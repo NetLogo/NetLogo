@@ -1376,6 +1376,8 @@ class WidgetPanel(val workspace: GUIWorkspace)
               w2.setLocation(w2.getX, w.getY + w.getHeight + gap)
           }
       }
+
+      getWrappers.foreach(w => resetZoomInfo(w.widget))
     } else {
       // only resize widgets, no positions will be adjusted
       getWrappers.foreach { w =>
@@ -1391,6 +1393,8 @@ class WidgetPanel(val workspace: GUIWorkspace)
           } else {
             w.setSize(new Dimension(width, height))
           }
+
+          resetZoomInfo(w.widget)
         }
       }
     }
