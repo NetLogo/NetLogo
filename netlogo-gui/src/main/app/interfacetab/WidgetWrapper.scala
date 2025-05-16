@@ -455,6 +455,8 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
     if (e.isPopupTrigger && mouseMode != MouseMode.DRAG) {
       doPopup(e)
     } else if (Mouse.hasButton1(e)) {
+      selected(true)
+
       if (mouseMode == MouseMode.DRAG) {
         WidgetActions.moveSelectedWidgets(interfacePanel)
       } else if (mouseMode != MouseMode.IDLE) {
