@@ -14,7 +14,7 @@ class DummyWorkspace extends Workspace {
   val world = new World2D()
   override def workspaceContext: WorkspaceContext = unsupported
   override def getPrimaryWorkspace: PrimaryWorkspace = unsupported
-  override def procedures: ListMap[String,Procedure] = ListMap.empty[String, Procedure]
+  override def procedures: ListMap[Tuple2[String, Option[String]], Procedure] = ListMap.empty[Tuple2[String, Option[String]], Procedure]
   override def joinForeverButtons(agent: Agent) = unsupported
   override def addJobFromJobThread(job: Job) = unsupported
   override def getExtensionManager = unsupported
