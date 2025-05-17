@@ -8,7 +8,9 @@ object FrontEndInterface {
   // use ListMap so procedures come out in the order they were defined (users expect errors in
   // earlier procedures to be reported first) - ST 6/10/04, 8/3/12
   import scala.collection.immutable.ListMap
-  type ProceduresMap = ListMap[String, FrontEndProcedure]
+  // The first string in the key is the procedure name. The second string is the name of the module it's supposed to be
+  // visible in, if any. For procedures visible to the model, this will be None. - Kritphong M November 2025
+  type ProceduresMap = ListMap[Tuple2[String, Option[String]], FrontEndProcedure]
   val NoProcedures: ProceduresMap = ListMap()
   type FrontEndResults = (Seq[ProcedureDefinition], StructureResults)
 

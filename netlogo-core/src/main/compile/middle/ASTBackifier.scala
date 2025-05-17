@@ -16,7 +16,7 @@ import scala.collection.immutable.ListMap
 // but right now, this is the only place in the code where we need
 // to do something like this with core ASTs.
 
-class ASTBackifier(backifier: ApiBackifier, procedures: ListMap[String, Procedure]) {
+class ASTBackifier(backifier: ApiBackifier, procedures: ListMap[Tuple2[String, Option[String]], Procedure]) {
   def backify(proc: nvm.Procedure, pd: core.ProcedureDefinition): ProcedureDefinition =
     new ProcedureDefinition(proc, backify(pd.statements))
 

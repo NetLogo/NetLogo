@@ -39,7 +39,7 @@ class TestArgumentInjection extends FixtureSuite {
   }
 
   def makeCommandCaller(ws: nvm.Workspace, name: String): nvm.Procedure = {
-    val proc = ws.procedures(name.toUpperCase)
+    val proc = ws.procedures((name.toUpperCase, None))
     val command =
       name + " " + Seq.fill(proc.args.size)("0").mkString(" ")
     ws.asInstanceOf[AbstractWorkspace]
@@ -48,7 +48,7 @@ class TestArgumentInjection extends FixtureSuite {
   }
 
   def makeReporterCaller(ws: nvm.Workspace, name: String): nvm.Procedure = {
-    val proc = ws.procedures(name.toUpperCase)
+    val proc = ws.procedures((name.toUpperCase, None))
     val dummyArgs = Seq.fill(proc.args.size)("0").mkString(" ")
     ws.asInstanceOf[AbstractWorkspace]
       .evaluator.compileReporter(s"$name $dummyArgs",

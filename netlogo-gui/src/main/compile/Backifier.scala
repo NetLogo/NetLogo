@@ -137,15 +137,20 @@ class Backifier(program: Program,
     }
   }
 
-  def apply(procedures: ListMap[String, nvm.Procedure], c: core.Command): nvm.Command = {
+  def apply(procedures: ListMap[Tuple2[String, Option[String]], nvm.Procedure], c: core.Command): nvm.Command = {
     val result: nvm.Command = c match {
       case core.prim._extern(_) =>
         new nvmprim._extern(
           extensionManager.replaceIdentifier(c.token.text.toUpperCase(Locale.ENGLISH))
             .asInstanceOf[nlogoApi.Command])
 
-      case core.prim._call(proc) =>
-        new nvmprim._call(procedures(proc.name))
+      case core.prim._call(proc) => {
+        val filename = if (c.token == null || c.token.sourceLocation.filename.isEmpty)
+          None
+        else
+          Some(c.token.sourceLocation.filename)
+        new nvmprim._call(procedures(proc.name, filename))
+      }
 
       case core.prim._let(Some(let), _) =>
         new nvmprim._let(let)
@@ -182,7 +187,7 @@ class Backifier(program: Program,
     result
   }
 
-  def apply(procedures: ListMap[String, nvm.Procedure], r: core.Reporter): nvm.Reporter = {
+  def apply(procedures: ListMap[Tuple2[String, Option[String]], nvm.Procedure], r: core.Reporter): nvm.Reporter = {
     val result: nvm.Reporter = r match {
 
       case core.prim._letvariable(let) =>
@@ -233,8 +238,13 @@ class Backifier(program: Program,
       case core.prim._turtleorlinkvariable(varName, _) =>
         new nvmprim._turtleorlinkvariable(varName)
 
-      case core.prim._callreport(proc) =>
-        new nvmprim._callreport(procedures(proc.name))
+      case core.prim._callreport(proc) => {
+        val filename = if (r.token == null || r.token.sourceLocation.filename.isEmpty)
+          None
+        else
+          Some(r.token.sourceLocation.filename)
+        new nvmprim._callreport(procedures((proc.name, filename)))
+      }
 
       case core.prim._errormessage(Some(let)) =>
         new nvmprim._errormessage(let)
