@@ -20,7 +20,7 @@ class NamerTests extends AnyFunSuite {
     val procedure = results.procedures.values.iterator.next()
     val namer = new Namer(results.program, results.procedures, procedure, new DummyExtensionManager)
     namer.validateProcedure()
-    TransformableTokenStream(results.procedureTokens(procedure.name).iterator, namer)
+    TransformableTokenStream(results.procedureTokens((procedure.name, None)).iterator, namer)
       .takeWhile(_.tpe != TokenType.Eof)
   }
 
