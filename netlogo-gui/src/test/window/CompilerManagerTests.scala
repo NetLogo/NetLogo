@@ -79,8 +79,8 @@ class CompilerManagerTests extends AnyFunSuiteEx {
   test("given no widgets, the compiler manager emits one CompiledEvent for empty widgets, one CompiledEvent for code tab") { new Helper {
     this.loadWidgets()
     assert(workspace.world.program.userGlobals == Seq("A", "B", "C"))
-    assert(workspace.procedures.get("FOO").nonEmpty)
-    assert(workspace.procedures.apply("FOO").owner == compilerManager.proceduresInterface)
+    assert(workspace.procedures.get(("FOO", None)).nonEmpty)
+    assert(workspace.procedures.apply(("FOO", None)).owner == compilerManager.proceduresInterface)
     assert(events.length == 3)
     assert(events(0).isInstanceOf[Events.RemoveAllJobsEvent])
     assert(events(1).isInstanceOf[Events.CompiledEvent])
