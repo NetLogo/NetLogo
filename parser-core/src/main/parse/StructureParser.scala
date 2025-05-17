@@ -148,14 +148,14 @@ object StructureParser {
   }
 
   private def prefixChangedProcedures(oldProcedures: ProceduresMap, newProcedures: ProceduresMap, prefix: String): ProceduresMap = {
-    val changedProcedures = newProcedures.drop(oldProcedures.size).map{case (name, proc) =>
+    val changedProcedures = newProcedures.drop(oldProcedures.size).map{case ((name, filename), proc) =>
       val decl = proc.procedureDeclaration
       val newName = prefix.toUpperCase + proc.name
       val newToken: Token = decl.name.token.copy(text = prefix + proc.name, value = prefix.toUpperCase + decl.name.token.value)(decl.name.token.sourceLocation)
       val newTokens = decl.tokens.updated(1, newToken) // The token at index 1 is the name of the procedure
       val newDecl = decl.copy(name = decl.name.copy(name = newName, token = newToken), tokens = newTokens)
 
-      prefix.toUpperCase + name -> new RawProcedure(newDecl, None)}
+      (prefix.toUpperCase + name, filename) -> new RawProcedure(newDecl, None)}
 
     oldProcedures ++ changedProcedures
   }
@@ -214,7 +214,7 @@ object StructureParser {
         .addSymbols(program.breeds.keys, SymbolType.TurtleBreed)
         .addSymbols(program.linkBreeds.values.map(_.singular), SymbolType.LinkBreedSingular)
         .addSymbols(program.linkBreeds.keys, SymbolType.LinkBreed)
-        .addSymbols(procedures.keys, SymbolType.ProcedureSymbol)
+        .addSymbols(procedures.keys.map(_._1), SymbolType.ProcedureSymbol)
 
     program.breeds.values.foldLeft(symTable) {
       case (table, breed) if breed.isLinkBreed =>
