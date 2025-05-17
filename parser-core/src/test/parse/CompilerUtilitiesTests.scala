@@ -14,9 +14,9 @@ class CompilerUtilitiesTests extends AnyFunSuite {
 
   val (proceduresMap, program) = {
     val (procedures, structureResults) = FrontEnd.frontEnd(src)
-    val proceduresMap =
+    val proceduresMap: org.nlogo.core.FrontEndInterface.ProceduresMap =
       collection.immutable.ListMap(
-        procedures.map { p => p.procedure.name -> p.procedure }*)
+        procedures.map { p => (p.procedure.name, None) -> p.procedure }*)
     (proceduresMap, structureResults.program)
   }
 

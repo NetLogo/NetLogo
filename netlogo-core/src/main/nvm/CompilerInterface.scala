@@ -47,7 +47,7 @@ trait AuxiliaryCompilerInterface {
   def isValidIdentifier(s: String, extensionManager: ApiExtensionManager): Boolean
   def findProcedurePositions(source: String): Map[String, ProcedureSyntax]
 
-  def isReporter(s: String, program: Program, procedures: ListMap[String, Procedure], extensionManager: ApiExtensionManager, compilationEnv: CompilationEnvironment): Boolean
+  def isReporter(s: String, program: Program, procedures: ListMap[Tuple2[String, Option[String]], Procedure], extensionManager: ApiExtensionManager, compilationEnv: CompilationEnvironment): Boolean
 
   def tokenizeForColorization(source: String, extensionManager: ApiExtensionManager): Array[Token]
   def tokenizeForColorizationIterator(source: String, extensionManager: ApiExtensionManager): Iterator[Token]
@@ -55,11 +55,11 @@ trait AuxiliaryCompilerInterface {
   def tokenizeWithWhitespace(source: String, extensionManager: ApiExtensionManager): Iterator[Token]
 
   @throws(classOf[CompilerException])
-  def checkCommandSyntax(source: String, program: Program, procedures: ListMap[String, Procedure],
+  def checkCommandSyntax(source: String, program: Program, procedures: ListMap[Tuple2[String, Option[String]], Procedure],
                          extensionManager: ApiExtensionManager, parse: Boolean, compilationEnv: CompilationEnvironment): Unit
 
   @throws(classOf[CompilerException])
-  def checkReporterSyntax(source: String, program: Program, procedures: ListMap[String, Procedure],
+  def checkReporterSyntax(source: String, program: Program, procedures: ListMap[Tuple2[String, Option[String]], Procedure],
                           extensionManager: ApiExtensionManager, parse: Boolean, compilationEnv: CompilationEnvironment): Unit
 }
 
