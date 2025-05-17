@@ -5,8 +5,6 @@ package org.nlogo.swing
 import java.awt.{ BorderLayout, Frame }
 import javax.swing.{ BorderFactory, JDialog, JLabel, JPanel, JProgressBar, SwingConstants }
 
-import org.nlogo.awt.Positioning.center
-
 class ModalProgressDialog(parent: Frame, message: String) extends JDialog(parent, true) {
   setResizable(false)
   setUndecorated(true)
@@ -26,6 +24,8 @@ class ModalProgressDialog(parent: Frame, message: String) extends JDialog(parent
   panel.add(progressBar, BorderLayout.SOUTH)
   getContentPane.setLayout(new BorderLayout)
   getContentPane.add(panel, BorderLayout.CENTER)
+
   pack()
-  center(this, parent)
+
+  Positioning.center(this, parent)
 }
