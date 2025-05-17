@@ -9,8 +9,8 @@ import org.nlogo.{ api, core },
 import scala.collection.immutable.ListMap
 
 object Procedure {
-  type ProceduresMap = ListMap[String, Procedure]
-  val NoProcedures = ListMap[String, Procedure]()
+  type ProceduresMap = ListMap[Tuple2[String, Option[String]], Procedure]
+  val NoProcedures = ListMap[Tuple2[String, Option[String]], Procedure]()
 }
 
 class Procedure(
