@@ -13,20 +13,22 @@ object PackageMacAggregate {
   val CodesigningIdentity = "Developer ID Application: Northwestern University (E74ZKF37E6)"
 
   def signJarLibs(jarFile: File, options: Seq[String], libsToSign: Seq[String]): Unit = {
-    val tmpDir = IO.createTemporaryDirectory
-    println(tmpDir)
-    IO.unzip(jarFile, tmpDir)
+    if (jarFile.exists) {
+      val tmpDir = IO.createTemporaryDirectory
+      println(tmpDir)
+      IO.unzip(jarFile, tmpDir)
 
-    val libPaths = libsToSign.map( (libToSign) => (tmpDir / libToSign).toString )
-    runCodeSign(options, libPaths, "jar libraries")
+      val libPaths = libsToSign.map( (libToSign) => (tmpDir / libToSign).toString )
+      runCodeSign(options, libPaths, "jar libraries")
 
-    val manifest = Using.fileInputStream(tmpDir / "META-INF" / "MANIFEST.MF") { is =>
-      new Manifest(is)
+      val manifest = Using.fileInputStream(tmpDir / "META-INF" / "MANIFEST.MF") { is =>
+        new Manifest(is)
+      }
+      IO.delete(tmpDir / "META-INF")
+      IO.jar(Path.allSubpaths(tmpDir), jarFile, manifest, None)
+
+      IO.delete(tmpDir)
     }
-    IO.delete(tmpDir / "META-INF")
-    IO.jar(Path.allSubpaths(tmpDir), jarFile, manifest, None)
-
-    IO.delete(tmpDir)
   }
 
   def runCodeSign(options: Seq[String], paths: Seq[String], taskName: String, workingDirectory: Option[File] = None): Unit = {
