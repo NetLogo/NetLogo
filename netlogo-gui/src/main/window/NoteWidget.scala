@@ -14,8 +14,6 @@ import java.awt.{ Color, Dimension, GridBagConstraints, GridBagLayout, Insets, R
 import java.util.ArrayList
 import javax.swing.JLabel
 
-import org.apache.commons.text.StringEscapeUtils
-
 import org.nlogo.core.{ I18N, TextBox => CoreTextBox, Widget => CoreWidget }
 import org.nlogo.swing.Transparent
 import org.nlogo.theme.{ ClassicTheme, DarkTheme, InterfaceColors, LightTheme }
@@ -83,18 +81,35 @@ class NoteWidget extends SingleErrorWidget with Transparent with Editable {
                       |    ul, ol {
                       |      margin-left: 8px;
                       |    }
+                      |    .style-unicode {
+                      |      font-family: 'Segoe UI', 'San Francisco', sans-serif
+                      |    }
                       |  </style>
                       |</head>""".stripMargin
 
   private def wrapText(): Unit = {
-    if (_markdown) {
-      textLabel.setText(s"""<html>$css${renderer.render(parser.parse(_text))}</html>""")
-    } else {
-      textLabel.setText(s"""<html>${StringEscapeUtils.escapeHtml4(_text).replaceAll("\n", "<br>")}</html>""")
+    val rendered = {
+      if (_markdown) {
+        s"""<html>$css${renderer.render(parser.parse(_text))}</html>"""
+      } else {
+        s"""<html>$css${escapeHTML(_text)}</html>"""
+      }
     }
+
+    textLabel.setText(rendered.foldLeft("") {
+      case (s, c) =>
+        if (textLabel.getFont.canDisplay(c)) {
+          s + c
+        } else {
+          s + s"""<span class="style-unicode">$c</span>"""
+        }
+    })
 
     repaint()
   }
+
+  private def escapeHTML(s: String): String =
+    s.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\n", "<br>")
 
   def text: String = _text
   def setText(newText: String): Unit = {
