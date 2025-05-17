@@ -106,7 +106,7 @@ class InfoTab(attachModelDir: String => String)
   override val activeMenuActions = Seq(undoAction, redoAction)
 
   private val toolBar = new ToolBar {
-    setBorder(new EmptyBorder(24, 6, 12, 6))
+    setBorder(new EmptyBorder(24, 10, 12, 6))
 
     override def addControls(): Unit = {
       this.addAll(findButton, editableButton, helpButton)

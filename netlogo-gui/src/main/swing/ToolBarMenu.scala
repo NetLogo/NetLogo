@@ -9,7 +9,7 @@ import javax.swing.{ AbstractAction, JButton, JLabel }
 abstract class ToolBarMenu(name: String) extends JButton with Transparent {
   setBorder(null)
 
-  setLayout(new FlowLayout)
+  setLayout(new FlowLayout(FlowLayout.LEADING, 8, 6))
 
   protected val label = new JLabel(name)
   protected val arrow = new DropdownArrow

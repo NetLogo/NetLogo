@@ -129,7 +129,7 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
   }
 
   def getToolBar = new ToolBar {
-    setBorder(new EmptyBorder(24, 6, 12, 6))
+    setBorder(new EmptyBorder(24, 10, 12, 6))
 
     override def addControls(): Unit = {
       // Only want to add toolbar items once

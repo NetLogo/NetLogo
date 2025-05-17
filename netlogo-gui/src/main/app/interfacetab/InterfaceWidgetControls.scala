@@ -250,7 +250,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
     locally {
       val c = new GridBagConstraints
 
-      c.insets = new Insets(6, 6, 6, 6)
+      c.insets = new Insets(6, 8, 6, 6)
 
       add(label, c)
       add(arrow, c)
@@ -315,7 +315,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
     locally {
       val c = new GridBagConstraints
 
-      c.insets = new Insets(6, 6, 6, 6)
+      c.insets = new Insets(6, 8, 6, 6)
 
       add(label, c)
       add(arrow, c)
