@@ -19,7 +19,7 @@ class TestGenerator extends AnyFunSuiteEx {
   def compileAll(source: String, preamble: String): Procedure =
     compiler.compileMoreCode(
       "to foo " + preamble + source + "\nend", None,
-      program, new scala.collection.immutable.ListMap[String, Procedure](),
+      program, new scala.collection.immutable.ListMap[Tuple2[String, Option[String]], Procedure](),
       new DummyExtensionManager, new DummyLibraryManager,
       new DummyCompilationEnvironment()).head
   def compile(source: String, preamble: String): Command =

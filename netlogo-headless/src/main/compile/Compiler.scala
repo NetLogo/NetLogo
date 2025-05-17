@@ -120,23 +120,23 @@ class Compiler(dialect: Dialect) extends PresentationCompilerInterface {
   // if this class doesn't conform to PresentationCompilerInterface, which defines these methods. sources are copied
   // from the version of this class in netlogo-gui. (Isaac B 9/27/25)
 
-  override def checkCommandSyntax(source: String, program: Program, procedures: ListMap[String, Procedure],
+  override def checkCommandSyntax(source: String, program: Program, procedures: ListMap[Tuple2[String, Option[String]], Procedure],
                                   extensionManager: ExtensionManager, parse: Boolean,
                                   compilationEnv: CompilationEnvironment): Unit = {
     checkSyntax("to __bogus-name " + source + "\nend", program, procedures, extensionManager, parse, compilationEnv)
   }
 
-  override def checkReporterSyntax(source: String, program: Program, procedures: ListMap[String, Procedure],
+  override def checkReporterSyntax(source: String, program: Program, procedures: ListMap[Tuple2[String, Option[String]], Procedure],
                                    extensionManager: ExtensionManager, parse: Boolean,
                                    compilationEnv: CompilationEnvironment): Unit = {
     checkSyntax("to-report __bogus-name report " + source + "\nend", program, procedures, extensionManager, parse,
                 compilationEnv)
   }
 
-  private def checkSyntax(source: String, program: Program, procedures: ListMap[String, Procedure],
+  private def checkSyntax(source: String, program: Program, procedures: ListMap[Tuple2[String, Option[String]], Procedure],
                           extensionManager: ExtensionManager, parse: Boolean,
                           compilationEnv: CompilationEnvironment): Unit = {
-    frontEnd.frontEnd(source, None, program, true, ListMap[String, Procedure](procedures.toSeq*),
+    frontEnd.frontEnd(source, None, program, true, ListMap[Tuple2[String, Option[String]], Procedure](procedures.toSeq*),
                       extensionManager)
   }
 
@@ -161,9 +161,9 @@ class Compiler(dialect: Dialect) extends PresentationCompilerInterface {
   override def getTokenAtPosition(source: String, position: Int): Token =
     parserTokenizer.getTokenAtPosition(source, position).orNull
 
-  override def isReporter(source: String, program: Program, procedures: ListMap[String, Procedure],
+  override def isReporter(source: String, program: Program, procedures: ListMap[Tuple2[String, Option[String]], Procedure],
                           extensionManager: ExtensionManager, compilationEnv: CompilationEnvironment): Boolean =
-    utilities.isReporter(source, program, ListMap[String, Procedure](procedures.toSeq*), extensionManager)
+    utilities.isReporter(source, program, ListMap[Tuple2[String, Option[String]], Procedure](procedures.toSeq*), extensionManager)
 
   override def isValidIdentifier(source: String, extensionManager: ExtensionManager): Boolean = {
     frontEnd.tokenizeForColorizationIterator(source, dialect, extensionManager).takeWhile(_.tpe != TokenType.Eof)
