@@ -26,8 +26,8 @@ class Compiler(dialect: Dialect) extends PresentationCompilerInterface {
   val parserTokenizer = Femto.scalaSingleton[org.nlogo.core.TokenizerInterface]("org.nlogo.lex.Tokenizer")
 
   // some private helpers
-  private type ProceduresMap = ListMap[String, Procedure]
-  private val noProcedures: ProceduresMap = ListMap.empty[String, Procedure]
+  private type ProceduresMap = ListMap[Tuple2[String, Option[String]], Procedure]
+  private val noProcedures: ProceduresMap = ListMap.empty[Tuple2[String, Option[String]], Procedure]
 
   // used to compile the Code tab, including declarations
   @throws(classOf[CompilerException])
@@ -120,7 +120,7 @@ class Compiler(dialect: Dialect) extends PresentationCompilerInterface {
   @throws(classOf[CompilerException])
   private def checkSyntax(source: String, subprogram: Boolean, program: Program, oldProcedures: ProceduresMap, extensionManager: ExtensionManager, parse: Boolean, compilationEnv: CompilationEnvironment): Unit = {
 
-    val oldProceduresListMap = ListMap[String, Procedure](oldProcedures.toSeq*)
+    val oldProceduresListMap = ListMap[Tuple2[String, Option[String]], Procedure](oldProcedures.toSeq*)
     val (topLevelDefs, feStructureResults) =
       frontEnd.frontEnd(source, None, program, subprogram, oldProceduresListMap, extensionManager)
   }
@@ -191,7 +191,7 @@ class Compiler(dialect: Dialect) extends PresentationCompilerInterface {
 
   // used by CommandLine
   def isReporter(s: String, program: Program, procedures: ProceduresMap, extensionManager: ExtensionManager, compilationEnv: CompilationEnvironment) = {
-    val proceduresListMap = ListMap[String, Procedure](procedures.toSeq*)
+    val proceduresListMap = ListMap[Tuple2[String, Option[String]], Procedure](procedures.toSeq*)
     utilities.isReporter(s, program, proceduresListMap, extensionManager)
   }
 
