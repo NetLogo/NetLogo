@@ -65,7 +65,7 @@ class StructureParserTests extends AnyFunSuite {
   test("command procedure") {
     val results = compile("to go fd 1 end")
     assertResult(1)(results.procedures.size)
-    val proc = results.procedures("GO")
+    val proc = results.procedures(("GO", None))
     assertResult(false)(proc.isReporter)
     assertResult("procedure GO:[]{OTPL}:\n")(proc.dump)
   }
@@ -75,15 +75,15 @@ class StructureParserTests extends AnyFunSuite {
     assertResult("globals [G]")(
       results.program.dump.split("\n").head)
     assertResult(2)(results.procedures.size)
-    assertResult("procedure FOO:[]{OTPL}:\n")(results.procedures("FOO").dump)
-    assertResult("")(results.procedures("FOO").displayName)
-    assertResult("procedure BAR:[]{OTPL}:\n")(results.procedures("BAR").dump)
+    assertResult("procedure FOO:[]{OTPL}:\n")(results.procedures(("FOO", None)).dump)
+    assertResult("")(results.procedures(("FOO", None)).displayName)
+    assertResult("procedure BAR:[]{OTPL}:\n")(results.procedures(("BAR", None)).dump)
   }
 
   test("command procedure with empty args") {
     val results = compile("to go [] fd 1 end")
     assertResult(1)(results.procedures.size)
-    val proc = results.procedures("GO")
+    val proc = results.procedures(("GO", None))
     assertResult(false)(proc.isReporter)
     assertResult("procedure GO:[]{OTPL}:\n")(proc.dump)
   }
@@ -91,7 +91,7 @@ class StructureParserTests extends AnyFunSuite {
   test("command procedure with some args") {
     val results = compile("to go [a b c] fd 1 end")
     assertResult(1)(results.procedures.size)
-    val proc = results.procedures("GO")
+    val proc = results.procedures(("GO", None))
     assertResult(false)(proc.isReporter)
     assertResult("procedure GO:[A B C]{OTPL}:\n")(proc.dump)
   }
@@ -99,7 +99,7 @@ class StructureParserTests extends AnyFunSuite {
   test("reporter procedure") {
     val results = compile("to-report foo report 0 end")
     assertResult(1)(results.procedures.size)
-    val proc = results.procedures("FOO")
+    val proc = results.procedures(("FOO", None))
     assertResult(true)(proc.isReporter)
     assertResult("reporter procedure FOO:[]{OTPL}:\n")(proc.dump)
   }
@@ -336,7 +336,7 @@ to test
 end
     """
     val results = compileAll(src, nlsSrc)
-    if (!results.procedures.contains("FOO:TEST")) {
+    if (!results.procedures.contains(("FOO:TEST", None))) {
       fail()
     }
   }
@@ -349,7 +349,7 @@ to test
 end
     """
     val results = compileAll(src, nlsSrc)
-    if (!results.procedures.contains("BAR:TEST")) {
+    if (!results.procedures.contains(("BAR:TEST", None))) {
       fail()
     }
   }
@@ -476,6 +476,6 @@ link-breeds"""
       StructureParser.parseSources(
         tokenizer, CompilationOperand( sources, new DummyExtensionManager, new DummyLibraryManager
                                      , new DummyCompilationEnvironment, subprogram = false))
-    assert(results.procedures.contains("FOO") && results.procedures.contains("BAR"))
+    assert(results.procedures.contains(("FOO", None)) && results.procedures.contains(("BAR", None)))
   }
 }
