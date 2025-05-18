@@ -62,7 +62,7 @@ trait Application extends AstNode {
  */
 class ProcedureDefinition(val procedure: FrontEndProcedure, val statements: Statements, _end: Int) extends AstNode {
   def this(procedure: FrontEndProcedure, stmts: Statements) = this(procedure, stmts, stmts.end)
-  val sourceLocation = SourceLocation(procedure.nameToken.start, _end, procedure.filename)
+  val sourceLocation = SourceLocation(procedure.nameToken.start, _end, procedure.filename.getOrElse(""))
 
   def nonLocalExit = statements.nonLocalExit
 
