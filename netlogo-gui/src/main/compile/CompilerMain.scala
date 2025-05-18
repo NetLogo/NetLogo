@@ -64,8 +64,7 @@ private[compile] object CompilerMain {
       allDefs
         .map(assembleProcedure(_, feStructureResults.program, compilationEnv))
         .filterNot(_.isLambda)
-        // TODO: Handle empty filenames
-        .map(p => (p.name, Some(p.filename)) -> p)
+        .map(p => (p.name, p.filename) -> p)
 
     val returnedProcedures = ListMap(newProcedures*) ++ oldProcedures
     // only return top level procedures.

@@ -8,7 +8,7 @@ trait FrontEndProcedure {
   def name: String
   def isReporter: Boolean
   def displayName: String
-  def filename: String
+  def filename: Option[String]
   def nameToken: Token
   def argTokens: Seq[Token]
   var args = Vector[String]()
