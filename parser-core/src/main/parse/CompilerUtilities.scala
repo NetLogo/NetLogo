@@ -63,7 +63,7 @@ object CompilerUtilities extends CompilerUtilitiesInterface {
       val namer =
         new Namer(program, procedures ++ results.procedures, proc, extensionManager)
       namer.validateProcedure()
-      val tokens = TransformableTokenStream(results.procedureTokens(proc.name).iterator, namer)
+      val tokens = TransformableTokenStream(results.procedureTokens((proc.name, None)).iterator, namer)
       tokens.to(LazyList)
         .drop(1)  // skip _report
         .dropWhile(_.tpe == core.TokenType.OpenParen)
