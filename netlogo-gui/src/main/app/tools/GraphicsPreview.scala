@@ -26,8 +26,10 @@ class GraphicsPreview
     setImage(Option(imagePath).map(loadImageFile(_, false)).orNull)
 
   def setImage(newImage: Image): Unit = {
-    image = Option(newImage)
-    repaint()
+    if (!image.exists(_ == newImage)) {
+      image = Option(newImage)
+      repaint()
+    }
   }
 
   override def paintComponent(g: Graphics): Unit = {

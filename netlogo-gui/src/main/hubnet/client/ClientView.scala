@@ -19,7 +19,13 @@ class ClientView(clientPanel: ClientPanel) extends Widget with ViewWidgetInterfa
   val renderer = new ClientRenderer(world)
   def isHeadless = false
   private var _displayOn = false
-  def setDisplayOn(on: Boolean): Unit = { _displayOn = on; repaint() }
+  def setDisplayOn(on: Boolean): Unit = {
+    if (_displayOn != on) {
+      _displayOn = on
+
+      repaint()
+    }
+  }
 
   setBackground(InterfaceColors.Transparent)
 

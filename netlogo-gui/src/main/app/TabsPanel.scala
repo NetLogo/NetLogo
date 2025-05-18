@@ -213,7 +213,7 @@ class TabLabel(startPanel: TabsPanel, text: String, tab: Component) extends JPan
 class TabsPanel(val tabManager: TabManager) extends JTabbedPane(SwingConstants.TOP, JTabbedPane.SCROLL_TAB_LAYOUT)
                                             with ChangeListener {
 
-  private var mouse: Option[Point] = None
+  private var mouse: Option[Int] = None
 
   setUI(new TabsPanelUI(this))
   setFocusable(false)
@@ -232,17 +232,36 @@ class TabsPanel(val tabManager: TabManager) extends JTabbedPane(SwingConstants.T
     }
 
     override def mouseExited(e: MouseEvent): Unit = {
-      mouse = None
+      if (mouse.isDefined) {
+        mouse = None
 
-      repaint()
+        repaint()
+      }
     }
   })
 
   addMouseMotionListener(new MouseMotionAdapter {
     override def mouseMoved(e: MouseEvent): Unit = {
-      mouse = Option(e.getPoint)
+      (0 until getTabCount).find { i =>
+        val component = getTabComponentAt(i)
 
-      repaint()
+        component.getX - 10 <= e.getX && component.getX + 10 + component.getWidth >= e.getX &&
+        component.getY <= e.getY && component.getY + component.getHeight >= e.getY
+      } match {
+        case Some(i) =>
+          if (!mouse.exists(_ == i)) {
+            mouse = Option(i)
+
+            repaint()
+          }
+
+        case None =>
+          if (mouse.isDefined) {
+            mouse = None
+
+            repaint()
+          }
+      }
     }
   })
 
@@ -274,14 +293,6 @@ class TabsPanel(val tabManager: TabManager) extends JTabbedPane(SwingConstants.T
     getTabComponentAt(index).asInstanceOf[TabLabel]
 
   def isHover(index: Int): Boolean = {
-    mouse match {
-      case Some(point) if getTabCount > 0 =>
-        val component = getTabComponentAt(index)
-
-        component.getX - 10 <= point.x && component.getX + 10 + component.getWidth >= point.x &&
-        component.getY <= point.y && component.getY + component.getHeight >= point.y
-
-      case _ => false
-    }
+    mouse.contains(index)
   }
 }

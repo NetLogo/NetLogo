@@ -112,10 +112,14 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
     widget.getMaximumSize == null || widget.getMaximumSize.width != widget.getMinimumSize.width
 
   def widgetChanged(): Unit = {
+    val oldVert = _verticallyResizable
+    val oldHoriz = _horizontallyResizable
+
     _verticallyResizable = computeVerticallyResizable
     _horizontallyResizable = computeHorizontallyResizable
 
-    repaint()
+    if (_verticallyResizable != oldVert || _horizontallyResizable != oldHoriz)
+      repaint()
   }
 
   def getBorderSize: Int =
@@ -152,10 +156,12 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
   }
 
   def setHighlight(on: Boolean): Unit = {
-    highlighted = on
+    if (highlighted != on) {
+      highlighted = on
 
-    revalidate()
-    repaint()
+      revalidate()
+      repaint()
+    }
   }
 
   private def revalidateInterfacePanel(): Unit = {
@@ -182,9 +188,11 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
     _isForeground
 
   def isForeground(isForeground: Boolean): Unit = {
-    _isForeground = isForeground
+    if (_isForeground != isForeground) {
+      _isForeground = isForeground
 
-    repaint()
+      repaint()
+    }
   }
 
   def foreground(): Unit = {

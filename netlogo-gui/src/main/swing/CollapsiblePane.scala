@@ -35,10 +35,12 @@ class CollapsiblePane(title: String, element: JComponent, parent: JDialog)
   add(element, BorderLayout.CENTER)
 
   def setOpen(open: Boolean): Unit = {
-    element.setVisible(open)
-    arrow.setOpen(open)
-    parent.pack()
-    repaint()
+    if (element.isVisible != open) {
+      element.setVisible(open)
+      arrow.setOpen(open)
+      parent.pack()
+      repaint()
+    }
   }
 
   def isOpen = element.isVisible

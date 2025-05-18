@@ -16,16 +16,18 @@ trait MouseUtils extends Component {
 
   addMouseListener(new MouseAdapter {
     override def mouseEntered(e: MouseEvent): Unit = {
-      if (useHandCursor)
-        setCursor(MouseUtils.HAND_CURSOR)
+      if (!hover) {
+        if (useHandCursor)
+          setCursor(MouseUtils.HAND_CURSOR)
 
-      hover = true
+        hover = true
 
-      repaint()
+        repaint()
+      }
     }
 
     override def mouseExited(e: MouseEvent): Unit = {
-      if (!contains(e.getPoint)) {
+      if (hover && !contains(e.getPoint)) {
         setCursor(null)
 
         hover = false
