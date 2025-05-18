@@ -22,14 +22,16 @@ object StructureConverter {
         val maybeAlias = l.options.map((x) => x match {
           case LibraryAlias(name, _) => Some(name)
         }).find(_.isDefined).flatten
-        Library(l.name, maybeAlias, l.token)
+        val filename = l.token.sourceLocation.filename
+        Library(l.name, if (filename.isEmpty()) None else Some(filename), maybeAlias, l.token)
     }
     val dls = declarations.collect {
       case dl: DefineLibraryDecl =>
         val exportedNames = dl.exportSpecs.map((x) => x match {
           case SimpleExport(name) => Some(name)
         }).flatten
-        DefineLibrary(dl.name, dl.version, exportedNames, dl.token)
+        val filename = dl.token.sourceLocation.filename
+        DefineLibrary(dl.name, if (filename.isEmpty()) None else Some(filename), dl.version, exportedNames, dl.token)
     }
     val is = declarations.collect {
       case i: Includes =>
@@ -49,7 +51,7 @@ object StructureConverter {
       procedures = oldResults.procedures ++
         ps.map { case (pp, _) => (pp.name, pp.filename) -> pp},
       procedureTokens = oldResults.procedureTokens ++ ps.map {
-        case (p, toks) => p.name -> toks
+        case (p, toks) => (p.name, p.filename) -> toks
       },
       includes = oldResults.includes ++ is,
       includedSources = oldResults.includedSources,
