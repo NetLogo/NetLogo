@@ -278,7 +278,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
     if (newWb.x < 0)
       x += - newWb.x
-    if (newWb.y < WidgetWrapper.BorderSize)
+    if (newWb.y < 0)
       y += WidgetWrapper.BorderSize - newWb.y
     if (newWb.x + 2 * WidgetWrapper.BorderSize > b.width)
       x -= (newWb.x + 2 * WidgetWrapper.BorderSize) - b.width
