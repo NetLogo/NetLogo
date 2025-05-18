@@ -29,5 +29,5 @@ class RawProcedure(val procedureDeclaration: Procedure, val displayNameOption: O
     buf.toString()
   }
 
-  def filename: String = nameToken.filename
+  def filename: Option[String] = if (nameToken.filename.isEmpty) None else Some(nameToken.filename)
 }
