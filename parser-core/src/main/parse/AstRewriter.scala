@@ -226,7 +226,7 @@ class AstRewriter(val tokenizer: TokenizerInterface, op: CompilationOperand) ext
     import edit.{operations, wsMap}
     val formatter = new Formatter
     val res = procs
-      .filter(p => op.sources.contains(p.procedure.filename))
+      .filter(p => op.sources.contains(p.procedure.filename.getOrElse("")))
       .foldLeft[AstFormat](Formatter.context("", operations, wsMap = wsMap)) {
         case (acc, proc) =>
           formatter.visitProcedureDefinition(proc)(Formatter.context(acc.text, acc.operations, wsMap = wsMap))
