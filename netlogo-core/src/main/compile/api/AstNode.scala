@@ -46,7 +46,7 @@ trait Application extends AstNode {
  * for the procedure body, which is a Statements object.
  */
 class ProcedureDefinition(val procedure: nvm.Procedure, val statements: Statements) extends AstNode {
-  val sourceLocation = SourceLocation(procedure.pos, procedure.end, procedure.filename)
+  val sourceLocation = SourceLocation(procedure.pos, procedure.end, procedure.filename.getOrElse(""))
   def accept(v: AstVisitor): Unit = { v.visitProcedureDefinition(this) }
   def copy(procedure: nvm.Procedure = procedure, statements: Statements = statements) =
     new ProcedureDefinition(procedure, statements)

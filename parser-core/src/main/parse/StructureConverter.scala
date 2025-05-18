@@ -47,8 +47,7 @@ object StructureConverter {
       program =
         updateProgram(oldResults.program, declarations),
       procedures = oldResults.procedures ++
-        // TODO: Handle empty filenames
-        ps.map { case (pp, _) => (pp.name, Some(pp.filename)) -> pp},
+        ps.map { case (pp, _) => (pp.name, pp.filename) -> pp},
       procedureTokens = oldResults.procedureTokens ++ ps.map {
         case (p, toks) => p.name -> toks
       },
