@@ -205,7 +205,8 @@ lazy val netlogo = project.in(file("netlogo-gui")).
         "com.fifesoft" % "rsyntaxtextarea" % "3.5.4",
         "com.typesafe" % "config" % "1.4.3",
         "net.lingala.zip4j" % "zip4j" % "2.11.5",
-        "org.scala-lang.modules" %% "scala-parallel-collections" % "1.2.0"
+        "org.scala-lang.modules" %% "scala-parallel-collections" % "1.2.0",
+        "org.scala-lang" %% "scala3-compiler" % "3.7.0"
       ) ++ Seq("base", "controls", "graphics", "swing", "web")
         .map(m => "org.openjfx" % s"javafx-$m" % "21.0.6" classifier osName)
     },

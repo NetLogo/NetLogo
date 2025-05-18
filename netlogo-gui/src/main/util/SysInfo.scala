@@ -2,6 +2,7 @@
 
 package org.nlogo.util
 
+import dotty.tools.dotc.config.Properties
 
 object SysInfo
 {
@@ -65,5 +66,5 @@ object SysInfo
     // fail at least somewhat gracefully if we run into permissions problems
     catch { case ex: RuntimeException => null }
   def getScalaVersionString =
-    "Scala " + scala.util.Properties.versionString
+    "Scala " + Properties.simpleVersionString
 }
