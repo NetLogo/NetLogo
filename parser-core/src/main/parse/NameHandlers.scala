@@ -22,7 +22,7 @@ extends NameHandler {
 class CallHandler(procedures: ProceduresMap) extends NameHandler {
   override def apply(token: Token) = {
     val name = token.value.asInstanceOf[String]
-    val result = Some(name)
+    Some(name)
       .flatMap{x => procedures.get((x, if (token.filename.isEmpty) None else Some(token.filename)))}
       .map{callproc =>
         if (callproc.isReporter)
