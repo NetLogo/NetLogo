@@ -41,10 +41,25 @@ class TrailDrawer(world: World, turtleDrawer: TurtleDrawer, linkDrawer: LinkDraw
 
   @throws(classOf[IOException])
   override def importDrawingBase64(base64: String): Unit = {
-    val pair        = base64.split(",")
-    val bytes       = Base64.getDecoder.decode(pair(1))
-    val contentType = pair(0).replaceFirst("^data:", "").replaceFirst(";base64$", "")
-    importDrawing(new ByteArrayInputStream(bytes), Option(contentType))
+
+    val arr = base64.split(",")
+
+    val (mimeOpt, rawBase64) =
+      arr match {
+        case Array(rb64) =>
+          (None, rb64)
+        case Array(prefix, rb64) =>
+          val MimeRegex       = "^data:(.*?);base64$".r
+          val MimeRegex(mime) = prefix: @unchecked
+          (Option(mime), rb64)
+        case _ =>
+          throw new Exception("Invalid base64 string")
+      }
+
+    val bais = new ByteArrayInputStream(Base64.getDecoder.decode(rawBase64))
+
+    importDrawing(bais, mimeOpt)
+
   }
 
   @throws(classOf[IOException])
