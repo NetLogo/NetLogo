@@ -554,9 +554,9 @@ object LightTheme extends ColorTheme {
   override def speedSliderThumb: Color = MediumBlue
   override def speedSliderThumbDisabled: Color = MediumGray
   override def buttonBackground: Color = MediumBlue
-  override def buttonBackgroundHover: Color = new Color(62, 150, 253)
-  override def buttonBackgroundPressed: Color = new Color(5, 69, 143)
-  override def buttonBackgroundPressedHover: Color = new Color(0, 49, 106)
+  override def buttonBackgroundHover: Color = new Color(31, 134, 255)
+  override def buttonBackgroundPressed: Color = new Color(0, 52, 115)
+  override def buttonBackgroundPressedHover: Color = new Color(0, 35, 77)
   override def buttonBackgroundDisabled: Color = new Color(213, 213, 213)
   override def buttonText: Color = Color.WHITE
   override def buttonTextPressed: Color = Color.WHITE
@@ -716,9 +716,9 @@ object DarkTheme extends ColorTheme {
   override def speedSliderThumb: Color = MediumBlue
   override def speedSliderThumbDisabled: Color = MediumGray
   override def buttonBackground: Color = MediumBlue
-  override def buttonBackgroundHover: Color = new Color(62, 150, 253)
-  override def buttonBackgroundPressed: Color = new Color(9, 89, 183)
-  override def buttonBackgroundPressedHover: Color = new Color(0, 49, 106)
+  override def buttonBackgroundHover: Color = new Color(42, 140, 255)
+  override def buttonBackgroundPressed: Color = new Color(0, 58, 127)
+  override def buttonBackgroundPressedHover: Color = new Color(0, 68, 149)
   override def buttonBackgroundDisabled: Color = new Color(213, 213, 213)
   override def buttonText: Color = Color.WHITE
   override def buttonTextPressed: Color = Color.WHITE
