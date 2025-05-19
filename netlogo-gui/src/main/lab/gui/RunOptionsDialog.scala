@@ -140,7 +140,7 @@ class RunOptionsDialog(parent: Window, dialogFactory: EditDialogFactory, filePre
 
     def get = LabRunOptions(threadCount, table, spreadsheet, stats, lists, updateView, updatePlotsAndMonitors, false)
     // boilerplate for Editable
-    def helpLink = None
+    def helpLink = Some("behaviorspace.html#running-an-experiment")
     val sourceOffset = 0
     def editFinished() = true
   }
