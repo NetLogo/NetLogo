@@ -291,6 +291,7 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
           setStyle(TokenTypes.LITERAL_BACKQUOTE, new Style(InterfaceColors.constantColor()))
           setStyle(TokenTypes.OPERATOR, new Style(InterfaceColors.commandColor()))
           setStyle(TokenTypes.SEPARATOR, new Style(InterfaceColors.defaultColor()))
+          setStyle(TokenTypes.ERROR_IDENTIFIER, new Style(InterfaceColors.defaultColor()))
         })
 
       case _ =>
