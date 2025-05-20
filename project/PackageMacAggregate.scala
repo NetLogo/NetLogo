@@ -184,6 +184,7 @@ object PackageMacAggregate {
     val jarLibsToSign = Map(
       ("app/flatlaf-3.5.4.jar", Seq("com/formdev/flatlaf/natives/libflatlaf-macos-x86_64.dylib", "/com/formdev/flatlaf/natives/libflatlaf-macos-arm64.dylib"))
     , ("app/java-objc-bridge-1.2.jar", Seq("libjcocoa.dylib"))
+    , ("app/jline-native-3.29.0.jar", Seq("org/jline/nativ/Mac/x86/libjlinenative.jnilib", "org/jline/nativ/Mac/x86_64/libjlinenative.jnilib", "org/jline/nativ/Mac/arm64/libjlinenative.jnilib"))
     , ("app/jna-5.10.0.jar", Seq("com/sun/jna/darwin-x86-64/libjnidispatch.jnilib", "com/sun/jna/darwin-aarch64/libjnidispatch.jnilib"))
     , ("extensions/.bundled/arduino/jssc-2.6.0.jar", Seq("libs/mac_os_x/libjSSC-2.6_x86.jnilib", "libs/mac_os_x/libjSSC-2.6_x86_64.jnilib", "libs/mac_os_x/libjSSC-2.6_ppc.jnilib"))
     , ("extensions/.bundled/gogo/gogo.jar", Seq("darwin/libhidapi.dylib"))
