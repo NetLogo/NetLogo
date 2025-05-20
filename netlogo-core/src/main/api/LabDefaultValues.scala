@@ -29,4 +29,5 @@ object LabDefaultValues {
   def getDefaultLists: String = ""
   def getDefaultUpdateView: Boolean = true
   def getDefaultUpdatePlotsAndMonitors: Boolean = true
+  def getDefaultMirrorHeadlessOutput: Boolean = false
 }
