@@ -120,11 +120,12 @@ object NetLogoPackaging {
       val webSource = baseDirectory.value / "downloadPages"
       val downloadLocations =
         Map(
-          "macInstaller"     -> s"NetLogo-${marketingVersion.value}.dmg",
-          "winInstaller32"   -> s"NetLogo-${marketingVersion.value}-32.msi",
-          "winInstaller64"   -> s"NetLogo-${marketingVersion.value}-64.msi",
-          "linuxInstaller32" -> s"NetLogo-${marketingVersion.value}-32.tgz",
-          "linuxInstaller64" -> s"NetLogo-${marketingVersion.value}-64.tgz")
+          "macInstallerIntel"    -> s"NetLogo-${marketingVersion.value}-x86_64.dmg",
+          "macInstallerSilicon"  -> s"NetLogo-${marketingVersion.value}-aarch64.dmg",
+          "winInstaller32"       -> s"NetLogo-${marketingVersion.value}-32.msi",
+          "winInstaller64"       -> s"NetLogo-${marketingVersion.value}-64.msi",
+          "linuxInstaller32"     -> s"NetLogo-${marketingVersion.value}-32.tgz",
+          "linuxInstaller64"     -> s"NetLogo-${marketingVersion.value}-64.tgz")
               .map(t => (t._1, webTarget.value / t._2))
 
       downloadLocations.map(_._2).filterNot(_.exists).foreach { f =>
