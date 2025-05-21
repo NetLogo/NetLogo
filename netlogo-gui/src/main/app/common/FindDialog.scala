@@ -344,10 +344,8 @@ class FindDialog(val owner: Frame) extends JDialog(owner, I18N.gui.get("dialog.f
 
     var matchIndex = text.indexOf(searchMut, target.getSelectionEnd)
 
-    if (matchIndex == -1 && wrapAround) {
-      text = text.substring(0, target.getSelectionEnd)
+    if (matchIndex == -1 && wrapAround)
       matchIndex = text.indexOf(searchMut)
-    }
 
     if (matchIndex > -1) {
       target.setSelectionStart(matchIndex)
