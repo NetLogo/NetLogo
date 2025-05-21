@@ -243,9 +243,9 @@ class NLogoXMLLoader(headless: Boolean, literalParser: LiteralParser, editNames:
 
       val (name, dims) =
         if (Version.is3D)
-          ("NetLogo 3D 7.0.0-beta1", new WorldDimensions3D(-16, 16, -16, 16, -16, 16, 13.0))
+          ("NetLogo 3D 7.0.0-beta2", new WorldDimensions3D(-16, 16, -16, 16, -16, 16, 13.0))
         else
-          ("NetLogo 7.0.0-beta1", WorldDimensions(-16, 16, -16, 16, 13.0))
+          ("NetLogo 7.0.0-beta2", WorldDimensions(-16, 16, -16, 16, 13.0))
 
       val widgets =
         List(Model.defaultView.copy(dimensions = dims))

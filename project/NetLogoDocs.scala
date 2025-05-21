@@ -120,7 +120,7 @@ class NetLogoDocs(
     val pdfFile = netLogoRoot / "NetLogo User Manual.pdf"
 
     val htmldocArgs =
-      Seq("wkhtmltopdf", "--enable-local-file-access",
+      Seq("/home/jason/bin/wkhtmltopdf", "--enable-local-file-access",
         "cover", (htmlFileRoot / "title.html").getAbsolutePath,
         "toc", "--xsl-style-sheet", (htmlFileRoot / "toc.xsl").getAbsolutePath) ++
         manualComponents(htmlFileRoot, extensions).map(_.getAbsolutePath) ++
