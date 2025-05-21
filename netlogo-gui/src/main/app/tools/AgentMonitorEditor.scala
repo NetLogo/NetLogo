@@ -417,7 +417,7 @@ with ThemeSync {
     else {
       val breed = workspace.world.getLinkBreed(text.toUpperCase)
       if(breed == null)
-        throw new org.nlogo.api.AgentException(I18N.gui.get("tools.agentMoniror.editor.edpectedLinkBreed"))
+        throw new org.nlogo.api.AgentException(I18N.gui.get("tools.agentMonitor.editor.edpectedLinkBreed"))
       breed
     }
 

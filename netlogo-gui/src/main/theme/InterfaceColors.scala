@@ -175,6 +175,7 @@ object InterfaceColors {
   def colorPickerOutputBackground(): Color = theme.colorPickerOutputBackground
   def colorPickerCheckmark(): Color = theme.colorPickerCheckmark
   def colorPickerCopyHover(): Color = theme.colorPickerCopyHover
+  def agentMonitorSeparator(): Color = theme.agentMonitorSeparator
 }
 
 trait ColorTheme {
@@ -365,6 +366,7 @@ trait ColorTheme {
   def colorPickerOutputBackground: Color
   def colorPickerCheckmark: Color
   def colorPickerCopyHover: Color
+  def agentMonitorSeparator: Color
 }
 
 object ClassicTheme extends ColorTheme {
@@ -527,6 +529,7 @@ object ClassicTheme extends ColorTheme {
   override def colorPickerOutputBackground: Color = new Color(125, 125, 125)
   override def colorPickerCheckmark: Color = new Color(62, 184, 79)
   override def colorPickerCopyHover: Color = new Color(197, 197, 197)
+  override def agentMonitorSeparator: Color = MediumGray
 }
 
 object LightTheme extends ColorTheme {
@@ -689,6 +692,7 @@ object LightTheme extends ColorTheme {
   override def colorPickerOutputBackground: Color = new Color(125, 125, 125)
   override def colorPickerCheckmark: Color = new Color(62, 184, 79)
   override def colorPickerCopyHover: Color = new Color(197, 197, 197)
+  override def agentMonitorSeparator: Color = MediumGray
 }
 
 object DarkTheme extends ColorTheme {
@@ -851,6 +855,7 @@ object DarkTheme extends ColorTheme {
   override def colorPickerOutputBackground: Color = DarkBlueGray
   override def colorPickerCheckmark: Color = new Color(62, 184, 79)
   override def colorPickerCopyHover: Color = new Color(57, 57, 57)
+  override def agentMonitorSeparator: Color = LightGray2
 }
 
 trait ThemeSync {

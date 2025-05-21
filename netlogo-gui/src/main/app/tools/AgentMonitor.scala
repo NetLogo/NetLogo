@@ -64,6 +64,15 @@ abstract class AgentMonitor(val workspace: GUIWorkspace, window: JDialog)
     }
   }
 
+  private val separator = new JPanel with ThemeSync {
+    override def getPreferredSize: Dimension =
+      new Dimension(super.getPreferredSize.width, 1)
+
+    override def syncTheme(): Unit = {
+      setBackground(InterfaceColors.agentMonitorSeparator())
+    }
+  }
+
   private val panel = new AgentMonitorViewPanel(workspace)
   private val viewPane = new CollapsiblePane(I18N.gui("view"), panel, window)
   private val propertiesPane = new CollapsiblePane(I18N.gui("properties"), scrollPane, window)
@@ -75,23 +84,46 @@ abstract class AgentMonitor(val workspace: GUIWorkspace, window: JDialog)
     } else {
       add(viewPane, BorderLayout.NORTH)
       add(propertiesPane, BorderLayout.CENTER)
+
       commandLine.setEnabled(agent != null && agent.id != -1)
       historyPrompt.setEnabled(agent != null && agent.id != -1)
       commandLine.agentKind(agentKind)
       prompt.setEnabled(false)
-      val commandPanel = new JPanel(new GridBagLayout) with Transparent
-      val c = new GridBagConstraints
-      c.insets = new Insets(0, 6, 0, 0)
-      commandPanel.add(prompt, c)
-      c.weightx = 1
-      c.fill = GridBagConstraints.BOTH
-      commandPanel.add(commandLine, c)
-      c.weightx = 0
-      c.weighty = 1
-      c.fill = GridBagConstraints.VERTICAL
-      c.insets = new Insets(1, 1, 1, 1)
-      commandPanel.add(historyPrompt, c)
-      add(commandPanel, BorderLayout.SOUTH)
+
+      // this panel contains the separator bar and command line (Isaac B 5/21/25)
+      add(new JPanel(new GridBagLayout) with Transparent {
+        val c = new GridBagConstraints
+
+        c.gridy = 0
+        c.gridwidth = 3
+        c.weightx = 1
+        c.fill = GridBagConstraints.HORIZONTAL
+
+        add(separator, c)
+
+        c.gridy = 1
+        c.gridwidth = 1
+        c.weightx = 0
+        c.fill = GridBagConstraints.NONE
+        c.insets = new Insets(6, 6, 6, 6)
+
+        add(prompt, c)
+
+        c.weightx = 1
+        c.fill = GridBagConstraints.BOTH
+        c.insets = new Insets(6, 0, 6, 0)
+
+        add(commandLine, c)
+
+        c.weightx = 0
+        c.weighty = 1
+
+        c.fill = GridBagConstraints.VERTICAL
+        c.insets = new Insets(6, 0, 6, 6)
+
+        add(historyPrompt, c)
+      }, BorderLayout.SOUTH)
+
       Some(panel)
     }
 
@@ -152,6 +184,7 @@ abstract class AgentMonitor(val workspace: GUIWorkspace, window: JDialog)
 
     viewPane.syncTheme()
     propertiesPane.syncTheme()
+    separator.syncTheme()
     commandLine.syncTheme()
   }
 }
