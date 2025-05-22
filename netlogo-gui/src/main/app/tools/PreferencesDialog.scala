@@ -106,12 +106,14 @@ class PreferencesDialog(parent: Frame & ThemeSync, preferences: Seq[Preference],
     val c = new GridBagConstraints
 
     c.gridx = 0
-    c.insets = new Insets(20, 10, 10, 10)
+    c.insets = new Insets(20, 10, 20, 10)
 
     codePreferencesContainer.add(codeMessage, c)
 
     codePreferences.foreach { pref =>
-      codePreferencesPanel.addField(I18N.gui(pref.i18nKey), pref.component)
+      codePreferencesPanel.addField(
+        (if (pref.requirement != RequiredAction.None) I18N.gui(pref.requirement.toString) + " " else "") +
+        I18N.gui(pref.i18nKey), pref.component)
     }
 
     c.insets = new Insets(0, 10, 20, 10)
