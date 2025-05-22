@@ -10,7 +10,7 @@ import javax.swing.{ AbstractAction, JDialog }
 import org.nlogo.api.{ AggregateManagerInterface, LibraryManager }
 import org.nlogo.app.common.TabsInterface
 import org.nlogo.app.interfacetab.WidgetPanel
-import org.nlogo.app.tools.{ LibrariesDialog, Preferences, PreferencesDialog, ThemesDialog }
+import org.nlogo.app.tools.{ LibrariesDialog, Preferences, PreferencesDialog }
 import org.nlogo.awt.Positioning
 import org.nlogo.core.I18N
 import org.nlogo.shape.ShapesManagerInterface
@@ -34,13 +34,13 @@ abstract class ShowDialogAction(name: String) extends AbstractAction(name) with 
   }
 }
 
-class ShowPreferencesDialog(frame: Frame, tabs: TabsInterface)
-extends ShowDialogAction(I18N.gui.get("menu.tools.preferences"))
+class ShowPreferencesDialog(frame: Frame & ThemeSync, tabs: TabsInterface)
+extends AbstractAction(I18N.gui.get("menu.tools.preferences")) with ThemeSync
 with MenuAction {
   category = ToolsCategory
   group    = ToolsSettingsGroup
 
-  override def createDialog() = new PreferencesDialog(frame,
+  private lazy val dialog = new PreferencesDialog(frame,
     Seq(
       Preferences.Language,
       Preferences.LoadLastOnStartup,
@@ -48,22 +48,32 @@ with MenuAction {
       Preferences.IsLoggingEnabled,
       new Preferences.LogDirectory(frame),
       Preferences.LogEvents,
+      Preferences.BoldWidgetNames
+    ) ++ (if (System.getProperty("os.name").contains("Linux")) Seq(Preferences.UIScale) else Nil),
+    Seq(
       Preferences.IncludedFilesMenu,
       Preferences.ProceduresMenuSortOrder,
       Preferences.FocusOnError,
       Preferences.StartSeparateCodeTab,
-      Preferences.BoldWidgetNames
-    ) ++ (if (System.getProperty("os.name").contains("Linux")) Seq(Preferences.UIScale) else Nil)
+      new Preferences.IndentAutomatically(tabs),
+      new Preferences.EditorLineNumbers(tabs)
+    )
   )
-}
 
-class ShowThemesDialog(frame: Frame & ThemeSync)
-  extends ShowDialogAction(I18N.gui.get("menu.tools.themes")) with MenuAction {
+  override def actionPerformed(e: ActionEvent): Unit = {
+    dialog.toFront()
+    dialog.setVisible(true)
+  }
 
-  category = ToolsCategory
-  group = ToolsSettingsGroup
+  override def syncTheme(): Unit = {
+    dialog.syncTheme()
+  }
 
-  override def createDialog() = new ThemesDialog(frame)
+  def openToTab(index: Int): Unit = {
+    dialog.setSelectedIndex(index)
+    dialog.toFront()
+    dialog.setVisible(true)
+  }
 }
 
 class OpenLibrariesDialog( frame:              Frame
