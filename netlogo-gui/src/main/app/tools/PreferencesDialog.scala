@@ -2,44 +2,64 @@
 
 package org.nlogo.app.tools
 
-import java.awt.{ BorderLayout, Frame }
+import java.awt.{ BorderLayout, Frame, GridBagConstraints, GridBagLayout, Insets }
 import java.io.File
 import java.nio.file.Files
 import java.util.prefs.{ Preferences => JavaPreferences }
-import javax.swing.{ BorderFactory, SwingConstants }
+import javax.swing.{ JLabel, JPanel, SwingConstants }
 import javax.swing.border.EmptyBorder
 
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ ButtonPanel, DialogButton, OptionPane, TextField, TextFieldBox }
+import org.nlogo.swing.{ ButtonPanel, DialogButton, FloatingTabbedPane, OptionPane, TabLabel, TextField, TextFieldBox,
+                         Transparent }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
-class PreferencesDialog(parent: Frame, preferences: Seq[Preference])
+class PreferencesDialog(parent: Frame & ThemeSync, preferences: Seq[Preference], codePreferences: Seq[Preference])
   extends ToolDialog(parent, "preferences") with ThemeSync {
 
   private lazy val netLogoPrefs = JavaPreferences.userRoot.node("/org/nlogo/NetLogo")
 
+  private lazy val tabs = new FloatingTabbedPane
+
   private lazy val preferencesPanel = new TextFieldBox(SwingConstants.TRAILING)
+  private lazy val codePreferencesContainer = new JPanel(new GridBagLayout) with Transparent
+  private lazy val codePreferencesPanel = new TextFieldBox(SwingConstants.TRAILING)
+  private lazy val themesPanel = new ThemesPanel(parent)
+
+  private lazy val codeMessage = new JLabel(I18N.gui("code.message"))
 
   private lazy val okButton = new DialogButton(true, I18N.gui.get("common.buttons.ok"), () => ok())
   private lazy val cancelButton = new DialogButton(false, I18N.gui.get("common.buttons.cancel"), () => cancel())
 
-  private def reset() = {
-    preferences foreach (_.load(netLogoPrefs))
+  // sync parameter prevents infinite recursion with syncTheme on load (Isaac B 5/22/25)
+  private def reset(sync: Boolean): Unit = {
+    preferences.foreach(_.load(netLogoPrefs))
+    codePreferences.foreach(_.load(netLogoPrefs))
+
+    themesPanel.revert(sync)
   }
-  private def ok() = {
-    if (apply()) setVisible(false)
+
+  private def ok(): Unit = {
+    if (apply())
+      setVisible(false)
   }
+
   private def apply(): Boolean = {
     if (validatePrefs()) {
-      preferences foreach (_.save(netLogoPrefs))
-      return true
+      preferences.foreach(_.save(netLogoPrefs))
+      codePreferences.foreach(_.save(netLogoPrefs))
+
+      true
+    } else {
+      false
     }
-    false
   }
-  private def cancel() = {
-    reset()
+
+  private def cancel(): Unit = {
+    reset(true)
     setVisible(false)
   }
+
   private def validatePrefs(): Boolean = {
     if (preferences.find(x => x.i18nKey == "loggingEnabled").get.
         asInstanceOf[Preferences.BooleanPreference].component.isSelected) {
@@ -76,11 +96,27 @@ class PreferencesDialog(parent: Frame, preferences: Seq[Preference])
   }
 
   override def initGUI() = {
-    preferencesPanel.setBorder(BorderFactory.createEmptyBorder(20, 10, 20, 10))
+    preferencesPanel.setBorder(new EmptyBorder(20, 10, 20, 10))
+
     preferences.foreach(pref =>
       preferencesPanel.addField(
         (if (pref.requirement != RequiredAction.None) I18N.gui(pref.requirement.toString) + " " else "") +
         I18N.gui(pref.i18nKey), pref.component))
+
+    val c = new GridBagConstraints
+
+    c.gridx = 0
+    c.insets = new Insets(20, 10, 10, 10)
+
+    codePreferencesContainer.add(codeMessage, c)
+
+    codePreferences.foreach { pref =>
+      codePreferencesPanel.addField(I18N.gui(pref.i18nKey), pref.component)
+    }
+
+    c.insets = new Insets(0, 10, 20, 10)
+
+    codePreferencesContainer.add(codePreferencesPanel, c)
 
     val buttonPanel = new ButtonPanel(Seq(okButton, cancelButton))
 
@@ -88,26 +124,38 @@ class PreferencesDialog(parent: Frame, preferences: Seq[Preference])
 
     getRootPane.setDefaultButton(okButton)
 
-    add(preferencesPanel, BorderLayout.CENTER)
+    tabs.addTabWithLabel(preferencesPanel, new TabLabel(tabs, I18N.gui("general"), preferencesPanel))
+    tabs.addTabWithLabel(codePreferencesContainer, new TabLabel(tabs, I18N.gui("code"), codePreferencesContainer))
+    tabs.addTabWithLabel(themesPanel, new TabLabel(tabs, I18N.gui("themes"), themesPanel))
+
+    add(tabs, BorderLayout.CENTER)
     add(buttonPanel, BorderLayout.SOUTH)
 
     pack()
-    reset()
+    reset(false)
 
     setResizable(false)
   }
 
-  override def onClose() = reset()
+  override def onClose() = reset(true)
+
+  def setSelectedIndex(index: Int): Unit = {
+    tabs.setSelectedIndex(index)
+  }
 
   override def syncTheme(): Unit = {
     getContentPane.setBackground(InterfaceColors.dialogBackground())
-    preferencesPanel.setBackground(InterfaceColors.dialogBackground())
 
     okButton.syncTheme()
     cancelButton.syncTheme()
 
     preferencesPanel.syncTheme()
+    codePreferencesPanel.syncTheme()
+    themesPanel.syncTheme()
 
     preferences.foreach(_.component.syncTheme())
+    codePreferences.foreach(_.component.syncTheme())
+
+    codeMessage.setForeground(InterfaceColors.dialogText())
   }
 }

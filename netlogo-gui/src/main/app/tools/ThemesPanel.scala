@@ -8,93 +8,72 @@ import java.util.prefs.{ Preferences => JavaPreferences }
 import javax.swing.{ AbstractAction, ButtonGroup, JLabel, JPanel }
 
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ ButtonPanel, DialogButton, Positioning, RadioButton }
+import org.nlogo.swing.{ RadioButton, Transparent }
 import org.nlogo.theme.{ ClassicTheme, ColorTheme, DarkTheme, InterfaceColors, LightTheme, ThemeSync }
 
-class ThemesDialog(frame: Frame & ThemeSync) extends ToolDialog(frame, "themes") with ThemeSync {
-  private lazy val prefs = JavaPreferences.userRoot.node("/org/nlogo/NetLogo")
+class ThemesPanel(frame: Frame & ThemeSync) extends JPanel(new GridBagLayout) with Transparent with ThemeSync {
+  private implicit val i18nPrefix: I18N.Prefix = I18N.Prefix("tools.preferences.themes")
 
-  private lazy val panel = new JPanel(new GridBagLayout)
+  private val prefs = JavaPreferences.userRoot.node("/org/nlogo/NetLogo")
 
-  private lazy val label = new JLabel(s"<html>${I18N.gui("text")}</html>")
+  private val label = new JLabel(s"<html>${I18N.gui("text")}</html>")
 
-  private lazy val classicButton = new RadioButton(new AbstractAction(I18N.gui("classic")) {
+  private val classicButton = new RadioButton(new AbstractAction(I18N.gui("classic")) {
     def actionPerformed(e: ActionEvent): Unit = {
       setTheme(ClassicTheme)
     }
   })
 
-  private lazy val lightButton = new RadioButton(new AbstractAction(I18N.gui("light")) {
+  private val lightButton = new RadioButton(new AbstractAction(I18N.gui("light")) {
     def actionPerformed(e: ActionEvent): Unit = {
       setTheme(LightTheme)
     }
   })
 
-  private lazy val darkButton = new RadioButton(new AbstractAction(I18N.gui("dark")) {
+  private val darkButton = new RadioButton(new AbstractAction(I18N.gui("dark")) {
     def actionPerformed(e: ActionEvent): Unit = {
       setTheme(DarkTheme)
     }
   })
 
-  private lazy val okButton = new DialogButton(true, I18N.gui.get("common.buttons.ok"), () => {
-    setVisible(false)
-  })
+  private var startTheme: ColorTheme = InterfaceColors.getTheme
 
-  private lazy val cancelButton = new DialogButton(false, I18N.gui.get("common.buttons.cancel"), () => {
-    setTheme(startTheme)
-    setSelected(startTheme)
-
-    setVisible(false)
-  })
-
-  private var startTheme: ColorTheme = LightTheme
-
-  override def initGUI(): Unit = {
-    setResizable(false)
-
+  locally {
     val c = new GridBagConstraints
 
     c.gridx = 0
     c.anchor = GridBagConstraints.WEST
     c.insets = new Insets(6, 6, 6, 6)
 
-    panel.add(label, c)
+    add(label, c)
 
     c.insets = new Insets(0, 6, 6, 6)
 
-    panel.add(lightButton, c)
-    panel.add(darkButton, c)
-    panel.add(classicButton, c)
+    add(lightButton, c)
+    add(darkButton, c)
+    add(classicButton, c)
 
     val themeButtons = new ButtonGroup
 
     themeButtons.add(classicButton)
     themeButtons.add(lightButton)
     themeButtons.add(darkButton)
-
-    val buttonPanel = new ButtonPanel(Seq(okButton, cancelButton))
-
-    getRootPane.setDefaultButton(okButton)
-
-    c.anchor = GridBagConstraints.CENTER
-
-    panel.add(buttonPanel, c)
-
-    add(panel)
-
-    pack()
   }
 
-  override def setVisible(visible: Boolean): Unit = {
-    if (visible) {
-      startTheme = InterfaceColors.getTheme
+  def init(): Unit = {
 
-      setSelected(startTheme)
+    setSelected(startTheme)
+  }
 
-      Positioning.center(this, frame)
+  // sync parameter prevents infinite recursion with syncTheme on load (Isaac B 5/22/25)
+  def revert(sync: Boolean): Unit = {
+    if (sync) {
+      setTheme(startTheme)
+    } else {
+      InterfaceColors.setTheme(startTheme)
     }
 
-    super.setVisible(visible)
+    setSelected(startTheme)
   }
 
   private def setTheme(theme: ColorTheme): Unit = {
@@ -120,15 +99,10 @@ class ThemesDialog(frame: Frame & ThemeSync) extends ToolDialog(frame, "themes")
   }
 
   override def syncTheme(): Unit = {
-    panel.setBackground(InterfaceColors.dialogBackground())
-
     label.setForeground(InterfaceColors.dialogText())
 
     lightButton.syncTheme()
     darkButton.syncTheme()
     classicButton.syncTheme()
-
-    okButton.syncTheme()
-    cancelButton.syncTheme()
   }
 }

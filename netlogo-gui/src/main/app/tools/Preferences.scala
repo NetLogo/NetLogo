@@ -189,4 +189,48 @@ object Preferences {
       prefs.putDouble(i18nKey, textField.getText.toDouble)
     }
   }
+
+  class IndentAutomatically(tabs: TabsInterface) extends Preference {
+    val i18nKey = "indentAutomatically"
+    val requirement = RequiredAction.None
+
+    private val checkBox = new CheckBox("", (selected) => {
+      tabs.smartTabbingEnabled = selected
+    })
+
+    override def component: CheckBox = checkBox
+
+    def load(prefs: JavaPreferences): Unit = {
+      val value = prefs.get(i18nKey, "true").toBoolean
+
+      checkBox.setSelected(value)
+      tabs.smartTabbingEnabled = value
+    }
+
+    def save(prefs: JavaPreferences): Unit = {
+      prefs.put(i18nKey, checkBox.isSelected.toString)
+    }
+  }
+
+  class EditorLineNumbers(tabs: TabsInterface) extends Preference {
+    val i18nKey = "editorLineNumbers"
+    val requirement = RequiredAction.None
+
+    private val checkBox = new CheckBox("", (selected) => {
+      tabs.lineNumbersVisible = selected
+    })
+
+    override def component: CheckBox = checkBox
+
+    def load(prefs: JavaPreferences): Unit = {
+      val value = prefs.get(i18nKey, "true").toBoolean
+
+      checkBox.setSelected(value)
+      tabs.lineNumbersVisible = value
+    }
+
+    def save(prefs: JavaPreferences): Unit = {
+      prefs.put(i18nKey, checkBox.isSelected.toString)
+    }
+  }
 }
