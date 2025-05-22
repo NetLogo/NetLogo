@@ -10,7 +10,7 @@ import org.nlogo.api.FileIO
 import org.nlogo.app.common.{ Dialogs, Events => AppEvents, TabsInterface }
 import org.nlogo.core.I18N
 import org.nlogo.ide.FocusedOnlyAction
-import org.nlogo.swing.{ FileDialog => SwingFileDialog }
+import org.nlogo.swing.{ CloseableTab, FileDialog => SwingFileDialog }
 import org.nlogo.window.{ Events => WindowEvents, ExternalFileInterface }
 import org.nlogo.workspace.{ AbstractWorkspace, ModelTracker }
 
@@ -26,7 +26,7 @@ class TemporaryCodeTab(workspace: AbstractWorkspace & ModelTracker,
   externalFileManager:            ExternalFileManager,
   conversionAction:               TemporaryCodeTab => Action,
   separateCodeWindow:             Boolean)
-  extends CodeTab(workspace, tabs) {
+  extends CodeTab(workspace, tabs) with CloseableTab {
 
   var closing = false
   var saveNeeded = false // Has the buffer changed since the file was saved?
