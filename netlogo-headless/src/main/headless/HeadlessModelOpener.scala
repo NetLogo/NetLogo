@@ -33,7 +33,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
 
     // get out if unknown version
     val netLogoVersion = model.version
-    if (!Version.knownVersion(netLogoVersion))
+    if (!Version.compatibleVersion(netLogoVersion))
       throw new IllegalStateException("unknown NetLogo version: " + netLogoVersion)
 
     WorldLoader.load(model.view, ws)
