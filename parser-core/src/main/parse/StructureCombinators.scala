@@ -90,7 +90,7 @@ extends scala.util.parsing.combinator.Parsers {
           decs ++ procs }
 
   def declaration: Parser[Declaration] =
-    defineLibrary | library | includes | extensions | breed | directedLinkBreed | undirectedLinkBreed |
+    defineLibrary | _import | includes | extensions | breed | directedLinkBreed | undirectedLinkBreed |
       variables("GLOBALS") | variables("TURTLES-OWN") | variables("PATCHES-OWN") |
       variables("LINKS-OWN") | breedVariables
 
@@ -117,21 +117,21 @@ extends scala.util.parsing.combinator.Parsers {
         SimpleExport(ident.name)
     }
 
-  def library: Parser[Library] =
-    keyword("LIBRARY") ~! openBracket ~! identifier ~! rep(libraryOption) <~ closeBracket ^^ {
+  def _import: Parser[Import] =
+    keyword("IMPORT") ~! openBracket ~! identifier ~! rep(importOption) <~ closeBracket ^^ {
       case keyword ~ _ ~ ident ~ options =>
-        Library(ident.name, options, keyword)
+        Import(ident.name, options, keyword)
     }
 
-  def libraryOption: Parser[LibraryOption] =
-    libraryAlias
+  def importOption: Parser[ImportOption] =
+    importAlias
 
-  def libraryAlias: Parser[LibraryAlias] =
-    openBracket ~> libraryAliasKeyword ~! identifier <~ closeBracket ^^ {
+  def importAlias: Parser[ImportAlias] =
+    openBracket ~> importAliasKeyword ~! identifier <~ closeBracket ^^ {
       case keyword ~ ident =>
-        LibraryAlias(ident.name, keyword) }
+        ImportAlias(ident.name, keyword) }
 
-  def libraryAliasKeyword: Parser[Token] =
+  def importAliasKeyword: Parser[Token] =
     acceptMatch("ALIAS", {
       case token @ Token(_, TokenType.Ident, "ALIAS") =>
         token })
