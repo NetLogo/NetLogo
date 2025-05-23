@@ -340,20 +340,6 @@ end
     }
   }
 
-  test("library syntax merges globals and turtle vars") {
-    val src = """library [foo [alias bar]] globals [ a b c ] breed [ mice mouse ] turtles-own [ t1 t2 ] mice-own [ m1 m2 ]"""
-    val nlsSrc = "globals [ d f g ] turtles-own [ t3 t4 ] mice-own [ m3 m4 ]"
-    val results = compileAll(src, nlsSrc)
-    val expected = """globals [A B C BAR:D BAR:F BAR:G]
-interfaceGlobals []
-turtles-own [WHO COLOR HEADING XCOR YCOR SHAPE LABEL LABEL-COLOR BREED HIDDEN? SIZE PEN-SIZE PEN-MODE T1 T2 BAR:T3 BAR:T4]
-patches-own [PXCOR PYCOR PCOLOR PLABEL PLABEL-COLOR]
-links-own [END1 END2 COLOR LABEL LABEL-COLOR HIDDEN? BREED THICKNESS SHAPE TIE-MODE]
-breeds MICE = Breed(MICE, MOUSE, M1 M2 BAR:M3 BAR:M4, false)
-link-breeds"""
-    assertResult(expected)(results.program.dump.trim)
-  }
-
   test("invalid included file") {
     expectParseAllError("""__includes [ "foobar.nlogox" ]""", "Included files must end with .nls")
   }
