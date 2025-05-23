@@ -255,6 +255,8 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
 
   def isTextSelected: Boolean = text.getSelectedText != null && !text.getSelectedText.isEmpty
 
+  def close(): Unit = {}
+
   override def syncTheme(): Unit = {
     def boldStyle(color: Color): Style =
       new Style(color, Style.DEFAULT_BACKGROUND, text.getFont.deriveFont(Font.BOLD), false)
