@@ -14,16 +14,16 @@ import org.nlogo.swing.{ ButtonPanel, DialogButton, FloatingTabbedPane, OptionPa
                          Transparent }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
-class PreferencesDialog(parent: Frame & ThemeSync, preferences: Seq[Preference], codePreferences: Seq[Preference])
-  extends ToolDialog(parent, "preferences") with ThemeSync {
+class PreferencesDialog(parent: Frame & ThemeSync, preferences: Seq[Preference], codePreferences: Seq[Preference],
+                        loggingPreferences: Seq[Preference]) extends ToolDialog(parent, "preferences") with ThemeSync {
 
   private lazy val netLogoPrefs = JavaPreferences.userRoot.node("/org/nlogo/NetLogo")
 
   private lazy val tabs = new FloatingTabbedPane
 
-  private lazy val preferencesPanel = new TextFieldBox(SwingConstants.TRAILING)
-  private lazy val codePreferencesContainer = new JPanel(new GridBagLayout) with Transparent
-  private lazy val codePreferencesPanel = new TextFieldBox(SwingConstants.TRAILING)
+  private lazy val preferencesPanel = new PreferenceContainer(preferences)
+  private lazy val codePreferencesPanel = new PreferenceContainer(codePreferences)
+  private lazy val loggingPreferencesPanel = new PreferenceContainer(loggingPreferences)
   private lazy val themesPanel = new ThemesPanel(parent)
 
   private lazy val codeMessage = new JLabel(I18N.gui("code.message"))
@@ -61,9 +61,9 @@ class PreferencesDialog(parent: Frame & ThemeSync, preferences: Seq[Preference],
   }
 
   private def validatePrefs(): Boolean = {
-    if (preferences.find(x => x.i18nKey == "loggingEnabled").get.
+    if (loggingPreferences.find(x => x.i18nKey == "loggingEnabled").get.
         asInstanceOf[Preferences.BooleanPreference].component.isSelected) {
-      val path = preferences.find(x => x.i18nKey == "logDirectory").get.
+      val path = loggingPreferences.find(x => x.i18nKey == "logDirectory").get.
                  asInstanceOf[Preferences.LogDirectory].textField.getText
       val file = new File(path)
       if (path.isEmpty) {
@@ -95,30 +95,23 @@ class PreferencesDialog(parent: Frame & ThemeSync, preferences: Seq[Preference],
     true
   }
 
-  override def initGUI() = {
-    preferencesPanel.setBorder(new EmptyBorder(20, 10, 20, 10))
+  override def initGUI(): Unit = {
+    preferencesPanel.setBorder(new EmptyBorder(24, 12, 24, 12))
 
-    preferences.foreach(pref =>
-      preferencesPanel.addField(
-        (if (pref.requirement != RequiredAction.None) I18N.gui(pref.requirement.toString) + " " else "") +
-        I18N.gui(pref.i18nKey), pref.component))
+    val codePreferencesContainer = new JPanel(new GridBagLayout) with Transparent {
+      val c = new GridBagConstraints
 
-    val c = new GridBagConstraints
+      c.gridx = 0
+      c.insets = new Insets(24, 12, 24, 12)
 
-    c.gridx = 0
-    c.insets = new Insets(20, 10, 20, 10)
+      add(codeMessage, c)
 
-    codePreferencesContainer.add(codeMessage, c)
+      c.insets = new Insets(0, 12, 24, 12)
 
-    codePreferences.foreach { pref =>
-      codePreferencesPanel.addField(
-        (if (pref.requirement != RequiredAction.None) I18N.gui(pref.requirement.toString) + " " else "") +
-        I18N.gui(pref.i18nKey), pref.component)
+      add(codePreferencesPanel, c)
     }
 
-    c.insets = new Insets(0, 10, 20, 10)
-
-    codePreferencesContainer.add(codePreferencesPanel, c)
+    loggingPreferencesPanel.setBorder(new EmptyBorder(24, 12, 24, 12))
 
     val buttonPanel = new ButtonPanel(Seq(okButton, cancelButton))
 
@@ -128,6 +121,7 @@ class PreferencesDialog(parent: Frame & ThemeSync, preferences: Seq[Preference],
 
     tabs.addTabWithLabel(preferencesPanel, new TabLabel(tabs, I18N.gui("general"), preferencesPanel))
     tabs.addTabWithLabel(codePreferencesContainer, new TabLabel(tabs, I18N.gui("code"), codePreferencesContainer))
+    tabs.addTabWithLabel(loggingPreferencesPanel, new TabLabel(tabs, I18N.gui("logging"), loggingPreferencesPanel))
     tabs.addTabWithLabel(themesPanel, new TabLabel(tabs, I18N.gui("themes"), themesPanel))
 
     add(tabs, BorderLayout.CENTER)
@@ -153,11 +147,44 @@ class PreferencesDialog(parent: Frame & ThemeSync, preferences: Seq[Preference],
 
     preferencesPanel.syncTheme()
     codePreferencesPanel.syncTheme()
+    loggingPreferencesPanel.syncTheme()
     themesPanel.syncTheme()
 
-    preferences.foreach(_.component.syncTheme())
-    codePreferences.foreach(_.component.syncTheme())
-
     codeMessage.setForeground(InterfaceColors.dialogText())
+  }
+}
+
+private class PreferenceContainer(preferences: Seq[Preference])
+  extends JPanel(new GridBagLayout) with Transparent with ThemeSync {
+
+  private implicit val i18nPrefix: I18N.Prefix = I18N.Prefix("tools.preferences")
+
+  val c = new GridBagConstraints
+
+  c.anchor = GridBagConstraints.WEST
+
+  val (labels, components) = preferences.foldLeft((Seq[JLabel](), Seq[ThemeSync]())) {
+    case ((labels, components), pref) =>
+      c.gridx = 0
+      c.insets = new Insets(3, 0, 3, 6)
+
+      val label = new JLabel(prefString(pref))
+
+      add(label, c)
+
+      c.gridx = 1
+      c.insets = new Insets(3, 0, 3, 0)
+
+      add(pref.component, c)
+
+      (labels :+ label, components :+ pref.component)
+  }
+
+  private def prefString(pref: Preference): String =
+    I18N.gui(pref.i18nKey) + pref.requirement.map(r => " " + I18N.gui(r.toString)).getOrElse("") + ":"
+
+  override def syncTheme(): Unit = {
+    labels.foreach(_.setForeground(InterfaceColors.dialogText()))
+    components.foreach(_.syncTheme())
   }
 }

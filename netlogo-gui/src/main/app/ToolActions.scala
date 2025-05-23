@@ -45,18 +45,20 @@ with MenuAction {
       Preferences.Language,
       Preferences.LoadLastOnStartup,
       new Preferences.ReloadOnExternalChanges(tabs),
-      Preferences.IsLoggingEnabled,
-      new Preferences.LogDirectory(frame),
-      Preferences.LogEvents,
       Preferences.BoldWidgetNames
     ) ++ (if (System.getProperty("os.name").contains("Linux")) Seq(Preferences.UIScale) else Nil),
     Seq(
-      Preferences.IncludedFilesMenu,
       Preferences.ProceduresMenuSortOrder,
+      Preferences.IncludedFilesMenu,
       Preferences.FocusOnError,
       Preferences.StartSeparateCodeTab,
       new Preferences.IndentAutomatically(tabs),
       new Preferences.EditorLineNumbers(tabs)
+    ),
+    Seq(
+      Preferences.IsLoggingEnabled,
+      new Preferences.LogDirectory(frame),
+      Preferences.LogEvents
     )
   )
 

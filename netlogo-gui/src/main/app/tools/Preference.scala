@@ -11,7 +11,6 @@ import org.nlogo.theme.ThemeSync
 sealed trait RequiredAction
 
 object RequiredAction {
-  case object None extends RequiredAction
   case object Reload extends RequiredAction {
     override def toString: String = "reloadRequired"
   }
@@ -22,7 +21,7 @@ object RequiredAction {
 
 trait Preference {
   val i18nKey: String
-  val requirement: RequiredAction
+  val requirement: Option[RequiredAction]
   def component: JComponent & ThemeSync
   def load(prefs: JavaPreferences): Unit
   def save(prefs: JavaPreferences): Unit
