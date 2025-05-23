@@ -22,9 +22,9 @@ object FrontEndInterface {
     }
   }
 
-  def hasLibrary(source: String): Boolean = {
-    val includesRegEx = """(?m)^\s*library""".r
-    includesRegEx.findFirstMatchIn(source) match {
+  def hasImport(source: String): Boolean = {
+    val importsRegEx = """(?m)^\s*import""".r
+    importsRegEx.findFirstMatchIn(source) match {
       case Some(_) => true
       case None    => false
     }
@@ -75,7 +75,7 @@ trait FrontEndInterface {
   def findIncludes(source: String): Seq[String]
 
   // lists the names of imported libraries
-  def findLibraries(source: String): Seq[String]
+  def findImports(source: String): Seq[String]
 
   // these do enough tokenization to be used by the frontEnd.
   // It's up to to the caller to decide whether they want a Seq or an Iterator
