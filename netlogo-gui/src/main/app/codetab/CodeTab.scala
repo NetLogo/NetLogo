@@ -42,6 +42,8 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
       compile()
     }
   }) {
+    setEnabled(false)
+
     override def syncTheme(): Unit = {
       super.syncTheme()
 

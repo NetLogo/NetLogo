@@ -678,8 +678,6 @@ class App extends org.nlogo.window.Event.LinkChild
 
   lazy val openPreferencesDialog = new ShowPreferencesDialog(frame, _tabManager)
 
-  lazy val showThemesDialog = new ShowThemesDialog(frame)
-
   lazy val openAboutDialog = new ShowAboutWindow(frame)
 
   lazy val openRGBAColorDialog = new OpenRGBAColorDialog(frame)
@@ -701,7 +699,6 @@ class App extends org.nlogo.window.Event.LinkChild
     val workspaceActions = org.nlogo.window.WorkspaceActions(workspace)
 
     val generalActions = Seq[javax.swing.Action](
-      showThemesDialog,
       openLibrariesDialog,
       openRGBAColorDialog,
       new ShowShapeManager("turtleShapesEditor", turtleShapesManager),
@@ -861,7 +858,6 @@ class App extends org.nlogo.window.Event.LinkChild
     labManager.syncTheme()
 
     openPreferencesDialog.syncTheme()
-    showThemesDialog.syncTheme()
     openAboutDialog.syncTheme()
     openRGBAColorDialog.syncTheme()
     openLibrariesDialog.syncTheme()
@@ -1320,6 +1316,10 @@ class App extends org.nlogo.window.Event.LinkChild
   def showPreferencesDialog(): Unit = {
     openPreferencesDialog.actionPerformed(
       new ActionEvent(frame, ActionEvent.ACTION_PERFORMED, null))
+  }
+
+  def showPreferencesDialogAt(index: Int): Unit = {
+    openPreferencesDialog.openToTab(index)
   }
 
   /// AppFrame

@@ -2,48 +2,68 @@
 
 package org.nlogo.app.tools
 
-import java.awt.{ BorderLayout, Frame }
+import java.awt.{ BorderLayout, Frame, GridBagConstraints, GridBagLayout, Insets }
 import java.io.File
 import java.nio.file.Files
 import java.util.prefs.{ Preferences => JavaPreferences }
-import javax.swing.{ BorderFactory, SwingConstants }
+import javax.swing.{ JLabel, JPanel, SwingConstants }
 import javax.swing.border.EmptyBorder
 
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ ButtonPanel, DialogButton, OptionPane, TextField, TextFieldBox }
+import org.nlogo.swing.{ ButtonPanel, DialogButton, FloatingTabbedPane, OptionPane, TabLabel, TextField, TextFieldBox,
+                         Transparent }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
-class PreferencesDialog(parent: Frame, preferences: Seq[Preference])
-  extends ToolDialog(parent, "preferences") with ThemeSync {
+class PreferencesDialog(parent: Frame & ThemeSync, preferences: Seq[Preference], codePreferences: Seq[Preference],
+                        loggingPreferences: Seq[Preference]) extends ToolDialog(parent, "preferences") with ThemeSync {
 
   private lazy val netLogoPrefs = JavaPreferences.userRoot.node("/org/nlogo/NetLogo")
 
-  private lazy val preferencesPanel = new TextFieldBox(SwingConstants.TRAILING)
+  private lazy val tabs = new FloatingTabbedPane
+
+  private lazy val preferencesPanel = new PreferenceContainer(preferences)
+  private lazy val codePreferencesPanel = new PreferenceContainer(codePreferences)
+  private lazy val loggingPreferencesPanel = new PreferenceContainer(loggingPreferences)
+  private lazy val themesPanel = new ThemesPanel(parent)
+
+  private lazy val codeMessage = new JLabel(I18N.gui("code.message"))
 
   private lazy val okButton = new DialogButton(true, I18N.gui.get("common.buttons.ok"), () => ok())
   private lazy val cancelButton = new DialogButton(false, I18N.gui.get("common.buttons.cancel"), () => cancel())
 
-  private def reset() = {
-    preferences foreach (_.load(netLogoPrefs))
+  // sync parameter prevents infinite recursion with syncTheme on load (Isaac B 5/22/25)
+  private def reset(sync: Boolean): Unit = {
+    preferences.foreach(_.load(netLogoPrefs))
+    codePreferences.foreach(_.load(netLogoPrefs))
+
+    themesPanel.revert(sync)
   }
-  private def ok() = {
-    if (apply()) setVisible(false)
+
+  private def ok(): Unit = {
+    if (apply())
+      setVisible(false)
   }
+
   private def apply(): Boolean = {
     if (validatePrefs()) {
-      preferences foreach (_.save(netLogoPrefs))
-      return true
+      preferences.foreach(_.save(netLogoPrefs))
+      codePreferences.foreach(_.save(netLogoPrefs))
+
+      true
+    } else {
+      false
     }
-    false
   }
-  private def cancel() = {
-    reset()
+
+  private def cancel(): Unit = {
+    reset(true)
     setVisible(false)
   }
+
   private def validatePrefs(): Boolean = {
-    if (preferences.find(x => x.i18nKey == "loggingEnabled").get.
+    if (loggingPreferences.find(x => x.i18nKey == "loggingEnabled").get.
         asInstanceOf[Preferences.BooleanPreference].component.isSelected) {
-      val path = preferences.find(x => x.i18nKey == "logDirectory").get.
+      val path = loggingPreferences.find(x => x.i18nKey == "logDirectory").get.
                  asInstanceOf[Preferences.LogDirectory].textField.getText
       val file = new File(path)
       if (path.isEmpty) {
@@ -75,12 +95,23 @@ class PreferencesDialog(parent: Frame, preferences: Seq[Preference])
     true
   }
 
-  override def initGUI() = {
-    preferencesPanel.setBorder(BorderFactory.createEmptyBorder(20, 10, 20, 10))
-    preferences.foreach(pref =>
-      preferencesPanel.addField(
-        (if (pref.requirement != RequiredAction.None) I18N.gui(pref.requirement.toString) + " " else "") +
-        I18N.gui(pref.i18nKey), pref.component))
+  override def initGUI(): Unit = {
+    preferencesPanel.setBorder(new EmptyBorder(24, 12, 24, 12))
+
+    val codePreferencesContainer = new JPanel(new GridBagLayout) with Transparent {
+      val c = new GridBagConstraints
+
+      c.gridx = 0
+      c.insets = new Insets(24, 12, 24, 12)
+
+      add(codeMessage, c)
+
+      c.insets = new Insets(0, 12, 24, 12)
+
+      add(codePreferencesPanel, c)
+    }
+
+    loggingPreferencesPanel.setBorder(new EmptyBorder(24, 12, 24, 12))
 
     val buttonPanel = new ButtonPanel(Seq(okButton, cancelButton))
 
@@ -88,26 +119,72 @@ class PreferencesDialog(parent: Frame, preferences: Seq[Preference])
 
     getRootPane.setDefaultButton(okButton)
 
-    add(preferencesPanel, BorderLayout.CENTER)
+    tabs.addTabWithLabel(preferencesPanel, new TabLabel(tabs, I18N.gui("general"), preferencesPanel))
+    tabs.addTabWithLabel(codePreferencesContainer, new TabLabel(tabs, I18N.gui("code"), codePreferencesContainer))
+    tabs.addTabWithLabel(loggingPreferencesPanel, new TabLabel(tabs, I18N.gui("logging"), loggingPreferencesPanel))
+    tabs.addTabWithLabel(themesPanel, new TabLabel(tabs, I18N.gui("themes"), themesPanel))
+
+    add(tabs, BorderLayout.CENTER)
     add(buttonPanel, BorderLayout.SOUTH)
 
     pack()
-    reset()
+    reset(false)
 
     setResizable(false)
   }
 
-  override def onClose() = reset()
+  override def onClose() = reset(true)
+
+  def setSelectedIndex(index: Int): Unit = {
+    tabs.setSelectedIndex(index)
+  }
 
   override def syncTheme(): Unit = {
     getContentPane.setBackground(InterfaceColors.dialogBackground())
-    preferencesPanel.setBackground(InterfaceColors.dialogBackground())
 
     okButton.syncTheme()
     cancelButton.syncTheme()
 
     preferencesPanel.syncTheme()
+    codePreferencesPanel.syncTheme()
+    loggingPreferencesPanel.syncTheme()
+    themesPanel.syncTheme()
 
-    preferences.foreach(_.component.syncTheme())
+    codeMessage.setForeground(InterfaceColors.dialogText())
+  }
+}
+
+private class PreferenceContainer(preferences: Seq[Preference])
+  extends JPanel(new GridBagLayout) with Transparent with ThemeSync {
+
+  private implicit val i18nPrefix: I18N.Prefix = I18N.Prefix("tools.preferences")
+
+  val c = new GridBagConstraints
+
+  c.anchor = GridBagConstraints.WEST
+
+  val (labels, components) = preferences.foldLeft((Seq[JLabel](), Seq[ThemeSync]())) {
+    case ((labels, components), pref) =>
+      c.gridx = 0
+      c.insets = new Insets(3, 0, 3, 6)
+
+      val label = new JLabel(prefString(pref))
+
+      add(label, c)
+
+      c.gridx = 1
+      c.insets = new Insets(3, 0, 3, 0)
+
+      add(pref.component, c)
+
+      (labels :+ label, components :+ pref.component)
+  }
+
+  private def prefString(pref: Preference): String =
+    I18N.gui(pref.i18nKey) + pref.requirement.map(r => " " + I18N.gui(r.toString)).getOrElse("") + ":"
+
+  override def syncTheme(): Unit = {
+    labels.foreach(_.setForeground(InterfaceColors.dialogText()))
+    components.foreach(_.syncTheme())
   }
 }
