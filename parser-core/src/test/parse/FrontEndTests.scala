@@ -224,15 +224,15 @@ class FrontEndTests extends AnyFunSuite with BaseParserTest {
     assertResult(Seq("foo.nls", "bar"))(FrontEnd.findIncludes("__includes [\"foo.nls\" foo \"bar\" end"))
   }
 
-  test("findLibraries lists all libraries when there is a valid library statement") {
-    assertResult(Seq())(FrontEnd.findLibraries(""))
-    assertResult(Seq("FOO"))(FrontEnd.findLibraries("library ;; comment\n;; com2\n [foo]"))
-    frontEndError(FrontEnd.findLibraries, "library foo]", "Did not find expected open bracket for library declaration")
-    assertResult(Seq("FOO"))(FrontEnd.findLibraries("library [foo]"))
-    assertResult(Seq("FOO"))(FrontEnd.findLibraries("library [foo [alias bar]]"))
-    assertResult(Seq("FOO"))(FrontEnd.findLibraries("library [foo] to foo show \"bar\" end"))
-    assertResult(Seq("FOO"))(FrontEnd.findLibraries("library [foo] foo \"bar\" end"))
-    assertResult(Seq("FOO", "BAZ"))(FrontEnd.findLibraries("library [foo [alias bar]] to foo show \"bar\" end library [baz [alias qaz]]"))
+  test("findImports lists all modules when there is a valid import statement") {
+    assertResult(Seq())(FrontEnd.findImports(""))
+    assertResult(Seq("FOO"))(FrontEnd.findImports("import ;; comment\n;; com2\n [foo]"))
+    frontEndError(FrontEnd.findImports, "import foo]", "Did not find expected open bracket for import declaration")
+    assertResult(Seq("FOO"))(FrontEnd.findImports("import [foo]"))
+    assertResult(Seq("FOO"))(FrontEnd.findImports("import [foo [alias bar]]"))
+    assertResult(Seq("FOO"))(FrontEnd.findImports("import [foo] to foo show \"bar\" end"))
+    assertResult(Seq("FOO"))(FrontEnd.findImports("import [foo] foo \"bar\" end"))
+    assertResult(Seq("FOO", "BAZ"))(FrontEnd.findImports("import [foo [alias bar]] to foo show \"bar\" end import [baz [alias qaz]]"))
   }
 
   test("findProcedurePositions maps procedures to their critical syntax tokens") {
