@@ -81,29 +81,15 @@ class NoteWidget extends SingleErrorWidget with Transparent with Editable {
                       |    ul, ol {
                       |      margin-left: 8px;
                       |    }
-                      |    .style-unicode {
-                      |      font-family: 'Segoe UI', 'San Francisco', sans-serif
-                      |    }
                       |  </style>
                       |</head>""".stripMargin
 
   private def wrapText(): Unit = {
-    val rendered = {
-      if (_markdown) {
-        s"""<html>$css${renderer.render(parser.parse(_text))}</html>"""
-      } else {
-        s"""<html>$css${escapeHTML(_text)}</html>"""
-      }
+    if (_markdown) {
+      textLabel.setText(s"""<html>$css${renderer.render(parser.parse(_text))}</html>""")
+    } else {
+      textLabel.setText(s"""<html>$css${escapeHTML(_text)}</html>""")
     }
-
-    textLabel.setText(rendered.foldLeft("") {
-      case (s, c) =>
-        if (textLabel.getFont.canDisplay(c)) {
-          s + c
-        } else {
-          s + s"""<span class="style-unicode">$c</span>"""
-        }
-    })
 
     repaint()
   }
