@@ -141,42 +141,6 @@ object StructureParser {
     newProcedureTokens ++ aliases
   }
 
-  private def prefixProgramChanges(oldProgram: Program, newProgram: Program, prefix: String): Program = {
-    val oldUserGlobalsCount = oldProgram.userGlobals.size
-    val oldTurtleVarsCount = oldProgram.turtleVars.size
-    val oldPatchVarsCount = oldProgram.patchVars.size
-
-    val (oldUserGlobals, changedUserGlobals) = newProgram.userGlobals.splitAt(oldUserGlobalsCount)
-    val (oldTurtleVars, changedTurtleVars) = newProgram.turtleVars.splitAt(oldTurtleVarsCount)
-    val (oldPatchVars, changedPatchVars) = newProgram.patchVars.splitAt(oldPatchVarsCount)
-
-    newProgram.copy(
-      userGlobals = oldUserGlobals ++ changedUserGlobals.map(prefix + _),
-      turtleVars = oldTurtleVars ++ changedTurtleVars.map {case (k, v) => prefix + k -> v},
-      patchVars = oldPatchVars ++ changedPatchVars.map {case (k, v) => prefix + k -> v},
-      breeds = prefixChangedBreeds(oldProgram.breeds, newProgram.breeds, prefix),
-      linkBreeds = prefixChangedBreeds(oldProgram.linkBreeds, newProgram.linkBreeds, prefix))
-  }
-
-  private def prefixChangedBreeds(oldBreeds: ListMap[String, Breed], newBreeds: ListMap[String, Breed], prefix: String): ListMap[String, Breed] = {
-    val oldBreeds_ = oldBreeds.zip(newBreeds.values).map {case ((k, oldBreed), newBreed) =>
-      k -> prefixChangedBreedOwns(oldBreed, newBreed, prefix)
-    }.to(ListMap)
-    val newBreeds_ = newBreeds.drop(oldBreeds.size).map {case (k, v) =>
-      prefix + k -> v.copy(
-        name = prefix + v.name,
-        singular = prefix + v.singular,
-        owns = v.owns.map(prefix + _))
-    }.to(ListMap)
-
-    oldBreeds_ ++ newBreeds_
-  }
-
-  private def prefixChangedBreedOwns(oldBreed: Breed, newBreed: Breed, prefix: String): Breed = {
-    val changedOwns = newBreed.owns.diff(oldBreed.owns)
-    newBreed.copy(owns = oldBreed.owns ++ changedOwns.map(prefix + _))
-  }
-
   // TODO: extend to work with modules
   private def parsingWithExtensions(compilationData: CompilationOperand)
                                    (results: => StructureResults): StructureResults = {
