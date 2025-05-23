@@ -84,6 +84,7 @@ object StructureParser {
               val prefix = currentLibrary.alias.getOrElse(currentLibrary.name) + ":"
 
               newResults = newResults.copy(
+                program = firstResults.program, // Exclude globals, breeds, and breed variables in modules
                 procedures = addProcedureAliases(previousResults.procedures, newResults.procedures, currentLibrary.filename, prefix),
                 procedureTokens = addProcedureTokenAliases(previousResults.procedureTokens, newResults.procedureTokens, currentLibrary.filename, prefix)
               )
