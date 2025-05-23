@@ -190,10 +190,10 @@ class Compiler(dialect: Dialect) extends PresentationCompilerInterface {
       } else
         Some((includes zip includes.map(i => PathUtils.standardize(compilationEnvironment.resolvePath(i)))).toMap)
 
-    val libraries = frontEnd.findLibraries(source).map(_.toLowerCase + ".nls")
-    val librariesMap = Some((libraries zip libraries.map(compilationEnvironment.resolvePath)).toMap)
+    val imports = frontEnd.findImports(source).map(_.toLowerCase + ".nls")
+    val importsMap = Some((imports zip imports.map(compilationEnvironment.resolvePath)).toMap)
 
-    Some(includesMap.getOrElse(Map.empty[String, String]) ++ librariesMap.getOrElse(Map.empty[String, String]))
+    Some(includesMap.getOrElse(Map.empty[String, String]) ++ importsMap.getOrElse(Map.empty[String, String]))
   }
 
   // used by IdentifierEditor (Isaac B 7/15/25)

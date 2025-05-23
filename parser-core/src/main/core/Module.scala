@@ -2,7 +2,7 @@
 
 package org.nlogo.core
 
-case class Library(
+case class Import(
   name: String,
   filename: Option[String],
   alias: Option[String],

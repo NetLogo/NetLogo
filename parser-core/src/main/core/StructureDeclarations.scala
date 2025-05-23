@@ -32,19 +32,22 @@ object StructureDeclarations {
   case class Identifier(name: String, token: Token)
 
   case class DefineLibrary(name: String, version: String, exportSpecs: Seq[ExportSpec], token: Token)
-      extends Declaration
-  sealed trait ExportSpec
-  case class SimpleExport(name: String)
-      extends ExportSpec
-
-  case class Library(name: String, options: Seq[LibraryOption], token: Token)
       extends Declaration {
 
       override val start: Token = token
       override val end: Token = token
   }
-  case class LibraryEntry(name: String, options: Seq[LibraryOption], token: Token)
-  sealed trait LibraryOption
-  case class LibraryAlias(name: String, token: Token)
-      extends LibraryOption
+  sealed trait ExportSpec
+  case class SimpleExport(name: String)
+      extends ExportSpec
+
+  case class Import(name: String, options: Seq[ImportOption], token: Token)
+      extends Declaration {
+
+      override val start: Token = token
+      override val end: Token = token
+  }
+  sealed trait ImportOption
+  case class ImportAlias(name: String, token: Token)
+      extends ImportOption
 }

@@ -183,7 +183,7 @@ class AstRewriter(val tokenizer: TokenizerInterface, frontEnd: FrontEndInterface
   }
 
   private def rewriteSimple(visitor: RewriteFolder): String = {
-    basicParse(op)._1.filter(_.procedure.filename == "").foldLeft(RewriteContext(op.sources(""))) {
+    basicParse(op)._1.filter(_.procedure.filename.isEmpty).foldLeft(RewriteContext(op.sources(""))) {
       case (ctx, proc) =>
         visitor.visitProcedureDefinition(proc)(ctx)
     }.throughEnd.text
