@@ -15,7 +15,7 @@ import org.nlogo.swing.{ Button, CheckBox, ComboBox, TextField, Transparent }
 import org.nlogo.theme.ThemeSync
 
 object Preferences {
-  abstract class BooleanPreference(val i18nKey: String, val requirement: RequiredAction, default: Boolean) extends Preference {
+  abstract class BooleanPreference(val i18nKey: String, val requirement: Option[RequiredAction], default: Boolean) extends Preference {
     private val checkBox = new CheckBox
 
     override def component: CheckBox = checkBox
@@ -30,7 +30,7 @@ object Preferences {
     }
   }
 
-  abstract class StringPreference(val i18nKey: String, val requirement: RequiredAction, default: String) extends Preference {
+  abstract class StringPreference(val i18nKey: String, val requirement: Option[RequiredAction], default: String) extends Preference {
     val textField = new TextField(20, default)
 
     def component: JComponent & ThemeSync = textField
@@ -54,7 +54,7 @@ object Preferences {
 
     val i18nKey = "uiLanguage"
     val comboBox = new ComboBox(languages.toList)
-    val requirement = RequiredAction.Restart
+    val requirement = Some(RequiredAction.Restart)
 
     def component: JComponent & ThemeSync = comboBox
 
@@ -71,12 +71,12 @@ object Preferences {
     }
   }
 
-  object LoadLastOnStartup extends BooleanPreference("loadLastOnStartup", RequiredAction.None, false) {}
+  object LoadLastOnStartup extends BooleanPreference("loadLastOnStartup", None, false) {}
 
   class ReloadOnExternalChanges(tabs: TabsInterface) extends Preference {
     val i18nKey = "reloadOnExternalChanges"
     val checkBox = new CheckBox
-    val requirement = RequiredAction.None
+    val requirement = None
 
     def component: JComponent & ThemeSync = checkBox
 
@@ -92,12 +92,12 @@ object Preferences {
     }
   }
 
-  object IsLoggingEnabled extends BooleanPreference("loggingEnabled", RequiredAction.Restart, false) {}
+  object IsLoggingEnabled extends BooleanPreference("loggingEnabled", Some(RequiredAction.Restart), false) {}
 
   class LogDirectory(val frame: Frame) extends Preference {
-    val i18nKey         = "logDirectory"
-    val requirement = RequiredAction.Restart
-    val textField       = new TextField(20)
+    val i18nKey = "logDirectory"
+    val requirement = Some(RequiredAction.Restart)
+    val textField = new TextField(20)
     val component =
       new JPanel with Transparent with ThemeSync {
         add(textField)
@@ -141,9 +141,9 @@ object Preferences {
 
   }
 
-  object LogEvents extends StringPreference("logEvents", RequiredAction.Restart, "")
+  object LogEvents extends StringPreference("logEvents", Some(RequiredAction.Restart), "")
 
-  object IncludedFilesMenu  extends BooleanPreference("includedFilesMenu", RequiredAction.Restart, false) {}
+  object IncludedFilesMenu  extends BooleanPreference("includedFilesMenu", Some(RequiredAction.Restart), false) {}
 
   object ProceduresMenuSortOrder extends Preference {
     val i18nKey = "proceduresMenuSortOrder"
@@ -154,7 +154,7 @@ object Preferences {
     )
 
     val comboBox = new ComboBox(options)
-    val requirement = RequiredAction.None
+    val requirement = None
 
     def component: JComponent & ThemeSync = comboBox
 
@@ -168,15 +168,15 @@ object Preferences {
     }
   }
 
-  object FocusOnError extends BooleanPreference("focusOnError", RequiredAction.None, true) {}
+  object FocusOnError extends BooleanPreference("focusOnError", None, true) {}
 
-  object StartSeparateCodeTab extends BooleanPreference("startSeparateCodeTab", RequiredAction.None, false) {}
+  object StartSeparateCodeTab extends BooleanPreference("startSeparateCodeTab", None, false) {}
 
-  object BoldWidgetNames extends BooleanPreference("boldWidgetNames", RequiredAction.Reload, false) {}
+  object BoldWidgetNames extends BooleanPreference("boldWidgetNames", Some(RequiredAction.Reload), false) {}
 
   object UIScale extends Preference {
     val i18nKey = "uiScale"
-    val requirement = RequiredAction.Restart
+    val requirement = Some(RequiredAction.Restart)
     val textField = new TextField(20, "1.0")
 
     def component: JComponent & ThemeSync = textField
@@ -192,7 +192,7 @@ object Preferences {
 
   class IndentAutomatically(tabs: TabsInterface) extends Preference {
     val i18nKey = "indentAutomatically"
-    val requirement = RequiredAction.None
+    val requirement = None
 
     private val checkBox = new CheckBox("", (selected) => {
       tabs.smartTabbingEnabled = selected
@@ -214,7 +214,7 @@ object Preferences {
 
   class EditorLineNumbers(tabs: TabsInterface) extends Preference {
     val i18nKey = "editorLineNumbers"
-    val requirement = RequiredAction.None
+    val requirement = None
 
     private val checkBox = new CheckBox("", (selected) => {
       tabs.lineNumbersVisible = selected

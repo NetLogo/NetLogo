@@ -43,7 +43,7 @@ class ThemesPanel(frame: Frame & ThemeSync) extends JPanel(new GridBagLayout) wi
 
     c.gridx = 0
     c.anchor = GridBagConstraints.WEST
-    c.insets = new Insets(6, 6, 6, 6)
+    c.insets = new Insets(6, 6, 24, 6)
 
     add(label, c)
 
