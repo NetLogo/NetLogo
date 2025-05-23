@@ -10,20 +10,20 @@ import org.nlogo.core,
 object StructureConverter {
 
   import org.nlogo.core.Fail.exception
-  import core.{Library, DefineLibrary}
-  import core.StructureDeclarations.{Library => LibraryDecl, DefineLibrary => DefineLibraryDecl, _}
+  import core.{Import, DefineLibrary}
+  import core.StructureDeclarations.{Import => ImportDecl, DefineLibrary => DefineLibraryDecl, _}
 
   def convert(declarations: Seq[Declaration],
               displayName: Option[String],
               oldResults: StructureResults,
               subprogram: Boolean): StructureResults = {
-    val ls = declarations.collect {
-      case l: LibraryDecl =>
+    val ims = declarations.collect {
+      case l: ImportDecl =>
         val maybeAlias = l.options.map((x) => x match {
-          case LibraryAlias(name, _) => Some(name)
+          case ImportAlias(name, _) => Some(name)
         }).find(_.isDefined).flatten
         val filename = l.token.sourceLocation.filename
-        Library(l.name, if (filename.isEmpty()) None else Some(filename), maybeAlias, l.token)
+        Import(l.name, if (filename.isEmpty()) None else Some(filename), maybeAlias, l.token)
     }
     val dls = declarations.collect {
       case dl: DefineLibraryDecl =>
@@ -60,7 +60,7 @@ object StructureConverter {
           case e: Extensions =>
             e.names.map(_.token)
         }.flatten,
-      libraries = oldResults.libraries ++ ls,
+      imports = oldResults.imports ++ ims,
       defineLibrary = dls.headOption)
   }
 

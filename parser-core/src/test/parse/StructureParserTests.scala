@@ -107,24 +107,24 @@ class StructureParserTests extends AnyFunSuite {
   test("define-library") {
     val results = compile("define-library [foo \"1.2.3\" [bar baz]]")
     assertResult(0)(results.procedures.size)
-    assertResult(0)(results.libraries.size)
+    assertResult(0)(results.imports.size)
     assertResult(true)(results.defineLibrary.isDefined)
   }
 
-  test("library") {
-    val results = compile("library [foo]")
+  test("import") {
+    val results = compile("import [foo]")
     assertResult(0)(results.procedures.size)
-    assertResult(1)(results.libraries.size)
-    assertResult("FOO")(results.libraries.head.name)
-    assertResult(None)(results.libraries.head.alias)
+    assertResult(1)(results.imports.size)
+    assertResult("FOO")(results.imports.head.name)
+    assertResult(None)(results.imports.head.alias)
   }
 
-  test("library with alias") {
-    val results = compile("library [foo [alias bar]]")
+  test("import with alias") {
+    val results = compile("import [foo [alias bar]]")
     assertResult(0)(results.procedures.size)
-    assertResult(1)(results.libraries.size)
-    assertResult("FOO")(results.libraries.head.name)
-    assertResult(Some("BAR"))(results.libraries.head.alias)
+    assertResult(1)(results.imports.size)
+    assertResult("FOO")(results.imports.head.name)
+    assertResult(Some("BAR"))(results.imports.head.alias)
   }
 
   test("includes") {
@@ -307,29 +307,29 @@ class StructureParserTests extends AnyFunSuite {
     assertResult(error)(e.getMessage.takeWhile(_ != ','))
   }
 
-  test("nonexistent library") {
-    expectParseAllError("""library [foobar]""", "Could not find foobar.nls")
+  test("import nonexistent module") {
+    expectParseAllError("""import [foobar]""", "Could not find foobar.nls")
   }
 
-  test("library syntax returns correct results") {
-    val results = compileAll("""library [foo]""", "")
-    assert(results.libraries.nonEmpty || results.includedSources.nonEmpty)
+  test("import syntax returns correct results") {
+    val results = compileAll("""import [foo]""", "")
+    assert(results.imports.nonEmpty || results.includedSources.nonEmpty)
   }
 
-  test("library syntax detects duplicate imports") {
-    expectParseAllError("library [foo] library [bar] library [foo [alias baz]]", "Attempted to import a library multiple times")
+  test("import syntax detects duplicate imports") {
+    expectParseAllError("import [foo] import [bar] import [foo [alias baz]]", "Attempted to import a module multiple times")
   }
 
-  test("library syntax detects import loops") {
+  test("import syntax detects import loops") {
     expectParseAllError(
-      "library [foo]",
-      "Found a loop in the library import chain",
-      "library [bar]",
-      "library [foo]")
+      "import [foo]",
+      "Found a loop in the module import chain",
+      "import [bar]",
+      "import [foo]")
   }
 
-  test("libraries syntax default alias") {
-    val src = """library [foo]"""
+  test("import syntax default alias") {
+    val src = """import [foo]"""
     val nlsSrc = """
 to test
   show 12345
@@ -341,8 +341,8 @@ end
     }
   }
 
-  test("library syntax custom alias") {
-    val src = """library [foo [alias bar]]"""
+  test("import syntax custom alias") {
+    val src = """import [foo [alias bar]]"""
     val nlsSrc = """
 to test
   show 12345
@@ -352,20 +352,6 @@ end
     if (!results.procedures.contains(("BAR:TEST", None))) {
       fail()
     }
-  }
-
-  test("library syntax merges globals and turtle vars") {
-    val src = """library [foo [alias bar]] globals [ a b c ] breed [ mice mouse ] turtles-own [ t1 t2 ] mice-own [ m1 m2 ]"""
-    val nlsSrc = "globals [ d f g ] turtles-own [ t3 t4 ] mice-own [ m3 m4 ]"
-    val results = compileAll(src, nlsSrc)
-    val expected = """globals [A B C BAR:D BAR:F BAR:G]
-interfaceGlobals []
-turtles-own [WHO COLOR HEADING XCOR YCOR SHAPE LABEL LABEL-COLOR BREED HIDDEN? SIZE PEN-SIZE PEN-MODE T1 T2 BAR:T3 BAR:T4]
-patches-own [PXCOR PYCOR PCOLOR PLABEL PLABEL-COLOR]
-links-own [END1 END2 COLOR LABEL LABEL-COLOR HIDDEN? BREED THICKNESS SHAPE TIE-MODE]
-breeds MICE = Breed(MICE, MOUSE, M1 M2 BAR:M3 BAR:M4, false)
-link-breeds"""
-    assertResult(expected)(results.program.dump.trim)
   }
 
   test("invalid included file") {

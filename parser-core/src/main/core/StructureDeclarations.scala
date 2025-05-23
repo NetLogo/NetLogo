@@ -24,9 +24,9 @@ object StructureDeclarations {
   case class SimpleExport(name: String)
       extends ExportSpec
 
-  case class Library(name: String, options: Seq[LibraryOption], token: Token)
+  case class Import(name: String, options: Seq[ImportOption], token: Token)
       extends Declaration
-  sealed trait LibraryOption
-  case class LibraryAlias(name: String, token: Token)
-      extends LibraryOption
+  sealed trait ImportOption
+  case class ImportAlias(name: String, token: Token)
+      extends ImportOption
 }
