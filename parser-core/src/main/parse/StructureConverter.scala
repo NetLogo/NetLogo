@@ -9,12 +9,30 @@ import org.nlogo.core,
 
 object StructureConverter {
 
-  import core.StructureDeclarations._
+  import org.nlogo.core.Fail.exception
+  import core.{Import, DefineLibrary}
+  import core.StructureDeclarations.{Import => ImportDecl, DefineLibrary => DefineLibraryDecl, _}
 
   def convert(declarations: Seq[Declaration],
               displayName: Option[String],
               oldResults: StructureResults,
               subprogram: Boolean): StructureResults = {
+    val ims = declarations.collect {
+      case l: ImportDecl =>
+        val maybeAlias = l.options.map((x) => x match {
+          case ImportAlias(name, _) => Some(name)
+        }).find(_.isDefined).flatten
+        val filename = l.token.sourceLocation.filename
+        Import(l.name, if (filename.isEmpty()) None else Some(filename), maybeAlias, l.token)
+    }
+    val dls = declarations.collect {
+      case dl: DefineLibraryDecl =>
+        val exportedNames = dl.exportSpecs.map((x) => x match {
+          case SimpleExport(name) => Some(name)
+        }).flatten
+        val filename = dl.token.sourceLocation.filename
+        DefineLibrary(dl.name, if (filename.isEmpty()) None else Some(filename), dl.version, exportedNames, dl.token)
+    }
     val is = declarations.collect {
       case i: Includes =>
         i.names
@@ -24,13 +42,16 @@ object StructureConverter {
         buildProcedure(p, displayName)
     }
     ps.foreach(_._1.topLevel = subprogram)
+    if (dls.size > 1) {
+      exception(I18N.errors.get("compiler.StructureParser.libraryMultipleDefines"), dls(1).token)
+    }
     StructureResults(
       program =
         updateProgram(oldResults.program, declarations),
       procedures = oldResults.procedures ++
-        ps.map { case (pp, _) => pp.name -> pp},
+        ps.map { case (pp, _) => (pp.name, pp.filename) -> pp},
       procedureTokens = oldResults.procedureTokens ++ ps.map {
-        case (p, toks) => p.name -> toks
+        case (p, toks) => (p.name, p.filename) -> toks
       },
       includes = oldResults.includes ++ is,
       includedSources = oldResults.includedSources,
@@ -38,7 +59,9 @@ object StructureConverter {
         declarations.collect {
           case e: Extensions =>
             e.names.map(_.token)
-        }.flatten)
+        }.flatten,
+      imports = oldResults.imports ++ ims,
+      defineLibrary = dls.headOption)
   }
 
   def buildProcedure(p: Procedure, displayName: Option[String]): (FrontEndProcedure, Iterable[Token]) = {
