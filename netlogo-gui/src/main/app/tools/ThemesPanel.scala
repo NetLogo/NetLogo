@@ -42,16 +42,25 @@ class ThemesPanel(frame: Frame & ThemeSync) extends JPanel(new GridBagLayout) wi
     val c = new GridBagConstraints
 
     c.gridx = 0
-    c.anchor = GridBagConstraints.WEST
-    c.insets = new Insets(6, 6, 24, 6)
+    c.anchor = GridBagConstraints.NORTH
+    c.insets = new Insets(24, 12, 24, 12)
 
     add(label, c)
 
-    c.insets = new Insets(0, 6, 6, 6)
+    c.weighty = 1
+    c.insets = new Insets(0, 12, 24, 12)
 
-    add(lightButton, c)
-    add(darkButton, c)
-    add(classicButton, c)
+    add(new JPanel(new GridBagLayout) with Transparent {
+      val c = new GridBagConstraints
+
+      c.gridx = 0
+      c.anchor = GridBagConstraints.WEST
+      c.insets = new Insets(0, 6, 6, 6)
+
+      add(lightButton, c)
+      add(darkButton, c)
+      add(classicButton, c)
+    }, c)
 
     val themeButtons = new ButtonGroup
 

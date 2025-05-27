@@ -14,27 +14,29 @@ import org.nlogo.swing.{ ButtonPanel, DialogButton, FloatingTabbedPane, OptionPa
                          Transparent }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
-class PreferencesDialog(parent: Frame & ThemeSync, preferences: Seq[Preference], codePreferences: Seq[Preference],
+class PreferencesDialog(parent: Frame & ThemeSync, generalPreferences: Seq[Preference], codePreferences: Seq[Preference],
                         loggingPreferences: Seq[Preference]) extends ToolDialog(parent, "preferences") with ThemeSync {
 
   private lazy val netLogoPrefs = JavaPreferences.userRoot.node("/org/nlogo/NetLogo")
 
   private lazy val tabs = new FloatingTabbedPane
 
-  private lazy val preferencesPanel = new PreferenceContainer(preferences)
+  private lazy val generalPreferencesPanel = new PreferenceContainer(generalPreferences)
   private lazy val codePreferencesPanel = new PreferenceContainer(codePreferences)
   private lazy val loggingPreferencesPanel = new PreferenceContainer(loggingPreferences)
   private lazy val themesPanel = new ThemesPanel(parent)
 
   private lazy val codeMessage = new JLabel(I18N.gui("code.message"))
+  private lazy val loggingMessage = new JLabel(I18N.gui("logging.message"))
 
   private lazy val okButton = new DialogButton(true, I18N.gui.get("common.buttons.ok"), () => ok())
   private lazy val cancelButton = new DialogButton(false, I18N.gui.get("common.buttons.cancel"), () => cancel())
 
   // sync parameter prevents infinite recursion with syncTheme on load (Isaac B 5/22/25)
   private def reset(sync: Boolean): Unit = {
-    preferences.foreach(_.load(netLogoPrefs))
+    generalPreferences.foreach(_.load(netLogoPrefs))
     codePreferences.foreach(_.load(netLogoPrefs))
+    loggingPreferences.foreach(_.load(netLogoPrefs))
 
     themesPanel.revert(sync)
   }
@@ -46,8 +48,9 @@ class PreferencesDialog(parent: Frame & ThemeSync, preferences: Seq[Preference],
 
   private def apply(): Boolean = {
     if (validatePrefs()) {
-      preferences.foreach(_.save(netLogoPrefs))
+      generalPreferences.foreach(_.save(netLogoPrefs))
       codePreferences.foreach(_.save(netLogoPrefs))
+      loggingPreferences.foreach(_.save(netLogoPrefs))
 
       true
     } else {
@@ -85,7 +88,7 @@ class PreferencesDialog(parent: Frame & ThemeSync, preferences: Seq[Preference],
       }
     }
     try {
-      preferences.find(_.i18nKey == "uiScale").foreach(_.component.asInstanceOf[TextField].getText.toDouble)
+      generalPreferences.find(_.i18nKey == "uiScale").foreach(_.component.asInstanceOf[TextField].getText.toDouble)
     } catch {
       case e: NumberFormatException =>
         new OptionPane(this, I18N.gui.get("common.messages.error"), I18N.gui.get("tools.preferences.scaleError"),
@@ -96,22 +99,45 @@ class PreferencesDialog(parent: Frame & ThemeSync, preferences: Seq[Preference],
   }
 
   override def initGUI(): Unit = {
-    preferencesPanel.setBorder(new EmptyBorder(24, 12, 24, 12))
+    val generalPreferencesContainer = new JPanel(new GridBagLayout) with Transparent {
+      val c = new GridBagConstraints
+
+      c.anchor = GridBagConstraints.NORTH
+      c.weighty = 1
+      c.insets = new Insets(24, 12, 24, 12)
+
+      add(generalPreferencesPanel, c)
+    }
 
     val codePreferencesContainer = new JPanel(new GridBagLayout) with Transparent {
       val c = new GridBagConstraints
 
       c.gridx = 0
+      c.anchor = GridBagConstraints.NORTH
       c.insets = new Insets(24, 12, 24, 12)
 
       add(codeMessage, c)
 
+      c.weighty = 1
       c.insets = new Insets(0, 12, 24, 12)
 
       add(codePreferencesPanel, c)
     }
 
-    loggingPreferencesPanel.setBorder(new EmptyBorder(24, 12, 24, 12))
+    val loggingPreferencesContainer = new JPanel(new GridBagLayout) with Transparent {
+      val c = new GridBagConstraints
+
+      c.gridx = 0
+      c.anchor = GridBagConstraints.NORTH
+      c.insets = new Insets(24, 12, 24, 12)
+
+      add(loggingMessage, c)
+
+      c.weighty = 1
+      c.insets = new Insets(0, 12, 24, 12)
+
+      add(loggingPreferencesPanel, c)
+    }
 
     val buttonPanel = new ButtonPanel(Seq(okButton, cancelButton))
 
@@ -119,9 +145,9 @@ class PreferencesDialog(parent: Frame & ThemeSync, preferences: Seq[Preference],
 
     getRootPane.setDefaultButton(okButton)
 
-    tabs.addTabWithLabel(preferencesPanel, new TabLabel(tabs, I18N.gui("general"), preferencesPanel))
+    tabs.addTabWithLabel(generalPreferencesContainer, new TabLabel(tabs, I18N.gui("general"), generalPreferencesContainer))
     tabs.addTabWithLabel(codePreferencesContainer, new TabLabel(tabs, I18N.gui("code"), codePreferencesContainer))
-    tabs.addTabWithLabel(loggingPreferencesPanel, new TabLabel(tabs, I18N.gui("logging"), loggingPreferencesPanel))
+    tabs.addTabWithLabel(loggingPreferencesContainer, new TabLabel(tabs, I18N.gui("logging"), loggingPreferencesContainer))
     tabs.addTabWithLabel(themesPanel, new TabLabel(tabs, I18N.gui("themes"), themesPanel))
 
     add(tabs, BorderLayout.CENTER)
@@ -145,12 +171,13 @@ class PreferencesDialog(parent: Frame & ThemeSync, preferences: Seq[Preference],
     okButton.syncTheme()
     cancelButton.syncTheme()
 
-    preferencesPanel.syncTheme()
+    generalPreferencesPanel.syncTheme()
     codePreferencesPanel.syncTheme()
     loggingPreferencesPanel.syncTheme()
     themesPanel.syncTheme()
 
     codeMessage.setForeground(InterfaceColors.dialogText())
+    loggingMessage.setForeground(InterfaceColors.dialogText())
   }
 }
 
