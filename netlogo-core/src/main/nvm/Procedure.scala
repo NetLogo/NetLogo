@@ -9,8 +9,8 @@ import org.nlogo.{ api, core },
 import scala.collection.immutable.ListMap
 
 object Procedure {
-  type ProceduresMap = ListMap[String, Procedure]
-  val NoProcedures = ListMap[String, Procedure]()
+  type ProceduresMap = ListMap[Tuple2[String, Option[String]], Procedure]
+  val NoProcedures = ListMap[Tuple2[String, Option[String]], Procedure]()
 }
 
 class Procedure(
@@ -28,7 +28,7 @@ class Procedure(
         p.isReporter, p.name, p.nameToken, p.argTokens, p.procedureDeclaration,
         if (p.displayName == "") None else Some(p.displayName))
 
-    val filename = nameToken.filename
+    val filename: Option[String] = if (nameToken.filename.isEmpty()) None else Some(nameToken.filename)
     val isLambda = false
 
     var pos: Int = 0
@@ -71,7 +71,7 @@ class Procedure(
 
     protected def buildDisplayName(displayName: Option[String]): String = {
       val nameAndFile =
-        Option(filename)
+        filename
           .filter(_.nonEmpty)
           .map(name + " (" + _ + ")")
           .getOrElse(name)

@@ -33,8 +33,13 @@ class Backifier(
           extensionManager.replaceIdentifier(c.token.text.toUpperCase)
             .asInstanceOf[nlogoApi.Command])
 
-      case core.prim._call(proc) =>
-        new nvmprim._call(procedures(proc.name))
+      case core.prim._call(proc) => {
+        val filename = if (c.token == null || c.token.sourceLocation.filename.isEmpty)
+          None
+        else
+          Some(c.token.sourceLocation.filename)
+        new nvmprim._call(procedures((proc.name, filename)))
+      }
 
       case core.prim._let(Some(let), _) =>
         new nvmprim._let(let)
@@ -109,8 +114,13 @@ class Backifier(
       case core.prim._turtleorlinkvariable(varName, _) =>
         new nvmprim._turtleorlinkvariable(varName)
 
-      case core.prim._callreport(proc) =>
-        new nvmprim._callreport(procedures(proc.name))
+      case core.prim._callreport(proc) => {
+        val filename = if (r.token == null || r.token.sourceLocation.filename.isEmpty)
+          None
+        else
+          Some(r.token.sourceLocation.filename)
+        new nvmprim._callreport(procedures((proc.name, None)))
+      }
 
       case core.prim._errormessage(Some(let)) =>
         new nvmprim._errormessage(let)
