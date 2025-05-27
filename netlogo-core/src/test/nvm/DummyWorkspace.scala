@@ -3,7 +3,7 @@
 package org.nlogo.nvm
 
 import org.nlogo.core.{ AgentKind, DummyCompilationEnvironment }
-import org.nlogo.agent.{Agent, AgentSet, World2D}
+import org.nlogo.agent.{ Agent, AgentSet, OutputObject, World2D }
 import org.nlogo.api.{ CommandRunnable, ExportPlotWarningAction, ImportErrorHandler, JobOwner, LabProtocol,
                        OutputDestination, ReporterRunnable }
 import org.nlogo.core.WorldDimensions
@@ -38,6 +38,7 @@ class DummyWorkspace extends Workspace {
   override def waitForQueuedEvents() = unsupported
   override def outputObject(obj: AnyRef, owner: AnyRef, addNewline: Boolean, readable: Boolean,
                    destination: OutputDestination) = unsupported
+  override def sendOutput(oo: OutputObject, toOutputArea: Boolean): Unit = unsupported
   override def clearOutput() = unsupported
   override def clearAll() = unsupported
   override def compileForRun(source: String, context: Context, reporter: Boolean) = unsupported

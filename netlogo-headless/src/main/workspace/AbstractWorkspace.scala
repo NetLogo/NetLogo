@@ -603,9 +603,6 @@ object AbstractWorkspaceTraits {
 
     def clearOutput(): Unit
 
-    // called from job thread - ST 10/1/03
-    def sendOutput(oo: agent.OutputObject, toOutputArea: Boolean): Unit
-
     /// importing
     def setOutputAreaContents(text: String): Unit = {
       try {
@@ -636,7 +633,6 @@ object AbstractWorkspaceTraits {
           sendOutput(oo, destination == api.OutputDestination.OutputArea)
       }
     }
-
   }
 
   trait Importing { this: nvm.Workspace =>

@@ -20,26 +20,13 @@ import org.nlogo.workspace.{ AbstractWorkspace, WorkspaceFactory }
 
 import scala.collection.mutable.Set
 
-object Supervisor {
-  // RunMode determines what context Supervisor is running in, to ensure the code can be correctly reused
-  sealed abstract class RunMode
-  case object GUI extends RunMode
-  case object Extension extends RunMode
-
-  def runFromExtension(protocol: LabProtocol, workspace: AbstractWorkspace, saveProtocol: (LabProtocol) => Unit): Unit = {
-    new Supervisor(workspace.asInstanceOf[GUIWorkspace].getFrame, workspace, protocol, null, null, saveProtocol,
-                   Extension).start()
-  }
-}
-
 class Supervisor(
   parent: Window,
   val workspace: AbstractWorkspace,
   protocol: LabProtocol,
   factory: WorkspaceFactory,
   dialogFactory: EditDialogFactory,
-  saveProtocol: (LabProtocol) => Unit,
-  runMode: Supervisor.RunMode
+  saveProtocol: LabProtocol => Unit
 ) extends Thread("BehaviorSpace Supervisor") {
   private implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("tools.behaviorSpace")
   var options = protocol.runOptions
@@ -109,7 +96,7 @@ class Supervisor(
         return
     }
 
-    if (runMode == Supervisor.GUI && (options == null || options.firstRun)) {
+    if (options == null || options.firstRun) {
       options =
         try {
           new RunOptionsDialog(parent, dialogFactory, workspace.guessExportName(worker.protocol.name)).get
@@ -232,7 +219,7 @@ class Supervisor(
     workspace.setExportPlotWarningAction(ExportPlotWarningAction.Warn)
     workspace.setTriedToExportPlot(false)
     queue.enqueue(workspace)
-    (2 to options.threadCount).foreach{num =>
+    (2 to options.threadCount.min(protocol.repetitions)).foreach{num =>
       val w = factory.newInstance
       // We want to print any plot compilation errors for just one of
       // the headless workspaces.
@@ -327,9 +314,7 @@ class Supervisor(
   }
 
   private def guiError(message: String): Unit = {
-    if (runMode == Supervisor.GUI) {
-      new OptionPane(workspace.asInstanceOf[GUIWorkspace].getFrame, I18N.gui("error.title"), message,
-                     OptionPane.Options.Ok, OptionPane.Icons.Error)
-    }
+    new OptionPane(workspace.asInstanceOf[GUIWorkspace].getFrame, I18N.gui("error.title"), message,
+                   OptionPane.Options.Ok, OptionPane.Icons.Error)
   }
 }
