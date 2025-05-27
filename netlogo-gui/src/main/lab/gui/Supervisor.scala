@@ -219,7 +219,7 @@ class Supervisor(
     workspace.setExportPlotWarningAction(ExportPlotWarningAction.Warn)
     workspace.setTriedToExportPlot(false)
     queue.enqueue(workspace)
-    (2 to options.threadCount).foreach{num =>
+    (2 to options.threadCount.min(protocol.repetitions)).foreach{num =>
       val w = factory.newInstance
       // We want to print any plot compilation errors for just one of
       // the headless workspaces.
