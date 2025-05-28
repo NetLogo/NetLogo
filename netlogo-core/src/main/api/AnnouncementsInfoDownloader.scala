@@ -5,6 +5,7 @@ package org.nlogo.api
 import java.io.File
 import java.net.URL
 import java.time.LocalDate
+import java.util.prefs.Preferences
 
 import scala.io.Source
 import scala.concurrent.{ ExecutionContext, Future }
@@ -78,7 +79,12 @@ object AnnouncementsInfoDownloader extends InfoDownloader {
 
         }
 
-      announcements.filter((x) => x.endDate.map(_.isAfter(LocalDate.now())).getOrElse(true))
+      val prefs = Preferences.userRoot.node("/org/nlogo/NetLogo")
+
+      if (prefs.get("announce.debug", "false") != "true")
+        announcements.filter((x) => x.endDate.map(_.isAfter(LocalDate.now())).getOrElse(true))
+      else
+        announcements
 
     } catch {
       case ex: ParseException =>

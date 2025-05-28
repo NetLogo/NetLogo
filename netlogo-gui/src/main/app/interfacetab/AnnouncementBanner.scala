@@ -95,7 +95,8 @@ class AnnouncementBanner extends JPanel with MouseUtils with ThemeSync {
   }
 
   def appendData(anns: Seq[Announcement]): Unit = {
-    val latestReadID = prefs.get(prefKey, "-1").toInt
+    val isDebug      = prefs.get("announce.debug", "false") == "true"
+    val latestReadID = if (!isDebug) prefs.get(prefKey, "-1").toInt else -1
     announcements ++= anns.filter(_.id > latestReadID)
     renderData()
   }
