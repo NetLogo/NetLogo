@@ -144,7 +144,27 @@ object Preferences {
 
   object LogEvents extends StringPreference("logEvents", Some(RequiredAction.Restart), "")
 
-  object IncludedFilesMenu  extends BooleanPreference("includedFilesMenu", Some(RequiredAction.Restart), false) {}
+  class IncludedFilesMenu(tabs: TabsInterface) extends Preference {
+    val i18nKey = "includedFilesMenu"
+    val requirement = None
+
+    private val checkBox = new CheckBox("", (selected) => {
+      tabs.setIncludedFilesShown(selected)
+    })
+
+    def component: CheckBox = checkBox
+
+    def load(prefs: JavaPreferences): Unit = {
+      val value = prefs.get(i18nKey, "true").toBoolean
+
+      checkBox.setSelected(value)
+      tabs.setIncludedFilesShown(value)
+    }
+
+    def save(prefs: JavaPreferences): Unit = {
+      prefs.put(i18nKey, checkBox.isSelected.toString)
+    }
+  }
 
   object ProceduresMenuSortOrder extends Preference {
     val i18nKey = "proceduresMenuSortOrder"

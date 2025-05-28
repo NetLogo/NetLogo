@@ -49,7 +49,7 @@ with MenuAction {
     ) ++ (if (System.getProperty("os.name").contains("Linux")) Seq(Preferences.UIScale) else Nil),
     Seq(
       Preferences.ProceduresMenuSortOrder,
-      Preferences.IncludedFilesMenu,
+      new Preferences.IncludedFilesMenu(tabs),
       Preferences.FocusOnError,
       Preferences.StartSeparateCodeTab,
       new Preferences.IndentAutomatically(tabs),
