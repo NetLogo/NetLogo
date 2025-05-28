@@ -321,6 +321,11 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     getExternalFileTabs.foreach(_.lineNumbersVisible = visible)
   }
 
+  def setIncludedFilesShown(visible: Boolean): Unit = {
+    mainCodeTab.setIncludedFilesShown(visible)
+    getExternalFileTabs.foreach(_.setIncludedFilesShown(visible))
+  }
+
   def watchingFiles: Boolean = watcherThread != null
   def watchingFiles_=(value: Boolean): Unit = setWatchingFiles(value)
 

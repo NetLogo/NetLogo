@@ -253,6 +253,10 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
   def lineNumbersVisible = scrollableEditor.lineNumbersEnabled
   def lineNumbersVisible_=(visible: Boolean) = scrollableEditor.setLineNumbersEnabled(visible)
 
+  def setIncludedFilesShown(visible: Boolean): Unit = {
+    includedFilesMenu.setAlwaysVisible(visible)
+  }
+
   def isTextSelected: Boolean = text.getSelectedText != null && !text.getSelectedText.isEmpty
 
   def close(): Unit = {}
