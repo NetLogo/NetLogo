@@ -42,9 +42,6 @@ trait Chooser extends SingleErrorWidget with MouseWheelListener {
     }
   }
 
-  if (_boldName)
-    label.setFont(label.getFont.deriveFont(Font.BOLD))
-
   setLayout(new GridBagLayout)
 
   addMouseWheelListener(this)
@@ -69,6 +66,8 @@ trait Chooser extends SingleErrorWidget with MouseWheelListener {
     }
 
     add(label, c)
+
+    label.setFont(label.getFont.deriveFont(_boldState))
 
     c.fill = GridBagConstraints.BOTH
     c.weighty = 1

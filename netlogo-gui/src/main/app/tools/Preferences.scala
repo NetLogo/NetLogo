@@ -13,6 +13,7 @@ import org.nlogo.app.common.TabsInterface
 import org.nlogo.core.I18N
 import org.nlogo.swing.{ Button, CheckBox, ComboBox, TextField, Transparent }
 import org.nlogo.theme.ThemeSync
+import org.nlogo.window.AbstractWidgetPanel
 
 object Preferences {
   abstract class BooleanPreference(val i18nKey: String, val requirement: Option[RequiredAction], default: Boolean) extends Preference {
@@ -172,7 +173,27 @@ object Preferences {
 
   object StartSeparateCodeTab extends BooleanPreference("startSeparateCodeTab", None, false) {}
 
-  object BoldWidgetNames extends BooleanPreference("boldWidgetNames", Some(RequiredAction.Reload), false) {}
+  class BoldWidgetText(widgetPanel: AbstractWidgetPanel) extends Preference {
+    val i18nKey = "boldWidgetText"
+    val requirement = None
+
+    private val checkBox = new CheckBox("", (selected) => {
+      widgetPanel.setBoldWidgetText(selected)
+    })
+
+    override def component: CheckBox = checkBox
+
+    def load(prefs: JavaPreferences): Unit = {
+      val value = prefs.get(i18nKey, "true").toBoolean
+
+      checkBox.setSelected(value)
+      widgetPanel.setBoldWidgetText(value)
+    }
+
+    def save(prefs: JavaPreferences): Unit = {
+      prefs.put(i18nKey, checkBox.isSelected.toString)
+    }
+  }
 
   object UIScale extends Preference {
     val i18nKey = "uiScale"
