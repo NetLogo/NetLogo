@@ -16,7 +16,7 @@ import org.nlogo.core.I18N
 import org.nlogo.shape.ShapesManagerInterface
 import org.nlogo.swing.{ OptionPane, UserAction }, UserAction._
 import org.nlogo.theme.ThemeSync
-import org.nlogo.window.{ CopyOnly, JFXColorPicker, LinkRoot }
+import org.nlogo.window.{ AbstractWidgetPanel, CopyOnly, JFXColorPicker, LinkRoot }
 import org.nlogo.workspace.AbstractWorkspaceScala
 
 abstract class ShowDialogAction(name: String) extends AbstractAction(name) with ThemeSync {
@@ -34,7 +34,7 @@ abstract class ShowDialogAction(name: String) extends AbstractAction(name) with 
   }
 }
 
-class ShowPreferencesDialog(frame: Frame & ThemeSync, tabs: TabsInterface)
+class ShowPreferencesDialog(frame: Frame & ThemeSync, tabs: TabsInterface, widgetPanel: AbstractWidgetPanel)
 extends AbstractAction(I18N.gui.get("menu.tools.preferences")) with ThemeSync
 with MenuAction {
   category = ToolsCategory
@@ -45,7 +45,7 @@ with MenuAction {
       Preferences.Language,
       Preferences.LoadLastOnStartup,
       new Preferences.ReloadOnExternalChanges(tabs),
-      Preferences.BoldWidgetNames
+      new Preferences.BoldWidgetText(widgetPanel)
     ) ++ (if (System.getProperty("os.name").contains("Linux")) Seq(Preferences.UIScale) else Nil),
     Seq(
       Preferences.ProceduresMenuSortOrder,

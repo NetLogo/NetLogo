@@ -685,7 +685,7 @@ class App extends org.nlogo.window.Event.LinkChild
     new ZoomedEvent(0).raise(this)
   }
 
-  lazy val openPreferencesDialog = new ShowPreferencesDialog(frame, _tabManager)
+  lazy val openPreferencesDialog = new ShowPreferencesDialog(frame, _tabManager, _tabManager.interfaceTab.iP)
 
   lazy val openAboutDialog = new ShowAboutWindow(frame)
 

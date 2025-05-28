@@ -52,13 +52,10 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
   plot.dirtyListener = Some(this)
   val canvas = new PlotCanvas(plot)
   private val canvasPanel = new CanvasPanel(canvas)
-  private val legend = new PlotLegend(this, _boldName)
+  private val legend = new PlotLegend(this)
   private val nameLabel = new JLabel(I18N.gui.get("edit.plot.previewName"))
   private val xAxis = new XAxisLabels(this)
   private val yAxis = new YAxisLabels(this)
-
-  if (_boldName)
-    nameLabel.setFont(nameLabel.getFont.deriveFont(Font.BOLD))
 
   displayName = plot.name
 
@@ -91,6 +88,7 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
     add(nameLabel, c)
 
     nameLabel.setText(plot.name)
+    nameLabel.setFont(nameLabel.getFont.deriveFont(_boldState))
 
     //ROW2
     //-----------------------------------------
@@ -105,6 +103,8 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
     c.fill = GridBagConstraints.VERTICAL
 
     add(yAxis, c)
+
+    yAxis.setBoldState(_boldState)
 
     c.gridwidth = GridBagConstraints.RELATIVE
     c.weightx = 3.0
@@ -132,6 +132,8 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
 
     add(xAxis, c)
 
+    xAxis.setBoldState(_boldState)
+
     c.weightx = 0.0
     c.weighty = 0.0
     c.gridwidth = 1
@@ -152,6 +154,8 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
     c.insets = new Insets(zoom(2), zoom(10), zoom(8), zoom(10))
 
     add(legend, c)
+
+    legend.setBoldState(_boldState)
 
     // make sure to update the gui components in case
     // something changed underneath ev 8/26/08
@@ -393,12 +397,6 @@ object AbstractPlotWidget {
     private val label: JLabel = new JLabel("", SwingConstants.CENTER)
     private val max: JLabel = new JLabel()
 
-    if (plot.boldName) {
-      min.setFont(min.getFont.deriveFont(Font.BOLD))
-      label.setFont(label.getFont.deriveFont(Font.BOLD))
-      max.setFont(max.getFont.deriveFont(Font.BOLD))
-    }
-
     val gridbag: GridBagLayout = new GridBagLayout
     setLayout(gridbag)
     val c: GridBagConstraints = new GridBagConstraints
@@ -424,6 +422,12 @@ object AbstractPlotWidget {
     gridbag.setConstraints(max, c)
     add(max)
 
+    def setBoldState(state: Int): Unit = {
+      min.setFont(min.getFont.deriveFont(state))
+      label.setFont(label.getFont.deriveFont(state))
+      max.setFont(max.getFont.deriveFont(state))
+    }
+
     override def paintComponent(g: Graphics) = {
       setBackground(InterfaceColors.plotBackground())
 
@@ -448,12 +452,6 @@ object AbstractPlotWidget {
     private val max: JLabel = new JLabel()
     private val min: JLabel = new JLabel()
 
-    if (plot.boldName) {
-      min.setFont(min.getFont.deriveFont(Font.BOLD))
-      label.setFont(label.getFont.deriveFont(Font.BOLD))
-      max.setFont(max.getFont.deriveFont(Font.BOLD))
-    }
-
     val gridbag: GridBagLayout = new GridBagLayout
     setLayout(gridbag)
     val c: GridBagConstraints = new GridBagConstraints
@@ -475,6 +473,12 @@ object AbstractPlotWidget {
     c.fill = java.awt.GridBagConstraints.NONE
     gridbag.setConstraints(min, c)
     add(min)
+
+    def setBoldState(state: Int): Unit = {
+      min.setFont(min.getFont.deriveFont(state))
+      label.setFont(label.getFont.deriveFont(state))
+      max.setFont(max.getFont.deriveFont(state))
+    }
 
     override def paintComponent(g: Graphics) = {
       setBackground(InterfaceColors.plotBackground())

@@ -47,9 +47,6 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
     addMouseListener(mouseListener)
     label.addMouseListener(mouseListener)
     toggle.addMouseListener(mouseListener)
-
-    if (_boldName)
-      label.setFont(label.getFont.deriveFont(Font.BOLD))
   }
 
   override def initGUI(): Unit = {
@@ -79,6 +76,8 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
       c.weightx = 1
 
       add(label, c)
+
+      label.setFont(label.getFont.deriveFont(_boldState))
 
       c.insets = new Insets(zoom(8), 0, zoom(8), zoom(8))
       c.fill = GridBagConstraints.VERTICAL

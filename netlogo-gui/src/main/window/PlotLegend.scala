@@ -9,8 +9,10 @@ import org.nlogo.plot.PlotPen
 import org.nlogo.swing.Transparent
 import org.nlogo.theme.InterfaceColors
 
-class PlotLegend(widget: AbstractPlotWidget, boldName: Boolean)
+class PlotLegend(widget: AbstractPlotWidget)
   extends JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0)) with Transparent {
+
+  private var boldState: Int = Font.PLAIN
 
   var open = false
 
@@ -34,6 +36,12 @@ class PlotLegend(widget: AbstractPlotWidget, boldName: Boolean)
     revalidate()
   }
 
+  def setBoldState(state: Int): Unit = {
+    boldState = state
+
+    refresh()
+  }
+
   private class LegendItem(pen: PlotPen) extends JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0)) with Transparent {
     add(new JPanel {
       setBackground(new Color(pen.color))
@@ -43,8 +51,7 @@ class PlotLegend(widget: AbstractPlotWidget, boldName: Boolean)
     })
 
     add(new JLabel(pen.name) {
-      if (boldName)
-        setFont(getFont.deriveFont(Font.BOLD))
+      setFont(getFont.deriveFont(boldState))
 
       override def paintComponent(g: Graphics): Unit = {
         setForeground(InterfaceColors.widgetText())

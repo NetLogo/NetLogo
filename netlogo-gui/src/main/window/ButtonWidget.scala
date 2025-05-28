@@ -88,9 +88,6 @@ class ButtonWidget(random: MersenneTwisterFast, colorizer: Colorizer) extends Jo
 
   keyLabel.setFont(keyLabel.getFont.deriveFont(12.0f))
 
-  if (_boldName)
-    nameLabel.setFont(nameLabel.getFont.deriveFont(Font.BOLD))
-
   agentLabel.setVisible(false)
 
   keyLabel.addMouseListener(this)
@@ -126,10 +123,16 @@ class ButtonWidget(random: MersenneTwisterFast, colorizer: Colorizer) extends Jo
     c.insets = new Insets(0, 0, 3, 3)
 
     add(foreverLabel, c)
+
+    initGUI()
+
+    addMouseListener(this)
+    addMouseMotionListener(this)
   }
 
-  addMouseListener(this)
-  addMouseMotionListener(this)
+  override def initGUI(): Unit = {
+    nameLabel.setFont(nameLabel.getFont.deriveFont(_boldState))
+  }
 
   override def editPanel: EditPanel = new ButtonEditPanel(this, colorizer)
 

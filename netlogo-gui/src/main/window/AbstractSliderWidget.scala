@@ -124,11 +124,6 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
     }
   }
 
-  if (_boldName) {
-    nameComponent.setFont(nameComponent.getFont.deriveFont(Font.BOLD))
-    unitsComponent.setFont(unitsComponent.getFont.deriveFont(Font.BOLD))
-  }
-
   locally {
     val mouseListener = new MouseAdapter {
       override def mousePressed(e: MouseEvent): Unit = {
@@ -199,6 +194,13 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
   add(valueComponent)
   add(unitsComponent)
   add(slider)
+
+  initGUI()
+
+  override def initGUI(): Unit = {
+    nameComponent.setFont(nameComponent.getFont.deriveFont(_boldState))
+    unitsComponent.setFont(unitsComponent.getFont.deriveFont(_boldState))
+  }
 
   def constraint = sliderData.constraint
   def setSliderConstraint(con: SliderConstraint) = {
