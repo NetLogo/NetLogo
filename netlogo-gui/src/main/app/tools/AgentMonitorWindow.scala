@@ -116,6 +116,7 @@ class AgentMonitorWindow(val agentKind: AgentKind, _agent: Agent, radius: Double
   def agentChangeNotify(oldAgent: Agent): Unit = {
     dead = agent != null && agent.id == -1
     setTitle(getUpdatedTitle)
+    monitor.setPrompt()
     manager.agentChangeNotify(this, oldAgent)
     pack()
   }

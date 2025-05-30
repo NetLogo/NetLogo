@@ -52,7 +52,7 @@ class LinePrompt(commandLine: CommandLine) extends JLabel {
     }
   })
 
-  private def getPrompt = {
+  protected def getPrompt: String = {
     commandLine.kind match {
       case AgentKind.Observer => CommandLine.OBSERVER_PROMPT
       case AgentKind.Turtle   => CommandLine.TURTLE_PROMPT

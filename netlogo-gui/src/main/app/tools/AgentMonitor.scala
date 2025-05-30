@@ -6,7 +6,7 @@ import java.awt.{ BorderLayout, Dimension, GridBagConstraints, GridBagLayout, In
 import java.util.{ List => JList }
 import javax.swing.{ JDialog, JPanel, ScrollPaneConstants }
 
-import org.nlogo.agent.Agent
+import org.nlogo.agent.{ Agent, Link, Patch, Patch3D, Turtle }
 import org.nlogo.app.common.{ CommandLine, HistoryPrompt, LinePrompt }
 import org.nlogo.awt.Hierarchy
 import org.nlogo.core.{ AgentKind, I18N }
@@ -47,7 +47,7 @@ abstract class AgentMonitor(val workspace: GUIWorkspace, window: JDialog)
     override def useAgentClass = false
   }
 
-  private val prompt = new LinePrompt(commandLine)
+  private val prompt = new AgentLinePrompt(commandLine)
   private val historyPrompt = new HistoryPrompt(commandLine)
   private val agentEditor = new AgentMonitorEditor(this)
 
@@ -165,6 +165,12 @@ abstract class AgentMonitor(val workspace: GUIWorkspace, window: JDialog)
     }
   }
 
+  // this is supposed to happen automatically on repaint,
+  // but for some reason calling repaint doesn't always repaint it (Isaac B 5/29/25)
+  def setPrompt(): Unit = {
+    prompt.setText(prompt.getPrompt)
+  }
+
   /// helpers
 
   private def sameVars(vars1: JList[String], vars2: JList[String]): Boolean =
@@ -186,5 +192,14 @@ abstract class AgentMonitor(val workspace: GUIWorkspace, window: JDialog)
     propertiesPane.syncTheme()
     separator.syncTheme()
     commandLine.syncTheme()
+  }
+
+  private class AgentLinePrompt(commandLine: CommandLine) extends LinePrompt(commandLine) {
+    override def getPrompt: String = {
+      agent match {
+        case _: Turtle | _: Patch | _: Link => agent.toString + ">"
+        case _ => ">"
+      }
+    }
   }
 }
