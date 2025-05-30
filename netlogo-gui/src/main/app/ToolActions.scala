@@ -159,8 +159,12 @@ class ConvertWidgetSizes(frame: Frame, widgetPanel: WidgetPanel)
       case 0 =>
         widgetPanel.convertWidgetSizes(true)
 
+        App.app.smartPack(frame.getPreferredSize, false)
+
       case 1 =>
         widgetPanel.convertWidgetSizes(false)
+
+        App.app.smartPack(frame.getPreferredSize, false)
 
       case _ =>
     }

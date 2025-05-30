@@ -230,7 +230,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
     getWrappers.filter(ww => ww.getBounds().contains(point)).sortBy(getPosition(_)).headOption
 
   override def empty: Boolean =
-    getComponents.exists {
+    !getComponents.exists {
       case w: WidgetWrapper => true
       case _ => false
     }
