@@ -225,21 +225,25 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
   def increment: Double = sliderData.increment
 
   def value: Double = sliderData.value
+
+  private def roundToPrecision(d: Double): Double =
+    BigDecimal(d).setScale(sliderData.precision, BigDecimal.RoundingMode.HALF_DOWN).toDouble
+
   def setValue(d: Double): Unit = {
-    sliderData.value = d
+    sliderData.value = roundToPrecision(d)
     valueComponent.setText(valueString(value))
     slider.setValue(((value - minimum) / increment).round.asInstanceOf[Int])
     repaint()
     new Events.WidgetEditedEvent(this).raise(this)
   }
   def setValue(d: Double, inc: Double): Unit = {
-    sliderData.value = d
+    sliderData.value = roundToPrecision(d)
     valueComponent.setText(valueString(value))
     slider.setValue(((value - minimum) / inc).round.asInstanceOf[Int])
     repaint()
   }
   def setValue(d: Double, buttonRelease: Boolean): Unit = {
-    sliderData.value_=(d, buttonRelease)
+    sliderData.value_=(roundToPrecision(d), buttonRelease)
     valueComponent.setText(valueString(value))
     slider.setValue(((value - minimum) / increment).round.asInstanceOf[Int])
     repaint()
