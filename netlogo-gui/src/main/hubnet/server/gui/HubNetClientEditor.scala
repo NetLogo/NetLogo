@@ -3,7 +3,7 @@
 package org.nlogo.hubnet.server.gui
 
 import java.awt.{ BorderLayout, Component, Dimension, GridBagConstraints, GridBagLayout, Insets }
-import java.awt.event.ActionEvent
+import java.awt.event.{ ActionEvent, WindowAdapter, WindowEvent }
 import javax.swing.{ AbstractAction, JFrame, JMenuBar, ScrollPaneConstants }
 
 import org.nlogo.api.ModelType
@@ -56,14 +56,18 @@ class HubNetClientEditor(workspace: GUIWorkspace,
     add(menuFactory.createHelpMenu)
   }
 
-  locally {
-    setTitle(getTitle(workspace.modelNameForDisplay, workspace.getModelDir, workspace.getModelType))
-    getContentPane.setLayout(new BorderLayout())
-    getContentPane.add(scrollPane, BorderLayout.CENTER)
-    getContentPane.add(toolbar, BorderLayout.NORTH)
-    setJMenuBar(menuBar)
-    setSize(getPreferredSize)
-  }
+  setTitle(getTitle(workspace.modelNameForDisplay, workspace.getModelDir, workspace.getModelType))
+  getContentPane.setLayout(new BorderLayout())
+  getContentPane.add(scrollPane, BorderLayout.CENTER)
+  getContentPane.add(toolbar, BorderLayout.NORTH)
+  setJMenuBar(menuBar)
+  setSize(getPreferredSize)
+
+  addWindowFocusListener(new WindowAdapter {
+    override def windowGainedFocus(e: WindowEvent): Unit = {
+      interfacePanel.requestFocus()
+    }
+  })
 
   override def getPreferredSize = if (interfacePanel.empty) new Dimension(700, 550) else super.getPreferredSize
   def getLinkParent = linkParent
