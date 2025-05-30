@@ -3,8 +3,8 @@
 package org.nlogo.app.interfacetab
 
 import java.awt.{ Component, Dimension, Graphics, MouseInfo, Point, Rectangle, Color => AwtColor }
-import java.awt.event.{ ActionEvent, KeyAdapter, KeyEvent, KeyListener, MouseAdapter, MouseEvent, MouseListener,
-                        MouseMotionAdapter, MouseMotionListener }
+import java.awt.event.{ ActionEvent, FocusEvent, FocusAdapter, KeyAdapter, KeyEvent, KeyListener, MouseAdapter,
+                        MouseEvent, MouseListener, MouseMotionAdapter, MouseMotionListener }
 import javax.swing.{ AbstractAction, JComponent, JLayeredPane, SwingUtilities }
 
 import org.nlogo.app.common.EditorFactory
@@ -12,7 +12,7 @@ import org.nlogo.awt.{ Fonts => NlogoFonts, Mouse => NlogoMouse }
 import org.nlogo.core.{ I18N, Button => CoreButton, Chooser => CoreChooser, InputBox => CoreInputBox,
   Monitor => CoreMonitor, Plot => CorePlot, Slider => CoreSlider, Switch => CoreSwitch, TextBox => CoreTextBox,
   View => CoreView, Widget => CoreWidget }
-import org.nlogo.editor.{ EditorArea, EditorConfiguration }
+import org.nlogo.editor.{ EditorArea, EditorConfiguration, UndoManager }
 import org.nlogo.log.LogManager
 import org.nlogo.nvm.DefaultCompilerServices
 import org.nlogo.swing.{ MenuItem, PopupMenu }
@@ -170,6 +170,12 @@ class WidgetPanel(val workspace: GUIWorkspace)
   addMouseListener(this)
   addMouseMotionListener(this)
   addKeyListener(this)
+
+  addFocusListener(new FocusAdapter {
+    override def focusGained(e: FocusEvent): Unit = {
+      UndoManager.setCurrentManager(WidgetActions.undoManager)
+    }
+  })
 
   // our children may overlap
   override def isOptimizedDrawingEnabled: Boolean = false
