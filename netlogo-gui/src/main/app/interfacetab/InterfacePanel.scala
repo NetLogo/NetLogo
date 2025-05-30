@@ -42,7 +42,6 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
   ///
 
   override def focusGained(e: FocusEvent): Unit = {
-    UndoManager.setCurrentManager(WidgetActions.undoManager)
     enableButtonKeys(true)
   }
 
