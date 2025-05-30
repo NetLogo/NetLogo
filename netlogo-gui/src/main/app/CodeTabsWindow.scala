@@ -10,7 +10,7 @@ import org.nlogo.theme.ThemeSync
 import org.nlogo.window.Event.LinkChild
 
 class CodeTabsWindow(parent: Frame, tabs: TabsPanel) extends JFrame with LinkChild with ThemeSync with NetLogoIcon {
-  val menuBar: MenuBar = new MenuBar(false)
+  val menuBar: MainMenuBar = new MainMenuBar(false)
 
   setJMenuBar(menuBar)
 
