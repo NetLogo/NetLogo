@@ -46,12 +46,6 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
   }
 
   override def focusLost(e: FocusEvent): Unit = {
-    if (interfaceMode == InterfaceMode.Add) {
-      setInterfaceMode(InterfaceMode.Interact, false)
-    } else if (interfaceMode == InterfaceMode.Interact) {
-      interceptPane.disableIntercept()
-    }
-
     enableButtonKeys(false)
   }
 

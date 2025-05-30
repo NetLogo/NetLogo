@@ -175,6 +175,14 @@ class WidgetPanel(val workspace: GUIWorkspace)
     override def focusGained(e: FocusEvent): Unit = {
       UndoManager.setCurrentManager(WidgetActions.undoManager)
     }
+
+    override def focusLost(e: FocusEvent): Unit = {
+      if (interfaceMode == InterfaceMode.Add) {
+        setInterfaceMode(InterfaceMode.Interact, false)
+      } else if (interfaceMode == InterfaceMode.Interact) {
+        interceptPane.disableIntercept()
+      }
+    }
   })
 
   // our children may overlap
