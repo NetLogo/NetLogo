@@ -76,3 +76,6 @@
 [submodule "netlogo-gui/colorpicker"]
 	path = netlogo-gui/colorpicker
 	url = https://github.com/NetLogo/ColorPicker
+[submodule "extensions/sr"]
+	path = extensions/sr
+	url = https://github.com/NetLogo/SimpleR-Extension
