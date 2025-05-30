@@ -17,7 +17,7 @@ import org.nlogo.awt.EventQueue
 import org.nlogo.core.{ CompilerException, I18N }
 import org.nlogo.editor.Colorizer
 import org.nlogo.sdm.Translator
-import org.nlogo.swing.{ MenuItem, NetLogoIcon, Utils => SwingUtils }
+import org.nlogo.swing.{ MenuBar, MenuItem, NetLogoIcon, Utils => SwingUtils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ Editable, EditDialogFactory, Events, MenuBarFactory }
 import org.nlogo.window.Event.LinkChild
@@ -250,29 +250,6 @@ class AggregateModelEditor(
     tabs.syncTheme()
     toolbar.syncTheme()
     view.syncTheme()
-  }
-
-  private class MenuBar extends JMenuBar with ThemeSync {
-    override def paintComponent(g: Graphics): Unit = {
-      val g2d = SwingUtils.initGraphics2D(g)
-
-      g2d.setColor(InterfaceColors.menuBackground())
-      g2d.fillRect(0, 0, getWidth, getHeight)
-    }
-
-    override def paintBorder(g: Graphics): Unit = {
-      val g2d = SwingUtils.initGraphics2D(g)
-
-      g2d.setColor(InterfaceColors.menuBarBorder())
-      g2d.drawLine(0, getHeight - 1, getWidth, getHeight - 1)
-    }
-
-    def syncTheme(): Unit = {
-      getComponents.foreach(_ match {
-        case ts: ThemeSync => ts.syncTheme()
-        case _ =>
-      })
-    }
   }
 
   private class SyncedCommandMenu(name: String) extends CommandMenu(name) with ThemeSync {

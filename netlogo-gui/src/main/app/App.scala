@@ -174,7 +174,7 @@ object App {
         "org.nlogo.app.tools.PreviewCommandsEditor",
         new ComponentParameter(classOf[AppFrame]),
         new ComponentParameter(), new ComponentParameter())
-      pico.add(classOf[MenuBar], "org.nlogo.app.MenuBar",
+      pico.add(classOf[MainMenuBar], "org.nlogo.app.MainMenuBar",
         new ConstantParameter(AbstractWorkspace.isApp))
       pico.add(classOf[CommandCenter], "org.nlogo.app.interfacetab.CommandCenter", new ComponentParameter(),
                new ConstantParameter(true))
@@ -311,7 +311,7 @@ class App extends org.nlogo.window.Event.LinkChild
   lazy val owner = new SimpleJobOwner("App", workspace.world.mainRNG, AgentKind.Observer)
   private var _tabManager: TabManager = null
   def tabManager = _tabManager
-  var menuBar: MenuBar = null
+  var menuBar: MainMenuBar = null
   var _fileManager: FileManager = null
   var monitorManager: AgentMonitorManager = null
   def getMonitorManager = monitorManager
@@ -513,7 +513,7 @@ class App extends org.nlogo.window.Event.LinkChild
       dirtyMonitor = pico.getComponent(classOf[DirtyMonitor])
       frame.addLinkComponent(dirtyMonitor)
 
-      val menuBar = pico.getComponent(classOf[MenuBar])
+      val menuBar = pico.getComponent(classOf[MainMenuBar])
 
       pico.add(classOf[FileManager],
         "org.nlogo.app.FileManager",
@@ -732,7 +732,7 @@ class App extends org.nlogo.window.Event.LinkChild
     osSpecificActions ++ generalActions
   }
 
-  def setMenuBar(menuBar: MenuBar): Unit = {
+  def setMenuBar(menuBar: MainMenuBar): Unit = {
     if (menuBar != this.menuBar) {
       this.menuBar = menuBar
       allActions.foreach(menuBar.offerAction)

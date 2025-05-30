@@ -54,7 +54,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
 
   var fileManager: FileManager = null
   var dirtyMonitor: DirtyMonitor = null
-  var menuBar: MenuBar = null
+  var menuBar: MainMenuBar = null
 
   private var widgetErrors = Set[Widget]()
 
@@ -165,7 +165,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
   smartTabbingEnabled = prefs.getBoolean("indentAutomatically", true)
   lineNumbersVisible = prefs.getBoolean("editorLineNumbers", true)
 
-  def init(fileManager: FileManager, dirtyMonitor: DirtyMonitor, menuBar: MenuBar, actions: Seq[Action]): Unit = {
+  def init(fileManager: FileManager, dirtyMonitor: DirtyMonitor, menuBar: MainMenuBar, actions: Seq[Action]): Unit = {
     this.fileManager = fileManager
     this.dirtyMonitor = dirtyMonitor
     this.menuBar = menuBar
