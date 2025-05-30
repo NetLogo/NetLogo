@@ -133,8 +133,12 @@ class HubNetClientEditor(workspace: GUIWorkspace,
         case 0 =>
           interfacePanel.convertWidgetSizes(true)
 
+          setSize(getPreferredSize)
+
         case 1 =>
           interfacePanel.convertWidgetSizes(false)
+
+          setSize(getPreferredSize)
 
         case _ =>
       }
