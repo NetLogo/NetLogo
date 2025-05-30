@@ -1304,7 +1304,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
   // of widgets like the note widget for improved aesthetics. this happens in two phases, first on the
   // x axis and then on the y axis, which although slightly less efficient allows for more accurate
   // repositioning of the widgets. (Isaac B 3/1/25)
-  def convertWidgetSizes(reposition: Boolean): Unit = {
+  override def convertWidgetSizes(reposition: Boolean): Unit = {
     setInterfaceMode(InterfaceMode.Interact, true)
 
     val originalBounds = getWrappers.map(w => (w, w.getBounds()))

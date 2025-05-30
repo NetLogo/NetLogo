@@ -3,11 +3,12 @@
 package org.nlogo.hubnet.server.gui
 
 import java.awt.{ BorderLayout, Component, Dimension, GridBagConstraints, GridBagLayout, Insets }
-import javax.swing.{ JFrame, JMenuBar, ScrollPaneConstants }
+import java.awt.event.ActionEvent
+import javax.swing.{ AbstractAction, JFrame, JMenuBar, ScrollPaneConstants }
 
 import org.nlogo.api.ModelType
 import org.nlogo.core.{ I18N, Widget => CoreWidget }
-import org.nlogo.swing.{ NetLogoIcon, ScrollPane, ToolBar }
+import org.nlogo.swing.{ Menu, MenuBar, NetLogoIcon, OptionPane, ScrollPane, ToolBar }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ WidgetInfo, MenuBarFactory, InterfaceFactory, GUIWorkspace, AbstractWidgetPanel,
                           WidgetSizes }
@@ -48,27 +49,19 @@ class HubNetClientEditor(workspace: GUIWorkspace,
     }
   }
 
+  private val menuBar = new MenuBar {
+    add(menuFactory.createEditMenu)
+    add(new HubNetToolsMenu)
+    add(menuFactory.createZoomMenu)
+    add(menuFactory.createHelpMenu)
+  }
+
   locally {
     setTitle(getTitle(workspace.modelNameForDisplay, workspace.getModelDir, workspace.getModelType))
     getContentPane.setLayout(new BorderLayout())
     getContentPane.add(scrollPane, BorderLayout.CENTER)
     getContentPane.add(toolbar, BorderLayout.NORTH)
-    if (System.getProperty("os.name").startsWith("Mac")) {
-      val menus = new JMenuBar() {add(menuFactory.createFileMenu)}
-      val edit = menuFactory.createEditMenu
-      edit.setEnabled(false)
-      menus.add(edit)
-      menus.add(menuFactory.createToolsMenu)
-      menus.add(menuFactory.createZoomMenu)
-      val helpMenu = menuFactory.createHelpMenu
-      menus.add(helpMenu)
-      try {
-        menus.setHelpMenu(helpMenu)
-      } catch {
-        case e: Error => org.nlogo.api.Exceptions.ignore(e)
-      }
-      setJMenuBar(menus)
-    }
+    setJMenuBar(menuBar)
     setSize(getPreferredSize)
   }
 
@@ -103,6 +96,8 @@ class HubNetClientEditor(workspace: GUIWorkspace,
   }
 
   override def syncTheme(): Unit = {
+    menuBar.syncTheme()
+
     interfacePanel.syncTheme()
 
     scrollPane.setBackground(InterfaceColors.interfaceBackground())
@@ -115,5 +110,30 @@ class HubNetClientEditor(workspace: GUIWorkspace,
     toolbar.setBackground(InterfaceColors.toolbarBackground())
 
     repaint()
+  }
+
+  private class HubNetToolsMenu extends Menu(I18N.gui.get("menu.tools"), Menu.model) {
+    setMnemonic('T')
+
+    offerAction(ConvertWidgetSizes)
+  }
+
+  private object ConvertWidgetSizes extends AbstractAction(I18N.gui.get("menu.tools.convertWidgetSizes")) {
+    override def actionPerformed(e: ActionEvent): Unit = {
+      new OptionPane(HubNetClientEditor.this, I18N.gui.get("menu.tools.convertWidgetSizes"),
+                     I18N.gui.get("menu.tools.convertWidgetSizes.prompt"),
+                     Seq(I18N.gui.get("menu.tools.convertWidgetSizes.resizeAndAdjust"),
+                         I18N.gui.get("menu.tools.convertWidgetSizes.onlyResize")),
+                     OptionPane.Icons.Info).getSelectedIndex match {
+
+        case 0 =>
+          interfacePanel.convertWidgetSizes(true)
+
+        case 1 =>
+          interfacePanel.convertWidgetSizes(false)
+
+        case _ =>
+      }
+    }
   }
 }

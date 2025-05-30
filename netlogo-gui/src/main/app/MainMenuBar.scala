@@ -7,11 +7,11 @@ import javax.swing.{ Action, JMenuBar }
 
 import org.nlogo.core.I18N
 import org.nlogo.editor.EditorMenu
-import org.nlogo.swing.{ UserAction, Utils },
+import org.nlogo.swing.{ MenuBar, UserAction, Utils },
   UserAction.{ ActionCategoryKey, EditCategory, FileCategory, HelpCategory, TabsCategory, ToolsCategory }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
-class MenuBar(isApplicationWide: Boolean) extends JMenuBar with EditorMenu with UserAction.Menu with ThemeSync {
+class MainMenuBar(isApplicationWide: Boolean) extends MenuBar with EditorMenu with UserAction.Menu {
   val editMenu  = new EditMenu
   val fileMenu  = new FileMenu
   val tabsMenu  = new TabsMenu(I18N.gui.get("menu.tabs"))
@@ -57,28 +57,5 @@ class MenuBar(isApplicationWide: Boolean) extends JMenuBar with EditorMenu with 
       case _ => ""
     }
     categoryMenus.get(categoryKey).foreach(_.revokeAction(action))
-  }
-
-  override def paintComponent(g: Graphics): Unit = {
-    val g2d = Utils.initGraphics2D(g)
-
-    g2d.setColor(InterfaceColors.menuBackground())
-    g2d.fillRect(0, 0, getWidth, getHeight)
-  }
-
-  override def paintBorder(g: Graphics): Unit = {
-    val g2d = Utils.initGraphics2D(g)
-
-    g2d.setColor(InterfaceColors.menuBarBorder())
-    g2d.drawLine(0, getHeight - 1, getWidth, getHeight - 1)
-  }
-
-  override def syncTheme(): Unit = {
-    fileMenu.syncTheme()
-    editMenu.syncTheme()
-    toolsMenu.syncTheme()
-    zoomMenu.syncTheme()
-    tabsMenu.syncTheme()
-    helpMenu.syncTheme()
   }
 }
