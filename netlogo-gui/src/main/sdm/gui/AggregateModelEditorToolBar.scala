@@ -142,7 +142,7 @@ class AggregateModelEditorToolBar(editor: AggregateModelEditor, model: Model) ex
   }
   val changeDTAction = new AbstractAction(I18N.gui("edit")) {
     def actionPerformed(e: ActionEvent): Unit = {
-      val newDt = new InputOptionPane(editor, "", "dt", model.getDt.toString).getInput
+      val newDt = new InputOptionPane(editor, I18N.gui("edit"), "dt", model.getDt.toString).getInput
       try if (newDt != null) {
         model.setDt(newDt.toDouble)
         dtLabel.setText("dt = " + model.getDt)
