@@ -101,6 +101,7 @@ jobs:
         , "headless/Test/slow"
         , "nogen; headless/Test/fast"
         , "nogen; headless/Test/medium"
+        , "behaviorsearchProject/test"
         ]
 
     steps:

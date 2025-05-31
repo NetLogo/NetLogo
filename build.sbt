@@ -415,7 +415,7 @@ lazy val netlogoCore = (project in file("netlogo-core")).
   settings(scalastyleSettings: _*).
   settings(Compile / compile / skip := true)
 
-// only exists for packaging
+// only exists for testing and packaging
 lazy val behaviorsearchProject: Project =
   project.in(file("behaviorsearch"))
     .dependsOn(netlogo % "test-internal->test;compile-internal->compile")
