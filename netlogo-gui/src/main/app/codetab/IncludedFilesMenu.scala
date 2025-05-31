@@ -23,7 +23,7 @@ extends ToolBarMenu(I18N.gui.get("tabs.code.includedFiles"))
 with WindowEvents.CompiledEvent.Handler with RoundedBorderPanel with ThemeSync {
   implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("tabs.code.includedFiles")
 
-  val alwaysVisible = Preferences.userRoot.node("/org/nlogo/NetLogo").get("includedFilesMenu", "false").toBoolean
+  private var alwaysVisible = Preferences.userRoot.node("/org/nlogo/NetLogo").get("includedFilesMenu", "false").toBoolean
   // If we're empty, we have no size, are invisible and don't affect our parent's layout
   private var isEmpty = true
 
@@ -31,6 +31,12 @@ with WindowEvents.CompiledEvent.Handler with RoundedBorderPanel with ThemeSync {
 
   setDiameter(6)
   enableHover()
+
+  def setAlwaysVisible(visible: Boolean): Unit = {
+    alwaysVisible = visible
+
+    updateVisibility()
+  }
 
   def handle(e: WindowEvents.CompiledEvent) = updateVisibility()
 

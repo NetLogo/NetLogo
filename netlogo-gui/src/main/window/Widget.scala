@@ -63,7 +63,13 @@ abstract class Widget extends JPanel with RoundedBorderPanel with ThemeSync with
   private var zoomFactor = 1.0
 
   protected var _oldSize = false
-  protected var _boldName = Preferences.userRoot.node("/org/nlogo/NetLogo").getBoolean("boldWidgetNames", false)
+  protected var _boldState = {
+    if (Preferences.userRoot.node("/org/nlogo/NetLogo").getBoolean("boldWidgetText", false)) {
+      Font.BOLD
+    } else {
+      Font.PLAIN
+    }
+  }
 
   def getEditable: Object = this
   def copyable = true // only OutputWidget and ViewWidget are not copyable
@@ -100,8 +106,16 @@ abstract class Widget extends JPanel with RoundedBorderPanel with ThemeSync with
     revalidate()
     repaint()
   }
-  def boldName: Boolean =
-    _boldName
+  def setBoldText(value: Boolean): Unit = {
+    if (value) {
+      _boldState = Font.BOLD
+    } else {
+      _boldState = Font.PLAIN
+    }
+    initGUI()
+    revalidate()
+    repaint()
+  }
   def getDefaultExportName = "output.txt"
   def updateConstraints(): Unit = {}
   def classDisplayName: String = getClass.getName
@@ -125,7 +139,7 @@ abstract class Widget extends JPanel with RoundedBorderPanel with ThemeSync with
     true
   }
 
-  // this method is for widgets that need to redo their layout when the size version changes (Isaac B 3/1/25)
+  // this method is for widgets that need to redo their layout when a visual property changes (Isaac B 3/1/25)
   def initGUI(): Unit = {}
 
   protected def resetSizeInfo(): Unit = {

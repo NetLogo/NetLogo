@@ -93,11 +93,6 @@ class MonitorWidget(random: MersenneTwisterFast, compiler: CompilerServices, col
   private val valuePanel = new ValuePanel(valueLabel)
   private val unitsLabel = new JLabel
 
-  if (_boldName) {
-    nameLabel.setFont(nameLabel.getFont.deriveFont(Font.BOLD))
-    unitsLabel.setFont(unitsLabel.getFont.deriveFont(Font.BOLD))
-  }
-
   unitsLabel.setVisible(false)
 
   addMouseListener(this)
@@ -125,6 +120,8 @@ class MonitorWidget(random: MersenneTwisterFast, compiler: CompilerServices, col
 
     add(nameLabel, c)
 
+    nameLabel.setFont(nameLabel.getFont.deriveFont(_boldState))
+
     c.gridwidth = 1
     c.fill = GridBagConstraints.BOTH
     c.weighty = 1
@@ -151,6 +148,8 @@ class MonitorWidget(random: MersenneTwisterFast, compiler: CompilerServices, col
     }
 
     add(unitsLabel, c)
+
+    unitsLabel.setFont(unitsLabel.getFont.deriveFont(_boldState))
   }
 
   def setDisplayName(name: String): Unit = {

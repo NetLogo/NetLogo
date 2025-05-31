@@ -11,7 +11,7 @@ import java.util.prefs.Preferences
 import javax.swing.{ AbstractAction, Action, JComponent, JFrame }
 
 import org.nlogo.api.Exceptions
-import org.nlogo.app.codetab.{ CodeTab, CodeTabPreferences, ExternalFileManager, MainCodeTab, TemporaryCodeTab }
+import org.nlogo.app.codetab.{ CodeTab, ExternalFileManager, MainCodeTab, TemporaryCodeTab }
 import org.nlogo.app.common.{ CommandLine, ExceptionCatchingAction, MenuTab, TabsInterface }
 import org.nlogo.app.common.Events.SwitchedTabsEvent
 import org.nlogo.app.common.TabsInterface.Filename
@@ -19,7 +19,7 @@ import org.nlogo.app.infotab.InfoTab
 import org.nlogo.app.interfacetab.InterfaceTab
 import org.nlogo.awt.UserCancelException
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ OptionPane, Printable, PrinterManager, UserAction }
+import org.nlogo.swing.{ OptionPane, Printable, PrinterManager, TabLabel, UserAction }
 import org.nlogo.theme.ThemeSync
 import org.nlogo.window.Events.{ AboutToCloseFilesEvent, AboutToSaveModelEvent, CompileAllEvent, CompiledEvent,
                                  ExternalFileSavedEvent, LoadBeginEvent, LoadErrorEvent, LoadModelEvent,
@@ -36,9 +36,6 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
   with WidgetErrorEvent.Handler with WidgetRemovedEvent.Handler with ThemeSync {
 
   private val prefs = Preferences.userRoot.node("/org/nlogo/NetLogo")
-
-  // if this is initialized in constructor the event system freaks out, so wait until first button click (Isaac B 2/21/25)
-  private var prefsDialog: Option[CodeTabPreferences] = None
 
   private val focusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager
 
@@ -166,7 +163,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
   })
 
   smartTabbingEnabled = prefs.getBoolean("indentAutomatically", true)
-  lineNumbersVisible = prefs.getBoolean("lineNumbers", true)
+  lineNumbersVisible = prefs.getBoolean("editorLineNumbers", true)
 
   def init(fileManager: FileManager, dirtyMonitor: DirtyMonitor, menuBar: MenuBar, actions: Seq[Action]): Unit = {
     this.fileManager = fileManager
@@ -322,6 +319,11 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
   def lineNumbersVisible_=(visible: Boolean): Unit = {
     mainCodeTab.lineNumbersVisible = visible
     getExternalFileTabs.foreach(_.lineNumbersVisible = visible)
+  }
+
+  def setIncludedFilesShown(visible: Boolean): Unit = {
+    mainCodeTab.setIncludedFilesShown(visible)
+    getExternalFileTabs.foreach(_.setIncludedFilesShown(visible))
   }
 
   def watchingFiles: Boolean = watcherThread != null
@@ -544,7 +546,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
 
         separateTabs.addTabWithLabel(mainTabs.getComponentAt(2), tabLabel)
 
-        tabLabel.setTabsPanel(separateTabs)
+        tabLabel.setTabbedPane(separateTabs)
       }
 
       separateTabsWindow.open()
@@ -569,7 +571,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
 
         mainTabs.addTabWithLabel(separateTabs.getComponentAt(0), tabLabel)
 
-        tabLabel.setTabsPanel(mainTabs)
+        tabLabel.setTabbedPane(mainTabs)
       }
 
       separateTabsWindow.setVisible(false)
@@ -591,10 +593,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
   }
 
   def showCodeTabPreferences(): Unit = {
-    if (prefsDialog.isEmpty)
-      prefsDialog = Some(new CodeTabPreferences(workspace.getFrame, this))
-
-    prefsDialog.foreach(_.setVisible(true))
+    App.app.showPreferencesDialogAt(1)
   }
 
   def reload(): Unit = {
@@ -769,8 +768,6 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     })
 
     separateTabsWindow.syncTheme()
-
-    prefsDialog.foreach(_.syncTheme())
   }
 
   private def tabFilePath: Option[Path] =

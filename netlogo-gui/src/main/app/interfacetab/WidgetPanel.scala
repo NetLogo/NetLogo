@@ -1417,6 +1417,10 @@ class WidgetPanel(val workspace: GUIWorkspace)
     new DirtyEvent(None).raise(this)
   }
 
+  override def setBoldWidgetText(value: Boolean): Unit = {
+    getWrappers.foreach(_.widget.setBoldText(value))
+  }
+
   override def syncTheme(): Unit = {
     setBackground(InterfaceColors.interfaceBackground())
 
