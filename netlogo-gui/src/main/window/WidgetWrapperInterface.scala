@@ -20,10 +20,6 @@ trait WidgetWrapperInterface {
   def setSize(width: Int, height: Int): Unit
   def setSize(size: Dimension): Unit
 
-  def verticallyResizable: Boolean
-
-  def widgetChanged(): Unit
-
   def snapToGrid(value: Int): Int
 
   def isNew: Boolean

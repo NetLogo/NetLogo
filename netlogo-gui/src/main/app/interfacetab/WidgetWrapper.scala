@@ -35,8 +35,6 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
 
   import WidgetWrapper._
 
-  private var _verticallyResizable = false
-  private var _horizontallyResizable = false
   private var _isNew = false
   private var _selected = false
   private var _isForeground = false
@@ -73,8 +71,6 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
 
   doLayout()
 
-  widgetChanged() // update cornerHandles and otherwise make sure we are in good state -- CLB
-
   // don't let mouse events get through to the InterfacePanel
   // (is there a more elegant way to do this?) - ST 8/9/03
   addMouseListener(new MouseAdapter {})
@@ -92,34 +88,11 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
     }
   })
 
-  def horizontallyResizable: Boolean =
-    _horizontallyResizable
-
-  def verticallyResizable: Boolean =
-    _verticallyResizable
-
   def isNew: Boolean =
     _isNew
 
   def isNew(isNew: Boolean): Unit = {
     _isNew = isNew
-  }
-
-  def computeVerticallyResizable: Boolean =
-    widget.getMaximumSize == null || widget.getMaximumSize.height != widget.getMinimumSize.height
-
-  def computeHorizontallyResizable: Boolean =
-    widget.getMaximumSize == null || widget.getMaximumSize.width != widget.getMinimumSize.width
-
-  def widgetChanged(): Unit = {
-    val oldVert = _verticallyResizable
-    val oldHoriz = _horizontallyResizable
-
-    _verticallyResizable = computeVerticallyResizable
-    _horizontallyResizable = computeHorizontallyResizable
-
-    if (_verticallyResizable != oldVert || _horizontallyResizable != oldHoriz)
-      repaint()
   }
 
   def getBorderSize: Int =
@@ -383,32 +356,29 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
     mouseMode = MouseMode.DRAG
 
     if (x < BorderSize) {
-      if (_verticallyResizable && y < BorderSize) {
+      if (y < BorderSize) {
         mouseMode = MouseMode.NW
-      } else if (_verticallyResizable && y > getHeight - BorderSize) {
+      } else if (y > getHeight - BorderSize) {
         mouseMode = MouseMode.SW
-      } else if (y <= BorderSize + (getHeight - BorderSize - BorderSize - HandleSize) / 2 + HandleSize &&
-                 y >= BorderSize + (getHeight - BorderSize - BorderSize - HandleSize) / 2) {
+      } else if (y <= (getHeight + HandleSize) / 2 && y >= (getHeight - HandleSize) / 2) {
         mouseMode = MouseMode.W
       }
     } else if (x > getWidth - BorderSize) {
-      if (_verticallyResizable && y < BorderSize) {
+      if (y < BorderSize) {
         mouseMode = MouseMode.NE
-      } else if (_verticallyResizable && y > getHeight - BorderSize) {
+      } else if (y > getHeight - BorderSize) {
         mouseMode = MouseMode.SE
-      } else if (y <= BorderSize + (getHeight - BorderSize - BorderSize - HandleSize) / 2 + HandleSize &&
-                 y >= BorderSize + (getHeight - BorderSize - BorderSize - HandleSize) / 2) {
+      } else if (y <= (getHeight + HandleSize) / 2 && y >= (getHeight - HandleSize) / 2) {
         mouseMode = MouseMode.E
       }
-    } else if (_verticallyResizable && y > getHeight - BorderSize) {
-      if (x <= BorderSize + (getWidth - BorderSize - BorderSize + HandleSize) / 2 &&
-          x >= BorderSize + (getWidth - BorderSize - BorderSize - HandleSize) / 2) {
+    } else if (y > getHeight - BorderSize) {
+      if (x <= (getWidth + HandleSize) / 2 && x >= (getWidth - HandleSize) / 2) {
         mouseMode = MouseMode.S
       }
-    } else if (_verticallyResizable && y < BorderSize &&
-               x <= BorderSize + (getWidth - BorderSize - BorderSize + HandleSize) / 2 &&
-               x >= BorderSize + (getWidth - BorderSize - BorderSize - HandleSize) / 2) {
-      mouseMode = MouseMode.N
+    } else if (y < BorderSize) {
+      if (x <= (getWidth + HandleSize) / 2 && x >= (getWidth - HandleSize) / 2) {
+        mouseMode = MouseMode.N
+      }
     }
 
     if (mouseMode == MouseMode.DRAG) {
@@ -850,37 +820,29 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
 
         menu.addSeparator()
 
-        if (interfacePanel.canStretchLeft) {
-          menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.stretchLeft")) {
-            def actionPerformed(e: ActionEvent): Unit = {
-              interfacePanel.stretchLeft()
-            }
-          }))
-        }
+        menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.stretchLeft")) {
+          def actionPerformed(e: ActionEvent): Unit = {
+            interfacePanel.stretchLeft()
+          }
+        }))
 
-        if (interfacePanel.canStretchRight) {
-          menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.stretchRight")) {
-            def actionPerformed(e: ActionEvent): Unit = {
-              interfacePanel.stretchRight()
-            }
-          }))
-        }
+        menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.stretchRight")) {
+          def actionPerformed(e: ActionEvent): Unit = {
+            interfacePanel.stretchRight()
+          }
+        }))
 
-        if (interfacePanel.canStretchTop) {
-          menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.stretchTop")) {
-            def actionPerformed(e: ActionEvent): Unit = {
-              interfacePanel.stretchTop()
-            }
-          }))
-        }
+        menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.stretchTop")) {
+          def actionPerformed(e: ActionEvent): Unit = {
+            interfacePanel.stretchTop()
+          }
+        }))
 
-        if (interfacePanel.canStretchBottom) {
-          menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.stretchBottom")) {
-            def actionPerformed(e: ActionEvent): Unit = {
-              interfacePanel.stretchBottom()
-            }
-          }))
-        }
+        menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.stretchBottom")) {
+          def actionPerformed(e: ActionEvent): Unit = {
+            interfacePanel.stretchBottom()
+          }
+        }))
       }
     } else {
       menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.select")) {
@@ -940,24 +902,22 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
     if (selected) {
       g2d.setColor(InterfaceColors.widgetHandle())
 
+      // bounding box
       g2d.drawRect(HandleSize / 2, HandleSize / 2, getWidth - HandleSize, getHeight - HandleSize)
 
-      if (_horizontallyResizable) {
-        g2d.fillRect(0, getHeight / 2 - HandleSize / 2, HandleSize, HandleSize)
-        g2d.fillRect(getWidth - HandleSize, getHeight / 2 - HandleSize / 2, HandleSize, HandleSize)
-      }
+      // left/right central handles
+      g2d.fillRect(0, getHeight / 2 - HandleSize / 2, HandleSize, HandleSize)
+      g2d.fillRect(getWidth - HandleSize, getHeight / 2 - HandleSize / 2, HandleSize, HandleSize)
 
-      if (verticallyResizable) {
-        g2d.fillRect(getWidth / 2 - HandleSize / 2, 0, HandleSize, HandleSize)
-        g2d.fillRect(getWidth / 2 - HandleSize / 2, getHeight - HandleSize, HandleSize, HandleSize)
-      }
+      // top/bottom central handles
+      g2d.fillRect(getWidth / 2 - HandleSize / 2, 0, HandleSize, HandleSize)
+      g2d.fillRect(getWidth / 2 - HandleSize / 2, getHeight - HandleSize, HandleSize, HandleSize)
 
-      if (_horizontallyResizable && verticallyResizable) {
-        g2d.fillRect(0, 0, HandleSize, HandleSize)
-        g2d.fillRect(getWidth - HandleSize, 0, HandleSize, HandleSize)
-        g2d.fillRect(0, getHeight - HandleSize, HandleSize, HandleSize)
-        g2d.fillRect(getWidth - HandleSize, getHeight - HandleSize, HandleSize, HandleSize)
-      }
+      // corner handles
+      g2d.fillRect(0, 0, HandleSize, HandleSize)
+      g2d.fillRect(getWidth - HandleSize, 0, HandleSize, HandleSize)
+      g2d.fillRect(0, getHeight - HandleSize, HandleSize, HandleSize)
+      g2d.fillRect(getWidth - HandleSize, getHeight - HandleSize, HandleSize, HandleSize)
     }
   }
 

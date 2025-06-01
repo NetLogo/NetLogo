@@ -41,22 +41,18 @@ abstract class WidgetEditPanel(target: Widget & Editable) extends EditPanel(targ
       wrapper.setSize(prefSize)
     } else if (originalPreferredSize != prefSize) {
       var width = 10000 min (prefSize.width max (if (swapSizes) originalSize.height else originalSize.width))
-      var height = 10000 min (if (wrapper.verticallyResizable)
-                                prefSize.height max (if (swapSizes) originalSize.width else originalSize.height)
-                              else
-                                prefSize.height)
+      var height = 10000 min (prefSize.height max (if (swapSizes) originalSize.width else originalSize.height))
+
       val currentSize = wrapper.getSize
 
       if (width != currentSize.width)
         width = wrapper.snapToGrid(width)
 
-      if (prefSize.height != currentSize.height)
+      if (height != currentSize.height)
         height = wrapper.snapToGrid(height)
 
       wrapper.setSize(width, height)
       originalPreferredSize = wrapper.getPreferredSize
     }
-
-    wrapper.widgetChanged()
   }
 }

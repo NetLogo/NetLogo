@@ -432,10 +432,10 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
         bottomAction.setEnabled(selectedObjects.size > 1 && wPanel.canAlignBottom)
         distributeHorizontalAction.setEnabled(selectedObjects.size > 1)
         distributeVerticalAction.setEnabled(selectedObjects.size > 1)
-        stretchLeftAction.setEnabled(selectedObjects.size > 1 && wPanel.canStretchLeft)
-        stretchRightAction.setEnabled(selectedObjects.size > 1 && wPanel.canStretchRight)
-        stretchTopAction.setEnabled(selectedObjects.size > 1 && wPanel.canStretchTop)
-        stretchBottomAction.setEnabled(selectedObjects.size > 1 && wPanel.canStretchBottom)
+        stretchLeftAction.setEnabled(selectedObjects.size > 1)
+        stretchRightAction.setEnabled(selectedObjects.size > 1)
+        stretchTopAction.setEnabled(selectedObjects.size > 1)
+        stretchBottomAction.setEnabled(selectedObjects.size > 1)
 
         popup.show(AlignmentMenu.this, 0, getHeight)
       }

@@ -1081,51 +1081,31 @@ class WidgetPanel(val workspace: GUIWorkspace)
     })
   }
 
-  def canStretchLeft: Boolean = {
-    val target = selectedWrappers.minBy(_.getX)
-    selectedWrappers.exists(w => w.horizontallyResizable && w != target)
-  }
-
   def stretchLeft(): Unit = {
     val target = selectedWrappers.minBy(_.getX)
 
-    WidgetActions.reboundWidgets(selectedWrappers.filter(_.horizontallyResizable).map(w =>
+    WidgetActions.reboundWidgets(selectedWrappers.map(w =>
       (w, new Rectangle(target.getX, w.getY, w.getX + w.getWidth - target.getX, w.getHeight))))
-  }
-
-  def canStretchRight: Boolean = {
-    val target = selectedWrappers.maxBy(w => w.getX + w.getWidth)
-    selectedWrappers.exists(w => w.horizontallyResizable && w != target)
   }
 
   def stretchRight(): Unit = {
     val target = selectedWrappers.maxBy(w => w.getX + w.getWidth)
 
-    WidgetActions.resizeWidgets(selectedWrappers.filter(_.horizontallyResizable).map(w =>
+    WidgetActions.resizeWidgets(selectedWrappers.map(w =>
       (w, target.getX + target.getWidth - w.getX, w.getHeight)))
-  }
-
-  def canStretchTop: Boolean = {
-    val target = selectedWrappers.minBy(_.getY)
-    selectedWrappers.exists(w => w.verticallyResizable && w != target)
   }
 
   def stretchTop(): Unit = {
     val target = selectedWrappers.minBy(_.getY)
 
-    WidgetActions.reboundWidgets(selectedWrappers.filter(_.verticallyResizable).map(w =>
+    WidgetActions.reboundWidgets(selectedWrappers.map(w =>
       (w, new Rectangle(w.getX, target.getY, w.getWidth, w.getY + w.getHeight - target.getY))))
-  }
-
-  def canStretchBottom: Boolean = {
-    val target = selectedWrappers.maxBy(w => w.getY + w.getHeight)
-    selectedWrappers.exists(w => w.verticallyResizable && w != target)
   }
 
   def stretchBottom(): Unit = {
     val target = selectedWrappers.maxBy(w => w.getY + w.getHeight)
 
-    WidgetActions.resizeWidgets(selectedWrappers.filter(_.verticallyResizable).map(w =>
+    WidgetActions.resizeWidgets(selectedWrappers.map(w =>
       (w, w.getWidth, target.getY + target.getHeight - w.getY)))
   }
 
