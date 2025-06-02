@@ -12,7 +12,7 @@ import org.nlogo.api.{ FileIO, ModelReader, ModelType, Version }
 import org.nlogo.awt.{ EventQueue, UserCancelException }
 import org.nlogo.core.{ I18N, Model }
 import org.nlogo.fileformat.{ ConversionError, ConversionWithErrors, ErroredConversion, FailedConversionResult }
-import org.nlogo.swing.{ BrowserLauncher, Button, FileDialog, MessageDialog, ModalProgress, OptionPane }
+import org.nlogo.swing.{ BrowserLauncher, Button, FileDialog, MessageDialog, OptionPane }
 import org.nlogo.workspace.{ ModelTracker, OpenModel, SaveModel },
   OpenModel.{ Controller => OpenModelController },
   SaveModel.{ Controller => SaveModelController }

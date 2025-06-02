@@ -2,9 +2,9 @@
 
 package org.nlogo.app
 
-import java.awt.{ BorderLayout, Component, SecondaryLoop, Toolkit }
-import java.awt.event.{WindowAdapter, WindowEvent}
-import javax.swing.{ JFrame, JLayeredPane, WindowConstants }
+import java.awt.{ SecondaryLoop, Toolkit }
+import java.awt.event.{ WindowAdapter, WindowEvent }
+import javax.swing.{ JFrame, WindowConstants }
 
 import org.nlogo.api.Exceptions
 import org.nlogo.awt.UserCancelException
@@ -54,8 +54,6 @@ class AppFrame extends JFrame with LinkParent with LinkRoot with NetLogoIcon wit
     modalProgressLoop.foreach(_.exit())
 
     modalProgressLoop = None
-
-    repaint()
   }
 
   override def syncTheme(): Unit = {
