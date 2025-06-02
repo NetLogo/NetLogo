@@ -4,7 +4,7 @@ package org.nlogo.hubnet.server.gui
 
 import java.awt.{ BorderLayout, Component, Dimension, GridBagConstraints, GridBagLayout, Insets }
 import java.awt.event.{ ActionEvent, WindowAdapter, WindowEvent }
-import javax.swing.{ AbstractAction, JFrame, JMenuBar, ScrollPaneConstants }
+import javax.swing.{ AbstractAction, JFrame, ScrollPaneConstants }
 
 import org.nlogo.api.ModelType
 import org.nlogo.core.{ I18N, Widget => CoreWidget }

@@ -2,14 +2,12 @@
 
 package org.nlogo.app
 
-import java.awt.Graphics
-import javax.swing.{ Action, JMenuBar }
+import javax.swing.Action
 
 import org.nlogo.core.I18N
 import org.nlogo.editor.EditorMenu
-import org.nlogo.swing.{ MenuBar, UserAction, Utils },
+import org.nlogo.swing.{ MenuBar, UserAction },
   UserAction.{ ActionCategoryKey, EditCategory, FileCategory, HelpCategory, TabsCategory, ToolsCategory }
-import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 class MainMenuBar(isApplicationWide: Boolean) extends MenuBar with EditorMenu with UserAction.Menu {
   val editMenu  = new EditMenu
