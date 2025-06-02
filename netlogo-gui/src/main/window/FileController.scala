@@ -6,10 +6,10 @@ import java.awt.{ Component, Dialog, FileDialog => AWTFileDialog }
 import java.awt.event.ActionEvent
 import java.nio.file.Paths
 import java.net.URI
-import javax.swing.{ AbstractAction, JComponent, JDialog }
+import javax.swing.{ AbstractAction, JComponent }
 
 import org.nlogo.api.{ FileIO, ModelReader, ModelType, Version }
-import org.nlogo.awt.{ EventQueue, UserCancelException }
+import org.nlogo.awt.UserCancelException
 import org.nlogo.core.{ I18N, Model }
 import org.nlogo.fileformat.{ ConversionError, ConversionWithErrors, ErroredConversion, FailedConversionResult }
 import org.nlogo.swing.{ BrowserLauncher, Button, FileDialog, MessageDialog, OptionPane }

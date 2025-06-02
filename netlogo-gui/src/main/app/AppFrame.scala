@@ -15,7 +15,7 @@ import org.nlogo.window.Event.LinkParent
 import org.nlogo.window.Events.IconifiedEvent
 
 class AppFrame extends JFrame with LinkParent with LinkRoot with NetLogoIcon with ModalProgress with ThemeSync {
-  private var modalProgressPanel = new ModalProgressPanel
+  private val modalProgressPanel = new ModalProgressPanel
 
   private var modalProgressLoop: Option[SecondaryLoop] = None
 

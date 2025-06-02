@@ -5,7 +5,7 @@ package org.nlogo.app.common
 import java.awt.{ Component, FileDialog => AWTFileDialog }
 import java.awt.event.ActionEvent
 import java.io.IOException
-import javax.swing.{ AbstractAction => SwingAbstractAction, JDialog }
+import javax.swing.{ AbstractAction => SwingAbstractAction }
 
 import org.nlogo.core.I18N
 import org.nlogo.api.Exceptions

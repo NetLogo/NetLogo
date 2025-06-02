@@ -3,7 +3,6 @@
 package org.nlogo.swing
 
 import java.awt.Frame
-import javax.swing.JDialog
 
 import org.nlogo.awt.EventQueue
 

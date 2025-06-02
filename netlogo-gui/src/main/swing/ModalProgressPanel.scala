@@ -2,7 +2,7 @@
 
 package org.nlogo.swing
 
-import java.awt.{ BorderLayout, Color, GridBagConstraints, GridBagLayout }
+import java.awt.{ BorderLayout, GridBagConstraints, GridBagLayout }
 import java.awt.event.{ MouseEvent, MouseListener }
 import javax.swing.{ JLabel, JPanel, JProgressBar, SwingConstants }
 import javax.swing.border.EmptyBorder
