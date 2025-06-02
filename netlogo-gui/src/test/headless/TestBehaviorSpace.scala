@@ -129,23 +129,12 @@ with OneInstancePerTest with BeforeAndAfterEach {
           // Compare up to 2 decimal places for numbers used in statistics to avoid rounding issues
           if (suffix == "-stats.csv") {
             val output = withoutFirst6Lines(stripLineFeeds(writer.toString))
-            var rebuild = ""
             var i = 0
             while (i < output.length) {
               if (output(i).isDigit) {
-                var currentChunk = ""
                 while (output(i) != ' ' && output(i) != '"' && output(i) != ']') {
-                  currentChunk += output(i)
                   i += 1
                 }
-                try {
-                  val number = currentChunk.toDouble
-                  rebuild += ((number * 100).round.toDouble / 100).toString + output(i)
-                } catch {
-                  case _: java.lang.NumberFormatException => rebuild += currentChunk
-                }
-              } else {
-                rebuild += output(i)
               }
               i += 1
             }

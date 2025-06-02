@@ -61,8 +61,6 @@ class TestClientInterface extends TestUsingWorkspace {
   }
 }
 
-import java.io.{ByteArrayInputStream, ObjectOutputStream, ByteArrayOutputStream}
-
 // this object contains utility functions usable by other tests
 object TestUtils {
 

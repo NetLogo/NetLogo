@@ -166,13 +166,8 @@ trait MockSuite extends AnyFunSuite {
   def not[T](m:Matcher[T]) = arg(org.hamcrest.core.IsNot.not(m))
   def not[T](t:T) = arg(org.hamcrest.core.IsNot.not(t))
   //  anyOf(m1, m2, ..., mn): The argument matches one of the Matchers m1 to mn.
-  // had to add ClassTag here only because if its not there the two methods
-  // have the same signature after erasure, and wont compile. nasty hack, but it works.
-  // same for allOf below. - JC 6/24/10
-  def anyOf[T : ClassTag](ts:T*) = org.hamcrest.core.AnyOf.anyOf(ts.map(equal(_))*)
   def anyOf[T](ts:Matcher[T]*) = org.hamcrest.core.AnyOf.anyOf(ts*)
   //  allOf(m1, m2, ..., mn): The argument matches all of the Matchers m1 to mn.
-  def allOf[T : ClassTag](ts:T*) = org.hamcrest.core.AllOf.allOf(ts.map(equal(_))*)
   def allOf[T](ts:Matcher[T]*) = org.hamcrest.core.AllOf.allOf(ts*)
 
 

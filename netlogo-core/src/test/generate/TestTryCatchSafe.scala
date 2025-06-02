@@ -19,7 +19,7 @@ class TestTryCatchSafe extends AnyFunSuite with AllPrimitivesTester {
       // found: false = looking for an error handler label
       //         true = found handler label, now looking for an ATHROW
       //                to occur before any branching instructions.
-      var found = false
+      private var found = false
       override def visitTryCatchBlock(start: Label, end: Label, handler: Label, tpe: String): Unit = {
         handlerLabels += handler }
       override def visitLabel(label: Label): Unit = {

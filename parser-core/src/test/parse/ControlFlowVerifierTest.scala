@@ -4,7 +4,7 @@ package org.nlogo.parse
 
 import
   org.nlogo.core.{ Command, CommandBlock, Expression,
-    Femto, FrontEndProcedure, prim, ProcedureDefinition,
+    FrontEndProcedure, prim, ProcedureDefinition,
     SourceLocation, Statement, Statements, StructureDeclarations, Token, TokenDSL },
     prim.{ _ask, _carefully, _createturtles => _crt, _fd, _report, _run, _stop }
 

@@ -101,7 +101,6 @@ class TestExtensionStackTraces extends AnyFunSuite {
     val wrapperCause = new Exception(primaryCause)
     val dummyClassManager = new DummyClassManager() {
       override val barPrim = new Command {
-        def getAgentClassString = "OTPL"
         override def getSyntax = Syntax.commandSyntax()
         override def perform(args: Array[Argument], context: Context): Unit = {
           throw new ExtensionException(wrapperCause)
