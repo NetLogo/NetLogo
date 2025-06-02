@@ -10,8 +10,7 @@ import javax.swing.{ AbstractAction => SwingAbstractAction, JDialog }
 import org.nlogo.core.I18N
 import org.nlogo.api.Exceptions
 import org.nlogo.awt.{ EventQueue, Hierarchy => NLogoHierarchy, UserCancelException }
-import org.nlogo.swing.{ FileDialog, ModalProgressTask, OptionPane, UserAction },
-  UserAction.MenuAction
+import org.nlogo.swing.{ FileDialog, ModalProgressTask, OptionPane }
 import org.nlogo.window.ExportControls
 
 object Actions {

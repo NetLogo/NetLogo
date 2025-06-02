@@ -141,8 +141,6 @@ trait OrientatableObserver { this: Observer =>
   }
 
   def updatePosition(): Boolean = {
-    var changed = false
-
     perspective match {
       case Perspective.Observe => false
       case w: Perspective.Watch if w.targetAgent != null =>
@@ -165,7 +163,6 @@ trait OrientatableObserver { this: Observer =>
             val newHeading = headingSmoother.follow(targetAgent);
             perspective match {
               case f: Perspective.Follow =>
-                changed = (_orientation.heading != newHeading)
                 heading(newHeading)
               case _ =>
                 heading(turtle.heading)

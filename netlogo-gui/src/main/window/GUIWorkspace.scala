@@ -13,16 +13,14 @@ import java.util.concurrent.TimeoutException
 import javax.swing.{ AbstractAction, Action, Timer }
 import javax.swing.border.LineBorder
 
-import org.nlogo.agent.{ Agent, AgentSet, BooleanConstraint, ImporterJ, Observer, OutputObject, SliderConstraint,
-                         World }
+import org.nlogo.agent.{ Agent, BooleanConstraint, ImporterJ, OutputObject, SliderConstraint, World }
 import org.nlogo.api.{ Agent => ApiAgent, AgentFollowingPerspective, CommandRunnable, ControlSet, DrawingInterface,
                        Exceptions, FileIO, JobOwner, LogoException, ModelReader, ModelSections, ModelSettings,
-                       ModelType, Perspective, PreviewCommands, RendererInterface, ReporterRunnable, SimpleJobOwner,
+                       ModelType, PreviewCommands, RendererInterface, ReporterRunnable, SimpleJobOwner,
                        TrailDrawerInterface, WorldPropertiesInterface }
 import org.nlogo.awt.{ EventQueue, Hierarchy, UserCancelException }
-import org.nlogo.core.{ AgentKind, CompilerException, File, I18N, Model, Shape, ShapeParser, UpdateMode,
-                        WorldDimensions }
-import org.nlogo.nvm.{ Context, HaltException, Instruction, Procedure, Workspace }
+import org.nlogo.core.{ AgentKind, CompilerException, File, I18N, Model, Shape, UpdateMode, WorldDimensions }
+import org.nlogo.nvm.{ Context, HaltException, Instruction, Procedure }
 import org.nlogo.shape.ShapeConverter
 import org.nlogo.swing.{ CustomOptionPane, FileDialog, ModalProgressTask, OptionPane, ScrollPane, TextArea, Utils }
 import org.nlogo.theme.InterfaceColors

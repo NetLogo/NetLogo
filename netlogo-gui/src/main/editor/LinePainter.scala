@@ -6,7 +6,7 @@ import java.awt.{ geom, Color, Graphics, Rectangle, Shape }, geom.Rectangle2D
 import javax.swing.event.{CaretEvent, CaretListener}
 import javax.swing.text.{ BadLocationException, Highlighter, JTextComponent }
 
-class LinePainter(private var component: JTextComponent) extends Highlighter.HighlightPainter with CaretListener {
+class LinePainter(component: JTextComponent) extends Highlighter.HighlightPainter with CaretListener {
 
   private var lastView: Rectangle2D = new Rectangle(0, 0, 0, 0)
   private val color = new Color(255, 249, 228, 100)

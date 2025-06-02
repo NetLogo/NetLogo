@@ -8,7 +8,7 @@ import java.lang.{ Double => JDouble, Integer => JInteger, Long => JLong }
 import org.nlogo.api.Dump
 import org.nlogo.core.Nobody
 import Dump.csv
-import scala.jdk.CollectionConverters.{ IterableHasAsScala, ListHasAsScala, SeqHasAsJava }
+import scala.jdk.CollectionConverters.{ IterableHasAsScala, SeqHasAsJava }
 
 // This is just a bunch of copy-and-pasted code from the 2D version, with little 3D tweaks embedded
 // in it.  It really ought to be redone to eliminate the copy-and-paste. - ST 4/11/11

@@ -32,7 +32,7 @@ lazy val scalaSettings = Seq(
   Test / scalaSource    := baseDirectory.value / "src" / "test",
   crossPaths            := false, // don't cross-build for different Scala versions
   scalacOptions ++=
-    "-deprecation -unchecked -feature -encoding us-ascii -release 11 -Xfatal-warnings"
+    "-deprecation -unchecked -feature -encoding us-ascii -release 11 -Xfatal-warnings -Wunused:linted"
       .split(" ").toSeq
 )
 

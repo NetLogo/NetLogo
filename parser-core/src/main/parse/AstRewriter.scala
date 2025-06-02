@@ -4,7 +4,6 @@ package org.nlogo.parse
 
 import org.nlogo.core.{
   CompilationOperand,
-  Femto,
   ProcedureDefinition,
   ProcedureSyntax,
   SourceLocation,
