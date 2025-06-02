@@ -6,12 +6,11 @@ import java.awt.{ BorderLayout, Frame, GridBagConstraints, GridBagLayout, Insets
 import java.io.File
 import java.nio.file.Files
 import java.util.prefs.{ Preferences => JavaPreferences }
-import javax.swing.{ JLabel, JPanel, SwingConstants }
+import javax.swing.{ JLabel, JPanel }
 import javax.swing.border.EmptyBorder
 
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ ButtonPanel, DialogButton, FloatingTabbedPane, OptionPane, TabLabel, TextField, TextFieldBox,
-                         Transparent }
+import org.nlogo.swing.{ ButtonPanel, DialogButton, FloatingTabbedPane, OptionPane, TabLabel, TextField, Transparent }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 class PreferencesDialog(parent: Frame & ThemeSync, generalPreferences: Seq[Preference], codePreferences: Seq[Preference],
@@ -31,6 +30,13 @@ class PreferencesDialog(parent: Frame & ThemeSync, generalPreferences: Seq[Prefe
 
   private lazy val okButton = new DialogButton(true, I18N.gui.get("common.buttons.ok"), () => ok())
   private lazy val cancelButton = new DialogButton(false, I18N.gui.get("common.buttons.cancel"), () => cancel())
+
+  override def setVisible(visible: Boolean): Unit = {
+    if (visible)
+      themesPanel.init()
+
+    super.setVisible(visible)
+  }
 
   // sync parameter prevents infinite recursion with syncTheme on load (Isaac B 5/22/25)
   private def reset(sync: Boolean): Unit = {

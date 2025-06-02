@@ -2,13 +2,11 @@
 
 package org.nlogo.swing
 
-import java.awt.{ Component, Dimension, Graphics, GridBagConstraints, GridBagLayout, Insets, Point }
+import java.awt.{ Component, Dimension, Graphics, GridBagConstraints, GridBagLayout, Insets }
 import java.awt.event.{ MouseAdapter, MouseEvent, MouseMotionAdapter }
-import javax.swing.event.{ ChangeEvent, ChangeListener }
 import javax.swing.{ JComponent, JLabel, JPanel, JTabbedPane, SwingConstants }
 import javax.swing.plaf.basic.BasicTabbedPaneUI
 
-import org.nlogo.awt.UserCancelException
 import org.nlogo.theme.InterfaceColors
 
 private class FloatingTabbedPaneUI(tabbedPane: FloatingTabbedPane) extends BasicTabbedPaneUI {

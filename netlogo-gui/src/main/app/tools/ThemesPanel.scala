@@ -70,6 +70,7 @@ class ThemesPanel(frame: Frame & ThemeSync) extends JPanel(new GridBagLayout) wi
   }
 
   def init(): Unit = {
+    startTheme = InterfaceColors.getTheme
 
     setSelected(startTheme)
   }

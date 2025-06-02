@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import java.awt.{ Color, Dimension, Font, Graphics, GridBagConstraints, GridBagLayout, Insets }
+import java.awt.{ Color, Dimension, Graphics, GridBagConstraints, GridBagLayout, Insets }
 import java.awt.image.BufferedImage
 import javax.swing.{ JLabel, JPanel, SwingConstants }
 

@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import java.awt.{ Cursor, Dimension, Font, Graphics, GridBagLayout, GridBagConstraints, Insets }
+import java.awt.{ Cursor, Dimension, Graphics, GridBagLayout, GridBagConstraints, Insets }
 import java.awt.event.{ MouseEvent, MouseListener, MouseMotionListener }
 import java.awt.image.FilteredImageSource
 import javax.swing.{ ImageIcon, JLabel }

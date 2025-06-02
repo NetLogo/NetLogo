@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import java.awt.{ Dimension, Font, Graphics, Point }
+import java.awt.{ Dimension, Graphics, Point }
 import java.awt.event.{ ActionEvent, ActionListener, FocusAdapter, FocusEvent, KeyAdapter, KeyEvent, MouseAdapter,
                         MouseEvent, MouseWheelEvent, MouseWheelListener }
 import java.lang.NumberFormatException

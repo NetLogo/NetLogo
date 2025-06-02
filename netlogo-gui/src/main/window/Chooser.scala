@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import java.awt.{ Dimension, Font, Graphics, GridBagConstraints, GridBagLayout, Insets, LinearGradientPaint }
+import java.awt.{ Dimension, Graphics, GridBagConstraints, GridBagLayout, Insets, LinearGradientPaint }
 import java.awt.event.{ MouseWheelEvent, MouseWheelListener }
 import javax.swing.JLabel
 

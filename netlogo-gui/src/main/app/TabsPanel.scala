@@ -2,16 +2,12 @@
 
 package org.nlogo.app
 
-import java.awt.{ Component, Dimension, Graphics, GridBagConstraints, GridBagLayout, Insets }
-import java.awt.event.{ MouseAdapter, MouseEvent, MouseMotionAdapter }
+import java.awt.Component
+import java.awt.event.{ MouseAdapter, MouseEvent }
 import javax.swing.event.{ ChangeEvent, ChangeListener }
-import javax.swing.{ JComponent, JLabel, JPanel, JTabbedPane, SwingConstants }
-import javax.swing.plaf.basic.BasicTabbedPaneUI
 
-import org.nlogo.app.codetab.{ CodeTab, MainCodeTab }
-import org.nlogo.awt.UserCancelException
-import org.nlogo.swing.{ CloseButton, FloatingTabbedPane, TabLabel, Utils }
-import org.nlogo.theme.InterfaceColors
+import org.nlogo.app.codetab.CodeTab
+import org.nlogo.swing.{ FloatingTabbedPane, TabLabel }
 
 class TabsPanel(val tabManager: TabManager) extends FloatingTabbedPane with ChangeListener {
   addChangeListener(this)
