@@ -2,64 +2,66 @@
 
 package org.nlogo.swing
 
-import java.awt.{ Frame, Window }
+import java.awt.Frame
 import javax.swing.JDialog
 
-import org.nlogo.awt.EventQueue, EventQueue.mustBeEventDispatchThread
+import org.nlogo.awt.EventQueue
 
 import scala.concurrent.{ Await, Promise }
 import scala.concurrent.duration.{ Duration, MILLISECONDS }
 
+trait ModalProgress {
+  def showModalProgressPanel(message: String): Unit
+  def hideModalProgressPanel(): Unit
+}
+
 object ModalProgressTask {
-  def display(parent: Frame, message: String, perform: JDialog => Unit): Unit = {
-    mustBeEventDispatchThread()
+  def display(parent: Frame, message: String, perform: ModalProgress => Unit): Unit = {
+    parent match {
+      case mp: ModalProgress =>
+        EventQueue.invokeLater { () => perform(mp) }
 
-    val dialog = new ModalProgressDialog(parent, message)
-    EventQueue.invokeLater { () => perform(dialog) }
+        mp.showModalProgressPanel(message)
 
-    dialog.setVisible(true)
+      case _ =>
+        throw new IllegalStateException("The modal progress panel can't be displayed on the specified frame.")
+    }
   }
 
   def onUIThread(parent: Frame, message: String, r: Runnable): Unit = {
-    display(parent, message, { dialog =>
+    display(parent, message, { mp =>
       try {
         r.run()
       } catch {
         case _: InterruptedException => // ignore
       } finally {
-        dialog.setVisible(false)
-        dialog.dispose()
+        mp.hideModalProgressPanel()
       }
     })
   }
 
-  def onBackgroundThreadWithUIData[A](parent: Frame, message: String, uiThreadData: () => A, runInBackground: A => Unit) = {
-    runForResultOnBackgroundThread[A, Unit](parent, message, (dialog: JDialog) => uiThreadData(), runInBackground)
-  }
+  def runForResultOnBackgroundThread[A, B](parent: Frame, message: String, uiThreadData: () => A, runInBackground: A => B): B = {
+    parent match {
+      case mp: ModalProgress =>
+        val completionPromise = Promise[B]()
 
-  def runForResultOnBackgroundThread[A, B](parent: Frame, message: String, uiThreadData: JDialog => A, runInBackground: A => B): B = {
-    mustBeEventDispatchThread()
+        val worker = new Worker[A, B](mp, uiThreadData(), runInBackground, completionPromise)
 
-    val dialog = new ModalProgressDialog(parent, message)
+        worker.setPriority(Thread.MAX_PRIORITY)
+        worker.start()
 
-    val completionPromise = Promise[B]()
+        mp.showModalProgressPanel(message)
 
-    EventQueue.invokeLater { () =>
-      val data = uiThreadData(dialog)
+        // if this is being run, it means that the panel should have been hidden
+        // and therefore the promise completed.
+        Await.result(completionPromise.future, Duration(10, MILLISECONDS))
 
-      val worker = new Worker[A, B](dialog, data, runInBackground, completionPromise)
-      worker.setPriority(Thread.MAX_PRIORITY)
-      worker.start()
+      case _ =>
+        throw new IllegalStateException("The modal progress panel can't be displayed on the specified frame.")
     }
-
-    dialog.setVisible(true)
-
-    // if this is being run, it means that the dialog should have been hidden
-    // and therefore the promise completed.
-    Await.result(completionPromise.future, Duration(10, MILLISECONDS))
   }
 
-  private class Worker[A, B](window: Window, data: A, runInBackground: A => B, promise: Promise[B]) extends
+  private class Worker[A, B](mp: ModalProgress, data: A, runInBackground: A => B, promise: Promise[B]) extends
     Thread("ModalProgressTask#Worker") {
     override def run(): Unit = {
       try {
@@ -67,10 +69,7 @@ object ModalProgressTask {
       } catch {
         case e: Exception => promise.failure(e)
       } finally {
-        EventQueue.invokeLater { () =>
-          window.setVisible(false)
-          window.dispose()
-        }
+        mp.hideModalProgressPanel()
       }
     }
   }

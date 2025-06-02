@@ -10,7 +10,7 @@ import javax.swing.{ AbstractAction => SwingAbstractAction, JDialog }
 import org.nlogo.core.I18N
 import org.nlogo.api.Exceptions
 import org.nlogo.awt.{ EventQueue, Hierarchy => NLogoHierarchy, UserCancelException }
-import org.nlogo.swing.{ FileDialog, ModalProgressTask, OptionPane }
+import org.nlogo.swing.{ FileDialog, ModalProgress, ModalProgressTask, OptionPane }
 import org.nlogo.window.ExportControls
 
 object Actions {
@@ -27,14 +27,13 @@ extends SwingAbstractAction(I18N.gui.get("menu.file.export." + taskName) + Ellip
 
   def inModalDialog(a: A, closeDialog: () => Unit): Unit
 
-  def runDialog(a: A)(dialog: JDialog): Unit = {
+  def runDialog(a: A)(mp: ModalProgress): Unit = {
     // we use isDisposed to allow this callback to be run multiple times safely
     var isDisposed = false
     val closeDialog = { () =>
       EventQueue.invokeLater { () =>
         if (! isDisposed) {
-          dialog.setVisible(false)
-          dialog.dispose()
+          mp.hideModalProgressPanel()
           isDisposed = true
         }
       }

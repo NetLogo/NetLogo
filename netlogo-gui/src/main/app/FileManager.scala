@@ -20,9 +20,9 @@ import org.nlogo.awt.{ Hierarchy, UserCancelException }
 import org.nlogo.fileformat.{ FailedConversionResult, SuccessfulConversion }
 import org.nlogo.fileformat.FileFormat.ModelConversion
 import org.nlogo.swing.{ FileDialog, ModalProgressTask, OptionPane, UserAction }, UserAction.MenuAction
-import org.nlogo.window.{ BackgroundFileController, Events, FileController, GUIWorkspace, ReconfigureWorkspaceUI,
-                          WidgetSizes }, Events.{ AboutToCloseFilesEvent, AboutToQuitEvent, AboutToSaveModelEvent,
-                                                  LoadModelEvent, LoadErrorEvent, ModelSavedEvent, OpenModelEvent }
+import org.nlogo.window.{ Events, FileController, GUIWorkspace, ReconfigureWorkspaceUI, WidgetSizes },
+                          Events.{ AboutToCloseFilesEvent, AboutToQuitEvent, AboutToSaveModelEvent, LoadModelEvent,
+                                   LoadErrorEvent, ModelSavedEvent, OpenModelEvent }
 import org.nlogo.workspace.{ AbstractWorkspaceScala, OpenModel, OpenModelFromURI, OpenModelFromSource, SaveModel,
                              SaveModelAs }
 
@@ -377,10 +377,10 @@ class FileManager(workspace: AbstractWorkspaceScala,
     } else {
       val result = ModalProgressTask.runForResultOnBackgroundThread(
         Hierarchy.getFrame(parent), I18N.gui.get("dialog.interface.loading.task"),
-        (dialog) => new BackgroundFileController(dialog, controller),
-        (fileController: BackgroundFileController) =>
+        () => {},
+        Unit =>
           try {
-            openModel(fileController)
+            openModel(controller)
           } catch {
             case e: Exception => println("Exception in FileMenu.loadModel: " + e)
             None

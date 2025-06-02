@@ -171,7 +171,7 @@ class CommandCenter(workspace: AbstractWorkspace, showToggle: Boolean) extends J
             val filename = SwingFileDialog.showFiles(
               output, I18N.gui.get("tabs.run.commandcenter.exporting"), FileDialog.SAVE,
               workspace.guessExportName("command center output.txt"))
-            ModalProgressTask.onBackgroundThreadWithUIData(
+            ModalProgressTask.runForResultOnBackgroundThread(
               Hierarchy.getFrame(output), I18N.gui.get("dialog.interface.export.task"),
               () => output.valueText, (text: String) => ExportOutput.silencingErrors(filename, text))
           } catch {

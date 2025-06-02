@@ -2,22 +2,26 @@
 
 package org.nlogo.app
 
-import java.awt.BorderLayout
+import java.awt.{ BorderLayout, Component, SecondaryLoop, Toolkit }
 import java.awt.event.{WindowAdapter, WindowEvent}
-import javax.swing.{ JFrame, WindowConstants }
+import javax.swing.{ JFrame, JLayeredPane, WindowConstants }
 
 import org.nlogo.api.Exceptions
 import org.nlogo.awt.UserCancelException
-import org.nlogo.swing.NetLogoIcon
+import org.nlogo.swing.{ ModalProgress, ModalProgressPanel, NetLogoIcon }
 import org.nlogo.theme.ThemeSync
 import org.nlogo.window.LinkRoot
 import org.nlogo.window.Event.LinkParent
 import org.nlogo.window.Events.IconifiedEvent
 
-class AppFrame extends JFrame with LinkParent with LinkRoot with NetLogoIcon with ThemeSync {
-  setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE)
+class AppFrame extends JFrame with LinkParent with LinkRoot with NetLogoIcon with ModalProgress with ThemeSync {
+  private var modalProgressPanel = new ModalProgressPanel
 
-  getContentPane.setLayout(new BorderLayout)
+  private var modalProgressLoop: Option[SecondaryLoop] = None
+
+  setGlassPane(modalProgressPanel)
+
+  setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE)
 
   addWindowListener(new WindowAdapter() {
     override def windowClosing(e: WindowEvent): Unit = {
@@ -31,6 +35,28 @@ class AppFrame extends JFrame with LinkParent with LinkRoot with NetLogoIcon wit
       new IconifiedEvent(AppFrame.this, false).raise(App.app)
     }
   })
+
+  override def showModalProgressPanel(message: String): Unit = {
+    modalProgressPanel.setMessage(message)
+
+    getGlassPane.setVisible(true)
+
+    val loop = Toolkit.getDefaultToolkit.getSystemEventQueue.createSecondaryLoop()
+
+    modalProgressLoop = Some(loop)
+
+    loop.enter()
+  }
+
+  override def hideModalProgressPanel(): Unit = {
+    getGlassPane.setVisible(false)
+
+    modalProgressLoop.foreach(_.exit())
+
+    modalProgressLoop = None
+
+    repaint()
+  }
 
   override def syncTheme(): Unit = {
     App.app.syncWindowThemes()

@@ -996,7 +996,7 @@ abstract class GUIWorkspace(world: World, kioskLevel: GUIWorkspace.KioskLevel, f
       }
 
     exportPathOption.foreach { exportPath =>
-      ModalProgressTask.onBackgroundThreadWithUIData(
+      ModalProgressTask.runForResultOnBackgroundThread(
         getFrame, I18N.gui.get("dialog.interface.export.task"), () => (exportee.exportView, exportPath),
         { (data: (BufferedImage, String)) =>
           data match {
@@ -1058,7 +1058,7 @@ abstract class GUIWorkspace(world: World, kioskLevel: GUIWorkspace.KioskLevel, f
       val text = awaitFutureFromJobThread(controlSet.userOutput)
       ExportOutput.throwingErrors(filename, text)
     } else {
-      ModalProgressTask.onBackgroundThreadWithUIData(frame, I18N.gui.get("dialog.interface.export.task"),
+      ModalProgressTask.runForResultOnBackgroundThread(frame, I18N.gui.get("dialog.interface.export.task"),
         () => controlSet.userOutput,
         (textFuture: Future[String]) => ExportOutput.silencingErrors(filename, awaitFuture(textFuture, 1000)))
     }
