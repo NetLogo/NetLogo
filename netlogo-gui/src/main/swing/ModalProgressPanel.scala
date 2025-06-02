@@ -3,6 +3,7 @@
 package org.nlogo.swing
 
 import java.awt.{ BorderLayout, Color, GridBagConstraints, GridBagLayout }
+import java.awt.event.{ MouseEvent, MouseListener }
 import javax.swing.{ JLabel, JPanel, JProgressBar, SwingConstants }
 import javax.swing.border.EmptyBorder
 
@@ -19,10 +20,17 @@ class ModalProgressPanel extends JPanel(new GridBagLayout) {
     add(progressBar, BorderLayout.SOUTH)
   }
 
-  setBackground(new Color(0, 0, 0, 128))
   setOpaque(false)
 
   add(panel, new GridBagConstraints)
+
+  addMouseListener(new MouseListener {
+    def mouseClicked(e: MouseEvent): Unit = {}
+    def mouseEntered(e: MouseEvent): Unit = {}
+    def mouseExited(e: MouseEvent): Unit = {}
+    def mousePressed(e: MouseEvent): Unit = {}
+    def mouseReleased(e: MouseEvent): Unit = {}
+  })
 
   def setMessage(message: String): Unit = {
     label.setText(message)
