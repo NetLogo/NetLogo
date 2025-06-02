@@ -2,9 +2,9 @@
 
 package org.nlogo.sdm.gui
 
-import java.awt.{ Component, Dimension, Graphics }
+import java.awt.{ Component, Dimension }
 import java.awt.event.ActionEvent
-import javax.swing.{ AbstractAction, JFrame, JMenuBar, JMenuItem, JPopupMenu, WindowConstants },
+import javax.swing.{ AbstractAction, JFrame, JMenuItem, JPopupMenu, WindowConstants },
   WindowConstants.HIDE_ON_CLOSE
 import javax.swing.border.LineBorder
 import javax.swing.plaf.basic.BasicMenuUI
@@ -17,7 +17,7 @@ import org.nlogo.awt.EventQueue
 import org.nlogo.core.{ CompilerException, I18N }
 import org.nlogo.editor.Colorizer
 import org.nlogo.sdm.Translator
-import org.nlogo.swing.{ MenuBar, MenuItem, NetLogoIcon, Utils => SwingUtils }
+import org.nlogo.swing.{ MenuBar, MenuItem, NetLogoIcon }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ Editable, EditDialogFactory, Events, MenuBarFactory }
 import org.nlogo.window.Event.LinkChild
