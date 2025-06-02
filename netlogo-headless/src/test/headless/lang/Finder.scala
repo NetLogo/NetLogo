@@ -6,7 +6,6 @@ package lang
 import org.nlogo.headless.{ LanguageTestTag, test => headlessTest },
   headlessTest.{ Finder => TestFinder, ExtensionTests, ModelTests,
     ReporterTests, CommandTests, AbstractFixture }
-import org.scalactic.source.Position
 import org.scalatest.Tag
 
 import org.nlogo.util.SlowTest
