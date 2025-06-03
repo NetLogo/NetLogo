@@ -38,6 +38,7 @@ object FrontMiddleBridge extends FrontMiddleBridgeInterface {
     )
     proc.agentClassString = p.agentClassString
     proc.topLevel = p.topLevel
+    proc.aliases = p.aliases
     proc.args = p.args
     proc.size = p.args.length
     proc
