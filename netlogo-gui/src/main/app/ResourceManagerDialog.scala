@@ -4,6 +4,8 @@ package org.nlogo.app
 
 import java.awt.{ Component, FileDialog => AWTFileDialog, Frame, GridBagConstraints, GridBagLayout, Insets }
 import java.io.FileOutputStream
+import java.nio.ByteBuffer
+import java.nio.charset.{ MalformedInputException, StandardCharsets }
 import java.nio.file.{ Files, Paths }
 import java.util.Base64
 import javax.swing.{ JDialog, JLabel, JList, JPanel, ListCellRenderer, ListSelectionModel }
@@ -60,8 +62,17 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
         }
 
         else {
-          val resource = new ExternalResource(trimmed, extension,
-                                              Base64.getEncoder.encodeToString(Files.readAllBytes(path)))
+          val bytes = Files.readAllBytes(path)
+
+          val text = {
+            try {
+              StandardCharsets.UTF_8.newDecoder.decode(ByteBuffer.wrap(bytes)).toString
+            } catch {
+              case _: MalformedInputException => Base64.getEncoder.encodeToString(bytes)
+            }
+          }
+
+          val resource = new ExternalResource(trimmed, extension, text)
 
           if (manager.addResource(resource)) {
             refreshList()
