@@ -40,7 +40,6 @@ object StructureConverter {
     }.flatten
     val ps = declarations.collect {
       case p: Procedure =>
-        // TODO: Use the actual module name
         buildProcedure(p, module, displayName)
     }
     ps.foreach(_._1.topLevel = subprogram)

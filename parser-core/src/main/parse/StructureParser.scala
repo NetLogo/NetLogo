@@ -85,8 +85,9 @@ object StructureParser {
 
               newResults = newResults.copy(
                 program = firstResults.program, // Exclude globals, breeds, and breed variables in modules
-                procedures = addProcedureAliases(previousResults.procedures, newResults.procedures, currentLibrary.filename, prefix),
-                procedureTokens = addProcedureTokenAliases(previousResults.procedureTokens, newResults.procedureTokens, currentLibrary.filename, prefix)
+                // TODO: Make this work with transitive imports
+                procedures = addProcedureAliases(previousResults.procedures, newResults.procedures, None, prefix),
+                procedureTokens = addProcedureTokenAliases(previousResults.procedureTokens, newResults.procedureTokens, None, currentLibrary.filename, prefix)
               )
             }
 
@@ -110,32 +111,31 @@ object StructureParser {
       }
   }
 
-  private def addProcedureAliases(oldProcedures: ProceduresMap, newProcedures: ProceduresMap, filename: Option[String], prefix: String): ProceduresMap = {
+  private def addProcedureAliases(
+    oldProcedures: ProceduresMap,
+    newProcedures: ProceduresMap,
+    module: Option[String],
+    prefix: String): ProceduresMap = {
     val changedProcedures = newProcedures.removedAll(oldProcedures.keys)
 
-    // TODO: Make these proper aliases
     val aliases = changedProcedures.map{case ((name, _), proc) =>
-      val decl = proc.procedureDeclaration
-      val newName = prefix.toUpperCase + proc.name
-      val newToken = decl.name.token.copy(
-        text = prefix + proc.name,
-        value = prefix.toUpperCase + decl.name.token.value
-      )(decl.name.token.sourceLocation.copy(filename = filename.getOrElse("")))
-      val newTokens = decl.tokens.updated(1, newToken) // The token at index 1 is the name of the procedure
-      val newDecl = decl.copy(name = decl.name.copy(name = newName, token = newToken), tokens = newTokens)
-
-      (prefix.toUpperCase + name, filename) -> new RawProcedure(newDecl, filename, None)}
+      val key = (prefix.toUpperCase + name, module)
+      proc.aliases = proc.aliases :+ key
+      key -> proc}
 
     newProcedures ++ aliases
   }
 
-  private def addProcedureTokenAliases(oldProcedureTokens: Map[Tuple2[String, Option[String]], Iterable[Token]], newProcedureTokens: Map[Tuple2[String, Option[String]], Iterable[Token]], filename: Option[String], prefix: String): Map[Tuple2[String, Option[String]], Iterable[Token]] = {
+  private def addProcedureTokenAliases(
+    oldProcedureTokens: Map[Tuple2[String, Option[String]], Iterable[Token]],
+    newProcedureTokens: Map[Tuple2[String, Option[String]], Iterable[Token]],
+    module: Option[String],
+    filename: Option[String],
+    prefix: String): Map[Tuple2[String, Option[String]], Iterable[Token]] = {
     val changedProcedureTokens = newProcedureTokens.removedAll(oldProcedureTokens.keys)
 
     val aliases = changedProcedureTokens.map{case ((name, _), proc) =>
-      val newProc = proc.toSeq
-      val nameToken = newProc(1)
-      (prefix.toUpperCase + name, filename) -> newProc.updated(1, nameToken.copy()(nameToken.sourceLocation.copy(filename = filename.getOrElse(""))))
+      (prefix.toUpperCase + name, module) -> proc
     }
 
     newProcedureTokens ++ aliases
