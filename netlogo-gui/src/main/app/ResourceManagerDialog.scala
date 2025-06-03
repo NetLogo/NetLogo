@@ -20,7 +20,7 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
   extends JDialog(parent, I18N.gui.get("resource.manager"), true) with ThemeSync {
 
   private val manager = workspace.getResourceManager
-  private val resourceList = new JList(manager.getResources.map(_.name).toArray) {
+  private val resourceList = new JList(manager.getResources.toArray) {
     setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
     setCellRenderer(new ResourceCellRenderer)
 
@@ -39,7 +39,7 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
       val path = Paths.get(file)
 
       val name = new InputOptionPane(parent, I18N.gui.get("resource.name"), I18N.gui.get("resource.name"),
-                                     path.getFileName.toString.split('.')(0)).getInput
+                                     path.getFileName.toString.split('.').dropRight(1).mkString(".")).getInput
 
       if (name != null) {
         val trimmed = name.trim
@@ -50,7 +50,7 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
         }
 
         else {
-          val resource = new ExternalResource(trimmed, file.split('.')(1),
+          val resource = new ExternalResource(trimmed, file.split('.').last,
                                               Base64.getEncoder.encodeToString(Files.readAllBytes(path)))
 
           if (manager.addResource(resource)) {
@@ -74,7 +74,7 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
 
   private val exportButton = new Button(I18N.gui.get("resource.export"), () => {
     try {
-      val resource = manager.getResource(resourceList.getSelectedValue).get
+      val resource = manager.getResource(resourceList.getSelectedValue.name).get
       val stream = new FileOutputStream(FileDialog.showFiles(parent, I18N.gui.get("resource.select"),
                                                               AWTFileDialog.SAVE,
                                                               s"${resource.name}.${resource.extension}"))
@@ -89,7 +89,7 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
   })
 
   private val renameButton = new Button(I18N.gui.get("resource.rename"), () => {
-    val resource = manager.getResource(resourceList.getSelectedValue).get
+    val resource = manager.getResource(resourceList.getSelectedValue.name).get
 
     val name = new InputOptionPane(parent, I18N.gui.get("resource.newName"), I18N.gui.get("resource.newName"),
                                    resource.name).getInput
@@ -122,7 +122,7 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
   })
 
   private val removeButton = new Button(I18N.gui.get("resource.remove"), () => {
-    manager.removeResource(resourceList.getSelectedValue)
+    manager.removeResource(resourceList.getSelectedValue.name)
 
     refreshList()
 
@@ -135,12 +135,15 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
     val c = new GridBagConstraints
 
     c.gridx = 0
-    c.fill = GridBagConstraints.HORIZONTAL
+    c.fill = GridBagConstraints.BOTH
+    c.weightx = 1
+    c.weighty = 1
     c.insets = new Insets(6, 6, 6, 6)
 
     add(scrollPane, c)
 
     c.fill = GridBagConstraints.HORIZONTAL
+    c.weightx = 0
     c.weighty = 0
 
     add(new JPanel(new GridBagLayout) with Transparent {
@@ -167,7 +170,7 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
   syncTheme()
 
   private def refreshList(): Unit = {
-    resourceList.setListData(manager.getResources.map(_.name).toArray)
+    resourceList.setListData(manager.getResources.toArray)
 
     enableButtons()
   }
@@ -191,8 +194,9 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
     removeButton.syncTheme()
   }
 
-  private class ResourceCellRenderer extends JPanel(new GridBagLayout) with ListCellRenderer[String] {
-    private val label = new JLabel
+  private class ResourceCellRenderer extends JPanel(new GridBagLayout) with ListCellRenderer[ExternalResource] {
+    private val nameLabel = new JLabel
+    private val extensionLabel = new JLabel
 
     locally {
       val c = new GridBagConstraints
@@ -200,25 +204,34 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
       c.anchor = GridBagConstraints.WEST
       c.fill = GridBagConstraints.HORIZONTAL
       c.weightx = 1
-      c.insets = new Insets(3, 3, 3, 3)
+      c.insets = new Insets(3, 6, 3, 6)
 
-      add(label, c)
+      add(nameLabel, c)
+
+      c.fill = GridBagConstraints.NONE
+      c.weightx = 0
+      c.insets = new Insets(3, 0, 3, 6)
+
+      add(extensionLabel, c)
     }
 
-    def getListCellRendererComponent(list: JList[? <: String], value: String, index: Int, isSelected: Boolean,
-                                     hasFocus: Boolean): Component = {
-      label.setText(value)
+    def getListCellRendererComponent(list: JList[? <: ExternalResource], resource: ExternalResource, index: Int,
+                                     isSelected: Boolean, hasFocus: Boolean): Component = {
+      nameLabel.setText(resource.name)
+      extensionLabel.setText("." + resource.extension)
 
       if (isSelected) {
         setBackground(InterfaceColors.dialogBackgroundSelected())
 
-        label.setForeground(InterfaceColors.dialogTextSelected())
+        nameLabel.setForeground(InterfaceColors.dialogTextSelected())
+        extensionLabel.setForeground(InterfaceColors.dialogTextSelected())
       }
 
       else {
         setBackground(InterfaceColors.dialogBackground())
 
-        label.setForeground(InterfaceColors.dialogText())
+        nameLabel.setForeground(InterfaceColors.dialogText())
+        extensionLabel.setForeground(InterfaceColors.dialogText())
       }
 
       this
