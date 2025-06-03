@@ -10,6 +10,7 @@ trait FrontEndProcedure {
   def displayName: String
   def filename: String
   def module: Option[String]
+  var aliases: Seq[Tuple2[String, Option[String]]] = Seq()
   def nameToken: Token
   def argTokens: Seq[Token]
   var args = Vector[String]()
