@@ -365,31 +365,20 @@ class FileManager(workspace: AbstractWorkspaceScala,
   }
 
   private def loadModel(uri: URI, openModel: (OpenModel.Controller) => Option[Model]): Option[Model] = {
-    // if NetLogo isn't currently focused, don't open the progress dialog or it will refocus NetLogo (Isaac B 4/22/25)
-    if (KeyboardFocusManager.getCurrentKeyboardFocusManager.getActiveWindow == null) {
-      try {
-        openModel(controller)
-      } catch {
-        case e: Exception =>
-          println("Exception in FileMenu.loadModel: " + e)
+    val result = ModalProgressTask.runForResultOnBackgroundThread(
+      Hierarchy.getFrame(parent), I18N.gui.get("dialog.interface.loading.task"),
+      () => {},
+      Unit =>
+        try {
+          openModel(controller)
+        } catch {
+          case e: Exception => println("Exception in FileMenu.loadModel: " + e)
           None
-      }
-    } else {
-      val result = ModalProgressTask.runForResultOnBackgroundThread(
-        Hierarchy.getFrame(parent), I18N.gui.get("dialog.interface.loading.task"),
-        () => {},
-        Unit =>
-          try {
-            openModel(controller)
-          } catch {
-            case e: Exception => println("Exception in FileMenu.loadModel: " + e)
-            None
-          })
-      if (result.isEmpty) {
-        new LoadErrorEvent().raise(eventRaiser)
-      }
-      result
+        })
+    if (result.isEmpty) {
+      new LoadErrorEvent().raise(eventRaiser)
     }
+    result
   }
 
   @throws(classOf[UserCancelException])
@@ -447,13 +436,7 @@ class FileManager(workspace: AbstractWorkspaceScala,
         }
       }
 
-      // if NetLogo isn't currently focused, don't open the progress dialog or it will refocus NetLogo (Isaac B 4/22/25)
-      if (KeyboardFocusManager.getCurrentKeyboardFocusManager.getActiveWindow == null) {
-        loader.run()
-      } else {
-        ModalProgressTask.onUIThread(
-          Hierarchy.getFrame(parent), I18N.gui.get("dialog.interface.loading.task"), loader)
-      }
+      ModalProgressTask.onUIThread(Hierarchy.getFrame(parent), I18N.gui.get("dialog.interface.loading.task"), loader)
     }
   }
 
