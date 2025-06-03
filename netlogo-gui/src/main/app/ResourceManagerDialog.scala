@@ -38,8 +38,18 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
       val file = FileDialog.showFiles(parent, I18N.gui.get("resource.select"), AWTFileDialog.LOAD)
       val path = Paths.get(file)
 
+      val (fileName, extension) = {
+        val split = path.getFileName.toString.split('.')
+
+        if (split.size > 1) {
+          (split.dropRight(1).mkString("."), split.last)
+        } else {
+          (split(0), "")
+        }
+      }
+
       val name = new InputOptionPane(parent, I18N.gui.get("resource.name"), I18N.gui.get("resource.name"),
-                                     path.getFileName.toString.split('.').dropRight(1).mkString(".")).getInput
+                                     fileName).getInput
 
       if (name != null) {
         val trimmed = name.trim
@@ -50,7 +60,7 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
         }
 
         else {
-          val resource = new ExternalResource(trimmed, file.split('.').last,
+          val resource = new ExternalResource(trimmed, extension,
                                               Base64.getEncoder.encodeToString(Files.readAllBytes(path)))
 
           if (manager.addResource(resource)) {
@@ -218,7 +228,7 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
     def getListCellRendererComponent(list: JList[? <: ExternalResource], resource: ExternalResource, index: Int,
                                      isSelected: Boolean, hasFocus: Boolean): Component = {
       nameLabel.setText(resource.name)
-      extensionLabel.setText("." + resource.extension)
+      extensionLabel.setText(if (resource.extension.isEmpty) "" else ("." + resource.extension))
 
       if (isSelected) {
         setBackground(InterfaceColors.dialogBackgroundSelected())
