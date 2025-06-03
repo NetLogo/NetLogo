@@ -38,7 +38,8 @@ class NetLogoDocs(
     "controlling"         -> "Controlling Guide",
     "mathematica"         -> "Mathematica Link",
     "extensions"          -> "Extensions Guide",
-    "faq"                 -> "FAQ (Frequently Asked Questions)")
+    "faq"                 -> "FAQ (Frequently Asked Questions)",
+    "colorpicker"         -> "Color Picker Guide")
 
   def manualComponents(base: File, extensions: Seq[String]): Seq[File] = {
     val allComponents = Seq(
@@ -47,7 +48,7 @@ class NetLogoDocs(
       "interfacetab", "infotab", "codetab", "programming", "transition",
       "extension-manager", "shapes", "behaviorspace", "systemdynamics",
       "hubnet", "hubnet-authoring", "modelingcommons", "logging", "controlling",
-      "mathematica", "3d", "extensions", "extension-authoring") ++
+      "mathematica", "3d", "extensions", "extension-authoring", "colorpicker") ++
       extensions ++ Seq("faq", "dictionary")
 
     allComponents.map(n => (base / s"$n.html"))
