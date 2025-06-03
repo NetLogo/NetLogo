@@ -19,7 +19,11 @@ trait NetLogoParser {
       StructureParser.usedNames(structureResults.program,
         (oldProcedures ++ structureResults.procedures).filter{case ((_, procModule), _ ) => procModule.isEmpty})
 
-    val newTopLevelProcedures = (structureResults.procedures -- oldProcedures.keys)
+    val nonAliasProcedures = structureResults.procedures.filter {
+      case ((name, module), proc) => name == proc.name && module == proc.module
+    }
+
+    val newTopLevelProcedures = (nonAliasProcedures -- oldProcedures.keys)
 
     val topLevelDefs = newTopLevelProcedures.values
       .map(parseProcedure(structureResults, globallyUsedNames, oldProcedures, extensionManager)).toSeq
