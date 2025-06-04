@@ -21,7 +21,7 @@ object EditorConfiguration {
       "Menlo"
     else if (os("Windows"))
       GraphicsEnvironment.getLocalGraphicsEnvironment.getAvailableFontFamilyNames
-        .find(_.equalsIgnoreCase("Lucida Console")).getOrElse("Monospaced")
+        .find(_.equalsIgnoreCase("Consolas")).getOrElse("Monospaced")
     else "Monospaced"
 
   val defaultFont = new Font(platformMonospacedFont, Font.PLAIN, 12)
@@ -137,6 +137,8 @@ case class EditorConfiguration(
 
     val indenter = new DumbIndenter(editor)
     editor.setIndenter(indenter)
+
+    editor.setFont(font)
 
     (contextActions ++ menuActions).foreach {
       case e: InstallableAction => e.install(editor)
