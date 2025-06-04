@@ -2,16 +2,40 @@
 
 package org.nlogo.swing
 
-import java.awt.Frame
+import java.awt.{ Frame, SecondaryLoop, Toolkit }
+import javax.swing.JFrame
 
 import org.nlogo.awt.EventQueue
 
 import scala.concurrent.{ Await, Promise }
 import scala.concurrent.duration.{ Duration, MILLISECONDS }
 
-trait ModalProgress {
-  def showModalProgressPanel(message: String): Unit
-  def hideModalProgressPanel(): Unit
+trait ModalProgress extends JFrame {
+  private val panel = new ModalProgressPanel
+
+  private var loop: Option[SecondaryLoop] = None
+
+  setGlassPane(panel)
+
+  def showModalProgressPanel(message: String): Unit = {
+    panel.setMessage(message)
+
+    getGlassPane.setVisible(true)
+
+    loop = Option(Toolkit.getDefaultToolkit.getSystemEventQueue.createSecondaryLoop())
+
+    loop.foreach(_.enter())
+  }
+
+  def hideModalProgressPanel(): Unit = {
+    getGlassPane.setVisible(false)
+
+    loop.foreach(_.exit())
+
+    loop = None
+
+    repaint()
+  }
 }
 
 object ModalProgressTask {

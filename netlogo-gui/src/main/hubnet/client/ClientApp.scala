@@ -7,7 +7,7 @@ import javax.swing.{WindowConstants, JFrame}
 import org.nlogo.api.CompilerServices
 import org.nlogo.core.I18N
 import org.nlogo.window.{ ClientAppInterface, DefaultEditorFactory }
-import org.nlogo.swing.{ Implicits, ModalProgressTask, OptionPane, SetSystemLookAndFeel }, Implicits._
+import org.nlogo.swing.{ Implicits, ModalProgress, ModalProgressTask, OptionPane, SetSystemLookAndFeel }, Implicits._
 import org.nlogo.theme.InterfaceColors
 import org.nlogo.awt.{ Hierarchy, Images, Positioning, EventQueue }
 import org.nlogo.hubnet.connection.Ports
@@ -52,7 +52,7 @@ object ClientApp {
   }
 }
 
-class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterface {
+class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterface with ModalProgress {
   import ClientApp.localClientIndex
 
   private var clientPanel: ClientPanel = null
