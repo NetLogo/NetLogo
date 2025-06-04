@@ -2,7 +2,7 @@
 
 package org.nlogo.app.tools
 
-import java.awt.Frame
+import java.awt.{ BorderLayout, Frame, Insets }
 import java.awt.event.ActionEvent
 import java.io.File
 import java.util.Locale
@@ -32,7 +32,10 @@ object Preferences {
   }
 
   abstract class StringPreference(val i18nKey: String, val requirement: Option[RequiredAction], default: String) extends Preference {
-    val textField = new TextField(20, default)
+    val textField = new TextField(20, default) {
+      override def getInsets: Insets =
+        new Insets(3, 3, 3, 0)
+    }
 
     def component: JComponent & ThemeSync = textField
 
@@ -100,8 +103,8 @@ object Preferences {
     val requirement = Some(RequiredAction.Restart)
     val textField = new TextField(20)
     val component =
-      new JPanel with Transparent with ThemeSync {
-        add(textField)
+      new JPanel(new BorderLayout(6, 0)) with Transparent with ThemeSync {
+        add(textField, BorderLayout.CENTER)
 
         private val browseButton = new Button(new AbstractAction("Browse...") {
           def actionPerformed(e: ActionEvent): Unit = {
@@ -109,7 +112,7 @@ object Preferences {
           }
         })
 
-        add(browseButton)
+        add(browseButton, BorderLayout.EAST)
 
         override def syncTheme(): Unit = {
           textField.syncTheme()
