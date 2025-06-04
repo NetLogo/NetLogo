@@ -384,7 +384,7 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
     if (mouseMode == MouseMode.DRAG) {
       interfacePanel.aboutToDragSelectedWidgets(this, startPressX, startPressY)
     } else {
-      interfacePanel.resizeWidget(this)
+      interfacePanel.beginResizeWidget(this)
       aboutToDrag(startPressX, startPressY)
     }
   }
@@ -438,7 +438,7 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
       if (mouseMode == MouseMode.DRAG) {
         WidgetActions.moveSelectedWidgets(interfacePanel)
       } else if (mouseMode != MouseMode.IDLE) {
-        interfacePanel.resizeWidget(null)
+        interfacePanel.endResizeWidget()
         WidgetActions.resizeWidget(this)
       }
 

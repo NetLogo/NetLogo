@@ -45,6 +45,8 @@ class WidgetPanel(val workspace: GUIWorkspace)
   private var widgetBeingResized: Option[WidgetWrapper] = None
   private var view: Widget = null // convert to Option?
 
+  private var prevSelectedWrappers = Seq[WidgetWrapper]()
+
   // if sliderEventOnReleaseOnly is true, a SliderWidget will only raise an InterfaceGlobalEvent
   // when the mouse is released from the SliderDragControl
   // --mag 9/25/02, ST 4/9/03
@@ -294,8 +296,20 @@ class WidgetPanel(val workspace: GUIWorkspace)
     setForegroundWrapper()
   }
 
-  def resizeWidget(w: WidgetWrapper): Unit = {
+  def beginResizeWidget(w: WidgetWrapper): Unit = {
     widgetBeingResized = Option(w)
+
+    prevSelectedWrappers = selectedWrappers
+
+    prevSelectedWrappers.foreach(_.selected(false, true))
+  }
+
+  def endResizeWidget(): Unit = {
+    widgetBeingResized = None
+
+    prevSelectedWrappers.foreach(_.selected(true, true))
+
+    prevSelectedWrappers = Seq()
   }
 
   def mouseMoved(e: MouseEvent): Unit = {
