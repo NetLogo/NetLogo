@@ -2,9 +2,9 @@
 
 package org.nlogo.window
 
-import java.awt.{ Dimension, Graphics }
+import java.awt.Dimension
+import javax.swing.JLabel
 
-import org.nlogo.awt.Fonts
 import org.nlogo.core.{ AgentKind, I18N, Button => CoreButton, Widget => CoreWidget }
 import org.nlogo.theme.InterfaceColors
 
@@ -20,12 +20,24 @@ class DummyButtonWidget extends SingleErrorWidget with Editable {
   private var _keyEnabled: Boolean = false
   private var _name: String = ""
 
+  private val nameLabel = new JLabel
+  private val keyLabel = new JLabel
+
+  keyLabel.setFont(keyLabel.getFont.deriveFont(11.0f))
+
+  setLayout(null)
+
+  add(nameLabel)
+  add(keyLabel)
+
   override def editPanel: EditPanel = new DummyButtonEditPanel(this)
 
   def actionKey: Char = _actionKey
 
   def setActionKey(actionKey: Char): Unit = {
     _actionKey = actionKey
+    keyLabel.setText(actionKeyString)
+    repaint()
   }
 
   private def actionKeyString: String =
@@ -53,6 +65,8 @@ class DummyButtonWidget extends SingleErrorWidget with Editable {
   def setDisplayName(name: String): Unit = {
     _name = name
     displayName(name)
+    nameLabel.setText(displayName)
+    repaint()
   }
 
   /// sizing
@@ -63,45 +77,20 @@ class DummyButtonWidget extends SingleErrorWidget with Editable {
   override def getPreferredSize: Dimension =
     new Dimension(MinimumWidth.max(super.getPreferredSize.width), MinimumHeight.max(super.getPreferredSize.height))
 
-  /// painting
+  override def doLayout(): Unit = {
+    val nameSize = nameLabel.getPreferredSize
+    val keySize = keyLabel.getPreferredSize
 
-  override def paintComponent(g: Graphics): Unit = {
-    super.paintComponent(g)
-    val size = getSize()
-    val fontMetrics = g.getFontMetrics
-    val labelHeight =
-      fontMetrics.getMaxDescent + fontMetrics.getMaxAscent
-    val availableWidth = size.width - 8
-    val stringWidth = fontMetrics.stringWidth(displayName)
-    g.setColor(InterfaceColors.buttonText())
-
-    val shortString =
-      Fonts.shortenStringToFit(displayName, availableWidth, fontMetrics)
-
-    val nx =
-      if (stringWidth > availableWidth) 4
-      else (size.width / 2) - (stringWidth / 2)
-    val ny = (size.height / 2) + (labelHeight / 2)
-    g.drawString(shortString, nx, ny)
-
-    // now draw keyboard shortcut
-    if (actionKeyString != "") {
-      val ax = size.width - 4 - fontMetrics.stringWidth(actionKeyString)
-      val ay = fontMetrics.getMaxAscent + 2
-
-      g.setColor(
-        if (keyEnabled)
-          InterfaceColors.buttonText()
-        else
-          InterfaceColors.buttonTextDisabled()
-      )
-
-      g.drawString(actionKeyString, ax - 1, ay)
-    }
+    nameLabel.setBounds(getWidth / 2 - nameSize.width / 2, getHeight / 2 - nameSize.height / 2, nameSize.width,
+                        nameSize.height)
+    keyLabel.setBounds(getWidth - keySize.width - 4, 2, keySize.width, keySize.height)
   }
 
   override def syncTheme(): Unit = {
     setBackgroundColor(InterfaceColors.buttonBackground())
+
+    nameLabel.setForeground(InterfaceColors.buttonText())
+    keyLabel.setForeground(InterfaceColors.buttonText())
   }
 
   ///
