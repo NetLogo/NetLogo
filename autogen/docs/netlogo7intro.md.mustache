@@ -1,37 +1,12 @@
-<html lang="en">
-  <head>
-    <title>
-      NetLogo 7.0 User Manual: NetLogo 7 Transition Guide
-    </title>
-    <link rel="stylesheet" href="netlogo.css" type="text/css"/>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-<h1><a href="#nl7transition-guide" id="nl7transition-guide" class="section-anchor">NetLogo 7 Transition Guide</a></h1>
-  </head>
-  <body>
-    <div class="version">NetLogo 7.0 User Manual</div>
-  </body>
-</html>
+{{> header.html}}
 
-<style type="text/css">
-  .interfacetable > tbody > tr > td {
-    padding-top: 0.75em;
-    padding-bottom: 0.75em;
-  }
-</style>
+The items in the table of contents highlighted in yellow are the
+most important changes in NetLogo 7.0.0.
 
-# NetLogo 7.0.0 Changes Overview
+[TOC levels=2,3]
 
-The items in the table of contents marked as KEY CHANGE are the most
-important changes in NetLogo 7.
-
-# Table of Contents
-
-[NetLogo 7.0.0 Changes Overview
-
-
-<span class="mark">Note: in this document the term “clicking” is
-synonymous with “left-clicking.”</span> Right-clicking will be referred
+Note: in this document the term “clicking” is
+synonymous with “left-clicking.” Right-clicking will be referred
 to explicitly.
 
 ## Motivation
@@ -42,7 +17,7 @@ have made major changes to the UI for NetLogo 7.0.0. We plan to continue
 modernizing NetLogo in future releases. Your feedback via the [NetLogo
 Forum](https://forum.netlogo.org/) will help guide UI improvements.
 
-## Interface Tab
+## <mark>Interface Tab</mark>
 
 ### Overview of Visual Changes to the Interface Tab
 
@@ -329,9 +304,9 @@ of information. However .nlogox files cannot be opened with previous
 versions of NetLogo. Any tools users have created that rely on the
 format of .nlogo files will need to be re-written.
 
-## Tools in the NetLogo 7 Interface
+## <mark>Tools in the NetLogo 7 Interface</mark>
 
-### <span class="mark">Overview: NetLogo</span> Interface Tool Buttons and Dropdown menus.
+### Overview: NetLogo Interface Tool Buttons and Dropdown menus.
 
 The Interface Panel now includes four tool buttons which control the
 meaning of user actions. They are the Interaction Tool, the Selection
@@ -348,7 +323,7 @@ Widgets pull-down menus, the Interaction Tool (a finger icon) Selection
 Tool (a cursor with dotted box icon) the Edit Tool (a pencil icon) and
 the Delete Tool (a garbage can icon).
 
-### <span class="mark">Interaction Tool</span>
+### Interaction Tool
 
 The Interaction Tool is for making direct use of widgets to run commands
 and change global variables.
@@ -382,8 +357,8 @@ tool.
 
 #### Exiting 
 
-Pressing the <span class="mark">Selection, Editing or Deletion icons
-exits the Interaction Tool.</span> One can also activate the Selection
+Pressing the Selection, Editing or Deletion icons
+exits the Interaction Tool. One can also activate the Selection
 Tool by using Ctrl-Click (Windows or Linux) or Cmd-Click (macOS) on a
 widget, or by using the Select option with the right-click pull-down
 menu. Using the Edit or Delete option with the right-click pull-down
@@ -393,7 +368,7 @@ actions.
 <p><img src="./images/nl7intro/widgetrightclick.png"
 style="width:3.1in" /></p>
 
-### <span class="mark">Selection, Editing and Deletion Tools</span>
+### Selection, Editing and Deletion Tools
 
 These explicit tools are new for NetLogo 7, although they incorporate
 behaviors associated with certain NetLogo 6.4. icons.
@@ -406,7 +381,7 @@ icon. The Esc key will return you to the Interaction Tool. Moving the
 focus to another context such as the Command Center, the Info Tab, or
 the Code Tab will activate the Interaction Tool.
 
-### <span class="mark">Add Widgets Menu</span>
+### Add Widgets Menu
 
 This menu allows users to add widgets. This tool is entered by clicking
 the “Add Widget” dropdown menu on the Interface toolbar and making a
@@ -479,32 +454,32 @@ dragged one at a time, and the items remain selected.
 The following actions require that two or more elements already be
 selected.
 
-#### <span class="mark">Aligning</span>
+#### Aligning
 
-<span class="mark">If</span> <span class="mark">more than one element is
+If more than one element is
 selected, clicking Align Widgets will display a popup menu of alignment
 choices. Dragging the mouse to select an option and releasing it will
-perform the alignment. The items remain selected.</span>
+perform the alignment. The items remain selected.
 
-<span class="mark"></span>
 
-#### <span class="mark">Distributing</span>
 
-<span class="mark">The Align Widgets menu also has options for
+#### Distributing
+
+The Align Widgets menu also has options for
 distributing widgets vertically or horizontally. The items remain
-selected.</span>
+selected.
 
-#### <span class="mark">Stretching</span>
+#### Stretching
 
-<span class="mark">The Align Widgets menu also has options for
+The Align Widgets menu also has options for
 stretching widgets to match other widgets to the right, left, top or
-bottom. The items remain selected.</span>
+bottom. The items remain selected.
 
-#### <span class="mark">Widget Overlap</span>
+#### Widget Overlap
 
-<span class="mark">The actions of aligning, distributing or stretching
+The actions of aligning, distributing or stretching
 will not be completed if they would create a new overlap of widgets. Not
-completing an action may result in</span> unexpected behavior, but
+completing an action may result in unexpected behavior, but
 protects users from other unexpected behavior, such as one widget
 becoming completely hidden behind another.
 
@@ -560,18 +535,10 @@ linear with the amount the slider knob is moved.
 
 ## The Color Picker
 
-### Introduction
+Color Swatches has been replaced by the [Color Picker](colorpicker.html),
+a new, more powerful way of selecting colors
 
-NetLogo 7 introduces a new, more powerful way of selecting colors, which
-replaces Color Swatches. As was the case previously there are four
-different contexts in which colors can be selected: from the Tools menu,
-from a Color Input widget, when selecting a plot pen color and when
-editing a Note. The ways in which the versions differ involve whether a
-selected color can be copied and or “picked,” whether transparency is
-allowed, and what forms of input and output specifications are allowed,
-as will be described later.
-
-**Notifications**
+## Notifications
 
 When the NetLogo team sends out a new notification message a banner will
 appear below the Interface Toolbar with a brief message. If you click on
