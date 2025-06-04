@@ -33,6 +33,7 @@ object FrontMiddleBridge extends FrontMiddleBridgeInterface {
       nameToken = p.nameToken,
       argTokens = p.argTokens,
       procedureDeclaration = p.procedureDeclaration,
+      module = p.module,
       baseDisplayName = if (p.displayName == "") None else Some(p.displayName)
     )
     proc.agentClassString = p.agentClassString
