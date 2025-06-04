@@ -49,7 +49,7 @@ class JFXColorPicker( frame: Frame, modal: Boolean, config: JFXCPConfig, initial
     else
       0
 
-  setSize(new Dimension(1000, 600 + addedHeight))
+  setSize(new Dimension(800, 570 + addedHeight))
   setResizable(false)
   setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE)
 
