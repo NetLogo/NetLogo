@@ -40,7 +40,8 @@ class NetLogoDocs(
     "extensions"          -> "Extensions Guide",
     "faq"                 -> "FAQ (Frequently Asked Questions)",
     "colorpicker"         -> "Color Picker Guide",
-    "netlogo7intro"       -> "NetLogo 7.0.0 Changes Overview")
+    "netlogo7intro"       -> "NetLogo 7.0.0 Changes Overview",
+    "netlogopreferences"  -> "NetLogo Preferences")
 
   def manualComponents(base: File, extensions: Seq[String]): Seq[File] = {
     val allComponents = Seq(
@@ -50,7 +51,7 @@ class NetLogoDocs(
       "extension-manager", "shapes", "behaviorspace", "systemdynamics",
       "hubnet", "hubnet-authoring", "modelingcommons", "logging", "controlling",
       "mathematica", "3d", "extensions", "extension-authoring", 
-      "colorpicker", "netlogo7intro") ++
+      "colorpicker", "netlogo7intro", "netlogopreferences") ++
       extensions ++ Seq("faq", "dictionary")
 
     allComponents.map(n => (base / s"$n.html"))
