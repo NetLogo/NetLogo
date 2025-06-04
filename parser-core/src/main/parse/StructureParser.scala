@@ -42,40 +42,40 @@ object StructureParser {
         if (subprogram)
           firstResults
         else {
-          val (maybeDuplicateToken, _) = firstResults.libraries.map(_.token).foldLeft((None: Option[Token], Set(): Set[Token])) {
+          val (maybeDuplicateToken, _) = firstResults.imports.map(_.token).foldLeft((None: Option[Token], Set(): Set[Token])) {
             case ((None, previousTokens), x) => (if (previousTokens.contains(x)) Some(x) else None, previousTokens + x)
 
             // No need to update previousTokens now that we've found something
             case ((token @ Some(_), previousTokens), _) => (token, previousTokens)
           }
 
-          maybeDuplicateToken.foreach(exception(I18N.errors.get("compiler.StructureParser.libraryMultipleImports"), _))
+          maybeDuplicateToken.foreach(exception(I18N.errors.get("compiler.StructureParser.importMultipleImports"), _))
 
           var processedLibraries: Set[String] = Set()
 
           Iterator.iterate(firstResults) { results =>
             var newResults: StructureResults = results
 
-            // Handle libraries
+            // Handle imports
             // TODO: Make resolveIncludePath case insensitive
-            if (newResults.libraries.nonEmpty) {
-              val filename = newResults.libraries.head.name.toLowerCase + ".nls"
+            if (newResults.imports.nonEmpty) {
+              val filename = newResults.imports.head.name.toLowerCase + ".nls"
               val suppliedPath = resolveIncludePath(filename)
 
               val previousResults = newResults
-              val currentLibrary = results.libraries.head
+              val currentLibrary = results.imports.head
 
               newResults = includeFile(compilationEnvironment, suppliedPath) match {
                 case Some((path, fileContents)) =>
                   parseOne(tokenizer, structureParser, fileContents, path,
-                    newResults.copy(libraries = newResults.libraries.tail,
+                    newResults.copy(imports = newResults.imports.tail,
                       includedSources = newResults.includedSources :+ suppliedPath))
                 case None =>
-                  exception(I18N.errors.getN("compiler.StructureParser.libraryNotFound", suppliedPath), currentLibrary.token)
+                  exception(I18N.errors.getN("compiler.StructureParser.importNotFound", suppliedPath), currentLibrary.token)
               }
 
               if (processedLibraries.contains(currentLibrary.name)) {
-                exception(I18N.errors.getN("compiler.StructureParser.libraryImportLoop"), currentLibrary.token)
+                exception(I18N.errors.getN("compiler.StructureParser.importLoop"), currentLibrary.token)
               } else {
                 processedLibraries += currentLibrary.name
               }
@@ -104,7 +104,7 @@ object StructureParser {
             }
 
             newResults
-          }.dropWhile(x => x.includes.nonEmpty || x.libraries.nonEmpty).next()
+          }.dropWhile(x => x.includes.nonEmpty || x.imports.nonEmpty).next()
         }
       }
   }
@@ -250,19 +250,19 @@ object StructureParser {
   }
 
   @throws(classOf[CompilerException])
-  def findLibraries(tokens: Iterator[Token]): Seq[String] = {
-    val libraryPositionedTokens =
-      tokens.dropWhile(! _.text.equalsIgnoreCase("library"))
+  def findImports(tokens: Iterator[Token]): Seq[String] = {
+    val importPositionedTokens =
+      tokens.dropWhile(! _.text.equalsIgnoreCase("import"))
     val result =
-      if (libraryPositionedTokens.isEmpty)
+      if (importPositionedTokens.isEmpty)
         Seq()
       else {
-        libraryPositionedTokens.next()
-        val libraryWithoutComments = libraryPositionedTokens.filter(_.tpe != TokenType.Comment)
-        if (libraryWithoutComments.next().tpe != TokenType.OpenBracket)
-          exception("Did not find expected open bracket for library declaration", tokens.next())
+        importPositionedTokens.next()
+        val importWithoutComments = importPositionedTokens.filter(_.tpe != TokenType.Comment)
+        if (importWithoutComments.next().tpe != TokenType.OpenBracket)
+          exception("Did not find expected open bracket for import declaration", tokens.next())
         else
-          libraryWithoutComments
+          importWithoutComments
             .takeWhile((x) => x.tpe != TokenType.OpenBracket && x.tpe != TokenType.CloseBracket)
             .filter(_.tpe == TokenType.Ident)
             .map(_.value.toString)
@@ -271,7 +271,7 @@ object StructureParser {
     if (result.isEmpty) {
       result
     } else {
-      result ++ findLibraries(tokens)
+      result ++ findImports(tokens)
     }
   }
 
