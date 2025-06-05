@@ -12,7 +12,7 @@ import scala.collection.immutable.ListMap
 object FrontMiddleBridge extends FrontMiddleBridgeInterface {
   def apply(
     structureResults: StructureResults,
-    oldProcedures:    ListMap[String, nvm.Procedure],
+    oldProcedures:    ListMap[Tuple2[String, Option[String]], nvm.Procedure],
     topLevelDefs:     Seq[core.ProcedureDefinition],
     backifier:        ApiBackifier
   ): Seq[ProcedureDefinition] = {
@@ -33,10 +33,12 @@ object FrontMiddleBridge extends FrontMiddleBridgeInterface {
       nameToken = p.nameToken,
       argTokens = p.argTokens,
       procedureDeclaration = p.procedureDeclaration,
+      module = p.module,
       baseDisplayName = if (p.displayName == "") None else Some(p.displayName)
     )
     proc.agentClassString = p.agentClassString
     proc.topLevel = p.topLevel
+    proc.aliases = p.aliases
     proc.args = p.args
     proc.size = p.args.length
     proc
