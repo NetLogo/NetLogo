@@ -7,11 +7,56 @@ later, over and over again, are found in the Code tab.
 
 [TOC]
 
+Many Code tab behaviors can be changed by using [Code preferences](netlogopreferences.html#code-preferences).
+These preferences can be accessed via the "Preferences" button in the Code tab toolbar, or the Code
+Preferences tab of the NetLogo Preferences dialog which is opened with the Tools menu “Preferences...”
+item on Windows and Linux, and with the NetLogo menu “Settings” items on MacOS.
+
+## Code Tab Toolbar
+<p><img src="./images/codetab/codetabtoolbar.png"
+style="width:6in" /></p>
+Details for these items can be found in the corresponding sections.
+
+- [Check](#checking-for-errors)
+- [Find](#find-replace)
+- [Procedures](#procedures-menu)
+- [Separate code window](#separate-code-tab)
+- [Preferences](netlogopreferences.html#code-preferences)
+ Preferences are also described in relevant sections of this document.
+
+### Procedures menu
+This menu includes a list of all the procedures in the Code tab. Clicking on a procedure
+moves the cursor to that procedure. Typing in the text box at the top will show only matching procedures.
+By default procedures are listed alphabetically, but this
+can be changed to their order of appearance by using the "Sort order of procedures menu"
+code preference.
+<table>
+<colgroup>
+<col style="width: 45%" />
+<col style="width: 45%" />
+</colgroup>
+<tbody>
+<tr>
+ <td style="vertical-align: top;">
+<img src="./images/codetab/codetabproceduresmenu.png"
+style="width:2in" />
+</td>
+<td style="vertical-align: top;">
+<img src="./images/codetab/codetabproceduresmenusearch.png"
+style="width:2in" />
+</td>
+</tr>
+</tbody>
+</table>
+
 ## Checking for Errors
 
 To determine if the code has any errors, you may press the "Check" button. If
-there are any syntax errors, the Code tab will turn red, the code that contains
-the error will be highlighted, and an error message will appear.
+there are any syntax errors, the Code tab will turn orange, the code that contains
+the error will be highlighted, the cursor will move to the error location, and an error message will appear
+in an orange banner at the top of the code area. If you don't want the cursor to move when there is a
+compilation error (for example when there is more code than fits on the screen) uncheck the "Auto-focus text or tab with errors when model is compiled" preference. The error will not be highlighted.
+
 ![[codetaberror.png]]
 
 Switching tabs also causes the code to be checked, so if you just switch tabs,
@@ -26,6 +71,7 @@ The Code tab can be opened in a separate window from the main NetLogo window. It
  on other operating systems.
 - To return a separated Code tab to the main NetLogo window you can use Command + W on Mac, Control + W
  on other operating systems or click the window's close button.
+- There is a Code preference to "Open code tab in separate window on startup"
 
 ## Find & Replace
 
@@ -50,7 +96,7 @@ with the replace phrase.
 
 ## Automatic Indentation
 
-When the Indent Automatically checkbox is selected, NetLogo will automatically
+When the "Indent Automatically" Code preference is selected, NetLogo will automatically
 attempt to align your code in a logically structured format. For example, when
 you open a set of square brackets "[" (perhaps after an `if` statement), NetLogo
 will automatically add spaces so that the following lines of code are two spaces
@@ -61,6 +107,10 @@ closing bracket will be lined up with the matching open bracket.
 NetLogo will try to indent the code as you type, but you can also press the tab
 key anywhere on any line to ask NetLogo to indent the line immediately. Or, you
 can select a whole region of code and press the tab key to re-indent all of it.
+
+## Line Numbers
+By default line numbers are shown on the left edge of the code area. They can be
+removed by unselecting the "Show line numbers" Code preference.
 
 ## More Editing Options
 
@@ -88,12 +138,12 @@ For more information about writing procedures, read
 
 ## Included Files Menu
 
-**Caution:** The includes facility is new and experimental.
+**Caution:** The includes facility is still experimental.
 
 When you add the [__includes](dictionary.html#includes) keyword to a model a
 menu to the right of the procedures menu appears. This is the "Included Files"
 menu which lists all the NetLogo source files (.nls) included in this file. You
-can make this menu always visible using the Preferences dialog.
+can make this menu always visible using the "Always show "Included Files" menu" Code preference.
 ![[includesmenu.png]]
 
 You can choose a file name from the menu to open a tab for that file, or you can
@@ -102,7 +152,6 @@ respectively.
 ![[includesmenuopen.png]]
 
 If the main Code tab is in a separate window, the tabs for included files will appear there too.
-
 Once you've opened new tabs they become accessible from the Tabs menu, and you
 can use the keyboard to move from tab to tab (Command + number on Mac, Control +
 number on other operating systems).
