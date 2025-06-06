@@ -13,8 +13,7 @@ Preferences tab of the NetLogo Preferences dialog which is opened with the Tools
 item on Windows and Linux, and with the NetLogo menu “Settings” items on MacOS.
 
 ## Code Tab Toolbar
-<p><img src="./images/codetab/codetabtoolbar.png"
-style="width:6in" /></p>
+<p><img src="./images/codetab/codetabtoolbar.png" style="width:6in" /></p>
 Details for these items can be found in the corresponding sections.
 
 - [Check](#checking-for-errors)
@@ -38,12 +37,10 @@ code preference.
 <tbody>
 <tr>
  <td style="vertical-align: top;">
-<img src="./images/codetab/codetabproceduresmenu.png"
-style="width:2in" />
+<img src="./images/codetab/codetabproceduresmenu.png" style="width:2in" />
 </td>
 <td style="vertical-align: top;">
-<img src="./images/codetab/codetabproceduresmenusearch.png"
-style="width:2in" />
+<img src="./images/codetab/codetabproceduresmenusearch.png" style="width:2in" />
 </td>
 </tr>
 </tbody>
@@ -136,23 +133,56 @@ For more information about writing procedures, read
 [Tutorial #3: Procedures](tutorial3.html) and the
 [Programming Guide](programming.html).
 
-## Included Files Menu
+## Included Files
 
 **Caution:** The includes facility is still experimental.
 
-When you add the [__includes](dictionary.html#includes) keyword to a model a
-menu to the right of the procedures menu appears. This is the "Included Files"
-menu which lists all the NetLogo source files (.nls) included in this file. You
+If you have a file with the extension .nls all of its breeds, variables, and procedure definitions
+are available in the model if you add it by using the [__includes](dictionary.html#includes) keyword
+ to a model. When that keyword is used the "Included Files" appears menu to the right of the procedures
+menu appears. This menu lists all the NetLogo source files (.nls) included in this model. You can choose
+a file name from the menu to open a tab for that file, or you can open a new or existing file using the
+"New Source File" or "Open Source File" items .You
 can make this menu always visible using the "Always show "Included Files" menu" Code preference.
-![[includesmenu.png]]
 
-You can choose a file name from the menu to open a tab for that file, or you can
-open a new or existing file using New Source File and Open Source File,
-respectively.
-![[includesmenuopen.png]]
+<table>
+<colgroup>
+<col style="width: 45%" />
+<col style="width: 45%" />
+</colgroup>
+<tbody>
+<tr>
+ <td style="vertical-align: top;">
+<img src="./images/codetab/includesmenu.png" />
+</td>
+<td style="vertical-align: top;">
+<img src="./images/codetab/includesmenuopen.png" />
+</td>
+</tr>
+</tbody>
+</table>
 
-If the main Code tab is in a separate window, the tabs for included files will appear there too.
 Once you've opened new tabs they become accessible from the Tabs menu, and you
-can use the keyboard to move from tab to tab (Command + number on Mac, Control +
-number on other operating systems).
-![[tabsmenu.png]]
+can use the keyboard to move from tab to tab (Command + number on Mac,
+Control + number on other operating systems). If the main Code tab is in a separate window, the tabs
+for included files will appear there too. When an included (.nls) file tab is selected it becomes blue.
+An included file tab is closed by clicking on the “x” on the right side of the tab. An included file tab
+has a checkbox to open it in a separate code window, and a
+Preferences button, which work as they do for the main Code Tab.
+
+<table>
+<colgroup>
+<col style="width: 35%" />
+<col style="width: 55%" />
+</colgroup>
+<tbody>
+<tr>
+ <td style="vertical-align: top;">
+<img src="./images/codetab/tabsmenu.png" />
+</td>
+<td style="vertical-align: top;">
+<img src="./images/codetab/codetabtoolbarwithnls.png"  style="width:7in" />
+</td>
+</tr>
+</tbody>
+</table>
