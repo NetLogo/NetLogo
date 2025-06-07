@@ -15,7 +15,7 @@ import org.nlogo.core.{
   AgentKind, I18N, Button => CoreButton, Chooser => CoreChooser, InputBox => CoreInputBox, Monitor => CoreMonitor,
   Output => CoreOutput, Plot => CorePlot, Slider => CoreSlider, Switch => CoreSwitch, TextBox => CoreTextBox,
   View => CoreView, Widget => CoreWidget }
-import org.nlogo.editor.{ Colorizer, EditorArea, UndoManager }
+import org.nlogo.editor.{ Colorizer, EditorArea }
 import org.nlogo.log.LogManager
 import org.nlogo.swing.{ MenuItem, PopupMenu }
 import org.nlogo.window.{ ButtonWidget, ChooserWidget, Editable, Events => WindowEvents, GUIWorkspace, InputBoxWidget,
@@ -42,17 +42,10 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
   ///
 
   override def focusGained(e: FocusEvent): Unit = {
-    UndoManager.setCurrentManager(WidgetActions.undoManager)
     enableButtonKeys(true)
   }
 
   override def focusLost(e: FocusEvent): Unit = {
-    if (interfaceMode == InterfaceMode.Add) {
-      setInterfaceMode(InterfaceMode.Interact, false)
-    } else if (interfaceMode == InterfaceMode.Interact) {
-      interceptPane.disableIntercept()
-    }
-
     enableButtonKeys(false)
   }
 

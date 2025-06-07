@@ -3,8 +3,8 @@
 package org.nlogo.app.interfacetab
 
 import java.awt.{ Component, Dimension, Graphics, MouseInfo, Point, Rectangle, Color => AwtColor }
-import java.awt.event.{ ActionEvent, KeyAdapter, KeyEvent, KeyListener, MouseAdapter, MouseEvent, MouseListener,
-                        MouseMotionAdapter, MouseMotionListener }
+import java.awt.event.{ ActionEvent, FocusEvent, FocusAdapter, KeyAdapter, KeyEvent, KeyListener, MouseAdapter,
+                        MouseEvent, MouseListener, MouseMotionAdapter, MouseMotionListener }
 import javax.swing.{ AbstractAction, JComponent, JLayeredPane, SwingUtilities }
 
 import org.nlogo.app.common.EditorFactory
@@ -12,7 +12,7 @@ import org.nlogo.awt.{ Fonts => NlogoFonts, Mouse => NlogoMouse }
 import org.nlogo.core.{ I18N, Button => CoreButton, Chooser => CoreChooser, InputBox => CoreInputBox,
   Monitor => CoreMonitor, Plot => CorePlot, Slider => CoreSlider, Switch => CoreSwitch, TextBox => CoreTextBox,
   View => CoreView, Widget => CoreWidget }
-import org.nlogo.editor.{ EditorArea, EditorConfiguration }
+import org.nlogo.editor.{ EditorArea, EditorConfiguration, UndoManager }
 import org.nlogo.log.LogManager
 import org.nlogo.nvm.DefaultCompilerServices
 import org.nlogo.swing.{ MenuItem, PopupMenu }
@@ -171,6 +171,20 @@ class WidgetPanel(val workspace: GUIWorkspace)
   addMouseMotionListener(this)
   addKeyListener(this)
 
+  addFocusListener(new FocusAdapter {
+    override def focusGained(e: FocusEvent): Unit = {
+      UndoManager.setCurrentManager(WidgetActions.undoManager)
+    }
+
+    override def focusLost(e: FocusEvent): Unit = {
+      if (interfaceMode == InterfaceMode.Add) {
+        setInterfaceMode(InterfaceMode.Interact, false)
+      } else if (interfaceMode == InterfaceMode.Interact) {
+        interceptPane.disableIntercept()
+      }
+    }
+  })
+
   // our children may overlap
   override def isOptimizedDrawingEnabled: Boolean = false
 
@@ -216,7 +230,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
     getWrappers.filter(ww => ww.getBounds().contains(point)).sortBy(getPosition(_)).headOption
 
   override def empty: Boolean =
-    getComponents.exists {
+    !getComponents.exists {
       case w: WidgetWrapper => true
       case _ => false
     }
@@ -1304,7 +1318,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
   // of widgets like the note widget for improved aesthetics. this happens in two phases, first on the
   // x axis and then on the y axis, which although slightly less efficient allows for more accurate
   // repositioning of the widgets. (Isaac B 3/1/25)
-  def convertWidgetSizes(reposition: Boolean): Unit = {
+  override def convertWidgetSizes(reposition: Boolean): Unit = {
     setInterfaceMode(InterfaceMode.Interact, true)
 
     val originalBounds = getWrappers.map(w => (w, w.getBounds()))
