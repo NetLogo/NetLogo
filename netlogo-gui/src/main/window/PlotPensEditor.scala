@@ -92,6 +92,7 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
   private val scrollPane = new ScrollPane(table)
 
   private val addButton = new Button(I18N.gui("add"), () => table.newPen())
+  private val checkButton = new Button(I18N.gui("check"), () => apply())
 
   override def apply(): Unit = {
     super.apply()
@@ -106,6 +107,7 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
   add(scrollPane, BorderLayout.CENTER)
   add(new JPanel with Transparent {
     add(addButton)
+    add(checkButton)
   }, BorderLayout.SOUTH)
 
   def set(value: List[PlotPen]): Unit = {} // seemingly no need to do anything here
