@@ -3,7 +3,8 @@
 package org.nlogo.swing
 
 import java.awt.{ BorderLayout, Frame }
-import javax.swing.{ JDialog, JPanel }
+import java.awt.event.ActionEvent
+import javax.swing.{ AbstractAction, JDialog, JPanel }
 
 import org.nlogo.theme.InterfaceColors
 
@@ -23,6 +24,13 @@ class Popup(parentFrame: Frame, title:String, panel: JPanel, cancel: => Unit, ok
     new DialogButton(true, i18n("common.buttons.ok"), () => { if (ok) die() }),
     new DialogButton(false, i18n("common.buttons.cancel"), () => { cancel; die() }))),
     BorderLayout.SOUTH)
+
+  Utils.addEscKeyAction(dialog, new AbstractAction {
+    override def actionPerformed(e: ActionEvent): Unit = {
+      cancel
+      die()
+    }
+  })
 
   DialogForegrounder(dialog)
 
