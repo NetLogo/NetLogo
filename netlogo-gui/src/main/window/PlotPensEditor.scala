@@ -319,6 +319,8 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
       editButton.putClientProperty("JComponent.sizeVariant", "small")
       deleteButton.putClientProperty("JComponent.sizeVariant", "small")
 
+      setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR))
+
       val buttonPanel = new JPanel(new GridBagLayout) with Transparent {
         val c = new GridBagConstraints
 
