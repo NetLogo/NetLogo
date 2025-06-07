@@ -185,7 +185,7 @@ public abstract class Event {
         // findHandlers does the grunt work of actually
         // walking the component hierarchy looking for
         // handlers
-        handlersV = findHandlers(findTop(raiser), eventClass);
+        handlersV = new ArrayList<>(new HashSet<>(findHandlers(findTop(raiser), eventClass)));
         events.put(eventClass, handlersV);
       }
 
