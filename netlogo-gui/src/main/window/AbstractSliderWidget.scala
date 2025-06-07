@@ -129,7 +129,7 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
       override def mousePressed(e: MouseEvent): Unit = {
         new InputBoxLoseFocusEvent().raise(AbstractSliderWidget.this)
 
-        requestFocus()
+        slider.requestFocus()
       }
     }
 
