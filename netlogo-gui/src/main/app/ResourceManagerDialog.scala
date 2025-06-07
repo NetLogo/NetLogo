@@ -2,14 +2,16 @@
 
 package org.nlogo.app
 
-import java.awt.{ Component, FileDialog => AWTFileDialog, Frame, GridBagConstraints, GridBagLayout, Insets }
+import java.awt.{ Component, FileDialog => AWTFileDialog, Font, Frame, GridBagConstraints, GridBagLayout, Insets }
 import java.io.FileOutputStream
 import java.nio.ByteBuffer
 import java.nio.charset.{ MalformedInputException, StandardCharsets }
 import java.nio.file.{ Files, Paths }
 import java.util.Base64
-import javax.swing.{ JDialog, JLabel, JList, JPanel, ListCellRenderer, ListSelectionModel }
+import javax.swing.{ JDialog, JLabel, JPanel, JTable, ListSelectionModel }
+import javax.swing.border.MatteBorder
 import javax.swing.event.{ ListSelectionEvent, ListSelectionListener }
+import javax.swing.table.{ DefaultTableModel, TableCellRenderer }
 
 import org.nlogo.api.{ Workspace }
 import org.nlogo.awt.{ Positioning, UserCancelException }
@@ -22,18 +24,41 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
   extends JDialog(parent, I18N.gui.get("resource.manager"), true) with ThemeSync {
 
   private val manager = workspace.getResourceManager
-  private val resourceList = new JList(manager.getResources.toArray) {
-    setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
-    setCellRenderer(new ResourceCellRenderer)
 
-    addListSelectionListener(new ListSelectionListener {
+  private val tableModel = new DefaultTableModel(0, 2)
+
+  private val table = new JTable(tableModel) {
+    setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
+    setCellSelectionEnabled(false)
+    setRowSelectionAllowed(true)
+
+    getTableHeader.setResizingAllowed(false)
+    getTableHeader.setReorderingAllowed(false)
+
+    setDefaultRenderer(classOf[ResourceCellRenderer], new ResourceCellRenderer)
+
+    getSelectionModel.addListSelectionListener(new ListSelectionListener {
       def valueChanged(e: ListSelectionEvent): Unit = {
         enableButtons()
       }
     })
+
+    val nameColumn = getColumnModel.getColumn(0)
+
+    nameColumn.setHeaderValue("Name")
+    nameColumn.setCellRenderer(new ResourceCellRenderer)
+    nameColumn.setHeaderRenderer(new HeaderCellRenderer)
+
+    val extensionColumn = getColumnModel.getColumn(1)
+
+    extensionColumn.setHeaderValue("Extension")
+    extensionColumn.setCellRenderer(new ResourceCellRenderer)
+    extensionColumn.setHeaderRenderer(new HeaderCellRenderer)
+
+    override def isCellEditable(row: Int, column: Int): Boolean = false
   }
 
-  private val scrollPane = new ScrollPane(resourceList)
+  private val scrollPane = new ScrollPane(table)
 
   private val addButton = new Button(I18N.gui.get("resource.add"), () => {
     try {
@@ -95,7 +120,7 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
 
   private val exportButton = new Button(I18N.gui.get("resource.export"), () => {
     try {
-      val resource = manager.getResource(resourceList.getSelectedValue.name).get
+      val resource = manager.getResource(table.getValueAt(table.getSelectedRow, 0).toString).get
       val stream = new FileOutputStream(FileDialog.showFiles(parent, I18N.gui.get("resource.select"),
                                                               AWTFileDialog.SAVE,
                                                               s"${resource.name}.${resource.extension}"))
@@ -110,7 +135,7 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
   })
 
   private val renameButton = new Button(I18N.gui.get("resource.rename"), () => {
-    val resource = manager.getResource(resourceList.getSelectedValue.name).get
+    val resource = manager.getResource(table.getValueAt(table.getSelectedRow, 0).toString).get
 
     val name = new InputOptionPane(parent, I18N.gui.get("resource.newName"), I18N.gui.get("resource.newName"),
                                    resource.name).getInput
@@ -143,16 +168,16 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
   })
 
   private val removeButton = new Button(I18N.gui.get("resource.remove"), () => {
-    manager.removeResource(resourceList.getSelectedValue.name)
+    manager.removeResource(table.getValueAt(table.getSelectedRow, 0).toString)
 
     refreshList()
 
     new DirtyEvent(None).raise(parent)
   })
 
-  setLayout(new GridBagLayout)
-
   locally {
+    setLayout(new GridBagLayout)
+
     val c = new GridBagConstraints
 
     c.gridx = 0
@@ -180,26 +205,30 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
       add(renameButton, c)
       add(removeButton, c)
     }, c)
+
+    refreshList()
+
+    pack()
+
+    Positioning.center(this, parent)
+
+    syncTheme()
   }
 
-  enableButtons()
-
-  pack()
-
-  Positioning.center(this, parent)
-
-  syncTheme()
-
   private def refreshList(): Unit = {
-    resourceList.setListData(manager.getResources.toArray)
+    tableModel.setRowCount(0)
+
+    manager.getResources.foreach { resource =>
+      tableModel.addRow(Array[Object](resource.name, resource.extension))
+    }
 
     enableButtons()
   }
 
   private def enableButtons(): Unit = {
-    exportButton.setEnabled(!resourceList.isSelectionEmpty)
-    renameButton.setEnabled(!resourceList.isSelectionEmpty)
-    removeButton.setEnabled(!resourceList.isSelectionEmpty)
+    exportButton.setEnabled(table.getSelectedRow != -1)
+    renameButton.setEnabled(table.getSelectedRow != -1)
+    removeButton.setEnabled(table.getSelectedRow != -1)
   }
 
   override def syncTheme(): Unit = {
@@ -207,7 +236,7 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
 
     scrollPane.setBackground(InterfaceColors.dialogBackground())
 
-    resourceList.setBackground(InterfaceColors.dialogBackground())
+    table.setBackground(InterfaceColors.dialogBackground())
 
     addButton.syncTheme()
     exportButton.syncTheme()
@@ -215,45 +244,73 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
     removeButton.syncTheme()
   }
 
-  private class ResourceCellRenderer extends JPanel(new GridBagLayout) with ListCellRenderer[ExternalResource] {
-    private val nameLabel = new JLabel
-    private val extensionLabel = new JLabel
+  private class ResourceCellRenderer extends JPanel(new GridBagLayout) with TableCellRenderer {
+    private val label = new JLabel
 
     locally {
       val c = new GridBagConstraints
 
       c.anchor = GridBagConstraints.WEST
-      c.fill = GridBagConstraints.HORIZONTAL
       c.weightx = 1
       c.insets = new Insets(3, 6, 3, 6)
 
-      add(nameLabel, c)
-
-      c.fill = GridBagConstraints.NONE
-      c.weightx = 0
-      c.insets = new Insets(3, 0, 3, 6)
-
-      add(extensionLabel, c)
+      add(label, c)
     }
 
-    def getListCellRendererComponent(list: JList[? <: ExternalResource], resource: ExternalResource, index: Int,
-                                     isSelected: Boolean, hasFocus: Boolean): Component = {
-      nameLabel.setText(resource.name)
-      extensionLabel.setText(if (resource.extension.isEmpty) "" else ("." + resource.extension))
+    def getTableCellRendererComponent(table: JTable, value: Object, isSelected: Boolean, hasFocus: Boolean, row: Int,
+                                      column: Int): Component = {
+      label.setText(value.toString)
 
       if (isSelected) {
         setBackground(InterfaceColors.dialogBackgroundSelected())
 
-        nameLabel.setForeground(InterfaceColors.dialogTextSelected())
-        extensionLabel.setForeground(InterfaceColors.dialogTextSelected())
+        label.setForeground(InterfaceColors.dialogTextSelected())
       }
 
       else {
         setBackground(InterfaceColors.dialogBackground())
 
-        nameLabel.setForeground(InterfaceColors.dialogText())
-        extensionLabel.setForeground(InterfaceColors.dialogText())
+        label.setForeground(InterfaceColors.dialogText())
       }
+
+      if (column == 0) {
+        setBorder(new MatteBorder(0, 0, 1, 0, InterfaceColors.dialogText()))
+      } else {
+        setBorder(new MatteBorder(0, 1, 1, 0, InterfaceColors.dialogText()))
+      }
+
+      this
+    }
+  }
+
+  private class HeaderCellRenderer extends JPanel(new GridBagLayout) with TableCellRenderer {
+    private val label = new JLabel
+
+    locally {
+      label.setFont(label.getFont.deriveFont(Font.BOLD))
+
+      val c = new GridBagConstraints
+
+      c.anchor = GridBagConstraints.WEST
+      c.weightx = 1
+      c.insets = new Insets(3, 6, 3, 6)
+
+      add(label, c)
+    }
+
+    def getTableCellRendererComponent(table: JTable, value: Object, isSelected: Boolean, hasFocus: Boolean, row: Int,
+                                      column: Int): Component = {
+      label.setText(value.toString)
+
+      setBackground(InterfaceColors.dialogBackground())
+
+      if (column == 0) {
+        setBorder(new MatteBorder(0, 0, 1, 0, InterfaceColors.dialogText()))
+      } else {
+        setBorder(new MatteBorder(0, 1, 1, 0, InterfaceColors.dialogText()))
+      }
+
+      label.setForeground(InterfaceColors.dialogText())
 
       this
     }
