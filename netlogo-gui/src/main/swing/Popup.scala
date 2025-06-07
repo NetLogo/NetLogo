@@ -5,6 +5,7 @@ package org.nlogo.swing
 import java.awt.{ BorderLayout, Frame }
 import java.awt.event.ActionEvent
 import javax.swing.{ AbstractAction, JDialog, JPanel }
+import javax.swing.border.EmptyBorder
 
 import org.nlogo.theme.InterfaceColors
 
@@ -20,10 +21,13 @@ class Popup(parentFrame: Frame, title:String, panel: JPanel, cancel: => Unit, ok
   dialog.setAutoRequestFocus(true)
   dialog.getContentPane.setBackground(InterfaceColors.dialogBackground())
 
-  dialog.add(new ButtonPanel(Seq(
-    new DialogButton(true, i18n("common.buttons.ok"), () => { if (ok) die() }),
-    new DialogButton(false, i18n("common.buttons.cancel"), () => { cancel; die() }))),
-    BorderLayout.SOUTH)
+  private val buttonPanel = new ButtonPanel(
+    Seq(new DialogButton(true, i18n("common.buttons.ok"), () => { if (ok) die() }),
+        new DialogButton(false, i18n("common.buttons.cancel"), () => { cancel; die() }))) {
+    setBorder(new EmptyBorder(0, 0, 6, 0))
+  }
+
+  dialog.add(buttonPanel, BorderLayout.SOUTH)
 
   Utils.addEscKeyAction(dialog, new AbstractAction {
     override def actionPerformed(e: ActionEvent): Unit = {
