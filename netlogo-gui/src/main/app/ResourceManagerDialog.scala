@@ -3,12 +3,13 @@
 package org.nlogo.app
 
 import java.awt.{ Component, FileDialog => AWTFileDialog, Font, Frame, GridBagConstraints, GridBagLayout, Insets }
+import java.awt.event.ActionEvent
 import java.io.FileOutputStream
 import java.nio.ByteBuffer
 import java.nio.charset.{ MalformedInputException, StandardCharsets }
 import java.nio.file.{ Files, Paths }
 import java.util.Base64
-import javax.swing.{ JDialog, JLabel, JPanel, JTable, ListSelectionModel }
+import javax.swing.{ AbstractAction, JDialog, JLabel, JPanel, JTable, ListSelectionModel }
 import javax.swing.border.MatteBorder
 import javax.swing.event.{ ListSelectionEvent, ListSelectionListener }
 import javax.swing.table.{ DefaultTableModel, TableCellRenderer }
@@ -16,7 +17,7 @@ import javax.swing.table.{ DefaultTableModel, TableCellRenderer }
 import org.nlogo.api.{ Workspace }
 import org.nlogo.awt.{ Positioning, UserCancelException }
 import org.nlogo.core.{ ExternalResource, I18N }
-import org.nlogo.swing.{ Button, FileDialog, InputOptionPane, OptionPane, ScrollPane, Transparent }
+import org.nlogo.swing.{ Button, FileDialog, InputOptionPane, OptionPane, ScrollPane, Transparent, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.Events.DirtyEvent
 
@@ -211,6 +212,12 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
     pack()
 
     Positioning.center(this, parent)
+
+    Utils.addEscKeyAction(this, new AbstractAction {
+      override def actionPerformed(e: ActionEvent): Unit = {
+        setVisible(false)
+      }
+    })
 
     syncTheme()
   }
