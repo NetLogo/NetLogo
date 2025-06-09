@@ -9,7 +9,7 @@ import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 import java.awt._
 import javax.swing.{ JLabel, JPanel }
-import event.{ MouseWheelEvent, MouseEvent, MouseAdapter, MouseWheelListener }
+import event.{ MouseEvent, MouseAdapter }
 
 object Switch {
   val MINWIDTH: Int = 90
@@ -17,9 +17,7 @@ object Switch {
   val MINHEIGHT: Int = CHANNEL_HEIGHT + 5
 }
 
-abstract class Switch extends MultiErrorWidget with MouseWheelListener
-  with Events.AfterLoadEvent.Handler with ThemeSync {
-
+abstract class Switch extends MultiErrorWidget with Events.AfterLoadEvent.Handler with ThemeSync {
   import Switch._
 
   protected var constraint = new BooleanConstraint
@@ -32,8 +30,6 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
     setLayout(new GridBagLayout)
 
     initGUI()
-
-    addMouseWheelListener(this)
 
     val mouseListener = new MouseAdapter {
       override def mousePressed(e: MouseEvent): Unit = {
@@ -131,8 +127,6 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
       new Dimension(50, 40)
     }
   }
-
-  def mouseWheelMoved(e: MouseWheelEvent): Unit = { isOn = ! (e.getWheelRotation >= 1) }
 
   override def syncTheme(): Unit = {
     setBackgroundColor(InterfaceColors.switchBackground())

@@ -3,7 +3,6 @@
 package org.nlogo.window
 
 import java.awt.{ Dimension, Graphics, GridBagConstraints, GridBagLayout, Insets, LinearGradientPaint }
-import java.awt.event.{ MouseWheelEvent, MouseWheelListener }
 import javax.swing.JLabel
 
 import org.nlogo.agent.ChooserConstraint
@@ -21,7 +20,7 @@ object Chooser {
 
 import Chooser._
 
-trait Chooser extends SingleErrorWidget with MouseWheelListener {
+trait Chooser extends SingleErrorWidget {
   def compiler: CompilerServices
 
   // The constraint track the list of choices, and ensures the
@@ -44,8 +43,6 @@ trait Chooser extends SingleErrorWidget with MouseWheelListener {
   }
 
   setLayout(new GridBagLayout)
-
-  addMouseWheelListener(this)
 
   initGUI()
 
@@ -146,18 +143,6 @@ trait Chooser extends SingleErrorWidget with MouseWheelListener {
   }
 
   ///
-
-  def mouseWheelMoved(e: MouseWheelEvent): Unit = {
-    val i =
-      if (e.getWheelRotation >= 1) {
-        val max = constraint.acceptedValues.size - 1
-        StrictMath.min(max, index + 1)
-      } else {
-        StrictMath.max(0, index - 1)
-      }
-
-    control.setSelectedIndex(i)
-  }
 
   override def paintComponent(g: Graphics): Unit = {
     super.paintComponent(g)

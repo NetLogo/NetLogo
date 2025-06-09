@@ -3,8 +3,7 @@
 package org.nlogo.swing
 
 import java.awt.{ Component, Dimension, GridBagConstraints, GridBagLayout, Insets, ItemSelectable }
-import java.awt.event.{ ActionEvent, ItemEvent, ItemListener, KeyAdapter, KeyEvent, MouseAdapter, MouseEvent,
-                        MouseWheelEvent, MouseWheelListener }
+import java.awt.event.{ ActionEvent, ItemEvent, ItemListener, KeyAdapter, KeyEvent, MouseAdapter, MouseEvent }
 import javax.swing.{ AbstractAction, JLabel, JPanel }
 
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
@@ -22,12 +21,6 @@ class ComboBox[T](private var items: Seq[T] = Seq())
   private val mouseListener = new MouseAdapter {
     override def mousePressed(e: MouseEvent): Unit = {
       popup.show(ComboBox.this, 0, getHeight)
-    }
-  }
-
-  private val wheelListener = new MouseWheelListener {
-    def mouseWheelMoved(e: MouseWheelEvent): Unit = {
-      setSelectedIndex(getSelectedIndex + e.getWheelRotation)
     }
   }
 
@@ -66,13 +59,8 @@ class ComboBox[T](private var items: Seq[T] = Seq())
     }, c)
 
     addMouseListener(mouseListener)
-    addMouseWheelListener(wheelListener)
-
     choiceDisplay.addMouseListener(mouseListener)
-    choiceDisplay.addMouseWheelListener(wheelListener)
-
     arrow.addMouseListener(mouseListener)
-    arrow.addMouseWheelListener(wheelListener)
 
     addKeyListener(new KeyAdapter {
       override def keyPressed(e: KeyEvent): Unit = {
@@ -185,7 +173,6 @@ class ComboBox[T](private var items: Seq[T] = Seq())
           add(child, c)
 
           child.addMouseListener(mouseListener)
-          child.addMouseWheelListener(wheelListener)
 
         case a =>
           val child = new JLabel(a.toString)
@@ -195,7 +182,6 @@ class ComboBox[T](private var items: Seq[T] = Seq())
           add(child, c)
 
           child.addMouseListener(mouseListener)
-          child.addMouseWheelListener(wheelListener)
       })
 
       syncTheme()

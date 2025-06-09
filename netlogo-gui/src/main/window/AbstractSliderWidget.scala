@@ -4,7 +4,7 @@ package org.nlogo.window
 
 import java.awt.{ Dimension, Graphics, Point }
 import java.awt.event.{ ActionEvent, ActionListener, FocusAdapter, FocusEvent, KeyAdapter, KeyEvent, MouseAdapter,
-                        MouseEvent, MouseWheelEvent, MouseWheelListener }
+                        MouseEvent }
 import java.lang.NumberFormatException
 import javax.swing.{ BorderFactory, JLabel, JSlider, JTextField, SwingConstants }
 import javax.swing.text.{ AttributeSet, PlainDocument }
@@ -138,18 +138,6 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
     unitsComponent.addMouseListener(mouseListener)
     slider.addMouseListener(mouseListener)
 
-    val mouseWheelListener = new MouseWheelListener {
-      def mouseWheelMoved(e: MouseWheelEvent): Unit = {
-        slider.setValue(slider.getValue - e.getWheelRotation)
-        updateValue()
-      }
-    }
-
-    addMouseWheelListener(mouseWheelListener)
-    nameComponent.addMouseWheelListener(mouseWheelListener)
-    unitsComponent.addMouseWheelListener(mouseWheelListener)
-    slider.addMouseWheelListener(mouseWheelListener)
-
     val keyListener = new KeyAdapter {
       override def keyPressed(e: KeyEvent): Unit = {
         if (e.getKeyCode == KeyEvent.VK_LEFT) {
@@ -260,7 +248,7 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
   }
 
   // sets the internal value based on the slider position
-  // used for alternative input methods like keys, scrolling, and clicking (Isaac B 4/4/25)
+  // used for alternative input methods like keys and clicking (Isaac B 4/4/25)
   def updateValue(): Unit = {
     setValue(minimum + slider.getValue * increment)
   }
