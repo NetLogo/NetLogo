@@ -34,7 +34,7 @@ trait Chooser extends SingleErrorWidget with MouseWheelListener {
   // sub-elements of Switch
   protected val label = new JLabel(I18N.gui.get("edit.chooser.previewName"))
   private val control = new ComboBox[String] {
-    addItemListener(_ => indexFromListener(getSelectedIndex))
+    addItemListener(_ => index(getSelectedIndex))
 
     override def paintComponent(g: Graphics): Unit = {
       setDiameter(zoom(6))
@@ -102,16 +102,12 @@ trait Chooser extends SingleErrorWidget with MouseWheelListener {
   protected def index: Int = constraint.defaultIndex
 
   protected def index(index: Int): Unit = {
-    constraint.defaultIndex = index
-    updateConstraints()
-    control.setSelectedIndex(index)
-    repaint()
-  }
-
-  protected def indexFromListener(index: Int): Unit = {
-    constraint.defaultIndex = index
-    updateConstraints()
-    repaint()
+    if (this.index != index) {
+      constraint.defaultIndex = index
+      updateConstraints()
+      control.setSelectedIndex(index)
+      repaint()
+    }
   }
 
   protected def choices(acceptedValues: LogoList): Unit = {
