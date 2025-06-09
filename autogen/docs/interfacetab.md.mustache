@@ -30,7 +30,7 @@ interface items (such as buttons and sliders).
 
 The buttons in the toolbar are described below.
 
-**Adding:** To add an interface element, select the element from the drop down
+**Adding:** To add an interface element, select the element from the drop-down
 menu. Note that the Add button stays down. Then click on the white area below
 the toolbar. (If the menu is already showing the right type, you can just press
 the Add button instead of using the menu again.)
@@ -82,10 +82,15 @@ chart below.
     <td><img alt="Button" src="images/interfacetab/button.png"></td>
     <td>Button</td>
     <td>
-      A button is either <em>once</em> or <em>forever</em>. When you click
+      <p>A button is either <em>once</em> or <em>forever</em>. When you click
       on a once button, it executes its instructions once. The forever
       button executes the instructions over and over, until you click
-      on the button again to stop the action. If you have assigned an
+      on the button again to stop the action. By default the
+      instructions are executed by the <em>observer</em>. However there is
+      an agents pull-down menu that lets you specify that <em>turtles</em>,<em>patches</em>, or
+      <em>links</em> will execute the instructions.  This will be indicated by an
+      icon on the left side of the button.</p>
+      <p>If you have assigned an
       action key to the button, pressing the corresponding keyboard key
       will act just like a button press when the button is in focus.
       Buttons with action keys have a letter in the upper right corner
@@ -94,7 +99,7 @@ chart below.
       pressing the action key won't trigger the button. The letter
       in the upper right hand corner of the button will be dimmed in
       this situation. To enable action keys, click in the white
-      background of the Interface tab.
+      background of the Interface tab.</p>
     </td>
   </tr>
   <tr>
@@ -105,7 +110,8 @@ chart below.
       They are used in models as a quick way to change a variable
       without having to recode the procedure every time. Instead, the
       user moves the slider to a value and observes what happens in the
-      model.
+      model. The value can also be set by typing a number in the slider's
+      text box.
     </td>
   </tr>
   <tr>
@@ -122,7 +128,7 @@ chart below.
     <td>Chooser</td>
     <td>
       Choosers let you choose a value for a global variable from a list
-      of choices, presented in a drop down menu. The choices may be
+      of choices, presented in a drop-down menu. The choices may be
       strings, numbers, booleans, or lists.
     </td>
   </tr>
@@ -394,7 +400,8 @@ Let's take a look at the design of the Command Center.
 ![[command-center.png]]
 
 The smaller box, below the large box, is where you type a command. After typing
-it press the Return or Enter key to run it.
+it press the Return or Enter key to run it. You can use the up and down arrows
+to access previous commands.
 
 To the left of where you type is a popup menu that initially says "observer>".
 You can choose either observer, turtles, or patches, to specify which agents run
@@ -426,7 +433,9 @@ keys on your keyboard.
 To clear the large scrolling area containing previous commands and output, click
 "clear" in the top right corner.
 
-To clear the history popup menu, choose "Clear History" on that menu.
+To clear the command history, choose "Clear History" on the history popup menu
+(accessed using the small downward pointing triangle to the right of where you type
+commands).
 
 #### Arranging
 
@@ -457,11 +466,13 @@ Many of the fields are fairly self-explanatory, such as the name of the plot,
 labels for the x and y axes, ranges for the axes, and the "Show legend?"
 checkbox.
 
-If Auto Scale? is checked the x and y axes will automatically readjust as
-points are added to the plot using `plot` or `plotxy` if the points are
-outside the current range.  If Auto Scale? is on and you use `histogram`,
-the y axis will automatically readjust for points outside the current range,
-but the x axis will be left unchanged.
+Points added to a plot using `plot` or `plotxy` will not be visible if they are outside
+the extent of the axes. The x and y axes can be automatically (and independently) readjusted
+by checking the Auto scale x-axis? and Auto scale y-axis? boxes respectively. Note that if
+you use `histogram` Auto scale y-axis? will work but Auto scale x-axis? will have no
+effect. Note that these checkboxes can be overridden by Plotting commands such as
+`auto-plot-x-on`, `auto-plot-y-on`, `auto-plot-x-off`, `auto-plot-y-off`, `set-plot-x-range`
+and `set-plot-y-range`.
 
 Under "Plot setup commands" and "Plot update commands" you can enter commands
 that will automatically be run at appropriate times. Click the little triangle
