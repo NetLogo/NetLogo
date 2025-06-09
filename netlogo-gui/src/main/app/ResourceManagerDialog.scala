@@ -33,7 +33,6 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
     setCellSelectionEnabled(false)
     setRowSelectionAllowed(true)
 
-    getTableHeader.setResizingAllowed(false)
     getTableHeader.setReorderingAllowed(false)
 
     setDefaultRenderer(classOf[ResourceCellRenderer], new ResourceCellRenderer)
