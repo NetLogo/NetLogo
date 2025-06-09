@@ -10,10 +10,6 @@ import org.nlogo.window.Events.{AfterLoadEvent, PeriodicUpdateEvent, InterfaceGl
 class ChooserWidget(val compiler: CompilerServices, colorizer: Colorizer)
   extends Chooser with Editable with InterfaceGlobalWidget with PeriodicUpdateEvent.Handler {
 
-  private var _name = ""
-
-  def name: String = _name
-
   override def classDisplayName: String = I18N.gui.get("tabs.run.widgets.chooser")
 
   override def editPanel: EditPanel = new ChooserEditPanel(this, compiler, colorizer)
@@ -31,26 +27,15 @@ class ChooserWidget(val compiler: CompilerServices, colorizer: Colorizer)
     }
   }
 
-  def name(newName: String): Unit = name(newName, true)
-
-  private def name(newName: String, sendEvent: Boolean): Unit = {
-    _name = newName
-    if (_name == "") {
-      displayName(I18N.gui.get("edit.chooser.previewName"))
-    } else {
-      displayName(newName)
-    }
-    label.setText(displayName)
-    // I don't think anyone ever uses the display name, but let's keep it in sync
-    // with the real name, just in case - ST 6/3/02
-    repaint()
+  private def setNameWithEvent(newName: String, sendEvent: Boolean): Unit = {
+    setVarName(newName)
     if (sendEvent) {new InterfaceGlobalEvent(this, true, false, false, false).raise(this)}
   }
 
   // name needs a wrapper because we don't want to recompile until editFinished()
   def setNameWrapper(newName: String): Unit = {
     nameChanged = _name != newName || nameChanged
-    name(newName, false)
+    setNameWithEvent(newName, false)
   }
 
   def choicesWrapper =
@@ -84,7 +69,7 @@ class ChooserWidget(val compiler: CompilerServices, colorizer: Colorizer)
 
   override def editFinished(): Boolean = {
     super.editFinished()
-    name(name, nameChanged)
+    setNameWithEvent(name, nameChanged)
     updateConstraints()
     nameChanged = false
     true
@@ -109,7 +94,7 @@ class ChooserWidget(val compiler: CompilerServices, colorizer: Colorizer)
       case chooser: CoreChooser =>
         oldSize(chooser.oldSize)
         setSize(chooser.width, chooser.height)
-        name(chooser.display.optionToPotentiallyEmptyString)
+        setNameWithEvent(chooser.display.optionToPotentiallyEmptyString, true)
         setChoicesWrapper(chooseableListToLogoList(chooser.choices))
         index(chooser.currentChoice)
 

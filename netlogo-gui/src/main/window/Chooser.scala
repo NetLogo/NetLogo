@@ -23,17 +23,18 @@ import Chooser._
 
 trait Chooser extends SingleErrorWidget with MouseWheelListener {
   def compiler: CompilerServices
-  def name: String
 
   // The constraint track the list of choices, and ensures the
   // global is always one of them.  We use it to track our current
   // index too (the selected value in the chooser). -- CLB
   protected var constraint = new ChooserConstraint()
 
+  protected var _name = ""
+
   // sub-elements of Switch
   protected val label = new JLabel(I18N.gui.get("edit.chooser.previewName"))
   private val control = new ComboBox[String] {
-    addItemListener(_ => index(getSelectedIndex))
+    addItemListener(_ => indexFromListener(getSelectedIndex))
 
     override def paintComponent(g: Graphics): Unit = {
       setDiameter(zoom(6))
@@ -84,12 +85,32 @@ trait Chooser extends SingleErrorWidget with MouseWheelListener {
 
   /// attributes
 
+  def name: String =
+    _name
+
+  def setVarName(name: String): Unit = {
+    _name = name
+    if (_name == "") {
+      displayName(I18N.gui.get("edit.chooser.previewName"))
+    } else {
+      displayName(name)
+    }
+    label.setText(displayName)
+    repaint()
+  }
+
   protected def index: Int = constraint.defaultIndex
 
   protected def index(index: Int): Unit = {
     constraint.defaultIndex = index
     updateConstraints()
     control.setSelectedIndex(index)
+    repaint()
+  }
+
+  protected def indexFromListener(index: Int): Unit = {
+    constraint.defaultIndex = index
+    updateConstraints()
     repaint()
   }
 

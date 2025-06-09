@@ -7,15 +7,6 @@ import org.nlogo.core.{ I18N, Chooseable, Chooser => CoreChooser, CompilerExcept
 import org.nlogo.editor.Colorizer
 
 class DummyChooserWidget(val compiler: CompilerServices, colorizer: Colorizer) extends Chooser with Editable {
-  private var _name = ""
-
-  def name: String = _name
-
-  def setVarName(newName: String): Unit = {
-    _name = newName
-    repaint()
-  }
-
   override def updateConstraints(): Unit = {
     // we never update constraints in a dummy widget -- CLB
   }
@@ -43,6 +34,8 @@ class DummyChooserWidget(val compiler: CompilerServices, colorizer: Colorizer) e
         compiler.readFromString("[ " + choicesString + " ]").asInstanceOf[LogoList]
 
       constraint.acceptedValues(newChoices)
+
+      populate()
 
       val newIndex = constraint.indexForValue(oldValue)
       if (newIndex == -1)
