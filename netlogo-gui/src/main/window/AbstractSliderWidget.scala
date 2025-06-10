@@ -119,8 +119,7 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
     override def setValue(value: Int): Unit = {
       super.setValue(value)
 
-      if (getValueIsAdjusting)
-        updateValue()
+      updateValue()
     }
   }
 
@@ -138,40 +137,15 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
     unitsComponent.addMouseListener(mouseListener)
     slider.addMouseListener(mouseListener)
 
-    val keyListener = new KeyAdapter {
-      override def keyPressed(e: KeyEvent): Unit = {
-        if (e.getKeyCode == KeyEvent.VK_LEFT) {
-          slider.setValue(slider.getValue - 1)
-        } else if (e.getKeyCode == KeyEvent.VK_RIGHT) {
-          slider.setValue(slider.getValue + 1)
-        } else if (e.getKeyCode == KeyEvent.VK_UP) {
-          slider.setValue(slider.getValue + 1)
-        } else if (e.getKeyCode == KeyEvent.VK_DOWN) {
-          slider.setValue(slider.getValue - 1)
-        }
-
-        updateValue()
-      }
-    }
-
-    addKeyListener(keyListener)
-    nameComponent.addKeyListener(keyListener)
-    unitsComponent.addKeyListener(keyListener)
-    slider.addKeyListener(keyListener)
-
-    val keyListenerUpDown = new KeyAdapter {
+    valueComponent.addKeyListener(new KeyAdapter {
       override def keyPressed(e: KeyEvent): Unit = {
         if (e.getKeyCode == KeyEvent.VK_UP) {
           slider.setValue(slider.getValue + 1)
         } else if (e.getKeyCode == KeyEvent.VK_DOWN) {
           slider.setValue(slider.getValue - 1)
         }
-
-        updateValue()
       }
-    }
-
-    valueComponent.addKeyListener(keyListenerUpDown)
+    })
   }
 
   slider.setUI(new SliderWidgetUI(this, slider))
@@ -220,25 +194,34 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
     BigDecimal(d).setScale(sliderData.precision, BigDecimal.RoundingMode.HALF_DOWN).toDouble
 
   def setValue(d: Double): Unit = {
-    sliderData.value = roundToPrecision(d)
-    valueComponent.setText(valueString(value))
-    slider.setValue(((value - minimum) / increment).round.asInstanceOf[Int])
-    repaint()
-    new Events.WidgetEditedEvent(this).raise(this)
+    if (sliderData.value != d) {
+      sliderData.value = roundToPrecision(d)
+      valueComponent.setText(valueString(value))
+      slider.setValue(((value - minimum) / increment).round.asInstanceOf[Int])
+      repaint()
+      new Events.WidgetEditedEvent(this).raise(this)
+    }
   }
+
   def setValue(d: Double, inc: Double): Unit = {
-    sliderData.value = roundToPrecision(d)
-    valueComponent.setText(valueString(value))
-    slider.setValue(((value - minimum) / inc).round.asInstanceOf[Int])
-    repaint()
+    if (sliderData.value != d) {
+      sliderData.value = roundToPrecision(d)
+      valueComponent.setText(valueString(value))
+      slider.setValue(((value - minimum) / inc).round.asInstanceOf[Int])
+      repaint()
+    }
   }
+
   def setValue(d: Double, buttonRelease: Boolean): Unit = {
-    sliderData.value_=(roundToPrecision(d), buttonRelease)
-    valueComponent.setText(valueString(value))
-    slider.setValue(((value - minimum) / increment).round.asInstanceOf[Int])
-    repaint()
-    new Events.WidgetEditedEvent(this).raise(this)
+    if (sliderData.value != d) {
+      sliderData.value_=(roundToPrecision(d), buttonRelease)
+      valueComponent.setText(valueString(value))
+      slider.setValue(((value - minimum) / increment).round.asInstanceOf[Int])
+      repaint()
+      new Events.WidgetEditedEvent(this).raise(this)
+    }
   }
+
   def coerceValue(value: Double): Double = {
     val ret = sliderData.coerceValue(value)
     valueComponent.setText(valueString(value))
