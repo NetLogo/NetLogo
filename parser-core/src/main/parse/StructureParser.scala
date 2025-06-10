@@ -66,6 +66,12 @@ object StructureParser {
               val previousResults = newResults
               val currentLibrary = results.imports.head
 
+              val separator = System.getProperty("file.separator")
+              val currentModule = for {
+                pathString <- currentLibrary.filename
+                basename = pathString.split(separator).last.toUpperCase()
+              } yield raw".NLS$$".r.replaceFirstIn(basename, "")
+
               newResults = includeFile(compilationEnvironment, suppliedPath) match {
                 case Some((path, fileContents)) =>
                   parseOne(tokenizer, structureParser, fileContents, path, Some(currentLibrary.name),
@@ -82,12 +88,24 @@ object StructureParser {
               }
 
               val prefix = currentLibrary.alias.getOrElse(currentLibrary.name) + ":"
+              val newProcedures = addProcedureAliases(
+                previousResults.procedures,
+                newResults.procedures,
+                currentModule,
+                prefix
+              )
+              val newProcedureTokens = addProcedureTokenAliases(
+                previousResults.procedureTokens,
+                newResults.procedureTokens,
+                currentModule,
+                currentLibrary.filename,
+                prefix
+              )
 
               newResults = newResults.copy(
                 program = firstResults.program, // Exclude globals, breeds, and breed variables in modules
-                // TODO: Make this work with transitive imports
-                procedures = addProcedureAliases(previousResults.procedures, newResults.procedures, None, prefix),
-                procedureTokens = addProcedureTokenAliases(previousResults.procedureTokens, newResults.procedureTokens, None, currentLibrary.filename, prefix)
+                procedures = newProcedures,
+                procedureTokens = newProcedureTokens
               )
             }
 
