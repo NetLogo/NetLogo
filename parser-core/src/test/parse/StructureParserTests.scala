@@ -354,6 +354,38 @@ end
     }
   }
 
+  test("import module from another module") {
+    val mainSrc = """
+import [foo]
+
+to hello
+  foo:hello
+end
+    """
+    val fooSrc = """
+import [bar]
+
+to hello
+  bar:hello
+end
+    """
+    val barSrc = """
+to hello
+  show 123
+end
+    """
+    val results = compileAll(mainSrc, fooSrc, barSrc)
+    val expected = Set(
+      ("HELLO", None),
+      ("HELLO", Some("FOO")),
+      ("FOO:HELLO", None),
+      ("HELLO", Some("BAR")),
+      ("BAR:HELLO", Some("FOO"))
+    )
+
+    assert(results.procedures.keys.toSet === expected)
+  }
+
   test("invalid included file") {
     expectParseAllError("""__includes [ "foobar.nlogox" ]""", "Included files must end with .nls")
   }
