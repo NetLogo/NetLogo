@@ -288,12 +288,15 @@ format of .nlogo files will need to be re-written.
 ### Overview: NetLogo Interface Tool Buttons and Dropdown menus.
 
 The Interface Panel now includes four tool buttons which control the
-meaning of user actions. They are the Interaction Tool, the Selection
-Tool, the Edit Tool and the Delete Tool. The key motivations for these
+meaning of user actions. They are the [Interaction Tool](interfacetab.html#interaction-tool),
+the [Selection Tool](interfacetab.html#selection-tool),
+the [Edit Tool](interfacetab.html#editing-tool),
+the [Delete Tool](interfacetab.html#deletion-tool). The key motivations for these
 tools are 1) to make user actions more discoverable and 2) to separate
 actions needed to use an existing model from those used when creating or
-modifying a model. There are also two pull-down menu tools, Add Widgets,
-and Align Widgets.
+modifying a model. Besides the familiar the [Add Widgets Menu](interfacetab.html#add-widgets-menu)
+there is a new [Alignment Menu(interfacetab.html#aligning). 
+What follows in an overview, use links above for more details.
 
 One of the four tools or is always active unless the user is currently
 adding a widget. The active tool appears darker than the others. From
@@ -305,46 +308,8 @@ the Delete Tool (a garbage can icon).
 ### Interaction Tool
 
 The Interaction Tool is for making direct use of widgets to run commands
-and change global variables.
-
-<p><img src="./images/nl7intro/interactiontool.png" style="width:3in" /></p>
-
-The effect of clicking is widget specific, and is the same as in NetLogo
-6.4.
-
-#### Right-clicking
-
-Users can Select, Edit and Delete widgets in interaction mode by
-right-clicking and bringing up a menu. With Plots one can also Copy
-Image, Export … and Clear. With the Output widget one can Copy
-SelectedText and Export …. The View cannot be deleted. The available
-options are Select, Edit, Copy View, Export View, Switch to 3D View,
-Inspect Globals, Inspect a patch, and Inspect, Watch or Follow a turtle.
-
-#### Ctrl-clicking or Cmd-clicking
-
-Selection of a widget can be toggled on and off using Ctrl-click
-(Windows and Linux) or Cmd-click (MacOs). This activates the Interaction
-Tool.
-
-#### Drag Select
-
-One option that is not available with the Interaction Tool is using
-Drag-Select to select one or more widgets. To Drag-Select first press
-the Selection Tool. However Ctrl+Drag does work with the Interactions
-tool.
-
-#### Exiting 
-
-Pressing the Selection, Editing or Deletion icons
-exits the Interaction Tool. One can also activate the Selection
-Tool by using Ctrl-Click (Windows or Linux) or Cmd-Click (macOS) on a
-widget, or by using the Select option with the right-click pull-down
-menu. Using the Edit or Delete option with the right-click pull-down
-menu does not exit the Interaction Tool because they are “transient”
-actions.
-
-<p><img src="./images/nl7intro/widgetrightclick.png" style="width:3.1in" /></p>
+and change global variables. The effect of clicking is widget specific,
+and is the same as in NetLogo 6.4.
 
 ### Selection, Editing and Deletion Tools
 
@@ -361,7 +326,7 @@ the Code Tab will activate the Interaction Tool.
 
 ### Add Widgets Menu
 
-This menu allows users to add widgets. This tool is entered by clicking
+This menu allows users to add widgets as in NetLogo 6.4. This tool is entered by clicking
 the “Add Widget” dropdown menu on the Interface toolbar and making a
 widget selection. The movement of the mouse is accompanied by a light
 image of the element and there is no cursor. Clicking places the element
