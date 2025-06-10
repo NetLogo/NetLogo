@@ -10,7 +10,6 @@ class SliderData(errorHandler: MultiErrorHandler, var minimum:Double = 0, var ma
   private var _value = 50d
   def value = _value
   def value_=(value: Double): Unit = {valueSetter(value)}
-  def value_=(value: Double, buttonRelease: Boolean): Unit = {valueSetter(value)}
   def valueSetter(v: Double): Boolean = {
     if (v!=_value) {
       this._value = v

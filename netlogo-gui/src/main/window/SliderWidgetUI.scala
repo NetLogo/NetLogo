@@ -129,7 +129,7 @@ class SliderWidgetUI(widget: AbstractSliderWidget, slider: JSlider) extends Basi
             slider.setValue(valueForXPosition(e.getPoint.x))
           }
 
-          widget.updateValue()
+          widget.setValueFromSlider()
 
           hover = true
           pressed = true
@@ -148,7 +148,7 @@ class SliderWidgetUI(widget: AbstractSliderWidget, slider: JSlider) extends Basi
             slider.setValue(valueForXPosition(e.getPoint.x))
           }
 
-          widget.updateValue()
+          widget.setValueFromSlider()
         }
       }
     }

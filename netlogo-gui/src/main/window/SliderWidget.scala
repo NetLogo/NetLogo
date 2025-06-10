@@ -52,10 +52,11 @@ class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast,
       new InterfaceGlobalEvent(this, false, false, true, false).raise(this)
     }
   }
-  override def setValue(v: Double, buttonRelease: Boolean): Unit = {
+
+  def setValue(v: Double, buttonRelease: Boolean): Unit = {
     val valueChanged = v != value || v < minimum || v > effectiveMaximum
     if (valueChanged) {
-      super.setValue(v, buttonRelease)
+      super.setValue(v)
       if (!eventOnReleaseOnly) new InterfaceGlobalEvent(this, false, false, true, buttonRelease).raise(this)
     }
     if (eventOnReleaseOnly && buttonRelease)

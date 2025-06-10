@@ -116,10 +116,22 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
   val valueComponent = new TextField
   val unitsComponent = new Label("")
   val slider = new JSlider(0, ((maximum - minimum) / increment).toInt, 50) {
-    override def setValue(value: Int): Unit = {
-      super.setValue(value)
+    override def processKeyEvent(e: KeyEvent): Unit = {
+      if (e.getID == KeyEvent.KEY_PRESSED) {
+        e.getKeyCode match {
+          case KeyEvent.VK_LEFT | KeyEvent.VK_DOWN =>
+            this.setValue(getValue - 1)
 
-      updateValue()
+            setValueFromSlider()
+
+          case KeyEvent.VK_RIGHT | KeyEvent.VK_UP =>
+            this.setValue(getValue + 1)
+
+            setValueFromSlider()
+
+          case _ =>
+        }
+      }
     }
   }
 
@@ -141,8 +153,12 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
       override def keyPressed(e: KeyEvent): Unit = {
         if (e.getKeyCode == KeyEvent.VK_UP) {
           slider.setValue(slider.getValue + 1)
+
+          setValueFromSlider()
         } else if (e.getKeyCode == KeyEvent.VK_DOWN) {
           slider.setValue(slider.getValue - 1)
+
+          setValueFromSlider()
         }
       }
     })
@@ -212,16 +228,6 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
     }
   }
 
-  def setValue(d: Double, buttonRelease: Boolean): Unit = {
-    if (sliderData.value != d) {
-      sliderData.value_=(roundToPrecision(d), buttonRelease)
-      valueComponent.setText(valueString(value))
-      slider.setValue(((value - minimum) / increment).round.asInstanceOf[Int])
-      repaint()
-      new Events.WidgetEditedEvent(this).raise(this)
-    }
-  }
-
   def coerceValue(value: Double): Double = {
     val ret = sliderData.coerceValue(value)
     valueComponent.setText(valueString(value))
@@ -232,7 +238,7 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
 
   // sets the internal value based on the slider position
   // used for alternative input methods like keys and clicking (Isaac B 4/4/25)
-  def updateValue(): Unit = {
+  def setValueFromSlider(): Unit = {
     setValue(minimum + slider.getValue * increment)
   }
 
