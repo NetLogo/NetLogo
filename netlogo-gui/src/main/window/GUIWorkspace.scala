@@ -483,37 +483,17 @@ abstract class GUIWorkspace(world: World, kioskLevel: GUIWorkspace.KioskLevel, f
   // when we've got two views going the mouse reporters should
   // be smart about which view we might be in and return something that makes
   // sense ev 12/20/07
-  override def mouseDown: Boolean = {
-    // we must first make sure the event thread has had the
-    // opportunity to detect any recent mouse clicks - ST 5/3/04
-    waitForQueuedEvents()
-
+  override def mouseDown: Boolean =
     viewManager.mouseDown
-  }
 
-  override def mouseInside: Boolean = {
-    // we must first make sure the event thread has had the
-    // opportunity to detect any recent mouse movement - ST 5/3/04
-    waitForQueuedEvents()
-
+  override def mouseInside: Boolean =
     viewManager.mouseInside
-  }
 
-  override def mouseXCor: Double = {
-    // we must first make sure the event thread has had the
-    // opportunity to detect any recent mouse movement - ST 5/3/04
-    waitForQueuedEvents()
-
+  override def mouseXCor: Double =
     viewManager.mouseXCor
-  }
 
-  override def mouseYCor: Double = {
-    // we must first make sure the event thread has had the
-    // opportunity to detect any recent mouse movement - ST 5/3/04
-    waitForQueuedEvents()
-
+  override def mouseYCor: Double =
     viewManager.mouseYCor
-  }
 
   // shouldn't have to fully qualify UpdateMode here, but we were having
   // intermittent compile failures on this line since upgrading to
