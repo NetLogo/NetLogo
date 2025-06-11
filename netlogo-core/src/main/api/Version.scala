@@ -37,7 +37,7 @@ trait Version {
        else
          lines2)
     knownVersions += noVersion
-    (version, versionDropZeroPatch, buildDate, knownVersions.toArray)
+    (version, versionDropZeroPatch, buildDate, knownVersions.map(removeRev).toArray)
   }
 
   def is3D(version: String) =
@@ -93,13 +93,18 @@ trait Version {
     }
 
   def knownVersion(version: String) =
-    knownVersions.exists(removeRev(version.trim).startsWith)
+    knownVersions.contains(removeRev(version.trim))
 
-  def removeRev(version: String) =
-    if(version.takeRight(8).startsWith(" (Rev "))
-      version.dropRight(8)
-    else
-      version
+  def removeRev(version: String) = {
+    val revisionRegex = "(?i)(.*) \\(Rev .*".r
+    val modifierRegex = "(?i)(.*)-(beta|rc|internal)\\d+".r
+
+    version match {
+      case revisionRegex(base) => base
+      case modifierRegex(base, _) => base
+      case _ => version
+    }
+  }
 
   def versionNumberOnly =
     version.drop("NetLogo ".size)

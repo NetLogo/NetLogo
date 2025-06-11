@@ -31,13 +31,15 @@ object VersionUtils {
         case versionRegex(majorText, minorText, patchText, standardModifier(modifier, modifierNum)) =>
           val (major, minor, patch) = (majorText.toInt, minorText.toInt, Option(patchText).map(_.toInt).getOrElse(0))
           val baseVersion = calculateVersion(major, minor, patch)
+          val modLower = modifier.toLowerCase
+          val validMod = modLower == "rc" || modLower == "beta" || modLower == "internal"
           (major, minor, patch) match {
             case (m, 0, 0) => baseVersion - 10000 +
-              (modifierNum.toInt - 1) + (if (modifier == "RC" || modifier == "BETA" || modifier == "INTERNAL" || modifier ==  "rc" || modifier == "beta" || modifier == "internal") 5000 else 0)
+              (modifierNum.toInt - 1) + (if (validMod) 5000 else 0)
             case (m, n, 0) => baseVersion - 200 +
-              (modifierNum.toInt - 1) + (if (modifier == "RC" || modifier == "BETA" || modifier == "INTERNAL" || modifier ==  "rc" || modifier == "beta" || modifier == "internal") 100 else 0)
+              (modifierNum.toInt - 1) + (if (validMod) 100 else 0)
             case (m, n, p) => baseVersion - 10 +
-              (modifierNum.toInt) + (if (modifier == "RC" || modifier == "BETA"|| modifier == "INTERNAL" || modifier ==  "rc" || modifier == "beta" || modifier == "internal") 5 else 0)
+              (modifierNum.toInt) + (if (validMod) 5 else 0)
           }
         case versionRegex(major, minor, patch, nonStandardModifier(_)) =>
           calculateVersion(major.toInt, minor.toInt, Option(patch).map(_.toInt).getOrElse(0)) - 10000
