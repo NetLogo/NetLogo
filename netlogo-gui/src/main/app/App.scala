@@ -5,7 +5,6 @@ package org.nlogo.app
 import java.awt.{ Dimension, EventQueue, Frame, GraphicsEnvironment, KeyboardFocusManager, Toolkit, BorderLayout}
 import java.awt.event.ActionEvent
 import java.io.File
-import java.util.Locale
 import java.util.prefs.Preferences
 import javax.swing.{ JFrame, JMenu }
 
@@ -81,15 +80,7 @@ object App {
     }
 
     try {
-      val prefs = Preferences.userRoot.node("/org/nlogo/NetLogo")
-
-      val defaultLocale: Locale = I18N.localeIfAvailable(Locale.getDefault).getOrElse(Locale.US)
-
-      // if user hasn't manually selected a locale, use the system locale if available (Isaac B 5/27/25)
-      prefs.put("user.language", prefs.get("user.language", defaultLocale.getLanguage))
-      prefs.put("user.country", prefs.get("user.country", defaultLocale.getCountry))
-
-      val scalePref = prefs.getDouble("uiScale", 1.0)
+      val scalePref = Preferences.userRoot.node("/org/nlogo/NetLogo").getDouble("uiScale", 1.0)
 
       if (scalePref > 1.0) {
         System.setProperty("sun.java2d.uiScale", scalePref.toString)

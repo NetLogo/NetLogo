@@ -50,28 +50,38 @@ object Preferences {
   }
 
   object Language extends Preference {
-    case class LocaleWrapper(val locale: Locale) {
+    sealed trait LocaleOption
+
+    case object DetectLocale extends LocaleOption {
+      override def toString = I18N.gui.get("tools.preferences.detectLanguage")
+    }
+
+    case class LocaleWrapper(val locale: Locale) extends LocaleOption {
       override def toString = locale.getDisplayName
     }
 
-    val languages = I18N.availableLocales map (LocaleWrapper(_)) sortBy (_.toString)
+    val languages: Seq[LocaleOption] = DetectLocale +: I18N.availableLocales.map(LocaleWrapper(_)).sortBy(_.toString).toSeq
 
     val i18nKey = "uiLanguage"
-    val comboBox = new ComboBox(languages.toList)
+    val comboBox = new ComboBox(languages)
     val requirement = Some(RequiredAction.Restart)
 
     def component: JComponent & ThemeSync = comboBox
 
     def load(prefs: JavaPreferences): Unit = {
-      val locale = I18N.localeFromPreferences.getOrElse(I18N.gui.defaultLocale)
-      comboBox.setSelectedItem(LocaleWrapper(locale))
+      comboBox.setSelectedItem(I18N.localeFromPreferences.map(LocaleWrapper(_)).getOrElse(DetectLocale))
     }
 
     def save(prefs: JavaPreferences): Unit = {
-      comboBox.getSelectedItem.foreach { w =>
-        prefs.put("user.language", w.locale.getLanguage)
-        prefs.put("user.country", w.locale.getCountry)
-      }
+      comboBox.getSelectedItem.foreach(_ match {
+        case DetectLocale =>
+          prefs.remove("user.language")
+          prefs.remove("user.country")
+
+        case LocaleWrapper(locale) =>
+          prefs.put("user.language", locale.getLanguage)
+          prefs.put("user.country", locale.getCountry)
+      })
     }
   }
 
