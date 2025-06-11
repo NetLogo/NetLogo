@@ -123,23 +123,41 @@ class SliderWidgetUI(widget: AbstractSliderWidget, slider: JSlider) extends Basi
         if (e.getButton == MouseEvent.BUTTON1) {
           slider.requestFocus()
 
-          if (widget.vertical) {
-            slider.setValue(valueForYPosition(e.getPoint.y))
+          if (widget.jumpOnClick) {
+            if (widget.vertical) {
+              slider.setValue(valueForYPosition(e.getY))
+            } else {
+              slider.setValue(valueForXPosition(e.getX))
+            }
+
+            hover = true
+            pressed = true
+
+            widget.repaint()
           } else {
-            slider.setValue(valueForXPosition(e.getPoint.x))
+            if (widget.vertical) {
+              if (valueForYPosition(e.getY) > slider.getValue) {
+                slider.setValue(slider.getValue + 1)
+              } else {
+                slider.setValue(slider.getValue - 1)
+              }
+            } else {
+              if (valueForXPosition(e.getX) > slider.getValue) {
+                slider.setValue(slider.getValue + 1)
+              } else {
+                slider.setValue(slider.getValue - 1)
+              }
+            }
           }
 
           widget.setValueFromSlider()
-
-          hover = true
-          pressed = true
-
-          widget.repaint()
         }
       }
 
       override def mouseDragged(e: MouseEvent): Unit = {
-        if ((e.getModifiersEx & InputEvent.BUTTON1_DOWN_MASK) == InputEvent.BUTTON1_DOWN_MASK) {
+        if ((e.getModifiersEx & InputEvent.BUTTON1_DOWN_MASK) == InputEvent.BUTTON1_DOWN_MASK &&
+            (widget.jumpOnClick || pressed)) {
+
           slider.requestFocus()
 
           if (widget.vertical) {

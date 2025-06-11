@@ -45,7 +45,8 @@ with MenuAction {
       Preferences.Language,
       Preferences.LoadLastOnStartup,
       new Preferences.ReloadOnExternalChanges(tabs),
-      new Preferences.BoldWidgetText(widgetPanel)
+      new Preferences.BoldWidgetText(widgetPanel),
+      new Preferences.JumpOnClick(widgetPanel)
     ) ++ (if (System.getProperty("os.name").contains("Linux")) Seq(Preferences.UIScale) else Nil),
     Seq(
       Preferences.ProceduresMenuSortOrder,

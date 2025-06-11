@@ -135,6 +135,8 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
     }
   }
 
+  var jumpOnClick = true
+
   locally {
     val mouseListener = new MouseAdapter {
       override def mousePressed(e: MouseEvent): Unit = {

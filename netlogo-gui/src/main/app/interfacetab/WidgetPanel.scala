@@ -19,7 +19,8 @@ import org.nlogo.swing.{ MenuItem, PopupMenu }
 import org.nlogo.theme.InterfaceColors
 import org.nlogo.window.{ AbstractWidgetPanel, ButtonWidget, Editable, Events => WindowEvents, GUIWorkspace,
                           InterfaceMode, OutputWidget, Widget, WidgetContainer, WidgetRegistry, DummyChooserWidget,
-                          DummyInputBoxWidget, DummyPlotWidget, DummyViewWidget, PlotWidget, WidgetSizes },
+                          DummyInputBoxWidget, DummyPlotWidget, DummyViewWidget, PlotWidget, SliderWidget,
+                          WidgetSizes },
   WindowEvents.{ CompileAllEvent, DirtyEvent, EditWidgetEvent, InterfaceModeChangedEvent, LoadBeginEvent,
                  SetInterfaceModeEvent, WidgetEditedEvent, WidgetRemovedEvent, ZoomedEvent }
 
@@ -1427,6 +1428,15 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
   override def setBoldWidgetText(value: Boolean): Unit = {
     getWrappers.foreach(_.widget.setBoldText(value))
+  }
+
+  override def setJumpOnClick(value: Boolean): Unit = {
+    getWrappers.foreach(_.widget match {
+      case slider: SliderWidget =>
+        slider.jumpOnClick = value
+
+      case _ =>
+    })
   }
 
   override def syncTheme(): Unit = {
