@@ -145,6 +145,8 @@ class ProtocolEditable(protocol: LabProtocol,
   override def errorString: Option[String] = {
     if (name.trim.isEmpty) {
       Some(I18N.gui.get("edit.behaviorSpace.name.empty"))
+    } else if (name.contains('/') || name.contains('\\')) {
+      Some(I18N.gui.get("edit.behaviorSpace.name.slashes"))
     } else if (experimentNames.contains(name.trim)) {
       Some(I18N.gui.getN("edit.behaviorSpace.name.duplicate", name.trim))
     } else {
