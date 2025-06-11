@@ -21,34 +21,33 @@ to issue NetLogo commands.
 
 [TOC]
 
-## Working with interface elements (widgets)
-### Overview: NetLogo Interface Tool Buttons and Dropdown menus.
+## Overview: Working with interface elements (widgets)
 
 The elements you can use to create the interface for a NetLogo model are:
 buttons, sliders, switches, choosers, inputs, monitors, plots, the
 output area, and notes. These interface elements are often referred to
 as widgets. More details are in the [Chart: Interface Widgets](#chart-interface-widgets).
-Later sections will describe in detail how you can create, select edit, and
-delete widgets.
 
 The Interface toolbar includes four tool buttons which control the
 meaning of user actions. They are the [Interaction Tool](#interaction-tool),
 the [Selection Tool](#selection-tool),
 the [Edit Tool](#editing-tool), and the [Delete Tool](#deletion-tool).
 There are also two pull-down menu tools, [Add Widgets Menu](add-widgets-menu),
- and [Align Widgets]](aligning).
+ and [Align Widgets Menu]](align-widgets-menu). For details on the use of these features to
+create, select edit, delete, and adjust widgets click on the tool and menu links
+above. They are located after the widgets chart.
+ Later sections will describe in detail how you can 
 
 ![[interfacetools.png]]
 
-One of the four tools or is always active unless the user is currently
+One of the four tools is always active unless the user is currently
 adding a widget. The active tool appears darker than the others. From
 left to right on the Interface Toolbar are the Add Widgets, and Align
 Widgets pull-down menus, the Interaction Tool (a finger icon) Selection
 Tool (a cursor with dotted box icon) the Edit Tool (a pencil icon) and
 the Delete Tool (a garbage can icon).
 
-This is a brief introduction to working with widgets. For details read the
-subsequent sections, or click on the Tool and Menu links above.
+Here is a brief introduction to working with widgets.
 
 **Adding:** To add a widget, select it from the "Add Widget" drop-down
 menu. A light image of the widget will appear. Drag it to the desired location
@@ -85,205 +84,182 @@ right-clicking it and choosing "Delete" from the popup menu.
 **Adjusting** After selecting multiple items you can use the
 Align Widget menu to align, stretch or distribute them.
 
-### Interaction Tool
-
-The Interaction Tool is for making direct use of widgets to run commands
-and change global variables.
-
-<p><img src="./images/interfacetab/interactiontool.png" style="width:3in" /></p>
-
-The effect of clicking is widget specific, and is the same as in NetLogo
-6.4.
-
-#### Right-clicking
-
-Users can Select, Edit and Delete widgets in interaction mode by
-right-clicking and bringing up a menu. With Plots one can also Copy
-Image, Export … and Clear. With the Output widget one can Copy
-SelectedText and Export …. The View cannot be deleted. The available
-options are Select, Edit, Copy View, Export View, Switch to 3D View,
-Inspect Globals, Inspect a patch, and Inspect, Watch or Follow a turtle.
-
-#### Ctrl-clicking or Cmd-clicking
-
-Selection of a widget can be toggled on and off using Ctrl-click
-(Windows and Linux) or Cmd-click (MacOs). This activates the Interaction
-Tool.
-
-#### Drag Select
-
-One option that is not available with the Interaction Tool is using
-Drag-Select to select one or more widgets. To Drag-Select first press
-the Selection Tool. However Ctrl+Drag does work with the Interactions
-tool.
-
-#### Exiting
-
-Pressing the Selection, Editing or Deletion icons
-exits the Interaction Tool. One can also activate the Selection
-Tool by using Ctrl-Click (Windows or Linux) or Cmd-Click (macOS) on a
-widget, or by using the Select option with the right-click pull-down
-menu. Using the Edit or Delete option with the right-click pull-down
-menu does not exit the Interaction Tool because they are “transient”
-actions.
-
-<p><img src="./images/interfacetab/widgetrightclick.png" style="width:3.1in" /></p>
-
-### Selection, Editing and Deletion Tools
-
-These explicit tools are new for NetLogo 7, although they incorporate
-behaviors associated with certain NetLogo 6.4. icons.
-
-Each of these tools can be entered by pressing the appropriate icon.
-When one of these tools is active widgets will be faintly dimmed to
-indicate that they are not currently interactive, and all "forever"
-buttons will halt. Each can be exited by selecting a different tool
-icon. The Esc key will return you to the Interaction Tool. Moving the
-focus to another context such as the Command Center, the Info Tab, or
-the Code Tab will activate the Interaction Tool.
-
-### Add Widgets Menu
-
-This menu allows users to add widgets. This tool is entered by clicking
-the “Add Widget” dropdown menu on the Interface toolbar and making a
-widget selection. The movement of the mouse is accompanied by a light
-image of the widget and there is no cursor. Clicking places the widget
-in its current location. Right-clicking allows you to change the widget
-type. You can also add a widget by right-clicking anywhere in the white
-background. This brings up a menu, allowing you to select the widget
-type and place the widget.
-
-Once you complete the add widget action by clicking “OK” to insert the
-widget, or “Cancel” to abort the process the Interaction Tool is
-active.
-
-### Selection Tool
-
-This tool allows users to select and subsequently edit or move an
-widget or change its size. Enter this tool by pressing the “Selection
-Tool” icon on the Interface toolbar (cursor with dashed rectangle).
-
-<p><img src="./images/interfacetab/selectedwidgets.png" style="width:3.2in" /></p>
-
-#### Selecting
-
-Press the “Selection Tool” Icon. Widgets will dim. Clicking on an
-widget selects it. A line border with square handles will
-appear around the widget to show it is selected. This will be black for
-the Light Color Theme, and grey for the Dark Color Theme. A widget can also
-be selected by dragging a rectangle around it with your mouse or by
-right-clicking a widget and choosing Select from the menu. You can
-toggle selection and deselection by using Ctrl+click(Windows/Linux) /
-Cmd+click(MacOS) a widget Any method of selecting one or more widgets
-will activate the Selection Tool. Clicking the background area will
-deselect any selected widgets. Dragging the mouse will move all selected
-widget(s). You can also click and drag an individual widget before the
-selection markers appear.
-
-#### Selecting multiple items
-
-You can select multiple interface elements at the same time by including
-them in the rectangle you drag. Additional elements can also be added by
-using the alternative methods.
-
-#### Deselecting
-
-An individual selected widget can be selected by pressing
-Ctrl+click(Windows/Linux) / Cmd+click(MacOS) or by right-clicking the
-widget and choosing “Unselect” from the popup menu. To deselect all
-selected interface elements, click the mouse on the white background of
-the Interface tab. The Selection Tool will remain active. Any method of
-choosing a different tool will exit Selection tool.
-
-The following actions require that at least widget is selected:
-
-#### Moving
-
-Select one or more widgets, then drag with your mouse to the new
-location. You can use the arrow keys to move the widgets a small
-increment right, left, up, or down. Using shift plus an arrow key
-increases the increment. If you hold down the shift key while dragging,
-the elements will move only straight up and down or straight left and
-right. The items remain selected.
-
-#### Resizing
-
-Select the widget, then drag the square “handles” in the
-selection border. If multiple elements are selected the handles can be
-dragged one at a time, and the items remain selected.
-
-The following actions require that two or more elements already be
-selected.
-
-#### Aligning
-
-If more than one widget is
-selected, clicking Align Widgets will display a popup menu of alignment
-choices. Dragging the mouse to select an option and releasing it will
-perform the alignment. The items remain selected.
-
-#### Distributing
-
-The Align Widgets menu also has options for
-distributing widgets vertically or horizontally. The items remain
-selected.
-
-#### Stretching
-
-The Align Widgets menu also has options for
-stretching widgets to match other widgets to the right, left, top or
-bottom. The items remain selected.
-
-#### Widget Overlap
-
-The actions of aligning, distributing or stretching
-will not be completed if they would create a new overlap of widgets. Not
-completing an action may result in unexpected behavior, but
-protects users from other unexpected behavior, such as one widget
-becoming completely hidden behind another.
-
-<p><img src="./images/interfacetab/alignwidgetsmenu.png" style="width:3in" /></p>
-
-### Editing Tool
-
-This tool allows users to change the characteristics of an interface
-widget Enter this tool by pressing the “Editing Tool” Icon on the
-Interface toolbar (a pencil).
-
-*Editing*: Press the “Editing Tool” Icon and click on a widget to edit
-it. When the user completes editing a widget, the Editing Tool remains
-active. Clicking another widget will edit it.
-
-If a widget is already selected you can press the editing icon to
-activate Editing Tool and open the widget for editing. Clicking the Edit
-icon when multiple items have already been selected deselects the items,
-and enters the Edit tool. You can also begin editing by double-clicking
-a selected widget, or right-clicking an unselected widget and choosing
-“Edit” from the popup menu.
-
-### Deletion Tool
-
-This tool allows users to delete interface elements. Enter this tool by
-pressing the “Deletion Tool” icon on the Interface toolbar (trashcan)
-After a widget is deleted the user is still in Deletion Tool and ready
-to delete more items. The view cannot be deleted.
-
-“Deletion Tool” Icon and click on a widget to delete it. You can also
-select the widget or elements you want to delete, then press the
-“Delete” to delete
-
-<p><img src="./images/interfacetab/deletiontooldark.png" style="width:3.7in" /></p>
-
-#### Deleting
-
-Press the widget. You may also delete a widget by right-clicking it
-and choosing “Delete” from the popup menu. If you use this latter
-method, it is not necessary to select the widget first.
-
 To learn more about the different kinds of interface elements, refer to the
 chart below.
 
-## Chart: Interface Widgets
+## Charts: Interface Widgets
+
+Buttons perform actions when clicked. The input widgets set values for
+global variables. The input widgets are: sliders,
+switches, choosers and inputs. Monitors and plots are two output widgets
+that display global variable value. There is also the output area which
+can be written to by the model as it runs. Notes are used to add labels, instructions and
+other information to the interface. Buttons are blue. Input widgets are a
+shades of blue (lighter for the Light Theme, darker for the Dark Theme).
+Output widgets are shades of grey. The background and font colors for notes
+are user settable.
+
+### Widget Appearance: Light and Dark Themes
+
+<table>
+<colgroup>
+<col style="width: 42%" />
+<col style="width: 42%" />
+<col style="width: 14%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: left;">
+Widget Light Color Theme
+</th>
+<th style="text-align: left;">
+Widget Dark Color Theme
+</th>
+<th style="text-align: left;">
+Description
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="3" style="text-align: left;">
+Buttons
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<img src="./images/nl7intro/moveturtleforeverlight.png" style="width:1.08;height:.56in" />
+</td>
+<td style="text-align: left;">
+<img src="./images/nl7intro/moveturtleforeverdark.png" style="width:1.08in;height:.56in" />
+</td>
+<td style="text-align: left;">
+Forever Turtle Button
+</td>
+</tr>
+<tr>
+<td colspan="3" style="text-align: left;">
+Input Widgets
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<img src="./images/nl7intro/sliderlight.png" style="width:2.5in;height:0.89in" />
+</td>
+<td style="text-align: left;">
+<img src="./images/nl7intro/sliderdark.png" style="width:2.5in;height:0.89in" />
+</td>
+<td style="text-align: left;">
+Slider
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<img src="./images/nl7intro/switchlight.png" style="width:1.47in;height:.58in" />
+</td>
+<td style="text-align: left;">
+<img src="./images/nl7intro/switchdark.png" style="width::1.47in;height:0.58in" />
+</td>
+<td style="text-align: left;">
+Switch
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<img src="./images/nl7intro/chooserlight.png" style="width:2.5in;height:0.89in" />
+</td>
+<td style="text-align: left;">
+<img src="./images/nl7intro/chooserdark.png" style="width:2.5in;height:0.89in" />
+</td>
+<td style="text-align: left;">
+Chooser
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<img src="./images/nl7intro/colorinputlight.png" style="width:2.5in;height:0.89in" />
+</td>
+<td style="text-align: left;">
+<img src="./images/nl7intro/colorinputdark.png" style="width:2.5in;height:0.89in" />
+</td>
+<td style="text-align: left;">
+Input (Color)
+</td>
+</tr>
+<tr>
+<td colspan="3" style="text-align: left;">
+Output Widgets ( Some smaller scale than input widgets)
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<img src="./images/nl7intro/numericinputlight.png" style="width:1.625in;height:1.11111in" />
+</td>
+<td style="text-align: left;">
+<img src="./images/nl7intro/numericinputdark.png" style="width:1.625in;height:1.11111in" />
+</td>
+<td style="text-align: left;">
+Monitor
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<img src="./images/nl7intro/plotlight.png" style="width:2.6125in;height:1.92361in" />
+</td>
+<td style="text-align: left;">
+<img src="./images/nl7intro/plotdark.png" style="width:2.65972in;height:1.95833in" />
+</td>
+<td style="text-align: left;">
+<p>
+Plot
+</p>
+<p>
+(smaller scale than input widgets)
+</p>
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<img src="./images/nl7intro/outputlight.png" style="width:2.61319in;height:1.8125in" />
+</td>
+<td style="text-align: left;">
+<img src="./images/nl7intro/outputdark.png" style="width:2.61319in;height:1.8125in" />
+</td>
+<td style="text-align: left;">
+Output
+</td>
+</tr>
+<tr>
+<td colspan="3" style="text-align: left;">
+Notes (smaller scale than input widgets)
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<img src="./images/nl7intro/notelight.png" style="width:2.61042in;height:0.75694in" />
+</td>
+<td style="text-align: left;">
+<img src="./images/nl7intro/notedark.png" style="width:2.61042in;height:0.75694in" />
+</td>
+<td style="text-align: left;">
+Note
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<img src="./images/nl7intro/editnotelight.png" style="width:2.61in;height:1.94in" />
+</td>
+<td style="text-align: left;">
+<img src="./images/nl7intro/editnotedark.png" style="width:2.61in;height:1.94in" />
+</td>
+<td style="text-align: left;">
+Editing a Note
+</td>
+</tr>
+</tbody>
+</table>
+
+### Widget Icons and Functionality
 
 <table class="widget-table" border>
   <tr>
@@ -319,12 +295,18 @@ chart below.
     <td><img alt="Slider" src="images/interfacetab/slider.png"></td>
     <td>Slider</td>
     <td>
-      Sliders are global variables, which are accessible by all agents.
-      They are used in models as a quick way to change a variable
+      Sliders are used in models as a quick way to change a variable
       without having to recode the procedure every time. Instead, the
       user moves the slider to a value and observes what happens in the
       model. The value can also be set by typing a number in the slider's
       text box.
+      Most of the fields in the edit dialog that open after you place the
+      sliderwill be familiar. However, it is  important to notice the minimum,
+      maximum and increment fields will take any reporter, not just constants.
+      So, for example, you could make the minimum
+      <a href="dictionary.html#min-pcor"><code>min-pxcor</code></a> and the maximum <a href="dictionary.html#max-pcor"><code>max-pxcor</code></a> and the slider
+      bounds will automatically adjust when you change the size of the world.
+      <img alt="Input Box" src="images/interfacetab/sliderbounds.png">
     </td>
   </tr>
   <tr>
@@ -349,13 +331,20 @@ chart below.
     <td><img alt="Input Box" src="images/interfacetab/input.png"></td>
     <td>Input Box</td>
     <td>
-      Input Boxes are global variables that contain strings or numbers.
+      Input Boxes represent global variables that contain numbers,
+      strings or colors.
       The model author chooses what types of values you can enter.
-      Input boxes can be set to check the syntax of a string for
-      commands or reporters. Number input boxes read any type of
-      constant number reporter which allows a more open way to express
-      numbers than a slider. Color input boxes offer a NetLogo color
-      chooser.
+      Number input boxes read any type of
+      constant number reporter which allows more expressivity than a slider.
+      When clicked, color input boxes open a NetLogo color
+      picker. Currently colors are NetLogo colors, which are numbers,
+      but in future releases they may be RGB or RGBA colors. Therefore
+      the global variable should only be used with
+      <a href="dictionary.html#colorgroup">Color commands or variables</code></a>.
+      If the global variable type is String(reporter), it can be evaluated using the 
+      <a href="dictionary.html#run"><code>runresult</code></a> primitive. 
+      If the type is String(commands), it can be executed using the
+    <a href="dictionary.html#run"><code>run</code></a> primitive.
     </td>
   </tr>
   <tr>
@@ -412,6 +401,206 @@ times a second, regardless of what is going on in the model. "Tick-based"
 updates means that the view only updates when the tick counter advances. (For a
 fuller discussion of view updates, see the
 [Programming Guide](programming.html).)
+
+## Interface Menus
+### Add Widgets Menu
+
+<p><img src="./images/interfacetab/add-widget-menu.png" style="width:3in" /></p>
+
+This menu allows users to add widgets. This tool is entered by clicking
+the “Add Widget” dropdown menu on the Interface toolbar and making a
+widget selection. The movement of the mouse is accompanied by a light
+image of the widget and there is no cursor. Clicking places the widget
+in its current location. Right-clicking allows you to change the widget
+type. You can also add a widget by right-clicking anywhere in the white
+background. This brings up a menu, allowing you to select the widget
+type and place the widget.
+
+Once you complete the add widget action by clicking “OK” to insert the
+widget, or “Cancel” to abort the process the Interaction Tool is
+active.
+
+### The Align Widgets Menu
+
+<p><img src="./images/interfacetab/alignwidgetsmenu.png" style="width:3in" /></p>
+
+The following actions require that two or more elements already be
+selected.
+
+#### Aligning
+
+If more than one widget is
+selected, clicking Align Widgets will display a popup menu of alignment
+choices. Dragging the mouse to select an option and releasing it will
+perform the alignment. The items remain selected.
+
+#### Distributing
+
+The Align Widgets menu also has options for
+distributing widgets vertically or horizontally. The items remain
+selected.
+
+#### Stretching
+
+The Align Widgets menu also has options for
+stretching widgets to match other widgets to the right, left, top or
+bottom. The items remain selected.
+
+#### Widget Overlap
+
+The actions of aligning, distributing or stretching
+will not be completed if they would create a new overlap of widgets. Not
+completing an action may result in unexpected behavior, but
+protects users from other unexpected behavior, such as one widget
+becoming completely hidden behind another.
+
+## Interface Tools
+### Interaction Tool
+
+The Interaction Tool is for making direct use of widgets to run commands
+and change global variables.
+
+<p><img src="./images/interfacetab/interactiontool.png" style="width:3in" /></p>
+
+The effect of clicking is widget specific, as described in the widget chart.
+
+#### Right-clicking
+
+Users can Select, Edit and Delete widgets in interaction mode by
+right-clicking and bringing up a menu. With Plots one can also Copy
+Image, Export … and Clear. With the Output widget one can Copy
+SelectedText and Export …. The View cannot be deleted. The available
+options are Select, Edit, Copy View, Export View, Switch to 3D View,
+Inspect Globals, Inspect a patch, and Inspect, Watch or Follow a turtle.
+
+#### Ctrl-clicking or Cmd-clicking
+
+Selection of a widget can be toggled on and off using Ctrl-click
+(Windows and Linux) or Cmd-click (MacOs). This activates the Interaction
+Tool.
+
+#### Drag Select
+
+One option that is not available with the Interaction Tool is using
+Drag-Select to select one or more widgets. To Drag-Select first press
+the Selection Tool. However Ctrl+Drag does work with the Interactions
+tool.
+
+#### Exiting
+
+Pressing the Selection, Editing or Deletion icons
+exits the Interaction Tool. One can also activate the Selection
+Tool by using Ctrl-Click (Windows or Linux) or Cmd-Click (macOS) on a
+widget, or by using the Select option with the right-click pull-down
+menu. Using the Edit or Delete option with the right-click pull-down
+menu does not exit the Interaction Tool because they are “transient”
+actions.
+
+<p><img src="./images/interfacetab/widgetrightclick.png" style="width:3.1in" /></p>
+
+### Selection, Editing and Deletion Tools
+
+These explicit tools are new for NetLogo 7, although they incorporate
+behaviors associated with certain NetLogo 6.4. icons.
+
+Each of these tools can be entered by pressing the appropriate icon.
+When one of these tools is active widgets will be faintly dimmed to
+indicate that they are not currently interactive, and all "forever"
+buttons will halt. Each can be exited by selecting a different tool
+icon. The Esc key will return you to the Interaction Tool. Moving the
+focus to another context such as the Command Center, the Info Tab, or
+the Code Tab will activate the Interaction Tool.
+
+### Selection Tool
+
+This tool allows users to select and subsequently edit or move an
+widget or change its size. Enter this tool by pressing the “Selection
+Tool” icon on the Interface toolbar (cursor with dashed rectangle).
+
+<p><img src="./images/interfacetab/selectedwidgets.png" style="width:3.2in" /></p>
+
+#### Selecting
+
+Press the “Selection Tool” Icon. Widgets will dim. Clicking on an
+widget selects it. A line border with square handles will
+appear around the widget to show it is selected. This will be black for
+the Light Color Theme, and grey for the Dark Color Theme. A widget can also
+be selected by dragging a rectangle around it with your mouse or by
+right-clicking a widget and choosing Select from the menu. You can
+toggle selection and deselection by using Ctrl+click(Windows/Linux) /
+Cmd+click(MacOS) a widget Any method of selecting one or more widgets
+will activate the Selection Tool. Clicking the background area will
+deselect any selected widgets. Dragging the mouse will move all selected
+widget(s). You can also click and drag an individual widget before the
+selection markers appear.
+
+#### Selecting multiple items
+
+You can select multiple interface elements at the same time by including
+them in the rectangle you drag. Additional elements can also be added by
+using the alternative methods.
+
+#### Deselecting
+
+An individual selected widget can be selected by pressing
+Ctrl+click(Windows/Linux) / Cmd+click(MacOS) or by right-clicking the
+widget and choosing “Unselect” from the popup menu. To deselect all
+selected interface elements, click the mouse on the white background of
+the Interface tab. The Selection Tool will remain active. Any method of
+choosing a different tool will exit Selection tool.
+
+The following actions require that at least one widget is selected:
+
+#### Moving
+
+Select one or more widgets, then drag with your mouse to the new
+location. You can use the arrow keys to move the widgets a small
+increment right, left, up, or down. Using shift plus an arrow key
+increases the increment. If you hold down the shift key while dragging,
+the elements will move only straight up and down or straight left and
+right. The items remain selected.
+
+#### Resizing
+
+Select the widget, then drag the square “handles” in the
+selection border. If multiple elements are selected the handles can be
+dragged one at a time, and the items remain selected.
+
+### Editing Tool
+
+This tool allows users to change the characteristics of an interface
+widget Enter this tool by pressing the “Editing Tool” Icon on the
+Interface toolbar (a pencil).
+
+*Editing*: Press the “Editing Tool” Icon and click on a widget to edit
+it. When the user completes editing a widget, the Editing Tool remains
+active. Clicking another widget will edit it.
+
+If a widget is already selected you can press the editing icon to
+activate Editing Tool and open the widget for editing. Clicking the Edit
+icon when multiple items have already been selected deselects the items,
+and enters the Edit tool. You can also begin editing by double-clicking
+a selected widget, or right-clicking an unselected widget and choosing
+“Edit” from the popup menu.
+
+### Deletion Tool
+
+This tool allows users to delete interface elements. Enter this tool by
+pressing the “Deletion Tool” icon on the Interface toolbar (trashcan)
+After a widget is deleted the user is still in Deletion Tool and ready
+to delete more items. The view cannot be deleted.
+
+“Deletion Tool” Icon and click on a widget to delete it. You can also
+select the widget or elements you want to delete, then press the
+“Delete” to delete
+
+<p><img src="./images/interfacetab/deletiontooldark.png" style="width:3.7in" /></p>
+
+#### Deleting
+
+Press the widget. You may also delete a widget by right-clicking it
+and choosing “Delete” from the popup menu. If you use this latter
+method, it is not necessary to select the widget first.
 
 ## The 2D and 3D views
 
@@ -731,19 +920,6 @@ Clicking a pen's edit button will open this dialog:
 
 For more detailed information on how each of these features works you can see
 the Plotting Section of the Programming Guide.
-
-## Sliders
-
-A slider has an associated global variable. Moving the slider changes the
-variable's value.
-
-When you place a slider in the Interface tab the edit dialog automatically
-opens, as with all widgets. Most of the fields will be familiar. However, it is
-important to notice the minimum, maximum and increment fields will take any
-reporter, not just constants. So, for example, you could make the minimum
-[[min-pxcor|min-pcor]] and the maximum [[max-pxcor|max-pcor]] and the slider
-bounds will automatically adjust when you change the size of the world.
-![[sliderbounds.png]]
 
 ## Agent Monitors
 
