@@ -199,6 +199,9 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
     }
   }
 
+  override def getMinimumSize: Dimension =
+    addWrapperBorder(widget.getMinimumSize)
+
   override def getPreferredSize: Dimension = {
     addWrapperBorder(
       if (widget.isNote) {

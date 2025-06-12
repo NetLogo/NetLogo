@@ -1366,8 +1366,8 @@ class WidgetPanel(val workspace: GUIWorkspace)
         if (w.widget.oldSize) {
           w.widget.oldSize(false)
 
-          val width = w.getPreferredSize.width.max(w.getWidth)
-          val height = w.getPreferredSize.height.max(w.getHeight)
+          val width = w.getMinimumSize.width.max(w.getWidth)
+          val height = w.getMinimumSize.height.max(w.getHeight)
 
           // add some extra height so that the increase in padding doesn't decrease the internal plot size (Isaac B 5/13/25)
           if (w.widget.isInstanceOf[PlotWidget]) {
@@ -1403,8 +1403,8 @@ class WidgetPanel(val workspace: GUIWorkspace)
         if (w.widget.oldSize) {
           w.widget.oldSize(false)
 
-          val width = w.getPreferredSize.width.max(w.getWidth)
-          val height = w.getPreferredSize.height.max(w.getHeight)
+          val width = w.getMinimumSize.width.max(w.getWidth)
+          val height = w.getMinimumSize.height.max(w.getHeight)
 
           // add some extra height so that the increase in padding doesn't decrease the internal plot size (Isaac B 5/13/25)
           if (w.widget.isInstanceOf[PlotWidget]) {
