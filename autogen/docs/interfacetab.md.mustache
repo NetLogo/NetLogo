@@ -36,7 +36,6 @@ There are also two pull-down menu tools, [Add Widgets Menu](add-widgets-menu),
  and [Align Widgets Menu]](align-widgets-menu). For details on the use of these features to
 create, select edit, delete, and adjust widgets click on the tool and menu links
 above. They are located after the widgets chart.
- Later sections will describe in detail how you can 
 
 ![[interfacetools.png]]
 
@@ -383,24 +382,37 @@ Editing a Note
   </tr>
 </table>
 
+## Other Interface Toolbar controls
 The other controls in the Interface toolbar allow you to control the view
 updates and various other model properties.
 ![[model-buttons.png]]
 
-- The slider lets you control how fast the model runs. Slower can be valuable
-  since some models run so fast they're hard to follow. You can also
-  fast-forward the model by moving the slider to the right, reducing the
-  frequency of view updates.
+The speed slider is located in the Interface Toolbar. You can make the
+model run faster by moving the slider to the right, or by clicking one
+or more times on the “+“ button, and slower by moving the slider to the
+left, or by clicking one or more times on the “-“ button. Twenty clicks
+on the “-“ or “+“ button will move the slider thumb from the center to
+its minimum or maximum rate. The increase or decrease in speed is not
+linear with the amount the slider knob is moved.
+
+- The speed slider lets you control how fast the model runs by
+  changing the frequency of view updates. You can
+  fast-forward the model by moving the slider to the right or by clicking one
+  or more times on the “+“ button, or slow down the
+  the model by moving the slider to the left or by clicking one
+  or more times on the “-“ button. Slower can be valuable
+  since some models run so fast they're hard to follow.
+  Twenty clicks
+  on the “-“ or “+“ button will move the slider thumb from the center to
+  its minimum or maximum rate. The increase or decrease in speed is not
+  linear with the amount the slider knob is moved.
 - The view updates checkbox controls whether view updates happen at all.
 - The update mode menu allows you to switch between continuous and tick-based
-  updates.
+  updates. "Continuous" updates means that NetLogo updates (that is, redraws) the view many
+  times a second, regardless of what is going on in the model. "Tick-based"
+  updates means that the view only updates when the tick counter advances. (For a
+  fuller discussion of view updates, see the  [Programming Guide](programming.html).)
 - The "Settings..." button allows you to change model settings.
-
-"Continuous" updates means that NetLogo updates (that is, redraws) the view many
-times a second, regardless of what is going on in the model. "Tick-based"
-updates means that the view only updates when the tick counter advances. (For a
-fuller discussion of view updates, see the
-[Programming Guide](programming.html).)
 
 ## Interface Menus
 ### Add Widgets Menu
