@@ -55,7 +55,8 @@ behaviors and determine which combinations of settings cause the behaviors of
 interest.
 
 If your computer has multiple processor cores, you can specify how many model runs will
-happen in parallel.
+happen in parallel. Using multiple runs in parallel will increase the memory used
+by BehaviorSpace.
 
 ### Why BehaviorSpace?
 
@@ -523,21 +524,32 @@ metrics are in orange, and the measurement metric data is in purple.
 #### Statistics output
 *(Since 6.4)*
 
-If the **Statistics output** is enabled, data in either the specified **Table output** or
-**Spreadsheet output** is used to calculate the mean and standard deviation of each numeric
-metric across repetitions for each step. These calculations are done at the end of the experiment.
-The statistics are then saved in the specified file. It is important to note that metrics
-that may produce non-numeric measurements like strings are not included in the statistics. If
-the metrics produce lists, the statistics are calculated across elements with the same index for each list.
+You can create a file with the mean and standard deviation of each numeric
+metric by enabling the **Statistics output**. Metrics are the reporters specified
+in the "Measure runs using these reporters as metrics:" box. You must also use the
+**Table output** and/or the **Spreadsheet output** because one of them will used
+to calculate the mean and standard deviation of each numeric
+metric across repetitions for each step. These calculations are done at the end of
+the experiment. The statistics are then saved in the specified file.
+It is important to note that metrics that produce non-numeric values such as
+strings are not included in the statistics.
+If the metrics produce lists, the statistics are calculated across elements with
+the same index for each list.
 Statistics are not calculated for metrics that produce lists that contain non-numeric elements. Also, the type of
 the measurement must remain constant. For example, statistics are not calculated if a metric
 produces measurements that can be both lists and numbers. Furthermore, the standard deviation may be "N/A",
 which means that there were two or fewer collected measurements for that step and parameter combination,
-producing a result that is not well-defined. The experiment must use a repetitions setting of 3 or more
+producing a result that is not well-defined. The experiment must use at least 3 repetitions
 to produce standard deviation values.
 
-In the **Statistics output** sample image below, the header section is in red, the parameter
+In the **Statistics output** sample image below (creating using the "Red Queen"
+library model), the header section is in red, the parameter
 combinations are in green, the steps are in blue, and the statistics are in purple.
+Starting with column F, the statistics are the mean of "count frogs",  the
+standard deviation of "count frogs", followed by the same statistics for
+"count snakes", average-poison, and average-resistance. Column E shows the step,
+and columns A-D show the parameter combination that was used. The statistics
+are calculated across all the repetitions.
 
 ![[bs-stats.png]]
 
@@ -546,7 +558,8 @@ combinations are in green, the steps are in blue, and the statistics are in purp
 
 This format is a supplement to the other two primary formats, as opposed to a complete data
 collection format. If you have any reporters that return a list, you can use the **Lists output**
-format to get properly formatted output for those reporters. In both **Spreadsheet output** and
+format to get properly formatted output for those reporters. Data is produced for all
+list reporters in the "metrics" box. In both **Spreadsheet output** and
 **Table output** formats, lists returned by reporters will be condensed into a single cell, rather
 than their elements being spread out with one value per cell. If you need the list values in
 individual cells, select the **List output** format in addition to one or both of the other formats.
@@ -557,7 +570,9 @@ with another format, it cannot be used on its own.
 
 In the **Lists output** sample image below, the header section is in red, the reporter name is in
 orange, the run number and step columns are in blue, the initial values of the variables for the run
-are in green, and the expanded list data is in purple.
+are in green, and the expanded list data is in purple. The list data starts in
+row 7, with the headers (the index into the list, starting from 0) starting in
+column E.
 
 ![[bs-lists.png]]
 
@@ -580,12 +595,16 @@ not be able to toggle between enabling and disabling the update plots checkbox i
 than was obtained before NetLogo 6.4, when such toggling was possible.
 Check the box if you you need to export plot data using primitives such as [[export-interface|export-cmds]],
 [[export-plot|export-cmds]], [[export-all-plots|export-cmds]], and [[export-world|export-cmds]].
+
 #### Run options: parallel runs
 
 The "Run Options" dialog also lets you select whether you want multiple model runs to happen in parallel, and if so, how
 many are allowed to be simultaneously active. The default and recommended maximum number of parallel runs are shown
 below the text box *(Since 6.4)*. Your choice of number of parallel runs
-is remembered from experiment to experiment *(Since 6.4)*.
+is remembered from experiment to experiment *(Since 6.4)*. Because each additional run
+increases memory usage we recommend starting with the default number of runs, and then
+trying more parallel runs if you want. The recommended maximum number of parallel runs is just an estimate, and
+some users have found that performance is significantly decreased when using the maximum.
 
 There are a few cautions associated with parallel runs.
 
