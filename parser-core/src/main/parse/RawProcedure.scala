@@ -6,7 +6,7 @@ import org.nlogo.core.FrontEndProcedure
 import org.nlogo.core,
   core.StructureDeclarations.Procedure
 
-class RawProcedure(val procedureDeclaration: Procedure, val displayNameOption: Option[String])
+class RawProcedure(val procedureDeclaration: Procedure, val module: Option[String], val displayNameOption: Option[String])
   extends FrontEndProcedure {
 
   val nameToken: core.Token = procedureDeclaration.tokens.tail.head
@@ -29,5 +29,5 @@ class RawProcedure(val procedureDeclaration: Procedure, val displayNameOption: O
     buf.toString()
   }
 
-  def filename: Option[String] = if (nameToken.filename.isEmpty) None else Some(nameToken.filename)
+  def filename: String = nameToken.filename
 }

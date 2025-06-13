@@ -19,11 +19,11 @@ extends NameHandler {
         (TokenType.Reporter, new core.prim._procedurevariable(args.indexOf(ident), ident)))
 }
 
-class CallHandler(procedures: ProceduresMap) extends NameHandler {
+class CallHandler(procedures: ProceduresMap, module: Option[String]) extends NameHandler {
   override def apply(token: Token) = {
     val name = token.value.asInstanceOf[String]
     Some(name)
-      .flatMap{x => procedures.get((x, if (token.filename.isEmpty) None else Some(token.filename)))}
+      .flatMap{x => procedures.get((x, module))}
       .map{callproc =>
         if (callproc.isReporter)
           (TokenType.Reporter, new core.prim._callreport(callproc))
