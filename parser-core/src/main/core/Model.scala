@@ -61,3 +61,5 @@ class OptionalSection[A <: AnyRef](val key: String, value: Option[A], val defaul
 }
 
 class Section[A <: AnyRef](key: String, value: A) extends OptionalSection[A](key, Some(value), value)
+
+case class ModelSettings(snapToGrid: Boolean)

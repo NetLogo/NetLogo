@@ -2,13 +2,15 @@
 
 package org.nlogo.api
 
+import org.nlogo.core.model.{ NLogoXMLWriter, XMLElement }
+
 import java.io.{ StringReader, Writer }
 import javax.xml.stream.{ XMLInputFactory, XMLOutputFactory, XMLStreamConstants, XMLStreamException }
 
 import scala.util.{ Failure, Try }
 
 // this wrapper around XMLStreamWriter allows for pretty-printing and other formatting (Isaac B 12/16/24)
-class XMLWriter(dest: Writer) {
+class XMLWriter(dest: Writer) extends NLogoXMLWriter {
   private val writer = XMLOutputFactory.newFactory.createXMLStreamWriter(dest)
 
   private val indentStr = "  "

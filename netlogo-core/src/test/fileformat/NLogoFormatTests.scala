@@ -8,8 +8,8 @@ import java.util.Arrays
 
 import org.scalatest.funsuite.AnyFunSuite
 
-import org.nlogo.api.{ AbstractModelLoader, ComponentSerialization, ConfigurableModelLoader, ModelSettings, Version }
-import org.nlogo.core.{ DummyCompilationEnvironment, DummyExtensionManager, Model, Shape, Widget },
+import org.nlogo.api.{ AbstractModelLoader, ComponentSerialization, ConfigurableModelLoader, Version }
+import org.nlogo.core.{ DummyCompilationEnvironment, DummyExtensionManager, Model, ModelSettings, Shape, Widget },
   Shape.{ LinkShape, VectorShape }
 
 import scala.jdk.CollectionConverters.ListHasAsScala
