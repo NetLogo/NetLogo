@@ -19,6 +19,7 @@ class Procedure(
   val nameToken:            Token,
   val argTokens:            Seq[Token],
   val procedureDeclaration: StructureDeclarations.Procedure,
+  val module:               Option[String],
   val baseDisplayName:      Option[String] = None) extends ProcedureJ with FrontEndProcedure {
 
     args = argTokens.map(_.text).toVector
@@ -28,7 +29,7 @@ class Procedure(
         p.isReporter, p.name, p.nameToken, p.argTokens, p.procedureDeclaration,
         if (p.displayName == "") None else Some(p.displayName))
 
-    val filename: Option[String] = if (nameToken.filename.isEmpty()) None else Some(nameToken.filename)
+    val filename: String = nameToken.filename
     val isLambda = false
 
     var pos: Int = 0
@@ -71,7 +72,7 @@ class Procedure(
 
     protected def buildDisplayName(displayName: Option[String]): String = {
       val nameAndFile =
-        filename
+        Option(filename)
           .filter(_.nonEmpty)
           .map(name + " (" + _ + ")")
           .getOrElse(name)
