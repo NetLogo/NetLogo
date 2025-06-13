@@ -15,6 +15,7 @@ object StructureConverter {
 
   def convert(declarations: Seq[Declaration],
               displayName: Option[String],
+              module: Option[String],
               oldResults: StructureResults,
               subprogram: Boolean): StructureResults = {
     val ims = declarations.collect {
@@ -39,7 +40,8 @@ object StructureConverter {
     }.flatten
     val ps = declarations.collect {
       case p: Procedure =>
-        buildProcedure(p, displayName)
+        // TODO: Use the actual module name
+        buildProcedure(p, module, displayName)
     }
     ps.foreach(_._1.topLevel = subprogram)
     if (dls.size > 1) {
@@ -49,9 +51,9 @@ object StructureConverter {
       program =
         updateProgram(oldResults.program, declarations),
       procedures = oldResults.procedures ++
-        ps.map { case (pp, _) => (pp.name, pp.filename) -> pp},
+        ps.map { case (pp, _) => (pp.name, pp.module) -> pp},
       procedureTokens = oldResults.procedureTokens ++ ps.map {
-        case (p, toks) => (p.name, p.filename) -> toks
+        case (p, toks) => (p.name, p.module) -> toks
       },
       includes = oldResults.includes ++ is,
       includedSources = oldResults.includedSources,
@@ -64,8 +66,8 @@ object StructureConverter {
       defineLibrary = dls.headOption)
   }
 
-  def buildProcedure(p: Procedure, displayName: Option[String]): (FrontEndProcedure, Iterable[Token]) = {
-    val proc = new RawProcedure(p, displayName)
+  def buildProcedure(p: Procedure, module: Option[String], displayName: Option[String]): (FrontEndProcedure, Iterable[Token]) = {
+    val proc = new RawProcedure(p, module, displayName)
     (proc, p.tokens.drop(2).init :+
       new Token("", TokenType.Eof, "")(p.tokens.last.sourceLocation))
   }
