@@ -15,9 +15,44 @@ complete details on differences between versions.
 
 ## Changes for NetLogo 7.0.0
 
+### New File Format
+
+Models in NetLogo 7 have a new format which is extensible and makes it
+easier to add new features to NetLogo. [The new file
+format](https://github.com/NetLogo/NetLogo/wiki/XML-File-Format) follows
+the XML format , and is compatible for any external tools for working
+with XML. Models saved with this format .nlogox or .nlogox3d, rather
+than .nlogo or .nlogo3d. All models going forward will use the new file
+format. Existing model files, with the extension .nlogo or .nlogo3d, can
+be opened in NetLogo 7 and will be automatically converted without loss
+of information. However .nlogox files cannot be opened with previous
+versions of NetLogo. Any tools users have created that rely on the
+format of .nlogo files will need to be re-written.
+
+### Widget Size Conversion
+
+When you open an existing model file, with the extension .nlogo or .nlogo3d,
+in NetLogo 7 widgets will change in appearance, but will not change size.
+However if you open a new model, widgets will appear by default in their new
+(generally larger) sizes.
+See the <a href="netlogo7intro.html#widget-sizes">Widget Sizes</a>
+section of the NetLogo7 Guide for more information about this size change.</td>
+You may want to use the Tools menu item *Tools -&gt; Convert Widgets to New Sizes*
+to make an automatic size conversion and optional adjustment of widget placements
+
+### New Interface Tools
+The Interface toolbar includes four new tool buttons which control the
+meaning of user actions. They are the [Interaction Tool](interfacetab.html#interaction-tool),
+the [Selection Tool](interfacetab.html#selection-tool),
+the [Edit Tool](interfacetab.html#editing-tool), and the [Delete Tool](interfacetab.html#deletion-tool).
+For a brief explanation of the use of these tools see this section of the
+[Interface Tab Documentation](interfacetab.html#overview-working-with-interface-elements-widgets)
+For details on the use of these features click the links above.
+
 ### Selecting Colors
 
-Color Swatches has been replaced by a new [Color Picker](colorpicker.html)
+Color Swatches has been replaced by a new [Color Picker](colorpicker.html).
+
 ## Changes for NetLogo 6.1.0
 
 ### CF Extension Removal
