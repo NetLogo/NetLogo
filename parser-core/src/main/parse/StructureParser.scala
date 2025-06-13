@@ -36,7 +36,7 @@ object StructureParser {
         val firstResults =
           sources.foldLeft(StructureResults(program, oldProcedures)) {
             case (results, (filename, source)) =>
-              parseOne(tokenizer, structureParser, source, filename, results)
+              parseOne(tokenizer, structureParser, source, filename, None, results)
           }
 
         if (subprogram)
@@ -66,7 +66,7 @@ object StructureParser {
 
               newResults = includeFile(compilationEnvironment, suppliedPath) match {
                 case Some((path, fileContents)) =>
-                  parseOne(tokenizer, structureParser, fileContents, path,
+                  parseOne(tokenizer, structureParser, fileContents, path, Some(currentLibrary.name),
                     newResults.copy(imports = newResults.imports.tail,
                       includedSources = newResults.includedSources :+ suppliedPath))
                 case None =>
@@ -94,7 +94,7 @@ object StructureParser {
               cAssert(suppliedPath.endsWith(".nls"), IncludeFilesEndInNLS, newResults.includes.head)
               newResults = includeFile(compilationEnvironment, suppliedPath) match {
                 case Some((path, fileContents)) =>
-                  parseOne(tokenizer, structureParser, fileContents, path,
+                  parseOne(tokenizer, structureParser, fileContents, path, None,
                     newResults.copy(includes = newResults.includes.tail,
                       includedSources = newResults.includedSources :+ suppliedPath))
                 case None =>
@@ -122,7 +122,7 @@ object StructureParser {
       val newTokens = decl.tokens.updated(1, newToken) // The token at index 1 is the name of the procedure
       val newDecl = decl.copy(name = decl.name.copy(name = newName, token = newToken), tokens = newTokens)
 
-      (prefix.toUpperCase + name, filename) -> new RawProcedure(newDecl, None)}
+      (prefix.toUpperCase + name, filename) -> new RawProcedure(newDecl, filename, None)}
 
     newProcedures ++ aliases
   }
@@ -164,12 +164,12 @@ object StructureParser {
     }
   }
 
-  private def parseOne(tokenizer: TokenizerInterface, structureParser: StructureParser, source: String, filename: String, oldResults: StructureResults): StructureResults = {
+  private def parseOne(tokenizer: TokenizerInterface, structureParser: StructureParser, source: String, filename: String, module: Option[String], oldResults: StructureResults): StructureResults = {
       val tokens =
         tokenizer.tokenizeString(source, filename)
           .filter(_.tpe != TokenType.Comment)
           .map(Namer0)
-      structureParser.parse(tokens, oldResults)
+      structureParser.parse(tokens, module, oldResults)
     }
 
   private[parse] def usedNames(program: Program, procedures: ProceduresMap): SymbolTable = {
@@ -290,16 +290,16 @@ class StructureParser(
   displayName: Option[String],
   subprogram: Boolean) {
 
-  def parse(tokens: Iterator[Token], oldResults: StructureResults): StructureResults =
+  def parse(tokens: Iterator[Token], module: Option[String], oldResults: StructureResults): StructureResults =
     StructureCombinators.parse(tokens) match {
       case Right(declarations) =>
         StructureChecker.rejectMisplacedConstants(declarations)
         StructureChecker.rejectDuplicateDeclarations(declarations)
         StructureChecker.rejectDuplicateNames(declarations,
           StructureParser.usedNames(
-            oldResults.program, oldResults.procedures))
+            oldResults.program, oldResults.procedures.filter{case ((_, procModule), _) => procModule == module}))
         StructureChecker.rejectMissingReport(declarations)
-        StructureConverter.convert(declarations, displayName,
+        StructureConverter.convert(declarations, displayName, module,
           if (subprogram)
             StructureResults(program = oldResults.program)
           else oldResults,
