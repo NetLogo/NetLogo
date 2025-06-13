@@ -35,13 +35,8 @@ class Backifier(
           extensionManager.replaceIdentifier(c.token.text.toUpperCase(Locale.ENGLISH))
             .asInstanceOf[nlogoApi.Command])
 
-      case core.prim._call(proc) => {
-        val filename = if (c.token == null || c.token.sourceLocation.filename.isEmpty)
-          None
-        else
-          Some(c.token.sourceLocation.filename)
-        new nvmprim._call(procedures((proc.name, filename)))
-      }
+      case core.prim._call(proc) =>
+        new nvmprim._call(procedures((proc.name, proc.module)))
 
       case core.prim._let(Some(let), _) =>
         new nvmprim._let(let)
