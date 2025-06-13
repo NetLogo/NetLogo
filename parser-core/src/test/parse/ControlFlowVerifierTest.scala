@@ -109,7 +109,8 @@ class ControlFlowVerifierTest extends AnyFunSuite with ScalaCheckDrivenPropertyC
     def name: String = "foobar"
     def isReporter: Boolean = reporterProcedure
     def displayName: String = "foobar"
-    def filename: Option[String] = Some("foo.nlogox")
+    def filename: String = "foo.nlogox"
+    def module: Option[String] = None
     def nameToken: Token = TokenDSL.id("foobar")
     def argTokens: Seq[Token] = Seq()
     def dump: String = "TEST FRONTENDPROCEDURE"
