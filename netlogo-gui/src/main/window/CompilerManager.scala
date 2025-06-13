@@ -212,9 +212,9 @@ class CompilerManager(val workspace: AbstractWorkspace,
       workspace.setProcedures(results.proceduresMap)
       workspace.procedures.values.foreach { procedure =>
         val owner = procedure.filename match {
-          case None          => proceduresInterface
-          case Some("aggregate") => workspace.aggregateManager
-          case Some(fileName)    => new ExternalFileInterface(fileName)
+          case ""          => proceduresInterface
+          case "aggregate" => workspace.aggregateManager
+          case fileName    => new ExternalFileInterface(fileName)
         }
         procedure.owner = owner
       }
