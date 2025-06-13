@@ -17,7 +17,7 @@ import org.nlogo.app.common.{ CodeToHtml, Events => AppEvents, FileActions, Find
 import org.nlogo.app.interfacetab.{ CommandCenter, InterfaceTab, InterfaceWidgetControls, WidgetPanel }
 import org.nlogo.app.tools.{ AgentMonitorManager, GraphicsPreview, LibraryManagerErrorDialog, PreviewCommandsEditor }
 import org.nlogo.awt.UserCancelException
-import org.nlogo.core.{ AgentKind, CompilerException, ExternalResource, I18N, Model,
+import org.nlogo.core.{ AgentKind, CompilerException, ExternalResource, I18N, Model, ModelSettings,
   Shape, Widget => CoreWidget }, Shape.{ LinkShape, VectorShape }
 import org.nlogo.core.model.WidgetReader
 import org.nlogo.fileformat.FileFormat

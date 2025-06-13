@@ -2,8 +2,8 @@
 
 package org.nlogo.fileformat
 
-import org.nlogo.core.Model
-import org.nlogo.api.{ ComponentSerialization, ModelSettings, ModelFormat }
+import org.nlogo.core.{ Model, ModelSettings }
+import org.nlogo.api.{ ComponentSerialization, ModelFormat }
 
 import scala.util.Try
 

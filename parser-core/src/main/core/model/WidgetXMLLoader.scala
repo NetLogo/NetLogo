@@ -1,8 +1,7 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.fileformat
+package org.nlogo.core.model
 
-import org.nlogo.api.XMLElement
 import org.nlogo.core.{ AgentKind, Button, ChooseableBoolean, ChooseableDouble, ChooseableList, ChooseableString,
                         Chooser, Horizontal, InputBox, LogoList, Monitor, NumericInput, Output, Pen, Plot, Slider,
                         StringInput, Switch, TextBox, UpdateMode, Vertical, View, Widget, WorldDimensions,

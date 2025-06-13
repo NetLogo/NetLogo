@@ -5,10 +5,10 @@ package org.nlogo.fileformat
 import java.io.{ File, PrintWriter, StringWriter, Writer }
 import java.net.URI
 
-import org.nlogo.api.{ AbstractModelLoader, AggregateDrawingInterface, FileIO, LabProtocol, ModelSettings,
-                       PreviewCommands, Version, XMLElement, XMLReader, XMLWriter }
-import org.nlogo.core.{ DummyView, ExternalResource, Femto, LiteralParser, Model, Section, Widget, WorldDimensions,
-                        WorldDimensions3D }
+import org.nlogo.api.{ AbstractModelLoader, AggregateDrawingInterface, FileIO, LabProtocol,
+                       PreviewCommands, Version, XMLReader, XMLWriter }
+import org.nlogo.core.{ Femto, LiteralParser, Model, Section, Widget }
+import org.nlogo.core.model.{ ModelXMLLoader, NLogoXMLWriter, XMLElement, WidgetXMLLoader }
 
 import scala.io.{ Codec, Source }
 import scala.util.{ Failure, Success, Try }
@@ -55,72 +55,45 @@ class NLogoXMLLoader(headless: Boolean, literalParser: LiteralParser, editNames:
       XMLReader.read(source).flatMap {
         element =>
 
-          element.name match {
-            case "model" =>
+          val model = ModelXMLLoader.loadBasics(element, defaultInfo)
+          element.children.foldLeft(model) {
 
-              import Model.{ defaultCode, defaultTurtleShapes, defaultLinkShapes }
+            case (model, XMLElement("previewCommands", _, commands, _)) =>
+              val section = new Section("org.nlogo.modelsection.previewcommands", PreviewCommands(commands))
+              model.map((m) => m.copy(optionalSections = m.optionalSections :+ section))
 
-              val version = element("version")
-              val snapToGrid = element("snapToGrid", "false").toBoolean
-
-              val settings  = new Section("org.nlogo.modelsection.modelsettings", ModelSettings(snapToGrid))
-
-              val model = Model(defaultCode, List(DummyView), defaultInfo, version, defaultTurtleShapes,
-                                defaultLinkShapes, List(settings), Seq())
-
-              element.children.foldLeft(Try(model)) {
-                case (model, XMLElement("widgets", _, _, children)) =>
-                  model.map(_.copy(widgets = children.map(WidgetXMLLoader.readWidget).flatten))
-                case (model, XMLElement("info", _, text, _)) =>
-                  model.map(_.copy(info = text))
-                case (model, XMLElement("code", _, text, _)) =>
-                  model.map(_.copy(code = text))
-                case (model, el @ XMLElement("turtleShapes", _, _, _)) =>
-                  model.map(_.copy(turtleShapes = el.getChildren("shape").map(ShapeXMLLoader.readShape)))
-                case (model, el @ XMLElement("linkShapes", _, _, _)) =>
-                  model.map(_.copy(linkShapes = el.getChildren("shape").map(ShapeXMLLoader.readLinkShape)))
-                case (model, XMLElement("previewCommands", _, commands, _)) =>
-                  val section = new Section("org.nlogo.modelsection.previewcommands", PreviewCommands(commands))
-                  model.map((m) => m.copy(optionalSections = m.optionalSections :+ section))
-                case (model, el @ XMLElement("systemDynamics", _, _, _)) =>
-                  val section = {
-                    if (headless) {
-                      new Section("org.nlogo.modelsection.systemdynamics",
-                        Femto.get[AggregateDrawingInterface]("org.nlogo.sdm.Model").read(el))
-                    } else {
-                      new Section("org.nlogo.modelsection.systemdynamics.gui",
-                        Femto.get[AggregateDrawingInterface]("org.nlogo.sdm.gui.AggregateDrawing").read(el))
-                    }
-                  }
-                  model.map((m) => m.copy(optionalSections = m.optionalSections :+ section))
-                case (model, XMLElement("experiments", _, _, children)) =>
-                  val (bspaceElems, _) = children.foldLeft((Seq[LabProtocol](), Set[String]())) {
-                    case ((elems, accNames), child) => {
-                      val (elem, names) = LabXMLLoader.readExperiment(child, literalParser, editNames, accNames)
-                      (elems :+ elem, accNames ++ names)
-                    }
-                  }
-                  val section = new Section("org.nlogo.modelsection.behaviorspace", bspaceElems)
-                  model.map((m) => m.copy(optionalSections = m.optionalSections :+ section))
-                case (model, XMLElement("hubNetClient", _, _, children)) =>
-                  val hnElems = children.map(WidgetXMLLoader.readWidget).flatten
-                  val section = new Section("org.nlogo.modelsection.hubnetclient", hnElems)
-                  model.map((m) => m.copy(optionalSections = m.optionalSections :+ section))
-                case (model, el @ XMLElement("resources", _, _, _)) =>
-                  model.map(_.copy(
-                    resources = el.getChildren("resource").map(
-                      resource => ExternalResource(resource("name"), resource("extension"), resource.text)
-                    )
-                  ))
-                case (model, _) => model // ignore other sections for compatibility with other versions in the future (Isaac B 2/12/25)
+            case (model, el @ XMLElement("systemDynamics", _, _, _)) =>
+              val section = {
+                if (headless) {
+                  new Section("org.nlogo.modelsection.systemdynamics",
+                    Femto.get[AggregateDrawingInterface]("org.nlogo.sdm.Model").read(el))
+                } else {
+                  new Section("org.nlogo.modelsection.systemdynamics.gui",
+                    Femto.get[AggregateDrawingInterface]("org.nlogo.sdm.gui.AggregateDrawing").read(el))
+                }
               }
+              model.map((m) => m.copy(optionalSections = m.optionalSections :+ section))
 
-            case x =>
-              Failure(new Exception(s"Expect 'model' element, but got: ${x}"))
+            case (model, XMLElement("experiments", _, _, children)) =>
+              val (bspaceElems, _) = children.foldLeft((Seq[LabProtocol](), Set[String]())) {
+                case ((elems, accNames), child) => {
+                  val (elem, names) = LabXMLLoader.readExperiment(child, literalParser, editNames, accNames)
+                  (elems :+ elem, accNames ++ names)
+                }
+              }
+              val section = new Section("org.nlogo.modelsection.behaviorspace", bspaceElems)
+              model.map((m) => m.copy(optionalSections = m.optionalSections :+ section))
+
+            case (model, XMLElement("hubNetClient", _, _, children)) =>
+              val hnElems = children.map(WidgetXMLLoader.readWidget).flatten
+              val section = new Section("org.nlogo.modelsection.hubnetclient", hnElems)
+              model.map((m) => m.copy(optionalSections = m.optionalSections :+ section))
+
+            case (model, _) => model // ignore other sections for compatibility with other versions in the future (Isaac B 2/12/25)
 
           }
 
-      }.map(model => model.copy(widgets = model.widgets.filter(_ != DummyView)))
+      }
 
     } else {
       Failure(new Exception(s"""Unable to open model with format "${extension}"."""))
@@ -128,33 +101,7 @@ class NLogoXMLLoader(headless: Boolean, literalParser: LiteralParser, editNames:
 
   }
 
-  def saveToWriter(model: Model, destWriter: Writer): Unit = {
-
-    val writer = new XMLWriter(destWriter)
-
-    writer.startDocument()
-    writer.startElement("model")
-    writer.attribute("version", model.version)
-
-    model.optionalSections.find(_.key == "org.nlogo.modelsection.modelsettings").foreach(section =>
-      writer.attribute("snapToGrid", section.get.get.asInstanceOf[ModelSettings].snapToGrid.toString)
-    )
-
-    writer.startElement("code")
-    writer.escapedText(model.code)
-    writer.endElement("code")
-
-    writer.startElement("widgets")
-    model.widgets.foreach(widget => writer.element(WidgetXMLLoader.writeWidget(widget)))
-    writer.endElement("widgets")
-
-    writer.startElement("info")
-    writer.escapedText(model.info)
-    writer.endElement("info")
-
-    writer.element(XMLElement("turtleShapes", Map(), "", model.turtleShapes.map(ShapeXMLLoader.writeShape).toList))
-    writer.element(XMLElement("linkShapes", Map(), "", model.linkShapes.map(ShapeXMLLoader.writeLinkShape).toList))
-
+  def writeExtras(writer: NLogoXMLWriter, model: Model): Unit = {
     for (section <- model.optionalSections) {
       section.key match {
         case "org.nlogo.modelsection.previewcommands" =>
@@ -188,31 +135,11 @@ class NLogoXMLLoader(headless: Boolean, literalParser: LiteralParser, editNames:
 
       }
     }
+  }
 
-    if (model.resources.nonEmpty) {
-
-      writer.startElement("resources")
-
-      for (resource <- model.resources) {
-
-        writer.startElement("resource")
-
-        writer.attribute("name", resource.name)
-        writer.attribute("extension", resource.extension)
-        writer.escapedText(resource.data)
-
-        writer.endElement("resource")
-
-      }
-
-      writer.endElement("resources")
-
-    }
-
-    writer.endElement("model")
-    writer.endDocument()
-    writer.close()
-
+  def saveToWriter(model: Model, destWriter: Writer): Unit = {
+    val writer = new XMLWriter(destWriter)
+    ModelXMLLoader.writeBasics(writer, model, writeExtras)
   }
 
   def save(model: Model, uri: URI): Try[URI] = {
@@ -240,18 +167,7 @@ class NLogoXMLLoader(headless: Boolean, literalParser: LiteralParser, editNames:
 
   def emptyModel(extension: String): Model = {
     if (isCompatible(extension)) {
-
-      val (name, dims) =
-        if (Version.is3D)
-          ("NetLogo 3D 7.0.0-beta2", new WorldDimensions3D(-16, 16, -16, 16, -16, 16, 13.0))
-        else
-          ("NetLogo 7.0.0-beta2", WorldDimensions(-16, 16, -16, 16, 13.0))
-
-      val widgets =
-        List(Model.defaultView.copy(dimensions = dims))
-
-      Model(Model.defaultCode, widgets, defaultInfo, name, Model.defaultTurtleShapes, Model.defaultLinkShapes)
-
+      ModelXMLLoader.emptyModel(Version.is3D, defaultInfo)
     } else {
       throw new Exception(s"""Unable to create empty model with format "${extension}".""")
     }

@@ -15,11 +15,12 @@ import javax.swing.border.LineBorder
 
 import org.nlogo.agent.{ Agent, BooleanConstraint, ImporterJ, OutputObject, SliderConstraint, World }
 import org.nlogo.api.{ Agent => ApiAgent, AgentFollowingPerspective, CommandRunnable, ControlSet, DrawingInterface,
-                       Exceptions, FileIO, JobOwner, LogoException, ModelReader, ModelSections, ModelSettings,
+                       Exceptions, FileIO, JobOwner, LogoException, ModelReader, ModelSections,
                        ModelType, PreviewCommands, RendererInterface, ReporterRunnable, SimpleJobOwner,
                        TrailDrawerInterface, WorldPropertiesInterface }
 import org.nlogo.awt.{ EventQueue, Hierarchy, UserCancelException }
-import org.nlogo.core.{ AgentKind, CompilerException, File, I18N, Model, Shape, UpdateMode, WorldDimensions }
+import org.nlogo.core.{ AgentKind, CompilerException, File, I18N, Model, ModelSettings,
+                        Shape, UpdateMode, WorldDimensions }
 import org.nlogo.nvm.{ Context, HaltException, Instruction, Procedure }
 import org.nlogo.shape.ShapeConverter
 import org.nlogo.swing.{ CustomOptionPane, FileDialog, ModalProgressTask, OptionPane, ScrollPane, TextArea, Utils }
