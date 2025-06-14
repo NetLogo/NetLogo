@@ -34,14 +34,14 @@ the [Selection Tool](#selection-tool),
 the [Edit Tool](#editing-tool), and the [Delete Tool](#deletion-tool).
 There are also two pull-down menu tools, [Add Widgets Menu](add-widgets-menu),
  and [Align Widgets Menu](align-widgets-menu). For details on the use of these features to
-create, select edit, delete, and adjust widgets click on the tool and menu links
+create, select, edit, delete, and adjust widgets, click on the tool and menu links
 above. They are located after the widgets chart.
 
 ![[interfacetools.png]]
 
 One of the four tools is always active unless the user is currently
-adding a widget. The active tool appears darker than the others. From
-left to right on the Interface Toolbar are the Add Widgets, and Align
+adding a widget. The active tool is colored in with blue. From
+left to right on the Interface Toolbar are the Add Widgets and Align
 Widgets pull-down menus, the Interaction Tool (a finger icon) Selection
 Tool (a cursor with dotted box icon) the Edit Tool (a pencil icon) and
 the Delete Tool (a garbage can icon).
@@ -49,30 +49,31 @@ the Delete Tool (a garbage can icon).
 Here is a brief introduction to working with widgets.
 
 **Adding:** To add a widget, select it from the "Add Widget" drop-down
-menu. A light image of the widget will appear. Drag it to the desired location
-and left click to insert it. A dialog will appear so you can set the appropriate
-values. Right clicking on the background is another way to get an
-"Add Widget" drop-down.
+menu, or right click on the background and select it from the popup menu.
+A light image of the widget will appear at the mouse cursor. Move the mouse to the desired location
+and left click to insert the widget. A dialog will appear so you can set the appropriate
+values. To cancel the addition of the widget, right click or press the Escape key.
 
 **Selecting:** With the Selection Tool active you can select a single widget by
 clicking it, and can select one or more widgets by dragging a rectangle around the
-widget(s) with your mouse. A outline with black handles will appear around the widget to
-show it is selected. Alternatively you can right-click widget and choose
+widget(s) with your mouse. A outline with square handles will appear around the widget to
+show that it is selected. Alternatively you can right-click a widget and choose
 "Select" from the popup menu.
 
 **Unselecting:** To unselect all interface elements, click the mouse on the
 white background of the Interface tab. To unselect an individual widget,
-right-click the widget and choose "Unselect" from the popup menu.
+right-click the widget and choose "Deselect" from the popup menu, or hold Ctrl/Cmd and
+left click on the widget.
 
 **Editing:** With the Editing Tool active you can click on a widget to bring up
-its edit dialog. Alternatively you can right-click widget and choose
+its edit dialog. Alternatively you can right-click the widget and choose
 "Edit" from the popup menu.
 
 **Moving:** Select the widget, then drag it with your mouse to its
 new location. If you hold down the shift key while dragging, the widget will
 move only straight up and down or straight left and right.
 
-**Resizing:** Select the widget, then drag the black "handles" in the
+**Resizing:** Select the widget, then drag the handles in the
 selection border.
 
 **Deleting:** With the Delete Tool active you can click on a widget to delete it.
@@ -80,7 +81,7 @@ Clicking the Delete button will delete any selected widgets.
 You may also delete a widget by
 right-clicking it and choosing "Delete" from the popup menu.
 
-**Adjusting** After selecting multiple items you can use the
+**Adjusting:** After selecting multiple widgets you can use the
 Align Widget menu to align, stretch or distribute them.
 
 To learn more about the different kinds of interface elements, refer to the
@@ -91,7 +92,7 @@ chart below.
 Buttons perform actions when clicked. The input widgets set values for
 global variables. The input widgets are: sliders,
 switches, choosers and inputs. Monitors and plots are two output widgets
-that display global variable value. There is also the output area which
+that display a global variable value. There is also the output area which
 can be written to by the model as it runs. Notes are used to add labels, instructions and
 other information to the interface. Buttons are blue. Input widgets are a
 shades of blue (lighter for the Light Theme, darker for the Dark Theme).
@@ -275,7 +276,7 @@ Editing a Note
       button executes the instructions over and over, until you click
       on the button again to stop the action. By default the
       instructions are executed by the <em>observer</em>. However there is
-      an agents pull-down menu that lets you specify that <em>turtles</em>,<em>patches</em>, or
+      an agents pull-down menu that lets you specify that <em>turtles</em>, <em>patches</em>, or
       <em>links</em> will execute the instructions.  This will be indicated by an
       icon on the left side of the button.</p>
       <p>If you have assigned an
@@ -298,9 +299,10 @@ Editing a Note
       without having to recode the procedure every time. Instead, the
       user moves the slider to a value and observes what happens in the
       model. The value can also be set by typing a number in the slider's
-      text box.
+      text box, or by clicking on the background of the slider and using the
+      left and right or up and down arrow keys.
       Most of the fields in the edit dialog that open after you place the
-      sliderwill be familiar. However, it is  important to notice the minimum,
+      slider will be familiar. However, it is  important to notice the minimum,
       maximum and increment fields will take any reporter, not just constants.
       So, for example, you could make the minimum
       <a href="dictionary.html#min-pcor"><code>min-pxcor</code></a> and the maximum <a href="dictionary.html#max-pcor"><code>max-pxcor</code></a> and the slider
@@ -336,12 +338,12 @@ Editing a Note
       Number input boxes read any type of
       constant number reporter which allows more expressivity than a slider.
       When clicked, color input boxes open a NetLogo color
-      picker. Currently colors are NetLogo colors, which are numbers,
+      picker. Currently colors are NetLogo colors, which are represented by numbers,
       but in future releases they may be RGB or RGBA colors. Therefore
       the global variable should only be used with
       <a href="dictionary.html#colorgroup">Color commands or variables</code></a>.
-      If the global variable type is String(reporter), it can be evaluated using the 
-      <a href="dictionary.html#run"><code>runresult</code></a> primitive. 
+      If the global variable type is String(reporter), it can be evaluated using the
+      <a href="dictionary.html#run"><code>runresult</code></a> primitive.
       If the type is String(commands), it can be executed using the
     <a href="dictionary.html#run"><code>run</code></a> primitive.
     </td>
@@ -376,7 +378,7 @@ Editing a Note
     </td>
     <td>Note</td>
     <td style="text-align: left; padding: 3px; vertical-align: top;">
-      Notes lets you add informative text labels to the Interface tab.
+      Notes let you add informative text labels to the Interface tab.
       The contents of notes do not change as the model runs.
     </td>
   </tr>
@@ -412,7 +414,7 @@ linear with the amount the slider knob is moved.
   times a second, regardless of what is going on in the model. "Tick-based"
   updates means that the view only updates when the tick counter advances. (For a
   fuller discussion of view updates, see the  [Programming Guide](programming.html).)
-- The "Settings..." button allows you to change model settings.
+- The "Settings" button allows you to change model settings.
 
 ## Interface Menus
 ### Add Widgets Menu
@@ -428,20 +430,21 @@ type. You can also add a widget by right-clicking anywhere in the white
 background. This brings up a menu, allowing you to select the widget
 type and place the widget.
 
-Once you complete the add widget action by clicking “OK” to insert the
-widget, or “Cancel” to abort the process the Interaction Tool is
-active.
+The Interaction Tool will be activated once you close the widget's Edit dialog by clicking
+“OK” to insert the widget or “Cancel” to abort the process.
 
-### The Align Widgets Menu
+### Align Widgets Menu
 
 <p><img src="./images/interfacetab/alignwidgetsmenu.png" style="width:3in" /></p>
 
 The Align Widgets is a popup menu of options to align, distribute, and
-stretch widgets. These options require at least two widgets to be selected
-choices. If an action is not possible it will be greyed out. This can happen
+stretch widgets. These options require at least two widgets to be selected.
+If an action is not possible it will be greyed out. This can happen
 if not enough widgets are selected, or if the action would result in undesireable
 overlap of widgets. See [Widget Overlap](widget-overlap) for more details.
-The items remain selected after the action is completed.
+The items remain selected after the action is completed. The Align Widgets menu
+can also be accessed by right clicking on a widget when multiple widgets are
+selected.
 
 #### Aligning
 
@@ -454,14 +457,14 @@ top and bottom. Widgets can also centered vertically or horizontally.
 
 Distribute Vertically keeps the top and bottom widgets fixed, and
 moves the other widgets so the vertical spacing between the widgets
-is the same. Distribute horizontally works similarly.
+is the same. Distribute Horizontally works similarly.
 
 #### Stretching
 
 If Stretch Left is selected the widget with the left-most
 widget remains in place. All the other widgets stretch so they
 have the same left-most edge.  There are similar alignment options for the right,
-top and bottom. 
+top and bottom.
 
 #### Widget Overlap
 
@@ -485,22 +488,22 @@ The effect of clicking is widget specific, as described in the widget chart.
 
 Users can Select, Edit and Delete widgets in interaction mode by
 right-clicking and bringing up a menu. With Plots one can also Copy
-Image, Export … and Clear. With the Output widget one can Copy
-SelectedText and Export …. The View cannot be deleted. The available
+Image, Export, and Clear. With the Output widget one can Copy
+Selected Text and Export. The View cannot be deleted. The available
 options are Select, Edit, Copy View, Export View, Switch to 3D View,
 Inspect Globals, Inspect a patch, and Inspect, Watch or Follow a turtle.
 
 #### Ctrl-clicking or Cmd-clicking
 
 Selection of a widget can be toggled on and off using Ctrl-click
-(Windows and Linux) or Cmd-click (MacOs). This activates the Interaction
-Tool.
+(Windows and Linux) or Cmd-click (MacOS). Performing this action when
+using the Interaction Tool will activate the Selection Tool.
 
 #### Drag Select
 
 One option that is not available with the Interaction Tool is using
 Drag-Select to select one or more widgets. To Drag-Select first press
-the Selection Tool. However Ctrl+Drag does work with the Interactions
+the Selection Tool. However Ctrl+Drag does work with the Interaction
 tool.
 
 #### Exiting
@@ -518,7 +521,7 @@ actions.
 ### Selection, Editing and Deletion Tools
 
 These explicit tools are new for NetLogo 7, although they incorporate
-behaviors associated with certain NetLogo 6.4. icons.
+behaviors associated with certain NetLogo 6.4 icons.
 
 Each of these tools can be entered by pressing the appropriate icon.
 When one of these tools is active widgets will be faintly dimmed to
@@ -530,7 +533,7 @@ the Code Tab will activate the Interaction Tool.
 
 ### Selection Tool
 
-This tool allows users to select and subsequently edit or move an
+This tool allows users to select and subsequently edit or move a
 widget or change its size. Enter this tool by pressing the “Selection
 Tool” icon on the Interface toolbar (cursor with dashed rectangle).
 
@@ -538,16 +541,16 @@ Tool” icon on the Interface toolbar (cursor with dashed rectangle).
 
 #### Selecting
 
-Press the “Selection Tool” Icon. Widgets will dim. Clicking on an
+Press the “Selection Tool” Icon. Widgets will dim. Clicking on a
 widget selects it. A line border with square handles will
 appear around the widget to show it is selected. This will be black for
 the Light Color Theme, and grey for the Dark Color Theme. A widget can also
 be selected by dragging a rectangle around it with your mouse or by
 right-clicking a widget and choosing Select from the menu. You can
-toggle selection and deselection by using Ctrl+click(Windows/Linux) /
-Cmd+click(MacOS) a widget Any method of selecting one or more widgets
+toggle selection and deselection by using Ctrl+Click (Windows/Linux) or
+Cmd+Click(MacOS) on a widget. Any method of selecting one or more widgets
 will activate the Selection Tool. Clicking the background area will
-deselect any selected widgets. Dragging the mouse will move all selected
+deselect any selected widgets. Dragging one widget will move all selected
 widget(s). You can also click and drag an individual widget before the
 selection markers appear.
 
@@ -560,8 +563,8 @@ using the alternative methods.
 #### Deselecting
 
 An individual selected widget can be selected by pressing
-Ctrl+click(Windows/Linux) / Cmd+click(MacOS) or by right-clicking the
-widget and choosing “Unselect” from the popup menu. To deselect all
+Ctrl+Click (Windows/Linux) or Cmd+Click (MacOS) or by right-clicking the
+widget and choosing “Deselect” from the popup menu. To deselect all
 selected interface elements, click the mouse on the white background of
 the Interface tab. The Selection Tool will remain active. Any method of
 choosing a different tool will exit Selection tool.
@@ -579,7 +582,7 @@ right. The items remain selected.
 
 #### Resizing
 
-Select the widget, then drag the square “handles” in the
+Select the widget, then drag the square handles in the
 selection border. If multiple elements are selected the handles can be
 dragged one at a time, and the items remain selected.
 
@@ -590,11 +593,11 @@ widget Enter this tool by pressing the “Editing Tool” Icon on the
 Interface toolbar (a pencil).
 
 *Editing*: Press the “Editing Tool” Icon and click on a widget to edit
-it. When the user completes editing a widget, the Editing Tool remains
+it. When the user finishes editing a widget, the Editing Tool remains
 active. Clicking another widget will edit it.
 
 If a widget is already selected you can press the editing icon to
-activate Editing Tool and open the widget for editing. Clicking the Edit
+activate the Editing Tool and open the widget for editing. Clicking the Edit
 icon when multiple items have already been selected deselects the items,
 and enters the Edit tool. You can also begin editing by double-clicking
 a selected widget, or right-clicking an unselected widget and choosing
@@ -603,13 +606,12 @@ a selected widget, or right-clicking an unselected widget and choosing
 ### Deletion Tool
 
 This tool allows users to delete interface elements. Enter this tool by
-pressing the “Deletion Tool” icon on the Interface toolbar (trashcan)
-After a widget is deleted the user is still in Deletion Tool and ready
+pressing the “Deletion Tool” icon on the Interface toolbar (trashcan).
+After a widget is deleted the user will remain in the Deletion Tool and ready
 to delete more items. The view cannot be deleted.
 
-“Deletion Tool” Icon and click on a widget to delete it. You can also
-select the widget or elements you want to delete, then press the
-“Delete” to delete
+You can also select the widget(s) you want to delete, then press the
+“Delete” button to delete them all at once.
 
 <p><img src="./images/interfacetab/deletiontooldark.png" style="width:3.7in" /></p>
 
@@ -630,24 +632,26 @@ is also available in the "Tools" menu).
 ![[open3d-context.png]]
 
 There are a number of settings for the View (accessible by editing the View, or
-by pressing the "Settings..." button in the Interface Toolbar):
+by pressing the "Settings" button in the Interface Toolbar):
 ![[settings.png]]
 
 Notice that the settings are broken up into three groups. There are world, view,
-and ticks counter settings. World settings affect the properties of the world
+and tick counter settings. World settings affect the properties of the world
 that the turtles live in (changing them may require resetting the world). View
 and tick counter settings only affect the appearance, changing them will not
 affect the outcome of the model.
 
+### World Settings
+
 The world settings allow you to define the boundaries and topology of the world.
 At the top of the left side of the world panel you can choose a location for the
 origin of the world either "Center", "Corner", "Edge", or "Custom". By default
-the world has a center configuration where (0,0) is at the center of the world
+the world has a center configuration where (0, 0) is at the center of the world
 and you define the number of patches from the center to the right and left
 boundaries and the number of patches from the center to the top and bottom
-boundaries. For example: if you set Max-Pxcor = 10, then Min-Pxcor will
-automatically be set to -10, thus there are 10 patches to the left of the origin
-and 10 patches to the right of patch 0 0, for a total of 21 patches in each row.
+boundaries. For example: if you set max-pxcor = 10, then min-pxcor will
+automatically be set to -10, thus there are 10 patches to the left of the patch at (0, 0)
+and 10 patches to the right of the patch at (0, 0), for a total of 21 patches in each row.
 
 A Corner configuration allows you to define the location of the origin as one of
 the corners of the world, upper left, upper right, lower left, or lower right.
@@ -661,7 +665,7 @@ example if you select edge mode along the bottom of the world, you must also
 define the top boundary, as well as the left and the right.
 
 Finally, Custom mode allows you to place the origin at any location in the
-world, though patch 0 0 must still exist in the world.
+world, though the patch at (0, 0) must still exist in the world.
 
 As you change the settings you will notice that the changes you make are
 reflected in the preview on the right side of the panel which shows the origin
@@ -669,11 +673,13 @@ and the boundaries. The width and height of the world are displayed below the
 preview.
 
 Also below the preview there are two checkboxes, the world wrap settings. These
-allow you to control the topology of the world. Notice when you click the check
-boxes the preview indicates which directions allow wrapping, and the name of the
-topology is displayed next to the world dimensions. See the
+allow you to control what happens to a turtle when it reaches the edge of the world.
+Notice when you click the check boxes the preview indicates which directions allow wrapping,
+and the name of the topology is displayed next to the world dimensions. See the
 [Topology section of the Programming Guide](programming.html#topology) for more
 information.
+
+### View Settings
 
 The view settings allow you to customize the look of the view without changing
 the world. Changing view settings will never force a world reset. To change the
@@ -694,8 +700,12 @@ The "Smooth edges" checkbox controls the use of anti-aliasing in the 3D view
 only and only appears when editing from the 3D view. Unchecking it makes lines
 appear more jagged but may speed up rendering.
 
+### Tick Counter Settings
+
 Tick counter settings control the appearance of the tick counter which is
 visible (or not) in the view control strip.
+
+### Interacting with Agents
 
 Turtle, patch and link monitors are easily available through the View, just
 right-click on the turtle or patch you want to inspect, and choose
@@ -718,23 +728,23 @@ The little blue triangle will always point along the y-axis in the positive
 direction, so you can orient yourself in case you get lost.
 ![[3d-cross.png]]
 
-To look at the world from a different angle, press the "rotate" button, then
+To look at the world from a different angle, press the "Rotate" button, then
 click and drag the mouse. The observer will continue to face the same point as
 before (where the blue cross is) but its position in the relation to the
 xy-plane will change.
 
 To move closer or farther away from the world or the agent you are watching,
-following or riding, press the "zoom" button and drag up and down. Note when you
+following or riding, press the "Zoom" button and drag up and down. Note when you
 are in follow or ride mode zooming will switch you between ride and follow,
 since ride is just a special case of follow where the distance at which you are
 following is 0.
 
 To change the position of the observer without changing the direction it is
-facing select the "move" button and drag the mouse inside the 3D View while
+facing select the "Move" button and drag the mouse inside the 3D View while
 holding down the mouse button.
 
 To allow the mouse position and state to be passed to the model select the
-"interact" button and it will function just as the mouse does in the 2D view.
+"Interact" button and it will function just as the mouse does in the 2D view.
 
 To return the observer and focus point to their default positions press the
 "Reset Perspective" button (or use the [[reset-perspective]] command).
@@ -743,7 +753,7 @@ To return the observer and focus point to their default positions press the
 
 Fullscreen mode makes the 3D view of NetLogo Desktop fit on the entire screen. It is often useful for exhibits in museums and other locations.
 
-To enter fullscreen mode, press the "Full Screen" button, to exit fullscreen
+To enter fullscreen mode, press the "Full Screen" button, and to exit fullscreen
 mode, press the Esc key.
 
 **Note:** Fullscreen mode doesn't work on every computer. It depends on your
@@ -819,12 +829,12 @@ Let's take a look at the design of the Command Center.
 ![[command-center.png]]
 
 The smaller box, below the large box, is where you type a command. After typing
-it press the Return or Enter key to run it. You can use the up and down arrows
-to access previous commands.
+it press the Return or Enter key to run it. You can use the up arrow to access the
+commands you previously typed, and the down arrow to navigate back through the list.
 
-To the left of where you type is a popup menu that initially says "observer>".
-You can choose either observer, turtles, or patches, to specify which agents run
-the command you type.
+To the left of where you type is a label that initially says "observer>". Clicking on
+the label will open a popup menu where you can choose either observer, turtles, or patches,
+to specify which agents run the command you type.
 
 Tip: a quicker way to change agent types is to use the Tab key.
 
@@ -836,7 +846,8 @@ inserted before it automatically.
 #### Accessing previous commands
 
 After you type a command, it appears in the large scrolling box above the
-command line. You can use Copy on the Edit menu in this area to copy commands
+command line. You can select a section of the text in this box and use Ctrl+C (Windows/Linux)
+or Cmd+C (Mac) or select Copy from the Edit menu to copy commands
 and then paste them elsewhere, such as the Code tab.
 
 You can also access previous commands using the history popup, which is the
@@ -850,7 +861,7 @@ keys on your keyboard.
 #### Clearing
 
 To clear the large scrolling area containing previous commands and output, click
-"clear" in the top right corner.
+"Clear" in the top right corner.
 
 To clear the command history, choose "Clear History" on the history popup menu
 (accessed using the small downward pointing triangle to the right of where you type
@@ -861,9 +872,9 @@ commands).
 You can hide and show the command center using the Hide Command Center and
 Show Command Center items on the Tools menu.
 
-To resize the command center, drag the bar that separates it from the model
-interface. Or, click one of the little arrows on the right end of the bar to
-make the command center either very big or hidden altogether.
+To resize the command center, drag the dark gray bar that separates it from the model
+interface. Or, click one of the little arrows on the left end of the bar to
+make the command center either fill the interface or be hidden altogether.
 
 To switch between a vertical command center and a horizontal one, click the
 button with the double-headed arrow, just to the left of "Clear".
@@ -928,7 +939,7 @@ Clicking a pen's edit button will open this dialog:
 - Interval is the amount by which x advances every time you use the `plot`
   command.
 - If the "Show in legend" checkbox is checked the selected pen will be a part of
-  the legend in the upper right hand corner of the plot.
+  the legend below the plot.
 - In the "Setup commands" field you can enter commands that will be run when
   `reset-ticks` or `setup-plots` runs.
 - In the "Update commands" field you can enter commands that will be run when
@@ -947,17 +958,17 @@ You can open agent monitors through the Tools menu or the [[inspect]] command.
 ![[agentmonitor1.png]]
 
 You can zoom in or out using the slider beneath the view and you can [[watch]]
-the agent in the main view using the `watch-me` button.
+the agent in the main view using the "Watch" button.
 ![[agentmonitor2.png]]
 
 Below the slider the current value of each agent variable is displayed. You can
-enter a new value. It will be as if, for example, the code `set pcolor ...` had
-run.
+enter a new value, and press the Enter or Return key. It will be as if, for example,
+the code `set pcolor ...` had run.
 ![[agentmonitor3.png]]
 
-Below the agent variable area there is a mini-command center. Rather than
+Below the agent variable area there is a miniature command center. Rather than
 running code as the observer, or talking to all of the turtles, patches, or
-links, the code entered in this command center is run only by this agent.
+links, the code entered in this command center is run only by the agent shown in the window.
 ![[agentmonitor4.png]]
 
 You can close an agent monitor by clicking the window's close button, or
