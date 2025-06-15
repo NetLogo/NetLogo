@@ -80,9 +80,8 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
       }
     }
 
-    c.gridx = 0
+    c.gridx = 1
     c.gridy = 0
-    c.gridwidth = GridBagConstraints.REMAINDER
     c.anchor = GridBagConstraints.CENTER
 
     add(nameLabel, c)
@@ -92,66 +91,43 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
 
     //ROW2
     //-----------------------------------------
-    c.insets = new Insets(0, zoom(3), zoom(3), zoom(3))
+    c.insets = new Insets(0, zoom(3), zoom(3), zoom(8))
 
-    c.gridx = GridBagConstraints.RELATIVE
+    c.gridx = 0
     c.gridy = 1
-    c.gridwidth = 1
-    c.gridheight = 1
-    c.weighty = 3.0
-    c.anchor = GridBagConstraints.WEST
     c.fill = GridBagConstraints.VERTICAL
 
     add(yAxis, c)
 
     yAxis.setBoldState(_boldState)
 
-    c.gridwidth = GridBagConstraints.RELATIVE
-    c.weightx = 3.0
-    c.anchor = GridBagConstraints.CENTER
+    c.gridx = 1
+    c.weightx = 1
+    c.weighty = 1
     c.fill = GridBagConstraints.BOTH
+    c.insets = new Insets(0, 0, zoom(3), zoom(8))
 
     add(canvasPanel, c)
 
     //ROW3
     //-----------------------------------------
-    c.insets = new Insets(0, zoom(3), zoom(3), zoom(3))
+    c.insets = new Insets(0, zoom(3), 0, zoom(3))
+
     c.gridy = 2
-
-    c.weightx = 0.0
-    c.weighty = 0.0
-    c.gridwidth = 1
-    c.anchor = GridBagConstraints.WEST
-    c.fill = GridBagConstraints.NONE
-
-    add(new JLabel, c)
-
-    c.gridwidth = GridBagConstraints.RELATIVE
-    c.anchor = GridBagConstraints.CENTER
+    c.weightx = 0
+    c.weighty = 0
     c.fill = GridBagConstraints.HORIZONTAL
 
     add(xAxis, c)
 
     xAxis.setBoldState(_boldState)
 
-    c.weightx = 0.0
-    c.weighty = 0.0
-    c.gridwidth = 1
-    c.gridheight = 1
-    c.anchor = GridBagConstraints.EAST
-    c.fill = GridBagConstraints.NONE
-
-    add(new JLabel, c)
-
     //ROW4
     //-----------------------------------------
-
     c.gridx = 0
     c.gridy = 3
-    c.gridwidth = GridBagConstraints.REMAINDER
-    c.weightx = 1
-    c.anchor = GridBagConstraints.CENTER
-    c.insets = new Insets(zoom(2), zoom(10), zoom(8), zoom(10))
+    c.gridwidth = 2
+    c.insets = new Insets(zoom(8), zoom(10), zoom(8), zoom(10))
 
     add(legend, c)
 
@@ -260,6 +236,13 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
   /// sizing
   override def getMinimumSize = AbstractPlotWidget.MIN_SIZE
   override def getPreferredSize = AbstractPlotWidget.PREF_SIZE
+
+  override def setBounds(x: Int, y: Int, width: Int, height: Int): Unit = {
+    super.setBounds(x, y, width, height)
+
+    // without this call the legend doesn't wrap correctly after the plot is resized (Isaac B 6/15/25)
+    legend.revalidate()
+  }
 
   override def syncTheme(): Unit = {
     canvasPanel.syncTheme()
