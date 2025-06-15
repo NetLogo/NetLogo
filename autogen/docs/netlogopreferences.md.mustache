@@ -5,7 +5,7 @@
 
 ## Overview
 This dialog lets you customize various NetLogo settings. On Windows and
-Linux, it is opened with the Tools menu “Preferences...” item. For Macs,
+Linux, it is opened with the Tools menu “Preferences” item. For Macs,
 it’s under the “NetLogo” menu and reads “Settings”.
 
 Items are organized into four tabs:
@@ -72,33 +72,31 @@ Color Themes
 </tbody>
 </table>
 
-Use the check boxes or pull-down menus to change the default preference
+Use the check boxes, pull-down menus and text fields to change the default preference
 values. When you are done, click the OK button to save your changes, or
 the Cancel button to revert the preferences to the state they were in
 before you opened the dialog. Most preferences take effect immediately.
 You must exit and re-open NetLogo for the preferences that indicate
-“(restart required)” to take effect. There is one preference that only
-takes effect when the user opens a new model, or re-opens the current
-model, as indicated by the note “(model reload required)”.
-
+“(restart required)” to take effect.
 
 ## General Preferences
 
 ### User Interface language
-Choose a language for user interface items and error messages. (restart required)
-```
-Choices: English, Spanish, Chinese,  Portuguese, Russian, and Japanese
-```
+Choose a language for user interface items and error messages. NetLogo must be restarted for
+this preference to take effect. The default option is "Detect Language", which will set the interface
+language to your system language, or English if your system language is not supported by NetLogo. The
+other available choices are English, Spanish, Chinese,  Portuguese, Russian, and Japanese.
+
 ### Reload the last used model on startup
-NetLogo opens with an empty model by default. When this option is selected the previously opened
-model will be loaded when NetLogo starts.
+NetLogo opens with an empty model by default. When this option is selected the most recently opened
+model will be loaded when NetLogo starts instead of an empty model.
 
 ### Reload model on external changes
 If you use an editor outside of NetLogo to change the model or any included .nls files, the
 changed file is updated in NetLogo.
 
 ### Bold widget text
-By default, widget text is not in bold, use this option to bold it. (model reload required)
+By default, widget text is not in bold, use this option to bold it.
 
 ### Jump slider widget thumb to mouse location on click (instead of incrementing)
 By default clicking a slider location will cause the value of the slider to be set
@@ -109,11 +107,8 @@ mouse click, also moving the widget thumb.
 ### UI Scale
 This option is for Linux only. It must be set to the
 same value as your system UI scale or NetLogo will fail to resize its
-visual components correctly.
-```
-Entering an improper value will produce the error message “UI Scale must
-be a valid floating point number.”
-```
+visual components correctly. This value must be a floating point number, or NetLogo will
+produce an error message.
 
 ## Code Preferences
 
@@ -126,7 +121,7 @@ Choices:
 ### Always show "Included Files" menu
 By default the "Included Files" menu is only shown when the Code Tab has an "includes" statement. With this
 option the "Included Files" menu will always be in the Code Tab toolbar. That menu allows user to select and open
-an included file or choose the **New Source File** or *Open Source File...* options.
+an included file or choose the **New Source File** or **Open Source File** options.
 
 ### Auto-focus text or tab with errors when model is compiled
 If checked, NetLogo will bring you to the location of an error if one
@@ -136,7 +131,8 @@ occurs during compilation.
 When checked the Code tab will appear in a separate window when NetLogo is opened.
 
 ### Auto Indent
-Auto-focus text or tab with errors when model is compiled
+When selected, indentation in the Code Tab will be determined by the compiler, instead of by
+manually pressing the Tab key to change the indentation of a line.
 
 ### Show line numbers
 When selected line numbers will be shown on the left edge of the Code Tab.
@@ -144,15 +140,14 @@ When selected line numbers will be shown on the left edge of the Code Tab.
 ## Logging Preferences
 
 ### Enable logging
-Create a log file containing user actions. This option can be useful for debugging and research. (restart required)
-```
-If logging is enabled and a log directory is not specified by the next preference the error message “Logging was enabled, but no log directory was specified.” will appear.
-```
+Create a log file containing user actions. This option can be useful for debugging and research. NetLogo must be restarted for
+this preference to take effect. If logging is enabled you must also specify a log directory, or NetLogo will produce
+an error message.
+
 ### Directory to store logs
 Specifies the directory to which log files will be written. You can type in the directory name, or select a
-directory using the Browse… dialog. (restart required)
+directory using the Browse… dialog. NetLogo must be restarted for this preference to take effect.
 
-```
 If logging is enabled one of the following may happen.
 
 - If you type in a non-existent directory you will see a dialog that
@@ -162,14 +157,14 @@ If logging is enabled one of the following may happen.
 - You must have write permission for the log directory, otherwise you
   will get the message “NetLogo does not have permission to write to the
   specified log directory.”
-```
 
 ### Events to log:
 Enter a comma-separate list of the event names or “shortcut” names. If you leave this value blank with logging enabled
-a set of default events will be logged. For detailed options see the [Events](logging.html#events) of the Logging documentation. The "all" option causes all the events be logged" button, chooser, comment, compile, command-center, global, input-box, link, model-open, slider, speed-slider, start, switch, stop, turtle, widget-edit, and tick
+a set of default events will be logged. For detailed options see the [Events](logging.html#events) of the Logging documentation. The "all" option causes all the events be logged,
+including button, chooser, comment, compile, command-center, global, input-box, link, model-open, slider, speed-slider, start, switch, stop, turtle, widget-edit, and tick events.
 
 ## Color Themes
-Use a radio button to change the color theme. See the images below.
+Use the radio buttons to change the color theme. See the images below for an example of each theme.
 
 ### Light
 <img src="./images/nl7intro/inttablight.png" style="width:5in" />

@@ -11,9 +11,6 @@ import org.nlogo.theme.ThemeSync
 sealed trait RequiredAction
 
 object RequiredAction {
-  case object Reload extends RequiredAction {
-    override def toString: String = "reloadRequired"
-  }
   case object Restart extends RequiredAction {
     override def toString: String = "restartRequired"
   }
