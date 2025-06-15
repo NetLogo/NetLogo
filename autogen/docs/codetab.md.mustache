@@ -1,16 +1,16 @@
 {{> header.html}}
 
 The Code tab is where the code for the model is stored. Commands you only want
-to use immediately go in the Command Center; commands you want to save and use
-later, over and over again, are found in the Code tab.
+to use once can be typed in the Command Center, but collections of commands that
+you want to save for later use can be stored in the Code tab.
 ![[codetab.png]]
 
 [TOC]
 
 Many Code tab behaviors can be changed by using [Code preferences](netlogopreferences.html#code-preferences).
 These preferences can be accessed via the "Preferences" button in the Code tab toolbar, or the Code
-Preferences tab of the NetLogo Preferences dialog which is opened with the Tools menu “Preferences...”
-item on Windows and Linux, and with the NetLogo menu “Settings” items on MacOS.
+Preferences tab of the NetLogo Preferences dialog which is opened with the Tools menu “Preferences”
+item on Windows and Linux, and with the NetLogo menu “Settings” item on MacOS.
 
 ## Code Tab Toolbar
 <p><img src="./images/codetab/codetabtoolbar.png" style="width:6in" /></p>
@@ -20,12 +20,12 @@ Details for these items can be found in the corresponding sections.
 - [Find](#find-replace)
 - [Procedures](#procedures-menu)
 - [Separate code window](#separate-code-tab)
-- [Preferences](netlogopreferences.html#code-preferences)
- Preferences are also described in relevant sections of this document.
+- [Preferences](netlogopreferences.html#code-preferences) (also described in relevant sections of this document)
 
 ### Procedures menu
 This menu includes a list of all the procedures in the Code tab. Clicking on a procedure
-moves the cursor to that procedure. Typing in the text box at the top will show only matching procedures.
+moves the cursor to that procedure. Typing in the text box at the top will filter the list, only
+showing procedures whose name contains the typed text.
 By default procedures are listed alphabetically, but this
 can be changed to their order of appearance by using the "Sort order of procedures menu"
 code preference.
@@ -52,7 +52,9 @@ To determine if the code has any errors, you may press the "Check" button. If
 there are any syntax errors, the Code tab will turn orange, the code that contains
 the error will be highlighted, the cursor will move to the error location, and an error message will appear
 in an orange banner at the top of the code area. If you don't want the cursor to move when there is a
-compilation error (for example when there is more code than fits on the screen) uncheck the "Auto-focus text or tab with errors when model is compiled" preference. The error will not be highlighted.
+compilation error (for example when there is more code than fits on the screen) uncheck the "Auto-focus text or tab with errors when model is compiled" preference.
+The error will not be highlighted. If the error occurs in the Interface tab, for example if any button
+or plot commands result in a compilation error, the Interface tab will turn orange instead.
 
 ![[codetaberror.png]]
 
@@ -68,11 +70,11 @@ The Code tab can be opened in a separate window from the main NetLogo window. It
  on other operating systems.
 - To return a separated Code tab to the main NetLogo window you can use Command + W on Mac, Control + W
  on other operating systems or click the window's close button.
-- There is a Code preference to "Open code tab in separate window on startup"
+- There is a Code preference to "Open code tab in separate window on startup".
 
 ## Find & Replace
 
-To find a fragment of code in the procedures, click on the "Find" button in the
+To find a fragment of code in the Code tab, click on the "Find" button in the
 Code toolbar and the Find dialog will appear.
 ![[find-replace.png]]
 
@@ -93,7 +95,7 @@ with the replace phrase.
 
 ## Automatic Indentation
 
-When the "Indent Automatically" Code preference is selected, NetLogo will automatically
+When the "Auto indent" Code preference is selected, NetLogo will automatically
 attempt to align your code in a logically structured format. For example, when
 you open a set of square brackets "[" (perhaps after an `if` statement), NetLogo
 will automatically add spaces so that the following lines of code are two spaces
@@ -166,9 +168,9 @@ Once you've opened new tabs they become accessible from the Tabs menu, and you
 can use the keyboard to move from tab to tab (Command + number on Mac,
 Control + number on other operating systems). If the main Code tab is in a separate window, the tabs
 for included files will appear there too. When an included (.nls) file tab is selected it becomes blue.
-An included file tab is closed by clicking on the “x” on the right side of the tab. An included file tab
-has a checkbox to open it in a separate code window, and a
-Preferences button, which work as they do for the main Code Tab.
+An included file tab can be closed by clicking on the “x” on the right side of the tab. Each included file
+tab has a toolbar indentical to the main Code Tab's toolbar; the options in this toolbar apply to all
+Code tabs, not just the one that is currently visible.
 
 <table>
 <colgroup>
