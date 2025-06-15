@@ -86,9 +86,13 @@ class NoteWidget extends SingleErrorWidget with Transparent with Editable {
 
   private def wrapText(): Unit = {
     if (_markdown) {
-      textLabel.setText(s"""<html>$css${renderer.render(parser.parse(_text))}</html>""")
+      val text = renderer.render(parser.parse(_text))
+
+      // for some reason setting the content width in CSS to the width of the JLabel always results in the rendered
+      // content being 1.3 times larger. dividing the JLabel width by 1.3 solves the problem. (Isaac B 6/15/25)
+      textLabel.setText(s"""<html>$css<body style="width: ${textLabel.getWidth / 1.3}px">$text</body></html>""")
     } else {
-      textLabel.setText(s"""<html>$css${escapeHTML(_text)}</html>""")
+      textLabel.setText(s"""<html>${escapeHTML(_text)}</html>""")
     }
 
     repaint()
