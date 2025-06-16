@@ -4,7 +4,7 @@ package org.nlogo.core
 
 import ConstraintSpecification._
 
-trait Widget {
+trait Widget extends Serializable {
   def x:   Int
   def y:    Int
   def width:  Int

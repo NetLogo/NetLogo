@@ -3,31 +3,32 @@
 package org.nlogo.window
 
 import java.awt.Toolkit
-import java.awt.datatransfer.{ Clipboard, ClipboardOwner, DataFlavor, Transferable }
+import java.awt.datatransfer.{ DataFlavor, Transferable }
+import java.util.ArrayList
 
 import org.nlogo.core.Widget
 
-object ClipboardUtils extends ClipboardOwner {
+import scala.jdk.CollectionConverters.{ ListHasAsScala, SeqHasAsJava }
+
+object ClipboardUtils {
   private val clipboard = Toolkit.getDefaultToolkit.getSystemClipboard
 
-  private val widgetsFlavor = new DataFlavor(classOf[Seq[Widget]], "NetLogo Widgets")
+  // Seq is not serializable, which prevents cross-instance copy/paste, so use ArrayList instead (Isaac B 6/16/25)
+  private val widgetsFlavor = new DataFlavor(classOf[ArrayList[Widget]], "NetLogo Widgets")
 
   def readWidgets(): Seq[Widget] = {
     if (clipboard.isDataFlavorAvailable(widgetsFlavor)) {
-      clipboard.getData(widgetsFlavor).asInstanceOf[Seq[Widget]]
+      clipboard.getData(widgetsFlavor).asInstanceOf[ArrayList[Widget]].asScala.toSeq
     } else {
       Seq()
     }
   }
 
   def writeWidgets(widgets: Seq[Widget]): Unit = {
-    clipboard.setContents(new WidgetsTransferable(widgets), this)
+    clipboard.setContents(new WidgetsTransferable(new ArrayList(widgets.asJava)), null)
   }
 
-  // no need to do anything here, no persistent state is stored (Isaac B 6/16/25)
-  override def lostOwnership(clipboard: Clipboard, contents: Transferable): Unit = {}
-
-  private class WidgetsTransferable(widgets: Seq[Widget]) extends Transferable {
+  private class WidgetsTransferable(widgets: ArrayList[Widget]) extends Transferable {
     override def getTransferData(flavor: DataFlavor): AnyRef = {
       if (isDataFlavorSupported(flavor)) {
         widgets
