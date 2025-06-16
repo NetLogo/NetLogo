@@ -701,17 +701,17 @@ class WidgetPanel(val workspace: GUIWorkspace)
     }
   }
 
-  private def hasCtrl(e: KeyEvent): Boolean = {
-    if (System.getProperty("os.name").contains("Mac"))
-      (e.getModifiersEx & InputEvent.META_DOWN_MASK) == InputEvent.META_DOWN_MASK
-    else
-      (e.getModifiersEx & InputEvent.CTRL_DOWN_MASK) == InputEvent.CTRL_DOWN_MASK
-  }
-
   def keyPressed(e: KeyEvent): Unit = {
+    val hasCtrl = {
+      if (System.getProperty("os.name").contains("Mac"))
+        (e.getModifiersEx & InputEvent.META_DOWN_MASK) == InputEvent.META_DOWN_MASK
+      else
+        (e.getModifiersEx & InputEvent.CTRL_DOWN_MASK) == InputEvent.CTRL_DOWN_MASK
+    }
+
     if (e.getKeyCode == KeyEvent.VK_ESCAPE) {
       setInterfaceMode(InterfaceMode.Interact, true)
-    } else if (e.getKeyCode == KeyEvent.VK_V && hasCtrl(e)) {
+    } else if (e.getKeyCode == KeyEvent.VK_V && hasCtrl) {
       val widgets = ClipboardUtils.readWidgets()
 
       if (widgets.nonEmpty) {
@@ -732,13 +732,25 @@ class WidgetPanel(val workspace: GUIWorkspace)
       val dist = if (e.isShiftDown) 10 else 1
 
       e.getKeyCode match {
-        case KeyEvent.VK_C if hasCtrl(e) =>
+        case KeyEvent.VK_C if hasCtrl =>
           ClipboardUtils.writeWidgets(selectedWrappers.collect {
             // since every model already has a view, it's not possible to paste a new view widget,
             // so just don't copy it in the first place (Isaac B 6/16/25)
             case wrapper: WidgetWrapper if !wrapper.widget.isInstanceOf[ViewWidget] =>
               wrapper.widget.model
           }.toSeq)
+
+        case KeyEvent.VK_X if hasCtrl =>
+          val widgets = selectedWrappers.collect {
+            // since every model already has a view, it's not possible to paste a new view widget,
+            // so just don't copy it in the first place (Isaac B 6/16/25)
+            case wrapper: WidgetWrapper if !wrapper.widget.isInstanceOf[ViewWidget] =>
+              wrapper.widget.model
+          }.toSeq
+
+          deleteSelectedWidgets()
+
+          ClipboardUtils.writeWidgets(widgets)
 
         case KeyEvent.VK_RIGHT =>
           WidgetActions.moveWidgets(selectedWrappers.map(w => (w, w.getX + dist, w.getY)))
