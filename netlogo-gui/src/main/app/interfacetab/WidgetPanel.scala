@@ -2,9 +2,9 @@
 
 package org.nlogo.app.interfacetab
 
-import java.awt.{ Component, Dimension, Graphics, MouseInfo, Point, Rectangle, Color => AwtColor }
-import java.awt.event.{ ActionEvent, FocusEvent, FocusAdapter, KeyAdapter, KeyEvent, KeyListener, MouseAdapter,
-                        MouseEvent, MouseListener, MouseMotionAdapter, MouseMotionListener }
+import java.awt.{ Color => AwtColor, Component, Dimension, Graphics, MouseInfo, Point, Rectangle }
+import java.awt.event.{ ActionEvent, FocusEvent, FocusAdapter, InputEvent, KeyAdapter, KeyEvent, KeyListener,
+                        MouseAdapter, MouseEvent, MouseListener, MouseMotionAdapter, MouseMotionListener }
 import javax.swing.{ AbstractAction, JComponent, JLayeredPane, SwingUtilities }
 
 import org.nlogo.app.common.EditorFactory
@@ -17,10 +17,10 @@ import org.nlogo.log.LogManager
 import org.nlogo.nvm.DefaultCompilerServices
 import org.nlogo.swing.{ MenuItem, PopupMenu }
 import org.nlogo.theme.InterfaceColors
-import org.nlogo.window.{ AbstractWidgetPanel, ButtonWidget, Editable, Events => WindowEvents, GUIWorkspace,
-                          InterfaceMode, OutputWidget, Widget, WidgetContainer, WidgetRegistry, DummyChooserWidget,
-                          DummyInputBoxWidget, DummyPlotWidget, DummyViewWidget, PlotWidget, SliderWidget,
-                          WidgetSizes },
+import org.nlogo.window.{ AbstractWidgetPanel, ButtonWidget, ClipboardUtils, Editable, Events => WindowEvents,
+                          GUIWorkspace, InterfaceMode, OutputWidget, Widget, WidgetContainer, WidgetRegistry,
+                          DummyChooserWidget, DummyInputBoxWidget, DummyPlotWidget, DummyViewWidget, PlotWidget,
+                          SliderWidget, ViewWidget, WidgetSizes },
   WindowEvents.{ CompileAllEvent, DirtyEvent, EditWidgetEvent, InterfaceModeChangedEvent, LoadBeginEvent,
                  SetInterfaceModeEvent, WidgetEditedEvent, WidgetRemovedEvent, ZoomedEvent }
 
@@ -54,7 +54,6 @@ class WidgetPanel(val workspace: GUIWorkspace)
   var sliderEventOnReleaseOnly: Boolean = false
 
   protected var startDragPoint: Option[Point] = None
-  protected var newWidget: Option[WidgetWrapper] = None
   protected var selectionPane: JComponent =
     new JComponent() {
       override def paintComponent(g: Graphics): Unit = {
@@ -68,6 +67,16 @@ class WidgetPanel(val workspace: GUIWorkspace)
         }
       }
     }
+
+  // this trait allows for a distinction between newly created shadow widgets
+  // and shadow widgets pasted from the clipboard (Isaac B 6/16/25)
+  protected sealed trait ShadowWidgets
+
+  protected case class NewShadowWidget(wrapper: WidgetWrapper) extends ShadowWidgets
+  // stores each shadow widget along with its offset from the cursor (Isaac B 6/16/25)
+  protected case class PastedShadowWidgets(wrappers: Seq[(WidgetWrapper, Point)]) extends ShadowWidgets
+
+  protected var shadowWidgets: Option[ShadowWidgets] = None
 
   protected class InterceptPane extends JComponent {
     addMouseListener(new MouseAdapter {
@@ -126,8 +135,8 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
   def setInterfaceMode(mode: InterfaceMode, focus: Boolean): Unit = {
     if (interfaceMode != mode) {
-      if (interfaceMode == InterfaceMode.Add && !placedShadowWidget)
-        removeShadowWidget()
+      if (interfaceMode == InterfaceMode.Add && !placedShadowWidgets)
+        removeShadowWidgets()
 
       interfaceMode = mode
 
@@ -158,7 +167,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
     setInterfaceMode(e.mode, e.focus)
   }
 
-  private var placedShadowWidget = false
+  private var placedShadowWidgets = false
 
   setOpaque(true)
   setBackground(AwtColor.WHITE)
@@ -330,14 +339,27 @@ class WidgetPanel(val workspace: GUIWorkspace)
   def mouseMoved(e: MouseEvent): Unit = {
     interfaceMode match {
       case InterfaceMode.Add =>
-        newWidget.foreach(widget => {
-          if (workspace.snapOn && !NlogoMouse.hasCtrl(e)) {
-            widget.setLocation(snapToGrid(e.getX), snapToGrid(e.getY))
-          } else {
-            widget.setLocation(e.getX, e.getY)
-          }
+        shadowWidgets.foreach(_ match {
+          case NewShadowWidget(wrapper) =>
+            if (workspace.snapOn && !NlogoMouse.hasCtrl(e)) {
+              wrapper.setLocation(snapToGrid(e.getX), snapToGrid(e.getY))
+            } else {
+              wrapper.setLocation(e.getX, e.getY)
+            }
 
-          widget.originalBounds = widget.getBounds
+            wrapper.originalBounds = wrapper.getBounds
+
+          case PastedShadowWidgets(wrappers) =>
+            wrappers.foreach {
+              case (wrapper, offset) =>
+                if (workspace.snapOn && !NlogoMouse.hasCtrl(e)) {
+                  wrapper.setLocation(snapToGrid(e.getX + offset.x), snapToGrid(e.getY + offset.y))
+                } else {
+                  wrapper.setLocation(e.getX + offset.x, e.getY + offset.y)
+                }
+
+                wrapper.originalBounds = wrapper.getBounds
+            }
         })
 
       case InterfaceMode.Select | InterfaceMode.Edit =>
@@ -397,10 +419,20 @@ class WidgetPanel(val workspace: GUIWorkspace)
               selectionPane.repaint(selectionRect)
 
             case InterfaceMode.Add =>
-              newWidget.foreach(widget => {
-                val p2 = restrictDrag(new Point(e.getX - point.x, e.getY - point.y), widget, NlogoMouse.hasCtrl(e))
+              shadowWidgets.foreach(_ match {
+                case NewShadowWidget(wrapper) =>
+                  val p2 = restrictDrag(new Point(e.getX - point.x, e.getY - point.y), wrapper, NlogoMouse.hasCtrl(e))
 
-                widget.setLocation(point.x + p2.x, point.y + p2.y)
+                  wrapper.setLocation(point.x + p2.x, point.y + p2.y)
+
+                case PastedShadowWidgets(wrappers) =>
+                  wrappers.foreach {
+                    case (wrapper, offset) =>
+                      val p2 = restrictDrag(new Point(e.getX - point.x + offset.x, e.getY - point.y + offset.y),
+                                            wrapper, NlogoMouse.hasCtrl(e))
+
+                      wrapper.setLocation(point.x + p2.x, point.y + p2.y)
+                  }
               })
 
             case InterfaceMode.Edit =>
@@ -626,7 +658,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
         if (e.isPopupTrigger) {
           doPopup(e.getPoint)
         } else if (e.getButton == MouseEvent.BUTTON1) {
-          placeShadowWidget()
+          placeShadowWidgets()
         }
 
       case InterfaceMode.Edit =>
@@ -669,9 +701,26 @@ class WidgetPanel(val workspace: GUIWorkspace)
     }
   }
 
+  private def hasCtrl(e: KeyEvent): Boolean = {
+    if (System.getProperty("os.name").contains("Mac"))
+      (e.getModifiersEx & InputEvent.META_DOWN_MASK) == InputEvent.META_DOWN_MASK
+    else
+      (e.getModifiersEx & InputEvent.CTRL_DOWN_MASK) == InputEvent.CTRL_DOWN_MASK
+  }
+
   def keyPressed(e: KeyEvent): Unit = {
     if (e.getKeyCode == KeyEvent.VK_ESCAPE) {
       setInterfaceMode(InterfaceMode.Interact, true)
+    } else if (e.getKeyCode == KeyEvent.VK_V && hasCtrl(e)) {
+      val widgets = ClipboardUtils.readWidgets()
+
+      if (widgets.nonEmpty) {
+        unselectWidgets()
+
+        createShadowWidgets(widgets)
+
+        setInterfaceMode(InterfaceMode.Add, true)
+      }
     } else if (interfaceMode == InterfaceMode.Interact) {
       if (System.getProperty("os.name").contains("Mac")) {
         if (e.getKeyCode == KeyEvent.VK_META)
@@ -683,6 +732,14 @@ class WidgetPanel(val workspace: GUIWorkspace)
       val dist = if (e.isShiftDown) 10 else 1
 
       e.getKeyCode match {
+        case KeyEvent.VK_C if hasCtrl(e) =>
+          ClipboardUtils.writeWidgets(selectedWrappers.collect {
+            // since every model already has a view, it's not possible to paste a new view widget,
+            // so just don't copy it in the first place (Isaac B 6/16/25)
+            case wrapper: WidgetWrapper if !wrapper.widget.isInstanceOf[ViewWidget] =>
+              wrapper.widget.model
+          }.toSeq)
+
         case KeyEvent.VK_RIGHT =>
           WidgetActions.moveWidgets(selectedWrappers.map(w => (w, w.getX + dist, w.getY)))
 
@@ -769,7 +826,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
     // we need to add the wrapper before we can call wrapper.getPreferredSize(), because
     // that method looks at its parent and sees if it's an InterfacePanel
     // and zooms accordingly - ST 6/16/02
-    add(wrapper, javax.swing.JLayeredPane.DEFAULT_LAYER)
+    add(wrapper, JLayeredPane.DEFAULT_LAYER)
     moveToFront(wrapper)
 
     if (select || ! loadingWidget) {
@@ -791,8 +848,9 @@ class WidgetPanel(val workspace: GUIWorkspace)
     zoomer.zoomWidget(wrapper, true, loadingWidget, 1.0, zoomFactor)
 
     if (select) {
-      newWidget = Some(wrapper)
-      newWidget.get.originalBounds = newWidget.get.getBounds
+      shadowWidgets = Some(NewShadowWidget(wrapper))
+
+      wrapper.originalBounds = wrapper.getBounds
     }
     LogManager.widgetAdded(loadingWidget, widget.classDisplayName, widget.displayName)
     wrapper
@@ -803,7 +861,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
     // we need to add the wrapper before we can call wrapper.getPreferredSize(), because
     // that method looks at its parent and sees if it's an InterfacePanel
     // and zooms accordingly - ST 6/16/02
-    add(widgetWrapper, javax.swing.JLayeredPane.DEFAULT_LAYER)
+    add(widgetWrapper, JLayeredPane.DEFAULT_LAYER)
     moveToFront(widgetWrapper)
     widgetWrapper.validate()
     widgetWrapper.syncTheme()
@@ -816,6 +874,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
     widgetWrapper
   }
 
+  // create shadow widget to be placed and edited (Isaac B 6/16/25)
   def createShadowWidget(widget: CoreWidget): Unit = {
     val wrapper = new WidgetWrapper(makeWidget(widget), this)
 
@@ -840,43 +899,109 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
     unselectWidgets()
 
-    newWidget = Some(wrapper)
+    shadowWidgets = Some(NewShadowWidget(wrapper))
   }
 
-  private def placeShadowWidget(): Unit = {
-    newWidget.foreach(widget => {
-      widget.selected(true)
-      widget.foreground()
-      widget.isNew(true)
-      widget.setPlacing(false)
+  // create shadow widgets being pasted as-is from the clipboard (Isaac B 6/16/25)
+  private def createShadowWidgets(widgets: Seq[CoreWidget]): Unit = {
+    val mouse = MouseInfo.getPointerInfo.getLocation
 
-      placedShadowWidget = true
+    SwingUtilities.convertPointFromScreen(mouse, this)
 
-      setInterfaceMode(InterfaceMode.Interact, false)
+    val start = new Point(mouse.x.max(0), mouse.y.max(0))
 
-      widget.widget.getEditable match {
-        case e: Editable =>
-          new EditWidgetEvent(e).raise(this)
+    // find widget closest to origin to calculate widget offsets (Isaac B 6/16/25)
+    val min: Point = {
+      val minWidget = widgets.minBy(widget => widget.x * widget.x + widget.y * widget.y)
 
-        case _ =>
-      }
+      new Point(minWidget.x, minWidget.y)
+    }
 
-      placedShadowWidget = false
+    shadowWidgets = Some(PastedShadowWidgets(widgets.map { widget =>
+      val newWidget = makeWidget(widget)
 
-      if (widget != null)
-        widget.isNew(false)
+      newWidget.load(widget)
 
-      newWidget = None
+      val wrapper = new WidgetWrapper(newWidget, this)
+
+      add(wrapper, JLayeredPane.DEFAULT_LAYER)
+
+      moveToFront(wrapper)
+
+      wrapper.setLocation(start.x + widget.x - min.x, start.y + widget.y - min.y)
+      wrapper.setSize(widget.width, widget.height)
+      wrapper.setPlacing(true)
+      wrapper.validate()
+
+      zoomer.zoomWidget(wrapper, true, false, 1.0, zoomFactor)
+
+      wrapper.syncTheme()
+
+      (wrapper, new Point(widget.x - min.x, widget.y - min.y))
+    }))
+  }
+
+  private def placeShadowWidgets(): Unit = {
+    shadowWidgets.foreach(_ match {
+      case NewShadowWidget(wrapper) =>
+        wrapper.selected(true)
+        wrapper.foreground()
+        wrapper.isNew(true)
+        wrapper.setPlacing(false)
+
+        placedShadowWidgets = true
+
+        setInterfaceMode(InterfaceMode.Interact, false)
+
+        wrapper.widget.getEditable match {
+          case e: Editable =>
+            new EditWidgetEvent(e).raise(this)
+
+          case _ =>
+        }
+
+        placedShadowWidgets = false
+
+        if (wrapper != null)
+          wrapper.isNew(false)
+
+        shadowWidgets = None
+
+      case PastedShadowWidgets(wrappers) =>
+        wrappers.foreach {
+          case (wrapper, _) =>
+            wrapper.foreground()
+            wrapper.setPlacing(false)
+
+            WidgetActions.addWidget(this, wrapper)
+
+            LogManager.widgetAdded(false, wrapper.widget.classDisplayName, wrapper.widget.displayName)
+        }
+
+        shadowWidgets = None
+
+        setInterfaceMode(InterfaceMode.Interact, false)
+
+        new CompileAllEvent().raise(this)
     })
   }
 
-  def removeShadowWidget(): Unit = {
-    newWidget.foreach(widget => {
-      removeWidget(widget)
-      newWidget = None
-      revalidate()
-      repaint()
+  def removeShadowWidgets(): Unit = {
+    shadowWidgets.foreach(_ match {
+      case NewShadowWidget(wrapper) =>
+        removeWidget(wrapper)
+
+      case PastedShadowWidgets(wrappers) =>
+        wrappers.foreach {
+          case (wrapper, _) =>
+            removeWidget(wrapper)
+        }
     })
+
+    shadowWidgets = None
+
+    revalidate()
+    repaint()
   }
 
   def editWidgetFinished(target: Editable, canceled: Boolean): Unit = {
@@ -889,7 +1014,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
       case _ =>
     }
     if (canceled) {
-      removeShadowWidget()
+      removeShadowWidgets()
     } else {
       target match {
         case comp: Component =>
