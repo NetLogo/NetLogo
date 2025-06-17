@@ -1,7 +1,30 @@
 <style type="text/css">
-  .interfacetable > tbody > tr > td {
-    padding-top: 0.75em;
-    padding-bottom: 0.75em;
+ interfacetable {
+    text-align: center;
+    margin: 0 auto;
+    border: .5px solid #696969ff;
+    border-collapse: collapse;
+  }
+
+  interfacetable > tbody > tr > td {
+    text-align: left;
+    vertical-align: top;
+  }
+
+  interfacetable > tbody > tr  {
+    text-align: left;
+    vertical-align: top;
+  }
+
+  interfacetable tr > th {
+    background-color: #A3AFC9;
+    color: white;
+  }
+
+  interfacetable  {
+    tr:nth-child(odd) {
+      background-color: #F4F6F8;
+    }
   }
 </style>
 
@@ -31,63 +54,56 @@ following chart.
 
 #### Chart: NetLogo menus
 
-<table border="1" style='border-collapse:collapse; border:none' class="interfacetable" >
-  <tbody>
+<table class="interfacetable" border >
+      <colgroup>
+      <col style="width: 15%" />
+      <col style="width: 85%" />
+      </colgroup>
+  <thead>
   <tr>
-    <td style='vertical-align: top; border-top:double 4.5pt; border-left:double 4.5pt;border-bottom:solid .5pt;border-right:none; border-color:windowtext;padding:0in 5.4pt 0in 5.4pt'>
-      <p style='margin-right:-27.9pt'><strong>File</strong>
-    </td>
-    <td style='vertical-align: top; border-top:double windowtext 4.5pt; border-left:none;border-bottom:solid windowtext .5pt;border-right:none; padding:0in 5.4pt 0in 5.4pt' />
-    <td style='vertical-align: top; border-top:double windowtext 4.5pt; border-left:none;border-bottom:solid windowtext .5pt;border-right:double windowtext 4.5pt; padding:0in 5.4pt 0in 5.4pt' />
-      <tr>
-        <td class="emptyLeft"></td>
+  <th colspan="2" style="text-align: left;">
+  File
+  </thead>
+  <tbody>
+       <tr>
         <td class="nameCenter">New</td>
         <td class="descriptionRight">Starts a new model.</td>
       </tr>
       <tr>
-        <td class="emptyLeft" />
         <td class="nameCenter">Open…</td>
         <td class="descriptionRight">Opens any NetLogo model on your computer.</td>
       </tr>
       <tr>
-        <td class="emptyLeft" />
         <td class="nameCenter">Models Library</td>
         <td class="descriptionRight">A collection of demonstration models.</td>
       </tr>
       <tr>
-        <td class="emptyLeft" />
         <td class="nameCenter">Recent Files</td>
         <td class="descriptionRight">Re-opens any previously model opened with "File -&gt; Open."</td>
       </tr>
       <tr>
-        <td class="emptyLeft" />
         <td class="nameCenter">Save</td>
         <td class="descriptionRight">Save the current model, or the currently selected source file.</td>
       </tr>
       <tr>
-        <td class="emptyLeft" />
         <td class="nameCenter">Save As…</td>
         <td class="descriptionRight">Save the current model, or the currently selected source file, using a different name.</td>
       </tr>
       <tr>
-        <td class="emptyLeft" />
         <td class="nameCenter">Save All</td>
         <td class="descriptionRight">Save the current model and all open source files. This option is only available when one or more source files are open.</td>
       </tr>
       <tr>
-        <td class="emptyLeft" />
         <td class="nameCenter">Upload to Modeling Commons</td>
         <td class="descriptionRight">
           Uploads the model to Modeling Commons. See <a href="modelingcommons.html">Modeling Commons</a>.
         </td>
       </tr>
       <tr>
-        <td class="emptyLeft" />
         <td class="nameCenter">Save As NetLogo Web…</td>
         <td class="descriptionRight">Saves your model as an HTML web page that runs using <a href="https://netlogoweb.org">NetLogo Web</a>.  Note the version of NetLogo Web used is bundled with NetLogo, so it may not be up to date with <a href="https://netlogoweb.org/whats-new">the latest changes and features<a>.  You can also <a href="https://netlogoweb.org/docs/faq#loading">upload your model to NetLogo Web</a> and <a href="https://netlogoweb.org/docs/faq#saving">export it to HTML from there</a> to get the most recent updates included.</td>
       </tr>
       <tr>
-        <td class="emptyLeft" />
         <td class="nameCenter">Export World…</td>
         <td class="descriptionRight">
           Saves all variables, the current state of all turtles and
@@ -96,51 +112,42 @@ following chart.
         </td>
       </tr>
       <tr>
-        <td class="emptyLeft" />
         <td class="nameCenter">Export Plot…</td>
         <td class="descriptionRight"> Saves the data in a plot to a file.</td>
       </tr>
       <tr>
-        <td class="emptyLeft" />
         <td class="nameCenter">Export All Plots…</td>
         <td class="descriptionRight">Saves the data in all the plots to a file.</td>
       </tr>
       <tr>
-        <td class="emptyLeft" />
         <td class="nameCenter">Export View…</td>
         <td class="descriptionRight">Save a picture of the current view (2D or 3D) to a file (in PNG format).</td>
       </tr>
       <tr>
-        <td class="emptyLeft" />
         <td class="nameCenter">Export Interface…</td>
         <td class="descriptionRight">Save a picture of the current Interface tab ( in PNG format ).</td>
       </tr>
       <tr>
-        <td class="emptyLeft" />
         <td class="nameCenter">Export Output…</td>
         <td class="descriptionRight">Save the contents of the output area or the output section of the command center to a file.</td>
       <tr>
-        <td class="emptyLeft" />
         <td class="nameCenter">Export Code…</td>
         <td class="descriptionRight">
         Save the model's code to an HTML file, preserving colors.
       </tr>
       <tr>
-        <td class="emptyLeft" />
         <td class="nameCenter">
         Import World…</td>
         <td class="descriptionRight">
         Load a file that was saved by Export World.</td>
       </tr>
       <tr>
-        <td class="emptyLeft" />
         <td class="nameCenter">
         Import Patch Colors…</td>
         <td class="descriptionRight">
         Load an image into the patches; see the <a href="dictionary.html#import-pcolors">import-pcolors</a> command.</td>
       </tr>
       <tr>
-        <td class="emptyLeft" />
         <td class="nameCenter">Import Patch Colors RGB…</td>
         <td class="descriptionRight">
         Load an image into the patches using RGB colors; see the
@@ -148,14 +155,12 @@ following chart.
         command.</td>
       </tr>
       <tr>
-        <td class="emptyLeft" />
         <td class="nameCenter">
         Import Drawing…</td>
         <td class="descriptionRight">
         Load an image into the drawing, see the <a href="dictionary.html#import-drawing">import-drawing</a> command.</td>
       </tr>
       <tr>
-        <td class="emptyLeft" />
         <td class="nameCenter">
         Import HubNet Client Interface…</td>
         <td class="descriptionRight">
@@ -163,38 +168,43 @@ following chart.
         Editor.</td>
       </tr>
       <tr>
-        <td class="emptyLeft" />
         <td class="nameCenter">Print…</td>
         <td class="descriptionRight">Sends the contents of the currently showing tab to your printer.</td>
       </tr>
       <tr>
-        <td class="emptyLeft" />
         <td class="nameCenter">
         Quit</td>
         <td class="descriptionRight">
         Exits NetLogo. On a Mac, this item is on the NetLogo menu
         instead.</td>
       </tr>
+  </tbody>
+</table>
+
+<table class="interfacetable" border>
+      <colgroup>
+      <col style="width: 15%" />
+      <col style="width: 85%" />
+      </colgroup>
+      <thead>
       <tr>
-        <td class="headerSpanningTable"><strong>Edit</strong></td>
-        <td style='vertical-align: top; border-top:none;border-left: none;border-bottom:solid windowtext .5pt;border-right:none; padding:0in 5.4pt 0in 5.4pt' />
-        <td class="descriptionRight" />
+      <th colspan="2" style="text-align: left;">
+      Edit
+      </th>
+      </tr>
       <tr>
-        <td class="emptyLeft" />
         <td class="nameCenter">
         Undo</td>
         <td class="descriptionRight">
         Undo last text editing action you performed.</td>
       </tr>
       <tr>
-        <td class="emptyLeft" />
         <td class="nameCenter">
         Redo</td>
         <td class="descriptionRight">
         Redo last undo action you performed.</td>
       </tr>
       <tr>
-        <td class="emptyLeft" />
         <td class="nameCenter">
         Cut</td>
         <td class="descriptionRight">
@@ -202,35 +212,30 @@ following chart.
         to the clipboard.</td>
       </tr>
       <tr>
-        <td class="emptyLeft" />
         <td class="nameCenter">
         Copy</td>
         <td class="descriptionRight">
         Copies the selected text.</td>
       </tr>
       <tr>
-        <td class="emptyLeft" />
         <td class="nameCenter">
         Paste</td>
         <td class="descriptionRight">
         Places the clipboard text where cursor is currently located.</td>
       </tr>
       <tr>
-        <td class="emptyLeft" />
         <td class="nameCenter">
         Delete</td>
         <td class="descriptionRight">
         Deletes selected text.</td>
       </tr>
       <tr>
-        <td class="emptyLeft" />
         <td class="nameCenter">
         Select All</td>
         <td class="descriptionRight">
         Select all the text in the active window.</td>
       </tr>
       <tr>
-        <td class="emptyLeft" />
         <td class="nameCenter">
         Find…</td>
         <td class="descriptionRight">
@@ -238,7 +243,6 @@ following chart.
         tabs.</td>
       </tr>
       <tr>
-        <td class="emptyLeft" />
         <td class="nameCenter">
         Find Next</td>
         <td class="descriptionRight">
@@ -246,7 +250,6 @@ following chart.
         Find with.</td>
       </tr>
       <tr>
-        <td class="emptyLeft" />
         <td class="nameCenter">
         Comment /
         <br>
@@ -256,32 +259,27 @@ following chart.
         (semicolons are used in NetLogo code to indicate comments).</td>
       </tr>
       <tr>
-        <td class="emptyLeft" />
         <td class="nameCenter">Shift Left / Shift Right</td>
         <td class="descriptionRight">
         Used in the Code tab to change the indentation level of code.</td>
       </tr>
       <tr>
-        <td class="emptyLeft" />
         <td class="nameCenter">Show Usage</td>
         <td class="descriptionRight">
         Used in the Code tab to show all usages of variable name or primitive that has been right-clicked.</td>
       </tr>
       <tr>
-        <td class="emptyLeft" />
         <td class="nameCenter">Jump to Declaration</td>
         <td class="descriptionRight">
         Used in the Code tab to show where in the file a variable name that has been right-clicked is declared.</td>
       </tr>
       <tr>
-        <td class="emptyLeft" />
         <td class="nameCenter">
         Format</td>
         <td class="descriptionRight">
         Used in the Code tab to correct the indentation of the currently selected code.</td>
       </tr>
       <tr>
-        <td class="emptyLeft" />
         <td class="nameCenter">Snap to Grid</td>
         <td class="descriptionRight">
         Available only in the Interface Tab.
@@ -290,7 +288,6 @@ following chart.
         or out.)</td>
       </tr>
       <tr>
-        <td class="emptyLeft" />
         <td class="nameCenter">Convert from 5.3.1 to 6.0</td>
         <td class="descriptionRight">
         Available only in an ".nls" code tab.
@@ -299,19 +296,28 @@ following chart.
         "Undo" doesn't take this operation into account, so you won't want to save unless you're satisfied with the changes.
         </td>
       </tr>
+ 
+   </tbody>
+</table>
+
+<table class="interfacetable" border>
+      <colgroup>
+      <col style="width: 15%" />
+      <col style="width: 85%" />
+      </colgroup>
+      <thead>
       <tr>
-        <td class="headerSpanningTable"><strong>Tools</strong></td>
-        <td style='vertical-align: top; border-top:none;border-left: none;border-bottom:solid windowtext .5pt;border-right:none; padding:0in 5.4pt 0in 5.4pt' />
-        <td class="descriptionRight" />
+      <th colspan="2" style="text-align: left;">
+      Tools
+      </th>
+      </tr>
       <tr>
-        <td class="emptyLeft" />
         <td class="nameCenter">Preferences…</td>
         <td class="descriptionRight">
         Opens the [Preferences dialog](netlogopreferences.html), where you can customize various NetLogo
         settings. On a Mac, this item is on the NetLogo menu instead.</td>
       </tr>
       <tr>
-        <td class="emptyLeft" />
         <td class="nameCenter">Extensions…</td>
         <td class="descriptionRight">
         Opens the Extension Manager, where you can discover and manage
@@ -319,7 +325,6 @@ following chart.
         Guide</a> for more information.</td>
       </tr>
       <tr>
-        <td class="emptyLeft" />
         <td class="nameCenter">Halt</td>
         <td class="descriptionRight">
         Stops all running code, including buttons and the command
@@ -329,12 +334,10 @@ following chart.
         &quot;setup&quot; to start the model run over.)</td>
       </tr>
       <tr>
-        <td class="emptyLeft" />
         <td class="nameCenter">Globals Monitor</td>
         <td class="descriptionRight">Displays the values of all global variables.</td>
       </tr>
       <tr>
-        <td class="emptyLeft" />
         <td class="nameCenter">Turtle Monitor</td>
         <td class="descriptionRight">
         Displays the values of all of the variables in a particular
@@ -343,7 +346,6 @@ following chart.
         a turtle monitor via the View; see the View section below.)</td>
       </tr>
       <tr>
-        <td class="emptyLeft" />
         <td class="nameCenter">Patch Monitor</td>
         <td class="descriptionRight">
         Displays the values of all of the variables in a particular
@@ -352,7 +354,6 @@ following chart.
         patch monitor via the View; see the View section below.)</td>
       </tr>
       <tr>
-        <td class="emptyLeft" />
         <td class="nameCenter">Link Monitor</td>
         <td class="descriptionRight">
         Displays the values of all of the variables in a particular
@@ -361,19 +362,16 @@ following chart.
         link monitor via the View; see the View section below.)</td>
       </tr>
       <tr>
-        <td class="emptyLeft" />
         <td class="nameCenter">Close All Agent Monitors</td>
         <td class="descriptionRight">
         Closes all open agent monitor windows.</td>
       </tr>
       <tr>
-        <td class="emptyLeft" />
         <td class="nameCenter">Close Monitors for Dead Agents</td>
         <td class="descriptionRight">
         Closes all open agent monitor windows targeting dead agents.</td>
       </tr>
       <tr>
-        <td class="emptyLeft" />
         <td class="nameCenter">Hide/Show Command Center</td>
         <td class="descriptionRight">
         Makes the command center visible or invisible. (Note that the
@@ -382,35 +380,30 @@ following chart.
         is active.</td>
       </tr>
       <tr>
-        <td class="emptyLeft" />
         <td class="nameCenter">3D View</td>
         <td class="descriptionRight">
         Opens the 3D view. See the <a href="interfacetab.html#the-2d-and-3d-views">Views</a> section
         of the Interface Tab Guide for more information.</td>
       </tr>
       <tr>
-        <td class="emptyLeft" />
         <td class="nameCenter">Color Picker</td>
         <td class="descriptionRight">
         Opens the Color Picker. See the <a href="programming.html#colors">Color Section</a> of the Programming
         Guide for details.</td>
       </tr>
       <tr>
-        <td class="emptyLeft" />
         <td class="nameCenter">Turtle Shapes Editor</td>
         <td class="descriptionRight">
         Draw turtle shapes. See the <a href="shapes.html">Shapes Editor
         Guide</a> for more information.</td>
       </tr>
       <tr>
-        <td class="emptyLeft" />
         <td class="nameCenter">Link Shapes Editor</td>
         <td class="descriptionRight">
         Draw link shapes. See the <a href="shapes.html">Shapes Editor
         Guide</a> for more information.</td>
       </tr>
       <tr>
-        <td class="emptyLeft" />
         <td class="nameCenter">BehaviorSpace</td>
         <td class="descriptionRight">
         Runs the model over and over with different settings. See the
@@ -418,14 +411,12 @@ following chart.
         information.</td>
       </tr>
       <tr>
-        <td class="emptyLeft" />
         <td class="nameCenter">System Dynamics Modeler</td>
         <td class="descriptionRight">
         Opens the System Dynamics Modeler. See the <a href="systemdynamics.html">System Dynamics Modeler Guide</a> for
         more details.</td>
       </tr>
       <tr>
-        <td class="emptyLeft" />
         <td class="nameCenter">Preview Commands Editor</td>
         <td class="descriptionRight">
         Allows for easy editing of the commands sequence used to create preview images
@@ -433,20 +424,17 @@ following chart.
         image is manually made) and preview the resulting image.</td>
       </tr>
       <tr>
-        <td class="emptyLeft" />
         <td class="nameCenter">HubNet Client Editor</td>
         <td class="descriptionRight">
         Opens the HubNet Client Editor. See the <a href="hubnet-authoring.html">HubNet Authoring Guide</a> for more
         details.</td>
       </tr>
       <tr>
-        <td class="emptyLeft" />
         <td class="nameCenter">HubNet Control Center</td>
         <td class="descriptionRight">
         Disabled if no HubNet activity is open. See the <a href="hubnet.html">HubNet Guide</a> for more information.</td>
       </tr>
       <tr>
-        <td class="emptyLeft" />
         <td class="nameCenter">Convert Widgets to New Sizes</td>
         <td class="descriptionRight">
          Change the size of widgets created before NetLogo 7 to the current size.
@@ -454,80 +442,104 @@ following chart.
          See the <a href="netlogo7intro.html#widget-sizes">Widget Sizes</a> 
          section of the NetLogo7 Guide for more information.</td>
       </tr>
+  </tbody>
+</table>
+
+<table class="interfacetable" border>
+      <colgroup>
+      <col style="width: 15%" />
+      <col style="width: 85%" />
+      </colgroup>
+      <thead>
       <tr>
-        <td class="headerSpanningTable"><strong>Zoom</strong></td>
-        <td style='vertical-align: top; border-top:none;border-left: none;border-bottom:solid windowtext .5pt;border-right:none; padding:0in 5.4pt 0in 5.4pt' />
-        <td class="descriptionRight" />
+      <th colspan="2" style="text-align: left;">
+      Zoom
+      </th>
       </tr>
       <tr>
-        <td class="emptyLeft" />
         <td class="nameCenter">Larger</td>
         <td class="descriptionRight">
         Increase the overall screen size of the model. Useful on large
         monitors or when using a projector in front of a group. Keyboard shortcut: Mac Command =, On Windows or Linux, Control =.</td>
       </tr>
       <tr>
-        <td class="emptyLeft" />
         <td class="nameCenter">Normal Size</td>
         <td class="descriptionRight">Reset the screen size of the model to the normal size. Keyboard shortcut: Mac Command 0, On Windows or Linux, Control 0.</td>
       </tr>
       <tr>
-        <td class="emptyLeft" />
         <td class="nameCenter">Smaller</td>
         <td class="descriptionRight">Decrease the overall screen size of the model. Keyboard shortcut: Mac Command -, On Windows or Linux, Control -.</td>
       </tr>
+  </tbody>
+</table>
+
+<table class="interfacetable" border>
+      <colgroup>
+      <col style="width: 15%" />
+      <col style="width: 85%" />
+      </colgroup>
+      <thead>
       <tr>
-        <td class="headerSpanningTable"><strong>Tabs</strong></td>
-        <td style='vertical-align: top; border-top:none;border-left: none;border-bottom:solid windowtext .5pt;border-right:none; padding:0in 5.4pt 0in 5.4pt' />
-        <td class="descriptionRight">
+      <th colspan="2" style="text-align: left;">
+      Tabs
+      </th>
+      </tr>
+      <tr>
+      <td class="emptyLeft" />
+      <td>
         This menu offers keyboard shortcuts for each of the tabs. On a
         Mac, it's Command 1 through Command 3. On Windows or Linux,
         it's Control 1 through Control 3. Additional numbers are used for
         tabs containing ".nls" files.</td>
       </tr>
+  </tbody>
+</table>
+
+<table class="interfacetable" border>
+      <colgroup>
+      <col style="width: 15%" />
+      <col style="width: 85%" />
+      </colgroup>
+<thead>
+<tr>
+<th colspan="2" style="text-align: left;">
+Help
+</th>
+</tr>
+</thead>
+  <tbody>
       <tr>
-      <td class="headerSpanningTable"><strong>Help</strong></td>
-      <td style='vertical-align: top; border-top:none;border-left: none;border-bottom:solid windowtext .5pt;border-right:none; padding:0in 5.4pt 0in 5.4pt' />
-      <td class="descriptionRight" />
-      <tr>
-        <td class="emptyLeft" />
         <td class="nameCenter">Look Up In Dictionary</td>
         <td class="descriptionRight">
         Opens a browser with the dictionary entry for the selected
         command or reporter. (You may also use the F1 key for this.)</td>
       </tr>
       <tr>
-        <td class="emptyLeft" />
         <td class="nameCenter">NetLogo User Manual</td>
         <td class="descriptionRight">
         Opens this manual in a web browser.</td>
       </tr>
       <tr>
-        <td class="emptyLeft" />
         <td class="nameCenter">NetLogo Dictionary</td>
         <td class="descriptionRight">
         Opens the NetLogo Dictionary in a web browser.</td>
       </tr>
       <tr>
-        <td class="emptyLeft" />
         <td class="nameCenter">NetLogo Users Group</td>
         <td class="descriptionRight">
         Opens the NetLogo Users Group site in a web browser.</td>
       </tr>
       <tr>
-        <td class="emptyLeft" />
         <td class="nameCenter">Introduction to Agent-Based Modeling</td>
         <td class="descriptionRight">
         Opens the MIT Press page for "Introduction to Agent-Based Modeling"
         (by Uri Wilensky and William Rand) in a web browser.</td>
       </tr>
       <tr>
-        <td class="emptyLeft" />
         <td class="nameCenter">Donate</td>
         <td class="descriptionRight">Opens the NetLogo donation page in a web browser.</td>
       </tr>
       <tr>
-        <td class="emptyLeft" />
         <td class="nameCenter">About NetLogo {{version}}…</td>
         <td class="descriptionRight">
         Information on the current NetLogo version you are running. On a
