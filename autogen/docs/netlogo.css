@@ -42,6 +42,11 @@ td {
   border: none;
 }
 
+td.subheader {
+  border-top: 1px solid rgb(225, 225, 225);
+  border-bottom: 1px solid rgb(225, 225, 225);
+}
+
 td:nth-child(n + 2) {
   border-left: 1px solid rgb(225, 225, 225);
 }
