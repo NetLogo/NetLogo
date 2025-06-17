@@ -3,7 +3,8 @@
 package org.nlogo.window
 
 import java.awt.{ Color, Component, Dimension, Graphics, GridBagConstraints, GridBagLayout }
-import java.awt.event.{ MouseEvent, MouseListener, MouseWheelEvent, MouseWheelListener }
+import java.awt.event.{ InputEvent, MouseEvent, MouseListener, MouseWheelEvent, MouseWheelListener }
+import java.util.prefs.Preferences
 import javax.swing.{ JLabel, JPanel, JSlider, SwingConstants }
 import javax.swing.event.{ ChangeEvent, ChangeListener }
 import javax.swing.plaf.basic.BasicSliderUI
@@ -20,6 +21,8 @@ class SpeedSliderPanel(workspace: GUIWorkspace, ticksLabel: Component = null) ex
                                                                               with LoadBeginEvent.Handler
                                                                               with ThemeSync {
   implicit val prefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("tabs.run.speedslider")
+
+  private val prefs = Preferences.userRoot.node("/org/nlogo/NetLogo")
 
   val speedSlider = {
     val slider = new SpeedSlider(workspace.speedSliderPosition().toInt)
@@ -63,6 +66,8 @@ class SpeedSliderPanel(workspace: GUIWorkspace, ticksLabel: Component = null) ex
   }
 
   val modelSpeed = new JLabel(I18N.gui("modelSpeed"), SwingConstants.CENTER)
+
+  private var jumpOnClick = prefs.getBoolean("jumpOnClick", true)
 
   slower.setFont(slower.getFont.deriveFont(10f))
   faster.setFont(faster.getFont.deriveFont(10f))
@@ -155,6 +160,10 @@ class SpeedSliderPanel(workspace: GUIWorkspace, ticksLabel: Component = null) ex
 
   override def isEnabled: Boolean = speedSlider.isEnabled
 
+  def setJumpOnClick(value: Boolean): Unit = {
+    jumpOnClick = value
+  }
+
   override def syncTheme(): Unit = {
     slower.syncTheme()
     faster.syncTheme()
@@ -241,6 +250,35 @@ class SpeedSliderPanel(workspace: GUIWorkspace, ticksLabel: Component = null) ex
 
         g2d.fillOval(thumbRect.x + thumbRect.width / 2 - width / 2, startY, width, width)
       }
+
+      override def scrollDueToClickInTrack(dir: Int): Unit = {
+        // implemented in track listener (Isaac B 2/8/25)
+      }
+
+      override def createTrackListener(slider: JSlider): TrackListener =
+        new TrackListener {
+          override def mousePressed(e: MouseEvent): Unit = {
+            if (e.getButton == MouseEvent.BUTTON1) {
+              slider.requestFocus()
+
+              if (jumpOnClick) {
+                slider.setValue(valueForXPosition(e.getX))
+              } else if (valueForXPosition(e.getX) > slider.getValue) {
+                slider.setValue(slider.getValue + 11)
+              } else {
+                slider.setValue(slider.getValue - 11)
+              }
+            }
+          }
+
+          override def mouseDragged(e: MouseEvent): Unit = {
+            if ((e.getModifiersEx & InputEvent.BUTTON1_DOWN_MASK) == InputEvent.BUTTON1_DOWN_MASK &&
+                (jumpOnClick || isDragging)) {
+
+              slider.setValue(valueForXPosition(e.getPoint.x))
+            }
+          }
+        }
     }
   }
 }

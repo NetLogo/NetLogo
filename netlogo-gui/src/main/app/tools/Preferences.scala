@@ -288,12 +288,12 @@ object Preferences {
     }
   }
 
-  class JumpOnClick(widgetPanel: AbstractWidgetPanel) extends Preference {
+  class JumpOnClick(tabs: TabsInterface) extends Preference {
     val i18nKey = "jumpOnClick"
     val requirement = None
 
     private val checkBox = new CheckBox("", (selected) => {
-      widgetPanel.setJumpOnClick(selected)
+      tabs.setJumpOnClick(selected)
     })
 
     override def component: CheckBox = checkBox
@@ -302,7 +302,7 @@ object Preferences {
       val value = prefs.get(i18nKey, "true").toBoolean
 
       checkBox.setSelected(value)
-      widgetPanel.setJumpOnClick(value)
+      tabs.setJumpOnClick(value)
     }
 
     def save(prefs: JavaPreferences): Unit = {

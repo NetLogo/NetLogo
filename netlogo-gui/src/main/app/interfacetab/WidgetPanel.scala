@@ -1430,7 +1430,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
     getWrappers.foreach(_.widget.setBoldText(value))
   }
 
-  override def setJumpOnClick(value: Boolean): Unit = {
+  def setJumpOnClick(value: Boolean): Unit = {
     getWrappers.foreach(_.widget match {
       case slider: SliderWidget =>
         slider.jumpOnClick = value

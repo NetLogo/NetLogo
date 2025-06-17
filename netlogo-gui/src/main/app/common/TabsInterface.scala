@@ -37,4 +37,6 @@ trait TabsInterface {
   def switchWindow(separate: Boolean, preserveSelected: Boolean): Unit
 
   def showCodeTabPreferences(): Unit
+
+  def setJumpOnClick(value: Boolean): Unit
 }

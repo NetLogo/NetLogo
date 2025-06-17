@@ -46,7 +46,7 @@ with MenuAction {
       Preferences.LoadLastOnStartup,
       new Preferences.ReloadOnExternalChanges(tabs),
       new Preferences.BoldWidgetText(widgetPanel),
-      new Preferences.JumpOnClick(widgetPanel)
+      new Preferences.JumpOnClick(tabs)
     ) ++ (if (System.getProperty("os.name").contains("Linux")) Seq(Preferences.UIScale) else Nil),
     Seq(
       Preferences.ProceduresMenuSortOrder,

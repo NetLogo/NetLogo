@@ -81,7 +81,7 @@ class InterfaceTab(workspace: GUIWorkspace,
     new InterfaceWidgetControls(iP, workspace, buttons, workspace.getFrame, dialogFactory)
   }
 
-  private val speedSlider = new SpeedSliderPanel(workspace, workspace.viewWidget.tickCounter)
+  val speedSlider = new SpeedSliderPanel(workspace, workspace.viewWidget.tickCounter)
 
   private val viewUpdatePanel = new ViewUpdatePanel(workspace, speedSlider, workspace.viewWidget.displaySwitch,
                                                     workspace.viewWidget.tickCounter)

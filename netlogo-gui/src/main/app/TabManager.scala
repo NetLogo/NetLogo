@@ -592,8 +592,13 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     App.app.setWindowTitles()
   }
 
-  def showCodeTabPreferences(): Unit = {
+  override def showCodeTabPreferences(): Unit = {
     App.app.showPreferencesDialogAt(1)
+  }
+
+  override def setJumpOnClick(value: Boolean): Unit = {
+    interfaceTab.iP.setJumpOnClick(value)
+    interfaceTab.speedSlider.setJumpOnClick(value)
   }
 
   def reload(): Unit = {

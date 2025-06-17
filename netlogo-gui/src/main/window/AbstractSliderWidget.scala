@@ -6,6 +6,7 @@ import java.awt.{ Dimension, Graphics, Point }
 import java.awt.event.{ ActionEvent, ActionListener, FocusAdapter, FocusEvent, KeyAdapter, KeyEvent, MouseAdapter,
                         MouseEvent }
 import java.lang.NumberFormatException
+import java.util.prefs.Preferences
 import javax.swing.{ BorderFactory, JLabel, JSlider, JTextField, SwingConstants }
 import javax.swing.text.{ AttributeSet, PlainDocument }
 
@@ -107,6 +108,8 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
     }
   }
 
+  private val prefs = Preferences.userRoot.node("/org/nlogo/NetLogo")
+
   protected var _name = ""
   private var _units = ""
   private var _vertical = false
@@ -135,7 +138,7 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
     }
   }
 
-  var jumpOnClick = true
+  var jumpOnClick = prefs.getBoolean("jumpOnClick", true)
 
   locally {
     val mouseListener = new MouseAdapter {
