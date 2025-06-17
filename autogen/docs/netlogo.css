@@ -88,20 +88,25 @@ h2 {
 }
 
 h3 {
-  font-size: 125%;
+  font-size: 115%;
   background: rgb(175,175,175);
   padding: 0.2em;
 }
 
 h4 {
-  font-size: 110% ;
-  background: rgb(200,200,200);
+  font-size: 100% ;
+  background: white;
   padding: 0.125em;
+  margin-left: 1.5em;
 }
 
 h3 > a {
   display: block;
   clear: both;
+}
+
+p {
+  margin-left: 1.5em;
 }
 
 a.section-anchor {
