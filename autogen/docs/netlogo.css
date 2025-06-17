@@ -16,12 +16,30 @@ body {
   background: white;
 }
 
+table {
+  border: 1px solid rgb(225, 225, 225);
+  border-spacing: 0;
+}
+
 th {
   font-family: arial, sans-serif;
+  padding: 10px;
+  border: none;
+  background: rgb(163, 175, 201);
+}
+
+tr:nth-child(odd) {
+  background: rgb(244, 246, 248);
 }
 
 td {
   font-family: arial, sans-serif;
+  padding: 10px;
+  border: none;
+}
+
+td:nth-child(n + 2) {
+  border-left: 1px solid rgb(225, 225, 225);
 }
 
 div.banner {
@@ -130,54 +148,6 @@ span.prim_example {
 
 .inlineblock {
   display: inline-block;
-}
-
-th {
-  padding: 5px;
-}
-
-td {
-  padding: 5px;
-}
-
-td.headerSpanningTable {
-  border-top:none;
-  border-left:double windowtext 4.5pt;
-  border-bottom:solid windowtext .5pt;
-  border-right:none;
-}
-
-td.descriptionRight {
-  border-top: none;
-  border-left: none;
-  border-bottom:solid windowtext .5pt;
-  border-right:double windowtext 4.5pt;
-}
-
-td.emptyLeft {
-  border-top:none;
-  border-left:double windowtext 4.5pt;
-  border-bottom:solid windowtext .5pt;
-  border-right:solid windowtext .5pt;
-}
-
-td.interior {
-  border-bottom:solid windowtext .5pt;
-  border-right:solid windowtext .5pt;
-  border-top:none;
-  border-left: none;
-}
-
-td.nameCenter {
-  border-top: none;
-  border-left: none;
-  border-bottom:solid windowtext .5pt;
-  border-right:solid windowtext .5pt;
-}
-
-table.interfacetable > tr > td {
-  vertical-align: top;
-  padding:0in 5.4pt 0in 5.4pt;
 }
 
 .tocborder {
