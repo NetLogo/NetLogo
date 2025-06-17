@@ -192,13 +192,12 @@ private class PreferenceContainer(preferences: Seq[Preference])
 
   private implicit val i18nPrefix: I18N.Prefix = I18N.Prefix("tools.preferences")
 
-  val c = new GridBagConstraints
-
-  c.anchor = GridBagConstraints.WEST
-
   val (labels, components) = preferences.foldLeft((Seq[JLabel](), Seq[ThemeSync]())) {
     case ((labels, components), pref) =>
+      val c = new GridBagConstraints
+
       c.gridx = 0
+      c.anchor = pref.anchor
       c.insets = new Insets(3, 0, 3, 6)
 
       val label = new JLabel(prefString(pref))

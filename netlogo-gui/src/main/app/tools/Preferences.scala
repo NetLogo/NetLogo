@@ -2,17 +2,17 @@
 
 package org.nlogo.app.tools
 
-import java.awt.{ BorderLayout, Frame, Insets }
+import java.awt.{ BorderLayout, Frame, GridBagConstraints, GridBagLayout, Insets }
 import java.awt.event.ActionEvent
 import java.io.File
 import java.util.Locale
 import java.util.prefs.{ Preferences => JavaPreferences }
-import javax.swing.{ AbstractAction, JComponent, JFileChooser, JPanel }
+import javax.swing.{ AbstractAction, JComponent, JFileChooser, JLabel, JPanel }
 
 import org.nlogo.app.common.TabsInterface
 import org.nlogo.core.I18N
 import org.nlogo.swing.{ Button, CheckBox, ComboBox, TextField, Transparent }
-import org.nlogo.theme.ThemeSync
+import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.AbstractWidgetPanel
 
 object Preferences {
@@ -63,10 +63,50 @@ object Preferences {
     val languages: Seq[LocaleOption] = DetectLocale +: I18N.availableLocales.map(LocaleWrapper(_)).sortBy(_.toString).toSeq
 
     val i18nKey = "uiLanguage"
-    val comboBox = new ComboBox(languages)
+    val comboBox = new ComboBox(languages) {
+      addItemListener(_ => {
+        getSelectedItem match {
+          case Some(DetectLocale) =>
+            label.setText(I18N.gui.defaultLocale.getDisplayName)
+
+          case _ =>
+            label.setText("")
+        }
+      })
+    }
     val requirement = Some(RequiredAction.Restart)
 
-    def component: JComponent & ThemeSync = comboBox
+    override val anchor: Int = GridBagConstraints.NORTHWEST
+
+    private val label = new JLabel
+
+    private val panel = new JPanel(new GridBagLayout) with Transparent with ThemeSync {
+      locally {
+        val c = new GridBagConstraints
+
+        c.gridx = 0
+        c.fill = GridBagConstraints.HORIZONTAL
+        c.weightx = 1
+        c.insets = new Insets(0, 0, 3, 0)
+
+        add(comboBox, c)
+
+        c.anchor = GridBagConstraints.EAST
+        c.fill = GridBagConstraints.NONE
+
+        add(label, c)
+      }
+
+      override def syncTheme(): Unit = {
+        label.setForeground(InterfaceColors.dialogText())
+
+        comboBox.syncTheme()
+      }
+    }
+
+    label.setFont(label.getFont.deriveFont(10f))
+
+    def component: JComponent & ThemeSync = panel
 
     def load(prefs: JavaPreferences): Unit = {
       comboBox.setSelectedItem(I18N.localeFromPreferences.map(LocaleWrapper(_)).getOrElse(DetectLocale))
