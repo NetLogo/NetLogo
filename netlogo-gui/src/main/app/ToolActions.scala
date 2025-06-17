@@ -64,8 +64,7 @@ with MenuAction {
   )
 
   override def actionPerformed(e: ActionEvent): Unit = {
-    dialog.toFront()
-    dialog.setVisible(true)
+    openToTab(0)
   }
 
   override def syncTheme(): Unit = {
