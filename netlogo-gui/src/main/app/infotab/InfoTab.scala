@@ -13,6 +13,7 @@ import javax.swing.event.{ DocumentListener, HyperlinkListener, DocumentEvent, H
 import javax.swing.text.JTextComponent
 import javax.swing.text.html.HTMLDocument
 
+import org.nlogo.api.ExternalResourceManager
 import org.nlogo.app.common.{ Events => AppEvents, FindDialog, MenuTab, UndoRedoActions }
 import org.nlogo.awt.{ Fonts, Hierarchy }
 import org.nlogo.core.I18N
@@ -24,7 +25,7 @@ import org.nlogo.swing.{ OptionPane, ScrollPane, TextArea, ToolBar, ToolBarActio
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ Events => WindowEvents, Zoomable }
 
-class InfoTab(attachModelDir: String => String)
+class InfoTab(attachModelDir: String => String, resourceManager: ExternalResourceManager)
   extends JPanel
   with DocumentListener
   with MenuTab
@@ -68,6 +69,7 @@ class InfoTab(attachModelDir: String => String)
     getDocument.addDocumentListener(InfoTab.this)
     setContentType("text/html")
     addHyperlinkListener(InfoTab.this)
+    setEditorKit(new ResourceEditorKit(resourceManager))
   }
 
   private val editableButton = new ToolBarToggleButton(new EditableAction(I18N.gui.get("tabs.info.edit"))) with ThemeSync {

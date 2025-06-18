@@ -5,7 +5,7 @@ package org.nlogo.core
 import java.util.prefs.Preferences
 
 // this helper object minimizes duplication of the Java Preferences stuff below,
-// and it reduces the risk of preferences getting stored in multiple places (Isaac 6/17/25)
+// and it reduces the risk of preferences getting stored in multiple places (Isaac B 6/17/25)
 object NetLogoPreferences {
   private val prefs = Preferences.userRoot.node("/org/nlogo/NetLogo")
 
