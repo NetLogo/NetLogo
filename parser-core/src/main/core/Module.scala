@@ -9,7 +9,7 @@ case class Import(
   token: Token
 )
 
-case class DefineLibrary(
+case class Export(
   name: String,
   filename: Option[String],
   version: String,
