@@ -7,6 +7,8 @@ When you first open NetLogo, the Interface tab is empty except for the view,
 where the turtles and patches appear, and the Command Center, which allows you
 to issue NetLogo commands.
 
+
+
 [TOC]
 
 ## Overview: Working with interface elements (widgets)
@@ -14,16 +16,22 @@ to issue NetLogo commands.
 The elements you can use to create the interface for a NetLogo model are:
 buttons, sliders, switches, choosers, inputs, monitors, plots, the
 output area, and notes. These interface elements are often referred to
-as widgets. More details are in the [Chart: Interface Widgets](#chart-interface-widgets).
+as widgets. More details are in the
+[Chart: Interface Widgets](#chart-interface-widgets).
 
 The Interface toolbar includes four tool buttons which control the
 meaning of user actions. They are the [Interaction Tool](#interaction-tool),
 the [Selection Tool](#selection-tool),
 the [Edit Tool](#editing-tool), and the [Delete Tool](#deletion-tool).
 There are also two pull-down menu tools, [Add Widgets Menu](add-widgets-menu),
- and [Align Widgets Menu](align-widgets-menu). For details on the use of these features to
-create, select, edit, delete, and adjust widgets, click on the tool and menu links
-above. They are located after the widgets chart.
+and [Align Widgets Menu](align-widgets-menu). For details on the use of these
+features to create, select, edit, delete, and adjust widgets, click on the tool
+and menu links above. They are located after the widgets chart.
+
+Note: the term click in this document refers to left click. Right clicking will
+referred to explicitly. Ctrl/Cmd refers to holding down the Control key on Windows
+and Linux and holding down the Command key on MacOS. Ctrl/Cmd + <key> refers
+to simultaneously holding down Control or Command and the key <key>.
 
 ![[interfacetools.png]]
 
@@ -52,6 +60,15 @@ show that it is selected. Alternatively you can right-click a widget and choose
 white background of the Interface tab. To unselect an individual widget,
 right-click the widget and choose "Deselect" from the popup menu, or hold Ctrl/Cmd and
 left click on the widget.
+
+**Copying**
+You can copy one or more selected widgets using Ctrl/Cmd + C. A light image of the
+widget(s) will be visible while you drag them. Releasing the mouse places the
+wigets(s). Widgets can be copied to a different model in another instance of NetLogo.
+Copied widgets can be pasted multiple times. Note that when copied into the same model the new widget(s) refer to the same
+global variable as the original, so you will probably want to edit them. You cannot
+copy the view. You can copy an Output widget, but copying it into the same
+model disables the original, so you should delete it.
 
 **Editing:** With the Editing Tool active you can click on a widget to bring up
 its edit dialog. Alternatively you can right-click the widget and choose
