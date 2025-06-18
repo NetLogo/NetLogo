@@ -7,7 +7,6 @@ import java.awt.event.{ ActionEvent, FocusEvent, FocusListener, TextEvent, TextL
 import java.awt.print.PageFormat
 import java.io.IOException
 import java.net.MalformedURLException
-import java.util.prefs.Preferences
 import javax.swing.{ AbstractAction, Action, JComponent, JPanel }
 import javax.swing.border.EmptyBorder
 
@@ -34,8 +33,6 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
   with NlogoPrintable
   with MenuTab
   with ThemeSync {
-
-  protected val prefs = Preferences.userRoot.node("/org/nlogo/NetLogo")
 
   private val compileButton = new ToolBarActionButton(new AbstractAction(I18N.gui.get("tabs.code.checkButton")) {
     override def actionPerformed(e: ActionEvent): Unit = {

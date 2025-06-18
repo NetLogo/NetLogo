@@ -5,7 +5,6 @@ package org.nlogo.app
 import java.awt.{ Dimension, EventQueue, Frame, GraphicsEnvironment, KeyboardFocusManager, Toolkit, BorderLayout}
 import java.awt.event.ActionEvent
 import java.io.File
-import java.util.prefs.Preferences
 import javax.swing.{ JFrame, JMenu }
 
 import scala.concurrent.ExecutionContext
@@ -17,7 +16,7 @@ import org.nlogo.app.common.{ CodeToHtml, Events => AppEvents, FileActions, Find
 import org.nlogo.app.interfacetab.{ CommandCenter, InterfaceTab, InterfaceWidgetControls, WidgetPanel }
 import org.nlogo.app.tools.{ AgentMonitorManager, GraphicsPreview, LibraryManagerErrorDialog, PreviewCommandsEditor }
 import org.nlogo.awt.UserCancelException
-import org.nlogo.core.{ AgentKind, CompilerException, ExternalResource, I18N, Model, ModelSettings,
+import org.nlogo.core.{ AgentKind, CompilerException, ExternalResource, I18N, Model, ModelSettings, NetLogoPreferences,
   Shape, Widget => CoreWidget }, Shape.{ LinkShape, VectorShape }
 import org.nlogo.core.model.WidgetReader
 import org.nlogo.fileformat.FileFormat
@@ -80,7 +79,7 @@ object App {
     }
 
     try {
-      val scalePref = Preferences.userRoot.node("/org/nlogo/NetLogo").getDouble("uiScale", 1.0)
+      val scalePref = NetLogoPreferences.getDouble("uiScale", 1.0)
 
       if (scalePref > 1.0) {
         System.setProperty("sun.java2d.uiScale", scalePref.toString)
@@ -290,8 +289,6 @@ class App extends org.nlogo.window.Event.LinkChild
   with ZoomedEvent.Handler
   with Controllable {
 
-  private val prefs = Preferences.userRoot.node("/org/nlogo/NetLogo")
-
   import App.{ pico, commandLineMagic, commandLineModel, commandLineURL, commandLineModelIsLaunch, logDirectory, logEvents, popOutCodeTab }
   val frame = new AppFrame
   def getFrame = frame
@@ -334,7 +331,7 @@ class App extends org.nlogo.window.Event.LinkChild
     pico.addComponent(frame)
 
     if (App.colorTheme == null)
-      App.colorTheme = prefs.get("colorTheme", "light")
+      App.colorTheme = NetLogoPreferences.get("colorTheme", "light")
 
     SetSystemLookAndFeel.setSystemLookAndFeel()
 
@@ -455,11 +452,11 @@ class App extends org.nlogo.window.Event.LinkChild
       if (switchValue != null && !switchValue.trim().equals("")) {
         switchValue
       } else {
-        prefs.get(prefName, default)
+        NetLogoPreferences.get(prefName, default)
       }
     }
 
-    if (logDirectory != null || logEvents != null || prefs.get("loggingEnabled", "false").toBoolean) {
+    if (logDirectory != null || logEvents != null || NetLogoPreferences.get("loggingEnabled", "false").toBoolean) {
       val finalLogDirectory = new File(switchOrPref(logDirectory, "logDirectory", System.getProperty("user.home")))
       val eventsString      = switchOrPref(logEvents, "logEvents", "")
       val events            = LogEvents.parseEvents(eventsString)
@@ -551,7 +548,7 @@ class App extends org.nlogo.window.Event.LinkChild
 
       frame.addLinkComponent(_tabManager.separateTabsWindow)
 
-      if (popOutCodeTab || prefs.getBoolean("startSeparateCodeTab", false)) {
+      if (popOutCodeTab || NetLogoPreferences.getBoolean("startSeparateCodeTab", false)) {
         _tabManager.switchWindow(true)
       }
 
@@ -652,7 +649,7 @@ class App extends org.nlogo.window.Event.LinkChild
                          OptionPane.Options.OkCancel, OptionPane.Icons.Warning)
       }
 
-    } else if (prefs.get("loadLastOnStartup", "false").toBoolean) {
+    } else if (NetLogoPreferences.get("loadLastOnStartup", "false").toBoolean) {
       // if recent list is empty we need the new model, or if loading the recent model
       // fails then we'll fall back on it.  -Jeremy B June 2021
       fileManager.newModel()

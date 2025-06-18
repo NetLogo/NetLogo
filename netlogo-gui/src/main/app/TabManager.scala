@@ -7,7 +7,6 @@ import java.awt.event.{ ActionEvent, KeyEvent, WindowAdapter, WindowEvent, Windo
 import java.awt.print.PrinterAbortException
 import java.io.{ File, PrintWriter }
 import java.nio.file.{ Path, Paths }
-import java.util.prefs.Preferences
 import javax.swing.{ AbstractAction, Action, JComponent, JFrame }
 
 import org.nlogo.api.Exceptions
@@ -18,7 +17,7 @@ import org.nlogo.app.common.TabsInterface.Filename
 import org.nlogo.app.infotab.InfoTab
 import org.nlogo.app.interfacetab.InterfaceTab
 import org.nlogo.awt.UserCancelException
-import org.nlogo.core.I18N
+import org.nlogo.core.{ I18N, NetLogoPreferences }
 import org.nlogo.swing.{ OptionPane, Printable, PrinterManager, TabLabel, UserAction }
 import org.nlogo.theme.ThemeSync
 import org.nlogo.window.Events.{ AboutToCloseFilesEvent, AboutToSaveModelEvent, CompileAllEvent, CompiledEvent,
@@ -34,8 +33,6 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
   with CompiledEvent.Handler with ExternalFileSavedEvent.Handler with LoadBeginEvent.Handler
   with LoadErrorEvent.Handler with LoadModelEvent.Handler with RuntimeErrorEvent.Handler
   with WidgetErrorEvent.Handler with WidgetRemovedEvent.Handler with ThemeSync {
-
-  private val prefs = Preferences.userRoot.node("/org/nlogo/NetLogo")
 
   private val focusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager
 
@@ -162,8 +159,8 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     }
   })
 
-  smartTabbingEnabled = prefs.getBoolean("indentAutomatically", true)
-  lineNumbersVisible = prefs.getBoolean("editorLineNumbers", true)
+  smartTabbingEnabled = NetLogoPreferences.getBoolean("indentAutomatically", true)
+  lineNumbersVisible = NetLogoPreferences.getBoolean("editorLineNumbers", true)
 
   def init(fileManager: FileManager, dirtyMonitor: DirtyMonitor, menuBar: MainMenuBar, actions: Seq[Action]): Unit = {
     this.fileManager = fileManager
@@ -331,9 +328,9 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
 
   watchingFiles = getAutoReload
 
-  def getAutoReload: Boolean = prefs.get("reloadOnExternalChanges", "false").toBoolean
+  def getAutoReload: Boolean = NetLogoPreferences.get("reloadOnExternalChanges", "false").toBoolean
 
-  def focusOnError: Boolean = prefs.getBoolean("focusOnError", true)
+  def focusOnError: Boolean = NetLogoPreferences.getBoolean("focusOnError", true)
 
   def getTotalTabCount: Int =
     mainTabs.getTabCount + separateTabs.getTabCount

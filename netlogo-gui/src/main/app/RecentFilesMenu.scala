@@ -5,11 +5,10 @@ package org.nlogo.app
 import java.awt.Component
 import java.awt.event.ActionEvent
 import java.io.File
-import java.util.prefs.Preferences
 import javax.swing.{ AbstractAction, Action }
 
 import org.nlogo.api.{ ModelType, Version }
-import org.nlogo.core.I18N
+import org.nlogo.core.{ I18N, NetLogoPreferences }
 import org.nlogo.swing.{ OptionPane, UserAction }, UserAction.{ Menu => ActionMenu, MenuAction }
 import org.nlogo.window.Events._
 
@@ -78,7 +77,6 @@ class OpenRecentFileAction(modelEntry: ModelEntry, fileManager: FileManager, ind
 }
 
 class RecentFiles {
-  val prefs = Preferences.userNodeForPackage(getClass)
   val key = if (Version.is3D) "recent_files_3d" else "recent_files"
   val maxEntries = 8
 
@@ -93,7 +91,7 @@ class RecentFiles {
       .distinct
       .filter(x => Version.is3D == (x.path.endsWith(".nlogo3d") || x.path.endsWith(".nlogox3d")))
       .take(maxEntries)
-    prefs.put(key, _models.mkString("\n"))
+    NetLogoPreferences.put(key, _models.mkString("\n"))
   }
 
   /**
@@ -106,7 +104,7 @@ class RecentFiles {
     catch { case _: java.io.IOException => None }
 
   def loadFromPrefs(filter: Boolean = false): Unit = {
-    models = prefs.get(key, "").linesIterator.toList.map(new ModelEntry(_))
+    models = NetLogoPreferences.get(key, "").linesIterator.toList.map(new ModelEntry(_))
                                                     .filter(entry => !filter || new File(entry.path).exists)
   }
 

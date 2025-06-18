@@ -2,12 +2,12 @@
 
 package org.nlogo.app.common
 
-import java.util.prefs.Preferences
 import java.awt.{ Adjustable, Font, Graphics }
 import java.awt.event.{InputEvent, KeyEvent}
 import javax.swing.{ Action, KeyStroke }
 
 import org.nlogo.api.{ CompilerServices, Version }
+import org.nlogo.core.NetLogoPreferences
 import org.nlogo.ide.{ AutoSuggestAction, CodeCompletionPopup, JumpToDeclarationAction,
   NetLogoFoldParser, NetLogoTokenMakerFactory, ShiftActions, ShowUsageBox, ShowUsageBoxAction, ToggleComments }
 import org.nlogo.editor.{ AbstractEditorArea, AdvancedEditorArea, EditorConfiguration, EditorScrollPane }
@@ -48,7 +48,7 @@ class EditorFactory(compiler: CompilerServices, extensionManager: ExtensionManag
       .addKeymap(
         KeyStroke.getKeyStroke(KeyEvent.VK_TAB, InputEvent.SHIFT_DOWN_MASK), shiftTabAction)
       .withLineNumbers(
-        Preferences.userRoot.node("/org/nlogo/NetLogo").get("line_numbers", "false").toBoolean)
+        NetLogoPreferences.get("line_numbers", "false").toBoolean)
       .forThreeDLanguage(Version.is3D)
   }
 

@@ -3,7 +3,6 @@
 package org.nlogo.app.tools
 
 import java.awt.GridBagConstraints
-import java.util.prefs.{ Preferences => JavaPreferences }
 import javax.swing.JComponent
 
 import org.nlogo.theme.ThemeSync
@@ -22,6 +21,6 @@ trait Preference {
   val requirement: Option[RequiredAction]
   val anchor: Int = GridBagConstraints.WEST
   def component: JComponent & ThemeSync
-  def load(prefs: JavaPreferences): Unit
-  def save(prefs: JavaPreferences): Unit
+  def load(): Unit
+  def save(): Unit
 }

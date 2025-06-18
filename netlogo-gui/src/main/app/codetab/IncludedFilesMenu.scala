@@ -5,14 +5,13 @@ package org.nlogo.app.codetab
 import java.awt.{ Dimension, FileDialog }
 import java.awt.event.ActionEvent
 import java.io.File
-import java.util.prefs.Preferences
 import javax.swing.AbstractAction
 
 import scala.util.control.Exception.ignoring
 
 import org.nlogo.app.common.{ Actions, TabsInterface }, Actions.Ellipsis
 import org.nlogo.awt.UserCancelException
-import org.nlogo.core.I18N
+import org.nlogo.core.{ I18N, NetLogoPreferences }
 import org.nlogo.swing.{ FileDialog => SwingFileDialog, MenuItem, OptionPane, PopupMenu, RoundedBorderPanel,
                          ToolBarMenu }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
@@ -23,7 +22,7 @@ extends ToolBarMenu(I18N.gui.get("tabs.code.includedFiles"))
 with WindowEvents.CompiledEvent.Handler with RoundedBorderPanel with ThemeSync {
   implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("tabs.code.includedFiles")
 
-  private var alwaysVisible = Preferences.userRoot.node("/org/nlogo/NetLogo").get("includedFilesMenu", "false").toBoolean
+  private var alwaysVisible = NetLogoPreferences.get("includedFilesMenu", "false").toBoolean
   // If we're empty, we have no size, are invisible and don't affect our parent's layout
   private var isEmpty = true
 

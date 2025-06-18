@@ -8,13 +8,12 @@ import java.net.{ HttpURLConnection, URL }
 import java.nio.file.{ Files, Paths, StandardCopyOption }
 import java.security.{ DigestInputStream, MessageDigest }
 import java.util.Arrays
-import java.util.prefs.{ Preferences => JPreferences }
+
+import org.nlogo.core.NetLogoPreferences
 
 import scala.concurrent.{ ExecutionContext, Future, Promise }
 
 trait InfoDownloader {
-
-  private val prefs = JPreferences.userNodeForPackage(getClass)
 
   def prefsKey: String
 
@@ -53,13 +52,13 @@ trait InfoDownloader {
 
           Files.copy(digest, Paths.get(FileIO.perUserFile(urlToHash(url))), StandardCopyOption.REPLACE_EXISTING)
 
-          val localHash = prefs.getByteArray(urlToFullHash(url), null)
+          val localHash = NetLogoPreferences.getByteArray(urlToFullHash(url), null)
           val newHash   = md.digest
           val file      = new File(FileIO.perUserFile(urlToHash(url)))
           val isWriting = !Arrays.equals(localHash, newHash)
 
           if (isWriting) {
-            prefs.putByteArray(urlToFullHash(url), newHash)
+            NetLogoPreferences.putByteArray(urlToFullHash(url), newHash)
           }
 
           Option((file, isWriting))
@@ -75,7 +74,7 @@ trait InfoDownloader {
 
   /** Ensures the next reload updates the GUI */
   def invalidateCache(url: URL): Unit =
-    prefs.put(urlToFullHash(url), "")
+    NetLogoPreferences.put(urlToFullHash(url), "")
 
   def urlToHash(url: URL): String = {
     val noTrailingSlash = url.toString.stripSuffix("/")

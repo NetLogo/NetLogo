@@ -3,12 +3,12 @@
 package org.nlogo.hubnet.connection
 
 import java.net.{ InetAddress, Inet4Address, NetworkInterface }
-import java.util.prefs.{ Preferences => JavaPreferences }
 
 import scala.jdk.CollectionConverters.EnumerationHasAsScala
 
+import org.nlogo.core.NetLogoPreferences
+
 object NetworkUtils {
-  private val hubnetPrefs = JavaPreferences.userRoot.node("/org/nlogo/HubNet")
   val NetworkPreferenceKey = "preferred_network_interface"
 
   def findViableInterfaces: Seq[(NetworkInterface, InetAddress)] = {
@@ -35,13 +35,13 @@ object NetworkUtils {
   }
 
   def rememberNetworkInterface(n: NetworkInterface): Unit = {
-    hubnetPrefs.put(NetworkPreferenceKey, n.getName)
+    NetLogoPreferences.put(NetworkPreferenceKey, n.getName)
   }
 
   def forgetNetworkInterface(): Unit = {
-    hubnetPrefs.put(NetworkPreferenceKey, "")
+    NetLogoPreferences.put(NetworkPreferenceKey, "")
   }
 
   def recallNetworkInterface: Option[NetworkInterface] =
-    Option(NetworkInterface.getByName(hubnetPrefs.get(NetworkPreferenceKey, "")))
+    Option(NetworkInterface.getByName(NetLogoPreferences.get(NetworkPreferenceKey, "")))
 }

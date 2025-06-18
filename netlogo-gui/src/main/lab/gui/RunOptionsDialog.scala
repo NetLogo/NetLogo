@@ -6,11 +6,10 @@ import java.awt.Window
 
 import org.nlogo.api.{ LabDefaultValues, LabRunOptions }
 import org.nlogo.awt.UserCancelException
-import org.nlogo.core.I18N
+import org.nlogo.core.{ I18N, NetLogoPreferences }
 import org.nlogo.window.{ DummyErrorHandler, Editable, EditDialogFactory, EditPanel }
 
 import java.io.File
-import java.util.prefs.Preferences
 
 class RunOptionsDialog(parent: Window, dialogFactory: EditDialogFactory, filePrefix: String) {
   val userHome = System.getProperty("user.home")
@@ -22,7 +21,6 @@ class RunOptionsDialog(parent: Window, dialogFactory: EditDialogFactory, filePre
   val defaultProcessors = LabDefaultValues.getDefaultThreads
 
   object Prefs {
-    private val prefs = Preferences.userNodeForPackage(RunOptionsDialog.this.getClass)
     // to match the behavior we had before (just boolean spreadsheet/table), if we had a
     // value stored in Preferences we want to use the setting again, but we want the
     // file path to be the suggested path since the stored one could be for another model
@@ -45,40 +43,40 @@ class RunOptionsDialog(parent: Window, dialogFactory: EditDialogFactory, filePre
       if (v == "true") { "" } else { v }
 
     def spreadsheet = {
-      val ss = prefs.get("spreadsheet", "")
+      val ss = NetLogoPreferences.get("spreadsheet", "")
       if (emptyVals.contains(ss)) { "" } else {
         append(replaceTrue(ss), spreadsheetFile)
       }
     }
     def table = {
-      val t = prefs.get("table", "")
+      val t = NetLogoPreferences.get("table", "")
       if (emptyVals.contains(t)) { "" } else {
         append(replaceTrue(t), tableFile)
       }
     }
     def stats = {
-      val t = prefs.get("stats", "")
+      val t = NetLogoPreferences.get("stats", "")
       if (emptyVals.contains(t)) { "" } else {
         append(replaceTrue(t), statsFile)
       }
     }
     def lists = {
-      val l = prefs.get("lists", "")
+      val l = NetLogoPreferences.get("lists", "")
       if (emptyVals.contains(l)) { "" } else {
         append(replaceTrue(l), listsFile)
       }
     }
-    def updateView = prefs.getBoolean("updateView", true)
-    def updatePlotsAndMonitors = prefs.getBoolean("updatePlotsAndMonitors", true)
-    def updateThreadCount = prefs.getInt("threadCount", defaultProcessors)
+    def updateView = NetLogoPreferences.getBoolean("updateView", true)
+    def updatePlotsAndMonitors = NetLogoPreferences.getBoolean("updatePlotsAndMonitors", true)
+    def updateThreadCount = NetLogoPreferences.getInt("threadCount", defaultProcessors)
     def updateFrom(runOptions: LabRunOptions): Unit = {
-      prefs.put("spreadsheet", parentDirectory(runOptions.spreadsheet))
-      prefs.put("table", parentDirectory(runOptions.table))
-      prefs.put("stats", parentDirectory(runOptions.stats))
-      prefs.put("lists", parentDirectory(runOptions.lists))
-      prefs.putBoolean("updateView", runOptions.updateView)
-      prefs.putBoolean("updatePlotsAndMonitors", runOptions.updatePlotsAndMonitors)
-      prefs.putInt("threadCount", runOptions.threadCount)
+      NetLogoPreferences.put("spreadsheet", parentDirectory(runOptions.spreadsheet))
+      NetLogoPreferences.put("table", parentDirectory(runOptions.table))
+      NetLogoPreferences.put("stats", parentDirectory(runOptions.stats))
+      NetLogoPreferences.put("lists", parentDirectory(runOptions.lists))
+      NetLogoPreferences.putBoolean("updateView", runOptions.updateView)
+      NetLogoPreferences.putBoolean("updatePlotsAndMonitors", runOptions.updatePlotsAndMonitors)
+      NetLogoPreferences.putInt("threadCount", runOptions.threadCount)
     }
   }
   def get = {

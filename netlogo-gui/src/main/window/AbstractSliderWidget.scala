@@ -6,13 +6,12 @@ import java.awt.{ Dimension, Graphics, Point }
 import java.awt.event.{ ActionEvent, ActionListener, FocusAdapter, FocusEvent, KeyAdapter, KeyEvent, MouseAdapter,
                         MouseEvent }
 import java.lang.NumberFormatException
-import java.util.prefs.Preferences
 import javax.swing.{ BorderFactory, JLabel, JSlider, JTextField, SwingConstants }
 import javax.swing.text.{ AttributeSet, PlainDocument }
 
 import org.nlogo.agent.SliderConstraint
 import org.nlogo.api.Dump
-import org.nlogo.core.I18N
+import org.nlogo.core.{ I18N, NetLogoPreferences }
 import org.nlogo.swing.{ Transparent, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.Events.InputBoxLoseFocusEvent
@@ -108,8 +107,6 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
     }
   }
 
-  private val prefs = Preferences.userRoot.node("/org/nlogo/NetLogo")
-
   protected var _name = ""
   private var _units = ""
   private var _vertical = false
@@ -138,7 +135,7 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
     }
   }
 
-  var jumpOnClick = prefs.getBoolean("jumpOnClick", true)
+  var jumpOnClick = NetLogoPreferences.getBoolean("jumpOnClick", true)
 
   locally {
     val mouseListener = new MouseAdapter {

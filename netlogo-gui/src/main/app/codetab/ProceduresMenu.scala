@@ -5,10 +5,9 @@ package org.nlogo.app.codetab
 import java.awt.event.{ ActionEvent, KeyEvent }
 import javax.swing.{ AbstractAction, JMenuItem, MenuSelectionManager, SwingUtilities }
 import java.text.Collator
-import java.util.prefs.{ Preferences => JavaPreferences }
 
 import org.nlogo.awt.EventQueue
-import org.nlogo.core.I18N
+import org.nlogo.core.{ I18N, NetLogoPreferences }
 import org.nlogo.swing.Implicits._
 import org.nlogo.swing.{ MenuItem, PopupMenu, RoundedBorderPanel, TextField, ToolBarMenu }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
@@ -31,10 +30,9 @@ extends ToolBarMenu(I18N.gui.get("tabs.code.procedures")) with RoundedBorderPane
     }
 
     val procs = {
-      val prefs = JavaPreferences.userRoot.node("/org/nlogo/NetLogo")
       val AlphaSort = I18N.gui.get("tools.preferences.proceduresSortAlphabetical")
       val sort: Seq[String] => Seq[String] =
-        prefs.get("proceduresMenuSortOrder", "default") match {
+        NetLogoPreferences.get("proceduresMenuSortOrder", "default") match {
           // Sort procedures by alphabetical order if requested in preferences
           case AlphaSort => _.sorted(using ordering)
           // Otherwise, sort procedures by order of appearance in the code tab

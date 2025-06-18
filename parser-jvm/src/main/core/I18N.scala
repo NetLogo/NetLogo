@@ -25,11 +25,9 @@ object I18N {
   // loads the locale data from the users preferences
   // but only if that locale is available.
   def localeFromPreferences: Option[Locale] = {
-    import java.util.prefs.Preferences
     def getPref(p: String): Option[String] =
       try {
-        val netLogoPrefs = Preferences.userRoot.node("/org/nlogo/NetLogo")
-        Option(netLogoPrefs.get(p, "")).filter(_.nonEmpty)
+        Option(NetLogoPreferences.get(p, "")).filter(_.nonEmpty)
       }
       catch {
         // security manager might say no

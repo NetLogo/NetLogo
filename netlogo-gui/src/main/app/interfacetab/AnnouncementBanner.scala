@@ -7,18 +7,17 @@ import java.awt.event.{ ActionEvent, ActionListener, MouseEvent, MouseAdapter }
 import java.awt.font.TextAttribute
 import java.net.URI
 import java.time.format.{ DateTimeFormatter, FormatStyle }
-import java.util.prefs.Preferences
 import javax.swing.{ BoxLayout, JButton, JLabel, JPanel }
 import javax.swing.border.EmptyBorder
 import javax.swing.BorderFactory
 
 import org.nlogo.api.{ Advisory, Announcement, Event, Release }
+import org.nlogo.core.NetLogoPreferences
 import org.nlogo.swing.{ BrowserLauncher, MouseUtils, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 class AnnouncementBanner extends JPanel with MouseUtils with ThemeSync {
 
-  private val prefs   = Preferences.userRoot.node("/org/nlogo/NetLogo")
   private val prefKey = "announce.latest-read-id"
 
   private var announcements = Seq[Announcement]()
@@ -28,7 +27,7 @@ class AnnouncementBanner extends JPanel with MouseUtils with ThemeSync {
   private val textPane = new TextPane(annTitle, annText)
 
   private val ggGoNext = () => {
-    prefs.put(prefKey, announcements.head.id.toString)
+    NetLogoPreferences.put(prefKey, announcements.head.id.toString)
     announcements = announcements.tail
     renderData()
   }
@@ -95,8 +94,8 @@ class AnnouncementBanner extends JPanel with MouseUtils with ThemeSync {
   }
 
   def appendData(anns: Seq[Announcement]): Unit = {
-    val isDebug      = prefs.get("announce.debug", "false") == "true"
-    val latestReadID = if (!isDebug) prefs.get(prefKey, "-1").toInt else -1
+    val isDebug      = NetLogoPreferences.get("announce.debug", "false") == "true"
+    val latestReadID = if (!isDebug) NetLogoPreferences.get(prefKey, "-1").toInt else -1
     announcements ++= anns.filter(_.id > latestReadID)
     renderData()
   }

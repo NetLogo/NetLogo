@@ -4,12 +4,11 @@ package org.nlogo.window
 
 import java.awt.{ Color, Component, Dimension, Graphics, GridBagConstraints, GridBagLayout }
 import java.awt.event.{ InputEvent, MouseEvent, MouseListener, MouseWheelEvent, MouseWheelListener }
-import java.util.prefs.Preferences
 import javax.swing.{ JLabel, JPanel, JSlider, SwingConstants }
 import javax.swing.event.{ ChangeEvent, ChangeListener }
 import javax.swing.plaf.basic.BasicSliderUI
 
-import org.nlogo.core.I18N
+import org.nlogo.core.{ I18N, NetLogoPreferences }
 import org.nlogo.log.LogManager
 import org.nlogo.swing.{ Button, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
@@ -21,8 +20,6 @@ class SpeedSliderPanel(workspace: GUIWorkspace, ticksLabel: Component = null) ex
                                                                               with LoadBeginEvent.Handler
                                                                               with ThemeSync {
   implicit val prefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("tabs.run.speedslider")
-
-  private val prefs = Preferences.userRoot.node("/org/nlogo/NetLogo")
 
   val speedSlider = {
     val slider = new SpeedSlider(workspace.speedSliderPosition().toInt)
@@ -67,7 +64,7 @@ class SpeedSliderPanel(workspace: GUIWorkspace, ticksLabel: Component = null) ex
 
   val modelSpeed = new JLabel(I18N.gui("modelSpeed"), SwingConstants.CENTER)
 
-  private var jumpOnClick = prefs.getBoolean("jumpOnClick", true)
+  private var jumpOnClick = NetLogoPreferences.getBoolean("jumpOnClick", true)
 
   slower.setFont(slower.getFont.deriveFont(10f))
   faster.setFont(faster.getFont.deriveFont(10f))

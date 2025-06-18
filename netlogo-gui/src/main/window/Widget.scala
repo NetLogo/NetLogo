@@ -4,11 +4,10 @@ package org.nlogo.window
 
 import java.awt.{ Component, Container, Dimension, Font, Graphics, Point, Rectangle, event },
                 event.{ MouseAdapter, MouseEvent, MouseListener }
-import java.util.prefs.Preferences
 import javax.swing.{ JPanel, JMenuItem }
 
 import org.nlogo.api.CompilerServices
-import org.nlogo.core.{ TokenType, Widget => CoreWidget }
+import org.nlogo.core.{ NetLogoPreferences, TokenType, Widget => CoreWidget }
 import org.nlogo.swing.{ PopupMenu, RoundedBorderPanel }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.Events.{ InterfaceModeChangedEvent, WidgetAddedEvent, WidgetEditedEvent, WidgetErrorEvent,
@@ -64,7 +63,7 @@ abstract class Widget extends JPanel with RoundedBorderPanel with ThemeSync with
 
   protected var _oldSize = false
   protected var _boldState = {
-    if (Preferences.userRoot.node("/org/nlogo/NetLogo").getBoolean("boldWidgetText", false)) {
+    if (NetLogoPreferences.getBoolean("boldWidgetText", false)) {
       Font.BOLD
     } else {
       Font.PLAIN

@@ -4,17 +4,14 @@ package org.nlogo.app.tools
 
 import java.awt.{ Frame, GridBagConstraints, GridBagLayout, Insets }
 import java.awt.event.ActionEvent
-import java.util.prefs.{ Preferences => JavaPreferences }
 import javax.swing.{ AbstractAction, ButtonGroup, JLabel, JPanel }
 
-import org.nlogo.core.I18N
+import org.nlogo.core.{ I18N, NetLogoPreferences }
 import org.nlogo.swing.{ RadioButton, Transparent }
 import org.nlogo.theme.{ ClassicTheme, ColorTheme, DarkTheme, InterfaceColors, LightTheme, ThemeSync }
 
 class ThemesPanel(frame: Frame & ThemeSync) extends JPanel(new GridBagLayout) with Transparent with ThemeSync {
   private implicit val i18nPrefix: I18N.Prefix = I18N.Prefix("tools.preferences.themes")
-
-  private val prefs = JavaPreferences.userRoot.node("/org/nlogo/NetLogo")
 
   private val label = new JLabel(s"<html>${I18N.gui("text")}</html>")
 
@@ -89,7 +86,7 @@ class ThemesPanel(frame: Frame & ThemeSync) extends JPanel(new GridBagLayout) wi
   private def setTheme(theme: ColorTheme): Unit = {
     InterfaceColors.setTheme(theme)
 
-    prefs.put("colorTheme", theme match {
+    NetLogoPreferences.put("colorTheme", theme match {
       case ClassicTheme => "classic"
       case LightTheme => "light"
       case DarkTheme => "dark"

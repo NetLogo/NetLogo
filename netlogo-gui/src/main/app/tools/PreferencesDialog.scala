@@ -5,7 +5,6 @@ package org.nlogo.app.tools
 import java.awt.{ BorderLayout, Frame, GridBagConstraints, GridBagLayout, Insets }
 import java.io.File
 import java.nio.file.Files
-import java.util.prefs.{ Preferences => JavaPreferences }
 import javax.swing.{ JLabel, JPanel }
 import javax.swing.border.EmptyBorder
 
@@ -15,8 +14,6 @@ import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 class PreferencesDialog(parent: Frame & ThemeSync, generalPreferences: Seq[Preference], codePreferences: Seq[Preference],
                         loggingPreferences: Seq[Preference]) extends ToolDialog(parent, "preferences") with ThemeSync {
-
-  private lazy val netLogoPrefs = JavaPreferences.userRoot.node("/org/nlogo/NetLogo")
 
   private lazy val tabs = new FloatingTabbedPane
 
@@ -40,9 +37,9 @@ class PreferencesDialog(parent: Frame & ThemeSync, generalPreferences: Seq[Prefe
 
   // sync parameter prevents infinite recursion with syncTheme on load (Isaac B 5/22/25)
   private def reset(sync: Boolean): Unit = {
-    generalPreferences.foreach(_.load(netLogoPrefs))
-    codePreferences.foreach(_.load(netLogoPrefs))
-    loggingPreferences.foreach(_.load(netLogoPrefs))
+    generalPreferences.foreach(_.load())
+    codePreferences.foreach(_.load())
+    loggingPreferences.foreach(_.load())
 
     themesPanel.revert(sync)
   }
@@ -54,9 +51,9 @@ class PreferencesDialog(parent: Frame & ThemeSync, generalPreferences: Seq[Prefe
 
   private def apply(): Boolean = {
     if (validatePrefs()) {
-      generalPreferences.foreach(_.save(netLogoPrefs))
-      codePreferences.foreach(_.save(netLogoPrefs))
-      loggingPreferences.foreach(_.save(netLogoPrefs))
+      generalPreferences.foreach(_.save())
+      codePreferences.foreach(_.save())
+      loggingPreferences.foreach(_.save())
 
       true
     } else {

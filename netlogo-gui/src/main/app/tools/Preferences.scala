@@ -6,11 +6,10 @@ import java.awt.{ BorderLayout, Frame, GridBagConstraints, GridBagLayout, Insets
 import java.awt.event.ActionEvent
 import java.io.File
 import java.util.Locale
-import java.util.prefs.{ Preferences => JavaPreferences }
 import javax.swing.{ AbstractAction, JComponent, JFileChooser, JLabel, JPanel }
 
 import org.nlogo.app.common.TabsInterface
-import org.nlogo.core.I18N
+import org.nlogo.core.{ I18N, NetLogoPreferences }
 import org.nlogo.swing.{ Button, CheckBox, ComboBox, TextField, Transparent }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.AbstractWidgetPanel
@@ -21,13 +20,13 @@ object Preferences {
 
     override def component: CheckBox = checkBox
 
-    def load(prefs: JavaPreferences) = {
-      val value = prefs.get(i18nKey, default.toString).toBoolean
+    def load() = {
+      val value = NetLogoPreferences.get(i18nKey, default.toString).toBoolean
       checkBox.setSelected(value)
     }
 
-    def save(prefs: JavaPreferences) = {
-      prefs.put(i18nKey, checkBox.isSelected.toString)
+    def save() = {
+      NetLogoPreferences.put(i18nKey, checkBox.isSelected.toString)
     }
   }
 
@@ -39,13 +38,13 @@ object Preferences {
 
     def component: JComponent & ThemeSync = textField
 
-    def load(prefs: JavaPreferences) = {
-      val value = prefs.get(i18nKey, default)
+    def load() = {
+      val value = NetLogoPreferences.get(i18nKey, default)
       textField.setText(value)
     }
 
-    def save(prefs: JavaPreferences) = {
-      prefs.put(i18nKey, textField.getText)
+    def save() = {
+      NetLogoPreferences.put(i18nKey, textField.getText)
     }
   }
 
@@ -108,19 +107,19 @@ object Preferences {
 
     def component: JComponent & ThemeSync = panel
 
-    def load(prefs: JavaPreferences): Unit = {
+    def load(): Unit = {
       comboBox.setSelectedItem(I18N.localeFromPreferences.map(LocaleWrapper(_)).getOrElse(DetectLocale))
     }
 
-    def save(prefs: JavaPreferences): Unit = {
+    def save(): Unit = {
       comboBox.getSelectedItem.foreach(_ match {
         case DetectLocale =>
-          prefs.remove("user.language")
-          prefs.remove("user.country")
+          NetLogoPreferences.remove("user.language")
+          NetLogoPreferences.remove("user.country")
 
         case LocaleWrapper(locale) =>
-          prefs.put("user.language", locale.getLanguage)
-          prefs.put("user.country", locale.getCountry)
+          NetLogoPreferences.put("user.language", locale.getLanguage)
+          NetLogoPreferences.put("user.country", locale.getCountry)
       })
     }
   }
@@ -134,14 +133,14 @@ object Preferences {
 
     def component: JComponent & ThemeSync = checkBox
 
-    def load(prefs: JavaPreferences) = {
-      val enabled = prefs.get("reloadOnExternalChanges", "false").toBoolean
+    def load() = {
+      val enabled = NetLogoPreferences.get("reloadOnExternalChanges", "false").toBoolean
       checkBox.setSelected(enabled)
     }
 
-    def save(prefs: JavaPreferences) = {
+    def save() = {
       val enabled = checkBox.isSelected
-      prefs.put("reloadOnExternalChanges", enabled.toString)
+      NetLogoPreferences.put("reloadOnExternalChanges", enabled.toString)
       tabs.watchingFiles = enabled
     }
   }
@@ -170,13 +169,13 @@ object Preferences {
         }
       }
 
-    def load(prefs: JavaPreferences) = {
-      val logDirectory = prefs.get("logDirectory", "")
+    def load() = {
+      val logDirectory = NetLogoPreferences.get("logDirectory", "")
       textField.setText(logDirectory)
     }
 
-    def save(prefs: JavaPreferences) = {
-      prefs.put("logDirectory", textField.getText)
+    def save() = {
+      NetLogoPreferences.put("logDirectory", textField.getText)
     }
 
     def askForConfigFile(current: String): Option[String] = {
@@ -207,15 +206,15 @@ object Preferences {
 
     def component: CheckBox = checkBox
 
-    def load(prefs: JavaPreferences): Unit = {
-      val value = prefs.get(i18nKey, "true").toBoolean
+    def load(): Unit = {
+      val value = NetLogoPreferences.get(i18nKey, "true").toBoolean
 
       checkBox.setSelected(value)
       tabs.setIncludedFilesShown(value)
     }
 
-    def save(prefs: JavaPreferences): Unit = {
-      prefs.put(i18nKey, checkBox.isSelected.toString)
+    def save(): Unit = {
+      NetLogoPreferences.put(i18nKey, checkBox.isSelected.toString)
     }
   }
 
@@ -232,13 +231,13 @@ object Preferences {
 
     def component: JComponent & ThemeSync = comboBox
 
-    def load(prefs: JavaPreferences): Unit = {
-      val sortOrder = prefs.get("proceduresMenuSortOrder", options(0))
+    def load(): Unit = {
+      val sortOrder = NetLogoPreferences.get("proceduresMenuSortOrder", options(0))
       comboBox.setSelectedItem(sortOrder)
     }
 
-    def save(prefs: JavaPreferences): Unit = {
-      comboBox.getSelectedItem.foreach(prefs.put("proceduresMenuSortOrder", _))
+    def save(): Unit = {
+      comboBox.getSelectedItem.foreach(NetLogoPreferences.put("proceduresMenuSortOrder", _))
     }
   }
 
@@ -256,15 +255,15 @@ object Preferences {
 
     override def component: CheckBox = checkBox
 
-    def load(prefs: JavaPreferences): Unit = {
-      val value = prefs.get(i18nKey, "true").toBoolean
+    def load(): Unit = {
+      val value = NetLogoPreferences.get(i18nKey, "true").toBoolean
 
       checkBox.setSelected(value)
       widgetPanel.setBoldWidgetText(value)
     }
 
-    def save(prefs: JavaPreferences): Unit = {
-      prefs.put(i18nKey, checkBox.isSelected.toString)
+    def save(): Unit = {
+      NetLogoPreferences.put(i18nKey, checkBox.isSelected.toString)
     }
   }
 
@@ -275,12 +274,12 @@ object Preferences {
 
     def component: JComponent & ThemeSync = textField
 
-    def load(prefs: JavaPreferences) = {
-      textField.setText(prefs.getDouble(i18nKey, 1.0).toString)
+    def load() = {
+      textField.setText(NetLogoPreferences.getDouble(i18nKey, 1.0).toString)
     }
 
-    def save(prefs: JavaPreferences) = {
-      prefs.putDouble(i18nKey, textField.getText.toDouble)
+    def save() = {
+      NetLogoPreferences.putDouble(i18nKey, textField.getText.toDouble)
     }
   }
 
@@ -294,15 +293,15 @@ object Preferences {
 
     override def component: CheckBox = checkBox
 
-    def load(prefs: JavaPreferences): Unit = {
-      val value = prefs.get(i18nKey, "true").toBoolean
+    def load(): Unit = {
+      val value = NetLogoPreferences.get(i18nKey, "true").toBoolean
 
       checkBox.setSelected(value)
       tabs.smartTabbingEnabled = value
     }
 
-    def save(prefs: JavaPreferences): Unit = {
-      prefs.put(i18nKey, checkBox.isSelected.toString)
+    def save(): Unit = {
+      NetLogoPreferences.put(i18nKey, checkBox.isSelected.toString)
     }
   }
 
@@ -316,15 +315,15 @@ object Preferences {
 
     override def component: CheckBox = checkBox
 
-    def load(prefs: JavaPreferences): Unit = {
-      val value = prefs.get(i18nKey, "true").toBoolean
+    def load(): Unit = {
+      val value = NetLogoPreferences.get(i18nKey, "true").toBoolean
 
       checkBox.setSelected(value)
       tabs.lineNumbersVisible = value
     }
 
-    def save(prefs: JavaPreferences): Unit = {
-      prefs.put(i18nKey, checkBox.isSelected.toString)
+    def save(): Unit = {
+      NetLogoPreferences.put(i18nKey, checkBox.isSelected.toString)
     }
   }
 
@@ -338,15 +337,15 @@ object Preferences {
 
     override def component: CheckBox = checkBox
 
-    def load(prefs: JavaPreferences): Unit = {
-      val value = prefs.get(i18nKey, "true").toBoolean
+    def load(): Unit = {
+      val value = NetLogoPreferences.get(i18nKey, "true").toBoolean
 
       checkBox.setSelected(value)
       tabs.setJumpOnClick(value)
     }
 
-    def save(prefs: JavaPreferences): Unit = {
-      prefs.put(i18nKey, checkBox.isSelected.toString)
+    def save(): Unit = {
+      NetLogoPreferences.put(i18nKey, checkBox.isSelected.toString)
     }
   }
 }
