@@ -10,8 +10,8 @@ import org.nlogo.core,
 object StructureConverter {
 
   import org.nlogo.core.Fail.exception
-  import core.{Import, DefineLibrary}
-  import core.StructureDeclarations.{Import => ImportDecl, DefineLibrary => DefineLibraryDecl, _}
+  import core.{Import, Export}
+  import core.StructureDeclarations.{Import => ImportDecl, Export => ExportDecl, _}
 
   def convert(declarations: Seq[Declaration],
               displayName: Option[String],
@@ -27,12 +27,12 @@ object StructureConverter {
         Import(l.name, if (filename.isEmpty()) None else Some(filename), maybeAlias, l.token)
     }
     val dls = declarations.collect {
-      case dl: DefineLibraryDecl =>
+      case dl: ExportDecl =>
         val exportedNames = dl.exportSpecs.map((x) => x match {
           case SimpleExport(name) => Some(name)
         }).flatten
         val filename = dl.token.sourceLocation.filename
-        DefineLibrary(dl.name, if (filename.isEmpty()) None else Some(filename), dl.version, exportedNames, dl.token)
+        Export(dl.name, if (filename.isEmpty()) None else Some(filename), dl.version, exportedNames, dl.token)
     }
     val is = declarations.collect {
       case i: Includes =>
@@ -44,7 +44,7 @@ object StructureConverter {
     }
     ps.foreach(_._1.topLevel = subprogram)
     if (dls.size > 1) {
-      exception(I18N.errors.get("compiler.StructureParser.libraryMultipleDefines"), dls(1).token)
+      exception(I18N.errors.get("compiler.StructureParser.exportMultiple"), dls(1).token)
     }
     StructureResults(
       program =
@@ -62,7 +62,7 @@ object StructureConverter {
             e.names.map(_.token)
         }.flatten,
       imports = oldResults.imports ++ ims,
-      defineLibrary = dls.headOption)
+      _export = dls.headOption)
   }
 
   def buildProcedure(p: Procedure, module: Option[String], displayName: Option[String]): (FrontEndProcedure, Iterable[Token]) = {

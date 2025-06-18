@@ -99,10 +99,10 @@ extends scala.util.parsing.combinator.Parsers {
       case token ~ names =>
         Includes(token, names) }
 
-  def defineLibrary: Parser[DefineLibrary] =
-    keyword("DEFINE-LIBRARY") ~! openBracket ~> identifier ~ string ~ exportSpecList <~ closeBracket ^^ {
+  def defineLibrary: Parser[Export] =
+    keyword("EXPORT") ~! openBracket ~> identifier ~ string ~ exportSpecList <~ closeBracket ^^ {
       case ident ~ version ~ specs =>
-        DefineLibrary(ident.name, version.text, specs, ident.token)
+        Export(ident.name, version.text, specs, ident.token)
     }
 
   def exportSpecList: Parser[Seq[ExportSpec]] =
