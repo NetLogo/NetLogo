@@ -35,6 +35,7 @@ class InfoTab(attachModelDir: String => String, resourceManager: ExternalResourc
   with AppEvents.SwitchedTabsEvent.Handler
   with WindowEvents.LoadBeginEvent.Handler
   with WindowEvents.LoadModelEvent.Handler
+  with WindowEvents.ResourcesChangedEvent.Handler
   with WindowEvents.ZoomedEvent.Handler
   with Zoomable
   with ThemeSync {
@@ -151,10 +152,10 @@ class InfoTab(attachModelDir: String => String, resourceManager: ExternalResourc
     undoManager.discardAllEdits()
   }
 
-  private def updateEditorPane(): Unit = { updateEditorPane(textArea.getText) }
+  private def updateEditorPane(force: Boolean = false): Unit = { updateEditorPane(textArea.getText, force) }
 
-  private def updateEditorPane(str: String): Unit = {
-    if(str != editorPane.getText) {
+  private def updateEditorPane(str: String, force: Boolean): Unit = {
+    if (force || str != editorPane.getText) {
       editorPane.getDocument.asInstanceOf[HTMLDocument].setBase(new File(attachModelDir(".")).toURI.toURL)
       editorPane.setText(InfoFormatter(str, editorPaneFontSize))
       editorPane.setCaretPosition(0)
@@ -200,6 +201,10 @@ class InfoTab(attachModelDir: String => String, resourceManager: ExternalResourc
   def handle(e: WindowEvents.LoadModelEvent): Unit = {
     info(e.model.info)
     resetView()
+  }
+
+  override def handle(e: WindowEvents.ResourcesChangedEvent): Unit = {
+    updateEditorPane(true)
   }
 
   private var editorPaneFontSize = InfoFormatter.defaultFontSize

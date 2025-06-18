@@ -19,7 +19,7 @@ import org.nlogo.awt.{ Positioning, UserCancelException }
 import org.nlogo.core.{ ExternalResource, I18N }
 import org.nlogo.swing.{ Button, FileDialog, InputOptionPane, OptionPane, ScrollPane, Transparent, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
-import org.nlogo.window.Events.DirtyEvent
+import org.nlogo.window.Events.{ DirtyEvent, ResourcesChangedEvent }
 
 class ResourceManagerDialog(parent: Frame, workspace: Workspace)
   extends JDialog(parent, I18N.gui.get("resource.manager"), true) with ThemeSync {
@@ -103,6 +103,7 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
             refreshList()
 
             new DirtyEvent(None).raise(parent)
+            new ResourcesChangedEvent().raise(parent)
           }
 
           else {
@@ -155,6 +156,7 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
           refreshList()
 
           new DirtyEvent(None).raise(parent)
+          new ResourcesChangedEvent().raise(parent)
         }
 
         else {
@@ -173,6 +175,7 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
     refreshList()
 
     new DirtyEvent(None).raise(parent)
+    new ResourcesChangedEvent().raise(parent)
   })
 
   locally {
