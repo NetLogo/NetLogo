@@ -74,7 +74,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
   protected case class NewShadowWidget(wrapper: WidgetWrapper) extends ShadowWidgets
   // stores each shadow widget along with its offset from the cursor (Isaac B 6/16/25)
-  protected case class PastedShadowWidgets(wrappers: Seq[(WidgetWrapper, Point)]) extends ShadowWidgets
+  protected case class PastedShadowWidgets(wrappers: Seq[(WidgetWrapper, Point)], control: WidgetWrapper) extends ShadowWidgets
 
   protected var shadowWidgets: Option[ShadowWidgets] = None
 
@@ -303,9 +303,9 @@ class WidgetPanel(val workspace: GUIWorkspace)
     }
 
     if (newWb.x < 0)
-      x += - newWb.x
+      x -= newWb.x
     if (newWb.y < 0)
-      y += WidgetWrapper.BorderSize - newWb.y
+      y -= newWb.y
     if (newWb.x + 2 * WidgetWrapper.BorderSize > b.width)
       x -= (newWb.x + 2 * WidgetWrapper.BorderSize) - b.width
     if (newWb.y + WidgetWrapper.BorderSize > b.height)
@@ -349,7 +349,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
             wrapper.originalBounds = wrapper.getBounds
 
-          case PastedShadowWidgets(wrappers) =>
+          case PastedShadowWidgets(wrappers, _) =>
             wrappers.foreach {
               case (wrapper, offset) =>
                 if (workspace.snapOn && !NlogoMouse.hasCtrl(e)) {
@@ -425,13 +425,12 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
                   wrapper.setLocation(point.x + p2.x, point.y + p2.y)
 
-                case PastedShadowWidgets(wrappers) =>
+                case PastedShadowWidgets(wrappers, control) =>
+                  val p2 = restrictDrag(new Point(e.getX - point.x, e.getY - point.y), control, NlogoMouse.hasCtrl(e))
+
                   wrappers.foreach {
                     case (wrapper, offset) =>
-                      val p2 = restrictDrag(new Point(e.getX - point.x + offset.x, e.getY - point.y + offset.y),
-                                            wrapper, NlogoMouse.hasCtrl(e))
-
-                      wrapper.setLocation(point.x + p2.x, point.y + p2.y)
+                      wrapper.setLocation(point.x + p2.x + offset.x, point.y + p2.y + offset.y)
                   }
               })
 
@@ -711,7 +710,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
     if (e.getKeyCode == KeyEvent.VK_ESCAPE) {
       setInterfaceMode(InterfaceMode.Interact, true)
-    } else if (e.getKeyCode == KeyEvent.VK_V && hasCtrl) {
+    } else if (e.getKeyCode == KeyEvent.VK_V && hasCtrl && interfaceMode != InterfaceMode.Add) {
       val widgets = ClipboardUtils.readWidgets()
 
       if (widgets.nonEmpty) {
@@ -906,13 +905,9 @@ class WidgetPanel(val workspace: GUIWorkspace)
     val start = new Point(mouse.x.max(0), mouse.y.max(0))
 
     // find widget closest to origin to calculate widget offsets (Isaac B 6/16/25)
-    val min: Point = {
-      val minWidget = widgets.minBy(widget => widget.x * widget.x + widget.y * widget.y)
+    val min: CoreWidget = widgets.minBy(widget => widget.x * widget.x + widget.y * widget.y)
 
-      new Point(minWidget.x, minWidget.y)
-    }
-
-    shadowWidgets = Some(PastedShadowWidgets(widgets.map { widget =>
+    val wrappers: Seq[(WidgetWrapper, Point)] = widgets.map { widget =>
       val newWidget = makeWidget(widget)
 
       newWidget.load(widget)
@@ -933,7 +928,11 @@ class WidgetPanel(val workspace: GUIWorkspace)
       wrapper.syncTheme()
 
       (wrapper, new Point(widget.x - min.x, widget.y - min.y))
-    }))
+    }
+
+    shadowWidgets = Some(PastedShadowWidgets(wrappers, wrappers.find {
+      case (_, point) => point.x == 0 && point.y == 0
+    }.get._1))
   }
 
   private def placeShadowWidgets(): Unit = {
@@ -962,27 +961,52 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
         shadowWidgets = None
 
-      case PastedShadowWidgets(wrappers) =>
+      case PastedShadowWidgets(wrappers, _) =>
         wrappers.foreach {
           case (wrapper, _) =>
-            wrapper.widget match {
+            val add: Boolean = wrapper.widget match {
               case v: ViewWidget =>
-                getWrappers.find(w => w != wrapper && w.widget.isInstanceOf[ViewWidget]).foreach(removeWidget)
+                getWrappers.find(w => w != wrapper && w.widget.isInstanceOf[ViewWidget]) match {
+                  case Some(w) =>
+                    w.widget.load(v.model)
+                    w.setLocation(wrapper.getLocation)
+                    w.setSize(v.model.width, v.model.height)
 
-                view = Option(wrapper.widget)
+                    remove(wrapper)
 
-                wrapper.widget.deleteable = false
+                    false
+
+                  case None =>
+                    true
+                }
 
               case o: OutputWidget =>
-                getWrappers.find(w => w != wrapper && w.widget.isInstanceOf[OutputWidget]).foreach(removeWidget)
+                getWrappers.find(w => w != wrapper && w.widget.isInstanceOf[OutputWidget]) match {
+                  case Some(w) =>
+                    w.widget.load(o.model)
+                    w.setLocation(wrapper.getLocation)
+                    w.setSize(o.model.width, o.model.height)
+
+                    remove(wrapper)
+
+                    false
+
+                  case None =>
+                    true
+                }
+
+              case _ =>
+                true
             }
 
-            wrapper.foreground()
-            wrapper.setPlacing(false)
+            if (add) {
+              wrapper.foreground()
+              wrapper.setPlacing(false)
 
-            WidgetActions.addWidget(this, wrapper)
+              WidgetActions.addWidget(this, wrapper)
 
-            LogManager.widgetAdded(false, wrapper.widget.classDisplayName, wrapper.widget.displayName)
+              LogManager.widgetAdded(false, wrapper.widget.classDisplayName, wrapper.widget.displayName)
+            }
         }
 
         shadowWidgets = None
@@ -998,7 +1022,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
       case NewShadowWidget(wrapper) =>
         removeWidget(wrapper)
 
-      case PastedShadowWidgets(wrappers) =>
+      case PastedShadowWidgets(wrappers, _) =>
         wrappers.foreach {
           case (wrapper, _) =>
             removeWidget(wrapper)
