@@ -11,7 +11,7 @@ import org.nlogo.awt.ImageSelection
 import org.nlogo.core.I18N
 import org.nlogo.editor.Colorizer
 import org.nlogo.plot.{PlotManagerInterface, Plot}
-import org.nlogo.swing.{ MenuItem, PopupMenu }
+import org.nlogo.swing.{ MenuItem, PopupMenu, Utils }
 import org.nlogo.window.Events.PeriodicUpdateEvent
 
 object PlotWidget{
@@ -45,8 +45,13 @@ class PlotWidget(plot: Plot, plotManager: PlotManagerInterface, colorizer: Color
   }
 
   override def exportGraphics: BufferedImage = {
-    val image = new BufferedImage(getWidth, getHeight, BufferedImage.TYPE_INT_ARGB)
-    paint(image.getGraphics)
+    val image = new BufferedImage(getWidth * 2, getHeight * 2, BufferedImage.TYPE_INT_ARGB)
+    val g2d = Utils.initGraphics2D(image.createGraphics)
+
+    g2d.scale(2, 2)
+
+    paint(g2d)
+
     image
   }
 
