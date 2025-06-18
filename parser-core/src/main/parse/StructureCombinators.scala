@@ -90,7 +90,7 @@ extends scala.util.parsing.combinator.Parsers {
           decs ++ procs }
 
   def declaration: Parser[Declaration] =
-    defineLibrary | _import | includes | extensions | breed | directedLinkBreed | undirectedLinkBreed |
+    _export | _import | includes | extensions | breed | directedLinkBreed | undirectedLinkBreed |
       variables("GLOBALS") | variables("TURTLES-OWN") | variables("PATCHES-OWN") |
       variables("LINKS-OWN") | breedVariables
 
@@ -99,10 +99,10 @@ extends scala.util.parsing.combinator.Parsers {
       case token ~ names =>
         Includes(token, names) }
 
-  def defineLibrary: Parser[DefineLibrary] =
-    keyword("DEFINE-LIBRARY") ~! openBracket ~> identifier ~ string ~ exportSpecList <~ closeBracket ^^ {
+  def _export: Parser[Export] =
+    keyword("EXPORT") ~! openBracket ~> identifier ~ string ~ exportSpecList <~ closeBracket ^^ {
       case ident ~ version ~ specs =>
-        DefineLibrary(ident.name, version.text, specs, ident.token)
+        Export(ident.name, version.text, specs, ident.token)
     }
 
   def exportSpecList: Parser[Seq[ExportSpec]] =
