@@ -2,18 +2,19 @@ package org.nlogo.app
 
 import org.scalatest.funsuite.AnyFunSuite
 
-import org.nlogo.api
+import org.nlogo.api.{ ModelType, Version }
+import org.nlogo.core.NetLogoPreferences
 
 class RecentFilesTests extends AnyFunSuite {
 
   val rf = new RecentFiles
-  val models = (1 to rf.maxEntries).map(makePath).map(ModelEntry(_, api.ModelType.Normal)).toList ++
-               (9 to rf.maxEntries).map(makePath).map(ModelEntry(_, api.ModelType.Library)).toList
-  val extraModel = ModelEntry(makePath(rf.maxEntries + 1), api.ModelType.Normal)
-  def makePath(n: Int) = "/" + n + (if (api.Version.is3D) ".nlogo3d" else ".nlogo")
+  val models = (1 to rf.maxEntries).map(makePath).map(ModelEntry(_, ModelType.Normal)).toList ++
+               (9 to rf.maxEntries).map(makePath).map(ModelEntry(_, ModelType.Library)).toList
+  val extraModel = ModelEntry(makePath(rf.maxEntries + 1), ModelType.Normal)
+  def makePath(n: Int) = "/" + n + (if (Version.is3D) ".nlogo3d" else ".nlogo")
 
   def putAndLoad(models: List[ModelEntry]): Unit = {
-    rf.prefs.put(rf.key, models.mkString("\n"))
+    NetLogoPreferences.put(rf.key, models.mkString("\n"))
     rf.loadFromPrefs()
   }
 
@@ -31,7 +32,7 @@ class RecentFilesTests extends AnyFunSuite {
     putAndLoad(List())
     models.foreach(rf.add)
     assert(rf.models === models.reverse)
-    assert(rf.prefs.get(rf.key, "") ===
+    assert(NetLogoPreferences.get(rf.key, "") ===
       models.reverse.mkString("\n"))
   }
 
@@ -48,7 +49,7 @@ class RecentFilesTests extends AnyFunSuite {
     assert(rf.models === models)
     rf.clear()
     assert(rf.models === Nil)
-    assert(rf.prefs.get(rf.key, "default") === "")
+    assert(NetLogoPreferences.get(rf.key, "default") === "")
   }
 
   test("max entries should be respected when adding one by one") {
@@ -72,7 +73,7 @@ class RecentFilesTests extends AnyFunSuite {
 
   test("a very long path should be refused") {
     val tooLongPath = "/" + ("x" * 4096) + ".nlogo"
-    putAndLoad(List(ModelEntry(tooLongPath, api.ModelType.Normal)))
+    putAndLoad(List(ModelEntry(tooLongPath, ModelType.Normal)))
     assert(rf.models.isEmpty)
   }
 }
