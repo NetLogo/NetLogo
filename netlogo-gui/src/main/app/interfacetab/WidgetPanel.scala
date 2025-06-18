@@ -44,7 +44,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
   protected var selectionRect: Rectangle = null // convert to Option?
   var widgetsBeingDragged: Seq[WidgetWrapper] = Seq()
   private var widgetBeingResized: Option[WidgetWrapper] = None
-  private var view: Widget = null // convert to Option?
+  private var view: Option[Widget] = None
 
   private var prevSelectedWrappers = Seq[WidgetWrapper]()
 
@@ -733,24 +733,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
       e.getKeyCode match {
         case KeyEvent.VK_C if hasCtrl =>
-          ClipboardUtils.writeWidgets(selectedWrappers.collect {
-            // since every model already has a view, it's not possible to paste a new view widget,
-            // so just don't copy it in the first place (Isaac B 6/16/25)
-            case wrapper: WidgetWrapper if !wrapper.widget.isInstanceOf[ViewWidget] =>
-              wrapper.widget.model
-          }.toSeq)
-
-        case KeyEvent.VK_X if hasCtrl =>
-          val widgets = selectedWrappers.collect {
-            // since every model already has a view, it's not possible to paste a new view widget,
-            // so just don't copy it in the first place (Isaac B 6/16/25)
-            case wrapper: WidgetWrapper if !wrapper.widget.isInstanceOf[ViewWidget] =>
-              wrapper.widget.model
-          }.toSeq
-
-          deleteSelectedWidgets()
-
-          ClipboardUtils.writeWidgets(widgets)
+          ClipboardUtils.writeWidgets(selectedWrappers.map(_.widget.model))
 
         case KeyEvent.VK_RIGHT =>
           WidgetActions.moveWidgets(selectedWrappers.map(w => (w, w.getX + dist, w.getY)))
@@ -982,6 +965,18 @@ class WidgetPanel(val workspace: GUIWorkspace)
       case PastedShadowWidgets(wrappers) =>
         wrappers.foreach {
           case (wrapper, _) =>
+            wrapper.widget match {
+              case v: ViewWidget =>
+                getWrappers.find(w => w != wrapper && w.widget.isInstanceOf[ViewWidget]).foreach(removeWidget)
+
+                view = Option(wrapper.widget)
+
+                wrapper.widget.deleteable = false
+
+              case o: OutputWidget =>
+                getWrappers.find(w => w != wrapper && w.widget.isInstanceOf[OutputWidget]).foreach(removeWidget)
+            }
+
             wrapper.foreground()
             wrapper.setPlacing(false)
 
@@ -1062,8 +1057,8 @@ class WidgetPanel(val workspace: GUIWorkspace)
   }
 
   protected def removeWidget(wrapper: WidgetWrapper): Unit = {
-    if (wrapper.widget eq view)
-      view = null
+    if (view.contains(wrapper.widget))
+      view = None
     remove(wrapper)
     LogManager.widgetRemoved(false, wrapper.widget.classDisplayName, wrapper.widget.displayName)
   }
@@ -1370,7 +1365,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
     }
   }
 
-  override def hasView: Boolean = view != null
+  override def hasView: Boolean = view.isDefined
 
   private[app] def contains(w: Editable): Boolean = {
     val isContained = getComponents.exists {
