@@ -141,6 +141,16 @@ object StructureParser {
       proc.aliases = proc.aliases :+ key
       key -> proc}
 
+    val oldProcedureKeys = oldProcedures.keys.toSet
+
+    aliases.keys.find(x => oldProcedureKeys.contains(x)) match {
+      case Some(x) => {
+        val message = I18N.errors.getN("compiler.StructureParser.importConflict", "procedure", x._1)
+        exception(message, oldProcedures(x).nameToken)
+      }
+      case None => ()
+    }
+
     newProcedures ++ aliases
   }
 
@@ -152,6 +162,7 @@ object StructureParser {
     prefix: String): Map[Tuple2[String, Option[String]], Iterable[Token]] = {
     val changedProcedureTokens = newProcedureTokens.removedAll(oldProcedureTokens.keys)
 
+    // addProcedureAliases() already checks for name conflicts, so no need to check again here.
     val aliases = changedProcedureTokens.map{case ((name, _), proc) =>
       (prefix.toUpperCase + name, module) -> proc
     }
