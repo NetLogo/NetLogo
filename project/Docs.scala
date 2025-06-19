@@ -61,6 +61,7 @@ object Docs {
         "profiler" -> "Profiler",
         "py"       -> "Python",
         "r"        -> "R",
+        "resource" -> "Resource",
         "rnd"      -> "Rnd",
         "sound"    -> "Sound",
         "table"    -> "Table",

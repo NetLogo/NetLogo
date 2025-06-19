@@ -25,6 +25,7 @@ class NetLogoDocs(
     "codetab"             -> "Code Tab Guide",
     "programming"         -> "Programming Guide",
     "transition"          -> "Transition Guide",
+    "resource-manager"    -> "Resource Manager Guide",
     "extension-authoring" -> "Extension Authoring Introduction",
     "extension-manager"   -> "Extension Manager Guide",
     "shapes"              -> "Shapes Editor Guide",
@@ -50,7 +51,7 @@ class NetLogoDocs(
       "interfacetab", "infotab", "codetab", "programming", "transition",
       "extension-manager", "shapes", "behaviorspace", "systemdynamics",
       "hubnet", "hubnet-authoring", "modelingcommons", "logging", "controlling",
-      "mathematica", "3d", "extensions", "extension-authoring", 
+      "mathematica", "3d", "extensions", "extension-authoring",
       "colorpicker", "netlogo7intro", "netlogopreferences") ++
       extensions ++ Seq("faq", "dictionary")
 

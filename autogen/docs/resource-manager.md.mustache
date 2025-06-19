@@ -1,0 +1,54 @@
+{{> header.html}}
+
+## Overview
+
+The Resource Manager dialog, shown below, allows you to manipulate the resources that are bundled with a model.
+
+![Resource Manager dialog](images/resource-manager/dialog.png)
+
+You can store any file type in a model using the Resource Manager. Although each resource's original file extension is
+not included in its name, the Resource Manager will remember the extension for other users' reference.
+
+## Usage
+
+### Add
+
+This button opens a system file selection dialog where you can choose a file to bundle with the model. After accepting
+the dialog, you will be prompted to enter a name for the resource (without a file extension). You can choose whatever
+name you would like, although no two resources can have the same name, regardless of their original file extensions.
+
+### Export
+
+Sometimes you might want to get a closer look at a resource bundled with a model, or save it for your personal use.
+After selecting a resource from the list, the Export button will become enabled, and clicking it will open a system
+file selection dialog where you can choose a path for the exported file. Exporting a resource does not remove it from
+the model.
+
+### Rename
+
+After selecting a resource from the list, the Rename button will become enabled, and clicking it will open a dialog
+where you can choose a new name for the resource. The operation will not be completed if you choose a name that already
+exists in the list.
+
+### Remove
+
+After selecting a resource from the list, the Remove button will become enabled, and clicking it will remove the
+selected resource from the model.
+
+## File Types
+
+As mentioned above, any file type can be stored in a model. However, most file types do not have an obvious use case in
+NetLogo. Listed below are the most common use cases for bundled resources.
+
+### Plain Text
+
+Bundling plain text files with a model is the simplest use case, and can be useful for storing large strings of text
+that would otherwise clutter up the Code tab. Plain text files can be accessed with the `resource:get` primitive
+(See [Resource Extension](resource.html)).
+
+### Images
+
+Bundling images with a model is one of the most common use cases. One way to use a bundled image is to load it into the
+View, which can be done using either the [Import-A Extension](https://github.com/NetLogo/ImportA-Extension) or the
+[Bitmap Extension](bitmap.html). Another way to use a bundled image is to display it in the Info tab, which can be done
+using either Markdown or HTML (See [Info Tab](infotab.html)).
