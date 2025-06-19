@@ -5,7 +5,7 @@ package org.nlogo.swing
 import java.awt.event.ActionEvent
 import javax.swing.text.{ DefaultEditorKit, JTextComponent, TextAction }
 
-// helpers for applying correct shortcuts to text fields and text areas (Isaac B 6/19/25)
+// helpers for applying correct shortcuts to text components (Isaac B 6/19/25)
 object TextActions {
   def applyToComponent(comp: JTextComponent): Unit = {
     comp.getActionMap.put(DefaultEditorKit.previousWordAction, new CorrectPreviousWordAction(comp, false))
