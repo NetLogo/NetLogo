@@ -15,6 +15,8 @@ class TextField(columns: Int = 0, text: String = null, document: Document = null
 
   private var mouseEvent = false
 
+  TextActions.applyToComponent(this)
+
   addMouseListener(new MouseAdapter {
     override def mousePressed(e: MouseEvent): Unit = {
       mouseEvent = true
