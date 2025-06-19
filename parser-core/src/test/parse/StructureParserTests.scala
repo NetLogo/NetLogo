@@ -386,6 +386,23 @@ end
     assert(results.procedures.keys.toSet === expected)
   }
 
+  test("import syntax name conflict") {
+    val src = """
+import [foo [alias a]]
+
+to a:test
+  show 1234
+end
+"""
+    val nlsSrc = """
+to test
+  show 5678
+end
+    """
+
+    expectParseAllError(src, "There is already an imported procedure called A:TEST", nlsSrc)
+  }
+
   test("invalid included file") {
     expectParseAllError("""__includes [ "foobar.nlogox" ]""", "Included files must end with .nls")
   }
