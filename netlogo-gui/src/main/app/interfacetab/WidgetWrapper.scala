@@ -935,7 +935,8 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
       val g2d = Utils.initGraphics2D(g)
 
       if (interfacePanel.getInterfaceMode != InterfaceMode.Interact &&
-          (interfacePanel.getInterfaceMode != InterfaceMode.Add || placing) && !selected && !highlighted && !dragging) {
+          (interfacePanel.getInterfaceMode != InterfaceMode.Add || placing) &&
+          !selected && !highlighted && (widget.isNote || !dragging)) {
 
         g2d.setColor(InterfaceColors.widgetPreviewCover())
 
