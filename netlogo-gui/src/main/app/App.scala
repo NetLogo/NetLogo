@@ -519,6 +519,8 @@ class App extends org.nlogo.window.Event.LinkChild
 
       _tabManager.init(fileManager, dirtyMonitor, menuBar, allActions)
 
+      FindDialog.init(frame, _tabManager.separateTabsWindow)
+
       // OK, this is a little kludgy.  First we pack so everything
       // is realized, and all addNotify() methods are called.  But
       // the actual size we get won't be right yet, because the
@@ -537,8 +539,6 @@ class App extends org.nlogo.window.Event.LinkChild
       _tabManager.interfaceTab.resetSplitPane()
 
       if (! isMac) { org.nlogo.awt.Positioning.center(frame, null) }
-
-      org.nlogo.app.common.FindDialog.init(frame, _tabManager.separateTabsWindow)
 
       Splash.endSplash()
       frame.setVisible(true)
