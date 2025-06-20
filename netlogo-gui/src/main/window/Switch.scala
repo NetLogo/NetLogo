@@ -116,7 +116,7 @@ abstract class Switch extends MultiErrorWidget with Events.AfterLoadEvent.Handle
     if (_oldSize) {
       new Dimension(super.getPreferredSize.width, MINHEIGHT)
     } else {
-      new Dimension(super.getPreferredSize.width, 37)
+      new Dimension(super.getPreferredSize.width, 40)
     }
   }
 
