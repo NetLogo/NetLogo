@@ -70,7 +70,13 @@ class TestMirroringModels extends AnyFunSuite  {
     "Link Breeds Example", // link shapes don't work properly
     "GIS General Examples", // the GIS ext. bypasses the trailDrawer
     "GIS Gradient Example",
-    "Movie Example")
+    "Movie Example",
+    // the following models use the import-a extension, which is not bundled
+    "Calorimetry",
+    "Resource Example",
+    "Bug Hunt Camouflage",
+    "Mammoths",
+    "Robotic Factory")
 
   // exclude features not existing on core branch
   val moreExclusions = Seq("/GIS/", "/System Dynamics/")
