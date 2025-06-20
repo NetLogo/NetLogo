@@ -6,33 +6,40 @@ For help running models made in old versions, see the
 [TOC]
 ## Version 7.0-beta2 (June 2025)
 
-A premier feature in this release is a modernization of the look and feel of the NetLogo Graphical User Interface (GUI) [(see below)](#changes-to-the-netlogo-gui).
+The biggest changes in this release are:
 
-Another important change is that NetLogo models are now stored in a new format with the extension .nlogox that enables greater flexibility for adding new features [(see below)](#changes-to-the-netlogo-file-format). 
+- A new modernized GUI with both light and dark modes (and a classic mode) 
+([see below](#changes-to-the-netlogo-gui))
+- Greater customizability, with more preferences and settings
+([see below](#changes-for-customizability))
+- NetLogo models are now stored in a new format with the extension .nlogox
+([see below](#changes-to-the-netlogo-file-format))
+- The download page now has separate Intel and Silicon MacOS versions.
 
-Another change of note is the NetLogo experience is more customizable [(see below)](#changes-for-customizability). These changes include additions to the Preferences Dialog, a new Code tab Preferences Dialog, a dialog for selecting color themes and the ability to choose between two options for widget sizes. The Preferences Dialog refers to the dialog which is opened with the Tools menu `Preferences...` item on Windows and Linux, and the “NetLogo” menu “Settings” item on Macs.
+Below, we list all the changes since NetLogo 6.4.
 
-Note: The download page now has separate Intel and Silicon MacOS versions. The Intel version will also run on Silicon Macs, but performance will not be as good as for the Silicon version.
+## Changes in NetLogo Functionality
+- The random number generator behavior has changed. If you had model behavior that depended on a specific random seed being set, it will not generate the same behavior as in NetLogo 6. 
 
 ## Changes to the NetLogo GUI
-- See the [transition guide document](https://ccl.northwestern.edu/nl7changesoverview/nl7guide.html)) for more details. 
+- See the [transition guide document](https://ccl.northwestern.edu/nl7changesoverview/nl7guide.html) for more details. 
 - User interface elements (widgets) have a flat modern look with a new color scheme.
 - Users have a choice of color themes: Light, Dark and Classic.
     - The classic color theme is similar to the light theme, except the widgets have the pre-NetLogo 7 colors.
 - Widget sizes have been adjusted for better aesthetics and readability.
-    - All widgets now open with the new widget *styles*, but pre-NetLogo 7 models will open with the old widget *sizes* by default.  The new widget styles are not designed to look or function well with the old widget sizes, however, so model authors are strongly encouraged to update their models to use the new widget.
+    - All widgets now open with the new widget *styles*, but pre-NetLogo 7 models will open with the old widget *sizes* by default. However, the new widget styles are not designed to look or function well with the old widget sizes, so model authors are strongly encouraged to update their models to use the new widget sizes.
     - There is a tool to automatically update the layout of a model to better support the new widget sizes.
     - Users can set widgets to have their pre-7.0.0 default sizes if they want.
-- An option to delete all selected widgets has been added to the right-click menu.
+- Options to delete, copy and paste all selected widgets have been added to the right-click menu.
 - A preview is shown when widgets are added.
 - Buttons have new icons for observer, turtle, patch and link.
 - Sliders now display their values in an editable box.
 - For Monitors, users can specify the units represented by numbers.
-- The font and background colors for Notes can include transparency, and are specified separately for Light and Dark Modes.
-- The Interface Toolbar has been updated for usability.
+- The font and background colors for Notes can include transparency and are specified separately for Light and Dark Modes.
+- The Interface Toolbar has been updated for usability:
     - With the Interaction tool, users can interact with widgets much as they did before NetLogo 7.
     - With the Selection tool, users can select and move widgets by clicking on them.
-    - With the Edit tool, users can edit widgets after a single clicking (no previous selection required).
+    - With the Edit tool, users can edit widgets after a single click (no previous selection required).
     - With the Delete tool, users can delete widgets by clicking (no previous selection required).
 - There are new tools to align, distribute and stretch widgets. These have a menu in the Interface Toolbar.
 - Icons for the Interface, Info and Code Tabs have been updated.
@@ -54,20 +61,19 @@ Note: The download page now has separate Intel and Silicon MacOS versions. The I
   - Any third-party scripts that processed `.nlogo` files are not expected to function correctly on `.nlogox` files
 - The .nlogox format allows the saving of model-specific information.
 - The .nlogox format allows the saving of user interface element specific information.
-    - For example a user interface element can appear in the new larger size, or the original size.
+    - For example, a user interface element can appear in the new larger size, or the original size.
 - The .nlogox format is extensible and will allow new types of data to be stored in the future.
     - This makes it easier to add capabilities and keep models backwards compatible.
     - Resources needed for a model may be stored in the .nlogox file in the future.
 
 ## Changes for Customizability
-- Widgets that have changed size for NetLogo 7 have a checkbox that allows users to switch between the previous size and the new larger size.
-- The  `Auto indent` and `Show line numbers` global preferences can be set directly from the Code Tab.
-- There are changes to the Preferences dialog which let you customize various NetLogo settings. 
+- Widgets that have changed size for NetLogo 7 have a checkbox that allows users to switch between the new larger size in NetLogo 7 and the previous size used in NetLogo 6.4.
+- The `Auto indent` and `Show line numbers` global preferences can be set directly from the Code Tab.
+- There are changes to the Preferences dialog which let you customize various NetLogo settings.
     - External editor support: Users can enable a feature that checks the open model for changes made outside of NetLogo to the model file and to any included files. When a change is detected, the file is updated in NetLogo. This feature can be enabled or disabled using the preferences dialog. It is disabled by default.
     - There is a new preference option that prevents compilation errors from stealing focus from the current tab. By default, it is not enabled.
     - There is a new preference option that causes a separate code tab to be opened when NetLogo starts. By default, it is not enabled.
     - There is a Linux-only UI Scale preference that matches NetLogo graphics to the system UI scale.
-
 - Users can switch between Light, Dark and Classic color themes using an item in the Tools menu.
 - A new Color Picker replaces Color Swatches. Users can still select NetLogo colors from a grid of rectangles. The Color Picker has a second tab that allows users to specify colors in most common formats,  and that enables easy selection of a more extensive set of colors.
 
@@ -76,9 +82,10 @@ Note: The download page now has separate Intel and Silicon MacOS versions. The I
 - The model file format has become [extensible](#changes-to-the-netlogo-file-format).
 - Brief timely messages can now be displayed in a banner on the Interface Tab. Users can click a link for more details.
 - Notes on the interface tab can now render markdown/html.
+- Users can copy and paste widgets both within and between models.
+- There is a new File -> Manage Bundled Resources dialog that allows you to view, add, or remove files that are bundled with the current NetLogo model. You can easily embed such files in the Info Tab.
 - Plots can now be scaled independently for the x and y axes via checkboxes in the Plot widget.
 - The separate code tab has a full NetLogo menu bar.
-- There is a new File -> Manage Bundled Resources dialog that allows you to view, add, or remove files that are bundled with the current NetLogo model.
 - The Help Menu now has a link to the NetLogo Forum, a website to ask/answer questions and have discussions about NetLogo.
 
 ## Language Changes
@@ -87,7 +94,7 @@ Note: The download page now has separate Intel and Silicon MacOS versions. The I
 - The new primitive `set-topology` replaces the "hidden" command `__change-topology`.
 
 ## Bug Fixes and Changes
-- Multi-assign with `let` and `set` can use arbitrarily nested lists to "destructure" variables. For example `let [[corner1-x corner1-y corner2-x corner2-y] player-name score] get-current-player-info`.
+- Multi-assign with `let` and `set` can use arbitrarily nested lists to "destructure" variables. For example, `let [[corner1-x corner1-y corner2-x corner2-y] player-name score] get-current-player-info`.
 - The primitive `auto-plot?` has been restored.
 - An optimization speeds up the execution of the constructs `any turtles-on` and `any <breeds>-on`.
 - An `__includes` statement not followed by brackets no longer causes an exception.
@@ -111,7 +118,7 @@ Note: The download page now has separate Intel and Silicon MacOS versions. The I
 - The value of the `Auto indent` checkbox now persists between sessions.
 - Shortcuts for `Previous word`, `Select previous word`, `Next word`, `Select next word`, `Select word`, `Delete previous word`, and `Delete next word` should work as expected in the code tab and in other text editors.
 - Command tasks now jump to the code when a runtime error occurs.
-- A tilde at the begining of an included file path is interpreted as referring to the user's home directory on MacOS and Linux.
+- The MacOS and Linux convention of specifying a user's home directory with a tilde at the beginning of a file path is now properly interpreted for included (.nls) files.
 - Included files are now recompiled when they are closed without saving the changes.
 - Leaving and returning to a "dirty" Code Tab no longer causes compilation.
 - There is no exception when reopening an included file that was saved in a separate code tab.
@@ -131,27 +138,29 @@ Note: The download page now has separate Intel and Silicon MacOS versions. The I
 - Number input boxes without a value no longer keep other input boxes or the command center from gaining focus.
 - The Page Setup dialog opened when a user wants to Print now closes when its Cancel button is pressed.
 - When a procedure in the Code Tab is "folded," so that only the line with the name is visible, an action that needs to move to inside the code causes it to be "unfolded," so it is fully visible. This can be a result of a search, find-and-replace or jumping to code with a compilation error.
+- If the NetLogo window is maximized in Windows, opening a new model no longer unmaximizes it.
 - Plot pens always take account of `plot-pen-up` and `plot-pen-down`.
 - The padding and location of internal components of widgets now change proportionally when zooming.
 
 ## Extension Updates
 - The gogo extension supports the GoGo board 6.
-- The dialog extension `user-input` primitive allows an optional default value argument. 
+- The dialog extension `user-input` primitive allows an optional default value argument.
+- There is a new resource extension that allows you to list and get resources bundled with a model.
 
 ## Documentation Updates
 - Grammar was improved for NetLogo Tutorial 2.
 - The link to the book "An Introduction to Agent-Based Modeling" was updated.
-- The BehaviorSpace error message about undefined parameter values is easier to interpret.
-- The BehaviorSpace documentation for the subexperiment syntax is improved and uses examples for the Wolf Sheep Predation Model.
+- The BehaviorSpace error message about undefined parameter values was made easier to interpret.
+- The BehaviorSpace documentation for the subexperiment syntax is improved and uses examples from the Wolf Sheep Predation Model.
 
 ## Models Library Changes
-Note: most models have been updated to the new widget size, but not all.
+Note: most models have been updated to the new widget size but not all.
 
 ### New Sample Models:
 - We will have new sample models with the next release.
 
 ### New Code Examples
-- The Ordered Agent Drawing Example model demonstrates how to sort turtles for display using `stamp` when precise drawing order is needed.
+- The Ordered Agent Drawing Code Example model demonstrates how to sort turtles for display using `stamp` when precise drawing order is needed.
 - The Patch Outlines Example model demonstrates how to outline patches in a reasonably simple way using `stamp`.
 
 ### Sample Model Changes
@@ -161,9 +170,7 @@ Note: most models have been updated to the new widget size, but not all.
 - When the bar is crowded in the El Farol model the patch label is now appropriately yellow.
 - An inaccurate comment in Small Worlds model was corrected.
 - Multi-line code input widgets were enabled for PNoM 2 Diffusion Sensor Sandbox. Previously single line widgets were incorrectly used.
-- The Radical Polymerization model was updated to fix a bug in which in which Km was used instead of Kr for probability of termination.
-- A new library folder, conic sections was added to the mathematics section of the library. Two former sample models, conic-sections 1  and conic-sections 2 had substantial changes made to them and were renamed “ellipse” and "hyperbola”.
-
+- The Radical Polymerization model was updated to fix a bug in which Km was used instead of Kr for probability of termination.
 
 ## Version 6.4.0 (November 2023)
 
