@@ -138,6 +138,7 @@ The models are in a public Git repository
 
 We offer workshops from time to time. If a workshop has been scheduled, we will
 announce it on the
+[NetLogo Forum](https://forum.netlogo.org/) and the
 [NetLogo Users Group](http://groups.google.com/d/forum/netlogo-users).
 
 ### Are there any NetLogo textbooks?
@@ -163,12 +164,11 @@ please let us know. We would welcome it.
 
 ### Is NetLogo available in other languages besides English?
 
-Volunteers have translated the user manual into Chinese and Czech. The
-translated versions are available from the NetLogo web site.
-
 So far, the NetLogo user interface has been localized in English, Spanish,
-Chinese, Russian, and Japanese. All five languages are included in the standard
+Chinese, Portuguese, Russian, and Japanese. All six languages are included in the standard
 download.
+
+There is a [BehaviorSpace Guide en Español](behaviorspace-spanish.html).
 
 We are seeking volunteers to complete and improve these localizations and to
 translate the NetLogo software and manual into as many other languages as
@@ -196,6 +196,7 @@ and our
 [list of references to NetLogo in outside works](http://ccl.northwestern.edu/netlogo/references.shtml).
 
 You might also ask the question on the
+NetLogo Forum](https://forum.netlogo.org/) and the
 [NetLogo Users Group](http://groups.google.com/d/forum/netlogo-users) and/or search past messages on the group.
 
 ### Are NetLogo models runs scientifically reproducible?
@@ -389,7 +390,8 @@ check that Windows is actually running in 64-bit mode; see
 
 ### NetLogo won't start on Mac OS Sierra (or later)
 
-Some users have reported problems opening NetLogo 6 on Mac OS Sierra. We've been
+Some users have reported problems opening NetLogo 6 on Mac OS Sierra and later
+(We don’t yet know if this is an issue with NetLogo 7). We've been
 unable to determine a root cause for this problem, but we're continuing to
 investigate. We're looking for assistance from you if you run into this problem.
 It would be extremely helpful if you could run the following command in the
@@ -449,8 +451,8 @@ for more information)
 ### Can I run NetLogo from the command line, without the GUI?
 
 Yes. The easiest way is to set up your model run or runs as a BehaviorSpace
-experiment. No additional programming is required. See the
-[BehaviorSpace Guide](behaviorspace.html) for details.
+experiment. No additional programming is required. See
+[Running from the command line](behaviorspace.html#running-from-the-command-line).
 
 Another option is to use our Controlling API. Some light Java programming is
 required. See the
@@ -460,7 +462,7 @@ for details and sample code.
 ### Does NetLogo take advantage of multiple processors?
 
 Only when using BehaviorSpace. BehaviorSpace does parallel runs, one per
-processor.
+processor. See [Run options: parallel runs](behaviorspace.html#run-options:-parallel-runs).
 
 For a single model run, only one processor is used.
 
@@ -477,6 +479,7 @@ splitting the runs across clusters, so you'll need to arrange that yourself.
 
 Various users are already using NetLogo on clusters, with a variety of hardware
 and software. You can seek them out on the
+[NetLogo Forum](https://forum.netlogo.org/) and the
 [NetLogo Users Group](http://groups.google.com/d/forum/netlogo-users).
 
 ### Is there any way to recover lost work if NetLogo crashes or freezes?
@@ -660,8 +663,12 @@ make some changes to the code. Usually the most obvious opportunity for speedup
 is that you're doing too many computations that involve all the turtles or all
 the patches. Often this can be reduced by reworking the model so that it does
 less computation per time step. The members of the
-[NetLogo Users Group](http://groups.google.com/d/forum/netlogo-users) may be able
+[NetLogo Users Group](http://groups.google.com/d/forum/netlogo-users)and
+participants in the [NetLogo Forum](https://forum.netlogo.org/) may be able
 to help with this.
+
+You wil find useful advice in the article
+[Improving Execution Speed of Models Implemented in NetLogo](https://www.jasss.org/20/1/3.html).
 
 The [profiler extension](profiler.html) is useful for identifying which parts of
 your code are taking the most time.
@@ -928,16 +935,20 @@ be written down directly. Instead, you build it using the
 [list](dictionary.html#list) primitive.
 
 ## BehaviorSpace
+You can find details about using BehaviorSpace at
+[BehaviorSpace Guide](behaviorspace.html)
+and [BehaviorSpace Guide en Español](behaviorspace-spanish.html)
 
 ### Why are the rows in my BehaviorSpace table results out of order?
 
 This is normal when doing multiple runs in parallel. For a discussion of the
 issue, see the section on parallel runs in the
-[BehaviorSpace Guide](behaviorspace.html) section of the User Manual.
+[Table Output](behaviorspace.html#table-output) section of the
+BehaviorSpace Guide.
 
 ### How do I measure runs every n ticks?
 
-Use `mod` in your experiment's “Run Metrics when” text box, e.g.:
+Use `mod` in your experiment's [Run Metrics when](behaviorspace.html#run-metrics-when) text box, e.g.:
 
     ticks mod 10 = 0
 
