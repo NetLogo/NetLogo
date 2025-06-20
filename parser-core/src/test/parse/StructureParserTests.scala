@@ -3,7 +3,7 @@
 package org.nlogo.parse
 
 import org.nlogo.core.{ CompilationOperand, DummyCompilationEnvironment, DummyExtensionManager,
-  DummyLibraryManager, CompilerException, Femto, StructureResults}
+  DummyLibraryManager, CompilerException, Femto, StructureResults }
 
 import org.nlogo._
 import org.scalatest.funsuite.AnyFunSuite
@@ -15,7 +15,7 @@ class StructureParserTests extends AnyFunSuite {
 
   def compile(source: String): StructureResults =
     new StructureParser(None, false).parse(
-      tokenizer.tokenizeString(source).map(Namer0), core.StructureResults.empty)
+      tokenizer.tokenizeString(source).map(Namer0), None, core.StructureResults.empty)
 
   def expectError(source: String, error: String): Unit = {
     val e = intercept[CompilerException] {
@@ -65,7 +65,7 @@ class StructureParserTests extends AnyFunSuite {
   test("command procedure") {
     val results = compile("to go fd 1 end")
     assertResult(1)(results.procedures.size)
-    val proc = results.procedures("GO")
+    val proc = results.procedures(("GO", None))
     assertResult(false)(proc.isReporter)
     assertResult("procedure GO:[]{OTPL}:\n")(proc.dump)
   }
@@ -75,15 +75,15 @@ class StructureParserTests extends AnyFunSuite {
     assertResult("globals [G]")(
       results.program.dump.split("\n").head)
     assertResult(2)(results.procedures.size)
-    assertResult("procedure FOO:[]{OTPL}:\n")(results.procedures("FOO").dump)
-    assertResult("")(results.procedures("FOO").displayName)
-    assertResult("procedure BAR:[]{OTPL}:\n")(results.procedures("BAR").dump)
+    assertResult("procedure FOO:[]{OTPL}:\n")(results.procedures(("FOO", None)).dump)
+    assertResult("")(results.procedures(("FOO", None)).displayName)
+    assertResult("procedure BAR:[]{OTPL}:\n")(results.procedures(("BAR", None)).dump)
   }
 
   test("command procedure with empty args") {
     val results = compile("to go [] fd 1 end")
     assertResult(1)(results.procedures.size)
-    val proc = results.procedures("GO")
+    val proc = results.procedures(("GO", None))
     assertResult(false)(proc.isReporter)
     assertResult("procedure GO:[]{OTPL}:\n")(proc.dump)
   }
@@ -91,7 +91,7 @@ class StructureParserTests extends AnyFunSuite {
   test("command procedure with some args") {
     val results = compile("to go [a b c] fd 1 end")
     assertResult(1)(results.procedures.size)
-    val proc = results.procedures("GO")
+    val proc = results.procedures(("GO", None))
     assertResult(false)(proc.isReporter)
     assertResult("procedure GO:[A B C]{OTPL}:\n")(proc.dump)
   }
@@ -99,9 +99,32 @@ class StructureParserTests extends AnyFunSuite {
   test("reporter procedure") {
     val results = compile("to-report foo report 0 end")
     assertResult(1)(results.procedures.size)
-    val proc = results.procedures("FOO")
+    val proc = results.procedures(("FOO", None))
     assertResult(true)(proc.isReporter)
     assertResult("reporter procedure FOO:[]{OTPL}:\n")(proc.dump)
+  }
+
+  test("export") {
+    val results = compile("export [foo \"1.2.3\" [bar baz]]")
+    assertResult(0)(results.procedures.size)
+    assertResult(0)(results.imports.size)
+    assertResult(true)(results._export.isDefined)
+  }
+
+  test("import") {
+    val results = compile("import [foo]")
+    assertResult(0)(results.procedures.size)
+    assertResult(1)(results.imports.size)
+    assertResult("FOO")(results.imports.head.name)
+    assertResult(None)(results.imports.head.alias)
+  }
+
+  test("import with alias") {
+    val results = compile("import [foo [alias bar]]")
+    assertResult(0)(results.procedures.size)
+    assertResult(1)(results.imports.size)
+    assertResult("FOO")(results.imports.head.name)
+    assertResult(Some("BAR"))(results.imports.head.alias)
   }
 
   test("includes") {
@@ -250,19 +273,120 @@ class StructureParserTests extends AnyFunSuite {
     expectError("to foo end globals []",
       "Keyword GLOBALS cannot be used in this context.") }
 
-  def compileAll(src: String, nlsSrc: String): StructureResults = {
+  def compileAll(src: String, nlsSrc1: String, nlsSrc2: String = ""): StructureResults = {
     StructureParser.parseSources(
       tokenizer,
       CompilationOperand( Map("" -> src), new DummyExtensionManager, new DummyLibraryManager
                         , new DummyCompilationEnvironment, subprogram = false),
-      (_, name) => if (name == "foo.nls") Some(("foo.nls", nlsSrc)) else None)
+      (_, name) =>
+        name match {
+          case "foo.nls" => Some(("foo.nls", nlsSrc1))
+          case "bar.nls" if nlsSrc2.nonEmpty => Some(("bar.nls", nlsSrc2))
+          case _ => None
+        })
   }
 
-  def expectParseAllError(src: String, error: String, nlsSrc: String = "") = {
+  def expectParseAllError(src: String, error: String, nlsSrc1: String = "", nlsSrc2: String = "") = {
     val e = intercept[CompilerException] {
-      compileAll(src, nlsSrc)
+      compileAll(src, nlsSrc1, nlsSrc2)
     }
     assertResult(error)(e.getMessage.takeWhile(_ != ','))
+  }
+
+  test("import nonexistent module") {
+    expectParseAllError("""import [foobar]""", "Could not find foobar.nls")
+  }
+
+  test("import syntax returns correct results") {
+    val results = compileAll("""import [foo]""", "")
+    assert(results.imports.nonEmpty || results.includedSources.nonEmpty)
+  }
+
+  test("import syntax detects duplicate imports") {
+    expectParseAllError("import [foo] import [bar] import [foo [alias baz]]", "Attempted to import a module multiple times")
+  }
+
+  test("import syntax detects import loops") {
+    expectParseAllError(
+      "import [foo]",
+      "Found a loop in the module import chain",
+      "import [bar]",
+      "import [foo]")
+  }
+
+  test("import syntax default alias") {
+    val src = """import [foo]"""
+    val nlsSrc = """
+to test
+  show 12345
+end
+    """
+    val results = compileAll(src, nlsSrc)
+    if (!results.procedures.contains(("FOO:TEST", None))) {
+      fail()
+    }
+  }
+
+  test("import syntax custom alias") {
+    val src = """import [foo [alias bar]]"""
+    val nlsSrc = """
+to test
+  show 12345
+end
+    """
+    val results = compileAll(src, nlsSrc)
+    if (!results.procedures.contains(("BAR:TEST", None))) {
+      fail()
+    }
+  }
+
+  test("import module from another module") {
+    val mainSrc = """
+import [foo]
+
+to hello
+  foo:hello
+end
+    """
+    val fooSrc = """
+import [bar]
+
+to hello
+  bar:hello
+end
+    """
+    val barSrc = """
+to hello
+  show 123
+end
+    """
+    val results = compileAll(mainSrc, fooSrc, barSrc)
+    val expected = Set(
+      ("HELLO", None),
+      ("HELLO", Some("FOO")),
+      ("FOO:HELLO", None),
+      ("HELLO", Some("BAR")),
+      ("BAR:HELLO", Some("FOO"))
+    )
+
+    assert(results.procedures.keys.toSet === expected)
+  }
+
+  test("import syntax name conflict") {
+    val src = """
+import [foo [alias a]]
+
+to a:test
+  show 1234
+end
+"""
+    val nlsSrc = """
+to test
+  show 5678
+end
+    """
+
+    expectParseAllError(src, "There is already an imported procedure called A:TEST", nlsSrc)
   }
 
   test("invalid included file") {
@@ -301,6 +425,6 @@ link-breeds"""
       StructureParser.parseSources(
         tokenizer, CompilationOperand( sources, new DummyExtensionManager, new DummyLibraryManager
                                      , new DummyCompilationEnvironment, subprogram = false))
-    assert(results.procedures.contains("FOO") && results.procedures.contains("BAR"))
+    assert(results.procedures.contains(("FOO", None)) && results.procedures.contains(("BAR", None)))
   }
 }

@@ -26,8 +26,8 @@ class Compiler(dialect: Dialect) extends PresentationCompilerInterface {
   val parserTokenizer = Femto.scalaSingleton[org.nlogo.core.TokenizerInterface]("org.nlogo.lex.Tokenizer")
 
   // some private helpers
-  private type ProceduresMap = ListMap[String, Procedure]
-  private val noProcedures: ProceduresMap = ListMap.empty[String, Procedure]
+  private type ProceduresMap = ListMap[Tuple2[String, Option[String]], Procedure]
+  private val noProcedures: ProceduresMap = ListMap.empty[Tuple2[String, Option[String]], Procedure]
 
   // used to compile the Code tab, including declarations
   @throws(classOf[CompilerException])
@@ -120,7 +120,7 @@ class Compiler(dialect: Dialect) extends PresentationCompilerInterface {
   @throws(classOf[CompilerException])
   private def checkSyntax(source: String, subprogram: Boolean, program: Program, oldProcedures: ProceduresMap, extensionManager: ExtensionManager, parse: Boolean, compilationEnv: CompilationEnvironment): Unit = {
 
-    val oldProceduresListMap = ListMap[String, Procedure](oldProcedures.toSeq*)
+    val oldProceduresListMap = ListMap[Tuple2[String, Option[String]], Procedure](oldProcedures.toSeq*)
     val (topLevelDefs, feStructureResults) =
       frontEnd.frontEnd(source, None, program, subprogram, oldProceduresListMap, extensionManager)
   }
@@ -161,20 +161,26 @@ class Compiler(dialect: Dialect) extends PresentationCompilerInterface {
   def findIncludes(sourceFileName: String, source: String,
     compilationEnvironment: CompilationEnvironment): Option[Map[String, String]] = {
     val includes = frontEnd.findIncludes(source)
-    if (includes.isEmpty) { // this allows the includes menu to be displayed for __includes []
-      // This is a workaround for slow tokenizing/parsing when looking for `__includes`.  We do a quick/basic regex
-      // check and do not do the big parsing if the declaration doesn't exist in the file.  A better way is probably
-      // to update the `findIncludes()` API to return `Some(Seq())` when `__includes []` exists and `None` when it does
-      // not, but I don't want to make that big a change at the moment.  -Jeremy B November 2020
-      if (!FrontEndInterface.hasIncludes(source)) {
-        None
-      } else {
-        parserTokenizer.tokenizeString(source)
-          .find(t => t.text.equalsIgnoreCase("__includes"))
-          .map(_ => Map.empty[String, String])
-      }
-    } else
-      Some((includes zip includes.map(compilationEnvironment.resolvePath)).toMap)
+    val includesMap =
+      if (includes.isEmpty) { // this allows the includes menu to be displayed for __includes []
+        // This is a workaround for slow tokenizing/parsing when looking for `__includes`.  We do a quick/basic regex
+        // check and do not do the big parsing if the declaration doesn't exist in the file.  A better way is probably
+        // to update the `findIncludes()` API to return `Some(Seq())` when `__includes []` exists and `None` when it does
+        // not, but I don't want to make that big a change at the moment.  -Jeremy B November 2020
+        if (!FrontEndInterface.hasIncludes(source)) {
+          None
+        } else {
+          parserTokenizer.tokenizeString(source)
+            .find(t => t.text.equalsIgnoreCase("__includes"))
+            .map(_ => Map.empty[String, String])
+        }
+      } else
+        Some((includes zip includes.map(compilationEnvironment.resolvePath)).toMap)
+
+    val imports = frontEnd.findImports(source).map(_.toLowerCase + ".nls")
+    val importsMap = Some((imports zip imports.map(compilationEnvironment.resolvePath)).toMap)
+
+    Some(includesMap.getOrElse(Map.empty[String, String]) ++ importsMap.getOrElse(Map.empty[String, String]))
   }
 
   // used by VariableNameEditor
@@ -185,7 +191,7 @@ class Compiler(dialect: Dialect) extends PresentationCompilerInterface {
 
   // used by CommandLine
   def isReporter(s: String, program: Program, procedures: ProceduresMap, extensionManager: ExtensionManager, compilationEnv: CompilationEnvironment) = {
-    val proceduresListMap = ListMap[String, Procedure](procedures.toSeq*)
+    val proceduresListMap = ListMap[Tuple2[String, Option[String]], Procedure](procedures.toSeq*)
     utilities.isReporter(s, program, proceduresListMap, extensionManager)
   }
 
