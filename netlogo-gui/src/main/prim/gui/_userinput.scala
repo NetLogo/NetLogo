@@ -14,13 +14,13 @@ class _userinput extends Reporter {
       case gw: GUIWorkspace =>
         gw.updateUI()
         val result = workspace.waitForResult(
-          new ReporterRunnable[String] {
-            override def run() = {
+          new ReporterRunnable[Option[String]] {
+            override def run(): Option[String] = {
               gw.view.mouseDown(false)
-              new InputOptionPane(gw.getFrame, "User Input", Dump.logoObject(inputMessage),
-                                  if (args.size > 1) args(1).report(context).toString else "").getInput
+              Option(new InputOptionPane(gw.getFrame, "User Input", Dump.logoObject(inputMessage),
+                                         if (args.size > 1) args(1).report(context).toString else "").getInput)
             }})
-        Option(result).getOrElse(
+        result.getOrElse(
           throw new HaltException(true))
       case _ =>
         throw new RuntimePrimitiveException(
