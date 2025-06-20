@@ -552,6 +552,26 @@ class WidgetPanel(val workspace: GUIWorkspace)
     if (workspace.plotManager.plots.size == 0)
       plot.setEnabled(false)
 
+    if (selectedWrappers.nonEmpty || ClipboardUtils.hasWidgets) {
+      menu.addSeparator()
+
+      if (selectedWrappers.nonEmpty) {
+        menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.copySelected")) {
+          def actionPerformed(e: ActionEvent): Unit = {
+            copySelectedWidgets()
+          }
+        }))
+      }
+
+      if (ClipboardUtils.hasWidgets) {
+        menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widgets.paste")) {
+          def actionPerformed(e: ActionEvent): Unit = {
+            pasteWidgets()
+          }
+        }))
+      }
+    }
+
     menu.show(this, point.x, point.y)
   }
 
@@ -711,15 +731,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
     if (e.getKeyCode == KeyEvent.VK_ESCAPE) {
       setInterfaceMode(InterfaceMode.Interact, true)
     } else if (e.getKeyCode == KeyEvent.VK_V && hasCtrl && interfaceMode != InterfaceMode.Add) {
-      val widgets = ClipboardUtils.readWidgets()
-
-      if (widgets.nonEmpty) {
-        unselectWidgets()
-
-        createShadowWidgets(widgets)
-
-        setInterfaceMode(InterfaceMode.Add, true)
-      }
+      pasteWidgets()
     } else if (interfaceMode == InterfaceMode.Interact) {
       if (System.getProperty("os.name").contains("Mac")) {
         if (e.getKeyCode == KeyEvent.VK_META)
@@ -732,7 +744,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
       e.getKeyCode match {
         case KeyEvent.VK_C if hasCtrl =>
-          ClipboardUtils.writeWidgets(selectedWrappers.map(_.widget.model))
+          copySelectedWidgets()
 
         case KeyEvent.VK_RIGHT =>
           WidgetActions.moveWidgets(selectedWrappers.map(w => (w, w.getX + dist, w.getY)))
@@ -778,6 +790,26 @@ class WidgetPanel(val workspace: GUIWorkspace)
   }
 
   def keyTyped(e: KeyEvent): Unit = {}
+
+  def copyWidgets(wrappers: Seq[WidgetWrapper]): Unit = {
+    ClipboardUtils.writeWidgets(wrappers.map(_.widget.model))
+  }
+
+  def copySelectedWidgets(): Unit = {
+    ClipboardUtils.writeWidgets(selectedWrappers.map(_.widget.model))
+  }
+
+  def pasteWidgets(): Unit = {
+    val widgets = ClipboardUtils.readWidgets()
+
+    if (widgets.nonEmpty) {
+      unselectWidgets()
+
+      createShadowWidgets(widgets)
+
+      setInterfaceMode(InterfaceMode.Add, true)
+    }
+  }
 
   private[interfacetab] def setForegroundWrapper(): Unit =
     getComponents.collect {
