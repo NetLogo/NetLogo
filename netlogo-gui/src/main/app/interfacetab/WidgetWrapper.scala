@@ -223,6 +223,8 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
       widget.setBounds(0, 0, getWidth, getHeight)
     }
 
+    widget.validate()
+
     glass.setBounds(0, 0, getWidth, getHeight)
     glass.setVisible(selected)
 
