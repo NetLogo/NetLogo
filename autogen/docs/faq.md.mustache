@@ -103,7 +103,8 @@ NetLogo is free, open source software under the
 or (at your option) any later version.
 
 Commercial licenses are also available. To inquire about commercial licenses,
-please contact Uri Wilensky at [uri@northwestern.edu](mailto:uri@northwestern.edu).
+please contact Uri Wilensky at
+<a href="mailto:netlogo-commercial-admin@ccl.northwestern.edu">netlogo-commercial-admin@ccl.northwestern.edu</a>.
 
 The source code is
 [on GitHub, here](https://github.com/NetLogo/NetLogo). Development discussion is
@@ -936,12 +937,11 @@ issue, see the section on parallel runs in the
 
 ### How do I measure runs every n ticks?
 
-Use `repeat` in your experiment's go commands, e.g.:
+Use `mod` in your experiment's “Run Metrics when” text box, e.g.:
 
-    repeat 10 [ go ]
+    ticks mod 10 = 0
 
-to measure the run after every 10 ticks. Essentially you are making one
-experiment step equal 10 ticks.
+to measure the run after every 10 ticks.
 
 ### I'm varying a global variable I declared in the Code tab, but it doesn't work. Why?
 
