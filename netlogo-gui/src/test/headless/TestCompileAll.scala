@@ -25,7 +25,10 @@ class TestCompileAll extends AnyFunSuite with SlowTest {
       path.endsWith("LS-Widgets.nlogo")) || // This is a LS model designed to test widgets with errors.
       // the following models use the import-a extension, which is not bundled
       path.contains("Calorimetry") ||
-      path.contains("Resource Example")
+      path.contains("Resource Example") ||
+      path.contains("Bug Hunt Camouflage") ||
+      path.contains("Mammoths") ||
+      path.contains("Robotic Factory")
   }
 
   // and those are exempt from having their preview commands tested:
