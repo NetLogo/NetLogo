@@ -206,8 +206,6 @@ abstract class GUIWorkspace(world: World, kioskLevel: GUIWorkspace.KioskLevel, f
 
   override def importerErrorHandler: ImporterJ.ErrorHandler = new ImporterJ.ErrorHandler {
     def showError(title: String, errorDetails: String, fatalError: Boolean): Boolean = {
-      EventQueue.mustBeEventDispatchThread()
-
       val options = {
         if (fatalError) {
           OptionPane.Options.Ok
@@ -225,7 +223,17 @@ abstract class GUIWorkspace(world: World, kioskLevel: GUIWorkspace.KioskLevel, f
         setBackground(InterfaceColors.textAreaBackground())
       }
 
-      new CustomOptionPane(getFrame, title, scrollPane, options).getSelectedIndex == 0
+      if (AWTEventQueue.isDispatchThread) {
+        new CustomOptionPane(getFrame, title, scrollPane, options).getSelectedIndex == 0
+      } else {
+        var result = false
+
+        AWTEventQueue.invokeAndWait(() => {
+          result = new CustomOptionPane(getFrame, title, scrollPane, options).getSelectedIndex == 0
+        })
+
+        result
+      }
     }
   }
 
