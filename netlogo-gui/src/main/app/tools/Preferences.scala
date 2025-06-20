@@ -56,17 +56,18 @@ object Preferences {
     }
 
     case class LocaleWrapper(val locale: Locale) extends LocaleOption {
-      override def toString = locale.getDisplayName
+      override def toString = locale.getDisplayLanguage
     }
 
-    val languages: Seq[LocaleOption] = DetectLocale +: I18N.availableLocales.map(LocaleWrapper(_)).sortBy(_.toString).toSeq
+    val languages: Seq[LocaleOption] = DetectLocale +: I18N.availableLocales.distinctBy(_.getLanguage)
+                                                           .map(LocaleWrapper(_)).sortBy(_.toString).toSeq
 
     val i18nKey = "uiLanguage"
     val comboBox = new ComboBox(languages) {
       addItemListener(_ => {
         getSelectedItem match {
           case Some(DetectLocale) =>
-            label.setText(I18N.gui.defaultLocale.getDisplayName)
+            label.setText(I18N.gui.defaultLocale.getDisplayLanguage)
 
           case _ =>
             label.setText("")
