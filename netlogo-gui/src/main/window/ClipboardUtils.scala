@@ -28,6 +28,9 @@ object ClipboardUtils {
     clipboard.setContents(new WidgetsTransferable(new ArrayList(widgets.asJava)), null)
   }
 
+  def hasWidgets: Boolean =
+    clipboard.isDataFlavorAvailable(widgetsFlavor)
+
   private class WidgetsTransferable(widgets: ArrayList[Widget]) extends Transferable {
     override def getTransferData(flavor: DataFlavor): AnyRef = {
       if (isDataFlavorSupported(flavor)) {
