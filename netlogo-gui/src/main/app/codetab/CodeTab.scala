@@ -3,7 +3,7 @@
 package org.nlogo.app.codetab
 
 import java.awt.{ BorderLayout, Color, Dimension, Font, Graphics, Insets }
-import java.awt.event.{ ActionEvent, FocusEvent, FocusListener, TextEvent, TextListener }
+import java.awt.event.{ ActionEvent, FocusEvent, FocusListener, KeyEvent, TextEvent, TextListener }
 import java.awt.print.PageFormat
 import java.io.IOException
 import java.net.MalformedURLException
@@ -97,14 +97,14 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
     new WrappedAction(text.undoAction,
       UserAction.EditCategory,
       UserAction.EditUndoGroup,
-      UserAction.KeyBindings.keystroke('Z', withMenu = true))
+      UserAction.KeyBindings.keystroke('Z', withMenu = true), KeyEvent.VK_U)
   }
 
   lazy val redoAction: Action = {
     new WrappedAction(text.redoAction,
       UserAction.EditCategory,
       UserAction.EditUndoGroup,
-      UserAction.KeyBindings.keystroke('Y', withMenu = true))
+      UserAction.KeyBindings.keystroke('Y', withMenu = true), KeyEvent.VK_R)
   }
 
   override def zoomTarget = text

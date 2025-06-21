@@ -18,22 +18,24 @@ import org.nlogo.swing.{ WrappedAction, UserAction },
 
 object TextMenuActions {
   val CutAction       =
-    new WrappedAction(Actions.CutAction, EditCategory, EditClipboardGroup, keystroke('X', withMenu = true))
+    new WrappedAction(Actions.CutAction, EditCategory, EditClipboardGroup, keystroke('X', withMenu = true),
+                      KeyEvent.VK_T)
   val CopyAction      =
-    new WrappedAction(Actions.CopyAction, EditCategory, EditClipboardGroup, keystroke('C', withMenu = true))
+    new WrappedAction(Actions.CopyAction, EditCategory, EditClipboardGroup, keystroke('C', withMenu = true),
+                      KeyEvent.VK_C)
   val PasteAction     = new WrappedPasteAction(Actions.PasteAction)
   val DeleteAction    =
     new WrappedAction(
-      Actions.DeleteAction, EditCategory, EditClipboardGroup, keystroke(KeyEvent.VK_DELETE))
+      Actions.DeleteAction, EditCategory, EditClipboardGroup, keystroke(KeyEvent.VK_DELETE), KeyEvent.VK_D)
   val SelectAllAction =
     new WrappedAction(
-      Actions.SelectAllAction, EditCategory, EditSelectionGroup, keystroke('A', withMenu = true))
+      Actions.SelectAllAction, EditCategory, EditSelectionGroup, keystroke('A', withMenu = true), KeyEvent.VK_S)
 
   def keyboardQuickHelp(colorizer: Colorizer) =
     new KeyboardQuickHelpAction(colorizer)
 
   class WrappedPasteAction(base: Action)
-    extends WrappedAction(base, EditCategory, EditClipboardGroup, keystroke('V', withMenu = true))
+    extends WrappedAction(base, EditCategory, EditClipboardGroup, keystroke('V', withMenu = true), KeyEvent.VK_P)
     with Refreshable {
 
     def refresh(): Unit = {

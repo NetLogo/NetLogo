@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import java.awt.event.ActionEvent
+import java.awt.event.{ ActionEvent, KeyEvent }
 
 import javax.swing.{ AbstractAction, Action }
 
@@ -89,6 +89,7 @@ class SnapToGridAction(workspace: GUIWorkspace, widgetPanel: AbstractWidgetPanel
 
   category = EditCategory
   group    = "SnapToGrid"
+  mnemonic = KeyEvent.VK_G
 
   putValue(Action.SELECTED_KEY,    checkedState)
 

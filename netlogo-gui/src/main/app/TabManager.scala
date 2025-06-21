@@ -246,6 +246,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     group       = UserAction.FileSaveGroup
     rank        = 1
     accelerator = UserAction.KeyBindings.keystroke('S', withMenu = true, withAlt = true)
+    mnemonic    = KeyEvent.VK_A
 
     @throws(classOf[UserCancelException])
     override def action(): Unit = {
@@ -258,6 +259,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     category = UserAction.FileCategory
     group = "org.nlogo.app.Tabs.Print"
     accelerator = UserAction.KeyBindings.keystroke('P', withMenu = true)
+    mnemonic = KeyEvent.VK_P
 
     def actionPerformed(e: ActionEvent): Unit =
       getSelectedTab match {
