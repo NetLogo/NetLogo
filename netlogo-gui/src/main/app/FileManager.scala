@@ -3,6 +3,7 @@
 package org.nlogo.app
 
 import java.awt.{ Component, Container, FileDialog => AWTFileDialog, KeyboardFocusManager }
+import java.awt.event.KeyEvent
 import java.io.{ File, IOException }
 import java.net.{ URI, URISyntaxException }
 import java.nio.file.Paths
@@ -34,6 +35,7 @@ object FileManager {
     group       = UserAction.FileOpenGroup
     rank        = 1
     accelerator = UserAction.KeyBindings.keystroke('N', withMenu = true)
+    mnemonic    = KeyEvent.VK_N
 
     @throws(classOf[UserCancelException])
     @throws(classOf[IOException])
@@ -50,6 +52,7 @@ object FileManager {
     group       = UserAction.FileOpenGroup
     rank        = 2
     accelerator = UserAction.KeyBindings.keystroke('O', withMenu = true)
+    mnemonic    = KeyEvent.VK_O
 
     @throws(classOf[UserCancelException])
     @throws(classOf[IOException])
@@ -65,6 +68,7 @@ object FileManager {
     category    = UserAction.FileCategory
     group       = "Quit"
     accelerator = UserAction.KeyBindings.keystroke('Q', withMenu = true)
+    mnemonic    = KeyEvent.VK_Q
 
     override def action(): Unit = {
       try {
@@ -82,6 +86,7 @@ object FileManager {
     group       = UserAction.FileOpenGroup
     rank        = 3
     accelerator = UserAction.KeyBindings.keystroke('M', withMenu = true)
+    mnemonic    = KeyEvent.VK_M
 
     @throws(classOf[UserCancelException])
     override def action(): Unit = {
@@ -262,6 +267,7 @@ object FileManager {
     category = UserAction.FileCategory
     group = UserAction.FileResourcesGroup
     rank = 1
+    mnemonic = KeyEvent.VK_B
 
     override def action(): Unit = {
       new ResourceManagerDialog(workspace.asInstanceOf[GUIWorkspace].getFrame, workspace).setVisible(true)
@@ -501,6 +507,12 @@ class FileManager(workspace: AbstractWorkspaceScala,
         group = UserAction.FileSaveGroup
         accelerator = UserAction.KeyBindings.keystroke('S', withMenu = true, withShift = saveAs)
         rank = 0
+
+        if (saveAs) {
+          mnemonic = KeyEvent.VK_V
+        } else {
+          mnemonic = KeyEvent.VK_S
+        }
 
         @throws(classOf[UserCancelException])
         override def action(): Unit = {
