@@ -277,41 +277,17 @@ class WidgetPanel(val workspace: GUIWorkspace)
     }
   }
 
-  private[interfacetab] def dragSelectedWidgets(x: Int, y: Int, ignoreSnap: Boolean): Unit = {
+  private[interfacetab] def dragSelectedWidgets(x: Int, y: Int): Unit = {
     if (widgetsBeingDragged.nonEmpty) {
-      val p = new Point(x, y)
-      val restrictedPoint = widgetsBeingDragged.foldLeft(p) {
-        case (p, w) => restrictDrag(p, w, ignoreSnap)
-      }
-      widgetsBeingDragged.foreach { w => w.doDrag(restrictedPoint.x, restrictedPoint.y) }
+      val p = restrictDrag(x, y, widgetsBeingDragged)
+
+      widgetsBeingDragged.foreach(w => w.snapLocation(w.originalBounds.x + p.x, w.originalBounds.y + p.y))
     }
   }
 
-  protected def restrictDrag(p: Point, w: WidgetWrapper, ignoreSnap: Boolean): Point = {
-    var x = p.x
-    var y = p.y
-    val wb = w.originalBounds
-    val b = getBounds()
-    val newWb = new Rectangle(wb.x + x, wb.y + y, wb.width, wb.height)
-    if (workspace.snapOn && !ignoreSnap) {
-      val xGridSnap = newWb.x - snapToGrid(newWb.x)
-      val yGridSnap = newWb.y - snapToGrid(newWb.y)
-      x -= xGridSnap
-      y -= yGridSnap
-      newWb.x -= xGridSnap
-      newWb.y -= yGridSnap
-    }
-
-    if (newWb.x < 0)
-      x -= newWb.x
-    if (newWb.y < 0)
-      y -= newWb.y
-    if (newWb.x + 2 * WidgetWrapper.BorderSize > b.width)
-      x -= (newWb.x + 2 * WidgetWrapper.BorderSize) - b.width
-    if (newWb.y + WidgetWrapper.BorderSize > b.height)
-      y -= (newWb.y + WidgetWrapper.BorderSize) - b.height
-
-    new Point(x, y)
+  protected def restrictDrag(x: Int, y: Int, wrappers: Seq[WidgetWrapper]): Point = {
+    new Point(x.max(-wrappers.minBy(_.originalBounds.x).originalBounds.x),
+              y.max(-wrappers.minBy(_.originalBounds.y).originalBounds.y))
   }
 
   def dropSelectedWidgets(): Unit = {
@@ -421,16 +397,16 @@ class WidgetPanel(val workspace: GUIWorkspace)
             case InterfaceMode.Add =>
               shadowWidgets.foreach(_ match {
                 case NewShadowWidget(wrapper) =>
-                  val p2 = restrictDrag(new Point(e.getX - point.x, e.getY - point.y), wrapper, NlogoMouse.hasCtrl(e))
+                  val p2 = restrictDrag(e.getX - point.x, e.getY - point.y, Seq(wrapper))
 
-                  wrapper.setLocation(point.x + p2.x, point.y + p2.y)
+                  wrapper.snapLocation(point.x + p2.x, point.y + p2.y)
 
                 case PastedShadowWidgets(wrappers, control) =>
-                  val p2 = restrictDrag(new Point(e.getX - point.x, e.getY - point.y), control, NlogoMouse.hasCtrl(e))
+                  val p2 = restrictDrag(e.getX - point.x, e.getY - point.y, wrappers.map(_._1))
 
                   wrappers.foreach {
                     case (wrapper, offset) =>
-                      wrapper.setLocation(point.x + p2.x + offset.x, point.y + p2.y + offset.y)
+                      wrapper.snapLocation(point.x + p2.x + offset.x, point.y + p2.y + offset.y)
                   }
               })
 
@@ -500,8 +476,11 @@ class WidgetPanel(val workspace: GUIWorkspace)
         }
 
       case InterfaceMode.Add =>
-        if (e.isPopupTrigger)
+        if (e.getButton == MouseEvent.BUTTON1) {
+          startDragPoint = Some(e.getPoint)
+        } else if (e.isPopupTrigger) {
           doPopup(e.getPoint)
+        }
 
       case _ =>
         if (e.getButton == MouseEvent.BUTTON1) {
