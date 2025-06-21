@@ -261,7 +261,7 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
 
     mouseMode match {
       case MouseMode.NW =>
-        val newY = y.max(BorderSize - bounds.y)
+        val newY = y.max(-bounds.y)
         val newX = x.max(-bounds.x)
 
         bounds.x += newX
@@ -270,7 +270,7 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
         bounds.height -= newY
 
       case MouseMode.NE =>
-        val newY = y.max(BorderSize - bounds.y)
+        val newY = y.max(-bounds.y)
         val newX = x.max(-bounds.x - bounds.width)
 
         bounds.width += newX
@@ -301,7 +301,7 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
         bounds.height += y
 
       case MouseMode.N =>
-        val newY = y.max(BorderSize - bounds.y)
+        val newY = y.max(-bounds.y)
 
         bounds.y += newY
         bounds.height -= newY
