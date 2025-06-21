@@ -106,14 +106,23 @@ class Menu(text: String, var menuModel: MenuModel[Action, String]) extends JMenu
   def addMenuItem(text: String, shortcut: Char, shift: Boolean, action: javax.swing.Action): javax.swing.JMenuItem =
     addMenuItem(text, shortcut, shift, action, true)
   def addMenuItem(text: String, shortcut: Char, shift: Boolean, action: javax.swing.Action, addMenuMask: Boolean): javax.swing.JMenuItem = {
-    val item =
-      if(action == null)
+    val item = action match {
+      case ma: MenuAction =>
+        new MenuItem(action, false) {
+          setText(text)
+
+          ma.mnemonic.foreach(setMnemonic)
+        }
+
+      case a if a != null =>
+        new MenuItem(action, false) {
+          setText(text)
+        }
+
+      case _ =>
         new MenuItem(text, false)
-      else {
-        val item = new MenuItem(action, false)
-        item.setText(text)
-        item
-      }
+    }
+
     val mask = if(shift) java.awt.event.InputEvent.SHIFT_DOWN_MASK else 0
     if(shortcut != 0) {
       val menuMask = if (addMenuMask) java.awt.Toolkit.getDefaultToolkit.getMenuShortcutKeyMaskEx else 0
