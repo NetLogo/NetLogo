@@ -18,9 +18,10 @@ import org.nlogo.core.{
 import org.nlogo.editor.{ Colorizer, EditorArea }
 import org.nlogo.log.LogManager
 import org.nlogo.swing.{ MenuItem, PopupMenu }
-import org.nlogo.window.{ ButtonWidget, ChooserWidget, Editable, Events => WindowEvents, GUIWorkspace, InputBoxWidget,
-                          InterfaceGlobalWidget, InterfaceMode, MonitorWidget, PlotWidget, SliderWidget, SwitchWidget,
-                          ViewWidget, ViewWidgetInterface, Widget, WidgetInfo, WidgetRegistry },
+import org.nlogo.window.{ ButtonWidget, ChooserWidget, ClipboardUtils, Editable, Events => WindowEvents, GUIWorkspace,
+                          InputBoxWidget, InterfaceGlobalWidget, InterfaceMode, MonitorWidget, PlotWidget,
+                          SliderWidget, SwitchWidget, ViewWidget, ViewWidgetInterface, Widget, WidgetInfo,
+                          WidgetRegistry },
   WindowEvents.{ CompileAllEvent, LoadBeginEvent, LoadWidgetsEvent, RemoveConstraintEvent, WidgetRemovedEvent }
 import org.nlogo.workspace.Evaluator
 
@@ -79,6 +80,26 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
 
     menu.add(new WidgetCreationMenuItemIP(I18N.gui.get("tabs.run.widgets.note"), CoreTextBox(None, fontSize = 11)))
 
+    if (selectedWrappers.nonEmpty || ClipboardUtils.hasWidgets) {
+      menu.addSeparator()
+
+      if (selectedWrappers.nonEmpty) {
+        menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.copySelected")) {
+          def actionPerformed(e: ActionEvent): Unit = {
+            copySelectedWidgets()
+          }
+        }))
+      }
+
+      if (ClipboardUtils.hasWidgets) {
+        menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widgets.paste")) {
+          def actionPerformed(e: ActionEvent): Unit = {
+            pasteWidgets()
+          }
+        }))
+      }
+    }
+
     // add extra stuff
     menu.addSeparator()
     menu.add(new MenuItem(new ExportInterfaceAction(workspace, this)))
@@ -117,6 +138,7 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
         val dialogTextArea = new EditorArea(dialogEditorConfiguration)
 
         new InputBoxWidget(textArea, dialogTextArea, workspace, this)
+      case v: CoreView => new ViewWidget(workspace)
       case _ =>
         throw new IllegalStateException("unknown widget type: " + coreWidget.getClass.getName)
     }

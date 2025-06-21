@@ -142,6 +142,10 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
       interfacePanel.revalidate()
   }
 
+  def snapLocation(x: Int, y: Int): Unit = {
+    setLocation(snapToGrid(x), snapToGrid(y))
+  }
+
   override def setBounds(r: Rectangle): Unit = {
     setBounds(r.x, r.y, r.width, r.height)
   }
@@ -257,7 +261,7 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
 
     mouseMode match {
       case MouseMode.NW =>
-        val newY = y.max(BorderSize - bounds.y)
+        val newY = y.max(-bounds.y)
         val newX = x.max(-bounds.x)
 
         bounds.x += newX
@@ -266,7 +270,7 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
         bounds.height -= newY
 
       case MouseMode.NE =>
-        val newY = y.max(BorderSize - bounds.y)
+        val newY = y.max(-bounds.y)
         val newX = x.max(-bounds.x - bounds.width)
 
         bounds.width += newX
@@ -297,7 +301,7 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
         bounds.height += y
 
       case MouseMode.N =>
-        val newY = y.max(BorderSize - bounds.y)
+        val newY = y.max(-bounds.y)
 
         bounds.y += newY
         bounds.height -= newY
@@ -424,14 +428,10 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
         }
       }
 
-      interfacePanel.dragSelectedWidgets(p.x - startPressX, p.y - startPressY, Mouse.hasCtrl(e))
+      interfacePanel.dragSelectedWidgets(p.x - startPressX, p.y - startPressY)
     } else if (mouseMode != MouseMode.IDLE) {
       doResize(p.x - startPressX, p.y - startPressY, Mouse.hasCtrl(e))
     }
-  }
-
-  def doDrag(x: Int, y: Int): Unit = {
-    setLocation(x + originalBounds.x, y + originalBounds.y)
   }
 
   def mouseReleased(e: MouseEvent): Unit = {
@@ -859,17 +859,29 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
       }))
     }
 
-    if (interfacePanel.selectedWrappers.size > 1) {
-      menu.addSeparator()
+    menu.addSeparator()
 
+    if (interfacePanel.multiSelected) {
+      menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.copySelected")) {
+        def actionPerformed(e: ActionEvent): Unit = {
+          interfacePanel.copySelectedWidgets()
+        }
+      }))
+    } else {
+      menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.copy")) {
+        def actionPerformed(e: ActionEvent): Unit = {
+          interfacePanel.copyWidgets(Seq(WidgetWrapper.this))
+        }
+      }))
+    }
+
+    if (interfacePanel.selectedWrappers.size > 1) {
       menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.deleteSelected")) {
         def actionPerformed(e: ActionEvent): Unit = {
           interfacePanel.deleteSelectedWidgets()
         }
       }))
     } else if (widget.deleteable) {
-      menu.addSeparator()
-
       menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.delete")) {
         def actionPerformed(e: ActionEvent): Unit = {
           WidgetActions.removeWidget(interfacePanel, WidgetWrapper.this)
