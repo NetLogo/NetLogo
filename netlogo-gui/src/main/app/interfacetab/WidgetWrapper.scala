@@ -142,6 +142,10 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
       interfacePanel.revalidate()
   }
 
+  def snapLocation(x: Int, y: Int): Unit = {
+    setLocation(snapToGrid(x), snapToGrid(y))
+  }
+
   override def setBounds(r: Rectangle): Unit = {
     setBounds(r.x, r.y, r.width, r.height)
   }
@@ -424,14 +428,10 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
         }
       }
 
-      interfacePanel.dragSelectedWidgets(p.x - startPressX, p.y - startPressY, Mouse.hasCtrl(e))
+      interfacePanel.dragSelectedWidgets(p.x - startPressX, p.y - startPressY)
     } else if (mouseMode != MouseMode.IDLE) {
       doResize(p.x - startPressX, p.y - startPressY, Mouse.hasCtrl(e))
     }
-  }
-
-  def doDrag(x: Int, y: Int): Unit = {
-    setLocation(x + originalBounds.x, y + originalBounds.y)
   }
 
   def mouseReleased(e: MouseEvent): Unit = {
