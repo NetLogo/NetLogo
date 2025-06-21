@@ -82,7 +82,17 @@ object UserAction {
     }
   }
 
-  trait MenuAction { this: Action =>
+  trait MenuAction extends Action {
+    def mnemonic: Option[Int] =
+      getValue(Action.MNEMONIC_KEY) match {
+        case i: Integer => Some(i)
+        case _ => None
+      }
+
+    def mnemonic_=(i: Int): Unit = {
+      putValue(Action.MNEMONIC_KEY, i)
+    }
+
     def accelerator: Option[KeyStroke] =
       getValue(Action.ACCELERATOR_KEY) match {
         case k: KeyStroke => Some(k)
