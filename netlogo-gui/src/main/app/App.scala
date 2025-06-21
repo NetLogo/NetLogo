@@ -10,6 +10,7 @@ import javax.swing.{ JFrame, JMenu }
 import scala.concurrent.ExecutionContext
 
 import org.nlogo.agent.{ Agent, World2D, World3D }
+import org.nlogo.analytics.Analytics
 import org.nlogo.api._
 import org.nlogo.app.codetab.{ ExternalFileManager, TemporaryCodeTab }
 import org.nlogo.app.common.{ CodeToHtml, Events => AppEvents, FileActions, FindDialog }
@@ -79,6 +80,8 @@ object App {
     }
 
     try {
+      Analytics.appStart()
+
       val scalePref = NetLogoPreferences.getDouble("uiScale", 1.0)
 
       if (scalePref > 1.0) {
