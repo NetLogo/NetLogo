@@ -2,7 +2,7 @@
 
 package org.nlogo.editor
 
-import java.awt.{ Color, Component }
+import java.awt.{ Color, Component, Dimension }
 import java.awt.event.{ KeyAdapter, KeyEvent, MouseAdapter, MouseEvent }
 import javax.swing.{ Action, JMenu, JMenuItem, JPopupMenu }
 import javax.swing.text.EditorKit
@@ -159,4 +159,7 @@ class AdvancedEditorArea(val configuration: EditorConfiguration)
   def endCompoundEdit(): Unit = {
     endAtomicEdit()
   }
+
+  override def getPreferredSize: Dimension =
+    new Dimension(super.getPreferredSize.width, getLineHeight * (getLineCount + 1))
 }
