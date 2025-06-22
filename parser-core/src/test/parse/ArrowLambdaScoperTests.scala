@@ -47,13 +47,13 @@ class ArrowLambdaScoperTests extends AnyFunSuite {
       SymbolTable("FOO" -> SymbolType.LambdaVariable, "BAZ" -> SymbolType.LambdaVariable))
   }
 
-  test("a block binds the bound id in each occurence in the body") {
+  test("a block binds the bound id in each occurrence in the body") {
     testScopes(Seq(`[`, `[`, unid("foo"), `]`, `->`, unid("foo"), `]`),
       Seq("FOO"), Seq(Token("foo", TokenType.Reporter, _lambdavariable("FOO"))(SourceLocation(0, 0, "test"))),
       SymbolTable("FOO" -> SymbolType.LambdaVariable))
   }
 
-  test("an unbracketed block binds the bound id in each occurence in the body") {
+  test("an unbracketed block binds the bound id in each occurrence in the body") {
     testScopes(Seq(`[`, unid("foo"), `->`, unid("foo"), `]`),
       Seq("FOO"), Seq(Token("foo", TokenType.Reporter, _lambdavariable("FOO"))(SourceLocation(0, 0, "test"))),
       SymbolTable("FOO" -> SymbolType.LambdaVariable))

@@ -78,7 +78,7 @@ public class HighlightView
   private static final boolean LEAVE_COLORS_ALONE =
       System.getProperty("os.name").startsWith("Mac");
 
-  // This is public so it can be overriden in ShowUsageBox - RG 2/14/18
+  // This is public so it can be overridden in ShowUsageBox - RG 2/14/18
   public float drawText(java.awt.Graphics2D g,
                        float x, float y,
                        int p0, int p1,
@@ -136,7 +136,7 @@ public class HighlightView
     }
   }
 
-  // return true if the selection color is dark (we arbitrarilly picked 375 to
+  // return true if the selection color is dark (we arbitrarily picked 375 to
   // be the too dark point)
   private boolean isDarkSelectionColor() {
     int red = SELECTED_BACKGROUND_COLOR.getRed();

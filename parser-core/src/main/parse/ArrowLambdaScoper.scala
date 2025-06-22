@@ -43,7 +43,7 @@ object ArrowLambdaScoper {
       def isArrow = t.text == "->"
       def isOpenBracket = t.tpe == TokenType.OpenBracket
       def isCloseBracket = t.tpe == TokenType.CloseBracket
-      // _taskvariable is an accomodation for the autoconverter
+      // _taskvariable is an accommodation for the autoconverter
       def isAlreadyDefined(usedNames: SymbolTable) =
         usedNames.contains(t.text.toUpperCase) && ! t.value.isInstanceOf[LambdaTokenMapper._taskvariable]
     }

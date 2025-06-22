@@ -229,7 +229,7 @@ object LocalizationReport {
           if (!exists) Missing(kaa.key)
           else {
             // otherwise, we go ahead and try to get the value
-            // by applying the aruments
+            // by applying the arguments
             arg.bundle.withLanguage(locale){
               try {
                 val translation = arg.bundle.getN(kaa.key, kaa.args*)
@@ -246,7 +246,7 @@ object LocalizationReport {
             }
           }
         }
-        // get the english value for the key (with its aruments filled in, if it has any)
+        // get the english value for the key (with its arguments filled in, if it has any)
         val englishResult = {
           val e = testKey(english, kaa)
           e match {
@@ -256,7 +256,7 @@ object LocalizationReport {
             case _ => e
           }
         }
-        // get the value for the key for the other language (with its aruments filled in, if it has any)
+        // get the value for the key for the other language (with its arguments filled in, if it has any)
         val otherLanguageResult = testKey(otherLanguageLocale, kaa)
         // we return all the information we have
         ((kaa, expectedEnglishResult), englishResult, otherLanguageResult)

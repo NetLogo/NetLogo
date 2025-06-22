@@ -607,7 +607,7 @@ public final class Layouts {
     }
 
     // A heuristic used to decide how much space each
-    // node should be alotted, based on its children.
+    // node should be allotted, based on its children.
     public double getWeight() {
       double myWeight = children.size() + 1;
       double maxChildWeight = 0.0;

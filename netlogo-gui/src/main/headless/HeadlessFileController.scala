@@ -35,7 +35,7 @@ object HeadlessFileController extends OpenModel.Controller {
     false
   }
   def errorAutoconvertingModel(res: FailedConversionResult): Option[Model] = {
-    System.err.println(s"While attempting to convert the NetLogo mdoel, NetLogo encountered the following errors:")
+    System.err.println(s"While attempting to convert the NetLogo model, NetLogo encountered the following errors:")
     res.errors.foreach(_.errors.foreach(e => System.err.println(e.getMessage)))
     System.err.println("aborting...")
     None

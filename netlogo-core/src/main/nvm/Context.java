@@ -80,7 +80,7 @@ public final class Context implements org.nlogo.api.Context {
 
   // Used to produce an exact duplicate context for inspection
   // by error-reporting tools, while allowing the context in
-  // which the error occured to be reverted to an error-free
+  // which the error occurred to be reverted to an error-free
   // state.
   public Context copy() {
     return new Context(job, agent, ip, activation);

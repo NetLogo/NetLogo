@@ -1327,7 +1327,7 @@ public abstract class ImporterJ
       }
     } else {
       throw new InvalidDataException
-          ("The data must be a multiple of 4 to covert from Hex string to ints");
+          ("The data must be a multiple of 4 to convert from Hex string to ints");
     }
 
     return ints;

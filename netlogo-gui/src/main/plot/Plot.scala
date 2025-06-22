@@ -255,7 +255,7 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with JSerializ
   def nextHistogramValue(value:Double) = histogram.get.nextValue(value)
 
   // this leaves the pen down, regardless of its previous state
-  // historgram cannot be None when entering this method, or boom. - Josh 11/2/09
+  // histogram cannot be None when entering this method, or boom. - Josh 11/2/09
   def endHistogram(pen: PlotPen): Unit = {
     pen.softReset()
 

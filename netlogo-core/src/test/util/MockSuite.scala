@@ -30,7 +30,7 @@ import scala.language.implicitConversions
     val objectUnderTest = new ObjectUnderTest
     val m = mock[SomeObjectNotUnderTest]
 
-    // some precondtion assertions
+    // some precondition assertions
     assert(objectUnderTest.something == somethingElse)
 
     // set up some expectations on the mock

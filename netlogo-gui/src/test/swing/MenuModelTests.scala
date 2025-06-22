@@ -116,7 +116,7 @@ class MenuModelTests extends AnyFunSuite {
     assertBranchAt(b2, 0)
   } }
 
-  test("optionally initalizes with a list giving the order of groups") { new Helper {
+  test("optionally initializes with a list giving the order of groups") { new Helper {
     override val model = new MenuModel[String, Int](Seq("group1", "group2"))
     model.insertLeaf("abc", "group2")
     model.insertLeaf("def", "group1")

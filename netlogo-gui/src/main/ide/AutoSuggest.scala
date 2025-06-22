@@ -22,7 +22,7 @@ object AutoSuggest {
 }
 
 /**
- * Builds the trie from commands and reporters and provides fuctions to get suggestions.
+ * Builds the trie from commands and reporters and provides functions to get suggestions.
  * Special care should be taken as everything is inserted and retrieved in lower case.
  */
 class AutoSuggest(val primitiveNames: Set[String], extensionPrimNames: () => Set[String]) {
