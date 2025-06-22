@@ -169,7 +169,7 @@ Interaction11_3D
 Interaction12
   O> cro 20 [ fd 5 ]
   map [[t] -> [towardsxy 0 0] of t] sort turtles => [180 198 216 234 252 270 288 306 324 342 0 18 36 54 72 90 108 126 144 162]
-  remove-duplicates [precision (distancexy 0 0) 15] of turtles => [5]
+  remove-duplicates [precision (distancexy 0 0) 14] of turtles => [5]
 
 Interaction13
   O> crt 2
