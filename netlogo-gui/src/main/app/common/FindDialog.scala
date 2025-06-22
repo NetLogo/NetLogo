@@ -357,8 +357,6 @@ class FindDialog(val owner: Frame) extends JDialog(owner, I18N.gui.get("dialog.f
   }
 
   private def prev(search: String, ignoreCase: Boolean, wrapAround: Boolean): Boolean = {
-    val start = 0.max(target.getSelectionStart - 1)
-
     var searchMut = search
     var text = getTargetText
 
@@ -368,10 +366,10 @@ class FindDialog(val owner: Frame) extends JDialog(owner, I18N.gui.get("dialog.f
       text = text.toUpperCase
     }
 
-    val matchIndex = text.lastIndexOf(searchMut, start)
+    var matchIndex = text.lastIndexOf(searchMut, target.getSelectionStart - 1)
 
     if (matchIndex == -1 && wrapAround)
-      text = text.substring(start, text.length)
+      matchIndex = text.lastIndexOf(searchMut)
 
     if (matchIndex > -1) {
       target.setSelectionStart(matchIndex)
