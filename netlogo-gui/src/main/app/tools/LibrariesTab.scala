@@ -450,11 +450,12 @@ class LibrariesTab( category:        String
                       , lib: LibraryInfo, multiple: Boolean
                       , callback: () => Unit = () => ()) extends SwingWorker[Any, Any] {
 
+    private val indices = libraryList.getSelectedIndices
+
     updateSidebar()
 
     override def doInBackground() = fn(lib)
     override def onComplete() = {
-      val indices = libraryList.getSelectedIndices
       updateLists()
       if (multiple && numOperatedLibs > 1) {
         // This happens (gets queued) on the EDT, so there are no shared-state threading issues -- EL 2018-07-01
@@ -463,8 +464,8 @@ class LibrariesTab( category:        String
       } else {
         updateStatus(null)
       }
-      libraryList.setSelectedIndices(indices)
       callback()
+      EventQueue.invokeLater(() => libraryList.setSelectedIndices(indices))
     }
 
   }
