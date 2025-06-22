@@ -2,6 +2,7 @@
 
 package org.nlogo.app
 
+import java.awt.Component
 import javax.swing.Action
 
 import org.nlogo.core.I18N
@@ -55,5 +56,13 @@ class MainMenuBar(isApplicationWide: Boolean) extends MenuBar with EditorMenu wi
       case _ => ""
     }
     categoryMenus.get(categoryKey).foreach(_.revokeAction(action))
+  }
+
+  override def remove(component: Component): Unit = {
+    super.remove(component)
+
+    // without this call, non-interactable visual artifacts of extension menus would remain in the menu bar after
+    // unloading an extension (Isaac B 6/21/25)
+    repaint()
   }
 }
