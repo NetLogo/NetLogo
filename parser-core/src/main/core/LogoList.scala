@@ -49,8 +49,22 @@ class LogoList private (private val v: Vector[AnyRef])
   /// public methods for prims. input validity checking is caller's job
 
   def first = v.head
-  def fput(obj: AnyRef) = new LogoList(obj +: v)
-  def lput(obj: AnyRef) = new LogoList(v :+ obj)
+  def fput(obj: AnyRef): LogoList = {
+    try {
+      new LogoList(obj +: v)
+    } catch {
+      case e: IllegalArgumentException =>
+        throw new RuntimeException("The specified list has too many elements.")
+    }
+  }
+  def lput(obj: AnyRef): LogoList = {
+    try {
+      new LogoList(v :+ obj)
+    } catch {
+      case e: IllegalArgumentException =>
+        throw new RuntimeException("The specified list has too many elements.")
+    }
+  }
   override def reverse = new LogoList(v.reverse)
   def replaceItem(index: Int, obj: AnyRef) =
     new LogoList(v.updated(index, obj))
