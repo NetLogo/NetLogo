@@ -14,7 +14,7 @@ package org.nlogo.headless
  *
  * Suites that need exactly one Fixture per test may extend FixtureSuite.  Fixture and FixtureSuite
  * are also useful even if you don't use Finder, Parser, and LanguageTest.  The tests in the misc
- * subirectory use Fixture/FixtureSuite directly, rather than reading tests out of .txt files.  Some
+ * subdirectory use Fixture/FixtureSuite directly, rather than reading tests out of .txt files.  Some
  * of them also use ModelCreator, which lets you make a model with widgets in code, instead of
  * having to keep an actual .nlogo file around.
  *

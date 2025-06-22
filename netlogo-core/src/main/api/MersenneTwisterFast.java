@@ -257,7 +257,7 @@ public final class MersenneTwisterFast
 
 
   /**
-   * Initalize the pseudo random number generator.  Don't
+   * Initialize the pseudo random number generator.  Don't
    * pass in a long that's bigger than an int (Mersenne Twister
    * only uses the first 32 bits for its seed).
    */

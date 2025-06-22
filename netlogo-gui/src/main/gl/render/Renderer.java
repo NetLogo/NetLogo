@@ -360,8 +360,8 @@ public class Renderer
     // of Patch3D, and all links are instances of Link3D. Also, world is an instance of
     // World3D, and world.observer() should give you an instance of Observer3D. Also,
     // beware of the fact that the Renderer3D class overrides some methods (e.g.,
-    // renderWorld) when we're in NetLogo 3D - the overriden versions of these methods
-    // will get called. However, since render() has not been overriden in Renderer3D,
+    // renderWorld) when we're in NetLogo 3D - the overridden versions of these methods
+    // will get called. However, since render() has not been overridden in Renderer3D,
     // this method still gets called.
     //
     // In the 3D view in 2D, all turtles are instances of Turtle, all patches are

@@ -182,7 +182,7 @@ case class CodeCompletionPopup(autoSuggest: AutoSuggest,
           case Some(token) =>
             // word only contains the current token till the cursor position
             val word = token.text.substring(0, position - token.start)
-            // popup not to be diplayed after user hits the enter key
+            // popup not to be displayed after user hits the enter key
             if (!token.text.equals(lastSuggested)) {
               list = autoSuggest.getSuggestions(word)
               list.foreach(dlm.addElement(_))

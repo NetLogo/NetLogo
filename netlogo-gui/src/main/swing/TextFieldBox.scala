@@ -32,7 +32,7 @@ object TextFieldBox {
 
 /**
  * A box for TextFields and their labels that keeps the fields and labels
- * nicely alligned.
+ * nicely aligned.
  */
 class TextFieldBox(labelAlignment: Int = SwingConstants.LEFT, labelFont: Option[Font] = None, fieldFont: Option[Font] = None)
   extends JPanel with Transparent with ThemeSync {

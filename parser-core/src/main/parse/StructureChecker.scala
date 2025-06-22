@@ -74,7 +74,7 @@ object StructureChecker {
 
     def checkForInconsistentIDs(usageIdentifier: String, usageType: SymbolType, occ: Occurrence): Unit = {
       cAssert(
-        usageDoesNotClashWithOccurence(usageIdentifier, usageType, occ),
+        usageDoesNotClashWithOccurrence(usageIdentifier, usageType, occ),
         duplicateOf(usageType, occ.identifier.name),
         occ.identifier.token)
     }
@@ -177,7 +177,7 @@ object StructureChecker {
     os.sortBy(_.typeOfDeclaration)
   }
 
-  private def usageDoesNotClashWithOccurence(usageIdentifier: String, usageType: SymbolType, occ: Occurrence): Boolean = {
+  private def usageDoesNotClashWithOccurrence(usageIdentifier: String, usageType: SymbolType, occ: Occurrence): Boolean = {
     val identifierNamesAreDifferent = ! usageIdentifier.equalsIgnoreCase(occ.identifier.name)
 
     identifierNamesAreDifferent || (usageType match {

@@ -688,7 +688,7 @@ public abstract class Turtle
       yprime = y + _world.worldHeight();
     }
 
-    // techincally we're not supposed to check these
+    // technically we're not supposed to check these
     // directly but it seems like the clearest thing to
     // do here since we don't want to change the values
     // just make sure that we're obeying the topology if

@@ -197,7 +197,7 @@ object ChecksumsAndPreviews {
       }
       catch {
         case e: Exception =>
-          println(s"Exception occured making checksums for $model")
+          println(s"Exception occurred making checksums for $model")
           return Some((model, e))
       }
       finally { workspace.dispose() }

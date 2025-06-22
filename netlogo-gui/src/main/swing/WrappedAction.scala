@@ -9,7 +9,7 @@ import UserAction.{ ActionCategoryKey, ActionGroupKey }
 
 /** The purpose of this class is to allow an action which doesn't know about the NetLogo menu system
  *  to be placed into a NetLogo menu. It's especially important in cases where the action is defined
- *  by somwhere which doesn't (or can't) know about the various keys in UserAction. This includes
+ *  by somewhere which doesn't (or can't) know about the various keys in UserAction. This includes
  *  packages which aren't allowed to depend on org.nlogo.swing (editor, for instance) or external
  *  libraries which provide actions (swing or RSyntaxTextArea) */
 class WrappedAction(base: Action, menu: String, group: String, accelerator: KeyStroke) extends Action {

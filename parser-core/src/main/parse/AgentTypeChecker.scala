@@ -52,7 +52,7 @@ package org.nlogo.parse
 // same AgentTypeCheckerVisitor object.  But when we hit something like ASK,
 // we don't let the current AgentTypeCheckerVisitor descend inside the ASK;
 // rather, we make a new one and then discard it when we're done
-// analzying the ASK.
+// analyzing the ASK.
 //
 // SUBTLETY INVOLVING PART 3: In order to propagate this information
 // fully, we have to do multiple passes.  At each pass, we analyze all
