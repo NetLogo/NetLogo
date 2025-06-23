@@ -22,7 +22,7 @@ import org.nlogo.swing.{ OptionPane, Printable, PrinterManager, TabLabel, UserAc
 import org.nlogo.theme.ThemeSync
 import org.nlogo.window.Events.{ AboutToCloseFilesEvent, AboutToSaveModelEvent, CompileAllEvent, CompiledEvent,
                                  ExternalFileSavedEvent, LoadBeginEvent, LoadErrorEvent, LoadModelEvent,
-                                 RuntimeErrorEvent, WidgetErrorEvent, WidgetRemovedEvent }
+                                 ModelSavedEvent, RuntimeErrorEvent, WidgetErrorEvent, WidgetRemovedEvent }
 import org.nlogo.window.{ ExternalFileInterface, GUIWorkspace, JobWidget, MonitorWidget, Widget }
 
 import scala.io.Source
@@ -31,7 +31,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
                  val externalFileManager: ExternalFileManager)
   extends TabsInterface with AboutToCloseFilesEvent.Handler with AboutToSaveModelEvent.Handler
   with CompiledEvent.Handler with ExternalFileSavedEvent.Handler with LoadBeginEvent.Handler
-  with LoadErrorEvent.Handler with LoadModelEvent.Handler with RuntimeErrorEvent.Handler
+  with LoadErrorEvent.Handler with LoadModelEvent.Handler with ModelSavedEvent.Handler with RuntimeErrorEvent.Handler
   with WidgetErrorEvent.Handler with WidgetRemovedEvent.Handler with ThemeSync {
 
   private val focusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager
@@ -762,6 +762,13 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
 
   def handle(e: AboutToCloseFilesEvent): Unit =
     OfferSaveExternalsDialog.offer(getExternalFileTabs.filter(_.saveNeeded).toSet, workspace.getFrame)
+
+  // if model didn't already exist, we need to restart the file watcher
+  // so it knows about the newly created file (Isaac B 6/22/25)
+  def handle(e: ModelSavedEvent): Unit = {
+    if (e.isNew)
+      startWatcherThread()
+  }
 
   override def syncTheme(): Unit = {
     (mainTabs.getComponents ++ separateTabs.getComponents).foreach(_ match {

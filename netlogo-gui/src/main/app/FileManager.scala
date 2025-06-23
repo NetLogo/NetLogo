@@ -394,6 +394,8 @@ class FileManager(workspace: AbstractWorkspaceScala,
 
   @throws(classOf[UserCancelException])
   private[app] def saveModel(saveAs: Boolean): Unit = {
+    val isNew = workspace.getModelPath == null
+
     val saveThunk = {
       val newFormat =
         workspace.getModelFileName != null && (workspace.getModelFileName.endsWith(".nlogox") ||
@@ -404,7 +406,7 @@ class FileManager(workspace: AbstractWorkspaceScala,
 
     // if there's no thunk, the user canceled the save
     saveThunk.foreach { thunk =>
-      val saver = new Saver(thunk)
+      val saver = new Saver(thunk, isNew)
       val focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner()
       val tempParent = if (focusOwner == null) parent else focusOwner
 
@@ -445,7 +447,7 @@ class FileManager(workspace: AbstractWorkspaceScala,
     FileDialog.showFiles(parent, I18N.gui.get("menu.file.open"), AWTFileDialog.LOAD, null)
   }
 
-  private class Saver(val thunk: () => Try[URI]) extends Runnable {
+  private class Saver(val thunk: () => Try[URI], isNew: Boolean) extends Runnable {
     var result = Option.empty[Try[URI]]
 
     def run(): Unit = {
@@ -454,7 +456,7 @@ class FileManager(workspace: AbstractWorkspaceScala,
       r.foreach { uri =>
         val path = Paths.get(uri).toString
         modelSaver.setCurrentModel(modelSaver.currentModel.copy(version = Version.version))
-        new ModelSavedEvent(path).raise(eventRaiser)
+        new ModelSavedEvent(path, isNew).raise(eventRaiser)
       }
       result = Some(r)
     }
