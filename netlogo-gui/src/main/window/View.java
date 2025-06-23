@@ -203,9 +203,15 @@ public class View
   @Override
   public void paint(java.awt.Graphics g) {
     if (!isDead()) {
-      workspace.updateManager().beginPainting();
+      if (paintingImmediately) {
+        workspace.updateManager().beginPainting();
+      }
+
       super.paint(g);
-      workspace.updateManager().donePainting();
+
+      if (paintingImmediately) {
+        workspace.updateManager().donePainting();
+      }
 
       // update the mouse coordinates if following
       if (workspace.world().observer().perspective() instanceof AgentFollowingPerspective) {
