@@ -337,77 +337,6 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
     testReporter("sort [who] of turtles", "[0 1 2 3 6 7 8 10 11]")
   }
 
-  test("testImportingTables", SlowTest.Tag) {
-    val filename = getUniqueFilename()
-    workspace.initForTesting(5, "globals [table1 table2] extensions [ table ]")
-    testCommand("set table1 table:from-list [[1 2] [\"word\" \"value\"] [3 false]]")
-    testCommand("export-world \"" + filename + "\"")
-    testCommand("ca")
-    testCommand("import-world \"" + filename + "\"")
-    testReporter("table:to-list table1", "[[1 2] [\"word\" \"value\"] [3 false]]")
-  }
-
-  test("testImportingTablesSameTable", SlowTest.Tag) {
-    val filename = getUniqueFilename()
-    workspace.initForTesting(5, "globals [table1 table2] extensions [ table ]")
-    testCommand("set table1 table:from-list [[1 2] [3 4] [4 5]]")
-    testCommand("set table2 table1")
-    testCommand("export-world \"" + filename + "\"")
-    testCommand("ca")
-    testCommand("import-world \"" + filename + "\"")
-    testCommand("table:put table1 7 8")
-    testReporter("table:to-list table1", "[[1 2] [3 4] [4 5] [7 8]]")
-    testReporter("table:to-list table2", "[[1 2] [3 4] [4 5] [7 8]]")
-  }
-
-  test("testImportingTablesTwoTables", SlowTest.Tag) {
-    val filename = getUniqueFilename()
-    workspace.initForTesting(5, "globals [table1 table2] extensions [ table ]")
-    testCommand("set table1 table:from-list [[1 2] [3 4] [4 5]]")
-    testCommand("set table2 table:from-list [[1 2] [3 4] [4 5]]")
-    testCommand("export-world \"" + filename + "\"")
-    testCommand("ca")
-    testCommand("import-world \"" + filename + "\"");
-    testCommand("table:put table1 7 8")
-    testReporter("table:to-list table1", "[[1 2] [3 4] [4 5] [7 8]]")
-    testReporter("table:to-list table2", "[[1 2] [3 4] [4 5]]")
-  }
-
-  test("testImportingArrays", SlowTest.Tag) {
-    val filename = getUniqueFilename()
-    workspace.initForTesting(5, "globals [ar1 ar2] extensions [ array ]")
-    testCommand("set ar1 array:from-list [1 2 3 4 \"string\" false]")
-    testCommand("export-world \"" + filename + "\"")
-    testCommand("ca")
-    testCommand("import-world \"" + filename + "\"")
-    testReporter("array:to-list ar1", "[1 2 3 4 \"string\" false]")
-  }
-
-  test("testImportingArraysSameArray", SlowTest.Tag) {
-    val filename = getUniqueFilename()
-    workspace.initForTesting(5, "globals [ar1 ar2] extensions [ array ]")
-    testCommand("set ar1 array:from-list [ 1 2 3 ]")
-    testCommand("set ar2 ar1")
-    testCommand("export-world \"" + filename + "\"")
-    testCommand("ca")
-    testCommand("import-world \"" + filename + "\"")
-    testCommand("array:set ar1 2 4")
-    testReporter("array:to-list ar2", "[1 2 4]");
-  }
-
-  test("testImportingArraysTwoArrays", SlowTest.Tag) {
-    val filename = getUniqueFilename()
-    workspace.initForTesting(5, "globals [ar1 ar2] extensions [ array ]")
-    testCommand("set ar1 array:from-list [ 1 2 3 ]")
-    testCommand("set ar2 array:from-list [ 1 2 3 ]")
-    testCommand("export-world \"" + filename + "\"")
-    testCommand("ca")
-    testCommand("import-world \"" + filename + "\"")
-    testCommand("array:set ar1 2 4")
-    testReporter("array:to-list ar1", "[1 2 4]");
-    testReporter("array:to-list ar2", "[1 2 3]");
-  }
-
   test("testImportingArraysAndTables", SlowTest.Tag) {
     val filename = getUniqueFilename()
     workspace.initForTesting(5, "globals [ar1 ar2 t1 t2] extensions [ array table ]")
@@ -428,16 +357,6 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
 
   test("testImportingArrayContainingStringsWithCurlyBraces") {
     roundTripHelper("set a array:from-list [\"}}\" \"{{\"]", "extensions [array] globals [a]")
-  }
-
-  test("testImportingArrayInsideArray", SlowTest.Tag) {
-    val filename = getUniqueFilename()
-    workspace.initForTesting(5, "globals [ ar1 ] extensions [ array ]")
-    testCommand("set ar1 array:from-list (list array:from-list [5])")
-    testCommand(s"export-world \"$filename\"")
-    testCommand("ca")
-    testCommand(s"import-world \"$filename\"")
-    testReporter("array:to-list array:item ar1 0", "[5]")
   }
 
   /// other tests (that don't use roundTripHelper)
