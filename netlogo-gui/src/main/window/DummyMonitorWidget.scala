@@ -48,6 +48,8 @@ class DummyMonitorWidget extends SingleErrorWidget with MonitorWidget.ToMonitorM
 
   override def editPanel: EditPanel = new DummyMonitorEditPanel(this)
 
+  override def getEditable: Option[Editable] = Some(this)
+
   override def getMinimumSize: Dimension =
     new Dimension(MinWidth, MaxHeight)
 

@@ -16,6 +16,8 @@ class DummyChooserWidget(val compiler: CompilerServices, colorizer: Colorizer) e
 
   override def editPanel: EditPanel = new DummyChooserEditPanel(this, compiler, colorizer)
 
+  override def getEditable: Option[Editable] = Some(this)
+
   override def editFinished(): Boolean = {
     super.editFinished()
     setVarName(name)

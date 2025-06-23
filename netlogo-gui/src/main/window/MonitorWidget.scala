@@ -205,6 +205,8 @@ class MonitorWidget(random: MersenneTwisterFast, compiler: CompilerServices, col
 
   override def editPanel: EditPanel = new MonitorEditPanel(this, compiler, colorizer)
 
+  override def getEditable: Option[Editable] = Some(this)
+
   override def kind: AgentKind = AgentKindJ.Observer
 
   override def ownsPrimaryJobs: Boolean =

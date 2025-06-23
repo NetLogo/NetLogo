@@ -223,7 +223,7 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
     }).distinct.toIndexedSeq
 
   override private[app] def contains(w: Editable): Boolean =
-    if (w == viewWidget.asInstanceOf[Widget].getEditable)
+    if (viewWidget.getEditable.contains(w))
       true
     else
       super.contains(w)

@@ -12,7 +12,7 @@ import org.nlogo.awt.{ Coordinates, Mouse }
 import org.nlogo.core.I18N
 import org.nlogo.swing.{ MenuItem, PopupMenu, WrappingPopupMenu, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
-import org.nlogo.window.{ Editable, InterfaceMode, MouseMode, ViewWidget, Widget, WidgetWrapperInterface }
+import org.nlogo.window.{ InterfaceMode, MouseMode, ViewWidget, Widget, WidgetWrapperInterface }
 import org.nlogo.window.Events.{ DirtyEvent, EditWidgetEvent, ExportWidgetEvent, WidgetForegroundedEvent }
 
 object WidgetWrapper {
@@ -344,12 +344,7 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
     foreground()
 
     if (e.getClickCount == 2) {
-      widget.getEditable match {
-        case ed: Editable =>
-          new EditWidgetEvent(ed).raise(this)
-
-        case _ =>
-      }
+      widget.getEditable.foreach(new EditWidgetEvent(_).raise(this))
 
       return
     }
@@ -722,7 +717,7 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
 
   private def populateContextMenu(menu: PopupMenu, p: Point): Unit = {
     widget.getEditable match {
-      case editable: Editable if !interfacePanel.multiSelected =>
+      case Some(editable) if !interfacePanel.multiSelected =>
         menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.edit")) {
           def actionPerformed(e: ActionEvent): Unit = {
             selected(true)

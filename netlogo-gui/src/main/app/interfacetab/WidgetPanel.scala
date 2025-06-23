@@ -661,12 +661,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
       case InterfaceMode.Edit =>
         if (e.getButton == MouseEvent.BUTTON1) {
-          wrapperAtPoint(e.getPoint).foreach(_.widget.getEditable match {
-            case e: Editable =>
-              new EditWidgetEvent(e).raise(this)
-
-            case _ =>
-          })
+          wrapperAtPoint(e.getPoint).flatMap(_.widget.getEditable).foreach(new EditWidgetEvent(_).raise(this))
         } else {
           wrapperAtPoint(e.getPoint) match {
             case Some(w) =>
@@ -958,12 +953,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
         setInterfaceMode(InterfaceMode.Interact, false)
 
-        wrapper.widget.getEditable match {
-          case e: Editable =>
-            new EditWidgetEvent(e).raise(this)
-
-          case _ =>
-        }
+        wrapper.widget.getEditable.foreach(new EditWidgetEvent(_).raise(this))
 
         placedShadowWidgets = false
 
@@ -1404,7 +1394,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
   private[app] def contains(w: Editable): Boolean = {
     val isContained = getComponents.exists {
-      case ww: WidgetWrapper => ww.widget.getEditable == w
+      case ww: WidgetWrapper => ww.widget.getEditable.contains(w)
       case _                 => false
     }
     isContained

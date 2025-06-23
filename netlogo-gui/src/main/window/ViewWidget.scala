@@ -45,8 +45,8 @@ class ViewWidget(workspace: GUIWorkspace) extends Widget with ViewWidgetInterfac
     view.setBounds(getInsets.left, getInsets.top, availableWidth, graphicsHeight)
   }
 
-  override def getEditable: AnyRef =
-    settings
+  override def getEditable: Option[Editable] =
+    Option(settings)
 
   def computePatchSize(width: Int, numPatches: Int): Double = {
     // This is sneaky.  We'd rather not have numbers with a zillion decimal places

@@ -70,7 +70,7 @@ abstract class Widget extends JPanel with RoundedBorderPanel with ThemeSync with
     }
   }
 
-  def getEditable: Object = this
+  def getEditable: Option[Editable]
   def copyable = true // only OutputWidget and ViewWidget are not copyable
   def constrainDrag(newBounds: Rectangle, originalBounds: Rectangle, mouseMode: MouseMode): Rectangle = newBounds
   def isZoomed: Boolean = if (findWidgetContainer != null) findWidgetContainer.isZoomed else false

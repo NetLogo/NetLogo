@@ -136,6 +136,8 @@ class ButtonWidget(random: MersenneTwisterFast, colorizer: Colorizer) extends Jo
 
   override def editPanel: EditPanel = new ButtonEditPanel(this, colorizer)
 
+  override def getEditable: Option[Editable] = Some(this)
+
   def buttonType_=(bt: ButtonType): Unit = {
     _buttonType = bt
     _buttonType.img(false) match {

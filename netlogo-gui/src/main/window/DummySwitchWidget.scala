@@ -9,6 +9,8 @@ class DummySwitchWidget extends Switch with Editable {
 
   override def editPanel: EditPanel = new DummySwitchEditPanel(this)
 
+  override def getEditable: Option[Editable] = Some(this)
+
   // we never update constraints in a dummy widget -- CLB
   override def updateConstraints(): Unit = {}
 

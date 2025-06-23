@@ -32,6 +32,8 @@ class DummyButtonWidget extends SingleErrorWidget with Editable {
 
   override def editPanel: EditPanel = new DummyButtonEditPanel(this)
 
+  override def getEditable: Option[Editable] = Some(this)
+
   def actionKey: Char = _actionKey
 
   def setActionKey(actionKey: Char): Unit = {

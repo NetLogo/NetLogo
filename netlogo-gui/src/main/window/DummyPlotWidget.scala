@@ -29,6 +29,8 @@ class DummyPlotWidget(plot: Plot, plotManager: PlotManager) extends AbstractPlot
     new DummyPlotEditPanel(this)
   }
 
+  override def getEditable: Option[Editable] = Some(this)
+
   override def handle(e: AfterLoadEvent): Unit = {}
 
   def setNameOptions(nameOptions: Options[Plot]): Unit = {

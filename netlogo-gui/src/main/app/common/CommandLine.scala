@@ -13,7 +13,8 @@ import org.nlogo.editor.EditorField
 import org.nlogo.ide.{ AutoSuggestAction, CodeCompletionPopup }
 import org.nlogo.swing.{ ScrollPane, Transparent }
 import org.nlogo.theme.InterfaceColors
-import org.nlogo.window.{ CommandCenterInterface, EditorColorizer, InterfaceMode, JobWidget, Events => WindowEvents }
+import org.nlogo.window.{ Editable, CommandCenterInterface, EditorColorizer, InterfaceMode, JobWidget,
+                          Events => WindowEvents }
 import org.nlogo.workspace.AbstractWorkspace
 
 import scala.collection.immutable.List
@@ -76,6 +77,8 @@ class CommandLine(commandCenter: CommandCenterInterface,
   def agent(agent: Agent): Unit = {
     this.agent = agent
   }
+
+  override def getEditable: Option[Editable] = None
 
   // I have no idea why, but at least on Macs, without this our minimum
   // height is larger than our preferred height, which doesn't make sense

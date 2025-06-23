@@ -17,6 +17,8 @@ class InputBoxWidget(textArea: AbstractEditorArea, dialogTextArea: AbstractEdito
 
   override def editPanel: EditPanel = new InputEditPanel(this, compiler)
 
+  override def getEditable: Option[Editable] = Some(this)
+
   override def name(name: String, sendEvent: Boolean): Unit = {
     this.name_=(name)
     // I don't think anyone ever uses the display name, but let's keep it in sync

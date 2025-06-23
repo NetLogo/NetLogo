@@ -30,6 +30,8 @@ class OutputWidget extends SingleErrorWidget with CommandCenterInterface
 
   override def editPanel: EditPanel = new OutputEditPanel(this)
 
+  override def getEditable: Option[Editable] = Some(this)
+
   originalFont = outputArea.getFont
   def fontSize = originalFont.getSize
   def setFontSize(newSize: Int): Unit = {

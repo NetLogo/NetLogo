@@ -43,6 +43,8 @@ class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast,
 
   override def editPanel: EditPanel = new SliderEditPanel(this, compiler, colorizer)
 
+  override def getEditable: Option[Editable] = Some(this)
+
   // VALUE RELATED METHODS
   def valueObject(): Object = super.value.asInstanceOf[AnyRef]
 

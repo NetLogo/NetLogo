@@ -74,6 +74,8 @@ class NoteWidget extends SingleErrorWidget with Transparent with Editable {
 
   override def editPanel: EditPanel = new NoteEditPanel(this)
 
+  override def getEditable: Option[Editable] = Some(this)
+
   override def isNote = true
 
   private val css = """<head>

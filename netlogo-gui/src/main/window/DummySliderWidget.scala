@@ -15,6 +15,8 @@ class DummySliderWidget extends AbstractSliderWidget with Editable {
 
   override def editPanel: EditPanel = new DummySliderEditPanel(this)
 
+  override def getEditable: Option[Editable] = Some(this)
+
   // this sets the value in the current constraint and then ensures
   // cached values are updated -- CLB
   def setMin( d: Double ): Unit = { if(setSliderConstraint(con.copy(min=d))) repaint() }

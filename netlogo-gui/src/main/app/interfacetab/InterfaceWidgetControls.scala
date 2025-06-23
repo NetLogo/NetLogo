@@ -196,7 +196,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
 
   private def updateTargets(widget: Widget): Unit = {
     if (selectedObjects.size == 1) {
-      editTarget = Some(widget.getEditable).collect { case editable: Editable => editable }
+      editTarget = widget.getEditable
     } else {
       editTarget = None
     }

@@ -21,6 +21,8 @@ class DummyViewWidget(val world: World) extends SingleErrorWidget with Editable 
 
   override def editPanel: EditPanel = new DummyViewEditPanel(this)
 
+  override def getEditable: Option[Editable] = Some(this)
+
   // nullary method to prevent conflict with Component.width
   def width(): Int = newWidth
 

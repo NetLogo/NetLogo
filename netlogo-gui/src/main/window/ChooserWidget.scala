@@ -14,6 +14,8 @@ class ChooserWidget(val compiler: CompilerServices, colorizer: Colorizer)
 
   override def editPanel: EditPanel = new ChooserEditPanel(this, compiler, colorizer)
 
+  override def getEditable: Option[Editable] = Some(this)
+
   // don't send an event unless the name of the variable
   // defined changes, which is the only case in which we
   // want a recompile. ev 6/15/05

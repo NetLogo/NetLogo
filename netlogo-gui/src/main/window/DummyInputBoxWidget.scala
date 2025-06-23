@@ -12,4 +12,6 @@ class DummyInputBoxWidget(textArea: AbstractEditorArea, dialogTextArea: Abstract
   InputBox(textArea, dialogTextArea, compiler, nextComponent) {
 
   override def editPanel: EditPanel = new DummyInputEditPanel(this)
+
+  override def getEditable: Option[Editable] = Some(this)
 }

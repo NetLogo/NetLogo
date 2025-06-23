@@ -14,7 +14,7 @@ import org.nlogo.editor.EditorField
 import org.nlogo.nvm.Procedure
 import org.nlogo.swing.{ OptionPane, ScrollPane, Transparent }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
-import org.nlogo.window.{ EditorColorizer, Events => WindowEvents, JobWidget }
+import org.nlogo.window.{ Editable, EditorColorizer, Events => WindowEvents, JobWidget }
 
 class AgentMonitorEditor(parent: AgentMonitor) extends JPanel with ThemeSync {
   private val noVarLabel = new JLabel(I18N.gui.get("tools.agentMonitor.editor.noVariables"))
@@ -150,6 +150,8 @@ with ThemeSync {
   refresh(true)
 
   /// JobWidget stuff
+
+  override def getEditable: Option[Editable] = None
 
   // we'll make an AgentSet ourselves, don't use the standard O/T/P sets - ST 11/5/03
   override def useAgentClass = false
