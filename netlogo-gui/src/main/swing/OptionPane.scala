@@ -2,7 +2,7 @@
 
 package org.nlogo.swing
 
-import java.awt.{ Component, Dialog, GridBagConstraints, GridBagLayout, Insets, Window }
+import java.awt.{ Component, Dialog, Dimension, GridBagConstraints, GridBagLayout, Insets, Window }
 import java.awt.event.{ ActionEvent, KeyEvent }
 import javax.swing.{ AbstractAction, Icon, JComponent, JDialog, JLabel, JPanel, KeyStroke }
 
@@ -124,7 +124,16 @@ class InputOptionPane(parent: Component, title: String, message: String, startin
   extends OptionPane(parent, title, message, OptionPane.Options.OkCancel, OptionPane.Icons.Question) {
 
   // lazy because addContents is called in super (Isaac B 11/16/24)
-  private lazy val input = new TextField(0, startingInput)
+  private lazy val input = new TextField(0, startingInput) {
+    override def getMinimumSize: Dimension =
+      new Dimension(250, super.getMinimumSize.height)
+
+    override def getPreferredSize: Dimension =
+      getMinimumSize
+
+    override def getMaximumSize: Dimension =
+      getMinimumSize
+  }
 
   def getInput: String = {
     if (getSelectedIndex == 0) {
