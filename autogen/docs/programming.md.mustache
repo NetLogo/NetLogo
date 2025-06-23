@@ -2558,7 +2558,7 @@ as described in its [Plots Section](interfacetab.html#plots). However it is
 possible to control plots from procedures, although you need to create
 them in the Interface tab first.
 
-#### Plotting points
+### Plotting points
 
 The two basic commands for actually plotting things are `plot` and `plotxy`.
 
@@ -2578,7 +2578,7 @@ then use `plotxy` instead. This example assumes that a global variable called
 
     plotxy time count-turtles
 
-#### Plot commands
+### Plot commands
 
 Each plot and its pens have setup and update code fields that may contain
 commands (usually containing `plot` or `plotxy`). These commands are run
@@ -2633,7 +2633,7 @@ with `setup-plots update-plots` and replace tick with `update-plots`.
 
 > Code Example: Plotting Example
 
-#### Other kinds of plots
+### Other kinds of plots
 
 By default, NetLogo plot pens plot in line mode, so that the points you plot are
 connected by a line.
@@ -2652,7 +2652,7 @@ default mode. It's also possible to change the pen's mode temporarily using the
 `set-plot-pen-mode` command. That command takes a number as input: 0 for line, 1
 for bar, 2 for point.
 
-#### Histograms
+### Histograms
 
 A histogram is a special kind of plot that measures how frequently certain
 values, or values in certain ranges, occur in a collection of numbers that arise
@@ -2686,7 +2686,7 @@ specified number of bars within the plot's current x range.
 
 > Code Example: Histogram Example
 
-#### Clearing and resetting
+### Clearing and resetting
 
 You can clear the current plot with the `clear-plot` command, or clear every
 plot in your model with `clear-all-plots`. The `clear-all command` also clears
@@ -2702,7 +2702,7 @@ or last edited. Therefore, the effects of such commands as
 `set-plot-background-color`, `set-plot-x-range` and `set-plot-pen-color` are
 only temporary.
 
-#### Ranges and auto scaling
+### Ranges and auto scaling
 
 The default x and y ranges for a plot are fixed numbers, but they can be changed
 at setup time or as the model runs.
@@ -2724,7 +2724,7 @@ If you want to turn off this feature, edit the plot and uncheck the
 "Auto Scale?" checkbox. At present, it is not possible to enable or disable this
 feature only on one axis; it always applies to both axes.
 
-#### Using a Legend
+### Using a Legend
 
 You can show the legend of a plot by checking the "Show legend" checkbox in the
 edit dialog. If you don't want a particular pen to show up in the legend you can
@@ -2732,7 +2732,7 @@ uncheck the "Show in Legend" checkbox for that pen also in the advanced plot pen
 settings (the advanced plot pen settings can be opened by clicking the pencil
 button for that pen in the plot pens table in the plot edit dialog).
 
-#### Temporary plot pens
+### Temporary plot pens
 
 Most plots can get along with a fixed number of pens. But some plots have more
 complex needs; they may need to have the number of pens vary depending on
@@ -2798,7 +2798,7 @@ looked something like this:
 Once again, this is no longer necessary in NetLogo 5, unless you are using
 temporary plot pens.
 
-#### Conclusion
+### Conclusion
 
 Not every aspect of NetLogo's plotting system has been explained here. See the
 Plotting section of the NetLogo Dictionary for information on additional
