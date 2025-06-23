@@ -366,15 +366,8 @@ class FileManager(workspace: AbstractWorkspaceScala,
 
   private def loadModel(uri: URI, openModel: (OpenModel.Controller) => Option[Model]): Option[Model] = {
     val result = ModalProgressTask.runForResultOnBackgroundThread(
-      Hierarchy.getFrame(parent), I18N.gui.get("dialog.interface.loading.task"),
-      () => {},
-      Unit =>
-        try {
-          openModel(controller)
-        } catch {
-          case e: Exception => println("Exception in FileMenu.loadModel: " + e)
-          None
-        })
+      Hierarchy.getFrame(parent), I18N.gui.get("dialog.interface.loading.task"), () => {},
+      Unit => openModel(controller))
     if (result.isEmpty) {
       new LoadErrorEvent().raise(eventRaiser)
     }

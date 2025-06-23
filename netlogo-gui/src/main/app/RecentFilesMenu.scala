@@ -2,12 +2,13 @@
 
 package org.nlogo.app
 
-import java.awt.Component
+import java.awt.Frame
 import java.awt.event.ActionEvent
-import java.io.File
+import java.io.{ File, FileNotFoundException, IOException }
 import javax.swing.{ AbstractAction, Action }
 
-import org.nlogo.api.{ ModelType, Version }
+import org.nlogo.api.{ Exceptions, ModelType, Version }
+import org.nlogo.awt.UserCancelException
 import org.nlogo.core.{ I18N, NetLogoPreferences }
 import org.nlogo.swing.{ OptionPane, UserAction }, UserAction.{ Menu => ActionMenu, MenuAction }
 import org.nlogo.window.Events._
@@ -44,7 +45,7 @@ object OpenRecentFileAction {
 
 import OpenRecentFileAction._
 
-class OpenRecentFileAction(modelEntry: ModelEntry, fileManager: FileManager, index: Int)
+class OpenRecentFileAction(parent: Frame, modelEntry: ModelEntry, fileManager: FileManager, index: Int)
   extends AbstractAction(trimForDisplay(modelEntry.path))
   with MenuAction {
 
@@ -54,22 +55,22 @@ class OpenRecentFileAction(modelEntry: ModelEntry, fileManager: FileManager, ind
   rank        = index.toDouble
 
   override def actionPerformed(e: ActionEvent): Unit = {
-    val sourceComponent = e.getSource match {
-      case component: Component => component
-      case _ => null
-    }
-    open(modelEntry, sourceComponent)
+    open(modelEntry)
   }
 
-  def open(modelEntry: ModelEntry, source: Component): Unit = {
+  def open(modelEntry: ModelEntry): Unit = {
     try {
       fileManager.aboutToCloseFiles()
       fileManager.openFromPath(modelEntry.path, modelEntry.modelType)
     } catch {
-      case ex: org.nlogo.awt.UserCancelException =>
-        org.nlogo.api.Exceptions.ignore(ex)
-      case ex: java.io.IOException => {
-        new OptionPane(source, I18N.gui.get("common.messages.error"), ex.getMessage, OptionPane.Options.YesNo,
+      case ex: UserCancelException =>
+        Exceptions.ignore(ex)
+      case ex: FileNotFoundException =>
+        new OptionPane(parent, I18N.gui.get("common.messages.error"),
+                       I18N.gui.getN("file.open.error.doesNotExist", modelEntry.path), OptionPane.Options.Ok,
+                       OptionPane.Icons.Error)
+      case ex: IOException => {
+        new OptionPane(parent, I18N.gui.get("common.messages.error"), ex.getMessage, OptionPane.Options.Ok,
                        OptionPane.Icons.Error)
       }
     }
@@ -153,7 +154,7 @@ class RecentFilesMenu(frame: AppFrame, fileManager: FileManager)
     val fileActions =
     if (recentFiles.models.isEmpty) Seq(new EmptyAction)
     else (for ((modelEntry, i) <- recentFiles.models.zipWithIndex)
-      yield new OpenRecentFileAction(modelEntry, fileManager, i))
+      yield new OpenRecentFileAction(frame, modelEntry, fileManager, i))
     fileActions :+ new ClearItems()
   }
 
