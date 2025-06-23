@@ -73,17 +73,8 @@ public class View
     return workspace.viewWidget().displaySwitch().isSelected();
   }
 
-  private final Runnable paintRunnable =
-      new Runnable() {
-        public void run() {
-          paintingImmediately = true;
-          paintImmediately();
-          paintingImmediately = false;
-        }
-      };
-
   public void incrementalUpdateFromEventThread() {
-    paintRunnable.run();
+    paintImmediately();
   }
 
   public void dirty() {
@@ -174,12 +165,9 @@ public class View
         if (offscreenImage != null) {
           gOff = (java.awt.Graphics2D) offscreenImage.getGraphics();
           gOff.setFont(getFont());
-        }
-      }
-      // this might happen since the view widget is not displayable in 3D ev 7/5/07
-      if (gOff != null) {
-        synchronized (workspace.world()) {
-          renderer.paint(gOff, this);
+          synchronized (workspace.world()) {
+            renderer.paint(gOff, this);
+          }
         }
       }
       dirty = false;
@@ -239,7 +227,8 @@ public class View
       framesSkipped = false;
     } else if (paintingImmediately) {
       synchronized (workspace.world()) {
-        renderer.paint((java.awt.Graphics2D) g, this);
+        renderer.paint(gOff, this);
+        g.drawImage(offscreenImage, 0, 0, null);
       }
       framesSkipped = false;
     } else {
@@ -252,19 +241,9 @@ public class View
     }
   }
 
-  public void paintingImmediately(boolean paintingImmediately) {
-    this.paintingImmediately = paintingImmediately;
-  }
-
-  public boolean paintingImmediately() {
-    return paintingImmediately;
-  }
-
   public void paintImmediately(boolean force) {
     if (viewIsVisible() && (framesSkipped || force)) {
-      paintingImmediately(true);
       paintImmediately();
-      paintingImmediately(false);
     }
   }
 
@@ -273,7 +252,9 @@ public class View
   }
 
   public void paintImmediately() {
+    paintingImmediately = true;
     paintImmediately(0, 0, getWidth(), getHeight());
+    paintingImmediately = false;
   }
 
   public java.awt.image.BufferedImage exportView() {
