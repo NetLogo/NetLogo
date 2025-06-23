@@ -302,7 +302,6 @@ abstract class WorldViewSettings(protected val workspace: GUIWorkspace, protecte
     workspace.world.patchSize(newPatchSize)
     setDimensions(d)
     patchSize(newPatchSize)
-    gWidget.resetSize()
   }
 
   def setDimensions(d: WorldDimensions): Unit = {

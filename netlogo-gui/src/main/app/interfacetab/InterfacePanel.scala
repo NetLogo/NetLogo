@@ -172,22 +172,22 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
         viewWidget.load(view)
         // in 3D we don't add the viewWidget to the interface panel
         // so don't worry about all the sizing junk ev 7/5/07
-        val parent = viewWidget.asWidget.getParent
+        val parent = viewWidget.getParent
         if (parent != null) {
-          parent.setSize(viewWidget.asWidget.getSize)
-          enforceMinimumAndMaximumWidgetSizes(viewWidget.asWidget)
+          parent.setSize(viewWidget.getSize)
+          enforceMinimumAndMaximumWidgetSizes(viewWidget)
           parent.setLocation(x, y)
           zoomer.zoomWidgetLocation(
-            getWrapper(viewWidget.asWidget),
+            getWrapper(viewWidget),
                   true, true, 1.0, zoomer.zoomFactor)
           zoomer.zoomWidgetSize(
-            getWrapper(viewWidget.asWidget),
+            getWrapper(viewWidget),
                   true, true, 1.0, zoomer.zoomFactor)
           zoomer.scaleComponentFont(
             viewWidget.asInstanceOf[ViewWidget].view,
                  zoomFactor, 1.0, false)
         }
-        viewWidget.asWidget
+        viewWidget
       case _ =>
         makeAndLoadWidget(coreWidget, x, y)
     }

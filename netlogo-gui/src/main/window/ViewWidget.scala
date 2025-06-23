@@ -9,7 +9,6 @@ import org.nlogo.api.{ Approximate, Version }
 import org.nlogo.core.{Widget=>CoreWidget}
 import org.nlogo.swing.PopupMenu
 import org.nlogo.theme.InterfaceColors
-import org.nlogo.window.Events.ResizeViewEvent
 import org.nlogo.window.MouseMode._
 
 class ViewWidget(workspace: GUIWorkspace) extends Widget with ViewWidgetInterface {
@@ -96,12 +95,6 @@ class ViewWidget(workspace: GUIWorkspace) extends Widget with ViewWidgetInterfac
     resetZoomInfo()
   }
 
-  override def setSize(width: Int, height: Int): Unit = {
-    super.setSize(width, height)
-    new ResizeViewEvent(workspace.world.worldWidth, workspace.world.worldHeight)
-        .raise(this);
-  }
-
   override def setBounds(x: Int, y: Int, width: Int, height: Int): Unit = {
     val bounds = getBounds()
     // only set the bounds if they've changed
@@ -182,10 +175,6 @@ class ViewWidget(workspace: GUIWorkspace) extends Widget with ViewWidgetInterfac
     val zoomDiff = font.getSize - view.fontSize
     view.applyNewFontSize(newFontSize, zoomDiff)
   }
-
-  /// ViewWidgetInterface
-
-  override def asWidget: Widget = this
 
   /// events
 

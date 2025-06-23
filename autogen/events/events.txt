@@ -48,7 +48,6 @@ window.PeriodicUpdate
 window.RemoveAllJobs
 window.RemoveConstraint - String varname
 window.RemoveJob - org.nlogo.api.JobOwner owner
-window.ResizeView - int width - int height
 window.ResourcesChanged
 window.RuntimeError - org.nlogo.api.JobOwner jobOwner - org.nlogo.api.SourceOwner sourceOwner - int pos - int length
 window.SetInterfaceMode - org.nlogo.window.InterfaceMode mode - boolean focus

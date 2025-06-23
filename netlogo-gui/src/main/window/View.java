@@ -129,12 +129,6 @@ public class View
   /// sizing
 
   @Override
-  public java.awt.Dimension getMinimumSize() {
-    return new java.awt.Dimension
-        (workspace.world().worldWidth(), workspace.world().worldHeight());
-  }
-
-  @Override
   public java.awt.Dimension getPreferredSize() {
     int width = (int) (viewWidth * patchSize());
     int height = (int) (viewHeight * patchSize());
