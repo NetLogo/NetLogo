@@ -330,6 +330,7 @@ class DummyWidget(var sourceCode: String, val isCommandCenter: Boolean = false) 
 class DummyJobWidget(source: String, rand: MersenneTwisterFast) extends JobWidget(rand) {
   def load(widget: CoreWidget): Unit = {}
   def model: CoreWidget = null
+  override def getEditable: Option[Editable] = None
   override def syncTheme(): Unit = {}
 }
 
