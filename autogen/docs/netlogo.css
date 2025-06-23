@@ -105,6 +105,21 @@ h3 > a {
   clear: both;
 }
 
+h5 {
+  font-size: 90% ;
+  font-weight: bold;
+  padding: 0.125em;
+  margin-left: 1.7em;
+}
+
+h5.minor-section-header {
+  font-size: 105% ;
+  font-weight: bold;
+  margin-top: 0.75em;
+  margin-bottom: 0.75em;
+  margin-left: 1.5em;
+}
+
 p {
   margin-left: 1.5em;
 }
@@ -203,13 +218,6 @@ img.screenshot {
 
 td.rightalign {vertical-align: top; text-align: right;}
 td.centeralign {vertical-align: top; text-align: center;}
-
-h5.minor-section-header {
-  font-size: 105% ;
-  font-weight: bold;
-  margin-top: 0.75em;
-  margin-bottom: 0.75em;
-}
 
 ul.no-bullets {
   list-style-type: none;
