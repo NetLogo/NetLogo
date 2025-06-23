@@ -430,6 +430,16 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
     roundTripHelper("set a array:from-list [\"}}\" \"{{\"]", "extensions [array] globals [a]")
   }
 
+  test("testImportingArrayInsideArray", SlowTest.Tag) {
+    val filename = getUniqueFilename()
+    workspace.initForTesting(5, "globals [ ar1 ] extensions [ array ]")
+    testCommand("set ar1 array:from-list (list array:from-list [5])")
+    testCommand(s"export-world \"$filename\"")
+    testCommand("ca")
+    testCommand(s"import-world \"$filename\"")
+    testReporter("array:to-list array:item ar1 0", "[5]")
+  }
+
   /// other tests (that don't use roundTripHelper)
 
   if(!Version.is3D)
