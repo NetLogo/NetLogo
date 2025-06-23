@@ -943,79 +943,88 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
   private def placeShadowWidgets(): Unit = {
     shadowWidgets.foreach(_ match {
-      case NewShadowWidget(wrapper) =>
-        wrapper.selected(true)
-        wrapper.foreground()
-        wrapper.isNew(true)
-        wrapper.setPlacing(false)
+      case NewShadowWidget(wrapper) => placeSingleShadowWidget(wrapper)
+      case PastedShadowWidgets(wrappers, _) => placeMultipleShadowWidgets(wrappers)
+    })
+  }
 
-        placedShadowWidgets = true
+  private def placeSingleShadowWidget(wrapper: WidgetWrapper): Unit = {
+    wrapper.selected(true)
+    wrapper.foreground()
+    wrapper.isNew(true)
+    wrapper.setPlacing(false)
 
-        setInterfaceMode(InterfaceMode.Interact, false)
+    placedShadowWidgets = true
 
-        wrapper.widget.getEditable.foreach(new EditWidgetEvent(_).raise(this))
+    setInterfaceMode(InterfaceMode.Interact, false)
 
-        placedShadowWidgets = false
+    wrapper.widget.getEditable.foreach(new EditWidgetEvent(_).raise(this))
 
-        if (wrapper != null)
-          wrapper.isNew(false)
+    placedShadowWidgets = false
 
-        shadowWidgets = None
+    if (wrapper != null)
+      wrapper.isNew(false)
 
-      case PastedShadowWidgets(wrappers, _) =>
-        wrappers.foreach {
-          case (wrapper, _) =>
-            val add: Boolean = wrapper.widget match {
-              case v: ViewWidget =>
-                getWrappers.find(w => w != wrapper && w.widget.isInstanceOf[ViewWidget]) match {
-                  case Some(w) =>
-                    w.widget.load(v.model)
-                    w.setLocation(wrapper.getLocation)
-                    w.setSize(v.model.width, v.model.height)
+    shadowWidgets = None
+  }
 
-                    remove(wrapper)
+  private def placeMultipleShadowWidgets(wrappers: Seq[(WidgetWrapper, Point)]): Unit = {
+    wrappers.foreach {
+      case (wrapper, _) =>
+        if (maybeReplaceWidget(wrapper)) {
+          wrapper.foreground()
+          wrapper.setPlacing(false)
 
-                    false
+          WidgetActions.addWidget(this, wrapper)
 
-                  case None =>
-                    true
-                }
+          LogManager.widgetAdded(false, wrapper.widget.classDisplayName, wrapper.widget.displayName)
+        }
+    }
 
-              case o: OutputWidget =>
-                getWrappers.find(w => w != wrapper && w.widget.isInstanceOf[OutputWidget]) match {
-                  case Some(w) =>
-                    w.widget.load(o.model)
-                    w.setLocation(wrapper.getLocation)
-                    w.setSize(o.model.width, o.model.height)
+    shadowWidgets = None
 
-                    remove(wrapper)
+    setInterfaceMode(InterfaceMode.Interact, false)
 
-                    false
+    new CompileAllEvent().raise(this)
+  }
 
-                  case None =>
-                    true
-                }
+  // if widget is a View or Output, replace any existing one and return false if one was replaced
+  // otherwise return true so the calling code knows to add it (Isaac B 6/23/25)
+  private def maybeReplaceWidget(wrapper: WidgetWrapper): Boolean = {
+    wrapper.widget match {
+      case v: ViewWidget =>
+        getWrappers.find(w => w != wrapper && w.widget.isInstanceOf[ViewWidget]) match {
+          case Some(w) =>
+            w.widget.load(v.model)
+            w.setLocation(wrapper.getLocation)
+            w.setSize(v.model.width, v.model.height)
 
-              case _ =>
-                true
-            }
+            remove(wrapper)
 
-            if (add) {
-              wrapper.foreground()
-              wrapper.setPlacing(false)
+            false
 
-              WidgetActions.addWidget(this, wrapper)
-
-              LogManager.widgetAdded(false, wrapper.widget.classDisplayName, wrapper.widget.displayName)
-            }
+          case None =>
+            true
         }
 
-        shadowWidgets = None
+      case o: OutputWidget =>
+        getWrappers.find(w => w != wrapper && w.widget.isInstanceOf[OutputWidget]) match {
+          case Some(w) =>
+            w.widget.load(o.model)
+            w.setLocation(wrapper.getLocation)
+            w.setSize(o.model.width, o.model.height)
 
-        setInterfaceMode(InterfaceMode.Interact, false)
+            remove(wrapper)
 
-        new CompileAllEvent().raise(this)
-    })
+            false
+
+          case None =>
+            true
+        }
+
+      case _ =>
+        true
+    }
   }
 
   def removeShadowWidgets(): Unit = {
