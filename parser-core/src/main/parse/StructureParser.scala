@@ -88,15 +88,19 @@ object StructureParser {
               }
 
               val prefix = currentLibrary.alias.getOrElse(currentLibrary.name) + ":"
+              val exportedNames =
+                newResults._export.map(_.exportedNames.toSet).getOrElse(newResults.procedures.keys.map(_._1).toSet)
               val newProcedures = addProcedureAliases(
                 previousResults.procedures,
                 newResults.procedures,
+                exportedNames,
                 currentModule,
                 prefix
               )
               val newProcedureTokens = addProcedureTokenAliases(
                 previousResults.procedureTokens,
                 newResults.procedureTokens,
+                exportedNames,
                 currentModule,
                 currentLibrary.filename,
                 prefix
@@ -132,11 +136,16 @@ object StructureParser {
   private def addProcedureAliases(
     oldProcedures: ProceduresMap,
     newProcedures: ProceduresMap,
+    exportedNames: Set[String],
     module: Option[String],
     prefix: String): ProceduresMap = {
-    val changedProcedures = newProcedures.removedAll(oldProcedures.keys)
 
-    val aliases = changedProcedures.map{case ((name, _), proc) =>
+    val changedProcedures = newProcedures.removedAll(oldProcedures.keys)
+    val exportedProcedures = changedProcedures.filter{case ((name, _), _) =>
+      exportedNames.contains(name)
+    }
+
+    val aliases = exportedProcedures.map{case ((name, _), proc) =>
       val key = (prefix.toUpperCase + name, module)
       proc.aliases = proc.aliases :+ key
       key -> proc}
@@ -157,13 +166,18 @@ object StructureParser {
   private def addProcedureTokenAliases(
     oldProcedureTokens: Map[Tuple2[String, Option[String]], Iterable[Token]],
     newProcedureTokens: Map[Tuple2[String, Option[String]], Iterable[Token]],
+    exportedNames: Set[String],
     module: Option[String],
     filename: Option[String],
     prefix: String): Map[Tuple2[String, Option[String]], Iterable[Token]] = {
+
     val changedProcedureTokens = newProcedureTokens.removedAll(oldProcedureTokens.keys)
+    val exportedProcedureTokens = changedProcedureTokens.filter{case ((name, _), _) =>
+      exportedNames.contains(name)
+    }
 
     // addProcedureAliases() already checks for name conflicts, so no need to check again here.
-    val aliases = changedProcedureTokens.map{case ((name, _), proc) =>
+    val aliases = exportedProcedureTokens.map{case ((name, _), proc) =>
       (prefix.toUpperCase + name, module) -> proc
     }
 
