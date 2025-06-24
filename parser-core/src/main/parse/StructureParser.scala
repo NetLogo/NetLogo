@@ -64,30 +64,30 @@ object StructureParser {
               val suppliedPath = resolveIncludePath(filename)
 
               val previousResults = newResults
-              val currentLibrary = results.imports.head
+              val currentImport = results.imports.head
 
               val separator = System.getProperty("file.separator")
               val currentModule = for {
-                pathString <- currentLibrary.filename
+                pathString <- currentImport.filename
                 basename = pathString.split(separator).last.toUpperCase()
               } yield raw".NLS$$".r.replaceFirstIn(basename, "")
 
               newResults = includeFile(compilationEnvironment, suppliedPath) match {
                 case Some((path, fileContents)) =>
-                  parseOne(tokenizer, structureParser, fileContents, path, Some(currentLibrary.name),
+                  parseOne(tokenizer, structureParser, fileContents, path, Some(currentImport.name),
                     newResults.copy(imports = newResults.imports.tail,
                       includedSources = newResults.includedSources :+ suppliedPath))
                 case None =>
-                  exception(I18N.errors.getN("compiler.StructureParser.importNotFound", suppliedPath), currentLibrary.token)
+                  exception(I18N.errors.getN("compiler.StructureParser.importNotFound", suppliedPath), currentImport.token)
               }
 
-              if (processedLibraries.contains(currentLibrary.name)) {
-                exception(I18N.errors.getN("compiler.StructureParser.importLoop"), currentLibrary.token)
+              if (processedLibraries.contains(currentImport.name)) {
+                exception(I18N.errors.getN("compiler.StructureParser.importLoop"), currentImport.token)
               } else {
-                processedLibraries += currentLibrary.name
+                processedLibraries += currentImport.name
               }
 
-              val prefix = currentLibrary.alias.getOrElse(currentLibrary.name) + ":"
+              val prefix = currentImport.alias.getOrElse(currentImport.name) + ":"
               val exportedNames =
                 newResults._export.map(_.exportedNames.toSet).getOrElse(newResults.procedures.keys.map(_._1).toSet)
               val newProcedures = addProcedureAliases(
@@ -102,7 +102,7 @@ object StructureParser {
                 newResults.procedureTokens,
                 exportedNames,
                 currentModule,
-                currentLibrary.filename,
+                currentImport.filename,
                 prefix
               )
 
