@@ -7,7 +7,7 @@ import java.awt.Component
 import org.nlogo.api.{ CompilerServices, Dump }
 import org.nlogo.core.I18N
 import org.nlogo.editor.AbstractEditorArea
-import org.nlogo.window.Events.{ InterfaceGlobalEvent, PeriodicUpdateEvent, WidgetEditedEvent }
+import org.nlogo.window.Events.{ InterfaceGlobalEvent, PeriodicUpdateEvent }
 
 class InputBoxWidget(textArea: AbstractEditorArea, dialogTextArea: AbstractEditorArea,
                      compiler: CompilerServices, nextComponent: Component)
@@ -44,7 +44,6 @@ class InputBoxWidget(textArea: AbstractEditorArea, dialogTextArea: AbstractEdito
       if (!text.equals(textArea.getText())) textArea.setText(text)
       if (raiseEvent) new InterfaceGlobalEvent(this, false, false, true, false).raise(this)
       inputType.colorPanel(colorSwatch)
-      new WidgetEditedEvent(this).raise(this)
     }
   }
 }

@@ -84,7 +84,6 @@ class ChooserWidget(val compiler: CompilerServices, colorizer: Colorizer)
     if ((index: Int) != newIndex) {
       super.index(newIndex)
       new InterfaceGlobalEvent(this, false, false, true, false).raise(this)
-      new Events.WidgetEditedEvent(this).raise(this)
     }
   }
 

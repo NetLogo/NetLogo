@@ -22,7 +22,7 @@ import org.nlogo.window.{ AbstractWidgetPanel, ButtonWidget, ClipboardUtils, Edi
                           DummyChooserWidget, DummyInputBoxWidget, DummyPlotWidget, DummyViewWidget, PlotWidget,
                           SliderWidget, ViewWidget, WidgetSizes },
   WindowEvents.{ CompileAllEvent, DirtyEvent, EditWidgetEvent, InterfaceModeChangedEvent, LoadBeginEvent,
-                 SetInterfaceModeEvent, WidgetEditedEvent, WidgetRemovedEvent, ZoomedEvent }
+                 SetInterfaceModeEvent, WidgetRemovedEvent, ZoomedEvent }
 
 // note that an instance of this class is used for the hubnet client editor
 // and its subclass InterfacePanel is used for the interface tab.
@@ -36,7 +36,6 @@ class WidgetPanel(val workspace: GUIWorkspace)
     with MouseListener
     with MouseMotionListener
     with KeyListener
-    with WidgetEditedEvent.Handler
     with WidgetRemovedEvent.Handler
     with LoadBeginEvent.Handler
     with SetInterfaceModeEvent.Handler {
@@ -1049,7 +1048,11 @@ class WidgetPanel(val workspace: GUIWorkspace)
     target match {
       case comp: Component =>
         comp.getParent match {
-          case ww: WidgetWrapper => ww.selected(false)
+          case ww: WidgetWrapper =>
+            ww.selected(false)
+
+            resetZoomInfo(ww.widget)
+
           case _ =>
         }
       case _ =>
@@ -1068,6 +1071,8 @@ class WidgetPanel(val workspace: GUIWorkspace)
           }
         case _ =>
       }
+
+      new DirtyEvent(None).raise(this)
     }
     setForegroundWrapper()
   }
@@ -1329,11 +1334,6 @@ class WidgetPanel(val workspace: GUIWorkspace)
       addWidget(newGuy, x, y, false, true)
     }
     newGuy
-  }
-
-  def handle(e: WidgetEditedEvent): Unit = {
-    new DirtyEvent(None).raise(this)
-    zoomer.updateZoomInfo(e.widget)
   }
 
   def handle(e: WidgetRemovedEvent): Unit =

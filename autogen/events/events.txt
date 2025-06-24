@@ -53,7 +53,6 @@ window.RuntimeError - org.nlogo.api.JobOwner jobOwner - org.nlogo.api.SourceOwne
 window.SetInterfaceMode - org.nlogo.window.InterfaceMode mode - boolean focus
 window.TickStateChange - boolean tickCounterInitialized
 window.WidgetAdded - Object widget
-window.WidgetEdited - Widget widget
 window.WidgetError - Widget widget - scala.Option<Exception> error
 window.WidgetForegrounded - Widget widget
 window.WidgetRemoved - Widget widget

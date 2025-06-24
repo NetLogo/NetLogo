@@ -47,6 +47,8 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
   private var constrainToHorizontal = false
   private var constrainToVertical = false
 
+  private var startBoundsUnselected: Option[Rectangle] = None
+
   private val glass = new JComponent {}
 
   glass.setOpaque(false)
@@ -398,6 +400,7 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
     startPressY = startY
     selected(false, true) // true = change is temporary, don't raise events
     originalBounds = getBounds()
+    startBoundsUnselected = Option(getUnselectedBounds)
     dragging = true
   }
 
@@ -449,7 +452,8 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
   def doDrop(): Unit = {
     selected(true, true) // 2nd true = change was temporary
 
-    new DirtyEvent(None).raise(this)
+    if (!startBoundsUnselected.contains(getUnselectedBounds))
+      new DirtyEvent(None).raise(this)
 
     getParent.asInstanceOf[WidgetPanel].zoomer.updateZoomInfo(widget)
 

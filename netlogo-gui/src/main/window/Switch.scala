@@ -92,7 +92,6 @@ abstract class Switch extends MultiErrorWidget with Events.AfterLoadEvent.Handle
       constraint.defaultValue = on
       updateConstraints()
       repaint()
-      new Events.WidgetEditedEvent(this).raise(this)
     }
   }
 

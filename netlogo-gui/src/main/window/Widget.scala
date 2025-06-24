@@ -10,8 +10,7 @@ import org.nlogo.api.CompilerServices
 import org.nlogo.core.{ NetLogoPreferences, TokenType, Widget => CoreWidget }
 import org.nlogo.swing.{ PopupMenu, RoundedBorderPanel }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
-import org.nlogo.window.Events.{ InterfaceModeChangedEvent, WidgetAddedEvent, WidgetEditedEvent, WidgetErrorEvent,
-                                 WidgetRemovedEvent }
+import org.nlogo.window.Events.{ InterfaceModeChangedEvent, WidgetAddedEvent, WidgetErrorEvent, WidgetRemovedEvent }
 
 object Widget {
   trait LoadHelper {
@@ -134,7 +133,6 @@ abstract class Widget extends JPanel with RoundedBorderPanel with ThemeSync with
   }
 
   def editFinished(): Boolean = {
-    new WidgetEditedEvent(this).raise(this)
     true
   }
 

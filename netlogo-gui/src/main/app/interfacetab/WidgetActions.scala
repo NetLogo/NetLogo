@@ -1,10 +1,12 @@
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
+
 package org.nlogo.app.interfacetab
 
 import java.awt.Rectangle
 import javax.swing.undo.AbstractUndoableEdit
 
 import org.nlogo.editor.UndoManager
-import org.nlogo.window.InterfaceMode
+import org.nlogo.window.{ Events, InterfaceMode }
 
 object WidgetActions {
 
@@ -170,6 +172,8 @@ object WidgetActions {
             removeSelectionMargin(map(widgetWrapper))
         )
       }
+
+      new Events.DirtyEvent(None).raise(widgetPanel)
     }
   }
 
@@ -191,6 +195,8 @@ object WidgetActions {
         else
           removeSelectionMargin(bounds)
       )
+
+      new Events.DirtyEvent(None).raise(widgetWrapper)
     }
   }
 
@@ -198,11 +204,15 @@ object WidgetActions {
     override def redo: Unit = {
       for ((ww, _, bounds) <- wrappers)
         setBounds(ww, bounds)
+
+      wrappers.headOption.foreach(new Events.DirtyEvent(None).raise)
     }
 
     override def undo: Unit = {
       for ((ww, bounds, _) <- wrappers)
         setBounds(ww, bounds)
+
+      wrappers.headOption.foreach(new Events.DirtyEvent(None).raise)
     }
 
     override def getPresentationName = "Widget Stretching"

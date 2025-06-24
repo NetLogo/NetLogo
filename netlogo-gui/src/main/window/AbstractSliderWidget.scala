@@ -217,7 +217,6 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
       valueComponent.setText(valueString(value))
       slider.setValue(((value - minimum) / increment).round.asInstanceOf[Int])
       repaint()
-      new Events.WidgetEditedEvent(this).raise(this)
     }
   }
 
