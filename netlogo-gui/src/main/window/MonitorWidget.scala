@@ -376,7 +376,8 @@ class MonitorWidget(random: MersenneTwisterFast, compiler: CompilerServices, col
   }
 
   def mouseClicked(e: MouseEvent): Unit = {
-    if (!e.isPopupTrigger && error() != null && !lastMousePressedWasPopupTrigger)
+    if (e.getButton == MouseEvent.BUTTON1 && !e.isPopupTrigger && error().isDefined &&
+        !lastMousePressedWasPopupTrigger)
       new EditWidgetEvent(this).raise(this)
   }
 
