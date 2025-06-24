@@ -80,7 +80,15 @@ abstract class Widget extends JPanel with RoundedBorderPanel with ThemeSync with
   def getEditable: Option[Editable]
   def copyable = true // only OutputWidget and ViewWidget are not copyable
   def constrainDrag(newBounds: Rectangle, originalBounds: Rectangle, mouseMode: MouseMode): Rectangle = newBounds
-  def isZoomed: Boolean = widgetContainer.exists(_.isZoomed)
+  def isZoomed: Boolean = {
+    // this couldn't possibly happen ...right?
+    // well somehow it does happen when loading monitor widgets, so here we are (Isaac B 6/24/25)
+    if (widgetContainer == null) {
+      false
+    } else {
+      widgetContainer.exists(_.isZoomed)
+    }
+  }
 
   def model: CoreWidget
   def reAdd(): Unit = { }

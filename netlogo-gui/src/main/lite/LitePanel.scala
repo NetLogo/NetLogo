@@ -69,7 +69,6 @@ with ControlSet {
     override def handle(e: LoadModelEvent): Unit = {
       workspace.aggregateManager.load(e.model, workspace)
   }})
-  workspace.setWidgetContainer(iP)
   setBackground(java.awt.Color.WHITE)
   setLayout(new java.awt.BorderLayout)
   add(iP, java.awt.BorderLayout.CENTER)
