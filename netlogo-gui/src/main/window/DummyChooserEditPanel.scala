@@ -17,7 +17,7 @@ class DummyChooserEditPanel(target: DummyChooserWidget, compiler: CompilerServic
         target,
         I18N.gui.get("edit.hubnet.tag"),
         () => target.name,
-        target.setVarName(_),
+        _.foreach(target.setVarName),
         () => apply()))
 
   private val choicesWrapper =
@@ -26,7 +26,7 @@ class DummyChooserEditPanel(target: DummyChooserWidget, compiler: CompilerServic
         target,
         I18N.gui.get("edit.chooser.choices"),
         () => target.choicesWrapper,
-        target.setChoicesWrapper(_),
+        _.foreach(target.setChoicesWrapper),
         () => apply()),
       compiler, colorizer)
 
@@ -38,7 +38,7 @@ class DummyChooserEditPanel(target: DummyChooserWidget, compiler: CompilerServic
         target,
         I18N.gui.get("edit.general.oldSize"),
         () => target.oldSize,
-        target.oldSize(_),
+        _.foreach(target.oldSize),
         () => apply()))
 
   locally {

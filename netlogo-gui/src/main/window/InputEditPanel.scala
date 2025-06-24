@@ -14,7 +14,7 @@ class InputEditPanel(target: InputBoxWidget, compiler: CompilerServices) extends
         target,
         I18N.gui.get("edit.input.globalVar"),
         () => target.name,
-        target.setNameWrapper(_),
+        name => target.setNameWrapper(name.getOrElse("")),
         () => apply()),
       compiler)
 
@@ -24,7 +24,7 @@ class InputEditPanel(target: InputBoxWidget, compiler: CompilerServices) extends
         target,
         I18N.gui.get("edit.input.type"),
         () => target.typeOptions,
-        target.setTypeOptions(_),
+        _.foreach(target.setTypeOptions),
         () => apply()))
 
   private val oldSize =
@@ -33,7 +33,7 @@ class InputEditPanel(target: InputBoxWidget, compiler: CompilerServices) extends
         target,
         I18N.gui.get("edit.general.oldSize"),
         () => target.oldSize,
-        target.oldSize(_),
+        _.foreach(target.oldSize),
         () => apply()))
 
   locally {

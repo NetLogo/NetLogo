@@ -14,11 +14,11 @@ class PlotEditPanel(target: PlotWidget, colorizer: Colorizer) extends WidgetEdit
         target,
         I18N.gui.get("edit.plot.name"),
         () => target.plotName,
-        target.setPlotName(_),
+        name => target.setPlotName(name.getOrElse("")),
         () => apply())) {
 
       override def get: Option[String] =
-        super.get.filter(_.nonEmpty)
+        super.get.map(_.trim).filter(_.nonEmpty)
     }
 
   private val xLabel =
@@ -27,7 +27,7 @@ class PlotEditPanel(target: PlotWidget, colorizer: Colorizer) extends WidgetEdit
         target,
         I18N.gui.get("edit.plot.xLabel"),
         () => target.xLabel,
-        target.setXLabel(_),
+        _.foreach(target.setXLabel),
         () => apply()))
 
   private val xMin =
@@ -36,7 +36,7 @@ class PlotEditPanel(target: PlotWidget, colorizer: Colorizer) extends WidgetEdit
         target,
         I18N.gui.get("edit.plot.xmin"),
         () => target.defaultXMin,
-        target.setDefaultXMin(_),
+        _.foreach(target.setDefaultXMin),
         () => apply()))
 
   private val xMax =
@@ -45,7 +45,7 @@ class PlotEditPanel(target: PlotWidget, colorizer: Colorizer) extends WidgetEdit
         target,
         I18N.gui.get("edit.plot.xmax"),
         () => target.defaultXMax,
-        target.setDefaultXMax(_),
+        _.foreach(target.setDefaultXMax),
         () => apply()))
 
   private val yLabel =
@@ -54,7 +54,7 @@ class PlotEditPanel(target: PlotWidget, colorizer: Colorizer) extends WidgetEdit
         target,
         I18N.gui.get("edit.plot.yLabel"),
         () => target.yLabel,
-        target.setYLabel(_),
+        _.foreach(target.setYLabel),
         () => apply()))
 
   private val yMin =
@@ -63,7 +63,7 @@ class PlotEditPanel(target: PlotWidget, colorizer: Colorizer) extends WidgetEdit
         target,
         I18N.gui.get("edit.plot.ymin"),
         () => target.defaultYMin,
-        target.setDefaultYMin(_),
+        _.foreach(target.setDefaultYMin),
         () => apply()))
 
   private val yMax =
@@ -72,7 +72,7 @@ class PlotEditPanel(target: PlotWidget, colorizer: Colorizer) extends WidgetEdit
         target,
         I18N.gui.get("edit.plot.ymax"),
         () => target.defaultYMax,
-        target.setDefaultYMax(_),
+        _.foreach(target.setDefaultYMax),
         () => apply()))
 
   private val autoPlotX =
@@ -81,7 +81,7 @@ class PlotEditPanel(target: PlotWidget, colorizer: Colorizer) extends WidgetEdit
         target,
         I18N.gui.get("edit.plot.autoScaleX"),
         () => target.defaultAutoPlotX,
-        target.setDefaultAutoPlotX(_),
+        _.foreach(target.setDefaultAutoPlotX),
         () => apply()))
 
   private val autoPlotY =
@@ -90,7 +90,7 @@ class PlotEditPanel(target: PlotWidget, colorizer: Colorizer) extends WidgetEdit
         target,
         I18N.gui.get("edit.plot.autoScaleY"),
         () => target.defaultAutoPlotY,
-        target.setDefaultAutoPlotY(_),
+        _.foreach(target.setDefaultAutoPlotY),
         () => apply()))
 
   private val showLegend =
@@ -99,7 +99,7 @@ class PlotEditPanel(target: PlotWidget, colorizer: Colorizer) extends WidgetEdit
         target,
         I18N.gui.get("edit.plot.showLegend"),
         () => target.showLegend,
-        target.setShowLegend(_),
+        _.foreach(target.setShowLegend),
         () => apply()))
 
   private val runtimeError =
@@ -108,7 +108,7 @@ class PlotEditPanel(target: PlotWidget, colorizer: Colorizer) extends WidgetEdit
         target,
         I18N.gui.get("edit.plot.error.runtimeError"),
         () => target.runtimeError,
-        target.setRuntimeError(_),
+        _.foreach(target.setRuntimeError),
         () => apply()))
 
   private val setupCode =
@@ -117,7 +117,7 @@ class PlotEditPanel(target: PlotWidget, colorizer: Colorizer) extends WidgetEdit
         target,
         I18N.gui.get("edit.plot.setupCode"),
         () => target.setupCode,
-        target.setSetupCode(_),
+        _.foreach(target.setSetupCode),
         () => apply()),
       colorizer, true, true)
 
@@ -127,7 +127,7 @@ class PlotEditPanel(target: PlotWidget, colorizer: Colorizer) extends WidgetEdit
         target,
         I18N.gui.get("edit.plot.updateCode"),
         () => target.updateCode,
-        target.setUpdateCode(_),
+        _.foreach(target.setUpdateCode),
         () => apply()),
       colorizer, true, true)
 
@@ -137,7 +137,7 @@ class PlotEditPanel(target: PlotWidget, colorizer: Colorizer) extends WidgetEdit
         target,
         I18N.gui.get("edit.plot.pen.plotPens"),
         () => target.editPlotPens,
-        target.setEditPlotPens(_),
+        _.foreach(target.setEditPlotPens),
         () => apply()),
       colorizer, target)
 
@@ -147,7 +147,7 @@ class PlotEditPanel(target: PlotWidget, colorizer: Colorizer) extends WidgetEdit
         target,
         I18N.gui.get("edit.general.oldSize"),
         () => target.oldSize,
-        target.oldSize(_),
+        _.foreach(target.oldSize),
         () => apply()))
 
   locally {

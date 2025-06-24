@@ -13,7 +13,7 @@ class DummyPlotEditPanel(target: DummyPlotWidget) extends WidgetEditPanel(target
         target,
         I18N.gui.get("edit.plot.name"),
         () => target.nameOptions,
-        target.setNameOptions(_),
+        _.foreach(target.setNameOptions),
         () => apply()))
 
   private val xLabel =
@@ -22,7 +22,7 @@ class DummyPlotEditPanel(target: DummyPlotWidget) extends WidgetEditPanel(target
         target,
         I18N.gui.get("edit.plot.xLabel"),
         () => target.xLabel,
-        target.setXLabel(_),
+        _.foreach(target.setXLabel),
         () => apply()))
 
   private val xMin =
@@ -31,7 +31,7 @@ class DummyPlotEditPanel(target: DummyPlotWidget) extends WidgetEditPanel(target
         target,
         I18N.gui.get("edit.plot.xmin"),
         () => target.defaultXMin,
-        target.setDefaultXMin(_),
+        _.foreach(target.setDefaultXMin),
         () => apply()))
 
   private val xMax =
@@ -40,7 +40,7 @@ class DummyPlotEditPanel(target: DummyPlotWidget) extends WidgetEditPanel(target
         target,
         I18N.gui.get("edit.plot.xmax"),
         () => target.defaultXMax,
-        target.setDefaultXMax(_),
+        _.foreach(target.setDefaultXMax),
         () => apply()))
 
   private val yLabel =
@@ -49,7 +49,7 @@ class DummyPlotEditPanel(target: DummyPlotWidget) extends WidgetEditPanel(target
         target,
         I18N.gui.get("edit.plot.yLabel"),
         () => target.yLabel,
-        target.setYLabel(_),
+        _.foreach(target.setYLabel),
         () => apply()))
 
   private val yMin =
@@ -58,7 +58,7 @@ class DummyPlotEditPanel(target: DummyPlotWidget) extends WidgetEditPanel(target
         target,
         I18N.gui.get("edit.plot.ymin"),
         () => target.defaultYMin,
-        target.setDefaultYMin(_),
+        _.foreach(target.setDefaultYMin),
         () => apply()))
 
   private val yMax =
@@ -67,7 +67,7 @@ class DummyPlotEditPanel(target: DummyPlotWidget) extends WidgetEditPanel(target
         target,
         I18N.gui.get("edit.plot.ymax"),
         () => target.defaultYMax,
-        target.setDefaultYMax(_),
+        _.foreach(target.setDefaultYMax),
         () => apply()))
 
   private val autoPlotX =
@@ -76,7 +76,7 @@ class DummyPlotEditPanel(target: DummyPlotWidget) extends WidgetEditPanel(target
         target,
         I18N.gui.get("edit.plot.autoScaleX"),
         () => target.defaultAutoPlotX,
-        target.setDefaultAutoPlotX(_),
+        _.foreach(target.setDefaultAutoPlotX),
         () => apply()))
 
   private val autoPlotY =
@@ -85,7 +85,7 @@ class DummyPlotEditPanel(target: DummyPlotWidget) extends WidgetEditPanel(target
         target,
         I18N.gui.get("edit.plot.autoScaleY"),
         () => target.defaultAutoPlotY,
-        target.setDefaultAutoPlotY(_),
+        _.foreach(target.setDefaultAutoPlotY),
         () => apply()))
 
   private val showLegend =
@@ -94,7 +94,7 @@ class DummyPlotEditPanel(target: DummyPlotWidget) extends WidgetEditPanel(target
         target,
         I18N.gui.get("edit.plot.showLegend"),
         () => target.showLegend,
-        target.setShowLegend(_),
+        _.foreach(target.setShowLegend),
         () => apply()))
 
   private val oldSize =
@@ -103,7 +103,7 @@ class DummyPlotEditPanel(target: DummyPlotWidget) extends WidgetEditPanel(target
         target,
         I18N.gui.get("edit.general.oldSize"),
         () => target.oldSize,
-        target.oldSize(_),
+        _.foreach(target.oldSize),
         () => apply()))
 
   locally {

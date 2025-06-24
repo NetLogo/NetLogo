@@ -21,7 +21,7 @@ class WorldEditPanel3D(target: WorldViewSettings3D) extends WorldEditPanel(targe
         target,
         "min-pxcor",
         () => target.minPxcor,
-        target.minPxcor(_),
+        _.foreach(target.minPxcor),
         () => previewChanged("minPxcor", minPxcor.get)))
 
   private val minPxcorLabel = new JLabel(I18N.gui("3D.minPxcor")) {
@@ -34,7 +34,7 @@ class WorldEditPanel3D(target: WorldViewSettings3D) extends WorldEditPanel(targe
         target,
         "max-pxcor",
         () => target.maxPxcor,
-        target.maxPxcor(_),
+        _.foreach(target.maxPxcor),
         () => previewChanged("maxPxcor", maxPxcor.get)))
 
   private val maxPxcorLabel = new JLabel(I18N.gui("3D.maxPxcor")) {
@@ -47,7 +47,7 @@ class WorldEditPanel3D(target: WorldViewSettings3D) extends WorldEditPanel(targe
         target,
         "min-ycor",
         () => target.minPycor,
-        target.minPycor(_),
+        _.foreach(target.minPycor),
         () => previewChanged("minPycor", minPycor.get)))
 
   private val minPycorLabel = new JLabel(I18N.gui("3D.minPycor")) {
@@ -60,7 +60,7 @@ class WorldEditPanel3D(target: WorldViewSettings3D) extends WorldEditPanel(targe
         target,
         "max-pycor",
         () => target.maxPycor,
-        target.maxPycor(_),
+        _.foreach(target.maxPycor),
         () => previewChanged("maxPycor", maxPycor.get)))
 
   private val maxPycorLabel = new JLabel(I18N.gui("3D.maxPycor")) {
@@ -73,7 +73,7 @@ class WorldEditPanel3D(target: WorldViewSettings3D) extends WorldEditPanel(targe
         target,
         "min-pzcor",
         () => target.minPzcor,
-        target.minPzcor(_),
+        _.foreach(target.minPzcor),
         () => previewChanged("minPzcor", minPzcor.get)))
 
   private val minPzcorLabel = new JLabel(I18N.gui("3D.minPzcor")) {
@@ -86,7 +86,7 @@ class WorldEditPanel3D(target: WorldViewSettings3D) extends WorldEditPanel(targe
         target,
         "max-pzcor",
         () => target.maxPzcor,
-        target.maxPzcor(_),
+        _.foreach(target.maxPzcor),
         () => previewChanged("maxPzcor", maxPzcor.get)))
 
   private val maxPzcorLabel = new JLabel(I18N.gui("3D.maxPzcor")) {
@@ -100,7 +100,7 @@ class WorldEditPanel3D(target: WorldViewSettings3D) extends WorldEditPanel(targe
         target,
         I18N.gui("3D.wrapX"),
         () => target.wrappingX,
-        target.wrappingX(_),
+        _.foreach(target.wrappingX),
         () => previewChanged("wrappingX", wrappingX.get)))
 
   private val wrappingY: BooleanEditor =
@@ -109,7 +109,7 @@ class WorldEditPanel3D(target: WorldViewSettings3D) extends WorldEditPanel(targe
         target,
         I18N.gui("3D.wrapY"),
         () => target.wrappingY,
-        target.wrappingY(_),
+        _.foreach(target.wrappingY),
         () => previewChanged("wrappingY", wrappingY.get)))
 
   private val wrappingZ: BooleanEditor =
@@ -118,7 +118,7 @@ class WorldEditPanel3D(target: WorldViewSettings3D) extends WorldEditPanel(targe
         target,
         I18N.gui("3D.wrapZ"),
         () => target.wrappingZ,
-        target.wrappingZ(_),
+        _.foreach(target.wrappingZ),
         () => previewChanged("wrappingZ", wrappingZ.get)))
 
   private val patchSize =
@@ -127,7 +127,7 @@ class WorldEditPanel3D(target: WorldViewSettings3D) extends WorldEditPanel(targe
         target,
         I18N.gui("2D.patchSize"),
         () => target.patchSize,
-        target.patchSize(_)))
+        _.foreach(target.patchSize)))
 
   private val patchSizeLabel = new JLabel(I18N.gui("2D.patchSize.info")) {
     setFont(getFont.deriveFont(9.0f))
@@ -139,7 +139,7 @@ class WorldEditPanel3D(target: WorldViewSettings3D) extends WorldEditPanel(targe
         target,
         I18N.gui("2D.fontSize"),
         () => target.fontSize,
-        target.fontSize(_)))
+        _.foreach(target.fontSize)))
 
   private val fontSizeLabel = new JLabel(I18N.gui("2D.fontSize.info")) {
     setFont(getFont.deriveFont(9.0f))
@@ -151,7 +151,7 @@ class WorldEditPanel3D(target: WorldViewSettings3D) extends WorldEditPanel(targe
         target,
         I18N.gui("2D.frameRate"),
         () => target.frameRate,
-        target.frameRate(_)))
+        _.foreach(target.frameRate)))
 
   private val frameRateLabel = new JLabel(I18N.gui("2D.frameRate.info")) {
     setFont(getFont.deriveFont(9.0f))
@@ -163,7 +163,7 @@ class WorldEditPanel3D(target: WorldViewSettings3D) extends WorldEditPanel(targe
         target,
         I18N.gui("3D.smooth"),
         () => target.smooth,
-        target.smooth(_)))
+        _.foreach(target.smooth)))
 
   private val smoothLabel = new JLabel(I18N.gui("3D.affects")) {
     setFont(getFont.deriveFont(9.0f))
@@ -175,7 +175,7 @@ class WorldEditPanel3D(target: WorldViewSettings3D) extends WorldEditPanel(targe
         target,
         I18N.gui("3D.wireFrame"),
         () => target.wireframe,
-        target.wireframe(_)))
+        _.foreach(target.wireframe)))
 
   private val wireframeLabel = new JLabel(I18N.gui("3D.affects")) {
     setFont(getFont.deriveFont(9.0f))
@@ -187,7 +187,7 @@ class WorldEditPanel3D(target: WorldViewSettings3D) extends WorldEditPanel(targe
         target,
         I18N.gui("3D.dualView"),
         () => target.dualView,
-        target.dualView(_)))
+        _.foreach(target.dualView)))
 
   private val showTickCounter =
     new BooleanEditor(
@@ -195,7 +195,7 @@ class WorldEditPanel3D(target: WorldViewSettings3D) extends WorldEditPanel(targe
         target,
         I18N.gui("showTickCounter"),
         () => target.showTickCounter,
-        target.showTickCounter(_)))
+        _.foreach(target.showTickCounter)))
 
   private val tickCounterLabel =
     new StringEditor(
@@ -203,7 +203,7 @@ class WorldEditPanel3D(target: WorldViewSettings3D) extends WorldEditPanel(targe
         target,
         I18N.gui("tickCounterLabel"),
         () => target.tickCounterLabel,
-        target.tickCounterLabel(_)))
+        _.foreach(target.tickCounterLabel)))
 
   private val worldBorder = new TitledBorder(I18N.gui("world"))
   private val viewBorder = new TitledBorder(I18N.gui("view"))

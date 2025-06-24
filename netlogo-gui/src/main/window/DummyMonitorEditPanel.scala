@@ -13,7 +13,7 @@ class DummyMonitorEditPanel(target: DummyMonitorWidget) extends WidgetEditPanel(
         target,
         I18N.gui.get("edit.hubnet.tag"),
         () => target.name,
-        target.setDisplayName(_),
+        _.foreach(target.setDisplayName),
         () => apply()))
 
   private val decimalPlaces =
@@ -22,7 +22,7 @@ class DummyMonitorEditPanel(target: DummyMonitorWidget) extends WidgetEditPanel(
         target,
         I18N.gui.get("edit.monitor.decimalPlaces"),
         () => target.decimalPlaces,
-        target.setDecimalPlaces(_),
+        _.foreach(target.setDecimalPlaces),
         () => apply()))
 
   private val oldSize =
@@ -31,7 +31,7 @@ class DummyMonitorEditPanel(target: DummyMonitorWidget) extends WidgetEditPanel(
         target,
         I18N.gui.get("edit.general.oldSize"),
         () => target.oldSize,
-        target.oldSize(_),
+        _.foreach(target.oldSize),
         () => apply()))
 
   locally {

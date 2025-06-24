@@ -19,7 +19,7 @@ class RateEditPanel(target: RateConnection, compiler: CompilerServices, colorize
         target,
         I18N.gui.get("tools.sdm.name"),
         () => target.nameWrapper,
-        target.nameWrapper(_),
+        name => target.nameWrapper(name.getOrElse("")),
         () => apply()),
       compiler)
 
@@ -29,7 +29,7 @@ class RateEditPanel(target: RateConnection, compiler: CompilerServices, colorize
         target,
         I18N.gui.get("tools.sdm.inputs"),
         () => target.inputs,
-        target.inputs(_),
+        _.foreach(target.inputs),
         () => apply()))
 
   private val expressionWrapper =
@@ -38,7 +38,7 @@ class RateEditPanel(target: RateConnection, compiler: CompilerServices, colorize
         target,
         I18N.gui.get("tools.sdm.expression"),
         () => target.expressionWrapper,
-        target.expressionWrapper(_),
+        _.foreach(target.expressionWrapper),
         () => apply()),
       colorizer)
 

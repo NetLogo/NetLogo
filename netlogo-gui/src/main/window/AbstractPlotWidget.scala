@@ -14,7 +14,7 @@ import org.nlogo.window.Events.{ AfterLoadEvent, CompiledEvent, WidgetErrorEvent
 
 import scala.math.Pi
 
-abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInterface)
+abstract class AbstractPlotWidget(val plot: Plot, val plotManager: PlotManagerInterface)
   extends Widget with Editable with Plot.DirtyListener
   with AfterLoadEvent.Handler
   with WidgetRemovedEvent.Handler
@@ -48,16 +48,18 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
     }
   }
 
+  private val originalName = plot.name
+
   private var fullyConstructed = false
   plot.dirtyListener = Some(this)
   val canvas = new PlotCanvas(plot)
   private val canvasPanel = new CanvasPanel(canvas)
   private val legend = new PlotLegend(this)
-  private val nameLabel = new JLabel(I18N.gui.get("edit.plot.previewName"))
+  private val nameLabel = new JLabel(originalName)
   private val xAxis = new XAxisLabels(this)
   private val yAxis = new YAxisLabels(this)
 
-  displayName = plot.name
+  displayName(originalName)
 
   plot.clear() // set current values to defaults
 
@@ -191,8 +193,14 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
   def plotName = plot.name
   def setPlotName(name: String): Unit = {
     plot.name(name)
-    displayName = plot.name
-    nameLabel.setText(name)
+
+    if (name.isEmpty) {
+      displayName(originalName)
+    } else {
+      displayName(plot.name)
+    }
+
+    nameLabel.setText(displayName)
   }
 
   private var _xAxisLabel: String = ""

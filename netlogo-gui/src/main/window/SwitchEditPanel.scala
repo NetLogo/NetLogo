@@ -14,7 +14,7 @@ class SwitchEditPanel(target: SwitchWidget, compiler: CompilerServices) extends 
         target,
         I18N.gui.get("edit.switch.globalVar"),
         () => target.nameWrapper,
-        target.setNameWrapper(_),
+        name => target.setNameWrapper(name.getOrElse("")),
         () => apply()),
       compiler)
 
@@ -24,7 +24,7 @@ class SwitchEditPanel(target: SwitchWidget, compiler: CompilerServices) extends 
         target,
         I18N.gui.get("edit.general.oldSize"),
         () => target.oldSize,
-        target.oldSize(_),
+        _.foreach(target.oldSize),
         () => apply()))
 
   locally {

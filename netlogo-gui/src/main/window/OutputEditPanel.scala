@@ -13,7 +13,7 @@ class OutputEditPanel(target: OutputWidget) extends WidgetEditPanel(target) {
         target,
         I18N.gui.get("edit.output.fontSize"),
         () => target.fontSize,
-        target.setFontSize(_),
+        _.foreach(target.setFontSize),
         () => apply()))
 
   locally {

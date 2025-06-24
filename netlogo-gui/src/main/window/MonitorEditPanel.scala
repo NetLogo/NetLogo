@@ -17,7 +17,7 @@ class MonitorEditPanel(target: MonitorWidget, compiler: CompilerServices, colori
         target,
         I18N.gui.get("edit.monitor.reporter"),
         () => target.wrapSource,
-        target.setWrapSource(_),
+        name => target.setWrapSource(name.getOrElse("")),
         () => apply()),
       colorizer)
 
@@ -27,7 +27,7 @@ class MonitorEditPanel(target: MonitorWidget, compiler: CompilerServices, colori
         target,
         I18N.gui.get("edit.monitor.name"),
         () => target.name,
-        target.setDisplayName(_),
+        _.foreach(target.setDisplayName),
         () => apply()))
 
   private val decimalPlaces =
@@ -36,7 +36,7 @@ class MonitorEditPanel(target: MonitorWidget, compiler: CompilerServices, colori
         target,
         I18N.gui.get("edit.monitor.decimalPlaces"),
         () => target.decimalPlaces,
-        target.setDecimalPlaces(_),
+        _.foreach(target.setDecimalPlaces),
         () => apply()))
 
   private val units =
@@ -45,7 +45,7 @@ class MonitorEditPanel(target: MonitorWidget, compiler: CompilerServices, colori
         target,
         I18N.gui.get("edit.monitor.units"),
         () => target.units,
-        target.setUnits(_),
+        _.foreach(target.setUnits),
         () => apply()))
 
   private val decimalLabeled = new LabeledEditor(decimalPlaces, I18N.gui.get("edit.monitor.precision"))
@@ -56,7 +56,7 @@ class MonitorEditPanel(target: MonitorWidget, compiler: CompilerServices, colori
         target,
         I18N.gui.get("edit.monitor.fontSize"),
         () => target.fontSize,
-        target.setFontSize(_),
+        _.foreach(target.setFontSize),
         () => apply()))
 
   private val oldSize =
@@ -65,7 +65,7 @@ class MonitorEditPanel(target: MonitorWidget, compiler: CompilerServices, colori
         target,
         I18N.gui.get("edit.general.oldSize"),
         () => target.oldSize,
-        target.oldSize(_),
+        _.foreach(target.oldSize),
         () => apply()))
 
   locally {

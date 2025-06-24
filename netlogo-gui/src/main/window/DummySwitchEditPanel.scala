@@ -13,7 +13,7 @@ class DummySwitchEditPanel(target: DummySwitchWidget) extends WidgetEditPanel(ta
         target,
         I18N.gui.get("edit.hubnet.tag"),
         () => target.name,
-        target.setVarName(_),
+        _.foreach(target.setVarName),
         () => apply()))
 
   private val oldSize =
@@ -22,7 +22,7 @@ class DummySwitchEditPanel(target: DummySwitchWidget) extends WidgetEditPanel(ta
         target,
         I18N.gui.get("edit.general.oldSize"),
         () => target.oldSize,
-        target.oldSize(_),
+        _.foreach(target.oldSize),
         () => apply()))
 
   locally {

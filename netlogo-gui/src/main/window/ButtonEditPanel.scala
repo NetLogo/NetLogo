@@ -14,7 +14,7 @@ class ButtonEditPanel(target: ButtonWidget, colorizer: Colorizer) extends Widget
         target,
         I18N.gui.get("edit.button.agents"),
         () => target.agentOptions,
-        target.setAgentOptions(_),
+        _.foreach(target.setAgentOptions),
         () => apply()))
 
   private val forever =
@@ -23,7 +23,7 @@ class ButtonEditPanel(target: ButtonWidget, colorizer: Colorizer) extends Widget
         target,
         I18N.gui.get("edit.button.forever"),
         () => target.forever,
-        target.setForever(_),
+        _.foreach(target.setForever),
         () => apply()))
 
   private val goTime =
@@ -32,7 +32,7 @@ class ButtonEditPanel(target: ButtonWidget, colorizer: Colorizer) extends Widget
         target,
         I18N.gui.get("edit.button.disable"),
         () => target.goTime,
-        target.setGoTime(_),
+        _.foreach(target.setGoTime),
         () => apply()))
 
   private val wrapSource =
@@ -41,7 +41,7 @@ class ButtonEditPanel(target: ButtonWidget, colorizer: Colorizer) extends Widget
         target,
         I18N.gui.get("edit.button.commands"),
         () => target.wrapSource,
-        target.setWrapSource(_),
+        _.foreach(target.setWrapSource),
         () => apply()),
       colorizer)
 
@@ -51,7 +51,7 @@ class ButtonEditPanel(target: ButtonWidget, colorizer: Colorizer) extends Widget
         target,
         I18N.gui.get("edit.button.displayName"),
         () => target.name,
-        target.setVarName(_),
+        _.foreach(target.setVarName),
         () => apply()))
 
   private val actionKey =
@@ -60,7 +60,7 @@ class ButtonEditPanel(target: ButtonWidget, colorizer: Colorizer) extends Widget
         target,
         I18N.gui.get("edit.button.actionKey"),
         () => target.actionKey,
-        target.setActionKey(_),
+        _.foreach(target.setActionKey),
         () => apply()))
 
   private val oldSize =
@@ -69,7 +69,7 @@ class ButtonEditPanel(target: ButtonWidget, colorizer: Colorizer) extends Widget
         target,
         I18N.gui.get("edit.general.oldSize"),
         () => target.oldSize,
-        target.oldSize(_),
+        _.foreach(target.oldSize),
         () => apply()))
 
   locally {

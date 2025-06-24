@@ -13,7 +13,7 @@ class DummySliderEditPanel(target: DummySliderWidget) extends WidgetEditPanel(ta
         target,
         I18N.gui.get("edit.hubnet.tag"),
         () => target.name,
-        target.setVarName(_),
+        _.foreach(target.setVarName),
         () => apply()))
 
   private val min =
@@ -22,7 +22,7 @@ class DummySliderEditPanel(target: DummySliderWidget) extends WidgetEditPanel(ta
         target,
         I18N.gui.get("edit.slider.minimum"),
         () => target.min,
-        target.setMin(_),
+        _.foreach(target.setMin),
         () => apply()))
 
   private val inc =
@@ -31,7 +31,7 @@ class DummySliderEditPanel(target: DummySliderWidget) extends WidgetEditPanel(ta
         target,
         I18N.gui.get("edit.slider.increment"),
         () => target.inc,
-        target.setInc(_),
+        _.foreach(target.setInc),
         () => apply()))
 
   private val max =
@@ -40,7 +40,7 @@ class DummySliderEditPanel(target: DummySliderWidget) extends WidgetEditPanel(ta
         target,
         I18N.gui.get("edit.slider.maximum"),
         () => target.max,
-        target.setMax(_),
+        _.foreach(target.setMax),
         () => apply()))
 
   private val value =
@@ -49,7 +49,7 @@ class DummySliderEditPanel(target: DummySliderWidget) extends WidgetEditPanel(ta
         target,
         I18N.gui.get("edit.slider.value"),
         () => target.value,
-        target.setValue(_),
+        _.foreach(target.setValue),
         () => apply()))
 
   private val units =
@@ -58,7 +58,7 @@ class DummySliderEditPanel(target: DummySliderWidget) extends WidgetEditPanel(ta
         target,
         I18N.gui.get("edit.slider.units"),
         () => target.units,
-        target.setUnits(_),
+        _.foreach(target.setUnits),
         () => apply()))
 
   private val vertical: BooleanEditor =
@@ -67,7 +67,7 @@ class DummySliderEditPanel(target: DummySliderWidget) extends WidgetEditPanel(ta
         target,
         I18N.gui.get("edit.slider.vertical"),
         () => target.vertical,
-        target.setVertical(_),
+        _.foreach(target.setVertical),
         () => apply(vertical.get.exists(_ != vertical.originalValue))))
 
   private val oldSize =
@@ -76,7 +76,7 @@ class DummySliderEditPanel(target: DummySliderWidget) extends WidgetEditPanel(ta
         target,
         I18N.gui.get("edit.general.oldSize"),
         () => target.oldSize,
-        target.oldSize(_),
+        _.foreach(target.oldSize),
         () => apply()))
 
   locally {

@@ -17,7 +17,7 @@ class ChooserEditPanel(target: ChooserWidget, compiler: CompilerServices, colori
         target,
         I18N.gui.get("edit.chooser.globalVar"),
         () => target.name,
-        target.setNameWrapper(_),
+        name => target.setNameWrapper(name.getOrElse("")),
         () => apply()),
       compiler)
 
@@ -27,7 +27,7 @@ class ChooserEditPanel(target: ChooserWidget, compiler: CompilerServices, colori
         target,
         I18N.gui.get("edit.chooser.choices"),
         () => target.choicesWrapper,
-        target.setChoicesWrapper(_),
+        _.foreach(target.setChoicesWrapper),
         () => apply()),
       compiler, colorizer)
 
@@ -39,7 +39,7 @@ class ChooserEditPanel(target: ChooserWidget, compiler: CompilerServices, colori
         target,
         I18N.gui.get("edit.general.oldSize"),
         () => target.oldSize,
-        target.oldSize(_),
+        _.foreach(target.oldSize),
         () => apply()))
 
   locally {

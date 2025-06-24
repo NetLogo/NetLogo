@@ -70,8 +70,6 @@ abstract class GUIWorkspace(world: World, kioskLevel: GUIWorkspace.KioskLevel, f
 
   val view = viewWidget.view
 
-  private var widgetContainer: WidgetContainer = null
-
   var glView: GLViewManagerInterface = null
 
   private val periodicUpdater = new PeriodicUpdater(jobManager)
@@ -291,12 +289,6 @@ abstract class GUIWorkspace(world: World, kioskLevel: GUIWorkspace.KioskLevel, f
 
     super.dispose()
   }
-
-  def getWidgetContainer: WidgetContainer =
-    widgetContainer
-
-  def setWidgetContainer(widgetContainer: WidgetContainer): Unit =
-    this.widgetContainer = widgetContainer
 
   override def isHeadless: Boolean =
     false

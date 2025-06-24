@@ -17,7 +17,7 @@ class SliderEditPanel(target: SliderWidget, compiler: CompilerServices, colorize
         target,
         I18N.gui.get("edit.slider.globalVar"),
         () => target.name,
-        target.setNameWrapper(_),
+        name => target.setNameWrapper(name.getOrElse("")),
         () => apply()),
       compiler)
 
@@ -27,7 +27,7 @@ class SliderEditPanel(target: SliderWidget, compiler: CompilerServices, colorize
         target,
         I18N.gui.get("edit.slider.minimum"),
         () => target.minimumCode,
-        target.setMinimumCode(_),
+        _.foreach(target.setMinimumCode),
         () => apply()),
       colorizer, false)
 
@@ -39,7 +39,7 @@ class SliderEditPanel(target: SliderWidget, compiler: CompilerServices, colorize
         target,
         I18N.gui.get("edit.slider.increment"),
         () => target.incrementCode,
-        target.setIncrementCode(_),
+        _.foreach(target.setIncrementCode),
         () => apply()),
       colorizer, false)
 
@@ -49,7 +49,7 @@ class SliderEditPanel(target: SliderWidget, compiler: CompilerServices, colorize
         target,
         I18N.gui.get("edit.slider.maximum"),
         () => target.maximumCode,
-        target.setMaximumCode(_),
+        _.foreach(target.setMaximumCode),
         () => apply()),
       colorizer, false)
 
@@ -59,7 +59,7 @@ class SliderEditPanel(target: SliderWidget, compiler: CompilerServices, colorize
         target,
         I18N.gui.get("edit.slider.value"),
         () => target.value,
-        target.setValue(_),
+        _.foreach(target.setValue),
         () => apply()))
 
   private val units =
@@ -68,7 +68,7 @@ class SliderEditPanel(target: SliderWidget, compiler: CompilerServices, colorize
         target,
         I18N.gui.get("edit.slider.units"),
         () => target.units,
-        target.setUnits(_),
+        _.foreach(target.setUnits),
         () => apply()))
 
   private val vertical: BooleanEditor =
@@ -77,7 +77,7 @@ class SliderEditPanel(target: SliderWidget, compiler: CompilerServices, colorize
         target,
         I18N.gui.get("edit.slider.vertical"),
         () => target.vertical,
-        target.setVertical(_),
+        _.foreach(target.setVertical),
         () => apply(vertical.get.exists(_ != vertical.originalValue))))
 
   private val oldSize =
@@ -86,7 +86,7 @@ class SliderEditPanel(target: SliderWidget, compiler: CompilerServices, colorize
         target,
         I18N.gui.get("edit.general.oldSize"),
         () => target.oldSize,
-        target.oldSize(_),
+        _.foreach(target.oldSize),
         () => apply(vertical.get.exists(_ != vertical.originalValue))))
 
   locally {

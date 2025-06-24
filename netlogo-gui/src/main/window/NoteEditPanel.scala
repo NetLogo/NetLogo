@@ -16,7 +16,7 @@ class NoteEditPanel(target: NoteWidget) extends WidgetEditPanel(target) {
         target,
         I18N.gui.get("edit.text.text"),
         () => target.text,
-        target.setText(_),
+        _.foreach(target.setText),
         () => apply()))
 
   private val fontSize =
@@ -25,7 +25,7 @@ class NoteEditPanel(target: NoteWidget) extends WidgetEditPanel(target) {
         target,
         I18N.gui.get("edit.text.fontSize"),
         () => target.fontSize,
-        target.setFontSize(_),
+        _.foreach(target.setFontSize),
         () => apply()))
 
   private val textColorLight =
@@ -34,7 +34,7 @@ class NoteEditPanel(target: NoteWidget) extends WidgetEditPanel(target) {
         target,
         I18N.gui.get("edit.text.textLight"),
         () => target.textColorLight,
-        target.setTextColorLight(_),
+        _.foreach(target.setTextColorLight),
         () => apply()),
       frame)
 
@@ -44,7 +44,7 @@ class NoteEditPanel(target: NoteWidget) extends WidgetEditPanel(target) {
         target,
         I18N.gui.get("edit.text.textDark"),
         () => target.textColorDark,
-        target.setTextColorDark(_),
+        _.foreach(target.setTextColorDark),
         () => apply()),
       frame)
 
@@ -54,7 +54,7 @@ class NoteEditPanel(target: NoteWidget) extends WidgetEditPanel(target) {
         target,
         I18N.gui.get("edit.text.backgroundLight"),
         () => target.backgroundLight,
-        target.setBackgroundLight(_),
+        _.foreach(target.setBackgroundLight),
         () => apply()),
       frame)
 
@@ -64,7 +64,7 @@ class NoteEditPanel(target: NoteWidget) extends WidgetEditPanel(target) {
         target,
         I18N.gui.get("edit.text.backgroundDark"),
         () => target.backgroundDark,
-        target.setBackgroundDark(_),
+        _.foreach(target.setBackgroundDark),
         () => apply()),
       frame)
 
@@ -74,7 +74,7 @@ class NoteEditPanel(target: NoteWidget) extends WidgetEditPanel(target) {
         target,
         I18N.gui.get("edit.text.markdown"),
         () => target.markdown,
-        target.setMarkdown(_),
+        _.foreach(target.setMarkdown),
         () => apply()))
 
   locally {

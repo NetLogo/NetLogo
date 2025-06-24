@@ -18,7 +18,7 @@ class RunOptionsEditPanel(target: RunOptionsDialog#EditableRunOptions, spreadshe
         target,
         I18N.gui.get("tools.behaviorSpace.runoptions.spreadsheet"),
         () => target.spreadsheet,
-        target.setSpreadsheet(_),
+        _.foreach(target.setSpreadsheet),
         () => apply()),
       this, Option(spreadsheetFile))
 
@@ -28,7 +28,7 @@ class RunOptionsEditPanel(target: RunOptionsDialog#EditableRunOptions, spreadshe
         target,
         I18N.gui.get("tools.behaviorSpace.runoptions.table"),
         () => target.table,
-        target.setTable(_),
+        _.foreach(target.setTable),
         () => apply()),
       this, Option(tableFile))
 
@@ -38,7 +38,7 @@ class RunOptionsEditPanel(target: RunOptionsDialog#EditableRunOptions, spreadshe
         target,
         I18N.gui.get("tools.behaviorSpace.runoptions.stats"),
         () => target.stats,
-        target.setStats(_),
+        _.foreach(target.setStats),
         () => apply()),
       this, Option(statsFile))
 
@@ -48,7 +48,7 @@ class RunOptionsEditPanel(target: RunOptionsDialog#EditableRunOptions, spreadshe
         target,
         I18N.gui.get("tools.behaviorSpace.runoptions.lists"),
         () => target.lists,
-        target.setLists(_),
+        _.foreach(target.setLists),
         () => apply()),
       this, Option(listsFile))
 
@@ -58,7 +58,7 @@ class RunOptionsEditPanel(target: RunOptionsDialog#EditableRunOptions, spreadshe
         target,
         I18N.gui.get("tools.behaviorSpace.runoptions.updateview"),
         () => target.updateView,
-        target.setUpdateView(_),
+        _.foreach(target.setUpdateView),
         () => apply()))
 
   private val updatePlotsAndMonitors =
@@ -67,7 +67,7 @@ class RunOptionsEditPanel(target: RunOptionsDialog#EditableRunOptions, spreadshe
         target,
         I18N.gui.get("tools.behaviorSpace.runoptions.updateplotsandmonitors"),
         () => target.updatePlotsAndMonitors,
-        target.setUpdatePlotsAndMonitors(_),
+        _.foreach(target.setUpdatePlotsAndMonitors),
         () => apply()))
 
   private val updateLabeled =
@@ -80,7 +80,7 @@ class RunOptionsEditPanel(target: RunOptionsDialog#EditableRunOptions, spreadshe
         target,
         I18N.gui.get("tools.behaviorSpace.runoptions.simultaneousruns"),
         () => target.threadCount,
-        target.setThreadCount(_),
+        _.foreach(target.setThreadCount),
         () => apply()))
 
   private val threadCountLabeled =

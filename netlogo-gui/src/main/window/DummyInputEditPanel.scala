@@ -13,7 +13,7 @@ class DummyInputEditPanel(target: DummyInputBoxWidget) extends WidgetEditPanel(t
         target,
         I18N.gui.get("edit.hubnet.tag"),
         () => target.name,
-        target.setNameWrapper(_),
+        _.foreach(target.setNameWrapper),
         () => apply()))
 
   private val typeOptions =
@@ -22,7 +22,7 @@ class DummyInputEditPanel(target: DummyInputBoxWidget) extends WidgetEditPanel(t
         target,
         I18N.gui.get("edit.input.type"),
         () => target.typeOptions,
-        target.setTypeOptions(_),
+        _.foreach(target.setTypeOptions),
         () => apply()))
 
   private val oldSize =
@@ -31,7 +31,7 @@ class DummyInputEditPanel(target: DummyInputBoxWidget) extends WidgetEditPanel(t
         target,
         I18N.gui.get("edit.general.oldSize"),
         () => target.oldSize,
-        target.oldSize(_),
+        _.foreach(target.oldSize),
         () => apply()))
 
   locally {

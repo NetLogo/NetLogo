@@ -13,7 +13,7 @@ class DummyViewEditPanel(target: DummyViewWidget) extends WidgetEditPanel(target
         target,
         I18N.gui.get("edit.hubnet.view.width"),
         () => target.width(),
-        target.setWidth(_),
+        _.foreach(target.setWidth),
         () => apply()))
 
   private val heightEditor =
@@ -22,7 +22,7 @@ class DummyViewEditPanel(target: DummyViewWidget) extends WidgetEditPanel(target
         target,
         I18N.gui.get("edit.hubnet.view.height"),
         () => target.width(),
-        target.setWidth(_),
+        _.foreach(target.setWidth),
         () => apply()))
 
   locally {

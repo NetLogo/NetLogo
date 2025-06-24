@@ -13,7 +13,7 @@ class DummyButtonEditPanel(target: DummyButtonWidget) extends WidgetEditPanel(ta
         target,
         I18N.gui.get("edit.hubnet.tag"),
         () => target.name,
-        target.setDisplayName(_),
+        _.foreach(target.setDisplayName),
         () => apply()))
 
   private val actionKey =
@@ -22,7 +22,7 @@ class DummyButtonEditPanel(target: DummyButtonWidget) extends WidgetEditPanel(ta
         target,
         I18N.gui.get("edit.button.actionKey"),
         () => target.actionKey,
-        target.setActionKey(_),
+        _.foreach(target.setActionKey),
         () => apply()))
 
   locally {

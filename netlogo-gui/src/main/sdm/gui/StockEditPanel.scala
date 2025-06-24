@@ -19,7 +19,7 @@ class StockEditPanel(target: StockFigure, compiler: CompilerServices, colorizer:
         target,
         I18N.gui.get("tools.sdm.name"),
         () => target.nameWrapper,
-        target.nameWrapper(_),
+        name => target.nameWrapper(name.getOrElse("")),
         () => apply()),
       compiler)
 
@@ -29,7 +29,7 @@ class StockEditPanel(target: StockFigure, compiler: CompilerServices, colorizer:
         target,
         I18N.gui.get("tools.sdm.initialValue"),
         () => target.initialValueExpressionWrapper,
-        target.initialValueExpressionWrapper(_),
+        _.foreach(target.initialValueExpressionWrapper),
         () => apply()),
       colorizer)
 
@@ -39,7 +39,7 @@ class StockEditPanel(target: StockFigure, compiler: CompilerServices, colorizer:
         target,
         I18N.gui.get("tools.sdm.allowNegative"),
         () => target.allowNegative,
-        target.allowNegative(_),
+        _.foreach(target.allowNegative),
         () => apply()))
 
   locally {
