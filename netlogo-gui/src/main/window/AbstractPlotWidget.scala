@@ -346,7 +346,7 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
 
   override def errorString: Option[String] = {
     val hasDuplicatedName =
-      findWidgetContainer.allWidgets.collect {
+      widgetContainer.map(_.allWidgets).getOrElse(Seq()).collect {
         case p: CorePlot if p.display.map(_.toUpperCase).getOrElse("") == plotName.toUpperCase => p
       }.length > 1
     if (hasDuplicatedName) {

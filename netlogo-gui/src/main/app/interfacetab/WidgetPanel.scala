@@ -817,8 +817,9 @@ class WidgetPanel(val workspace: GUIWorkspace)
     selectedWrappers.foreach(_.selected(false))
   }
 
-  def addWidget(widget: Widget, x: Int, y: Int,
-    select: Boolean, loadingWidget: Boolean): WidgetWrapper = {
+  def addWidget(widget: Widget, x: Int, y: Int, select: Boolean, loadingWidget: Boolean): WidgetWrapper = {
+    widget.setWidgetContainer(this)
+
     val size = widget.getSize()
     val wrapper = new WidgetWrapper(widget, this)
     wrapper.setVisible(false)
@@ -856,6 +857,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
   }
 
   def reAddWidget(widgetWrapper: WidgetWrapper): WidgetWrapper = {
+    widgetWrapper.widget.setWidgetContainer(this)
     widgetWrapper.setVisible(false)
     // we need to add the wrapper before we can call wrapper.getPreferredSize(), because
     // that method looks at its parent and sees if it's an InterfacePanel
@@ -875,7 +877,11 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
   // create shadow widget to be placed and edited (Isaac B 6/16/25)
   def createShadowWidget(widget: CoreWidget): Unit = {
-    val wrapper = new WidgetWrapper(makeWidget(widget), this)
+    val newWidget = makeWidget(widget)
+
+    newWidget.setWidgetContainer(this)
+
+    val wrapper = new WidgetWrapper(newWidget, this)
 
     add(wrapper, JLayeredPane.DEFAULT_LAYER)
 
@@ -916,6 +922,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
       val newWidget = makeWidget(widget)
 
       newWidget.load(widget)
+      newWidget.setWidgetContainer(this)
 
       val wrapper = new WidgetWrapper(newWidget, this)
 

@@ -18,8 +18,6 @@ import org.nlogo.app.tools.{ AgentMonitorManager, GraphicsPreview, LibraryManage
 import org.nlogo.awt.UserCancelException
 import org.nlogo.core.{ AgentKind, CompilerException, ExternalResource, I18N, Model, ModelSettings, NetLogoPreferences,
   Shape, Widget => CoreWidget }, Shape.{ LinkShape, VectorShape }
-import org.nlogo.core.model.WidgetReader
-import org.nlogo.fileformat.FileFormat
 import org.nlogo.log.{ JsonFileLogger, LogEvents, LogManager }
 import org.nlogo.nvm.{ PresentationCompilerInterface, Workspace }
 import org.nlogo.shape.{ LinkShapesManagerInterface, ShapesManagerInterface, TurtleShapesManagerInterface }
@@ -1232,16 +1230,6 @@ class App extends org.nlogo.window.Event.LinkChild
         catch { case ex: InterruptedException => org.nlogo.api.Exceptions.ignore(ex) }
       }
     }
-  }
-
-  /**
-   * Adds new widget to Interface tab given its specification,
-   * in the same (undocumented) format found in a saved model.
-   * @param text the widget specification
-   */
-  def makeWidget(text:String): Unit = {
-    dispatchThreadOrBust(
-      _tabManager.interfaceTab.getInterfacePanel.loadWidget(WidgetReader.read(text.linesIterator.toList, workspace, FileFormat.nlogoReaders(Version.is3D))))
   }
 
   /// helpers for controlling methods

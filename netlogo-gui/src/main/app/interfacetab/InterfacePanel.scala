@@ -119,29 +119,35 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
   // new widgets in the UI.  For most widget types, the same type string
   // is used in both places. - ST 3/17/04
   override def makeWidget(coreWidget: CoreWidget): Widget = {
-    val fromRegistry = WidgetRegistry(coreWidget.getClass.getSimpleName)
-    if (fromRegistry != null)
-      fromRegistry
-    else coreWidget match {
-      case c: CoreChooser  => new ChooserWidget(workspace, colorizer)
-      case b: CoreButton   => new ButtonWidget(workspace.world.mainRNG, colorizer)
-      case p: CorePlot     => PlotWidget(workspace.plotManager, colorizer)
-      case m: CoreMonitor  => new MonitorWidget(workspace.world.auxRNG, workspace, colorizer)
-      case s: CoreSlider =>
-        new SliderWidget(workspace.world.auxRNG, workspace, colorizer) {
-          override def sourceOffset: Int =
-            Evaluator.sourceOffset(AgentKind.Observer, false)
-        }
-      case s: CoreSwitch => new SwitchWidget(workspace)
-      case i: CoreInputBox =>
-        val textArea       = new EditorArea(textEditorConfiguration)
-        val dialogTextArea = new EditorArea(dialogEditorConfiguration)
+    val widget = WidgetRegistry(coreWidget.getClass.getSimpleName) match {
+      case null =>
+        coreWidget match {
+          case c: CoreChooser  => new ChooserWidget(workspace, colorizer)
+          case b: CoreButton   => new ButtonWidget(workspace.world.mainRNG, colorizer)
+          case p: CorePlot     => PlotWidget(workspace.plotManager, colorizer)
+          case m: CoreMonitor  => new MonitorWidget(workspace.world.auxRNG, workspace, colorizer)
+          case s: CoreSlider =>
+            new SliderWidget(workspace.world.auxRNG, workspace, colorizer) {
+              override def sourceOffset: Int =
+                Evaluator.sourceOffset(AgentKind.Observer, false)
+            }
+          case s: CoreSwitch => new SwitchWidget(workspace)
+          case i: CoreInputBox =>
+            val textArea       = new EditorArea(textEditorConfiguration)
+            val dialogTextArea = new EditorArea(dialogEditorConfiguration)
 
-        new InputBoxWidget(textArea, dialogTextArea, workspace, this)
-      case v: CoreView => new ViewWidget(workspace)
-      case _ =>
-        throw new IllegalStateException("unknown widget type: " + coreWidget.getClass.getName)
+            new InputBoxWidget(textArea, dialogTextArea, workspace, this)
+          case v: CoreView => new ViewWidget(workspace)
+          case _ =>
+            throw new IllegalStateException("unknown widget type: " + coreWidget.getClass.getName)
+        }
+
+      case w => w
     }
+
+    widget.setWidgetContainer(this)
+
+    widget
   }
 
   override private[app] def deleteWidgets(hitList: Seq[WidgetWrapper]): Unit = {
@@ -231,9 +237,8 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
   override def handle(e: WidgetRemovedEvent): Unit = {
     // We use `raiseLater` to ensure that the WidgetRemovedEvent
     // propagates to the Compiler.
-    if ((e.widget.findWidgetContainer eq this) && ! unloading) {
+    if (e.widget.getWidgetContainer.contains(this) && !unloading)
       new CompileAllEvent().raiseLater(this)
-    }
   }
 
   def interfaceImage: BufferedImage =

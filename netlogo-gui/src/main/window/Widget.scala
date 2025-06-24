@@ -50,7 +50,6 @@ abstract class MultiErrorWidget extends Widget with MultiErrorHandler {
 }
 
 abstract class Widget extends JPanel with RoundedBorderPanel with ThemeSync with InterfaceModeChangedEvent.Handler {
-
   def helpLink: Option[String] = None
   var originalFont: Font = null
   var displayName: String = ""
@@ -69,10 +68,19 @@ abstract class Widget extends JPanel with RoundedBorderPanel with ThemeSync with
     }
   }
 
+  protected var widgetContainer: Option[WidgetContainer] = None
+
+  def getWidgetContainer: Option[WidgetContainer] =
+    widgetContainer
+
+  def setWidgetContainer(container: WidgetContainer): Unit = {
+    widgetContainer = Option(container)
+  }
+
   def getEditable: Option[Editable]
   def copyable = true // only OutputWidget and ViewWidget are not copyable
   def constrainDrag(newBounds: Rectangle, originalBounds: Rectangle, mouseMode: MouseMode): Rectangle = newBounds
-  def isZoomed: Boolean = if (findWidgetContainer != null) findWidgetContainer.isZoomed else false
+  def isZoomed: Boolean = widgetContainer.exists(_.isZoomed)
 
   def model: CoreWidget
   def reAdd(): Unit = { }
@@ -140,7 +148,7 @@ abstract class Widget extends JPanel with RoundedBorderPanel with ThemeSync with
   def initGUI(): Unit = {}
 
   protected def resetSizeInfo(): Unit = {
-    if (findWidgetContainer != null) { findWidgetContainer.resetSizeInfo(this) }
+    widgetContainer.foreach(_.resetSizeInfo(this))
   }
 
   private def doPopup(e: MouseEvent): Unit = {
@@ -160,10 +168,6 @@ abstract class Widget extends JPanel with RoundedBorderPanel with ThemeSync with
     override def mousePressed(e: MouseEvent): Unit = { if (e.isPopupTrigger) { doPopup(e) } }
     override def mouseReleased(e: MouseEvent): Unit = { if (e.isPopupTrigger) { doPopup(e) } }
   }
-
-  def findWidgetContainer: WidgetContainer =
-    org.nlogo.awt.Hierarchy.findAncestorOfClass(this, classOf[WidgetContainer])
-      .orNull.asInstanceOf[WidgetContainer]
 
   def displayName(displayName: String): Unit = {
     this.displayName = displayName
@@ -189,17 +193,11 @@ abstract class Widget extends JPanel with RoundedBorderPanel with ThemeSync with
   def populateContextMenu(menu: PopupMenu, p: Point): Unit = {}
 
   protected def resetZoomInfo(): Unit = {
-    if (findWidgetContainer != null)
-      findWidgetContainer.resetZoomInfo(this)
+    widgetContainer.foreach(_.resetZoomInfo(this))
   }
 
-  def getUnzoomedBounds: Rectangle = {
-    if (findWidgetContainer != null) {
-      findWidgetContainer.getUnzoomedBounds(this)
-    } else {
-      getBounds
-    }
-  }
+  def getUnzoomedBounds: Rectangle =
+    widgetContainer.map(_.getUnzoomedBounds(this)).getOrElse(getBounds)
 
   override def removeNotify: Unit = {
     if (java.awt.EventQueue.isDispatchThread) {
