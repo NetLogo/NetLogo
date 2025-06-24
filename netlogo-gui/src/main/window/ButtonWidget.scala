@@ -299,7 +299,7 @@ class ButtonWidget(random: MersenneTwisterFast, colorizer: Colorizer) extends Jo
 
   def mouseMoved(e: MouseEvent): Unit = {}
   def mouseClicked(e: MouseEvent): Unit = {
-    if (!e.isPopupTrigger() && error() != null && !lastMousePressedWasPopupTrigger && hasButton1(e))
+    if (!e.isPopupTrigger() && error().isDefined && !lastMousePressedWasPopupTrigger && hasButton1(e))
       new Events.EditWidgetEvent(this).raise(this)
   }
 
