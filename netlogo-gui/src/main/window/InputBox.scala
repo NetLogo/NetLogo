@@ -70,14 +70,22 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
 
     setLayout(new GridBagLayout)
 
-    val c = new GridBagConstraints
+    initGUI()
 
-    c.weightx = 1
-    c.weighty = 1
-    c.fill = GridBagConstraints.BOTH
-    c.insets = new Insets(zoom(3), zoom(3), zoom(3), zoom(3))
+    def initGUI(): Unit = {
+      removeAll()
 
-    add(scrollPane, c)
+      val c = new GridBagConstraints
+
+      c.weightx = 1
+      c.weighty = 1
+      c.fill = GridBagConstraints.BOTH
+      c.insets = new Insets(zoom(3), zoom(3), zoom(3), zoom(3))
+
+      add(scrollPane, c)
+
+      textArea.setMargin(new Insets(zoom(2), zoom(6), zoom(2), zoom(6)))
+    }
 
     override def paintComponent(g: Graphics): Unit = {
       // this mostly fixes some weird horizontal scrollbar issues (Isaac B 8/7/24)
@@ -283,6 +291,8 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
         new Insets(0, zoom(8), zoom(8), zoom(8))
       }
     }
+
+    scroller.initGUI()
 
     add(scroller, c)
     add(colorSwatch, c)
