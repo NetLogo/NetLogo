@@ -226,7 +226,12 @@ class WidgetPanel(val workspace: GUIWorkspace)
     // lower right corner
     maxX += 8
     maxY += 8
-    new Dimension(maxX, maxY)
+
+    if (hasView || maxY > 8) {
+      new Dimension(maxX, maxY)
+    } else {
+      new Dimension(maxX, 500)
+    }
   }
 
   private def getWrappers: Seq[WidgetWrapper] = {
