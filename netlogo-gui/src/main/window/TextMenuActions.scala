@@ -5,6 +5,7 @@ package org.nlogo.window
 import java.awt.Toolkit
 import java.awt.datatransfer.DataFlavor
 import java.awt.event.{ ActionEvent, KeyEvent }
+import java.lang.IllegalStateException
 import javax.swing.Action
 import javax.swing.text.{ Document, JTextComponent }
 
@@ -37,8 +38,13 @@ object TextMenuActions {
     with Refreshable {
 
     def refresh(): Unit = {
-      setEnabled(Toolkit.getDefaultToolkit.getSystemClipboard
-        .isDataFlavorAvailable(DataFlavor.stringFlavor))
+      try {
+        setEnabled(Toolkit.getDefaultToolkit.getSystemClipboard
+          .isDataFlavorAvailable(DataFlavor.stringFlavor))
+      } catch {
+        case _: IllegalStateException =>
+          setEnabled(false)
+      }
     }
   }
 
