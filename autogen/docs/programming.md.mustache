@@ -2886,6 +2886,9 @@ half transparent pure red with the following code:
 
     set color [255 0 0 125]
 
+Note that decimal values will be rounded towards 0 before the range is checked.
+An error will be thrown if a value is outside the range 0-255 after this rounding.
+
 You can convert from a NetLogo color to RGB or HSB (hue/saturation/brightness)
 using [[extract-hsb]] and [[extract-rgb]]. You can use [[rgb]] to generate rgb
 lists and [[hsb]] to convert from an HSB color to RGB.

@@ -3583,7 +3583,8 @@ histogram [color] of turtles
         <p>
           Reports a RGB list when given three numbers describing an HSB
           color. Hue, saturation, and brightness are integers in the range
-          0-360, 0-100, 0-100 respectively. The RGB list contains three
+          0-360, 0-100, 0-100 respectively. Input values will be clamped to
+          these ranges before converting to RGB. The RGB list contains three
           integers in the range of 0-255.
         </p>
         <p>
@@ -7573,7 +7574,7 @@ show reverse &quot;live&quot;
         </h4>
         <p>
           Reports a RGB list when given three numbers describing an RGB
-          color. The numbers are range checked to be between 0 and 255.
+          color. The numbers are clamped to the range 0-255.
         </p>
         <p>
           See also <a href="#hsb">hsb</a>
