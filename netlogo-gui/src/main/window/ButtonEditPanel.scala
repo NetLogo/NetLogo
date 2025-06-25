@@ -97,8 +97,6 @@ class ButtonEditPanel(target: ButtonWidget, colorizer: Colorizer) extends Widget
 
     add(wrapSource, c)
 
-    wrapSource.requestFocus()
-
     c.gridy = 3
 
     add(name, c)
@@ -117,4 +115,8 @@ class ButtonEditPanel(target: ButtonWidget, colorizer: Colorizer) extends Widget
     Seq(agentOptions, forever, goTime, wrapSource, name, actionKey, oldSize)
 
   override def isResizable: Boolean = true
+
+  override def requestFocus(): Unit = {
+    wrapSource.requestFocus()
+  }
 }

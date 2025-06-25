@@ -60,12 +60,14 @@ class StockEditPanel(target: StockFigure, compiler: CompilerServices, colorizer:
     c.anchor = GridBagConstraints.WEST
 
     add(allowNegative, c)
-
-    nameWrapper.requestFocus()
   }
 
   override def propertyEditors: Seq[PropertyEditor[?]] =
     Seq(nameWrapper, initialValueExpressionWrapper, allowNegative)
 
   override def isResizable: Boolean = true
+
+  override def requestFocus(): Unit = {
+    nameWrapper.requestFocus()
+  }
 }

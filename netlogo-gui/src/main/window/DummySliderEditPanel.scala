@@ -125,4 +125,8 @@ class DummySliderEditPanel(target: DummySliderWidget) extends WidgetEditPanel(ta
 
   override def propertyEditors: Seq[PropertyEditor[?]] =
     Seq(name, min, inc, max, value, units, vertical, oldSize)
+
+  override def requestFocus(): Unit = {
+    name.requestFocus()
+  }
 }

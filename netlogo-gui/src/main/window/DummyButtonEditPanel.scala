@@ -44,4 +44,8 @@ class DummyButtonEditPanel(target: DummyButtonWidget) extends WidgetEditPanel(ta
 
   override def propertyEditors: Seq[PropertyEditor[?]] =
     Seq(name, actionKey)
+
+  override def requestFocus(): Unit = {
+    name.requestFocus()
+  }
 }

@@ -105,8 +105,6 @@ class RunOptionsEditPanel(target: RunOptionsDialog#EditableRunOptions, spreadshe
     add(updateView, c)
     add(updateLabeled, c)
     add(threadCountLabeled, c)
-
-    spreadsheet.requestFocus()
   }
 
   override def propertyEditors: Seq[PropertyEditor[?]] =
@@ -115,5 +113,9 @@ class RunOptionsEditPanel(target: RunOptionsDialog#EditableRunOptions, spreadshe
   override def syncExtraComponents(): Unit = {
     updateLabeled.syncTheme()
     threadCountLabeled.syncTheme()
+  }
+
+  override def requestFocus(): Unit = {
+    spreadsheet.requestFocus()
   }
 }

@@ -154,12 +154,14 @@ class DummyPlotEditPanel(target: DummyPlotWidget) extends WidgetEditPanel(target
     c.insets = new Insets(0, 6, 6, 6)
 
     add(oldSize, c)
-
-    nameOptions.requestFocus()
   }
 
   override def propertyEditors: Seq[PropertyEditor[?]] =
     Seq(nameOptions, xLabel, xMin, xMax, yLabel, yMin, yMax, autoPlotX, autoPlotY, showLegend, oldSize)
 
   override def isResizable: Boolean = true
+
+  override def requestFocus(): Unit = {
+    nameOptions.requestFocus()
+  }
 }

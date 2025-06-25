@@ -60,10 +60,12 @@ class InputEditPanel(target: InputBoxWidget, compiler: CompilerServices) extends
     c.insets = new Insets(0, 0, 6, 6)
 
     add(oldSize, c)
-
-    nameWrapper.requestFocus()
   }
 
   override def propertyEditors: Seq[PropertyEditor[?]] =
     Seq(nameWrapper, typeOptions, oldSize)
+
+  override def requestFocus(): Unit = {
+    nameWrapper.requestFocus()
+  }
 }

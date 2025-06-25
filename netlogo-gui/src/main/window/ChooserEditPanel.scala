@@ -56,8 +56,6 @@ class ChooserEditPanel(target: ChooserWidget, compiler: CompilerServices, colori
 
     add(choicesLabeled, c)
     add(oldSize, c)
-
-    nameWrapper.requestFocus()
   }
 
   override def propertyEditors: Seq[PropertyEditor[?]] =
@@ -67,5 +65,9 @@ class ChooserEditPanel(target: ChooserWidget, compiler: CompilerServices, colori
 
   override def syncExtraComponents(): Unit = {
     choicesLabeled.syncTheme()
+  }
+
+  override def requestFocus(): Unit = {
+    nameWrapper.requestFocus()
   }
 }

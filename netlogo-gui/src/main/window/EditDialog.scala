@@ -101,6 +101,8 @@ class EditDialog(window: Window, target: Editable, modal: Boolean)
 
   getRootPane.setDefaultButton(okButton)
 
+  editPanel.requestFocus()
+
   Positioning.center(this, window)
 
   setResizable(editPanel.isResizable)

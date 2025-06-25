@@ -58,10 +58,12 @@ class DummyInputEditPanel(target: DummyInputBoxWidget) extends WidgetEditPanel(t
     c.insets = new Insets(0, 0, 6, 6)
 
     add(oldSize, c)
-
-    name.requestFocus()
   }
 
   override def propertyEditors: Seq[PropertyEditor[?]] =
     Seq(name, typeOptions, oldSize)
+
+  override def requestFocus(): Unit = {
+    name.requestFocus()
+  }
 }

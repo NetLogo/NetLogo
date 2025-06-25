@@ -104,8 +104,6 @@ class MonitorEditPanel(target: MonitorWidget, compiler: CompilerServices, colori
     c.gridy = 4
 
     add(oldSize, c)
-
-    wrapSource.requestFocus()
   }
 
   override def propertyEditors: Seq[PropertyEditor[?]] =
@@ -115,5 +113,9 @@ class MonitorEditPanel(target: MonitorWidget, compiler: CompilerServices, colori
 
   override def syncExtraComponents(): Unit = {
     decimalLabeled.syncTheme()
+  }
+
+  override def requestFocus(): Unit = {
+    wrapSource.requestFocus()
   }
 }

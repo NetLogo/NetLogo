@@ -55,8 +55,6 @@ class DummyChooserEditPanel(target: DummyChooserWidget, compiler: CompilerServic
 
     add(choicesLabeled, c)
     add(oldSize, c)
-
-    name.requestFocus()
   }
 
   override def propertyEditors: Seq[PropertyEditor[?]] =
@@ -66,5 +64,9 @@ class DummyChooserEditPanel(target: DummyChooserWidget, compiler: CompilerServic
 
   override def syncExtraComponents(): Unit = {
     choicesLabeled.syncTheme()
+  }
+
+  override def requestFocus(): Unit = {
+    name.requestFocus()
   }
 }

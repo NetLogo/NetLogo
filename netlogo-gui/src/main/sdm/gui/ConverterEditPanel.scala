@@ -62,12 +62,14 @@ class ConverterEditPanel(target: ConverterFigure, compiler: CompilerServices, co
     c.fill = GridBagConstraints.HORIZONTAL
 
     add(expressionWrapper, c)
-
-    nameWrapper.requestFocus()
   }
 
   override def propertyEditors: Seq[PropertyEditor[?]] =
     Seq(nameWrapper, inputs, expressionWrapper)
 
   override def isResizable: Boolean = true
+
+  override def requestFocus(): Unit = {
+    nameWrapper.requestFocus()
+  }
 }

@@ -50,12 +50,14 @@ class DummyMonitorEditPanel(target: DummyMonitorWidget) extends WidgetEditPanel(
 
     add(decimalPlaces, c)
     add(oldSize, c)
-
-    name.requestFocus()
   }
 
   override def propertyEditors: Seq[PropertyEditor[?]] =
     Seq(name, decimalPlaces, oldSize)
 
   override def isResizable: Boolean = true
+
+  override def requestFocus(): Unit = {
+    name.requestFocus()
+  }
 }

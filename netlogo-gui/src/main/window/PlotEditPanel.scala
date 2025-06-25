@@ -214,8 +214,6 @@ class PlotEditPanel(target: PlotWidget, colorizer: Colorizer) extends WidgetEdit
     c.anchor = GridBagConstraints.WEST
 
     add(oldSize, c)
-
-    plotName.requestFocus()
   }
 
   override def propertyEditors: Seq[PropertyEditor[?]] =
@@ -223,4 +221,8 @@ class PlotEditPanel(target: PlotWidget, colorizer: Colorizer) extends WidgetEdit
         updateCode, editPlotPens, oldSize)
 
   override def isResizable: Boolean = true
+
+  override def requestFocus(): Unit = {
+    plotName.requestFocus()
+  }
 }

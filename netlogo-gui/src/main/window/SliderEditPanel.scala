@@ -150,4 +150,8 @@ class SliderEditPanel(target: SliderWidget, compiler: CompilerServices, colorize
   override def syncExtraComponents(): Unit = {
     minimumLabeled.syncTheme()
   }
+
+  override def requestFocus(): Unit = {
+    nameWrapper.requestFocus()
+  }
 }

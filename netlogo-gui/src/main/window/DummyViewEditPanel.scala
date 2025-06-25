@@ -38,10 +38,12 @@ class DummyViewEditPanel(target: DummyViewWidget) extends WidgetEditPanel(target
     c.insets = new Insets(0, 6, 6, 6)
 
     add(heightEditor, c)
-
-    widthEditor.requestFocus()
   }
 
   override def propertyEditors: Seq[PropertyEditor[?]] =
     Seq(widthEditor, heightEditor)
+
+  override def requestFocus(): Unit = {
+    widthEditor.requestFocus()
+  }
 }

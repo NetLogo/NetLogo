@@ -115,12 +115,14 @@ class NoteEditPanel(target: NoteWidget) extends WidgetEditPanel(target) {
     c.insets = new Insets(0, 6, 6, 6)
 
     add(markdown, c)
-
-    text.requestFocus()
   }
 
   override def propertyEditors: Seq[PropertyEditor[?]] =
     Seq(text, fontSize, textColorLight, textColorDark, backgroundLight, backgroundDark, markdown)
 
   override def isResizable: Boolean = true
+
+  override def requestFocus(): Unit = {
+    text.requestFocus()
+  }
 }

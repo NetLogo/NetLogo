@@ -24,10 +24,12 @@ class OutputEditPanel(target: OutputWidget) extends WidgetEditPanel(target) {
     c.insets = new Insets(6, 6, 6, 6)
 
     add(fontSize, c)
-
-    fontSize.requestFocus()
   }
 
   override def propertyEditors: Seq[PropertyEditor[?]] =
     Seq(fontSize)
+
+  override def requestFocus(): Unit = {
+    fontSize.requestFocus()
+  }
 }

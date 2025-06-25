@@ -248,8 +248,6 @@ class ProtocolEditPanel(target: ProtocolEditable, compiler: CompilerServices, co
     c.gridwidth = 2
 
     add(timeLimit, c)
-
-    name.requestFocus()
   }
 
   override def propertyEditors: Seq[PropertyEditor[?]] =
@@ -260,5 +258,9 @@ class ProtocolEditPanel(target: ProtocolEditable, compiler: CompilerServices, co
   override def syncExtraComponents(): Unit = {
     hintPanel.setBackground(InterfaceColors.bspaceHintBackground())
     hintLabel.setForeground(InterfaceColors.dialogText())
+  }
+
+  override def requestFocus(): Unit = {
+    name.requestFocus()
   }
 }

@@ -39,10 +39,12 @@ class DummySwitchEditPanel(target: DummySwitchWidget) extends WidgetEditPanel(ta
     c.insets = new Insets(0, 6, 6, 6)
 
     add(oldSize, c)
-
-    name.requestFocus()
   }
 
   override def propertyEditors: Seq[PropertyEditor[?]] =
     Seq(name, oldSize)
+
+  override def requestFocus(): Unit = {
+    name.requestFocus()
+  }
 }
