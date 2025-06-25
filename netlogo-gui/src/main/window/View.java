@@ -232,10 +232,15 @@ public class View
       }
       framesSkipped = false;
     } else if (paintingImmediately) {
+      if (offscreenImage == null) {
+        offscreenImage = createImage(getWidth(), getHeight());
+        gOff = (java.awt.Graphics2D)offscreenImage.getGraphics();
+        gOff.setFont(getFont());
+      }
       synchronized (workspace.world()) {
         renderer.paint(gOff, this);
-        g.drawImage(offscreenImage, 0, 0, null);
       }
+      g.drawImage(offscreenImage, 0, 0, null);
       framesSkipped = false;
     } else {
       if (beClean()) {
@@ -349,7 +354,6 @@ public class View
   @Override
   public void setFont(java.awt.Font font) {
     super.setFont(font);
-    offscreenImage = null;
     discardOffscreenImage();
   }
 
