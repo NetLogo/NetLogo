@@ -940,7 +940,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
       wrapper.setPlacing(true)
       wrapper.validate()
 
-      zoomer.zoomWidget(wrapper, true, false, 1.0, zoomFactor)
+      zoomer.zoomWidget(wrapper, true, true, 1.0, zoomFactor)
 
       wrapper.syncTheme()
 
@@ -990,6 +990,8 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
           LogManager.widgetAdded(false, wrapper.widget.classDisplayName, wrapper.widget.displayName)
         }
+
+        resetZoomInfo(wrapper.widget)
     }
 
     shadowWidgets = None
