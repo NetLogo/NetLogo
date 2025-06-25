@@ -21,8 +21,8 @@ class PlotPenEditorAdvanced(inputPen: PlotPensEditor.Pen, colorizer: Colorizer, 
   private val intervalField = new TextField(8)
   private val penModes = new ComboBox(List(I18N.gui("mode.line"), I18N.gui("mode.bar"), I18N.gui("mode.point")))
   private val showPenInLegend = new CheckBox(I18N.gui("showInLegend"))
-  val setupCode = CodeEditor(I18N.gui("setupCommands"), colorizer, columns = 65, err=inputPen.setupError)
-  val updateCode = CodeEditor(I18N.gui("updateCommands"), colorizer, columns = 65, err=inputPen.updateError)
+  val setupCode = CodeEditor(I18N.gui("setupCommands"), colorizer, columns = 65, err = () => inputPen.setupError)
+  val updateCode = CodeEditor(I18N.gui("updateCommands"), colorizer, columns = 65, err = () => inputPen.updateError)
 
   val runtimeErrorPanel =
     inputPen.runtimeError.map(

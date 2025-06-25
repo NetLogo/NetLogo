@@ -13,8 +13,8 @@ import org.nlogo.theme.InterfaceColors
 
 object CodeEditor {
   def apply(displayName: String, colorizer: Colorizer, collapsible: Boolean = false,
-            collapseWhenEmpty: Boolean = false, rows: Int = 5, columns: Int = 30, err: Option[Exception] = None,
-            changedFunc: => Unit = {}): CodeEditor = {
+            collapseWhenEmpty: Boolean = false, rows: Int = 5, columns: Int = 30,
+            err: () => Option[Exception] = () => None, changedFunc: => Unit = {}): CodeEditor = {
 
     val accessor = new PropertyAccessor[String](new DummyEditable, displayName, () => "", _ => {}, () => changedFunc)
 
@@ -23,7 +23,8 @@ object CodeEditor {
 }
 
 class CodeEditor(accessor: PropertyAccessor[String], colorizer: Colorizer, collapsible: Boolean = false,
-                 collapseWhenEmpty: Boolean = false, rows: Int = 5, columns: Int = 30, err: Option[Exception] = None)
+                 collapseWhenEmpty: Boolean = false, rows: Int = 5, columns: Int = 30,
+                 err: () => Option[Exception] = () => None)
   extends PropertyEditor(accessor) {
 
   val editorConfig =
@@ -96,7 +97,7 @@ class CodeEditor(accessor: PropertyAccessor[String], colorizer: Colorizer, colla
     editor.setText(value)
     setVisibility(value.nonEmpty)
     editor.select(0, 0)
-    err.foreach(errorLabel.setError(_, accessor.target.sourceOffset))
+    err().foreach(errorLabel.setError(_, accessor.target.sourceOffset))
   }
 
   override def setToolTipText(text: String): Unit = {
@@ -130,8 +131,9 @@ class CodeEditor(accessor: PropertyAccessor[String], colorizer: Colorizer, colla
   }
 }
 
-class NonEmptyCodeEditor(accessor: PropertyAccessor[String], colorizer: Colorizer)
-  extends CodeEditor(accessor, colorizer) {
+class NonEmptyCodeEditor(accessor: PropertyAccessor[String], colorizer: Colorizer,
+                         err: () => Option[Exception] = () => None)
+  extends CodeEditor(accessor, colorizer, err = err) {
 
   override def get: Option[String] =
     super.get.map(_.trim).filter(_.nonEmpty)

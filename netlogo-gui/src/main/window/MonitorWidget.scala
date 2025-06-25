@@ -220,7 +220,7 @@ class MonitorWidget(random: MersenneTwisterFast, compiler: CompilerServices, col
       new AddJobEvent(this, agents, procedure).raise(this)
       jobRunning = true
     }
-    nameLabel.setForeground(if (procedure == null) Color.RED else InterfaceColors.widgetText())
+    syncTheme()
     repaint()
   }
 
@@ -282,7 +282,12 @@ class MonitorWidget(random: MersenneTwisterFast, compiler: CompilerServices, col
   override def syncTheme(): Unit = {
     setBackgroundColor(InterfaceColors.monitorBackground())
 
-    nameLabel.setForeground(InterfaceColors.widgetText())
+    if (anyErrors) {
+      nameLabel.setForeground(Color.RED)
+    } else {
+      nameLabel.setForeground(InterfaceColors.widgetText())
+    }
+
     valueLabel.setForeground(InterfaceColors.displayAreaText())
     unitsLabel.setForeground(InterfaceColors.widgetText())
 
@@ -338,14 +343,20 @@ class MonitorWidget(random: MersenneTwisterFast, compiler: CompilerServices, col
     if (this == e.jobOwner) {
       hasError = true
       halt()
+      syncTheme()
+      repaint()
     }
 
-  def handle(e: PeriodicUpdateEvent): Unit =
+  def handle(e: PeriodicUpdateEvent): Unit = {
     if (!jobRunning && procedure != null) {
       hasError = false
       jobRunning = true
-      new AddJobEvent(this, agents, procedure).raise(this);
+      new AddJobEvent(this, agents, procedure).raise(this)
     }
+
+    syncTheme()
+    repaint()
+  }
 
   def handle(e: JobRemovedEvent): Unit =
     if (e.owner == this) {
