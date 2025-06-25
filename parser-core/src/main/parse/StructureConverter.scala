@@ -3,7 +3,7 @@
 package org.nlogo.parse
 
 import org.nlogo.core,
-  core.{ CompilerException, FrontEndProcedure, I18N, StructureResults, Program, Syntax, Token, TokenType }
+  core.{ CompilerException, Fail, FrontEndProcedure, I18N, StructureResults, Program, Syntax, Token, TokenType }
 
 /// Stage #3 of StructureParser
 
@@ -47,19 +47,32 @@ object StructureConverter {
       new Token("", TokenType.Eof, "")(p.tokens.last.sourceLocation))
   }
 
+  private def checkForDuplicates(identifiers: Seq[Identifier], current: Set[String], typeName: String): Unit = {
+    identifiers.foldLeft(current) {
+      case (names, i) =>
+        if (names.exists(_ == i.name))
+          Fail.exception(I18N.errors.getN("compiler.StructureChecker.duplicateType", typeName, i.name), i.token)
+
+        names + i.name
+    }
+  }
+
   def updateProgram(program: Program, declarations: Seq[Declaration]): Program = {
     def updateVariables(program: Program): Program =
       declarations.foldLeft(program) {
         case (program, Variables(Identifier("GLOBALS", _), identifiers)) =>
           program.copy(userGlobals = program.userGlobals ++ identifiers.map(_.name))
         case (program, Variables(Identifier("TURTLES-OWN", _), identifiers)) =>
+          checkForDuplicates(identifiers, program.turtleVars.keySet, SymbolType.typeName(SymbolType.TurtleVariable))
           program.copy(turtleVars = program.turtleVars ++ identifiers.map(i => i.name -> Syntax.WildcardType))
         case (program, Variables(Identifier("PATCHES-OWN", _), identifiers)) =>
+          checkForDuplicates(identifiers, program.patchVars.keySet, SymbolType.typeName(SymbolType.PatchVariable))
           program.copy(patchVars = program.patchVars ++ identifiers.map(i => i.name -> Syntax.WildcardType))
         case (program, Variables(Identifier("LINKS-OWN", _), identifiers)) =>
+          checkForDuplicates(identifiers, program.linkVars.keySet, SymbolType.typeName(SymbolType.LinkVariable))
           program.copy(linkVars = program.linkVars ++ identifiers.map(i => i.name -> Syntax.WildcardType))
         case (program, Variables(Identifier(breedOwn, tok), identifiers)) =>
-          updateBreedVariables(program, breedOwn.stripSuffix("-OWN"), identifiers.map(_.name), tok)
+          updateBreedVariables(program, breedOwn.stripSuffix("-OWN"), identifiers, tok)
         case (program, _) =>
           program
       }
@@ -79,7 +92,7 @@ object StructureConverter {
     updateVariables(updateBreeds(program))
   }
 
-  def updateBreedVariables(program: Program, breedName: String, newOwns: Seq[String], tok: Token): Program = {
+  def updateBreedVariables(program: Program, breedName: String, newOwns: Seq[Identifier], tok: Token): Program = {
     if ((program.breeds.keySet ++ program.linkBreeds.keySet).contains(breedName)) {
       import collection.immutable.ListMap
       type BreedMap = ListMap[String, core.Breed]
@@ -99,16 +112,20 @@ object StructureConverter {
       // if we had lenses this wouldn't need to be so repetitious - ST 7/15/12
       if (program.linkBreeds.isDefinedAt(breedName)) {
         val breed = program.linkBreeds(breedName)
+        checkForDuplicates(newOwns, program.turtleVars.keySet, SymbolType.typeName(SymbolType.TurtleVariable))
+        checkForDuplicates(newOwns, breed.owns.toSet, SymbolType.typeName(SymbolType.LinkBreedVariable(breedName)))
         program.copy(linkBreeds =
           orderPreservingUpdate(
             program.linkBreeds,
-            breed.copy(owns = breed.owns ++ newOwns)))
+            breed.copy(owns = breed.owns ++ newOwns.map(_.name))))
       } else {
         val breed = program.breeds(breedName)
+        checkForDuplicates(newOwns, program.turtleVars.keySet, SymbolType.typeName(SymbolType.TurtleVariable))
+        checkForDuplicates(newOwns, breed.owns.toSet, SymbolType.typeName(SymbolType.BreedVariable(breedName)))
         program.copy(breeds =
           orderPreservingUpdate(
             program.breeds,
-            breed.copy(owns = breed.owns ++ newOwns)))
+            breed.copy(owns = breed.owns ++ newOwns.map(_.name))))
       }
     } else {
       throw new CompilerException(
