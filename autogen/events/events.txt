@@ -42,7 +42,7 @@ window.LoadSection - String version - Object section - String[] lines - String t
 window.LoadWidgets - scala.collection.immutable.Seq<org.nlogo.core.Widget> widgets - org.nlogo.window.WidgetSizes widgetSizesOption
 window.ModelSaved - String modelPath - boolean isNew
 window.OpenModel - String path - boolean shouldAutoInstallLibs
-window.Output - boolean clear - org.nlogo.agent.OutputObject outputObject - boolean wrapLines - boolean toCommandCenter
+window.Output - boolean clear - org.nlogo.agent.OutputObject outputObject - boolean wrapLines - boolean toCommandCenter - long time
 window.PatchesCreated
 window.PeriodicUpdate
 window.RemoveAllJobs

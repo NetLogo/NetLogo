@@ -1071,7 +1071,7 @@ abstract class GUIWorkspace(world: World, kioskLevel: GUIWorkspace.KioskLevel, f
   /// output
 
   def clearOutput(): Unit = {
-    val event = new OutputEvent(true, null, false, false)
+    val event = new OutputEvent(true, null, false, false, System.currentTimeMillis)
 
     // This method can be called when we are ALREADY in the AWT
     // event thread, so check before we block on it. -- CLB 07/18/05
@@ -1086,7 +1086,7 @@ abstract class GUIWorkspace(world: World, kioskLevel: GUIWorkspace.KioskLevel, f
   }
 
   override def sendOutput(oo: OutputObject, toOutputArea: Boolean): Unit = {
-    val event = new OutputEvent(false, oo, false, !toOutputArea)
+    val event = new OutputEvent(false, oo, false, !toOutputArea, System.currentTimeMillis)
 
     // This method can be called when we are ALREADY in the AWT
     // event thread, so check before we block on it. -- CLB 07/18/05

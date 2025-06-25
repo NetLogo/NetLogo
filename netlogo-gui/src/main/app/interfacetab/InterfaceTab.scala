@@ -18,7 +18,7 @@ import org.nlogo.swing.{ Implicits, PrinterManager, Printable => NlogoPrintable,
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ EditDialogFactory, GUIWorkspace, InterfaceMode, SpeedSliderPanel, ViewUpdatePanel,
                           WidgetInfo, Events => WindowEvents, WorkspaceActions },
-                        WindowEvents.{ Enable2DEvent, LoadBeginEvent, OutputEvent }
+                        WindowEvents.{ AfterLoadEvent, Enable2DEvent, LoadBeginEvent, OutputEvent }
 
 object InterfaceTab {
   val MenuGroup = "org.nlogo.app.InterfaceTab"
@@ -31,12 +31,15 @@ class InterfaceTab(workspace: GUIWorkspace,
                    dialogFactory: EditDialogFactory,
                    val commandCenter: CommandCenter) extends JPanel
   with LoadBeginEvent.Handler
+  with AfterLoadEvent.Handler
   with OutputEvent.Handler
   with Enable2DEvent.Handler
   with SwitchedTabsEvent.Handler
   with NlogoPrintable
   with MenuTab
   with ThemeSync {
+
+  private var lastLoadTime = System.currentTimeMillis
 
   setFocusCycleRoot(true)
   setFocusTraversalPolicy(new InterfaceTabFocusTraversalPolicy)
@@ -157,14 +160,20 @@ class InterfaceTab(workspace: GUIWorkspace,
     scrollPane.getVerticalScrollBar.setValue(0)
   }
 
+  def handle(e: AfterLoadEvent): Unit = {
+    lastLoadTime = System.currentTimeMillis
+  }
+
   /// output
 
   def getOutputArea = Option(iP.getOutputWidget).map(_.outputArea).getOrElse(commandCenter.output)
 
   def handle(e: OutputEvent): Unit = {
-    val outputArea = if(e.toCommandCenter) commandCenter.output else getOutputArea
-    if(e.clear && iP.getOutputWidget != null) outputArea.clear()
-    if(e.outputObject != null) outputArea.append(e.outputObject, e.wrapLines)
+    if (e.time > lastLoadTime) {
+      val outputArea = if(e.toCommandCenter) commandCenter.output else getOutputArea
+      if(e.clear && iP.getOutputWidget != null) outputArea.clear()
+      if(e.outputObject != null) outputArea.append(e.outputObject, e.wrapLines)
+    }
   }
 
   def handle(e: Enable2DEvent): Unit = {

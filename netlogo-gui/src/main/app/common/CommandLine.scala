@@ -177,7 +177,7 @@ class CommandLine(commandCenter: CommandCenterInterface,
           // print error message
           new WindowEvents.OutputEvent(false,
             new OutputObject("", "ERROR: " + err.getMessage(), true, true),
-            true, true).raise(this)
+            true, true, System.currentTimeMillis).raise(this)
         case None =>
           setText("")
           var outStr = innerSource
@@ -193,7 +193,7 @@ class CommandLine(commandCenter: CommandCenterInterface,
               outStr = prefix + " " + outStr
               new WindowEvents.OutputEvent(false,
                 new OutputObject("", outStr, true, false),
-                      false, true).raise(this)
+                      false, true, System.currentTimeMillis).raise(this)
             }
             if (agent != null) {
               val agentSet = AgentSet.fromAgent(agent)
