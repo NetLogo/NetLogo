@@ -18,11 +18,11 @@ The biggest changes in this release are:
 
 Below, we list all the changes since NetLogo 6.4.
 
-## Changes in NetLogo Functionality
-- The random number generator behavior has changed. If you had model behavior that depended on a specific random seed being set, it will not generate the same behavior as in NetLogo 6. 
+### Changes in NetLogo Functionality
+- The random number generator behavior has changed. If you had model behavior that depended on a specific random seed being set, it will not generate the same behavior as in NetLogo 6.
 
-## Changes to the NetLogo GUI
-- See the [transition guide document](https://ccl.northwestern.edu/nl7changesoverview/nl7guide.html) for more details. 
+### Changes to the NetLogo GUI
+- See the [transition guide document](https://ccl.northwestern.edu/nl7changesoverview/nl7guide.html) for more details.
 - User interface elements (widgets) have a flat modern look with a new color scheme.
 - Users have a choice of color themes: Light, Dark and Classic.
     - The classic color theme is similar to the light theme, except the widgets have the pre-NetLogo 7 colors.
@@ -49,11 +49,11 @@ Below, we list all the changes since NetLogo 6.4.
 - Code Tabs for included (.nls) files can be closed by clicking on the tab.
 - Code Tabs for included files have checkboxes for opening a separate code window.
 - Headers in the Info Tab have been redesigned.
-- The color themes are color blind friendly. 
+- The color themes are color blind friendly.
 - The shapes list in the Turtle Shapes Editor and the Link Shapes Editor is now searchable.
 - Color Swatches has been replaced by a more powerful Color picker.
 
-## Changes to the NetLogo File format
+### Changes to the NetLogo File format
 - The extension of model files is now .nlogox or .nlogox3d.
 - Existing .nlogo model files will be converted to .nlogox files.
 - NetLogo 7 only saves models as .nlogox files.
@@ -66,7 +66,7 @@ Below, we list all the changes since NetLogo 6.4.
     - This makes it easier to add capabilities and keep models backwards compatible.
     - Resources needed for a model may be stored in the .nlogox file in the future.
 
-## Changes for Customizability
+### Changes for Customizability
 - Widgets that have changed size for NetLogo 7 have a checkbox that allows users to switch between the new larger size in NetLogo 7 and the previous size used in NetLogo 6.4.
 - The `Auto indent` and `Show line numbers` global preferences can be set directly from the Code Tab.
 - There are changes to the Preferences dialog which let you customize various NetLogo settings.
@@ -77,7 +77,7 @@ Below, we list all the changes since NetLogo 6.4.
 - Users can switch between Light, Dark and Classic color themes using an item in the Tools menu.
 - A new Color Picker replaces Color Swatches. Users can still select NetLogo colors from a grid of rectangles. The Color Picker has a second tab that allows users to specify colors in most common formats,  and that enables easy selection of a more extensive set of colors.
 
-## Features and Enhancements
+### Features and Enhancements
 - The NetLogo Graphical User Interface (GUI) has been thoroughly [modernized](#changes-to-the-netlogo-gui).
 - The model file format has become [extensible](#changes-to-the-netlogo-file-format).
 - Brief timely messages can now be displayed in a banner on the Interface Tab. Users can click a link for more details.
@@ -88,12 +88,12 @@ Below, we list all the changes since NetLogo 6.4.
 - The separate code tab has a full NetLogo menu bar.
 - The Help Menu now has a link to the NetLogo Forum, a website to ask/answer questions and have discussions about NetLogo.
 
-## Language Changes
+### Language Changes
 - The `user-input` primitive has a new optional argument for a default input value.
 - The new primitives `auto-plot-x-on`, `auto-plot-y-on`, `auto-plot-x-off`, and `auto-plot-y-off` allow plots to be scaled independently for the x and y axes.
 - The new primitive `set-topology` replaces the "hidden" command `__change-topology`.
 
-## Bug Fixes and Changes
+### Bug Fixes and Changes
 - Multi-assign with `let` and `set` can use arbitrarily nested lists to "destructure" variables. For example, `let [[corner1-x corner1-y corner2-x corner2-y] player-name score] get-current-player-info`.
 - The primitive `auto-plot?` has been restored.
 - An optimization speeds up the execution of the constructs `any turtles-on` and `any <breeds>-on`.
@@ -142,28 +142,28 @@ Below, we list all the changes since NetLogo 6.4.
 - Plot pens always take account of `plot-pen-up` and `plot-pen-down`.
 - The padding and location of internal components of widgets now change proportionally when zooming.
 
-## Extension Updates
+### Extension Updates
 - The gogo extension supports the GoGo board 6.
 - The dialog extension `user-input` primitive allows an optional default value argument.
 - There is a new resource extension that allows you to list and get resources bundled with a model.
 
-## Documentation Updates
+### Documentation Updates
 - Grammar was improved for NetLogo Tutorial 2.
 - The link to the book "An Introduction to Agent-Based Modeling" was updated.
 - The BehaviorSpace error message about undefined parameter values was made easier to interpret.
 - The BehaviorSpace documentation for the subexperiment syntax is improved and uses examples from the Wolf Sheep Predation Model.
 
-## Models Library Changes
+### Models Library Changes
 Note: most models have been updated to the new widget size but not all.
 
-### New Sample Models:
+#### New Sample Models:
 - We will have new sample models with the next release.
 
-### New Code Examples
+#### New Code Examples
 - The Ordered Agent Drawing Code Example model demonstrates how to sort turtles for display using `stamp` when precise drawing order is needed.
 - The Patch Outlines Example model demonstrates how to outline patches in a reasonably simple way using `stamp`.
 
-### Sample Model Changes
+#### Sample Model Changes
 - The Moths model was updated with information about new research into why moths circle lights. The idea that this could be modeled with NetLogo 3D was added as a suggestion for further exploration.
 - The correct label is used after `hatch`ing in the Plant Speciation model.
 - The Discrete Event Mousetrap has additions to the Extending the Model section.
@@ -171,6 +171,7 @@ Note: most models have been updated to the new widget size but not all.
 - An inaccurate comment in Small Worlds model was corrected.
 - Multi-line code input widgets were enabled for PNoM 2 Diffusion Sensor Sandbox. Previously single line widgets were incorrectly used.
 - The Radical Polymerization model was updated to fix a bug in which Km was used instead of Kr for probability of termination.
+
 
 ## Version 6.4.0 (November 2023)
 
