@@ -64,12 +64,22 @@ object StructureConverter {
           program.copy(userGlobals = program.userGlobals ++ identifiers.map(_.name))
         case (program, Variables(Identifier("TURTLES-OWN", _), identifiers)) =>
           checkForDuplicates(identifiers, program.turtleVars.keySet, SymbolType.typeName(SymbolType.TurtleVariable))
+          program.breeds.foreach {
+            case (name, breed) =>
+              checkForDuplicates(identifiers, breed.owns.toSet,
+                                 SymbolType.typeName(SymbolType.BreedVariable(name)))
+          }
           program.copy(turtleVars = program.turtleVars ++ identifiers.map(i => i.name -> Syntax.WildcardType))
         case (program, Variables(Identifier("PATCHES-OWN", _), identifiers)) =>
           checkForDuplicates(identifiers, program.patchVars.keySet, SymbolType.typeName(SymbolType.PatchVariable))
           program.copy(patchVars = program.patchVars ++ identifiers.map(i => i.name -> Syntax.WildcardType))
         case (program, Variables(Identifier("LINKS-OWN", _), identifiers)) =>
           checkForDuplicates(identifiers, program.linkVars.keySet, SymbolType.typeName(SymbolType.LinkVariable))
+          program.linkBreeds.foreach {
+            case (name, breed) =>
+              checkForDuplicates(identifiers, breed.owns.toSet,
+                                 SymbolType.typeName(SymbolType.LinkBreedVariable(name)))
+          }
           program.copy(linkVars = program.linkVars ++ identifiers.map(i => i.name -> Syntax.WildcardType))
         case (program, Variables(Identifier(breedOwn, tok), identifiers)) =>
           updateBreedVariables(program, breedOwn.stripSuffix("-OWN"), identifiers, tok)
@@ -112,7 +122,7 @@ object StructureConverter {
       // if we had lenses this wouldn't need to be so repetitious - ST 7/15/12
       if (program.linkBreeds.isDefinedAt(breedName)) {
         val breed = program.linkBreeds(breedName)
-        checkForDuplicates(newOwns, program.turtleVars.keySet, SymbolType.typeName(SymbolType.TurtleVariable))
+        checkForDuplicates(newOwns, program.linkVars.keySet, SymbolType.typeName(SymbolType.LinkVariable))
         checkForDuplicates(newOwns, breed.owns.toSet, SymbolType.typeName(SymbolType.LinkBreedVariable(breedName)))
         program.copy(linkBreeds =
           orderPreservingUpdate(

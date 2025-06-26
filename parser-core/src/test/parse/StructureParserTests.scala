@@ -227,6 +227,16 @@ class StructureParserTests extends AnyFunSuite {
     expectError("undirected-link-breed [edges edge] breed [nodes node] edges-own [weight] nodes-own [weight]",
       "There is already a EDGES-OWN variable called WEIGHT") }
 
+  test("breed owns / turtles own clashes") {
+    expectError("turtles-own [ test ] breed [ stuffs stuff ] stuffs-own [ test ]",
+      "There is already a turtle variable called TEST")
+  }
+
+  test("duplicate turtles own clashes") {
+    expectError("turtles-own [ test test ]",
+      "There is already a turtle variable called TEST")
+  }
+
   // https://github.com/NetLogo/NetLogo/issues/414
   test("missing end 1") {
     expectError("to foo to bar",
@@ -290,6 +300,78 @@ links-own [END1 END2 COLOR LABEL LABEL-COLOR HIDDEN? BREED THICKNESS SHAPE TIE-M
 breeds MICE = Breed(MICE, MOUSE, M1 M2 M3 M4, false)
 link-breeds"""
     assertResult(expected)(results.program.dump.trim)
+  }
+
+  test("included file detects duplicate breed declaration") {
+    expectParseAllError("""__includes [ "foo.nls" ] breed [ stuffs stuff ]""",
+      "There is already a breed called STUFFS",
+      "breed [ stuffs stuff ]")
+  }
+
+  test("included file detects duplicate turtles own variables") {
+    expectParseAllError("""__includes [ "foo.nls" ] turtles-own [ test ]""",
+      "There is already a turtle variable called TEST",
+      "turtles-own [ test ]")
+  }
+
+  test("included file detects turtles own / breeds own clashes") {
+    expectParseAllError("""__includes [ "foo.nls" ] turtles-own [ test ]""",
+      "There is already a turtle variable called TEST",
+      "breed [ stuffs stuff ] stuffs-own [ test ]")
+  }
+
+  test("included file detects breeds own / turtles own clashes") {
+    expectParseAllError("""__includes [ "foo.nls" ] breed [ stuffs stuff ] stuffs-own [ test ]""",
+      "There is already a STUFFS-OWN variable called TEST",
+      "turtles-own [ test ]")
+  }
+
+  test("included file detects duplicate breeds own variables") {
+    expectParseAllError("""__includes [ "foo.nls" ] breed [ stuffs stuff ] stuffs-own [ test ]""",
+      "There is already a STUFFS-OWN variable called TEST",
+      "stuffs-own [ test ]")
+  }
+
+  test("included file detects duplicate links own variables") {
+    expectParseAllError("""__includes [ "foo.nls" ] links-own [ test ]""",
+      "There is already a link variable called TEST",
+      "links-own [ test ]")
+  }
+
+  test("included file detects duplicate undirected link breeds own variables") {
+    expectParseAllError("""__includes [ "foo.nls" ] undirected-link-breed [ stuffs stuff ] stuffs-own [ test ]""",
+      "There is already a STUFFS-OWN variable called TEST",
+      "stuffs-own [ test ]")
+  }
+
+  test("included file detects duplicate directed link breeds own variables") {
+    expectParseAllError("""__includes [ "foo.nls" ] directed-link-breed [ stuffs stuff ] stuffs-own [ test ]""",
+      "There is already a STUFFS-OWN variable called TEST",
+      "stuffs-own [ test ]")
+  }
+
+  test("included file detects links own / undirected link breeds own clashes") {
+    expectParseAllError("""__includes [ "foo.nls" ] links-own [ test ]""",
+      "There is already a link variable called TEST",
+      "undirected-link-breed [ stuffs stuff ] stuffs-own [ test ]")
+  }
+
+  test("included file detects links own / directed link breeds own clashes") {
+    expectParseAllError("""__includes [ "foo.nls" ] links-own [ test ]""",
+      "There is already a link variable called TEST",
+      "directed-link-breed [ stuffs stuff ] stuffs-own [ test ]")
+  }
+
+  test("included file detects undirected link breed / links own clashes") {
+    expectParseAllError("""__includes [ "foo.nls" ] undirected-link-breed [ stuffs stuff ] stuffs-own [ test ]""",
+      "There is already a STUFFS-OWN variable called TEST",
+      "stuffs-own [ test ]")
+  }
+
+  test("included file detects directed link breed / links own clashes") {
+    expectParseAllError("""__includes [ "foo.nls" ] directed-link-breed [ stuffs stuff ] stuffs-own [ test ]""",
+      "There is already a STUFFS-OWN variable called TEST",
+      "stuffs-own [ test ]")
   }
 
   test("mutually referrent sources") {
