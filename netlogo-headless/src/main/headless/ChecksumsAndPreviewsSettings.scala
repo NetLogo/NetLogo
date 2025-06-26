@@ -103,5 +103,10 @@ object ChecksumsAndPreviewsSettings {
       "/Code Examples/Extensions Examples/py/Python Flocking Clusters.nlogox"
     )
 
+    , Some("it uses the import-a extension") -> List(
+      "/models/Code Examples/Image Resource Example.nlogox",
+      "/models/Sample Models/Biology/Evolution/Mammoths.nlogox"
+    )
+
   )
 }
