@@ -53,15 +53,15 @@ object HelpActions {
     new LocalBrowseAction(I18N.gui.get("menu.help.netLogoDictionary"),
       docPath("index2.html")),
     new RemoteBrowseAction(I18N.gui.get("menu.help.news"),
-      new URI("https://ccl.northwestern.edu/netlogo/announce.shtml")),
+      new URI("https://www.netlogo.org/announcements/")),
     new RemoteBrowseAction(I18N.gui.get("menu.help.bind"),
       new URI("https://ccl.northwestern.edu/netlogo/bind")),
     new RemoteBrowseAction(I18N.gui.get("menu.help.netLogoUsersGroup"),
       new URI("http://groups.google.com/d/forum/netlogo-users")),
     new RemoteBrowseAction(I18N.gui.get("menu.help.introToABM"),
-      new URI("https://mitpress.mit.edu/books/introduction-agent-based-modeling")),
+      new URI("https://mitpress.mit.edu/9780262731898/an-introduction-to-agent-based-modeling/")),
     new RemoteBrowseAction(I18N.gui.get("menu.help.donate"),
-      new URI("http://ccl.northwestern.edu/netlogo/giving.shtml")) {
+      new URI("https://www.netlogo.org/donate/")) {
       putValue(ActionGroupKey, HelpAboutGroup)
     },
     new RemoteBrowseAction(I18N.gui.get("menu.help.forum"),
@@ -69,7 +69,7 @@ object HelpActions {
       putValue(ActionGroupKey, HelpAboutGroup)
       },
     new RemoteBrowseAction(I18N.gui.get("menu.help.contact"),
-      new URI("https://ccl.northwestern.edu/netlogo/contact.shtml")) {
+      new URI("https://www.netlogo.org/contact/")) {
       putValue(ActionGroupKey, HelpAboutGroup)
       })
   }
