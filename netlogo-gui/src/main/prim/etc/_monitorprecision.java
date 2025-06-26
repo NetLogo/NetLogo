@@ -18,6 +18,10 @@ public final class _monitorprecision
     if (!(value instanceof Double)) {
       return value;
     }
+    String dStr = ((Double)value).toString();
+    if (dStr.toLowerCase().contains("e")) {
+      return String.format("%." + numberOfPlaces +  "E0", (Double)value);
+    }
     return newValidDouble
         (org.nlogo.api.Approximate.approximate
             (((Double) value).doubleValue(), numberOfPlaces), context);
