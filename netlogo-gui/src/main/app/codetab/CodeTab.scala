@@ -176,7 +176,14 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
       }
     }.flatMap { path =>
       try {
-        workspace.compiler.findIncludes(path, getText, workspace.getCompilationEnvironment)
+        tabs.mainCodeTab match {
+          case tab: MainCodeTab =>
+            workspace.compiler.findIncludes(path, tab.getText, workspace.getCompilationEnvironment)
+
+          // this shouldn't be possible but it can't hurt to have a fallback (Isaac B 6/26/25)
+          case _ =>
+            workspace.compiler.findIncludes(path, getText, workspace.getCompilationEnvironment)
+        }
       } catch {
         case e: CompilerException => None
       }
