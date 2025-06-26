@@ -299,17 +299,17 @@ abstract class WorldViewSettings(protected val workspace: GUIWorkspace, protecte
     gWidget.calculateWidth(worldWidth, patchSize)
 
   def setDimensions(d: WorldDimensions, newPatchSize: Double): Unit = {
+    val patchSizeChanged = newPatchSize != workspace.world.patchSize
     workspace.world.patchSize(newPatchSize)
-    setDimensions(d)
+    setDimensions(d.minPxcor, d.maxPxcor, d.minPycor, d.maxPycor, patchSizeChanged)
     patchSize(newPatchSize)
   }
 
   def setDimensions(d: WorldDimensions): Unit = {
-    setDimensions(d.minPxcor, d.maxPxcor, d.minPycor, d.maxPycor)
+    setDimensions(d.minPxcor, d.maxPxcor, d.minPycor, d.maxPycor, false)
   }
 
-  def setDimensions(minPxcor: Int, maxPxcor: Int,
-                    minPycor: Int, maxPycor: Int): Unit = {
+  def setDimensions(minPxcor: Int, maxPxcor: Int, minPycor: Int, maxPycor: Int, patchSizeChanged: Boolean): Unit = {
     newMinX = minPxcor
     newMaxX = maxPxcor
     newMinY = minPycor
@@ -317,10 +317,10 @@ abstract class WorldViewSettings(protected val workspace: GUIWorkspace, protecte
     if (minPxcor != workspace.world.minPxcor ||
         maxPxcor != workspace.world.maxPxcor ||
         minPycor != workspace.world.minPycor ||
-        maxPycor != workspace.world.maxPycor) {
+        maxPycor != workspace.world.maxPycor ||
+        patchSizeChanged) {
       prepareForWorldResize()
-      workspace.world
-        .createPatches(minPxcor, maxPxcor, minPycor, maxPycor)
+      workspace.world.createPatches(minPxcor, maxPxcor, minPycor, maxPycor)
       finishWorldResize()
     }
   }
