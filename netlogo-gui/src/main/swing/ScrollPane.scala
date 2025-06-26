@@ -34,6 +34,8 @@ class ScrollBar(orientation: Int) extends JScrollBar(orientation) with MouseUtil
   private class ScrollBarUI extends BasicScrollBarUI {
     override def createDecreaseButton(orientation: Int): JButton = {
       new JButton {
+        setFocusable(false)
+
         override def getPreferredSize: Dimension =
           new Dimension(0, 0)
       }
@@ -41,6 +43,8 @@ class ScrollBar(orientation: Int) extends JScrollBar(orientation) with MouseUtil
 
     override def createIncreaseButton(orientation: Int): JButton = {
       new JButton {
+        setFocusable(false)
+
         override def getPreferredSize: Dimension =
           new Dimension(0, 0)
       }
