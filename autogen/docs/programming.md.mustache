@@ -29,7 +29,7 @@ Examples section of the Models Library.
     - [Tick counter](#tick-counter)
     - [View updates](#view-updates)
     - [Topology](#topology)
-- [<b>Perspective</b>](#perspective)
+- [<b>Observer Perspective</b>](#observer-perspective)
 - [<b>Input/Output</b>](#inputoutput)
     - [Output](#output)
     - [User Interaction Primitives](#use-interaction-primitives)
@@ -1812,7 +1812,7 @@ Edges Example.
 
 
 
-## <b>Perspective</b>
+## <b>Observer Perspective</b>
 
 The 2D and the 3D view show the world from the perspective of the observer. By
 default the observer is looking down on the world from the positive z-axis at
@@ -1827,7 +1827,9 @@ it is actually riding the agent. When the observer is in watch mode it tracks
 the movements of one turtle (or patch or link) without moving. In both views you
 will see a spotlight appear on the subject and in the 3D view the observer will
 turn to face the subject. To determine which agent is the focus you can use the
-[[subject]] reporter.
+[[subject]] reporter. Use the [[reset-perspective]] command to  stop the
+observer from watching, following, or riding. In the 3D view, the observer also
+returns to its default position (above the origin, looking straight down).
 
 > **Code Example:** Perspective Example
 
