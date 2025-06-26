@@ -129,7 +129,7 @@ abstract class AbstractPlotWidget(val plot: Plot, val plotManager: PlotManagerIn
     c.gridx = 0
     c.gridy = 3
     c.gridwidth = 2
-    c.insets = new Insets(zoom(8), zoom(10), zoom(8), zoom(10))
+    c.insets = new Insets(zoom(2), zoom(10), zoom(8), zoom(10))
 
     add(legend, c)
 
