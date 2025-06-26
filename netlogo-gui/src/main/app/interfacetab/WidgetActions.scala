@@ -205,14 +205,14 @@ object WidgetActions {
       for ((ww, _, bounds) <- wrappers)
         setBounds(ww, bounds)
 
-      wrappers.headOption.foreach(new Events.DirtyEvent(None).raise)
+      wrappers.headOption.foreach(t => new Events.DirtyEvent(None).raise(t._1))
     }
 
     override def undo: Unit = {
       for ((ww, bounds, _) <- wrappers)
         setBounds(ww, bounds)
 
-      wrappers.headOption.foreach(new Events.DirtyEvent(None).raise)
+      wrappers.headOption.foreach(t => new Events.DirtyEvent(None).raise(t._1))
     }
 
     override def getPresentationName = "Widget Stretching"
