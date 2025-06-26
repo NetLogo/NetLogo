@@ -210,6 +210,7 @@ lazy val netlogo = project.in(file("netlogo-gui")).
       ) ++ Seq("base", "controls", "graphics", "swing", "web")
         .map(m => "org.openjfx" % s"javafx-$m" % "21.0.6" classifier osName)
     },
+    Compile / compile := (Compile / compile).dependsOn(NativeLibs.nativeLibs).value,
     all := {},
     all := {
       all.dependsOn(
