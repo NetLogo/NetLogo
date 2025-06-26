@@ -257,7 +257,7 @@ object Preferences {
     override def component: CheckBox = checkBox
 
     def load(): Unit = {
-      val value = NetLogoPreferences.get(i18nKey, "true").toBoolean
+      val value = NetLogoPreferences.get(i18nKey, "false").toBoolean
 
       checkBox.setSelected(value)
       widgetPanel.setBoldWidgetText(value)
