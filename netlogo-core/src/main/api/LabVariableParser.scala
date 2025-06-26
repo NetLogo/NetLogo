@@ -27,12 +27,14 @@ object LabVariableParser {
             case List(first: java.lang.Double,
                       step: java.lang.Double,
                       last: java.lang.Double) =>
-              if (((last > first && step > 0) || (last < first && step < 0)) &&
+              if (step == 0) {
+                throw new Exception(I18N.gui.getN("edit.behaviorSpace.list.zeroIncrement", variableName))
+              } else if (((last > first && step > 0) || (last < first && step < 0)) &&
                     Int.MaxValue / totalCombinations > ((last - first) / step + 1)) {
                 val multiplier: Int = ((last - first) / step + 1).toInt
                 totalCombinations = totalCombinations * (if (multiplier == 0) 1 else multiplier)
               } else
-                throw new Exception(I18N.gui.getN("edit.behaviorSpace.list.increment",
+                throw new Exception(I18N.gui.getN("edit.behaviorSpace.list.inverseIncrement",
                                     s"[ ${"\"" + variableName + "\""} [ $first $step $last ] ]"))
               val constant = new SteppedValueSet(variableName,
                                                  BigDecimal(Dump.number(first)),
@@ -74,12 +76,14 @@ object LabVariableParser {
                   case List(first: java.lang.Double,
                             step: java.lang.Double,
                             last: java.lang.Double) =>
-                    if (((last > first && step > 0) || (last < first && step < 0)) &&
+                    if (step == 0) {
+                      throw new Exception(I18N.gui.getN("edit.behaviorSpace.list.zeroIncrement", variableName))
+                    } else if (((last > first && step > 0) || (last < first && step < 0)) &&
                           Int.MaxValue / totalCombinations > ((last - first) / step + 1)) {
                       val multiplier: Int = ((last - first) / step + 1).toInt
                       totalCombinations = totalCombinations * (if (multiplier == 0) 1 else multiplier)
                     } else
-                      throw new Exception(I18N.gui.getN("edit.behaviorSpace.list.increment",
+                      throw new Exception(I18N.gui.getN("edit.behaviorSpace.list.inverseIncrement",
                                                   s"[ ${"\"" + variableName + "\""} [ $first $step $last ] ]"))
                     val exp = new SteppedValueSet(variableName,
                                                   BigDecimal(Dump.number(first)),
