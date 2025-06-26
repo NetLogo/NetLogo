@@ -65,6 +65,12 @@ class OutputWidget extends SingleErrorWidget with CommandCenterInterface
         outputArea.text.copy
       }
     }))
+
+    menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.clear")) {
+      def actionPerformed(e: ActionEvent): Unit = {
+        outputArea.clear()
+      }
+    }))
   }
 
   override def syncTheme(): Unit = {
