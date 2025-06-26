@@ -45,10 +45,16 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
   private val alignmentMenu = new AlignmentMenu
 
   locally {
-    interactButton.setToolTipText(I18N.gui.get("tabs.run.interactButton.tooltip"))
-    selectButton.setToolTipText(I18N.gui.get("tabs.run.selectButton.tooltip"))
-    editButton.setToolTipText(I18N.gui.get("tabs.run.editButton.tooltip"))
-    deleteButton.setToolTipText(I18N.gui.get("tabs.run.deleteButton.tooltip"))
+    val altText = if (System.getProperty("os.name").toLowerCase.contains("mac")) {
+      "\u2325"
+    } else {
+      "Alt"
+    }
+
+    interactButton.setToolTipText(I18N.gui.getN("tabs.run.interactButton.tooltip", altText))
+    selectButton.setToolTipText(I18N.gui.getN("tabs.run.selectButton.tooltip", altText))
+    editButton.setToolTipText(I18N.gui.getN("tabs.run.editButton.tooltip", altText))
+    deleteButton.setToolTipText(I18N.gui.getN("tabs.run.deleteButton.tooltip", altText))
 
     buttonGroup.add(interactButton)
     buttonGroup.add(selectButton)
