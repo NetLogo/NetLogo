@@ -315,9 +315,9 @@ Interaction21
 PatchTriesTurtleReporter
   globals [ glob1 ]
   O> set glob1 one-of patches
-  [dx] of glob1 => ERROR this code can't be run by a patch, only a turtle
-  [dx + dy] of glob1 => ERROR this code can't be run by a patch, only a turtle
-  O> ask glob1 [ __ignore dx ] => ERROR this code can't be run by a patch, only a turtle
+  [dx] of glob1 => ERROR this code can't be run by a patch, only by a turtle
+  [dx + dy] of glob1 => ERROR this code can't be run by a patch, only by a turtle
+  O> ask glob1 [ __ignore dx ] => ERROR this code can't be run by a patch, only by a turtle
 
 BreedAt_2D
   breed [frogs frog]

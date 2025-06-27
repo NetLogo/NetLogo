@@ -10,16 +10,16 @@ AgentClassChecking1
 
 AgentClassChecking2
   globals [ glob1 ]
-  O> crt 1 [ set glob1 self ] __ignore [link-length] of glob1 => ERROR this code can't be run by a turtle, only a link
+  O> crt 1 [ set glob1 self ] __ignore [link-length] of glob1 => ERROR this code can't be run by a turtle, only by a link
 
 RunRetainsAgentContext
   to test-patches [t] ask patches [ run t ] end
   to test-turtles [t] ask turtles [ run t ] end
   O> create-turtles 10
   O> test-patches "hatch 1" => ERROR You can't use HATCH in a patch context, because HATCH is turtle-only.
-  O> test-patches [-> hatch 1] => ERROR this code can't be run by a patch, only a turtle
+  O> test-patches [-> hatch 1] => ERROR this code can't be run by a patch, only by a turtle
   O> test-turtles "sprout 1" => ERROR You can't use SPROUT in a turtle context, because SPROUT is patch-only.
-  O> test-turtles [-> sprout 1] => ERROR this code can't be run by a turtle, only a patch
+  O> test-turtles [-> sprout 1] => ERROR this code can't be run by a turtle, only by a patch
   O> test-turtles "ask turtles [ set color red ]" => ERROR Only the observer can ASK the set of all turtles.
   O> test-turtles [-> ask turtles [ set color red ]] => ERROR Only the observer can ASK the set of all turtles.
 
@@ -28,10 +28,10 @@ RunRetainsAgentContext
 # it failed.  It may depend on whether the prim is rejiggered or not.
 
 AgentClassChecking3a
-  O> let p patches __ignore p with [who] => ERROR this code can't be run by a patch, only a turtle
+  O> let p patches __ignore p with [who] => ERROR this code can't be run by a patch, only by a turtle
 
 AgentClassChecking3b
-  O> let p patches print p with [size] => ERROR this code can't be run by a patch, only a turtle
+  O> let p patches print p with [size] => ERROR this code can't be run by a patch, only by a turtle
 
 CompileTypeChecking1
   P> __ignore pxcor or true => COMPILER ERROR OR expected this input to be a TRUE/FALSE, but got a number instead
