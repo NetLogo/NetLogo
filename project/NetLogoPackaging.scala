@@ -179,6 +179,15 @@ object NetLogoPackaging {
       RunProcess(Seq("rsync", "-rltv", "--inplace", "--progress", manualSource.getPath, s"$user@$host:$manualTarget"), "rsync user manual")
       RunProcess(Seq("ssh", s"$user@$host", "chgrp", "-R", "apache", targetDir), "ssh - change release group")
       RunProcess(Seq("ssh", s"$user@$host", "chmod", "-R", "g+rwX", targetDir), "ssh - change release permissions")
+      val tempDocs = file("docs-" + System.currentTimeMillis)
+      val versionDir = tempDocs / marketingVersion.value
+      RunProcess(Seq("git", "clone", "https://github.com/NetLogo/docs", tempDocs.toString), "clone docs repo")
+      FileActions.copyDirectory(sourceDir, versionDir)
+      FileActions.copyFile(manualSource, versionDir / "NetLogo User Manual.pdf")
+      RunProcess(Seq("git", "-C", tempDocs.toString, "add", "."), "stage changed files")
+      RunProcess(Seq("git", "-C", tempDocs.toString, "commit", "-m", s"Upload ${marketingVersion.value} docs"), "create commit")
+      RunProcess(Seq("git", "-C", tempDocs.toString, "push"), "push commit to remote")
+      FileActions.remove(tempDocs)
     },
 
     packagingClasspath := {
