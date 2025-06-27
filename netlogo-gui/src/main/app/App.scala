@@ -554,6 +554,8 @@ class App extends org.nlogo.window.Event.LinkChild
       import ExecutionContext.Implicits.global
       AnnouncementsInfoDownloader.fetch().foreach(_tabManager.interfaceTab.appendAnnouncements)
 
+      _tabManager.interfaceTab.requestFocus()
+
       syncWindowThemes()
 
     }
