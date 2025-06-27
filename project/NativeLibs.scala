@@ -24,12 +24,15 @@ object NativeLibs {
       val joglFile = "jogl-2.4.0-natives.zip"
       val baseURL = "https://s3.amazonaws.com/ccl-artifacts/"
       val joglNatives = baseDirectory.value / "natives"
-      val joglTmp = baseDirectory.value / joglFile
-      val joglUrl = new URL(baseURL + joglFile)
-      IO.createDirectory(joglNatives)
-      FileActions.download(joglUrl, joglTmp)
-      IO.unzip(joglTmp, joglNatives)
-      IO.delete(joglTmp)
+
+      if (!joglNatives.exists) {
+        val joglTmp = baseDirectory.value / joglFile
+        val joglUrl = new URL(baseURL + joglFile)
+        IO.createDirectory(joglNatives)
+        FileActions.download(joglUrl, joglTmp)
+        IO.unzip(joglTmp, joglNatives)
+        IO.delete(joglTmp)
+      }
 
       // if we need any additional libraries
       // excluded by this, make sure the copyright notice is updated
