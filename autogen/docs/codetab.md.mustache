@@ -188,3 +188,8 @@ Code tabs, not just the one that is currently visible.
 </tr>
 </tbody>
 </table>
+
+Note that you can create or open an .nls file before including it in a model with an `__includes` statement.
+In this case, the contents of the file will not be compilable, which is indicated by a warning label below the
+toolbar and by the Check button being disabled. This does not affect the rest of the model or cause any errors,
+but the contents of the file will not be accessible from any other code tabs in the model.
