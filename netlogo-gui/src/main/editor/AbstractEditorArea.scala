@@ -14,6 +14,7 @@ trait AbstractEditorArea extends JTextComponent {
 
   def setSelection(s: Boolean): Unit
 
+  def selectNormal(): Unit
   def selectError(start: Int, end: Int): Unit
 
   def resetUndoHistory(): Unit

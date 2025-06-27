@@ -148,6 +148,12 @@ class EditorArea(val configuration: EditorConfiguration)
     _selectionActive = s
   }
 
+  def selectNormal(): Unit = {
+    setSelectionColor(defaultSelectionColor)
+
+    select(getSelectionStart, getSelectionEnd)
+  }
+
   def selectError(start: Int, end: Int): Unit = {
     setSelectionColor(InterfaceColors.errorHighlight())
 

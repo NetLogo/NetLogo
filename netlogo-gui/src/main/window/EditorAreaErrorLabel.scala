@@ -15,6 +15,7 @@ class EditorAreaErrorLabel(val editorArea: AbstractEditorArea) extends ErrorLabe
         editorArea.setSelection(false)
         editorArea.requestFocus()
       case _ =>
+        editorArea.selectNormal()
         editorArea.setSelection(true)
     }
   }
