@@ -28,6 +28,9 @@ class EditDialog(window: Window, target: Editable, modal: Boolean)
 
   val okButton = new DialogButton(true, I18N.gui.get("common.buttons.ok"), () => {
     if (editPanel.valid) {
+      if (editPanel.changed)
+        new Events.DirtyEvent(None).raise(window)
+
       editPanel.apply()
 
       if (target.editFinished())

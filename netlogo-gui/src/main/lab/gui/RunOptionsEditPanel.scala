@@ -110,6 +110,10 @@ class RunOptionsEditPanel(target: RunOptionsDialog#EditableRunOptions, spreadshe
   override def propertyEditors: Seq[PropertyEditor[?]] =
     Seq(spreadsheet, table, stats, lists, updateView, updatePlotsAndMonitors, threadCount)
 
+  // since this edit panel's changes are not saved in the model file,
+  // always return false so the model doesn't get marked as dirty (Isaac B 6/27/25)
+  override def changed: Boolean = false
+
   override def syncExtraComponents(): Unit = {
     updateLabeled.syncTheme()
     threadCountLabeled.syncTheme()

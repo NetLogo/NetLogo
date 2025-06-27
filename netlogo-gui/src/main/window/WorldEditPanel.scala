@@ -56,6 +56,9 @@ abstract class WorldEditPanel(target: WorldViewSettings) extends EditPanel(targe
     target.revert()
   }
 
+  override def changed: Boolean =
+    propertyEditors.exists(_.changed) || target.changed
+
   private def selectType(): Unit = {
     originTypes.getSelectedItem.foreach { t =>
       target.setOriginType(t)

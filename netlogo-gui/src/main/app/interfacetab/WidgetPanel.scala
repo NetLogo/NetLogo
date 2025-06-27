@@ -1079,8 +1079,6 @@ class WidgetPanel(val workspace: GUIWorkspace)
           }
         case _ =>
       }
-
-      new DirtyEvent(None).raise(this)
     }
     setForegroundWrapper()
   }

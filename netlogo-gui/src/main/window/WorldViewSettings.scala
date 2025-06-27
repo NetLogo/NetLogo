@@ -112,6 +112,9 @@ abstract class WorldViewSettings(protected val workspace: GUIWorkspace, protecte
     originConfig = originalConfig
   }
 
+  def changed: Boolean =
+    originType != originalType || originConfig != originalConfig
+
   def load(view: CoreWidget): AnyRef = {
     workspace.world.displayOn(false)
     workspace.loadWorld(view.asInstanceOf[CoreView], this)

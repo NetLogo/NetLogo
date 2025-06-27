@@ -194,7 +194,7 @@ private class ManagerDialog(manager:       LabManager,
     val editable = new ProtocolEditable(protocol, manager.workspace.getFrame,
                                         manager.workspace, dialogFactory.colorizer, manager.workspace.world,
                                         manager.protocols.map(_.name).filter(isNew || _ != protocol.name).toSeq)
-    dialogFactory.create(this, editable, success => {
+    dialogFactory.create(manager.workspace.getFrame, editable, success => {
       blockActions = false
       if (success) {
         val newProtocol = editable.get.get
@@ -205,7 +205,6 @@ private class ManagerDialog(manager:       LabManager,
         }
         update()
         select(newProtocol)
-        manager.dirty()
       } else {
         update()
       }

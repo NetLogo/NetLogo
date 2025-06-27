@@ -29,6 +29,9 @@ abstract class EditPanel(target: Editable) extends JPanel with Transparent with 
     }
   }
 
+  def changed: Boolean =
+    propertyEditors.exists(_.changed)
+
   def valid: Boolean = {
     propertyEditors.find(editor => editor.get.isEmpty && !editor.handlesOwnErrors) match {
       case Some(editor) =>

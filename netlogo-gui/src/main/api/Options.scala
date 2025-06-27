@@ -2,28 +2,24 @@
 
 package org.nlogo.api
 
-import scala.{ Option => _ }
-import collection.mutable.ArrayBuffer
+private case class Choice[T](name: String, value: T)
 
 class Options[T] {
-
-  private case class Option(name: String, value: T)
-
-  private val choices = ArrayBuffer[Option]()
-  private var current: scala.Option[Option] = None
+  protected var choices = Seq[Choice[T]]()
+  protected var current: Option[Choice[T]] = None
 
   def chosenName = current.get.name
   def chosenValue = current.get.value
 
   def addOption(name: String, value: T): Unit = {
-    choices += Option(name, value)
+    choices = choices :+ Choice(name, value)
   }
 
-  def names: List[String] =
-    choices.map(_.name).toList
+  def names: Seq[String] =
+    choices.map(_.name)
 
-  def values: List[T] =
-    choices.map(_.value).toList
+  def values: Seq[T] =
+    choices.map(_.value)
 
   def selectByName(s: String): Unit = {
     current = choices.find(_.name == s)
@@ -33,4 +29,10 @@ class Options[T] {
     current = choices.find(_.value == obj)
   }
 
+  override def equals(other: Any): Boolean = {
+    other match {
+      case opts: Options[_] => choices == opts.choices && current == opts.current
+      case _ => false
+    }
+  }
 }

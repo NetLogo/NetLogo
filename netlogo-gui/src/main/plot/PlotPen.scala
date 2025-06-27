@@ -50,6 +50,21 @@ extends PlotPenInterface with JSerializable {
 
   override def toString = "PlotPen("+name+", "+plot+")"
 
+  override def equals(other: Any): Boolean = {
+    other match {
+      case pen: PlotPen =>
+        name == pen.name &&
+        setupCode == pen.setupCode &&
+        updateCode == pen.updateCode &&
+        defaultColor == pen.defaultColor &&
+        inLegend == pen.inLegend &&
+        defaultInterval == pen.defaultInterval &&
+        defaultMode == pen.defaultMode
+
+      case _ => false
+    }
+  }
+
   override def state: PlotPenState =
     PlotPenState(x, _color, _interval, _mode, _isDown, _hidden)
 

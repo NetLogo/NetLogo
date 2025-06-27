@@ -49,6 +49,9 @@ class InputBoxEditor[InputType <: InputBox#InputType](accessor: PropertyAccessor
     super.revert()
   }
 
+  override def changed: Boolean =
+    !selected.contains(originalOption) || multiline.isSelected != originalMultiline
+
   override def requestFocus(): Unit = { typeCombo.requestFocus() }
 
   override def syncTheme(): Unit = {

@@ -18,4 +18,6 @@ abstract class PropertyEditor[T](val accessor: PropertyAccessor[T], val handlesO
 
   def get: Option[T]
   def set(value: T): Unit
+
+  def changed: Boolean = !get.contains(originalValue)
 }
