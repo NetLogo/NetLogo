@@ -12,7 +12,6 @@ case class Import(
 case class Export(
   name: String,
   filename: Option[String],
-  version: String,
   exportedNames: Seq[String],
   token: Token
 )
