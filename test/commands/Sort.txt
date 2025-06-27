@@ -30,7 +30,7 @@ SortByDoesntExposeAgentsetOrder
 
 SortByBadReporter
   O> crt 3
-  sort-by [who] turtles => ERROR this code can't be run by the observer, only a turtle
+  sort-by [who] turtles => ERROR this code can't be run by the observer, only by a turtle
   sort-by [2] turtles => ERROR SORT-BY expected input to be a TRUE/FALSE but got the number 2 instead.
 
 SortingListsOfAgents_2D
