@@ -7,8 +7,7 @@ import java.net.URI
 import org.matomo.java.tracking.{ MatomoRequest, MatomoTracker, TrackerConfiguration }
 
 object Analytics {
-  // this endpoint is temporary for local testing purposes (Isaac B 6/20/25)
-  private val config = TrackerConfiguration.builder.apiEndpoint(URI.create("http://localhost:8080/matomo.php"))
+  private val config = TrackerConfiguration.builder.apiEndpoint(URI.create("http://129.105.119.160:8080/matomo.php"))
                                                    .defaultSiteId(1)
                                                    .build()
 
