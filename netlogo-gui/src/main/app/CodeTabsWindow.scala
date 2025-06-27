@@ -5,11 +5,13 @@ package org.nlogo.app
 import java.awt.{ Dimension, Frame, GraphicsEnvironment, Point }
 import javax.swing.{ JFrame, WindowConstants }
 
-import org.nlogo.swing.NetLogoIcon
+import org.nlogo.swing.{ ModalProgress, NetLogoIcon }
 import org.nlogo.theme.ThemeSync
 import org.nlogo.window.Event.LinkChild
 
-class CodeTabsWindow(parent: Frame, tabs: TabsPanel) extends JFrame with LinkChild with ThemeSync with NetLogoIcon {
+class CodeTabsWindow(parent: Frame, tabs: TabsPanel)
+  extends JFrame with LinkChild with ThemeSync with NetLogoIcon with ModalProgress {
+
   val menuBar: MainMenuBar = new MainMenuBar(false)
 
   setJMenuBar(menuBar)
