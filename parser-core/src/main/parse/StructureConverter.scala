@@ -32,7 +32,7 @@ object StructureConverter {
           case SimpleExport(name) => Some(name)
         }).flatten
         val filename = ex.token.sourceLocation.filename
-        Export(ex.name, if (filename.isEmpty()) None else Some(filename), ex.version, exportedNames, ex.token)
+        Export(ex.name, if (filename.isEmpty()) None else Some(filename), exportedNames, ex.token)
     }
     val is = declarations.collect {
       case i: Includes =>
