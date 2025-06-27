@@ -18,8 +18,13 @@ object PackageLinuxAggregate {
 
     val shellScriptPermissions = {
       import PosixFilePermission._
-      import scala.collection.JavaConverters._
+      import scala.collection.JavaConverters.setAsJavaSetConverter
       Set(OWNER_READ, OWNER_WRITE, OWNER_EXECUTE, GROUP_READ, GROUP_EXECUTE, OTHERS_READ, OTHERS_EXECUTE).asJava
+    }
+
+    val launcherDesktopPermissions = {
+      import scala.collection.JavaConverters.setAsJavaSetConverter
+      Set(PosixFilePermission.OWNER_EXECUTE).asJava
     }
 
     // these could be simple symlinks, but there is an issue with `file` that affects Ubuntu and other common distros.
@@ -39,6 +44,10 @@ object PackageLinuxAggregate {
       )
       shellScriptLauncher.setExecutable(true)
       Files.setPosixFilePermissions(shellScriptLauncher.toPath, shellScriptPermissions)
+      val launcherDesktop = appImageDir / (launcher.name + ".desktop")
+      Mustache(configDir / "linux" / "launcher.desktop.mustache", launcherDesktop,
+               Map("name" -> launcher.name, "icon" -> launcher.icon))
+      Files.setPosixFilePermissions(launcherDesktop.toPath, launcherDesktopPermissions)
     })
 
     log.info("Creating NetLogo_Console sym link")
