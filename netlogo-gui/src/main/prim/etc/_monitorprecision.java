@@ -13,7 +13,10 @@ public final class _monitorprecision
 
   @Override
   public Object report(final Context context) throws LogoException {
-    Object value = args[0].report(context);
+    Object value = "N/A";
+    try {
+      value = args[0].report(context);
+    } catch (Exception e) {}
     int numberOfPlaces = argEvalIntValue(context, 1);
     if (!(value instanceof Double)) {
       return value;
