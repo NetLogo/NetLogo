@@ -34,7 +34,7 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
   with MenuTab
   with ThemeSync {
 
-  private val compileButton = new ToolBarActionButton(new AbstractAction(I18N.gui.get("tabs.code.checkButton")) {
+  protected val compileButton = new ToolBarActionButton(new AbstractAction(I18N.gui.get("tabs.code.checkButton")) {
     override def actionPerformed(e: ActionEvent): Unit = {
       compile()
     }
@@ -60,7 +60,7 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
     tabs.showCodeTabPreferences()
   })
 
-  private var _dirty = false // Has the buffer changed since it was compiled?
+  protected var _dirty = false // Has the buffer changed since it was compiled?
   def dirty = _dirty
 
   protected def dirty_=(b: Boolean) = {
@@ -214,7 +214,7 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
   def handle(e: WindowEvents.CompiledEvent) = {
     dirty = false
     if (e.sourceOwner == this) {
-      errorLabel.setError(e.error, headerSource.length)
+      errorLabel.setError(Option(e.error), headerSource.length)
       compileButton.setEnabled(true)
     }
     // this was needed to get extension colorization showing up reliably in the editor area - RG 23/3/16

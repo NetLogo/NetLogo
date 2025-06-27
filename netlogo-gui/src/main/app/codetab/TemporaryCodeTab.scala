@@ -31,6 +31,8 @@ class TemporaryCodeTab(workspace: AbstractWorkspace & ModelTracker,
   var closing = false
   var saveNeeded = false // Has the buffer changed since the file was saved?
 
+  checkCompilable(false)
+
   def filename: Either[String, String] = _filename
 
   def filename_=(newName: Either[String, String]): Unit = {
@@ -75,8 +77,23 @@ class TemporaryCodeTab(workspace: AbstractWorkspace & ModelTracker,
       filename.fold(_ => Seq(), name => Seq(conversionAction(this)))
   }
 
+  // if included file is not saved and not referenced in the main Code tab,
+  // disable Check button and show warning banner (Isaac B 6/26/25)
+  private def checkCompilable(dirty: Boolean): Unit = {
+    if (getIncludesTable.exists(_.exists(_._2 == filename.getOrElse(null)))) {
+      compileButton.setEnabled(dirty)
+      errorLabel.setWarning(None)
+    } else {
+      compileButton.setEnabled(false)
+      errorLabel.setWarning(Some(I18N.gui.get("tabs.code.cannotCompile")))
+    }
+  }
+
   override def dirty_=(d: Boolean) = {
-    super.dirty_=(d)
+    checkCompilable(d)
+
+    _dirty = d
+
     if (d) {
       saveNeeded = true
 
@@ -114,7 +131,7 @@ class TemporaryCodeTab(workspace: AbstractWorkspace & ModelTracker,
   }
 
   override def handle(e: WindowEvents.CompiledEvent) = {
-    def setErrorLabel() = errorLabel.setError(e.error, e.sourceOwner.headerSource.size)
+    def setErrorLabel() = errorLabel.setError(Option(e.error), e.sourceOwner.headerSource.size)
 
     dirty = false
     e.sourceOwner match {

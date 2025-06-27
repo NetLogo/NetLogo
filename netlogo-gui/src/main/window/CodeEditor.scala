@@ -97,7 +97,7 @@ class CodeEditor(accessor: PropertyAccessor[String], colorizer: Colorizer, colla
     editor.setText(value)
     setVisibility(value.nonEmpty)
     editor.select(0, 0)
-    err().foreach(errorLabel.setError(_, accessor.target.sourceOffset))
+    errorLabel.setError(err(), accessor.target.sourceOffset)
   }
 
   override def setToolTipText(text: String): Unit = {

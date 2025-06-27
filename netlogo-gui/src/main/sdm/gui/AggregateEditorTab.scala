@@ -31,7 +31,7 @@ class AggregateEditorTab(toolbar: AggregateModelEditorToolBar, contents: Compone
   }
 
   def setError(e: CompilerException, offset: Int): Unit = {
-    errorLabel.setError(e, offset)
+    errorLabel.setError(Option(e), offset)
   }
 
   def clearError(): Unit = {

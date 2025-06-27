@@ -106,10 +106,10 @@ class PreviewCommandsDialog(
       val setError = editorPanel.errorLabel.setError
       evt.getNewValue match {
         case Some(e: CompilerException) =>
-          setError(e, Evaluator.sourceOffset(AgentKind.Observer, true))
+          setError(Option(e), Evaluator.sourceOffset(AgentKind.Observer, true))
           okButton.setEnabled(false)
         case _ =>
-          setError(null, 0)
+          setError(None, 0)
           okButton.setEnabled(true)
       }
     }

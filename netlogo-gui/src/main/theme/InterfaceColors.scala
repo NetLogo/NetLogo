@@ -110,6 +110,8 @@ object InterfaceColors {
   def checkFilled(): Color = theme.checkFilled
   def errorLabelText(): Color = theme.errorLabelText
   def errorLabelBackground(): Color = theme.errorLabelBackground
+  def warningLabelText(): Color = theme.warningLabelText
+  def warningLabelBackground(): Color = theme.warningLabelBackground
   def errorHighlight(): Color = theme.errorHighlight
   def codeBackground(): Color = theme.codeBackground
   def codeLineHighlight(): Color = theme.codeLineHighlight
@@ -301,6 +303,8 @@ trait ColorTheme {
   def checkFilled: Color
   def errorLabelText: Color
   def errorLabelBackground: Color
+  def warningLabelText: Color
+  def warningLabelBackground: Color
   def errorHighlight: Color
   def codeBackground: Color
   def codeLineHighlight: Color
@@ -464,6 +468,8 @@ object ClassicTheme extends ColorTheme {
   override def checkFilled: Color = new Color(0, 173, 90)
   override def errorLabelText: Color = Color.WHITE
   override def errorLabelBackground: Color = LightRed
+  override def warningLabelText: Color = Color.WHITE
+  override def warningLabelBackground: Color = new Color(255, 160, 0)
   override def errorHighlight: Color = LightRed
   override def codeBackground: Color = Color.WHITE
   override def codeLineHighlight: Color = new Color(255, 255, 204)
@@ -627,6 +633,8 @@ object LightTheme extends ColorTheme {
   override def checkFilled: Color = new Color(0, 173, 90)
   override def errorLabelText: Color = Color.WHITE
   override def errorLabelBackground: Color = LightRed
+  override def warningLabelText: Color = Color.WHITE
+  override def warningLabelBackground: Color = new Color(255, 160, 0)
   override def errorHighlight: Color = LightRed
   override def codeBackground: Color = Color.WHITE
   override def codeLineHighlight: Color = new Color(255, 255, 204)
@@ -790,6 +798,8 @@ object DarkTheme extends ColorTheme {
   override def checkFilled: Color = new Color(0, 173, 90)
   override def errorLabelText: Color = Color.WHITE
   override def errorLabelBackground: Color = LightRed
+  override def warningLabelText: Color = Color.WHITE
+  override def warningLabelBackground: Color = new Color(255, 160, 0)
   override def errorHighlight: Color = LightRed
   override def codeBackground: Color = AlmostBlack
   override def codeLineHighlight: Color = new Color(35, 35, 35)

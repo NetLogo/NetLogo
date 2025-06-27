@@ -27,8 +27,8 @@ class CommentableError(val editorArea: AbstractEditorArea) {
     add(errorLabel, BorderLayout.CENTER)
   }
 
-  def setError(compilerError: Exception, offset: Int): Unit = {
-    component.setVisible(compilerError != null)
+  def setError(compilerError: Option[Exception], offset: Int): Unit = {
+    component.setVisible(compilerError.isDefined)
 
     if (LogManager.isStarted) {
       component.add(commentButton, BorderLayout.WEST)
@@ -37,6 +37,12 @@ class CommentableError(val editorArea: AbstractEditorArea) {
     }
 
     errorLabel.setError(compilerError, offset)
+  }
+
+  def setWarning(warning: Option[String]): Unit = {
+    component.setVisible(warning.isDefined)
+
+    errorLabel.setWarning(warning)
   }
 
   def zoom(zoomFactor: Double): Unit = {
