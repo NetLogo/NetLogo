@@ -535,25 +535,19 @@ class WidgetPanel(val workspace: GUIWorkspace)
     if (workspace.plotManager.plots.size == 0)
       plot.setEnabled(false)
 
-    if (selectedWrappers.nonEmpty || ClipboardUtils.hasWidgets) {
-      menu.addSeparator()
+    menu.addSeparator()
 
-      if (selectedWrappers.nonEmpty) {
-        menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.copySelected")) {
-          def actionPerformed(e: ActionEvent): Unit = {
-            copySelectedWidgets()
-          }
-        }))
+    menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.copySelected")) {
+      def actionPerformed(e: ActionEvent): Unit = {
+        copySelectedWidgets()
       }
+    })).setEnabled(selectedWrappers.nonEmpty)
 
-      if (ClipboardUtils.hasWidgets) {
-        menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widgets.paste")) {
-          def actionPerformed(e: ActionEvent): Unit = {
-            pasteWidgets()
-          }
-        }))
+    menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widgets.paste")) {
+      def actionPerformed(e: ActionEvent): Unit = {
+        pasteWidgets()
       }
-    }
+    })).setEnabled(ClipboardUtils.hasWidgets)
 
     menu.show(this, point.x, point.y)
   }
