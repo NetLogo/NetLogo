@@ -26,11 +26,15 @@ if [[ `uname -s` = Linux && -z $JENKINS_URL ]] ; then
   fi
 else
   if [ `uname -s` = Darwin ] ; then
-    export JAVA_HOME=`/usr/libexec/java_home -F -v${JAVA_VERSION_NUMBER}`
-    if [ -e "$JAVA_HOME" ] ; then
-       export JAVA_HOME
-    else
-       echo "$MSG_SET_JAVA_HOME"
+    # if user hasn't already set JAVA_HOME, find it for them
+    # otherwise use the previously set JAVA_HOME
+    if [ -z "$JAVA_HOME" ] ; then
+      export JAVA_HOME=`/usr/libexec/java_home -F -v${JAVA_VERSION_NUMBER}`
+    fi
+
+    # if it's still not set, then the correct version is not installed
+    if [ -z "$JAVA_HOME" ] ; then
+      echo "$MSG_SET_JAVA_HOME"
       exit
     fi
   fi
