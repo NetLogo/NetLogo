@@ -97,9 +97,9 @@ extends scala.util.parsing.combinator.Parsers {
         Includes(token, names, closeBracket) }
 
   def _export: Parser[Export] =
-    keyword("EXPORT") ~! openBracket ~> identifier ~ string ~ exportSpecList <~ closeBracket ^^ {
-      case ident ~ version ~ specs =>
-        Export(ident.name, version.text, specs, ident.token)
+    keyword("EXPORT") ~! openBracket ~> identifier ~ exportSpecList <~ closeBracket ^^ {
+      case ident ~ specs =>
+        Export(ident.name, specs, ident.token)
     }
 
   def exportSpecList: Parser[Seq[ExportSpec]] =
