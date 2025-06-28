@@ -14,7 +14,7 @@ class Lab extends LabInterface {
     import settings._
     // pool of workspaces, same size as thread pool
     // unless there are fewer runs than threads (Isaac B 6/27/25)
-    val workspaces = (1 to threads.min(worker.protocol.countRuns)).map(_ => fn.apply()).toList
+    val workspaces = (1 to threads.min(worker.protocol.countRuns)).map(_ => fn()).toList
     val queue = new collection.mutable.Queue[Workspace]
     workspaces.foreach(queue.enqueue)
     try {
