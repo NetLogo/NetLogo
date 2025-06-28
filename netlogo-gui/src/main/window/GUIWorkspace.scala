@@ -22,7 +22,7 @@ import org.nlogo.api.{ Agent => ApiAgent, AgentFollowingPerspective, CommandRunn
 import org.nlogo.awt.{ EventQueue, Hierarchy, UserCancelException }
 import org.nlogo.core.{ AgentKind, CompilerException, File, I18N, Model, ModelSettings,
                         Shape, UpdateMode, WorldDimensions }
-import org.nlogo.nvm.{ Context, HaltException, Instruction, Procedure }
+import org.nlogo.nvm.{ Context, HaltException, Instruction, Procedure, WorkspaceMirror }
 import org.nlogo.shape.ShapeConverter
 import org.nlogo.swing.{ CustomOptionPane, FileDialog, ModalProgressTask, OptionPane, ScrollPane, TextArea, Utils }
 import org.nlogo.theme.InterfaceColors
@@ -59,7 +59,7 @@ abstract class GUIWorkspace(world: World, kioskLevel: GUIWorkspace.KioskLevel, f
   with RemoveJobEvent.Handler with AddSliderConstraintEvent.Handler with RemoveConstraintEvent.Handler
   with AddBooleanConstraintEvent.Handler with AddChooserConstraintEvent.Handler with AddInputBoxConstraintEvent.Handler
   with CompiledEvent.Handler with ExportPlotEvent.Handler with ExportWidgetEvent.Handler with LoadModelEvent.Handler
-  with TrailDrawerInterface with DrawingInterface with ModelSections.ModelSaveable {
+  with TrailDrawerInterface with DrawingInterface with ModelSections.ModelSaveable with WorkspaceMirror {
 
   val viewManager = new ViewManager
 
@@ -1099,6 +1099,13 @@ abstract class GUIWorkspace(world: World, kioskLevel: GUIWorkspace.KioskLevel, f
     } else {
       event.raise(this)
     }
+  }
+
+  override def mirrorOutput(oo: OutputObject, toOutputArea: Boolean): Unit = {
+    // not sure why, but without invokeLater this call causes background threads to block infinitely (Isaac B 6/28/25)
+    AWTEventQueue.invokeLater(() => {
+      sendOutput(oo, toOutputArea)
+    })
   }
 
   /// runtime error handling
