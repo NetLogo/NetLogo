@@ -384,7 +384,7 @@ class App extends org.nlogo.window.Event.LinkChild
         override def updateMode = _workspace.updateMode
       }
 
-      override def primaryWorkspace: Option[WorkspaceMirror] =
+      override def getPrimaryWorkspace: Option[WorkspaceMirror] =
         Option(this)
 
       def aggregateManager: AggregateManagerInterface = App.this.aggregateManager
