@@ -5,7 +5,7 @@ package org.nlogo.nvm
 import org.nlogo.core.{ AgentKind, CompilerException }
 import org.nlogo.api.{ Agent => ApiAgent, ExportPlotWarningAction, JobOwner, Workspace => ApiWorkspace, MersenneTwisterFast }
 
-import org.nlogo.agent.{ Agent, AgentSet, OutputObject, World }
+import org.nlogo.agent.{ Agent, AgentSet, World }
 
 import collection.mutable.WeakHashMap
 
@@ -25,9 +25,6 @@ trait Workspace extends ApiWorkspace with JobManagerOwner {
 
   @throws(classOf[java.net.MalformedURLException])
   def attachModelDir(filePath: String): String
-
-  // called from job thread - ST 10/1/03
-  def sendOutput(oo: OutputObject, toOutputArea: Boolean): Unit
 
   def behaviorSpaceExperimentName: String
   def behaviorSpaceExperimentName(name: String): Unit

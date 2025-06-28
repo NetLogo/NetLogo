@@ -13,7 +13,7 @@ import scala.collection.mutable.WeakHashMap
 
 import
   org.nlogo.{ agent, api, core, nvm, plot },
-  agent.{ AbstractExporter, Agent, AgentSet, World },
+  agent.{ AbstractExporter, Agent, AgentSet, OutputObject, World },
   api.{ PlotInterface, CommandLogoThunk, Dump, Exceptions, ExtensionManager => APIEM, ExternalResourceManager,
     ExportPlotWarningAction, JobOwner, LabProtocol, LibraryManager, LogoException, MersenneTwisterFast, ModelType,
     PreviewCommands, ReporterLogoThunk, SimpleJobOwner },
@@ -602,6 +602,9 @@ object AbstractWorkspaceTraits {
   trait OutputArea { this: AbstractWorkspace =>
 
     def clearOutput(): Unit
+
+    // called from job thread - ST 10/1/03
+    def sendOutput(oo: OutputObject, toOutputArea: Boolean): Unit
 
     /// importing
     def setOutputAreaContents(text: String): Unit = {
