@@ -145,6 +145,9 @@ abstract class GUIWorkspace(world: World, kioskLevel: GUIWorkspace.KioskLevel, f
   repaintTimer.start()
   lifeguard.start()
 
+  override def getPrimaryWorkspace: Option[WorkspaceMirror] =
+    Option(this)
+
   def getFrame: Frame =
     frame
 
