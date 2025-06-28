@@ -19,7 +19,7 @@ import org.nlogo.awt.UserCancelException
 import org.nlogo.core.{ AgentKind, CompilerException, ExternalResource, I18N, Model, ModelSettings, NetLogoPreferences,
   Shape, Widget => CoreWidget }, Shape.{ LinkShape, VectorShape }
 import org.nlogo.log.{ JsonFileLogger, LogEvents, LogManager }
-import org.nlogo.nvm.{ PresentationCompilerInterface, Workspace }
+import org.nlogo.nvm.{ PresentationCompilerInterface, Workspace, WorkspaceMirror }
 import org.nlogo.shape.{ LinkShapesManagerInterface, ShapesManagerInterface, TurtleShapesManagerInterface }
 import org.nlogo.swing.{ DropdownOptionPane, InputOptionPane, OptionPane, SetSystemLookAndFeel, Utils }
 import org.nlogo.theme.{ ClassicTheme, DarkTheme, InterfaceColors, LightTheme, ThemeSync }
@@ -384,7 +384,7 @@ class App extends org.nlogo.window.Event.LinkChild
         override def updateMode = _workspace.updateMode
       }
 
-      override def primaryWorkspace: Option[Workspace] =
+      override def primaryWorkspace: Option[WorkspaceMirror] =
         Option(this)
 
       def aggregateManager: AggregateManagerInterface = App.this.aggregateManager
