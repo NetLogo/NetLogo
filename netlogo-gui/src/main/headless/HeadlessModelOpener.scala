@@ -6,7 +6,7 @@ import java.util.Locale
 
 import org.nlogo.agent.{BooleanConstraint, ChooserConstraint, CompilationManagement,
   ConstantSliderConstraint, InputBoxConstraint, NumericConstraint }
-import org.nlogo.api.{ LogoException, NetLogoLegacyDialect, NetLogoThreeDDialect,
+import org.nlogo.api.{ LabProtocol, LogoException, NetLogoLegacyDialect, NetLogoThreeDDialect,
   SourceOwner, ValueConstraint, Version}
 import org.nlogo.core.{ Button, CompilerException, ConstraintSpecification, LogoList, Model, Monitor, Program }
 import org.nlogo.plot.PlotLoader
@@ -59,6 +59,9 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
 
     // parse turtle and link shapes, updating the workspace.
     attachWorldShapes(model.turtleShapes, model.linkShapes)
+
+    ws.setBehaviorSpaceExperiments(model.optionalSectionValue[Seq[LabProtocol]]("org.nlogo.modelsection.behaviorspace")
+                                        .getOrElse(Seq()))
 
     if (model.hasValueForOptionalSection("org.nlogo.modelsection.hubnetclient")) {
       ws.getHubNetManager.foreach(_.load(model))

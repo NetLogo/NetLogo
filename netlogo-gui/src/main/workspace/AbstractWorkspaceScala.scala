@@ -291,7 +291,7 @@ object AbstractWorkspaceTraits {
 
     var _behaviorSpaceExperimentName = ""
 
-    var _behaviorSpaceExperiments = List[LabProtocol]()
+    var _behaviorSpaceExperiments = Seq[LabProtocol]()
 
     def behaviorSpaceRunNumber: Int =
       _behaviorSpaceRunNumber
@@ -299,7 +299,7 @@ object AbstractWorkspaceTraits {
     def behaviorSpaceExperimentName: String =
       _behaviorSpaceExperimentName
 
-    def getBehaviorSpaceExperiments: List[LabProtocol] =
+    def getBehaviorSpaceExperiments: Seq[LabProtocol] =
       _behaviorSpaceExperiments
 
     def behaviorSpaceRunNumber(n: Int): Unit = {
@@ -310,7 +310,7 @@ object AbstractWorkspaceTraits {
       _behaviorSpaceExperimentName = name
     }
 
-    def setBehaviorSpaceExperiments(experiments: List[LabProtocol]): Unit = {
+    def setBehaviorSpaceExperiments(experiments: Seq[LabProtocol]): Unit = {
       _behaviorSpaceExperiments = experiments
     }
   }

@@ -84,8 +84,8 @@ with ViewSettings with Controllable {
   def benchmark(minTime: Int, maxTime: Int): Unit
   def behaviorSpaceRunNumber: Int
   def behaviorSpaceRunNumber(n: Int): Unit
-  def getBehaviorSpaceExperiments: List[LabProtocol]
-  def setBehaviorSpaceExperiments(experiments: List[LabProtocol]): Unit
+  def getBehaviorSpaceExperiments: Seq[LabProtocol]
+  def setBehaviorSpaceExperiments(experiments: Seq[LabProtocol]): Unit
   // for now this only works in HeadlessWorkspace, returns null in GUIWorkspace.  error handling
   // stuff is a mess, should be redone - ST 3/10/09, 1/22/12
   def lastLogoException: LogoException

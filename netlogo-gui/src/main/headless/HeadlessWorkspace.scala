@@ -30,26 +30,20 @@ object HeadlessWorkspace {
    */
   def newInstance: HeadlessWorkspace = newInstance(Version.is3D)
 
-  def newInstance(is3d: Boolean): HeadlessWorkspace = newInstance(classOf[HeadlessWorkspace], is3d, None)
+  def newInstance(is3d: Boolean): HeadlessWorkspace = newInstance(classOf[HeadlessWorkspace], is3d)
 
-  def newInstance(subclass: Class[? <: HeadlessWorkspace]): HeadlessWorkspace =
-    newInstance(subclass, Version.is3D, None)
-
-  def newInstance(primaryWorkspace: Option[WorkspaceMirror]): HeadlessWorkspace =
-    newInstance(classOf[HeadlessWorkspace], Version.is3D, primaryWorkspace)
+  def newInstance(subclass: Class[? <: HeadlessWorkspace]): HeadlessWorkspace = newInstance(subclass, Version.is3D)
 
   /**
    * If you derive your own subclass of HeadlessWorkspace, use this method to instantiate it.
    */
-  def newInstance(subclass: Class[? <: HeadlessWorkspace], is3d: Boolean,
-                  primaryWorkspace: Option[WorkspaceMirror]): HeadlessWorkspace = {
+  def newInstance(subclass: Class[? <: HeadlessWorkspace], is3d: Boolean): HeadlessWorkspace = {
     val pico = new Pico
     pico.addComponent(if (is3d) classOf[World3D] else classOf[World2D])
     pico.add("org.nlogo.compile.Compiler")
     if (is3d) pico.addScalaObject("org.nlogo.api.NetLogoThreeDDialect") else pico.addScalaObject("org.nlogo.api.NetLogoLegacyDialect")
     pico.add("org.nlogo.sdm.AggregateManagerLite")
     pico.add("org.nlogo.render.Renderer")
-    pico.addConfig("primaryWorkspace", primaryWorkspace)
     pico.addComponent(subclass)
     pico.addAdapter(new LegacyModelLoaderComponent())
     pico.add(classOf[HubNetManagerFactory], "org.nlogo.hubnet.server.HeadlessHubNetManagerFactory")
@@ -110,12 +104,20 @@ class HeadlessWorkspace(
   val compiler: PresentationCompilerInterface,
   val renderer: RendererInterface,
   val aggregateManager: AggregateManagerInterface,
-  hubNetManagerFactory: HubNetManagerFactory,
-  primaryWorkspace: Option[WorkspaceMirror])
+  hubNetManagerFactory: HubNetManagerFactory)
 extends AbstractWorkspaceScala(_world, hubNetManagerFactory)
 with org.nlogo.workspace.Controllable
 with org.nlogo.workspace.WorldLoaderInterface
 with org.nlogo.api.ViewSettings {
+
+  private var primaryWorkspace: Option[WorkspaceMirror] = None
+
+  override def getPrimaryWorkspace: Option[WorkspaceMirror] =
+    primaryWorkspace
+
+  def setPrimaryWorkspace(workspace: Option[WorkspaceMirror]): Unit = {
+    primaryWorkspace = workspace
+  }
 
   world.trailDrawer(renderer.trailDrawer)
 
@@ -415,9 +417,9 @@ with org.nlogo.api.ViewSettings {
     // we also need to record it if it headed for the Output Area widget
     if (toOutputArea) {
       outputAreaBuffer.append(oo.get)
-      primaryWorkspace.foreach(_.mirrorOutput(oo, true))
+      getPrimaryWorkspace.foreach(_.mirrorOutput(oo, true))
     } else {
-      primaryWorkspace.foreach(_.mirrorOutput(oo, false))
+      getPrimaryWorkspace.foreach(_.mirrorOutput(oo, false))
     }
   }
 

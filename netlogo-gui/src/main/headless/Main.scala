@@ -82,7 +82,8 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
     var plotCompilationErrorAction: PlotCompilationErrorAction = PlotCompilationErrorAction.Output
     var exportPlotWarningAction: ExportPlotWarningAction = ExportPlotWarningAction.Output
     def newWorkspace = {
-      val w = HeadlessWorkspace.newInstance(primaryWorkspace)
+      val w = HeadlessWorkspace.newInstance
+      w.setPrimaryWorkspace(primaryWorkspace)
       w.setPlotCompilationErrorAction(plotCompilationErrorAction)
       w.setExportPlotWarningAction(exportPlotWarningAction)
       w.open(settings.modelPath)

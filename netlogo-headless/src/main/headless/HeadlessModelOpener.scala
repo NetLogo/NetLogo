@@ -7,7 +7,7 @@ import org.nlogo.workspace
 import workspace.WorldLoader
 import org.nlogo.plot.PlotLoader
 import org.nlogo.agent.{BooleanConstraint, ChooserConstraint, CompilationManagement, InputBoxConstraint, NumericConstraint}
-import org.nlogo.api.{ PreviewCommands, SourceOwner, ValueConstraint, Version }
+import org.nlogo.api.{ LabProtocol, PreviewCommands, SourceOwner, ValueConstraint, Version }
 import org.nlogo.core.{ Button, CompilerException, ConstraintSpecification,
   LogoList, Model, Monitor, Program, Shape },
   ConstraintSpecification._,
@@ -63,6 +63,9 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
 
     // parse turtle and link shapes, updating the workspace.
     parseShapes(model.turtleShapes, model.linkShapes)
+
+    ws.setBehaviorSpaceExperiments(model.optionalSectionValue[Seq[LabProtocol]]("org.nlogo.modelsection.behaviorspace")
+                                        .getOrElse(Seq()))
 
     ws.init()
     ws.world.asInstanceOf[CompilationManagement].program = results.program

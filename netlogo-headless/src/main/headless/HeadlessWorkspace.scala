@@ -75,7 +75,7 @@ class HeadlessWorkspace(
 extends AbstractWorkspace(_world)
 with org.nlogo.workspace.WorldLoaderInterface {
 
-  override val primaryWorkspace: Option[WorkspaceMirror] = None
+  override def getPrimaryWorkspace: Option[WorkspaceMirror] = None
 
   def parser = compiler.utilities
 
