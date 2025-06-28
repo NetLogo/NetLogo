@@ -111,7 +111,7 @@ class HeadlessWorkspace(
   val renderer: RendererInterface,
   val aggregateManager: AggregateManagerInterface,
   hubNetManagerFactory: HubNetManagerFactory,
-  primaryWorkspace: Option[WorkspaceMirror] = None)
+  primaryWorkspace: Option[WorkspaceMirror])
 extends AbstractWorkspaceScala(_world, hubNetManagerFactory)
 with org.nlogo.workspace.Controllable
 with org.nlogo.workspace.WorldLoaderInterface
