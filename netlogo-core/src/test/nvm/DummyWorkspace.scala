@@ -3,7 +3,7 @@
 package org.nlogo.nvm
 
 import org.nlogo.core.{ AgentKind, DummyCompilationEnvironment }
-import org.nlogo.agent.{ Agent, AgentSet, OutputObject, World2D }
+import org.nlogo.agent.{ Agent, AgentSet, World2D }
 import org.nlogo.api.{ CommandRunnable, ExportPlotWarningAction, ImportErrorHandler, JobOwner, LabProtocol,
                        OutputDestination, ReporterRunnable }
 import org.nlogo.core.WorldDimensions
