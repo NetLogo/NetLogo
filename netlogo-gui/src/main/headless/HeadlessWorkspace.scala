@@ -2,7 +2,6 @@
 
 package org.nlogo.headless
 
-import java.awt.EventQueue
 import java.io.InputStream
 import java.nio.file.Paths
 
@@ -16,7 +15,7 @@ import org.nlogo.api.{ ComponentSerialization, Version, RendererInterface, Aggre
 import org.nlogo.core.{ AgentKind, CompilerException, Femto, Model, Output, Program, UpdateMode, WorldDimensions,
   WorldDimensions3D }
 import org.nlogo.agent.{ CompilationManagement, OutputObject, World, World2D, World3D }
-import org.nlogo.nvm.{ LabInterface, PresentationCompilerInterface, Workspace }
+import org.nlogo.nvm.{ LabInterface, PresentationCompilerInterface, WorkspaceMirror }
 import org.nlogo.workspace.{ AbstractWorkspaceScala, HubNetManagerFactory }
 import org.nlogo.fileformat.{ FileFormat, NLogoFormat, NLogoThreeDFormat }
 import org.nlogo.util.Pico
@@ -36,14 +35,14 @@ object HeadlessWorkspace {
   def newInstance(subclass: Class[? <: HeadlessWorkspace]): HeadlessWorkspace =
     newInstance(subclass, Version.is3D, None)
 
-  def newInstance(primaryWorkspace: Option[Workspace]): HeadlessWorkspace =
+  def newInstance(primaryWorkspace: Option[WorkspaceMirror]): HeadlessWorkspace =
     newInstance(classOf[HeadlessWorkspace], Version.is3D, primaryWorkspace)
 
   /**
    * If you derive your own subclass of HeadlessWorkspace, use this method to instantiate it.
    */
   def newInstance(subclass: Class[? <: HeadlessWorkspace], is3d: Boolean,
-                  primaryWorkspace: Option[Workspace]): HeadlessWorkspace = {
+                  primaryWorkspace: Option[WorkspaceMirror]): HeadlessWorkspace = {
     val pico = new Pico
     pico.addComponent(if (is3d) classOf[World3D] else classOf[World2D])
     pico.add("org.nlogo.compile.Compiler")
@@ -112,7 +111,7 @@ class HeadlessWorkspace(
   val renderer: RendererInterface,
   val aggregateManager: AggregateManagerInterface,
   hubNetManagerFactory: HubNetManagerFactory,
-  primaryWorkspace: Option[Workspace] = None)
+  primaryWorkspace: Option[WorkspaceMirror] = None)
 extends AbstractWorkspaceScala(_world, hubNetManagerFactory)
 with org.nlogo.workspace.Controllable
 with org.nlogo.workspace.WorldLoaderInterface
@@ -416,10 +415,9 @@ with org.nlogo.api.ViewSettings {
     // we also need to record it if it headed for the Output Area widget
     if (toOutputArea) {
       outputAreaBuffer.append(oo.get)
+      primaryWorkspace.foreach(_.mirrorOutput(oo, true))
     } else {
-      EventQueue.invokeLater(() => {
-        primaryWorkspace.foreach(_.sendOutput(oo, false))
-      })
+      primaryWorkspace.foreach(_.mirrorOutput(oo, false))
     }
   }
 

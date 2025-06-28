@@ -15,7 +15,7 @@ import
     core.{ AgentKind, CompilerException, Femto, File, FileMode, Model, Output, UpdateMode, WorldDimensions },
     drawing.DrawingActionBroker,
     fileformat.{ FileFormat, NLogoFormat, NLogoPreviewCommandsFormat },
-    nvm.{ CompilerInterface, Context, LabInterface, Workspace },
+    nvm.{ CompilerInterface, Context, LabInterface, WorkspaceMirror },
     workspace.AbstractWorkspace
 
 import java.io.InputStream
@@ -75,7 +75,7 @@ class HeadlessWorkspace(
 extends AbstractWorkspace(_world)
 with org.nlogo.workspace.WorldLoaderInterface {
 
-  override val primaryWorkspace: Option[Workspace] = None
+  override val primaryWorkspace: Option[WorkspaceMirror] = None
 
   def parser = compiler.utilities
 

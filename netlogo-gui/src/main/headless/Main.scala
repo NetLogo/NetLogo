@@ -7,7 +7,7 @@ import java.io.{ File, FileWriter, PrintWriter }
 import org.nlogo.core.WorldDimensions
 import org.nlogo.api.{ APIVersion, ExportPlotWarningAction, LabDefaultValues, LabProtocol, PlotCompilationErrorAction,
                        Version }
-import org.nlogo.nvm.Workspace
+import org.nlogo.nvm.WorkspaceMirror
 import org.nlogo.nvm.LabInterface.{ Settings, Worker }
 
 object Main {
@@ -78,7 +78,7 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
 
   // used in bspace extension
   def runExperimentWithProtocol(settings: Settings, protocol: LabProtocol, assignWorker: Worker => Unit,
-                                finish: () => Unit, primaryWorkspace: Option[Workspace]): Unit = {
+                                finish: () => Unit, primaryWorkspace: Option[WorkspaceMirror]): Unit = {
     var plotCompilationErrorAction: PlotCompilationErrorAction = PlotCompilationErrorAction.Output
     var exportPlotWarningAction: ExportPlotWarningAction = ExportPlotWarningAction.Output
     def newWorkspace = {
