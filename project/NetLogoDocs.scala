@@ -6,7 +6,7 @@ import scala.sys.process.Process
 
 class NetLogoDocs(
   docsSource: File, docsTarget: File, netLogoRoot: File, modelsDirectory: File,
-  extensionDocs: ExtensionDocs) {
+  extensionDocs: ExtensionDocs, extensionRoot: File) {
 
   val dictTarget = docsTarget / "dict"
 
@@ -77,24 +77,26 @@ class NetLogoDocs(
     InfoTabGenerator(modelsDirectory / "Code Examples" / "Info Tab Example.nlogox")
   }
 
-  def generatePDF(buildVariables: Map[String, Object], documentedExtensions: Seq[(String, String)]): File = {
+  def generatePDF(buildVariables: Map[String, Object], autoDocumentedExtensions: Seq[(String, String)],
+                  manuallyDocumentedExtensions: Seq[String]): File = {
     val mustacheVars =
       buildVariables + ("infoTabModelHTML" -> infoTabHTML)
 
     val tmp = IO.createTemporaryDirectory
-    generateDocs(tmp, documentedExtensions, mustacheVars, perPageTOC = false)
-    generateManualPDF(tmp, documentedExtensions.map(_._1))
+    generateDocs(tmp, autoDocumentedExtensions, manuallyDocumentedExtensions, mustacheVars, perPageTOC = false)
+    generateManualPDF(tmp, (autoDocumentedExtensions.map(_._1) ++ manuallyDocumentedExtensions).sorted)
   }
 
-  def generateHTML(buildVariables: Map[String, Object], documentedExtensions: Seq[(String, String)]): Seq[File] = {
+  def generateHTML(buildVariables: Map[String, Object], autoDocumentedExtensions: Seq[(String, String)],
+                   manuallyDocumentedExtensions: Seq[String]): Seq[File] = {
     val mustacheVars =
       buildVariables + (
         "infoTabModelHTML" -> infoTabHTML,
-        "documentedExtensions" -> documentedExtensions.asJava)
+        "documentedExtensions" -> autoDocumentedExtensions.asJava)
 
     val supportFiles =
       Seq("dictTemplate.html", "title.html", "toc.xsl").map(n => docsTarget / n)
-    generateDocs(docsTarget, documentedExtensions, mustacheVars, perPageTOC = true)
+    generateDocs(docsTarget, autoDocumentedExtensions, manuallyDocumentedExtensions, mustacheVars, perPageTOC = true)
     generatePrimIndices(docsTarget / "dict")
     supportFiles.foreach(IO.delete)
 
@@ -103,13 +105,17 @@ class NetLogoDocs(
 
   private def generateDocs(
     targetDir:            File,
-    documentedExtensions: Seq[(String, String)],
+    autoDocumentedExtensions: Seq[(String, String)],
+    manuallyDocumentedExtensions: Seq[String],
     variables:            Map[String, Object],
     perPageTOC:           Boolean): Unit = {
 
     IO.createDirectory(targetDir)
     Mustache.betweenDirectories(docsSource, targetDir, markdownComponents, variables)
-    markdownComponents.keySet foreach { name =>
+    manuallyDocumentedExtensions.foreach { name =>
+      Mustache(extensionRoot / name / "README.md.mustache", targetDir / (name + ".md"), variables)
+    }
+    (markdownComponents.keySet ++ manuallyDocumentedExtensions).foreach { name =>
       val md = Files.readAllLines((targetDir / (name + ".md")).toPath).asScala.mkString("\n")
       val html = Markdown(
         if (perPageTOC) md else md.replaceAll("""\n\n\[TOC[^]]*\]""",""),
@@ -117,7 +123,7 @@ class NetLogoDocs(
       IO.write(targetDir / (name + ".html"), "<!DOCTYPE html>\n" + html)
       IO.delete(targetDir / (name + ".md"))
     }
-    extensionDocs.generateExtensionDocs(targetDir, documentedExtensions, variables)
+    extensionDocs.generateExtensionDocs(targetDir, autoDocumentedExtensions, variables)
     FileActions.copyFile(modelsDirectory / "Code Examples" / "Perspective Example.png", targetDir / "Perspective Example.png")
   }
 
