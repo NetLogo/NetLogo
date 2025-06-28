@@ -69,7 +69,7 @@ class RunOptionsDialog(parent: Window, dialogFactory: EditDialogFactory, filePre
     }
     def updateView = NetLogoPreferences.getBoolean("updateView", true)
     def updatePlotsAndMonitors = NetLogoPreferences.getBoolean("updatePlotsAndMonitors", true)
-    def updateThreadCount = NetLogoPreferences.getInt("threadCount", defaultProcessors)
+    def threadCount = NetLogoPreferences.getInt("threadCount", defaultProcessors)
     def mirrorHeadlessOutput = NetLogoPreferences.getBoolean("mirrorHeadlessOutput", false)
     def updateFrom(runOptions: LabRunOptions): Unit = {
       NetLogoPreferences.put("spreadsheet", parentDirectory(runOptions.spreadsheet))

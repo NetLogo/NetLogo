@@ -93,7 +93,7 @@ class RunOptionsEditPanel(target: RunOptionsDialog#EditableRunOptions, spreadshe
         target,
         I18N.gui.get("tools.behaviorSpace.runoptions.mirrorHeadlessOutput"),
         () => target.mirrorHeadlessOutput,
-        target.setMirrorHeadlessOutput(_),
+        _.foreach(target.setMirrorHeadlessOutput),
         () => apply()))
 
   locally {

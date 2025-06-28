@@ -16,8 +16,8 @@ import org.nlogo.api.{ ComponentSerialization, Version, RendererInterface, Aggre
 import org.nlogo.core.{ AgentKind, CompilerException, Femto, Model, Output, Program, UpdateMode, WorldDimensions,
   WorldDimensions3D }
 import org.nlogo.agent.{ CompilationManagement, OutputObject, World, World2D, World3D }
-import org.nlogo.nvm.{ LabInterface, DefaultCompilerServices, PresentationCompilerInterface, Workspace }
-import org.nlogo.workspace.{ AbstractWorkspace, AbstractWorkspaceScala, HubNetManagerFactory }
+import org.nlogo.nvm.{ LabInterface, PresentationCompilerInterface, Workspace }
+import org.nlogo.workspace.{ AbstractWorkspaceScala, HubNetManagerFactory }
 import org.nlogo.fileformat.{ FileFormat, NLogoFormat, NLogoThreeDFormat }
 import org.nlogo.util.Pico
 
