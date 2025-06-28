@@ -13,7 +13,8 @@ class Lab extends LabInterface {
   def run(settings: LabInterface.Settings, worker: LabInterface.Worker, fn: () => Workspace): Unit = {
     import settings._
     // pool of workspaces, same size as thread pool
-    val workspaces = (1 to threads.min(worker.protocol.repetitions)).map(_ => fn.apply()).toList
+    // unless there are fewer runs than threads (Isaac B 6/27/25)
+    val workspaces = (1 to threads.min(worker.protocol.countRuns)).map(_ => fn.apply()).toList
     val queue = new collection.mutable.Queue[Workspace]
     workspaces.foreach(queue.enqueue)
     try {
@@ -61,7 +62,7 @@ class Lab extends LabInterface {
                   t.printStackTrace(System.err)
               }
           } } )
-      def nextWorkspace = queue.synchronized { queue.dequeue() }
+      def nextWorkspace = queue.synchronized { if (queue.isEmpty) null else queue.dequeue() }
       worker.run(workspaces.head, () => nextWorkspace, threads)
     }
     finally { workspaces.foreach(_.dispose()) }

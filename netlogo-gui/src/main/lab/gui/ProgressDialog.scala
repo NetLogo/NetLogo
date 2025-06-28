@@ -6,7 +6,7 @@ import java.awt.{ Dialog, Dimension, GridBagConstraints, GridBagLayout, Insets, 
 import javax.swing.{ JDialog, JPanel, ScrollPaneConstants, Timer, WindowConstants }
 import javax.swing.border.{ EmptyBorder, LineBorder }
 
-import org.nlogo.api.{ Dump, ExportPlotWarningAction, LabProtocol, PeriodicUpdateDelay }
+import org.nlogo.api.{ Dump, ExportPlotWarningAction, LabProtocol, LabRunOptions, PeriodicUpdateDelay }
 import org.nlogo.awt.Positioning
 import org.nlogo.core.I18N
 import org.nlogo.editor.Colorizer
@@ -164,7 +164,7 @@ private [gui] class ProgressDialog(parent: Window, supervisor: Supervisor, color
   }
 
   def resetProtocol(): Unit = {
-    saveProtocol(protocol.copy(runsCompleted = 0, runOptions = null))
+    saveProtocol(protocol.copy(runsCompleted = 0, runOptions = LabRunOptions()))
   }
 
   def updateView(check: Boolean): Unit = {

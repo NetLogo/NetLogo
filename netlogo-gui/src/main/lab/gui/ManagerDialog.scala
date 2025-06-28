@@ -7,7 +7,7 @@ import java.awt.event.ActionEvent
 import javax.swing.{ AbstractAction, JDialog, JLabel, JList, JMenuBar, JPanel, ListCellRenderer }
 import javax.swing.event.ListSelectionListener
 
-import org.nlogo.api.{ RefEnumeratedValueSet, LabProtocol }
+import org.nlogo.api.{ RefEnumeratedValueSet, LabProtocol, LabRunOptions }
 import org.nlogo.window.{ EditDialogFactory, MenuBarFactory }
 
 import org.nlogo.core.I18N
@@ -303,7 +303,7 @@ private class ManagerDialog(manager:       LabManager,
     }
   }
   private def abort(): Unit = {
-    saveProtocol(selectedProtocol.copy(runsCompleted = 0, runOptions = null))
+    saveProtocol(selectedProtocol.copy(runsCompleted = 0, runOptions = LabRunOptions()))
   }
   /// helpers
   def update(): Unit = {

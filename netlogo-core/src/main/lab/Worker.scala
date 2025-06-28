@@ -141,6 +141,8 @@ class Worker(val protocol: LabProtocol, val supervisorWriting: () => Unit = () =
           try callHelper(workspace)
           catch { case t: Throwable =>
             if (!aborted) eachListener(_.runtimeError(workspace, runNumber, t)) }
+        } else {
+          println("null!")
         }
       }
     }
