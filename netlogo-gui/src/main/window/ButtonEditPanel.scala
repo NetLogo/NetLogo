@@ -43,7 +43,7 @@ class ButtonEditPanel(target: ButtonWidget, colorizer: Colorizer) extends Widget
         () => target.wrapSource,
         _.foreach(target.setWrapSource),
         () => apply()),
-      colorizer)
+      colorizer, err = () => target.error())
 
   private val name =
     new StringEditor(
