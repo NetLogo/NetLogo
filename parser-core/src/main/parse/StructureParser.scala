@@ -53,7 +53,7 @@ object StructureParser {
 
           maybeDuplicateToken.foreach(exception(I18N.errors.get("compiler.StructureParser.importMultipleImports"), _))
 
-          var processedLibraries: Set[String] = Set()
+          var processedImports: Set[String] = Set()
 
           Iterator.iterate(firstResults) { results =>
             var newResults: StructureResults = results
@@ -81,10 +81,10 @@ object StructureParser {
                   exception(I18N.errors.getN("compiler.StructureParser.importNotFound", suppliedPath), currentImport.token)
               }
 
-              if (processedLibraries.contains(currentImport.name)) {
+              if (processedImports.contains(currentImport.name)) {
                 exception(I18N.errors.getN("compiler.StructureParser.importLoop"), currentImport.token)
               } else {
-                processedLibraries += currentImport.name
+                processedImports += currentImport.name
               }
 
               val prefix = currentImport.alias.getOrElse(currentImport.name) + ":"
