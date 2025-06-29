@@ -82,7 +82,7 @@ object Extensions {
           buildExtension(dir, nlJar, stateValue) }
       }
     },
-    excludedExtensions := Seq(),
+    excludedExtensions := Seq("ls"),
     javaOptions +=
       "-Dnetlogo.extensions.dir=" + extensionRoot.value.getAbsolutePath.toString
   )
