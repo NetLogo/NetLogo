@@ -15,7 +15,7 @@ import
     core.{ AgentKind, CompilerException, Femto, File, FileMode, Model, Output, UpdateMode, WorldDimensions },
     drawing.DrawingActionBroker,
     fileformat.{ FileFormat, NLogoFormat, NLogoPreviewCommandsFormat },
-    nvm.{ CompilerInterface, Context, LabInterface, WorkspaceMirror },
+    nvm.{ CompilerInterface, Context, LabInterface },
     workspace.AbstractWorkspace
 
 import java.io.InputStream
