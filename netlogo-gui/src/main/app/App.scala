@@ -825,10 +825,6 @@ class App extends org.nlogo.window.Event.LinkChild
     syncComponents = syncComponents + ts
   }
 
-  def removeSyncComponent(ts: ThemeSync): Unit = {
-    syncComponents = syncComponents - ts
-  }
-
   def syncWindowThemes(): Unit = {
     FindDialog.syncTheme()
 

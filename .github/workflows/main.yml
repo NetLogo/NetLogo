@@ -40,9 +40,6 @@ jobs:
         run: |
           ./sbt update all headless/compile parserJS/compile
 
-      - name: Publish local artifacts
-        run: ./sbt netlogo/publishLocal headless/publishLocal
-
       - uses: actions/cache@v4
         id: restore-build
         with:
