@@ -502,11 +502,18 @@ with org.nlogo.api.ViewSettings {
   @throws(classOf[LogoException])
   override def open(path: String, shouldAutoInstallLibs: Boolean): Unit = {
     try {
-      val m = loader.readModel(Paths.get(path).toUri).get
-      setModelPath(path)
-      setModelType(ModelType.Normal)
-      fileManager.handleModelChange()
-      openModel(m, shouldAutoInstallLibs)
+      if (path == null) {
+        val m = loader.emptyModel("nlogox")
+        setModelType(ModelType.New)
+        fileManager.handleModelChange()
+        openModel(m, shouldAutoInstallLibs)
+      } else {
+        val m = loader.readModel(Paths.get(path).toUri).get
+        setModelPath(path)
+        setModelType(ModelType.Normal)
+        fileManager.handleModelChange()
+        openModel(m, shouldAutoInstallLibs)
+      }
     }
     catch {
       case ex: CompilerException =>
