@@ -25,36 +25,38 @@ object LabXMLLoader {
 
     val name = element("name")
 
-    val baseLab =
-      LabProtocol( name, "", "", "", "", "", element("repetitions").toInt
-                 , element("sequentialRunOrder").toBoolean, element("runMetricsEveryStep").toBoolean, ""
-                 , element("timeLimit", "0").toInt, "", List(), List(), List())
+    val lab = LabProtocol.defaultGUIProtocol.copy(
+      name = name,
+      repetitions = element("repetitions").toInt,
+      sequentialRunOrder = element("sequentialRunOrder").toBoolean,
+      runMetricsEveryStep = element("runMetricsEveryStep").toBoolean,
+      timeLimit = element("timeLimit", "0").toInt
+    )
 
-    val filledLab =
-      element.children.foldLeft(baseLab) {
-        case (lab, XMLElement("preExperiment", _, text, _)) =>
-          lab.copy(preExperimentCommands = text)
-        case (lab, XMLElement("setup", _, text, _)) =>
-          lab.copy(setupCommands = text)
-        case (lab, XMLElement("go", _, text, _)) =>
-          lab.copy(goCommands = text)
-        case (lab, XMLElement("postRun", _, text, _)) =>
-          lab.copy(postRunCommands = text)
-        case (lab, XMLElement("postExperiment", _, text, _)) =>
-          lab.copy(postExperimentCommands = text)
-        case (lab, XMLElement("runMetricsCondition", _, text, _)) =>
-          lab.copy(runMetricsCondition = text)
-        case (lab, XMLElement("exitCondition", _, text, _)) =>
-          lab.copy(exitCondition = text)
-        case (lab, el @ XMLElement("metrics", _, _, _)) =>
-          lab.copy(metrics = el.getChildren("metric").map(_.text).toList)
-        case (lab, XMLElement("constants", _, _, children)) =>
-          lab.copy(constants = children.map(readValueSet).toList)
-        case (lab, el @ XMLElement("subExperiments", _, _, _)) =>
-          lab.copy(subExperiments = el.getChildren("subExperiment").map(_.children.map(readValueSet).toList).toList)
-        case (  _, XMLElement(otherName, _, _, _)) =>
-          throw new Exception(s"Unknown BehaviorSpace XML node type: ${otherName}")
-      }
+    element.children.foreach {
+      case XMLElement("preExperiment", _, text, _) =>
+        lab.preExperimentCommands = text
+      case XMLElement("setup", _, text, _) =>
+        lab.setupCommands = text
+      case XMLElement("go", _, text, _) =>
+        lab.goCommands = text
+      case XMLElement("postRun", _, text, _) =>
+        lab.postRunCommands = text
+      case XMLElement("postExperiment", _, text, _) =>
+        lab.postExperimentCommands = text
+      case XMLElement("runMetricsCondition", _, text, _) =>
+        lab.runMetricsCondition = text
+      case XMLElement("exitCondition", _, text, _) =>
+        lab.exitCondition = text
+      case el @ XMLElement("metrics", _, _, _) =>
+        lab.metrics = el.getChildren("metric").map(_.text).toList
+      case XMLElement("constants", _, _, children) =>
+        lab.constants = children.map(readValueSet).toList
+      case el @ XMLElement("subExperiments", _, _, _) =>
+        lab.subExperiments = el.getChildren("subExperiment").map(_.children.map(readValueSet).toList).toList
+      case XMLElement(otherName, _, _, _) =>
+        throw new Exception(s"Unknown BehaviorSpace XML node type: ${otherName}")
+    }
 
     val outNameMaybe =
       if (editNames)
@@ -72,7 +74,7 @@ object LabXMLLoader {
       else
         None
 
-    (filledLab, existingNames ++ outNameMaybe)
+    (lab, existingNames ++ outNameMaybe)
 
   }
 

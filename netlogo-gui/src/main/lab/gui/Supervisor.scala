@@ -26,10 +26,9 @@ class Supervisor(
   protocol: LabProtocol,
   factory: WorkspaceFactory,
   dialogFactory: EditDialogFactory,
-  saveProtocol: LabProtocol => Unit
+  saveProtocol: (LabProtocol, Int) => Unit
 ) extends Thread("BehaviorSpace Supervisor") {
   private implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("tools.behaviorSpace")
-  var options = protocol.runOptions
   val worker = new Worker(protocol, writing)
   val headlessWorkspaces = new ListBuffer[Workspace]
   val queue = new collection.mutable.Queue[Workspace]
@@ -66,7 +65,7 @@ class Supervisor(
 
   def nextWorkspace = queue.synchronized { if (queue.isEmpty) null else queue.dequeue() }
   val runnable = new Runnable { override def run(): Unit = {
-    worker.run(workspace, () => nextWorkspace, options.threadCount)
+    worker.run(workspace, () => nextWorkspace, protocol.threadCount)
   } }
   private val workerThread = new Thread(runnable, "BehaviorSpace Worker")
   private val progressDialog = new ProgressDialog(parent, this, dialogFactory.colorizer, saveProtocol)
@@ -96,20 +95,16 @@ class Supervisor(
         return
     }
 
-    if (options == null || options.firstRun) {
-      options =
-        try {
-          new RunOptionsDialog(parent, dialogFactory, workspace.guessExportName(worker.protocol.name)).get
-        } catch {
-          case ex: UserCancelException => null
-        }
+    if (protocol.runsCompleted == 0) {
+      try {
+        new RunOptionsDialog(parent, dialogFactory, workspace.guessExportName(protocol.name), protocol).run()
+      } catch {
+        case ex: UserCancelException => return
+      }
     }
 
-    if (options == null)
-      return
-
-    if (options.spreadsheet != null && options.spreadsheet.trim() != "") {
-      val fileName = options.spreadsheet.trim()
+    if (protocol.spreadsheet != null && protocol.spreadsheet.trim() != "") {
+      val fileName = protocol.spreadsheet.trim()
       if (protocol.runsCompleted == 0 || new File(fileName).exists) {
         try {
           val partialData = new PartialData
@@ -153,8 +148,8 @@ class Supervisor(
       }
       else return guiError(I18N.gui("error.pause.spreadsheet"))
     }
-    if (options.table != null && options.table.trim() != "") {
-      val fileName = options.table.trim()
+    if (protocol.table != null && protocol.table.trim() != "") {
+      val fileName = protocol.table.trim()
       if (protocol.runsCompleted == 0 || new File(fileName).exists) {
         try {
           tableExporter = new TableExporter(
@@ -170,9 +165,9 @@ class Supervisor(
       }
       else return guiError(I18N.gui("error.pause.table"))
     }
-    if (options.stats != null && options.stats.trim() != "") {
+    if (protocol.stats != null && protocol.stats.trim() != "") {
       if (tableFileName != null || spreadsheetFileName != null) {
-        val fileName = options.stats.trim()
+        val fileName = protocol.stats.trim()
         try {
           statsExporter = new StatsExporter(
             workspace.getModelFileName,
@@ -192,18 +187,18 @@ class Supervisor(
         }
       } else return guiError(I18N.gui("error.stats"))
     }
-    if (options.lists != null && options.lists.trim() != "") {
-      val fileName = options.lists.trim()
+    if (protocol.lists != null && protocol.lists.trim() != "") {
+      val fileName = protocol.lists.trim()
       try {
         addExporter(new ListsExporter(
           workspace.getModelFileName,
           workspace.world.getDimensions,
           worker.protocol,
           new PrintWriter(new FileWriter(fileName)),
-          if (options.table != null && options.table.trim() != "") {
-            LabPostProcessorInputFormat.Table(options.table.trim())
-          } else if (options.spreadsheet != null && options.spreadsheet.trim() != "") {
-            LabPostProcessorInputFormat.Spreadsheet(options.spreadsheet.trim())
+          if (protocol.table != null && protocol.table.trim() != "") {
+            LabPostProcessorInputFormat.Table(protocol.table.trim())
+          } else if (protocol.spreadsheet != null && protocol.spreadsheet.trim() != "") {
+            LabPostProcessorInputFormat.Spreadsheet(protocol.spreadsheet.trim())
           } else return guiError(I18N.gui("error.lists"))))
       } catch {
         case e: FileNotFoundException => return guiError(I18N.gui("error.pause.alreadyOpen"))
@@ -212,14 +207,14 @@ class Supervisor(
           return
       }
     }
-    progressDialog.setUpdateView(options.updateView)
-    progressDialog.setPlotsAndMonitorsSwitch(options.updatePlotsAndMonitors)
-    progressDialog.enablePlotsAndMonitorsSwitch(options.updatePlotsAndMonitors)
-    workspace.setShouldUpdatePlots(options.updatePlotsAndMonitors)
+    progressDialog.setUpdateView(protocol.updateView)
+    progressDialog.setPlotsAndMonitorsSwitch(protocol.updatePlotsAndMonitors)
+    progressDialog.enablePlotsAndMonitorsSwitch(protocol.updatePlotsAndMonitors)
+    workspace.setShouldUpdatePlots(protocol.updatePlotsAndMonitors)
     workspace.setExportPlotWarningAction(ExportPlotWarningAction.Warn)
     workspace.setTriedToExportPlot(false)
     queue.enqueue(workspace)
-    (2 to options.threadCount.min(protocol.countRuns)).foreach{num =>
+    (2 to protocol.threadCount.min(protocol.countRuns)).foreach{num =>
       val w = factory.newInstance
       // We want to print any plot compilation errors for just one of
       // the headless workspaces.
@@ -231,7 +226,7 @@ class Supervisor(
         w.setExportPlotWarningAction(ExportPlotWarningAction.Ignore)
       }
       factory.openCurrentModelIn(w)
-      w.setShouldUpdatePlots(options.updatePlotsAndMonitors)
+      w.setShouldUpdatePlots(protocol.updatePlotsAndMonitors)
       headlessWorkspaces += w
       queue.enqueue(w)
     }

@@ -26,95 +26,78 @@ private [gui] class ProtocolEditable(protocol: LabProtocol,
 
   private implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("tools.behaviorSpace")
 
-  override def editPanel: EditPanel = new ProtocolEditPanel(this, compiler, colorizer)
-
-  // These are the actual vars the user edits.  Before editing they are copied out of the
-  // original LabProtocol; after editing a new LabProtocol is created.
-  private var _name = protocol.name
-  private var _preExperimentCommands = protocol.preExperimentCommands
-  private var _setupCommands = protocol.setupCommands
-  private var _goCommands = protocol.goCommands
-  private var _postRunCommands = protocol.postRunCommands
-  private var _postExperimentCommands = protocol.postExperimentCommands
-  private var _repetitions = protocol.repetitions
-  private var _sequentialRunOrder = protocol.sequentialRunOrder
-  private var _runMetricsEveryStep = protocol.runMetricsEveryStep
-  private var _runMetricsCondition = protocol.runMetricsCondition
-  private var _timeLimit = protocol.timeLimit
-  private var _exitCondition = protocol.exitCondition
-  private var _metrics = protocol.metrics.mkString("\n")
   private var _valueSets = LabVariableParser.combineVariables(protocol.constants, protocol.subExperiments)
 
-  val runsCompleted = protocol.runsCompleted
+  override def editPanel: EditPanel = new ProtocolEditPanel(this, compiler, colorizer)
 
-  def name: String = _name
+  def name: String = protocol.name
   def setName(s: String): Unit = {
-    _name = s
+    protocol.name = s.trim
   }
 
-  def preExperimentCommands: String = _preExperimentCommands
+  def preExperimentCommands: String = protocol.preExperimentCommands
   def setPreExperimentCommands(s: String): Unit = {
-    _preExperimentCommands = s
+    protocol.preExperimentCommands = s.trim
   }
 
-  def setupCommands: String = _setupCommands
+  def setupCommands: String = protocol.setupCommands
   def setSetupCommands(s: String): Unit = {
-    _setupCommands = s
+    protocol.setupCommands = s.trim
   }
 
-  def goCommands: String = _goCommands
+  def goCommands: String = protocol.goCommands
   def setGoCommands(s: String): Unit = {
-    _goCommands = s
+    protocol.goCommands = s.trim
   }
 
-  def postRunCommands: String = _postRunCommands
+  def postRunCommands: String = protocol.postRunCommands
   def setPostRunCommands(s: String): Unit = {
-    _postRunCommands = s
+    protocol.postRunCommands = s.trim
   }
 
-  def postExperimentCommands: String = _postExperimentCommands
+  def postExperimentCommands: String = protocol.postExperimentCommands
   def setPostExperimentCommands(s: String): Unit = {
-    _postExperimentCommands = s
+    protocol.postExperimentCommands = s.trim
   }
 
-  def repetitions: Int = _repetitions
+  def repetitions: Int = protocol.repetitions
   def setRepetitions(i: Int): Unit = {
-    _repetitions = i
+    protocol.repetitions = i
   }
 
-  def sequentialRunOrder: Boolean = _sequentialRunOrder
+  def sequentialRunOrder: Boolean = protocol.sequentialRunOrder
   def setSequentialRunOrder(b: Boolean): Unit = {
-    _sequentialRunOrder = b
+    protocol.sequentialRunOrder = b
   }
 
-  def runMetricsEveryStep: Boolean = _runMetricsEveryStep
+  def runMetricsEveryStep: Boolean = protocol.runMetricsEveryStep
   def setRunMetricsEveryStep(b: Boolean): Unit = {
-    _runMetricsEveryStep = b
+    protocol.runMetricsEveryStep = b
   }
 
-  def runMetricsCondition: String = _runMetricsCondition
+  def runMetricsCondition: String = protocol.runMetricsCondition
   def setRunMetricsCondition(s: String): Unit = {
-    _runMetricsCondition = s
+    protocol.runMetricsCondition = s.trim
   }
 
-  def timeLimit: Int = _timeLimit
+  def timeLimit: Int = protocol.timeLimit
   def setTimeLimit(i: Int): Unit = {
-    _timeLimit = i
+    protocol.timeLimit = i
   }
 
-  def exitCondition: String = _exitCondition
+  def exitCondition: String = protocol.exitCondition
   def setExitCondition(s: String): Unit = {
-    _exitCondition = s
+    protocol.exitCondition = s.trim
   }
 
-  def metrics: String = _metrics
+  def metrics: String = protocol.metrics.mkString("\n")
   def setMetrics(s: String): Unit = {
-    _metrics = s
+    protocol.metrics = s.split("\n", 0).map(_.trim).filter(_.nonEmpty).toList
   }
 
   def valueSets: String = _valueSets
   def setValueSets(s: String): Unit = {
-    _valueSets = s
+    _valueSets = s.trim
   }
 
   // make a new LabProtocol based on what user entered
@@ -128,12 +111,11 @@ private [gui] class ProtocolEditable(protocol: LabProtocol,
     }
     LabVariableParser.parseVariables(valueSets, repetitions, worldLock, compiler) match {
       case Success((constants, subExperiments)) =>
-        Some(new LabProtocol(
-          name.trim, preExperimentCommands.trim, setupCommands.trim, goCommands.trim,
-          postRunCommands.trim, postExperimentCommands.trim, repetitions, sequentialRunOrder, runMetricsEveryStep,
-          runMetricsCondition.trim, timeLimit, exitCondition.trim,
-          metrics.split("\n", 0).map(_.trim).filter(!_.isEmpty).toList,
-          constants, subExperiments, runsCompleted))
+        protocol.constants = constants
+        protocol.subExperiments = subExperiments
+
+        Some(protocol)
+
       case Failure(t) =>
         complain(t.getMessage)
         None

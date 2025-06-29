@@ -19,18 +19,25 @@ object NLogoLabConverter extends AutoConvertable {
       metrics.exists(needsConversion) || needsConversion(exitCondition)
   }
 
-  def autoConvertProtocol(converter: AutoConverter)(protocol:LabProtocol): LabProtocol = {
+  def autoConvertProtocol(converter: AutoConverter)(protocol: LabProtocol): LabProtocol = {
     import protocol._
-    new LabProtocol(name,
+    protocol.copy(
+      name,
       converter.convertStatement(preExperimentCommands),
       converter.convertStatement(setupCommands),
       converter.convertStatement(goCommands),
       converter.convertStatement(postRunCommands),
       converter.convertStatement(postExperimentCommands),
-      repetitions, sequentialRunOrder, runMetricsEveryStep, converter.convertStatement(runMetricsCondition), timeLimit,
+      repetitions,
+      sequentialRunOrder,
+      runMetricsEveryStep,
+      converter.convertStatement(runMetricsCondition),
+      timeLimit,
       if (exitCondition == "") "" else converter.convertReporterExpression(exitCondition),
       metrics.map(converter.convertReporterExpression),
-      constants, subExperiments)
+      constants,
+      subExperiments
+    )
   }
 
   override def requiresAutoConversion(model: Model, needsConversion: String => Boolean): Boolean =
