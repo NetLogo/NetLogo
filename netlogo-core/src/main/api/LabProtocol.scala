@@ -171,4 +171,37 @@ class LabProtocol(
       runsCompleted
     )
   }
+
+  override def equals(other: Any): Boolean = {
+    other match {
+      case protocol: LabProtocol =>
+        name == protocol.name &&
+        preExperimentCommands == protocol.preExperimentCommands &&
+        setupCommands == protocol.setupCommands &&
+        goCommands == protocol.goCommands &&
+        postRunCommands == protocol.postRunCommands &&
+        postExperimentCommands == protocol.postExperimentCommands &&
+        repetitions == protocol.repetitions &&
+        sequentialRunOrder == protocol.sequentialRunOrder &&
+        runMetricsEveryStep == protocol.runMetricsEveryStep &&
+        runMetricsCondition == protocol.runMetricsCondition &&
+        timeLimit == protocol.timeLimit &&
+        exitCondition == protocol.exitCondition &&
+        metrics == protocol.metrics &&
+        constants == protocol.constants &&
+        subExperiments == protocol.subExperiments &&
+        threadCount == protocol.threadCount &&
+        table == protocol.table &&
+        spreadsheet == protocol.spreadsheet &&
+        stats == protocol.stats &&
+        lists == protocol.lists &&
+        updateView == protocol.updateView &&
+        updatePlotsAndMonitors == protocol.updatePlotsAndMonitors &&
+        mirrorHeadlessOutput == protocol.mirrorHeadlessOutput &&
+        runsCompleted == protocol.runsCompleted
+
+      case _ =>
+        false
+    }
+  }
 }
