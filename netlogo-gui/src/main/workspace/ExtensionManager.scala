@@ -125,6 +125,9 @@ class ExtensionManager(val workspace: ExtendableWorkspace, loader: ExtensionLoad
   def loadedExtensions: JIterable[ClassManager] =
     jars.values.map(_.classManager).asJava
 
+  def loadedExtensionNames: Seq[String] =
+    jars.values.map(_.extensionName).toSeq
+
   private var obj: AnyRef = null
 
   private[nlogo] def addLoader(alternateLoader: ExtensionLoader): Unit = {
