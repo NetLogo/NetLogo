@@ -501,9 +501,15 @@ with org.nlogo.api.ViewSettings {
   @throws(classOf[CompilerException])
   @throws(classOf[LogoException])
   override def open(path: String, shouldAutoInstallLibs: Boolean): Unit = {
+    open(path, shouldAutoInstallLibs, Seq())
+  }
+
+  def open(path: String, shouldAutoInstallLibs: Boolean, loadedExtensions: Seq[String]): Unit = {
     try {
       if (path == null) {
-        val m = loader.emptyModel("nlogox")
+        // if we're in a new model, loaded extensions won't persist when the empty model loads,
+        // so make sure to manually add them in here (Isaac B 6/29/25)
+        val m = loader.emptyModel("nlogox").copy(code = s"extensions [ ${loadedExtensions.mkString(" ")} ]")
         setModelType(ModelType.New)
         fileManager.handleModelChange()
         openModel(m, shouldAutoInstallLibs)

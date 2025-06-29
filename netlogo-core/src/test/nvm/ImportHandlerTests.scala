@@ -58,6 +58,7 @@ class ImportHandlerTests extends AnyFunSuite {
       def finishFullCompilation() = ???
       def anyExtensionsLoaded: Boolean = ???
       def loadedExtensions: java.lang.Iterable[ClassManager] = ???
+      def loadedExtensionNames: Seq[String] = ???
       def replaceIdentifier(name: String): Primitive = ???
       def importExtension(jarPath: String, errors: ErrorSource) = ???
       def resolvePath(path: String): String = ???

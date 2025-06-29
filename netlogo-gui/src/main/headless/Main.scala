@@ -78,7 +78,8 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
 
   // used in bspace extension
   def runExperimentWithProtocol(settings: Settings, protocol: LabProtocol, assignWorker: Worker => Unit,
-                                finish: () => Unit, primaryWorkspace: Option[WorkspaceMirror]): Unit = {
+                                finish: () => Unit, primaryWorkspace: Option[WorkspaceMirror],
+                                loadedExtensions: Seq[String] = Seq()): Unit = {
     var plotCompilationErrorAction: PlotCompilationErrorAction = PlotCompilationErrorAction.Output
     var exportPlotWarningAction: ExportPlotWarningAction = ExportPlotWarningAction.Output
     def newWorkspace = {
@@ -86,7 +87,7 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
       w.setPrimaryWorkspace(primaryWorkspace)
       w.setPlotCompilationErrorAction(plotCompilationErrorAction)
       w.setExportPlotWarningAction(exportPlotWarningAction)
-      w.open(settings.modelPath)
+      w.open(settings.modelPath, false, loadedExtensions)
       plotCompilationErrorAction = PlotCompilationErrorAction.Ignore
       exportPlotWarningAction = ExportPlotWarningAction.Ignore
       w.setShouldUpdatePlots(settings.updatePlots)
