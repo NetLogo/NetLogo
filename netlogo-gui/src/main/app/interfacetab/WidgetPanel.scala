@@ -1256,9 +1256,9 @@ class WidgetPanel(val workspace: GUIWorkspace)
     val total = ordered.last.getX + ordered.last.getWidth - ordered.head.getX
     val space = (total - ordered.foldLeft(0)((c, w) => c + w.getWidth)) / (ordered.size - 1)
 
-    var start = ordered(0).getX
+    var start = ordered(0).getX + ordered(0).getWidth + space
 
-    WidgetActions.moveWidgets(ordered.map { w =>
+    WidgetActions.moveWidgets(ordered.drop(1).dropRight(1).map { w =>
       val out = (w, start, w.getY)
 
       start += w.getWidth + space
@@ -1272,9 +1272,9 @@ class WidgetPanel(val workspace: GUIWorkspace)
     val total = ordered.last.getY + ordered.last.getHeight - ordered.head.getY
     val space = (total - ordered.foldLeft(0)((c, w) => c + w.getHeight)) / (ordered.size - 1)
 
-    var start = ordered(0).getY
+    var start = ordered(0).getY + ordered(0).getHeight + space
 
-    WidgetActions.moveWidgets(ordered.map { w =>
+    WidgetActions.moveWidgets(ordered.drop(1).dropRight(1).map { w =>
       val out = (w, w.getX, start)
 
       start += w.getHeight + space
