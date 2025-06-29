@@ -7,7 +7,7 @@ import java.awt.event.ActionEvent
 import javax.swing.{ AbstractAction, JDialog, JLabel, JList, JMenuBar, JPanel, ListCellRenderer }
 import javax.swing.event.ListSelectionListener
 
-import org.nlogo.api.{ RefEnumeratedValueSet, LabProtocol, LabRunOptions }
+import org.nlogo.api.{ RefEnumeratedValueSet, LabProtocol }
 import org.nlogo.window.{ EditDialogFactory, MenuBarFactory }
 
 import org.nlogo.core.I18N
@@ -21,8 +21,8 @@ private class ManagerDialog(manager:       LabManager,
                             menuFactory:   MenuBarFactory)
   extends JDialog(manager.workspace.getFrame) with ListSelectionListener with ThemeSync {
 
-  def saveProtocol(protocol: LabProtocol): Unit = {
-    manager.protocols(editIndex) = protocol
+  def saveProtocol(protocol: LabProtocol, runsCompleted: Int): Unit = {
+    protocol.runsCompleted = runsCompleted
     update()
     select(protocol)
   }
@@ -176,7 +176,7 @@ private class ManagerDialog(manager:       LabManager,
   }
   private def makeNew(): Unit = {
     editProtocol(
-      new LabProtocol(constants = manager.workspace.world.synchronized {
+      LabProtocol.defaultGUIProtocol.copy(constants = manager.workspace.world.synchronized {
                                     manager.workspace.world.program.interfaceGlobals.toList
                                     .map{case variableName: String =>
                                       new RefEnumeratedValueSet(
@@ -303,7 +303,7 @@ private class ManagerDialog(manager:       LabManager,
     }
   }
   private def abort(): Unit = {
-    saveProtocol(selectedProtocol.copy(runsCompleted = 0, runOptions = LabRunOptions()))
+    saveProtocol(selectedProtocol, 0)
   }
   /// helpers
   def update(): Unit = {
