@@ -6,10 +6,12 @@ import FrontEndInterface._
 
 case class StructureResults(program: Program,
                         procedures: ProceduresMap = NoProcedures,
-                        procedureTokens: Map[String, Iterable[Token]] = Map(),
+                        procedureTokens: Map[Tuple2[String, Option[String]], Iterable[Token]] = Map(),
                         includes: Seq[Token] = Seq(),
                         includedSources: Seq[String] = Seq(),
-                        extensions: Seq[Token] = Seq())
+                        extensions: Seq[Token] = Seq(),
+                        imports: Seq[Import] = Seq(),
+                        _export: Option[Export] = None)
 
 object StructureResults {
   val empty = StructureResults(Program.empty())

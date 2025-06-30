@@ -90,7 +90,7 @@ extends scala.util.parsing.combinator.Parsers {
           decs ++ procs }
 
   def declaration: Parser[Declaration] =
-    includes | extensions | breed | directedLinkBreed | undirectedLinkBreed |
+    _export | _import | includes | extensions | breed | directedLinkBreed | undirectedLinkBreed |
       variables("GLOBALS") | variables("TURTLES-OWN") | variables("PATCHES-OWN") |
       variables("LINKS-OWN") | breedVariables
 
@@ -98,6 +98,43 @@ extends scala.util.parsing.combinator.Parsers {
     keyword("__INCLUDES") ~! stringList ^^ {
       case token ~ names =>
         Includes(token, names) }
+
+  def _export: Parser[Export] =
+    keyword("EXPORT") ~! openBracket ~> identifier ~ exportSpecList <~ closeBracket ^^ {
+      case ident ~ specs =>
+        Export(ident.name, specs, ident.token)
+    }
+
+  def exportSpecList: Parser[Seq[ExportSpec]] =
+    openBracket ~> rep(exportSpec) <~ closeBracket
+
+  def exportSpec: Parser[ExportSpec] =
+    simpleExport
+
+  def simpleExport: Parser[SimpleExport] =
+    identifier ^^ {
+      case ident =>
+        SimpleExport(ident.name)
+    }
+
+  def _import: Parser[Import] =
+    keyword("IMPORT") ~! openBracket ~! identifier ~! rep(importOption) <~ closeBracket ^^ {
+      case keyword ~ _ ~ ident ~ options =>
+        Import(ident.name, options, keyword)
+    }
+
+  def importOption: Parser[ImportOption] =
+    importAlias
+
+  def importAlias: Parser[ImportAlias] =
+    openBracket ~> importAliasKeyword ~! identifier <~ closeBracket ^^ {
+      case keyword ~ ident =>
+        ImportAlias(ident.name, keyword) }
+
+  def importAliasKeyword: Parser[Token] =
+    acceptMatch("ALIAS", {
+      case token @ Token(_, TokenType.Ident, "ALIAS") =>
+        token })
 
   def extensions: Parser[Extensions] =
     keyword("EXTENSIONS") ~! identifierList ^^ {
