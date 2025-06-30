@@ -83,11 +83,7 @@ abstract class Widget extends JPanel with RoundedBorderPanel with ThemeSync with
   def isZoomed: Boolean = {
     // this couldn't possibly happen ...right?
     // well somehow it does happen when loading monitor widgets, so here we are (Isaac B 6/24/25)
-    if (widgetContainer == null) {
-      false
-    } else {
-      widgetContainer.exists(_.isZoomed)
-    }
+    widgetContainer != null && widgetContainer.exists(_.isZoomed)
   }
 
   def model: CoreWidget
