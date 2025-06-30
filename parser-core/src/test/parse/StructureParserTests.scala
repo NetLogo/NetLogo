@@ -323,7 +323,7 @@ class StructureParserTests extends AnyFunSuite {
   test("import syntax detects import loops") {
     expectParseAllError(
       "import [foo]",
-      "Found a loop in the module import chain",
+      "Module FOO has already been imported",
       "import [bar]",
       "import [foo]")
   }
