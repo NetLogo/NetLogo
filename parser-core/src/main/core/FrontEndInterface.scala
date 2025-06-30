@@ -10,7 +10,7 @@ object FrontEndInterface {
   import scala.collection.immutable.ListMap
   // The first string in the key is the procedure name. The second string is the name of the module it's supposed to be
   // visible in, if any. For procedures visible to the model, this will be None. - Kritphong M November 2025
-  type ProceduresMap = ListMap[Tuple2[String, Option[String]], FrontEndProcedure]
+  type ProceduresMap = ListMap[(String, Option[String]), FrontEndProcedure]
   val NoProcedures: ProceduresMap = ListMap()
   type FrontEndResults = (Seq[ProcedureDefinition], StructureResults)
 
