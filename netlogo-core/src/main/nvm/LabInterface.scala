@@ -15,6 +15,7 @@ object LabInterface {
     def addListsWriter(modelFileName: String, initialDims: WorldDimensions, w: java.io.PrintWriter,
                        in: LabPostProcessorInputFormat.Format): Unit
     def run(testWorkspace: Workspace, fn: () => Workspace, threads: Int): Unit
+    def abort(): Unit
     def compile(w: Workspace): Unit // only for testing purposes
   }
   trait ProgressListener {
@@ -37,7 +38,8 @@ object LabInterface {
     dims: Option[WorldDimensions],
     threads: Int,
     suppressErrors: Boolean,
-    updatePlots: Boolean
+    updatePlots: Boolean,
+    mirrorHeadlessOutput: Boolean = false
     )
 }
 trait LabInterface {

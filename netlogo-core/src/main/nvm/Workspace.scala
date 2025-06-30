@@ -10,8 +10,8 @@ import org.nlogo.agent.{ Agent, AgentSet, World }
 import collection.mutable.WeakHashMap
 
 trait Workspace extends ApiWorkspace with JobManagerOwner {
-  // This method returns the primary GUI workspace if it exists, for use by its headless children (Isaac B 5/14/25)
-  def getPrimaryWorkspace: Option[WorkspaceMirror] = None
+  // This method returns the primary workspace, for use by its headless children (Isaac B 5/14/25)
+  def getPrimaryWorkspace: PrimaryWorkspace
 
   def world: World
 
