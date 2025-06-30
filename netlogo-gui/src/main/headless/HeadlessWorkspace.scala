@@ -15,7 +15,7 @@ import org.nlogo.api.{ ComponentSerialization, Version, RendererInterface, Aggre
 import org.nlogo.core.{ AgentKind, CompilerException, Femto, Model, Output, Program, UpdateMode, WorldDimensions,
   WorldDimensions3D }
 import org.nlogo.agent.{ CompilationManagement, OutputObject, World, World2D, World3D }
-import org.nlogo.nvm.{ DummyPrimaryWorkspace, LabInterface, PresentationCompilerInterface, PrimaryWorkspace }
+import org.nlogo.nvm.{ LabInterface, PresentationCompilerInterface, PrimaryWorkspace }
 import org.nlogo.workspace.{ AbstractWorkspaceScala, HubNetManagerFactory }
 import org.nlogo.fileformat.{ FileFormat, NLogoFormat, NLogoThreeDFormat }
 import org.nlogo.util.Pico
@@ -108,9 +108,9 @@ class HeadlessWorkspace(
 extends AbstractWorkspaceScala(_world, hubNetManagerFactory)
 with org.nlogo.workspace.Controllable
 with org.nlogo.workspace.WorldLoaderInterface
-with org.nlogo.api.ViewSettings {
+with org.nlogo.api.ViewSettings with PrimaryWorkspace {
 
-  private var primaryWorkspace: PrimaryWorkspace = new DummyPrimaryWorkspace
+  private var primaryWorkspace: PrimaryWorkspace = this
 
   override def getPrimaryWorkspace: PrimaryWorkspace =
     primaryWorkspace
@@ -471,6 +471,15 @@ with org.nlogo.api.ViewSettings {
   // lastErrorReport gives more information than the regular exception that gets thrown from the
   // command function.  -JC 11/16/10
   var lastErrorReport: ErrorReport = null
+
+  override def runtimeError(t: Throwable): Unit = {
+    t match {
+      case le: LogoException =>
+        lastLogoException = le
+
+      case _ =>
+    }
+  }
 
   /**
    * Internal use only.
