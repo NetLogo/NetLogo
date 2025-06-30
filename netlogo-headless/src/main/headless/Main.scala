@@ -4,6 +4,7 @@ package org.nlogo.headless
 
 import org.nlogo.core.WorldDimensions
 import org.nlogo.api.{ APIVersion, ExportPlotWarningAction, LabDefaultValues, LabProtocol, Version }
+import org.nlogo.nvm.DummyPrimaryWorkspace
 import org.nlogo.nvm.LabInterface.{ Settings, Worker }
 import org.nlogo.api.PlotCompilationErrorAction
 
@@ -65,7 +66,7 @@ object Main {
     val lab = HeadlessWorkspace.newLab
     val worker = lab.newWorker(protocol)
     assignWorker(worker)
-    lab.run(settings, worker, () => newWorkspace)
+    lab.run(settings, worker, new DummyPrimaryWorkspace, () => newWorkspace)
   }
 
   def setHeadlessProperty(): Unit = {
