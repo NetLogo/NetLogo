@@ -137,7 +137,7 @@ class Backifier(program: Program,
     }
   }
 
-  def apply(procedures: ListMap[Tuple2[String, Option[String]], nvm.Procedure], c: core.Command): nvm.Command = {
+  def apply(procedures: ListMap[(String, Option[String]), nvm.Procedure], c: core.Command): nvm.Command = {
     val result: nvm.Command = c match {
       case core.prim._extern(_) =>
         new nvmprim._extern(
@@ -183,7 +183,7 @@ class Backifier(program: Program,
     result
   }
 
-  def apply(procedures: ListMap[Tuple2[String, Option[String]], nvm.Procedure], r: core.Reporter): nvm.Reporter = {
+  def apply(procedures: ListMap[(String, Option[String]), nvm.Procedure], r: core.Reporter): nvm.Reporter = {
     val result: nvm.Reporter = r match {
 
       case core.prim._letvariable(let) =>
