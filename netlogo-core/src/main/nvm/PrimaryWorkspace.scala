@@ -12,6 +12,7 @@ trait PrimaryWorkspace {
     experimentManager
 
   def mirrorOutput(oo: OutputObject, toOutputArea: Boolean): Unit = {}
+  def runtimeError(t: Throwable): Unit = {}
 }
 
 class DummyPrimaryWorkspace extends PrimaryWorkspace
