@@ -80,7 +80,7 @@ object StructureParser {
               }
 
               if (processedImports.contains(currentImport.name)) {
-                exception(I18N.errors.getN("compiler.StructureParser.importLoop"), currentImport.token)
+                exception(I18N.errors.getN("compiler.StructureParser.importLoop", currentImport.name), currentImport.token)
               } else {
                 processedImports += currentImport.name
               }
