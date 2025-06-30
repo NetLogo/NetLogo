@@ -82,7 +82,7 @@ object StructureParser {
               }
 
               if (processedImports.contains(currentImport.name)) {
-                exception(I18N.errors.getN("compiler.StructureParser.importLoop"), currentImport.token)
+                exception(I18N.errors.getN("compiler.StructureParser.importLoop", currentImport.name), currentImport.token)
               } else {
                 processedImports += currentImport.name
               }
@@ -164,12 +164,12 @@ object StructureParser {
   }
 
   private def addProcedureTokenAliases(
-    oldProcedureTokens: Map[Tuple2[String, Option[String]], Iterable[Token]],
-    newProcedureTokens: Map[Tuple2[String, Option[String]], Iterable[Token]],
+    oldProcedureTokens: Map[(String, Option[String]), Iterable[Token]],
+    newProcedureTokens: Map[(String, Option[String]), Iterable[Token]],
     exportedNames: Set[String],
     module: Option[String],
     filename: Option[String],
-    prefix: String): Map[Tuple2[String, Option[String]], Iterable[Token]] = {
+    prefix: String): Map[(String, Option[String]), Iterable[Token]] = {
 
     val changedProcedureTokens = newProcedureTokens.removedAll(oldProcedureTokens.keys)
     val exportedProcedureTokens = changedProcedureTokens.filter{case ((name, _), _) =>
