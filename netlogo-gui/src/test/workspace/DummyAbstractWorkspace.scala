@@ -3,7 +3,7 @@
 package org.nlogo.workspace
 
 import org.nlogo.agent.{World2D, World3D}
-import org.nlogo.nvm.PresentationCompilerInterface
+import org.nlogo.nvm.{ PresentationCompilerInterface, PrimaryWorkspace }
 import org.nlogo.core.AgentKind
 import org.nlogo.api.{AggregateManagerInterface, Version}
 
@@ -19,6 +19,7 @@ extends AbstractWorkspaceScala(
   dispose() // don't leak a JobThread - ST 5/2/13
   private def unsupported = throw new UnsupportedOperationException
   override val isHeadless = true
+  override def getPrimaryWorkspace: PrimaryWorkspace = unsupported
   override def compilerTestingMode = false
   override def aggregateManager: AggregateManagerInterface = unsupported
   override def waitFor(runnable: org.nlogo.api.CommandRunnable): Unit = unsupported

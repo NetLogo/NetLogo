@@ -15,8 +15,8 @@ import
     core.{ AgentKind, CompilerException, Femto, File, FileMode, Model, Output, UpdateMode, WorldDimensions },
     drawing.DrawingActionBroker,
     fileformat.{ FileFormat, NLogoFormat, NLogoPreviewCommandsFormat },
-    nvm.{ CompilerInterface, Context, LabInterface },
-    workspace.AbstractWorkspace
+    nvm.{ CompilerInterface, Context, LabInterface, PrimaryWorkspace },
+    workspace.{ AbstractWorkspace, WorldLoaderInterface }
 
 import java.io.InputStream
 import java.nio.file.Paths
@@ -72,8 +72,10 @@ class HeadlessWorkspace(
   val compiler: CompilerInterface,
   val renderer: RendererInterface,
   val aggregateManager: AggregateManagerInterface)
-extends AbstractWorkspace(_world)
-with org.nlogo.workspace.WorldLoaderInterface {
+extends AbstractWorkspace(_world) with WorldLoaderInterface with PrimaryWorkspace {
+
+  override def getPrimaryWorkspace: PrimaryWorkspace =
+    this
 
   def parser = compiler.utilities
 

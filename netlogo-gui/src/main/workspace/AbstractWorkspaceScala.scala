@@ -9,8 +9,8 @@ import java.util.Base64
 import scala.collection.mutable.WeakHashMap
 import scala.util.Try
 import org.nlogo.agent.{ World, Agent, OutputObject }
-import org.nlogo.api.{ Dump, ExtensionManager => APIEM, FileIO, HubNetInterface, LabProtocol, LibraryManager,
-  LogoException, OutputDestination, PreviewCommands, Workspace => APIWorkspace }
+import org.nlogo.api.{ Dump, ExtensionManager => APIEM, FileIO, HubNetInterface, LibraryManager, LogoException,
+                       OutputDestination, PreviewCommands, Workspace => APIWorkspace }
 import org.nlogo.core.{ CompilerException, Model, View, Widget => CoreWidget, WorldDimensions, WorldDimensions3D }
 import org.nlogo.nvm.{ Activation, Instruction, Command, Context, Job, MutableLong, Procedure, Tracer }
 import org.nlogo.nvm.RuntimePrimitiveException
@@ -291,16 +291,11 @@ object AbstractWorkspaceTraits {
 
     var _behaviorSpaceExperimentName = ""
 
-    var _behaviorSpaceExperiments = Seq[LabProtocol]()
-
     def behaviorSpaceRunNumber: Int =
       _behaviorSpaceRunNumber
 
     def behaviorSpaceExperimentName: String =
       _behaviorSpaceExperimentName
-
-    def getBehaviorSpaceExperiments: Seq[LabProtocol] =
-      _behaviorSpaceExperiments
 
     def behaviorSpaceRunNumber(n: Int): Unit = {
       _behaviorSpaceRunNumber = n
@@ -308,10 +303,6 @@ object AbstractWorkspaceTraits {
 
     def behaviorSpaceExperimentName(name: String): Unit = {
       _behaviorSpaceExperimentName = name
-    }
-
-    def setBehaviorSpaceExperiments(experiments: Seq[LabProtocol]): Unit = {
-      _behaviorSpaceExperiments = experiments
     }
   }
 

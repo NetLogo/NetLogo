@@ -309,7 +309,7 @@ private class ManagerDialog(manager:       LabManager,
   def update(): Unit = {
     listModel.clear
     manager.protocols.foreach(listModel.addElement(_))
-    manager.workspace.setBehaviorSpaceExperiments(manager.protocols.toSeq)
+    manager.workspace.getExperimentManager.setGUIExperiments(manager.protocols.toSeq)
     valueChanged(null)
     if (manager.protocols.size > 0) jlist.setSelectedIndices(Array(0))
   }

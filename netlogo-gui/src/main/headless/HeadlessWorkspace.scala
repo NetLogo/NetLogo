@@ -15,7 +15,7 @@ import org.nlogo.api.{ ComponentSerialization, Version, RendererInterface, Aggre
 import org.nlogo.core.{ AgentKind, CompilerException, Femto, Model, Output, Program, UpdateMode, WorldDimensions,
   WorldDimensions3D }
 import org.nlogo.agent.{ CompilationManagement, OutputObject, World, World2D, World3D }
-import org.nlogo.nvm.{ LabInterface, PresentationCompilerInterface, WorkspaceMirror }
+import org.nlogo.nvm.{ DummyPrimaryWorkspace, LabInterface, PresentationCompilerInterface, PrimaryWorkspace }
 import org.nlogo.workspace.{ AbstractWorkspaceScala, HubNetManagerFactory }
 import org.nlogo.fileformat.{ FileFormat, NLogoFormat, NLogoThreeDFormat }
 import org.nlogo.util.Pico
@@ -110,13 +110,19 @@ with org.nlogo.workspace.Controllable
 with org.nlogo.workspace.WorldLoaderInterface
 with org.nlogo.api.ViewSettings {
 
-  private var primaryWorkspace: Option[WorkspaceMirror] = None
+  private var primaryWorkspace: PrimaryWorkspace = new DummyPrimaryWorkspace
 
-  override def getPrimaryWorkspace: Option[WorkspaceMirror] =
+  override def getPrimaryWorkspace: PrimaryWorkspace =
     primaryWorkspace
 
-  def setPrimaryWorkspace(workspace: Option[WorkspaceMirror]): Unit = {
+  def setPrimaryWorkspace(workspace: PrimaryWorkspace): Unit = {
     primaryWorkspace = workspace
+  }
+
+  private var mirrorHeadlessOutput = false
+
+  def setMirrorHeadlessOutput(b: Boolean): Unit = {
+    mirrorHeadlessOutput = b
   }
 
   world.trailDrawer(renderer.trailDrawer)
@@ -415,12 +421,10 @@ with org.nlogo.api.ViewSettings {
     if (!silent)
       print(oo.get)
     // we also need to record it if it headed for the Output Area widget
-    if (toOutputArea) {
+    if (toOutputArea)
       outputAreaBuffer.append(oo.get)
-      getPrimaryWorkspace.foreach(_.mirrorOutput(oo, true))
-    } else {
-      getPrimaryWorkspace.foreach(_.mirrorOutput(oo, false))
-    }
+    if (mirrorHeadlessOutput)
+      primaryWorkspace.mirrorOutput(oo, toOutputArea)
   }
 
   /**

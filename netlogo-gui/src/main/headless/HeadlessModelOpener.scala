@@ -60,8 +60,8 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
     // parse turtle and link shapes, updating the workspace.
     attachWorldShapes(model.turtleShapes, model.linkShapes)
 
-    ws.setBehaviorSpaceExperiments(model.optionalSectionValue[Seq[LabProtocol]]("org.nlogo.modelsection.behaviorspace")
-                                        .getOrElse(Seq()))
+    ws.getPrimaryWorkspace.getExperimentManager.setGUIExperiments(
+      model.optionalSectionValue[Seq[LabProtocol]]("org.nlogo.modelsection.behaviorspace").getOrElse(Seq()))
 
     if (model.hasValueForOptionalSection("org.nlogo.modelsection.hubnetclient")) {
       ws.getHubNetManager.foreach(_.load(model))

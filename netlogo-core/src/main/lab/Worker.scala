@@ -99,7 +99,7 @@ class Worker(val protocol: LabProtocol, val supervisorWriting: () => Unit = () =
   // used in TestCompileAll, also used before the start of the
   // experiment in the GUI so if something doesn't compile we can fail early.
   def compile(w: Workspace): Unit = { new Procedures(w) }
-  def abort(): Unit = {
+  override def abort(): Unit = {
     if (runners != null) runners.foreach(_.aborted = true)
     supervisorWriting()
   }

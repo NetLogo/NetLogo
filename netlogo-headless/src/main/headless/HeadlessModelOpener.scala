@@ -64,8 +64,8 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
     // parse turtle and link shapes, updating the workspace.
     parseShapes(model.turtleShapes, model.linkShapes)
 
-    ws.setBehaviorSpaceExperiments(model.optionalSectionValue[Seq[LabProtocol]]("org.nlogo.modelsection.behaviorspace")
-                                        .getOrElse(Seq()))
+    ws.getPrimaryWorkspace.getExperimentManager.setGUIExperiments(
+      model.optionalSectionValue[Seq[LabProtocol]]("org.nlogo.modelsection.behaviorspace").getOrElse(Seq()))
 
     ws.init()
     ws.world.asInstanceOf[CompilationManagement].program = results.program

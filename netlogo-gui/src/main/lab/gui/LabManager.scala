@@ -62,7 +62,7 @@ class LabManager(val workspace:        GUIWorkspace,
     protocols ++= e.model
       .optionalSectionValue[Seq[LabProtocol]]("org.nlogo.modelsection.behaviorspace")
       .getOrElse(Seq[LabProtocol]())
-    workspace.setBehaviorSpaceExperiments(protocols.toSeq)
+    workspace.getExperimentManager.setGUIExperiments(protocols.toSeq)
   }
   override def updateModel(m: Model): Model =
     m.withOptionalSection("org.nlogo.modelsection.behaviorspace", Some(protocols.toSeq), Seq())

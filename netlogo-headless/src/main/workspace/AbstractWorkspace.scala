@@ -15,8 +15,8 @@ import
   org.nlogo.{ agent, api, core, nvm, plot },
   agent.{ AbstractExporter, Agent, AgentSet, OutputObject, World },
   api.{ PlotInterface, CommandLogoThunk, Dump, Exceptions, ExtensionManager => APIEM, ExternalResourceManager,
-    ExportPlotWarningAction, JobOwner, LabProtocol, LibraryManager, LogoException, MersenneTwisterFast, ModelType,
-    PreviewCommands, ReporterLogoThunk, SimpleJobOwner },
+    ExportPlotWarningAction, JobOwner, LibraryManager, LogoException, MersenneTwisterFast, ModelType, PreviewCommands,
+    ReporterLogoThunk, SimpleJobOwner },
   core.{ CompilationEnvironment, AgentKind, CompilerException, Femto, File, FileMode, I18N, LiteralParser},
   nvm.{ Activation, Command, Context, FileManager, ImportHandler,
     Instruction, Job, MutableLong, Procedure, RuntimePrimitiveException, Workspace },
@@ -454,14 +454,9 @@ object AbstractWorkspaceTraits {
 
   trait BehaviorSpace { this: api.Workspace =>
     private var _behaviorSpaceRunNumber = 0
-    private var _behaviorSpaceExperiments = Seq[LabProtocol]()
     override def behaviorSpaceRunNumber = _behaviorSpaceRunNumber
     override def behaviorSpaceRunNumber(n: Int): Unit = {
       _behaviorSpaceRunNumber = n
-    }
-    override def getBehaviorSpaceExperiments = _behaviorSpaceExperiments
-    override def setBehaviorSpaceExperiments(experiments: Seq[LabProtocol]): Unit = {
-      _behaviorSpaceExperiments = experiments
     }
   }
 
