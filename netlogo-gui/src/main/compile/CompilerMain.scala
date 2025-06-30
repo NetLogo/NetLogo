@@ -33,14 +33,14 @@ private[compile] object CompilerMain {
     displayName:           Option[String],
     program:               Program,
     subprogram:            Boolean,
-    oldProcedures:         ListMap[Tuple2[String, Option[String]], Procedure],
+    oldProcedures:         ListMap[(String, Option[String]), Procedure],
     extensionManager:      ExtensionManager,
     libManager:            LibraryManager,
     compilationEnv:        CompilationEnvironment,
     shouldAutoInstallLibs: Boolean = false
-  ): (ListMap[Tuple2[String, Option[String]], Procedure], Program) = {
+  ): (ListMap[(String, Option[String]), Procedure], Program) = {
 
-    val oldProceduresListMap = ListMap[Tuple2[String, Option[String]], Procedure](oldProcedures.toSeq*)
+    val oldProceduresListMap = ListMap[(String, Option[String]), Procedure](oldProcedures.toSeq*)
     val (topLevelDefs, feStructureResults) =
       frontEnd.frontEnd(CompilationOperand( sources, extensionManager, libManager, compilationEnv, program
                                           , oldProceduresListMap, subprogram, displayName
