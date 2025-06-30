@@ -37,19 +37,6 @@ public final class Context implements org.nlogo.api.Context {
 
   // This constructor is used when a Context spawns a Job which
   // in turn spawns Contexts, such as with _ask. - ST 6/12/06
-  public Context(Job job, Agent agent, int ip,
-                 Activation activation) {
-    this.job = job;
-    this.agent = agent;
-    if (agent != null) {
-      agentBit = agent.agentBit();
-    }
-    this.ip = ip;
-    this.activation = activation;
-  }
-
-  // This constructor is used when a Context spawns a Job which
-  // in turn spawns Contexts, such as with _ask. - ST 6/12/06
   public Context(Job job, Agent agent, int ip, Activation activation, Workspace workspace) {
     this.job = job;
     this.agent = agent;
@@ -69,6 +56,7 @@ public final class Context implements org.nlogo.api.Context {
     activation = context.activation;
     myself = context.agent;
     agentBit = agents.agentBit();
+    workspace = context.workspace;
   }
 
   public Context(Context context, Agent agent) {
@@ -76,6 +64,7 @@ public final class Context implements org.nlogo.api.Context {
     activation = context.activation;
     myself = context.agent;
     agentBit = agent.agentBit();
+    workspace = context.workspace;
   }
 
   // Used to produce an exact duplicate context for inspection
@@ -83,7 +72,7 @@ public final class Context implements org.nlogo.api.Context {
   // which the error occurred to be reverted to an error-free
   // state.
   public Context copy() {
-    return new Context(job, agent, ip, activation);
+    return new Context(job, agent, ip, activation, workspace);
   }
 
   public boolean makeChildrenExclusive() {

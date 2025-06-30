@@ -76,3 +76,6 @@
 [submodule "netlogo-gui/colorpicker"]
 	path = netlogo-gui/colorpicker
 	url = https://github.com/NetLogo/ColorPicker
+[submodule "extensions/bspace"]
+	path = extensions/bspace
+	url = https://github.com/NetLogo/BehaviorSpace-Extension

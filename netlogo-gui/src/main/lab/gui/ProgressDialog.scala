@@ -18,7 +18,7 @@ import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ GUIWorkspace, PlotWidget, SpeedSliderPanel }
 
 private [gui] class ProgressDialog(parent: Window, supervisor: Supervisor, colorizer: Colorizer,
-                                   saveProtocol: (LabProtocol) => Unit)
+                                   saveProtocol: (LabProtocol, Int) => Unit)
               extends JDialog(parent, Dialog.DEFAULT_MODALITY_TYPE) with ProgressListener with ThemeSync {
   val protocol = supervisor.worker.protocol
   val workspace = supervisor.workspace.asInstanceOf[GUIWorkspace]
@@ -160,11 +160,11 @@ private [gui] class ProgressDialog(parent: Window, supervisor: Supervisor, color
   }
 
   def saveProtocolP(): Unit = {
-    saveProtocol(protocol.copy(runsCompleted = supervisor.highestCompleted, runOptions = supervisor.options))
+    saveProtocol(protocol, supervisor.highestCompleted)
   }
 
   def resetProtocol(): Unit = {
-    saveProtocol(protocol.copy(runsCompleted = 0, runOptions = null))
+    saveProtocol(protocol, 0)
   }
 
   def updateView(check: Boolean): Unit = {
