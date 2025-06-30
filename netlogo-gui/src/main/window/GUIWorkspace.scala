@@ -1202,7 +1202,7 @@ abstract class GUIWorkspace(world: World, kioskLevel: GUIWorkspace.KioskLevel, f
 
     displaySwitchOn(true)
 
-    setProcedures(new ListMap[Tuple2[String, Option[String]], Procedure])
+    setProcedures(new ListMap[(String, Option[String]), Procedure])
 
     lastTicksListenersHeard = -1.0
 
