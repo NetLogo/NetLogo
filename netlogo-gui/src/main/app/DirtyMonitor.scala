@@ -3,25 +3,13 @@
 package org.nlogo.app
 
 import java.net.URI
-import java.io.IOException
-import java.nio.file.{ Files, Path, Paths }
+import java.io.{ File, IOException }
+import java.nio.file.{ Files, Paths }
 import javax.swing.JFrame
 
-import org.nlogo.api.{ AbstractModelLoader, Exceptions, ModelReader, ModelType, Version }
+import org.nlogo.api.{ AbstractModelLoader, Exceptions, ModelType, Version }
 import org.nlogo.window.Events._
 import org.nlogo.workspace.{ ModelTracker, SaveModel }
-
-import scala.util.Try
-
-object DirtyMonitor {
-  val autoSaveFileName = {
-    val df = new java.text.SimpleDateFormat("yyyy-MM-dd.HH_mm_ss",
-                                            java.util.Locale.US)
-    System.getProperty("java.io.tmpdir") +
-      System.getProperty("file.separator") + "autosave_" +
-      df.format(new java.util.Date()) + "." + ModelReader.modelSuffix
-  }
-}
 
 class DirtyMonitor(frame: JFrame, modelSaver: ModelSaver, modelLoader: AbstractModelLoader, modelTracker: ModelTracker,
                    title: Option[String] => String, codeWindow: JFrame)
@@ -38,7 +26,21 @@ with SaveModel.Controller
   // we don't want auto save to kick in when a model isn't completely loaded yet - ST 8/6/09
   private var loading = true
   private var _modelDirty = false
-  private var priorTempFile = Option.empty[Path]
+  private var lastAutoSaveFile: Option[File] = None
+
+  private def resetAutoSave(file: Option[File]): Unit = {
+    try {
+      lastAutoSaveFile.foreach(_.delete())
+    } catch {
+      case e: IOException =>
+    }
+
+    lastAutoSaveFile = file
+  }
+
+  def deleteLastAutoSave(): Unit = {
+    resetAutoSave(None)
+  }
 
   def modelDirty = _modelDirty && !loading
   private def setDirty(dirty: Boolean, path: Option[String] = None): Unit = {
@@ -54,10 +56,7 @@ with SaveModel.Controller
   }
 
   def handle(e: AboutToQuitEvent): Unit = {
-    new java.io.File(DirtyMonitor.autoSaveFileName).delete()
-    Exceptions.ignoring(classOf[IOException]) {
-      priorTempFile.foreach(Files.deleteIfExists)
-    }
+    Option(modelTracker.getModelPath).foreach(ModelConfig.pruneAutoSaves)
   }
 
   private var lastTimeAutoSaved = 0L
@@ -70,9 +69,10 @@ with SaveModel.Controller
       lastTimeAutoSaved = System.currentTimeMillis()
       SaveModel(modelSaver.currentModel, modelLoader, this, TempFileModelTracker, Version).foreach { f =>
         f().foreach { savedUri =>
-          if (System.getProperty("os.name").startsWith("Windows")) {
+          if (System.getProperty("os.name").startsWith("Windows"))
             Files.setAttribute(Paths.get(savedUri), "dos:hidden", true)
-          }
+
+          resetAutoSave(Option(new File(savedUri.getPath)))
         }
       }
     } catch {
@@ -95,10 +95,7 @@ with SaveModel.Controller
   def handle(e: AfterLoadEvent): Unit = {
     setDirty(false)
     loading = false
-    Exceptions.ignoring(classOf[IOException]) {
-      priorTempFile.foreach(Files.deleteIfExists)
-    }
-    priorTempFile = TempFileModelTracker.getModelFileUri.flatMap(u => Try(Paths.get(u)).toOption)
+    resetAutoSave(None)
   }
 
   /// how we get dirty
@@ -122,22 +119,15 @@ with SaveModel.Controller
     def compiler: org.nlogo.nvm.PresentationCompilerInterface = delegate.compiler
     def getExtensionManager(): org.nlogo.workspace.ExtensionManager = delegate.getExtensionManager()
     override def getModelType = delegate.getModelType
-    override def getModelFileUri: Option[URI] = {
-      delegate.getModelFileUri.map { u =>
-        val p = Paths.get(u)
-        val name = p.getName(p.getNameCount - 1).toString
-        val extension = name.split("\\.").last
-        val nameContent = name.split("\\.").init.mkString(".")
-        p.getParent.resolve(s".$nameContent.tmp.$extension").toUri
-      }
-    }
+    override def getModelFileUri: Option[URI] =
+      Option(ModelConfig.getAutoSavePath(Option(delegate.getModelPath)).toUri)
   }
 
   // SaveModel.Controller
 
   // chooseFilePath is used when the file doesn't yet have a path
   def chooseFilePath(modelType: ModelType): Option[URI] =
-    Some(Paths.get(DirtyMonitor.autoSaveFileName).toUri)
+    TempFileModelTracker.getModelFileUri
 
   def shouldSaveModelOfDifferingVersion(version: String): Boolean = true
   def warnInvalidFileFormat(format: String): Unit = {}

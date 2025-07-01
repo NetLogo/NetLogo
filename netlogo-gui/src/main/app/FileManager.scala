@@ -104,7 +104,7 @@ object FileManager {
         def run(): Unit = {
           try {
             val uri = Paths.get(importPath).toUri
-            manager.loadModel(uri, manager.openModelURI(uri)).map(model =>
+            manager.loadModel(manager.openModelURI(uri)).map(model =>
               workspace.getHubNetManager.foreach(_.importClientInterface(model, sectionChoice == 1)))
           } catch {
             case ex: IOException => exception = Some(ex)
@@ -298,9 +298,14 @@ class FileManager(workspace: AbstractWorkspaceScala,
   }
 
   private[app] def aboutToCloseFiles(): Unit = {
-    if (dirtyMonitor.modelDirty &&
-        Dialogs.userWantsToSaveFirst(I18N.gui.get("file.save.offer.thisModel"), parent))
-      saveModel(false)
+    if (dirtyMonitor.modelDirty) {
+      if (Dialogs.userWantsToSaveFirst(I18N.gui.get("file.save.offer.thisModel"), parent)) {
+        saveModel(false)
+      } else {
+        dirtyMonitor.deleteLastAutoSave()
+      }
+    }
+
     new AboutToCloseFilesEvent().raise(eventRaiser)
   }
 
@@ -320,17 +325,33 @@ class FileManager(workspace: AbstractWorkspaceScala,
   }
 
   def openFromURI(uri: URI, modelType: ModelType, shouldAutoInstallLibs: Boolean = false): Unit = {
-    loadModel(uri, openModelURI(uri)).foreach(m => openFromModel(m, uri, modelType, shouldAutoInstallLibs))
+    val newUri = ModelConfig.findAutoSave(uri.getPath) match {
+      case Some(path) =>
+        if (new OptionPane(parent, I18N.gui.get("file.autosave.recover"), I18N.gui.get("file.autosave.recover.message"),
+                           OptionPane.Options.YesNo, OptionPane.Icons.Info).getSelectedIndex == 0) {
+          path.toUri
+        } else {
+          uri
+        }
+
+      case _ => uri
+    }
+
+    loadModel(openModelURI(newUri)).foreach { m =>
+      openFromModel(m, uri, modelType, shouldAutoInstallLibs)
+
+      if (modelType == ModelType.Normal)
+        saveModel(false)
+    }
   }
 
   private def openModelURI(uri: URI): (OpenModel.Controller) => Option[Model] =
     ((fileController: OpenModel.Controller) => OpenModelFromURI(uri, fileController, modelLoader, modelConverter, Version))
 
   def openFromSource(uri: URI, modelSource: String, modelType: ModelType): Unit = {
-    loadModel(uri,
-      (fileController: OpenModel.Controller) =>
-        OpenModelFromSource(uri, modelSource, fileController, modelLoader, modelConverter, Version))
-          .foreach(m => openFromModel(m, uri, modelType))
+    loadModel((fileController: OpenModel.Controller) =>
+      OpenModelFromSource(uri, modelSource, fileController, modelLoader, modelConverter, Version))
+        .foreach(m => openFromModel(m, uri, modelType))
   }
 
   /**
@@ -364,7 +385,7 @@ class FileManager(workspace: AbstractWorkspaceScala,
     ReconfigureWorkspaceUI(linkParent, uri, modelType, model, workspace, shouldAutoInstallLibs, widgetSizesOption)
   }
 
-  private def loadModel(uri: URI, openModel: (OpenModel.Controller) => Option[Model]): Option[Model] = {
+  private def loadModel(openModel: (OpenModel.Controller) => Option[Model]): Option[Model] = {
     val result = ModalProgressTask.runForResultOnBackgroundThread(
       Hierarchy.getFrame(parent), I18N.gui.get("dialog.interface.loading.task"), () => {},
       Unit => openModel(controller))
