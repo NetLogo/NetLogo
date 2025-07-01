@@ -302,7 +302,7 @@ class FileManager(workspace: AbstractWorkspaceScala,
       if (Dialogs.userWantsToSaveFirst(I18N.gui.get("file.save.offer.thisModel"), parent)) {
         saveModel(false)
       } else {
-        dirtyMonitor.deleteLastAutoSave()
+        dirtyMonitor.discardNewAutoSaves()
       }
     }
 

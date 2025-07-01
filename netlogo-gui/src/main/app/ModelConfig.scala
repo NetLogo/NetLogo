@@ -47,8 +47,10 @@ object ModelConfig {
     val autosaves = getModelConfigPath(modelPath).resolve("autosaves")
 
     if (autosaves.toFile.exists) {
+      val lastModified = new File(modelPath).lastModified
+
       Files.list(autosaves).toScala(Seq).maxByOption(_.toFile.lastModified)
-           .filter(_.toFile.lastModified > new File(modelPath).lastModified)
+           .filter(_.toFile.lastModified > lastModified)
     } else {
       None
     }
@@ -68,6 +70,23 @@ object ModelConfig {
 
       case _ =>
         Paths.get(System.getProperty("java.io.tmpdir"), s"$name.${ModelReader.modelSuffix}")
+    }
+  }
+
+  // discard all autosave files for the current model that are newer than its most recent manual save (Isaac B 7/1/25)
+  def discardNewAutoSaves(modelPath: String): Unit = {
+    val autosaves = getModelConfigPath(modelPath).resolve("autosaves")
+
+    if (autosaves.toFile.exists) {
+      val lastModified = new File(modelPath).lastModified
+
+      Files.list(autosaves).toScala(Seq).filter(_.toFile.lastModified > lastModified).foreach { path =>
+        try {
+          path.toFile.delete()
+        } catch {
+          case e: IOException =>
+        }
+      }
     }
   }
 

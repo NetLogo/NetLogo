@@ -38,8 +38,10 @@ with SaveModel.Controller
     lastAutoSaveFile = file
   }
 
-  def deleteLastAutoSave(): Unit = {
+  def discardNewAutoSaves(): Unit = {
     resetAutoSave(None)
+
+    Option(modelTracker.getModelPath).foreach(ModelConfig.discardNewAutoSaves)
   }
 
   def modelDirty = _modelDirty && !loading
