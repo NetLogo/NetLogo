@@ -171,6 +171,8 @@ class PreferencesDialog(parent: Frame & ThemeSync, generalPreferences: Seq[Prefe
   override def syncTheme(): Unit = {
     getContentPane.setBackground(InterfaceColors.dialogBackground())
 
+    tabs.syncTheme()
+
     okButton.syncTheme()
     cancelButton.syncTheme()
 

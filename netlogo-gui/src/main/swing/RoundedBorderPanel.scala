@@ -7,13 +7,13 @@ import java.awt.{ Color, Graphics }
 import org.nlogo.theme.InterfaceColors
 
 trait RoundedBorderPanel extends Transparent with MouseUtils {
-  private var backgroundColor = Color.WHITE
-  private var backgroundHoverColor = Color.WHITE
-  private var backgroundPressedColor = Color.WHITE
-  private var borderColor = Color.BLACK
-  private var diameter = 0
-  private var hoverEnabled = false
-  private var pressedEnabled = false
+  protected var backgroundColor = Color.WHITE
+  protected var backgroundHoverColor = Color.WHITE
+  protected var backgroundPressedColor = Color.WHITE
+  protected var borderColor = Color.BLACK
+  protected var diameter = 0
+  protected var hoverEnabled = false
+  protected var pressedEnabled = false
 
   def setBackgroundColor(color: Color): Unit = {
     backgroundColor = color

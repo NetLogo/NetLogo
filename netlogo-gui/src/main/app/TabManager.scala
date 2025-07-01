@@ -73,6 +73,8 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
   addTabWithLabel(mainTabs, I18N.gui.get("tabs.info"), infoTab)
   addTabWithLabel(mainTabs, I18N.gui.get("tabs.code"), mainCodeTab)
 
+  mainTabs.setAddButtonVisible(true)
+
   movingTabs = false
 
   workspace.getFrame.addWindowFocusListener(new WindowFocusListener {
@@ -544,6 +546,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
         separateTabs.addTabWithLabel(mainTabs.getComponentAt(2), tabLabel)
 
         tabLabel.setTabbedPane(separateTabs)
+        tabLabel.resetMouseState()
       }
 
       separateTabsWindow.open()
@@ -560,6 +563,9 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
         separateTabs.setSelectedIndex(0)
         mainCodeTab.requestFocus
       }
+
+      mainTabs.setAddButtonVisible(false)
+      separateTabs.setAddButtonVisible(true)
     } else {
       val selected = separateTabs.getSelectedComponent
 
@@ -569,6 +575,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
         mainTabs.addTabWithLabel(separateTabs.getComponentAt(0), tabLabel)
 
         tabLabel.setTabbedPane(mainTabs)
+        tabLabel.resetMouseState()
       }
 
       separateTabsWindow.setVisible(false)
@@ -580,6 +587,9 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
         mainTabs.setSelectedComponent(selected)
 
       mainTabs.getSelectedComponent.requestFocus
+
+      separateTabs.setAddButtonVisible(false)
+      mainTabs.setAddButtonVisible(true)
     }
 
     movingTabs = false
@@ -771,11 +781,8 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
   }
 
   override def syncTheme(): Unit = {
-    (mainTabs.getComponents ++ separateTabs.getComponents).foreach(_ match {
-      case ts: ThemeSync => ts.syncTheme()
-      case _ =>
-    })
-
+    mainTabs.syncTheme()
+    separateTabs.syncTheme()
     separateTabsWindow.syncTheme()
   }
 

@@ -209,7 +209,7 @@ class InterfaceTab(workspace: GUIWorkspace,
     override def getPreferredSize: Dimension =
       new Dimension(super.getPreferredSize.width, widgetControls.getPreferredSize.height.
                                                   max(speedSlider.getPreferredSize.height).
-                                                  max(viewUpdatePanel.getPreferredSize.height) + 16)
+                                                  max(viewUpdatePanel.getPreferredSize.height) + 8)
 
     override def addControls(): Unit = {
       add(widgetControls)
