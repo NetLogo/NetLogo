@@ -5,6 +5,7 @@ package org.nlogo.app
 import java.net.URI
 import java.io.{ File, IOException }
 import java.nio.file.{ Files, Paths }
+import java.util.{ Timer, TimerTask }
 import javax.swing.JFrame
 
 import org.nlogo.api.{ AbstractModelLoader, Exceptions, ModelType, Version }
@@ -18,7 +19,6 @@ with AfterLoadEvent.Handler
 with WidgetAddedEvent.Handler
 with WidgetRemovedEvent.Handler
 with DirtyEvent.Handler
-with AboutToQuitEvent.Handler
 with ModelSavedEvent.Handler
 with ExternalFileSavedEvent.Handler
 with SaveModel.Controller
@@ -28,24 +28,28 @@ with SaveModel.Controller
   private var _modelDirty = false
   private var lastAutoSaveFile: Option[File] = None
 
-  private def resetAutoSave(file: Option[File]): Unit = {
-    try {
-      lastAutoSaveFile.foreach(_.delete())
-    } catch {
-      case e: IOException =>
-    }
-
-    lastAutoSaveFile = file
-  }
+  private var dirtyTimer = new Timer
 
   def discardNewAutoSaves(): Unit = {
-    resetAutoSave(None)
-
     Option(modelTracker.getModelPath).foreach(ModelConfig.discardNewAutoSaves)
   }
 
   def modelDirty = _modelDirty && !loading
   private def setDirty(dirty: Boolean, path: Option[String] = None): Unit = {
+    if (dirty && !loading) {
+      dirtyTimer.cancel()
+      dirtyTimer.purge()
+
+      dirtyTimer = new Timer
+
+      // auto save if no dirty event is received for a while (Isaac B 7/1/25)
+      dirtyTimer.schedule(new TimerTask {
+        override def run(): Unit = {
+          doAutoSave()
+        }
+      }, 5000)
+    }
+
     if (!path.isDefined && dirty != _modelDirty && !loading) {
       _modelDirty = dirty
       // on a Mac, this will make a gray dot appear in the red close button in the frame's title bar
@@ -57,32 +61,34 @@ with SaveModel.Controller
     App.app.setWindowTitles()
   }
 
-  def handle(e: AboutToQuitEvent): Unit = {
-    Option(modelTracker.getModelPath).foreach(ModelConfig.pruneAutoSaves)
-  }
-
-  private var lastTimeAutoSaved = 0L
   private def doAutoSave(): Unit = {
-    // autoSave when we get a dirty event but no more than once a minute I have no idea if this is a
-    // good number or even the right ballpark.  feel free to change it. ev 8/22/06
-    if (!modelDirty || (System.currentTimeMillis() - lastTimeAutoSaved) < 60000)
-      return
-    try {
-      lastTimeAutoSaved = System.currentTimeMillis()
-      SaveModel(modelSaver.currentModel, modelLoader, this, TempFileModelTracker, Version).foreach { f =>
-        f().foreach { savedUri =>
-          if (System.getProperty("os.name").startsWith("Windows"))
-            Files.setAttribute(Paths.get(savedUri), "dos:hidden", true)
+    if (modelDirty) {
+      try {
+        SaveModel(modelSaver.currentModel, modelLoader, this, TempFileModelTracker, Version).foreach { f =>
+          f().foreach { savedUri =>
+            if (System.getProperty("os.name").startsWith("Windows"))
+              Files.setAttribute(Paths.get(savedUri), "dos:hidden", true)
 
-          resetAutoSave(Option(new File(savedUri.getPath)))
+            // if the model is new, we can't keep track of old autosaves as easily,
+            // so overwrite the previous autosave file instead of adding a new file (Isaac B 7/1/25)
+            if (modelTracker.getModelType == ModelType.New) {
+              try {
+                lastAutoSaveFile.foreach(_.delete())
+              } catch {
+                case e: IOException =>
+              }
+            }
+
+            lastAutoSaveFile = Option(new File(savedUri.getPath))
+          }
         }
+      } catch {
+        case ex: java.io.IOException =>
+          // not sure what the right thing to do here is we probably
+          // don't want to be telling the user all the time that they
+          // the auto save failed. ev 8/22/06
+          Exceptions.ignore(ex)
       }
-    } catch {
-      case ex: java.io.IOException =>
-        // not sure what the right thing to do here is we probably
-        // don't want to be telling the user all the time that they
-        // the auto save failed. ev 8/22/06
-        Exceptions.ignore(ex)
     }
   }
 
@@ -97,23 +103,19 @@ with SaveModel.Controller
   def handle(e: AfterLoadEvent): Unit = {
     setDirty(false)
     loading = false
-    resetAutoSave(None)
   }
 
   /// how we get dirty
   def handle(e: DirtyEvent): Unit = {
     setDirty(true, path = e.path)
-    doAutoSave()
   }
 
   def handle(e: WidgetAddedEvent): Unit = {
     setDirty(true)
-    doAutoSave()
   }
 
   def handle(e: WidgetRemovedEvent): Unit = {
     setDirty(true)
-    doAutoSave()
   }
 
   object TempFileModelTracker extends ModelTracker {

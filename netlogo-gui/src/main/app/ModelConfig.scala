@@ -90,15 +90,22 @@ object ModelConfig {
     }
   }
 
-  def pruneAutoSaves(modelPath: String): Unit = {
-    val autosaves = getModelConfigPath(modelPath).resolve("autosaves")
+  // for each tracked model, get rid of any autosaves that are older than 10 versions (Isaac B 7/1/25)
+  def pruneAutoSaves(): Unit = {
+    val configDir = Paths.get(System.getProperty("user.home"), ".nlogo", "modelConfigs")
 
-    if (autosaves.toFile.exists) {
-      Files.list(autosaves).toScala(Seq).sortBy(-_.toFile.lastModified).drop(10).foreach { path =>
-        try {
-          path.toFile.delete()
-        } catch {
-          case e: IOException =>
+    if (configDir.toFile.exists) {
+      Files.list(configDir).toScala(Seq).foreach { configPath =>
+        val autosaves = configPath.resolve("autosaves")
+
+        if (autosaves.toFile.exists) {
+          Files.list(autosaves).toScala(Seq).sortBy(-_.toFile.lastModified).drop(10).foreach { path =>
+            try {
+              path.toFile.delete()
+            } catch {
+              case e: IOException =>
+            }
+          }
         }
       }
     }
