@@ -10,8 +10,10 @@ import scala.util.hashing.MurmurHash3
 
 // helpers for cross-session model configuration settings (Isaac B 4/21/25)
 object ModelConfig {
-  def getModelConfigPath(modelPath: String): Path =
-    Paths.get(System.getProperty("user.home"), ".nlogo", "modelConfigs", MurmurHash3.stringHash(modelPath).toString)
+  def getModelConfigPath(modelPath: String): Path = {
+    Paths.get(System.getProperty("user.home"), ".nlogo", "modelConfigs",
+              (MurmurHash3.stringHash(modelPath) & Int.MaxValue).toString)
+  }
 
   def getLastModified(modelPath: String): Option[String] = {
     val file = getModelConfigPath(modelPath).resolve("lastModified.txt").toFile
