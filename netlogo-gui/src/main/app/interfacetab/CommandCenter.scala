@@ -26,7 +26,7 @@ class CommandCenter(workspace: AbstractWorkspace, showToggle: Boolean) extends J
 
   // true = echo commands to output
   val commandLine = new CommandLine(this, true, 12, workspace)
-  private val prompt = new LinePrompt(commandLine)
+  private val prompt = new LinePrompt(commandLine, true)
   private val northPanel = new JPanel(new GridBagLayout)
   private val southPanel = new JPanel
   val output = OutputArea.withNextFocus(commandLine)

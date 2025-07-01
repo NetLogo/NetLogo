@@ -29,7 +29,7 @@ class HistoryPrompt(commandLine: CommandLine) extends JButton {
           doPopupMenu()}})
   lazy val isMac = System.getProperty("os.name").startsWith("Mac")
 
-  override def getInsets = new Insets(0, 4, 0, 4)  // ad hoc - ST 11/24/04
+  override def getInsets = new Insets(4, 4, 4, 4)  // ad hoc - ST 11/24/04
 
   private def doPopupMenu(): Unit = {
     val popMenu = new PopupMenu(I18N.gui.get("tabs.run.commandcenter.history"))
@@ -68,5 +68,4 @@ class HistoryPrompt(commandLine: CommandLine) extends JButton {
     }
     popMenu.show(this, getWidth / 2, getHeight / 2)
   }
-
 }

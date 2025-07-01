@@ -7,29 +7,15 @@ import java.awt.event.{ ActionEvent, MouseAdapter, MouseEvent }
 import javax.swing.{ AbstractAction, JLabel }
 
 import org.nlogo.core.{ AgentKind, I18N }
-import org.nlogo.swing.{ MenuItem, PopupMenu }
+import org.nlogo.swing.{ MenuItem, MouseUtils, PopupMenu }
 import org.nlogo.theme.InterfaceColors
 
-class LinePrompt(commandLine: CommandLine) extends JLabel {
+class LinePrompt(commandLine: CommandLine, switchingEnabled: Boolean) extends JLabel with MouseUtils {
   setText(getPrompt)
 
-  private var mouseInBounds = false
-
   addMouseListener(new MouseAdapter {
-    override def mouseEntered(e: MouseEvent): Unit = {
-      mouseInBounds = true
-
-      repaint()
-    }
-
-    override def mouseExited(e: MouseEvent): Unit = {
-      mouseInBounds = false
-
-      repaint()
-    }
-
     override def mousePressed(e: MouseEvent): Unit =  {
-      if (isEnabled) {
+      if (isEnabled && switchingEnabled) {
         val popMenu = new PopupMenu("Ask who?")
 
         def addItem(name: String, clazz: AgentKind): Unit = {
@@ -64,10 +50,11 @@ class LinePrompt(commandLine: CommandLine) extends JLabel {
   override def paintComponent(g: Graphics): Unit = {
     setText(getPrompt)
 
-    if (mouseInBounds)
+    if (isHover && switchingEnabled) {
       setForeground(Color.BLUE)
-    else
+    } else {
       setForeground(InterfaceColors.commandCenterText())
+    }
 
     super.paintComponent(g)
   }

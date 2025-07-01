@@ -2,9 +2,10 @@
 
 package org.nlogo.app.tools
 
-import java.awt.{ BorderLayout, Dimension, GridBagConstraints, GridBagLayout, Insets }
+import java.awt.{ BorderLayout, Dimension }
 import java.util.{ List => JList }
-import javax.swing.{ JDialog, JPanel, ScrollPaneConstants }
+import javax.swing.{ Box, BoxLayout, JDialog, JPanel, ScrollPaneConstants }
+import javax.swing.border.{ CompoundBorder, EmptyBorder, MatteBorder }
 
 import org.nlogo.agent.{ Agent, Link, Patch, Turtle }
 import org.nlogo.app.common.{ CommandLine, HistoryPrompt, LinePrompt }
@@ -64,12 +65,9 @@ abstract class AgentMonitor(val workspace: GUIWorkspace, window: JDialog)
     }
   }
 
-  private val separator = new JPanel with ThemeSync {
-    override def getPreferredSize: Dimension =
-      new Dimension(super.getPreferredSize.width, 1)
-
+  private val separator = new MatteBorder(1, 0, 0, 0, InterfaceColors.agentMonitorSeparator()) with ThemeSync {
     override def syncTheme(): Unit = {
-      setBackground(InterfaceColors.agentMonitorSeparator())
+      color = InterfaceColors.agentMonitorSeparator()
     }
   }
 
@@ -88,40 +86,17 @@ abstract class AgentMonitor(val workspace: GUIWorkspace, window: JDialog)
       commandLine.setEnabled(agent != null && agent.id != -1)
       historyPrompt.setEnabled(agent != null && agent.id != -1)
       commandLine.agentKind(agentKind)
-      prompt.setEnabled(false)
 
       // this panel contains the separator bar and command line (Isaac B 5/21/25)
-      add(new JPanel(new GridBagLayout) with Transparent {
-        val c = new GridBagConstraints
+      add(new JPanel with Transparent {
+        setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
+        setBorder(new CompoundBorder(separator, new EmptyBorder(6, 6, 6, 6)))
 
-        c.gridy = 0
-        c.gridwidth = 3
-        c.weightx = 1
-        c.fill = GridBagConstraints.HORIZONTAL
-
-        add(separator, c)
-
-        c.gridy = 1
-        c.gridwidth = 1
-        c.weightx = 0
-        c.fill = GridBagConstraints.NONE
-        c.insets = new Insets(6, 6, 6, 6)
-
-        add(prompt, c)
-
-        c.weightx = 1
-        c.fill = GridBagConstraints.BOTH
-        c.insets = new Insets(6, 0, 6, 0)
-
-        add(commandLine, c)
-
-        c.weightx = 0
-        c.weighty = 1
-
-        c.fill = GridBagConstraints.VERTICAL
-        c.insets = new Insets(6, 0, 6, 6)
-
-        add(historyPrompt, c)
+        add(prompt)
+        add(Box.createHorizontalStrut(6))
+        add(commandLine)
+        add(Box.createHorizontalStrut(6))
+        add(historyPrompt)
       }, BorderLayout.SOUTH)
 
       Some(panel)
@@ -194,7 +169,7 @@ abstract class AgentMonitor(val workspace: GUIWorkspace, window: JDialog)
     commandLine.syncTheme()
   }
 
-  private class AgentLinePrompt(commandLine: CommandLine) extends LinePrompt(commandLine) {
+  private class AgentLinePrompt(commandLine: CommandLine) extends LinePrompt(commandLine, false) {
     override def getPrompt: String = {
       agent match {
         case _: Turtle | _: Patch | _: Link => agent.toString + ">"
