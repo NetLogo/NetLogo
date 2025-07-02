@@ -76,6 +76,3 @@
 [submodule "extensions/sr"]
 	path = extensions/sr
 	url = https://github.com/NetLogo/SimpleR-Extension
-[submodule "extensions/bspace"]
-	path = extensions/bspace
-	url = https://github.com/NetLogo/BehaviorSpace-Extension

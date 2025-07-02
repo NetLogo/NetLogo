@@ -76,9 +76,7 @@ object Docs {
     },
     // expects the documentation file at extensions/<name>/README.md.mustache (Isaac B 6/28/25)
     manuallyDocumentedExtensions := {
-      Seq(
-        "bspace"
-      )
+      Seq()
     },
     extensionDocs := {
       extensionDocsGen.value.generateExtensionDocs(
