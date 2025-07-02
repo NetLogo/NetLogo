@@ -20,6 +20,7 @@ import javax.swing.{ JDialog, WindowConstants }
 
 import netscape.javascript.JSObject
 
+import org.nlogo.analytics.Analytics
 import org.nlogo.api.{ Color => NLColor }
 import org.nlogo.awt.EventQueue
 import org.nlogo.core.{ Color => CoreColor, I18N, LogoList }
@@ -171,6 +172,13 @@ class JFXColorPicker( frame: Frame, modal: Boolean, config: JFXCPConfig, initial
       ))
     })
 
+  }
+
+  override def setVisible(visible: Boolean): Unit = {
+    if (visible)
+      Analytics.colorPickerOpen()
+
+    super.setVisible(visible)
   }
 
   private class Bridge {

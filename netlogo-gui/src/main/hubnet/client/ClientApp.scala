@@ -3,14 +3,16 @@
 package org.nlogo.hubnet.client
 
 import java.awt.BorderLayout
-import javax.swing.{WindowConstants, JFrame}
+import javax.swing.{ JFrame, WindowConstants }
+
+import org.nlogo.analytics.Analytics
 import org.nlogo.api.CompilerServices
+import org.nlogo.awt.{ EventQueue, Hierarchy, Images, Positioning }
 import org.nlogo.core.I18N
-import org.nlogo.window.{ ClientAppInterface, DefaultEditorFactory }
+import org.nlogo.hubnet.connection.Ports
 import org.nlogo.swing.{ Implicits, ModalProgress, ModalProgressTask, OptionPane, SetSystemLookAndFeel }, Implicits._
 import org.nlogo.theme.InterfaceColors
-import org.nlogo.awt.{ Hierarchy, Images, Positioning, EventQueue }
-import org.nlogo.hubnet.connection.Ports
+import org.nlogo.window.{ ClientAppInterface, DefaultEditorFactory }
 
 /**
  * The HubNet client.
@@ -187,5 +189,12 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
     getContentPane.setBackground(InterfaceColors.dialogBackground())
 
     clientPanel.syncTheme()
+  }
+
+  override def setVisible(visible: Boolean): Unit = {
+    if (visible)
+      Analytics.hubNetClientOpen()
+
+    super.setVisible(visible)
   }
 }

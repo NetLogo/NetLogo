@@ -9,6 +9,7 @@ import javax.swing.{ AbstractAction, JDialog, LayoutFocusTraversalPolicy }
 import scala.jdk.CollectionConverters.SeqHasAsJava
 
 import org.nlogo.agent.{ Agent, Link, Observer, Turtle }
+import org.nlogo.analytics.Analytics
 import org.nlogo.core.{ AgentKind, I18N }
 import org.nlogo.swing.{ NetLogoIcon, Utils => SwingUtils }
 import org.nlogo.theme.ThemeSync
@@ -127,6 +128,19 @@ class AgentMonitorWindow(val agentKind: AgentKind, _agent: Agent, radius: Double
   def handle(e: WindowEvents.PatchesCreatedEvent): Unit = {
     if(!agent.isInstanceOf[Observer])
       close()
+  }
+
+  override def setVisible(visible: Boolean): Unit = {
+    if (visible) {
+      monitor.agentKind match {
+        case AgentKind.Observer => Analytics.globalsMonitorOpen()
+        case AgentKind.Turtle => Analytics.turtleMonitorOpen()
+        case AgentKind.Patch => Analytics.patchMonitorOpen()
+        case AgentKind.Link => Analytics.linkMonitorOpen()
+      }
+    }
+
+    super.setVisible(visible)
   }
 
   class ObserverMonitor(window: JDialog)

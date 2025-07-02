@@ -6,6 +6,7 @@ import java.awt.{ BasicStroke, Component, Graphics, GridBagConstraints, GridBagL
 import java.awt.event.{ ActionEvent, WindowAdapter, WindowEvent }
 import javax.swing.{ AbstractAction, Icon, JDialog, JLabel, WindowConstants }
 
+import org.nlogo.analytics.Analytics
 import org.nlogo.core.{ I18N, Shape, ShapeList }
 import org.nlogo.shape.{ LinkLine, LinkShape, VectorShape }
 import org.nlogo.swing.{ Button, ButtonPanel, ComboBox, DialogButton, LabeledComponent, OptionPane, TextField, Utils }
@@ -180,6 +181,13 @@ class LinkEditorDialog(parent: JDialog, list: DrawableList[LinkShape], shape: Li
     }
 
     currentShape
+  }
+
+  override def setVisible(visible: Boolean): Unit = {
+    if (visible)
+      Analytics.linkShapeEdit()
+
+    super.setVisible(visible)
   }
 
   private class DashComboBox(items: List[Array[Float]]) extends ComboBox[JLabel] {

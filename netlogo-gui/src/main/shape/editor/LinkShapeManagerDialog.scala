@@ -4,6 +4,7 @@ package org.nlogo.shape.editor
 
 import java.awt.Frame
 
+import org.nlogo.analytics.Analytics
 import org.nlogo.api.{ AbstractModelLoader, World }
 import org.nlogo.core.{ AgentKind, Model, Shape }, Shape.{ LinkShape => CoreLinkShape }
 import org.nlogo.shape.{ LinkShape, ShapeConverter }
@@ -45,5 +46,12 @@ class LinkShapeManagerDialog(parentFrame: Frame, world: World, modelLoader: Abst
       newShape.name = ""
       new LinkEditorDialog(this, shapesList, newShape)
     }
+  }
+
+  override def setVisible(visible: Boolean): Unit = {
+    if (visible)
+      Analytics.linkShapeEditorOpen()
+
+    super.setVisible(visible)
   }
 }

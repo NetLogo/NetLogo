@@ -9,6 +9,7 @@ import javax.swing.{ AbstractAction, Action, Box, BoxLayout, ButtonGroup, JDialo
                      WindowConstants }
 import javax.swing.undo.{ AbstractUndoableEdit, UndoableEdit }
 
+import org.nlogo.analytics.Analytics
 import org.nlogo.api.{ Color => NLColor }
 import org.nlogo.awt.ColumnLayout
 import org.nlogo.core.{ I18N, Shape }
@@ -563,6 +564,13 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
       override def getInsets: Insets =
         new Insets(3, 3, 3, 3)
     }
+  }
+
+  override def setVisible(visible: Boolean): Unit = {
+    if (visible)
+      Analytics.turtleShapeEdit()
+
+    super.setVisible(visible)
   }
 
   private class ColorPanel(index: Int) extends JPanel(new FlowLayout(FlowLayout.LEFT, 6, 0)) with Transparent

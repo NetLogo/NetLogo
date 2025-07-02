@@ -5,6 +5,7 @@ package org.nlogo.lab.gui
 import java.awt.{ GridBagConstraints, Insets }
 import javax.swing.{ JLabel, JPanel }
 
+import org.nlogo.analytics.Analytics
 import org.nlogo.api.CompilerServices
 import org.nlogo.core.I18N
 import org.nlogo.editor.Colorizer
@@ -262,5 +263,12 @@ class ProtocolEditPanel(target: ProtocolEditable, compiler: CompilerServices, co
 
   override def requestFocus(): Unit = {
     name.requestFocus()
+  }
+
+  override def setVisible(visible: Boolean): Unit = {
+    if (visible)
+      Analytics.bspaceOpen()
+
+    super.setVisible(visible)
   }
 }

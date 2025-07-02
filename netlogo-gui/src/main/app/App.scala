@@ -5,6 +5,7 @@ package org.nlogo.app
 import java.awt.{ Dimension, EventQueue, Frame, GraphicsEnvironment, KeyboardFocusManager, Toolkit, BorderLayout}
 import java.awt.event.ActionEvent
 import java.io.File
+import java.lang.Runtime
 import javax.swing.{ JFrame, JMenu }
 
 import scala.concurrent.ExecutionContext
@@ -78,7 +79,13 @@ object App {
     }
 
     try {
-      Analytics.appStart()
+      Runtime.getRuntime.addShutdownHook(new Thread {
+        override def run(): Unit = {
+          Analytics.appExit()
+        }
+      })
+
+      Analytics.appStart(Version.is3D)
 
       val scalePref = NetLogoPreferences.getDouble("uiScale", 1.0)
 
