@@ -11,6 +11,7 @@ import org.nlogo.nvm.{ CompilerFlags, CompilerResults, ImportHandler, Presentati
 import org.nlogo.util.PathUtils
 
 import scala.collection.immutable.ListMap
+import scala.util.Try
 
 // This is intended to be called from Java as well as Scala, so @throws declarations are included.
 // No other classes in this package are public. - ST 2/20/08, 4/9/08, 1/21/09
@@ -169,6 +170,14 @@ class Compiler(dialect: Dialect) extends PresentationCompilerInterface {
   def findProcedurePositions(source: String): Map[String, ProcedureSyntax] =
     frontEnd.findProcedurePositions(source, Some(dialect))
 
+  def findAllImportedFiles(source: String, compilationEnvironment: CompilationEnvironment): Seq[String] = {
+    val directSourceFiles = frontEnd.findImports(source).map(_.toLowerCase + ".nls")
+    val resolvedDirectSourceFiles = directSourceFiles.map(compilationEnvironment.resolvePath)
+    val directSources = resolvedDirectSourceFiles.flatMap(x => Try(compilationEnvironment.getSource(x)).toOption)
+
+    directSourceFiles ++ directSources.flatMap(x => findAllImportedFiles(x, compilationEnvironment))
+  }
+
   // used for includes menu
   @throws(classOf[CompilerException])
   def findIncludes(sourceFileName: String, source: String,
@@ -190,7 +199,7 @@ class Compiler(dialect: Dialect) extends PresentationCompilerInterface {
       } else
         Some((includes zip includes.map(i => PathUtils.standardize(compilationEnvironment.resolvePath(i)))).toMap)
 
-    val imports = frontEnd.findImports(source).map(_.toLowerCase + ".nls")
+    val imports = findAllImportedFiles(source, compilationEnvironment)
     val importsMap = Some((imports zip imports.map(compilationEnvironment.resolvePath)).toMap)
 
     Some(includesMap.getOrElse(Map.empty[String, String]) ++ importsMap.getOrElse(Map.empty[String, String]))
