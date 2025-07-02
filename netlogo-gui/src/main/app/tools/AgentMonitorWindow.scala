@@ -10,7 +10,7 @@ import scala.jdk.CollectionConverters.SeqHasAsJava
 
 import org.nlogo.agent.{ Agent, Link, Observer, Turtle }
 import org.nlogo.core.{ AgentKind, I18N }
-import org.nlogo.swing.{ Utils => SwingUtils }
+import org.nlogo.swing.{ NetLogoIcon, Utils => SwingUtils }
 import org.nlogo.theme.ThemeSync
 import org.nlogo.window.{ Event, Events => WindowEvents }
 
@@ -19,7 +19,8 @@ class AgentMonitorWindow(val agentKind: AgentKind, _agent: Agent, radius: Double
   // to force the window to stay above the application window replace the following
   // line with 'extends JDialog(parent)' AAB - Feb 02 2021
   extends JDialog with Event.LinkChild with WindowEvents.PeriodicUpdateEvent.Handler
-  with WindowEvents.PatchesCreatedEvent.Handler with WindowEvents.LoadBeginEvent.Handler with ThemeSync {
+  with WindowEvents.PatchesCreatedEvent.Handler with WindowEvents.LoadBeginEvent.Handler with ThemeSync
+  with NetLogoIcon {
 
   private val monitor = {
     agentKind match {
