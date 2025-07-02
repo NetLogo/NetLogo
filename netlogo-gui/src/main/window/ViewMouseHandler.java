@@ -134,7 +134,8 @@ public class ViewMouseHandler
     double xOff = settings.viewOffsetX();
     double dx = ((double) x) / rect.width;
     double xcor = (dx * settings.viewWidth()) + (world.minPxcor() - 0.5);
-    xcor += xOff;
+
+    xcor = Math.min(Math.max(xcor + xOff, world.minPxcor() - 0.4999999), world.maxPxcor() + 0.4999999);
 
     try {
       xcor = world.wrapX(xcor);
@@ -155,7 +156,8 @@ public class ViewMouseHandler
     double yOff = settings.viewOffsetY();
     double dy = ((double) y) / rect.height;
     double ycor = world.maxPycor() + 0.4999999 - (settings.viewHeight() * dy);
-    ycor += yOff;
+
+    ycor = Math.min(Math.max(ycor + yOff, world.minPycor() - 0.5), world.maxPycor() + 0.5);
 
     try {
       ycor = world.wrapY(ycor);
