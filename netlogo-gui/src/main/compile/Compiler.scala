@@ -169,6 +169,14 @@ class Compiler(dialect: Dialect) extends PresentationCompilerInterface {
   def findProcedurePositions(source: String): Map[String, ProcedureSyntax] =
     frontEnd.findProcedurePositions(source, Some(dialect))
 
+  def findAllImportedFiles(source: String, compilationEnvironment: CompilationEnvironment): Seq[String] = {
+    val directSourceFiles = frontEnd.findImports(source).map(_.toLowerCase + ".nls")
+    val resolvedDirectSourceFiles = directSourceFiles.map(compilationEnvironment.resolvePath)
+    val directSources = resolvedDirectSourceFiles.map(compilationEnvironment.getSource)
+
+    directSourceFiles ++ directSources.flatMap(x => findAllImportedFiles(x, compilationEnvironment))
+  }
+
   // used for includes menu
   @throws(classOf[CompilerException])
   def findIncludes(sourceFileName: String, source: String,
@@ -190,7 +198,7 @@ class Compiler(dialect: Dialect) extends PresentationCompilerInterface {
       } else
         Some((includes zip includes.map(compilationEnvironment.resolvePath)).toMap)
 
-    val imports = frontEnd.findImports(source).map(_.toLowerCase + ".nls")
+    val imports = findAllImportedFiles(source, compilationEnvironment)
     val importsMap = Some((imports zip imports.map(compilationEnvironment.resolvePath)).toMap)
 
     Some(includesMap.getOrElse(Map.empty[String, String]) ++ importsMap.getOrElse(Map.empty[String, String]))
