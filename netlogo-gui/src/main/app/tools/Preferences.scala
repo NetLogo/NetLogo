@@ -8,6 +8,7 @@ import java.io.File
 import java.util.Locale
 import javax.swing.{ AbstractAction, JComponent, JFileChooser, JLabel, JPanel }
 
+import org.nlogo.analytics.Analytics
 import org.nlogo.app.common.TabsInterface
 import org.nlogo.core.{ I18N, NetLogoPreferences }
 import org.nlogo.swing.{ Button, CheckBox, ComboBox, TextField, Transparent }
@@ -347,6 +348,29 @@ object Preferences {
 
     def save(): Unit = {
       NetLogoPreferences.put(i18nKey, checkBox.isSelected.toString)
+    }
+  }
+
+  object SendAnalytics extends Preference {
+    val i18nKey = "sendAnalytics"
+    val requirement = None
+
+    private val checkBox = new CheckBox("", (selected) => {
+      Analytics.refreshPreference()
+    })
+
+    override def component: CheckBox = checkBox
+
+    def load(): Unit = {
+      val value = NetLogoPreferences.getBoolean(i18nKey, true)
+
+      checkBox.setSelected(value)
+
+      Analytics.refreshPreference()
+    }
+
+    def save(): Unit = {
+      NetLogoPreferences.putBoolean(i18nKey, checkBox.isSelected)
     }
   }
 }
