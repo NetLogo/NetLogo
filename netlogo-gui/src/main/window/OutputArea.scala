@@ -70,6 +70,14 @@ class OutputArea(val text: TextArea) extends JPanel with RoundedBorderPanel with
 
   def valueText = text.getText
 
+  def getTextForExport: String = {
+    if (addCarriageReturn) {
+      text.getText + "\n"
+    } else {
+      text.getText
+    }
+  }
+
   def fontSize: Int =
     text.getFont.getSize
 
