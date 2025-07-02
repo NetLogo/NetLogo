@@ -181,13 +181,13 @@ abstract class GUIWorkspace(world: World, kioskLevel: GUIWorkspace.KioskLevel, f
   override def importWorld(filename: String): Unit = {
     super.importWorld(filename)
 
-    new TickStateChangeEvent(true).raiseLater(this)
+    new TickStateChangeEvent(world.tickCounter.ticks > -1).raiseLater(this)
   }
 
   override def importWorld(reader: Reader): Unit = {
     super.importWorld(reader)
 
-    new TickStateChangeEvent(true).raiseLater(this)
+    new TickStateChangeEvent(world.tickCounter.ticks > -1).raiseLater(this)
   }
 
   override def importDrawing(is: InputStream, mimeType: Option[String]): Unit =
