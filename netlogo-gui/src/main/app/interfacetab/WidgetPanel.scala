@@ -7,6 +7,7 @@ import java.awt.event.{ ActionEvent, FocusEvent, FocusAdapter, InputEvent, KeyAd
                         MouseAdapter, MouseEvent, MouseListener, MouseMotionAdapter, MouseMotionListener }
 import javax.swing.{ AbstractAction, JComponent, JLayeredPane, SwingUtilities }
 
+import org.nlogo.analytics.Analytics
 import org.nlogo.app.common.EditorFactory
 import org.nlogo.awt.{ Fonts => NlogoFonts, Mouse => NlogoMouse }
 import org.nlogo.core.{ I18N, Button => CoreButton, Chooser => CoreChooser, InputBox => CoreInputBox,
@@ -1385,6 +1386,8 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
       setVisible(true)
       revalidate()
+
+      Analytics.loadOldSizeWidgets(getWrappers.count(_.widget.oldSize))
     }
   }
 

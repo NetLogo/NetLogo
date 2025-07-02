@@ -6,6 +6,7 @@ import java.awt.{ BorderLayout, Component, Dimension, GridBagConstraints, GridBa
 import java.awt.event.{ ActionEvent, WindowAdapter, WindowEvent }
 import javax.swing.{ AbstractAction, JFrame, ScrollPaneConstants }
 
+import org.nlogo.analytics.Analytics
 import org.nlogo.api.ModelType
 import org.nlogo.core.{ I18N, Widget => CoreWidget }
 import org.nlogo.swing.{ Menu, MenuBar, NetLogoIcon, OptionPane, ScrollPane, ToolBar }
@@ -114,6 +115,13 @@ class HubNetClientEditor(workspace: GUIWorkspace,
     toolbar.setBackground(InterfaceColors.toolbarBackground())
 
     repaint()
+  }
+
+  override def setVisible(visible: Boolean): Unit = {
+    if (visible)
+      Analytics.hubNetEditorOpen()
+
+    super.setVisible(visible)
   }
 
   private class HubNetToolsMenu extends Menu(I18N.gui.get("menu.tools"), Menu.model) {

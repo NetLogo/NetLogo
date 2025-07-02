@@ -6,6 +6,7 @@ import java.awt.{ Dialog, Dimension, GridBagConstraints, GridBagLayout, Insets, 
 import javax.swing.{ JDialog, JPanel, ScrollPaneConstants, Timer, WindowConstants }
 import javax.swing.border.{ EmptyBorder, LineBorder }
 
+import org.nlogo.analytics.Analytics
 import org.nlogo.api.{ Dump, ExportPlotWarningAction, LabProtocol, PeriodicUpdateDelay }
 import org.nlogo.awt.Positioning
 import org.nlogo.core.I18N
@@ -132,6 +133,8 @@ private [gui] class ProgressDialog(parent: Window, supervisor: Supervisor, color
     pack()
 
     Positioning.center(this, parent)
+
+    Analytics.bspaceRun()
   }
 
   override def getMinimumSize = getPreferredSize

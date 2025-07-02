@@ -52,7 +52,7 @@ object Depend {
       "agent" -> List("api", "log"),
       "analytics" -> List("core"),
       "api" -> List("core", "core/model", "core/prim", "util"),
-      "app" -> List("analytics", "app/codetab", "app/common", "app/infotab", "app/interfacetab", "app/tools", "headless", "log"),
+      "app" -> List("app/codetab", "app/common", "app/infotab", "app/interfacetab", "app/tools", "headless", "log"),
       "app/codetab" -> List("app/common"),
       "app/infotab" -> List("app/common"),
       "app/interfacetab" -> List("app/common", "app/tools", "log"),
@@ -85,7 +85,7 @@ object Depend {
       "hubnet/mirroring" -> List("api"),
       "hubnet/protocol" -> List("api"),
       "hubnet/server" -> List("workspace", "hubnet/connection", "hubnet/mirroring", "hubnet/protocol", "fileformat"),
-      "hubnet/server/gui" -> List("hubnet/server","window"),
+      "hubnet/server/gui" -> List("hubnet/server", "window"),
       "ide" -> List("api", "window"),
       "job" -> List("nvm"),
       "lab" -> List("nvm"),
@@ -110,12 +110,12 @@ object Depend {
       "sdm" -> List("api", "fileformat"),
       "sdm/gui" -> List("sdm", "window"),
       "shape" -> List("api", "theme"),
-      "shape/editor" -> List("shape", "swing"),
+      "shape/editor" -> List("analytics", "shape", "swing"),
       "swing" -> List("awt", "core", "theme"),
       "util" -> Nil,
       "theme" -> List("api"),
-      "window" -> List("core/model", "editor", "fileformat", "log", "shape", "swing", "workspace"),
-      "workspace" -> List("fileformat", "nvm", "plot"))
+      "window" -> List("analytics", "core/model", "editor", "fileformat", "log", "shape", "swing", "workspace"),
+      "workspace" -> List("analytics", "fileformat", "nvm", "plot"))
     case class Package(val dir: String, var depends: Set[Package]) {
       def ancestors:Set[Package] = depends ++ depends.flatMap(_.ancestors)
     }

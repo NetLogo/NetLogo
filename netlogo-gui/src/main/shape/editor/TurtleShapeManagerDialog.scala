@@ -4,6 +4,7 @@ package org.nlogo.shape.editor
 
 import java.awt.Frame
 
+import org.nlogo.analytics.Analytics
 import org.nlogo.api.{ AbstractModelLoader, World }
 import org.nlogo.core.{ AgentKind, I18N, Model, Shape, ShapeList },
   Shape.{ VectorShape => CoreVectorShape }, ShapeList.isDefaultShapeName
@@ -57,5 +58,12 @@ class TurtleShapeManagerDialog(parentFrame: Frame,
   private def importFromLibrary(): Unit = {
     importDialog = Some(new ImportDialog(this, this, drawableListFromModelShapes(
       (Model.defaultTurtleShapes ++ Model.libraryTurtleShapes).map(baseVectorShapeToVectorShape))))
+  }
+
+  override def setVisible(visible: Boolean): Unit = {
+    if (visible)
+      Analytics.turtleShapeEditorOpen()
+
+    super.setVisible(visible)
   }
 }

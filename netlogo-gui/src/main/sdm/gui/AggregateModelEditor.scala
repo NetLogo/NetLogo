@@ -12,6 +12,7 @@ import javax.swing.plaf.basic.BasicMenuUI
 import org.jhotdraw.framework.{ DrawingEditor, DrawingView, Figure, Tool, ViewChangeListener }
 import org.jhotdraw.util.{ Command, CommandMenu, RedoCommand, UndoCommand, UndoManager }
 
+import org.nlogo.analytics.Analytics
 import org.nlogo.api.{ CompilerServices, SourceOwner }
 import org.nlogo.awt.EventQueue
 import org.nlogo.core.{ CompilerException, I18N }
@@ -136,6 +137,13 @@ class AggregateModelEditor(
   }
 
   syncTheme()
+
+  override def setVisible(visible: Boolean): Unit = {
+    super.setVisible(visible)
+
+    if (visible)
+      Analytics.sdmOpen()
+  }
 
   def clearError(): Unit = {
     tabs.clearError()

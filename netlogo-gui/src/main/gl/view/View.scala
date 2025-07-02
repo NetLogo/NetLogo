@@ -9,6 +9,7 @@ import java.awt.Frame
 import java.awt.event.{ KeyEvent, KeyAdapter, MouseEvent }
 import java.awt.image.BufferedImage
 
+import org.nlogo.analytics.Analytics
 import org.nlogo.api.Version
 import org.nlogo.gl.render.Renderer
 import org.nlogo.swing.{ NetLogoIcon, Utils }
@@ -80,9 +81,16 @@ abstract class View(title: String, val viewManager: ViewManager, var renderer: R
   }
 
   def setVisible(): Unit = {
-    super.setVisible(true)
+    setVisible(true)
     toFront()
     canvas.requestFocus()
+  }
+
+  override def setVisible(visible: Boolean): Unit = {
+    if (visible)
+      Analytics.threedViewOpen()
+
+    super.setVisible(visible)
   }
 
   def display(): Unit = {
