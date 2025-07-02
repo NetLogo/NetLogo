@@ -55,9 +55,6 @@
 [submodule "extensions/ls"]
 	path = extensions/ls
 	url = https://github.com/NetLogo/LevelSpace.git
-[submodule "extensions/r"]
-	path = extensions/r
-	url = https://github.com/NetLogo/R-Extension.git
 [submodule "extensions/rnd"]
 	path = extensions/rnd
 	url = https://github.com/NetLogo/Rnd-Extension.git
