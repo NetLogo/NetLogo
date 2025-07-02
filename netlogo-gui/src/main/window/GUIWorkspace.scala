@@ -1116,6 +1116,8 @@ abstract class GUIWorkspace(world: World, kioskLevel: GUIWorkspace.KioskLevel, f
 
   private def runtimeErrorPrivate(owner: JobOwner, context: Context, instruction: Instruction, thread: Thread,
                                   e: Exception): Unit = {
+    fileManager.closeAllFiles()
+
     // halt, or at least turn graphics back on if they were off
     e match {
       case he: HaltException if he.haltAll =>
