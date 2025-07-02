@@ -95,7 +95,7 @@ object LabVariableParser {
                     }
                     subExperiment = subExperiment :+ exp
                   case _ =>
-                    throw new Exception(I18N.gui.getN("edit.behaviorSpace.list.incrementinvalid", Dump.list(more)))
+                    throw new Exception(I18N.gui.getN("edit.behaviorSpace.list.incrementInvalid", Dump.list(more)))
                 }
               case List(variableName: String, more@_*) =>
                 if (more.isEmpty) { throw new Exception(I18N.gui.getN("edit.behaviorSpace.expectedValue", variableName)) }
