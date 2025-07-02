@@ -6,6 +6,7 @@ import java.awt.{ Frame, GridBagConstraints, GridBagLayout, Insets }
 import java.awt.event.ActionEvent
 import javax.swing.{ AbstractAction, ButtonGroup, JLabel, JPanel }
 
+import org.nlogo.analytics.Analytics
 import org.nlogo.core.{ I18N, NetLogoPreferences }
 import org.nlogo.swing.{ RadioButton, Transparent }
 import org.nlogo.theme.{ ClassicTheme, ColorTheme, DarkTheme, InterfaceColors, LightTheme, ThemeSync }
@@ -86,12 +87,15 @@ class ThemesPanel(frame: Frame & ThemeSync) extends JPanel(new GridBagLayout) wi
   private def setTheme(theme: ColorTheme): Unit = {
     InterfaceColors.setTheme(theme)
 
-    NetLogoPreferences.put("colorTheme", theme match {
+    val themeString = theme match {
       case ClassicTheme => "classic"
       case LightTheme => "light"
       case DarkTheme => "dark"
       case _ => throw new IllegalStateException
-    })
+    }
+
+    NetLogoPreferences.put("colorTheme", themeString)
+    Analytics.themeChange(themeString)
 
     frame.syncTheme()
   }
