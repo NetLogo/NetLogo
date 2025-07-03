@@ -45,6 +45,7 @@ class MenuItem(action: Action, showIcon: Boolean = true) extends JMenuItem(actio
 
   def updateEnabled(): Unit = {
     configurePropertiesFromAction(getAction)
+    syncTheme()
   }
 
   override def syncTheme(): Unit = {
