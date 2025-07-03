@@ -13,19 +13,16 @@ import scala.concurrent.{ ExecutionContext, Future }
 object Analytics {
   private var sendEnabled = true
 
-  private val config = TrackerConfiguration.builder.apiEndpoint(URI.create("https://ccl.northwestern.edu:8080/matomo.php"))
-                                                   .defaultSiteId(1)
-                                                   .build()
+  private val config = TrackerConfiguration.builder
+                                           .apiEndpoint(URI.create("https://ccl.northwestern.edu:8080/matomo.php"))
+                                           .defaultSiteId(1)
+                                           .build()
 
   private val tracker = new MatomoTracker(config)
 
   private var startTime = 0L
 
   refreshPreference()
-
-  def refreshPreference(): Unit = {
-    sendEnabled = NetLogoPreferences.getBoolean("sendAnalytics", true)
-  }
 
   private def wrapRequest(request: MatomoRequest, synchronous: Boolean = false): Unit = {
     if (sendEnabled) {
@@ -44,18 +41,30 @@ object Analytics {
     }
   }
 
+  // non-recursively builds a simple subset of JSON to avoid unnecessary
+  // dependencies or object structures (Isaac B 7/2/25)
+  private def buildJson(properties: Map[String, Any]): String = {
+    properties.map {
+      case (key, value: String) => s"\"$key\": \"$value\""
+      case (key, value: Double) => s"\"$key\": $value"
+      case (key, value: Int) => s"\"$key\": $value"
+      case (key, value: Boolean) => s"\"$key\": $value"
+      case (key, value) => s"\"$key\": \"null\""
+    }.mkString("{ ", ", ", " }")
+  }
+
   def appStart(is3D: Boolean): Unit = {
     startTime = System.currentTimeMillis
 
-    wrapRequest(MatomoRequests.event("Desktop", "App Start", if (is3D) "3D" else "2D", null).build())
+    val json = buildJson(
+      Map(
+        "threed" -> is3D,
+        "os" -> System.getProperty("os.name"),
+        "arch" -> System.getProperty("os.arch")
+      )
+    )
 
-    if (System.getProperty("os.name").toLowerCase.contains("mac")) {
-      if (System.getProperty("os.arch") == "aarch64") {
-        wrapRequest(MatomoRequests.event("Desktop", "App Start Mac", "Silicon", null).build())
-      } else {
-        wrapRequest(MatomoRequests.event("Desktop", "App Start Mac", "Intel", null).build())
-      }
-    }
+    wrapRequest(MatomoRequests.event("Desktop", "App Start", json, null).build())
   }
 
   def appExit(): Unit = {
@@ -69,10 +78,16 @@ object Analytics {
     wrapRequest(MatomoRequests.event("Desktop", "Theme Change", theme, null).build())
   }
 
-  // figure out how best to use this
-  // def preferenceChange(preference: String): Unit = {
-  //   wrapRequest(MatomoRequests.event("Desktop", "Preference Change", preference, null).build())
-  // }
+  def preferenceChange(name: String, value: String): Unit = {
+    val json = buildJson(
+      Map(
+        "name" -> name,
+        "value" -> value
+      )
+    )
+
+    wrapRequest(MatomoRequests.event("Desktop", "Preference Change", json, null).build())
+  }
 
   def sdmOpen(): Unit = {
     wrapRequest(MatomoRequests.event("Desktop", "SDM Open", null, null).build())
@@ -151,11 +166,8 @@ object Analytics {
           }
       }
 
-      if (prims.nonEmpty) {
-        val json = s"{ ${prims.map((k, v) => s"\"$k\": $v").mkString(", ")} }"
-
-        wrapRequest(MatomoRequests.event("Desktop", "Primitive Usage", json, null).build())
-      }
+      if (prims.nonEmpty)
+        wrapRequest(MatomoRequests.event("Desktop", "Primitive Usage", buildJson(prims), null).build())
     } (using ExecutionContext.global)
   }
 
@@ -166,5 +178,9 @@ object Analytics {
 
   def loadExtension(extension: String): Unit = {
     wrapRequest(MatomoRequests.event("Desktop", "Load Extension", extension, null).build())
+  }
+
+  def refreshPreference(): Unit = {
+    sendEnabled = NetLogoPreferences.getBoolean("sendAnalytics", true)
   }
 }
