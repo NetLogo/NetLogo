@@ -12,7 +12,7 @@ import scala.collection.immutable.ListMap
 class DummyWorkspace extends Workspace {
   private def unsupported = throw new UnsupportedOperationException
   val world = new World2D()
-  override def procedures: ListMap[String,Procedure] = ListMap.empty[String, Procedure]
+  override def procedures: ListMap[(String, Option[String]), Procedure] = ListMap.empty[(String, Option[String]), Procedure]
   override def joinForeverButtons(agent: Agent) = unsupported
   override def addJobFromJobThread(job: Job) = unsupported
   override def getExtensionManager = unsupported

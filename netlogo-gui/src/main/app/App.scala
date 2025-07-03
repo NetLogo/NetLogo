@@ -484,8 +484,8 @@ class App extends org.nlogo.window.Event.LinkChild
               new ComponentParameter(classOf[AppFrame]),
               new ConstantParameter(() => workspace.exportView),
               new ConstantParameter(() => Boolean.box(
-                workspace.procedures.get("SETUP") != null &&
-                  workspace.procedures.get("GO") != null)),
+                workspace.procedures.get(("SETUP", None)) != null &&
+                  workspace.procedures.get(("GO", None)) != null)),
               new ComponentParameter()))
       aggregateManager = pico.getComponent(classOf[AggregateManagerInterface])
       frame.addLinkComponent(aggregateManager)
