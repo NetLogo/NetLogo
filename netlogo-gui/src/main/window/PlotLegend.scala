@@ -2,8 +2,8 @@
 
 package org.nlogo.window
 
-import java.awt.{ Color, Component, Container, Dimension, FlowLayout, Font, Graphics, LayoutManager }
-import javax.swing.{ JLabel, JPanel }
+import java.awt.{ Color, Component, Container, Dimension, Font, Graphics, LayoutManager }
+import javax.swing.{ Box, BoxLayout, JLabel, JPanel }
 
 import org.nlogo.plot.PlotPen
 import org.nlogo.swing.Transparent
@@ -40,23 +40,36 @@ class PlotLegend(widget: AbstractPlotWidget) extends JPanel(new WrapLayout) with
     refresh()
   }
 
-  private class LegendItem(pen: PlotPen) extends JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0)) with Transparent {
-    add(new JPanel {
+  private class LegendItem(pen: PlotPen) extends JPanel with Transparent {
+    private val panel = new JPanel {
       setBackground(new Color(pen.color))
 
       override def getPreferredSize: Dimension =
         new Dimension(widget.zoom(15), widget.zoom(2))
-    })
+
+      override def getMaximumSize: Dimension =
+        getPreferredSize
+    }
+
+    setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
+
+    add(Box.createHorizontalStrut(10))
+    add(panel)
+    add(Box.createHorizontalStrut(10))
 
     add(new JLabel(pen.name) {
       setFont(getFont.deriveFont(boldState))
 
       override def paintComponent(g: Graphics): Unit = {
+        setSize(getWidth.min(LegendItem.this.getWidth - panel.getWidth - 30), getHeight)
+
         setForeground(InterfaceColors.widgetText())
 
         super.paintComponent(g)
       }
     })
+
+    add(Box.createHorizontalStrut(10))
   }
 }
 
@@ -69,6 +82,9 @@ class WrapLayout extends LayoutManager {
 
   override def layoutContainer(parent: Container): Unit = {
     parent.getTreeLock synchronized {
+      if (parent.getComponentCount == 0)
+        return
+
       val maxWidth = {
         if (parent.getWidth == 0) {
           parent.getMaximumSize.width
@@ -77,24 +93,27 @@ class WrapLayout extends LayoutManager {
         }
       }
 
+      val firstSize = parent.getComponent(0).getPreferredSize
+
       var y = 0
-      var rowWidth = 0
-      var rowHeight = 0
-      var row = Seq[Component]()
+      var rowWidth = firstSize.width
+      var rowHeight = firstSize.height
+      var row = Seq[Component](parent.getComponent(0))
 
       def layoutRow(): Unit = {
-        var x = maxWidth / 2 - rowWidth / 2
+        var x = (maxWidth / 2 - rowWidth / 2).max(0)
 
         row.foreach { component =>
           val size = component.getPreferredSize
+          val width = (size.width).min(maxWidth)
 
-          component.setBounds(x, y, size.width, size.height)
+          component.setBounds(x, y, width, size.height)
 
-          x += size.width
+          x += width
         }
       }
 
-      parent.getComponents.foreach { component =>
+      parent.getComponents.tail.foreach { component =>
         val size = component.getPreferredSize
         val newWidth = rowWidth + size.width
 
@@ -118,6 +137,9 @@ class WrapLayout extends LayoutManager {
 
   override def minimumLayoutSize(parent: Container): Dimension = {
     parent.getTreeLock synchronized {
+      if (parent.getComponentCount == 0)
+        return new Dimension(0, 0)
+
       val maxWidth = {
         if (parent.getWidth == 0) {
           parent.getMaximumSize.width
@@ -126,12 +148,14 @@ class WrapLayout extends LayoutManager {
         }
       }
 
-      var rowWidth = 0
-      var rowHeight = 0
+      val firstSize = parent.getComponent(0).getPreferredSize
+
+      var rowWidth = firstSize.width
+      var rowHeight = firstSize.height
       var width = 0
       var height = 0
 
-      parent.getComponents.foreach { component =>
+      parent.getComponents.tail.foreach { component =>
         val size = component.getPreferredSize
         val newWidth = rowWidth + size.width
 
@@ -162,7 +186,7 @@ class WrapLayout extends LayoutManager {
         }
       }
 
-      new Dimension(width, height)
+      new Dimension(width.min(maxWidth), height)
     }
   }
 
