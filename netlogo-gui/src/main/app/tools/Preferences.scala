@@ -56,7 +56,7 @@ object Preferences {
     }
 
     case class LocaleWrapper(val locale: Locale) extends LocaleOption {
-      override def toString = locale.getDisplayLanguage
+      override def toString = locale.getDisplayLanguage(locale)
     }
 
     val languages: Seq[LocaleOption] = DetectLocale +: I18N.availableLocales.distinctBy(_.getLanguage)
