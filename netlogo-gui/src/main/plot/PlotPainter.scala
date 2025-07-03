@@ -13,7 +13,8 @@ class PlotPainter(plot: Plot) {
   private var width = 0
 
   def setupOffscreenImage(width: Int, height: Int): Unit = {
-    if(offScreenImage == null || this.width != width || this.height != height) {
+    if ((offScreenImage == null || this.width != width || this.height != height) &&
+        width > 0 && height > 0) {
       this.width = width
       this.height = height
       if(offScreenImage != null) {
@@ -36,11 +37,13 @@ class PlotPainter(plot: Plot) {
   def drawImage(g: java.awt.Graphics): Unit = { g.drawImage(offScreenImage, 0, 0, null) }
 
   def refresh(): Unit = {
-    gOff.setColor(new Color(plot.backgroundColor))
-    gOff.fillRect(0, 0, offScreenImage.getWidth, offScreenImage.getHeight)
-    for(pen <- plot.pens; if(! pen.hidden)) {
-      pen.penModeChanged = false
-      refreshPen(pen, collectPointsForPainting(pen))
+    if (gOff != null) {
+      gOff.setColor(new Color(plot.backgroundColor))
+      gOff.fillRect(0, 0, offScreenImage.getWidth, offScreenImage.getHeight)
+      for(pen <- plot.pens; if(! pen.hidden)) {
+        pen.penModeChanged = false
+        refreshPen(pen, collectPointsForPainting(pen))
+      }
     }
   }
 
@@ -64,6 +67,9 @@ class PlotPainter(plot: Plot) {
   // method can account for a substantial amount of the runtime,
   // so it's worth considering even small efficiency issues here. - ST 8/16/07
   private def refreshPen(pen: PlotPen, pointsToPlot: Seq[PlotPoint]): Unit = {
+    if (gOff == null)
+      return
+
     var last: PlotPoint = null
     // used to cut down on unnecessary setColor() calls - ST 9/17/03
     var color = 0
