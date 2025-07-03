@@ -3,7 +3,7 @@
 package org.nlogo.window
 
 import org.nlogo.api.WorldPropertiesInterface
-import org.nlogo.core.{ CompilerException, UpdateMode, View => CoreView, Widget => CoreWidget, WorldDimensions }
+import org.nlogo.core.{ CompilerException, I18N, UpdateMode, View => CoreView, Widget => CoreWidget, WorldDimensions }
 import org.nlogo.workspace.WorldLoaderInterface
 
 trait WorldIntegerEditor {
@@ -40,8 +40,7 @@ abstract class WorldViewSettings(protected val workspace: GUIWorkspace, protecte
 
   protected var _error: Option[CompilerException] = None
 
-  def classDisplayName: String = "Model Settings"
-
+  def classDisplayName: String = I18N.gui.get("edit.viewSettings.modelSettings")
   def resizeWithProgress(showProgress: Boolean): Unit
 
   def model: CoreWidget
