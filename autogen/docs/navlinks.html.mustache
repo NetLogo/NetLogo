@@ -1,0 +1,61 @@
+<div class="navbar__links">
+	<!-- Intro -->
+	<div class="navbar__item">
+		<a href="whatis.html">Introduction</a>
+		<div class="dropdown__menu">
+			<a href="whatis.html">What is NetLogo?</a>
+			<a href="sample.html">Sample Model: Party</a>
+		</div>
+	</div>
+	<!-- Learning -->
+	<div class="navbar__item">
+		<a href="tutorial1.html">Learning NetLogo</a>
+		<div class="dropdown__menu">
+			<a href="tutorial1.html">Tutorial #1 Models</a>
+			<a href="tutorial2.html">Tutorial #2 Commands</a>
+			<a href="tutorial3.html">Tutorial #3 Procedures</a>
+		</div>
+	</div>
+	<!-- Reference -->
+	<div class="navbar__item">
+		<a href="interface.html">Reference</a>
+		<div class="dropdown__menu">
+			<a href="interface.html">Interface Guide</a>
+			<a href="interfacetab.html">Interface Tab Guide</a>
+			<a href="infotab.html">Info Tab Guide</a>
+			<a href="codetab.html">Code Tab Guide</a>
+			<a href="programming.html">Programming Guide</a>
+			<a href="transition.html">Transition Guide</a>
+			<a href="dictionary.html">NetLogo Dictionary</a>
+		</div>
+	</div>
+	<!-- Features -->
+	<div class="navbar__item">
+		<a href="extension-manager.html">Features</a>
+		<div class="dropdown__menu" style="column-count: 2; column-gap: 1rem; row-gap: 0.5rem">
+			<a href="extension-manager.html">Extension Manager</a>
+			<a href="shapes.html">Shapes Editor</a>
+			<a href="behaviorspace.html">BehaviorSpace</a>
+			<a href="systemdynamics.html">System Dynamics</a>
+			<a href="hubnet.html">HubNet</a>
+			<a href="hubnet-authoring.html">HubNet Authoring</a>
+			<a href="logging.html">Logging</a>
+			<a href="controlling.html">Controlling</a>
+			<a href="mathematica.html">Mathematica Link</a>
+			<a href="3d.html">NetLogo 3D</a>
+			<a href="modelingcommons.html">Save to Modeling Commons</a>
+		</div>
+	</div>
+	<!-- Extensions -->
+	<div class="navbar__item">
+		<a href="extensions.html">Extensions</a>
+		<div class="dropdown__menu" style="column-count: 2; column-gap: 1rem; row-gap: 0.5rem">
+			<a href="extensions.html">Extensions Guide</a>
+			{{#documentedExtensions}}
+			<a href="{{ _1 }}.html">{{ _2 }}</a>
+			{{/documentedExtensions}}
+		</div>
+	</div>
+	<!-- FAQ -->
+	<div class="navbar__item"><a href="faq.html">FAQ</a></div>
+</div>

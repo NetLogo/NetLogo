@@ -1,9 +1,19 @@
 {{> header.html}}
 
+<main class="prose">
+
+
+
 This tutorial leads you through the process of building a complete model, built
 up in stages, with every step explained along the way.
 
+<div class="toc">
+
+#### Table of Contents
 [TOC]
+
+</div>
+
 
 ## Agents and procedures
 
@@ -51,7 +61,7 @@ Now we'll create the "setup" procedure, so the error message will go away:
 
 > - Switch to the Code tab.
 > - Type the following:
-> 
+>
 >         to setup
 >           clear-all
 >           create-turtles 100 [ setxy random-xcor random-ycor ]
@@ -135,7 +145,7 @@ run over and over again, not just once.
 The "Disable until ticks start" prevents you from pressing go before setup.
 
 > - Then add a go procedure to the Code tab:
-> 
+>
 >         to go
 >           move-turtles
 >           tick
@@ -148,12 +158,12 @@ NetLogo)? No, it's another procedure that you're about to add. So far, you have
 introduced two procedures that you added yourself: `setup` and `go`.
 
 > - Add the `move-turtles` procedure after the `go`procedure:
-> 
+>
 >         to go
 >           move-turtles
 >           tick
 >         end
-> 
+>
 >         to move-turtles
 >           ask turtles [
 >             right random 360
@@ -227,37 +237,37 @@ anything else around them. Let's make things a little more interesting by giving
 these turtles a nice background against which to move.
 
 > - Go back to the `setup` procedure. We can rewrite it as follows:
-> 
+>
 >         to setup
 >           clear-all
 >           setup-patches
 >           setup-turtles
 >           reset-ticks
 >         end
-> 
+>
 > - The new definition of `setup` refers to two new procedures. To define
 >   `setup-patches`, add this:
-> 
+>
 >         to setup-patches
 >           ask patches [ set pcolor green ]
 >         end
-> 
+>
 > The `setup-patches` procedure sets the color of every patch to green to start
 > with. (A turtle's color variable is [[color]]; a patch's is [[pcolor]].)
 
 > The only part remaining in our new 'setup' that is still undefined is
 > `setup-turtles`.
-> 
+>
 > - Add this procedure too:
-> 
+>
 >         to setup-turtles
 >           create-turtles 100
 >           ask turtles [ setxy random-xcor random-ycor ]
 >         end
-> 
+>
 > Did you notice that the new `setup-turtles` procedure has most of the same
 > commands as the old `setup` procedure?
-> 
+>
 > - Switch back to the Interface tab.
 > - Press the setup button.
 
@@ -296,15 +306,15 @@ Let's use this newly defined variable (`energy`) to allow the turtles to eat.
 
 > - Switch to the Code tab.
 > - Rewrite the `go` procedure as follows:
-> 
+>
 >         to go
 >           move-turtles
 >           eat-grass
 >           tick
 >         end
-> 
+>
 > - Add a new `eat-grass` procedure:
-> 
+>
 >         to eat-grass
 >           ask turtles [
 >             if pcolor = green [
@@ -327,7 +337,7 @@ energy, from having just eaten.
 Next, let's make the movement of turtles use up some of the turtle's energy.
 
 > - Rewrite `move-turtles` as follows:
-> 
+>
 >         to move-turtles
 >           ask turtles [
 >             right random 360
@@ -340,7 +350,7 @@ As each turtle wanders, it will lose one unit of energy at each step.
 
 > - Switch to the Interface tab now and press the setup button and the go
 >   button.
-> 
+>
 > You'll see the patches turn black as turtles travel over them.
 > ![[eating-grass.png]]
 
@@ -352,9 +362,9 @@ Let's make the first monitor now.
 
 > - Create a monitor by clicking the Add icon on the toolbar, selecting Monitor
 >   next to it, and clicking on an open spot in the Interface.
-> 
+>
 > | A dialog box will appear.
-> 
+>
 > - In the dialog type: `count turtles` (see image below).
 > - Press the OK button to close the dialog.
 
@@ -367,9 +377,9 @@ Let's make the second monitor now:
 
 > - Create a monitor by clicking the Add icon on the toolbar, selecting Monitor
 >   next to it, and clicking on an open spot in the Interface.
-> 
+>
 > | A dialog box will appear.
-> 
+>
 > - In the Reporter section of the dialog box type:
 >   `count patches with [pcolor = green]` (see image below).
 > - In the Display name section of the dialog box type: `green patches`
@@ -403,9 +413,9 @@ information on and off.
 > - Click on the Add icon on the toolbar (in the Interface tab).
 > - Select Switch from the menu next to Add.
 > - Click on an open spot in the interface.
-> 
+>
 > | A dialog will appear.
-> 
+>
 > - Into the Global variable field, type `show-energy?`
 >   Don't forget to include the question mark in the name. (See
 >   image below.)
@@ -414,7 +424,7 @@ information on and off.
 
 > - Now go back to the 'go' procedure using the Code tab with the Toolbar.
 > - Rewrite the `eat-grass` procedure as follows:
-> 
+>
 >         to eat-grass
 >           ask turtles [
 >             if pcolor = green [
@@ -457,7 +467,7 @@ by making three separate procedures, one for each behavior.
 
 > - Go to the Code tab.
 > - Rewrite the `go` procedure as follows:
-> 
+>
 >         to go
 >           move-turtles
 >           eat-grass
@@ -466,10 +476,10 @@ by making three separate procedures, one for each behavior.
 >           regrow-grass
 >           tick
 >         end
-> 
+>
 > - Add the procedures for `reproduce`, `check-death`, and `regrow-grass` as
 >   shown below:
-> 
+>
 >         to reproduce
 >           ask turtles [
 >             if energy > 50 [
@@ -478,13 +488,13 @@ by making three separate procedures, one for each behavior.
 >             ]
 >           ]
 >         end
-> 
+>
 >         to check-death
 >           ask turtles [
 >             if energy <= 0 [ die ]
 >           ]
 >         end
-> 
+>
 >         to regrow-grass
 >           ask patches [
 >             if random 100 < 3 [ set pcolor green ]
@@ -592,7 +602,7 @@ You can also use the tick counter for other things, such as to set a limit on
 the total length of a run.
 
 > - Change the `go` procedure:
-> 
+>
 >         to go
 >           if ticks >= 500 [ stop ]
 >           move-turtles
@@ -602,7 +612,7 @@ the total length of a run.
 >           regrow-grass
 >           tick
 >         end
-> 
+>
 > - Now setup and run the model.
 
 The graph and model won't keep running forever. They should stop automatically
@@ -623,7 +633,7 @@ turtles.
 > - Try changing the minimum and maximum values in the slider.
 > - Then inside of `setup-turtles`, instead of `create-turtles 100` you can
 >   type:
-> 
+>
 >         to setup-turtles
 >           create-turtles number [ setxy random-xcor random-ycor ]
 >         end
@@ -637,7 +647,7 @@ they eat grass and reproduce?
 > - Make a slider called `energy-from-grass`.
 > - Make another slider called `birth-energy`.
 > - Then, inside of `eat-grass,` make this change:
-> 
+>
 >         to eat-grass
 >           ask turtles [
 >             if pcolor = green [
@@ -649,9 +659,9 @@ they eat grass and reproduce?
 >               [ set label "" ]
 >           ]
 >         end
-> 
+>
 > - And, inside of `reproduce`, make this change:
-> 
+>
 >         to reproduce
 >           ask turtles [
 >             if energy > birth-energy [
@@ -788,3 +798,4 @@ In the Code tab, comments are gray, so your eyes can pick them out easily.
       ]
     end
 
+</main>

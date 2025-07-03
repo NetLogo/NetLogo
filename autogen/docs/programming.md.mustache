@@ -1,52 +1,22 @@
 {{> header.html}}
 
+<main class="prose">
+
 This section describes the NetLogo programming language in detail.
 
 The Code Example models mentioned throughout can be found in the Code
 Examples section of the Models Library.
 
-**Table of Contents**
+<div class="toc">
 
-- [<b>Agents and Agentsets</b>](#agents-and-agentsets)
-    - [Agents](#agents)
-    - [Agentsets](#agentsets)
-    - [Breeds](#breeds)
-    - [Variables](#variables)
-    - [Links](#links)
-    - [Tie](#tie)
-    - [Drawing](#drawing)
-    - [Turtle shapes](#turtle-shapes)
-    - [Link shapes](#link-shapes)
-- [<b>Programming</b>](#programming)
-    - [Procedures](#procedures)
-    - [Ask](#ask)
-    - [Ask    -Concurrent](#ask-concurrent)
-    - [Syntax](#syntax)
-    - [Multiple source files](#multiple-source-files)
-    - [Buttons](#buttons)
-    - [Anonymous procedures](#anonymous-procedures)
-- [<b>World</b>](#world)
-    - [Tick counter](#tick-counter)
-    - [View updates](#view-updates)
-    - [Topology](#topology)
-- [<b>Observer Perspective</b>](#observer-perspective)
-- [<b>Input/Output</b>](#inputoutput)
-    - [Output](#output)
-    - [User Interaction Primitives](#use-interaction-primitives)
-    - [File I/O](#file-io)
-- [<b>Lists</b>](#lists)
-- [<b>Strings</b>](#strings)
-- [<b>Mathematics</b>](#mathematics)
-    - [Math](#math)
-    - [Random numbers](#random-numbers)
-- [<b>Plotting</b>](#plotting)
-- [<b>Color</b>](#color)
-- [<b>Movies</b>](#movies)
+#### Table of Contents
+[TOC levels=2,3]
+
+</div>
 
 
-
-## <b>Agents and Agentsets</b>
-## Agents
+## Agents and Agentsets
+### Agents
 
 The NetLogo world is made up of **agents**. Agents are beings that can follow
 instructions.
@@ -91,7 +61,7 @@ Links do not have coordinates. Every link has two ends, and each end is a
 turtle. If either turtle dies, the link dies too. A link is represented visually
 as a line connecting the two turtles.
 
-## Agentsets
+### Agentsets
 
 An agentset is exactly what its name implies, a set of agents. An agentset can
 contain either turtles, patches or links, but not more than one type at once.
@@ -195,7 +165,7 @@ agentset primitives.
 More examples of using agentsets are provided in the individual entries for
 these primitives in the NetLogo Dictionary.
 
-### Special agentsets
+#### Special agentsets
 
 The agentsets `turtles` and `links` have special behavior because they always
 hold the sets of *all* turtles and *all* links. Therefore, these agentsets can
@@ -229,7 +199,7 @@ they're born.
 Breed agentsets are special in the same way as `turtles` and `links`. Breeds are
 introduced and explained below.
 
-### Agentsets and lists
+#### Agentsets and lists
 
 Earlier, we said that agentsets are always in random order, a different random
 order every time. If you need your agents to do something in a fixed order, you
@@ -237,7 +207,7 @@ need to make a list of the agents instead. See the Lists section below.
 
 > **Code Example:** Ask Ordering Example
 
-## Breeds
+### Breeds
 
 NetLogo allows you to define different "breeds" of turtles and breeds of links.
 Once you have defined breeds, you can go on and make the different breeds behave
@@ -311,7 +281,7 @@ Here is a quick example of using breeds:
 
 > **Code Example:** Breeds and Shapes Example
 
-### Link breeds
+#### Link breeds
 
 Link breeds are very similar to turtle breeds, however, there are a few
 differences.
@@ -367,7 +337,7 @@ particular link shape.
 
 > **Code Example:** Link Breeds Example
 
-## Variables
+### Variables
 
 **Agent variables**
 
@@ -445,7 +415,7 @@ example inside an "ask", then it will exist only inside those brackets.
       ask turtle2 [ set color temp ]
     end
 
-## Links
+### Links
 
 A link is an agent that connects two turtles. These turtles are sometimes also
 called nodes.
@@ -546,7 +516,7 @@ involved the nodes will not end up exactly that distance from each other.
 > Small Worlds, Preferential Attachment
 
 
-## Tie
+### Tie
 
 Tie connects two turtles so that the movement of one turtles affects the
 location and heading of another. Tie is a property of links so there must be a
@@ -575,7 +545,7 @@ the mode to "free" you need to: `set tie-mode "free"`.
 
 > **Code Example:** Tie System Example
 
-## Drawing
+### Drawing
 
 The drawing is a layer where turtles can make visible marks.
 
@@ -638,7 +608,7 @@ Drawing features not supported by NetLogo:
 - There is no `flood` or `fill` command to fill an enclosed area with color.
 
 
-## Turtle shapes
+### Turtle shapes
 
 In NetLogo, turtle shapes are vector shapes. They are built up from basic
 geometric shapes; squares, circles, and lines, rather than a grid of pixels.
@@ -667,7 +637,7 @@ the [[__set-line-thickness]] primitive.
 
 > **Code Examples:** Breeds and Shapes Example, Shape Animation Example
 
-## Link shapes
+### Link shapes
 
 Link Shapes are similar to turtle shapes, only you use the Link Shape Editor to
 create and edit them. Link shapes consist of between 0 and 3 lines which can
@@ -682,8 +652,8 @@ The thickness of the lines in the link shape is controlled by the [[thickness]]
 link variable.
 
 
-## <b>Programming</b>
-## Procedures
+## Programming
+### Procedures
 
 In NetLogo, **commands** and **reporters** tell agents what to do. A command is
 an action for an agent to carry out, resulting in some effect. A reporter is
@@ -788,7 +758,7 @@ report the value you want to report.
         [ report (- number) ]
     end
 
-## Ask
+### Ask
 
 NetLogo uses the [[ask]] command to give commands to turtles, patches, and
 links. All code to be run by turtles *must* be located in a turtle "context".
@@ -886,7 +856,7 @@ But if you write it this way:
 
 first all the turtles move, then they all turn red.
 
-## Ask-Concurrent
+### Ask-Concurrent
 
 **NOTE:** The following information is included only for backwards
 compatibility. We don't recommend using the `ask-concurrent` primitive at all in
@@ -967,9 +937,9 @@ how `ask-concurrent` works. We make no guarantees that its semantics will remain
 the same in future versions of NetLogo, or that it will continue to be supported
 at all.
 
-## Syntax
+### Syntax
 
-### Colors
+#### Colors
 
 In the Code tab and elsewhere in the NetLogo user interface, program code is
 color-coded by the following scheme:
@@ -981,19 +951,19 @@ color-coded by the following scheme:
 - Primitive reporters are purple
 - Everything else is black
 
-### Notice
+#### Notice
 
 The remainder of this section contains technical terminology which will be
 unfamiliar to some readers.
 
-### Keywords
+#### Keywords
 
 The only keywords in the language are [[globals]], [[breed]], [[turtles-own]],
 [[patches-own]], [[to]], [[to-report]], and [[end]], plus [[extensions]] and the
 experimental [[__includes]] keyword. (Built-in primitive names may not be
 shadowed or redefined, so they are effectively a kind of keyword as well.)
 
-### Identifiers
+#### Identifiers
 
 All primitives, global and agent variable names, and procedure names share a
 single global case-insensitive namespace; local names ([[let]] variables and the
@@ -1007,18 +977,18 @@ Some primitive names begin with two underscores to indicate that they are
 experimental and are especially likely to change or be removed in future NetLogo
 releases.
 
-### Scope
+#### Scope
 
 NetLogo is lexically scoped. Local variables (including inputs to procedures)
 are accessible within the block of commands in which they are declared, but not
 accessible by procedures called by those commands.
 
-### Comments
+#### Comments
 
 The semicolon character introduces a comment, which lasts until the
 end of the line. There is no multi-line comment syntax.
 
-### Structure
+#### Structure
 
 A program consists of optional declarations ([[globals]], [[breed]],
 [[turtles-own]], [[patches-own]], [[<BREED>-own|turtles-own]], [[extensions]])
@@ -1030,7 +1000,7 @@ Every procedure definition begins with [[to]] or [[to-report]], the procedure
 name, and an optional bracketed list of input names. Every procedure definition
 ends with [[end]]. In between are zero or more commands.
 
-### Commands and reporters
+#### Commands and reporters
 
 Commands take zero or more inputs; the inputs are reporters, which may also take
 zero or more inputs. No punctuation separates or terminates commands; no
@@ -1075,14 +1045,14 @@ is `false`.  This is different than many other programming languages where `or` 
 the above statement would be read as `true or (false and false)`, `true or (false)`, so `true`.  You can surround
 expressions in parentheses to ensure you get your desired order of operations.
 
-### Compared to other Logos
+#### Compared to other Logos
 
 There is no agreed-upon standard definition of Logo; it is a loose family of
 languages. We believe that NetLogo has enough in common with other Logos to earn
 the Logo name. Still, NetLogo differs in some respects from most other Logos.
 The most important differences are as follows.
 
-#### Surface differences
+##### Surface differences
 
 - The precedence of mathematical operators is different. Infix math operators
   (like `+`, `*`, etc.) have lower precedence than reporters with names. For
@@ -1123,7 +1093,7 @@ report x * x
 end</pre>
 </table>
 
-#### Deeper differences
+##### Deeper differences
 
 - NetLogo's local variables and inputs to procedures are lexically scoped, not
   dynamically scoped.
@@ -1149,7 +1119,7 @@ end</pre>
 Of course, the NetLogo language also contains other features not found in most
 Logos, most importantly agents and agentsets.
 
-## Multiple source files
+### Multiple source files
 
 The [[__includes]] keyword allows you to use multiple source files in a single
 NetLogo model.
@@ -1175,7 +1145,7 @@ be accessible from all the included files. The same would be true if `my-global`
 were declared in one of the included files.
 
 
-## Buttons
+### Buttons
 
 Buttons in the interface tab provide an easy way to control the model. Typically
 a model will have at least a "setup" button, to set up the initial state of the
@@ -1269,7 +1239,7 @@ also that a model like this cannot be used with BehaviorSpace.
 At present, NetLogo has no way for one forever button to start another. Buttons
 are only started when you press them.
 
-## Anonymous procedures
+### Anonymous procedures
 
 Anonymous procedures let you store code to be run later. Just like regular
 NetLogo procedures, an anonymous procedures can be either a command (anonymous
@@ -1283,7 +1253,7 @@ An anonymous procedure might be run once, multiple times, or not at all.
 In other programming languages anonymous procedures are known as first-class
 functions, closures, or lambda.
 
-### Anonymous procedure primitives
+#### Anonymous procedure primitives
 
 Primitives specific to anonymous procedures are `->`, `is-anonymous-command?`,
 and `is-anonymous-reporter?`.
@@ -1314,20 +1284,20 @@ surrounded with parentheses, so for example `(run my-anonymous-command 5)` or
 `(runresult my-anonymous-reporter "foo" 2)`. When not passing input, no
 parentheses are required.
 
-### Anonymous procedure inputs
+#### Anonymous procedure inputs
 
 An anonymous procedure may take zero or more inputs. The inputs are referenced
 the variables declared before the arrow. For instance, in the anonymous reporter
 `[ [a b] -> a + b ]`, `a` and `b` are inputs.
 
-### Anonymous procedures and strings
+#### Anonymous procedures and strings
 
 Creating and running anonymous procedures is fast. To use `run` or `runresult`
 on a new string for the first time is about 100x slower than running an
 anonymous procedure. Modelers should normally use anonymous procedures instead
 of running strings, except when running strings entered by the user.
 
-### Concise syntax
+#### Concise syntax
 
 Simple uses of `foreach`, `map`, `reduce`, `filter`, `n-values`, and `sort-by`
 can be written with an especially concise syntax. You can write:
@@ -1352,25 +1322,25 @@ In older NetLogo versions (4 and earlier), these had to be written:
     foreach [1 2 3 4] [ print ? ]
     ;; prints 1 through 4
 
-### Anonymous procedures as closures
+#### Anonymous procedures as closures
 
 Anonymous procedures are "closures"; that means they capture or "close over" the
 bindings (not just the current values) of local variables and procedure inputs.
 They do not capture agent variables and do not capture the identity (or even the
 agent type) of the current agent.
 
-### Nonlocal exits
+#### Nonlocal exits
 
 The `stop` and `report` commands exit from the dynamically enclosing procedure,
 not the enclosing anonymous procedure. (This is backward-compatible with older
 NetLogo versions.)
 
-### Anonymous procedures and extensions
+#### Anonymous procedures and extensions
 
 The extensions API supports writing primitives that accept anonymous procedures
 as input. Write us for sample code.
 
-### Limitations
+#### Limitations
 
 We hope to address at least some of the following limitations in future NetLogo
 versions:
@@ -1395,7 +1365,7 @@ versions:
   procedure `p` that accepts an anonymous procedure as input, it must be called
   as e.g. `p [ -> ...  ]` not `p [ ... ]`.
 
-### What is Optional?
+#### What is Optional?
 
 There are several different ways of writing anonymous procedures which allow
 users to omit part or all of the anonymous procedure syntax. These are
@@ -1481,13 +1451,13 @@ summarized in the table below.
 If you copy and paste code into NetLogo 6.0.0 using anonymous procedures with
 unbracketed input names, the code will not compile until you add the brackets.
 
-### Code example
+#### Code example
 
 > **Code Example:** State Machine Example
 
 
-## <b>World</b>
-## Tick counter
+## World
+### Tick counter
 
 In many NetLogo models, time passes in discrete steps, called "ticks". NetLogo
 includes a built-in tick counter so you can keep track of how many ticks have
@@ -1509,7 +1479,7 @@ If your model is set to use tick-based updates, then the [[tick]] command will
 usually also update the view. See the later section,
 [View Updates](#view-updates).
 
-### When to tick
+#### When to tick
 
 Use [[reset-ticks]] at the end of your setup procedure.
 
@@ -1526,7 +1496,7 @@ Use [[tick]] at the end of your go procedure.
       tick
     end
 
-### Fractional ticks
+#### Fractional ticks
 
 In most models, the tick counter starts at 0 and goes up 1 at a time, from
 integer to integer. But it's also possible for the tick counter to take on
@@ -1542,7 +1512,7 @@ Chemistry & Physics). These models calculate the exact time at which a future
 event is to occur, then advance the tick counter to exactly that time.
 
 
-## View updates
+### View updates
 
 The "view" in NetLogo lets you see the agents in your model on your computer's
 screen. As your agents move and change, you see them moving and changing in the
@@ -1576,7 +1546,7 @@ It's also important how often updates happen, because updates take time. The
 more time NetLogo spends updating the view, the slower your model will run. With
 fewer updates, your model runs faster.
 
-### Continuous updates
+#### Continuous updates
 
 Continuous updates are very simple. With continuous updates, NetLogo updates the
 view a certain number of times per second -- by default, 30 times a second when
@@ -1595,7 +1565,7 @@ command. The [[display]] command turns updates back on, and also forces an
 immediate update (unless the user is fast-forwarding the model using the speed
 slider).
 
-### Tick-based updates
+#### Tick-based updates
 
 As discussed above in the [Tick Counter](#tick-counter) section, in many NetLogo
 models, time passes in discrete steps, called "ticks". Typically, you want the
@@ -1625,7 +1595,7 @@ Computer Science -> Cellular Automata). The forever buttons that let the user
 draw in the view use the [[display]] command so the user can see what they are
 drawing, even though the tick counter is not advancing.
 
-### Choosing a mode
+#### Choosing a mode
 
 Advantages of tick-based updates over continuous updates include:
 
@@ -1658,7 +1628,7 @@ running a single tick is faster than drawing a frame of the model. Most models
 run faster under tick-based updates, but for an example of a model which is
 faster with continuous updates see the "Heroes and Cowards" library model.
 
-### Frame rate
+#### Frame rate
 
 One of the model settings in NetLogo's "Settings..." dialog is "Frame rate"
 which defaults to 30 frames per second.
@@ -1680,7 +1650,7 @@ temporarily get a faster or slower speed.
 
 
 
-## Topology
+### Topology
 
 The way the world of patches is connected can change. By default the world is a
 torus which means it isn't bounded, but "wraps" -- so when a turtle moves past
@@ -1812,7 +1782,7 @@ Edges Example.
 
 
 
-## <b>Observer Perspective</b>
+## Observer Perspective
 
 The 2D and the 3D view show the world from the perspective of the observer. By
 default the observer is looking down on the world from the positive z-axis at
@@ -1834,11 +1804,11 @@ returns to its default position (above the origin, looking straight down).
 > **Code Example:** Perspective Example
 
 
-## <b>Input/Output</b>
+## Input/Output
 
 
 
-## Output
+### Output
 
 This section is about output to the screen. Output to the screen can also be
 later saved to a file using the [[export-output|export-cmds]] command. If you
@@ -1875,7 +1845,7 @@ If you use [[output-print|output-cmds]], [[output-show|output-cmds]],
 [[export-output|export-cmds]] in a model which does not have a separate output
 area, then the commands apply to the output portion of the Command Center.
 
-### How Output Primitives Differ
+#### How Output Primitives Differ
 
 This information is a quick reference for more advanced users.
 
@@ -1895,7 +1865,7 @@ The following table summarizes the behavior of each primitive.
 | [[type]]  | any NetLogo value | no | no | no |
 | [[write]] | boolean, number, string, lists containing only these types | no | yes | no |
 
-## User Interaction Primitives
+#### User Interaction Primitives
 
 NetLogo features several primitives which allow a model to interact with the
 user. These primitives include [user-directory](dictionary.html#user-directory),
@@ -1917,7 +1887,7 @@ Note that all active forever buttons will pause when one of these primitives is
 used and will resume only when the user completes the interaction with the
 button.
 
-### What does "Halt" mean?
+#### What does "Halt" mean?
 
 The primitives which prompt the user for input, as well as `user-message` all
 provide a "Halt" button. The effect of this button is the same for all of these
@@ -1928,7 +1898,7 @@ may see strange results if you continue to run the model after a halt without
 setting it up again.
 
 
-## File I/O
+### File I/O
 
 In NetLogo, there is a set of primitives that give you the power to interact
 with outside files. They all begin with the prefix **file-**.
@@ -2006,7 +1976,7 @@ The [[user-directory]], [[user-file]], and [[user-new-file]] primitives are
 useful when you want the user to choose a file or directory for your code to
 operate on.
 
-## <b>Lists</b>
+## Lists
 
 In the simplest models, each variable holds only one piece of information,
 usually a number or a string. Lists let you store multiple pieces of information
@@ -2279,7 +2249,7 @@ as implemented by Tiark Rompf, based in part on work by Phil Bagwell and Rich
 Hickey.
 
 
-## <b>Strings</b>
+## Strings
 
 Strings may contain any Unicode characters.
 
@@ -2328,8 +2298,8 @@ sequences:
 - `\\` = backslash
 
 
-## <b>Mathematics</b>
-## Math
+## Mathematics
+### Math
 
 All numbers in NetLogo are stored internally as double precision floating point
 numbers, as defined in the IEEE 754 standard. They are 64 bit numbers consisting
@@ -2445,7 +2415,7 @@ Also, the [[precision]] primitive is handy for rounding off numbers for display
 purposes. NetLogo monitors round the numbers they display to a configurable
 number of decimal places, too.
 
-## Random numbers
+### Random numbers
 
 The random numbers used by NetLogo are what is called "pseudo-random". (This is
 typical in computer programming.) That means they appear random, but are in fact
@@ -2503,7 +2473,7 @@ several other random distributions. See the dictionary entries for
 [[random-normal|random-reporters]], [[random-poisson|random-reporters]],
 [[random-exponential|random-reporters]], and [[random-gamma|random-reporters]].
 
-### Auxiliary generator
+#### Auxiliary generator
 
 Code run by buttons or from the command center uses the main random number
 generator.
@@ -2512,14 +2482,14 @@ Code in monitors uses an auxiliary random generator, so even if a monitor does a
 calculation that uses random numbers, the outcome of the model is not affected.
 The same is true of code in sliders.
 
-### Local randomness
+#### Local randomness
 
 You may want to explicitly specify that a section of code does not affect the
 state of the main random generator, so the outcome of the model is not affected.
 The [[with-local-randomness]] command is provided for this purpose. See its
 entry in the NetLogo Dictionary for more information.
 
-### Saving a Random Seed for a Run
+#### Saving a Random Seed for a Run
 
 If you want to know what the random seed used by a "run" of a model was, you can
 add some simple code to track it.  Then if an interesting behavior emerges or
@@ -2550,7 +2520,7 @@ to the command center whenever you want to know its value.  If you are using
 BehaviorSpace to run experiments, you can also include it in the output to be
 able to later reproduce runs that it generates.
 
-## <b>Plotting</b>
+## Plotting
 
 NetLogo's plotting features let you create plots to help you understand what's
 going on in your model.
@@ -2812,7 +2782,7 @@ plotting techniques. Also check out the following code examples:
 > Code Examples: Plot Axis Example, Plot Smoothing Example, Rolling Plot Example
 
 
-## <b>Color</b>
+## Color
 
 NetLogo represents colors in different ways. A color can be number in the range
 0 to 140, with the exception of 140 itself. Below is a chart showing the range
@@ -2940,7 +2910,7 @@ The [Color Picker](colorpicker.html) dialog helps you experiment with and choose
 by choosing Color Picker on the Tools Menu.
 
 
-## <b>Movies</b>
+## Movies
 
 This section describes how to capture an ".mp4" movie of a NetLogo model.
 
@@ -3013,9 +2983,4 @@ the detail in the movie is lost. Depending on the nature of your model, you may
 want to avoid using lossy compression, for example if the view contains fine
 pixel-level detail.
 
-
-
-
-
-
-
+</main>

@@ -1,5 +1,9 @@
 {{> header.html}}
 
+<main class="prose">
+
+
+
 Esta guía consta de tres partes:
 
 - [**¿Qué es Espacio-Conductual?**](#qué-es-espacio-conductual): Describe la herramienta en términos generales,
@@ -555,7 +559,7 @@ obtener
 resultados con formato adecuado para esos reporteros. Tanto en los formatos **Resultados en hoja de cálculo** como en
 **Resultados tabulados**, las listas generadas por los reporteros serán comprimidas en una sola celda, en lugar de
 desplegar
-sus elementos en celdas separadas con un valor por celda. Si los valores de la lista se requieren en celdas 
+sus elementos en celdas separadas con un valor por celda. Si los valores de la lista se requieren en celdas
 ndividuales,
 se selecciona el formato  **Resultados en lista** junto con uno o ambos de los otros formatos.
 
@@ -635,7 +639,7 @@ Séptima: hay una posibilidad extremadamente pequeña de que, al iniciar múltip
 éstas puedan terminar con el mismo estado del generador de números aleatorios. Esto significaría que las ejecuciones producirían
 resultados idénticos en todas las operaciones aleatorias y, probablemente, resultados iguales en general. Esto podría ocurrir al
 ejecutar en procesadores muy rápidos y con muchas ejecuciones en paralelo al mismo tiempo. Si se desea garantizar que esto no afecte
-los resultados, puede agregarse el comando `random-seed new-seed` a los comandos de configuración para generar una nueva semilla 
+los resultados, puede agregarse el comando `random-seed new-seed` a los comandos de configuración para generar una nueva semilla
 aleatoria única en cada ejecución. De hecho, guardar `new-seed` como una variable global permitiría volver a ejecutar una ejecución
 en otro momento, utilizando ese valor para establecer `random-seed` manualmente.
 
@@ -971,3 +975,5 @@ API permite ejecutar experimentos de Espacio-Conductual desde el código en Java
 código personalizado que controle NetLogo de manera más directa para realizar tareas similares
 a las de Espacio-Conductual. Consulta la sección [Control](controlling.html) del Manual del Usuario
 para obtener más detalles sobre ambas posibilidades.
+
+</main>

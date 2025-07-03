@@ -1,5 +1,9 @@
 {{> header.html}}
 
+<main class="prose">
+
+
+
 NetLogo's logging facility allows researchers to record student actions for later
 analysis.
 
@@ -11,7 +15,13 @@ In NetLogo version 6.2.2 and earlier, log4j was the library used and the logging
 was in XML format.  See [the documentation for that prior version](https://ccl.northwestern.edu/netlogo/6.2.2/docs/)
 if you're not on the latest NetLogo release.
 
+<div class="toc">
+
+#### Table of Contents
 [TOC]
+
+</div>
+
 
 ## Starting Logging
 
@@ -156,3 +166,5 @@ There are two convenience commands that will help you manage the logs.  `__zip-l
 at the location specified. After doing `__zip-log-files` the existing logs are **not**
 deleted, you can do so explicitly by using `__delete-log-files`.  Both commands stop the
 current log file (so it can be zipped or deleted) and a new one is started afterwards.
+
+</main>

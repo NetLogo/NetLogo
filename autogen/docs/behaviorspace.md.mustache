@@ -1,5 +1,9 @@
 {{> header.html}}
 
+<main class="prose">
+
+
+
 This guide has three parts:
 
 - [**What is BehaviorSpace?**](#what-is-behaviorspace): A general description of the tool,
@@ -27,7 +31,7 @@ of data from repetitions can be saved in an output file.
 an XML file that can be used when running headlessly. Experiments can also be imported into a
  model.
 - [**Paused experiments**](#paused-experiments): Experiments can now be paused and resumed.
-- [**Run options: update plots and monitors**](#run-options-update-plots-and-monitors): 
+- [**Run options: update plots and monitors**](#run-options-update-plots-and-monitors):
 Reduction in memory usage when box is unchecked.
 
 
@@ -152,7 +156,7 @@ if you start with a world with `min-pxcor = 0`, `max-pxcor = 10` and you vary
 > `["world-width" [11 1 14]]`
 
 [[min-pxcor|min-pcor]] will remain zero and [[max-pxcor|max-pcor]] will be set to 11,
-12, and 13 for successive runs. If neither of these conditions is true you cannot 
+12, and 13 for successive runs. If neither of these conditions is true you cannot
 you cannot vary [[world-height|world-dim]] or [[world-width|world-dim]] directly but
 must vary [[max-pxcor|max-pcor]], [[max-pycor|max-pcor]], [[min-pxcor|min-pcor]]
 and [[min-pycor|min-pcor]] instead.
@@ -977,3 +981,5 @@ The API lets you run BehaviorSpace experiments from Java code, or, you can write
 custom code that controls NetLogo more directly to do BehaviorSpace-like things.
 See the [Controlling](controlling.html) section of the User Manual for further
 details on both possibilities.
+
+</main>
