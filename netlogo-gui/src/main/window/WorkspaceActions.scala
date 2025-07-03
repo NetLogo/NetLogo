@@ -17,7 +17,7 @@ object WorkspaceActions {
 
   def apply(workspace: GUIWorkspace): Seq[Action] =
     Seq(
-      new SimpleGUIWorkspaceAction(I18N.gui("halt"), HaltGroup, workspace, _.halt),
+      new HaltAction(workspace),
       new SimpleGUIWorkspaceAction(I18N.gui("globalsMonitor"), ToolsMonitorGroup, workspace, _.inspectAgent(AgentKind.Observer)),
       new SimpleGUIWorkspaceAction(I18N.gui("turtleMonitor"), ToolsMonitorGroup, workspace, _.inspectAgent(AgentKind.Turtle)),
       new SimpleGUIWorkspaceAction(I18N.gui("patchMonitor"), ToolsMonitorGroup, workspace, _.inspectAgent(AgentKind.Patch)),
@@ -46,6 +46,13 @@ object WorkspaceActions {
     override def performAction(workspace: GUIWorkspace): Unit = {
       action(workspace)
     }
+  }
+
+  class HaltAction(workspace: GUIWorkspace)
+    extends SimpleGUIWorkspaceAction(I18N.gui("halt"), HaltGroup, workspace, _.halt) {
+
+    override def isEnabled: Boolean =
+      workspace.jobManager.anyPrimaryJobs()
   }
 
   // this should be unified with switchTo3DViewAction in GUIWorkspace at some point...

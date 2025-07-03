@@ -5,6 +5,7 @@ package org.nlogo.swing
 import java.awt.{ Component, Graphics }
 import javax.swing.{ Action, Icon, JMenu, JMenuItem, JPopupMenu }
 import javax.swing.border.LineBorder
+import javax.swing.event.{ MenuEvent, MenuListener }
 import javax.swing.plaf.basic.BasicMenuUI
 
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
@@ -69,6 +70,18 @@ class Menu(text: String, var menuModel: MenuModel[Action, String]) extends JMenu
 
   setUI(menuUI)
   syncTheme()
+
+  addMenuListener(new MenuListener {
+    override def menuCanceled(e: MenuEvent): Unit = {}
+    override def menuDeselected(e: MenuEvent): Unit = {}
+
+    override def menuSelected(e: MenuEvent): Unit = {
+      getMenuComponents.foreach(_ match {
+        case menu: MenuItem => menu.updateEnabled()
+        case _ =>
+      })
+    }
+  })
 
   override def getPopupMenu: JPopupMenu = {
     val menu = super.getPopupMenu
