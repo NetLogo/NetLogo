@@ -341,8 +341,11 @@ class FileManager(workspace: AbstractWorkspaceScala,
     loadModel(openModelURI(newUri)).foreach { m =>
       openFromModel(m, uri, modelType, shouldAutoInstallLibs)
 
-      if (modelType == ModelType.Normal)
+      if (modelType == ModelType.Normal) {
         saveModel(false)
+      } else {
+        dirtyMonitor.discardNewAutoSaves()
+      }
     }
   }
 
