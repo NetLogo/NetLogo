@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent
 import java.io.File
 import java.util.Locale
 import javax.swing.{ AbstractAction, JComponent, JFileChooser, JLabel, JPanel }
+import javax.swing.event.{ DocumentEvent, DocumentListener }
 
 import org.nlogo.analytics.Analytics
 import org.nlogo.app.common.TabsInterface
@@ -16,14 +17,21 @@ import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.AbstractWidgetPanel
 
 object Preferences {
-  abstract class BooleanPreference(val i18nKey: String, val requirement: Option[RequiredAction], default: Boolean) extends Preference {
-    private val checkBox = new CheckBox
+  abstract class BooleanPreference(val i18nKey: String, val requirement: Option[RequiredAction], default: Boolean)
+    extends Preference {
+
+    private val checkBox = new CheckBox("", selected => {
+      if (selected != getPreference)
+        Analytics.preferenceChange(i18nKey, selected.toString)
+    })
 
     override def component: CheckBox = checkBox
 
+    private def getPreference: Boolean =
+      NetLogoPreferences.get(i18nKey, default.toString).toBoolean
+
     def load() = {
-      val value = NetLogoPreferences.get(i18nKey, default.toString).toBoolean
-      checkBox.setSelected(value)
+      checkBox.setSelected(getPreference)
     }
 
     def save() = {
@@ -33,15 +41,28 @@ object Preferences {
 
   abstract class StringPreference(val i18nKey: String, val requirement: Option[RequiredAction], default: String) extends Preference {
     val textField = new TextField(20, default) {
+      getDocument.addDocumentListener(new DocumentListener {
+        override def changedUpdate(e: DocumentEvent): Unit = changed()
+        override def insertUpdate(e: DocumentEvent): Unit = changed()
+        override def removeUpdate(e: DocumentEvent): Unit = changed()
+      })
+
       override def getInsets: Insets =
         new Insets(3, 3, 3, 0)
+
+      private def changed(): Unit = {
+        if (getText != getPreference)
+          Analytics.preferenceChange(i18nKey, getText)
+      }
     }
 
     def component: JComponent & ThemeSync = textField
 
+    private def getPreference: String =
+      NetLogoPreferences.get(i18nKey, default)
+
     def load() = {
-      val value = NetLogoPreferences.get(i18nKey, default)
-      textField.setText(value)
+      textField.setText(getPreference)
     }
 
     def save() = {
@@ -64,17 +85,27 @@ object Preferences {
                                                            .map(LocaleWrapper(_)).sortBy(_.toString).toSeq
 
     val i18nKey = "uiLanguage"
+
     val comboBox = new ComboBox(languages) {
       addItemListener(_ => {
         getSelectedItem match {
           case Some(DetectLocale) =>
-            label.setText(I18N.gui.defaultLocale.getDisplayLanguage)
+            val text = I18N.gui.defaultLocale.getDisplayLanguage
+
+            label.setText(text)
+
+            if (!getSelectedItem.contains(getPreference))
+              Analytics.preferenceChange(i18nKey, text)
 
           case _ =>
             label.setText("")
+
+            if (!getSelectedItem.contains(getPreference))
+              Analytics.preferenceChange(i18nKey, "")
         }
       })
     }
+
     val requirement = Some(RequiredAction.Restart)
 
     override val anchor: Int = GridBagConstraints.NORTHWEST
@@ -109,8 +140,11 @@ object Preferences {
 
     def component: JComponent & ThemeSync = panel
 
+    private def getPreference: LocaleOption =
+      I18N.localeFromPreferences.map(LocaleWrapper(_)).getOrElse(DetectLocale)
+
     def load(): Unit = {
-      comboBox.setSelectedItem(I18N.localeFromPreferences.map(LocaleWrapper(_)).getOrElse(DetectLocale))
+      comboBox.setSelectedItem(getPreference)
     }
 
     def save(): Unit = {
@@ -130,14 +164,21 @@ object Preferences {
 
   class ReloadOnExternalChanges(tabs: TabsInterface) extends Preference {
     val i18nKey = "reloadOnExternalChanges"
-    val checkBox = new CheckBox
+
+    val checkBox = new CheckBox("", selected => {
+      if (selected != getPreference)
+        Analytics.preferenceChange(i18nKey, selected.toString)
+    })
+
     val requirement = None
 
     def component: JComponent & ThemeSync = checkBox
 
+    private def getPreference: Boolean =
+      NetLogoPreferences.get("reloadOnExternalChanges", "false").toBoolean
+
     def load() = {
-      val enabled = NetLogoPreferences.get("reloadOnExternalChanges", "false").toBoolean
-      checkBox.setSelected(enabled)
+      checkBox.setSelected(getPreference)
     }
 
     def save() = {
@@ -152,7 +193,20 @@ object Preferences {
   class LogDirectory(val frame: Frame) extends Preference {
     val i18nKey = "logDirectory"
     val requirement = Some(RequiredAction.Restart)
-    val textField = new TextField(20)
+
+    val textField = new TextField(20) {
+      getDocument.addDocumentListener(new DocumentListener {
+        override def changedUpdate(e: DocumentEvent): Unit = changed()
+        override def insertUpdate(e: DocumentEvent): Unit = changed()
+        override def removeUpdate(e: DocumentEvent): Unit = changed()
+      })
+
+      private def changed(): Unit = {
+        if (getText != getPreference)
+          Analytics.preferenceChange(i18nKey, getText)
+      }
+    }
+
     val component =
       new JPanel(new BorderLayout(6, 0)) with Transparent with ThemeSync {
         add(textField, BorderLayout.CENTER)
@@ -171,9 +225,11 @@ object Preferences {
         }
       }
 
+    private def getPreference: String =
+      NetLogoPreferences.get("logDirectory", "")
+
     def load() = {
-      val logDirectory = NetLogoPreferences.get("logDirectory", "")
-      textField.setText(logDirectory)
+      textField.setText(getPreference)
     }
 
     def save() = {
@@ -204,12 +260,18 @@ object Preferences {
 
     private val checkBox = new CheckBox("", (selected) => {
       tabs.setIncludedFilesShown(selected)
+
+      if (selected != getPreference)
+        Analytics.preferenceChange(i18nKey, selected.toString)
     })
 
     def component: CheckBox = checkBox
 
+    private def getPreference: Boolean =
+      NetLogoPreferences.get(i18nKey, "true").toBoolean
+
     def load(): Unit = {
-      val value = NetLogoPreferences.get(i18nKey, "true").toBoolean
+      val value = getPreference
 
       checkBox.setSelected(value)
       tabs.setIncludedFilesShown(value)
@@ -228,14 +290,22 @@ object Preferences {
       I18N.gui.get("tools.preferences.proceduresSortAlphabetical")
     )
 
-    val comboBox = new ComboBox(options)
+    val comboBox = new ComboBox(options) {
+      addItemListener(_ => {
+        if (!getSelectedItem.contains(getPreference))
+          Analytics.preferenceChange(i18nKey, getSelectedItem.map(_.toString).orNull)
+      })
+    }
+
     val requirement = None
 
     def component: JComponent & ThemeSync = comboBox
 
+    private def getPreference: String =
+      NetLogoPreferences.get("proceduresMenuSortOrder", options(0))
+
     def load(): Unit = {
-      val sortOrder = NetLogoPreferences.get("proceduresMenuSortOrder", options(0))
-      comboBox.setSelectedItem(sortOrder)
+      comboBox.setSelectedItem(getPreference)
     }
 
     def save(): Unit = {
@@ -253,12 +323,18 @@ object Preferences {
 
     private val checkBox = new CheckBox("", (selected) => {
       widgetPanel.setBoldWidgetText(selected)
+
+      if (selected != getPreference)
+        Analytics.preferenceChange(i18nKey, selected.toString)
     })
 
     override def component: CheckBox = checkBox
 
+    private def getPreference: Boolean =
+      NetLogoPreferences.get(i18nKey, "false").toBoolean
+
     def load(): Unit = {
-      val value = NetLogoPreferences.get(i18nKey, "false").toBoolean
+      val value = getPreference
 
       checkBox.setSelected(value)
       widgetPanel.setBoldWidgetText(value)
@@ -291,12 +367,18 @@ object Preferences {
 
     private val checkBox = new CheckBox("", (selected) => {
       tabs.smartTabbingEnabled = selected
+
+      if (selected != getPreference)
+        Analytics.preferenceChange(i18nKey, selected.toString)
     })
 
     override def component: CheckBox = checkBox
 
+    private def getPreference: Boolean =
+      NetLogoPreferences.get(i18nKey, "true").toBoolean
+
     def load(): Unit = {
-      val value = NetLogoPreferences.get(i18nKey, "true").toBoolean
+      val value = getPreference
 
       checkBox.setSelected(value)
       tabs.smartTabbingEnabled = value
@@ -313,12 +395,18 @@ object Preferences {
 
     private val checkBox = new CheckBox("", (selected) => {
       tabs.lineNumbersVisible = selected
+
+      if (selected != getPreference)
+        Analytics.preferenceChange(i18nKey, selected.toString)
     })
 
     override def component: CheckBox = checkBox
 
+    private def getPreference: Boolean =
+      NetLogoPreferences.get(i18nKey, "true").toBoolean
+
     def load(): Unit = {
-      val value = NetLogoPreferences.get(i18nKey, "true").toBoolean
+      val value = getPreference
 
       checkBox.setSelected(value)
       tabs.lineNumbersVisible = value
@@ -335,12 +423,18 @@ object Preferences {
 
     private val checkBox = new CheckBox("", (selected) => {
       tabs.setJumpOnClick(selected)
+
+      if (selected != getPreference)
+        Analytics.preferenceChange(i18nKey, selected.toString)
     })
 
     override def component: CheckBox = checkBox
 
+    private def getPreference: Boolean =
+      NetLogoPreferences.get(i18nKey, "true").toBoolean
+
     def load(): Unit = {
-      val value = NetLogoPreferences.get(i18nKey, "true").toBoolean
+      val value = getPreference
 
       checkBox.setSelected(value)
       tabs.setJumpOnClick(value)

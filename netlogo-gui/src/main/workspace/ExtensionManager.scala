@@ -7,7 +7,6 @@ import java.lang.{ ClassLoader, Iterable => JIterable }
 import java.net.URL
 import java.util.{ List => JList, Locale }
 
-import org.nlogo.analytics.Analytics
 import org.nlogo.api.{ ClassManager, Dump, ExtensionException, ImportErrorHandler, Reporter }
 import org.nlogo.core.{ CompilerException, ErrorSource, ExtensionObject, Primitive, PrimitiveCommand, PrimitiveReporter, TokenType }
 import org.nlogo.nvm.{ ExtensionManager => NvmExtensionManager }
@@ -143,8 +142,6 @@ class ExtensionManager(val workspace: ExtendableWorkspace, loader: ExtensionLoad
 
   @throws(classOf[CompilerException])
   def importExtension(extName: String, errors: ErrorSource): Unit = {
-    Analytics.loadExtension(extName)
-
     try {
       val (fileURL, loader) = loaders.foldLeft(Option.empty[(URL, ExtensionLoader)]) {
         case (None,           ldr) => ldr.locateExtension(extName).map((_, ldr))

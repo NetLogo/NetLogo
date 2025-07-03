@@ -94,8 +94,10 @@ class ThemesPanel(frame: Frame & ThemeSync) extends JPanel(new GridBagLayout) wi
       case _ => throw new IllegalStateException
     }
 
+    if (themeString != NetLogoPreferences.get("colorTheme", "light"))
+      Analytics.preferenceChange("colorTheme", themeString)
+
     NetLogoPreferences.put("colorTheme", themeString)
-    Analytics.themeChange(themeString)
 
     frame.syncTheme()
   }

@@ -74,10 +74,6 @@ object Analytics {
       wrapRequest(MatomoRequests.event("Desktop", "App Exit", null, length.toDouble).build(), true)
   }
 
-  def themeChange(theme: String): Unit = {
-    wrapRequest(MatomoRequests.event("Desktop", "Theme Change", theme, null).build())
-  }
-
   def preferenceChange(name: String, value: String): Unit = {
     val json = buildJson(
       Map(
@@ -171,13 +167,15 @@ object Analytics {
     } (using ExecutionContext.global)
   }
 
+  def includeExtensions(extensions: Array[String]): Unit = {
+    extensions.foreach { extension =>
+      wrapRequest(MatomoRequests.event("Desktop", "Include Extension", extension, null).build())
+    }
+  }
+
   def loadOldSizeWidgets(widgets: Int): Unit = {
     if (widgets > 0)
       wrapRequest(MatomoRequests.event("Desktop", "Load Old Size Widgets", null, widgets.toDouble).build())
-  }
-
-  def loadExtension(extension: String): Unit = {
-    wrapRequest(MatomoRequests.event("Desktop", "Load Extension", extension, null).build())
   }
 
   def refreshPreference(): Unit = {
