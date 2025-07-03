@@ -22,21 +22,9 @@ with WindowEvents.LoadModelEvent.Handler
 
   new Timer().scheduleAtFixedRate(new TimerTask {
     override def run(): Unit = {
-      val text = getText
-
-      if (text.nonEmpty) {
-        val hash = MurmurHash3.stringHash(text)
-
-        if (!lastHash.contains(hash)) {
-          Analytics.codeHash(hash)
-
-          lastHash = Option(hash)
-
-          Analytics.primUsage(workspace.tokenizeForColorizationIterator(text))
-        }
-      }
+      maybeSendAnalytics()
     }
-  }, 5000, 5000)
+  }, 300000, 300000)
 
   override def editorConfiguration =
     super.editorConfiguration.withMenu(editorMenu)
@@ -51,5 +39,26 @@ with WindowEvents.LoadModelEvent.Handler
   def handle(e: WindowEvents.LoadModelEvent): Unit = {
     innerSource = e.model.code
     compile()
+    maybeSendAnalytics()
+  }
+
+  private def maybeSendAnalytics(): Unit = {
+    val text = getText
+
+    if (text.nonEmpty) {
+      val hash = MurmurHash3.stringHash(text)
+
+      if (!lastHash.contains(hash)) {
+        lastHash = Option(hash)
+
+        Analytics.codeHash(hash)
+        Analytics.primUsage(workspace.tokenizeForColorizationIterator(text))
+
+        "extensions[\\s\r\n]*\\[(.*)\\]".r.findFirstMatchIn(text).foreach(_.group(1) match {
+          case s if s != null => Analytics.includeExtensions(s.trim.split("[\\s\r\n]+"))
+          case _ =>
+        })
+      }
+    }
   }
 }
