@@ -7,15 +7,51 @@
     <link rel="stylesheet" href="netlogo.css" type="text/css"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+      div.dict_entry > h3 {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        align-items: center;
+        gap: 1rem;
+        padding-inline: var(--space-lg);
+      }
+
+      div.dict_entry > h3 a {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        flex-grow: 1;
+        flex-shrink: 0;
+      }
+
+      span.since {
+        margin-left: auto;
+        font-size: 0.875rem;
+        font-weight: 200;
+      }
+
+      span.since::before {
+        content: 'Since ';
+        font-weight: 500;
+        color: var(--color-white);
+      }
+
+      span.prim_example {
+        display: block;
+        margin-bottom: var(--block-bottom);
+        width: fit-content;
+      }
+      </style>
   </head>
   <body>
-    <h1>
-      NetLogo Dictionary
-    </h1>
+    {{> header.html}}
+    <div class="prose">
     <div class="version">
       NetLogo {{version}} User Manual
     </div>
-    <div class="centertext">
+    <div class="centertext" style="padding-bottom: 1rem">
       <div class="block">
         <div class="smallfont centertext tocborder inlineblock">
           Alphabetical:
@@ -10307,6 +10343,7 @@ if (pxcor &gt; 0) xor (pycor &gt; 0)
           Programming Guide for details.
         </p>
       </div>
+    </div>
     </div>
   </body>
 </html>

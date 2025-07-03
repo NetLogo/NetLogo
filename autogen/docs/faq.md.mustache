@@ -30,14 +30,25 @@
 
 {{> header.html}}
 
+<main class="prose">
+
+
+
 Feedback from users is very valuable to us in designing and improving
 NetLogo. We'd like to hear from you. (See [Contacting Us](contact.html).)
 
 <div id="questions">
 
+<div class="toc">
+
+#### Table of Contents
 [TOC levels=2,3]
 
 </div>
+
+
+</div>
+
 
 ## General
 
@@ -439,7 +450,7 @@ This happens when NetLogo makes a request over the network to update information
 extensions and their latest versions and there is a problem getting the response. We offer the following workaround.
 
 Turn off the request to update the extensions information by setting the java preference
-netlogo.libraries.disabled=true by editing the NetLogo configuration file. Add the 
+netlogo.libraries.disabled=true by editing the NetLogo configuration file. Add the
 following line to the section with java-options (order doesn’t matter)
 
     java-options=-Dnetlogo.libraries.disabled=true
@@ -988,3 +999,5 @@ probably no.
 
 You need to add NetLogo.jar to your classpath when compiling. `NetLogo.jar` is
 included with NetLogo.
+
+</main>

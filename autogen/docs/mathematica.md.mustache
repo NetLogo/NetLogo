@@ -1,5 +1,9 @@
 {{> header.html}}
 
+<main class="prose">
+
+
+
 The NetLogo-Mathematica link provides modelers with an easy to use, real-time
 link between NetLogo and Mathematica. Together, these tools can provide users
 with a highly interactive, self-documenting work flow that neither can provide
@@ -26,7 +30,13 @@ your model.
 For more information about Mathematica, please visit the
 [Wolfram Research web site](http://www.wolfram.com/).
 
+<div class="toc">
+
+#### Table of Contents
 [TOC]
+
+</div>
+
 
 ## What can I do with it?
 
@@ -93,15 +103,15 @@ common Mathematica data types into strings suitable for NetLogo. The following
 commands set the density using a single string, or set the density using a
 Mathematica defined variable, `myDensity`.
 
-> `NLCommand["set density 50"];`  
-> `myDensity = 60;`  
+> `NLCommand["set density 50"];`
+> `myDensity = 60;`
 > `NLCommand["set density", myDensity];`
 
 **Reporting information from NetLogo:** NetLogo data can be reported back to
 Mathematica using `NLReport[]`. This includes numbers, strings, boolean values,
 and lists.
 
-> `NLReport["count turtles"];`  
+> `NLReport["count turtles"];`
 > `NLReport["[(list pxcor pycor)] of n-of 10 patches"]`
 
 For more information, see the NetLogo-Mathematica Tutorial notebook included
@@ -135,3 +145,4 @@ http://ccl.northwestern.edu/netlogo/mathematica.html. Center for
 Connected Learning and Computer-Based Modeling, Northwestern
 University, Evanston, IL.
 
+</main>

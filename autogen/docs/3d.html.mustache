@@ -10,12 +10,15 @@
     <style>
       p.bookquote { font-size: 85%; margin-left: 4em; margin-right: 4em; color: #333 ; }
       p.c1 {font-style: italic}
+
+      .prose.nl-three div {
+        padding: 0;
+      }
     </style>
   </head>
   <body>
-    <h1>
-      NetLogo 3D
-    </h1>
+    {{> header.html}}
+   <main class="prose nl-three">
     <p>
       NetLogo includes the NetLogo 3D application that allows you to create 3D worlds.
     </p>
@@ -37,7 +40,7 @@
         <a href="#dictionary">Dictionary</a>
       </li>
     </ul>
-    <div id="introduction">
+    <div id="introduction" class="prose">
       <h2>
         <a>Introduction</a>
       </h2>
@@ -50,7 +53,7 @@
         When you're ready to write your own 3D model, look at the Code
         Examples in the 3D section of the Models Library.
       </p>
-      <div class="blockquote">
+      <blockquote>
         <p>
           <b>Code Example:</b> Turtle Perspective Example 3D helps you learn
           about the different perspectives.
@@ -60,7 +63,7 @@
           you understand how turtles and the observer move in 3D. You can
           also step through this model with the tutorial below.
         </p>
-      </div>
+      </blockquote>
       <h4>
         <span class="prim_example">3D Worlds</span>
       </h4>
@@ -202,7 +205,7 @@ stop
 end-shape
 </pre>
     </div>
-    <div id="tutorial">
+    <div id="tutorial" class="prose">
       <h2>
         <a>Tutorial</a>
       </h2>
@@ -240,7 +243,7 @@ end-shape
         are all checked and grayed out. Topologies are not yet supported in
         NetLogo 3D, so the world always wraps in all dimensions.
       </p>
-      <div class="blockquote">
+      <blockquote>
         <ul>
           <li>Move to the Command Center and type <code>print count
               patches</code>.</li>
@@ -248,7 +251,7 @@ end-shape
         <p class="question">
           Is the number smaller or larger than you expected?
         </p>
-      </div>
+      </blockquote>
       <p>
         In a 3D world the number of patches grows very quickly since
         <code>count patches = world-width * world-height * world-depth</code>.
@@ -256,13 +259,13 @@ end-shape
         model. Lots of patches can slow your model down or even cause NetLogo
         to run out of memory.
       </p>
-      <div class="blockquote">
+      <blockquote>
         <ul>
           <li>Type <code>ask patch 1 2 3 [ set pcolor red ]</code> into the
             Command Center.</li>
           <li>Use the mouse in the 3D view to rotate the world.</li>
         </ul>
-      </div>
+      </blockquote>
       <p>
         Notice the shape of the patch and its position in relation to the
         edges of the world. You'll also notice that you now need three
@@ -271,7 +274,7 @@ end-shape
       <h4>
         <span class="prim_example">Step 2: Turtle Movement</span>
       </h4>
-      <div class="blockquote">
+      <blockquote>
         <ul>
           <li>Open the Models Library in the File menu. (If you are on a Mac
             and you don't have a File menu, click on the main NetLogo
@@ -280,7 +283,7 @@ end-shape
           <li>Open Turtle and Observer Motion Example 3D in 3D/Code Examples
           </li>
         </ul>
-      </div>
+      </blockquote>
       <p>
         Take a moment to look for the controls and monitors. In the bottom
         left you'll notice a group of monitors that describe the location
@@ -370,7 +373,7 @@ end-shape
         observer has a heading, pitch and roll, these variables control where
         the observer is looking, that is, what you see in the view.
       </p>
-      <div class="blockquote">
+      <blockquote>
         <ul>
           <li>Move to the 3D view, and make sure &quot;Orbit&quot; is
             selected in the bottom left corner of the view.</li>
@@ -399,7 +402,7 @@ end-shape
         <p class="question">
           How does the view change? How do the observer variables change?
         </p>
-      </div>
+      </blockquote>
       <p>
         After you are done exploring the world using the mouse controls you
         can take a look at the observer control buttons in the lower left
@@ -415,7 +418,7 @@ end-shape
         difference is only visual in the 3D view. When in watch mode the
         observer does not move but updates to face the target agent.
       </p>
-      <div class="blockquote">
+      <blockquote>
         <ul>
           <li>Press the &quot;setup&quot; button again so you are back to the
             default orientation.</li>
@@ -429,7 +432,7 @@ end-shape
           <li>Take a little time to experiment with orbit, roll and zoom
             buttons; notice similarities and differences to the mouse controls.</li>
         </ul>
-      </div>
+      </blockquote>
       <p>
         The direction of the orbit commands refer to the direction that the
         observer moves. That is, imagine that the observer is on the surface
@@ -466,7 +469,7 @@ end-shape
         as well as the orientation of the observer.
       </p>
     </div>
-    <div id="dictionary">
+    <div id="dictionary" class="prose">
       <h2>
         <a>Dictionary</a>
       </h2>
@@ -1238,5 +1241,6 @@ show [count turtles-at 0 0 0] of turtle 0
         </p>
       </div>
     </div>
+    </main>
   </body>
 </html>

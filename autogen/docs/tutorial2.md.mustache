@@ -1,5 +1,9 @@
 {{> header.html}}
 
+<main class="prose">
+
+
+
 So far you've successfully navigated your way through opening and running
 models, pressing buttons, changing sliders and switches, and gathering
 information from a model using plots and monitors.
@@ -8,7 +12,13 @@ In this section, the focus will start to shift from observing models to
 manipulating models. You will start to see the inner workings of the models and
 be able to change how they look.
 
+<div class="toc">
+
+#### Table of Contents
 [TOC]
+
+</div>
+
 
 ## Sample Model: Traffic Basic
 
@@ -48,40 +58,40 @@ commands or directions to a model. Commands are instructions you can give to
 NetLogo's agents: turtles, patches, links, and the observer.
 
 > In Traffic Basic:
-> 
+>
 > - Press the "setup" button.
 > - Locate the Command Center.
 > - Click the mouse in the white box at the bottom of the Command Center.
 > - Type the text shown here:
-> 
+>
 > ![[cc-set-patches-yellow.png]]
-> 
+>
 > - Press the return key.
-> 
+>
 > | What happened to the View?
-> 
+>
 > You may have noticed the background of the View has turned all yellow and the
 > street has disappeared.
-> 
+>
 > | Why didn't the cars turn yellow too?
-> 
+>
 > Looking back at the command that was written, we asked only the patches to
 > change their color. In this model, the cars are represented by a different
 > kind of agent, called "turtles". Therefore, the cars did not receive these
 > instructions and thus did not change.
-> 
+>
 > | What happened in the Command Center?
-> 
+>
 > You may have noticed that the command you just typed is now displayed in the
 > Command Center as shown below:
 > ![[commandcenterhistory.png]]
-> 
+>
 > - Type in the bottom of the Command Center the text shown below:
-> 
+>
 > ![[cc-set-turtles-brown.png]]
-> 
+>
 > | Was the result what you expected?
-> 
+>
 > The view should have a yellow background with a line of brown cars in the
 > middle:
 > <p class="screenshot">
@@ -99,16 +109,16 @@ corner. You can also use the tab key on your keyboard to cycle through the
 different types.
 
 > - In the Command Center, click on the "observer>" in the bottom left corner:
-> 
+>
 > ![[cc-context-menu.png]]
-> 
+>
 > - Choose "turtles" from the popup menu.
 > - Type `set color pink` and press return.
 > - Press the tab key until you see "patches>" in the bottom left corner.
 > - Type <code>set pcolor white</code> and press return.
-> 
+>
 > | What does the View look like now?
-> 
+>
 > | Do you notice any differences between these two commands and the
 > | observer commands from earlier?
 
@@ -120,7 +130,7 @@ agents like in the second example (patches> `set pcolor white`), you only have
 to give the command itself.
 
 > - Press "setup".
-> 
+>
 > | What happened?
 
 Why did the View revert back to the old version, with the black background and
@@ -140,19 +150,19 @@ You may have noticed in the previous section that we used two different words
 for changing color: [[color]] and [[pcolor]].
 
 > | What is the difference between color and pcolor?
-> 
+>
 > - Choose "turtles" from the popup menu in the Command Center (or use the tab
 >   key).
 > - Type `set color blue` and press return.
-> 
+>
 > | What happened to the cars?
-> 
+>
 > Think about what you did to make the cars turn blue, and try to make the
 > patches turn red.
-> 
+>
 > If you try to ask the patches to `set color red`, an error message occurs:
 > ![[cc-error-patch-color.png]]
-> 
+>
 > - Type `set pcolor red` instead and press return.
 
 We call [[color]] and [[pcolor]] "variables". Some commands and variables are
@@ -183,15 +193,15 @@ that is a little larger or a little smaller, as follows.
 > - Choose "patches" from the popup menu in the Command Center (or use the tab
 >   key).
 > - Type `set pcolor red - 2` (The spacing around the "-" is important.)
-> 
+>
 > By subtracting from red, you make it darker.
-> 
+>
 > - Type `set pcolor red + 2`
-> 
+>
 > By adding to red, you make it lighter.
 
 You can use this technique on any of the colors listed in the chart.
-NetLogo allows you to use the whole spectrum of 
+NetLogo allows you to use the whole spectrum of
 For information on the different ways colors are represented in NetLogo
 see the
 [Colors](programming.html#colors) section of the NetLogo Programming Guide.
@@ -211,7 +221,7 @@ group of blue cars. Let's look at how to change only one car's color.
 >   selections, notice when your mouse highlights a turtle menu item that turtle
 >   is highlighted in the view. Select "inspect turtle" from the sub-menu for
 >   the red turtle.
-> 
+>
 > A turtle monitor for that car will appear:
 > ![[car-inspector.png]]
 
@@ -225,9 +235,9 @@ that belong to the red car. A variable is a location that holds a value.
 Let's take a closer look at the turtle monitor:
 
 > | What is this turtle's who number?
-> 
+>
 > | What color is this turtle?
-> 
+>
 > | What shape is this turtle?
 
 This turtle monitor is showing a turtle that has a who number of 0, a color
@@ -251,9 +261,9 @@ commands you type here are only done by this particular turtle.
 
 > - In the Agent Commander of the Turtle Monitor for turtle 0, type
 >   `set color pink`.
-> 
+>
 > | What happens in the View?
-> 
+>
 > | Did anything change in the Turtle Monitor?
 
 A second way to change one turtle's color is to go directly to the color
@@ -261,7 +271,7 @@ variable in the Turtle Monitor and change the value.
 
 > - Select the text to the right of "color" in the Turtle Monitor.
 > - Type in a new color such as `green + 2`.
-> 
+>
 > | What happened?
 
 The third way to change an individual turtle's or patch's color is to use the
@@ -271,12 +281,12 @@ that affect individual turtles, as well as groups of turtles.
 > - In the Command Center, select "observer" from the popup menu (or use the tab
 >   key).
 > - Type `ask turtle 0 [set color blue]` and press return.
-> 
+>
 > | What happens?
 
 > Just as there are Turtle Monitors, there are also Patch Monitors, which work
 > very similarly.
-> 
+>
 > | Can you make a patch monitor and use it to change the color of a single
 > | patch?
 
@@ -292,25 +302,25 @@ plot a point on a graph: an x-axis value and a y-axis value. Patch locations are
 designated in the same way as plotting a point.
 
 > - Open a patch monitor for any patch.
-> 
+>
 > ![[patch-inspector.png]]
-> 
+>
 > The monitor shows that for the patch in the picture, its
 > [pxcor](dictionary.html#pcor) variable is -19 and its
 > [pycor](dictionary.html#pcor) variable is 0. If we go back to the analogy of
 > the coordinate plane and wanted to plot this point, the point would be found
 > on the x axis left of the origin, where x=-19 and y=0.
-> 
+>
 > To tell this particular patch to change color:
-> 
+>
 > - In the bottom of the patch monitor, enter `set pcolor blue` and press
 >   return.
-> 
+>
 > Typing a command in a turtle or patch monitor addresses only that turtle or
 > patch.
-> 
+>
 > You can also talk to a single patch from the Command Center:
-> 
+>
 > - In the Command Center, enter `ask patch -19 0 [set pcolor green]` and press
 >   return.
 
@@ -322,3 +332,4 @@ learned on some of the other models in the Models Library.
 In [Tutorial #3: Procedures](tutorial3.html) you can learn how to alter and
 extend existing models and build your own models.
 
+</main>

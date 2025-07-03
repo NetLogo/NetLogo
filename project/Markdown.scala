@@ -70,6 +70,7 @@ object Markdown {
 
     extensions.add(TocExtension.create())
     options.set[java.lang.Integer](TocExtension.LEVELS, TocOptions.getLevels(2))
+    extensions.add(TOCAttributeExtension)
     extensions.add(AnchorLinkExtension.create())
     options.set(AnchorLinkExtension.ANCHORLINKS_ANCHOR_CLASS, "section-anchor")
 
@@ -168,6 +169,31 @@ object Markdown {
 
           def getNodeRenderingHandlers = Set[NodeRenderingHandler[?]](
             new NodeRenderingHandler(classOf[AsideBlock], QuestionRenderer)).asJava
+        }
+      }
+    }
+  }
+
+  object TOCAttributeExtension extends HtmlRenderer.HtmlRendererExtension {
+    def rendererOptions(options: MutableDataHolder) = {}
+    def extend(builder: HtmlRenderer.Builder, rendererType: String) =
+      if (rendererType == "HTML")
+        builder.nodeRendererFactory(TOCAttributeRenderer.Factory)
+
+    object TOCAttributeRenderer extends CustomNodeRenderer[toc.TocBlock] {
+      override def render(node: toc.TocBlock, context: NodeRendererContext, html: HtmlWriter) = {
+        html.attr("class", "toc")
+        html.withAttr().tag("div")
+        context.renderChildren(node.getFirstChild)
+        html.tag("/div")
+      }
+
+      object Factory extends NodeRendererFactory {
+        def create(options: DataHolder) = new NodeRenderer {
+          import scala.collection.JavaConverters._
+
+          def getNodeRenderingHandlers = Set[NodeRenderingHandler[?]](
+            new NodeRenderingHandler(classOf[toc.TocBlock], TOCAttributeRenderer)).asJava
         }
       }
     }

@@ -61,8 +61,26 @@ class ExtensionDocs(extensionsDirectory: File, extensionDocConfigFile: File) {
         generateHTMLPageForExtension(extShortName, extFullName, targetPath, buildVariables)
     }
 
-  private def renderMarkdown(extensionName: String)(str: String): String =
+  private def wrapString(
+    str: String,
+    pre: String = "",
+    post: String = ""
+  ): String = {
+    val wrapped = str.linesIterator.map(line => pre + line + post).mkString("\n")
+    if (wrapped.nonEmpty) wrapped + "\n" else wrapped
+  }
+
+  private def wrapMarkdownInProseBlock(
+    str: String,
+  ): String = {
+    val pre = "<main class=\"prose\">\n\n"
+    val post = "\n\n</main>"
+    wrapString(str, pre, post)
+  }
+
+  private def renderMarkdown(extensionName: String)(str: String): String = {
     Markdown(str, extensionName, extension = true)
+  }
 
   private def getIncludes(filenames: Seq[String], basePath: NioPath): TemplateFunction =
     new TemplateFunction {
