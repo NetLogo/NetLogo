@@ -120,6 +120,8 @@ object XMLReader {
                 parseElement(acc)
               else
                 parseElement(acc.copy(text = s"]]${XMLElement.CDataEscape}>".r.replaceAllIn(reader.getText, "]]>")))
+            case XMLStreamConstants.COMMENT =>
+              parseElement(acc)
             case x =>
               Failure(throw new Exception(s"Unexpected value found while parsing XML: ${x}"))
           }
