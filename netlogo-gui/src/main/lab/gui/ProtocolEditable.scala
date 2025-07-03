@@ -4,22 +4,20 @@ package org.nlogo.lab.gui
 
 import java.awt.Window
 
-import org.nlogo.api.{ CompilerServices, LabProtocol, LabVariableParser}
-import org.nlogo.core.I18N
+import org.nlogo.api.{ CompilerServices, GlobalsIdentifier, LabProtocol, LabVariableParser }
+import org.nlogo.core.{ CompilerException, I18N }
 import org.nlogo.editor.Colorizer
 import org.nlogo.swing.OptionPane
 import org.nlogo.window.{ DummyErrorHandler, Editable, EditPanel }
 
 import scala.util.{ Success, Failure }
 
-// normally we'd be package-private but the org.nlogo.properties stuff requires we be public - ST 2/25/09
-
-class ProtocolEditable(protocol: LabProtocol,
-                       window: Window,
-                       compiler: CompilerServices,
-                       colorizer: Colorizer,
-                       worldLock: AnyRef,
-                       experimentNames: Seq[String] = Seq[String]())
+private [gui] class ProtocolEditable(protocol: LabProtocol,
+                                     window: Window,
+                                     compiler: CompilerServices & GlobalsIdentifier,
+                                     colorizer: Colorizer,
+                                     worldLock: AnyRef,
+                                     experimentNames: Seq[String] = Seq[String]())
   extends Editable with DummyErrorHandler {
   // these are for Editable
   def helpLink = Some("behaviorspace.html#creating-an-experiment-setup")
@@ -151,9 +149,47 @@ class ProtocolEditable(protocol: LabProtocol,
       Some(I18N.gui.getN("edit.behaviorSpace.name.duplicate", name.trim))
     } else {
       LabVariableParser.parseVariables(valueSets, repetitions, worldLock, compiler) match {
-        case Failure(t) => Some(t.getMessage)
-        case _ => None
+        case Failure(t) =>
+          return Some(I18N.gui.getN("edit.behaviorSpace.compilerError",
+                                    I18N.gui.get("edit.behaviorSpace.variableSpec"), t.getMessage))
+
+        case _ =>
       }
+
+      def checkCommand(name: String, text: String): Option[String] = {
+        try {
+          if (text.trim.nonEmpty)
+            compiler.checkCommandSyntax(text.trim)
+        } catch {
+          case e: CompilerException =>
+            return Some(I18N.gui.getN("edit.behaviorSpace.compilerError", name, e.getMessage))
+        }
+
+        None
+      }
+
+      def checkReporter(name: String, text: String): Option[String] = {
+        try {
+          if (text.trim.nonEmpty)
+            compiler.checkReporterSyntax(text.trim)
+        } catch {
+          case e: CompilerException =>
+            return Some(I18N.gui.getN("edit.behaviorSpace.compilerError", name, e.getMessage))
+        }
+
+        None
+      }
+
+      metrics.split("\n").foldLeft(Option.empty[String]) {
+        case (None, m) => checkReporter(I18N.gui.get("edit.behaviorSpace.metrics"), m)
+        case (e, _) => e
+      }.orElse(checkReporter(I18N.gui.get("edit.behaviorSpace.runMetricsCondition"), runMetricsCondition))
+       .orElse(checkCommand(I18N.gui.get("edit.behaviorSpace.preExperimentCommands"), preExperimentCommands))
+       .orElse(checkCommand(I18N.gui.get("edit.behaviorSpace.setupCommands"), setupCommands))
+       .orElse(checkCommand(I18N.gui.get("edit.behaviorSpace.goCommands"), goCommands))
+       .orElse(checkReporter(I18N.gui.get("edit.behaviorSpace.exitCondition"), exitCondition))
+       .orElse(checkCommand(I18N.gui.get("edit.behaviorSpace.postRunCommands"), postRunCommands))
+       .orElse(checkCommand(I18N.gui.get("edit.behaviorSpace.postExperimentCommands"), postExperimentCommands))
     }
   }
 }

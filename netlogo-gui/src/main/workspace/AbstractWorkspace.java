@@ -13,6 +13,7 @@ import org.nlogo.api.AggregateManagerInterface;
 import org.nlogo.api.ExportPlotWarningAction;
 import org.nlogo.api.ExportPlotWarningActionJ;
 import org.nlogo.api.ExternalResourceManager;
+import org.nlogo.api.GlobalsIdentifier;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.PreviewCommands;
 import org.nlogo.core.CompilerException;
@@ -40,7 +41,8 @@ public abstract class AbstractWorkspace
     EditorWorkspace,
     ExtendableWorkspace,
     org.nlogo.api.LogoThunkFactory,
-    org.nlogo.api.HubNetWorkspaceInterface {
+    org.nlogo.api.HubNetWorkspaceInterface,
+    GlobalsIdentifier {
 
   /// globals
   /// (some of these probably should be changed not to be public - ST 12/11/01)
@@ -222,6 +224,18 @@ public abstract class AbstractWorkspace
   }
 
   /// misc
+
+  public boolean isGlobalVariable(String name) {
+    if (!_world.isDimensionVariable(name) && !name.equalsIgnoreCase("RANDOM-SEED")) {
+      synchronized (_world) {
+        if (_world.observerOwnsIndexOf(name.toUpperCase()) == -1) {
+          return false;
+        }
+      }
+    }
+
+    return true;
+  }
 
   // we shouldn't need "Workspace." lampsvn.epfl.ch/trac/scala/ticket/1409 - ST 4/6/09
   private UpdateMode updateMode = UpdateModeJ.CONTINUOUS();
