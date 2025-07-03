@@ -326,7 +326,7 @@ class FileManager(workspace: AbstractWorkspaceScala,
   }
 
   def openFromURI(uri: URI, modelType: ModelType, shouldAutoInstallLibs: Boolean = false): Unit = {
-    val newUri = ModelConfig.findAutoSave(uri.getPath) match {
+    val newUri = ModelConfig.findAutoSave(Paths.get(uri).toString) match {
       case Some(path) =>
         if (new OptionPane(parent, I18N.gui.get("file.autosave.recover"), I18N.gui.get("file.autosave.recover.message"),
                            OptionPane.Options.YesNo, OptionPane.Icons.Info).getSelectedIndex == 0) {
