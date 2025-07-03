@@ -3,8 +3,8 @@
 package org.nlogo.swing
 
 import java.awt.{ BorderLayout, Frame }
-import java.awt.event.ActionEvent
-import javax.swing.{ AbstractAction, JDialog, JPanel }
+import java.awt.event.{ ActionEvent, KeyEvent }
+import javax.swing.{ AbstractAction, JDialog, JPanel, KeyStroke }
 import javax.swing.border.EmptyBorder
 
 import org.nlogo.theme.InterfaceColors
@@ -21,9 +21,10 @@ class Popup(parentFrame: Frame, title:String, panel: JPanel, cancel: => Unit, ok
   dialog.setAutoRequestFocus(true)
   dialog.getContentPane.setBackground(InterfaceColors.dialogBackground())
 
+  private val okButton = new DialogButton(true, i18n("common.buttons.ok"), () => { if (ok) die() })
+
   private val buttonPanel = new ButtonPanel(
-    Seq(new DialogButton(true, i18n("common.buttons.ok"), () => { if (ok) die() }),
-        new DialogButton(false, i18n("common.buttons.cancel"), () => { cancel; die() }))) {
+    Seq(okButton, new DialogButton(false, i18n("common.buttons.cancel"), () => { cancel; die() }))) {
     setBorder(new EmptyBorder(0, 0, 6, 0))
   }
 
@@ -35,6 +36,15 @@ class Popup(parentFrame: Frame, title:String, panel: JPanel, cancel: => Unit, ok
       die()
     }
   })
+
+  dialog.getRootPane.getInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), new AbstractAction {
+    override def actionPerformed(e: ActionEvent): Unit = {
+      if (ok)
+        die()
+    }
+  })
+
+  dialog.getRootPane.setDefaultButton(okButton)
 
   DialogForegrounder(dialog)
 
