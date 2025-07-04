@@ -5,6 +5,7 @@ package org.nlogo.window
 import java.awt.{ BorderLayout, Color, Cursor, Dimension, Font, Frame, Graphics, GridBagConstraints, GridBagLayout,
                   Insets }
 import java.awt.event.ActionEvent
+import java.util.Locale
 import javax.swing.{ AbstractAction, AbstractCellEditor, JButton, JLabel, JPanel, JTable }
 import javax.swing.border.EmptyBorder
 import javax.swing.event.{ ListSelectionEvent, ListSelectionListener }
@@ -119,13 +120,13 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
     val names = table.model.pens.map(_.name)
     // It was an intentional decision made Q2 2011 to allow multiple pens with
     // a blank name. - RG 2/21/2018
-    val groupedNames = (names.groupBy(_.toUpperCase) - "").toSeq
+    val groupedNames = (names.groupBy(_.toUpperCase(Locale.ENGLISH)) - "").toSeq
     val duplicateNames = groupedNames.filter(_._2.length > 1)
     if (duplicateNames.nonEmpty) {
       new OptionPane(this, I18N.gui.get("edit.plot.pen.invalidEntry"),
                      I18N.gui.getN("edit.plot.pen.duplicateNames",
-                                   duplicateNames.map(_._1.toUpperCase).mkString(", ")), OptionPane.Options.Ok,
-                     OptionPane.Icons.Error)
+                                   duplicateNames.map(_._1.toUpperCase(Locale.ENGLISH)).mkString(", ")),
+                     OptionPane.Options.Ok, OptionPane.Icons.Error)
       None
     } else {
       Some(table.getPlotPens)

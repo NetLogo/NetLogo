@@ -5,7 +5,7 @@ package org.nlogo.workspace
 import java.io.{ Closeable, IOException, PrintWriter }
 import java.lang.{ ClassLoader, Iterable => JIterable }
 import java.net.URL
-import java.util.{ List => JList }
+import java.util.{ List => JList, Locale }
 
 import org.nlogo.api.{ ClassManager, Dump, ExtensionException, ImportErrorHandler, Reporter }
 import org.nlogo.core.{ CompilerException, ErrorSource, ExtensionObject, Primitive, PrimitiveCommand, PrimitiveReporter, TokenType }
@@ -63,7 +63,7 @@ object ExtensionManager {
 
   class JarContainer(val jarClassLoader: ClassLoader, data: ExtensionData) {
     val extensionName  = data.extensionName
-    val normalizedName = data.extensionName.toUpperCase
+    val normalizedName = data.extensionName.toUpperCase(Locale.ENGLISH)
     val fileURL        = data.fileURL
     val modified: Long = data.modified
     val primManager: ExtensionPrimitiveManager = new ExtensionPrimitiveManager(extensionName)
@@ -80,8 +80,8 @@ object ExtensionManager {
     }
 
     private def primName(name: String): String = {
-      if (primManager.autoImportPrimitives) name.toUpperCase
-      else s"${extensionName.toUpperCase}:${name.toUpperCase}"
+      if (primManager.autoImportPrimitives) name.toUpperCase(Locale.ENGLISH)
+      else s"${extensionName.toUpperCase(Locale.ENGLISH)}:${name.toUpperCase(Locale.ENGLISH)}"
     }
 
     def unload(extensionManager: ExtensionManager) = {
@@ -216,7 +216,7 @@ class ExtensionManager(val workspace: ExtendableWorkspace, loader: ExtensionLoad
 
   @throws(classOf[CompilerException])
   def readExtensionObject(extName: String, typeName: String, value: String): ExtensionObject = {
-    val upcaseExtName = extName.toUpperCase
+    val upcaseExtName = extName.toUpperCase(Locale.ENGLISH)
     def catchExtensionException(f: JarContainer => ExtensionObject): JarContainer => ExtensionObject = { (j: JarContainer) =>
       try { f(j) }
       catch {
@@ -233,7 +233,8 @@ class ExtensionManager(val workspace: ExtendableWorkspace, loader: ExtensionLoad
 
   def replaceIdentifier(name: String): Primitive = {
     val (primName, isRelevantJar) = name.split(":") match {
-      case Array(prefix, pname) => (pname, (jc: JarContainer) => prefix.toUpperCase == jc.normalizedName)
+      case Array(prefix, pname) => (pname, (jc: JarContainer) =>
+                                     prefix.toUpperCase(Locale.ENGLISH) == jc.normalizedName)
       case _                    => (name,  (jc: JarContainer) => jc.primManager.autoImportPrimitives)
     }
     jars.values.filter(liveJars.contains)
@@ -253,7 +254,7 @@ class ExtensionManager(val workspace: ExtendableWorkspace, loader: ExtensionLoad
     typeCache -= name
   }
 
-  def cachedType(name: String): Option[TokenType] = typeCache.get(name.toUpperCase)
+  def cachedType(name: String): Option[TokenType] = typeCache.get(name.toUpperCase(Locale.ENGLISH))
 
   def extensionCommandNames: Set[String] =
     typeCache.filter(_._2 == TokenType.Command).map(_._1).toSet

@@ -84,6 +84,8 @@ package org.nlogo.parse
 //    LetScoper, but it would result in having to change the syntax of the _let primitive,
 //    seems awkward and confusing.
 
+import java.util.Locale
+
 import org.nlogo.core.{ I18N, Let, Reporter, Token, TokenType }
 import org.nlogo.core.Fail._
 import org.nlogo.core.prim.{ _abstractlet, _let, _multilet }
@@ -100,7 +102,7 @@ object LetScope {
       case _let(None, _) =>
         tokens.head match {
           case nameToken @ Token(text, TokenType.Reporter, _) =>
-            val name = text.toUpperCase
+            val name = text.toUpperCase(Locale.ENGLISH)
             val newLet = Let(name)
             for (tpe <- usedNames.get(name))
               exception("There is already a " + SymbolType.typeName(tpe) + " called " + name, nameToken)
@@ -127,7 +129,7 @@ object LetScope {
         }
 
       case _let(Some(let), _) =>
-        (l, usedNames.addSymbol(let.name.toUpperCase, LocalVariable(let)))
+        (l, usedNames.addSymbol(let.name.toUpperCase(Locale.ENGLISH), LocalVariable(let)))
 
     }
   }
@@ -148,7 +150,7 @@ object LetScope {
         lets = lets :+ subLet
         multiUsedNames = newUsedNames
       } else {
-        val name     = token.text.toUpperCase
+        val name     = token.text.toUpperCase(Locale.ENGLISH)
         val newLet   = Let(name, token)
         val splitLet = new _let(Some(newLet), Some(token.text))
 
@@ -182,7 +184,7 @@ object LetVariableScope {
     r match {
       case u @ core.prim._unknownidentifier() =>
         val newInstruction =
-          usedNames.get(t.text.toUpperCase).collect {
+          usedNames.get(t.text.toUpperCase(Locale.ENGLISH)).collect {
             case LocalVariable(let) =>
               val newLetVariable = core.prim._letvariable(let)
               newLetVariable.token = t

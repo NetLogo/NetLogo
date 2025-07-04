@@ -2,9 +2,10 @@
 
 package org.nlogo.parse
 
+import java.util.Locale
+
 import org.nlogo.core.{ Application, AstNode, CommandBlock,
   Expression, ProcedureDefinition, ReporterApp, ReporterBlock, Statement, Statements }
-
 
 object AstPath {
   trait Component
@@ -81,7 +82,7 @@ case class AstPath(components: Component*) {
 trait PositionalAstFolder[A] {
   import AstPath._
   def visitProcedureDefinition(proc: ProcedureDefinition)(a: A): A = {
-    visitStatements(proc.statements, AstPath(Proc(proc.procedure.name.toUpperCase)))(using a)
+    visitStatements(proc.statements, AstPath(Proc(proc.procedure.name.toUpperCase(Locale.ENGLISH))))(using a)
   }
   def visitCommandBlock(block: CommandBlock, position: AstPath)(implicit a: A): A = {
     visitStatements(block.statements, position)

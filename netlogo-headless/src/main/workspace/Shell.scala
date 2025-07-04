@@ -3,6 +3,7 @@
 package org.nlogo.workspace
 
 import java.io.{ BufferedReader, InputStreamReader }
+import java.util.Locale
 
 abstract class Shell {
   val input: Iterator[String] = {
@@ -12,6 +13,6 @@ abstract class Shell {
   }
 
   def isQuit(s: String) =
-    List(":QUIT", ":EXIT").contains(s.trim.toUpperCase)
+    List(":QUIT", ":EXIT").contains(s.trim.toUpperCase(Locale.ENGLISH))
 
 }

@@ -2,6 +2,8 @@
 
 package org.nlogo.parse
 
+import java.util.Locale
+
 import SymbolType.LocalVariable
 
 import org.nlogo.core
@@ -87,7 +89,7 @@ object ExpressionParser {
               case set @ core.prim._set() =>
                 val setVar = set.token.value match {
                   case uv: core.prim._unknownidentifier =>
-                    val varName = set.token.text.toUpperCase
+                    val varName = set.token.text.toUpperCase(Locale.ENGLISH)
                     val tpe = s.get(varName).getOrElse(exception(s"There is no variable called ${varName}.", set.token.sourceLocation))
                     val variable = tpe match {
                       // normally this happens in `LetVariableScope` but that time has passed I guess?
@@ -106,7 +108,7 @@ object ExpressionParser {
                     new core.ReporterApp(r, Seq(), set.token.sourceLocation)
 
                   case _ =>
-                    exception(s"Command found in multi-set where a variable name was expected: ${set.token.text.toUpperCase}.", set.token.sourceLocation)
+                    exception(s"Command found in multi-set where a variable name was expected: ${set.token.text.toUpperCase(Locale.ENGLISH)}.", set.token.sourceLocation)
 
                 }
 
@@ -180,8 +182,9 @@ object ExpressionParser {
 
       case _ =>
         token.value match {
-          case (_: core.prim._symbol | _: core.prim._unknownidentifier) if ! scope.contains(token.text.toUpperCase) =>
-            exception(I18N.errors.getN("compiler.LetVariable.notDefined", token.text.toUpperCase), token)
+          case (_: core.prim._symbol | _: core.prim._unknownidentifier) if ! scope.contains(token.text.toUpperCase(Locale.ENGLISH)) =>
+            exception(I18N.errors.getN("compiler.LetVariable.notDefined", token.text.toUpperCase(Locale.ENGLISH)),
+                      token)
 
           case _ => exception(ExpectedCommand, token)
         }
@@ -505,7 +508,8 @@ object ExpressionParser {
                     case (letReporter, newScope) =>
                       (letReporter.syntax, new core.ReporterApp(letReporter, token.sourceLocation))
                   }.getOrElse {
-                    exception(I18N.errors.getN("compiler.LetVariable.notDefined", token.text.toUpperCase), token)
+                    exception(I18N.errors.getN("compiler.LetVariable.notDefined",
+                                               token.text.toUpperCase(Locale.ENGLISH)), token)
                   }
                 }
               }

@@ -2,6 +2,8 @@
 
 package org.nlogo.lex
 
+import java.util.Locale
+
 import org.nlogo.core.{ NumberParser, StringEscaper, Token, TokenType }
 import LexOperations._
 
@@ -130,7 +132,7 @@ class TokenLexer {
       None
 
   private def tokenizeIdent(identString: String): Option[(String, TokenType, AnyRef)] =
-    Some((identString, TokenType.Ident, identString.toUpperCase))
+    Some((identString, TokenType.Ident, identString.toUpperCase(Locale.ENGLISH)))
 
   private def tokenizeString(stringText: String): Option[(String, TokenType, AnyRef)] = {
     val lastCharEscaped = stringText.dropRight(1).foldLeft(false) {

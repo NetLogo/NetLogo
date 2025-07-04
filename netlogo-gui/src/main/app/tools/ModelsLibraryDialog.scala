@@ -12,7 +12,7 @@ import java.awt.event.{ ActionEvent, KeyAdapter, KeyEvent, MouseAdapter, MouseEv
 import java.io.File
 import java.nio.file.Paths
 import java.net.URI
-import java.util.{ Enumeration, LinkedList, List => JList }
+import java.util.{ Enumeration, LinkedList, List => JList, Locale }
 import javax.swing.{ AbstractAction, Action, Box, BorderFactory, BoxLayout, InputMap, JComponent, JDialog, JEditorPane,
                      JLabel, JPanel, JTree, KeyStroke, SwingUtilities, WindowConstants }
 import javax.swing.text.{ BadLocationException, DefaultHighlighter }
@@ -401,7 +401,7 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
     if (newText.length == 0) {
       searchText = None
     } else {
-      searchText = Some(newText.toUpperCase)
+      searchText = Some(newText.toUpperCase(Locale.ENGLISH))
     }
     val isEmpty = searchText.isEmpty
     val root = tree.getModel.getRoot.asInstanceOf[Node]
@@ -485,7 +485,7 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
     if (searchText.isEmpty) {
       null
     } else {
-      val ucText = text.toUpperCase();
+      val ucText = text.toUpperCase(Locale.ENGLISH)
       val indices: JList[Integer] = new LinkedList[Integer]()
       var index = 0
       var containsCharacter = true
@@ -715,9 +715,9 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
 
     private def matchesSearchText(node: Node): Boolean = {
       searchText.exists(t =>
-          node.name.toUpperCase.contains(t) ||
-          node.info.toUpperCase.contains(t) ||
-          node.path.toUpperCase.contains(t))
+          node.name.toUpperCase(Locale.ENGLISH).contains(t) ||
+          node.info.toUpperCase(Locale.ENGLISH).contains(t) ||
+          node.path.toUpperCase(Locale.ENGLISH).contains(t))
     }
   }
 

@@ -2,10 +2,11 @@
 
 package org.nlogo.agent
 
+import java.lang.{ Double => JDouble }
+import java.util.Locale
+
 import org.nlogo.api.{ AgentException, WorldDimensionException }
 import org.nlogo.core.WorldDimensions
-
-import java.lang.{ Double => JDouble }
 
 trait DimensionManagement { this: WorldJ =>
   def topology: Topology
@@ -67,7 +68,7 @@ trait DimensionManagement { this: WorldJ =>
     topology.isInstanceOf[Torus] || topology.isInstanceOf[HorizCylinder]
 
   def isDimensionVariable(variableName: String): Boolean =
-    dimensionVariableNames.contains(variableName.toUpperCase)
+    dimensionVariableNames.contains(variableName.toUpperCase(Locale.ENGLISH))
 
   @throws(classOf[WorldDimensionException])
   def setDimensionVariable(variableName: String, value: Int, d: WorldDimensions): WorldDimensions = {

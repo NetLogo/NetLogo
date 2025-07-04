@@ -2,6 +2,8 @@
 
 package org.nlogo.parse
 
+import java.util.Locale
+
 import org.nlogo.core.{ AstNode, CommandBlock, Dump, Instruction, LogoList, ProcedureDefinition,
   ReporterApp, ReporterBlock, Statement, prim },
   prim.{ _commandlambda, _const, _constcodeblock, _lambdavariable, _let, _letname, _multilet, _multiassignitem, _multiset, _set, Lambda }
@@ -19,17 +21,19 @@ object Formatter {
 
   def instructionString(i: Instruction): String =
     i match {
-      case _const(value) if value.isInstanceOf[LogoList] => Dump.logoObject(value, true, false)
-      case r: _const                                     => r.token.text
-      case r: _commandlambda                             => ""
-      case v: _lambdavariable if v.synthetic             => ""
-      case l @ _let(_, Some(name))                       => if (l.token.text != name) { s"${l.token.text} $name" } else { "" }
-      case _: _letname                                   => ""
-      case s: _set if s.token.text.toUpperCase != "SET"  => { skipNext = true; "" }
-      case m: _multilet                                  => s"let ${m.letList}"
-      case _: _multiassignitem                           => ""
-      case s: _multiset                                  => s"set ${s.setList}"
-      case r                                             => if (skipNext) { skipNext = false; "" } else { r.token.text }
+      case _const(value) if value.isInstanceOf[LogoList]       => Dump.logoObject(value, true, false)
+      case r: _const                                           => r.token.text
+      case r: _commandlambda                                   => ""
+      case v: _lambdavariable if v.synthetic                   => ""
+      case l @ _let(_, Some(name))                             =>
+        if (l.token.text != name) { s"${l.token.text} $name" } else { "" }
+      case _: _letname                                         => ""
+      case s: _set if s.token.text.toUpperCase(Locale.ENGLISH) != "SET"  => { skipNext = true; "" }
+      case m: _multilet                                        => s"let ${m.letList}"
+      case _: _multiassignitem                                 => ""
+      case s: _multiset                                        => s"set ${s.setList}"
+      case r                                                   =>
+        if (skipNext) { skipNext = false; "" } else { r.token.text }
     }
 
   def deletedInstructionToString(i: Instruction): String = ""
@@ -46,7 +50,7 @@ class Formatter extends PositionalAstFolder[AstFormat] {
   import Formatter.context
 
   override def visitProcedureDefinition(proc: ProcedureDefinition)(c: AstFormat): AstFormat = {
-    val position = AstPath(AstPath.Proc(proc.procedure.name.toUpperCase))
+    val position = AstPath(AstPath.Proc(proc.procedure.name.toUpperCase(Locale.ENGLISH)))
     super.visitProcedureDefinition(proc)(c.appendText(c.wsMap.leading(position)))
       .appendText(c.wsMap.backMargin(position))
       .appendText(c.wsMap.trailing(position))

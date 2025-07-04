@@ -2,6 +2,8 @@
 
 package org.nlogo.parse
 
+import java.util.Locale
+
 import org.nlogo.core.{Fail, Token, TokenType}
 import Fail.exception
 import org.nlogo.core.prim.{Lambda, _lambdavariable, _unknownidentifier}
@@ -19,8 +21,8 @@ object ArrowLambdaScoper {
           case (args, remainder, syms) =>
             val body = remainder.map {
               case t @ Token(txt, TokenType.Reporter, _unknownidentifier())
-                if args.argumentNames.contains(t.text.toUpperCase) =>
-                t.refine(_lambdavariable(txt.toUpperCase))
+                if args.argumentNames.contains(t.text.toUpperCase(Locale.ENGLISH)) =>
+                t.refine(_lambdavariable(txt.toUpperCase(Locale.ENGLISH)))
               case t => t
             }
             (args, body, syms)
@@ -45,7 +47,7 @@ object ArrowLambdaScoper {
       def isCloseBracket = t.tpe == TokenType.CloseBracket
       // _taskvariable is an accommodation for the autoconverter
       def isAlreadyDefined(usedNames: SymbolTable) =
-        usedNames.contains(t.text.toUpperCase) && ! t.value.isInstanceOf[LambdaTokenMapper._taskvariable]
+        usedNames.contains(t.text.toUpperCase(Locale.ENGLISH)) && ! t.value.isInstanceOf[LambdaTokenMapper._taskvariable]
     }
 
     @tailrec
@@ -54,11 +56,11 @@ object ArrowLambdaScoper {
       if (tok.isCloseBracket)
         (Lambda.BracketedArguments(acc), toks.tail.tail, usedNames)
       else if (tok.isAlreadyDefined(usedNames))
-        SymbolType.alreadyDefinedException(usedNames(tok.text.toUpperCase), tok)
+        SymbolType.alreadyDefinedException(usedNames(tok.text.toUpperCase(Locale.ENGLISH)), tok)
       else if (tok.isArrow || tok.tpe != TokenType.Reporter)
         exception(s"Expected a variable name here", tok)
       else
-        gatherArgumentToCloseBracket(acc :+ tok, toks.tail, usedNames.addSymbols(Seq(tok.text.toUpperCase), SymbolType.LambdaVariable))
+        gatherArgumentToCloseBracket(acc :+ tok, toks.tail, usedNames.addSymbols(Seq(tok.text.toUpperCase(Locale.ENGLISH)), SymbolType.LambdaVariable))
     }
 
     def gatherUnbracketedArgument(toks: Seq[Token], usedNames: SymbolTable): Option[(Arguments, Seq[Token], SymbolTable)] = {
@@ -70,7 +72,7 @@ object ArrowLambdaScoper {
       else if (tok.isAlreadyDefined(usedNames))
         gatherSymbolsToOpenBracket(Seq(tok), toks.tail, usedNames)
       else
-        gatherArgumentToArrow(tok, toks.tail, usedNames.addSymbols(Seq(tok.text.toUpperCase), SymbolType.LambdaVariable))
+        gatherArgumentToArrow(tok, toks.tail, usedNames.addSymbols(Seq(tok.text.toUpperCase(Locale.ENGLISH)), SymbolType.LambdaVariable))
     }
 
     def gatherArgumentToArrow(arg: Token, toks: Seq[Token], usedNames: SymbolTable): Option[(Arguments, Seq[Token], SymbolTable)] = {
@@ -94,7 +96,7 @@ object ArrowLambdaScoper {
           exception("An anonymous procedures of two or more arguments must enclose its argument list in brackets", gatheredSymbols.head.start, gatheredSymbols.last.end, tok.filename)
         else {
           val initTok = gatheredSymbols.head
-          SymbolType.alreadyDefinedException(usedNames(initTok.text.toUpperCase), initTok)
+          SymbolType.alreadyDefinedException(usedNames(initTok.text.toUpperCase(Locale.ENGLISH)), initTok)
         }
       } else if (tok.isOpenBracket)
         None

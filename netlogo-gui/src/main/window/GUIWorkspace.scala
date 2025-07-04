@@ -9,6 +9,7 @@ import java.io.{ IOException, InputStream, PrintWriter, Reader }
 import java.lang.Thread
 import java.net.MalformedURLException
 import java.nio.file.Paths
+import java.util.Locale
 import java.util.concurrent.TimeoutException
 import javax.swing.{ AbstractAction, Action, Timer }
 import javax.swing.border.LineBorder
@@ -782,7 +783,7 @@ abstract class GUIWorkspace(world: World, kioskLevel: GUIWorkspace.KioskLevel, f
 
   def handle(e: AddBooleanConstraintEvent): Unit = {
     // now we set the constraint in the observer, so that it is enforced.
-    val index = world.observerOwnsIndexOf(e.varname.toUpperCase)
+    val index = world.observerOwnsIndexOf(e.varname.toUpperCase(Locale.ENGLISH))
 
     if (index != -1)
       world.observer.setConstraint(index, new BooleanConstraint(e.defaultValue))
@@ -790,7 +791,7 @@ abstract class GUIWorkspace(world: World, kioskLevel: GUIWorkspace.KioskLevel, f
 
   def handle(e: AddInputBoxConstraintEvent): Unit = {
     // now we set the constraint in the observer, so that it is enforced.
-    val index = world.observerOwnsIndexOf(e.varname.toUpperCase)
+    val index = world.observerOwnsIndexOf(e.varname.toUpperCase(Locale.ENGLISH))
 
     if (index != -1)
       world.observer.setConstraint(index, e.constraint)
@@ -798,7 +799,7 @@ abstract class GUIWorkspace(world: World, kioskLevel: GUIWorkspace.KioskLevel, f
 
   def handle(e: AddChooserConstraintEvent): Unit = {
     // now we set the constraint in the observer, so that it is enforced.
-    val index = world.observerOwnsIndexOf(e.varname.toUpperCase)
+    val index = world.observerOwnsIndexOf(e.varname.toUpperCase(Locale.ENGLISH))
 
     if (index != -1)
       world.observer.setConstraint(index, e.constraint)
@@ -813,7 +814,7 @@ abstract class GUIWorkspace(world: World, kioskLevel: GUIWorkspace.KioskLevel, f
       e.slider.setSliderConstraint(con)
 
       // now we set the constraint in the observer, so that it is enforced.
-      val index = world.observerOwnsIndexOf(e.varname.toUpperCase)
+      val index = world.observerOwnsIndexOf(e.varname.toUpperCase(Locale.ENGLISH))
 
       if (index != -1)
         world.observer.setConstraint(index, con)
@@ -825,7 +826,7 @@ abstract class GUIWorkspace(world: World, kioskLevel: GUIWorkspace.KioskLevel, f
   }
 
   def handle(e: RemoveConstraintEvent): Unit = {
-    val index = world.observerOwnsIndexOf(e.varname.toUpperCase)
+    val index = world.observerOwnsIndexOf(e.varname.toUpperCase(Locale.ENGLISH))
 
     if (index != -1)
       world.observer.setConstraint(index, null)

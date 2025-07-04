@@ -63,6 +63,8 @@ package org.nlogo.parse
 //
 // Whew!  Got all that?
 
+import java.util.Locale
+
 import org.nlogo.core,
   core.{AstVisitor, Fail, Instruction,
         ProcedureDefinition, ReporterApp, Statement, Syntax,
@@ -186,7 +188,7 @@ class AgentTypeChecker(defs: Seq[ProcedureDefinition]) {
     private def checkSatisfiable(coreInstruction: Instruction, agentClassString: String, instructionClassString: String): String = {
       val classString = combineRestrictions(agentClassString, instructionClassString)
       if (classString == "----") {
-        val name = coreInstruction.token.text.toUpperCase
+        val name = coreInstruction.token.text.toUpperCase(Locale.ENGLISH)
         exception(
           s"""|You can't use $name in ${aOrAn(agentName(agentClassString))} context,
               | because $name is ${agentName(instructionClassString)}-only.""".stripMargin.replaceAll("\n", ""),

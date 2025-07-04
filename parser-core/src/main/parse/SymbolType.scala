@@ -2,6 +2,8 @@
 
 package org.nlogo.parse
 
+import java.util.Locale
+
 import org.nlogo.core.{ Fail, Let, Token }, Fail.exception
 
 sealed trait SymbolType
@@ -80,6 +82,7 @@ object SymbolType {
   }
 
   def alreadyDefinedException(symType: SymbolType, t: Token): Nothing = {
-    exception("There is already a " + SymbolType.typeName(symType) + " called " + t.text.toUpperCase, t)
+    exception("There is already a " + SymbolType.typeName(symType) + " called " + t.text.toUpperCase(Locale.ENGLISH),
+              t)
   }
 }

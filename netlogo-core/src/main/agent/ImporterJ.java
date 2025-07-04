@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -563,7 +564,7 @@ public abstract class ImporterJ
   }
 
   boolean validBreed(String breed) {
-    return (world.getBreed(breed.toUpperCase()) != null)
+    return (world.getBreed(breed.toUpperCase(Locale.ENGLISH)) != null)
         || breed.equalsIgnoreCase("TURTLES")
         || breed.equalsIgnoreCase("PATCHES")
         || breed.equalsIgnoreCase("LINKS");

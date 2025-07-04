@@ -2,6 +2,8 @@
 
 package org.nlogo.core
 
+import java.util.Locale
+
 import scala.collection.immutable.ListMap
 
 object Program {
@@ -31,7 +33,7 @@ case class Program(
   val observerVars = dialect.agentVariables.implicitObserverVariableTypeMap
 
   val globals: Seq[String] =
-    observerVars.keys.toSeq ++ interfaceGlobals.map(_.toUpperCase) ++ userGlobals
+    observerVars.keys.toSeq ++ interfaceGlobals.map(_.toUpperCase(Locale.ENGLISH)) ++ userGlobals
 
   val turtlesOwn = turtleVars.keys.toSeq
 
