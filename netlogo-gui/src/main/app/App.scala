@@ -383,6 +383,7 @@ class App extends org.nlogo.window.Event.LinkChild
         override def ticks = _workspace.world.tickCounter.ticks
         override def updateMode = _workspace.updateMode
       }
+
       def aggregateManager: AggregateManagerInterface = App.this.aggregateManager
       def inspectAgent(agent: org.nlogo.api.Agent, radius: Double): Unit = {
         val a = agent.asInstanceOf[org.nlogo.agent.Agent]

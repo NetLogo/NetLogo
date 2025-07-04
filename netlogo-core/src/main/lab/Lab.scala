@@ -2,24 +2,25 @@
 
 package org.nlogo.lab
 
-import org.nlogo.api.{LogoException, LabProtocol, LabPostProcessorInputFormat}
-import org.nlogo.nvm.{EngineException,LabInterface,Workspace}
+import org.nlogo.api.{ LabProtocol, LabPostProcessorInputFormat }
+import org.nlogo.nvm.{ LabInterface, PrimaryWorkspace, Workspace }
 
 // This is used when running headless. - ST 3/3/09
 
 class Lab extends LabInterface {
   def newWorker(protocol: LabProtocol) =
     new Worker(protocol)
-  def run(settings: LabInterface.Settings, protocol: LabProtocol, fn: ()=>Workspace, finish: () => Unit = () => {}): Unit = {
+  def run(settings: LabInterface.Settings, worker: LabInterface.Worker, primaryWorkspace: PrimaryWorkspace,
+          fn: () => Workspace): Unit = {
     import settings._
     // pool of workspaces, same size as thread pool
-    val workspaces = (1 to threads).map(_ => fn.apply()).toList
+    // unless there are fewer runs than threads (Isaac B 6/27/25)
+    val workspaces = (1 to threads.min(worker.protocol.countRuns)).map(_ => fn()).toList
     val queue = new collection.mutable.Queue[Workspace]
-    workspaces.foreach(queue.enqueue(_))
+    workspaces.foreach(queue.enqueue)
     try {
       queue.foreach(w => dims.foreach(w.setDimensions))
       def modelDims = queue.head.world.getDimensions
-      val worker = newWorker(protocol)
       tableWriter.foreach(
         worker.addTableWriter(modelPath, dims.getOrElse(modelDims), _))
       spreadsheetWriter.foreach(
@@ -49,21 +50,10 @@ class Lab extends LabInterface {
           }
           override def runtimeError(w: Workspace, runNumber: Int, t: Throwable): Unit = {
             if (!suppressErrors)
-              t match {
-                case ee: EngineException =>
-                  val msg = ee.runtimeErrorMessage
-                  System.err.println("Run #" + runNumber + ", RUNTIME ERROR: " + msg)
-                  ee.printStackTrace(System.err)
-                case _: LogoException =>
-                  System.err.println("Run #" + runNumber + ", RUNTIME ERROR: " + t.getMessage)
-                  t.printStackTrace(System.err)
-                case _ =>
-                  System.err.println("Run #" + runNumber + ", JAVA EXCEPTION: " + t.getMessage)
-                  t.printStackTrace(System.err)
-              }
+              primaryWorkspace.runtimeError(t)
           } } )
-      def nextWorkspace = queue.synchronized { queue.dequeue() }
-      worker.run(workspaces.head, () => nextWorkspace, threads, finish)
+      def nextWorkspace = queue.synchronized { if (queue.isEmpty) null else queue.dequeue() }
+      worker.run(workspaces.head, () => nextWorkspace, threads)
     }
     finally { workspaces.foreach(_.dispose()) }
   }

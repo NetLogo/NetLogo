@@ -36,6 +36,8 @@ trait ExtensionManager extends CoreManager {
   /** uses java.lang.Iterable for easy access from Java */
   def loadedExtensions: java.lang.Iterable[ClassManager]
 
+  def loadedExtensionNames: Seq[String]
+
   def dumpExtensions: String
 
   def dumpExtensionPrimitives(): String

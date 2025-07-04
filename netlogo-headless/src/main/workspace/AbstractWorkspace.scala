@@ -13,10 +13,10 @@ import scala.collection.mutable.WeakHashMap
 
 import
   org.nlogo.{ agent, api, core, nvm, plot },
-  agent.{ AbstractExporter, Agent, AgentSet, World },
+  agent.{ AbstractExporter, Agent, AgentSet, OutputObject, World },
   api.{ PlotInterface, CommandLogoThunk, Dump, Exceptions, ExtensionManager => APIEM, ExternalResourceManager,
-    ExportPlotWarningAction, JobOwner, LabProtocol, LibraryManager, LogoException, MersenneTwisterFast, ModelType,
-    PreviewCommands, ReporterLogoThunk, SimpleJobOwner },
+    ExportPlotWarningAction, JobOwner, LibraryManager, LogoException, MersenneTwisterFast, ModelType, PreviewCommands,
+    ReporterLogoThunk, SimpleJobOwner },
   core.{ CompilationEnvironment, AgentKind, CompilerException, Femto, File, FileMode, I18N, LiteralParser},
   nvm.{ Activation, Command, Context, FileManager, ImportHandler,
     Instruction, Job, MutableLong, Procedure, RuntimePrimitiveException, Workspace },
@@ -454,14 +454,9 @@ object AbstractWorkspaceTraits {
 
   trait BehaviorSpace { this: api.Workspace =>
     private var _behaviorSpaceRunNumber = 0
-    private var _behaviorSpaceExperiments = List[LabProtocol]()
     override def behaviorSpaceRunNumber = _behaviorSpaceRunNumber
     override def behaviorSpaceRunNumber(n: Int): Unit = {
       _behaviorSpaceRunNumber = n
-    }
-    override def getBehaviorSpaceExperiments = _behaviorSpaceExperiments
-    override def setBehaviorSpaceExperiments(experiments: List[LabProtocol]): Unit = {
-      _behaviorSpaceExperiments = experiments
     }
   }
 
@@ -604,7 +599,7 @@ object AbstractWorkspaceTraits {
     def clearOutput(): Unit
 
     // called from job thread - ST 10/1/03
-    def sendOutput(oo: agent.OutputObject, toOutputArea: Boolean): Unit
+    def sendOutput(oo: OutputObject, toOutputArea: Boolean): Unit
 
     /// importing
     def setOutputAreaContents(text: String): Unit = {
@@ -636,7 +631,6 @@ object AbstractWorkspaceTraits {
           sendOutput(oo, destination == api.OutputDestination.OutputArea)
       }
     }
-
   }
 
   trait Importing { this: nvm.Workspace =>

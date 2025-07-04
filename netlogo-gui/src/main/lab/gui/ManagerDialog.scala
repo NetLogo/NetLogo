@@ -21,8 +21,8 @@ private class ManagerDialog(manager:       LabManager,
                             menuFactory:   MenuBarFactory)
   extends JDialog(manager.workspace.getFrame) with ListSelectionListener with ThemeSync {
 
-  def saveProtocol(protocol: LabProtocol): Unit = {
-    manager.protocols(editIndex) = protocol
+  def saveProtocol(protocol: LabProtocol, runsCompleted: Int): Unit = {
+    protocol.runsCompleted = runsCompleted
     update()
     select(protocol)
   }
@@ -170,13 +170,13 @@ private class ManagerDialog(manager:       LabManager,
 
       manager.prepareForRun()
 
-      new Supervisor(this, manager.workspace, selectedProtocol, manager.workspaceFactory, dialogFactory, saveProtocol, Supervisor.GUI).start()
+      new Supervisor(this, manager.workspace, selectedProtocol, manager.workspaceFactory, dialogFactory, saveProtocol).start()
     }
     catch { case ex: org.nlogo.awt.UserCancelException => org.nlogo.api.Exceptions.ignore(ex) }
   }
   private def makeNew(): Unit = {
     editProtocol(
-      new LabProtocol(constants = manager.workspace.world.synchronized {
+      LabProtocol.defaultGUIProtocol.copy(constants = manager.workspace.world.synchronized {
                                     manager.workspace.world.program.interfaceGlobals.toList
                                     .map{case variableName: String =>
                                       new RefEnumeratedValueSet(
@@ -303,13 +303,13 @@ private class ManagerDialog(manager:       LabManager,
     }
   }
   private def abort(): Unit = {
-    saveProtocol(selectedProtocol.copy(runsCompleted = 0, runOptions = null))
+    saveProtocol(selectedProtocol, 0)
   }
   /// helpers
   def update(): Unit = {
     listModel.clear
     manager.protocols.foreach(listModel.addElement(_))
-    manager.workspace.setBehaviorSpaceExperiments(manager.protocols.toList)
+    manager.workspace.getExperimentManager.setGUIExperiments(manager.protocols.toSeq)
     valueChanged(null)
     if (manager.protocols.size > 0) jlist.setSelectedIndices(Array(0))
   }

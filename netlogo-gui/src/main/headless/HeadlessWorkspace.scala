@@ -14,8 +14,8 @@ import org.nlogo.api.{ ComponentSerialization, Version, RendererInterface, Aggre
   NetLogoThreeDDialect, CommandRunnable, ReporterRunnable }, ModelReader.modelSuffix
 import org.nlogo.core.{ AgentKind, CompilerException, Femto, Model, Output, Program, UpdateMode, WorldDimensions,
   WorldDimensions3D }
-import org.nlogo.agent.{ CompilationManagement, World, World2D, World3D }
-import org.nlogo.nvm.{ LabInterface, DefaultCompilerServices, PresentationCompilerInterface }
+import org.nlogo.agent.{ CompilationManagement, OutputObject, World, World2D, World3D }
+import org.nlogo.nvm.{ LabInterface, PresentationCompilerInterface, PrimaryWorkspace }
 import org.nlogo.workspace.{ AbstractWorkspaceScala, HubNetManagerFactory }
 import org.nlogo.fileformat.{ FileFormat, NLogoFormat, NLogoThreeDFormat }
 import org.nlogo.util.Pico
@@ -58,17 +58,8 @@ object HeadlessWorkspace {
     */
   def newLab: LabInterface = newLab(Version.is3D)
 
-  def newLab(is3d: Boolean): LabInterface = {
-    val pico = new Pico
-    pico.add("org.nlogo.compile.Compiler")
-    if (is3d)
-      pico.addScalaObject("org.nlogo.api.NetLogoThreeDDialect")
-    else
-      pico.addScalaObject("org.nlogo.api.NetLogoLegacyDialect")
-    pico.add("org.nlogo.lab.Lab")
-    pico.addComponent(classOf[DefaultCompilerServices])
-    pico.getComponent(classOf[LabInterface])
-  }
+  def newLab(is3d: Boolean): LabInterface =
+    Femto.get[LabInterface]("org.nlogo.lab.Lab")
 
   /**
    * Internal use only.
@@ -117,7 +108,22 @@ class HeadlessWorkspace(
 extends AbstractWorkspaceScala(_world, hubNetManagerFactory)
 with org.nlogo.workspace.Controllable
 with org.nlogo.workspace.WorldLoaderInterface
-with org.nlogo.api.ViewSettings {
+with org.nlogo.api.ViewSettings with PrimaryWorkspace {
+
+  private var primaryWorkspace: PrimaryWorkspace = this
+
+  override def getPrimaryWorkspace: PrimaryWorkspace =
+    primaryWorkspace
+
+  def setPrimaryWorkspace(workspace: PrimaryWorkspace): Unit = {
+    primaryWorkspace = workspace
+  }
+
+  private var mirrorHeadlessOutput = false
+
+  def setMirrorHeadlessOutput(b: Boolean): Unit = {
+    mirrorHeadlessOutput = b
+  }
 
   world.trailDrawer(renderer.trailDrawer)
 
@@ -410,13 +416,15 @@ with org.nlogo.api.ViewSettings {
   /**
    * Internal use only. Called from job thread.
    */
-  override def sendOutput(oo: org.nlogo.agent.OutputObject, toOutputArea: Boolean): Unit = {
+  override def sendOutput(oo: OutputObject, toOutputArea: Boolean): Unit = {
     // output always goes to stdout in headless mode
     if (!silent)
       print(oo.get)
     // we also need to record it if it headed for the Output Area widget
     if (toOutputArea)
       outputAreaBuffer.append(oo.get)
+    if (mirrorHeadlessOutput)
+      primaryWorkspace.mirrorOutput(oo, toOutputArea)
   }
 
   /**
@@ -464,6 +472,15 @@ with org.nlogo.api.ViewSettings {
   // command function.  -JC 11/16/10
   var lastErrorReport: ErrorReport = null
 
+  override def runtimeError(t: Throwable): Unit = {
+    t match {
+      case le: LogoException =>
+        lastLogoException = le
+
+      case _ =>
+    }
+  }
+
   /**
    * Internal use only.
    */
@@ -497,12 +514,25 @@ with org.nlogo.api.ViewSettings {
   @throws(classOf[CompilerException])
   @throws(classOf[LogoException])
   override def open(path: String, shouldAutoInstallLibs: Boolean): Unit = {
+    open(path, shouldAutoInstallLibs, Seq())
+  }
+
+  def open(path: String, shouldAutoInstallLibs: Boolean, loadedExtensions: Seq[String]): Unit = {
     try {
-      val m = loader.readModel(Paths.get(path).toUri).get
-      setModelPath(path)
-      setModelType(ModelType.Normal)
-      fileManager.handleModelChange()
-      openModel(m, shouldAutoInstallLibs)
+      if (path == null) {
+        // if we're in a new model, loaded extensions won't persist when the empty model loads,
+        // so make sure to manually add them in here (Isaac B 6/29/25)
+        val m = loader.emptyModel("nlogox").copy(code = s"extensions [ ${loadedExtensions.mkString(" ")} ]")
+        setModelType(ModelType.New)
+        fileManager.handleModelChange()
+        openModel(m, shouldAutoInstallLibs)
+      } else {
+        val m = loader.readModel(Paths.get(path).toUri).get
+        setModelPath(path)
+        setModelType(ModelType.Normal)
+        fileManager.handleModelChange()
+        openModel(m, shouldAutoInstallLibs)
+      }
     }
     catch {
       case ex: CompilerException =>
