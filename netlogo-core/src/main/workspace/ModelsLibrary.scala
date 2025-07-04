@@ -4,6 +4,7 @@ package org.nlogo.workspace
 
 import java.io.File
 import java.nio.file.{ Files, Path }
+import java.util.Locale
 import javax.swing.tree.DefaultMutableTreeNode
 
 import org.nlogo.api.{ FileIO, Version }
@@ -48,20 +49,20 @@ object ModelsLibrary {
 
     def exactMatch(node: Node): Option[Seq[String]] =
       node.depthFirstIterable
-        .find(n => n.name.toUpperCase.startsWith(s"${targetName.toUpperCase}.NLOGOX"))
+        .find(n => n.name.toUpperCase(Locale.ENGLISH).startsWith(s"${targetName.toUpperCase(Locale.ENGLISH)}.NLOGOX"))
         .filter(_.isLeaf)
         .map(n => Seq(n.name))
 
     def initialMatch(node: Node): Seq[String] =
       node.depthFirstIterable
-        .filter(n => n.name.toUpperCase.startsWith(targetName.toUpperCase))
+        .filter(n => n.name.toUpperCase(Locale.ENGLISH).startsWith(targetName.toUpperCase(Locale.ENGLISH)))
         .filter(_.isLeaf)
         .map(n => n.name)
         .toSeq
 
     def anywhereMatch(node: Node): Seq[String] =
       node.depthFirstIterable
-        .filter(n => n.name.toUpperCase.contains(targetName.toUpperCase))
+        .filter(n => n.name.toUpperCase(Locale.ENGLISH).contains(targetName.toUpperCase(Locale.ENGLISH)))
         .filter(_.isLeaf)
         .map(n => n.name)
         .toSeq
@@ -87,7 +88,8 @@ object ModelsLibrary {
     rootNode.flatMap {
       _.depthFirstIterable
         .find(n =>
-            n.path.toUpperCase.split(File.separator(0)).last.startsWith(s"${targetName.toUpperCase}"))
+            n.path.toUpperCase(Locale.ENGLISH).split(File.separator(0)).last
+             .startsWith(s"${targetName.toUpperCase(Locale.ENGLISH)}"))
         .map(_.path)
     }
   }
@@ -180,7 +182,7 @@ object ModelsLibrary {
             if (Files.isDirectory(p)) {
               scanDirectory(p, exclusive, nameOverride)
             } else {
-              val fileName = p.getFileName.toString.toUpperCase
+              val fileName = p.getFileName.toString.toUpperCase(Locale.ENGLISH)
               if (fileName.endsWith(".NLOGO") || fileName.endsWith(".NLOGO3D") ||
                   fileName.endsWith(".NLOGOX") || fileName.endsWith(".NLOGOX3D")) {
                 Some(Leaf(p.getFileName.toString, p.toString))
@@ -208,15 +210,15 @@ object ModelsLibrary {
   object NLogoModelOrdering
     extends scala.math.Ordering[String] {
     def compare(s1: String, s2: String): Int =
-      if (s2.toUpperCase == "UNVERIFIED")
+      if (s2.toUpperCase(Locale.ENGLISH) == "UNVERIFIED")
         -1
-      else if (s1.toUpperCase == "UNVERIFIED")
+      else if (s1.toUpperCase(Locale.ENGLISH) == "UNVERIFIED")
         1
       else
         String.CASE_INSENSITIVE_ORDER.compare(munge(s1), munge(s2))
 
     private def munge(_s: String): String = {
-      val s = _s.toUpperCase()
+      val s = _s.toUpperCase(Locale.ENGLISH)
       if (s.endsWith(".NLOGOX"))        s.substring(0, s.length - 7)
       else if (s.endsWith(".NLOGOX3D")) s.substring(0, s.length - 9)
       else                              s
@@ -243,7 +245,7 @@ object ModelsLibrary {
           Seq()
 
       def indexOf(s: String) = {
-        val i = orderedNames.indexOf(s.toUpperCase)
+        val i = orderedNames.indexOf(s.toUpperCase(Locale.ENGLISH))
         if (i == -1) orderedNames.length
         else i
       }

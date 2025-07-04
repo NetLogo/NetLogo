@@ -2,6 +2,7 @@
 
 package org.nlogo.ide
 
+import java.util.Locale
 import javax.swing.text.JTextComponent
 
 import org.nlogo.core._
@@ -57,11 +58,15 @@ object JumpToDeclaration {
             argIndex += 1
           }
         }
-        return globals.get(token.text.toUpperCase) orElse owns.get(token.text.toUpperCase) orElse functions.get(token.text.toUpperCase)
+        return globals.get(token.text.toUpperCase(Locale.ENGLISH))
+                      .orElse(owns.get(token.text.toUpperCase(Locale.ENGLISH)))
+                      .orElse(functions.get(token.text.toUpperCase(Locale.ENGLISH)))
       }
       i -= 1
     }
-    globals.get(token.text.toUpperCase) orElse owns.get(token.text.toUpperCase) orElse functions.get(token.text.toUpperCase)
+    globals.get(token.text.toUpperCase(Locale.ENGLISH))
+           .orElse(owns.get(token.text.toUpperCase(Locale.ENGLISH)))
+           .orElse(functions.get(token.text.toUpperCase(Locale.ENGLISH)))
   }
 
   /**
@@ -82,15 +87,15 @@ object JumpToDeclaration {
         while (token.tpe != TokenType.CloseBracket && i < tokens.length) {
           token = tokens(i)
           if (token.tpe == TokenType.Ident)
-            globals += token.text.toUpperCase -> token
+            globals += token.text.toUpperCase(Locale.ENGLISH) -> token
           i += 1
         }
-      } else if (token.text.toUpperCase.endsWith("-OWN")) {
+      } else if (token.text.toUpperCase(Locale.ENGLISH).endsWith("-OWN")) {
         i += 1
         while (token.tpe != TokenType.CloseBracket && i < tokens.length) {
           token = tokens(i)
-          if (token.tpe == TokenType.Ident && owns.get(token.text.toUpperCase).isEmpty) {
-            owns += token.text.toUpperCase -> token
+          if (token.tpe == TokenType.Ident && owns.get(token.text.toUpperCase(Locale.ENGLISH)).isEmpty) {
+            owns += token.text.toUpperCase(Locale.ENGLISH) -> token
           }
           i += 1
         }
@@ -98,7 +103,7 @@ object JumpToDeclaration {
         i += 1
         if(i < tokens.length) {
           token = tokens(i)
-          functions += token.text.toUpperCase -> token
+          functions += token.text.toUpperCase(Locale.ENGLISH) -> token
         }
       } else {
         i += 1

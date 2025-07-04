@@ -2,6 +2,8 @@
 
 package org.nlogo.parse
 
+import java.util.Locale
+
 import org.nlogo.core.{ Command, Instruction, Reporter, TokenMapperInterface }
 
 class TokenMapper extends TokenMapperInterface {
@@ -15,9 +17,9 @@ class TokenMapper extends TokenMapperInterface {
   def allReporterClassNames: Set[String] = reporters.values.toSet
 
   def getCommand(s: String): Option[Command] =
-    TokenMapping.commandPrimToInstance(s.toUpperCase)
+    TokenMapping.commandPrimToInstance(s.toUpperCase(Locale.ENGLISH))
   def getReporter(s: String): Option[Reporter] =
-    TokenMapping.reporterPrimToInstance(s.toUpperCase)
+    TokenMapping.reporterPrimToInstance(s.toUpperCase(Locale.ENGLISH))
   def breedInstruction(primName: String, breedName: String): Option[Instruction] =
     TokenMapping.breeded(breedName)(primName)
 

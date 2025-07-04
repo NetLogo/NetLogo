@@ -4,6 +4,7 @@ package org.nlogo.window
 
 import java.awt.Component
 import java.nio.file.Path
+import java.util.Locale
 
 import org.nlogo.api.{ FileIO, Version }
 import org.nlogo.core.I18N
@@ -62,8 +63,9 @@ object QuickHelp {
       openDictionary(comp, tokenLower, quickHelpWords)
     else {
       if (new OptionPane(comp, I18N.gui.get("common.netlogo"),
-                         I18N.gui.getN("tabs.code.rightclick.quickhelp.notfound", tokenLower.toUpperCase),
-                         OptionPane.Options.OkCancel, OptionPane.Icons.Error).getSelectedIndex == 0)
+                         I18N.gui.getN("tabs.code.rightclick.quickhelp.notfound",
+                         tokenLower.toUpperCase(Locale.ENGLISH)), OptionPane.Options.OkCancel,
+                         OptionPane.Icons.Error).getSelectedIndex == 0)
         BrowserLauncher.openPath(comp, docPath("index2.html"), null)
     }
   }

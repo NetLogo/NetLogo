@@ -2,10 +2,11 @@
 
 package org.nlogo.nvm
 
+import java.util.{ List => JList, Locale }
+
 import org.nlogo.core.{ AgentKind, I18N, LogoList, Syntax, Token, TokenHolder }
 import org.nlogo.api.{ AnonymousReporter => ApiAnonymousReporter, AnonymousCommand => ApiAnonymousCommand }
 import org.nlogo.agent.{ Agent, AgentSet, AgentBit, Turtle, Patch, Link }
-import java.util.{ List => JList }
 
 object Instruction {
   def agentKindDescription(kind: AgentKind): String = {
@@ -308,12 +309,13 @@ abstract class Instruction extends InstructionJ with TokenHolder {
    * instead returning the displayName() of the GeneratedInstruction. ~Forrest (summer 2006)
    */
   def displayName: String =
-    if (token != null)
-      token.text.toUpperCase
-    else
+    if (token != null) {
+      token.text.toUpperCase(Locale.ENGLISH)
+    } else {
       // well, returning some weird ugly internal class name
       // is better than nothing, I guess
       getClass.getSimpleName
+    }
 
   override def toString =
     getClass.getSimpleName

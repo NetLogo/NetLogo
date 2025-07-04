@@ -18,6 +18,8 @@ package org.nlogo.parse
 // will be discovered as we parse, through __include declarations.  (Included files might themselves
 // include further files.)
 
+import java.util.Locale
+
 import org.nlogo.core.{ CompilationEnvironment, CompilationOperand, CompilerException, ErrorSource, I18N, ProcedureSyntax, Program, StructureResults, Token, TokenizerInterface, TokenType }
 import org.nlogo.core.Fail._
 import org.nlogo.core.FrontEndInterface.ProceduresMap
@@ -196,7 +198,7 @@ class StructureParser(
           subprogram)
       case Left((msg, token)) =>
         if (token.tpe == TokenType.Keyword) {
-          exception(s"""Keyword ${token.text.toUpperCase} cannot be used in this context.""", token)
+          exception(s"""Keyword ${token.text.toUpperCase(Locale.ENGLISH)} cannot be used in this context.""", token)
         } else {
           exception(msg, token)
         }

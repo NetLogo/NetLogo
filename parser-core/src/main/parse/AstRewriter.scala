@@ -2,6 +2,8 @@
 
 package org.nlogo.parse
 
+import java.util.Locale
+
 import org.nlogo.core.{
   CompilationOperand,
   ProcedureDefinition,
@@ -63,7 +65,7 @@ class AstRewriter(val tokenizer: TokenizerInterface, op: CompilationOperand) ext
 
   def removeExtension(extension: String): String = {
     import TokenType.{OpenBracket, CloseBracket, Ident}
-    val extValue = extension.toUpperCase
+    val extValue = extension.toUpperCase(Locale.ENGLISH)
     val source = op.sources("")
     val tokens = tokenizer.tokenizeString(source).to(LazyList)
     val buf = new StringBuilder(source)
@@ -183,7 +185,7 @@ class AstRewriter(val tokenizer: TokenizerInterface, op: CompilationOperand) ext
       else {
         val newPositions =
           findProcedurePositions(getSource(file), Some(op.containingProgram.dialect)).map {
-            case (k, v) => k.toUpperCase -> v
+            case (k, v) => k.toUpperCase(Locale.ENGLISH) -> v
           }
         procedurePositions = procedurePositions + (file -> newPositions)
         newPositions(procedureName)

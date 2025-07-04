@@ -3,6 +3,8 @@
 package org.nlogo.core
 package prim
 
+import java.util.Locale
+
 //scalastyle:off number.of.types
 case class _and() extends Reporter with Pure {
   override def syntax =
@@ -165,11 +167,11 @@ case class _errormessage(let: Option[Let]) extends Reporter {
 }
 case class _extern(syntax: Syntax) extends Command {
   override def toString =
-    s"_extern(${token.text.toUpperCase})"
+    s"_extern(${token.text.toUpperCase(Locale.ENGLISH)})"
 }
 case class _externreport(syntax: Syntax) extends Reporter {
   override def toString =
-    s"_externreport(${token.text.toUpperCase})"
+    s"_externreport(${token.text.toUpperCase(Locale.ENGLISH)})"
 }
 case class _fd() extends Command {
   override def syntax =

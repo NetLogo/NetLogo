@@ -5,6 +5,7 @@ package org.nlogo.app.codetab
 import java.awt.{ Dimension, FileDialog }
 import java.awt.event.ActionEvent
 import java.io.File
+import java.util.Locale
 import javax.swing.AbstractAction
 
 import scala.util.control.Exception.ignoring
@@ -55,11 +56,12 @@ with WindowEvents.CompiledEvent.Handler with RoundedBorderPanel with ThemeSync {
           menu.add(new MenuItem(I18N.gui.get("common.menus.empty"))).setEnabled(false)
 
         else {
-          filtered.sortBy(_.toUpperCase).foreach(include => menu.add(new MenuItem(new AbstractAction(include) {
-            def actionPerformed(e: ActionEvent): Unit = {
-              tabs.openExternalFile(includePaths(include))
-            }
-          })))
+          filtered.sortBy(_.toUpperCase(Locale.ENGLISH)).foreach(include =>
+            menu.add(new MenuItem(new AbstractAction(include) {
+              def actionPerformed(e: ActionEvent): Unit = {
+                tabs.openExternalFile(includePaths(include))
+              }
+            })))
         }
       case None =>
         menu.add(new MenuItem(I18N.gui.get("common.menus.empty"))).setEnabled(false)

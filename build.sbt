@@ -386,6 +386,7 @@ lazy val parser = crossProject(JSPlatform, JVMPlatform).
         "org.scala-lang.modules" %%% "scala-parser-combinators" %    "2.4.0"
       ,          "org.scalatest" %%%                "scalatest" %   "3.2.19" % Test
       ,      "org.scalatestplus" %%%          "scalacheck-1-18" % "3.2.19.0" % Test
+      ,      "io.github.cquiroz" %%%       "scala-java-locales" %    "1.2.0"
       )
     }).
   jvmConfigure(_.dependsOn(sharedResources % "compile-internal->compile")).

@@ -1,7 +1,8 @@
 package org.nlogo.agent
 
-import
-  org.nlogo.core.{ AgentKind, Program }
+import java.util.Locale
+
+import org.nlogo.core.{ AgentKind, Program }
 
 object Realloc {
   def realloc(world: AgentManagement & CompilationManagement, oldProgram: Program, newProgram: Program): Unit = {
@@ -17,11 +18,11 @@ object Realloc {
     for(breedName <- newProgram.breeds.keys)
       world.breeds.put(breedName,
         Option(world.breeds.get(breedName)).getOrElse(
-          new TreeAgentSet(AgentKind.Turtle, breedName.toUpperCase)))
+          new TreeAgentSet(AgentKind.Turtle, breedName.toUpperCase(Locale.ENGLISH))))
     for(breedName <- newProgram.linkBreeds.keys)
       world.linkBreeds.put(breedName,
         Option(world.linkBreeds.get(breedName)).getOrElse(
-          new TreeAgentSet(AgentKind.Link, breedName.toUpperCase)))
+          new TreeAgentSet(AgentKind.Link, breedName.toUpperCase(Locale.ENGLISH))))
     // make sure directednesses are up-to-date
     for((name, breed) <- newProgram.linkBreeds)
       world.linkBreeds.get(name).setDirected(breed.isDirected)

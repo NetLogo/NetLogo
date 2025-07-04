@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import scala.collection.mutable.WeakHashMap;
 import org.nlogo.agent.Agent;
@@ -228,7 +229,7 @@ public abstract class AbstractWorkspace
   public boolean isGlobalVariable(String name) {
     if (!_world.isDimensionVariable(name) && !name.equalsIgnoreCase("RANDOM-SEED")) {
       synchronized (_world) {
-        if (_world.observerOwnsIndexOf(name.toUpperCase()) == -1) {
+        if (_world.observerOwnsIndexOf(name.toUpperCase(Locale.ENGLISH)) == -1) {
           return false;
         }
       }

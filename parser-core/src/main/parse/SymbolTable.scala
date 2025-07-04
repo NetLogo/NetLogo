@@ -2,6 +2,8 @@
 
 package org.nlogo.parse
 
+import java.util.Locale
+
 import scala.collection.{ Iterable, IterableOnce, WithFilter }
 
 object SymbolTable {
@@ -23,29 +25,29 @@ class SymbolTable(private val syms: Map[String, SymbolType], private val uniqueV
     syms.foreach(f)
 
   def addSymbols(symNames: Iterable[String], tpe: SymbolType): SymbolTable =
-    new SymbolTable(syms ++ symNames.map(_.toUpperCase -> tpe).toMap, uniqueVarID)
+    new SymbolTable(syms ++ symNames.map(_.toUpperCase(Locale.ENGLISH) -> tpe).toMap, uniqueVarID)
 
   def addSymbol(symName: String, tpe: SymbolType): SymbolTable =
-    new SymbolTable(syms + (symName.toUpperCase -> tpe), uniqueVarID)
+    new SymbolTable(syms + (symName.toUpperCase(Locale.ENGLISH) -> tpe), uniqueVarID)
 
   def ++(other: SymbolTable): SymbolTable =
     new SymbolTable(syms ++ other.syms, uniqueVarID + other.uniqueVarID)
 
   def -(name: String): SymbolTable =
-    new SymbolTable(syms - name.toUpperCase, uniqueVarID)
+    new SymbolTable(syms - name.toUpperCase(Locale.ENGLISH), uniqueVarID)
 
-  def apply(name: String) = syms(name.toUpperCase)
+  def apply(name: String) = syms(name.toUpperCase(Locale.ENGLISH))
 
-  def contains(name: String) = syms.isDefinedAt(name.toUpperCase)
+  def contains(name: String) = syms.isDefinedAt(name.toUpperCase(Locale.ENGLISH))
 
-  def get(name: String): Option[SymbolType] = syms.get(name.toUpperCase)
+  def get(name: String): Option[SymbolType] = syms.get(name.toUpperCase(Locale.ENGLISH))
 
   def withFreshSymbol(symType: SymbolType, hint: String = ""): (String, SymbolTable) = {
     var foundSymbolAndID = Option.empty[(String, Int)]
     var currentVarID = uniqueVarID
 
     while (foundSymbolAndID.isEmpty) {
-      val potentialName = (hint + "_" + currentVarID.toString).toUpperCase
+      val potentialName = (hint + "_" + currentVarID.toString).toUpperCase(Locale.ENGLISH)
       if (contains(potentialName)) currentVarID += 1
       else foundSymbolAndID = Some((potentialName, currentVarID))
     }

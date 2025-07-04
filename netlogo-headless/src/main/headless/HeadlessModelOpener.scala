@@ -1,6 +1,8 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 package org.nlogo.headless
 
+import java.util.Locale
+
 import org.nlogo.workspace
 import workspace.WorldLoader
 import org.nlogo.plot.PlotLoader
@@ -116,7 +118,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
         case NumericInputConstraintSpecification(typeName, default) => new InputBoxConstraint(typeName, default)
         case _ => throw new IllegalStateException
       }
-      ws.world.observer.setConstraint(ws.world.observerOwnsIndexOf(vname.toUpperCase), con)
+      ws.world.observer.setConstraint(ws.world.observerOwnsIndexOf(vname.toUpperCase(Locale.ENGLISH)), con)
     }
 
     ws.command(interfaceGlobalCommands)

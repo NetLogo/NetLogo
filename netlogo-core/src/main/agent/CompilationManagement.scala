@@ -2,7 +2,7 @@
 
 package org.nlogo.agent
 
-import java.util.{ HashMap => JHashMap, Map => JMap }
+import java.util.{ HashMap => JHashMap, Locale, Map => JMap }
 
 import org.nlogo.{ core, api },
   core.{ AgentKind, Breed, NetLogoCore, Program },
@@ -87,7 +87,7 @@ trait CompilationManagement extends CoreWorld { this: AgentManagement =>
 
     programBreeds
       .filterNot {
-        case (name: String, _) => worldBreeds.containsKey(name.toUpperCase)
+        case (name: String, _) => worldBreeds.containsKey(name.toUpperCase(Locale.ENGLISH))
       }
       .foreach {
         case (name: String, breed: Breed) =>
@@ -96,7 +96,7 @@ trait CompilationManagement extends CoreWorld { this: AgentManagement =>
           if (breed.isLinkBreed) {
             agentset.setDirected(breed.isDirected)
           }
-          worldBreeds.put(name.toUpperCase, agentset)
+          worldBreeds.put(name.toUpperCase(Locale.ENGLISH), agentset)
       }
   }
 

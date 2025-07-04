@@ -2,6 +2,8 @@
 
 package org.nlogo.parse
 
+import java.util.Locale
+
 import org.nlogo.core._,
   org.nlogo.core.prim.{_let, _letvariable},
   Fail._
@@ -27,7 +29,7 @@ class LetVerifier extends AstVisitor {
       case l: _letvariable =>
         cAssert(
           currentLet.isEmpty || (currentLet.get ne l.let),
-          I18N.errors.getN("compiler.LetVariable.notDefined", l.token.text.toUpperCase),
+          I18N.errors.getN("compiler.LetVariable.notDefined", l.token.text.toUpperCase(Locale.ENGLISH)),
           l.token)
       case _ =>
     }

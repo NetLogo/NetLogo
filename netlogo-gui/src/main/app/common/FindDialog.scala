@@ -4,6 +4,7 @@ package org.nlogo.app.common
 
 import java.awt.{ BorderLayout, Frame, Toolkit }
 import java.awt.event.{ ActionEvent, ActionListener, FocusEvent }
+import java.util.Locale
 import javax.swing.{ AbstractAction, Action, Box, BoxLayout, JDialog, JEditorPane, JLabel, JPanel, SwingConstants }
 import javax.swing.border.EmptyBorder
 import javax.swing.text.{ BadLocationException, JTextComponent, TextAction }
@@ -338,8 +339,8 @@ class FindDialog(val owner: Frame) extends JDialog(owner, I18N.gui.get("dialog.f
 
     if (ignoreCase) {
       // this might get slow with big programs. should be tested. -AZS
-      searchMut = searchMut.toUpperCase
-      text = text.toUpperCase
+      searchMut = searchMut.toUpperCase(Locale.ENGLISH)
+      text = text.toUpperCase(Locale.ENGLISH)
     }
 
     var matchIndex = text.indexOf(searchMut, target.getSelectionEnd)
@@ -362,8 +363,8 @@ class FindDialog(val owner: Frame) extends JDialog(owner, I18N.gui.get("dialog.f
 
     if (ignoreCase) {
       // this might get slow with big programs. should be tested. -AZS
-      searchMut = searchMut.toUpperCase
-      text = text.toUpperCase
+      searchMut = searchMut.toUpperCase(Locale.ENGLISH)
+      text = text.toUpperCase(Locale.ENGLISH)
     }
 
     var matchIndex = text.lastIndexOf(searchMut, target.getSelectionStart - 1)

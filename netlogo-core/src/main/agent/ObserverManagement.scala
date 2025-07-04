@@ -2,6 +2,8 @@
 
 package org.nlogo.agent
 
+import java.util.Locale
+
 import org.nlogo.api.{ AgentException, LogoException }
 import org.nlogo.log.LogManager
 
@@ -18,7 +20,7 @@ trait ObserverManagement extends WorldKernel {
   @throws(classOf[AgentException])
   @throws(classOf[LogoException])
   def setObserverVariableByName(varName: String, value: Object): Unit = {
-    val index = observer.variableIndex(varName.toUpperCase)
+    val index = observer.variableIndex(varName.toUpperCase(Locale.ENGLISH))
     if (index != -1) {
       val oldValue = observer.getVariable(index)
       observer.setVariable(index, value)
@@ -29,7 +31,7 @@ trait ObserverManagement extends WorldKernel {
   }
 
   def getObserverVariableByName(varName: String): AnyRef = {
-    val index = observer.variableIndex(varName.toUpperCase)
+    val index = observer.variableIndex(varName.toUpperCase(Locale.ENGLISH))
     if (index >= 0)
       observer.variables(index)
     else

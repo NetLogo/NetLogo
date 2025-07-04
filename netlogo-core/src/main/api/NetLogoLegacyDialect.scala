@@ -2,6 +2,8 @@
 
 package org.nlogo.api
 
+import java.util.Locale
+
 import org.nlogo.core.{ AgentVariableSet, Command, Dialect, Femto, Instruction, Reporter, Resource, Syntax,
                         TokenMapperInterface }
 
@@ -61,11 +63,11 @@ trait DelegatingMapper extends TokenMapperInterface {
   def overrideBreedInstruction(primName: String, breedName: String): Option[Instruction] = None
 
   def getCommand(s: String): Option[Command] =
-    commands.get(s.toUpperCase).map(instantiate[Command]) orElse
+    commands.get(s.toUpperCase(Locale.ENGLISH)).map(instantiate[Command]) orElse
       magicOpenToken(s) orElse defaultMapper.getCommand(s)
 
   def getReporter(s: String): Option[Reporter] =
-    reporters.get(s.toUpperCase).map(instantiate[Reporter]) orElse
+    reporters.get(s.toUpperCase(Locale.ENGLISH)).map(instantiate[Reporter]) orElse
       defaultMapper.getReporter(s)
 
   def breedInstruction(primName: String, breedName: String): Option[Instruction] =

@@ -3,6 +3,8 @@
 package org.nlogo.core
 package prim
 
+import java.util.Locale
+
 trait Lambda {
   def arguments: Lambda.Arguments
   def closedVariables: Set[ClosedVariable]
@@ -33,12 +35,12 @@ object Lambda {
     def argumentTokens: Seq[Token] = Seq()
   }
   case class UnbracketedArgument(t: Token) extends Arguments {
-    def argumentNames = Seq(t.text.toUpperCase)
+    def argumentNames = Seq(t.text.toUpperCase(Locale.ENGLISH))
     def argumentTokens: Seq[Token] = Seq(t)
     def argumentSyntax = Seq(Syntax.WildcardType)
   }
   case class BracketedArguments(argumentTokens: Seq[Token]) extends Arguments {
-    def argumentNames  = argumentTokens.map(_.text.toUpperCase)
+    def argumentNames  = argumentTokens.map(_.text.toUpperCase(Locale.ENGLISH))
     def argumentSyntax = argumentTokens.map(_ => Syntax.WildcardType)
   }
 }

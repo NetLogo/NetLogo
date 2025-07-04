@@ -1,6 +1,8 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.window;
+package org.nlogo.window
+
+import java.util.Locale
 
 import org.nlogo.core.{ CompilerException, Program }
 import org.nlogo.api.{ AgentException, Exceptions, JobOwner, LogoException, SourceOwner, ValueConstraint }
@@ -96,7 +98,7 @@ class CompilerManager(val workspace: AbstractWorkspace,
       compileAll()
     // this check is needed because it might be a brand new widget
     // that doesn't have a variable yet - ST 3/3/04
-    else if (world.observerOwnsIndexOf(widget.name.toUpperCase) != -1) {
+    else if (world.observerOwnsIndexOf(widget.name.toUpperCase(Locale.ENGLISH)) != -1) {
       if (e.updating) {
         widget.valueObject(world.getObserverVariableByName(widget.name))
       }
@@ -237,7 +239,7 @@ class CompilerManager(val workspace: AbstractWorkspace,
       try {
         // we could do `world.setObserverVariableByName()`, but since compilation may have failed we cannot rely on the
         // variable names existing - Jeremy B August 2019
-        val index = world.observerOwnsIndexOf(widget.name.toUpperCase)
+        val index = world.observerOwnsIndexOf(widget.name.toUpperCase(Locale.ENGLISH))
         if (index != -1) {
           world.observer.setVariable(index, widget.valueObject())
         }
