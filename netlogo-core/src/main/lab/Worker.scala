@@ -2,11 +2,14 @@
 
 package org.nlogo.lab
 
-import java.util.concurrent.{Callable, Executors, TimeUnit}
+import java.util.Locale
+import java.util.concurrent.{ Callable, Executors, TimeUnit }
+
 import org.nlogo.core.{ AgentKind, I18N, WorldDimensions }
-import org.nlogo.api.{Dump, ExportPlotWarningAction, LabProtocol,
-  LogoException, MersenneTwisterFast, LabPostProcessorInputFormat, WorldDimensionException, SimpleJobOwner}
-import org.nlogo.nvm.{Command, LabInterface, Workspace}
+import org.nlogo.api.{ Dump, ExportPlotWarningAction, LabProtocol,
+  LogoException, MersenneTwisterFast, LabPostProcessorInputFormat, WorldDimensionException, SimpleJobOwner }
+import org.nlogo.nvm.{ Command, LabInterface, Workspace }
+
 import LabInterface.ProgressListener
 
 class Worker(val protocol: LabProtocol, val supervisorWriting: () => Unit = () => {})
@@ -169,7 +172,7 @@ class Worker(val protocol: LabProtocol, val supervisorWriting: () => Unit = () =
         for((name, value) <- settings)
           if (!world.isDimensionVariable(name) && !name.equalsIgnoreCase("RANDOM-SEED"))
             ws.world.synchronized {
-              if (ws.world.observerOwnsIndexOf(name.toUpperCase) == -1)
+              if (ws.world.observerOwnsIndexOf(name.toUpperCase(Locale.ENGLISH)) == -1)
                 throw new FailedException(
                   "Global variable does not exist:\n" + name)
               ws.world.setObserverVariableByName(name, value)

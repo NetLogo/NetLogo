@@ -2,6 +2,8 @@
 
 package org.nlogo.agent
 
+import java.util.Locale
+
 import org.nlogo.api.{ AgentException, Color, ImporterUser,
   NetLogoThreeDDialect, WorldDimensionException }
 import org.nlogo.core.{ AgentKind, Program, WorldDimensions, WorldDimensions3D }
@@ -204,7 +206,7 @@ class World3D extends World
     program.breeds.foreach {
       case (name, breed) =>
         val agentset = new TreeAgentSet(AgentKind.Turtle, breed.name)
-        breeds.put(name.toUpperCase, agentset)
+        breeds.put(name.toUpperCase(Locale.ENGLISH), agentset)
     }
 
     _turtles.clear() // so a SimpleChangeEvent is published
@@ -285,7 +287,7 @@ class World3D extends World
   @throws(classOf[WorldDimensionException])
   override def setDimensionVariable(variableName: String, value: Int, d: WorldDimensions): WorldDimensions = {
     val wd = d.asInstanceOf[WorldDimensions3D]
-    variableName.toUpperCase match {
+    variableName.toUpperCase(Locale.ENGLISH) match {
       case "MIN-PZCOR" => wd.copyThreeD(minPzcor = value)
       case "MAX-PZCOR" => wd.copyThreeD(maxPzcor = value)
       case "WORLD-DEPTH" =>

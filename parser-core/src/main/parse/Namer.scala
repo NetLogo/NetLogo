@@ -2,6 +2,8 @@
 
 package org.nlogo.parse
 
+import java.util.Locale
+
 import org.nlogo.core,
   core.{ Dialect, ExtensionManager, FrontEndInterface, FrontEndProcedure, Instruction,
   Program, Token, TokenType },
@@ -57,7 +59,7 @@ class Namer(
     val ok = newVal.isInstanceOf[core.prim._call] ||
     newVal.isInstanceOf[core.prim._callreport] ||
     newVal.isInstanceOf[core.prim._procedurevariable]
-    cAssert(ok, alreadyTaken(userFriendlyName(newVal), token.text.toUpperCase), token)
+    cAssert(ok, alreadyTaken(userFriendlyName(newVal), token.text.toUpperCase(Locale.ENGLISH)), token)
   }
 
   private def processOne(token: Token): Option[Token] = {

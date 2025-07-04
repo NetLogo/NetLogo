@@ -2,6 +2,8 @@
 
 package org.nlogo.sdm
 
+import java.util.Locale
+
 import org.nlogo.core.{ CompilerException, LiteralParser }
 
 /**
@@ -22,7 +24,7 @@ class Translator(model: Model, compiler: LiteralParser) {
       case r: Rate => if(!r.expression.isEmpty) rates += r
       case c: Converter =>
         if(!c.expression.isEmpty)
-          if(isConstant(c.expression.toUpperCase))
+          if(isConstant(c.expression.toUpperCase(Locale.ENGLISH)))
             constantConverters += c
           else converters += c
       case _ => // ignore
@@ -132,10 +134,10 @@ class Translator(model: Model, compiler: LiteralParser) {
     // Stock ordering is as follows: constants first, then alphabetical by name.  Ideally we should
     // also order depending upon which expressions refer to other stocks.  -- 11/09/05 CLB
     def compare(s1: Stock, s2: Stock) = {
-      val sname1 = s1.name.toUpperCase
-      val sname2 = s2.name.toUpperCase
-      val sexp1 = s1.initialValueExpression.toUpperCase
-      val sexp2 = s2.initialValueExpression.toUpperCase
+      val sname1 = s1.name.toUpperCase(Locale.ENGLISH)
+      val sname2 = s2.name.toUpperCase(Locale.ENGLISH)
+      val sexp1 = s1.initialValueExpression.toUpperCase(Locale.ENGLISH)
+      val sexp2 = s2.initialValueExpression.toUpperCase(Locale.ENGLISH)
       if(isConstant(sexp1))
         if(isConstant(sexp2))
           // both constant, compare names

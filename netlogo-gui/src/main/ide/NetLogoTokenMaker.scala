@@ -2,6 +2,7 @@
 
 package org.nlogo.ide
 
+import java.util.Locale
 import javax.swing.text.Segment
 
 import org.fife.ui.rsyntaxtextarea.{ TokenMakerBase }
@@ -33,7 +34,7 @@ trait NetLogoTokenMaker extends TokenMakerBase {
       (dialect.agentVariables.implicitObserverVariableTypeMap.keySet ++
       dialect.agentVariables.implicitTurtleVariableTypeMap.keySet ++
       dialect.agentVariables.implicitPatchVariableTypeMap.keySet ++
-      dialect.agentVariables.implicitLinkVariableTypeMap.keySet).contains(t.text.toUpperCase)
+      dialect.agentVariables.implicitLinkVariableTypeMap.keySet).contains(t.text.toUpperCase(Locale.ENGLISH))
     }
 
     def tagToken(t: Token): Token = {
@@ -41,7 +42,7 @@ trait NetLogoTokenMaker extends TokenMakerBase {
       named.tpe match {
         case TokenType.Ident =>
           extensionManager.flatMap { manager =>
-            manager.cachedType(t.text.toUpperCase)
+            manager.cachedType(t.text.toUpperCase(Locale.ENGLISH))
               .map(tokenType => t.copy(tpe = tokenType)())
           }.getOrElse(t)
         case _ => named
@@ -60,9 +61,9 @@ trait NetLogoTokenMaker extends TokenMakerBase {
           case Keyword  => TokenTypes.RESERVED_WORD
           case Literal  => literalToken(namedToken.value)
           case _        =>
-            if (dialect.tokenMapper.getCommand(t.text.toUpperCase).isDefined)
+            if (dialect.tokenMapper.getCommand(t.text.toUpperCase(Locale.ENGLISH)).isDefined)
               TokenTypes.OPERATOR
-            else if (dialect.tokenMapper.getReporter(t.text.toUpperCase).isDefined)
+            else if (dialect.tokenMapper.getReporter(t.text.toUpperCase(Locale.ENGLISH)).isDefined)
               TokenTypes.FUNCTION
             else if (t.text.equalsIgnoreCase("BREED") && firstOnLine)
               TokenTypes.RESERVED_WORD

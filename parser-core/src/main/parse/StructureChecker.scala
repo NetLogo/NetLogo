@@ -8,6 +8,8 @@ package org.nlogo.parse
 // (I'm not very happy with the code for this stage, but as long as it's
 // well encapsulated, maybe it's good enough. - ST 12/7/12)
 
+import java.util.Locale
+
 import
   org.nlogo.core,
     core.{ BreedIdentifierHandler, I18N, StructureDeclarations, Token, TokenType },
@@ -136,10 +138,13 @@ object StructureChecker {
     usage.declaration match {
       case breed@Breed(_, _, _, _) =>
         val matchedPrimAndType =
-          BreedIdentifierHandler.breedCommands(breed).filter(c => usedNames.contains(c.toUpperCase)).map(i => (i, BreedCommand)) ++
-          BreedIdentifierHandler.breedReporters(breed).filter(r => usedNames.contains(r.toUpperCase)).map(i => (i, BreedReporter))
+          BreedIdentifierHandler.breedCommands(breed).filter(c => usedNames.contains(c.toUpperCase(Locale.ENGLISH)))
+                                                     .map(i => (i, BreedCommand)) ++
+          BreedIdentifierHandler.breedReporters(breed).filter(r => usedNames.contains(r.toUpperCase(Locale.ENGLISH)))
+                                                      .map(i => (i, BreedReporter))
         matchedPrimAndType.foreach {
-          case (p, st) => exception(breedOverridesBuiltIn(breed, usedNames(p.toUpperCase), p), usage.identifier.token)
+          case (p, st) => exception(breedOverridesBuiltIn(breed, usedNames(p.toUpperCase(Locale.ENGLISH)), p),
+                                    usage.identifier.token)
         }
       case _ =>
     }
@@ -148,7 +153,7 @@ object StructureChecker {
   private def occurrencesFromDeclarations(declarations: Seq[Declaration]): Seq[Occurrence] = {
     val os = declarations.foldLeft(Seq[Occurrence]()) {
       case (occs, decl@Variables(kind, names)) =>
-        val vars = kind.name.toUpperCase match {
+        val vars = kind.name.toUpperCase(Locale.ENGLISH) match {
           case "TURTLES-OWN" => names.map(Occurrence(decl, _, TurtleVariable))
           case "PATCHES-OWN" => names.map(Occurrence(decl, _, PatchVariable))
           case "LINKS-OWN"   => names.map(Occurrence(decl, _, LinkVariable))

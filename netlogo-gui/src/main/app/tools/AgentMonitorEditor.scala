@@ -4,6 +4,7 @@ package org.nlogo.app.tools
 
 import java.awt.{ BorderLayout, FlowLayout, Font, GridBagConstraints, GridBagLayout, Insets, Rectangle }
 import java.awt.event.{ FocusEvent, FocusListener, KeyEvent, KeyListener }
+import java.util.Locale
 import javax.swing.{ JLabel, JPanel, ScrollPaneConstants }
 
 import org.nlogo.agent.{ Agent, AgentSet, Turtle, Patch, Link }
@@ -417,7 +418,7 @@ with ThemeSync {
     if(text.equalsIgnoreCase("LINKS"))
       workspace.world.links
     else {
-      val breed = workspace.world.getLinkBreed(text.toUpperCase)
+      val breed = workspace.world.getLinkBreed(text.toUpperCase(Locale.ENGLISH))
       if(breed == null)
         throw new org.nlogo.api.AgentException(I18N.gui.get("tools.agentMonitor.editor.edpectedLinkBreed"))
       breed

@@ -2,6 +2,8 @@
 
 package org.nlogo.app.codetab
 
+import java.util.Locale
+
 import org.nlogo.api.{ CompilerServices, EditorAreaInterface}
 import org.nlogo.core.{ Token, TokenType }
 import org.nlogo.editor.Indenter
@@ -218,9 +220,10 @@ extends Indenter {
       None
   }
 
-  private def indentationChange(indentLevels: List[Int], line: TokenizedLine, priorLine: Option[TokenizedLine], priorAdjustment: Option[LineIndent]): List[Int] = {
+  private def indentationChange(indentLevels: List[Int], line: TokenizedLine, priorLine: Option[TokenizedLine],
+                                priorAdjustment: Option[LineIndent]): List[Int] = {
     val priorIndentLevel = indentLevels.headOption.getOrElse(0)
-    line.tokens.headOption.map(t => (t.tpe, t.text.toUpperCase)) match {
+    line.tokens.headOption.map(t => (t.tpe, t.text.toUpperCase(Locale.ENGLISH))) match {
       case Some((TokenType.Keyword, ("TO" | "TO-REPORT"))) => List(TAB_WIDTH)
       case Some((TokenType.Keyword, _)) if line.bracketDelta == 0 => List()
       case Some((TokenType.OpenBracket, _)) if line.bracketDelta > 0 =>

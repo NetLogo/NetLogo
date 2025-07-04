@@ -3,6 +3,7 @@
 package org.nlogo.workspace
 
 import java.net.URL
+import java.util.Locale
 
 import org.nlogo.api.{ ClassManager, Dump, ExtensionException, ImportErrorHandler, Reporter }
 import org.nlogo.core.CompilerException
@@ -68,7 +69,7 @@ object ExtensionManager {
 
   class JarContainer(val jarClassLoader: ClassLoader, data: ExtensionData) {
     val extensionName  = data.extensionName
-    val normalizedName = data.extensionName.toUpperCase
+    val normalizedName = data.extensionName.toUpperCase(Locale.ENGLISH)
     val fileURL        = data.fileURL
     val modified: Long = data.modified
     val primManager: ExtensionPrimitiveManager = new ExtensionPrimitiveManager(extensionName)
@@ -205,7 +206,7 @@ class ExtensionManager(val workspace: ExtendableWorkspace, loader: ExtensionLoad
 
   @throws(classOf[CompilerException])
   def readExtensionObject(extName: String, typeName: String, value: String): ExtensionObject = {
-    val upcaseExtName = extName.toUpperCase
+    val upcaseExtName = extName.toUpperCase(Locale.ENGLISH)
     def catchExtensionException(f: JarContainer => ExtensionObject): JarContainer => ExtensionObject = { (j: JarContainer) =>
       try { f(j) }
       catch {
@@ -227,7 +228,7 @@ class ExtensionManager(val workspace: ExtendableWorkspace, loader: ExtensionLoad
           case Array(pr, pn) => (pr, pn)
           case _ => throw new IllegalStateException
         }
-        (pname, { (jc: JarContainer) => prefix.toUpperCase == jc.normalizedName })
+        (pname, { (jc: JarContainer) => prefix.toUpperCase(Locale.ENGLISH) == jc.normalizedName })
       } else
         (name,  { (jc: JarContainer) => jc.primManager.autoImportPrimitives })
     jars.values.filter(liveJars.contains)

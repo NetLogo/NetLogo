@@ -2,6 +2,8 @@
 
 package org.nlogo.core
 
+import java.util.Locale
+
 // no "BREED" keyword because it conflicts with BREED turtle variable -- CLB
 
 object Keywords {
@@ -11,5 +13,5 @@ object Keywords {
     "DIRECTED-LINK-BREED", "UNDIRECTED-LINK-BREED",
     "EXTENSIONS", "__INCLUDES")
   def isKeyword(s: String) =
-    keywords.contains(s.toUpperCase) || s.toUpperCase.endsWith("-OWN")
+    keywords.contains(s.toUpperCase(Locale.ENGLISH)) || s.toUpperCase(Locale.ENGLISH).endsWith("-OWN")
 }

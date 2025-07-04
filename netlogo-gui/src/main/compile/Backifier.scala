@@ -2,9 +2,12 @@
 
 package org.nlogo.compile
 
-import scala.collection.immutable.ListMap
+import java.util.Locale
+
 import org.nlogo.core.{ Fail, I18N, Instantiator, Program, BreedIdentifierHandler }, Fail.exception
 import org.nlogo.{ api => nlogoApi, core, nvm, prim => nvmprim }
+
+import scala.collection.immutable.ListMap
 
 class Backifier(program: Program,
   extensionManager: core.ExtensionManager) extends api.Backifier {
@@ -113,7 +116,7 @@ class Backifier(program: Program,
   }
 
   private def fallback[T1 <: core.Instruction, T2 <: nvm.Instruction](i: T1): T2 = {
-    BreedIdentifierHandler.process(i.token.copy(value = i.token.text.toUpperCase)(), program) match {
+    BreedIdentifierHandler.process(i.token.copy(value = i.token.text.toUpperCase(Locale.ENGLISH))(), program) match {
       case None =>
         try {
           val klass = Class.forName(backifyName(i.getClass.getName))
@@ -138,7 +141,7 @@ class Backifier(program: Program,
     val result: nvm.Command = c match {
       case core.prim._extern(_) =>
         new nvmprim._extern(
-          extensionManager.replaceIdentifier(c.token.text.toUpperCase)
+          extensionManager.replaceIdentifier(c.token.text.toUpperCase(Locale.ENGLISH))
             .asInstanceOf[nlogoApi.Command])
 
       case core.prim._call(proc) =>
@@ -206,7 +209,7 @@ class Backifier(program: Program,
 
       case core.prim._externreport(_) =>
         new nvmprim._externreport(
-          extensionManager.replaceIdentifier(r.token.text.toUpperCase)
+          extensionManager.replaceIdentifier(r.token.text.toUpperCase(Locale.ENGLISH))
             .asInstanceOf[nlogoApi.Reporter])
 
       case core.prim._breedvariable(varName) =>

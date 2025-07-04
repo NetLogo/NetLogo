@@ -4,6 +4,7 @@ package org.nlogo.window
 
 import java.awt.{ Color, Dimension, Graphics, GridBagConstraints, GridBagLayout, Insets }
 import java.awt.image.BufferedImage
+import java.util.Locale
 import javax.swing.{ JLabel, JPanel, SwingConstants }
 
 import org.nlogo.core.{ I18N, Pen => CorePen, Plot => CorePlot, Widget => CoreWidget }
@@ -355,10 +356,11 @@ abstract class AbstractPlotWidget(val plot: Plot, val plotManager: PlotManagerIn
   override def errorString: Option[String] = {
     val hasDuplicatedName =
       widgetContainer.map(_.allWidgets).getOrElse(Seq()).collect {
-        case p: CorePlot if p.display.map(_.toUpperCase).getOrElse("") == plotName.toUpperCase => p
+        case p: CorePlot if p.display.map(_.toUpperCase(Locale.ENGLISH))
+                                     .getOrElse("") == plotName.toUpperCase(Locale.ENGLISH) => p
       }.length > 1
     if (hasDuplicatedName) {
-      Some(I18N.gui.getN("edit.plot.name.duplicate", plotName.toUpperCase))
+      Some(I18N.gui.getN("edit.plot.name.duplicate", plotName.toUpperCase(Locale.ENGLISH)))
     } else {
       None
     }

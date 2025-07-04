@@ -3,6 +3,7 @@
 package org.nlogo.fileformat
 
 import java.nio.file.Path
+import java.util.Locale
 
 import org.nlogo.core.{ CompilationEnvironment, Dialect, ExtensionManager,
   LibraryManager, LiteralParser, Model, Plot, SourceRewriter }
@@ -32,7 +33,7 @@ object PlotConverter {
             case (original, index) => {
               var new_name = s"${original}_${index}"
               var new_index = index
-              while(groupedNames.map(_._1).contains(new_name.toUpperCase)){
+              while(groupedNames.map(_._1).contains(new_name.toUpperCase(Locale.ENGLISH))){
                 new_index = new_index + 1
                 new_name  = s"${original}_${new_index}"
               }
@@ -45,11 +46,12 @@ object PlotConverter {
 
   private[fileformat] def determinePenSubstitutions(names: Seq[(String, Seq[String])]): Seq[(String, Seq[(String, String)])] = {
     names.map(plotAndPens =>
-        (plotAndPens._1, generateRenameMappings(plotAndPens._2.groupBy(_.toUpperCase).toSeq))).filterNot(_._2.isEmpty)
+        (plotAndPens._1, generateRenameMappings(plotAndPens._2.groupBy(_.toUpperCase(Locale.ENGLISH)).toSeq)))
+                                                              .filterNot(_._2.isEmpty)
   }
 
   private[fileformat] def determinePlotSubstitutions(names: Seq[String]): Seq[(String, String)] = {
-    generateRenameMappings(names.groupBy(_.toUpperCase).toSeq)
+    generateRenameMappings(names.groupBy(_.toUpperCase(Locale.ENGLISH)).toSeq)
   }
 
   private def modifyPlotNameKeys(groupedPlotAndPens: Seq[(String, Seq[(String, String)])], nameMappings: Seq[(String, String)]): Seq[(String, Seq[(String, String)])] =
