@@ -2,60 +2,60 @@
 
 package org.nlogo.api
 
-import org.nlogo.core.{ File, FileMode }
+import java.io.{ BufferedReader, File, FileInputStream, FileOutputStream, IOException, InputStreamReader,
+                 OutputStreamWriter, PrintWriter }
 
-class LocalFile(filepath: String) extends File {
+import org.nlogo.core.{ File => CoreFile, FileMode }
 
-  private var w: java.io.PrintWriter = null
+class LocalFile(filepath: String) extends CoreFile {
+
+  private var w: PrintWriter = null
   override def getPrintWriter = w
 
-  @throws(classOf[java.io.IOException])
+  @throws(classOf[IOException])
   override def getInputStream =
-    new java.io.FileInputStream(getPath)
+    new FileInputStream(getPath)
 
-  @throws(classOf[java.io.IOException])
+  @throws(classOf[IOException])
   override def open(mode: FileMode): Unit = {
     if (w != null || reader != null)
-      throw new java.io.IOException(
+      throw new IOException(
         "Attempted to open an already open file")
     mode match {
       case FileMode.Read =>
         pos = 0
         eof = false
-        reader = new java.io.BufferedReader(
-            new java.io.InputStreamReader(
-                new java.io.BufferedInputStream(
-                    new java.io.FileInputStream(new java.io.File(filepath)))))
+        reader = new BufferedReader(new InputStreamReader(new FileInputStream(new File(filepath)), "UTF-8"))
         this.mode = mode
       case FileMode.Write =>
-        w = new java.io.PrintWriter(new java.io.FileWriter(filepath))
+        w = new PrintWriter(new OutputStreamWriter(new FileOutputStream(new File(filepath)), "UTF-8"))
         this.mode = mode
       case FileMode.Append =>
-        w = new java.io.PrintWriter(new java.io.FileWriter(filepath, true))
+        w = new PrintWriter(new OutputStreamWriter(new FileOutputStream(new File(filepath)), "UTF-8"), true)
         this.mode = mode
       case FileMode.None =>
         throw new IllegalStateException("file is not open")
     }
   }
 
-  @throws(classOf[java.io.IOException])
+  @throws(classOf[IOException])
   override def print(str: String): Unit = {
     if (w == null)
-      throw new java.io.IOException("Attempted to print to an unopened File")
+      throw new IOException("Attempted to print to an unopened File")
     w.print(str)
   }
 
-  @throws(classOf[java.io.IOException])
+  @throws(classOf[IOException])
   override def println(line: String): Unit = {
     if (w == null)
-      throw new java.io.IOException("Attempted to println to an unopened File")
+      throw new IOException("Attempted to println to an unopened File")
     w.println(line)
   }
 
-  @throws(classOf[java.io.IOException])
+  @throws(classOf[IOException])
   override def println(): Unit = {
     if (w == null)
-      throw new java.io.IOException("Attempted to println to an unopened File")
+      throw new IOException("Attempted to println to an unopened File")
     w.println()
   }
 
@@ -64,7 +64,7 @@ class LocalFile(filepath: String) extends File {
       w.flush()
   }
 
-  @throws(classOf[java.io.IOException])
+  @throws(classOf[IOException])
   override def close(ok: Boolean): Unit = {
     mode match {
       case FileMode.Write | FileMode.Append =>
@@ -79,9 +79,9 @@ class LocalFile(filepath: String) extends File {
   }
 
   override def getAbsolutePath =
-    new java.io.File(filepath).getAbsolutePath
+    new File(filepath).getAbsolutePath
 
   override def getPath =
-    new java.io.File(filepath).getPath
+    new File(filepath).getPath
 
 }

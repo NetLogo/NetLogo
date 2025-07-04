@@ -20,6 +20,14 @@ import
 
 class DefaultFileManagerTests extends AnyFunSuite with OneInstancePerTest {
 
+  private val root: String = {
+    if (System.getProperty("os.name").toLowerCase.contains("windows")) {
+      "C:\\"
+    } else {
+      "/"
+    }
+  }
+
   test("openFile allows opening files that do not exist") {
     fileManager.getFile("foobar")
   }
@@ -154,13 +162,13 @@ class DefaultFileManagerTests extends AnyFunSuite with OneInstancePerTest {
   }
 
   test("setPrefix accepts an absolute directory") {
-    fileManager.setPrefix("/")
-    assert(fileManager.prefix == "/")
+    fileManager.setPrefix(root)
+    assert(fileManager.prefix == root)
   }
 
   test("setPrefix sets the prefix with a trailing slash") {
-    fileManager.setPrefix("/tmp")
-    assert(fileManager.prefix == "/tmp/")
+    fileManager.setPrefix(root + "tmp")
+    assert(fileManager.prefix == root + "tmp" + JFile.separatorChar)
   }
 
   test("setPrefix should not be null when not set") {

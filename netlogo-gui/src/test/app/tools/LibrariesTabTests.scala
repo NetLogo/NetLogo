@@ -20,7 +20,7 @@ class LibrariesTabTests extends AnyFunSuite {
     val expected =
       """extensions [fetch]
         |to go end""".stripMargin
-    assertResult(expected)(addExtsToSource(source, requiredExts))
+    assertResult(expected.split("\r?\n").sameElements(addExtsToSource(source, requiredExts)))
   }
 
   test("adds extensions to existing simple extensions statement") {

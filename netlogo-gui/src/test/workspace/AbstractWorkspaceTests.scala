@@ -31,14 +31,14 @@ class AbstractWorkspaceTests extends AnyFunSuite with BeforeAndAfterEach with On
   }
   test("AttachModelDir1") {
     workspace.setModelPath("/tmp/foo.nlogox")
-    assertResult("/tmp/abc.txt")(workspace.attachModelDir("abc.txt"))
+    assertResult("/tmp/abc.txt")("[A-Z]:".r.replaceFirstIn(workspace.attachModelDir("abc.txt").replace("\\", "/"), ""))
   }
   test("AttachModelDir2") {
     workspace.setModelPath("/tmp/foo.nlogox")
-    assertResult("/usr/abc.txt")(workspace.attachModelDir("/usr/abc.txt"))
+    assertResult("/usr/abc.txt")("[A-Z]:".r.replaceFirstIn(workspace.attachModelDir("/usr/abc.txt").replace("\\", "/"), ""))
   }
   test("AttachModelDir3") {
-    val home = System.getProperty("user.home")
-    assertResult(s"$home/abc.txt")(workspace.attachModelDir("abc.txt"))
+    val home = System.getProperty("user.home").replace("\\", "/")
+    assertResult(s"$home/abc.txt")(workspace.attachModelDir("abc.txt").replace("\\", "/"))
   }
 }

@@ -25,7 +25,7 @@ object ChecksumsAndPreviews {
   def main(argv: Array[String]): Unit = {
     Main.setHeadlessProperty()
     def paths(fn: String => Boolean, includeBenchmarks: Boolean) = {
-      val allLibrary = ModelsLibrary.getModelPaths(true, false).toList
+      val allLibrary = ModelsLibrary.getModelPaths(true, false).map(_.replace("\\", "/")).toList
       val library = if (includeBenchmarks)
         allBenchmarks.map("models/test/benchmarks/" + _ + " Benchmark.nlogox") ::: allLibrary
       else

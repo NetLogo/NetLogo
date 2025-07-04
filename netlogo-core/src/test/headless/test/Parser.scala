@@ -14,11 +14,11 @@ object Parser {
           LanguageTest(suiteName, xs.head.trim, some.map{_.trim}.map(parse)) :: split(rest)
       }
     val multiLine =
-      s.split("/\n")
+      s.split("/\r?\n")
         .map(_.trim)
         .mkString(" ")
     val lines =
-      multiLine.split("\n")
+      multiLine.split("\r?\n")
         .filter(!_.trim.startsWith("#"))
         .filter(!_.trim.isEmpty)
     split(lines.toList)

@@ -140,16 +140,16 @@ command-and-reporter-tasks-close-over-same-procedure-input
   runresult glob2 => 130
 
 *command-task-stack-trace
-  O> run [ -> print __boom] => STACKTRACE boom!\
-  error while observer running __BOOM\
-    called by (anonymous command: [ -> print __boom ])\
+  O> run [ -> print __boom] => STACKTRACE boom! /
+  error while observer running __BOOM /
+    called by (anonymous command: [ -> print __boom ]) /
     called by procedure __EVALUATOR
 
 *command-task-in-command-task-stack-trace
-  O> run [run [print __boom]] => STACKTRACE boom!\
-  error while observer running __BOOM\
-    called by (anonymous command: [ print __boom ])\
-    called by (anonymous command: [ run [ print __boom ] ])\
+  O> run [run [print __boom]] => STACKTRACE boom! /
+  error while observer running __BOOM /
+    called by (anonymous command: [ print __boom ]) /
+    called by (anonymous command: [ run [ print __boom ] ]) /
     called by procedure __EVALUATOR
 
 turtle-executing-command-task

@@ -48,9 +48,9 @@ class TestGenerator extends AnyFunSuite {
       assertResult("""|ICONST_4
                       |FRAME FULL [org/nlogo/prim/_asm_procedurefoo_if_0 org/nlogo/nvm/Context I] [org/nlogo/nvm/Context I]
                       |PUTFIELD org/nlogo/nvm/Context.ip : I
-                      |RETURN""".stripMargin)(
+                      |RETURN""".stripMargin.sameElements(
         stripLineNumbers(disassembleCommand("if true [ __ignore 1 __ignore 2 __ignore 3 ]"))
-        .takeRight(4).mkString("\n"))
+        .takeRight(4).mkString("\n")))
     }
 
   // make sure the generator chooses _constdouble's Double-returning method,

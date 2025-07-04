@@ -8,7 +8,7 @@ import java.nio.file.Files
 // http://download.oracle.com/javase/tutorial/i18n/text/string.html
 class TestFilePrimsUTF8 extends AbstractTestModels {
 
-  val testDir = Files.createTempDirectory("file-prim-files").toString
+  val testDir = Files.createTempDirectory("file-prim-files").toString.replace("\\", "/")
 
   val code = s"""
 globals [f utf-string]

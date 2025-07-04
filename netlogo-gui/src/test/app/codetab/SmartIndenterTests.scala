@@ -99,7 +99,7 @@ class SmartIndenterTests extends AnyFunSuite {
     def spec2out(spec: String) = replaceLeading(replaceLeading(spec, '-', ""), '+', " ")
 
     fileToString(path)
-            .split("\n")
+            .split("\r?\n")
             .filter(!_.startsWith("#"))
             .dropWhile(_.isEmpty)
             .mkString("\n")

@@ -2,6 +2,8 @@
 
 package org.nlogo.headless
 
+import java.nio.charset.StandardCharsets
+
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.{ OneInstancePerTest, BeforeAndAfterEach }
 import org.nlogo.api.{ FileIO, Perspective, Version }
@@ -481,7 +483,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
   }
 
   test("utf 8 string", SlowTest.Tag) {
-    val x = new String("A" + "\u00ea" + "\u00f1" + "\u00fc" + "C")
+    val x = new String("A\u00ea\u00f1\u00fcC".getBytes, StandardCharsets.UTF_8)
     roundTripHelper(setup="set t \"" + x + "\"", model="globals [t]")
   }
 

@@ -137,7 +137,7 @@ class Fixture(name: String) extends AbstractFixture {
             assertResult(expected)(
               ex.getMessage.stripPrefix(runtimePrefix))
           case StackTrace(expected) =>
-            assertResult(expected)(workspace.lastErrorReport.stackTrace.get)
+            assertResult(expected)(workspace.lastErrorReport.stackTrace.get.split("\r?\n").map(_.trim).mkString(" "))
           case _ =>
             throw ex
         }

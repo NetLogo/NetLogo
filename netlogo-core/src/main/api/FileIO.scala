@@ -22,16 +22,28 @@ object FileIO {
     io.Source.fromFile(file).mkString
 
   @throws(classOf[java.io.IOException])
-  def fileToString(file: java.io.File) =
-    io.Source.fromFile(file, "UTF-8").mkString
+  def fileToString(file: java.io.File) = {
+    val f = io.Source.fromFile(file, "UTF-8")
+    val result = f.mkString
+    f.close()
+    result
+  }
 
   @throws(classOf[java.io.IOException])
-  def fileToString(path: String) =
-    io.Source.fromFile(path, "UTF-8").mkString
+  def fileToString(path: String) = {
+    val file = io.Source.fromFile(path, "UTF-8")
+    val result = file.mkString
+    file.close()
+    result
+  }
 
   @throws(classOf[java.io.IOException])
-  def fileToString(path: String, encoding: String) =
-    io.Source.fromFile(path, "UTF-8").mkString
+  def fileToString(path: String, encoding: String) = {
+    val file = io.Source.fromFile(path, "UTF-8")
+    val result = file.mkString
+    file.close()
+    result
+  }
 
   @throws(classOf[java.io.IOException])
   def url2String(sampleURL: String): String = {

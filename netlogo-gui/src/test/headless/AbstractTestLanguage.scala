@@ -101,7 +101,7 @@ trait AbstractTestLanguage extends Assertions {
             fail(s"expected to find an error, but none found for `$reporter`")
 
           else
-            assertResult(expectedError)(actualError.get)
+            assertResult(expectedError)(actualError.get.split("\r?\n").map(_.trim).mkString(" "))
         }
 
     }
@@ -147,8 +147,7 @@ trait AbstractTestLanguage extends Assertions {
     catch {
       case ex: LogoException =>
         withClue(s"$mode: command: $command") {
-          // println(workspace.lastErrorReport.stackTrace.get)
-          assertResult(stackTrace)(workspace.lastErrorReport.stackTrace.get)
+          assertResult(stackTrace)(workspace.lastErrorReport.stackTrace.get.split("\r?\n").map(_.trim).mkString(" "))
         }
     }
   }

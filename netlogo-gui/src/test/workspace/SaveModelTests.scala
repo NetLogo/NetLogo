@@ -3,6 +3,7 @@
 package org.nlogo.workspace
 
 import java.net.URI
+import java.nio.file.Paths
 
 import org.nlogo.core.Model
 import org.nlogo.api.{ ConfigurableModelLoader, ModelType, Version }
@@ -20,7 +21,7 @@ class SaveModelTests extends AnyFunSuite {
     error: Option[Exception] = None,
     existingPath: Option[String] = None,
     forcePathSelect: Boolean = false)(
-    assertion: (Option[Try[URI]], MockController) => Unit): Unit = {
+    assertion: (Option[Try[String]], MockController) => Unit): Unit = {
       val model = withModel(Model(version = "NetLogo 6.0.4"))
       val model3d = withModel(Model(version = "NetLogo 3D 6.0.4"))
       val format = new MockFormat(model, error)
@@ -36,9 +37,11 @@ class SaveModelTests extends AnyFunSuite {
       }
       val res =
         if (forcePathSelect)
-          SaveModelAs(model, loader, controller, modelTracker, Version).map(_.apply())
+          SaveModelAs(model, loader, controller, modelTracker, Version)
+            .map(_.apply().map(u => "[A-Z]:".r.replaceFirstIn(Paths.get(u).toString.replace("\\", "/"), "")))
         else
-          SaveModel(model, loader, controller, modelTracker, Version).map(_.apply())
+          SaveModel(model, loader, controller, modelTracker, Version)
+            .map(_.apply().map(u => "[A-Z]:".r.replaceFirstIn(Paths.get(u).toString.replace("\\", "/"), "")))
       assertion(res, controller)
   }
 
@@ -48,7 +51,7 @@ class SaveModelTests extends AnyFunSuite {
     error: Option[Exception] = None,
     existingPath: Option[String] = None,
     forcePathSelect: Boolean = false)(
-    assertion: (Option[Try[URI]], MockController) => Unit): Unit = {
+    assertion: (Option[Try[String]], MockController) => Unit): Unit = {
       val model = withModel(Model(version = "NetLogo 6.0.4"))
       val model3d = withModel(Model(version = "NetLogo 3D 6.0.4"))
       val format = new MockFormat(model, error)
@@ -64,9 +67,11 @@ class SaveModelTests extends AnyFunSuite {
       }
       val res =
         if (forcePathSelect)
-          SaveModelAs(model, loader, controller, modelTracker, Version).map(_.apply())
+          SaveModelAs(model, loader, controller, modelTracker, Version)
+            .map(_.apply().map(u => "[A-Z]:".r.replaceFirstIn(Paths.get(u).toString.replace("\\", "/"), "")))
         else
-          SaveModel(model, loader, controller, modelTracker, Version).map(_.apply())
+          SaveModel(model, loader, controller, modelTracker, Version)
+            .map(_.apply().map(u => "[A-Z]:".r.replaceFirstIn(Paths.get(u).toString.replace("\\", "/"), "")))
       assertion(res, controller)
   }
 
@@ -76,19 +81,19 @@ class SaveModelTests extends AnyFunSuite {
     testSave3d(modelType = ModelType.Normal,
       existingPath = Some("/existing/save.test"),
       forcePathSelect = true) { (result, _) =>
-      assert(Some(Try(new URI("file:///tmp/nlogo.test"))) == result)
+      assert(Some(Try("/tmp/nlogo.test")) == result)
     }
   }
 
   test("if workspace fileMode is Normal, saves at the workspace model path with 3D model") {
     testSave3d(modelType = ModelType.Normal, existingPath = Some("/existing/save.test")) { (result, _) =>
-      assert(Some(Try(new URI("file:///existing/save.test"))) == result)
+      assert(Some(Try("/existing/save.test")) == result)
     }
   }
 
   test("if ModelType is New, prompts for path and saves as specified path with 3D model") {
     testSave3d() { (result, _) =>
-      assert(Some(Try(new URI("file:///tmp/nlogo.test"))) == result)
+      assert(Some(Try("/tmp/nlogo.test")) == result)
     }
   }
 
@@ -106,7 +111,7 @@ class SaveModelTests extends AnyFunSuite {
 
   test("if workspace fileMode is LIBRARY, prompts for path and saves as specified path with 3D model") {
     testSave3d(modelType = ModelType.Library) { (result, _) =>
-      assert(Some(Try(new URI("file:///tmp/nlogo.test"))) == result)
+      assert(Some(Try("/tmp/nlogo.test")) == result)
     }
   }
 
@@ -121,7 +126,7 @@ class SaveModelTests extends AnyFunSuite {
   test("if user tries to save the file in a non-default NetLogo file format, accept the file with 3D model") {
     val filePaths = Seq(new URI("file:///invalid.invalid"), new URI("file:///valid.test"))
     testSave3d(controller = new MockController(chosenFilePaths = filePaths)) { (result, controller) =>
-      assert(result == Some(Try(new URI("file:///invalid.invalid"))))
+      assert(result == Some(Try("/invalid.invalid")))
     }
   }
 
@@ -134,7 +139,7 @@ class SaveModelTests extends AnyFunSuite {
 
   test("if workspace fileMode is Normal, saves at the workspace model path") {
     testSave(modelType = ModelType.Normal, existingPath = Some("/existing/save.test")) { (result, _) =>
-      assert(Some(Try(new URI("file:///existing/save.test"))) == result)
+      assert(Some(Try("/existing/save.test")) == result)
     }
   }
 
@@ -142,13 +147,13 @@ class SaveModelTests extends AnyFunSuite {
     testSave(modelType = ModelType.Normal,
       existingPath = Some("/existing/save.test"),
       forcePathSelect = true) { (result, _) =>
-      assert(Some(Try(new URI("file:///tmp/nlogo.test"))) == result)
+      assert(Some(Try("/tmp/nlogo.test")) == result)
     }
   }
 
   test("if ModelType is New, prompts for path and saves as specified path") {
     testSave() { (result, _) =>
-      assert(Some(Try(new URI("file:///tmp/nlogo.test"))) == result)
+      assert(Some(Try("/tmp/nlogo.test")) == result)
     }
   }
 
@@ -166,7 +171,7 @@ class SaveModelTests extends AnyFunSuite {
 
   test("if workspace fileMode is LIBRARY, prompts for path and saves as specified path") {
     testSave(modelType = ModelType.Library) { (result, _) =>
-      assert(Some(Try(new URI("file:///tmp/nlogo.test"))) == result)
+      assert(Some(Try("/tmp/nlogo.test")) == result)
     }
   }
 
@@ -181,7 +186,7 @@ class SaveModelTests extends AnyFunSuite {
   test("if user tries to save the file in a non-default NetLogo file format, accept the file") {
     val filePaths = Seq(new URI("file:///invalid.invalid"), new URI("file:///valid.test"))
     testSave(controller = new MockController(chosenFilePaths = filePaths)) { (result, controller) =>
-      assert(result == Some(Try(new URI("file:///invalid.invalid"))))
+      assert(result == Some(Try("/invalid.invalid")))
     }
   }
 

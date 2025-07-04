@@ -37,13 +37,11 @@ class UpdateManagerTests extends AnyFunSuite {
   }
 
   test("tick-based: all speeds") {
-    assert((-50 to 50).map(debugInfo(TickBased, _)).mkString("\n", "\n", "\n")
-           === tickBased)
+    assert((-50 to 50).map(debugInfo(TickBased, _)).sameElements(tickBased.trim.split("\r?\n")))
   }
 
   test("continuous: all speeds") {
-    assert((-50 to 50).map(debugInfo(Continuous, _)).mkString("\n", "\n", "\n")
-           === continuous)
+    assert((-50 to 50).map(debugInfo(Continuous, _)).sameElements(continuous.trim.split("\r?\n")))
   }
 
   val tickBased =

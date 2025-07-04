@@ -1,4 +1,8 @@
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
+
 package org.nlogo.app
+
+import java.io.File
 
 import org.scalatest.funsuite.AnyFunSuite
 
@@ -11,7 +15,7 @@ class RecentFilesTests extends AnyFunSuite {
   val models = (1 to rf.maxEntries).map(makePath).map(ModelEntry(_, ModelType.Normal)).toList ++
                (9 to rf.maxEntries).map(makePath).map(ModelEntry(_, ModelType.Library)).toList
   val extraModel = ModelEntry(makePath(rf.maxEntries + 1), ModelType.Normal)
-  def makePath(n: Int) = "/" + n + (if (Version.is3D) ".nlogo3d" else ".nlogo")
+  def makePath(n: Int) = new File(n.toString + (if (Version.is3D) ".nlogox3d" else ".nlogox")).getCanonicalPath()
 
   def putAndLoad(models: List[ModelEntry]): Unit = {
     NetLogoPreferences.put(rf.key, models.mkString("\n"))

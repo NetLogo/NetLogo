@@ -27,7 +27,7 @@ class TestMain extends AnyFunSuite {
       Main.main(Array("--version"))
     }
     assertResult("")(err)
-    assertResult(s"${api.Version.version}\n")(out)
+    assertResult(s"${api.Version.version}\r?\n".r.matches(out))
   }
 
   test("bad arg") {
@@ -35,7 +35,7 @@ class TestMain extends AnyFunSuite {
       Main.main(Array("--foobarbaz"))
     }
     assertResult("")(out)
-    assertResult("unknown argument: --foobarbaz\n")(err)
+    assertResult("unknown argument: --foobarbaz\r?\n".r.matches(err))
   }
 
   test("no args") {
@@ -43,7 +43,7 @@ class TestMain extends AnyFunSuite {
       Main.main(Array())
     }
     assertResult("")(out)
-    assertResult("you must specify --model\n")(err)
+    assertResult("you must specify --model\r?\n".r.matches(err))
   }
 
   test("missing filename") {
@@ -51,17 +51,15 @@ class TestMain extends AnyFunSuite {
       Main.main(Array("--model"))
     }
     assertResult("")(out)
-    assertResult("missing argument after --model\n")(err)
+    assertResult("missing argument after --model\r?\n".r.matches(err))
   }
 
   test("no experiment specified") {
     val (out, err) = capture {
       Main.main(Array("--model", "foobarbaz.nlogox"))
     }
-    val expected =
-      "you must specify either --setup-file or --experiment (or both)\n"
     assertResult("")(out)
-    assertResult(expected)(err)
+    assertResult("you must specify either --setup-file or --experiment (or both)\r?\n".r.matches(err))
   }
 
   // duplicating stuff from TestBehaviorSpace, just
@@ -98,8 +96,8 @@ class TestMain extends AnyFunSuite {
     assertResult(expected.replaceFirst("VERSION", api.Version.version)
                           .replaceFirst("EXPORTER_VERSION", api.LabExporterVersion.version))(
       out.replaceAll(
-        """"\d\d/\d\d/\d\d\d\d \d\d:\d\d:\d\d:\d\d\d .\d\d\d\d"\n""",
-        ""))
+        """"\d\d/\d\d/\d\d\d\d \d\d:\d\d:\d\d:\d\d\d .\d\d\d\d"\r?\n""",
+        "").replace("\r\n", "\n"))
   }
 
 }
