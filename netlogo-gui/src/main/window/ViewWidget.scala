@@ -77,11 +77,11 @@ class ViewWidget(workspace: GUIWorkspace) extends Widget with ViewWidgetInterfac
     getInsets.left + getInsets.right;
 
   def calculateWidth(worldWidth: Int, patchSize: Double): Int = {
-    ((worldWidth * patchSize) + insetWidth).toInt
+    ((worldWidth * patchSize)).toInt
   }
 
   def calculateHeight(worldHeight: Int, patchSize: Double): Int = {
-    getExtraHeight + (patchSize * worldHeight).toInt
+    (patchSize * worldHeight).toInt
   }
 
   def resetSize(): Unit = {
