@@ -27,7 +27,7 @@ of data from repetitions can be saved in an output file.
 an XML file that can be used when running headlessly. Experiments can also be imported into a
  model.
 - [**Paused experiments**](#paused-experiments): Experiments can now be paused and resumed.
-- [**Run options: update plots and monitors**](#run-options-update-plots-and-monitors): 
+- [**Run options: update plots and monitors**](#run-options-update-plots-and-monitors):
 Reduction in memory usage when box is unchecked.
 
 
@@ -152,7 +152,7 @@ if you start with a world with `min-pxcor = 0`, `max-pxcor = 10` and you vary
 > `["world-width" [11 1 14]]`
 
 [[min-pxcor|min-pcor]] will remain zero and [[max-pxcor|max-pcor]] will be set to 11,
-12, and 13 for successive runs. If neither of these conditions is true you cannot 
+12, and 13 for successive runs. If neither of these conditions is true you cannot
 you cannot vary [[world-height|world-dim]] or [[world-width|world-dim]] directly but
 must vary [[max-pxcor|max-pcor]], [[max-pycor|max-pcor]], [[min-pxcor|min-pcor]]
 and [[min-pycor|min-pcor]] instead.
@@ -332,9 +332,11 @@ population of turtles rose and fell during each run, you would enter:
 You can enter one reporter, or several, or none at all. If you enter several,
 each reporter must be on a line by itself, for example:
 
-> `count frogs`
-> `count mice`
-> `count birds`
+<blockquote>
+<code>count frogs</code><br>
+<code>count mice</code><br>
+<code>count birds</code>
+</blockquote>
 
 If you don't enter any reporters, the runs will still take place. This is useful
 if you want to record the results yourself your own way, such as with the
