@@ -72,7 +72,7 @@ class CodeEditor(accessor: PropertyAccessor[String], colorizer: Colorizer, colla
 
   add(collapso, BorderLayout.CENTER)
 
-  private def collapsed: Boolean = !collapso.isVisible()
+  def collapsed: Boolean = !collapso.isVisible()
 
   private def setVisibility(newVisibility: Boolean): Unit = {
     if (collapsible && collapseWhenEmpty) {

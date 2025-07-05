@@ -74,13 +74,16 @@ class MonitorEditPanel(target: MonitorWidget, compiler: CompilerServices, colori
     c.gridy = 0
     c.gridwidth = 2
     c.anchor = GridBagConstraints.WEST
-    c.fill = GridBagConstraints.HORIZONTAL
+    c.fill = GridBagConstraints.BOTH
     c.weightx = 1
+    c.weighty = 1
     c.insets = new Insets(6, 6, 6, 6)
 
     add(wrapSource, c)
 
     c.gridy = 1
+    c.fill = GridBagConstraints.HORIZONTAL
+    c.weighty = 0
     c.insets = new Insets(0, 6, 6, 6)
 
     add(name, c)

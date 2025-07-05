@@ -108,7 +108,14 @@ class EditDialog(window: Window, target: Editable, modal: Boolean)
 
   Positioning.center(this, window)
 
-  setResizable(editPanel.isResizable)
+  if (editPanel.isResizable) {
+    setResizable(true)
+
+    editPanel.setLayoutListener(() => setMinimumSize(mainPanel.getMinimumSize))
+  } else {
+    setResizable(false)
+  }
+
   setVisible(true)
 
   def abort(): Unit = {

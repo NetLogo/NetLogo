@@ -2,10 +2,9 @@
 
 package org.nlogo.window
 
-import java.awt.{ GridBagConstraints, Insets }
-
 import org.nlogo.core.I18N
 import org.nlogo.editor.Colorizer
+import org.nlogo.swing.DynamicRowLayout
 
 class PlotEditPanel(target: PlotWidget, colorizer: Colorizer) extends WidgetEditPanel(target) {
   private val plotName =
@@ -151,69 +150,19 @@ class PlotEditPanel(target: PlotWidget, colorizer: Colorizer) extends WidgetEdit
         () => apply()))
 
   locally {
-    val c = new GridBagConstraints
+    val rowLayout = new DynamicRowLayout(this, 6)
 
-    c.gridy = 0
-    c.gridwidth = 3
-    c.fill = GridBagConstraints.HORIZONTAL
-    c.weightx = 1
-    c.insets = new Insets(6, 6, 6, 6)
+    setLayout(rowLayout)
 
-    add(plotName, c)
-
-    c.gridy = 1
-    c.gridwidth = 1
-    c.insets = new Insets(0, 6, 6, 6)
-
-    add(xLabel, c)
-
-    c.insets = new Insets(0, 0, 6, 6)
-
-    add(xMin, c)
-    add(xMax, c)
-
-    c.gridy = 2
-    c.insets = new Insets(0, 6, 6, 6)
-
-    add(yLabel, c)
-
-    c.insets = new Insets(0, 0, 6, 6)
-
-    add(yMin, c)
-    add(yMax, c)
-
-    c.gridy = 3
-    c.insets = new Insets(0, 6, 6, 6)
-
-    add(autoPlotX, c)
-
-    c.insets = new Insets(0, 0, 6, 6)
-
-    add(autoPlotY, c)
-    add(showLegend, c)
-
-    c.gridy = 4
-    c.gridwidth = 3
-    c.insets = new Insets(0, 6, 6, 6)
-
-    add(runtimeError, c)
-
-    c.gridy = 5
-
-    add(setupCode, c)
-
-    c.gridy = 6
-
-    add(updateCode, c)
-
-    c.gridy = 7
-
-    add(editPlotPens, c)
-
-    c.gridy = 8
-    c.anchor = GridBagConstraints.WEST
-
-    add(oldSize, c)
+    rowLayout.addRow(Seq(plotName))
+    rowLayout.addRow(Seq(xLabel, xMin, xMax))
+    rowLayout.addRow(Seq(yLabel, yMin, yMax))
+    rowLayout.addRow(Seq(autoPlotX, autoPlotY, showLegend), expandX = false)
+    rowLayout.addRow(Seq(runtimeError))
+    rowLayout.addRow(Seq(setupCode), expandY = () => !setupCode.collapsed)
+    rowLayout.addRow(Seq(updateCode), expandY = () => !updateCode.collapsed)
+    rowLayout.addRow(Seq(editPlotPens), expandY = () => setupCode.collapsed && updateCode.collapsed)
+    rowLayout.addRow(Seq(oldSize))
   }
 
   override def propertyEditors: Seq[PropertyEditor[?]] =

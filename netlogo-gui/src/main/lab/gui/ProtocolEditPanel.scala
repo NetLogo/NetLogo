@@ -2,12 +2,12 @@
 
 package org.nlogo.lab.gui
 
-import java.awt.{ GridBagConstraints, Insets }
 import javax.swing.{ JLabel, JPanel }
 
 import org.nlogo.api.CompilerServices
 import org.nlogo.core.I18N
 import org.nlogo.editor.Colorizer
+import org.nlogo.swing.DynamicRowLayout
 import org.nlogo.theme.InterfaceColors
 import org.nlogo.window.{ BooleanEditor, CodeEditor, EditPanel, IntegerEditor, PropertyAccessor, PropertyEditor,
                           ReporterLineEditor, StringEditor }
@@ -202,52 +202,24 @@ class ProtocolEditPanel(target: ProtocolEditable, compiler: CompilerServices, co
     }
 
   locally {
-    val c = new GridBagConstraints
+    val rowLayout = new DynamicRowLayout(this, 6)
 
-    c.gridx = 0
-    c.gridwidth = 2
-    c.fill = GridBagConstraints.HORIZONTAL
-    c.weightx = 1
-    c.insets = new Insets(6, 6, 6, 6)
+    setLayout(rowLayout)
 
-    add(hintPanel, c)
-
-    c.insets = new Insets(0, 6, 6, 6)
-
-    add(name, c)
-    add(valueSets, c)
-    add(repetitions, c)
-    add(sequentialRunOrder, c)
-    add(metrics, c)
-    add(runMetricsEveryStep, c)
-    add(runMetricsCondition, c)
-    add(preExperimentCommands, c)
-
-    c.gridwidth = 1
-
-    add(setupCommands, c)
-
-    c.gridx = 1
-
-    add(goCommands, c)
-
-    c.gridx = 0
-    c.anchor = GridBagConstraints.NORTH
-    c.weighty = 1
-
-    add(exitCondition, c)
-
-    c.gridx = 1
-
-    add(postRunCommands, c)
-
-    c.gridx = 0
-
-    add(postExperimentCommands, c)
-
-    c.gridwidth = 2
-
-    add(timeLimit, c)
+    rowLayout.addRow(Seq(hintPanel))
+    rowLayout.addRow(Seq(name))
+    rowLayout.addRow(Seq(valueSets), expandY = () => true)
+    rowLayout.addRow(Seq(repetitions))
+    rowLayout.addRow(Seq(sequentialRunOrder))
+    rowLayout.addRow(Seq(metrics), expandY = () => true)
+    rowLayout.addRow(Seq(runMetricsEveryStep))
+    rowLayout.addRow(Seq(runMetricsCondition))
+    rowLayout.addRow(Seq(preExperimentCommands), expandY = () => !preExperimentCommands.collapsed)
+    rowLayout.addRow(Seq(setupCommands, goCommands), expandY = () => !setupCommands.collapsed || !goCommands.collapsed)
+    rowLayout.addRow(Seq(exitCondition, postRunCommands),
+                     expandY = () => !exitCondition.collapsed || !postRunCommands.collapsed)
+    rowLayout.addRow(Seq(postExperimentCommands), expandY = () => !postExperimentCommands.collapsed)
+    rowLayout.addRow(Seq(timeLimit))
   }
 
   override def propertyEditors: Seq[PropertyEditor[?]] =
@@ -259,6 +231,9 @@ class ProtocolEditPanel(target: ProtocolEditable, compiler: CompilerServices, co
     hintPanel.setBackground(InterfaceColors.bspaceHintBackground())
     hintLabel.setForeground(InterfaceColors.dialogText())
   }
+
+  override def isResizable: Boolean =
+    true
 
   override def requestFocus(): Unit = {
     name.requestFocus()

@@ -10,8 +10,13 @@ import org.nlogo.swing.{ OptionPane, Transparent }
 import org.nlogo.theme.ThemeSync
 
 // This is the contents of an EditDialog, except for the buttons at the bottom (OK/Apply/Cancel).
-abstract class EditPanel(target: Editable) extends JPanel with Transparent with ThemeSync {
-  setLayout(new GridBagLayout)
+abstract class EditPanel(target: Editable) extends JPanel(new GridBagLayout) with Transparent with ThemeSync {
+  // allows EditDialog to reset its minimum size if this panel's minimum size changes
+  private var layoutListener: () => Unit = () => {}
+
+  def setLayoutListener(listener: () => Unit): Unit = {
+    layoutListener = listener
+  }
 
   def propertyEditors: Seq[PropertyEditor[?]]
 
@@ -53,6 +58,12 @@ abstract class EditPanel(target: Editable) extends JPanel with Transparent with 
             true
         })
     }
+  }
+
+  override def doLayout(): Unit = {
+    super.doLayout()
+
+    layoutListener()
   }
 
   // helper for any EditPanel that has GUI components that aren't PropertyEditors (Isaac B 3/31/25)

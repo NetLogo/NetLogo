@@ -53,11 +53,15 @@ class StockEditPanel(target: StockFigure, compiler: CompilerServices, colorizer:
 
     add(nameWrapper, c)
 
+    c.fill = GridBagConstraints.BOTH
+    c.weighty = 1
     c.insets = new Insets(0, 6, 6, 6)
 
     add(initialValueExpressionWrapper, c)
 
     c.anchor = GridBagConstraints.WEST
+    c.fill = GridBagConstraints.HORIZONTAL
+    c.weighty = 0
 
     add(allowNegative, c)
   }

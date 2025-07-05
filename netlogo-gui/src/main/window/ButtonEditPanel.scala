@@ -93,11 +93,14 @@ class ButtonEditPanel(target: ButtonWidget, colorizer: Colorizer) extends Widget
     add(goTime, c)
 
     c.gridy = 2
-    c.fill = GridBagConstraints.HORIZONTAL
+    c.fill = GridBagConstraints.BOTH
+    c.weighty = 1
 
     add(wrapSource, c)
 
     c.gridy = 3
+    c.fill = GridBagConstraints.HORIZONTAL
+    c.weighty = 0
 
     add(name, c)
 

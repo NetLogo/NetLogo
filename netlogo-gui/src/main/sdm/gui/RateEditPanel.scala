@@ -59,7 +59,8 @@ class RateEditPanel(target: RateConnection, compiler: CompilerServices, colorize
 
     add(inputs, c)
 
-    c.fill = GridBagConstraints.HORIZONTAL
+    c.fill = GridBagConstraints.BOTH
+    c.weighty = 1
 
     add(expressionWrapper, c)
   }

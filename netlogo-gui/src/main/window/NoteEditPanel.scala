@@ -82,13 +82,16 @@ class NoteEditPanel(target: NoteWidget) extends WidgetEditPanel(target) {
 
     c.gridy = 0
     c.gridwidth = 2
-    c.fill = GridBagConstraints.HORIZONTAL
+    c.fill = GridBagConstraints.BOTH
     c.weightx = 1
+    c.weighty = 1
     c.insets = new Insets(6, 6, 6, 6)
 
     add(text, c)
 
     c.gridy = 1
+    c.fill = GridBagConstraints.HORIZONTAL
+    c.weighty = 0
     c.insets = new Insets(0, 6, 6, 6)
 
     add(fontSize, c)
