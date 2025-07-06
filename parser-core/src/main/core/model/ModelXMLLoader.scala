@@ -24,7 +24,7 @@ object ModelXMLLoader {
     Model(Model.defaultCode, widgets, defaultInfo, name, Model.defaultTurtleShapes, Model.defaultLinkShapes)
   }
 
-  def loadBasics(root: XMLElement, defaultInfo: String): Try[Model] = {
+  def loadBasics(root: XMLElement, defaultInfo: String): (Try[Model], Seq[XMLElement]) = {
     root.name match {
       case "model" =>
 
@@ -38,35 +38,42 @@ object ModelXMLLoader {
         val model = Model(defaultCode, List(DummyView), defaultInfo, version, defaultTurtleShapes,
                           defaultLinkShapes, List(settings), Seq())
 
-        root.children.foldLeft(Try(model)) {
+        root.children.foldLeft((Try(model), Seq[XMLElement]())) {
 
-          case (model, XMLElement("widgets", _, _, children)) =>
-            model.map(_.copy(widgets = children.map(WidgetXMLLoader.readWidget).flatten))
+          case ((model, sections), XMLElement("widgets", _, _, children)) =>
+            (model.map(_.copy(widgets = children.map(WidgetXMLLoader.readWidget).flatten)), sections)
 
-          case (model, XMLElement("info", _, text, _)) =>
-            model.map(_.copy(info = text))
+          case ((model, sections), XMLElement("info", _, text, _)) =>
+            (model.map(_.copy(info = text)), sections)
 
-          case (model, XMLElement("code", _, text, _)) =>
-            model.map(_.copy(code = text))
+          case ((model, sections), XMLElement("code", _, text, _)) =>
+            (model.map(_.copy(code = text)), sections)
 
-          case (model, el @ XMLElement("turtleShapes", _, _, _)) =>
-            model.map(_.copy(turtleShapes = el.getChildren("shape").map(ShapeXMLLoader.readShape)))
+          case ((model, sections), el @ XMLElement("turtleShapes", _, _, _)) =>
+            (model.map(_.copy(turtleShapes = el.getChildren("shape").map(ShapeXMLLoader.readShape))), sections)
 
-          case (model, el @ XMLElement("linkShapes", _, _, _)) =>
-            model.map(_.copy(linkShapes = el.getChildren("shape").map(ShapeXMLLoader.readLinkShape)))
+          case ((model, sections), el @ XMLElement("linkShapes", _, _, _)) =>
+            (model.map(_.copy(linkShapes = el.getChildren("shape").map(ShapeXMLLoader.readLinkShape))), sections)
 
-          case (model, el @ XMLElement("resources", _, _, _)) =>
-            model.map(_.copy(
+          case ((model, sections), el @ XMLElement("resources", _, _, _)) =>
+            (model.map(_.copy(
               resources = el.getChildren("resource").map(
                 resource => ExternalResource(resource("name"), resource("extension"), resource.text)
               )
-            ))
+            )), sections)
 
-          case (model, _) => model // ignore other sections for compatibility with other versions in the future (Isaac B 2/12/25)
-        }.map(model => model.copy(widgets = model.widgets.filter(_ != DummyView)))
+          // ignore other sections for compatibility with other versions in the future (Isaac B 2/12/25)
+          // but still keep track of them in case the user wanted them in there (Isaac B 7/6/25)
+          case ((model, sections), element) =>
+            (model, sections :+ element)
+
+        } match {
+          case (model, sections) =>
+            (model.map(m => m.copy(widgets = m.widgets.filter(_ != DummyView))), sections)
+        }
 
       case x =>
-        Failure(new Exception(s"Expect 'model' element, but got: ${x}"))
+        (Failure(new Exception(s"Expect 'model' element, but got: ${x}")), Seq())
 
     }
   }

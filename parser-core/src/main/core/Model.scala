@@ -2,6 +2,8 @@
 
 package org.nlogo.core
 
+import org.nlogo.core.model.XMLElement
+
 import Shape.{ VectorShape, LinkShape }
 
 import ShapeParser.{ parseVectorShapes, parseLinkShapes }
@@ -14,7 +16,10 @@ case class Model(code: String = "",
   turtleShapes: Seq[VectorShape] = Model.defaultTurtleShapes,
   linkShapes: Seq[LinkShape] = Model.defaultLinkShapes,
   optionalSections: Seq[OptionalSection[?]] = Seq(),
-  resources: Seq[ExternalResource] = Seq()) {
+  resources: Seq[ExternalResource] = Seq(),
+  // these are sections in the XML format that were not recognized by the current version but should
+  // remain in the model file just in case for the user's benefit (Isaac B 7/6/25)
+  unknownSections: Seq[XMLElement] = Seq()) {
 
   def interfaceGlobals: Seq[String] = widgets.collect{case x:DeclaresGlobal => x}.map(_.varName)
   def constraints: Map[String, ConstraintSpecification] = widgets.collect{case x:DeclaresConstraint => (x.varName, x.constraint)}.toMap

@@ -52,14 +52,15 @@ class NLogoXMLLoader(headless: Boolean, literalParser: LiteralParser, editNames:
       XMLReader.read(source).flatMap {
         element =>
 
-          val model = ModelXMLLoader.loadBasics(element, defaultInfo)
-          element.children.foldLeft(model) {
+          val (model, unknownSections) = ModelXMLLoader.loadBasics(element, defaultInfo)
 
-            case (model, XMLElement("previewCommands", _, commands, _)) =>
+          element.children.foldLeft((model, Set[String]())) {
+
+            case ((model, sections), XMLElement("previewCommands", _, commands, _)) =>
               val section = new Section("org.nlogo.modelsection.previewcommands", PreviewCommands(commands))
-              model.map((m) => m.copy(optionalSections = m.optionalSections :+ section))
+              (model.map((m) => m.copy(optionalSections = m.optionalSections :+ section)), sections)
 
-            case (model, el @ XMLElement("systemDynamics", _, _, _)) =>
+            case ((model, sections), el @ XMLElement("systemDynamics", _, _, _)) =>
               val section = {
                 if (headless) {
                   new Section("org.nlogo.modelsection.systemdynamics",
@@ -69,9 +70,9 @@ class NLogoXMLLoader(headless: Boolean, literalParser: LiteralParser, editNames:
                     Femto.get[AggregateDrawingInterface]("org.nlogo.sdm.gui.AggregateDrawing").read(el))
                 }
               }
-              model.map((m) => m.copy(optionalSections = m.optionalSections :+ section))
+              (model.map((m) => m.copy(optionalSections = m.optionalSections :+ section)), sections)
 
-            case (model, XMLElement("experiments", _, _, children)) =>
+            case ((model, sections), XMLElement("experiments", _, _, children)) =>
               val (bspaceElems, _) = children.foldLeft((Seq[LabProtocol](), Set[String]())) {
                 case ((elems, accNames), child) => {
                   val (elem, names) = LabXMLLoader.readExperiment(child, literalParser, editNames, accNames)
@@ -79,15 +80,24 @@ class NLogoXMLLoader(headless: Boolean, literalParser: LiteralParser, editNames:
                 }
               }
               val section = new Section("org.nlogo.modelsection.behaviorspace", bspaceElems)
-              model.map((m) => m.copy(optionalSections = m.optionalSections :+ section))
+              (model.map((m) => m.copy(optionalSections = m.optionalSections :+ section)), sections)
 
-            case (model, XMLElement("hubNetClient", _, _, children)) =>
+            case ((model, sections), XMLElement("hubNetClient", _, _, children)) =>
               val hnElems = children.map(WidgetXMLLoader.readWidget).flatten
               val section = new Section("org.nlogo.modelsection.hubnetclient", hnElems)
-              model.map((m) => m.copy(optionalSections = m.optionalSections :+ section))
+              (model.map((m) => m.copy(optionalSections = m.optionalSections :+ section)), sections)
 
-            case (model, _) => model // ignore other sections for compatibility with other versions in the future (Isaac B 2/12/25)
+            // ignore other sections for compatibility with other versions in the future (Isaac B 2/12/25)
+            // but still keep track of them in case the user wanted them in there (Isaac B 7/6/25)
+            case ((model, sections), XMLElement(name, _, _, _)) =>
+              (model, sections + name)
 
+          } match {
+            case (model, unknownSectionNames) =>
+              // unknownSections was constructed in ModelXMLLoader, which doesn't know about the above sections here,
+              // so compute the intersection of the two sets to make sure valid sections don't get added to
+              // unknownSections (Isaac B 7/6/25)
+              model.map(_.copy(unknownSections = unknownSections.filter(el => unknownSectionNames.contains(el.name))))
           }
 
       }
@@ -132,6 +142,8 @@ class NLogoXMLLoader(headless: Boolean, literalParser: LiteralParser, editNames:
 
       }
     }
+
+    model.unknownSections.foreach(writer.element)
   }
 
   def saveToWriter(model: Model, destWriter: Writer): Unit = {
