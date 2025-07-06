@@ -78,6 +78,8 @@ class WidgetPanel(val workspace: GUIWorkspace)
   protected var shadowWidgets: Option[ShadowWidgets] = None
 
   protected class InterceptPane extends JComponent {
+    setEnabled(false)
+
     addMouseListener(new MouseAdapter {
       override def mousePressed(e: MouseEvent): Unit = {
         WidgetPanel.this.mousePressed(e)
@@ -114,10 +116,12 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
     def enableIntercept(): Unit = {
       setBounds(0, 0, WidgetPanel.this.getWidth - 10, WidgetPanel.this.getHeight - 10)
+      setEnabled(true)
     }
 
     def disableIntercept(): Unit = {
       setBounds(0, 0, 0, 0)
+      setEnabled(false)
     }
   }
 
@@ -1605,6 +1609,13 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
       case _ =>
     })
+  }
+
+  override def setSize(width: Int, height: Int): Unit = {
+    super.setSize(width, height)
+
+    if (interceptPane.isEnabled)
+      interceptPane.setSize(width - 10, height - 10)
   }
 
   override def syncTheme(): Unit = {
