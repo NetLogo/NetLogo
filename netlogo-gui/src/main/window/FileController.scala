@@ -27,7 +27,6 @@ class FileController(owner: Component, modelTracker: ModelTracker) extends OpenM
     new OptionPane(owner, I18N.gui.get("common.messages.error"),
                    I18N.gui.getN("file.open.error.unableToOpen", Paths.get(uri).toString, exception.getMessage),
                    OptionPane.Options.Ok, OptionPane.Icons.Error)
-    throw new UserCancelException()
   }
 
   def errorAutoconvertingModel(res: FailedConversionResult): Option[Model] =
