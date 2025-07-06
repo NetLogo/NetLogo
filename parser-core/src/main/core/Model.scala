@@ -2,8 +2,6 @@
 
 package org.nlogo.core
 
-import org.nlogo.core.model.XMLElement
-
 import Shape.{ VectorShape, LinkShape }
 
 import ShapeParser.{ parseVectorShapes, parseLinkShapes }

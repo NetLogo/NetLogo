@@ -2,6 +2,7 @@
 
 package org.nlogo.core.model
 
+import org.nlogo.core.XMLElement
 import org.nlogo.core.Shape.{ Circle => CoreCircle, Element, Line => CoreLine, LinkLine => CoreLinkLine
                               , LinkShape => CoreLinkShape, Polygon => CorePolygon, Rectangle => CoreRectangle
                               , RgbColor, VectorShape => CoreVectorShape }

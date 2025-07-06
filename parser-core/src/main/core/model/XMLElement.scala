@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.core.model
+package org.nlogo.core
 
 import scala.util.hashing.MurmurHash3
 

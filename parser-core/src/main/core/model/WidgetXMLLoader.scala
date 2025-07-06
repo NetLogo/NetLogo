@@ -5,7 +5,7 @@ package org.nlogo.core.model
 import org.nlogo.core.{ AgentKind, Button, ChooseableBoolean, ChooseableDouble, ChooseableList, ChooseableString,
                         Chooser, Horizontal, InputBox, LogoList, Monitor, NumericInput, Output, Pen, Plot, Slider,
                         StringInput, Switch, TextBox, UpdateMode, Vertical, View, Widget, WorldDimensions,
-                        WorldDimensions3D }
+                        WorldDimensions3D, XMLElement }
 
 object WidgetXMLLoader {
   def readWidget(element: XMLElement): Option[Widget] = {

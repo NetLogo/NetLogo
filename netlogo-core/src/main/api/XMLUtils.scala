@@ -2,7 +2,8 @@
 
 package org.nlogo.api
 
-import org.nlogo.core.model.{ NLogoXMLWriter, XMLElement }
+import org.nlogo.core.XMLElement
+import org.nlogo.core.model.NLogoXMLWriter
 
 import java.io.{ StringReader, Writer }
 import javax.xml.stream.{ XMLInputFactory, XMLOutputFactory, XMLStreamConstants, XMLStreamException }

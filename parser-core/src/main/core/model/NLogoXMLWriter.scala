@@ -2,6 +2,8 @@
 
 package org.nlogo.core.model
 
+import org.nlogo.core.XMLElement
+
 trait NLogoXMLWriter {
   def startDocument(): Unit
   def endDocument(): Unit

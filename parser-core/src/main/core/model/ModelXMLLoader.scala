@@ -2,7 +2,8 @@
 
 package org.nlogo.core.model
 
-import org.nlogo.core.{ DummyView, ExternalResource, Model, ModelSettings, Section, WorldDimensions, WorldDimensions3D }
+import org.nlogo.core.{ DummyView, ExternalResource, Model, ModelSettings, Section, WorldDimensions, WorldDimensions3D,
+                        XMLElement }
 
 import scala.util.{ Failure, Try }
 

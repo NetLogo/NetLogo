@@ -3,8 +3,7 @@
 package org.nlogo.fileformat
 
 import org.nlogo.api.{ Dump, LabProtocol, RefEnumeratedValueSet, RefValueSet, SteppedValueSet }
-import org.nlogo.core.LiteralParser
-import org.nlogo.core.model.XMLElement
+import org.nlogo.core.{ LiteralParser, XMLElement }
 
 object LabXMLLoader {
 

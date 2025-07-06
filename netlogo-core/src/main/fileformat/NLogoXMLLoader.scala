@@ -7,8 +7,8 @@ import java.net.URI
 
 import org.nlogo.api.{ AbstractModelLoader, AggregateDrawingInterface, FileIO, LabProtocol,
                        PreviewCommands, Version, XMLReader, XMLWriter }
-import org.nlogo.core.{ Femto, LiteralParser, Model, Section, Widget }
-import org.nlogo.core.model.{ ModelXMLLoader, NLogoXMLWriter, XMLElement, WidgetXMLLoader }
+import org.nlogo.core.{ Femto, LiteralParser, Model, Section, Widget, XMLElement }
+import org.nlogo.core.model.{ ModelXMLLoader, NLogoXMLWriter, WidgetXMLLoader }
 
 import scala.io.{ Codec, Source }
 import scala.util.{ Failure, Success, Try }

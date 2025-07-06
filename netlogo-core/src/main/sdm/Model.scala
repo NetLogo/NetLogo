@@ -3,7 +3,7 @@
 package org.nlogo.sdm
 
 import org.nlogo.api.AggregateDrawingInterface
-import org.nlogo.core.model.XMLElement
+import org.nlogo.core.XMLElement
 
 import scala.collection.mutable.ListBuffer
 

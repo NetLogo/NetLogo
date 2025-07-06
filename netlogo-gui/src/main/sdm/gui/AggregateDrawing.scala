@@ -9,7 +9,7 @@ import org.jhotdraw.standard.StandardDrawing
 
 import org.nlogo.api.AggregateDrawingInterface
 import org.nlogo.sdm.Model
-import org.nlogo.core.model.XMLElement
+import org.nlogo.core.XMLElement
 
 class AggregateDrawing extends StandardDrawing with AggregateDrawingInterface {
 
