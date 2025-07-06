@@ -3,7 +3,7 @@
 package org.nlogo.headless
 package misc
 
-import org.nlogo.api.{ FileIO, ModelReader, Version }
+import org.nlogo.api.{ FileIO, Version }
 import org.nlogo.core.{ Femto, LiteralParser }
 import org.nlogo.fileformat.FileFormat
 import org.nlogo.workspace.ModelsLibrary
@@ -78,15 +78,14 @@ class TestCompileAll extends AnyFunSuite  {
   for(path <- (ModelsLibrary.getModelPaths ++ ModelsLibrary.getModelPathsAtRoot("extensions")).filterNot(TestCompileAll.badPath))
     test("version: " + path, SlowTest.Tag) {
       val loader = FileFormat.standardAnyLoader(true, literalParser)
-      val version = loader.readModel(FileIO.fileToString(path), ModelReader.modelSuffix).get.version
+      val version = loader.readModel(FileIO.fileToString(path), path.split('.').last).get.version
       assert(Version.compatibleVersion(version))
     }
 
   def readWriteRead(path: String, text: String): Unit = {
     val loader = FileFormat.standardAnyLoader(true, literalParser)
-    val model = loader.readModel(text, ModelReader.modelSuffix).get
-    val newModel = loader.readModel(loader.sourceString(model, ModelReader.modelSuffix).get,
-                                    ModelReader.modelSuffix).get
+    val model = loader.readModel(text, path.split('.').last).get
+    val newModel = loader.readModel(loader.sourceString(model, path.split('.').last).get, path.split('.').last).get
     assertResult(model.code)(newModel.code)
     assertResult(model.widgets)(newModel.widgets)
     assertResult(model.info)(newModel.info)

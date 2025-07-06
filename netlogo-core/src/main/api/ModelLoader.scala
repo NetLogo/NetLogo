@@ -78,10 +78,10 @@ trait ModelLoader extends AbstractModelLoader {
   def formats: Seq[FormatterPair[?, ?]]
 
   override def isCompatible(uri: URI): Boolean =
-    formats.exists(_.isCompatible(uri))
+    AbstractModelLoader.getURIExtension(uri).exists(isCompatible)
 
   override def isCompatible(extension: String): Boolean =
-    formats.exists(_.isCompatible(extension))
+    extension == "nlogo" || extension == "nlogo3d"
 
   def readModel(uri: URI): Try[Model] = {
     formats.find(_.isCompatible(uri)) match {
