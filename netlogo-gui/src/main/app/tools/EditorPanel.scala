@@ -8,6 +8,7 @@ import javax.swing.JPanel
 import javax.swing.border.EmptyBorder
 
 import org.nlogo.api.PreviewCommands, PreviewCommands.{ Compilable, Custom, Default, Manual }
+import org.nlogo.core.I18N
 import org.nlogo.editor.{ EditorArea, EditorConfiguration }
 import org.nlogo.swing.{ Button, ComboBox, HasPropertyChangeSupport, ScrollPane, Transparent, Utils }
 import org.nlogo.theme.InterfaceColors
@@ -108,11 +109,25 @@ class EditorPanel(colorizer: EditorColorizer) extends JPanel(new GridBagLayout) 
   }
 }
 
-class PreviewCommandsComboBox extends ComboBox[PreviewCommands](List(Default, Custom(Default.source), Manual)) {
+// the PreviewCommands trait is in netlogo-core, so it doesn't have access to the necessary I18N stuff (Isaac B 7/6/25)
+case class PreviewCommandsWrapper(commands: PreviewCommands) {
+  override def toString: String = {
+    commands match {
+      case Manual => I18N.gui.get("tools.previewCommands.manual")
+      case Default => I18N.gui.get("tools.previewCommands.default")
+      case _: Custom => I18N.gui.get("tools.previewCommands.custom")
+      case c => c.toString
+    }
+  }
+}
+
+class PreviewCommandsComboBox extends ComboBox[PreviewCommandsWrapper](
+  List(Default, Custom(Default.source), Manual).map(PreviewCommandsWrapper(_))) {
+
   def updateCommands(newPreviewCommands: PreviewCommands): Unit = {
     if (newPreviewCommands.isInstanceOf[Custom])
-      setItems(List(Default, newPreviewCommands, Manual))
+      setItems(List(Default, newPreviewCommands, Manual).map(PreviewCommandsWrapper(_)))
 
-    setSelectedItem(newPreviewCommands)
+    setSelectedItem(PreviewCommandsWrapper(newPreviewCommands))
   }
 }

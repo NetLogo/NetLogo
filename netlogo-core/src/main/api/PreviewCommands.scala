@@ -2,7 +2,7 @@
 
 package org.nlogo.api
 
-import org.nlogo.core.{ I18N, Model }
+import org.nlogo.core.Model
 import org.nlogo.util.Implicits.RichString
 
 /**
@@ -19,8 +19,6 @@ import org.nlogo.util.Implicits.RichString
  */
 sealed trait PreviewCommands extends ModelSections.ModelSaveable {
   def source: String
-  def description: String
-  override def toString = description
   override def updateModel(m: Model): Model = {
     m.withOptionalSection[PreviewCommands]("org.nlogo.modelsection.previewcommands", Some(this), PreviewCommands.Default)
   }
@@ -29,16 +27,12 @@ sealed trait PreviewCommands extends ModelSections.ModelSaveable {
 object PreviewCommands {
   case object Manual extends PreviewCommands {
     override val source = "need-to-manually-make-preview-for-this-model"
-    override val description = I18N.gui.get("tools.previewCommands.manual")
   }
   trait Compilable extends PreviewCommands
   case object Default extends Compilable {
     override val source = "setup repeat 75 [ go ]"
-    override val description = I18N.gui.get("tools.previewCommands.default")
   }
-  case class Custom(override val source: String) extends Compilable {
-    override val description = I18N.gui.get("tools.previewCommands.custom")
-  }
+  case class Custom(override val source: String) extends Compilable
   def apply(source: List[String]): PreviewCommands = {
     apply(source.mkString(""))
   }

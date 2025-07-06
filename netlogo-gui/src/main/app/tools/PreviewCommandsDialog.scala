@@ -72,7 +72,7 @@ class PreviewCommandsDialog(
     def itemStateChanged(evt: ItemEvent): Unit =
       if (evt.getStateChange == ItemEvent.SELECTED) {
         evt.getItem match {
-          case Some(pc: PreviewCommands) =>
+          case Some(PreviewCommandsWrapper(pc: PreviewCommands)) =>
             editorPanel.update(pc)
             guiState.previewCommands = pc
 
