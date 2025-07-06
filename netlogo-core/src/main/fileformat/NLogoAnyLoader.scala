@@ -13,48 +13,53 @@ import scala.reflect.ClassTag
 import scala.util.{ Failure, Try }
 
 class NLogoAnyLoader(loaders: List[AbstractModelLoader]) extends ConfigurableModelLoader {
+  override def isCompatible(uri: URI): Boolean =
+    loaders.exists(_.isCompatible(uri))
 
-  private def bruteForce[T, U](ts: Seq[T], f: (T) => Try[U])(errorMessage: String): Try[U] = {
-    val init: Try[U] = Failure(new Exception(errorMessage))
-    ts.foldLeft(init) {
-      case (acc, t) => if (acc.isSuccess) acc else f(t)
-    }
-  }
+  override def isCompatible(extension: String): Boolean =
+    loaders.exists(_.isCompatible(extension))
+
+  private def bruteForce[T](check: AbstractModelLoader => Boolean, transform: AbstractModelLoader => Try[T])
+                           (defaultError: String): Try[T] =
+    loaders.find(check).map(transform).getOrElse(Failure(new Exception(defaultError)))
 
   override def readModel(uri: URI): Try[Model] = {
-    val errorMessage = s"""Unable to read model with format "${AbstractModelLoader.getURIExtension(uri).getOrElse("")}"."""
-    bruteForce(loaders, (_: AbstractModelLoader).readModel(uri))(errorMessage)
+    val errorMessage =
+      s"""Unable to read model with format "${AbstractModelLoader.getURIExtension(uri).getOrElse("")}"."""
+    bruteForce(_.isCompatible(uri), _.readModel(uri))(errorMessage)
   }
 
   override def readModel(source: String, extension: String): Try[Model] = {
     val errorMessage = s"""Unable to read model with format "${extension}"."""
-    bruteForce(loaders, (_: AbstractModelLoader).readModel(source, extension))(errorMessage)
+    bruteForce(_.isCompatible(extension), _.readModel(source, extension))(errorMessage)
   }
 
   override def save(model: Model, uri: URI): Try[URI] = {
-    val errorMessage = s"""Unable to save model with format "${AbstractModelLoader.getURIExtension(uri).getOrElse("")}"."""
-    bruteForce(loaders, (_: AbstractModelLoader).save(model, uri))(errorMessage)
+    val errorMessage =
+      s"""Unable to save model with format "${AbstractModelLoader.getURIExtension(uri).getOrElse("")}"."""
+    bruteForce(_.isCompatible(uri), _.save(model, uri))(errorMessage)
   }
 
   override def sourceString(model: Model, extension: String): Try[String] = {
     val errorMessage = s"""Unable to create source string for model with format "${extension}"."""
-    bruteForce(loaders, (_: AbstractModelLoader).sourceString(model, extension))(errorMessage)
+    bruteForce(_.isCompatible(extension), _.sourceString(model, extension))(errorMessage)
   }
 
   override def emptyModel(extension: String): Model = {
-    val errorMessage = s"""Unable to create empty model for format "${extension}"."""
-    bruteForce(loaders, (gml: AbstractModelLoader) => Try(gml.emptyModel(extension)))(errorMessage).get
+    val errorMessage =
+      s"""Unable to create empty model for format "${extension}"."""
+    bruteForce(_.isCompatible(extension), l => Try(l.emptyModel(extension)))(errorMessage).get
   }
 
   override def readExperiments(source: String, editNames: Boolean, existingNames: Set[String]):
       Try[(Seq[LabProtocol], Set[String])] = {
     val errorMessage = "Unable to read experiments."
-    bruteForce(loaders, (_: AbstractModelLoader).readExperiments(source, editNames, existingNames))(errorMessage)
+    bruteForce(_ => true, _.readExperiments(source, editNames, existingNames))(errorMessage)
   }
 
   override def writeExperiments(experiments: Seq[LabProtocol], writer: Writer): Try[Unit] = {
     val errorMessage = "Unable to write experiments."
-    bruteForce(loaders, (_: AbstractModelLoader).writeExperiments(experiments, writer))(errorMessage)
+    bruteForce(_ => true, _.writeExperiments(experiments, writer))(errorMessage)
   }
 
   override def addSerializers[A, B <: ModelFormat[A, B]](ss: Seq[ComponentSerialization[A, B]])

@@ -142,6 +142,12 @@ object XMLReader {
     reader.close()
     sourceReader.close()
 
-    elementTry
+    elementTry match {
+      case Failure(e: XMLStreamException) =>
+        Failure(new Exception("ParseError.*?Message: ".r.replaceFirstIn(e.getMessage.replace("\n", ""), "")))
+
+      case t =>
+        t
+    }
   }
 }

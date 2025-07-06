@@ -9,6 +9,26 @@ import org.nlogo.core.{ AgentKind, Button, ChooseableBoolean, ChooseableDouble, 
 
 object WidgetXMLLoader {
   def readWidget(element: XMLElement): Option[Widget] = {
+    // alternative to toInt that provides a more descriptive error message on failure (Isaac B 7/6/25)
+    def toInt(element: XMLElement, property: String): Int = {
+      element(property).toIntOption.getOrElse {
+        throw new Exception(s"Property \"$property\" in element \"${element.name}\" must be an integer.")
+      }
+    }
+
+    // alternative to toDouble that provides a more descriptive error message on failure (Isaac B 7/6/25)
+    def toDouble(element: XMLElement, property: String): Double = {
+      element(property).toDoubleOption.getOrElse {
+        throw new Exception(s"Property \"$property\" in element \"${element.name}\" must be a floating point number.")
+      }
+    }
+
+    // alternative to toBoolean that provides a more descriptive error message on failure (Isaac B 7/6/25)
+    def toBoolean(element: XMLElement, property: String): Boolean = {
+      element(property).toBooleanOption.getOrElse {
+        throw new Exception(s"Property \"$property\" in element \"${element.name}\" must be \"true\" or \"false\".")
+      }
+    }
 
     element.name match {
 
@@ -25,10 +45,10 @@ object WidgetXMLLoader {
             case "Turtle"   => AgentKind.Turtle
             case "Link"     => AgentKind.Link
           }
-        Some(Button( source, element("x").toInt, element("y").toInt, element("width").toInt, element("height").toInt
-                   , element("sizeVersion", "1").toInt == 0, element.get("display")
-                   , element("forever").toBoolean, kind, element.get("actionKey").map(_.head)
-                   , element("disableUntilTicks").toBoolean
+        Some(Button( source, toInt(element, "x"), toInt(element, "y"), toInt(element, "width")
+                   , toInt(element, "height"), element("sizeVersion", "1").toInt == 0, element.get("display")
+                   , toBoolean(element, "forever"), kind, element.get("actionKey").map(_.head)
+                   , toBoolean(element, "disableUntilTicks")
                    ))
 
       case "slider" =>
@@ -37,47 +57,49 @@ object WidgetXMLLoader {
             case "Horizontal" => Horizontal
             case "Vertical"   => Vertical
           }
-        Some(Slider( element.get("variable"), element("x").toInt, element("y").toInt, element("width").toInt
-                   , element("height").toInt, element("sizeVersion", "1").toInt == 0, element.get("display")
-                   , element("min"), element("max"), element("default").toDouble, element("step"), element.get("units")
-                   , direction
+        Some(Slider( element.get("variable"), toInt(element, "x"), toInt(element, "y"), toInt(element, "width")
+                   , toInt(element, "height"), element("sizeVersion", "1").toInt == 0, element.get("display")
+                   , element("min"), element("max"), toDouble(element, "default"), element("step")
+                   , element.get("units"), direction
                    ))
 
       case "view" =>
         val dims =
-          new WorldDimensions( element("minPxcor").toInt, element("maxPxcor").toInt, element("minPycor").toInt
-                             , element("maxPycor").toInt, element("patchSize").toDouble
-                             , element("wrappingAllowedX").toBoolean, element("wrappingAllowedY").toBoolean
+          new WorldDimensions( toInt(element, "minPxcor"), toInt(element, "maxPxcor"), toInt(element, "minPycor")
+                             , toInt(element, "maxPycor"), toDouble(element, "patchSize")
+                             , toBoolean(element, "wrappingAllowedX"), toBoolean(element, "wrappingAllowedY")
                              )
-        Some(View( element("x").toInt, element("y").toInt, element("width").toInt, element("height").toInt, dims
-                 , element("fontSize").toInt, UpdateMode.load(element("updateMode").toInt)
-                 , element("showTickCounter").toBoolean, element.get("tickCounterLabel"), element("frameRate").toDouble
+        Some(View( toInt(element, "x"), toInt(element, "y"), toInt(element, "width"), toInt(element, "height"), dims
+                 , toInt(element, "fontSize"), UpdateMode.load(toInt(element, "updateMode"))
+                 , toBoolean(element, "showTickCounter"), element.get("tickCounterLabel")
+                 , toDouble(element, "frameRate")
                  ))
 
       case "view3d" =>
         val dims =
-          new WorldDimensions3D( element("minPxcor").toInt, element("maxPxcor").toInt
-                               , element("minPycor").toInt, element("maxPycor").toInt
-                               , element("minPzcor").toInt, element("maxPzcor").toInt
-                               , element("patchSize").toDouble, element("wrappingAllowedX").toBoolean
-                               , element("wrappingAllowedY").toBoolean, element("wrappingAllowedZ").toBoolean
+          new WorldDimensions3D( toInt(element, "minPxcor"), toInt(element, "maxPxcor")
+                               , toInt(element, "minPycor"), toInt(element, "maxPycor")
+                               , toInt(element, "minPzcor"), toInt(element, "maxPzcor")
+                               , toDouble(element, "patchSize"), toBoolean(element, "wrappingAllowedX")
+                               , toBoolean(element, "wrappingAllowedY"), toBoolean(element, "wrappingAllowedZ")
                                )
-        Some(View( element("x").toInt, element("y").toInt, element("width").toInt, element("height").toInt, dims
-                 , element("fontSize").toInt, UpdateMode.load(element("updateMode").toInt)
-                 , element("showTickCounter").toBoolean, element.get("tickCounterLabel"), element("frameRate").toDouble
+        Some(View( toInt(element, "x"), toInt(element, "y"), toInt(element, "width"), toInt(element, "height"), dims
+                 , toInt(element, "fontSize"), UpdateMode.load(toInt(element, "updateMode"))
+                 , toBoolean(element, "showTickCounter"), element.get("tickCounterLabel")
+                 , toDouble(element, "frameRate")
                  ))
 
       case "monitor" =>
-        Some(Monitor( Some(element.text), element("x").toInt, element("y").toInt
-                    , element("width").toInt, element("height").toInt, element("sizeVersion", "1").toInt == 0
-                    , element.get("display"), element("precision").toInt, element("fontSize").toInt
+        Some(Monitor( Some(element.text), toInt(element, "x"), toInt(element, "y")
+                    , toInt(element, "width"), toInt(element, "height"), element("sizeVersion", "1").toInt == 0
+                    , element.get("display"), toInt(element, "precision"), toInt(element, "fontSize")
                     , element.get("units")
                     ))
 
       case "switch" =>
-        Some(Switch( element.get("variable"), element("x").toInt, element("y").toInt, element("width").toInt
-                   , element("height").toInt, element("sizeVersion", "1").toInt == 0, element.get("display")
-                   , element("on").toBoolean
+        Some(Switch( element.get("variable"), toInt(element, "x"), toInt(element, "y"), toInt(element, "width")
+                   , toInt(element, "height"), element("sizeVersion", "1").toInt == 0, element.get("display")
+                   , toBoolean(element, "on")
                    ))
 
       case "plot" =>
@@ -88,11 +110,11 @@ object WidgetXMLLoader {
                   , el("legend").toBoolean, el.getChild("setup").text, el.getChild("update").text
                   )
           ).toList
-        Some(Plot( element.get("display"), element("x").toInt, element("y").toInt, element("width").toInt
-                 , element("height").toInt, element("sizeVersion", "1").toInt == 0, element.get("xAxis")
-                 , element.get("yAxis"), element("xMin").toDouble, element("xMax").toDouble
-                 , element("yMin").toDouble, element("yMax").toDouble, element("autoPlotX").toBoolean
-                 , element("autoPlotY").toBoolean, element("legend").toBoolean, element.getChild("setup").text
+        Some(Plot( element.get("display"), toInt(element, "x"), toInt(element, "y"), toInt(element, "width")
+                 , toInt(element, "height"), element("sizeVersion", "1").toInt == 0, element.get("xAxis")
+                 , element.get("yAxis"), toDouble(element, "xMin"), toDouble(element, "xMax")
+                 , toDouble(element, "yMin"), toDouble(element, "yMax"), toBoolean(element, "autoPlotX")
+                 , toBoolean(element, "autoPlotY"), toBoolean(element, "legend"), element.getChild("setup").text
                  , element.getChild("update").text, pens
                  ))
 
@@ -111,14 +133,14 @@ object WidgetXMLLoader {
                   ChooseableList(LogoList.fromList(el.getChildren("value").map(_("value")).toList))
               }
           )
-        Some(Chooser( element.get("variable"), element("x").toInt, element("y").toInt, element("width").toInt
-                   , element("height").toInt, element("sizeVersion", "1").toInt == 0, element.get("display")
-                   , children.toList, element("current").toInt
+        Some(Chooser( element.get("variable"), toInt(element, "x"), toInt(element, "y"), toInt(element, "width")
+                   , toInt(element, "height"), element("sizeVersion", "1").toInt == 0, element.get("display")
+                   , children.toList, toInt(element, "current")
                    ))
 
       case "output" =>
-        Some(Output( element("x").toInt, element("y").toInt, element("width").toInt, element("height").toInt
-                   , element("fontSize").toInt
+        Some(Output( toInt(element, "x"), toInt(element, "y"), toInt(element, "width"), toInt(element, "height")
+                   , toInt(element, "fontSize")
                    ))
 
       case "input" =>
@@ -129,19 +151,19 @@ object WidgetXMLLoader {
             case "color" =>
               NumericInput(element.text.toDouble, NumericInput.ColorLabel)
             case "string" =>
-              StringInput(element.text, StringInput.StringLabel, element("multiline").toBoolean)
+              StringInput(element.text, StringInput.StringLabel, toBoolean(element, "multiline"))
             case "reporter" =>
-              StringInput(element.text, StringInput.ReporterLabel, element("multiline").toBoolean)
+              StringInput(element.text, StringInput.ReporterLabel, toBoolean(element, "multiline"))
             case "command" =>
-              StringInput(element.text, StringInput.CommandLabel, element("multiline").toBoolean)
+              StringInput(element.text, StringInput.CommandLabel, toBoolean(element, "multiline"))
           }
-        Some(InputBox( element.get("variable"), element("x").toInt, element("y").toInt, element("width").toInt
-                     , element("height").toInt, element("sizeVersion", "1").toInt == 0, input
+        Some(InputBox( element.get("variable"), toInt(element, "x"), toInt(element, "y"), toInt(element, "width")
+                     , toInt(element, "height"), element("sizeVersion", "1").toInt == 0, input
                      ))
 
       case "note" =>
-        Some(TextBox( Some(element.text), element("x").toInt, element("y").toInt, element("width").toInt
-                    , element("height").toInt, element("fontSize").toInt, element("markdown").toBoolean
+        Some(TextBox( Some(element.text), toInt(element, "x"), toInt(element, "y"), toInt(element, "width")
+                    , toInt(element, "height"), toInt(element, "fontSize"), toBoolean(element, "markdown")
                     , element.get("textColorLight").map(_.toInt), element.get("textColorDark").map(_.toInt)
                     , element.get("backgroundLight").map(_.toInt), element.get("backgroundDark").map(_.toInt)
                     ))

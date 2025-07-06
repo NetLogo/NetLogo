@@ -12,6 +12,8 @@ import scala.reflect.ClassTag
 import scala.util.{ Failure, Try }
 
 trait AbstractModelLoader {
+  def isCompatible(uri: URI): Boolean
+  def isCompatible(extension: String): Boolean
   def readModel(uri: URI): Try[Model]
   def readModel(source: String, extension: String): Try[Model]
   def save(model: Model, uri: URI): Try[URI]
@@ -75,12 +77,14 @@ class FormatterPair[A, B <: ModelFormat[A, B]](
 trait ModelLoader extends AbstractModelLoader {
   def formats: Seq[FormatterPair[?, ?]]
 
-  def uriCompatible(uri: URI): Option[FormatterPair[?, ?]] =
-    formats.find(_.isCompatible(uri))
+  override def isCompatible(uri: URI): Boolean =
+    formats.exists(_.isCompatible(uri))
+
+  override def isCompatible(extension: String): Boolean =
+    formats.exists(_.isCompatible(extension))
 
   def readModel(uri: URI): Try[Model] = {
-    val format = uriCompatible(uri)
-    format match {
+    formats.find(_.isCompatible(uri)) match {
       case None =>
         Failure(new Exception(
           s"Unable to open model with current format: ${uri.getPath}"))
@@ -89,8 +93,7 @@ trait ModelLoader extends AbstractModelLoader {
   }
 
   def readModel(source: String, extension: String): Try[Model] = {
-    val format = formats.find(_.isCompatible(source))
-    format match {
+    formats.find(_.isCompatible(source)) match {
       case None =>
         Failure(new Exception(
           s"Unable to open model with current format: $extension"))
@@ -99,8 +102,7 @@ trait ModelLoader extends AbstractModelLoader {
   }
 
   def save(model: Model, uri: URI): Try[URI] = {
-    val format = formats.find(_.isCompatible(model))
-    format match {
+    formats.find(_.isCompatible(model)) match {
       case None =>
         Failure(new Exception("Unable to save NetLogo model in format specified by " + uri.getPath))
       case Some(formatter) => formatter.save(model, uri)
@@ -108,8 +110,7 @@ trait ModelLoader extends AbstractModelLoader {
   }
 
   def sourceString(model: Model, extension: String): Try[String] = {
-    val format = formats.find(_.isCompatible(model))
-    format match {
+    formats.find(_.isCompatible(model)) match {
       case None =>
         Failure(new Exception(
           "Unable to get source for NetLogo model in format: " + extension))
