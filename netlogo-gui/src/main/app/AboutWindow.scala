@@ -81,8 +81,8 @@ class AboutWindow(parent: Frame) extends JDialog(parent, I18N.gui.get("dialog.ab
   }
 
   private val tabs = new TabbedPane {
-    add("Credits", creditsScrollPane)
-    add("System", systemScrollPane)
+    add(I18N.gui.get("dialog.about.credits"), creditsScrollPane)
+    add(I18N.gui.get("dialog.about.system"), systemScrollPane)
   }
 
   locally {
