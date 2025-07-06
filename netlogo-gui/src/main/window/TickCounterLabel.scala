@@ -5,11 +5,12 @@ package org.nlogo.window
 import javax.swing.JLabel
 
 import org.nlogo.api.{ Dump, World }
+import org.nlogo.core.I18N
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.Events.{ AfterLoadEvent, PeriodicUpdateEvent, LoadBeginEvent }
 
 object TickCounterLabel {
-  private val TickCounterLabelDefault = "ticks"
+  private val TickCounterLabelDefault = I18N.gui.get("tabs.run.speedslider.ticks")
 }
 
 import TickCounterLabel._
@@ -24,7 +25,7 @@ class TickCounterLabel(world: World)
 
   def handle(e: LoadBeginEvent): Unit = {
     setText("")
-    _label = "ticks"
+    _label = TickCounterLabelDefault
     setVisible(true)
   }
 
