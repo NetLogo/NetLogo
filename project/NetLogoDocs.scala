@@ -94,6 +94,15 @@ class NetLogoDocs(
         "infoTabModelHTML" -> infoTabHTML,
         "documentedExtensions" -> autoDocumentedExtensions.asJava)
 
+    // Render the header with the version, navlinks,
+    // and other variables
+    Mustache(
+      docsSource / "header.html.mustache",
+      docsTarget / "header.html",
+      mustacheVars,
+      Some(docsSource)
+    )
+
     val supportFiles =
       Seq("dictTemplate.html", "title.html", "toc.xsl").map(n => docsTarget / n)
     generateDocs(docsTarget, autoDocumentedExtensions, manuallyDocumentedExtensions, mustacheVars, perPageTOC = true)

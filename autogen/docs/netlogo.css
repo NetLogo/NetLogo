@@ -22,15 +22,16 @@
 	/* Typography */
 	--font-sans: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 	--font-mono: monospace;
-	--line-height: 1.4em;
+	--line-height: 1.6em;
 	--line-height-heading: 0.7em;
 	--line-height-code: 1.6em;
 
 	/* Border */
 	--radius-sm: 3px;
-	--radius: 6px;
+	--radius: 4px;
+	--radius-md: 5px;
 	--radius-lg: 8px;
-	--radius-xl: 8px;
+	--radius-xl: 10px;
 
 	/* Color palette */
 	--color-blue: #0670ed;
@@ -42,7 +43,7 @@
 	--color-black: #161616;
 	--color-grey: #d5d5d5;
 	--color-grey-accent: #555770;
-	--color-white: #f5f5f5;
+	--color-white: #fdfdfd;
 	--color-white-light: #fafafa;
 
 	/* Functional colours */
@@ -53,9 +54,9 @@
 	--color-brand-accent: var(--color-red-accent);
 	--color-brand-dark: var(--color-red-dark);
 	--color-background: var(--color-white);
-	--color-background-overlay: #e0e0e0;
+	--color-background-overlay: #f5f5f5;
 	--color-nav-background: #ebebf0;
-	--color-nav-hover: #dcdce0;
+	--color-nav-hover: #dedede;
 	--color-nav-text: #555770;
 
 	--color-text-on-primary: var(--color-white);
@@ -77,9 +78,25 @@
 
 	/* Derived spacing */
 	--block-bottom: var(--space-md);
+	--block-top: calc(2.5 * var(--block-bottom));
+
+	/* Font Styles */
+	--h1-size: 2.5rem;
+	--h2-size: 2rem;
+	--h3-size: 1.75rem;
+	--h4-size: 1.5rem;
+	--h5-size: 1.125rem;
+	--h6-size: 1rem;
+
+	--primary-heading-background-color: var(--color-primary);
+	--primary-heading-background-color-hover: #0a55ad;
+	--primary-heading-text-color: var(--color-text-on-primary);
+	--secondary-heading-background-color: #d4e5f2;
+	--secondary-heading-background-color-hover: #b3cde0;
+	--secondary-heading-text-color: var(--color-black);
 
 	/* Derived helpers (local to nav) */
-	--shadow-md: 0 2px 6px rgba(0, 0, 0, 0.15);
+	--shadow-md: 0 2px 6px rgba(0, 0, 0, 0.25);
 	--dur-fast: 0.25s;
 }
 
@@ -203,6 +220,12 @@ table {
 	line-height: normal;
 }
 
+h1,
+h2,
+h3 {
+	margin-top: var(--block-top);
+}
+
 /* Grouping content
    ========================================================================== */
 
@@ -253,8 +276,16 @@ h6 a {
 }
 
 h1:has(a:hover),
-h2:has(a:hover),
-h3:has(a:hover),
+h2:has(a:hover) {
+	background-color: var(--primary-heading-background-color-hover);
+	color: var(--primary-heading-text-color);
+}
+
+h3:has(a:hover) {
+	background-color: var(--secondary-heading-background-color);
+	color: var(--secondary-heading-text-color);
+}
+
 h4:has(a:hover),
 h5:has(a:hover),
 h6:has(a:hover) {
@@ -340,18 +371,13 @@ pre {
 	max-width: min(100%, var(--max-width-ch));
 }
 
-blockquote,
-div.blockquote {
-	width: fit-content;
-}
-
 .prose blockquote,
 .prose div.blockquote {
-	max-width: calc(var(--max-width-ch) - 2 * (var(--space-xl) + var(--space-md)));
+	max-width: calc(var(--max-width-ch) - 2 * (var(--space-xl)));
 }
 .prose blockquote p,
 .prose div.blockquote p {
-	width: calc(var(--max-width-ch) - 2 * (var(--space-xl) + var(--space-md)));
+	width: calc(var(--max-width-ch) - 2 * (var(--space-xl)));
 }
 
 p:first-of-type {
@@ -393,9 +419,8 @@ pre {
 
 p code,
 li code,
-table code,
-span.prim_example {
-	padding: calc(0.3 * var(--space-xxs)) var(--space-xs);
+table code {
+	padding: calc(0.3 * var(--space-xxs)) var(--space-xxs);
 	font-size: 0.9rem;
 	border-radius: var(--radius-md);
 	line-height: var(--line-height-code);
@@ -438,42 +463,42 @@ template {
    Theming
    ========================================================================== */
 h1 {
-	font-size: 2.5rem;
+	font-size: var(--h1-size);
 	font-weight: 700;
 	letter-spacing: 0.00625rem;
 	line-height: var(--line-height-heading);
 
-	background-color: var(--color-primary);
-	color: var(--color-text-on-primary);
+	background-color: var(--primary-heading-background-color);
+	color: var(--primary-heading-text-color);
 
 	padding: calc(0.8 * var(--space-lg)) var(--space-xl);
 }
 
 h2 {
-	font-size: 2rem;
+	font-size: var(--h2-size);
 	font-weight: 700;
 	letter-spacing: 0.00625rem;
 	line-height: var(--line-height-heading);
 
-	background-color: var(--color-primary);
-	color: var(--color-text-on-primary);
+	background-color: var(--primary-heading-background-color);
+	color: var(--primary-heading-text-color);
 
 	padding: calc(0.7 * var(--space-lg)) var(--space-xl);
 }
 
 h3 {
-	font-size: 1.75rem;
-	background-color: var(--color-black);
-	color: var(--color-text-on-primary);
+	font-size: var(--h3-size);
+	background-color: var(--secondary-heading-background-color);
+	color: var(--secondary-heading-text-color);
 	padding: var(--space-md) var(--space-xl);
 }
 h4 {
 	color: var(--color-black);
-	font-size: 1.5rem;
+	font-size: var(--h4-size);
 	font-weight: 500;
 }
 h5 {
-	font-size: 1.125rem;
+	font-size: var(--h5-size);
 	font-weight: 600;
 	color: #707290;
 }
@@ -515,8 +540,8 @@ main > pre,
 .prose > blockquote,
 main > blockquote,
 .prose div.blockquote {
-	margin: var(--space-md) var(--space-xl);
-	padding: var(--space-sm);
+	margin: var(--space-lg) var(--space-xl);
+	padding: var(--space-md);
 }
 
 /* HR */
@@ -592,9 +617,18 @@ div.toc > ul ul li a {
 
 /* Blockquotes */
 blockquote,
-div.blockquote {
-	border: solid black thin;
-	background: rgb(250, 250, 220);
+div.blockquote,
+div.highlight {
+	border-left: 0.4rem solid var(--color-primary);
+	background: var(--color-background-overlay);
+	border-radius: var(--radius-md);
+	padding: var(--space-sm) var(--space-md);
+	margin: var(--space-md) 0;
+	box-shadow: var(--shadow-md);
+	width: min(max(85vw, 30ch), var(--max-width-ch));
+	font-family: var(--font-sans);
+	font-size: 1rem;
+	color: var(--color-black);
 }
 
 blockquote p:last-child,
@@ -730,6 +764,8 @@ table thead th code {
 
 .navbar__item {
 	position: relative;
+	white-space: nowrap;
+	break-after: avoid;
 }
 .navbar__item > a,
 .navbar__action {
@@ -773,10 +809,11 @@ table thead th code {
 	font-weight: 400;
 	color: var(--color-black);
 	text-decoration: none;
+	border-radius: var(--radius);
 	transition: background var(--dur-fast), color var(--dur-fast);
 }
 .dropdown__menu a:hover {
-	background: var(--color-background);
+	background: var(--color-nav-hover);
 	color: var(--color-brand);
 }
 .navbar__item:hover > .dropdown__menu,
@@ -1100,22 +1137,32 @@ div.dict_entry > h3 a {
 	flex-shrink: 0;
 }
 
+div.dict_entry > h4 img {
+	display: inline-block;
+	margin: 0;
+}
+
 span.since {
 	margin-left: auto;
-	font-size: 0.875rem;
-	font-weight: 200;
+	font-size: 1rem;
+	font-weight: 500;
 }
 
 span.since::before {
-	content: 'Since ';
-	font-weight: 500;
-	color: var(--color-white);
+	content: 'Since  ';
+	font-style: italic;
+	color: inherit;
+}
+
+div.dict_entry > :not(:first-child) {
+	margin-left: var(--space-lg);
 }
 
 span.prim_example {
 	display: block;
-	margin-bottom: var(--block-bottom);
 	width: fit-content;
+	font-weight: 700;
+	font-size: var(--h5-size);
+	font-family: var(--font-mono);
+	margin: 0;
 }
-
-/* Modifiers */

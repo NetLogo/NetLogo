@@ -5,8 +5,9 @@ import scala.collection.JavaConverters._
 
 import com.github.mustachejava.TemplateFunction
 import org.nlogo.build.{ DocumentationConfig, Documenter, HoconParser }
+import Docs.docsRoot
 
-class ExtensionDocs(extensionsDirectory: File, extensionDocConfigFile: File) {
+class ExtensionDocs(extensionsDirectory: File, extensionDocConfigFile: File, headerFile: File) {
   def generateHTMLPageForExtension(
     extShortName:   String,
     extFullName:    String,
@@ -14,6 +15,7 @@ class ExtensionDocs(extensionsDirectory: File, extensionDocConfigFile: File) {
     buildVariables: Map[String, Object]): NioPath = {
 
     val documentationConf = (extensionsDirectory / extShortName / "documentation.conf").toPath
+    val headerTemplate = Files.readString(headerFile.toPath())
     val netLogoConfFile = extensionDocConfigFile.toPath
     val configDocument = HoconParser.parseConfigFile(documentationConf.toFile)
     val netLogoConfig = HoconParser.parseConfig(HoconParser.parseConfigFile(netLogoConfFile.toFile))
@@ -31,7 +33,8 @@ class ExtensionDocs(extensionsDirectory: File, extensionDocConfigFile: File) {
       "extensionName"         -> extFullName.capitalize,
       "prePrimitiveSections"  -> prePrimFiles,
       "postPrimitiveSections" -> postPrimFiles,
-      "emptyTableOfContents"  -> Boolean.box(emptyToC)
+      "emptyTableOfContents"  -> Boolean.box(emptyToC),
+      "header"                -> headerTemplate
     )
     val finalConfig = DocumentationConfig(
       markdownTemplate = netLogoConfig.markdownTemplate,
@@ -68,14 +71,6 @@ class ExtensionDocs(extensionsDirectory: File, extensionDocConfigFile: File) {
   ): String = {
     val wrapped = str.linesIterator.map(line => pre + line + post).mkString("\n")
     if (wrapped.nonEmpty) wrapped + "\n" else wrapped
-  }
-
-  private def wrapMarkdownInProseBlock(
-    str: String,
-  ): String = {
-    val pre = "<main class=\"prose\">\n\n"
-    val post = "\n\n</main>"
-    wrapString(str, pre, post)
   }
 
   private def renderMarkdown(extensionName: String)(str: String): String = {

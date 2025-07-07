@@ -84,7 +84,7 @@ object Docs {
       .map(_.toFile)
     },
     extensionDocsGen := {
-      new ExtensionDocs(extensionRoot.value, extensionDocConfigFile.value)
+      new ExtensionDocs(extensionRoot.value, extensionDocConfigFile.value, docsRoot.value.getAbsoluteFile / "header.html")
     },
     testDocLinks := {
       val res = NetLogoDocsTest(docsRoot.value.getAbsoluteFile)
