@@ -2,23 +2,15 @@
 
 package org.nlogo.lab.gui
 
-import javax.swing.{ JLabel, JPanel }
-
 import org.nlogo.api.CompilerServices
 import org.nlogo.core.I18N
 import org.nlogo.editor.Colorizer
 import org.nlogo.swing.DynamicRowLayout
-import org.nlogo.theme.InterfaceColors
 import org.nlogo.window.{ BooleanEditor, CodeEditor, EditPanel, IntegerEditor, PropertyAccessor, PropertyEditor,
                           ReporterLineEditor, StringEditor }
 
 class ProtocolEditPanel(target: ProtocolEditable, compiler: CompilerServices, colorizer: Colorizer)
   extends EditPanel(target) {
-
-  private val hintLabel = new JLabel(s"<html>${I18N.gui.get("tools.behaviorSpace.hint")}</html>")
-  private val hintPanel = new JPanel {
-    add(hintLabel)
-  }
 
   private val name =
     new StringEditor(
@@ -206,7 +198,6 @@ class ProtocolEditPanel(target: ProtocolEditable, compiler: CompilerServices, co
 
     setLayout(rowLayout)
 
-    rowLayout.addRow(Seq(hintPanel))
     rowLayout.addRow(Seq(name))
     rowLayout.addRow(Seq(valueSets), expandY = () => true)
     rowLayout.addRow(Seq(repetitions))
@@ -226,11 +217,6 @@ class ProtocolEditPanel(target: ProtocolEditable, compiler: CompilerServices, co
     Seq(name, valueSets, repetitions, sequentialRunOrder, metrics, runMetricsEveryStep, runMetricsCondition,
         preExperimentCommands, setupCommands, goCommands, exitCondition, postRunCommands, postExperimentCommands,
         timeLimit)
-
-  override def syncExtraComponents(): Unit = {
-    hintPanel.setBackground(InterfaceColors.bspaceHintBackground())
-    hintLabel.setForeground(InterfaceColors.dialogText())
-  }
 
   override def isResizable: Boolean =
     true
