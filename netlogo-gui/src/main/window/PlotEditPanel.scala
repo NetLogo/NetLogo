@@ -118,7 +118,7 @@ class PlotEditPanel(target: PlotWidget, colorizer: Colorizer) extends WidgetEdit
         () => target.setupCode,
         _.foreach(target.setSetupCode),
         () => apply()),
-      colorizer, true, true)
+      colorizer, true, true, err = () => target.error(I18N.gui.get("edit.plot.setupCode")))
 
   private val updateCode =
     new CodeEditor(
@@ -128,7 +128,7 @@ class PlotEditPanel(target: PlotWidget, colorizer: Colorizer) extends WidgetEdit
         () => target.updateCode,
         _.foreach(target.setUpdateCode),
         () => apply()),
-      colorizer, true, true)
+      colorizer, true, true, err = () => target.error(I18N.gui.get("edit.plot.updateCode")))
 
   private val editPlotPens =
     new PlotPensEditor(
