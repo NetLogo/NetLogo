@@ -144,13 +144,23 @@ abstract class AbstractWorkspaceScala(val world: World, val hubNetManagerFactory
 
   @throws(classOf[java.io.IOException])
   def importDrawingBase64(base64: String): Unit = {
-    val MimeRegex = "data:(.*);base64".r
-    val (contentType, byteString) = base64.split(",") match {
-      case Array(MimeRegex(tpe), str) => (tpe, str)
-      case _ => throw new IllegalStateException
-    }
-    val bytes = Base64.getDecoder.decode(byteString)
-    importDrawing(new ByteArrayInputStream(bytes), Option(contentType))
+   val arr = base64.split(",")
+
+    val (mimeOpt, rawBase64) =
+      arr match {
+        case Array(rb64) =>
+          (None, rb64)
+        case Array(prefix, rb64) =>
+          val MimeRegex       = "^data:(.*?);base64$".r
+          val MimeRegex(mime) = prefix: @unchecked
+          (Option(mime), rb64)
+        case _ =>
+          throw new Exception("Invalid base64 string")
+      }
+
+    val bais = new ByteArrayInputStream(Base64.getDecoder.decode(rawBase64))
+
+    importDrawing(bais, mimeOpt)
   }
 
   override def getCompilationEnvironment = {
