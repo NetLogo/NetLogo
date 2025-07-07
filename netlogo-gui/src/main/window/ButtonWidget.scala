@@ -466,13 +466,22 @@ class ButtonWidget(random: MersenneTwisterFast, colorizer: Colorizer) extends Jo
     val drawAsUp = buttonUp && !running
 
     if (disabledWaitingForSetup) {
-      setBackgroundColor(InterfaceColors.buttonBackgroundDisabled())
-      keyLabel.setForeground(InterfaceColors.buttonTextDisabled())
-      nameLabel.setForeground(InterfaceColors.buttonTextDisabled())
-      foreverLabel.setIcon(foreverIconDisabled)
+      if (error().isDefined) {
+        setBackgroundColor(InterfaceColors.widgetTextError())
+        keyLabel.setForeground(InterfaceColors.buttonText())
+        nameLabel.setForeground(InterfaceColors.buttonText())
+        foreverLabel.setIcon(foreverIcon)
+      } else {
+        setBackgroundColor(InterfaceColors.buttonBackgroundDisabled())
+        keyLabel.setForeground(InterfaceColors.buttonTextDisabled())
+        nameLabel.setForeground(InterfaceColors.buttonTextDisabled())
+        foreverLabel.setIcon(foreverIconDisabled)
+      }
     } else if (drawAsUp) {
       setBackgroundColor(
-        if (hover) {
+        if (error().isDefined) {
+          InterfaceColors.widgetTextError()
+        } else if (hover) {
           InterfaceColors.buttonBackgroundHover()
         } else {
           InterfaceColors.buttonBackground()
@@ -480,17 +489,13 @@ class ButtonWidget(random: MersenneTwisterFast, colorizer: Colorizer) extends Jo
       )
 
       keyLabel.setForeground(InterfaceColors.buttonText())
-      nameLabel.setForeground(
-        if (error().isEmpty) {
-          InterfaceColors.buttonText()
-        } else {
-          InterfaceColors.widgetTextError()
-        }
-      )
+      nameLabel.setForeground(InterfaceColors.buttonText())
       foreverLabel.setIcon(foreverIcon)
     } else {
       setBackgroundColor(
-        if (hover) {
+        if (error().isDefined) {
+          InterfaceColors.widgetTextError()
+        } else if (hover) {
           InterfaceColors.buttonBackgroundPressedHover()
         } else {
           InterfaceColors.buttonBackgroundPressed()

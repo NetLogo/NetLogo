@@ -375,7 +375,7 @@ trait ColorTheme {
 
 object ClassicTheme extends ColorTheme {
   override def widgetText: Color = Color.BLACK
-  override def widgetTextError: Color = Color.RED
+  override def widgetTextError: Color = LightRed
   override def widgetHoverShadow: Color = new Color(75, 75, 75)
   override def widgetPreviewCover: Color = new Color(255, 255, 255, 100)
   override def widgetPreviewCoverNote: Color = new Color(175, 175, 175, 75)
@@ -540,7 +540,7 @@ object ClassicTheme extends ColorTheme {
 
 object LightTheme extends ColorTheme {
   override def widgetText: Color = new Color(53, 54, 74)
-  override def widgetTextError: Color = Color.RED
+  override def widgetTextError: Color = LightRed
   override def widgetHoverShadow: Color = new Color(75, 75, 75)
   override def widgetPreviewCover: Color = new Color(255, 255, 255, 100)
   override def widgetPreviewCoverNote: Color = new Color(175, 175, 175, 75)
@@ -705,7 +705,7 @@ object LightTheme extends ColorTheme {
 
 object DarkTheme extends ColorTheme {
   override def widgetText: Color = Color.WHITE
-  override def widgetTextError: Color = Color.RED
+  override def widgetTextError: Color = LightRed
   override def widgetHoverShadow: Color = new Color(75, 75, 75)
   override def widgetPreviewCover: Color = new Color(0, 0, 0, 85)
   override def widgetPreviewCoverNote: Color = new Color(100, 100, 100, 75)
