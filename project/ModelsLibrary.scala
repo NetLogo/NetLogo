@@ -24,6 +24,7 @@ object ModelsLibrary {
   val convertWidgetSizes = TaskKey[Unit]("convertWidgetSizes", "run widget resize tool on all models in the library")
 
   val benchmark = TaskKey[Unit]("benchmark", "Run all benchmark models and record runtime statistics")
+  val benchmarkGUI = TaskKey[Unit]("benchmarkGUI", "Run all benchmark models in the GUI and record runtime statistics")
 
   val modelParser: Initialize[Parser[Option[Path]]] = {
     import Parser._
@@ -76,6 +77,11 @@ object ModelsLibrary {
     },
     benchmark := {
       makeMainTask("org.nlogo.headless.HeadlessBenchmarker",
+        classpath = (Test / fullClasspath),
+        workingDirectory = baseDirectory(_.getParentFile)).toTask("").value
+    },
+    benchmarkGUI := {
+      makeMainTask("org.nlogo.workspace.Benchmarker",
         classpath = (Test / fullClasspath),
         workingDirectory = baseDirectory(_.getParentFile)).toTask("").value
     }
