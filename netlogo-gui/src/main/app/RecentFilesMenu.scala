@@ -89,7 +89,7 @@ class RecentFiles {
   def models_=(newModels: List[ModelEntry]): Unit = {
     _models = newModels
       .flatMap(ensureCanonicalPath)
-      .distinct
+      .distinctBy(_.path)
       .filter(x => Version.is3D == (x.path.endsWith(".nlogo3d") || x.path.endsWith(".nlogox3d")))
       .take(maxEntries)
     NetLogoPreferences.put(key, _models.mkString("\n"))
@@ -110,7 +110,11 @@ class RecentFiles {
   }
 
   def add(modelEntry: ModelEntry): Unit = {
-    models = (modelEntry :: _models)
+    if (_models.exists(entry => entry.path == modelEntry.path && entry.modelType == ModelType.Library)) {
+      models = ModelEntry(modelEntry.path, ModelType.Library) +: _models
+    } else {
+      models = modelEntry +: _models
+    }
   }
 
   def clear(): Unit = {

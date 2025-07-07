@@ -80,4 +80,24 @@ class RecentFilesTests extends AnyFunSuite {
     putAndLoad(List(ModelEntry(tooLongPath, ModelType.Normal)))
     assert(rf.models.isEmpty)
   }
+
+  test("library version of model should replace normal version of model") {
+    putAndLoad(List(ModelEntry(makePath(1), ModelType.Normal),
+                    ModelEntry(makePath(2), ModelType.Normal),
+                    ModelEntry(makePath(3), ModelType.Normal)))
+    rf.add(ModelEntry(makePath(2), ModelType.Library))
+    assert(rf.models === List(ModelEntry(makePath(2), ModelType.Library),
+                              ModelEntry(makePath(1), ModelType.Normal),
+                              ModelEntry(makePath(3), ModelType.Normal)))
+  }
+
+  test("normal version of model should bump library version of model but not replace") {
+    putAndLoad(List(ModelEntry(makePath(1), ModelType.Normal),
+                    ModelEntry(makePath(2), ModelType.Library),
+                    ModelEntry(makePath(3), ModelType.Normal)))
+    rf.add(ModelEntry(makePath(2), ModelType.Normal))
+    assert(rf.models === List(ModelEntry(makePath(2), ModelType.Library),
+                              ModelEntry(makePath(1), ModelType.Normal),
+                              ModelEntry(makePath(3), ModelType.Normal)))
+  }
 }
