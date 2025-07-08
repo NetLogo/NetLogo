@@ -37,6 +37,7 @@ object Launcher {
   val defaultJavaOptions: Seq[String] = Seq(
     "-XX:MaxRAMPercentage=50"
   , "-Dfile.encoding=UTF-8"
+  , "-Dorg.nlogo.release=true"
   , "--add-exports=java.base/java.lang=ALL-UNNAMED"
   , "--add-exports=java.desktop/sun.awt=ALL-UNNAMED"
   , "--add-exports=java.desktop/sun.java2d=ALL-UNNAMED"

@@ -13,6 +13,14 @@ import scala.concurrent.{ ExecutionContext, Future }
 object Analytics {
   private var sendEnabled = true
 
+  private val category: String = {
+    if (System.getProperty("org.nlogo.release") == "true") {
+      "Desktop"
+    } else {
+      "Desktop (Devel)"
+    }
+  }
+
   private val config = TrackerConfiguration.builder
                                            .apiEndpoint(URI.create("https://ccl.northwestern.edu:8080/matomo.php"))
                                            .defaultSiteId(1)
@@ -64,14 +72,14 @@ object Analytics {
       )
     )
 
-    wrapRequest(MatomoRequests.event("Desktop", "App Start", json, null).build())
+    wrapRequest(MatomoRequests.event(category, "App Start", json, null).build())
   }
 
   def appExit(): Unit = {
     val length = (System.currentTimeMillis - startTime) / 60000
 
     if (length > 0)
-      wrapRequest(MatomoRequests.event("Desktop", "App Exit", null, length.toDouble).build(), true)
+      wrapRequest(MatomoRequests.event(category, "App Exit", null, length.toDouble).build(), true)
   }
 
   def preferenceChange(name: String, value: String): Unit = {
@@ -82,71 +90,71 @@ object Analytics {
       )
     )
 
-    wrapRequest(MatomoRequests.event("Desktop", "Preference Change", json, null).build())
+    wrapRequest(MatomoRequests.event(category, "Preference Change", json, null).build())
   }
 
   def sdmOpen(): Unit = {
-    wrapRequest(MatomoRequests.event("Desktop", "SDM Open", null, null).build())
+    wrapRequest(MatomoRequests.event(category, "SDM Open", null, null).build())
   }
 
   def bspaceOpen(): Unit = {
-    wrapRequest(MatomoRequests.event("Desktop", "BehaviorSpace Open", null, null).build())
+    wrapRequest(MatomoRequests.event(category, "BehaviorSpace Open", null, null).build())
   }
 
   def bspaceRun(): Unit = {
-    wrapRequest(MatomoRequests.event("Desktop", "BehaviorSpace Run", null, null).build())
+    wrapRequest(MatomoRequests.event(category, "BehaviorSpace Run", null, null).build())
   }
 
   def threedViewOpen(): Unit = {
-    wrapRequest(MatomoRequests.event("Desktop", "3D View Open", null, null).build())
+    wrapRequest(MatomoRequests.event(category, "3D View Open", null, null).build())
   }
 
   def turtleShapeEditorOpen(): Unit = {
-    wrapRequest(MatomoRequests.event("Desktop", "Turtle Shape Editor Open", null, null).build())
+    wrapRequest(MatomoRequests.event(category, "Turtle Shape Editor Open", null, null).build())
   }
 
   def turtleShapeEdit(): Unit = {
-    wrapRequest(MatomoRequests.event("Desktop", "Turtle Shape Edit", null, null).build())
+    wrapRequest(MatomoRequests.event(category, "Turtle Shape Edit", null, null).build())
   }
 
   def linkShapeEditorOpen(): Unit = {
-    wrapRequest(MatomoRequests.event("Desktop", "Link Shape Editor Open", null, null).build())
+    wrapRequest(MatomoRequests.event(category, "Link Shape Editor Open", null, null).build())
   }
 
   def linkShapeEdit(): Unit = {
-    wrapRequest(MatomoRequests.event("Desktop", "Link Shape Edit", null, null).build())
+    wrapRequest(MatomoRequests.event(category, "Link Shape Edit", null, null).build())
   }
 
   def colorPickerOpen(): Unit = {
-    wrapRequest(MatomoRequests.event("Desktop", "Color Picker Open", null, null).build())
+    wrapRequest(MatomoRequests.event(category, "Color Picker Open", null, null).build())
   }
 
   def hubNetEditorOpen(): Unit = {
-    wrapRequest(MatomoRequests.event("Desktop", "HubNet Editor Open", null, null).build())
+    wrapRequest(MatomoRequests.event(category, "HubNet Editor Open", null, null).build())
   }
 
   def hubNetClientOpen(): Unit = {
-    wrapRequest(MatomoRequests.event("Desktop", "HubNet Client Open", null, null).build())
+    wrapRequest(MatomoRequests.event(category, "HubNet Client Open", null, null).build())
   }
 
   def globalsMonitorOpen(): Unit = {
-    wrapRequest(MatomoRequests.event("Desktop", "Globals Monitor Open", null, null).build())
+    wrapRequest(MatomoRequests.event(category, "Globals Monitor Open", null, null).build())
   }
 
   def turtleMonitorOpen(): Unit = {
-    wrapRequest(MatomoRequests.event("Desktop", "Turtle Monitor Open", null, null).build())
+    wrapRequest(MatomoRequests.event(category, "Turtle Monitor Open", null, null).build())
   }
 
   def patchMonitorOpen(): Unit = {
-    wrapRequest(MatomoRequests.event("Desktop", "Patch Monitor Open", null, null).build())
+    wrapRequest(MatomoRequests.event(category, "Patch Monitor Open", null, null).build())
   }
 
   def linkMonitorOpen(): Unit = {
-    wrapRequest(MatomoRequests.event("Desktop", "Link Monitor Open", null, null).build())
+    wrapRequest(MatomoRequests.event(category, "Link Monitor Open", null, null).build())
   }
 
   def codeHash(hash: Int): Unit = {
-    wrapRequest(MatomoRequests.event("Desktop", "Model Code Hash", hash.toString, null).build())
+    wrapRequest(MatomoRequests.event(category, "Model Code Hash", hash.toString, null).build())
   }
 
   def primUsage(tokens: Iterator[Token]): Unit = {
@@ -163,19 +171,19 @@ object Analytics {
       }
 
       if (prims.nonEmpty)
-        wrapRequest(MatomoRequests.event("Desktop", "Primitive Usage", buildJson(prims), null).build())
+        wrapRequest(MatomoRequests.event(category, "Primitive Usage", buildJson(prims), null).build())
     } (using ExecutionContext.global)
   }
 
   def includeExtensions(extensions: Array[String]): Unit = {
     extensions.foreach { extension =>
-      wrapRequest(MatomoRequests.event("Desktop", "Include Extension", extension, null).build())
+      wrapRequest(MatomoRequests.event(category, "Include Extension", extension, null).build())
     }
   }
 
   def loadOldSizeWidgets(widgets: Int): Unit = {
     if (widgets > 0)
-      wrapRequest(MatomoRequests.event("Desktop", "Load Old Size Widgets", null, widgets.toDouble).build())
+      wrapRequest(MatomoRequests.event(category, "Load Old Size Widgets", null, widgets.toDouble).build())
   }
 
   def refreshPreference(): Unit = {
