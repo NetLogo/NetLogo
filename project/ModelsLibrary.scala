@@ -81,7 +81,7 @@ object ModelsLibrary {
         workingDirectory = baseDirectory(_.getParentFile)).toTask("").value
     },
     benchmarkGUI := {
-      makeMainTask("org.nlogo.workspace.Benchmarker",
+      makeMainTask("org.nlogo.app.GUIBenchmarker",
         classpath = (Test / fullClasspath),
         workingDirectory = baseDirectory(_.getParentFile)).toTask("").value
     }
