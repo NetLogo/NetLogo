@@ -1,4 +1,5 @@
 import java.io.File
+import java.nio.file.Files
 import scala.sys.process._
 import sbt._
 import Keys._
@@ -6,6 +7,7 @@ import Keys._
 import Def.Initialize
 import sbt.complete.{ Parser, DefaultParsers }, Parser.success, DefaultParsers._
 
+import scala.collection.JavaConverters._
 import scala.sys.process.Process
 
 object Extensions {
@@ -64,22 +66,17 @@ object Extensions {
       }
     },
     extension  := {
-      val extensionDir = extensionParser.parsed
-      streams.value.log.info(s"building extension: ${extensionDir.getName}")
-      buildExtension(extensionDir, extensionNetLogoJar.value, state.value)(Set()).toSeq
+      buildExtension(baseDirectory.value, extensionParser.parsed, streams.value.cacheDirectory,
+                     extensionNetLogoJar.value)
     },
     extensions := {
       val nlJar = extensionNetLogoJar.value
       val excluded = excludedExtensions.value
       val base = baseDirectory.value
-      val s    = streams.value
+      val s = streams.value
       Process("git -C " + base + " submodule --quiet update --init") ! s.log
-      val dirs = extensionDirs(extensionRoot.value)
-      val stateValue = state.value
-      dirs.filterNot(f => excluded.contains(f.getName)).flatMap{ dir =>
-        cacheBuild(s.cacheDirectory, dir, Set(base / "NetLogo.jar", base / "NetLogoLite.jar")) {
-          s.log.info("building extension: " + dir.getName)
-          buildExtension(dir, nlJar, stateValue) }
+      extensionDirs(extensionRoot.value).filterNot(f => excluded.contains(f.getName)).flatMap { dir =>
+        buildExtension(base, dir, s.cacheDirectory, nlJar)
       }
     },
     excludedExtensions := Seq(),
@@ -87,17 +84,23 @@ object Extensions {
       "-Dnetlogo.extensions.dir=" + extensionRoot.value.getAbsolutePath.toString
   )
 
-  private def cacheBuild(cacheDirectory: File, extensionDir: File, otherDeps: Set[File])
-                        (build: Set[File] => Set[File]): Seq[File] = {
-    val buildCached = FileFunction.cached(cacheDirectory / "extensions" / extensionDir.getName,
-        inStyle = FilesInfo.hash, outStyle = FilesInfo.hash)(build)
-    buildCached(otherDeps).toSeq
-  }
+  private def buildExtension(baseDir: File, extensionDir: File, cacheDir: File, netLogoJar: File): Seq[File] = {
+    val extensionSources: Set[File] = Files.walk(extensionDir.toPath).iterator.asScala.map(_.toFile).filter { file =>
+      val name = file.toString
 
-  private def buildExtension(dir: File, netLogoJar: File, state: State): Set[File] => Set[File] = {
-    sbtExec(dir, "package", netLogoJar.getAbsolutePath)
+      name.endsWith(".sbt") || name.endsWith(".scala") || name.endsWith(".java")
+    }.toSet
 
-    { files => Set(dir / (dir.getName + ".jar")) }
+    val netlogoJars: Set[File] = Set(baseDir / "NetLogo.jar", baseDir / "NetLogoLite.jar")
+
+    FileFunction.cached(cacheDir / "extensions" / extensionDir.getName,
+                        inStyle = FilesInfo.hash, outStyle = FilesInfo.hash) {
+      _ => {
+        sbtExec(extensionDir, "package", netLogoJar.getAbsolutePath)
+
+        Set(extensionDir / (extensionDir.getName + ".jar"))
+      }
+    }(extensionSources ++ netlogoJars).toSeq
   }
 
   private def sbtExec(dir: File, command: String, netlogoJarPath: String): Unit = {
