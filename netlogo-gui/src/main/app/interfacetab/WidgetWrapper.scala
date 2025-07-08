@@ -49,6 +49,8 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
 
   private var startBoundsUnselected: Option[Rectangle] = None
 
+  private var snapped = false
+
   private val glass = new JComponent {}
 
   glass.setOpaque(false)
@@ -145,7 +147,24 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
   }
 
   def snapLocation(x: Int, y: Int): Unit = {
-    setLocation(snapToGrid(x), snapToGrid(y))
+    if (snapped) {
+      setLocation(snapToGrid(x), snapToGrid(y))
+    } else {
+      val anchorDist = (x - originalBounds.x) * (x - originalBounds.x) + (y - originalBounds.y) * (y - originalBounds.y)
+
+      val xSnap = snapToGrid(x)
+      val ySnap = snapToGrid(y)
+
+      val snapDist = (x - xSnap) * (x - xSnap) + (y - ySnap) * (y - ySnap)
+
+      if (anchorDist <= snapDist) {
+        setLocation(originalBounds.x, originalBounds.y)
+      } else {
+        setLocation(xSnap, ySnap)
+
+        snapped = true
+      }
+    }
   }
 
   override def setBounds(r: Rectangle): Unit = {
@@ -401,6 +420,7 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
     selected(false, true) // true = change is temporary, don't raise events
     originalBounds = getBounds()
     startBoundsUnselected = Option(getUnselectedBounds)
+    snapped = false
     dragging = true
   }
 
