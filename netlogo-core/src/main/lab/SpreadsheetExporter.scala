@@ -173,7 +173,7 @@ class SpreadsheetExporter(modelFileName: String,
     def getMeasurement(measurementNumber: Int, metricNumber: Int): AnyRef =
       measurements(measurementNumber)(metricNumber)
     def lastMeasurement(metricNumber: Int): Option[AnyRef] =
-      Some(measurements.last(metricNumber))
+      measurements.lastOption.map(_(metricNumber))
     def doubles(metricNumber: Int): Seq[Double] =
       measurements.map(_(metricNumber)).collect {
         case d: java.lang.Double => d.doubleValue
