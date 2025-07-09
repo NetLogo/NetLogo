@@ -5,28 +5,93 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<style>
-			iframe {
-				width: 100%;
-			}
-			body,
-			table {
-				width: 100%;
-			}
-			table {
-				border-collapse: collapse;
-			}
-			* {
-				height: 100%;
-				margin: 0;
-				padding: 0;
-			}
-			body {
-				height: 100vh;
-			}
-		</style>
 	</head>
 	<body>
-		<iframe name="entry" src="whatis.html"></iframe>
+		{{> header.html}}
+
+		<main class="my-1 px-2 landing">
+			<div class="nl-container">
+				<div class="nl-col nl-col-lg-8 nl-container-free">
+					<h1 class="nl-col landing">NetLogo 7.0.0-beta2 Documentation</h1>
+					<p>
+						Welcome to the documentation for NetLogo 7.0.0-beta2. Download the latest version
+						<a href="https://ccl.northwestern.edu/netlogo">here</a>.
+					</p>
+					<p>
+						Please read the <a href="/docs/versions.html">Release Notes</a> for information about new features, bug
+						fixes, and other changes in this version. For help running models made in old versions, see the
+						<a href="/docs/transition.html">Transition Guide</a>.
+					</p>
+					<div class="highlight highlight-warning">
+						<p>
+							NetLogo 7.0.0-beta2 is a beta release. It is not recommended for production use, but we welcome your
+							feedback on the new features and changes.
+						</p>
+					</div>
+				</div>
+				<img
+					class="nl-col nl-col-lg-4"
+					src="https://ccl.northwestern.edu/netlogo/bind/static/branding/banner-with-code.png"
+				/>
+			</div>
+			<div class="nl-container">
+				<div class="nl-col nl-col-md-6">
+					<h3>Important Links</h3>
+					<ul>
+						<li>
+							<a href="/docs/whatis.html">What is NetLogo?</a>
+						</li>
+						<li>
+							<a href="/docs/sample.html">Your First NetLogo Model</a>
+						</li>
+						<li>
+							<a href="/docs/programming.html">Programming Guide</a>
+						</li>
+						<li>
+							<a href="/docs/dictionary.html">Dictionary Reference</a>
+						</li>
+						<li>
+							<a href="/docs/requirements.html">System Requirements</a>
+						</li>
+						<li>
+							<a href="/docs/copyright.html">Copyright Information</a>
+						</li>
+					</ul>
+				</div>
+				<div class="nl-col nl-col-md-6">
+					<h3>Beginner's Guide</h3>
+					<ul>
+						<li>
+							<a href="https://ccl.northwestern.edu/netlogo/bind/">New to NetLogo?</a>
+						</li>
+						<li>
+							<a href="https://ccl.northwestern.edu/netlogo/bind/article/what-is-a-primitive.html"
+								>What is a Primitive?</a
+							>
+						</li>
+						<li>
+							<a href="https://ccl.northwestern.edu/netlogo/bind/article/first-11-netlogo-primitives-to-learn.html"
+								>First 11 Primitives to Learn</a
+							>
+						</li>
+						<li>
+							<a href="https://ccl.northwestern.edu/netlogo/bind/article/common-netlogo-error-messages.html"
+								>Common NetLogo Error Messages</a
+							>
+						</li>
+						<li>
+							<a href="https://ccl.northwestern.edu/netlogo/bind/article/code-colors-in-netlogo.html"
+								>What does each color indicate in NetLogo programming?</a
+							>
+						</li>
+						<li>
+							<a href="https://ccl.northwestern.edu/netlogo/bind/article/shapes-and-colors-in-netlogo.html"
+								>Shapes and Colors in NetLogo</a
+							>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</main>
 	</body>
 </html>

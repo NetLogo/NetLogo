@@ -1,5 +1,26 @@
 (function () {
 	document.addEventListener('DOMContentLoaded', function () {
+		// Active link highlighting
+		const currentPath = window.location.pathname;
+		document.querySelectorAll('.navbar__item a').forEach((link) => {
+			const path = new URL(link.href).pathname;
+			if (path === currentPath) {
+				link.classList.add('active');
+				const parentItem = link.closest('.navbar__item');
+				if (parentItem) parentItem.classList.add('active');
+			}
+		});
+
+		// Make tag footer the last tag in the body
+		const footer = document.querySelector('footer');
+		if (footer) {
+			const body = document.querySelector('body');
+			if (body && body.lastChild !== footer) {
+				body.appendChild(footer);
+				footer.classList.remove('hidden'); // Show footer if it was hidden
+			}
+		}
+
 		/* search modal toggle */
 		const modal = document.getElementById('searchModal');
 		const btn = document.getElementById('searchBtn');
@@ -73,5 +94,13 @@
 			e.preventDefault();
 			goToVersion(this);
 		});
+
+		// Copyright year update
+		const copyrightElement = document.getElementById('copyright');
+		if (copyrightElement) {
+			const currentYear = new Date().getFullYear();
+			const originalText = copyrightElement.innerHTML;
+			copyrightElement.innerHTML = originalText.replace('1999-', '1999-' + currentYear);
+		}
 	});
 })();
