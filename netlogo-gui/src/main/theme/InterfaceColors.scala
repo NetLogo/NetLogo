@@ -81,6 +81,7 @@ object InterfaceColors {
   def tabTextError(): Color = theme.tabTextError
   def tabBorder(): Color = theme.tabBorder
   def tabSeparator(): Color = theme.tabSeparator
+  def tabCloseButtonBackgroundHover(): Color = theme.tabCloseButtonBackgroundHover
   def toolbarText(): Color = theme.toolbarText
   def toolbarTextSelected(): Color = theme.toolbarTextSelected
   def toolbarControlBackground(): Color = theme.toolbarControlBackground
@@ -274,6 +275,7 @@ trait ColorTheme {
   def tabTextError: Color
   def tabBorder: Color
   def tabSeparator: Color
+  def tabCloseButtonBackgroundHover: Color
   def toolbarText: Color
   def toolbarTextSelected: Color
   def toolbarControlBackground: Color
@@ -439,6 +441,7 @@ object ClassicTheme extends ColorTheme {
   override def tabTextError: Color = LightRed
   override def tabBorder: Color = MediumGray
   override def tabSeparator: Color = MediumGray
+  override def tabCloseButtonBackgroundHover: Color = new Color(0, 0, 0, 64)
   override def toolbarText: Color = Color.BLACK
   override def toolbarTextSelected: Color = Color.WHITE
   override def toolbarControlBackground: Color = Color.WHITE
@@ -604,6 +607,7 @@ object LightTheme extends ColorTheme {
   override def tabTextError: Color = LightRed
   override def tabBorder: Color = MediumGray
   override def tabSeparator: Color = MediumGray
+  override def tabCloseButtonBackgroundHover: Color = new Color(0, 0, 0, 64)
   override def toolbarText: Color = Color.BLACK
   override def toolbarTextSelected: Color = Color.WHITE
   override def toolbarControlBackground: Color = Color.WHITE
@@ -769,6 +773,7 @@ object DarkTheme extends ColorTheme {
   override def tabTextError: Color = LightRed
   override def tabBorder: Color = LightGrayOutline
   override def tabSeparator: Color = LightGrayOutline
+  override def tabCloseButtonBackgroundHover: Color = new Color(0, 0, 0, 64)
   override def toolbarText: Color = Color.WHITE
   override def toolbarTextSelected: Color = Color.WHITE
   override def toolbarControlBackground: Color = DarkBlueGray
