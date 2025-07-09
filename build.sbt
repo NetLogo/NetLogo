@@ -47,6 +47,7 @@ lazy val jvmSettings = Seq(
     .split(" ").toSeq,
   javaOptions ++=Seq(
     "-Dswing.aatext=true",
+    "-Dsun.java2d.d3d=false",
     //  These add-exports are needed for JOGL
     "--add-exports", "java.base/java.lang=ALL-UNNAMED",
     "--add-exports", "java.desktop/sun.awt=ALL-UNNAMED",
