@@ -7,7 +7,7 @@ import org.nlogo.app.infotab.InfoFormatter
 import java.io.{ FileInputStream, FileOutputStream }
 
 /**
- * inputs: models/Code Examples/Info Tab Example.nlogo
+ * inputs: models/Code Examples/Info Tab Example.nlogox
  * outputs: docs/infotab.html
  * really.
  */
