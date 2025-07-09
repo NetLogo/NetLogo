@@ -467,7 +467,7 @@ abstract class GUIWorkspace(world: World, kioskLevel: GUIWorkspace.KioskLevel, f
   }
 
   def dualView: Boolean =
-    return dualView
+    return _dualView
 
   def dualView(on: Boolean): Unit = {
     if (on != _dualView) {
