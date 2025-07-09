@@ -110,13 +110,13 @@ class TestConstraintModels extends AbstractTestModels {
     checkError("set commands max-pxcor")
   }
 
-  testModelFile("Slider Constraints1", "test/constraint/density-slider.nlogo") {
+  testModelFile("Slider Constraints1", "test/constraint/density-slider.nlogox") {
     observer>>"set density 57.00001"
     observer>>"set density 9999"
     observer>>"set density -0001"
   }
 
-  testModelFile("Slider Constraint Constructor", "test/constraint/density-slider.nlogo") {
+  testModelFile("Slider Constraint Constructor", "test/constraint/density-slider.nlogox") {
     var con = SliderConstraint.makeSliderConstraint(
       world.observer, "0", "100", "1", 50d, "", workspace, workspace)
     assert(con.isInstanceOf[ConstantSliderConstraint])

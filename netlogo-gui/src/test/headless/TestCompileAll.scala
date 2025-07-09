@@ -22,7 +22,7 @@ class TestCompileAll extends AnyFunSuite with SlowTest {
       path.contains(s"${sep}r${sep}") || // the r extension relies on R, which is system-dependent and we don't want to depend on.
       path.contains(s"${sep}time${sep}") || // the time extension includes some non-standard testing models that break here
       path.endsWith("5.x.nlogo") || // This is a LS model specifically for testing version problems.
-      path.endsWith("LS-Widgets.nlogo")) || // This is a LS model designed to test widgets with errors.
+      path.endsWith("LS-Widgets.nlogox")) || // This is a LS model designed to test widgets with errors.
       // the following models use the import-a extension, which is not bundled
       path.contains("Calorimetry") ||
       path.contains("Resource Example") ||

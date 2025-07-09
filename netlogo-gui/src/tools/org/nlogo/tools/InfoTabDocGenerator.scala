@@ -13,7 +13,7 @@ import java.io.{ FileInputStream, FileOutputStream }
  */
 object InfoTabDocGenerator {
   def main(args:Array[String]): Unit = {
-    val model = FileIO.fileToString("./models/Code Examples/Info Tab Example.nlogo")
+    val model = FileIO.fileToString("./models/Code Examples/Info Tab Example.nlogox")
     val info = model.split("\\@\\#\\$\\#\\@\\#\\$\\#\\@(\r)?\n")(2)
     val pre = Preprocessor.convert(info)
     val html = InfoFormatter.toInnerHtml(pre)

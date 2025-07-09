@@ -1,48 +1,63 @@
 @#$#@#$#@
 GRAPHICS-WINDOW
-265
+231
 10
-575
-341
-0
-0
-300.0
+661
+461
+10
+10
+20.0
 1
 10
 1
 1
 1
 0
-1
-1
-1
-0
-0
-0
-0
 0
 0
 1
+-10
+10
+-10
+10
+1
+1
+0
 ticks
-30.0
 
-PLOT
-37
-72
-237
-222
-plot 2
+BUTTON
+34
+51
+105
+84
+NIL
+setup
+NIL
+1
+T
+OBSERVER
 NIL
 NIL
-0.0
-10.0
-0.0
-10.0
-true
-false
-"" ""
-PENS
-"default" 1.0 0 -16777216 true "" ""
+NIL
+NIL
+1
+
+BUTTON
+107
+51
+178
+84
+NIL
+go
+T
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+0
 
 @#$#@#$#@
 @#$#@#$#@
@@ -212,17 +227,6 @@ true
 0
 Line -7500403 true 150 0 150 150
 
-link
-true
-0
-Line -7500403 true 150 0 150 300
-
-link direction
-true
-0
-Line -7500403 true 150 150 30 225
-Line -7500403 true 150 150 270 225
-
 pentagon
 false
 0
@@ -340,17 +344,120 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 6.0-PREVIEW-12-15
+NetLogo 6.0
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
+VIEW
+252
+10
+682
+440
+0
+0
+0
+1
+1
+1
+1
+1
+0
+1
+1
+1
+-10
+10
+-10
+10
+
+BUTTON
+85
+121
+147
+154
+up
+NIL
+NIL
+1
+T
+OBSERVER
+NIL
+I
+
+BUTTON
+85
+187
+150
+220
+down
+NIL
+NIL
+1
+T
+OBSERVER
+NIL
+K
+
+BUTTON
+147
+154
+210
+187
+right
+NIL
+NIL
+1
+T
+OBSERVER
+NIL
+L
+
+BUTTON
+23
+154
+85
+187
+left
+NIL
+NIL
+1
+T
+OBSERVER
+NIL
+J
+
+SLIDER
+39
+78
+189
+111
+step-size
+step-size
+1
+5
+2
+1
+1
+NIL
+HORIZONTAL
+
+MONITOR
+70
+21
+157
+70
+location
+NIL
+0
+1
+
 @#$#@#$#@
 default
 0.0
--0.2 0 0.0 1.0
+-0.2 0 1.0 0.0
 0.0 1 1.0 0.0
-0.2 0 0.0 1.0
+0.2 0 1.0 0.0
 link direction
 true
 0

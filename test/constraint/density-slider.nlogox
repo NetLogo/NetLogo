@@ -2,9 +2,8 @@
 <model version="NetLogo 7.0.0-beta2" snapToGrid="false">
   <code></code>
   <widgets>
-    <view x="231" wrappingAllowedX="false" y="10" frameRate="30.0" minPycor="-10" height="451" showTickCounter="false" patchSize="20.0" fontSize="10" wrappingAllowedY="false" width="430" tickCounterLabel="ticks" maxPycor="10" updateMode="1" maxPxcor="10" minPxcor="-10"></view>
-    <button x="34" y="51" height="33" disableUntilTicks="false" forever="false" kind="Observer" width="71" sizeVersion="0">setup</button>
-    <button x="107" y="51" height="33" disableUntilTicks="true" forever="true" kind="Observer" width="71" sizeVersion="0">go</button>
+    <view x="200" wrappingAllowedX="false" y="10" frameRate="30.0" minPycor="-125" height="502" showTickCounter="true" patchSize="2.0" fontSize="10" wrappingAllowedY="false" width="502" tickCounterLabel="ticks" maxPycor="125" updateMode="1" maxPxcor="125" minPxcor="-125"></view>
+    <slider x="5" step="1.0" y="38" max="99.0" display="density" height="33" min="0.0" direction="Horizontal" default="57.0" variable="density" units="%" width="185" sizeVersion="0"></slider>
   </widgets>
   <info></info>
   <turtleShapes>
@@ -716,14 +715,7 @@
       </indicator>
     </shape>
   </linkShapes>
-  <hubNetClient>
-    <view x="252" wrappingAllowedX="true" y="10" frameRate="30.0" minPycor="-10" height="430" showTickCounter="true" patchSize="12.0" fontSize="13" wrappingAllowedY="true" width="430" tickCounterLabel="ticks" maxPycor="10" updateMode="1" maxPxcor="10" minPxcor="-10"></view>
-    <button x="85" actionKey="I" y="121" height="33" disableUntilTicks="false" forever="false" kind="Observer" display="up" width="62" sizeVersion="0"></button>
-    <button x="85" actionKey="K" y="187" height="33" disableUntilTicks="false" forever="false" kind="Observer" display="down" width="65" sizeVersion="0"></button>
-    <button x="147" actionKey="L" y="154" height="33" disableUntilTicks="false" forever="false" kind="Observer" display="right" width="63" sizeVersion="0"></button>
-    <button x="23" actionKey="J" y="154" height="33" disableUntilTicks="false" forever="false" kind="Observer" display="left" width="62" sizeVersion="0"></button>
-    <slider x="39" step="1.0" y="78" max="5.0" display="step-size" height="33" min="1.0" direction="Horizontal" default="2.0" variable="step-size" width="150" sizeVersion="0"></slider>
-    <monitor x="70" precision="0" y="21" height="49" fontSize="11" display="location" width="87" sizeVersion="0"></monitor>
-  </hubNetClient>
-  <previewCommands>setup repeat 75 [ go ]</previewCommands>
+  <previewCommands>set density 60.0
+setup
+repeat 180 [ go ]</previewCommands>
 </model>

@@ -301,7 +301,7 @@ class TestImportExport extends FixtureSuite  {
 
   test("NonExistentPen", SlowTest.Tag) { implicit fixture =>
     import fixture._
-    workspace.open("test/import/plot-simple.nlogo")
+    workspace.open("test/import/plot-simple.nlogox")
     workspace.importerErrorHandler =
       new org.nlogo.agent.ImporterJ.ErrorHandler() {
         def showError(title: String, errorDetails: String,
@@ -318,7 +318,7 @@ class TestImportExport extends FixtureSuite  {
   test("CustomPenColor", SlowTest.Tag) { implicit fixture =>
     import fixture._
     val filename = getUniqueFilename()
-    workspace.open("test/import/plot-custom-color.nlogo")
+    workspace.open("test/import/plot-custom-color.nlogox")
     testCommand("setup-plots update-plots")
     exportWorld("../../" + filename)
     val export1 = fileToString(filename)
@@ -577,7 +577,7 @@ class TestImportExport extends FixtureSuite  {
 
     import fixture._
 
-    workspace.open("test/import/current-plot-pen.nlogo")
+    workspace.open("test/import/current-plot-pen.nlogox")
     testCommand("reset-ticks")
     assertResult(workspace.plotManager.currentPlot.get.currentPenByName)("pen1")
 
@@ -593,7 +593,7 @@ class TestImportExport extends FixtureSuite  {
 
     import fixture._
 
-    workspace.open("test/import/current-plot-pen.nlogo")
+    workspace.open("test/import/current-plot-pen.nlogox")
     testCommand("reset-ticks plot-pen-up")
 
     val filename = "../../" + getUniqueFilename()
