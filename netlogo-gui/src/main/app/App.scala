@@ -79,14 +79,6 @@ object App {
     }
 
     try {
-      Runtime.getRuntime.addShutdownHook(new Thread {
-        override def run(): Unit = {
-          Analytics.appExit()
-        }
-      })
-
-      Analytics.appStart(Version.is3D)
-
       val scalePref = NetLogoPreferences.getDouble("uiScale", 1.0)
 
       if (scalePref > 1.0) {
@@ -325,6 +317,8 @@ class App extends org.nlogo.window.Event.LinkChild
   private val ImportRawWorldURLProp = "netlogo.raw_world_state_url"
 
   val isMac = System.getProperty("os.name").startsWith("Mac")
+
+  private val analyticsConsent = NetLogoPreferences.get("sendAnalytics", "$$$") == "$$$"
 
   /**
    * Quits NetLogo by exiting the JVM.  Asks user for confirmation first
@@ -569,6 +563,21 @@ class App extends org.nlogo.window.Event.LinkChild
 
       syncWindowThemes()
 
+      if (analyticsConsent) {
+        NetLogoPreferences.putBoolean("sendAnalytics",
+          new OptionPane(frame, I18N.gui.get("dialog.analyticsConsent"),
+                         I18N.gui.get("dialog.analyticsConsent.message"), OptionPane.Options.YesNo,
+                         OptionPane.Icons.Info).getSelectedIndex == 0)
+
+        Analytics.refreshPreference()
+        Analytics.appStart(Version.is3D)
+
+        Runtime.getRuntime.addShutdownHook(new Thread {
+          override def run(): Unit = {
+            Analytics.appExit()
+          }
+        })
+      }
     }
     catch {
       case ex: java.lang.Throwable =>

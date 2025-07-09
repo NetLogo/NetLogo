@@ -456,7 +456,7 @@ object Preferences {
     override def component: CheckBox = checkBox
 
     def load(): Unit = {
-      val value = NetLogoPreferences.getBoolean(i18nKey, true)
+      val value = NetLogoPreferences.getBoolean(i18nKey, false)
 
       checkBox.setSelected(value)
 

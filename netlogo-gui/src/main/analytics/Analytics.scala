@@ -11,7 +11,7 @@ import org.nlogo.core.{ NetLogoPreferences, Token, TokenType }
 import scala.concurrent.{ ExecutionContext, Future }
 
 object Analytics {
-  private var sendEnabled = true
+  private var sendEnabled = false
 
   private val category: String = {
     if (System.getProperty("org.nlogo.release") == "true") {
@@ -29,8 +29,6 @@ object Analytics {
   private val tracker = new MatomoTracker(config)
 
   private var startTime = 0L
-
-  refreshPreference()
 
   private def wrapRequest(request: MatomoRequest, synchronous: Boolean = false): Unit = {
     if (sendEnabled) {
@@ -187,6 +185,6 @@ object Analytics {
   }
 
   def refreshPreference(): Unit = {
-    sendEnabled = NetLogoPreferences.getBoolean("sendAnalytics", true)
+    sendEnabled = NetLogoPreferences.getBoolean("sendAnalytics", false)
   }
 }
