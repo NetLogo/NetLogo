@@ -177,6 +177,10 @@ class WorldViewSettings3D(workspace: GUIWorkspace, gw: ViewWidget, tickCounter: 
     }
   }
 
+  override def setDimensions(d: WorldDimensions, newPatchSize: Double): Unit = {
+    setDimensions(d)
+  }
+
   override def setDimensions(d: WorldDimensions): Unit = {
     d match {
       case dd: WorldDimensions3D =>
