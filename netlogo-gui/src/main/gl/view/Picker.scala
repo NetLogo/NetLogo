@@ -85,12 +85,8 @@ class Picker(view: View) extends PickListener with ActionListener {
       else
         menu.add(new AgentMenuItem(agent, Inspect, "inspect"))
     }
-    if(menu.getSubElements.nonEmpty)
-      // move the menu over just a bit from the mouse point, it tends to
-      // get in the way in 3D ev 5/12/06
-      menu.show(view.canvas,
-                mousePt.getX.toInt + 15,
-                mousePt.getY.toInt + 15)
+    if (menu.getSubElements.nonEmpty)
+      menu.show(view.canvas, mousePt.getX.toInt, mousePt.getY.toInt)
   }
 
   /// context menu
