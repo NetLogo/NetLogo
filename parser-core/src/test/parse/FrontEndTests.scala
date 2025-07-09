@@ -271,6 +271,31 @@ class FrontEndTests extends AnyFunSuite with BaseParserTest {
       "_let(Let(V1),v1)[_const(0)[]] _let(Let(V2),v2)[_const(0)[]] _multiset(List(_set(), _set()))[_const([1, 2, 3])[]] _set()[_letvariable(Let(V1))[], _multiassignitem()[]] _set()[_letvariable(Let(V2))[], _multiassignitem()[]]")
   }
 
+  test("find extensions empty source") {
+    assert(FrontEnd.findExtensions("").sameElements(Seq()))
+  }
+
+  test("find extensions no extensions") {
+    assert(FrontEnd.findExtensions("globals [ a b c ] to test print \"test\" end to-report whee report 5 end")
+                   .sameElements(Seq()))
+  }
+
+  test("find extensions one extension") {
+    assert(FrontEnd.findExtensions("extensions [ array ]").sameElements(Seq("ARRAY")))
+  }
+
+  test("find extensions one extension after globals") {
+    assert(FrontEnd.findExtensions("globals [ a b c ] extensions [ array ]").sameElements(Seq("ARRAY")))
+  }
+
+  test("find extensions multiple extensions") {
+    assert(FrontEnd.findExtensions("extensions [ array bitmap csv ]").sameElements(Seq("ARRAY", "BITMAP", "CSV")))
+  }
+
+  test("find extensions funky whitespace") {
+    assert(FrontEnd.findExtensions("extensions\n\n\t[     array\n\n\t\t\t\t    bitmap csv \t\t\t \n]")
+                   .sameElements(Seq("ARRAY", "BITMAP", "CSV")))
+  }
 }
 
 object FrontEndTests {

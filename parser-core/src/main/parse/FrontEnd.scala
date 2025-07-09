@@ -67,4 +67,7 @@ trait FrontEndMain extends NetLogoParser {
       Seq()
     }
   }
+
+  def findExtensions(source: String): Seq[String] =
+    StructureParser.findExtensions(tokenizer.tokenizeString(source))
 }

@@ -175,7 +175,19 @@ object StructureParser {
       path.replaceFirst("^~", System.getProperty("user.home"))
   }
 
+  def findExtensions(tokens: Iterator[Token]): Seq[String] = {
+    val openBracket = tokens.dropWhile(!_.text.equalsIgnoreCase("extensions")).drop(1)
+                            .dropWhile(_.tpe == TokenType.Comment)
+
+    if (openBracket.isEmpty || openBracket.next().tpe != TokenType.OpenBracket) {
+      Seq()
+    } else {
+      openBracket.takeWhile(_.tpe != TokenType.CloseBracket).filter(_.tpe == TokenType.Ident)
+                 .map(_.value.toString).toSeq
+    }
+  }
 }
+
 /// for each source file. knits stages together. throws CompilerException
 
 class StructureParser(
