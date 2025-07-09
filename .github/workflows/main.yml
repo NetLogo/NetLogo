@@ -5,9 +5,6 @@ on:
   pull_request:
   workflow_dispatch:
 
-env:
-  liberica-version: '17.0'
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -19,20 +16,15 @@ jobs:
           access_token: ${{ github.token }}
 
       - uses: actions/checkout@v4
-        # This setting can be re-added and the `Clone Git submoudles` step removed when this bug is fixed and released:
-        # https://github.com/actions/checkout/issues/994 -Jeremy B April 2023
-        # with:
-        #   submodules: true
-
-      - name: Clone Git submodules
-        run: git submodule update --init
+        with:
+          submodules: true
 
       - uses: actions/setup-java@v4
         with:
-          distribution: 'liberica'
-          java-version: ${{ env.liberica-version }}
+          distribution: zulu
+          java-version: 17
           java-package: jdk+fx
-          cache: 'sbt'
+          cache: sbt
 
       - uses: sbt/setup-sbt@v1
 
@@ -60,14 +52,14 @@ jobs:
 
       - uses: actions/setup-java@v4
         with:
-          distribution: 'liberica'
-          java-version: ${{ env.liberica-version }}
+          distribution: zulu
+          java-version: 17
           java-package: jdk+fx
-          cache: 'sbt'
+          cache: sbt
 
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.9'
+          python-version: '3.10'
 
       # This is just for testing the Simple R extension (Isaac B 5/30/25)
       - uses: r-lib/actions/setup-r@v2
@@ -88,23 +80,23 @@ jobs:
       fail-fast: false
       matrix:
         test: [
-          "parserJS/test; parserJVM/test"
-        , "depend"
-        , "headless/depend"
-        , "netlogo/Test/fast"
-        , "netlogo/Test/medium"
-        , "netlogo/Test/slow"
-        , "nogen; netlogo/Test/fast"
-        , "nogen; netlogo/Test/medium"
-        , "threed; netlogo/Test/fast"
-        , "threed; netlogo/Test/medium"
-        , "threed; netlogo/Test/slow"
-        , "headless/Test/fast"
-        , "headless/Test/medium"
-        , "headless/Test/slow"
-        , "nogen; headless/Test/fast"
-        , "nogen; headless/Test/medium"
-        , "behaviorsearchProject/test"
+          "parserJS/test; parserJVM/test",
+          "depend",
+          "headless/depend",
+          "netlogo/Test/fast",
+          "netlogo/Test/medium",
+          "netlogo/Test/slow",
+          "nogen; netlogo/Test/fast",
+          "nogen; netlogo/Test/medium",
+          "threed; netlogo/Test/fast",
+          "threed; netlogo/Test/medium",
+          "threed; netlogo/Test/slow",
+          "headless/Test/fast",
+          "headless/Test/medium",
+          "headless/Test/slow",
+          "nogen; headless/Test/fast",
+          "nogen; headless/Test/medium",
+          "behaviorsearchProject/test"
         ]
 
     steps:
@@ -116,10 +108,10 @@ jobs:
 
       - uses: actions/setup-java@v4
         with:
-          distribution: 'liberica'
-          java-version: ${{ env.liberica-version }}
+          distribution: zulu
+          java-version: 17
           java-package: jdk+fx
-          cache: 'sbt'
+          cache: sbt
 
       - name: ${{ matrix.test }}
         run: ./sbt "${{ matrix.test }}"
