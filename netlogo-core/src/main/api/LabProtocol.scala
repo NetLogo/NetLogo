@@ -70,21 +70,22 @@ class LabProtocol(
   var mirrorHeadlessOutput: Boolean = LabDefaultValues.getDefaultMirrorHeadlessOutput,
   var runsCompleted: Int = 0
 ) {
-  val valueSets =
-    if (subExperiments.isEmpty)
+  def valueSets: List[List[RefValueSet]] = {
+    if (subExperiments.isEmpty) {
       List(constants)
-    else {
+    } else {
       val variables = (constants.map(_.variableName) ::: subExperiments.flatten.map(_.variableName)).distinct
       for (subExperiment <- subExperiments) yield {
         var filled = List[RefValueSet]()
         for (variable <- variables) {
-          filled = filled :+ subExperiment.find(_.variableName == variable)
-                                          .getOrElse(constants.find(_.variableName == variable)
-                                          .getOrElse(new RefEnumeratedValueSet(variable, List(null).asInstanceOf[List[AnyRef]])))
+          filled = filled :+
+            subExperiment.find(_.variableName == variable).getOrElse(constants.find(_.variableName == variable)
+                          .getOrElse(new RefEnumeratedValueSet(variable, List(null).asInstanceOf[List[AnyRef]])))
         }
         filled
       }
     }
+  }
 
   def countRuns = repetitions * valueSets.map(_.map(_.length.toInt).product).sum
 
