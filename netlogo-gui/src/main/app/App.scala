@@ -3,8 +3,11 @@
 package org.nlogo.app
 
 import java.awt.{ Dimension, EventQueue, Frame, GraphicsEnvironment, KeyboardFocusManager, Toolkit, BorderLayout}
+import java.awt.datatransfer.DataFlavor
+import java.awt.dnd.{ DropTarget, DropTargetDragEvent, DropTargetDropEvent, DropTargetEvent, DropTargetListener }
 import java.awt.event.ActionEvent
 import java.io.File
+import java.util.{ List => JList }
 import javax.swing.{ JFrame, JMenu }
 
 import scala.concurrent.ExecutionContext
@@ -31,6 +34,8 @@ import org.nlogo.workspace.{ AbstractWorkspace, AbstractWorkspaceScala, Controll
 
 import org.picocontainer.parameters.{ ComponentParameter, ConstantParameter }
 import org.picocontainer.Parameter
+
+import scala.jdk.CollectionConverters.ListHasAsScala
 
 /**
  * The main class for the complete NetLogo application.
@@ -542,6 +547,39 @@ class App extends org.nlogo.window.Event.LinkChild
       _tabManager.interfaceTab.resetSplitPane()
 
       if (! isMac) { org.nlogo.awt.Positioning.center(frame, null) }
+
+      new DropTarget(frame.getContentPane, new DropTargetListener {
+        def dragEnter(e: DropTargetDragEvent): Unit = {}
+        def dragExit(e: DropTargetEvent): Unit = {}
+        def dragOver(e: DropTargetDragEvent): Unit = {}
+
+        def drop(e: DropTargetDropEvent): Unit = {
+          if (e.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
+            e.acceptDrop(e.getDropAction)
+
+            val files = e.getTransferable.getTransferData(DataFlavor.javaFileListFlavor)
+                         .asInstanceOf[JList[File]].asScala
+
+            if (files.size == 1) {
+              val path = files(0).toString
+
+              if (path.endsWith("." + ModelReader.modelSuffix)) {
+                open(path)
+
+                e.dropComplete(true)
+              } else {
+                e.dropComplete(false)
+              }
+            } else {
+              e.dropComplete(false)
+            }
+          } else {
+            e.rejectDrop()
+          }
+        }
+
+        def dropActionChanged(e: DropTargetDragEvent): Unit = {}
+      })
 
       Splash.endSplash()
       frame.setVisible(true)
