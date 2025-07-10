@@ -98,10 +98,10 @@ class JFXColorPicker( frame: Frame, modal: Boolean, config: JFXCPConfig, initial
 
               initialValue.foreach {
                 value =>
-                  engine.executeScript(s"""window.setValue(${value.toJSArgs})""")
                   if (!value.isInstanceOf[NLNumber]) {
                     engine.executeScript("window.switchToAdvPicker()")
                   }
+                  engine.executeScript(s"""window.setValue(${value.toJSArgs})""")
               }
 
               webEngine = Option(engine)
