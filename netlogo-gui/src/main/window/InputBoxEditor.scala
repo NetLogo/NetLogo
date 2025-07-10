@@ -17,7 +17,11 @@ class InputBoxEditor[InputType <: InputBox#InputType](accessor: PropertyAccessor
 
   private val label = new JLabel(accessor.name)
   private val typeCombo = new ComboBox[InputType](options.values) {
-    addItemListener(_ => multiline.setEnabled(selected.map(_.enableMultiline).getOrElse(false)))
+    addItemListener(_ => {
+      apply()
+
+      multiline.setEnabled(selected.map(_.enableMultiline).getOrElse(false))
+    })
   }
 
   private val multiline = new CheckBox("Multi-Line") {
