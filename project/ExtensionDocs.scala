@@ -8,11 +8,12 @@ import org.nlogo.build.{ DocumentationConfig, Documenter, HoconParser }
 
 class ExtensionDocs(extensionsDirectory: File, extensionDocConfigFile: File) {
   def generateHTMLPageForExtension(
-    extensionName:  String,
+    extShortName:   String,
+    extFullName:    String,
     targetFile:     NioPath,
     buildVariables: Map[String, Object]): NioPath = {
 
-    val documentationConf = (extensionsDirectory / extensionName / "documentation.conf").toPath
+    val documentationConf = (extensionsDirectory / extShortName / "documentation.conf").toPath
     val netLogoConfFile = extensionDocConfigFile.toPath
     val configDocument = HoconParser.parseConfigFile(documentationConf.toFile)
     val netLogoConfig = HoconParser.parseConfig(HoconParser.parseConfigFile(netLogoConfFile.toFile))
@@ -27,7 +28,7 @@ class ExtensionDocs(extensionsDirectory: File, extensionDocConfigFile: File) {
       docConfig.tableOfContents.isEmpty ||
         (docConfig.tableOfContents.size == 1 && docConfig.tableOfContents.isDefinedAt(""))
     val additionalConfig = Map(
-      "extensionName"         -> extensionName.capitalize,
+      "extensionName"         -> extFullName.capitalize,
       "prePrimitiveSections"  -> prePrimFiles,
       "postPrimitiveSections" -> postPrimFiles,
       "emptyTableOfContents"  -> Boolean.box(emptyToC)
@@ -40,10 +41,10 @@ class ExtensionDocs(extensionsDirectory: File, extensionDocConfigFile: File) {
     )
 
     val renderedPage =
-      renderMarkdown(extensionName)(Documenter.documentAll(finalConfig, primitives, documentationConf.getParent))
+      renderMarkdown(extFullName)(Documenter.documentAll(finalConfig, primitives, documentationConf.getParent))
     val res = Files.write(targetFile, renderedPage.getBytes("UTF-8"))
 
-    val imagesCopy = Path.allSubpaths(extensionsDirectory / extensionName / "images").map {
+    val imagesCopy = Path.allSubpaths(extensionsDirectory / extShortName / "images").map {
       case (f, p) => (f, targetFile.getParent.toFile / "images" / p)
     }
     FileActions.copyAll(imagesCopy)
@@ -55,9 +56,9 @@ class ExtensionDocs(extensionsDirectory: File, extensionDocConfigFile: File) {
     htmlFileRoot: File,
     documentedExtensions: Seq[(String, String)],
     buildVariables: Map[String, Object]): Seq[NioPath] = documentedExtensions map {
-      case (extName, extTitle) =>
-        val targetPath = (htmlFileRoot / (extName + ".html").toLowerCase).toPath
-        generateHTMLPageForExtension(extName, targetPath, buildVariables)
+      case (extShortName, extFullName) =>
+        val targetPath = (htmlFileRoot / (extShortName + ".html").toLowerCase).toPath
+        generateHTMLPageForExtension(extShortName, extFullName, targetPath, buildVariables)
     }
 
   private def renderMarkdown(extensionName: String)(str: String): String =
@@ -71,4 +72,3 @@ class ExtensionDocs(extensionsDirectory: File, extensionDocConfigFile: File) {
         .mkString("\n\n")
     }
 }
-
