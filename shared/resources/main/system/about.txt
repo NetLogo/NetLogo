@@ -1,10 +1,10 @@
 
 NetLogo author: Uri Wilensky
-Development team: Jason Bertsche, Aaron Brandes, and Bryan Head.
+Core development team: Jason Bertsche, Aaron Brandes, Jeremy Baker and Isaac Brown.
 
-Seungyeon Kim was the main designer of the Graphical User Interface changes for NetLogo 7. Isaac Brown implemented most of those changes.
+Seungyeon Kim was the main graphics designer for the Graphical User Interface changes for NetLogo 7.
 
-We also thank the following for their substantial contributions: Jeremy Baker, Corey Brady, Craig Brozefsky, Damon Centola, Brent Collins, Josh Cough, Frank Duncan, Matt Goto, Robert Grider, Matt Hellige, Geoff Hulette, Eamon McKenzie, James Newell, Nicolas Payette, Eric Russell, Ben Shargel, Chuck Shubert, Forrest Stonedahl, Walter Stroup, Seth Tisue, Esther Verreau.
+We also thank the following for their substantial contributions: Corey Brady, Craig Brozefsky, Damon Centola, Brent Collins, Josh Cough, Frank Duncan, Matt Goto, Robert Grider, Matt Hellige, Geoff Hulette, Eamon McKenzie, James Newell, Nicolas Payette, Eric Russell, Ben Shargel, Chuck Shubert, Forrest Stonedahl, Walter Stroup, Seth Tisue, Esther Verreau.
 
 We also gratefully acknowledge the contributions of: Dor Abrahamson, Fernando Alegre, Jason Alt, Gabriella Anton, Umit Aslan, Zeina Atrash, Gordon Bailey, Connor Bain, Eytan Bakshy, Matthew Berland, Stephanie Bezold, Paulo Blikstein, Silas Boyd-Wickizer, Dirk Brockman, Meridith Bruozas, Rodrigo Cadiz, Ivan Ceraj, Charles Chen, Eric Cheng, Jarva Chow, Sugat Dabholkar, Rumou Duan, Jared Dunne, Geoff Garen, Jeremy Glassenberg, Katie Goodrum, Steve Gorodetskiy, Bryan Guo, Can Gurkan, Eric Hao, Ed Hazzard, Arthur Hjorth, Carrie Hobbs, Nathan Holbert, Abbie Jacobs, Wendy Johnson, Nathan Jones, Jacob Kelter, Hyungsin Kim, Jayun Kim, Woo-young Kim, Daniel Kornhauser, Sergey Krilov, Dr. Setsuya Kurahashi, Eyal Landau, Victor Lee, Reuven Lerner, Sharona Levy, Silvia Lovato, Kit Martin, Geoff Mathews, Spiro Maroulis, Dhrumil Mehta, Nate Nichols, Ben Neidhart, Michael Novak, Kai Orton, Yevgeny Patarakin, Christina Pei, Daniel Perlovsky, Lorenzo Pesce, Francisco J. Miguel Quesada, Bill Rand, Ben Rafshoon, Charly Resendiz, Andy Russell, Phil Saltzmann, Andrei Scheinkman, Pratim Sengupta, Ben Shapiro, Gagandeep Singh, Firat Soylu, Mike Stieff, Scott Styles, Celina Troutman, Josh Unterman, Aditi Wagh, Akarshit Wal, David Weintrop, Baba Kofi Weusijana, Michelle Wilkerson, Julio Patron Witwytzkyj, Nate Wong, Philip Woods, Christine Yang, Dr. Takashi Yoshida, Jack Zhu, Tianyu Xia.
 
@@ -215,8 +215,6 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 ===
 
 For reading models, NetLogo uses the Parboiled library. The copyright and license for Parboiled are as follows:
-
-The copyright and license for Parboiled are as follows:
 
 This software is licensed under the Apache 2 license, quoted below.
 
