@@ -55,6 +55,16 @@ class Lab extends LabInterface {
       def nextWorkspace = queue.synchronized { if (queue.isEmpty) null else queue.dequeue() }
       worker.run(workspaces.head, () => nextWorkspace, threads)
     }
-    finally { workspaces.foreach(_.dispose()) }
+    finally {
+      workspaces.foreach { w =>
+        try {
+          w.dispose()
+        } catch {
+          // if this is caught, the JobManager was in the middle of doing something,
+          // probably means the user Halted so it's fine to ignore this (Isaac B 7/10/25)
+          case _: InterruptedException =>
+        }
+      }
+    }
   }
 }
