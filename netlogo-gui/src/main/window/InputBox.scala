@@ -775,6 +775,8 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     }
     override def changeVisible = false
     override def enableMultiline = false
-    override def defaultValue = org.nlogo.agent.World.Zero
+    override def defaultValue = Double.box(15) // Initialize color picker to `red`, because some people might
+                                               // not know how to use a color picker.  Unironically.
+                                               // --Jason B. (7/10/25)
   }
 }

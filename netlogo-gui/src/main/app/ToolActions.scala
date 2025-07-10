@@ -16,7 +16,7 @@ import org.nlogo.core.I18N
 import org.nlogo.shape.ShapesManagerInterface
 import org.nlogo.swing.{ OptionPane, UserAction }, UserAction._
 import org.nlogo.theme.ThemeSync
-import org.nlogo.window.{ AbstractWidgetPanel, CopyOnly, JFXColorPicker, LinkRoot }
+import org.nlogo.window.{ AbstractWidgetPanel, CopyOnly, JFXColorPicker, LinkRoot, NLNumber }
 import org.nlogo.workspace.AbstractWorkspaceScala
 
 abstract class ShowDialogAction(name: String) extends AbstractAction(name) with ThemeSync {
@@ -98,7 +98,7 @@ class OpenRGBAColorDialog(frame: Frame) extends ShowDialogAction(I18N.gui.get("m
   category = ToolsCategory
   group = ToolsDialogsGroup
 
-  def createDialog() = new JFXColorPicker(frame, false, CopyOnly)
+  def createDialog() = new JFXColorPicker(frame, false, CopyOnly, Option(NLNumber(15)))
 
   override def actionPerformed(e: ActionEvent): Unit = {
     Positioning.center(createdDialog, frame)
