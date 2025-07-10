@@ -71,7 +71,11 @@ class ColorEditor(accessor: PropertyAccessor[Color], frame: Frame) extends Prope
     addMouseListener(new MouseAdapter {
 
       override def mousePressed(e: MouseEvent): Unit = {
-        new JFXColorPicker(frame, true, NumAndRGBA, Option(RGBA.fromJavaColor(color)),
+
+        val initialOpt = Option(RGBA.fromJavaColor(color))
+        val colorOpt   = initialOpt.flatMap(NLNumber.fromRGBA).orElse(initialOpt)
+
+        new JFXColorPicker(frame, true, NumAndRGBA, colorOpt,
           (x: String) => {
 
             val SimpleDouble = """^(\d{1,3}(?:\.\d)?)$""".r
@@ -94,6 +98,7 @@ class ColorEditor(accessor: PropertyAccessor[Color], frame: Frame) extends Prope
 
           }
         ).setVisible(true)
+
       }
 
     })

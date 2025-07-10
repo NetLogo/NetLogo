@@ -234,7 +234,11 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
       private var currentColor = ColorInfo(Color.BLACK)
       private val button = new JButton(new AbstractAction {
         override def actionPerformed(e: ActionEvent): Unit = {
-          new JFXColorPicker(frame, true, DoubleOnly, Option(RGBA.fromMask(currentColor.rgb)),
+
+          val initialOpt = Option(RGBA.fromMask(currentColor.rgb))
+          val colorOpt   = initialOpt.flatMap(NLNumber.fromRGBA).orElse(initialOpt)
+
+          new JFXColorPicker(frame, true, DoubleOnly, colorOpt,
             (x: String) => {
               val num = x.toDouble
               currentColor = ColorInfo(NLNumber(num).toColor)
@@ -243,6 +247,7 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
               fireEditingStopped()
             }
           ).setVisible(true)
+
         }
       }) {
         override def paintComponent(g: Graphics): Unit = {
