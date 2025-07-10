@@ -18,6 +18,7 @@
 			if (body && body.lastChild !== footer) {
 				body.appendChild(footer);
 				footer.classList.remove('hidden'); // Show footer if it was hidden
+				footer.classList.remove('hidden-important'); // Show footer if it was hidden
 			}
 		}
 
@@ -71,26 +72,27 @@
 		});
 
 		// Version Change
+		const CURRENT_VERSION = 'this'; // Default to current version
 		function goToVersion(select) {
-			const version = select.value;
-			if (!version || version === '{{ version }}') return;
+			let docsURL = select.value;
+			if (!docsURL || docsURL === CURRENT_VERSION) return;
 
-			const currentUrl = window.location.href;
-			const docsIndex = currentUrl.indexOf('/docs');
-			const base =
-				docsIndex !== -1
-					? currentUrl.slice(0, docsIndex + 1) // includes the slash after docs
-					: currentUrl.slice(0, currentUrl.lastIndexOf('/') + 1);
+			// Get the path up to and including docs/ (if present)
+			const currentPath = window.location.pathname.replace(/\/$/, ''); // Remove trailing slash
+			const docsIndex = currentPath.indexOf('/docs');
+			const rest = currentPath.substring(docsIndex + 5);
 
-			const root = docsIndex !== -1 ? base.slice(0, base.indexOf('/docs') + 1) : base;
+			// Construct the new URL
+			docsURL = docsURL.endsWith('/') ? docsURL.substring(0, docsURL.length - 1) : docsURL;
+			const newURLString = docsURL + rest;
+			const newURL = new URL(newURLString, window.location.origin);
 
-			const versionPath = select.hasAttribute('current') ? '' : version + '/';
-			const suffix = docsIndex !== -1 ? 'docs/' : '';
-
-			window.location.href = root + versionPath + suffix;
+			window.location = newURL;
 		}
 
-		document.getElementById('version-select').addEventListener('change', function (e) {
+		const $versionSelect = document.getElementById('version-select');
+		$versionSelect.selectedIndex = 0;
+		$versionSelect.addEventListener('change', function (e) {
 			e.preventDefault();
 			goToVersion(this);
 		});

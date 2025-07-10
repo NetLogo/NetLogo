@@ -1,0 +1,253 @@
+/* (c) 2025 Omar Ibrahim, CCL
+   with code repurposed and https://necolas.github.io/normalize.css/8.0.1/normalize.css
+   licensed under the MIT License. */
+
+/* ============================================================
+   Modifiers
+   ========================================================================== */
+.block {
+	display: block;
+}
+
+.smallfont {
+	font-size: small;
+}
+
+.xsmallfont {
+	font-size: x-small;
+}
+
+.xlargefont {
+	font-size: x-large;
+}
+
+.largefont {
+	font-size: large;
+}
+
+.bold {
+	font-weight: bold;
+}
+
+.centertext {
+	text-align: center;
+}
+
+.inlineblock {
+	display: inline-block;
+}
+
+.visible-lg {
+	display: none;
+}
+@media (min-width: 1024px) {
+	.visible-lg {
+		display: contents;
+	}
+	.hidden-lg {
+		display: none;
+	}
+}
+
+.hidden {
+	display: none;
+}
+.hidden-important {
+	display: none !important;
+}
+
+.font-mono {
+	font-family: var(--font-mono);
+}
+
+.font-sans {
+	font-family: var(--font-sans);
+}
+
+/* ============================================================
+   Special Cases
+   ========================================================================== */
+/* Special Case for /docs/arduino.html */
+li > p:first-child:last-child {
+	display: inline-block;
+}
+
+/* Special Case for footer */
+footer {
+	padding: var(--space-lg);
+	background: var(--color-nav-background);
+	box-shadow: var(--shadow-md);
+	color: var(--color-black);
+}
+
+/* Special Case for landing page */
+h1.landing {
+	background: transparent;
+	color: var(--color-text);
+	line-height: normal;
+	padding: 0;
+}
+
+.landing a,
+a:has(code),
+code a,
+a.code,
+a.modern-anchor {
+	text-decoration: none;
+	color: var(--color-link);
+	font-weight: 600;
+}
+
+.landing a:hover,
+a:has(code:hover),
+code a:hover,
+a.code:hover,
+a.modern-anchor:hover {
+	color: var(--color-link-hover);
+}
+
+/* Special cases for dictionary */
+
+div.dict_entry > h3 {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	align-items: center;
+	gap: 1rem;
+	padding-inline: var(--space-lg);
+}
+
+div.dict_entry > h3 a {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+	flex-grow: 1;
+	flex-shrink: 0;
+}
+
+div.dict_entry > h4 img {
+	display: inline-block;
+	margin: 0;
+	/* filter: hue-rotate(240deg) saturate(10.5); */
+}
+
+span.since {
+	margin-left: auto;
+	font-size: 1rem;
+	font-weight: 500;
+}
+
+span.since::before {
+	content: 'Since  ';
+	font-style: italic;
+	color: inherit;
+}
+
+div.dict_entry > :not(:first-child) {
+	margin-left: var(--space-lg);
+}
+
+span.prim_example {
+	display: block;
+	width: fit-content;
+	font-weight: 700;
+	font-size: var(--h5-size);
+	font-family: var(--font-mono);
+	margin: 0;
+}
+
+/* ============================================================
+   ARTIFACTS (from NetLogo < 7.0)
+   ========================================================================== */
+/* Ensures some artifacts from NetLogo < 7.0 are not shown */
+div.version {
+	display: none; /* Hide version info */
+}
+
+/* --- SIDEBAR (artifact) --------------------------------------------------- */
+.sidebar p,
+.sidebar a,
+.sidebar li {
+	max-width: var(--max-width-ch);
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap; /* Prevent text wrapping */
+	break-after: avoid; /* Avoid breaking after these elements */
+}
+.sidebar {
+	width: 100%;
+	min-height: 100vh; /* full-height */
+	position: sticky;
+	top: 0;
+
+	display: flex;
+	flex-direction: column;
+	overflow-y: auto;
+
+	background: var(--color-nav-background);
+	color: var(--color-nav-text);
+	box-shadow: var(--shadow-md);
+
+	display: flex;
+	flex-direction: column;
+	padding: var(--space-md) var(--space-xs);
+	background: var(--color-nav-background);
+}
+
+/* header banner sits at the top */
+.sidebar .headerbanner {
+	margin: 0; /* kill gap */
+	padding: var(--space-md) 0;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+/* lists --------------------------------------------------------- */
+.sidebar a {
+	display: block;
+	padding: 0.35rem 0.9rem;
+	border-radius: var(--radius-sm);
+	font-size: 0.875rem;
+	font-weight: 500;
+	color: var(--color-nav-text);
+
+	text-decoration: none;
+	transition: background 0.15s;
+}
+.sidebar a:hover,
+.sidebar a:focus {
+	background: var(--color-nav-hover);
+}
+
+.sidebar .headerbanner {
+	display: flex;
+	flex-direction: column;
+	align-items: start;
+	justify-content: center;
+	padding: 0.35rem 0.9rem;
+}
+.sidebar .heading-section {
+	margin: var(--space-md) 0 0;
+	padding: 0 var(--space-xs);
+}
+.sidebar .heading-title {
+	font-size: 0.75rem;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	color: var(--color-nav-text);
+	display: block;
+	margin-bottom: 0.25rem;
+}
+
+.sidebar ul {
+	list-style: none;
+	padding-left: 0;
+}
+.sidebar li {
+	margin: 0;
+}
+/* second-level indent */
+.sidebar .interface-items,
+.sidebar .heading-items ul {
+	padding-left: 1rem;
+}

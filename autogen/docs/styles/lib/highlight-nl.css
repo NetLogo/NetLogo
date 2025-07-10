@@ -1,0 +1,19 @@
+.reporter {
+  color: #660096;
+}
+
+.command {
+  color: #0000AA;
+}
+
+.keyword {
+  color: #007F69;
+}
+
+.comment {
+  color: #5A5A5A;
+}
+
+.string, .number, .constant {
+  color: #963700;
+}
