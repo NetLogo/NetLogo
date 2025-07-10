@@ -41,6 +41,7 @@ object Analytics {
           }.join(4000)
         } catch {
           case e: MatomoException => println(e)
+          case _: InterruptedException =>
         }
       } else {
         tracker.sendBulkRequestAsync(request).handle((_, error) => {
