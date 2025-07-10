@@ -10,6 +10,7 @@ import javax.swing.Action
 
 import scala.util.{ Failure, Try }
 
+import org.nlogo.analytics.Analytics
 import org.nlogo.core.{ I18N, Model }
 import org.nlogo.api.{ AbstractModelLoader, Exceptions, FileIO, ModelReader, ModelType, Version },
   ModelReader.{ emptyModelPath, modelSuffix }
@@ -315,6 +316,7 @@ class FileManager(workspace: AbstractWorkspaceScala,
     ModelConfig.pruneAutoSaves()
     new AboutToQuitEvent().raise(eventRaiser)
     workspace.getExtensionManager.reset()
+    Analytics.appExit()
     System.exit(0)
   }
 

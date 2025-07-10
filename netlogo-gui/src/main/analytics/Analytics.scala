@@ -34,7 +34,11 @@ object Analytics {
     if (sendEnabled) {
       if (synchronous) {
         try {
-          tracker.sendBulkRequest(request)
+          new Thread {
+            override def run(): Unit = {
+              tracker.sendBulkRequest(request)
+            }
+          }.join(4000)
         } catch {
           case e: MatomoException => println(e)
         }

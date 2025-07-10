@@ -5,7 +5,6 @@ package org.nlogo.app
 import java.awt.{ Dimension, EventQueue, Frame, GraphicsEnvironment, KeyboardFocusManager, Toolkit, BorderLayout}
 import java.awt.event.ActionEvent
 import java.io.File
-import java.lang.Runtime
 import javax.swing.{ JFrame, JMenu }
 
 import scala.concurrent.ExecutionContext
@@ -568,16 +567,10 @@ class App extends org.nlogo.window.Event.LinkChild
           new OptionPane(frame, I18N.gui.get("dialog.analyticsConsent"),
                          I18N.gui.get("dialog.analyticsConsent.message"), OptionPane.Options.YesNo,
                          OptionPane.Icons.Info).getSelectedIndex == 0)
-
-        Analytics.refreshPreference()
-        Analytics.appStart(Version.is3D)
-
-        Runtime.getRuntime.addShutdownHook(new Thread {
-          override def run(): Unit = {
-            Analytics.appExit()
-          }
-        })
       }
+
+      Analytics.refreshPreference()
+      Analytics.appStart(Version.is3D)
     }
     catch {
       case ex: java.lang.Throwable =>
