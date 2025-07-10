@@ -233,6 +233,29 @@ object NLNumber {
     fromJavaColor(new Color(rgbMask))
   }
 
+  def fromRGB(rgb: RGB): Option[NLNumber] = {
+
+    val vec      = Vector(rgb.r, rgb.g, rgb.b, 255.0)
+    val list     = LogoList.fromVector(vec.map(Double.box))
+    val argbMask = CoreColor.getARGBIntByRGBAList(list)
+    val colorNum = CoreColor.getClosestColorNumberByARGB(argbMask)
+    val outARGB  = CoreColor.getARGBbyPremodulatedColorNumber(colorNum)
+
+    if (argbMask == outARGB)
+      Option(NLNumber(colorNum))
+    else
+      None
+
+  }
+
+  def fromRGBA(rgba: RGBA): Option[NLNumber] = {
+    if (rgba.a == RGBA.MaxAlpha) {
+      fromRGB(RGB(rgba.r, rgba.g, rgba.b))
+    } else {
+      None
+    }
+  }
+
 }
 
 case class RGB(r: Double, g: Double, b: Double) extends NLColorValue {
