@@ -138,7 +138,7 @@ class FileController(owner: Component, modelTracker: ModelTracker) extends OpenM
 
     val userPath = FileDialog.showFiles(
       owner, I18N.gui.get("menu.file.saveAs"), AWTFileDialog.SAVE,
-      newFileName, List[String](ModelReader.modelSuffix))
+      newFileName, Some(Seq(("NetLogo Model", "*." + ModelReader.modelSuffix))))
     val extensionPath = FileIO.ensureExtension(userPath, ModelReader.modelSuffix)
     val path = Paths.get(extensionPath)
     if (!path.toFile.exists) {

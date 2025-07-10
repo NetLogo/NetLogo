@@ -2,10 +2,11 @@
 
 package org.nlogo.swing
 
-import java.awt.{ Component, FileDialog => AWTFileDialog, Frame }
+import java.awt.{ Component, EventQueue, FileDialog => AWTFileDialog, Frame, Toolkit }
 import java.io.File
 import javax.swing.JFileChooser
 
+import org.nlogo.api.ModelReader
 import org.nlogo.awt.{ Hierarchy, UserCancelException }
 import org.nlogo.core.I18N
 
@@ -27,7 +28,7 @@ object FileDialog {
     * the given file will be the default selection.
     */
   @throws[UserCancelException]
-  def showFiles(component: Component, title: String, mode: Int, file: String, allowed: List[String] = Nil): String =
+  def showFiles(component: Component, title: String, mode: Int, file: String, allowed: Option[Seq[(String, String)]] = None): String =
     showFiles(Hierarchy.getFrame(component), title, mode, file, allowed)
 
   def confirmFileOverwrite(owner: Component, path: String) = {
@@ -50,7 +51,7 @@ object FileDialog {
     */
   @throws[UserCancelException]
   def showFiles(parentFrame: Frame, title: String, mode: Int): String =
-    showFiles(parentFrame, title, mode, null, Nil)
+    showFiles(parentFrame, title, mode, null, None)
 
   @throws[UserCancelException]
   def showDirectories(parentFrame: Frame, title: String): String = {
@@ -66,21 +67,59 @@ object FileDialog {
   }
 
   @throws[UserCancelException]
-  private def showFiles(parentFrame: Frame, title: String, mode: Int, file: String, allowed: List[String]): String = {
-    val chooser = new AWTFileDialog(parentFrame, title, mode)
-    chooser.setDirectory(currentDirectory)
-    if (file != null)
-      chooser.setFile(file)
-    chooser.setVisible(true)
-    if (chooser.getFile == null)
+  private def showFiles(parentFrame: Frame, title: String, mode: Int, file: String, allowed: Option[Seq[(String, String)]]): String = {
+    // native dialogs are not recongized by the EDT, so without this SecondaryLoop, the File menu
+    // popup remains open in front of the file chooser dialog (Isaac B 7/10/25)
+    val loop = Toolkit.getDefaultToolkit.getSystemEventQueue.createSecondaryLoop()
+
+    var selected: String = null
+
+    EventQueue.invokeLater(() => {
+      val chooser = NativeFileChooser.createFileChooser
+
+      if (file == null) {
+        chooser.setCurrentDirectory(new File(currentDirectory))
+      } else {
+        chooser.setSelectedFile(new File(file))
+      }
+
+      chooser.setDialogTitle(title)
+      chooser.setFileSelectionMode(JFileChooser.FILES_ONLY)
+
+      allowed.foreach(chooser.setFileTypes)
+
+      val result = {
+        if (mode == AWTFileDialog.LOAD) {
+          chooser.showOpenDialog(parentFrame)
+        } else {
+          chooser.setDefaultExtension(ModelReader.modelSuffix)
+          chooser.showSaveDialog(parentFrame)
+        }
+      }
+
+      val selectedFile = chooser.getSelectedFile
+
+      chooser.cleanup()
+
+      if (result == JFileChooser.APPROVE_OPTION && selectedFile != null) {
+        currentDirectory = selectedFile.getParentFile.getAbsolutePath
+
+        if (mode == AWTFileDialog.LOAD && !selectedFile.exists) {
+          selected = showFiles(parentFrame, title, mode, selectedFile.getAbsolutePath, allowed)
+        } else {
+          selected = selectedFile.getAbsolutePath
+        }
+      }
+
+      loop.exit()
+    })
+
+    loop.enter()
+
+    if (selected == null)
       throw new UserCancelException
-    currentDirectory = chooser.getDirectory
-    if (mode == AWTFileDialog.LOAD && !new File(currentDirectory + chooser.getFile).exists)
-      return showFiles(parentFrame, title, mode, chooser.getFile, allowed)
-    if (chooser.getDirectory == null)
-      chooser.getFile
-    else
-      chooser.getDirectory + chooser.getFile
+
+    selected
   }
 
   private def selectedDirectory(chooser: JFileChooser): String = {
