@@ -16,9 +16,12 @@ import org.nlogo.window.{ InterfaceMode, MouseMode, ViewWidget, Widget, WidgetWr
 import org.nlogo.window.Events.{ DirtyEvent, EditWidgetEvent, ExportWidgetEvent, WidgetForegroundedEvent }
 
 object WidgetWrapper {
-  val BorderSize = 7
-
   private val HandleSize = 7
+
+  // the space around each handle that counts as grabbing the handle (Isaac B 7/11/25)
+  private val GrabBuffer = 5
+
+  val BorderSize = HandleSize + GrabBuffer
 
   private val MinWidgetWidth = 12
   private val MinWidgetHeight = 12
@@ -98,9 +101,6 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
   def isNew(isNew: Boolean): Unit = {
     _isNew = isNew
   }
-
-  def getBorderSize: Int =
-    BorderSize
 
   override def isValidateRoot: Boolean =
     true
@@ -380,28 +380,31 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
 
     mouseMode = MouseMode.DRAG
 
-    if (x < BorderSize) {
-      if (y < BorderSize) {
+    // GrabBuffer is added to BorderSize again in all of these checks because for positioning and rendering
+    // purposes, BorderSize only contains the outer portion of GrabBuffer, but when checking for mouse clicks
+    // we also want to have some GrabBuffer on the inside over top of the widget itself (Isaac B 7/11/25)
+    if (x < BorderSize + GrabBuffer) {
+      if (y < BorderSize + GrabBuffer) {
         mouseMode = MouseMode.NW
-      } else if (y > getHeight - BorderSize) {
+      } else if (y > getHeight - BorderSize - GrabBuffer) {
         mouseMode = MouseMode.SW
-      } else if (y <= (getHeight + HandleSize) / 2 && y >= (getHeight - HandleSize) / 2) {
+      } else if (y <= (getHeight + HandleSize) / 2 + GrabBuffer && y >= (getHeight - HandleSize) / 2 - GrabBuffer) {
         mouseMode = MouseMode.W
       }
-    } else if (x > getWidth - BorderSize) {
-      if (y < BorderSize) {
+    } else if (x > getWidth - BorderSize - GrabBuffer) {
+      if (y < BorderSize + GrabBuffer) {
         mouseMode = MouseMode.NE
-      } else if (y > getHeight - BorderSize) {
+      } else if (y > getHeight - BorderSize - GrabBuffer) {
         mouseMode = MouseMode.SE
-      } else if (y <= (getHeight + HandleSize) / 2 && y >= (getHeight - HandleSize) / 2) {
+      } else if (y <= (getHeight + HandleSize) / 2 + GrabBuffer && y >= (getHeight - HandleSize) / 2 - GrabBuffer) {
         mouseMode = MouseMode.E
       }
-    } else if (y > getHeight - BorderSize) {
-      if (x <= (getWidth + HandleSize) / 2 && x >= (getWidth - HandleSize) / 2) {
+    } else if (y > getHeight - BorderSize - GrabBuffer) {
+      if (x <= (getWidth + HandleSize) / 2 + GrabBuffer && x >= (getWidth - HandleSize) / 2 - GrabBuffer) {
         mouseMode = MouseMode.S
       }
-    } else if (y < BorderSize) {
-      if (x <= (getWidth + HandleSize) / 2 && x >= (getWidth - HandleSize) / 2) {
+    } else if (y < BorderSize + GrabBuffer) {
+      if (x <= (getWidth + HandleSize) / 2 + GrabBuffer && x >= (getWidth - HandleSize) / 2 - GrabBuffer) {
         mouseMode = MouseMode.N
       }
     }
@@ -943,21 +946,22 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
       g2d.setColor(InterfaceColors.widgetHandle())
 
       // bounding box
-      g2d.drawRect(HandleSize / 2, HandleSize / 2, getWidth - HandleSize, getHeight - HandleSize)
+      g2d.drawRect(GrabBuffer + HandleSize / 2, GrabBuffer + HandleSize / 2, getWidth - HandleSize - GrabBuffer * 2,
+                   getHeight - HandleSize - GrabBuffer * 2)
 
       // left/right central handles
-      g2d.fillRect(0, getHeight / 2 - HandleSize / 2, HandleSize, HandleSize)
-      g2d.fillRect(getWidth - HandleSize, getHeight / 2 - HandleSize / 2, HandleSize, HandleSize)
+      g2d.fillRect(GrabBuffer, getHeight / 2 - HandleSize / 2, HandleSize, HandleSize)
+      g2d.fillRect(getWidth - HandleSize - GrabBuffer, getHeight / 2 - HandleSize / 2, HandleSize, HandleSize)
 
       // top/bottom central handles
-      g2d.fillRect(getWidth / 2 - HandleSize / 2, 0, HandleSize, HandleSize)
-      g2d.fillRect(getWidth / 2 - HandleSize / 2, getHeight - HandleSize, HandleSize, HandleSize)
+      g2d.fillRect(getWidth / 2 - HandleSize / 2, GrabBuffer, HandleSize, HandleSize)
+      g2d.fillRect(getWidth / 2 - HandleSize / 2, getHeight - HandleSize - GrabBuffer, HandleSize, HandleSize)
 
       // corner handles
-      g2d.fillRect(0, 0, HandleSize, HandleSize)
-      g2d.fillRect(getWidth - HandleSize, 0, HandleSize, HandleSize)
-      g2d.fillRect(0, getHeight - HandleSize, HandleSize, HandleSize)
-      g2d.fillRect(getWidth - HandleSize, getHeight - HandleSize, HandleSize, HandleSize)
+      g2d.fillRect(GrabBuffer, GrabBuffer, HandleSize, HandleSize)
+      g2d.fillRect(getWidth - HandleSize - GrabBuffer, GrabBuffer, HandleSize, HandleSize)
+      g2d.fillRect(GrabBuffer, getHeight - HandleSize - GrabBuffer, HandleSize, HandleSize)
+      g2d.fillRect(getWidth - HandleSize - GrabBuffer, getHeight - HandleSize - GrabBuffer, HandleSize, HandleSize)
     }
   }
 
