@@ -25,8 +25,9 @@ object LabXMLLoader {
 
     val name = element("name")
 
-    val lab = LabProtocol.defaultGUIProtocol.copy(
-      name = name,
+    // these will be loaded into the GUI, however using defaultGUIProtocol causes default values like setup
+    // and go to be added in automatically if they aren't specified in the model file (Isaac B 7/11/25)
+    val lab = LabProtocol.defaultCodeProtocol(name).copy(
       repetitions = element("repetitions").toInt,
       sequentialRunOrder = element("sequentialRunOrder").toBoolean,
       runMetricsEveryStep = element("runMetricsEveryStep").toBoolean,
