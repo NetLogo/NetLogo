@@ -141,8 +141,7 @@ object FileManager {
     group    = UserAction.FileShareGroup
 
     // disabled for 3-D since you can't do that in NetLogo Web - RG 9/10/15
-    setEnabled(false) // Disabled until NLW supports '.nlogox' -- Jason B. (3/13/25)
-    //setEnabled(! Version.is3D)
+    setEnabled(!Version.is3D)
 
     @throws(classOf[UserCancelException])
     @throws(classOf[IOException])
