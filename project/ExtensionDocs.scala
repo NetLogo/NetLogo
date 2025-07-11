@@ -29,12 +29,22 @@ class ExtensionDocs(extensionsDirectory: File, extensionDocConfigFile: File, hea
     val emptyToC =
       docConfig.tableOfContents.isEmpty ||
         (docConfig.tableOfContents.size == 1 && docConfig.tableOfContents.isDefinedAt(""))
+
+
+
+    // Find </title> in the header template and insert the extension name before it.
+    val titleInsertIndex = headerTemplate.indexOf("</title>")
+    val titledHeader = if (titleInsertIndex != -1) {
+      headerTemplate.substring(0, titleInsertIndex) + extFullName.capitalize + headerTemplate.substring(titleInsertIndex)
+    } else { headerTemplate }
+
+
     val additionalConfig = Map(
       "extensionName"         -> extFullName.capitalize,
       "prePrimitiveSections"  -> prePrimFiles,
       "postPrimitiveSections" -> postPrimFiles,
       "emptyTableOfContents"  -> Boolean.box(emptyToC),
-      "header"                -> headerTemplate
+      "header"                -> titledHeader
     )
     val finalConfig = DocumentationConfig(
       markdownTemplate = netLogoConfig.markdownTemplate,

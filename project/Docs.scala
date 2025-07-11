@@ -43,7 +43,7 @@ object Docs {
                                      manuallyDocumentedExtensions.value)
     },
     manualPDF := {
-      netLogoDocs.value.generatePDF(buildVariables.value, autoDocumentedExtensions.value,
+      netLogoDocs.value.generatePDF(buildVariables.value + ("pdf" -> "true"), autoDocumentedExtensions.value,
                                     manuallyDocumentedExtensions.value)
     },
     extensionDocConfigFile := {

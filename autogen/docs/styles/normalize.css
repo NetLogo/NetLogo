@@ -274,3 +274,26 @@ template {
 [hidden] {
 	display: none;
 }
+
+/**
+ * Select
+ *
+ */
+
+select::picker-icon {
+	color: var(--color-text-on-primary);
+	content: '▾';
+}
+::picker(select) {
+	border: none;
+}
+::picker(select) {
+	opacity: 0;
+	transition: all 0.4s allow-discrete;
+}
+::picker(select):popover-open {
+	opacity: 1;
+}
+::picker(select) {
+	top: calc(anchor(bottom) + 1px);
+}

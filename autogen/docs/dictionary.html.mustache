@@ -4,7 +4,12 @@
     <title>
       NetLogo {{version}} User Manual: NetLogo Dictionary
     </title>
-    <link rel="stylesheet" href="netlogo.css" type="text/css"/>
+    {{#pdf}}
+		<link rel="stylesheet" href="netlogo-pdf.css" type="text/css"/>
+		{{/pdf}}
+		{{^pdf}}
+		<link rel="stylesheet" href="netlogo.css" type="text/css"/>
+		{{/pdf}}
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="netlogo.css" type="text/css" />
@@ -58,6 +63,9 @@
     <div class="version">
       NetLogo {{version}} User Manual
     </div>
+
+    <h1>NetLogo Dictionary</h1>
+
     <div class="centertext" style="padding-bottom: 1rem; max-width: inherit;">
       <div class="block">
         <div class="smallfont centertext tocborder inlineblock">
@@ -10352,5 +10360,19 @@ if (pxcor &gt; 0) xor (pycor &gt; 0)
       </div>
     </div>
     </div>
+    <script type="text/javascript">
+    (function() {
+      document.addEventListener("DOMContentLoaded", function() {
+        const entries = document.querySelectorAll(".dict_entry");
+        Array.from(entries).forEach(function(entry) {
+          const hash = entry.id;
+          const anchors = entry.querySelectorAll("a");
+          Array.from(anchors).forEach(function(anchor) {
+            anchor.href = "#" + hash;
+          });
+        });
+      });
+    })()
+    </script>
   </body>
 </html>

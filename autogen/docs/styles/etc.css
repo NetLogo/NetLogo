@@ -64,12 +64,16 @@
 	font-family: var(--font-sans);
 }
 
+.break-after {
+	break-after: always;
+}
+
 /* ============================================================
    Special Cases
    ========================================================================== */
 /* Special Case for /docs/arduino.html */
 li > p:first-child:last-child {
-	display: inline-block;
+	display: inline;
 }
 
 /* Special Case for footer */
@@ -92,7 +96,8 @@ h1.landing {
 a:has(code),
 code a,
 a.code,
-a.modern-anchor {
+a.modern-anchor,
+a:not(h1 a):not(h2 a):not(h3 a):not(h4 a):not(h5 a):not(h6 a) {
 	text-decoration: none;
 	color: var(--color-link);
 	font-weight: 600;
@@ -102,7 +107,8 @@ a.modern-anchor {
 a:has(code:hover),
 code a:hover,
 a.code:hover,
-a.modern-anchor:hover {
+a.modern-anchor:hover,
+a:not(h1 a):not(h2 a):not(h3 a):not(h4 a):not(h5 a):not(h6 a):hover {
 	color: var(--color-link-hover);
 }
 
@@ -150,11 +156,21 @@ div.dict_entry > :not(:first-child) {
 
 span.prim_example {
 	display: block;
-	width: fit-content;
+	width: 100%;
 	font-weight: 700;
 	font-size: var(--h5-size);
 	font-family: var(--font-mono);
 	margin: 0;
+}
+
+span.prim_example span.since {
+	float: right;
+	margin: 0 0 0 auto;
+	font-size: 0.875rem;
+	padding: 0.125rem 0.3em;
+	border-radius: var(--radius-sm);
+	background: var(--secondary-heading-background-color);
+	color: var(--secondary-heading-text-color);
 }
 
 /* ============================================================

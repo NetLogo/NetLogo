@@ -6,7 +6,7 @@
 	--font-sans: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 	--font-mono: monospace;
 	--line-height: 1.6em;
-	--line-height-heading: 0.7em;
+	--line-height-heading: 1em;
 	--line-height-code: 1.6em;
 
 	/* Border */
@@ -39,7 +39,7 @@
 	--color-background: var(--color-white);
 	--color-background-overlay: #f5f5f5;
 	--color-nav-background: #ebebf0;
-	--color-nav-active: var(--color-brand);
+	--color-nav-active: var(--color-primary);
 	--color-nav-hover: #dedede;
 	--color-nav-text: #555770;
 
@@ -62,7 +62,7 @@
 	--space-xs: 0.5rem; /* formerly level-2 inset Y */
 	--space-xxs: 0.25rem; /* formerly level-2 inset Y */
 
-	--max-width-ch: 120ch; /* Maximum width for text content */
+	--max-width-ch: min(90vw, 120ch); /* Maximum width for text content */
 
 	/* Derived spacing */
 	--block-bottom: var(--space-md);

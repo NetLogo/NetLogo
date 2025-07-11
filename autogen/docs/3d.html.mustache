@@ -4,21 +4,27 @@
     <title>
       NetLogo {{version}} User Manual: 3D
     </title>
-    <link rel="stylesheet" href="netlogo.css" type="text/css"/>
+    {{#pdf}}
+		<link rel="stylesheet" href="netlogo-pdf.css" type="text/css"/>
+		{{/pdf}}
+		{{^pdf}}
+		<link rel="stylesheet" href="netlogo.css" type="text/css"/>
+		{{/pdf}}
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="icon" type="image/png" href="favicon/favicon-96x96.png" sizes="96x96" />
+		<link rel="icon" type="image/svg+xml" href="favicon/favicon.svg" />
+		<link rel="shortcut icon" href="favicon/favicon.ico" />
+		<link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png" />
+		<meta name="apple-mobile-web-app-title" content="3D" />
     <style>
       p.bookquote { font-size: 85%; margin-left: 4em; margin-right: 4em; color: #333 ; }
       p.c1 {font-style: italic}
-
-      .prose.nl-three div {
-        padding: 0;
-      }
     </style>
   </head>
   <body>
     {{> header.html}}
-   <main class="prose nl-three">
+   <main  class="my-3">
     <p>
       NetLogo includes the NetLogo 3D application that allows you to create 3D worlds.
     </p>
@@ -40,7 +46,7 @@
         <a href="#dictionary">Dictionary</a>
       </li>
     </ul>
-    <div id="introduction" class="prose">
+    <section id="introduction" class="prose">
       <h2>
         <a>Introduction</a>
       </h2>
@@ -204,8 +210,8 @@ normal: 0 0 -1
 stop
 end-shape
 </pre>
-    </div>
-    <div id="tutorial" class="prose">
+    </section>
+    <section id="tutorial" class="prose">
       <h2>
         <a>Tutorial</a>
       </h2>
@@ -468,8 +474,8 @@ end-shape
         but the observer does not move. The radius of the sphere may change,
         as well as the orientation of the observer.
       </p>
-    </div>
-    <div id="dictionary" class="prose">
+    </section>
+    <section id="dictionary" class="prose">
       <h2>
         <a>Dictionary</a>
       </h2>
@@ -1240,7 +1246,7 @@ show [count turtles-at 0 0 0] of turtle 0
           will only move as far as the point it is facing.
         </p>
       </div>
-    </div>
+    </section>
     </main>
   </body>
 </html>

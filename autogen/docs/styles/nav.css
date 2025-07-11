@@ -108,7 +108,7 @@
 
 /* Version selector */
 .version-select {
-	appearance: none;
+	appearance: base-select;
 	background: var(--color-nav-text);
 	color: var(--color-text-on-primary);
 	border: 1px solid transparent;
@@ -155,6 +155,16 @@
 button.navbar__action {
 	border: none;
 	outline: none;
+}
+
+@media (max-width: 1024px) {
+	.version-select {
+		font-size: 0.875rem;
+		max-height: 3rem;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
 }
 
 /* ------------------------------------------------------------------
@@ -276,7 +286,8 @@ button.navbar__action {
 	.dropdown__menu {
 		background: transparent;
 		padding: 0;
-		position: static;
+		position: relative;
+		display: contents;
 		opacity: 1;
 		height: auto;
 		transform: none;
@@ -284,6 +295,9 @@ button.navbar__action {
 	}
 	.dropdown__menu a {
 		padding-left: 1.25rem;
+		text-overflow: ellipsis;
+		overflow: hidden;
+		pointer-events: all;
 	}
 	.hamburger {
 		display: flex;
@@ -299,7 +313,7 @@ button.navbar__action {
 	}
 }
 
-@media (max-width: 400px) {
+@media (max-width: 768px) {
 	.navbar__brand {
 		/* display: none; Hide brand logo on small screens */
 		width: 6rem; /* Adjust width for smaller screens */
