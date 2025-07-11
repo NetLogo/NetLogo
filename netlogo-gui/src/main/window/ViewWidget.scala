@@ -18,11 +18,14 @@ class ViewWidget(workspace: GUIWorkspace) extends Widget with ViewWidgetInterfac
 
   setLayout(null)
   add(view)
-  val settings: WorldViewSettings =
-    if (Version.is3D)
+
+  val settings: WorldViewSettings = {
+    if (Version.is3D) {
       new WorldViewSettings3D(workspace, this, tickCounter)
-    else
-      new WorldViewSettings2D(workspace, this, tickCounter);
+    } else {
+      new WorldViewSettings2D(workspace, this, tickCounter)
+    }
+  }
 
   override def classDisplayName: String = "World & View"
 

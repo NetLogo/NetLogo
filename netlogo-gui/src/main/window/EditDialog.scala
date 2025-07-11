@@ -14,7 +14,7 @@ import org.nlogo.swing.{ BrowserLauncher, ButtonPanel, DialogButton, Implicits, 
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 // contains an EditPanel, plus some buttons at the bottom (OK/Apply/Help/Cancel).
-class EditDialog(window: Window, target: Editable, modal: Boolean)
+class EditDialog(window: Window, target: Editable, editPanel: EditPanel, modal: Boolean)
   extends JDialog(window, target.classDisplayName,
                   if (modal)
                     Dialog.ModalityType.APPLICATION_MODAL
@@ -24,7 +24,6 @@ class EditDialog(window: Window, target: Editable, modal: Boolean)
   var canceled = false
 
   private val mainPanel = new JPanel(new BorderLayout) with Transparent
-  private val editPanel = target.editPanel
 
   val okButton = new DialogButton(true, I18N.gui.get("common.buttons.ok"), () => {
     if (editPanel.valid) {

@@ -43,6 +43,8 @@ abstract class WorldViewSettings(protected val workspace: GUIWorkspace, protecte
   def classDisplayName: String = I18N.gui.get("edit.viewSettings.modelSettings")
   def resizeWithProgress(showProgress: Boolean): Unit
 
+  def editPanel3D: EditPanel = editPanel
+
   def model: CoreWidget
 
   val originTypes: Seq[OriginType] = Seq(OriginType.Center, OriginType.Corner, OriginType.Edge, OriginType.Custom)

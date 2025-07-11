@@ -181,14 +181,6 @@ class WorldEditPanel3D(target: WorldViewSettings3D) extends WorldEditPanel(targe
     setFont(getFont.deriveFont(9.0f))
   }
 
-  private val dualView =
-    new BooleanEditor(
-      new PropertyAccessor(
-        target,
-        I18N.gui("3D.dualView"),
-        () => target.dualView,
-        _.foreach(target.dualView)))
-
   private val showTickCounter =
     new BooleanEditor(
       new PropertyAccessor(
@@ -350,10 +342,6 @@ class WorldEditPanel3D(target: WorldViewSettings3D) extends WorldEditPanel(targe
       c.insets = new Insets(0, 6, 6, 6)
 
       add(wireframeLabel, c)
-
-      c.insets = new Insets(0, 6, 3, 6)
-
-      add(dualView, c)
     }
 
     val modelPanel = new JPanel(new GridBagLayout) with Transparent {
@@ -387,7 +375,7 @@ class WorldEditPanel3D(target: WorldViewSettings3D) extends WorldEditPanel(targe
 
   override def propertyEditors: Seq[PropertyEditor[?]] =
     Seq(minPxcor, maxPxcor, minPycor, maxPycor, minPzcor, maxPzcor, wrappingX, wrappingY, wrappingZ, patchSize,
-        fontSize, frameRate, smooth, wireframe, dualView, showTickCounter, tickCounterLabel)
+        fontSize, frameRate, smooth, wireframe, showTickCounter, tickCounterLabel)
 
   override def editors: Seq[IntegerEditor] =
     Seq(minPxcor, maxPxcor, minPycor, maxPycor, minPzcor, maxPzcor)

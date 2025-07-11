@@ -87,7 +87,7 @@ class InterfaceTab(workspace: GUIWorkspace,
   val speedSlider = new SpeedSliderPanel(workspace, workspace.viewWidget.tickCounter)
 
   private val viewUpdatePanel = new ViewUpdatePanel(workspace, speedSlider, workspace.viewWidget.displaySwitch,
-                                                    workspace.viewWidget.tickCounter)
+                                                    workspace.viewWidget.tickCounter, false)
 
   private val splitPane = new SplitPane(scrollPane, commandCenter, Some(commandCenterToggleAction))
 

@@ -22,6 +22,7 @@ window.CompileMoreSource - org.nlogo.api.JobOwner owner
 window.Compiled - org.nlogo.api.SourceOwner sourceOwner - org.nlogo.core.Program program - org.nlogo.nvm.Procedure procedure - org.nlogo.core.CompilerException error
 window.Dirty - scala.Option<String> path
 window.EditWidget - org.nlogo.window.Editable widget
+window.EditView3D - org.nlogo.window.WorldViewSettings settings
 window.Enable2D - boolean enabled
 window.ExportPlot - org.nlogo.window.PlotWidgetExport plotExport - String exportFilename - Runnable onCompletion
 window.ExportWorld - java.io.PrintWriter writer

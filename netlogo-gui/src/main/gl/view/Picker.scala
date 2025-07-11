@@ -13,6 +13,7 @@ import org.nlogo.core.AgentKind
 import org.nlogo.gl.render.PickListener
 import org.nlogo.swing.{ Menu, MenuItem, WrappingPopupMenu }
 import org.nlogo.theme.InterfaceColors
+import org.nlogo.window.Events.EditView3DEvent
 
 class Picker(view: View) extends PickListener with ActionListener {
 
@@ -21,9 +22,7 @@ class Picker(view: View) extends PickListener with ActionListener {
 
     menu.add(new MenuItem(new AbstractAction("Edit...") {
       def actionPerformed(e: ActionEvent): Unit = {
-        new org.nlogo.window.Events.EditWidgetEvent(
-          view.viewManager.workspace.viewWidget.settings)
-        .raise(view)
+        new EditView3DEvent(view.viewManager.workspace.viewWidget.settings).raise(view)
       }
     }))
 

@@ -12,7 +12,7 @@ import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.Events.LoadEndEvent
 
 class ViewUpdatePanel(workspace: GUIWorkspace, speedSlider: SpeedSliderPanel, displaySwitch: JCheckBox,
-                      tickCounter: TickCounterLabel)
+                      tickCounter: TickCounterLabel, is3D: Boolean)
   extends JPanel(new GridBagLayout) with Transparent with LoadEndEvent.Handler with ThemeSync {
 
   implicit val prefix: org.nlogo.core.I18N.Prefix = Prefix("tabs.run")
@@ -90,7 +90,11 @@ class ViewUpdatePanel(workspace: GUIWorkspace, speedSlider: SpeedSliderPanel, di
     extends AbstractAction(I18N.gui("settingsButton")) {
     putValue(Action.SHORT_DESCRIPTION, I18N.gui("settingsButton.tooltip"))
     def actionPerformed(e: ActionEvent): Unit = {
-      new Events.EditWidgetEvent(settings).raise(e.getSource)
+      if (is3D) {
+        new Events.EditView3DEvent(settings).raise(e.getSource)
+      } else {
+        new Events.EditWidgetEvent(settings).raise(e.getSource)
+      }
     }
   }
 }

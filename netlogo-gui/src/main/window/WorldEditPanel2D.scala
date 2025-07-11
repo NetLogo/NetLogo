@@ -10,7 +10,7 @@ import org.nlogo.core.I18N
 import org.nlogo.swing.Transparent
 import org.nlogo.theme.InterfaceColors
 
-class WorldEditPanel2D(target: WorldViewSettings2D) extends WorldEditPanel(target) {
+class WorldEditPanel2D(target: WorldViewSettings2D, enableDualView: Boolean) extends WorldEditPanel(target) {
   private implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("edit.viewSettings")
 
   private val locationLabel = new JLabel(I18N.gui("origin.location"))
@@ -120,6 +120,14 @@ class WorldEditPanel2D(target: WorldViewSettings2D) extends WorldEditPanel(targe
   private val frameRateLabel = new JLabel(I18N.gui("2D.frameRate.info")) {
     setFont(getFont.deriveFont(9.0f))
   }
+
+  private val dualView =
+    new BooleanEditor(
+      new PropertyAccessor(
+        target,
+        I18N.gui("3D.dualView"),
+        () => target.dualView,
+        _.foreach(target.dualView)))
 
   private val showTickCounter =
     new BooleanEditor(
@@ -267,6 +275,13 @@ class WorldEditPanel2D(target: WorldViewSettings2D) extends WorldEditPanel(targe
       c.insets = new Insets(0, 6, 6, 6)
 
       add(frameRateLabel, c)
+
+      if (enableDualView) {
+        c.gridy = 4
+        c.insets = new Insets(0, 6, 3, 6)
+
+        add(dualView, c)
+      }
     }
 
     val modelPanel = new JPanel(new GridBagLayout) with Transparent {
@@ -299,8 +314,8 @@ class WorldEditPanel2D(target: WorldViewSettings2D) extends WorldEditPanel(targe
   }
 
   override def propertyEditors: Seq[PropertyEditor[?]] =
-    Seq(minPxcor, maxPxcor, minPycor, maxPycor, wrappingX, wrappingY, patchSize, fontSize, frameRate, showTickCounter,
-        tickCounterLabel)
+    Seq(minPxcor, maxPxcor, minPycor, maxPycor, wrappingX, wrappingY, patchSize, fontSize, frameRate, dualView,
+        showTickCounter, tickCounterLabel)
 
   override def editors: Seq[IntegerEditor] =
     Seq(minPxcor, maxPxcor, minPycor, maxPycor)

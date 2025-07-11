@@ -12,8 +12,8 @@ import org.nlogo.core.I18N
 import org.nlogo.swing.{ DropdownArrow, MenuItem, MouseUtils, PopupMenu, RoundedBorderPanel, ToolBarToggleButton,
                          Transparent, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
-import org.nlogo.window.{ Editable, EditDialogFactory, Events => WindowEvents, GUIWorkspace, InterfaceMode, JobWidget,
-                          Widget, WidgetInfo }
+import org.nlogo.window.{ Editable, EditDialog, EditDialogFactory, Events => WindowEvents, GUIWorkspace, InterfaceMode,
+                          JobWidget, Widget, WidgetInfo }
 
 import scala.collection.mutable.HashSet
 
@@ -29,6 +29,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
   with WindowEvents.WidgetForegroundedEvent.Handler
   with WindowEvents.WidgetRemovedEvent.Handler
   with WindowEvents.EditWidgetEvent.Handler
+  with WindowEvents.EditView3DEvent.Handler
   with WindowEvents.WidgetAddedEvent.Handler
   with ThemeSync {
 
@@ -142,6 +143,11 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
       wPanel.editWidgetFinished(target, dialogFactory.canceled(frame, target))
       suppress(false)
     }
+  }
+
+  def handle(e: WindowEvents.EditView3DEvent): Unit = {
+    wPanel.haltIfRunning()
+    wPanel.editWidgetFinished(e.settings, new EditDialog(frame, e.settings, e.settings.editPanel3D, true).canceled)
   }
 
   override def syncTheme(): Unit = {

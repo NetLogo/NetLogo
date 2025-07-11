@@ -18,7 +18,8 @@ class WorldViewSettings2D(workspace: GUIWorkspace, gw: ViewWidget, tickCounter: 
 
   protected val world = workspace.world
 
-  override def editPanel: EditPanel = new WorldEditPanel2D(this)
+  override def editPanel: EditPanel = new WorldEditPanel2D(this, false)
+  override def editPanel3D: EditPanel = new WorldEditPanel2D(this, true)
 
   override def cornerConfigs: Seq[OriginConfiguration] = {
     Seq(

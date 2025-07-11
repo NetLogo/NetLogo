@@ -14,7 +14,7 @@ class ViewControlStrip3D(workspace: GUIWorkspace, val tickCounter: TickCounterLa
 
   val speedSlider = new SpeedSliderPanel(workspace, tickCounter)
   val displaySwitch = new DisplaySwitch(workspace)
-  val controls = new ViewUpdatePanel(workspace, speedSlider, displaySwitch, tickCounter)
+  val controls = new ViewUpdatePanel(workspace, speedSlider, displaySwitch, tickCounter, true)
 
   add(new JPanel(new FlowLayout(FlowLayout.CENTER, 40, 0)) with Transparent {
     add(speedSlider)
