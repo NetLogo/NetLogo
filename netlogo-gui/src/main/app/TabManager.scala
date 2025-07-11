@@ -7,7 +7,7 @@ import java.awt.event.{ ActionEvent, KeyEvent, WindowAdapter, WindowEvent, Windo
 import java.awt.print.PrinterAbortException
 import java.io.{ File, PrintWriter }
 import java.nio.file.{ Path, Paths }
-import javax.swing.{ AbstractAction, Action, JComponent, JFrame }
+import javax.swing.{ AbstractAction, JComponent, JFrame }
 
 import org.nlogo.api.Exceptions
 import org.nlogo.app.codetab.{ CodeTab, ExternalFileManager, MainCodeTab, TemporaryCodeTab }
@@ -59,7 +59,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
 
   private var watcherThread: FileWatcherThread = null
 
-  private var tabActions: Seq[Action] = TabsMenu.tabActions(this)
+  private var tabActions: Seq[UserAction.MenuAction] = TabsMenu.tabActions(this)
 
   private var newFileNumber = 1
 
@@ -162,7 +162,9 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
   smartTabbingEnabled = NetLogoPreferences.getBoolean("indentAutomatically", true)
   lineNumbersVisible = NetLogoPreferences.getBoolean("editorLineNumbers", true)
 
-  def init(fileManager: FileManager, dirtyMonitor: DirtyMonitor, menuBar: MainMenuBar, actions: Seq[Action]): Unit = {
+  def init(fileManager: FileManager, dirtyMonitor: DirtyMonitor, menuBar: MainMenuBar,
+           actions: Seq[UserAction.MenuAction]): Unit = {
+
     this.fileManager = fileManager
     this.dirtyMonitor = dirtyMonitor
     this.menuBar = menuBar
@@ -271,7 +273,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
       }
   }
 
-  def permanentMenuActions: Seq[Action] =
+  def permanentMenuActions: Seq[UserAction.MenuAction] =
     mainCodeTab.permanentMenuActions ++ interfaceTab.permanentMenuActions ++ interfaceTab.activeMenuActions ++
       fileManager.saveModelActions(workspace.getFrame) :+ printAction
 
@@ -295,12 +297,12 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     tabActions.foreach(offerAction)
   }
 
-  def offerAction(action: Action): Unit = {
+  def offerAction(action: UserAction.MenuAction): Unit = {
     menuBar.offerAction(action)
     separateTabsWindow.menuBar.offerAction(action)
   }
 
-  def revokeAction(action: Action): Unit = {
+  def revokeAction(action: UserAction.MenuAction): Unit = {
     menuBar.revokeAction(action)
     separateTabsWindow.menuBar.revokeAction(action)
   }

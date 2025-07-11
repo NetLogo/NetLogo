@@ -3,12 +3,11 @@
 package org.nlogo.app
 
 import java.awt.Component
-import javax.swing.Action
 
 import org.nlogo.core.I18N
 import org.nlogo.editor.EditorMenu
 import org.nlogo.swing.{ MenuBar, UserAction },
-  UserAction.{ ActionCategoryKey, EditCategory, FileCategory, HelpCategory, TabsCategory, ToolsCategory }
+  UserAction.{ ActionCategoryKey, EditCategory, FileCategory, HelpCategory, MenuAction, TabsCategory, ToolsCategory }
 
 class MainMenuBar(isApplicationWide: Boolean) extends MenuBar with EditorMenu with UserAction.Menu {
   val editMenu  = new EditMenu
@@ -42,7 +41,7 @@ class MainMenuBar(isApplicationWide: Boolean) extends MenuBar with EditorMenu wi
     TabsCategory  -> tabsMenu
   )
 
-  def offerAction(action: javax.swing.Action): Unit = {
+  def offerAction(action: MenuAction): Unit = {
     val categoryKey = action.getValue(ActionCategoryKey) match {
       case s: String => s
       case _ => ""
@@ -50,7 +49,7 @@ class MainMenuBar(isApplicationWide: Boolean) extends MenuBar with EditorMenu wi
     categoryMenus.get(categoryKey).foreach(_.offerAction(action))
   }
 
-  def revokeAction(action: Action): Unit = {
+  def revokeAction(action: MenuAction): Unit = {
     val categoryKey = action.getValue(ActionCategoryKey) match {
       case s: String => s
       case _ => ""

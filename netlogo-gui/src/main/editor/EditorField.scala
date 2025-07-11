@@ -5,13 +5,15 @@ package org.nlogo.editor
 import javax.swing._
 import javax.swing.text.TextAction
 
+import org.nlogo.swing.UserAction.MenuAction
+
 class EditorField(
   columns: Int,
   font: java.awt.Font,
   enableFocusTraversalKeys: Boolean,
   colorizer: Colorizer,
-  actionMap: Map[KeyStroke, TextAction] = Map.empty[KeyStroke, TextAction],
-  contextActions: Seq[Action] = Seq())
+  actionMap: Map[KeyStroke, TextAction & MenuAction] = Map(),
+  contextActions: Seq[MenuAction] = Seq())
   extends EditorArea(
     EditorConfiguration.default(1, columns, colorizer)
     .withFont(font)

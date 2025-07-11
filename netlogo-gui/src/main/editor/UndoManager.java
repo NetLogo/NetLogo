@@ -8,6 +8,7 @@ import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.CompoundEdit;
 import javax.swing.undo.UndoableEdit;
 
+import org.nlogo.swing.UserAction;
 
 // some of this is cribbed from Sun's TextComponentDemo - ST 7/30/04
 
@@ -29,7 +30,7 @@ public class UndoManager extends javax.swing.undo.UndoManager
 
   private static RedoAction redoAction = new RedoAction();
 
-  public static javax.swing.Action redoAction() {
+  public static RedoAction redoAction() {
     return redoAction;
   }
 
@@ -158,10 +159,15 @@ public class UndoManager extends javax.swing.undo.UndoManager
     }
   }
 
-  static class UndoAction extends javax.swing.AbstractAction {
+  static class UndoAction extends javax.swing.AbstractAction implements UserAction.MenuAction {
 
     public UndoAction() {
       super("Undo");
+
+      category_$eq("org.nlogo.swing.EditCategory");
+      group_$eq("org.nlogo.swing.EditUndoGroup");
+      accelerator_$eq(org.nlogo.swing.UserAction.KeyBindings$.MODULE$.keystroke('Z', true, false, false));
+
       setEnabled(false);
     }
 
@@ -184,10 +190,15 @@ public class UndoManager extends javax.swing.undo.UndoManager
     }
   }
 
-  static class RedoAction extends javax.swing.AbstractAction {
+  static class RedoAction extends javax.swing.AbstractAction implements UserAction.MenuAction {
 
     public RedoAction() {
       super("Redo");
+
+      category_$eq("org.nlogo.swing.EditCategory");
+      group_$eq("org.nlogo.swing.EditUndoGroup");
+      accelerator_$eq(org.nlogo.swing.UserAction.KeyBindings$.MODULE$.keystroke('Y', true, false, false));
+
       setEnabled(false);
     }
 

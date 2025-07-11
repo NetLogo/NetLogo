@@ -4,7 +4,7 @@ package org.nlogo.app.common
 
 import java.awt.{ Adjustable, Font, Graphics }
 import java.awt.event.{InputEvent, KeyEvent}
-import javax.swing.{ Action, KeyStroke }
+import javax.swing.KeyStroke
 
 import org.nlogo.api.{ CompilerServices, Version }
 import org.nlogo.core.NetLogoPreferences
@@ -12,6 +12,7 @@ import org.nlogo.ide.{ AutoSuggestAction, CodeCompletionPopup, JumpToDeclaration
   NetLogoFoldParser, NetLogoTokenMakerFactory, ShiftActions, ShowUsageBox, ShowUsageBoxAction, ToggleComments }
 import org.nlogo.editor.{ AbstractEditorArea, AdvancedEditorArea, EditorConfiguration, EditorScrollPane }
 import org.nlogo.nvm.ExtensionManager
+import org.nlogo.swing.UserAction.MenuAction
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.DefaultEditorFactory
 
@@ -34,7 +35,7 @@ class EditorFactory(compiler: CompilerServices, extensionManager: ExtensionManag
   override def defaultConfiguration(rows: Int, cols: Int): EditorConfiguration = {
     val showUsageBox = new ShowUsageBox(colorizer)
     val shiftTabAction = new ShiftActions.LeftTab()
-    val actions = Seq[Action](
+    val actions = Seq[MenuAction](
       new ToggleComments(),
       new ShiftActions.Left(),
       new ShiftActions.Right(),

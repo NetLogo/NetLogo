@@ -15,7 +15,7 @@ object WorkspaceActions {
 
   val HaltGroup     = "org.nlogo.window.WorkspaceActions.Halt"
 
-  def apply(workspace: GUIWorkspace): Seq[Action] =
+  def apply(workspace: GUIWorkspace): Seq[MenuAction] =
     Seq(
       new HaltAction(workspace),
       new SimpleGUIWorkspaceAction(I18N.gui("globalsMonitor"), ToolsMonitorGroup, workspace, _.inspectAgent(AgentKind.Observer)),
@@ -26,7 +26,7 @@ object WorkspaceActions {
       new SimpleGUIWorkspaceAction(I18N.gui("closeDeadAgentMonitors"), ToolsMonitorGroup, workspace, _.stopInspectingDeadAgents()),
     ) ++ (if (Version.is3D) Seq() else Seq(new Open3DViewAction(workspace)))
 
-  def interfaceActions(workspace: GUIWorkspace, widgetPanel: AbstractWidgetPanel): Seq[Action] =
+  def interfaceActions(workspace: GUIWorkspace, widgetPanel: AbstractWidgetPanel): Seq[MenuAction] =
     Seq(new SnapToGridAction(workspace, widgetPanel))
 
   class GUIWorkspaceAction(name: String, workspace: GUIWorkspace) extends AbstractAction(name) with MenuAction {

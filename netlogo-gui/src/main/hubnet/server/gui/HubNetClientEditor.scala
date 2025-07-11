@@ -9,7 +9,7 @@ import javax.swing.{ AbstractAction, JFrame, ScrollPaneConstants }
 import org.nlogo.analytics.Analytics
 import org.nlogo.api.ModelType
 import org.nlogo.core.{ I18N, Widget => CoreWidget }
-import org.nlogo.swing.{ Menu, MenuBar, NetLogoIcon, OptionPane, ScrollPane, ToolBar }
+import org.nlogo.swing.{ Menu, MenuBar, NetLogoIcon, OptionPane, ScrollPane, ToolBar, UserAction }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ WidgetInfo, MenuBarFactory, InterfaceFactory, GUIWorkspace, AbstractWidgetPanel,
                           WidgetSizes }
@@ -130,7 +130,9 @@ class HubNetClientEditor(workspace: GUIWorkspace,
     offerAction(ConvertWidgetSizes)
   }
 
-  private object ConvertWidgetSizes extends AbstractAction(I18N.gui.get("menu.tools.convertWidgetSizes")) {
+  private object ConvertWidgetSizes extends AbstractAction(I18N.gui.get("menu.tools.convertWidgetSizes"))
+                                    with UserAction.MenuAction {
+
     override def actionPerformed(e: ActionEvent): Unit = {
       new OptionPane(HubNetClientEditor.this, I18N.gui.get("menu.tools.convertWidgetSizes"),
                      I18N.gui.get("menu.tools.convertWidgetSizes.prompt"),

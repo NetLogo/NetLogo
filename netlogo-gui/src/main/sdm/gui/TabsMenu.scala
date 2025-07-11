@@ -5,11 +5,12 @@ package org.nlogo.sdm.gui
 // TODO i18n lot of work needed here...
 
 import java.awt.event.ActionEvent
-import javax.swing.{ Action, AbstractAction, JTabbedPane }
-import org.nlogo.swing.UserAction._
+import javax.swing.{ AbstractAction, JTabbedPane }
+import org.nlogo.swing.{ Menu, UserAction },
+  UserAction.{ KeyBindings, MenuAction, TabsCategory }
 
 object TabsMenu {
-  def tabAction(tabs: JTabbedPane, index: Int): Action =
+  def tabAction(tabs: JTabbedPane, index: Int): MenuAction =
     new AbstractAction(tabs.getTitleAt(index)) with MenuAction {
       category    = TabsCategory
       rank        = index
@@ -19,11 +20,11 @@ object TabsMenu {
       }
     }
 
-  def tabActions(tabs: JTabbedPane): Seq[Action] =
+  def tabActions(tabs: JTabbedPane): Seq[MenuAction] =
     for (i <- 0 until tabs.getTabCount) yield tabAction(tabs, i)
 }
 
-class TabsMenu(name: String, initialActions: Seq[Action]) extends org.nlogo.swing.Menu(name) {
+class TabsMenu(name: String, initialActions: Seq[MenuAction]) extends Menu(name) {
   setMnemonic('A')
 
   initialActions.foreach(offerAction)

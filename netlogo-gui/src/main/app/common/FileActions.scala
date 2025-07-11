@@ -3,7 +3,6 @@
 package org.nlogo.app.common
 
 import java.awt.Component
-import javax.swing.Action
 
 import org.nlogo.awt.UserCancelException
 import org.nlogo.agent.ImportPatchColors
@@ -16,7 +15,7 @@ import org.nlogo.window.{ Events => WindowEvents, GUIWorkspace, PlotWidgetExport
 
 object FileActions {
 
-  def apply(workspace: GUIWorkspace, parent: Component): Seq[Action] = {
+  def apply(workspace: GUIWorkspace, parent: Component): Seq[MenuAction] = {
     val baseActions = Seq(
       new ExportWorldAction(workspace, parent),
       new ExportGraphicsAction(workspace, parent),

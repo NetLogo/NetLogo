@@ -6,7 +6,11 @@ import java.awt.event.ActionEvent
 import javax.swing.event.{ DocumentEvent, DocumentListener }
 import javax.swing.text.TextAction
 
-class AutoSuggestAction(name: String, codeCompletionPopup: CodeCompletionPopup) extends TextAction(name) {
+import org.nlogo.swing.UserAction.MenuAction
+
+class AutoSuggestAction(name: String, codeCompletionPopup: CodeCompletionPopup)
+  extends TextAction(name) with MenuAction {
+
   final val autoSuggestDocumentListener = new AutoSuggestDocumentListener(codeCompletionPopup)
 
   override def actionPerformed(e: ActionEvent): Unit = {

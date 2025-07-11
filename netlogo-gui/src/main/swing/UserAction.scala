@@ -4,7 +4,7 @@ package org.nlogo.swing
 
 import java.awt.Toolkit
 import java.awt.event.InputEvent
-import javax.swing.{ Action, KeyStroke }
+import javax.swing.{ AbstractAction, Action, KeyStroke }
 
 object UserAction {
   /* Key denoting in which menu an action ought to be included */
@@ -52,8 +52,8 @@ object UserAction {
   val DefaultRank  = Double.MaxValue
 
   trait Menu {
-    def offerAction(action: javax.swing.Action): Unit
-    def revokeAction(action: javax.swing.Action): Unit
+    def offerAction(action: MenuAction): Unit
+    def revokeAction(action: MenuAction): Unit
   }
 
   trait CheckBoxAction {
@@ -82,7 +82,7 @@ object UserAction {
     }
   }
 
-  trait MenuAction { this: Action =>
+  trait MenuAction extends AbstractAction {
     def accelerator: Option[KeyStroke] =
       getValue(Action.ACCELERATOR_KEY) match {
         case k: KeyStroke => Some(k)
@@ -91,6 +91,16 @@ object UserAction {
 
     def accelerator_=(k: KeyStroke): Unit = {
       putValue(Action.ACCELERATOR_KEY, k)
+    }
+
+    def mnemonic: Option[Int] =
+      getValue(Action.MNEMONIC_KEY) match {
+        case i: Integer => Some(i)
+        case _          => None
+      }
+
+    def mnemonic_=(i: Int): Unit = {
+      putValue(Action.MNEMONIC_KEY, i)
     }
 
     def category: Option[String] =

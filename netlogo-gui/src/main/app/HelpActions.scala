@@ -6,7 +6,7 @@ import java.awt.{ Component, Frame }
 import java.awt.event.{ ActionEvent, WindowAdapter, WindowEvent }
 import java.net.URI
 import java.nio.file.Path
-import javax.swing.{ Action, AbstractAction }
+import javax.swing.AbstractAction
 
 import org.nlogo.core.I18N
 import org.nlogo.api.Version
@@ -46,7 +46,7 @@ with MenuAction {
 }
 
 object HelpActions {
-  def apply: Seq[Action] = {
+  def apply: Seq[MenuAction] = {
     Seq(
     new LocalBrowseAction(I18N.gui.get("menu.help.netLogoUserManual"),
       docPath("index.html")),

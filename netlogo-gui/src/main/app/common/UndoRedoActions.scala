@@ -2,23 +2,10 @@
 
 package org.nlogo.app.common
 
-import javax.swing.Action
-
 import org.nlogo.editor.UndoManager
-import org.nlogo.swing.{ UserAction, WrappedAction }
+import org.nlogo.swing.UserAction.MenuAction
 
 trait UndoRedoActions {
-  lazy val undoAction: Action = {
-    new WrappedAction(UndoManager.undoAction,
-      UserAction.EditCategory,
-      UserAction.EditUndoGroup,
-      UserAction.KeyBindings.keystroke('Z', withMenu = true))
-  }
-
-  lazy val redoAction: Action = {
-    new WrappedAction(UndoManager.redoAction,
-      UserAction.EditCategory,
-      UserAction.EditUndoGroup,
-      UserAction.KeyBindings.keystroke('Y', withMenu = true))
-  }
+  lazy val undoAction: MenuAction = UndoManager.undoAction
+  lazy val redoAction: MenuAction = UndoManager.redoAction
 }

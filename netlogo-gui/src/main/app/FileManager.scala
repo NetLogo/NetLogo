@@ -6,7 +6,6 @@ import java.awt.{ Component, Container, FileDialog => AWTFileDialog, KeyboardFoc
 import java.io.{ File, IOException }
 import java.net.{ URI, URISyntaxException }
 import java.nio.file.Paths
-import javax.swing.Action
 
 import scala.util.{ Failure, Try }
 
@@ -484,7 +483,7 @@ class FileManager(workspace: AbstractWorkspaceScala,
 
   def currentModel: Model = modelSaver.currentModel
 
-  def actions: Seq[Action] = Seq(
+  def actions: Seq[MenuAction] = Seq(
     new NewAction(this, parent),
     new OpenAction(this, parent),
     new QuitAction(this, parent),
@@ -518,7 +517,7 @@ class FileManager(workspace: AbstractWorkspaceScala,
     Seq(saveAction(false), saveAction(true))
   }
 
-  def convertTabAction(t: TemporaryCodeTab): Action = {
+  def convertTabAction(t: TemporaryCodeTab): MenuAction = {
     val version =
       if (Version.is3D) "NetLogo 3D 5.3.1"
       else              "NetLogo 5.3.1"

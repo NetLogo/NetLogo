@@ -168,12 +168,12 @@ class Menu(text: String, var menuModel: MenuModel[Action, String]) extends JMenu
         new MenuItem(action, false)
     }
 
-  def revokeAction(action: Action): Unit = {
+  def revokeAction(action: MenuAction): Unit = {
     menuModel.removeElement(action)
     rebuildFromModel(menuModel)
   }
 
-  def offerAction(action: Action): Unit = {
+  def offerAction(action: MenuAction): Unit = {
     subcategoryItem(action) match {
       case Some((subcategoryKey, subcategoryGroup)) =>
         val branch = menuModel.createBranch(subcategoryKey, subcategoryGroup)

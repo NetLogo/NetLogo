@@ -8,6 +8,8 @@ import javax.swing.{ AbstractAction, SwingUtilities }
 import javax.swing.text.Document
 
 import org.nlogo.core.I18N
+import org.nlogo.swing.UserAction.MenuAction
+
 import RichDocument._
 
 trait QuickHelpAction {
@@ -29,7 +31,8 @@ trait QuickHelpAction {
 class MouseQuickHelpAction(val colorizer: Colorizer)
   extends AbstractAction(I18N.gui.get("tabs.code.rightclick.quickhelp"))
   with EditorAwareAction
-  with QuickHelpAction {
+  with QuickHelpAction
+  with MenuAction {
 
   override def actionPerformed(e: ActionEvent): Unit = {
     doHelp(editor.getDocument, documentOffset, SwingUtilities.getWindowAncestor(editor))

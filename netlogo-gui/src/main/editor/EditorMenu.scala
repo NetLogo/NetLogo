@@ -2,8 +2,8 @@
 
 package org.nlogo.editor
 
-import javax.swing.Action
+import org.nlogo.swing.UserAction.MenuAction
 
 trait EditorMenu {
-  def offerAction(action: Action): Unit
+  def offerAction(action: MenuAction): Unit
 }

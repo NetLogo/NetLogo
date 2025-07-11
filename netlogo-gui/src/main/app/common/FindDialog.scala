@@ -12,13 +12,14 @@ import javax.swing.text.{ BadLocationException, JTextComponent, TextAction }
 import org.nlogo.core.I18N
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.swing.{ ButtonPanel, CheckBox, DialogButton, NonemptyTextFieldActionEnabler,
-                         NonemptyTextFieldButtonEnabler, TextField, TextFieldBox, Transparent, UserAction, Utils }
+                         NonemptyTextFieldButtonEnabler, TextField, TextFieldBox, Transparent, UserAction, Utils },
+  UserAction.{ EditCategory, EditFindGroup, KeyBindings, MenuAction }
 
 object FindDialog extends ThemeSync {
-  class FindAction extends TextAction(I18N.gui.get("menu.edit.find")) {
-    putValue(UserAction.ActionCategoryKey, UserAction.EditCategory)
-    putValue(UserAction.ActionGroupKey, UserAction.EditFindGroup)
-    putValue(Action.ACCELERATOR_KEY, UserAction.KeyBindings.keystroke('F', withMenu = true))
+  class FindAction extends TextAction(I18N.gui.get("menu.edit.find")) with MenuAction {
+    category = EditCategory
+    group = EditFindGroup
+    accelerator = KeyBindings.keystroke('F', withMenu = true)
 
     setEnabled(false)
 
@@ -48,10 +49,10 @@ object FindDialog extends ThemeSync {
     }
   }
 
-  class FindNextAction extends TextAction(I18N.gui.get("menu.edit.findNext")) {
-    putValue(UserAction.ActionCategoryKey, UserAction.EditCategory)
-    putValue(UserAction.ActionGroupKey, UserAction.EditFindGroup)
-    putValue(Action.ACCELERATOR_KEY, UserAction.KeyBindings.keystroke('G', withMenu = true))
+  class FindNextAction extends TextAction(I18N.gui.get("menu.edit.findNext")) with MenuAction {
+    category = EditCategory
+    group = EditFindGroup
+    accelerator = KeyBindings.keystroke('G', withMenu = true)
 
     setEnabled(false)
 
@@ -62,9 +63,9 @@ object FindDialog extends ThemeSync {
     }
   }
 
-  class FindActionCode extends TextAction(I18N.gui.get("menu.edit.find")) {
-    putValue(UserAction.ActionCategoryKey, UserAction.EditCategory)
-    putValue(UserAction.ActionGroupKey, UserAction.EditFindGroup)
+  class FindActionCode extends TextAction(I18N.gui.get("menu.edit.find")) with MenuAction {
+    category = EditCategory
+    group = EditFindGroup
 
     setEnabled(false)
 
@@ -94,10 +95,10 @@ object FindDialog extends ThemeSync {
     }
   }
 
-  class FindNextActionCode extends TextAction(I18N.gui.get("menu.edit.findNext")) {
-    putValue(UserAction.ActionCategoryKey, UserAction.EditCategory)
-    putValue(UserAction.ActionGroupKey, UserAction.EditFindGroup)
-    putValue(Action.ACCELERATOR_KEY, UserAction.KeyBindings.keystroke('G', withMenu = true))
+  class FindNextActionCode extends TextAction(I18N.gui.get("menu.edit.findNext")) with MenuAction {
+    category = EditCategory
+    group = EditFindGroup
+    accelerator = KeyBindings.keystroke('G', withMenu = true)
 
     setEnabled(false)
 

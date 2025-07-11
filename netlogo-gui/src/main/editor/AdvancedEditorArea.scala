@@ -10,13 +10,14 @@ import javax.swing.text.EditorKit
 import org.fife.ui.rtextarea.RTextArea
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea
 
-import org.nlogo.swing.{ Menu, MenuItem, PopupMenu }
+import org.nlogo.swing.{ Menu, MenuItem, PopupMenu, UserAction, WrappedAction },
+  UserAction.{ EditCategory, EditUndoGroup, KeyBindings }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 class AdvancedEditorArea(val configuration: EditorConfiguration)
   extends RSyntaxTextArea(configuration.rows, configuration.columns) with AbstractEditorArea {
 
-  var indenter = Option.empty[Indenter]
+  var indenter: Option[Indenter] = None
 
   // the language style is configured primarily in app.common.EditorFactory
   setSyntaxEditingStyle(if (configuration.is3Dlanguage) "netlogo3d" else "netlogo")
@@ -148,8 +149,11 @@ class AdvancedEditorArea(val configuration: EditorConfiguration)
     }
   })
 
-  def undoAction = RTextArea.getAction(RTextArea.UNDO_ACTION)
-  def redoAction = RTextArea.getAction(RTextArea.REDO_ACTION)
+  def undoAction = new WrappedAction(RTextArea.getAction(RTextArea.UNDO_ACTION), EditCategory, EditUndoGroup,
+                                     KeyBindings.keystroke('Z', withMenu = true))
+
+  def redoAction = new WrappedAction(RTextArea.getAction(RTextArea.REDO_ACTION), EditCategory, EditUndoGroup,
+                                     KeyBindings.keystroke('Y', withMenu = true))
 
   // These methods are used only by the input widget, which uses editor.EditorArea
   // exclusively at present. - RG 10/28/16

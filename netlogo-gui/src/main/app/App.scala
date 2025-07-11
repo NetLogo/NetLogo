@@ -25,7 +25,8 @@ import org.nlogo.core.{ AgentKind, CompilerException, ExternalResource, I18N, Mo
 import org.nlogo.log.{ JsonFileLogger, LogEvents, LogManager }
 import org.nlogo.nvm.{ PresentationCompilerInterface, Workspace }
 import org.nlogo.shape.{ LinkShapesManagerInterface, ShapesManagerInterface, TurtleShapesManagerInterface }
-import org.nlogo.swing.{ DropdownOptionPane, InputOptionPane, OptionPane, SetSystemLookAndFeel, Utils }
+import org.nlogo.swing.{ DropdownOptionPane, InputOptionPane, OptionPane, SetSystemLookAndFeel, UserAction, Utils },
+  UserAction.{ ActionCategoryKey, EditCategory, FileCategory, HelpCategory, MenuAction, ToolsCategory }
 import org.nlogo.theme.{ ClassicTheme, DarkTheme, InterfaceColors, LightTheme, ThemeSync }
 import org.nlogo.util.{ NullAppHandler, Pico }
 import org.nlogo.window._
@@ -622,7 +623,6 @@ class App extends org.nlogo.window.Event.LinkChild
   // bar.  It's needed especially for OS X since the screen menu bar
   // doesn't get shared across windows.  -- AZS 6/17/2005
   private class MenuBarFactory extends org.nlogo.window.MenuBarFactory {
-    import org.nlogo.swing.UserAction, UserAction.{ ActionCategoryKey, EditCategory, FileCategory, HelpCategory, ToolsCategory }
     def actions = allActions ++ _tabManager.permanentMenuActions
 
     def createMenu(newMenu: org.nlogo.swing.Menu, category: String): JMenu = {
@@ -739,15 +739,15 @@ class App extends org.nlogo.window.Event.LinkChild
                            , updateSource, () => workspace.getExtensionPathMappings())
   }
 
-  lazy val allActions: Seq[javax.swing.Action] = {
+  lazy val allActions: Seq[MenuAction] = {
     // If we're running in the mac wrapper, it takes care of displaying these
     // items for us - RG 2/26/18
     val osSpecificActions =
       if (runningInMacWrapper) Seq() else Seq(openPreferencesDialog, openAboutDialog)
 
-    val workspaceActions = org.nlogo.window.WorkspaceActions(workspace)
+    val workspaceActions = WorkspaceActions(workspace)
 
-    val generalActions = Seq[javax.swing.Action](
+    val generalActions: Seq[MenuAction] = Seq(
       openLibrariesDialog,
       openRGBAColorDialog,
       new ShowShapeManager("turtleShapesEditor", turtleShapesManager),

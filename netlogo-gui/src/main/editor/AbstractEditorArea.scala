@@ -2,8 +2,10 @@
 
 package org.nlogo.editor
 
-import javax.swing.{ Action, JViewport, SwingUtilities }
+import javax.swing.{ JViewport, SwingUtilities }
 import javax.swing.text.{ EditorKit, JTextComponent }
+
+import org.nlogo.swing.UserAction.MenuAction
 
 trait AbstractEditorArea extends JTextComponent {
   def configuration: EditorConfiguration
@@ -19,8 +21,8 @@ trait AbstractEditorArea extends JTextComponent {
 
   def resetUndoHistory(): Unit
 
-  def undoAction: Action
-  def redoAction: Action
+  def undoAction: MenuAction
+  def redoAction: MenuAction
 
   def containingViewport: Option[JViewport] = {
     SwingUtilities.getAncestorOfClass(classOf[JViewport], this) match {

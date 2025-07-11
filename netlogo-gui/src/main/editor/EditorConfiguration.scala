@@ -11,7 +11,7 @@ import javax.swing.text.{ DefaultEditorKit, TextAction }
 import org.fife.ui.rtextarea.RTextAreaEditorKit
 
 import org.nlogo.editor.KeyBinding._
-import org.nlogo.swing.TextActions
+import org.nlogo.swing.{ TextActions, UserAction }
 
 object EditorConfiguration {
   private def os(s: String) =
@@ -30,12 +30,12 @@ object EditorConfiguration {
   private val emptyListener =
     new TextListener() { override def textValueChanged(e: TextEvent): Unit = { } }
 
-  def defaultContextActions(colorizer: Colorizer): Seq[Action] =
+  def defaultContextActions(colorizer: Colorizer): Seq[UserAction.MenuAction] =
     Seq(new MouseQuickHelpAction(colorizer))
 
   private val emptyMenu =
     new EditorMenu {
-      def offerAction(action: Action): Unit = {}
+      def offerAction(action: UserAction.MenuAction): Unit = {}
     }
 
   def default(rows: Int, columns: Int, colorizer: Colorizer) =
@@ -50,11 +50,11 @@ case class EditorConfiguration(
   colorizer:            Colorizer,
   /* additionalActions are added to the input map and added to
    * top-level menus if appropriate */
-  additionalActions:    Map[KeyStroke, TextAction],
+  additionalActions:    Map[KeyStroke, TextAction & UserAction.MenuAction],
   /* contextActions are presented in the right-click context menu */
-  contextActions:       Seq[Action],
+  contextActions:       Seq[UserAction.MenuAction],
   /* menuActions are made available to top-level menus, but not otherwise available */
-  menuActions:          Seq[Action],
+  menuActions:          Seq[UserAction.MenuAction],
   enableFocusTraversal: Boolean,
   highlightCurrentLine: Boolean,
   showLineNumbers:      Boolean,
@@ -71,15 +71,15 @@ case class EditorConfiguration(
     copy(highlightCurrentLine = isHighlighted)
   def withLineNumbers(show: Boolean) =
     copy(showLineNumbers = show)
-  def withContextActions(actions: Seq[Action]) =
+  def withContextActions(actions: Seq[UserAction.MenuAction]) =
     copy(contextActions = contextActions ++ actions)
-  def withMenuActions(actions: Seq[Action]) =
+  def withMenuActions(actions: Seq[UserAction.MenuAction]) =
     copy(menuActions = menuActions ++ actions)
   def forThreeDLanguage(is3D: Boolean) =
     copy(is3Dlanguage = is3D)
-  def addKeymap(key: KeyStroke, action: TextAction) =
+  def addKeymap(key: KeyStroke, action: TextAction & UserAction.MenuAction) =
     copy(additionalActions = additionalActions + (key -> action))
-  def withKeymap(keymap: Map[KeyStroke, TextAction]) =
+  def withKeymap(keymap: Map[KeyStroke, TextAction & UserAction.MenuAction]) =
     copy(additionalActions = keymap)
   def withMenu(newMenu: EditorMenu) =
     copy(menu = newMenu)
@@ -171,7 +171,7 @@ case class EditorConfiguration(
     removeQuote(editor.getInputMap)
   }
 
-  def permanentActions: Seq[Action] = additionalActions.values.toSeq ++ menuActions
+  def permanentActions: Seq[UserAction.MenuAction] = additionalActions.values.toSeq ++ menuActions
 
   def editorOnlyActions: Seq[Action] = Seq()
 }

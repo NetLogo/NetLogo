@@ -7,7 +7,7 @@ import java.awt.event.{ ActionEvent, FocusEvent, FocusListener, TextEvent, TextL
 import java.awt.print.PageFormat
 import java.io.IOException
 import java.net.MalformedURLException
-import javax.swing.{ AbstractAction, Action, JComponent, JPanel }
+import javax.swing.{ AbstractAction, JComponent, JPanel }
 import javax.swing.border.EmptyBorder
 
 import org.fife.ui.rsyntaxtextarea.{ Style, SyntaxScheme, TokenTypes }
@@ -17,7 +17,7 @@ import org.nlogo.app.common.{CodeToHtml, EditorFactory, FindDialog, MenuTab, Tab
 import org.nlogo.core.{ AgentKind, CompilerException, I18N }
 import org.nlogo.editor.{ AdvancedEditorArea, DumbIndenter }
 import org.nlogo.ide.FocusedOnlyAction
-import org.nlogo.swing.{ Button, CheckBox, PrinterManager, ToolBar, ToolBarActionButton, UserAction, WrappedAction,
+import org.nlogo.swing.{ Button, CheckBox, PrinterManager, ToolBar, ToolBarActionButton, UserAction,
                          Printable => NlogoPrintable, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ CommentableError, ProceduresInterface, Zoomable, Events => WindowEvents }
@@ -93,19 +93,8 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
 
   private val includedFilesMenu = new IncludedFilesMenu(getIncludesTable, tabs)
 
-  lazy val undoAction: Action = {
-    new WrappedAction(text.undoAction,
-      UserAction.EditCategory,
-      UserAction.EditUndoGroup,
-      UserAction.KeyBindings.keystroke('Z', withMenu = true))
-  }
-
-  lazy val redoAction: Action = {
-    new WrappedAction(text.redoAction,
-      UserAction.EditCategory,
-      UserAction.EditUndoGroup,
-      UserAction.KeyBindings.keystroke('Y', withMenu = true))
-  }
+  lazy val undoAction: UserAction.MenuAction = text.undoAction
+  lazy val redoAction: UserAction.MenuAction = text.redoAction
 
   override def zoomTarget = text
 

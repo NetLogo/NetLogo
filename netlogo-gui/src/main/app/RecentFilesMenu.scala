@@ -5,7 +5,7 @@ package org.nlogo.app
 import java.awt.Frame
 import java.awt.event.ActionEvent
 import java.io.{ File, FileNotFoundException, IOException }
-import javax.swing.{ AbstractAction, Action }
+import javax.swing.AbstractAction
 
 import org.nlogo.api.{ Exceptions, ModelType, Version }
 import org.nlogo.awt.UserCancelException
@@ -127,8 +127,8 @@ class RecentFilesMenu(frame: AppFrame, fileManager: FileManager)
   with BeforeLoadEvent.Handler {
 
   val recentFiles = new RecentFiles
-  private var currentActions = Seq.empty[Action]
-  private var menu = Option.empty[ActionMenu]
+  private var currentActions = Seq[MenuAction]()
+  private var menu: Option[ActionMenu] = None
 
   def setMenu(newMenu: ActionMenu): Unit = {
     menu.foreach(oldMenu => currentActions.foreach(oldMenu.revokeAction))
@@ -154,7 +154,7 @@ class RecentFilesMenu(frame: AppFrame, fileManager: FileManager)
     }
   }
 
-  def computeActions: Seq[Action] = {
+  def computeActions: Seq[MenuAction] = {
     val fileActions =
     if (recentFiles.models.isEmpty) Seq(new EmptyAction)
     else (for ((modelEntry, i) <- recentFiles.models.zipWithIndex)
