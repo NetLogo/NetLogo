@@ -2,7 +2,7 @@
 
 package org.nlogo.app.interfacetab
 
-import java.awt.{ Color => AwtColor, Component, Dimension, Graphics, MouseInfo, Point, Rectangle }
+import java.awt.{ Color => AwtColor, Component, Cursor, Dimension, Graphics, MouseInfo, Point, Rectangle }
 import java.awt.event.{ ActionEvent, FocusEvent, FocusAdapter, InputEvent, KeyAdapter, KeyEvent, KeyListener,
                         MouseAdapter, MouseEvent, MouseListener, MouseMotionAdapter, MouseMotionListener }
 import javax.swing.{ AbstractAction, JComponent, JLayeredPane, SwingUtilities }
@@ -347,13 +347,31 @@ class WidgetPanel(val workspace: GUIWorkspace)
             }
         })
 
-      case InterfaceMode.Select | InterfaceMode.Edit =>
-        val topWrapper = wrapperAtPoint(e.getPoint).getOrElse(null)
+      case InterfaceMode.Select =>
+        val topWrapper = wrapperAtPoint(e.getPoint).orNull
+
+        getWrappers.foreach { wrapper =>
+          if (wrapper == topWrapper) {
+            wrapper.setHighlight(true)
+
+            e.translatePoint(-wrapper.getX, -wrapper.getY)
+
+            wrapper.mouseMoved(e)
+          } else {
+            wrapper.setHighlight(false)
+          }
+        }
+
+        if (topWrapper == null)
+          setCursor(Cursor.getDefaultCursor)
+
+      case InterfaceMode.Edit =>
+        val topWrapper = wrapperAtPoint(e.getPoint).orNull
 
         getWrappers.foreach(wrapper => wrapper.setHighlight(wrapper == topWrapper))
 
       case InterfaceMode.Delete =>
-        val topWrapper = wrapperAtPoint(e.getPoint).filter(_.widget.deleteable).getOrElse(null)
+        val topWrapper = wrapperAtPoint(e.getPoint).filter(_.widget.deleteable).orNull
 
         getWrappers.foreach(wrapper => wrapper.setHighlight(wrapper == topWrapper))
 

@@ -2,7 +2,7 @@
 
 package org.nlogo.app.interfacetab
 
-import java.awt.{ Dimension, Graphics, Point, Rectangle }
+import java.awt.{ Cursor, Dimension, Graphics, Point, Rectangle }
 import java.awt.event.{ ActionEvent, InputEvent, MouseAdapter, MouseEvent, MouseListener,  MouseMotionAdapter,
                         MouseMotionListener }
 import javax.swing.{ AbstractAction, JComponent, JLayeredPane, JPanel }
@@ -347,7 +347,80 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
     }
   }
 
-  def mouseMoved(e: MouseEvent): Unit = {}
+  // GrabBuffer is added to BorderSize again in all of these checks because for positioning and rendering
+  // purposes, BorderSize only contains the outer portion of GrabBuffer, but when checking for mouse clicks
+  // we also want to have some GrabBuffer on the inside over top of the widget itself (Isaac B 7/11/25)
+  private def getHandle(x: Int, y: Int): Option[MouseMode] = {
+    if (x < BorderSize + GrabBuffer) {
+      if (y < BorderSize + GrabBuffer) {
+        Some(MouseMode.NW)
+      } else if (y > getHeight - BorderSize - GrabBuffer) {
+        Some(MouseMode.SW)
+      } else if (y <= (getHeight + HandleSize) / 2 + GrabBuffer && y >= (getHeight - HandleSize) / 2 - GrabBuffer) {
+        Some(MouseMode.W)
+      } else {
+        None
+      }
+    } else if (x > getWidth - BorderSize - GrabBuffer) {
+      if (y < BorderSize + GrabBuffer) {
+        Some(MouseMode.NE)
+      } else if (y > getHeight - BorderSize - GrabBuffer) {
+        Some(MouseMode.SE)
+      } else if (y <= (getHeight + HandleSize) / 2 + GrabBuffer && y >= (getHeight - HandleSize) / 2 - GrabBuffer) {
+        Some(MouseMode.E)
+      } else {
+        None
+      }
+    } else if (y > getHeight - BorderSize - GrabBuffer) {
+      if (x <= (getWidth + HandleSize) / 2 + GrabBuffer && x >= (getWidth - HandleSize) / 2 - GrabBuffer) {
+        Some(MouseMode.S)
+      } else {
+        None
+      }
+    } else if (y < BorderSize + GrabBuffer) {
+      if (x <= (getWidth + HandleSize) / 2 + GrabBuffer && x >= (getWidth - HandleSize) / 2 - GrabBuffer) {
+        Some(MouseMode.N)
+      } else {
+        None
+      }
+    } else {
+      None
+    }
+  }
+
+  def mouseMoved(e: MouseEvent): Unit = {
+    interfacePanel.setCursor(
+      getHandle(e.getX, e.getY) match {
+        case Some(MouseMode.N) =>
+          Cursor.getPredefinedCursor(Cursor.N_RESIZE_CURSOR)
+
+        case Some(MouseMode.NE) =>
+          Cursor.getPredefinedCursor(Cursor.NE_RESIZE_CURSOR)
+
+        case Some(MouseMode.E) =>
+          Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR)
+
+        case Some(MouseMode.SE) =>
+          Cursor.getPredefinedCursor(Cursor.SE_RESIZE_CURSOR)
+
+        case Some(MouseMode.S) =>
+          Cursor.getPredefinedCursor(Cursor.S_RESIZE_CURSOR)
+
+        case Some(MouseMode.SW) =>
+          Cursor.getPredefinedCursor(Cursor.SW_RESIZE_CURSOR)
+
+        case Some(MouseMode.W) =>
+          Cursor.getPredefinedCursor(Cursor.W_RESIZE_CURSOR)
+
+        case Some(MouseMode.NW) =>
+          Cursor.getPredefinedCursor(Cursor.NW_RESIZE_CURSOR)
+
+        case _ =>
+          Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR)
+      }
+    )
+  }
+
   def mouseClicked(e: MouseEvent): Unit = {}
   def mouseEntered(e: MouseEvent): Unit = {}
   def mouseExited(e: MouseEvent): Unit = {}
@@ -378,36 +451,7 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
     startPressX = p.x
     startPressY = p.y
 
-    mouseMode = MouseMode.DRAG
-
-    // GrabBuffer is added to BorderSize again in all of these checks because for positioning and rendering
-    // purposes, BorderSize only contains the outer portion of GrabBuffer, but when checking for mouse clicks
-    // we also want to have some GrabBuffer on the inside over top of the widget itself (Isaac B 7/11/25)
-    if (x < BorderSize + GrabBuffer) {
-      if (y < BorderSize + GrabBuffer) {
-        mouseMode = MouseMode.NW
-      } else if (y > getHeight - BorderSize - GrabBuffer) {
-        mouseMode = MouseMode.SW
-      } else if (y <= (getHeight + HandleSize) / 2 + GrabBuffer && y >= (getHeight - HandleSize) / 2 - GrabBuffer) {
-        mouseMode = MouseMode.W
-      }
-    } else if (x > getWidth - BorderSize - GrabBuffer) {
-      if (y < BorderSize + GrabBuffer) {
-        mouseMode = MouseMode.NE
-      } else if (y > getHeight - BorderSize - GrabBuffer) {
-        mouseMode = MouseMode.SE
-      } else if (y <= (getHeight + HandleSize) / 2 + GrabBuffer && y >= (getHeight - HandleSize) / 2 - GrabBuffer) {
-        mouseMode = MouseMode.E
-      }
-    } else if (y > getHeight - BorderSize - GrabBuffer) {
-      if (x <= (getWidth + HandleSize) / 2 + GrabBuffer && x >= (getWidth - HandleSize) / 2 - GrabBuffer) {
-        mouseMode = MouseMode.S
-      }
-    } else if (y < BorderSize + GrabBuffer) {
-      if (x <= (getWidth + HandleSize) / 2 + GrabBuffer && x >= (getWidth - HandleSize) / 2 - GrabBuffer) {
-        mouseMode = MouseMode.N
-      }
-    }
+    mouseMode = getHandle(x, y).getOrElse(MouseMode.DRAG)
 
     if (mouseMode == MouseMode.DRAG) {
       interfacePanel.aboutToDragSelectedWidgets(this, startPressX, startPressY)
