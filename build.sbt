@@ -200,8 +200,6 @@ lazy val netlogo = project.in(file("netlogo-gui")).
         "org.jogamp.jogl" % "jogl-all" % "2.4.0" from "https://jogamp.org/deployment/archive/rc/v2.4.0/jar/jogl-all.jar",
         "org.jogamp.gluegen" % "gluegen-rt" % "2.4.0" from "https://jogamp.org/deployment/archive/rc/v2.4.0/jar/gluegen-rt.jar",
         "org.jhotdraw" % "jhotdraw" % "6.0b1" % "provided,optional" from cclArtifacts("jhotdraw-6.0b1.jar"),
-        "org.apache.httpcomponents" % "httpclient" % "4.2",
-        "org.apache.httpcomponents" % "httpmime" % "4.2",
         "com.googlecode.json-simple" % "json-simple" % "1.1.1",
         "com.fifesoft" % "rsyntaxtextarea" % "3.5.4",
         "com.typesafe" % "config" % "1.4.3",
