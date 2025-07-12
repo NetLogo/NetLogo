@@ -4,8 +4,6 @@ package org.nlogo.app.tools
 
 import org.nlogo.api.FileIO
 
-import scala.util.matching.Regex
-
 trait NLWTemplateLoader {
   def loadTemplate(): String
 }
@@ -23,17 +21,17 @@ class NetLogoWebSaver(loader: NLWTemplateLoader, saveFunction: String => Unit) {
   val ModelContents = "<NetLogoModel />"
   val ModelName     = "<NetLogoModelName />"
 
-  def save(modelString: String, modelName: String, includes: List[(String, String)] = Nil) = {
+  def save(modelString: String, modelName: String, includes: Seq[(String, String)] = Nil) = {
     var stringMut = modelString
 
     if (includes.nonEmpty) {
       stringMut = "; Main code\n\n" + stringMut
 
       for ((name, source) <- includes) {
-        stringMut = "; " + name + "\n\n" + source + "\n\n" + stringMut
+        stringMut = "; " + name + "\n\n" + source.trim + "\n\n" + stringMut
       }
 
-      stringMut = new Regex("__includes\\s*\\[.*?\\]").replaceAllIn(stringMut, "") // will break if __includes is in a string (Isaac B 6/15/24)
+      stringMut = "(?i)(?<=[\\s\r\n])__includes[\\s\r\n]*\\[[\\w\\W]*?\\](\n|\r\n)?".r.replaceAllIn(stringMut, "")
     }
 
     saveFunction(templateHTML(loader.loadTemplate(), stringMut, modelName))
