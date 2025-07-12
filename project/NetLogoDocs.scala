@@ -97,7 +97,7 @@ class NetLogoDocs(
     // Render the header with the version, navlinks,
     // and other variables
     Mustache(
-      docsSource / "header.html.mustache",
+      docsSource / "header.mustache",
       docsTarget / "header.html",
       mustacheVars,
       Some(docsSource)
