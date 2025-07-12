@@ -211,7 +211,7 @@ object FileManager {
     }
 
     @throws(classOf[IOException])
-    private def collectIncludes(str: String): List[(String, String)] = {
+    private def collectIncludes(str: String): Seq[(String, String)] = {
       val includes = workspace.compiler.findIncludes(workspace.getModelPath, str, workspace.getCompilationEnvironment)
 
       if (includes.isEmpty)
@@ -223,7 +223,7 @@ object FileManager {
 
         file.close()
 
-        (name, source) :: collectIncludes(source)
+        (name, source) +: collectIncludes(source)
       }).toList
     }
   }

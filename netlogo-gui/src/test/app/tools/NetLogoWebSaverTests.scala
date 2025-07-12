@@ -41,6 +41,55 @@ class NetLogoWebSaverTests extends AnyFunSuite {
     assert(savedText == dummyTemplate(dummyModel, "model name.nlogox"))
   }
 
+  test("nlwsaver bundles plainly formatted included files") {
+    val modelString = "__includes [ \"New File 1.nls\" ]\n"
+    var savedText = ""
+
+    new NetLogoWebSaver(templateLoader, savedText = _)
+      .save(modelString, "test.html", Seq(("New File 1.nls", "to test\nend\n")))
+
+    assert(savedText == dummyTemplate("; New File 1.nls\n\nto test\nend\n\n; Main code\n\n", "test.nlogox"))
+  }
+
+  test("nlwsaver bundles strangely formatted included files") {
+    val modelString = "\n\n       __includes [\n\n   \"New File 1.nls\"    \n\n\n\n]\n"
+    var savedText = ""
+
+    new NetLogoWebSaver(templateLoader, savedText = _)
+      .save(modelString, "test.html", Seq(("New File 1.nls", "to test\nend\n")))
+
+    assert(savedText == dummyTemplate("; New File 1.nls\n\nto test\nend\n\n; Main code\n\n\n\n       ", "test.nlogox"))
+  }
+
+  test("nlwsaver bundles multiple included files") {
+    val modelString = "__includes [\n  \"New File 1.nls\"\n  \"New File 2.nls\"\n]\n"
+    var savedText = ""
+
+    new NetLogoWebSaver(templateLoader, savedText = _)
+      .save(modelString, "test.html", Seq(("New File 1.nls", "to test\nend\n"), ("New File 2.nls", "to test2\nend\n")))
+
+    assert(savedText == dummyTemplate(
+      "; New File 2.nls\n\nto test2\nend\n\n; New File 1.nls\n\nto test\nend\n\n; Main code\n\n", "test.nlogox"))
+  }
+
+  test("nlwsaver preserves __includes in procedure names") {
+    val modelString = "to test__includes []\nend\n"
+    var savedText = ""
+
+    new NetLogoWebSaver(templateLoader, savedText = _).save(modelString, "test.html")
+
+    assert(savedText == dummyTemplate(modelString, "test.nlogox"))
+  }
+
+  test("nlwsaver preserves __includes in strings") {
+    val modelString = "to test\n  let x \"__includes [ \\\"New File 1.nls\\\" ]\"\nend\n"
+    var savedText = ""
+
+    new NetLogoWebSaver(templateLoader, savedText = _).save(modelString, "test.html")
+
+    assert(savedText == dummyTemplate(modelString, "test.nlogox"))
+  }
+
   val dummyModel = "model text"
 
   val emptyTemplateLoader = new NLWTemplateLoader() {
