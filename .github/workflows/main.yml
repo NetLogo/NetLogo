@@ -38,7 +38,7 @@ jobs:
 
       - name: Build NetLogo
         run: |
-          ./sbt update all headless/compile parserJS/compile dist/buildMathematicaLink
+          ./sbt update all headless/compile parserJS/compile
 
       - uses: actions/cache@v4
         id: restore-build
