@@ -24,11 +24,11 @@ addSbtPlugin("org.nlogo"          %  "netlogo-extension-documentation" % "0.8.3"
 addSbtPlugin("com.timushev.sbt"   %  "sbt-updates"                     % "0.6.4")
 
 libraryDependencies ++= Seq(
-  "com.github.spullara.mustache.java" % "compiler"              % "0.9.5"
+  "com.github.spullara.mustache.java" % "compiler"              % "0.9.14"
 , "de.jflex"                          % "jflex"                 % "1.9.1"
 , "classycle"                         % "classycle"             % "1.4.2" from
   "https://s3.amazonaws.com/ccl-artifacts/classycle-1.4.2.jar"
-, "com.github.spullara.mustache.java" % "scala-extensions-2.10" % "0.9.5"
+, "com.github.spullara.mustache.java" % "scala-extensions-2.11" % "0.9.14"
 , "org.jsoup"                         % "jsoup"                 % "1.15.4"
 , "org.apache.commons"                % "commons-lang3"         % "3.13.0"
 , "commons-io"                        % "commons-io"            % "2.14.0"
