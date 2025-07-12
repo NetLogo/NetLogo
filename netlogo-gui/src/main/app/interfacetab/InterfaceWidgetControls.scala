@@ -13,7 +13,7 @@ import org.nlogo.swing.{ DropdownArrow, MenuItem, MouseUtils, PopupMenu, Rounded
                          Transparent, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ Editable, EditDialog, EditDialogFactory, Events => WindowEvents, GUIWorkspace, InterfaceMode,
-                          JobWidget, Widget, WidgetInfo }
+                          JobWidget, Widget, WidgetInfo, WorldViewSettings }
 
 import scala.collection.mutable.HashSet
 
@@ -146,8 +146,13 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
   }
 
   def handle(e: WindowEvents.EditView3DEvent): Unit = {
-    wPanel.haltIfRunning()
-    wPanel.editWidgetFinished(e.settings, new EditDialog(frame, e.settings, e.settings.editPanel3D, true).canceled)
+    e.settings match {
+      case wvs: WorldViewSettings =>
+        wPanel.haltIfRunning()
+        wPanel.editWidgetFinished(wvs, new EditDialog(frame, wvs, wvs.editPanel3D, true).canceled)
+
+      case _ =>
+    }
   }
 
   override def syncTheme(): Unit = {
