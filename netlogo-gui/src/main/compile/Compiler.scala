@@ -2,7 +2,10 @@
 
 package org.nlogo.compile
 
-import org.nlogo.core.{ CompilationEnvironment, CompilerException, CompilerUtilitiesInterface, Dialect, Femto, FrontEndInterface, ProcedureSyntax, Program, Token }
+import java.util.Locale
+
+import org.nlogo.core.{ CompilationEnvironment, CompilerException, CompilerUtilitiesInterface, Dialect, Femto,
+                        FrontEndInterface, ProcedureSyntax, Program, Token, TokenType }
 import org.nlogo.api.{ SourceOwner, World }
 import org.nlogo.nvm.{ PresentationCompilerInterface, CompilerFlags, CompilerResults, ImportHandler, Procedure }
 import org.nlogo.api.{ ExtensionManager, LibraryManager }
@@ -81,6 +84,16 @@ class Compiler(dialect: Dialect) extends PresentationCompilerInterface {
     extensionManager: ExtensionManager,
     libManager:       LibraryManager,
     compilationEnv:   CompilationEnvironment): CompilerResults = {
+
+    // drop the wrapping TO from the front and the wrapping END and EOF from the end, leaving only
+    // the contents of the target loose procedure, which should not contain any keywords (Isaac B 7/11/25)
+    frontEnd.tokenizeForColorization(source, dialect, extensionManager).drop(1).dropRight(2)
+      .find(_.tpe == TokenType.Keyword).foreach { token =>
+
+      throw CompilerException(s"Keyword ${token.text.toUpperCase(Locale.ENGLISH)} cannot be used in this context.",
+                              token.start, token.end, token.sourceLocation.filename)
+    }
+
     val (procedures, newProgram) =
       CompilerMain.compile( Map("" -> source), displayName, program, true
                           , oldProcedures, extensionManager, libManager, compilationEnv)
