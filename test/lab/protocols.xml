@@ -444,4 +444,15 @@
     <metric>string-test</metric>
     <metric>list-test</metric>
   </experiment>
+  <experiment name="testIgnoreComments" repetitions="1" runMetricsEveryStep="true">
+    <setup>ca reset-ticks</setup>
+    <go>tick</go>
+    <timeLimit steps="0"/>
+    <exitCondition>; stop when ticks &gt; 2
+
+ticks &gt; 2 ; this is the stop condition</exitCondition>
+    <metric>; hello this is a comment</metric>
+    <metric>count patches ; count the number of patches</metric>
+    <metric>; count turtles please ignore me</metric>
+  </experiment>
 </experiments>

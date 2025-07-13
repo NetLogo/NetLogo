@@ -111,9 +111,8 @@ class Worker(val protocol: LabProtocol, val supervisorWriting: () => Unit = () =
                                                 + "__experimentstepend")
     val postRunProcedure = workspace.compileCommands(protocol.postRunCommands)
     val postExperimentProcedure = workspace.compileCommands(protocol.postExperimentCommands)
-    val exitProcedure =
-      if (protocol.exitCondition.trim == "") None
-      else Some(workspace.compileReporter(protocol.exitCondition))
+    val exitProcedure = protocol.exitCondition.split("\n").dropWhile(_.trim.startsWith(";")).dropWhile(_.trim.isEmpty)
+                          .headOption.map(workspace.compileReporter)
     val metricProcedures = protocol.metrics.map(workspace.compileReporter(_))
     val runMetricsConditionProcedure = {
       if (protocol.runMetricsCondition.isEmpty) None

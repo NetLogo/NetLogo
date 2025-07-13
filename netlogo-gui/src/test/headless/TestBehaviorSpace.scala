@@ -408,4 +408,7 @@ with OneInstancePerTest with BeforeAndAfterEach {
   test("ExcludeStatsMetricsSpreadsheet", SlowTest.Tag) {
     runExperiment(4, "globals [string-test list-test]", "testStatsExcludeMetrics", wantTable=false, wantStats=true)
   }
+  test("IgnoreCommentsInMultilineReporters", SlowTest.Tag) {
+    runExperiment(4, "", "testIgnoreComments", wantTable = false)
+  }
 }

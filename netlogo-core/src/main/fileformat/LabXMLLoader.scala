@@ -50,7 +50,7 @@ object LabXMLLoader {
       case XMLElement("exitCondition", _, text, _) =>
         lab.exitCondition = text
       case el @ XMLElement("metrics", _, _, _) =>
-        lab.metrics = el.getChildren("metric").map(_.text).toList
+        lab.metricsForSaving = el.getChildren("metric").map(_.text).toList
       case XMLElement("constants", _, _, children) =>
         lab.constants = children.map(readValueSet).toList
       case el @ XMLElement("subExperiments", _, _, _) =>
@@ -129,7 +129,7 @@ object LabXMLLoader {
       baseAttributes ++
         (if (experiment.timeLimit != 0) Map("timeLimit" -> experiment.timeLimit.toString) else Map())
 
-    val subMetrics = experiment.metrics.flatMap((m) => makeBabyMaybe(true)("metric", m, Seq()))
+    val subMetrics = experiment.metricsForSaving.flatMap((m) => makeBabyMaybe(true)("metric", m, Seq()))
 
     val children =
       Seq[XMLElement]() ++
@@ -140,7 +140,7 @@ object LabXMLLoader {
         makeBabyMaybeSimple(_.postExperimentCommands,      "postExperiment") ++
         makeBabyMaybeSimple(_.         exitCondition,       "exitCondition") ++
         makeBabyMaybeSimple(_.   runMetricsCondition, "runMetricsCondition") ++
-        makeBabyMaybe(experiment.metrics.nonEmpty)("metrics", "", subMetrics) ++
+        makeBabyMaybe(experiment.metricsForSaving.nonEmpty)("metrics", "", subMetrics) ++
         makeBabyMaybe(experiment.constants.nonEmpty)("constants", "", experiment.constants.map(writeValueSet)) ++
         makeBabyMaybe(experiment.subExperiments.nonEmpty)("subExperiments", "",
           experiment.subExperiments.flatMap((se) => makeBabyMaybe(true)("subExperiment", "", se.map(writeValueSet))))

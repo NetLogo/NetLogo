@@ -57,7 +57,7 @@ class LabProtocol(
   var runMetricsCondition: String,
   var timeLimit: Int,
   var exitCondition: String,
-  var metrics: List[String],
+  var metricsForSaving: List[String],
   var constants: List[RefValueSet],
   var subExperiments: List[List[RefValueSet]],
   var threadCount: Int = LabDefaultValues.getDefaultThreads,
@@ -118,6 +118,11 @@ class LabProtocol(
       Iterator.fill(repetitions)(valueSets.map(x => combinations(x.reverse)).flatten).flatten
     }
   }
+
+  // metrics excluding comments; this helps Worker and ProgressDialog more easily track
+  // the list of valid metrics for an experiment (Isaac B 7/13/25)
+  def metrics: List[String] =
+    metricsForSaving.filter(!_.trim.startsWith(";")).map(m => ";.*$".r.replaceFirstIn(m, "").trim)
 
   def copy(
     name: String = name,

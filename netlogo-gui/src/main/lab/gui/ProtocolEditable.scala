@@ -90,9 +90,9 @@ private [gui] class ProtocolEditable(protocol: LabProtocol,
     protocol.exitCondition = s.trim
   }
 
-  def metrics: String = protocol.metrics.mkString("\n")
+  def metrics: String = protocol.metricsForSaving.mkString("\n")
   def setMetrics(s: String): Unit = {
-    protocol.metrics = s.split("\n", 0).map(_.trim).filter(_.nonEmpty).toList
+    protocol.metricsForSaving = s.split("\n", 0).map(_.trim).filter(_.nonEmpty).toList
   }
 
   def valueSets: String = _valueSets
@@ -140,8 +140,10 @@ private [gui] class ProtocolEditable(protocol: LabProtocol,
 
       def checkCommand(name: String, text: String): Option[String] = {
         try {
-          if (text.trim.nonEmpty)
-            compiler.checkCommandSyntax(text.trim)
+          val trimmed = text.trim
+
+          if (trimmed.nonEmpty && !trimmed.startsWith(";"))
+            compiler.checkCommandSyntax(trimmed)
         } catch {
           case e: CompilerException =>
             return Some(I18N.gui.getN("edit.behaviorSpace.compilerError", name, e.getMessage))
@@ -152,8 +154,10 @@ private [gui] class ProtocolEditable(protocol: LabProtocol,
 
       def checkReporter(name: String, text: String): Option[String] = {
         try {
-          if (text.trim.nonEmpty)
-            compiler.checkReporterSyntax(text.trim)
+          val trimmed = text.trim
+
+          if (trimmed.nonEmpty && !trimmed.startsWith(";"))
+            compiler.checkReporterSyntax(trimmed)
         } catch {
           case e: CompilerException =>
             return Some(I18N.gui.getN("edit.behaviorSpace.compilerError", name, e.getMessage))
@@ -169,7 +173,12 @@ private [gui] class ProtocolEditable(protocol: LabProtocol,
        .orElse(checkCommand(I18N.gui.get("edit.behaviorSpace.preExperimentCommands"), preExperimentCommands))
        .orElse(checkCommand(I18N.gui.get("edit.behaviorSpace.setupCommands"), setupCommands))
        .orElse(checkCommand(I18N.gui.get("edit.behaviorSpace.goCommands"), goCommands))
-       .orElse(checkReporter(I18N.gui.get("edit.behaviorSpace.exitCondition"), exitCondition))
+       .orElse {
+          val trimmed: Option[String] = exitCondition.split("\n").dropWhile(_.trim.startsWith(";"))
+                                          .dropWhile(_.trim.isEmpty).headOption
+
+          trimmed.flatMap(checkReporter(I18N.gui.get("edit.behaviorSpace.exitCondition"), _))
+        }
        .orElse(checkCommand(I18N.gui.get("edit.behaviorSpace.postRunCommands"), postRunCommands))
        .orElse(checkCommand(I18N.gui.get("edit.behaviorSpace.postExperimentCommands"), postExperimentCommands))
     }
