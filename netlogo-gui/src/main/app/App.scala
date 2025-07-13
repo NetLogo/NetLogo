@@ -481,10 +481,6 @@ class App extends org.nlogo.window.Event.LinkChild
   private def finishStartup(appHandler: Object): Unit = {
     try {
       val app = pico.getComponent(classOf[App])
-      val currentModelAsString = {() =>
-        val modelSaver = pico.getComponent(classOf[ModelSaver])
-        modelSaver.modelAsString(modelSaver.currentModel, ModelReader.modelSuffix)
-      }
 
       aggregateManager = pico.getComponent(classOf[AggregateManagerInterface])
       frame.addLinkComponent(aggregateManager)
