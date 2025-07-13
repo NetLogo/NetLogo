@@ -86,7 +86,8 @@ with ControlSet {
   }
 
   protected def createInterfacePanel(workspace: LiteWorkspace): InterfacePanelLite =
-    new InterfacePanelLite(workspace.viewWidget, workspace, workspace, workspace.plotManager, liteEditorFactory)
+    new InterfacePanelLite(workspace.viewWidget, workspace, workspace, workspace.plotManager, liteEditorFactory,
+                           workspace.getExtensionManager)
 
   /** internal use only */
   def setAdVisible(visible: Boolean): Unit = {

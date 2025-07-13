@@ -6,7 +6,7 @@ import java.awt.{ BorderLayout, Font, Insets }
 import javax.swing.{ Box, BoxLayout, JLabel, JPanel }
 import javax.swing.border.{ BevelBorder, EmptyBorder, LineBorder }
 
-import org.nlogo.api.{ CompilerServices, MersenneTwisterFast, RandomServices }
+import org.nlogo.api.{ CompilerServices, ExtensionManager, MersenneTwisterFast, RandomServices }
 import org.nlogo.awt.Hierarchy
 import org.nlogo.plot.PlotManager
 import org.nlogo.swing.{ ScrollPane, TextArea, Transparent }
@@ -15,11 +15,13 @@ import org.nlogo.window.{ ButtonWidget, ChooserWidget, EditorFactory, InterfaceP
 
 // The layout for the hubnet client. Holds the interface panel and the message text field.
 class ClientGUI(editorFactory: EditorFactory, clientView: ClientView, plotManager: PlotManager,
-                compiler: CompilerServices) extends JPanel(new BorderLayout) with Transparent with ThemeSync {
+                compiler: CompilerServices, extensionManager: ExtensionManager)
+  extends JPanel(new BorderLayout) with Transparent with ThemeSync {
 
   private val statusPanel = new StatusPanel()
   private val messagePanel = new MessagePanel(new TextArea(4, 3))
-  private val interfacePanel = new InterfacePanelLite(clientView, compiler, new DummyRandomServices(), plotManager, editorFactory) {
+  private val interfacePanel = new InterfacePanelLite(clientView, compiler, new DummyRandomServices(), plotManager,
+                                                      editorFactory, extensionManager) {
     sliderEventOnReleaseOnly(true)
 
     class ClientGUIButtonKeyAdapter extends ButtonKeyAdapter {

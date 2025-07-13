@@ -30,7 +30,7 @@ class DummyCompilerServices extends CompilerServices {
   def checkReporterSyntax(source: String): Unit = { }
   def checkCommandSyntax(source: String): Unit = { }
   def isConstant(s: String): Boolean = unsupported
-  def isValidIdentifier(s: String): Boolean = unsupported
+  def isValidIdentifier(s: String, extensionManager: ExtensionManager): Boolean = unsupported
   def isReporter(s: String): Boolean = unsupported
   def tokenizeForColorization(s: String): Array[Token] = unsupported
   def tokenizeForColorizationIterator(s: String): Iterator[Token] = unsupported

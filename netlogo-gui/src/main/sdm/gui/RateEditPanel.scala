@@ -4,14 +4,14 @@ package org.nlogo.sdm.gui
 
 import java.awt.{ GridBagConstraints, Insets }
 
-import org.nlogo.api.CompilerServices
+import org.nlogo.api.{ CompilerServices, ExtensionManager }
 import org.nlogo.core.I18N
 import org.nlogo.editor.Colorizer
 import org.nlogo.window.{ EditPanel, IdentifierEditor, NonEmptyCodeEditor, OptionsEditor, PropertyAccessor,
                           PropertyEditor }
 
-class RateEditPanel(target: RateConnection, compiler: CompilerServices, colorizer: Colorizer)
-  extends EditPanel(target) {
+class RateEditPanel(target: RateConnection, compiler: CompilerServices, colorizer: Colorizer,
+                    extensionManager: ExtensionManager) extends EditPanel(target) {
 
   private val nameWrapper =
     new IdentifierEditor(
@@ -21,7 +21,7 @@ class RateEditPanel(target: RateConnection, compiler: CompilerServices, colorize
         () => target.nameWrapper,
         name => target.nameWrapper(name.getOrElse("")),
         () => apply()),
-      compiler)
+      compiler, extensionManager)
 
   private val inputs =
     new OptionsEditor[String](

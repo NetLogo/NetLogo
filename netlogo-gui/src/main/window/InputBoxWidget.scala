@@ -4,18 +4,18 @@ package org.nlogo.window
 
 import java.awt.Component
 
-import org.nlogo.api.{ CompilerServices, Dump }
+import org.nlogo.api.{ CompilerServices, Dump, ExtensionManager }
 import org.nlogo.core.I18N
 import org.nlogo.editor.AbstractEditorArea
 import org.nlogo.window.Events.{ InterfaceGlobalEvent, PeriodicUpdateEvent }
 
 class InputBoxWidget(textArea: AbstractEditorArea, dialogTextArea: AbstractEditorArea,
-                     compiler: CompilerServices, nextComponent: Component)
+                     compiler: CompilerServices, extensionManager: ExtensionManager, nextComponent: Component)
   extends InputBox(textArea, dialogTextArea, compiler, nextComponent)
   with InterfaceGlobalWidget
   with PeriodicUpdateEvent.Handler {
 
-  override def editPanel: EditPanel = new InputEditPanel(this, compiler)
+  override def editPanel: EditPanel = new InputEditPanel(this, compiler, extensionManager)
 
   override def getEditable: Option[Editable] = Some(this)
 

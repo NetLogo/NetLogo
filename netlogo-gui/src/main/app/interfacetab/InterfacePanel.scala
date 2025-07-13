@@ -116,21 +116,21 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
     if (fromRegistry != null)
       fromRegistry
     else coreWidget match {
-      case c: CoreChooser  => new ChooserWidget(workspace, colorizer)
+      case c: CoreChooser  => new ChooserWidget(workspace, colorizer, workspace.getExtensionManager)
       case b: CoreButton   => new ButtonWidget(workspace.world.mainRNG, colorizer)
       case p: CorePlot     => PlotWidget(workspace.plotManager, colorizer)
       case m: CoreMonitor  => new MonitorWidget(workspace.world.auxRNG, workspace, colorizer)
       case s: CoreSlider =>
-        new SliderWidget(workspace.world.auxRNG, workspace, colorizer) {
+        new SliderWidget(workspace.world.auxRNG, workspace, colorizer, workspace.getExtensionManager) {
           override def sourceOffset: Int =
             Evaluator.sourceOffset(AgentKind.Observer, false)
         }
-      case s: CoreSwitch => new SwitchWidget(workspace)
+      case s: CoreSwitch => new SwitchWidget(workspace, workspace.getExtensionManager)
       case i: CoreInputBox =>
         val textArea       = new EditorArea(textEditorConfiguration)
         val dialogTextArea = new EditorArea(dialogEditorConfiguration)
 
-        new InputBoxWidget(textArea, dialogTextArea, workspace, this)
+        new InputBoxWidget(textArea, dialogTextArea, workspace, workspace.getExtensionManager, this)
       case v: CoreView => new ViewWidget(workspace)
       case _ =>
         throw new IllegalStateException("unknown widget type: " + coreWidget.getClass.getName)

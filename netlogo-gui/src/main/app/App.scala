@@ -137,12 +137,6 @@ object App {
             Array[Parameter] (
               new ComponentParameter(classOf[AppFrame]),
               new ComponentParameter(), new ComponentParameter()))
-      pico.add(classOf[AggregateManagerInterface],
-            "org.nlogo.sdm.gui.GUIAggregateManager",
-            Array[Parameter] (
-              new ComponentParameter(classOf[AppFrame]),
-              new ComponentParameter(), new ComponentParameter(),
-              new ComponentParameter(), new ComponentParameter()))
       pico.add("org.nlogo.lab.gui.LabManager")
       pico.addComponent(classOf[EditDialogFactory])
       // we need to make HeadlessWorkspace objects for BehaviorSpace to use.
@@ -180,6 +174,15 @@ object App {
       System.setProperty("sun.awt.noerasebackground", "true") // stops view2.5d and 3d windows from blanking to white until next interaction
 
       app = pico.getComponent(classOf[App])
+
+      pico.add(classOf[AggregateManagerInterface],
+        "org.nlogo.sdm.gui.GUIAggregateManager",
+        Array[Parameter] (
+          new ComponentParameter(classOf[AppFrame]),
+          new ComponentParameter(), new ComponentParameter(),
+          new ComponentParameter(), new ComponentParameter(),
+          new ConstantParameter(app.workspace.getExtensionManager)))
+
       // It's pretty silly, but in order for the splash screen to show up
       // for more than a fraction of a second, we want to initialize as
       // much stuff as we can from main() before handing off to the event

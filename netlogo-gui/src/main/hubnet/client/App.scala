@@ -3,9 +3,9 @@
 package org.nlogo.hubnet.client
 
 import org.nlogo.core.Femto
-import org.nlogo.api.{ NetLogoThreeDDialect, NetLogoLegacyDialect, Version }
+import org.nlogo.api.{ DummyExtensionManager, NetLogoThreeDDialect, NetLogoLegacyDialect, Version }
 import org.nlogo.util.NullAppHandler
-import org.nlogo.nvm.PresentationCompilerInterface
+import org.nlogo.nvm.{ DefaultCompilerServices, PresentationCompilerInterface }
 import org.nlogo.workspace.AbstractWorkspace
 import org.nlogo.window.VMCheck
 
@@ -22,8 +22,8 @@ object App {
     handler.getClass.getDeclaredMethod("ready", classOf[AnyRef]).invoke(handler, this)
     AbstractWorkspace.isApp(true)
     VMCheck.detectBadJVMs()
-    val compiler = new org.nlogo.nvm.DefaultCompilerServices(
+    val compiler = new DefaultCompilerServices(
       Femto.get[PresentationCompilerInterface]("org.nlogo.compile.Compiler", if (Version.is3D) NetLogoThreeDDialect else NetLogoLegacyDialect))
-    ClientApp.mainHelper(args, compiler)
+    ClientApp.mainHelper(args, compiler, new DummyExtensionManager)
   }
 }

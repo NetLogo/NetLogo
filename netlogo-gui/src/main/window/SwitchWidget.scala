@@ -4,15 +4,15 @@ package org.nlogo.window
 
 import java.lang.{ Boolean => JBoolean }
 
-import org.nlogo.api.CompilerServices
+import org.nlogo.api.{ CompilerServices, ExtensionManager }
 import org.nlogo.core.{ I18N, Switch => CoreSwitch, Widget => CoreWidget }
 
-class SwitchWidget(compiler: CompilerServices) extends Switch with Editable with InterfaceGlobalWidget
-  with Events.PeriodicUpdateEvent.Handler {
+class SwitchWidget(compiler: CompilerServices, extensionManager: ExtensionManager)
+  extends Switch with Editable with InterfaceGlobalWidget with Events.PeriodicUpdateEvent.Handler {
 
   override def classDisplayName = I18N.gui.get("tabs.run.widgets.switch")
 
-  override def editPanel: EditPanel = new SwitchEditPanel(this, compiler)
+  override def editPanel: EditPanel = new SwitchEditPanel(this, compiler, extensionManager)
 
   override def getEditable: Option[Editable] = Some(this)
 

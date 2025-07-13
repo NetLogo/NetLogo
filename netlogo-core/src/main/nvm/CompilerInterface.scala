@@ -44,7 +44,7 @@ trait AuxiliaryCompilerInterface {
 
   def getTokenAtPosition(source: String, position: Int): Token
 
-  def isValidIdentifier(s: String): Boolean
+  def isValidIdentifier(s: String, extensionManager: ApiExtensionManager): Boolean
   def findProcedurePositions(source: String): Map[String, ProcedureSyntax]
 
   def isReporter(s: String, program: Program, procedures: ListMap[String, Procedure], extensionManager: ApiExtensionManager, compilationEnv: CompilationEnvironment): Boolean

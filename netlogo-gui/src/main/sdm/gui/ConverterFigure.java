@@ -9,6 +9,7 @@ import org.jhotdraw.standard.HandleEnumerator;
 import org.jhotdraw.standard.NullHandle;
 import org.jhotdraw.standard.RelativeLocator;
 import org.nlogo.api.CompilerServices;
+import org.nlogo.api.ExtensionManager;
 import org.nlogo.editor.Colorizer;
 import org.nlogo.window.Editable;
 import org.nlogo.window.EditPanel;
@@ -27,6 +28,7 @@ public class ConverterFigure extends DiamondFigure
 
   private transient CompilerServices compiler;
   private transient Colorizer colorizer;
+  private transient ExtensionManager extensionManager;
 
   public ConverterFigure() {
     setAttribute
@@ -37,9 +39,10 @@ public class ConverterFigure extends DiamondFigure
   }
 
   // if these go in the constructor it messes up the old deserialization code (Isaac B 3/31/25)
-  public void setCompilerAndColorizer(CompilerServices compiler, Colorizer colorizer) {
+  public void setConstructorDeps(CompilerServices compiler, Colorizer colorizer, ExtensionManager extensionManager) {
     this.compiler = compiler;
     this.colorizer = colorizer;
+    this.extensionManager = extensionManager;
   }
 
   public org.nlogo.sdm.ModelElement getModelElement() {
@@ -124,7 +127,7 @@ public class ConverterFigure extends DiamondFigure
   }
 
   public EditPanel editPanel() {
-    return new ConverterEditPanel(this, compiler, colorizer);
+    return new ConverterEditPanel(this, compiler, colorizer, extensionManager);
   }
 
   public String classDisplayName() {

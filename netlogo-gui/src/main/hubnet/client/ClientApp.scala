@@ -6,7 +6,7 @@ import java.awt.BorderLayout
 import javax.swing.{ JFrame, WindowConstants }
 
 import org.nlogo.analytics.Analytics
-import org.nlogo.api.CompilerServices
+import org.nlogo.api.{ CompilerServices, ExtensionManager }
 import org.nlogo.awt.{ EventQueue, Hierarchy, Images, Positioning }
 import org.nlogo.core.I18N
 import org.nlogo.hubnet.connection.Ports
@@ -21,7 +21,7 @@ object ClientApp {
   private var localClientIndex = 0
 
   // called by App.main()
-  def mainHelper(args: Array[String], workspace: CompilerServices): Unit = {
+  def mainHelper(args: Array[String], workspace: CompilerServices, extensionManager: ExtensionManager): Unit = {
     try {
       val app = new ClientApp()
       SetSystemLookAndFeel.setSystemLookAndFeel()
@@ -47,7 +47,7 @@ object ClientApp {
         else if (args(i).equalsIgnoreCase("--ip")) hostip = args(i + 1)
         else if (args(i).equalsIgnoreCase("--port")) port = (i + 1).toInt
       }
-      app.startup(userid, hostip, port, false, isRoboClient, waitTime, workspace)
+      app.startup(userid, hostip, port, false, isRoboClient, waitTime, workspace, extensionManager)
     } catch {
       case ex: RuntimeException => org.nlogo.api.Exceptions.handle(ex)
     }
@@ -65,7 +65,8 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
   setResizable(false)
 
   def startup(userid: String, hostip: String,
-              port: Int, isLocal: Boolean, isRobo: Boolean, waitTime: Long, compiler: CompilerServices): Unit = {
+              port: Int, isLocal: Boolean, isRobo: Boolean, waitTime: Long, compiler: CompilerServices,
+              extensionManager: ExtensionManager): Unit = {
     val editorFactory = new DefaultEditorFactory(compiler)
     EventQueue.invokeLater(() => {
       Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
@@ -79,8 +80,8 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
       getContentPane.setLayout(new BorderLayout())
       loginDialog = new LoginDialog(this, userid, hostip, port)
       clientPanel =
-        if (isRobo) new RoboClientPanel(editorFactory, this, waitTime, compiler)
-        else new ClientPanel(editorFactory, this, compiler)
+        if (isRobo) new RoboClientPanel(editorFactory, this, waitTime, compiler, extensionManager)
+        else new ClientPanel(editorFactory, this, compiler, extensionManager)
 
       getContentPane.add(clientPanel, BorderLayout.CENTER)
 

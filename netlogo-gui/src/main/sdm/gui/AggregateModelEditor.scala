@@ -13,7 +13,7 @@ import org.jhotdraw.framework.{ DrawingEditor, DrawingView, Figure, Tool, ViewCh
 import org.jhotdraw.util.{ Command, CommandMenu, RedoCommand, UndoCommand, UndoManager }
 
 import org.nlogo.analytics.Analytics
-import org.nlogo.api.{ CompilerServices, SourceOwner }
+import org.nlogo.api.{ CompilerServices, ExtensionManager, SourceOwner }
 import org.nlogo.awt.EventQueue
 import org.nlogo.core.{ CompilerException, I18N }
 import org.nlogo.editor.Colorizer
@@ -37,7 +37,8 @@ class AggregateModelEditor(
   menuBarFactory: MenuBarFactory,
   val drawing: AggregateDrawing,
   compiler: CompilerServices,
-  dialogFactory: EditDialogFactory) extends JFrame(
+  dialogFactory: EditDialogFactory,
+  extensionManager: ExtensionManager) extends JFrame(
     I18N.gui.get("menu.tools.systemDynamicsModeler"), linkParent.getGraphicsConfiguration)
   with DrawingEditor
   with LinkChild
@@ -50,8 +51,9 @@ class AggregateModelEditor(
     colorizer: Colorizer,
     menuBarFactory: MenuBarFactory,
     compiler: CompilerServices,
-    dialogFactory: EditDialogFactory) =
-      this(linkParent, colorizer, menuBarFactory, new AggregateDrawing(), compiler, dialogFactory)
+    dialogFactory: EditDialogFactory,
+    extensionManager: ExtensionManager) =
+      this(linkParent, colorizer, menuBarFactory, new AggregateDrawing(), compiler, dialogFactory, extensionManager)
 
   private val undoManager: UndoManager = new UndoManager()
   private var currentTool: Option[Tool] = None
@@ -161,11 +163,11 @@ class AggregateModelEditor(
   def inspectFigure(f: Figure): Unit = {
     f match {
       case target: Editable =>
-        // for some reason it only works to set the compiler and colorizer right before the edit dialog opens... (Isaac B 3/31/25)
+        // for some reason it only works to set the constructor dependencies right before the edit dialog opens... (Isaac B 3/31/25)
         target match {
-          case c: ConverterFigure => c.setCompilerAndColorizer(compiler, colorizer)
-          case s: StockFigure => s.setCompilerAndColorizer(compiler, colorizer)
-          case r: RateConnection => r.setCompilerAndColorizer(compiler, colorizer)
+          case c: ConverterFigure => c.setConstructorDeps(compiler, colorizer, extensionManager)
+          case s: StockFigure => s.setConstructorDeps(compiler, colorizer, extensionManager)
+          case r: RateConnection => r.setConstructorDeps(compiler, colorizer, extensionManager)
           case _ =>
         }
 

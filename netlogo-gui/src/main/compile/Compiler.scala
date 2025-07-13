@@ -193,8 +193,8 @@ class Compiler(dialect: Dialect) extends PresentationCompilerInterface {
   // used by VariableNameEditor
   // it *shouldn't* matter whether we're in 3D mode or not because
   // the tokenizer makes no effort to match commands and reporters at this stage
-  def isValidIdentifier(s: String) =
-    parserTokenizer.isValidIdentifier(s)
+  def isValidIdentifier(s: String, extensionManager: ExtensionManager) =
+    frontEnd.tokenizeForColorizationIterator(s, defaultDialect, extensionManager).next.tpe == TokenType.Ident
 
   // used by CommandLine
   def isReporter(s: String, program: Program, procedures: ProceduresMap, extensionManager: ExtensionManager, compilationEnv: CompilationEnvironment) = {

@@ -7,7 +7,7 @@ import org.nlogo.core.{ SourceLocation, Token, TokenType, TestUtils },
 import org.scalatest.funsuite.AnyFunSuite
 
 class TokenizerTests extends AnyFunSuite {
-  import Tokenizer.{ isValidIdentifier, getTokenAtPosition }
+  import Tokenizer.getTokenAtPosition
 
   def tokenize(s: String) = {
     val result = Tokenizer.tokenizeString(s, "").toSeq
@@ -193,14 +193,6 @@ class TokenizerTests extends AnyFunSuite {
       assert(end   == badToken.end)
       assert(error == badToken.value)
     }
-
-  test("checks valid identifiers") {
-    Seq("abc", "a42", "------''''-------").foreach(ident => assert(isValidIdentifier(ident)))
-  }
-
-  test("checks invalid identifiers") {
-    Seq("{{}}", "(", ";comment", "42", "\"abc\"", "```", "-- --").foreach(ident => assert(! isValidIdentifier(ident)))
-  }
 
   test("gets token at a given position") {
     assert(getTokenAtPosition("", -1)   == None)

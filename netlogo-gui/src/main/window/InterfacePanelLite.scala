@@ -8,7 +8,7 @@ import java.awt.event.{ FocusListener, FocusEvent,
 import java.awt.image.BufferedImage
 import javax.swing.JLayeredPane
 
-import org.nlogo.api.{ CompilerServices, Exceptions, RandomServices, Version }
+import org.nlogo.api.{ CompilerServices, Exceptions, ExtensionManager, RandomServices, Version }
 import org.nlogo.awt.Images
 import org.nlogo.core.{ Widget => CoreWidget, View => CoreView }
 import org.nlogo.plot.PlotManager
@@ -20,7 +20,7 @@ import org.nlogo.util.SysInfo
 import scala.collection.mutable.{ Map => MutableMap }
 
 class InterfacePanelLite(val viewWidget: ViewWidgetInterface, compiler: CompilerServices,
-  random: RandomServices, plotManager: PlotManager, editorFactory: EditorFactory)
+  random: RandomServices, plotManager: PlotManager, editorFactory: EditorFactory, extensionManager: ExtensionManager)
   extends JLayeredPane
   with WidgetContainer
   with FocusListener
@@ -209,15 +209,16 @@ class InterfacePanelLite(val viewWidget: ViewWidgetInterface, compiler: Compiler
   private val widgetBuilderMap = Map[String, () => Widget](
     "Monitor"  -> (() => new MonitorWidget(random.auxRNG, compiler, editorFactory.colorizer)),
     "Plot"     -> (() => PlotWidget.apply(plotManager, editorFactory.colorizer)),
-    "Slider"   -> (() => new SliderWidget(sliderEventOnReleaseOnly, random.auxRNG, compiler, editorFactory.colorizer)),
-    "Switch"   -> (() => new SwitchWidget(compiler)),
-    "Chooser"  -> (() => new ChooserWidget(compiler, editorFactory.colorizer)),
+    "Slider"   -> (() => new SliderWidget(sliderEventOnReleaseOnly, random.auxRNG, compiler, editorFactory.colorizer,
+                                          extensionManager)),
+    "Switch"   -> (() => new SwitchWidget(compiler, extensionManager)),
+    "Chooser"  -> (() => new ChooserWidget(compiler, editorFactory.colorizer, extensionManager)),
     "InputBox" -> { () =>
       val singleLineConfig = editorFactory.defaultConfiguration(1, 10)
         .withFocusTraversalEnabled(true)
       val multiLineConfig = editorFactory.defaultConfiguration(5, 20)
       new InputBoxWidget(editorFactory.newEditor(singleLineConfig),
-       editorFactory.newEditor(multiLineConfig), compiler, this)
+       editorFactory.newEditor(multiLineConfig), compiler, extensionManager, this)
     },
     "Button"   -> (() => new ButtonWidget(random.mainRNG, editorFactory.colorizer)),
     "Output"   -> (() => new OutputWidget()))

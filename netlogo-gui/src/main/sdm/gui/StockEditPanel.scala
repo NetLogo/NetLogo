@@ -4,14 +4,14 @@ package org.nlogo.sdm.gui
 
 import java.awt.{ GridBagConstraints, Insets }
 
-import org.nlogo.api.CompilerServices
+import org.nlogo.api.{ CompilerServices, ExtensionManager }
 import org.nlogo.core.I18N
 import org.nlogo.editor.Colorizer
 import org.nlogo.window.{ BooleanEditor, EditPanel, IdentifierEditor, NonEmptyCodeEditor, PropertyAccessor,
                           PropertyEditor }
 
-class StockEditPanel(target: StockFigure, compiler: CompilerServices, colorizer: Colorizer)
-  extends EditPanel(target) {
+class StockEditPanel(target: StockFigure, compiler: CompilerServices, colorizer: Colorizer,
+                     extensionManager: ExtensionManager) extends EditPanel(target) {
 
   private val nameWrapper =
     new IdentifierEditor(
@@ -21,7 +21,7 @@ class StockEditPanel(target: StockFigure, compiler: CompilerServices, colorizer:
         () => target.nameWrapper,
         name => target.nameWrapper(name.getOrElse("")),
         () => apply()),
-      compiler)
+      compiler, extensionManager)
 
   private val initialValueExpressionWrapper =
     new NonEmptyCodeEditor(

@@ -4,12 +4,12 @@ package org.nlogo.window
 
 import java.awt.{ GridBagConstraints, Insets }
 
-import org.nlogo.api.CompilerServices
+import org.nlogo.api.{ CompilerServices, ExtensionManager }
 import org.nlogo.core.I18N
 import org.nlogo.editor.Colorizer
 
-class ChooserEditPanel(target: ChooserWidget, compiler: CompilerServices, colorizer: Colorizer)
-  extends WidgetEditPanel(target) {
+class ChooserEditPanel(target: ChooserWidget, compiler: CompilerServices, colorizer: Colorizer,
+                       extensionManager: ExtensionManager) extends EditPanel(target) {
 
   private val nameWrapper =
     new IdentifierEditor(
@@ -19,7 +19,7 @@ class ChooserEditPanel(target: ChooserWidget, compiler: CompilerServices, colori
         () => target.name,
         name => target.setNameWrapper(name.getOrElse("")),
         () => apply()),
-      compiler)
+      compiler, extensionManager)
 
   private val choicesWrapper =
     new LogoListEditor(

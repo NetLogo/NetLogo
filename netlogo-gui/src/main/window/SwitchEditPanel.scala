@@ -4,10 +4,12 @@ package org.nlogo.window
 
 import java.awt.{ GridBagConstraints, Insets }
 
-import org.nlogo.api.CompilerServices
+import org.nlogo.api.{ CompilerServices, ExtensionManager }
 import org.nlogo.core.I18N
 
-class SwitchEditPanel(target: SwitchWidget, compiler: CompilerServices) extends WidgetEditPanel(target) {
+class SwitchEditPanel(target: SwitchWidget, compiler: CompilerServices, extensionManager: ExtensionManager)
+  extends WidgetEditPanel(target) {
+
   private val name =
     new IdentifierEditor(
       PropertyAccessor(
@@ -16,7 +18,7 @@ class SwitchEditPanel(target: SwitchWidget, compiler: CompilerServices) extends 
         () => target.nameWrapper,
         name => target.setNameWrapper(name.getOrElse("")),
         () => apply()),
-      compiler)
+      compiler, extensionManager)
 
   private val oldSize =
     new BooleanEditor(

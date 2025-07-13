@@ -2,7 +2,7 @@
 
 package org.nlogo.sdm.gui
 
-import org.nlogo.api.{ AggregateManagerInterface, CompilerServices }
+import org.nlogo.api.{ AggregateManagerInterface, CompilerServices, ExtensionManager }
 import org.nlogo.core.{ AgentKind, LiteralParser, Model => CoreModel }
 import org.nlogo.editor.Colorizer
 import org.nlogo.theme.ThemeSync
@@ -13,7 +13,8 @@ class GUIAggregateManager(
   menuBarFactory: MenuBarFactory,
   compiler: CompilerServices,
   colorizer: Colorizer,
-  dialogFactory: EditDialogFactory)
+  dialogFactory: EditDialogFactory,
+  extensionManager: ExtensionManager)
 extends AggregateManagerInterface
 with Event.LinkChild
 with Events.CompiledEvent.Handler
@@ -27,7 +28,7 @@ with ThemeSync {
     // if it's the first time, make a new aggregate model editor
     if (editor == null)
       editor = new AggregateModelEditor(
-        linkParent, colorizer, menuBarFactory, compiler, dialogFactory)
+        linkParent, colorizer, menuBarFactory, compiler, dialogFactory, extensionManager)
     editor.setVisible(true)
     editor.toFront()
   }
@@ -49,7 +50,7 @@ with ThemeSync {
     model.optionalSectionValue[AggregateDrawing]("org.nlogo.modelsection.systemdynamics.gui")
       .foreach { drawing =>
         editor = new AggregateModelEditor(
-          linkParent, colorizer, menuBarFactory, drawing, compiler, dialogFactory)
+          linkParent, colorizer, menuBarFactory, drawing, compiler, dialogFactory, extensionManager)
         if (drawing.getModel.elements.isEmpty)
           editor.setVisible(false)
       }

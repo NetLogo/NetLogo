@@ -14,7 +14,7 @@ trait CompilerServices extends LiteralParser {
   @throws(classOf[CompilerException])
   def checkCommandSyntax(source: String): Unit
   def isReporter(s: String): Boolean
-  def isValidIdentifier(s: String): Boolean
+  def isValidIdentifier(s: String, extensionManager: ExtensionManager): Boolean
   def tokenizeForColorization(source: String): Array[Token]
   def tokenizeForColorizationIterator(source: String): Iterator[Token]
   def getTokenAtPosition(source: String, position: Int): Token

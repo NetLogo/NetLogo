@@ -4,10 +4,12 @@ package org.nlogo.window
 
 import java.awt.{ GridBagConstraints, Insets }
 
-import org.nlogo.api.CompilerServices
+import org.nlogo.api.{ CompilerServices, ExtensionManager }
 import org.nlogo.core.I18N
 
-class InputEditPanel(target: InputBoxWidget, compiler: CompilerServices) extends WidgetEditPanel(target) {
+class InputEditPanel(target: InputBoxWidget, compiler: CompilerServices, extensionManager: ExtensionManager)
+  extends WidgetEditPanel(target) {
+
   private val nameWrapper =
     new IdentifierEditor(
       new PropertyAccessor(
@@ -16,7 +18,7 @@ class InputEditPanel(target: InputBoxWidget, compiler: CompilerServices) extends
         () => target.name,
         name => target.setNameWrapper(name.getOrElse("")),
         () => apply()),
-      compiler)
+      compiler, extensionManager)
 
   private val typeOptions =
     new InputBoxEditor(

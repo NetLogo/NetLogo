@@ -5,18 +5,19 @@ package org.nlogo.window
 import java.lang.NumberFormatException
 
 import org.nlogo.agent.SliderConstraint
-import org.nlogo.api.{ CompilerServices, MersenneTwisterFast }
+import org.nlogo.api.{ CompilerServices, ExtensionManager, MersenneTwisterFast }
 import org.nlogo.core.{ Horizontal, I18N, Slider => CoreSlider, Vertical, Widget => CoreWidget }
 import org.nlogo.editor.Colorizer
 import org.nlogo.window.Events.{ InterfaceGlobalEvent, AfterLoadEvent, PeriodicUpdateEvent, AddSliderConstraintEvent }
 
 class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast,
-                   compiler: CompilerServices, colorizer: Colorizer)
+                   compiler: CompilerServices, colorizer: Colorizer, extensionManager: ExtensionManager)
   extends MultiErrorWidget with AbstractSliderWidget with InterfaceGlobalWidget with Editable
   with PeriodicUpdateEvent.Handler with AfterLoadEvent.Handler {
 
-  def this(random: MersenneTwisterFast, compiler: CompilerServices, colorizer: Colorizer) =
-    this(false, random, compiler, colorizer)
+  def this(random: MersenneTwisterFast, compiler: CompilerServices, colorizer: Colorizer,
+           extensionManager: ExtensionManager) =
+    this(false, random, compiler, colorizer, extensionManager)
 
   private var _minimumCode: String = "0"
   private var _maximumCode: String = "100"
@@ -41,7 +42,7 @@ class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast,
 
   override def classDisplayName = I18N.gui.get("tabs.run.widgets.slider")
 
-  override def editPanel: EditPanel = new SliderEditPanel(this, compiler, colorizer)
+  override def editPanel: EditPanel = new SliderEditPanel(this, compiler, colorizer, extensionManager)
 
   override def getEditable: Option[Editable] = Some(this)
 

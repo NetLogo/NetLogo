@@ -2,7 +2,7 @@
 
 package org.nlogo.workspace
 
-import org.nlogo.api.CompilerServices
+import org.nlogo.api.{ CompilerServices, ExtensionManager }
 import org.nlogo.core.{ CompilerException, ProcedureSyntax, Token }
 
 // This trait implements all the api.CompilerServices methods *except* readFromString, which
@@ -36,8 +36,8 @@ trait Compiling extends CompilerServices { this: AbstractWorkspace =>
   def isReporter(s: String): Boolean =
     compiler.isReporter(s, _world.program, procedures, getExtensionManager, getCompilationEnvironment);
 
-  def isValidIdentifier(s: String): Boolean =
-    compiler.isValidIdentifier(s)
+  def isValidIdentifier(s: String, extensionManager: ExtensionManager): Boolean =
+    compiler.isValidIdentifier(s, extensionManager)
 
   def tokenizeForColorization(s: String): Array[Token] =
     compiler.tokenizeForColorization(s, getExtensionManager)

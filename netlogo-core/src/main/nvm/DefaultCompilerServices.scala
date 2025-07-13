@@ -3,7 +3,7 @@
 package org.nlogo.nvm
 
 import org.nlogo.core.{ Dialect, DummyCompilationEnvironment }
-import org.nlogo.api.{ CompilerServices }
+import org.nlogo.api.{ DummyExtensionManager, CompilerServices, ExtensionManager }
 import org.nlogo.core.Program
 import scala.collection.immutable.ListMap
 
@@ -29,9 +29,9 @@ class DefaultCompilerServices(compiler: CompilerInterface & AuxiliaryCompilerInt
   def readFromString(source: String) =
     compiler.readFromString(source)
   def isConstant(s: String) =
-    compiler.isValidIdentifier(s)
-  def isValidIdentifier(s: String) =
-    compiler.isValidIdentifier(s)
+    compiler.isValidIdentifier(s, new DummyExtensionManager)
+  def isValidIdentifier(s: String, extensionManager: ExtensionManager) =
+    compiler.isValidIdentifier(s, extensionManager)
   def isReporter(s: String) =
     compiler.isReporter(s, emptyProgram, new ListMap[String, Procedure],
                         new org.nlogo.api.DummyExtensionManager, new DummyCompilationEnvironment())

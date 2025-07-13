@@ -37,11 +37,6 @@ object Tokenizer extends TokenizerInterface {
       }
   }
 
-  def isValidIdentifier(ident: String): Boolean = {
-    val is = tokenizeString(ident)
-    is.next().tpe == TokenType.Ident && is.next().tpe == TokenType.Eof
-  }
-
   def tokenizeSkippingTrailingWhitespace(reader: Reader, filename: String = ""): Iterator[(Token, Int)] = {
     var lastOffset = 0
     new TokenLexIterator(WhitespaceSkippingLexer, WrappedInput(reader, filename)).map {

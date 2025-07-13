@@ -55,8 +55,8 @@ class GUIHubNetManager(workspace: GUIWorkspace,
     val host = try Some(InetAddress.getLocalHost.getHostAddress.toString)
     catch {case ex: java.net.UnknownHostException => None}
     // TODO: this seems like a bunch of bugs waiting to happen
-    clientApp.startup("", host.orNull, connectionManager.port, true,
-      isRobo, waitTime, new DefaultCompilerServices(workspace.compiler))
+    clientApp.startup("", host.orNull, connectionManager.port, true, isRobo, waitTime,
+                      new DefaultCompilerServices(workspace.compiler), workspace.getExtensionManager)
     Some(clientApp)
   }
 

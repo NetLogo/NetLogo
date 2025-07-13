@@ -9,7 +9,8 @@ import java.util.concurrent.atomic.AtomicBoolean
 import javax.swing.JPanel
 
 import org.nlogo.core.{ I18N, LogoList }
-import org.nlogo.api.{ Version, Dump, MersenneTwisterFast, PlotInterface, DummyLogoThunkFactory, CompilerServices }
+import org.nlogo.api.{ Version, Dump, ExtensionManager, MersenneTwisterFast, PlotInterface, DummyLogoThunkFactory,
+                       CompilerServices }
 import org.nlogo.agent.{ AbstractExporter, ConstantSliderConstraint }
 import org.nlogo.plot.{ CorePlotExporter, Plot, PlotManager }
 import org.nlogo.hubnet.connection.{ Streamable, ConnectionTypes, AbstractConnection }
@@ -32,7 +33,8 @@ import scala.concurrent.Future
 // moved, so we use events.  - ST 8/24/03
 class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
                   errorHandler:ErrorHandler,
-                  compiler:CompilerServices)
+                  compiler:CompilerServices,
+                  extensionManager: ExtensionManager)
   extends JPanel(new BorderLayout) with Transparent with AddJobEvent.Handler with ExportPlotEvent.Handler
   with InterfaceGlobalEvent.Handler with AddSliderConstraintEvent.Handler with ThemeSync {
 
@@ -236,7 +238,7 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
     if (clientGUI != null) remove(clientGUI)
     plotManager.forgetAll()
     viewWidget = new ClientView(this)
-    clientGUI = new ClientGUI(editorFactory, viewWidget, plotManager, compiler)
+    clientGUI = new ClientGUI(editorFactory, viewWidget, plotManager, compiler, extensionManager)
     add(clientGUI, java.awt.BorderLayout.CENTER)
     clientGUI.setStatus(userid, activityName, hostip, port)
     val clientInterface = handshake.clientInterface match {
