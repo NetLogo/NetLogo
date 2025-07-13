@@ -316,7 +316,6 @@ class App extends org.nlogo.window.Event.LinkChild
   private var errorDialogManager: ErrorDialogManager = null
   private val listenerManager = new NetLogoListenerManager
   private var syncComponents = Set[ThemeSync]()
-  lazy val modelingCommons = pico.getComponent(classOf[ModelingCommonsInterface])
   private val runningInMacWrapper = Option(System.getProperty("org.nlogo.mac.appClassName")).nonEmpty
   private val ImportWorldURLProp = "netlogo.world_state_url"
   private val ImportRawWorldURLProp = "netlogo.raw_world_state_url"
@@ -487,16 +486,6 @@ class App extends org.nlogo.window.Event.LinkChild
         modelSaver.modelAsString(modelSaver.currentModel, ModelReader.modelSuffix)
       }
 
-      pico.add(classOf[ModelingCommonsInterface],
-            "org.nlogo.mc.ModelingCommons",
-            Array[Parameter] (
-              new ConstantParameter(currentModelAsString),
-              new ComponentParameter(classOf[AppFrame]),
-              new ConstantParameter(() => workspace.exportView),
-              new ConstantParameter(() => Boolean.box(
-                workspace.procedures.get("SETUP") != null &&
-                  workspace.procedures.get("GO") != null)),
-              new ComponentParameter()))
       aggregateManager = pico.getComponent(classOf[AggregateManagerInterface])
       frame.addLinkComponent(aggregateManager)
 

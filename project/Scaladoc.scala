@@ -10,7 +10,6 @@ object Scaladoc {
   , "org.nlogo.job"
   , "org.nlogo.lex"
   , "org.nlogo.log"
-  , "org.nlogo.mc"
   , "org.nlogo.parse"
   , "org.nlogo.plot"
   , "org.nlogo.properties"
