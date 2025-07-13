@@ -13,7 +13,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.DataBuffer;
 import java.awt.image.SampleModel;
-import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,7 +23,7 @@ public class ImportPatchColors {
       throws java.io.IOException {
 
     String filename = imageFile.getAbsolutePath();
-    FileInputStream stream = imageFile.getInputStream();
+    InputStream stream = imageFile.getInputStream();
     BufferedImage image = ImageIO.read(stream);
     stream.close();
     // sometime we have to throw the exception ourselves,
