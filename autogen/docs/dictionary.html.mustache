@@ -5933,8 +5933,11 @@ show n-values 5 [ x -&gt; x * x ]
           <img alt="Turtle Command" src="images/turtle.png" width=16 height=16/> <img alt="Patch Command" src="images/patch.png" width=16 height=16/>
         </h4>
         <p>
-          Reports an agentset containing the 8 surrounding patches
-          (neighbors) or 4 surrounding patches (neighbors4).
+          Reports an agentset containing the 8 surrounding patches (neighbors) or 4 surrounding patches (neighbors4),
+          if they exist. If the world is wrapping, the neighbors of a patch along the edge of the world will include
+          the corresponding patches on the opposite edge of the world. If the world is not wrapping, any neighbors
+          outside the boundaries of the world will be excluded from the set. The neighbor set will never include the
+          target patch itself, even if the world only has one row or one column of patches.
         </p>
         <pre>
 show sum [count turtles-here] of neighbors
