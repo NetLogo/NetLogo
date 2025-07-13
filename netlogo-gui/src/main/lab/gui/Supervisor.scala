@@ -295,7 +295,15 @@ class Supervisor(
           progressDialog.resetProtocol()
         progressDialog.close()
       } } )
-    headlessWorkspaces.foreach(_.dispose())
+    headlessWorkspaces.foreach { w =>
+      try {
+        w.dispose()
+      } catch {
+        // if this is caught, the JobManager was in the middle of doing something,
+        // probably means the user Halted so it's fine to ignore this (Isaac B 7/13/25)
+        case _: InterruptedException =>
+      }
+    }
   }
 
   private def failure(t: Throwable): Unit = {
