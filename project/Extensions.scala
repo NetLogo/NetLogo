@@ -79,7 +79,7 @@ object Extensions {
         buildExtension(base, dir, s.cacheDirectory, nlJar)
       }
     },
-    excludedExtensions := Seq(),
+    excludedExtensions := Seq("ls"),
     javaOptions +=
       "-Dnetlogo.extensions.dir=" + extensionRoot.value.getAbsolutePath.toString
   )
