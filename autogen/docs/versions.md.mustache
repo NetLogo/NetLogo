@@ -107,7 +107,7 @@ Below, we list all the changes since NetLogo 6.4.
 ### Bug Fixes and Changes
 - Multi-assign with `let` and `set` can use arbitrarily nested lists to "destructure" variables. For example, `let [[corner1-x corner1-y corner2-x corner2-y] player-name score] get-current-player-info`.
 - The primitive `auto-plot?` has been restored.
-- An optimization speeds up the execution of the constructs `any turtles-on` and `any <breeds>-on`.
+- An optimization speeds up the execution of the constructs `any? turtles-on` and `any? <breeds>-on`.
 - An `__includes` statement not followed by brackets no longer causes an exception.
 - Reporter procedures without a `report` statement, `run` or `runresult` now throw a compile time error.
 - The user receives a specific message when keywords such as `globals`, `turtles-own`, `to` or `end` are used in an incorrect context.
