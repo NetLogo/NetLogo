@@ -244,11 +244,13 @@ div.toc > ul {
 	font-weight: 800; /* Bold for top-level links */
 	font-size: 1.3rem; /* Larger size for top-level links */
 	line-height: 2rem; /* Increased line height for readability */
+	list-style: decimal;
 }
 
 /* Second Level List */
 div.toc > ul ul {
 	max-width: 100ch; /* Limit the width */
+	list-style: decimal;
 }
 
 div.toc > ul li ul {
