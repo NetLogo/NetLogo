@@ -65,12 +65,14 @@ class NetLogoDocs(
       docsTarget / "dictionary.html",
       targetDir,
       docsSource / "dictTemplate.html.mustache",
-      netLogoRoot / "resources" / "system" / "dict.txt")
+      netLogoRoot / "resources" / "system" / "dict.txt",
+      docsTarget / "header.html")
     PrimIndex.generate(
       docsTarget / "3d.html",
       targetDir,
       docsSource / "dictTemplate.html.mustache",
-      netLogoRoot / "resources" / "system" / "dict3d.txt")
+      netLogoRoot / "resources" / "system" / "dict3d.txt",
+      docsTarget / "header.html")
   }
 
   private def infoTabHTML: String = {
