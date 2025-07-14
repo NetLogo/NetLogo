@@ -36,6 +36,8 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with JSerializ
 
   private var _currentPen: Option[PlotPen] = None
 
+  private var penListeners = Set[PenListener]()
+
   // This only affects the UI, not headless operation, but because it is included when a plot is
   // exported, we keep it here rather than in PlotWidget, so that exporting can stay totally
   // headless - ST 3/9/06
@@ -69,6 +71,10 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with JSerializ
   }
   def removePlotListener(): Unit ={ this.plotListener = None }
 
+  def addPenListener(listener: PenListener): Unit = {
+    penListeners += listener
+  }
+
   def name(newName:String): Unit ={ name = newName }
 
   def makeDirty(): Unit ={ dirtyListener.foreach{_.makeDirty() }}
@@ -81,6 +87,7 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with JSerializ
   def addPen(p:PlotPen) = {
     pens = _pens :+ p
     pensDirty = true
+    penListeners.foreach(_.penAdded())
   }
 
   // take the first pen if there is no current pen set
@@ -286,4 +293,10 @@ object Plot {
   trait DirtyListener {
     def makeDirty(): Unit
   }
+}
+
+// allows GUI plot to notify its parent widget when a pen is added so it
+// can repaint its legend (Isaac B 7/13/25)
+trait PenListener {
+  def penAdded(): Unit
 }

@@ -8,7 +8,7 @@ import java.util.Locale
 import javax.swing.{ JLabel, JPanel, SwingConstants }
 
 import org.nlogo.core.{ I18N, Pen => CorePen, Plot => CorePlot, Widget => CoreWidget }
-import org.nlogo.plot.{ PlotManagerInterface, PlotLoader, PlotPen, Plot }
+import org.nlogo.plot.{ PenListener, PlotManagerInterface, PlotLoader, PlotPen, Plot }
 import org.nlogo.swing.{ RoundedBorderPanel, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.Events.{ AfterLoadEvent, CompiledEvent, WidgetErrorEvent, WidgetRemovedEvent }
@@ -59,6 +59,12 @@ abstract class AbstractPlotWidget(val plot: Plot, val plotManager: PlotManagerIn
   private val nameLabel = new JLabel(originalName)
   private val xAxis = new XAxisLabels(this)
   private val yAxis = new YAxisLabels(this)
+
+  plot.addPenListener(new PenListener {
+    override def penAdded(): Unit = {
+      legend.refresh()
+    }
+  })
 
   displayName(originalName)
 
