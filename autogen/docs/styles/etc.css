@@ -304,6 +304,23 @@ div.version {
 	box-shadow: none;
 }
 
+.dictionary-layout .sidebar .search-bar {
+	outline: none;
+	border: solid 1px;
+	border-color: var(--color-black);
+	border-radius: var(--radius-sm);
+
+	padding: var(--space-xs) var(--space-sm);
+	margin-bottom: var(--block-bottom);
+
+	color: var(--color-nav-text);
+
+	width: 100%;
+	font-size: 0.875rem;
+
+	background: var(--color-nav-background);
+}
+
 .dictionary-layout .content {
 	flex: 1; /* Take remaining space */
 	min-width: unset;
@@ -415,7 +432,7 @@ div.version {
 	}
 
 	/* Avoid layout shifts */
-	.navbar {
+	.dictionary-entry-page .navbar {
 		position: fixed;
 		width: 100%;
 	}
@@ -433,4 +450,9 @@ div.version {
 		margin-top: 0;
 		margin-bottom: var(--space-lg);
 	}
+}
+
+/* Versions Page Overrides */
+.versions-page .toc ul {
+	list-style: none;
 }
