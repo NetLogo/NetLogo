@@ -38,8 +38,10 @@ object UserAction {
   val FileShareGroup        = "org.nlogo.swing.FileShareGroup"
   val FileResourcesGroup    = "org.nlogo.swing.FileResourcesGroup"
 
-  val HelpWebGroup     = "org.nlogo.swing.HelpWebGroup"
   val HelpContextGroup = "org.nlogo.swing.HelpContextGroup"
+  val HelpDocGroup     = "org.nlogo.swing.HelpDocGroup"
+  val HelpWebGroup     = "org.nlogo.swing.HelpWebGroup"
+  val HelpDonateGroup  = "org.nlogo.swing.HelpDonateGroup"
   val HelpAboutGroup   = "org.nlogo.swing.HelpAboutGroup"
 
   val ToolsSettingsGroup = "org.nlogo.swing.ToolsSettingsGroup"

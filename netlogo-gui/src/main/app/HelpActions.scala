@@ -15,11 +15,11 @@ import org.nlogo.swing.{ BrowserLauncher, UserAction },
   UserAction._
 import org.nlogo.theme.ThemeSync
 
-class LocalBrowseAction(name: String, path: Path)
+class LocalBrowseAction(name: String, path: Path, group: String)
 extends AbstractAction(name)
 with MenuAction {
   category = HelpCategory
-  group    = HelpWebGroup
+  this.group    = group
 
   override def actionPerformed(e: ActionEvent): Unit = {
     val launchComponent = e.getSource match {
@@ -30,11 +30,11 @@ with MenuAction {
   }
 }
 
-class RemoteBrowseAction(name: String, uri: URI)
+class RemoteBrowseAction(name: String, uri: URI, group: String)
 extends AbstractAction(name)
 with MenuAction {
   category = HelpCategory
-  group    = HelpWebGroup
+  this.group = group
 
   override def actionPerformed(e: ActionEvent): Unit = {
     val launchComponent = e.getSource match {
@@ -49,29 +49,23 @@ object HelpActions {
   def apply: Seq[MenuAction] = {
     Seq(
     new LocalBrowseAction(I18N.gui.get("menu.help.netLogoUserManual"),
-      docPath("index.html")),
+      docPath("index.html"), HelpDocGroup),
     new LocalBrowseAction(I18N.gui.get("menu.help.netLogoDictionary"),
-      docPath("index2.html")),
-    new RemoteBrowseAction(I18N.gui.get("menu.help.news"),
-      new URI("https://www.netlogo.org/announcements/")),
+      docPath("index2.html"), HelpDocGroup),
     new RemoteBrowseAction(I18N.gui.get("menu.help.bind"),
-      new URI("https://ccl.northwestern.edu/netlogo/bind")),
-    new RemoteBrowseAction(I18N.gui.get("menu.help.netLogoUsersGroup"),
-      new URI("http://groups.google.com/d/forum/netlogo-users")),
+      new URI("https://ccl.northwestern.edu/netlogo/bind"), HelpDocGroup),
     new RemoteBrowseAction(I18N.gui.get("menu.help.introToABM"),
-      new URI("https://mitpress.mit.edu/9780262731898/an-introduction-to-agent-based-modeling/")),
-    new RemoteBrowseAction(I18N.gui.get("menu.help.donate"),
-      new URI("https://www.netlogo.org/donate/")) {
-      putValue(ActionGroupKey, HelpAboutGroup)
-    },
+      new URI("https://mitpress.mit.edu/9780262731898/an-introduction-to-agent-based-modeling/"), HelpDocGroup),
     new RemoteBrowseAction(I18N.gui.get("menu.help.forum"),
-      new URI("https://forum.netlogo.org")) {
-      putValue(ActionGroupKey, HelpAboutGroup)
-      },
+      new URI("https://forum.netlogo.org"), HelpWebGroup),
+    new RemoteBrowseAction(I18N.gui.get("menu.help.netLogoUsersGroup"),
+      new URI("http://groups.google.com/d/forum/netlogo-users"), HelpWebGroup),
     new RemoteBrowseAction(I18N.gui.get("menu.help.contact"),
-      new URI("https://www.netlogo.org/contact/")) {
-      putValue(ActionGroupKey, HelpAboutGroup)
-      })
+      new URI("https://www.netlogo.org/contact/"), HelpWebGroup),
+    new RemoteBrowseAction(I18N.gui.get("menu.help.donate"),
+      new URI("https://www.netlogo.org/donate/"), HelpDonateGroup),
+    new RemoteBrowseAction(I18N.gui.get("menu.help.news"),
+      new URI("https://www.netlogo.org/announcements/"), HelpAboutGroup))
   }
 }
 
