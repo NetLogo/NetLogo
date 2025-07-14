@@ -61,18 +61,33 @@ class NetLogoDocs(
   private def generatePrimIndices(targetDir: File): Unit = {
     IO.createDirectory(targetDir)
     println(docsSource.getAbsolutePath)
+
+    val vars = Map[String, Object](
+      "dictHome" -> "dictionary.html",
+      "dictTitle" -> "NetLogo Dictionary",
+    )
+
     PrimIndex.generate(
       docsTarget / "dictionary.html",
       targetDir,
       docsSource / "dictTemplate.html.mustache",
       netLogoRoot / "resources" / "system" / "dict.txt",
-      docsTarget / "header.html")
+      docsTarget / "header.html",
+      vars
+    )
+
+    val vars3D = vars + (
+      "dictHome" -> "3d.html",
+      "dictTitle" -> "NetLogo 3D Dictionary",
+    )
     PrimIndex.generate(
       docsTarget / "3d.html",
       targetDir,
       docsSource / "dictTemplate.html.mustache",
       netLogoRoot / "resources" / "system" / "dict3d.txt",
-      docsTarget / "header.html")
+      docsTarget / "header.html",
+      vars3D
+    )
   }
 
   private def infoTabHTML: String = {

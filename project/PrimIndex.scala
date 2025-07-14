@@ -7,8 +7,8 @@ case class IndexElement(anchorName: String, containedPrims: Seq[String], html: S
 
 object PrimIndex {
   private def adjustHtml(rawHtml: String, sourceFileName: String): String = {
-    val otherHref = new Regex("""<a href="([^#][^"]*)"""", "link")
-    val anchorHref = new Regex("""<a href="#([^"]*)"""", "anchor")
+    val otherHref = new Regex("""<a(\s*class="[^"]+"\s*)?href="([^#][^"]*)"""", "class", "link")
+    val anchorHref = new Regex("""<a(\s*class="[^"]+"\s*)?href="#([^"]*)"""", "class", "anchor")
 
     // We used <base href="../" /> in the template, so the link adjustment
     // is no longer needed.
@@ -18,11 +18,11 @@ object PrimIndex {
       if (m.group("link").startsWith("http:") || m.group("link").startsWith("https:"))
         m.matched
       else
-        s"""<a href="${m.group("link")}""""                        // NOP
+        s"""<a${m.group("class")}href="${m.group("link")}""""                        // NOP
     }
 
     def replaceAnchor(m: Match): String =
-      s"""<a href="../${sourceFileName}#${m.group("anchor")}""""
+      s"""<a${m.group("class")}href="./${sourceFileName}#${m.group("anchor")}""""
 
     val s = rawHtml.replace("""src="images""", """src="images""")  // NOP
     val s1 = otherHref.replaceAllIn(s, replaceHref _)
@@ -30,7 +30,7 @@ object PrimIndex {
     s2
   }
 
-  def generate(dictFile: File, target: File, templateFile: File, indexFile: File, headerFile: File): Unit = {
+  def generate(dictFile: File, target: File, templateFile: File, indexFile: File, headerFile: File, renderVars: Map[String, Object]): Unit = {
     import scala.collection.JavaConverters._
 
     val html = IO.read(dictFile)
@@ -69,7 +69,7 @@ object PrimIndex {
         "header"         -> headerHtml,
         "primMap"       -> primMap.asJava,
         "primTitle"     -> el.containedPrims.mkString(", "),
-      )
+      ) ++ renderVars
       Mustache(templateFile, target / s"${el.anchorName}.html", vars)
     }
 
