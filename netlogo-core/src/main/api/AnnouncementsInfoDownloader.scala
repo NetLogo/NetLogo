@@ -19,7 +19,7 @@ object AnnouncementsInfoDownloader extends InfoDownloader {
 
   override val prefsKey = "announcements"
 
-  val defaultURL = new URL("https://ccl.northwestern.edu/netlogo/announce.json")
+  val defaultURL = new URL("https://backend.netlogo.org/items/announcements")
 
   def fetch(): Future[Seq[Announcement]] = {
     import ExecutionContext.Implicits.global
@@ -38,8 +38,9 @@ object AnnouncementsInfoDownloader extends InfoDownloader {
 
     try {
 
-      val arr  = json.parse(contents).asInstanceOf[JSONArray]
-      val iter = arr.iterator()
+      val topObj = json.parse(contents).asInstanceOf[JSONObject]
+      val arr    = topObj.get("data").asInstanceOf[JSONArray]
+      val iter   = arr.iterator()
 
       val announcements =
         iter.asScala.toVector.map {
@@ -51,13 +52,13 @@ object AnnouncementsInfoDownloader extends InfoDownloader {
             val lifespan = obj.get("lifespan").asInstanceOf[Number].longValue
             val typeStr  = obj.get(    "type").asInstanceOf[String]
             val summary  = obj.get( "summary").asInstanceOf[String]
-            val desc     = obj.get(    "desc").asInstanceOf[String]
+            val content  = obj.get( "content").asInstanceOf[String]
 
-            val (months, days, years) = dateStr.split("/") match {
-              case Array(m, d, y) => (m, d, y)
+            val (years, months, days) = dateStr.split("-") match {
+              case Array(y, m, d) => (y, m, d)
               case a => throw new IllegalStateException
             }
-            val date                       = LocalDate.of(2000 + years.toInt, months.toInt, days.toInt)
+            val date = LocalDate.of(2000 + years.toInt, months.toInt, days.toInt)
 
             val annType =
               typeStr match {
@@ -73,7 +74,7 @@ object AnnouncementsInfoDownloader extends InfoDownloader {
               else
                 Option(date.plusDays(lifespan))
 
-            Announcement(id, title, date, endDate, annType, summary, desc)
+            Announcement(id, title, date, endDate, annType, summary, content)
 
           case o =>
             throw new IllegalStateException

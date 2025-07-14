@@ -50,7 +50,7 @@ class AnnouncementBanner extends JPanel with MouseUtils with ThemeSync {
       override def mouseClicked(e: MouseEvent): Unit = {
         announcements.headOption.foreach {
           ann =>
-            BrowserLauncher.openURI(new URI(s"https://ccl.northwestern.edu/netlogo/announce.shtml#news-item-${ann.id}"))
+            BrowserLauncher.openURI(new URI(s"https://www.netlogo.org/announcements#news-item-${ann.id}"))
             ggGoNext()
         }
       }
