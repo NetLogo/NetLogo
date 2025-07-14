@@ -447,7 +447,6 @@
   <experiment name="testIgnoreComments" repetitions="1" runMetricsEveryStep="true">
     <setup>ca reset-ticks</setup>
     <go>tick</go>
-    <timeLimit steps="0"/>
     <exitCondition>; stop when ticks &gt; 2
 
 ticks &gt; 2 ; this is the stop condition</exitCondition>

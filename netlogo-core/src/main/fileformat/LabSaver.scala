@@ -92,7 +92,7 @@ object LabSaver {
                             attributes(("steps",protocol.timeLimit.toString)))
     if (protocol.exitCondition != "")
       element("exitCondition", protocol.exitCondition)
-    for(metric <- protocol.metrics)
+    for(metric <- protocol.metricsForSaving)
       element("metric", metric)
     if (!protocol.runMetricsCondition.isEmpty)
       element("runMetricsCondition", protocol.runMetricsCondition)
