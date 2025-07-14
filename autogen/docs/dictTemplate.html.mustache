@@ -18,7 +18,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 	</head>
-	<body>
+	<body class="dictionary-entry-page">
 		{{{header}}}
 		<div class="dictionary-layout">
 			<section class="sidebar">
@@ -35,6 +35,8 @@
 
 					<!-- List -->
 					<span class="heading-title">NetLogo Dictionary</span>
+					<!-- Search -->
+					<input class="search-bar" type="text" id="search-input" placeholder="Search primitives..." />
 					<ul class="heading-items">
 						{{#primMap}}
 						<li>
@@ -122,6 +124,29 @@
 						} catch (error) {
 							console.error(`Error processing link ${link.getAttribute('href')}:`, error);
 						}
+					});
+
+					// Search functionality
+					const searchInput = document.getElementById('search-input');
+					let timer = null;
+					const debounceDelay = 200; // 300 milliseconds
+					searchInput.addEventListener('input', function () {
+						clearTimeout(timer);
+						timer = setTimeout(
+							() => {
+								const searchTerm = searchInput.value.toLowerCase();
+								const items = document.querySelectorAll('.heading-items li');
+								items.forEach((item) => {
+									const link = item.querySelector('a');
+									if (link && link.textContent.toLowerCase().includes(searchTerm)) {
+										item.style.display = 'block';
+									} else {
+										item.style.display = 'none';
+									}
+								});
+							},
+							timer ? debounceDelay : 0
+						);
 					});
 				});
 			})();
