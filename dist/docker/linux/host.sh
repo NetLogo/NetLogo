@@ -17,7 +17,7 @@ if [ -z "${NL_BUILD_VERSION}" ]; then
   exit 1
 fi
 
-apt install docker.io
+apt install -y docker.io
 docker pull ubuntu:20.04
 
 NL_DOCKER_ID=`sudo docker run -dit ubuntu:20.04 /bin/bash`
