@@ -36,9 +36,6 @@ object ChecksumsAndPreviewsSettings {
     )
 
     , Some("it uses the sound extension") -> List(
-      "/SAMPLE MODELS/GAMES/FROGGER.NLOGOX",
-      "/SAMPLE MODELS/ART/SOUND MACHINES.NLOGOX",
-      "/SAMPLE MODELS/ART/GENJAM - DUPLE.NLOGOX",
       "/CODE EXAMPLES/EXTENSIONS EXAMPLES/SOUND/"
     )
 
@@ -64,10 +61,6 @@ object ChecksumsAndPreviewsSettings {
 
     , Some("it uses the palette extension") -> List(
       "/CODE EXAMPLES/EXTENSIONS EXAMPLES/PALETTE/"
-    )
-
-    , Some("it uses the nw extension") -> List(
-      "/CODE EXAMPLES/EXTENSIONS EXAMPLES/NW/"
     )
 
     , Some("it uses the time extension") -> List(
