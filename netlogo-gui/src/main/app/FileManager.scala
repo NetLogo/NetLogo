@@ -326,8 +326,12 @@ class FileManager(workspace: AbstractWorkspaceScala,
   }
 
   def openFromURI(uri: URI, modelType: ModelType, shouldAutoInstallLibs: Boolean = false): Unit = {
+    var autosaveFound = false
+
     val newUri = ModelConfig.findAutoSave(Paths.get(uri).toString) match {
       case Some(path) =>
+        autosaveFound = true
+
         if (new OptionPane(parent, I18N.gui.get("file.autosave.recover"), I18N.gui.get("file.autosave.recover.message"),
                            OptionPane.Options.YesNo, OptionPane.Icons.Info).getSelectedIndex == 0) {
           path.toUri
@@ -341,7 +345,7 @@ class FileManager(workspace: AbstractWorkspaceScala,
     loadModel(openModelURI(newUri)).foreach { m =>
       openFromModel(m, uri, modelType, shouldAutoInstallLibs)
 
-      if (modelType == ModelType.Normal) {
+      if (modelType == ModelType.Normal && autosaveFound) {
         saveModel(false)
       } else {
         dirtyMonitor.discardNewAutoSaves()
