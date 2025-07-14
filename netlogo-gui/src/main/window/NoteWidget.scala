@@ -100,8 +100,10 @@ class NoteWidget extends SingleErrorWidget with Transparent with Editable {
     repaint()
   }
 
-  private def escapeHTML(s: String): String =
+  private def escapeHTML(s: String): String = {
     s.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\n", "<br>")
+     .replaceAll(" ", "&nbsp;")
+  }
 
   def text: String = _text
   def setText(newText: String): Unit = {
