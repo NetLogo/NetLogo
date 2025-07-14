@@ -122,6 +122,10 @@
 	transition: background var(--dur-fast);
 
 	width: fit-content;
+	max-height: 1.9lh;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 .version-select:hover {
 	background: var(--color-brand);
@@ -155,16 +159,6 @@
 button.navbar__action {
 	border: none;
 	outline: none;
-}
-
-@media (max-width: 1024px) {
-	.version-select {
-		font-size: 0.875rem;
-		max-height: 3rem;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		white-space: nowrap;
-	}
 }
 
 /* ------------------------------------------------------------------
@@ -310,6 +304,14 @@ button.navbar__action {
 	}
 	#menu-toggle:checked + div .hamburger span:nth-child(3) {
 		transform: translateY(-6px) rotate(-45deg);
+	}
+
+	.version-select {
+		font-size: 0.875rem;
+		max-height: 3rem;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
 	}
 }
 

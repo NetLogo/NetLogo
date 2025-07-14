@@ -225,7 +225,6 @@ ol {
 }
 
 ul {
-	list-style: decimal;
 	max-width: var(--max-width-ch);
 }
 
