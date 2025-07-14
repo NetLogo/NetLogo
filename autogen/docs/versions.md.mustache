@@ -15,25 +15,26 @@ For help running models made in old versions, see the
 </div>
 
 
-## Version 7.0.0-beta2 (June 2025)
+## Version 7.0.0-beta2 (July 2025)
 
 The biggest changes in this release are:
 
-- A new modernized GUI with both light and dark modes (and a classic mode)
-([see below](#changes-to-the-netlogo-gui))
-- Greater customizability, with more preferences and settings
-([see below](#changes-for-customizability))
-- NetLogo models are now stored in a new format with the extension .nlogox
-([see below](#changes-to-the-netlogo-file-format))
+- A new modernized GUI with both light and dark modes (and a classic mode) ([see below](#changes-to-the-netLogo-gui))
+
+- Greater customizability, with more preferences and settings ([see below](#changes-for-customizability))
+
+- NetLogo models are now stored in a new format with the extension .nlogox ([see below](#changes-to-the-netlogo-file-format))
+
 - The download page now has separate Intel and Silicon MacOS versions.
 
 Below, we list all the changes since NetLogo 6.4.
 
 ### Changes in NetLogo Functionality
-- The random number generator behavior has changed. If you had model behavior that depended on a specific random seed being set, it will not generate the same behavior as in NetLogo 6.
+- There was a small bug fixed in the behavior of the `random` primitive.  Models that use `random` and
+`random-seed` may not generate the exact same behavior as in NetLogo 6.
 
 ### Changes to the NetLogo GUI
-- See the [transition guide document](https://ccl.northwestern.edu/nl7changesoverview/nl7guide.html) for more details.
+- See the [NetLogo 7.0.0 Changes Overview](netlogo7intro.html) for more details.
 - User interface elements (widgets) have a flat modern look with a new color scheme.
 - Users have a choice of color themes: Light, Dark and Classic.
     - The classic color theme is similar to the light theme, except the widgets have the pre-NetLogo 7 colors.
@@ -63,6 +64,7 @@ Below, we list all the changes since NetLogo 6.4.
 - The color themes are color blind friendly.
 - The shapes list in the Turtle Shapes Editor and the Link Shapes Editor is now searchable.
 - Color Swatches has been replaced by a more powerful Color picker.
+- The documentation format has been updated.
 
 ### Changes to the NetLogo File format
 - The extension of model files is now .nlogox or .nlogox3d.
@@ -85,8 +87,10 @@ Below, we list all the changes since NetLogo 6.4.
     - There is a new preference option that prevents compilation errors from stealing focus from the current tab. By default, it is not enabled.
     - There is a new preference option that causes a separate code tab to be opened when NetLogo starts. By default, it is not enabled.
     - There is a Linux-only UI Scale preference that matches NetLogo graphics to the system UI scale.
+    - There is a preference that enable users to control whether anonymous data will be collected when they are using NetLogo. It is enabled by default.
 - Users can switch between Light, Dark and Classic color themes using an item in the Tools menu.
 - A new Color Picker replaces Color Swatches. Users can still select NetLogo colors from a grid of rectangles. The Color Picker has a second tab that allows users to specify colors in most common formats,  and that enables easy selection of a more extensive set of colors.
+
 
 ### Features and Enhancements
 - The NetLogo Graphical User Interface (GUI) has been thoroughly [modernized](#changes-to-the-netlogo-gui).
@@ -98,20 +102,23 @@ Below, we list all the changes since NetLogo 6.4.
 - Plots can now be scaled independently for the x and y axes via checkboxes in the Plot widget.
 - The separate code tab has a full NetLogo menu bar.
 - The Help Menu now has a link to the NetLogo Forum, a website to ask/answer questions and have discussions about NetLogo.
+- The Tools->Halt option is disabled if code is not running.
+- Print legends wrap to be multi-line if needed.
+- The auto-save functionality will prompt users if there is an auto-save file available (for example if NetLogo crashed).
 
 ### Language Changes
 - The `user-input` primitive has a new optional argument for a default input value.
 - The new primitives `auto-plot-x-on`, `auto-plot-y-on`, `auto-plot-x-off`, and `auto-plot-y-off` allow plots to be scaled independently for the x and y axes.
 - The new primitive `set-topology` replaces the "hidden" command `__change-topology`.
 
-### Bug Fixes and Changes
+### Bug Fixes and Minor Changes
 - Multi-assign with `let` and `set` can use arbitrarily nested lists to "destructure" variables. For example, `let [[corner1-x corner1-y corner2-x corner2-y] player-name score] get-current-player-info`.
 - The primitive `auto-plot?` has been restored.
 - An optimization speeds up the execution of the constructs `any? turtles-on` and `any? <breeds>-on`.
 - An `__includes` statement not followed by brackets no longer causes an exception.
 - Reporter procedures without a `report` statement, `run` or `runresult` now throw a compile time error.
 - The user receives a specific message when keywords such as `globals`, `turtles-own`, `to` or `end` are used in an incorrect context.
-- A helpful error message results when a constant such as `e` or `pi` is used as a global variable name.
+
 - Unmatched closing parentheses, brackets and braces result in a meaningful error message.
 - When a runtime error occurs the user is asked for information that would allow us to reproduce and fix the problem. This is in addition to the stack trace plus system information currently requested.
 - `Save as NetLogo Web` adds the contents of any included files to the model code.
@@ -139,11 +146,13 @@ Below, we list all the changes since NetLogo 6.4.
 - Doing a text search in a separate code tab that overlaps an interface window will no longer bring the interface window to the front, covering part of the separate code tab. (This was a MacOS-only issue.)
 - Changes in focus happen correctly when moving between separate and non-separate tabs.
 - Multi-assign with `let` and `set` now works with BehaviorSpace.
-- BehaviorSpace no longer produces a runtime error when the following conditions hold: 1) the user specifies a *Run metrics when* reporter, 2) the reporter is never true, and 3) the user has specified both Table and Spreadsheet output.
+- BehaviorSpace works correctly when no measurements have been made. In particular, it no longer produces a runtime error when the following conditions hold: 1) the user specifies a *Run metrics when* reporter, 2) the reporter is never true, and 3) the user has specified both Table and Spreadsheet output.
 - BehaviorSpace error messages are improved.
 - When a BehaviorSpace experiment is run with one or more specified output files that are open in another program, it now aborts the experiment and shows a useful error message.
 - Invalid variable specifications in BehaviorSpace result in useful messages.
 - BehaviorSpace output files can now be deleted once an experiment ends. NetLogo does not need to be exited.
+- BehaviorSpace experiment edit compilation errors are reported when the dialog is closed rather than at runtime.
+- Comments are now supported in BehaviorSpace multiline reporter fields.
 - Right clicking the blank space in a new Systems Dynamics Model no longer causes an exception.
 - NetLogo no longer hangs moving through a corner with wrapped coordinates and pen-down.
 - Number input boxes without a value no longer keep other input boxes or the command center from gaining focus.
@@ -152,23 +161,62 @@ Below, we list all the changes since NetLogo 6.4.
 - If the NetLogo window is maximized in Windows, opening a new model no longer unmaximizes it.
 - Plot pens always take account of `plot-pen-up` and `plot-pen-down`.
 - The padding and location of internal components of widgets now change proportionally when zooming.
+- Models that have not been edited are never consider unsaved.
+- Ctrl/Cmd+X when nothing is selected now cuts (copies and deletes) the entire line.
+- Double clicking on a model that was saved with compilation errors opens it correctly.
+- `mouse-xcor` and `mouse-ycor` no longer degrade performance when called multiple times per iteration of go or in an ask with lots of agents.
+- If the NetLogo window is maximized in Windows, opening a new model no longer unmaximizes it.
+- Plot pens always take account of `plot-pen-up` and `plot-pen-down`.
+- The padding and location of internal components of widgets now change proportionally when zooming.
+- Models that have not been edited are never consider unsaved.
+- Ctrl/Cmd+X when nothing is selected now cuts (copies and deletes) the entire line.
+- Double clicking on a model that was saved with compilation errors opens it correctly.
+- `mouse-xcor` and `mouse-ycor` no longer degrade performance when called multiple times per iteration of go or in an ask with lots of agents.
+- Using a lower case 'i' in code with a Turkish locale no longer causes compilations errors
+- The resize behavior of edit dialogs has been improved. For example, plot widget "update commands" and "setup commands" fields can now be made taller
+- NetLogo now detects autosave files created for a model in case NetLogo crashes. Users are now asked if they want to recover it.
+- Mouse coordinated are now correctly reported along border of a selected view.
+- All open files are closed when a runtime error occurs.
+- When exporting and then importing a model the last line in an Output area is a newline it will be retained.
+- Disabled button state is now preserved by Import world.
+- Scientific notation in monitors shows the desired number of decimals.
+- Empty 3D models now have more room for widgets.
+- Clipboard errors when pasting no longer cause an exception.
+- After patch colors have been read from a file the underlying input stream is now closed.
+- Some NetLogo display problems are avoided because Microsoft Direct3D graphics are now off by default.
 
 ### Extension Updates
 - The gogo extension supports the GoGo board 6.
 - The dialog extension `user-input` primitive allows an optional default value argument.
 - There is a new resource extension that allows you to list and get resources bundled with a model.
+- The SimpleR extension is now bundled with NetLogo.
+- The R extension is no longer bundled with NetLogo. It is available through the extension manager.
+- There is a new bspace extension that allows users to create experiments programatically.
 
 ### Documentation Updates
+- The Documentation has been updated to describe the many updates that were made for NetLogo 7.0.0. The majority of the images have been updated.
+- There are three new pages:
+    - [NetLogo 7.0.0 Changes Overview](netlogo7intro.html)
+    - [Netlogo Preferences](netlogopreferences.html)
+    - [Color Picker Guide](colorpicker.html)
 - Grammar was improved for NetLogo Tutorial 2.
 - The link to the book "An Introduction to Agent-Based Modeling" was updated.
 - The BehaviorSpace error message about undefined parameter values was made easier to interpret.
 - The BehaviorSpace documentation for the subexperiment syntax is improved and uses examples from the Wolf Sheep Predation Model.
+- The effect of topological wrapping on the primitives `neighbors` and `neighbors4` is explained in the documentation.
 
 ### Models Library Changes
 Note: most models have been updated to the new widget size but not all.
 
 #### New Sample Models:
-- We will have new sample models with the next release.
+ 
+- The Mathematics section now has a subfolder Conic Sections that contains three models:
+    - Emergent Shapes - Ellipse
+    - Emergent Shapes - Parabola
+    - Emergent Shapes - Hyperbola
+- The three models above replace two models from the NetLogo 6.4 mathematics section:
+    - Conic Sections 1
+    - Comic Sections 2
 
 #### New Code Examples
 - The Ordered Agent Drawing Code Example model demonstrates how to sort turtles for display using `stamp` when precise drawing order is needed.
@@ -182,7 +230,6 @@ Note: most models have been updated to the new widget size but not all.
 - An inaccurate comment in Small Worlds model was corrected.
 - Multi-line code input widgets were enabled for PNoM 2 Diffusion Sensor Sandbox. Previously single line widgets were incorrectly used.
 - The Radical Polymerization model was updated to fix a bug in which Km was used instead of Kr for probability of termination.
-
 
 ## Version 6.4.0 (November 2023)
 
