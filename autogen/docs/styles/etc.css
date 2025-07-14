@@ -297,11 +297,22 @@ div.version {
 .dictionary-layout .sidebar {
 	flex: 0 0 var(--sidebar-size);
 	width: var(--sidebar-size);
-
 	overflow-y: auto;
 	flex-shrink: 0; /* Prevent shrinking */
-
 	box-shadow: none;
+	padding: 0;
+	padding-bottom: var(--space-sm);
+}
+
+.dictionary-layout .sidebar .heading-sticky {
+	padding: var(--space-md) var(--space-xs);
+	padding-top: 1rem;
+	background-color: var(--color-nav-background);
+	position: sticky;
+	top: 0;
+	z-index: 10; /* Ensure it stays above other content */
+	border-bottom: 1px solid var(--color-rule);
+	margin-bottom: var(--block-bottom);
 }
 
 .dictionary-layout .sidebar .search-bar {
@@ -309,16 +320,11 @@ div.version {
 	border: solid 1px;
 	border-color: var(--color-black);
 	border-radius: var(--radius-sm);
-
 	padding: var(--space-xs) var(--space-sm);
-	margin-bottom: var(--block-bottom);
-
 	color: var(--color-nav-text);
-
 	width: 100%;
 	font-size: 0.875rem;
-
-	background: var(--color-nav-background);
+	background: var(--color-background-overlay);
 }
 
 .dictionary-layout .content {
@@ -326,23 +332,54 @@ div.version {
 	min-width: unset;
 	padding: 0;
 	max-width: calc(100vw - var(--sidebar-size) - 2 * var(--space-lg));
+	margin-top: 0;
+	margin-bottom: var(--space-lg);
 }
 
+.dictionary-layout .content .dict_entry {
+	padding-inline: 0 !important;
+}
+
+.dictionary-layout ~ footer {
+	margin-top: 0;
+}
+
+.dictionary-entry-page .navbar {
+	position: fixed;
+	width: 100%;
+}
+
+.dictionary-layout {
+	margin-top: 4rem;
+}
+
+/* Folded sidebar not shown on desktop */
+.sidebar-folded {
+	display: none;
+}
+
+.dictionary-layout .sidebar .heading-section {
+	margin-top: 0;
+}
+
+/* --------- Mobile / Tablet: max-width 1024px --------- */
 @media (max-width: 1024px) {
 	.dictionary-layout {
 		flex-direction: column;
 		gap: 0;
 	}
+
 	.dictionary-layout .sidebar {
 		padding: 0;
 		width: calc(100% - 2 * var(--space-xl));
-		margin: 0 auto;
+		margin: var(--space-xl) auto 0 auto;
 		background-color: transparent;
 		position: unset;
 		flex: unset;
 	}
-	.dictionary-layout .content {
-		max-width: 100vw;
+
+	.dictionary-layout .sidebar .heading-sticky {
+		padding: var(--space-md) var(--space-md);
 	}
 
 	.sidebar-folded {
@@ -351,7 +388,6 @@ div.version {
 		gap: var(--space-md);
 		align-items: center;
 		margin-bottom: var(--block-bottom);
-
 		background: var(--color-nav-background);
 		padding: var(--space-lg) !important;
 	}
@@ -367,35 +403,40 @@ div.version {
 	#prim-toggle:checked + div .hamburger span:nth-child(1) {
 		transform: translateY(6px) rotate(45deg);
 	}
+
 	#prim-toggle:checked + div .hamburger span:nth-child(2) {
 		opacity: 0;
 	}
+
 	#prim-toggle:checked + div .hamburger span:nth-child(3) {
 		transform: translateY(-6px) rotate(-45deg);
 	}
 
 	div.primitive-list {
-		padding: var(--space-lg) !important;
+		padding: 0 !important;
 		background: var(--color-nav-background);
 		overflow-y: auto;
-		max-height: 20rem;
-
 		position: absolute;
-		top: 10rem;
+		top: 12rem;
 		width: calc(100% - 2 * var(--space-xl));
 		max-height: 30rem;
 		z-index: 10;
-
 		box-shadow: var(--shadow-md);
-
 		opacity: 0;
 		transition: all var(--dur-fast) ease;
 	}
+
+	div.primitive-list .heading-items {
+		padding: var(--space-lg) !important;
+		padding-top: 0 !important;
+	}
+
 	#prim-toggle:not(:checked) ~ div.primitive-list {
 		opacity: 0;
 		max-height: 0;
 		pointer-events: none;
 	}
+
 	#prim-toggle:checked ~ div.primitive-list {
 		display: block;
 		max-height: 30rem;
@@ -403,6 +444,7 @@ div.version {
 	}
 
 	.dictionary-layout .content {
+		max-width: 100vw;
 		margin-top: 0;
 	}
 
@@ -414,41 +456,15 @@ div.version {
 	}
 }
 
+/* --------- Desktop: min-width 1024px --------- */
 @media (min-width: 1024px) {
+	.dictionary-layout .sidebar {
+		min-height: 90vh; /* full-height */
+		max-height: 90vh;
+		margin-top: 0;
+	}
 	.dictionary-layout .content {
 		margin-bottom: var(--block-bottom);
-	}
-	.dictionary-layout .content .dict_entry {
-		padding-inline: 0 !important;
-	}
-
-	.dictionary-layout .sidebar {
-		min-height: 100vh; /* full-height */
-		max-height: 100vh;
-	}
-
-	.dictionary-layout ~ footer {
-		margin-top: 0;
-	}
-
-	/* Avoid layout shifts */
-	.dictionary-entry-page .navbar {
-		position: fixed;
-		width: 100%;
-	}
-
-	.dictionary-layout {
-		margin-top: 4rem;
-	}
-
-	/* Fold */
-	.sidebar-folded {
-		display: none;
-	}
-
-	.dictionary-layout .content {
-		margin-top: 0;
-		margin-bottom: var(--space-lg);
 	}
 }
 

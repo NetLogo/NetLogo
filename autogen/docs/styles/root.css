@@ -53,6 +53,7 @@
 	--color-link-hover: var(--color-primary-dark);
 	--color-link-visited: var(--color-secondary);
 	--color-focus: var(--color-brand);
+	--color-rule: var(--color-grey-accent);
 
 	/* Spacing */
 	--space-xl: 5rem; /* formerly level-1 inset X */

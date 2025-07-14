@@ -33,10 +33,12 @@
 				<div class="heading-section primitive-list">
 					<!-- primMap: Map[String, String] where key is primitive name and value is href to the primitive's documentation -->
 
-					<!-- List -->
-					<span class="heading-title">NetLogo Dictionary</span>
-					<!-- Search -->
-					<input class="search-bar" type="text" id="search-input" placeholder="Search primitives..." />
+					<div class="heading-sticky">
+						<!-- List -->
+						<span class="heading-title">{{ dictTitle }}</span>
+						<!-- Search -->
+						<input class="search-bar" type="text" id="search-input" placeholder="Search primitives..." />
+					</div>
 					<ul class="heading-items">
 						{{#primMap}}
 						<li>
@@ -48,7 +50,9 @@
 			</section>
 			<main class="prose content" style="min-height: 75vh">
 				{{{html}}}
-				<p>Take me to the full <a href="dictionary.html">NetLogo Dictionary</a></p>
+				<p style="padding: var(--space-sm)">
+					Take me to the full <a href="{{ dictHome }}">{{ dictTitle }}</a>
+				</p>
 			</main>
 		</div>
 		<script>
@@ -67,15 +71,42 @@
 						return;
 					}
 
+					const searchInput = document.getElementById('search-input');
+					if (!searchInput) {
+						console.error('Search bar element not found');
+						return;
+					}
+
+					const updateSearchResults = async () => {
+						const searchTerm = searchInput.value.toLowerCase();
+						const items = document.querySelectorAll('.heading-items li');
+						items.forEach((item) => {
+							const link = item.querySelector('a');
+							if (link && link.textContent.toLowerCase().includes(searchTerm)) {
+								item.style.display = 'block';
+							} else {
+								item.style.display = 'none';
+							}
+						});
+					};
+
 					// Maintain last scroll position
 					const parentScroll = new URLSearchParams(window.location.search).get('parentScroll');
 					sidebarDiv.scrollTop = parentScroll || 0;
 
 					const scrollBehavior = parentScroll ? 'smooth' : 'instant';
 
+					// Maintain last search query
+					const searchQuery = new URLSearchParams(window.location.search).get('search');
+					if (searchQuery) {
+						searchInput.value = searchQuery;
+						updateSearchResults();
+					}
+
 					// Remove parentScroll from the URL to avoid confusion
 					const newURL = new URL(window.location.href);
 					newURL.searchParams.delete('parentScroll');
+					newURL.searchParams.delete('search');
 					window.history.replaceState({}, '', newURL);
 
 					// Process links in the sidebar
@@ -85,6 +116,7 @@
 
 					// Base URL matches <base href="../" />
 					const baseURL = new URL('../', window.location.href);
+					const scrollMargin = 100;
 
 					// Loop through each link
 					// and 1. set data-link attribute to the pathname
@@ -102,11 +134,11 @@
 									didScroll = true;
 									setTimeout(() => {
 										sidebarDiv.scrollTo({
-											top: link.offsetTop - sidebarDiv.offsetTop,
+											top: link.offsetTop - sidebarDiv.offsetTop - scrollMargin,
 											behavior: scrollBehavior,
 										});
 										primList.scrollTo({
-											top: link.offsetTop - primList.offsetTop,
+											top: link.offsetTop - primList.offsetTop - scrollMargin,
 											behavior: 'instant', // Mobile
 										});
 									}, 0);
@@ -117,8 +149,13 @@
 								event.preventDefault();
 								// Add ?parentScroll=<parentScroll> to the URL
 								const parentScroll = sidebarDiv ? sidebarDiv.scrollTop : 0;
+								const query = searchInput ? searchInput.value : '';
+
 								const newURL = new URL(link.getAttribute('href'), baseURL);
 								newURL.searchParams.set('parentScroll', parentScroll);
+								if (query) {
+									newURL.searchParams.set('search', query);
+								}
 								window.location.href = newURL.href;
 							});
 						} catch (error) {
@@ -127,26 +164,11 @@
 					});
 
 					// Search functionality
-					const searchInput = document.getElementById('search-input');
 					let timer = null;
 					const debounceDelay = 200; // 300 milliseconds
 					searchInput.addEventListener('input', function () {
 						clearTimeout(timer);
-						timer = setTimeout(
-							() => {
-								const searchTerm = searchInput.value.toLowerCase();
-								const items = document.querySelectorAll('.heading-items li');
-								items.forEach((item) => {
-									const link = item.querySelector('a');
-									if (link && link.textContent.toLowerCase().includes(searchTerm)) {
-										item.style.display = 'block';
-									} else {
-										item.style.display = 'none';
-									}
-								});
-							},
-							timer ? debounceDelay : 0
-						);
+						timer = setTimeout(updateSearchResults, timer ? debounceDelay : 0);
 					});
 				});
 			})();
