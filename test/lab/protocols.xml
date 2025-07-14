@@ -451,7 +451,7 @@
 
 ticks &gt; 2 ; this is the stop condition</exitCondition>
     <metric>; hello this is a comment</metric>
-    <metric>count patches ; count the number of patches</metric>
-    <metric>; count turtles please ignore me</metric>
+    <metric>count turtles ; count the number of turtles</metric>
+    <metric>; count patches please ignore me</metric>
   </experiment>
 </experiments>
