@@ -121,5 +121,15 @@ jobs:
           java-package: jdk+fx
           cache: 'sbt'
 
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      # The Python stuff is just for testing the Python extension, it's not part of NetLogo's build process.
+      - name: Install Dependencies
+        run: |
+          pip3 install numpy
+          pip3 install scikit-learn
+
       - name: ${{ matrix.test }}
         run: ./sbt "${{ matrix.test }}"

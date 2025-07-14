@@ -109,6 +109,10 @@ object ChecksumsAndPreviews {
         println("skipping: " + path + "\n (non-bundled extension usage)")
         return
       }
+      if (path.contains("GenJam - Duple") || path.contains("Frogger") || path.contains("Sound Machines")) {
+        println("skipping: " + path + "\n (uses sound extension)")
+        return
+      }
       val previewPath = path.replaceFirst(".nlogox", ".png")
       try {
         val runner = PreviewCommandsRunner.fromModelPath(new WorkspaceFactory {
