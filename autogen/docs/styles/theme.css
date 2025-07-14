@@ -7,89 +7,89 @@
    ========================================================================== */
 
 div {
-	scroll-margin-top: var(--scroll-margin);
+    scroll-margin-top: var(--scroll-margin);
 }
 
 /* Headings */
 h1 {
-	font-size: var(--h1-size);
-	font-weight: 700;
-	letter-spacing: 0.00625rem;
-	line-height: var(--line-height-heading);
+    font-size: var(--h1-size);
+    font-weight: 700;
+    letter-spacing: 0.00625rem;
+    line-height: var(--line-height-heading);
 
-	background-color: var(--primary-heading-background-color);
-	color: var(--primary-heading-text-color);
+    background-color: var(--primary-heading-background-color);
+    color: var(--primary-heading-text-color);
 
-	--padding-block: calc(0.8 * var(--space-lg));
-	padding: var(--padding-block) var(--space-xl);
+    --padding-block: calc(0.8 * var(--space-lg));
+    padding: var(--padding-block) var(--space-xl);
 }
 
 h1,
 h1 a {
-	scroll-margin-top: calc(
-		var(--scroll-margin) + var(--h1-size) + 2 * var(--padding-block)
-	); /* 100% of the h1 height + padding */
+    scroll-margin-top: calc(
+        var(--scroll-margin) + var(--h1-size) + 2 * var(--padding-block)
+    ); /* 100% of the h1 height + padding */
 }
 
 h2 {
-	font-size: var(--h2-size);
-	font-weight: 700;
-	letter-spacing: 0.00625rem;
-	line-height: var(--line-height-heading);
+    font-size: var(--h2-size);
+    font-weight: 700;
+    letter-spacing: 0.00625rem;
+    line-height: var(--line-height-heading);
 
-	background-color: var(--primary-heading-background-color);
-	color: var(--primary-heading-text-color);
+    background-color: var(--primary-heading-background-color);
+    color: var(--primary-heading-text-color);
 
-	--padding-block: calc(0.7 * var(--space-lg));
-	padding: var(--padding-block) var(--space-xl);
+    --padding-block: calc(0.7 * var(--space-lg));
+    padding: var(--padding-block) var(--space-xl);
 }
 
 h2,
 h2 a {
-	scroll-margin-top: calc(
-		var(--scroll-margin) + var(--h2-size) + 2 * var(--padding-block)
-	); /* 100% of the h2 height + padding */
+    scroll-margin-top: calc(
+        var(--scroll-margin) + var(--h2-size) + 2 * var(--padding-block)
+    ); /* 100% of the h2 height + padding */
 }
 
 h3 {
-	font-size: var(--h3-size);
-	background-color: var(--secondary-heading-background-color);
-	color: var(--secondary-heading-text-color);
+    font-size: var(--h3-size);
+    background-color: var(--secondary-heading-background-color);
+    color: var(--secondary-heading-text-color);
 
-	--padding-block: calc(0.6 * var(--space-lg));
-	padding: var(--padding-block) var(--space-xl);
+    --padding-block: calc(0.6 * var(--space-lg));
+    padding: var(--padding-block) var(--space-xl);
 }
 
 h3,
 h3 a,
 .dict_entry {
-	/* special case for dictionary entries requires redefining padding */
-	--padding-block: calc(0.6 * var(--space-lg));
-	scroll-margin-top: calc(
-		var(--scroll-margin) + var(--h3-size) + 2 * var(--padding-block)
-	); /* 100% of the h3 height + padding */
+    /* special case for dictionary entries requires redefining padding */
+    --padding-block: calc(0.6 * var(--space-lg));
+    scroll-margin-top: calc(
+        var(--scroll-margin) + var(--h3-size) + 2 * var(--padding-block)
+    ); /* 100% of the h3 height + padding */
 }
 
 h4 {
-	color: var(--color-black);
-	font-size: var(--h4-size);
-	font-weight: 500;
+    color: var(--color-black);
+    font-size: var(--h4-size);
+    font-weight: 500;
 }
 
 h4,
 h4 a {
-	scroll-margin-top: calc(var(--scroll-margin) + var(--h4-size)); /* 100% of the h4 height + padding */
+    scroll-margin-top: calc(var(--scroll-margin) + var(--h4-size)); /* 100% of the h4 height + padding */
 }
 
 h5 {
-	font-size: var(--h5-size);
-	font-weight: 600;
-	color: #707290;
+    font-size: var(--h5-size);
+    font-weight: 600;
+    color: #707290;
 }
 
 h5,
 h5 a {
-	scroll-margin-top: calc(var(--scroll-margin) + var(--h5-size)); /* 100% of the h5 height + padding */
+    scroll-margin-top: calc(var(--scroll-margin) + var(--h5-size)); /* 100% of the h5 height + padding */
 }
 
 h1 a:focus-visible,
@@ -97,44 +97,44 @@ h2 a:focus-visible,
 h3 a:focus-visible,
 h4 a:focus-visible,
 h5 a:focus-visible {
-	outline: none;
-	text-decoration: underline;
+    outline: none;
+    text-decoration: underline;
 }
 
 h1:has(a:hover),
 h2:has(a:hover) {
-	background-color: var(--primary-heading-background-color-hover);
-	color: var(--primary-heading-text-color);
+    background-color: var(--primary-heading-background-color-hover);
+    color: var(--primary-heading-text-color);
 }
 
 h3:has(a:hover) {
-	background-color: var(--secondary-heading-background-color-hover);
-	color: var(--secondary-heading-text-color);
+    background-color: var(--secondary-heading-background-color-hover);
+    color: var(--secondary-heading-text-color);
 }
 
 h4:has(a:hover),
 h5:has(a:hover),
 h6:has(a:hover) {
-	/* Placeholder */
-	filter: brightness(0.9); /* Darken link on hover */
+    /* Placeholder */
+    filter: brightness(0.9); /* Darken link on hover */
 }
 
 /* Paragraphs */
 p.question {
-	font-style: italic;
-	font-weight: bold;
-	margin-left: var(--space-sm) !important;
-	margin-bottom: var(--space-sm);
+    font-style: italic;
+    font-weight: bold;
+    margin-left: var(--space-sm) !important;
+    margin-bottom: var(--space-sm);
 }
 
 /* Top-level Indentation */
 .prose {
-	margin-top: var(--space-lg);
+    margin-top: var(--space-lg);
 }
 
 body {
-	max-width: 100vw;
-	overflow-x: hidden;
+    max-width: 100vw;
+    overflow-x: hidden;
 }
 
 .prose > p,
@@ -153,8 +153,8 @@ main > h4,
 main > h5,
 .prose > div,
 main > div {
-	padding: 0 var(--space-xl);
-	max-width: var(--max-width-ch);
+    padding: 0 var(--space-xl);
+    max-width: var(--max-width-ch);
 }
 
 .prose > pre,
@@ -162,63 +162,63 @@ main > pre,
 .prose > blockquote,
 main > blockquote,
 .prose div.blockquote {
-	margin: var(--space-lg) var(--space-xl);
-	padding: var(--space-md);
+    margin: var(--space-lg) var(--space-xl);
+    padding: var(--space-md);
 }
 
 .prose blockquote,
 .prose div.blockquote {
-	max-width: calc(var(--max-width-ch) - 2 * (var(--space-xl)));
+    max-width: calc(var(--max-width-ch) - 2 * (var(--space-xl)));
 }
 .prose blockquote p,
 .prose div.blockquote p {
-	width: min(100%, calc(var(--max-width-ch) - 2 * (var(--space-xl))));
+    width: min(100%, calc(var(--max-width-ch) - 2 * (var(--space-xl))));
 }
 
 /* Pre/Code */
 pre {
-	overflow: auto;
-	padding: var(--space-sm) var(--space-md);
-	font-size: 0.9rem;
-	line-height: var(--line-height-code);
-	background-color: var(--color-background-overlay);
+    overflow: auto;
+    padding: var(--space-sm) var(--space-md);
+    font-size: 0.9rem;
+    line-height: var(--line-height-code);
+    background-color: var(--color-background-overlay);
 }
 
 p code,
 li code,
 table code,
 a.code {
-	padding: calc(0.3 * var(--space-xxs)) var(--space-xxs);
-	font-size: 0.9rem;
-	border-radius: var(--radius-md);
-	line-height: var(--line-height-code);
-	background-color: var(--color-background-overlay);
-	font-family: var(--font-mono);
+    padding: calc(0.3 * var(--space-xxs)) var(--space-xxs);
+    font-size: 0.9rem;
+    border-radius: var(--radius-md);
+    line-height: var(--line-height-code);
+    background-color: var(--color-background-overlay);
+    font-family: var(--font-mono);
 }
 
 /* HR */
 hr {
-	color: var(--netlogo-black);
-	height: 0.1875rem; /* 3px */
+    color: var(--netlogo-black);
+    height: 0.1875rem; /* 3px */
 }
 
 /* Images */
 img {
-	max-width: 100%;
-	height: auto;
-	display: block;
-	margin: 1rem auto;
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 1rem auto;
 }
 
 img.screenshot {
-	display: inherit;
-	margin: 1em auto;
+    display: inherit;
+    margin: 1em auto;
 }
 
 /* Lists when made of links only */
 ul.no-bullets {
-	list-style-type: none;
-	list-style-position: outside;
+    list-style-type: none;
+    list-style-position: outside;
 }
 
 /* Table of Contents
@@ -227,192 +227,192 @@ ul.no-bullets {
 /* Common */
 div.toc ul,
 div.toc ul a {
-	color: var(--color-link);
-	text-decoration: none;
+    color: var(--color-link);
+    text-decoration: none;
 }
 
 div.toc ul a:hover,
 div.toc ul a:focus {
-	color: var(--color-link-hover);
-	border: none;
-	outline: none;
+    color: var(--color-link-hover);
+    border: none;
+    outline: none;
 }
 
 /* Level 1 List */
 div.toc > ul {
-	/* level 1 */
-	font-weight: 800; /* Bold for top-level links */
-	font-size: 1.3rem; /* Larger size for top-level links */
-	line-height: 2rem; /* Increased line height for readability */
-	list-style: decimal;
+    /* level 1 */
+    font-weight: 800; /* Bold for top-level links */
+    font-size: 1.3rem; /* Larger size for top-level links */
+    line-height: 2rem; /* Increased line height for readability */
+    list-style: decimal;
 }
 
 /* Second Level List */
 div.toc > ul ul {
-	max-width: 100ch; /* Limit the width */
-	list-style: decimal;
+    max-width: 100ch; /* Limit the width */
+    list-style: decimal;
 }
 
 div.toc > ul li ul {
-	margin-top: var(--space-md); /* Has some space before the sublist */
+    margin-top: var(--space-md); /* Has some space before the sublist */
 }
 
 div.toc > ul ul {
-	/* level 2 */
-	list-style-type: disc; /* Use disc bullets for sublists */
-	margin-bottom: var(--block-bottom); /* Space after the sublist */
+    /* level 2 */
+    list-style-type: disc; /* Use disc bullets for sublists */
+    margin-bottom: var(--block-bottom); /* Space after the sublist */
 }
 
 div.toc > ul ul li,
 div.toc > ul ul li a {
-	/* level 2 */
-	font-weight: 400; /* Normal weight for sublist items */
-	font-size: 1rem; /* Normal size for sublist items */
+    /* level 2 */
+    font-weight: 400; /* Normal weight for sublist items */
+    font-size: 1rem; /* Normal size for sublist items */
 }
 
 /* Blockquotes */
 blockquote,
 div.blockquote,
 .highlight {
-	border-left: 0.4rem solid var(--color-primary);
-	background: var(--color-background-overlay);
-	border-radius: var(--radius-md);
-	padding: var(--space-sm) var(--space-md);
-	margin: var(--space-md) 0;
-	box-shadow: var(--shadow-md);
-	width: min(100%, min(max(85vw, 30ch), var(--max-width-ch)));
-	font-family: var(--font-sans);
-	font-size: 1rem;
-	color: var(--color-black);
+    border-left: 0.4rem solid var(--color-primary);
+    background: var(--color-background-overlay);
+    border-radius: var(--radius-md);
+    padding: var(--space-sm) var(--space-md);
+    margin: var(--space-md) 0;
+    box-shadow: var(--shadow-md);
+    width: min(100%, min(max(85vw, 30ch), var(--max-width-ch)));
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    color: var(--color-black);
 }
 
 blockquote p:last-child,
 div.blockquote p:last-child,
 .highlight p:last-child {
-	margin-bottom: 0;
+    margin-bottom: 0;
 }
 
 .highlight-warning {
-	border-left-color: var(--color-warning);
+    border-left-color: var(--color-warning);
 }
 
 .highlight-success {
-	border-left-color: var(--color-success);
+    border-left-color: var(--color-success);
 }
 
 .highlight-error {
-	border-left-color: var(--color-error);
+    border-left-color: var(--color-error);
 }
 
 /* ------------------------------------------------------------------
    NetLogo “command list” table
 ------------------------------------------------------------------ */
 table {
-	width: 100%;
-	overflow: auto;
+    width: 100%;
+    overflow: auto;
 
-	border-collapse: collapse;
-	/* 1 px outline that matches the header colour */
-	font-family: var(--font-sans);
-	line-height: var(--line-height);
-	margin: 0 var(--space-xl) var(--space-lg) var(--space-xl);
+    border-collapse: collapse;
+    /* 1 px outline that matches the header colour */
+    font-family: var(--font-sans);
+    line-height: var(--line-height);
+    margin: 0 var(--space-xl) var(--space-lg) var(--space-xl);
 
-	--table-background: rgb(30, 30, 30);
-	--table-border-color: rgb(40, 50, 80);
+    --table-background: rgb(30, 30, 30);
+    --table-border-color: rgb(40, 50, 80);
 }
 
 /* Workaround because max-width does not work on table */
 div.table-container table {
-	margin: 0;
-	padding: 0;
+    margin: 0;
+    padding: 0;
 }
 
 div.table-container,
 table:not(.table-container table) {
-	display: block;
-	padding: 0;
-	margin-inline: var(--space-xl);
-	margin-bottom: var(--block-bottom);
-	width: calc(var(--max-width-ch) - 2 * (var(--space-xl)));
-	max-width: calc(var(--max-width-ch) - 2 * (var(--space-xl))) !important;
-	overflow-x: auto; /* Allow horizontal scrolling */
+    display: block;
+    padding: 0;
+    margin-inline: var(--space-xl);
+    margin-bottom: var(--block-bottom);
+    width: calc(var(--max-width-ch) - 2 * (var(--space-xl)));
+    max-width: calc(var(--max-width-ch) - 2 * (var(--space-xl))) !important;
+    overflow-x: auto; /* Allow horizontal scrolling */
 }
 
 @media (max-width: 1024px) {
-	div.table-container,
-	table:not(.table-container table) {
-		max-width: min(100vw - 2 * (var(--space-xl)), calc(var(--max-width-ch) - 2 * (var(--space-md)))) !important;
-	}
+    div.table-container,
+    table:not(.table-container table) {
+        max-width: min(100vw - 2 * (var(--space-xl)), calc(var(--max-width-ch) - 2 * (var(--space-md)))) !important;
+    }
 }
 
 /* --- HEADER ROW -------------------------------------------------- */
 table thead {
-	width: 100%;
+    width: 100%;
 }
 table thead th,
 table th {
-	background: var(--table-background);
-	color: var(--color-white);
-	font-weight: 600;
-	text-align: left;
-	padding: var(--space-xs) var(--space-md);
-	border-bottom: 2px solid var(--table-border-color);
+    background: var(--table-background);
+    color: var(--color-white);
+    font-weight: 600;
+    text-align: left;
+    padding: var(--space-xs) var(--space-md);
+    border-bottom: 2px solid var(--table-border-color);
 }
 
 /* --- BODY CELLS --------------------------------------------------- */
 table td {
-	padding: var(--space-md) var(--space-md);
-	vertical-align: top;
+    padding: var(--space-md) var(--space-md);
+    vertical-align: top;
 }
 
 table td,
 table th {
-	border-right: 1px solid var(--table-border-color);
+    border-right: 1px solid var(--table-border-color);
 }
 
 table td:first-child,
 table th:first-child {
-	border-left: 1px solid var(--table-border-color); /* Add left border to first column */
+    border-left: 1px solid var(--table-border-color); /* Add left border to first column */
 }
 
 table th {
-	border-top: 1px solid var(--table-border-color); /* Add top border to header */
+    border-top: 1px solid var(--table-border-color); /* Add top border to header */
 }
 table tr:last-child td {
-	border-bottom: 1px solid var(--table-border-color); /* Add bottom border to last row */
+    border-bottom: 1px solid var(--table-border-color); /* Add bottom border to last row */
 }
 
 /* command-name column */
 table td:first-child {
-	width: 11rem; /* fixed width for alignment */
-	font-weight: 600;
-	white-space: nowrap;
+    width: 11rem; /* fixed width for alignment */
+    font-weight: 600;
+    white-space: nowrap;
 }
 
 /* description column links */
 table a {
-	color: var(--color-link);
-	text-decoration: none;
+    color: var(--color-link);
+    text-decoration: none;
 }
 table a:hover {
-	text-decoration: underline;
+    text-decoration: underline;
 }
 
 /* zebra-striping */
 table tbody tr:nth-child(even) td {
-	background: #f5f6f8;
+    background: #f5f6f8;
 }
 table tbody tr:nth-child(odd) td {
-	background: #ffffff;
+    background: #ffffff;
 }
 
 table thead th code {
-	background-color: #161616;
+    background-color: #161616;
 }
 
 /* optional: subtle hover highlight for the entire row */
 @media (hover: hover) {
-	table tbody tr:hover td {
-		background: var(--color-background-overlay);
-	}
+    table tbody tr:hover td {
+        background: var(--color-background-overlay);
+    }
 }
