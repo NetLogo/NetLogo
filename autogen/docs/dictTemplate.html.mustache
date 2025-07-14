@@ -1,27 +1,130 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>NetLogo Help:{{#containedPrims}} {{.}}{{/containedPrims}}</title>
-    <link rel="stylesheet" href="../netlogo.css" type="text/css" />
-		<link rel="icon" type="image/png" href="../favicon/favicon-96x96.png" sizes="96x96" />
-		<link rel="icon" type="image/svg+xml" href="../favicon/favicon.svg" />
-		<link rel="shortcut icon" href="../favicon/favicon.ico" />
-		<link rel="apple-touch-icon" sizes="180x180" href="../favicon/apple-touch-icon.png" />
+	<head>
+		<base href="../" />
+		<title>NetLogo Help:{{#containedPrims}} {{.}}{{/containedPrims}}</title>
+		<link rel="icon" type="image/png" href="favicon/favicon-96x96.png" sizes="96x96" />
+		<link rel="icon" type="image/svg+xml" href="favicon/favicon.svg" />
+		<link rel="shortcut icon" href="favicon/favicon.ico" />
+		<link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png" />
 		<meta name="apple-mobile-web-app-title" content="Docs" />
 		<link rel="manifest" href="favicon/site.webmanifest" />
-    {{#pdf}}
-		<link rel="stylesheet" href="netlogo-pdf.css" type="text/css"/>
+		{{#pdf}}
+		<link rel="stylesheet" href="netlogo-pdf.css" type="text/css" />
 		{{/pdf}}
 		{{^pdf}}
-		<link rel="stylesheet" href="netlogo.css" type="text/css"/>
+		<link rel="stylesheet" href="netlogo.css" type="text/css" />
 		{{/pdf}}
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-  </head>
-  <body class="prose">
-    {{{html}}}
-    <p>
-      Take me to the full <a href="../dictionary.html">NetLogo Dictionary</a>
-    </p>
-  </body>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+	</head>
+	<body>
+		{{{header}}}
+		<div class="dictionary-layout">
+			<section class="sidebar">
+				<input type="checkbox" id="prim-toggle" hidden />
+				<div class="heading-section sidebar-folded">
+					<!-- Hamburger controls for mobile using checkbox hack -->
+					<label class="hamburger" for="prim-toggle"> <span></span><span></span><span></span> </label>
+					<div id="active-primitive" class="hidden-lg">
+						<span class="active-primitive-name"><i>primitive: </i>{{ primTitle }}</span>
+					</div>
+				</div>
+				<div class="heading-section primitive-list">
+					<!-- primMap: Map[String, String] where key is primitive name and value is href to the primitive's documentation -->
+
+					<!-- List -->
+					<span class="heading-title">NetLogo Dictionary</span>
+					<ul class="heading-items">
+						{{#primMap}}
+						<li>
+							<a href="dict/{{ value }}">{{ key }}</a>
+						</li>
+						{{/primMap}}
+					</ul>
+				</div>
+			</section>
+			<main class="prose content" style="min-height: 75vh">
+				{{{html}}}
+				<p>Take me to the full <a href="dictionary.html">NetLogo Dictionary</a></p>
+			</main>
+		</div>
+		<script>
+			(function () {
+				document.addEventListener('DOMContentLoaded', function () {
+					// Get the sidebar element
+					const sidebarDiv = document.querySelector('.sidebar');
+					if (!sidebarDiv) {
+						console.error('Sidebar element not found');
+						return;
+					}
+
+					const primList = sidebarDiv.querySelector('.primitive-list');
+					if (!primList) {
+						console.error('Primitive list element not found');
+						return;
+					}
+
+					// Maintain last scroll position
+					const parentScroll = new URLSearchParams(window.location.search).get('parentScroll');
+					sidebarDiv.scrollTop = parentScroll || 0;
+
+					const scrollBehavior = parentScroll ? 'smooth' : 'instant';
+
+					// Remove parentScroll from the URL to avoid confusion
+					const newURL = new URL(window.location.href);
+					newURL.searchParams.delete('parentScroll');
+					window.history.replaceState({}, '', newURL);
+
+					// Process links in the sidebar
+					// currentPath: /<version>/dict/<primitive-name>.html
+					const links = document.querySelectorAll('.sidebar a');
+					const currentPath = window.location.pathname;
+
+					// Base URL matches <base href="../" />
+					const baseURL = new URL('../', window.location.href);
+
+					// Loop through each link
+					// and 1. set data-link attribute to the pathname
+					//     2. add 'active' class if it matches currentPath
+					//     3. add click event to update URL with parentScroll
+					let didScroll = false;
+					links.forEach((link) => {
+						try {
+							const url = new URL(link.getAttribute('href'), baseURL);
+							link.setAttribute('data-link', url.pathname);
+							if (url.pathname === currentPath) {
+								link.classList.add('active');
+								// Local div scroll
+								if (sidebarDiv && !didScroll) {
+									didScroll = true;
+									setTimeout(() => {
+										sidebarDiv.scrollTo({
+											top: link.offsetTop - sidebarDiv.offsetTop,
+											behavior: scrollBehavior,
+										});
+										primList.scrollTo({
+											top: link.offsetTop - primList.offsetTop,
+											behavior: 'instant', // Mobile
+										});
+									}, 0);
+								}
+							}
+
+							link.addEventListener('click', function (event) {
+								event.preventDefault();
+								// Add ?parentScroll=<parentScroll> to the URL
+								const parentScroll = sidebarDiv ? sidebarDiv.scrollTop : 0;
+								const newURL = new URL(link.getAttribute('href'), baseURL);
+								newURL.searchParams.set('parentScroll', parentScroll);
+								window.location.href = newURL.href;
+							});
+						} catch (error) {
+							console.error(`Error processing link ${link.getAttribute('href')}:`, error);
+						}
+					});
+				});
+			})();
+		</script>
+	</body>
 </html>

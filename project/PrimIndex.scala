@@ -10,23 +10,27 @@ object PrimIndex {
     val otherHref = new Regex("""<a href="([^#][^"]*)"""", "link")
     val anchorHref = new Regex("""<a href="#([^"]*)"""", "anchor")
 
+    // We used <base href="../" /> in the template, so the link adjustment
+    // is no longer needed.
+    // I converted everything below to NOP to avoid changing the original
+    // behavior of the code.
     def replaceHref(m: Match): String = {
       if (m.group("link").startsWith("http:") || m.group("link").startsWith("https:"))
         m.matched
       else
-        s"""<a href="../${m.group("link")}""""
+        s"""<a href="${m.group("link")}""""                        // NOP
     }
 
     def replaceAnchor(m: Match): String =
       s"""<a href="../${sourceFileName}#${m.group("anchor")}""""
 
-    val s = rawHtml.replace("""src="images""", """src="../images""")
+    val s = rawHtml.replace("""src="images""", """src="images""")  // NOP
     val s1 = otherHref.replaceAllIn(s, replaceHref _)
     val s2 = anchorHref.replaceAllIn(s1, replaceAnchor _)
     s2
   }
 
-  def generate(dictFile: File, target: File, templateFile: File, indexFile: File): Unit = {
+  def generate(dictFile: File, target: File, templateFile: File, indexFile: File, headerFile: File): Unit = {
     import scala.collection.JavaConverters._
 
     val html = IO.read(dictFile)
@@ -50,10 +54,21 @@ object PrimIndex {
         entry.outerHtml)
     )
 
+    val headerHtml = IO.read(headerFile)
+
+    // [ { key: "primName", value: "primHref" }, ... ]
+    val primMap = (primIndex ++ constIndex).flatMap { el =>
+      el.containedPrims.map(p => Map("key" -> p, "value" ->  (target / s"${el.anchorName}.html").getName).asJava)
+    }
+
+
     (primIndex ++ constIndex).foreach { el =>
       val vars = Map[String, Object](
         "html"           -> adjustHtml(el.html, dictFile.getName),
-        "containedPrims" -> el.containedPrims.asJava
+        "containedPrims" -> el.containedPrims.asJava,
+        "header"         -> headerHtml,
+        "primMap"       -> primMap.asJava,
+        "primTitle"     -> el.containedPrims.mkString(", "),
       )
       Mustache(templateFile, target / s"${el.anchorName}.html", vars)
     }
