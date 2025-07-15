@@ -46,7 +46,4 @@ abstract class DefaultClassManager extends ClassManager {
   override def readExtensionObject(em: ExtensionManager, typeName: String, value: String): ExtensionObject =
     throw new IllegalStateException("readExtensionObject not implemented for " + this)
 
-  override def additionalJars: JList[String] =
-    new java.util.ArrayList[String]
-
 }

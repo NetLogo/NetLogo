@@ -44,9 +44,6 @@ class PlotManager(factory: LogoThunkFactory, random: MersenneTwisterFast) extend
     plot
   }
 
-  @deprecated("Use `maybeGetPlot()`", "6.1.2")
-  def getPlot(name: String): Plot = _plots.find(_.name.equalsIgnoreCase(name)).orNull
-
   // used for letting the user choose which plot to export
   def getPlotNames: Seq[String] = _plots.map(_.name).toSeq
   def nextName = LazyList.from(1).map("plot " + _).find(maybeGetPlot(_) == None).get

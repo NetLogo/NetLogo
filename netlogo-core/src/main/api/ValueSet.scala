@@ -7,19 +7,7 @@ sealed trait BaseValueSet {
   def variableName: String
 }
 
-@deprecated("6.0.2", "use RefValueSet instead")
-sealed trait ValueSet extends Iterable[Any] with BaseValueSet
-
 sealed trait RefValueSet extends Iterable[AnyRef] with BaseValueSet
-
-@deprecated("6.0.2", "use RefEnumeratedValueSet instead")
-case class EnumeratedValueSet(variableName: String,
-                         values: List[Any])
-  extends ValueSet
-{
-  val length = values.length
-  def iterator = values.iterator
-}
 
 case class RefEnumeratedValueSet(variableName: String, values: List[AnyRef])
   extends RefValueSet {

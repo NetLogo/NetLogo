@@ -3,7 +3,6 @@
 package org.nlogo.plot
 
 import org.nlogo.core.{ Pen => CorePen, Plot => CorePlot }
-import org.nlogo.api.Color.translateSavedColor
 import org.nlogo.api.StringUtils.unEscapeString
 
 object PlotLoader {
@@ -32,60 +31,6 @@ object PlotLoader {
     newPen.inLegend = pen.inLegend
     newPen.hardReset()
     newPen
-  }
-
-  @deprecated("use loadPlot instead", "hexy")
-  def parsePlot(widget: Array[String], plot: Plot, autoConvert: String => String): Unit = {
-    val (plotLines, penLines) =
-      widget.toList.span(_ != "PENS")
-    plot.name(plotLines(5))
-    if (11 < plotLines.length) {
-      plot.defaultXMin = plotLines(8).toDouble
-      plot.defaultXMax = plotLines(9).toDouble
-      plot.defaultYMin = plotLines(10).toDouble
-      plot.defaultYMax = plotLines(11).toDouble
-    }
-    if (12 < plotLines.length) {
-      plot.defaultAutoPlotX = plotLines(12).toBoolean
-      plot.defaultAutoPlotY = plotLines(12).toBoolean
-    }
-    if (14 < plotLines.length) {
-      parseStringLiterals(plotLines(14)) match {
-        case Nil => // old style model, no new plot code. this is ok.
-        case setup :: update :: Nil =>
-          // the correct amount of plot code.
-          plot.setupCode = autoConvert(unEscapeString(setup))
-          plot.updateCode = autoConvert(unEscapeString(update))
-        case _ =>
-          // 1, or 3 or more bits of code...error.
-          sys.error("Plot '" + plot.name + "' contains invalid setup and/or update code: " + plotLines(14))
-      }
-    }
-
-    // some models might not have a PENS line with any pens underneath.
-    // deal with that here.
-    val doubleCheckedPenLines = penLines match {
-      case "PENS" :: xs => xs
-      case _ => Nil
-    }
-
-    def loadPens(penLines: Seq[String], translateColors: Boolean): Unit = {
-      plot.pens = Nil
-      for (spec <- penLines.map(parsePen)) {
-        val pen = plot.createPlotPen(spec.name, false,
-                                     autoConvert(spec.setupCode),
-                                     autoConvert(spec.updateCode))
-        pen.defaultInterval = spec.interval
-        pen.defaultMode = spec.mode
-        pen.defaultColor =
-          if (translateColors)
-            translateSavedColor(spec.color)
-          else spec.color
-        pen.inLegend = spec.inLegend
-      }
-    }
-    loadPens(doubleCheckedPenLines, translateColors=false)
-    plot.clear()
   }
 
   // example pen line: "My Pen" 1.0 0 -16777216 true

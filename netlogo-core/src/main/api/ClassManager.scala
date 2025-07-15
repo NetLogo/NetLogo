@@ -78,7 +78,4 @@ trait ClassManager {
    */
   def clearAll(): Unit
 
-  @deprecated("Only used by applets, no longer needed", "10/2015")
-  def additionalJars: JList[String]
-
 }

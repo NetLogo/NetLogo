@@ -16,14 +16,6 @@ object BrowserLauncher {
   val unableToOpenBrowserError = "We were unable to open a browser on your system.\n" +
       "This error can be reported to bugs@ccl.northwestern.edu"
 
-  @deprecated("Use openURI or openPath instead", "6.0.2")
-  def openURL(comp: Component, urlString: String, local: Boolean): Unit = {
-    if (local)
-      openPath(comp, Paths.get(urlString), "")
-    else
-      Option(makeURI(comp, urlString)).foreach(openURI(comp, _))
-  }
-
   def openURI(comp: Component, uri: URI): Unit = {
     val normalUri = uri.normalize()
     try {

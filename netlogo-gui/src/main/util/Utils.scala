@@ -29,52 +29,6 @@ object Utils {
 
   ///
 
-  @deprecated("use FileIO.getResourceLines instead", "6.0-M6")
-  def getResourceLines(path: String): Iterator[String] = {
-    val in = new java.io.BufferedReader(
-      new java.io.InputStreamReader(
-        getClass.getResourceAsStream(path)))
-    Iterator.continually(in.readLine()).takeWhile(_ != null)
-  }
-
-  @deprecated("use FileIO.getResourceAsStringArray instead", "6.0-M6")
-  def getResourceAsStringArray(path: String): Array[String] =
-    getResourceLines(path).toArray
-
-  @deprecated("use FileIO.getResourceAsString instead", "6.0-M6")
-  def getResourceAsString(path: String): String =
-    getResourceLines(path).mkString("", "\n", "\n")
-
-  @deprecated("use FileIO.url2String instead", "6.0-M6")
-  @throws(classOf[java.io.IOException])
-  def url2String(sampleURL: String): String = {
-    if(sampleURL.startsWith("/"))
-      getResourceAsString(sampleURL)
-    else {
-      val massagedURL =
-        if(!System.getProperty("os.name").startsWith("Mac")) {
-          val badStart = "file://"
-          if(sampleURL.indexOf(badStart) != -1)
-            "file:/" + sampleURL.drop(badStart.size)
-          else sampleURL
-        }
-        else sampleURL
-
-      // UTF-8 is needed directly here because it seems that applets can't be
-      // passed -D params. So, we can't use -Dfile.encoding=UTF-8 like we normally do.
-      // This shouldn't hurt anything.
-      reader2String(
-        new java.io.InputStreamReader(
-          new java.net.URL(massagedURL)
-          .openStream(), "UTF-8"))
-    }
-  }
-
-  @deprecated("use FileIO.reader2String instead", "6.0-M6")
-  @throws(classOf[java.io.IOException])
-  def reader2String(reader: java.io.Reader): String =
-    reader2String(reader, 8192) // arbitrary default
-
   // separate method with configurable bufferSize for easy testing with ScalaCheck.
   // for now we can't just use a default argument because most of our callers
   // are from Java - ST 12/22/09

@@ -67,8 +67,6 @@ object AnonymousProcedure {
   val rightArgs = List(Syntax.WildcardType | Syntax.RepeatableType)
 }
 
-import org.nlogo.nvm.AnonymousProcedure._
-
 // anonymous reporters are pretty simple.  The body is simply a Reporter.
 // To run it, we swap closed-over variables into the context,
 // bind actuals to formals, call report(), then unswap.
@@ -81,18 +79,6 @@ case class AnonymousReporter(
   locals:    Array[AnyRef],
   source:    String)
   extends AnonymousProcedure with org.nlogo.api.AnonymousReporter {
-
-  @deprecated("Provide defined arguments for the anonymous reporter", "6.2.2")
-  def this(body: Reporter, formals: Array[Let], binding: Binding, locals: Array[AnyRef], source: String) = {
-    this(body, formals, LambdaArgs.fromFormals(formals), binding, locals, source)
-    System.err.println("Constructing Anonymous Reporters without defined arguments is deprecated, please update")
-  }
-
-  @deprecated("Construct an anonymous reporter using Binding instead of List[LetBinding]", "6.0.1")
-  def this(body: Reporter, formals: Array[Let], allLets: List[LetBinding], locals: Array[AnyRef]) = {
-    this(body, formals, LambdaArgs.fromFormals(formals), letBindingsToBinding(allLets), locals, "")
-    System.err.println("Constructing Anonymous Reporters using a list of bindings is deprecated, please update")
-  }
 
   val argsHandler = LambdaArgsHandler.createInstruction(arguments, body)
 
@@ -153,18 +139,6 @@ case class AnonymousCommand(
   locals:    Array[AnyRef],
   source:    String)
 extends AnonymousProcedure with org.nlogo.api.AnonymousCommand {
-
-  @deprecated("Provide defined arguments for the anonymous command", "6.2.2")
-  def this(procedure: LiftedLambda, formals: Array[Let], binding: Binding, locals: Array[AnyRef], source: String) = {
-    this(procedure, formals, LambdaArgs.fromFormals(formals), binding, locals, source)
-    System.err.println("Constructing Anonymous Commands without defined arguments is deprecated, please update")
-  }
-
-  @deprecated("Construct an anonymous command using Binding instead of List[LetBinding]", "6.0.1")
-  def this(procedure: LiftedLambda, formals: Array[Let], allLets: List[LetBinding], locals: Array[AnyRef]) = {
-    this(procedure, formals, LambdaArgs.fromFormals(formals), letBindingsToBinding(allLets), locals, "")
-    System.err.println("Constructing Anonymous Commands using a list of bindings is deprecated, please update")
-  }
 
   val argsHandler = LambdaArgsHandler.createCommand(arguments, procedure)
 
