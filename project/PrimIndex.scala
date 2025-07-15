@@ -7,22 +7,22 @@ case class IndexElement(anchorName: String, containedPrims: Seq[String], html: S
 
 object PrimIndex {
   private def adjustHtml(rawHtml: String, sourceFileName: String): String = {
-    val otherHref = new Regex("""<a(\s*class="[^"]+"\s*)?href="([^#][^"]*)"""", "class", "link")
-    val anchorHref = new Regex("""<a(\s*class="[^"]+"\s*)?href="#([^"]*)"""", "class", "anchor")
+    val otherHref = new Regex("""<a(\s+class="[^"]+")?\s+href="([^#][^"]*)"""", "class", "link")
+    val anchorHref = new Regex("""<a(\s+class="[^"]+")?\s+href="#([^"]*)"""", "class", "anchor")
 
     // We used <base href="../" /> in the template, so the link adjustment
     // is no longer needed.
     // I converted everything below to NOP to avoid changing the original
-    // behavior of the code.
+    // behavior of the code.   (Omar I 07/14/25)
     def replaceHref(m: Match): String = {
       if (m.group("link").startsWith("http:") || m.group("link").startsWith("https:"))
         m.matched
       else
-        s"""<a${m.group("class")}href="${m.group("link")}""""                        // NOP
+        s"""<a${Option(m.group("class")).getOrElse("")} href="${m.group("link")}""""      // NOP
     }
 
     def replaceAnchor(m: Match): String =
-      s"""<a${m.group("class")}href="./${sourceFileName}#${m.group("anchor")}""""
+      s"""<a${Option(m.group("class")).getOrElse("")} href="./${sourceFileName}#${m.group("anchor")}""""
 
     val s = rawHtml.replace("""src="images""", """src="images""")  // NOP
     val s1 = otherHref.replaceAllIn(s, replaceHref _)
@@ -30,7 +30,16 @@ object PrimIndex {
     s2
   }
 
-  def generate(dictFile: File, target: File, templateFile: File, indexFile: File, headerFile: File, renderVars: Map[String, Object]): Unit = {
+  def escapeFileName(fileName: String): String = {
+    // Remove boolean (?)
+    fileName.replaceAll("[?]", "")
+
+    // Why only (?)
+    // It is the only character that causes problems in the file names
+    // in URLs as far as I know. (Omar I 07/14/25)
+  }
+
+  def generate(dictFile: File, target: File, templateFile: File, indexFile: File, headerFile: File, buildVariables: Map[String, Object], generateHTMLIndexPage: Boolean = false): Unit = {
     import scala.collection.JavaConverters._
 
     val html = IO.read(dictFile)
@@ -58,7 +67,7 @@ object PrimIndex {
 
     // [ { key: "primName", value: "primHref" }, ... ]
     val primMap = (primIndex ++ constIndex).flatMap { el =>
-      el.containedPrims.map(p => Map("key" -> p, "value" ->  (target / s"${el.anchorName}.html").getName).asJava)
+      el.containedPrims.map(p => Map("key" -> p, "value" ->  (target / s"${escapeFileName(el.anchorName)}.html").getName).asJava)
     }
 
 
@@ -69,12 +78,21 @@ object PrimIndex {
         "header"         -> headerHtml,
         "primMap"       -> primMap.asJava,
         "primTitle"     -> el.containedPrims.mkString(", "),
-      ) ++ renderVars
-      Mustache(templateFile, target / s"${el.anchorName}.html", vars)
+      ) ++ buildVariables
+      Mustache(templateFile, target / s"${escapeFileName(el.anchorName)}.html", vars)
+    }
+
+    if (generateHTMLIndexPage) {
+      val vars = Map[String, Object](
+        "header" -> headerHtml,
+        "primMap" -> primMap.asJava,
+        "primTitle" -> "NetLogo Primitives",
+      ) ++ buildVariables
+      Mustache(templateFile, target / "index.html", vars)
     }
 
     val index = (primIndex ++ constIndex).map { el =>
-      el.containedPrims.map(p => s"$p ${el.anchorName}.html").mkString("\n")
+      el.containedPrims.map(p => s"$p ${escapeFileName(el.anchorName)}.html").mkString("\n")
     }.mkString("\n")
 
     IO.write(indexFile, index)

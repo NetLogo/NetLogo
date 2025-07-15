@@ -65,6 +65,7 @@ class NetLogoDocs(
     val vars = Map[String, Object](
       "dictHome" -> "dictionary.html",
       "dictTitle" -> "NetLogo Dictionary",
+      "primRoot" -> "dict", // /<version>/<primRoot>/<prim>
     )
 
     PrimIndex.generate(
@@ -76,9 +77,13 @@ class NetLogoDocs(
       vars
     )
 
+    // Having to use <primRoot> = "dict" here is an
+    // unfortunate artifact of the way things were done
+    // before. (Omar I 07/15/25)
     val vars3D = vars + (
       "dictHome" -> "3d.html",
       "dictTitle" -> "NetLogo 3D Dictionary",
+      "primRoot" -> "dict" // /<version>/<primRoot>/<prim>
     )
     PrimIndex.generate(
       docsTarget / "3d.html",
@@ -125,7 +130,6 @@ class NetLogoDocs(
     generateDocs(docsTarget, autoDocumentedExtensions, manuallyDocumentedExtensions, mustacheVars, perPageTOC = true)
     generatePrimIndices(docsTarget / "dict")
     supportFiles.foreach(IO.delete)
-
     Path.allSubpaths(docsTarget).map(_._1).toSeq
   }
 
@@ -149,7 +153,7 @@ class NetLogoDocs(
       IO.write(targetDir / (name + ".html"), "<!DOCTYPE html>\n" + html)
       IO.delete(targetDir / (name + ".md"))
     }
-    extensionDocs.generateExtensionDocs(targetDir, autoDocumentedExtensions, variables)
+    extensionDocs.generateExtensionDocs(targetDir, docsSource, autoDocumentedExtensions, variables)
     FileActions.copyFile(modelsDirectory / "Code Examples" / "Perspective Example.png", targetDir / "Perspective Example.png")
   }
 

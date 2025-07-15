@@ -1,151 +1,149 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <title>NetLogo {{ version }} User Manual: 3D</title>
-        {{#pdf}}
-        <link rel="stylesheet" href="netlogo-pdf.css" type="text/css" />
-        {{/pdf}}
-        {{^pdf}}
-        <link rel="stylesheet" href="netlogo.css" type="text/css" />
-        {{/pdf}}
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" type="image/png" href="favicon/favicon-96x96.png" sizes="96x96" />
-        <link rel="icon" type="image/svg+xml" href="favicon/favicon.svg" />
-        <link rel="shortcut icon" href="favicon/favicon.ico" />
-        <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png" />
-        <meta name="apple-mobile-web-app-title" content="3D" />
-        <style>
-            p.bookquote {
-                font-size: 85%;
-                margin-left: 4em;
-                margin-right: 4em;
-                color: #333;
-            }
-            p.c1 {
-                font-style: italic;
-            }
-        </style>
-    </head>
-    <body>
-        {{> header}}
-        <main class="my-3">
-            <p>NetLogo includes the NetLogo 3D application that allows you to create 3D worlds.</p>
-            <p>
-                <b>Notice:</b> NetLogo's support for 3D is less developed than NetLogo 2D. Models created with this release may
-                not be compatible with future versions. While we've made efforts to ensure a quality product, NetLogo 3D has not
-                been subject to the same level of quality control as the main application.
-            </p>
-            <ul>
-                <li>
-                    <a href="#introduction">Introduction</a>
-                </li>
-                <li>
-                    <a href="#tutorial">Tutorial</a>
-                </li>
-                <li>
-                    <a href="#dictionary">Dictionary</a>
-                </li>
-            </ul>
-            <section id="introduction" class="prose">
-                <h2>
-                    <a>Introduction</a>
-                </h2>
-                <p>
-                    To get started using NetLogo 3D, launch the NetLogo 3D application and check out the Sample Models in the 3D
-                    section of the Models Library.
-                </p>
-                <p>
-                    When you're ready to write your own 3D model, look at the Code Examples in the 3D section of the Models
-                    Library.
-                </p>
-                <blockquote>
-                    <p><b>Code Example:</b> Turtle Perspective Example 3D helps you learn about the different perspectives.</p>
-                    <p>
-                        <b>Code Example:</b> Turtle and Observer Motion Example 3D helps you understand how turtles and the observer
-                        move in 3D. You can also step through this model with the tutorial below.
-                    </p>
-                </blockquote>
-                <h4>
-                    <span class="prim_example">3D Worlds</span>
-                </h4>
-                <p class="bookquote">
-                    <i
-                        >An unspeakable horror seized me. There was a darkness; then a dizzy, sickening sensation of sight that was
-                        not like seeing; I saw a Line that was no Line; Space that was not Space: I was myself, and not myself. When
-                        I could find voice, I shrieked loud in agony, &quot;Either this is madness or it is Hell.&quot;</i
-                    >
-                </p>
-                <p class="bookquote">
-                    <i
-                        >&quot;It is neither,&quot; calmly replied the voice of the Sphere, &quot;it is Knowledge; it is Three
-                        Dimensions: open your eye once again and try to look steadily.&quot;</i
-                    >
-                    <br />
-                    -- Edwin A. Abbott, <i>Flatland: A romance in many dimensions</i>
-                </p>
-                <p>
-                    NetLogo 3D's world has width, height and depth. Patches are cubes. In addition to
-                    <code><a href="dictionary.html#pcor">pxcor</a></code> and <code><a href="dictionary.html#pcor">pycor</a></code
-                    >, patches have <code><a href="#pzcor">pzcor</a></code
-                    >.
-                </p>
-                <p>
-                    Turtles have three Cartesian coordinates, instead of two, to describe position. In addition to
-                    <code><a href="dictionary.html#xcor">xcor</a></code> and <code><a href="dictionary.html#ycor">ycor</a></code
-                    >, turtles have <code><a href="#zcor">zcor</a></code
-                    >.
-                </p>
-                <p>
-                    A turtle's orientation is defined by three turtle variables,
-                    <code><a href="dictionary.html#heading">heading</a></code
-                    >, <code><a href="#pitch">pitch</a></code> and <code><a href="#roll">roll</a></code
-                    >. You can imagine the turtle as having two vectors to define its orientation in 3D space. One vector comes
-                    straight out of the nose of the turtle, this is the direction the turtle will travel when it moves forward.
-                    The second vector is perpendicular to the forward vector and comes out of the right side of the turtle (as if
-                    the turtle were to stick its right arm straight out from its body). Heading is the angle between the forward
-                    vector of the turtle projected onto the xy-plane and the vector [0 1 0]. Pitch is the angle between the
-                    forward vector of the turtle and the xy-plane and finally roll is the angle between the right vector of the
-                    turtle and the xy-plane. When turtle turns right or left in 3D space it rotates around the down vector, that
-                    is the vector that is perpendicular to both the forward and right vectors. Depending on the orientation of the
-                    turtle more than one of the internal turtle variables may change as the result of a turn.
-                </p>
-                <h4>
-                    <span class="prim_example">The observer and the 3D view</span>
-                </h4>
-                <p>
-                    The point of view that you see the world from is considered the location and orientation of the observer. This
-                    is similar to the 3D view in NetLogo 2D. However, there are a few more ways to control the observer. You can
-                    set the point that the observer is facing by using
-                    <code>face</code> and <code>facexyz</code> which work the same way as the turtle commands, the observer turns
-                    so the center of the view is on the given point or the location of the given agent at the time it is called.
-                    You can change the location of the observer using <code>setxyz</code>. The observer will move to view the
-                    world as if standing on the given location, the point the observer faces will stay the same. For example
-                    create a new model and observer will be located at (0, 0, 49.5), that is, on the z-axis 49.5 patch units away
-                    from the origin and the observer is facing the origin, (0, 0, 0). If you <code>setxyz 0 49.5 0</code> the
-                    observer will move so it is on the positive y-axis but it will keep the origin at the center of the view. You
-                    can also move the observer using the rotation primitives that will allow you to move the observer around the
-                    world as if on the surface of a sphere where the center is the location the observer is facing. You may notice
-                    from the above examples that the observer is not constrained to be within the bounds of the world.
-                </p>
-                <h4>
-                    <span class="prim_example"><a id="custom-shapes">Custom Shapes</a></span>
-                </h4>
-                <p>
-                    NetLogo automatically interprets 2D shapes so they are extruded, like a cookie cutter shape in the 3D view.
-                    You can also use the primitive
-                    <a href="#load-shapes-3d"><code>load-shapes-3d</code></a> to load shapes described in an external file in a
-                    custom format described here. Currently we do not import shapes in any standard formats.
-                </p>
-                <p>
-                    For each shape in a custom 3D shape file, a 2D shape of the same name must exist as well. You can create the
-                    2D shape in the Turtle Shapes Editor.
-                </p>
-                <p>
-                    The input file may contain any number of shapes with any number of rectangular or triangular surfaces. The
-                    format of the input file should be as follows:
-                </p>
-                <pre>
+	<head>
+		<title>NetLogo {{ version }} User Manual: 3D</title>
+		{{#pdf}}
+		<link rel="stylesheet" href="netlogo-pdf.css" type="text/css" />
+		{{/pdf}}
+		{{^pdf}}
+		<link rel="stylesheet" href="netlogo.css" type="text/css" />
+		{{/pdf}}
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="icon" type="image/png" href="favicon/favicon-96x96.png" sizes="96x96" />
+		<link rel="icon" type="image/svg+xml" href="favicon/favicon.svg" />
+		<link rel="shortcut icon" href="favicon/favicon.ico" />
+		<link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png" />
+		<meta name="apple-mobile-web-app-title" content="3D" />
+		<style>
+			p.bookquote {
+				font-size: 85%;
+				margin-left: 4em;
+				margin-right: 4em;
+				color: #333;
+			}
+			p.c1 {
+				font-style: italic;
+			}
+		</style>
+	</head>
+	<body>
+		{{> header}}
+		<main class="my-3">
+			<p>NetLogo includes the NetLogo 3D application that allows you to create 3D worlds.</p>
+			<p>
+				<b>Notice:</b> NetLogo's support for 3D is less developed than NetLogo 2D. Models created with this release may
+				not be compatible with future versions. While we've made efforts to ensure a quality product, NetLogo 3D has not
+				been subject to the same level of quality control as the main application.
+			</p>
+			<div class="toc">
+				<ul>
+					<li>
+						<a href="#introduction">Introduction</a>
+					</li>
+					<li>
+						<a href="#tutorial">Tutorial</a>
+					</li>
+					<li>
+						<a href="#dictionary">Dictionary</a>
+					</li>
+				</ul>
+			</div>
+			<section id="introduction" class="prose">
+				<h2>
+					<a>Introduction</a>
+				</h2>
+				<p>
+					To get started using NetLogo 3D, launch the NetLogo 3D application and check out the Sample Models in the 3D
+					section of the Models Library.
+				</p>
+				<p>
+					When you're ready to write your own 3D model, look at the Code Examples in the 3D section of the Models
+					Library.
+				</p>
+				<blockquote>
+					<p><b>Code Example:</b> Turtle Perspective Example 3D helps you learn about the different perspectives.</p>
+					<p>
+						<b>Code Example:</b> Turtle and Observer Motion Example 3D helps you understand how turtles and the observer
+						move in 3D. You can also step through this model with the tutorial below.
+					</p>
+				</blockquote>
+				<h4>3D Worlds</h4>
+				<p class="bookquote">
+					<i
+						>An unspeakable horror seized me. There was a darkness; then a dizzy, sickening sensation of sight that was
+						not like seeing; I saw a Line that was no Line; Space that was not Space: I was myself, and not myself. When
+						I could find voice, I shrieked loud in agony, &quot;Either this is madness or it is Hell.&quot;</i
+					>
+				</p>
+				<p class="bookquote">
+					<i
+						>&quot;It is neither,&quot; calmly replied the voice of the Sphere, &quot;it is Knowledge; it is Three
+						Dimensions: open your eye once again and try to look steadily.&quot;</i
+					>
+					<br />
+					-- Edwin A. Abbott, <i>Flatland: A romance in many dimensions</i>
+				</p>
+				<p>
+					NetLogo 3D's world has width, height and depth. Patches are cubes. In addition to
+					<code><a href="dictionary.html#pcor">pxcor</a></code> and <code><a href="dictionary.html#pcor">pycor</a></code
+					>, patches have <code><a href="#pzcor">pzcor</a></code
+					>.
+				</p>
+				<p>
+					Turtles have three Cartesian coordinates, instead of two, to describe position. In addition to
+					<code><a href="dictionary.html#xcor">xcor</a></code> and <code><a href="dictionary.html#ycor">ycor</a></code
+					>, turtles have <code><a href="#zcor">zcor</a></code
+					>.
+				</p>
+				<p>
+					A turtle's orientation is defined by three turtle variables,
+					<code><a href="dictionary.html#heading">heading</a></code
+					>, <code><a href="#pitch">pitch</a></code> and <code><a href="#roll">roll</a></code
+					>. You can imagine the turtle as having two vectors to define its orientation in 3D space. One vector comes
+					straight out of the nose of the turtle, this is the direction the turtle will travel when it moves forward.
+					The second vector is perpendicular to the forward vector and comes out of the right side of the turtle (as if
+					the turtle were to stick its right arm straight out from its body). Heading is the angle between the forward
+					vector of the turtle projected onto the xy-plane and the vector [0 1 0]. Pitch is the angle between the
+					forward vector of the turtle and the xy-plane and finally roll is the angle between the right vector of the
+					turtle and the xy-plane. When turtle turns right or left in 3D space it rotates around the down vector, that
+					is the vector that is perpendicular to both the forward and right vectors. Depending on the orientation of the
+					turtle more than one of the internal turtle variables may change as the result of a turn.
+				</p>
+				<h4>The observer and the 3D view</h4>
+				<p>
+					The point of view that you see the world from is considered the location and orientation of the observer. This
+					is similar to the 3D view in NetLogo 2D. However, there are a few more ways to control the observer. You can
+					set the point that the observer is facing by using
+					<code>face</code> and <code>facexyz</code> which work the same way as the turtle commands, the observer turns
+					so the center of the view is on the given point or the location of the given agent at the time it is called.
+					You can change the location of the observer using <code>setxyz</code>. The observer will move to view the
+					world as if standing on the given location, the point the observer faces will stay the same. For example
+					create a new model and observer will be located at (0, 0, 49.5), that is, on the z-axis 49.5 patch units away
+					from the origin and the observer is facing the origin, (0, 0, 0). If you <code>setxyz 0 49.5 0</code> the
+					observer will move so it is on the positive y-axis but it will keep the origin at the center of the view. You
+					can also move the observer using the rotation primitives that will allow you to move the observer around the
+					world as if on the surface of a sphere where the center is the location the observer is facing. You may notice
+					from the above examples that the observer is not constrained to be within the bounds of the world.
+				</p>
+				<h4>
+					<a id="custom-shapes">Custom Shapes</a>
+				</h4>
+				<p>
+					NetLogo automatically interprets 2D shapes so they are extruded, like a cookie cutter shape in the 3D view.
+					You can also use the primitive
+					<a href="#load-shapes-3d"><code>load-shapes-3d</code></a> to load shapes described in an external file in a
+					custom format described here. Currently we do not import shapes in any standard formats.
+				</p>
+				<p>
+					For each shape in a custom 3D shape file, a 2D shape of the same name must exist as well. You can create the
+					2D shape in the Turtle Shapes Editor.
+				</p>
+				<p>
+					The input file may contain any number of shapes with any number of rectangular or triangular surfaces. The
+					format of the input file should be as follows:
+				</p>
+				<pre>
 number of shapes in file
 name of first shape
 type of surface ( quads or tris )
@@ -163,24 +161,24 @@ surfaceA
 stop
 end-shape
 </pre
-                >
-                <p>
-                    Each surface is defined by a unit normal vector and the vertices listed in clockwise order, tris should have
-                    three vertices and quads should have four.
-                </p>
-                <pre>
+				>
+				<p>
+					Each surface is defined by a unit normal vector and the vertices listed in clockwise order, tris should have
+					three vertices and quads should have four.
+				</p>
+				<pre>
 normal: xn yn zn
 x1 y1 z1
 x2 y2 z2
 x3 y3 z3
 x4 y4 z4
 </pre
-                >
-                <p>
-                    A file declaring just a two dimensional, patch-sized, square in the xy-plane centered at the origin would look
-                    like this:
-                </p>
-                <pre>
+				>
+				<p>
+					A file declaring just a two dimensional, patch-sized, square in the xy-plane centered at the origin would look
+					like this:
+				</p>
+				<pre>
 1
 square
 quads
@@ -197,947 +195,928 @@ normal: 0 0 -1
 stop
 end-shape
 </pre
-                >
-            </section>
-            <section id="tutorial" class="prose">
-                <h2>
-                    <a>Tutorial</a>
-                </h2>
-                <h4>
-                    <span class="prim_example">Step 1: Depth</span>
-                </h4>
-                <p>
-                    One of the first things you will notice when you open NetLogo 3D is that the world is a cube instead of a
-                    square.
-                </p>
-                <p class="screenshot">
-                    <img alt="screen shot" src="images/3d/cube.png" />
-                </p>
-                <p>
-                    You can open up the Model Settings, by clicking on the &quot;Settings...&quot; button at the top of the 3D
-                    View. You'll notice in addition to <code>max-pxcor</code>, <code>min-pxcor</code>, <code>max-pycor</code>, and
-                    <code>min-pycor</code>, there is also <a href="#min-max-pzcor"><code>max-pzcor</code></a> and
-                    <a href="#min-max-pzcor"><code>min-pzcor</code></a
-                    >.
-                </p>
-                <p class="screenshot">
-                    <img alt="screen shot" src="images/3d/properties.png" />
-                </p>
-                <p>
-                    The z-axis is perpendicular to both the x-axis and the y-axis, when you <code>reset-perspective</code> it is
-                    the axis that comes straight out of the screen. In the default position <code>max-pzcor</code> is the face of
-                    the cube nearest to you and <code>min-pzcor</code> is the face farthest from you. As always
-                    <code>min-pxcor</code> is on the left, <code>max-pxcor</code> on the right, <code>min-pycor</code> on the
-                    bottom, and <code>max-pycor</code> on the top.
-                </p>
-                <p>
-                    You'll also notice on the left side of the Model Settings that there are options for wrapping in all three
-                    directions, however, they are all checked and grayed out. Topologies are not yet supported in NetLogo 3D, so
-                    the world always wraps in all dimensions.
-                </p>
-                <blockquote>
-                    <ul>
-                        <li>Move to the Command Center and type <code>print count patches</code>.</li>
-                    </ul>
-                    <p class="question">Is the number smaller or larger than you expected?</p>
-                </blockquote>
-                <p>
-                    In a 3D world the number of patches grows very quickly since
-                    <code>count patches = world-width * world-height * world-depth</code>. It's important to keep this in mind
-                    when you are building your model. Lots of patches can slow your model down or even cause NetLogo to run out of
-                    memory.
-                </p>
-                <blockquote>
-                    <ul>
-                        <li>Type <code>ask patch 1 2 3 [ set pcolor red ]</code> into the Command Center.</li>
-                        <li>Use the mouse in the 3D view to rotate the world.</li>
-                    </ul>
-                </blockquote>
-                <p>
-                    Notice the shape of the patch and its position in relation to the edges of the world. You'll also notice that
-                    you now need three coordinates to address patches in a 3D world.
-                </p>
-                <h4>
-                    <span class="prim_example">Step 2: Turtle Movement</span>
-                </h4>
-                <blockquote>
-                    <ul>
-                        <li>
-                            Open the Models Library in the File menu. (If you are on a Mac and you don't have a File menu, click on
-                            the main NetLogo window first and it should reappear.)
-                        </li>
-                        <li>Open Turtle and Observer Motion Example 3D in 3D/Code Examples</li>
-                    </ul>
-                </blockquote>
-                <p>
-                    Take a moment to look for the controls and monitors. In the bottom left you'll notice a group of monitors that
-                    describe the location and orientation of the turtle, though until you press the setup button they'll all say
-                    &quot;N/A&quot;.
-                </p>
-                <div class="blockquote">
-                    <ul>
-                        <li>Press the &quot;setup&quot; button</li>
-                    </ul>
-                </div>
-                <p>
-                    Heading, pitch, and roll are turtle variables that represent the orientation of the turtle. Heading is
-                    absolute in relation to the x/y plane; it is the rotation of the turtle around the z-axis.
-                </p>
-                <p class="screenshot">
-                    <img alt="screen shot" src="images/3d/heading.png" />
-                </p>
-                <p>Pitch is the angle between the nose of the turtle and the xy-plane. It is relative to heading.</p>
-                <p class="screenshot">
-                    <img alt="screen shot" src="images/3d/pitch.png" />
-                </p>
-                <p>Roll is the rotation around the turtle's forward vector. It is relative to heading and pitch.</p>
-                <p class="screenshot">
-                    <img alt="screen shot" src="images/3d/roll.png" />
-                </p>
-                <p>
-                    When turtles are created with <code>create-turtles</code> or <code>create-ordered-turtles</code>, their
-                    initial headings vary but their initial pitch and roll are always zero.
-                </p>
-                <p>Take a look at the &quot;Turtle Movement&quot; buttons.</p>
-                <div class="blockquote">
-                    <ul>
-                        <li>Press the &quot;left 1&quot; button.</li>
-                    </ul>
-                    <p class="question">
-                        How does the turtle move? Is is the same or different from 2D NetLogo? Which of the turtle variables change?
-                    </p>
-                    <ul>
-                        <li>Press the &quot;pitch-down 1&quot; button.</li>
-                    </ul>
-                    <p class="question">How does the turtle move? Which of the turtle variables change?</p>
-                    <ul>
-                        <li>Press the &quot;left 1&quot; button again.</li>
-                    </ul>
-                    <p class="question">
-                        How does the turtle move? Is it different than the last time you pressed the &quot;left 1&quot; button?
-                    </p>
-                    <ul>
-                        <li>
-                            Take a little time to play with the Turtle Movement buttons, watching both how the turtle moves and which
-                            of the turtle variables change.
-                        </li>
-                    </ul>
-                </div>
-                <p>
-                    You probably noticed that often more than one of the turtle variables may change for a single turn. For this
-                    reason we suggest that you use the turtle commands rather than setting the orientation variables directly.
-                </p>
-                <h4>
-                    <span class="prim_example">Step 3: Observer Movement</span>
-                </h4>
-                <p>
-                    At the bottom of the interface you will see Orbit, Zoom, and Move buttons. If you have ever used the 3D view
-                    in NetLogo 2D or if you have been using the mouse controls in the 3D view through this tutorial you have been
-                    moving the observer. Changing the point of view in the 3D view is actually moving and changing the orientation
-                    of the observer. The observer has x, y and z coordinates, just like a turtle or patch, while turtles and
-                    patches are constrained to be inside the world the observer can be anywhere. Like a turtle the observer has a
-                    heading, pitch and roll, these variables control where the observer is looking, that is, what you see in the
-                    view.
-                </p>
-                <blockquote>
-                    <ul>
-                        <li>
-                            Move to the 3D view, and make sure &quot;Orbit&quot; is selected in the bottom left corner of the view.
-                        </li>
-                        <li>
-                            Click and hold the mouse button in the middle of the view, move the mouse left, right, up, and down.
-                        </li>
-                    </ul>
-                    <p class="question">How does the position and orientation of the observer change?</p>
-                    <ul>
-                        <li>
-                            Press the reset-perspective button in the lower right corner of the view and select &quot;Zoom&quot; in
-                            the lower left corner.
-                        </li>
-                        <li>Click and hold the mouse button in the middle of the view and move the mouse up and down.</li>
-                    </ul>
-                    <p class="question">Which of the observer variables change? Which stay the same?</p>
-                    <ul>
-                        <li>Try rotating the world a bit and then zoom again.</li>
-                        <li>Press the &quot;Move&quot; button in the lower left corner of the view.</li>
-                        <li>
-                            Click and hold the mouse button in the middle of the view and move the mouse up, down, left and right.
-                        </li>
-                    </ul>
-                    <p class="question">How does the view change? How do the observer variables change?</p>
-                </blockquote>
-                <p>
-                    After you are done exploring the world using the mouse controls you can take a look at the observer control
-                    buttons in the lower left portion of the interface.
-                </p>
-                <p>
-                    You may already be familiar with the first three buttons in the observer group from your experience with
-                    NetLogo 2D. Watch, follow, and ride, are special modes that automatically update the position and orientation
-                    of the observer. When in follow or ride mode, the observer position and orientation are the same as the
-                    turtle's. Note that follow and ride are functionally exactly the same, the difference is only visual in the 3D
-                    view. When in watch mode the observer does not move but updates to face the target agent.
-                </p>
-                <blockquote>
-                    <ul>
-                        <li>Press the &quot;setup&quot; button again so you are back to the default orientation.</li>
-                        <li>Press the &quot;orbit-right&quot; button.</li>
-                    </ul>
-                    <p class="question">
-                        How did the view change? Was it what you expected? How is it similar or different from using the mouse
-                        controls?
-                    </p>
-                    <ul>
-                        <li>
-                            Take a little time to experiment with orbit, roll and zoom buttons; notice similarities and differences to
-                            the mouse controls.
-                        </li>
-                    </ul>
-                </blockquote>
-                <p>
-                    The direction of the orbit commands refer to the direction that the observer moves. That is, imagine that the
-                    observer is on the surface of a sphere, the center of the sphere is the point that the observer is facing
-                    represented by the blue cross, by default (0,0,0). The observer will always face the center of the sphere and
-                    the radius of the sphere will remain constant. The directions, up, down, left, and right, refer to moving
-                    along the lines of latitude and the lines of longitude of the sphere. When you zoom the radius of the sphere
-                    changes but the center and the observer's orientation in relation to the center of the sphere will remain the
-                    same.
-                </p>
-                <div class="blockquote">
-                    <ul>
-                        <li>Press one of the &quot;setxyz&quot; buttons.</li>
-                    </ul>
-                    <p class="question">How does the view change? How do the observer variables change?</p>
-                    <ul>
-                        <li>Press the &quot;facexyz&quot; button.</li>
-                    </ul>
-                    <p class="question">How does the view change? How do the observer variables change?</p>
-                </div>
-                <p>
-                    When you <code>setxyz</code> the center of the sphere remains the same (so the observer automatically keeps
-                    that point in the center of the view.) However, the radius of the sphere may change as well as the observer's
-                    orientation in relation to the center. When you <code>facexyz</code> or <code>face</code>, the center of the
-                    sphere changes but the observer does not move. The radius of the sphere may change, as well as the orientation
-                    of the observer.
-                </p>
-            </section>
-            <section id="dictionary" class="prose">
-                <h2>
-                    <a>Dictionary</a>
-                </h2>
-                <h3>Commands and Reporters</h3>
-                <h4>
-                    <span class="prim_example">Turtle-related primitives</span>
-                </h4>
-                <p>
-                    <a class="code" href="#distance-3d">distancexyz</a>
-                    <a class="code" href="#distance-3d">distancexyz-nowrap</a>
-                    <a class="code" href="#dz">dz</a>
-                    <a class="code" href="#left">left</a>
-                    <a class="code" href="#patch-at-3d">patch-at</a>
-                    <a class="code" href="#patch-at-heading-pitch-and-distance">patch-at-heading-pitch-and-distance</a>
-                    <a class="code" href="#tilt-cmds">tilt-down</a>
-                    <a class="code" href="#tilt-cmds">tilt-up</a>
-                    <a class="code" href="#right">right</a>
-                    <a class="code" href="#roll-left">roll-left</a>
-                    <a class="code" href="#roll-right">roll-right</a>
-                    <a class="code" href="#setxyz">setxyz</a>
-                    <a class="code" href="#towards-pitch-cmd">towards-pitch</a>
-                    <a class="code" href="#towards-pitch-cmd">towards-pitch-nowrap</a>
-                    <a class="code" href="#towards-pitch-xyz-cmd">towards-pitch-xyz</a>
-                    <a class="code" href="#towards-pitch-xyz-cmd">towards-pitch-xyz-nowrap</a>
-                    <a class="code" href="#turtles-at-3d">turtles-at</a>
-                </p>
-                <h4>
-                    <span class="prim_example">Patch-related primitives</span>
-                </h4>
-                <p>
-                    <a class="code" href="#distance-3d">distancexyz</a>
-                    <a class="code" href="#distance-3d">distancexyz-nowrap</a>
-                    <a class="code" href="#neighbors-3d">neighbors</a>
-                    <a class="code" href="#neighbors-3d">neighbors6</a>
-                    <a class="code" href="#patch">patch</a>
-                    <a class="code" href="#patch-at-3d">patch-at</a>
-                    <a class="code" href="#patch-at-heading-pitch-and-distance">patch-at-heading-pitch-and-distance</a>
-                </p>
-                <h4>
-                    <span class="prim_example">Agentset primitives</span>
-                </h4>
-                <p>
-                    <a class="code" href="#at-points-3d">at-points</a>
-                    <a class="code" href="#turtles-at-3d">breeds-at</a>
-                    <a class="code" href="#turtles-at-3d">turtles-at</a>
-                </p>
-                <h4>
-                    <span class="prim_example">World primitives</span>
-                </h4>
-                <p>
-                    <a class="code" href="#min-max-pzcor">max-pzcor</a>
-                    <a class="code" href="#min-max-pzcor">min-pzcor</a>
-                    <a class="code" href="#random-pzcor">random-pzcor</a>
-                    <a class="code" href="#random-zcor">random-zcor</a>
-                    <a class="code" href="#world-depth">world-depth</a>
-                    <a class="code" href="#load-shapes-3d">load-shapes-3d</a>
-                </p>
-                <h4>
-                    <span class="prim_example">Observer movement primitives</span>
-                </h4>
-                <p>
-                    <a class="code" href="#face-3d">face</a>
-                    <a class="code" href="#face-3d">facexyz</a>
-                    <a class="code" href="#orbit-cmds">orbit-down</a>
-                    <a class="code" href="#orbit-cmds">orbit-left</a>
-                    <a class="code" href="#orbit-cmds">orbit-right</a>
-                    <a class="code" href="#orbit-cmds">orbit-up</a>
-                    <a class="code" href="#observer-cors">__oxcor</a>
-                    <a class="code" href="#observer-cors">__oycor</a>
-                    <a class="code" href="#observer-cors">__ozcor</a>
-                    <a class="code" href="#setxyz">setxyz</a>
-                    <a class="code" href="#zoom">zoom</a>
-                </p>
-                <h4>
-                    <span class="prim_example">Link primitives</span>
-                </h4>
-                <p><a class="code" href="#link-pitch">link-pitch</a></p>
-                <h3>Built-In Variables</h3>
-                <h4>
-                    <span class="prim_example">Turtles</span>
-                </h4>
-                <p>
-                    <a class="code" href="#zcor">zcor</a>
-                    <a class="code" href="#pitch">pitch</a>
-                    <a class="code" href="#roll">roll</a>
-                </p>
-                <h4>
-                    <span class="prim_example">Patches</span>
-                </h4>
-                <p>
-                    <a class="code" href="#pzcor">pzcor</a>
-                </p>
-                <h3>Primitives</h3>
-                <div class="dict_entry" id="at-points-3d">
-                    <h3>
-                        <a>at-points<span class="since">4.1</span></a>
-                    </h3>
-                    <h4>
-                        <span class="prim_example"><i>agentset</i> at-points [[<i>x1 y1 z1</i>] [<i>x2 y2 z2</i>] ...]</span>
-                    </h4>
-                    <p>
-                        Reports a subset of the given agentset that includes only the agents on the patches the given distances away
-                        from this agent. The distances are specified as a list of three-item lists, where the three items are the x,
-                        y, and z offsets.
-                    </p>
-                    <p>
-                        If the caller is the observer, then the points are measured relative to the origin, in other words, the
-                        points are taken as absolute patch coordinates.
-                    </p>
-                    <p>
-                        If the caller is a turtle, the points are measured relative to the turtle's exact location, and not from the
-                        center of the patch under the turtle.
-                    </p>
-                    <pre>
+				>
+			</section>
+			<section id="tutorial" class="prose">
+				<h2>
+					<a>Tutorial</a>
+				</h2>
+				<h4>Step 1: Depth</h4>
+				<p>
+					One of the first things you will notice when you open NetLogo 3D is that the world is a cube instead of a
+					square.
+				</p>
+				<p class="screenshot">
+					<img alt="screen shot" src="images/3d/cube.png" />
+				</p>
+				<p>
+					You can open up the Model Settings, by clicking on the &quot;Settings...&quot; button at the top of the 3D
+					View. You'll notice in addition to <code>max-pxcor</code>, <code>min-pxcor</code>, <code>max-pycor</code>, and
+					<code>min-pycor</code>, there is also <a href="#min-max-pzcor"><code>max-pzcor</code></a> and
+					<a href="#min-max-pzcor"><code>min-pzcor</code></a
+					>.
+				</p>
+				<p class="screenshot">
+					<img alt="screen shot" src="images/3d/properties.png" />
+				</p>
+				<p>
+					The z-axis is perpendicular to both the x-axis and the y-axis, when you <code>reset-perspective</code> it is
+					the axis that comes straight out of the screen. In the default position <code>max-pzcor</code> is the face of
+					the cube nearest to you and <code>min-pzcor</code> is the face farthest from you. As always
+					<code>min-pxcor</code> is on the left, <code>max-pxcor</code> on the right, <code>min-pycor</code> on the
+					bottom, and <code>max-pycor</code> on the top.
+				</p>
+				<p>
+					You'll also notice on the left side of the Model Settings that there are options for wrapping in all three
+					directions, however, they are all checked and grayed out. Topologies are not yet supported in NetLogo 3D, so
+					the world always wraps in all dimensions.
+				</p>
+				<blockquote>
+					<ul>
+						<li>Move to the Command Center and type <code>print count patches</code>.</li>
+					</ul>
+					<p class="question">Is the number smaller or larger than you expected?</p>
+				</blockquote>
+				<p>
+					In a 3D world the number of patches grows very quickly since
+					<code>count patches = world-width * world-height * world-depth</code>. It's important to keep this in mind
+					when you are building your model. Lots of patches can slow your model down or even cause NetLogo to run out of
+					memory.
+				</p>
+				<blockquote>
+					<ul>
+						<li>Type <code>ask patch 1 2 3 [ set pcolor red ]</code> into the Command Center.</li>
+						<li>Use the mouse in the 3D view to rotate the world.</li>
+					</ul>
+				</blockquote>
+				<p>
+					Notice the shape of the patch and its position in relation to the edges of the world. You'll also notice that
+					you now need three coordinates to address patches in a 3D world.
+				</p>
+				<h4>Step 2: Turtle Movement</h4>
+				<blockquote>
+					<ul>
+						<li>
+							Open the Models Library in the File menu. (If you are on a Mac and you don't have a File menu, click on
+							the main NetLogo window first and it should reappear.)
+						</li>
+						<li>Open Turtle and Observer Motion Example 3D in 3D/Code Examples</li>
+					</ul>
+				</blockquote>
+				<p>
+					Take a moment to look for the controls and monitors. In the bottom left you'll notice a group of monitors that
+					describe the location and orientation of the turtle, though until you press the setup button they'll all say
+					&quot;N/A&quot;.
+				</p>
+				<div class="blockquote">
+					<ul>
+						<li>Press the &quot;setup&quot; button</li>
+					</ul>
+				</div>
+				<p>
+					Heading, pitch, and roll are turtle variables that represent the orientation of the turtle. Heading is
+					absolute in relation to the x/y plane; it is the rotation of the turtle around the z-axis.
+				</p>
+				<p class="screenshot">
+					<img alt="screen shot" src="images/3d/heading.png" />
+				</p>
+				<p>Pitch is the angle between the nose of the turtle and the xy-plane. It is relative to heading.</p>
+				<p class="screenshot">
+					<img alt="screen shot" src="images/3d/pitch.png" />
+				</p>
+				<p>Roll is the rotation around the turtle's forward vector. It is relative to heading and pitch.</p>
+				<p class="screenshot">
+					<img alt="screen shot" src="images/3d/roll.png" />
+				</p>
+				<p>
+					When turtles are created with <code>create-turtles</code> or <code>create-ordered-turtles</code>, their
+					initial headings vary but their initial pitch and roll are always zero.
+				</p>
+				<p>Take a look at the &quot;Turtle Movement&quot; buttons.</p>
+				<div class="blockquote">
+					<ul>
+						<li>Press the &quot;left 1&quot; button.</li>
+					</ul>
+					<p class="question">
+						How does the turtle move? Is is the same or different from 2D NetLogo? Which of the turtle variables change?
+					</p>
+					<ul>
+						<li>Press the &quot;pitch-down 1&quot; button.</li>
+					</ul>
+					<p class="question">How does the turtle move? Which of the turtle variables change?</p>
+					<ul>
+						<li>Press the &quot;left 1&quot; button again.</li>
+					</ul>
+					<p class="question">
+						How does the turtle move? Is it different than the last time you pressed the &quot;left 1&quot; button?
+					</p>
+					<ul>
+						<li>
+							Take a little time to play with the Turtle Movement buttons, watching both how the turtle moves and which
+							of the turtle variables change.
+						</li>
+					</ul>
+				</div>
+				<p>
+					You probably noticed that often more than one of the turtle variables may change for a single turn. For this
+					reason we suggest that you use the turtle commands rather than setting the orientation variables directly.
+				</p>
+				<h4>Step 3: Observer Movement</h4>
+				<p>
+					At the bottom of the interface you will see Orbit, Zoom, and Move buttons. If you have ever used the 3D view
+					in NetLogo 2D or if you have been using the mouse controls in the 3D view through this tutorial you have been
+					moving the observer. Changing the point of view in the 3D view is actually moving and changing the orientation
+					of the observer. The observer has x, y and z coordinates, just like a turtle or patch, while turtles and
+					patches are constrained to be inside the world the observer can be anywhere. Like a turtle the observer has a
+					heading, pitch and roll, these variables control where the observer is looking, that is, what you see in the
+					view.
+				</p>
+				<blockquote>
+					<ul>
+						<li>
+							Move to the 3D view, and make sure &quot;Orbit&quot; is selected in the bottom left corner of the view.
+						</li>
+						<li>
+							Click and hold the mouse button in the middle of the view, move the mouse left, right, up, and down.
+						</li>
+					</ul>
+					<p class="question">How does the position and orientation of the observer change?</p>
+					<ul>
+						<li>
+							Press the reset-perspective button in the lower right corner of the view and select &quot;Zoom&quot; in
+							the lower left corner.
+						</li>
+						<li>Click and hold the mouse button in the middle of the view and move the mouse up and down.</li>
+					</ul>
+					<p class="question">Which of the observer variables change? Which stay the same?</p>
+					<ul>
+						<li>Try rotating the world a bit and then zoom again.</li>
+						<li>Press the &quot;Move&quot; button in the lower left corner of the view.</li>
+						<li>
+							Click and hold the mouse button in the middle of the view and move the mouse up, down, left and right.
+						</li>
+					</ul>
+					<p class="question">How does the view change? How do the observer variables change?</p>
+				</blockquote>
+				<p>
+					After you are done exploring the world using the mouse controls you can take a look at the observer control
+					buttons in the lower left portion of the interface.
+				</p>
+				<p>
+					You may already be familiar with the first three buttons in the observer group from your experience with
+					NetLogo 2D. Watch, follow, and ride, are special modes that automatically update the position and orientation
+					of the observer. When in follow or ride mode, the observer position and orientation are the same as the
+					turtle's. Note that follow and ride are functionally exactly the same, the difference is only visual in the 3D
+					view. When in watch mode the observer does not move but updates to face the target agent.
+				</p>
+				<blockquote>
+					<ul>
+						<li>Press the &quot;setup&quot; button again so you are back to the default orientation.</li>
+						<li>Press the &quot;orbit-right&quot; button.</li>
+					</ul>
+					<p class="question">
+						How did the view change? Was it what you expected? How is it similar or different from using the mouse
+						controls?
+					</p>
+					<ul>
+						<li>
+							Take a little time to experiment with orbit, roll and zoom buttons; notice similarities and differences to
+							the mouse controls.
+						</li>
+					</ul>
+				</blockquote>
+				<p>
+					The direction of the orbit commands refer to the direction that the observer moves. That is, imagine that the
+					observer is on the surface of a sphere, the center of the sphere is the point that the observer is facing
+					represented by the blue cross, by default (0,0,0). The observer will always face the center of the sphere and
+					the radius of the sphere will remain constant. The directions, up, down, left, and right, refer to moving
+					along the lines of latitude and the lines of longitude of the sphere. When you zoom the radius of the sphere
+					changes but the center and the observer's orientation in relation to the center of the sphere will remain the
+					same.
+				</p>
+				<div class="blockquote">
+					<ul>
+						<li>Press one of the &quot;setxyz&quot; buttons.</li>
+					</ul>
+					<p class="question">How does the view change? How do the observer variables change?</p>
+					<ul>
+						<li>Press the &quot;facexyz&quot; button.</li>
+					</ul>
+					<p class="question">How does the view change? How do the observer variables change?</p>
+				</div>
+				<p>
+					When you <code>setxyz</code> the center of the sphere remains the same (so the observer automatically keeps
+					that point in the center of the view.) However, the radius of the sphere may change as well as the observer's
+					orientation in relation to the center. When you <code>facexyz</code> or <code>face</code>, the center of the
+					sphere changes but the observer does not move. The radius of the sphere may change, as well as the orientation
+					of the observer.
+				</p>
+			</section>
+			<section id="dictionary" class="prose">
+				<h2>
+					<a>Dictionary</a>
+				</h2>
+				<h3>Commands and Reporters</h3>
+				<h4>Turtle-related primitives</h4>
+				<p>
+					<a class="code" href="#distance-3d">distancexyz</a>
+					<a class="code" href="#distance-3d">distancexyz-nowrap</a>
+					<a class="code" href="#dz">dz</a>
+					<a class="code" href="#left">left</a>
+					<a class="code" href="#patch-at-3d">patch-at</a>
+					<a class="code" href="#patch-at-heading-pitch-and-distance">patch-at-heading-pitch-and-distance</a>
+					<a class="code" href="#tilt-cmds">tilt-down</a>
+					<a class="code" href="#tilt-cmds">tilt-up</a>
+					<a class="code" href="#right">right</a>
+					<a class="code" href="#roll-left">roll-left</a>
+					<a class="code" href="#roll-right">roll-right</a>
+					<a class="code" href="#setxyz">setxyz</a>
+					<a class="code" href="#towards-pitch-cmd">towards-pitch</a>
+					<a class="code" href="#towards-pitch-cmd">towards-pitch-nowrap</a>
+					<a class="code" href="#towards-pitch-xyz-cmd">towards-pitch-xyz</a>
+					<a class="code" href="#towards-pitch-xyz-cmd">towards-pitch-xyz-nowrap</a>
+					<a class="code" href="#turtles-at-3d">turtles-at</a>
+				</p>
+				<h4>Patch-related primitives</h4>
+				<p>
+					<a class="code" href="#distance-3d">distancexyz</a>
+					<a class="code" href="#distance-3d">distancexyz-nowrap</a>
+					<a class="code" href="#neighbors-3d">neighbors</a>
+					<a class="code" href="#neighbors-3d">neighbors6</a>
+					<a class="code" href="#patch">patch</a>
+					<a class="code" href="#patch-at-3d">patch-at</a>
+					<a class="code" href="#patch-at-heading-pitch-and-distance">patch-at-heading-pitch-and-distance</a>
+				</p>
+				<h4>Agentset primitives</h4>
+				<p>
+					<a class="code" href="#at-points-3d">at-points</a>
+					<a class="code" href="#turtles-at-3d">breeds-at</a>
+					<a class="code" href="#turtles-at-3d">turtles-at</a>
+				</p>
+				<h4>World primitives</h4>
+				<p>
+					<a class="code" href="#min-max-pzcor">max-pzcor</a>
+					<a class="code" href="#min-max-pzcor">min-pzcor</a>
+					<a class="code" href="#random-pzcor">random-pzcor</a>
+					<a class="code" href="#random-zcor">random-zcor</a>
+					<a class="code" href="#world-depth">world-depth</a>
+					<a class="code" href="#load-shapes-3d">load-shapes-3d</a>
+				</p>
+				<h4>Observer movement primitives</h4>
+				<p>
+					<a class="code" href="#face-3d">face</a>
+					<a class="code" href="#face-3d">facexyz</a>
+					<a class="code" href="#orbit-cmds">orbit-down</a>
+					<a class="code" href="#orbit-cmds">orbit-left</a>
+					<a class="code" href="#orbit-cmds">orbit-right</a>
+					<a class="code" href="#orbit-cmds">orbit-up</a>
+					<a class="code" href="#observer-cors">__oxcor</a>
+					<a class="code" href="#observer-cors">__oycor</a>
+					<a class="code" href="#observer-cors">__ozcor</a>
+					<a class="code" href="#setxyz">setxyz</a>
+					<a class="code" href="#zoom">zoom</a>
+				</p>
+				<h4>Link primitives</h4>
+				<p><a class="code" href="#link-pitch">link-pitch</a></p>
+				<h3>Built-In Variables</h3>
+				<h4>Turtles</h4>
+				<p>
+					<a class="code" href="#zcor">zcor</a>
+					<a class="code" href="#pitch">pitch</a>
+					<a class="code" href="#roll">roll</a>
+				</p>
+				<h4>Patches</h4>
+				<p>
+					<a class="code" href="#pzcor">pzcor</a>
+				</p>
+				<h3>Primitives</h3>
+				<div class="dict_entry" id="at-points-3d">
+					<h3>
+						<a>at-points<span class="since">4.1</span></a>
+					</h3>
+					<h4>
+						<span class="prim_example"><i>agentset</i> at-points [[<i>x1 y1 z1</i>] [<i>x2 y2 z2</i>] ...]</span>
+					</h4>
+					<p>
+						Reports a subset of the given agentset that includes only the agents on the patches the given distances away
+						from this agent. The distances are specified as a list of three-item lists, where the three items are the x,
+						y, and z offsets.
+					</p>
+					<p>
+						If the caller is the observer, then the points are measured relative to the origin, in other words, the
+						points are taken as absolute patch coordinates.
+					</p>
+					<p>
+						If the caller is a turtle, the points are measured relative to the turtle's exact location, and not from the
+						center of the patch under the turtle.
+					</p>
+					<pre>
 ask turtles at-points [[2 4 0] [1 2 1] [10 15 10]]
 [ fd 1 ]  ;; only the turtles on the patches at the
           ;; distances (2,4,0), (1,2,1) and (10,15,10),
           ;; relative to the caller, move
 </pre
-                    >
-                </div>
-                <div class="dict_entry" id="distance-3d">
-                    <h3>
-                        <a>distancexyz<span class="since">4.1</span></a>
-                        <a>distancexyz-nowrap<span class="since">4.1</span></a>
-                    </h3>
-                    <h4>
-                        <span class="prim_example">distancexyz <i>xcor</i> <i>ycor</i> <i>zcor</i></span>
-                        <span class="prim_example">distancexyz-nowrap <i>xcor</i> <i>ycor</i> <i>zcor</i></span>
-                        <img alt="Turtle Command" src="images/turtle.png" width="16" height="16" />
-                        <img alt="Patch Command" src="images/patch.png" width="16" height="16" />
-                    </h4>
-                    <p>3D versions of <a href="dictionary.html#distancexy">distancexy</a>.</p>
-                    <p>
-                        Reports the distance from this agent to the point (<i>xcor</i>,
-                        <i>ycor</i>, <i>zcor</i>).
-                    </p>
-                    <p>The distance from a patch is measured from the center of the patch.</p>
-                    <p>
-                        distancexyz-nowrap always reports the in world distance, never a distance that would require wrapping around
-                        the edges of the world. With distancexyz the wrapped distance (around the edges of the world) is used if
-                        that distance is shorter than the in world distance.
-                    </p>
-                    <pre>
+					>
+				</div>
+				<div class="dict_entry" id="distance-3d">
+					<h3>
+						<a>distancexyz<span class="since">4.1</span></a>
+						<a>distancexyz-nowrap<span class="since">4.1</span></a>
+					</h3>
+					<h4>
+						<span class="prim_example">distancexyz <i>xcor</i> <i>ycor</i> <i>zcor</i></span>
+						<span class="prim_example">distancexyz-nowrap <i>xcor</i> <i>ycor</i> <i>zcor</i></span>
+						<img alt="Turtle Command" src="images/turtle.png" width="16" height="16" />
+						<img alt="Patch Command" src="images/patch.png" width="16" height="16" />
+					</h4>
+					<p>3D versions of <a href="dictionary.html#distancexy">distancexy</a>.</p>
+					<p>
+						Reports the distance from this agent to the point (<i>xcor</i>,
+						<i>ycor</i>, <i>zcor</i>).
+					</p>
+					<p>The distance from a patch is measured from the center of the patch.</p>
+					<p>
+						distancexyz-nowrap always reports the in world distance, never a distance that would require wrapping around
+						the edges of the world. With distancexyz the wrapped distance (around the edges of the world) is used if
+						that distance is shorter than the in world distance.
+					</p>
+					<pre>
 if (distancexyz 0 0 0) &lt; 10
   [ set color green ]
 ;; all turtles less than 10 units from
 ;; the center of the screen turn green.
 </pre
-                    >
-                </div>
-                <div class="dict_entry" id="dz">
-                    <h3>
-                        <a>dz<span class="since">4.1</span></a>
-                    </h3>
-                    <h4>
-                        <span class="prim_example">dz</span>
-                        <img alt="Turtle Command" src="images/turtle.png" width="16" height="16" />
-                    </h4>
-                    <p>
-                        Reports the z-increment (the amount by which the turtle's zcor would change) if the turtle were to take one
-                        step forward at its current heading and pitch.
-                    </p>
-                    <p>
-                        NOTE: dz is simply the sine of the turtle's pitch. Both dx and dy have changed in this case. So, dx =
-                        cos(pitch) * sin(heading) and dy = cos(pitch) * cos(heading).
-                    </p>
-                    <p>See also <a href="dictionary.html#dxy">dx</a>, <a href="dictionary.html#dxy">dy</a>.</p>
-                </div>
-                <div class="dict_entry" id="face-3d">
-                    <h3>
-                        <a>face</a>
-                        <a>facexyz<span class="since">4.1</span></a>
-                    </h3>
-                    <h4>
-                        <span class="prim_example">face <i>agent</i></span>
-                        <span class="prim_example">facexyz <i>x</i> <i>y</i> <i>z</i></span>
-                        <img alt="Turtle Command" src="images/turtle.png" width="16" height="16" />
-                        <img alt="Observer Movement Command" src="images/observermovement.png" width="16" height="16" />
-                    </h4>
-                    <p>Set the caller's heading and pitch towards <i>agent</i> or towards the point <i>(x,y,z)</i>.</p>
-                    <p>
-                        If the caller and the target are at the same x and y coordinates the caller's heading will not change. If
-                        the caller and the target are also at the same z coordinate the pitch will not change either.
-                    </p>
-                </div>
-                <div class="dict_entry" id="left">
-                    <h3>
-                        <a>left<span class="since">4.1</span></a>
-                    </h3>
-                    <h4>
-                        <span class="prim_example">left <i>number</i></span>
-                        <img alt="Turtle Command" src="images/turtle.png" width="16" height="16" />
-                    </h4>
-                    <p>
-                        The turtle turns left by <i>number</i> degrees, relative to its current orientation. While left in a 2D
-                        world only modifies the turtle's heading, left in a 3D world may also modify the turtle's pitch and roll.
-                    </p>
-                    <p>
-                        See also <a href="dictionary.html#left">left</a>, <a class="code" href="#tilt-cmds">tilt-up</a>,
-                        <a class="code" href="#tilt-cmds">tilt-down</a>
-                    </p>
-                </div>
-                <div class="dict_entry" id="link-pitch">
-                    <h3>
-                        <a>link-pitch<span class="since">4.1.2</span></a>
-                    </h3>
-                    <h4>
-                        <span class="prim_example">link-pitch</span>
-                        <img alt="Link Command" src="images/link.png" width="16" height="16" />
-                    </h4>
-                    <p>Reports the pitch from end1 to end2 of this link.</p>
-                    <pre>
+					>
+				</div>
+				<div class="dict_entry" id="dz">
+					<h3>
+						<a>dz<span class="since">4.1</span></a>
+					</h3>
+					<h4>
+						<span class="prim_example">dz</span>
+						<img alt="Turtle Command" src="images/turtle.png" width="16" height="16" />
+					</h4>
+					<p>
+						Reports the z-increment (the amount by which the turtle's zcor would change) if the turtle were to take one
+						step forward at its current heading and pitch.
+					</p>
+					<p>
+						NOTE: dz is simply the sine of the turtle's pitch. Both dx and dy have changed in this case. So, dx =
+						cos(pitch) * sin(heading) and dy = cos(pitch) * cos(heading).
+					</p>
+					<p>See also <a href="dictionary.html#dxy">dx</a>, <a href="dictionary.html#dxy">dy</a>.</p>
+				</div>
+				<div class="dict_entry" id="face-3d">
+					<h3>
+						<a>face</a>
+						<a>facexyz<span class="since">4.1</span></a>
+					</h3>
+					<h4>
+						<span class="prim_example">face <i>agent</i></span>
+						<span class="prim_example">facexyz <i>x</i> <i>y</i> <i>z</i></span>
+						<img alt="Turtle Command" src="images/turtle.png" width="16" height="16" />
+						<img alt="Observer Movement Command" src="images/observermovement.png" width="16" height="16" />
+					</h4>
+					<p>Set the caller's heading and pitch towards <i>agent</i> or towards the point <i>(x,y,z)</i>.</p>
+					<p>
+						If the caller and the target are at the same x and y coordinates the caller's heading will not change. If
+						the caller and the target are also at the same z coordinate the pitch will not change either.
+					</p>
+				</div>
+				<div class="dict_entry" id="left">
+					<h3>
+						<a>left<span class="since">4.1</span></a>
+					</h3>
+					<h4>
+						<span class="prim_example">left <i>number</i></span>
+						<img alt="Turtle Command" src="images/turtle.png" width="16" height="16" />
+					</h4>
+					<p>
+						The turtle turns left by <i>number</i> degrees, relative to its current orientation. While left in a 2D
+						world only modifies the turtle's heading, left in a 3D world may also modify the turtle's pitch and roll.
+					</p>
+					<p>
+						See also <a href="dictionary.html#left">left</a>, <a class="code" href="#tilt-cmds">tilt-up</a>,
+						<a class="code" href="#tilt-cmds">tilt-down</a>
+					</p>
+				</div>
+				<div class="dict_entry" id="link-pitch">
+					<h3>
+						<a>link-pitch<span class="since">4.1.2</span></a>
+					</h3>
+					<h4>
+						<span class="prim_example">link-pitch</span>
+						<img alt="Link Command" src="images/link.png" width="16" height="16" />
+					</h4>
+					<p>Reports the pitch from end1 to end2 of this link.</p>
+					<pre>
 ask link 0 1 [ print link-pitch ]
 ;; prints [[towards-pitch other-end] of end1] of link 0 1
 </pre
-                    >
-                    <p>
-                        See also <a href="dictionary.html#link-heading">link-heading</a>,
-                        <a class="code" href="#pitch">pitch</a>
-                    </p>
-                </div>
-                <div class="dict_entry" id="load-shapes-3d">
-                    <h3>
-                        <a>load-shapes-3d<span class="since">4.1</span></a>
-                    </h3>
-                    <h4>
-                        <span class="prim_example">load-shapes-3d <i>filename</i></span>
-                        <img alt="Observer Movement Command" src="images/observermovement.png" width="16" height="16" />
-                    </h4>
-                    <p>
-                        Loads custom 3D shapes from the given file. See the <a href="3d.html">3D guide</a> for more details. You
-                        must also add a 2D shape of the same name to the model using the Turtle Shapes Editor. Custom shapes
-                        override built-in 3D shapes and converted 2D shapes.
-                    </p>
-                </div>
-                <div class="dict_entry" id="min-max-pzcor">
-                    <h3>
-                        <a>max-pzcor<span class="since">4.1</span></a>
-                        <a>min-pzcor<span class="since">4.1</span></a>
-                    </h3>
-                    <h4>
-                        <span class="prim_example">max-pzcor</span>
-                        <span class="prim_example">min-pzcor</span>
-                    </h4>
-                    <p>
-                        These reporters give the maximum and minimum z-coordinates (respectively) for patches, which determines the
-                        size of the world.
-                    </p>
-                    <p>
-                        Unlike in older versions of NetLogo the origin does not have to be at the center of the world. However, the
-                        minimum z-coordinate has to be less than or equal to 0 and the maximum z-coordinate has to be greater than
-                        or equal to 0.
-                    </p>
-                    <p>
-                        Note: You can set the size of the world only by editing the view -- these are reporters which cannot be set.
-                    </p>
-                    <p>
-                        See also <a href="dictionary.html#max-pcor">max-pxcor</a>, <a href="dictionary.html#max-pcor">max-pycor</a>,
-                        <a href="dictionary.html#min-pcor">min-pxcor</a>, <a href="dictionary.html#min-pcor">min-pycor</a>, and
-                        <a class="code" href="#world-depth">world-depth</a>.
-                    </p>
-                </div>
-                <div class="dict_entry" id="neighbors-3d">
-                    <h3>
-                        <a>neighbors<span class="since">4.1</span></a>
-                        <a>neighbors6<span class="since">4.1</span></a>
-                    </h3>
-                    <h4>
-                        <span class="prim_example">neighbors</span>
-                        <span class="prim_example">neighbors6</span>
-                        <img alt="Turtle Command" src="images/turtle.png" width="16" height="16" />
-                        <img alt="Patch Command" src="images/patch.png" width="16" height="16" />
-                    </h4>
-                    <p>
-                        3D versions of <a href="dictionary.html#neighbors">neighbors</a> and
-                        <a href="dictionary.html#neighbors">neighbors4</a>.
-                    </p>
-                    <p>
-                        Reports an agentset containing the 26 surrounding patches (neighbors) or 6 surrounding patches (neighbors6).
-                    </p>
-                    <pre>
+					>
+					<p>
+						See also <a href="dictionary.html#link-heading">link-heading</a>,
+						<a class="code" href="#pitch">pitch</a>
+					</p>
+				</div>
+				<div class="dict_entry" id="load-shapes-3d">
+					<h3>
+						<a>load-shapes-3d<span class="since">4.1</span></a>
+					</h3>
+					<h4>
+						<span class="prim_example">load-shapes-3d <i>filename</i></span>
+						<img alt="Observer Movement Command" src="images/observermovement.png" width="16" height="16" />
+					</h4>
+					<p>
+						Loads custom 3D shapes from the given file. See the <a href="3d.html">3D guide</a> for more details. You
+						must also add a 2D shape of the same name to the model using the Turtle Shapes Editor. Custom shapes
+						override built-in 3D shapes and converted 2D shapes.
+					</p>
+				</div>
+				<div class="dict_entry" id="min-max-pzcor">
+					<h3>
+						<a>max-pzcor<span class="since">4.1</span></a>
+						<a>min-pzcor<span class="since">4.1</span></a>
+					</h3>
+					<h4>
+						<span class="prim_example">max-pzcor</span>
+						<span class="prim_example">min-pzcor</span>
+					</h4>
+					<p>
+						These reporters give the maximum and minimum z-coordinates (respectively) for patches, which determines the
+						size of the world.
+					</p>
+					<p>
+						Unlike in older versions of NetLogo the origin does not have to be at the center of the world. However, the
+						minimum z-coordinate has to be less than or equal to 0 and the maximum z-coordinate has to be greater than
+						or equal to 0.
+					</p>
+					<p>
+						Note: You can set the size of the world only by editing the view -- these are reporters which cannot be set.
+					</p>
+					<p>
+						See also <a href="dictionary.html#max-pcor">max-pxcor</a>, <a href="dictionary.html#max-pcor">max-pycor</a>,
+						<a href="dictionary.html#min-pcor">min-pxcor</a>, <a href="dictionary.html#min-pcor">min-pycor</a>, and
+						<a class="code" href="#world-depth">world-depth</a>.
+					</p>
+				</div>
+				<div class="dict_entry" id="neighbors-3d">
+					<h3>
+						<a>neighbors<span class="since">4.1</span></a>
+						<a>neighbors6<span class="since">4.1</span></a>
+					</h3>
+					<h4>
+						<span class="prim_example">neighbors</span>
+						<span class="prim_example">neighbors6</span>
+						<img alt="Turtle Command" src="images/turtle.png" width="16" height="16" />
+						<img alt="Patch Command" src="images/patch.png" width="16" height="16" />
+					</h4>
+					<p>
+						3D versions of <a href="dictionary.html#neighbors">neighbors</a> and
+						<a href="dictionary.html#neighbors">neighbors4</a>.
+					</p>
+					<p>
+						Reports an agentset containing the 26 surrounding patches (neighbors) or 6 surrounding patches (neighbors6).
+					</p>
+					<pre>
 show sum values-from neighbors [count turtles-here]
   ;; prints the total number of turtles on the twenty-six
   ;; patches around this turtle or patch
 ask neighbors6 [ set pcolor red ]
   ;; turns the six neighboring patches red
 </pre
-                    >
-                </div>
-                <div class="dict_entry" id="orbit-cmds">
-                    <h3>
-                        <a>orbit-down<span class="since">4.1</span></a>
-                        <a>orbit-left<span class="since">4.1</span></a>
-                        <a>orbit-right<span class="since">4.1</span></a>
-                        <a>orbit-up<span class="since">4.1</span></a>
-                    </h3>
-                    <h4>
-                        <span class="prim_example">orbit-down <i>number</i></span>
-                        <span class="prim_example">orbit-left <i>number</i></span>
-                        <span class="prim_example">orbit-right <i>number</i></span>
-                        <span class="prim_example">orbit-up <i>number</i></span>
-                        <img alt="Observer Movement Command" src="images/observermovement.png" width="16" height="16" />
-                    </h4>
-                    <p>
-                        Rotate the observer around the last point faced. Imagine the observer is on the surface of a sphere, the
-                        last point face is the center of that sphere. Up and down orbit along the lines of longitude and right and
-                        left orbit along the lines of latitude. The observer will remain facing the last point faced so the heading
-                        and pitch may change as result of orbiting. However, because we assume an absolute north pole (parallel to
-                        the positive z-axis) the roll will never change.
-                    </p>
-                    <p>
-                        See also <a class="code" href="#setxyz">setxyz</a>, <a class="code" href="#face-3d">face</a> and
-                        <a class="code" href="#zoom">zoom</a>
-                    </p>
-                </div>
-                <div class="dict_entry" id="observer-cors">
-                    <h3>
-                        <a>__oxcor</a>
-                        <a>__oycor</a>
-                        <a>__ozcor</a>
-                    </h3>
-                    <h4>
-                        <span class="prim_example">__oxcor</span>
-                        <span class="prim_example">__oycor</span>
-                        <span class="prim_example">__ozcor</span>
-                        <img alt="Observer Movement Command" src="images/observermovement.png" width="16" height="16" />
-                    </h4>
-                    <p>Reports the x-, y-, or z-coordinate of the observer.</p>
-                    <p>See also <a class="code" href="#setxyz">setxyz</a></p>
-                    <h3>
-                        <a id="patch">patch<span class="since">4.1</span></a>
-                    </h3>
-                    <h4>
-                        <span class="prim_example">patch <i>pxcor</i> <i>pycor</i> <i>pzcor</i></span>
-                    </h4>
-                    <p>3D version of <a href="dictionary.html#patch">patch</a>.</p>
-                    <p>
-                        Given three integers, reports the single patch with the given pxcor, pycor and pzcor. <i>pxcor</i>,
-                        <i>pycor</i> and <i>pzcor</i>
-                        must be integers.
-                    </p>
-                    <pre>
+					>
+				</div>
+				<div class="dict_entry" id="orbit-cmds">
+					<h3>
+						<a>orbit-down<span class="since">4.1</span></a>
+						<a>orbit-left<span class="since">4.1</span></a>
+						<a>orbit-right<span class="since">4.1</span></a>
+						<a>orbit-up<span class="since">4.1</span></a>
+					</h3>
+					<h4>
+						<span class="prim_example">orbit-down <i>number</i></span>
+						<span class="prim_example">orbit-left <i>number</i></span>
+						<span class="prim_example">orbit-right <i>number</i></span>
+						<span class="prim_example">orbit-up <i>number</i></span>
+						<img alt="Observer Movement Command" src="images/observermovement.png" width="16" height="16" />
+					</h4>
+					<p>
+						Rotate the observer around the last point faced. Imagine the observer is on the surface of a sphere, the
+						last point face is the center of that sphere. Up and down orbit along the lines of longitude and right and
+						left orbit along the lines of latitude. The observer will remain facing the last point faced so the heading
+						and pitch may change as result of orbiting. However, because we assume an absolute north pole (parallel to
+						the positive z-axis) the roll will never change.
+					</p>
+					<p>
+						See also <a class="code" href="#setxyz">setxyz</a>, <a class="code" href="#face-3d">face</a> and
+						<a class="code" href="#zoom">zoom</a>
+					</p>
+				</div>
+				<div class="dict_entry" id="observer-cors">
+					<h3>
+						<a>__oxcor</a>
+						<a>__oycor</a>
+						<a>__ozcor</a>
+					</h3>
+					<h4>
+						<span class="prim_example">__oxcor</span>
+						<span class="prim_example">__oycor</span>
+						<span class="prim_example">__ozcor</span>
+						<img alt="Observer Movement Command" src="images/observermovement.png" width="16" height="16" />
+					</h4>
+					<p>Reports the x-, y-, or z-coordinate of the observer.</p>
+					<p>See also <a class="code" href="#setxyz">setxyz</a></p>
+					<h3>
+						<a id="patch">patch<span class="since">4.1</span></a>
+					</h3>
+					<h4>
+						<span class="prim_example">patch <i>pxcor</i> <i>pycor</i> <i>pzcor</i></span>
+					</h4>
+					<p>3D version of <a href="dictionary.html#patch">patch</a>.</p>
+					<p>
+						Given three integers, reports the single patch with the given pxcor, pycor and pzcor. <i>pxcor</i>,
+						<i>pycor</i> and <i>pzcor</i>
+						must be integers.
+					</p>
+					<pre>
 ask (patch 3 -4 2) [ set pcolor green ]
 ;; patch with pxcor of 3 and pycor of -4 and pzcor of 2 turns green
 </pre
-                    >
-                    <p>See also <a href="dictionary.html#patch">patch</a></p>
-                </div>
-                <div class="dict_entry" id="patch-at-3d">
-                    <h3>
-                        <a>patch-at<span class="since">4.1</span></a>
-                    </h3>
-                    <h4>
-                        <span class="prim_example">patch-at <i>dx</i> <i>dy</i> <i>dz</i></span>
-                        <img alt="Turtle Command" src="images/turtle.png" width="16" height="16" />
-                        <img alt="Patch Command" src="images/patch.png" width="16" height="16" />
-                    </h4>
-                    <p>3D version of <a href="dictionary.html#patch-at">patch-at</a>.</p>
-                    <p>
-                        Reports the single patch at (dx, dy, dz) from the caller, that is, dx patches east, dy patches north and dz
-                        patches up from the caller.
-                    </p>
-                    <pre>
+					>
+					<p>See also <a href="dictionary.html#patch">patch</a></p>
+				</div>
+				<div class="dict_entry" id="patch-at-3d">
+					<h3>
+						<a>patch-at<span class="since">4.1</span></a>
+					</h3>
+					<h4>
+						<span class="prim_example">patch-at <i>dx</i> <i>dy</i> <i>dz</i></span>
+						<img alt="Turtle Command" src="images/turtle.png" width="16" height="16" />
+						<img alt="Patch Command" src="images/patch.png" width="16" height="16" />
+					</h4>
+					<p>3D version of <a href="dictionary.html#patch-at">patch-at</a>.</p>
+					<p>
+						Reports the single patch at (dx, dy, dz) from the caller, that is, dx patches east, dy patches north and dz
+						patches up from the caller.
+					</p>
+					<pre>
 ask patch-at 1 -1 1 [ set pcolor green ]
 ;; turns the patch just southeast and up from the caller green
 </pre
-                    >
-                </div>
-                <div class="dict_entry" id="patch-at-heading-pitch-and-distance">
-                    <h3>
-                        <a>patch-at-heading-pitch-and-distance<span class="since">4.1</span></a>
-                    </h3>
-                    <h4>
-                        <span class="prim_example"
-                            >patch-at-heading-pitch-and-distance <i>heading</i> <i>pitch</i> <i>distance</i></span
-                        >
-                        <img alt="Turtle Command" src="images/turtle.png" width="16" height="16" />
-                        <img alt="Patch Command" src="images/patch.png" width="16" height="16" />
-                    </h4>
-                    <p>
-                        3D version of <a href="dictionary.html#patch-at-heading-and-distance">patch-at-heading-and-distance</a>.
-                    </p>
-                    <p>
-                        patch-at-heading-pitch-and-distance reports the single patch that is the given distance from this turtle or
-                        patch, along the given absolute heading and pitch. (In contrast to patch-left-and-ahead and
-                        patch-right-and-ahead, this turtle's current heading is not taken into account.)
-                    </p>
-                    <pre>
+					>
+				</div>
+				<div class="dict_entry" id="patch-at-heading-pitch-and-distance">
+					<h3>
+						<a>patch-at-heading-pitch-and-distance<span class="since">4.1</span></a>
+					</h3>
+					<h4>
+						<span class="prim_example"
+							>patch-at-heading-pitch-and-distance <i>heading</i> <i>pitch</i> <i>distance</i></span
+						>
+						<img alt="Turtle Command" src="images/turtle.png" width="16" height="16" />
+						<img alt="Patch Command" src="images/patch.png" width="16" height="16" />
+					</h4>
+					<p>
+						3D version of <a href="dictionary.html#patch-at-heading-and-distance">patch-at-heading-and-distance</a>.
+					</p>
+					<p>
+						patch-at-heading-pitch-and-distance reports the single patch that is the given distance from this turtle or
+						patch, along the given absolute heading and pitch. (In contrast to patch-left-and-ahead and
+						patch-right-and-ahead, this turtle's current heading is not taken into account.)
+					</p>
+					<pre>
 ask patch-at-heading-pitch-and-distance 0 90 1 [ set pcolor green ]
 ;; turns the patch directly above the caller green.
 </pre
-                    >
-                </div>
-                <div class="dict_entry" id="pitch">
-                    <h3>
-                        <a>pitch</a>
-                    </h3>
-                    <h4>
-                        <span class="prim_example">pitch</span>
-                        <img alt="Turtle Command" src="images/turtle.png" width="16" height="16" />
-                    </h4>
-                    <p>
-                        This is a built-in turtle variable. Pitch is the angle between the &quot;nose&quot; of the turtle and the
-                        xy-plane. Heading and pitch together define the forward vector of the turtle or the direction that the
-                        turtle is facing.
-                    </p>
-                    <p>
-                        This is a number greater than or equal to 0 and less than 360. 0 is parallel to the xy-plane, 90 is parallel
-                        to the z-axis. While you can set pitch we recommend that you use the primitives to turn the turtle.
-                        Depending on the position more than one relative angle (heading, pitch and roll) may change at once.
-                    </p>
-                    <p>Example:</p>
-                    <pre>
+					>
+				</div>
+				<div class="dict_entry" id="pitch">
+					<h3>
+						<a>pitch</a>
+					</h3>
+					<h4>
+						<span class="prim_example">pitch</span>
+						<img alt="Turtle Command" src="images/turtle.png" width="16" height="16" />
+					</h4>
+					<p>
+						This is a built-in turtle variable. Pitch is the angle between the &quot;nose&quot; of the turtle and the
+						xy-plane. Heading and pitch together define the forward vector of the turtle or the direction that the
+						turtle is facing.
+					</p>
+					<p>
+						This is a number greater than or equal to 0 and less than 360. 0 is parallel to the xy-plane, 90 is parallel
+						to the z-axis. While you can set pitch we recommend that you use the primitives to turn the turtle.
+						Depending on the position more than one relative angle (heading, pitch and roll) may change at once.
+					</p>
+					<p>Example:</p>
+					<pre>
 ;; assume roll and heading are 0
 set pitch 45      ;; turtle is now north and up
 set heading heading + 10 ;; same effect as &quot;tilt-up 10&quot;
 </pre
-                    >
-                    <p>
-                        See also <a href="dictionary.html#heading">heading</a>, <a class="code" href="#roll">roll</a>,
-                        <a class="code" href="#tilt-cmds">tilt-up</a>, <a class="code" href="#tilt-cmds">tilt-down</a>, <a class="code" href="#right">right</a>,
-                        <a class="code" href="#left">left</a>
-                    </p>
-                </div>
-                <div class="dict_entry" id="pzcor">
-                    <h3>
-                        <a>pzcor</a>
-                    </h3>
-                    <h4>
-                        <span class="prim_example">pzcor</span>
-                        <img alt="Patch Command" src="images/patch.png" width="16" height="16" />
-                        <img alt="Turtle Command" src="images/turtle.png" width="16" height="16" />
-                    </h4>
-                    <p>
-                        This is a built-in patch variable. It holds the z coordinate of the patch. It is always an integer. You
-                        cannot set this variable, because patches don't move.
-                    </p>
-                    <p>pzcor is greater than or equal to min-pzcor and less than or equal to max-pzcor.</p>
-                    <p>All patch variables can be directly accessed by any turtle standing on the patch.</p>
-                    <p>See also <a href="dictionary.html#pcor">pxcor, pycor</a>, <a class="code" href="#zcor">zcor</a>.</p>
-                </div>
-                <div class="dict_entry" id="random-pzcor">
-                    <h3>
-                        <a>random-pzcor<span class="since">4.1</span></a>
-                    </h3>
-                    <h4>
-                        <span class="prim_example">random-pzcor</span>
-                    </h4>
-                    <p>Reports a random integer ranging from min-pzcor to max-pzcor inclusive.</p>
-                    <pre>
+					>
+					<p>
+						See also <a href="dictionary.html#heading">heading</a>, <a class="code" href="#roll">roll</a>,
+						<a class="code" href="#tilt-cmds">tilt-up</a>, <a class="code" href="#tilt-cmds">tilt-down</a>,
+						<a class="code" href="#right">right</a>,
+						<a class="code" href="#left">left</a>
+					</p>
+				</div>
+				<div class="dict_entry" id="pzcor">
+					<h3>
+						<a>pzcor</a>
+					</h3>
+					<h4>
+						<span class="prim_example">pzcor</span>
+						<img alt="Patch Command" src="images/patch.png" width="16" height="16" />
+						<img alt="Turtle Command" src="images/turtle.png" width="16" height="16" />
+					</h4>
+					<p>
+						This is a built-in patch variable. It holds the z coordinate of the patch. It is always an integer. You
+						cannot set this variable, because patches don't move.
+					</p>
+					<p>pzcor is greater than or equal to min-pzcor and less than or equal to max-pzcor.</p>
+					<p>All patch variables can be directly accessed by any turtle standing on the patch.</p>
+					<p>See also <a href="dictionary.html#pcor">pxcor, pycor</a>, <a class="code" href="#zcor">zcor</a>.</p>
+				</div>
+				<div class="dict_entry" id="random-pzcor">
+					<h3>
+						<a>random-pzcor<span class="since">4.1</span></a>
+					</h3>
+					<h4>
+						<span class="prim_example">random-pzcor</span>
+					</h4>
+					<p>Reports a random integer ranging from min-pzcor to max-pzcor inclusive.</p>
+					<pre>
 ask turtles [
   ;; move each turtle to the center of a random patch
   setxyz random-pxcor random-pycor random-pzcor
 ]
 </pre
-                    >
-                    <p>
-                        See also <a href="dictionary.html#random-pcor">random-pxcor</a>,
-                        <a href="dictionary.html#random-pcor">random-pycor</a>.
-                    </p>
-                </div>
-                <div class="dict_entry" id="random-zcor">
-                    <h3>
-                        <a>random-zcor<span class="since">4.1</span></a>
-                    </h3>
-                    <h4>
-                        <span class="prim_example">random-zcor</span>
-                    </h4>
-                    <p>Reports a random floating point number from the allowable range of turtle coordinates along the z axis.</p>
-                    <p>Turtle coordinates range from min-pzcor - 0.5 (inclusive) to max-pzcor + 0.5 (exclusive).</p>
-                    <pre>
+					>
+					<p>
+						See also <a href="dictionary.html#random-pcor">random-pxcor</a>,
+						<a href="dictionary.html#random-pcor">random-pycor</a>.
+					</p>
+				</div>
+				<div class="dict_entry" id="random-zcor">
+					<h3>
+						<a>random-zcor<span class="since">4.1</span></a>
+					</h3>
+					<h4>
+						<span class="prim_example">random-zcor</span>
+					</h4>
+					<p>Reports a random floating point number from the allowable range of turtle coordinates along the z axis.</p>
+					<p>Turtle coordinates range from min-pzcor - 0.5 (inclusive) to max-pzcor + 0.5 (exclusive).</p>
+					<pre>
 ask turtles [
   ;; move each turtle to a random point
   setxyz random-xcor random-ycor random-zcor
 ]
 </pre
-                    >
-                    <p>
-                        See also <a href="dictionary.html#random-cor">random-xcor</a>,
-                        <a href="dictionary.html#random-cor">random-ycor</a>.
-                    </p>
-                </div>
-                <div class="dict_entry" id="right">
-                    <h3>
-                        <a>right<span class="since">4.1</span></a>
-                    </h3>
-                    <h4>
-                        <span class="prim_example">right <i>number</i></span>
-                        <img alt="Turtle Command" src="images/turtle.png" width="16" height="16" />
-                    </h4>
-                    <p>
-                        The turtle turns right by <i>number</i> degrees, relative to its current orientation. While right in a 2D
-                        world only modifies the turtle's heading, right in a 3D world may also modify the turtle's pitch and roll.
-                    </p>
-                    <p>See also <a class="code" href="dictionary.html#right">right</a> and <a class="code" href="#left">left</a></p>
-                </div>
-                <div class="dict_entry" id="roll">
-                    <h3>
-                        <a>roll</a>
-                    </h3>
-                    <h4>
-                        <span class="prim_example">roll</span>
-                        <img alt="Turtle Command" src="images/turtle.png" width="16" height="16" />
-                    </h4>
-                    <p>
-                        This is a built-in turtle variable. Roll is the angle between the &quot;wing-tip&quot; of the turtle and the
-                        xy-plane.
-                    </p>
-                    <p>
-                        This is a number greater than or equal to 0 and less than 360. You can set this variable to make a turtle
-                        roll. Since roll is always from the turtle's point of view, rolling right and left only only change roll
-                        regardless of turtle orientation.
-                    </p>
-                    <p>Example:</p>
-                    <pre>
+					>
+					<p>
+						See also <a href="dictionary.html#random-cor">random-xcor</a>,
+						<a href="dictionary.html#random-cor">random-ycor</a>.
+					</p>
+				</div>
+				<div class="dict_entry" id="right">
+					<h3>
+						<a>right<span class="since">4.1</span></a>
+					</h3>
+					<h4>
+						<span class="prim_example">right <i>number</i></span>
+						<img alt="Turtle Command" src="images/turtle.png" width="16" height="16" />
+					</h4>
+					<p>
+						The turtle turns right by <i>number</i> degrees, relative to its current orientation. While right in a 2D
+						world only modifies the turtle's heading, right in a 3D world may also modify the turtle's pitch and roll.
+					</p>
+					<p>
+						See also <a class="code" href="dictionary.html#right">right</a> and <a class="code" href="#left">left</a>
+					</p>
+				</div>
+				<div class="dict_entry" id="roll">
+					<h3>
+						<a>roll</a>
+					</h3>
+					<h4>
+						<span class="prim_example">roll</span>
+						<img alt="Turtle Command" src="images/turtle.png" width="16" height="16" />
+					</h4>
+					<p>
+						This is a built-in turtle variable. Roll is the angle between the &quot;wing-tip&quot; of the turtle and the
+						xy-plane.
+					</p>
+					<p>
+						This is a number greater than or equal to 0 and less than 360. You can set this variable to make a turtle
+						roll. Since roll is always from the turtle's point of view, rolling right and left only only change roll
+						regardless of turtle orientation.
+					</p>
+					<p>Example:</p>
+					<pre>
 set roll 45      ;; turtle rotated right
 set roll roll + 10 ;; same effect as &quot;roll-right 10&quot;
 </pre
-                    >
-                    <p>
-                        See also <a href="dictionary.html#heading">heading</a>, <a class="code" href="#pitch">pitch</a>,
-                        <a class="code" href="#roll-left">roll-left</a>, <a class="code" href="#roll-right">roll-right</a>.
-                    </p>
-                </div>
-                <div class="dict_entry" id="roll-left">
-                    <h3>
-                        <a>roll-left<span class="since">4.1</span></a>
-                    </h3>
-                    <h4>
-                        <span class="prim_example">roll-left <i>number</i></span>
-                        <img alt="Turtle Command" src="images/turtle.png" width="16" height="16" />
-                    </h4>
-                    <p>
-                        The wingtip of the turtle rotates to the left <i>number</i> degrees with respect to the current heading and
-                        pitch.
-                    </p>
-                </div>
-                <div class="dict_entry" id="roll-right">
-                    <h3>
-                        <a>roll-right<span class="since">4.1</span></a>
-                    </h3>
-                    <h4>
-                        <span class="prim_example">roll-right <i>number</i></span>
-                        <img alt="Turtle Command" src="images/turtle.png" width="16" height="16" />
-                    </h4>
-                    <p>
-                        The wingtip of the turtle rotates to the right <i>number</i>
-                        degrees with respect to the current heading and pitch.
-                    </p>
-                </div>
-                <div class="dict_entry" id="setxyz">
-                    <h3>
-                        <a>setxyz<span class="since">4.1</span></a>
-                    </h3>
-                    <h4>
-                        <span class="prim_example">setxyz <i>x y z</i></span>
-                        <img alt="Turtle Command" src="images/turtle.png" width="16" height="16" />
-                        <img alt="Observer Movement Command" src="images/observermovement.png" width="16" height="16" />
-                    </h4>
-                    <p>3D version of <a href="dictionary.html#setxy">setxy</a>.</p>
-                    <p>
-                        The agent, a turtle or the observer, sets its x-coordinate to
-                        <i>x</i>, its y-coordinate to <i>y</i> and its z-coordinate to <i>z</i>. When the observer uses
-                        <code>setxyz</code> it remains facing the same point so the heading, pitch, and roll, may also change.
-                    </p>
-                    <p>
-                        For turtles equivalent to <code>set xcor x set ycor y set zcor z</code>, except it happens in one time step
-                        instead of three.
-                    </p>
-                    <pre>
+					>
+					<p>
+						See also <a href="dictionary.html#heading">heading</a>, <a class="code" href="#pitch">pitch</a>,
+						<a class="code" href="#roll-left">roll-left</a>, <a class="code" href="#roll-right">roll-right</a>.
+					</p>
+				</div>
+				<div class="dict_entry" id="roll-left">
+					<h3>
+						<a>roll-left<span class="since">4.1</span></a>
+					</h3>
+					<h4>
+						<span class="prim_example">roll-left <i>number</i></span>
+						<img alt="Turtle Command" src="images/turtle.png" width="16" height="16" />
+					</h4>
+					<p>
+						The wingtip of the turtle rotates to the left <i>number</i> degrees with respect to the current heading and
+						pitch.
+					</p>
+				</div>
+				<div class="dict_entry" id="roll-right">
+					<h3>
+						<a>roll-right<span class="since">4.1</span></a>
+					</h3>
+					<h4>
+						<span class="prim_example">roll-right <i>number</i></span>
+						<img alt="Turtle Command" src="images/turtle.png" width="16" height="16" />
+					</h4>
+					<p>
+						The wingtip of the turtle rotates to the right <i>number</i>
+						degrees with respect to the current heading and pitch.
+					</p>
+				</div>
+				<div class="dict_entry" id="setxyz">
+					<h3>
+						<a>setxyz<span class="since">4.1</span></a>
+					</h3>
+					<h4>
+						<span class="prim_example">setxyz <i>x y z</i></span>
+						<img alt="Turtle Command" src="images/turtle.png" width="16" height="16" />
+						<img alt="Observer Movement Command" src="images/observermovement.png" width="16" height="16" />
+					</h4>
+					<p>3D version of <a href="dictionary.html#setxy">setxy</a>.</p>
+					<p>
+						The agent, a turtle or the observer, sets its x-coordinate to
+						<i>x</i>, its y-coordinate to <i>y</i> and its z-coordinate to <i>z</i>. When the observer uses
+						<code>setxyz</code> it remains facing the same point so the heading, pitch, and roll, may also change.
+					</p>
+					<p>
+						For turtles equivalent to <code>set xcor x set ycor y set zcor z</code>, except it happens in one time step
+						instead of three.
+					</p>
+					<pre>
 setxyz 0 0 0
 ;; agent moves to the middle of the center patch
-</pre>
-                    <p>
-                    See also <a class="code" href="#face-3d">face</a>
-                    </p>
-                </div>
-                <div class="dict_entry" id="tilt-cmds">
-                    <h3>
-                        <a>tilt-down<span class="since">4.1</span></a>
-                        <a>tilt-up<span class="since">4.1</span></a>
-                    </h3>
-                    <h4>
-                        <span class="prim_example">tilt-down <i>number</i></span>
-                        <span class="prim_example">tilt-up <i>number</i></span>
-                        <img alt="Turtle Command" src="images/turtle.png" width="16" height="16" />
-                    </h4>
-                    <p>
-                        The nose of the turtle rotates by <i>number</i> degrees, relative to its current orientation. Depending on
-                        the orientation of the turtle more than one of the relative angles (heading, pitch, and roll) may change
-                        when a turtle turns.
-                    </p>
-                </div>
-                <div class="dict_entry" id="towards-pitch-cmd">
-                    <h3>
-                        <a>towards-pitch<span class="since">4.1</span></a>
-                        <a>towards-pitch-nowrap<span class="since">4.1</span></a>
-                    </h3>
-                    <h4>
-                        <span class="prim_example">towards-pitch <i>agent</i></span>
-                        <span class="prim_example">towards-pitch-nowrap <i>agent</i></span>
-                        <img alt="Turtle Command" src="images/turtle.png" width="16" height="16" />
-                        <img alt="Patch Command" src="images/patch.png" width="16" height="16" />
-                    </h4>
-                    <p>Reports the pitch from this agent to the given agent.</p>
-                    <p>
-                        If the wrapped distance (around the edges of the screen) is shorter than the on-screen distance,
-                        towards-pitch will report the pitch of the wrapped path. towards-pitch-nowrap never uses the wrapped path.
-                    </p>
-                    <p>Note: In order to get one turtle to face another you need to use both towards-pitch and towards.</p>
-                    <p>
-                        Note: asking for the pitch from an agent to itself, or an agent on the same location, will cause a runtime
-                        error.
-                    </p>
-                    <p>See also <a href="dictionary.html#towards">towards</a></p>
-                </div>
-                <div class="dict_entry" id="towards-pitch-xyz-cmd">
-                    <h3>
-                        <a>towards-pitch-xyz<span class="since">4.1</span></a>
-                        <a>towards-pitch-xyz-nowrap<span class="since">4.1</span></a>
-                    </h3>
-                    <h4>
-                        <span class="prim_example">towards-pitch-xyz <i>x</i> <i>y</i> <i>z</i></span>
-                        <span class="prim_example">towards-pitch-xyz-no-wrap <i>x</i> <i>y</i> <i>z</i></span>
-                        <img alt="Turtle Command" src="images/turtle.png" width="16" height="16" />
-                        <img alt="Patch Command" src="images/patch.png" width="16" height="16" />
-                    </h4>
-                    <p>Reports the pitch from this agent to the coordinates x, y, z</p>
-                    <p>
-                        If the wrapped distance (around the edges of the screen) is shorter than the on-screen distance,
-                        towards-pitch will report the pitch of the wrapped path. towards-pitch-nowrap never uses the wrapped path.
-                    </p>
-                    <p>
-                        Note: In order to get a turtle to face a given location you need to use both towards-pitch-xyz and
-                        towardsxy.
-                    </p>
-                    <p>Note: asking for the pitch from an agent to the location it is standing on will cause a runtime error.</p>
-                    <p>See also <a href="dictionary.html#towardsxy">towardsxy</a></p>
-                </div>
-                <div class="dict_entry" id="turtles-at-3d">
-                    <h3>
-                        <a>turtles-at<span class="since">4.1</span></a>
-                        <a>&lt;breeds&gt;-at</a>
-                    </h3>
-                    <h4>
-                        <span class="prim_example">turtles-at <i>dx</i> <i>dy</i> <i>dz</i></span>
-                        <span class="prim_example"><i>&lt;breeds&gt;-at</i> <i>dx</i> <i>dy</i> <i>dz</i></span>
-                        <img alt="Turtle Command" src="images/turtle.png" width="16" height="16" />
-                        <img alt="Patch Command" src="images/patch.png" width="16" height="16" />
-                    </h4>
-                    <p>
-                        3D versions of <a href="dictionary.html#turtles-at">turtles-at</a> and
-                        <a href="dictionary.html#turtles-at">breeds-at</a>.
-                    </p>
-                    <p>
-                        Reports an agentset containing the turtles on the patch (dx, dy, dz) from the caller (including the caller
-                        itself if it's a turtle).
-                    </p>
-                    <pre>
+</pre
+					>
+					<p>See also <a class="code" href="#face-3d">face</a></p>
+				</div>
+				<div class="dict_entry" id="tilt-cmds">
+					<h3>
+						<a>tilt-down<span class="since">4.1</span></a>
+						<a>tilt-up<span class="since">4.1</span></a>
+					</h3>
+					<h4>
+						<span class="prim_example">tilt-down <i>number</i></span>
+						<span class="prim_example">tilt-up <i>number</i></span>
+						<img alt="Turtle Command" src="images/turtle.png" width="16" height="16" />
+					</h4>
+					<p>
+						The nose of the turtle rotates by <i>number</i> degrees, relative to its current orientation. Depending on
+						the orientation of the turtle more than one of the relative angles (heading, pitch, and roll) may change
+						when a turtle turns.
+					</p>
+				</div>
+				<div class="dict_entry" id="towards-pitch-cmd">
+					<h3>
+						<a>towards-pitch<span class="since">4.1</span></a>
+						<a>towards-pitch-nowrap<span class="since">4.1</span></a>
+					</h3>
+					<h4>
+						<span class="prim_example">towards-pitch <i>agent</i></span>
+						<span class="prim_example">towards-pitch-nowrap <i>agent</i></span>
+						<img alt="Turtle Command" src="images/turtle.png" width="16" height="16" />
+						<img alt="Patch Command" src="images/patch.png" width="16" height="16" />
+					</h4>
+					<p>Reports the pitch from this agent to the given agent.</p>
+					<p>
+						If the wrapped distance (around the edges of the screen) is shorter than the on-screen distance,
+						towards-pitch will report the pitch of the wrapped path. towards-pitch-nowrap never uses the wrapped path.
+					</p>
+					<p>Note: In order to get one turtle to face another you need to use both towards-pitch and towards.</p>
+					<p>
+						Note: asking for the pitch from an agent to itself, or an agent on the same location, will cause a runtime
+						error.
+					</p>
+					<p>See also <a href="dictionary.html#towards">towards</a></p>
+				</div>
+				<div class="dict_entry" id="towards-pitch-xyz-cmd">
+					<h3>
+						<a>towards-pitch-xyz<span class="since">4.1</span></a>
+						<a>towards-pitch-xyz-nowrap<span class="since">4.1</span></a>
+					</h3>
+					<h4>
+						<span class="prim_example">towards-pitch-xyz <i>x</i> <i>y</i> <i>z</i></span>
+						<span class="prim_example">towards-pitch-xyz-no-wrap <i>x</i> <i>y</i> <i>z</i></span>
+						<img alt="Turtle Command" src="images/turtle.png" width="16" height="16" />
+						<img alt="Patch Command" src="images/patch.png" width="16" height="16" />
+					</h4>
+					<p>Reports the pitch from this agent to the coordinates x, y, z</p>
+					<p>
+						If the wrapped distance (around the edges of the screen) is shorter than the on-screen distance,
+						towards-pitch will report the pitch of the wrapped path. towards-pitch-nowrap never uses the wrapped path.
+					</p>
+					<p>
+						Note: In order to get a turtle to face a given location you need to use both towards-pitch-xyz and
+						towardsxy.
+					</p>
+					<p>Note: asking for the pitch from an agent to the location it is standing on will cause a runtime error.</p>
+					<p>See also <a href="dictionary.html#towardsxy">towardsxy</a></p>
+				</div>
+				<div class="dict_entry" id="turtles-at-3d">
+					<h3>
+						<a>turtles-at<span class="since">4.1</span></a>
+						<a>&lt;breeds&gt;-at</a>
+					</h3>
+					<h4>
+						<span class="prim_example">turtles-at <i>dx</i> <i>dy</i> <i>dz</i></span>
+						<span class="prim_example"><i>&lt;breeds&gt;-at</i> <i>dx</i> <i>dy</i> <i>dz</i></span>
+						<img alt="Turtle Command" src="images/turtle.png" width="16" height="16" />
+						<img alt="Patch Command" src="images/patch.png" width="16" height="16" />
+					</h4>
+					<p>
+						3D versions of <a href="dictionary.html#turtles-at">turtles-at</a> and
+						<a href="dictionary.html#turtles-at">breeds-at</a>.
+					</p>
+					<p>
+						Reports an agentset containing the turtles on the patch (dx, dy, dz) from the caller (including the caller
+						itself if it's a turtle).
+					</p>
+					<pre>
 ;; suppose I have 40 turtles at the origin
 show [count turtles-at 0 0 0] of turtle 0
 =&gt; 40
 </pre
-                    >
-                </div>
-                <div class="dict_entry" id="world-depth">
-                    <h3>
-                        <a>world-depth<span class="since">4.1</span></a>
-                    </h3>
-                    <h4>
-                        <span class="prim_example">world-depth</span>
-                    </h4>
-                    <p>Reports the total depth of the NetLogo world.</p>
-                    <p>The depth of the world is the same as max-pzcor - min-pzcor + 1.</p>
-                    <p>
-                        See also <a class="code" href="#min-max-pzcor">max-pzcor</a>, <a class="code" href="#min-max-pzcor">min-pzcor</a>,
-                        <a href="dictionary.html#world-dim">world-width</a>, and
-                        <a href="dictionary.html#world-dim">world-height</a>
-                    </p>
-                </div>
-                <div class="dict_entry" id="zcor">
-                    <h3>
-                        <a>zcor</a>
-                    </h3>
-                    <h4>
-                        <span class="prim_example">zcor</span>
-                        <img alt="Turtle Command" src="images/turtle.png" width="16" height="16" />
-                    </h4>
-                    <p>
-                        This is a built-in turtle variable. It holds the current z coordinate of the turtle. This is a floating
-                        point number, not an integer. You can set this variable to change the turtle's location.
-                    </p>
-                    <p>
-                        This variable is always greater than or equal to (- screen-edge-z) and strictly less than screen-edge-z.
-                    </p>
-                    <p>
-                        See also <a class="code" href="#setxyz">setxy</a>, <a href="dictionary.html#xcor">xcor</a>,
-                        <a href="dictionary.html#ycor">ycor</a>, <a href="dictionary.html#pcor">pxcor</a>,
-                        <a href="dictionary.html#pcor">pycor</a>, <a class="code" href="#pzcor">pzcor</a>
-                    </p>
-                </div>
-                <div class="dict_entry" id="zoom">
-                    <h3>
-                        <a>zoom<span class="since">4.1</span></a>
-                    </h3>
-                    <h4>
-                        <span class="prim_example">zoom <i>number</i></span>
-                        <img alt="Observer Movement Command" src="images/observermovement.png" width="16" height="16" />
-                    </h4>
-                    <p>
-                        Move the observer toward the point it is facing, <i>number</i> steps. The observer will never move beyond
-                        the point it is facing so if <i>number</i> is greater than the distance to that point it will only move as
-                        far as the point it is facing.
-                    </p>
-                </div>
-            </section>
-        </main>
-    </body>
+					>
+				</div>
+				<div class="dict_entry" id="world-depth">
+					<h3>
+						<a>world-depth<span class="since">4.1</span></a>
+					</h3>
+					<h4>
+						<span class="prim_example">world-depth</span>
+					</h4>
+					<p>Reports the total depth of the NetLogo world.</p>
+					<p>The depth of the world is the same as max-pzcor - min-pzcor + 1.</p>
+					<p>
+						See also <a class="code" href="#min-max-pzcor">max-pzcor</a>,
+						<a class="code" href="#min-max-pzcor">min-pzcor</a>, <a href="dictionary.html#world-dim">world-width</a>,
+						and
+						<a href="dictionary.html#world-dim">world-height</a>
+					</p>
+				</div>
+				<div class="dict_entry" id="zcor">
+					<h3>
+						<a>zcor</a>
+					</h3>
+					<h4>
+						<span class="prim_example">zcor</span>
+						<img alt="Turtle Command" src="images/turtle.png" width="16" height="16" />
+					</h4>
+					<p>
+						This is a built-in turtle variable. It holds the current z coordinate of the turtle. This is a floating
+						point number, not an integer. You can set this variable to change the turtle's location.
+					</p>
+					<p>
+						This variable is always greater than or equal to (- screen-edge-z) and strictly less than screen-edge-z.
+					</p>
+					<p>
+						See also <a class="code" href="#setxyz">setxy</a>, <a href="dictionary.html#xcor">xcor</a>,
+						<a href="dictionary.html#ycor">ycor</a>, <a href="dictionary.html#pcor">pxcor</a>,
+						<a href="dictionary.html#pcor">pycor</a>, <a class="code" href="#pzcor">pzcor</a>
+					</p>
+				</div>
+				<div class="dict_entry" id="zoom">
+					<h3>
+						<a>zoom<span class="since">4.1</span></a>
+					</h3>
+					<h4>
+						<span class="prim_example">zoom <i>number</i></span>
+						<img alt="Observer Movement Command" src="images/observermovement.png" width="16" height="16" />
+					</h4>
+					<p>
+						Move the observer toward the point it is facing, <i>number</i> steps. The observer will never move beyond
+						the point it is facing so if <i>number</i> is greater than the distance to that point it will only move as
+						far as the point it is facing.
+					</p>
+				</div>
+			</section>
+		</main>
+	</body>
 </html>
