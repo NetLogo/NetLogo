@@ -9,14 +9,14 @@
 /* Prevent iOS and MacOS OverScroll */
 html,
 body {
-	overscroll-behavior: contain; /* Prevents overscroll on iOS and MacOS */
-	font-synthesis: none;
+  overscroll-behavior: contain; /* Prevents overscroll on iOS and MacOS */
+  font-synthesis: none;
 }
 
 * {
-	box-sizing: border-box;
-	margin: 0;
-	padding: 0;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 /**
@@ -25,19 +25,19 @@ body {
  */
 
 html {
-	line-height: 1.1; /* 1 */
-	-webkit-text-size-adjust: 100%; /* 2 */
+  line-height: 1.1; /* 1 */
+  -webkit-text-size-adjust: 100%; /* 2 */
 }
 
 /* Sections
    ========================================================================== */
 body {
-	background-color: var(--color-background);
-	color: var(--color-black);
-	min-height: 100vh;
-	line-height: var(--line-height);
-	font-size: 13px;
-	min-height: 90vh;
+  background-color: var(--color-background);
+  color: var(--color-black);
+  min-height: 100vh;
+  line-height: var(--line-height);
+  font-size: 13px;
+  min-height: 90vh;
 }
 
 body,
@@ -45,11 +45,11 @@ input,
 button,
 select,
 textarea {
-	font-family: var(--font-sans);
-	font-size: 1rem;
-	font-style: normal;
-	font-optical-sizing: auto;
-	-webkit-font-smoothing: antialiased;
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  font-style: normal;
+  font-optical-sizing: auto;
+  -webkit-font-smoothing: antialiased;
 }
 
 /**
@@ -57,8 +57,8 @@ textarea {
  */
 
 main {
-	display: block;
-	min-height: 90vh;
+  display: block;
+  min-height: 90vh;
 }
 
 /**
@@ -76,15 +76,15 @@ pre,
 code,
 hr,
 table {
-	margin-top: 0;
-	margin-bottom: var(--block-bottom);
-	line-height: normal;
+  margin-top: 0;
+  margin-bottom: var(--block-bottom);
+  line-height: normal;
 }
 
 h1,
 h2,
 h3 {
-	margin-top: var(--block-top);
+  margin-top: var(--block-top);
 }
 
 /* Grouping content
@@ -96,9 +96,9 @@ h3 {
  */
 
 hr {
-	box-sizing: content-box; /* 1 */
-	height: 0; /* 1 */
-	overflow: visible; /* 2 */
+  box-sizing: content-box; /* 1 */
+  height: 0; /* 1 */
+  overflow: visible; /* 2 */
 }
 
 /**
@@ -107,8 +107,8 @@ hr {
  */
 
 pre {
-	font-family: monospace, monospace; /* 1 */
-	font-size: 1em; /* 2 */
+  font-family: monospace, monospace; /* 1 */
+  font-size: 1em; /* 2 */
 }
 
 /* Text-level semantics
@@ -119,7 +119,7 @@ pre {
  */
 
 a {
-	background-color: transparent;
+  background-color: transparent;
 }
 
 h1 a,
@@ -128,12 +128,12 @@ h3 a,
 h4 a,
 h5 a,
 h6 a {
-	color: inherit; /* Ensure links in headings inherit color */
-	text-decoration: none; /* Remove underline from links in headings */
-	font-size: inherit; /* Ensure links in headings inherit font size */
-	letter-spacing: inherit; /* Ensure links in headings inherit letter spacing */
-	white-space: inherit; /* Ensure links in headings inherit white space */
-	text-transform: inherit; /* Ensure links in headings inherit text transform */
+  color: inherit; /* Ensure links in headings inherit color */
+  text-decoration: none; /* Remove underline from links in headings */
+  font-size: inherit; /* Ensure links in headings inherit font size */
+  letter-spacing: inherit; /* Ensure links in headings inherit letter spacing */
+  white-space: inherit; /* Ensure links in headings inherit white space */
+  text-transform: inherit; /* Ensure links in headings inherit text transform */
 }
 
 /**
@@ -142,9 +142,9 @@ h6 a {
  */
 
 abbr[title] {
-	border-bottom: none; /* 1 */
-	text-decoration: underline; /* 2 */
-	text-decoration: underline dotted; /* 2 */
+  border-bottom: none; /* 1 */
+  text-decoration: underline; /* 2 */
+  text-decoration: underline dotted; /* 2 */
 }
 
 /**
@@ -153,8 +153,8 @@ abbr[title] {
 
 b,
 strong {
-	font-weight: bolder;
-	letter-spacing: inherit; /* Ensure strong elements inherit letter spacing */
+  font-weight: bolder;
+  letter-spacing: inherit; /* Ensure strong elements inherit letter spacing */
 }
 
 /**
@@ -165,8 +165,8 @@ strong {
 code,
 kbd,
 samp {
-	font-family: monospace, monospace; /* 1 */
-	font-size: 1em; /* 2 */
+  font-family: monospace, monospace; /* 1 */
+  font-size: 1em; /* 2 */
 }
 
 /**
@@ -174,7 +174,7 @@ samp {
  */
 
 small {
-	font-size: 80%;
+  font-size: 80%;
 }
 
 /**
@@ -184,61 +184,61 @@ small {
 
 sub,
 sup {
-	font-size: 75%;
-	line-height: 0;
-	position: relative;
-	vertical-align: baseline;
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
 }
 
 sub {
-	bottom: -0.25em;
+  bottom: -0.25em;
 }
 
 sup {
-	top: -0.5em;
+  top: -0.5em;
 }
 
 p {
-	line-height: var(--line-height);
-	hyphens: auto;
-	hyphenate-limit-chars: 6 3 3;
-	hyphenate-limit-lines: 2;
-	hyphenate-limit-last: always;
-	hyphenate-limit-zone: 8%;
-	hyphenate-character: '‑'; /* U+2011 NON-BREAKING HYPHEN */
-	font-weight: 400;
+  line-height: var(--line-height);
+  hyphens: auto;
+  hyphenate-limit-chars: 6 3 3;
+  hyphenate-limit-lines: 2;
+  hyphenate-limit-last: always;
+  hyphenate-limit-zone: 8%;
+  hyphenate-character: '‑'; /* U+2011 NON-BREAKING HYPHEN */
+  font-weight: 400;
 }
 
 p,
 pre {
-	max-width: min(100%, var(--max-width-ch));
+  max-width: min(100%, var(--max-width-ch));
 }
 
 p:first-of-type {
-	margin-top: 0; /* Remove top margin for first paragraph */
+  margin-top: 0; /* Remove top margin for first paragraph */
 }
 
 ul,
 ol {
-	padding-inline: var(--space-md);
+  padding-inline: var(--space-md);
 }
 
 ul {
-	max-width: var(--max-width-ch);
+  max-width: var(--max-width-ch);
 }
 
 li {
-	margin: 0 0 0.5em 1em;
-	line-height: var(--line-height);
+  margin: 0 0 0.5em 1em;
+  line-height: var(--line-height);
 }
 
 li:last-of-type {
-	margin-bottom: 0;
+  margin-bottom: 0;
 }
 
 pre,
 code {
-	font-family: var(--font-mono);
+  font-family: var(--font-mono);
 }
 
 /* Embedded content
@@ -250,8 +250,8 @@ code {
  */
 
 img {
-	border-style: none; /* 1 */
-	display: block; /* 2 */
+  border-style: none; /* 1 */
+  display: block; /* 2 */
 }
 
 /* Misc
@@ -262,7 +262,7 @@ img {
  */
 
 template {
-	display: none;
+  display: none;
 }
 
 /**
@@ -270,7 +270,7 @@ template {
  */
 
 [hidden] {
-	display: none;
+  display: none;
 }
 
 /**
@@ -279,19 +279,19 @@ template {
  */
 
 select::picker-icon {
-	color: var(--color-text-on-primary);
-	content: '▾';
+  color: var(--color-text-on-primary);
+  content: '▾';
 }
 ::picker(select) {
-	border: none;
+  border: none;
 }
 ::picker(select) {
-	opacity: 0;
-	transition: all 0.4s allow-discrete;
+  opacity: 0;
+  transition: all 0.4s allow-discrete;
 }
 ::picker(select):popover-open {
-	opacity: 1;
+  opacity: 1;
 }
 ::picker(select) {
-	top: calc(anchor(bottom) + 1px);
+  top: calc(anchor(bottom) + 1px);
 }
