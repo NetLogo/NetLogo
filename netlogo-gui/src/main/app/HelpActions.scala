@@ -18,8 +18,8 @@ import org.nlogo.theme.ThemeSync
 class LocalBrowseAction(name: String, path: Path, group: String)
 extends AbstractAction(name)
 with MenuAction {
-  category = HelpCategory
-  this.group    = group
+  category   = HelpCategory
+  this.group = group
 
   override def actionPerformed(e: ActionEvent): Unit = {
     val launchComponent = e.getSource match {
