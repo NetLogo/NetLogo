@@ -10,6 +10,8 @@ import org.nlogo.awt.LineBreaker
 import org.nlogo.core.I18N
 import org.nlogo.theme.InterfaceColors
 
+import scala.collection.{ Seq => CollectionSeq }
+
 object OptionPane {
   object Options {
     val Ok = Seq(I18N.gui.get("common.buttons.ok"))
@@ -27,11 +29,15 @@ object OptionPane {
 }
 
 // like OptionDialog, but allows synchronization with theme (Isaac B 11/16/24)
-class OptionPane(parent: Component, title: String, message: String, options: Seq[String],
-                 protected val icon: Icon = OptionPane.Icons.None) extends JDialog(parent match {
-                   case w: Window => w
-                   case _ => null
-                 }, title, Dialog.ModalityType.APPLICATION_MODAL) {
+class OptionPane(parent: Component, title: String, message: String, options: Seq[String], protected val icon: Icon)
+  extends JDialog(parent match {
+                    case w: Window => w
+                    case _ => null
+                  }, title, Dialog.ModalityType.APPLICATION_MODAL) {
+
+  // this constructor makes it easier to access from Java (Isaac B 7/14/25)
+  def this(parent: Component, title: String, message: String, options: CollectionSeq[String]) =
+    this(parent, title, message, options.toSeq, OptionPane.Icons.None)
 
   private var selectedOption: Option[String] = None
 
