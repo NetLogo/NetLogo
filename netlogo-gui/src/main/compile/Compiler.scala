@@ -190,11 +190,13 @@ class Compiler(dialect: Dialect) extends PresentationCompilerInterface {
       Some((includes zip includes.map(compilationEnvironment.resolvePath)).toMap)
   }
 
-  // used by VariableNameEditor
-  // it *shouldn't* matter whether we're in 3D mode or not because
-  // the tokenizer makes no effort to match commands and reporters at this stage
-  def isValidIdentifier(s: String, extensionManager: ExtensionManager) =
-    frontEnd.tokenizeForColorizationIterator(s, defaultDialect, extensionManager).next.tpe == TokenType.Ident
+  // used by IdentifierEditor (Isaac B 7/15/25)
+  def isValidIdentifier(s: String, extensionManager: ExtensionManager) = {
+    val iterator = frontEnd.tokenizeForColorizationIterator(s, defaultDialect, extensionManager)
+                           .takeWhile(_.tpe != TokenType.Eof)
+
+    iterator.filter(_.tpe == TokenType.Ident).size == 1
+  }
 
   // used by CommandLine
   def isReporter(s: String, program: Program, procedures: ProceduresMap, extensionManager: ExtensionManager, compilationEnv: CompilationEnvironment) = {
