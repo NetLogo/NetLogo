@@ -67,11 +67,38 @@ class ExtensionDocs(extensionsDirectory: File, extensionDocConfigFile: File, hea
 
   def generateExtensionDocs(
     htmlFileRoot: File,
+    docsSource: File,
     documentedExtensions: Seq[(String, String)],
     buildVariables: Map[String, Object]): Seq[NioPath] = documentedExtensions map {
       case (extShortName, extFullName) =>
-        val targetPath = (htmlFileRoot / (extShortName + ".html").toLowerCase).toPath
-        generateHTMLPageForExtension(extShortName, extFullName, targetPath, buildVariables)
+        val primRoot = extShortName.toLowerCase()                 // Need for links in entries
+        val fileName = primRoot + ".html"                         // Need for links in entries
+        val targetFile = htmlFileRoot / fileName                  // Top-level path for prims
+        val targetPath = targetFile.toPath                        // Extension README in docs
+
+        // Generate the HTML page for the extension
+        generateHTMLPageForExtension(extShortName, extFullName, targetPath, buildVariables + ("primRoot" -> primRoot))
+
+        // Generate the dictionary reference for
+        val targetDir = htmlFileRoot / extShortName
+        IO.createDirectory(targetDir)
+
+        val dictVars = Map[String, Object](
+          "dictHome" -> fileName,
+          "dictTitle" -> s"$extFullName Extension Dictionary",
+          "primRoot" -> primRoot, // /<version>/<primRoot>/<prim>
+        )
+        PrimIndex.generate(
+          targetFile,
+          targetDir,
+          docsSource / "dictTemplate.html.mustache",
+          targetDir / "index.txt",
+          headerFile,
+          dictVars,
+          generateHTMLIndexPage = true
+        )
+
+        targetPath
     }
 
   private def wrapString(

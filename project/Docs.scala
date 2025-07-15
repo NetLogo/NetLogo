@@ -59,7 +59,7 @@ object Docs {
         "gis"      -> "GIS",
         "gogo"     -> "GoGo",
         "ls"       -> "LevelSpace",
-        "matrix"   -> "Matrices",
+        "matrix"   -> "Matrix",
         "nw"       -> "Networks",
         "palette"  -> "Palette",
         "profiler" -> "Profiler",
@@ -80,7 +80,7 @@ object Docs {
     },
     extensionDocs := {
       extensionDocsGen.value.generateExtensionDocs(
-        docsRoot.value, autoDocumentedExtensions.value, buildVariables.value)
+        docsRoot.value, docsRoot.value, autoDocumentedExtensions.value, buildVariables.value)
       .map(_.toFile)
     },
     extensionDocsGen := {
