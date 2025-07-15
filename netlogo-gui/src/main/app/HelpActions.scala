@@ -15,7 +15,7 @@ import org.nlogo.swing.{ BrowserLauncher, UserAction },
   UserAction._
 import org.nlogo.theme.ThemeSync
 
-class LocalBrowseAction(name: String, path: Path, group: String)
+class TryRemoteBrowseAction(name: String, uri: URI, fallback: Path, group: String)
 extends AbstractAction(name)
 with MenuAction {
   category   = HelpCategory
@@ -26,7 +26,7 @@ with MenuAction {
       case c: Component => c
       case _ => null
     }
-    BrowserLauncher.openPath(launchComponent, path, "")
+    BrowserLauncher.tryOpenURI(launchComponent, uri, fallback)
   }
 }
 
@@ -48,10 +48,10 @@ with MenuAction {
 object HelpActions {
   def apply: Seq[MenuAction] = {
     Seq(
-    new LocalBrowseAction(I18N.gui.get("menu.help.netLogoUserManual"),
-      docPath("index.html"), HelpDocGroup),
-    new LocalBrowseAction(I18N.gui.get("menu.help.netLogoDictionary"),
-      docPath("index2.html"), HelpDocGroup),
+    new TryRemoteBrowseAction(I18N.gui.get("menu.help.netLogoUserManual"),
+      new URI("https://docs.netlogo.org/7.0.0-beta2"), docPath("index.html"), HelpDocGroup),
+    new TryRemoteBrowseAction(I18N.gui.get("menu.help.netLogoDictionary"),
+      new URI("https://docs.netlogo.org/7.0.0-beta2/index2.html"), docPath("index2.html"), HelpDocGroup),
     new RemoteBrowseAction(I18N.gui.get("menu.help.bind"),
       new URI("https://ccl.northwestern.edu/netlogo/bind"), HelpDocGroup),
     new RemoteBrowseAction(I18N.gui.get("menu.help.introToABM"),

@@ -3,13 +3,15 @@
 package org.nlogo.swing
 
 import java.awt.{ Component, Desktop }
-import java.lang.Process
 import java.io.IOException
-import java.net.{ URI, URISyntaxException }
+import java.lang.Process
+import java.net.{ NetworkInterface, URI, URISyntaxException }
 import java.nio.file.{ Files, Path, Paths }
 import javax.swing.JDialog
 
 import org.nlogo.core.I18N
+
+import scala.jdk.CollectionConverters.EnumerationHasAsScala
 
 object BrowserLauncher {
   private val osName = System.getProperty("os.name")
@@ -38,15 +40,23 @@ object BrowserLauncher {
     }
   }
 
-    def openURI(uri: URI): Unit = {
-      openURI(new JDialog, uri)
-    }
+  def openURI(uri: URI): Unit = {
+    openURI(new JDialog, uri)
+  }
 
-    def openURIString(s: String): Unit = {
-      val dialog = new JDialog
-      val uri = makeURI(dialog, s)
-      openURI(dialog, uri)
+  def openURIString(s: String): Unit = {
+    val dialog = new JDialog
+    val uri = makeURI(dialog, s)
+    openURI(dialog, uri)
+  }
+
+  def tryOpenURI(comp: Component, uri: URI, fallback: Path): Unit = {
+    if (NetworkInterface.getNetworkInterfaces.asScala.exists(_.isUp)) {
+      openURI(comp, uri)
+    } else {
+      openURI(comp, fallback.toUri)
     }
+  }
 
   def openPath(comp: Component, path: Path, anchor: String): Unit = {
     val u = path.toUri
