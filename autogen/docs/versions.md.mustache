@@ -121,7 +121,7 @@ Below, we list all the changes since NetLogo 6.4.
 ### Bug Fixes and Minor Changes
 
 - Multi-assign with `let` and `set` can use arbitrarily nested lists to "destructure" variables. For example, `let [[corner1-x corner1-y corner2-x corner2-y] player-name score] get-current-player-info`.
-- The primitive `auto-plot?` has been restored.
+- The primitive `autoplot?` has been restored.
 - An optimization speeds up the execution of the constructs `any? turtles-on` and `any? <breeds>-on`.
 - An `__includes` statement not followed by brackets no longer causes an exception.
 - Reporter procedures without a `report` statement, `run` or `runresult` now throw a compile time error.
@@ -165,10 +165,9 @@ Below, we list all the changes since NetLogo 6.4.
 - Number input boxes without a value no longer keep other input boxes or the command center from gaining focus.
 - The Page Setup dialog opened when a user wants to Print now closes when its Cancel button is pressed.
 - When a procedure in the Code Tab is "folded," so that only the line with the name is visible, an action that needs to move to inside the code causes it to be "unfolded," so it is fully visible. This can be a result of a search, find-and-replace or jumping to code with a compilation error.
-- The padding and location of internal components of widgets now change proportionally when zooming.
-- `mouse-xcor` and `mouse-ycor` no longer degrade performance when called multiple times per iteration of go or in an ask with lots of agents.
 - If the NetLogo window is maximized in Windows, opening a new model no longer unmaximizes it.
 - Plot pens always take account of `plot-pen-up` and `plot-pen-down`.
+- The padding and location of internal components of widgets now change proportionally when zooming.
 - Models that have not been edited are never consider unsaved.
 - Ctrl/Cmd+X when nothing is selected now cuts (copies and deletes) the entire line.
 - Double clicking on a model that was saved with compilation errors opens it correctly.
@@ -176,7 +175,7 @@ Below, we list all the changes since NetLogo 6.4.
 - Using a lower case 'i' in code with a Turkish locale no longer causes compilations errors
 - The resize behavior of edit dialogs has been improved. For example, plot widget "update commands" and "setup commands" fields can now be made taller
 - NetLogo now detects autosave files created for a model in case NetLogo crashes. Users are now asked if they want to recover it.
-- Mouse coordinated are now correctly reported along border of a selected view.
+- Mouse coordinates are now correctly reported along the border of a selected view.
 - All open files are closed when a runtime error occurs.
 - When exporting and then importing a model the last line in an Output area is a newline it will be retained.
 - Disabled button state is now preserved by Import world.
