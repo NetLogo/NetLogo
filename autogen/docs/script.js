@@ -108,8 +108,7 @@
 
 		// Version Change
 		const CURRENT_VERSION = 'this'; // Default to current version
-		function goToVersion(select) {
-			let version = select.value;
+		function goToVersion({ version, urlPrefix }) {
 			if (!version || version === CURRENT_VERSION) return;
 
 			// Get the path up to and including docs/ (if present)
@@ -117,15 +116,78 @@
 			const versionPathIndexEnd = pathname.indexOf('/'); // Find the first slash after the leading slash
 
 			// Why 2? -> version number always ends with a slash, so we need to skip it
-			const rest = window.location.pathname.slice(versionPathIndexEnd + 2); // Get the rest of the path after the first slash
-			window.location.pathname = '/' + version + '/' + rest; // Redirect to the selected version
+			let rest = window.location.pathname.slice(versionPathIndexEnd + 2); // Get the rest of the path after the first slash
+			if (window.netlogo && window.netlogo.redirectPath) {
+				// Workaround for new pages
+				rest = window.netlogo.redirectPath;
+			}
+
+			// Get the option element
+			let newURL = '';
+			if (urlPrefix) {
+				newURL = urlPrefix + '/' + rest; // Construct the new URL with prefix
+			} else {
+				// If no urlPrefix is provided, use the current path as the base
+				newURL = window.location.origin + '/' + version + '/' + rest; // Construct the new URL
+			}
+
+			window.location.href = newURL; // Navigate to the new URL
+		}
+
+		async function checkNot404(url) {
+			try {
+				// allow cross-origin requests
+				const response = await fetch(url, {
+					method: 'HEAD',
+					headers: {
+						'Content-Type': 'text/html',
+					},
+					mode: 'cors',
+				});
+				return response.status !== 404;
+			} catch (error) {
+				console.error(`Error checking URL ${url}:`, error);
+				return false;
+			}
+		}
+
+		function expandStringVariables(string) {
+			if (!string) return '';
+			if (!window.netlogo || !window.netlogo.stringVariables) return string;
+
+			// A variable has the form ${variableName}
+			const variableRegex = /\$\{([a-zA-Z0-9_]+)\}/g;
+			const variables = window.netlogo.stringVariables || {};
+			return string.replace(variableRegex, (match, variableName) => {
+				// Check if the variable exists in netlogo.stringVariables
+				if (variables[variableName]) {
+					return variables[variableName];
+				}
+				console.error(`Variable ${variableName} not found in netlogo.stringVariables`);
+				return match; // Return the original match if no variable found
+			});
 		}
 
 		const $versionSelect = document.getElementById('version-select');
 		$versionSelect.selectedIndex = 0;
 		$versionSelect.addEventListener('change', function (e) {
 			e.preventDefault();
-			goToVersion(this);
+			e.stopImmediatePropagation();
+
+			// Save the selected version
+			const version = this.value;
+
+			// Maintains selected index since the browser
+			// preserves the selected index on back/forward navigation
+			// This is always guaranteed to be the first option
+			this.selectedIndex = 0;
+
+			const option = this.querySelector(`option[value="${version}"]`);
+			let urlPrefix = undefined;
+			if (option && option.dataset.urlPrefix) {
+				urlPrefix = expandStringVariables(option.dataset.urlPrefix);
+			}
+			goToVersion({ version, urlPrefix });
 		});
 
 		// Copyright year update

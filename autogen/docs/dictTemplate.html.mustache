@@ -20,6 +20,12 @@
 	</head>
 	<body class="dictionary-entry-page">
 		{{{header}}}
+		<script>
+			window.netlogo = {
+				...(window.netlogo || {}),
+				redirectPath: '{{primRoot}}' === 'dict' ? undefined : '{{primRoot}}.html',
+			};
+		</script>
 		<div class="dictionary-layout">
 			<section class="sidebar">
 				<input type="checkbox" id="prim-toggle" hidden />
