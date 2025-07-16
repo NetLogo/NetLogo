@@ -39,6 +39,12 @@ object PrimIndex {
     // in URLs as far as I know. (Omar I 07/14/25)
   }
 
+  def grabTitleFromHTML(html: String): String = {
+    val doc = Jsoup.parse(html)
+    val h1 = doc.select("h1").first()
+    if (h1 != null) h1.text() else ""
+  }
+
   def generate(dictFile: File, target: File, templateFile: File, indexFile: File, headerFile: File, buildVariables: Map[String, Object], generateHTMLIndexPage: Boolean = false): Unit = {
     import scala.collection.JavaConverters._
 
@@ -82,11 +88,13 @@ object PrimIndex {
       Mustache(templateFile, target / s"${escapeFileName(el.anchorName)}.html", vars)
     }
 
+    val title = grabTitleFromHTML(doc.outerHtml())
     if (generateHTMLIndexPage) {
       val vars = Map[String, Object](
         "header" -> headerHtml,
         "primMap" -> primMap.asJava,
-        "primTitle" -> "NetLogo Primitives",
+        "primTitle" -> s"$title Primitives",
+        "html" -> s"<h1>$title</h1>"
       ) ++ buildVariables
       Mustache(templateFile, target / "index.html", vars)
     }
