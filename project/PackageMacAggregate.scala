@@ -7,28 +7,42 @@ import java.nio.file.{ Files, Path => JPath, Paths }
 import java.io.IOException
 import java.util.jar.Manifest
 
+import scala.collection.JavaConverters.asScalaIteratorConverter
+import scala.sys.process.Process
+
 import NetLogoPackaging.RunProcess
 
 object PackageMacAggregate {
   val CodesigningIdentity = "Developer ID Application: Northwestern University (E74ZKF37E6)"
 
-  def signJarLibs(jarFile: File, options: Seq[String], libsToSign: Seq[String]): Unit = {
-    if (jarFile.exists) {
-      val tmpDir = IO.createTemporaryDirectory
-      println(tmpDir)
-      IO.unzip(jarFile, tmpDir)
+  private def needToSign(path: JPath): Boolean = {
+    val name = path.getFileName.toString
 
-      val libPaths = libsToSign.map( (libToSign) => (tmpDir / libToSign).toString )
+    name.endsWith(".dylib") || name.endsWith(".jnilib") || name.endsWith(".so") ||
+      (!name.contains(".") && Process(Seq("file", path.toString)).!!.contains("executable"))
+  }
+
+  private def signJarLibs(jarFile: File, options: Seq[String]): Unit = {
+    val tmpDir = IO.createTemporaryDirectory
+
+    IO.unzip(jarFile, tmpDir)
+
+    val libPaths = Files.walk(tmpDir.toPath).iterator.asScala.collect {
+      case path if path.toFile.isFile && needToSign(path) => path.toString
+    }.toSeq
+
+    if (libPaths.nonEmpty) {
       runCodeSign(options, libPaths, "jar libraries")
 
       val manifest = Using.fileInputStream(tmpDir / "META-INF" / "MANIFEST.MF") { is =>
         new Manifest(is)
       }
+
       IO.delete(tmpDir / "META-INF")
       IO.jar(Path.allSubpaths(tmpDir), jarFile, manifest, None)
-
-      IO.delete(tmpDir)
     }
+
+    IO.delete(tmpDir)
   }
 
   def runCodeSign(options: Seq[String], paths: Seq[String], taskName: String, workingDirectory: Option[File] = None): Unit = {
@@ -173,35 +187,12 @@ object PackageMacAggregate {
     // Apple requires a "hardened" runtime for notarization -Jeremy B July 2020
     val appSigningOptions = Seq("--options", "runtime", "--entitlements", (configDir / "macosx" / "entitlements.xml").toString)
 
-    // In theory instead of hardcoding these we could search all jars for any libs that
-    // aren't signed or are signed incorrectly.  But Apple will do that search for us when
-    // we submit for notarization and these libraries don't change that often.  -Jeremy B
-    // July 2020
-
-    // This map is officially bonkers enough that I'd consider switching to an automated
-    // solution.  Although most of the libs are from the Vid extension and could go away
-    // if we ever get onto a single camera capture library for it.  -Jeremy B August 2022
-    val jarLibsToSign = Map(
-      ("app/flatlaf-3.5.4.jar", Seq("com/formdev/flatlaf/natives/libflatlaf-macos-x86_64.dylib", "/com/formdev/flatlaf/natives/libflatlaf-macos-arm64.dylib"))
-    , ("app/java-objc-bridge-1.2.jar", Seq("libjcocoa.dylib"))
-    , ("app/jline-native-3.29.0.jar", Seq("org/jline/nativ/Mac/x86/libjlinenative.jnilib", "org/jline/nativ/Mac/x86_64/libjlinenative.jnilib", "org/jline/nativ/Mac/arm64/libjlinenative.jnilib"))
-    , ("app/jna-5.10.0.jar", Seq("com/sun/jna/darwin-x86-64/libjnidispatch.jnilib", "com/sun/jna/darwin-aarch64/libjnidispatch.jnilib"))
-    , ("extensions/.bundled/arduino/jssc-2.6.0.jar", Seq("libs/mac_os_x/libjSSC-2.6_x86.jnilib", "libs/mac_os_x/libjSSC-2.6_x86_64.jnilib", "libs/mac_os_x/libjSSC-2.6_ppc.jnilib"))
-    , ("extensions/.bundled/gogo/gogo.jar", Seq("darwin/libhidapi.dylib"))
-    , ("extensions/.bundled/gogo/hid4java-develop-SNAPSHOT.jar", Seq("darwin-x86-64/libhidapi.dylib", "darwin-aarch64/libhidapi.dylib"))
-    , ("extensions/.bundled/gogo/jna-5.6.0.jar", Seq("com/sun/jna/darwin/libjnidispatch.jnilib"))
-    , ("extensions/.bundled/r/jna-4.2.2.jar", Seq("com/sun/jna/darwin/libjnidispatch.jnilib"))
-    , ("extensions/.bundled/vid/javacpp-1.5.7-macosx-arm64.jar", Seq("org/bytedeco/javacpp/macosx-arm64/libjnijavacpp.dylib"))
-    , ("extensions/.bundled/vid/javacpp-1.5.7-macosx-x86_64.jar", Seq("org/bytedeco/javacpp/macosx-x86_64/libjnijavacpp.dylib"))
-    , ("extensions/.bundled/vid/openblas-0.3.19-1.5.7-macosx-arm64.jar", Seq("org/bytedeco/openblas/macosx-arm64/libjniopenblas_nolapack.dylib", "org/bytedeco/openblas/macosx-arm64/libjniopenblas.dylib", "org/bytedeco/openblas/macosx-arm64/libopenblas.0.dylib"))
-    , ("extensions/.bundled/vid/openblas-0.3.19-1.5.7-macosx-x86_64.jar", Seq("org/bytedeco/openblas/macosx-x86_64/libgfortran.dylib", "org/bytedeco/openblas/macosx-x86_64/libjniopenblas_nolapack.dylib", "org/bytedeco/openblas/macosx-x86_64/libjniopenblas.dylib", "org/bytedeco/openblas/macosx-x86_64/libgfortran.4.dylib", "org/bytedeco/openblas/macosx-x86_64/libquadmath.0.dylib", "org/bytedeco/openblas/macosx-x86_64/libgcc_s.1.dylib", "org/bytedeco/openblas/macosx-x86_64/libopenblas.0.dylib"))
-    , ("extensions/.bundled/vid/opencv-4.5.5-1.5.7-macosx-arm64.jar", Seq("org/bytedeco/opencv/macosx-arm64/libopencv_plot.405.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_face.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_barcode.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_dnn_superres.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_flann.405.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_intensity_transform.405.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_img_hash.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_quality.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_optflow.405.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_videoio.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_imgproc.405.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_face.405.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_structured_light.405.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_aruco.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_videostab.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_optflow.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_tracking.405.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_quality.405.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_structured_light.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_xfeatures2d.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_features2d.405.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_text.405.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_saliency.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_bioinspired.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_stitching.405.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_rapid.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_ml.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_rapid.405.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_core.405.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_highgui.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_photo.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_phase_unwrapping.405.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_ml.405.dylib", "org/bytedeco/opencv/macosx-arm64/opencv_interactive-calibration", "org/bytedeco/opencv/macosx-arm64/libopencv_calib3d.405.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_flann.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_imgcodecs.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_shape.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_aruco.405.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_ximgproc.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_mcc.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_tracking.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_java.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_xfeatures2d.405.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_superres.405.dylib", "org/bytedeco/opencv/macosx-arm64/opencv_annotation", "org/bytedeco/opencv/macosx-arm64/libjniopencv_features2d.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_plot.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_superres.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_core.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_video.405.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_dnn.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_imgcodecs.405.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_objdetect.405.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_python3.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_highgui.405.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_stitching.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_barcode.405.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_wechat_qrcode.405.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_ximgproc.405.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_xphoto.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_videoio.405.dylib", "org/bytedeco/opencv/macosx-arm64/opencv_version", "org/bytedeco/opencv/macosx-arm64/libopencv_videostab.405.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_bgsegm.405.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_img_hash.405.dylib", "org/bytedeco/opencv/macosx-arm64/opencv_visualisation", "org/bytedeco/opencv/macosx-arm64/libjniopencv_video.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_photo.405.dylib", "org/bytedeco/opencv/macosx-arm64/libjnicvkernels.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_bioinspired.405.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_bgsegm.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_objdetect.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_java.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_dnn.405.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_intensity_transform.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_imgproc.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_dnn_superres.405.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_shape.405.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_mcc.405.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_wechat_qrcode.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_xphoto.405.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_saliency.405.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_calib3d.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_phase_unwrapping.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_text.dylib"))
-    , ("extensions/.bundled/vid/opencv-4.5.5-1.5.7-macosx-x86_64.jar", Seq("org/bytedeco/opencv/macosx-x86_64/libopencv_plot.405.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_face.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_barcode.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_dnn_superres.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_flann.405.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_intensity_transform.405.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_img_hash.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_quality.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_optflow.405.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_videoio.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_imgproc.405.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_face.405.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_structured_light.405.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_aruco.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_videostab.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_optflow.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_tracking.405.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_quality.405.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_structured_light.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_xfeatures2d.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_features2d.405.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_text.405.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_saliency.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_bioinspired.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_stitching.405.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_rapid.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_ml.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_rapid.405.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_core.405.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_highgui.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_photo.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_phase_unwrapping.405.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_ml.405.dylib", "org/bytedeco/opencv/macosx-x86_64/opencv_interactive-calibration", "org/bytedeco/opencv/macosx-x86_64/libopencv_calib3d.405.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_flann.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_imgcodecs.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_shape.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_aruco.405.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_ximgproc.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_mcc.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_tracking.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_java.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_xfeatures2d.405.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_superres.405.dylib", "org/bytedeco/opencv/macosx-x86_64/opencv_annotation", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_features2d.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_plot.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_superres.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_core.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_video.405.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_dnn.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_imgcodecs.405.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_objdetect.405.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_python3.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_highgui.405.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_stitching.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_barcode.405.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_wechat_qrcode.405.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_ximgproc.405.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_xphoto.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_videoio.405.dylib", "org/bytedeco/opencv/macosx-x86_64/opencv_version", "org/bytedeco/opencv/macosx-x86_64/libopencv_videostab.405.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_bgsegm.405.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_img_hash.405.dylib", "org/bytedeco/opencv/macosx-x86_64/opencv_visualisation", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_video.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_photo.405.dylib", "org/bytedeco/opencv/macosx-x86_64/libjnicvkernels.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_bioinspired.405.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_bgsegm.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_objdetect.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_java.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_dnn.405.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_intensity_transform.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_imgproc.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_dnn_superres.405.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_shape.405.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_mcc.405.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_wechat_qrcode.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_xphoto.405.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_saliency.405.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_calib3d.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_phase_unwrapping.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_text.dylib", "org/bytedeco/opencv/macosx-x86_64/python/cv2.cpython-310-darwin.so"))
-    , ("extensions/.bundled/vid/openimaj_bridj-0.7-20140918-3.jar", Seq("org/bridj/lib/darwin_universal/libbridj.dylib"))
-    , ("extensions/.bundled/vid/openimaj_core-video-capture-1.4-20220209.101851-153.jar", Seq("org/openimaj/video/capture/nativelib/darwin_universal/libOpenIMAJGrabber.dylib"))
-    )
     log.info("Signing libs inside jars.")
-    jarLibsToSign.foreach { case (jarPath: String, libsToSign: Seq[String]) => signJarLibs(bundleDir / jarPath, appSigningOptions, libsToSign) }
+
+    Files.walk(bundleDir.toPath).iterator.asScala.foreach { path =>
+      if (path.toString.endsWith(".jar"))
+        signJarLibs(path.toFile, appSigningOptions)
+    }
 
     // It's odd that we have to sign `libjli.dylib`, but it works so I'm not going to
     // worry about it.  We should try to remove it once we're on a more modern JDK version
