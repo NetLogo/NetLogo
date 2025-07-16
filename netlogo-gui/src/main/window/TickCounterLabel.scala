@@ -51,8 +51,8 @@ class TickCounterLabel(world: World)
 
   def visibility: Boolean = isVisible
 
-  def label_=(label: String): Unit = {
-    _label = label
+  def label_=(label: Option[String]): Unit = {
+    _label = label.getOrElse(TickCounterLabelDefault)
     redrawTickCounter()
   }
 

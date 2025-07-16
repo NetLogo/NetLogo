@@ -17,7 +17,7 @@ trait WorldLoaderInterface {
   def calculateHeight(worldHeight: Int, patchSize: Double): Int
   def calculateWidth(worldWidth: Int, patchSize: Double): Int
   def insetWidth(): Int
-  def tickCounterLabel(label: String): Unit
+  def tickCounterLabel(label: Option[String]): Unit
   def tickCounterLabel: String
   def showTickCounter(visible: Boolean): Unit
   def showTickCounter: Boolean

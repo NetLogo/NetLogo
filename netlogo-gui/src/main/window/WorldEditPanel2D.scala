@@ -143,7 +143,7 @@ class WorldEditPanel2D(target: WorldViewSettings2D, enableDualView: Boolean) ext
         target,
         I18N.gui("tickCounterLabel"),
         () => target.tickCounterLabel,
-        _.foreach(target.tickCounterLabel)))
+        target.tickCounterLabel))
 
   private val worldBorder = new TitledBorder(I18N.gui("world"))
   private val viewBorder = new TitledBorder(I18N.gui("view"))

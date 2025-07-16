@@ -2,7 +2,7 @@
 <model version="NetLogo 7.0.0-beta2" snapToGrid="false">
   <code></code>
   <widgets>
-    <view x="368" maxPycor="16" updateMode="0" wrappingAllowedX="true" y="10" frameRate="30.0" minPycor="-16" height="434" showTickCounter="true" patchSize="13.0" fontSize="10" wrappingAllowedY="true" width="433" tickCounterLabel="ticks" maxPxcor="16" minPxcor="-16"></view>
+    <view x="368" maxPycor="16" updateMode="0" wrappingAllowedX="true" y="10" frameRate="30.0" minPycor="-16" height="434" showTickCounter="true" patchSize="13.0" fontSize="10" wrappingAllowedY="true" width="433" maxPxcor="16" minPxcor="-16"></view>
   </widgets>
   <info>## WHAT IS IT?
 

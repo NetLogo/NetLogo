@@ -195,7 +195,7 @@ class WorldEditPanel3D(target: WorldViewSettings3D) extends WorldEditPanel(targe
         target,
         I18N.gui("tickCounterLabel"),
         () => target.tickCounterLabel,
-        _.foreach(target.tickCounterLabel)))
+        target.tickCounterLabel))
 
   private val worldBorder = new TitledBorder(I18N.gui("world"))
   private val viewBorder = new TitledBorder(I18N.gui("view"))

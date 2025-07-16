@@ -8,7 +8,7 @@ object WorldLoader {
   def load(view: View, worldInterface: WorldLoaderInterface): Unit = {
     val d = view.dimensions
 
-    worldInterface.tickCounterLabel(view.tickCounterLabel.getOrElse(""))
+    worldInterface.tickCounterLabel(view.tickCounterLabel)
 
     worldInterface.showTickCounter(view.showTickCounter)
 

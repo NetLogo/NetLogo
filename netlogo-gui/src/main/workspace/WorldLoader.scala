@@ -2,8 +2,7 @@
 
 package org.nlogo.workspace
 
-import org.nlogo.core.WorldDimensions
-import org.nlogo.core.{ View => CoreView }
+import org.nlogo.core.{ View => CoreView, WorldDimensions }
 
 class WorldLoader {
   def load(view: CoreView, worldInterface: WorldLoaderInterface): Unit = {
@@ -11,8 +10,7 @@ class WorldLoader {
 
     // set the visiblity of the ticks counter first because it changes the minimum size of the
     // viewWidget which could cause patchSize ugliness down the line ev 7/30/07
-    val label = view.tickCounterLabel.getOrElse("")
-    worldInterface.tickCounterLabel(label)
+    worldInterface.tickCounterLabel(view.tickCounterLabel)
     worldInterface.showTickCounter(view.showTickCounter)
 
     val width = getWidth(worldInterface, d, view)

@@ -253,7 +253,7 @@ abstract class WorldViewSettings(protected val workspace: GUIWorkspace, protecte
   def showTickCounter: Boolean =
     tickCounter.visibility
 
-  def tickCounterLabel(label: String): Unit = {
+  def tickCounterLabel(label: Option[String]): Unit = {
     tickCounter.label = label
   }
 

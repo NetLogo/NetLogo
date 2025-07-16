@@ -156,7 +156,7 @@ extends AbstractWorkspace(_world) with WorldLoaderInterface with PrimaryWorkspac
 
   private var _tickCounterLabel = "ticks"
   override def tickCounterLabel = _tickCounterLabel
-  override def tickCounterLabel(s: String): Unit = { _tickCounterLabel = tickCounterLabel }
+  override def tickCounterLabel(s: Option[String]): Unit = { _tickCounterLabel = s.getOrElse("ticks") }
 
   private var _showTickCounter = true
   override def showTickCounter = _showTickCounter

@@ -55,7 +55,7 @@ object Model {
   lazy val defaultLinkShapes: Seq[LinkShape] =
     parseLinkShapes(Resource.lines("/system/defaultLinkShapes.txt").toSeq)
   lazy val defaultView =
-    View(368, 10, 434, 434, WorldDimensions(-16, 16, -16, 16, 13.0), 10, UpdateMode.Continuous, true, Some("ticks"), 30)
+    View(368, 10, 434, 434, WorldDimensions(-16, 16, -16, 16, 13.0), 10, UpdateMode.Continuous, true, None, 30)
   class InvalidModelError(message: String) extends RuntimeException(message)
 }
 
