@@ -39,7 +39,6 @@
 	flex: 1;
 
 	max-width: max(70vw, 400px);
-	overflow-x: auto;
 }
 
 .navbar__item {

@@ -27,9 +27,6 @@ body {
 html {
 	line-height: 1.1; /* 1 */
 	-webkit-text-size-adjust: 100%; /* 2 */
-
-	max-width: 100vw;
-	overflow-x: hidden;
 }
 
 /* Sections
