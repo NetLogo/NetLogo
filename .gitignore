@@ -61,3 +61,7 @@ tmp/
 /netlogo-gui/resources/system/dict.txt
 /netlogo-gui/resources/system/dict3d.txt
 /test/file-prim-files/utf8-file-written-by-test.txt
+
+# Metal Scala server
+.metals
+.bloop
