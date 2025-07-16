@@ -290,6 +290,63 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 ===
 
+The NetLogo arduino extension makes use of the JSSC library.
+
+JSSC is released under the LGPL 3.0 license, which can be found at https://www.gnu.org/licenses/lgpl-3.0.en.html.
+
+===
+
+The NetLogo csv extension makes use of the Apache Commons CSV library.
+
+The Apache Commons CSV library is released under the Apache 2.0 license, which can be found at https://www.apache.org/licenses/LICENSE-2.0.
+
+===
+
+The NetLogo gis extension makes use of the JTS Topology Suite.
+
+The JTS Topology Suite is released under the EPL 2.0 license (https://www.eclipse.org/legal/epl-2.0/)
+and the BSD 3-Clause license (https://opensource.org/license/bsd-3-clause).
+
+The NetLogo gis extension also makes use of the Apache Commons HTTPClient, Logging, and Codec libraries.
+
+The Apache Commons libraries are released under the Apache 2.0 license, which can be found at https://www.apache.org/licenses/LICENSE-2.0.
+
+The NetLogo gis extension also makes use of the ng-units library.
+
+The ng-units library is released under the MIT license, which can be found at https://opensource.org/license/mit.
+
+The NetLogo gis extension also makes use of the Tinfour library.
+
+The Tinfour library is released under the Apache 2.0 license, which can be found at https://www.apache.org/licenses/LICENSE-2.0.
+
+The NetLogo gis extension also makes use of the json-simple library.
+
+The json-simple library is released under the Apache 2.0 license, which can be found at https://www.apache.org/licenses/LICENSE-2.0.
+
+===
+
+The NetLogo gogo extension makes use of the hid4java library.
+
+The hid4java library is released under the MIT license, which can be found at https://opensource.org/license/mit.
+
+The NetLogo gogo extension also makes use of the Java Native Access library.
+
+The Java Native Access library is released under the Apache 2.0 license, which can be found at https://www.apache.org/licenses/LICENSE-2.0.
+
+===
+
+The NetLogo matrix extension makes use of the JAMA library.
+
+The JAMA library does not have a license.
+
+===
+
+The NetLogo table extension makes use of the Gson library.
+
+The Gson library is released under the Apache 2.0 license, which can be found at https://www.apache.org/licenses/LICENSE-2.0.
+
+===
+
 The NetLogo vid extension makes use of the JCodec library.
 The copyright and license for JCodec are as follows:
 
@@ -359,39 +416,6 @@ Gephi is licensed under the following terms:
   For more information on the license please see: the Gephi License FAQs.
 
   License headers are available on http://www.opensource.org/licenses/CDDL-1.0 and http://www.gnu.org/licenses/gpl.html.
-
-===
-
-The R extension is licensed under the following terms:
-
-   The R extension is Copyright (C) 2009-2016 Jan C. Thiele and
-   Copyright (C) 2016 Uri Wilensky / The Center for Connected Learning.
-
-   NetLogo-R-Extension is free software; you can redistribute it and/or
-   modify it under the terms of the GNU General Public License
-   as published by the Free Software Foundation; either version 2
-   of the License, or (at your option) any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with NetLogo-R-Extension (located in GPL.txt). If not, see <http://www.gnu.org/licenses/>.
-
-===
-
-The R extension makes use of the JNA library, licensed under the following terms:
-
-   This copy of JNA is licensed under the
-   Apache (Software) License, version 2.0 ("the License").
-   See the License for details about distribution rights, and the
-   specific rights regarding derivate works.
-
-   You may obtain a copy of the License at:
-
-   http://www.apache.org/licenses/
 
 ===
 
