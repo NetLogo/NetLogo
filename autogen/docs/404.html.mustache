@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<base href="/{{ version }}/" />
+		<title>NetLogo Documentation: 404 - Page Not Found</title>
+		<link rel="icon" type="image/png" href="favicon/favicon-96x96.png" sizes="96x96" />
+		<link rel="icon" type="image/svg+xml" href="favicon/favicon.svg" />
+		<link rel="shortcut icon" href="favicon/favicon.ico" />
+		<link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png" />
+		<meta name="apple-mobile-web-app-title" content="Docs" />
+		<link rel="manifest" href="favicon/site.webmanifest" />
+		{{#pdf}}
+		<link rel="stylesheet" href="netlogo-pdf.css" type="text/css" />
+		{{/pdf}}
+		{{^pdf}}
+		<link rel="stylesheet" href="netlogo.css" type="text/css" />
+		{{/pdf}}
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+	</head>
+	<body>
+		{{> header}}
+		<main class="prose h-full">
+			<h1 style="background: var(--color-error); color: var(--color-white)">404 - Page Not Found</h1>
+			<p>
+				Sorry, the page you are looking for does not exist. It may have been moved or deleted. Please check the URL or
+				return to the <a href="https://docs.netlogo.org">home page</a>. You may also click
+				<a
+					href="javascript:window.history.back()"
+					aria-label="Go back to the previous page"
+					aria-role="button"
+					role="button"
+					>here</a
+				>
+				to go back to the previous page.
+			</p>
+		</main>
+	</body>
+</html>
