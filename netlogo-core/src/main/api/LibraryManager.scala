@@ -39,7 +39,7 @@ object LibraryManager {
         bundledsConfig.getString("fallback-libraries-location")
       }
 
-    new URL(s"$baseURL/refs/heads/${APIVersion.version}-beta2")
+    new URL(s"$baseURL/refs/heads/${APIVersion.version}")
 
   }
 

@@ -51,7 +51,17 @@ object ExtensionManager {
   def extensionsPath: Path =
     Paths.get(System.getProperty("netlogo.extensions.dir", "extensions"))
 
-  def userExtensionsPath: Path =
-    Paths.get(System.getProperty("netlogo.extensions.perUserDir", FileIO.perUserDir("extensions")))
+  def userExtensionsPath: Path = {
+    val os = System.getProperty("os.name").toUpperCase
+    val appData =
+      if (os.contains("WIN"))
+        System.getenv("APPDATA") + "\\NetLogo"
+      else if (os.contains("MAC"))
+        System.getProperty("user.home") + "/Library/Application Support/NetLogo"
+      else
+        System.getProperty("user.home") + "/.netlogo"
+
+    Paths.get(appData, APIVersion.version, "extensions")
+  }
 
 }
