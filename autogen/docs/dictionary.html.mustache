@@ -10369,7 +10369,7 @@ if (pxcor &gt; 0) xor (pycor &gt; 0)
         const entries = document.querySelectorAll(".dict_entry");
         Array.from(entries).forEach(function(entry) {
           const hash = entry.id;
-          const anchors = entry.querySelectorAll("a");
+          const anchors = entry.querySelectorAll("h3 a");
           Array.from(anchors).forEach(function(anchor) {
             anchor.href = "#" + hash;
           });
