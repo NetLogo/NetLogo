@@ -239,7 +239,7 @@ lazy val netlogo = project.in(file("netlogo-gui")).
     , "-sourcepath", baseDirectory.value.getParentFile.getAbsolutePath
     , "-doc-title", "NetLogo"
     , "-doc-version", netlogoVersion.value
-    , "-skip-by-regex", Scaladoc.excludedPackages.mkString(":")
+    , "-skip-by-regex", Scaladoc.excludedPackages.mkString(",")
     , "-doc-source-url", s"github://NetLogo/NetLogo/${netlogoVersion.value}"
     )
   )
@@ -373,7 +373,10 @@ lazy val parser = crossProject(JSPlatform, JVMPlatform).
     publishTo := { Some("Cloudsmith API" at "https://maven.cloudsmith.io/netlogo/netlogo/") },
     version := "0.4.0",
     Compile / unmanagedSourceDirectories += baseDirectory.value.getParentFile / "parser-core" / "src" / "main",
-    Test / unmanagedSourceDirectories    += baseDirectory.value.getParentFile / "parser-core" / "src" / "test").
+    Test / unmanagedSourceDirectories    += baseDirectory.value.getParentFile / "parser-core" / "src" / "test",
+    Compile / doc / scalacOptions := Seq(
+      "-skip-by-regex", Scaladoc.excludedPackages.mkString(",")
+    )).
   jsConfigure(_.dependsOn(sharedResources % "compile-internal->compile")).
   jsConfigure(_.dependsOn(         macros % "compile-internal->compile;test-internal->compile")).
   jsSettings(

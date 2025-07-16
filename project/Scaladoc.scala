@@ -1,8 +1,7 @@
 object Scaladoc {
 
   val excludedPackages = Seq(
-    "org.nlogo.app.previewcommands"
-  , "org.nlogo.awt"
+    "org.nlogo.awt"
   , "org.nlogo.compile"
   , "org.nlogo.core.prim"
   , "org.nlogo.gl"
