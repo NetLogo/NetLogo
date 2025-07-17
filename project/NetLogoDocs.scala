@@ -101,7 +101,7 @@ class NetLogoDocs(
   def generatePDF(buildVariables: Map[String, Object], autoDocumentedExtensions: Seq[(String, String)],
                   manuallyDocumentedExtensions: Seq[String]): File = {
     val mustacheVars =
-      buildVariables + ("infoTabModelHTML" -> infoTabHTML)
+      buildVariables + ("infoTabModelHTML" -> infoTabHTML, "pdf" -> java.lang.Boolean.TRUE)
 
     val tmp = IO.createTemporaryDirectory
     generateDocs(tmp, autoDocumentedExtensions, manuallyDocumentedExtensions, mustacheVars, perPageTOC = false)
@@ -156,19 +156,52 @@ class NetLogoDocs(
     FileActions.copyFile(modelsDirectory / "Code Examples" / "Perspective Example.png", targetDir / "Perspective Example.png")
   }
 
+  /* Check if whoever is running this has:
+   *  1. npm installed
+   *  2. the generate-manual script in the right place
+   *  3. run `npm install` in the right directory
+   *  If not, throw an error with instructions.
+   * */
+  private def checkPDFRenderingDependencies(): Unit = {
+      try {
+        val version = Process("npm --version").!!
+        println(s"Found npm version: $version")
+      } catch {
+        case _: Throwable =>
+          sys.error("You must have npm installed to generate the manual PDF.")
+      }
+
+      val scriptPath = netLogoRoot / "resources" / "docs" / "generate-manual" / "index.js"
+      if (!Files.exists(scriptPath.toPath)) {
+        sys.error(s"Script not found: $scriptPath")
+      }
+
+      val npmInstall = Process("npm install", scriptPath.getParentFile)
+      val res = npmInstall.!
+      if (res != 0) {
+        sys.error("npm install failed. Please ensure you have npm installed and try again.")
+      }
+
+      println("npm install completed successfully.")
+  }
   private def generateManualPDF(htmlFileRoot: File, extensions: Seq[String]): File = {
+    checkPDFRenderingDependencies()
+
     val pdfFile = netLogoRoot / "NetLogo User Manual.pdf"
+    val scriptPath = netLogoRoot / "resources" / "docs" / "generate-manual" / "index.js"
+    if (!Files.exists(scriptPath.toPath)) {
+      sys.error(s"Script not found: $scriptPath")
+    }
 
-    val htmldocArgs =
-      Seq("wkhtmltopdf", "--enable-local-file-access",
-        "cover", (htmlFileRoot / "title.html").getAbsolutePath,
-        "toc", "--xsl-style-sheet", (htmlFileRoot / "toc.xsl").getAbsolutePath) ++
-        manualComponents(htmlFileRoot, extensions).map(_.getAbsolutePath) ++
-        Seq(pdfFile.getAbsolutePath)
 
-    println(htmldocArgs.mkString(" "))
+    val htmlDocArgs = // node generate-manual.js <output> <...html files>
+      Seq("node", scriptPath.getAbsolutePath, (htmlFileRoot / "title.html").getAbsolutePath) ++
+      manualComponents(htmlFileRoot, extensions).map(_.getAbsolutePath) ++
+      Seq(pdfFile.getAbsolutePath)
 
-    val res = Process(htmldocArgs, docsTarget).!
+    println(htmlDocArgs.mkString(" "))
+
+    val res = Process(htmlDocArgs, docsTarget).!
 
     if (res != 0)
       sys.error("could not generate htmldoc!")

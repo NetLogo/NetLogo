@@ -1,0 +1,21 @@
+{
+  "name": "generate-manual",
+  "version": "1.0.0",
+  "description": "generate pdf manual for netlogo",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "netlogo",
+    "pdf"
+  ],
+  "author": "Omar Ibrahim",
+  "license": "ISC",
+  "dependencies": {
+    "fs-extra": "^11.3.0",
+    "pdf-creator-node": "^2.3.5",
+    "pdf-lib": "^1.17.1",
+    "puppeteer": "^24.14.0"
+  }
+}

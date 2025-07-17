@@ -2,7 +2,7 @@
 
 <main class="prose">
 
-
+# Espacio-Conductual
 
 Esta guía consta de tres partes:
 
@@ -22,29 +22,29 @@ Se añadieron varias funciones nuevas en NetLogo 6.4:
 - [**Comandos pre-experimento**](#comandos-pre-experimento): Se ejecutan antes del inicio del experimento.
 - [**Comandos post-experimento**](#comandos-post-experimento): Se ejecutan cuando finaliza el experimento.
 - [**Resultados estadísticos**](#resultados-estadísticos): La media y la desviación estándar
-de los datos de simulaciones pueden guardarse en un archivo de resultados.
+  de los datos de simulaciones pueden guardarse en un archivo de resultados.
 - [**Resultados en lista**](#resultados-en-lista): Los datos se pueden guardar en listas en un archivo,
   con un elemento de lista por celda.
 - [**Importar y exportar**](#importar-y-exportar): Los experimentos ahora pueden exportarse a
-un archivo XML que puede utilizarse al ejecutar en modo sin interfaz (headlessly). También es posible importar
-experimentos en un
-modelo.
+  un archivo XML que puede utilizarse al ejecutar en modo sin interfaz (headlessly). También es posible importar
+  experimentos en un
+  modelo.
 - [**Experimentos pausados**](#experimentos-pausados): Ahora es posible pausar y reanudar los experimentos.
 - [**Opciones de ejecución: actualizar gráficos y monitores**](#opciones-de-ejecución-actualizar-gráficos-y-monitores):
-Mejora el rendimiento en mayor medida si no se selecciona.
+  Mejora el rendimiento en mayor medida si no se selecciona.
 
 Más acerca de las modificaciones en Espacio-Conductual en NetLogo 6.4:
 
 - Los experimentos creados en versiones anteriores a la 6.4 aún se pueden abrir, pero
-los creados con las nuevas funciones no son compatibles con versiones anteriores.
+  los creados con las nuevas funciones no son compatibles con versiones anteriores.
 - Para información sobre cambios en archivos de resultados, consult
- [**Cambios en Archivos de Resultados**](#cambios-en-archivos-de-resultados).
+  [**Cambios en Archivos de Resultados**](#cambios-en-archivos-de-resultados).
 - El cuadro de diálogo del experimento ahora usa mensajes emergentes debajo de cada elemento de entrada, en lugar de
-texto; consulta
-[**Creación de una configuración de experimentos**](#creación-de-una-configuración-de-experimentos).
+  texto; consulta
+  [**Creación de una configuración de experimentos**](#creación-de-una-configuración-de-experimentos).
 - Experimentos que utilizan las nuevas funciones pueden encontrarse en el modelo
-Sample Models=>Biology=>Wolf Sheep Predation, con notas adicionales en la pestaña de información.
-- Modificaciones menores adicionales pueden encontrarse en esta página, buscando *(Desde 6.4)*.
+  Sample Models=>Biology=>Wolf Sheep Predation, con notas adicionales en la pestaña de información.
+- Modificaciones menores adicionales pueden encontrarse en esta página, buscando _(Desde 6.4)_.
 
 ## ¿Qué es Espacio-Conductual?
 
@@ -76,7 +76,7 @@ espacio de parámetros multidimensional- funciona mejor nuestro modelo?
 Por ejemplo, supongamos que desea lograrse una sincronización rápida entre los agentes en el modelo
 Fireflies. El modelo tiene cuatro deslizadores: number, cycle-length,
 flash-length and flashes-to-reset, con aproximadamente 2000, 100, 10 y 3 valores posibles,
-respectivamente. Esto significa que, ¡hay 2000 * 100 * 10 * 3 =
+respectivamente. Esto significa que, ¡hay 2000 _ 100 _ 10 \* 3 =
 6,000,000 posibles combinaciones de valores de los deslizadores! Probar combinaciones una por una,
 no es una forma remotamente eficiente de descubrir cuál provocará la sincronización
 más rápida.
@@ -109,13 +109,13 @@ de ejecuciones del modelo.
 
 Las configuraciones de experimentos se consideran parte de un modelo de NetLogo y se guardan como
 componentes del modelo, pero también pueden exportarse como archivos individuales. Consulta
-[**Importar y exportar**](#importar-y-exportar) (*Desde 6.4*).
+[**Importar y exportar**](#importar-y-exportar) (_Desde 6.4_).
 
 Para crear una nueva configuración de experimento, presiona el botón "Nuevo". Para editar
 una configuración de experimento existente, presiona el botón "Editar". El mismo cuadro de diálogo
 se utiliza en ambos casos, lo que difiere es la información que ya está incluida.
 El cuadro de diálogo no bloquea, lo que resulta útil si se desea copiar algo de la pestaña de "Código"
-o ver los deslizadores en la pestaña de "Ejecutar" (*Desde 6.4*).
+o ver los deslizadores en la pestaña de "Ejecutar" (_Desde 6.4_).
 
 ### Creación de una configuración de experimentos
 
@@ -123,11 +123,11 @@ A continuación se detalla la información que se puede incluir en el cuadro de 
 del experimento. Ten en cuenta que no es necesario especificar todo; algunas partes pueden
 dejarse en blanco o con sus valores predeterminados. Si el nombre de una propiedad está
 subrayado, puedes desplazar el cursor sobre él para obtener más información sobre la propiedad
-y sobre cómo se utiliza, de modo que no tengas que visitar esta página con tanta frecuencia *(Desde 6.4)*.
+y sobre cómo se utiliza, de modo que no tengas que visitar esta página con tanta frecuencia _(Desde 6.4)_.
 
 **Nombre del experimento:** Los experimentos de un mismo modelo deben tener nombres distintos. Si
 se abre un modelo que contiene experimentos con nombres duplicados, éstos se modificarán
-para garantizar que todos los nombres sean únicos *(Desde 6.4)*.
+para garantizar que todos los nombres sean únicos _(Desde 6.4)_.
 
 **Variar variables de la siguiente manera:** En este apartado, se especifican las configuraciones
 que se desean modificar y los valores que deben tomar. Las variables pueden incluir deslizadores,
@@ -168,6 +168,7 @@ información sobre semillas aleatorias, consulta la sección
 Programación.
 
 #### Sintaxis combinatoria
+
 Los valores pueden especificarse ya sea enumerando los que se desean utilizar, o
 indicando que se desea probar cada valor dentro de un rango específico. Por ejemplo,
 para asignar a un deslizador llamado `number` cada valor de 100 a 1000, en incrementos de
@@ -195,14 +196,14 @@ valores para la variable `a` y tres valores para la variable `b`, se obtendrán 
 
 Las seis ejecuciones creadas se organizarán de la siguiente manera:
 
-| a   | b   |
-| ---: | ---: |
-| 1   |  2  |
-| 1   |  6  |
-| 1   | 10  |
-| 2   |  2  |
-| 2   |  6  |
-| 2   | 10  |
+|   a |   b |
+| --: | --: |
+|   1 |   2 |
+|   1 |   6 |
+|   1 |  10 |
+|   2 |   2 |
+|   2 |   6 |
+|   2 |  10 |
 
 **Casilla de verificación para ejecutar combinaciones en orden secuencial** Esta casilla está marcada
 de forma predeterminada y provoca que las variables especificadas posteriormente varíen más rápido
@@ -210,17 +211,18 @@ que las especificadas anteriormente. Cuando la casilla está en blanco, se obtie
 con las variables especificadas anteriormente variando más rápido que las especificadas posteriormente.
 El orden no-secuencial para la especificación de variables anterior es:
 
-| a   | b   |
-| ---: | ---: |
-| 1   |  2  |
-| 2   |  2  |
-| 1   |  6  |
-| 2   |  6  |
-| 1   | 10  |
-| 2   | 10  |
+|   a |   b |
+| --: | --: |
+|   1 |   2 |
+|   2 |   2 |
+|   1 |   6 |
+|   2 |   6 |
+|   1 |  10 |
+|   2 |  10 |
 
 #### Sintaxis de subexperimento
-*(Desde 6.4)*
+
+_(Desde 6.4)_
 
 Para usuarios más avanzados, existe una tercera sintaxis disponible
 para variar parámetros: la sintaxis de subexperimento. Por ejemplo, si se desea probar dos valores para una variable `a`
@@ -234,12 +236,12 @@ se puede escribir de la siguiente manera:
 Atención al uso de dobles corchetes anidados para separar cada variable dentro del subexperimento.
 Esto generará cuatro ejecuciones, organizadas de la siguiente manera:
 
-| a   | b   |
-| ---: | ---: |
-| 1   |  1  |
-| 2   |  1  |
-| 3   |  2  |
-| 4   |  2  |
+|   a |   b |
+| --: | --: |
+|   1 |   1 |
+|   2 |   1 |
+|   3 |   2 |
+|   4 |   2 |
 
 La sintaxis de subexperimento también permite definir constantes utilizando la sintaxis
 estándar. Estas constantes se aplicarán a cada subexperimento, a menos que se sobrescriban.
@@ -254,12 +256,12 @@ con un valor específico para una tercera variable `c`, se puede escribir de la 
 
 Esto fijaría el valor de `c` en 5 para los 4 subexperimentos, lo que resultaría en las siguientes ejecuciones:
 
-| a   | b     | c    |
-| ---: | ---: | ---: |
-| 1   |  1    |  5   |
-| 2   |  1    |  5   |
-| 3   |  2    |  5   |
-| 4   |  2    |  5   |
+|   a |   b |   c |
+| --: | --: | --: |
+|   1 |   1 |   5 |
+|   2 |   1 |   5 |
+|   3 |   2 |   5 |
+|   4 |   2 |   5 |
 
 También se puede sobreescribir una constante en un subexperimento, como se muestra en el siguiente ejemplo:
 
@@ -271,9 +273,9 @@ También se puede sobreescribir una constante en un subexperimento, como se mues
 
 Esto generaría una ejecución con la siguiente combinación:
 
-| a    | b    |
-| ---: | ---: |
-| 2    |  2   |
+|   a |   b |
+| --: | --: |
+|   2 |   2 |
 
 Ten en cuenta que todos los valores constantes deben definirse antes de cualquier subexperimento.
 
@@ -294,37 +296,37 @@ números aleatorios. Si deseas ejecutar el modelo más de una vez en cada combin
 de configuraciones, ingresa un número mayor.
 Con repeticiones en un orden secuencial, las repeticiones ocurren en ejecuciones secuenciales:
 
-| a   | b   |
-| ---: | ---: |
-| 1   |  2  |
-| 1   |  2  |
-| 2   |  2  |
-| 2   |  2  |
-| 1   |  6  |
-| 1   |  6  |
-| 2   |  6  |
-| 2   |  6  |
-| 1   | 10  |
-| 1   | 10  |
-| 2   | 10  |
-| 2   | 10  |
+|   a |   b |
+| --: | --: |
+|   1 |   2 |
+|   1 |   2 |
+|   2 |   2 |
+|   2 |   2 |
+|   1 |   6 |
+|   1 |   6 |
+|   2 |   6 |
+|   2 |   6 |
+|   1 |  10 |
+|   1 |  10 |
+|   2 |  10 |
+|   2 |  10 |
 
 Con repeticiones en un orden no-secuencial, las repeticiones se realizan como un segundo grupo de ejecuciones:
 
-| a   | b   |
-| ---: | ---: |
-| 1   |  2  |
-| 2   |  2  |
-| 1   |  6  |
-| 2   |  6  |
-| 1   | 10  |
-| 2   | 10  |
-| 1   |  2  |
-| 2   |  2  |
-| 1   |  6  |
-| 2   |  6  |
-| 1   | 10  |
-| 2   | 10  |
+|   a |   b |
+| --: | --: |
+|   1 |   2 |
+|   2 |   2 |
+|   1 |   6 |
+|   2 |   6 |
+|   1 |  10 |
+|   2 |  10 |
+|   1 |   2 |
+|   2 |   2 |
+|   1 |   6 |
+|   2 |   6 |
+|   1 |  10 |
+|   2 |  10 |
 
 **Evaluar las ejecuciones utilizando estos reporteros:** Aquí se especifica qué datos
 recopilar de cada ejecución. Por ejemplo, para registrar cómo la población de las
@@ -335,9 +337,7 @@ tortugas aumentó y disminuyó durante cada ejecución, se incluiría:
 Se puede ingresar un reportero, varios o ninguno. Si se ingresan varios,
 cada reportero debe estar en una línea diferente, por ejemplo:
 
-> `count frogs`
-> `count mice`
-> `count birds`
+> `count frogs` > `count mice` > `count birds`
 
 Si no se ingresan reporteros, las ejecuciones aún se llevarán a cabo. Esto es útil
 si deseas registrar los resultados a tu propia manera, como con el comando
@@ -353,17 +353,19 @@ Si se desea evaluar el modelo solo al final de la ejecución, o si se desea espe
 condiciones que indiquen cuándo evaluar el modelo, se debe dejar la casilla en blanco.
 
 #### Ejecutar indicadores cuando
-*(Desde 6.4)*
+
+_(Desde 6.4)_
 
 Este reportero se utilizará para determinar cuándo se deben registrar datos,
 si no se está evaluando a cada paso. Los datos siempre se obtendrán al final de cada
 ejecución del modelo, aún si este cuadro de texto está vacío,
- como sucedía cuando *Evaluar ejecuciones a cada paso* (ahora *Ejecutar indicadores a cada paso*)
- se dejaba en blanco. Por ejemplo *ticks mod 10 = 0*
-  registrará datos tanto en cada décimo tick, como en el último tick. Se pueden combinar múltiples
-  reporteros usando *and* y *or*.
+como sucedía cuando _Evaluar ejecuciones a cada paso_ (ahora _Ejecutar indicadores a cada paso_)
+se dejaba en blanco. Por ejemplo _ticks mod 10 = 0_
+registrará datos tanto en cada décimo tick, como en el último tick. Se pueden combinar múltiples
+reporteros usando _and_ y _or_.
 
 ##### Comandos pre-experimento
+
 Estos comandos se ejecutarán una vez, antes de que inicie el experimento.
 
 **Instrucciones de configuración inicial:** Estos comandos se utilizarán para
@@ -378,7 +380,7 @@ Para obtener resultados diferentes en repeticiones, se puedes usar
 al siguiente 'paso'. Por lo general, esto será el nombre de un procedimiento, como `go`,
 pero se pueden incluir los comandos que se deseen.
 
-**Condición de finalización:**  Esto permite realizar ejecuciones del modelo de diferentes
+**Condición de finalización:** Esto permite realizar ejecuciones del modelo de diferentes
 duraciones, finalizando cada una cuando se cumple una cierta condición. Por ejemplo, supongamos
 que se desea que cada ejecución dure hasta que ya no queden tortugas. En ese caso, se ingresaría:
 
@@ -402,6 +404,7 @@ al comando [[export-world|export-cmds]] o para registrar los resultados de la ej
 alguna otra manera.
 
 ##### Comandos post-experimento
+
 Estos son cualquier comando adicional que se quiera ejecutar
 cuando finaliza el experimento, una vez que todas las ejecuciones han finalizado.
 
@@ -417,7 +420,8 @@ en los comandos previos o posteriores al experimento, su estado interno no se tr
 a las ejecuciones y es probable que ocurran errores si se utilizan ahí.
 
 ### Importar y exportar
-*(Desde 6.4)*
+
+_(Desde 6.4)_
 
 Aunque los experimentos están vinculados a un modelo y generalmente se guardan junto con el
 modelo, también se pueden importar y exportar de forma individual a archivos XML. Esto
@@ -474,6 +478,7 @@ NetLogo utilizado, 3) el nombre del experimento de Espacio-Conductual utilizado,
 de inicio, y 5) las dimensiones iniciales del mundo.
 
 #### Resultados tabulados
+
 Este formato lista cada paso de medición de cada ejecución en su propia fila, con cada indicador en una
 columna separada. Las filas de medición aparecerán en el orden en que ocurren en el tiempo real. Con la
 opción de **ejecuciones en paralelo** las mediciones pueden aparecer en un orden mixto, ya que varias ejecuciones
@@ -494,6 +499,7 @@ variables para la ejecución se muestran en verde y los datos de indicadores de 
 ![[/behaviorspace/bs-table.png]]
 
 #### Resultados en hoja de cálculo
+
 Este formato lista los números de paso, así como cada indicador de cada ejecución en una columna separada,
 con cada fila correspondiente a un paso de medición, aplicable a todas las ejecuciones. Si una ejecución
 termina antes que otra debido a una **condición de finalización**, entonces sus números de paso después de
@@ -528,7 +534,8 @@ en morado.
 ![[/behaviorspace/bs-spreadsheet.png]]
 
 #### Resultados estadísticos
-*(Desde 6.4)*
+
+_(Desde 6.4)_
 
 Si se habilita la opción de **Resultados estadísticos**, los datos obtenidos, ya sea en **Resultados tabulados**,
 o bien en **Resultados en hoja de cálculo**, se utilizan para calcular la media y la desviación estándar de cada
@@ -550,7 +557,8 @@ morado.
 ![[/behaviorspace/bs-stats.png]]
 
 #### Resultados en lista
-*(Desde 6.4)*
+
+_(Desde 6.4)_
 
 Este formato es un complemento de los otros dos formatos principales, en lugar de ser un formato completo de
 recopilación
@@ -561,7 +569,7 @@ resultados con formato adecuado para esos reporteros. Tanto en los formatos **Re
 desplegar
 sus elementos en celdas separadas con un valor por celda. Si los valores de la lista se requieren en celdas
 ndividuales,
-se selecciona el formato  **Resultados en lista** junto con uno o ambos de los otros formatos.
+se selecciona el formato **Resultados en lista** junto con uno o ambos de los otros formatos.
 
 Es importante destacar que el formato **Resultados en lista**, al igual que el formato **Resultados en hoja de
 cálculo**, no contendrá datos hasta que el experimento esté completo. También es importante tener en cuenta que el
@@ -576,31 +584,33 @@ en azul, los valores iniciales de las variables en verde, y la lista expandida d
 ![[/behaviorspace/bs-lists.png]]
 
 #### Cambios en archivos de resultados
-*(Desde 6.4)*
+
+_(Desde 6.4)_
 
 - Los archivos de resultados tienen números de versión.
 - Los resultados en hoja de cálculo siempre incluyen información sobre los pasos.
 - El encabezado de columna `[initial & final values]` en los resultados en hoja de cálculo se cambió por el más preciso
-`[final value]`.
+  `[final value]`.
 - Se añadió [**Resultados estadísticos**](#resultados-estadísticos).
 - Se añadió [**Resultados en lista**](#resultados-en-lista).
 
 #### Opciones de ejecución: actualizar gráficos y monitores
 
 El cuadro de diálogo "Opciones de ejecución" ofrece la opción de actualizar o no los gráficos y monitores. El
-rendimiento mejora si se deja en blanco. Es importante destacar que *(Desde 6.4)*, si se comienza el experimento
+rendimiento mejora si se deja en blanco. Es importante destacar que _(Desde 6.4)_, si se comienza el experimento
 con la casilla en blanco, no se podrá alternar entre activar o desactivar esta casilla de verificación en el cuadro
 de diálogo "Ejecutando experimento". Esto proporciona una mejora de rendimiento aún mayor que la obtenida antes
 de NetLogo 6.4, cuando dicha alternancia era posible. Selecciona la casilla si es necesario exportar datos de
 gráficos mediante primitivas como: [[export-interface|export-cmds]] (guarda la interfaz completa en un archivo PNG),
 [[export-plot|export-cmds]] (guarda datos de gráficos en un archivo), [[export-all-plots|export-cmds]] (guarda
 todos los gráficos en un archivo), y [[export-world|export-cmds]] (guarda todo el estado del modelo en un archivo).
+
 #### Opciones de ejecución: ejecuciones en paralelo
 
 El cuadro de diálogo "Opciones de ejecución" también permite seleccionar si se desean ejecuciones múltiples del
 modelo en paralelo y, en tal caso, cuántas pueden estar activas simultáneamente. Tanto el número predeterminado como
-el máximo recomendado de ejecuciones en paralelo se indican debajo del cuadro de texto *(Desde 6.4)*. La elección
-de la cantidad de ejecuciones en paralelo se mantiene de un experimento a otro *(Desde 6.4)*.
+el máximo recomendado de ejecuciones en paralelo se indican debajo del cuadro de texto _(Desde 6.4)_. La elección
+de la cantidad de ejecuciones en paralelo se mantiene de un experimento a otro _(Desde 6.4)_.
 
 Es importante considerar algunas precauciones con las ejecuciones en paralelo.
 
@@ -628,7 +638,7 @@ necesario ajustar el límite de memoria de NetLogo (consultar [this FAQ
 entry](faq.html#how-big-can-my-model-be-how-many-turtles-patches-procedures-buttons-and-so-on-can-my-model-contain)).
 Por defecto, NetLogo no utilizará más del 50% de la memoria del sistema.
 
-Sexta: cada ejecución en paralelo tiene su propio mundo en el que se ejecuta el modelo. Este mundo *no* se borra automáticamente
+Sexta: cada ejecución en paralelo tiene su propio mundo en el que se ejecuta el modelo. Este mundo _no_ se borra automáticamente
 por Espacio-Conductual si una ejecución en paralelo se reutiliza para otra repetición, lo que ocurre con bastante frecuencia. Esto
 significa, por ejemplo, que si se ejecuta `ask patches [ set pcolor red ]` en una ejecución y no se utiliza `clear-all` o `clear-patches`
 en los comandos de configuración de la siguiente ejecución, entonces las parcelas seguirán siendo rojas. En general, usar `clear-all`
@@ -656,11 +666,11 @@ experimento" obstaculiza la vista, simplemente se puede mover a otra ubicación 
 visualizar las actualizaciones de los gráficos, puede desactivarse esta función utilizando las casillas de verificación
 en el cuadro de diálogo "Ejecutando experimento". Esto acelerará el experimento. Sin embargo, si ya ha se desactivado
 la actualización de gráficos y monitores en el cuadro de diálogo "Opciones de ejecución", esta casilla permanecerá
-deshabilitada *(Desde 6.4)*.
+deshabilitada _(Desde 6.4)_.
 
 Si se quiere detener un experimento antes de que haya finalizado, existen dos opciones. Para detenerlo después
 de que las ejecuciones actuales hayan concluido y guardar el progreso para más tarde, se presiona el botón "Pausar"
-*(Desde 6.4)*. Para detener el experimento de inmediato, sin esperar a que las ejecuciones actuales se completen,
+_(Desde 6.4)_. Para detener el experimento de inmediato, sin esperar a que las ejecuciones actuales se completen,
 se presiona el botón "Interrumpir". Cualquier resultado generado hasta ese momento se guardará, pero ten en cuenta que
 presionar "Interrumpir" puede generar datos fragmentados, por lo que los experimentos interrumpidos no pueden
 reanudarse.
@@ -669,7 +679,8 @@ Cuando todas las ejecuciones se han completado, el experimento finaliza. En este
 Resultados en hoja de cálculo, en lista y estadísticos.
 
 #### Experimentos pausados
-*(Desde 6.4)*
+
+_(Desde 6.4)_
 
 Los experimentos pausados en la ventana de Espacio-Conductual, aparecerán con la leyenda "En progreso".
 Para reanudar un experimento desde el punto donde se pausó, selecciónalo y presiona el botón "Ejecutar".
@@ -688,8 +699,6 @@ nuevos datos se agregarán al final del archivo original, lo cual probablemente 
 Es importante tener en cuenta que mover o eliminar archivos de resultados antes de reanudar un experimento pausado,
 provocará un error. Así también, si se generan nuevos datos en un archivo asociado con un experimento pausado, también
 podría causar un error al reanudar dicho experimento.
-
-
 
 ## Uso avanzado
 
@@ -710,24 +719,24 @@ Se ejecuta NetLogo usando la aplicación `NetLogo_Console` con el argumento de l
 compatible con los siguientes argumentos:
 
 - `--headless`: activa el modo sin interfaz para ejecutar un experimento de Espacio-Conductual (obligatorio, de lo contrario
-se abrirá la interfaz gráfica).
+  se abrirá la interfaz gráfica).
 - `--model <ruta>`: ruta de archivo del modelo a abrir
-(obligatorio).
+  (obligatorio).
 - `--setup-file <ruta>`: lee las configuraciones de experimentos desde este archivo en lugar del archivo del
-modelo.
+  modelo.
 - `--experiment <nombre>`: nombre del experimento a ejecutarse.
 - `--table <ruta>`: ruta para enviar resultados tabulados (o `-` para resultados
-estándar).
+  estándar).
 - `--spreadsheet <ruta>`: ruta para enviar resultados en hoja de cálculo (o `-` para resultados
-estándar)
+  estándar)
 - `--lists <ruta>`: ruta para enviar resultados en lista (o `-` para resultados estándar),
-no puede utilizarse sin `--table` o `--spreadsheet`.
+  no puede utilizarse sin `--table` o `--spreadsheet`.
 - `--stats <ruta>`: ruta para enviar resultados estadísticos (o `-` para resultados estándar),
-no puede utilizarse sin `--table` o `--spreadsheet`
+  no puede utilizarse sin `--table` o `--spreadsheet`
 - `--threads <número>`: utiliza esta cantidad de hilos para realizar ejecuciones de modelo en paralelo, o 1
-para desactivar ejecuciones en paralelo. El valor predeterminadao es `floor(0.75 * <number of processors>)`.
+  para desactivar ejecuciones en paralelo. El valor predeterminadao es `floor(0.75 * <number of processors>)`.
 - `--update-plots`: habilita las actualizaciones de gráficos. Se incluye si se desea exportar datos de gráficos o
-se excluye para mejorar el rendimiento.
+  se excluye para mejorar el rendimiento.
 - `--min-pxcor <número>`: reemplaza la configuración de tamaño del mundo en el archivo del modelo.
 - `--max-pxcor <número>`: reemplaza la configuración de tamaño del mundo en el archivo del modelo.
 - `--min-pycor <número>`: reemplaza la configuración de tamaño del mundo en el archivo del modelo.
@@ -739,7 +748,7 @@ especificar `--table` o `--spreadsheet`, o ambos. Si se especifica alguna de las
 del mundo, se deben proporcionar las cuatro.
 
 Es importante tener en cuenta que antes de NetLogo 6.3.0, las indicaciones recomendaban el uso de
-`netlogo-headless.sh` (o `netlogo-headless.bat` en Windows)  junto con una instalación independiente de Java
+`netlogo-headless.sh` (o `netlogo-headless.bat` en Windows) junto con una instalación independiente de Java
 en el sistema para llevar a cabo experimentos de Espacio-Conductual. El script `netlogo-headless.sh` aún se
 incluye en NetLogo y puede seguir utilizándose como antes, lo que puede ser preferible en entornos de servidor,
 donde la versión de Java instalada está estrictamente controlada. Sin embargo, en una computadora personal, el
@@ -752,7 +761,7 @@ configuraciones especiales.
 Resulta más conveniente crear previamente la configuración de un experimento en la interfaz gráfica,
 de modo que quede guardada como parte del modelo. Para ejecutar una configuración de experimento que
 se haya guardado en un modelo, se presenta un ejemplo de línea de comandos que debe ejecutarse
-desde la carpeta de instalación de NetLogo {{version}},  de modo que las rutas a la aplicación
+desde la carpeta de instalación de NetLogo {{version}}, de modo que las rutas a la aplicación
 `NetLogo_Console` y al modelo `Wolf Sheep Simple 5.nlogo` sean correctas.
 
 Las siguientes instrucciones deberían funcionar tal cual en una terminal en macOS y Linux. En Windows,
@@ -892,7 +901,7 @@ utilidad "jar" de Java o cualquier programa que gestione el formato ZIP).
 
 La forma más sencilla de aprender cómo se ven las configuraciones en XML, es crear
 algunas en la interfaz gráfica de Espacio-Conductual, guardar el modelo, exportarlas
-*(Desde 6.4)*, y luego examinar el o los archivos .xml resultantes en un editor de texto.
+_(Desde 6.4)_, y luego examinar el o los archivos .xml resultantes en un editor de texto.
 También puedes encontrar las configuraciones de experimentos al final del archivo
 .nlogo, en una sección que comienza y termina con la etiqueta `experiments`. Por ejemplo:
 
@@ -964,7 +973,7 @@ el tamaño del heap](faq.html#how-big-can-my-model-be-how-many-turtles-patches-p
 
 Observa el uso de `-Dfile.encoding=UTF-8`. Esto obliga a todos los archivos de E/S a utilizar
 la codificación UTF-8. Al hacerlo, se garantiza que NetLogo pueda cargar todos los modelos
-de manera coherente y que las primitivas de archivo file-* funcionen de manera uniforme en todas
+de manera coherente y que las primitivas de archivo file-\* funcionen de manera uniforme en todas
 las plataformas, incluyendo modelos que contengan caracteres Unicode.
 
 ### Control API

@@ -501,7 +501,6 @@ div.version {
 	font-family: courier;
 	font-size: 0.875rem;
 
-	box-shadow: var(--shadow-md);
 	color: var(--color-text);
 }
 
