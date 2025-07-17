@@ -1583,8 +1583,13 @@ class WidgetPanel(val workspace: GUIWorkspace)
       xGaps.foreach {
         case (w, gaps) =>
           for ((w2, gap) <- gaps) {
-            if (w2.getX < w.getX + w.getWidth + gap && w2.getY + w2.getHeight > w.getY && w2.getY < w.getY + w.getHeight)
-              w2.setLocation(w.getX + w.getWidth + gap, w2.getY)
+            if (w2.getY + w2.getHeight > w.getY && w2.getY < w.getY + w.getHeight) {
+              if (gap <= 0) {
+                w2.setLocation(w.getX + w.getWidth + 5, w2.getY)
+              } else if (w2.getX < w.getX + w.getWidth + gap) {
+                w2.setLocation(w.getX + w.getWidth + gap.max(5), w2.getY)
+              }
+            }
           }
       }
 
@@ -1592,8 +1597,13 @@ class WidgetPanel(val workspace: GUIWorkspace)
       yGaps.foreach {
         case (w, gaps) =>
           for ((w2, gap) <- gaps) {
-            if (w2.getY < w.getY + w.getHeight + gap && w2.getX + w2.getWidth > w.getX && w2.getX < w.getX + w.getWidth)
-              w2.setLocation(w2.getX, w.getY + w.getHeight + gap)
+            if (w2.getX + w2.getWidth > w.getX && w2.getX < w.getX + w.getWidth) {
+              if (gap <= 0) {
+                w2.setLocation(w2.getX, w.getY + w.getHeight + 5)
+              } else if (w2.getY < w.getY + w.getHeight + gap) {
+                w2.setLocation(w2.getX, w.getY + w.getHeight + gap.max(5))
+              }
+            }
           }
       }
 
