@@ -43,7 +43,7 @@
 .display-lg {
 	display: none;
 }
-@media (min-width: 1024px) {
+@media (min-width: 1215px) {
 	.visible-lg {
 		display: contents;
 	}
@@ -179,7 +179,7 @@ span.prim_example span.since {
 	color: var(--secondary-heading-text-color);
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1214px) {
 	div.dict_entry > :not(:first-child) {
 		margin-inline: var(--space-lg);
 	}
@@ -375,8 +375,8 @@ div.version {
 	margin-top: 0;
 }
 
-/* --------- Mobile / Tablet: max-width 1024px --------- */
-@media (max-width: 1024px) {
+/* --------- Mobile / Tablet: max-width 1214px --------- */
+@media (max-width: 1214px) {
 	.dictionary-layout {
 		flex-direction: column;
 		gap: 0;
@@ -469,8 +469,8 @@ div.version {
 	}
 }
 
-/* --------- Desktop: min-width 1024px --------- */
-@media (min-width: 1024px) {
+/* --------- Desktop: min-width 1215px --------- */
+@media (min-width: 1215px) {
 	.dictionary-layout .sidebar {
 		min-height: 100vh; /* full-height */
 		max-height: 100vh;

@@ -227,7 +227,7 @@ button.navbar__action {
 	display: contents;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1214px) {
 	:root {
 		--max-width-ch: 150ch;
 		--space-xl: 2rem; /* Adjusted for smaller screens */
