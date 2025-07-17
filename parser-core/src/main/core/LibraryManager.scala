@@ -25,13 +25,28 @@ object LibraryInfo {
     val (availableMajor, availableMinor, availablePatch, availableExtra) = parseVersion(available)
     val (installedMajor, installedMinor, installedPatch, installedExtra) = parseVersion(installed)
 
-    (availableMajor > installedMajor ||
-      availableMinor > installedMinor ||
-      availablePatch > installedPatch ||
-      // this works for most basic scenarios, like: "" > "-beta1", "-beta2" > "-beta1", etc.
-      // it might break on some edge cases, but our versions so far have been pretty simple.
-      // -Jeremy B November 2020
-      availableExtra > installedExtra)
+    if (availableMajor > installedMajor) {
+      true
+    } else if (availableMajor < installedMajor) {
+      false
+    } else {
+      if (availableMinor > installedMinor) {
+        true
+      } else if (availableMinor < installedMinor) {
+        false
+      } else {
+        if (availablePatch > installedPatch) {
+          true
+        } else if (availablePatch < installedPatch) {
+          false
+        } else {
+          // this works for most basic scenarios, like: "" > "-beta1", "-beta2" > "-beta1", etc.
+          // it might break on some edge cases, but our versions so far have been pretty simple.
+          // -Jeremy B November 2020
+          availableExtra > installedExtra
+        }
+      }
+    }
   }
 
   def parseVersion(version: String): (Int, Int, Int, String) = {
