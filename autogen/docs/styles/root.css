@@ -48,6 +48,7 @@
 	--color-error: var(--color-red-accent); /* Error color */
 
 	--color-text-on-primary: var(--color-white);
+	--color-text: var(--color-black);
 
 	--color-link: var(--color-primary);
 	--color-link-hover: var(--color-primary-dark);

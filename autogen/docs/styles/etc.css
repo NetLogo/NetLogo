@@ -488,3 +488,28 @@ div.version {
 .versions-page a {
 	line-break: anywhere;
 }
+
+/* License */
+.license {
+	margin: 0 auto var(--block-bottom) auto;
+	padding: var(--space-lg);
+	background-color: var(--color-background-overlay);
+
+	border-radius: 0.5rem;
+	border-left: 0.3125rem solid var(--color-primary); /* Light blue-grey for the box */
+
+	font-family: courier;
+	font-size: 0.875rem;
+
+	box-shadow: var(--shadow-md);
+	color: var(--color-text);
+}
+
+.license > p:last-child {
+	margin-bottom: 0;
+}
+
+.prose .license {
+	margin: 0 var(--space-xl);
+	padding: var(--space-lg);
+}
