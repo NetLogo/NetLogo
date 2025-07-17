@@ -2,11 +2,15 @@
 
 package org.nlogo.gl.view
 
+import java.awt.event.KeyListener
+import java.lang.UnsatisfiedLinkError
+import javax.swing.JFrame
+
+import org.nlogo.awt.Positioning
 import org.nlogo.core.{ I18N, Shape }
 import org.nlogo.gl.render.GLViewSettings
+import org.nlogo.swing.Utils
 import org.nlogo.window.{ GUIWorkspace, JOGLLoadingException, JOGLVersionMismatchException, TickCounterLabel }
-import javax.swing.JFrame
-import java.awt.event.KeyListener
 
 class ViewManager(val workspace: GUIWorkspace,
                   appWindow: JFrame,
@@ -19,12 +23,11 @@ class ViewManager(val workspace: GUIWorkspace,
     with GLViewSettings {
 
   val world = workspace.world
-  var currentView: View = null
-  var observerView: ObserverView = null
+  var currentView: Option[View] = None
+  var observerView: Option[ObserverView] = None
   val tickCounterLabel = new TickCounterLabel(workspace.world)
   addLinkComponent(tickCounterLabel)
-  private var fullscreenView: FullscreenView = null
-  var turtleView: View = null
+  private var fullscreenView: Option[FullscreenView] = None
   private var fullscreen = false
 
   var paintingImmediately = false
@@ -35,39 +38,43 @@ class ViewManager(val workspace: GUIWorkspace,
 
   @throws(classOf[JOGLLoadingException])
   def open(): Unit = {
-    if (observerView != null) {
-      observerView.toFront()
-      observerView.updatePerspectiveLabel()
-    } else
-      try init()
-      catch {
-        case vex: JOGLVersionMismatchException =>
-          org.nlogo.swing.Utils.alert(
-            vex.getMessage,
-            I18N.gui.get("common.buttons.continue"))
-        case ex: JOGLLoadingException =>
-          if (observerView != null) {
-            observerView.dispose()
-            observerView = null
-          }
-          throw ex
-      }
+    observerView match {
+      case Some(view) =>
+        view.toFront()
+        view.updatePerspectiveLabel()
+
+      case _ =>
+        try {
+          init()
+        } catch {
+          case vex: JOGLVersionMismatchException =>
+            Utils.alert(vex.getMessage, I18N.gui.get("common.buttons.continue"))
+
+          case ex: JOGLLoadingException =>
+            observerView.foreach(_.dispose())
+            observerView = None
+
+            throw ex
+        }
+    }
+
     syncTheme()
   }
 
   def init(): Unit = {
     // if we have a frame already, dispose of it
-    Option(observerView).foreach(_.dispose())
+    observerView.foreach(_.dispose())
 
     try {
-      observerView = new ObserverView(this, null)
-      observerView.canvas.addKeyListener(keyListener)
+      val view = new ObserverView(this, null)
+      observerView = Option(view)
+      view.canvas.addKeyListener(keyListener)
       currentView = observerView
-      org.nlogo.awt.Positioning.moveNextTo(observerView, appWindow)
-      currentView.updatePerspectiveLabel()
-      observerView.setVisible(true)
+      Positioning.moveNextTo(view, appWindow)
+      currentView.foreach(_.updatePerspectiveLabel())
+      view.setVisible(true)
     } catch {
-      case e: java.lang.UnsatisfiedLinkError =>
+      case e: UnsatisfiedLinkError =>
         throw new JOGLLoadingException(
           "NetLogo could not load the JOGL native libraries on your computer.\n\n" +
             "Write bugs@ccl.northwestern.edu for assistance.", e)
@@ -84,23 +91,25 @@ class ViewManager(val workspace: GUIWorkspace,
         if (!gd.isFullScreenSupported)
           throw new UnsupportedOperationException(
             "This graphics environment does not support full screen mode")
-        currentView.setVisible(true)
+        currentView.foreach(_.setVisible(true))
         appWindow.setVisible(false)
-        fullscreenView = new FullscreenView(this, currentView.renderer)
-        fullscreenView.canvas.addKeyListener(keyListener)
-        fullscreenView.init()
-        observerView.setVisible(false)
+        val view = new FullscreenView(this, currentView.map(_.renderer).orNull)
+        fullscreenView = Some(view)
+        view.canvas.addKeyListener(keyListener)
+        view.init()
+        observerView.foreach(_.setVisible(false))
         currentView = fullscreenView
         this.fullscreen = true
       } else {
         appWindow.setVisible(true)
         gd.setFullScreenWindow(null)
-        observerView.setVisible(true)
-        observerView.display()
-        observerView.updateRenderer()
+        observerView.foreach(_.setVisible(true))
+        observerView.foreach(_.display())
+        observerView.foreach(_.updateRenderer())
         this.fullscreen = false
         currentView = observerView
-        fullscreenView.dispose()
+        fullscreenView.foreach(_.dispose())
+        fullscreenView = None
       }
     }
   }
@@ -108,20 +117,19 @@ class ViewManager(val workspace: GUIWorkspace,
   def isFullscreen = fullscreen
 
   def editFinished(): Unit = {
-    if (currentView != null)
-      currentView.editFinished()
+    currentView.foreach(_.editFinished())
   }
 
-  def is3D = currentView != null
+  def is3D = currentView.isDefined
 
   def isDead = false
 
   def close(): Unit = {
-    if(currentView != null) {
+    currentView.foreach { view =>
       workspace.set2DViewEnabled(true)
-      currentView.dispose()
-      observerView = null
-      currentView = null
+      view.dispose()
+      observerView = None
+      currentView = None
     }
   }
 
@@ -141,22 +149,20 @@ class ViewManager(val workspace: GUIWorkspace,
   }
 
   def incrementalUpdateFromEventThread(): Unit = {
-    // in case we get called before init() - ST 2/18/05
-    if (currentView != null) {
+    currentView.foreach { view =>
       workspace.updateManager.beginPainting()
-      currentView.display()
+      view.display()
       workspace.updateManager.donePainting()
-      currentView.updatePerspectiveLabel()
+      view.updatePerspectiveLabel()
     }
   }
 
   def repaint(): Unit = {
-    // in case we get called before init() - ST 2/18/05
-    if (currentView != null) {
+    currentView.foreach { view =>
       workspace.updateManager.beginPainting()
-      currentView.display()
+      view.display()
       workspace.updateManager.donePainting()
-      currentView.updatePerspectiveLabel()
+      view.updatePerspectiveLabel()
       _framesSkipped = false
     }
   }
@@ -165,12 +171,12 @@ class ViewManager(val workspace: GUIWorkspace,
 
   def antiAliasingOn(antiAliasing: Boolean): Unit = {
     this.antiAliasing = antiAliasing
-    if (currentView != null) {
+    currentView.foreach { view =>
       world.markPatchColorsDirty()
-      observerView = new ObserverView(this, currentView.renderer, currentView.getBounds)
-      currentView.dispose()
+      observerView = Option(new ObserverView(this, view.renderer, view.getBounds))
+      view.dispose()
       currentView = observerView
-      currentView.setVisible(true)
+      currentView.foreach(_.setVisible(true))
     }
   }
 
@@ -190,12 +196,12 @@ class ViewManager(val workspace: GUIWorkspace,
     }
   }
 
-  def viewIsVisible = currentView.isShowing
+  def viewIsVisible = currentView.exists(_.isShowing)
 
   def getExportWindowFrame: java.awt.Component =
-    currentView
+    currentView.orNull
 
-  def exportView = currentView.exportView
+  def exportView = currentView.map(_.exportView).orNull
 
   override def addLinkComponent(c: AnyRef): Unit = {
     linkComponents.clear()
@@ -203,8 +209,7 @@ class ViewManager(val workspace: GUIWorkspace,
   }
 
   def handle(e: org.nlogo.window.Events.PeriodicUpdateEvent): Unit = {
-    if (observerView != null)
-      observerView.controlStrip.updateTicks()
+    observerView.foreach(_.controlStrip.updateTicks())
   }
 
   def displayOn = workspace.displaySwitchOn
@@ -217,28 +222,27 @@ class ViewManager(val workspace: GUIWorkspace,
     workspace.view
 
   def mouseXCor =
-    Option(currentView).map(_.renderer.mouseXCor).getOrElse(0f)
+    currentView.map(_.renderer.mouseXCor).getOrElse(0f)
 
   def mouseYCor =
-    Option(currentView).map(_.renderer.mouseYCor).getOrElse(0f)
+    currentView.map(_.renderer.mouseYCor).getOrElse(0f)
 
   def resetMouseCors(): Unit = {
-    if (currentView != null)
-      currentView.renderer.resetMouseCors()
+    currentView.foreach(_.renderer.resetMouseCors())
   }
 
   def mouseDown =
-    Option(currentView).map(_.renderer.mouseDown).getOrElse(false)
+    currentView.exists(_.renderer.mouseDown)
 
-  def mouseInside = currentView.renderer.mouseInside
+  def mouseInside = currentView.exists(_.renderer.mouseInside)
 
   def shapeChanged(shape: Shape): Unit = {
-    if (currentView != null) {
+    currentView.foreach { view =>
       shape match {
         case _: Shape.VectorShape =>
-          currentView.invalidateTurtleShape(shape.name)
+          view.invalidateTurtleShape(shape.name)
         case _: Shape.LinkShape =>
-          currentView.invalidateLinkShape(shape.name)
+          view.invalidateLinkShape(shape.name)
       }
       repaint()
     }
@@ -247,15 +251,15 @@ class ViewManager(val workspace: GUIWorkspace,
   @throws(classOf[java.io.IOException])
   @throws(classOf[org.nlogo.shape.InvalidShapeDescriptionException])
   def addCustomShapes(filename: String): Unit = {
-    currentView.renderer.addCustomShapes(filename)
+    currentView.foreach(_.renderer.addCustomShapes(filename))
   }
 
   def displaySwitch(on: Boolean): Unit = {
-    observerView.controlStrip.displaySwitch.setOn(on)
+    observerView.foreach(_.controlStrip.displaySwitch.setOn(on))
   }
 
   def displaySwitch =
-    observerView.controlStrip.displaySwitch.isSelected
+    observerView.exists(_.controlStrip.displaySwitch.isSelected)
 
   // I think the 3D renderer grabs it's font size directly from the main view so we don't need to
   // keep track of it here.
@@ -264,10 +268,7 @@ class ViewManager(val workspace: GUIWorkspace,
   var warned = false
 
   override def syncTheme(): Unit = {
-    if (observerView != null)
-      observerView.syncTheme()
-
-    if (fullscreenView != null)
-      fullscreenView.syncTheme()
+    observerView.foreach(_.syncTheme())
+    fullscreenView.foreach(_.syncTheme())
   }
 }
