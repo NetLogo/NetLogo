@@ -219,17 +219,24 @@ p:first-of-type {
 }
 
 ul,
-ol {
+ol,
+dl {
 	padding-inline: var(--space-md);
 }
 
-ul {
+ul,
+dl {
 	max-width: var(--max-width-ch);
 }
 
-li {
+li,
+dd {
 	margin: 0 0 0.5em 1em;
 	line-height: var(--line-height);
+}
+
+dt {
+	font-weight: 700;
 }
 
 li:last-of-type {
