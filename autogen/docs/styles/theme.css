@@ -141,6 +141,8 @@ body {
 main > p,
 .prose > ul,
 main > ul,
+.prose > dl,
+main > dl,
 .prose > ol,
 main > ol,
 .prose > table,

@@ -98,52 +98,73 @@ The toolbar contains buttons to edit, delete and create items in your diagram.
 
 A System Dynamics diagram is made up of four kinds of components:
 Stocks, Variables, Flows and Links.
+
 <dl>
-<dt>Stock
-<dd><p>
-  To create a Stock, press the Stock button in the toolbar and click in the
-  diagram area below. A new Stock appears. Each Stock requires a unique name,
-  which becomes a global variable. Stocks also require an **Initial value**.
-  It can be a number, a variable, a complex NetLogo expression, or a call to a
-  NetLogo reporter.
-<dt>Variable
-<dd><p>
-  To create a Variable, press the Variable button and click on the diagram.
-  Each Variable in the System Dynamics Model requires a unique name, which
-  becomes the name of a procedure, or a global variable. Variables also
-  require an **Expression**. This expression can be a number, a variable, a
-  complex NetLogo expression, or a call to a NetLogo reporter.
-<dt>Flow
-<dd><p>
-  To create a Flow, press the Flow button or use the right mouse button to
-  Click and hold where you want the Flow to begin -- either on a Stock or in
-  an empty area -- and drag the mouse to where you want the Flow to end -- on a
-  Stock or in an empty area.
-  Each Flow requires a unique name, which becomes a NetLogo reporter. Flows
-  require an **Expression**, which is the rate of flow from the input to the
-  output.
-  This expression can be a number, a variable, a complex NetLogo expression,
-  or a call to a NetLogo reporter. If the value is negative, the flow is in
-  the opposite direction.
+<dt>
 
-  When more than one Flow is connected to a Stock, it is important to consider
-  how they should interact with one another. NetLogo will not enforce that the
-  Flows out of a stock occur in any particular order. Also, NetLogo will not
-  ensure that the sum of Flows out of a Stock are less than or equal to the
-  value of the Stock. These behaviors can be implemented explicitly when
-  creating the **Expression** for a Flow.
+Stock
 
-  For example, if the Flow is defined as a constant value, 10, you can ensure
-  it never draws more than the value of the Stock by using the [[min]]
-  primitive: `min (list stock 10)`. If I want Flow A to deplete a Stock before
-  Flow B is calculated, I can link Flow A to Flow B and modify Flow B to
-  subtract Flow A's value from the stock:
-  `min (list (max (list 0 (stock - flow-a))) 10)`.
-<dt>Link
 <dd><p>
-  To create a Link, press the Link button, or using the right mouse button,
-  click and hold on the starting point for the link -- a Variable, Stock or
-  Flow -- and drag the mouse to the destination Variable or Flow.
+
+To create a Stock, press the Stock button in the toolbar and click in the
+diagram area below. A new Stock appears. Each Stock requires a unique name,
+which becomes a global variable. Stocks also require an **Initial value**.
+It can be a number, a variable, a complex NetLogo expression, or a call to a
+NetLogo reporter.
+
+<dt>
+
+Variable
+
+<dd><p>
+
+To create a Variable, press the Variable button and click on the diagram.
+Each Variable in the System Dynamics Model requires a unique name, which
+becomes the name of a procedure, or a global variable. Variables also
+require an **Expression**. This expression can be a number, a variable, a
+complex NetLogo expression, or a call to a NetLogo reporter.
+
+<dt>
+
+Flow
+
+<dd><p>
+
+To create a Flow, press the Flow button or use the right mouse button to
+Click and hold where you want the Flow to begin -- either on a Stock or in
+an empty area -- and drag the mouse to where you want the Flow to end -- on a
+Stock or in an empty area.
+Each Flow requires a unique name, which becomes a NetLogo reporter. Flows
+require an **Expression**, which is the rate of flow from the input to the
+output.
+This expression can be a number, a variable, a complex NetLogo expression,
+or a call to a NetLogo reporter. If the value is negative, the flow is in
+the opposite direction.
+
+When more than one Flow is connected to a Stock, it is important to consider
+how they should interact with one another. NetLogo will not enforce that the
+Flows out of a stock occur in any particular order. Also, NetLogo will not
+ensure that the sum of Flows out of a Stock are less than or equal to the
+value of the Stock. These behaviors can be implemented explicitly when
+creating the **Expression** for a Flow.
+
+For example, if the Flow is defined as a constant value, 10, you can ensure
+it never draws more than the value of the Stock by using the [[min]]
+primitive: `min (list stock 10)`. If I want Flow A to deplete a Stock before
+Flow B is calculated, I can link Flow A to Flow B and modify Flow B to
+subtract Flow A's value from the stock:
+`min (list (max (list 0 (stock - flow-a))) 10)`.
+
+<dt>
+
+Link
+
+<dd><p>
+
+To create a Link, press the Link button, or using the right mouse button,
+click and hold on the starting point for the link -- a Variable, Stock or
+Flow -- and drag the mouse to the destination Variable or Flow.
+
 </dl>
 
 #### Working with Diagram Elements
@@ -326,6 +347,7 @@ a plot to watch the changes in sheep population.
 >           set-current-plot "populations"
 >           system-dynamics-do-plot
 >         end
+>
 > - Move to the Interface tab
 > - Create a `setup` button
 > - Create a `go` button (don't forget to make it forever)
@@ -356,14 +378,14 @@ which eat sheep.
 > - Fill in the names of the diagram elements so it looks like this:
 >   ![[tutorial10.png]]
 >
->     where
->     initial-value of `wolves` is `30`,
->     `wolf-deaths` is `wolves * wolf-death-rate`,
->     `wolf-death-rate` is `0.15`,
->     `predator-efficiency` is `.8`,
->     `wolf-births` is `wolves * predator-efficiency * predation-rate * sheep`,
->     `predation-rate` is `3.0E-4`,
->     and `sheep-deaths` is `sheep * predation-rate * wolves`.
+>   where
+>   initial-value of `wolves` is `30`,
+>   `wolf-deaths` is `wolves * wolf-death-rate`,
+>   `wolf-death-rate` is `0.15`,
+>   `predator-efficiency` is `.8`,
+>   `wolf-births` is `wolves * predator-efficiency * predation-rate * sheep`,
+>   `predation-rate` is `3.0E-4`,
+>   and `sheep-deaths` is `sheep * predation-rate * wolves`.
 >
 > - Adjust the `dt` of the system dynamics model by selecting "Edit" next to
 >   `dt` in the toolbar of the system dynamics modeler. In the dialog that
