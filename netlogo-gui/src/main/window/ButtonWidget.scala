@@ -16,6 +16,8 @@ import org.nlogo.swing.Utils
 import org.nlogo.theme.InterfaceColors
 
 object ButtonWidget {
+  val PrefHeight = 40
+
   object ButtonType {
 
     // the 4 possible button types
@@ -458,8 +460,7 @@ class ButtonWidget(random: MersenneTwisterFast, colorizer: Colorizer) extends Jo
   }
 
   override def getPreferredSize =
-    new Dimension(getMinimumSize.width.max(super.getPreferredSize.width),
-                  getMinimumSize.height.max(super.getPreferredSize.height))
+    new Dimension(getMinimumSize.width.max(super.getPreferredSize.width + 12), ButtonWidget.PrefHeight)
 
   /// painting
   override def paintComponent(g: Graphics): Unit = {

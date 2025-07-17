@@ -178,6 +178,9 @@ abstract class AbstractPlotWidget(val plot: Plot, val plotManager: PlotManagerIn
   }
   override def helpLink = Some("programming.html#plotting")
 
+  def legendHeight: Int =
+    legend.getHeight
+
   def showLegend = legend.open
   def setShowLegend(open: Boolean): Unit = { legend.open = open }
 
@@ -389,7 +392,7 @@ abstract class AbstractPlotWidget(val plot: Plot, val plotManager: PlotManagerIn
 object AbstractPlotWidget {
   /// sizing
   val MIN_SIZE = new Dimension(160, 120)
-  val PREF_SIZE = new Dimension(200, 150)
+  val PREF_SIZE = new Dimension(230, 175)
 
   class XAxisLabels(plot: AbstractPlotWidget) extends JPanel {
     private val min: JLabel = new JLabel()

@@ -18,10 +18,10 @@ import org.nlogo.log.LogManager
 import org.nlogo.nvm.DefaultCompilerServices
 import org.nlogo.swing.{ MenuItem, PopupMenu }
 import org.nlogo.theme.InterfaceColors
-import org.nlogo.window.{ AbstractWidgetPanel, ButtonWidget, ClipboardUtils, Editable, Events => WindowEvents,
-                          GUIWorkspace, InterfaceMode, OutputWidget, Widget, WidgetContainer, WidgetRegistry,
-                          DummyChooserWidget, DummyInputBoxWidget, DummyPlotWidget, DummyViewWidget, PlotWidget,
-                          SliderWidget, ViewWidget, WidgetSizes },
+import org.nlogo.window.{ AbstractPlotWidget, AbstractWidgetPanel, ButtonWidget, ClipboardUtils, Editable,
+                          Events => WindowEvents, GUIWorkspace, InterfaceMode, OutputWidget, Widget, WidgetContainer,
+                          WidgetRegistry, DummyChooserWidget, DummyInputBoxWidget, DummyPlotWidget, DummyViewWidget,
+                          PlotWidget, SliderWidget, ViewWidget, WidgetSizes },
   WindowEvents.{ CompileAllEvent, DirtyEvent, EditWidgetEvent, InterfaceModeChangedEvent, LoadBeginEvent,
                  SetInterfaceModeEvent, WidgetRemovedEvent, ZoomedEvent }
 
@@ -1562,11 +1562,19 @@ class WidgetPanel(val workspace: GUIWorkspace)
           val width = w.getMinimumSize.width.max(w.getWidth)
           val height = w.getMinimumSize.height.max(w.getHeight)
 
-          // add some extra height so that the increase in padding doesn't decrease the internal plot size (Isaac B 5/13/25)
-          if (w.widget.isInstanceOf[PlotWidget]) {
-            w.setSize(new Dimension(width, height + 7))
-          } else {
-            w.setSize(new Dimension(width, height))
+          // enforce adjusted and preferred sizes for specific widget types to make the resizing more
+          // intelligent and aesthetic (Isaac B 7/17/25)
+          w.widget match {
+            case button: ButtonWidget =>
+              w.setSize(new Dimension(width, height.max(ButtonWidget.PrefHeight)))
+
+            case plot: PlotWidget =>
+              val newHeight = (height + plot.legendHeight).max(AbstractPlotWidget.PREF_SIZE.height + plot.legendHeight)
+
+              w.setSize(new Dimension(width.max(AbstractPlotWidget.PREF_SIZE.width), newHeight))
+
+            case _ =>
+              w.setSize(new Dimension(width, height))
           }
         }
       }
