@@ -65,3 +65,9 @@ tmp/
 # Metal Scala server
 .metals
 .bloop
+
+# NPM modules
+**/node_modules
+**/package-lock.json
+**/yarn.lock
+**/tmp/

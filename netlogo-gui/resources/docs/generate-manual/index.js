@@ -19,6 +19,7 @@
 
 const path = require('path');
 const PRINT_TOC_FOR_DEBUGGING = true; // Set to true to print the table of contents for debugging purposes
+const EXPORT_DEBUG_HTML = false; // Set to true to export the combined HTML for debugging purposes
 
 async function main() {
 	// Check if required dependencies are installed
@@ -423,9 +424,12 @@ ${combinedHtml}
 	});
 
 	// Write the HTML as well for debugging purposes
-	const debugHtmlPath = path.join(__dirname, 'debug', 'combined.html');
-	fs.ensureDirSync(path.dirname(debugHtmlPath));
-	fs.writeFileSync(debugHtmlPath, fullHtmlContent);
+	if (EXPORT_DEBUG_HTML) {
+		const debugHtmlPath = path.join(__dirname, 'tmp', 'combined.html');
+		fs.ensureDirSync(path.dirname(debugHtmlPath));
+		fs.writeFileSync(debugHtmlPath, fullHtmlContent);
+		console.log(`Debug HTML exported to: ${debugHtmlPath}`);
+	}
 
 	// Output the PDF
 	fs.writeFileSync(outputPdf, pdfBuffer);
