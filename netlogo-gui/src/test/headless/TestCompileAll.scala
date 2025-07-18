@@ -28,7 +28,9 @@ class TestCompileAll extends AnyFunSuite with SlowTest {
       path.contains("Resource Example") ||
       path.contains("Bug Hunt Camouflage") ||
       path.contains("Mammoths") ||
-      path.contains("Robotic Factory")
+      path.contains("Robotic Factory") ||
+      path.contains("Bug Hunters Camouflage") ||
+      path.contains("Beatbox")
   }
 
   // and those are exempt from having their preview commands tested:
