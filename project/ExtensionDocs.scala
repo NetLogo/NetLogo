@@ -41,6 +41,7 @@ class ExtensionDocs(extensionsDirectory: File, extensionDocConfigFile: File, hea
 
     val additionalConfig = Map(
       "extensionName"         -> extFullName.capitalize,
+      "extensionShortName"    -> extShortName.toLowerCase(),
       "prePrimitiveSections"  -> prePrimFiles,
       "postPrimitiveSections" -> postPrimFiles,
       "emptyTableOfContents"  -> Boolean.box(emptyToC),
