@@ -160,6 +160,33 @@ object FileIO {
     appData + File.separator + version + File.separator + path
   }
 
+  def perUserExtensionFile(file: String, createNecessaryDirs: Boolean = true): Path = {
+    val res = perUserExtensionPath(file)
+    if (createNecessaryDirs)
+      Files.createDirectories(res.getParent)
+    res
+  }
+
+  def perUserExtensionDir(dir: String, createNecessaryDirs: Boolean = true): Path = {
+    val res = perUserExtensionPath(dir)
+    if (createNecessaryDirs)
+      Files.createDirectories(res)
+    res
+  }
+
+  private def perUserExtensionPath(path: String): Path = {
+    val os = System.getProperty("os.name").toUpperCase
+    val appData =
+      if (os.contains("WIN"))
+        System.getenv("APPDATA") + "\\NetLogo"
+      else if (os.contains("MAC"))
+        System.getProperty("user.home") + "/Library/Application Support/NetLogo"
+      else
+        System.getProperty("user.home") + "/.netlogo"
+
+    Paths.get(appData, APIVersion.version, path)
+  }
+
   def resolvePath(name: String): Option[Path] = resolvePath(name, None)
 
   def resolvePath(name: String, peerFile: Path): Option[Path] = resolvePath(name, Some(peerFile))

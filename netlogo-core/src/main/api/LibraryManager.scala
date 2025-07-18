@@ -11,6 +11,8 @@ import com.typesafe.config.{ Config, ConfigException, ConfigFactory, ConfigRende
 import org.nlogo.core.LibraryInfo
 import org.nlogo.core.{ LibraryManager => CoreLibraryManager }
 
+import scala.concurrent.ExecutionContext.Implicits.global
+
 object LibraryManager {
 
   private val libsLocationSite = "https://ccl.northwestern.edu/netlogo/config"
@@ -26,7 +28,7 @@ object LibraryManager {
 
         val locationURL    = new URL(s"$libsLocationSite/$libsLocation")
         LibraryInfoDownloader(locationURL)
-        val locationPath   = FileIO.perUserFile(libsLocation)
+        val locationPath   = FileIO.perUserExtensionFile(libsLocation).toString
         val locationConfig = ConfigFactory.parseFile(new File(locationPath))
 
         try {
@@ -49,13 +51,18 @@ object LibraryManager {
 
   private var loadedOnce = false
 
-  private def reloadMetadata(isFirstLoad: Boolean): Unit = {
+  private def reloadMetadata(isFirstLoad: Boolean, updateLists: File => Unit): Unit = {
     // If not first load (user clicked a button) or metadata not loaded once, load it!
     // This is an attempt to avoid multiple redundant remote fetches during test runs.
     // -JeremyB April 2019
     if (!isFirstLoad || !loadedOnce) {
       LibraryInfoDownloader.invalidateCache(metadataURL)
-      LibraryInfoDownloader(metadataURL)
+      LibraryInfoDownloader(metadataURL).foreach {
+        case Some(file, rewrite) if rewrite =>
+          updateLists(file)
+
+        case _ =>
+      }
       loadedOnce = true
     }
   }
@@ -67,13 +74,13 @@ class LibraryManager(userExtPath: Path, unloadExtensions: () => Unit) extends Co
 
   private type InfoChangeCallback = Seq[LibraryInfo] => Unit
 
-  private val userInstalledsPath = FileIO.perUserFile("installed-libraries.conf")
+  private val userInstalledsPath = FileIO.perUserExtensionFile("installed-libraries.conf").toString
   private val extInstaller       = new ExtensionInstaller(userExtPath, unloadExtensions)
 
   private var libraries           = Seq[       LibraryInfo]()
   private var infoChangeCallbacks = Seq[InfoChangeCallback]()
 
-  val allLibsPath = FileIO.perUserFile(allLibsName)
+  val allLibsPath = FileIO.perUserExtensionFile(allLibsName).toString
   val metadataURL = LibraryManager.metadataURL
 
   if (!Files.exists(Paths.get(userInstalledsPath)))
@@ -109,7 +116,7 @@ class LibraryManager(userExtPath: Path, unloadExtensions: () => Unit) extends Co
   override def reloadMetadata(): Unit = reloadMetadata(false)
 
   def reloadMetadata(isFirstLoad: Boolean = false, useBundled: Boolean = true): Unit = {
-    LibraryManager.reloadMetadata(isFirstLoad)
+    LibraryManager.reloadMetadata(isFirstLoad, updateLists(_))
     updateLists(new File(allLibsPath), isFirstLoad, useBundled)
   }
 
