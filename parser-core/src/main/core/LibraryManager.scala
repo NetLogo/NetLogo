@@ -22,31 +22,19 @@ import java.net.URL
 
 object LibraryInfo {
   def isAvailableNewer(available: String, installed: String): Boolean = {
+    // this works for most basic scenarios, like: "" > "-beta1", "-beta2" > "-beta1", etc.
+    // it might break on some edge cases, but our versions so far have been pretty simple.
+    // -Jeremy B November 2020
+    def numericVersion(major: Int, minor: Int, patch: Int): Int =
+      1000000 * major + 10000 * minor + 100 * patch
+
     val (availableMajor, availableMinor, availablePatch, availableExtra) = parseVersion(available)
     val (installedMajor, installedMinor, installedPatch, installedExtra) = parseVersion(installed)
 
-    if (availableMajor > installedMajor) {
-      true
-    } else if (availableMajor < installedMajor) {
-      false
-    } else {
-      if (availableMinor > installedMinor) {
-        true
-      } else if (availableMinor < installedMinor) {
-        false
-      } else {
-        if (availablePatch > installedPatch) {
-          true
-        } else if (availablePatch < installedPatch) {
-          false
-        } else {
-          // this works for most basic scenarios, like: "" > "-beta1", "-beta2" > "-beta1", etc.
-          // it might break on some edge cases, but our versions so far have been pretty simple.
-          // -Jeremy B November 2020
-          availableExtra > installedExtra
-        }
-      }
-    }
+    val availableNumeric = numericVersion(availableMajor, availableMinor, availablePatch)
+    val installedNumeric = numericVersion(installedMajor, installedMinor, installedPatch)
+
+    availableNumeric > installedNumeric || (availableNumeric == installedNumeric && availableExtra > installedExtra)
   }
 
   def parseVersion(version: String): (Int, Int, Int, String) = {
