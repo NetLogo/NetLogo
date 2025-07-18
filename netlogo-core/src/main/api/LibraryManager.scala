@@ -51,7 +51,7 @@ object LibraryManager {
 
   private var loadedOnce = false
 
-  private def reloadMetadata(isFirstLoad: Boolean, updateLists: File => Unit): Unit = {
+  private def reloadMetadata(isFirstLoad: Boolean, complete: () => Unit): Unit = {
     // If not first load (user clicked a button) or metadata not loaded once, load it!
     // This is an attempt to avoid multiple redundant remote fetches during test runs.
     // -JeremyB April 2019
@@ -59,7 +59,7 @@ object LibraryManager {
       LibraryInfoDownloader.invalidateCache(metadataURL)
       LibraryInfoDownloader(metadataURL).foreach {
         case Some(file, rewrite) if rewrite =>
-          updateLists(file)
+          complete()
 
         case _ =>
       }
@@ -116,8 +116,7 @@ class LibraryManager(userExtPath: Path, unloadExtensions: () => Unit) extends Co
   override def reloadMetadata(): Unit = reloadMetadata(false)
 
   def reloadMetadata(isFirstLoad: Boolean = false, useBundled: Boolean = true): Unit = {
-    LibraryManager.reloadMetadata(isFirstLoad, updateLists(_))
-    updateLists(new File(allLibsPath), isFirstLoad, useBundled)
+    LibraryManager.reloadMetadata(isFirstLoad, () => updateLists(new File(allLibsPath), isFirstLoad, useBundled))
   }
 
   def onLibInfoChange(callback: InfoChangeCallback): Unit = {
