@@ -29,6 +29,7 @@ class TestCompileAll extends AnyFunSuite with SlowTest {
       path.contains("Bug Hunt Camouflage") ||
       path.contains("Mammoths") ||
       path.contains("Robotic Factory") ||
+      path.contains("Guppy Spots HubNet") ||
       path.contains("Bug Hunters Camouflage") ||
       path.contains("Beatbox")
   }
