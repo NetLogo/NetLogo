@@ -70,4 +70,14 @@ trait FrontEndMain extends NetLogoParser {
 
   def findExtensions(source: String): Seq[String] =
     StructureParser.findExtensions(tokenizer.tokenizeString(source))
+
+  @throws(classOf[CompilerException])
+  def findImports(source: String): Seq[String] = {
+    if (FrontEndInterface.hasImport(source)) {
+      val tokens = tokenizer.tokenizeString(source)
+      StructureParser.findImports(tokens)
+    } else {
+      Seq()
+    }
+  }
 }

@@ -6,10 +6,11 @@ import org.nlogo.core.Program
 import scala.collection.immutable.ListMap
 
 case class CompilerResults(procedures: Seq[Procedure], program: Program) {
-  def this(proceduresMap: ListMap[String, Procedure], program: Program) =
-    this(proceduresMap.values.toSeq, program)
+  def this(proceduresMap: ListMap[(String, Option[String]), Procedure], program: Program) =
+    this(proceduresMap.values.toSeq.distinct, program)
 
-  def proceduresMap: ListMap[String, Procedure] =
-    ListMap(procedures.map(proc => (proc.name, proc))*)
+  def proceduresMap: ListMap[(String, Option[String]), Procedure] =
+    ListMap(procedures.flatMap(proc => proc.aliases.map(alias => (alias, proc)) :+ ((proc.name, proc.module), proc))*)
+
   def head = procedures.head
 }
