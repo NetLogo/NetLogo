@@ -22,7 +22,7 @@ object PrimIndex {
     }
 
     def replaceAnchor(m: Match): String =
-      s"""<a${Option(m.group("class")).getOrElse("")} href="./${sourceFileName}#${m.group("anchor")}""""
+      s"""<a${Option(m.group("class")).getOrElse(" class='code'")} href="./${sourceFileName}#${m.group("anchor")}""""
 
     val s = rawHtml.replace("""src="images""", """src="images""")  // NOP
     val s1 = otherHref.replaceAllIn(s, replaceHref _)
