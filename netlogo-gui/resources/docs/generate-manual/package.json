@@ -15,7 +15,6 @@
   "dependencies": {
     "fs-extra": "^11.3.0",
     "pdf-creator-node": "^2.3.5",
-    "pdf-lib": "^1.17.1",
     "puppeteer": "^24.14.0"
   }
 }
