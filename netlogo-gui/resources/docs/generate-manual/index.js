@@ -9,6 +9,12 @@
  * @license GPL-2.0-or-later
  * @author Omar Ibrahim, Center for Connected Learning, Northwestern University
  * @since 2025
+ *
+ * All files that should be of interest to you are defined in project/Docs.scala
+ * and are located in:
+ *   * Mustache files: autogen/docs
+ *   * HTML output files: netlogo-gui/docs
+ *   * SBT scripts invoking this script: project/Docs.scala and project/NetLogoDocs.scala
  */
 
 const path = require('path');
@@ -17,7 +23,7 @@ const PRINT_TOC_FOR_DEBUGGING = true; // Set to true to print the table of conte
 async function main() {
 	// Check if required dependencies are installed
 	const missingDependencies = [];
-	for (const dep of ['puppeteer', 'pdf-lib', 'fs-extra']) {
+	for (const dep of ['puppeteer', 'fs-extra']) {
 		try {
 			require.resolve(dep);
 		} catch (e) {
@@ -303,6 +309,58 @@ async function main() {
 		tocEntries.push({ file: file, entries: fileTocEntries }); // Store entries per
 	}
 
+	const styleFromEntry = (entry) =>
+		[
+			`margin-left: ${entry.level * 20}px!important`,
+			`font-size: ${1.6 - entry.level * 0.2}em!important`,
+			`width: calc(100% - ${entry.level * 20}px!important)`,
+		].join('; ');
+
+	/**
+	 *
+	 * @typedef {Object} TocHeadingNumberManager
+	 * @property {function(number): string} getHeadingNumberString - A function that takes a heading level
+	 * @returns {string} - The heading number as a string.
+	 *
+	 * JS Object constructor to manage the numbering of headings in
+	 * the table of contents.
+	 * It keeps track of the chapter, section, and subsection numbers
+	 * and returns a string representation of the current heading number.
+	 * @returns {TocHeadingNumberManager}
+	 */
+	const createTocHeadingNumberManager = ({ chapterStart }) => {
+		let chapterNum = chapterStart,
+			sectionNum = 0,
+			subsectionNum = 0;
+		return {
+			/**
+			 * Returns a string representation of the current heading number
+			 * based on the provided level.
+			 * @param {number} level - The heading level (1 for h1, 2 for h2, 3 for h3).
+			 * @returns {string} - The heading number as a string.
+			 * */
+			getHeadingNumberString: (level) => {
+				switch (level) {
+					case 1:
+						chapterNum++;
+						sectionNum = 0;
+						subsectionNum = 0;
+						return `${chapterNum}.`;
+					case 2:
+						sectionNum++;
+						subsectionNum = 0;
+						return `${chapterNum}.${sectionNum}`;
+					case 3:
+						subsectionNum++;
+						return `${chapterNum}.${sectionNum}.${subsectionNum}`;
+					default:
+						console.warn(`Unexpected heading level: ${level}. Defaulting to chapter number.`);
+						return `${chapterNum}.`;
+				}
+			},
+		};
+	};
+
 	const tocHTML = `
 <!DOCTYPE html>
 <html>
@@ -313,20 +371,25 @@ async function main() {
   <link rel="stylesheet" href="netlogo.css">
   <style>
     ul { width: 100%;}
+    .pdf-toc li {
+      border-bottom: 1px dotted var(--color-primary);
+    }
+    body {
+      background: white!important;
+    }
   </style>
 </head>
 <body>
   <h1 style="width: 100%">Table of Contents</h1>
-  <ul>
-    ${tocEntries.reduce((acc, { entries }) => {
+  <ul class="pdf-toc" style="list-style-type: none;">
+    ${tocEntries.reduce((acc, { entries }, index) => {
+			let headings = createTocHeadingNumberManager({ chapterStart: index });
 			const entryList = entries
 				.map(
 					(entry) => `
-        <li style="margin-left: ${entry.level * 20}px;">
-          <a href="#${entry.id}" style="font-size: ${1.6 - entry.level * 0.2}em; font-weight: ${
-						entry.level === 1 ? 'bold' : 'normal'
-					};">
-            ${entry.text}
+        <li style="${styleFromEntry(entry)}">
+          <a href="#${entry.id}" style="font-weight: ${entry.level === 1 ? 'bold' : 'normal'};">
+            ${headings.getHeadingNumberString(entry.level)} ${entry.text}
           </a>
         </li>
       `
@@ -349,9 +412,6 @@ ${combinedHtml}
 	const pdfBuffer = await page.pdf({
 		format: 'A4',
 		printBackground: true,
-		displayHeaderFooter: true,
-		headerTemplate: headerTemplate,
-		footerTemplate: footerTemplate,
 		margin: {
 			top: '60px',
 			bottom: '60px',

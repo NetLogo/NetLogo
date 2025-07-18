@@ -96,6 +96,13 @@
 	:root {
 		--color-white: #ffffff;
 		--shadow-md: none; /* No shadows in print */
+
+		--space-xl: 4rem;
+		--space-lg: 1.5rem;
+		--space-md: 0.9rem;
+		--space-sm: 0.65rem;
+		--space-xs: 0.35rem;
+		--space-xxs: 0.25rem;
 	}
 	h1[id],
 	h2[id],
