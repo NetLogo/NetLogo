@@ -103,6 +103,15 @@ class NetLogoDocs(
     val mustacheVars =
       buildVariables + ("infoTabModelHTML" -> infoTabHTML, "pdf" -> java.lang.Boolean.TRUE)
 
+    // Render the header with the version, navlinks,
+    // and other variables
+    Mustache(
+      docsSource / "header.mustache",
+      docsTarget / "header.html",
+      mustacheVars,
+      Some(docsSource)
+    )
+
     val tmp = IO.createTemporaryDirectory
     generateDocs(tmp, autoDocumentedExtensions, manuallyDocumentedExtensions, mustacheVars, perPageTOC = false)
     generateManualPDF(tmp, (autoDocumentedExtensions.map(_._1) ++ manuallyDocumentedExtensions).sorted)
