@@ -29,7 +29,6 @@ class CodeEditor(accessor: PropertyAccessor[String], colorizer: Colorizer, colla
 
   val editorConfig =
     EditorConfiguration.default(rows, columns, colorizer)
-      .withFocusTraversalEnabled(true)
       .withListener(new TextListener { def textValueChanged(e: TextEvent): Unit = { accessor.changed() } })
 
   protected lazy val editor = new EditorArea(editorConfig)

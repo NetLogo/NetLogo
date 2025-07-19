@@ -57,8 +57,8 @@ extends Indenter {
   }
   case class RemoveIndent(lineNum: Int, lineStart: Int, lineEnd: Int, text: String, delta: Int) extends LineIndent
 
-  /// first, the four handle* methods in IndenterInterface
-  def handleTab() = {
+  /// first, the five handle* methods in IndenterInterface
+  def handleTab(): Unit = {
     code.beginCompoundEdit()
     val indentations = lineIndentation(code.getSelectionStart, code.getSelectionEnd)
     if (indentations.nonEmpty) {
@@ -67,7 +67,16 @@ extends Indenter {
     code.endCompoundEdit()
   }
 
-  def handleEnter() = {
+  def handleUntab(): Unit = {
+    code.beginCompoundEdit()
+    val indentations = lineIndentation(code.getSelectionStart, code.getSelectionEnd)
+    if (indentations.nonEmpty) {
+      executeIndentations(indentations, Some(code.getCaretPosition))
+    }
+    code.endCompoundEdit()
+  }
+
+  def handleEnter(): Unit = {
     code.beginCompoundEdit()
     code.replaceSelection("\n")
     val originalCaretPosition = code.getCaretPosition
@@ -82,7 +91,7 @@ extends Indenter {
     code.endCompoundEdit()
   }
 
-  def handleInsertion(s: String) = {
+  def handleInsertion(s: String): Unit = {
     code.beginCompoundEdit()
     if(List("e", "n", "d").contains(s.toLowerCase)) {
       val lineNum = code.offsetToLine(code.getSelectionStart)
@@ -92,7 +101,7 @@ extends Indenter {
     code.endCompoundEdit()
   }
 
-  def handleCloseBracket() = {
+  def handleCloseBracket(): Unit = {
     code.beginCompoundEdit()
     code.replaceSelection("]")
     indentSelectedLine()

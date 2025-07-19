@@ -6,8 +6,30 @@ import javax.swing.text.JTextComponent
 import RichDocument._
 
 class DumbIndenter(code: JTextComponent) extends Indenter {
+  private val TabSize = 2
+
   def handleTab(): Unit = {
-    code.replaceSelection("  ")
+    code.replaceSelection(" " * TabSize)
+  }
+
+  def handleUntab(): Unit = {
+    val start = code.getSelectionStart
+    val lineStart = code.getText.lastIndexOf('\n', start - 1) + 1
+    val textStart = code.getText.indexWhere(!_.isWhitespace, lineStart)
+    val remove = {
+      if (textStart == -1) {
+        TabSize.min(code.getText.size - lineStart)
+      } else {
+        TabSize.min(textStart - lineStart)
+      }
+    }
+
+    if (remove > 0) {
+      code.setCaretPosition(lineStart)
+      code.moveCaretPosition(lineStart + remove)
+      code.replaceSelection("")
+      code.setCaretPosition((start - remove).max(0))
+    }
   }
 
   def handleCloseBracket(): Unit = {

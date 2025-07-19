@@ -108,6 +108,9 @@ case class EditorConfiguration(
       editor.addMouseListener(focusTraversalListener)
       editor.getInputMap.put(keystroke(KeyEvent.VK_TAB),           new TransferFocusAction())
       editor.getInputMap.put(keystroke(KeyEvent.VK_TAB, ShiftKey), new TransferFocusBackwardAction())
+    } else {
+      editor.getInputMap.put(keystroke(KeyEvent.VK_TAB, CtrlKey),            new TransferFocusAction())
+      editor.getInputMap.put(keystroke(KeyEvent.VK_TAB, CtrlKey | ShiftKey), new TransferFocusBackwardAction())
     }
 
     additionalActions.foreach {
