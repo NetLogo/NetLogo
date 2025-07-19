@@ -10,10 +10,11 @@ import javax.swing.event.{ MenuEvent, MenuListener }
 import org.nlogo.api.Refreshable
 import org.nlogo.core.I18N
 import org.nlogo.swing.{ Menu, UserAction },
-  UserAction.{ EditClipboardGroup, EditFindGroup, EditFormatGroup, EditSelectionGroup, EditUndoGroup, MenuAction }
+  UserAction.{ EditClipboardGroup, EditFindGroup, EditFoldGroup, EditFormatGroup, EditSelectionGroup, EditUndoGroup,
+               MenuAction }
 
 object EditMenu {
-  def sortOrder = Seq(EditUndoGroup, EditClipboardGroup, EditSelectionGroup, EditFindGroup, EditFormatGroup)
+  def sortOrder = Seq(EditUndoGroup, EditClipboardGroup, EditSelectionGroup, EditFindGroup, EditFormatGroup, EditFoldGroup)
 }
 
 class EditMenu extends Menu(I18N.gui.get("menu.edit"), Menu.model(EditMenu.sortOrder)) {
