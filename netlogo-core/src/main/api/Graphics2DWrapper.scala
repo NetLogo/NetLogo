@@ -48,30 +48,24 @@ class Graphics2DWrapper(g: Graphics2D, renderLabelsAsRectangles: Boolean = false
     }
   }
   def fillCircle(x: Double, y: Double, xDiameter: Double, yDiameter: Double, scale: Double, angle: Double): Unit = {
-    // one pixel bigger
-    val sizeCorrection = Shape.Width / scale
-    // adjust position to still be centered
-    val xCorrection = -0.5 * sizeCorrection
-    val yCorrection = xCorrection
-    g.fill(new java.awt.geom.Ellipse2D.Double(
+    g.fill(new java.awt.geom.Ellipse2D.Double(x, y, xDiameter, yDiameter))
+  }
+  def drawCircle(x: Double, y: Double, xDiameter: Double, yDiameter: Double, scale: Double, angle: Double): Unit = {
+    // one pixel smaller
+    val sizeCorrection = -Shape.Width / scale
+    val xCorrection = getXCorrection(sizeCorrection, angle)
+    val yCorrection = getYCorrection(sizeCorrection, angle)
+    g.draw(new java.awt.geom.Ellipse2D.Double(
       x + xCorrection, y + yCorrection,
       xDiameter + sizeCorrection, yDiameter + sizeCorrection))
   }
-  def drawCircle(x: Double, y: Double, xDiameter: Double, yDiameter: Double, scale: Double, angle: Double): Unit = {
-    g.draw(new java.awt.geom.Ellipse2D.Double(x, y, xDiameter, yDiameter))
-  }
   def fillRect(x: Double, y: Double, width: Double, height: Double, scale: Double, angle: Double): Unit = {
-    // size: one pixel bigger
-    val sizeCorrection = Shape.Width / scale
-    val xCorrection = getXCorrection(sizeCorrection, angle)
-    val yCorrection = getYCorrection(sizeCorrection, angle)
-    g.fill(new java.awt.geom.Rectangle2D.Double(
-      x + xCorrection, y + yCorrection,
-      width + sizeCorrection, height + sizeCorrection))
+    g.fill(new java.awt.geom.Rectangle2D.Double(x, y, width, height))
   }
   def drawRect(x: Double, y: Double, width: Double, height: Double, scale: Double, angle: Double): Unit = {
+    val sizeCorrection = -Shape.Width / scale
     g.draw(new java.awt.geom.Rectangle2D.Double(
-      x, y, width, height))
+      x, y, width + sizeCorrection, height + sizeCorrection))
   }
 
   // as for the corrections to the position, well, I wrote it, but that doesn't mean I understand
@@ -108,12 +102,11 @@ class Graphics2DWrapper(g: Graphics2D, renderLabelsAsRectangles: Boolean = false
   def rotate(theta: Double): Unit = { g.rotate(theta) }
   def rotate(theta: Double, x: Double, y: Double): Unit = { g.rotate(theta, x, y) }
   def rotate(theta: Double, x: Double, y: Double, offset: Double): Unit = {
-    val offset2 = offset - 1
-    g.rotate(theta, x + offset2 / 2, y + offset2 / 2)
+    g.rotate(theta, x + offset / 2, y + offset / 2)
   }
   def scale(x: Double, y: Double): Unit = { g.scale(x, y) }
   def scale(x: Double, y: Double, shapeWidth: Double): Unit = {
-    g.scale((x - 1) / shapeWidth, (y - 1) / shapeWidth)
+    g.scale(x / shapeWidth, y / shapeWidth)
   }
   def antiAliasing(on: Boolean): Unit = {
     g.setRenderingHint(
@@ -138,7 +131,7 @@ class Graphics2DWrapper(g: Graphics2D, renderLabelsAsRectangles: Boolean = false
   def setComposite(comp: java.awt.Composite): Unit = { g.setComposite(comp) }
   def setStroke(width: Double): Unit = { g.setStroke(new java.awt.BasicStroke((width max 1.0).toFloat)) }
   def setStrokeFromLineThickness(lineThickness: Double, scale: Double, cellSize: Double, shapeWidth: Double): Unit = {
-    setStroke((shapeWidth / (scale - 1)) * (if (lineThickness == 0) 1 else (lineThickness * cellSize)))
+    setStroke((shapeWidth / scale) * (if (lineThickness == 0) 1 else (lineThickness * cellSize)))
   }
   def setStroke(width: Float, dashes: Array[Float]): Unit = {
     g.setStroke(
