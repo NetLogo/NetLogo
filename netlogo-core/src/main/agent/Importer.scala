@@ -74,19 +74,19 @@ extends ImporterJ(_errorHandler, _world, _importerUser, _stringReader) {
         val line = nextLine()
         try {
           val plotName = getTokenValue(line(0), false, false).asInstanceOf[String]
-          val plot = importerUser.getPlot(plotName)
-          if (plot == null) {
-            errorHandler.showError("Error Importing Plots",
+          importerUser.maybeGetPlot(plotName) match {
+            case Some(plot) =>
+              val (numPens, currentPenNameOpt) = importIntro(plot)
+              importPens(plot, numPens)
+              importPoints(plot)
+              currentPenNameOpt.foreach(plot.currentPenByName_=)
+            case None =>
+              errorHandler.showError("Error Importing Plots",
                 "The plot \"" + plotName + "\" does not exist.",
                 false)
-            // gobble up remaining lines of this section
-            while (hasMoreLines(false)) { }
-            return
-          } else {
-            val (numPens, currentPenNameOpt) = importIntro(plot)
-            importPens(plot, numPens)
-            importPoints(plot)
-            currentPenNameOpt.foreach(plot.currentPenByName_=)
+              // gobble up remaining lines of this section
+              while (hasMoreLines(false)) { }
+              return
           }
         }
         catch { case e: ClassCastException =>

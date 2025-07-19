@@ -29,7 +29,7 @@ class ImporterTests extends AnyFunSuite with OneInstancePerTest {
       def setOutputAreaContents(text: String): Unit = { }
       def resizeView(): Unit = { }
       def currentPlot(plot: String): Unit = { }
-      def getPlot(plot: String): PlotInterface = null
+      def maybeGetPlot(plot: String): Option[PlotInterface] = None
       def importExtensionData(name: String, data: java.util.List[Array[String]], handler: org.nlogo.api.ImportErrorHandler): Unit = { }
       def isExtensionName(name: String) = false
     }

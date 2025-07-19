@@ -276,10 +276,6 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
   }
 
   if(!Version.is3D)
-    // The way this exception is thrown causes it to show up in the "Annotations" report of a test run in GitHub
-    // Actions.  I poked at it a little but it doesn't seem important enough to change anything just to get that not to
-    // show there, since the test is valid and passing.  So instead I'm leaving this note to the next explorer who
-    // decides to check into it.  -Jeremy B May 2023
     test("testNonExistentPlot", SlowTest.Tag) {
       workspace.initForTesting(10)
       workspace.importerErrorHandler =

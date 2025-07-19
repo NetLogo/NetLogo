@@ -227,7 +227,7 @@ object AbstractWorkspaceTraits {
       plotManager.currentPlot = plotManager.maybeGetPlot(plot)
     }
 
-    def getPlot(plot: String): PlotInterface = plotManager.maybeGetPlot(plot).orNull
+    def maybeGetPlot(plot: String): Option[PlotInterface] = plotManager.maybeGetPlot(plot)
 
     // The PlotManager has already-compiled thunks that it runs to setup and update
     // plots.  But those thunks need a Context to run in, which isn't known until
