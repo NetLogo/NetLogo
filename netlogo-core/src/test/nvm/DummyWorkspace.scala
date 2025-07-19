@@ -78,7 +78,7 @@ class DummyWorkspace extends Workspace {
   // from ImporterUser
   override def setOutputAreaContents(text: String) = unsupported
   override def currentPlot(plot: String) = unsupported
-  override def getPlot(plot: String) = unsupported
+  override def maybeGetPlot(plot: String) = unsupported
   override def isExtensionName(name: String) = unsupported
   override def importExtensionData(name: String, data: java.util.List[Array[String]], handler: ImportErrorHandler) = unsupported
 
