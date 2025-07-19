@@ -11,8 +11,7 @@ object Running {
     run / javaOptions ++= Seq(
       "-XX:-OmitStackTraceInFastThrow",  // issue #104
       "-XX:MaxRAMPercentage=50",
-      "-Dfile.encoding=UTF-8",
-      "-Dapple.awt.graphics.UseQuartz=true") ++
+      "-Dfile.encoding=UTF-8") ++
     (if(System.getProperty("os.name").startsWith("Mac"))
       Seq("-Xdock:name=NetLogo")
       else Seq()) ++

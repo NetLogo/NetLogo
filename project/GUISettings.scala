@@ -6,7 +6,6 @@ object GUISettings {
     run / javaOptions ++= (
       if (System.getProperty("os.name").contains("Mac"))
         Seq(
-          "-Dapple.awt.graphics.UseQuartz=true",
           "-Dapple.awt.showGrowBox=true",
           "-Dapple.laf.useScreenMenuBar=true")
       else

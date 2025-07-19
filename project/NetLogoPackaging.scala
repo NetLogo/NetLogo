@@ -343,8 +343,7 @@ object NetLogoPackaging {
       icons.foreach( (i) => FileActions.copyFile(i, buildDir / i.getName) )
 
       val extraJavaOptions = Seq(
-        "-Dapple.awt.graphics.UseQuartz=true"
-      , "--add-exports=java.desktop/com.apple.laf=ALL-UNNAMED"
+        "--add-exports=java.desktop/com.apple.laf=ALL-UNNAMED"
       // See comment in `PackageMacAggregate` for more info on the `{{{ROOTDIR}}}` placeholder.  -Jeremy B September
       // 2022
       , "-Dnetlogo.extensions.dir={{{ROOTDIR}}}/extensions"
