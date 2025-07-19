@@ -70,7 +70,6 @@ lazy val scalatestSettings = Seq(
 , Test / javaOptions := { Seq(
     "--add-opens", "java.desktop/java.awt=ALL-UNNAMED"
   , "--add-opens", "java.base/java.io=ALL-UNNAMED"
-  , "-Dapple.awt.graphics.UseQuartz=false"
   , s"-Dorg.nlogo.is3d=${System.getProperty("org.nlogo.is3d", "false")}"
   , s"-Dorg.nlogo.noGenerator=${System.getProperty("org.nlogo.noGenerator", "false")}"
   , s"-Dorg.nlogo.noOptimizer=${System.getProperty("org.nlogo.noOptimizer", "false")}"

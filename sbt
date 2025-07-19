@@ -48,7 +48,6 @@ XSS=-Xss10m
 XMRP=-XX:MaxRAMPercentage=50
 ENCODING=-Dfile.encoding=UTF-8
 HEADLESS=-Djava.awt.headless=true
-USE_QUARTZ=-Dapple.awt.graphics.UseQuartz=false
 BOOT=xsbt.boot.Boot
 GOGO_JAVA=-Dnetlogo.extensions.gogo.javaexecutable=$JAVA
 
@@ -67,13 +66,11 @@ if [ ! -f $SBT_LAUNCH ] ; then
 fi
 
 
-# UseQuartz=false so that we get pixel for pixel identical drawings between OS's, so TestChecksums works - ST 6/9/10
 "$JAVA" \
     $XSS $XMRP $XX \
     $ENCODING \
     $JAVA_OPTS \
     $HEADLESS \
     $TERMINAL \
-    $USE_QUARTZ \
     -classpath $SBT_LAUNCH \
     $BOOT "$@"

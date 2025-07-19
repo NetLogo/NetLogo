@@ -25,14 +25,7 @@ public class MacApplication {
   public static void main(String[] args) {
     MacHandler handler = new MacHandler();
 
-    // on Mac OS X 10.5, we have to explicitly ask for the Quartz
-    // renderer. perhaps we should eventually switch to the Sun
-    // renderer since that's the new default, but for now, the
-    // Quartz renderer is what we've long used and tested, so
-    // let's stick with it - ST 12/4/07
-    // Not sure whether these are necessary, now that we're packaging for
-    // OS X 10.7+
-    System.setProperty("apple.awt.graphics.UseQuartz", "true");
+    System.setProperty("apple.awt.graphics.UseQuartz", "false");
     System.setProperty("apple.awt.showGrowBox", "true");
     System.setProperty("apple.laf.useScreenMenuBar", "true");
 
