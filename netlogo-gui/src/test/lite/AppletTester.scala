@@ -8,7 +8,6 @@ import org.nlogo.workspace.AbstractWorkspace
 
 object AppletTester {
   def main(args: Array[String]): Unit = {
-    System.setProperty("apple.awt.graphics.UseQuartz", "true")
     System.setProperty("apple.awt.showGrowBox", "true")
     VMCheck.detectBadJVMs()
     val (eventsArgs, otherArgs) = args.partition(_ == "--events")
