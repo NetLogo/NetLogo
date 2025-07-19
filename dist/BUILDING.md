@@ -34,13 +34,13 @@ This makes it convenient to install 3 different applications (as opposed to inst
 5. Generate each of the 5 installers
   * Mac OS X
 ```
-./sbt
+sbt
 > packageMacAggregate
 # ...
 ```
   * Linux
 ```
-./sbt
+sbt
 > packageLinuxAggregate <your-32-bit-jdk-version>-32
 # ...
 > packageLinuxAggregate <your-64-bit-jdk-version>-64
@@ -48,7 +48,7 @@ This makes it convenient to install 3 different applications (as opposed to inst
 ```
   * Windows
 ```
-./sbt
+sbt
 > packageWinAggregate <your-32-bit-jdk-version>-32
 # ...
 > packageWinAggregate <your-64-bit-jdk-version>-64
@@ -58,7 +58,7 @@ Note that the installers can also be copied to the `target/downloadPages` folder
 
 6. Generate and upload the website
 ```
-./sbt
+sbt
 > downloadPages
 # ...
 > uploadWebsite

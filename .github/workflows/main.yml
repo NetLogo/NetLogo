@@ -38,7 +38,7 @@ jobs:
 
       - name: Build NetLogo
         run: |
-          ./sbt update all headless/compile parserJS/compile
+          sbt update all headless/compile parserJS/compile
 
       - uses: actions/cache@v4
         id: restore-build
@@ -79,7 +79,7 @@ jobs:
           pip3 install scikit-learn
 
       - name: Test Extensions
-        run: ./sbt netlogo/Test/extensionTests
+        run: sbt netlogo/Test/extensionTests
 
   test:
     runs-on: ubuntu-latest
@@ -132,4 +132,4 @@ jobs:
           pip3 install scikit-learn
 
       - name: ${{ matrix.test }}
-        run: ./sbt "${{ matrix.test }}"
+        run: sbt "${{ matrix.test }}"
