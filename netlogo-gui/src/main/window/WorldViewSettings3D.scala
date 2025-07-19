@@ -3,7 +3,6 @@
 package org.nlogo.window
 
 import org.nlogo.agent.World3D
-import org.nlogo.awt.Hierarchy
 import org.nlogo.core.{ I18N, View => CoreView, Widget => CoreWidget, WorldDimensions, WorldDimensions3D }
 import org.nlogo.swing.ModalProgressTask
 import org.nlogo.window.Events.RemoveAllJobsEvent
@@ -163,11 +162,12 @@ class WorldViewSettings3D(workspace: GUIWorkspace, gw: ViewWidget, tickCounter: 
       world.displayOn(false)
 
     val runnable = new ResizeRunner()
-    if (showProgress)
-      ModalProgressTask.onUIThread(Hierarchy.getFrame(gWidget),
-        I18N.gui.get("view.resize.progress"), runnable)
-    else
+
+    if (showProgress) {
+      ModalProgressTask.onUIThread(workspace.getFrame, I18N.gui.get("view.resize.progress"), runnable)
+    } else {
       runnable.run()
+    }
 
     gWidget.displaySwitchOn(true)
     if (oldGraphicsOn) {
