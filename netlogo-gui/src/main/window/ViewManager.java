@@ -38,7 +38,8 @@ public class ViewManager {
 
   void framesSkipped() {
     for (ViewInterface v : views) {
-      v.framesSkipped();
+      if (v != null)
+        v.framesSkipped();
     }
   }
 
