@@ -17,9 +17,7 @@ import org.nlogo.window.{ Event, Events => WindowEvents }
 
 class AgentMonitorWindow(val agentKind: AgentKind, _agent: Agent, radius: Double,
                          manager: AgentMonitorManager, parent: Frame)
-  // to force the window to stay above the application window replace the following
-  // line with 'extends JDialog(parent)' AAB - Feb 02 2021
-  extends JDialog with Event.LinkChild with WindowEvents.PeriodicUpdateEvent.Handler
+  extends JDialog(parent) with Event.LinkChild with WindowEvents.PeriodicUpdateEvent.Handler
   with WindowEvents.PatchesCreatedEvent.Handler with WindowEvents.LoadBeginEvent.Handler with ThemeSync
   with NetLogoIcon {
 
