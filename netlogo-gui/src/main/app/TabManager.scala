@@ -339,9 +339,9 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
 
   def getTabTitle(index: Int): String = {
     if (index >= mainTabs.getTabCount)
-      separateTabs.getTabLabelAt(index - mainTabs.getTabCount).getText
+      separateTabs.getTabLabelAt(index - mainTabs.getTabCount).map(_.getText).getOrElse("")
     else
-      mainTabs.getTabLabelAt(index).getText
+      mainTabs.getTabLabelAt(index).map(_.getText).getOrElse("")
   }
 
   def getTotalTabIndex(tab: Component): Int = {
@@ -541,11 +541,11 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
       val selected = mainTabs.getSelectedComponent
 
       while (mainTabs.getTabCount > 2) {
-        val tabLabel = mainTabs.getTabLabelAt(2)
+        mainTabs.getTabLabelAt(2).foreach { tabLabel =>
+          separateTabs.addTabWithLabel(mainTabs.getComponentAt(2), tabLabel)
 
-        separateTabs.addTabWithLabel(mainTabs.getComponentAt(2), tabLabel)
-
-        tabLabel.setTabbedPane(separateTabs)
+          tabLabel.setTabbedPane(separateTabs)
+        }
       }
 
       separateTabsWindow.open()
@@ -566,11 +566,11 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
       val selected = separateTabs.getSelectedComponent
 
       while (separateTabs.getTabCount > 0) {
-        val tabLabel = separateTabs.getTabLabelAt(0)
+        separateTabs.getTabLabelAt(0).foreach { tabLabel =>
+          mainTabs.addTabWithLabel(separateTabs.getComponentAt(0), tabLabel)
 
-        mainTabs.addTabWithLabel(separateTabs.getComponentAt(0), tabLabel)
-
-        tabLabel.setTabbedPane(mainTabs)
+          tabLabel.setTabbedPane(mainTabs)
+        }
       }
 
       separateTabsWindow.setVisible(false)
@@ -755,9 +755,9 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
   def handle(e: ExternalFileSavedEvent): Unit = {
     getTabWithFilename(Right(e.path)).foreach(tab => {
       if (separateTabsWindow.isVisible) {
-        separateTabs.getTabLabelAt(separateTabs.indexOfComponent(tab)).setText(tab.filenameForDisplay)
+        separateTabs.getTabLabelAt(separateTabs.indexOfComponent(tab))foreach(_.setText(tab.filenameForDisplay))
       } else {
-        mainTabs.getTabLabelAt(mainTabs.indexOfComponent(tab)).setText(tab.filenameForDisplay)
+        mainTabs.getTabLabelAt(mainTabs.indexOfComponent(tab)).foreach(_.setText(tab.filenameForDisplay))
       }
     })
   }
