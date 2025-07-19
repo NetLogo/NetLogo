@@ -9,6 +9,8 @@ import javax.swing.plaf.basic.BasicTabbedPaneUI
 
 import org.nlogo.theme.InterfaceColors
 
+import scala.util.Try
+
 private class FloatingTabbedPaneUI(tabbedPane: FloatingTabbedPane) extends BasicTabbedPaneUI {
   override def getContentBorderInsets(tabPlacement: Int) =
     new Insets(0, 0, 0, 0)
@@ -253,14 +255,14 @@ class FloatingTabbedPane extends JTabbedPane(SwingConstants.TOP, JTabbedPane.SCR
   def focusSelected(): Unit =
     getSelectedComponent.requestFocus
 
-  def getTabLabelAt(index: Int): TabLabel =
-    getTabComponentAt(index).asInstanceOf[TabLabel]
+  def getTabLabelAt(index: Int): Option[TabLabel] =
+    Try(getTabComponentAt(index)).map(c => Option(c.asInstanceOf[TabLabel])).getOrElse(None)
 
   def getError(index: Int): Boolean =
-    getTabLabelAt(index).error
+    getTabLabelAt(index).map(_.error).getOrElse(false)
 
   def setError(index: Int, error: Boolean): Unit = {
-    getTabLabelAt(index).error = error
+    getTabLabelAt(index).foreach(_.error = error)
   }
 
   def isHover(index: Int): Boolean =
