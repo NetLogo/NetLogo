@@ -21,6 +21,8 @@ trait AbstractEditorArea extends JTextComponent {
 
   def resetUndoHistory(): Unit
 
+  def additionalMenuActions: Seq[MenuAction] = Seq()
+
   def undoAction: MenuAction
   def redoAction: MenuAction
 
