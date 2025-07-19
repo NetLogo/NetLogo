@@ -146,7 +146,8 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
     Seq(new CodeToHtml.Action(workspace, this, () => getText)) ++ editorConfiguration.permanentActions
 
   override val activeMenuActions =
-    editorConfiguration.contextActions.filter(_.isInstanceOf[FocusedOnlyAction]) ++ Seq(undoAction, redoAction)
+    editorConfiguration.contextActions.filter(_.isInstanceOf[FocusedOnlyAction]) ++ Seq(undoAction, redoAction) ++
+      text.additionalMenuActions
 
   // don't let the editor influence the preferred size,
   // since the editor tends to want to be huge - ST

@@ -11,11 +11,13 @@ import org.fife.ui.rtextarea.RTextArea
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea
 
 import org.nlogo.swing.{ Menu, MenuItem, PopupMenu, UserAction, WrappedAction },
-  UserAction.{ EditCategory, EditUndoGroup, KeyBindings }
+  UserAction.{ EditCategory, EditFoldGroup, EditUndoGroup, KeyBindings, MenuAction }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 class AdvancedEditorArea(val configuration: EditorConfiguration)
   extends RSyntaxTextArea(configuration.rows, configuration.columns) with AbstractEditorArea {
+
+  private lazy val toggleFoldsAction = new ToggleFoldsAction(this)
 
   var indenter: Option[Indenter] = None
 
@@ -35,6 +37,17 @@ class AdvancedEditorArea(val configuration: EditorConfiguration)
     super.getActions.filter(_.getValue(Action.NAME) != "RSTA.GoToMatchingBracketAction").toArray[Action]
   }
 
+  override def additionalMenuActions: Seq[MenuAction] = {
+    // this is a little jank, but we're probably going to switch to a different text component
+    // before this one gets an update anyway. (Isaac B 7/19/25)
+    super.createPopupMenu.getComponents.toSeq.collect {
+      case menu: JMenu =>
+        menu.getMenuComponents.collect {
+          case item: JMenuItem => new WrappedAction(item.getAction, EditCategory, EditFoldGroup, item.getAccelerator)
+        }
+    }.flatten :+ toggleFoldsAction
+  }
+
   def resetUndoHistory(): Unit = {
     discardAllEdits()
   }
@@ -49,7 +62,7 @@ class AdvancedEditorArea(val configuration: EditorConfiguration)
             case item: JMenuItem => add(new MenuItem(item.getAction))
             case _ =>
           })
-          add(new MenuItem(new ToggleFoldsAction(AdvancedEditorArea.this)))
+          add(new MenuItem(toggleFoldsAction))
         })
         case item: JMenuItem => add(new MenuItem(item.getAction))
         case separator: JPopupMenu.Separator => addSeparator()
