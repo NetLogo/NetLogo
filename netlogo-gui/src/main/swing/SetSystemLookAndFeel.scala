@@ -4,6 +4,8 @@ package org.nlogo.swing
 
 import com.formdev.flatlaf.{ FlatLaf, FlatLightLaf }
 
+import com.sun.jna.platform.win32.{ Advapi32Util, WinReg }
+
 import java.awt.{ Color, Font, GraphicsEnvironment, Insets }
 import javax.swing.{ UIManager, UnsupportedLookAndFeelException }
 
@@ -68,6 +70,26 @@ object SetSystemLookAndFeel {
       // which was distractingly bad for the name field of the "PlotPen" JTable when
       // that field was clicked, moved off and then released - RG 7/1/16
       UIManager.getDefaults.put("Table.focusCellBackground", new Color(202, 202, 202))
+    }
+
+    // the following code (up until the font stuff) is necessary because the default FlatLaf settings override
+    // the Windows title bar colors, ignoring the system accent color for any frames and dialogs created by
+    // the application. this code retrieves the accent color from the registry (if the accent color has been
+    // enabled for windows) and manually applies it to all application windows, overriding the FlatLaf settings.
+    // (Isaac B 7/20/25)
+
+    if (Advapi32Util.registryGetIntValue(WinReg.HKEY_CURRENT_USER,
+                                         "Software\\Microsoft\\Windows\\DWM", "ColorPrevalence") != 0) {
+      val accentColor = Advapi32Util.registryGetIntValue(WinReg.HKEY_CURRENT_USER,
+                                                        "Software\\Microsoft\\Windows\\DWM", "AccentColor")
+
+      val r = accentColor & 0xff
+      val g = (accentColor >> 8) & 0xff
+      val b = (accentColor >> 16) & 0xff
+      val a = (accentColor >> 24) & 0xff
+
+      UIManager.put("TitlePane.unifiedBackground", false)
+      UIManager.put("TitlePane.background", new Color(r, g, b, a))
     }
 
     val font = Font.createFont(Font.TRUETYPE_FONT, getClass.getResourceAsStream("/fonts/OpenSans-Variable.ttf"))
