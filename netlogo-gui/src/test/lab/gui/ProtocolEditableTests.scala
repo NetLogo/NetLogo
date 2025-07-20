@@ -2,6 +2,8 @@
 
 package org.nlogo.lab.gui
 
+import java.util.List
+
 import org.scalatest.funsuite.AnyFunSuite
 
 import org.nlogo.api.{ DummyCompilerServices, FileIO, GlobalsIdentifier, NetLogoLegacyDialect, NetLogoThreeDDialect,
@@ -29,8 +31,7 @@ class ProtocolEditableTests extends AnyFunSuite {
 
       // required since ProtocolEditable's GUI instance needs to be able to check the validity of a variable
       // specification, but not meaningful in this context, so just pretend everything is valid (Isaac B 7/3/25)
-      override def isGlobalVariable(name: String): Boolean =
-        true
+      override def checkGlobalVariable(name: String, values: List[AnyRef]): Unit = {}
     }
     val protocolLines = FileIO.fileToString("test/lab/protocols.xml").linesIterator.toArray
     val protocols = new NLogoLabFormat(literalParser).load(protocolLines, None).get

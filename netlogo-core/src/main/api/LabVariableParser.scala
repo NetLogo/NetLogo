@@ -4,6 +4,7 @@ package org.nlogo.api
 
 import org.nlogo.core.{ I18N, LogoList }
 
+import scala.jdk.CollectionConverters.SeqHasAsJava
 import scala.util.Try
 
 // moved variable parsing out of ProtocolEditable so it could be reused for bspace extension
@@ -24,8 +25,6 @@ object LabVariableParser {
       o.asInstanceOf[LogoList].toList match {
         case List() => throw new Exception(I18N.gui.getN("edit.behaviorSpace.list.field"))
         case List(variableName: String, more: LogoList) =>
-          if (!compiler.isGlobalVariable(variableName))
-            throw new Exception(I18N.gui.getN("edit.behaviorSpace.noGlobal", variableName))
           more.toList match {
             case List(first: java.lang.Double,
                       step: java.lang.Double,
@@ -39,6 +38,7 @@ object LabVariableParser {
               } else
                 throw new Exception(I18N.gui.getN("edit.behaviorSpace.list.inverseIncrement",
                                     s"[ ${"\"" + variableName + "\""} [ $first $step $last ] ]"))
+              compiler.checkGlobalVariable(variableName, List(first).asJava)
               val constant = new SteppedValueSet(variableName,
                                                  BigDecimal(Dump.number(first)),
                                                  BigDecimal(Dump.number(step)),
@@ -54,12 +54,11 @@ object LabVariableParser {
               throw new Exception(I18N.gui.getN("edit.behaviorSpace.list.incrementInvalid", Dump.list(more)))
           }
         case List(variableName: String, more@_*) =>
-          if (!compiler.isGlobalVariable(variableName))
-            throw new Exception(I18N.gui.getN("edit.behaviorSpace.noGlobal", variableName))
           if (more.isEmpty) { throw new Exception(I18N.gui.getN("edit.behaviorSpace.expectedValue", variableName)) }
           if (Int.MaxValue / totalCombinations > more.toList.size)
             totalCombinations = totalCombinations * more.toList.size
           else throw new Exception(I18N.gui.getN("edit.behaviorSpace.list.variablelist", variableName))
+          compiler.checkGlobalVariable(variableName, more.toList.asJava)
           val constant = new RefEnumeratedValueSet(variableName, more.toList)
           if (constants.exists(_.variableName == variableName)) {
             throw new Exception(I18N.gui.getN("edit.behaviorSpace.constantDefinedTwice", variableName))
@@ -77,8 +76,6 @@ object LabVariableParser {
             l.asInstanceOf[LogoList].toList match {
               case List() => throw new Exception(I18N.gui.getN("edit.behaviorSpace.list.field"))
               case List(variableName: String, more: LogoList) =>
-                if (!compiler.isGlobalVariable(variableName))
-                  throw new Exception(I18N.gui.getN("edit.behaviorSpace.noGlobal", variableName))
                 more.toList match {
                   case List(first: java.lang.Double,
                             step: java.lang.Double,
@@ -92,6 +89,7 @@ object LabVariableParser {
                     } else
                       throw new Exception(I18N.gui.getN("edit.behaviorSpace.list.inverseIncrement",
                                                   s"[ ${"\"" + variableName + "\""} [ $first $step $last ] ]"))
+                    compiler.checkGlobalVariable(variableName, more.toList.asJava)
                     val exp = new SteppedValueSet(variableName,
                                                   BigDecimal(Dump.number(first)),
                                                   BigDecimal(Dump.number(step)),
@@ -105,12 +103,11 @@ object LabVariableParser {
                     throw new Exception(I18N.gui.getN("edit.behaviorSpace.list.incrementInvalid", Dump.list(more)))
                 }
               case List(variableName: String, more@_*) =>
-                if (!compiler.isGlobalVariable(variableName))
-                  throw new Exception(I18N.gui.getN("edit.behaviorSpace.noGlobal", variableName))
                 if (more.isEmpty) { throw new Exception(I18N.gui.getN("edit.behaviorSpace.expectedValue", variableName)) }
                 if (Int.MaxValue / totalCombinations > more.toList.size)
                   totalCombinations = totalCombinations * more.toList.size
                 else throw new Exception(I18N.gui.getN("edit.behaviorSpace.list.variablelist", variableName))
+                compiler.checkGlobalVariable(variableName, more.toList.asJava)
                 val exp = new RefEnumeratedValueSet(variableName, more.toList)
                 if (subExperiment.exists(_.variableName == variableName)) {
                   throw new Exception(I18N.gui.getN("edit.behaviorSpace.variableDefinedTwiceSubexperiment", variableName))
