@@ -70,6 +70,9 @@ object SetSystemLookAndFeel {
       UIManager.getDefaults.put("Table.focusCellBackground", new Color(202, 202, 202))
     }
 
+    if (System.getProperty("os.name").toLowerCase.startsWith("win"))
+      WindowsLookAndFeel.setTitleBarColors()
+
     val font = Font.createFont(Font.TRUETYPE_FONT, getClass.getResourceAsStream("/fonts/OpenSans-Variable.ttf"))
 
     GraphicsEnvironment.getLocalGraphicsEnvironment.registerFont(font)
