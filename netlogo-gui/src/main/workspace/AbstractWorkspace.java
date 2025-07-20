@@ -21,6 +21,7 @@ import org.nlogo.core.CompilerException;
 import org.nlogo.core.Femto;
 import org.nlogo.core.FileModeJ;
 import org.nlogo.core.File;
+import org.nlogo.core.I18N;
 import org.nlogo.core.Token;
 import org.nlogo.core.TokenType;
 import org.nlogo.core.UpdateMode;
@@ -226,16 +227,24 @@ public abstract class AbstractWorkspace
 
   /// misc
 
-  public boolean isGlobalVariable(String name) {
-    if (!_world.isDimensionVariable(name) && !name.equalsIgnoreCase("RANDOM-SEED")) {
+  public void checkGlobalVariable(String name, List<Object> values) throws Exception {
+    String upperName = name.toUpperCase(Locale.ENGLISH);
+
+    if (!_world.isDimensionVariable(upperName) && !name.equalsIgnoreCase("RANDOM-SEED")) {
       synchronized (_world) {
-        if (_world.observerOwnsIndexOf(name.toUpperCase(Locale.ENGLISH)) == -1) {
-          return false;
+        if (_world.observerOwnsIndexOf(upperName) == -1) {
+          throw new Exception(I18N.guiJ().getN("edit.behaviorSpace.noGlobal", name));
         }
       }
     }
 
-    return true;
+    for (Object o : values) {
+      try {
+        _world.observer().assertConstraint(_world.observer().variableIndex(upperName), o);
+      } catch (Exception e) {
+        throw new Exception(I18N.guiJ().getN("edit.behaviorSpace.invalidValue", name));
+      }
+    }
   }
 
   // we shouldn't need "Workspace." lampsvn.epfl.ch/trac/scala/ticket/1409 - ST 4/6/09
