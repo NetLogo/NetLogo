@@ -6,13 +6,13 @@ import java.awt.event.ActionEvent
 import javax.swing.AbstractAction
 
 import org.nlogo.core.I18N
-import org.nlogo.swing.UserAction.{ EditCategory, EditFoldGroup, MenuAction }
+import org.nlogo.swing.UserAction.{ EditCategory, EditFoldSubcategory, MenuAction }
 
 class ToggleFoldsAction(editorArea: AdvancedEditorArea)
   extends AbstractAction(I18N.gui.get("tabs.code.rightclick.collapse")) with MenuAction {
 
   category = EditCategory
-  group = EditFoldGroup
+  subcategory = EditFoldSubcategory
 
   override def actionPerformed(evt: ActionEvent): Unit = {
     val fm = editorArea.getFoldManager
