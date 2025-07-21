@@ -88,6 +88,8 @@ class EditorFactory(compiler: CompilerServices, extensionManager: ExtensionManag
           setHorizontalScrollBar(new NLScrollBar(Adjustable.HORIZONTAL))
           setVerticalScrollBar(new NLScrollBar(Adjustable.VERTICAL))
 
+          aea.setGutter(getGutter)
+
           def lineNumbersEnabled = getLineNumbersEnabled
           override def setFont(f: Font) = {
             super.setFont(f)
