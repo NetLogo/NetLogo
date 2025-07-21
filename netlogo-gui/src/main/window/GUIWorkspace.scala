@@ -21,7 +21,7 @@ import org.nlogo.api.{ Agent => ApiAgent, AgentFollowingPerspective, CommandRunn
                        TrailDrawerInterface, WorldPropertiesInterface }
 import org.nlogo.awt.{ EventQueue, Hierarchy, UserCancelException }
 import org.nlogo.core.{ AgentKind, CompilerException, File, I18N, Model, ModelSettings,
-                        Shape, UpdateMode, WorldDimensions }
+                        Shape, UpdateMode, WorldDimensions, WorldDimensions3D }
 import org.nlogo.nvm.{ Context, HaltException, Instruction, PrimaryWorkspace, Procedure }
 import org.nlogo.shape.ShapeConverter
 import org.nlogo.swing.{ CustomOptionPane, FileDialog, ModalProgressTask, OptionPane, ScrollPane, TextArea, Utils }
@@ -131,6 +131,8 @@ abstract class GUIWorkspace(world: World, kioskLevel: GUIWorkspace.KioskLevel, f
       open3DView()
   }
 
+  private var _isModel3D = false
+
   def getSwitchTo3DViewAction: Action =
     switchTo3DViewAction
 
@@ -150,6 +152,9 @@ abstract class GUIWorkspace(world: World, kioskLevel: GUIWorkspace.KioskLevel, f
 
   def getFrame: Frame =
     frame
+
+  def isModel3D: Boolean =
+    _isModel3D
 
   def setSnapOn(snapOn: Boolean): Unit =
     _snapOn = snapOn
@@ -848,6 +853,8 @@ abstract class GUIWorkspace(world: World, kioskLevel: GUIWorkspace.KioskLevel, f
       case Some(settings: ModelSettings) => setSnapOn(settings.snapToGrid)
       case _ =>
     }
+
+    _isModel3D = e.model.view.dimensions.isInstanceOf[WorldDimensions3D]
   }
 
   def handle(e: ExportWidgetEvent): Unit = {

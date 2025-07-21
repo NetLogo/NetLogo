@@ -84,8 +84,12 @@ class WorldViewSettings3D(workspace: GUIWorkspace, gw: ViewWidget, tickCounter: 
     editors(1).setEnabled(originConfig.map(_.x != 1).getOrElse(true))
     editors(2).setEnabled(originType == OriginType.Custom || originConfig.map(_.y != 0).getOrElse(false))
     editors(3).setEnabled(originConfig.map(_.y != 1).getOrElse(true))
-    editors(4).setEnabled(originType == OriginType.Custom || originConfig.map(_.z != 0).getOrElse(false))
-    editors(5).setEnabled(originConfig.map(_.z != 1).getOrElse(true))
+
+    // if the user loaded a 2D model in NetLogo 3D, make sure they can't edit the z axis (Isaac B 7/21/25)
+    val isModel3D = workspace.isModel3D
+
+    editors(4).setEnabled(isModel3D && (originType == OriginType.Custom || originConfig.map(_.z != 0).getOrElse(false)))
+    editors(5).setEnabled(isModel3D && originConfig.map(_.z != 1).getOrElse(true))
 
     if (originType != OriginType.Custom) {
       val width = (maxPxcor - minPxcor).toDouble
