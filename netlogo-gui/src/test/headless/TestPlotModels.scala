@@ -18,7 +18,7 @@ class TestPlotModels extends AbstractTestModels {
   def onlyPlot = workspace.plotManager.plots(0)
   def onlyPen = workspace.plotManager.currentPlot.get.pens.head
 
-  val modelCode = "breed [dogs dog] to setup reset-ticks clear-all-plots end  to go create-dogs 1 tick end"
+  val modelCode = "breed [dogs dog] to setup clear-all-plots reset-ticks end  to go create-dogs 1 tick end"
   val theModel = Model(modelCode, Plot(pens = Pens(Pen(updateCode = "plot count dogs * 2"))))
 
   testModel("plot on tick", theModel) {
@@ -26,44 +26,44 @@ class TestPlotModels extends AbstractTestModels {
     observer>>"go"
     reporter("count dogs") -> 1.0
     reporter("ticks") -> 1.0
-    assert(onlyPen.containsPoint(0.0, 2.0))
+    assert(onlyPen.containsPoint(1.0, 2.0))
 
     observer>>"go"
     reporter("count dogs") -> 2.0
     reporter("ticks") -> 2.0
-    assert(onlyPen.containsPoint(1.0, 4.0))
+    assert(onlyPen.containsPoint(2.0, 4.0))
 
     observer>>"tick"
-    assert(onlyPen.containsPoint(2.0, 4.0))
+    assert(onlyPen.containsPoint(3.0, 4.0))
   }
 
   testModel("several ticks", theModel) {
     observer>>"setup"
     observer>>"tick"
-    assert(onlyPen.containsPoint(0.0, 0.0))
+    assert(onlyPen.containsPoint(1.0, 0.0))
 
     observer>>"tick"
-    assert(onlyPen.containsPoint(1.0, 0.0))
+    assert(onlyPen.containsPoint(2.0, 0.0))
 
     observer>>"create-dogs 1"
     observer>>"tick"
-    assert(onlyPen.containsPoint(2.0, 2.0))
+    assert(onlyPen.containsPoint(3.0, 2.0))
   }
 
   testModel("update-plots", theModel) {
     observer>>"setup"
     observer>>"update-plots"
-    assert(onlyPen.containsPoint(0.0, 0.0))
+    assert(onlyPen.containsPoint(1.0, 0.0))
 
     observer>>"update-plots"
-    assert(onlyPen.containsPoint(1.0, 0.0))
+    assert(onlyPen.containsPoint(2.0, 0.0))
 
     observer>>"create-dogs 1"
     observer>>"update-plots"
-    assert(onlyPen.containsPoint(2.0, 2.0))
+    assert(onlyPen.containsPoint(3.0, 2.0))
 
     observer>>"update-plots"
-    assert(onlyPen.containsPoint(3.0, 2.0))
+    assert(onlyPen.containsPoint(4.0, 2.0))
   }
 
   testModel("setup-plots",
