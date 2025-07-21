@@ -111,7 +111,7 @@ private class FloatingTabbedPaneUI(tabbedPane: FloatingTabbedPane) extends Basic
   override def paint(g: Graphics, c: JComponent): Unit = {
     val g2d = Utils.initGraphics2D(g)
 
-    g2d.setColor(InterfaceColors.toolbarBackground())
+    g2d.setColor(tabbedPane.getBackground)
     g2d.fillRect(0, 0, tabbedPane.getWidth, tabbedPane.getHeight)
 
     super.paint(g, c)

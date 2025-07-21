@@ -8,8 +8,9 @@ import javax.swing.event.{ ChangeEvent, ChangeListener }
 
 import org.nlogo.app.codetab.CodeTab
 import org.nlogo.swing.{ FloatingTabbedPane, TabLabel }
+import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
-class TabsPanel(val tabManager: TabManager) extends FloatingTabbedPane with ChangeListener {
+class TabsPanel(val tabManager: TabManager) extends FloatingTabbedPane with ChangeListener with ThemeSync {
   addChangeListener(this)
 
   addMouseListener(new MouseAdapter {
@@ -36,4 +37,8 @@ class TabsPanel(val tabManager: TabManager) extends FloatingTabbedPane with Chan
 
   def stateChanged(e: ChangeEvent): Unit =
     tabManager.switchedTabs(getSelectedComponent)
+
+  override def syncTheme(): Unit = {
+    setBackground(InterfaceColors.toolbarBackground())
+  }
 }
