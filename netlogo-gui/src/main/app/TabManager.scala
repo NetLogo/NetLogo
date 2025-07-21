@@ -778,6 +778,8 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
       case _ =>
     })
 
+    mainTabs.syncTheme()
+    separateTabs.syncTheme()
     separateTabsWindow.syncTheme()
   }
 
