@@ -10,7 +10,7 @@ import javax.swing.{ BorderFactory, JLabel, JSlider, JTextField, SwingConstants 
 import javax.swing.text.{ AttributeSet, PlainDocument }
 
 import org.nlogo.agent.SliderConstraint
-import org.nlogo.api.Dump
+import org.nlogo.api.{ Approximate, Dump }
 import org.nlogo.core.{ I18N, NetLogoPreferences }
 import org.nlogo.swing.{ Transparent, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
@@ -209,7 +209,7 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
   def value: Double = sliderData.value
 
   private def roundToPrecision(d: Double): Double =
-    BigDecimal(d).setScale(sliderData.precision, BigDecimal.RoundingMode.HALF_DOWN).toDouble
+    Approximate.approximate(d, sliderData.precision)
 
   def setValue(d: Double): Unit = {
     if (sliderData.value != d) {
