@@ -7,7 +7,7 @@ import java.awt.event.{ KeyAdapter, KeyEvent, MouseAdapter, MouseEvent }
 import javax.swing.{ Action, JMenu, JMenuItem, JPopupMenu }
 import javax.swing.text.EditorKit
 
-import org.fife.ui.rtextarea.RTextArea
+import org.fife.ui.rtextarea.{ Gutter, RTextArea }
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea
 
 import org.nlogo.swing.{ Menu, MenuItem, PopupMenu, UserAction, WrappedAction },
@@ -18,6 +18,8 @@ class AdvancedEditorArea(val configuration: EditorConfiguration)
   extends RSyntaxTextArea(configuration.rows, configuration.columns) with AbstractEditorArea {
 
   private lazy val toggleFoldsAction = new ToggleFoldsAction(this)
+
+  private var gutter: Option[Gutter] = None
 
   var indenter: Option[Indenter] = None
 
@@ -31,6 +33,10 @@ class AdvancedEditorArea(val configuration: EditorConfiguration)
 
   def enableBracketMatcher(enable: Boolean): Unit = {
     setBracketMatchingEnabled(enable)
+  }
+
+  def setGutter(gutter: Gutter): Unit = {
+    this.gutter = Option(gutter)
   }
 
   override def getActions(): Array[Action] = {
@@ -91,6 +97,12 @@ class AdvancedEditorArea(val configuration: EditorConfiguration)
   def setIndenter(indenter: Indenter): Unit = {
     indenter.addActions(configuration, getInputMap)
     this.indenter = Some(indenter)
+  }
+
+  // without this helper, ToggleFoldsAction causes an inconsistent state where the line
+  // numbers don't align with the procedures (Isaac B 7/21/25)
+  def repaintGutter(): Unit = {
+    gutter.foreach(_.repaint())
   }
 
   // This method will receive null input if a partial accent character is entered in the editor, e.g., via Option+e on

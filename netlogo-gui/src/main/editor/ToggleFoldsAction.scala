@@ -25,5 +25,7 @@ class ToggleFoldsAction(editorArea: AdvancedEditorArea)
 
     if (allCollapsed) foldsToToggle.foreach(_.setCollapsed(false))
     else              foldsToToggle.foreach(_.setCollapsed(true))
+
+    editorArea.repaintGutter()
   }
 }
