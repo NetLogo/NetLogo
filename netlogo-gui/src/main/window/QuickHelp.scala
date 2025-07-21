@@ -3,6 +3,7 @@
 package org.nlogo.window
 
 import java.awt.Component
+import java.net.URI
 import java.nio.file.Path
 import java.util.Locale
 
@@ -46,7 +47,8 @@ object QuickHelp {
     BrowserLauncher.docPath(docName)
 
   private def openDictionary(comp: Component, word: String, words: Map[String, String]): Unit = {
-    BrowserLauncher.openPath(comp, docPath(s"dict/${words(word)}"), null)
+    BrowserLauncher.tryOpenURI(comp, new URI(s"https://docs.netlogo.org/7.0.0-beta2/dict/${words(word)}"),
+                               docPath(s"dict/${words(word)}"))
   }
 
   def doHelp(comp: Component, token: String): Unit = {
@@ -66,7 +68,8 @@ object QuickHelp {
                          I18N.gui.getN("tabs.code.rightclick.quickhelp.notfound",
                          tokenLower.toUpperCase(Locale.ENGLISH)), OptionPane.Options.OkCancel,
                          OptionPane.Icons.Error).getSelectedIndex == 0)
-        BrowserLauncher.openPath(comp, docPath("index2.html"), null)
+        BrowserLauncher.tryOpenURI(comp, new URI("https://docs.netlogo.org/7.0.0-beta2/index2.html"),
+                                   docPath("index2.html"))
     }
   }
 }
