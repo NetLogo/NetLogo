@@ -11,10 +11,11 @@ import javax.swing.{ Action, KeyStroke }
  *  packages which aren't allowed to depend on org.nlogo.swing (editor, for instance) or external
  *  libraries which provide actions (swing or RSyntaxTextArea) */
 class WrappedAction(base: Action) extends UserAction.MenuAction {
-  def this(base: Action, category: String, group: String, accelerator: KeyStroke) = {
+  def this(base: Action, category: String, subcategory: String, group: String, accelerator: KeyStroke) = {
     this(base)
 
     this.category = category
+    this.subcategory = subcategory
     this.group = group
     this.accelerator = accelerator
   }

@@ -10,11 +10,12 @@ import javax.swing.event.{ MenuEvent, MenuListener }
 import org.nlogo.api.Refreshable
 import org.nlogo.core.I18N
 import org.nlogo.swing.{ Menu, UserAction },
-  UserAction.{ EditClipboardGroup, EditFindGroup, EditFoldGroup, EditFormatGroup, EditSelectionGroup, EditUndoGroup,
-               MenuAction }
+  UserAction.{ EditClipboardGroup, EditFindGroup, EditFoldGroup, EditFoldSubcategory, EditFormatGroup,
+               EditSelectionGroup, EditUndoGroup, MenuAction }
 
 object EditMenu {
-  def sortOrder = Seq(EditUndoGroup, EditClipboardGroup, EditSelectionGroup, EditFindGroup, EditFormatGroup, EditFoldGroup)
+  def sortOrder = Seq(EditUndoGroup, EditClipboardGroup, EditSelectionGroup, EditFindGroup, EditFormatGroup,
+                      EditFoldGroup)
 }
 
 class EditMenu extends Menu(I18N.gui.get("menu.edit"), Menu.model(EditMenu.sortOrder)) {
@@ -34,6 +35,11 @@ class EditMenu extends Menu(I18N.gui.get("menu.edit"), Menu.model(EditMenu.sortO
 
     override def menuCanceled(e: MenuEvent): Unit = { }
   })
+
+  private val subNames = Map(EditFoldSubcategory -> (I18N.gui.get("menu.edit.folding") -> EditFoldGroup))
+
+  override def subcategoryNameAndGroup(key: String): (String, String) =
+    subNames.get(key).getOrElse(super.subcategoryNameAndGroup(key))
 
   override def offerAction(action: MenuAction): Unit = {
     action match {

@@ -11,7 +11,7 @@ import org.fife.ui.rtextarea.{ Gutter, RTextArea }
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea
 
 import org.nlogo.swing.{ Menu, MenuItem, PopupMenu, UserAction, WrappedAction },
-  UserAction.{ EditCategory, EditFoldGroup, EditUndoGroup, KeyBindings, MenuAction }
+  UserAction.{ EditCategory, EditFoldSubcategory, EditUndoGroup, KeyBindings, MenuAction }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 class AdvancedEditorArea(val configuration: EditorConfiguration)
@@ -49,7 +49,8 @@ class AdvancedEditorArea(val configuration: EditorConfiguration)
     super.createPopupMenu.getComponents.toSeq.collect {
       case menu: JMenu =>
         menu.getMenuComponents.collect {
-          case item: JMenuItem => new WrappedAction(item.getAction, EditCategory, EditFoldGroup, item.getAccelerator)
+          case item: JMenuItem => new WrappedAction(item.getAction, EditCategory, EditFoldSubcategory, null,
+                                                    item.getAccelerator)
         }
     }.flatten :+ toggleFoldsAction
   }
@@ -174,10 +175,10 @@ class AdvancedEditorArea(val configuration: EditorConfiguration)
     }
   })
 
-  def undoAction = new WrappedAction(RTextArea.getAction(RTextArea.UNDO_ACTION), EditCategory, EditUndoGroup,
+  def undoAction = new WrappedAction(RTextArea.getAction(RTextArea.UNDO_ACTION), EditCategory, null, EditUndoGroup,
                                      KeyBindings.keystroke('Z', withMenu = true))
 
-  def redoAction = new WrappedAction(RTextArea.getAction(RTextArea.REDO_ACTION), EditCategory, EditUndoGroup,
+  def redoAction = new WrappedAction(RTextArea.getAction(RTextArea.REDO_ACTION), EditCategory, null, EditUndoGroup,
                                      KeyBindings.keystroke('Y', withMenu = true))
 
   // These methods are used only by the input widget, which uses editor.EditorArea
