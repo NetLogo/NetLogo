@@ -32,6 +32,8 @@ class PreferencesDialog(parent: Frame & ThemeSync, generalPreferences: Seq[Prefe
     if (visible)
       themesPanel.init()
 
+    pack()
+
     super.setVisible(visible)
   }
 
@@ -156,7 +158,6 @@ class PreferencesDialog(parent: Frame & ThemeSync, generalPreferences: Seq[Prefe
     add(tabs, BorderLayout.CENTER)
     add(buttonPanel, BorderLayout.SOUTH)
 
-    pack()
     reset(false)
 
     setResizable(false)
