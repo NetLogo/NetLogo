@@ -1381,6 +1381,9 @@ class WidgetPanel(val workspace: GUIWorkspace)
   def handle(e: LoadBeginEvent): Unit = {
     setInterfaceMode(InterfaceMode.Interact, false)
     removeAllWidgets()
+    // removeAllWidgets doesn't completely delete the view, so we need to unselect it or it
+    // gets sized incorrectly when the next model loads (Isaac B 7/22/25)
+    unselectWidgets()
     zoomer.forgetAllZoomInfo()
     WidgetActions.undoManager.discardAllEdits()
   }

@@ -13,11 +13,7 @@ class WorldLoader {
     worldInterface.tickCounterLabel(view.tickCounterLabel)
     worldInterface.showTickCounter(view.showTickCounter)
 
-    val width = getWidth(worldInterface, d, view)
-    val adjustedPatchSize = adjustPatchSize(worldInterface, d)
-
-    val height = getHeight(worldInterface, d, adjustedPatchSize, view)
-    worldInterface.setDimensions(d, adjustedPatchSize)
+    worldInterface.setDimensions(d, adjustPatchSize(worldInterface, d))
 
     // we have to clear turtles before we change the topology otherwise we might have extra links
     // lying around in the world that go kerplooey when we try to reposition them and after we set
@@ -31,7 +27,7 @@ class WorldLoader {
     worldInterface.updateMode(view.updateMode)
     worldInterface.frameRate(view.frameRate)
 
-    worldInterface.setSize(width, height)
+    worldInterface.setSize(view.width, view.height)
   }
 
   def getWidth(world: WorldLoaderInterface, d: WorldDimensions, v: CoreView): Int = {
