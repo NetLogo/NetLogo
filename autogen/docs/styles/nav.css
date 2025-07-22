@@ -121,7 +121,6 @@
 	padding: 0.35rem 0.9rem;
 	font-weight: 500;
 	cursor: pointer;
-	transition: background var(--dur-fast);
 
 	width: fit-content;
 	max-height: 1.9lh;
