@@ -4,6 +4,7 @@ package org.nlogo.window
 
 import java.awt.{ BorderLayout, Dialog, Dimension, Window }
 import java.awt.event.{ WindowAdapter, WindowEvent }
+import java.net.URI
 import javax.swing.{ JDialog, JPanel, WindowConstants }
 import javax.swing.border.EmptyBorder
 
@@ -56,8 +57,8 @@ class EditDialog(window: Window, target: Editable, editPanel: EditPanel, modal: 
     val (mainLink, anchor) =
       if (splitLink.length > 1) (splitLink(0), splitLink(1))
       else                      (splitLink.head, "")
-    val path = docPath(mainLink)
-    BrowserLauncher.openPath(this, path, anchor)
+    BrowserLauncher.tryOpenURI(this, new URI(s"https://docs.netlogo.org/7.0.0-beta2/$mainLink"), docPath(mainLink),
+                               anchor)
   })
 
   private val buttons = Seq(
