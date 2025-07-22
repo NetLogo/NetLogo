@@ -75,6 +75,8 @@ object LabXMLLoader {
       else
         None
 
+    outNameMaybe.foreach(lab.name = _)
+
     (lab, existingNames ++ outNameMaybe)
 
   }
