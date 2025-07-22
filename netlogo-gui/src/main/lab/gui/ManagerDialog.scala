@@ -11,7 +11,7 @@ import org.nlogo.api.{ RefEnumeratedValueSet, LabProtocol }
 import org.nlogo.window.{ EditDialogFactory, MenuBarFactory }
 
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ Button, FileDialog, OptionPane, ScrollPane, Transparent, Utils }
+import org.nlogo.swing.{ Button, FileDialog, OptionPane, Positioning, ScrollPane, Transparent, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 import scala.io.Source
@@ -124,10 +124,7 @@ private class ManagerDialog(manager:       LabManager,
 
   pack()
 
-  // set location
-  private val maxBounds = getGraphicsConfiguration.getBounds
-  setLocation(maxBounds.x + maxBounds.width / 3,
-              maxBounds.y + maxBounds.height / 2)
+  Positioning.center(this, manager.workspace.getFrame)
 
   // menu - make a file menu available for saving, but don't show it
   private val menus = new JMenuBar() {
@@ -138,6 +135,10 @@ private class ManagerDialog(manager:       LabManager,
   // misc
   Utils.addEscKeyAction(this, closeAction)
   getRootPane.setDefaultButton(runButton)
+
+  override def getPreferredSize: Dimension =
+    new Dimension(super.getPreferredSize.width.max(400), super.getPreferredSize.height.max(300))
+
   /// implement ListSelectionListener
   def valueChanged(e: javax.swing.event.ListSelectionEvent): Unit = {
     if (blockActions) {
