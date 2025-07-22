@@ -2,19 +2,19 @@
 
 package org.nlogo.lab.gui
 
-import java.awt.{ Dialog, Dimension, GridBagConstraints, GridBagLayout, Insets, Window }
-import javax.swing.{ JDialog, JPanel, ScrollPaneConstants, Timer, WindowConstants }
+import java.awt.{ Dialog, Dimension, EventQueue, FlowLayout, Window }
+import javax.swing.{ Box, BoxLayout, JDialog, JPanel, ScrollPaneConstants, Timer, WindowConstants }
 import javax.swing.border.{ EmptyBorder, LineBorder }
 
 import org.nlogo.analytics.Analytics
-import org.nlogo.api.{ Dump, ExportPlotWarningAction, LabProtocol, PeriodicUpdateDelay }
+import org.nlogo.api.{ Color, Dump, ExportPlotWarningAction, LabProtocol, PeriodicUpdateDelay }
 import org.nlogo.awt.Positioning
 import org.nlogo.core.I18N
 import org.nlogo.editor.Colorizer
 import org.nlogo.nvm.LabInterface.ProgressListener
 import org.nlogo.nvm.Workspace
 import org.nlogo.plot.DummyPlotManager
-import org.nlogo.swing.{ Button, CheckBox, OptionPane, RichAction, ScrollPane, TextArea, Transparent }
+import org.nlogo.swing.{ Button, ButtonPanel, CheckBox, OptionPane, RichAction, ScrollPane, TextArea, Transparent }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ GUIWorkspace, PlotWidget, SpeedSliderPanel }
 
@@ -63,7 +63,20 @@ private [gui] class ProgressDialog(parent: Window, supervisor: Supervisor, color
       // cause anything to happen to this plot.
       // except of course, for the measurements that this plot is displaying.
       // JC - 4/4/11
-      val plotWidget = PlotWidget(I18N.gui("plot.title"), new DummyPlotManager, colorizer)
+      val plotManager = new DummyPlotManager
+      val plotWidget = new PlotWidget(plotManager.newPlot(I18N.gui("plot.title")), plotManager, colorizer) {
+        // the default plot size assumes there is no legend, so add the legend height
+        // to ensure that enough canvas area is visible by default (Isaac B 7/22/25)
+        override def getMinimumSize: Dimension =
+          new Dimension(super.getMinimumSize.width,
+                        (super.getPreferredSize.height - legendHeight).max(100) + legendHeight)
+
+        override def getPreferredSize: Dimension =
+          getMinimumSize
+      }
+
+      plotManager.compilePlot(plotWidget.plot)
+
       plotWidget.plot.defaultXMin = 0
       plotWidget.plot.defaultYMin = 0
       plotWidget.plot.defaultXMax = 1
@@ -73,7 +86,6 @@ private [gui] class ProgressDialog(parent: Window, supervisor: Supervisor, color
       plotWidget.setXLabel(I18N.gui("plot.time"))
       plotWidget.setYLabel(I18N.gui("plot.behavior"))
       plotWidget.clear()
-      plotWidget.plot.pens=Nil // make sure to start with no pens. plotWidget adds one by default.
       plotWidget.togglePenList()
       Some(plotWidget)
     }
@@ -87,54 +99,51 @@ private [gui] class ProgressDialog(parent: Window, supervisor: Supervisor, color
     })
     setTitle(I18N.gui("title", protocol.name))
     setResizable(true)
-    getContentPane.setLayout(new GridBagLayout)
-    val c = new GridBagConstraints
 
-    c.gridwidth = GridBagConstraints.REMAINDER
-    c.weightx = 1
-    c.weighty = 1
-    c.insets = new Insets(6, 6, 0, 6)
+    val container = new JPanel with Transparent {
+      setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
+      setBorder(new EmptyBorder(6, 6, 6, 6))
 
-    getContentPane.add(speedSlider, c)
+      add(new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0)) with Transparent {
+        add(speedSlider)
+      })
 
-    c.fill = GridBagConstraints.BOTH
+      add(Box.createVerticalStrut(6))
 
-    plotWidgetOption.foreach{ plotWidget =>
-      getContentPane.add(plotWidget, c)
+      plotWidgetOption.foreach{ plotWidget =>
+        add(plotWidget)
+        add(Box.createVerticalStrut(6))
+      }
+
+      progressArea.setEditable(false)
+      progressArea.setBorder(new EmptyBorder(6, 6, 6, 6))
+
+      add(scrollPane)
+      add(Box.createVerticalStrut(6))
+
+      updateProgressArea(true)
+      scrollPane.setMinimumSize(scrollPane.getPreferredSize())
+
+      add(new JPanel with Transparent {
+        setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
+
+        add(displaySwitch)
+        add(Box.createHorizontalGlue)
+      })
+
+      add(new JPanel with Transparent {
+        setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
+
+        add(plotsAndMonitorsSwitch)
+        add(Box.createHorizontalGlue)
+      })
+
+      add(Box.createVerticalStrut(6))
+
+      add(new ButtonPanel(Seq(pauseButton, abortButton)))
     }
 
-    progressArea.setEditable(false)
-    progressArea.setBorder(new EmptyBorder(5, 5, 5, 5))
-
-    getContentPane.add(scrollPane, c)
-    updateProgressArea(true)
-    scrollPane.setMinimumSize(scrollPane.getPreferredSize())
-
-    c.weighty = 0.0
-    c.fill = GridBagConstraints.HORIZONTAL
-    getContentPane.add(displaySwitch, c)
-
-    c.insets = new Insets(0, 6, 0, 6)
-    getContentPane.add(plotsAndMonitorsSwitch, c)
-
-    val buttonPanel = new JPanel with Transparent
-
-    buttonPanel.add(pauseButton)
-    buttonPanel.add(abortButton)
-
-    c.fill = GridBagConstraints.NONE
-    c.anchor = GridBagConstraints.EAST
-    c.insets = new Insets(6, 6, 6, 6)
-
-    getContentPane.add(buttonPanel, c)
-
-    timer.start()
-
-    pack()
-
-    Positioning.center(this, parent)
-
-    Analytics.bspaceRun()
+    getContentPane.add(container)
   }
 
   override def getMinimumSize = getPreferredSize
@@ -212,6 +221,10 @@ private [gui] class ProgressDialog(parent: Window, supervisor: Supervisor, color
   override def setVisible(visible: Boolean): Unit = {
     syncTheme()
 
+    Analytics.bspaceRun()
+
+    timer.start()
+
     super.setVisible(visible)
   }
 
@@ -227,6 +240,17 @@ private [gui] class ProgressDialog(parent: Window, supervisor: Supervisor, color
       for ((name, value) <- settings)
         settingsString += name + " = " + Dump.logoObject(value.asInstanceOf[AnyRef]) + "\n"
       updateProgressArea(true)
+
+      plotWidgetOption.foreach(_.refreshGUI())
+
+      // the plot pens don't affect the height of the plot until it's invalidated and repainted,
+      // so we wait to pack the window to the correct size (Isaac B 7/22/25)
+      EventQueue.invokeLater(() => {
+        pack()
+        setSize(getMinimumSize)
+
+        Positioning.center(this, parent)
+      })
     }
   }
   override def stepCompleted(w: Workspace, steps: Int): Unit = {
@@ -234,12 +258,10 @@ private [gui] class ProgressDialog(parent: Window, supervisor: Supervisor, color
       this.steps = steps
       if (workspace.triedToExportPlot && workspace.exportPlotWarningAction == ExportPlotWarningAction.Warn) {
         workspace.setExportPlotWarningAction(ExportPlotWarningAction.Ignore)
-        org.nlogo.awt.EventQueue.invokeLater(new Runnable() {
-          def run(): Unit = {
-            new OptionPane(workspace.getFrame, I18N.gui("updatingPlotsWarningTitle"),
-                           I18N.shared.get("tools.behaviorSpace.runoptions.updateplotsandmonitors.error"),
-                           OptionPane.Options.Ok, OptionPane.Icons.Warning)
-          }
+        EventQueue.invokeLater(() => {
+          new OptionPane(workspace.getFrame, I18N.gui("updatingPlotsWarningTitle"),
+                         I18N.shared.get("tools.behaviorSpace.runoptions.updateplotsandmonitors.error"),
+                         OptionPane.Options.Ok, OptionPane.Icons.Warning)
         })
       }
     }
@@ -249,7 +271,7 @@ private [gui] class ProgressDialog(parent: Window, supervisor: Supervisor, color
   }
 
   private def invokeAndWait(f: => Unit) =
-    try org.nlogo.awt.EventQueue.invokeAndWait(new Runnable {def run(): Unit = {f}})
+    try EventQueue.invokeAndWait(() => f)
     catch {
       case ex: InterruptedException =>
         // we may get interrupted if the user aborts the run - ST 10/30/03
@@ -257,14 +279,15 @@ private [gui] class ProgressDialog(parent: Window, supervisor: Supervisor, color
     }
 
   private def resetPlot(): Unit = {
-    plotWidgetOption.foreach{ plotWidget => invokeAndWait {
-      plotWidget.clear()
-      for (metricNumber <- 0 until protocol.metrics.length) yield {
-        val pen = plotWidget.plot.createPlotPen(getPenName(metricNumber), true)
-        pen.color = org.nlogo.api.Color.getColor(Double.box(metricNumber % 14 * 10 + 5)).getRGB
-        pen
+    plotWidgetOption.foreach { plotWidget =>
+      invokeAndWait {
+        plotWidget.clear()
+        for (metricNumber <- 0 until protocol.metrics.length) {
+          val pen = plotWidget.plot.createPlotPen(getPenName(metricNumber), true)
+          pen.color = Color.getColor(Double.box(metricNumber % 14 * 10 + 5)).getRGB
+        }
       }
-    }}
+    }
   }
 
   // this is only called when we KNOW we have a plot, so plotWidgetOption.get is ok
@@ -300,12 +323,10 @@ private [gui] class ProgressDialog(parent: Window, supervisor: Supervisor, color
     val newElapsed = hours + ":" + minutes + ":" + seconds
     if (force || elapsed != newElapsed) {
       elapsed = newElapsed
-      org.nlogo.awt.EventQueue.invokeLater(new Runnable {
-        def run(): Unit = {
-          progressArea.setText(I18N.gui("progressArea", runCount.toString,
-            totalRuns.toString, steps.toString, elapsed, settingsString))
-          progressArea.setCaretPosition(0)
-        }
+      EventQueue.invokeLater(() => {
+        progressArea.setText(I18N.gui("progressArea", runCount.toString,
+          totalRuns.toString, steps.toString, elapsed, settingsString))
+        progressArea.setCaretPosition(0)
       })
     }
   }

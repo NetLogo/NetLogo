@@ -102,6 +102,14 @@ class SpeedSliderPanel(workspace: GUIWorkspace, ticksLabel: Component = null) ex
     }
   }
 
+  override def getMinimumSize: Dimension =
+    new Dimension(super.getMinimumSize.width, modelSpeed.getPreferredSize.height +
+                  speedSlider.getPreferredSize.height.max(faster.getPreferredSize.height) +
+                  Option(ticksLabel).map(_.getPreferredSize.height).getOrElse(0))
+
+  override def getPreferredSize: Dimension =
+    new Dimension(super.getPreferredSize.width, getMinimumSize.height)
+
   override def setEnabled(enabled: Boolean): Unit = {
     speedSlider.setEnabled(enabled)
     // if we do setVisible() on the label, that changes the layout
