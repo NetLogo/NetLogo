@@ -128,7 +128,7 @@
 	text-overflow: ellipsis;
 	white-space: nowrap;
 }
-.version-select:hover {
+.version-select:hover:not(.version-select option:hover) {
 	background: var(--color-brand);
 }
 .version-select:focus {
@@ -142,6 +142,9 @@
 	background: var(--color-grey-light);
 	color: var(--color-text-disabled);
 	cursor: not-allowed;
+}
+.version-select option {
+	background: var(--color-background);
 }
 
 /* Utility buttons */
