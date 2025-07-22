@@ -106,8 +106,8 @@ trait Version {
     }
   }
 
-  def versionNumberOnly =
-    version.drop("NetLogo ".size)
+  def versionNumberOnly: String =
+    "NetLogo (3D )?".r.replaceFirstIn(version, "")
 
   def compatibleVersion(modelVersion: String) =
     compareVersions(version, modelVersion)

@@ -6,7 +6,6 @@ import java.net.URI
 
 import org.matomo.java.tracking.{ MatomoException, MatomoRequest, MatomoRequests, MatomoTracker, TrackerConfiguration }
 
-import org.nlogo.api.Version
 import org.nlogo.core.{ NetLogoPreferences, Token, TokenType }
 
 import scala.concurrent.{ ExecutionContext, Future }
@@ -65,12 +64,13 @@ object Analytics {
     }.mkString("{ ", ", ", " }")
   }
 
-  def appStart(): Unit = {
+  def appStart(version: String, is3D: Boolean): Unit = {
     startTime = System.currentTimeMillis
 
     val json = buildJson(
       Map(
-        "version" -> Version.version,
+        "version" -> version,
+        "threed" -> is3D,
         "os" -> System.getProperty("os.name"),
         "arch" -> System.getProperty("os.arch")
       )
