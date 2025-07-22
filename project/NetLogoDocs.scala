@@ -172,36 +172,23 @@ class NetLogoDocs(
    *  If not, throw an error with instructions.
    * */
   private def checkPDFRenderingDependencies(): Unit = {
-      try {
-        val version = Process("npm --version").!!
-        println(s"Found npm version: $version")
-      } catch {
-        case _: Throwable =>
-          sys.error("You must have npm installed to generate the manual PDF.")
-      }
+    if (!(docsSource / "generate-manual" / "index.js").exists)
+      sys.error(s"index.js not found in generate-manual directory.")
 
-      val scriptPath = netLogoRoot / "resources" / "docs" / "generate-manual" / "index.js"
-      if (!Files.exists(scriptPath.toPath)) {
-        sys.error(s"Script not found: $scriptPath")
-      }
+    if (Process(Seq("bash", "npm-install.sh"), docsSource / "generate-manual").! != 0)
+      sys.error("npm install failed. Please ensure you have npm installed and try again.")
 
-      val npmInstall = Process("npm install", scriptPath.getParentFile)
-      val res = npmInstall.!
-      if (res != 0) {
-        sys.error("npm install failed. Please ensure you have npm installed and try again.")
-      }
-
-      println("npm install completed successfully.")
+    println("npm install completed successfully.")
   }
+
   private def generateManualPDF(htmlFileRoot: File, extensions: Seq[String]): File = {
     checkPDFRenderingDependencies()
 
     val pdfFile = netLogoRoot / "NetLogo User Manual.pdf"
-    val scriptPath = netLogoRoot / "resources" / "docs" / "generate-manual" / "index.js"
+    val scriptPath = docsSource / "generate-manual" / "index.js"
     if (!Files.exists(scriptPath.toPath)) {
       sys.error(s"Script not found: $scriptPath")
     }
-
 
     val htmlDocArgs = // node generate-manual.js <output> <...html files>
       Seq("node", scriptPath.getAbsolutePath, (htmlFileRoot / "title.html").getAbsolutePath) ++
