@@ -597,7 +597,7 @@ class App extends org.nlogo.window.Event.LinkChild
       }
 
       Analytics.refreshPreference()
-      Analytics.appStart(Version.is3D)
+      Analytics.appStart()
     }
     catch {
       case ex: java.lang.Throwable =>
