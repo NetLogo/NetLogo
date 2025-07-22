@@ -50,11 +50,11 @@ object BrowserLauncher {
     openURI(dialog, uri)
   }
 
-  def tryOpenURI(comp: Component, uri: URI, fallback: Path): Unit = {
+  def tryOpenURI(comp: Component, uri: URI, fallback: Path, anchor: String = ""): Unit = {
     if (NetworkInterface.getNetworkInterfaces.asScala.exists(_.isUp)) {
       openURI(comp, uri)
     } else {
-      openURI(comp, fallback.toUri)
+      openPath(comp, fallback, anchor)
     }
   }
 
