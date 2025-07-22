@@ -90,7 +90,7 @@ extends scala.util.parsing.combinator.Parsers {
           decs ++ procs }
 
   def declaration: Parser[Declaration] =
-    includes | extensions | breed | directedLinkBreed | undirectedLinkBreed |
+    includes | extensions | extension | breed | directedLinkBreed | undirectedLinkBreed |
       variables("GLOBALS") | variables("TURTLES-OWN") | variables("PATCHES-OWN") |
       variables("LINKS-OWN") | breedVariables
 
@@ -103,6 +103,19 @@ extends scala.util.parsing.combinator.Parsers {
     keyword("EXTENSIONS") ~! identifierList ^^ {
       case token ~ names =>
         Extensions(token, names) }
+
+  def extension: Parser[ExtensionDeclaration] =
+    keyword("EXTENSION") ~! (
+      openBracket ~> identifier ~ opt(extensionURL) <~ closeBracket) ^^ {
+        case keyToken ~  (name ~ urlOpt) =>
+          ExtensionDeclaration(keyToken, name, urlOpt)
+    }
+
+  def extensionURL: Parser[Identifier] = 
+    openBracket ~> modifier("URL") ~! literal <~ closeBracket ^^ {
+      case urlToken ~ url =>
+        url
+    }
 
   def variables(key: String): Parser[Variables] =
     keyword(key) ~! identifierList ^^ {
@@ -168,6 +181,11 @@ extends scala.util.parsing.combinator.Parsers {
 
   def closeBracket: Parser[Token] =
     tokenType("closing bracket", TokenType.CloseBracket)
+  
+
+  def modifier(key: String): Parser[Token] =
+    acceptMatch(key, { case token @ Token(_, TokenType.Ident, `key`) => token })
+
 
   def identifier: Parser[Identifier] =
     tokenType("identifier", TokenType.Ident) ^^ {
