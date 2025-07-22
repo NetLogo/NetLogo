@@ -64,11 +64,12 @@ object Analytics {
     }.mkString("{ ", ", ", " }")
   }
 
-  def appStart(is3D: Boolean): Unit = {
+  def appStart(version: String, is3D: Boolean): Unit = {
     startTime = System.currentTimeMillis
 
     val json = buildJson(
       Map(
+        "version" -> version,
         "threed" -> is3D,
         "os" -> System.getProperty("os.name"),
         "arch" -> System.getProperty("os.arch")

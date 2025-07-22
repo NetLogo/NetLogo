@@ -106,8 +106,8 @@ trait Version {
     }
   }
 
-  def versionNumberOnly =
-    version.drop("NetLogo ".size)
+  def versionNumberOnly: String =
+    version.stripPrefix("NetLogo ")
 
   def compatibleVersion(modelVersion: String) =
     compareVersions(version, modelVersion)
