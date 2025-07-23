@@ -77,8 +77,11 @@ trait FrontEndMain extends NetLogoParser {
   }
 
   def findAllExtensions(source: String): Seq[(String, Option[String])] = {
-    val tokens = tokenizer.tokenizeString(source)
+    var tokens = tokenizer.tokenizeString(source)
     val classicExtensions = StructureParser.findExtensions(tokens)
+
+    // Reset the tokens iterator to re-use it
+    tokens = tokenizer.tokenizeString(source)
     val configurableExtensions = StructureParser.findConfigurableExtensions(tokens)
     classicExtensions.map(name => (name, None)) ++
       configurableExtensions.map { case (name, url) => (name, url) }

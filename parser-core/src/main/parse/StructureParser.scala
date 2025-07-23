@@ -208,7 +208,7 @@ object StructureParser {
     val extensions = ListBuffer[(String, Option[String])]()
     while (tokens.hasNext) {
       val token = tokens.next() // Keep moving until we find "EXTENSION"
-      if (token.tpe == TokenType.Keyword && token.value == "EXTENSION") {
+      if (token.value == "EXTENSION") {
         // Open bracket
         if (!tokens.hasNext || tokens.next().tpe != TokenType.OpenBracket) {
           exception("Expected open bracket after 'EXTENSION' keyword", token)
