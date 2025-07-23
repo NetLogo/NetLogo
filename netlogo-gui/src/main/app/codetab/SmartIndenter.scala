@@ -50,12 +50,16 @@ extends Indenter {
     def lineEnd: Int
     def text: String
     def delta: Int
+    def caretOffset: Int
   }
-  case class AddIndent(lineNum: Int, lineStart: Int, lineEnd: Int, text: String, delta: Int) extends LineIndent
-  case class MaintainIndent(lineNum: Int, lineStart: Int, lineEnd: Int, text: String) extends LineIndent {
+  case class AddIndent(lineNum: Int, lineStart: Int, lineEnd: Int, text: String, delta: Int, caretOffset: Int)
+    extends LineIndent
+  case class MaintainIndent(lineNum: Int, lineStart: Int, lineEnd: Int, text: String, caretOffset: Int)
+    extends LineIndent {
     def delta: Int = 0
   }
-  case class RemoveIndent(lineNum: Int, lineStart: Int, lineEnd: Int, text: String, delta: Int) extends LineIndent
+  case class RemoveIndent(lineNum: Int, lineStart: Int, lineEnd: Int, text: String, delta: Int, caretOffset: Int)
+    extends LineIndent
 
   /// first, the five handle* methods in IndenterInterface
   def handleTab(): Unit = {
@@ -122,16 +126,16 @@ extends Indenter {
     val builder = new StringBuilder(finish - start)
     indentations.foldLeft(0) { (offset: Int, indent: LineIndent) =>
       val newOffset = (offset, indent) match {
-        case (offset, AddIndent(_, _, _, text, delta)) =>
+        case (offset, AddIndent(_, _, _, text, delta, _)) =>
           builder.append(spaces(delta))
           builder.append(text)
           (offset + delta)
-        case (offset, RemoveIndent(_, _, _, text, delta)) =>
+        case (offset, RemoveIndent(_, _, _, text, delta, _)) =>
           if (text.length > - delta) {
             builder.append(text.substring(- delta, text.length))
           }
           (offset + delta)
-        case (offset, MaintainIndent(_, _, _, text)) =>
+        case (offset, MaintainIndent(_, _, _, text, _)) =>
           builder.append(text)
           offset
       }
@@ -142,11 +146,12 @@ extends Indenter {
     builder.delete(builder.length - 1, builder.length)
     if (caretPosition.isDefined) {
       caretPosition.foreach { startCaretPosition =>
+        val startLine = code.offsetToLine(startCaretPosition)
         val finalCaretPosition =
           if (startCaretPosition >= start) {
             val caretOffset = indentations.foldLeft(0) {
               case (offset, indent) if indent.lineStart <= startCaretPosition + 1 =>
-                offset + indent.delta
+                offset + indent.delta + indent.caretOffset
               case (offset, indent) => offset
             }
             startCaretPosition + caretOffset max 0
@@ -154,7 +159,7 @@ extends Indenter {
             startCaretPosition
           }
         code.replace(start, finish - start, builder.toString)
-        code.setCaretPosition(finalCaretPosition)
+        code.setCaretPosition(finalCaretPosition.max(code.lineToStartOffset(startLine)))
       }
     } else {
       code.replace(start, finish - start, builder.toString)
@@ -181,13 +186,24 @@ extends Indenter {
     val (indentLevels, priorLine, indentAcc) = acc
     val thisIndent = lineIndentationLevel(indentLevels, line, priorLine, indentAcc.headOption)
     val newIndentLevels = indentationChange(indentLevels, line, priorLine, indentAcc.headOption)
-    val newIndentAcc: Seq[LineIndent] =
-      if ((thisIndent - line.leadingSpaces) == 0)
-        MaintainIndent(line.lineNum, line.lineStart, line.lineEnd, line.text) +: indentAcc
-      else if (thisIndent - line.leadingSpaces > 0) {
-        AddIndent(line.lineNum, line.lineStart, line.lineEnd, line.text, thisIndent - line.leadingSpaces) +: indentAcc
-      } else
-        RemoveIndent(line.lineNum, line.lineStart, line.lineEnd, line.text, thisIndent - line.leadingSpaces) +: indentAcc
+    val caretOffset = {
+      if (line.lineStart <= code.getCaretPosition && line.lineEnd > code.getCaretPosition && line.tokens.isEmpty) {
+        line.leadingSpaces - (code.getCaretPosition - line.lineStart)
+      } else {
+        0
+      }
+    }
+    val newIndentAcc: Seq[LineIndent] = {
+      if ((thisIndent - line.leadingSpaces) == 0) {
+        MaintainIndent(line.lineNum, line.lineStart, line.lineEnd, line.text, caretOffset) +: indentAcc
+      } else if (thisIndent - line.leadingSpaces > 0) {
+        AddIndent(line.lineNum, line.lineStart, line.lineEnd, line.text, thisIndent - line.leadingSpaces, caretOffset)
+          +: indentAcc
+      } else {
+        RemoveIndent(line.lineNum, line.lineStart, line.lineEnd, line.text, thisIndent - line.leadingSpaces,
+                     caretOffset) +: indentAcc
+      }
+    }
     (newIndentLevels, Some(line), newIndentAcc)
   }
 

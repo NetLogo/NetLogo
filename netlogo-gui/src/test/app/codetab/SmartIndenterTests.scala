@@ -134,6 +134,22 @@ class SmartIndenterTests extends AnyFunSuite {
     assert("[\n  abc\n]" == code.text)
   }
 
+  test("move caret to correct indentation if line is all whitespace") {
+    val code = new Scaffold("to test\n  \nend\n")
+    code.setCaretPosition(8)
+    new SmartIndenter(code, compiler).handleTab()
+    assert(code.text == "to test\n  \nend\n")
+    assert(code.getCaretPosition == 10)
+  }
+
+  test("ensure that caret doesn't move onto previous line") {
+    val code = new Scaffold("to test\n    print \"test\"\nend\n")
+    code.setCaretPosition(8)
+    new SmartIndenter(code, compiler).handleTab()
+    assert(code.text == "to test\n  print \"test\"\nend\n")
+    assert(code.getCaretPosition == 8)
+  }
+
   // call FunSuite's test method for each test read
   for(Array(name, in, out) <- data) {
     test("indent all lines in " + name) {
