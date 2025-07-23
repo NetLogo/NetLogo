@@ -41,7 +41,15 @@ trait ExtensionManager {
    * @param errors  the ErrorSource to use when a CompilerException needs
    *                to be thrown.
    */
-  def importExtension(jarPath: String, errors: ErrorSource): Unit
+  def importExtension(jarPath: String, errors: ErrorSource): Unit 
+  def importExtension(nameOrJarPath: String, url: Option[String], errors: ErrorSource): Unit = {
+    // In NetLogo Desktop, URL extensions are not supported, so we error if this is called.
+    if (url.isDefined) {
+      throw new UnsupportedOperationException(
+        s"URL extensions are not supported in NetLogo Desktop: ${nameOrJarPath}")
+    }
+    importExtension(nameOrJarPath, errors)
+  }
 
   def readExtensionObject(extensionName: String, typeName: String, value: String): ExtensionObject
 }
