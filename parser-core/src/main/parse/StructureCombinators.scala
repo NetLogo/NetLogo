@@ -182,10 +182,8 @@ extends scala.util.parsing.combinator.Parsers {
   def closeBracket: Parser[Token] =
     tokenType("closing bracket", TokenType.CloseBracket)
   
-
   def modifier(key: String): Parser[Token] =
     acceptMatch(key, { case token @ Token(_, TokenType.Ident, `key`) => token })
-
 
   def identifier: Parser[Identifier] =
     tokenType("identifier", TokenType.Ident) ^^ {
