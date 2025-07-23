@@ -12,6 +12,11 @@ object FrontEndInterface {
   val NoProcedures: ProceduresMap = ListMap()
   type FrontEndResults = (Seq[ProcedureDefinition], StructureResults)
 
+  case class ConfigurableExtension(
+    name: String,
+    url: Option[String]
+  )
+
   def hasIncludes(source: String): Boolean = {
     val includesRegEx = """(?m)^\s*__includes""".r
     includesRegEx.findFirstMatchIn(source) match {

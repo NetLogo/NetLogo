@@ -2,6 +2,7 @@
 
 package org.nlogo.core
 
+import org.nlogo.core.StructureDeclarations.ExtensionDeclaration
 import FrontEndInterface._
 
 case class StructureResults(program: Program,
@@ -9,7 +10,8 @@ case class StructureResults(program: Program,
                         procedureTokens: Map[String, Iterable[Token]] = Map(),
                         includes: Seq[Token] = Seq(),
                         includedSources: Seq[String] = Seq(),
-                        extensions: Seq[Token] = Seq())
+                        extensions: Seq[Token] = Seq(),
+                        configurableExtensions: Seq[ExtensionDeclaration] = Seq())
 
 object StructureResults {
   val empty = StructureResults(Program.empty())

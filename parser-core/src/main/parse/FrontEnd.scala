@@ -85,4 +85,17 @@ trait FrontEndMain extends NetLogoParser {
       decls => decls
     )
   }
+
+  def findConfigurableExtensions(source: String): Seq[(String, Option[String])] = {
+    val tokens = tokenizer.tokenizeString(source)
+    StructureParser.findConfigurableExtensions(tokens)
+  }
+
+  def findAllExtensions(source: String): Seq[(String, Option[String])] = {
+    val tokens = tokenizer.tokenizeString(source)
+    val classicExtensions = StructureParser.findExtensions(tokens)
+    val configurableExtensions = StructureParser.findConfigurableExtensions(tokens)
+    classicExtensions.map(name => (name, None)) ++
+      configurableExtensions.map { case (name, url) => (name, url) }
+  }
 }

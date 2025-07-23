@@ -4,7 +4,6 @@ package org.nlogo.parse
 
 import org.nlogo.core,
   core.{ CompilerException, Fail, FrontEndProcedure, I18N, StructureResults, Program, Syntax, Token, TokenType }
-
 /// Stage #3 of StructureParser
 
 object StructureConverter {
@@ -38,8 +37,13 @@ object StructureConverter {
         declarations.collect {
           case e: Extensions =>
             e.names.map(_.token)
-        }.flatten)
-  }
+        }.flatten,
+      configurableExtensions = oldResults.configurableExtensions ++
+        declarations.collect {
+          case e: ExtensionDeclaration =>
+            e
+        })
+    }
 
   def buildProcedure(p: Procedure, displayName: Option[String]): (FrontEndProcedure, Iterable[Token]) = {
     val proc = new RawProcedure(p, displayName)
