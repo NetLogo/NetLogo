@@ -30,7 +30,8 @@ import org.nlogo.theme.{ ClassicTheme, DarkTheme, InterfaceColors, LightTheme, T
 import org.nlogo.util.{ NullAppHandler, Pico }
 import org.nlogo.window._
 import org.nlogo.window.Events._
-import org.nlogo.workspace.{ AbstractWorkspace, AbstractWorkspaceScala, Controllable, HubNetManagerFactory, WorkspaceFactory }
+import org.nlogo.workspace.{ AbstractWorkspace, AbstractWorkspaceScala, Controllable, HubNetManagerFactory,
+                             ModelsLibrary, WorkspaceFactory }
 
 import org.picocontainer.parameters.{ ComponentParameter, ConstantParameter }
 import org.picocontainer.Parameter
@@ -846,9 +847,14 @@ class App extends org.nlogo.window.Event.LinkChild
             .getSelectedChoice
         }
       fullName.foreach(name => {
-        org.nlogo.workspace.ModelsLibrary.getModelPath(name).foreach { path =>
-          val source = FileIO.fileToString(path)
-          org.nlogo.awt.EventQueue.invokeLater(() => openFromSource(source, path, ModelType.Library))
+        try {
+          fileManager.aboutToCloseFiles()
+          ModelsLibrary.getModelPath(name).foreach { path =>
+            val source = FileIO.fileToString(path)
+            EventQueue.invokeLater(() => openFromSource(source, path, ModelType.Library))
+          }
+        } catch {
+          case _: UserCancelException =>
         }
       })
     }
