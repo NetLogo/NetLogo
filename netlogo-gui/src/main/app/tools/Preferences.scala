@@ -30,13 +30,16 @@ object Preferences {
     private def getPreference: Boolean =
       NetLogoPreferences.get(i18nKey, default.toString).toBoolean
 
-    def load() = {
+    def load(): Unit = {
       checkBox.setSelected(getPreference)
     }
 
-    def save() = {
+    def save(): Unit = {
       NetLogoPreferences.put(i18nKey, checkBox.isSelected.toString)
     }
+
+    def changed: Boolean =
+      getPreference != checkBox.isSelected
   }
 
   abstract class StringPreference(val i18nKey: String, val requirement: Option[RequiredAction], default: String) extends Preference {
@@ -68,6 +71,9 @@ object Preferences {
     def save() = {
       NetLogoPreferences.put(i18nKey, textField.getText)
     }
+
+    def changed: Boolean =
+      getPreference != textField.getText
   }
 
   object Language extends Preference {
@@ -158,6 +164,9 @@ object Preferences {
           NetLogoPreferences.put("user.country", locale.getCountry)
       })
     }
+
+    def changed: Boolean =
+      !comboBox.getSelectedItem.contains(getPreference)
   }
 
   object LoadLastOnStartup extends BooleanPreference("loadLastOnStartup", None, false) {}
@@ -186,6 +195,9 @@ object Preferences {
       NetLogoPreferences.put("reloadOnExternalChanges", enabled.toString)
       tabs.watchingFiles = enabled
     }
+
+    def changed: Boolean =
+      getPreference != checkBox.isSelected
   }
 
   object IsLoggingEnabled extends BooleanPreference("loggingEnabled", Some(RequiredAction.Restart), false) {}
@@ -236,6 +248,9 @@ object Preferences {
       NetLogoPreferences.put("logDirectory", textField.getText)
     }
 
+    def changed: Boolean =
+      getPreference != textField.getText
+
     def askForConfigFile(current: String): Option[String] = {
       val dialog = new JFileChooser(new File(current))
       dialog.setDialogTitle("Log Directory")
@@ -280,6 +295,9 @@ object Preferences {
     def save(): Unit = {
       NetLogoPreferences.put(i18nKey, checkBox.isSelected.toString)
     }
+
+    def changed: Boolean =
+      getPreference != checkBox.isSelected
   }
 
   object ProceduresMenuSortOrder extends Preference {
@@ -311,6 +329,9 @@ object Preferences {
     def save(): Unit = {
       comboBox.getSelectedItem.foreach(NetLogoPreferences.put("proceduresMenuSortOrder", _))
     }
+
+    def changed: Boolean =
+      !comboBox.getSelectedItem.contains(getPreference)
   }
 
   object FocusOnError extends BooleanPreference("focusOnError", None, true) {}
@@ -343,6 +364,9 @@ object Preferences {
     def save(): Unit = {
       NetLogoPreferences.put(i18nKey, checkBox.isSelected.toString)
     }
+
+    def changed: Boolean =
+      getPreference != checkBox.isSelected
   }
 
   object UIScale extends Preference {
@@ -352,13 +376,19 @@ object Preferences {
 
     def component: JComponent & ThemeSync = textField
 
+    private def getPreference: String =
+      NetLogoPreferences.getDouble(i18nKey, 1.0).toString
+
     def load() = {
-      textField.setText(NetLogoPreferences.getDouble(i18nKey, 1.0).toString)
+      textField.setText(getPreference)
     }
 
     def save() = {
       NetLogoPreferences.putDouble(i18nKey, textField.getText.toDouble)
     }
+
+    def changed: Boolean =
+      getPreference != textField.getText
   }
 
   class IndentAutomatically(tabs: TabsInterface) extends Preference {
@@ -387,6 +417,9 @@ object Preferences {
     def save(): Unit = {
       NetLogoPreferences.put(i18nKey, checkBox.isSelected.toString)
     }
+
+    def changed: Boolean =
+      getPreference != checkBox.isSelected
   }
 
   class EditorLineNumbers(tabs: TabsInterface) extends Preference {
@@ -415,6 +448,9 @@ object Preferences {
     def save(): Unit = {
       NetLogoPreferences.put(i18nKey, checkBox.isSelected.toString)
     }
+
+    def changed: Boolean =
+      getPreference != checkBox.isSelected
   }
 
   class JumpOnClick(tabs: TabsInterface) extends Preference {
@@ -443,6 +479,9 @@ object Preferences {
     def save(): Unit = {
       NetLogoPreferences.put(i18nKey, checkBox.isSelected.toString)
     }
+
+    def changed: Boolean =
+      getPreference != checkBox.isSelected
   }
 
   object SendAnalytics extends Preference {
@@ -455,10 +494,11 @@ object Preferences {
 
     override def component: CheckBox = checkBox
 
-    def load(): Unit = {
-      val value = NetLogoPreferences.getBoolean(i18nKey, false)
+    private def getPreference: Boolean =
+      NetLogoPreferences.getBoolean(i18nKey, false)
 
-      checkBox.setSelected(value)
+    def load(): Unit = {
+      checkBox.setSelected(getPreference)
 
       Analytics.refreshPreference()
     }
@@ -466,5 +506,8 @@ object Preferences {
     def save(): Unit = {
       NetLogoPreferences.putBoolean(i18nKey, checkBox.isSelected)
     }
+
+    def changed: Boolean =
+      getPreference != checkBox.isSelected
   }
 }

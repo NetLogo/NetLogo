@@ -23,4 +23,5 @@ trait Preference {
   def component: JComponent & ThemeSync
   def load(): Unit
   def save(): Unit
+  def changed: Boolean
 }
