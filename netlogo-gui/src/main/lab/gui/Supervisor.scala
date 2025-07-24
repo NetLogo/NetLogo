@@ -97,7 +97,8 @@ class Supervisor(
 
     if (protocol.runsCompleted == 0) {
       try {
-        new RunOptionsDialog(parent, dialogFactory, workspace.guessExportName(protocol.name), protocol).run()
+        new RunOptionsDialog(parent, dialogFactory, Option(workspace.getModelDir).map(new File(_).toPath),
+                             workspace.guessExportName(protocol.name), protocol).run()
       } catch {
         case ex: UserCancelException => return
       }
