@@ -189,10 +189,10 @@ object PackageMacAggregate {
 
     log.info("Signing libs inside jars.")
 
-    // Files.walk(bundleDir.toPath).iterator.asScala.foreach { path =>
-    //   if (path.toString.endsWith(".jar"))
-    //     signJarLibs(path.toFile, appSigningOptions)
-    // }
+    Files.walk(bundleDir.toPath).iterator.asScala.foreach { path =>
+      if (path.toString.endsWith(".jar"))
+        signJarLibs(path.toFile, appSigningOptions)
+    }
 
     // It's odd that we have to sign `libjli.dylib`, but it works so I'm not going to
     // worry about it.  We should try to remove it once we're on a more modern JDK version
