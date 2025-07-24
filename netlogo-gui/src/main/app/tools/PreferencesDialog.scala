@@ -8,12 +8,14 @@ import java.nio.file.Files
 import javax.swing.{ JLabel, JPanel }
 import javax.swing.border.EmptyBorder
 
+import org.nlogo.app.common.Events.RestartEvent
 import org.nlogo.core.I18N
 import org.nlogo.swing.{ ButtonPanel, DialogButton, FloatingTabbedPane, OptionPane, TabLabel, TextField, Transparent }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
-class PreferencesDialog(parent: Frame & ThemeSync, generalPreferences: Seq[Preference], codePreferences: Seq[Preference],
-                        loggingPreferences: Seq[Preference]) extends ToolDialog(parent, "preferences") with ThemeSync {
+class PreferencesDialog(parent: Frame & ThemeSync, generalPreferences: Seq[Preference],
+                        codePreferences: Seq[Preference], loggingPreferences: Seq[Preference])
+  extends ToolDialog(parent, "preferences") with ThemeSync {
 
   private lazy val tabs = new FloatingTabbedPane
 
@@ -53,9 +55,19 @@ class PreferencesDialog(parent: Frame & ThemeSync, generalPreferences: Seq[Prefe
 
   private def apply(): Boolean = {
     if (validatePrefs()) {
+      val allPrefs: Seq[Preference] = generalPreferences ++ codePreferences ++ loggingPreferences
+      val restartPrompt = allPrefs.exists(pref => pref.requirement.contains(RequiredAction.Restart) && pref.changed)
+
       generalPreferences.foreach(_.save())
       codePreferences.foreach(_.save())
       loggingPreferences.foreach(_.save())
+
+      if (restartPrompt) {
+        if (new OptionPane(this, I18N.gui("restartPrompt"), I18N.gui("restartPrompt.message"),
+                           Seq(I18N.gui("restartNow"), I18N.gui("restartLater")), OptionPane.Icons.Info)
+              .getSelectedIndex == 0)
+          new RestartEvent().raise(parent)
+      }
 
       true
     } else {

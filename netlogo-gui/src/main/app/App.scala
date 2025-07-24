@@ -7,10 +7,9 @@ import java.awt.datatransfer.DataFlavor
 import java.awt.dnd.{ DropTarget, DropTargetDragEvent, DropTargetDropEvent, DropTargetEvent, DropTargetListener }
 import java.awt.event.ActionEvent
 import java.io.File
+import java.lang.ProcessHandle
 import java.util.{ List => JList }
 import javax.swing.{ JFrame, JMenu }
-
-import scala.concurrent.ExecutionContext
 
 import org.nlogo.agent.{ Agent, World2D, World3D }
 import org.nlogo.analytics.Analytics
@@ -36,7 +35,9 @@ import org.nlogo.workspace.{ AbstractWorkspace, AbstractWorkspaceScala, Controll
 import org.picocontainer.parameters.{ ComponentParameter, ConstantParameter }
 import org.picocontainer.Parameter
 
+import scala.concurrent.ExecutionContext
 import scala.jdk.CollectionConverters.ListHasAsScala
+import scala.sys.process.Process
 
 /**
  * The main class for the complete NetLogo application.
@@ -294,6 +295,7 @@ class App extends org.nlogo.window.Event.LinkChild
   with ModelSections
   with AppEvents.SwitchedTabsEvent.Handler
   with AppEvents.OpenLibrariesDialogEvent.Handler
+  with AppEvents.RestartEvent.Handler
   with AboutToQuitEvent.Handler
   with ZoomedEvent.Handler
   with Controllable {
@@ -605,6 +607,21 @@ class App extends org.nlogo.window.Event.LinkChild
         return
     }
 
+  }
+
+  // used by preferences that require a restart if the user chooses the "Restart Now" option (Isaac B 7/23/25)
+  def handle(e: AppEvents.RestartEvent): Unit = {
+    val processFile = new File(ProcessHandle.current.info.command.get)
+
+    if (System.getProperty("os.name").toLowerCase.startsWith("mac")) {
+      // this looks a bit strange but the reported process is actually the binary file nested deep in the .app file,
+      // and in order for the OS to register the app properly, the .app file needs to be run (Isaac B 7/24/25)
+      Process(Seq("open", "-n", "-a", processFile.getParentFile.getParentFile.getParentFile.toString)).run()
+    } else {
+      Process(processFile.toString).run()
+    }
+
+    System.exit(0)
   }
 
   // This is for other windows to get their own copy of the menu
