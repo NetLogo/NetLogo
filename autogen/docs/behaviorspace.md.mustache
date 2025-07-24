@@ -41,12 +41,13 @@ More about changes to BehaviorSpace in NetLogo 6.4:
 created using new features are not backwards compatible.
 - For information on format changes to output files see
 [**Output File Changes**](#output-file-changes).
-- The Experiment dialog now uses tooltips rather than text below each input element see
+- Hovering over the Experiment dialog entry titles will show a helpful 'tooltip'. See
 [**Creating an experiment setup**](#creating-an-experiment-setup).
 - Experiments using the new features can be found in the model
 Sample Models=>Biology=>Wolf Sheep Predation, with with additional notes in the Info tab.
-- Hovering over the edit dialog entry titles will show a helpful 'tooltip'.
 - Additional minor changes can be found by searching this page for *(Since 6.4)*.
+
+The [bspace extension](#bspace-extension) was added with NetLogo 7.0.0.
 
 ## What is BehaviorSpace?
 
@@ -974,6 +975,16 @@ Note the use of `-Dfile.encoding=UTF-8`. This forces all file I/O to use UTF-8
 encoding. Doing so ensures that NetLogo can load all models consistently, and
 that file-* primitives work consistently on all platforms, including models
 containing Unicode characters.
+
+### Bspace Extension
+The [bspace extension](https://github.com/NetLogo/BehaviorSpace-Extension),
+which can be downloaded using the Extensions Manager (Tools -> Extensions),
+provides a programmatic way to create and run BehaviorSpace experiments.
+The bspace extension has primitives that allow you to create new experiments
+from scratch, and to copy and modify experiments that have been created using
+the BehaviorSpace GUI. Any of the parameters in the Experiment dialog or the
+Run options dialog can be set or modified. This is a beta version of the bspace
+extension and feedback is appreciated.
 
 ### Controlling API
 
