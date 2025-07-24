@@ -389,36 +389,40 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
   }
 
   def mouseMoved(e: MouseEvent): Unit = {
-    interfacePanel.setCursor(
-      getHandle(e.getX, e.getY) match {
-        case Some(MouseMode.N) =>
-          Cursor.getPredefinedCursor(Cursor.N_RESIZE_CURSOR)
+    if (selected) {
+      interfacePanel.setCursor(
+        getHandle(e.getX, e.getY) match {
+          case Some(MouseMode.N) =>
+            Cursor.getPredefinedCursor(Cursor.N_RESIZE_CURSOR)
 
-        case Some(MouseMode.NE) =>
-          Cursor.getPredefinedCursor(Cursor.NE_RESIZE_CURSOR)
+          case Some(MouseMode.NE) =>
+            Cursor.getPredefinedCursor(Cursor.NE_RESIZE_CURSOR)
 
-        case Some(MouseMode.E) =>
-          Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR)
+          case Some(MouseMode.E) =>
+            Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR)
 
-        case Some(MouseMode.SE) =>
-          Cursor.getPredefinedCursor(Cursor.SE_RESIZE_CURSOR)
+          case Some(MouseMode.SE) =>
+            Cursor.getPredefinedCursor(Cursor.SE_RESIZE_CURSOR)
 
-        case Some(MouseMode.S) =>
-          Cursor.getPredefinedCursor(Cursor.S_RESIZE_CURSOR)
+          case Some(MouseMode.S) =>
+            Cursor.getPredefinedCursor(Cursor.S_RESIZE_CURSOR)
 
-        case Some(MouseMode.SW) =>
-          Cursor.getPredefinedCursor(Cursor.SW_RESIZE_CURSOR)
+          case Some(MouseMode.SW) =>
+            Cursor.getPredefinedCursor(Cursor.SW_RESIZE_CURSOR)
 
-        case Some(MouseMode.W) =>
-          Cursor.getPredefinedCursor(Cursor.W_RESIZE_CURSOR)
+          case Some(MouseMode.W) =>
+            Cursor.getPredefinedCursor(Cursor.W_RESIZE_CURSOR)
 
-        case Some(MouseMode.NW) =>
-          Cursor.getPredefinedCursor(Cursor.NW_RESIZE_CURSOR)
+          case Some(MouseMode.NW) =>
+            Cursor.getPredefinedCursor(Cursor.NW_RESIZE_CURSOR)
 
-        case _ =>
-          Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR)
-      }
-    )
+          case _ =>
+            Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR)
+        }
+      )
+    } else {
+      interfacePanel.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR))
+    }
   }
 
   def mouseClicked(e: MouseEvent): Unit = {}
@@ -443,15 +447,16 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
       return
     }
 
-    val x = e.getX
-    val y = e.getY
-
     val p = Coordinates.convertPointToScreen(e.getPoint, this)
 
     startPressX = p.x
     startPressY = p.y
 
-    mouseMode = getHandle(x, y).getOrElse(MouseMode.DRAG)
+    if (selected) {
+      mouseMode = getHandle(e.getX, e.getY).getOrElse(MouseMode.DRAG)
+    } else {
+      mouseMode = MouseMode.DRAG
+    }
 
     if (mouseMode == MouseMode.DRAG) {
       interfacePanel.aboutToDragSelectedWidgets(this, startPressX, startPressY)
