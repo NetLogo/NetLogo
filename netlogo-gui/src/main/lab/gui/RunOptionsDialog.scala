@@ -3,6 +3,7 @@
 package org.nlogo.lab.gui
 
 import java.awt.Window
+import java.nio.file.Path
 
 import org.nlogo.api.{ LabDefaultValues, LabProtocol }
 import org.nlogo.awt.UserCancelException
@@ -11,8 +12,8 @@ import org.nlogo.window.{ DummyErrorHandler, Editable, EditDialogFactory, EditPa
 
 import java.io.File
 
-class RunOptionsDialog(parent: Window, dialogFactory: EditDialogFactory, filePrefix: String, protocol: LabProtocol) {
-  val userHome = System.getProperty("user.home")
+class RunOptionsDialog(parent: Window, dialogFactory: EditDialogFactory, currentDirectory: Option[Path],
+                       filePrefix: String, protocol: LabProtocol) {
   val spreadsheetFile = s"$filePrefix-spreadsheet.csv"
   val tableFile = s"$filePrefix-table.csv"
   val statsFile = s"$filePrefix-stats.csv"
@@ -135,8 +136,9 @@ class RunOptionsDialog(parent: Window, dialogFactory: EditDialogFactory, filePre
       protocol.mirrorHeadlessOutput = b
     }
 
-    override def editPanel: EditPanel = new RunOptionsEditPanel(this, spreadsheetFile, tableFile, statsFile, listsFile,
-                                                                defaultProcessors.toString, totalProcessors.toString)
+    override def editPanel: EditPanel = new RunOptionsEditPanel(this, currentDirectory, spreadsheetFile, tableFile,
+                                                                statsFile, listsFile, defaultProcessors.toString,
+                                                                totalProcessors.toString)
 
     // boilerplate for Editable
     def helpLink = Some("behaviorspace.html#running-an-experiment")

@@ -12,8 +12,8 @@ import org.nlogo.swing.Implicits.thunk2documentListener
 import org.nlogo.swing.{ Button, FileDialog, TextField, Transparent }
 import org.nlogo.theme.InterfaceColors
 
-class FilePathEditor(accessor: PropertyAccessor[String], parent: Component, suggestedFile: Option[String])
-  extends PropertyEditor(accessor) {
+class FilePathEditor(accessor: PropertyAccessor[String], parent: Component, currentDirectory: Option[Path],
+                     suggestedFile: Option[String]) extends PropertyEditor(accessor) {
 
   private val suggestedFileName: String = suggestedFile.map(_.trim).filter(_.nonEmpty).getOrElse(s"${accessor.name}-export.csv")
   private val homePath: Path = (new File(System.getProperty("user.home"))).toPath.toAbsolutePath
@@ -56,7 +56,7 @@ class FilePathEditor(accessor: PropertyAccessor[String], parent: Component, sugg
     val path = if (currentPath.isAbsolute) {
       currentPath
     } else {
-      homePath.resolve(currentPath)
+      currentDirectory.getOrElse(homePath).resolve(currentPath)
     }
     if (path.toFile.isDirectory) {
       path.resolve(suggestedFileName)

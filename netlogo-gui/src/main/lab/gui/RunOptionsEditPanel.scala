@@ -3,13 +3,15 @@
 package org.nlogo.lab.gui
 
 import java.awt.{ GridBagConstraints, Insets }
+import java.nio.file.Path
 
 import org.nlogo.core.I18N
 import org.nlogo.window.{ BooleanEditor, EditPanel, FilePathEditor, IntegerEditor, LabeledEditor, PropertyAccessor,
                           PropertyEditor }
 
-class RunOptionsEditPanel(target: RunOptionsDialog#EditableRunOptions, spreadsheetFile: String, tableFile: String,
-                          statsFile: String, listsFile: String, defaultProcessors: String, totalProcessors: String)
+class RunOptionsEditPanel(target: RunOptionsDialog#EditableRunOptions, currentDirectory: Option[Path],
+                          spreadsheetFile: String, tableFile: String, statsFile: String, listsFile: String,
+                          defaultProcessors: String, totalProcessors: String)
   extends EditPanel(target) {
 
   private val spreadsheet =
@@ -20,7 +22,7 @@ class RunOptionsEditPanel(target: RunOptionsDialog#EditableRunOptions, spreadshe
         () => target.spreadsheet,
         _.foreach(target.setSpreadsheet),
         () => apply()),
-      this, Option(spreadsheetFile))
+      this, currentDirectory, Option(spreadsheetFile))
 
   private val table =
     new FilePathEditor(
@@ -30,7 +32,7 @@ class RunOptionsEditPanel(target: RunOptionsDialog#EditableRunOptions, spreadshe
         () => target.table,
         _.foreach(target.setTable),
         () => apply()),
-      this, Option(tableFile))
+      this, currentDirectory, Option(tableFile))
 
   private val stats =
     new FilePathEditor(
@@ -40,7 +42,7 @@ class RunOptionsEditPanel(target: RunOptionsDialog#EditableRunOptions, spreadshe
         () => target.stats,
         _.foreach(target.setStats),
         () => apply()),
-      this, Option(statsFile))
+      this, currentDirectory, Option(statsFile))
 
   private val lists =
     new FilePathEditor(
@@ -50,7 +52,7 @@ class RunOptionsEditPanel(target: RunOptionsDialog#EditableRunOptions, spreadshe
         () => target.lists,
         _.foreach(target.setLists),
         () => apply()),
-      this, Option(listsFile))
+      this, currentDirectory, Option(listsFile))
 
   private val updateView =
     new BooleanEditor(
