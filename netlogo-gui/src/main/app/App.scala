@@ -612,16 +612,13 @@ class App extends org.nlogo.window.Event.LinkChild
   // used by preferences that require a restart if the user chooses the "Restart Now" option (Isaac B 7/23/25)
   def handle(e: AppEvents.RestartEvent): Unit = {
     val processFile = new File(ProcessHandle.current.info.command.get)
-    val os = System.getProperty("os.name").toLowerCase
 
-    if (os.startsWith("win")) {
-      Process(Seq("start", processFile.toString)).run()
-    } else if (os.startsWith("mac")) {
+    if (System.getProperty("os.name").toLowerCase.startsWith("mac")) {
       // this looks a bit strange but the reported process is actually the binary file nested deep in the .app file,
       // and in order for the OS to register the app properly, the .app file needs to be run (Isaac B 7/24/25)
       Process(Seq("open", "-n", "-a", processFile.getParentFile.getParentFile.getParentFile.toString)).run()
     } else {
-      Process(processFile.toString)
+      Process(processFile.toString).run()
     }
 
     System.exit(0)
