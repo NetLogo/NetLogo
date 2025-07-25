@@ -71,7 +71,7 @@ class ScopingTests extends AnyFunSuite with BaseParserTest {
   }
   test("BreedDuplicateName") {
     duplicateName("breed [xs xs]",
-      "There is already a breed called XS")
+      "A breed cannot have the same plural and singular name")
   }
   test("BreedOnlyOneName") {
     duplicateName("breed [xs]",

@@ -81,6 +81,14 @@ object StructureChecker {
         occ.identifier.token)
     }
 
+    declarations.foreach {
+      case Breed(plural, singular, _, _) =>
+        cAssert(plural.name != singular.name, I18N.errors.get("compiler.StructureChecker.pluralSingular"),
+                singular.token)
+
+      case _ =>
+    }
+
     val occurrences = occurrencesFromDeclarations(declarations)
 
     for { case usage@Occurrence(Breed(_, _, _, _), _, _, _) <- occurrences.iterator } {
