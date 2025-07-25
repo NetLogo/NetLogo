@@ -10,13 +10,14 @@ import javax.swing.border.EmptyBorder
 import scala.concurrent.ExecutionContext
 
 import org.nlogo.api.{ LibraryInfoDownloader, LibraryManager }
-import org.nlogo.core.I18N
+import org.nlogo.core.{ I18N, Token }
 import org.nlogo.swing.{ CustomOptionPane, DialogButton, OptionPane, ProgressListener, ScrollPane, TextArea, Transparent }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 class LibrariesDialog( parent:          Frame
                      , manager:         LibraryManager
                      , recompile:       () => Unit
+                     , tokenizeSource:  String => Iterator[Token]
                      , updateSource:    ((String) => String) => Unit
                      , extPathMappings: Map[String, Path]
                      ) extends ToolDialog(parent, "libraries") with ThemeSync {
@@ -24,7 +25,8 @@ class LibrariesDialog( parent:          Frame
   // `tabs` can be converted back to a `JTabbedPane` once other libraries are added, like code modules or models.
   // -JeremyB April 2019
   private lazy val tabs            = new JPanel(new BorderLayout)
-  private lazy val tab             = new LibrariesTab("extensions", manager, status.setText, recompile, updateSource, extPathMappings)
+  private lazy val tab             = new LibrariesTab("extensions", manager, status.setText, recompile, tokenizeSource,
+                                                      updateSource, extPathMappings)
   private lazy val bottomPanel     = new JPanel(new BorderLayout)
   private lazy val status          = new JLabel
   private lazy val buttonPanel     = new JPanel(new FlowLayout(FlowLayout.CENTER, 6, 0)) with Transparent

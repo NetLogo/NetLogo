@@ -12,7 +12,7 @@ import org.nlogo.app.common.TabsInterface
 import org.nlogo.app.interfacetab.WidgetPanel
 import org.nlogo.app.tools.{ LibrariesDialog, Preferences, PreferencesDialog }
 import org.nlogo.awt.Positioning
-import org.nlogo.core.I18N
+import org.nlogo.core.{ I18N, Token }
 import org.nlogo.shape.ShapesManagerInterface
 import org.nlogo.swing.{ OptionPane, UserAction }, UserAction._
 import org.nlogo.theme.ThemeSync
@@ -82,6 +82,7 @@ with MenuAction {
 class OpenLibrariesDialog( frame:              Frame
                          , libManager:         LibraryManager
                          , recompile:          () => Unit
+                         , tokenizeSource:     String => Iterator[Token]
                          , updateSource:       ((String) => String) => Unit
                          , getExtPathMappings: () => Map[String, Path]
                          ) extends ShowDialogAction(I18N.gui.get("menu.tools.extensions")) with MenuAction {
@@ -89,7 +90,8 @@ class OpenLibrariesDialog( frame:              Frame
   category = ToolsCategory
   group    = ToolsSettingsGroup
 
-  def createDialog() = new LibrariesDialog(frame, libManager, recompile, updateSource, getExtPathMappings())
+  def createDialog() = new LibrariesDialog(frame, libManager, recompile, tokenizeSource, updateSource,
+                                           getExtPathMappings())
 
 }
 

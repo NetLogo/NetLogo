@@ -214,4 +214,7 @@ class Compiler(dialect: Dialect) extends PresentationCompilerInterface {
   def tokenizeForColorizationIterator(source: String, extensionManager: ExtensionManager): Iterator[Token] =
     frontEnd.tokenizeForColorizationIterator(source, defaultDialect, extensionManager)
 
+  def tokenizeWithWhitespace(source: String, extensionManager: ExtensionManager): Iterator[Token] =
+    frontEnd.tokenizeWithWhitespace(source, defaultDialect, extensionManager)
+
 }

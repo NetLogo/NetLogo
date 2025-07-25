@@ -54,6 +54,10 @@ trait FrontEndMain extends NetLogoParser {
     tokenizer.tokenizeString(source).map(Namer.basicNamer(dialect, extensionManager))
   }
 
+  def tokenizeWithWhitespace(source: String, dialect: Dialect,
+                             extensionManager: ExtensionManager): Iterator[core.Token] =
+    tokenizer.tokenizeWithWhitespace(source, null).map(Namer.basicNamer(dialect, extensionManager))
+
   @throws(classOf[CompilerException])
   def findIncludes(source: String): Seq[String] = {
     // The tokenizing and parsing just for the `__includes` declaration is quite slow on large (5000+ line) models that
