@@ -15,37 +15,32 @@ For help running models made in old versions, see the
 
 </div>
 
-## Version 7.0.0-beta2 (July 2025)
+## Version 7.0.0-beta3 (July 2025)
 
+
+
+### Changes in NetLogo Functionality
 This is a major upgrade from NetLogo 6.4. We made many changes to basic features, the NetLogo GUI, the file format and NetLogo library models.
 
 Some of the biggest changes we made in this release are:
 
 - A new modernized GUI with both light and dark modes (and a classic mode) ([see below](#changes-to-the-netLogo-gui))
-
 - Greater customizability, with more preferences and settings ([see below](#changes-for-customizability))
-
 - NetLogo models are now stored in a new format with the extension .nlogox ([see below](#changes-to-the-netlogo-file-format))
-
 - The download page now has separate Intel and Silicon MacOS versions.
+
 
 Below, we list all the changes since NetLogo 6.4.
 
-### Changes in NetLogo Functionality
-
-- There was a small bug fixed in the behavior of the `random` primitive. Models that use `random` and
-  `random-seed` may not generate the exact same behavior as in NetLogo 6.
-
 ### Changes to the NetLogo GUI
-
 - See the [NetLogo 7.0.0 Changes Overview](netlogo7intro.html) for more details.
 - User interface elements (widgets) have a flat modern look with a new color scheme.
 - Users have a choice of color themes: Light, Dark and Classic.
-  - The classic color theme is similar to the light theme, except the widgets have the pre-NetLogo 7 colors.
+    - The classic color theme is similar to the light theme, except the widgets have the pre-NetLogo 7 colors.
 - Widget sizes have been adjusted for better aesthetics and readability.
-  - All widgets now open with the new widget _styles_, but pre-NetLogo 7 models will open with the old widget _sizes_ by default. However, the new widget styles are not designed to look or function well with the old widget sizes, so model authors are strongly encouraged to update their models to use the new widget sizes.
-  - There is a tool to automatically update the layout of a model to better support the new widget sizes.
-  - Users can set widgets to have their pre-7.0.0 default sizes if they want.
+    - All widgets now open with the new widget *styles*, but pre-NetLogo 7 models will open with the old widget *sizes* by default. However, the new widget styles are not designed to look or function well with the old widget sizes, so model authors are strongly encouraged to update their models to use the new widget sizes.
+    - There is a tool to automatically update the layout of a model to better support the new widget sizes.
+    - Users can set widgets to have their pre-7.0.0 default sizes if they want.
 - Options to delete, copy and paste all selected widgets have been added to the right-click menu.
 - A preview is shown when widgets are added.
 - Buttons have new icons for observer, turtle, patch and link.
@@ -53,10 +48,10 @@ Below, we list all the changes since NetLogo 6.4.
 - For Monitors, users can specify the units represented by numbers.
 - The font and background colors for Notes can include transparency and are specified separately for Light and Dark Modes.
 - The Interface Toolbar has been updated for usability: there are now four different tools for interacting with or editing widgets:
-  - With the _Interaction tool_, users can interact with widgets much as they did before NetLogo 7.
-  - With the _Selection tool_, users can select and move widgets by clicking on them.
-  - With the _Edit tool_, users can edit widgets after a single click (no previous selection required).
-  - With the _Delete tool_, users can delete widgets by clicking (no previous selection required).
+    - With the *Interaction tool*, users can interact with widgets much as they did before NetLogo 7.
+    - With the *Selection tool*, users can select and move widgets by clicking on them.
+    - With the *Edit tool*, users can edit widgets after a single click (no previous selection required).
+    - With the *Delete tool*, users can delete widgets by clicking (no previous selection required).
 - There are new tools to align, distribute and stretch widgets. These have a menu in the Interface Toolbar.
 - Icons for the Interface, Info and Code Tabs have been updated.
 - The icons for moving the command center from the bottom of the Interface Tab to its right side and back are now more intuitive.
@@ -71,34 +66,35 @@ Below, we list all the changes since NetLogo 6.4.
 - The documentation format has been updated.
 
 ### Changes to the NetLogo File format
-
 - The extension of model files is now .nlogox or .nlogox3d.
 - Existing .nlogo model files will be converted to .nlogox files.
 - NetLogo 7 only saves models as .nlogox files.
 - The .nlogox files are XML files.
-  - Any third-party scripts that processed `.nlogo` files are not expected to function correctly on `.nlogox` files
+  - Any third-party scripts that processed .nlogo files are not expected to function correctly on .nlogox files
 - The .nlogox format allows the saving of model-specific information.
 - The .nlogox format allows the saving of user interface element specific information.
-  - For example, a user interface element can appear in the new larger size, or the original size.
+    - For example, a user interface element can appear in the new larger size, or the original size.
 - The .nlogox format is extensible and will allow new types of data to be stored in the future.
-  - This makes it easier to add capabilities and keep models backwards compatible.
-  - [Resources](resource-manager.html) needed for a model may be stored in the .nlogox file in the future.
+    - This makes it easier to add capabilities and keep models backwards compatible.
+    - [Resources](resource-manager.html) needed for a model may be stored in the .nlogox file in the future.
+
+### Changes in Primitive Functionality
+- There was a small bug fixed in the behavior of the `random` primitive.  Models that use `random` and `random-seed` may not generate the exact same behavior as in NetLogo 6.
 
 ### Changes for Customizability
-
 - Widgets that have changed size for NetLogo 7 have a checkbox that allows users to switch between the new larger size in NetLogo 7 and the previous size used in NetLogo 6.4.
 - The "Auto indent" and "Show line numbers" global preferences can be set directly from the Code Tab.
 - There are changes to the Preferences dialog which let you customize various NetLogo settings.
-  - External editor support: Users can enable a feature that checks the open model for changes made outside of NetLogo to the model file and to any included files. When a change is detected, the file is updated in NetLogo. This feature can be enabled or disabled using the preferences dialog. It is disabled by default.
-  - There is a new preference option that prevents compilation errors from stealing focus from the current tab. By default, it is not enabled.
-  - There is a new preference option that causes a separate code tab to be opened when NetLogo starts. By default, it is not enabled.
-  - There is a Linux-only UI Scale preference that matches NetLogo graphics to the system UI scale.
-  - There is a preference that enable users to control whether anonymous data will be collected when they are using NetLogo. It is enabled by default.
+    - External editor support: Users can enable a feature that checks the open model for changes made outside of NetLogo to the model file and to any included files. When a change is detected, the file is updated in NetLogo. This feature can be enabled or disabled using the preferences dialog. It is disabled by default.
+    - There is a new preference option that prevents compilation errors from stealing focus from the current tab. By default, it is not enabled.
+    - There is a new preference option that causes a separate code tab to be opened when NetLogo starts. By default, it is not enabled.
+    - There is a Linux-only UI Scale preference that matches NetLogo graphics to the system UI scale.
+    - There is a preference that enable users to control whether anonymous data will be collected when they are using NetLogo. It is enabled by default.
 - Users can switch between Light, Dark and Classic color themes using an item in the Tools menu.
 - A new Color Picker replaces Color Swatches. Users can still select NetLogo colors from a grid of rectangles. The Color Picker has a second tab that allows users to specify colors in most common formats, and that enables easy selection of a more extensive set of colors.
 
-### Features and Enhancements
 
+### Features and Enhancements
 - The NetLogo Graphical User Interface (GUI) has been thoroughly [modernized](#changes-to-the-netlogo-gui).
 - The model file format has become [extensible](#changes-to-the-netlogo-file-format).
 - Brief timely messages can now be displayed in a banner on the Interface Tab. Users can click a link for more details.
@@ -113,13 +109,11 @@ Below, we list all the changes since NetLogo 6.4.
 - The auto-save functionality will prompt users if there is an auto-save file available (for example if NetLogo crashed).
 
 ### Language Changes
-
 - The `user-input` primitive has a new optional argument for a default input value.
 - The new primitives `auto-plot-x-on`, `auto-plot-y-on`, `auto-plot-x-off`, and `auto-plot-y-off` allow plots to be scaled independently for the x and y axes.
 - The new primitive `set-topology` replaces the "hidden" command `__change-topology`.
 
 ### Bug Fixes and Minor Changes
-
 - Multi-assign with `let` and `set` can use arbitrarily nested lists to "destructure" variables. For example, `let [[corner1-x corner1-y corner2-x corner2-y] player-name score] get-current-player-info`.
 - The primitive `autoplot?` has been restored.
 - An optimization speeds up the execution of the constructs `any? turtles-on` and `any? <breeds>-on`.
@@ -153,7 +147,7 @@ Below, we list all the changes since NetLogo 6.4.
 - Doing a text search in a separate code tab that overlaps an interface window will no longer bring the interface window to the front, covering part of the separate code tab. (This was a MacOS-only issue.)
 - Changes in focus happen correctly when moving between separate and non-separate tabs.
 - Multi-assign with `let` and `set` now works with BehaviorSpace.
-- BehaviorSpace works correctly when no measurements have been made. In particular, it no longer produces a runtime error when the following conditions hold: 1) the user specifies a _Run metrics when_ reporter, 2) the reporter is never true, and 3) the user has specified both Table and Spreadsheet output.
+- BehaviorSpace works correctly when no measurements have been made. In particular, it no longer produces a runtime error when the following conditions hold: 1) the user specifies a "Run metrics when" reporter, 2) the reporter is never true, and 3) the user has specified both Table and Spreadsheet output.
 - BehaviorSpace error messages are improved.
 - When a BehaviorSpace experiment is run with one or more specified output files that are open in another program, it now aborts the experiment and shows a useful error message.
 - Invalid variable specifications in BehaviorSpace result in useful messages.
@@ -173,7 +167,7 @@ Below, we list all the changes since NetLogo 6.4.
 - Double clicking on a model that was saved with compilation errors opens it correctly.
 - `mouse-xcor` and `mouse-ycor` no longer degrade performance when called multiple times per iteration of go or in an ask with lots of agents.
 - Using a lower case 'i' in code with a Turkish locale no longer causes compilations errors
-- The resize behavior of edit dialogs has been improved. For example, plot widget "update commands" and "setup commands" fields can now be made taller
+- The resize behavior of edit dialogs has been improved. For example, plot widget "update commands" and "setup commands" fields can now be made taller, and the BehaviorSpace experiment edit dialog can be resized to make controls near the bottom accessible.
 - NetLogo now detects autosave files created for a model in case NetLogo crashes. Users are now asked if they want to recover it.
 - Mouse coordinates are now correctly reported along the border of a selected view.
 - All open files are closed when a runtime error occurs.
@@ -189,24 +183,23 @@ Below, we list all the changes since NetLogo 6.4.
 - Inserting a tab in a Note produces four spaces.
 - Adjusting a widget value using arrow keys does not affect other scrollable areas.
 - `import-world` correctly handles tables that have a key with a ':'.
-- Better memory support for worlds with one small and one very large dimension.
+- Better support for worlds with one small and one very large dimension.
+- The app icon preview found by searching in the Windows Start Menu, is no longer pixelated.
 
 ### Extension Updates
-
 - The gogo extension supports the GoGo board 6.
 - The dialog extension `user-input` primitive allows an optional default value argument.
-- There is [a new resource extension](resource.html) that allows you to list and [get resources bundled with a model](resource-manager.html).
+- There is a new resource extension that allows you to list and get resources bundled with a model.
 - The SimpleR extension is now bundled with NetLogo.
 - The R extension is no longer bundled with NetLogo. It is available through the extension manager.
 - There is a new bspace extension that allows users to create experiments programatically.
 
 ### Documentation Updates
-
 - The Documentation has been updated to describe the many updates that were made for NetLogo 7.0.0. The majority of the images have been updated.
 - There are three new pages:
-  - [NetLogo 7.0.0 Changes Overview](netlogo7intro.html)
-  - [Netlogo Preferences](netlogopreferences.html)
-  - [Color Picker Guide](colorpicker.html)
+    - [NetLogo 7.0.0 Changes Overview](netlogo7intro.html)
+    - [Netlogo Preferences](netlogopreferences.html)
+    - [Color Picker Guide](colorpicker.html)
 - Grammar was improved for NetLogo Tutorial 2.
 - The link to the book "An Introduction to Agent-Based Modeling" was updated.
 - The BehaviorSpace error message about undefined parameter values was made easier to interpret.
@@ -214,7 +207,6 @@ Below, we list all the changes since NetLogo 6.4.
 - The effect of topological wrapping on the primitives `neighbors` and `neighbors4` is explained in the documentation.
 
 ### Models Library Changes
-
 Note: most models have been updated to the new widget size but not all.
 
 #### New Sample Models:
@@ -222,20 +214,18 @@ Note: most models have been updated to the new widget size but not all.
 - Interstitial Diffusion
 - Invasive Plants
 - The Mathematics section now has a subfolder Conic Sections that contains three models:
-  - Emergent Shapes - Ellipse
-  - Emergent Shapes - Parabola
-  - Emergent Shapes - Hyperbola
+    - Emergent Shapes - Ellipse
+    - Emergent Shapes - Parabola
+    - Emergent Shapes - Hyperbola
 - The three models above replace two models from the NetLogo 6.4 mathematics section:
-  - Conic Sections 1
-  - Comic Sections 2
+    - Conic Sections 1
+    - Comic Sections 2
 
 #### New Code Examples
-
 - The Ordered Agent Drawing Code Example model demonstrates how to sort turtles for display using `stamp` when precise drawing order is needed.
 - The Patch Outlines Example model demonstrates how to outline patches in a reasonably simple way using `stamp`.
 
 #### Sample Model Changes
-
 - The Moths model was updated with information about new research into why moths circle lights. The idea that this could be modeled with NetLogo 3D was added as a suggestion for further exploration.
 - The correct label is used after `hatch`ing in the Plant Speciation model.
 - The Discrete Event Mousetrap has additions to the Extending the Model section.
