@@ -97,7 +97,7 @@ class ChecksumTester(info: String => Unit) {
     val workspace = HeadlessWorkspace.newInstance
     workspace.silent = true
     val revisionMatches = revision == ChecksumsAndPreviews.Checksums.getRevisionNumber(model)
-    workspace.open(model)
+    workspace.open(model, true)
     Checksummer.initModelForChecksumming(workspace, variant)
     val actual = Checksummer.calculateWorldChecksum(workspace)
     if (expectedWorldSum != actual) {

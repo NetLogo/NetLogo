@@ -105,10 +105,6 @@ object ChecksumsAndPreviews {
         .forall(!path.toUpperCase.containsSlice(_))
 
     def remake(path: String): Unit = {
-      if (path.contains("Calorimetry") || path.contains("Image Resource Example") || path.contains("Mammoths")) {
-        println("skipping: " + path + "\n (non-bundled extension usage)")
-        return
-      }
       if (path.contains("GenJam - Duple") || path.contains("Frogger") || path.contains("Sound Machines")) {
         println("skipping: " + path + "\n (uses sound extension)")
         return

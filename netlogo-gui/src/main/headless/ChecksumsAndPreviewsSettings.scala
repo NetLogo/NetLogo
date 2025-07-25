@@ -61,12 +61,5 @@ object ChecksumsAndPreviewsSettings {
       "/Code Examples/Extensions Examples/view2.5d/"
     )
 
-    , Some("it uses the import-a extension") -> List(
-      "/models/Code Examples/Image Resource Example.nlogox",
-      "/models/Sample Models/Biology/Evolution/Mammoths.nlogox",
-      "/models/Sample Models/Computer Science/Robotic Factory.nlogox",
-      "/models/Sample Models/Biology/Evolution/Bug Hunt Camouflage.nlogox"
-    )
-
   )
 }

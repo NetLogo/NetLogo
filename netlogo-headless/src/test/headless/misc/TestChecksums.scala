@@ -60,7 +60,7 @@ class ChecksumTester(val info: String => Unit, versionMismatch: () => Unit = () 
       versionMismatch()
       info(s"checksums.txt has $expectedRevision but model is $actualRevision")
     }
-    workspace.open(model)
+    workspace.open(model, true)
     Checksummer.initModelForChecksumming(workspace, variant)
     val actual = Checksummer.calculateWorldChecksum(workspace)
     if (expectedWorldSum != actual) {
