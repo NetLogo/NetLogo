@@ -64,6 +64,8 @@ object LibraryManager {
         case _ =>
       }
       loadedOnce = true
+    } else {
+      complete()
     }
   }
 }
