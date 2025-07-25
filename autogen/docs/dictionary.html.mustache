@@ -8839,6 +8839,8 @@ ask links [ stop-inspecting self ]
         <p>
           Reports just a section of the given list or string, ranging between
           the first position (inclusive) and the second position (exclusive).
+          To include the last item <i>position2</i> should equal the length of the
+          list or string.
         </p>
         <p>
           If either <i>position</i> is fractional, it will be rounded down to
@@ -8850,6 +8852,10 @@ ask links [ stop-inspecting self ]
         <pre>
 show sublist [99 88 77 66] 1 3
 =&gt; [88 77]
+show sublist [99 88 77 66] 1 4
+=&gt;  [88 77 66]
+show sublist [99 88 77 66] 1 5
+ERROR: Runtime error: 5 is greater than the length of the input list (4).
 show substring &quot;apartment&quot; 1 5
 =&gt; &quot;part&quot;
 </pre>
