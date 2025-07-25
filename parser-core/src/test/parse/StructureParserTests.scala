@@ -260,6 +260,10 @@ class StructureParserTests extends AnyFunSuite {
     expectError("to foo end globals []",
       "Keyword GLOBALS cannot be used in this context.") }
 
+  test("singular breed name matches plural") {
+    expectError("breed [ cats cats ]", "A breed cannot have the same plural and singular name")
+  }
+
   def compileAll(src: String, nlsSrc: String): StructureResults = {
     StructureParser.parseSources(
       tokenizer,
