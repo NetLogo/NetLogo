@@ -7,6 +7,7 @@ import java.awt.{ BorderLayout, Component, Dimension, FlowLayout, Font, GridBagC
 import java.awt.font.TextAttribute
 import java.io.IOException
 import java.nio.file.Path
+import java.util.Locale
 import javax.swing.{ Action, Box, DefaultListModel, Icon, JLabel, JList, JPanel, ListCellRenderer, ListModel }
 import javax.swing.border.LineBorder
 import javax.swing.event.{ AncestorEvent, AncestorListener, ListDataEvent, ListDataListener }
@@ -17,37 +18,66 @@ import scala.collection.mutable.Buffer
 
 import org.nlogo.api.{ LibraryInfoDownloader, LibraryManager, Version }
 import org.nlogo.awt.EventQueue
-import org.nlogo.core.{ I18N, LibraryInfo, LibraryStatus }
+import org.nlogo.core.{ I18N, LibraryInfo, LibraryStatus, Token, TokenType }
 import org.nlogo.swing.{ BrowserLauncher, Button, EmptyIcon, FilterableListModel, OptionPane, RichAction, ScalableIcon,
                          ScrollPane, SwingWorker, TextArea, TextField, Transparent, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.workspace.ModelsLibrary
 
 object LibrariesTab {
-  def addExtsToSource(source: String, requiredExts: Set[String]): String = {
+  // this may look overly complex, but when rewriting the user's source code, we need to be absolutely sure
+  // that we're doing the right thing, otherwise we might break things. the following code tokenizes the source,
+  // preserving all whitespace and comments. it then tries to find an existing valid extensions directive. if it
+  // can't find an extensions directive regardless of its validity, it adds a new extensions directive to the top
+  // of the source. if it finds an extensions directive that is in valid, it rejects the operation. if it finds a
+  // valid extensions directive, it adds any new extensions from the specified list to that directive.
+  // (Isaac B 7/25/25)
+  def addExtsToSource(source: String, requiredExts: Set[String],
+                      tokenizeSource: String => Iterator[Token]): Option[String] = {
+    val (prefix, rest) = tokenizeSource(source).span(token => token.tpe != TokenType.Keyword ||
+                                                              token.text.toUpperCase(Locale.US) != "EXTENSIONS")
 
-    // We have to be careful here.  I'd love to do clever things, but the extensions
-    // directive can be multiline and have comments in it.  --JAB (3/6/19)
-    val ExtRegex = """(?s)(?i)(^|.*\n)(\s*extensions\s*(?:;?.*?\n)?\[)(.*?\].*)""".r
+    if (rest.nextOption.isDefined) {
+      val (beforeList, list) = rest.span(token => token.tpe == TokenType.Comment ||
+                                                  token.tpe == TokenType.Whitespace)
 
-    val newExtsBasis = requiredExts.toSeq.sorted.mkString(" ")
+      if (list.nextOption.exists(_.tpe == TokenType.OpenBracket)) {
+        val (contents, suffix) = list.span(token => token.tpe == TokenType.Ident ||
+                                                    token.tpe == TokenType.Comment ||
+                                                    token.tpe == TokenType.Whitespace)
 
-    source match {
-      case ExtRegex(prefix, extDirective, suffix) =>
-        val newExtsStr = if (newExtsBasis.length > 0) s"$newExtsBasis " else ""
-        s"$prefix$extDirective$newExtsStr$suffix"
-      case _ =>
-        s"extensions [$newExtsBasis]\n$source"
+        if (suffix.nextOption.exists(_.tpe == TokenType.CloseBracket)) {
+          val existing = contents.toSeq
+          val extNames = requiredExts -- existing.filter(_.tpe == TokenType.Ident)
+                                                 .map(_.text.toLowerCase(Locale.US)).toSet
+
+          val newExts = {
+            if (extNames.isEmpty) {
+              existing.map(_.text).mkString
+            } else {
+              extNames.toSeq.sorted.mkString(" ", " ", " ") + existing.map(_.text).mkString.stripLeading
+            }
+          }
+
+          Some(prefix.map(_.text).mkString + "extensions" + beforeList.map(_.text).mkString + "[" + newExts + "]" +
+               suffix.map(_.text).mkString)
+        } else {
+          None
+        }
+      } else {
+        None
+      }
+    } else {
+      Some(s"extensions [ ${requiredExts.toSeq.sorted.mkString(" ")} ]\n$source")
     }
-
   }
-
 }
 
 class LibrariesTab( category:        String
                   , manager:         LibraryManager
                   , updateStatus:    String => Unit
                   , recompile:       () => Unit
+                  , tokenizeSource:  String => Iterator[Token]
                   , updateSource:    ((String) => String) => Unit
                   , extPathMappings: Map[String, Path]
                   ) extends JPanel(new BorderLayout) with ThemeSync {
@@ -116,7 +146,19 @@ class LibrariesTab( category:        String
   })
 
   private val addToCodeTabButton = new Button(I18N.gui("addToCodeTab"), () => {
-    updateSource(addExtsToSource(_, selectedValues.map(_.codeName).toSet))
+    updateSource { source =>
+      addExtsToSource(source, selectedValues.map(_.codeName).toSet, tokenizeSource) match {
+        case Some(newSource) =>
+          newSource
+
+        case _ =>
+          new OptionPane(this, I18N.gui.get("common.messages.error"), I18N.gui.get("tools.libraries.failedToAdd"),
+                         OptionPane.Options.Ok, OptionPane.Icons.Error)
+
+          source
+      }
+    }
+
     recompile()
   })
 

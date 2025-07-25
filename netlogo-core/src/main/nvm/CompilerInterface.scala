@@ -52,6 +52,8 @@ trait AuxiliaryCompilerInterface {
   def tokenizeForColorization(source: String, extensionManager: ApiExtensionManager): Array[Token]
   def tokenizeForColorizationIterator(source: String, extensionManager: ApiExtensionManager): Iterator[Token]
 
+  def tokenizeWithWhitespace(source: String, extensionManager: ApiExtensionManager): Iterator[Token]
+
   @throws(classOf[CompilerException])
   def checkCommandSyntax(source: String, program: Program, procedures: ListMap[String, Procedure],
                          extensionManager: ApiExtensionManager, parse: Boolean, compilationEnv: CompilationEnvironment): Unit

@@ -741,8 +741,9 @@ class App extends org.nlogo.window.Event.LinkChild
     val updateSource =
       (transform: (String) => String) =>
         _tabManager.mainCodeTab.innerSource = transform(_tabManager.mainCodeTab.innerSource)
-    new OpenLibrariesDialog( frame, workspace.getLibraryManager, () => compile()
-                           , updateSource, () => workspace.getExtensionPathMappings())
+    new OpenLibrariesDialog( frame, workspace.getLibraryManager, compile
+                           , workspace.compiler.tokenizeWithWhitespace(_, workspace.getExtensionManager), updateSource
+                           , () => workspace.getExtensionPathMappings())
   }
 
   lazy val allActions: Seq[MenuAction] = {

@@ -69,5 +69,7 @@ trait FrontEndInterface {
   def tokenizeForColorization(source: String, dialect: Dialect, extensionManager: ExtensionManager): Seq[Token]
   def tokenizeForColorizationIterator(source: String, dialect: Dialect, extensionManager: ExtensionManager): Iterator[Token]
 
+  def tokenizeWithWhitespace(source: String, dialect: Dialect, extensionManager: ExtensionManager): Iterator[Token]
+
   def findExtensions(source: String): Seq[String]
 }
