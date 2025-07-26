@@ -9,8 +9,8 @@ package org.nlogo.headless
 import
   org.nlogo.{ agent, api, core, drawing, fileformat, nvm, workspace },
     agent.{ Agent, OutputObject, World, World2D },
-    api.{ AggregateManagerInterface, CommandRunnable, FileIO, LogoException, ModelReader, RendererInterface,
-          ReporterRunnable, SimpleJobOwner },
+    api.{ AggregateManagerInterface, CommandRunnable, LogoException, ModelReader, RendererInterface, ReporterRunnable,
+          SimpleJobOwner },
       ModelReader.modelSuffix,
     core.{ AgentKind, CompilerException, Femto, File, FileMode, Model, Output, UpdateMode, WorldDimensions },
     drawing.DrawingActionBroker,
@@ -385,18 +385,10 @@ extends AbstractWorkspace(_world) with WorldLoaderInterface with PrimaryWorkspac
    * @param shouldAutoInstallLibs whether or not missing libraries (extensions) should be automatically installed
    */
   @throws(classOf[java.io.IOException])
+  @throws(classOf[CompilerException])
   override def open(path: String, shouldAutoInstallLibs: Boolean): Unit = {
     setModelPath(path)
-    val modelContents = FileIO.fileToString(path)
-    try loader.readModel(Paths.get(path).toUri).foreach(m => openModel(m, shouldAutoInstallLibs))
-    catch {
-      case ex: CompilerException =>
-        // models with special comment are allowed not to compile
-        if (compilerTestingMode &&
-            modelContents.startsWith(";; DOESN'T COMPILE IN CURRENT BUILD"))
-          System.out.println("ignored compile error: " + path)
-        else throw ex
-    }
+    loader.readModel(Paths.get(path).toUri).foreach(m => openModel(m, shouldAutoInstallLibs))
   }
 
   /**
