@@ -24,25 +24,6 @@ object PackageLinuxAggregate {
       Set(OWNER_READ, OWNER_WRITE, OWNER_EXECUTE, GROUP_READ, GROUP_EXECUTE, OTHERS_READ, OTHERS_EXECUTE).asJava
     }
 
-    // these could be simple symlinks, but there is an issue with `file` that affects Ubuntu and other common distros.
-    // The `jpackage`-produced executables are detected as `ELF 64-bit LSB shared object` libraries (which is correct
-    // according to the specs), but file reports them as non-executable libraries, so they cannot be launched from the
-    // GUIs that use that info to determine file associations, like Nautilus.  So we have to do this, which at least
-    // lets users get the things running from the GUI, albeit possibly with a warning or question about running a text
-    // file.  With javapackager the bins produced were `LSB executables` so didn't have this issue.
-    // https://bugs.launchpad.net/ubuntu/+source/file/+bug/1747711 -Jeremy B September 2022
-    log.info("Adding launcher shell scripts")
-    launchers.foreach( (launcher) => {
-      val shellScriptLauncher = appImageDir / launcher.name
-      Mustache(
-        configDir / "linux" / "shell-launcher.sh.mustache",
-        shellScriptLauncher,
-        Map("bin" -> launcher.name.replace(" ", "\\ "))
-      )
-      shellScriptLauncher.setExecutable(true)
-      Files.setPosixFilePermissions(shellScriptLauncher.toPath, shellScriptPermissions)
-    })
-
     log.info("Generating install script")
 
     Mustache(configDir / "linux" / "install.sh.mustache", appImageDir / "install.sh", Map(
