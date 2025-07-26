@@ -1,0 +1,9 @@
+- vendor:       "Liberica"
+  version:      "17.0.15"
+  architecture: "32"
+  path:         "/root/jvm-store/liberica-jdk-17.0.15/"
+
+- vendor:       "OpenJDK"
+  version:      "17.0.2"
+  architecture: "64"
+  path:         "/root/jvm-store/openjdk-17.0.2/"
