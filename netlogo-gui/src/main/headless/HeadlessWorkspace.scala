@@ -518,29 +518,19 @@ with org.nlogo.api.ViewSettings with PrimaryWorkspace {
   }
 
   def open(path: String, shouldAutoInstallLibs: Boolean, loadedExtensions: Seq[String]): Unit = {
-    try {
-      if (path == null) {
-        // if we're in a new model, loaded extensions won't persist when the empty model loads,
-        // so make sure to manually add them in here (Isaac B 6/29/25)
-        val m = loader.emptyModel("nlogox").copy(code = s"extensions [ ${loadedExtensions.mkString(" ")} ]")
-        setModelType(ModelType.New)
-        fileManager.handleModelChange()
-        openModel(m, shouldAutoInstallLibs)
-      } else {
-        val m = loader.readModel(Paths.get(path).toUri).get
-        setModelPath(path)
-        setModelType(ModelType.Normal)
-        fileManager.handleModelChange()
-        openModel(m, shouldAutoInstallLibs)
-      }
-    }
-    catch {
-      case ex: CompilerException =>
-        // models with special comment are allowed not to compile
-        if (compilerTestingMode &&
-            FileIO.fileToString(path).startsWith(";; DOESN'T COMPILE IN CURRENT BUILD"))
-          System.out.println("ignored compile error: " + path)
-        else throw ex
+    if (path == null) {
+      // if we're in a new model, loaded extensions won't persist when the empty model loads,
+      // so make sure to manually add them in here (Isaac B 6/29/25)
+      val m = loader.emptyModel("nlogox").copy(code = s"extensions [ ${loadedExtensions.mkString(" ")} ]")
+      setModelType(ModelType.New)
+      fileManager.handleModelChange()
+      openModel(m, shouldAutoInstallLibs)
+    } else {
+      val m = loader.readModel(Paths.get(path).toUri).get
+      setModelPath(path)
+      setModelType(ModelType.Normal)
+      fileManager.handleModelChange()
+      openModel(m, shouldAutoInstallLibs)
     }
   }
 
