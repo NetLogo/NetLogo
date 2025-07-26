@@ -1,0 +1,41 @@
+#!/bin/sh
+
+set -e
+
+if [ $(/usr/bin/id -u) -ne 0 ]; then
+  echo "This script must be run as root (i.e.: sudo ./install.sh)"
+  exit 1
+fi
+
+if [ $# -ne 1 ]; then
+  echo "You must provide one argument, the path to the desired installation directory."
+  exit 1
+fi
+
+echo "Installing {{version}} to $1..."
+echo "Copying main directory."
+
+cp -r . $1/{{version}}
+
+{{#launchers}}
+echo "Creating .desktop file for {{name}}."
+
+cat > /usr/share/applications/{{path-name}}.desktop << EOL
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name={{display-name}}
+Exec=$1/{{version}}/bin/{{name}}
+{{#icon}}
+Icon=$1/{{version}}/icons/{{icon}}
+{{/icon}}
+Terminal=false
+Categories=Education;Science;Java
+EOL
+
+{{/launchers}}
+echo "Updating .desktop file database."
+
+update-desktop-database
+
+echo "Installation complete!"

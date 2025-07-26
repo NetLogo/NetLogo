@@ -216,6 +216,15 @@ object NetLogoPackaging {
       val rootFiles    = (packageLinuxAggregate / aggregateOnlyFiles).value
       val variables    = buildVariables.value
 
+      val icons = Seq(
+        configDir / "linux" / "NetLogo.png",
+        configDir / "linux" / "NetLogo3D.png",
+        configDir / "linux" / "HubNetClient.png",
+        configDir / "linux" / "Behaviorsearch.png"
+      )
+
+      icons.foreach(i => FileActions.copyFile(i, buildDir / i.getName))
+
       // $APPDIR on Linux is `./lib/app`, so move two levels up for the extra dirs
       val extraJavaOptions = Seq(
         "-Dnetlogo.extensions.dir=$APPDIR/../../extensions"
@@ -223,13 +232,13 @@ object NetLogoPackaging {
       , "-Dnetlogo.docs.dir=$APPDIR/../../docs"
       , s"-Djava.library.path=$$APPDIR/../../natives/linux-${buildJDK.nativesArch}"
       )
-      val mainLauncher = new NetLogoLauncher(version, None, extraJavaOptions)
+      val mainLauncher = new NetLogoLauncher(version, Some("NetLogo.png"), extraJavaOptions)
       val launchers    = Seq(
         // Linux apps usually avoid spaces in directories and binary names, so we follow along.  -Jeremy B September
         // 2022
-        new NetLogo3dLauncher(version, None, extraJavaOptions) { override def id: String = "NetLogo3D" }
-      , new HubNetClientLauncher(version, None, extraJavaOptions) { override def id: String = "HubNetClient" }
-      , new BehaviorsearchLauncher(version, None, extraJavaOptions)
+        new NetLogo3dLauncher(version, Some("NetLogo3D.png"), extraJavaOptions) { override def id: String = "NetLogo3D" }
+      , new HubNetClientLauncher(version, Some("HubNetClient.png"), extraJavaOptions) { override def id: String = "HubNetClient" }
+      , new BehaviorsearchLauncher(version, Some("Behaviorsearch.png"), extraJavaOptions)
       )
 
       val inputDir = JavaPackager.setupAppImageInput(log, version, buildJDK, buildDir, netLogoJar, dependencies)
@@ -240,6 +249,10 @@ object NetLogoPackaging {
       val extraDirs = bundledDirs(netlogo, behaviorsearchProject).value(platform, buildJDK.architecture)
       JavaPackager.copyExtraFiles(log, extraDirs, platform, buildJDK.architecture, appImageDir, appImageDir, rootFiles)
       JavaPackager.createScripts(log, appImageDir, appImageDir / "lib" / "app", configDir, "netlogo-headless.sh", "netlogo-gui.sh", variables)
+
+      FileActions.createDirectories(appImageDir / "icons")
+
+      icons.foreach(i => FileActions.copyFile(i, appImageDir / "icons" / i.getName))
 
       PackageLinuxAggregate(
         log

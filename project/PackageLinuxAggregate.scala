@@ -4,6 +4,8 @@ import java.nio.file.{ Files, Paths }
 import java.nio.file.attribute.PosixFilePermission
 import java.io.File
 
+import scala.collection.JavaConverters._
+
 object PackageLinuxAggregate {
   def apply(
     log: sbt.util.Logger
@@ -20,11 +22,6 @@ object PackageLinuxAggregate {
       import PosixFilePermission._
       import scala.collection.JavaConverters.setAsJavaSetConverter
       Set(OWNER_READ, OWNER_WRITE, OWNER_EXECUTE, GROUP_READ, GROUP_EXECUTE, OTHERS_READ, OTHERS_EXECUTE).asJava
-    }
-
-    val launcherDesktopPermissions = {
-      import scala.collection.JavaConverters.setAsJavaSetConverter
-      Set(PosixFilePermission.OWNER_EXECUTE).asJava
     }
 
     // these could be simple symlinks, but there is an issue with `file` that affects Ubuntu and other common distros.
@@ -44,11 +41,19 @@ object PackageLinuxAggregate {
       )
       shellScriptLauncher.setExecutable(true)
       Files.setPosixFilePermissions(shellScriptLauncher.toPath, shellScriptPermissions)
-      val launcherDesktop = appImageDir / (launcher.name + ".desktop")
-      Mustache(configDir / "linux" / "launcher.desktop.mustache", launcherDesktop,
-               Map("name" -> launcher.name, "icon" -> launcher.icon))
-      Files.setPosixFilePermissions(launcherDesktop.toPath, launcherDesktopPermissions)
     })
+
+    log.info("Generating install script")
+
+    Mustache(configDir / "linux" / "install.sh.mustache", appImageDir / "install.sh", Map(
+      "version" -> s"NetLogo-$version",
+      "launchers" -> launchers.map { launcher =>
+        (Map("name" -> launcher.name, "display-name" -> s"${launcher.name} $version",
+             "path-name" -> s"${launcher.name}-$version") ++ launcher.icon.map("icon" -> _)).asJava
+      }.asJava
+    ))
+
+    Files.setPosixFilePermissions((appImageDir / "install.sh").toPath, shellScriptPermissions)
 
     log.info("Creating NetLogo_Console sym link")
     FileActions.createRelativeSoftLink(appImageDir / "NetLogo_Console", appImageDir / "bin" / "NetLogo")
