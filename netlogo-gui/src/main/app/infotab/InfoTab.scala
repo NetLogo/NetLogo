@@ -7,7 +7,8 @@ import java.awt.event.{ ActionEvent, FocusEvent, FocusListener }
 import java.awt.print.PageFormat
 import java.io.File
 import java.nio.file.Path
-import javax.swing.{ AbstractAction, Action, BorderFactory, JEditorPane, JPanel, JTextArea, ScrollPaneConstants }
+import javax.swing.{ AbstractAction, Action, BorderFactory, JEditorPane, JPanel, JScrollPane, JTextArea,
+                     ScrollPaneConstants }
 import javax.swing.border.EmptyBorder
 import javax.swing.event.{ DocumentListener, HyperlinkListener, DocumentEvent, HyperlinkEvent }
 import javax.swing.text.JTextComponent
@@ -19,8 +20,8 @@ import org.nlogo.awt.{ Fonts, Hierarchy }
 import org.nlogo.core.I18N
 import org.nlogo.editor.UndoManager
 import org.nlogo.swing.Implicits._
-import org.nlogo.swing.{ OptionPane, ScrollPane, TextArea, ToolBar, ToolBarActionButton, ToolBarToggleButton,
-                         Printable, PrinterManager, BrowserLauncher, Utils },
+import org.nlogo.swing.{ OptionPane, ScrollableTextComponent, ScrollPane, TextArea, ToolBar, ToolBarActionButton,
+                         ToolBarToggleButton, Printable, PrinterManager, BrowserLauncher, Utils },
   BrowserLauncher.docPath
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ Events => WindowEvents, Zoomable }
@@ -45,33 +46,8 @@ class InfoTab(attachModelDir: String => String, resourceManager: ExternalResourc
   private val undoManager = new UndoManager
   // 90 columns seems reasonable: wide enough to not waste screen real estate, but narrow enough so
   // as not to cause readability problems if the frame is really wide - ST 10/27/03
-  private val textArea = new TextArea(0, 90) { self =>
-    addFocusListener(new FocusListener {
-      def focusGained(fe: FocusEvent): Unit = { FindDialog.watch(self); UndoManager.setCurrentManager(undoManager) }
-      def focusLost(fe: FocusEvent): Unit = {
-        if (!fe.isTemporary) { FindDialog.dontWatch(self); UndoManager.setCurrentManager(null) }
-      }
-    })
-    setDragEnabled(false)
-    setEditable(true)
-    setLineWrap(true)
-    setWrapStyleWord(true)
-    getDocument.addDocumentListener(InfoTab.this)
-    getDocument.addUndoableEditListener(undoManager)
-    setFont(new Font(Fonts.platformMonospacedFont, Font.PLAIN, 12))
-  }
-  private val editorPane = new JEditorPane { self =>
-    addFocusListener(new FocusListener {
-      def focusGained(fe: FocusEvent): Unit = { FindDialog.watch(self) }
-      def focusLost(fe: FocusEvent): Unit = { if (!fe.isTemporary) { FindDialog.dontWatch(self) } }
-    })
-    setDragEnabled(false)
-    setEditable(false)
-    getDocument.addDocumentListener(InfoTab.this)
-    setContentType("text/html")
-    addHyperlinkListener(InfoTab.this)
-    setEditorKit(new ResourceEditorKit(resourceManager))
-  }
+  private val textArea = new ScrollableTextArea
+  private val editorPane = new ScrollableEditorPane
 
   private val editableButton = new ToolBarToggleButton(new EditableAction(I18N.gui.get("tabs.info.edit"))) with ThemeSync {
     override def syncTheme(): Unit = {
@@ -191,7 +167,7 @@ class InfoTab(attachModelDir: String => String, resourceManager: ExternalResourc
 
   def handle(e: AppEvents.SwitchedTabsEvent): Unit = {
     if (e.newTab != this)
-      FindDialog.dontWatch(editorPane)
+      FindDialog.dontWatch()
   }
 
   def handle(e: WindowEvents.LoadBeginEvent): Unit = {
@@ -244,6 +220,57 @@ class InfoTab(attachModelDir: String => String, resourceManager: ExternalResourc
   /// Printing
   def print(g: Graphics, pageFormat: PageFormat, pageIndex: Int, printer: PrinterManager) = {
     printer.printText(g, pageFormat, pageIndex, textArea.getText)
+  }
+
+  private class ScrollableTextArea extends TextArea(0, 90) with ScrollableTextComponent {
+    addFocusListener(new FocusListener {
+      def focusGained(fe: FocusEvent): Unit = {
+        FindDialog.watch(ScrollableTextArea.this)
+        UndoManager.setCurrentManager(undoManager)
+      }
+
+      def focusLost(fe: FocusEvent): Unit = {
+        if (!fe.isTemporary) {
+          FindDialog.dontWatch()
+          UndoManager.setCurrentManager(null)
+        }
+      }
+    })
+
+    setDragEnabled(false)
+    setEditable(true)
+    setLineWrap(true)
+    setWrapStyleWord(true)
+    getDocument.addDocumentListener(InfoTab.this)
+    getDocument.addUndoableEditListener(undoManager)
+    setFont(new Font(Fonts.platformMonospacedFont, Font.PLAIN, 12))
+
+    override def scrollPane: Option[JScrollPane] =
+      Option(InfoTab.this.scrollPane)
+  }
+
+  private class ScrollableEditorPane extends JEditorPane with ScrollableTextComponent {
+    addFocusListener(new FocusListener {
+      def focusGained(fe: FocusEvent): Unit = {
+        FindDialog.watch(ScrollableEditorPane.this)
+      }
+
+      def focusLost(fe: FocusEvent): Unit = {
+        if (!fe.isTemporary) {
+          FindDialog.dontWatch()
+        }
+      }
+    })
+
+    setDragEnabled(false)
+    setEditable(false)
+    getDocument.addDocumentListener(InfoTab.this)
+    setContentType("text/html")
+    addHyperlinkListener(InfoTab.this)
+    setEditorKit(new ResourceEditorKit(resourceManager))
+
+    override def scrollPane: Option[JScrollPane] =
+      Option(InfoTab.this.scrollPane)
   }
 
   private class EditableAction(label: String) extends AbstractAction(label) {

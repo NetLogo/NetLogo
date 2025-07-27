@@ -7,12 +7,13 @@ import java.awt.event.{ ActionEvent, ActionListener, FocusEvent }
 import java.util.Locale
 import javax.swing.{ AbstractAction, Action, Box, BoxLayout, JDialog, JEditorPane, JLabel, JPanel, SwingConstants }
 import javax.swing.border.EmptyBorder
-import javax.swing.text.{ BadLocationException, JTextComponent, TextAction }
+import javax.swing.text.{ BadLocationException, TextAction }
 
 import org.nlogo.core.I18N
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.swing.{ ButtonPanel, CheckBox, DialogButton, NonemptyTextFieldActionEnabler,
-                         NonemptyTextFieldButtonEnabler, TextField, TextFieldBox, Transparent, UserAction, Utils },
+                         NonemptyTextFieldButtonEnabler, ScrollableTextComponent, TextField, TextFieldBox, Transparent,
+                         UserAction, Utils },
   UserAction.{ EditCategory, EditFindGroup, KeyBindings, MenuAction }
 
 object FindDialog extends ThemeSync {
@@ -35,12 +36,8 @@ object FindDialog extends ThemeSync {
       instance.findBox.requestFocus()
       instance.findBox.selectAll()
 
-      val selectedText = instance.target.getSelectedText
-
-      if (selectedText == null)
-        instance.findBox.setText(codeInstance.findBox.getText)
-      else
-        instance.findBox.setText(selectedText)
+      instance.findBox.setText(instance.target.flatMap(t => Option(t.getSelectedText))
+                                              .getOrElse(codeInstance.findBox.getText))
 
       instance.setLocation(instance.owner.getLocation.x + instance.owner.getWidth - instance.getPreferredSize.width,
                            instance.owner.getLocation.y + instance.owner.getHeight / 2 -
@@ -81,12 +78,8 @@ object FindDialog extends ThemeSync {
       codeInstance.findBox.requestFocus()
       codeInstance.findBox.selectAll()
 
-      val selectedText = codeInstance.target.getSelectedText
-
-      if (selectedText == null)
-        codeInstance.findBox.setText(instance.findBox.getText)
-      else
-        codeInstance.findBox.setText(selectedText)
+      codeInstance.findBox.setText(codeInstance.target.flatMap(t => Option(t.getSelectedText))
+                                              .getOrElse(instance.findBox.getText))
 
       codeInstance.setLocation(codeInstance.owner.getLocation.x + codeInstance.owner.getWidth -
                                codeInstance.getPreferredSize.width, codeInstance.owner.getLocation.y +
@@ -111,13 +104,17 @@ object FindDialog extends ThemeSync {
 
   class FocusListener extends java.awt.event.FocusListener {
     def focusGained(e: FocusEvent): Unit = {
-      if (e.getSource.isInstanceOf[JTextComponent])
-        watch(e.getSource.asInstanceOf[JTextComponent])
+      e.getSource match {
+        case s: ScrollableTextComponent =>
+          watch(s)
+
+        case _ =>
+      }
     }
 
     def focusLost(e: FocusEvent): Unit = {
-      if (!e.isTemporary && e.getSource.isInstanceOf[JTextComponent])
-        dontWatch(e.getSource.asInstanceOf[JTextComponent])
+      if (!e.isTemporary && e.getSource.isInstanceOf[ScrollableTextComponent])
+        dontWatch()
     }
   }
 
@@ -149,21 +146,21 @@ object FindDialog extends ThemeSync {
     codeInstance
   }
 
-  def watch(target: JTextComponent, code: Boolean = false): Unit = {
+  def watch(target: ScrollableTextComponent, code: Boolean = false): Unit = {
     if (code) {
       FIND_ACTION_CODE.setEnabled(true)
-      getCodeInstance.target = target
+      getCodeInstance.target = Option(target)
       getCodeInstance.setReplaceEnabled(target.isEditable)
     }
 
     else {
       FIND_ACTION.setEnabled(true)
-      getInstance.target = target
+      getInstance.target = Option(target)
       getInstance.setReplaceEnabled(target.isEditable)
     }
   }
 
-  def dontWatch(target: JTextComponent, code: Boolean = false): Unit = {
+  def dontWatch(code: Boolean = false): Unit = {
     if (code) {
       getCodeInstance.setVisible(false)
       FIND_ACTION_CODE.setEnabled(false)
@@ -195,7 +192,7 @@ object FindDialog extends ThemeSync {
 
 class FindDialog(val owner: Frame) extends JDialog(owner, I18N.gui.get("dialog.find.title"), false) with ActionListener
                                                                                                     with ThemeSync {
-  private var target: JTextComponent = null
+  private var target: Option[ScrollableTextComponent] = None
 
   private val nextButton = new DialogButton(false, I18N.gui.get("dialog.find.next"), () => {
     if (!next(findBox.getText, ignoreCaseCheckBox.isSelected, wrapAroundCheckBox.isSelected)) {
@@ -220,13 +217,15 @@ class FindDialog(val owner: Frame) extends JDialog(owner, I18N.gui.get("dialog.f
   })
 
   private val replaceAndFindButton = new DialogButton(false, I18N.gui.get("dialog.find.replaceAndFind"), () => {
-    if (target.getSelectedText != null && (
-      if (ignoreCaseCheckBox.isSelected)
-        target.getSelectedText.equalsIgnoreCase(findBox.getText)
-      else
-        target.getSelectedText.equals(findBox.getText)
-    )) {
-      replace(replaceBox.getText)
+    target.foreach { t =>
+      if (t.getSelectedText != null && (
+        if (ignoreCaseCheckBox.isSelected)
+          t.getSelectedText.equalsIgnoreCase(findBox.getText)
+        else
+          t.getSelectedText.equals(findBox.getText)
+      )) {
+        replace(replaceBox.getText)
+      }
     }
 
     if (!next(findBox.getText, ignoreCaseCheckBox.isSelected, wrapAroundCheckBox.isSelected)) {
@@ -334,104 +333,131 @@ class FindDialog(val owner: Frame) extends JDialog(owner, I18N.gui.get("dialog.f
     }
   }
 
+  // helper function for centering found or replaced text in the view (Isaac B 7/26/25)
+  private def setScrollPosition(offset: Int): Unit = {
+    target.foreach { t =>
+      t.scrollPane.foreach { pane =>
+        val pos = t.modelToView2D(offset)
+        val xBar = pane.getHorizontalScrollBar
+        val yBar = pane.getVerticalScrollBar
+
+        xBar.setValue((pos.getX - xBar.getVisibleAmount / 2).toInt)
+        yBar.setValue((pos.getY - yBar.getVisibleAmount / 2).toInt)
+      }
+    }
+  }
+
   private def next(search: String, ignoreCase: Boolean, wrapAround: Boolean): Boolean = {
-    var searchMut = search
-    var text = getTargetText
+    target.map { t =>
+      var searchMut = search
+      var text = getTargetText
 
-    if (ignoreCase) {
-      // this might get slow with big programs. should be tested. -AZS
-      searchMut = searchMut.toUpperCase(Locale.ENGLISH)
-      text = text.toUpperCase(Locale.ENGLISH)
-    }
+      if (ignoreCase) {
+        // this might get slow with big programs. should be tested. -AZS
+        searchMut = searchMut.toUpperCase(Locale.ENGLISH)
+        text = text.toUpperCase(Locale.ENGLISH)
+      }
 
-    var matchIndex = text.indexOf(searchMut, target.getSelectionEnd)
+      var matchIndex = text.indexOf(searchMut, t.getSelectionEnd)
 
-    if (matchIndex == -1 && wrapAround)
-      matchIndex = text.indexOf(searchMut)
+      if (matchIndex == -1 && wrapAround)
+        matchIndex = text.indexOf(searchMut)
 
-    if (matchIndex > -1) {
-      target.setSelectionStart(matchIndex)
-      target.setSelectionEnd(matchIndex + searchMut.length)
-      true
-    } else {
-      false
-    }
+      if (matchIndex > -1) {
+        setScrollPosition(matchIndex)
+        t.setSelectionStart(matchIndex)
+        t.setSelectionEnd(matchIndex + searchMut.length)
+        true
+      } else {
+        false
+      }
+    }.getOrElse(false)
   }
 
   private def prev(search: String, ignoreCase: Boolean, wrapAround: Boolean): Boolean = {
-    var searchMut = search
-    var text = getTargetText
+    target.map { t =>
+      var searchMut = search
+      var text = getTargetText
 
-    if (ignoreCase) {
-      // this might get slow with big programs. should be tested. -AZS
-      searchMut = searchMut.toUpperCase(Locale.ENGLISH)
-      text = text.toUpperCase(Locale.ENGLISH)
-    }
+      if (ignoreCase) {
+        // this might get slow with big programs. should be tested. -AZS
+        searchMut = searchMut.toUpperCase(Locale.ENGLISH)
+        text = text.toUpperCase(Locale.ENGLISH)
+      }
 
-    var matchIndex = text.lastIndexOf(searchMut, target.getSelectionStart - 1)
+      var matchIndex = text.lastIndexOf(searchMut, t.getSelectionStart - 1)
 
-    if (matchIndex == -1 && wrapAround)
-      matchIndex = text.lastIndexOf(searchMut)
+      if (matchIndex == -1 && wrapAround)
+        matchIndex = text.lastIndexOf(searchMut)
 
-    if (matchIndex > -1) {
-      target.setSelectionStart(matchIndex)
-      target.setSelectionEnd(matchIndex + searchMut.length)
-      true
-    } else {
-      false
-    }
+      if (matchIndex > -1) {
+        setScrollPosition(matchIndex)
+        t.setSelectionStart(matchIndex)
+        t.setSelectionEnd(matchIndex + searchMut.length)
+        true
+      } else {
+        false
+      }
+    }.getOrElse(false)
   }
 
   private def replace(replacement: String): Unit = {
-    if (target.getSelectedText == null || target.getSelectedText.isEmpty) {
-      Toolkit.getDefaultToolkit.beep()
-
-      return
-    }
-
-    try {
-      target.getDocument.remove(target.getSelectionStart, target.getSelectionEnd - target.getSelectionStart)
-      target.getDocument.insertString(target.getCaretPosition, replacement, null)
-    } catch {
-      case ex: BadLocationException =>
+    target.foreach { t =>
+      if (t.getSelectedText == null || t.getSelectedText.isEmpty) {
         Toolkit.getDefaultToolkit.beep()
+      } else {
+        try {
+          setScrollPosition(t.getSelectionStart)
+          t.getDocument.remove(t.getSelectionStart, t.getSelectionEnd - t.getSelectionStart)
+          t.getDocument.insertString(t.getCaretPosition, replacement, null)
+        } catch {
+          case ex: BadLocationException =>
+            Toolkit.getDefaultToolkit.beep()
+        }
+      }
     }
   }
 
   private def replaceAll(search: String, ignoreCase: Boolean, replacement: String): Int = {
-    target.setSelectionStart(0)
-    target.setSelectionEnd(0)
+    target.map { t =>
+      t.setSelectionStart(0)
+      t.setSelectionEnd(0)
 
-    if (next(search, ignoreCase, false)) {
-      var i = 1
+      if (next(search, ignoreCase, false)) {
+        var i = 1
 
-      while {
-        replace(replacement)
+        while {
+          replace(replacement)
 
-        i += 1
+          i += 1
 
-        if (i > 50000)
-          throw new IllegalStateException("Replace All replaced too many items.")
+          if (i > 50000)
+            throw new IllegalStateException("Replace All replaced too many items.")
 
-        next(search, ignoreCase, false) // never wrap around on replace all
-      } do ()
+          next(search, ignoreCase, false) // never wrap around on replace all
+        } do ()
 
-      i
-    } else 0
+        i
+      } else 0
+    }.getOrElse(0)
   }
 
   private def getTargetText: String = {
-    if (target.isInstanceOf[JEditorPane]) {
-      // we need to get the text this way to avoid returning the HTML
-      // tags which screw-up the search - jrn 7/22/05
-      try {
-        target.getText(0, target.getDocument.getLength)
-      } catch {
-        case ex: BadLocationException =>
-          throw new IllegalStateException(ex)
-      }
-    } else {
-      target.getText
+    target match {
+      case Some(editor: JEditorPane) =>
+        // we need to get the text this way to avoid returning the HTML
+        // tags which screw-up the search - jrn 7/22/05
+        try {
+          editor.getText(0, editor.getDocument.getLength)
+        } catch {
+          case ex: BadLocationException =>
+            throw new IllegalStateException(ex)
+        }
+
+      case Some(t) =>
+        t.getText
+
+      case _ => ""
     }
   }
 

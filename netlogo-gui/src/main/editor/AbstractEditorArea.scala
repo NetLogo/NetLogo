@@ -2,12 +2,12 @@
 
 package org.nlogo.editor
 
-import javax.swing.{ JViewport, SwingUtilities }
+import javax.swing.{ JScrollPane, JViewport, SwingUtilities }
 import javax.swing.text.{ EditorKit, JTextComponent }
 
-import org.nlogo.swing.UserAction.MenuAction
+import org.nlogo.swing.{ ScrollableTextComponent, UserAction }, UserAction.MenuAction
 
-trait AbstractEditorArea extends JTextComponent {
+trait AbstractEditorArea extends ScrollableTextComponent {
   def configuration: EditorConfiguration
 
   def enableBracketMatcher(enable: Boolean): Unit
@@ -38,4 +38,6 @@ trait AbstractEditorArea extends JTextComponent {
   def getEditorKit(): EditorKit
   def setEditorKit(kit: EditorKit): Unit
   def getEditorKitForContentType(contentType: String): EditorKit
+
+  override def scrollPane: Option[JScrollPane] = configuration.scrollPaneGetter()
 }

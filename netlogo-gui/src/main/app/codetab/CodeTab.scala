@@ -7,7 +7,7 @@ import java.awt.event.{ ActionEvent, FocusEvent, FocusListener, TextEvent, TextL
 import java.awt.print.PageFormat
 import java.io.IOException
 import java.net.MalformedURLException
-import javax.swing.{ AbstractAction, JComponent, JPanel }
+import javax.swing.{ AbstractAction, JComponent, JPanel, JScrollPane }
 import javax.swing.border.EmptyBorder
 
 import org.fife.ui.rsyntaxtextarea.{ Style, SyntaxScheme, TokenTypes }
@@ -78,6 +78,7 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
     editorFactory.defaultConfiguration(100, 80)
       .withCurrentLineHighlighted(true)
       .withListener(listener)
+      .withScrollPaneGetter(() => scrollPane)
 
   val text = {
     val editor = editorFactory.newEditor(editorConfiguration, true)
@@ -115,6 +116,9 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
     }
     add(codePanel, BorderLayout.CENTER)
   }
+
+  private def scrollPane: Option[JScrollPane] =
+    Option(scrollableEditor)
 
   def getToolBar = new ToolBar {
     setBorder(new EmptyBorder(24, 10, 12, 6))
@@ -188,7 +192,7 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
     if (e.oldTab == this && dirty)
       compile()
     if (!e.newTab.isInstanceOf[CodeTab])
-      FindDialog.dontWatch(text, true)
+      FindDialog.dontWatch(true)
   }
 
   private var originalFontSize = -1

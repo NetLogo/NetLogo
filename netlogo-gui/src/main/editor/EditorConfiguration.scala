@@ -5,7 +5,7 @@ package org.nlogo.editor
 import java.awt.{ Font, GraphicsEnvironment }
 import java.awt.event.{ KeyEvent, TextEvent, TextListener }
 import java.awt.event.InputEvent.{ ALT_DOWN_MASK => AltKey, CTRL_DOWN_MASK => CtrlKey, SHIFT_DOWN_MASK => ShiftKey }
-import javax.swing.{ Action, InputMap, KeyStroke }
+import javax.swing.{ Action, InputMap, JScrollPane, KeyStroke }
 import javax.swing.text.{ DefaultEditorKit, TextAction }
 
 import org.fife.ui.rtextarea.RTextAreaEditorKit
@@ -39,7 +39,8 @@ object EditorConfiguration {
     }
 
   def default(rows: Int, columns: Int, colorizer: Colorizer) =
-    EditorConfiguration(rows, columns, defaultFont, emptyListener, colorizer, Map(), defaultContextActions(colorizer), Seq(), false, false, false, false, emptyMenu)
+    EditorConfiguration(rows, columns, defaultFont, emptyListener, colorizer, Map(), defaultContextActions(colorizer),
+                        Seq(), false, false, false, false, emptyMenu, () => None)
 }
 
 case class EditorConfiguration(
@@ -59,7 +60,8 @@ case class EditorConfiguration(
   highlightCurrentLine: Boolean,
   showLineNumbers:      Boolean,
   is3Dlanguage:         Boolean,
-  menu:                 EditorMenu) {
+  menu:                 EditorMenu,
+  scrollPaneGetter:     () => Option[JScrollPane]) {
 
   def withFont(font: Font) =
     copy(font = font)
@@ -83,6 +85,8 @@ case class EditorConfiguration(
     copy(additionalActions = keymap)
   def withMenu(newMenu: EditorMenu) =
     copy(menu = newMenu)
+  def withScrollPaneGetter(getter: () => Option[JScrollPane]) =
+    copy(scrollPaneGetter = getter)
 
   def configureEditorArea(editor: EditorArea) = {
 
