@@ -153,23 +153,14 @@ class ConvertWidgetSizes(frame: Frame, widgetPanel: WidgetPanel)
   group    = ToolsWidgetGroup
 
   override def actionPerformed(e: ActionEvent): Unit = {
-    new OptionPane(frame, I18N.gui.get("menu.tools.convertWidgetSizes"),
-                   I18N.gui.get("menu.tools.convertWidgetSizes.prompt"),
-                   Seq(I18N.gui.get("menu.tools.convertWidgetSizes.resizeAndAdjust"),
-                       I18N.gui.get("menu.tools.convertWidgetSizes.onlyResize")),
-                   OptionPane.Icons.Info).getSelectedIndex match {
+    if (new OptionPane(frame, I18N.gui.get("menu.tools.convertWidgetSizes"),
+                       I18N.gui.get("menu.tools.convertWidgetSizes.prompt"),
+                       Seq(I18N.gui.get("menu.tools.convertWidgetSizes.resizeAndAdjust"),
+                           I18N.gui.get("common.buttons.cancel")),
+                       OptionPane.Icons.Info).getSelectedIndex == 0) {
+      widgetPanel.convertWidgetSizes()
 
-      case 0 =>
-        widgetPanel.convertWidgetSizes(true)
-
-        App.app.smartPack(frame.getPreferredSize, false)
-
-      case 1 =>
-        widgetPanel.convertWidgetSizes(false)
-
-        App.app.smartPack(frame.getPreferredSize, false)
-
-      case _ =>
+      App.app.smartPack(frame.getPreferredSize, false)
     }
   }
 }

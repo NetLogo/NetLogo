@@ -29,7 +29,7 @@ object ExportResizedModels {
 
           ImageIO.write(interfacePanel.interfaceImage, "png", file)
 
-          interfacePanel.convertWidgetSizes(true)
+          interfacePanel.convertWidgetSizes()
         })
 
         Thread.sleep(1000)

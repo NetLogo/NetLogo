@@ -20,7 +20,7 @@ import org.nlogo.awt.{ Hierarchy, UserCancelException }
 import org.nlogo.fileformat.{ FailedConversionResult, SuccessfulConversion }
 import org.nlogo.fileformat.FileFormat.ModelConversion
 import org.nlogo.swing.{ FileDialog, ModalProgressTask, OptionPane, UserAction }, UserAction.MenuAction
-import org.nlogo.window.{ Events, FileController, GUIWorkspace, ReconfigureWorkspaceUI, WidgetSizes },
+import org.nlogo.window.{ Events, FileController, GUIWorkspace, ReconfigureWorkspaceUI },
                           Events.{ AboutToCloseFilesEvent, AboutToQuitEvent, AboutToSaveModelEvent, LoadModelEvent,
                                    LoadErrorEvent, ModelSavedEvent, OpenModelEvent }
 import org.nlogo.workspace.{ AbstractWorkspaceScala, OpenModel, OpenModelFromURI, OpenModelFromSource, SaveModel,
@@ -372,25 +372,19 @@ class FileManager(workspace: AbstractWorkspaceScala,
 
   private def runLoad( linkParent: Container, uri: URI, model: Model, modelType: ModelType
                      , shouldAutoInstallLibs: Boolean): Unit = {
-    val widgetSizesOption = {
+    val convertWidgetSizes = {
       if (Version.numericValue(model.version) > Version.numericValue("NetLogo 6.4.0")) {
-        WidgetSizes.Skip
+        false
       } else {
         new OptionPane(parent, I18N.gui.get("menu.tools.convertWidgetSizes"),
                       I18N.gui.get("file.open.warn.convertWidgetSizes"),
                       Seq(I18N.gui.get("menu.tools.convertWidgetSizes.resizeAndAdjust"),
-                          I18N.gui.get("menu.tools.convertWidgetSizes.onlyResize"),
                           I18N.gui.get("file.open.skip")), OptionPane.Icons.Info)
-          .getSelectedIndex match {
-
-          case 0 => WidgetSizes.ResizeAndAdjust
-          case 1 => WidgetSizes.OnlyResize
-          case _ => WidgetSizes.Skip
-        }
+          .getSelectedIndex == 0
       }
     }
 
-    ReconfigureWorkspaceUI(linkParent, uri, modelType, model, workspace, shouldAutoInstallLibs, widgetSizesOption)
+    ReconfigureWorkspaceUI(linkParent, uri, modelType, model, workspace, shouldAutoInstallLibs, convertWidgetSizes)
   }
 
   private def loadModel(openModel: (OpenModel.Controller) => Option[Model]): Option[Model] = {

@@ -10,8 +10,8 @@ import org.nlogo.theme.ThemeSync
 abstract class AbstractWidgetPanel extends JLayeredPane with Zoomable with ThemeSync {
   def removeAllWidgets(): Unit
   def getWidgetsForSaving: Seq[CoreWidget]
-  def loadWidgets(widgets: Seq[CoreWidget], widgetSizesOption: WidgetSizes): Unit
-  def convertWidgetSizes(reposition: Boolean): Unit
+  def loadWidgets(widgets: Seq[CoreWidget], convertWidgetSizes: Boolean): Unit
+  def convertWidgetSizes(): Unit
   def hasView: Boolean
   def empty: Boolean
   def setBoldWidgetText(value: Boolean): Unit

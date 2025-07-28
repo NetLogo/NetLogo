@@ -11,8 +11,7 @@ import org.nlogo.api.ModelType
 import org.nlogo.core.{ I18N, Widget => CoreWidget }
 import org.nlogo.swing.{ Menu, MenuBar, NetLogoIcon, OptionPane, ScrollPane, ToolBar, UserAction }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
-import org.nlogo.window.{ WidgetInfo, MenuBarFactory, InterfaceFactory, GUIWorkspace, AbstractWidgetPanel,
-                          WidgetSizes }
+import org.nlogo.window.{ WidgetInfo, MenuBarFactory, InterfaceFactory, GUIWorkspace, AbstractWidgetPanel }
 
 class HubNetClientEditor(workspace: GUIWorkspace,
                          linkParent: Component,
@@ -80,7 +79,7 @@ class HubNetClientEditor(workspace: GUIWorkspace,
     interfacePanel.getWidgetsForSaving
 
   def load(widgets: Seq[CoreWidget]): Unit = {
-    interfacePanel.loadWidgets(widgets, WidgetSizes.Skip)
+    interfacePanel.loadWidgets(widgets, false)
     setSize(getPreferredSize)
   }
 
@@ -134,23 +133,14 @@ class HubNetClientEditor(workspace: GUIWorkspace,
                                     with UserAction.MenuAction {
 
     override def actionPerformed(e: ActionEvent): Unit = {
-      new OptionPane(HubNetClientEditor.this, I18N.gui.get("menu.tools.convertWidgetSizes"),
-                     I18N.gui.get("menu.tools.convertWidgetSizes.prompt"),
-                     Seq(I18N.gui.get("menu.tools.convertWidgetSizes.resizeAndAdjust"),
-                         I18N.gui.get("menu.tools.convertWidgetSizes.onlyResize")),
-                     OptionPane.Icons.Info).getSelectedIndex match {
+      if (new OptionPane(HubNetClientEditor.this, I18N.gui.get("menu.tools.convertWidgetSizes"),
+                         I18N.gui.get("menu.tools.convertWidgetSizes.prompt"),
+                         Seq(I18N.gui.get("menu.tools.convertWidgetSizes.resizeAndAdjust"),
+                             I18N.gui.get("common.buttons.cancel")),
+                         OptionPane.Icons.Info).getSelectedIndex == 0) {
+        interfacePanel.convertWidgetSizes()
 
-        case 0 =>
-          interfacePanel.convertWidgetSizes(true)
-
-          setSize(getPreferredSize)
-
-        case 1 =>
-          interfacePanel.convertWidgetSizes(false)
-
-          setSize(getPreferredSize)
-
-        case _ =>
+        setSize(getPreferredSize)
       }
     }
   }

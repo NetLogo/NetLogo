@@ -28,7 +28,7 @@ object ConvertWidgetSizes {
         EventQueue.invokeAndWait(() => {
           fileManager.openFromPath(path.toString, ModelType.Library)
 
-          interfacePanel.convertWidgetSizes(true)
+          interfacePanel.convertWidgetSizes()
         })
 
         Thread.sleep(1000)

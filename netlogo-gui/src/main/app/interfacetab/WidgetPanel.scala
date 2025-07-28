@@ -21,7 +21,7 @@ import org.nlogo.theme.InterfaceColors
 import org.nlogo.window.{ AbstractPlotWidget, AbstractWidgetPanel, ButtonWidget, ClipboardUtils, Editable,
                           Events => WindowEvents, GUIWorkspace, InterfaceMode, OutputWidget, Widget, WidgetContainer,
                           WidgetRegistry, DummyChooserWidget, DummyInputBoxWidget, DummyPlotWidget, DummyViewWidget,
-                          PlotWidget, SliderWidget, ViewWidget, WidgetSizes },
+                          PlotWidget, SliderWidget, ViewWidget },
   WindowEvents.{ CompileAllEvent, DirtyEvent, EditWidgetEvent, InterfaceModeChangedEvent, LoadBeginEvent,
                  SetInterfaceModeEvent, WidgetRemovedEvent, ZoomedEvent }
 
@@ -1388,22 +1388,15 @@ class WidgetPanel(val workspace: GUIWorkspace)
     WidgetActions.undoManager.discardAllEdits()
   }
 
-  override def loadWidgets(widgets: Seq[CoreWidget], widgetSizesOption: WidgetSizes): Unit = {
+  override def loadWidgets(widgets: Seq[CoreWidget], convertWidgetSizes: Boolean): Unit = {
     try {
       if (widgets.nonEmpty) {
         setVisible(false)
         widgets.foreach(loadWidget)
       }
     } finally {
-      widgetSizesOption match {
-        case WidgetSizes.ResizeAndAdjust =>
-          convertWidgetSizes(true)
-
-        case WidgetSizes.OnlyResize =>
-          convertWidgetSizes(false)
-
-        case _ =>
-      }
+      if (convertWidgetSizes)
+        this.convertWidgetSizes()
 
       setVisible(true)
       revalidate()
@@ -1515,112 +1508,103 @@ class WidgetPanel(val workspace: GUIWorkspace)
   // of widgets like the note widget for improved aesthetics. this happens in two phases, first on the
   // x axis and then on the y axis, which although slightly less efficient allows for more accurate
   // repositioning of the widgets. (Isaac B 3/1/25)
-  override def convertWidgetSizes(reposition: Boolean): Unit = {
-    def resize(): Unit = {
-      getWrappers.foreach { w =>
-        if (w.widget.oldSize) {
-          w.widget.oldSize(false)
-
-          val width = w.getMinimumSize.width.max(w.getWidth)
-          val height = w.getMinimumSize.height.max(w.getHeight)
-
-          // enforce adjusted and preferred sizes for specific widget types to make the resizing more
-          // intelligent and aesthetic (Isaac B 7/17/25)
-          w.widget match {
-            case button: ButtonWidget =>
-              w.setSize(new Dimension(width, height.max(ButtonWidget.PrefHeight)))
-
-            case plot: PlotWidget =>
-              val newHeight = (height + plot.legendHeight).max(AbstractPlotWidget.PREF_SIZE.height + plot.legendHeight)
-
-              w.setSize(new Dimension(width.max(AbstractPlotWidget.PREF_SIZE.width), newHeight))
-
-            case _ =>
-              w.setSize(new Dimension(width, height))
-          }
-        }
-      }
-    }
-
+  override def convertWidgetSizes(): Unit = {
     setInterfaceMode(InterfaceMode.Interact, true)
 
     val originalBounds = getWrappers.map(w => (w, w.getBounds()))
 
-    if (reposition) {
-      // widgets sorted first by x coordinate, then by y coordinate if x coordinates match
-      val xSorted = getWrappers.sortWith((w, w2) => {
-        if (w.getX == w2.getX) {
-          w.getY < w2.getY
-        } else {
-          w.getX < w2.getX
-        }
+    // widgets sorted first by x coordinate, then by y coordinate if x coordinates match
+    val xSorted = getWrappers.sortWith((w, w2) => {
+      if (w.getX == w2.getX) {
+        w.getY < w2.getY
+      } else {
+        w.getX < w2.getX
+      }
+    })
+
+    // widgets sorted first by y coordinate, then by x coordinate if y coordinates match
+    val ySorted = getWrappers.sortWith((w, w2) => {
+      if (w.getY == w2.getY) {
+        w.getX < w2.getX
+      } else {
+        w.getY < w2.getY
+      }
+    })
+
+    // the horizontal space between each widget, excluding widgets that could not overlap
+    val xGaps = xSorted.map { w =>
+      (w, xSorted.collect {
+        case w2 if w2.getX > w.getX && (w2.getX > w.getX + w.getWidth ||
+                                       (w2.getY + w2.getHeight > w.getY && w2.getY < w.getY + w.getHeight)) &&
+                   w2.getX - (w.getX + w.getWidth) >= -5 =>
+          (w2, w2.getX - (w.getX + w.getWidth))
       })
-
-      // widgets sorted first by y coordinate, then by x coordinate if y coordinates match
-      val ySorted = getWrappers.sortWith((w, w2) => {
-        if (w.getY == w2.getY) {
-          w.getX < w2.getX
-        } else {
-          w.getY < w2.getY
-        }
-      })
-
-      // the horizontal space between each widget, excluding widgets that could not overlap
-      val xGaps = xSorted.map { w =>
-        (w, xSorted.collect {
-          case w2 if w2.getX > w.getX && (w2.getX > w.getX + w.getWidth ||
-                                          (w2.getY + w2.getHeight > w.getY && w2.getY < w.getY + w.getHeight)) &&
-                     w2.getX - (w.getX + w.getWidth) >= -5 =>
-            (w2, w2.getX - (w.getX + w.getWidth))
-        })
-      }
-
-      // the vertical space between each widget, excluding widgets that could not overlap
-      val yGaps = ySorted.map { w =>
-        (w, ySorted.collect {
-          case w2 if w2.getY > w.getY && (w2.getY > w.getY + w.getHeight ||
-                                          (w2.getX + w2.getWidth > w.getX && w2.getX < w.getX + w.getWidth)) &&
-                     w2.getY - (w.getY + w.getHeight) >= -5 =>
-            (w2, w2.getY - (w.getY + w.getHeight))
-        })
-      }
-
-      // resize all the widgets, must happen first or things can happen out of order for more complex layouts
-      resize()
-
-      // adjust the x position of widgets that now have a smaller horizontal gap than before
-      xGaps.foreach {
-        case (w, gaps) =>
-          for ((w2, gap) <- gaps) {
-            if (w2.getY + w2.getHeight > w.getY && w2.getY < w.getY + w.getHeight) {
-              if (gap <= 0) {
-                w2.setLocation(w.getX + w.getWidth + 5, w2.getY)
-              } else if (w2.getX < w.getX + w.getWidth + gap) {
-                w2.setLocation(w.getX + w.getWidth + gap.max(5), w2.getY)
-              }
-            }
-          }
-      }
-
-      // adjust the y position of widgets that now have a smaller vertical gap than before
-      yGaps.foreach {
-        case (w, gaps) =>
-          for ((w2, gap) <- gaps) {
-            if (w2.getX + w2.getWidth > w.getX && w2.getX < w.getX + w.getWidth) {
-              if (gap <= 0) {
-                w2.setLocation(w2.getX, w.getY + w.getHeight + 5)
-              } else if (w2.getY < w.getY + w.getHeight + gap) {
-                w2.setLocation(w2.getX, w.getY + w.getHeight + gap.max(5))
-              }
-            }
-          }
-      }
-
-      getWrappers.foreach(w => resetZoomInfo(w.widget))
-    } else {
-      // only resize widgets, no positions will be adjusted
-      resize()
     }
+
+    // the vertical space between each widget, excluding widgets that could not overlap
+    val yGaps = ySorted.map { w =>
+      (w, ySorted.collect {
+        case w2 if w2.getY > w.getY && (w2.getY > w.getY + w.getHeight ||
+                                       (w2.getX + w2.getWidth > w.getX && w2.getX < w.getX + w.getWidth)) &&
+                   w2.getY - (w.getY + w.getHeight) >= -5 =>
+          (w2, w2.getY - (w.getY + w.getHeight))
+      })
+    }
+
+    // resize all the widgets, must happen first or things can happen out of order for more complex layouts
+    getWrappers.foreach { w =>
+      if (w.widget.oldSize) {
+        w.widget.oldSize(false)
+
+        val width = w.getMinimumSize.width.max(w.getWidth)
+        val height = w.getMinimumSize.height.max(w.getHeight)
+
+        // enforce adjusted and preferred sizes for specific widget types to make the resizing more
+        // intelligent and aesthetic (Isaac B 7/17/25)
+        w.widget match {
+          case button: ButtonWidget =>
+            w.setSize(new Dimension(width, height.max(ButtonWidget.PrefHeight)))
+
+          case plot: PlotWidget =>
+            val newHeight = (height + plot.legendHeight).max(AbstractPlotWidget.PREF_SIZE.height + plot.legendHeight)
+
+            w.setSize(new Dimension(width.max(AbstractPlotWidget.PREF_SIZE.width), newHeight))
+
+          case _ =>
+            w.setSize(new Dimension(width, height))
+        }
+      }
+    }
+
+    // adjust the x position of widgets that now have a smaller horizontal gap than before
+    xGaps.foreach {
+      case (w, gaps) =>
+        for ((w2, gap) <- gaps) {
+          if (w2.getY + w2.getHeight > w.getY && w2.getY < w.getY + w.getHeight) {
+            if (gap <= 0) {
+              w2.setLocation(w.getX + w.getWidth + 5, w2.getY)
+            } else if (w2.getX < w.getX + w.getWidth + gap) {
+              w2.setLocation(w.getX + w.getWidth + gap.max(5), w2.getY)
+            }
+          }
+        }
+    }
+
+    // adjust the y position of widgets that now have a smaller vertical gap than before
+    yGaps.foreach {
+      case (w, gaps) =>
+        for ((w2, gap) <- gaps) {
+          if (w2.getX + w2.getWidth > w.getX && w2.getX < w.getX + w.getWidth) {
+            if (gap <= 0) {
+              w2.setLocation(w2.getX, w.getY + w.getHeight + 5)
+            } else if (w2.getY < w.getY + w.getHeight + gap) {
+              w2.setLocation(w2.getX, w.getY + w.getHeight + gap.max(5))
+            }
+          }
+        }
+    }
+
+    getWrappers.foreach(w => resetZoomInfo(w.widget))
 
     revalidate()
     repaint()

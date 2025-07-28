@@ -232,7 +232,7 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
     Images.paintToImage(this)
 
   def handle(e: LoadWidgetsEvent): Unit = {
-    loadWidgets(e.widgets, e.widgetSizesOption)
+    loadWidgets(e.widgets, e.convertWidgetSizes)
   }
 
   private var unloading = false
