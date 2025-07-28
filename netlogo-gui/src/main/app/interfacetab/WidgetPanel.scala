@@ -1516,6 +1516,32 @@ class WidgetPanel(val workspace: GUIWorkspace)
   // x axis and then on the y axis, which although slightly less efficient allows for more accurate
   // repositioning of the widgets. (Isaac B 3/1/25)
   override def convertWidgetSizes(reposition: Boolean): Unit = {
+    def resize(): Unit = {
+      getWrappers.foreach { w =>
+        if (w.widget.oldSize) {
+          w.widget.oldSize(false)
+
+          val width = w.getMinimumSize.width.max(w.getWidth)
+          val height = w.getMinimumSize.height.max(w.getHeight)
+
+          // enforce adjusted and preferred sizes for specific widget types to make the resizing more
+          // intelligent and aesthetic (Isaac B 7/17/25)
+          w.widget match {
+            case button: ButtonWidget =>
+              w.setSize(new Dimension(width, height.max(ButtonWidget.PrefHeight)))
+
+            case plot: PlotWidget =>
+              val newHeight = (height + plot.legendHeight).max(AbstractPlotWidget.PREF_SIZE.height + plot.legendHeight)
+
+              w.setSize(new Dimension(width.max(AbstractPlotWidget.PREF_SIZE.width), newHeight))
+
+            case _ =>
+              w.setSize(new Dimension(width, height))
+          }
+        }
+      }
+    }
+
     setInterfaceMode(InterfaceMode.Interact, true)
 
     val originalBounds = getWrappers.map(w => (w, w.getBounds()))
@@ -1543,7 +1569,8 @@ class WidgetPanel(val workspace: GUIWorkspace)
       val xGaps = xSorted.map { w =>
         (w, xSorted.collect {
           case w2 if w2.getX > w.getX && (w2.getX > w.getX + w.getWidth ||
-                                          (w2.getY + w2.getHeight > w.getY && w2.getY < w.getY + w.getHeight)) =>
+                                          (w2.getY + w2.getHeight > w.getY && w2.getY < w.getY + w.getHeight)) &&
+                     w2.getX - (w.getX + w.getWidth) >= -5 =>
             (w2, w2.getX - (w.getX + w.getWidth))
         })
       }
@@ -1552,35 +1579,14 @@ class WidgetPanel(val workspace: GUIWorkspace)
       val yGaps = ySorted.map { w =>
         (w, ySorted.collect {
           case w2 if w2.getY > w.getY && (w2.getY > w.getY + w.getHeight ||
-                                          (w2.getX + w2.getWidth > w.getX && w2.getX < w.getX + w.getWidth)) =>
+                                          (w2.getX + w2.getWidth > w.getX && w2.getX < w.getX + w.getWidth)) &&
+                     w2.getY - (w.getY + w.getHeight) >= -5 =>
             (w2, w2.getY - (w.getY + w.getHeight))
         })
       }
 
       // resize all the widgets, must happen first or things can happen out of order for more complex layouts
-      getWrappers.foreach { w =>
-        if (w.widget.oldSize) {
-          w.widget.oldSize(false)
-
-          val width = w.getMinimumSize.width.max(w.getWidth)
-          val height = w.getMinimumSize.height.max(w.getHeight)
-
-          // enforce adjusted and preferred sizes for specific widget types to make the resizing more
-          // intelligent and aesthetic (Isaac B 7/17/25)
-          w.widget match {
-            case button: ButtonWidget =>
-              w.setSize(new Dimension(width, height.max(ButtonWidget.PrefHeight)))
-
-            case plot: PlotWidget =>
-              val newHeight = (height + plot.legendHeight).max(AbstractPlotWidget.PREF_SIZE.height + plot.legendHeight)
-
-              w.setSize(new Dimension(width.max(AbstractPlotWidget.PREF_SIZE.width), newHeight))
-
-            case _ =>
-              w.setSize(new Dimension(width, height))
-          }
-        }
-      }
+      resize()
 
       // adjust the x position of widgets that now have a smaller horizontal gap than before
       xGaps.foreach {
@@ -1613,23 +1619,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
       getWrappers.foreach(w => resetZoomInfo(w.widget))
     } else {
       // only resize widgets, no positions will be adjusted
-      getWrappers.foreach { w =>
-        if (w.widget.oldSize) {
-          w.widget.oldSize(false)
-
-          val width = w.getMinimumSize.width.max(w.getWidth)
-          val height = w.getMinimumSize.height.max(w.getHeight)
-
-          // add some extra height so that the increase in padding doesn't decrease the internal plot size (Isaac B 5/13/25)
-          if (w.widget.isInstanceOf[PlotWidget]) {
-            w.setSize(new Dimension(width, height + 7))
-          } else {
-            w.setSize(new Dimension(width, height))
-          }
-
-          resetZoomInfo(w.widget)
-        }
-      }
+      resize()
     }
 
     revalidate()
