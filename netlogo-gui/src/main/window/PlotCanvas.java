@@ -94,7 +94,7 @@ class PlotCanvas extends javax.swing.JPanel {
     // prepare xcor
     int xPrecision = (int) -StrictMath.floor(StrictMath.log(fromScreenXCor(1) - fromScreenXCor(0)) / StrictMath.log(10));
     String xcor =
-        Double.toString(org.nlogo.api.Approximate.approximate(fromScreenXCor(mouseLoc.x), xPrecision));
+        Double.toString(org.nlogo.api.Approximate.approximate(fromScreenXCor(mouseLoc.x), StrictMath.min(xPrecision, 34)));
     if (xPrecision <= 0) {
       // strip the trailing ".0"
       xcor = xcor.substring(0, xcor.length() - 2);
