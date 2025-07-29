@@ -145,6 +145,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     text = Dump.logoObject(toAnyRef(value))
     this.value = Option(toAnyRef(value))
     if (text != textArea.getText) textArea.setText(text)
+    new Events.DirtyEvent(None).raise(this)
   }
 
   protected def toAnyRef(value: Any): AnyRef = {

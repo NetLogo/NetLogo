@@ -44,6 +44,7 @@ class InputBoxWidget(textArea: AbstractEditorArea, dialogTextArea: AbstractEdito
       if (!text.equals(textArea.getText())) textArea.setText(text)
       if (raiseEvent) new InterfaceGlobalEvent(this, false, false, true, false).raise(this)
       inputType.colorPanel(colorSwatch)
+      new Events.DirtyEvent(None).raise(this)
     }
   }
 }

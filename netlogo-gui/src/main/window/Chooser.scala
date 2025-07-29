@@ -104,6 +104,7 @@ trait Chooser extends SingleErrorWidget {
       updateConstraints()
       control.setSelectedIndex(index)
       repaint()
+      new Events.DirtyEvent(None).raise(this)
     }
   }
 
