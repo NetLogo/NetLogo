@@ -106,14 +106,16 @@ case class EditorConfiguration(
     editor.setFont(font)
     editor.setFocusTraversalKeysEnabled(enableFocusTraversal)
 
+    val focusTraversalListener = new FocusTraversalListener(editor)
+
+    editor.addFocusListener(focusTraversalListener)
+    editor.addMouseListener(focusTraversalListener)
+
     if (enableFocusTraversal) {
-      val focusTraversalListener = new FocusTraversalListener(editor)
-      editor.addFocusListener(focusTraversalListener)
-      editor.addMouseListener(focusTraversalListener)
-      editor.getInputMap.put(keystroke(KeyEvent.VK_TAB),           new TransferFocusAction())
+      editor.getInputMap.put(keystroke(KeyEvent.VK_TAB), new TransferFocusAction())
       editor.getInputMap.put(keystroke(KeyEvent.VK_TAB, ShiftKey), new TransferFocusBackwardAction())
     } else {
-      editor.getInputMap.put(keystroke(KeyEvent.VK_TAB, CtrlKey),            new TransferFocusAction())
+      editor.getInputMap.put(keystroke(KeyEvent.VK_TAB, CtrlKey), new TransferFocusAction())
       editor.getInputMap.put(keystroke(KeyEvent.VK_TAB, CtrlKey | ShiftKey), new TransferFocusBackwardAction())
     }
 
