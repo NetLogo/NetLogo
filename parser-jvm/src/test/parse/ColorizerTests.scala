@@ -3,30 +3,33 @@
 package org.nlogo.parse
 
 import java.awt.Color
+
+import org.nlogo.core.{ ColorizerTheme, TokenType }
+
 import org.scalatest.funsuite.AnyFunSuite
 
 class ColorizerTests extends AnyFunSuite {
 
-  import Colorizer.Colors
+  private val theme = ColorizerTheme.Light
 
   def simple(s: String, color: Color): Unit = {
     assertResult(Vector.fill(s.length)(color)) {
-      Colorizer.colorizeLine(s)
+      Colorizer.colorizeLine(s, ColorizerTheme.Light)
     }
   }
 
-  test("empty")      { simple(""       , Colors.Default  ) }
-  test("keyword")    { simple("end"    , Colors.Keyword  ) }
-  test("command")    { simple("fd"     , Colors.Command  ) }
-  test("reporter")   { simple("timer"  , Colors.Reporter ) }
-  test("turtle var") { simple("xcor"   , Colors.Reporter ) }
-  test("number")     { simple("345"    , Colors.Literal  ) }
-  test("string")     { simple("\"ha\"" , Colors.Literal  ) }
-  test("breed 1")    { simple("breed"  , Colors.Keyword  ) }
+  test("empty")      { simple(""       , theme.getColor(null)  ) }
+  test("keyword")    { simple("end"    , theme.getColor(TokenType.Keyword)  ) }
+  test("command")    { simple("fd"     , theme.getColor(TokenType.Command)  ) }
+  test("reporter")   { simple("timer"  , theme.getColor(TokenType.Reporter) ) }
+  test("turtle var") { simple("xcor"   , theme.getColor(TokenType.Reporter) ) }
+  test("number")     { simple("345"    , theme.getColor(TokenType.Literal)  ) }
+  test("string")     { simple("\"ha\"" , theme.getColor(TokenType.Literal)  ) }
+  test("breed 1")    { simple("breed"  , theme.getColor(TokenType.Keyword)  ) }
 
   test("breed 2") {
-    assertResult(Vector(Colors.Default, Colors.Reporter)) {
-      Colorizer.colorizeLine(" breed").distinct
+    assertResult(Vector(theme.getColor(null), theme.getColor(TokenType.Reporter))) {
+      Colorizer.colorizeLine(" breed", theme).distinct
     }
   }
 
@@ -46,7 +49,7 @@ class ColorizerTests extends AnyFunSuite {
       """<font color="#000000"> ] </font>"""   +
       """<font color="#007f69">end</font>"""
     assertResult(expected)(
-      Colorizer.toHtml("to foo crt 10 [ set xcor 5 ] end"))
+      Colorizer.toHtml("to foo crt 10 [ set xcor 5 ] end", theme))
   }
 
   test("adds breaks for newlines") {
@@ -56,7 +59,7 @@ class ColorizerTests extends AnyFunSuite {
       """<font color="#963700">10</font><font color="#000000"> [""" +
       """<br />]<br /></font>""" +
       """<font color="#007f69">end</font>""")(
-        Colorizer.toHtml("to foo\ncrt 10 [\n]\nend"))
+        Colorizer.toHtml("to foo\ncrt 10 [\n]\nend", theme))
   }
 
 }

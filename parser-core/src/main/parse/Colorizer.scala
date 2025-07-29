@@ -5,7 +5,7 @@ package org.nlogo.parse
 import
   java.awt.Color,
   org.nlogo.core,
-    core.{Program, Token, TokenType, TokenColorizer }
+    core.{ ColorizerTheme, Program, Token, TokenType, TokenColorizer }
 
 // code in, HTML out!
 
@@ -14,25 +14,7 @@ object Colorizer extends TokenColorizer {
   // for standalone use, for example on a web server
   def main(argv: Array[String]): Unit = {
     for (line <- io.Source.fromInputStream(System.in).getLines())
-      println(Colorizer.toHtml(line))
-  }
-
-  object Colors extends (TokenType => Color) {
-    val Comment  = new Color(90, 90, 90)  // gray
-    val Command  = new Color(0, 0, 170)   // blue
-    val Reporter = new Color(102, 0, 150) // purple
-    val Keyword  = new Color(0, 127, 105) // bluish green
-    val Literal  = new Color(150, 55, 0)  // orange
-    val Default  = Color.BLACK            // black
-    def apply(tpe: TokenType): Color =
-      tpe match {
-        case TokenType.Literal  => Literal
-        case TokenType.Command  => Command
-        case TokenType.Reporter => Reporter
-        case TokenType.Keyword  => Keyword
-        case TokenType.Comment  => Comment
-        case _                  => Default
-      }
+      println(Colorizer.toHtml(line, ColorizerTheme.Light))
   }
 
   // just enough of a subset of Namer to do syntax highlighting with;
@@ -55,11 +37,11 @@ object Colorizer extends TokenColorizer {
           .getOrElse(Namer0(token))
   }
 
-  def toHtml(line: String): String = {
+  def toHtml(line: String, theme: ColorizerTheme): String = {
     // getCharacterColors gives us a color for every character, but we want to wait until
     // the color changes before we start a new font tag.  So we group the colors into
     // sublists of equal colors.
-    val colorGroups = group(colorizeLine(line).toList)
+    val colorGroups = group(colorizeLine(line, theme).toList)
     // use a mutable StringBuilder and tail recursion so we don't blow the stack - ST 6/30/09
     val result = new StringBuilder
     def loop(source: String, colorGroups: List[List[Color]]): Unit = {
@@ -73,18 +55,18 @@ object Colorizer extends TokenColorizer {
     result.toString.replace("\n", "<br />")
   }
 
-  def colorizeLine(line: String): Vector[Color] = {
-    val result = Array.fill(line.size)(Colorizer.Colors.Default)
+  def colorizeLine(line: String, theme: ColorizerTheme): Vector[Color] = {
+    val result = Array.fill(line.size)(theme.getColor(null))
     for {
       tok <- FrontEnd.tokenizer.tokenizeString(line)
       j <- tok.start until tok.end
       // guard against any bugs in tokenization causing out-of-bounds positions
       if result.isDefinedAt(j)
-    } result(j) = colorizeToken(Colorizer.Namer(tok))
+    } result(j) = colorizeToken(Colorizer.Namer(tok), theme)
     result.toVector
   }
 
-  def colorizeToken(token: Token): Color = {
+  def colorizeToken(token: Token, theme: ColorizerTheme): Color = {
     // "breed" can be either a keyword or a turtle variable, which means we can't reliably colorize
     // it correctly; so as a kludge we colorize it as a keyword only if it's at the beginning of the
     // line (position 0) - ST 7/11/06
@@ -95,7 +77,7 @@ object Colorizer extends TokenColorizer {
         TokenType.Keyword
       else
         token.tpe
-    Colorizer.Colors(tpe)
+    theme.getColor(tpe)
   }
 
   /// HTML generation helpers

@@ -2,8 +2,10 @@
 
 package org.nlogo.parse
 
-import org.scalatest.funsuite.AnyFunSuite
+import org.nlogo.core.ColorizerTheme
 import org.nlogo.util.SlowTest
+
+import org.scalatest.funsuite.AnyFunSuite
 
 class SlowColorizerTests extends AnyFunSuite  {
 
@@ -12,6 +14,6 @@ class SlowColorizerTests extends AnyFunSuite  {
   test("don't blow stack", SlowTest.Tag) {
     val longCode = io.Source.fromFile("models/test/Really Long Code.nls").mkString
     assertResult(1042326)(
-      Colorizer.toHtml(longCode).size)
+      Colorizer.toHtml(longCode, ColorizerTheme.Light).size)
   }
 }

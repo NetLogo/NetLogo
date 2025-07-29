@@ -4,6 +4,8 @@ package org.nlogo.theme
 
 import java.awt.Color
 
+import org.nlogo.core.{ ColorizerTheme, TokenType }
+
 object InterfaceColors {
   private var theme: ColorTheme = LightTheme
 
@@ -163,12 +165,12 @@ object InterfaceColors {
   def updateIcon(): Color = theme.updateIcon
   def stockBackground(): Color = theme.stockBackground
   def converterBackground(): Color = theme.converterBackground
-  def commentColor(): Color = theme.commentColor
-  def commandColor(): Color = theme.commandColor
-  def reporterColor(): Color = theme.reporterColor
-  def keywordColor(): Color = theme.keywordColor
-  def constantColor(): Color = theme.constantColor
-  def defaultColor(): Color = theme.defaultColor
+  def commentColor(): Color = theme.colorizerTheme.getColor(TokenType.Comment)
+  def commandColor(): Color = theme.colorizerTheme.getColor(TokenType.Command)
+  def reporterColor(): Color = theme.colorizerTheme.getColor(TokenType.Reporter)
+  def keywordColor(): Color = theme.colorizerTheme.getColor(TokenType.Keyword)
+  def constantColor(): Color = theme.colorizerTheme.getColor(TokenType.Literal)
+  def defaultColor(): Color = theme.colorizerTheme.getColor(null)
   def announceX(): Color = theme.announceX
   def announceXHovered(): Color = theme.announceXHovered
   def announceXPressed(): Color = theme.announceXPressed
@@ -357,12 +359,6 @@ trait ColorTheme {
   def updateIcon: Color
   def stockBackground: Color
   def converterBackground: Color
-  def commentColor: Color
-  def commandColor: Color
-  def reporterColor: Color
-  def keywordColor: Color
-  def constantColor: Color
-  def defaultColor: Color
   def announceX: Color
   def announceXHovered: Color
   def announceXPressed: Color
@@ -373,6 +369,8 @@ trait ColorTheme {
   def colorPickerCheckmark: Color
   def colorPickerCopyHover: Color
   def agentMonitorSeparator: Color
+
+  def colorizerTheme: ColorizerTheme
 }
 
 object ClassicTheme extends ColorTheme {
@@ -523,12 +521,6 @@ object ClassicTheme extends ColorTheme {
   override def updateIcon: Color = new Color(240, 91, 0)
   override def stockBackground: Color = ClassicBeige
   override def converterBackground: Color = ClassicLightGreen
-  override def commentColor: Color = new Color(120, 120, 120) // medium gray
-  override def commandColor: Color = new Color(0, 0, 170) // blue
-  override def reporterColor: Color = new Color(102, 0, 150) // purple
-  override def keywordColor: Color = new Color(0, 127, 105) // bluish green
-  override def constantColor: Color = new Color(150, 55, 0) // dark orange
-  override def defaultColor: Color = Color.BLACK
   override def announceX: Color = DarkGray
   override def announceXHovered: Color = LightGrayOutline
   override def announceXPressed: Color = MediumGray
@@ -539,6 +531,8 @@ object ClassicTheme extends ColorTheme {
   override def colorPickerCheckmark: Color = new Color(62, 184, 79)
   override def colorPickerCopyHover: Color = new Color(197, 197, 197)
   override def agentMonitorSeparator: Color = MediumGray
+
+  override def colorizerTheme: ColorizerTheme = ColorizerTheme.Classic
 }
 
 object LightTheme extends ColorTheme {
@@ -689,12 +683,6 @@ object LightTheme extends ColorTheme {
   override def updateIcon: Color = new Color(240, 91, 0)
   override def stockBackground: Color = ClassicBeige
   override def converterBackground: Color = ClassicLightGreen
-  override def commentColor: Color = new Color(120, 120, 120) // medium gray
-  override def commandColor: Color = new Color(0, 0, 170) // blue
-  override def reporterColor: Color = new Color(102, 0, 150) // purple
-  override def keywordColor: Color = new Color(0, 127, 105) // bluish green
-  override def constantColor: Color = new Color(150, 55, 0) // dark orange
-  override def defaultColor: Color = Color.BLACK
   override def announceX: Color = DarkGray
   override def announceXHovered: Color = LightGrayOutline
   override def announceXPressed: Color = MediumGray
@@ -705,6 +693,8 @@ object LightTheme extends ColorTheme {
   override def colorPickerCheckmark: Color = new Color(62, 184, 79)
   override def colorPickerCopyHover: Color = new Color(197, 197, 197)
   override def agentMonitorSeparator: Color = MediumGray
+
+  override def colorizerTheme: ColorizerTheme = ColorizerTheme.Light
 }
 
 object DarkTheme extends ColorTheme {
@@ -855,12 +845,6 @@ object DarkTheme extends ColorTheme {
   override def updateIcon: Color = new Color(240, 91, 0)
   override def stockBackground: Color = ClassicBeige
   override def converterBackground: Color = ClassicLightGreen
-  override def commentColor: Color = new Color(150, 150, 150) // light gray
-  override def commandColor: Color = new Color(6, 183, 255) // sky blue
-  override def reporterColor: Color = new Color(190, 85, 190) // light purple
-  override def keywordColor: Color = new Color(36, 172, 150) // light bluish green
-  override def constantColor: Color = new Color(234, 110, 33) // light orange
-  override def defaultColor: Color = Color.WHITE
   override def announceX: Color = White2
   override def announceXHovered: Color = MediumGray
   override def announceXPressed: Color = DarkGray
@@ -871,6 +855,8 @@ object DarkTheme extends ColorTheme {
   override def colorPickerCheckmark: Color = new Color(62, 184, 79)
   override def colorPickerCopyHover: Color = new Color(57, 57, 57)
   override def agentMonitorSeparator: Color = LightGray2
+
+  override def colorizerTheme: ColorizerTheme = ColorizerTheme.Dark
 }
 
 trait ThemeSync {
