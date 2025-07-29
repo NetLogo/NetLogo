@@ -36,7 +36,10 @@ object ChecksumsAndPreviewsSettings {
     )
 
     , Some("it uses the sound extension") -> List(
-      "/CODE EXAMPLES/EXTENSIONS EXAMPLES/SOUND/"
+      "/CODE EXAMPLES/EXTENSIONS EXAMPLES/SOUND/",
+      "/Sample Models/Art/GenJam - Duple.nlogox",
+      "/Sample Models/Art/Sound Machines.nlogox",
+      "/Sample Models/Games/Frogger.nlogox"
     )
 
     , Some("it uses behaviorspace-experiment-name") -> List(
@@ -60,7 +63,10 @@ object ChecksumsAndPreviewsSettings {
     )
 
     , Some("it uses the palette extension") -> List(
-      "/CODE EXAMPLES/EXTENSIONS EXAMPLES/PALETTE/"
+      "/CODE EXAMPLES/EXTENSIONS EXAMPLES/PALETTE/",
+      "/Alternative Visualizations/Heat Diffusion - Alternative Visualization.nlogox",
+      "/Sample Models/Biology/Slime Mold Network.nlogox",
+      "/Sample Models/Mathematics/Conic Sections/Emergent Shapes - Parabola.nlogox"
     )
 
     , Some("it uses the time extension") -> List(

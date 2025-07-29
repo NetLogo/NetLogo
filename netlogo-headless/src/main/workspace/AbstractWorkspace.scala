@@ -741,7 +741,9 @@ object AbstractWorkspaceTraits {
   trait ExtensionCompilationEnvironment { this: Paths & Profiling =>
     import java.io.{ File => JFile }
     import java.net.MalformedURLException
-    import java.net.URL
+    import java.nio.file.Paths
+
+    import scala.io.Source
 
     def attachModelDir(filePath: String): String = {
       if (new JFile(filePath).isAbsolute())
@@ -751,13 +753,17 @@ object AbstractWorkspaceTraits {
           Option(getModelPath).getOrElse(
             System.getProperty("user.home")
             + JFile.separatorChar + "dummy.txt")
-        val urlForm = new URL(new JFile(path).toURI.toURL, filePath);
-        new JFile(urlForm.getFile()).getAbsolutePath();
+        Paths.get(path).resolveSibling(filePath).toAbsolutePath.toString
       }
     }
 
     def getSource(filename: String): String = {
-      throw new UnsupportedOperationException("Source not available from headless workspace")
+      val source = Source.fromFile(filename, "UTF-8")
+      val result = source.getLines.mkString("\n")
+
+      source.close()
+
+      result
     }
 
     val compilationEnvironment = new CompilationEnvironment {

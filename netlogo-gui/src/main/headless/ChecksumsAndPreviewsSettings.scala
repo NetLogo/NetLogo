@@ -50,7 +50,10 @@ object ChecksumsAndPreviewsSettings {
     )
 
     , Some("it uses the sound extension") -> List(
-      "/CODE EXAMPLES/EXTENSIONS EXAMPLES/SOUND/"
+      "/CODE EXAMPLES/EXTENSIONS EXAMPLES/SOUND/",
+      "/Sample Models/Art/GenJam - Duple.nlogox",
+      "/Sample Models/Art/Sound Machines.nlogox",
+      "/Sample Models/Games/Frogger.nlogox"
     )
 
     , Some("it uses the vid extension") -> List(

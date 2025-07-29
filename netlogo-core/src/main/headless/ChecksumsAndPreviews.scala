@@ -190,7 +190,7 @@ object ChecksumsAndPreviews {
           }
         }
         else {
-          workspace.open(model)
+          workspace.open(model, true)
           updateOneHelper(m, model, "", workspace)
           variants.sortWith(_ < _).foreach(updateOneHelper(m, model, _, workspace))
         }
