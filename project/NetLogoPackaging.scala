@@ -238,7 +238,10 @@ object NetLogoPackaging {
         // 2022
         new NetLogo3dLauncher(version, Some("NetLogo3D.png"), extraJavaOptions) { override def id: String = "NetLogo3D" }
       , new HubNetClientLauncher(version, Some("HubNetClient.png"), extraJavaOptions) { override def id: String = "HubNetClient" }
-      , new BehaviorsearchLauncher(version, Some("Behaviorsearch.png"), extraJavaOptions)
+      , new BehaviorsearchLauncher(version, Some("Behaviorsearch.png"), extraJavaOptions ++ Seq(
+          "-Dbsearch.appfolder=$APPDIR/../../behaviorsearch",
+          "-Dbsearch.startupfolder=$APPDIR/../.."
+        ))
       )
 
       val inputDir = JavaPackager.setupAppImageInput(log, version, buildJDK, buildDir, netLogoJar, dependencies)
