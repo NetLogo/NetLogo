@@ -89,8 +89,9 @@ abstract class AbstractPlotWidget(val plot: Plot, val plotManager: PlotManagerIn
       }
     }
 
-    c.gridx = 1
+    c.gridx = 0
     c.gridy = 0
+    c.gridwidth = 3
     c.anchor = GridBagConstraints.CENTER
 
     add(nameLabel, c)
@@ -102,8 +103,8 @@ abstract class AbstractPlotWidget(val plot: Plot, val plotManager: PlotManagerIn
     //-----------------------------------------
     c.insets = new Insets(0, zoom(3), zoom(3), zoom(8))
 
-    c.gridx = 0
     c.gridy = 1
+    c.gridwidth = 1
     c.fill = GridBagConstraints.VERTICAL
 
     add(yAxis, c)
