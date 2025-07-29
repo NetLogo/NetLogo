@@ -385,6 +385,9 @@ class FileManager(workspace: AbstractWorkspaceScala,
     }
 
     ReconfigureWorkspaceUI(linkParent, uri, modelType, model, workspace, shouldAutoInstallLibs, convertWidgetSizes)
+
+    if (modelType == ModelType.Normal)
+      FileDialog.setDirectory(workspace.fileManager.prefix)
   }
 
   private def loadModel(openModel: (OpenModel.Controller) => Option[Model]): Option[Model] = {

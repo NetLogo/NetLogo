@@ -25,11 +25,8 @@ class FilePathEditor(accessor: PropertyAccessor[String], parent: Component, curr
 
   private val browseButton = new Button("Browse...", () => {
     try {
-      val filePath = asPath(getCurrentText)
-      FileDialog.setDirectory(filePath.getParent.toString)
-      val outName = FileDialog.showFiles(parent, s"${accessor.name} export", JFileDialog.SAVE,
-                                         filePath.getFileName.toString)
-      this.set(outName.trim)
+      this.set(FileDialog.showFiles(parent, s"${accessor.name} export", JFileDialog.SAVE,
+                                    asPath(getCurrentText).getFileName.toString).trim)
     } catch {
       case ex: UserCancelException =>
     }

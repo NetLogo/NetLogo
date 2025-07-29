@@ -15,12 +15,17 @@ object FileDialog {
     * next time it's shown. It's either set explicitly from code, or it's the
     * directory the user last selected a file from.
     */
-  private var currentDirectory = System.getProperty("user.home")
+  private var currentDirectory: Option[String] = None
 
   /**
     * sets the current directory for the file dialog.
     */
-  def setDirectory(directory: String) = currentDirectory = directory
+  def setDirectory(directory: String): Unit = {
+    currentDirectory = Option(directory)
+  }
+
+  def getDirectory: String =
+    currentDirectory.getOrElse(System.getProperty("user.home"))
 
   /**
     * shows the file dialog. The given component's frame will be used, and
@@ -54,12 +59,12 @@ object FileDialog {
 
   @throws[UserCancelException]
   def showDirectories(parentFrame: Frame, title: String): String = {
-    val chooser = new JFileChooser(currentDirectory)
+    val chooser = new JFileChooser(getDirectory)
     chooser.setDialogTitle(title)
     chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY)
     if (chooser.showOpenDialog(parentFrame) != JFileChooser.APPROVE_OPTION)
       throw new UserCancelException
-    currentDirectory = selectedDirectory(chooser)
+    setDirectory(selectedDirectory(chooser))
     if (!chooser.getSelectedFile.exists)
       return showDirectories(parentFrame, title)
     chooser.getSelectedFile.getAbsolutePath
@@ -68,14 +73,14 @@ object FileDialog {
   @throws[UserCancelException]
   private def showFiles(parentFrame: Frame, title: String, mode: Int, file: String, allowed: List[String]): String = {
     val chooser = new AWTFileDialog(parentFrame, title, mode)
-    chooser.setDirectory(currentDirectory)
+    chooser.setDirectory(getDirectory)
     if (file != null)
       chooser.setFile(file)
     chooser.setVisible(true)
     if (chooser.getFile == null)
       throw new UserCancelException
-    currentDirectory = chooser.getDirectory
-    if (mode == AWTFileDialog.LOAD && !new File(currentDirectory + chooser.getFile).exists)
+    setDirectory(chooser.getDirectory)
+    if (mode == AWTFileDialog.LOAD && !new File(getDirectory + chooser.getFile).exists)
       return showFiles(parentFrame, title, mode, chooser.getFile, allowed)
     if (chooser.getDirectory == null)
       chooser.getFile

@@ -20,7 +20,6 @@ class _userfile extends Reporter {
             override def run() =
               try {
                 gw.view.mouseDown(false)
-                FileDialog.setDirectory(workspace.fileManager.prefix)
                 FileDialog.showFiles(gw.getFrame, "Choose File", java.awt.FileDialog.LOAD)
               }
               catch {

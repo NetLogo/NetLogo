@@ -8,7 +8,7 @@ import java.nio.file.Paths
 import java.net.URI
 import javax.swing.{ AbstractAction, JComponent }
 
-import org.nlogo.api.{ FileIO, ModelReader, ModelType, Version }
+import org.nlogo.api.{ FileIO, ModelReader, Version }
 import org.nlogo.awt.UserCancelException
 import org.nlogo.core.{ I18N, Model }
 import org.nlogo.fileformat.{ ConversionError, ConversionWithErrors, ErroredConversion, FailedConversionResult }
@@ -127,18 +127,9 @@ class FileController(owner: Component, modelTracker: ModelTracker) extends OpenM
   }
 
   def chooseFilePath(modelType: org.nlogo.api.ModelType): Option[java.net.URI] = {
-    val newFileName = guessFileName
-
-    // we only default to saving in the model dir for normal
-    // models. for library and new models, we use the current
-    // FileDialog dir.
-    if (modelTracker.getModelType == ModelType.Normal) {
-      FileDialog.setDirectory(modelTracker.getModelDir)
-    }
-
     val userPath = FileDialog.showFiles(
       owner, I18N.gui.get("menu.file.saveAs"), AWTFileDialog.SAVE,
-      newFileName, List[String](ModelReader.modelSuffix))
+      guessFileName, List[String](ModelReader.modelSuffix))
     val extensionPath = FileIO.ensureExtension(userPath, ModelReader.modelSuffix)
     val path = Paths.get(extensionPath)
     if (!path.toFile.exists) {

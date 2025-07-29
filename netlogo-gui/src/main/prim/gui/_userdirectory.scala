@@ -19,7 +19,6 @@ class _userdirectory extends Reporter {
         result = gw.waitForResult(() =>
           try {
             gw.view.mouseDown(false)
-            FileDialog.setDirectory(workspace.fileManager.prefix)
             FileDialog.showDirectories(gw.getFrame, "Choose Directory") + File.separatorChar
           }
           catch {
