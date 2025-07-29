@@ -12,7 +12,7 @@ import scala.sys.process.Process
 
 object Extensions {
 
-  private val extensionNetLogoJar = TaskKey[File]("netlogo jar, ensuring test jar also built")
+  val extensionNetLogoJar = TaskKey[File]("netlogo jar, ensuring test jar also built")
   val extensionRoot = SettingKey[File]("extension root", "root directory of extensions")
   val excludedExtensions = SettingKey[Seq[String]]("extensions excluded for this configuration")
   val extensions = TaskKey[Seq[File]]("extensions", "builds extensions")
@@ -48,10 +48,6 @@ object Extensions {
   }
 
   lazy val settings = Seq(
-    extensionNetLogoJar := {
-      (Test / packageBin).value
-      (Compile / packageBin).value
-    },
     forExtension := {
       val (extensionDir, command) = extensionAndCommandParser.parsed
       streams.value.log.info(s"running ${command} on ${extensionDir.getName}")

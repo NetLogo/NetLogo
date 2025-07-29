@@ -4,7 +4,7 @@ import sbtcrossproject.CrossPlugin.autoImport.{ crossProject, CrossType }
 import sbtcrossproject.Platform
 
 import ModelsLibrary.modelsDirectory
-import Extensions.{ excludedExtensions, extensionRoot }
+import Extensions.{ excludedExtensions, extensionNetLogoJar, extensionRoot }
 import NetLogoBuild.{ all, autogenRoot, cclArtifacts, includeInPackaging,
   marketingVersion, numericMarketingVersion, netlogoVersion, shareSourceDirectory }
 import Docs.htmlDocs
@@ -225,6 +225,10 @@ lazy val netlogo = project.in(file("netlogo-gui")).
       ).value
     }
   , Test / baseDirectory := baseDirectory.value.getParentFile
+  , extensionNetLogoJar := {
+    (Test / packageBin).value
+    (Compile / packageBin).value
+  }
   // I don't think this `apiMappings` setup works anymore for the JDK.  I'm not going to worry about it because it
   // hasn't worked in the last few releases, no one has noticed, and the JDK docs are easy enough to lookup outside of
   // NetLogo's docs.  There is a `-jdk-api-doc-base` option in Scala 2.13+, and a more generalized/powerful
@@ -294,7 +298,8 @@ lazy val headless = (project in file ("netlogo-headless")).
     Compile / unmanagedResourceDirectories ++= (sharedResources / Compile / unmanagedResourceDirectories).value,
     Test / resourceDirectory    := baseDirectory.value.getParentFile / "test",
     dumpClassName               := "org.nlogo.headless.misc.Dump",
-    excludedExtensions          := Seq("arduino", "bitmap", "gis", "gogo", "ls", "palette", "vid", "view2.5d"),
+    excludedExtensions          := Seq("arduino", "bitmap", "gis", "gogo", "ls", "palette", "sound", "vid", "view2.5d"),
+    extensionNetLogoJar         := (netlogo / extensionNetLogoJar).value,
     all := { val _ = (
       (Compile / packageBin).value,
       (Test / packageBin).value,
