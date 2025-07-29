@@ -419,3 +419,12 @@ table thead th code {
 		background: var(--color-background-overlay);
 	}
 }
+
+/* External links */
+span.external-link {
+	font-size: 0.7rem;
+    color: var(--color-link);
+    text-decoration: none;
+    vertical-align: top;
+    font-weight: bold;
+}
