@@ -457,6 +457,10 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
 
     updateTabActions()
     saveOpenTabs()
+
+    // if a new included file is added, the file watcher thread needs to be
+    // restarted with the updated includes (Isaac B 7/29/25)
+    startWatcherThread()
   }
 
   def newExternalFile(): Unit = {
