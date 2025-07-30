@@ -282,11 +282,11 @@ object NetLogoPackaging {
       val variables    = buildVariables.value
 
       val icons = Seq(
-        (behaviorsearchProject / baseDirectory).value / "resources" / "Behaviorsearch.ico",
-        (behaviorsearchProject / baseDirectory).value / "resources" / "behaviorsearch_model.ico",
         configDir / "windows" / "NetLogo.ico",
         configDir / "windows" / "HubNet Client.ico",
-        configDir / "windows" / "model.ico"
+        configDir / "windows" / "model.ico",
+        configDir / "windows" / "Behaviorsearch.ico",
+        (behaviorsearchProject / baseDirectory).value / "resources" / "behaviorsearch_model.ico"
       )
 
       icons.foreach(i => FileActions.copyFile(i, buildDir / i.getName))
@@ -350,10 +350,10 @@ object NetLogoPackaging {
       val variables    = buildVariables.value
 
       val icons = Seq(
-        (behaviorsearchProject / baseDirectory).value / "resources" / "Behaviorsearch.icns"
-      , configDir / "macosx" / "NetLogo.icns"
+        configDir / "macosx" / "NetLogo.icns"
       , configDir / "macosx" / "NetLogo3D.icns"
       , configDir / "macosx" / "HubNet Client.icns"
+      , configDir / "macosx" / "Behaviorsearch.icns"
       , configDir / "macosx" / "Model.icns"
       )
       icons.foreach( (i) => FileActions.copyFile(i, buildDir / i.getName) )
