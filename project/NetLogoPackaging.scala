@@ -283,6 +283,7 @@ object NetLogoPackaging {
 
       val icons = Seq(
         configDir / "windows" / "NetLogo.ico",
+        configDir / "windows" / "NetLogo3D.ico",
         configDir / "windows" / "HubNet Client.ico",
         configDir / "windows" / "model.ico",
         configDir / "windows" / "Behaviorsearch.ico",
