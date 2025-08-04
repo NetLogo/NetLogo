@@ -2,8 +2,8 @@
 
 package org.nlogo.core.model
 
-import org.nlogo.core.{ DummyView, ExternalResource, Model, ModelSettings, Section, WorldDimensions, WorldDimensions3D,
-                        XMLElement }
+import org.nlogo.core.{ DummyView, ExternalResource, LiteralParser, Model, ModelSettings, Section, WorldDimensions,
+                        WorldDimensions3D, XMLElement }
 
 import scala.util.{ Failure, Try }
 
@@ -25,7 +25,7 @@ object ModelXMLLoader {
     Model(Model.defaultCode, widgets, defaultInfo, name, Model.defaultTurtleShapes, Model.defaultLinkShapes)
   }
 
-  def loadBasics(root: XMLElement, defaultInfo: String): (Try[Model], Seq[XMLElement]) = {
+  def loadBasics(root: XMLElement, defaultInfo: String, parser: LiteralParser): (Try[Model], Seq[XMLElement]) = {
     root.name match {
       case "model" =>
 
@@ -42,7 +42,7 @@ object ModelXMLLoader {
         root.children.foldLeft((Try(model), Seq[XMLElement]())) {
 
           case ((model, sections), XMLElement("widgets", _, _, children)) =>
-            (model.map(_.copy(widgets = children.map(WidgetXMLLoader.readWidget).flatten)), sections)
+            (model.map(_.copy(widgets = children.map(WidgetXMLLoader.readWidget(_, parser)).flatten)), sections)
 
           case ((model, sections), XMLElement("info", _, text, _)) =>
             (model.map(_.copy(info = text)), sections)

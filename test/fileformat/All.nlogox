@@ -4,47 +4,35 @@
   print "hello from the code"
 end</code>
   <widgets>
-    <view x="435" maxPycor="16" updateMode="0" wrappingAllowedX="true" y="19" frameRate="30.0" minPycor="-16" height="434" showTickCounter="true" patchSize="13.0" fontSize="10" wrappingAllowedY="true" width="433" tickCounterLabel="ticks" maxPxcor="16" minPxcor="-16"></view>
-    <button sizeVersion="0" x="12" actionKey="P" y="15" height="35" disableUntilTicks="false" forever="false" kind="Observer" width="83" display="print-test">print "test"</button>
-    <slider sizeVersion="0" x="13" step="1" y="64" height="150" min="-100" direction="Vertical" max="100" default="0.0" variable="slides" units="slides" width="33" display="slides"></slider>
-    <switch sizeVersion="0" x="59" y="64" height="33" on="true" variable="switching" width="106" display="switching"></switch>
-    <chooser sizeVersion="0" x="60" y="113" height="45" variable="choice" current="0" width="138" display="choice">
+    <view x="435" wrappingAllowedX="true" y="19" frameRate="30.0" minPycor="-16" height="434" showTickCounter="true" patchSize="13.0" fontSize="10" wrappingAllowedY="true" width="433" tickCounterLabel="ticks" maxPycor="16" updateMode="0" maxPxcor="16" minPxcor="-16"></view>
+    <button x="12" actionKey="P" y="15" height="35" disableUntilTicks="false" forever="false" kind="Observer" display="print-test" width="83" sizeVersion="0">print "test"</button>
+    <slider x="13" step="1" y="64" max="100" display="slides" height="150" min="-100" direction="Vertical" default="0.0" variable="slides" units="slides" width="33" sizeVersion="0"></slider>
+    <switch x="59" y="64" height="33" on="true" variable="switching" display="switching" width="106" sizeVersion="0"></switch>
+    <chooser x="60" y="113" height="45" variable="choice" current="0" display="choice" width="138" sizeVersion="0">
       <choice type="double" value="1.0"></choice>
       <choice type="double" value="2.0"></choice>
       <choice type="double" value="3.0"></choice>
     </chooser>
-    <chooser sizeVersion="0" x="60" y="178" height="45" variable="list-choice" current="0" width="138" display="list-choice">
-      <choice type="list">
-        <value value="1.0"></value>
-        <value value="2.0"></value>
-        <value value="3.0"></value>
-      </choice>
-      <choice type="list">
-        <value value="4.0"></value>
-        <value value="5.0"></value>
-        <value value="6.0"></value>
-      </choice>
-      <choice type="list">
-        <value value="7.0"></value>
-        <value value="8.0"></value>
-        <value value="9.0"></value>
-      </choice>
+    <chooser x="60" y="178" height="45" variable="list-choice" current="0" display="list-choice" width="138" sizeVersion="0">
+      <choice type="list">[1 2 3]</choice>
+      <choice type="list">[4 5 6]</choice>
+      <choice type="list">[7 8 9]</choice>
     </chooser>
-    <input sizeVersion="0" x="12" multiline="true" y="235" height="60" variable="input-string" type="string" width="311">hello
+    <input x="12" multiline="true" y="235" height="60" variable="input-string" type="string" width="311" sizeVersion="0">hello
 i
 am
 a
 string</input>
-    <input sizeVersion="0" x="13" multiline="false" y="310" height="60" variable="color-input" type="color" width="155">117.0</input>
-    <monitor sizeVersion="0" x="181" precision="5" y="310" height="33" fontSize="8" width="57" display="slides">slides</monitor>
-    <plot sizeVersion="0" x="213" yMax="66.6666" yAxis="number" y="15" xMin="-10.0" height="150" legend="false" xMax="20.0" autoPlotX="true" autoPlotY="true" yMin="-33.3333" width="200" xAxis="choice" display="c hoice-plotter">
+    <input x="13" multiline="false" y="310" height="60" variable="color-input" type="color" width="155" sizeVersion="0">117.0</input>
+    <monitor x="181" precision="5" y="310" height="33" fontSize="8" display="slides" width="57" sizeVersion="0">slides</monitor>
+    <plot x="213" autoPlotX="true" yMax="66.6666" autoPlotY="true" yAxis="number" y="15" xMin="-10.0" height="150" legend="false" xMax="20.0" yMin="-33.3333" xAxis="choice" display="c hoice-plotter" width="200" sizeVersion="0">
       <setup>
         print "the plot has been set up"
       </setup>
       <update>
         print "the plot is updating"
       </update>
-      <pen color="-16777216" legend="true" interval="4.2" mode="2" display="default">
+      <pen interval="4.2" mode="2" display="default" color="-16777216" legend="true">
         <setup>
           print "the pen has been set up"
         </setup>
@@ -54,7 +42,7 @@ string</input>
       </pen>
     </plot>
     <output x="13" y="383" height="54" fontSize="8" width="240"></output>
-    <note markdown="false" x="214" y="181" height="42" textColorDark="-1" backgroundDark="-13791810" textColorLight="-16777216" backgroundLight="-13791810" fontSize="25" width="150">nota bene</note>
+    <note x="214" y="181" backgroundDark="-13791810" fontSize="25" width="150" markdown="false" height="42" textColorDark="-1" textColorLight="-16777216" backgroundLight="-13791810">nota bene</note>
   </widgets>
   <info>## WHAT IS IT?
 

@@ -52,7 +52,7 @@ class NLogoXMLLoader(headless: Boolean, literalParser: LiteralParser, editNames:
       XMLReader.read(source).flatMap {
         element =>
 
-          val (model, unknownSections) = ModelXMLLoader.loadBasics(element, defaultInfo)
+          val (model, unknownSections) = ModelXMLLoader.loadBasics(element, defaultInfo, literalParser)
 
           element.children.foldLeft((model, Set[String]())) {
 
@@ -83,7 +83,7 @@ class NLogoXMLLoader(headless: Boolean, literalParser: LiteralParser, editNames:
               (model.map((m) => m.copy(optionalSections = m.optionalSections :+ section)), sections)
 
             case ((model, sections), XMLElement("hubNetClient", _, _, children)) =>
-              val hnElems = children.map(WidgetXMLLoader.readWidget).flatten
+              val hnElems = children.map(WidgetXMLLoader.readWidget(_, literalParser)).flatten
               val section = new Section("org.nlogo.modelsection.hubnetclient", hnElems)
               (model.map((m) => m.copy(optionalSections = m.optionalSections :+ section)), sections)
 

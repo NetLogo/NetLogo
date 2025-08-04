@@ -3,12 +3,12 @@
 package org.nlogo.core.model
 
 import org.nlogo.core.{ AgentKind, Button, ChooseableBoolean, ChooseableDouble, ChooseableList, ChooseableString,
-                        Chooser, Horizontal, InputBox, LogoList, Monitor, NumericInput, Output, Pen, Plot, Slider,
-                        StringInput, Switch, TextBox, UpdateMode, Vertical, View, Widget, WorldDimensions,
-                        WorldDimensions3D, XMLElement }
+                        Chooser, Dump, Horizontal, InputBox, LiteralParser, LogoList, Monitor, NumericInput, Output,
+                        Pen, Plot, Slider, StringInput, Switch, TextBox, UpdateMode, Vertical, View, Widget,
+                        WorldDimensions, WorldDimensions3D, XMLElement }
 
 object WidgetXMLLoader {
-  def readWidget(element: XMLElement): Option[Widget] = {
+  def readWidget(element: XMLElement, parser: LiteralParser): Option[Widget] = {
     // alternative to toInt that provides a more descriptive error message on failure (Isaac B 7/6/25)
     def toInt(element: XMLElement, property: String): Int = {
       element(property).toIntOption.getOrElse {
@@ -130,7 +130,7 @@ object WidgetXMLLoader {
                 case "boolean" =>
                   ChooseableBoolean(el("value").toBoolean)
                 case "list" =>
-                  ChooseableList(LogoList.fromList(el.getChildren("value").map(_("value")).toList))
+                  ChooseableList(parser.readFromString(el.text).asInstanceOf[LogoList])
               }
           )
         Some(Chooser( element.get("variable"), toInt(element, "x"), toInt(element, "y"), toInt(element, "width")
@@ -344,8 +344,7 @@ object WidgetXMLLoader {
             case ChooseableBoolean(boolean) =>
               XMLElement("choice", Map("type" -> "boolean", "value" -> boolean.toString), "", Seq())
             case ChooseableList(list) =>
-              val children = list.map((x) => XMLElement("value", Map("value" -> x.toString), "", Seq()))
-              XMLElement("choice", Map("type" -> "list"), "", children)
+              XMLElement("choice", Map("type" -> "list"), Dump.logoObject(list, true, false), Seq())
           }
 
         XMLElement("chooser", attributes, "", children)
