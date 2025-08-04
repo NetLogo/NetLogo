@@ -41,7 +41,7 @@ object StructureDeclarations {
   case class SimpleExport(name: String)
       extends ExportSpec
 
-  case class Import(name: String, options: Seq[ImportOption], token: Token)
+  case class Import(packageName: Option[String], moduleName: String, options: Seq[ImportOption], token: Token)
       extends Declaration {
 
       override val start: Token = token
