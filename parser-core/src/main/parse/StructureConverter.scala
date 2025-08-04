@@ -24,7 +24,7 @@ object StructureConverter {
           case ImportAlias(name, _) => Some(name)
         }).find(_.isDefined).flatten
         val filename = l.token.sourceLocation.filename
-        Import(l.name, if (filename.isEmpty()) None else Some(filename), maybeAlias, l.token)
+        Import(l.packageName, l.moduleName, if (filename.isEmpty()) None else Some(filename), maybeAlias, l.token)
     }
     val exs = declarations.collect {
       case ex: ExportDecl =>
