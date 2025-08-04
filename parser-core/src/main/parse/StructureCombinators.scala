@@ -118,9 +118,13 @@ extends scala.util.parsing.combinator.Parsers {
     }
 
   def _import: Parser[Import] =
-    keyword("IMPORT") ~! openBracket ~! identifier ~! rep(importOption) <~ closeBracket ^^ {
-      case keyword ~ _ ~ ident ~ options =>
-        Import(ident.name, options, keyword)
+    keyword("IMPORT") ~ openBracket ~ identifier ~ identifier ~ rep(importOption) <~ closeBracket ^^ {
+      case keyword ~ _ ~ packageName ~ moduleName ~ options =>
+        Import(Some(packageName.name), moduleName.name, options, keyword)
+    } |
+    keyword("IMPORT") ~ openBracket ~ identifier ~ rep(importOption) <~ closeBracket ^^ {
+      case keyword ~ _ ~ moduleName ~ options =>
+        Import(None, moduleName.name, options, keyword)
     }
 
   def importOption: Parser[ImportOption] =
