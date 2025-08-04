@@ -115,7 +115,7 @@ class StructureParserTests extends AnyFunSuite {
     val results = compile("import [foo]")
     assertResult(0)(results.procedures.size)
     assertResult(1)(results.imports.size)
-    assertResult("FOO")(results.imports.head.name)
+    assertResult("FOO")(results.imports.head.moduleName)
     assertResult(None)(results.imports.head.alias)
   }
 
@@ -123,7 +123,7 @@ class StructureParserTests extends AnyFunSuite {
     val results = compile("import [foo [alias bar]]")
     assertResult(0)(results.procedures.size)
     assertResult(1)(results.imports.size)
-    assertResult("FOO")(results.imports.head.name)
+    assertResult("FOO")(results.imports.head.moduleName)
     assertResult(Some("BAR"))(results.imports.head.alias)
   }
 

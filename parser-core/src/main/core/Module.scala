@@ -3,7 +3,8 @@
 package org.nlogo.core
 
 case class Import(
-  name: String,
+  packageName: Option[String],
+  moduleName: String,
   filename: Option[String],
   alias: Option[String],
   token: Token
