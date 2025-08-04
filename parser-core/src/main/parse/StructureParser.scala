@@ -19,7 +19,7 @@ package org.nlogo.parse
 // include further files.)
 
 import java.util.Locale
-import org.nlogo.core.{ CompilationEnvironment, CompilationOperand, CompilerException, ErrorSource, I18N,
+import org.nlogo.core.{ CompilationEnvironment, CompilationOperand, CompilerException, ErrorSource, I18N, Import,
                         ProcedureSyntax, Program, StructureResults, Token, TokenizerInterface, TokenType }
 import org.nlogo.core.Fail._
 import org.nlogo.core.FrontEndInterface.ProceduresMap
@@ -44,14 +44,20 @@ object StructureParser {
         if (subprogram)
           firstResults
         else {
-          val (maybeDuplicateToken, _) = firstResults.imports.map(_.token).foldLeft((None: Option[Token], Set(): Set[Token])) {
-            case ((None, previousTokens), x) => (if (previousTokens.contains(x)) Some(x) else None, previousTokens + x)
+          // Check for duplicate import statements. We're doing this check instead of relying on the duplicate symbol
+          // check so that we can provide a more specific error message.
+          val (maybeDuplicateImport, _) = firstResults.imports.foldLeft((None: Option[Import], Set())) {
+            case ((None, previousNames), x) => {
+              val key = (x.packageName, x.moduleName)
+              val maybeDuplicate = if (previousNames.contains(key)) Some(x) else None
+              (maybeDuplicate, previousNames + key)
+            }
 
-            // No need to update previousTokens now that we've found something
-            case ((token @ Some(_), previousTokens), _) => (token, previousTokens)
+            // No need to update previousNames now that we've found something
+            case ((token @ Some(_), previousNames), _) => (token, previousNames)
           }
 
-          maybeDuplicateToken.foreach(exception(I18N.errors.get("compiler.StructureParser.importMultipleImports"), _))
+          maybeDuplicateImport.foreach(x => exception(I18N.errors.get("compiler.StructureParser.importMultipleImports"), x.token))
 
           var processedImports: Set[String] = Set()
 
@@ -60,13 +66,16 @@ object StructureParser {
 
             // Handle imports
             if (newResults.imports.nonEmpty) {
-              val filename = newResults.imports.head.name.toLowerCase + ".nls"
-              val suppliedPath = resolveIncludePath(filename)
-
               val previousResults = newResults
               val currentImport = results.imports.head
-
               val separator = System.getProperty("file.separator")
+
+              val filename = currentImport.packageName match
+                case Some(x) => x.toLowerCase + separator + currentImport.moduleName.toLowerCase + ".nls"
+                case None => currentImport.moduleName.toLowerCase + ".nls"
+
+              val suppliedPath = resolveIncludePath(filename)
+
               val currentModule = for {
                 pathString <- currentImport.filename
                 basename = pathString.split(separator).last.toUpperCase()
@@ -74,20 +83,20 @@ object StructureParser {
 
               newResults = includeFile(compilationEnvironment, suppliedPath) match {
                 case Some((path, fileContents)) =>
-                  parseOne(tokenizer, structureParser, fileContents, path, Some(currentImport.name),
+                  parseOne(tokenizer, structureParser, fileContents, path, Some(currentImport.moduleName),
                     newResults.copy(imports = newResults.imports.tail,
                       includedSources = newResults.includedSources :+ suppliedPath))
                 case None =>
                   exception(I18N.errors.getN("compiler.StructureParser.importNotFound", suppliedPath), currentImport.token)
               }
 
-              if (processedImports.contains(currentImport.name)) {
-                exception(I18N.errors.getN("compiler.StructureParser.importLoop", currentImport.name), currentImport.token)
+              if (processedImports.contains(currentImport.moduleName)) {
+                exception(I18N.errors.getN("compiler.StructureParser.importLoop", currentImport.moduleName), currentImport.token)
               } else {
-                processedImports += currentImport.name
+                processedImports += currentImport.moduleName
               }
 
-              val prefix = currentImport.alias.getOrElse(currentImport.name) + ":"
+              val prefix = currentImport.alias.getOrElse(currentImport.moduleName) + ":"
               val exportedNames =
                 newResults._export.map(_.exportedNames.toSet).getOrElse(newResults.procedures.keys.map(_._1).toSet)
               val newProcedures = addProcedureAliases(
