@@ -293,6 +293,8 @@ object NetLogoPackaging {
       )
 
       icons.foreach { icon =>
+        log.info(s"Generating ico file for ${icon.getName}")
+
         RunProcess(Seq("magick", icon.toString,
                        "(", "-clone", "0", "-resize", "16x16", ")",
                        "(", "-clone", "0", "-resize", "24x24", ")",
@@ -362,13 +364,34 @@ object NetLogoPackaging {
       val variables    = buildVariables.value
 
       val icons = Seq(
-        configDir / "macosx" / "NetLogo.icns"
-      , configDir / "macosx" / "NetLogo3D.icns"
-      , configDir / "macosx" / "HubNet Client.icns"
-      , configDir / "macosx" / "Behaviorsearch.icns"
-      , configDir / "macosx" / "Model.icns"
+        configDir / "NetLogo.png",
+        configDir / "NetLogo3D.png",
+        configDir / "HubNetClient.png",
+        configDir / "Behaviorsearch.png",
+        configDir / "Model.png",
+        configDir / "BehaviorsearchModel.png"
       )
-      icons.foreach( (i) => FileActions.copyFile(i, buildDir / i.getName) )
+
+      icons.foreach { icon =>
+        log.info(s"Generating icns file for ${icon.getName}")
+
+        val iconset = buildDir / icon.getName.replace(".png", ".iconset")
+
+        iconset.mkdirs()
+
+        for (size <- Seq(16, 32, 48, 128, 256, 512)) {
+          RunProcess(Seq("magick", icon.toString, "-bordercolor", "transparent", "-border", "10%",
+                         "-resize", s"${size}x${size}", (iconset / s"icon_${size}x${size}.png").toString),
+                     s"generate ${size}x${size} icon for ${icon.getName}")
+          RunProcess(Seq("magick", icon.toString, "-bordercolor", "transparent", "-border", "10%",
+                         "-resize", s"${size * 2}x${size * 2}", (iconset / s"icon_${size}x${size}@2x.png").toString),
+                     s"generate ${size}x${size}@2x icon for ${icon.getName}")
+        }
+
+        RunProcess(Seq("iconutil", "-c", "icns", iconset.toString), s"generate icns file for ${icon.getName}")
+
+        FileActions.remove(iconset)
+      }
 
       val extraJavaOptions = Seq(
         "--add-exports=java.desktop/com.apple.laf=ALL-UNNAMED"
@@ -409,7 +432,7 @@ object NetLogoPackaging {
         }
       , new HubNetClientLauncher(
           version
-        , Some("HubNet Client.icns")
+        , Some("HubNetClient.icns")
         , extraJavaOptions ++ Seq(
             "-Xdock:name=HubNet"
           , "-Dorg.nlogo.mac.appClassName=org.nlogo.hubnet.client.App$"
@@ -449,7 +472,7 @@ object NetLogoPackaging {
       launchers.foreach( (launcher) => {
         val extraArgs  = Seq("--icon", launcher.icon.getOrElse(""))
         val appPackage = JavaPackager.generateAppImage(log, buildJDK.jpackage, platform, launcher, configDir, buildDir, inputDir, destDir, extraArgs, Seq())
-        FileActions.copyFile(configDir / "macosx" / "Model.icns", destDir / s"${launcher.name}.app" / "Contents" / "Resources" / "Model.icns")
+        FileActions.copyFile(buildDir / "Model.icns", destDir / s"${launcher.name}.app" / "Contents" / "Resources" / "Model.icns")
       })
 
       val appImageDir = destDir / s"NetLogo ${version}"
