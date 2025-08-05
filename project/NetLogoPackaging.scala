@@ -345,6 +345,7 @@ object NetLogoPackaging {
       , buildJDK.architecture
       , configDir
       , destDir / "NetLogo"
+      , buildDir
       , webTarget.value
       , variables
       , mainLauncher +: launchers

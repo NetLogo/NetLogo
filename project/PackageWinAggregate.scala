@@ -79,6 +79,7 @@ object PackageWinAggregate {
   , arch: String
   , configDir: File
   , appImageDir: File
+  , targetDir: File
   , webDir: File
   , variables: Map[String, String]
   , launchers: Seq[Launcher]
@@ -106,7 +107,8 @@ object PackageWinAggregate {
     }
 
     val winVariables: Map[String, String] =
-      variables ++ Seq("iconDir" -> platformConfigDir.toString) ++ (if (arch == "64") vars64 else vars32) ++ archUUIDs
+      variables ++ Seq("iconDir" -> targetDir.toString, "configDir" -> platformConfigDir.toString) ++
+                   (if (arch == "64") vars64 else vars32) ++ archUUIDs
 
     val msiBuildDir = appImageDir.getParentFile
 
@@ -115,7 +117,8 @@ object PackageWinAggregate {
       Map[String, AnyRef](
           "bitness"               -> winVariables("bitness"),
           "version"               -> winVariables("version"),
-          "iconDir"               -> winVariables("iconDir"))
+          "iconDir"               -> winVariables("iconDir"),
+          "configDir"             -> winVariables("configDir"))
     val componentConfig = Map[String, AnyRef](
       "components" -> Seq(
         Map[String, AnyRef](
