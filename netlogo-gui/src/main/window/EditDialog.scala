@@ -18,7 +18,7 @@ import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 class EditDialog(window: Window, target: Editable, editPanel: EditPanel, modal: Boolean)
   extends JDialog(window, target.classDisplayName,
                   if (modal)
-                    Dialog.ModalityType.APPLICATION_MODAL
+                    Dialog.ModalityType.DOCUMENT_MODAL
                   else
                     Dialog.DEFAULT_MODALITY_TYPE) with ThemeSync {
 
