@@ -111,7 +111,7 @@ object JavaPackager {
 
   def setupAppImageInput(log: Logger, version: String, buildJDK: JDK, buildDir: File, netLogoJar: File, dependencies: Seq[File]) = {
     val inputDir = buildDir / s"input-${buildJDK.majorVersion}-${buildJDK.architecture}"
-    log.info(s"Setting up jpackage input director: $inputDir")
+    log.info(s"Setting up jpackage input directory: $inputDir")
     FileActions.remove(inputDir)
     FileActions.createDirectory(inputDir)
 

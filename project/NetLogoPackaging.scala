@@ -217,10 +217,12 @@ object NetLogoPackaging {
       val variables    = buildVariables.value
 
       val icons = Seq(
-        configDir / "linux" / "NetLogo.png",
-        configDir / "linux" / "NetLogo3D.png",
-        configDir / "linux" / "HubNetClient.png",
-        configDir / "linux" / "Behaviorsearch.png"
+        configDir / "NetLogo.png",
+        configDir / "NetLogo3D.png",
+        configDir / "HubNetClient.png",
+        configDir / "Behaviorsearch.png",
+        configDir / "Model.png",
+        configDir / "BehaviorsearchModel.png"
       )
 
       icons.foreach(i => FileActions.copyFile(i, buildDir / i.getName))
@@ -282,15 +284,24 @@ object NetLogoPackaging {
       val variables    = buildVariables.value
 
       val icons = Seq(
-        configDir / "windows" / "NetLogo.ico",
-        configDir / "windows" / "NetLogo3D.ico",
-        configDir / "windows" / "HubNet Client.ico",
-        configDir / "windows" / "model.ico",
-        configDir / "windows" / "Behaviorsearch.ico",
-        (behaviorsearchProject / baseDirectory).value / "resources" / "behaviorsearch_model.ico"
+        configDir / "NetLogo.png",
+        configDir / "NetLogo3D.png",
+        configDir / "HubNetClient.png",
+        configDir / "Behaviorsearch.png",
+        configDir / "Model.png",
+        configDir / "BehaviorsearchModel.png"
       )
 
-      icons.foreach(i => FileActions.copyFile(i, buildDir / i.getName))
+      icons.foreach { icon =>
+        RunProcess(Seq("magick", icon.toString,
+                       "(", "-clone", "0", "-resize", "16x16", ")",
+                       "(", "-clone", "0", "-resize", "24x24", ")",
+                       "(", "-clone", "0", "-resize", "32x32", ")",
+                       "(", "-clone", "0", "-resize", "48x48", ")",
+                       "(", "-clone", "0", "-resize", "256x256", ")",
+                       "-delete", "0", (buildDir / icon.getName.replace(".png", ".ico")).toString),
+                   s"generate ico file for ${icon.getName}")
+      }
 
       // $APPDIR on Windows is `./app`, so move one levels up for the extra dirs
       val extraJavaOptions = Seq(
@@ -306,7 +317,7 @@ object NetLogoPackaging {
           override def mustachePrefix = "win-console-launcher"
         }
       , new NetLogo3dLauncher(version, Some("NetLogo3D.ico"), extraJavaOptions)
-      , new HubNetClientLauncher(version, Some("HubNet Client.ico"), extraJavaOptions)
+      , new HubNetClientLauncher(version, Some("HubNetClient.ico"), extraJavaOptions)
       , new BehaviorsearchLauncher(version, Some("Behaviorsearch.ico"), extraJavaOptions)
       )
 
