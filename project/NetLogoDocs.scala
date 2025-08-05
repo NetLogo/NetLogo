@@ -172,10 +172,10 @@ class NetLogoDocs(
    *  If not, throw an error with instructions.
    * */
   private def checkPDFRenderingDependencies(): Unit = {
-    if (!(docsSource / "generate-manual" / "index.js").exists)
+    if (!(docsSource.getParentFile / "generate-manual" / "index.js").exists)
       sys.error(s"index.js not found in generate-manual directory.")
 
-    if (Process(Seq("bash", "npm-install.sh"), docsSource / "generate-manual").! != 0)
+    if (Process(Seq("bash", "npm-install.sh"), docsSource.getParentFile / "generate-manual").! != 0)
       sys.error("npm install failed. Please ensure you have npm installed and try again.")
 
     println("npm install completed successfully.")
@@ -185,7 +185,7 @@ class NetLogoDocs(
     checkPDFRenderingDependencies()
 
     val pdfFile = netLogoRoot / "NetLogo User Manual.pdf"
-    val scriptPath = docsSource / "generate-manual" / "index.js"
+    val scriptPath = docsSource.getParentFile / "generate-manual" / "index.js"
     if (!Files.exists(scriptPath.toPath)) {
       sys.error(s"Script not found: $scriptPath")
     }
