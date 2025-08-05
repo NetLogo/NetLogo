@@ -289,8 +289,18 @@ class WidgetPanel(val workspace: GUIWorkspace)
   private[interfacetab] def dragSelectedWidgets(x: Int, y: Int): Unit = {
     if (widgetsBeingDragged.nonEmpty) {
       val p = restrictDrag(x, y, widgetsBeingDragged)
+      val first = widgetsBeingDragged(0)
 
-      widgetsBeingDragged.foreach(w => w.snapLocation(w.originalBounds.x + p.x, w.originalBounds.y + p.y))
+      if (workspace.snapOn) {
+        first.snapLocation(first.originalBounds.x + p.x, first.originalBounds.y + p.y)
+      } else {
+        first.setLocation(first.originalBounds.x + p.x, first.originalBounds.y + p.y)
+      }
+
+      val dx = first.getX - first.originalBounds.x
+      val dy = first.getY - first.originalBounds.y
+
+      widgetsBeingDragged.foreach(w => w.setLocation(w.originalBounds.x + dx, w.originalBounds.y + dy))
     }
   }
 
