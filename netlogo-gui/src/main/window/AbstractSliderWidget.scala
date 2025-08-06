@@ -186,7 +186,7 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
   def setSliderConstraint(con: SliderConstraint) = {
     slider.setMinimum(0)
     slider.setMaximum(((con.maximum.get - con.minimum.get) / con.increment.get).asInstanceOf[Int])
-    slider.setValue(((value - con.minimum.get) / con.increment.get).asInstanceOf[Int])
+    slider.setValue(((value - con.minimum.get) / con.increment.get).round.asInstanceOf[Int])
     sliderData.setSliderConstraint(con)
   }
   def name: String = _name
