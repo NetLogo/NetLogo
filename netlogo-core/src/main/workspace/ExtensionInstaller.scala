@@ -13,13 +13,17 @@ object ExtensionInstaller {
     }
     hasRun = true
 
+    println(APIEM.userExtensionsPath)
     val libraryManager = new LibraryManager(APIEM.userExtensionsPath, () => {})
     libraryManager.reloadMetadata(isFirstLoad = false, useBundled = false)
+    Thread.sleep(2500)
     val extensionInfos = libraryManager.getExtensionInfos
+    println(extensionInfos.mkString("\n"))
+
     def isNeededExtension(extInfo: LibraryInfo): Boolean = {
       println(s"checking ${extInfo.codeName}")
       val isContained   = extensionNames.contains(extInfo.codeName)
-      val isInstallable = (extInfo.status == LibraryStatus.CanInstall || extInfo.status == LibraryStatus.CanUpdate)
+      val isInstallable = (extInfo.status == LibraryStatus.CanInstall || extInfo.status == LibraryStatus.CanUpdate || forceRun)
       return isContained && isInstallable
     }
 
@@ -33,7 +37,6 @@ object ExtensionInstaller {
       Thread.sleep(2500)
     })
   }
-
 
   def main(args: Array[String]): Unit = {
     ExtensionInstaller(args.toSet, true)
