@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.app
+package org.nlogo.app.common
 
 import java.io.{ File, IOException, PrintWriter }
 import java.nio.file.{ Files, Path, Paths }
@@ -8,6 +8,8 @@ import java.text.SimpleDateFormat
 import java.util.{ Date, Locale }
 
 import org.nlogo.api.ModelReader
+import org.nlogo.app.common.CommandLine.ExecutionString
+import org.nlogo.core.AgentKind
 
 import scala.io.Source
 import scala.jdk.StreamConverters.StreamHasToScala
@@ -109,5 +111,45 @@ object ModelConfig {
         }
       }
     }
+  }
+
+  def getCommandHistory(modelPath: String): Seq[ExecutionString] = {
+    val history = getModelConfigPath(modelPath).resolve("commandHistory.txt").toFile
+
+    if (history.exists) {
+      val source = Source.fromFile(history, "UTF-8")
+      val commands = source.getLines.collect {
+        _.split(">", 2) match {
+          case Array("O", command) => ExecutionString(AgentKind.Observer, command)
+          case Array("T", command) => ExecutionString(AgentKind.Turtle, command)
+          case Array("P", command) => ExecutionString(AgentKind.Patch, command)
+          case Array("L", command) => ExecutionString(AgentKind.Link, command)
+        }
+      }.toSeq
+
+      source.close()
+
+      commands
+    } else {
+      Seq()
+    }
+  }
+
+  def updateCommandHistory(modelPath: String, commands: Seq[ExecutionString]): Unit = {
+    val history = getModelConfigPath(modelPath).resolve("commandHistory.txt").toFile
+
+    if (!history.exists)
+      history.getParentFile.mkdirs()
+
+    new PrintWriter(history) {
+      commands.foreach { exec =>
+        exec.agentClass match {
+          case AgentKind.Observer => this.println(s"O>${exec.string}")
+          case AgentKind.Turtle => this.println(s"T>${exec.string}")
+          case AgentKind.Patch => this.println(s"P>${exec.string}")
+          case AgentKind.Link => this.println(s"L>${exec.string}")
+        }
+      }
+    }.close()
   }
 }
