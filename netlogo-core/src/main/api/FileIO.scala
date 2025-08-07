@@ -11,6 +11,8 @@ import org.nlogo.core.FileMode
 
 object FileIO {
 
+  def exists(path: String): Boolean = Files.exists(Paths.get(path))
+
   @throws(classOf[java.io.IOException])
   def fileToString(file: java.io.File) = {
     val f = io.Source.fromFile(file, "UTF-8")
