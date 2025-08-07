@@ -70,11 +70,7 @@ object StructureParser {
               val currentImport = results.imports.head
               val separator = System.getProperty("file.separator")
 
-              val filename = currentImport.packageName match
-                case Some(x) => x.toLowerCase + separator + currentImport.moduleName.toLowerCase + ".nls"
-                case None => currentImport.moduleName.toLowerCase + ".nls"
-
-              val suppliedPath = resolveIncludePath(filename)
+              val suppliedPath = compilationEnvironment.resolveModule(currentImport.packageName, currentImport.moduleName)
 
               val currentModule = for {
                 pathString <- currentImport.filename
