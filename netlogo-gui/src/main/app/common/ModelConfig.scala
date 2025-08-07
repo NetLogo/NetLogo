@@ -1,13 +1,15 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.app
+package org.nlogo.app.common
 
 import java.io.{ File, IOException, PrintWriter }
-import java.nio.file.{ Files, Path, Paths }
+import java.nio.file.{ Files, Path, Paths, StandardOpenOption }
 import java.text.SimpleDateFormat
 import java.util.{ Date, Locale }
 
 import org.nlogo.api.ModelReader
+import org.nlogo.app.common.CommandLine.ExecutionString
+import org.nlogo.core.AgentKind
 
 import scala.io.Source
 import scala.jdk.StreamConverters.StreamHasToScala
@@ -139,6 +141,35 @@ object ModelConfig {
         case e: IOException =>
       }
     }
+  }
+
+  def getCommandHistory(modelPath: String): Seq[ExecutionString] = {
+    val history: Path = getModelConfigPath(modelPath).resolve("commandHistory.txt")
+
+    if (Files.exists(history)) {
+      Files.readAllLines(history).toArray(Array[String]()).collect {
+        case s"O>$command" => ExecutionString(AgentKind.Observer, command)
+        case s"T>$command" => ExecutionString(AgentKind.Turtle, command)
+        case s"P>$command" => ExecutionString(AgentKind.Patch, command)
+        case s"L>$command" => ExecutionString(AgentKind.Link, command)
+      }.toSeq
+    } else {
+      Seq()
+    }
+  }
+
+  def updateCommandHistory(modelPath: String, commands: Seq[ExecutionString]): Unit = {
+    val history: Path = getModelConfigPath(modelPath).resolve("commandHistory.txt")
+
+    if (!Files.exists(history))
+      Files.createDirectories(history.getParent)
+
+    Files.writeString(history, commands.collect {
+      case ExecutionString(AgentKind.Observer, string) => s"O>$string"
+      case ExecutionString(AgentKind.Turtle, string) => s"T>$string"
+      case ExecutionString(AgentKind.Patch, string) => s"P>$string"
+      case ExecutionString(AgentKind.Link, string) => s"L>$string"
+    }.mkString("\n"), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)
   }
 
   private def listRecursive(file: File): Array[File] = {
