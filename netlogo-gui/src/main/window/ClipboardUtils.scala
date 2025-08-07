@@ -14,7 +14,7 @@ object ClipboardUtils {
   private val clipboard = Toolkit.getDefaultToolkit.getSystemClipboard
 
   // Seq is not serializable, which prevents cross-instance copy/paste, so use ArrayList instead (Isaac B 6/16/25)
-  private val widgetsFlavor = new DataFlavor(classOf[ArrayList[Widget]], "NetLogo Widgets")
+  val widgetsFlavor = new DataFlavor(classOf[ArrayList[Widget]], "NetLogo Widgets")
 
   def readWidgets(): Seq[Widget] = {
     if (clipboard.isDataFlavorAvailable(widgetsFlavor)) {

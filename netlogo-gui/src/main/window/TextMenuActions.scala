@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import java.awt.Toolkit
+import java.awt.{ KeyboardFocusManager, Toolkit }
 import java.awt.datatransfer.DataFlavor
 import java.awt.event.{ ActionEvent, KeyEvent }
 import java.lang.IllegalStateException
@@ -21,7 +21,18 @@ object TextMenuActions {
   val CutAction       =
     new WrappedAction(Actions.CutAction, EditCategory, null, EditClipboardGroup, keystroke('X', withMenu = true))
   val CopyAction      =
-    new WrappedAction(Actions.CopyAction, EditCategory, null, EditClipboardGroup, keystroke('C', withMenu = true))
+    new WrappedAction(Actions.CopyAction, EditCategory, null, EditClipboardGroup, keystroke('C', withMenu = true)) {
+
+    override def actionPerformed(e: ActionEvent): Unit = {
+      KeyboardFocusManager.getCurrentKeyboardFocusManager.getPermanentFocusOwner match {
+        case widgetPanel: AbstractWidgetPanel =>
+          widgetPanel.copySelectedWidgets()
+
+        case _ =>
+          super.actionPerformed(e)
+      }
+    }
+  }
   val PasteAction     = new WrappedPasteAction(Actions.PasteAction)
   val DeleteAction    =
     new WrappedAction(
@@ -39,11 +50,23 @@ object TextMenuActions {
 
     def refresh(): Unit = {
       try {
-        setEnabled(Toolkit.getDefaultToolkit.getSystemClipboard
-          .isDataFlavorAvailable(DataFlavor.stringFlavor))
+        val clipboard = Toolkit.getDefaultToolkit.getSystemClipboard
+
+        setEnabled(clipboard.isDataFlavorAvailable(DataFlavor.stringFlavor) ||
+                   clipboard.isDataFlavorAvailable(ClipboardUtils.widgetsFlavor))
       } catch {
         case _: IllegalStateException =>
           setEnabled(false)
+      }
+    }
+
+    override def actionPerformed(e: ActionEvent): Unit = {
+      KeyboardFocusManager.getCurrentKeyboardFocusManager.getPermanentFocusOwner match {
+        case widgetPanel: AbstractWidgetPanel =>
+          widgetPanel.pasteWidgets()
+
+        case _ =>
+          super.actionPerformed(e)
       }
     }
   }

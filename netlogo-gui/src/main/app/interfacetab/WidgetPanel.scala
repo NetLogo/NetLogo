@@ -3,8 +3,8 @@
 package org.nlogo.app.interfacetab
 
 import java.awt.{ Color => AwtColor, Component, Cursor, Dimension, Graphics, MouseInfo, Point, Rectangle }
-import java.awt.event.{ ActionEvent, FocusEvent, FocusAdapter, InputEvent, KeyAdapter, KeyEvent, KeyListener,
-                        MouseAdapter, MouseEvent, MouseListener, MouseMotionAdapter, MouseMotionListener }
+import java.awt.event.{ ActionEvent, FocusEvent, FocusAdapter, KeyAdapter, KeyEvent, KeyListener, MouseAdapter,
+                        MouseEvent, MouseListener, MouseMotionAdapter, MouseMotionListener }
 import javax.swing.{ AbstractAction, JComponent, JLayeredPane, SwingUtilities }
 
 import org.nlogo.analytics.Analytics
@@ -726,17 +726,8 @@ class WidgetPanel(val workspace: GUIWorkspace)
   }
 
   def keyPressed(e: KeyEvent): Unit = {
-    val hasCtrl = {
-      if (System.getProperty("os.name").contains("Mac"))
-        (e.getModifiersEx & InputEvent.META_DOWN_MASK) == InputEvent.META_DOWN_MASK
-      else
-        (e.getModifiersEx & InputEvent.CTRL_DOWN_MASK) == InputEvent.CTRL_DOWN_MASK
-    }
-
     if (e.getKeyCode == KeyEvent.VK_ESCAPE) {
       setInterfaceMode(InterfaceMode.Interact, true)
-    } else if (e.getKeyCode == KeyEvent.VK_V && hasCtrl && interfaceMode != InterfaceMode.Add) {
-      pasteWidgets()
     } else if (interfaceMode == InterfaceMode.Interact) {
       if (System.getProperty("os.name").contains("Mac")) {
         if (e.getKeyCode == KeyEvent.VK_META)
@@ -748,9 +739,6 @@ class WidgetPanel(val workspace: GUIWorkspace)
       val dist = if (e.isShiftDown) 10 else 1
 
       e.getKeyCode match {
-        case KeyEvent.VK_C if hasCtrl =>
-          copySelectedWidgets()
-
         case KeyEvent.VK_RIGHT =>
           WidgetActions.moveWidgets(selectedWrappers.map(w => (w, w.getX + dist, w.getY)))
 
@@ -800,19 +788,22 @@ class WidgetPanel(val workspace: GUIWorkspace)
     ClipboardUtils.writeWidgets(wrappers.map(_.widget.model))
   }
 
-  def copySelectedWidgets(): Unit = {
-    ClipboardUtils.writeWidgets(selectedWrappers.map(_.widget.model))
+  override def copySelectedWidgets(): Unit = {
+    if (selectedWrappers.nonEmpty)
+      ClipboardUtils.writeWidgets(selectedWrappers.map(_.widget.model))
   }
 
-  def pasteWidgets(): Unit = {
-    val widgets = ClipboardUtils.readWidgets()
+  override def pasteWidgets(): Unit = {
+    if (interfaceMode != InterfaceMode.Add) {
+      val widgets = ClipboardUtils.readWidgets()
 
-    if (widgets.nonEmpty) {
-      unselectWidgets()
+      if (widgets.nonEmpty) {
+        unselectWidgets()
 
-      createShadowWidgets(widgets)
+        createShadowWidgets(widgets)
 
-      setInterfaceMode(InterfaceMode.Add, true)
+        setInterfaceMode(InterfaceMode.Add, true)
+      }
     }
   }
 
