@@ -9,6 +9,7 @@ import java.util.{ Timer, TimerTask }
 import javax.swing.JFrame
 
 import org.nlogo.api.{ AbstractModelLoader, Exceptions, ModelType, Version }
+import org.nlogo.app.common.ModelConfig
 import org.nlogo.window.Events._
 import org.nlogo.workspace.{ ModelTracker, SaveModel }
 
