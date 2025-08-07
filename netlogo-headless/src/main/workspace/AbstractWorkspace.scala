@@ -15,8 +15,8 @@ import
   org.nlogo.{ agent, api, core, nvm, plot },
   agent.{ AbstractExporter, Agent, AgentSet, OutputObject, World },
   api.{ PlotInterface, CommandLogoThunk, Dump, Exceptions, ExtensionManager => APIEM, ExternalResourceManager,
-    ExportPlotWarningAction, JobOwner, LibraryManager, LogoException, MersenneTwisterFast, ModelType, PreviewCommands,
-    ReporterLogoThunk, SimpleJobOwner },
+    ExportPlotWarningAction, FileIO, JobOwner, LibraryManager, LogoException, MersenneTwisterFast, ModelType,
+    PreviewCommands, PackageManager => APIPM, ReporterLogoThunk, SimpleJobOwner },
   core.{ CompilationEnvironment, AgentKind, CompilerException, Femto, File, FileMode, I18N, LiteralParser},
   nvm.{ Activation, Command, Context, FileManager, ImportHandler,
     Instruction, Job, MutableLong, Procedure, RuntimePrimitiveException, Workspace },
@@ -153,6 +153,7 @@ with ExtendableWorkspace with ExtensionCompilationEnvironment with APIConformant
     import java.net.MalformedURLException
 
     new org.nlogo.core.CompilationEnvironment {
+      def exists(path: String): Boolean = FileIO.exists(path)
       def getSource(filename: String): String = AbstractWorkspace.this.getSource(filename)
       def profilingEnabled: Boolean = AbstractWorkspace.this.profilingEnabled
       def resolvePath(path: String): String = {
@@ -166,6 +167,23 @@ with ExtendableWorkspace with ExtensionCompilationEnvironment with APIConformant
         } catch {
           case ex: MalformedURLException =>
             throw new IllegalStateException(s"$path is not a valid pathname: $ex")
+        }
+      }
+      def resolveModule(packageName: Option[String], moduleName: String): String = {
+        val separator = System.getProperty("file.separator")
+
+        packageName match {
+          case Some(x) => {
+            val localPkgPath = x.toLowerCase + separator + moduleName.toLowerCase + ".nls"
+            val resolvedLocalPkgPath = resolvePath(localPkgPath)
+
+            if (exists(resolvedLocalPkgPath)) {
+              resolvedLocalPkgPath
+            } else {
+              resolvePath(FileIO.perUserFile("packages" + separator + localPkgPath, false))
+            }
+          }
+          case None => resolvePath(moduleName.toLowerCase + ".nls")
         }
       }
     }
@@ -439,7 +457,7 @@ object AbstractWorkspaceTraits {
       _extensionManager.importExtensionData(name, data, handler)
     }
 
-    private val libraryManager = new LibraryManager(APIEM.userExtensionsPath, _extensionManager.reset)
+    private val libraryManager = new LibraryManager(APIPM.userPackagesPath, APIEM.userExtensionsPath, _extensionManager.reset)
 
     override def getLibraryManager = libraryManager
 
@@ -767,6 +785,8 @@ object AbstractWorkspaceTraits {
     }
 
     val compilationEnvironment = new CompilationEnvironment {
+      def exists(path: String): Boolean =
+        FileIO.exists(path)
 
       def getSource(filename: String): String =
         ExtensionCompilationEnvironment.this.getSource(filename)
@@ -785,6 +805,24 @@ object AbstractWorkspaceTraits {
         } catch {
           case ex: MalformedURLException =>
             throw new IllegalStateException(s"$path is not a valid pathname: $ex")
+        }
+      }
+
+      def resolveModule(packageName: Option[String], moduleName: String): String = {
+        val separator = System.getProperty("file.separator")
+
+        packageName match {
+          case Some(x) => {
+            val localPkgPath = x.toLowerCase + separator + moduleName.toLowerCase + ".nls"
+            val resolvedLocalPkgPath = resolvePath(localPkgPath)
+
+            if (exists(resolvedLocalPkgPath)) {
+              resolvedLocalPkgPath
+            } else {
+              resolvePath(FileIO.perUserFile("packages" + separator + localPkgPath, false))
+            }
+          }
+          case None => resolvePath(moduleName.toLowerCase + ".nls")
         }
       }
     }
