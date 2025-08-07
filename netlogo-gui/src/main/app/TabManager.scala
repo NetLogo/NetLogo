@@ -11,7 +11,7 @@ import javax.swing.{ AbstractAction, JComponent, JFrame }
 
 import org.nlogo.api.Exceptions
 import org.nlogo.app.codetab.{ CodeTab, ExternalFileManager, MainCodeTab, TemporaryCodeTab }
-import org.nlogo.app.common.{ CommandLine, ExceptionCatchingAction, MenuTab, TabsInterface }
+import org.nlogo.app.common.{ CommandLine, ExceptionCatchingAction, MenuTab, ModelConfig, TabsInterface }
 import org.nlogo.app.common.Events.SwitchedTabsEvent
 import org.nlogo.app.common.TabsInterface.Filename
 import org.nlogo.app.infotab.InfoTab
