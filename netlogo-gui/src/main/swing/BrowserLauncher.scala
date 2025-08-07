@@ -6,7 +6,7 @@ import java.awt.{ Component, Desktop }
 import java.io.IOException
 import java.lang.Process
 import java.net.{ NetworkInterface, URI, URISyntaxException }
-import java.nio.file.{ Files, Path, Paths }
+import java.nio.file.{ Path, Paths }
 import javax.swing.JDialog
 
 import org.nlogo.core.I18N
@@ -60,29 +60,15 @@ object BrowserLauncher {
 
   def openPath(comp: Component, path: Path, anchor: String): Unit = {
     val u = path.toUri
-    if (anchor == null || anchor == "")
+    if (anchor == null || anchor == "") {
       openURI(comp, u)
-    else {
-      // Windows and Linux don't support anchors in file URLs, so we create a redirect helper
-      // to work around this.
-      val uriWithAnchor = new URI(u.getScheme, u.getHost, u.getPath, anchor)
-      val redirectFile = Files.createTempFile("redirectHelper", ".html")
-      Files.write(redirectFile, redirectHelper(uriWithAnchor).getBytes("UTF-8"))
-      openURI(comp, redirectFile.toUri)
+    } else {
+      openURI(comp, new URI(u.getScheme, u.getHost, u.getPath, anchor))
     }
   }
 
   def openPath(path: Path, anchor: String): Unit = {
     openPath(new JDialog, path, anchor)
-  }
-
-  private def redirectHelper(targetUri: URI): String = {
-    s"""|<html>
-        |<head><meta http-equiv="refresh" content="0;url=${targetUri}" /></head>
-        |<body>
-        |<script type="text/javascript">onload="window.location = '${targetUri}'"</script>
-        |</body>
-        |</html>""".stripMargin
   }
 
   def makeURI(comp: Component, s: String): URI = {
