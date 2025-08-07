@@ -28,7 +28,12 @@ object ModelConfig {
     val file = getModelConfigPath(modelPath).resolve("lastModified.txt").toFile
 
     if (file.exists) {
-      Option(Source.fromFile(file).getLines().next().trim)
+      val source = Source.fromFile(file, "UTF-8")
+      val result = Option(source.getLines.next.trim)
+
+      source.close()
+
+      result
     } else {
       None
     }
