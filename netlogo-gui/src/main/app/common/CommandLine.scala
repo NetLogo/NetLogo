@@ -16,8 +16,6 @@ import org.nlogo.window.{ Editable, CommandCenterInterface, EditorColorizer, Int
                           Events => WindowEvents }
 import org.nlogo.workspace.AbstractWorkspace
 
-import scala.collection.immutable.List
-
 object CommandLine {
   val PROMPT = ">"
   val OBSERVER_PROMPT = I18N.gui.get("common.observer") + PROMPT
@@ -48,7 +46,7 @@ class CommandLine(commandCenter: CommandCenterInterface,
   private var historyPosition = -1
   private var historyBase = ""
   private var historyBaseClass: AgentKind = AgentKind.Observer
-  private var history: List[ExecutionString] = List()
+  private var history = Seq[ExecutionString]()
 
   lazy val codeCompletionPopup = CodeCompletionPopup(workspace.dialect, workspace.getExtensionManager)
   lazy val actionMap = Map(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_SPACE, java.awt.event.InputEvent.CTRL_DOWN_MASK)
@@ -208,12 +206,13 @@ class CommandLine(commandCenter: CommandCenterInterface,
   private def addToHistory(str: String): Unit = {
     val executionString = new ExecutionString(kind, str)
     if (history.isEmpty || executionString != history.head) {
-      history = executionString :: history
+      history = executionString +: history
       while (history.size > MAX_HISTORY_SIZE) {
         history = history.dropRight(1)
       }
     }
     historyPosition = -1
+    saveHistory()
   }
 
   protected def cycleListBack(): Unit = {
@@ -247,18 +246,19 @@ class CommandLine(commandCenter: CommandCenterInterface,
   }
 
   def getExecutionList: Seq[ExecutionString] =
-    history.toSeq
+    history
 
   private[app] def reset(): Unit = {
-    clearList()
+    loadHistory()
     setText("")
     agentKind(AgentKind.Observer)
     textField.resetUndoHistory()
   }
 
   private[app] def clearList(): Unit = {
-    history = List[ExecutionString]()
+    history = Seq()
     historyPosition = 0
+    saveHistory()
   }
 
   private[app] def setExecutionString(es: ExecutionString): Unit = {
@@ -266,6 +266,15 @@ class CommandLine(commandCenter: CommandCenterInterface,
     agentKind(es.agentClass)
     textField.setCaretPosition(getText.length)
     commandCenter.repaintPrompt()
+  }
+
+  private def loadHistory(): Unit = {
+    history = Option(workspace.getModelPath).map(ModelConfig.getCommandHistory).getOrElse(Seq())
+    historyPosition = -1
+  }
+
+  private def saveHistory(): Unit = {
+    Option(workspace.getModelPath).foreach(ModelConfig.updateCommandHistory(_, history))
   }
 
   override def setEnabled(enabled: Boolean): Unit = {
