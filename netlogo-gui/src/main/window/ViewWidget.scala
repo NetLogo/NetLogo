@@ -98,6 +98,15 @@ class ViewWidget(workspace: GUIWorkspace) extends Widget with ViewWidgetInterfac
     resetZoomInfo()
   }
 
+  // the border size was changed for 7.0, so there can be weird sizing issues with older views. this method is used
+  // during widget size conversion to determine whether the size of an old view needs to be corrected. it checks
+  // whether the assigned view size from the model file matches the size computed from the world dimensions and the
+  // patch size, returning true if they do not match. (Isaac B 8/7/25)
+  def shouldAdjustSize: Boolean = {
+    view.getWidth > (workspace.world.patchSize * workspace.world.worldWidth) ||
+    view.getHeight > (workspace.world.patchSize * workspace.world.worldHeight)
+  }
+
   override def setBounds(x: Int, y: Int, width: Int, height: Int): Unit = {
     val bounds = getBounds()
     // only set the bounds if they've changed

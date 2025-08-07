@@ -1614,6 +1614,14 @@ class WidgetPanel(val workspace: GUIWorkspace)
         }
     }
 
+    // the view border size was changed for 7.0, which is accounted for in this adjustment (Isaac B 8/7/25)
+    getWrappers.foreach(w => w.widget match {
+      case view: ViewWidget if view.shouldAdjustSize =>
+        w.setSize(w.getWidth - 4, w.getHeight - 5)
+
+      case _ =>
+    })
+
     getWrappers.foreach(w => resetZoomInfo(w.widget))
 
     revalidate()
