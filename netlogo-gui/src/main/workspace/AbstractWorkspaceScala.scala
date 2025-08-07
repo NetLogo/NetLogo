@@ -9,7 +9,7 @@ import java.util.Base64
 import scala.collection.mutable.WeakHashMap
 import scala.util.Try
 import org.nlogo.agent.{ World, Agent, OutputObject }
-import org.nlogo.api.{ Dump, ExtensionManager => APIEM, FileIO, HubNetInterface, LibraryManager, LogoException,
+import org.nlogo.api.{ Dump, PackageManager => APIPM, ExtensionManager => APIEM, FileIO, HubNetInterface, LibraryManager, LogoException,
                        OutputDestination, PreviewCommands, Workspace => APIWorkspace }
 import org.nlogo.core.{ CompilerException, Model, View, Widget => CoreWidget, WorldDimensions, WorldDimensions3D }
 import org.nlogo.nvm.{ Activation, Instruction, Command, Context, Job, MutableLong, Procedure, Tracer }
@@ -36,7 +36,7 @@ abstract class AbstractWorkspaceScala(val world: World, val hubNetManagerFactory
   with Plotting
   with Extensions {
 
-  private val libraryManager = new LibraryManager(APIEM.userExtensionsPath, extensionManager.reset)
+  private val libraryManager = new LibraryManager(APIPM.userPackagesPath, APIEM.userExtensionsPath, extensionManager.reset)
 
   def compilerTestingMode: Boolean
 
@@ -163,6 +163,7 @@ abstract class AbstractWorkspaceScala(val world: World, val hubNetManagerFactory
 
   override def getCompilationEnvironment = {
     new org.nlogo.core.CompilationEnvironment {
+      def exists(path: String): Boolean = FileIO.exists(path)
       def getSource(filename: String): String = AbstractWorkspaceScala.this.getSource(filename)
       def profilingEnabled: Boolean = AbstractWorkspaceScala.this.profilingEnabled
       def resolvePath(path: String): String = {
@@ -173,6 +174,23 @@ abstract class AbstractWorkspaceScala(val world: World, val hubNetManagerFactory
         } catch {
           case ex: Exception =>
             throw new IllegalStateException(s"$path is not a valid pathname: $ex")
+        }
+      }
+      def resolveModule(packageName: Option[String], moduleName: String): String = {
+        val separator = System.getProperty("file.separator")
+
+        packageName match {
+          case Some(x) => {
+            val localPkgPath = x.toLowerCase + separator + moduleName.toLowerCase + ".nls"
+            val resolvedLocalPkgPath = resolvePath(localPkgPath)
+
+            if (exists(resolvedLocalPkgPath)) {
+              resolvedLocalPkgPath
+            } else {
+              resolvePath(FileIO.perUserFile("packages" + separator + localPkgPath, false))
+            }
+          }
+          case None => resolvePath(moduleName.toLowerCase + ".nls")
         }
       }
     }

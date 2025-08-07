@@ -13,6 +13,8 @@ import scala.io.Source
 
 object FileIO {
 
+  def exists(path: String): Boolean = Files.exists(Paths.get(path))
+
   @throws(classOf[java.io.IOException])
   def fileToString(file: java.io.File) = {
     val f = Source.fromFile(file, "UTF-8")
