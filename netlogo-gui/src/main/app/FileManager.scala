@@ -13,7 +13,7 @@ import org.nlogo.analytics.Analytics
 import org.nlogo.core.{ I18N, Model }
 import org.nlogo.api.{ AbstractModelLoader, Exceptions, FileIO, ModelReader, ModelType, Version, Workspace },
   ModelReader.{ emptyModelPath, modelSuffix }
-import org.nlogo.app.common.{ Actions, Dialogs, ExceptionCatchingAction }, Actions.Ellipsis
+import org.nlogo.app.common.{ Actions, Dialogs, ExceptionCatchingAction, ModelConfig }, Actions.Ellipsis
 import org.nlogo.app.codetab.TemporaryCodeTab
 import org.nlogo.app.tools.{ ModelsLibraryDialog, NetLogoWebSaver }
 import org.nlogo.awt.{ Hierarchy, UserCancelException }
