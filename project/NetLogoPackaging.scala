@@ -472,9 +472,12 @@ object NetLogoPackaging {
 
       launchers.foreach( (launcher) => {
         val extraArgs  = Seq("--icon", launcher.icon.getOrElse(""))
-        val appPackage = JavaPackager.generateAppImage(log, buildJDK.jpackage, platform, launcher, configDir, buildDir, inputDir, destDir, extraArgs, Seq())
-        FileActions.copyFile(buildDir / "Model.icns", destDir / s"${launcher.name}.app" / "Contents" / "Resources" / "Model.icns")
+        JavaPackager.generateAppImage(log, buildJDK.jpackage, platform, launcher, configDir, buildDir, inputDir, destDir, extraArgs, Seq())
       })
+
+      FileActions.copyFile(buildDir / "Model.icns", destDir / s"${launchers(0).name}.app" / "Contents" / "Resources" / "Model.icns")
+      FileActions.copyFile(buildDir / "Model.icns", destDir / s"${launchers(1).name}.app" / "Contents" / "Resources" / "Model.icns")
+      FileActions.copyFile(buildDir / "BehaviorsearchModel.icns", destDir / s"${launchers(3).name}.app" / "Contents" / "Resources" / "BehaviorsearchModel.icns")
 
       val appImageDir = destDir / s"NetLogo ${version}"
       FileActions.remove(appImageDir)

@@ -66,6 +66,7 @@ object PackageMacAggregate {
       , "fileAssociationOld"  -> "nlogo"
       , "fileAssociationNew"  -> "nlogox"
       , "fileAssociationIcon" -> "Model.icns"
+      , "fileAssociationType" -> "NetLogo Model"
       , "iconFile"            -> s"NetLogo $version.icns"
       , "packageID"           -> "APPLnLo1"
       , "version"             -> version
@@ -78,6 +79,7 @@ object PackageMacAggregate {
       , "fileAssociationOld"  -> "nlogo3d"
       , "fileAssociationNew"  -> "nlogox3d"
       , "fileAssociationIcon" -> "Model.icns"
+      , "fileAssociationType" -> "NetLogo 3D Model"
       , "iconFile"            -> s"NetLogo 3D $version.icns"
       , "packageID"           -> "APPLnLo1"
       , "version"             -> version
@@ -97,7 +99,8 @@ object PackageMacAggregate {
       , "bundleName"          -> "Behaviorsearch"
       , "bundleSignature"     -> "????"
       , "fileAssociationOld"  -> "bsearch"
-      , "fileAssociationIcon" -> s"Behaviorsearch $version.icns"
+      , "fileAssociationIcon" -> "BehaviorsearchModel.icns"
+      , "fileAssociationType" -> "Behaviorsearch Model"
       , "iconFile"            -> s"Behaviorsearch $version.icns"
       , "packageID"           -> "APPL????"
       , "version"             -> version
