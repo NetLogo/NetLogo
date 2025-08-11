@@ -18,10 +18,10 @@ import org.nlogo.log.LogManager
 import org.nlogo.nvm.DefaultCompilerServices
 import org.nlogo.swing.{ MenuItem, PopupMenu }
 import org.nlogo.theme.InterfaceColors
-import org.nlogo.window.{ AbstractPlotWidget, AbstractWidgetPanel, ButtonWidget, ClipboardUtils, Editable,
-                          Events => WindowEvents, GUIWorkspace, InterfaceMode, OutputWidget, Widget, WidgetContainer,
-                          WidgetRegistry, DummyChooserWidget, DummyInputBoxWidget, DummyPlotWidget, DummyViewWidget,
-                          PlotWidget, SliderWidget, ViewWidget },
+import org.nlogo.window.{ AbstractPlotWidget, AbstractWidgetPanel, ButtonWidget, ClipboardUtils, CopyPasteTarget,
+                          Editable, Events => WindowEvents, GUIWorkspace, InterfaceMode, OutputWidget, Widget,
+                          WidgetContainer, WidgetRegistry, DummyChooserWidget, DummyInputBoxWidget, DummyPlotWidget,
+                          DummyViewWidget, PlotWidget, SliderWidget, ViewWidget },
   WindowEvents.{ CompileAllEvent, DirtyEvent, EditWidgetEvent, InterfaceModeChangedEvent, LoadBeginEvent,
                  SetInterfaceModeEvent, WidgetRemovedEvent, ZoomedEvent }
 
@@ -39,7 +39,8 @@ class WidgetPanel(val workspace: GUIWorkspace)
     with KeyListener
     with WidgetRemovedEvent.Handler
     with LoadBeginEvent.Handler
-    with SetInterfaceModeEvent.Handler {
+    with SetInterfaceModeEvent.Handler
+    with CopyPasteTarget {
 
   protected var selectionRect: Rectangle = null // convert to Option?
   var widgetsBeingDragged: Seq[WidgetWrapper] = Seq()
@@ -788,12 +789,12 @@ class WidgetPanel(val workspace: GUIWorkspace)
     ClipboardUtils.writeWidgets(wrappers.map(_.widget.model))
   }
 
-  override def copySelectedWidgets(): Unit = {
+  def copySelectedWidgets(): Unit = {
     if (selectedWrappers.nonEmpty)
       ClipboardUtils.writeWidgets(selectedWrappers.map(_.widget.model))
   }
 
-  override def pasteWidgets(): Unit = {
+  def pasteWidgets(): Unit = {
     if (interfaceMode != InterfaceMode.Add) {
       val widgets = ClipboardUtils.readWidgets()
 
@@ -805,6 +806,15 @@ class WidgetPanel(val workspace: GUIWorkspace)
         setInterfaceMode(InterfaceMode.Add, true)
       }
     }
+  }
+
+  // the next two methods are from CopyPasteTarget (Isaac B 8/11/25)
+  override def copy(): Unit = {
+    copySelectedWidgets()
+  }
+
+  override def paste(): Unit = {
+    pasteWidgets()
   }
 
   private[interfacetab] def setForegroundWrapper(): Unit =

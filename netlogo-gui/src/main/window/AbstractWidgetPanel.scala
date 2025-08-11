@@ -15,6 +15,4 @@ abstract class AbstractWidgetPanel extends JLayeredPane with Zoomable with Theme
   def hasView: Boolean
   def empty: Boolean
   def setBoldWidgetText(value: Boolean): Unit
-  def copySelectedWidgets(): Unit
-  def pasteWidgets(): Unit
 }

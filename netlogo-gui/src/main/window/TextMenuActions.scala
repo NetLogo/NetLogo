@@ -25,8 +25,8 @@ object TextMenuActions {
 
     override def actionPerformed(e: ActionEvent): Unit = {
       KeyboardFocusManager.getCurrentKeyboardFocusManager.getPermanentFocusOwner match {
-        case widgetPanel: AbstractWidgetPanel =>
-          widgetPanel.copySelectedWidgets()
+        case target: CopyPasteTarget =>
+          target.copy()
 
         case _ =>
           super.actionPerformed(e)
@@ -62,8 +62,8 @@ object TextMenuActions {
 
     override def actionPerformed(e: ActionEvent): Unit = {
       KeyboardFocusManager.getCurrentKeyboardFocusManager.getPermanentFocusOwner match {
-        case widgetPanel: AbstractWidgetPanel =>
-          widgetPanel.pasteWidgets()
+        case target: CopyPasteTarget =>
+          target.paste()
 
         case _ =>
           super.actionPerformed(e)
