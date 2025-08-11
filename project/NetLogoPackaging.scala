@@ -411,6 +411,7 @@ object NetLogoPackaging {
         , extraJavaOptions ++ Seq(
             "-Xdock:name=NetLogo"
           , "-Dorg.nlogo.mac.appClassName=org.nlogo.app.App$"
+          , "-Dapple.awt.application.appearance=system"
           )
         , Seq()
         , Some("netlogo-mac-app.jar")
@@ -424,6 +425,7 @@ object NetLogoPackaging {
         , extraJavaOptions ++ Seq(
             "\"-Xdock:name=NetLogo 3D\""
           , "-Dorg.nlogo.mac.appClassName=org.nlogo.app.App$"
+          , "-Dapple.awt.application.appearance=system"
           )
         , Seq()
         , Some("netlogo-mac-app.jar")
