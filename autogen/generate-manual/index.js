@@ -18,7 +18,7 @@
  */
 
 const path = require('path');
-const PRINT_TOC_FOR_DEBUGGING = true; // Set to true to print the table of contents for debugging purposes
+const PRINT_TOC_FOR_DEBUGGING = false; // Set to true to print the table of contents for debugging purposes
 const EXPORT_DEBUG_HTML = false; // Set to true to export the combined HTML for debugging purposes
 
 async function main() {
@@ -73,7 +73,7 @@ async function main() {
   /**
    * @type {TocEntryCollection}
    */
-  let tocEntries = [];
+  let tocEntries = Array(htmlFiles.length); // Array of objects with file and entries
 
   // (Optional) headers and footers for the PDF
   // To use this, add the following to await page.pdf() options:
@@ -92,7 +92,7 @@ async function main() {
    * builder string for the combined HTML content from
    * all HTML files.
    */
-  let combinedHtml = '';
+  let combinedHtml = Array(htmlFiles.length)
   /**
    * @type {string|undefined}
    * placeholder variable for the title HTML.
@@ -161,7 +161,8 @@ async function main() {
    *  * Because of styling, the anchor targets are actually way below the headings,
    *    so we need to add _fake_ targets before each heading.
    * */
-  for (const file of htmlFiles) {
+  await Promise.all(htmlFiles.map(async (file, index) => {
+    const myPage = await browser.newPage();
     const filePath = path.resolve(__dirname, file);
     let fileContent = fs.readFileSync(filePath, 'utf8');
 
@@ -213,7 +214,7 @@ async function main() {
       if (!titleHTML) {
         titleHTML = fileContent + `<div style="page-break-before: always;"></div>`;
       } else {
-        combinedHtml += fileContent + '<div style="page-break-before: always;"></div>';
+        combinedHtml[index] = fileContent + '<div style="page-break-before: always;"></div>';
       }
     } else {
       console.warn(`No body found in ${file}. Skipping.`);
@@ -224,7 +225,7 @@ async function main() {
 
     const fileUrl = 'file://' + filePath;
     console.log(`Handling: ${file}`);
-    await page.goto(fileUrl, { waitUntil: 'networkidle0' });
+    await myPage.goto(fileUrl, { waitUntil: 'networkidle0' });
 
     /**
      * Extract the table of contents entries from the page.
@@ -234,7 +235,7 @@ async function main() {
      * @type {TocEntry[]}
      * @returns {Promise<TocEntry[]>} - An array of objects representing the table of contents entries.
      */
-    const fileTocEntries = await page.evaluate(() => {
+    const fileTocEntries = await myPage.evaluate(() => {
       /**
        * Get the level of a heading element.
        * @param {HTMLElement} heading - The heading element.
@@ -307,8 +308,10 @@ async function main() {
         console.log(`  - ${entry.text} (ID: ${entry.id}, Level: ${entry.level}, Tag: ${entry.tag})`);
       }
     }
-    tocEntries.push({ file: file, entries: fileTocEntries }); // Store entries per
-  }
+    tocEntries[index] = {file: file, entries: fileTocEntries};
+
+    await myPage.close();
+  }));
 
   const styleFromEntry = (entry) =>
     [
@@ -399,10 +402,11 @@ async function main() {
 </html>
 `;
 
+  
   const fullHtmlContent = `
 ${titleHTML}
 ${tocHTML}
-${combinedHtml}
+${combinedHtml.join('')}
 `;
 
   // Write the HTML as well for debugging purposes
