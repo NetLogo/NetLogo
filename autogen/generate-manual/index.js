@@ -405,7 +405,21 @@ ${tocHTML}
 ${combinedHtml}
 `;
 
-  await page.setContent(fullHtmlContent, { waitUntil: 'networkidle0' });
+  // Write the HTML as well for debugging purposes
+  if (EXPORT_DEBUG_HTML) {
+    const debugHtmlPath = path.join(__dirname, 'tmp', 'combined.html');
+    fs.ensureDirSync(path.dirname(debugHtmlPath));
+    fs.writeFileSync(debugHtmlPath, fullHtmlContent);
+    console.log(`Debug HTML exported to: ${debugHtmlPath}`);
+  }
+
+  const dirname = path.dirname(htmlFiles[0]);
+  const tempHtmlPath = path.join(dirname, 'tmp.html');
+  fs.ensureDirSync(path.dirname(tempHtmlPath));
+  fs.writeFileSync(tempHtmlPath, fullHtmlContent);
+  const tempHtmlUrl = 'file://' + tempHtmlPath;
+
+  await page.goto(tempHtmlUrl, { waitUntil: 'networkidle0' });
   const pdfBuffer = await page.pdf({
     format: 'A4',
     printBackground: true,
@@ -419,13 +433,7 @@ ${combinedHtml}
     outline: true,
   });
 
-  // Write the HTML as well for debugging purposes
-  if (EXPORT_DEBUG_HTML) {
-    const debugHtmlPath = path.join(__dirname, 'tmp', 'combined.html');
-    fs.ensureDirSync(path.dirname(debugHtmlPath));
-    fs.writeFileSync(debugHtmlPath, fullHtmlContent);
-    console.log(`Debug HTML exported to: ${debugHtmlPath}`);
-  }
+  fs.removeSync(tempHtmlPath);
 
   // Output the PDF
   fs.writeFileSync(outputPdf, pdfBuffer);
