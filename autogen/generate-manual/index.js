@@ -92,7 +92,7 @@ async function main() {
    * builder string for the combined HTML content from
    * all HTML files.
    */
-  let combinedHtml = Array(htmlFiles.length)
+  let combinedHtml = Array(htmlFiles.length).fill(undefined);
   /**
    * @type {string|undefined}
    * placeholder variable for the title HTML.
@@ -211,7 +211,7 @@ async function main() {
         // If it's an absolute link, we leave it as is
         return match;
       });
-      if (!titleHTML) {
+      if (index === 0) {
         titleHTML = fileContent + `<div style="page-break-before: always;"></div>`;
       } else {
         combinedHtml[index] = fileContent + '<div style="page-break-before: always;"></div>';
@@ -406,7 +406,7 @@ async function main() {
   const fullHtmlContent = `
 ${titleHTML}
 ${tocHTML}
-${combinedHtml.join('')}
+${combinedHtml.filter(Boolean).join('')}
 `;
 
   // Write the HTML as well for debugging purposes
