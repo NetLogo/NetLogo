@@ -89,7 +89,7 @@ class MonitorWidget(random: MersenneTwisterFast, compiler: CompilerServices, col
   private var _fontSize = DefaultFontSize
 
   private val nameLabel = new JLabel(I18N.gui.get("edit.monitor.previewName"))
-  private val valueLabel = new JLabel
+  private lazy val valueLabel = new JLabel
   private val valuePanel = new ValuePanel(valueLabel)
   private val unitsLabel = new JLabel
 
@@ -184,10 +184,20 @@ class MonitorWidget(random: MersenneTwisterFast, compiler: CompilerServices, col
   }
 
   override def setFont(f: Font): Unit = {
-    if (isZoomed || getFont == null)
+    if (isZoomed || getFont == null) {
       super.setFont(f)
-    else
-      super.setFont(getFont.deriveFont(fontSize.toFloat))
+
+      valueLabel.setFont(f)
+    } else {
+      val newFont = getFont.deriveFont(fontSize.toFloat)
+
+      super.setFont(newFont)
+
+      valueLabel.setFont(newFont)
+    }
+
+    revalidate()
+    repaint()
   }
 
   def fontSize: Int = _fontSize
