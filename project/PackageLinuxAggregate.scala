@@ -4,8 +4,6 @@ import java.nio.file.{ Files, Paths }
 import java.nio.file.attribute.PosixFilePermission
 import java.io.File
 
-import scala.collection.JavaConverters._
-
 object PackageLinuxAggregate {
   def apply(
     log: sbt.util.Logger
@@ -26,13 +24,16 @@ object PackageLinuxAggregate {
 
     log.info("Generating install script")
 
-    Mustache(configDir / "linux" / "install.sh.mustache", appImageDir / "install.sh", Map(
-      "version" -> s"NetLogo-$version",
-      "launchers" -> launchers.map { launcher =>
-        (Map("name" -> launcher.name, "display-name" -> s"${launcher.name} $version",
-             "path-name" -> s"${launcher.name}-$version") ++ launcher.icon.map("icon" -> _)).asJava
-      }.asJava
-    ))
+    {
+      import scala.jdk.CollectionConverters._
+      Mustache(configDir / "linux" / "install.sh.mustache", appImageDir / "install.sh", Map(
+        "version" -> s"NetLogo-$version",
+        "launchers" -> launchers.map { launcher =>
+          (Map("name" -> launcher.name, "display-name" -> s"${launcher.name} $version",
+               "path-name" -> s"${launcher.name}-$version") ++ launcher.icon.map("icon" -> _)).asJava
+        }.asJava
+      ))
+    }
 
     Files.setPosixFilePermissions((appImageDir / "install.sh").toPath, shellScriptPermissions)
 
