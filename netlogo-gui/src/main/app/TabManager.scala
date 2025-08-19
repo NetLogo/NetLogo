@@ -338,10 +338,12 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     mainTabs.getTabCount + separateTabs.getTabCount
 
   def getTabTitle(index: Int): String = {
-    if (index >= mainTabs.getTabCount)
-      separateTabs.getTabLabelAt(index - mainTabs.getTabCount).map(_.getText).getOrElse("")
-    else
-      mainTabs.getTabLabelAt(index).map(_.getText).getOrElse("")
+    val (tabs, offset) =
+      if (index >= mainTabs.getTabCount)
+        (separateTabs, mainTabs.getTabCount)
+      else
+        (mainTabs, 0)
+    tabs.getTabLabelAt(index - offset).fold("")(_.getText)
   }
 
   def getTotalTabIndex(tab: Component): Int = {
@@ -677,13 +679,9 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
 
   def handle(e: CompiledEvent): Unit = {
     def clearErrors(): Unit = {
-      if (separateTabsWindow.isVisible) {
-        for (i <- 0 until separateTabs.getTabCount)
-          separateTabs.setError(i, false)
-      } else {
-        for (i <- 0 until mainTabs.getTabCount)
-          mainTabs.setError(i, false)
-      }
+      val tabs = if (separateTabsWindow.isVisible) separateTabs else mainTabs
+      for (i <- 0 until tabs.getTabCount)
+        tabs.setError(i, false)
     }
 
     e.sourceOwner match {
