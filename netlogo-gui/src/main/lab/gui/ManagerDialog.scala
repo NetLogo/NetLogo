@@ -4,6 +4,7 @@ package org.nlogo.lab.gui
 
 import java.awt.{ Component, Dimension, FlowLayout, GridBagConstraints, GridBagLayout, Insets }
 import java.awt.event.ActionEvent
+import java.io.PrintWriter
 import javax.swing.{ AbstractAction, JDialog, JLabel, JList, JMenuBar, JPanel, ListCellRenderer }
 import javax.swing.event.ListSelectionListener
 
@@ -294,10 +295,11 @@ private class ManagerDialog(manager:       LabManager,
       if (!path.endsWith(".xml"))
         path += ".xml"
 
-      val out = new java.io.PrintWriter(path)
+      val out = new PrintWriter(path)
 
-      manager.modelLoader.writeExperiments(manager.protocols.toSeq, out)
+      manager.modelLoader.writeExperiments(selectedProtocols, out)
 
+      out.println()
       out.close()
     } catch {
       case e: org.nlogo.awt.UserCancelException => org.nlogo.api.Exceptions.ignore(e)
@@ -329,8 +331,12 @@ private class ManagerDialog(manager:       LabManager,
       case _ => -1
     }
   }
-  private def selectedProtocol =
+
+  private def selectedProtocol: LabProtocol =
     manager.protocols(jlist.getSelectedIndices()(0))
+
+  private def selectedProtocols: Seq[LabProtocol] =
+    jlist.getSelectedIndices.map(manager.protocols).toSeq
 
   override def syncTheme(): Unit = {
     getContentPane.setBackground(InterfaceColors.dialogBackground())
