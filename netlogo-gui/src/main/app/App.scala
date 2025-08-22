@@ -507,7 +507,8 @@ class App extends org.nlogo.window.Event.LinkChild
         "org.nlogo.app.FileManager",
         new ComponentParameter(), new ComponentParameter(), new ComponentParameter(),
         new ComponentParameter(), new ComponentParameter(),
-        new ConstantParameter(menuBar), new ConstantParameter(frame), new ConstantParameter(_tabManager))
+        new ConstantParameter(menuBar), new ConstantParameter(frame), new ConstantParameter(_tabManager),
+        new ComponentParameter())
       setFileManager(pico.getComponent(classOf[FileManager]))
 
       val viewManager = pico.getComponent(classOf[GLViewManagerInterface])

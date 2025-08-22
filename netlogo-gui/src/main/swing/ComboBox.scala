@@ -73,6 +73,15 @@ class ComboBox[T](private var items: Seq[T] = Seq())
     syncTheme()
   }
 
+  def showPopup(): Unit = {
+    popup.setVisible(false)
+    popup.show(this, 0, getHeight)
+  }
+
+  def hidePopup(): Unit = {
+    popup.setVisible(false)
+  }
+
   def setItems(items: Seq[T]): Unit = {
     this.items = items
 

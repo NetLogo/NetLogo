@@ -11,7 +11,7 @@ import scala.util.{ Failure, Try }
 
 import org.nlogo.analytics.Analytics
 import org.nlogo.core.{ I18N, Model }
-import org.nlogo.api.{ AbstractModelLoader, Exceptions, FileIO, ModelReader, ModelType, Version },
+import org.nlogo.api.{ AbstractModelLoader, Exceptions, FileIO, ModelReader, ModelType, Version, Workspace },
   ModelReader.{ emptyModelPath, modelSuffix }
 import org.nlogo.app.common.{ Actions, Dialogs, ExceptionCatchingAction }, Actions.Ellipsis
 import org.nlogo.app.codetab.TemporaryCodeTab
@@ -19,12 +19,13 @@ import org.nlogo.app.tools.{ ModelsLibraryDialog, NetLogoWebSaver }
 import org.nlogo.awt.{ Hierarchy, UserCancelException }
 import org.nlogo.fileformat.{ FailedConversionResult, SuccessfulConversion }
 import org.nlogo.fileformat.FileFormat.ModelConversion
+import org.nlogo.mc.ModelingCommons
 import org.nlogo.swing.{ FileDialog, ModalProgressTask, OptionPane, UserAction }, UserAction.MenuAction
 import org.nlogo.window.{ Events, FileController, GUIWorkspace, ReconfigureWorkspaceUI },
                           Events.{ AboutToCloseFilesEvent, AboutToQuitEvent, AboutToSaveModelEvent, LoadModelEvent,
                                    LoadErrorEvent, ModelSavedEvent, OpenModelEvent }
 import org.nlogo.workspace.{ AbstractWorkspaceScala, OpenModel, OpenModelFromURI, OpenModelFromSource, SaveModel,
-                             SaveModelAs }
+                             SaveModelAs, WorkspaceFactory }
 
 object FileManager {
   class NewAction(manager: FileManager, parent: Container)
@@ -131,6 +132,19 @@ object FileManager {
           importTask(importPath, choice))
         exception.foreach(throw _)
       }
+    }
+  }
+
+  class UploadToModelingCommonsAction(parent: Component, workspace: Workspace, workspaceFactory: WorkspaceFactory,
+                                      modelSaver: ModelSaver)
+    extends ExceptionCatchingAction(I18N.gui.get("menu.file.uploadMc"), parent) with MenuAction {
+
+    category = UserAction.FileCategory
+    group = UserAction.FileShareGroup
+
+    override def action(): Unit = {
+      ModelingCommons.upload(Hierarchy.getFrame(parent), modelSaver.modelAsString(modelSaver.currentModel, "nlogox"),
+                             workspace, workspaceFactory)
     }
   }
 
@@ -281,7 +295,8 @@ class FileManager(workspace: AbstractWorkspaceScala,
   modelSaver: ModelSaver,
   eventRaiser: AnyRef,
   parent: Container,
-  tabManager: TabManager)
+  tabManager: TabManager,
+  workspaceFactory: WorkspaceFactory)
     extends OpenModelEvent.Handler
     with LoadModelEvent.Handler {
   private var firstLoad: Boolean = true
@@ -488,6 +503,7 @@ class FileManager(workspace: AbstractWorkspaceScala,
     new OpenAction(this, parent),
     new QuitAction(this, parent),
     new ModelsLibraryAction(this, parent),
+    new UploadToModelingCommonsAction(parent, workspace, workspaceFactory, modelSaver),
     new SaveAsNetLogoWebAction(this, workspace, modelSaver, parent),
     new ImportClientAction(this, workspace, parent),
     new ManageResourcesAction(this, workspace, parent))

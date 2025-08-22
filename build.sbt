@@ -208,7 +208,11 @@ lazy val netlogo = project.in(file("netlogo-gui")).
         "org.scala-lang" %% "scala3-compiler" % "3.7.0",
         "org.piwik.java.tracking" % "matomo-java-tracker" % "3.4.0",
         "it.unimi.dsi" % "fastutil" % "8.5.16",
-        "net.java.dev.jna" % "jna-platform" % "5.17.0"
+        "net.java.dev.jna" % "jna-platform" % "5.17.0",
+        "com.softwaremill.sttp.client4" %% "core" % "4.0.9",
+        "com.softwaremill.sttp.client4" %% "upickle" % "4.0.9",
+        "com.softwaremill.sttp.client4" %% "pekko-http-backend" % "4.0.9",
+        "org.apache.pekko" %% "pekko-stream" % "1.1.5"
       ) ++ Seq("base", "controls", "graphics", "swing", "web")
         .map(m => "org.openjfx" % s"javafx-$m" % "21.0.6" classifier osName)
     },
