@@ -34,6 +34,7 @@ class NetLogoDocs(
     "systemdynamics"      -> "System Dynamics Guide",
     "hubnet"              -> "HubNet Guide",
     "hubnet-authoring"    -> "HubNet Authoring Guide",
+    "modelingcommons"     -> "Modeling Commons Guide",
     "logging"             -> "Logging",
     "controlling"         -> "Controlling Guide",
     "mathematica"         -> "Mathematica Link",
@@ -49,7 +50,7 @@ class NetLogoDocs(
       "sample", "tutorial1", "tutorial2", "tutorial3", "interface",
       "interfacetab", "infotab", "codetab", "programming", "transition",
       "extension-manager", "shapes", "behaviorspace", "systemdynamics",
-      "hubnet", "hubnet-authoring", "logging", "controlling",
+      "hubnet", "hubnet-authoring", "modelingcommons", "logging", "controlling",
       "mathematica", "3d", "extensions", "extension-authoring",
       "colorpicker", "netlogo7intro", "netlogopreferences") ++
       extensions ++ Seq("faq", "dictionary")
