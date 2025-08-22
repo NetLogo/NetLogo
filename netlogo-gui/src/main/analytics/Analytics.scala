@@ -190,6 +190,10 @@ object Analytics {
       wrapRequest(MatomoRequests.event(category, "Load Old Size Widgets", null, widgets.toDouble).build())
   }
 
+  def modelingCommonsOpen(): Unit = {
+    wrapRequest(MatomoRequests.event(category, "Modeling Commons Open", null, null).build())
+  }
+
   def refreshPreference(): Unit = {
     sendEnabled = NetLogoPreferences.getBoolean("sendAnalytics", false)
   }

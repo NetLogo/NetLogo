@@ -93,7 +93,7 @@ object Depend {
       "lex" -> List("api"),
       "lite" -> List("window"),
       "log" -> List("api"),
-      "mc" -> List("swing", "workspace"),
+      "mc" -> List("analytics", "swing", "workspace"),
       "nvm" -> List("agent"),
       "parse" -> List("core", "core/prim", "core/prim/etc", "core/prim/hubnet", "util"),
       "plot" -> List("api"),

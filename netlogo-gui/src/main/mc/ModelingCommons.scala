@@ -5,6 +5,7 @@ package org.nlogo.mc
 import java.awt.{ Component, Frame }
 import java.util.concurrent.TimeoutException
 
+import org.nlogo.analytics.Analytics
 import org.nlogo.api.Workspace
 import org.nlogo.core.I18N
 import org.nlogo.swing.OptionPane
@@ -23,6 +24,8 @@ object ModelingCommons {
   private var loginCache: Option[LoginInfo] = None
 
   def upload(parent: Frame, modelBody: String, workspace: Workspace, workspaceFactory: WorkspaceFactory): Unit = {
+    Analytics.modelingCommonsOpen()
+
     loginCache = loginCache.orElse(new LoginDialog(parent, backend.get()).getLoginInfo)
 
     loginCache.foreach(new UploadDialog(parent, backend.get(), _, modelBody, workspace, workspaceFactory))
