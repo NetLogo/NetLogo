@@ -2,7 +2,7 @@
 
 package org.nlogo.swing
 
-import java.awt.Insets
+import java.awt.{ Graphics, Insets }
 import java.awt.event.{ ActionEvent, FocusEvent, FocusListener, KeyEvent, MouseAdapter, MouseEvent }
 import javax.swing.{ AbstractAction, JTextField, KeyStroke }
 import javax.swing.border.LineBorder
@@ -59,8 +59,17 @@ class TextField(columns: Int = 0, text: String = null, document: Document = null
   override def getInsets: Insets =
     new Insets(0, 3, 0, 0)
 
+  override def paintComponent(g: Graphics): Unit = {
+    if (isEnabled) {
+      setBackground(InterfaceColors.textAreaBackground())
+    } else {
+      setBackground(InterfaceColors.Transparent)
+    }
+
+    super.paintComponent(g)
+  }
+
   override def syncTheme(): Unit = {
-    setBackground(InterfaceColors.textAreaBackground())
     setForeground(InterfaceColors.textAreaText())
     setCaretColor(InterfaceColors.textAreaText())
     setBorder(new LineBorder(InterfaceColors.textAreaBorderEditable()))

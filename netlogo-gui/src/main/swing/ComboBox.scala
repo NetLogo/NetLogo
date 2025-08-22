@@ -20,7 +20,8 @@ class ComboBox[T](private var items: Seq[T] = Seq())
 
   private val mouseListener = new MouseAdapter {
     override def mousePressed(e: MouseEvent): Unit = {
-      popup.show(ComboBox.this, 0, getHeight)
+      if (isEnabled)
+        popup.show(ComboBox.this, 0, getHeight)
     }
   }
 
@@ -64,7 +65,7 @@ class ComboBox[T](private var items: Seq[T] = Seq())
 
     addKeyListener(new KeyAdapter {
       override def keyPressed(e: KeyEvent): Unit = {
-        if (e.getKeyCode == KeyEvent.VK_DOWN)
+        if (e.getKeyCode == KeyEvent.VK_DOWN && isEnabled)
           popup.show(ComboBox.this, 0, getHeight)
       }
     })
@@ -154,6 +155,13 @@ class ComboBox[T](private var items: Seq[T] = Seq())
   def itemCount: Int =
     items.size
 
+  override def setEnabled(enabled: Boolean): Unit = {
+    super.setEnabled(enabled)
+
+    arrow.setEnabled(enabled)
+    choiceDisplay.setEnabled(enabled)
+  }
+
   override def syncTheme(): Unit = {
     setBackgroundColor(InterfaceColors.toolbarControlBackground())
     setBackgroundHoverColor(InterfaceColors.toolbarControlBackgroundHover())
@@ -196,6 +204,12 @@ class ComboBox[T](private var items: Seq[T] = Seq())
       syncTheme()
       revalidate()
       repaint()
+    }
+
+    override def setEnabled(enabled: Boolean): Unit = {
+      super.setEnabled(enabled)
+
+      getComponents.foreach(_.setEnabled(enabled))
     }
 
     override def syncTheme(): Unit = {
