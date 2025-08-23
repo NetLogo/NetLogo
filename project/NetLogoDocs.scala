@@ -32,6 +32,7 @@ class NetLogoDocs(
     "behaviorspace"       -> "BehaviorSpace Guide",
     "behaviorspace-spanish" -> "BehaviorSpace Guide en Español",
     "systemdynamics"      -> "System Dynamics Guide",
+    "hpc"                 -> "High-Performance Cluster Guide",
     "hubnet"              -> "HubNet Guide",
     "hubnet-authoring"    -> "HubNet Authoring Guide",
     "modelingcommons"     -> "Modeling Commons Guide",

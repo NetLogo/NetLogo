@@ -1,0 +1,421 @@
+{{> header}}
+
+<main class="prose">
+
+# {{title}}
+
+This document is an advanced guide that provides examples of how to run NetLogo BehaviorSpace experiments on a High-Performance Computing (HPC) cluster. The scripts provided in this guide are specifically for **Slurm**, a popular open-source workload manager and job scheduler, but they can be adapted for use with other schedulers.
+
+<div class="toc">
+
+#### Table of Contents
+
+[TOC]
+
+</div>
+
+## Installing NetLogo on a Cluster
+
+To run BehaviorSpace experiments, NetLogo must be installed on your HPC in a location accessible to the user.
+
+-  The easiest method is to download the desired NetLogo version (for most clusters this is the 64-bit Linux installation, available at [https://www.netlogo.org/downloads/linux/](https://www.netlogo.org/downloads/linux/)) , unzip and move the entire folder to a directory on your HPC.
+
+-  Alternatively, you can install NetLogo from the command line if your HPC allows it. For example, you can download and unzip the 64-bit Linux version of NetLogo 7.0.0 with:
+
+```bash
+curl -O https://ccl.northwestern.edu/netlogo/7.0.0/NetLogo-7.0.0-64.tgz
+tar zxf NetLogo-7.0.0-64.tgz
+```
+
+Note: Although NetLogo comes with a bundled Java installation, some HPC clusters require users to run only approved Java Runtime Environments (JREs). If that is the case, you must ensure that your HPC has a compatible JRE (Java 17 or higher). Please consult your HPC documentation or system administrator if unsure.
+
+## Submitting a Job
+
+This section provides two examples of how to run a BehaviorSpace experiment on an HPC using Slurm.
+
+1.  A **simple script**, which must be customized for each experiment and model.
+
+2.  A **general script**, which takes arguments to automatically generate and submit a Slurm job script.
+
+The simple script is easier to debug, while the general script is more convenient for repeated use. Both approaches are valid, and the scripts can also be found [here](https://github.com/umit1010/slurm-scripts-for-netlogo).
+
+### A simple example
+
+The script below is a simple Slurm job submission template for NetLogo. Lines beginning with `###` provide explanations.
+
+Save this script as `simple_standalone_job.sh`. After updating it to match your HPC configuration, model, and experiment, you can submit it with:
+
+`sbatch simple_standalone_job.sh`
+
+**Script:**
+
+```bash
+#!/bin/sh
+
+### ---
+### simple_standalone_job.sh
+### ---
+
+### Template standalone Slurm job submission script for NetLogo BehaviorSpace experiments
+
+#SBATCH --account=PROJECTID       ### replace PROJECTID with your allocation/project ID number.
+#SBATCH --partition=short         ### replace short with desired parition: medium, long, gengpu, etc.
+#SBATCH --time=1:30:00            ### time format is hh:mm:ss
+#SBATCH --nodes=1                 ### leave the --nodes as 1 because NetLogo can run into problems when trying to use multiple nodes
+#SBATCH --ntasks-per-node=16      ### replace 16 with the number of CPU cores you will request
+#SBATCH --mem=4G                  ### replace 4G with the amount of memory you will request; do not forget to put specify the units.
+#SBATCH --job-name=EXAMPLE_JOB    ### replace EXAMPLE_JOB with the name of your job (can be anything)
+#SBATCH --output=%x-%j.out        ### automatically generates an output file. Slurm replaces %x with job name you provided in the previous instruction and %j with the unique job id.
+#SBATCH --error=%x-%j.err         ### automatically generates an error file.
+#SBATCH --mail-type=ALL           ### replace ALL with BEGIN, END, or FAIL if you'd like to.
+#SBATCH --mail-user=U@SCHOOL.EDU  ### Replace U@SCHOOL.edu with your own email address so that Slurm can send you emails when your job is queried, started, completed, or terminated due to an error.
+
+module purge all
+module load java/jdk-17.0.2+8     ### You may need to update this line if your HPC doesn't have the jdk-17.0.2+8 module available.
+
+JVM_OPTS=(-Xmx1024m -server -XX:+UseParallelGC -Dfile.encoding=UTF-8 -Dnetlogo.extensions.dir="${BASE_DIR}/extensions")
+
+### Make sure to update the NetLogo installation path, experiment name, model filename, experiment name and output filename variables in the following command.
+java ${JVM_OPTS[@]} -classpath PATH/TO/NETLOGO/lib/app/netlogo-7.0.0.jar org.nlogo.headless.Main --model "MODELFILE.nlogo" --experiment "EXPERIMENT_NAME" --threads 16 --table PATH/TO/OUT/FOLDER/OUTPUTFILE.csv
+```
+
+### A more general example
+
+Editing a submission file for each experiment can be tedious. The following scripts automate the process by generating a temporary job script with your chosen arguments and then submitting it.
+
+Save the following as `config.sh` and `generate_and_submit.sh`. Update `config.sh` with your account details, and adjust `generate_and_submit.sh` as needed for your HPC.
+
+Run the script with:
+
+```bash
+bash generate_and_submit.sh <model-file> <experiment-name> <category> <maxtime> <threads> <ram>
+```
+
+Where the command-line arguments are:
+
+-   `model-file`  (including the file extension)
+-   `experiment-name`
+-   `category`  (which partition to use: short, normal, long, gpu, etc.)
+-   `maxtime`  (in  _hh:mm:ss_  format)
+-   `threads`  (number of CPU cores to request)
+-   `ram`  (in megabytes)
+
+This will automatically generate an intermediary bash script and then use it to submit the job. It will also delete the intermediary file after submission to prevent folder pollution.
+
+**Example:**
+
+```bash
+bash generate_and_submit.sh fire.nlogo densityexp short 1:00:00 32 4096
+```
+
+**Scripts:**
+
+```bash
+#!/bin/bash
+
+### ---
+### config.sh
+### ---
+
+# Update this script with your Slurm account information
+
+# your email address to receive notifications
+email=youremail@yourinstitution.edu
+
+# The following variable should match your Slurm Allocation/Project ID
+project=p00000
+
+# the experiment directory (absolute path)
+path=/home/username/projectfolder
+```
+
+```bash
+#!/bin/bash
+
+### ---
+### generate_and_submit.sh
+### ---
+
+### A script to automate the slurm job submission process for NetLogo BehaviorSpace experiments
+
+model=$1
+experiment=$2
+category=$4
+maxtime=$5
+threads=$6
+ram=$7
+
+# NetLogo struggles to divide experiments between multiple physical processors
+machines=1
+
+# load the config file to pull the shared variables
+source config.sh
+
+### AUTO GENERATE A TEMPORARY SCRIPT TO RUN THE EXPERIMENT
+### This approach minimizes the repetitive editing and potential errors
+### that may arise from trying to manually edit long scripts
+
+totalram=$((ram*threads+4096))
+modelpath=${path}/${model}
+
+runfile=run_${experiment}.sh
+
+# if a file with the same name exists, just delete it
+if test -f $runfile ; then
+    rm $runfile
+fi
+
+# create the slurm job definition within the run file
+echo "#!/bin/sh" >> $runfile
+echo "#SBATCH --account="${project} >> $runfile
+echo "#SBATCH --partition="${category} >> $runfile
+echo "#SBATCH --time="${maxtime} >> $runfile
+echo "#SBATCH --nodes="${machines} >> $runfile
+echo "#SBATCH --ntasks-per-node="${threads} >> $runfile
+echo "#SBATCH --mem="$((totalram/1024))G >> $runfile
+echo "#SBATCH --job-name="${experiment} >> $runfile
+echo "#SBATCH --output=output_%x-%j.out" >> $runfile
+echo "#SBATCH --mail-type="ALL >> $runfile
+echo "#SBATCH --mail-user="${email} >> $runfile
+
+echo "module purge all" >> $runfile
+echo "module load java/jdk-17.0.2+8" >> $runfile
+
+echo "JVM_OPTS=(-Xmx${totalram}m -server -XX:+UseParallelGC -Dfile.encoding=UTF-8 -Dnetlogo.extensions.dir="${BASE_DIR}/extensions")" >> $runfile
+
+echo "java ${JVM_OPTS[@]} -classpath ${path}/netlogo/lib/app/netlogo-7.0.0.jar org.nlogo.headless.Main --model ${modelpath} --setup-file ${path}/xml/${experiment}.xml --threads $threads --table ${path}/csv/${experiment}.csv" >> $runfile
+
+echo "Job ID: "
+
+# submit the job and print the job number
+sbatch --parsable $runfile
+
+# remove the temporary run file to keep things clean
+rm $runfile
+```
+
+## Advanced Usage
+
+NetLogo includes built-in parallelization, but this often does not integrate well with multi-node HPC architectures. Large BehaviorSpace experiments with many parameter combinations and repetitions that require hundreds or thousands of runs may crash if distributed directly across multiple nodes.
+
+A better strategy is to split the experiment into many small jobs (one per parameter combination and repetition).
+
+To do so, first we need to subdivide our NetLogo BehaviorSpace experiment into separate BehaviorSpace experiment files (xml files) for each parameter combination.
+
+### Dividing BehaviorSpace experiments into smaller sub-experiments
+
+This step can be performed on your local machine, not necessarily on an HPC.
+
+1. Export your BehaviorSpace experiment as an XML file. In BehaviorSpace, select your experiment and click _Export_.
+
+![[export.png]]
+
+- For maximum parallelization, set repetitions to **1** before exporting. This allows submitting a separate job for each repetition.
+
+2. Use the exported XML file to generate individual experiment files. Instructions and a Jupyter notebook can be found [here](https://github.com/can-gurkan/BehaviorSpace_exp_split).
+
+Alternatively, you can run the Python script below (`split_bspace_exps.py`) if you have Python installed on your machine. It is the same script linked above which generates one XML experiment file per parameter combination.
+
+Run as:
+
+```bash
+python split_bspace_exps.py <input_file_name> <output_folder_path>
+```
+
+**Example:**
+
+```bash
+python split_bspace_exps.py /path/to/example-experiment.xml /path/to/output/folder/
+```
+
+**Script:**
+
+```python
+"""split_bspace_exps.py
+
+This script splits a NetLogo BehaviorSpace experiment into multiple experiments, each with a different set of parameters.
+The inputs are a BehaviorSpace experiment xml file and the output folder path.
+The output is a folder with the new experiments, one for each combination of parameters.
+
+Usage: python split_bspace_exps.py <input_file_name> <output_folder_path>
+Example: python split_bspace_exps.py /path/to/example-experiment.xml /path/to/output/folder/
+"""
+
+import sys
+import xml.etree.ElementTree as ET
+from itertools import product
+from pathlib import Path
+
+def dict_product(d):
+    """
+    Given a dictionary of parameters and their values, return a generator that yields a dictionary for each combination of parameters.
+    """
+    keys = d.keys()
+    for element in product(*d.values()):
+        yield dict(zip(keys, element))
+
+def construct_pdict(file_name):
+    """
+    Given a BehaviorSpace experiment xml file, return a dictionary of parameters and their values.
+    """
+    tree = ET.parse(file_name)
+    root = tree.getroot()
+    pdict = {}
+    for node in root.findall('.//enumeratedValueSet'):
+        plist = []
+        for child in node:
+            plist.append(child.attrib.get('value'))
+        if len(plist) > 1:
+            pdict[node.get('variable')] = plist
+    for node in root.findall('.//steppedValueSet'):
+        rstart = node.attrib.get('first')
+        rend = node.attrib.get('last')
+        rstep = node.attrib.get('step')
+        plist = range(int(rstart), int(rend)+int(rstep), int(rstep))
+        pdict[node.get('variable')] = [str(num) for num in plist]
+    print(pdict)
+    return pdict
+
+def process_xml(file, dict, new_folder):
+    """
+    Given a BehaviorSpace experiment xml file, a dictionary of parameters and their values, and a new folder,
+    create a new experiment xml file for each combination of parameters and save it to the new folder.
+    """
+    tree = ET.parse(file)
+    root = tree.getroot()
+    counter = 0
+    name_list = []
+    Path(new_folder).mkdir(parents=True, exist_ok=True)
+    for cd in dict_product(dict):
+        exp_name_str = 'exp' + str(counter)
+        name_list.append([exp_name_str,list(cd.values())])
+        root[0].set('name', exp_name_str)
+
+        for k,v in cd.items():
+            # first delete all elements matching the tag
+            elements_to_remove = root.findall('.//*[@variable="'+k+'"]')
+            for element in elements_to_remove:
+                # Iterate through the entire tree to find the parent of the current element
+                for parent in root.iter():
+                    if element in parent:
+                        parent.remove(element)
+                        break
+            # Now insert the appropriate elements
+            target_item = root.find('.//constants')
+            new_element_str = f'<enumeratedValueSet variable="{k}"><value value="{v}"></value></enumeratedValueSet>'
+            new_element = ET.fromstring(new_element_str)
+            target_item.append(new_element)
+
+        with open(new_folder+exp_name_str+'.xml', 'wb') as f:
+            ET.indent(root, space="  ")
+            tree.write(f, 'utf-8', xml_declaration=True)
+        counter += 1
+    print(f'{counter} experiments created')
+    print('\nexp_name', list(cd.keys()))
+    for i in name_list:
+        print(i)
+
+def split_exps(file_name,new_folder):
+    """
+    Given a BehaviorSpace experiment xml file and a new folder,
+    construct a dictionary of parameters and their values,
+    and create a new experiment xml file for each combination of parameters and save it to the new folder.
+    """
+    pdict = construct_pdict(file_name)
+    process_xml(file_name, pdict, new_folder)
+
+def check_args(args):
+    """
+    Given a list of arguments, check if the arguments are valid.
+    """
+    if len(args) != 3:
+        print('Error: Invalid number of arguments')
+        print('Usage: python split_bspace_exps.py <input_file_name> <output_folder_path>')
+        print('Example: python split_bspace_exps.py /path/to/example-experiment.xml /path/to/output/folder/')
+        sys.exit(1)
+    if not Path(args[1]).exists():
+        print('Error: input_file_name does not exist')
+        sys.exit(1)
+
+
+if __name__ == '__main__':
+
+    check_args(sys.argv)
+    split_exps(sys.argv[1], sys.argv[2])
+    print('Done')
+```
+
+### Submitting separate jobs for each experiment file
+
+Once you have a directory of XML files, you can use the script below (`deployment.bash`) to submit each as a separate job. It uses the `generate_and_submit.sh` script described earlier.
+
+Run as:
+
+```bash
+bash deployment.bash <experiment-directory> <netlogo-model> <num-repetitions> <category> <maxtime> <threads> <ram>
+```
+
+Where the arguments are:
+
+-   `experiment-directory`  (path to directory that contains the xml files)
+-   `netlogo-model`
+-   `num-repetitions`  (how many repetitions to run for each experiment. note that this should be 1 if you did not edit the number of repetitions in your experiment before exporting)
+- `category`  (which partition to use: short, normal, long, gpu, etc.)
+-   `maxtime`  (in  _hh:mm:ss_  format)
+-   `threads`  (number of CPU cores to request)
+-   `ram`  (in megabytes)
+
+**Example:**
+
+```bash
+bash deployment.bash /directory/of/xmls/ fire.nlogo 1 short 1:00:00 1 4096
+```
+
+**Script:**
+
+```bash
+### ---
+### deployment.bash
+### ---
+
+if [ $# -ne 7 ]
+then
+  echo "Usage 'bash deployment.bash /directory/of/xmls/ /path/to/model.nlogo number-of-reps partition max-time threads memory'"
+  exit 1
+fi
+
+#XML_DIR= directory of BehaviorSpace exoeriment files
+XML_DIR=$1
+#MODEL= path to NetLogo model
+MODEL=$2
+#REPS= number of repetitions for each experiment
+REPS=$3
+#CATEGORY= partition
+CATEGORY=$4
+#MAXTIME= time limit
+MAXTIME=$5
+#THREADS= number of cpus (should be 1 in general)
+THREADS=$6
+#RAM= max ram for each cpu in mb
+RAM=$7
+
+for iter in $(seq 1 $REPS); do
+  for SETUPFILE in $(ls ${XML_DIR}/*.xml); do
+    EXPR="$(basename ${SETUPFILE%.*})"
+    #echo $SETUPFILE
+    #echo $EXPR
+    bash generate_and_submit.sh $MODEL $SETUPFILE $CATEGORY $MAXTIME $THREADS $RAM;
+    sleep 2 # Avoid overloading the scheduler
+  done
+done
+```
+
+ **Note:** This script inserts a 2-second pause after each submission to avoid overwhelming the scheduler. For very large experiments, consider running it in the background with `screen`. For example:
+
+```bash
+screen -dmS session_name bash deployment.sh /directory/of/xmls/ fire.nlogo short 1:00:00 1 4096
+```
+
+The most up-to-date versions of these scripts, along with additional utilities and scripts, can be found [here](https://github.com/can-gurkan/BehaviorSpace-HPC).
+
+</main>
