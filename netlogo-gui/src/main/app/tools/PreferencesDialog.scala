@@ -82,7 +82,7 @@ class PreferencesDialog(parent: Frame & ThemeSync, generalPreferences: Seq[Prefe
 
   private def validatePrefs(): Boolean = {
     if (loggingPreferences.find(x => x.i18nKey == "loggingEnabled").get.
-        asInstanceOf[Preferences.BooleanPreference].component.isSelected) {
+        asInstanceOf[Preferences.BooleanPreference].checkBox.isSelected) {
       val path = loggingPreferences.find(x => x.i18nKey == "logDirectory").get.
                  asInstanceOf[Preferences.LogDirectory].textField.getText
       val file = new File(path)

@@ -16,10 +16,8 @@ object RequiredAction {
   }
 }
 
-trait Preference {
-  val i18nKey: String
-  val requirement: Option[RequiredAction]
-  val anchor: Int = GridBagConstraints.WEST
+trait Preference(val i18nKey: String, val requirement: Option[RequiredAction],
+                 val anchor: Int = GridBagConstraints.WEST) {
   def component: JComponent & ThemeSync
   def load(): Unit
   def save(): Unit
