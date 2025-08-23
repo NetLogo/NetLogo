@@ -402,7 +402,7 @@ async function main() {
 </html>
 `;
 
-  
+
   const fullHtmlContent = `
 ${titleHTML}
 ${tocHTML}
