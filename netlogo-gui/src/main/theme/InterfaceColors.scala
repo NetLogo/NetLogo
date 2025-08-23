@@ -583,13 +583,13 @@ object LightTheme extends ColorTheme {
   override def inputBorder: Color = MediumBlue
   override def viewBackground: Color = MediumGray
   override def viewBorder: Color = Color.BLACK
-  override def monitorBackground: Color = LightGray
+  override def monitorBackground: Color = LightGray2
   override def monitorBorder: Color = MediumGray
-  override def plotBackground: Color = LightGray
+  override def plotBackground: Color = LightGray2
   override def plotBorder: Color = MediumGray
   override def plotMouseBackground: Color = LightGray
   override def plotMouseText: Color = Color.BLACK
-  override def outputBackground: Color = LightGray
+  override def outputBackground: Color = LightGray2
   override def outputBorder: Color = MediumGray
   override def toolbarBackground: Color = LightGray
   override def tabBackground: Color = Color.WHITE
