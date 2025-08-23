@@ -7,14 +7,14 @@ package org.nlogo.app.tools
 // instead of sifting through all the files at that time cause that's
 // super slow. ev 3/26/09
 
-import java.awt.{ Color, Dimension, Frame, Toolkit }
+import java.awt.{ Color, Component, Dimension, Frame, Graphics, Toolkit }
 import java.awt.event.{ ActionEvent, KeyAdapter, KeyEvent, MouseAdapter, MouseEvent, WindowAdapter, WindowEvent }
 import java.io.File
 import java.nio.file.Paths
 import java.net.URI
 import java.util.{ Enumeration, LinkedList, List => JList, Locale }
-import javax.swing.{ AbstractAction, Action, Box, BorderFactory, BoxLayout, InputMap, JComponent, JDialog, JEditorPane,
-                     JLabel, JPanel, JTree, KeyStroke, SwingUtilities, WindowConstants }
+import javax.swing.{ AbstractAction, Action, Box, BorderFactory, BoxLayout, Icon, InputMap, JComponent, JDialog,
+                     JEditorPane, JLabel, JPanel, JTree, KeyStroke, SwingUtilities, WindowConstants }
 import javax.swing.text.{ BadLocationException, DefaultHighlighter }
 import javax.swing.tree.{ DefaultMutableTreeNode, DefaultTreeCellRenderer, DefaultTreeModel, TreePath,
                           TreeSelectionModel }
@@ -736,5 +736,47 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
     selectButton.syncTheme()
     cancelButton.syncTheme()
     clearSearchButton.syncTheme()
+  }
+}
+
+// these are referenced in FlatLaf.properties, because FlatLaf only lets you set the icons
+// to custom ones when the application is initialized (Isaac B 8/22/25)
+class CollapsedArrowIcon extends Icon {
+  override def getIconWidth: Int = 5
+  override def getIconHeight: Int = 9
+
+  override def paintIcon(c: Component, g: Graphics, x: Int, y: Int): Unit = {
+    val g2d = Utils.initGraphics2D(g)
+
+    c match {
+      case tree: JTree if tree.getSelectionRows.contains(tree.getClosestRowForLocation(x, y)) =>
+        g2d.setColor(InterfaceColors.dialogTextSelected())
+
+      case _ =>
+        g2d.setColor(InterfaceColors.dialogText())
+    }
+
+    g2d.drawLine(x, y, x + getIconWidth - 1, y + getIconHeight / 2)
+    g2d.drawLine(x + getIconWidth - 1, y + getIconHeight / 2, x, y + getIconHeight - 1)
+  }
+}
+
+class ExpandedArrowIcon extends Icon {
+  override def getIconWidth: Int = 9
+  override def getIconHeight: Int = 5
+
+  override def paintIcon(c: Component, g: Graphics, x: Int, y: Int): Unit = {
+    val g2d = Utils.initGraphics2D(g)
+
+    c match {
+      case tree: JTree if tree.getSelectionRows.contains(tree.getClosestRowForLocation(x, y)) =>
+        g2d.setColor(InterfaceColors.dialogTextSelected())
+
+      case _ =>
+        g2d.setColor(InterfaceColors.dialogText())
+    }
+
+    g2d.drawLine(x, y, x + getIconWidth / 2, y + getIconHeight - 1)
+    g2d.drawLine(x + getIconWidth / 2, y + getIconHeight - 1, x + getIconWidth - 1, y)
   }
 }
