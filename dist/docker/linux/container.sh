@@ -26,6 +26,11 @@ apt install -y aspell
 apt install -y python3 python3-pip
 pip3 install numpy
 
+# Install 'tzdata' without the interactive prompts about where you live (required by 'libglib' below)
+DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends tzdata
+
+# Required by Puppeteer/Chromium for generating NetLogo User Manual PDF
+apt install -y libglib2.0-0 libnspr4 libnss3 libdbus-1-3 libatk1.0-0 libatk-bridge2.0-0 libcups2 libxkbcommon0 libxcomposite1 libxdamage1 libxfixes3 libxrandr2 libgbm1 libcairo2 libpango1.0-0 libasound2
 
 # NPM installation for NL color picker
 wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
