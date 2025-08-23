@@ -53,7 +53,7 @@ async function main() {
   let htmlFiles = args;
 
   // Run puppeteer in headless mode
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({ headless: "new", args: ["--no-sandbox"] });
   const page = await browser.newPage();
 
   // Increase timeout
