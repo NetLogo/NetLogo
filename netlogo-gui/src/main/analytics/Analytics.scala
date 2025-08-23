@@ -194,6 +194,10 @@ object Analytics {
     wrapRequest(MatomoRequests.event(category, "Modeling Commons Open", null, null).build())
   }
 
+  def modelingCommonsUpload(): Unit = {
+    wrapRequest(MatomoRequests.event(category, "Modeling Commons Upload", null, null).build())
+  }
+
   def refreshPreference(): Unit = {
     sendEnabled = NetLogoPreferences.getBoolean("sendAnalytics", false)
   }

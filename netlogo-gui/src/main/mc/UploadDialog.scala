@@ -10,6 +10,7 @@ import javax.imageio.ImageIO
 import javax.swing.{ Box, BoxLayout, ButtonGroup, JDialog, JLabel, JPanel }
 import javax.swing.event.{ DocumentEvent, DocumentListener }
 
+import org.nlogo.analytics.Analytics
 import org.nlogo.api.Workspace
 import org.nlogo.awt.UserCancelException
 import org.nlogo.core.I18N
@@ -427,6 +428,8 @@ class UploadDialog(parent: Frame, backend: Backend[Future], loginInfo: LoginInfo
   }
 
   private def uploadSucceeded(url: String): Unit = {
+    Analytics.modelingCommonsUpload()
+
     if (new OptionPane(this, I18N.gui.get("dialog.mc.upload.succeeded"),
                        I18N.gui.get("dialog.mc.upload.succeeded.message"), Seq(
                          I18N.gui.get("common.buttons.ok"),
