@@ -12,7 +12,7 @@ apt install -y libc6:i386 libncurses5:i386 libstdc++6:i386 zlib1g-dev:i386
 # Install general tools
 apt install -y curl git wget
 
-# Set up global SBT (which seems to be used by some parts of the NL build, like `buildMathematicaLink`)
+# Set up global SBT
 echo "deb https://repo.scala-sbt.org/scalasbt/debian all main" | tee /etc/apt/sources.list.d/sbt.list
 echo "deb https://repo.scala-sbt.org/scalasbt/debian /" | tee /etc/apt/sources.list.d/sbt_old.list
 curl -sL "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x2EE0EA64E40A89B84B2DF73499E82A75642AC823" | tee /etc/apt/trusted.gpg.d/sbt.asc
@@ -55,6 +55,8 @@ mv jdk-17.0.2 /root/jvm-store/openjdk-17.0.2/
 # Configure Java for general NL build
 export JAVA_HOME=/root/jvm-store/openjdk-17.0.2/
 
+ln -s $JAVA_HOME/bin/java /usr/bin/java
+
 # Initialize NetLogo repo
 git clone https://github.com/NetLogo/NetLogo
 cd NetLogo
@@ -76,10 +78,10 @@ cat > /root/NetLogo/.jdks.yaml << EOF
   path:         "/root/jvm-store/openjdk-17.0.2/"
 EOF
 
-/root/NetLogo/sbt dist/buildNetLogo
+sbt dist/buildNetLogo
 
-/root/NetLogo/sbt "dist/packageLinuxAggregate OpenJDK_17.0.2_64"
+sbt "dist/packageLinuxAggregate OpenJDK_17.0.2_64"
 mv /root/NetLogo/dist/target/downloadPages/*.tgz /root/NL-Linux-64.tgz
 
-/root/NetLogo/sbt "dist/packageLinuxAggregate Liberica_17.0.15_32"
+sbt "dist/packageLinuxAggregate Liberica_17.0.15_32"
 mv /root/NetLogo/dist/target/downloadPages/*.tgz /root/NL-Linux-32.tgz
