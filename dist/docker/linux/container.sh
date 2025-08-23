@@ -26,10 +26,6 @@ apt install -y aspell
 apt install -y python3 python3-pip
 pip3 install numpy
 
-# Patched `wkhtmltopdf` for NL release docs
-wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6-1/wkhtmltox_0.12.6-1.focal_amd64.deb
-apt install -y /root/wkhtmlto*
-rm /root/wkhtmlto*
 
 # NPM installation for NL color picker
 wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
