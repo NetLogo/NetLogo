@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="scalacheck_2.12-1.13.4">
-    <CLASSES>
-      <root url="jar://$IVY_HOME$/cache/org.scalacheck/scalacheck_2.12/jars/scalacheck_2.12-1.13.4.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>

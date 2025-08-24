@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="org.picocontainer:picocontainer:2.13.6">
-    <CLASSES>
-      <root url="jar://$IVY_HOME$/cache/org.picocontainer/picocontainer/jars/picocontainer-2.13.6.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>
