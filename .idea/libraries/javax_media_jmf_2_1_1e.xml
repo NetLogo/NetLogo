@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="javax.media:jmf:2.1.1e">
-    <CLASSES>
-      <root url="jar://$IVY_HOME$/cache/javax.media/jmf/jars/jmf-2.1.1e.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>
