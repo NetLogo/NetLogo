@@ -22,7 +22,9 @@ import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-public class MacHandler {
+import org.nlogo.util.AppHandler;
+
+public class MacHandler extends AppHandler {
   Desktop application;
   FileOutputStream output;
   Object app;
@@ -123,8 +125,10 @@ public class MacHandler {
     }
   }
 
+  @Override
   public void init() { }
 
+  @Override
   public void ready(Object app) {
     this.app = app;
     if (openMeLater != null) {

@@ -8,6 +8,7 @@ import javax.swing.AbstractAction
 import org.nlogo.api.{ AbstractModelLoader, LabProtocol }
 import org.nlogo.awt.Positioning
 import org.nlogo.core.{ I18N, Model }
+import org.nlogo.editor.Colorizer
 import org.nlogo.swing.UserAction.{ ToolsCategory, ToolsDialogsGroup, KeyBindings, MenuAction }
 import org.nlogo.theme.ThemeSync
 import org.nlogo.window.{ GUIWorkspace, EditDialogFactory, LabManagerInterface, MenuBarFactory }
@@ -18,6 +19,7 @@ import scala.collection.mutable.ListBuffer
 
 class LabManager(val workspace:        GUIWorkspace,
                  dialogFactory:        EditDialogFactory,
+                 colorizer:            Colorizer,
                  menuFactory:          MenuBarFactory,
                  val workspaceFactory: WorkspaceFactory,
                  val modelLoader:      AbstractModelLoader)
@@ -39,7 +41,7 @@ class LabManager(val workspace:        GUIWorkspace,
   def clearProtocols(): Unit = {
     protocols.clear()
   }
-  private lazy val dialog = new ManagerDialog(this, dialogFactory, menuFactory)
+  private lazy val dialog = new ManagerDialog(this, dialogFactory, colorizer, menuFactory)
   def show(): Unit = {
     Positioning.center(dialog, workspace.getFrame)
     dialog.update()
