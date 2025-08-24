@@ -8,11 +8,10 @@ import java.awt.{ Dimension, EventQueue, Frame, GraphicsEnvironment, KeyboardFoc
 import java.awt.datatransfer.DataFlavor
 import java.awt.dnd.{ DropTarget, DropTargetDragEvent, DropTargetDropEvent, DropTargetEvent, DropTargetListener }
 import java.awt.event.ActionEvent
-import java.io.{ BufferedReader, ByteArrayInputStream, File, InputStreamReader }
+import java.io.File
 import java.lang.ProcessHandle
-import java.net.{ ConnectException, URL }
+import java.net.{ ConnectException, URI, URL }
 import java.util.{ List => JList }
-import java.util.zip.GZIPInputStream
 import javax.swing.{ JFrame, JMenu }
 
 import scala.concurrent.ExecutionContext
@@ -37,7 +36,7 @@ import org.nlogo.core.{ AgentKind, CompilerException, ExternalResource, I18N, Mo
   Shape.{ LinkShape, VectorShape }
 import org.nlogo.fileformat.FileFormat
 import org.nlogo.gl.view.ViewManager
-import org.nlogo.headless.HeadlessWorkspace
+import org.nlogo.headless.{ HeadlessWorkspace, Main }
 import org.nlogo.hubnet.server.gui.HubNetManagerFactory
 import org.nlogo.lab.gui.LabManager
 import org.nlogo.log.{ JsonFileLogger, LogEvents, LogManager }
@@ -70,16 +69,33 @@ import sttp.client4.quick.{ quickRequest, UriContext }
  * for example code.
  */
 object App {
-  // all these guys are assigned in main. yuck
+  sealed abstract trait ModelArgType
+
+  object ModelArgType {
+    case class Model(file: String) extends ModelArgType
+    case class Magic(name: String) extends ModelArgType
+    case class Url(url: String) extends ModelArgType
+  }
+
+  case class CommandLineArgs(
+    launch: Boolean = false,
+    model: Option[ModelArgType] = None,
+    logEvents: Option[String] = None,
+    logDirectory: Option[String] = None,
+    popOutCodeTab: Boolean = false,
+    colorTheme: String = NetLogoPreferences.get("colorTheme", {
+      if (OsThemeDetector.getDetector.isDark) {
+        "dark"
+      } else {
+        "light"
+      }
+    })
+  )
+
+  // ideally this would be an Option[App], but that would break all the code that uses App.app,
+  // so it's not worth changing at this point (Isaac B 8/24/25)
   var app: App = null
-  private var commandLineModelIsLaunch = false
-  private var commandLineModel: String = null
-  private var commandLineMagic: String = null
-  private var commandLineURL: String = null
-  private var logEvents: String = null
-  private var logDirectory: String = null
-  private var popOutCodeTab = false
-  private var colorTheme: String = null
+
   /**
    * Should be called once at startup to create the application and
    * start it running.  May not be called more than once.  Once
@@ -98,8 +114,10 @@ object App {
 
   def mainWithAppHandler(args: Array[String], appHandler: AppHandler): Unit = {
     val lowerArgs = args.map(_.trim.toLowerCase)
+
     if (lowerArgs.contains("--headless") || lowerArgs.contains("--help")) {
-      org.nlogo.headless.Main.main(args)
+      Main.main(args)
+
       return
     }
 
@@ -122,25 +140,13 @@ object App {
       AbstractWorkspace.isApp(true)
       VMCheck.detectBadJVMs()
 
-      processCommandLineArguments(args)
+      val cmdArgs = processCommandLineArguments(args)
 
       Splash.beginSplash() // also initializes AWT
 
-      if (colorTheme == null) {
-        val defaultTheme = {
-          if (OsThemeDetector.getDetector.isDark) {
-            "dark"
-          } else {
-            "light"
-          }
-        }
-
-        colorTheme = NetLogoPreferences.get("colorTheme", defaultTheme)
-      }
-
       SetSystemLookAndFeel.setSystemLookAndFeel()
 
-      InterfaceColors.setTheme(App.colorTheme match {
+      InterfaceColors.setTheme(cmdArgs.colorTheme match {
         case "classic" => ClassicTheme
         case "light" => LightTheme
         case "dark" => DarkTheme
@@ -149,7 +155,7 @@ object App {
       System.setProperty("flatlaf.menuBarEmbedded", "false")
       System.setProperty("sun.awt.noerasebackground", "true") // stops view2.5d and 3d windows from blanking to white until next interaction
 
-      app = new App
+      app = new App(cmdArgs)
 
       // It's pretty silly, but in order for the splash screen to show up
       // for more than a fraction of a second, we want to initialize as
@@ -167,94 +173,102 @@ object App {
     }
   }
 
-  private def processCommandLineArguments(args: Array[String]): Unit = {
+  // note: this method is static so that it can be called from main()
+  // before App is instantiated, which means we can use the --version
+  // flags without the AWT ever being initialized, which is handy when
+  // we're at the command line and need the version but can't do GUI stuff
+  // (e.g. if we're on Linux but don't have the DISPLAY environment variable
+  // set) - ST 4/1/02
+  private def processCommandLineArguments(args: Array[String]): CommandLineArgs = {
     def printAndExit(s: String): Unit = {
       println(s)
       sys.exit(0)
     }
 
-    // note: this method is static so that it can be called from main()
-    // before App is instantiated, which means we can use the --version
-    // flags without the AWT ever being initialized, which is handy when
-    // we're at the command line and need the version but can't do GUI stuff
-    // (e.g. if we're on Linux but don't have the DISPLAY environment variable
-    // set) - ST 4/1/02
-    var i = 0
-    def nextToken() = { val t = args(i); i += 1; t }
-    def moreTokens = i < args.length
-    while(moreTokens){
-      val token = nextToken()
-      if (token == "--events") org.nlogo.window.Event.logEvents = true;
-      else if (token == "--open" || token == "--launch") {
-        commandLineModelIsLaunch = token == "--launch"
-        require(commandLineModel == null &&
-                commandLineMagic == null &&
-                commandLineURL == null,
-          "Error parsing command line arguments: you can only specify one model to open at startup.")
-        val fileToken = nextToken()
-        val modelFile = new java.io.File(fileToken)
-        // Best to check if the file exists here, because after the GUI thread has started,
-        // NetLogo just hangs with the splash screen showing if file doesn't exist. ~Forrest (2/12/2009)
-        if (!modelFile.exists) throw new IllegalStateException(I18N.errors.getN("fileformat.notFound", fileToken))
-        commandLineModel = modelFile.getAbsolutePath()
-      }
-      else if (token == "--magic") {
-        require(commandLineModel == null &&
-                commandLineMagic == null &&
-                commandLineURL == null)
-        commandLineMagic = nextToken()
-      }
-      else if (token == "--url") {
-        require(commandLineModel == null &&
-                commandLineMagic == null &&
-                commandLineURL == null)
-        commandLineURL = nextToken()
-      }
-      else if (token == "--color-theme") {
-        colorTheme = nextToken()
+    val iter = args.iterator
 
-        colorTheme match {
-          case "classic" =>
-          case "light" =>
-          case _ => throw new IllegalArgumentException(I18N.errors.getN("themes.unknown", colorTheme))
-        }
-      }
-      else if (token == "--version") printAndExit(Version.version)
-      else if (token == "--extension-api-version") printAndExit(APIVersion.version)
-      else if (token == "--builddate") printAndExit(Version.buildDate)
-      else if (token == "--log-events") logEvents = nextToken()
-      else if (token == "--log-directory") logDirectory = nextToken()
-      else if (token == "--codetab-window") popOutCodeTab = true
-      else if (token == "--3d") Version.set3D(true)
-      else if (token.startsWith("--")) {
-        //TODO: Decide: should we do System.exit() here?
-        // Previously we've just ignored unknown parameters, but that seems wrong to me.  ~Forrest (2/12/2009)
-        System.err.println("Error: Unknown command line argument: " + token)
-      }
-      else { // we assume it's a filename to "launch"
-        commandLineModelIsLaunch = true
-        require(commandLineModel == null &&
-                commandLineMagic == null &&
-                commandLineURL == null,
-          "Error parsing command line arguments: you can only specify one model to open at startup.")
-        val modelFile = new File(token)
-        // Best to check if the file exists here, because after the GUI thread has started,
-        // NetLogo just hangs with the splash screen showing if file doesn't exist. ~Forrest (2/12/2009)
-        if (!modelFile.exists())
-          throw new IllegalStateException(I18N.errors.getN("fileformat.notFound", token))
-        commandLineModel = modelFile.getAbsolutePath()
+    def requireAndGet(message: String): String = {
+      require(iter.hasNext, message)
+      iter.next
+    }
+
+    var current = CommandLineArgs()
+
+    while (iter.hasNext) {
+      iter.next match {
+        case "--version" => printAndExit(Version.version)
+        case "--extension-api-version" => printAndExit(APIVersion.version)
+        case "--builddate" => printAndExit(Version.buildDate)
+        case "--events" => Event.logEvents = true
+
+        case token @ ("--open" | "--launch") =>
+          require(current.model.isEmpty, I18N.errors.get("args.oneModel"))
+
+          val next = requireAndGet(I18N.errors.getN("args.noFile", token))
+          val file = new File(next)
+
+          // Best to check if the file exists here, because after the GUI thread has started,
+          // NetLogo just hangs with the splash screen showing if file doesn't exist. ~Forrest (2/12/2009)
+          require(file.exists, I18N.errors.getN("fileformat.notFound", next))
+
+          current = current.copy(launch = token == "--launch", model = Some(ModelArgType.Model(file.getAbsolutePath)))
+
+        case "--magic" =>
+          require(current.model.isEmpty, I18N.errors.get("args.oneModel"))
+
+          current = current.copy(model = Some(ModelArgType.Magic(requireAndGet(I18N.errors.get("args.noName")))))
+
+        case "--url" =>
+          require(current.model.isEmpty, I18N.errors.get("args.oneModel"))
+
+          current = current.copy(model = Some(ModelArgType.Url(requireAndGet(I18N.errors.get("args.noUrl")))))
+
+        case "--color-theme" =>
+          val next = requireAndGet(I18N.errors.get("args.noTheme"))
+
+          require(next == "classic" || next == "light" || next == "dark", I18N.errors.getN("themes.unknown", next))
+
+          current = current.copy(colorTheme = next)
+
+        case "--log-events" =>
+          current = current.copy(logEvents = Option(requireAndGet(I18N.errors.get("args.noEvents"))))
+
+        case "--log-directory" =>
+          current = current.copy(logDirectory = Option(requireAndGet(I18N.errors.get("args.noDirectory"))))
+
+        case "--codetab-window" =>
+          current = current.copy(popOutCodeTab = true)
+
+        case "--3d" =>
+          Version.set3D(true)
+
+        case token if token.startsWith("--") =>
+          // TODO: Decide: should we do System.exit() here?
+          // Previously we've just ignored unknown parameters, but that seems wrong to me.  ~Forrest (2/12/2009)
+          System.err.println("Error: Unknown command line argument: " + token)
+
+        case token => // we assume it's a filename to "launch"
+          require(current.model.isEmpty, I18N.errors.get("args.oneModel"))
+
+          val file = new File(token)
+
+          // Best to check if the file exists here, because after the GUI thread has started,
+          // NetLogo just hangs with the splash screen showing if file doesn't exist. ~Forrest (2/12/2009)
+          require(file.exists, I18N.errors.getN("fileformat.notFound", token))
+
+          current = current.copy(launch = true, model = Some(ModelArgType.Model(file.getAbsolutePath)))
       }
     }
+
+    current
   }
 }
 
-class App extends LinkChild with Exceptions.Handler with AppEvent.Handler with BeforeLoadEvent.Handler
-  with LoadBeginEvent.Handler with LoadEndEvent.Handler with LoadModelEvent.Handler with ModelSavedEvent.Handler
-  with ModelSections with AppEvents.SwitchedTabsEvent.Handler with AppEvents.OpenLibrariesDialogEvent.Handler
-  with AppEvents.RestartEvent.Handler with AboutToQuitEvent.Handler with ZoomedEvent.Handler with Controllable {
-
-  import App.{ commandLineMagic, commandLineModel, commandLineURL, commandLineModelIsLaunch, logDirectory, logEvents,
-               popOutCodeTab }
+class App(args: App.CommandLineArgs) extends LinkChild with Exceptions.Handler with AppEvent.Handler
+  with BeforeLoadEvent.Handler with LoadBeginEvent.Handler with LoadEndEvent.Handler with LoadModelEvent.Handler
+  with ModelSavedEvent.Handler with ModelSections with AppEvents.SwitchedTabsEvent.Handler
+  with AppEvents.OpenLibrariesDialogEvent.Handler with AppEvents.RestartEvent.Handler with AboutToQuitEvent.Handler
+  with ZoomedEvent.Handler with Controllable {
 
   val frame = new AppFrame
 
@@ -387,8 +401,6 @@ class App extends LinkChild with Exceptions.Handler with AppEvent.Handler with B
   private lazy val owner = new SimpleJobOwner("App", world.mainRNG, AgentKind.Observer)
 
   private val runningInMacWrapper = Option(System.getProperty("org.nlogo.mac.appClassName")).nonEmpty
-  private val ImportWorldURLProp = "netlogo.world_state_url"
-  private val ImportRawWorldURLProp = "netlogo.raw_world_state_url"
 
   private val analyticsConsent = NetLogoPreferences.get("sendAnalytics", "$$$") == "$$$"
 
@@ -450,12 +462,13 @@ class App extends LinkChild with Exceptions.Handler with AppEvent.Handler with B
 
     controlSet.interfaceTab = Some(interfaceTab)
 
-    def switchOrPref(switchValue: String, prefName: String, default: String): String =
-      Option(switchValue).filter(_.trim.nonEmpty).getOrElse(NetLogoPreferences.get(prefName, default))
+    def switchOrPref(switchValue: Option[String], prefName: String, default: String): String =
+      switchValue.filter(_.trim.nonEmpty).getOrElse(NetLogoPreferences.get(prefName, default))
 
-    if (logDirectory != null || logEvents != null || NetLogoPreferences.get("loggingEnabled", "false").toBoolean) {
-      val finalLogDirectory = new File(switchOrPref(logDirectory, "logDirectory", System.getProperty("user.home")))
-      val eventsString      = switchOrPref(logEvents, "logEvents", "")
+    if (args.logDirectory.isDefined || args.logEvents.isDefined ||
+        NetLogoPreferences.get("loggingEnabled", "false").toBoolean) {
+      val finalLogDirectory = new File(switchOrPref(args.logDirectory, "logDirectory", System.getProperty("user.home")))
+      val eventsString      = switchOrPref(args.logEvents, "logEvents", "")
       val events            = LogEvents.parseEvents(eventsString)
       val studentName       = askForName()
       val addListener       = (l) => listenerManager.addListener(l)
@@ -541,7 +554,7 @@ class App extends LinkChild with Exceptions.Handler with AppEvent.Handler with B
 
       appHandler.ready(this)
 
-      if (popOutCodeTab || NetLogoPreferences.getBoolean("startSeparateCodeTab", false))
+      if (args.popOutCodeTab || NetLogoPreferences.getBoolean("startSeparateCodeTab", false))
         tabManager.switchWindow(true)
 
       import ExecutionContext.Implicits.global
@@ -626,35 +639,39 @@ class App extends LinkChild with Exceptions.Handler with AppEvent.Handler with B
   }
 
   private def loadDefaultModel(): Unit = {
-    if (commandLineModel != null) {
-      if (commandLineModelIsLaunch) { // --launch through InstallAnywhere?
-        // open up the blank model first so in case
-        // the magic open fails for some reason
-        // there's still a model loaded ev 3/7/06
-        fileManager.newModel()
-        open(commandLineModel)
-      }
-      else {
-        libraryOpen(commandLineModel) // --open from command line
-      }
+    args.model match {
+      case Some(App.ModelArgType.Model(file)) =>
+        if (args.launch) { // --launch through InstallAnywhere?
+          // open up the blank model first so in case
+          // the magic open fails for some reason
+          // there's still a model loaded ev 3/7/06
+          fileManager.newModel()
+          open(file)
+        } else { // --open from command line
+          libraryOpen(file)
+        }
 
-    } else if (commandLineMagic != null) {
-      workspace.magicOpen(commandLineMagic)
+      case Some(App.ModelArgType.Magic(name)) =>
+        workspace.magicOpen(name)
 
-    } else if (commandLineURL != null) {
-      try {
-        fileManager.openFromURI(new java.net.URI(commandLineURL), ModelType.Library)
+      case Some(App.ModelArgType.Url(url)) =>
+        try {
+          fileManager.openFromURI(new URI(url), ModelType.Library)
 
-        Option(System.getProperty(ImportRawWorldURLProp)) map {
-          url => // `io.Source.fromURL(url).bufferedReader` steps up to bat and... manages to fail gloriously here! --JAB (8/22/12)
-            EventQueue.invokeLater {
-              () =>
-                workspace.importWorld(new BufferedReader(new InputStreamReader(new URL(url).openStream())))
-                workspace.view.dirty()
-                workspace.view.repaint()
-            }
-        } orElse (Option(System.getProperty(ImportWorldURLProp)) map {
-          url =>
+          Option(System.getProperty("netlogo.raw_world_state_url")).map { url =>
+            EventQueue.invokeLater(() => {
+              // `io.Source.fromURL(url).bufferedReader` steps up to bat and...
+              // manages to fail gloriously here! --JAB (8/22/12)
+              import java.io.{ BufferedReader, InputStreamReader }
+
+              workspace.importWorld(new BufferedReader(new InputStreamReader(new URL(url).openStream())))
+              workspace.view.dirty()
+              workspace.view.repaint()
+            })
+          }.orElse(Option(System.getProperty("netlogo.world_state_url")).map { url =>
+            import java.io.{ ByteArrayInputStream, InputStreamReader }
+            import java.util.zip.GZIPInputStream
+            import scala.io.{ Codec, Source }
 
             val source = Source.fromURL(url)(using Codec.ISO8859)
             val bytes  = source.map(_.toByte).toArray
@@ -662,39 +679,36 @@ class App extends LinkChild with Exceptions.Handler with AppEvent.Handler with B
             val gis    = new GZIPInputStream(bais)
             val reader = new InputStreamReader(gis)
 
-            EventQueue.invokeLater {
-              () => {
-                workspace.importWorld(reader)
-                workspace.view.dirty()
-                workspace.view.repaint()
-                source.close()
-                bais.close()
-                gis.close()
-                reader.close()
-              }
-            }
+            EventQueue.invokeLater(() => {
+              workspace.importWorld(reader)
+              workspace.view.dirty()
+              workspace.view.repaint()
+              source.close()
+              bais.close()
+              gis.close()
+              reader.close()
+            })
+          })
+        } catch {
+          case _: ConnectException =>
+            fileManager.newModel()
 
-        })
-      }
-      catch {
-        case ex: ConnectException =>
-          fileManager.newModel()
-          new OptionPane(frame, I18N.gui.get("file.open.error.unloadable.title"),
-                         I18N.gui.getN("file.open.error.unloadable.message", commandLineURL),
-                         OptionPane.Options.OkCancel, OptionPane.Icons.Warning)
-      }
+            new OptionPane(frame, I18N.gui.get("file.open.error.unloadable.title"),
+                           I18N.gui.getN("file.open.error.unloadable.message", url),
+                           OptionPane.Options.OkCancel, OptionPane.Icons.Warning)
+        }
 
-    } else if (NetLogoPreferences.get("loadLastOnStartup", "false").toBoolean) {
-      // if recent list is empty we need the new model, or if loading the recent model
-      // fails then we'll fall back on it.  -Jeremy B June 2021
-      fileManager.newModel()
-      val recentFiles = (new RecentFiles).models
-      if (!recentFiles.isEmpty) {
-        val modelEntry = recentFiles.head
-        fileManager.openFromPath(modelEntry.path, modelEntry.modelType)
-      }
-    } else {
-      fileManager.newModel()
+      case _ =>
+        // if recent list is empty we need the new model, or if loading the recent model
+        // fails then we'll fall back on it.  -Jeremy B June 2021
+        fileManager.newModel()
+
+        if (NetLogoPreferences.get("loadLastOnStartup", "false").toBoolean) {
+          (new RecentFiles).models.headOption.foreach {
+            case ModelEntry(path, modelType) =>
+              fileManager.openFromPath(path, modelType)
+          }
+        }
     }
   }
 
