@@ -12,6 +12,7 @@ import javax.swing.event.ListSelectionListener
 import org.nlogo.analytics.Analytics
 import org.nlogo.api.{ RefEnumeratedValueSet, LabProtocol }
 import org.nlogo.core.I18N
+import org.nlogo.editor.Colorizer
 import org.nlogo.swing.{ Button, FileDialog, OptionPane, Positioning, ScrollPane, Transparent, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ EditDialogFactory, MenuBarFactory }
@@ -21,6 +22,7 @@ import scala.util.{ Success, Failure }
 
 private class ManagerDialog(manager:       LabManager,
                             dialogFactory: EditDialogFactory,
+                            colorizer:     Colorizer,
                             menuFactory:   MenuBarFactory)
   extends JDialog(manager.workspace.getFrame) with ListSelectionListener with ThemeSync {
 
@@ -174,7 +176,8 @@ private class ManagerDialog(manager:       LabManager,
 
       manager.prepareForRun()
 
-      new Supervisor(this, manager.workspace, selectedProtocol, manager.workspaceFactory, dialogFactory, saveProtocol).start()
+      new Supervisor(this, manager.workspace, selectedProtocol, manager.workspaceFactory, dialogFactory,
+                     manager.workspace, colorizer, saveProtocol).start()
     }
     catch { case ex: org.nlogo.awt.UserCancelException => org.nlogo.api.Exceptions.ignore(ex) }
   }
@@ -198,7 +201,7 @@ private class ManagerDialog(manager:       LabManager,
     select(editIndex)
     Analytics.bspaceOpen()
     val editable = new ProtocolEditable(protocol, manager.workspace.getFrame,
-                                        manager.workspace, dialogFactory.colorizer, manager.workspace.world,
+                                        manager.workspace, colorizer, manager.workspace.world,
                                         manager.workspace.world.getDimensions,
                                         manager.protocols.map(_.name).filter(isNew || _ != protocol.name).toSeq)
     dialogFactory.create(manager.workspace.getFrame, editable, success => {

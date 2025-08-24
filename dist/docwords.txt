@@ -284,7 +284,6 @@ Paus
 Pegdown
 PepperedMoths
 Phidgets
-PicoContainer
 PlatformSpecific
 Polyconic
 Polysynth
