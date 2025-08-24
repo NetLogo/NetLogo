@@ -77,8 +77,9 @@ object NetLogoPackaging {
     buildNetLogo := {
       (netlogo / all).value
       (netlogo / allDocs).value
-      (netlogo / allPreviews).toTask("").value
-      resaveModels.value
+      // allPreviews doesn't technically depend on resaveModels, but if they're allowed to run concurrently it causes
+      // problems when allPreviews tries to read a file that resaveModels is writing to (Isaac B 8/23/25)
+      (netlogo / allPreviews).toTask("").dependsOn(resaveModels).value
       buildMathematicaLink.value
       (behaviorsearchProject / Compile / packageBin).value
     },
@@ -86,10 +87,8 @@ object NetLogoPackaging {
     resaveModels := {
       makeMainTask("org.nlogo.tools.ModelResaver",
         classpath = (netlogo / Test / Keys.fullClasspath),
-        workingDirectory = baseDirectory(_.getParentFile)).toTask("").value
+        workingDirectory = baseDirectory(_.getParentFile)).toTask("").dependsOn(netlogo / extensions).value
     },
-
-    resaveModels := (resaveModels dependsOn (netlogo / extensions)).value,
 
     buildMathematicaLink := {
       val sbt = if (System.getProperty("os.name").contains("Windows")) "sbt.bat" else "sbt"
