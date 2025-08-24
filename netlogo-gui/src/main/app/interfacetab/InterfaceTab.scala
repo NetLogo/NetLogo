@@ -12,6 +12,7 @@ import org.nlogo.api.Announcement
 import org.nlogo.app.common.{Events => AppEvents, MenuTab}, AppEvents.SwitchedTabsEvent
 import org.nlogo.app.tools.AgentMonitorManager
 import org.nlogo.core.I18N
+import org.nlogo.editor.Colorizer
 import org.nlogo.swing.{ Implicits, PrinterManager, Printable => NlogoPrintable, ScrollPane, SplitPane, ToolBar,
                          UserAction, Utils },
                        Implicits.thunk2action, UserAction.{ MenuAction, ToolsCategory }
@@ -29,6 +30,7 @@ import InterfaceTab._
 class InterfaceTab(workspace: GUIWorkspace,
                    monitorManager: AgentMonitorManager,
                    dialogFactory: EditDialogFactory,
+                   colorizer: Colorizer,
                    val commandCenter: CommandCenter) extends JPanel
   with LoadBeginEvent.Handler
   with AfterLoadEvent.Handler
@@ -45,7 +47,7 @@ class InterfaceTab(workspace: GUIWorkspace,
   setFocusTraversalPolicy(new InterfaceTabFocusTraversalPolicy)
   private val locationToggleAction = new CommandCenterLocationToggleAction
   commandCenter.locationToggleAction = locationToggleAction
-  val iP = new InterfacePanel(workspace.viewWidget, workspace, dialogFactory.colorizer)
+  val iP = new InterfacePanel(workspace.viewWidget, workspace, colorizer)
 
   val commandCenterToggleAction = new CommandCenterToggleAction()
 
