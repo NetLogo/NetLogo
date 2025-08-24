@@ -5,7 +5,6 @@ package org.nlogo.window
 import java.awt.Window
 import java.awt.event.{ WindowAdapter, WindowEvent }
 
-import org.nlogo.api.CompilerServices
 import org.nlogo.editor.Colorizer
 import org.nlogo.theme.ThemeSync
 
@@ -18,7 +17,7 @@ import org.nlogo.theme.ThemeSync
 // There are two different methods because the JDialog created needs a parent, and JDialog has
 // two different constructors for the two different possible parent types. - ST 2/24/10
 
-class EditDialogFactory(val compiler: CompilerServices, val colorizer: Colorizer) extends ThemeSync {
+class EditDialogFactory(val colorizer: Colorizer) extends ThemeSync {
   private var dialog: Option[EditDialog] = None
 
   // used for modal dialog
