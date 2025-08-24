@@ -11,6 +11,7 @@ import org.nlogo.api.{ Exceptions, ExportPlotWarningAction, LabProtocol, LogoExc
                        PlotCompilationErrorAction, LabPostProcessorInputFormat }
 import org.nlogo.awt.{ EventQueue, UserCancelException }
 import org.nlogo.core.{ CompilerException, I18N }
+import org.nlogo.editor.Colorizer
 import org.nlogo.lab.{ Exporter, ListsExporter, PartialData, SpreadsheetExporter, StatsExporter, TableExporter, Worker }
 import org.nlogo.nvm.{ EngineException, Workspace }
 import org.nlogo.nvm.LabInterface.ProgressListener
@@ -26,6 +27,7 @@ class Supervisor(
   protocol: LabProtocol,
   factory: WorkspaceFactory,
   dialogFactory: EditDialogFactory,
+  colorizer: Colorizer,
   saveProtocol: (LabProtocol, Int) => Unit
 ) extends Thread("BehaviorSpace Supervisor") {
   private implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("tools.behaviorSpace")
@@ -68,7 +70,7 @@ class Supervisor(
     worker.run(workspace, () => nextWorkspace, protocol.threadCount)
   } }
   private val workerThread = new Thread(runnable, "BehaviorSpace Worker")
-  private val progressDialog = new ProgressDialog(parent, this, dialogFactory.colorizer, saveProtocol)
+  private val progressDialog = new ProgressDialog(parent, this, colorizer, saveProtocol)
   private val exporters = new ListBuffer[Exporter]
   private var spreadsheetExporter: SpreadsheetExporter = null
   private var spreadsheetFileName: String = null
