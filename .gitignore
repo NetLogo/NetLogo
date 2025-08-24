@@ -43,16 +43,19 @@ tmp/
 /.cache
 /.settings
 
+# IntelliJ IDEA
+/.idea
+/.idea
+/.idea
+/.idea
+/.idea
+*.iml
+
 # other
 /.ensime
 /.ensime_lucene/
 /.jdks.yaml
 /build/
-/.idea/workspace.xml
-/.idea/tasks.xml
-/.idea/codeStyleSettings.xml
-/.idea/uiDesigner.xml
-/.idea/misc.xml
 /lib/
 /netlogo-gui/lib/
 /natives/
