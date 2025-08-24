@@ -4,26 +4,17 @@ package org.nlogo.headless
 
 import java.lang.ref.Cleaner
 
-import org.nlogo.api.{ AggregateManagerInterface, LogoException, RendererInterface, Version }
-import org.nlogo.agent.{ CompilationManagement, World }
-import org.nlogo.nvm.{ PresentationCompilerInterface, HaltException }
-import org.nlogo.util.{ AnyFunSuiteEx, SlowTest }
+import org.nlogo.api.{ LogoException, Version }
+import org.nlogo.nvm.HaltException
+import org.nlogo.util.{ AnyFunSuiteEx,  SlowTest }
 
-object TestHalt {
-  // This is ugly, but since we use PicoContainer to instantiate HeadlessWorkspace it's hard to
-  // subclass.  Oh well, this is only test code. - ST 3/4/09
-  class MyWorkspace(world: World & CompilationManagement, compiler: PresentationCompilerInterface, renderer: RendererInterface, aggregateManager: AggregateManagerInterface)
-  extends HeadlessWorkspace(world, compiler, renderer, aggregateManager, null)
-}
 class TestHalt extends AnyFunSuiteEx with SlowTest {
   @volatile var finalized = false
   if(!Version.is3D)
     test("halt", SlowTest.Tag) {
-      import TestHalt._
       val cleaner = Cleaner.create()
       finalized = false
-      var workspace =
-        HeadlessWorkspace.newInstance(classOf[MyWorkspace]).asInstanceOf[MyWorkspace]
+      var workspace = HeadlessWorkspace.newInstance
       cleaner.register(workspace, new Runnable() {
         override def run(): Unit = {
           finalized = true
