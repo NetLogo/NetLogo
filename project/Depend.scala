@@ -52,7 +52,8 @@ object Depend {
       "agent" -> List("api", "log"),
       "analytics" -> List("core"),
       "api" -> List("core", "core/model", "core/prim", "util"),
-      "app" -> List("app/codetab", "app/common", "app/infotab", "app/interfacetab", "app/tools", "headless", "log", "mc"),
+      "app" -> List("app/codetab", "app/common", "app/infotab", "app/interfacetab", "app/tools", "compile", "gl/view",
+                    "headless", "hubnet/server/gui", "lab/gui", "log", "mc", "sdm/gui", "shape/editor"),
       "app/codetab" -> List("app/common"),
       "app/infotab" -> List("app/common"),
       "app/interfacetab" -> List("app/common", "app/tools", "log"),
@@ -77,10 +78,12 @@ object Depend {
       "generate" -> List("prim"), // for headless
       "gl/render" -> List("shape"),
       "gl/view" -> List("gl/render","window"),
-      "headless" -> List("core/model", "drawing", "fileformat", "shape", "workspace", "headless/test"),
+      "headless" -> List("compile", "core/model", "drawing", "fileformat", "hubnet/server", "render", "sdm", "shape",
+                         "workspace", "headless/test"),
       "headless/hubnet" -> List("headless", "hubnet/protocol"),
       "headless/test" -> List("api", "core"),
-      "hubnet/client" -> List("hubnet/connection", "hubnet/mirroring", "hubnet/protocol", "render", "fileformat", "window"),
+      "hubnet/client" -> List("hubnet/connection", "hubnet/mirroring", "hubnet/protocol", "render", "fileformat",
+                              "window"),
       "hubnet/connection" -> List("api"),
       "hubnet/mirroring" -> List("api"),
       "hubnet/protocol" -> List("api"),
@@ -148,7 +151,7 @@ check [not-job-not-workspace] directlyIndependentOf [job]
 
 [Sun-Swing] = javax.swing.* excluding javax.swing.tree.MutableTreeNode javax.swing.tree.DefaultMutableTreeNode javax.swing.tree.TreeNode
 [Sun-AWT] = java.awt.*
-[headless-AWT] = java.awt.geom.* java.awt.image.* java.awt.Color java.awt.Image java.awt.Shape java.awt.Graphics2D java.awt.Graphics java.awt.Stroke java.awt.Composite java.awt.BasicStroke java.awt.Point java.awt.Font java.awt.AlphaComposite java.awt.RenderingHints java.awt.Rectangle java.awt.FontMetrics java.awt.color.ColorSpace java.awt.Polygon java.awt.RenderingHints$Key
+[headless-AWT] = java.awt.geom.* java.awt.image.* java.awt.Color java.awt.EventQueue java.awt.Image java.awt.Shape java.awt.Graphics2D java.awt.Graphics java.awt.Stroke java.awt.Composite java.awt.BasicStroke java.awt.Point java.awt.Font java.awt.AlphaComposite java.awt.RenderingHints java.awt.Rectangle java.awt.FontMetrics java.awt.color.ColorSpace java.awt.Polygon java.awt.RenderingHints$Key
 # as a special case, we allow referring to java.awt.Frame, because ShapesManagerFactory
 # mentions it in its constructor, and I don't want to have to make a whole new package
 # just to put ShapesManagerFactory in - ST 2/27/09
@@ -161,7 +164,8 @@ check [gl.render] independentOf [Sun-Swing] [bad-AWT]
 
 ### checks on external libraries
 
-[JOGL-free-zone] = org.nlogo.* excluding [gl.render] [gl.view]
+# app doesn't depend on JOGL but it needs access to gl for initialization
+[JOGL-free-zone] = org.nlogo.* excluding [app] [gl.render] [gl.view]
 [JOGL] = net.java.games.* com.jogamp.opengl.*
 check [JOGL-free-zone] independentOf [JOGL]
 
@@ -170,11 +174,9 @@ check [ASM-free-zone] independentOf org.objectweb.*
 
 check org.nlogo.* independentOf com.wolfram.*
 
-[JHotDraw-free-zone] = org.nlogo.* excluding [sdm.gui]
+# app doesn't depend on JHotDraw but it needs access to sdm.gui for initialization
+[JHotDraw-free-zone] = org.nlogo.* excluding [app] [sdm.gui]
 check [JHotDraw-free-zone] independentOf org.jhotdraw.*
-
-[PicoContainer-free-zone] = org.nlogo.* excluding org.nlogo.util.Pico [app] [headless]
-check [PicoContainer-free-zone] independentOf org.picocontainer.*
 
 """
               )

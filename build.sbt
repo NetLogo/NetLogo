@@ -236,7 +236,6 @@ lazy val netlogo = project.in(file("netlogo-gui")).
     }.taskValue,
     libraryDependencies ++= Seq(
       "com.formdev" % "flatlaf" % "3.5.4",
-      "org.picocontainer" % "picocontainer" % "2.15.2",
       "javax.media" % "jmf" % "2.1.1e",
       "commons-codec" % "commons-codec" % "1.18.0",
       "org.parboiled" %% "parboiled" % "2.5.1",
