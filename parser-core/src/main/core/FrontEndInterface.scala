@@ -8,13 +8,23 @@ object FrontEndInterface {
   // use ListMap so procedures come out in the order they were defined (users expect errors in
   // earlier procedures to be reported first) - ST 6/10/04, 8/3/12
   import scala.collection.immutable.ListMap
-  type ProceduresMap = ListMap[String, FrontEndProcedure]
+  // The first string in the key is the procedure name. The second string is the name of the module it's supposed to be
+  // visible in, if any. For procedures visible to the model, this will be None.
+  type ProceduresMap = ListMap[(String, Option[String]), FrontEndProcedure]
   val NoProcedures: ProceduresMap = ListMap()
   type FrontEndResults = (Seq[ProcedureDefinition], StructureResults)
 
   def hasIncludes(source: String): Boolean = {
     val includesRegEx = """(?m)^\s*__includes""".r
     includesRegEx.findFirstMatchIn(source) match {
+      case Some(_) => true
+      case None    => false
+    }
+  }
+
+  def hasImport(source: String): Boolean = {
+    val importsRegEx = """(?m)^\s*import""".r
+    importsRegEx.findFirstMatchIn(source) match {
       case Some(_) => true
       case None    => false
     }
@@ -63,6 +73,9 @@ trait FrontEndInterface {
 
   // lists the strings contained by the __includes list
   def findIncludes(source: String): Seq[String]
+
+  // lists the names of imported libraries
+  def findImports(source: String): Seq[String]
 
   // these do enough tokenization to be used by the frontEnd.
   // It's up to to the caller to decide whether they want a Seq or an Iterator
