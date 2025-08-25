@@ -32,7 +32,7 @@ object PreviewCommandsRunner {
   def fromModelPath(
     workspaceFactory: WorkspaceFactory,
     modelPath: String): PreviewCommandsRunner = {
-    this(workspaceFactory, _.open(modelPath))
+    this(workspaceFactory, _.open(modelPath, true))
   }
 
   def initWorkspace(
