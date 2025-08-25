@@ -36,3 +36,5 @@ MOMMAS_BOY=`who mom likes | awk '{print $1}'`
 
 chown $MOMMAS_BOY:$MOMMAS_BOY ./NetLogo-$NL_BUILD_VERSION-64.tgz
 chown $MOMMAS_BOY:$MOMMAS_BOY ./NetLogo-$NL_BUILD_VERSION-32.tgz
+
+su $MOMMAS_BOY -c "tar zxf ./NetLogo-$NL_BUILD_VERSION-64.tgz"
