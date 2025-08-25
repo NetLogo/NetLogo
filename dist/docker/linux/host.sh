@@ -31,3 +31,8 @@ docker cp $NL_DOCKER_ID:/root/NL-Linux-32.tgz ./NetLogo-$NL_BUILD_VERSION-32.tgz
 
 docker stop $NL_DOCKER_ID
 docker rm $NL_DOCKER_ID
+
+MOMMAS_BOY=`who mom likes | awk '{print $1}'`
+
+chown $MOMMAS_BOY:$MOMMAS_BOY ./NetLogo-$NL_BUILD_VERSION-64.tgz
+chown $MOMMAS_BOY:$MOMMAS_BOY ./NetLogo-$NL_BUILD_VERSION-32.tgz
