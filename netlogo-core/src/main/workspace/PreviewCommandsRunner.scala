@@ -23,8 +23,8 @@ object PreviewCommandsRunner {
     modelPath: String,
     previewCommands: PreviewCommands): PreviewCommandsRunner = {
     val open = (w: AbstractWorkspace) => {
-      w.openModel(model)
       Option(modelPath).foreach(w.setModelPath)
+      w.openModel(model)
     }
     this(workspaceFactory, open, Some(previewCommands))
   }
