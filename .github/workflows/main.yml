@@ -27,7 +27,7 @@ jobs:
       - name: Clone Git submodules
         run: git submodule update --init
 
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         with:
           distribution: 'liberica'
           java-version: ${{ env.liberica-version }}
@@ -58,7 +58,7 @@ jobs:
           path: ./*
           key: ${{ github.sha }}
 
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         with:
           distribution: 'liberica'
           java-version: ${{ env.liberica-version }}
@@ -116,7 +116,7 @@ jobs:
           path: ./*
           key: ${{ github.sha }}
 
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         with:
           distribution: 'liberica'
           java-version: ${{ env.liberica-version }}
