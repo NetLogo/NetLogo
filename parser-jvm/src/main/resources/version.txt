@@ -1,5 +1,5 @@
-NetLogo 7.0.0-beta2
-July 18, 2025
+NetLogo 7.0.0-RC1
+August 26, 2025
 NetLogo 6.4
 NetLogo 6.3
 NetLogo 6.2
