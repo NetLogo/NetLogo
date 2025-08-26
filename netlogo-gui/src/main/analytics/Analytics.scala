@@ -198,6 +198,10 @@ object Analytics {
     wrapRequest(MatomoRequests.event(category, "Modeling Commons Upload", null, null).build())
   }
 
+  def saveAsNetLogoWeb(): Unit = {
+    wrapRequest(MatomoRequests.event(category, "Save as NetLogo Web", null, null).build())
+  }
+
   def refreshPreference(): Unit = {
     sendEnabled = NetLogoPreferences.getBoolean("sendAnalytics", false)
   }

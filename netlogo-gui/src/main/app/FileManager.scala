@@ -176,6 +176,8 @@ object FileManager {
                        OptionPane.Icons.Warning).getSelectedIndex != 0)
         throw new UserCancelException()
 
+      Analytics.saveAsNetLogoWeb()
+
       saver.save(modelString, exportFile.getName, includes)
     }
 
