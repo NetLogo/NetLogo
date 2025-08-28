@@ -46,7 +46,9 @@ object ChecksumsAndPreviewsSettings {
     )
 
     , Some("it uses the ls extension") -> List(
-      "/Code Examples/Extensions Examples/ls/"
+      "/Code Examples/Extensions Examples/ls/",
+      "/Sample Models/Biology/Wolf Sheep Predation - Agent Cognition/Wolf Sheep Predation - Micro-Sims.nlogox",
+      "/Sample Models/Biology/Wolf Sheep Predation - Agent Cognition/Wolf Sheep Predation - Micro-Sims Cognitive Model.nlogox"
     )
 
     , Some("it uses the sound extension") -> List(

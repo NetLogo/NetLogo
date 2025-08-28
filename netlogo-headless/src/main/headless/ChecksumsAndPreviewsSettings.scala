@@ -50,7 +50,9 @@ object ChecksumsAndPreviewsSettings {
       "/Curricular Models/GenEvo/GenEvo 4 Competition.nlogox",
       "/SAMPLE MODELS/CHEMISTRY & PHYSICS/KICKED ROTATORS.NLOGOX",
       "/CODE EXAMPLES/EXTENSIONS EXAMPLES/LS/",
-      "Sample Models/Biology/CRISPR/CRISPR Ecosystem LevelSpace.nlogox"
+      "Sample Models/Biology/CRISPR/CRISPR Ecosystem LevelSpace.nlogox",
+      "/Sample Models/Biology/Wolf Sheep Predation - Agent Cognition/Wolf Sheep Predation - Micro-Sims.nlogox",
+      "/Sample Models/Biology/Wolf Sheep Predation - Agent Cognition/Wolf Sheep Predation - Micro-Sims Cognitive Model.nlogox"
     )
 
     , Some("it involves the system dynamics modeler") -> List(

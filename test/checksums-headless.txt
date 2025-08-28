@@ -425,8 +425,6 @@ models/Code Examples/Extensions Examples/sr/Ripleys-K Example.nlogox *  * E2A3F2
 models/Code Examples/Extensions Examples/sr/RScript Example.nlogox *  * 0B396885694E0C2C381A37C0DE993CE88DDB75EE * 410024C10F339060926140FCEEC0074ED2D2DB0C * e299d6cc10
 models/Code Examples/Extensions Examples/sr/Spearman Example.nlogox *  * AAEFBC3512CFE7F0E3AC3AB6734AF4F4DC4BDF4E * 56C7D4369A0F44A0BDD6D85978180E340DDCF567 * 76f7e30bfb
 models/Code Examples/Extensions Examples/sr/Wilcoxon Example.nlogox *  * F15F14FD0053098B2C09C500955D5B02FDEC70EB * 30F1BDD0691674F9D148E91F81EACE652A74CE0C * a60342938a
-models/Sample Models/Biology/Wolf Sheep Predation - Agent Cognition/Wolf Sheep Predation - Micro-Sims.nlogox *  * CCEEDA3F0B9D465DCE76EEC29E8C47715B4154D6 * 2DF7DF484AE288886FEB2CE38C1D05180DE823EE * 7b6d487a52
-models/Sample Models/Biology/Wolf Sheep Predation - Agent Cognition/Wolf Sheep Predation - Micro-Sims Cognitive Model.nlogox *  * B8AE494FC01F440D9998C2038AE3A87395E59FAB * C63AB804FD5CCF9F4EB7EFBB78A3343664420156 * 7b6d487a52
 models/Sample Models/Chemistry & Physics/Waves/Chladni Figures.nlogox *  * 9D3246F3F2368DCB619A2589D854F18643BDDA29 * 82033795B030012DCCD9BF7B14F2A3600910573E * 70161526b2
 models/Sample Models/Computer Science/Cellular Automata/Cyclic CA.nlogox *  * AB56EFD6798187AEF86B06429EC1D55A57FE0EE0 * 649B7343A18FC7FDDFDE279C3245A20561534829 * 70161526b2
 models/Sample Models/Social Science/Consumer Choice.nlogox *  * 5EDF16A4F5D8CA9C2754A532F24A1E29531926E7 * C3C0A898AF8AF7F1A056FD9FC48005C3543E3297 * cf3caadfba
