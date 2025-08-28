@@ -14,6 +14,7 @@ object ChecksumsAndPreviews {
   lazy val allPreviews = InputKey[Try[Unit]]("all-previews", "update all model preview images")
   lazy val checksumExport = InputKey[Try[Unit]]("checksumExport", "run export on preview commands for one model")
   lazy val allChecksumsExport = InputKey[Try[Unit]]("allChecksumsExport", "run export on preview commands for all models")
+  lazy val allRevisions = InputKey[Try[Unit]]("all-revisions", "update all model revision numbers")
 
   val settings = Seq(
     Def.setting(checksum, makeTask("--checksum")),
@@ -21,7 +22,10 @@ object ChecksumsAndPreviews {
     Def.setting(preview, makeTask("--preview")),
     Def.setting(allPreviews, makeTask("--previews")),
     Def.setting(checksumExport, makeTask("--checksum-export")),
-    Def.setting(allChecksumsExport, makeTask("--checksum-exports"))
+    Def.setting(allChecksumsExport, makeTask("--checksum-exports")),
+    Def.setting(allRevisions, Running.makeMainTask("org.nlogo.headless.ChecksumsAndPreviews",
+                                                   Seq("--revisions"),
+                                                   workingDirectory = baseDirectory(_.getParentFile)))
   )
 
   private def makeTask(flag: String): Def.Initialize[InputTask[Try[Unit]]] =

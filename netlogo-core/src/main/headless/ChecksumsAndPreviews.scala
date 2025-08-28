@@ -88,6 +88,8 @@ object ChecksumsAndPreviews {
         ChecksumExports.`export`(List(path))
       case Array("--checksum-exports") =>
         ChecksumExports.`export`(paths(Checksums.okPath, includeBenchmarks = !Version.is3D))
+      case Array("--revisions") =>
+        Checksums.updateRevisions()
       case _ =>
         throw new Exception(s"Unexpected input arguments: $argv")
     }
@@ -221,6 +223,25 @@ object ChecksumsAndPreviews {
       m.put(newEntry.key, newEntry)
       if (action != "Didn't change")
         println(action + ": \"" + newEntry.toString + "\"")
+    }
+
+    // helper for only updating revision numbers, which can be optimized
+    // since it doesn't require compilation (Isaac B 8/28/25)
+    def updateRevisions(): Unit = {
+      write(load().map {
+        case (key, entry) =>
+          val newRevision = getRevisionNumber(entry.path)
+
+          if (newRevision != entry.revision) {
+            val newEntry = entry.copy(revision = newRevision)
+
+            println(s"* Changed rev # only: \"$newEntry\"")
+
+            (key, newEntry)
+          } else {
+            (key, entry)
+          }
+      }, ChecksumsFilePath)
     }
 
     def load(): ChecksumMap = {
