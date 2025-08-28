@@ -64,5 +64,10 @@ object ChecksumsAndPreviewsSettings {
       "/Code Examples/Extensions Examples/view2.5d/"
     )
 
+    // TODO: find a good solution for this (Isaac B 8/28/25)
+    , Some("it has different behavior on GitHub Actions") -> List(
+      "/Code Examples/Extensions Examples/sr/Linear Regression Example.nlogox"
+    )
+
   )
 }
