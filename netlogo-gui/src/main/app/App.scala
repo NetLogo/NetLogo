@@ -321,7 +321,7 @@ class App extends org.nlogo.window.Event.LinkChild
   var recentFilesMenu: RecentFilesMenu = null
   private var errorDialogManager: ErrorDialogManager = null
   private val listenerManager = new NetLogoListenerManager
-  private var syncComponents = Set[ThemeSync]()
+  private val themeSyncManager = new ThemeSyncManager
   private val runningInMacWrapper = Option(System.getProperty("org.nlogo.mac.appClassName")).nonEmpty
   private val ImportWorldURLProp = "netlogo.world_state_url"
   private val ImportRawWorldURLProp = "netlogo.raw_world_state_url"
@@ -886,11 +886,19 @@ class App extends org.nlogo.window.Event.LinkChild
   /// ThemeSync stuff
 
   def addSyncComponent(ts: ThemeSync): Unit = {
-    syncComponents = syncComponents + ts
+    themeSyncManager.addSyncComponent(ts)
   }
 
   def removeSyncComponent(ts: ThemeSync): Unit = {
-    syncComponents = syncComponents - ts
+    themeSyncManager.removeSyncComponent(ts)
+  }
+
+  def addSyncFunction(f: () => Unit): Long = {
+    themeSyncManager.addSyncFunction(f)
+  }
+
+  def removeSyncFunction(id: Long): Unit = {
+    themeSyncManager.removeSyncFunction(id)
   }
 
   def syncWindowThemes(): Unit = {
@@ -937,7 +945,8 @@ class App extends org.nlogo.window.Event.LinkChild
     errorDialogManager.syncTheme()
 
     // this allows external objects like extension GUIs to sync with the theme (Isaac B 1/12/25)
-    syncComponents.foreach(_.syncTheme())
+    themeSyncManager.syncAll()
+
   }
 
   /**
