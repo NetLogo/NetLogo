@@ -44,7 +44,11 @@ class EditDialogFactory(compiler: CompilerServices, val colorizer: Colorizer) ex
   }
 
   def clearDialog(): Unit = {
-    dialog.foreach(_.abort())
+    dialog.foreach { d =>
+      if (d.isVisible)
+        d.abort()
+    }
+
     dialog = None
   }
 
