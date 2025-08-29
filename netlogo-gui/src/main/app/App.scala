@@ -6,10 +6,16 @@ import java.awt.{ Dimension, EventQueue, Frame, GraphicsEnvironment, KeyboardFoc
 import java.awt.datatransfer.DataFlavor
 import java.awt.dnd.{ DropTarget, DropTargetDragEvent, DropTargetDropEvent, DropTargetEvent, DropTargetListener }
 import java.awt.event.ActionEvent
-import java.io.File
+import java.io.{ BufferedReader, ByteArrayInputStream, File, InputStreamReader }
 import java.lang.ProcessHandle
+import java.net.URL
 import java.util.{ List => JList }
+import java.util.zip.GZIPInputStream
 import javax.swing.{ JFrame, JMenu }
+
+import scala.concurrent.ExecutionContext
+import scala.io.{ Codec, Source }
+import scala.sys.process.Process
 
 import org.nlogo.agent.{ Agent, World2D, World3D }
 import org.nlogo.analytics.Analytics
@@ -35,10 +41,6 @@ import org.nlogo.workspace.{ AbstractWorkspace, AbstractWorkspaceScala, Controll
 
 import org.picocontainer.parameters.{ ComponentParameter, ConstantParameter }
 import org.picocontainer.Parameter
-
-import scala.concurrent.ExecutionContext
-import scala.jdk.CollectionConverters.ListHasAsScala
-import scala.sys.process.Process
 
 /**
  * The main class for the complete NetLogo application.
@@ -547,6 +549,9 @@ class App extends org.nlogo.window.Event.LinkChild
         def dragOver(e: DropTargetDragEvent): Unit = {}
 
         def drop(e: DropTargetDropEvent): Unit = {
+
+          import scala.jdk.CollectionConverters.ListHasAsScala
+
           if (e.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
             e.acceptDrop(e.getDropAction)
 
@@ -569,6 +574,7 @@ class App extends org.nlogo.window.Event.LinkChild
           } else {
             e.rejectDrop()
           }
+
         }
 
         def dropActionChanged(e: DropTargetDragEvent): Unit = {}
@@ -668,7 +674,6 @@ class App extends org.nlogo.window.Event.LinkChild
 
         Option(System.getProperty(ImportRawWorldURLProp)) map {
           url => // `io.Source.fromURL(url).bufferedReader` steps up to bat and... manages to fail gloriously here! --JAB (8/22/12)
-            import java.io.{ BufferedReader, InputStreamReader }, java.net.URL
             EventQueue.invokeLater {
               () =>
                 workspace.importWorld(new BufferedReader(new InputStreamReader(new URL(url).openStream())))
@@ -677,8 +682,6 @@ class App extends org.nlogo.window.Event.LinkChild
             }
         } orElse (Option(System.getProperty(ImportWorldURLProp)) map {
           url =>
-
-            import java.util.zip.GZIPInputStream, java.io.{ ByteArrayInputStream, InputStreamReader }, scala.io.{ Codec, Source }
 
             val source = Source.fromURL(url)(using Codec.ISO8859)
             val bytes  = source.map(_.toByte).toArray
