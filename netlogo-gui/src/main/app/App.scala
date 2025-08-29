@@ -619,17 +619,32 @@ class App extends org.nlogo.window.Event.LinkChild
 
   // used by preferences that require a restart if the user chooses the "Restart Now" option (Isaac B 7/23/25)
   def handle(e: AppEvents.RestartEvent): Unit = {
+
     val processFile = new File(ProcessHandle.current.info.command.get)
 
     if (System.getProperty("os.name").toLowerCase.startsWith("mac")) {
+
       // this looks a bit strange but the reported process is actually the binary file nested deep in the .app file,
       // and in order for the OS to register the app properly, the .app file needs to be run (Isaac B 7/24/25)
       Process(Seq("open", "-n", "-a", processFile.getParentFile.getParentFile.getParentFile.toString)).run()
+
+    } else if (System.getProperty("os.name").toLowerCase.startsWith("linux")) {
+
+      // It's very important that we remove `_JPACKAGE_LAUNCHER` from the environment.  The Linux launcher will fail
+      // to relaunch itself if that value is set.  See: https://bugs.java.com/bugdatabase/view_bug?bug_id=8289201
+      // --Jason B. (8/29/25)
+      val cmdSequence = Source.fromFile("/proc/self/cmdline").getLines().toSeq.head.split('\u0000').toArray
+      val cwd         = new File("/proc/self/cwd").getCanonicalFile()
+      val pb          = ProcessBuilder(cmdSequence*).directory(cwd).inheritIO()
+      pb.environment.remove("_JPACKAGE_LAUNCHER")
+      pb.start()
+
     } else {
       Process(Seq(processFile.toString)).run()
     }
 
     System.exit(0)
+
   }
 
   // This is for other windows to get their own copy of the menu
