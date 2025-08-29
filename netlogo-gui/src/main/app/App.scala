@@ -620,7 +620,7 @@ class App extends org.nlogo.window.Event.LinkChild
       // and in order for the OS to register the app properly, the .app file needs to be run (Isaac B 7/24/25)
       Process(Seq("open", "-n", "-a", processFile.getParentFile.getParentFile.getParentFile.toString)).run()
     } else {
-      Process(processFile.toString).run()
+      Process(Seq(processFile.toString)).run()
     }
 
     System.exit(0)
