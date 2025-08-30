@@ -16,3 +16,5 @@
 #   architecture: "64"
 #   path:         "/my/favorite/jdk-store/jdk-17.0.2/"
 #
+#
+# NOTE: Even on Windows, you need to use '/' as your directory separator, not '\'!
