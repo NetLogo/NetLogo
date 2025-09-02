@@ -141,8 +141,8 @@ class LibrariesTab( category:        String
     val installCheck = (lib: LibraryInfo) =>
       lib.isVersionRequirementMet(Version.version) && lib.status != LibraryStatus.UpToDate
     val uninstallCheck = (lib: LibraryInfo) => installCheck(lib) && lib.canUninstall
-    perform("uninstalling", uninstall, uninstallCheck)
-    perform("installing", wrappedInstall, installCheck)
+    perform("uninstalling", uninstall, uninstallCheck, true)
+    perform("installing", wrappedInstall, installCheck, false)
   })
 
   private val addToCodeTabButton = new Button(I18N.gui("addToCodeTab"), () => {
@@ -167,7 +167,7 @@ class LibrariesTab( category:        String
   })
 
   private val uninstallButton = new Button(I18N.gui("uninstall"), () => {
-    perform("uninstalling", uninstall, _.canUninstall)
+    perform("uninstalling", uninstall, _.canUninstall, false)
   })
 
   private val info = new TextArea(2, 28)
@@ -396,16 +396,27 @@ class LibrariesTab( category:        String
   private def containsLib(info: LibraryInfo, text: String): Boolean =
     s"${info.name}${info.shortDescription}".toLowerCase.contains(text.toLowerCase)
 
-  private def perform(opName: String, fn: LibraryInfo => Unit, checkIsTarget: LibraryInfo => Boolean) = {
+  // the `silent` parameter prevents recompilation during a multi-step action such as uninstalling
+  // and then reinstalling an extension (Isaac B 9/2/25)
+  private def perform(opName: String, fn: LibraryInfo => Unit, checkIsTarget: LibraryInfo => Boolean,
+                      silent: Boolean) = {
     if (numSelected == 1) {
       updateSingleOperationStatus(opName, selectedValue.name)
       actionIsInProgress = true
-      new Worker(opName, fn, selectedValue, multiple = false, { () => actionIsInProgress = false; finishManagement() }).execute()
+      new Worker(opName, fn, selectedValue, multiple = false, () => {
+        actionIsInProgress = false
+
+        if (!silent)
+          finishManagement()
+      }).execute()
     } else {
       val libs = selectedValues.filter(checkIsTarget).toSeq
       numOperatedLibs = libs.length
       updateMultipleOperationStatus(opName)
-      runAllWorkersAndThen(opName, fn, libs, multiple = true)(() => finishManagement())
+      runAllWorkersAndThen(opName, fn, libs, multiple = true)(() => {
+        if (!silent)
+          finishManagement()
+      })
     }
   }
 
