@@ -7,11 +7,6 @@ if [ $(/usr/bin/id -u) -ne 0 ]; then
   exit 1
 fi
 
-if [ -z "${JLINK}" ] || [ ! -f $JLINK ]; then
-  echo "You must set the JLINK variable to the path of a 'JLink.jar' file"
-  exit 1
-fi
-
 if [ -z "${NL_BUILD_VERSION}" ]; then
   echo "You must set the NL_BUILD_VERSION variable for naming the build artifacts (e.g. NL_BUILD_VERSION=7.0.0)"
   exit 1
@@ -21,7 +16,6 @@ apt install -y docker.io
 docker pull ubuntu:20.04
 
 NL_DOCKER_ID=`sudo docker run -dit ubuntu:20.04 /bin/bash`
-docker cp $JLINK $NL_DOCKER_ID:/root/
 docker cp ./container.sh $NL_DOCKER_ID:/root/
 docker exec $NL_DOCKER_ID bash -c "chmod +x /root/container.sh"
 docker exec $NL_DOCKER_ID /root/container.sh
