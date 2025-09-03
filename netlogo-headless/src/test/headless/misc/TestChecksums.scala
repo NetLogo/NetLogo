@@ -1,12 +1,15 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.headless
-package misc
+package org.nlogo.headless.misc
 
+import java.io.File
+
+import org.nlogo.headless.{ ChecksumsAndPreviews, HeadlessWorkspace }
 import org.nlogo.util.SlowTest
 import org.nlogo.workspace.Checksummer
-import org.scalatest.funsuite.AnyFunSuite
+
 import org.scalatest.{ Args, Status, SucceededStatus }
+import org.scalatest.funsuite.AnyFunSuite
 
 class TestChecksums extends AnyFunSuite  {
 
@@ -65,31 +68,19 @@ class ChecksumTester(val info: String => Unit, versionMismatch: () => Unit = () 
     val actual = Checksummer.calculateWorldChecksum(workspace)
     if (expectedWorldSum != actual) {
       val message = model + "\n  expected world checksum " + expectedWorldSum + "\n  but got " + actual + "\n"
-      if (revisionMatches) {
-        addFailure(message)
-        info("\n" + message)
-        exportWorld(workspace, model)
-      }
-      else {
-        info("version mismatch, ignoring: " + message)
-        return
-      }
+      addFailure(message)
+      info("\n" + message)
+      exportWorld(workspace, model)
     }
     // test view contents checksum
     val actual2 = Checksummer.calculateGraphicsChecksum(workspace)
     if (expectedGraphicsSum != actual2) {
       val message = model + "\n  expected graphics checksum " + expectedGraphicsSum + "\n  but got " + actual2 + "\n"
-      if (revisionMatches) {
-        addFailure(message)
-        info("\n" + message)
-      }
-      else {
-        info("version mismatch, ignoring: " + message)
-        return
-      }
+      addFailure(message)
+      info("\n" + message)
     }
-    new java.io.File("tmp").mkdir()
-    new java.io.File("tmp/TestChecksums").mkdir()
+    new File("tmp").mkdir()
+    new File("tmp/TestChecksums").mkdir()
     val name = model.substring(
       model.lastIndexOf('/'),
       model.lastIndexOf(".nlogox"))
@@ -99,9 +90,9 @@ class ChecksumTester(val info: String => Unit, versionMismatch: () => Unit = () 
   }
 
   def exportWorld(workspace: HeadlessWorkspace, model: String): Unit = {
-    new java.io.File("tmp").mkdir()
-    new java.io.File("tmp/TestChecksums").mkdir()
-    val path = "tmp/TestChecksums/" + new java.io.File(model).getName + ".csv"
+    new File("tmp").mkdir()
+    new File("tmp/TestChecksums").mkdir()
+    val path = "tmp/TestChecksums/" + new File(model).getName + ".csv"
     info("  exporting world to " + path)
     try workspace.exportWorld(path)
     catch {

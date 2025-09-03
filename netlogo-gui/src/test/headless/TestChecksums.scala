@@ -2,14 +2,18 @@
 
 package org.nlogo.headless
 
-import org.nlogo.workspace.Checksummer
-import java.util.concurrent.{Executors, TimeUnit}
+import java.io.File
+import java.util.concurrent.{ Executors, TimeUnit }
+
 import org.nlogo.util.SlowTest
-import org.scalatest._
+import org.nlogo.workspace.Checksummer
+
+import org.scalatest.{ Args, DynaTags, Filter }
+import org.scalatest.funsuite.AnyFunSuite
 
 import scala.language.implicitConversions
 
-class TestChecksums extends funsuite.AnyFunSuite {
+class TestChecksums extends AnyFunSuite {
 
   // overriding this so we can pass in a model filter to run checksums against a single model.
   // example   sbt> checksums model=Echo
@@ -73,7 +77,7 @@ object TestChecksums extends ChecksumTester(println) {
       executor.execute(thunk2runnable(doit))
     }
     executor.shutdown()
-    executor.awaitTermination(java.lang.Integer.MAX_VALUE, TimeUnit.SECONDS)
+    executor.awaitTermination(Integer.MAX_VALUE, TimeUnit.SECONDS)
     // print report of longest runtimes (so we can alter preview commands to not take so long)
     val n = 30
     println(s"$n slowest models:")
@@ -96,48 +100,33 @@ class ChecksumTester(info: String => Unit) {
   def testChecksum(model: String, variant: String, expectedWorldSum: String, expectedGraphicsSum: String, revision: String): Unit = {
     val workspace = HeadlessWorkspace.newInstance
     workspace.silent = true
-    val revisionMatches = revision == ChecksumsAndPreviews.Checksums.getRevisionNumber(model)
     workspace.open(model, true)
     Checksummer.initModelForChecksumming(workspace, variant)
     val actual = Checksummer.calculateWorldChecksum(workspace)
     if (expectedWorldSum != actual) {
       val message = model + "\n  expected world checksum " + expectedWorldSum + "\n  but got " + actual + "\n"
-      if (revisionMatches) {
-        addFailure(message)
-        info("\n" + message)
-        exportWorld(workspace, model)
-      }
-      else {
-        info("version mismatch, ignoring: " + message)
-        workspace.dispose()
-        return
-      }
+      addFailure(message)
+      info("\n" + message)
+      exportWorld(workspace, model)
     }
     // test view contents checksum
     val actual2 = Checksummer.calculateGraphicsChecksum(workspace)
     if (expectedGraphicsSum != actual2) {
       val message = model + "\n  expected graphics checksum " + expectedGraphicsSum + "\n  but got " + actual2 + "\n"
-      if (revisionMatches) {
-        addFailure(message)
-        info("\n" + message)
-      }
-      else {
-        info("version mismatch, ignoring: " + message)
-        workspace.dispose()
-        return
-      }
+      addFailure(message)
+      info("\n" + message)
     }
-    new java.io.File("tmp").mkdir()
-    new java.io.File("tmp/TestChecksums").mkdir()
+    new File("tmp").mkdir()
+    new File("tmp/TestChecksums").mkdir()
     workspace.exportView("tmp/TestChecksums/" + model.substring(model.lastIndexOf('/'), model.lastIndexOf(".nlogox")) + ".png",
       "PNG")
     workspace.dispose()
   }
 
   def exportWorld(workspace: HeadlessWorkspace, model: String): Unit = {
-    new java.io.File("tmp").mkdir()
-    new java.io.File("tmp/TestChecksums").mkdir()
-    val path = "tmp/TestChecksums/" + new java.io.File(model).getName + ".csv"
+    new File("tmp").mkdir()
+    new File("tmp/TestChecksums").mkdir()
+    val path = "tmp/TestChecksums/" + new File(model).getName + ".csv"
     info("  exporting world to " + path)
     try workspace.exportWorld(path)
     catch {
