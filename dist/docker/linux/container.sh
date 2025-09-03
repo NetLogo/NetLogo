@@ -63,9 +63,6 @@ git clone https://github.com/NetLogo/NetLogo
 cd NetLogo
 git submodule update --init --recursive
 
-# Set up Mathematica-Link
-mv /root/JLink.jar /root/NetLogo/Mathematica-Link/
-
 # Create JDK conf file for NL release
 cat > /root/NetLogo/.jdks.yaml << EOF
 - vendor:       "Liberica"
