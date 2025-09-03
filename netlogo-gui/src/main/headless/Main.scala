@@ -179,7 +179,7 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
         return None
 
       } else if (arg == "--3d") {
-        System.setProperty("org.nlogo.is3d", "true")
+        Version.set3D(true)
 
       } else if (arg == "--model") {
         requireHasNext()

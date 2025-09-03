@@ -55,10 +55,16 @@ object ModelResaver {
     val modelPaths = paths.map((s: String) => Paths.get(s))
     System.setProperty("java.awt.headless", "true")
     modelPaths.foreach(p => resaveModel(p))
+    Version.set3D(true)
+    modelPaths.foreach(p => resaveModel(p))
+    Version.set3D(false)
   }
 
   def resaveAllModels(): Unit = {
     traverseModels(Paths.get(modelsRoot), resaveModel)
+    Version.set3D(true)
+    traverseModels(Paths.get(modelsRoot), resaveModel)
+    Version.set3D(false)
   }
 
   lazy val literalParser =
@@ -75,7 +81,7 @@ object ModelResaver {
           .addSerializer[Array[String], NLogoFormat](new NLogoGuiSDMFormat())
       val controller = new ResaveController(modelPath.toUri)
       val dialect =
-        if (modelPath.toString.toUpperCase.endsWith("3D")) NetLogoThreeDDialect
+        if (Version.is3D) NetLogoThreeDDialect
         else NetLogoLegacyDialect
       OpenModelFromURI(modelPath.toUri, controller, modelLoader, converter(dialect), Version).foreach { model =>
         SaveModel(model, modelLoader, controller, ws, Version).map(_.apply()) match {

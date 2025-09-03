@@ -12,7 +12,9 @@ trait Version {
     else
       "NetLogo (no version)"
 
-  val (version, versionDropZeroPatch, buildDate, knownVersions) = {
+  var (version, versionDropZeroPatch, buildDate, knownVersions) = loadVersions()
+
+  private def loadVersions(): (String, String, String, Array[String]) = {
     val lines = Resource.lines("/version.txt").toSeq
 
     val lines2 = Array("NetLogo 3D Preview 5",
@@ -40,6 +42,15 @@ trait Version {
     (version, versionDropZeroPatch, buildDate, knownVersions.map(removeRev).toArray)
   }
 
+  private def reloadVersions(): Unit = {
+    val (version, versionDropZeroPatch, buildDate, knownVersions) = loadVersions()
+
+    this.version = version
+    this.versionDropZeroPatch = versionDropZeroPatch
+    this.buildDate = buildDate
+    this.knownVersions = knownVersions
+  }
+
   def is3D(version: String) =
     Option(version).exists(v =>
       version.containsSlice("3D") || version.containsSlice("3-D"))
@@ -51,6 +62,12 @@ trait Version {
     catch {
       case _: java.security.AccessControlException => false
     }
+
+  def set3D(value: Boolean): Unit = {
+    System.setProperty("org.nlogo.is3d", value.toString)
+
+    reloadVersions()
+  }
 
   // Turning the optimizer off may be useful when testing or modifying the compiler.  This flag is
   // public so we can conditionalize tests on it, since the results of some tests are affected by
