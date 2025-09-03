@@ -114,6 +114,7 @@ jobs:
         , "nogen; headless/Test/fast"
         , "nogen; headless/Test/medium"
         , "behaviorsearchProject/test"
+        , "dist/buildMathematicaLink"
         ]
 
     steps:
