@@ -267,7 +267,7 @@ object App {
       else if (token == "--log-events") logEvents = nextToken()
       else if (token == "--log-directory") logDirectory = nextToken()
       else if (token == "--codetab-window") popOutCodeTab = true
-      else if (token == "--3d") System.setProperty("org.nlogo.is3d", "true")
+      else if (token == "--3d") Version.set3D(true)
       else if (token.startsWith("--")) {
         //TODO: Decide: should we do System.exit() here?
         // Previously we've just ignored unknown parameters, but that seems wrong to me.  ~Forrest (2/12/2009)
