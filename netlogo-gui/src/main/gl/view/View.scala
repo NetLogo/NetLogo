@@ -2,8 +2,8 @@
 
 package org.nlogo.gl.view
 
-import com.jogamp.opengl.GLProfile
-import com.jogamp.opengl.awt.GLCanvas
+import com.jogamp.opengl.{ GLCapabilities, GLProfile }
+import com.jogamp.opengl.awt.GLJPanel
 
 import java.awt.Frame
 import java.awt.event.{ KeyEvent, KeyAdapter, MouseEvent }
@@ -19,7 +19,7 @@ import org.nlogo.window.Event.LinkChild
 abstract class View(title: String, val viewManager: ViewManager, var renderer: Renderer)
   extends Frame(title) with LinkChild with ThemeSync with NetLogoIcon {
 
-  var canvas: GLCanvas = null
+  var canvas: GLJPanel = null
   val picker = new Picker(this)
 
   if (Version.is3D) {
@@ -54,11 +54,11 @@ abstract class View(title: String, val viewManager: ViewManager, var renderer: R
   def updatePerspectiveLabel(): Unit = { }
 
   def createCanvas(antiAliasing: Boolean): Unit = {
-    val capabilities = new com.jogamp.opengl.GLCapabilities(GLProfile.get(GLProfile.GL2))
+    val capabilities = new GLCapabilities(GLProfile.get(GLProfile.GL2))
     capabilities.setSampleBuffers(antiAliasing)
     capabilities.setNumSamples(4)
     capabilities.setStencilBits(1)
-    canvas = new GLCanvas(capabilities)
+    canvas = new GLJPanel(capabilities)
     canvas.addGLEventListener(renderer)
     canvas.addMouseListener(inputHandler)
     canvas.addMouseMotionListener(inputHandler)
