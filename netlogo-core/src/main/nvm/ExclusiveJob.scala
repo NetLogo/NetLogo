@@ -7,7 +7,8 @@ import org.nlogo.api.JobOwner
 import org.nlogo.api.MersenneTwisterFast
 
 class ExclusiveJob(owner: JobOwner, agentset: AgentSet, topLevelProcedure: Procedure,
-                   address: Int, parentContext: Context, workspace: Workspace, random: MersenneTwisterFast)
+                   address: Int, parentContext: Context, workspace: Workspace, random: MersenneTwisterFast,
+                   sibling: Boolean = false)
 extends Job(owner, agentset, topLevelProcedure, address, parentContext, workspace, random) {
 
   override def exclusive = true
@@ -22,7 +23,18 @@ extends Job(owner, agentset, topLevelProcedure, address, parentContext, workspac
     // and one of them hatches; the hatched turtle must not be returned by the shufflerator.
     // - ST 12/5/05, 3/15/06
     val it = agentset.shufflerator(random)
-    val context = new Context(this, null, 0, null, workspace)
+
+    // normally, running an exclusive job creates a new agent context, which changes the values of `self` and `myself`.
+    // the `sibling` flag allows primitives like `carefully` to get the required features of a new nested context while
+    // preserving the values of `self` and `myself`. (Isaac B 9/4/25)
+    val context = {
+      if (sibling) {
+        new Context(this, null, parentContext.myself, 0, null, workspace)
+      } else {
+        new Context(this, null, 0, null, workspace)
+      }
+    }
+
     // if the Job was created by Evaluator, then we may have no parent context - ST 7/11/06
     val runActivation =
       if (parentContext == null)

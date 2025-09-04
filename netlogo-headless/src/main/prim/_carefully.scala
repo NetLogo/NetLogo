@@ -20,7 +20,7 @@ class _carefully(let: Let) extends Command with CustomAssembled with SelfScoping
     val oldBinding = context.activation.binding.copy
     try {
       // start new job that skips over the _goto command
-      context.runExclusiveJob(agentset, next + 1)
+      context.runExclusiveJob(agentset, next + 1, true)
       // move on to the _goto command, which will skip to the end.
       context.ip = next
     }

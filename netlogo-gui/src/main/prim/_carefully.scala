@@ -22,7 +22,7 @@ final class _carefully(let: Let)
     val oldBinding = context.activation.binding
     try { // start new job that skips over the _goto command
       context.activation.binding = context.activation.binding.enterScope
-      context.runExclusiveJob(agentset, next + 1)
+      context.runExclusiveJob(agentset, next + 1, true)
       context.activation.binding = context.activation.binding.exitScope
       // move on to the _goto command, which will skip to the end.
       context.ip = next

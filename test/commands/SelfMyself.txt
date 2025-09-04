@@ -22,3 +22,31 @@ SelfResetsAfterException
   to-report selfish-self let my-who who carefully [ ask other turtles [ error "Derp" ] ] [ ] report who end
   O> crt 2
   [selfish-self] of turtle 0 => 0
+
+AgentContextPreservedInCarefully
+  to-report carefully-self let result -1 carefully [ set result self ] [ ] report result end
+  to-report carefully-myself let result -1 carefully [ set result myself ] [ ] report result end
+  O> crt 1
+  [ who ] of [ carefully-self ] of turtle 0 => 0
+  [ carefully-myself ] of turtle 0 => -1
+
+NestedAgentContextPreservedInCarefully
+  to-report carefully-self let result -1 ask turtle 1 [ carefully [ set result self ] [ ] ] report result end
+  to-report carefully-myself let result -1 ask turtle 1 [ carefully [ set result myself ] [ ] ] report result end
+  O> crt 2
+  [ who ] of [ carefully-self ] of turtle 0 => 1
+  [ who ] of [ carefully-myself ] of turtle 0 => 0
+
+OtherEndInCarefullyTurtle
+  to-report carefully-other-end let result -1 ask link 0 1 [ carefully [ set result other-end ] [ ] ] report result end
+  O> crt 2
+  O> ask turtle 0 [ create-link-with turtle 1 ]
+  [ who ] of [ carefully-other-end ] of turtle 0 => 1
+  [ who ] of [ carefully-other-end ] of turtle 1 => 0
+
+OtherEndInCarefullyLink
+  to-report carefully-other-end [ t ] let result -1 ask t [ carefully [ set result other-end ] [ ] ] report result end
+  O> crt 2
+  O> ask turtle 0 [ create-link-with turtle 1 ]
+  [ who ] of [ carefully-other-end turtle 0 ] of link 0 1 => 1
+  [ who ] of [ carefully-other-end turtle 1 ] of link 0 1 => 0
