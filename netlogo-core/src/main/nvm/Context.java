@@ -12,7 +12,7 @@ public final class Context implements org.nlogo.api.Context {
 
   // these are information about our execution environment
   public final Job job;
-  public Agent myself; // non-final so we needn't always fill it in until requested
+  private final Agent myself;
   public Agent agent;  // non-final to allow Contexts to be re-used within the same Job
   public int agentBit;
 
@@ -38,11 +38,16 @@ public final class Context implements org.nlogo.api.Context {
   // This constructor is used when a Context spawns a Job which
   // in turn spawns Contexts, such as with _ask. - ST 6/12/06
   public Context(Job job, Agent agent, int ip, Activation activation, Workspace workspace) {
+    this(job, agent, job.parentContext == null ? null : job.parentContext.agent, ip, activation, workspace);
+  }
+
+  public Context(Job job, Agent agent, Agent myself, int ip, Activation activation, Workspace workspace) {
     this.job = job;
     this.agent = agent;
     if (agent != null) {
       agentBit = agent.agentBit();
     }
+    this.myself = myself;
     this.ip = ip;
     this.activation = activation;
     this.workspace = workspace;
@@ -134,20 +139,6 @@ public final class Context implements org.nlogo.api.Context {
   }
 
   public Agent myself() {
-    // myself will be non-null if this Context was spawned
-    // directly from another Context, e.g. _with - ST 6/12/06
-    if (myself == null) {
-      if (job.parentContext == null) {
-        // let the caller figure out what to do about it - ST 4/16/13
-        return null;
-      }
-      // ...but if this Context was spawned by a Job (e.g. _ask)
-      // then (to save time) we won't have bothered to fill in
-      // the myself field in this Context, so we go to the
-      // parent context and fill it now that it has been
-      // asked for . - ST 6/12/06
-      myself = job.parentContext.agent;
-    }
     return myself;
   }
 
@@ -160,9 +151,9 @@ public final class Context implements org.nlogo.api.Context {
         || activation != job.parentContext.activation;
   }
 
-  public void runExclusiveJob(AgentSet agentset, int address) {
+  public void runExclusiveJob(AgentSet agentset, int address, boolean sibling) {
     new ExclusiveJob
-        (job.owner, agentset, activation.procedure, address, this, workspace, job.random)
+        (job.owner, agentset, activation.procedure, address, this, workspace, job.random, sibling)
         .run();
     // this next check is here to handle an obscure special case:
     // check if the child has (gasp!) killed its parent
@@ -170,6 +161,10 @@ public final class Context implements org.nlogo.api.Context {
     if (agent._id == -1) {
       finished = true;
     }
+  }
+
+  public void runExclusiveJob(AgentSet agentset, int address) {
+    runExclusiveJob(agentset, address, false);
   }
 
   public Job makeConcurrentJob(AgentSet agentset) {
