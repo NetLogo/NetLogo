@@ -7,8 +7,9 @@ exec scala -classpath bin -deprecation -Dfile.encoding=UTF-8 "$0" "$@"
 // 2) Tab characters
 // 3) Carriage return characters
 
-import sys.process.Process
-import collection.mutable.Buffer
+import scala.collection.mutable.Buffer
+import scala.io.Source
+import scala.sys.process.Process
 
 def ignore(path: String) =
   path.contains("/extensions/gis/") ||
@@ -33,7 +34,7 @@ def paths =
   Process("find" + directories.mkString(" ", " ", " ") + "! -ipath */target/* -and " + extensions.map("-name *." + _).mkString("( ", " -or ", " )")).lazyLines
 
 for(path <- paths.filterNot(ignore)) {
-  val contents = io.Source.fromFile(path).mkString
+  val contents = Source.fromFile(path).mkString
   val problems = Buffer[String]()
   if(contents.nonEmpty && contents.last != '\n')
     problems += "Missing newline at eof"

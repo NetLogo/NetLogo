@@ -183,6 +183,7 @@ lazy val netlogo = project.in(file("netlogo-gui")).
       Process("bash" :: "stage.sh" :: Nil, baseDirectory.value / "colorpicker").!
       Seq(baseDirectory.value / "colorpicker" / "out")
     }.taskValue,
+    resolvers += "jitpack" at "https://jitpack.io",
     libraryDependencies ++= {
       lazy val osName = (System.getProperty("os.name"), System.getProperty("os.arch")) match {
         case (n, _) if n.startsWith("Linux") => "linux"
@@ -212,7 +213,8 @@ lazy val netlogo = project.in(file("netlogo-gui")).
         "com.softwaremill.sttp.client4" %% "core" % "4.0.9",
         "com.softwaremill.sttp.client4" %% "upickle" % "4.0.9",
         "com.softwaremill.sttp.client4" %% "pekko-http-backend" % "4.0.9",
-        "org.apache.pekko" %% "pekko-stream" % "1.1.5"
+        "org.apache.pekko" %% "pekko-stream" % "1.1.5",
+        "com.github.Dansoftowner" % "jSystemThemeDetector" % "3.9.1"
       ) ++ Seq("base", "controls", "graphics", "swing", "web")
         .map(m => "org.openjfx" % s"javafx-$m" % "21.0.6" classifier osName)
     },

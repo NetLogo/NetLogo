@@ -17,6 +17,8 @@ import com.vladsch.flexmark.ext.typographic.TypographicExtension
 import org.nlogo.api.FileIO
 import org.nlogo.theme.InterfaceColors
 
+import scala.io.Source
+
 // This gets tested by TestInfoFormatter. - ST 9/7/10
 
 object InfoFormatter {
@@ -33,7 +35,7 @@ object InfoFormatter {
     println(apply(read(System.in)))
   }
 
-  def read(in: InputStream): String = io.Source.fromInputStream(in).mkString
+  def read(in: InputStream): String = Source.fromInputStream(in).mkString
 
   def styleSheetFile: CSS = FileIO.getResourceAsString("/system/info.css")
   val defaultFontSize = 14

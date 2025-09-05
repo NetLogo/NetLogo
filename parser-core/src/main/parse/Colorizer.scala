@@ -2,10 +2,11 @@
 
 package org.nlogo.parse
 
-import
-  java.awt.Color,
-  org.nlogo.core,
-    core.{ ColorizerTheme, Program, Token, TokenType, TokenColorizer }
+import java.awt.Color
+
+import org.nlogo.core.{ ColorizerTheme, Program, Token, TokenColorizer, TokenType }
+
+import scala.io.Source
 
 // code in, HTML out!
 
@@ -13,7 +14,7 @@ object Colorizer extends TokenColorizer {
 
   // for standalone use, for example on a web server
   def main(argv: Array[String]): Unit = {
-    for (line <- io.Source.fromInputStream(System.in).getLines())
+    for (line <- Source.fromInputStream(System.in).getLines())
       println(Colorizer.toHtml(line, ColorizerTheme.Light))
   }
 

@@ -9,11 +9,13 @@ import javax.imageio.ImageIO
 
 import org.nlogo.core.FileMode
 
+import scala.io.Source
+
 object FileIO {
 
   @throws(classOf[java.io.IOException])
   def fileToString(file: java.io.File) = {
-    val f = io.Source.fromFile(file, "UTF-8")
+    val f = Source.fromFile(file, "UTF-8")
     val result = f.mkString
     f.close()
     result
@@ -21,7 +23,7 @@ object FileIO {
 
   @throws(classOf[java.io.IOException])
   def fileToString(path: String) = {
-    val file = io.Source.fromFile(path, "UTF-8")
+    val file = Source.fromFile(path, "UTF-8")
     val result = file.mkString
     file.close()
     result
@@ -29,7 +31,7 @@ object FileIO {
 
   @throws(classOf[java.io.IOException])
   def fileToString(path: String, encoding: String) = {
-    val file = io.Source.fromFile(path, "UTF-8")
+    val file = Source.fromFile(path, "UTF-8")
     val result = file.mkString
     file.close()
     result

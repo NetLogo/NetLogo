@@ -2,6 +2,8 @@
 
 package org.nlogo.sdm
 
+import scala.io.Source
+
 // in the GUI we load and save the diagram using JHotDraw's built-in facilities for that.  headless,
 // we can't use the JHotDraw stuff because it depends on AWT and Swing, so we have to roll our own
 // loading stuff. we also use this in the applet since we don't want to have to include JHotDraw in
@@ -11,7 +13,7 @@ object Loader {
 
   def load(input: String): Option[Model] = {
     val lines =
-      io.Source.fromString(mungeClassNames(input))
+      Source.fromString(mungeClassNames(input))
         .getLines()
         .map(_.trim)
         .filter(_.nonEmpty)
