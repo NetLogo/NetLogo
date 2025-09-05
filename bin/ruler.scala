@@ -4,7 +4,8 @@ exec scala -classpath bin -deprecation -Dfile.encoding=UTF-8 "$0" "$@"
 
 /// count lines of code in NetLogo source tree
 
-import sys.process.Process
+import scala.io.Source
+import scala.sys.process.Process
 
 val format = "%25s: %6d unique, %6d total  (%3d%% Scala)\n"
 var tj, tuj, ts, tus = 0 // totals. u = unique, j = Java, s = Scala
@@ -20,7 +21,7 @@ def names(dir: String, extension: String, flatten: Boolean) =
 
 def lines(dir: String, extension: String, flatten: Boolean): List[String] =
   names(dir, extension, flatten)
-    .flatMap(io.Source.fromFile(_).getLines)
+    .flatMap(Source.fromFile(_).getLines)
     .toList
 def dirs(root: String) =
   Process(Seq("find", root, "-type", "d"))

@@ -10,6 +10,8 @@ import org.nlogo.api.{ FileIO, Perspective, Version }
 import org.nlogo.workspace.Checksummer
 import org.nlogo.util.SlowTest
 
+import scala.io.Source
+
 class TestImportExport extends AnyFunSuite with AbstractTestLanguage
 with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
 
@@ -72,7 +74,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
   }
 
   def dropLines(s: String, n: Int): String =
-    io.Source.fromString(s).getLines().drop(n).mkString("\n")
+    Source.fromString(s).getLines().drop(n).mkString("\n")
 
   /// tests that use roundTripHelper
 

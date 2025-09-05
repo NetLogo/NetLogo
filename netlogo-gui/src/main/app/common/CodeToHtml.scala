@@ -12,10 +12,12 @@ import org.nlogo.swing.UserAction,
 import org.nlogo.theme.{ ClassicTheme, DarkTheme, InterfaceColors, LightTheme }
 import org.nlogo.workspace.AbstractWorkspace
 
+import scala.io.Source
+
 object CodeToHtml {
   // for standalone use, for example on a web server
   def main(argv:Array[String]): Unit = {
-    val input = io.Source.fromInputStream(System.in).mkString
+    val input = Source.fromInputStream(System.in).mkString
     println(newInstance.convert(input))
   }
 

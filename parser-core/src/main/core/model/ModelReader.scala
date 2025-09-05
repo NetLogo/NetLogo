@@ -4,6 +4,8 @@ package org.nlogo.core.model
 
 import org.nlogo.core.{ LiteralParser, Model, ShapeParser }
 
+import scala.io.Source
+
 object ModelReader {
 
   val SEPARATOR = "@#$#@#$#@"
@@ -19,7 +21,7 @@ object ModelReader {
       sections :+= sectionContents
       sectionContents = Vector()
     }
-    for(line <- io.Source.fromString(model).getLines())
+    for(line <- Source.fromString(model).getLines())
       if(line.startsWith(SEPARATOR))
         sectionDone()
       else
