@@ -8,11 +8,10 @@ import java.awt.{ Dimension, EventQueue, Frame, GraphicsEnvironment, KeyboardFoc
 import java.awt.datatransfer.DataFlavor
 import java.awt.dnd.{ DropTarget, DropTargetDragEvent, DropTargetDropEvent, DropTargetEvent, DropTargetListener }
 import java.awt.event.ActionEvent
-import java.io.{ BufferedReader, ByteArrayInputStream, File, InputStreamReader }
+import java.io.File
 import java.lang.ProcessHandle
-import java.net.URL
+import java.net.{ ConnectException, URI, URL }
 import java.util.{ List => JList }
-import java.util.zip.GZIPInputStream
 import javax.swing.{ JFrame, JMenu }
 
 import scala.concurrent.ExecutionContext
@@ -21,28 +20,40 @@ import scala.sys.process.Process
 
 import org.nlogo.agent.{ Agent, World2D, World3D }
 import org.nlogo.analytics.Analytics
-import org.nlogo.api._
+import org.nlogo.agent.{ CompilationManagement, World }
+import org.nlogo.api.{ Agent => ApiAgent, AggregateManagerInterface, AnnouncementsInfoDownloader, APIVersion,
+                       Exceptions, FileIO, LogoException, MetadataLoadingException, ModelReader, ModelSections,
+                       ModelType, NetLogoLegacyDialect, NetLogoThreeDDialect, RendererInterface, SimpleJobOwner,
+                       Version }
 import org.nlogo.app.codetab.{ ExternalFileManager, TemporaryCodeTab }
-import org.nlogo.app.common.{ CodeToHtml, Events => AppEvents, FileActions, FindDialog }
+import org.nlogo.app.common.{ Events => AppEvents, FileActions, FindDialog }
 import org.nlogo.app.interfacetab.{ CommandCenter, InterfaceTab, InterfaceWidgetControls, WidgetPanel }
 import org.nlogo.app.tools.{ AgentMonitorManager, GraphicsPreview, LibraryManagerErrorDialog, PreviewCommandsEditor }
 import org.nlogo.awt.UserCancelException
+import org.nlogo.compile.Compiler
 import org.nlogo.core.{ AgentKind, CompilerException, ExternalResource, I18N, Model, ModelSettings, NetLogoPreferences,
-  Shape, Widget => CoreWidget }, Shape.{ LinkShape, VectorShape }
+                        Shape, Widget => CoreWidget },
+  Shape.{ LinkShape, VectorShape }
+import org.nlogo.fileformat.FileFormat
+import org.nlogo.gl.view.ViewManager
+import org.nlogo.headless.{ HeadlessWorkspace, Main }
+import org.nlogo.hubnet.server.gui.HubNetManagerFactory
+import org.nlogo.lab.gui.LabManager
 import org.nlogo.log.{ JsonFileLogger, LogEvents, LogManager }
 import org.nlogo.nvm.{ PresentationCompilerInterface, Workspace }
-import org.nlogo.shape.{ LinkShapesManagerInterface, ShapesManagerInterface, TurtleShapesManagerInterface }
-import org.nlogo.swing.{ DropdownOptionPane, InputOptionPane, OptionPane, SetSystemLookAndFeel, UserAction, Utils },
+import org.nlogo.render.Renderer
+import org.nlogo.sdm.gui.{ GUIAggregateManager, NLogoGuiSDMFormat, NLogoThreeDGuiSDMFormat, SDMGuiAutoConvertable }
+import org.nlogo.shape.editor.{ LinkShapeManagerDialog, TurtleShapeManagerDialog }
+import org.nlogo.swing.{ DropdownOptionPane, InputOptionPane, Menu, OptionPane, Positioning, SetSystemLookAndFeel,
+                         UserAction, Utils },
   UserAction.{ ActionCategoryKey, EditCategory, FileCategory, HelpCategory, MenuAction, ToolsCategory }
 import org.nlogo.theme.{ ClassicTheme, DarkTheme, InterfaceColors, LightTheme, ThemeSync }
-import org.nlogo.util.{ NullAppHandler, Pico }
+import org.nlogo.util.AppHandler
 import org.nlogo.window._
+import org.nlogo.window.{ MenuBarFactory => WindowMenuBarFactory }
+import org.nlogo.window.Event.LinkChild
 import org.nlogo.window.Events._
-import org.nlogo.workspace.{ AbstractWorkspace, AbstractWorkspaceScala, Controllable, HubNetManagerFactory,
-                             ModelsLibrary, WorkspaceFactory }
-
-import org.picocontainer.parameters.{ ComponentParameter, ConstantParameter }
-import org.picocontainer.Parameter
+import org.nlogo.workspace.{ AbstractWorkspace, AbstractWorkspaceScala, Controllable, ModelsLibrary, WorkspaceFactory }
 
 /**
  * The main class for the complete NetLogo application.
@@ -55,17 +66,33 @@ import org.picocontainer.Parameter
  * for example code.
  */
 object App {
-  private val pico = new Pico()
-  // all these guys are assigned in main. yuck
+  sealed abstract trait ModelArgType
+
+  object ModelArgType {
+    case class Model(file: String) extends ModelArgType
+    case class Magic(name: String) extends ModelArgType
+    case class Url(url: String) extends ModelArgType
+  }
+
+  case class CommandLineArgs(
+    launch: Boolean = false,
+    model: Option[ModelArgType] = None,
+    logEvents: Option[String] = None,
+    logDirectory: Option[String] = None,
+    popOutCodeTab: Boolean = false,
+    colorTheme: String = NetLogoPreferences.get("colorTheme", {
+      if (OsThemeDetector.getDetector.isDark) {
+        "dark"
+      } else {
+        "light"
+      }
+    })
+  )
+
+  // ideally this would be an Option[App], but that would break all the code that uses App.app,
+  // so it's not worth changing at this point (Isaac B 8/24/25)
   var app: App = null
-  private var commandLineModelIsLaunch = false
-  private var commandLineModel: String = null
-  private var commandLineMagic: String = null
-  private var commandLineURL: String = null
-  private var logEvents: String = null
-  private var logDirectory: String = null
-  private var popOutCodeTab = false
-  private var colorTheme: String = null
+
   /**
    * Should be called once at startup to create the application and
    * start it running.  May not be called more than once.  Once
@@ -79,13 +106,15 @@ object App {
    *             is not currently documented.)
    */
   def main(args: Array[String]): Unit = {
-    mainWithAppHandler(args, NullAppHandler)
+    mainWithAppHandler(args, new AppHandler)
   }
 
-  def mainWithAppHandler(args: Array[String], appHandler: Object): Unit = {
+  def mainWithAppHandler(args: Array[String], appHandler: AppHandler): Unit = {
     val lowerArgs = args.map(_.trim.toLowerCase)
+
     if (lowerArgs.contains("--headless") || lowerArgs.contains("--help")) {
-      org.nlogo.headless.Main.main(args)
+      Main.main(args)
+
       return
     }
 
@@ -103,91 +132,27 @@ object App {
         Utils.setUIScale(scale)
       }
 
-      // this call is reflective to avoid complicating dependencies
-      appHandler.getClass.getDeclaredMethod("init").invoke(appHandler)
+      appHandler.init()
 
       AbstractWorkspace.isApp(true)
-      org.nlogo.window.VMCheck.detectBadJVMs()
-      processCommandLineArguments(args)
+      VMCheck.detectBadJVMs()
+
+      val cmdArgs = processCommandLineArguments(args)
+
       Splash.beginSplash() // also initializes AWT
-      pico.add("org.nlogo.compile.Compiler")
-      if (Version.is3D)
-        pico.addScalaObject("org.nlogo.api.NetLogoThreeDDialect")
-      else
-        pico.addScalaObject("org.nlogo.api.NetLogoLegacyDialect")
 
-      if (Version.systemDynamicsAvailable) {
-        pico.add("org.nlogo.sdm.gui.NLogoGuiSDMFormat")
-        pico.add("org.nlogo.sdm.gui.NLogoThreeDGuiSDMFormat")
-      }
-      pico.addScalaObject("org.nlogo.sdm.gui.SDMGuiAutoConvertable")
+      SetSystemLookAndFeel.setSystemLookAndFeel()
 
-      pico.addAdapter(new Adapters.AnyModelLoaderComponent())
-
-      pico.addAdapter(new Adapters.ModelConverterComponent())
-
-      pico.addComponent(classOf[CodeToHtml])
-      pico.addComponent(classOf[App])
-      pico.addComponent(classOf[ModelSaver])
-      pico.add("org.nlogo.gl.view.ViewManager")
-      // Anything that needs a parent Frame, we need to use ComponentParameter
-      // and specify classOf[AppFrame], otherwise PicoContainer won't know which
-      // Frame to use - ST 6/16/09
-      pico.add(classOf[TurtleShapesManagerInterface],
-            "org.nlogo.shape.editor.TurtleShapeManagerDialog",
-            Array[Parameter] (
-              new ComponentParameter(classOf[AppFrame]),
-              new ComponentParameter(), new ComponentParameter()))
-      pico.add(classOf[LinkShapesManagerInterface],
-            "org.nlogo.shape.editor.LinkShapeManagerDialog",
-            Array[Parameter] (
-              new ComponentParameter(classOf[AppFrame]),
-              new ComponentParameter(), new ComponentParameter()))
-      pico.add("org.nlogo.lab.gui.LabManager")
-      pico.addComponent(classOf[EditDialogFactory])
-      // we need to make HeadlessWorkspace objects for BehaviorSpace to use.
-      // HeadlessWorkspace uses picocontainer too, but it could get confusing
-      // to use the same container in both places, so I'm going to keep the
-      // containers separate and just use Plain Old Java Reflection to
-      // call HeadlessWorkspace's newInstance() method. - ST 3/11/09
-      // And we'll conveniently reuse it for the preview commands editor! - NP 2015-11-18
-      val factory = new WorkspaceFactory {
-        def newInstance: AbstractWorkspaceScala =
-          Class.forName("org.nlogo.headless.HeadlessWorkspace")
-            .getMethod("newInstance").invoke(null).asInstanceOf[AbstractWorkspaceScala]
-        def openCurrentModelIn(w: Workspace): Unit = {
-          w.setModelPath(app.workspace.getModelPath)
-          w.openModel(pico.getComponent(classOf[ModelSaver]).currentModelInCurrentVersion)
-        }
-      }
-
-      pico.addComponent(classOf[WorkspaceFactory], factory)
-      pico.addComponent(classOf[GraphicsPreview])
-      pico.addComponent(classOf[ExternalFileManager])
-      pico.add(
-        classOf[PreviewCommandsEditorInterface],
-        "org.nlogo.app.tools.PreviewCommandsEditor",
-        new ComponentParameter(classOf[AppFrame]),
-        new ComponentParameter(), new ComponentParameter())
-      pico.add(classOf[MainMenuBar], "org.nlogo.app.MainMenuBar",
-        new ConstantParameter(AbstractWorkspace.isApp))
-      pico.add(classOf[CommandCenter], "org.nlogo.app.interfacetab.CommandCenter", new ComponentParameter(),
-               new ConstantParameter(true))
-      pico.add("org.nlogo.app.interfacetab.InterfaceTab")
-      pico.addComponent(classOf[AgentMonitorManager])
+      InterfaceColors.setTheme(cmdArgs.colorTheme match {
+        case "classic" => ClassicTheme
+        case "light" => LightTheme
+        case "dark" => DarkTheme
+      })
 
       System.setProperty("flatlaf.menuBarEmbedded", "false")
       System.setProperty("sun.awt.noerasebackground", "true") // stops view2.5d and 3d windows from blanking to white until next interaction
 
-      app = pico.getComponent(classOf[App])
-
-      pico.add(classOf[AggregateManagerInterface],
-        "org.nlogo.sdm.gui.GUIAggregateManager",
-        Array[Parameter] (
-          new ComponentParameter(classOf[AppFrame]),
-          new ComponentParameter(), new ComponentParameter(),
-          new ComponentParameter(), new ComponentParameter(),
-          new ConstantParameter(app.workspace.getExtensionManager)))
+      app = new App(cmdArgs)
 
       // It's pretty silly, but in order for the splash screen to show up
       // for more than a fraction of a second, we want to initialize as
@@ -198,139 +163,241 @@ object App {
       // exceptions because we're doing too much on the main thread.
           // Hey, it's important to make a good first impression.
       //   - ST 8/19/03
-      org.nlogo.awt.EventQueue.invokeAndWait(() => app.finishStartup(appHandler))
-    }
-    catch {
-      case ex: java.lang.Throwable =>
+      EventQueue.invokeAndWait(() => app.finishStartup(appHandler))
+    } catch {
+      case ex: Throwable =>
         StartupError.report(ex)
-        return
     }
-
   }
 
-  private def processCommandLineArguments(args: Array[String]): Unit = {
+  // note: this method is static so that it can be called from main()
+  // before App is instantiated, which means we can use the --version
+  // flags without the AWT ever being initialized, which is handy when
+  // we're at the command line and need the version but can't do GUI stuff
+  // (e.g. if we're on Linux but don't have the DISPLAY environment variable
+  // set) - ST 4/1/02
+  private def processCommandLineArguments(args: Array[String]): CommandLineArgs = {
     def printAndExit(s: String): Unit = {
       println(s)
       sys.exit(0)
     }
 
-    // note: this method is static so that it can be called from main()
-    // before App is instantiated, which means we can use the --version
-    // flags without the AWT ever being initialized, which is handy when
-    // we're at the command line and need the version but can't do GUI stuff
-    // (e.g. if we're on Linux but don't have the DISPLAY environment variable
-    // set) - ST 4/1/02
-    var i = 0
-    def nextToken() = { val t = args(i); i += 1; t }
-    def moreTokens = i < args.length
-    while(moreTokens){
-      val token = nextToken()
-      if (token == "--events") org.nlogo.window.Event.logEvents = true;
-      else if (token == "--open" || token == "--launch") {
-        commandLineModelIsLaunch = token == "--launch"
-        require(commandLineModel == null &&
-                commandLineMagic == null &&
-                commandLineURL == null,
-          "Error parsing command line arguments: you can only specify one model to open at startup.")
-        val fileToken = nextToken()
-        val modelFile = new java.io.File(fileToken)
-        // Best to check if the file exists here, because after the GUI thread has started,
-        // NetLogo just hangs with the splash screen showing if file doesn't exist. ~Forrest (2/12/2009)
-        if (!modelFile.exists) throw new IllegalStateException(I18N.errors.getN("fileformat.notFound", fileToken))
-        commandLineModel = modelFile.getAbsolutePath()
-      }
-      else if (token == "--magic") {
-        require(commandLineModel == null &&
-                commandLineMagic == null &&
-                commandLineURL == null)
-        commandLineMagic = nextToken()
-      }
-      else if (token == "--url") {
-        require(commandLineModel == null &&
-                commandLineMagic == null &&
-                commandLineURL == null)
-        commandLineURL = nextToken()
-      }
-      else if (token == "--color-theme") {
-        colorTheme = nextToken()
+    val iter = args.iterator
 
-        colorTheme match {
-          case "classic" =>
-          case "light" =>
-          case _ => throw new IllegalArgumentException(I18N.errors.getN("themes.unknown", colorTheme))
-        }
-      }
-      else if (token == "--version") printAndExit(Version.version)
-      else if (token == "--extension-api-version") printAndExit(APIVersion.version)
-      else if (token == "--builddate") printAndExit(Version.buildDate)
-      else if (token == "--log-events") logEvents = nextToken()
-      else if (token == "--log-directory") logDirectory = nextToken()
-      else if (token == "--codetab-window") popOutCodeTab = true
-      else if (token == "--3d") Version.set3D(true)
-      else if (token.startsWith("--")) {
-        //TODO: Decide: should we do System.exit() here?
-        // Previously we've just ignored unknown parameters, but that seems wrong to me.  ~Forrest (2/12/2009)
-        System.err.println("Error: Unknown command line argument: " + token)
-      }
-      else { // we assume it's a filename to "launch"
-        commandLineModelIsLaunch = true
-        require(commandLineModel == null &&
-                commandLineMagic == null &&
-                commandLineURL == null,
-          "Error parsing command line arguments: you can only specify one model to open at startup.")
-        val modelFile = new java.io.File(token)
-        // Best to check if the file exists here, because after the GUI thread has started,
-        // NetLogo just hangs with the splash screen showing if file doesn't exist. ~Forrest (2/12/2009)
-        if (!modelFile.exists())
-          throw new IllegalStateException(I18N.errors.getN("fileformat.notFound", token))
-        commandLineModel = modelFile.getAbsolutePath()
+    def requireAndGet(message: String): String = {
+      require(iter.hasNext, message)
+      iter.next
+    }
+
+    var current = CommandLineArgs()
+
+    while (iter.hasNext) {
+      iter.next match {
+        case "--version" => printAndExit(Version.version)
+        case "--extension-api-version" => printAndExit(APIVersion.version)
+        case "--builddate" => printAndExit(Version.buildDate)
+        case "--events" => Event.logEvents = true
+
+        case token @ ("--open" | "--launch") =>
+          require(current.model.isEmpty, I18N.errors.get("args.oneModel"))
+
+          val next = requireAndGet(I18N.errors.getN("args.noFile", token))
+          val file = new File(next)
+
+          // Best to check if the file exists here, because after the GUI thread has started,
+          // NetLogo just hangs with the splash screen showing if file doesn't exist. ~Forrest (2/12/2009)
+          require(file.exists, I18N.errors.getN("fileformat.notFound", next))
+
+          current = current.copy(launch = token == "--launch", model = Some(ModelArgType.Model(file.getAbsolutePath)))
+
+        case "--magic" =>
+          require(current.model.isEmpty, I18N.errors.get("args.oneModel"))
+
+          current = current.copy(model = Some(ModelArgType.Magic(requireAndGet(I18N.errors.get("args.noName")))))
+
+        case "--url" =>
+          require(current.model.isEmpty, I18N.errors.get("args.oneModel"))
+
+          current = current.copy(model = Some(ModelArgType.Url(requireAndGet(I18N.errors.get("args.noUrl")))))
+
+        case "--color-theme" =>
+          val next = requireAndGet(I18N.errors.get("args.noTheme"))
+
+          require(next == "classic" || next == "light" || next == "dark", I18N.errors.getN("themes.unknown", next))
+
+          current = current.copy(colorTheme = next)
+
+        case "--log-events" =>
+          current = current.copy(logEvents = Option(requireAndGet(I18N.errors.get("args.noEvents"))))
+
+        case "--log-directory" =>
+          current = current.copy(logDirectory = Option(requireAndGet(I18N.errors.get("args.noDirectory"))))
+
+        case "--codetab-window" =>
+          current = current.copy(popOutCodeTab = true)
+
+        case "--3d" =>
+          Version.set3D(true)
+
+        case token if token.startsWith("--") =>
+          // TODO: Decide: should we do System.exit() here?
+          // Previously we've just ignored unknown parameters, but that seems wrong to me.  ~Forrest (2/12/2009)
+          System.err.println("Error: Unknown command line argument: " + token)
+
+        case token => // we assume it's a filename to "launch"
+          require(current.model.isEmpty, I18N.errors.get("args.oneModel"))
+
+          val file = new File(token)
+
+          // Best to check if the file exists here, because after the GUI thread has started,
+          // NetLogo just hangs with the splash screen showing if file doesn't exist. ~Forrest (2/12/2009)
+          require(file.exists, I18N.errors.getN("fileformat.notFound", token))
+
+          current = current.copy(launch = true, model = Some(ModelArgType.Model(file.getAbsolutePath)))
       }
     }
+
+    current
   }
 }
 
-class App extends org.nlogo.window.Event.LinkChild
-  with org.nlogo.api.Exceptions.Handler
-  with AppEvent.Handler
-  with BeforeLoadEvent.Handler
-  with LoadBeginEvent.Handler
-  with LoadEndEvent.Handler
-  with LoadModelEvent.Handler
-  with ModelSavedEvent.Handler
-  with ModelSections
-  with AppEvents.SwitchedTabsEvent.Handler
-  with AppEvents.OpenLibrariesDialogEvent.Handler
-  with AppEvents.RestartEvent.Handler
-  with AboutToQuitEvent.Handler
-  with ZoomedEvent.Handler
-  with Controllable {
+class App(args: App.CommandLineArgs) extends LinkChild with Exceptions.Handler with AppEvent.Handler
+  with BeforeLoadEvent.Handler with LoadBeginEvent.Handler with LoadEndEvent.Handler with LoadModelEvent.Handler
+  with ModelSavedEvent.Handler with ModelSections with AppEvents.SwitchedTabsEvent.Handler
+  with AppEvents.OpenLibrariesDialogEvent.Handler with AppEvents.RestartEvent.Handler with AboutToQuitEvent.Handler
+  with ZoomedEvent.Handler with Controllable {
 
-  import App.{ pico, commandLineMagic, commandLineModel, commandLineURL, commandLineModelIsLaunch, logDirectory, logEvents, popOutCodeTab }
   val frame = new AppFrame
+
   def getFrame = frame
 
-  // all these guys get set in the locally block
-  private var _workspace: GUIWorkspace = null
-  def workspace = _workspace
-  lazy val owner = new SimpleJobOwner("App", workspace.world.mainRNG, AgentKind.Observer)
-  private var _tabManager: TabManager = null
-  def tabManager = _tabManager
-  var menuBar: MainMenuBar = null
-  var _fileManager: FileManager = null
-  var monitorManager: AgentMonitorManager = null
-  def getMonitorManager = monitorManager
-  var aggregateManager: AggregateManagerInterface = null
-  var dirtyMonitor: DirtyMonitor = null
-  var labManager: LabManagerInterface = null
-  var recentFilesMenu: RecentFilesMenu = null
-  private var errorDialogManager: ErrorDialogManager = null
+  private val world: World & CompilationManagement = {
+    if (Version.is3D) {
+      new World3D
+    } else {
+      new World2D
+    }
+  }
+
+  private val editDialogFactory = new EditDialogFactory
+
+  private val interfaceFactory = new InterfaceFactory {
+    def widgetPanel(workspace: GUIWorkspace): AbstractWidgetPanel =
+      new WidgetPanel(workspace)
+
+    def widgetControls(wp: AbstractWidgetPanel, workspace: GUIWorkspace, buttons: List[WidgetInfo], frame: Frame) =
+      new InterfaceWidgetControls(wp.asInstanceOf[WidgetPanel], workspace, buttons, frame, editDialogFactory)
+  }
+
+  private val menuBarFactory = new MenuBarFactory
+  private val externalFileManager = new ExternalFileManager
   private val listenerManager = new NetLogoListenerManager
   private val themeSyncManager = new ThemeSyncManager
-  private val runningInMacWrapper = Option(System.getProperty("org.nlogo.mac.appClassName")).nonEmpty
-  private val ImportWorldURLProp = "netlogo.world_state_url"
-  private val ImportRawWorldURLProp = "netlogo.raw_world_state_url"
 
-  val isMac = System.getProperty("os.name").startsWith("Mac")
+  private val errorDialogManager =
+    new ErrorDialogManager(frame, Map(classOf[MetadataLoadingException] -> new LibraryManagerErrorDialog(frame)))
+
+  private val controlSet = new AppControlSet
+
+  val workspace: GUIWorkspace = new GUIWorkspace(world, GUIWorkspace.KioskLevel.None, frame, frame,
+                                                 new HubNetManagerFactory(frame, interfaceFactory, menuBarFactory),
+                                                 externalFileManager, listenerManager, errorDialogManager,
+                                                 controlSet) {
+    val compiler = new Compiler(
+      if (Version.is3D) {
+        NetLogoThreeDDialect
+      } else {
+        NetLogoLegacyDialect
+      }
+    )
+
+    // lazy to avoid initialization order snafu - ST 3/1/11
+    lazy val updateManager = new UpdateManager {
+      override def defaultFrameRate = frameRate
+      override def ticks = workspace.world.tickCounter.ticks
+      override def updateMode = workspace.updateMode
+    }
+
+    def aggregateManager: AggregateManagerInterface =
+      new GUIAggregateManager(frame, menuBarFactory, this, colorizer, editDialogFactory, extensionManager)
+
+    def inspectAgent(agent: ApiAgent, radius: Double): Unit = {
+      agent match {
+        case a: Agent =>
+          monitorManager.inspect(a.kind, a, radius)
+
+        case _ =>
+      }
+    }
+
+    override def inspectAgent(agentClass: AgentKind, agent: Agent, radius: Double): Unit = {
+      monitorManager.inspect(agentClass, agent, radius)
+    }
+
+    override def stopInspectingAgent(agent: Agent): Unit = {
+      monitorManager.stopInspecting(agent)
+    }
+
+    override def stopInspectingDeadAgents(): Unit = {
+      monitorManager.stopInspectingDeadAgents()
+    }
+
+    override def closeAgentMonitors(): Unit = {
+      monitorManager.closeAll()
+    }
+
+    override def newRenderer: RendererInterface =
+      new Renderer(this.world)
+
+    def updateModel(model: Model): Model =
+      model.withOptionalSection("org.nlogo.modelsection.modelsettings", Some(ModelSettings(snapOn)),
+                                Some(ModelSettings(false)))
+  }
+
+  private val monitorManager = new AgentMonitorManager(workspace)
+  private val colorizer = new EditorColorizer(workspace)
+
+  private val interfaceTab = new InterfaceTab(workspace, monitorManager, editDialogFactory, colorizer,
+                                              new CommandCenter(workspace, true))
+
+  private val modelLoader = FileFormat.standardAnyLoader(false, workspace, true)
+  private val modelSaver = new ModelSaver(this, modelLoader)
+
+  val tabManager = new TabManager(workspace, interfaceTab, externalFileManager)
+
+  private val dirtyMonitor = new DirtyMonitor(frame, modelSaver, modelLoader, workspace,
+                                              _.fold(modelTitle())(externalFileTitle), tabManager.separateTabsWindow)
+
+  private val converter = FileFormat.converter(workspace.getExtensionManager, workspace.getLibraryManager,
+                                               workspace.getCompilationEnvironment, workspace,
+                                               FileFormat.defaultAutoConvertables :+ SDMGuiAutoConvertable)
+                                              (workspace.dialect)
+
+  private val mainMenuBar = new MainMenuBar(AbstractWorkspace.isApp)
+
+  private val workspaceFactory = new WorkspaceFactory {
+    def newInstance: AbstractWorkspaceScala = HeadlessWorkspace.newInstance
+
+    def openCurrentModelIn(w: Workspace): Unit = {
+      w.setModelPath(workspace.getModelPath)
+      w.openModel(modelSaver.currentModelInCurrentVersion)
+    }
+  }
+
+  val fileManager = new FileManager(workspace, modelLoader, converter, dirtyMonitor, modelSaver, mainMenuBar,
+                                    frame, tabManager, workspaceFactory)
+
+  private val recentFilesMenu = new RecentFilesMenu(frame, fileManager)
+
+  private val labManager = new LabManager(workspace, editDialogFactory, colorizer, menuBarFactory, workspaceFactory,
+                                          modelLoader)
+
+  private val turtleShapesManager = new TurtleShapeManagerDialog(frame, world, modelLoader)
+  private val linkShapesManager = new LinkShapeManagerDialog(frame, world, modelLoader)
+
+  private lazy val owner = new SimpleJobOwner("App", world.mainRNG, AgentKind.Observer)
+
+  private val runningInMacWrapper = Option(System.getProperty("org.nlogo.mac.appClassName")).nonEmpty
 
   private val analyticsConsent = NetLogoPreferences.get("sendAnalytics", "$$$") == "$$$"
 
@@ -341,151 +408,64 @@ class App extends org.nlogo.window.Event.LinkChild
   // part of controlling API; used by e.g. the Mathematica-NetLogo link
   // - ST 8/21/07
   @throws(classOf[UserCancelException])
-  def quit(): Unit ={ fileManager.quit() }
+  def quit(): Unit = {
+    fileManager.quit()
+  }
 
   locally {
     frame.addLinkComponent(this)
-    pico.addComponent(frame)
-
-    if (App.colorTheme == null) {
-      val defaultTheme = {
-        if (OsThemeDetector.getDetector.isDark) {
-          "dark"
-        } else {
-          "light"
-        }
-      }
-
-      App.colorTheme = NetLogoPreferences.get("colorTheme", defaultTheme)
-    }
-
-    SetSystemLookAndFeel.setSystemLookAndFeel()
-
-    InterfaceColors.setTheme(App.colorTheme match {
-      case "classic" => ClassicTheme
-      case "light" => LightTheme
-      case "dark" => DarkTheme
-    })
-
-    errorDialogManager = new ErrorDialogManager(frame,
-      Map(classOf[MetadataLoadingException] -> new LibraryManagerErrorDialog(frame)))
-
-    org.nlogo.api.Exceptions.setHandler(this)
-    Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
-      def uncaughtException(t: Thread, e: Throwable): Unit = { org.nlogo.api.Exceptions.handle(e) }
-    })
-
-    val interfaceFactory = new InterfaceFactory() {
-      def widgetPanel(workspace: GUIWorkspace): AbstractWidgetPanel =
-        new WidgetPanel(workspace)
-      def widgetControls(wp: AbstractWidgetPanel, workspace: GUIWorkspace, buttons: List[WidgetInfo], frame: Frame) = {
-        new InterfaceWidgetControls(wp.asInstanceOf[WidgetPanel], workspace, buttons, frame,
-          pico.getComponent(classOf[EditDialogFactory]))
-      }
-    }
-    pico.add(classOf[HubNetManagerFactory], "org.nlogo.hubnet.server.gui.HubNetManagerFactory",
-          Array[Parameter] (
-            new ComponentParameter(classOf[AppFrame]), new ComponentParameter(), new ComponentParameter()))
-    pico.addComponent(interfaceFactory)
-    pico.addComponent(new MenuBarFactory())
-
-    val controlSet = new AppControlSet()
-
-    val world = if(Version.is3D) new World3D() else new World2D()
-
-    pico.addComponent(world)
-    _workspace = new GUIWorkspace(world,
-      GUIWorkspace.KioskLevel.None,
-      frame,
-      frame,
-      pico.getComponent(classOf[HubNetManagerFactory]),
-      pico.getComponent(classOf[ExternalFileManager]),
-      listenerManager,
-      errorDialogManager,
-      controlSet) {
-      val compiler = pico.getComponent(classOf[PresentationCompilerInterface])
-      // lazy to avoid initialization order snafu - ST 3/1/11
-      lazy val updateManager = new UpdateManager {
-        override def defaultFrameRate = _workspace.frameRate
-        override def ticks = _workspace.world.tickCounter.ticks
-        override def updateMode = _workspace.updateMode
-      }
-
-      def aggregateManager: AggregateManagerInterface = App.this.aggregateManager
-      def inspectAgent(agent: org.nlogo.api.Agent, radius: Double): Unit = {
-        val a = agent.asInstanceOf[org.nlogo.agent.Agent]
-        monitorManager.inspect(a.kind, a, radius)
-      }
-      override def inspectAgent(agentClass: AgentKind, agent: Agent, radius: Double): Unit = {
-        monitorManager.inspect(agentClass, agent, radius)
-      }
-      override def stopInspectingAgent(agent: Agent): Unit = {
-        monitorManager.stopInspecting(agent)
-      }
-      override def stopInspectingDeadAgents(): Unit = {
-        monitorManager.stopInspectingDeadAgents()
-      }
-      override def closeAgentMonitors(): Unit = { monitorManager.closeAll() }
-      override def newRenderer: RendererInterface = {
-        // yikes, it's really ugly that we do this stuff
-        // way inside here (should be top level). not sure
-        // what to do about it - ST 3/2/09, 3/4/09
-        if (pico.getComponent(classOf[GUIWorkspace]) == null) {
-          pico.addComponent(this)
-          pico.add("org.nlogo.render.Renderer")
-        }
-        pico.getComponent(classOf[RendererInterface])
-      }
-
-      def updateModel(model: Model): Model = {
-        model.withOptionalSection("org.nlogo.modelsection.modelsettings", Some(ModelSettings(snapOn)), Some(ModelSettings(false)))
-      }
-
-      override def dispose(): Unit = super.dispose()
-    }
-
-    ShapeChangeListener.listen(_workspace, world)
-
-    pico.addComponent(new EditorColorizer(workspace))
-
     frame.addLinkComponent(workspace)
+    frame.addLinkComponent(monitorManager)
+    frame.addLinkComponent(tabManager)
+    frame.addLinkComponent(new CompilerManager(workspace, world, tabManager.mainCodeTab))
+    frame.addLinkComponent(listenerManager)
+    frame.addLinkComponent(workspace.aggregateManager)
+    frame.addLinkComponent(labManager)
+    frame.addLinkComponent(dirtyMonitor)
+    frame.addLinkComponent(fileManager)
+    frame.addLinkComponent(recentFilesMenu)
+    frame.addLinkComponent(tabManager.separateTabsWindow)
 
     frame.addLinkComponent({
       val libMan = workspace.getLibraryManager
-      new ExtensionAssistant(
-        frame
-      , libMan.getExtensionInfos.map(_.codeName).toSet
-      , (name) => libMan.lookupExtension(name, "").fold("N/A")(_.version)
-      , { (name, version) => libMan.lookupExtension(name, version).foreach(libMan.installExtension); compileLater() }
-      )
+      new ExtensionAssistant(frame, libMan.getExtensionInfos.map(_.codeName).toSet,
+                             libMan.lookupExtension(_, "").fold("N/A")(_.version), {
+                               (name, version) =>
+                                 libMan.lookupExtension(name, version).foreach(libMan.installExtension)
+                               compileLater()
+                             })
     })
 
-    monitorManager = pico.getComponent(classOf[AgentMonitorManager])
-    frame.addLinkComponent(monitorManager)
+    val viewManager = new ViewManager(workspace, frame, interfaceTab.iP)
 
-    _tabManager = new TabManager(workspace, pico.getComponent(classOf[InterfaceTab]),
-                                 pico.getComponent(classOf[ExternalFileManager]))
+    frame.addLinkComponent(viewManager)
 
-    frame.addLinkComponent(_tabManager)
-    controlSet.interfaceTab = Some(_tabManager.interfaceTab)
+    workspace.init(viewManager)
 
-    pico.addComponent(_tabManager.interfaceTab.getInterfacePanel)
-    frame.getContentPane.add(_tabManager.mainTabs, BorderLayout.CENTER)
-
-    frame.addLinkComponent(new CompilerManager(workspace, world, _tabManager.mainCodeTab))
-    frame.addLinkComponent(listenerManager)
-
-    def switchOrPref(switchValue: String, prefName: String, default: String) = {
-      if (switchValue != null && !switchValue.trim().equals("")) {
-        switchValue
-      } else {
-        NetLogoPreferences.get(prefName, default)
-      }
+    if (Version.systemDynamicsAvailable) {
+      new NLogoGuiSDMFormat().addToLoader(modelLoader)
+      new NLogoThreeDGuiSDMFormat().addToLoader(modelLoader)
     }
 
-    if (logDirectory != null || logEvents != null || NetLogoPreferences.get("loggingEnabled", "false").toBoolean) {
-      val finalLogDirectory = new File(switchOrPref(logDirectory, "logDirectory", System.getProperty("user.home")))
-      val eventsString      = switchOrPref(logEvents, "logEvents", "")
+    Exceptions.setHandler(this)
+
+    Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler {
+      def uncaughtException(t: Thread, e: Throwable): Unit = {
+        Exceptions.handle(e)
+      }
+    })
+
+    ShapeChangeListener.listen(workspace, world)
+
+    controlSet.interfaceTab = Some(interfaceTab)
+
+    def switchOrPref(switchValue: Option[String], prefName: String, default: String): String =
+      switchValue.filter(_.trim.nonEmpty).getOrElse(NetLogoPreferences.get(prefName, default))
+
+    if (args.logDirectory.isDefined || args.logEvents.isDefined ||
+        NetLogoPreferences.get("loggingEnabled", "false").toBoolean) {
+      val finalLogDirectory = new File(switchOrPref(args.logDirectory, "logDirectory", System.getProperty("user.home")))
+      val eventsString      = switchOrPref(args.logEvents, "logEvents", "")
       val events            = LogEvents.parseEvents(eventsString)
       val studentName       = askForName()
       val addListener       = (l) => listenerManager.addListener(l)
@@ -494,46 +474,20 @@ class App extends org.nlogo.window.Event.LinkChild
         new OptionPane(frame, I18N.gui.get("common.messages.warning"), I18N.gui.get("error.dialog.logDirectory"),
                        OptionPane.Options.Ok, OptionPane.Icons.Warning))
     }
-
   }
 
-  private def finishStartup(appHandler: Object): Unit = {
+  private def finishStartup(appHandler: AppHandler): Unit = {
     try {
-      val app = pico.getComponent(classOf[App])
+      frame.getContentPane.add(tabManager.mainTabs, BorderLayout.CENTER)
 
-      aggregateManager = pico.getComponent(classOf[AggregateManagerInterface])
-      frame.addLinkComponent(aggregateManager)
+      allActions.foreach(mainMenuBar.offerAction)
 
-      labManager = pico.getComponent(classOf[LabManagerInterface])
-      frame.addLinkComponent(labManager)
+      recentFilesMenu.setMenu(mainMenuBar)
+      frame.setJMenuBar(mainMenuBar)
 
-      val titler = (file: Option[String]) => { file map externalFileTitle getOrElse modelTitle() }
-      pico.add(classOf[DirtyMonitor], "org.nlogo.app.DirtyMonitor",
-        new ComponentParameter, new ComponentParameter, new ComponentParameter, new ComponentParameter,
-        new ConstantParameter(titler), new ConstantParameter(_tabManager.separateTabsWindow))
-      dirtyMonitor = pico.getComponent(classOf[DirtyMonitor])
-      frame.addLinkComponent(dirtyMonitor)
+      tabManager.init(fileManager, dirtyMonitor, mainMenuBar, allActions)
 
-      val menuBar = pico.getComponent(classOf[MainMenuBar])
-
-      pico.add(classOf[FileManager],
-        "org.nlogo.app.FileManager",
-        new ComponentParameter(), new ComponentParameter(), new ComponentParameter(),
-        new ComponentParameter(), new ComponentParameter(),
-        new ConstantParameter(menuBar), new ConstantParameter(frame), new ConstantParameter(_tabManager),
-        new ComponentParameter())
-      setFileManager(pico.getComponent(classOf[FileManager]))
-
-      val viewManager = pico.getComponent(classOf[GLViewManagerInterface])
-      workspace.init(viewManager)
-      frame.addLinkComponent(viewManager)
-
-      app.setMenuBar(menuBar)
-      frame.setJMenuBar(menuBar)
-
-      _tabManager.init(fileManager, dirtyMonitor, menuBar, allActions)
-
-      FindDialog.init(frame, _tabManager.separateTabsWindow)
+      FindDialog.init(frame, tabManager.separateTabsWindow)
 
       // OK, this is a little kludgy.  First we pack so everything
       // is realized, and all addNotify() methods are called.  But
@@ -546,13 +500,13 @@ class App extends org.nlogo.window.Event.LinkChild
 
       loadDefaultModel()
 
-      _tabManager.interfaceTab.packSplitPane()
+      interfaceTab.packSplitPane()
 
       smartPack(frame.getPreferredSize, true)
 
-      _tabManager.interfaceTab.resetSplitPane()
+      interfaceTab.resetSplitPane()
 
-      if (! isMac) { org.nlogo.awt.Positioning.center(frame, null) }
+      Positioning.center(frame, null)
 
       new DropTarget(frame.getContentPane, new DropTargetListener {
         def dragEnter(e: DropTargetDragEvent): Unit = {}
@@ -592,21 +546,19 @@ class App extends org.nlogo.window.Event.LinkChild
       })
 
       Splash.endSplash()
+
       frame.setVisible(true)
-      if (isMac) {
-        appHandler.getClass.getDeclaredMethod("ready", classOf[AnyRef]).invoke(appHandler, this)
-      }
 
-      frame.addLinkComponent(_tabManager.separateTabsWindow)
+      appHandler.ready(this)
 
-      if (popOutCodeTab || NetLogoPreferences.getBoolean("startSeparateCodeTab", false)) {
-        _tabManager.switchWindow(true)
-      }
+      if (args.popOutCodeTab || NetLogoPreferences.getBoolean("startSeparateCodeTab", false))
+        tabManager.switchWindow(true)
 
       import ExecutionContext.Implicits.global
-      AnnouncementsInfoDownloader.fetch().foreach(_tabManager.interfaceTab.appendAnnouncements)
 
-      _tabManager.interfaceTab.requestFocus()
+      AnnouncementsInfoDownloader.fetch().foreach(interfaceTab.appendAnnouncements)
+
+      interfaceTab.requestFocus()
 
       syncWindowThemes()
 
@@ -619,13 +571,9 @@ class App extends org.nlogo.window.Event.LinkChild
 
       Analytics.refreshPreference()
       Analytics.appStart(Version.versionNumberOnly.stripPrefix("3D "), Version.is3D)
+    } catch {
+      case ex: Throwable => StartupError.report(ex)
     }
-    catch {
-      case ex: java.lang.Throwable =>
-        StartupError.report(ex)
-        return
-    }
-
   }
 
   // used by preferences that require a restart if the user chooses the "Restart Now" option (Isaac B 7/23/25)
@@ -661,10 +609,10 @@ class App extends org.nlogo.window.Event.LinkChild
   // This is for other windows to get their own copy of the menu
   // bar.  It's needed especially for OS X since the screen menu bar
   // doesn't get shared across windows.  -- AZS 6/17/2005
-  private class MenuBarFactory extends org.nlogo.window.MenuBarFactory {
-    def actions = allActions ++ _tabManager.permanentMenuActions
+  private class MenuBarFactory extends WindowMenuBarFactory {
+    def actions = allActions ++ tabManager.permanentMenuActions
 
-    def createMenu(newMenu: org.nlogo.swing.Menu, category: String): JMenu = {
+    def createMenu(newMenu: Menu, category: String): JMenu = {
       actions.filter(_.getValue(ActionCategoryKey) == category).foreach(newMenu.offerAction)
       newMenu
     }
@@ -677,37 +625,39 @@ class App extends org.nlogo.window.Event.LinkChild
   }
 
   private def loadDefaultModel(): Unit = {
-    if (commandLineModel != null) {
-      if (commandLineModelIsLaunch) { // --launch through InstallAnywhere?
-        // open up the blank model first so in case
-        // the magic open fails for some reason
-        // there's still a model loaded ev 3/7/06
-        fileManager.newModel()
-        open(commandLineModel)
-      }
-      else {
-        libraryOpen(commandLineModel) // --open from command line
-      }
+    args.model match {
+      case Some(App.ModelArgType.Model(file)) =>
+        if (args.launch) { // --launch through InstallAnywhere?
+          // open up the blank model first so in case
+          // the magic open fails for some reason
+          // there's still a model loaded ev 3/7/06
+          fileManager.newModel()
+          open(file)
+        } else { // --open from command line
+          libraryOpen(file)
+        }
 
-    } else if (commandLineMagic != null) {
-      workspace.magicOpen(commandLineMagic)
+      case Some(App.ModelArgType.Magic(name)) =>
+        workspace.magicOpen(name)
 
-    } else if (commandLineURL != null) {
-      try {
-        fileManager.openFromURI(new java.net.URI(commandLineURL), ModelType.Library)
+      case Some(App.ModelArgType.Url(url)) =>
+        try {
+          fileManager.openFromURI(new URI(url), ModelType.Library)
 
-        import org.nlogo.awt.EventQueue
+          Option(System.getProperty("netlogo.raw_world_state_url")).map { url =>
+            EventQueue.invokeLater(() => {
+              // `io.Source.fromURL(url).bufferedReader` steps up to bat and...
+              // manages to fail gloriously here! --JAB (8/22/12)
+              import java.io.{ BufferedReader, InputStreamReader }
 
-        Option(System.getProperty(ImportRawWorldURLProp)) map {
-          url => // `io.Source.fromURL(url).bufferedReader` steps up to bat and... manages to fail gloriously here! --JAB (8/22/12)
-            EventQueue.invokeLater {
-              () =>
-                workspace.importWorld(new BufferedReader(new InputStreamReader(new URL(url).openStream())))
-                workspace.view.dirty()
-                workspace.view.repaint()
-            }
-        } orElse (Option(System.getProperty(ImportWorldURLProp)) map {
-          url =>
+              workspace.importWorld(new BufferedReader(new InputStreamReader(new URL(url).openStream())))
+              workspace.view.dirty()
+              workspace.view.repaint()
+            })
+          }.orElse(Option(System.getProperty("netlogo.world_state_url")).map { url =>
+            import java.io.{ ByteArrayInputStream, InputStreamReader }
+            import java.util.zip.GZIPInputStream
+            import scala.io.{ Codec, Source }
 
             val source = Source.fromURL(url)(using Codec.ISO8859)
             val bytes  = source.map(_.toByte).toArray
@@ -715,39 +665,36 @@ class App extends org.nlogo.window.Event.LinkChild
             val gis    = new GZIPInputStream(bais)
             val reader = new InputStreamReader(gis)
 
-            EventQueue.invokeLater {
-              () => {
-                workspace.importWorld(reader)
-                workspace.view.dirty()
-                workspace.view.repaint()
-                source.close()
-                bais.close()
-                gis.close()
-                reader.close()
-              }
-            }
+            EventQueue.invokeLater(() => {
+              workspace.importWorld(reader)
+              workspace.view.dirty()
+              workspace.view.repaint()
+              source.close()
+              bais.close()
+              gis.close()
+              reader.close()
+            })
+          })
+        } catch {
+          case _: ConnectException =>
+            fileManager.newModel()
 
-        })
-      }
-      catch {
-        case ex: java.net.ConnectException =>
-          fileManager.newModel()
-          new OptionPane(frame, I18N.gui.get("file.open.error.unloadable.title"),
-                         I18N.gui.getN("file.open.error.unloadable.message", commandLineURL),
-                         OptionPane.Options.OkCancel, OptionPane.Icons.Warning)
-      }
+            new OptionPane(frame, I18N.gui.get("file.open.error.unloadable.title"),
+                           I18N.gui.getN("file.open.error.unloadable.message", url),
+                           OptionPane.Options.OkCancel, OptionPane.Icons.Warning)
+        }
 
-    } else if (NetLogoPreferences.get("loadLastOnStartup", "false").toBoolean) {
-      // if recent list is empty we need the new model, or if loading the recent model
-      // fails then we'll fall back on it.  -Jeremy B June 2021
-      fileManager.newModel()
-      val recentFiles = (new RecentFiles).models
-      if (!recentFiles.isEmpty) {
-        val modelEntry = recentFiles.head
-        fileManager.openFromPath(modelEntry.path, modelEntry.modelType)
-      }
-    } else {
-      fileManager.newModel()
+      case _ =>
+        // if recent list is empty we need the new model, or if loading the recent model
+        // fails then we'll fall back on it.  -Jeremy B June 2021
+        fileManager.newModel()
+
+        if (NetLogoPreferences.get("loadLastOnStartup", "false").toBoolean) {
+          (new RecentFiles).models.headOption.foreach {
+            case ModelEntry(path, modelType) =>
+              fileManager.openFromPath(path, modelType)
+          }
+        }
     }
   }
 
@@ -761,7 +708,7 @@ class App extends org.nlogo.window.Event.LinkChild
     new ZoomedEvent(0).raise(this)
   }
 
-  lazy val openPreferencesDialog = new ShowPreferencesDialog(frame, _tabManager, _tabManager.interfaceTab.iP)
+  lazy val openPreferencesDialog = new ShowPreferencesDialog(frame, tabManager, tabManager.interfaceTab.iP)
 
   lazy val openAboutDialog = new ShowAboutWindow(frame)
 
@@ -770,7 +717,7 @@ class App extends org.nlogo.window.Event.LinkChild
   lazy val openLibrariesDialog = {
     val updateSource =
       (transform: (String) => String) =>
-        _tabManager.mainCodeTab.innerSource = transform(_tabManager.mainCodeTab.innerSource)
+        tabManager.mainCodeTab.innerSource = transform(tabManager.mainCodeTab.innerSource)
     new OpenLibrariesDialog( frame, workspace.getLibraryManager, compile
                            , workspace.compiler.tokenizeWithWhitespace(_, workspace.getExtensionManager), updateSource
                            , () => workspace.getExtensionPathMappings())
@@ -789,43 +736,23 @@ class App extends org.nlogo.window.Event.LinkChild
       openRGBAColorDialog,
       new ShowShapeManager("turtleShapesEditor", turtleShapesManager),
       new ShowShapeManager("linkShapesEditor",   linkShapesManager),
-      new ShowSystemDynamicsModeler(aggregateManager),
+      new ShowSystemDynamicsModeler(workspace.aggregateManager),
       new OpenHubNetClientEditor(workspace, frame),
       workspace.hubNetControlCenterAction,
       new PreviewCommandsEditor.EditPreviewCommands(
-        pico.getComponent(classOf[PreviewCommandsEditorInterface]),
-        workspace,
-        () => pico.getComponent(classOf[ModelSaver]).asInstanceOf[ModelSaver].currentModel),
+        new PreviewCommandsEditor(frame, workspaceFactory, new GraphicsPreview), workspace,
+        () => modelSaver.currentModel),
       FindDialog.FIND_ACTION,
       FindDialog.FIND_NEXT_ACTION,
-      new ConvertWidgetSizes(frame, _tabManager.interfaceTab.iP)
+      new ConvertWidgetSizes(frame, tabManager.interfaceTab.iP)
     ) ++
     HelpActions.apply ++
-    FileActions(workspace, menuBar.fileMenu) ++
+    FileActions(workspace, mainMenuBar.fileMenu) ++
     workspaceActions ++
     labManager.actions ++
     fileManager.actions
 
     osSpecificActions ++ generalActions
-  }
-
-  def setMenuBar(menuBar: MainMenuBar): Unit = {
-    if (menuBar != this.menuBar) {
-      this.menuBar = menuBar
-      allActions.foreach(menuBar.offerAction)
-      Option(recentFilesMenu).foreach(_.setMenu(menuBar))
-    }
-  }
-
-  def fileManager: FileManager = _fileManager
-
-  def setFileManager(manager: FileManager): Unit = {
-    if (manager != _fileManager) {
-      _fileManager = manager
-      frame.addLinkComponent(manager)
-      recentFilesMenu = new RecentFilesMenu(frame, manager)
-      frame.addLinkComponent(recentFilesMenu)
-    }
   }
 
   // used by external tools to make GUI automation smoother (Isaac B 3/13/25)
@@ -933,7 +860,7 @@ class App extends org.nlogo.window.Event.LinkChild
   def syncWindowThemes(): Unit = {
     FindDialog.syncTheme()
 
-    menuBar.syncTheme()
+    mainMenuBar.syncTheme()
 
     tabManager.syncTheme()
     frame.repaint()
@@ -943,17 +870,8 @@ class App extends org.nlogo.window.Event.LinkChild
     workspace.glView.repaint()
 
     monitorManager.syncTheme()
-
-    _turtleShapesManager match {
-      case ts: ThemeSync => ts.syncTheme()
-      case _ =>
-    }
-
-    _linkShapesManager match {
-      case ts: ThemeSync => ts.syncTheme()
-      case _ =>
-    }
-
+    turtleShapesManager.syncTheme()
+    linkShapesManager.syncTheme()
     labManager.syncTheme()
 
     openPreferencesDialog.syncTheme()
@@ -962,11 +880,11 @@ class App extends org.nlogo.window.Event.LinkChild
     openLibrariesDialog.syncTheme()
 
     workspace.hubNetManager match {
-      case Some(manager: ThemeSync) => manager.syncTheme()
+      case Some(ts: ThemeSync) => ts.syncTheme()
       case _ =>
     }
 
-    aggregateManager match {
+    workspace.aggregateManager match {
       case ts: ThemeSync => ts.syncTheme()
       case _ =>
     }
@@ -982,10 +900,10 @@ class App extends org.nlogo.window.Event.LinkChild
    * Internal use only.
    */
   final def handle(e: AppEvents.SwitchedTabsEvent): Unit = {
-    if (e.newTab == _tabManager.interfaceTab) {
+    if (e.newTab == tabManager.interfaceTab) {
       monitorManager.showAll()
       frame.toFront()
-    } else if (e.oldTab == _tabManager.interfaceTab) {
+    } else if (e.oldTab == tabManager.interfaceTab) {
       monitorManager.hideAll()
     }
     setWindowTitles()
@@ -1036,16 +954,6 @@ class App extends org.nlogo.window.Event.LinkChild
             frame.getSize == frame.getPreferredSize
   }
 
-  private lazy val _turtleShapesManager: ShapesManagerInterface = {
-    pico.getComponent(classOf[TurtleShapesManagerInterface])
-  }
-  def turtleShapesManager: ShapesManagerInterface = _turtleShapesManager
-
-  private lazy val _linkShapesManager: ShapesManagerInterface = {
-    pico.getComponent(classOf[LinkShapesManagerInterface])
-  }
-  def linkShapesManager: ShapesManagerInterface = _linkShapesManager
-
   /**
    * Internal use only.
    */
@@ -1057,7 +965,7 @@ class App extends org.nlogo.window.Event.LinkChild
     if(AbstractWorkspace.isApp){
       // if we don't call revalidate() here we don't get up-to-date
       // preferred size information - ST 11/4/03
-      _tabManager.interfaceTab.packSplitPane()
+      tabManager.interfaceTab.packSplitPane()
       if(wasAtPreferredSizeBeforeLoadBegan) smartPack(frame.getPreferredSize, true)
       else{
         val currentSize = frame.getSize
@@ -1068,13 +976,13 @@ class App extends org.nlogo.window.Event.LinkChild
         if(preferredSize.height > newHeight) newHeight = preferredSize.height
         if(newWidth != currentSize.width || newHeight != currentSize.height) smartPack(new Dimension(newWidth, newHeight), true)
       }
-      _tabManager.interfaceTab.resetSplitPane()
+      tabManager.interfaceTab.resetSplitPane()
       preferredSizeAtLoadEndTime = frame.getPreferredSize()
     }
 
     if (KeyboardFocusManager.getCurrentKeyboardFocusManager.getActiveWindow != null) {
       frame.toFront()
-      _tabManager.interfaceTab.requestFocus()
+      tabManager.interfaceTab.requestFocus()
     }
 
     syncWindowThemes()
@@ -1102,7 +1010,7 @@ class App extends org.nlogo.window.Event.LinkChild
     if (dirty) s"* $title" else title
   }
 
-  private def modelTitle(allowDirtyMarker: Boolean = true) = {
+  private def modelTitle(allowDirtyMarker: Boolean = true): String = {
     if (workspace.getModelFileName == null) "NetLogo"
     else {
       val title = frameTitle(workspace.modelNameForDisplay, allowDirtyMarker && dirtyMonitor.modelDirty)
@@ -1111,9 +1019,9 @@ class App extends org.nlogo.window.Event.LinkChild
     }
   }
 
-  private def externalFileTitle(path: String) = {
+  private def externalFileTitle(path: String): String = {
     val filename = TemporaryCodeTab.stripPath(path)
-    (_tabManager.getTabWithFilename(Right(path)) orElse _tabManager.getTabWithFilename(Left(path))).
+    (tabManager.getTabWithFilename(Right(path)) orElse tabManager.getTabWithFilename(Left(path))).
       map (tab => frameTitle(filename, tab.saveNeeded)).
       getOrElse(frameTitle(filename, false))
   }
@@ -1283,7 +1191,7 @@ class App extends org.nlogo.window.Event.LinkChild
    * Returns the contents of the Code tab.
    * @return contents of Code tab
    */
-  def getProcedures: String = dispatchThreadOrBust(_tabManager.mainCodeTab.innerSource)
+  def getProcedures: String = dispatchThreadOrBust(tabManager.mainCodeTab.innerSource)
 
   /**
    * Replaces the contents of the Code tab.
@@ -1291,7 +1199,7 @@ class App extends org.nlogo.window.Event.LinkChild
    * @param source new contents
    * @see #compile
    */
-  def setProcedures(source:String): Unit = { dispatchThreadOrBust(_tabManager.mainCodeTab.innerSource = source) }
+  def setProcedures(source:String): Unit = { dispatchThreadOrBust(tabManager.mainCodeTab.innerSource = source) }
 
   /**
    * Recompiles the model.  Useful after calling
@@ -1340,7 +1248,7 @@ class App extends org.nlogo.window.Event.LinkChild
   /// helpers for controlling methods
 
   private def findButton(name:String): ButtonWidget =
-    _tabManager.interfaceTab.getInterfacePanel.getComponents
+    tabManager.interfaceTab.getInterfacePanel.getComponents
       .collect{case bw: ButtonWidget => bw}
       .find(_.displayName == name)
       .getOrElse{throw new IllegalArgumentException(
@@ -1384,10 +1292,10 @@ class App extends org.nlogo.window.Event.LinkChild
       frame.setBounds(newX, newY, newWidth, newHeight)
       frame.validate()
 
-      frame.setMinimumSize(new Dimension(_tabManager.interfaceTab.getMinimumWidth / 2, 300))
+      frame.setMinimumSize(new Dimension(tabManager.interfaceTab.getMinimumWidth / 2, 300))
 
       // not sure why this is sometimes necessary - ST 11/24/03
-      _tabManager.mainTabs.requestFocus()
+      tabManager.mainTabs.requestFocus()
     }
   }
 
@@ -1421,12 +1329,12 @@ class App extends org.nlogo.window.Event.LinkChild
   }
 
   def procedureSource:  String =
-    _tabManager.mainCodeTab.innerSource
+    tabManager.mainCodeTab.innerSource
   def widgets:          Seq[CoreWidget] = {
-    _tabManager.interfaceTab.iP.getWidgetsForSaving
+    tabManager.interfaceTab.iP.getWidgetsForSaving
   }
   def info:             String =
-    _tabManager.infoTab.info
+    tabManager.infoTab.info
   def turtleShapes:     Seq[VectorShape] =
     workspace.world.turtleShapeList.shapes.collect { case s: VectorShape => s }
   def linkShapes:       Seq[LinkShape] =
@@ -1435,7 +1343,7 @@ class App extends org.nlogo.window.Event.LinkChild
     val sections =
       Seq[ModelSections.ModelSaveable](workspace.previewCommands,
         labManager,
-        aggregateManager,
+        workspace.aggregateManager,
         workspace)
     workspace.hubNetManager.map(_ +: sections).getOrElse(sections)
   }
