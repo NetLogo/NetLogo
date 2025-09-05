@@ -2,6 +2,8 @@
 
 package org.nlogo.app
 
+import com.jthemedetecor.OsThemeDetector
+
 import java.awt.{ Dimension, EventQueue, Frame, GraphicsEnvironment, KeyboardFocusManager, Toolkit, BorderLayout}
 import java.awt.datatransfer.DataFlavor
 import java.awt.dnd.{ DropTarget, DropTargetDragEvent, DropTargetDropEvent, DropTargetEvent, DropTargetListener }
@@ -348,8 +350,17 @@ class App extends org.nlogo.window.Event.LinkChild
     frame.addLinkComponent(this)
     pico.addComponent(frame)
 
-    if (App.colorTheme == null)
-      App.colorTheme = NetLogoPreferences.get("colorTheme", "light")
+    if (App.colorTheme == null) {
+      val defaultTheme = {
+        if (OsThemeDetector.getDetector.isDark) {
+          "dark"
+        } else {
+          "light"
+        }
+      }
+
+      App.colorTheme = NetLogoPreferences.get("colorTheme", defaultTheme)
+    }
 
     SetSystemLookAndFeel.setSystemLookAndFeel()
 

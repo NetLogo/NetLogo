@@ -4,13 +4,12 @@ package org.nlogo.headless
 package lang
 package misc
 
-import
-  org.nlogo.{ api, core, util, workspace => ws },
-    api.Agent,
-    api.FileIO.fileToString,
-    core._,
-    util.SlowTest,
-    ws.Checksummer
+import org.nlogo.api, api.{ Agent, FileIO }, FileIO.fileToString
+import org.nlogo.core._
+import org.nlogo.util.SlowTest
+import org.nlogo.workspace.Checksummer
+
+import scala.io.Source
 
 class TestImportExport extends FixtureSuite  {
 
@@ -73,7 +72,7 @@ class TestImportExport extends FixtureSuite  {
   }
 
   def dropLines(s: String, n: Int): String =
-    io.Source.fromString(s).getLines().drop(n).mkString("\n")
+    Source.fromString(s).getLines().drop(n).mkString("\n")
 
   /// tests that use roundTripHelper
 

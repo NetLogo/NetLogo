@@ -8,6 +8,8 @@ import org.nlogo.api.Version
 import org.nlogo.util.SlowTest
 import org.nlogo.headless.ChecksumsAndPreviewsSettings.DumpsPath
 
+import scala.io.Source
+
 class TestCompileBenchmarks extends AnyFunSuite with SlowTest {
 
   private val names = Seq(
@@ -32,7 +34,7 @@ class TestCompileBenchmarks extends AnyFunSuite with SlowTest {
           result
         }
         val source =
-          io.Source.fromFile(DumpsPath + name + ".txt")
+          Source.fromFile(DumpsPath + name + ".txt")
         assert(dump === source.getLines().mkString("","\n","\n"))
       }
   }
