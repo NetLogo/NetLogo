@@ -10,20 +10,16 @@
   <true/>
   <key>CFBundleDocumentTypes</key>
   <array>
+    {{#fileAssociations}}
     <dict>
       <key>CFBundleTypeExtensions</key>
       <array>
-        {{#fileAssociationOld}}
-        <string>{{fileAssociationOld}}</string>
-        {{/fileAssociationOld}}
-        {{#fileAssociationNew}}
-        <string>{{fileAssociationNew}}</string>
-        {{/fileAssociationNew}}
+        <string>{{extension}}</string>
       </array>
       <key>CFBundleTypeIconFile</key>
-      <string>{{{fileAssociationIcon}}}</string>
+      <string>{{{icon}}}</string>
       <key>CFBundleTypeName</key>
-      <string>{{{fileAssociationType}}}</string>
+      <string>{{{type}}}</string>
       <key>CFBundleTypeRole</key>
       <string>Editor</string>
       <key>CFBundleTypeOSTypes</key>
@@ -31,6 +27,7 @@
         <string>TEXT</string>
       </array>
     </dict>
+    {{/fileAssociations}}
   </array>
   <key>CFBundleExecutable</key>
   <string>{{appName}}</string>
