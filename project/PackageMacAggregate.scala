@@ -7,7 +7,7 @@ import java.nio.file.{ Files, Path => JPath, Paths }
 import java.io.IOException
 import java.util.jar.Manifest
 
-import scala.collection.JavaConverters.asScalaIteratorConverter
+import scala.collection.JavaConverters.{ asScalaIteratorConverter, mapAsJavaMapConverter }
 import scala.sys.process.Process
 
 import NetLogoPackaging.RunProcess
@@ -63,10 +63,18 @@ object PackageMacAggregate {
       , "bundleIdentifier"    -> "org.nlogo.NetLogo"
       , "bundleName"          -> "NetLogo"
       , "bundleSignature"     -> "nLo1"
-      , "fileAssociationOld"  -> "nlogo"
-      , "fileAssociationNew"  -> "nlogox"
-      , "fileAssociationIcon" -> "Model.icns"
-      , "fileAssociationType" -> "NetLogo Model"
+      , "fileAssociations"    -> Array(
+        Map(
+          "extension" -> "nlogo"
+        , "icon"      -> "ModelOld.icns"
+        , "type"      -> "NetLogo Model"
+        ).asJava
+      , Map(
+          "extension" -> "nlogox"
+        , "icon"      -> "Model.icns"
+        , "type"      -> "NetLogo Model"
+        ).asJava
+      )
       , "iconFile"            -> s"NetLogo $version.icns"
       , "packageID"           -> "APPLnLo1"
       , "version"             -> version
@@ -76,10 +84,18 @@ object PackageMacAggregate {
       , "bundleIdentifier"    -> "org.nlogo.NetLogo3D"
       , "bundleName"          -> "NetLogo"
       , "bundleSignature"     -> "nLo1"
-      , "fileAssociationOld"  -> "nlogo3d"
-      , "fileAssociationNew"  -> "nlogox3d"
-      , "fileAssociationIcon" -> "Model.icns"
-      , "fileAssociationType" -> "NetLogo 3D Model"
+      , "fileAssociations"    -> Array(
+        Map(
+          "extension" -> "nlogo3d"
+        , "icon"      -> "ModelOld.icns"
+        , "type"      -> "NetLogo 3D Model"
+        ).asJava
+      , Map(
+          "extension" -> "nlogox3d"
+        , "icon"      -> "Model.icns"
+        , "type"      -> "NetLogo 3D Model"
+        ).asJava
+      )
       , "iconFile"            -> s"NetLogo 3D $version.icns"
       , "packageID"           -> "APPLnLo1"
       , "version"             -> version
@@ -98,9 +114,13 @@ object PackageMacAggregate {
       , "bundleIdentifier"    -> "org.nlogo.Behaviorsearch"
       , "bundleName"          -> "Behaviorsearch"
       , "bundleSignature"     -> "????"
-      , "fileAssociationOld"  -> "bsearch"
-      , "fileAssociationIcon" -> "BehaviorsearchModel.icns"
-      , "fileAssociationType" -> "Behaviorsearch Model"
+      , "fileAssociations"    -> Array(
+        Map(
+          "extension" -> "bsearch"
+        , "icon"      -> "BehaviorsearchModel.icns"
+        , "type"      -> "Behaviorsearch Model"
+        ).asJava
+      )
       , "iconFile"            -> s"Behaviorsearch $version.icns"
       , "packageID"           -> "APPL????"
       , "version"             -> version

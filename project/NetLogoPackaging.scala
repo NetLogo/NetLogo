@@ -369,6 +369,7 @@ object NetLogoPackaging {
         configDir / "HubNetClient.png",
         configDir / "Behaviorsearch.png",
         configDir / "Model.png",
+        configDir / "ModelOld.png",
         configDir / "BehaviorsearchModel.png"
       )
 
@@ -478,6 +479,8 @@ object NetLogoPackaging {
 
       FileActions.copyFile(buildDir / "Model.icns", destDir / s"${launchers(0).name}.app" / "Contents" / "Resources" / "Model.icns")
       FileActions.copyFile(buildDir / "Model.icns", destDir / s"${launchers(1).name}.app" / "Contents" / "Resources" / "Model.icns")
+      FileActions.copyFile(buildDir / "ModelOld.icns", destDir / s"${launchers(0).name}.app" / "Contents" / "Resources" / "ModelOld.icns")
+      FileActions.copyFile(buildDir / "ModelOld.icns", destDir / s"${launchers(1).name}.app" / "Contents" / "Resources" / "ModelOld.icns")
       FileActions.copyFile(buildDir / "BehaviorsearchModel.icns", destDir / s"${launchers(3).name}.app" / "Contents" / "Resources" / "BehaviorsearchModel.icns")
 
       val appImageDir = destDir / s"NetLogo ${version}"
