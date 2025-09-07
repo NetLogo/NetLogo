@@ -14,7 +14,8 @@ object FixedViewSettings {
     viewWidth = originalView.viewWidth,
     viewHeight = originalView.viewHeight,
     viewOffsetX = originalView.viewOffsetX,
-    viewOffsetY = originalView.viewOffsetY)
+    viewOffsetY = originalView.viewOffsetY,
+    workspaceContext = originalView.workspaceContext)
 }
 
 case class FixedViewSettings private (
@@ -23,7 +24,8 @@ case class FixedViewSettings private (
   override val viewWidth: Double,
   override val viewHeight: Double,
   override val viewOffsetX: Double,
-  override val viewOffsetY: Double)
+  override val viewOffsetY: Double,
+  override val workspaceContext: api.WorkspaceContext)
   extends api.ViewSettings
   with Serializable {
   // the next few method disregard original view settings
@@ -31,5 +33,4 @@ case class FixedViewSettings private (
   override def drawSpotlight = false
   override def renderPerspective = false
   override def perspective = api.Perspective.Observe
-  override def isHeadless = true
 }

@@ -45,8 +45,6 @@ import org.nlogo.sdm.gui.NLogoGuiSDMFormat
 
 object ModelResaver {
   def main(args: Array[String]): Unit = {
-    System.setProperty("org.nlogo.preferHeadless", "true")
-
     if (args.length > 0) resaveModels(args.toSeq)
     else                 resaveAllModels()
   }

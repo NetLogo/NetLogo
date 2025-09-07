@@ -2,6 +2,8 @@ package org.nlogo.workspace
 
 import java.nio.file.Files
 
+import org.nlogo.api.WorkspaceContext
+
 class DummyWorkspace extends ExtendableWorkspace {
   val dummyFileManager = new DummyFileManager()
 
@@ -16,6 +18,7 @@ class DummyWorkspace extends ExtendableWorkspace {
   def readFromString(s: String): Object = s
   def warningMessage(x$1: String): Boolean = ???
   def setProfilingTracer(tracer: org.nlogo.nvm.Tracer) = ???
+  def workspaceContext: WorkspaceContext = ???
 }
 
 class DummyFileManager extends org.nlogo.nvm.FileManager {

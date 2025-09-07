@@ -104,10 +104,8 @@ private [gui] class ProtocolEditable(protocol: LabProtocol,
   def editFinished(): Boolean = get.isDefined
   def get: Option[LabProtocol] = {
     def complain(message: String): Unit = {
-      if (!java.awt.GraphicsEnvironment.isHeadless) {
-        new OptionPane(window, I18N.gui("invalid"), I18N.gui.getN("edit.behaviorSpace.invalidVarySpec", message),
-                       OptionPane.Options.Ok, OptionPane.Icons.Error)
-      }
+      new OptionPane(window, I18N.gui("invalid"), I18N.gui.getN("edit.behaviorSpace.invalidVarySpec", message),
+                     OptionPane.Options.Ok, OptionPane.Icons.Error)
     }
     LabVariableParser.parseVariables(valueSets, repetitions, worldLock, compiler) match {
       case Success((constants, subExperiments)) =>

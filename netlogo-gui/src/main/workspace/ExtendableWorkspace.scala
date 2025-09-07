@@ -2,13 +2,19 @@
 
 package org.nlogo.workspace
 
+import java.net.MalformedURLException
+
+import org.nlogo.api.WorkspaceContext
+import org.nlogo.nvm.{ FileManager, Tracer }
+
 trait ExtendableWorkspace {
-  def setProfilingTracer(tracer: org.nlogo.nvm.Tracer): Unit
+  def setProfilingTracer(tracer: Tracer): Unit
   def compilerTestingMode: Boolean
   def profilingEnabled: Boolean
-  def fileManager: org.nlogo.nvm.FileManager
-  @throws(classOf[java.net.MalformedURLException])
+  def fileManager: FileManager
+  @throws(classOf[MalformedURLException])
   def attachModelDir(filePath: String): String
   def warningMessage(message: String): Boolean
   def readFromString(path: String): AnyRef
+  def workspaceContext: WorkspaceContext
 }

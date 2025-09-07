@@ -3,7 +3,7 @@
 package org.nlogo.headless
 package render
 
-import org.nlogo.api
+import org.nlogo.api.{ Perspective, ViewSettings, WorkspaceContext, WorldType }
 import org.nlogo.core.{ Model, View }
 import org.nlogo.shape.ShapeConverter
 import org.nlogo.util.MockSuite
@@ -19,11 +19,11 @@ trait TestUsingWorkspace extends MockSuite {
     viewOffsetY: Double = 0,
     drawSpotlight: Boolean = false,
     renderPerspective: Boolean = false,
-    perspective: api.Perspective = api.Perspective.Observe,
-    isHeadless: Boolean = true) extends api.ViewSettings
+    perspective: Perspective = Perspective.Observe,
+    workspaceContext: WorkspaceContext) extends ViewSettings
 
   def testUsingWorkspace(testName: String, radius: Int = 5,
-                         worldType: api.WorldType = api.WorldType.Torus)
+                         worldType: WorldType = WorldType.Torus)
                         (f: HeadlessWorkspace => Unit): Unit = {
     test(testName) {
       runWorkspaceTest(radius, worldType){ f }
@@ -31,14 +31,14 @@ trait TestUsingWorkspace extends MockSuite {
   }
 
   def mockTestUsingWorkspace(name:String, radius: Int = 5,
-                             worldType: api.WorldType = api.WorldType.Torus)
+                             worldType: WorldType = WorldType.Torus)
                             (f: HeadlessWorkspace => Unit): Unit ={
     mockTest(name){
       runWorkspaceTest(radius, worldType){ f }
     }
   }
 
-  def runWorkspaceTest(radius: Int = 5, worldType: api.WorldType = api.WorldType.Torus)
+  def runWorkspaceTest(radius: Int = 5, worldType: WorldType = WorldType.Torus)
                       (f: HeadlessWorkspace => Unit): Unit = {
     val workspace: HeadlessWorkspace = HeadlessWorkspace.newInstance
     workspace.silent = true

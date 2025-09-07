@@ -7,7 +7,7 @@ import java.awt.event.MouseEvent
 import java.io.{ ByteArrayInputStream, DataInputStream }
 import javax.swing.border.LineBorder
 
-import org.nlogo.api.{ Perspective, Graphics2DWrapper, ViewSettings }
+import org.nlogo.api.{ Perspective, Graphics2DWrapper, ViewSettings, WorkspaceContext }
 import org.nlogo.core.{ View => CoreView, Widget => CoreWidget }
 import org.nlogo.hubnet.mirroring._
 import org.nlogo.theme.InterfaceColors
@@ -17,7 +17,9 @@ import org.nlogo.window.{ Editable, ViewMouseHandler, ViewWidgetInterface, Widge
 class ClientView(clientPanel: ClientPanel) extends Widget with ViewWidgetInterface with ViewSettings {
   val world = new ClientWorld()
   val renderer = new ClientRenderer(world)
-  def isHeadless = false
+
+  override val workspaceContext = new WorkspaceContext(true, true)
+
   private var _displayOn = false
   def setDisplayOn(on: Boolean): Unit = {
     if (_displayOn != on) {

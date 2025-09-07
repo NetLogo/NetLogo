@@ -74,10 +74,10 @@ object Main {
     // on most platforms when a display is not available. --CLB
     // note that since our check is for null, so the user can still force the property to false and
     // not be overridden by this - ST 4/21/05
-    val p = "java.awt.headless"
-    if(System.getProperty(p) == null)
-      System.setProperty(p, "true")
+    if (System.getProperty("java.awt.headless") == null)
+      System.setProperty("java.awt.headless", "true")
   }
+
   private def parseArgs(args: Array[String]): Option[Settings] = {
     var model: Option[String] = None
     var minPxcor: Option[String] = None

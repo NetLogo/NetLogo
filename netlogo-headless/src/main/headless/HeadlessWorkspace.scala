@@ -10,7 +10,7 @@ import
   org.nlogo.{ agent, api, core, drawing, fileformat, nvm, workspace },
     agent.{ Agent, OutputObject, World, World2D },
     api.{ AggregateManagerInterface, CommandRunnable, LogoException, ModelReader, RendererInterface, ReporterRunnable,
-          SimpleJobOwner },
+          SimpleJobOwner, WorkspaceContext },
       ModelReader.modelSuffix,
     core.{ AgentKind, CompilerException, Femto, File, FileMode, Model, Output, UpdateMode, WorldDimensions },
     drawing.DrawingActionBroker,
@@ -74,12 +74,12 @@ class HeadlessWorkspace(
   val aggregateManager: AggregateManagerInterface)
 extends AbstractWorkspace(_world) with WorldLoaderInterface with PrimaryWorkspace {
 
+  override val workspaceContext: WorkspaceContext = new WorkspaceContext(false, false)
+
   override def getPrimaryWorkspace: PrimaryWorkspace =
     this
 
   def parser = compiler.utilities
-
-  def isHeadless = true
 
   val drawingActionBroker = new DrawingActionBroker(renderer.trailDrawer)
   world.trailDrawer(drawingActionBroker)

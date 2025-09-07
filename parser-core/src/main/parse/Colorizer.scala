@@ -53,7 +53,7 @@ object Colorizer extends TokenColorizer {
       }
     }
     loop(line, colorGroups)
-    result.toString.replace("\n", "<br />")
+    "\r?\n".r.replaceAllIn(result.toString, "<br />")
   }
 
   def colorizeLine(line: String, theme: ColorizerTheme): Vector[Color] = {

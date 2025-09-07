@@ -3,6 +3,7 @@
 package org.nlogo.render;
 
 import org.nlogo.api.Graphics2DWrapper;
+import org.nlogo.api.WorkspaceContext;
 
 public abstract class TrailDrawerJ
     implements org.nlogo.api.TrailDrawerInterface,
@@ -249,7 +250,7 @@ public abstract class TrailDrawerJ
     return false;
   }
 
-  public boolean isHeadless() {
+  public WorkspaceContext workspaceContext() {
     throw new UnsupportedOperationException();
   }
 }

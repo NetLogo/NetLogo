@@ -2,10 +2,10 @@
 
 package org.nlogo.headless
 
-import org.nlogo.util.MockSuite
-import org.nlogo.api.{ Version, ViewSettings, Perspective, WorldType }
-import org.nlogo.shape.ShapeConverter
+import org.nlogo.api.{ Perspective, Version, ViewSettings, WorkspaceContext, WorldType }
 import org.nlogo.core.Model
+import org.nlogo.shape.ShapeConverter
+import org.nlogo.util.MockSuite
 
 trait TestUsingWorkspace extends MockSuite {
   case class SimpleViewSettings(
@@ -17,8 +17,8 @@ trait TestUsingWorkspace extends MockSuite {
     viewOffsetY: Double = 0,
     drawSpotlight: Boolean = false,
     renderPerspective: Boolean = false,
-    isHeadless: Boolean = true,
-    perspective: Perspective = Perspective.Observe) extends ViewSettings
+    perspective: Perspective = Perspective.Observe,
+    workspaceContext: WorkspaceContext) extends ViewSettings
 
   def testUsingWorkspace(testName: String, radius: Int = 5,
                          worldType: WorldType = WorldType.Torus)

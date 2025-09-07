@@ -10,13 +10,13 @@ import javax.swing.event.ListSelectionListener
 
 import org.nlogo.analytics.Analytics
 import org.nlogo.api.{ RefEnumeratedValueSet, LabProtocol }
-import org.nlogo.window.{ EditDialogFactory, MenuBarFactory }
-
 import org.nlogo.core.I18N
 import org.nlogo.swing.{ Button, FileDialog, OptionPane, Positioning, ScrollPane, Transparent, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
+import org.nlogo.window.{ EditDialogFactory, MenuBarFactory }
 
 import scala.io.Source
+import scala.util.{ Success, Failure }
 
 private class ManagerDialog(manager:       LabManager,
                             dialogFactory: EditDialogFactory,
@@ -257,17 +257,14 @@ private class ManagerDialog(manager:       LabManager,
       dialog.setVisible(true)
 
       for (file <- dialog.getFiles) {
-        try {
-          manager.modelLoader.readExperiments(Source.fromFile(file).mkString, true,
-                                              manager.protocols.map(_.name).toSet)
-                             .foreach(_._1.foreach(manager.addProtocol(_)))
-        } catch {
-          case e: org.xml.sax.SAXParseException => {
-            if (!java.awt.GraphicsEnvironment.isHeadless) {
-              new OptionPane(manager.workspace.getFrame, I18N.gui("invalid"), I18N.gui("error.import", file.getName),
-                             OptionPane.Options.Ok, OptionPane.Icons.Error)
-            }
-          }
+        manager.modelLoader.readExperiments(Source.fromFile(file).mkString, true,
+                                            manager.protocols.map(_.name).toSet) match {
+          case Success((protocols, _)) =>
+            protocols.foreach(manager.addProtocol)
+
+          case Failure(_) =>
+            new OptionPane(manager.workspace.getFrame, I18N.gui("invalid"), I18N.gui("error.import", file.getName),
+                           OptionPane.Options.Ok, OptionPane.Icons.Error)
         }
       }
 
