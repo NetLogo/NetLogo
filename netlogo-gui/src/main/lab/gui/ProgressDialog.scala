@@ -232,7 +232,7 @@ private [gui] class ProgressDialog(parent: Window, supervisor: Supervisor, compi
 
   override def experimentStarted(): Unit = {started = System.currentTimeMillis}
   override def runStarted(w: Workspace, runNumber: Int, settings: List[(String, Any)]): Unit = {
-    if (!w.isHeadless) {
+    if (w.workspaceContext.workspaceGUI) {
       runCount = runNumber
       steps = 0
       resetPlot()
@@ -254,7 +254,7 @@ private [gui] class ProgressDialog(parent: Window, supervisor: Supervisor, compi
     }
   }
   override def stepCompleted(w: Workspace, steps: Int): Unit = {
-    if (!w.isHeadless) {
+    if (w.workspaceContext.workspaceGUI) {
       this.steps = steps
       if (workspace.triedToExportPlot && workspace.exportPlotWarningAction == ExportPlotWarningAction.Warn) {
         workspace.setExportPlotWarningAction(ExportPlotWarningAction.Ignore)
@@ -267,7 +267,7 @@ private [gui] class ProgressDialog(parent: Window, supervisor: Supervisor, compi
     }
   }
   override def measurementsTaken(w: Workspace, runNumber: Int, step: Int, values: List[AnyRef]): Unit = {
-    if (!w.isHeadless) plotNextPoint(values)
+    if (w.workspaceContext.workspaceGUI) plotNextPoint(values)
   }
 
   private def invokeAndWait(f: => Unit) =

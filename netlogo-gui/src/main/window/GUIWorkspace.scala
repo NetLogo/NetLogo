@@ -16,9 +16,9 @@ import javax.swing.border.LineBorder
 
 import org.nlogo.agent.{ Agent, BooleanConstraint, ImporterJ, OutputObject, SliderConstraint, World }
 import org.nlogo.api.{ Agent => ApiAgent, AgentFollowingPerspective, CommandRunnable, ControlSet, DrawingInterface,
-                       Exceptions, FileIO, JobOwner, LogoException, ModelReader, ModelSections,
-                       ModelType, PreviewCommands, RendererInterface, ReporterRunnable, SimpleJobOwner,
-                       TrailDrawerInterface, WorldPropertiesInterface }
+                       Exceptions, FileIO, JobOwner, LogoException, ModelReader, ModelSections, ModelType,
+                       PreviewCommands, RendererInterface, ReporterRunnable, SimpleJobOwner, TrailDrawerInterface,
+                       WorkspaceContext, WorldPropertiesInterface }
 import org.nlogo.awt.{ EventQueue, Hierarchy, UserCancelException }
 import org.nlogo.core.{ AgentKind, CompilerException, File, I18N, Model, ModelSettings,
                         Shape, UpdateMode, WorldDimensions, WorldDimensions3D }
@@ -146,6 +146,8 @@ abstract class GUIWorkspace(world: World, kioskLevel: GUIWorkspace.KioskLevel, f
 
   repaintTimer.start()
   lifeguard.start()
+
+  override val workspaceContext = new WorkspaceContext(true, true)
 
   override def getPrimaryWorkspace: PrimaryWorkspace =
     this
@@ -298,9 +300,6 @@ abstract class GUIWorkspace(world: World, kioskLevel: GUIWorkspace.KioskLevel, f
 
     super.dispose()
   }
-
-  override def isHeadless: Boolean =
-    false
 
   def waitFor(runnable: Runnable): Unit =
     ThreadUtils.waitFor(this, runnable)

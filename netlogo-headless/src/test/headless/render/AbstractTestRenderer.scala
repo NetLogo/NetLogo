@@ -33,7 +33,7 @@ abstract class AbstractTestRenderer(worldType: WorldType = Torus) extends TestUs
         setup(g)
         when{
           workspace.command(command)
-          workspace.renderer.paint(g, SimpleViewSettings(patchSize = 13))
+          workspace.renderer.paint(g, SimpleViewSettings(patchSize = 13, workspaceContext = workspace.workspaceContext))
           testOperations(g, List(Rect(Location(0.0,0.0), Size(429.0,429.0), filled=true)) ::: expectedResults.toList)
         }
       }

@@ -60,7 +60,7 @@ class EditorArea(val configuration: EditorConfiguration)
     undoManager.watch(this)
 
     // add key bindings for undo and redo so they work even in modal dialogs
-    val mask: Int = if(java.awt.GraphicsEnvironment.isHeadless) 0 else getToolkit.getMenuShortcutKeyMaskEx
+    val mask: Int = getToolkit.getMenuShortcutKeyMaskEx
 
     getKeymap.addActionForKeyStroke(keystroke(KeyEvent.VK_Z, mask), UndoManager.undoAction)
     getKeymap.addActionForKeyStroke(keystroke(KeyEvent.VK_Y, mask), UndoManager.redoAction)

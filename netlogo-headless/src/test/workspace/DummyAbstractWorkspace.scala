@@ -5,9 +5,9 @@ package org.nlogo.workspace
 import java.io.InputStream
 
 import org.nlogo.agent.{ Agent, World2D }
+import org.nlogo.api, api.WorkspaceContext
+import org.nlogo.core, org.nlogo.core.{ File, Model }
 import org.nlogo.nvm, nvm.{ CompilerInterface, PrimaryWorkspace }
-import org.nlogo.api
-import org.nlogo.core, org.nlogo.core.{File, Model}
 
 /**
  * handy for use in unit tests
@@ -18,6 +18,7 @@ extends AbstractWorkspace(new World2D)
 {
   dispose() // don't leak a JobThread - ST 5/2/13
   private def unsupported = throw new UnsupportedOperationException
+  override def workspaceContext: WorkspaceContext = unsupported
   override def getPrimaryWorkspace: PrimaryWorkspace = unsupported
   override def compilerTestingMode = false
   override def waitFor(runnable: api.CommandRunnable): Unit = unsupported
@@ -75,5 +76,4 @@ extends AbstractWorkspace(new World2D)
   override def viewOffsetX = unsupported
   override def viewOffsetY = unsupported
   override def viewWidth = unsupported
-  override def isHeadless = true
 }

@@ -2,10 +2,10 @@
 
 package org.nlogo.workspace
 
-import org.nlogo.agent.{World2D, World3D}
-import org.nlogo.nvm.{ PresentationCompilerInterface, PrimaryWorkspace }
+import org.nlogo.agent.{ World2D, World3D }
+import org.nlogo.api.{ AggregateManagerInterface, Version, WorkspaceContext }
 import org.nlogo.core.AgentKind
-import org.nlogo.api.{AggregateManagerInterface, Version}
+import org.nlogo.nvm.{ PresentationCompilerInterface, PrimaryWorkspace }
 
 /**
  * handy for use in unit tests
@@ -18,7 +18,7 @@ extends AbstractWorkspaceScala(
 {
   dispose() // don't leak a JobThread - ST 5/2/13
   private def unsupported = throw new UnsupportedOperationException
-  override val isHeadless = true
+  override def workspaceContext: WorkspaceContext = unsupported
   override def getPrimaryWorkspace: PrimaryWorkspace = unsupported
   override def compilerTestingMode = false
   override def aggregateManager: AggregateManagerInterface = unsupported

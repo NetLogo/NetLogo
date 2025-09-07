@@ -8,7 +8,7 @@ import org.scalatest.funsuite.AnyFunSuite
 
 import org.nlogo.{ api, agent, core },
   agent.{ AgentSet, World2D, DummyLiteralParser },
-  api.{ Dump, ExtensionManager => ApiExtensionManager , ClassManager },
+  api.{ Dump, ExtensionManager => ApiExtensionManager , ClassManager, WorkspaceContext },
   core.{ ExtensionObject, File, ErrorSource, Primitive, TokenDSL}
 
 class ImportHandlerTests extends AnyFunSuite {
@@ -70,6 +70,7 @@ class ImportHandlerTests extends AnyFunSuite {
       def getJarPaths: JList[String] = ???
       def getExtensionNames: JList[String] = ???
       def profilingEnabled: Boolean = ???
+      def workspaceContext: WorkspaceContext = ???
     }
   }
 

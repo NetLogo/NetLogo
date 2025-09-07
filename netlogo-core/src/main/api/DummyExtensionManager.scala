@@ -18,6 +18,7 @@ class DummyExtensionManager extends CoreDummyExtensionManager with ExtensionMana
   override def loadedExtensionNames: Seq[String] = Seq()
   override def dumpExtensions: String = unsupported
   override def dumpExtensionPrimitives(): String = unsupported
+  override def workspaceContext: WorkspaceContext = unsupported
   def extensionCommandNames: Set[String] = Set.empty[String]
   def extensionReporterNames: Set[String] = Set.empty[String]
   private def unsupported = throw new UnsupportedOperationException

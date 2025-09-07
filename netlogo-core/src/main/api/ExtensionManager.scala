@@ -42,6 +42,8 @@ trait ExtensionManager extends CoreManager {
 
   def dumpExtensionPrimitives(): String
 
+  def workspaceContext: WorkspaceContext
+
 }
 
 object ExtensionManager {
