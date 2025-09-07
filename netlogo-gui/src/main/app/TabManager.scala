@@ -767,11 +767,10 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
   def handle(e: AboutToCloseFilesEvent): Unit =
     OfferSaveExternalsDialog.offer(getExternalFileTabs.filter(_.saveNeeded).toSet, workspace.getFrame)
 
-  // if model didn't already exist, we need to restart the file watcher
-  // so it knows about the newly created file (Isaac B 6/22/25)
+  // before saving, the watcher thread is stopped so it doesn't detect our own write,
+  // so we need to start it up again after the save is complete (Isaac B 9/7/25)
   def handle(e: ModelSavedEvent): Unit = {
-    if (e.isNew)
-      startWatcherThread()
+    startWatcherThread()
   }
 
   override def syncTheme(): Unit = {
