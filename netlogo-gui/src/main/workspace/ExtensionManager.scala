@@ -7,7 +7,7 @@ import java.lang.{ ClassLoader, Iterable => JIterable }
 import java.net.URL
 import java.util.{ List => JList, Locale }
 
-import org.nlogo.api.{ ClassManager, Dump, ExtensionException, ImportErrorHandler, Reporter }
+import org.nlogo.api.{ ClassManager, Dump, ExtensionException, ImportErrorHandler, Reporter, WorkspaceContext }
 import org.nlogo.core.{ CompilerException, ErrorSource, ExtensionObject, Primitive, PrimitiveCommand, PrimitiveReporter, TokenType }
 import org.nlogo.nvm.{ ExtensionManager => NvmExtensionManager }
 
@@ -371,4 +371,7 @@ class ExtensionManager(val workspace: ExtendableWorkspace, loader: ExtensionLoad
 
   private def getJarContainerByIdentifier(identifier: String): Option[JarContainer] =
     jars.values.find(_.extensionName.equalsIgnoreCase(identifier))
+
+  override def workspaceContext: WorkspaceContext =
+    workspace.workspaceContext
 }

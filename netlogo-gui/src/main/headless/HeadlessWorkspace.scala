@@ -10,8 +10,8 @@ import java.nio.file.Paths
 // here and document it here.  The overriding method can simply call super(). - ST 6/1/05, 7/28/11
 
 import org.nlogo.api.{ ComponentSerialization, Version, RendererInterface, AggregateManagerInterface, FileIO,
-  LogoException, ModelReader, ModelType, NetLogoLegacyDialect,
-  NetLogoThreeDDialect, CommandRunnable, ReporterRunnable }, ModelReader.modelSuffix
+                       LogoException, ModelReader, ModelType, NetLogoLegacyDialect, NetLogoThreeDDialect,
+                       CommandRunnable, ReporterRunnable, WorkspaceContext }, ModelReader.modelSuffix
 import org.nlogo.core.{ AgentKind, CompilerException, Femto, Model, Output, Program, UpdateMode, WorldDimensions,
   WorldDimensions3D }
 import org.nlogo.agent.{ CompilationManagement, OutputObject, World, World2D, World3D }
@@ -110,6 +110,8 @@ with org.nlogo.workspace.Controllable
 with org.nlogo.workspace.WorldLoaderInterface
 with org.nlogo.api.ViewSettings with PrimaryWorkspace {
 
+  override val workspaceContext: WorkspaceContext = new WorkspaceContext(true, false)
+
   private var primaryWorkspace: PrimaryWorkspace = this
 
   override def getPrimaryWorkspace: PrimaryWorkspace =
@@ -145,11 +147,6 @@ with org.nlogo.api.ViewSettings with PrimaryWorkspace {
    * If true, don't send anything to standard output.
    */
   var silent = false
-
-  /**
-   * Internal use only.
-   */
-  override def isHeadless = true
 
   private var _is3d = false
   def set3d(newMode: Boolean) = { _is3d = newMode }

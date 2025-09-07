@@ -14,6 +14,7 @@ import org.nlogo.api.AgentFollowingPerspective;
 import org.nlogo.api.Perspective;
 import org.nlogo.api.PerspectiveJ;
 import org.nlogo.api.RendererInterface;
+import org.nlogo.api.WorkspaceContext;
 import org.nlogo.awt.Colors;
 import org.nlogo.awt.ImageSelection;
 import org.nlogo.core.AgentKindJ;
@@ -53,10 +54,6 @@ public class View
     addMouseListener(mouser);
     addMouseMotionListener(mouser);
     workspace.viewManager().add(this);
-  }
-
-  public boolean isHeadless() {
-    return workspace.isHeadless();
   }
 
   public boolean displayOn() {
@@ -426,6 +423,10 @@ public class View
 
   public boolean renderPerspective() {
     return renderPerspective;
+  }
+
+  public WorkspaceContext workspaceContext() {
+    return workspace.workspaceContext();
   }
 
   public void populateContextMenu(PopupMenu menu, java.awt.Point p) {

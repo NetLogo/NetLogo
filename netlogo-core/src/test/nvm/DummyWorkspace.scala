@@ -2,16 +2,17 @@
 
 package org.nlogo.nvm
 
-import org.nlogo.core.{ AgentKind, DummyCompilationEnvironment }
 import org.nlogo.agent.{ Agent, AgentSet, World2D }
 import org.nlogo.api.{ CommandRunnable, ExportPlotWarningAction, ImportErrorHandler, JobOwner, OutputDestination,
-                       ReporterRunnable }
-import org.nlogo.core.WorldDimensions
+                       ReporterRunnable, WorkspaceContext }
+import org.nlogo.core.{ AgentKind, DummyCompilationEnvironment, WorldDimensions }
+
 import scala.collection.immutable.ListMap
 
 class DummyWorkspace extends Workspace {
   private def unsupported = throw new UnsupportedOperationException
   val world = new World2D()
+  override def workspaceContext: WorkspaceContext = unsupported
   override def getPrimaryWorkspace: PrimaryWorkspace = unsupported
   override def procedures: ListMap[String,Procedure] = ListMap.empty[String, Procedure]
   override def joinForeverButtons(agent: Agent) = unsupported
@@ -70,7 +71,6 @@ class DummyWorkspace extends Workspace {
   override def dispose(): Unit = { }
   override def lastLogoException = unsupported
   override def clearLastLogoException() = unsupported
-  override def isHeadless = unsupported
   override def behaviorSpaceRunNumber = 0
   override def behaviorSpaceRunNumber(n: Int) = unsupported
   override def previewCommands = unsupported

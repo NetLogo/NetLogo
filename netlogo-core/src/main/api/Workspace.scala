@@ -8,6 +8,7 @@ import java.io.IOException
 
 trait Workspace extends ImporterUser with LiteralParser with RandomServices
 with ViewSettings with Controllable {
+  def workspaceContext: WorkspaceContext
   def world: World
   def getExtensionManager: ExtensionManager
   def getLibraryManager:   LibraryManager

@@ -60,7 +60,7 @@ class TestPatchLabelsBehaveSameAsTurtleLabels extends AbstractTestRenderer {
       workspace.changeTopology(wt.xWrap, wt.yWrap)
       workspace.command("ask patches [ set plabel 123 sprout 1 [ set label 123 ]]")
       val g = new MockGraphics(this) { allowingLabels(LabelSize(10, 10)) }
-      workspace.renderer.paint(g, SimpleViewSettings(patchSize = 13))
+      workspace.renderer.paint(g, SimpleViewSettings(patchSize = 13, workspaceContext = workspace.workspaceContext))
       for (Seq(a, b) <- g.labels.sorted.grouped(2))
         assert(a === b)
     }
@@ -79,7 +79,7 @@ class TestLabelsAlwaysAppearWhenUsingFollow extends AbstractTestRenderer {
       for (i <- 0 until numTurtles) {
         g.clear()
         workspace.command(s"follow turtle $i")
-        workspace.renderer.paint(g, SimpleViewSettings(patchSize = 13))
+        workspace.renderer.paint(g, SimpleViewSettings(patchSize = 13, workspaceContext = workspace.workspaceContext))
         assert(g.labels.size === numTurtles)
       }
     }

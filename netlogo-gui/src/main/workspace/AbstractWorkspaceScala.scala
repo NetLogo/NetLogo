@@ -38,8 +38,6 @@ abstract class AbstractWorkspaceScala(val world: World, val hubNetManagerFactory
 
   private val libraryManager = new LibraryManager(APIEM.userExtensionsPath, extensionManager.reset)
 
-  def isHeadless: Boolean
-
   def compilerTestingMode: Boolean
 
   // used by `_every`

@@ -110,7 +110,6 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
     if (System.getProperty(p) == null) {
       System.setProperty(p, "true")
     }
-    System.setProperty("org.nlogo.preferHeadless", "true")
   }
 
   private def parseArgs(args: Array[String]): Option[Settings] = {

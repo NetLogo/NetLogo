@@ -66,7 +66,8 @@ class TestRenderer extends AbstractTestRenderer {
     val node = workspace.world.turtles.iterator.next()
     val g = new MockGraphics(this)
     workspace.renderer.paint(g,
-      SimpleViewSettings(patchSize=61.285714285714285, viewOffsetX=13,viewOffsetY= -13, renderPerspective=true, perspective=Perspective.Follow(node, 5)))
+      SimpleViewSettings(patchSize = 61.285714285714285, viewOffsetX = 13, viewOffsetY = -13, renderPerspective = true,
+                         perspective = Perspective.Follow(node, 5), workspaceContext = workspace.workspaceContext))
     testOperations(g,List(
       Rect(Location(0.0, 0.0), Size(2022.0,2022.0), filled=true),
       Line(Location(-91.92857142857143,214.5),Location(214.5,214.5))))
@@ -77,7 +78,8 @@ class TestRenderer extends AbstractTestRenderer {
                                "create-turtles 1 [ ht setxy 6 0 ] " +
                                "ask turtle 0 [ create-link-with turtle 1 ]")
     val g = new MockGraphics(this)
-    workspace.renderer.paint(g, SimpleViewSettings(patchSize=10, viewOffsetX=0,viewOffsetY=0))
+    workspace.renderer.paint(g, SimpleViewSettings(patchSize = 10, viewOffsetX = 0, viewOffsetY = 0,
+                             workspaceContext = workspace.workspaceContext))
     testOperations(g,List(
       Rect(Location(0.0,0.0), Size(210.0,210.0), filled=true),
       Line(Location(45.0,105.0),Location(-45.0,105.0)),
@@ -90,8 +92,9 @@ class TestRenderer extends AbstractTestRenderer {
                                "ask turtle 0 [ create-link-with turtle 1 ]")
     val turtle = workspace.world.turtles.iterator.next()
     val g = new MockGraphics(this)
-    workspace.renderer.paint(g, SimpleViewSettings(patchSize=10, viewOffsetX=3,viewOffsetY= -3,
-      renderPerspective=true, perspective=Perspective.Follow(turtle, 5)))
+    workspace.renderer.paint(g, SimpleViewSettings(patchSize = 10, viewOffsetX = 3, viewOffsetY = -3,
+                             renderPerspective = true, perspective = Perspective.Follow(turtle, 5),
+                             workspaceContext = workspace.workspaceContext))
     testOperations(g,List(
       Rect(Location(0.0,0.0), Size(210.0,210.0), filled=true),
       Line(Location(15.0,75.0),Location(-75.0,75.0)),
@@ -349,7 +352,7 @@ class TestLabelsAlwaysAppearWhenUsingFollow extends AbstractTestRenderer{
       for(i <- 0 until numTurtles){
         g.clear()
         workspace.command("follow turtle " + i)
-        workspace.renderer.paint(g, SimpleViewSettings(patchSize = 13))
+        workspace.renderer.paint(g, SimpleViewSettings(patchSize = 13, workspaceContext = workspace.workspaceContext))
         assert(g.labels.size === numTurtles)
       }
     }
@@ -363,7 +366,7 @@ class TestRendererPatchLabelsBehaveSameAsTurtleLabels extends AbstractTestRender
       workspace.changeTopology(wt.xWrap, wt.yWrap)
       workspace.command("ask patches [ set plabel 123 sprout 1 [ set label 123 ]]")
       val g = new MockGraphics(this){ allowingLabels(LabelSize(10,10)) }
-      workspace.renderer.paint(g, SimpleViewSettings(patchSize = 13))
+      workspace.renderer.paint(g, SimpleViewSettings(patchSize = 13, workspaceContext = workspace.workspaceContext))
       g.labels.sorted.grouped(2).toList.foreach {
         case Seq(a, b) => assert(a === b)
         case _ =>
@@ -399,7 +402,7 @@ abstract class AbstractTestRenderer(worldType: WorldType = Torus) extends TestUs
         setup(g)
         when{
           workspace.command(command)
-          workspace.renderer.paint(g, SimpleViewSettings(patchSize = 13))
+          workspace.renderer.paint(g, SimpleViewSettings(patchSize = 13, workspaceContext = workspace.workspaceContext))
           testOperations(g, List(Rect(Location(0.0,0.0), Size(429.0,429.0), filled=true)) ::: expectedResults.toList)
         }
       }

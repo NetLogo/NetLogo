@@ -148,7 +148,7 @@ public abstract class AbstractRenderer
     // faster on some machines if we uselessly draw the blank
     // layer -- go figure! it's only worth doing if there
     // are turtles though - ST 11/23/05
-    if (!_trailDrawer.drawingBlank || (WINDOWS && anyTurtles() && !settings.isHeadless())) {
+    if (!_trailDrawer.drawingBlank || (WINDOWS && anyTurtles() && settings.workspaceContext().workspaceGUI())) {
       topology.paintViewImage
           (g, _trailDrawer.getAndCreateDrawing(false));
     }
