@@ -13,7 +13,7 @@ if [ -z "${JLINK}" ] || [ ! -f $JLINK ]; then
 fi
 
 if [ -z "${NL_BUILD_VERSION}" ]; then
-  echo "You must set the NL_BUILD_VERSION variable for naming the build artifacts (e.g. NL_BUILD_VERSION=7.0.0-RC1)"
+  echo "You must set the NL_BUILD_VERSION variable for naming the build artifacts (e.g. NL_BUILD_VERSION=7.0.0)"
   exit 1
 fi
 
