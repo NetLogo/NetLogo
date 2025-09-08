@@ -32,7 +32,8 @@ object ChecksumsAndPreviewsSettings {
       "/Code Examples/Mouse Example.nlogox",
       "/Code Examples/Perspective Demos/Termites (Perspective Demo).nlogox",
       "/Code Examples/User Interaction Example.nlogox",
-      "/Sample Models/Mathematics/Probability/ProbLab/Unverified/Equidistant Probability.nlogox"
+      "/Sample Models/Mathematics/Probability/ProbLab/Unverified/Equidistant Probability.nlogox",
+      "/3D/Sample Models/Maze 3D.nlogox3d"
     )
 
     , Some("it uses the sound extension") -> List(
