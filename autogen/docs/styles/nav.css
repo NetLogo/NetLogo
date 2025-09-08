@@ -147,6 +147,16 @@
 	background: var(--color-background);
 }
 
+@-moz-document, @supports (-moz-appearance: none) {
+  .version-select:hover {
+    background: var(--color-nav-text);
+    color: var(--color-text-on-primary);
+  }
+  .version-select option {
+    color: var(--color-text-on-primary);
+  }
+}
+
 /* Utility buttons */
 .navbar__actions {
 	display: flex;
