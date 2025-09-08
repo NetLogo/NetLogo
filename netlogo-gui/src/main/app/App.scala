@@ -42,6 +42,9 @@ import org.nlogo.workspace.{ AbstractWorkspace, AbstractWorkspaceScala, Controll
 import org.picocontainer.parameters.{ ComponentParameter, ConstantParameter }
 import org.picocontainer.Parameter
 
+import sttp.client4.pekkohttp.PekkoHttpBackend
+import sttp.client4.quick.{ quickRequest, UriContext }
+
 /**
  * The main class for the complete NetLogo application.
  *
@@ -600,10 +603,21 @@ class App extends org.nlogo.window.Event.LinkChild
       syncWindowThemes()
 
       if (analyticsConsent) {
-        NetLogoPreferences.putBoolean("sendAnalytics",
-          new OptionPane(frame, I18N.gui.get("dialog.analyticsConsent"),
-                         I18N.gui.get("dialog.analyticsConsent.message"), OptionPane.Options.YesNo,
-                         OptionPane.Icons.Info).getSelectedIndex == 0)
+        val sendAnalytics = new OptionPane(frame, I18N.gui.get("dialog.analyticsConsent"),
+                                           I18N.gui.get("dialog.analyticsConsent.message"), OptionPane.Options.YesNo,
+                                           OptionPane.Icons.Info).getSelectedIndex == 0
+
+        NetLogoPreferences.putBoolean("sendAnalytics", sendAnalytics)
+
+        val request = quickRequest.post(uri"https://backend.netlogo.org/items/NetLogo_Desktop_Analytics")
+                                  .body(s"""{"enabled": $sendAnalytics}""")
+                                  .contentType("application/json")
+
+        val backend = PekkoHttpBackend()
+
+        request.send(backend).onComplete { _ =>
+          backend.close()
+        }
       }
 
       Analytics.refreshPreference()
