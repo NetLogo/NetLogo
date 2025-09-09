@@ -205,7 +205,7 @@ public class LinkData
     return color;
   }
 
-  public void color(Object color) {
+  public final void color(Object color) {
     if (color instanceof Double) {
       color((Double) color);
     } else {
@@ -213,15 +213,15 @@ public class LinkData
     }
   }
 
-  public void color(Double color) {
+  public final void color(Double color) {
     color(org.nlogo.api.Color.getARGBbyPremodulatedColorNumber(color));
   }
 
-  public void color(org.nlogo.core.LogoList color) {
+  public final void color(org.nlogo.core.LogoList color) {
     this.color = color;
   }
 
-  public void color(int argb) {
+  public final void color(int argb) {
     this.color = org.nlogo.api.Color.getRGBAListByARGB(argb);
   }
 

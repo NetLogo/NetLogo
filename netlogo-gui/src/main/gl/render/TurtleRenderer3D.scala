@@ -4,9 +4,7 @@ package org.nlogo.gl.render
 
 import org.nlogo.api.{ Agent, Constants, Turtle3D, World, World3D }
 
-private class TurtleRenderer3D(world: World, shapeRenderer: ShapeRenderer)
-extends TurtleRenderer(world, shapeRenderer) {
-
+class TurtleRenderer3D(world: World, shapeRenderer: ShapeRenderer) extends TurtleRenderer(world, shapeRenderer) {
   override def getOrientation(agent: Agent): Array[Double] = {
     val turtle = agent.asInstanceOf[Turtle3D]
     Array(turtle.heading, turtle.pitch, turtle.roll)

@@ -6,10 +6,9 @@ import com.jogamp.opengl.{ GL, GL2 }
 import org.nlogo.api.{ Turtle, Turtle3D, Patch, Patch3D, World, World3D,
                        Agent, AgentFollowingPerspective, AgentException, DrawingInterface }
 
-private class WorldRenderer3D(world: World3D, patchRenderer: PatchRenderer3D,
-                              drawing: DrawingInterface, turtleRenderer: TurtleRenderer3D,
-                              linkRenderer: LinkRenderer3D, settings: GLViewSettings)
-extends WorldRenderer(world, patchRenderer, drawing, turtleRenderer, linkRenderer, settings) {
+class WorldRenderer3D(world: World3D, patchRenderer: PatchRenderer3D, drawing: DrawingInterface,
+                      turtleRenderer: TurtleRenderer3D, linkRenderer: LinkRenderer3D, settings: GLViewSettings)
+  extends WorldRenderer(world, patchRenderer, drawing, turtleRenderer, linkRenderer, settings) {
 
   override def createDrawingRenderer(world: World, drawing: DrawingInterface,
                                      renderer: TurtleRenderer, linkRenderer: LinkRenderer): DrawingRendererInterface =

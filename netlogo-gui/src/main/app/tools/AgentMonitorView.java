@@ -18,6 +18,9 @@ public class AgentMonitorView
   public AgentMonitorView(GUIWorkspace workspace) {
     super(workspace);
     radius = (workspace.world().worldWidth() - 1) / 2;
+  }
+
+  public void addPopupListener() {
     addMouseListener(popupListener);
   }
 

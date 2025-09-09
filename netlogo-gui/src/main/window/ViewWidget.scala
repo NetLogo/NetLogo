@@ -16,6 +16,8 @@ class ViewWidget(workspace: GUIWorkspace) extends Widget with ViewWidgetInterfac
   val tickCounter = new TickCounterLabel(workspace.world)
   val displaySwitch = new DisplaySwitch(workspace)
 
+  view.init()
+
   setLayout(null)
   add(view)
 

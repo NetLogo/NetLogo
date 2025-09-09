@@ -6,17 +6,20 @@ package org.nlogo.agent
 // we'll convert it at method at a time, as needed, by relocating
 // methods from ImporterJ to here. - ST 7/11/12
 
-import org.nlogo.{ api, core },
-  core.{ AgentKind, AgentVariables, Breed, PlotPenState },
-  api.{ ImporterUser, PlotInterface, PlotPenInterface, PlotState }
+import org.nlogo.api.{ ImporterUser, PlotInterface, PlotPenInterface, PlotState }
+import org.nlogo.core.{ AgentKind, AgentVariables, Breed, PlotPenState }
 
-import collection.immutable.ListMap
+import scala.collection.immutable.ListMap
 
 class Importer(_errorHandler: ImporterJ.ErrorHandler,
                _world: World,
                _importerUser: ImporterUser,
                _stringReader: ImporterJ.StringReader)
 extends ImporterJ(_errorHandler, _world, _importerUser, _stringReader) {
+
+  someBreedOwns = getAllVars(world.program.breeds)
+  someLinkBreedOwns = getAllVars(world.program.linkBreeds)
+  specialVariables = fillSpecialVariables
 
   override def getImplicitVariables(kind: AgentKind): Array[String] =
     kind match {
