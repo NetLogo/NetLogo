@@ -6,9 +6,7 @@ import com.jogamp.opengl.GL2
 import com.jogamp.opengl.glu.GLU
 import org.nlogo.api.{ Agent, AgentFollowingPerspective, Constants, Perspective, Turtle, World }
 
-private class TurtleRenderer(world: World, shapeRenderer: ShapeRenderer)
-extends AgentRenderer(world, shapeRenderer) {
-
+class TurtleRenderer(world: World, shapeRenderer: ShapeRenderer) extends AgentRenderer(world, shapeRenderer) {
   private def lineScale = {
     val distance =
       world.observer.perspective match {
