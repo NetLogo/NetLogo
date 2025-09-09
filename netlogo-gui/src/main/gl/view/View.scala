@@ -10,8 +10,10 @@ import java.awt.event.{ KeyEvent, KeyAdapter, MouseEvent }
 import java.awt.image.BufferedImage
 
 import org.nlogo.analytics.Analytics
-import org.nlogo.api.Version
-import org.nlogo.gl.render.Renderer
+import org.nlogo.api.{ DrawingInterface, Version, World3D, WorldRenderable, WorldWithWorldRenderable }
+import org.nlogo.gl.render.{ LinkRenderer, LinkRenderer3D, PatchRenderer, PatchRenderer3D, Renderer, Renderer3D,
+                             ShapeRenderer, ShapeRenderer3D, TurtleRenderer, TurtleRenderer3D, WorldRenderer,
+                             WorldRenderer3D }
 import org.nlogo.swing.NetLogoIcon
 import org.nlogo.theme.ThemeSync
 import org.nlogo.window.Event.LinkChild
@@ -24,24 +26,40 @@ abstract class View(title: String, val viewManager: ViewManager, var renderer: R
 
   if (Version.is3D) {
     if (renderer == null) {
-      renderer = new org.nlogo.gl.render.Renderer3D(
-        viewManager.world, viewManager.graphicsSettings,
-        viewManager.workspace, viewManager)
+      val world: World3D & WorldRenderable = viewManager.world.asInstanceOf[World3D & WorldRenderable]
+      val drawing: DrawingInterface = viewManager.workspace
+
+      val shapeRenderer = new ShapeRenderer3D(world)
+      val turtleRenderer = new TurtleRenderer3D(world, shapeRenderer)
+      val linkRenderer = new LinkRenderer3D(world, shapeRenderer)
+      val patchRenderer = new PatchRenderer3D(world, drawing, shapeRenderer)
+      val worldRenderer = new WorldRenderer3D(world, patchRenderer, drawing, turtleRenderer, linkRenderer, viewManager)
+
+      renderer = new Renderer3D(viewManager.world, viewManager.graphicsSettings, drawing, viewManager, shapeRenderer,
+                                turtleRenderer, linkRenderer, patchRenderer, worldRenderer)
     } else {
       renderer.cleanUp()
-      renderer = new org.nlogo.gl.render.Renderer3D(renderer)
+      renderer = new Renderer3D(renderer)
     }
   }
 
   else {
     if (renderer == null) {
-      renderer = new Renderer(
-        viewManager.world, viewManager.graphicsSettings,
-        viewManager.workspace, viewManager)
+      val world: WorldWithWorldRenderable = viewManager.world
+      val drawing: DrawingInterface = viewManager.workspace
+
+      val shapeRenderer = new ShapeRenderer(world)
+      val turtleRenderer = new TurtleRenderer(world, shapeRenderer)
+      val linkRenderer = new LinkRenderer(world, shapeRenderer)
+      val patchRenderer = new PatchRenderer(world, drawing, shapeRenderer)
+      val worldRenderer = new WorldRenderer(world, patchRenderer, drawing, turtleRenderer, linkRenderer, viewManager)
+
+      renderer = new Renderer(world, viewManager.graphicsSettings, drawing, viewManager, shapeRenderer, turtleRenderer,
+                              linkRenderer, patchRenderer, worldRenderer)
     }
     else {
       renderer.cleanUp()
-      renderer = new org.nlogo.gl.render.Renderer(renderer)
+      renderer = new Renderer(renderer)
     }
   }
 

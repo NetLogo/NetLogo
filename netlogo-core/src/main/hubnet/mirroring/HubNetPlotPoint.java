@@ -31,7 +31,7 @@ public class HubNetPlotPoint
     return specifiesXCor;
   }
 
-  void xcor(double xcor) {
+  final void xcor(double xcor) {
     this.xcor = xcor;
   }
 
@@ -39,7 +39,7 @@ public class HubNetPlotPoint
     return xcor;
   }
 
-  void ycor(double ycor) {
+  final void ycor(double ycor) {
     this.ycor = ycor;
   }
 

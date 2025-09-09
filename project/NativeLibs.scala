@@ -3,7 +3,7 @@ import sbt.TaskKey, sbt.Keys._
 import sbt.io.{ IO, syntax }, syntax._
 
 import java.io.File
-import java.net.URL
+import java.net.URI
 
 import NetLogoBuild.cclArtifacts
 
@@ -27,7 +27,7 @@ object NativeLibs {
 
       if (!joglNatives.exists) {
         val joglTmp = baseDirectory.value / joglFile
-        val joglUrl = new URL(baseURL + joglFile)
+        val joglUrl = new URI(baseURL + joglFile).toURL
         IO.createDirectory(joglNatives)
         FileActions.download(joglUrl, joglTmp)
         IO.unzip(joglTmp, joglNatives)
@@ -48,7 +48,7 @@ object NativeLibs {
     cocoaLibs := {
       val libDir = baseDirectory.value / "natives" / "macosx-universal"
       IO.createDirectory(libDir / "natives")
-      FileActions.download(new java.net.URL(cclArtifacts("libjcocoa.dylib")), libDir / "libjcocoa.dylib")
+      FileActions.download(new URI(cclArtifacts("libjcocoa.dylib")).toURL, libDir / "libjcocoa.dylib")
       Seq(libDir / "libjcocoa.dylib")
     }
 
