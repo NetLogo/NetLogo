@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.ArrayList;
 
 import org.nlogo.api.Options;
+import org.nlogo.sdm.Converter;
+import org.nlogo.theme.InterfaceColors;
 
 public class ConverterFigure extends DiamondFigure
     implements
@@ -30,11 +32,17 @@ public class ConverterFigure extends DiamondFigure
   private transient Colorizer colorizer;
   private transient ExtensionManager extensionManager;
 
-  public ConverterFigure() {
-    setAttribute
-        (FigureAttributeConstant.FILL_COLOR,
-            org.nlogo.theme.InterfaceColors.converterBackground());
-    converter = new org.nlogo.sdm.Converter();
+  public static ConverterFigure create() {
+    ConverterFigure figure = new ConverterFigure();
+
+    figure.setAttribute(FigureAttributeConstant.FILL_COLOR, InterfaceColors.converterBackground());
+
+    return figure;
+  }
+
+  private ConverterFigure() {
+    converter = new Converter();
+
     converter.setSelected("Select");
   }
 
