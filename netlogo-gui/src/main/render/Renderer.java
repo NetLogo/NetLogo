@@ -25,8 +25,7 @@ public class Renderer
   }
 
   public Renderer(WorldWithWorldRenderable world, boolean renderLabelsAsRectangles) {
-    super(world, world.turtleShapes(), world.linkShapes());
-    setRenderLabelsAsRectangles(renderLabelsAsRectangles);
+    super(world, world.turtleShapes(), world.linkShapes(), renderLabelsAsRectangles);
   }
 
   ///
