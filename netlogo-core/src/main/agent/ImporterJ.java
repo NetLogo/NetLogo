@@ -88,10 +88,6 @@ public abstract class ImporterJ
 
     shapesNotToImport = new HashSet<Object>();
     breedsNotToImport = new HashSet<String>();
-    someBreedOwns = getAllBreedVars();
-    someLinkBreedOwns = getAllLinkBreedVars();
-
-    specialVariables = fillSpecialVariables();
     //essentialVarHeadersToImport = fillEssentialVarsToImport() ;
   }
 
@@ -832,16 +828,6 @@ public abstract class ImporterJ
       throw new AbortingImportException
           (ImportError.ILLEGAL_CLASS_CAST_ERROR, abortingError);
     }
-  }
-
-  abstract List<String> getAllVars(scala.collection.immutable.ListMap<String, Breed> breeds);
-
-  List<String> getAllBreedVars() {
-    return getAllVars(world.program().breeds());
-  }
-
-  List<String> getAllLinkBreedVars() {
-    return getAllVars(world.program().linkBreeds());
   }
 
   Map<AgentKind, List<String>> specialVariables;

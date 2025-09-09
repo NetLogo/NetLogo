@@ -36,6 +36,8 @@ abstract class AbstractWorkspaceScala(val world: World, val hubNetManagerFactory
   with Plotting
   with Extensions {
 
+  initMembers()
+
   private val libraryManager = new LibraryManager(APIEM.userExtensionsPath, extensionManager.reset)
 
   def isHeadless: Boolean
