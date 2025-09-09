@@ -58,8 +58,8 @@ class AggregateModelEditorToolBar(editor: AggregateModelEditor, model: Model) ex
 
     val stockButton = makeButton("Stock", "/images/stock.gif", new StockFigureCreationTool(model, editor))
     val variablButton = makeButton("Variable", "/images/converter.gif", new ConverterFigureCreationTool(model, editor))
-    val flowButton = makeButton("Flow", "/images/rate.gif", new RateConnectionTool(model, editor, new RateConnection()))
-    val linkButton = makeButton("Link", "/images/connector.gif", new AggregateConnectionTool(model, editor, new BindingConnection()))
+    val flowButton = makeButton("Flow", "/images/rate.gif", new RateConnectionTool(model, editor, RateConnection.create()))
+    val linkButton = makeButton("Link", "/images/connector.gif", new AggregateConnectionTool(model, editor, BindingConnection.create()))
 
     val toolButtonGroup = new ButtonGroup() { add(noToolButton) }
     for (b <- List(stockButton, variablButton, flowButton, linkButton)) {
@@ -115,7 +115,7 @@ class AggregateModelEditorToolBar(editor: AggregateModelEditor, model: Model) ex
     }
 
   /// Figure creation tools
-  private class ConverterFigureCreationTool(model: Model, editor: DrawingEditor) extends ModelElementCreationTool(model, editor, new ConverterFigure()) {
+  private class ConverterFigureCreationTool(model: Model, editor: DrawingEditor) extends ModelElementCreationTool(model, editor, ConverterFigure.create()) {
     // We override these to create a fixed-size shape, rather than allow
     // user to drag out the size
     override def mouseDown(e: MouseEvent, x: Int, y: Int): Unit = {

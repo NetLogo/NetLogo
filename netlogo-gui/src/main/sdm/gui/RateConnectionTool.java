@@ -25,7 +25,7 @@ class RateConnectionTool
   public Figure implyReservoir(int x, int y, Drawing drawing) {
     Figure target = findConnectableFigure(x, y, drawing);
     if (target == null) {
-      target = new ReservoirFigure();
+      target = ReservoirFigure.create();
       target.displayBox(new Point(x - 15, y - 15),
           new Point(x + 15, y + 15));
       view().add(target);
