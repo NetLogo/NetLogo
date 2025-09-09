@@ -6,8 +6,8 @@ import com.jogamp.opengl.{ GL, GL2, GL2GL3, GL2ES3 }
 import com.jogamp.opengl.fixedfunc.GLLightingFunc.GL_LIGHTING
 import org.nlogo.api.{ AgentFollowingPerspective, World, WorldRenderable, Patch, Patch3D, DrawingInterface}
 
-private class PatchRenderer(world: World & WorldRenderable, drawing: DrawingInterface, shapeRenderer: ShapeRenderer)
-extends TextureRenderer(world) {
+class PatchRenderer(world: World & WorldRenderable, drawing: DrawingInterface, shapeRenderer: ShapeRenderer)
+  extends TextureRenderer(world) {
 
   def getPatchCoords(patch: Patch): Array[Float] = {
     val coords = Array[Float](patch.pxcor.toFloat, patch.pycor.toFloat, 0)
