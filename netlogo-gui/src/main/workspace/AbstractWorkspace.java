@@ -10,6 +10,7 @@ import java.util.Locale;
 import java.util.Map;
 import scala.collection.mutable.WeakHashMap;
 import org.nlogo.agent.Agent;
+import org.nlogo.agent.ImporterJ;
 import org.nlogo.agent.World;
 import org.nlogo.api.AggregateManagerInterface;
 import org.nlogo.api.ExportPlotWarningAction;
@@ -27,7 +28,6 @@ import org.nlogo.core.Token;
 import org.nlogo.core.TokenType;
 import org.nlogo.core.UpdateMode;
 import org.nlogo.core.UpdateModeJ;
-import org.nlogo.agent.ImporterJ;
 import org.nlogo.nvm.Activation;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.EditorWorkspace;
@@ -53,17 +53,16 @@ public abstract class AbstractWorkspace
 
   public final World _world;
 
-  private final org.nlogo.nvm.JobManagerInterface jobManager;
+  private org.nlogo.nvm.JobManagerInterface jobManager;
 
   @Override
   public org.nlogo.nvm.JobManagerInterface jobManager() {
     return jobManager;
   }
 
-  public final Evaluator evaluator;
-  public final ExtensionManager extensionManager;
-
-  protected final ExternalResourceManager resourceManager;
+  public Evaluator evaluator;
+  public ExtensionManager extensionManager;
+  protected ExternalResourceManager resourceManager;
 
   public abstract WeakHashMap<Job, WeakHashMap<Agent, WeakHashMap<Command, MutableLong>>> lastRunTimes();
 
@@ -107,10 +106,12 @@ public abstract class AbstractWorkspace
   /// startup
 
   protected AbstractWorkspace(World world) {
-    this._world = world;
+    _world = world;
+  }
+
+  public void initMembers() {
     evaluator = new Evaluator(this);
-    jobManager = Femto.getJ(JobManagerInterface.class, "org.nlogo.job.JobManager",
-        new Object[]{this, world, world});
+    jobManager = Femto.getJ(JobManagerInterface.class, "org.nlogo.job.JobManager", new Object[]{this, _world, _world});
     extensionManager = new ExtensionManager(this, new JarLoader(this));
     resourceManager = new ExternalResourceManager();
   }

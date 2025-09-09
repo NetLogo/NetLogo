@@ -13,7 +13,7 @@ import javax.swing.undo.UndoableEdit;
 // compound edit stuff copied from My World GIS - ER 4/11/08
 
 public class UndoManager extends javax.swing.undo.UndoManager
-    implements java.awt.event.ActionListener, java.awt.event.FocusListener, java.beans.PropertyChangeListener {
+                         implements java.awt.event.FocusListener, java.beans.PropertyChangeListener {
 
   // Edits that happen less than this number of milliseconds
   // apart will be coalesced into a single CompoundEdit for
@@ -55,7 +55,14 @@ public class UndoManager extends javax.swing.undo.UndoManager
   // EDIT_COMPOSITION_THRESHOLD milliseconds. - ER 4/11/08
 
   public UndoManager() {
-    _timer = new Timer(EDIT_COMPOSITION_THRESHOLD, this);
+    _timer = new Timer(EDIT_COMPOSITION_THRESHOLD, new java.awt.event.ActionListener() {
+      @Override
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        if (evt.getSource() == _timer) {
+          closeEditInProgress(true);
+        }
+      }
+    });
     _editInProgress = null;
     _lastEditTime = 0;
     _lastEditSource = null;
@@ -97,12 +104,6 @@ public class UndoManager extends javax.swing.undo.UndoManager
     _lastEditTime = currentTime;
     _lastEditSource = currentSource;
     _timer.restart();
-  }
-
-  public void actionPerformed(java.awt.event.ActionEvent evt) {
-    if (evt.getSource() == _timer) {
-      closeEditInProgress(true);
-    }
   }
 
   private void closeEditInProgress(boolean perform) {
