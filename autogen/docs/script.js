@@ -106,6 +106,52 @@
 			dropdownExitTimers.push(leaveTimer);
 		});
 
+		// Load versions from versions.json
+		async function loadVersions() {
+			try {
+				const response = await fetch('/versions.json', { cache: 'force-cache' });
+				if (!response.ok) throw new Error('Network response was not ok');
+				const versions = await response.json();
+				return versions;
+			} catch (error) {
+				console.error('Error fetching versions.json:', error);
+				return null;
+			}
+		}
+
+		const $versionSelect = document.getElementById('version-select');
+		async function populateVersionSelect() {
+			if (!$versionSelect) return;
+
+			const versions = await loadVersions();
+			if (!versions || !Array.isArray(versions) || versions.length === 0) return;
+
+			let currentVersion = (window.netlogo?.currentVersion) || 
+								 ($versionSelect.dataset.currentVersion) ||
+								 ($versionSelect.querySelector('option[value="this"]').textContent.trim());
+			if (!currentVersion) return;
+			
+			const optionNodes = versions.map((version) => {
+				const isCurrent = version.name === currentVersion || version.value === currentVersion;
+				const option = document.createElement('option');
+				option.value = isCurrent ? 'this' : version.value;
+				option.textContent = version.name;
+				option.selected = isCurrent;
+				if (version.urlPrefix) {
+					option.dataset.urlPrefix = version.urlPrefix;
+				} 
+				if (version.disabled) {
+					option.disabled = true;
+				}
+				return option;
+			});
+			
+			$versionSelect.innerHTML = '';
+			optionNodes.forEach((option) => $versionSelect.appendChild(option));
+		}
+
+		setTimeout(populateVersionSelect, 0); // Populate after current call stack
+
 		// Version Change
 		const CURRENT_VERSION = 'this'; // Default to current version
 		function goToVersion({ version, urlPrefix }) {
@@ -168,7 +214,6 @@
 			});
 		}
 
-		const $versionSelect = document.getElementById('version-select');
 		$versionSelect.selectedIndex = 0;
 		$versionSelect.addEventListener('change', function (e) {
 			e.preventDefault();
