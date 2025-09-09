@@ -53,13 +53,14 @@ import org.nlogo.api.Perspective;
 import org.nlogo.api.PerspectiveJ;
 import org.nlogo.api.TrailDrawerInterface;
 import org.nlogo.api.ViewSettings;
+import org.nlogo.api.World;
 import org.nlogo.core.ShapeList;
 import org.nlogo.core.ShapeListTracker;
 
 public abstract class AbstractRenderer
     implements org.nlogo.api.RendererInterface {
 
-  public final org.nlogo.api.World world;
+  public final World world;
   public final LinkDrawer linkDrawer;
   public final TurtleDrawer turtleDrawer;
   private final TrailDrawer _trailDrawer;
@@ -73,9 +74,9 @@ public abstract class AbstractRenderer
 
   private boolean _renderLabelsAsRectangles = false;
   public boolean renderLabelsAsRectangles() { return _renderLabelsAsRectangles; }
-  public void setRenderLabelsAsRectangles(boolean b) { _renderLabelsAsRectangles = b; }
+  public final void setRenderLabelsAsRectangles(boolean b) { _renderLabelsAsRectangles = b; }
 
-  public AbstractRenderer(org.nlogo.api.World world, ShapeListTracker turtleShapes, ShapeListTracker linkShapes) {
+  public AbstractRenderer(World world, ShapeListTracker turtleShapes, ShapeListTracker linkShapes) {
     this.world = world;
     linkDrawer = new LinkDrawer(linkShapes);
     turtleDrawer = new TurtleDrawer(turtleShapes);
@@ -83,9 +84,15 @@ public abstract class AbstractRenderer
     changeTopology(world.wrappingAllowedInX(), world.wrappingAllowedInY());
   }
 
+  public AbstractRenderer(World world, ShapeListTracker turtleShapes, ShapeListTracker linkShapes,
+                          boolean renderLabelsAsRectangles) {
+    this(world, turtleShapes, linkShapes);
+    setRenderLabelsAsRectangles(renderLabelsAsRectangles);
+  }
+
   ///
 
-  public void changeTopology(boolean wrapX, boolean wrapY) {
+  public final void changeTopology(boolean wrapX, boolean wrapY) {
     if (wrapX) {
       if (wrapY) {
         topology = new TorusRenderer(world);
