@@ -2,24 +2,32 @@
 
 package org.nlogo.sdm.gui;
 
+import java.awt.Color;
+import java.util.ArrayList;
+
 import org.jhotdraw.figures.EllipseFigure;
 import org.jhotdraw.framework.FigureAttributeConstant;
 import org.jhotdraw.framework.Handle;
 import org.jhotdraw.framework.HandleEnumeration;
 import org.jhotdraw.standard.HandleEnumerator;
 
-import java.util.ArrayList;
+import org.nlogo.sdm.Reservoir;
 
 public class ReservoirFigure
     extends EllipseFigure
     implements ModelElementFigure {
   private final org.nlogo.sdm.Reservoir reservoir;
 
-  public ReservoirFigure() {
-    super();
-    setAttribute(FigureAttributeConstant.FILL_COLOR,
-        java.awt.Color.LIGHT_GRAY);
-    reservoir = new org.nlogo.sdm.Reservoir();
+  public static ReservoirFigure create() {
+    ReservoirFigure figure = new ReservoirFigure();
+
+    figure.setAttribute(FigureAttributeConstant.FILL_COLOR, Color.LIGHT_GRAY);
+
+    return figure;
+  }
+
+  private ReservoirFigure() {
+    reservoir = new Reservoir();
   }
 
   public org.nlogo.sdm.ModelElement getModelElement() {
