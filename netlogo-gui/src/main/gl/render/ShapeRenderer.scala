@@ -6,8 +6,7 @@ import org.nlogo.api.{ Agent, AgentFollowingPerspective, Perspective, World }
 import com.jogamp.opengl.{ GL, GL2, GL2GL3, GL2ES3 }
 
 
-private[render] class ShapeRenderer(world: World) {
-
+class ShapeRenderer(world: World) {
   // We use a stencil buffer to highlight turtles. Some graphics cards, including the NVIDIA GeForce
   // FX 5200 Ultra, don't seem to support a stencil buffer, so we keep track of whether this card
   // supports the buffer and implement a workaround if not. - AZS 6/22/05

@@ -11,6 +11,7 @@ import org.nlogo.api.ExtensionManager;
 import org.nlogo.api.Options;
 import org.nlogo.editor.Colorizer;
 import org.nlogo.sdm.ModelElement;
+import org.nlogo.sdm.Rate;
 import org.nlogo.sdm.Reservoir;
 import org.nlogo.sdm.Stock;
 import org.nlogo.window.DummyErrorHandler;
@@ -20,7 +21,6 @@ import org.nlogo.window.EditPanel;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.List;
-
 
 import scala.collection.immutable.Seq;
 
@@ -36,10 +36,18 @@ public class RateConnection
   private transient Colorizer colorizer;
   private transient ExtensionManager extensionManager;
 
-  public RateConnection() {
-    setEndDecoration(null);
-    setStartDecoration(null);
-    rate = new org.nlogo.sdm.Rate();
+  public static RateConnection create() {
+    RateConnection connection = new RateConnection();
+
+    connection.setStartDecoration(null);
+    connection.setEndDecoration(null);
+
+    return connection;
+  }
+
+  private RateConnection() {
+    rate = new Rate();
+
     rate.setSelected("Select");
   }
 
