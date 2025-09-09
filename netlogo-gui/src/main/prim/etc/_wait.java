@@ -19,7 +19,7 @@ public final class _wait
   public void perform(final Context context)
       throws LogoException {
     long targetTime = System.nanoTime();
-    targetTime += argEvalDoubleValue(context, 0) * 1000000000;
+    targetTime += (long)(argEvalDoubleValue(context, 0) * 1000000000);
     context.activation.binding.let(let, new MutableLong(targetTime));
     context.ip = next;
   }

@@ -9,10 +9,16 @@ import org.nlogo.sdm.ModelElement;
 import org.nlogo.sdm.Reservoir;
 
 public class BindingConnection extends LineConnection {
-  public BindingConnection() {
-    setEndDecoration(null);
-    setStartDecoration(null);
+  public static BindingConnection create() {
+    BindingConnection connection = new BindingConnection();
+
+    connection.setStartDecoration(null);
+    connection.setEndDecoration(null);
+
+    return connection;
   }
+
+  private BindingConnection() {}
 
   @Override
   public boolean canConnect(Figure start, Figure end) {

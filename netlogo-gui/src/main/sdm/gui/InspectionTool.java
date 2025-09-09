@@ -85,8 +85,8 @@ class InspectionTool
       }
     super.mouseDown(e, x, y);
     } else {
-      link = new AggregateConnectionTool(model, editor, new BindingConnection());
-      rct = new RateConnectionTool(model, editor, new RateConnection());
+      link = new AggregateConnectionTool(model, editor, BindingConnection.create());
+      rct = new RateConnectionTool(model, editor, RateConnection.create());
       link.mouseDown(e, x, y);
       rct.mouseDown(e, x, y);
     }
