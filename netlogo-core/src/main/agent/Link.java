@@ -67,17 +67,15 @@ public class Link
 
   public Link(World world, Turtle end1, Turtle end2, int arraySize) {
     super(world);
-    Object[] variables = new Object[arraySize];
-    variables[VAR_END1] = end1;
-    variables[VAR_END2] = end2;
+    _variables = new Object[arraySize];
+    _variables[VAR_END1] = end1;
+    _variables[VAR_END2] = end2;
     this._end1 = end1;
     this._end2 = end2;
 
-    for (int i = 2; i < variables.length; i++) {
-      variables[i] = World.Zero();
+    for (int i = 2; i < _variables.length; i++) {
+      _variables[i] = World.Zero();
     }
-
-    setVariables(variables);
 
     colorDoubleUnchecked(DEFAULT_COLOR);
   }
@@ -545,8 +543,8 @@ public class Link
     variables()[VAR_COLOR] = boxedColor;
   }
 
-  public void colorDoubleUnchecked(Double boxedColor) {
-    variables()[VAR_COLOR] = boxedColor;
+  private void colorDoubleUnchecked(Double boxedColor) {
+    _variables[VAR_COLOR] = boxedColor;
   }
 
   public void color(LogoList rgb)
