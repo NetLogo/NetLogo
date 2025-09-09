@@ -5,8 +5,7 @@ package org.nlogo.gl.render
 import com.jogamp.opengl.GL2
 import org.nlogo.api.World3D
 
-private class ShapeRenderer3D(world: World3D) extends ShapeRenderer(world) {
-
+class ShapeRenderer3D(world: World3D) extends ShapeRenderer(world) {
   override def renderWrappedAgent(gl: GL2, shape3D: GLShape, size: Double, color: java.awt.Color,
                                   label: String, labelColor: AnyRef,
                                   x: Double, y: Double, z: Double, height: Float,
