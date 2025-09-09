@@ -79,10 +79,6 @@ public abstract class Turtle
     _variables[VAR_PENMODE] = PEN_UP;
   }
 
-  public Turtle(World world, AgentSet breed, Double xcor, Double ycor) {
-    this(world, breed, xcor, ycor, true);
-  }
-
   Turtle(World world, AgentSet breed, Double xcor, Double ycor, boolean getId) {
     super(world);
     Object[] variables = new Object[world.getVariablesArraySize(this, breed)];

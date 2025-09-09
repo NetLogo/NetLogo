@@ -73,7 +73,9 @@ abstract class GUIWorkspace(world: World, kioskLevel: GUIWorkspace.KioskLevel, f
 
   var glView: GLViewManagerInterface = null
 
-  private val periodicUpdater = new PeriodicUpdater(jobManager)
+  private val periodicUpdater = new PeriodicUpdater(jobManager) {
+    createActionListener()
+  }
 
   // ensure that any skipped frames get painted eventually
   // 10 checks a second seems like plenty

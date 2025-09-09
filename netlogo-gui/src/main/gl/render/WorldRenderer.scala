@@ -7,9 +7,8 @@ import com.jogamp.opengl.fixedfunc.GLLightingFunc.GL_LIGHTING
 import org.nlogo.api.{ World, Agent, AgentFollowingPerspective, Patch,
     Patch3D, Turtle, DrawingInterface, AgentException }
 
-private class WorldRenderer(world: World, patchRenderer: PatchRenderer,
-                            drawing: DrawingInterface, turtleRenderer: TurtleRenderer,
-                            linkRenderer: LinkRenderer, settings: GLViewSettings) {
+class WorldRenderer(world: World, patchRenderer: PatchRenderer, drawing: DrawingInterface,
+                    turtleRenderer: TurtleRenderer, linkRenderer: LinkRenderer, settings: GLViewSettings) {
 
   val observer = world.observer
   val drawingRenderer = createDrawingRenderer(world, drawing, turtleRenderer, linkRenderer)
