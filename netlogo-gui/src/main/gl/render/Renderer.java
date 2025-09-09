@@ -83,15 +83,11 @@ public class Renderer
                   ViewSettings graphicsSettings,
                   DrawingInterface drawing,
                   GLViewSettings glSettings,
-                  double uiScale) {
-    this(world, graphicsSettings, drawing, glSettings, new ShapeRenderer(world), uiScale);
-  }
-
-  public Renderer(WorldWithWorldRenderable world,
-                  ViewSettings graphicsSettings,
-                  DrawingInterface drawing,
-                  GLViewSettings glSettings,
                   ShapeRenderer shapeRenderer,
+                  TurtleRenderer turtleRenderer,
+                  LinkRenderer linkRenderer,
+                  PatchRenderer patchRenderer,
+                  WorldRenderer worldRenderer,
                   double uiScale) {
     modelMatrix = DoubleBuffer.wrap(new double[16]);
     projMatrix = DoubleBuffer.wrap(new double[16]);
@@ -101,11 +97,10 @@ public class Renderer
     transparentAgents = new PriorityQueue<Agent>(100, new Euclidean(world.observer()));
     renderer = graphicsSettings;
     this.shapeRenderer = shapeRenderer;
-    turtleRenderer = createTurtleRenderer(world);
-    linkRenderer = createLinkRenderer(world);
-    patchRenderer = createPatchRenderer(world, drawing);
-    worldRenderer = createWorldRenderer(world, patchRenderer, drawing,
-        turtleRenderer, glSettings);
+    this.turtleRenderer = turtleRenderer;
+    this.linkRenderer = linkRenderer;
+    this.patchRenderer = patchRenderer;
+    this.worldRenderer = worldRenderer;
     this.uiScale = uiScale;
   }
 
@@ -131,26 +126,6 @@ public class Renderer
 
   @Override
   public void dispose(GLAutoDrawable autoDrawable) {
-  }
-
-  TurtleRenderer createTurtleRenderer(World world) {
-    return new TurtleRenderer(world, shapeRenderer);
-  }
-
-  WorldRenderer createWorldRenderer(World world, PatchRenderer patchRenderer,
-                                    DrawingInterface drawing,
-                                    TurtleRenderer turtleRenderer,
-                                    GLViewSettings settings) {
-    return new WorldRenderer(world, patchRenderer, drawing, turtleRenderer, linkRenderer, settings);
-  }
-
-  PatchRenderer createPatchRenderer(World world,
-                                    DrawingInterface drawing) {
-    return new PatchRenderer(world, drawing, shapeRenderer);
-  }
-
-  LinkRenderer createLinkRenderer(World world) {
-    return new LinkRenderer(world, shapeRenderer);
   }
 
   public ExportRenderer createExportRenderer() {
