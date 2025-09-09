@@ -18,14 +18,19 @@ import com.jogamp.opengl.GL2;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Renderer3D
-    extends org.nlogo.gl.render.Renderer {
+public class Renderer3D extends Renderer {
   public Renderer3D(WorldWithWorldRenderable world,
                     ViewSettings graphicsSettings,
                     DrawingInterface drawing,
                     GLViewSettings glSettings,
+                    ShapeRenderer3D shapeRenderer,
+                    TurtleRenderer3D turtleRenderer,
+                    LinkRenderer3D linkRenderer,
+                    PatchRenderer3D patchRenderer,
+                    WorldRenderer3D worldRenderer,
                     double uiScale) {
-    super(world, graphicsSettings, drawing, glSettings, new ShapeRenderer3D((World3D) world), uiScale);
+    super(world, graphicsSettings, drawing, glSettings, shapeRenderer, turtleRenderer, linkRenderer, patchRenderer,
+          worldRenderer, uiScale);
   }
 
   public Renderer3D(Renderer glrenderer) {
@@ -56,32 +61,6 @@ public class Renderer3D
     super.disableClippingPlanes(gl);
     gl.glDisable(GL2.GL_CLIP_PLANE4);
     gl.glDisable(GL2.GL_CLIP_PLANE5);
-  }
-
-  @Override
-  TurtleRenderer createTurtleRenderer(World world) {
-    return new TurtleRenderer3D(world, shapeRenderer);
-  }
-
-  @Override
-  WorldRenderer createWorldRenderer(World world,
-                                    PatchRenderer patchRenderer,
-                                    DrawingInterface drawing,
-                                    TurtleRenderer turtleRenderer,
-                                    GLViewSettings settings) {
-    return new WorldRenderer3D((World3D) world, (PatchRenderer3D) patchRenderer,
-        drawing, (TurtleRenderer3D) turtleRenderer, (LinkRenderer3D) linkRenderer, settings);
-  }
-
-  @Override
-  PatchRenderer createPatchRenderer(World world,
-                                    DrawingInterface drawing) {
-    return new PatchRenderer3D((World3D) world, drawing, shapeRenderer);
-  }
-
-  @Override
-  LinkRenderer createLinkRenderer(World world) {
-    return new LinkRenderer3D(world, shapeRenderer);
   }
 
   @Override
