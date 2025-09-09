@@ -206,7 +206,7 @@
 				</div>
 				<div class="navbar__actions">
 					<!-- Version / Actions -->
-					<select id="version-select" class="version-select" aria-label="Select version">
+					<select id="version-select" class="version-select" aria-label="Select version" data-current-version="{{ version }}">
 						<option selected value="this">{{ version }}</option>
 						<!-- See script:expandStringVariables for details on how ${var} works -->
 						<option data-url-prefix="${CCL}/6.4.0/docs" value="6.4.0">6.4</option>
