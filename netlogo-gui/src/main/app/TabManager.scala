@@ -795,7 +795,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
       val actualLastModified = new File(workspace.getModelPath).lastModified.toString
 
       if (path.toFile.exists && storedLastModified == actualLastModified)
-        Source.fromFile(path.toFile).getLines().foreach(openExternalFile(_))
+        Source.fromFile(path.toFile).getLines().foreach(openExternalFile(_, false))
     }
 
     loadingTabs = false
