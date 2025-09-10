@@ -4,16 +4,17 @@ package org.nlogo.headless
 
 import collection.mutable.LinkedHashMap
 
-import java.io.{ BufferedReader, File, FileWriter, InputStreamReader }
+import java.io.{ File, FileWriter }
 import java.nio.file.{ Files, Paths }
-
-import scala.io.Source
 
 import org.nlogo.api.{ FileIO, Version }
 import org.nlogo.core.CompilerException
 import org.nlogo.headless.ChecksumsAndPreviewsSettings.ChecksumsFilePath
 import org.nlogo.nvm.Workspace
 import org.nlogo.workspace.{ Checksummer, ModelsLibrary, PreviewCommandsRunner }
+
+import scala.io.Source
+import scala.sys.process.Process
 
 object ChecksumsAndPreviews {
 
@@ -264,16 +265,8 @@ object ChecksumsAndPreviews {
     }
 
     def getRevisionNumber(modelPath: String): String = {
-      val cmds = Array("git", "log", "--pretty=format:%H",
-        new File(modelPath).getAbsolutePath)
-      val proc =
-        Runtime.getRuntime().exec(cmds, Array[String](), new File(ModelsLibrary.modelsRoot))
-      val stdInput = new BufferedReader(new InputStreamReader(proc.getInputStream))
-      val stdError = Source.fromInputStream(proc.getErrorStream)
-      // rather than use %h, we take the first 10 of %H. Git changed things making %h different
-      // across versions (see https://github.com/git/git/commit/e6c587c733b4634030b353f4024794b08bc86892)
-      Option(stdInput.readLine()).map(_.trim.take(10)).getOrElse(
-        throw new Exception("Error fetching SHA1 of model: " + stdError.mkString))
+      Process(Seq("git", "log", "--pretty=format:%H", new File(modelPath).getAbsolutePath),
+                  new File(ModelsLibrary.modelsRoot)).!!.trim.take(10)
     }
   }
 
