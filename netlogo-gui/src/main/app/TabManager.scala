@@ -39,6 +39,8 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
   private val saveAllAction = new SaveAllAction
   private val printAction = new PrintAction
 
+  private var printing = false
+
   val infoTab: InfoTab = new InfoTab(workspace.attachModelDir(_), workspace.getResourceManager)
   val mainCodeTab: MainCodeTab = new MainCodeTab(workspace, this, null)
 
@@ -263,11 +265,15 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
 
     def actionPerformed(e: ActionEvent): Unit =
       getSelectedTab match {
-        case printable: Printable =>
+        case printable: Printable if !printing =>
+          printing = true
+
           try PrinterManager.print(printable, workspace.modelNameForDisplay)
           catch {
             case abortEx: PrinterAbortException => Exceptions.ignore(abortEx)
           }
+
+          printing = false
 
         case _ =>
       }
