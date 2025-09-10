@@ -9669,10 +9669,16 @@ file-open user-new-file
         </h3>
         <h4>
           <span class="prim_example">user-input <i>value</i></span>
+          <span class="prim_example">
+            (user-input <i>value</i> <i>default-value</i>)
+            <span class="since">7.0</span>
+          </span>
         </h4>
         <p>
           Reports the string that a user types into an entry field in a
-          dialog with title <i>value</i>.
+          dialog with title <i>value</i>.  You can optionally provide a
+          <i>default-value</i> that the entry field will be preset with
+          when it is displayed.
         </p>
         <p>
           <i>value</i> may be of any type, but is typically a string.
