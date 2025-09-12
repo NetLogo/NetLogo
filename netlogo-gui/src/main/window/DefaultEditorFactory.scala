@@ -7,7 +7,7 @@ import javax.swing.ScrollPaneConstants
 import org.nlogo.editor.{ AbstractEditorArea, EditorArea, EditorConfiguration, EditorScrollPane, LineNumberScrollPane }
 import org.nlogo.api.CompilerServices
 
-class DefaultEditorFactory(compiler: CompilerServices) extends EditorFactory {
+class DefaultEditorFactory(val compiler: CompilerServices) extends EditorFactory {
   val colorizer = new EditorColorizer(compiler)
 
   override def newEditor(configuration: EditorConfiguration): AbstractEditorArea =

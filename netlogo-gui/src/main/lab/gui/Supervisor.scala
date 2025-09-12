@@ -68,7 +68,8 @@ class Supervisor(
     worker.run(workspace, () => nextWorkspace, protocol.threadCount)
   } }
   private val workerThread = new Thread(runnable, "BehaviorSpace Worker")
-  private val progressDialog = new ProgressDialog(parent, this, dialogFactory.colorizer, saveProtocol)
+  private val progressDialog = new ProgressDialog(parent, this, dialogFactory.compiler, dialogFactory.colorizer,
+                                                  saveProtocol)
   private val exporters = new ListBuffer[Exporter]
   private var spreadsheetExporter: SpreadsheetExporter = null
   private var spreadsheetFileName: String = null

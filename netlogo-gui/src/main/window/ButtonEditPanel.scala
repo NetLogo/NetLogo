@@ -4,10 +4,13 @@ package org.nlogo.window
 
 import java.awt.{ GridBagConstraints, Insets }
 
+import org.nlogo.api.CompilerServices
 import org.nlogo.core.I18N
 import org.nlogo.editor.Colorizer
 
-class ButtonEditPanel(target: ButtonWidget, colorizer: Colorizer) extends WidgetEditPanel(target) {
+class ButtonEditPanel(target: ButtonWidget, compiler: CompilerServices, colorizer: Colorizer)
+  extends WidgetEditPanel(target) {
+
   private val agentOptions =
     new OptionsEditor[String](
       new PropertyAccessor(
@@ -43,7 +46,7 @@ class ButtonEditPanel(target: ButtonWidget, colorizer: Colorizer) extends Widget
         () => target.wrapSource,
         _.foreach(target.setWrapSource),
         () => apply()),
-      colorizer, err = () => target.error())
+      compiler, colorizer, err = () => target.error())
 
   private val name =
     new StringEditor(

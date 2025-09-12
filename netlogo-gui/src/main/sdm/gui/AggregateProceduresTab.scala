@@ -5,14 +5,17 @@ package org.nlogo.sdm.gui
 import java.awt.{ GridBagConstraints, GridBagLayout }
 import javax.swing.{ JPanel, ScrollPaneConstants }
 
+import org.nlogo.api.CompilerServices
 import org.nlogo.core.CompilerException
 import org.nlogo.editor.{ Colorizer, EditorArea, EditorConfiguration }
 import org.nlogo.swing.ScrollPane
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.EditorAreaErrorLabel
 
-class AggregateProceduresTab(colorizer: Colorizer) extends JPanel(new GridBagLayout) with ThemeSync {
-  private val editorConfiguration = EditorConfiguration.default(50, 75, colorizer)
+class AggregateProceduresTab(compiler: CompilerServices, colorizer: Colorizer)
+  extends JPanel(new GridBagLayout) with ThemeSync {
+
+  private val editorConfiguration = EditorConfiguration.default(50, 75, compiler, colorizer)
   private val text = new EditorArea(editorConfiguration)
 
   text.setEditable(false)

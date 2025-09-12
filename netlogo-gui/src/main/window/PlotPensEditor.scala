@@ -11,6 +11,7 @@ import javax.swing.border.EmptyBorder
 import javax.swing.event.{ ListSelectionEvent, ListSelectionListener }
 import javax.swing.table.{ DefaultTableCellRenderer, AbstractTableModel, TableCellEditor, TableCellRenderer }
 
+import org.nlogo.api.CompilerServices
 import org.nlogo.awt.Hierarchy
 import org.nlogo.awt.Fonts.platformMonospacedFont
 import org.nlogo.core.{ CompilerException, I18N }
@@ -79,8 +80,8 @@ object PlotPensEditor {
   }
 }
 
-class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Colorizer, target: PlotWidget)
-  extends PropertyEditor(accessor, true) {
+class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], compiler: CompilerServices, colorizer: Colorizer,
+                     target: PlotWidget) extends PropertyEditor(accessor, true) {
 
   import PlotPensEditor._
 
@@ -300,7 +301,7 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
     }
 
     def openAdvancedPenEditor(editingPen: Pen): Unit = {
-      showEditorPopup(editingPen, new PlotPenEditorAdvanced(editingPen, colorizer, plotManager))
+      showEditorPopup(editingPen, new PlotPenEditorAdvanced(editingPen, compiler, colorizer, plotManager))
     }
 
     // renders the delete and edit buttons for each column
@@ -362,7 +363,7 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
 
     class CodeCellRenderer extends TableCellRenderer {
       val font = new Font(platformMonospacedFont, Font.PLAIN, 12)
-      val editor = new EditorField(30, font, true, colorizer)
+      val editor = new EditorField(30, font, true, compiler, colorizer)
       setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR))
       def getTableCellRendererComponent(table: JTable, value: Object,
                                         isSelected: Boolean, hasFocus: Boolean, row: Int, col: Int) = {
@@ -380,7 +381,7 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
 
     class CodeCellEditor extends AbstractCellEditor with TableCellEditor {
       val goodFont = new Font(platformMonospacedFont, Font.PLAIN, 12)
-      val editor = new EditorField(30, goodFont, true, colorizer)
+      val editor = new EditorField(30, goodFont, true, compiler, colorizer)
       def getTableCellEditorComponent(table: JTable, value: Object, isSelected: Boolean, row: Int, col: Int) = {
         editor.setText(value.asInstanceOf[String])
         editor.setBackground(InterfaceColors.textAreaBackground())

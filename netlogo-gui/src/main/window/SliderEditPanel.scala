@@ -29,7 +29,7 @@ class SliderEditPanel(target: SliderWidget, compiler: CompilerServices, colorize
         () => target.minimumCode,
         _.foreach(target.setMinimumCode),
         () => apply()),
-      colorizer, false)
+      compiler, colorizer, false)
 
   private val minimumLabeled = new LabeledEditor(minimumCode, I18N.gui.get("edit.slider.minmax.message"))
 
@@ -41,7 +41,7 @@ class SliderEditPanel(target: SliderWidget, compiler: CompilerServices, colorize
         () => target.incrementCode,
         _.foreach(target.setIncrementCode),
         () => apply()),
-      colorizer, false)
+      compiler, colorizer, false)
 
   private val maximumCode =
     new ReporterLineEditor(
@@ -51,7 +51,7 @@ class SliderEditPanel(target: SliderWidget, compiler: CompilerServices, colorize
         () => target.maximumCode,
         _.foreach(target.setMaximumCode),
         () => apply()),
-      colorizer, false)
+      compiler, colorizer, false)
 
   private val value =
     new DoubleEditor(

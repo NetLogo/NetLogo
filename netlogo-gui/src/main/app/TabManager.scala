@@ -20,8 +20,8 @@ import org.nlogo.awt.UserCancelException
 import org.nlogo.core.{ I18N, NetLogoPreferences }
 import org.nlogo.swing.{ OptionPane, Printable, PrinterManager, TabLabel, UserAction }
 import org.nlogo.theme.ThemeSync
-import org.nlogo.window.Events.{ AboutToCloseFilesEvent, AboutToSaveModelEvent, CompileAllEvent, CompiledEvent,
-                                 ExternalFileSavedEvent, LoadBeginEvent, LoadErrorEvent, LoadModelEvent,
+import org.nlogo.window.Events.{ AboutToCloseFilesEvent, AboutToSaveModelEvent, AutoIndentEvent, CompileAllEvent,
+                                 CompiledEvent, ExternalFileSavedEvent, LoadBeginEvent, LoadErrorEvent, LoadModelEvent,
                                  ModelSavedEvent, RuntimeErrorEvent, WidgetErrorEvent, WidgetRemovedEvent }
 import org.nlogo.window.{ ExternalFileInterface, GUIWorkspace, JobWidget, MonitorWidget, Widget }
 
@@ -30,9 +30,9 @@ import scala.io.Source
 class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
                  val externalFileManager: ExternalFileManager)
   extends TabsInterface with AboutToCloseFilesEvent.Handler with AboutToSaveModelEvent.Handler
-  with CompiledEvent.Handler with ExternalFileSavedEvent.Handler with LoadBeginEvent.Handler
-  with LoadErrorEvent.Handler with LoadModelEvent.Handler with ModelSavedEvent.Handler with RuntimeErrorEvent.Handler
-  with WidgetErrorEvent.Handler with WidgetRemovedEvent.Handler with ThemeSync {
+  with AutoIndentEvent.Handler with CompiledEvent.Handler with ExternalFileSavedEvent.Handler
+  with LoadBeginEvent.Handler with LoadErrorEvent.Handler with LoadModelEvent.Handler with ModelSavedEvent.Handler
+  with RuntimeErrorEvent.Handler with WidgetErrorEvent.Handler with WidgetRemovedEvent.Handler with ThemeSync {
 
   private val focusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager
 
@@ -777,6 +777,10 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
   // so we need to start it up again after the save is complete (Isaac B 9/7/25)
   def handle(e: ModelSavedEvent): Unit = {
     startWatcherThread()
+  }
+
+  def handle(e: AutoIndentEvent): Unit = {
+    smartTabbingEnabled = e.smart
   }
 
   override def syncTheme(): Unit = {

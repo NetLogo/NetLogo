@@ -34,7 +34,7 @@ class PreviewCommandsDialog(
   def previewCommands = _previewCommands
 
   val guiState = new GUIState(model, modelPath, workspaceFactory)
-  val editorPanel = new EditorPanel(new EditorColorizer(workspace))
+  val editorPanel = new EditorPanel(workspace, new EditorColorizer(workspace))
   val comboBox = editorPanel.comboBox
   val editor = editorPanel.editor
   val previewPanel = new PreviewPanel(graphicsPreview)

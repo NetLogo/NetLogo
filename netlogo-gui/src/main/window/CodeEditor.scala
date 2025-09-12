@@ -6,29 +6,30 @@ import java.awt.{ BorderLayout, Component, Container }
 import java.awt.event.{ MouseAdapter, MouseEvent, TextListener, TextEvent }
 import javax.swing.{ JLabel, JPanel, ScrollPaneConstants }
 
+import org.nlogo.api.CompilerServices
 import org.nlogo.awt.{ Hierarchy, RowLayout }
 import org.nlogo.editor.{ Colorizer, EditorArea, EditorConfiguration }
 import org.nlogo.swing.{ CollapsibleArrow, ScrollPane, Transparent }
 import org.nlogo.theme.InterfaceColors
 
 object CodeEditor {
-  def apply(displayName: String, colorizer: Colorizer, collapsible: Boolean = false,
+  def apply(displayName: String, compiler: CompilerServices, colorizer: Colorizer, collapsible: Boolean = false,
             collapseWhenEmpty: Boolean = false, rows: Int = 5, columns: Int = 30,
             err: () => Option[Exception] = () => None, changedFunc: => Unit = {}): CodeEditor = {
 
     val accessor = new PropertyAccessor[String](new DummyEditable, displayName, () => "", _ => {}, () => changedFunc)
 
-    new CodeEditor(accessor, colorizer, collapsible, collapseWhenEmpty, rows, columns, err)
+    new CodeEditor(accessor, compiler, colorizer, collapsible, collapseWhenEmpty, rows, columns, err)
   }
 }
 
-class CodeEditor(accessor: PropertyAccessor[String], colorizer: Colorizer, collapsible: Boolean = false,
-                 collapseWhenEmpty: Boolean = false, rows: Int = 5, columns: Int = 30,
+class CodeEditor(accessor: PropertyAccessor[String], compiler: CompilerServices, colorizer: Colorizer,
+                 collapsible: Boolean = false, collapseWhenEmpty: Boolean = false, rows: Int = 5, columns: Int = 30,
                  err: () => Option[Exception] = () => None)
   extends PropertyEditor(accessor) {
 
   val editorConfig =
-    EditorConfiguration.default(rows, columns, colorizer)
+    EditorConfiguration.default(rows, columns, compiler, colorizer)
       .withListener(new TextListener { def textValueChanged(e: TextEvent): Unit = { accessor.changed() } })
 
   protected lazy val editor = new EditorArea(editorConfig)
@@ -131,9 +132,9 @@ class CodeEditor(accessor: PropertyAccessor[String], colorizer: Colorizer, colla
   }
 }
 
-class NonEmptyCodeEditor(accessor: PropertyAccessor[String], colorizer: Colorizer,
+class NonEmptyCodeEditor(accessor: PropertyAccessor[String], compiler: CompilerServices, colorizer: Colorizer,
                          err: () => Option[Exception] = () => None)
-  extends CodeEditor(accessor, colorizer, err = err) {
+  extends CodeEditor(accessor, compiler, colorizer, err = err) {
 
   override def get: Option[String] =
     super.get.map(_.trim).filter(_.nonEmpty)

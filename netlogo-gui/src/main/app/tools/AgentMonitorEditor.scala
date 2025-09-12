@@ -141,7 +141,7 @@ with ThemeSync {
   setLayout(new BorderLayout)
 
   private val editor = new EditorField(17, new Font(Fonts.platformMonospacedFont, Font.PLAIN, 12), true,
-                                       new EditorColorizer(workspace))
+                                       workspace, new EditorColorizer(workspace))
   editor.setFont(editor.getFont.deriveFont(10f))
   private val scrollPane = new ScrollPane(editor, ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER,
                                           ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER)

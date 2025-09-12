@@ -7,7 +7,7 @@ import java.awt.event.{ FocusEvent, TextEvent, TextListener }
 import javax.swing.JPanel
 import javax.swing.border.EmptyBorder
 
-import org.nlogo.api.PreviewCommands, PreviewCommands.{ Compilable, Custom, Default, Manual }
+import org.nlogo.api.{ CompilerServices, PreviewCommands }, PreviewCommands.{ Compilable, Custom, Default, Manual }
 import org.nlogo.core.I18N
 import org.nlogo.editor.{ EditorArea, EditorConfiguration }
 import org.nlogo.swing.{ Button, ComboBox, HasPropertyChangeSupport, ScrollPane, Transparent, Utils }
@@ -15,7 +15,9 @@ import org.nlogo.theme.InterfaceColors
 import org.nlogo.util.Implicits.RichString
 import org.nlogo.window.{ EditorAreaErrorLabel, EditorColorizer }
 
-class EditorPanel(colorizer: EditorColorizer) extends JPanel(new GridBagLayout) with Transparent {
+class EditorPanel(compiler: CompilerServices, colorizer: EditorColorizer)
+  extends JPanel(new GridBagLayout) with Transparent {
+
   val comboBox = new PreviewCommandsComboBox
   val compileButton = new Button("", () => {
     if (dirty) {
@@ -37,7 +39,7 @@ class EditorPanel(colorizer: EditorColorizer) extends JPanel(new GridBagLayout) 
     }
   }
   val configuration =
-    EditorConfiguration.default(0, 0, colorizer)
+    EditorConfiguration.default(0, 0, compiler, colorizer)
       .withFocusTraversalEnabled(true)
       .withListener(textListener)
   val editor = new EditorArea(configuration) {

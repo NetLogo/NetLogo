@@ -208,7 +208,7 @@ class InterfacePanelLite(val viewWidget: ViewWidgetInterface, compiler: Compiler
 
   private val widgetBuilderMap = Map[String, () => Widget](
     "Monitor"  -> (() => new MonitorWidget(random.auxRNG, compiler, editorFactory.colorizer)),
-    "Plot"     -> (() => PlotWidget.apply(plotManager, editorFactory.colorizer)),
+    "Plot"     -> (() => PlotWidget.apply(plotManager, compiler, editorFactory.colorizer)),
     "Slider"   -> (() => new SliderWidget(sliderEventOnReleaseOnly, random.auxRNG, compiler, editorFactory.colorizer,
                                           extensionManager)),
     "Switch"   -> (() => new SwitchWidget(compiler, extensionManager)),
@@ -220,7 +220,7 @@ class InterfacePanelLite(val viewWidget: ViewWidgetInterface, compiler: Compiler
       new InputBoxWidget(editorFactory.newEditor(singleLineConfig),
        editorFactory.newEditor(multiLineConfig), compiler, extensionManager, this)
     },
-    "Button"   -> (() => new ButtonWidget(random.mainRNG, editorFactory.colorizer)),
+    "Button"   -> (() => new ButtonWidget(random.mainRNG, compiler, editorFactory.colorizer)),
     "Output"   -> (() => new OutputWidget()))
 
   override def allWidgets: Seq[CoreWidget] =

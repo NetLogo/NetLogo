@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent
 import java.awt.image.BufferedImage
 import javax.swing.{ AbstractAction, JMenuItem }
 
+import org.nlogo.api.CompilerServices
 import org.nlogo.awt.ImageSelection
 import org.nlogo.core.I18N
 import org.nlogo.editor.Colorizer
@@ -15,7 +16,9 @@ import org.nlogo.swing.{ MenuItem, PopupMenu, Utils }
 import org.nlogo.window.Events.PeriodicUpdateEvent
 
 object PlotWidget{
-  def apply(name: String, plotManager: PlotManagerInterface, colorizer: Colorizer): PlotWidget = {
+  def apply(name: String, plotManager: PlotManagerInterface, compiler: CompilerServices,
+            colorizer: Colorizer): PlotWidget = {
+
     val plot = plotManager.newPlot(name)
     // create a default pen.
     plot.createPlotPen("default", false, "", "plot count turtles")
@@ -24,16 +27,17 @@ object PlotWidget{
     // this would save trouble in other places too where might forget to recompile.
     // however, this would take a good deal of work. maybe someday. -JC 6/1/10
     plotManager.compilePlot(plot)
-    new PlotWidget(plot, plotManager, colorizer)
+    new PlotWidget(plot, plotManager, compiler, colorizer)
   }
 
-  def apply(plotManager: PlotManagerInterface, colorizer: Colorizer): PlotWidget = this(plotManager.nextName, plotManager, colorizer)
+  def apply(plotManager: PlotManagerInterface, compiler: CompilerServices, colorizer: Colorizer): PlotWidget =
+    this(plotManager.nextName, plotManager, compiler, colorizer)
 }
 
-class PlotWidget(plot: Plot, plotManager: PlotManagerInterface, colorizer: Colorizer)
+class PlotWidget(plot: Plot, plotManager: PlotManagerInterface, compiler: CompilerServices, colorizer: Colorizer)
   extends AbstractPlotWidget(plot, plotManager) with PeriodicUpdateEvent.Handler {
 
-  override def editPanel: EditPanel = new PlotEditPanel(this, colorizer)
+  override def editPanel: EditPanel = new PlotEditPanel(this, compiler, colorizer)
 
   override def getEditable: Option[Editable] = Some(this)
 

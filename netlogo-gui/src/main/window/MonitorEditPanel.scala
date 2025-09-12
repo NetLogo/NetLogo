@@ -19,7 +19,7 @@ class MonitorEditPanel(target: MonitorWidget, compiler: CompilerServices, colori
         () => target.wrapSource,
         name => target.setWrapSource(name.getOrElse("")),
         () => apply()),
-      colorizer, () => target.error())
+      compiler, colorizer, () => target.error())
 
   private val name =
     new StringEditor(

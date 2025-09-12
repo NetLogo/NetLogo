@@ -2,11 +2,14 @@
 
 package org.nlogo.window
 
+import org.nlogo.api.CompilerServices
 import org.nlogo.core.I18N
 import org.nlogo.editor.Colorizer
 import org.nlogo.swing.DynamicRowLayout
 
-class PlotEditPanel(target: PlotWidget, colorizer: Colorizer) extends WidgetEditPanel(target) {
+class PlotEditPanel(target: PlotWidget, compiler: CompilerServices, colorizer: Colorizer)
+  extends WidgetEditPanel(target) {
+
   private val plotName =
     new StringEditor(
       new PropertyAccessor(
@@ -118,7 +121,7 @@ class PlotEditPanel(target: PlotWidget, colorizer: Colorizer) extends WidgetEdit
         () => target.setupCode,
         _.foreach(target.setSetupCode),
         () => apply()),
-      colorizer, true, true, err = () => target.error(I18N.gui.get("edit.plot.setupCode")))
+      compiler, colorizer, true, true, err = () => target.error(I18N.gui.get("edit.plot.setupCode")))
 
   private val updateCode =
     new CodeEditor(
@@ -128,7 +131,7 @@ class PlotEditPanel(target: PlotWidget, colorizer: Colorizer) extends WidgetEdit
         () => target.updateCode,
         _.foreach(target.setUpdateCode),
         () => apply()),
-      colorizer, true, true, err = () => target.error(I18N.gui.get("edit.plot.updateCode")))
+      compiler, colorizer, true, true, err = () => target.error(I18N.gui.get("edit.plot.updateCode")))
 
   private val editPlotPens =
     new PlotPensEditor(
@@ -138,7 +141,7 @@ class PlotEditPanel(target: PlotWidget, colorizer: Colorizer) extends WidgetEdit
         () => target.editPlotPens,
         _.foreach(target.setEditPlotPens),
         () => apply()),
-      colorizer, target)
+      compiler, colorizer, target)
 
   private val oldSize =
     new BooleanEditor(
