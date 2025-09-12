@@ -49,6 +49,8 @@ lazy val jvmSettings = Seq(
     "-Dswing.aatext=true",
     "-Dsun.java2d.d3d=false",
     "-Dapple.awt.application.appearance=system",
+    // this enables anti-aliasing in JavaFX WebView
+    "-Dprism.lcdtext=false",
     //  These add-exports are needed for JOGL
     "--add-exports", "java.base/java.lang=ALL-UNNAMED",
     "--add-exports", "java.desktop/sun.awt=ALL-UNNAMED",

@@ -5,33 +5,39 @@ package org.nlogo.app.infotab
 import java.awt.{ Font, Dimension, BorderLayout, Graphics }
 import java.awt.event.{ ActionEvent, FocusEvent, FocusListener }
 import java.awt.print.PageFormat
-import java.io.File
+import java.net.URI
 import java.nio.file.Path
-import javax.swing.{ AbstractAction, Action, BorderFactory, JEditorPane, JPanel, JScrollPane, JTextArea,
+import javax.swing.{ AbstractAction, Action, BorderFactory, JComponent, JPanel, JScrollPane, JTextArea,
                      ScrollPaneConstants }
 import javax.swing.border.EmptyBorder
-import javax.swing.event.{ DocumentListener, HyperlinkListener, DocumentEvent, HyperlinkEvent }
-import javax.swing.text.JTextComponent
-import javax.swing.text.html.HTMLDocument
+import javax.swing.event.{ DocumentListener, DocumentEvent }
+
+import javafx.application.Platform
+import javafx.concurrent.Worker
+import javafx.embed.swing.JFXPanel
+import javafx.scene.Scene
+import javafx.scene.web.{ WebEngine, WebView }
 
 import org.nlogo.api.ExternalResourceManager
 import org.nlogo.app.common.{ Events => AppEvents, FindDialog, MenuTab, UndoRedoActions }
-import org.nlogo.awt.{ Fonts, Hierarchy }
+import org.nlogo.awt.Fonts
 import org.nlogo.core.I18N
 import org.nlogo.editor.UndoManager
 import org.nlogo.swing.Implicits._
-import org.nlogo.swing.{ OptionPane, ScrollableTextComponent, ScrollPane, TextArea, ToolBar, ToolBarActionButton,
+import org.nlogo.swing.{ ScrollableTextComponent, ScrollPane, TextArea, ToolBar, ToolBarActionButton,
                          ToolBarToggleButton, Printable, PrinterManager, BrowserLauncher, Utils },
   BrowserLauncher.docPath
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ Events => WindowEvents, Zoomable }
 
-class InfoTab(attachModelDir: String => String, resourceManager: ExternalResourceManager)
+import org.w3c.dom.events.{ Event, EventListener, EventTarget }
+import org.w3c.dom.html.HTMLAnchorElement
+
+class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManager)
   extends JPanel
   with DocumentListener
   with MenuTab
   with Printable
-  with HyperlinkListener
   with UndoRedoActions
   with AppEvents.SwitchedTabsEvent.Handler
   with WindowEvents.LoadBeginEvent.Handler
@@ -47,7 +53,7 @@ class InfoTab(attachModelDir: String => String, resourceManager: ExternalResourc
   // 90 columns seems reasonable: wide enough to not waste screen real estate, but narrow enough so
   // as not to cause readability problems if the frame is really wide - ST 10/27/03
   private val textArea = new ScrollableTextArea
-  private val editorPane = new ScrollableEditorPane
+  private val htmlPanel = new HTMLPanel
 
   private val editableButton = new ToolBarToggleButton(new EditableAction(I18N.gui.get("tabs.info.edit"))) with ThemeSync {
     override def syncTheme(): Unit = {
@@ -74,7 +80,7 @@ class InfoTab(attachModelDir: String => String, resourceManager: ExternalResourc
   // when edit is unclicked, it switches back.
   // there are some funny casts around because of this, and maybe we should clean it up.
   // -JC 9/7/10
-  private var view: JTextComponent = editorPane.asInstanceOf[JTextComponent]
+  private var view: JComponent = htmlPanel
   private val scrollPane = new ScrollPane(view, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
                                           ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED)
 
@@ -103,7 +109,7 @@ class InfoTab(attachModelDir: String => String, resourceManager: ExternalResourc
   private def resetBorders(): Unit = {
     val border = BorderFactory.createEmptyBorder(4, 7, 4, 7)
     textArea.setBorder(border)
-    editorPane.setBorder(border)
+    htmlPanel.setBorder(border)
   }
 
   override def doLayout(): Unit = {
@@ -113,7 +119,7 @@ class InfoTab(attachModelDir: String => String, resourceManager: ExternalResourc
     resetBorders()
     val extraWidth = StrictMath.max(7, getWidth - textArea.getPreferredScrollableViewportSize.width - 7)
     textArea.setBorder(BorderFactory.createEmptyBorder(4, 7, 4, extraWidth))
-    editorPane.setBorder(BorderFactory.createEmptyBorder(4, 7, 4, extraWidth))
+    htmlPanel.setBorder(BorderFactory.createEmptyBorder(4, 7, 4, extraWidth))
     super.doLayout()
   }
 
@@ -131,18 +137,16 @@ class InfoTab(attachModelDir: String => String, resourceManager: ExternalResourc
   private def updateEditorPane(force: Boolean = false): Unit = { updateEditorPane(textArea.getText, force) }
 
   private def updateEditorPane(str: String, force: Boolean): Unit = {
-    if (force || str != editorPane.getText) {
-      editorPane.getDocument.asInstanceOf[HTMLDocument].setBase(new File(attachModelDir(".")).toURI.toURL)
-      editorPane.setText(InfoFormatter(str, editorPaneFontSize))
-      editorPane.setCaretPosition(0)
-    }
+    if (force || str != htmlPanel.getText)
+      htmlPanel.setText(InfoFormatter(str, getModelDir(), resourceManager, editorPaneFontSize))
+
     toggleHelpButton()
   }
 
   def resetView(): Unit = {
     if (view.isInstanceOf[JTextArea]) {
-      scrollPane.setViewportView(editorPane)
-      view = editorPane
+      scrollPane.setViewportView(htmlPanel)
+      view = htmlPanel
       editableButton.setSelected(false)
     }
     updateEditorPane()
@@ -158,7 +162,6 @@ class InfoTab(attachModelDir: String => String, resourceManager: ExternalResourc
     helpButton.setIcon(Utils.iconScaledWithColor("/images/help.png", 15, 15, InterfaceColors.toolbarImage()))
 
     scrollPane.setBackground(InterfaceColors.infoBackground())
-    editorPane.setBackground(InterfaceColors.infoBackground())
 
     textArea.syncTheme()
 
@@ -196,20 +199,6 @@ class InfoTab(attachModelDir: String => String, resourceManager: ExternalResourc
 
   // the textArea will give us an outlandlishly large preferred size unless we restrain it
   override def getPreferredSize = new Dimension(100, 100)
-
-  /// Hyperlink listener
-  def hyperlinkUpdate(e: HyperlinkEvent): Unit = {
-    if (e.getEventType == HyperlinkEvent.EventType.ACTIVATED) {
-      if (e.getURL == null) {
-        if (new OptionPane(Hierarchy.getFrame(InfoTab.this), I18N.gui.get("common.messages.error"),
-                           I18N.gui.get("tabs.info.invalidURL"),
-                           Seq(I18N.gui.get("common.buttons.help"), I18N.gui.get("common.buttons.cancel")),
-                           OptionPane.Icons.Error).getSelectedIndex == 1) // Help
-          BrowserLauncher.openPath(this, baseDocPath, "links")
-      }
-      else BrowserLauncher.openURI(this, e.getURL.toURI)
-    }
-  }
 
   /// DocumentListener
   def changedUpdate(e: DocumentEvent): Unit = { changed() }
@@ -249,28 +238,85 @@ class InfoTab(attachModelDir: String => String, resourceManager: ExternalResourc
       Option(InfoTab.this.scrollPane)
   }
 
-  private class ScrollableEditorPane extends JEditorPane with ScrollableTextComponent {
-    addFocusListener(new FocusListener {
-      def focusGained(fe: FocusEvent): Unit = {
-        FindDialog.watch(ScrollableEditorPane.this)
+  private class HTMLPanel extends JFXPanel {
+    private var engine: Option[WebEngine] = None
+    private var height: Option[Int] = None
+    private var text = ""
+
+    Platform.runLater(() => {
+      val webView = new WebView
+
+      webView.setContextMenuEnabled(false)
+      webView.setOnScroll { event =>
+        val bar = scrollPane.getVerticalScrollBar
+
+        bar.setValue((bar.getValue - event.getDeltaY / 2).toInt)
       }
 
-      def focusLost(fe: FocusEvent): Unit = {
-        if (!fe.isTemporary) {
-          FindDialog.dontWatch()
+      setScene(new Scene(webView))
+
+      val webEngine = webView.getEngine
+
+      webEngine.getLoadWorker.stateProperty.addListener((value, oldState, newState) => {
+        val listener = new EventListener {
+          override def handleEvent(e: Event): Unit = {
+            e.getCurrentTarget match {
+              case anchor: HTMLAnchorElement =>
+                BrowserLauncher.openURI(InfoTab.this, URI.create(anchor.getHref))
+
+              case _ =>
+            }
+
+            e.preventDefault()
+          }
         }
-      }
+
+        if (newState == Worker.State.SUCCEEDED) {
+          val nodes = webEngine.getDocument.getElementsByTagName("a")
+
+          for (i <- 0 until nodes.getLength) {
+            nodes.item(i) match {
+              case target: EventTarget =>
+                target.addEventListener("click", listener, false)
+
+              case _ =>
+            }
+          }
+        }
+      })
+
+      engine = Option(webEngine)
     })
 
-    setDragEnabled(false)
-    setEditable(false)
-    getDocument.addDocumentListener(InfoTab.this)
-    setContentType("text/html")
-    addHyperlinkListener(InfoTab.this)
-    setEditorKit(new ResourceEditorKit(resourceManager))
+    def getText: String =
+      text
 
-    override def scrollPane: Option[JScrollPane] =
-      Option(InfoTab.this.scrollPane)
+    def setText(str: String): Unit = {
+      this.text = str
+
+      Platform.runLater(() => {
+        engine.foreach { eng =>
+          eng.loadContent(str, "text/html")
+
+          height synchronized {
+            height = eng.executeScript("document.body == null ? -1 : document.body.scrollHeight")
+                        .toString.replace("px", "").toInt match {
+              case -1 =>
+                None
+
+              case i =>
+                Some(i)
+            }
+          }
+        }
+      })
+    }
+
+    override def getPreferredSize: Dimension = {
+      new Dimension(super.getPreferredSize.width, height synchronized {
+        height.fold(super.getPreferredSize.height)(_ + 100)
+      })
+    }
   }
 
   private class EditableAction(label: String) extends AbstractAction(label) {
@@ -281,8 +327,8 @@ class InfoTab(attachModelDir: String => String, resourceManager: ExternalResourc
       val ratio = ((scrollBar.getValue - min).asInstanceOf[Double] / (max - min).asInstanceOf[Double])
       if (view.isInstanceOf[JTextArea]) {
         updateEditorPane()
-        scrollPane.setViewportView(editorPane)
-        view = editorPane
+        scrollPane.setViewportView(htmlPanel)
+        view = htmlPanel
       } else {
         scrollPane.setViewportView(textArea)
         view = textArea
