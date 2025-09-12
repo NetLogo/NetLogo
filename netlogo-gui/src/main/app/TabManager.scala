@@ -43,7 +43,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
 
   private var printing = false
 
-  val infoTab: InfoTab = new InfoTab(workspace.attachModelDir(_), workspace.getResourceManager)
+  val infoTab: InfoTab = new InfoTab(() => workspace.getModelDir, workspace.getResourceManager)
   val mainCodeTab: MainCodeTab = new MainCodeTab(workspace, this, null)
 
   val mainTabs = new TabsPanel(this)
