@@ -7,7 +7,7 @@ import java.awt.event.{ MouseEvent, MouseListener, MouseMotionListener }
 import java.awt.image.FilteredImageSource
 import javax.swing.{ ImageIcon, JLabel }
 
-import org.nlogo.api.{ MersenneTwisterFast, Options }
+import org.nlogo.api.{ CompilerServices, MersenneTwisterFast, Options }
 import org.nlogo.awt.{ DarkenImageFilter, Mouse }, Mouse.hasButton1
 import org.nlogo.core.{ AgentKind, Button => CoreButton, I18N, Widget => CoreWidget }
 import org.nlogo.editor.Colorizer
@@ -68,7 +68,7 @@ object ButtonWidget {
     }
   }
 }
-class ButtonWidget(random: MersenneTwisterFast, colorizer: Colorizer) extends JobWidget(random)
+class ButtonWidget(random: MersenneTwisterFast, compiler: CompilerServices, colorizer: Colorizer) extends JobWidget(random)
   with Editable with MouseListener with MouseMotionListener
   with Events.JobRemovedEvent.Handler with Events.TickStateChangeEvent.Handler {
 
@@ -136,7 +136,7 @@ class ButtonWidget(random: MersenneTwisterFast, colorizer: Colorizer) extends Jo
     nameLabel.setFont(nameLabel.getFont.deriveFont(_boldState))
   }
 
-  override def editPanel: EditPanel = new ButtonEditPanel(this, colorizer)
+  override def editPanel: EditPanel = new ButtonEditPanel(this, compiler, colorizer)
 
   override def getEditable: Option[Editable] = Some(this)
 

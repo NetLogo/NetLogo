@@ -7,7 +7,7 @@ import org.nlogo.core.{ CompilerException, LogoList, Nobody }
 import org.nlogo.editor.Colorizer
 
 class LogoListEditor(accessor: PropertyAccessor[String], compiler: CompilerServices, colorizer: Colorizer)
-  extends CodeEditor(accessor, colorizer) {
+  extends CodeEditor(accessor, compiler, colorizer) {
 
   private def nobodyFree(a: AnyRef): Boolean = {
     a match {

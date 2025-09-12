@@ -57,7 +57,7 @@ class CommandLine(commandCenter: CommandCenterInterface,
     new EditorField(30,
       new Font(Fonts.platformMonospacedFont,
         Font.PLAIN, 12),
-      true, new EditorColorizer(workspace), actionMap)
+      true, workspace, new EditorColorizer(workspace), actionMap)
 
   agentKind(AgentKind.Observer)
 

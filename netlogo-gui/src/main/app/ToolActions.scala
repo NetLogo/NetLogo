@@ -54,7 +54,7 @@ with MenuAction {
       new Preferences.IncludedFilesMenu(tabs),
       Preferences.FocusOnError,
       Preferences.StartSeparateCodeTab,
-      new Preferences.IndentAutomatically(tabs),
+      new Preferences.IndentAutomatically(frame),
       new Preferences.EditorLineNumbers(tabs)
     ),
     Seq(

@@ -40,7 +40,7 @@ class ConverterEditPanel(target: ConverterFigure, compiler: CompilerServices, co
         () => target.expressionWrapper,
         _.foreach(target.expressionWrapper),
         () => apply()),
-      colorizer)
+      compiler, colorizer)
 
   locally {
     val c = new GridBagConstraints

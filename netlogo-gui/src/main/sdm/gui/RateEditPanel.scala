@@ -40,7 +40,7 @@ class RateEditPanel(target: RateConnection, compiler: CompilerServices, colorize
         () => target.expressionWrapper,
         _.foreach(target.expressionWrapper),
         () => apply()),
-      colorizer)
+      compiler, colorizer)
 
   locally {
     val c = new GridBagConstraints

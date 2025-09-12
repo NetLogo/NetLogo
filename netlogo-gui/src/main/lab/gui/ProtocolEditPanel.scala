@@ -33,7 +33,7 @@ class ProtocolEditPanel(target: ProtocolEditable, compiler: CompilerServices, co
         () => target.valueSets,
         _.foreach(target.setValueSets),
         () => apply()),
-      colorizer) {
+      compiler, colorizer) {
 
       setToolTipText(s"<html>${I18N.gui.get("tools.behaviorSpace.vary.info")}</html>")
     }
@@ -70,7 +70,7 @@ class ProtocolEditPanel(target: ProtocolEditable, compiler: CompilerServices, co
         () => target.metrics,
         _.foreach(target.setMetrics),
         () => apply()),
-      colorizer) {
+      compiler, colorizer) {
 
       setToolTipText(s"<html>${I18N.gui.get("tools.behaviorSpace.metrics.info")}</html>")
     }
@@ -98,7 +98,7 @@ class ProtocolEditPanel(target: ProtocolEditable, compiler: CompilerServices, co
         () => target.runMetricsCondition,
         _.foreach(target.setRunMetricsCondition),
         () => apply()),
-      colorizer, true) {
+      compiler, colorizer, true) {
 
       setToolTipText(I18N.gui.get("tools.behaviorSpace.runMetricsCondition.info"))
       setEnabled(!target.runMetricsEveryStep)
@@ -112,7 +112,7 @@ class ProtocolEditPanel(target: ProtocolEditable, compiler: CompilerServices, co
         () => target.preExperimentCommands,
         _.foreach(target.setPreExperimentCommands),
         () => apply()),
-      colorizer, true, true) {
+      compiler, colorizer, true, true) {
 
       setToolTipText(I18N.gui.get("tools.behaviorSpace.preExperimentCommands.info"))
     }
@@ -125,7 +125,7 @@ class ProtocolEditPanel(target: ProtocolEditable, compiler: CompilerServices, co
         () => target.setupCommands,
         _.foreach(target.setSetupCommands),
         () => apply()),
-      colorizer) {
+      compiler, colorizer) {
 
       setToolTipText(I18N.gui.get("tools.behaviorSpace.setupCommands.info"))
     }
@@ -138,7 +138,7 @@ class ProtocolEditPanel(target: ProtocolEditable, compiler: CompilerServices, co
         () => target.goCommands,
         _.foreach(target.setGoCommands),
         () => apply()),
-      colorizer) {
+      compiler, colorizer) {
 
       setToolTipText(I18N.gui.get("tools.behaviorSpace.goCommands.info"))
     }
@@ -151,7 +151,7 @@ class ProtocolEditPanel(target: ProtocolEditable, compiler: CompilerServices, co
         () => target.exitCondition,
         _.foreach(target.setExitCondition),
         () => apply()),
-      colorizer, true, true) {
+      compiler, colorizer, true, true) {
 
       setToolTipText(I18N.gui.get("tools.behaviorSpace.exitCondition.info"))
     }
@@ -164,7 +164,7 @@ class ProtocolEditPanel(target: ProtocolEditable, compiler: CompilerServices, co
         () => target.postRunCommands,
         _.foreach(target.setPostRunCommands),
         () => apply()),
-      colorizer, true, true) {
+      compiler, colorizer, true, true) {
 
       setToolTipText(I18N.gui.get("tools.behaviorSpace.postRunCommands.info"))
     }
@@ -177,7 +177,7 @@ class ProtocolEditPanel(target: ProtocolEditable, compiler: CompilerServices, co
         () => target.postExperimentCommands,
         _.foreach(target.setPostExperimentCommands),
         () => apply()),
-      colorizer, true, true) {
+      compiler, colorizer, true, true) {
 
       setToolTipText(I18N.gui.get("tools.behaviorSpace.postExperimentCommands.info"))
     }

@@ -79,7 +79,7 @@ class AggregateModelEditor(
   val tabs: AggregateTabs = {
     val editorTab = new AggregateEditorTab(toolbar, view.asInstanceOf[Component])
     editorTab.setBorder(null)
-    val proceduresTab = new AggregateProceduresTab(colorizer)
+    val proceduresTab = new AggregateProceduresTab(compiler, colorizer)
     new AggregateTabs(this, editorTab, proceduresTab)
   }
 

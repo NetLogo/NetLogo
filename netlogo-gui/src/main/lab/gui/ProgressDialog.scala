@@ -7,7 +7,7 @@ import javax.swing.{ Box, BoxLayout, JDialog, JPanel, ScrollPaneConstants, Timer
 import javax.swing.border.{ EmptyBorder, LineBorder }
 
 import org.nlogo.analytics.Analytics
-import org.nlogo.api.{ Color, Dump, ExportPlotWarningAction, LabProtocol, PeriodicUpdateDelay }
+import org.nlogo.api.{ Color, CompilerServices, Dump, ExportPlotWarningAction, LabProtocol, PeriodicUpdateDelay }
 import org.nlogo.awt.Positioning
 import org.nlogo.core.I18N
 import org.nlogo.editor.Colorizer
@@ -18,8 +18,8 @@ import org.nlogo.swing.{ Button, ButtonPanel, CheckBox, OptionPane, RichAction, 
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ GUIWorkspace, PlotWidget, SpeedSliderPanel }
 
-private [gui] class ProgressDialog(parent: Window, supervisor: Supervisor, colorizer: Colorizer,
-                                   saveProtocol: (LabProtocol, Int) => Unit)
+private [gui] class ProgressDialog(parent: Window, supervisor: Supervisor, compiler: CompilerServices,
+                                   colorizer: Colorizer, saveProtocol: (LabProtocol, Int) => Unit)
               extends JDialog(parent, Dialog.DEFAULT_MODALITY_TYPE) with ProgressListener with ThemeSync {
   val protocol = supervisor.worker.protocol
   val workspace = supervisor.workspace.asInstanceOf[GUIWorkspace]
@@ -64,7 +64,7 @@ private [gui] class ProgressDialog(parent: Window, supervisor: Supervisor, color
       // except of course, for the measurements that this plot is displaying.
       // JC - 4/4/11
       val plotManager = new DummyPlotManager
-      val plotWidget = new PlotWidget(plotManager.newPlot(I18N.gui("plot.title")), plotManager, colorizer) {
+      val plotWidget = new PlotWidget(plotManager.newPlot(I18N.gui("plot.title")), plotManager, compiler, colorizer) {
         // the default plot size assumes there is no legend, so add the legend height
         // to ensure that enough canvas area is visible by default (Isaac B 7/22/25)
         override def getMinimumSize: Dimension =

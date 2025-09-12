@@ -10,6 +10,7 @@ import javax.swing.text.{ DefaultEditorKit, TextAction }
 
 import org.fife.ui.rtextarea.RTextAreaEditorKit
 
+import org.nlogo.api.CompilerServices
 import org.nlogo.editor.KeyBinding._
 import org.nlogo.swing.{ TextActions, UserAction }
 
@@ -38,9 +39,9 @@ object EditorConfiguration {
       def offerAction(action: UserAction.MenuAction): Unit = {}
     }
 
-  def default(rows: Int, columns: Int, colorizer: Colorizer) =
-    EditorConfiguration(rows, columns, defaultFont, emptyListener, colorizer, Map(), defaultContextActions(colorizer),
-                        Seq(), false, false, false, false, emptyMenu, () => None)
+  def default(rows: Int, columns: Int, compiler: CompilerServices, colorizer: Colorizer) =
+    EditorConfiguration(rows, columns, defaultFont, emptyListener, compiler, colorizer, Map(),
+                        defaultContextActions(colorizer), Seq(), false, false, false, false, emptyMenu, () => None)
 }
 
 case class EditorConfiguration(
@@ -48,6 +49,7 @@ case class EditorConfiguration(
   columns:              Int,
   font:                 Font,
   listener:             TextListener,
+  compiler:             CompilerServices,
   colorizer:            Colorizer,
   /* additionalActions are added to the input map and added to
    * top-level menus if appropriate */

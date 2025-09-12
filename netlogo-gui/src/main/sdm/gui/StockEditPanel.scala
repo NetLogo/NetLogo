@@ -31,7 +31,7 @@ class StockEditPanel(target: StockFigure, compiler: CompilerServices, colorizer:
         () => target.initialValueExpressionWrapper,
         _.foreach(target.initialValueExpressionWrapper),
         () => apply()),
-      colorizer)
+      compiler, colorizer)
 
   private val allowNegative =
     new BooleanEditor(
