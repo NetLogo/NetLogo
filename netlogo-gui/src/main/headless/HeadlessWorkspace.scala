@@ -10,15 +10,18 @@ import java.nio.file.Paths
 // here and document it here.  The overriding method can simply call super(). - ST 6/1/05, 7/28/11
 
 import org.nlogo.api.{ ComponentSerialization, Version, RendererInterface, AggregateManagerInterface, FileIO,
-  LogoException, ModelReader, ModelType, NetLogoLegacyDialect,
-  NetLogoThreeDDialect, CommandRunnable, ReporterRunnable }, ModelReader.modelSuffix
-import org.nlogo.core.{ AgentKind, CompilerException, Femto, Model, Output, Program, UpdateMode, WorldDimensions,
-  WorldDimensions3D }
+                       LogoException, ModelReader, ModelType, NetLogoLegacyDialect, NetLogoThreeDDialect,
+                       CommandRunnable, ReporterRunnable }, ModelReader.modelSuffix
+import org.nlogo.compile.Compiler
+import org.nlogo.core.{ AgentKind, CompilerException, Dialect, Femto, Model, Output, Program, UpdateMode,
+                        WorldDimensions, WorldDimensions3D }
 import org.nlogo.agent.{ CompilationManagement, OutputObject, World, World2D, World3D }
+import org.nlogo.hubnet.server.HeadlessHubNetManagerFactory
 import org.nlogo.nvm.{ LabInterface, PresentationCompilerInterface, PrimaryWorkspace }
+import org.nlogo.render.Renderer
+import org.nlogo.sdm.AggregateManagerLite
 import org.nlogo.workspace.{ AbstractWorkspaceScala, HubNetManagerFactory }
 import org.nlogo.fileformat.{ FileFormat, NLogoFormat, NLogoThreeDFormat }
-import org.nlogo.util.Pico
 
 /**
  * Companion object, and factory object, for the HeadlessWorkspace class.
@@ -30,25 +33,31 @@ object HeadlessWorkspace {
    */
   def newInstance: HeadlessWorkspace = newInstance(Version.is3D)
 
-  def newInstance(is3d: Boolean): HeadlessWorkspace = newInstance(classOf[HeadlessWorkspace], is3d)
-
-  def newInstance(subclass: Class[? <: HeadlessWorkspace]): HeadlessWorkspace = newInstance(subclass, Version.is3D)
-
   /**
    * If you derive your own subclass of HeadlessWorkspace, use this method to instantiate it.
    */
-  def newInstance(subclass: Class[? <: HeadlessWorkspace], is3d: Boolean): HeadlessWorkspace = {
-    val pico = new Pico
-    pico.addComponent(if (is3d) classOf[World3D] else classOf[World2D])
-    pico.add("org.nlogo.compile.Compiler")
-    if (is3d) pico.addScalaObject("org.nlogo.api.NetLogoThreeDDialect") else pico.addScalaObject("org.nlogo.api.NetLogoLegacyDialect")
-    pico.add("org.nlogo.sdm.AggregateManagerLite")
-    pico.add("org.nlogo.render.Renderer")
-    pico.addComponent(subclass)
-    pico.addAdapter(new LegacyModelLoaderComponent())
-    pico.add(classOf[HubNetManagerFactory], "org.nlogo.hubnet.server.HeadlessHubNetManagerFactory")
-    val hw = pico.getComponent(subclass)
+  def newInstance(is3d: Boolean): HeadlessWorkspace = {
+    val world: World & CompilationManagement = {
+      if (is3d) {
+        new World3D
+      } else {
+        new World2D
+      }
+    }
+
+    val dialect: Dialect = {
+      if (is3d) {
+        NetLogoThreeDDialect
+      } else {
+        NetLogoLegacyDialect
+      }
+    }
+
+    val hw = new HeadlessWorkspace(world, new Compiler(dialect), new Renderer(world), new AggregateManagerLite,
+                                   new HeadlessHubNetManagerFactory)
+
     hw.set3d(is3d)
+
     hw
   }
 
@@ -95,9 +104,6 @@ object HeadlessWorkspace {
  *
  * See the "Controlling" section of the NetLogo User Manual
  * for example code.
- *
- * Don't try to use the constructor yourself; use
- * HeadlessWorkspace.newInstance instead.
  */
 class HeadlessWorkspace(
   _world: World & CompilationManagement,
