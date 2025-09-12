@@ -28,7 +28,7 @@ object InfoFormatter {
    * for standalone use, for example on a web server
    */
   def main(argv: Array[String]): Unit = {
-    println(apply(read(System.in), "", new ExternalResourceManager))
+    println(apply(read(System.in)))
   }
 
   def read(in: InputStream): String = Source.fromInputStream(in).mkString

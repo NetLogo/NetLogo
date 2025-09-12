@@ -41,20 +41,10 @@ class ResourceRenderer(modelDir: String, resourceManager: ExternalResourceManage
 
       val source = {
         if (url.startsWith("file:")) {
-          val path = url.stripPrefix("file:")
-
-          if (Paths.get(path).isAbsolute) {
-            s"file:$path"
-          } else {
-            s"file:${Paths.get(Option(modelDir).getOrElse(""), path)}"
-          }
+          s"file:${Paths.get(Option(modelDir).getOrElse("")).resolve(url.stripPrefix("file:"))}"
         } else {
-          resourceManager.getResource(url) match {
-            case Some(resource) =>
-              s"data:image/${resource.extension};base64,${resource.data}"
-
-            case _ =>
-              url
+          resourceManager.getResource(url).fold(url) { resource =>
+            s"data:image/${resource.extension};base64,${resource.data}"
           }
         }
       }
