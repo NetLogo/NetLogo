@@ -32,7 +32,7 @@ class CodeEditor(accessor: PropertyAccessor[String], compiler: CompilerServices,
     EditorConfiguration.default(rows, columns, compiler, colorizer)
       .withListener(new TextListener { def textValueChanged(e: TextEvent): Unit = { accessor.changed() } })
 
-  protected lazy val editor = new EditorArea(editorConfig)
+  protected lazy val editor = new EditorArea(editorConfig) with AutoIndentHandler
   protected lazy val scrollPane = new ScrollPane(editor, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
                                             ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED)
   private val errorLabel = new EditorAreaErrorLabel(editor)

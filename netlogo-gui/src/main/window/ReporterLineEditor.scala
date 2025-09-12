@@ -16,7 +16,7 @@ class ReporterLineEditor(accessor: PropertyAccessor[String], compiler: CompilerS
   extends CodeEditor(accessor, compiler, colorizer, false, false) {
 
   override lazy val editor = new EditorField(30, new Font(platformMonospacedFont, Font.PLAIN, 12), true, compiler,
-                                             colorizer) {
+                                             colorizer) with AutoIndentHandler {
     getDocument.addDocumentListener(new DocumentListener {
       def insertUpdate(e: DocumentEvent): Unit = { accessor.changed() }
       def removeUpdate(e: DocumentEvent): Unit = { accessor.changed() }

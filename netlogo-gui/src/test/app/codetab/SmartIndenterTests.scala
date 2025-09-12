@@ -3,9 +3,11 @@
 package org.nlogo.app.codetab
 
 import org.nlogo.api.{ EditorAreaInterface, NetLogoLegacyDialect, NetLogoThreeDDialect, Version }
-import org.nlogo.nvm.{ PresentationCompilerInterface, DefaultCompilerServices }
-import org.nlogo.core.Femto
 import org.nlogo.api.FileIO.fileToString
+import org.nlogo.core.Femto
+import org.nlogo.editor.SmartIndenter
+import org.nlogo.nvm.{ PresentationCompilerInterface, DefaultCompilerServices }
+
 import org.scalatest.funsuite.AnyFunSuite
 
 import scala.util.matching.Regex

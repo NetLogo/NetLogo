@@ -18,10 +18,10 @@ import org.nlogo.log.LogManager
 import org.nlogo.nvm.DefaultCompilerServices
 import org.nlogo.swing.{ MenuItem, PopupMenu }
 import org.nlogo.theme.InterfaceColors
-import org.nlogo.window.{ AbstractPlotWidget, AbstractWidgetPanel, ButtonWidget, ClipboardUtils, CopyPasteTarget,
-                          Editable, Events => WindowEvents, GUIWorkspace, InterfaceMode, OutputWidget, Widget,
-                          WidgetContainer, WidgetRegistry, DummyChooserWidget, DummyInputBoxWidget, DummyPlotWidget,
-                          DummyViewWidget, PlotWidget, SliderWidget, ViewWidget },
+import org.nlogo.window.{ AbstractPlotWidget, AbstractWidgetPanel, AutoIndentHandler, ButtonWidget, ClipboardUtils,
+                          CopyPasteTarget, Editable, Events => WindowEvents, GUIWorkspace, InterfaceMode, OutputWidget,
+                          Widget, WidgetContainer, WidgetRegistry, DummyChooserWidget, DummyInputBoxWidget,
+                          DummyPlotWidget, DummyViewWidget, PlotWidget, SliderWidget, ViewWidget },
   WindowEvents.{ CompileAllEvent, DirtyEvent, EditWidgetEvent, InterfaceModeChangedEvent, LoadBeginEvent,
                  SetInterfaceModeEvent, WidgetRemovedEvent, ZoomedEvent }
 
@@ -616,8 +616,8 @@ class WidgetPanel(val workspace: GUIWorkspace)
           DummyPlotWidget(names.headOption.getOrElse("plot 1"), workspace.plotManager)
         case i: CoreInputBox =>
           new DummyInputBoxWidget(
-            new EditorArea(textEditorConfiguration),
-            new EditorArea(dialogEditorConfiguration),
+            new EditorArea(textEditorConfiguration) with AutoIndentHandler,
+            new EditorArea(dialogEditorConfiguration) with AutoIndentHandler,
             this,
             new DefaultCompilerServices(workspace.compiler))
         case _ =>
