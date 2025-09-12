@@ -12,21 +12,24 @@
 body {
     margin-left: 5px;
     font-family: arial, sans-serif;
-    background: none;
-    font-size: {BODY-FONT-SIZE}pt
+    background: {BODY-BACKGROUND};
+    font-size: {BODY-FONT-SIZE}pt;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    width: 650px;
 }
 h1 {
     background: {H1-BACKGROUND};
     color: {H1-COLOR};
     font-size: {H1-FONT-SIZE}pt;
-    margin-bottom: 4px;
+    margin-bottom: 12px;
     padding-left: 6px;
     padding-right: 6px;
     padding-top: 6px;
     padding-bottom: 6px;
 }
 h2 {
-    margin-top: 15px;
+    margin-top: 18px;
     margin-left: 6px;
     margin-bottom: 4px;
     background: {H2-BACKGROUND};
@@ -34,11 +37,11 @@ h2 {
     font-size: {H2-FONT-SIZE}pt;
     padding-left: 6px;
     padding-right: 6px;
-    padding-top: 6px;
+    padding-top: 8px;
     padding-bottom: 6px;
 }
 h3 {
-    margin-top: 15px;
+    margin-top: 20px;
     margin-left: 15px;
     margin-bottom: 4px;
     color: {H3-COLOR};
@@ -49,24 +52,25 @@ h3 {
     padding-bottom: 6px;
 }
 h4 {
-    margin-top: 15px;
+    margin-top: 20px;
     margin-left: 15px;
     color: {H4-COLOR};
     font-size: {H4-FONT-SIZE}pt;
 }
 h5 {
-    margin-top: 15px;
+    margin-top: 20px;
     margin-left: 15px;
     color: {H4-COLOR};
     font-size: {H5-FONT-SIZE}pt;
 }
 h6 {
-    margin-top: 15px;
+    margin-top: 20px;
     margin-left: 15px;
     color: {H4-COLOR};
     font-size: {H6-FONT-SIZE}pt;
 }
 p {
+    margin-top: 20px;
     margin-left: 15px;
     margin-bottom: 3px;
     color: {P-COLOR};
@@ -87,6 +91,7 @@ pre {
 code {
     font-family: monospace;
     font-size: {BODY-FONT-SIZE}pt;
+    color: {P-COLOR};
 }
 blockquote {
     background: {BLOCK-BAR};
@@ -97,6 +102,7 @@ blockquote {
 }
 blockquote div {
     background: {INFO-BACKGROUND};
+    padding-top: 2px;
     padding-bottom: 10px;
 }
 blockquote p
