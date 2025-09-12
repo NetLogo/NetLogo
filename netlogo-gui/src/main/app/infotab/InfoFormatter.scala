@@ -14,7 +14,7 @@ import com.vladsch.flexmark.ext.escaped.character.EscapedCharacterExtension
 import com.vladsch.flexmark.ext.autolink.AutolinkExtension
 import com.vladsch.flexmark.ext.typographic.TypographicExtension
 
-import org.nlogo.api.FileIO
+import org.nlogo.api.{ ExternalResourceManager, FileIO }
 import org.nlogo.theme.InterfaceColors
 
 import scala.io.Source
@@ -22,10 +22,6 @@ import scala.io.Source
 // This gets tested by TestInfoFormatter. - ST 9/7/10
 
 object InfoFormatter {
-  type Markdown = String
-  type HTML = String
-  type CSS = String
-
   val MaxParsingTimeMillis = 4000 // set high for Travis, won't take that long on most computers
 
   /**
@@ -37,11 +33,12 @@ object InfoFormatter {
 
   def read(in: InputStream): String = Source.fromInputStream(in).mkString
 
-  def styleSheetFile: CSS = FileIO.getResourceAsString("/system/info.css")
-  val defaultFontSize = 14
-  val defaultStyleSheet: CSS = styleSheet("monospace", defaultFontSize)
-  def styleSheet(fontFamily: String, fontSize: Int): CSS = "<style type=\"text/css\">\n<!--\n"+
+  def styleSheetFile: String = FileIO.getResourceAsString("/system/info.css")
+  val defaultFontSize = 11
+  val defaultStyleSheet: String = styleSheet("monospace", defaultFontSize)
+  def styleSheet(fontFamily: String, fontSize: Int): String = "<style type=\"text/css\">\n<!--\n"+
           styleSheetFile.
+            replace("{BODY-BACKGROUND}", colorString(InterfaceColors.infoBackground())).
             replace("{BODY-FONT-SIZE}", fontSize.toString).
             replace("{H1-BACKGROUND}", colorString(InterfaceColors.infoH1Background())).
             replace("{H1-COLOR}", colorString(InterfaceColors.infoH1Color())).
@@ -63,14 +60,23 @@ object InfoFormatter {
             replace("{INFO-BACKGROUND}", colorString(InterfaceColors.infoBackground())).
             replace("{LINK-COLOR}", colorString(InterfaceColors.infoLink())) + "\n-->\n</style>"
 
-  def apply(content: String, fontFamily: String = "monospace", fontSize: Int = defaultFontSize) = {
-    wrapHtml(toInnerHtml(content), fontFamily, fontSize)
+  def apply(content: String, modelDir: String = null,
+            resourceManager: ExternalResourceManager = new ExternalResourceManager,
+            fontFamily: String = "monospace", fontSize: Int = defaultFontSize) = {
+
+    wrapHtml(toInnerHtml(content, modelDir, resourceManager), fontFamily, fontSize)
   }
 
-  def wrapHtml(body: HTML, fontFamily: String = "monospace", fontSize: Int = defaultFontSize): HTML =
-    s"<html><head>${styleSheet(fontFamily, fontSize)}</head><body>$body</body></html>"
+  def wrapHtml(body: String, fontFamily: String = "monospace", fontSize: Int = defaultFontSize): String = {
+    val mathJax = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"
 
-  def toInnerHtml(content: String): String = {
+    s"""<html><head><script type="text/javascript" src="$mathJax"></script>"""
+      + styleSheet(fontFamily, fontSize) + "</head><body>" + body + "</body></html>"
+  }
+
+  def toInnerHtml(content: String, modelDir: String = null,
+                  resourceManager: ExternalResourceManager = new ExternalResourceManager): String = {
+
     val extensions = new JArrayList[Extension]()
     val options = new MutableDataSet()
 
@@ -91,6 +97,7 @@ object InfoFormatter {
 
     extensions.add(new CodeBlockRenderer())
     extensions.add(new BlockQuoteRenderer())
+    extensions.add(new ResourceRenderer(modelDir, resourceManager))
 
     options.set(Parser.EXTENSIONS, extensions)
 
