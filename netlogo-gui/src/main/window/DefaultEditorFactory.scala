@@ -11,7 +11,7 @@ class DefaultEditorFactory(val compiler: CompilerServices) extends EditorFactory
   val colorizer = new EditorColorizer(compiler)
 
   override def newEditor(configuration: EditorConfiguration): AbstractEditorArea =
-    new EditorArea(configuration)
+    new EditorArea(configuration) with AutoIndentHandler
 
   def scrollPane(editor: AbstractEditorArea): EditorScrollPane = {
     val sp = new LineNumberScrollPane(

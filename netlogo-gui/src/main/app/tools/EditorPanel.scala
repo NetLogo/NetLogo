@@ -13,7 +13,7 @@ import org.nlogo.editor.{ EditorArea, EditorConfiguration }
 import org.nlogo.swing.{ Button, ComboBox, HasPropertyChangeSupport, ScrollPane, Transparent, Utils }
 import org.nlogo.theme.InterfaceColors
 import org.nlogo.util.Implicits.RichString
-import org.nlogo.window.{ EditorAreaErrorLabel, EditorColorizer }
+import org.nlogo.window.{ AutoIndentHandler, EditorAreaErrorLabel, EditorColorizer }
 
 class EditorPanel(compiler: CompilerServices, colorizer: EditorColorizer)
   extends JPanel(new GridBagLayout) with Transparent {
@@ -42,7 +42,7 @@ class EditorPanel(compiler: CompilerServices, colorizer: EditorColorizer)
     EditorConfiguration.default(0, 0, compiler, colorizer)
       .withFocusTraversalEnabled(true)
       .withListener(textListener)
-  val editor = new EditorArea(configuration) {
+  val editor = new EditorArea(configuration) with AutoIndentHandler {
     setBackground(InterfaceColors.codeBackground())
     setCaretColor(InterfaceColors.textAreaText())
 

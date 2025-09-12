@@ -14,11 +14,9 @@ import java.awt.event.{ FocusListener, KeyAdapter, KeyEvent, MouseAdapter, Mouse
 import javax.swing.{ Action, JEditorPane }
 import javax.swing.text.{ Document, TextAction, PlainDocument, BadLocationException }
 
-import org.nlogo.app.codetab.{ EditorAreaWrapper, SmartIndenter }
 import org.nlogo.core.NetLogoPreferences
 import org.nlogo.swing.{ MenuItem, PopupMenu }
 import org.nlogo.theme.InterfaceColors
-import org.nlogo.window.Events.AutoIndentEvent
 
 import KeyBinding.keystroke
 
@@ -32,8 +30,7 @@ class EditorArea(val configuration: EditorConfiguration)
   extends JEditorPane
   with AbstractEditorArea
   with FocusTraversable
-  with FocusListener
-  with AutoIndentEvent.Handler {
+  with FocusListener {
 
   val rows      = configuration.rows
   val columns   = configuration.columns
@@ -90,16 +87,12 @@ class EditorArea(val configuration: EditorConfiguration)
     newIndenter.addActions(configuration, getInputMap)
   }
 
-  private def setIndenter(smart: Boolean): Unit = {
+  def setIndenter(smart: Boolean): Unit = {
     if (smart) {
       setIndenter(new SmartIndenter(new EditorAreaWrapper(this), configuration.compiler))
     } else {
       setIndenter(new DumbIndenter(this))
     }
-  }
-
-  def handle(e: AutoIndentEvent): Unit = {
-    setIndenter(e.smart)
   }
 
   override def getActions: Array[Action] = {

@@ -1,11 +1,11 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.app.codetab
+package org.nlogo.editor
 
-import org.nlogo.api.EditorAreaInterface
-import org.nlogo.editor.AdvancedEditorArea
 import javax.swing.JTextArea
 import javax.swing.text.{ AbstractDocument, JTextComponent }
+
+import org.nlogo.api.EditorAreaInterface
 
 // wraps an EditorArea to satisfy EditorAreaInterface, for the benefit of SmartIndenter
 

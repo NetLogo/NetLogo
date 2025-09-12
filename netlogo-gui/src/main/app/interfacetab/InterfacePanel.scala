@@ -18,10 +18,10 @@ import org.nlogo.core.{
 import org.nlogo.editor.{ Colorizer, EditorArea }
 import org.nlogo.log.LogManager
 import org.nlogo.swing.{ MenuItem, PopupMenu }
-import org.nlogo.window.{ ButtonWidget, ChooserWidget, ClipboardUtils, Editable, Events => WindowEvents, GUIWorkspace,
-                          InputBoxWidget, InterfaceGlobalWidget, InterfaceMode, MonitorWidget, PlotWidget,
-                          SliderWidget, SwitchWidget, ViewWidget, ViewWidgetInterface, Widget, WidgetInfo,
-                          WidgetRegistry },
+import org.nlogo.window.{ AutoIndentHandler, ButtonWidget, ChooserWidget, ClipboardUtils, Editable,
+                          Events => WindowEvents, GUIWorkspace, InputBoxWidget, InterfaceGlobalWidget, InterfaceMode,
+                          MonitorWidget, PlotWidget, SliderWidget, SwitchWidget, ViewWidget, ViewWidgetInterface,
+                          Widget, WidgetInfo, WidgetRegistry },
   WindowEvents.{ CompileAllEvent, LoadBeginEvent, LoadWidgetsEvent, RemoveConstraintEvent, WidgetRemovedEvent }
 import org.nlogo.workspace.Evaluator
 
@@ -127,8 +127,8 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
         }
       case s: CoreSwitch => new SwitchWidget(workspace, workspace.getExtensionManager)
       case i: CoreInputBox =>
-        val textArea       = new EditorArea(textEditorConfiguration)
-        val dialogTextArea = new EditorArea(dialogEditorConfiguration)
+        val textArea       = new EditorArea(textEditorConfiguration) with AutoIndentHandler
+        val dialogTextArea = new EditorArea(dialogEditorConfiguration) with AutoIndentHandler
 
         new InputBoxWidget(textArea, dialogTextArea, workspace, workspace.getExtensionManager, this)
       case v: CoreView => new ViewWidget(workspace)
