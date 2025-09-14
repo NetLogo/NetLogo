@@ -23,7 +23,7 @@ import org.nlogo.theme.ThemeSync
 import org.nlogo.window.Events.{ AboutToCloseFilesEvent, AboutToSaveModelEvent, AutoIndentEvent, CompileAllEvent,
                                  CompiledEvent, ExternalFileSavedEvent, LoadBeginEvent, LoadErrorEvent, LoadModelEvent,
                                  ModelSavedEvent, RuntimeErrorEvent, WidgetErrorEvent, WidgetRemovedEvent }
-import org.nlogo.window.{ ExternalFileInterface, GUIWorkspace, JobWidget, MonitorWidget, Widget }
+import org.nlogo.window.{ Event, ExternalFileInterface, GUIWorkspace, JobWidget, MonitorWidget, Widget }
 
 import scala.io.Source
 
@@ -469,6 +469,10 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     // if a new included file is added, the file watcher thread needs to be
     // restarted with the updated includes (Isaac B 7/29/25)
     startWatcherThread()
+
+    // for some reason the event system gets confused when temporary tabs are added in certain ways,
+    // so reset the events here just in case (Isaac B 9/14/25)
+    Event.rehash()
   }
 
   def newExternalFile(): Unit = {
