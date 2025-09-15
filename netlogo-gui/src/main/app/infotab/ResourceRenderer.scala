@@ -9,7 +9,7 @@ import com.vladsch.flexmark.html.renderer.{ NodeRenderer, NodeRendererContext, N
 import com.vladsch.flexmark.util.options.{ DataHolder, MutableDataHolder }
 
 import java.nio.file.Paths
-import java.util.{ HashSet, Set }
+import java.util.{ Base64, HashSet, Set }
 
 import org.nlogo.api.ExternalResourceManager
 
@@ -44,7 +44,15 @@ class ResourceRenderer(modelDir: String, resourceManager: ExternalResourceManage
           s"file:${Paths.get(Option(modelDir).getOrElse("")).resolve(url.stripPrefix("file:"))}"
         } else {
           resourceManager.getResource(url).fold(url) { resource =>
-            s"data:image/${resource.extension};base64,${resource.data}"
+            val data = {
+              if ("^[A-Za-z0-9+/=]*$".r.matches(resource.data)) {
+                resource.data
+              } else {
+                Base64.getEncoder.encodeToString(resource.data.getBytes)
+              }
+            }
+
+            s"data:image/${resource.extension};base64,$data"
           }
         }
       }
