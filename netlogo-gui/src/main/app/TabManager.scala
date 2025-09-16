@@ -21,7 +21,7 @@ import org.nlogo.core.{ I18N, NetLogoPreferences }
 import org.nlogo.swing.{ OptionPane, Printable, PrinterManager, TabLabel, UserAction }
 import org.nlogo.theme.ThemeSync
 import org.nlogo.window.Events.{ AboutToCloseFilesEvent, AboutToSaveModelEvent, AutoIndentEvent, CompileAllEvent,
-                                 CompiledEvent, ExternalFileSavedEvent, LoadBeginEvent, LoadErrorEvent, LoadModelEvent,
+                                 CompiledEvent, ExternalFileSavedEvent, LoadBeginEvent, LoadErrorEvent, LoadEndEvent,
                                  ModelSavedEvent, RuntimeErrorEvent, WidgetErrorEvent, WidgetRemovedEvent }
 import org.nlogo.window.{ Event, ExternalFileInterface, GUIWorkspace, JobWidget, MonitorWidget, Widget }
 
@@ -31,7 +31,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
                  val externalFileManager: ExternalFileManager)
   extends TabsInterface with AboutToCloseFilesEvent.Handler with AboutToSaveModelEvent.Handler
   with AutoIndentEvent.Handler with CompiledEvent.Handler with ExternalFileSavedEvent.Handler
-  with LoadBeginEvent.Handler with LoadErrorEvent.Handler with LoadModelEvent.Handler with ModelSavedEvent.Handler
+  with LoadBeginEvent.Handler with LoadErrorEvent.Handler with LoadEndEvent.Handler with ModelSavedEvent.Handler
   with RuntimeErrorEvent.Handler with WidgetErrorEvent.Handler with WidgetRemovedEvent.Handler with ThemeSync {
 
   private val focusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager
@@ -630,7 +630,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     }
   }
 
-  def handle(e: LoadModelEvent): Unit = {
+  def handle(e: LoadEndEvent): Unit = {
     loadOpenTabs()
 
     // We need to restart the watcher thread every load because the list of
