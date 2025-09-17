@@ -8,6 +8,7 @@ import java.io.PrintWriter
 import javax.swing.{ AbstractAction, JDialog, JLabel, JList, JMenuBar, JPanel, ListCellRenderer }
 import javax.swing.event.ListSelectionListener
 
+import org.nlogo.analytics.Analytics
 import org.nlogo.api.{ RefEnumeratedValueSet, LabProtocol }
 import org.nlogo.window.{ EditDialogFactory, MenuBarFactory }
 
@@ -193,6 +194,7 @@ private class ManagerDialog(manager:       LabManager,
     blockActions = true
     if (!isNew) editIndex = selectedIndex
     update()
+    Analytics.bspaceOpen()
     val editable = new ProtocolEditable(protocol, manager.workspace.getFrame,
                                         manager.workspace, dialogFactory.colorizer, manager.workspace.world,
                                         manager.protocols.map(_.name).filter(isNew || _ != protocol.name).toSeq)
