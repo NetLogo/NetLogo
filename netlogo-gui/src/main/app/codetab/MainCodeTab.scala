@@ -53,6 +53,7 @@ with WindowEvents.LoadModelEvent.Handler
 
         Analytics.codeHash(hash)
         Analytics.primUsage(workspace.tokenizeForColorizationIterator(text))
+        Analytics.keywordUsage(workspace.tokenizeForColorizationIterator(text))
 
         "extensions[\\s\r\n]*\\[(.*)\\]".r.findFirstMatchIn(text).foreach(_.group(1) match {
           case s if s != null => Analytics.includeExtensions(s.trim.split("[\\s\r\n]+"))
