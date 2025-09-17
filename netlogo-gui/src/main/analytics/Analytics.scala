@@ -179,6 +179,24 @@ object Analytics {
     } (using ExecutionContext.global)
   }
 
+  def keywordUsage(tokens: Iterator[Token]): Unit = {
+    Future {
+      val keywords = tokens.foldLeft(Map[String, Int]()) {
+        case (map, token) =>
+          if (token.tpe == TokenType.Keyword) {
+            val name = token.text.toLowerCase
+
+            map + ((name, map.getOrElse(name, 0) + 1))
+          } else {
+            map
+          }
+      }
+
+      if (keywords.nonEmpty)
+        wrapRequest(MatomoRequests.event(category, "Keyword Usage", buildJson(keywords), null).build())
+    } (using ExecutionContext.global)
+  }
+
   def includeExtensions(extensions: Array[String]): Unit = {
     extensions.foreach { extension =>
       wrapRequest(MatomoRequests.event(category, "Include Extension", extension, null).build())
