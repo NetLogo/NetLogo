@@ -57,3 +57,17 @@ ResizeWorldDoesntRestartWhoNumbering_2D
   sort [who] of turtles => []
   O> crt 1
   sort [who] of turtles => [1]
+
+ResizeWorldKillsPatches_2D
+  globals [ a b ]
+  O> set a patch 0 0
+  O> let c patch 1 1 resize-world 0 0 0 0 set b c
+  a => nobody
+  b => nobody
+
+ResizeWorldKillsPatches_3D
+  globals [ a b ]
+  O> set a patch 0 0 0
+  O> let c patch 1 1 1 resize-world 0 0 0 0 0 0 set b c
+  a => nobody
+  b => nobody
