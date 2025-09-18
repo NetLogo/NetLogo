@@ -66,10 +66,17 @@ object InfoFormatter {
   }
 
   def wrapHtml(body: String, fontSize: Int = defaultFontSize): String = {
-    val mathJax = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"
+    val mathJax = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
 
-    s"""<html><head><script type="text/javascript" src="$mathJax"></script>"""
-      + styleSheet(fontSize) + "</head><body>" + body + "</body></html>"
+    s"<html><head>${styleSheet(fontSize)}</head><body>" + body + s"""</body><script>
+      window.MathJax = {
+        tex: {
+          inlineMath: [['$$', '$$']],
+          packages: {'[+]': ['mhchem']}
+        },
+        loader: {load: ['[tex]/mhchem']}
+      };
+    </script><script type="text/javascript" src="$mathJax"></script></html>"""
   }
 
   def toInnerHtml(content: String, modelDir: String = null,
