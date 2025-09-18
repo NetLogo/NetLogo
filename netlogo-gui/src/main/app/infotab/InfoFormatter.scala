@@ -67,8 +67,19 @@ object InfoFormatter {
     wrapHtml(toInnerHtml(content, modelDir, resourceManager), fontFamily, fontSize)
   }
 
-  def wrapHtml(body: String, fontFamily: String = "monospace", fontSize: Int = defaultFontSize): String =
-    s"""<html><head>${styleSheet(fontFamily, fontSize)}</head><body>$body</body></html>"""
+  def wrapHtml(body: String, fontFamily: String = "monospace", fontSize: Int = defaultFontSize): String = {
+    val mathJax = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+
+    s"""<html><head>${styleSheet(fontFamily, fontSize)}</head><body>$body</body><script>
+      window.MathJax = {
+        tex: {
+          inlineMath: [['$$', '$$']],
+          packages: {'[+]': ['mhchem']}
+        },
+        loader: {load: ['[tex]/mhchem']}
+      };
+    </script><script type="text/javascript" src="$mathJax"></script></html>"""
+  }
 
   def toInnerHtml(content: String, modelDir: String = null,
                   resourceManager: ExternalResourceManager = new ExternalResourceManager): String = {
