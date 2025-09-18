@@ -213,6 +213,13 @@ class World3D extends World
     _links.clear() // so a SimpleChangeEvent is published
     _links.directed = Directedness.Undetermined
 
+    if (_patches != null) {
+      val iter = _patches.iterator
+
+      while (iter.hasNext)
+        iter.next().setId(-1)
+    }
+
     var x = _minPxcor
     var y = _maxPycor
     var z = _maxPzcor
