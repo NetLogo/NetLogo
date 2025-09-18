@@ -64,7 +64,7 @@ object NetLogoDocsTest {
           } else {
             val resCode =
               try
-                new URL(loc).openConnection.asInstanceOf[HttpURLConnection].getResponseCode
+                new URI(loc).toURL.openConnection.asInstanceOf[HttpURLConnection].getResponseCode
               catch {
                 case _: IOException => 0
               }

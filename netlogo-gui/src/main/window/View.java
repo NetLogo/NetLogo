@@ -37,7 +37,7 @@ public class View
     LocalViewInterface {
 
   protected final GUIWorkspace workspace;
-  final ViewMouseHandler mouser;
+  ViewMouseHandler mouser = null;
   public RendererInterface renderer;
 
   private boolean paintingImmediately = false;
@@ -47,8 +47,11 @@ public class View
 
   public View(final GUIWorkspace workspace) {
     this.workspace = workspace;
-    setOpaque(true);
     renderer = workspace.newRenderer();
+  }
+
+  public void init() {
+    setOpaque(true);
     mouser = new ViewMouseHandler(this, workspace.world(), this);
     addMouseListener(mouser);
     addMouseMotionListener(mouser);
