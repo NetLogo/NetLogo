@@ -47,9 +47,7 @@ class _anybreedon(_breedName: String) extends Reporter {
               if (t.getBreed eq breed)
                 return true
             }
-            return false
           }
-          return false
         } else if(sourceSet.kind == AgentKind.Patch) {
           val sourceSetItr = sourceSet.iterator
           while (sourceSetItr.hasNext) {
@@ -59,9 +57,7 @@ class _anybreedon(_breedName: String) extends Reporter {
               if (t.getBreed eq breed)
                 return true
             }
-            return false
           }
-          return false
         }
         return false
       case _ =>

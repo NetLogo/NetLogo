@@ -44,3 +44,14 @@ TurtlesOn1_3D
   count frogs-on one-of frogs-on patch 0 0 0 => 1
   count frogs-on one-of mice-on patch 0 0 0 => ERROR FROGS-ON expected input to be a turtle agentset or patch agentset or turtle or patch but got NOBODY instead.
   count mice-on one-of turtles-on patch 0 0 0 => 0
+
+TurtlesOn2_2D
+  breed [ cats cat ]
+  O> create-cats 10 [ setxy random-xcor random-ycor ]
+  any? cats-on patches => true
+  O> clear-all
+  O> ask n-of 10 patches [ sprout 1 [ set breed cats ] ]
+  any? cats-on patches => true
+  O> clear-all
+  P> if random 1 = 0 [ sprout 1 [ set breed cats ] ]
+  any? cats-on patches => true
