@@ -123,8 +123,9 @@ class OutputArea(val text: TextArea) extends JPanel with RoundedBorderPanel with
       }
     }
     lastTemporaryAddition = None
+    val metrics = getFontMetrics(text.getFont)
     if (wrapLines) {
-      message = LineBreaker.breakLines(message, getFontMetrics(text.getFont), text.getWidth - GuessScrollBarWidth)
+      message = LineBreaker.breakLines(message, metrics, text.getWidth - GuessScrollBarWidth)
                            .mkString("\n") + "\n"
     }
     val buf = new StringBuilder();
@@ -132,15 +133,24 @@ class OutputArea(val text: TextArea) extends JPanel with RoundedBorderPanel with
       buf.append('\n')
       addCarriageReturn = false
     }
-    buf.append(message);
+    buf.append(message)
     if (buf.length > 0 && buf.charAt(buf.length - 1) == '\n') {
       buf.setLength(buf.length - 1)
       addCarriageReturn = true
     }
-    text.append(buf.toString)
+    val cut = {
+      val str = buf.toString
+
+      if (metrics.stringWidth(str) > 32767) {
+        str.substring(0, 32767 / metrics.charWidth('a') - 3) + "..."
+      } else {
+        str
+      }
+    }
+    text.append(cut)
     lastTemporaryAddition = None
     if (oo.isTemporary) {
-      text.select(text.getText.length - buf.length, text.getText.length)
+      text.select(text.getText.length - cut.length, text.getText.length)
       lastTemporaryAddition = Some(text.getSelectedText)
     }
     // doesn't always work unless we wait til later to do it - ST 8/18/03
