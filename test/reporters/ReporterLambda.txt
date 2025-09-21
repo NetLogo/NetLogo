@@ -228,3 +228,5 @@ PrintReporterLambda
   (word [ -> 5 ]) => "(anonymous reporter: [ -> 5 ])"
   (word [ a -> a ]) => "(anonymous reporter: [ a -> a ])"
   (word [ [a b] -> a + b ]) => "(anonymous reporter: [ [a b] -> a + b ])"
+  (word [ [a] -> (ifelse-value a = 10 [red] a = 20 [blue] [green]) ]) => "(anonymous reporter: [ [a] -> ( ifelse-value a = 10 [ red ] a = 20 [ blue ] [ green ] ) ])"
+  (word [ -> (list 10 20 30 40) ]) => "(anonymous reporter: [ -> ( list 10 20 30 40 ) ])"

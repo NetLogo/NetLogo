@@ -150,8 +150,37 @@ class Formatter extends PositionalAstFolder[AstFormat] {
             c
 
           case (false, reporter) =>
-            super.visitReporterApp(app, position)(using c.appendText(ws + c.instructionToString(reporter)))
-              .copy(instructionToString = c.instructionToString)
+            // TL;DR - some methods got reused incorrectly in the past, so it ended up being easier to just check for
+            // existing parentheses than to ensure that they didn't get added before this point.
+            //
+            // technically the third check here isn't the correct way to deal with this, but it's not worth the effort
+            // to fix properly right now. the problem is that one of the two classes that uses this code decided that
+            // "leading whitespace" means "every character up until the start of the primitive name" which erroneously
+            // includes any parentheses before the name of variadic primitives. but the method that determines this is
+            // used in other places in which everything would break if the "start of the primitive" was before the
+            // leading parenthesis. in contrast, the other class that uses this code decided correctly that
+            // "leading whitespace" means "the whitespace before the application of the primitive", so it seems most
+            // logical to write the code here so that it works correctly with that class, and then add checks to make
+            // sure this code doesn't break the other class until it's fixed properly.
+            //
+            // (Isaac B 9/20/25)
+            val parens = app.reporter.syntax.isVariadic && app.args.size != app.reporter.syntax.rightDefault &&
+                           !ws.trim.startsWith("(")
+
+            val start = if (parens) {
+              c.appendText(" (")
+            } else {
+              c
+            }
+
+            val expr = super.visitReporterApp(app, position)(using start.appendText(ws + start.instructionToString(reporter)))
+              .copy(instructionToString = start.instructionToString)
+
+            if (parens) {
+              expr.appendText(" )")
+            } else {
+              expr
+            }
         }
       }
   }

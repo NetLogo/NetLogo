@@ -361,3 +361,7 @@ AlternateSyntaxesSupported
   O> zero-argument-arrow-omitted
   O> one-argument-bracketed
   O> one-argument-unbracketed
+
+PrintCommandLambda
+  (word [ -> print 10 let v1 (list 10) ]) => "(anonymous command: [ -> print 10 let v1 ( list 10 ) ])"
+  (word [ -> let v1 (list 10 20 30) ]) => "(anonymous command: [ -> let v1 ( list 10 20 30 ) ])"
