@@ -284,6 +284,8 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
       case editor: AdvancedEditorArea =>
         editor.setCurrentLineHighlightColor(InterfaceColors.codeLineHighlight())
         editor.setDefaultSelectionColor(InterfaceColors.codeSelection())
+        editor.setMatchedBracketBGColor(InterfaceColors.codeBracketHighlight())
+        editor.setMatchedBracketBorderColor(InterfaceColors.codeBracketHighlight())
         editor.setSyntaxScheme(new SyntaxScheme(true) {
           setStyle(TokenTypes.IDENTIFIER, new Style(InterfaceColors.defaultColor()))
           setStyle(TokenTypes.RESERVED_WORD, boldStyle(InterfaceColors.keywordColor()))

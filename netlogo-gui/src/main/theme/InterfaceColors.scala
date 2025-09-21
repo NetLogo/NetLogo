@@ -118,6 +118,7 @@ object InterfaceColors {
   def errorHighlight(): Color = theme.errorHighlight
   def codeBackground(): Color = theme.codeBackground
   def codeLineHighlight(): Color = theme.codeLineHighlight
+  def codeBracketHighlight(): Color = theme.codeBracketHighlight
   def codeSelection(): Color = theme.codeSelection
   def codeSeparator(): Color = theme.codeSeparator
   def checkboxBackgroundSelected(): Color = theme.checkboxBackgroundSelected
@@ -312,6 +313,7 @@ trait ColorTheme {
   def errorHighlight: Color
   def codeBackground: Color
   def codeLineHighlight: Color
+  def codeBracketHighlight: Color
   def codeSelection: Color
   def codeSeparator: Color
   def checkboxBackgroundSelected: Color
@@ -474,6 +476,7 @@ object ClassicTheme extends ColorTheme {
   override def errorHighlight: Color = LightRed
   override def codeBackground: Color = Color.WHITE
   override def codeLineHighlight: Color = new Color(255, 255, 204)
+  override def codeBracketHighlight: Color = new Color(200, 200, 255)
   override def codeSelection: Color = new Color(200, 200, 255)
   override def codeSeparator: Color = LightGray
   override def checkboxBackgroundSelected: Color = MediumBlue
@@ -636,6 +639,7 @@ object LightTheme extends ColorTheme {
   override def errorHighlight: Color = LightRed
   override def codeBackground: Color = Color.WHITE
   override def codeLineHighlight: Color = new Color(255, 255, 204)
+  override def codeBracketHighlight: Color = new Color(200, 200, 255)
   override def codeSelection: Color = new Color(200, 200, 255)
   override def codeSeparator: Color = LightGray
   override def checkboxBackgroundSelected: Color = MediumBlue
@@ -798,6 +802,7 @@ object DarkTheme extends ColorTheme {
   override def errorHighlight: Color = LightRed
   override def codeBackground: Color = AlmostBlack
   override def codeLineHighlight: Color = new Color(35, 35, 35)
+  override def codeBracketHighlight: Color = DarkGray
   override def codeSelection: Color = DarkGray
   override def codeSeparator: Color = DarkGray
   override def checkboxBackgroundSelected: Color = MediumBlue
