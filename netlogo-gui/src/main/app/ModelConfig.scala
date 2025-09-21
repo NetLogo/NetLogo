@@ -95,7 +95,8 @@ object ModelConfig {
     }
   }
 
-  // for each tracked model, get rid of any autosaves that are older than 10 versions (Isaac B 7/1/25)
+  // for each tracked model, including the empty/new model, get rid of any autosaves that
+  // are older than 10 versions (Isaac B 7/1/25)
   def pruneAutoSaves(): Unit = {
     val configDir = Paths.get(System.getProperty("user.home"), ".nlogo", "modelConfigs")
 
@@ -112,6 +113,18 @@ object ModelConfig {
             }
           }
         }
+      }
+    }
+
+    val autosaveRegex = s"^autosave_\\d\\d\\d\\d-\\d\\d-\\d\\d.\\d\\d_\\d\\d_\\d\\d.${ModelReader.modelSuffix}$$".r
+
+    Files.list(Paths.get(System.getProperty("java.io.tmpdir"))).toScala(Seq).filter { path =>
+      autosaveRegex.matches(path.getFileName.toString)
+    }.sortBy(-_.toFile.lastModified).drop(10).foreach { path =>
+      try {
+        path.toFile.delete()
+      } catch {
+        case e: IOException =>
       }
     }
   }
