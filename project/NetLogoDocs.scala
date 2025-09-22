@@ -159,7 +159,15 @@ class NetLogoDocs(
     if (!(docsSource.getParentFile / "generate-manual" / "index.js").exists)
       sys.error(s"index.js not found in generate-manual directory.")
 
-    if (Process(Seq("bash", "npm-install.sh"), docsSource.getParentFile / "generate-manual").! != 0)
+    val npm = {
+      if (System.getProperty("os.name").startsWith("Windows")) {
+        "npm.cmd"
+      } else {
+        "npm"
+      }
+    }
+
+    if (Process(Seq(npm, "install"), docsSource.getParentFile / "generate-manual").! != 0)
       sys.error("npm install failed. Please ensure you have npm installed and try again.")
 
     println("npm install completed successfully.")

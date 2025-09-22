@@ -423,7 +423,8 @@ ${combinedHtml.filter(Boolean).join('')}
   fs.writeFileSync(tempHtmlPath, fullHtmlContent);
   const tempHtmlUrl = 'file://' + tempHtmlPath;
 
-  await page.goto(tempHtmlUrl, { waitUntil: 'networkidle0' });
+  // longer timeout for this step because it is slow on GitHub Actions (Isaac B 9/23/25)
+  await page.goto(tempHtmlUrl, { waitUntil: 'networkidle0', timeout: 300000 });
   const pdfBuffer = await page.pdf({
     format: 'A4',
     printBackground: true,
