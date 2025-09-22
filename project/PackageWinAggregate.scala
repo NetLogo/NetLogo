@@ -23,18 +23,6 @@ object PackageWinAggregate {
     "bitness"                         -> "always64"
   )
 
-  val WiXPath = {
-    val fs = FileSystems.getDefault
-    val basePaths =
-      Set(fs.getPath("C:", "Program Files (x86)"), fs.getPath("C:", "Program Files"))
-        .map(_.toFile).filter(_.exists)
-    basePaths.flatMap(_.listFiles).find(_.getName.contains("WiX")).getOrElse(
-      sys.error("Could not find WiX installation, please ensure WiX is installed"))
-  }
-
-  def wixCommand(commandName: String) =
-    WiXPath / "bin" / (commandName + ".exe")
-
   def generateUUIDs: Map[String, String] = {
     Seq("product",
       "NetLogoStartMenuShortcutId",
@@ -196,7 +184,7 @@ object PackageWinAggregate {
     log.info("Running WiX MSI packager")
     val msiName = s"NetLogo-$version-$arch.msi"
     val buildCommand = Seq[String](
-      wixCommand("wix").getPath,
+      "wix.exe",
       "build",
       "NetLogo.wxs",
       "NetLogoApp.wxs",
