@@ -1,0 +1,153 @@
+name: package-mac
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  package-silicon:
+    runs-on: macos-latest
+    steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.12.1
+        with:
+          access_token: ${{ github.token }}
+
+      - uses: actions/checkout@v5
+        with:
+          submodules: true
+          fetch-depth: 0
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: 17.0.2
+          java-package: jdk+fx
+          cache: sbt
+
+      - uses: sbt/setup-sbt@v1
+
+      - uses: mfinelli/setup-imagemagick@v7
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 23
+          cache: npm
+          cache-dependency-path: netlogo-gui/colorpicker/package-lock.json
+
+      - uses: r-lib/actions/setup-r@v2
+
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: |
+            spatstat@3.4-0
+            rjson@0.2.23
+            vegan@2.7-1
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.10'
+
+      - name: Install Python Dependencies
+        run: |
+          pip3 install numpy
+          pip3 install scikit-learn
+
+      - name: Setup Packaging Environment
+        run: |
+          echo "- vendor: 'OpenJDK'" > .jdks.yaml
+          echo "  version: '17.0.2'" >> .jdks.yaml
+          echo "  architecture: 'aarch64'" >> .jdks.yaml
+          echo "  path: '${{ env.JAVA_HOME }}'" >> .jdks.yaml
+
+      - name: Build and Package NetLogo
+        run: |
+          sbt dist/buildNetLogo
+          sbt "dist/packageMacAggregate OpenJDK_17.0.2_aarch64"
+
+      - uses: actions/upload-artifact@v6
+        with:
+          name: mac-aarch64
+          path: dist/target/downloadPages/*
+          if-no-files-found: error
+          overwrite: true
+
+      - uses: actions/cache@v5
+        id: restore-build
+        with:
+          path: ./*
+          key: ${{ github.sha }}
+
+  package-intel:
+    runs-on: macos-15-intel
+    steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.12.1
+        with:
+          access_token: ${{ github.token }}
+
+      - uses: actions/checkout@v5
+        with:
+          submodules: true
+          fetch-depth: 0
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: 17.0.2
+          java-package: jdk+fx
+          cache: sbt
+
+      - uses: sbt/setup-sbt@v1
+
+      - uses: mfinelli/setup-imagemagick@v7
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 23
+          cache: npm
+          cache-dependency-path: netlogo-gui/colorpicker/package-lock.json
+
+      - uses: r-lib/actions/setup-r@v2
+
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: |
+            spatstat@3.4-0
+            rjson@0.2.23
+            vegan@2.7-1
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.10'
+
+      - name: Install Python Dependencies
+        run: |
+          pip3 install numpy
+          pip3 install scikit-learn
+
+      - name: Setup Packaging Environment
+        run: |
+          echo "- vendor: 'OpenJDK'" > .jdks.yaml
+          echo "  version: '17.0.2'" >> .jdks.yaml
+          echo "  architecture: 'x86_64'" >> .jdks.yaml
+          echo "  path: '${{ env.JAVA_HOME }}'" >> .jdks.yaml
+
+      - name: Build and Package NetLogo
+        run: |
+          sbt dist/buildNetLogo
+          sbt "dist/packageMacAggregate OpenJDK_17.0.2_x86_64"
+
+      - uses: actions/upload-artifact@v6
+        with:
+          name: mac-x86_64
+          path: dist/target/downloadPages/*
+          if-no-files-found: error
+          overwrite: true
+
+      - uses: actions/cache@v5
+        id: restore-build
+        with:
+          path: ./*
+          key: ${{ github.sha }}
