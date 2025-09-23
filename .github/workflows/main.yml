@@ -48,25 +48,25 @@ jobs:
       fail-fast: false
       matrix:
         test: [
-          "parserJS/test; parserJVM/test",
-          "depend",
-          "headless/depend",
-          "netlogo/Test/fast",
-          "netlogo/Test/medium",
-          "netlogo/Test/slow",
-          "nogen; netlogo/Test/fast",
-          "nogen; netlogo/Test/medium",
-          "threed; netlogo/Test/fast",
-          "threed; netlogo/Test/medium",
-          "threed; netlogo/Test/slow",
-          "headless/Test/fast",
-          "headless/Test/medium",
-          "headless/Test/slow",
-          "nogen; headless/Test/fast",
-          "nogen; headless/Test/medium",
-          "extensionTests",
-          "behaviorsearchProject/test",
-          "dist/buildMathematicaLink"
+          "parserJS/test; parserJVM/test"
+        , "depend"
+        , "headless/depend"
+        , "netlogo/Test/fast"
+        , "netlogo/Test/medium"
+        , "netlogo/Test/slow"
+        , "nogen; netlogo/Test/fast"
+        , "nogen; netlogo/Test/medium"
+        , "threed; netlogo/Test/fast"
+        , "threed; netlogo/Test/medium"
+        , "threed; netlogo/Test/slow"
+        , "headless/Test/fast"
+        , "headless/Test/medium"
+        , "headless/Test/slow"
+        , "nogen; headless/Test/fast"
+        , "nogen; headless/Test/medium"
+        , "extensionTests"
+        , "behaviorsearchProject/test"
+        , "dist/buildMathematicaLink"
         ]
 
     steps:
