@@ -26,6 +26,8 @@ object ModelsLibrary {
   val benchmark = TaskKey[Unit]("benchmark", "Run all benchmark models and record runtime statistics")
   val benchmarkGUI = TaskKey[Unit]("benchmarkGUI", "Run all benchmark models in the GUI and record runtime statistics")
 
+  val scrapePrims = InputKey[Unit]("scrapePrims", "Scrape the library for primitive usage at the given version tags")
+
   val modelParser: Initialize[Parser[Option[Path]]] = {
     import Parser._
     Def.setting {
@@ -84,6 +86,11 @@ object ModelsLibrary {
       makeMainTask("org.nlogo.app.GUIBenchmarker",
         classpath = (Test / fullClasspath),
         workingDirectory = baseDirectory(_.getParentFile)).toTask("").value
+    },
+    scrapePrims := {
+      makeMainTask("org.nlogo.tools.PrimitiveScraper",
+        classpath = (Test / fullClasspath),
+        workingDirectory = baseDirectory(_.getParentFile)).evaluated
     }
   )
 
