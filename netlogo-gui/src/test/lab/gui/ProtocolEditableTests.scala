@@ -9,7 +9,7 @@ import org.scalatest.funsuite.AnyFunSuite
 import org.nlogo.api.{ DummyCompilerServices, FileIO, GlobalsIdentifier, NetLogoLegacyDialect, NetLogoThreeDDialect,
                        Version }
 import org.nlogo.core.{ Femto, LiteralParser }
-import org.nlogo.fileformat.NLogoLabFormat
+import org.nlogo.fileformat.FileFormat
 import org.nlogo.nvm.PresentationCompilerInterface
 import org.nlogo.window.EditorColorizer
 
@@ -33,8 +33,8 @@ class ProtocolEditableTests extends AnyFunSuite {
       // specification, but not meaningful in this context, so just pretend everything is valid (Isaac B 7/3/25)
       override def checkGlobalVariable(name: String, values: List[AnyRef]): Unit = {}
     }
-    val protocolLines = FileIO.fileToString("test/lab/protocols.xml").linesIterator.toArray
-    val protocols = new NLogoLabFormat(literalParser).load(protocolLines, None).get
+    val protocols = FileFormat.standardAnyLoader(true, literalParser)
+                              .readExperiments(FileIO.fileToString("test/lab/protocols.xml"), false, Set()).get._1
     protocols.foreach { protocol =>
       val editedProtocol = new ProtocolEditable(protocol, null, workspace, new EditorColorizer(workspace), new AnyRef,
                                                 Seq()).get.get

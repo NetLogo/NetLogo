@@ -63,7 +63,7 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
     }
     val openWs = newWorkspace
     val proto = try {
-      BehaviorSpaceCoordinator.selectProtocol(settings, openWs)
+      BehaviorSpaceCoordinator.selectProtocol(settings)
     } finally {
       openWs.dispose()
     }

@@ -893,45 +893,45 @@ We don't yet have detailed documentation on authoring experiment setups in XML,
 but if you already have some familiarity with XML, then the following pointers
 may be enough to get you started.
 
-The structure of BehaviorSpace experiment setups in XML is determined by a
-Document Type Definition (DTD) file. The DTD is stored in NetLogo.jar, as
-`system/behaviorspace.dtd`. (JAR files are also zip files, so you can extract
-the DTD from the JAR using Java's "jar" utility or with any program that
-understands zip format.)
+The structure of BehaviorSpace experiment setups in the new model file format as
+of NetLogo 7 is detailed in the [XML File Format Wiki page](https://github.com/NetLogo/NetLogo/wiki/XML-File-Format).
+Prior to NetLogo 7, BehaviorSpace experiments were also defined with XML, however
+the format was slightly different.
 
 The easiest way to learn what setups look like in XML, though, is to author a
 few of them in BehaviorSpace's GUI, save the model, export them *(Since 6.4)* and then examine the
 resulting .xml file(s) in a text editor. The experiment setups can also be found
- towards the end of the .nlogo file, in a section that begins and ends with a
+ towards the end of the .nlogox file, in a section that begins and ends with an
 `experiments` tag. Example:
 
 ```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE experiments SYSTEM "behaviorspace.dtd">
 <experiments>
-  <experiment name="My WSP Exploration" repetitions="5" runMetricsEveryStep="false">
+  <experiment name="My WSP Exploration" repetitions="5" runMetricsEveryStep="false" timeLimit="2000">
     <setup>setup</setup>
     <go>go</go>
-    <timeLimit steps="2000"/>
-    <metric>count wolves</metric>
-    <metric>count sheep</metric>
-    <metric>sum [grass-amount] of patches</metric>
-    <enumeratedValueSet variable="energy-gain-from-grass">
-      <value value="2"/>
-    </enumeratedValueSet>
-    <steppedValueSet variable="number-of-wolves" first="5" step="1" last="15"/>
-    <enumeratedValueSet variable="movement-cost">
-      <value value="0.5"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="energy-gain-from-sheep">
-      <value value="5"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="number-of-sheep">
-      <value value="500"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="grass-regrowth-rate">
-      <value value="0.3"/>
-    </enumeratedValueSet>
+    <metrics>
+      <metric>count wolves</metric>
+      <metric>count sheep</metric>
+      <metric>sum [grass-amount] of patches</metric>
+    </metrics>
+    <constants>
+      <enumeratedValueSet variable="energy-gain-from-grass">
+        <value value="2"/>
+      </enumeratedValueSet>
+      <steppedValueSet variable="number-of-wolves" first="5" step="1" last="15"/>
+      <enumeratedValueSet variable="movement-cost">
+        <value value="0.5"/>
+      </enumeratedValueSet>
+      <enumeratedValueSet variable="energy-gain-from-sheep">
+        <value value="5"/>
+      </enumeratedValueSet>
+      <enumeratedValueSet variable="number-of-sheep">
+        <value value="500"/>
+      </enumeratedValueSet>
+      <enumeratedValueSet variable="grass-regrowth-rate">
+        <value value="0.3"/>
+      </enumeratedValueSet>
+    </constants>
   </experiment>
 </experiments>
 ```
@@ -939,10 +939,8 @@ resulting .xml file(s) in a text editor. The experiment setups can also be found
 In this example, only one experiment setup is given, but you can put as many as
 you want between the beginning and ending `experiments` tags.
 
-Between looking at the DTD, and looking at examples you create in the GUI, it
-will hopefully be apparent how to use the tags to specify different kind of
-experiments. The DTD specifies which tags are required and which are optional,
-which may be repeated and which may not, and so forth.
+After looking at examples you create in the GUI, it will hopefully be apparent how
+to use the tags to specify different kinds of experiments.
 
 If you want to create a setup file for NetLogo 6.3.0 and earlier versions for
 which **Export** is not available you need to know that in a model file the XML for

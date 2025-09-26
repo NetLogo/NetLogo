@@ -35,7 +35,7 @@ object Main {
     }
     val openWs = newWorkspace
     val proto = try {
-      BehaviorSpaceCoordinator.selectProtocol(settings, openWs)
+      BehaviorSpaceCoordinator.selectProtocol(settings)
     } finally {
       openWs.dispose()
     }

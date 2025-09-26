@@ -5,33 +5,30 @@ package org.nlogo.headless
 import java.nio.file.Paths
 
 import org.nlogo.core.{ Femto, LiteralParser, Model }
-import org.nlogo.api.{ LabProtocol, Version, Workspace }
+import org.nlogo.api.LabProtocol
 import org.nlogo.nvm.LabInterface.Settings
-import org.nlogo.workspace.OpenModelFromURI
-import org.nlogo.fileformat.{ FileFormat, NLogoLabFormat }
+import org.nlogo.fileformat.FileFormat
 import scala.util.{ Failure, Success }
 
 import scala.io.Source
 
 object BehaviorSpaceCoordinator {
-  private val literalParser =
-    Femto.scalaSingleton[LiteralParser]("org.nlogo.parse.CompilerUtilities")
+  private val literalParser = Femto.scalaSingleton[LiteralParser]("org.nlogo.parse.CompilerUtilities")
+  private val loader = FileFormat.standardAnyLoader(true, literalParser)
 
-  private lazy val labFormat: NLogoLabFormat =
-    new NLogoLabFormat(literalParser)
-
-  private def bsSection = labFormat.componentName
+  private val bsSection = "org.nlogo.modelsection.behaviorspace"
 
   private def modelProtocols(m: Model): Option[Seq[LabProtocol]] =
     m.optionalSectionValue[Seq[LabProtocol]](bsSection)
 
-  def selectProtocol(settings: Settings, workspace: Workspace): Option[LabProtocol] = {
-    val model = modelAtPath(settings.modelPath, workspace)
+  def selectProtocol(settings: Settings): Option[LabProtocol] = {
+    val model = modelAtPath(settings.modelPath)
 
     val modelWithExtraProtocols =
       settings.externalXMLFile.map { file =>
-        val loadableXML = Source.fromFile(file).mkString
-        val additionalProtos = labFormat.load(loadableXML.linesIterator.toArray, None)
+        val source = Source.fromFile(file)
+        val additionalProtos = loader.readExperiments(source.mkString, false, modelProtocols(model).fold(Set())(_.map(_.name).toSet)).toOption.map(_._1)
+        source.close()
         model.withOptionalSection(bsSection, additionalProtos, Seq[LabProtocol]())
       }.getOrElse(model)
 
@@ -51,32 +48,20 @@ object BehaviorSpaceCoordinator {
     namedProtocol orElse firstSetupFileProtocol
   }
 
-  private def modelAtPath(path: String, workspace: Workspace): Model = {
-    val allAutoConvertables = FileFormat.defaultAutoConvertables :+
-      Femto.scalaSingleton[org.nlogo.api.AutoConvertable]("org.nlogo.sdm.SDMAutoConvertable")
-    val converter =
-      FileFormat.converter(
-        workspace.getExtensionManager
-      , workspace.getLibraryManager
-      , workspace.getCompilationEnvironment
-      , literalParser
-      , allAutoConvertables)
-    val loader = FileFormat.standardAnyLoader(true, literalParser)
-    val modelConverter = converter(workspace.world.program.dialect)
-
-    OpenModelFromURI(Paths.get(path).toUri, HeadlessFileController, loader, modelConverter, Version)
+  private def modelAtPath(path: String): Model = {
     loader.readModel(Paths.get(path).toUri) match {
       case Success(m) => m
       case Failure(e) => throw new Exception("Unable to open model at: " + path + ". " + e.getMessage)
     }
   }
 
-  def protocolsFromModel(modelPath: String, workspace: Workspace): Seq[LabProtocol] = {
-    modelProtocols(modelAtPath(modelPath, workspace)).getOrElse(Seq[LabProtocol]())
-  }
+  def protocolsFromModel(modelPath: String): Seq[LabProtocol] =
+    modelProtocols(modelAtPath(modelPath)).getOrElse(Seq[LabProtocol]())
 
   def externalProtocols(path: String): Option[Seq[LabProtocol]] = {
-    val fileSource = Source.fromFile(path).mkString
-    labFormat.load(fileSource.linesIterator.toArray, None)
+    val source = Source.fromFile(path)
+    val protocols = loader.readExperiments(source.mkString, false, Set())
+    source.close()
+    protocols.toOption.map(_._1)
   }
 }

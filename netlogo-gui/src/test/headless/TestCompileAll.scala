@@ -52,7 +52,7 @@ class TestCompileAll extends AnyFunSuite with SlowTest {
       if (!excludePreviewCommands(path)) compilePreviewCommands(workspace)
       // compile BehaviorSpace experiments
       val lab = HeadlessWorkspace.newLab
-      val protocols = BehaviorSpaceCoordinator.protocolsFromModel(path, workspace)
+      val protocols = BehaviorSpaceCoordinator.protocolsFromModel(path)
       protocols.foreach(lab.newWorker(_).compile(workspace))
     } finally workspace.dispose()
   }
