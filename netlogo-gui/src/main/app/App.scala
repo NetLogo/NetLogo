@@ -108,7 +108,15 @@ object App {
    *             is not currently documented.)
    */
   def main(args: Array[String]): Unit = {
-    mainWithAppHandler(args, new AppHandler)
+    if (System.getProperty("os.name").toLowerCase.startsWith("mac")) {
+      System.setProperty("apple.awt.graphics.UseQuartz", "false")
+      System.setProperty("apple.awt.showGrowBox", "true")
+      System.setProperty("apple.laf.useScreenMenuBar", "true")
+
+      mainWithAppHandler(args, new MacHandler)
+    } else {
+      mainWithAppHandler(args, new AppHandler)
+    }
   }
 
   def mainWithAppHandler(args: Array[String], appHandler: AppHandler): Unit = {
