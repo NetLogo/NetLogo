@@ -369,46 +369,12 @@ lazy val headless = (project in file ("netlogo-headless")).
   , Test / baseDirectory := baseDirectory.value.getParentFile
   )
 
- // this project exists as a wrapper for the mac-specific NetLogo components
-lazy val macApp = project.in(file("mac-app")).
-  settings(commonSettings: _*).
-  settings(jvmSettings: _*).
-  settings(scalaSettings: _*).
-  settings(JavaPackager.mainArtifactSettings: _*).
-  settings(NativeLibs.cocoaLibsTask).
-  settings(Running.settings).
-  settings(
-    Compile / run / mainClass           := Some("org.nlogo.app.MacApplication"),
-    // all other projects can use `--release 11`, but since this one uses `--add-exports`
-    // for a system library it is incompatible.  So we let it target 17, as it will only
-    // use the bundled Java.  -Jeremy B August 2022
-    javacOptions ++= Seq("-source", "17", "-target", "17"),
-    run / fork                          := true,
-    name                                := "NetLogo-Mac-App",
-    Compile / compile                   := {
-      ((Compile / compile) dependsOn (netlogo / Compile / packageBin)).value
-    },
-    Compile / unmanagedJars             += (netlogo / Compile / packageBin).value,
-    libraryDependencies                ++= Seq(
-      "net.java.dev.jna" % "jna" % "4.5.2",
-      "ca.weblite" % "java-objc-bridge" % "1.2"),
-    libraryDependencies                ++= (netlogo / libraryDependencies).value,
-    libraryDependencies                ++= (parserJVM/ libraryDependencies).value,
-    Compile / run                       := {
-      ((Compile / run) dependsOn NativeLibs.cocoaLibs).evaluated
-    },
-    run / javaOptions                   += "-Djava.library.path=" + (Seq(
-      baseDirectory.value / "natives" / "macosx-universal" / "libjcocoa.dylib") ++
-      ((netlogo / baseDirectory).value / "natives" / "macosx-universal" * "*.jnilib").get).mkString(":"),
-    Compile / packageBin / artifactPath := target.value / "netlogo-mac-app.jar",
-    javacOptions ++= Seq("-bootclasspath", System.getProperty("java.home") + "/lib/rt.jar"))
-
 // this project is all about packaging NetLogo for distribution
 lazy val dist = project.in(file("dist")).
   settings(version := (netlogo / version).value).
-  settings(NetLogoBuild.settings: _*).
   settings(marketingVersion := (Compile / version).value).
-  settings(NetLogoPackaging.settings(netlogo, macApp, behaviorsearchProject): _*)
+  settings(NetLogoBuild.settings: _*).
+  settings(NetLogoPackaging.settings(netlogo, behaviorsearchProject): _*)
 
 lazy val sharedResources = (project in file ("shared")).
   settings(commonSettings: _*).

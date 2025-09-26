@@ -101,11 +101,6 @@ Intermediate files are left at `target/[appName]/[platform]` for inspection and 
 
 If you wish to package from a mac, you *must* have the NetLogo Developer ID keys (Robert or Jason should have copies).
 
-When bundling, there were several Apple-imposed requirements which led to some very difficult choices about how to package the mac build.
-MRJAdapter didn't work well (and seemed to sometimes cause crashes) under Oracle Java 8.
-This inspired the creation of a very thin wrapper "MacApplication" (in the `mac-app` folder) for all mac-specific behavior.
-This wrapper app can take advantage of java-8-specific features while calling into the main application (compiled against java 6).
-
 Apple forbids symbolic links in packages which point to paths other than (a) those within the package or (b) those in system directories.
 Signing will succeed, but the app will fail to validate at runtime.
 In order to overcome this limitation, the following system properties were added and are used only on Mac:
