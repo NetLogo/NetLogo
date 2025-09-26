@@ -68,8 +68,8 @@ object QuickHelp {
                          I18N.gui.getN("tabs.code.rightclick.quickhelp.notfound",
                          tokenLower.toUpperCase(Locale.ENGLISH)), OptionPane.Options.OkCancel,
                          OptionPane.Icons.Error).getSelectedIndex == 0)
-        BrowserLauncher.tryOpenURI(comp, new URI("https://docs.netlogo.org/7.0.0/index2.html"),
-                                   docPath("index2.html"))
+        BrowserLauncher.tryOpenURI(comp, new URI("https://docs.netlogo.org/7.0.0/dictionary.html"),
+                                   docPath("dictionary.html"))
     }
   }
 }

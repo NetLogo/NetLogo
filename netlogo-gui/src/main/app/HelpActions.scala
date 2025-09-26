@@ -51,7 +51,7 @@ object HelpActions {
     new TryRemoteBrowseAction(I18N.gui.get("menu.help.netLogoUserManual"),
       new URI("https://docs.netlogo.org/7.0.0"), docPath("index.html"), HelpDocGroup),
     new TryRemoteBrowseAction(I18N.gui.get("menu.help.netLogoDictionary"),
-      new URI("https://docs.netlogo.org/7.0.0/index2.html"), docPath("index2.html"), HelpDocGroup),
+      new URI("https://docs.netlogo.org/7.0.0/dictionary.html"), docPath("dictionary.html"), HelpDocGroup),
     new RemoteBrowseAction(I18N.gui.get("menu.help.bind"),
       new URI("https://ccl.northwestern.edu/netlogo/bind"), HelpDocGroup),
     new RemoteBrowseAction(I18N.gui.get("menu.help.introToABM"),

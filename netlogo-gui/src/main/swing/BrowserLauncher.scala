@@ -5,13 +5,14 @@ package org.nlogo.swing
 import java.awt.{ Component, Desktop }
 import java.io.IOException
 import java.lang.Process
-import java.net.{ NetworkInterface, URI, URISyntaxException }
+import java.net.{ HttpURLConnection, NetworkInterface, URI, URISyntaxException, URL }
 import java.nio.file.{ Path, Paths }
 import javax.swing.JDialog
 
 import org.nlogo.core.I18N
 
 import scala.jdk.CollectionConverters.EnumerationHasAsScala
+import scala.util.Try
 
 object BrowserLauncher {
   private val osName = System.getProperty("os.name")
@@ -51,7 +52,7 @@ object BrowserLauncher {
   }
 
   def tryOpenURI(comp: Component, uri: URI, fallback: Path, anchor: String = ""): Unit = {
-    if (NetworkInterface.getNetworkInterfaces.asScala.exists(_.isUp)) {
+    if (hasConnection()) {
       openURI(comp, uri)
     } else {
       openPath(comp, fallback, anchor)
@@ -86,6 +87,14 @@ object BrowserLauncher {
   def docPath(docName: String): Path = {
     val docRoot = System.getProperty("netlogo.docs.dir", "docs")
     Paths.get(docRoot + "/" + docName)
+  }
+
+  // first check if there's a valid network interface, then ensure that it can open a connection to the docs
+  // as a connection test (Isaac B 9/26/25)
+  private def hasConnection(): Boolean = {
+    NetworkInterface.getNetworkInterfaces.asScala.exists(_.isUp) &&
+      Try(new URL("https://docs.netlogo.org").openConnection.asInstanceOf[HttpURLConnection].getResponseCode)
+        .toOption.contains(200)
   }
 
   private def desktop: Option[Desktop] = {
