@@ -31,7 +31,7 @@ class LocalFile(filepath: String) extends CoreFile {
         w = new PrintWriter(new OutputStreamWriter(new FileOutputStream(new File(filepath)), "UTF-8"))
         this.mode = mode
       case FileMode.Append =>
-        w = new PrintWriter(new OutputStreamWriter(new FileOutputStream(new File(filepath)), "UTF-8"), true)
+        w = new PrintWriter(new OutputStreamWriter(new FileOutputStream(new File(filepath), true), "UTF-8"))
         this.mode = mode
       case FileMode.None =>
         throw new IllegalStateException("file is not open")

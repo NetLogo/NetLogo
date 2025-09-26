@@ -51,6 +51,10 @@ trait AbstractTestModels extends AnyFunSuite with ModelCreator {
   def workspace = _workspace.value
   def world = _workspace.value.world
 
+  def command(s: String): Unit = {
+    workspace.command(s)
+  }
+
   // part of the DSL enabling reporter("someValue") -> expected
   def reporter(s: String) = Reported(workspace.report(s))
   case class Reported(a:Any){
