@@ -16,9 +16,6 @@ object NativeLibs {
   val nativeLibs = TaskKey[Seq[File]](
     "native-libs", "download native libraries for JOGL")
 
-  val cocoaLibs = TaskKey[Seq[File]](
-    "download native libraries for mac interaction")
-
   lazy val nativeLibsTask =
     nativeLibs := {
       val joglFile = "jogl-2.4.0-natives.zip"
@@ -42,14 +39,6 @@ object NativeLibs {
         IO.delete(f)
       }
       (joglNatives.allPaths).get
-    }
-
-  lazy val cocoaLibsTask =
-    cocoaLibs := {
-      val libDir = baseDirectory.value / "natives" / "macosx-universal"
-      IO.createDirectory(libDir / "natives")
-      FileActions.download(new URI(cclArtifacts("libjcocoa.dylib")).toURL, libDir / "libjcocoa.dylib")
-      Seq(libDir / "libjcocoa.dylib")
     }
 
 }
