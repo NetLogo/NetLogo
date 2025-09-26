@@ -63,7 +63,7 @@ object NetLogoPackaging {
     ).map(p => (" " ~> p))
     .getOrElse(Parser.failure("Add at least one JDK to '.jdks.yaml' at the root of the NetLogo repository."))
 
-  def settings(netlogo: Project, macApp: Project, behaviorsearchProject: Project): Seq[Setting[?]] = Seq(
+  def settings(netlogo: Project, behaviorsearchProject: Project): Seq[Setting[?]] = Seq(
     netLogoRoot     := (netlogo / baseDirectory).value,
     mathematicaRoot := netLogoRoot.value.getParentFile / "Mathematica-Link",
     configRoot      := baseDirectory.value / "configuration",
@@ -360,9 +360,6 @@ object NetLogoPackaging {
           , "-Dorg.nlogo.mac.appClassName=org.nlogo.app.App$"
           , "-Dapple.awt.application.appearance=system"
           )
-        , Seq()
-        , Some("netlogo-mac-app.jar")
-        , Some("org.nlogo.app.MacApplication")
         ) {
           override def name = s"NetLogo ${this.version}"
         }
@@ -374,9 +371,6 @@ object NetLogoPackaging {
           , "-Dorg.nlogo.mac.appClassName=org.nlogo.app.App$"
           , "-Dapple.awt.application.appearance=system"
           )
-        , Seq()
-        , Some("netlogo-mac-app.jar")
-        , Some("org.nlogo.app.MacApplication")
         ) {
           override def name = s"NetLogo 3D ${this.version}"
         }
@@ -387,10 +381,7 @@ object NetLogoPackaging {
             "-Xdock:name=HubNet"
           , "-Dorg.nlogo.mac.appClassName=org.nlogo.hubnet.client.App$"
           , "-Dapple.laf.useScreenMenuBar=true"
-         )
-        , Seq()
-        , Some("netlogo-mac-app.jar")
-        , Some("org.nlogo.app.MacApplication")
+          )
         ) {
           override def name = s"HubNet Client ${this.version}"
         }
@@ -409,12 +400,6 @@ object NetLogoPackaging {
       )
 
       val inputDir = JavaPackager.setupAppImageInput(log, version, buildJDK, buildDir, netLogoJar, dependencies)
-
-      val macAppMainJar = (macApp / Compile / packageBin).value
-      val macAppDeps = removeJdkLibraries((macApp / Runtime / dependencyClasspath).value).files
-      (macAppDeps :+ macAppMainJar).foreach( (dep) => {
-        FileActions.copyFile(dep, inputDir / dep.getName)
-      })
 
       val destDir = buildDir / s"${platform}-dest-${buildJDK.version}-${buildJDK.architecture}"
       FileActions.remove(destDir)
