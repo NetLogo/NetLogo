@@ -6,6 +6,10 @@ import scala.collection.immutable
 
 trait PlotInterface {
   def name: String
+  def xMin: Double
+  def xMax: Double
+  def yMin: Double
+  def yMax: Double
   def pens: Seq[PlotPenInterface]
   def getPen(pen: String): Option[PlotPenInterface]
   def currentPen: Option[PlotPenInterface]
@@ -17,4 +21,6 @@ trait PlotInterface {
   def plot(y: Double): Unit
   def plot(x: Double, y: Double): Unit
   def histogramActions(pen: PlotPenInterface, values: Seq[Double]): immutable.Seq[PlotAction]
+  def setPlotListener(listener: PlotListener): Unit
+  def removePlotListener(): Unit
 }

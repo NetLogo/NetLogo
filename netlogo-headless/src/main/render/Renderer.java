@@ -12,11 +12,12 @@ import org.nlogo.api.Patch;
 import org.nlogo.api.Turtle;
 import org.nlogo.api.ViewSettings;
 import org.nlogo.api.World;
+import org.nlogo.api.WorldWithWorldRenderable;
 
 public class Renderer
     extends AbstractRenderer {
 
-  public Renderer(World world) {
+  public Renderer(WorldWithWorldRenderable world) {
     this(world, false);
   }
 
