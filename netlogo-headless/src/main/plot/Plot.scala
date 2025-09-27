@@ -2,11 +2,13 @@
 
 package org.nlogo.plot
 
-import org.nlogo.api.{ PlotAction, PlotInterface, PlotPenInterface, PlotState }
-import PlotAction.{ PlotXY, SoftResetPen }
+import org.nlogo.api.{ PlotAction, PlotInterface, PlotListener, PlotPenInterface, PlotState }
 import org.nlogo.core.PlotPenInterface
+
 import scala.collection.immutable
 import scala.collection.immutable.VectorBuilder
+
+import PlotAction.{ PlotXY, SoftResetPen }
 
 // normally, to create a new Plot, you have to go through PlotManager.newPlot
 // this makes sense because the PlotManager then controls compilation
@@ -43,10 +45,21 @@ extends PlotInterface {
   def currentPen_=(p: PlotPen): Unit = currentPen=(if(p==null) None else Some(p))
   def currentPen_=(p: Option[PlotPen]): Unit = {
     this._currentPen = p
+    p.foreach(pen => listener.foreach(_.currentPen(pen.name)))
   }
   def currentPenByName: String = currentPen.map(_.name).getOrElse(null)
   def currentPenByName_=(penName: String): Unit = { currentPen=(getPen(penName)) }
   def getPen(penName: String): Option[PlotPen] = pens.find(_.name.toLowerCase==penName.toLowerCase)
+
+  private var listener: Option[PlotListener] = None
+
+  override def setPlotListener(listener: PlotListener): Unit = {
+    this.listener = Option(listener)
+  }
+
+  override def removePlotListener(): Unit = {
+    listener = None
+  }
 
   // This only affects the UI, not headless operation, but because it is included when a plot is
   // exported, we keep it here rather than in PlotWidget, so that exporting can stay totally
@@ -74,6 +87,7 @@ extends PlotInterface {
     currentPen = pens.headOption
     pens.foreach(_.hardReset())
     state = defaultState
+    listener.foreach(_.clear())
   }
 
   def createPlotPen(name: String, temporary: Boolean = false, setupCode: String = "", updateCode: String = ""): PlotPen = {
@@ -101,6 +115,11 @@ extends PlotInterface {
     if (pen.state.isDown)
       perhapsGrowRanges(pen, x, y)
   }
+
+  override def xMin: Double = state.xMin
+  override def xMax: Double = state.xMax
+  override def yMin: Double = state.yMin
+  override def yMax: Double = state.yMax
 
   def perhapsGrowRanges(pen: PlotPen, x: Double, y: Double): Unit = {
     if (state.autoPlotX) {
