@@ -2,9 +2,8 @@
 
 package org.nlogo.plot
 
+import org.nlogo.api.{ ActionBroker, CommandLogoThunk, LogoThunkFactory, PlotAction, PlotListener, MersenneTwisterFast }
 import org.nlogo.core.CompilerException
-
-import org.nlogo.api.{ ActionBroker, CommandLogoThunk, LogoThunkFactory, PlotAction, MersenneTwisterFast }
 
 import scala.collection.mutable
 import scala.util.{ Failure, Success, Try }
@@ -20,7 +19,13 @@ class PlotManager(factory: LogoThunkFactory, random: MersenneTwisterFast)
 
   // all the plots in the model
   private val _plots = mutable.Buffer[Plot]()
-  def plots = _plots.toList
+  override def plots: List[Plot] = _plots.toList
+
+  private var listener: Option[PlotListener] = None
+
+  override def setPlotListener(listener: PlotListener): Unit = {
+    this.listener = Option(listener)
+  }
 
   // the currently selected plot.
   // needed for backwards comp with pre 5.0 plotting style.
@@ -71,6 +76,7 @@ class PlotManager(factory: LogoThunkFactory, random: MersenneTwisterFast)
   }
   def clearAll(): Unit = {
     _plots.foreach(_.clear())
+    listener.foreach(_.clearAll())
   }
 
   //

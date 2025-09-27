@@ -3,8 +3,8 @@
 package org.nlogo.nvm
 
 import org.nlogo.agent.{ Agent, AgentSet, World2D }
-import org.nlogo.api.{ CommandRunnable, ExportPlotWarningAction, ImportErrorHandler, JobOwner, OutputDestination,
-                       ReporterRunnable, WorkspaceContext }
+import org.nlogo.api.{ CommandRunnable, ExportPlotWarningAction, HubNetInterface, ImportErrorHandler, JobOwner,
+                       OutputDestination, ReporterRunnable, WorkspaceContext }
 import org.nlogo.core.{ AgentKind, DummyCompilationEnvironment, WorldDimensions }
 
 import scala.collection.immutable.ListMap
@@ -139,6 +139,7 @@ class DummyWorkspace extends Workspace {
   def worldChecksum: String = unsupported
   def handleModelChange(): Unit = unsupported
   def writeOutputObject(x$1: org.nlogo.agent.OutputObject): Unit = unsupported
+  def getHubNetManager: Option[HubNetInterface] = unsupported
 
   // Members declared in org.nlogo.core.LiteralParser
   def readFromString(s: String): AnyRef = unsupported

@@ -7,7 +7,7 @@ import collection.mutable.LinkedHashMap
 import java.io.{ File, FileWriter }
 import java.nio.file.{ Files, Paths }
 
-import org.nlogo.api.{ FileIO, Version }
+import org.nlogo.api.{ FileIO, PreviewCommands, Version }
 import org.nlogo.core.CompilerException
 import org.nlogo.headless.ChecksumsAndPreviewsSettings.ChecksumsFilePath
 import org.nlogo.nvm.Workspace
@@ -26,7 +26,7 @@ object ChecksumsAndPreviews {
 
   def main(argv: Array[String]): Unit = {
     Main.setHeadlessProperty()
-    def paths(fn: String => Boolean, includeBenchmarks: Boolean) = {
+    def paths(includeBenchmarks: Boolean) = {
       val allLibrary = ModelsLibrary.getModelPaths(true, false).map(PathUtils.standardize).toList
       val library = if (includeBenchmarks)
         allBenchmarks.map("models/test/benchmarks/" + _ + " Benchmark.nlogox") ::: allLibrary
@@ -34,7 +34,6 @@ object ChecksumsAndPreviews {
         allLibrary
 
       library
-        .filter(fn)
         .map(p => {
           val iOf = p.indexOf(ModelsLibrary.modelsRoot)
           val r = p.substring(iOf)
@@ -79,23 +78,26 @@ object ChecksumsAndPreviews {
     // is already taken - ST 6/28/12
     argv match {
       case Array("--checksum", path) =>
-        if (Checksums.okPath(path)) Checksums.update(List(path), readVariants())
+        Checksums.update(List(path), readVariants())
       case Array("--checksums") =>
-        Checksums.update(paths(Checksums.okPath, includeBenchmarks = !Version.is3D), readVariants())
+        Checksums.update(paths(includeBenchmarks = !Version.is3D), readVariants())
       case Array("--preview", path) =>
         Previews.remake(path)
       case Array("--previews") =>
-        paths(Previews.okPath, false).foreach(Previews.remake)
+        paths(false).foreach(Previews.remake)
       case Array("--checksum-export", path) =>
         ChecksumExports.`export`(List(path))
       case Array("--checksum-exports") =>
-        ChecksumExports.`export`(paths(Checksums.okPath, includeBenchmarks = !Version.is3D))
+        ChecksumExports.`export`(paths(includeBenchmarks = !Version.is3D))
       case Array("--revisions") =>
         Checksums.updateRevisions()
       case _ =>
         throw new Exception(s"Unexpected input arguments: $argv")
     }
     println("done")
+    // this call forces any lingering resources to be cleaned up, ensuring
+    // that the task always exits immediately (Isaac B 10/2/25)
+    System.exit(0)
   }
 
   object Previews {
@@ -103,17 +105,12 @@ object ChecksumsAndPreviews {
     def needsManualPreview(previewCommands: String) =
       previewCommands.contains("need-to-manually-make-preview-for-this-model")
 
-    // NW is only included temporarily until extension compiles correctly - AAB 7-2022
-    def okPath(path: String) =
-      List("HUBNET", "/GOGO/", "/CODE EXAMPLES/SOUND/", "GIS GRADIENT EXAMPLE", "/NW/")
-        .forall(!path.toUpperCase.containsSlice(_))
-
     def remake(path: String): Unit = {
       if (path.contains("GenJam - Duple") || path.contains("Frogger") || path.contains("Sound Machines")) {
         println("skipping: " + path + "\n (uses sound extension)")
         return
       }
-      val previewPath = path.replaceFirst(".nlogox", ".png")
+      val previewPath = path.replaceFirst(".nlogox(3d)?", ".png")
       try {
         val runner = PreviewCommandsRunner.fromModelPath(new WorkspaceFactory {
           def openCurrentModelIn(workspace: Workspace): Unit = {}
@@ -153,18 +150,6 @@ object ChecksumsAndPreviews {
 
     type ChecksumMap = LinkedHashMap[String, Entry]
 
-    def okPath(path: String): Boolean = {
-      val skips = ChecksumsAndPreviewsSettings.ModelsToSkip.filter({ case (_, paths) =>
-        paths.exists((s) => path.toUpperCase.containsSlice(s.toUpperCase))
-      })
-      if (skips.length > 0) {
-        println(s"SKIPPING MODEL: $path because ${skips.head._1.getOrElse("of unspecified reasons.")}")
-        false
-      } else {
-        true
-      }
-    }
-
     def update(paths: List[String], variants: Map[String, Seq[String]]): Unit = {
       // prevent annoying JAI message on Linux when using JAI extension
       // (old.nabble.com/get-rid-of-%22Could-not-find-mediaLib-accelerator-wrapper-classes%22-td11025745.html)
@@ -175,7 +160,7 @@ object ChecksumsAndPreviews {
       write(m, ChecksumsFilePath)
       if (!results.isEmpty) {
         val errors = results.map({ case (model, ex) => s"Exception in $model: ${ex.toString()}" }).mkString("\n\n")
-        throw new Exception(s"Not all checksums completed.  Review the errors and resolve them or add to `ModelsToSkip` as needed.\n\n$errors")
+        throw new Exception(s"Not all checksums completed.  Review the errors and resolve them.\n\n$errors")
       }
     }
 
@@ -195,8 +180,11 @@ object ChecksumsAndPreviews {
         }
         else {
           workspace.open(model, true)
-          updateOneHelper(m, model, "", workspace)
-          variants.sortWith(_ < _).foreach(updateOneHelper(m, model, _, workspace))
+
+          if (workspace.previewCommands != PreviewCommands.Manual) {
+            updateOneHelper(m, model, "", workspace)
+            variants.sortWith(_ < _).foreach(updateOneHelper(m, model, _, workspace))
+          }
         }
       }
       catch {

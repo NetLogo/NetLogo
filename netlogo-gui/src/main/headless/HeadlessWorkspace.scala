@@ -110,6 +110,9 @@ with org.nlogo.workspace.Controllable
 with org.nlogo.workspace.WorldLoaderInterface
 with org.nlogo.api.ViewSettings with PrimaryWorkspace {
 
+  def this(world: World & CompilationManagement, compiler: PresentationCompilerInterface, renderer: RendererInterface,
+           aggregateManager: AggregateManagerInterface) = this(world, compiler, renderer, aggregateManager, null)
+
   override val workspaceContext: WorkspaceContext = new WorkspaceContext(true, false)
 
   private var primaryWorkspace: PrimaryWorkspace = this
