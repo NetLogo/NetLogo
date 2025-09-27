@@ -2,10 +2,14 @@
 
 package org.nlogo.prim
 
+import java.lang.{ Double => JDouble }
+
 import org.nlogo.core.Pure
 import org.nlogo.nvm.{ Context, Reporter }
 
 class _constdouble(_primitiveValue: Double) extends Reporter with Pure {
+
+  def this(value: JDouble) = this(value: Double)
 
   private val value = Double.box(_primitiveValue)
   val primitiveValue = _primitiveValue

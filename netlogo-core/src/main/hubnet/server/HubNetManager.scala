@@ -3,15 +3,15 @@
 package org.nlogo.hubnet.server
 
 import org.nlogo.core.{ AgentKind, Model, Widget => CoreWidget }
-import org.nlogo.api.{ AbstractModelLoader, HubNetInterface, Version }, HubNetInterface.ClientInterface
+import org.nlogo.api.{ AbstractModelLoader, HubNetInterface, Version, Workspace }, HubNetInterface.ClientInterface
 import org.nlogo.hubnet.mirroring
 import org.nlogo.hubnet.mirroring.{ HubNetLinkStamp, HubNetDrawingMessage, HubNetTurtleStamp, HubNetLine }
 import org.nlogo.hubnet.connection.{ HubNetException, ConnectionInterface }
 import org.nlogo.hubnet.connection.MessageEnvelope._
 import org.nlogo.hubnet.connection.MessageEnvelope.MessageEnvelope
 import org.nlogo.hubnet.protocol.{ CalculatorInterface, ComputerInterface }
-import org.nlogo.workspace.{ AbstractWorkspaceScala, OpenModel, OpenModelFromURI }
-import org.nlogo.agent.{Link, Turtle}
+import org.nlogo.workspace.{ OpenModel, OpenModelFromURI }
+import org.nlogo.agent.{ Link, Turtle }
 import org.nlogo.fileformat.FailedConversionResult
 import org.nlogo.fileformat.FileFormat.ModelConversion
 
@@ -20,10 +20,8 @@ import java.net.URI
 import java.io.{ Serializable => JSerializable }
 import java.util.concurrent.LinkedBlockingQueue
 
-abstract class HubNetManager( workspace: AbstractWorkspaceScala, modelLoader: AbstractModelLoader
-                            , modelConverter: ModelConversion)
-  extends HubNetInterface
-  with ConnectionInterface {
+abstract class HubNetManager(workspace: Workspace, modelLoader: AbstractModelLoader, modelConverter: ModelConversion)
+  extends HubNetInterface with ConnectionInterface {
 
   val connectionManager: ConnectionManager
 

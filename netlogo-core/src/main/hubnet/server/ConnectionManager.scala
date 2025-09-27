@@ -2,18 +2,19 @@
 
 package org.nlogo.hubnet.server
 
-import java.io.{ Serializable => JSerializable , InterruptedIOException, IOException}
-import org.nlogo.core.AgentKind
-import org.nlogo.workspace.AbstractWorkspaceScala
-import org.nlogo.hubnet.connection.MessageEnvelope.MessageEnvelope
-import org.nlogo.plot.Plot
-import org.nlogo.hubnet.protocol._
-import org.nlogo.hubnet.mirroring.{AgentPerspective, ClearOverride, SendOverride, ServerWorld}
-import org.nlogo.agent.AgentSet
-import java.net.{BindException, InetAddress, NetworkInterface, ServerSocket}
-import org.nlogo.api.{WorldPropertiesInterface, PlotInterface}
+import java.io.{ Serializable => JSerializable, InterruptedIOException, IOException }
+import java.net.{ BindException, InetAddress, NetworkInterface, ServerSocket }
+
 import org.nlogo.api.HubNetInterface.ClientInterface
-import org.nlogo.hubnet.connection.{Streamable, ConnectionTypes, Ports, HubNetException, ConnectionInterface}
+import org.nlogo.api.{ AgentSet, HubNetWorkspaceInterface, PlotInterface, Workspace, WorldPropertiesInterface }
+import org.nlogo.core.AgentKind
+import org.nlogo.hubnet.connection.MessageEnvelope.MessageEnvelope
+import org.nlogo.hubnet.connection.{ ConnectionInterface, ConnectionTypes, HubNetException, Ports, Streamable }
+import org.nlogo.hubnet.mirroring.{ AgentPerspective, ClearOverride, SendOverride, ServerWorld }
+import org.nlogo.hubnet.protocol.{ AgentPerspectiveMessage, ClearOverrideMessage, ComputerInterface, DisableView,
+                                   HandshakeFromServer, Message, OverrideMessage, PlotControl, PlotUpdate, Text,
+                                   ViewUpdate, WidgetControl }
+import org.nlogo.plot.Plot
 
 // Connection Manager calls back to this when these events happen.
 // HeadlessHNM uses it to simply print events.
@@ -40,7 +41,7 @@ trait ConnectionManagerInterface {
 
 class ConnectionManager(val connection: ConnectionInterface,
                         val clientEventListener: ClientEventListener,
-                        workspace: AbstractWorkspaceScala) extends ConnectionManagerInterface with Runnable {
+                        workspace: Workspace & HubNetWorkspaceInterface) extends ConnectionManagerInterface with Runnable {
   val VALID_SEND_TYPES_MESSAGE =
     "You can only send strings, booleans (true or false), numbers, and lists of these types."
 
@@ -64,8 +65,8 @@ class ConnectionManager(val connection: ConnectionInterface,
   protected var running = false
   private val clients = collection.mutable.HashMap[String, ServerSideConnection]()
   val plotManager = new ServerPlotManager(workspace, this,
-    () => workspace.plotManager.plots, () => workspace.plotManager.currentPlot.get) {
-    workspace.plotManager.listener = this
+    () => workspace.realPlotManager.plots, () => workspace.realPlotManager.currentPlot.get) {
+    workspace.realPlotManager.setPlotListener(this)
   }
 
   private type ClientType = String
