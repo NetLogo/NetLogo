@@ -14,6 +14,10 @@ object TokenMapping {
        , "__EXPERIMENTSTEPEND"           -> "org.nlogo.core.prim.etc._experimentstepend"
        , "__EXPORT-DRAWING"              -> "org.nlogo.core.prim.etc._exportdrawing"
        , "__FOREVERBUTTONEND"            -> "org.nlogo.core.prim.etc._foreverbuttonend"
+       , "__HUBNET-CLEAR-PLOT"           -> "org.nlogo.core.prim.hubnet._hubnetclearplot"
+       , "__HUBNET-CREATE-CLIENT"        -> "org.nlogo.core.prim.hubnet._hubnetcreateclient"
+       , "__HUBNET-MAKE-PLOT-NARROWCAST" -> "org.nlogo.core.prim.hubnet._hubnetmakeplotnarrowcast"
+       , "__HUBNET-PLOT"                 -> "org.nlogo.core.prim.hubnet._hubnetplot"
        , "__IGNORE"                      -> "org.nlogo.core.prim.etc._ignore"
        , "__LET"                         -> "org.nlogo.core.prim._let"
        , "__LINKCODE"                    -> "org.nlogo.core.prim.etc._linkcode"
@@ -635,9 +639,13 @@ object TokenMapping {
       case "org.nlogo.core.prim.hubnet._hubnetbroadcast"            => new org.nlogo.core.prim.hubnet._hubnetbroadcast
       case "org.nlogo.core.prim.hubnet._hubnetclearoverride"        => new org.nlogo.core.prim.hubnet._hubnetclearoverride
       case "org.nlogo.core.prim.hubnet._hubnetclearoverrides"       => new org.nlogo.core.prim.hubnet._hubnetclearoverrides
+      case "org.nlogo.core.prim.hubnet._hubnetclearplot"            => new org.nlogo.core.prim.hubnet._hubnetclearplot
+      case "org.nlogo.core.prim.hubnet._hubnetcreateclient"         => new org.nlogo.core.prim.hubnet._hubnetcreateclient
       case "org.nlogo.core.prim.hubnet._hubnetfetchmessage"         => new org.nlogo.core.prim.hubnet._hubnetfetchmessage
       case "org.nlogo.core.prim.hubnet._hubnetkickallclients"       => new org.nlogo.core.prim.hubnet._hubnetkickallclients
       case "org.nlogo.core.prim.hubnet._hubnetkickclient"           => new org.nlogo.core.prim.hubnet._hubnetkickclient
+      case "org.nlogo.core.prim.hubnet._hubnetmakeplotnarrowcast"   => new org.nlogo.core.prim.hubnet._hubnetmakeplotnarrowcast
+      case "org.nlogo.core.prim.hubnet._hubnetplot"                 => new org.nlogo.core.prim.hubnet._hubnetplot
       case "org.nlogo.core.prim.hubnet._hubnetreset"                => new org.nlogo.core.prim.hubnet._hubnetreset
       case "org.nlogo.core.prim.hubnet._hubnetresetperspective"     => new org.nlogo.core.prim.hubnet._hubnetresetperspective
       case "org.nlogo.core.prim.hubnet._hubnetsendclearoutput"      => new org.nlogo.core.prim.hubnet._hubnetsendclearoutput

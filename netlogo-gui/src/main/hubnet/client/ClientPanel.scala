@@ -149,7 +149,7 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
   // this is the master method for handling plot messages. it should probably be redone.
   private def handlePlotControlMessage(value: Any, plotName:String): Unit = {
     org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
-    val plotWidget = findWidget(plotName).asInstanceOf[Option[PlotWidget]].get // horrible.
+    val plotWidget = findWidget(plotName).asInstanceOf[PlotWidget] // horrible.
     value match {
       // This instance sets the current-plot-pen
       case s:String =>
