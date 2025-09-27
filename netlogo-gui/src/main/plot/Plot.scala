@@ -7,7 +7,7 @@ import
     ColorConstants.White
 
 import
-  org.nlogo.api.{ PlotAction, PlotInterface, PlotPenInterface, PlotState }
+  org.nlogo.api.{ PlotAction, PlotInterface, PlotListener, PlotPenInterface, PlotState }
 
 import
   java.io.{ Serializable => JSerializable }
@@ -65,11 +65,12 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with JSerializ
 
   override def toString = "Plot(" + name + ")"
 
-  def setPlotListener(plotListener:PlotListener): Unit ={
+  override def setPlotListener(plotListener:PlotListener): Unit ={
     if(plotListener == null) sys.error("null plotListener")
     this.plotListener = Some(plotListener)
   }
-  def removePlotListener(): Unit ={ this.plotListener = None }
+
+  override def removePlotListener(): Unit ={ this.plotListener = None }
 
   def addPenListener(listener: PenListener): Unit = {
     penListeners += listener
@@ -145,13 +146,13 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with JSerializ
 
   def autoPlotY = state.autoPlotY
 
-  def xMin = state.xMin
+  override def xMin = state.xMin
 
-  def xMax = state.xMax
+  override def xMax = state.xMax
 
-  def yMin = state.yMin
+  override def yMin = state.yMin
 
-  def yMax = state.yMax
+  override def yMax = state.yMax
 
   def saveString = {
     import org.nlogo.api.StringUtils.escapeString
