@@ -9,66 +9,26 @@ import org.nlogo.fileformat.FileFormat
 import org.nlogo.util.{ AnyFunSuiteEx, SlowTest }
 import org.nlogo.workspace.ModelsLibrary
 
-import scala.util.matching.Regex
-
 object TestCompileAll {
-  val HeadlessSupportedExtensions =
-    Seq("ARRAY", "MATRIX", "PROFILER", "SAMPLE", "SAMPLE-SCALA", "TABLE")
-
-  val UnsupportedPrimitives =
-    Seq("HUBNET-RESET")
-
   // core branch doesn't have these features - ST 1/11/12
   def badPath(path: String): Boolean = {
-    import java.io.File.separatorChar
-    def pathMatches(bad: String) =
-      path.toUpperCase.containsSlice(s"${separatorChar}bad$separatorChar")
-    pathMatches("SYSTEM DYNAMICS") ||
-      pathMatches("GIS") ||
-      pathMatches("QUICKTIME EXTENSION") ||
-      pathMatches("HUBNET ACTIVITIES") ||
-      pathMatches("CURRICULAR MODELS") ||
-      pathMatches("SOUND") ||
-      path.containsSlice("HubNet") ||
-      path.containsSlice("Frogger") || // uses sound extension
-      path.containsSlice("Sound Machines") || // uses sound extension
-      path.containsSlice("GoGoMonitor") ||
-      path.containsSlice("Movie Example") ||
-      path.containsSlice("Anisogamy.nlogox") || // uses behaviorspace-experiment-name
-      path.endsWith("5.x.nlogo") || // explicitly 5.x models
-      path.endsWith(".nlogo3d") || path.endsWith(".nlogox3d")
-  }
-
-  def goodModel(text: String): Option[String] = {
-    val extensionsRegex = new Regex("""EXTENSIONS \[([^]]*)\]""", "exts")
-    val cleanedText = text.toUpperCase.replaceAll("\n", "")
-    val onlySupportedPrimitives =
-      ! UnsupportedPrimitives.exists(cleanedText.contains)
-    val onlyValidExtensions =
-      extensionsRegex.findFirstMatchIn(cleanedText).map {
-        extensionMatch =>
-          val extensions = extensionMatch.group(1).trim.split(" ").filterNot(_ == "")
-          extensions.forall(HeadlessSupportedExtensions.contains)
-      } getOrElse true
-    if (onlyValidExtensions && onlySupportedPrimitives)
-      Some(text)
-    else
-      None
+    path.endsWith("5.x.nlogo") || // explicitly 5.x models
+    path.endsWith(".nlogo3d") || path.endsWith(".nlogox3d")
   }
 }
 
 class TestCompileAll extends AnyFunSuiteEx  {
-  for {
-    path <- ModelsLibrary.getModelPaths.filterNot(TestCompileAll.badPath)
-    text <- TestCompileAll.goodModel(FileIO.fileToString(path))
-  }  {
-      test("compile: " + path, SlowTest.Tag) {
-        compile(path, text)
-      }
-      test("readWriteRead: " + path, SlowTest.Tag) {
-        readWriteRead(path, text)
-      }
+  ModelsLibrary.getModelPaths.filterNot(TestCompileAll.badPath).foreach { path =>
+    val text = FileIO.fileToString(path)
+
+    test("compile: " + path, SlowTest.Tag) {
+      compile(path, text)
     }
+
+    test("readWriteRead: " + path, SlowTest.Tag) {
+      readWriteRead(path, text)
+    }
+  }
 
   private val literalParser =
     Femto.scalaSingleton[LiteralParser]("org.nlogo.parse.CompilerUtilities")

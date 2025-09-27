@@ -93,4 +93,5 @@ with ViewSettings with Controllable {
   def renderer: RendererInterface
   def compilerTestingMode: Boolean
   def warningMessage(message: String): Boolean
+  def getHubNetManager: Option[HubNetInterface]
 }
