@@ -2,11 +2,10 @@
 
 package org.nlogo.plot
 
-import org.nlogo.{ api, core },
-  api.PlotAction,
-  core.CompilerException
+import org.nlogo.api.{ PlotAction, PlotInterface, PlotListener, PlotManagerInterface => ApiPlotManagerInterface }
+import org.nlogo.core.CompilerException
 
-trait PlotManagerInterface extends api.PlotManagerInterface {
+trait PlotManagerInterface extends ApiPlotManagerInterface {
   def newPlot(name: String): Plot
   def compilePlot(plot: Plot): List[CompilerException]
   def forgetPlot(plot: Plot): Unit
@@ -35,4 +34,6 @@ class DummyPlotManager extends PlotManagerInterface {
   override def hasPlot(name: String) = false
   override def maybeGetPlot(name: String) = None
   override def getPlotNames = Seq()
+  override def plots: Seq[PlotInterface] = Seq()
+  override def setPlotListener(listener: PlotListener): Unit = {}
 }

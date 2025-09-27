@@ -348,9 +348,13 @@ class TestAllSyntaxes extends AnyFunSuiteEx {
                     |_hubnetbroadcastmessage anything,OTPL,None,0,1,1
                     |_hubnetclearoverride string/agent or agentset/string,OTPL,Some(?),0,3,3
                     |_hubnetclearoverrides string,OTPL,None,0,1,1
+                    |_hubnetclearplot string,OTPL,None,0,1,1
+                    |_hubnetcreateclient ,O---,None,0,0,0
                     |_hubnetfetchmessage ,OTPL,None,0,0,0
                     |_hubnetkickallclients ,OTPL,None,0,0,0
                     |_hubnetkickclient string,OTPL,None,0,1,1
+                    |_hubnetmakeplotnarrowcast string,OTPL,None,0,1,1
+                    |_hubnetplot string/number,OTPL,None,0,2,2
                     |_hubnetreset ,O---,None,0,0,0
                     |_hubnetresetperspective string,OTPL,None,0,1,1
                     |_hubnetsend string or list/string/anything,OTPL,None,0,3,3

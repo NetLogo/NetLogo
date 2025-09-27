@@ -334,15 +334,15 @@ object AbstractWorkspaceTraits {
         })
     }
 
-    def hubNetRunning = _hubNetRunning
+    override def hubNetRunning = _hubNetRunning
 
-    def hubNetRunning_=(running: Boolean): Unit = {
+    override def hubNetRunning_=(running: Boolean): Unit = {
       _hubNetRunning = running;
     }
 
     def hubNetManager = getHubNetManager
 
-    def getHubNetManager: Option[HubNetInterface] =
+    override def getHubNetManager: Option[HubNetInterface] =
       getComponent(classOf[HubNetInterface])
   }
 
