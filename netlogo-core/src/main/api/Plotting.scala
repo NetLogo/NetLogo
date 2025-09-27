@@ -14,6 +14,8 @@ trait PlotManagerInterface {
   // should be reconciled and unified into a single `org.nlogo.plot` package in `netlogo-core`, but not today.
   // -Jeremy B Octover 2020
   def maybeGetPlot(name: String): Option[PlotInterface]
+  def plots: Seq[PlotInterface]
+  def setPlotListener(listener: PlotListener): Unit
 }
 
 case class PlotState(

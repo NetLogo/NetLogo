@@ -2,16 +2,15 @@
 
 package org.nlogo.hubnet.server
 
+import org.nlogo.api.{ HubNetWorkspaceInterface, PlotInterface, PlotListener, Workspace }
 import org.nlogo.hubnet.mirroring.HubNetPlotPoint
-import org.nlogo.workspace.AbstractWorkspaceScala
-import org.nlogo.plot.{Plot, PlotListener}
 
 // This should definitely be all redone.
 // It sends messages out on every single little change.
 // We really ought to only send bunched diffs the way we do with view updates.
 // - JOSH COUGH 8/21/10, 12/28/10
-class ServerPlotManager(workspace: AbstractWorkspaceScala, connectionManager: ConnectionManager,
-                        getPlots: () => List[Plot], getCurrentPlot: () => Plot) extends PlotListener {
+class ServerPlotManager(workspace: Workspace & HubNetWorkspaceInterface, connectionManager: ConnectionManager,
+                        getPlots: () => Seq[PlotInterface], getCurrentPlot: () => PlotInterface) extends PlotListener {
   private val narrowcastPlots = new collection.mutable.ListBuffer[String]()
 
   // just add listeners to the plots that we might be mirroring
@@ -112,7 +111,7 @@ class ServerPlotManager(workspace: AbstractWorkspaceScala, connectionManager: Co
   def penDown(penDown: Boolean): Unit = {broadcastToClients(penDown)}
   // Sends as a plot-pen-interval
   // TODO: I dont think this really works... Its ignoring the argument! - JC 8/21/10
-  def setHistogramNumBars(num: Int): Unit = { for (pen <- getCurrentPlot().currentPen) setInterval(pen.interval) }
+  def setHistogramNumBars(num: Int): Unit = { for (pen <- getCurrentPlot().currentPen) setInterval(pen.state.interval) }
   // TODO: Note - send strings to mean pen name, ints for color, doubles for interval, boolean for pen down...BAD!
   // Sends a java.lang.String, which is the name of the current plot pen
   def currentPen(penName: String): Unit = {broadcastToClients(penName)}

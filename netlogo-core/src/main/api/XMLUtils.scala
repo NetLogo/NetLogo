@@ -104,7 +104,7 @@ object XMLReader {
         reader.close()
         sourceReader.close()
 
-        return Failure(new Exception(e))
+        return Failure(filterParseError(e))
     }
 
     def readElement(): Try[XMLElement] = {
@@ -148,10 +148,13 @@ object XMLReader {
 
     elementTry match {
       case Failure(e: XMLStreamException) =>
-        Failure(new Exception("ParseError.*?Message: ".r.replaceFirstIn(e.getMessage.replace("\n", ""), "")))
+        Failure(filterParseError(e))
 
       case t =>
         t
     }
   }
+
+  private def filterParseError(e: Exception): Exception =
+    new Exception("ParseError.*?Message: ".r.replaceFirstIn(e.getMessage.replace("\n", ""), ""))
 }
