@@ -10,6 +10,7 @@ import javax.swing.Action
 import javax.swing.text.{ Document, JTextComponent }
 
 import org.nlogo.api.Refreshable
+import org.nlogo.awt.Hierarchy
 import org.nlogo.core.I18N
 import org.nlogo.editor.{ Actions, Colorizer, DocumentAction, QuickHelpAction }
 import org.nlogo.swing.{ WrappedAction, UserAction },
@@ -82,7 +83,7 @@ object TextMenuActions {
 
     override def perform(component: JTextComponent, document: Document, e: ActionEvent): Unit = {
       val targetOffset = component.getSelectionEnd
-      doHelp(component.getDocument, targetOffset, component)
+      doHelp(component.getDocument, targetOffset, Hierarchy.getFrame(component))
     }
   }
 }
