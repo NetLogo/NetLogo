@@ -2,7 +2,7 @@
 
 package org.nlogo.app
 
-import java.awt.{ Component, Frame }
+import java.awt.{ Frame, KeyboardFocusManager }
 import java.awt.event.{ ActionEvent, WindowAdapter, WindowEvent }
 import java.net.URI
 import java.nio.file.Path
@@ -22,11 +22,7 @@ with MenuAction {
   this.group = group
 
   override def actionPerformed(e: ActionEvent): Unit = {
-    val launchComponent = e.getSource match {
-      case c: Component => c
-      case _ => null
-    }
-    BrowserLauncher.tryOpenURI(launchComponent, uri, fallback)
+    BrowserLauncher.tryOpenURI(KeyboardFocusManager.getCurrentKeyboardFocusManager.getFocusedWindow, uri, fallback)
   }
 }
 
@@ -37,11 +33,7 @@ with MenuAction {
   this.group = group
 
   override def actionPerformed(e: ActionEvent): Unit = {
-    val launchComponent = e.getSource match {
-      case c: Component => c
-      case _ => null
-    }
-    BrowserLauncher.openURI(launchComponent, uri)
+    BrowserLauncher.openURI(KeyboardFocusManager.getCurrentKeyboardFocusManager.getFocusedWindow, uri)
   }
 }
 
