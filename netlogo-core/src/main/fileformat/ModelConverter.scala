@@ -57,8 +57,8 @@ class ModelConverter(
             def profilingEnabled = compilationEnv.profilingEnabled
             def resolvePath(path: String): String =
               FileIO.resolvePath(path, modelPath).map(_.normalize.toString).getOrElse(path)
-            def resolveModule(packageName: Option[String], moduleName: String): String =
-              compilationEnv.resolveModule(packageName, moduleName)
+            def resolveModule(currentFile: Option[String], packageName: Option[String], moduleName: String): String =
+              compilationEnv.resolveModule(currentFile, packageName, moduleName)
           },
         oldProcedures          = procedures,
         containingProgram      = program,
