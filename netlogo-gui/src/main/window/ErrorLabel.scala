@@ -2,24 +2,43 @@
 
 package org.nlogo.window
 
-import javax.swing.JLabel
+import java.awt.Cursor
+import javax.swing.{ Box, BoxLayout, JLabel, JPanel, JTextPane }
 import javax.swing.border.EmptyBorder
 
 import org.nlogo.swing.Utils
 import org.nlogo.theme.InterfaceColors
 
-class ErrorLabel extends JLabel {
+class ErrorLabel extends JPanel {
+  private val icon = new JLabel
+  private val label = new JTextPane {
+    setEditable(false)
+    setOpaque(false)
+    setBorder(null)
+    setContentType("text/html")
+    setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR))
+  }
+
   setOpaque(true)
   setBorder(new EmptyBorder(6, 6, 6, 6))
   setVisible(false)
+  setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
+
+  add(icon)
+  add(Box.createHorizontalStrut(6))
+  add(label)
+
+  def setText(text: String): Unit = {
+    label.setText(text)
+  }
 
   def setError(error: Option[Exception], offset: Int): Unit = {
     error match {
       case Some(e) =>
-        setForeground(InterfaceColors.errorLabelText())
+        label.setForeground(InterfaceColors.errorLabelText())
         setBackground(InterfaceColors.errorLabelBackground())
-        setIcon(Utils.iconScaledWithColor("/images/error.png", 15, 15, InterfaceColors.errorLabelText()))
-        setText(s"<html><b>${encodeHTML(e.getMessage)}</b></html>")
+        icon.setIcon(Utils.iconScaledWithColor("/images/error.png", 15, 15, InterfaceColors.errorLabelText()))
+        label.setText(s"<html><b>${encodeHTML(e.getMessage)}</b></html>")
         setVisible(true)
 
       case _ =>
@@ -30,11 +49,11 @@ class ErrorLabel extends JLabel {
   def setWarning(warning: Option[String]): Unit = {
     warning match {
       case Some(str) =>
-        setForeground(InterfaceColors.warningLabelText())
+        label.setForeground(InterfaceColors.warningLabelText())
         setBackground(InterfaceColors.warningLabelBackground())
-        setIcon(Utils.iconScaledWithColor("/images/exclamation-triangle.png", 15, 15,
+        icon.setIcon(Utils.iconScaledWithColor("/images/exclamation-triangle.png", 15, 15,
                                           InterfaceColors.warningLabelText()))
-        setText(s"<html><b>${encodeHTML(str)}</b></html>")
+        label.setText(s"<html><b>${encodeHTML(str)}</b></html>")
         setVisible(true)
 
       case _ =>
@@ -46,8 +65,8 @@ class ErrorLabel extends JLabel {
 
   def zoom(zoomFactor: Double): Unit = {
     if(originalFontSize == -1)
-      originalFontSize = getFont.getSize
-    setFont(getFont.deriveFont((originalFontSize * zoomFactor).ceil.toFloat))
+      originalFontSize = label.getFont.getSize
+    label.setFont(label.getFont.deriveFont((originalFontSize * zoomFactor).ceil.toFloat))
     repaint()
     revalidate()
   }
