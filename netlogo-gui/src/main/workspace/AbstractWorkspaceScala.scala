@@ -176,11 +176,13 @@ abstract class AbstractWorkspaceScala(val world: World, val hubNetManagerFactory
             throw new IllegalStateException(s"$path is not a valid pathname: $ex")
         }
       }
-      def resolveModule(packageName: Option[String], moduleName: String): String = {
+      def resolveModule(currentFile: Option[String], packageName: Option[String], moduleName: String): String = {
         val separator = System.getProperty("file.separator")
 
-        packageName match {
-          case Some(x) => {
+        (currentFile, packageName) match {
+          // If packageName is provided, load module from either the package folder in CWD or the central package
+          // directory.
+          case (_, Some(x)) => {
             val localPkgPath = x.toLowerCase + separator + moduleName.toLowerCase + ".nls"
             val resolvedLocalPkgPath = resolvePath(localPkgPath)
 
@@ -190,7 +192,14 @@ abstract class AbstractWorkspaceScala(val world: World, val hubNetManagerFactory
               resolvePath(FileIO.perUserFile("packages" + separator + localPkgPath, false))
             }
           }
-          case None => resolvePath(moduleName.toLowerCase + ".nls")
+          // If packageName is not provided but currentFile is available, load the module relative to currentFile's
+          // parent directory.
+          case (Some(x), None) => {
+            resolvePath(Paths.get(x).getParent.toString + separator + moduleName.toLowerCase + ".nls")
+          }
+          // Otherwise, try to load the module from CWD.
+          case _ =>
+            resolvePath(moduleName.toLowerCase + ".nls")
         }
       }
     }
