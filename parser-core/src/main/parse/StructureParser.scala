@@ -70,7 +70,7 @@ object StructureParser {
               val currentImport = results.imports.head
               val separator = System.getProperty("file.separator")
 
-              val suppliedPath = compilationEnvironment.resolveModule(currentImport.packageName, currentImport.moduleName)
+              val suppliedPath = compilationEnvironment.resolveModule(currentImport.filename, currentImport.packageName, currentImport.moduleName)
 
               val currentModule = for {
                 pathString <- currentImport.filename

@@ -5,7 +5,7 @@ package org.nlogo.core
 trait CompilationEnvironment {
   def profilingEnabled: Boolean
   def resolvePath(path: String): String
-  def resolveModule(packageName: Option[String], moduleName: String): String
+  def resolveModule(currentFile:Option[String], packageName: Option[String], moduleName: String): String
   def exists(path: String): Boolean
   def getSource(filename: String): String
 }
@@ -13,7 +13,7 @@ trait CompilationEnvironment {
 class DummyCompilationEnvironment extends CompilationEnvironment {
   def profilingEnabled = false
   def resolvePath(filename: String): String = filename
-  def resolveModule(packageName: Option[String], moduleName: String): String = {
+  def resolveModule(currentFile: Option[String], packageName: Option[String], moduleName: String): String = {
     val separator = System.getProperty("file.separator")
 
     packageName match {
