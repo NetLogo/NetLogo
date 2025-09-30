@@ -8,12 +8,12 @@ package org.nlogo.core
  * of the error.
  */
 class CompilerException(message: String, val start: Int, val end: Int, val filename: String)
-extends RuntimeException(message) {
+extends RuntimeException(s"$message at location ($start, $end) in $filename") {
   def this(token: Token) = this(token.ensuring(_.tpe == TokenType.Bad).value.asInstanceOf[String],
                                 token.start, token.end, token.filename)
 
   override def toString =
-    getMessage + " at position " + start + " in " + filename
+    getMessage
 }
 object CompilerException {
   val RuntimeErrorAtCompileTimePrefix = "Runtime error: "

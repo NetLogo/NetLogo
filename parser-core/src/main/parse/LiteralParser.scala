@@ -80,7 +80,7 @@ class LiteralParser(importHandler: LiteralImportHandler) {
         // just skip comments when reading a literal - ev 7/10/07
         readLiteralPrefix(tokens.next(), tokens)
       case _ =>
-        exception(ERR_EXPECTED_LITERAL, token)
+        exception(s"$ERR_EXPECTED_LITERAL, got ${token.text}", token)
     }
   }
 
