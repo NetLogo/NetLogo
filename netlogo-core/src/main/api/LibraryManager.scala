@@ -18,7 +18,8 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 object LibraryManager {
 
-  private val libsLocationSite = "https://ccl.northwestern.edu/netlogo/config"
+  //private val libsLocationSite = "https://ccl.northwestern.edu/netlogo/config"
+  private val libsLocationSite = "https://mongkhonvanit.com/netlogo/config"
   private val libsLocation     = "libraries-location.conf"
   private val allLibsName      = "libraries.conf"
   private val bundledsConfig   = ConfigFactory.parseResources("system/bundled-libraries.conf")
@@ -39,7 +40,8 @@ object LibraryManager {
     baseURLOptF.map {
       opt =>
         val baseURL = opt.getOrElse(bundledsConfig.getString("fallback-libraries-location"))
-        val url = new URL(s"$baseURL/refs/heads/${APIVersion.version}")
+        //val url = new URL(s"$baseURL/refs/heads/${APIVersion.version}")
+        val url = new URL(s"$baseURL/refs/heads/module-test")
         url
     }
 
