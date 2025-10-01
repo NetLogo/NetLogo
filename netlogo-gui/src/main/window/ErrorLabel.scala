@@ -2,6 +2,7 @@
 
 package org.nlogo.window
 
+import java.awt.Cursor
 import javax.swing.{ Box, BoxLayout, JLabel, JPanel, JTextPane }
 import javax.swing.border.EmptyBorder
 
@@ -15,6 +16,7 @@ class ErrorLabel extends JPanel {
     setOpaque(false)
     setBorder(null)
     setContentType("text/html")
+    setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR))
   }
 
   setOpaque(true)
