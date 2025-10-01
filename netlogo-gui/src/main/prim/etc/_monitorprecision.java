@@ -2,6 +2,7 @@
 
 package org.nlogo.prim.etc;
 
+import org.nlogo.api.Dump;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Context;
@@ -21,7 +22,7 @@ public final class _monitorprecision
     if (!(value instanceof Double)) {
       return value;
     }
-    String dStr = ((Double)value).toString();
+    String dStr = Dump.logoObject(value);
     if (dStr.toLowerCase().contains("e")) {
       return String.format("%." + numberOfPlaces +  "E", (Double)value);
     }
