@@ -23,7 +23,7 @@ public final class _monitorprecision
     }
     String dStr = ((Double)value).toString();
     if (dStr.toLowerCase().contains("e")) {
-      return String.format("%." + numberOfPlaces +  "E0", (Double)value);
+      return String.format("%." + numberOfPlaces +  "E", (Double)value);
     }
     return newValidDouble
         (org.nlogo.api.Approximate.approximate
