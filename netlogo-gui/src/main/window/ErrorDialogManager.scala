@@ -2,19 +2,30 @@
 
 package org.nlogo.window
 
-import java.awt.Component
+import java.awt.{ Component, Dialog }
+import java.awt.event.ActionEvent
+import javax.swing.{ AbstractAction, Box, BoxLayout, JComponent, JDialog, JLabel, JPanel, ScrollPaneConstants }
+import javax.swing.border.{ EmptyBorder, LineBorder }
 import javax.swing.text.JTextComponent
 
 import org.nlogo.api.{ LogoException, Version }
 import org.nlogo.core.I18N
 import org.nlogo.nvm.{ Context, Instruction }
-import org.nlogo.swing.{ BrowserLauncher, CheckBox, DialogButton, MessageDialog }
+import org.nlogo.swing.{ BrowserLauncher, ButtonPanel, CheckBox, DialogButton, MessageDialog, Positioning, ScrollPane,
+                         TextArea, Transparent, Utils => SwingUtils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.util.{ SysInfo, Utils }
 
 import scala.annotation.tailrec
 
-case class ErrorInfo(var throwable: Throwable, var context: Option[Context] = None, var instruction: Option[Instruction] = None) {
+import sttp.client4.DefaultSyncBackend
+import sttp.client4.quick.{ quickRequest, UriContext }
+
+import ujson.Obj
+
+case class ErrorInfo(var throwable: Throwable, var context: Option[Context] = None,
+                     var instruction: Option[Instruction] = None) {
+
   def ordinaryError: Boolean = throwable.isInstanceOf[LogoException]
 
   def hasKnownCause: Boolean = knownAncestorCause(throwable)
@@ -33,7 +44,8 @@ case class ErrorInfo(var throwable: Throwable, var context: Option[Context] = No
     t.isInstanceOf[OutOfMemoryError] || (t.getCause != null && knownAncestorCause(t.getCause))
 }
 
-case class DebuggingInfo(var className: String, var threadName: String, var modelName: String, var eventTrace: String, var javaStackTrace: String) {
+case class DebuggingInfo(var className: String, var threadName: String, var modelName: String, var eventTrace: String,
+                         var javaStackTrace: String) {
   def debugInfo =
     s"""|${Version.version}
         |main: $className
@@ -131,6 +143,28 @@ extends MessageDialog(owner, I18N.gui.get("common.buttons.dismiss")) {
   protected var message = ""
   protected var details = ""
 
+  override def makeButtons(): Seq[JComponent] = {
+    val reportButton = new DialogButton(true, I18N.gui.get("dialog.error.report"), () => {
+      new ReportDialog(this, details)
+
+      setVisible(false)
+    })
+
+    val dismissAction = new AbstractAction(I18N.gui.get("common.buttons.dismiss")) {
+      override def actionPerformed(e: ActionEvent): Unit = {
+        setVisible(false)
+      }
+    }
+
+    SwingUtils.addEscKeyAction(this, dismissAction)
+
+    val dismissButton = new DialogButton(false, dismissAction)
+
+    getRootPane.setDefaultButton(reportButton)
+
+    Seq(reportButton, dismissButton)
+  }
+
   def show(errorInfo: ErrorInfo, debugInfo: DebuggingInfo): Unit
 
   protected def doShow(showDetails: Boolean): Unit = {
@@ -198,5 +232,83 @@ extends ErrorDialog(owner, I18N.gui.get("error.dialog.outOfMemory.title")) {
     super.makeButtons() :+ new DialogButton(false, I18N.gui.get("error.dialog.openFAQ"), () => {
       BrowserLauncher.openPath(owner, BrowserLauncher.docPath("faq.html"), "howbig")
     })
+  }
+}
+
+private class ReportDialog(parent: Dialog, trace: String)
+  extends JDialog(parent, I18N.gui.get("dialog.error.report.title"), true) with ThemeSync {
+
+  private val label = new JLabel(I18N.gui.get("dialog.error.report.message"))
+
+  private val message = new TextArea(8, 40)
+
+  private val scrollPane = new ScrollPane(message, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+                                          ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED)
+
+  private val reportButton = new DialogButton(true, I18N.gui.get("dialog.error.report"), () => {
+    report()
+    setVisible(false)
+  })
+
+  private val cancelButton = new DialogButton(false, I18N.gui.get("common.buttons.cancel"), () => {
+    setVisible(false)
+  })
+
+  add(new JPanel with Transparent {
+    setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
+    setBorder(new EmptyBorder(6, 6, 6, 6))
+
+    add(new JPanel with Transparent {
+      setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
+
+      add(label)
+      add(Box.createHorizontalGlue)
+    })
+
+    add(Box.createVerticalStrut(6))
+    add(scrollPane)
+    add(Box.createVerticalStrut(6))
+    add(new ButtonPanel(Seq(reportButton, cancelButton)))
+  })
+
+  syncTheme()
+  pack()
+
+  Positioning.center(this, parent)
+
+  setVisible(true)
+
+  private def report(): Unit = {
+    val version = Version.versionNumberOnly
+    val os = s"${System.getProperty("os.name").split(" ")(0)} ${System.getProperty("os.arch")}"
+    val stacktrace = trace.trim
+    val comment = message.getText.trim
+
+    val json =
+      ujson.write(
+        Obj( "version"         -> version
+           , "os"              -> os
+           , "stacktrace"      -> stacktrace
+           , "user_commentary" -> comment
+           )
+      )
+
+    quickRequest.post(uri"https://backend.netlogo.org/items/NetLogo_Desktop_Error_Reports")
+                .body(json)
+                .contentType("application/json")
+                .send(DefaultSyncBackend())
+  }
+
+  override def syncTheme(): Unit = {
+    getContentPane.setBackground(InterfaceColors.dialogBackground())
+
+    label.setForeground(InterfaceColors.dialogText())
+
+    scrollPane.setBorder(new LineBorder(InterfaceColors.textAreaBorderEditable()))
+    scrollPane.setBackground(InterfaceColors.textAreaBackground())
+
+    message.syncTheme()
+    reportButton.syncTheme()
+    cancelButton.syncTheme()
   }
 }
