@@ -58,6 +58,8 @@ class BracketMatcher
   // don't want to retokenize the whole document unless necessary.
   public void caretUpdate(javax.swing.event.CaretEvent e) {
     EditorArea source = (EditorArea) e.getSource();
+    if (!source.hasFocus())
+      return;
     Highlighter highlighter = source.getHighlighter();
     removeOldHighlights(highlighter);
     int dot = e.getDot();
