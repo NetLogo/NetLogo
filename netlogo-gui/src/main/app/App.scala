@@ -22,8 +22,9 @@ import org.nlogo.agent.{ Agent, World2D, World3D }
 import org.nlogo.analytics.{ Analytics, AnalyticsSender }
 import org.nlogo.agent.{ CompilationManagement, World }
 import org.nlogo.api.{ Agent => ApiAgent, AggregateManagerInterface, AnnouncementsInfoDownloader, APIVersion,
-                       Exceptions, FileIO, LogoException, MetadataLoadingException, ModelSections, ModelType,
-                       NetLogoLegacyDialect, NetLogoThreeDDialect, RendererInterface, SimpleJobOwner, Version }
+                       Exceptions, FileIO, LogoException, MetadataLoadingException, ModelSaver, ModelSections,
+                       ModelType, NetLogoLegacyDialect, NetLogoThreeDDialect, RendererInterface, SimpleJobOwner,
+                       Version }
 import org.nlogo.app.codetab.{ ExternalFileManager, TemporaryCodeTab }
 import org.nlogo.app.common.{ Events => AppEvents, FileActions, FindDialog }
 import org.nlogo.app.interfacetab.{ CommandCenter, InterfaceTab, InterfaceWidgetControls, WidgetPanel }
@@ -425,7 +426,7 @@ class App(args: App.CommandLineArgs) extends LinkChild with Exceptions.Handler w
   }
 
   val labManager = new LabManager(workspace, editDialogFactory, colorizer, menuBarFactory, workspaceFactory,
-                                  modelLoader)
+                                  modelLoader, modelSaver)
 
   val fileManager = new FileManager(workspace, modelLoader, converter, dirtyMonitor, modelSaver, mainMenuBar,
                                     frame, tabManager, workspaceFactory, labManager, args.testing)

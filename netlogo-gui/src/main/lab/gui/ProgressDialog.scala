@@ -7,12 +7,10 @@ import javax.swing.{ Box, BoxLayout, JDialog, JPanel, ScrollPaneConstants, Timer
 import javax.swing.border.{ EmptyBorder, LineBorder }
 
 import org.nlogo.analytics.Analytics
-import org.nlogo.api.{ Color, CompilerServices, Dump, ExportPlotWarningAction, LabProtocol, PeriodicUpdateDelay }
+import org.nlogo.api.{ Color, CompilerServices, ExportPlotWarningAction, LabProtocol, PeriodicUpdateDelay }
 import org.nlogo.awt.Positioning
 import org.nlogo.core.I18N
 import org.nlogo.editor.Colorizer
-import org.nlogo.nvm.LabInterface.ProgressListener
-import org.nlogo.nvm.Workspace
 import org.nlogo.plot.DummyPlotManager
 import org.nlogo.swing.{ Button, ButtonPanel, CheckBox, OptionPane, RichAction, ScrollPane, TextArea, Transparent }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
@@ -20,8 +18,8 @@ import org.nlogo.window.{ GUIWorkspace, PlotWidget, SpeedSliderPanel }
 
 private [gui] class ProgressDialog(parent: Window, supervisor: Supervisor, compiler: CompilerServices,
                                    colorizer: Colorizer, saveProtocol: (LabProtocol, Int) => Unit)
-              extends JDialog(parent, Dialog.DEFAULT_MODALITY_TYPE) with ProgressListener with ThemeSync {
-  val protocol = supervisor.worker.protocol
+              extends JDialog(parent, Dialog.DEFAULT_MODALITY_TYPE) with ThemeSync {
+  val protocol = supervisor.protocol
   val workspace = supervisor.workspace.asInstanceOf[GUIWorkspace]
   private implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("tools.behaviorSpace.progressDialog")
   private val totalRuns = protocol.countRuns
@@ -146,6 +144,11 @@ private [gui] class ProgressDialog(parent: Window, supervisor: Supervisor, compi
     }
 
     getContentPane.add(container)
+
+    pack()
+    setSize(getMinimumSize)
+
+    Positioning.center(this, parent)
   }
 
   override def getMinimumSize = getPreferredSize
@@ -237,46 +240,43 @@ private [gui] class ProgressDialog(parent: Window, supervisor: Supervisor, compi
     super.setVisible(visible)
   }
 
-  /// ProgressListener implementation
+  def experimentStarted(): Unit = {
+    started = System.currentTimeMillis
+  }
 
-  override def experimentStarted(): Unit = {started = System.currentTimeMillis}
-  override def runStarted(w: Workspace, runNumber: Int, settings: List[(String, Any)]): Unit = {
-    if (w.workspaceContext.workspaceGUI) {
-      runCount = runNumber
-      steps = 0
-      resetPlot()
-      settingsString = ""
-      for ((name, value) <- settings)
-        settingsString += name + " = " + Dump.logoObject(value.asInstanceOf[AnyRef]) + "\n"
-      updateProgressArea(true)
+  def runStarted(runNumber: Int, settings: Seq[(String, String)]): Unit = {
+    runCount = runNumber
+    steps = 0
+    resetPlot()
+    settingsString = settings.map((name, value) => s"$name = $value").mkString("\n")
+    updateProgressArea(true)
 
-      plotWidgetOption.foreach(_.refreshGUI())
+    plotWidgetOption.foreach(_.refreshGUI())
 
-      // the plot pens don't affect the height of the plot until it's invalidated and repainted,
-      // so we wait to pack the window to the correct size (Isaac B 7/22/25)
+    // the plot pens don't affect the height of the plot until it's invalidated and repainted,
+    // so we re-pack window to the correct size here (Isaac B 7/22/25)
+    EventQueue.invokeLater(() => {
+      pack()
+      setSize(getMinimumSize)
+
+      Positioning.center(this, parent)
+    })
+  }
+
+  def stepCompleted(step: Int): Unit = {
+    this.steps = step
+    if (workspace.triedToExportPlot && workspace.exportPlotWarningAction == ExportPlotWarningAction.Warn) {
+      workspace.setExportPlotWarningAction(ExportPlotWarningAction.Ignore)
       EventQueue.invokeLater(() => {
-        if (getMinimumSize.width > getWidth || getMinimumSize.height > getHeight) {
-          pack()
-          setSize(getMinimumSize)
-        }
+        new OptionPane(workspace.getFrame, I18N.gui("updatingPlotsWarningTitle"),
+                        I18N.shared.get("tools.behaviorSpace.runoptions.updateplotsandmonitors.error"),
+                        OptionPane.Options.Ok, OptionPane.Icons.Warning)
       })
     }
   }
-  override def stepCompleted(w: Workspace, steps: Int): Unit = {
-    if (w.workspaceContext.workspaceGUI) {
-      this.steps = steps
-      if (workspace.triedToExportPlot && workspace.exportPlotWarningAction == ExportPlotWarningAction.Warn) {
-        workspace.setExportPlotWarningAction(ExportPlotWarningAction.Ignore)
-        EventQueue.invokeLater(() => {
-          new OptionPane(workspace.getFrame, I18N.gui("updatingPlotsWarningTitle"),
-                         I18N.shared.get("tools.behaviorSpace.runoptions.updateplotsandmonitors.error"),
-                         OptionPane.Options.Ok, OptionPane.Icons.Warning)
-        })
-      }
-    }
-  }
-  override def measurementsTaken(w: Workspace, runNumber: Int, step: Int, values: List[AnyRef]): Unit = {
-    if (w.workspaceContext.workspaceGUI) plotNextPoint(values)
+
+  def measurementsTaken(values: Seq[Double]): Unit = {
+    plotNextPoint(values)
   }
 
   private def invokeAndWait(f: => Unit) =
@@ -310,33 +310,37 @@ private [gui] class ProgressDialog(parent: Window, supervisor: Supervisor, compi
     buf.toString
   }
 
-  private def plotNextPoint(measurements: List[AnyRef]): Unit = {
+  private def plotNextPoint(measurements: Seq[Double]): Unit = {
     plotWidgetOption.foreach { plotWidget => invokeAndWait {
-      for (metricNumber <- 0 until protocol.metrics.length) {
-        val measurement = measurements(metricNumber)
-        if (measurement.isInstanceOf[Number]) {
-          val pen = plotWidget.plot.getPen(getPenName(metricNumber)).get
-          pen.plot(steps, measurement.asInstanceOf[java.lang.Double].doubleValue)
-        }
-      }
+      for (metricNumber <- 0 until protocol.metrics.length)
+        plotWidget.plot.getPen(getPenName(metricNumber)).get.plot(steps, measurements(metricNumber))
+
       plotWidget.plot.makeDirty()
     }}
   }
 
   private def updateProgressArea(force: Boolean): Unit = {
     def pad(s: String) = if (s.length == 1) ("0" + s) else s
-    val elapsedMillis: Int = ((System.currentTimeMillis - started) / 1000).toInt
-    val hours = (elapsedMillis / 3600).toString
-    val minutes = pad(((elapsedMillis % 3600) / 60).toString)
-    val seconds = pad((elapsedMillis % 60).toString)
-    val newElapsed = hours + ":" + minutes + ":" + seconds
-    if (force || elapsed != newElapsed) {
-      elapsed = newElapsed
+
+    if (started == 0) {
       EventQueue.invokeLater(() => {
-        progressArea.setText(I18N.gui("progressArea", runCount.toString,
-          totalRuns.toString, steps.toString, elapsed, settingsString))
+        progressArea.setText(I18N.gui("init"))
         progressArea.setCaretPosition(0)
       })
+    } else {
+      val elapsedMillis: Int = ((System.currentTimeMillis - started) / 1000).toInt
+      val hours = (elapsedMillis / 3600).toString
+      val minutes = pad(((elapsedMillis % 3600) / 60).toString)
+      val seconds = pad((elapsedMillis % 60).toString)
+      val newElapsed = hours + ":" + minutes + ":" + seconds
+      if (force || elapsed != newElapsed) {
+        elapsed = newElapsed
+        EventQueue.invokeLater(() => {
+          progressArea.setText(I18N.gui("progressArea", runCount.toString,
+            totalRuns.toString, steps.toString, elapsed, settingsString))
+          progressArea.setCaretPosition(0)
+        })
+      }
     }
   }
 
