@@ -6,6 +6,7 @@ import java.awt.{ Component, Dimension, EventQueue, FileDialog => JFileDialog, F
                   GridBagLayout, Insets }
 import java.awt.event.ActionEvent
 import java.io.PrintWriter
+import java.nio.file.{ Files, Paths }
 import javax.swing.{ AbstractAction, JDialog, JLabel, JList, JMenuBar, JPanel, ListCellRenderer }
 import javax.swing.event.ListSelectionListener
 
@@ -178,7 +179,13 @@ class ManagerDialog(manager:       LabManager,
 
       manager.prepareForRun()
 
-      new Supervisor(this, manager.workspace, selectedProtocol, manager.workspaceFactory, dialogFactory,
+      val temp = Files.createTempFile("temp-model", ".nlogox")
+
+      temp.toFile.deleteOnExit()
+
+      manager.modelLoader.save(manager.modelSaver.currentModel, temp.toUri)
+
+      new Supervisor(this, manager.workspace, temp, selectedProtocol, manager.workspaceFactory, dialogFactory,
                      manager.workspace, colorizer, saveProtocol, false).start()
     }
     catch { case ex: org.nlogo.awt.UserCancelException => org.nlogo.api.Exceptions.ignore(ex) }
@@ -388,8 +395,9 @@ class ManagerDialog(manager:       LabManager,
       manager.prepareForRun()
     })
 
-    val supervisor = new Supervisor(this, manager.workspace, selectedProtocol, manager.workspaceFactory, dialogFactory,
-                                    manager.workspace, colorizer, saveProtocol, true)
+    val supervisor = new Supervisor(this, manager.workspace, Paths.get(manager.workspace.getModelPath),
+                                    selectedProtocol, manager.workspaceFactory, dialogFactory, manager.workspace,
+                                    colorizer, saveProtocol, true)
 
     EventQueue.invokeAndWait(() => {
       supervisor.start()
