@@ -5,6 +5,7 @@ package org.nlogo.lab.gui
 import java.awt.{ Component, Dimension, FlowLayout, GridBagConstraints, GridBagLayout, Insets }
 import java.awt.event.ActionEvent
 import java.io.PrintWriter
+import java.nio.file.Files
 import javax.swing.{ AbstractAction, JDialog, JLabel, JList, JMenuBar, JPanel, ListCellRenderer }
 import javax.swing.event.ListSelectionListener
 
@@ -175,7 +176,13 @@ private class ManagerDialog(manager:       LabManager,
 
       manager.prepareForRun()
 
-      new Supervisor(this, manager.workspace, selectedProtocol, manager.workspaceFactory, dialogFactory,
+      val temp = Files.createTempFile("temp-model", ".nlogox")
+
+      temp.toFile.deleteOnExit()
+
+      manager.modelLoader.save(manager.modelSaver.currentModel, temp.toUri)
+
+      new Supervisor(this, manager.workspace, temp, selectedProtocol, manager.workspaceFactory, dialogFactory,
                      manager.workspace, colorizer, saveProtocol).start()
     }
     catch { case ex: org.nlogo.awt.UserCancelException => org.nlogo.api.Exceptions.ignore(ex) }
