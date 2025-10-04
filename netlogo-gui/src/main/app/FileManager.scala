@@ -13,8 +13,8 @@ import scala.util.{ Failure, Try }
 
 import org.nlogo.analytics.Analytics
 import org.nlogo.core.{ I18N, Model }
-import org.nlogo.api.{ AbstractModelLoader, Exceptions, FileIO, ModelReader, ModelType, Version, Workspace },
-  ModelReader.{ emptyModelPath, modelSuffix }
+import org.nlogo.api.{ AbstractModelLoader, Exceptions, FileIO, ModelReader, ModelSaver, ModelType, Version,
+                       Workspace }, ModelReader.{ emptyModelPath, modelSuffix }
 import org.nlogo.app.common.{ Actions, Dialogs, ExceptionCatchingAction, ModelConfig }, Actions.Ellipsis
 import org.nlogo.app.codetab.TemporaryCodeTab
 import org.nlogo.app.tools.{ ModelsLibraryDialog, NetLogoWebSaver }

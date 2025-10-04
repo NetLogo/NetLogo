@@ -1,8 +1,7 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.app
+package org.nlogo.api
 
-import org.nlogo.api.{ AbstractModelLoader, ModelSections, Version}
 import org.nlogo.core.Model
 
 class ModelSaver(model: ModelSections, loader: AbstractModelLoader) {
@@ -11,7 +10,7 @@ class ModelSaver(model: ModelSections, loader: AbstractModelLoader) {
 
   def priorModel: Model = _currentModel
 
-  def currentModel = {
+  def currentModel: Model = {
     val m = _currentModel.copy(
       code          = model.procedureSource,
       widgets       = model.widgets,
