@@ -5,7 +5,7 @@ package org.nlogo.lab.gui
 import java.awt.event.ActionEvent
 import javax.swing.AbstractAction
 
-import org.nlogo.api.{ AbstractModelLoader, LabProtocol }
+import org.nlogo.api.{ AbstractModelLoader, LabProtocol, ModelSaver }
 import org.nlogo.awt.Positioning
 import org.nlogo.core.{ I18N, Model }
 import org.nlogo.editor.Colorizer
@@ -22,7 +22,8 @@ class LabManager(val workspace:        GUIWorkspace,
                  colorizer:            Colorizer,
                  menuFactory:          MenuBarFactory,
                  val workspaceFactory: WorkspaceFactory,
-                 val modelLoader:      AbstractModelLoader)
+                 val modelLoader:      AbstractModelLoader,
+                 val modelSaver:       ModelSaver)
   extends LabManagerInterface
   with CompiledEvent.Handler
   with LoadBeginEvent.Handler

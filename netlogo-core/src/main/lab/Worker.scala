@@ -6,8 +6,8 @@ import java.util.Locale
 import java.util.concurrent.{ Callable, Executors, TimeUnit }
 
 import org.nlogo.core.{ AgentKind, I18N, WorldDimensions }
-import org.nlogo.api.{ Dump, ExportPlotWarningAction, LabProtocol,
-  LogoException, MersenneTwisterFast, LabPostProcessorInputFormat, WorldDimensionException, SimpleJobOwner }
+import org.nlogo.api.{ Dump, ExportPlotWarningAction, LabPostProcessorInputFormat, LabProtocol, LogoException,
+                       MersenneTwisterFast, PartialData, SimpleJobOwner, WorldDimensionException }
 import org.nlogo.nvm.{ Command, LabInterface, Workspace }
 
 import LabInterface.ProgressListener
@@ -19,8 +19,9 @@ class Worker(val protocol: LabProtocol, val supervisorWriting: () => Unit = () =
   def addListener(listener: ProgressListener): Unit = {
     listeners += listener
   }
-  def addSpreadsheetWriter(modelFileName: String, initialDims: WorldDimensions, w: java.io.PrintWriter): Unit = {
-    addListener(new SpreadsheetExporter(modelFileName, initialDims, protocol, w))
+  def addSpreadsheetWriter(modelFileName: String, initialDims: WorldDimensions, w: java.io.PrintWriter,
+                           partialData: PartialData = new PartialData): Unit = {
+    addListener(new SpreadsheetExporter(modelFileName, initialDims, protocol, w, partialData))
   }
   def addTableWriter(modelFileName: String, initialDims: WorldDimensions, w: java.io.PrintWriter): Unit = {
     addListener(new TableExporter(modelFileName, initialDims, protocol, w))
