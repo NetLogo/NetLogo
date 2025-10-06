@@ -10,10 +10,12 @@ import com.vladsch.flexmark.ext.escaped.character.EscapedCharacterExtension
 import com.vladsch.flexmark.ext.autolink.AutolinkExtension
 import com.vladsch.flexmark.ext.typographic.TypographicExtension
 
-import java.awt.{ Color, Dimension, GridBagConstraints, GridBagLayout, Insets, Rectangle }
+import java.awt.{ Color, Dimension, Rectangle }
 import java.util.ArrayList
-import javax.swing.JLabel
+import javax.swing.{ Box, BoxLayout, JLabel }
+import javax.swing.border.EmptyBorder
 
+import org.nlogo.awt.LineBreaker
 import org.nlogo.core.{ I18N, TextBox => CoreTextBox, Widget => CoreWidget }
 import org.nlogo.swing.Transparent
 import org.nlogo.theme.{ ClassicTheme, DarkTheme, InterfaceColors, LightTheme }
@@ -22,17 +24,11 @@ class NoteWidget extends SingleErrorWidget with Transparent with Editable {
   val textLabel = new JLabel
 
   locally {
-    setLayout(new GridBagLayout)
+    setBorder(new EmptyBorder(0, 4, 0, 4))
+    setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
 
-    val c = new GridBagConstraints
-
-    c.anchor = GridBagConstraints.NORTHWEST
-    c.fill = GridBagConstraints.HORIZONTAL
-    c.weightx = 1
-    c.weighty = 1
-    c.insets = new Insets(0, 4, 0, 4)
-
-    add(textLabel, c)
+    add(textLabel)
+    add(Box.createVerticalGlue)
   }
 
   val MIN_WIDTH = 15
@@ -94,16 +90,16 @@ class NoteWidget extends SingleErrorWidget with Transparent with Editable {
       // content being 1.3 times larger. dividing the JLabel width by 1.3 solves the problem. (Isaac B 6/15/25)
       textLabel.setText(s"""<html>$css<body style="width: ${textLabel.getWidth / 1.3}px">$text</body></html>""")
     } else {
-      textLabel.setText(s"""<html>${escapeHTML(_text)}</html>""")
+      val lines = LineBreaker.breakLines(escapeHTML(_text), getFontMetrics(getFont), textLabel.getWidth)
+
+      textLabel.setText(s"""<html>${lines.mkString("<br>").replace("\n", "<br>")}</html>""")
     }
 
     repaint()
   }
 
-  private def escapeHTML(s: String): String = {
-    s.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\n", "<br>")
-     .replaceAll(" ", "&nbsp;")
-  }
+  private def escapeHTML(s: String): String =
+    s.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;")
 
   def text: String = _text
   def setText(newText: String): Unit = {
