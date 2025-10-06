@@ -297,7 +297,7 @@ object StructureParser {
   }
 
   @throws(classOf[CompilerException])
-  def findImports(tokens: Iterator[Token]): Seq[String] = {
+  def findImports(tokens: Iterator[Token]): Seq[(Option[String], String)] = {
     val importPositionedTokens =
       tokens.dropWhile(! _.text.equalsIgnoreCase("import"))
     val result =
@@ -308,12 +308,18 @@ object StructureParser {
         val importWithoutComments = importPositionedTokens.filter(_.tpe != TokenType.Comment)
         if (importWithoutComments.next().tpe != TokenType.OpenBracket)
           exception("Did not find expected open bracket for import declaration", tokens.next())
-        else
-          importWithoutComments
+        else {
+          val tokens = importWithoutComments
             .takeWhile((x) => x.tpe != TokenType.OpenBracket && x.tpe != TokenType.CloseBracket)
             .filter(_.tpe == TokenType.Ident)
             .map(_.value.toString)
             .toSeq
+          tokens.length match {
+            case 1 => Seq((None, tokens.head))
+            case 2 => Seq((Some(tokens.head), tokens(1)))
+            case _ => Seq() // Malformed import
+          }
+        }
       }
     if (result.isEmpty) {
       result
