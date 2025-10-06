@@ -5,9 +5,11 @@ package org.nlogo.lab
 import java.io.{ File, FileWriter, PrintWriter }
 import java.lang.{ Double => JDouble }
 import java.net.SocketException
+import java.util.Base64
 
 import org.nlogo.api.{ Dump, LabProtocol, LabPostProcessorInputFormat, PartialData }
 import org.nlogo.core.I18N
+import org.nlogo.mirror.{ Mirrorables, Mirroring, Serializer }
 import org.nlogo.nvm.{ LabInterface, PrimaryWorkspace, Workspace }
 
 import scala.collection.mutable.Queue
@@ -224,6 +226,16 @@ class Lab extends LabInterface {
             ))).recover {
               case _: SocketException =>
                 abort()
+            }
+
+            if (w == workspaces.head) {
+              val mirrorables = Mirrorables.allMirrorables(w.world)
+              val bytes = Serializer.toBytes(Mirroring.diffs(Map(), mirrorables)._2)
+
+              handler.writeLine(ujson.write(Obj(
+                "type" -> "mirror_world",
+                "state" -> Base64.getEncoder.encodeToString(bytes)
+              )))
             }
           }
 
