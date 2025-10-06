@@ -6,16 +6,18 @@ import java.awt.Window
 import java.io.File
 import java.net.SocketException
 import java.nio.file.Path
+import java.util.Base64
 
-import org.nlogo.api.{ CompilerServices, Exceptions, ExportPlotWarningAction, IPCHandler, LabProtocol }
+import org.nlogo.api.{ ActionBuffer, CompilerServices, Exceptions, ExportPlotWarningAction, IPCHandler, LabProtocol }
 import org.nlogo.agent.OutputObject
 import org.nlogo.awt.{ EventQueue, UserCancelException }
 import org.nlogo.core.I18N
+import org.nlogo.drawing.{ DrawingActionBroker, DrawingActionRunner }
 import org.nlogo.editor.Colorizer
-import org.nlogo.nvm.PrimaryWorkspace
+import org.nlogo.mirror.{ FakeWorld, Mirroring, Serializer }
 import org.nlogo.swing.OptionPane
 import org.nlogo.window.{ EditDialogFactory, GUIWorkspace }
-import org.nlogo.workspace.{ AbstractWorkspace, WorkspaceFactory }
+import org.nlogo.workspace.WorkspaceFactory
 
 import scala.collection.mutable.Set
 import scala.sys.process.Process
@@ -25,7 +27,7 @@ import ujson.Obj
 
 class Supervisor(
   parent: Window,
-  val workspace: AbstractWorkspace,
+  val workspace: GUIWorkspace,
   modelPath: Path,
   val protocol: LabProtocol,
   factory: WorkspaceFactory,
@@ -152,14 +154,9 @@ class Supervisor(
 
       json("type").str match {
         case "mirror" =>
-          workspace match {
-            case pw: PrimaryWorkspace =>
-              pw.mirrorOutput(new OutputObject(json("caption").str, json("message").str, json("newline").bool,
-                                               json("temporary").bool),
-                              json("area").bool)
-
-            case _ =>
-          }
+          workspace.mirrorOutput(new OutputObject(json("caption").str, json("message").str, json("newline").bool,
+                                                  json("temporary").bool),
+                                 json("area").bool)
 
         case "error" =>
           val message = json("message").str
@@ -181,6 +178,25 @@ class Supervisor(
 
         case "step_complete" =>
           progressDialog.stepCompleted(json("number").num.toInt)
+
+        case "mirror_world" =>
+          if (workspace.displaySwitchOn) {
+            val state = Mirroring.merge(Map(), Serializer.fromBytes(Base64.getDecoder.decode(json("state").str)))
+
+            val renderer = new FakeWorld(state).newRenderer
+
+            val actionBuffer = new ActionBuffer(new DrawingActionBroker(renderer.trailDrawer))
+
+            actionBuffer.activate()
+
+            val actionRunner = new DrawingActionRunner(renderer.trailDrawer)
+
+            actionBuffer.grab().foreach(actionRunner.run)
+
+            EventQueue.invokeLater(() => {
+              workspace.view.paintFromRenderer(renderer)
+            })
+          }
 
         case "measurements" =>
           progressDialog.measurementsTaken(json("values").arr.map(_.num).toSeq)
@@ -214,11 +230,6 @@ class Supervisor(
   }
 
   private def guiError(message: String): Unit = {
-    workspace match {
-      case gw: GUIWorkspace =>
-        new OptionPane(gw.getFrame, I18N.gui("error.title"), message, OptionPane.Options.Ok, OptionPane.Icons.Error)
-
-      case _ =>
-    }
+    new OptionPane(workspace.getFrame, I18N.gui("error.title"), message, OptionPane.Options.Ok, OptionPane.Icons.Error)
   }
 }
