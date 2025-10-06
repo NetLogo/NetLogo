@@ -206,7 +206,7 @@ class FrontEndTests extends AnyFunSuite with BaseParserTest {
   }
 
   /// duplicate name tests
-  def frontEndError(find: String => Seq[String], src: String, error: String) = {
+  def frontEndError[T](find: String => Seq[T], src: String, error: String) = {
     val e = intercept[CompilerException] {
         find(src)
       }
@@ -226,13 +226,13 @@ class FrontEndTests extends AnyFunSuite with BaseParserTest {
 
   test("findImports lists all modules when there is a valid import statement") {
     assertResult(Seq())(FrontEnd.findImports(""))
-    assertResult(Seq("FOO"))(FrontEnd.findImports("import ;; comment\n;; com2\n [foo]"))
+    assertResult(Seq((None, "FOO")))(FrontEnd.findImports("import ;; comment\n;; com2\n [foo]"))
     frontEndError(FrontEnd.findImports, "import foo]", "Did not find expected open bracket for import declaration")
-    assertResult(Seq("FOO"))(FrontEnd.findImports("import [foo]"))
-    assertResult(Seq("FOO"))(FrontEnd.findImports("import [foo [alias bar]]"))
-    assertResult(Seq("FOO"))(FrontEnd.findImports("import [foo] to foo show \"bar\" end"))
-    assertResult(Seq("FOO"))(FrontEnd.findImports("import [foo] foo \"bar\" end"))
-    assertResult(Seq("FOO", "BAZ"))(FrontEnd.findImports("import [foo [alias bar]] to foo show \"bar\" end import [baz [alias qaz]]"))
+    assertResult(Seq((None, "FOO")))(FrontEnd.findImports("import [foo]"))
+    assertResult(Seq((None, "FOO")))(FrontEnd.findImports("import [foo [alias bar]]"))
+    assertResult(Seq((None, "FOO")))(FrontEnd.findImports("import [foo] to foo show \"bar\" end"))
+    assertResult(Seq((None, "FOO")))(FrontEnd.findImports("import [foo] foo \"bar\" end"))
+    assertResult(Seq((None, "FOO"), (None, "BAZ")))(FrontEnd.findImports("import [foo [alias bar]] to foo show \"bar\" end import [baz [alias qaz]]"))
   }
 
   test("findProcedurePositions maps procedures to their critical syntax tokens") {
