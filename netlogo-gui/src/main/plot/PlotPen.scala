@@ -204,4 +204,12 @@ extends PlotPenInterface with JSerializable {
   def runtimeError_=(e: Option[Exception]): Unit = {
     _runtimeError = e
   }
+
+  override def clone: PlotPen = {
+    val newPlotPen =
+      new PlotPen(plot, name, temporary, setupCode, updateCode, inLegend = inLegend)
+    newPlotPen.state = state
+    newPlotPen.points = points
+    newPlotPen
+  }
 }
