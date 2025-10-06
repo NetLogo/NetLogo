@@ -2,16 +2,54 @@
 
 package org.nlogo.api
 
-import java.io.{ BufferedReader, InputStreamReader }
-import java.net.{ InetAddress, ServerSocket, Socket }
+import java.io.{ BufferedReader, InputStreamReader, OutputStream }
+import java.net.{ InetAddress, ServerSocket, Socket, SocketException }
 
 import scala.util.Try
 
 // created as an abstraction for communication with BehaviorSpace processes,
 // but could be used for other things in the future (Isaac B 10/2/25)
 trait IPCHandler {
-  def readLine(): Try[String]
-  def writeLine(line: String): Try[Unit]
+  protected var input: Option[BufferedReader] = None
+  protected var output: Option[OutputStream] = None
+
+  protected var connectionThread: Option[Thread] = None
+
+  def connect(): Unit
+
+  def readLine(): Try[String] = {
+    connectionThread match {
+      case Some(thread) if thread.isAlive =>
+        thread.join()
+
+      case _ =>
+    }
+
+    Try {
+      input synchronized {
+        input.map(_.readLine()).getOrElse(throw new Exception)
+      }
+    }
+  }
+
+  def writeLine(line: String): Try[Unit] = {
+    connectionThread match {
+      case Some(thread) if thread.isAlive =>
+        thread.join()
+
+      case _ =>
+    }
+
+    Try {
+      output synchronized {
+        output.foreach { stream =>
+          stream.write(s"$line\n".getBytes)
+          stream.flush()
+        }
+      }
+    }
+  }
+
   def close(): Unit
 }
 
@@ -29,49 +67,63 @@ object IPCHandler {
 }
 
 class IPCServerHandler extends IPCHandler {
-  val server = new ServerSocket(IPCHandler.Port, 0, InetAddress.getByName(IPCHandler.Address))
-  val client = server.accept()
-  val input = new BufferedReader(new InputStreamReader(client.getInputStream, "UTF-8"))
-  val output = client.getOutputStream
+  private var server: Option[ServerSocket] = None
+  private var client: Option[Socket] = None
 
-  def readLine(): Try[String] = {
-    Try {
-      input synchronized {
-        input.readLine()
+  override def connect(): Unit = {
+    val thread = new Thread {
+      override def run(): Unit = {
+        val server = new ServerSocket(IPCHandler.Port, 0, InetAddress.getByName(IPCHandler.Address))
+
+        IPCServerHandler.this.server = Option(server)
+
+        try {
+          val client = server.accept()
+
+          IPCServerHandler.this.client = Option(client)
+
+          input = Option(new BufferedReader(new InputStreamReader(client.getInputStream, "UTF-8")))
+          output = Option(client.getOutputStream)
+        } catch {
+          case _: SocketException => // ignore, most likely the connection was aborted by the client (Isaac B 10/6/25)
+        }
       }
     }
+
+    connectionThread = Option(thread)
+
+    thread.start()
   }
 
-  def writeLine(line: String): Try[Unit] = {
-    Try {
-      output synchronized {
-        output.write(s"$line\n".getBytes)
-        output.flush()
-      }
-    }
-  }
-
-  def close(): Unit = {
-    server.close()
+  override def close(): Unit = {
+    connectionThread.foreach(_.interrupt())
+    client.foreach(_.close())
+    server.foreach(_.close())
   }
 }
 
 class IPCClientHandler extends IPCHandler {
-  val socket = new Socket(IPCHandler.Address, IPCHandler.Port)
-  val input = new BufferedReader(new InputStreamReader(socket.getInputStream, "UTF-8"))
-  val output = socket.getOutputStream
+  private var socket: Option[Socket] = None
 
-  def readLine(): Try[String] =
-    Try(input.readLine())
+  override def connect(): Unit = {
+    val thread = new Thread {
+      override def run(): Unit = {
+        val socket = new Socket(IPCHandler.Address, IPCHandler.Port)
 
-  def writeLine(line: String): Try[Unit] = {
-    Try {
-      output.write(s"$line\n".getBytes)
-      output.flush()
+        IPCClientHandler.this.socket = Option(socket)
+
+        input = Option(new BufferedReader(new InputStreamReader(socket.getInputStream, "UTF-8")))
+        output = Option(socket.getOutputStream)
+      }
     }
+
+    connectionThread = Option(thread)
+
+    thread.start()
   }
 
-  def close(): Unit = {
-    socket.close()
+  override def close(): Unit = {
+    connectionThread.foreach(_.interrupt())
+    socket.foreach(_.close())
   }
 }
