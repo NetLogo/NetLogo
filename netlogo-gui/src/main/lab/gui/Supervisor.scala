@@ -20,7 +20,7 @@ import org.nlogo.window.{ EditDialogFactory, GUIWorkspace }
 import org.nlogo.workspace.WorkspaceFactory
 
 import scala.collection.mutable.Set
-import scala.sys.process.Process
+import scala.sys.process.{ Process, ProcessLogger }
 import scala.util.Try
 
 import ujson.Obj
@@ -98,24 +98,29 @@ class Supervisor(
     var process: Option[Process] = None
 
     try {
-      process = Option(Process(Seq("java", "-Xmx2G", "org.nlogo.headless.Main", "--headless", "--model", modelPath.toString,
-                                   "--experiment", protocol.name, "--threads", protocol.threadCount.toString,
+      process = Option(Process(Seq(ProcessHandle.current.info.command.get, "-Xmx2G",
+                                   "-cp", System.getProperty("java.class.path"), "org.nlogo.headless.Main",
+                                   "--headless", "--model", modelPath.toString, "--experiment", protocol.name,
+                                   "--threads", protocol.threadCount.toString,
                                    "--skip", protocol.runsCompleted.toString, "--ipc") ++
                                boolToArgs("--update-plots", protocol.updatePlotsAndMonitors) ++
                                boolToArgs("--mirror-headless", protocol.mirrorHeadlessOutput) ++
                                strToArgs("--table", protocol.table.trim) ++
                                strToArgs("--spreadsheet", protocol.spreadsheet.trim) ++
                                strToArgs("--stats", protocol.stats.trim) ++
-                               strToArgs("--lists", protocol.lists.trim)).run(true))
+                               strToArgs("--lists", protocol.lists.trim)).run(
+                                 ProcessLogger(processOutput, processError)))
 
       val ipcHandler = IPCHandler(true)
 
       handler = Option(ipcHandler)
 
+      ipcHandler.connect()
+
       new Thread {
         override def run(): Unit = {
           while (process.exists(_.isAlive)) {
-            ipcHandler.readLine().map(processOutput).recover {
+            ipcHandler.readLine().map(processMessage).recover {
               case _: SocketException =>
                 process.foreach(_.destroy())
             }
@@ -149,6 +154,14 @@ class Supervisor(
   }
 
   private def processOutput(str: String): Unit = {
+    println(str)
+  }
+
+  private def processError(str: String): Unit = {
+    guiError(str)
+  }
+
+  private def processMessage(str: String): Unit = {
     Try {
       val json = ujson.read(str)
 
