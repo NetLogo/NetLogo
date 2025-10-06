@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import java.awt.Cursor
+import java.awt.{ Cursor, Dimension }
 import javax.swing.{ Box, BoxLayout, JLabel, JPanel, JTextPane }
 import javax.swing.border.EmptyBorder
 
@@ -17,6 +17,9 @@ class ErrorLabel extends JPanel {
     setBorder(null)
     setContentType("text/html")
     setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR))
+
+    override def getMaximumSize: Dimension =
+      new Dimension(ErrorLabel.this.getWidth, super.getMaximumSize.height)
   }
 
   setOpaque(true)
@@ -27,6 +30,7 @@ class ErrorLabel extends JPanel {
   add(icon)
   add(Box.createHorizontalStrut(6))
   add(label)
+  add(Box.createHorizontalGlue)
 
   def setText(text: String): Unit = {
     label.setText(text)
