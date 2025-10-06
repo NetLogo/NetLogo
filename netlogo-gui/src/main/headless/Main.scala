@@ -94,6 +94,8 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
     var plotCompilationErrorAction: PlotCompilationErrorAction = PlotCompilationErrorAction.Output
     var exportPlotWarningAction: ExportPlotWarningAction = ExportPlotWarningAction.Output
 
+    settings.ipcHandler.foreach(_.connect())
+
     val lab = HeadlessWorkspace.newLab
 
     val primaryWorkspace: PrimaryWorkspace = settings.ipcHandler.fold(new DummyPrimaryWorkspace) { handler =>
