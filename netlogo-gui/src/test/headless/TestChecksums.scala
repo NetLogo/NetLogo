@@ -8,7 +8,7 @@ import java.util.concurrent.{ Executors, TimeUnit }
 import org.nlogo.util.SlowTest
 import org.nlogo.workspace.Checksummer
 
-import org.scalatest.{ Args, DynaTags, Filter }
+import org.scalatest.{ Args, Status, SucceededStatus }
 import org.scalatest.funsuite.AnyFunSuite
 
 import scala.language.implicitConversions
@@ -17,16 +17,15 @@ class TestChecksums extends AnyFunSuite {
 
   // overriding this so we can pass in a model filter to run checksums against a single model.
   // example   sbt> checksums model=Echo
-  override def run(testName: Option[String], args: Args) = {
-    val allTests: Set[String] = testNames
-    val selection = args.configMap.get("model")
-    val testsToRun = allTests.filter((tname: String) => selection.map(tname.contains(_)).getOrElse(true))
-    val allOtherTests = allTests -- testsToRun
-    val ignoreAllOtherTests = allOtherTests.map(_ -> Set("org.scalatest.Ignore")).toMap
-    val ignoreAllOtherTestsInThisSuite = Map(suiteId -> ignoreAllOtherTests)
-    val newDynatags = DynaTags(args.filter.dynaTags.suiteTags, args.filter.dynaTags.testTags ++ ignoreAllOtherTestsInThisSuite)
-    val newFilter = Filter(args.filter.tagsToInclude, args.filter.tagsToExclude, args.filter.excludeNestedSuites, newDynatags)
-    super.run(testName, args.copy(filter = newFilter))
+  override def runTest(testName: String, args: Args): Status = {
+    val shouldRun =
+      args.configMap.get("model")
+        .collect{case s: String => s}
+        .forall(testName.containsSlice(_))
+    if(shouldRun)
+      super.runTest(testName, args)
+    else
+      SucceededStatus
   }
 
   // prevent annoying JAI message on Linux when using JAI extension
