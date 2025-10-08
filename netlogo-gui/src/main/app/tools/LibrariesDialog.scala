@@ -9,7 +9,7 @@ import javax.swing.border.EmptyBorder
 
 import scala.concurrent.ExecutionContext
 
-import org.nlogo.api.{ LibraryInfoDownloader, LibraryManager }
+import org.nlogo.api.LibraryManager
 import org.nlogo.core.{ I18N, Token }
 import org.nlogo.swing.{ CustomOptionPane, DialogButton, OptionPane, ProgressListener, ScrollPane, TextArea, Transparent }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
@@ -73,15 +73,8 @@ class LibrariesDialog( parent:          Frame
       listener.start()
 
       import ExecutionContext.Implicits.global
-      LibraryInfoDownloader(manager.metadataURL).foreach {
-        pairOpt =>
-          pairOpt.foreach {
-            case (file, didRewrite) =>
-              if (didRewrite) {
-                manager.updateLists(file)
-              }
-          }
-          listener.finish()
+      manager.updateMetadata().foreach {
+        _ => listener.finish()
       }
 
       buttonPanel.getComponents.foreach(c => buttonPanel.remove(c))
