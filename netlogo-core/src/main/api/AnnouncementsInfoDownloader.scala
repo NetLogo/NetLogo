@@ -58,7 +58,7 @@ object AnnouncementsInfoDownloader extends InfoDownloader {
               case Array(y, m, d) => (y, m, d)
               case a => throw new IllegalStateException
             }
-            val date = LocalDate.of(2000 + years.toInt, months.toInt, days.toInt)
+            val date = LocalDate.of(years.toInt, months.toInt, days.toInt)
 
             val annType =
               typeStr match {
