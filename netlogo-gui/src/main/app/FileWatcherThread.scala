@@ -6,13 +6,14 @@ import java.nio.file.{ FileSystems, Path, WatchKey, WatchService, WatchEvent }
 import java.nio.file.StandardWatchEventKinds.{ ENTRY_CREATE, ENTRY_MODIFY }
 
 import scala.jdk.CollectionConverters.ListHasAsScala
+import scala.util.Try
 
 private class FileWatcherThread(paths: List[Path], callback: () => Boolean) extends Thread {
   private val watchService: WatchService = FileSystems.getDefault.newWatchService
   private val parentSet: Set[Path] = paths.map(_.getParent).toSet
 
   private def f(x: Path): (WatchKey, Path) = x.register(watchService, ENTRY_CREATE, ENTRY_MODIFY) -> x
-  private val keyPathMap: Map[WatchKey, Path] = parentSet.map(f).toMap
+  private val keyPathMap: Map[WatchKey, Path] = parentSet.map(x => Try(f(x)).toOption).flatten.toMap
 
   override def run(): Unit = {
     try {
