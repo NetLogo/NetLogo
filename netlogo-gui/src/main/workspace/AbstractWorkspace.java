@@ -10,6 +10,7 @@ import java.util.Locale;
 import java.util.Map;
 import scala.collection.mutable.WeakHashMap;
 import org.nlogo.agent.Agent;
+import org.nlogo.agent.World;
 import org.nlogo.api.AggregateManagerInterface;
 import org.nlogo.api.ExportPlotWarningAction;
 import org.nlogo.api.ExportPlotWarningActionJ;
@@ -49,7 +50,7 @@ public abstract class AbstractWorkspace
   /// globals
   /// (some of these probably should be changed not to be public - ST 12/11/01)
 
-  public final org.nlogo.agent.World _world;
+  public final World _world;
 
   public final org.nlogo.nvm.JobManagerInterface jobManager;
   public final Evaluator evaluator;
@@ -98,7 +99,7 @@ public abstract class AbstractWorkspace
 
   /// startup
 
-  protected AbstractWorkspace(org.nlogo.agent.World world) {
+  protected AbstractWorkspace(World world) {
     this._world = world;
     evaluator = new Evaluator(this);
     jobManager = Femto.getJ(JobManagerInterface.class, "org.nlogo.job.JobManager",
@@ -230,19 +231,35 @@ public abstract class AbstractWorkspace
   public void checkGlobalVariable(String name, List<Object> values) throws Exception {
     String upperName = name.toUpperCase(Locale.ENGLISH);
 
-    if (!_world.isDimensionVariable(upperName) && !name.equalsIgnoreCase("RANDOM-SEED")) {
+    if (upperName.equals("RANDOM-SEED")) {
+      for (Object o : values) {
+        if (!(o instanceof Double)) {
+          throw new Exception(I18N.guiJ().getN("edit.behaviorSpace.invalidValue", name));
+        }
+      }
+    } else if (_world.isDimensionVariable(upperName)) {
+      World worldCopy = _world.copy();
+
+      for (Object o : values) {
+        try {
+          worldCopy.setDimensionVariable(upperName, ((Double)o).intValue(), _world.getDimensions());
+        } catch (Exception e) {
+          throw new Exception(I18N.guiJ().getN("edit.behaviorSpace.invalidValue", name));
+        }
+      }
+    } else {
       synchronized (_world) {
         if (_world.observerOwnsIndexOf(upperName) == -1) {
           throw new Exception(I18N.guiJ().getN("edit.behaviorSpace.noGlobal", name));
         }
-      }
-    }
 
-    for (Object o : values) {
-      try {
-        _world.observer().assertConstraint(_world.observer().variableIndex(upperName), o);
-      } catch (Exception e) {
-        throw new Exception(I18N.guiJ().getN("edit.behaviorSpace.invalidValue", name));
+        for (Object o : values) {
+          try {
+            _world.observer().assertConstraint(_world.observer().variableIndex(upperName), o);
+          } catch (Exception e) {
+            throw new Exception(I18N.guiJ().getN("edit.behaviorSpace.invalidValue", name));
+          }
+        }
       }
     }
   }
