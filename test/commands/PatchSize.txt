@@ -8,5 +8,10 @@ SetPatchSize
   patch-size = (x * x) => true
   O> set-patch-size 5.2
   patch-size => 5.2
-  O> set-patch-size -1
-  patch-size => -1
+
+SetInvalidPatchSize
+  O> set-patch-size 5
+  O> set-patch-size 0 => ERROR Patch size must be strictly positive.
+  patch-size => 5
+  O> set-patch-size -5 => ERROR Patch size must be strictly positive.
+  patch-size => 5
