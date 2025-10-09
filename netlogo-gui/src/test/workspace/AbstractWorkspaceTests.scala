@@ -2,6 +2,8 @@
 
 package org.nlogo.workspace
 
+import org.nlogo.api.Version
+
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.{ BeforeAndAfterEach, OneInstancePerTest }
 
@@ -52,6 +54,12 @@ class AbstractWorkspaceTests extends AnyFunSuite with BeforeAndAfterEach with On
     workspace.checkGlobalVariable("max-pxcor", Seq(Double.box(15)).asJava)
     workspace.checkGlobalVariable("min-pycor", Seq(Double.box(-15)).asJava)
     workspace.checkGlobalVariable("max-pycor", Seq(Double.box(15)).asJava)
+
+    if (Version.is3D) {
+      workspace.checkGlobalVariable("min-pzcor", Seq(Double.box(-15)).asJava)
+      workspace.checkGlobalVariable("max-pzcor", Seq(Double.box(15)).asJava)
+    }
+
     workspace.checkGlobalVariable("world-width", Seq(Double.box(33)).asJava)
     workspace.checkGlobalVariable("world-height", Seq(Double.box(33)).asJava)
   }
@@ -62,6 +70,12 @@ class AbstractWorkspaceTests extends AnyFunSuite with BeforeAndAfterEach with On
     assertThrows[Exception](workspace.checkGlobalVariable("max-pxcor", Seq("test").asJava))
     assertThrows[Exception](workspace.checkGlobalVariable("min-pycor", Seq("test").asJava))
     assertThrows[Exception](workspace.checkGlobalVariable("max-pycor", Seq("test").asJava))
+
+    if (Version.is3D) {
+      assertThrows[Exception](workspace.checkGlobalVariable("min-pzcor", Seq("test").asJava))
+      assertThrows[Exception](workspace.checkGlobalVariable("max-pzcor", Seq("test").asJava))
+    }
+
     assertThrows[Exception](workspace.checkGlobalVariable("world-width", Seq("test").asJava))
     assertThrows[Exception](workspace.checkGlobalVariable("world-height", Seq("test").asJava))
   }
