@@ -11,7 +11,7 @@ SetPatchSize
 
 SetInvalidPatchSize
   O> set-patch-size 5
-  O> set-patch-size 0 => ERROR Patch size must be strictly positive.
+  O> set-patch-size 0 => ERROR Patch size must be greater than zero.
   patch-size => 5
-  O> set-patch-size -5 => ERROR Patch size must be strictly positive.
+  O> set-patch-size -5 => ERROR Patch size must be greater than zero.
   patch-size => 5
