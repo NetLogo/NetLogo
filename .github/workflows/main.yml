@@ -73,9 +73,9 @@ jobs:
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           packages: |
-            any::spatstat
-            any::rjson
-            any::vegan
+            spatstat@3.4-0
+            rjson@0.2.23
+            vegan@2.7-1
 
       # The Python stuff is just for testing the Python extension, it's not part of NetLogo's build process.
       - name: Install Dependencies
@@ -138,9 +138,9 @@ jobs:
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           packages: |
-            any::spatstat
-            any::rjson
-            any::vegan
+            spatstat@3.4-0
+            rjson@0.2.23
+            vegan@2.7-1
 
       # The Python stuff is just for testing the Python extension, it's not part of NetLogo's build process.
       - name: Install Dependencies
