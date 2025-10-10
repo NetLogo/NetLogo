@@ -2,7 +2,7 @@
 
 package org.nlogo.app
 
-import java.awt.{ Component, Container, FileDialog => AWTFileDialog, KeyboardFocusManager }
+import java.awt.{ Component, Container, FileDialog => AWTFileDialog }
 import java.io.{ File, IOException }
 import java.net.{ URI, URISyntaxException }
 import java.nio.file.Paths
@@ -443,11 +443,8 @@ class FileManager(workspace: AbstractWorkspaceScala,
     // if there's no thunk, the user canceled the save
     saveThunk.foreach { thunk =>
       val saver = new Saver(thunk, isNew)
-      val focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner()
-      val tempParent = if (focusOwner == null) parent else focusOwner
 
-      ModalProgressTask.onUIThread(Hierarchy.getFrame(tempParent),
-        I18N.gui.get("dialog.interface.saving.task"), saver)
+      ModalProgressTask.onUIThread(Hierarchy.getFrame(parent), I18N.gui.get("dialog.interface.saving.task"), saver)
 
       if (! saver.result.isDefined)
         throw new UserCancelException()
