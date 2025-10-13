@@ -172,7 +172,11 @@ private [gui] class ProgressDialog(parent: Window, supervisor: Supervisor, compi
   }
 
   def saveProtocolP(): Unit = {
-    saveProtocol(protocol, supervisor.highestCompleted)
+    if (supervisor.highestCompleted >= protocol.countRuns) {
+      saveProtocol(protocol, 0)
+    } else {
+      saveProtocol(protocol, supervisor.highestCompleted)
+    }
   }
 
   def resetProtocol(): Unit = {
