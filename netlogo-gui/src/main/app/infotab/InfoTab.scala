@@ -18,10 +18,9 @@ import org.nlogo.api.ExternalResourceManager
 import org.nlogo.app.common.{ Events => AppEvents, FindDialog, MenuTab, UndoRedoActions }
 import org.nlogo.awt.{ Fonts, Hierarchy }
 import org.nlogo.core.I18N
-import org.nlogo.editor.UndoManager
 import org.nlogo.swing.Implicits._
 import org.nlogo.swing.{ OptionPane, ScrollableTextComponent, ScrollPane, TextArea, ToolBar, ToolBarActionButton,
-                         ToolBarToggleButton, Printable, PrinterManager, BrowserLauncher, Utils },
+                         ToolBarToggleButton, Printable, PrinterManager, BrowserLauncher, UndoManager, Utils },
   BrowserLauncher.docPath
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ Events => WindowEvents, Zoomable }

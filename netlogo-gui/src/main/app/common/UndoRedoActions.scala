@@ -2,7 +2,7 @@
 
 package org.nlogo.app.common
 
-import org.nlogo.editor.UndoManager
+import org.nlogo.swing.UndoManager
 import org.nlogo.swing.UserAction.MenuAction
 
 trait UndoRedoActions {

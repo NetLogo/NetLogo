@@ -1,14 +1,12 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.editor;
+package org.nlogo.swing;
 
 import javax.swing.Timer;
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.CompoundEdit;
 import javax.swing.undo.UndoableEdit;
-
-import org.nlogo.swing.UserAction;
 
 // some of this is cribbed from Sun's TextComponentDemo - ST 7/30/04
 

@@ -15,7 +15,7 @@ import javax.swing.{ Action, JEditorPane }
 import javax.swing.text.{ Document, TextAction, PlainDocument, BadLocationException }
 
 import org.nlogo.core.NetLogoPreferences
-import org.nlogo.swing.{ MenuItem, PopupMenu }
+import org.nlogo.swing.{ MenuItem, PopupMenu, UndoManager }
 import org.nlogo.theme.InterfaceColors
 
 import KeyBinding.keystroke

@@ -5,7 +5,7 @@ package org.nlogo.app.interfacetab
 import java.awt.Rectangle
 import javax.swing.undo.AbstractUndoableEdit
 
-import org.nlogo.editor.UndoManager
+import org.nlogo.swing.UndoManager
 import org.nlogo.window.{ Events, InterfaceMode }
 
 object WidgetActions {

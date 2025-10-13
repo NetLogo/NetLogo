@@ -13,10 +13,10 @@ import org.nlogo.awt.{ Fonts => NlogoFonts, Mouse => NlogoMouse }
 import org.nlogo.core.{ I18N, Button => CoreButton, Chooser => CoreChooser, InputBox => CoreInputBox,
   Monitor => CoreMonitor, Plot => CorePlot, Slider => CoreSlider, Switch => CoreSwitch, TextBox => CoreTextBox,
   View => CoreView, Widget => CoreWidget }
-import org.nlogo.editor.{ EditorArea, EditorConfiguration, UndoManager }
+import org.nlogo.editor.{ EditorArea, EditorConfiguration }
 import org.nlogo.log.LogManager
 import org.nlogo.nvm.DefaultCompilerServices
-import org.nlogo.swing.{ MenuItem, PopupMenu }
+import org.nlogo.swing.{ MenuItem, PopupMenu, UndoManager }
 import org.nlogo.theme.InterfaceColors
 import org.nlogo.window.{ AbstractPlotWidget, AbstractWidgetPanel, AutoIndentHandler, ButtonWidget, ClipboardUtils,
                           CopyPasteTarget, Editable, Events => WindowEvents, GUIWorkspace, InterfaceMode, OutputWidget,
