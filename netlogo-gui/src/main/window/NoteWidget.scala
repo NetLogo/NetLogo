@@ -12,22 +12,24 @@ import com.vladsch.flexmark.ext.typographic.TypographicExtension
 
 import java.awt.{ Color, Dimension, Rectangle }
 import java.util.ArrayList
-import javax.swing.{ Box, BoxLayout, JLabel }
+import javax.swing.{ Box, BoxLayout, JEditorPane }
 import javax.swing.border.EmptyBorder
 
-import org.nlogo.awt.LineBreaker
 import org.nlogo.core.{ I18N, TextBox => CoreTextBox, Widget => CoreWidget }
 import org.nlogo.swing.Transparent
 import org.nlogo.theme.{ ClassicTheme, DarkTheme, InterfaceColors, LightTheme }
 
 class NoteWidget extends SingleErrorWidget with Transparent with Editable {
-  val textLabel = new JLabel
+  private val textPane = new JEditorPane("text/html", "") {
+    setEditable(false)
+    setOpaque(false)
+  }
 
   locally {
-    setBorder(new EmptyBorder(0, 4, 0, 4))
+    setBorder(new EmptyBorder(0, 3, 0, 4))
     setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
 
-    add(textLabel)
+    add(textPane)
     add(Box.createVerticalGlue)
   }
 
@@ -37,7 +39,7 @@ class NoteWidget extends SingleErrorWidget with Transparent with Editable {
 
   private var _width: Int = DEFAULT_WIDTH
   private var _text: String = ""
-  private var _fontSize: Int = textLabel.getFont.getSize
+  private var _fontSize: Int = textPane.getFont.getSize
   private var _textColorLight = Color.BLACK
   private var _textColorDark = Color.WHITE
   private var _backgroundLight = InterfaceColors.Transparent
@@ -88,18 +90,13 @@ class NoteWidget extends SingleErrorWidget with Transparent with Editable {
 
       // for some reason setting the content width in CSS to the width of the JLabel always results in the rendered
       // content being 1.3 times larger. dividing the JLabel width by 1.3 solves the problem. (Isaac B 6/15/25)
-      textLabel.setText(s"""<html>$css<body style="width: ${textLabel.getWidth / 1.3}px">$text</body></html>""")
+      textPane.setText(s"""<html>$css<body style="width: ${textPane.getWidth / 1.3}px">$text</body></html>""")
     } else {
-      val lines = LineBreaker.breakLines(escapeHTML(_text), getFontMetrics(getFont), textLabel.getWidth)
-
-      textLabel.setText(s"""<html>${lines.mkString("<br>").replace("\n", "<br>")}</html>""")
+      textPane.setText(_text.replace("\n", "<br>"))
     }
 
     repaint()
   }
-
-  private def escapeHTML(s: String): String =
-    s.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;")
 
   def text: String = _text
   def setText(newText: String): Unit = {
@@ -113,9 +110,9 @@ class NoteWidget extends SingleErrorWidget with Transparent with Editable {
     _fontSize = size
     if (isZoomed && originalFont != null) {
       val zoomDiff: Int = getFont.getSize - originalFont.getSize
-      textLabel.setFont(textLabel.getFont.deriveFont((size + zoomDiff).toFloat))
+      textPane.setFont(textPane.getFont.deriveFont((size + zoomDiff).toFloat))
     } else {
-      textLabel.setFont(textLabel.getFont.deriveFont(size.toFloat))
+      textPane.setFont(textPane.getFont.deriveFont(size.toFloat))
     }
     if (originalFont != null) originalFont = (originalFont.deriveFont(size.toFloat))
     resetZoomInfo()
@@ -171,17 +168,17 @@ class NoteWidget extends SingleErrorWidget with Transparent with Editable {
 
   override def getMinimumSize = new Dimension(MIN_WIDTH, MIN_HEIGHT)
   override def getPreferredSize: Dimension =
-    new Dimension(MIN_WIDTH.max(_width), MIN_HEIGHT.max(textLabel.getPreferredSize.height + 8))
+    new Dimension(MIN_WIDTH.max(_width), MIN_HEIGHT.max(textPane.getPreferredSize.height + 8))
 
   override def syncTheme(): Unit = {
     InterfaceColors.getTheme match {
       case ClassicTheme | LightTheme =>
         setBackgroundColor(_backgroundLight)
-        textLabel.setForeground(_textColorLight)
+        textPane.setForeground(_textColorLight)
 
       case DarkTheme =>
         setBackgroundColor(_backgroundDark)
-        textLabel.setForeground(_textColorDark)
+        textPane.setForeground(_textColorDark)
 
       case _ => throw new IllegalStateException
     }
