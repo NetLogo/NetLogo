@@ -225,6 +225,8 @@ private [gui] class ProgressDialog(parent: Window, supervisor: Supervisor, compi
   override def setVisible(visible: Boolean): Unit = {
     syncTheme()
 
+    Positioning.center(this, parent)
+
     Analytics.bspaceRun()
 
     timer.start()
@@ -250,10 +252,10 @@ private [gui] class ProgressDialog(parent: Window, supervisor: Supervisor, compi
       // the plot pens don't affect the height of the plot until it's invalidated and repainted,
       // so we wait to pack the window to the correct size (Isaac B 7/22/25)
       EventQueue.invokeLater(() => {
-        pack()
-        setSize(getMinimumSize)
-
-        Positioning.center(this, parent)
+        if (getMinimumSize.width > getWidth || getMinimumSize.height > getHeight) {
+          pack()
+          setSize(getMinimumSize)
+        }
       })
     }
   }
