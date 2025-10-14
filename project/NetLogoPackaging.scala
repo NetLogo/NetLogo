@@ -288,6 +288,7 @@ object NetLogoPackaging {
         configDir / "HubNetClient.png",
         configDir / "Behaviorsearch.png",
         configDir / "Model.png",
+        configDir / "ModelOld.png",
         configDir / "BehaviorsearchModel.png"
       )
 

@@ -8,6 +8,7 @@
 
     <Icon Id="ProductIcon" SourceFile="{{{iconDir}}}\NetLogo.ico" />
     <Icon Id="ModelIcon" SourceFile="{{{iconDir}}}\Model.ico" />
+    <Icon Id="ModelOldIcon" SourceFile="{{{iconDir}}}\ModelOld.ico" />
     <Icon Id="BehaviorsearchExperimentIcon" SourceFile="{{{iconDir}}}\BehaviorsearchModel.ico" />
 
     <ComponentGroup Id="NetLogoFeatures">
@@ -54,13 +55,6 @@
           <RegistryValue Root="HKLM" Key="SOFTWARE\NetLogo {{version}}\Capabilities" Name="ApplicationIcon" Value="[INSTALLDIR]{{{componentFileName}}},0" Type="string" />
           <RegistryValue Root="HKLM" Key="SOFTWARE\NetLogo {{version}}\Capabilities" Name="ApplicationName" Value="{{componentFriendlyName}}" Type="string" />
           <RegistryValue Root="HKLM" Key="SOFTWARE\NetLogo {{version}}\Capabilities\DefaultIcon" Value="[APPLICATIONFOLDER]{{componentFileName}},1" Type="string" />
-          <RegistryValue Root="HKLM" Key="SOFTWARE\NetLogo {{version}}\Capabilities\FileAssociations" Name=".{{fileAssociationOld}}" Value="NetLogo.{{fileAssociationOld}}" Type="string" />
-          <RegistryValue Root="HKLM" Key="SOFTWARE\NetLogo {{version}}\Capabilities\MIMEAssociations" Name="text/{{fileAssociationOld}}" Value="NetLogo.{{fileAssociationOld}}" Type="string" />
-
-          {{#fileAssociationNew}}
-          <RegistryValue Root="HKLM" Key="SOFTWARE\NetLogo {{version}}\Capabilities\FileAssociations" Name=".{{fileAssociationNew}}" Value="NetLogo.{{fileAssociationNew}}" Type="string" />
-          <RegistryValue Root="HKLM" Key="SOFTWARE\NetLogo {{version}}\Capabilities\MIMEAssociations" Name="text/{{fileAssociationNew}}" Value="NetLogo.{{fileAssociationNew}}" Type="string" />
-          {{/fileAssociationNew}}
 
           <RegistryValue Root="HKLM" Key="SOFTWARE\NetLogo {{version}}\Capabilities\shell\Open\command" Value="&quot;[INSTALLDIR]{{{componentFileName}}}&quot; {{launchArgs}}" Type="string" />
           <RegistryValue Root="HKLM" Key="SOFTWARE\RegisteredApplications" Name="NetLogo {{version}}" Value="SOFTWARE\NetLogo {{version}}\Capabilities" Type="string" />
@@ -69,21 +63,17 @@
           <RegistryValue Root="HKLM" Key="SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\{{{componentFileName}}}" Value="[!{{componentId}}]" Type="string" />
           <RegistryValue Root="HKLM" Key="SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\{{{componentFileName}}}" Name="Path" Value="[INSTALLDIR]" Type="string" />
 
-          <ProgId Id="NetLogo.{{fileAssociationOld}}" Description="{{associationDescription}}" Advertise="yes" Icon="{{fileIcon}}">
-            <Extension Id="{{fileAssociationOld}}">
-              <Verb Id="open" Command="Edit with {{componentFriendlyName}} {{numericOnlyVersion}}" Argument="{{launchArgs}}" />
-              <MIME Advertise="yes" ContentType="text/{{fileAssociationOld}}" Default="yes" />
-            </Extension>
-          </ProgId>
+          {{#fileAssociations}}
+          <RegistryValue Root="HKLM" Key="SOFTWARE\NetLogo {{version}}\Capabilities\FileAssociations" Name=".{{extension}}" Value="NetLogo.{{extension}}" Type="string" />
+          <RegistryValue Root="HKLM" Key="SOFTWARE\NetLogo {{version}}\Capabilities\MIMEAssociations" Name="text/{{extension}}" Value="NetLogo.{{extension}}" Type="string" />
 
-          {{#fileAssociationNew}}
-          <ProgId Id="NetLogo.{{fileAssociationNew}}" Description="{{associationDescription}}" Advertise="yes" Icon="{{fileIcon}}">
-            <Extension Id="{{fileAssociationNew}}">
+          <ProgId Id="NetLogo.{{extension}}" Description="{{type}}" Advertise="yes" Icon="{{icon}}">
+            <Extension Id="{{extension}}">
               <Verb Id="open" Command="Edit with {{componentFriendlyName}} {{numericOnlyVersion}}" Argument="{{launchArgs}}" />
-              <MIME Advertise="yes" ContentType="text/{{fileAssociationNew}}" Default="yes" />
+              <MIME Advertise="yes" ContentType="text/{{extension}}" Default="yes" />
             </Extension>
           </ProgId>
-          {{/fileAssociationNew}}
+          {{/fileAssociations}}
           {{/hasFileAssociation}}
         </Component>
         {{/components}}

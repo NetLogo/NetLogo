@@ -142,11 +142,19 @@ object PackageWinAggregate {
           "desktopShortcutId"      -> winVariables("NetLogoDesktopShortcutId"),
           "startMenuShortcutId"    -> winVariables("NetLogoStartMenuShortcutId"),
           "hasFileAssociation"     -> Boolean.box(true),
-          "fileAssociationOld"     -> "nlogo",
-          "fileAssociationNew"     -> "nlogox",
-          "fileIcon"               -> "ModelIcon",
-          "launchArgs"             -> """--launch "%1"""",
-          "associationDescription" -> "NetLogo Model"
+          "fileAssociations"       -> Array(
+            Map(
+              "extension" -> "nlogo",
+              "icon"      -> "ModelOldIcon",
+              "type"      -> "NetLogo Model"
+            ).asJava,
+            Map(
+              "extension" -> "nlogox",
+              "icon"      -> "ModelIcon",
+              "type"      -> "NetLogo Model"
+            ).asJava
+          ),
+          "launchArgs"             -> """--launch "%1""""
         ) ++ baseComponentVariables,
         Map[String, AnyRef](
           "componentFriendlyName"  -> "NetLogo 3D",
@@ -158,11 +166,19 @@ object PackageWinAggregate {
           "desktopShortcutId"      -> winVariables("NetLogo3DDesktopShortcutId"),
           "startMenuShortcutId"    -> winVariables("NetLogo3DStartMenuShortcutId"),
           "hasFileAssociation"     -> Boolean.box(true),
-          "launchArgs"             -> """--launch "%1"""",
-          "fileAssociationOld"     -> "nlogo3d",
-          "fileAssociationNew"     -> "nlogox3d",
-          "fileIcon"               -> "ModelIcon",
-          "associationDescription" -> "NetLogo 3D Model"
+          "fileAssociations"       -> Array(
+            Map(
+              "extension" -> "nlogo3d",
+              "icon"      -> "ModelOldIcon",
+              "type"      -> "NetLogo 3D Model"
+            ).asJava,
+            Map(
+              "extension" -> "nlogox3d",
+              "icon"      -> "ModelIcon",
+              "type"      -> "NetLogo 3D Model"
+            ).asJava
+          ),
+          "launchArgs"             -> """--launch "%1""""
         ) ++ baseComponentVariables,
         Map[String, AnyRef](
           "componentFriendlyName"  -> "Behaviorsearch",
@@ -174,10 +190,14 @@ object PackageWinAggregate {
           "desktopShortcutId"      -> winVariables("behaviorSearchDesktopShortcutId"),
           "startMenuShortcutId"    -> winVariables("behaviorSearchStartMenuShortcutId"),
           "hasFileAssociation"     -> Boolean.box(true),
-          "launchArgs"             -> """"%1"""",
-          "fileAssociationOld"     -> "bsearch",
-          "fileIcon"               -> "BehaviorsearchExperimentIcon",
-          "associationDescription" -> "Behaviorsearch Experiment"
+          "fileAssociations"       -> Array(
+            Map(
+              "extension" -> "bsearch",
+              "icon"      -> "BehaviorsearchExperimentIcon",
+              "type"      -> "Behaviorsearch Experiment"
+            ).asJava
+          ),
+          "launchArgs"             -> """"%1""""
         ) ++ baseComponentVariables
       ).map(_.asJava).asJava)
 
