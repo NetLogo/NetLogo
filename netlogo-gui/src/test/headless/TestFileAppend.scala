@@ -11,8 +11,9 @@ class TestFileAppend extends AbstractTestModels {
   private val code = s"""|to test
                          |  file-open "${path.toString.replace("\\", "/")}"
                          |  file-print "test1"
+                         |  file-close
+                         |  file-open "${path.toString.replace("\\", "/")}"
                          |  file-print "test2"
-                         |  file-print "test3"
                          |  file-close
                          |end
                          |""".stripMargin
@@ -23,6 +24,6 @@ class TestFileAppend extends AbstractTestModels {
   testModel("file-print", Model(code = code)) {
     command("test")
 
-    assert(Files.readString(path).split("\r?\n").sameElements(Seq("test1", "test2", "test3")))
+    assert(Files.readString(path).split("\r?\n").sameElements(Seq("test1", "test2")))
   }
 }
