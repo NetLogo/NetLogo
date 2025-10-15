@@ -33,6 +33,8 @@ private[api] class ExtensionInstaller(userExtPath: Path, unloadExtensions: () =>
       new ZipFile(zipPath.toFile).extractAll(extDir.toString)
       Files.delete(zipPath)
 
+    } else {
+      throw new IOException
     }
 
   }
