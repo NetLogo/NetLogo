@@ -8,11 +8,12 @@ import org.nlogo.build.{ DocumentationConfig, Documenter, HoconParser }
 import Docs.docsRoot
 
 class ExtensionDocs(extensionsDirectory: File, extensionDocConfigFile: File, headerFile: File) {
-  def generateHTMLPageForExtension(
+  private def generateHTMLPageForExtension(
     extShortName:   String,
     extFullName:    String,
     targetFile:     NioPath,
-    buildVariables: Map[String, Object]): NioPath = {
+    version:        String,
+    primRoot:       String): NioPath = {
 
     val documentationConf = (extensionsDirectory / extShortName / "documentation.conf").toPath
     val headerTemplate = Files.readString(headerFile.toPath())
@@ -51,7 +52,8 @@ class ExtensionDocs(extensionsDirectory: File, extensionDocConfigFile: File, hea
       markdownTemplate = netLogoConfig.markdownTemplate,
       primTemplate     = netLogoConfig.primTemplate,
       tableOfContents  = docConfig.tableOfContents,
-      additionalConfig = docConfig.additionalConfig ++ additionalConfig ++ buildVariables
+      additionalConfig = docConfig.additionalConfig ++ additionalConfig ++
+                           Map("version" -> version, "primRoot" -> primRoot)
     )
 
     val renderedPage =
@@ -70,7 +72,7 @@ class ExtensionDocs(extensionsDirectory: File, extensionDocConfigFile: File, hea
     htmlFileRoot: File,
     docsSource: File,
     documentedExtensions: Seq[(String, String)],
-    buildVariables: Map[String, Object]): Seq[NioPath] = documentedExtensions map {
+    version: String): Seq[NioPath] = documentedExtensions map {
       case (extShortName, extFullName) =>
         val primRoot = extShortName.toLowerCase()                 // Need for links in entries
         val fileName = primRoot + ".html"                         // Need for links in entries
@@ -78,25 +80,22 @@ class ExtensionDocs(extensionsDirectory: File, extensionDocConfigFile: File, hea
         val targetPath = targetFile.toPath                        // Extension README in docs
 
         // Generate the HTML page for the extension
-        generateHTMLPageForExtension(extShortName, extFullName, targetPath, buildVariables + ("primRoot" -> primRoot))
+        generateHTMLPageForExtension(extShortName, extFullName, targetPath, version, primRoot)
 
         // Generate the dictionary reference for
         val targetDir = htmlFileRoot / extShortName
         IO.createDirectory(targetDir)
 
-        val dictVars = Map[String, Object](
-          "dictHome" -> fileName,
-          "dictTitle" -> s"$extFullName Extension Dictionary",
-          "primRoot" -> primRoot, // /<version>/<primRoot>/<prim>
-        )
         PrimIndex.generate(
           targetFile,
           targetDir,
           docsSource / "dictTemplate.html.mustache",
           targetDir / "index.txt",
           headerFile,
-          dictVars,
-          generateHTMLIndexPage = true
+          fileName,
+          s"$extFullName Extension Dictionary",
+          primRoot, // /<version>/<primRoot>/<prim>
+          true
         )
 
         targetPath

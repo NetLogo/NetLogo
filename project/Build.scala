@@ -14,17 +14,18 @@ object NetLogoBuild {
 
   lazy val buildDate = taskKey[String]("date of build")
 
+  lazy val year = taskKey[String]("year of build")
+
   lazy val marketingVersion = settingKey[String]("Version attached to the build for end-user identification")
-  lazy val numericMarketingVersion = settingKey[String]("Numeric-only version attached to the build for end-user identification")
 
   val settings = Seq(
-    marketingVersion        := "7.0.0",
-    numericMarketingVersion := "7.0.0",
+    marketingVersion := "7.0.0",
     buildDate := {
       val dateFormat =
         new java.text.SimpleDateFormat("MMMMMMMMMMMMMMM d, yyyy")
       dateFormat.format(new java.util.Date())
     },
+    year := buildDate.value.takeRight(4),
     netlogoVersion := {
       val loader = (Test / testLoader).value
       val klass = loader.loadClass("org.nlogo.api.Version$")

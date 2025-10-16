@@ -1,36 +1,16 @@
-import scala.collection.JavaConverters._
-
 trait Launcher {
   def id: String
   def name: String = id
   def appName =
     s"$name $version"
   def description: String = appName
-  def icon: Option[String]
+  def icon: String
   def version: String
   def mustachePrefix: String
   def javaOptions: Seq[String]
   def extraProperties: Seq[String]
   def mainJar: String
   def mainClass: String
-
-  def toVariables = {
-    // In the properties files the `java-options=` property overwrites, so you don't want
-    // to include it if there are no options provided or you'll lose the defaults.
-    val jOpts = if (javaOptions.isEmpty) {
-      ""
-    } else {
-      s"java-options=${javaOptions.map((jOpt) => s""""$jOpt"""").mkString(" \\\n  ")}"
-    }
-    val iconString = icon.map( (i: String) => s"icon=$i" ).getOrElse("")
-    Map(
-      "javaOptions"     -> jOpts
-    , "extraProperties" -> extraProperties.asJava
-    , "mainJar"         -> mainJar
-    , "mainClass"       -> mainClass
-    , "icon"            -> iconString
-    )
-  }
 }
 
 object Launcher {
@@ -49,7 +29,7 @@ object Launcher {
 // September 2022
 class NetLogoLauncher(
   val version: String
-, val icon: Option[String] = None
+, val icon: String
 , extraJavaOptions: Seq[String] = Seq()
 , val extraProperties: Seq[String] = Seq()
 , customMainJar: Option[String] = None
@@ -64,7 +44,7 @@ class NetLogoLauncher(
 
 class NetLogo3dLauncher(
   val version: String
-, val icon: Option[String] = None
+, val icon: String
 , extraJavaOptions: Seq[String] = Seq()
 , val extraProperties: Seq[String] = Seq()
 , customMainJar: Option[String] = None
@@ -79,7 +59,7 @@ class NetLogo3dLauncher(
 
 class HubNetClientLauncher(
   val version: String
-, val icon: Option[String] = None
+, val icon: String
 , extraJavaOptions: Seq[String] = Seq()
 , val extraProperties: Seq[String] = Seq()
 , customMainJar: Option[String] = None
@@ -94,7 +74,7 @@ class HubNetClientLauncher(
 
 class BehaviorsearchLauncher(
   val version: String
-, val icon: Option[String] = None
+, val icon: String
 , extraJavaOptions: Seq[String] = Seq()
 , val extraProperties: Seq[String] = Seq()
 , customMainJar: Option[String] = None

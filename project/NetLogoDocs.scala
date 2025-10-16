@@ -63,36 +63,29 @@ class NetLogoDocs(
     IO.createDirectory(targetDir)
     println(docsSource.getAbsolutePath)
 
-    val vars = Map[String, Object](
-      "dictHome" -> "dictionary.html",
-      "dictTitle" -> "NetLogo Dictionary",
-      "primRoot" -> "dict", // /<version>/<primRoot>/<prim>
-    )
-
     PrimIndex.generate(
       docsTarget / "dictionary.html",
       targetDir,
       docsSource / "dictTemplate.html.mustache",
       netLogoRoot / "resources" / "system" / "dict.txt",
       docsTarget / "header.html",
-      vars
+      "dictionary.html",
+      "NetLogo Dictionary",
+      "dict" // /<version>/<primRoot>/<prim>
     )
 
     // Having to use <primRoot> = "dict" here is an
     // unfortunate artifact of the way things were done
     // before. (Omar I 07/15/25)
-    val vars3D = vars + (
-      "dictHome" -> "3d.html",
-      "dictTitle" -> "NetLogo 3D Dictionary",
-      "primRoot" -> "dict" // /<version>/<primRoot>/<prim>
-    )
     PrimIndex.generate(
       docsTarget / "3d.html",
       targetDir,
       docsSource / "dictTemplate.html.mustache",
       netLogoRoot / "resources" / "system" / "dict3d.txt",
       docsTarget / "header.html",
-      vars3D
+      "3d.html",
+      "NetLogo 3D Dictionary",
+      "dict" // /<version>/<primRoot>/<prim>
     )
   }
 
@@ -100,70 +93,59 @@ class NetLogoDocs(
     InfoTabGenerator(modelsDirectory / "Code Examples" / "Info Tab Example.nlogox")
   }
 
-  def generatePDF(buildVariables: Map[String, Object], autoDocumentedExtensions: Seq[(String, String)],
-                  manuallyDocumentedExtensions: Seq[String]): File = {
-    val mustacheVars =
-      buildVariables + ("infoTabModelHTML" -> infoTabHTML, "pdf" -> java.lang.Boolean.TRUE)
-
+  def generatePDF(version: String, year: String, autoDocumentedExtensions: Seq[(String, String)]): File = {
     // Render the header with the version, navlinks,
     // and other variables
     Mustache(
       docsSource / "header.mustache",
       docsTarget / "header.html",
-      mustacheVars,
+      Map("version" -> version, "title" -> "", "pdf" -> Boolean.box(true)),
       Some(docsSource)
     )
 
     val tmp = IO.createTemporaryDirectory
-    generateDocs(tmp, autoDocumentedExtensions, manuallyDocumentedExtensions, mustacheVars, perPageTOC = false)
-    generateManualPDF(tmp, (autoDocumentedExtensions.map(_._1) ++ manuallyDocumentedExtensions).sorted)
+    generateDocs(tmp, autoDocumentedExtensions, version, year, true)
+    generateManualPDF(tmp, autoDocumentedExtensions.map(_._1).sorted)
   }
 
-  def generateHTML(buildVariables: Map[String, Object], autoDocumentedExtensions: Seq[(String, String)],
-                   manuallyDocumentedExtensions: Seq[String]): Seq[File] = {
-    val mustacheVars =
-      buildVariables + (
-        "infoTabModelHTML" -> infoTabHTML,
-        "documentedExtensions" -> autoDocumentedExtensions.asJava)
-
+  def generateHTML(version: String, year: String, autoDocumentedExtensions: Seq[(String, String)]): Seq[File] = {
     // Render the header with the version, navlinks,
     // and other variables
-    Mustache(
-      docsSource / "header.mustache",
-      docsTarget / "header.html",
-      mustacheVars,
-      Some(docsSource)
-    )
+    Mustache(docsSource / "header.mustache", docsTarget / "header.html", Map(
+      "version" -> version,
+      "title" -> "",
+      "pdf" -> Boolean.box(false),
+      "documentedExtensions" -> autoDocumentedExtensions.asJava
+    ), Some(docsSource))
 
     val supportFiles =
       Seq("dictTemplate.html", "title.html", "toc.xsl").map(n => docsTarget / n)
-    generateDocs(docsTarget, autoDocumentedExtensions, manuallyDocumentedExtensions, mustacheVars, perPageTOC = true)
+    generateDocs(docsTarget, autoDocumentedExtensions, version, year, false)
     generatePrimIndices(docsTarget / "dict")
     supportFiles.foreach(IO.delete)
     Path.allSubpaths(docsTarget).map(_._1).toSeq
   }
 
-  private def generateDocs(
-    targetDir:            File,
-    autoDocumentedExtensions: Seq[(String, String)],
-    manuallyDocumentedExtensions: Seq[String],
-    variables:            Map[String, Object],
-    perPageTOC:           Boolean): Unit = {
+  private def generateDocs(targetDir: File, autoDocumentedExtensions: Seq[(String, String)], version: String,
+                           year: String, pdf: Boolean): Unit = {
 
     IO.createDirectory(targetDir)
-    Mustache.betweenDirectories(docsSource, targetDir, markdownComponents, variables)
-    manuallyDocumentedExtensions.foreach { name =>
-      Mustache(extensionRoot / name / "README.md.mustache", targetDir / (name + ".md"), variables)
-    }
-    (markdownComponents.keySet ++ manuallyDocumentedExtensions).foreach { name =>
+    Mustache.betweenDirectories(docsSource, targetDir, markdownComponents, Map(
+      "version" -> version,
+      "year" -> year,
+      "pdf" -> Boolean.box(pdf),
+      "documentedExtensions" -> autoDocumentedExtensions.asJava,
+      "infoTabModelHTML" -> infoTabHTML
+    ), Set("dictTemplate.html.mustache", "headings.html.mustache"))
+    markdownComponents.keySet.foreach { name =>
       val md = Files.readAllLines((targetDir / (name + ".md")).toPath).asScala.mkString("\n")
       val html = Markdown(
-        if (perPageTOC) md else md.replaceAll("""\n\n\[TOC[^]]*\]""",""),
+        if (!pdf) md else md.replaceAll("""\n\n\[TOC[^]]*\]""",""),
         name, extension = false)
       IO.write(targetDir / (name + ".html"), "<!DOCTYPE html>\n" + html)
       IO.delete(targetDir / (name + ".md"))
     }
-    extensionDocs.generateExtensionDocs(targetDir, docsSource, autoDocumentedExtensions, variables)
+    extensionDocs.generateExtensionDocs(targetDir, docsSource, autoDocumentedExtensions, version)
     FileActions.copyFile(modelsDirectory / "Code Examples" / "Perspective Example.png", targetDir / "Perspective Example.png")
   }
 

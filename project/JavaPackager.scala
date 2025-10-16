@@ -12,6 +12,8 @@ import java.nio.file.{ Files, Paths }
 import java.nio.file.attribute.PosixFilePermission
 import java.io.File
 import java.util.jar.Attributes.Name._
+
+import scala.collection.JavaConverters.asJavaIterableConverter
 import scala.sys.process.Process
 
 /*
@@ -125,14 +127,22 @@ object JavaPackager {
     inputDir
   }
 
-  def generateAppImage(log: Logger, jpackage: File, platform: String, mainLauncher: Launcher, configDir: File, buildDir: File, inputDir: File, destDir: File, extraJpackageArgs: Seq[String], extraLaunchers: Seq[Launcher]) = {
+  def generateAppImage(log: Logger, jpackage: File, platform: String, mainLauncher: Launcher, configDir: File, buildDir: File, inputDir: File, destDir: File, extraLaunchers: Seq[Launcher]) = {
 
-    val extraLauncherArgs = extraLaunchers.flatMap( (settings) => {
+    val extraLauncherArgs = extraLaunchers.flatMap { launcher =>
       val inFile  = configDir / s"extra-launcher.properties.mustache"
-      val outFile = buildDir / s"${settings.mustachePrefix}.properties"
-      Mustache(inFile, outFile, settings.toVariables)
-      Seq("--add-launcher", s"${settings.name}=${outFile.getAbsolutePath}")
-    })
+      val outFile = buildDir / s"${launcher.mustachePrefix}.properties"
+
+      Mustache(inFile, outFile, Map(
+        "javaOptions" -> s"java-options=${launcher.javaOptions.map(opt => s""""$opt"""").mkString(" \\\n  ")}",
+        "extraProperties" -> launcher.extraProperties.asJava,
+        "mainJar" -> launcher.mainJar,
+        "mainClass" -> launcher.mainClass,
+        "icon" -> s"icon=${launcher.icon}"
+      ))
+
+      Seq("--add-launcher", s"${launcher.name}=${outFile.getAbsolutePath}")
+    }
 
     val javaOptions = mainLauncher.javaOptions.flatMap( (option) => {
       Seq("--java-options", option)
@@ -152,7 +162,8 @@ object JavaPackager {
     , "--main-class",   mainLauncher.mainClass
     , "--input",        inputDir.getAbsolutePath
     , "--dest",         destDir.getAbsolutePath
-    ) ++ javaOptions ++ extraLauncherArgs ++ extraJpackageArgs
+    , "--icon",         mainLauncher.icon
+    ) ++ javaOptions ++ extraLauncherArgs
 
     log.info(s"running: ${args.mkString(" ")}")
     val returnValue = Process(args, buildDir).!
@@ -181,7 +192,8 @@ object JavaPackager {
     })
   }
 
-  def createScripts(log: Logger, appImageDir: File, appDir: File, scriptSourceDir: File, headlessScript: String, guiScript: String, variables: Map[String, String]) = {
+  def createScripts(log: Logger, appImageDir: File, appDir: File, scriptSourceDir: File, headlessScript: String,
+                    guiScript: String, javaOptions: Seq[String] = Seq()) = {
     log.info("Creating GUI/headless run scripts")
     val headlessClasspath =
       ("netlogoJar" ->
@@ -197,7 +209,7 @@ object JavaPackager {
     Mustache(
       scriptSource,
       headlessFile,
-      variables + headlessClasspath + ("mainClass" -> "org.nlogo.headless.Main")
+      Map("javaOptions" -> javaOptions.asJava, headlessClasspath, "mainClass" -> "org.nlogo.headless.Main")
     )
     headlessFile.setExecutable(true)
 
@@ -205,7 +217,7 @@ object JavaPackager {
     Mustache(
       scriptSource,
       guiFile,
-      variables + headlessClasspath + ("mainClass" -> "org.nlogo.app.App")
+      Map("javaOptions" -> javaOptions.asJava, headlessClasspath, "mainClass" -> "org.nlogo.app.App")
     )
     guiFile.setExecutable(true)
   }

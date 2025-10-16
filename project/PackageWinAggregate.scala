@@ -6,22 +6,30 @@ import java.nio.file.{ Files, FileSystems, Path, Paths }
 import java.util.Properties
 import java.util.jar.JarFile
 
-import scala.collection.JavaConverters._
+import scala.collection.JavaConverters.{ collectionAsScalaIterableConverter, mapAsJavaMapConverter }
 
 import NetLogoPackaging.RunProcess
 
 object PackageWinAggregate {
-  val vars32 = Map[String, String](
-    "upgradeCode"                     -> "7DEBD71E-5C9C-44C5-ABBB-B39A797CA851",
-    "platformArch"                    -> "x86",
-    "bitness"                         -> "always32"
-  )
+  sealed abstract trait PlatformVars {
+    val upgradeCode: String
+    val platformArch: String
+    val bitness: String
+  }
 
-  val vars64 = Map[String, String](
-    "upgradeCode"                     -> "891140E9-912C-4E62-AC55-97129BD46DEF",
-    "platformArch"                    -> "x64",
-    "bitness"                         -> "always64"
-  )
+  object PlatformVars {
+    case object Vars32 extends PlatformVars {
+      override val upgradeCode = "7DEBD71E-5C9C-44C5-ABBB-B39A797CA851"
+      override val platformArch = "x86"
+      override val bitness = "always32"
+    }
+
+    case object Vars64 extends PlatformVars {
+      override val upgradeCode = "891140E9-912C-4E62-AC55-97129BD46DEF"
+      override val platformArch = "x64"
+      override val bitness = "always64"
+    }
+  }
 
   val WiXPath = {
     val fs = FileSystems.getDefault
@@ -81,14 +89,13 @@ object PackageWinAggregate {
   , appImageDir: File
   , targetDir: File
   , webDir: File
-  , variables: Map[String, String]
   , launchers: Seq[Launcher]
   ): File = {
     val platformConfigDir = configDir / "windows"
 
     log.info("Generating Windows UUIDs")
     val uuidArchiveFileName =
-      variables("version").replace("-", "").replace(".", "") + ".properties"
+      version.replace("-", "").replace(".", "") + ".properties"
     val uuidArchiveFile = platformConfigDir / "archive" / uuidArchiveFileName
     val uuids =
       if (! uuidArchiveFile.exists) {
@@ -106,43 +113,51 @@ object PackageWinAggregate {
       case (k, v) => k.stripSuffix(".64").stripSuffix(".32") -> v
     }
 
-    val winVariables: Map[String, String] =
-      variables ++ Seq("iconDir" -> targetDir.toString, "configDir" -> platformConfigDir.toString) ++
-                   (if (arch == "64") vars64 else vars32) ++ archUUIDs
+    val platformVars: PlatformVars = {
+      if (arch == "64") {
+        PlatformVars.Vars64
+      } else {
+        PlatformVars.Vars32
+      }
+    }
 
+    val iconDir = targetDir.getAbsolutePath
     val msiBuildDir = appImageDir.getParentFile
 
     log.info("Generating WiX config files")
-    val baseComponentVariables =
-      Map[String, AnyRef](
-          "bitness"               -> winVariables("bitness"),
-          "version"               -> winVariables("version"),
-          "iconDir"               -> winVariables("iconDir"),
-          "configDir"             -> winVariables("configDir"))
-    val componentConfig = Map[String, AnyRef](
-      "components" -> Seq(
-        Map[String, AnyRef](
+
+    val componentConfig = Map(
+      "upgradeCode" -> platformVars.upgradeCode,
+      "platformArch" -> platformVars.platformArch,
+      "bitness" -> platformVars.bitness,
+      "version" -> version,
+      "iconDir" -> iconDir,
+      "configDir" -> platformConfigDir,
+      "product" -> archUUIDs("product"),
+      "startMenuFolderId" -> archUUIDs("startMenuFolderId"),
+      "components" -> Array(
+        Map(
           "componentFriendlyName" -> "HubNet Client",
           "noSpaceName"           -> "HubNetClient",
           "componentId"           -> "HubNet_Client.exe",
           "componentFileName"     -> "HubNet Client.exe",
           "lowerDashName"         -> "hubnet-client",
-          "componentGuid"         -> winVariables("hubNetClientExecutableId"),
-          "desktopShortcutId"     -> winVariables("HubNetClientDesktopShortcutId"),
-          "startMenuShortcutId"   -> winVariables("HubNetClientStartMenuShortcutId"),
+          "componentGuid"         -> archUUIDs("hubNetClientExecutableId"),
+          "desktopShortcutId"     -> archUUIDs("HubNetClientDesktopShortcutId"),
+          "startMenuShortcutId"   -> archUUIDs("HubNetClientStartMenuShortcutId"),
           "hasFileAssociation"    -> Boolean.box(false)
-        ) ++ baseComponentVariables,
-        Map[String, AnyRef](
-          "componentFriendlyName"  -> "NetLogo",
-          "noSpaceName"            -> "NetLogo",
-          "componentId"            -> "NetLogo.exe",
-          "componentFileName"      -> "NetLogo.exe",
-          "lowerDashName"          -> "netlogo",
-          "componentGuid"          -> winVariables("nlogoExecutableId"),
-          "desktopShortcutId"      -> winVariables("NetLogoDesktopShortcutId"),
-          "startMenuShortcutId"    -> winVariables("NetLogoStartMenuShortcutId"),
-          "hasFileAssociation"     -> Boolean.box(true),
-          "fileAssociations"       -> Array(
+        ).asJava,
+        Map(
+          "componentFriendlyName" -> "NetLogo",
+          "noSpaceName"           -> "NetLogo",
+          "componentId"           -> "NetLogo.exe",
+          "componentFileName"     -> "NetLogo.exe",
+          "lowerDashName"         -> "netlogo",
+          "componentGuid"         -> archUUIDs("nlogoExecutableId"),
+          "desktopShortcutId"     -> archUUIDs("NetLogoDesktopShortcutId"),
+          "startMenuShortcutId"   -> archUUIDs("NetLogoStartMenuShortcutId"),
+          "hasFileAssociation"    -> Boolean.box(true),
+          "fileAssociations"      -> Array(
             Map(
               "extension" -> "nlogo",
               "icon"      -> "ModelOldIcon",
@@ -154,19 +169,19 @@ object PackageWinAggregate {
               "type"      -> "NetLogo Model"
             ).asJava
           ),
-          "launchArgs"             -> """--launch "%1""""
-        ) ++ baseComponentVariables,
+          "launchArgs" -> """--launch "%1""""
+        ).asJava,
         Map[String, AnyRef](
-          "componentFriendlyName"  -> "NetLogo 3D",
-          "noSpaceName"            -> "NetLogo3D",
-          "componentId"            -> "NetLogo_3D.exe",
-          "componentFileName"      -> "NetLogo 3D.exe",
-          "lowerDashName"          -> "netlogo-3d",
-          "componentGuid"          -> winVariables("nlogo3DExecutableId"),
-          "desktopShortcutId"      -> winVariables("NetLogo3DDesktopShortcutId"),
-          "startMenuShortcutId"    -> winVariables("NetLogo3DStartMenuShortcutId"),
-          "hasFileAssociation"     -> Boolean.box(true),
-          "fileAssociations"       -> Array(
+          "componentFriendlyName" -> "NetLogo 3D",
+          "noSpaceName"           -> "NetLogo3D",
+          "componentId"           -> "NetLogo_3D.exe",
+          "componentFileName"     -> "NetLogo 3D.exe",
+          "lowerDashName"         -> "netlogo-3d",
+          "componentGuid"         -> archUUIDs("nlogo3DExecutableId"),
+          "desktopShortcutId"     -> archUUIDs("NetLogo3DDesktopShortcutId"),
+          "startMenuShortcutId"   -> archUUIDs("NetLogo3DStartMenuShortcutId"),
+          "hasFileAssociation"    -> Boolean.box(true),
+          "fileAssociations"      -> Array(
             Map(
               "extension" -> "nlogo3d",
               "icon"      -> "ModelOldIcon",
@@ -178,30 +193,31 @@ object PackageWinAggregate {
               "type"      -> "NetLogo 3D Model"
             ).asJava
           ),
-          "launchArgs"             -> """--launch "%1""""
-        ) ++ baseComponentVariables,
+          "launchArgs" -> """--launch "%1""""
+        ).asJava,
         Map[String, AnyRef](
-          "componentFriendlyName"  -> "Behaviorsearch",
-          "noSpaceName"            -> "Behaviorsearch",
-          "componentId"            -> "Behaviorsearch.exe",
-          "componentFileName"      -> "Behaviorsearch.exe",
-          "lowerDashName"          -> "behaviorsearch",
-          "componentGuid"          -> winVariables("behaviorSearchExecutableId"),
-          "desktopShortcutId"      -> winVariables("behaviorSearchDesktopShortcutId"),
-          "startMenuShortcutId"    -> winVariables("behaviorSearchStartMenuShortcutId"),
-          "hasFileAssociation"     -> Boolean.box(true),
-          "fileAssociations"       -> Array(
+          "componentFriendlyName" -> "Behaviorsearch",
+          "noSpaceName"           -> "Behaviorsearch",
+          "componentId"           -> "Behaviorsearch.exe",
+          "componentFileName"     -> "Behaviorsearch.exe",
+          "lowerDashName"         -> "behaviorsearch",
+          "componentGuid"         -> archUUIDs("behaviorSearchExecutableId"),
+          "desktopShortcutId"     -> archUUIDs("behaviorSearchDesktopShortcutId"),
+          "startMenuShortcutId"   -> archUUIDs("behaviorSearchStartMenuShortcutId"),
+          "hasFileAssociation"    -> Boolean.box(true),
+          "fileAssociations"      -> Array(
             Map(
               "extension" -> "bsearch",
               "icon"      -> "BehaviorsearchExperimentIcon",
               "type"      -> "Behaviorsearch Experiment"
             ).asJava
           ),
-          "launchArgs"             -> """"%1""""
-        ) ++ baseComponentVariables
-      ).map(_.asJava).asJava)
+          "launchArgs" -> """"%1""""
+        ).asJava
+      )
+    )
 
-    Mustache(platformConfigDir / "NetLogo.wxs.mustache", msiBuildDir / "NetLogo.wxs", winVariables ++ componentConfig)
+    Mustache(platformConfigDir / "NetLogo.wxs.mustache", msiBuildDir / "NetLogo.wxs", componentConfig)
 
     Seq("NetLogoTranslation.wxl", "NetLogoUI.wxs", "ShortcutDialog.wxs").foreach { wixFile =>
       FileActions.copyFile(platformConfigDir / wixFile, msiBuildDir / wixFile)
@@ -210,7 +226,7 @@ object PackageWinAggregate {
     val launcherExes = launchers.map( (launcher) => s"${launcher.name}.exe" ).toSet - "NetLogo_Console.exe"
     val generatedUUIDs =
       HarvestResources.harvest(appImageDir.toPath, "INSTALLDIR", "NetLogoApp",
-        launcherExes, winVariables,
+        launcherExes, platformVars,
         (msiBuildDir / "NetLogoApp.wxs").toPath)
 
     log.info("Running WiX MSI packager")
@@ -222,7 +238,7 @@ object PackageWinAggregate {
       "NetLogoApp.wxs",
       "NetLogoUI.wxs",
       "ShortcutDialog.wxs",
-      "-arch", winVariables("platformArch"),
+      "-arch", platformVars.platformArch,
       "-culture", "en-us",
       "-loc", "NetLogoTranslation.wxl",
       "-ext", "WixToolset.UI.wixext",

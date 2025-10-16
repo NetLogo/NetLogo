@@ -1,9 +1,8 @@
 import sbt._
 import Keys._
-import NetLogoBuild.{ buildDate, marketingVersion, numericMarketingVersion, autogenRoot }
+import NetLogoBuild.{ buildDate, marketingVersion, year, autogenRoot }
 import ModelsLibrary.modelsDirectory
 import Extensions.extensionRoot
-import NetLogoPackaging.buildVariables
 
 object Docs {
   lazy val netLogoDocs                  = taskKey[NetLogoDocs]("netlogo docs object used to build documentation")
@@ -12,7 +11,6 @@ object Docs {
   lazy val manualPDF                    = taskKey[File]("NetLogo manual PDF")
   lazy val docsRoot                     = settingKey[File]("location to which docs are generated")
   lazy val autoDocumentedExtensions     = settingKey[Seq[(String, String)]]("list of extensions setup to use the documenter")
-  lazy val manuallyDocumentedExtensions = settingKey[Seq[String]]("list of extensions with manually generated documentation")
   lazy val extensionDocConfigFile       = settingKey[File]("extension documentation config file")
   lazy val extensionDocs                = taskKey[Seq[File]]("generate extension documentation")
   lazy val extensionDocsGen             = taskKey[ExtensionDocs]("extension docs object used to build extension documentation")
@@ -21,11 +19,6 @@ object Docs {
   lazy val settings = Seq(
     javaOptions    += "-Dnetlogo.docs.dir=" + docsRoot.value.getAbsolutePath.toString,
     docsRoot       := baseDirectory.value / "docs",
-    buildVariables := Map[String, String](
-      "version"            -> marketingVersion.value,
-      "numericOnlyVersion" -> numericMarketingVersion.value,
-      "year"               -> buildDate.value.takeRight(4),
-      "date"               -> buildDate.value),
     netLogoDocs := {
       new NetLogoDocs(
         autogenRoot.value / "docs",
@@ -39,12 +32,10 @@ object Docs {
       htmlDocs.value :+ manualPDF.value :+ (Compile / doc).value
     },
     htmlDocs := {
-      netLogoDocs.value.generateHTML(buildVariables.value, autoDocumentedExtensions.value,
-                                     manuallyDocumentedExtensions.value)
+      netLogoDocs.value.generateHTML(marketingVersion.value, year.value, autoDocumentedExtensions.value)
     },
     manualPDF := {
-      netLogoDocs.value.generatePDF(buildVariables.value, autoDocumentedExtensions.value,
-                                    manuallyDocumentedExtensions.value)
+      netLogoDocs.value.generatePDF(marketingVersion.value, year.value, autoDocumentedExtensions.value)
     },
     extensionDocConfigFile := {
       baseDirectory.value.getParentFile / "project" / "documentation.conf"
@@ -74,13 +65,9 @@ object Docs {
         "view2.5d" -> "View2.5D"
       )
     },
-    // expects the documentation file at extensions/<name>/README.md.mustache (Isaac B 6/28/25)
-    manuallyDocumentedExtensions := {
-      Seq()
-    },
     extensionDocs := {
       extensionDocsGen.value.generateExtensionDocs(
-        docsRoot.value, docsRoot.value, autoDocumentedExtensions.value, buildVariables.value)
+        docsRoot.value, docsRoot.value, autoDocumentedExtensions.value, marketingVersion.value)
       .map(_.toFile)
     },
     extensionDocsGen := {

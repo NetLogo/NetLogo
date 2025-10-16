@@ -1,5 +1,5 @@
 ﻿<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
-  <Package Name="NetLogo {{version}}" Manufacturer="CCL" UpgradeCode="{{upgradeCode}}" Language="1033" Version="{{numericOnlyVersion}}" ProductCode="{{product}}">
+  <Package Name="NetLogo {{version}}" Manufacturer="CCL" UpgradeCode="{{upgradeCode}}" Language="1033" Version="{{version}}" ProductCode="{{product}}">
     <SummaryInformation Keywords="Installer" Description="NetLogo {{version}} Installer" Manufacturer="Center for Connected Learning" />
 
     <MajorUpgrade AllowDowngrades="yes" />
@@ -69,7 +69,7 @@
 
           <ProgId Id="NetLogo.{{extension}}" Description="{{type}}" Advertise="yes" Icon="{{icon}}">
             <Extension Id="{{extension}}">
-              <Verb Id="open" Command="Edit with {{componentFriendlyName}} {{numericOnlyVersion}}" Argument="{{launchArgs}}" />
+              <Verb Id="open" Command="Edit with {{componentFriendlyName}} {{version}}" Argument="{{launchArgs}}" />
               <MIME Advertise="yes" ContentType="text/{{extension}}" Default="yes" />
             </Extension>
           </ProgId>

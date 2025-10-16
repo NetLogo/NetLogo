@@ -45,7 +45,8 @@ object PrimIndex {
     if (h1 != null) h1.text() else ""
   }
 
-  def generate(dictFile: File, target: File, templateFile: File, indexFile: File, headerFile: File, buildVariables: Map[String, Object], generateHTMLIndexPage: Boolean = false): Unit = {
+  def generate(dictFile: File, target: File, templateFile: File, indexFile: File, headerFile: File, dictHome: String,
+               dictTitle: String, primRoot: String, generateHTMLIndexPage: Boolean = false): Unit = {
     import scala.collection.JavaConverters._
 
     val html = IO.read(dictFile)
@@ -78,25 +79,30 @@ object PrimIndex {
 
 
     (primIndex ++ constIndex).foreach { el =>
-      val vars = Map[String, Object](
+      Mustache(templateFile, target / s"${escapeFileName(el.anchorName)}.html", Map(
         "html"           -> adjustHtml(el.html, dictFile.getName),
         "containedPrims" -> el.containedPrims.asJava,
         "header"         -> headerHtml,
-        "primMap"       -> primMap.asJava,
-        "primTitle"     -> el.containedPrims.mkString(", "),
-      ) ++ buildVariables
-      Mustache(templateFile, target / s"${escapeFileName(el.anchorName)}.html", vars)
+        "primMap"        -> primMap.asJava,
+        "primTitle"      -> el.containedPrims.mkString(", "),
+        "dictHome"       -> dictHome,
+        "dictTitle"      -> dictTitle,
+        "primRoot"       -> primRoot
+      ))
     }
 
     val title = grabTitleFromHTML(doc.outerHtml())
     if (generateHTMLIndexPage) {
-      val vars = Map[String, Object](
+      Mustache(templateFile, target / "index.html", Map(
         "header" -> headerHtml,
         "primMap" -> primMap.asJava,
         "primTitle" -> s"$title Primitives",
-        "html" -> s"<h1>$title</h1>"
-      ) ++ buildVariables
-      Mustache(templateFile, target / "index.html", vars)
+        "html" -> s"<h1>$title</h1>",
+        "dictHome" -> dictHome,
+        "dictTitle" -> dictTitle,
+        "primRoot" -> primRoot,
+        "containedPrims" -> Array()
+      ))
     }
 
     val index = (primIndex ++ constIndex).map { el =>

@@ -6,7 +6,7 @@ import sbtcrossproject.Platform
 import ModelsLibrary.modelsDirectory
 import Extensions.{ excludedExtensions, extensionNetLogoJar, extensionRoot }
 import NetLogoBuild.{ all, autogenRoot, cclArtifacts, includeInPackaging,
-  marketingVersion, numericMarketingVersion, netlogoVersion, shareSourceDirectory }
+  marketingVersion, netlogoVersion, shareSourceDirectory }
 import Docs.htmlDocs
 import Dump.dumpClassName
 import Testing.testTempDirectory

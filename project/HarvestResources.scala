@@ -21,7 +21,10 @@ import scala.util.matching.Regex
 object HarvestResources {
   val WiXNamespace = "http://wixtoolset.org/schemas/v4/wxs"
 
-  class AuthoringVisitor(root: Path, doc: Document, directoryRefName: String, wixNode: Node, excludedFiles: Set[String], variables: Map[String, String]) extends FileVisitor[Path] {
+  class AuthoringVisitor(root: Path, doc: Document, directoryRefName: String, wixNode: Node,
+                         excludedFiles: Set[String], platformVars: PackageWinAggregate.PlatformVars)
+    extends FileVisitor[Path] {
+
     var directoryNodes: List[Element] = Nil
     var componentNodes: List[Element] = Nil
     var generatedUUIDs: Map[String, String] = Map()
@@ -58,7 +61,7 @@ object HarvestResources {
         generatedUUIDs += "InstallationRootComponent" -> uuid
         topComponent.setAttribute("Guid", "{" + uuid + "}")
         topComponent.setAttribute("Id", "InstallationRootComponent")
-        topComponent.setAttribute("Bitness", variables("bitness"))
+        topComponent.setAttribute("Bitness", platformVars.bitness)
         topDirectory.appendChild(topComponent)
         componentNodes = topComponent :: componentNodes
       } else {
@@ -75,7 +78,7 @@ object HarvestResources {
         generatedUUIDs += componentId -> uuid
         newComponent.setAttribute("Guid", "{" + uuid + "}")
         newComponent.setAttribute("Id", componentId)
-        newComponent.setAttribute("Bitness", variables("bitness"))
+        newComponent.setAttribute("Bitness", platformVars.bitness)
         newDirectory.appendChild(newComponent)
         componentNodes = newComponent :: componentNodes
       }
@@ -90,7 +93,7 @@ object HarvestResources {
         val sourceName = ("SourceDir" +: pathElements).mkString("\\")
         val id = idSafe(pathElements.mkString("__"))
         fileNode.setAttribute("Source", nameSafe(sourceName))
-        fileNode.setAttribute("ProcessorArchitecture", variables("platformArch"))
+        fileNode.setAttribute("ProcessorArchitecture", platformVars.platformArch)
         fileNode.setAttribute("Id", id)
         activeComponent.appendChild(fileNode)
       }
@@ -115,14 +118,16 @@ object HarvestResources {
 
   }
 
-  def harvest(dir: Path, directoryRefName: String, componentGroupName: String, excludedFiles: Set[String], variables: Map[String, String], outputFile: Path): Map[String, String] = {
+  def harvest(dir: Path, directoryRefName: String, componentGroupName: String, excludedFiles: Set[String],
+              platformVars: PackageWinAggregate.PlatformVars, outputFile: Path): Map[String, String] = {
+
     val docBuilderFactory = DocumentBuilderFactory.newInstance
     docBuilderFactory.setNamespaceAware(true)
     val document = docBuilderFactory.newDocumentBuilder.newDocument
     val docRoot = document.createElementNS(WiXNamespace, "Wix")
     document.appendChild(docRoot)
 
-    val visitor = new AuthoringVisitor(dir, document, directoryRefName, docRoot, excludedFiles, variables)
+    val visitor = new AuthoringVisitor(dir, document, directoryRefName, docRoot, excludedFiles, platformVars)
 
     Files.walkFileTree(dir, new java.util.HashSet(), Int.MaxValue, visitor)
 

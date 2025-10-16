@@ -105,6 +105,7 @@ object PackageMacAggregate {
       , "bundleIdentifier" -> "org.nlogo.HubNetClient"
       , "bundleName"       -> "HubNet Client"
       , "bundleSignature"  -> "????"
+      , "fileAssociations" -> Array()
       , "iconFile"         -> s"HubNet Client $version.icns"
       , "packageID"        -> "APPL????"
       , "version"          -> version
@@ -158,9 +159,9 @@ object PackageMacAggregate {
       Files.writeString(configFile.toPath, config4)
 
       log.info("  Generating Info.plist and PkgInfo files.")
-      val variables = plistConfig.getOrElse(launcher.id, throw new Exception(s"No variables for this launcher? ${launcher.id} : $plistConfig"))
-      Mustache(configDir / "macosx" / "Info.plist.mustache", appDir / "Contents" / "Info.plist", variables)
-      Mustache(configDir / "macosx" / "PkgInfo.mustache",    appDir / "Contents" / "PkgInfo", variables)
+
+      Mustache(configDir / "macosx" / "Info.plist.mustache", appDir / "Contents" / "Info.plist", plistConfig(launcher.id))
+      Mustache(configDir / "macosx" / "PkgInfo.mustache",    appDir / "Contents" / "PkgInfo", plistConfig(launcher.id))
 
       log.info("  Move to the bundle directory.")
       FileActions.copyDirectory(appDir, bundleDir / appDir.getName)
