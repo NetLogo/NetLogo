@@ -188,8 +188,9 @@ object PackageMacAggregate {
     FileActions.createRelativeSoftLink(bundleDir / "NetLogo_Console", bundleDir / s"$buildName.app" / "Contents" / "MacOS" / buildName)
 
     log.info("Gathering files to sign")
-    val appNames = launchers.map(_.id)
-    val apps     = launchers.map( (l) => (bundleDir / s"${l.name}.app") )
+    val appNames = launchers.map(_.id) :+ s"NetLogo Launcher $version.app"
+    val apps     = launchers.map( (l) => (bundleDir / s"${l.name}.app") ) :+
+                     (bundleDir / s"NetLogo Launcher $version.app")
 
     val filesToBeSigned =
       (apps :+ (bundleDir / "natives") :+ (bundleDir / "runtime" / "Contents" / "Home" / "lib")).flatMap( a => FileActions.enumeratePaths(a.toPath).filterNot( p => Files.isDirectory(p) ) )

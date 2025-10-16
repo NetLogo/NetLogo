@@ -436,6 +436,12 @@ object NetLogoPackaging {
       JavaPackager.createScripts(log, bundleDir, bundleDir / "app", configDir, "netlogo-headless.sh", "netlogo-gui.sh",
                                  Seq("--add-exports=java.desktop/com.apple.laf=ALL-UNNAMED"))
 
+      log.info("Creating launcher")
+
+      RunProcess(Seq("sh", "build.sh", appImageDir.getAbsolutePath, version,
+                     (buildDir / "NetLogo.icns").getAbsolutePath), configDir / platform / "launcher",
+                 "create launcher")
+
       // clean up unwanted icon files
       FileActions.listDirectory(appImageDir.toPath).foreach(path => {
         if (path.toString.endsWith(".icns"))
