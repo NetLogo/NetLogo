@@ -4,7 +4,7 @@ package org.nlogo.window
 
 import java.lang.NumberFormatException
 
-import org.nlogo.agent.SliderConstraint
+import org.nlogo.agent.{ ConstantSliderConstraint, SliderConstraint }
 import org.nlogo.api.{ CompilerServices, ExtensionManager, MersenneTwisterFast }
 import org.nlogo.core.{ Horizontal, I18N, Slider => CoreSlider, Vertical, Widget => CoreWidget }
 import org.nlogo.editor.Colorizer
@@ -158,6 +158,8 @@ class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast,
         val max: String = s.max
         val v = s.default
         val inc: String = s.step
+
+        setSliderConstraint(new ConstantSliderConstraint(min.toDouble, max.toDouble, inc.toDouble))
         setUnits(s.units.optionToPotentiallyEmptyString)
         setVertical(s.direction == Vertical)
 
