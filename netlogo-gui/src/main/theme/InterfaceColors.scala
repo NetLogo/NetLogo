@@ -199,6 +199,7 @@ trait ColorTheme {
   protected val DarkBlue = new Color(0, 54, 117)
   protected val White2 = new Color(245, 245, 245)
   protected val LightGray = new Color(238, 238, 238)
+  protected val LightGray1 = new Color(232, 232, 232)
   protected val LightGray2 = new Color(215, 215, 215)
   protected val MediumGray = new Color(175, 175, 175)
   protected val LightGrayOutline = new Color(120, 120, 120)
@@ -586,13 +587,13 @@ object LightTheme extends ColorTheme {
   override def inputBorder: Color = MediumBlue
   override def viewBackground: Color = MediumGray
   override def viewBorder: Color = Color.BLACK
-  override def monitorBackground: Color = LightGray2
+  override def monitorBackground: Color = LightGray1
   override def monitorBorder: Color = MediumGray
-  override def plotBackground: Color = LightGray2
+  override def plotBackground: Color = LightGray1
   override def plotBorder: Color = MediumGray
   override def plotMouseBackground: Color = LightGray
   override def plotMouseText: Color = Color.BLACK
-  override def outputBackground: Color = LightGray2
+  override def outputBackground: Color = LightGray1
   override def outputBorder: Color = MediumGray
   override def toolbarBackground: Color = LightGray
   override def tabBackground: Color = Color.WHITE
