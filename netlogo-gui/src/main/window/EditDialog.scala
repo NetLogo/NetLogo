@@ -57,7 +57,7 @@ class EditDialog(window: Window, target: Editable, editPanel: EditPanel, modal: 
     val (mainLink, anchor) =
       if (splitLink.length > 1) (splitLink(0), splitLink(1))
       else                      (splitLink.head, "")
-    BrowserLauncher.tryOpenURI(this, new URI(s"https://docs.netlogo.org/7.0.0/$link"), docPath(mainLink),
+    BrowserLauncher.tryOpenURI(this, new URI(s"https://docs.netlogo.org/7.0.1/$link"), docPath(mainLink),
                                anchor)
   })
 

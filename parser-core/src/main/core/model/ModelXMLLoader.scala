@@ -15,9 +15,9 @@ object ModelXMLLoader {
   def emptyModel(is3D: Boolean, defaultInfo: String): Model = {
     val (name, dims) =
       if (is3D)
-        ("NetLogo 3D 7.0.0", new WorldDimensions3D(-16, 16, -16, 16, -16, 16, 13.0))
+        ("NetLogo 3D 7.0.1", new WorldDimensions3D(-16, 16, -16, 16, -16, 16, 13.0))
       else
-        ("NetLogo 7.0.0", WorldDimensions(-16, 16, -16, 16, 13.0))
+        ("NetLogo 7.0.1", WorldDimensions(-16, 16, -16, 16, 13.0))
 
     val widgets =
       List(Model.defaultView.copy(dimensions = dims))

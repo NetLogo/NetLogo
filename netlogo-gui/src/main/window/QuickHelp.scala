@@ -47,7 +47,7 @@ object QuickHelp {
     BrowserLauncher.docPath(docName)
 
   private def openDictionary(comp: Component, word: String, words: Map[String, String]): Unit = {
-    BrowserLauncher.tryOpenURI(comp, new URI(s"https://docs.netlogo.org/7.0.0/dict/${words(word)}"),
+    BrowserLauncher.tryOpenURI(comp, new URI(s"https://docs.netlogo.org/7.0.1/dict/${words(word)}"),
                                docPath(s"dict/${words(word)}"))
   }
 
@@ -68,7 +68,7 @@ object QuickHelp {
                          I18N.gui.getN("tabs.code.rightclick.quickhelp.notfound",
                          tokenLower.toUpperCase(Locale.ENGLISH)), OptionPane.Options.OkCancel,
                          OptionPane.Icons.Error).getSelectedIndex == 0)
-        BrowserLauncher.tryOpenURI(comp, new URI("https://docs.netlogo.org/7.0.0/dictionary.html"),
+        BrowserLauncher.tryOpenURI(comp, new URI("https://docs.netlogo.org/7.0.1/dictionary.html"),
                                    docPath("dictionary.html"))
     }
   }
