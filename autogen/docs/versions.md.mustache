@@ -15,6 +15,70 @@ For help running models made in old versions, see the
 
 </div>
 
+## Version 7.0.1 (October 2025)
+
+### Bundled software
+
+- A *NetLogo Launcher* app is now included on macOS to allow opening multiple instances of NetLogo simultaneously.
+
+### Interface changes
+
+- Plots, monitors, and output widgets are now slightly lighter grey in light mode.
+- Disabled buttons now have slightly darker text (for increased contrast) in light mode.
+
+### Major bugs fixed
+
+- Primitives for writing text to files were always overwriting the files, rather than appending to them
+- Running Grammarly on a Mac could prevent using the 3D View
+- Monitors that were displaying numbers in scientific notation were showing an extra "0" at the end
+- Monitors were switching to scientific notation at 10,000,000 instead of at 9,007,199,254,740,993 (2<sup>53</sup>)
+
+### Minor bugs fixed
+
+- Updated to the latest version of NetLogo Web
+    - The most notable change to NetLogo Web is that the HTML files now send usage data to our Google Analytics
+        - The amount of data tracked by this is very minimal, so we ask that users please leave it enabled so that we can better understand how self-hosted NetLogo Web models are being used.  However, note that the functionality can be disabled by appending `?disableAnalytics` to the URL
+    - Other updates to NetLogo Web are documented [here](https://netlogoweb.org/whats-new), from version v2.12.1 to v2.12.4
+- The "Reload model on external changes" functionality was not watching all of the files that it should have been for the full duration that it should have been
+- The "Reload model on external changes" functionality could sometimes trigger the display of multiple redundant "Are you sure you want to open a different file?" dialogs
+- The "Reload model on external changes" functionality could sometimes raise unnecessary exceptions
+- Internal `lastModified.txt` file handles were being inefficiently left open
+- NetLogo would sometimes suggest importing an extension immediately after having imported it
+- The color theme was defaulting to "light", rather than checking the system's default theme
+- Some modal dialogs were being hidden behind other windows
+- macOS and Windows were using incorrect file icons for `.nlogo` and `.nlogo3d` files
+- macOS was consistently producing more than one "Print" dialog at a time (yes, as in: printing to paper)
+- Tabs for `__includes` files were wrongly being foregrounded when reopened
+- Tabs for `__includes` files could not be zoomed when popped out into separate windows
+- The "Auto-indent" setting was not applying to secondary code editors (e.g. inside of widget "Edit" dialogs)
+- `self` and `myself` were reporting incorrect values inside of `carefully` blocks
+- Mathematica Link was setting the wrong location to look for NetLogo extensions
+- Patches could wrongly persist in stored patchsets after calls to `resize-world`
+- The internal optimized form of `any? <breed>-on` was was producing incorrect results
+- Printing anonymous procedures to strings (e.g. with the `word` primitive) was over-eagerly eliding parentheses that are actually necessary when calling primitives that don't take a fixed number of arguments
+- The Command Center would display illegible gobbledygook on Linux if the output line was wider than 32767 pixels
+- The colors of square brackets had poor visibility in dark mode
+- Auto-saves of the "File > New" model were never expiring
+- "Headless" versions of NetLogo could not open NetLogo 7-formatted BehaviorSpace experiments
+- NetLogo would give up on trying to open documentation if it lacked a connection to the internet, instead of falling back to using the copy of the documentation that comes with the NetLogo installation
+- Some "help" dialogs were being placed in the wrong location on the screen
+- Brackets were being visually matched in editors, even when the containing editor was not foregrounded
+- The icon used in the compiler error banner was needlessly low-resolution
+- Note widgets were failing to correctly wrap text when rendering in the standard (i.e. non-Markdown) mode
+- The Extension Manager could sometimes fail to load the list of extensions properly
+- BehaviorSpace was refusing to validate or save any experiments that referenced special variables (e.g. `world-width`, `random-seed`)
+- BehaviorSpace could open dialogs at wrong locations and sizes
+- BehaviorSpace (pointlessly) allowed pausing after the final run
+- NW Extension: Graphs were not always retaining their ordering when they should have been
+- Vid Extension: Native library files were not being properly cleaned up when "temporarily" unpacked
+- Vid Extension: Would crash when loaded headlessly
+- Vid Extension: Could not use webcams on macOS versions before 14
+- `set-patch-size` wrongly allowed values of 0 or less
+- Opening a new file while focusing a text input could cause an exception
+- Extension Manager downloads didn't raise errors when they should have
+- Single-line text fields did not respect undo/redo
+- When converting models from the old file format to the new format, slider widgets could sometimes lose their default value
+
 ## Version 7.0.0 (September 2025)
 
 ### Changes in NetLogo Functionality
