@@ -69,7 +69,8 @@ object ChecksumsAndPreviewsSettings {
 
     // TODO: find a good solution for this (Isaac B 8/28/25)
     , Some("it has different behavior on GitHub Actions") -> List(
-      "/Code Examples/Extensions Examples/sr/Linear Regression Example.nlogox"
+      "/Code Examples/Extensions Examples/sr/Linear Regression Example.nlogox",
+      "/Code Examples/Extensions Examples/sr/Package Example.nlogox"
     )
 
   )
