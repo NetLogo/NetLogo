@@ -112,6 +112,27 @@ object App {
       AbstractWorkspace.isApp(true)
       org.nlogo.window.VMCheck.detectBadJVMs()
       processCommandLineArguments(args)
+
+      if (App.colorTheme == null) {
+        val defaultTheme = {
+          if (OsThemeDetector.getDetector.isDark) {
+            "dark"
+          } else {
+            "light"
+          }
+        }
+
+        App.colorTheme = NetLogoPreferences.get("colorTheme", defaultTheme)
+      }
+
+      SetSystemLookAndFeel.setSystemLookAndFeel()
+
+      InterfaceColors.setTheme(App.colorTheme match {
+        case "classic" => ClassicTheme
+        case "light" => LightTheme
+        case "dark" => DarkTheme
+      })
+
       Splash.beginSplash() // also initializes AWT
       pico.add("org.nlogo.compile.Compiler")
       if (Version.is3D)
@@ -349,26 +370,6 @@ class App extends org.nlogo.window.Event.LinkChild
   locally {
     frame.addLinkComponent(this)
     pico.addComponent(frame)
-
-    if (App.colorTheme == null) {
-      val defaultTheme = {
-        if (OsThemeDetector.getDetector.isDark) {
-          "dark"
-        } else {
-          "light"
-        }
-      }
-
-      App.colorTheme = NetLogoPreferences.get("colorTheme", defaultTheme)
-    }
-
-    SetSystemLookAndFeel.setSystemLookAndFeel()
-
-    InterfaceColors.setTheme(App.colorTheme match {
-      case "classic" => ClassicTheme
-      case "light" => LightTheme
-      case "dark" => DarkTheme
-    })
 
     errorDialogManager = new ErrorDialogManager(frame,
       Map(classOf[MetadataLoadingException] -> new LibraryManagerErrorDialog(frame)))
