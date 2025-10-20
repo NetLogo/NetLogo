@@ -12,20 +12,17 @@ import NetLogoPackaging.RunProcess
 
 object PackageWinAggregate {
   sealed abstract trait PlatformVars {
-    val upgradeCode: String
     val platformArch: String
     val bitness: String
   }
 
   object PlatformVars {
     case object Vars32 extends PlatformVars {
-      override val upgradeCode = "7DEBD71E-5C9C-44C5-ABBB-B39A797CA851"
       override val platformArch = "x86"
       override val bitness = "always32"
     }
 
     case object Vars64 extends PlatformVars {
-      override val upgradeCode = "891140E9-912C-4E62-AC55-97129BD46DEF"
       override val platformArch = "x64"
       override val bitness = "always64"
     }
@@ -45,17 +42,18 @@ object PackageWinAggregate {
 
   def generateUUIDs: Map[String, String] = {
     Seq("product",
-      "NetLogoStartMenuShortcutId",
-      "NetLogo3DStartMenuShortcutId",
-      "HubNetClientStartMenuShortcutId",
-      "NetLogoDesktopShortcutId",
-      "NetLogo3DDesktopShortcutId",
-      "HubNetClientDesktopShortcutId",
-      "nlogoExecutableId", "nlogo3DExecutableId", "hubNetClientExecutableId",
-      "behaviorSearchExecutableId",
-      "behaviorSearchDesktopShortcutId",
-      "behaviorSearchStartMenuShortcutId",
-      "startMenuFolderId"
+        "upgrade",
+        "NetLogoStartMenuShortcutId",
+        "NetLogo3DStartMenuShortcutId",
+        "HubNetClientStartMenuShortcutId",
+        "NetLogoDesktopShortcutId",
+        "NetLogo3DDesktopShortcutId",
+        "HubNetClientDesktopShortcutId",
+        "nlogoExecutableId", "nlogo3DExecutableId", "hubNetClientExecutableId",
+        "behaviorSearchExecutableId",
+        "behaviorSearchDesktopShortcutId",
+        "behaviorSearchStartMenuShortcutId",
+        "startMenuFolderId"
       ).flatMap(k => Seq(k + ".32", k + ".64")).map(k => k -> java.util.UUID.randomUUID.toString.toUpperCase).toMap
   }
 
@@ -127,7 +125,7 @@ object PackageWinAggregate {
     log.info("Generating WiX config files")
 
     val componentConfig = Map(
-      "upgradeCode" -> platformVars.upgradeCode,
+      "upgradeCode" -> archUUIDs("upgrade"),
       "platformArch" -> platformVars.platformArch,
       "bitness" -> platformVars.bitness,
       "version" -> version,
