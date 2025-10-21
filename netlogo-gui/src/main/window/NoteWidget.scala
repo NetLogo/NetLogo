@@ -14,6 +14,7 @@ import java.awt.{ Color, Dimension, Rectangle }
 import java.util.ArrayList
 import javax.swing.{ Box, BoxLayout, JEditorPane }
 import javax.swing.border.EmptyBorder
+import javax.swing.text.DefaultCaret
 
 import org.nlogo.core.{ I18N, TextBox => CoreTextBox, Widget => CoreWidget }
 import org.nlogo.swing.Transparent
@@ -23,6 +24,8 @@ class NoteWidget extends SingleErrorWidget with Transparent with Editable {
   private val textPane = new JEditorPane("text/html", "") {
     setEditable(false)
     setOpaque(false)
+
+    setCaret(new SilentCaret)
   }
 
   locally {
@@ -211,5 +214,11 @@ class NoteWidget extends SingleErrorWidget with Transparent with Editable {
 
       case _ =>
     }
+  }
+
+  // prevents the interface from automatically scrolling to a note widget
+  // when setText is called (Isaac B 10/21/25)
+  private class SilentCaret extends DefaultCaret {
+    override def adjustVisibility(nloc: Rectangle): Unit = {}
   }
 }
