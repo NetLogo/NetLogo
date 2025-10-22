@@ -1,6 +1,6 @@
 
 NetLogo author: Uri Wilensky
-Core development team: Jason Bertsche, Aaron Brandes, Jeremy Baker and Isaac Brown.
+Core development team: Jason Bertsche, Omar Ibrahim, Jeremy Baker and Isaac Brown.
 
 Seungyeon Kim was the main graphics designer for the Graphical User Interface changes for NetLogo 7.
 
