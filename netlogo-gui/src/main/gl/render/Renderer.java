@@ -77,22 +77,18 @@ public class Renderer
   // subclasses/traits should this to false to avoid re-adding lights
   boolean addsLights = true;
 
-  private double uiScale;
-
   public Renderer(WorldWithWorldRenderable world,
                   ViewSettings graphicsSettings,
                   DrawingInterface drawing,
-                  GLViewSettings glSettings,
-                  double uiScale) {
-    this(world, graphicsSettings, drawing, glSettings, new ShapeRenderer(world), uiScale);
+                  GLViewSettings glSettings) {
+    this(world, graphicsSettings, drawing, glSettings, new ShapeRenderer(world));
   }
 
   public Renderer(WorldWithWorldRenderable world,
                   ViewSettings graphicsSettings,
                   DrawingInterface drawing,
                   GLViewSettings glSettings,
-                  ShapeRenderer shapeRenderer,
-                  double uiScale) {
+                  ShapeRenderer shapeRenderer) {
     modelMatrix = DoubleBuffer.wrap(new double[16]);
     projMatrix = DoubleBuffer.wrap(new double[16]);
     viewPort = IntBuffer.wrap(new int[4]);
@@ -106,7 +102,6 @@ public class Renderer
     patchRenderer = createPatchRenderer(world, drawing);
     worldRenderer = createWorldRenderer(world, patchRenderer, drawing,
         turtleRenderer, glSettings);
-    this.uiScale = uiScale;
   }
 
   public Renderer(Renderer glrenderer) {
@@ -119,7 +114,6 @@ public class Renderer
     linkRenderer = glrenderer.linkRenderer;
     shapeRenderer = glrenderer.shapeRenderer;
     shapeManager = glrenderer.shapeManager;
-    uiScale = glrenderer.uiScale;
     worldRenderer.shapeManager_$eq(shapeManager);
     shapeRenderer.shapeManager_$eq(shapeManager);
   }
@@ -235,8 +229,8 @@ public class Renderer
   public void reshape(GLAutoDrawable gLDrawable, int x, int y, int width, int height) {
     GL2 gl = (GL2) gLDrawable.getGL();
     if (System.getProperty("os.name").toLowerCase().startsWith("linux")) {
-      this.width = (int)(width * uiScale);
-      this.height = (height > 0) ? (int)(height * uiScale) : 1;
+      this.width = width;
+      this.height = (height > 0) ? height : 1;
     } else {
       this.width = width;
       this.height = height > 0 ? height : 1;
