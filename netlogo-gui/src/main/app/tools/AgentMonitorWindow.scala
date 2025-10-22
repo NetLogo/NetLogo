@@ -138,6 +138,8 @@ class AgentMonitorWindow(val agentKind: AgentKind, _agent: Agent, radius: Double
       }
     }
 
+    pack()
+
     super.setVisible(visible)
   }
 
