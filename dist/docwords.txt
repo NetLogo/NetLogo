@@ -27,6 +27,8 @@ Atlassian
 Authors's
 Automata
 Autoplot
+autoplotx
+autoploty
 Autoplotting
 Azimuthal
 BICUBIC
@@ -82,6 +84,7 @@ DefaultCommand
 DefaultReporter
 Deselect
 Dfile
+dictTitle
 Digikey
 Digikey's
 Diprotic
@@ -92,6 +95,7 @@ Drawbar
 Dsun
 EEC
 EPFL
+EPL
 ESRI
 Esc
 Evanston
@@ -119,6 +123,7 @@ GIS
 GPL
 GPLv
 GPS
+Gson
 GTK
 GasLab
 GeForce
@@ -182,6 +187,7 @@ JRE
 JRuby
 JSR
 JScience
+JSSC
 JTS
 JVM
 Jama
@@ -281,6 +287,8 @@ Polyconic
 Polysynth
 Predation's
 PrimitiveManager
+primMap
+primTitle
 PrintWriter
 ProbLab
 Pty
@@ -612,6 +620,7 @@ hsb
 ht
 html
 http
+HTTPClient
 https
 hubnet
 iMovie
@@ -645,6 +654,7 @@ jogamp
 jogl
 jpg
 jre
+json
 jsp
 kb
 keynumber
@@ -728,6 +738,7 @@ oxcor
 oycor
 ozcor
 patch's
+patchset
 pathname
 pathnames
 pcolor
@@ -880,6 +891,7 @@ thisway
 ti
 tickCounterChanged
 timestamp
+Tinfour
 tle
 tmp
 toLogoList
