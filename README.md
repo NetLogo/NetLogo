@@ -35,14 +35,13 @@ NetLogo comes with a [tutorial](https://docs.netlogo.org/tutorial1.html) which i
 If you're looking for a textbook which explains the concepts underlying NetLogo you might look at [An Introduction to Agent-Based Modeling](https://mitpress.mit.edu/9780262731898/an-introduction-to-agent-based-modeling/) available as a paper book and/or ebook from MIT Press.
 The archives of an intro courses on NetLogo titled "Introduction to Agent-Based Modeling" are available on [Complexity Explorer](https://www.complexityexplorer.org/courses/23-introduction-to-agent-based-modeling).
 
-### Help With Modeling
+### Help with Modeling
 
 There are many good resources listed on the [NetLogo resources page](https://www.netlogo.org/resources/)
-The [Netlogo-Users Google group](http://groups.google.com/d/forum/netlogo-users) frequently tackles questions on modeling.
-Be aware that the the group is moderated, so most messages don't go through until at least the next business day.
-There is also a fairly active NetLogo community [on StackOverflow](http://stackoverflow.com/questions/tagged/netlogo).
-NetLogo Users tends to be a better place to ask more open-ended modeling questions, for instance "I'm interested in making a model of plate tectonics, can anyone offer advice?".
-StackOverflow tends to be best for asking specific questions with definite answers, for instance "How can I create a small-world network of turtles and links?".
+
+The best place to ask questions is [the NetLogo Forum](https://forum.netlogo.org/).
+
+The [Netlogo-Users Google group](http://groups.google.com/d/forum/netlogo-users) frequently tackles questions on modeling, but be aware that the group is moderated, so most messages don't go through until at least the next business day.
 
 ### Suggestions for New Features
 
