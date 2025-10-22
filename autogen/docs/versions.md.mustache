@@ -26,19 +26,22 @@ For help running models made in old versions, see the
 - Plots, monitors, and output widgets are now slightly lighter grey in light mode.
 - Disabled buttons now have slightly darker text (for increased contrast) in light mode.
 
+### Changes to NetLogo Web export
+
+- NetLogo Desktop will now export the latest version of NetLogo Web
+    - The most notable change to NetLogo Web is that it now sends anonymized usage data to our Google Analytics
+        - The amount of data tracked by this is very minimal, so we ask that users please leave it enabled so that we can better understand how self-hosted NetLogo Web models are being used.  However, note that the functionality can be disabled by appending `?disableAnalytics` to the URL
+    - Other updates to NetLogo Web are documented [here](https://netlogoweb.org/whats-new), from version v2.12.1 to v2.12.4
+
 ### Major bugs fixed
 
 - Primitives for writing text to files were always overwriting the files, rather than appending to them
 - Running Grammarly on a Mac could prevent using the 3D View
-- Monitors that were displaying numbers in scientific notation were showing an extra "0" at the end
-- Monitors were switching to scientific notation at 10,000,000 instead of at 9,007,199,254,740,993 (2<sup>53</sup>)
 
 ### Minor bugs fixed
 
-- Updated to the latest version of NetLogo Web
-    - The most notable change to NetLogo Web is that the HTML files now send usage data to our Google Analytics
-        - The amount of data tracked by this is very minimal, so we ask that users please leave it enabled so that we can better understand how self-hosted NetLogo Web models are being used.  However, note that the functionality can be disabled by appending `?disableAnalytics` to the URL
-    - Other updates to NetLogo Web are documented [here](https://netlogoweb.org/whats-new), from version v2.12.1 to v2.12.4
+- Monitors that were displaying numbers in scientific notation were showing an extra "0" at the end
+- Monitors were switching to scientific notation at 10,000,000 instead of at 9,007,199,254,740,993 (2<sup>53</sup>)
 - The "Reload model on external changes" functionality was not watching all of the files that it should have been for the full duration that it should have been
 - The "Reload model on external changes" functionality could sometimes trigger the display of multiple redundant "Are you sure you want to open a different file?" dialogs
 - The "Reload model on external changes" functionality could sometimes raise unnecessary exceptions
