@@ -6,7 +6,7 @@ import Docs.{ allDocs, docsRoot, extensionDocs, htmlDocs, manualPDF }
 import Extensions.{ extensions, extensionRoot }
 import ModelsLibrary.{ modelsDirectory, modelIndex }
 import NativeLibs.nativeLibs
-import NetLogoBuild.{ all, buildDate, marketingVersion, year }
+import NetLogoBuild.{ all, buildDate, marketingVersion, numericMarketingVersion, year }
 import Running.makeMainTask
 import java.nio.file.Paths
 import java.nio.file.Files
@@ -16,6 +16,7 @@ object NetLogoPackaging {
 
   lazy val aggregateJDKParser      = settingKey[State => Parser[JDK]]("parser for packageApp settings")
   lazy val aggregateOnlyFiles      = taskKey[Seq[File]]("Files to be included in the aggregate root")
+  lazy val buildDownloadPages      = taskKey[Seq[File]]("package the web download pages")
   lazy val buildNetLogo            = taskKey[Unit]("build NetLogo")
   lazy val configRoot              = settingKey[File]("configuration directory")
   lazy val resaveModels            = taskKey[Unit]("prep models library for packaging")
@@ -116,6 +117,65 @@ object NetLogoPackaging {
     },
 
     webTarget := target.value / "downloadPages",
+
+    buildDownloadPages := {
+      val webSource = baseDirectory.value / "downloadPages"
+      val downloadLocations =
+        Map(
+          "macInstallerIntel"    -> s"NetLogo-${marketingVersion.value}-x86_64.dmg",
+          "macInstallerSilicon"  -> s"NetLogo-${marketingVersion.value}-aarch64.dmg",
+          "winInstaller32"       -> s"NetLogo-${marketingVersion.value}-32.msi",
+          "winInstaller64"       -> s"NetLogo-${marketingVersion.value}-64.msi",
+          "linuxInstaller32"     -> s"NetLogo-${marketingVersion.value}-32.tgz",
+          "linuxInstaller64"     -> s"NetLogo-${marketingVersion.value}-64.tgz")
+              .map(t => (t._1, webTarget.value / t._2))
+
+      downloadLocations.map(_._2).filterNot(_.exists).foreach { f =>
+        sys.error(s"missing $f, please run build on linux, mac, and windows before building download pages")
+      }
+
+      val downloadSizes = downloadLocations.map {
+        case (name, f) => name.replace("Installer", "Size") ->
+            ((f.length / 1000000).toString + " MB")
+      }
+
+      val buildVariables =
+        Map[String, String](
+          "version"            -> marketingVersion.value,
+          "numericOnlyVersion" -> numericMarketingVersion.value,
+          "year"               -> buildDate.value.takeRight(4),
+          "date"               -> buildDate.value
+        )
+
+      val vars = buildVariables ++ downloadSizes ++
+        downloadLocations.map(t => (t._1, t._2.getName))
+
+      Mustache.betweenDirectories(webSource, webTarget.value,
+        Map("index" -> "NetLogo {{version}} Downloads"), vars)
+
+    },
+
+    generateLocalWebsite := {
+      val localSiteTarget = target.value / marketingVersion.value
+      FileActions.copyDirectory(webTarget.value, localSiteTarget)
+      FileActions.copyDirectory((netlogo / modelsDirectory).value, localSiteTarget / "models")
+      FileActions.copyDirectory(netLogoRoot.value / "docs", localSiteTarget / "docs")
+      FileActions.copyFile(netLogoRoot.value / "NetLogo User Manual.pdf", localSiteTarget / "docs" / "NetLogo User Manual.pdf")
+      localSiteTarget
+    },
+
+    uploadWebsite := {
+      val user = System.getenv("USER")
+      val host = "ccl.northwestern.edu"
+      val targetDir = "/usr/local/www/netlogo"
+      val generatedSite = generateLocalWebsite.value
+      // Use `--ignore-existing` because generally the website is only uploaded once during a release.  If there is a failure
+      // and it needs to be re-uploaded, the directory should be wiped on the server and then this task can be re-run.  If
+      // just the docs need to be updated, see `uploadDocs` below, which will change existing files.  -Jeremy B October 2021
+      RunProcess(Seq("rsync", "-rltv", "--ignore-existing", "--progress", generatedSite.getPath, s"${user}@${host}:${targetDir}"), "rsync")
+      RunProcess(Seq("ssh", s"${user}@${host}", "chgrp", "-R", "apache", s"${targetDir}/${marketingVersion.value}"), "ssh - change release group")
+      RunProcess(Seq("ssh", s"${user}@${host}", "chmod", "-R", "g+rwX",  s"${targetDir}/${marketingVersion.value}"), "ssh - change release permissions")
+    },
 
     uploadDocs := {
       val user = System.getenv("USER")
