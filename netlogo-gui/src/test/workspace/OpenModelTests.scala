@@ -79,11 +79,11 @@ class OpenModelTests extends AnyFunSuite {
   } }
 
   test("if the model is in 2D, but NetLogo is open in 3D, notifies the user") { new OpenTest {
-    override def currentVersion = "NetLogo 3D 7.0.1"
+    override def currentVersion = "NetLogo 3D 7.0.2"
     userContinuesOpen()
     assert(openedModel.isDefined)
     assert(controller.notifiedModelArity   == 2)
-    assert(controller.notifiedModelVersion == "NetLogo 7.0.1")
+    assert(controller.notifiedModelVersion == "NetLogo 7.0.2")
   } }
 
   test("if the model is not a known version, checks before opening") { new OpenTest {
