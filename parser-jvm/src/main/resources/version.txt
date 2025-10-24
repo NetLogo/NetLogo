@@ -1,5 +1,6 @@
+NetLogo 7.0.2
+October 24, 2025
 NetLogo 7.0.1
-October 22, 2025
 NetLogo 7.0.0
 NetLogo 6.4
 NetLogo 6.3

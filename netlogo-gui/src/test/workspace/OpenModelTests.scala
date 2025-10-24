@@ -20,7 +20,7 @@ class OpenModelTests extends AnyFunSuite {
   trait OpenTest {
     val uri: URI = testURI
     def modelChanges: Model => Model = identity
-    def currentVersion = "NetLogo 7.0.1"
+    def currentVersion = "NetLogo 7.0.2"
     def autoconverter: ModelConversion = FileFormat.defaultConverter
 
     def userContinuesOpen() = controller.openModel(true)
@@ -131,7 +131,7 @@ class OpenModelTests extends AnyFunSuite {
   } }
 
   test("serializes various version in the model") { new OpenTest {
-    assert(nlogoformat.version.serialize(new Model()) === Array[String]("NetLogo 7.0.1"))
+    assert(nlogoformat.version.serialize(new Model()) === Array[String]("NetLogo 7.0.2"))
     assert(nlogoformat.version.serialize(new Model(version = "NetLogo 3D 6.3")) ===
       Array[String]("NetLogo 3D 6.3"))
   } }
