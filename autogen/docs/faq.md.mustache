@@ -405,30 +405,15 @@ check that Windows is actually running in 64-bit mode; see
 
 ### NetLogo won't start on Mac OS Sierra (or later)
 
-Some users have reported problems opening NetLogo 6 on Mac OS Sierra and later
-(We don’t yet know if this is an issue with NetLogo 7). We've been
-unable to determine a root cause for this problem, but we're continuing to
-investigate. We're looking for assistance from you if you run into this problem.
-It would be extremely helpful if you could run the following command in the
-"Terminal" application and send the output in an email to
-[bugs@ccl.northwestern.edu](mailto:bugs@ccl.northwestern.edu?subject=Sierra%20NetLogo%206%20Bug).
-
-    xattr -pl com.apple.quarantine /Applications/NetLogo\ {{version}}/NetLogo\ {{version}}.app
-
-running it should give you a single line of output (something like
-`com.apple.quarantine: 01e1;58ac6af2;Firefox;F2E0B1E2-D203-4B05-8DF9-ABA58B52EFEA`,
-but yours will have different numbers, letters, and words). Please copy and
-paste this string into the email you send us.
-
-There is also a partial workaround! Running the following command in the
+Some users have reported problems opening versions after NetLogo 6 on Mac OS Sierra and later.
+We've been unable to determine a root cause for this problem, but we're continuing to
+investigate. In the meantime, there is a workaround! Running the following command in the
 Terminal will enable users to run NetLogo without turning Gatekeeper completely
 off. The command is:
 
-    sudo xattr -dr com.apple.quarantine /Applications/NetLogo\ {{version}}/NetLogo\ {{version}}.app
+    sudo xattr -dr com.apple.quarantine /Applications/NetLogo\ {{version}}
 
-Note that if you plan to run NetLogo 3D or HubNet Client you
-may also need to re-run that command once for each of those applications. If the
-workaround was not effective for you, please
+If the workaround was not effective for you, please
 [send us an email and let us know](mailto:bugs@ccl.northwestern.edu?subject=Sierra%20NetLogo%206%20Bug%20Workaround).
 
 ### NetLogo won't start on Windows or crashes suddenly on Mac OS Sierra
