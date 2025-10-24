@@ -2,9 +2,7 @@
 
 package org.nlogo.window
 
-import java.lang.NumberFormatException
-
-import org.nlogo.agent.{ ConstantSliderConstraint, SliderConstraint }
+import org.nlogo.agent.SliderConstraint
 import org.nlogo.api.{ CompilerServices, ExtensionManager, MersenneTwisterFast }
 import org.nlogo.core.{ Horizontal, I18N, Slider => CoreSlider, Vertical, Widget => CoreWidget }
 import org.nlogo.editor.Colorizer
@@ -66,8 +64,8 @@ class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast,
       new InterfaceGlobalEvent(this, false, false, valueChanged, buttonRelease).raise(this)
   }
 
-  def forceValue(v: Double): Unit = {
-    super.setValue(v)
+  override def forceValue(v: Double): Unit = {
+    super.forceValue(v)
     new InterfaceGlobalEvent(this, false, false, true, false).raise(this)
   }
 
@@ -141,7 +139,7 @@ class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast,
   // EVENT HANDLING
   def handle(e: AfterLoadEvent): Unit = {
     updateConstraints()
-    setValue(defaultValue)
+    forceValue(defaultValue)
   }
 
   def handle(e: PeriodicUpdateEvent): Unit = {
@@ -159,7 +157,6 @@ class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast,
         val v = s.default
         val inc: String = s.step
 
-        setSliderConstraint(new ConstantSliderConstraint(min.toDouble, max.toDouble, inc.toDouble))
         setUnits(s.units.optionToPotentiallyEmptyString)
         setVertical(s.direction == Vertical)
 
@@ -170,12 +167,6 @@ class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast,
         // it needs to be tested more and maybe we can get rid of it. JC - 9/23/10
         setMinimumCode(min)
         setIncrementCode(inc)
-        try {
-          setValue(v, inc.toDouble)
-        } catch {
-          case e: NumberFormatException =>
-            setValue(v)
-        }
         defaultValue = v
         oldSize(s.oldSize)
         setSize(s.width, s.height)

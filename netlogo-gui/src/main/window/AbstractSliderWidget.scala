@@ -221,14 +221,11 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
     }
   }
 
-  def setValue(d: Double, inc: Double): Unit = {
-    if (sliderData.value != d) {
-      sliderData.value = roundToPrecision(d)
-      valueComponent.setText(valueString(value))
-      slider.setValue(((value - minimum) / inc).round.asInstanceOf[Int])
-      repaint()
-      new Events.DirtyEvent(None).raise(this)
-    }
+  def forceValue(d: Double): Unit = {
+    sliderData.value = roundToPrecision(d)
+    valueComponent.setText(valueString(value))
+    slider.setValue(((value - minimum) / increment).round.asInstanceOf[Int])
+    repaint()
   }
 
   def coerceValue(value: Double): Double = {
