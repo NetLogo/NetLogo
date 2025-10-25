@@ -27,11 +27,11 @@ object HeadlessFileController extends OpenModel.Controller {
     false
   }
   def shouldOpenModelOfLegacyVersion(version: String): Boolean = {
-    System.err.println(s"This NetLogo model has version $version, the current version is ${Version.version}, please resave the model in NetLogo ${Version.version} before opening headlessly. Aborting...")
+    System.err.println(s"This NetLogo model has version $version, the current version is ${Version.version}, please resave the model in ${Version.version} before opening headlessly. Aborting...")
     false
   }
   def shouldOpenModelOfUnknownVersion(version: String): Boolean = {
-    System.err.println(s"This NetLogo model has version $version, the current version is ${Version.version}, please resave the model in NetLogo ${Version.version} before opening headlessly. Aborting...")
+    System.err.println(s"This NetLogo model has version $version, the current version is ${Version.version}, please resave the model in ${Version.version} before opening headlessly. Aborting...")
     false
   }
   def errorAutoconvertingModel(res: FailedConversionResult): Option[Model] = {
