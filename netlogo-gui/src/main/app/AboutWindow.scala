@@ -2,7 +2,7 @@
 
 package org.nlogo.app
 
-import java.awt.{ BorderLayout, Dimension, Font, Frame }
+import java.awt.{ BorderLayout, Cursor, Dimension, Font, Frame }
 import java.awt.event.{ WindowAdapter, WindowEvent, MouseAdapter, MouseEvent }
 import java.net.URI
 import javax.swing.{ JDialog, JLabel, SwingConstants, Timer, WindowConstants }
@@ -24,6 +24,7 @@ class AboutWindow(parent: Frame) extends JDialog(parent, I18N.gui.get("dialog.ab
     setBorder(new EmptyBorder(5, 10, 5, 10))
     setDragEnabled(false)
     setEditable(false)
+    setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR))
   }
   private var graphicsInfo = ""
   private val staticInfo =
@@ -70,6 +71,7 @@ class AboutWindow(parent: Frame) extends JDialog(parent, I18N.gui.get("dialog.ab
     setWrapStyleWord(true)
     setEditable(false)
     setBorder(new EmptyBorder(5, 10, 5, 10))
+    setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR))
   }
 
   private val creditsScrollPane = new ScrollPane(credits) {
