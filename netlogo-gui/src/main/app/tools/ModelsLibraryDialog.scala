@@ -167,7 +167,9 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
 
   private val modelPreviewPanel: ModelPreviewPanel = new ModelPreviewPanel()
 
-  private val modelPreviewScrollPane = new ScrollPane(modelPreviewPanel)
+  private val modelPreviewScrollPane = new ScrollPane(modelPreviewPanel) {
+    setBorder(null)
+  }
 
   private val tree = new JTree(new SearchableModelTree(node)) with ThemeSync {
     private val renderer = new DefaultTreeCellRenderer with ThemeSync {
@@ -190,7 +192,9 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
 
   tree.setSelectionRow(0)
 
-  private val treeScrollPane = new ScrollPane(tree)
+  private val treeScrollPane = new ScrollPane(tree) {
+    setBorder(null)
+  }
 
   private val contentPane = new JPanel
 
