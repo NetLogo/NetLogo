@@ -4,13 +4,14 @@ package org.nlogo.app
 
 import org.nlogo.core.I18N
 import org.nlogo.swing.{ Menu, UserAction },
-  UserAction.{ FileExportSubcategory, FileImportSubcategory, FileOpenGroup, FileSaveGroup, FileShareGroup,
-               FileRecentSubcategory, FileResourcesGroup, MenuAction }
+  UserAction.{ FileExportSubcategory, FileImportSubcategory, FileOpenGroup, FilePrintGroup, FileQuitGroup,
+               FileSaveGroup, FileShareGroup, FileRecentSubcategory, FileResourcesGroup, MenuAction }
 
 object FileMenu {
   val ExportImportGroup = "ExportImportGroup"
 
-  def sortOrder = Seq(FileOpenGroup, FileSaveGroup, FileShareGroup, FileResourcesGroup, ExportImportGroup)
+  def sortOrder = Seq(FileOpenGroup, FileSaveGroup, FileShareGroup, FileResourcesGroup, ExportImportGroup,
+                      FilePrintGroup, FileQuitGroup)
 }
 
 import FileMenu._

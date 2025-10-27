@@ -64,7 +64,7 @@ object FileManager {
   extends ExceptionCatchingAction(I18N.gui.get("menu.file.quit"), parent)
   with MenuAction {
     category    = UserAction.FileCategory
-    group       = "Quit"
+    group       = UserAction.FileQuitGroup
     accelerator = UserAction.KeyBindings.keystroke('Q', withMenu = true)
 
     override def action(): Unit = {
@@ -497,15 +497,23 @@ class FileManager(workspace: AbstractWorkspaceScala,
 
   def currentModel: Model = modelSaver.currentModel
 
-  def actions: Seq[MenuAction] = Seq(
-    new NewAction(this, parent),
-    new OpenAction(this, parent),
-    new QuitAction(this, parent),
-    new ModelsLibraryAction(this, parent),
-    new UploadToModelingCommonsAction(parent, workspace, workspaceFactory, modelSaver),
-    new SaveAsNetLogoWebAction(this, workspace, modelSaver, parent),
-    new ImportClientAction(this, workspace, parent),
-    new ManageResourcesAction(this, workspace, parent))
+  def actions: Seq[MenuAction] = {
+    Seq(
+      new NewAction(this, parent),
+      new OpenAction(this, parent),
+      new ModelsLibraryAction(this, parent),
+      new UploadToModelingCommonsAction(parent, workspace, workspaceFactory, modelSaver),
+      new SaveAsNetLogoWebAction(this, workspace, modelSaver, parent),
+      new ImportClientAction(this, workspace, parent),
+      new ManageResourcesAction(this, workspace, parent)
+    ) ++ {
+      if (System.getProperty("os.name").toLowerCase.startsWith("mac")) {
+        Seq()
+      } else {
+        Seq(new QuitAction(this, parent))
+      }
+    }
+  }
 
   def saveModelActions(parent: Component) = {
     def saveAction(saveAs: Boolean) =

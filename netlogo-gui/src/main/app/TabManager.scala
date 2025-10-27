@@ -260,7 +260,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
 
   class PrintAction extends AbstractAction(I18N.gui.get("menu.file.print")) with UserAction.MenuAction {
     category = UserAction.FileCategory
-    group = "org.nlogo.app.Tabs.Print"
+    group = UserAction.FilePrintGroup
     accelerator = UserAction.KeyBindings.keystroke('P', withMenu = true)
 
     def actionPerformed(e: ActionEvent): Unit =
