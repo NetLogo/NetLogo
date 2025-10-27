@@ -18,7 +18,7 @@ import org.nlogo.awt.EventQueue
 import org.nlogo.core.{ CompilerException, I18N }
 import org.nlogo.editor.Colorizer
 import org.nlogo.sdm.Translator
-import org.nlogo.swing.{ MenuBar, MenuItem, NetLogoIcon }
+import org.nlogo.swing.{ MenuBar, MenuItem, NetLogoIcon, Utils => SwingUtils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ Editable, EditDialogFactory, Events, MenuBarFactory }
 import org.nlogo.window.Event.LinkChild
@@ -68,6 +68,12 @@ class AggregateModelEditor(
     // at most once per model. After it's been made, it hides and shows
     // but is not disposed of until the model is closed. - AZS 6/18/05
     setDefaultCloseOperation(HIDE_ON_CLOSE)
+
+    SwingUtils.addEscKeyAction(getRootPane, new AbstractAction {
+      override def actionPerformed(e: ActionEvent): Unit = {
+        setVisible(false)
+      }
+    })
   }
 
   val view = new AggregateDrawingView(this, ViewSize.width, ViewSize.height)
