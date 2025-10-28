@@ -133,6 +133,9 @@ abstract class GUIWorkspace(world: World, kioskLevel: GUIWorkspace.KioskLevel, f
 
   private var _isModel3D = false
 
+  // prevents GUI interactions from happening during GUI tests (Isaac B 10/27/25)
+  private var invisible = false
+
   def getSwitchTo3DViewAction: Action =
     switchTo3DViewAction
 
@@ -151,6 +154,10 @@ abstract class GUIWorkspace(world: World, kioskLevel: GUIWorkspace.KioskLevel, f
 
   override def getPrimaryWorkspace: PrimaryWorkspace =
     this
+
+  def setInvisible(invisible: Boolean): Unit = {
+    this.invisible = invisible
+  }
 
   def getFrame: Frame =
     frame
@@ -665,15 +672,17 @@ abstract class GUIWorkspace(world: World, kioskLevel: GUIWorkspace.KioskLevel, f
     if (glView != null)
       glView.close()
 
-    if (world.program.dialect.is3D)
-      open3DView()
+    if (!invisible) {
+      if (world.program.dialect.is3D)
+        open3DView()
 
-    try {
-      evaluateCommands(new SimpleJobOwner("startup", world.mainRNG, AgentKind.Observer),
-                       "without-interruption [ startup ]", false)
-    } catch {
-      case e: CompilerException =>
-        Exceptions.ignore(e)
+      try {
+        evaluateCommands(new SimpleJobOwner("startup", world.mainRNG, AgentKind.Observer),
+                        "without-interruption [ startup ]", false)
+      } catch {
+        case e: CompilerException =>
+          Exceptions.ignore(e)
+      }
     }
   }
 

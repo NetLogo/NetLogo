@@ -37,7 +37,7 @@ object ReconfigureWorkspaceUI {
         new LoadModelEvent(model, shouldAutoInstallLibs),
         new LoadWidgetsEvent(model.widgets, convertWidgetSizes))
 
-      val afterEvents = List(new LoadEndEvent(), new AfterLoadEvent())
+      val afterEvents = List(new LoadEndEvent(shouldAutoInstallLibs), new AfterLoadEvent())
       // fire missles! (actually, just fire the events...)
       for (e <- beforeEvents ::: loadSectionEvents ::: afterEvents) e.raise(this)
     }

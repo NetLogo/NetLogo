@@ -17,6 +17,7 @@ object Analytics {
 
   private var available = false
   private var sendEnabled = false
+  private var silent = false
 
   private val category: String = {
     if (System.getProperty("org.nlogo.release") == "true") {
@@ -40,7 +41,7 @@ object Analytics {
 
   private def wrapRequest(request: MatomoRequest, synchronous: Boolean = false): Unit = {
 
-    if (sendEnabled) {
+    if (sendEnabled && !silent) {
 
       if (!available && System.currentTimeMillis() - lastCheck >= 30000)
         checkNetwork()
@@ -255,6 +256,11 @@ object Analytics {
 
   def refreshPreference(): Unit = {
     sendEnabled = NetLogoPreferences.getBoolean("sendAnalytics", false)
+  }
+
+  // used by GUI tests to prevent GitHub Actions from diluting the analytics data (Isaac B 10/29/25)
+  def silence(): Unit = {
+    silent = true
   }
 
   private def checkNetwork(): Unit = {
