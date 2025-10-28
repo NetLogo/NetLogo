@@ -3,12 +3,13 @@ import Def.{ Initialize, spaceDelimited }
 import Keys._
 
 object Testing {
-  lazy val fast     = taskKey[Unit]("fast tests")
-  lazy val medium   = taskKey[Unit]("medium tests")
-  lazy val slow     = taskKey[Unit]("slow tests")
-  lazy val language = taskKey[Unit]("language tests")
+  lazy val fast           = taskKey[Unit]("fast tests")
+  lazy val medium         = taskKey[Unit]("medium tests")
+  lazy val slow           = taskKey[Unit]("slow tests")
+  lazy val language       = taskKey[Unit]("language tests")
   lazy val extensionTests = taskKey[Unit]("extension tests")
-  lazy val crawl    = taskKey[Unit]("extremely slow tests")
+  lazy val crawl          = taskKey[Unit]("extremely slow tests")
+  lazy val gui            = taskKey[Unit]("gui tests")
 
   lazy val testReportersClass  = settingKey[String]("class used to run reporter tests")
   lazy val testCommandsClass   = settingKey[String]("class used to run command tests")
@@ -27,7 +28,7 @@ object Testing {
 
   lazy val suiteSettings = Seq(
     (Test / fast) := {
-      (Test / testOnly).toTask(" -- -l org.nlogo.util.SlowTestTag -l org.nlogo.util.ExtensionTestTag -l org.nlogo.headless.LanguageTestTag").value
+      (Test / testOnly).toTask(" -- -l org.nlogo.util.SlowTestTag -l org.nlogo.util.ExtensionTestTag -l org.nlogo.headless.LanguageTestTag -l org.nlogo.util.GuiTestTag").value
     },
     (Test / medium) := {
       (Test / testOnly).toTask(" -- -n org.nlogo.headless.LanguageTestTag -l org.nlogo.util.ExtensionTestTag").value
@@ -43,6 +44,9 @@ object Testing {
     },
     (Test / slow) := {
       (Test / testOnly).toTask(" -- -n org.nlogo.util.SlowTestTag -l org.nlogo.headless.LanguageTestTag -l org.nlogo.util.ExtensionTestTag").value
+    },
+    (Test / gui) := {
+      (Test / testOnly).toTask(" -- -n org.nlogo.util.GuiTestTag").value
     })
 
   def useLanguageTestPrefix(prefix: String) =

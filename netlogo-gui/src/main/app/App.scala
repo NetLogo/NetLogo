@@ -88,7 +88,9 @@ object App {
       } else {
         "light"
       }
-    })
+    }),
+    // only for testing, no GUI components will be shown with this flag (Isaac B 10/27/25)
+    invisible: Boolean = false
   )
 
   // ideally this would be an Option[App], but that would break all the code that uses App.app,
@@ -160,7 +162,8 @@ object App {
       System.setProperty("flatlaf.menuBarEmbedded", "false")
       System.setProperty("sun.awt.noerasebackground", "true") // stops view2.5d and 3d windows from blanking to white until next interaction
 
-      Splash.beginSplash() // also initializes AWT
+      if (!cmdArgs.invisible)
+        Splash.beginSplash() // also initializes AWT
 
       app = new App(cmdArgs)
 
@@ -249,6 +252,9 @@ object App {
         case "--3d" =>
           Version.set3D(true)
 
+        case "--invisible" =>
+          current = current.copy(invisible = true)
+
         case token if token.startsWith("--") =>
           // TODO: Decide: should we do System.exit() here?
           // Previously we've just ignored unknown parameters, but that seems wrong to me.  ~Forrest (2/12/2009)
@@ -328,8 +334,11 @@ class App(args: App.CommandLineArgs) extends LinkChild with Exceptions.Handler w
       override def updateMode = workspace.updateMode
     }
 
+    setInvisible(args.invisible)
+
     def aggregateManager: AggregateManagerInterface =
-      new GUIAggregateManager(frame, menuBarFactory, this, colorizer, editDialogFactory, extensionManager)
+      new GUIAggregateManager(frame, menuBarFactory, this, colorizer, editDialogFactory, extensionManager,
+                              args.invisible)
 
     def inspectAgent(agent: ApiAgent, radius: Double): Unit = {
       agent match {
@@ -370,7 +379,8 @@ class App(args: App.CommandLineArgs) extends LinkChild with Exceptions.Handler w
   private val interfaceTab = new InterfaceTab(workspace, monitorManager, editDialogFactory, colorizer,
                                               new CommandCenter(workspace, true))
 
-  private val modelLoader = FileFormat.standardAnyLoader(false, workspace, true)
+  val modelLoader = FileFormat.standardAnyLoader(false, workspace, true)
+
   private val modelSaver = new ModelSaver(this, modelLoader)
 
   val tabManager = new TabManager(workspace, interfaceTab, externalFileManager)
@@ -558,9 +568,11 @@ class App(args: App.CommandLineArgs) extends LinkChild with Exceptions.Handler w
         def dropActionChanged(e: DropTargetDragEvent): Unit = {}
       })
 
-      Splash.endSplash()
+      if (!args.invisible) {
+        Splash.endSplash()
 
-      frame.setVisible(true)
+        frame.setVisible(true)
+      }
 
       appHandler.ready(this)
 
@@ -575,26 +587,30 @@ class App(args: App.CommandLineArgs) extends LinkChild with Exceptions.Handler w
 
       syncWindowThemes()
 
-      if (analyticsConsent) {
-        val sendAnalytics = new OptionPane(frame, I18N.gui.get("dialog.analyticsConsent"),
-                                           I18N.gui.get("dialog.analyticsConsent.message"), OptionPane.Options.YesNo,
-                                           OptionPane.Icons.Info).getSelectedIndex == 0
+      if (args.invisible) {
+        Analytics.silence()
+      } else {
+        if (analyticsConsent) {
+          val sendAnalytics = new OptionPane(frame, I18N.gui.get("dialog.analyticsConsent"),
+                                            I18N.gui.get("dialog.analyticsConsent.message"), OptionPane.Options.YesNo,
+                                            OptionPane.Icons.Info).getSelectedIndex == 0
 
-        NetLogoPreferences.putBoolean("sendAnalytics", sendAnalytics)
+          NetLogoPreferences.putBoolean("sendAnalytics", sendAnalytics)
 
-        val request = quickRequest.post(uri"https://backend.netlogo.org/items/NetLogo_Desktop_Analytics")
-                                  .body(s"""{"enabled": $sendAnalytics}""")
-                                  .contentType("application/json")
+          val request = quickRequest.post(uri"https://backend.netlogo.org/items/NetLogo_Desktop_Analytics")
+                                    .body(s"""{"enabled": $sendAnalytics}""")
+                                    .contentType("application/json")
 
-        val backend = PekkoHttpBackend()
+          val backend = PekkoHttpBackend()
 
-        request.send(backend).onComplete { _ =>
-          backend.close()
+          request.send(backend).onComplete { _ =>
+            backend.close()
+          }
         }
-      }
 
-      Analytics.refreshPreference()
-      Analytics.appStart(Version.versionNumberNo3D, Version.is3D)
+        Analytics.refreshPreference()
+        Analytics.appStart(Version.versionNumberNo3D, Version.is3D)
+      }
     } catch {
       case ex: Throwable => StartupError.report(ex)
     }
