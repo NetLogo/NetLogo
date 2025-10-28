@@ -12,6 +12,7 @@ import scala.concurrent.{ ExecutionContext, Future }
 
 object Analytics {
   private var sendEnabled = false
+  private var silent = false
 
   private val category: String = {
     if (System.getProperty("org.nlogo.release") == "true") {
@@ -31,7 +32,7 @@ object Analytics {
   private var startTime = 0L
 
   private def wrapRequest(request: MatomoRequest, synchronous: Boolean = false): Unit = {
-    if (sendEnabled) {
+    if (sendEnabled && !silent) {
       if (synchronous) {
         try {
           new Thread {
@@ -222,5 +223,10 @@ object Analytics {
 
   def refreshPreference(): Unit = {
     sendEnabled = NetLogoPreferences.getBoolean("sendAnalytics", false)
+  }
+
+  // used by GUI tests to prevent GitHub Actions from diluting the analytics data (Isaac B 10/29/25)
+  def silence(): Unit = {
+    silent = true
   }
 }
