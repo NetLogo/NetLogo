@@ -136,7 +136,6 @@ class AggregateModelEditor(
     setTool(selectionTool)
     setPreferredSize(WindowSize)
     pack()
-
     syncTheme()
   }
 
