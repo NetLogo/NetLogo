@@ -64,7 +64,7 @@ class CompilerManager(val workspace: AbstractWorkspace,
     isLoading = false
     world.program(Program.fromDialect(workspace.dialect).copy(interfaceGlobals = getGlobalVariableNames))
     world.realloc()
-    compileAll()
+    compileAll(e.shouldAutoInstallLibs)
     world.clearAll()
   }
 
@@ -162,7 +162,7 @@ class CompilerManager(val workspace: AbstractWorkspace,
     }
   }
 
-  private def compileAll(): Unit = {
+  private def compileAll(shouldAutoInstallLibs: Boolean = false): Unit = {
     raiseEvent(new RemoveAllJobsEvent())
     world.displayOn(true)
     // We can't compile the Code tab until the contents of
@@ -173,7 +173,7 @@ class CompilerManager(val workspace: AbstractWorkspace,
     // has loaded, including widgets) will take care of calling
     // this method again. - ST 7/7/06
     if (!isLoading) {
-      val proceed = compileProcedures()
+      val proceed = compileProcedures(shouldAutoInstallLibs)
       // After every, failing or passing, compilation process, NetLogo needs to remember
       // the state of all the widgets in the interface tab when loading for the first time.
       // This is normally done by reallocating the widgets, updating the dialog
@@ -195,7 +195,7 @@ class CompilerManager(val workspace: AbstractWorkspace,
     }
   }
 
-  private def compileProcedures(): Boolean = {
+  private def compileProcedures(shouldAutoInstallLibs: Boolean): Boolean = {
     val program = Program.fromDialect(workspace.dialect).copy(interfaceGlobals = getGlobalVariableNames)
     world.program(program)
     try {
@@ -209,7 +209,7 @@ class CompilerManager(val workspace: AbstractWorkspace,
         workspace.compiler.compileProgram(
           proceduresInterface.innerSource, owners, program,
           workspace.getExtensionManager, workspace.getLibraryManager,
-          workspace.getCompilationEnvironment, false)
+          workspace.getCompilationEnvironment, shouldAutoInstallLibs)
       workspace.setProcedures(results.proceduresMap)
       workspace.procedures.values.foreach { procedure =>
         val owner = procedure.filename match {
