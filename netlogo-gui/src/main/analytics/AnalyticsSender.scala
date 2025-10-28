@@ -19,6 +19,7 @@ object AnalyticsSender {
   private val domain = "https://telemetry.netlogo.org"
 
   private var sendEnabled = false
+  private var silent      = false
 
   private val isDeveloper = System.getProperty("org.nlogo.release") != "true"
 
@@ -73,7 +74,7 @@ object AnalyticsSender {
 
   private def trySending(eventType: AnalyticsEventType, payloadOpt: Option[String]): Future[Unit] =
     Future {
-      if (sendEnabled && networkTracker.isAvailable())
+      if (!silent && sendEnabled && networkTracker.isAvailable())
         send(eventType, payloadOpt)
     }
 
@@ -110,5 +111,10 @@ object AnalyticsSender {
           println(s"Network unavailable.  Not retrying telemetry event of type '$eventType'.")
         }
     }
+
+  // used by GUI tests to prevent GitHub Actions from diluting the analytics data (Isaac B 10/29/25)
+  def silence(): Unit = {
+    silent = true
+  }
 
 }
