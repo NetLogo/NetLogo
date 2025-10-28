@@ -26,16 +26,19 @@ class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast,
   def minimumCode: String = _minimumCode
   def setMinimumCode(s: String): Unit = {
     _minimumCode = s
+    updateConstraints()
   }
 
   def maximumCode: String = _maximumCode
   def setMaximumCode(s: String): Unit = {
     _maximumCode = s
+    updateConstraints()
   }
 
   def incrementCode: String = _incrementCode
   def setIncrementCode(s: String): Unit = {
     _incrementCode = s
+    updateConstraints()
   }
 
   override def classDisplayName = I18N.gui.get("tabs.run.widgets.slider")
