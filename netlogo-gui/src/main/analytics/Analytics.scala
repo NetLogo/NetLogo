@@ -173,5 +173,4 @@ object Analytics {
   def refreshPreference(): Unit = {
     AnalyticsSender.refreshPreference()
   }
-
 }

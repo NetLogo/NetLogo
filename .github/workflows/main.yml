@@ -55,11 +55,13 @@ jobs:
         , "netlogo/Test/fast"
         , "netlogo/Test/medium"
         , "netlogo/Test/slow"
+        , "netlogo/Test/gui"
         , "nogen; netlogo/Test/fast"
         , "nogen; netlogo/Test/medium"
         , "threed; netlogo/Test/fast"
         , "threed; netlogo/Test/medium"
         , "threed; netlogo/Test/slow"
+        , "threed; netlogo/Test/gui"
         , "headless/Test/fast"
         , "headless/Test/medium"
         , "headless/Test/slow"
@@ -108,7 +110,10 @@ jobs:
       - uses: mfinelli/setup-imagemagick@v7
 
       - name: ${{ matrix.test }}
-        run: sbt "${{ matrix.test }}"
+        run: |
+          export DISPLAY=:0
+          Xvfb :0 -screen 0 1920x1080x24 &
+          sbt "${{ matrix.test }}"
 
       - uses: actions/upload-artifact@v6
         with:

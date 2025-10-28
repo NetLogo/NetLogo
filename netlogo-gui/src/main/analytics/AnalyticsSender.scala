@@ -22,6 +22,7 @@ object AnalyticsSender {
 
   private var available   = false
   private var sendEnabled = false
+  private var silent      = false
 
   private var lastCheck = 0L
 
@@ -74,17 +75,22 @@ object AnalyticsSender {
   private[analytics] def shutdown(): Unit = {
   }
 
-  private def trySending(eventType: AnalyticsEventType, payloadOpt: Option[String]): Future[Unit] =
-    Future {
-      if (sendEnabled) {
-        if (!available && System.currentTimeMillis() - lastCheck >= 5000) {
-          checkNetwork()
-        }
-        if (available) {
-          send(eventType, payloadOpt)
+  private def trySending(eventType: AnalyticsEventType, payloadOpt: Option[String]): Future[Unit] = {
+    if (silent) {
+      Future.successful({})
+    } else {
+      Future {
+        if (sendEnabled) {
+          if (!available && System.currentTimeMillis() - lastCheck >= 5000) {
+            checkNetwork()
+          }
+          if (available) {
+            send(eventType, payloadOpt)
+          }
         }
       }
     }
+  }
 
   private def send(eventType: AnalyticsEventType, payloadOpt: Option[String]): Unit =
     try {
@@ -125,6 +131,11 @@ object AnalyticsSender {
           conn.getResponseCode()
         }.toOption.contains(200)
     lastCheck = System.currentTimeMillis()
+  }
+
+  // used by GUI tests to prevent GitHub Actions from diluting the analytics data (Isaac B 10/29/25)
+  def silence(): Unit = {
+    silent = true
   }
 
 }
