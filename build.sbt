@@ -164,7 +164,12 @@ lazy val netlogo = project.in(file("netlogo-gui")).
           NativeLibs.nativeLibsTask ++
           NetLogoWebExport.settings ++
           GUISettings.settings ++
-          Depend.dependTask: _*).
+          Depend.dependTask ++
+          BSBench.settings ++
+          FindBadSource.settings ++
+          Ruler.settings ++
+          SpellCheck.settings ++
+          TranslationHelper.settings: _*).
   settings(
     name := "NetLogo",
     version := "7.0.2",
