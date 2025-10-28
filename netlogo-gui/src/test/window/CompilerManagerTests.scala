@@ -20,7 +20,7 @@ class CompilerManagerTests extends AnyFunSuiteEx {
     ws.foreach { w =>
       cm.handle(new CompileMoreSourceEvent(w))
     }
-    cm.handle(new LoadEndEvent())
+    cm.handle(new LoadEndEvent(false))
     cm
   }
 
@@ -65,7 +65,7 @@ class CompilerManagerTests extends AnyFunSuiteEx {
           case _ =>
         }
       }
-      compilerManager.handle(new LoadEndEvent())
+      compilerManager.handle(new LoadEndEvent(false))
     }
   }
 

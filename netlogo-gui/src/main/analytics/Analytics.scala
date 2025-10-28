@@ -177,5 +177,4 @@ object Analytics {
   def setPreference(enabled: Boolean): Unit = {
     AnalyticsSender.setPreference(enabled)
   }
-
 }
