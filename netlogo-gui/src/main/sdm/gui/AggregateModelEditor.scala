@@ -38,7 +38,8 @@ class AggregateModelEditor(
   val drawing: AggregateDrawing,
   compiler: CompilerServices,
   dialogFactory: EditDialogFactory,
-  extensionManager: ExtensionManager) extends JFrame(
+  extensionManager: ExtensionManager,
+  show: Boolean) extends JFrame(
     I18N.gui.get("menu.tools.systemDynamicsModeler"), linkParent.getGraphicsConfiguration)
   with DrawingEditor
   with LinkChild
@@ -52,8 +53,10 @@ class AggregateModelEditor(
     menuBarFactory: MenuBarFactory,
     compiler: CompilerServices,
     dialogFactory: EditDialogFactory,
-    extensionManager: ExtensionManager) =
-      this(linkParent, colorizer, menuBarFactory, new AggregateDrawing(), compiler, dialogFactory, extensionManager)
+    extensionManager: ExtensionManager,
+    show: Boolean) =
+      this(linkParent, colorizer, menuBarFactory, new AggregateDrawing(), compiler, dialogFactory, extensionManager,
+           show)
 
   private val undoManager: UndoManager = new UndoManager()
   private var currentTool: Option[Tool] = None
@@ -137,11 +140,14 @@ class AggregateModelEditor(
     setTool(selectionTool)
     setPreferredSize(WindowSize)
     pack()
-    setVisible(true)
 
-    EventQueue.invokeLater(new Runnable() {
-      def run(): Unit = { toFront() }
-    })
+    if (show) {
+      setVisible(true)
+
+      EventQueue.invokeLater(new Runnable() {
+        def run(): Unit = { toFront() }
+      })
+    }
   }
 
   syncTheme()
