@@ -182,21 +182,29 @@ class WorldViewSettings3D(workspace: GUIWorkspace, gw: ViewWidget, tickCounter: 
   }
 
   override def setDimensions(d: WorldDimensions, newPatchSize: Double): Unit = {
-    setDimensions(d)
+    val patchSizeChanged = newPatchSize != workspace.world.patchSize
+    workspace.world.patchSize(newPatchSize)
+    setDimensions(d, patchSizeChanged)
+    patchSize(newPatchSize)
   }
 
   override def setDimensions(d: WorldDimensions): Unit = {
+    setDimensions(d, false)
+  }
+
+  def setDimensions(d: WorldDimensions, patchSizeChanged: Boolean): Unit = {
     d match {
       case dd: WorldDimensions3D =>
-        setDimensions(dd.minPxcor, dd.maxPxcor, dd.minPycor, dd.maxPycor, dd.minPzcor, dd.maxPzcor)
+        setDimensions(dd.minPxcor, dd.maxPxcor, dd.minPycor, dd.maxPycor, dd.minPzcor, dd.maxPzcor, patchSizeChanged)
       case d =>
-        setDimensions(d.minPxcor, d.maxPxcor, d.minPycor, d.maxPycor, 0, 0)
+        setDimensions(d.minPxcor, d.maxPxcor, d.minPycor, d.maxPycor, 0, 0, patchSizeChanged)
     }
   }
 
   def setDimensions(minPxcor: Int, maxPxcor: Int,
                     minPycor: Int, maxPycor: Int,
-                    minPzcor: Int, maxPzcor: Int): Unit = {
+                    minPzcor: Int, maxPzcor: Int,
+                    patchSizeChanged: Boolean): Unit = {
     newMinX = minPxcor
     newMaxX = maxPxcor
     newMinY = minPycor
@@ -209,7 +217,8 @@ class WorldViewSettings3D(workspace: GUIWorkspace, gw: ViewWidget, tickCounter: 
         minPycor != world.minPycor ||
         maxPycor != world.maxPycor ||
         minPzcor != world.minPzcor ||
-        maxPzcor != world.maxPzcor) {
+        maxPzcor != world.maxPzcor ||
+        patchSizeChanged) {
       prepareForWorldResize()
       world.createPatches(minPxcor, maxPxcor, minPycor, maxPycor, minPzcor, maxPzcor)
       finishWorldResize()
