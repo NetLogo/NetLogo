@@ -106,7 +106,7 @@ object Preferences {
       addItemListener(_ => {
         getSelectedItem match {
           case Some(DetectLocale) =>
-            val text = I18N.gui.defaultLocale.getDisplayLanguage
+            val text = Locale.getDefault.getDisplayLanguage
 
             label.setText(text)
 
