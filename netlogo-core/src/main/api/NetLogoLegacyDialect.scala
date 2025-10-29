@@ -41,7 +41,7 @@ trait DelegatingMapper extends TokenMapperInterface {
       if !line.startsWith("#")
       split = line.split(" ")
       if split(0) == entryType
-    } yield split(1).toUpperCase -> (s"$pkgName.${split(2)}")
+    } yield split(1).toUpperCase(Locale.ENGLISH) -> (s"$pkgName.${split(2)}")
 
   lazy val commands  = entries("C").toMap
   lazy val reporters = entries("R").toMap
