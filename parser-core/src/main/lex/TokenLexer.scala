@@ -12,6 +12,7 @@ class TokenLexer {
   import Charset.validIdentifierChar
 
   private val punctuation = Map(
+    ":" -> TokenType.Colon,
     "," -> TokenType.Comma,
     "{" -> TokenType.OpenBrace,
     "}" -> TokenType.CloseBrace,
