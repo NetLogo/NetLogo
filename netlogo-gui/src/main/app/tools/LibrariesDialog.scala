@@ -11,7 +11,8 @@ import scala.concurrent.ExecutionContext
 
 import org.nlogo.api.LibraryManager
 import org.nlogo.core.{ I18N, Token }
-import org.nlogo.swing.{ CustomOptionPane, DialogButton, OptionPane, ProgressListener, ScrollPane, TextArea, Transparent }
+import org.nlogo.swing.{ AutomateWindow, CustomOptionPane, DialogButton, OptionPane, ProgressListener, ScrollPane,
+                         TextArea, Transparent }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 class LibrariesDialog( parent:          Frame
@@ -20,7 +21,7 @@ class LibrariesDialog( parent:          Frame
                      , tokenizeSource:  String => Iterator[Token]
                      , updateSource:    ((String) => String) => Unit
                      , extPathMappings: Map[String, Path]
-                     ) extends ToolDialog(parent, "libraries") with ThemeSync {
+                     ) extends ToolDialog(parent, "libraries") with ThemeSync with AutomateWindow {
 
   // `tabs` can be converted back to a `JTabbedPane` once other libraries are added, like code modules or models.
   // -JeremyB April 2019
