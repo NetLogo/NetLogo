@@ -5,7 +5,7 @@ package org.nlogo.lex
 import java.lang.Character
 
 object Charset {
-  val identifierPunctuation = """_.?=*!<>:#+/%$^'&-"""
+  val identifierPunctuation = """_.?=*!<>#+/%$^'&-"""
   val digits = "0123456789"
 
   def validIdentifierChar(c: Char): Boolean =
