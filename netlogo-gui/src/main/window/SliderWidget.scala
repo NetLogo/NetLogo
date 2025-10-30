@@ -2,6 +2,8 @@
 
 package org.nlogo.window
 
+import java.lang.{ Double => JDouble }
+
 import org.nlogo.agent.SliderConstraint
 import org.nlogo.api.{ CompilerServices, ExtensionManager, MersenneTwisterFast }
 import org.nlogo.core.{ Horizontal, I18N, Slider => CoreSlider, Vertical, Widget => CoreWidget }
@@ -73,7 +75,12 @@ class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast,
   }
 
   def valueObject(v: Object): Unit = {
-    if (v.isInstanceOf[Double]) { setValue(v.asInstanceOf[Double], true) }
+    v match {
+      case d: JDouble if d != value =>
+        super.forceValue(d)
+
+      case _ =>
+    }
   }
 
   // NAME RELATED METHODS

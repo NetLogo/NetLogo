@@ -38,7 +38,7 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
     addActionListener(new ActionListener {
       def actionPerformed(e: ActionEvent): Unit = {
         try {
-          setValue(getText.toDouble)
+          forceValue(getText.toDouble)
         } catch {
           case e: NumberFormatException =>
         }
@@ -222,7 +222,7 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
   }
 
   def forceValue(d: Double): Unit = {
-    sliderData.value = roundToPrecision(d)
+    sliderData.value = d
     valueComponent.setText(valueString(value))
     slider.setValue(((value - minimum) / increment).round.asInstanceOf[Int])
     repaint()
