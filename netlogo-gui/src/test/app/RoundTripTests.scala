@@ -35,7 +35,7 @@ class RoundTripTests extends AnyFunSuite with BeforeAndAfterAll {
   recurseModels(new File("models"))
 
   override def beforeAll(): Unit = {
-    App.main(Array("--invisible"))
+    App.main(Array("--automated"))
   }
 
   private def recurseModels(path: File): Unit = {

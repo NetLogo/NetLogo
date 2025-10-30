@@ -19,8 +19,18 @@ object BrowserLauncher {
   val unableToOpenBrowserError = "We were unable to open a browser on your system.\n" +
       "This error can be reported to bugs@ccl.northwestern.edu"
 
+  private var automated = false
+
+  def setAutomated(automated: Boolean): Unit = {
+    this.automated = automated
+  }
+
   def openURI(comp: Component, uri: URI): Unit = {
     val normalUri = uri.normalize()
+
+    if (automated)
+      return
+
     try {
       val opened =
         desktop.map( d => { d.browse(normalUri); true } ).getOrElse(false)
