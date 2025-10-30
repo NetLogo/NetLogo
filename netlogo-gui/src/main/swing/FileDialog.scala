@@ -17,6 +17,13 @@ object FileDialog {
     */
   private var currentDirectory: Option[String] = None
 
+  // used by GUI tests, prevents blocking dialog from showing (Isaac B 10/30/25)
+  private var automated = false
+
+  def setAutomated(automated: Boolean): Unit = {
+    this.automated = automated
+  }
+
   /**
     * sets the current directory for the file dialog.
     */
@@ -59,6 +66,8 @@ object FileDialog {
 
   @throws[UserCancelException]
   def showDirectories(parentFrame: Frame, title: String): String = {
+    if (automated)
+      throw new UserCancelException
     val chooser = new JFileChooser(getDirectory)
     chooser.setDialogTitle(title)
     chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY)
@@ -72,6 +81,8 @@ object FileDialog {
 
   @throws[UserCancelException]
   private def showFiles(parentFrame: Frame, title: String, mode: Int, file: String, allowed: List[String]): String = {
+    if (automated)
+      throw new UserCancelException
     val chooser = new AWTFileDialog(parentFrame, title, mode)
     chooser.setDirectory(getDirectory)
     if (file != null)
