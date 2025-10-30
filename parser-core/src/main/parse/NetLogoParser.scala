@@ -38,7 +38,8 @@ trait NetLogoParser {
     val rawTokens = structureResults.procedureTokens((procedure.name, procedure.module))
     val usedNames = globallyUsedNames.addSymbols(procedure.args, SymbolType.ProcedureVariable)
     val namedTokens = {
-      val letNamedTokens = TransformableTokenStream(rawTokens.iterator, LetNamer)
+      val consolidatedTokens = ConsolidatingTokenStream(rawTokens.iterator, ScopedIdentifierConsolidator)
+      val letNamedTokens = TransformableTokenStream(consolidatedTokens, LetNamer)
       val namer = new Namer(
           structureResults.program
         , oldProcedures ++ structureResults.procedures
