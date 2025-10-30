@@ -189,7 +189,7 @@ extends scala.util.parsing.combinator.Parsers {
     (keyword("TO") | keyword("TO-REPORT")) ~!
       identifier ~
       opt(identifierList) ~
-      rep(nonKeyword) ~
+      rep(identifierToken | nonKeyword) ~
       (keyword("END") | failure("END expected")) ^^ {
         case to ~ name ~ names ~ body ~ end =>
           Procedure(name,
@@ -210,15 +210,32 @@ extends scala.util.parsing.combinator.Parsers {
   def closeBracket: Parser[Token] =
     tokenType("closing bracket", TokenType.CloseBracket)
 
+  def colon: Parser[Token] =
+    tokenType("colon", TokenType.Colon)
+
+  def plainIdentifier: Parser[Token] =
+    tokenType("identifier", TokenType.Ident)
+
+  def anyKeyword: Parser[Token] =
+    tokenType("keyword", TokenType.Keyword)
+
+  def identifierToken: Parser[Token] =
+    chainl1(plainIdentifier, plainIdentifier | literalToken | anyKeyword, colon ^^ {_ => {
+      case (p, x) => {
+        val newText = p.text + ":" + x.text
+        val newValue = p.value.asInstanceOf[String] + ":" + x.value
+        val newSourcelocation = p.sourceLocation.copy(end = x.sourceLocation.end)
+
+        p.copy(text = newText, value = newValue)(newSourcelocation) }}})
+
   def identifier: Parser[Identifier] =
-    tokenType("identifier", TokenType.Ident) ^^ {
-      token =>
-        Identifier(token.value.asInstanceOf[String], token) }
+    identifierToken ^^ {x => Identifier(x.value.toString, x)}
+
+  def literalToken: Parser[Token] =
+    tokenType("literal", TokenType.Literal)
 
   def literal: Parser[Identifier] =
-    tokenType("literal", TokenType.Literal) ^^ {
-      token =>
-        Identifier(token.value.toString, token) }
+    literalToken ^^ {token => Identifier(token.value.toString, token)}
 
   def identifierList: Parser[Seq[Identifier]] =
     openBracket ~> commit(rep(identifier | literal) <~ closeBracket)
