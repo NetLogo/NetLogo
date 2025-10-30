@@ -18,7 +18,7 @@ import org.nlogo.awt.EventQueue
 import org.nlogo.core.{ CompilerException, I18N }
 import org.nlogo.editor.Colorizer
 import org.nlogo.sdm.Translator
-import org.nlogo.swing.{ MenuBar, MenuItem, NetLogoIcon, Utils => SwingUtils }
+import org.nlogo.swing.{ AutomateWindow, MenuBar, MenuItem, NetLogoIcon, Utils => SwingUtils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ Editable, EditDialogFactory, Events, MenuBarFactory }
 import org.nlogo.window.Event.LinkChild
@@ -38,14 +38,14 @@ class AggregateModelEditor(
   val drawing: AggregateDrawing,
   compiler: CompilerServices,
   dialogFactory: EditDialogFactory,
-  extensionManager: ExtensionManager,
-  show: Boolean) extends JFrame(
+  extensionManager: ExtensionManager) extends JFrame(
     I18N.gui.get("menu.tools.systemDynamicsModeler"), linkParent.getGraphicsConfiguration)
   with DrawingEditor
   with LinkChild
   with Events.LoadBeginEvent.Handler
   with ThemeSync
-  with NetLogoIcon {
+  with NetLogoIcon
+  with AutomateWindow {
 
   def this(
     linkParent: Component,
@@ -53,10 +53,8 @@ class AggregateModelEditor(
     menuBarFactory: MenuBarFactory,
     compiler: CompilerServices,
     dialogFactory: EditDialogFactory,
-    extensionManager: ExtensionManager,
-    show: Boolean) =
-      this(linkParent, colorizer, menuBarFactory, new AggregateDrawing(), compiler, dialogFactory, extensionManager,
-           show)
+    extensionManager: ExtensionManager) =
+      this(linkParent, colorizer, menuBarFactory, new AggregateDrawing(), compiler, dialogFactory, extensionManager)
 
   private val undoManager: UndoManager = new UndoManager()
   private var currentTool: Option[Tool] = None
@@ -140,14 +138,11 @@ class AggregateModelEditor(
     setTool(selectionTool)
     setPreferredSize(WindowSize)
     pack()
+    setVisible(true)
 
-    if (show) {
-      setVisible(true)
-
-      EventQueue.invokeLater(new Runnable() {
-        def run(): Unit = { toFront() }
-      })
-    }
+    EventQueue.invokeLater(new Runnable() {
+      def run(): Unit = { toFront() }
+    })
   }
 
   syncTheme()

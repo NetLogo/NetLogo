@@ -19,6 +19,8 @@ public final class PrinterManager {
    */
   private List<List<Object>> textPages;
 
+  private static boolean invisible = false;
+
   /**
    * makes a new PrinterManager. Used to create a new PrinterManager
    * specifically for each print job. Each instance contains job-specific
@@ -29,12 +31,20 @@ public final class PrinterManager {
     textPages = null;
   }
 
+  // used by GUI tests, prevents blocking print dialog from appearing (Isaac B 10/30/25)
+  public static void setInvisible(boolean value) {
+    invisible = value;
+  }
+
   /**
    * initiate a print job. This method is used to create a new print job.
    * It is the only entry point into the printing system.
    */
   public static void print(final org.nlogo.swing.Printable p, String fileName)
       throws java.awt.print.PrinterAbortException, java.awt.print.PrinterException {
+    if (invisible) {
+      throw new java.awt.print.PrinterAbortException();
+    }
     java.awt.print.PrinterJob printerJob =
         java.awt.print.PrinterJob.getPrinterJob();
     java.awt.print.PageFormat defaultPageFormat = printerJob.defaultPage();
