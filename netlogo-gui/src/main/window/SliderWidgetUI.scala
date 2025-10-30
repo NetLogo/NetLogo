@@ -32,13 +32,6 @@ class SliderWidgetUI(widget: AbstractSliderWidget, slider: JSlider) extends Basi
 
       widget.repaint()
     }
-
-    override def mouseExited(e: MouseEvent): Unit = {
-      hover = false
-      pressed = false
-
-      widget.repaint()
-    }
   })
 
   slider.addMouseMotionListener(new MouseMotionAdapter {

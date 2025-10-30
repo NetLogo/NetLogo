@@ -3,7 +3,7 @@
 package org.nlogo.window
 
 import java.awt.{ Color, Component, Dimension, Graphics, GridBagConstraints, GridBagLayout }
-import java.awt.event.{ InputEvent, MouseEvent, MouseListener, MouseWheelEvent, MouseWheelListener }
+import java.awt.event.{ InputEvent, MouseAdapter, MouseEvent, MouseListener, MouseWheelEvent, MouseWheelListener }
 import javax.swing.{ JLabel, JPanel, JSlider, SwingConstants }
 import javax.swing.event.{ ChangeEvent, ChangeListener }
 import javax.swing.plaf.basic.BasicSliderUI
@@ -180,6 +180,8 @@ class SpeedSliderPanel(workspace: GUIWorkspace, ticksLabel: Component = null) ex
     private val sliderUI = new SpeedSliderUI
     private var lastThumbLocation = 0
 
+    private var pressed = false
+
     setExtent(1)
     setToolTipText(I18N.gui("tooltip"))
     setUI(sliderUI)
@@ -216,6 +218,17 @@ class SpeedSliderPanel(workspace: GUIWorkspace, ticksLabel: Component = null) ex
     }
 
     private class SpeedSliderUI extends BasicSliderUI(this) {
+      addMouseListener(new MouseAdapter {
+        override def mousePressed(e: MouseEvent): Unit = {
+          if (thumbRect.contains(e.getPoint))
+            pressed = true
+        }
+
+        override def mouseReleased(e: MouseEvent): Unit = {
+          pressed = false
+        }
+      })
+
       def getThumbLocation: Int =
         thumbRect.x
 
@@ -278,7 +291,7 @@ class SpeedSliderPanel(workspace: GUIWorkspace, ticksLabel: Component = null) ex
 
           override def mouseDragged(e: MouseEvent): Unit = {
             if ((e.getModifiersEx & InputEvent.BUTTON1_DOWN_MASK) == InputEvent.BUTTON1_DOWN_MASK &&
-                (jumpOnClick || isDragging)) {
+                (jumpOnClick || pressed)) {
 
               slider.setValue(valueForXPosition(e.getPoint.x))
             }
