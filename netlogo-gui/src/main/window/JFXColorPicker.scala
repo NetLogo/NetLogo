@@ -24,12 +24,12 @@ import org.nlogo.analytics.Analytics
 import org.nlogo.api.{ Color => NLColor }
 import org.nlogo.awt.EventQueue
 import org.nlogo.core.{ Color => CoreColor, I18N, LogoList }
-import org.nlogo.swing.Positioning
+import org.nlogo.swing.{ AutomateWindow, Positioning }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 class JFXColorPicker( frame: Frame, modal: Boolean, config: JFXCPConfig, initialValue: Option[NLColorValue] = None
                     , pickCallback: (String) => Unit = (_ => {}), cancelCallback: () => Unit = (() => {}))
-  extends JDialog(frame, I18N.gui.get("tools.colorpicker"), modal) with ThemeSync {
+  extends JDialog(frame, I18N.gui.get("tools.colorpicker"), modal) with ThemeSync with AutomateWindow {
 
   private val nlBabyMonitor = new Bridge
   private val panel         = new JFXPanel
