@@ -1151,7 +1151,7 @@ abstract class GUIWorkspace(world: World, kioskLevel: GUIWorkspace.KioskLevel, f
             instruction.getPositionAndLength()
           }
 
-        new RuntimeErrorEvent(owner, context.activation.procedure.owner, posAndLength(0), posAndLength(1))
+        new RuntimeErrorEvent(owner, context.activation.procedure.owner, posAndLength(0), posAndLength(1)).raise(frame)
 
         // MonitorWidgets always immediately restart their jobs when a runtime error occurs,
         // but we don't want to just stream errors to the command center, so let's not print
