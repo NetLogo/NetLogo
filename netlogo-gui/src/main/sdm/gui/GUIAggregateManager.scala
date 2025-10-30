@@ -14,8 +14,7 @@ class GUIAggregateManager(
   compiler: CompilerServices,
   colorizer: Colorizer,
   dialogFactory: EditDialogFactory,
-  extensionManager: ExtensionManager,
-  invisible: Boolean)
+  extensionManager: ExtensionManager)
 extends AggregateManagerInterface
 with Event.LinkChild
 with Events.CompiledEvent.Handler
@@ -29,7 +28,7 @@ with ThemeSync {
     // if it's the first time, make a new aggregate model editor
     if (editor == null)
       editor = new AggregateModelEditor(
-        linkParent, colorizer, menuBarFactory, compiler, dialogFactory, extensionManager, true)
+        linkParent, colorizer, menuBarFactory, compiler, dialogFactory, extensionManager)
     editor.setVisible(true)
     editor.toFront()
   }
@@ -51,7 +50,9 @@ with ThemeSync {
     model.optionalSectionValue[AggregateDrawing]("org.nlogo.modelsection.systemdynamics.gui")
       .foreach { drawing =>
         editor = new AggregateModelEditor(
-          linkParent, colorizer, menuBarFactory, drawing, compiler, dialogFactory, extensionManager, !invisible)
+          linkParent, colorizer, menuBarFactory, drawing, compiler, dialogFactory, extensionManager)
+        if (drawing.getModel.elements.isEmpty)
+          editor.setVisible(false)
       }
   }
 

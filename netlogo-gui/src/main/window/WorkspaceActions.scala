@@ -64,13 +64,14 @@ object WorkspaceActions {
     accelerator = KeyBindings.keystroke('T', withMenu = true, withShift = true)
 
     override def performAction(workspace: GUIWorkspace): Unit = {
-      try {
-        workspace.glView.open()
-        workspace.set2DViewEnabled(false)
-      }
-      catch {
-        case ex: org.nlogo.window.JOGLLoadingException =>
-          org.nlogo.swing.Utils.alert("3d", ex.getMessage, "" + ex.getCause, I18N.gui.get("common.buttons.continue") )
+      if (!workspace.isAutomated) {
+        try {
+          workspace.glView.open()
+          workspace.set2DViewEnabled(false)
+        } catch {
+          case ex: org.nlogo.window.JOGLLoadingException =>
+            org.nlogo.swing.Utils.alert("3d", ex.getMessage, "" + ex.getCause, I18N.gui.get("common.buttons.continue") )
+        }
       }
     }
   }
