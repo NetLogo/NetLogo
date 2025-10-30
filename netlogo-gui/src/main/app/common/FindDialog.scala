@@ -11,7 +11,7 @@ import javax.swing.text.{ BadLocationException, TextAction }
 
 import org.nlogo.core.I18N
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
-import org.nlogo.swing.{ ButtonPanel, CheckBox, DialogButton, NonemptyTextFieldActionEnabler,
+import org.nlogo.swing.{ AutomateWindow, ButtonPanel, CheckBox, DialogButton, NonemptyTextFieldActionEnabler,
                          NonemptyTextFieldButtonEnabler, ScrollableTextComponent, TextField, TextFieldBox, Transparent,
                          UserAction, Utils },
   UserAction.{ EditCategory, EditFindGroup, KeyBindings, MenuAction }
@@ -190,8 +190,9 @@ object FindDialog extends ThemeSync {
   }
 }
 
-class FindDialog(val owner: Frame) extends JDialog(owner, I18N.gui.get("dialog.find.title"), false) with ActionListener
-                                                                                                    with ThemeSync {
+class FindDialog(val owner: Frame) extends JDialog(owner, I18N.gui.get("dialog.find.title"), false)
+                                   with ActionListener with ThemeSync with AutomateWindow {
+
   private var target: Option[ScrollableTextComponent] = None
 
   private val nextButton = new DialogButton(false, I18N.gui.get("dialog.find.next"), () => {
