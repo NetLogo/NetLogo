@@ -9,7 +9,7 @@ import org.fife.ui.rsyntaxtextarea.{ TokenMakerBase }
 import org.fife.ui.rsyntaxtextarea.{ Token => RstaToken, TokenImpl, TokenTypes }
 
 import org.nlogo.api.{ NetLogoLegacyDialect, NetLogoThreeDDialect }
-import org.nlogo.core.{ Dialect, Femto, Nobody, Token, TokenizerInterface, TokenType }
+import org.nlogo.core.{ Dialect, Femto, FrontEndInterface, Nobody, Token, TokenizerInterface, TokenType }
 import org.nlogo.nvm.ExtensionManager
 
 trait NetLogoTokenMaker extends TokenMakerBase {
@@ -18,6 +18,7 @@ trait NetLogoTokenMaker extends TokenMakerBase {
 
   val tokenizer = Femto.scalaSingleton[TokenizerInterface]("org.nlogo.lex.Tokenizer")
   val namer = Femto.scalaSingleton[Token => Token]("org.nlogo.parse.Namer0")
+  val frontEnd = Femto.scalaSingleton[FrontEndInterface]("org.nlogo.parse.FrontEnd")
 
   def literalToken(value: AnyRef): Int =
     value match {
@@ -51,7 +52,7 @@ trait NetLogoTokenMaker extends TokenMakerBase {
 
     val punctType = TokenTypes.SEPARATOR
     t.tpe match {
-      case OpenParen | CloseParen | OpenBracket | CloseBracket | OpenBrace | CloseBrace | Comma => punctType
+      case OpenParen | CloseParen | OpenBracket | CloseBracket | OpenBrace | CloseBrace | Colon | Comma => punctType
       case Literal    => literalToken(t.value)
       case Ident      =>
         val namedToken = tagToken(t)
@@ -103,7 +104,7 @@ trait NetLogoTokenMaker extends TokenMakerBase {
       next
     }
 
-    val tokens = tokenizer.tokenizeWithWhitespace(seg, "").filter(_.tpe != TokenType.Eof)
+    val tokens = frontEnd.tokenizeWithWhitespaceConsolidated(seg, "").filter(_.tpe != TokenType.Eof)
 
     val firstRstaToken =
       if (tokens.hasNext) netlogoTokenToRstaToken(tokens.next(), None)
