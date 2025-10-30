@@ -11,7 +11,7 @@ import javax.swing.event.{ DocumentEvent, DocumentListener, ListSelectionEvent, 
 import org.nlogo.api.AbstractModelLoader
 import org.nlogo.core.{ AgentKind, I18N, Model, Shape => CoreShape, ShapeList, ShapeListTracker },
   ShapeList.{ shapesToMap, isDefaultShapeName }
-import org.nlogo.swing.{ Button, DialogButton, OptionPane, ScrollPane, TextField, Transparent, Utils }
+import org.nlogo.swing.{ AutomateWindow, Button, DialogButton, OptionPane, ScrollPane, TextField, Transparent, Utils }
 import org.nlogo.swing.Implicits.thunk2action
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
@@ -20,7 +20,7 @@ import scala.util.{ Failure, Success }
 
 abstract class ManagerDialog[A <: CoreShape](parentFrame: Frame, modelLoader: AbstractModelLoader,
                                              shapeListTracker: ShapeListTracker)(implicit ct: ClassTag[A])
-  extends JDialog(parentFrame) with ListSelectionListener with ThemeSync {
+  extends JDialog(parentFrame) with ListSelectionListener with ThemeSync with AutomateWindow {
 
   implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("tools.shapesEditor")
 

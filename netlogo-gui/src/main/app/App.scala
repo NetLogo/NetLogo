@@ -43,8 +43,8 @@ import org.nlogo.nvm.{ PresentationCompilerInterface, Workspace }
 import org.nlogo.render.Renderer
 import org.nlogo.sdm.gui.{ GUIAggregateManager, NLogoGuiSDMFormat, NLogoThreeDGuiSDMFormat, SDMGuiAutoConvertable }
 import org.nlogo.shape.editor.{ LinkShapeManagerDialog, TurtleShapeManagerDialog }
-import org.nlogo.swing.{ DropdownOptionPane, InputOptionPane, Menu, OptionPane, Positioning, SetSystemLookAndFeel,
-                         UserAction, Utils },
+import org.nlogo.swing.{ AutomateWindow, BrowserLauncher, DropdownOptionPane, FileDialog, InputOptionPane, Menu,
+                         OptionPane, Positioning, PrinterManager, SetSystemLookAndFeel, UserAction, Utils },
   UserAction.{ ActionCategoryKey, EditCategory, FileCategory, HelpCategory, MenuAction, ToolsCategory }
 import org.nlogo.theme.{ ClassicTheme, DarkTheme, InterfaceColors, LightTheme, ThemeSync }
 import org.nlogo.util.AppHandler
@@ -89,8 +89,8 @@ object App {
         "light"
       }
     }),
-    // only for testing, no GUI components will be shown with this flag (Isaac B 10/27/25)
-    invisible: Boolean = false
+    // only for testing, interactable GUI components will be automated with this flag (Isaac B 10/27/25)
+    automated: Boolean = false
   )
 
   // ideally this would be an Option[App], but that would break all the code that uses App.app,
@@ -151,6 +151,11 @@ object App {
 
       val cmdArgs = processCommandLineArguments(args)
 
+      AutomateWindow.setAutomated(cmdArgs.automated)
+      FileDialog.setAutomated(cmdArgs.automated)
+      PrinterManager.setInvisible(cmdArgs.automated)
+      BrowserLauncher.setAutomated(cmdArgs.automated)
+
       SetSystemLookAndFeel.setSystemLookAndFeel()
 
       InterfaceColors.setTheme(cmdArgs.colorTheme match {
@@ -162,8 +167,7 @@ object App {
       System.setProperty("flatlaf.menuBarEmbedded", "false")
       System.setProperty("sun.awt.noerasebackground", "true") // stops view2.5d and 3d windows from blanking to white until next interaction
 
-      if (!cmdArgs.invisible)
-        Splash.beginSplash() // also initializes AWT
+      Splash.beginSplash() // also initializes AWT
 
       app = new App(cmdArgs)
 
@@ -252,8 +256,8 @@ object App {
         case "--3d" =>
           Version.set3D(true)
 
-        case "--invisible" =>
-          current = current.copy(invisible = true)
+        case "--automated" =>
+          current = current.copy(automated = true)
 
         case token if token.startsWith("--") =>
           // TODO: Decide: should we do System.exit() here?
@@ -334,11 +338,10 @@ class App(args: App.CommandLineArgs) extends LinkChild with Exceptions.Handler w
       override def updateMode = workspace.updateMode
     }
 
-    setInvisible(args.invisible)
+    setAutomated(args.automated)
 
     def aggregateManager: AggregateManagerInterface =
-      new GUIAggregateManager(frame, menuBarFactory, this, colorizer, editDialogFactory, extensionManager,
-                              args.invisible)
+      new GUIAggregateManager(frame, menuBarFactory, this, colorizer, editDialogFactory, extensionManager)
 
     def inspectAgent(agent: ApiAgent, radius: Double): Unit = {
       agent match {
@@ -393,7 +396,7 @@ class App(args: App.CommandLineArgs) extends LinkChild with Exceptions.Handler w
                                                FileFormat.defaultAutoConvertables :+ SDMGuiAutoConvertable)
                                               (workspace.dialect)
 
-  private val mainMenuBar = new MainMenuBar(AbstractWorkspace.isApp)
+  val mainMenuBar = new MainMenuBar(AbstractWorkspace.isApp)
 
   private val workspaceFactory = new WorkspaceFactory {
     def newInstance: AbstractWorkspaceScala = HeadlessWorkspace.newInstance
@@ -568,11 +571,9 @@ class App(args: App.CommandLineArgs) extends LinkChild with Exceptions.Handler w
         def dropActionChanged(e: DropTargetDragEvent): Unit = {}
       })
 
-      if (!args.invisible) {
-        Splash.endSplash()
+      Splash.endSplash()
 
-        frame.setVisible(true)
-      }
+      frame.setVisible(true)
 
       appHandler.ready(this)
 
@@ -587,7 +588,7 @@ class App(args: App.CommandLineArgs) extends LinkChild with Exceptions.Handler w
 
       syncWindowThemes()
 
-      if (args.invisible) {
+      if (args.automated) {
         Analytics.silence()
       } else {
         if (analyticsConsent) {
