@@ -83,8 +83,14 @@ jobs:
           pip3 install numpy
           pip3 install scikit-learn
 
+      # nothing actually runs in the GUI for these tests, but SBT initializes all suites regardless of
+      # whether they are set to run or not, which causes MenuTests to throw an exception if the display
+      # isn't set up correctly. (Isaac B 11/8/25)
       - name: Test Extensions
-        run: sbt netlogo/Test/extensionTests
+        run: |
+          export DISPLAY=:0
+          Xvfb :0 -screen 0 1920x1080x24 &
+          sbt netlogo/Test/extensionTests
 
   test:
     runs-on: ubuntu-latest
