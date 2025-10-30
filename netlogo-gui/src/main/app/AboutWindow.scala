@@ -11,11 +11,13 @@ import javax.swing.border.{ EmptyBorder, LineBorder }
 import org.nlogo.api.{ APIVersion, FileIO, Version }
 import org.nlogo.awt.{ Fonts, Positioning }
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ BrowserLauncher, RichAction, ScrollPane, TabbedPane, TextArea, Utils }
+import org.nlogo.swing.{ AutomateWindow, BrowserLauncher, RichAction, ScrollPane, TabbedPane, TextArea, Utils }
 import org.nlogo.theme.{ DarkTheme, InterfaceColors, ThemeSync }
 import org.nlogo.util.SysInfo
 
-class AboutWindow(parent: Frame) extends JDialog(parent, I18N.gui.get("dialog.about"), false) with ThemeSync {
+class AboutWindow(parent: Frame) extends JDialog(parent, I18N.gui.get("dialog.about"), false)
+                                 with ThemeSync with AutomateWindow {
+
   private val refreshTimer: Timer = new Timer(2000, _ => refreshSystemText())
   private val system = new TextArea(0, 0, "") {
     setFont(new Font(Fonts.platformMonospacedFont, Font.PLAIN, 12))

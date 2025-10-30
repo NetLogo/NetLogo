@@ -25,8 +25,8 @@ import javax.swing.event.{ AncestorEvent, AncestorListener, DocumentEvent, Docum
 import org.nlogo.core.I18N
 import org.nlogo.api.FileIO
 import org.nlogo.awt.{ Positioning, UserCancelException }
-import org.nlogo.swing.{ BrowserLauncher, Button, DialogButton, ModalProgressTask, OptionPane, ScrollPane, TextField,
-                         Utils }, Utils.addEscKeyAction
+import org.nlogo.swing.{ AutomateWindow, BrowserLauncher, Button, DialogButton, ModalProgressTask, OptionPane,
+                         ScrollPane, TextField, Utils }, Utils.addEscKeyAction
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.workspace.ModelsLibrary
 
@@ -156,7 +156,8 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
   extends JDialog(parent, I18N.gui.get("menu.file.modelsLibrary"), true)
   with TreeSelectionListener
   with TreeExpansionListener
-  with ThemeSync {
+  with ThemeSync
+  with AutomateWindow {
 
   private var selected = Option.empty[Node]
   private var sourceURI = Option.empty[URI]

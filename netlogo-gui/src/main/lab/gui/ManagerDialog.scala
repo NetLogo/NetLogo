@@ -12,7 +12,7 @@ import org.nlogo.analytics.Analytics
 import org.nlogo.api.{ RefEnumeratedValueSet, LabProtocol }
 import org.nlogo.core.I18N
 import org.nlogo.editor.Colorizer
-import org.nlogo.swing.{ Button, FileDialog, OptionPane, Positioning, ScrollPane, Transparent, Utils }
+import org.nlogo.swing.{ AutomateWindow, Button, FileDialog, OptionPane, Positioning, ScrollPane, Transparent, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ EditDialogFactory, MenuBarFactory }
 
@@ -23,7 +23,7 @@ private class ManagerDialog(manager:       LabManager,
                             dialogFactory: EditDialogFactory,
                             colorizer:     Colorizer,
                             menuFactory:   MenuBarFactory)
-  extends JDialog(manager.workspace.getFrame) with ListSelectionListener with ThemeSync {
+  extends JDialog(manager.workspace.getFrame) with ListSelectionListener with ThemeSync with AutomateWindow {
 
   def saveProtocol(protocol: LabProtocol, runsCompleted: Int): Unit = {
     protocol.runsCompleted = runsCompleted

@@ -11,13 +11,13 @@ import javax.swing.border.EmptyBorder
 
 import org.nlogo.app.common.Events.RestartEvent
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ ButtonPanel, CheckBox, DialogButton, FloatingTabbedPane, OptionPane, TabLabel, TextField,
-                         Transparent }
+import org.nlogo.swing.{ AutomateWindow, ButtonPanel, CheckBox, DialogButton, FloatingTabbedPane, OptionPane, TabLabel,
+                         TextField, Transparent }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 class PreferencesDialog(parent: Frame & ThemeSync, generalPreferences: Seq[Preference],
                         codePreferences: Seq[Preference], loggingPreferences: Seq[Preference])
-  extends ToolDialog(parent, "preferences") with ThemeSync {
+  extends ToolDialog(parent, "preferences") with ThemeSync with AutomateWindow {
 
   private lazy val tabs = new FloatingTabbedPane
 
