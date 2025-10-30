@@ -5,7 +5,8 @@ package org.nlogo.parse
 import org.nlogo.core,
   core.{AstTransformer, CompilationOperand, Dialect, Femto,
     ExtensionManager, FrontEndInterface, CompilerException,
-    TokenizerInterface }
+    Token, TokenizerInterface }
+import java.text.CharacterIterator
 
 object FrontEnd extends FrontEnd {
   val tokenizer: TokenizerInterface =
@@ -46,17 +47,30 @@ trait FrontEndMain extends NetLogoParser {
     Seq(new LetReducer, new CarefullyVisitor, new ClosureTagger, new SourceTagger(compilationOperand))
   }
 
+  def tokenizeStringConsolidated(source: String): Iterator[core.Token] = {
+    ConsolidatingTokenStream(tokenizer.tokenizeString(source), ScopedIdentifierConsolidator)
+  }
+
   def tokenizeForColorization(source: String, dialect: Dialect, extensionManager: ExtensionManager): Seq[core.Token] = {
-    tokenizer.tokenizeString(source).map(Namer.basicNamer(dialect, extensionManager)).toSeq
+    tokenizeStringConsolidated(source).map(Namer.basicNamer(dialect, extensionManager)).toSeq
   }
 
   def tokenizeForColorizationIterator(source: String, dialect: Dialect, extensionManager: ExtensionManager): Iterator[core.Token] = {
-    tokenizer.tokenizeString(source).map(Namer.basicNamer(dialect, extensionManager))
+    tokenizeStringConsolidated(source).map(Namer.basicNamer(dialect, extensionManager))
   }
 
   def tokenizeWithWhitespace(source: String, dialect: Dialect,
                              extensionManager: ExtensionManager): Iterator[core.Token] =
     tokenizer.tokenizeWithWhitespace(source, null).map(Namer.basicNamer(dialect, extensionManager))
+
+
+  // Unlike tokenizeWithWhitespace(), this doesn't use the Namer. This is because it's used by NetLogoTokenMaker, and
+  // it's doing the naming itself. The name should probably be changed so that this is clear though.
+  // -Kritphong M October 2025
+  def tokenizeWithWhitespaceConsolidated(iter: CharacterIterator, filename: String): Iterator[Token] ={
+    val tokens = tokenizer.tokenizeWithWhitespace(iter, filename)
+    ConsolidatingTokenStream(tokens, ScopedIdentifierConsolidator)
+  }
 
   @throws(classOf[CompilerException])
   def findIncludes(source: String): Seq[String] = {

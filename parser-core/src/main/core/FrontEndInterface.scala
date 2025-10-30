@@ -3,6 +3,7 @@
 package org.nlogo.core
 
 import org.nlogo.core.FrontEndInterface.{NoProcedures, ProceduresMap}
+import java.text.CharacterIterator
 
 object FrontEndInterface {
   // use ListMap so procedures come out in the order they were defined (users expect errors in
@@ -83,6 +84,8 @@ trait FrontEndInterface {
   def tokenizeForColorizationIterator(source: String, dialect: Dialect, extensionManager: ExtensionManager): Iterator[Token]
 
   def tokenizeWithWhitespace(source: String, dialect: Dialect, extensionManager: ExtensionManager): Iterator[Token]
+
+  def tokenizeWithWhitespaceConsolidated(iter: CharacterIterator, filename: String): Iterator[Token]
 
   def findExtensions(source: String): Seq[String]
 }
