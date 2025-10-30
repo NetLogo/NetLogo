@@ -16,8 +16,7 @@ class GUIAggregateManager(
   compiler: CompilerServices,
   colorizer: Colorizer,
   dialogFactory: EditDialogFactory,
-  extensionManager: ExtensionManager,
-  invisible: Boolean)
+  extensionManager: ExtensionManager)
 extends AggregateManagerInterface
 with Event.LinkChild
 with Events.CompiledEvent.Handler
@@ -54,7 +53,7 @@ with ThemeSync {
       .foreach { drawing =>
         editor = new AggregateModelEditor(
           linkParent, colorizer, menuBarFactory, drawing, compiler, dialogFactory, extensionManager)
-        if (!invisible && drawing.getModel.elements.nonEmpty) {
+        if (drawing.getModel.elements.nonEmpty) {
           editor.setVisible(true)
 
           EventQueue.invokeLater(() => editor.toFront())
