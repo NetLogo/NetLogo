@@ -3,6 +3,7 @@
 package org.nlogo.app.tools
 
 import java.awt.{ BorderLayout, Frame, GridBagConstraints, GridBagLayout, Insets }
+import java.awt.event.{ MouseAdapter, MouseEvent }
 import java.io.File
 import java.nio.file.Files
 import javax.swing.{ JLabel, JPanel }
@@ -10,7 +11,8 @@ import javax.swing.border.EmptyBorder
 
 import org.nlogo.app.common.Events.RestartEvent
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ ButtonPanel, DialogButton, FloatingTabbedPane, OptionPane, TabLabel, TextField, Transparent }
+import org.nlogo.swing.{ ButtonPanel, CheckBox, DialogButton, FloatingTabbedPane, OptionPane, TabLabel, TextField,
+                         Transparent }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 class PreferencesDialog(parent: Frame & ThemeSync, generalPreferences: Seq[Preference],
@@ -213,6 +215,17 @@ private class PreferenceContainer(preferences: Seq[Preference])
       c.insets = new Insets(3, 0, 3, 6)
 
       val label = new JLabel(prefString(pref))
+
+      pref.component match {
+        case cb: CheckBox =>
+          label.addMouseListener(new MouseAdapter {
+            override def mousePressed(e: MouseEvent): Unit = {
+              cb.doClick()
+            }
+          })
+
+        case _ =>
+      }
 
       add(label, c)
 
