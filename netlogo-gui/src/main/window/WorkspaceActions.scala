@@ -64,7 +64,7 @@ object WorkspaceActions {
     accelerator = KeyBindings.keystroke('T', withMenu = true, withShift = true)
 
     override def performAction(workspace: GUIWorkspace): Unit = {
-      if (!workspace.isAutomated) {
+      if (!workspace.isTesting) {
         try {
           workspace.glView.open()
           workspace.set2DViewEnabled(false)
