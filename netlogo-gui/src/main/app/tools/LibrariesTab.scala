@@ -2,27 +2,28 @@
 
 package org.nlogo.app.tools
 
-import java.awt.{ BorderLayout, Component, Dimension, FlowLayout, Font, GridBagConstraints, GridBagLayout, GridLayout,
-                  Insets }
+import java.awt.{ BorderLayout, Component, Dimension, EventQueue, FlowLayout, Font, GridBagConstraints, GridBagLayout,
+                  GridLayout, Insets, Toolkit }
+import java.awt.event.KeyEvent
 import java.awt.font.TextAttribute
 import java.io.IOException
 import java.nio.file.Path
-import java.util.Locale
+import java.util.{ Collections, Locale }
+import java.util.concurrent.TimeoutException
 import javax.swing.{ Action, Box, DefaultListModel, Icon, JLabel, JList, JPanel, ListCellRenderer, ListModel }
 import javax.swing.border.LineBorder
 import javax.swing.event.{ AncestorEvent, AncestorListener, ListDataEvent, ListDataListener }
 
-import java.util.Collections
-
-import scala.collection.mutable.Buffer
-
 import org.nlogo.api.{ LibraryInfoDownloader, LibraryManager, Version }
-import org.nlogo.awt.EventQueue
 import org.nlogo.core.{ I18N, LibraryInfo, LibraryStatus, Token, TokenType }
 import org.nlogo.swing.{ BrowserLauncher, Button, EmptyIcon, FilterableListModel, OptionPane, RichAction, ScalableIcon,
                          ScrollPane, SwingWorker, TextArea, TextField, Transparent, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.workspace.ModelsLibrary
+
+import scala.collection.mutable.Buffer
+import scala.concurrent.{ Await, Promise }
+import scala.concurrent.duration.{ Duration, SECONDS }
 
 object LibrariesTab {
   // this may look overly complex, but when rewriting the user's source code, we need to be absolutely sure
@@ -571,5 +572,55 @@ class LibrariesTab( category:        String
     infoScroll.setBackground(InterfaceColors.textAreaBackground())
 
     info.syncTheme()
+  }
+
+  // used by GUI tests, adds the specified text to the search field and returns the resulting list (Isaac B 11/2/25)
+  def searchFor(text: String, expectedSize: Int): Option[Seq[LibraryInfo]] = {
+    filterField.requestFocus()
+
+    // make sure all focus-related events are processed (Isaac B 11/6/25)
+    while (!filterField.hasFocus)
+      Thread.sleep(250)
+
+    val queue: EventQueue = Toolkit.getDefaultToolkit.getSystemEventQueue
+
+    text.foreach { char =>
+      queue.postEvent(new KeyEvent(filterField, KeyEvent.KEY_TYPED, System.currentTimeMillis, 0,
+                                   KeyEvent.VK_UNDEFINED, char))
+    }
+
+    val promise = Promise[Unit]()
+
+    // wait for the list to update extension visibilities (Isaac B 11/2/25)
+    new Thread {
+      override def run(): Unit = {
+        while (listModel.getSize != expectedSize)
+          Thread.sleep(250)
+
+        promise.success({})
+      }
+    }.start()
+
+    try {
+      Await.ready(promise.future, Duration(5, SECONDS))
+    } catch {
+      case _: TimeoutException =>
+        return None
+    }
+
+    Option((0 until listModel.getSize).map(listModel.getElementAt))
+  }
+
+  // used by GUI tests, installs and uninstalls the specified extension (Isaac B 11/2/25)
+  def testInstall(info: LibraryInfo): Unit = {
+    install(info)
+
+    // wait for any resulting events to be processed (Isaac B 11/2/25)
+    EventQueue.invokeAndWait(() => {})
+
+    uninstall(info)
+
+    // wait for any resulting events to be processed (Isaac B 11/2/25)
+    EventQueue.invokeAndWait(() => {})
   }
 }
