@@ -2,22 +2,48 @@
 
 package org.nlogo.app.tools
 
-import java.awt.{ BorderLayout, Frame, GridBagConstraints, GridBagLayout, Insets }
+import java.awt.{ BorderLayout, EventQueue, Frame, GridBagConstraints, GridBagLayout, Insets }
 import java.awt.event.{ MouseAdapter, MouseEvent }
 import java.io.File
 import java.nio.file.Files
 import javax.swing.{ JLabel, JPanel }
 import javax.swing.border.EmptyBorder
 
+import org.nlogo.app.common.TabsInterface
 import org.nlogo.app.common.Events.RestartEvent
 import org.nlogo.core.I18N
 import org.nlogo.swing.{ AutomateWindow, ButtonPanel, CheckBox, DialogButton, FloatingTabbedPane, OptionPane, TabLabel,
                          TextField, Transparent }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
+import org.nlogo.window.AbstractWidgetPanel
 
-class PreferencesDialog(parent: Frame & ThemeSync, generalPreferences: Seq[Preference],
-                        codePreferences: Seq[Preference], loggingPreferences: Seq[Preference])
+class PreferencesDialog(parent: Frame & ThemeSync, tabManager: TabsInterface, widgetPanel: AbstractWidgetPanel)
   extends ToolDialog(parent, "preferences") with ThemeSync with AutomateWindow {
+
+  private lazy val generalPreferences = Seq[Preference](
+    Preferences.Language,
+    Preferences.LoadLastOnStartup,
+    new Preferences.ReloadOnExternalChanges(tabManager),
+    new Preferences.BoldWidgetText(widgetPanel),
+    new Preferences.JumpOnClick(tabManager),
+    Preferences.SendAnalytics
+  ) ++ (if (System.getProperty("os.name").contains("Linux")) Seq(Preferences.UIScale) else Nil)
+
+  private lazy val codePreferences = Seq[Preference](
+    Preferences.ProceduresMenuSortOrder,
+    new Preferences.IncludedFilesMenu(tabManager),
+    Preferences.FocusOnError,
+    Preferences.StartSeparateCodeTab,
+    new Preferences.IndentAutomatically(parent),
+    new Preferences.EditorLineNumbers(tabManager),
+    new Preferences.CodeFont(tabManager)
+  )
+
+  private lazy val loggingPreferences = Seq[Preference](
+    Preferences.IsLoggingEnabled,
+    new Preferences.LogDirectory(parent),
+    Preferences.LogEvents
+  )
 
   private lazy val tabs = new FloatingTabbedPane
 
@@ -42,7 +68,7 @@ class PreferencesDialog(parent: Frame & ThemeSync, generalPreferences: Seq[Prefe
   }
 
   // sync parameter prevents infinite recursion with syncTheme on load (Isaac B 5/22/25)
-  private def reset(sync: Boolean): Unit = {
+  def reset(sync: Boolean): Unit = {
     generalPreferences.foreach(_.load())
     codePreferences.foreach(_.load())
     loggingPreferences.foreach(_.load())
@@ -198,6 +224,40 @@ class PreferencesDialog(parent: Frame & ThemeSync, generalPreferences: Seq[Prefe
 
     codeMessage.setForeground(InterfaceColors.dialogText())
     loggingMessage.setForeground(InterfaceColors.dialogText())
+  }
+
+  // used by GUI tests to make sure all preferences can be changed without blowing up (Isaac B 11/2/25)
+  def scramble(): Unit = {
+    setSelectedIndex(0)
+
+    generalPreferences.foreach { pref =>
+      EventQueue.invokeAndWait(() => {
+        pref.scramble()
+      })
+    }
+
+    setSelectedIndex(1)
+
+    codePreferences.foreach { pref =>
+      EventQueue.invokeAndWait(() => {
+        pref.scramble()
+      })
+    }
+
+    setSelectedIndex(2)
+
+    loggingPreferences.foreach { pref =>
+      EventQueue.invokeAndWait(() => {
+        pref.scramble()
+      })
+    }
+
+    setSelectedIndex(3)
+
+    themesPanel.scramble()
+
+    // make sure resulting events from preference change are fully resolved (Isaac B 11/2/25)
+    EventQueue.invokeAndWait(() => {})
   }
 }
 

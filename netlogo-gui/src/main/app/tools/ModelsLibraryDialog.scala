@@ -37,6 +37,9 @@ import scala.language.implicitConversions
 object ModelsLibraryDialog {
   private var me: ModelsLibraryDialog = null
 
+  def dialog: Option[ModelsLibraryDialog] =
+    Option(me)
+
   // finish is a callback called *on the UI Thread* with the URI of the selected model
   @throws(classOf[UserCancelException])
   def open(parent: Frame, onSelect: URI => Unit): Unit = {
@@ -55,7 +58,9 @@ object ModelsLibraryDialog {
         }
       })
     } else {
-      finishOpen(me, onSelect)
+      SwingUtilities.invokeLater(() => {
+        finishOpen(me, onSelect)
+      })
     }
   }
 
@@ -162,7 +167,10 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
   private var selected = Option.empty[Node]
   private var sourceURI = Option.empty[URI]
   private val savedExpandedPaths: JList[TreePath] = new LinkedList[TreePath]()
-  private val searchField = new TextField
+
+  // public for automated GUI tests (Isaac B 10/31/25)
+  val searchField = new TextField
+
   private var searchText = Option.empty[String]
   private val searchIcon = new JLabel
 
@@ -550,6 +558,14 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
     invalidate()
     if (tree.getSelectionPath != null) {
       tree.scrollPathToVisible(tree.getSelectionPath)
+    }
+  }
+
+  // used by GUI tests to validate search results (Isaac B 11/1/25)
+  def visibleModels: Seq[String] = {
+    (0 until tree.getRowCount).collect {
+      case row if tree.isVisible(tree.getPathForRow(row)) && !tree.isExpanded(row) =>
+        tree.getPathForRow(row).getLastPathComponent.toString
     }
   }
 

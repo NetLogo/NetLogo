@@ -29,7 +29,8 @@ class Supervisor(
   dialogFactory: EditDialogFactory,
   compiler: CompilerServices,
   colorizer: Colorizer,
-  saveProtocol: (LabProtocol, Int) => Unit
+  saveProtocol: (LabProtocol, Int) => Unit,
+  automated: Boolean
 ) extends Thread("BehaviorSpace Supervisor") {
   private implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("tools.behaviorSpace")
   val worker = new Worker(protocol, writing)
@@ -98,7 +99,7 @@ class Supervisor(
         return
     }
 
-    if (protocol.runsCompleted == 0) {
+    if (protocol.runsCompleted == 0 && !automated) {
       try {
         new RunOptionsDialog(parent, dialogFactory, Option(workspace.getModelDir).map(new File(_).toPath),
                              workspace.guessExportName(protocol.name), protocol).run()
