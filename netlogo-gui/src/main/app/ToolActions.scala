@@ -10,7 +10,7 @@ import javax.swing.{ AbstractAction, JDialog }
 import org.nlogo.api.{ AggregateManagerInterface, LibraryManager }
 import org.nlogo.app.common.TabsInterface
 import org.nlogo.app.interfacetab.WidgetPanel
-import org.nlogo.app.tools.{ LibrariesDialog, Preferences, PreferencesDialog }
+import org.nlogo.app.tools.{ LibrariesDialog, PreferencesDialog }
 import org.nlogo.awt.Positioning
 import org.nlogo.core.{ I18N, Token }
 import org.nlogo.shape.ShapesManagerInterface
@@ -40,30 +40,7 @@ with MenuAction {
   category = ToolsCategory
   group    = ToolsSettingsGroup
 
-  private lazy val dialog = new PreferencesDialog(frame,
-    Seq(
-      Preferences.Language,
-      Preferences.LoadLastOnStartup,
-      new Preferences.ReloadOnExternalChanges(tabs),
-      new Preferences.BoldWidgetText(widgetPanel),
-      new Preferences.JumpOnClick(tabs),
-      Preferences.SendAnalytics
-    ) ++ (if (System.getProperty("os.name").contains("Linux")) Seq(Preferences.UIScale) else Nil),
-    Seq(
-      new Preferences.CodeFont(tabs),
-      Preferences.ProceduresMenuSortOrder,
-      new Preferences.IncludedFilesMenu(tabs),
-      Preferences.FocusOnError,
-      Preferences.StartSeparateCodeTab,
-      new Preferences.IndentAutomatically(frame),
-      new Preferences.EditorLineNumbers(tabs)
-    ),
-    Seq(
-      Preferences.IsLoggingEnabled,
-      new Preferences.LogDirectory(frame),
-      Preferences.LogEvents
-    )
-  )
+  private lazy val dialog = new PreferencesDialog(frame, tabs, widgetPanel)
 
   override def actionPerformed(e: ActionEvent): Unit = {
     openToTab(0)
