@@ -91,13 +91,17 @@ class AgentMonitorEditor(parent: AgentMonitor) extends JPanel with ThemeSync {
 
     editors.foreach(_.syncTheme())
   }
+
+  // used by GUI tests to validate the values shown in property fields
+  def getEditors: Seq[AgentVarEditor] =
+    editors
 }
 
 // this gets complicated... if there's any way to make it less complicated I'd love to know about it
 // - ST 8/17/03, 8/19/03
 
 class AgentVarEditor(parent: AgentMonitorEditor,
-                     index: Int,
+                     val index: Int,
                      variableName: String,
                      label: JLabel)
 extends JobWidget(parent.workspace.world.auxRNG)
@@ -147,6 +151,9 @@ with ThemeSync {
   editor.addKeyListener(this)
   editor.addFocusListener(this)
   refresh(true)
+
+  def getText: String =
+    editor.getText
 
   /// JobWidget stuff
 

@@ -169,6 +169,10 @@ abstract class AgentMonitor(val workspace: GUIWorkspace, window: JDialog)
     commandLine.syncTheme()
   }
 
+  // used by GUI tests to validate the values shown in property fields
+  def getEditors: Seq[AgentVarEditor] =
+    agentEditor.getEditors
+
   private class AgentLinePrompt(commandLine: CommandLine) extends LinePrompt(commandLine, false) {
     override def getPrompt: String = {
       agent match {
