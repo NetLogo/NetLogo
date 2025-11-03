@@ -2,7 +2,7 @@
 
 package org.nlogo.lab.gui
 
-import java.awt.{ Component, Dimension, FlowLayout, GridBagConstraints, GridBagLayout, Insets }
+import java.awt.{ Component, Dimension, EventQueue, FlowLayout, GridBagConstraints, GridBagLayout, Insets }
 import java.awt.event.ActionEvent
 import java.io.PrintWriter
 import javax.swing.{ AbstractAction, JDialog, JLabel, JList, JMenuBar, JPanel, ListCellRenderer }
@@ -14,15 +14,15 @@ import org.nlogo.core.I18N
 import org.nlogo.editor.Colorizer
 import org.nlogo.swing.{ AutomateWindow, Button, FileDialog, OptionPane, Positioning, ScrollPane, Transparent, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
-import org.nlogo.window.{ EditDialogFactory, MenuBarFactory }
+import org.nlogo.window.{ EditDialog, EditDialogFactory, MenuBarFactory }
 
 import scala.io.Source
 import scala.util.{ Success, Failure }
 
-private class ManagerDialog(manager:       LabManager,
-                            dialogFactory: EditDialogFactory,
-                            colorizer:     Colorizer,
-                            menuFactory:   MenuBarFactory)
+class ManagerDialog(manager:       LabManager,
+                    dialogFactory: EditDialogFactory,
+                    colorizer:     Colorizer,
+                    menuFactory:   MenuBarFactory)
   extends JDialog(manager.workspace.getFrame) with ListSelectionListener with ThemeSync with AutomateWindow {
 
   def saveProtocol(protocol: LabProtocol, runsCompleted: Int): Unit = {
@@ -176,7 +176,7 @@ private class ManagerDialog(manager:       LabManager,
       manager.prepareForRun()
 
       new Supervisor(this, manager.workspace, selectedProtocol, manager.workspaceFactory, dialogFactory,
-                     manager.workspace, colorizer, saveProtocol).start()
+                     manager.workspace, colorizer, saveProtocol, false).start()
     }
     catch { case ex: org.nlogo.awt.UserCancelException => org.nlogo.api.Exceptions.ignore(ex) }
   }
@@ -319,7 +319,7 @@ private class ManagerDialog(manager:       LabManager,
     valueChanged(null)
     if (manager.protocols.size > 0) jlist.setSelectedIndices(Array(0))
   }
-  private def select(index: Int): Unit = {
+  def select(index: Int): Unit = {
     jlist.setSelectedIndices(Array(index))
     jlist.ensureIndexIsVisible(index)
   }
@@ -357,6 +357,43 @@ private class ManagerDialog(manager:       LabManager,
     runButton.syncTheme()
 
     dialogFactory.syncTheme()
+  }
+
+  // used by GUI tests to validate loaded experiments (Isaac B 11/2/25)
+  def getExperiments: Seq[LabProtocol] =
+    manager.protocols.toSeq
+
+  // used by GUI tests, edits the selected experiment and closes it to check for errors (Isaac B 11/2/25)
+  def editAndClose(): Unit = {
+    val protocol: LabProtocol = selectedProtocol
+    val editable = new ProtocolEditable(protocol, manager.workspace.getFrame, manager.workspace, colorizer,
+                                        manager.workspace.world, manager.workspace.world.getDimensions,
+                                        manager.protocols.map(_.name).filter(_ != protocol.name).toSeq)
+    val dialog = new EditDialog(manager.workspace.getFrame, editable, editable.editPanel, false)
+
+    // make sure the dialog is really open (Isaac B 11/2/25)
+    EventQueue.invokeAndWait(() => {})
+
+    dialog.okButton.doClick()
+  }
+
+  // used by GUI tests, runs the selected experiment with automated
+  // dialogs and waits for its completion (Isaac B 11/2/25)
+  def runForTesting(): Unit = {
+    editIndex = selectedIndex
+
+    EventQueue.invokeAndWait(() => {
+      manager.prepareForRun()
+    })
+
+    val supervisor = new Supervisor(this, manager.workspace, selectedProtocol, manager.workspaceFactory, dialogFactory,
+                                    manager.workspace, colorizer, saveProtocol, true)
+
+    EventQueue.invokeAndWait(() => {
+      supervisor.start()
+    })
+
+    supervisor.join()
   }
 
   class ProtocolRenderer extends JPanel(new FlowLayout(FlowLayout.LEFT)) with ListCellRenderer[LabProtocol] {
