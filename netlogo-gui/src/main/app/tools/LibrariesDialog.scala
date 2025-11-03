@@ -10,7 +10,7 @@ import javax.swing.border.EmptyBorder
 import scala.concurrent.ExecutionContext
 
 import org.nlogo.api.LibraryManager
-import org.nlogo.core.{ I18N, Token }
+import org.nlogo.core.{ I18N, LibraryInfo, Token }
 import org.nlogo.swing.{ AutomateWindow, CustomOptionPane, DialogButton, OptionPane, ProgressListener, ScrollPane,
                          TextArea, Transparent }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
@@ -96,5 +96,14 @@ class LibrariesDialog( parent:          Frame
     updateAllButton.syncTheme()
 
     status.setForeground(InterfaceColors.dialogText())
+  }
+
+  // used by GUI tests, adds the specified text to the search field and returns the resulting list (Isaac B 11/2/25)
+  def searchFor(text: String): Seq[LibraryInfo] =
+    tab.searchFor(text)
+
+  // used by GUI tests, installs and uninstalls the specified extension (Isaac B 11/2/25)
+  def testInstall(info: LibraryInfo): Unit = {
+    tab.testInstall(info)
   }
 }

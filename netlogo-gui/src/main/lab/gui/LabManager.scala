@@ -87,6 +87,10 @@ class LabManager(val workspace:        GUIWorkspace,
     dialog.syncTheme()
   }
 
+  // used by GUI tests to automate running BehaviorSpace experiments
+  def getDialog: ManagerDialog =
+    dialog
+
   class ShowLabManager extends AbstractAction(I18N.gui.get(s"menu.tools.behaviorSpace")) with MenuAction {
     category    = ToolsCategory
     group       = ToolsDialogsGroup
