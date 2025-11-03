@@ -133,14 +133,14 @@ abstract class GUIWorkspace(world: World, kioskLevel: GUIWorkspace.KioskLevel, f
 
   private var _isModel3D = false
 
-  private var automated = false
+  private var testing = false
 
-  def setAutomated(automated: Boolean): Unit = {
-    this.automated = automated
+  def setTesting(testing: Boolean): Unit = {
+    this.testing = testing
   }
 
-  def isAutomated: Boolean =
-    automated
+  def isTesting: Boolean =
+    testing
 
   def getSwitchTo3DViewAction: Action =
     switchTo3DViewAction
@@ -687,7 +687,7 @@ abstract class GUIWorkspace(world: World, kioskLevel: GUIWorkspace.KioskLevel, f
   }
 
   private def open3DView(): Unit = {
-    if (!automated) {
+    if (!testing) {
       try {
         glView.open()
         set2DViewEnabled(false)

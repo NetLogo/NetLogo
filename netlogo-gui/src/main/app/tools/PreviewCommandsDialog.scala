@@ -23,8 +23,9 @@ class PreviewCommandsDialog(
   model: Model,
   modelPath: String,
   workspaceFactory: WorkspaceFactory,
-  graphicsPreview: GraphicsPreviewInterface)
-  extends JDialog(owner, title, true) with AutomateWindow {
+  graphicsPreview: GraphicsPreviewInterface,
+  modal: Boolean = true)
+  extends JDialog(owner, title, modal) with AutomateWindow {
 
   private val workspace = initWorkspace(workspaceFactory, _.openModel(model))
 

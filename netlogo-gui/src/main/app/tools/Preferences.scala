@@ -48,6 +48,10 @@ object Preferences {
     override def changed: Boolean =
       getPreference != checkBox.isSelected
 
+    override def scramble(): Unit = {
+      checkBox.doClick()
+    }
+
     protected def onSelect(selected: Boolean): Unit = {}
   }
 
@@ -174,6 +178,14 @@ object Preferences {
 
     override def changed: Boolean =
       !comboBox.getSelectedItem.contains(getPreference)
+
+    override def scramble(): Unit = {
+      if (comboBox.getSelectedItem.contains(DetectLocale)) {
+        comboBox.setSelectedIndex(1)
+      } else {
+        comboBox.setSelectedItem(DetectLocale)
+      }
+    }
   }
 
   object LoadLastOnStartup extends BooleanPreference("loadLastOnStartup", None, false)
@@ -227,9 +239,25 @@ object Preferences {
         None
       }
     }
+
+    override def scramble(): Unit = {
+      if (textField.getText.isEmpty) {
+        textField.setText("/Users/stromboli/Documents/logs/")
+      } else {
+        textField.setText("")
+      }
+    }
   }
 
-  object LogEvents extends StringPreference("logEvents", Some(RequiredAction.Restart), "")
+  object LogEvents extends StringPreference("logEvents", Some(RequiredAction.Restart), "") {
+    override def scramble(): Unit = {
+      if (textField.getText.isEmpty) {
+        textField.setText("all")
+      } else {
+        textField.setText("")
+      }
+    }
+  }
 
   class IncludedFilesMenu(tabs: TabsInterface) extends BooleanPreference("includedFilesMenu", None, true) {
     override def onSelect(selected: Boolean): Unit = {
@@ -266,6 +294,14 @@ object Preferences {
 
     override def changed: Boolean =
       !comboBox.getSelectedItem.contains(getPreference)
+
+    override def scramble(): Unit = {
+      if (comboBox.getSelectedIndex == 0) {
+        comboBox.setSelectedIndex(1)
+      } else {
+        comboBox.setSelectedIndex(0)
+      }
+    }
   }
 
   object FocusOnError extends BooleanPreference("focusOnError", None, true)
@@ -278,7 +314,15 @@ object Preferences {
     }
   }
 
-  object UIScale extends StringPreference("uiScale", Some(RequiredAction.Restart), "1.0")
+  object UIScale extends StringPreference("uiScale", Some(RequiredAction.Restart), "1.0") {
+    override def scramble(): Unit = {
+      if (textField.getText == "1.0") {
+        textField.setText("2.0")
+      } else {
+        textField.setText("1.0")
+      }
+    }
+  }
 
   class IndentAutomatically(raiser: Component) extends BooleanPreference("indentAutomatically", None, true) {
     override def onSelect(selected: Boolean): Unit = {
