@@ -89,7 +89,9 @@ object App {
         "light"
       }
     }),
-    // only for testing, interactable GUI components will be automated with this flag (Isaac B 10/27/25)
+    // only for testing, certain user-focused behaviors will be disabled (Isaac B 10/31/25)
+    testing: Boolean = false,
+    // only for testing, interactable GUI components will be automated (Isaac B 10/27/25)
     automated: Boolean = false
   )
 
@@ -258,6 +260,9 @@ object App {
         case "--3d" =>
           Version.set3D(true)
 
+        case "--testing" =>
+          current = current.copy(testing = true)
+
         case "--automated" =>
           current = current.copy(automated = true)
 
@@ -340,7 +345,7 @@ class App(args: App.CommandLineArgs) extends LinkChild with Exceptions.Handler w
       override def updateMode = workspace.updateMode
     }
 
-    setAutomated(args.automated)
+    setTesting(args.testing)
 
     def aggregateManager: AggregateManagerInterface =
       new GUIAggregateManager(frame, menuBarFactory, this, colorizer, editDialogFactory, extensionManager)
@@ -378,7 +383,8 @@ class App(args: App.CommandLineArgs) extends LinkChild with Exceptions.Handler w
                                 Some(ModelSettings(false)))
   }
 
-  private val monitorManager = new AgentMonitorManager(workspace)
+  val monitorManager = new AgentMonitorManager(workspace)
+
   private val colorizer = new EditorColorizer(workspace)
 
   private val interfaceTab = new InterfaceTab(workspace, monitorManager, editDialogFactory, colorizer,
@@ -400,7 +406,7 @@ class App(args: App.CommandLineArgs) extends LinkChild with Exceptions.Handler w
 
   val mainMenuBar = new MainMenuBar(AbstractWorkspace.isApp)
 
-  private val workspaceFactory = new WorkspaceFactory {
+  val workspaceFactory = new WorkspaceFactory {
     def newInstance: AbstractWorkspaceScala = HeadlessWorkspace.newInstance
 
     def openCurrentModelIn(w: Workspace): Unit = {
@@ -409,8 +415,8 @@ class App(args: App.CommandLineArgs) extends LinkChild with Exceptions.Handler w
     }
   }
 
-  private val labManager = new LabManager(workspace, editDialogFactory, colorizer, menuBarFactory, workspaceFactory,
-                                          modelLoader)
+  val labManager = new LabManager(workspace, editDialogFactory, colorizer, menuBarFactory, workspaceFactory,
+                                  modelLoader)
 
   val fileManager = new FileManager(workspace, modelLoader, converter, dirtyMonitor, modelSaver, mainMenuBar,
                                     frame, tabManager, workspaceFactory, labManager)
@@ -419,6 +425,8 @@ class App(args: App.CommandLineArgs) extends LinkChild with Exceptions.Handler w
 
   private val turtleShapesManager = new TurtleShapeManagerDialog(frame, world, modelLoader)
   private val linkShapesManager = new LinkShapeManagerDialog(frame, world, modelLoader)
+
+  val graphicsPreview = new GraphicsPreview
 
   private lazy val owner = new SimpleJobOwner("App", world.mainRNG, AgentKind.Observer)
 
@@ -602,7 +610,7 @@ class App(args: App.CommandLineArgs) extends LinkChild with Exceptions.Handler w
 
       syncWindowThemes()
 
-      if (args.automated) {
+      if (args.testing) {
         AnalyticsSender.silence()
       } else {
         if (analyticsConsent) {
@@ -795,7 +803,7 @@ class App(args: App.CommandLineArgs) extends LinkChild with Exceptions.Handler w
       new OpenHubNetClientEditor(workspace, frame),
       workspace.hubNetControlCenterAction,
       new PreviewCommandsEditor.EditPreviewCommands(
-        new PreviewCommandsEditor(frame, workspaceFactory, new GraphicsPreview), workspace,
+        new PreviewCommandsEditor(frame, workspaceFactory, graphicsPreview), workspace,
         () => modelSaver.currentModel),
       FindDialog.FIND_ACTION,
       FindDialog.FIND_NEXT_ACTION,
