@@ -19,7 +19,7 @@ class MenuTests extends AnyFunSpec {
   private lazy val tabManager: TabManager = App.app.tabManager
   private lazy val menuBar: MainMenuBar = App.app.mainMenuBar
 
-  App.main(Array("--automated"))
+  App.main(Array("--testing", "--automated"))
 
   // there are different menu actions for each tab, so test each one separately (Isaac B 10/29/25)
   describe("Interface Tab") {

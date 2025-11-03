@@ -2,8 +2,9 @@
 
 package org.nlogo.app.tools
 
-import java.awt.{ BorderLayout, Component, Dimension, FlowLayout, Font, GridBagConstraints, GridBagLayout, GridLayout,
-                  Insets }
+import java.awt.{ BorderLayout, Component, Dimension, EventQueue, FlowLayout, Font, GridBagConstraints, GridBagLayout,
+                  GridLayout, Insets, Toolkit }
+import java.awt.event.KeyEvent
 import java.awt.font.TextAttribute
 import java.io.IOException
 import java.nio.file.Path
@@ -17,7 +18,6 @@ import java.util.Collections
 import scala.collection.mutable.Buffer
 
 import org.nlogo.api.{ LibraryInfoDownloader, LibraryManager, Version }
-import org.nlogo.awt.EventQueue
 import org.nlogo.core.{ I18N, LibraryInfo, LibraryStatus, Token, TokenType }
 import org.nlogo.swing.{ BrowserLauncher, Button, EmptyIcon, FilterableListModel, OptionPane, RichAction, ScalableIcon,
                          ScrollPane, SwingWorker, TextArea, TextField, Transparent, Utils }
@@ -571,5 +571,33 @@ class LibrariesTab( category:        String
     infoScroll.setBackground(InterfaceColors.textAreaBackground())
 
     info.syncTheme()
+  }
+
+  // used by GUI tests, adds the specified text to the search field and returns the resulting list (Isaac B 11/2/25)
+  def searchFor(text: String): Seq[LibraryInfo] = {
+    val queue: EventQueue = Toolkit.getDefaultToolkit.getSystemEventQueue
+
+    text.foreach { char =>
+      queue.postEvent(new KeyEvent(filterField, KeyEvent.KEY_TYPED, System.currentTimeMillis, 0,
+                                   KeyEvent.VK_UNDEFINED, char))
+    }
+
+    // make sure the list has time to update extension visibilities (Isaac B 11/2/25)
+    Thread.sleep(500)
+
+    (0 until listModel.getSize).map(listModel.getElementAt)
+  }
+
+  // used by GUI tests, installs and uninstalls the specified extension (Isaac B 11/2/25)
+  def testInstall(info: LibraryInfo): Unit = {
+    install(info)
+
+    // wait for any resulting events to be processed (Isaac B 11/2/25)
+    EventQueue.invokeAndWait(() => {})
+
+    uninstall(info)
+
+    // wait for any resulting events to be processed (Isaac B 11/2/25)
+    EventQueue.invokeAndWait(() => {})
   }
 }
