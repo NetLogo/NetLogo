@@ -108,7 +108,7 @@ class StructureParserTests extends AnyFunSuite {
     val results = compile("export [foo [bar baz]]")
     assertResult(0)(results.procedures.size)
     assertResult(0)(results.imports.size)
-    assertResult(true)(results._export.isDefined)
+    assertResult(true)(results.`export`.isDefined)
   }
 
   test("import") {
