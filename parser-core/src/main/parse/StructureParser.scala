@@ -94,7 +94,7 @@ object StructureParser {
 
               val prefix = currentImport.alias.getOrElse(currentImport.moduleName) + ":"
               val exportedNames =
-                newResults._export.map(_.exportedNames.toSet).getOrElse(newResults.procedures.keys.map(_._1).toSet)
+                newResults.`export`.map(_.exportedNames.toSet).getOrElse(newResults.procedures.keys.map(_._1).toSet)
               val newProcedures = addProcedureAliases(
                 previousResults.procedures,
                 newResults.procedures,
