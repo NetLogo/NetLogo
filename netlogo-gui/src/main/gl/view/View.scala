@@ -12,12 +12,14 @@ import java.awt.image.BufferedImage
 import org.nlogo.analytics.Analytics
 import org.nlogo.api.Version
 import org.nlogo.gl.render.Renderer
-import org.nlogo.swing.{ AutomateWindow, NetLogoIcon }
+import org.nlogo.swing.{ NetLogoIcon, WindowAutomator }
 import org.nlogo.theme.ThemeSync
 import org.nlogo.window.Event.LinkChild
 
 abstract class View(title: String, val viewManager: ViewManager, var renderer: Renderer)
-  extends Frame(title) with LinkChild with ThemeSync with NetLogoIcon with AutomateWindow {
+  extends Frame(title) with LinkChild with ThemeSync with NetLogoIcon {
+
+  WindowAutomator.automate(this)
 
   var canvas: GLJPanel = null
   val picker = new Picker(this)

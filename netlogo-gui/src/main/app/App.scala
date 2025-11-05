@@ -43,8 +43,8 @@ import org.nlogo.nvm.{ PresentationCompilerInterface, Workspace }
 import org.nlogo.render.Renderer
 import org.nlogo.sdm.gui.{ GUIAggregateManager, NLogoGuiSDMFormat, NLogoThreeDGuiSDMFormat, SDMGuiAutoConvertable }
 import org.nlogo.shape.editor.{ LinkShapeManagerDialog, TurtleShapeManagerDialog }
-import org.nlogo.swing.{ AutomateWindow, BrowserLauncher, DropdownOptionPane, FileDialog, InputOptionPane, Menu,
-                         OptionPane, Positioning, PrinterManager, SetSystemLookAndFeel, UserAction, Utils },
+import org.nlogo.swing.{ BrowserLauncher, DropdownOptionPane, FileDialog, InputOptionPane, Menu, OptionPane,
+                         Positioning, PrinterManager, SetSystemLookAndFeel, UserAction, Utils, WindowAutomator },
   UserAction.{ ActionCategoryKey, EditCategory, FileCategory, HelpCategory, MenuAction, ToolsCategory }
 import org.nlogo.theme.{ ClassicTheme, DarkTheme, InterfaceColors, LightTheme, ThemeSync }
 import org.nlogo.util.AppHandler
@@ -149,10 +149,12 @@ object App {
 
       val cmdArgs = processCommandLineArguments(args)
 
-      AutomateWindow.setAutomated(cmdArgs.automated)
-      FileDialog.setAutomated(cmdArgs.automated)
-      PrinterManager.setInvisible(cmdArgs.automated)
-      BrowserLauncher.setAutomated(cmdArgs.automated)
+      if (cmdArgs.automated) {
+        WindowAutomator.enableAutomation()
+        FileDialog.enableAutomation()
+        PrinterManager.enableAutomation()
+        BrowserLauncher.enableAutomation()
+      }
 
       SetSystemLookAndFeel.setSystemLookAndFeel()
 
