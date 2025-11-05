@@ -7,11 +7,11 @@ import org.scalatest.funsuite.AnyFunSuite
 class ProjectParserTests extends AnyFunSuite {
   test("basic parsing") {
     val input = """
-name = "foo"
-version = 1.0.0
-dependencies = "libfoo", "libbar" > 1.0, "libbaz" >= 1.2.3 && < 4.5.6
-source-files = "foo.nls", "bar.nls", "baz.nls"
-    """
+      |name = "foo"
+      |version = 1.0.0
+      |dependencies = "libfoo", "libbar" > 1.0, "libbaz" >= 1.2.3 && < 4.5.6
+      |source-files = "foo.nls", "bar.nls", "baz.nls"
+      """.stripMargin
     val result = ProjectCombinators.parse(input)
 
     val expectedDependencies =
@@ -32,11 +32,11 @@ source-files = "foo.nls", "bar.nls", "baz.nls"
 
   test("parser accepts file with fields in a different order") {
     val input = """
-version = 1.0.0
-dependencies = "libfoo", "libbar" > 1.0, "libbaz" >= 1.2.3 && < 4.5.6
-name = "foo"
-source-files = "foo.nls", "bar.nls", "baz.nls"
-    """
+      |version = 1.0.0
+      |dependencies = "libfoo", "libbar" > 1.0, "libbaz" >= 1.2.3 && < 4.5.6
+      |name = "foo"
+      |source-files = "foo.nls", "bar.nls", "baz.nls"
+      """.stripMargin
     val result = ProjectCombinators.parse(input)
 
     val expectedDependencies =
@@ -57,12 +57,12 @@ source-files = "foo.nls", "bar.nls", "baz.nls"
 
   test("parser rejects file with duplicate fields") {
     val input = """
-name = "foo"
-version = 1.0.0
-dependencies = "libfoo", "libbar" > 1.0, "libbaz" >= 1.2.3 && < 4.5.6
-source-files = "foo.nls", "bar.nls", "baz.nls"
-version = 2.0.0
-    """
+      |name = "foo"
+      |version = 1.0.0
+      |dependencies = "libfoo", "libbar" > 1.0, "libbaz" >= 1.2.3 && < 4.5.6
+      |source-files = "foo.nls", "bar.nls", "baz.nls"
+      |version = 2.0.0
+      """.stripMargin
 
     val e = intercept[Exception] {
       ProjectCombinators.parse(input)
@@ -73,9 +73,9 @@ version = 2.0.0
 
   test("parser accepts file without optional fields") {
     val input = """
-name = "foo"
-version = 1.0.0
-    """
+      |name = "foo"
+      |version = 1.0.0
+      """.stripMargin
     val result = ProjectCombinators.parse(input)
     val expected = Some(Project("foo", VersionNumber(List(1, 0, 0)), List(), List()))
 
@@ -84,10 +84,10 @@ version = 1.0.0
 
   test("parser rejects file missing a required field") {
     val input = """
-name = "foo"
-dependencies = "libfoo", "libbar" > 1.0, "libbaz" >= 1.2.3 && < 4.5.6
-source-files = "foo.nls", "bar.nls", "baz.nls"
-    """
+      |name = "foo"
+      |dependencies = "libfoo", "libbar" > 1.0, "libbaz" >= 1.2.3 && < 4.5.6
+      |source-files = "foo.nls", "bar.nls", "baz.nls"
+      """.stripMargin
     val result = ProjectCombinators.parse(input)
 
     assertResult(None)(result)
@@ -95,11 +95,11 @@ source-files = "foo.nls", "bar.nls", "baz.nls"
 
   test("parser rejects invalid version number") {
     val input = """
-name = "foo"
-version = 1.0.0.a
-dependencies = "libfoo", "libbar" > 1.0, "libbaz" >= 1.2.3 && < 4.5.6
-source-files = "foo.nls", "bar.nls", "baz.nls"
-    """
+      |name = "foo"
+      |version = 1.0.0.a
+      |dependencies = "libfoo", "libbar" > 1.0, "libbaz" >= 1.2.3 && < 4.5.6
+      |source-files = "foo.nls", "bar.nls", "baz.nls"
+      """.stripMargin
     val result = ProjectCombinators.parse(input)
 
     assertResult(None)(result)
@@ -107,11 +107,11 @@ source-files = "foo.nls", "bar.nls", "baz.nls"
 
   test("parser rejects unquoted strings") {
     val input = """
-name = foo
-version = 1.0.0
-dependencies = "libfoo", "libbar" > 1.0, "libbaz" >= 1.2.3 && < 4.5.6
-source-files = "foo.nls", "bar.nls", "baz.nls"
-    """
+      |name = foo
+      |version = 1.0.0
+      |dependencies = "libfoo", "libbar" > 1.0, "libbaz" >= 1.2.3 && < 4.5.6
+      |source-files = "foo.nls", "bar.nls", "baz.nls"
+      """.stripMargin
     val result = ProjectCombinators.parse(input)
 
     assertResult(None)(result)
@@ -119,11 +119,11 @@ source-files = "foo.nls", "bar.nls", "baz.nls"
 
   test("parser rejects strings with unmatched quotes") {
     val input = """
-name = "foo
-version = 1.0.0
-dependencies = "libfoo", "libbar" > 1.0, "libbaz" >= 1.2.3 && < 4.5.6
-source-files = "foo.nls", "bar.nls", "baz.nls"
-    """
+      |name = "foo
+      |version = 1.0.0
+      |dependencies = "libfoo", "libbar" > 1.0, "libbaz" >= 1.2.3 && < 4.5.6
+      |source-files = "foo.nls", "bar.nls", "baz.nls"
+      """.stripMargin
     val result = ProjectCombinators.parse(input)
 
     assertResult(None)(result)
@@ -131,11 +131,11 @@ source-files = "foo.nls", "bar.nls", "baz.nls"
 
   test("parser rejects dependency with flipped bounds") {
     val input = """
-name = "foo"
-version = 1.0.0
-dependencies = "libfoo", "libbar" > 1.0, "libbaz" < 1.2.3 && >= 4.5.6
-source-files = "foo.nls", "bar.nls", "baz.nls"
-    """
+      |name = "foo"
+      |version = 1.0.0
+      |dependencies = "libfoo", "libbar" > 1.0, "libbaz" < 1.2.3 && >= 4.5.6
+      |source-files = "foo.nls", "bar.nls", "baz.nls"
+      """.stripMargin
     val result = ProjectCombinators.parse(input)
 
     assertResult(None)(result)
