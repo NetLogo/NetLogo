@@ -19,7 +19,8 @@ public final class PrinterManager {
    */
   private List<List<Object>> textPages;
 
-  private static boolean invisible = false;
+  // used by GUI tests, prevents blocking print dialog from appearing (Isaac B 10/30/25)
+  private static boolean automated = false;
 
   /**
    * makes a new PrinterManager. Used to create a new PrinterManager
@@ -31,9 +32,8 @@ public final class PrinterManager {
     textPages = null;
   }
 
-  // used by GUI tests, prevents blocking print dialog from appearing (Isaac B 10/30/25)
-  public static void setInvisible(boolean value) {
-    invisible = value;
+  public static void enableAutomation() {
+    automated = true;
   }
 
   /**
@@ -42,7 +42,7 @@ public final class PrinterManager {
    */
   public static void print(final org.nlogo.swing.Printable p, String fileName)
       throws java.awt.print.PrinterAbortException, java.awt.print.PrinterException {
-    if (invisible) {
+    if (automated) {
       throw new java.awt.print.PrinterAbortException();
     }
     java.awt.print.PrinterJob printerJob =
