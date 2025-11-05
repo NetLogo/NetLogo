@@ -2,11 +2,11 @@
 
 package org.nlogo.app
 
-import java.awt.{ Component, EventQueue, Window }
+import java.awt.{ Component, EventQueue }
 import java.util.concurrent.TimeoutException
 import javax.swing.{ JMenu, JMenuItem }
 
-import org.nlogo.swing.AutomateWindow
+import org.nlogo.swing.WindowAutomator
 import org.nlogo.util.GuiTest
 
 import org.scalatest.funspec.AnyFunSpec
@@ -80,7 +80,7 @@ class MenuTests extends AnyFunSpec {
             // clear EventQueue so non-modal dialogs can receive their close events (Isaac B 10/30/25)
             EventQueue.invokeAndWait(() => {})
 
-            Window.getWindows.filter(window => window.isVisible && window.isInstanceOf[AutomateWindow])
+            WindowAutomator.getVisibleWindows
               .headOption.foreach { window =>
 
               alert("Failed to close window: " + window.getClass.getName)

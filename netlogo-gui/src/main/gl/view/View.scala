@@ -14,12 +14,14 @@ import org.nlogo.api.{ DrawingInterface, Version, World3D, WorldRenderable, Worl
 import org.nlogo.gl.render.{ LinkRenderer, LinkRenderer3D, PatchRenderer, PatchRenderer3D, Renderer, Renderer3D,
                              ShapeRenderer, ShapeRenderer3D, TurtleRenderer, TurtleRenderer3D, WorldRenderer,
                              WorldRenderer3D }
-import org.nlogo.swing.{ AutomateWindow, NetLogoIcon }
+import org.nlogo.swing.{ NetLogoIcon, WindowAutomator }
 import org.nlogo.theme.ThemeSync
 import org.nlogo.window.Event.LinkChild
 
 abstract class View(title: String, val viewManager: ViewManager, var renderer: Renderer)
-  extends Frame(title) with LinkChild with ThemeSync with NetLogoIcon with AutomateWindow {
+  extends Frame(title) with LinkChild with ThemeSync with NetLogoIcon {
+
+  WindowAutomator.automate(this)
 
   var canvas: GLJPanel = null
   val picker = new Picker(this)
