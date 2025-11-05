@@ -458,7 +458,7 @@ class App extends org.nlogo.window.Event.LinkChild
       val libMan = workspace.getLibraryManager
       new ExtensionAssistant(
         frame
-      , libMan.getExtensionInfos.map(_.codeName).toSet
+      , (name)            => libMan.lookupExtension(name, "").isDefined
       , (name)            => libMan.lookupExtension(name, "").fold("N/A")(_.version)
       , { (name, version) => libMan.lookupExtension(name, version).foreach(libMan.installExtension); compileLater() }
       )
