@@ -11,7 +11,7 @@ import org.nlogo.analytics.Analytics
 import org.nlogo.api.PreviewCommands
 import org.nlogo.awt.Positioning
 import org.nlogo.core.{ AgentKind, CompilerException, I18N, Model }
-import org.nlogo.swing.{ AutomateWindow, Button, Transparent, Utils }
+import org.nlogo.swing.{ Button, Transparent, Utils, WindowAutomator }
 import org.nlogo.theme.InterfaceColors
 import org.nlogo.window.{ EditorColorizer, GraphicsPreviewInterface }
 import org.nlogo.workspace.{ Evaluator, WorkspaceFactory }
@@ -26,7 +26,9 @@ class PreviewCommandsDialog(
   workspaceFactory: WorkspaceFactory,
   graphicsPreview: GraphicsPreviewInterface,
   modal: Boolean = true)
-  extends JDialog(owner, title, modal) with AutomateWindow {
+  extends JDialog(owner, title, modal) {
+
+  WindowAutomator.automate(this)
 
   private val workspace = initWorkspace(workspaceFactory, _.openModel(model))
 
