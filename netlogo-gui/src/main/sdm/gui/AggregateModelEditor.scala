@@ -17,7 +17,7 @@ import org.nlogo.api.{ CompilerServices, ExtensionManager, SourceOwner }
 import org.nlogo.core.{ CompilerException, I18N }
 import org.nlogo.editor.Colorizer
 import org.nlogo.sdm.Translator
-import org.nlogo.swing.{ AutomateWindow, MenuBar, MenuItem, NetLogoIcon, Utils => SwingUtils }
+import org.nlogo.swing.{ MenuBar, MenuItem, NetLogoIcon, Utils => SwingUtils, WindowAutomator }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ Editable, EditDialogFactory, Events, MenuBarFactory }
 import org.nlogo.window.Event.LinkChild
@@ -43,8 +43,9 @@ class AggregateModelEditor(
   with LinkChild
   with Events.LoadBeginEvent.Handler
   with ThemeSync
-  with NetLogoIcon
-  with AutomateWindow {
+  with NetLogoIcon {
+
+  WindowAutomator.automate(this)
 
   def this(
     linkParent: Component,

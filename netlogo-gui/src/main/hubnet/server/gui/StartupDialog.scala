@@ -10,12 +10,14 @@ import javax.swing.border.EmptyBorder
 import org.nlogo.awt.Positioning
 import org.nlogo.core.I18N
 import org.nlogo.swing.NonemptyTextFieldButtonEnabler
-import org.nlogo.swing.{ AutomateWindow, CheckBox, ComboBox, DialogButton, TextField, TextFieldBox, Transparent }
+import org.nlogo.swing.{ CheckBox, ComboBox, DialogButton, TextField, TextFieldBox, Transparent, WindowAutomator }
 import org.nlogo.theme.InterfaceColors
 
 class StartupDialog(parent: Frame, choices: Seq[(NetworkInterface, InetAddress)],
                     preferredNetworkConnection: Option[(NetworkInterface, InetAddress)])
-  extends JDialog(parent, I18N.gui.get("edit.hubnet.startActivity"), true) with AutomateWindow {
+  extends JDialog(parent, I18N.gui.get("edit.hubnet.startActivity"), true) {
+
+  WindowAutomator.automate(this)
 
   private val nameField = new TextField(14, System.getProperty("user.name", ""))
 

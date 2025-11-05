@@ -33,7 +33,9 @@ class OptionPane(parent: Component, title: String, message: String, options: Seq
   extends JDialog(parent match {
                     case w: Window => w
                     case _ => null
-                  }, title, Dialog.ModalityType.APPLICATION_MODAL) with AutomateWindow {
+                  }, title, Dialog.ModalityType.APPLICATION_MODAL) {
+
+  WindowAutomator.automate(this)
 
   // this constructor makes it easier to access from Java (Isaac B 7/14/25)
   def this(parent: Component, title: String, message: String, options: CollectionSeq[String]) =
