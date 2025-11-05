@@ -331,10 +331,10 @@ class StructureParserTests extends AnyFunSuite {
   test("import syntax default alias") {
     val src = """import [foo]"""
     val nlsSrc = """
-to test
-  show 12345
-end
-    """
+      |to test
+      |  show 12345
+      |end
+      """.stripMargin
     val results = compileAll(src, nlsSrc)
     if (!results.procedures.contains(("FOO:TEST", None))) {
       fail()
@@ -344,10 +344,10 @@ end
   test("import syntax custom alias") {
     val src = """import [foo [alias bar]]"""
     val nlsSrc = """
-to test
-  show 12345
-end
-    """
+      |to test
+      |  show 12345
+      |end
+      """.stripMargin
     val results = compileAll(src, nlsSrc)
     if (!results.procedures.contains(("BAR:TEST", None))) {
       fail()
@@ -356,24 +356,24 @@ end
 
   test("import module from another module") {
     val mainSrc = """
-import [foo]
-
-to hello
-  foo:hello
-end
-    """
+      |import [foo]
+      |
+      |to hello
+      |  foo:hello
+      |end
+      """.stripMargin
     val fooSrc = """
-import [bar]
-
-to hello
-  bar:hello
-end
-    """
+      |import [bar]
+      |
+      |to hello
+      |  bar:hello
+      |end
+      """.stripMargin
     val barSrc = """
-to hello
-  show 123
-end
-    """
+      |to hello
+      |  show 123
+      |end
+      """.stripMargin
     val results = compileAll(mainSrc, fooSrc, barSrc)
     val expected = Set(
       ("HELLO", None),
@@ -388,17 +388,17 @@ end
 
   test("import syntax name conflict") {
     val src = """
-import [foo [alias a]]
-
-to a:test
-  show 1234
-end
-"""
+      |import [foo [alias a]]
+      |
+      |to a:test
+      |  show 1234
+      |end
+      """.stripMargin
     val nlsSrc = """
-to test
-  show 5678
-end
-    """
+      |to test
+      |  show 5678
+      |end
+      """.stripMargin
 
     expectParseAllError(src, "There is already an imported procedure called A:TEST", nlsSrc)
   }
@@ -421,12 +421,12 @@ end
     val nlsSrc = "globals [ d f g ] turtles-own [ t3 t4 ] mice-own [ m3 m4 ]"
     val results = compileAll(src, nlsSrc)
     val expected = """globals [A B C D F G]
-interfaceGlobals []
-turtles-own [WHO COLOR HEADING XCOR YCOR SHAPE LABEL LABEL-COLOR BREED HIDDEN? SIZE PEN-SIZE PEN-MODE T1 T2 T3 T4]
-patches-own [PXCOR PYCOR PCOLOR PLABEL PLABEL-COLOR]
-links-own [END1 END2 COLOR LABEL LABEL-COLOR HIDDEN? BREED THICKNESS SHAPE TIE-MODE]
-breeds MICE = Breed(MICE, MOUSE, M1 M2 M3 M4, false)
-link-breeds"""
+      |interfaceGlobals []
+      |turtles-own [WHO COLOR HEADING XCOR YCOR SHAPE LABEL LABEL-COLOR BREED HIDDEN? SIZE PEN-SIZE PEN-MODE T1 T2 T3 T4]
+      |patches-own [PXCOR PYCOR PCOLOR PLABEL PLABEL-COLOR]
+      |links-own [END1 END2 COLOR LABEL LABEL-COLOR HIDDEN? BREED THICKNESS SHAPE TIE-MODE]
+      |breeds MICE = Breed(MICE, MOUSE, M1 M2 M3 M4, false)
+      |link-breeds""".stripMargin
     assertResult(expected)(results.program.dump.trim)
   }
 
