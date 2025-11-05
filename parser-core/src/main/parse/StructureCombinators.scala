@@ -90,7 +90,7 @@ extends scala.util.parsing.combinator.Parsers {
           decs ++ procs }
 
   def declaration: Parser[Declaration] =
-    _export | _import | includes | extensions | breed | directedLinkBreed | undirectedLinkBreed |
+    `export` | `import` | includes | extensions | breed | directedLinkBreed | undirectedLinkBreed |
       variables("GLOBALS") | variables("TURTLES-OWN") | variables("PATCHES-OWN") |
       variables("LINKS-OWN") | breedVariables
 
@@ -99,7 +99,7 @@ extends scala.util.parsing.combinator.Parsers {
       case token ~ names =>
         Includes(token, names) }
 
-  def _export: Parser[Export] =
+  def `export`: Parser[Export] =
     keyword("EXPORT") ~! openBracket ~> identifier ~ exportSpecList <~ closeBracket ^^ {
       case ident ~ specs =>
         Export(ident.name, specs, ident.token)
@@ -117,7 +117,7 @@ extends scala.util.parsing.combinator.Parsers {
         SimpleExport(ident.name)
     }
 
-  def _import: Parser[Import] =
+  def `import`: Parser[Import] =
     keyword("IMPORT") ~ openBracket ~ identifier ~ identifier ~ rep(importOption) <~ closeBracket ^^ {
       case keyword ~ _ ~ packageName ~ moduleName ~ options =>
         Import(Some(packageName.name), moduleName.name, options, keyword)
