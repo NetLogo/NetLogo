@@ -62,7 +62,7 @@ object StructureConverter {
             e.names.map(_.token)
         }.flatten,
       imports = oldResults.imports ++ ims,
-      _export = exs.headOption)
+      `export` = exs.headOption)
   }
 
   def buildProcedure(p: Procedure, module: Option[String], displayName: Option[String]): (FrontEndProcedure, Iterable[Token]) = {

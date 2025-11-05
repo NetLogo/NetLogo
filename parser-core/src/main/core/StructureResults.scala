@@ -11,7 +11,7 @@ case class StructureResults(program: Program,
                         includedSources: Seq[String] = Seq(),
                         extensions: Seq[Token] = Seq(),
                         imports: Seq[Import] = Seq(),
-                        _export: Option[Export] = None)
+                        `export`: Option[Export] = None)
 
 object StructureResults {
   val empty = StructureResults(Program.empty())
