@@ -12,13 +12,15 @@ import javax.swing.border.EmptyBorder
 import org.nlogo.app.common.TabsInterface
 import org.nlogo.app.common.Events.RestartEvent
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ AutomateWindow, ButtonPanel, CheckBox, DialogButton, FloatingTabbedPane, OptionPane, TabLabel,
-                         TextField, Transparent }
+import org.nlogo.swing.{ ButtonPanel, CheckBox, DialogButton, FloatingTabbedPane, OptionPane, TabLabel,
+                         TextField, Transparent, WindowAutomator }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.AbstractWidgetPanel
 
 class PreferencesDialog(parent: Frame & ThemeSync, tabManager: TabsInterface, widgetPanel: AbstractWidgetPanel)
-  extends ToolDialog(parent, "preferences") with ThemeSync with AutomateWindow {
+  extends ToolDialog(parent, "preferences") with ThemeSync {
+
+  WindowAutomator.automate(this)
 
   private lazy val generalPreferences = Seq[Preference](
     Preferences.Language,
