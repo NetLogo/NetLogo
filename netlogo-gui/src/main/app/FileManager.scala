@@ -302,7 +302,8 @@ class FileManager(workspace: AbstractWorkspaceScala,
   parent: Container,
   tabManager: TabManager,
   workspaceFactory: WorkspaceFactory,
-  labManager: LabManagerInterface)
+  labManager: LabManagerInterface,
+  testing: Boolean)
     extends OpenModelEvent.Handler
     with LoadModelEvent.Handler {
   private var firstLoad: Boolean = true
@@ -325,7 +326,7 @@ class FileManager(workspace: AbstractWorkspaceScala,
       throw new UserCancelException
 
     if (dirtyMonitor.modelDirty) {
-      if (Dialogs.userWantsToSaveFirst(I18N.gui.get("file.save.offer.thisModel"), parent)) {
+      if (!testing && Dialogs.userWantsToSaveFirst(I18N.gui.get("file.save.offer.thisModel"), parent)) {
         saveModel(false)
       } else {
         dirtyMonitor.discardNewAutoSaves()
@@ -365,7 +366,7 @@ class FileManager(workspace: AbstractWorkspaceScala,
 
   def openFromURI(uri: URI, modelType: ModelType, shouldAutoInstallLibs: Boolean = false): Unit = {
     val newUri = ModelConfig.findAutoSave(Paths.get(uri).toString) match {
-      case Some(path) =>
+      case Some(path) if !testing =>
         if (new OptionPane(parent, I18N.gui.get("file.autosave.recover"), I18N.gui.get("file.autosave.recover.message"),
                            OptionPane.Options.YesNo, OptionPane.Icons.Info).getSelectedIndex == 0) {
           path.toUri
