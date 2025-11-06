@@ -407,6 +407,12 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
     })
   }
 
+  override def dispose(): Unit = {
+    super.dispose()
+
+    ModelsLibraryDialog.me = null
+  }
+
   def selectAll(): Unit = searchField.selectAll
 
   def setSearchText(newText: String): Unit = {
