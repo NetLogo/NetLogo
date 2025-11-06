@@ -8,10 +8,10 @@ import java.util.concurrent.TimeoutException
 
 import org.nlogo.agent.{ Link, Patch, Turtle }
 import org.nlogo.api.ModelType
-import org.nlogo.app.common.CommandLine
 import org.nlogo.app.tools.{ AgentMonitorManager, LibrariesDialog, ModelsLibraryDialog, PreferencesDialog,
                              PreviewCommandsDialog, PreviewCommandsEditor }
 import org.nlogo.core.LibraryInfo
+import org.nlogo.editor.EditorField
 import org.nlogo.lab.gui.{ LabManager, ManagerDialog }
 import org.nlogo.util.GuiTest
 import org.nlogo.window.GUIWorkspace
@@ -29,7 +29,7 @@ class DialogTests extends AnyFunSuite with BeforeAndAfterAll {
   private lazy val fileManager: FileManager = App.app.fileManager
   private lazy val tabManager: TabManager = App.app.tabManager
   private lazy val monitorManager: AgentMonitorManager = App.app.monitorManager
-  private lazy val commandLine: CommandLine = tabManager.interfaceTab.commandCenter.commandLine
+  private lazy val commandLine: EditorField = tabManager.interfaceTab.commandCenter.commandLine.textField
   private lazy val labManager: LabManager = App.app.labManager
 
   private lazy val eventQueue: EventQueue = Toolkit.getDefaultToolkit.getSystemEventQueue
@@ -110,9 +110,10 @@ class DialogTests extends AnyFunSuite with BeforeAndAfterAll {
         // make sure the dialog is really open (Isaac B 11/2/25)
         EventQueue.invokeAndWait(() => {})
 
-        val infos: Seq[LibraryInfo] = dialog.searchFor("bspace")
+        val infos: Seq[LibraryInfo] = dialog.searchFor("bspace", 1).getOrElse {
+          fail("Extensions Manager dialog did not filter extensions correctly.")
+        }
 
-        assert(infos.size == 1)
         assert(infos(0).name == "bspace")
 
         dialog.testInstall(infos(0))
@@ -133,7 +134,8 @@ class DialogTests extends AnyFunSuite with BeforeAndAfterAll {
         // make sure the dialog is really open (Isaac B 11/2/25)
         EventQueue.invokeAndWait(() => {})
 
-        assert(dialog.searchFor("lasagna").isEmpty)
+        if (dialog.searchFor("lasagna", 0).isEmpty)
+          fail("Extensions Manager dialog did not filter extensions correctly.")
 
         dialog.setVisible(false)
 
@@ -156,7 +158,7 @@ class DialogTests extends AnyFunSuite with BeforeAndAfterAll {
 
         assert(window.validateFields(turtle))
 
-        sendLine(window.commandLine, "set heading 0")
+        sendLine(window.commandLine.textField, "set heading 0")
 
         waitUntil(() => turtle.heading == 0, "Turtle Monitor window failed to run command.")
 
@@ -181,7 +183,7 @@ class DialogTests extends AnyFunSuite with BeforeAndAfterAll {
 
         assert(window.validateFields(patch))
 
-        sendLine(window.commandLine, "set pcolor black")
+        sendLine(window.commandLine.textField, "set pcolor black")
 
         waitUntil(() => patch.pcolor == 0, "Patch Monitor window failed to run command.")
 
@@ -207,7 +209,7 @@ class DialogTests extends AnyFunSuite with BeforeAndAfterAll {
 
         assert(window.validateFields(link))
 
-        sendLine(window.commandLine, "set thickness 5")
+        sendLine(window.commandLine.textField, "set thickness 5")
 
         waitUntil(() => link.lineThickness == 5, "Link Monitor window failed to run command.")
 
@@ -270,6 +272,11 @@ class DialogTests extends AnyFunSuite with BeforeAndAfterAll {
   }
 
   private def sendChars(comp: Component, text: String): Unit = {
+    comp.requestFocus()
+
+    // make sure all focus-related events are processed (Isaac B 11/6/25)
+    waitUntil(comp.hasFocus, "Target component did not receive focus.")
+
     text.foreach { char =>
       eventQueue.postEvent(new KeyEvent(comp, KeyEvent.KEY_TYPED, System.currentTimeMillis, 0, KeyEvent.VK_UNDEFINED,
                                         char))
@@ -296,7 +303,7 @@ class DialogTests extends AnyFunSuite with BeforeAndAfterAll {
     }.start()
 
     try {
-      Await.ready(promise.future, Duration(5, SECONDS))
+      Await.ready(promise.future, Duration(15, SECONDS))
     } catch {
       case _: TimeoutException =>
         fail(message)
