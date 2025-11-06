@@ -8,14 +8,11 @@ import java.awt.event.KeyEvent
 import java.awt.font.TextAttribute
 import java.io.IOException
 import java.nio.file.Path
-import java.util.Locale
+import java.util.{ Collections, Locale }
+import java.util.concurrent.TimeoutException
 import javax.swing.{ Action, Box, DefaultListModel, Icon, JLabel, JList, JPanel, ListCellRenderer, ListModel }
 import javax.swing.border.LineBorder
 import javax.swing.event.{ AncestorEvent, AncestorListener, ListDataEvent, ListDataListener }
-
-import java.util.Collections
-
-import scala.collection.mutable.Buffer
 
 import org.nlogo.api.{ LibraryInfoDownloader, LibraryManager, Version }
 import org.nlogo.core.{ I18N, LibraryInfo, LibraryStatus, Token, TokenType }
@@ -23,6 +20,10 @@ import org.nlogo.swing.{ BrowserLauncher, Button, EmptyIcon, FilterableListModel
                          ScrollPane, SwingWorker, TextArea, TextField, Transparent, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.workspace.ModelsLibrary
+
+import scala.collection.mutable.Buffer
+import scala.concurrent.{ Await, Promise }
+import scala.concurrent.duration.{ Duration, SECONDS }
 
 object LibrariesTab {
   // this may look overly complex, but when rewriting the user's source code, we need to be absolutely sure
@@ -574,7 +575,13 @@ class LibrariesTab( category:        String
   }
 
   // used by GUI tests, adds the specified text to the search field and returns the resulting list (Isaac B 11/2/25)
-  def searchFor(text: String): Seq[LibraryInfo] = {
+  def searchFor(text: String, expectedSize: Int): Option[Seq[LibraryInfo]] = {
+    filterField.requestFocus()
+
+    // make sure all focus-related events are processed (Isaac B 11/6/25)
+    while (!filterField.hasFocus)
+      Thread.sleep(250)
+
     val queue: EventQueue = Toolkit.getDefaultToolkit.getSystemEventQueue
 
     text.foreach { char =>
@@ -582,10 +589,26 @@ class LibrariesTab( category:        String
                                    KeyEvent.VK_UNDEFINED, char))
     }
 
-    // make sure the list has time to update extension visibilities (Isaac B 11/2/25)
-    Thread.sleep(500)
+    val promise = Promise[Unit]()
 
-    (0 until listModel.getSize).map(listModel.getElementAt)
+    // wait for the list to update extension visibilities (Isaac B 11/2/25)
+    new Thread {
+      override def run(): Unit = {
+        while (listModel.getSize != expectedSize)
+          Thread.sleep(250)
+
+        promise.success({})
+      }
+    }.start()
+
+    try {
+      Await.ready(promise.future, Duration(5, SECONDS))
+    } catch {
+      case _: TimeoutException =>
+        return None
+    }
+
+    Option((0 until listModel.getSize).map(listModel.getElementAt))
   }
 
   // used by GUI tests, installs and uninstalls the specified extension (Isaac B 11/2/25)
