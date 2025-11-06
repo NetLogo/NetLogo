@@ -153,12 +153,10 @@ object App {
 
       val cmdArgs = processCommandLineArguments(args)
 
-      if (cmdArgs.automated) {
-        WindowAutomator.enableAutomation()
-        FileDialog.enableAutomation()
-        PrinterManager.enableAutomation()
-        BrowserLauncher.enableAutomation()
-      }
+      WindowAutomator.setAutomated(cmdArgs.automated)
+      FileDialog.setAutomated(cmdArgs.automated)
+      PrinterManager.setAutomated(cmdArgs.automated)
+      BrowserLauncher.setAutomated(cmdArgs.automated)
 
       SetSystemLookAndFeel.setSystemLookAndFeel()
 
@@ -188,6 +186,15 @@ object App {
     } catch {
       case ex: Throwable =>
         StartupError.report(ex)
+    }
+  }
+
+  // used by GUI tests to restore the default behavior in between suites (Isaac B 11/5/25)
+  def reset(): Unit = {
+    if (app != null) {
+      WindowAutomator.resetWindows()
+
+      app.frame.dispose()
     }
   }
 
@@ -419,7 +426,7 @@ class App(args: App.CommandLineArgs) extends LinkChild with Exceptions.Handler w
                                   modelLoader)
 
   val fileManager = new FileManager(workspace, modelLoader, converter, dirtyMonitor, modelSaver, mainMenuBar,
-                                    frame, tabManager, workspaceFactory, labManager)
+                                    frame, tabManager, workspaceFactory, labManager, args.testing)
 
   private val recentFilesMenu = new RecentFilesMenu(frame, fileManager)
 

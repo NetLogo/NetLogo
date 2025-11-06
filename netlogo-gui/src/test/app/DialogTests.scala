@@ -265,6 +265,7 @@ class DialogTests extends AnyFunSuite with BeforeAndAfterAll {
   }
 
   override def beforeAll(): Unit = {
+    App.reset()
     App.main(Array("--testing"))
   }
 
