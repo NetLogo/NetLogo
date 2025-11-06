@@ -20,8 +20,8 @@ object FileDialog {
   // used by GUI tests, prevents blocking dialog from showing (Isaac B 10/30/25)
   private var automated = false
 
-  def enableAutomation(): Unit = {
-    automated = true
+  def setAutomated(automated: Boolean): Unit = {
+    this.automated = automated
   }
 
   /**

@@ -22,8 +22,8 @@ object BrowserLauncher {
   // used by GUI tests, prevents the inevitable onslaught of random tabs being opened (Isaac B 11/5/25)
   private var automated = false
 
-  def enableAutomation(): Unit = {
-    automated = true
+  def setAutomated(automated: Boolean): Unit = {
+    this.automated = automated
   }
 
   def openURI(comp: Component, uri: URI): Unit = {
