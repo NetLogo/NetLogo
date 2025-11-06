@@ -32,8 +32,8 @@ public final class PrinterManager {
     textPages = null;
   }
 
-  public static void enableAutomation() {
-    automated = true;
+  public static void setAutomated(boolean value) {
+    automated = value;
   }
 
   /**
