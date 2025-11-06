@@ -299,7 +299,8 @@ class FileManager(workspace: AbstractWorkspaceScala,
   eventRaiser: AnyRef,
   parent: Container,
   tabManager: TabManager,
-  workspaceFactory: WorkspaceFactory)
+  workspaceFactory: WorkspaceFactory,
+  testing: Boolean)
     extends OpenModelEvent.Handler
     with LoadModelEvent.Handler {
   private var firstLoad: Boolean = true
@@ -316,7 +317,7 @@ class FileManager(workspace: AbstractWorkspaceScala,
 
   private[app] def aboutToCloseFiles(): Unit = {
     if (dirtyMonitor.modelDirty) {
-      if (Dialogs.userWantsToSaveFirst(I18N.gui.get("file.save.offer.thisModel"), parent)) {
+      if (!testing && Dialogs.userWantsToSaveFirst(I18N.gui.get("file.save.offer.thisModel"), parent)) {
         saveModel(false)
       } else {
         dirtyMonitor.discardNewAutoSaves()
@@ -346,18 +347,25 @@ class FileManager(workspace: AbstractWorkspaceScala,
   def openFromURI(uri: URI, modelType: ModelType, shouldAutoInstallLibs: Boolean = false): Unit = {
     var autosaveFound = false
 
-    val newUri = ModelConfig.findAutoSave(Paths.get(uri).toString) match {
-      case Some(path) =>
-        autosaveFound = true
+    val newUri = {
+      if (testing) {
+        uri
+      } else {
+        ModelConfig.findAutoSave(Paths.get(uri).toString) match {
+          case Some(path) =>
+            autosaveFound = true
 
-        if (new OptionPane(parent, I18N.gui.get("file.autosave.recover"), I18N.gui.get("file.autosave.recover.message"),
-                           OptionPane.Options.YesNo, OptionPane.Icons.Info).getSelectedIndex == 0) {
-          path.toUri
-        } else {
-          uri
+            if (new OptionPane(parent, I18N.gui.get("file.autosave.recover"),
+                               I18N.gui.get("file.autosave.recover.message"), OptionPane.Options.YesNo,
+                               OptionPane.Icons.Info).getSelectedIndex == 0) {
+              path.toUri
+            } else {
+              uri
+            }
+
+          case _ => uri
         }
-
-      case _ => uri
+      }
     }
 
     loadModel(openModelURI(newUri)).foreach { m =>
