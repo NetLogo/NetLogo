@@ -139,9 +139,7 @@ class RichDocumentTest extends AnyFunSuite {
     val text = "abc\ndef"
     assertResult((1, 1))(doc.selectionLineRange(4, 4))
     assertResult((0, 0))(doc.selectionLineRange(0, 3))
-    // in this case we want to avoid selecting the top line,
-    // since the top-line selection only includes only the newline
-    assertResult((1, 1))(doc.selectionLineRange(3, 7))
+    assertResult((0, 1))(doc.selectionLineRange(3, 7))
     // in this case we want to avoid selecting the bottom line,
     // since the bottom-line selection includes only the newline
     assertResult((0, 0))(doc.selectionLineRange(0, 4))
@@ -149,6 +147,6 @@ class RichDocumentTest extends AnyFunSuite {
 
   test("selectionLineRange: middle line") { new Helper {
     val text = "abc\ndef\nghi"
-    assertResult((1, 1))(doc.selectionLineRange(3, 7))
+    assertResult((1, 1))(doc.selectionLineRange(4, 7))
   } }
 }

@@ -46,12 +46,11 @@ object RichDocument {
     def selectionLineRange(start: Int, end: Int): (Int, Int) = {
       val startLine = offsetToLine(start)
       val endLine = offsetToLine(end)
-      if (start == lineToEndOffset(startLine) - 1 && startLine < endLine)
-        (startLine + 1, endLine)
-      else if (end == lineToStartOffset(endLine) && endLine > startLine)
+      if (end == lineToStartOffset(endLine) && endLine > startLine) {
         (startLine, endLine - 1)
-      else
+      } else {
         (startLine, endLine)
+      }
     }
   }
 }
