@@ -6,8 +6,7 @@ import java.io.File
 import java.nio.file.Files
 
 import org.nlogo.api.{ AbstractModelLoader, ModelType, Version }
-import org.nlogo.app.{ App, FileManager }
-import org.nlogo.app.util.AutomationUtils
+import org.nlogo.swing.AutomationUtils
 import org.nlogo.util.GuiTest
 
 import org.scalatest.BeforeAndAfterAll

@@ -2,17 +2,16 @@
 
 package org.nlogo.app
 
-import java.awt.{ Component, EventQueue, Toolkit }
-import java.awt.event.KeyEvent
+import java.awt.{ Component, EventQueue}
 
 import org.nlogo.agent.{ Link, Patch, Turtle }
 import org.nlogo.api.{ LibraryManager, ModelType, Version }
 import org.nlogo.app.tools.{ AgentMonitorManager, LibrariesDialog, ModelsLibraryDialog, PreferencesDialog,
                              PreviewCommandsDialog, PreviewCommandsEditor }
-import org.nlogo.app.util.AutomationUtils
 import org.nlogo.core.LibraryInfo
 import org.nlogo.editor.EditorField
 import org.nlogo.lab.gui.{ LabManager, ManagerDialog }
+import org.nlogo.swing.AutomationUtils
 import org.nlogo.util.GuiTest
 import org.nlogo.window.GUIWorkspace
 
@@ -30,8 +29,6 @@ class DialogTests extends AnyFunSuite with BeforeAndAfterAll {
   private lazy val labManager: LabManager = App.app.labManager
   private lazy val libraryManager: LibraryManager = workspace.getLibraryManager
 
-  private lazy val eventQueue: EventQueue = Toolkit.getDefaultToolkit.getSystemEventQueue
-
   test("Search for standard model in Models Library dialog", GuiTest.Tag) {
     ModelsLibraryDialog.open(frame, libraryManager, fileManager.openFromURI(_, ModelType.Library))
 
@@ -40,7 +37,8 @@ class DialogTests extends AnyFunSuite with BeforeAndAfterAll {
 
     ModelsLibraryDialog.dialog match {
       case Some(dialog) =>
-        sendChars(dialog.searchField, "wolf sheep predation")
+        if (!AutomationUtils.sendChars(dialog.searchField, "wolf sheep predation"))
+          fail("Search field did not receive focus.")
 
         // wait until the tree has updated its path visibilities (Isaac B 10/31/25)
         if (!AutomationUtils.waitUntilGUI(() => dialog.visibleModels.contains("Wolf Sheep Predation")))
@@ -64,7 +62,8 @@ class DialogTests extends AnyFunSuite with BeforeAndAfterAll {
 
     ModelsLibraryDialog.dialog match {
       case Some(dialog) =>
-        sendChars(dialog.searchField, "shwibble shwabble")
+        if (!AutomationUtils.sendChars(dialog.searchField, "shwibble shwabble"))
+          fail("Search field did not receive focus.")
 
         // wait until the tree has updated its path visibilities (Isaac B 10/31/25)
         if (!AutomationUtils.waitUntilGUI(() => dialog.visibleModels.isEmpty))
@@ -144,9 +143,10 @@ class DialogTests extends AnyFunSuite with BeforeAndAfterAll {
   }
 
   test("Create and inspect turtle in turtle monitor", GuiTest.Tag) {
-    sendLine(commandLine, "clear-all")
-    sendLine(commandLine, "create-turtles 5 [ setxy random-pxcor random-pycor set color random 140 ]")
-    sendLine(commandLine, "inspect turtle 3")
+    sendLineOrFail(commandLine, "clear-all", "Command Center did not receive focus.")
+    sendLineOrFail(commandLine, "create-turtles 5 [ setxy random-pxcor random-pycor set color random 140 ]",
+                   "Command Center did not receive focus.")
+    sendLineOrFail(commandLine, "inspect turtle 3", "Command Center did not receive focus.")
 
     // wait until the monitor window opens (Isaac B 11/2/25)
     if (!AutomationUtils.waitUntil(monitorManager.areAnyVisible))
@@ -158,7 +158,7 @@ class DialogTests extends AnyFunSuite with BeforeAndAfterAll {
 
         assert(window.validateFields(turtle))
 
-        sendLine(window.commandLine.textField, "set heading 0")
+        sendLineOrFail(window.commandLine.textField, "set heading 0", "Command line did not receive focus.")
 
         if (!AutomationUtils.waitUntil(() => turtle.heading == 0))
           fail("Turtle Monitor window failed to run command.")
@@ -171,13 +171,13 @@ class DialogTests extends AnyFunSuite with BeforeAndAfterAll {
   }
 
   test("Inspect patch in patch monitor", GuiTest.Tag) {
-    sendLine(commandLine, "clear-all")
-    sendLine(commandLine, "ask patches [ set pcolor random 140 ]")
+    sendLineOrFail(commandLine, "clear-all", "Command Center did not receive focus.")
+    sendLineOrFail(commandLine, "ask patches [ set pcolor random 140 ]", "Command Center did not receive focus.")
 
     if (Version.is3D) {
-      sendLine(commandLine, "inspect patch 5 5 5")
+      sendLineOrFail(commandLine, "inspect patch 5 5 5", "Command Center did not receive focus.")
     } else {
-      sendLine(commandLine, "inspect patch 5 5")
+      sendLineOrFail(commandLine, "inspect patch 5 5", "Command Center did not receive focus.")
     }
 
     // wait until the monitor window opens (Isaac B 11/2/25)
@@ -196,7 +196,7 @@ class DialogTests extends AnyFunSuite with BeforeAndAfterAll {
 
         assert(window.validateFields(patch))
 
-        sendLine(window.commandLine.textField, "set pcolor black")
+        sendLineOrFail(window.commandLine.textField, "set pcolor black", "Command line did not receive focus.")
 
         if (!AutomationUtils.waitUntil(() => patch.pcolor == 0))
           fail("Patch Monitor window failed to run command.")
@@ -209,10 +209,11 @@ class DialogTests extends AnyFunSuite with BeforeAndAfterAll {
   }
 
   test("Create and inspect link in link monitor", GuiTest.Tag) {
-    sendLine(commandLine, "clear-all")
-    sendLine(commandLine, "create-turtles 5 [ setxy random-pxcor random-pycor set color random 140 ]")
-    sendLine(commandLine, "ask turtle 3 [ create-link-with turtle 4 ]")
-    sendLine(commandLine, "inspect one-of links")
+    sendLineOrFail(commandLine, "clear-all", "Command Center did not receive focus.")
+    sendLineOrFail(commandLine, "create-turtles 5 [ setxy random-pxcor random-pycor set color random 140 ]",
+                   "Command Center did not receive focus.")
+    sendLineOrFail(commandLine, "ask turtle 3 [ create-link-with turtle 4 ]", "Command Center did not receive focus.")
+    sendLineOrFail(commandLine, "inspect one-of links", "Command Center did not receive focus.")
 
     // wait until the monitor window opens (Isaac B 11/2/25)
     if (!AutomationUtils.waitUntil(monitorManager.areAnyVisible))
@@ -224,7 +225,7 @@ class DialogTests extends AnyFunSuite with BeforeAndAfterAll {
 
         assert(window.validateFields(link))
 
-        sendLine(window.commandLine.textField, "set thickness 5")
+        sendLineOrFail(window.commandLine.textField, "set thickness 5", "Command line did not receive focus.")
 
         if (!AutomationUtils.waitUntil(() => link.lineThickness == 5))
           fail("Link Monitor window failed to run command.")
@@ -295,23 +296,8 @@ class DialogTests extends AnyFunSuite with BeforeAndAfterAll {
     App.main(Array("--testing"))
   }
 
-  private def sendChars(comp: Component, text: String): Unit = {
-    comp.requestFocus()
-
-    // make sure all focus-related events are processed (Isaac B 11/6/25)
-    if (!AutomationUtils.waitUntil(comp.hasFocus))
-      fail("Target component did not receive focus.")
-
-    text.foreach { char =>
-      eventQueue.postEvent(new KeyEvent(comp, KeyEvent.KEY_TYPED, System.currentTimeMillis, 0, KeyEvent.VK_UNDEFINED,
-                                        char))
-    }
-  }
-
-  private def sendLine(comp: Component, text: String): Unit = {
-    sendChars(comp, text)
-
-    eventQueue.postEvent(new KeyEvent(comp, KeyEvent.KEY_PRESSED, System.currentTimeMillis, 0, KeyEvent.VK_ENTER,
-                                      KeyEvent.CHAR_UNDEFINED))
+  private def sendLineOrFail(comp: Component, text: String, message: String): Unit = {
+    if (!AutomationUtils.sendLine(comp, text))
+      fail(message)
   }
 }
