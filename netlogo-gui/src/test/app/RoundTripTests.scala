@@ -2,20 +2,17 @@
 
 package org.nlogo.app
 
-import java.awt.EventQueue
 import java.io.File
 import java.nio.file.Files
-import java.util.concurrent.TimeoutException
 
 import org.nlogo.api.{ AbstractModelLoader, ModelType, Version }
 import org.nlogo.app.{ App, FileManager }
+import org.nlogo.app.util.AutomationUtils
 import org.nlogo.util.GuiTest
 
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.funsuite.AnyFunSuite
 
-import scala.concurrent.{ Await, Promise }
-import scala.concurrent.duration.{ Duration, SECONDS }
 import scala.util.{ Failure, Success }
 import scala.util.hashing.MurmurHash3
 
@@ -49,30 +46,25 @@ class RoundTripTests extends AnyFunSuite with BeforeAndAfterAll {
 
         var failures = 0
 
+        // sometimes the EventQueue gets stuck, but it doesn't usually happen multiple times in a row,
+        // so if that happens just try to load the model again to avoid needless test failures. (Isaac B 10/27/25)
         while (newChecksum.isEmpty && failures < 5) {
-          val promise = Promise[Int]()
-
-          EventQueue.invokeLater(() => {
+          newChecksum = AutomationUtils.waitForGUI(() => {
             fileManager.openFromPath(path.getAbsolutePath, ModelType.Library, true)
 
             modelLoader.sourceString(fileManager.currentModel, extension) match {
               case Success(str) =>
-                promise.success(MurmurHash3.stringHash(str))
+                MurmurHash3.stringHash(str)
 
               case Failure(t) =>
                 fail(t)
             }
-          })
+          }, 15)
 
-          // sometimes the EventQueue gets stuck, but it doesn't usually happen multiple times in a row,
-          // so if that happens just try to load the model again to avoid needless test failures. (Isaac B 10/27/25)
-          try {
-            newChecksum = Option(Await.result(promise.future, Duration(15, SECONDS)))
-          } catch {
-            case _: TimeoutException =>
-              failures += 1
+          if (newChecksum.isEmpty) {
+            failures += 1
 
-              alert("EventQueue invocation took too long, trying again...")
+            alert("EventQueue invocation took too long, trying again...")
           }
         }
 
