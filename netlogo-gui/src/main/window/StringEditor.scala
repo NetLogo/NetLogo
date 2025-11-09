@@ -29,6 +29,9 @@ class StringEditor(accessor: PropertyAccessor[String]) extends PropertyEditor(ac
 
   override def requestFocus(): Unit = { editor.requestFocus() }
 
+  override def hasFocus(): Boolean =
+    editor.hasFocus
+
   override def syncTheme(): Unit = {
     label.setForeground(InterfaceColors.dialogText())
 
