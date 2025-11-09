@@ -205,6 +205,9 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
     placing = value
   }
 
+  def isPlacing: Boolean =
+    placing
+
   private def addWrapperBorder(dim: Dimension): Dimension = {
     // some widgets have no max size.
     // Adding the border dimensions to that results in another null -- CLB
