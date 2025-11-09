@@ -5,8 +5,7 @@ package org.nlogo.app
 import java.awt.{ Component, EventQueue }
 import javax.swing.{ JMenu, JMenuItem }
 
-import org.nlogo.app.util.AutomationUtils
-import org.nlogo.swing.WindowAutomator
+import org.nlogo.swing.{ AutomationUtils, WindowAutomator }
 import org.nlogo.util.GuiTest
 
 import org.scalatest.funspec.AnyFunSpec

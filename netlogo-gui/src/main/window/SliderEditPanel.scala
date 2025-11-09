@@ -8,6 +8,7 @@ import org.nlogo.agent.SliderConstraint
 import org.nlogo.api.{ CompilerServices, ExtensionManager }
 import org.nlogo.core.I18N
 import org.nlogo.editor.Colorizer
+import org.nlogo.swing.AutomationUtils
 
 class SliderEditPanel(target: SliderWidget, compiler: CompilerServices, colorizer: Colorizer,
                       extensionManager: ExtensionManager) extends WidgetEditPanel(target) {
@@ -152,4 +153,7 @@ class SliderEditPanel(target: SliderWidget, compiler: CompilerServices, colorize
   override def requestFocus(): Unit = {
     nameWrapper.requestFocus()
   }
+
+  override def autoFill(): Boolean =
+    AutomationUtils.sendChars(nameWrapper, s"test-${System.currentTimeMillis}")
 }
