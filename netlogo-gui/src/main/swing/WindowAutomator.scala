@@ -15,13 +15,17 @@ object WindowAutomator {
   }
 
   // helper for GUI testing, prevents windows from blocking regardless of modality (Isaac B 10/29/25)
-  def automate(w: Window): Unit = {
+  def automate(w: Window, close: Option[() => Unit] = None): Unit = {
     if (isAutomating) {
       windows = windows :+ w
       w.addWindowFocusListener(
         new WindowAdapter {
           override def windowGainedFocus(e: WindowEvent): Unit = {
-            w.setVisible(false)
+            new Thread {
+              override def run(): Unit = {
+                close.getOrElse(() => w.setVisible(false))()
+              }
+            }.start()
           }
         }
       )
