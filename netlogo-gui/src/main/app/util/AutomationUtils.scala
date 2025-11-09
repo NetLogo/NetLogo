@@ -32,6 +32,22 @@ object AutomationUtils {
     }, seconds).isDefined
   }
 
+  def waitUntilGUI(test: () => Boolean, seconds: Int = 5): Boolean = {
+    timedFunction(() => {
+      while {
+        var result = false
+
+        EventQueue.invokeAndWait(() => {
+          result = test()
+        })
+
+        !result
+      } do {
+        Thread.sleep(250)
+      }
+    }, seconds).isDefined
+  }
+
   private def timedFunction[T](function: () => T, seconds: Int): Option[T] = {
     try {
       Await.result(Future {
