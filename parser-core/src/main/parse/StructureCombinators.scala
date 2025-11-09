@@ -118,14 +118,13 @@ extends scala.util.parsing.combinator.Parsers {
     }
 
   def `import`: Parser[Import] =
-    keyword("IMPORT") ~ openBracket ~ identifier ~ identifier ~ rep(importOption) <~ closeBracket ^^ {
-      case keyword ~ _ ~ packageName ~ moduleName ~ options =>
-        Import(Some(packageName.name), moduleName.name, options, keyword)
+    keyword("IMPORT") ~ opt(colon) ~ rep1sep(plainIdentifier, colon) ~ opt(exactIdentifier("AS") ~> identifier) ^^ {
+      case keyword ~ prefix ~ components ~ rename =>
+        Import(prefix.isDefined, components.map(_.text), Seq(), rename.map(x => x.name), keyword)
     } |
-    keyword("IMPORT") ~ openBracket ~ identifier ~ rep(importOption) <~ closeBracket ^^ {
-      case keyword ~ _ ~ moduleName ~ options =>
-        Import(None, moduleName.name, options, keyword)
-    }
+    keyword("IMPORT") ~ opt(colon) ~ rep1sep(plainIdentifier, colon) ~ opt(colon ~> plainIdentifierList) ^^ {
+      case keyword ~ prefix ~ components ~ importList =>
+        Import(prefix.isDefined, components.map(_.text), importList.map(_.map(_.text)).getOrElse(Seq()), None, keyword) }
 
   def importOption: Parser[ImportOption] =
     importAlias
@@ -219,6 +218,11 @@ extends scala.util.parsing.combinator.Parsers {
   def anyKeyword: Parser[Token] =
     tokenType("keyword", TokenType.Keyword)
 
+  def exactIdentifier(text: String): Parser[Token] =
+    acceptMatch("identifier", {
+      case t @ Token(text, TokenType.Ident, _) =>
+        t })
+
   def identifierToken: Parser[Token] =
     chainl1(plainIdentifier, plainIdentifier | literalToken | anyKeyword, colon ^^ {_ => {
       case (p, x) => {
@@ -239,6 +243,9 @@ extends scala.util.parsing.combinator.Parsers {
 
   def identifierList: Parser[Seq[Identifier]] =
     openBracket ~> commit(rep(identifier | literal) <~ closeBracket)
+
+  def plainIdentifierList: Parser[Seq[Token]] =
+    openBracket ~> commit(rep(plainIdentifier | literalToken) <~ closeBracket)
 
   def stringList: Parser[Seq[Token]] =
     openBracket ~> commit(rep(string) <~ closeBracket)
