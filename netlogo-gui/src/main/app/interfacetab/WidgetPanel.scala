@@ -991,7 +991,6 @@ class WidgetPanel(val workspace: GUIWorkspace)
     wrapper.selected(true)
     wrapper.foreground()
     wrapper.isNew(true)
-    wrapper.setPlacing(false)
 
     placedShadowWidgets = true
 
@@ -1001,8 +1000,10 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
     placedShadowWidgets = false
 
-    if (wrapper != null)
+    if (wrapper != null) {
       wrapper.isNew(false)
+      wrapper.setPlacing(false)
+    }
 
     shadowWidgets = None
   }
@@ -1423,6 +1424,14 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
   override def allWidgets: Seq[CoreWidget] =
     getWidgetsForSaving
+
+  // used by GUI tests to validate and manipulate placed widgets (Isaac B 11/9/25)
+  def getPermanentWidgets: Array[WidgetWrapper] = {
+    getComponents.collect {
+      case w: WidgetWrapper if !w.isPlacing =>
+        w
+    }
+  }
 
   override def removeAllWidgets(): Unit = {
     val comps = getComponents

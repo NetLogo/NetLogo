@@ -6,6 +6,7 @@ import java.awt.{ GridBagConstraints, Insets }
 
 import org.nlogo.api.{ CompilerServices, ExtensionManager }
 import org.nlogo.core.I18N
+import org.nlogo.swing.AutomationUtils
 
 class InputEditPanel(target: InputBoxWidget, compiler: CompilerServices, extensionManager: ExtensionManager)
   extends WidgetEditPanel(target) {
@@ -70,4 +71,7 @@ class InputEditPanel(target: InputBoxWidget, compiler: CompilerServices, extensi
   override def requestFocus(): Unit = {
     nameWrapper.requestFocus()
   }
+
+  override def autoFill(): Boolean =
+    AutomationUtils.sendChars(nameWrapper, s"test-${System.currentTimeMillis}")
 }
