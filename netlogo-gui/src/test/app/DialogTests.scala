@@ -7,7 +7,7 @@ import java.awt.event.KeyEvent
 import java.util.concurrent.TimeoutException
 
 import org.nlogo.agent.{ Link, Patch, Turtle }
-import org.nlogo.api.ModelType
+import org.nlogo.api.{ ModelType, Version }
 import org.nlogo.app.tools.{ AgentMonitorManager, LibrariesDialog, ModelsLibraryDialog, PreferencesDialog,
                              PreviewCommandsDialog, PreviewCommandsEditor }
 import org.nlogo.core.LibraryInfo
@@ -172,14 +172,25 @@ class DialogTests extends AnyFunSuite with BeforeAndAfterAll {
   test("Inspect patch in patch monitor", GuiTest.Tag) {
     sendLine(commandLine, "clear-all")
     sendLine(commandLine, "ask patches [ set pcolor random 140 ]")
-    sendLine(commandLine, "inspect patch 5 5")
+
+    if (Version.is3D) {
+      sendLine(commandLine, "inspect patch 5 5 5")
+    } else {
+      sendLine(commandLine, "inspect patch 5 5")
+    }
 
     // wait until the monitor window opens (Isaac B 11/2/25)
     waitUntil(monitorManager.areAnyVisible, "Patch Monitor window failed to open.")
 
     monitorManager.getMonitorWindows.headOption match {
       case Some(window) =>
-        val patch: Patch = workspace.world.getPatchAt(5, 5)
+        val patch: Patch = {
+          if (Version.is3D) {
+            workspace.world.asInstanceOf[org.nlogo.agent.World3D].getPatchAt(5, 5, 5)
+          } else {
+            workspace.world.getPatchAt(5, 5)
+          }
+        }
 
         assert(window.validateFields(patch))
 
@@ -221,7 +232,11 @@ class DialogTests extends AnyFunSuite with BeforeAndAfterAll {
   }
 
   test("Run standard model preview commands", GuiTest.Tag) {
-    fileManager.openFromPath("models/Sample Models/Biology/Wolf Sheep Predation.nlogox", ModelType.Library)
+    if (Version.is3D) {
+      fileManager.openFromPath("models/3D/Code Examples/Airplane Landing Example 3D.nlogox3d", ModelType.Library)
+    } else {
+      fileManager.openFromPath("models/Sample Models/Biology/Wolf Sheep Predation.nlogox", ModelType.Library)
+    }
 
     // wait for any resulting events to be processed (Isaac B 11/2/25)
     EventQueue.invokeAndWait(() => {})
@@ -241,7 +256,11 @@ class DialogTests extends AnyFunSuite with BeforeAndAfterAll {
   }
 
   test("Open and run standard model BehaviorSpace experiment", GuiTest.Tag) {
-    fileManager.openFromPath("models/Sample Models/Biology/Wolf Sheep Predation.nlogox", ModelType.Library)
+    if (Version.is3D) {
+      fileManager.openFromPath("models/3D/Sample Models/GasLab/GasLab Free Gas 3D.nlogox3d", ModelType.Library)
+    } else {
+      fileManager.openFromPath("models/Sample Models/Biology/Wolf Sheep Predation.nlogox", ModelType.Library)
+    }
 
     // wait for any resulting events to be processed (Isaac B 11/2/25)
     EventQueue.invokeAndWait(() => {})
