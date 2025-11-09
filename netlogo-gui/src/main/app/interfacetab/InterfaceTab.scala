@@ -78,7 +78,7 @@ class InterfaceTab(workspace: GUIWorkspace,
 
   commandCenter.setMinimumSize(new Dimension(0, 0))
 
-  private val widgetControls = {
+  val widgetControls = {
     import WidgetInfo._
 
     val buttons = List(button, slider, switch, chooser, input, monitor, plot, output, note)
