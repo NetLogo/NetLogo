@@ -39,22 +39,26 @@ abstract class EditPanel(target: Editable) extends JPanel(new GridBagLayout) wit
   def changed: Boolean =
     propertyEditors.exists(_.changed)
 
-  def valid: Boolean = {
+  def valid(silent: Boolean): Boolean = {
     propertyEditors.filter(!_.handlesOwnErrors).map(_.get).collectFirst {
       case Failure(error) =>
         error.getMessage
     } match {
       case Some(error) =>
-        new OptionPane(this, I18N.gui.get("edit.general.invalidSettings"), error, OptionPane.Options.Ok,
-                       OptionPane.Icons.Error)
+        if (!silent) {
+          new OptionPane(this, I18N.gui.get("edit.general.invalidSettings"), error, OptionPane.Options.Ok,
+                         OptionPane.Icons.Error)
+        }
 
         false
 
       case None =>
         (target.errorString match {
           case Some(error) =>
-            new OptionPane(this, I18N.gui.get("edit.general.invalidSettings"), error, OptionPane.Options.Ok,
-                          OptionPane.Icons.Error)
+            if (!silent) {
+              new OptionPane(this, I18N.gui.get("edit.general.invalidSettings"), error, OptionPane.Options.Ok,
+                             OptionPane.Icons.Error)
+            }
 
             false
 
@@ -78,4 +82,8 @@ abstract class EditPanel(target: Editable) extends JPanel(new GridBagLayout) wit
 
     syncExtraComponents()
   }
+
+  // used by GUI tests to automate widget creation (Isaac B 11/8/25)
+  def autoFill(): Boolean =
+    true
 }
