@@ -42,7 +42,7 @@ class DialogTests extends AnyFunSuite with BeforeAndAfterAll {
         sendChars(dialog.searchField, "wolf sheep predation")
 
         // wait until the tree has updated its path visibilities (Isaac B 10/31/25)
-        if (!AutomationUtils.waitUntil(() => dialog.visibleModels.contains("Wolf Sheep Predation")))
+        if (!AutomationUtils.waitUntilGUI(() => dialog.visibleModels.contains("Wolf Sheep Predation")))
           fail("Models Library dialog did not filter the model tree correctly.")
 
         EventQueue.invokeAndWait(() => {
@@ -66,7 +66,7 @@ class DialogTests extends AnyFunSuite with BeforeAndAfterAll {
         sendChars(dialog.searchField, "shwibble shwabble")
 
         // wait until the tree has updated its path visibilities (Isaac B 10/31/25)
-        if (!AutomationUtils.waitUntil(() => dialog.visibleModels.isEmpty))
+        if (!AutomationUtils.waitUntilGUI(() => dialog.visibleModels.isEmpty))
           fail("Models Library dialog did not filter the model tree correctly.")
 
         EventQueue.invokeAndWait(() => {
