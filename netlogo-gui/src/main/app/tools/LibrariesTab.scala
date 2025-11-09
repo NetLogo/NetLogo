@@ -14,10 +14,9 @@ import javax.swing.border.LineBorder
 import javax.swing.event.{ AncestorEvent, AncestorListener, ListDataEvent, ListDataListener }
 
 import org.nlogo.api.{ LibraryInfoDownloader, LibraryManager, Version }
-import org.nlogo.app.util.AutomationUtils
 import org.nlogo.core.{ I18N, LibraryInfo, LibraryStatus, Token, TokenType }
-import org.nlogo.swing.{ BrowserLauncher, Button, EmptyIcon, FilterableListModel, OptionPane, RichAction, ScalableIcon,
-                         ScrollPane, SwingWorker, TextArea, TextField, Transparent, Utils }
+import org.nlogo.swing.{ AutomationUtils, BrowserLauncher, Button, EmptyIcon, FilterableListModel, OptionPane,
+                         RichAction, ScalableIcon, ScrollPane, SwingWorker, TextArea, TextField, Transparent, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.workspace.ModelsLibrary
 
