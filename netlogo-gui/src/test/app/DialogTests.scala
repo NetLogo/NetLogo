@@ -4,12 +4,12 @@ package org.nlogo.app
 
 import java.awt.{ Component, EventQueue, Toolkit }
 import java.awt.event.KeyEvent
-import java.util.concurrent.TimeoutException
 
 import org.nlogo.agent.{ Link, Patch, Turtle }
 import org.nlogo.api.{ ModelType, Version }
 import org.nlogo.app.tools.{ AgentMonitorManager, LibrariesDialog, ModelsLibraryDialog, PreferencesDialog,
                              PreviewCommandsDialog, PreviewCommandsEditor }
+import org.nlogo.app.util.AutomationUtils
 import org.nlogo.core.LibraryInfo
 import org.nlogo.editor.EditorField
 import org.nlogo.lab.gui.{ LabManager, ManagerDialog }
@@ -18,9 +18,6 @@ import org.nlogo.window.GUIWorkspace
 
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.funsuite.AnyFunSuite
-
-import scala.concurrent.{ Await, Promise }
-import scala.concurrent.duration.{ Duration, SECONDS }
 
 // test a variety of specific behaviors within dialogs (Isaac B 10/29/25)
 class DialogTests extends AnyFunSuite with BeforeAndAfterAll {
@@ -45,8 +42,8 @@ class DialogTests extends AnyFunSuite with BeforeAndAfterAll {
         sendChars(dialog.searchField, "wolf sheep predation")
 
         // wait until the tree has updated its path visibilities (Isaac B 10/31/25)
-        waitUntil(() => dialog.visibleModels.contains("Wolf Sheep Predation"),
-                  "Models Library dialog did not filter the model tree correctly.")
+        if (!AutomationUtils.waitUntil(() => dialog.visibleModels.contains("Wolf Sheep Predation")))
+          fail("Models Library dialog did not filter the model tree correctly.")
 
         EventQueue.invokeAndWait(() => {
           dialog.searchField.setText("")
@@ -69,7 +66,8 @@ class DialogTests extends AnyFunSuite with BeforeAndAfterAll {
         sendChars(dialog.searchField, "shwibble shwabble")
 
         // wait until the tree has updated its path visibilities (Isaac B 10/31/25)
-        waitUntil(() => dialog.visibleModels.isEmpty, "Models Library dialog did not filter the model tree correctly.")
+        if (!AutomationUtils.waitUntil(() => dialog.visibleModels.isEmpty))
+          fail("Models Library dialog did not filter the model tree correctly.")
 
         EventQueue.invokeAndWait(() => {
           dialog.searchField.setText("")
@@ -150,7 +148,8 @@ class DialogTests extends AnyFunSuite with BeforeAndAfterAll {
     sendLine(commandLine, "inspect turtle 3")
 
     // wait until the monitor window opens (Isaac B 11/2/25)
-    waitUntil(monitorManager.areAnyVisible, "Turtle Monitor window failed to open.")
+    if (!AutomationUtils.waitUntil(monitorManager.areAnyVisible))
+      fail("Turtle Monitor window failed to open.")
 
     monitorManager.getMonitorWindows.headOption match {
       case Some(window) =>
@@ -160,7 +159,8 @@ class DialogTests extends AnyFunSuite with BeforeAndAfterAll {
 
         sendLine(window.commandLine.textField, "set heading 0")
 
-        waitUntil(() => turtle.heading == 0, "Turtle Monitor window failed to run command.")
+        if (!AutomationUtils.waitUntil(() => turtle.heading == 0))
+          fail("Turtle Monitor window failed to run command.")
 
         window.close()
 
@@ -180,7 +180,8 @@ class DialogTests extends AnyFunSuite with BeforeAndAfterAll {
     }
 
     // wait until the monitor window opens (Isaac B 11/2/25)
-    waitUntil(monitorManager.areAnyVisible, "Patch Monitor window failed to open.")
+    if (!AutomationUtils.waitUntil(monitorManager.areAnyVisible))
+      fail("Patch Monitor window failed to open.")
 
     monitorManager.getMonitorWindows.headOption match {
       case Some(window) =>
@@ -196,7 +197,8 @@ class DialogTests extends AnyFunSuite with BeforeAndAfterAll {
 
         sendLine(window.commandLine.textField, "set pcolor black")
 
-        waitUntil(() => patch.pcolor == 0, "Patch Monitor window failed to run command.")
+        if (!AutomationUtils.waitUntil(() => patch.pcolor == 0))
+          fail("Patch Monitor window failed to run command.")
 
         window.close()
 
@@ -212,7 +214,8 @@ class DialogTests extends AnyFunSuite with BeforeAndAfterAll {
     sendLine(commandLine, "inspect one-of links")
 
     // wait until the monitor window opens (Isaac B 11/2/25)
-    waitUntil(monitorManager.areAnyVisible, "Link Monitor window failed to open.")
+    if (!AutomationUtils.waitUntil(monitorManager.areAnyVisible))
+      fail("Link Monitor window failed to open.")
 
     monitorManager.getMonitorWindows.headOption match {
       case Some(window) =>
@@ -222,7 +225,8 @@ class DialogTests extends AnyFunSuite with BeforeAndAfterAll {
 
         sendLine(window.commandLine.textField, "set thickness 5")
 
-        waitUntil(() => link.lineThickness == 5, "Link Monitor window failed to run command.")
+        if (!AutomationUtils.waitUntil(() => link.lineThickness == 5))
+          fail("Link Monitor window failed to run command.")
 
         window.close()
 
@@ -294,7 +298,8 @@ class DialogTests extends AnyFunSuite with BeforeAndAfterAll {
     comp.requestFocus()
 
     // make sure all focus-related events are processed (Isaac B 11/6/25)
-    waitUntil(comp.hasFocus, "Target component did not receive focus.")
+    if (!AutomationUtils.waitUntil(comp.hasFocus))
+      fail("Target component did not receive focus.")
 
     text.foreach { char =>
       eventQueue.postEvent(new KeyEvent(comp, KeyEvent.KEY_TYPED, System.currentTimeMillis, 0, KeyEvent.VK_UNDEFINED,
@@ -307,25 +312,5 @@ class DialogTests extends AnyFunSuite with BeforeAndAfterAll {
 
     eventQueue.postEvent(new KeyEvent(comp, KeyEvent.KEY_PRESSED, System.currentTimeMillis, 0, KeyEvent.VK_ENTER,
                                       KeyEvent.CHAR_UNDEFINED))
-  }
-
-  private def waitUntil(test: () => Boolean, message: String): Unit = {
-    val promise = Promise[Unit]()
-
-    new Thread {
-      override def run(): Unit = {
-        while (!test())
-          Thread.sleep(250)
-
-        promise.success({})
-      }
-    }.start()
-
-    try {
-      Await.ready(promise.future, Duration(15, SECONDS))
-    } catch {
-      case _: TimeoutException =>
-        fail(message)
-    }
   }
 }
