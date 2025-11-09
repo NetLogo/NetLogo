@@ -9,8 +9,8 @@ import javax.swing.border.EmptyBorder
 
 import org.nlogo.app.common.{ Events => AppEvents }
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ DropdownArrow, MenuItem, MouseUtils, PopupMenu, RoundedBorderPanel, ToolBarToggleButton,
-                         Transparent, Utils }
+import org.nlogo.swing.{ AutomationUtils, DropdownArrow, MenuItem, MouseUtils, PopupMenu, RoundedBorderPanel,
+                         ToolBarToggleButton, Transparent, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ Editable, EditDialogFactory, Events => WindowEvents, GUIWorkspace, InterfaceMode, JobWidget,
                           Widget, WidgetInfo, WorldViewSettings }
@@ -35,10 +35,10 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
 
   private val selectedObjects = new HashSet[Widget]
 
-  private val interactButton = new SquareButton(new InteractAction)
-  private val selectButton = new SquareButton(new SelectAction)
-  private val editButton = new SquareButton(new EditAction)
-  private val deleteButton = new SquareButton(new DeleteAction)
+  val interactButton = new SquareButton(new InteractAction)
+  val selectButton = new SquareButton(new SelectAction)
+  val editButton = new SquareButton(new EditAction)
+  val deleteButton = new SquareButton(new DeleteAction)
 
   private val buttonGroup = new ButtonGroup
 
@@ -261,6 +261,27 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
     }
   }
 
+  // used by GUI tests, opens the Add Widget menu and returns the resulting popup (Isaac B 11/8/25)
+  def openWidgetMenu(): Option[PopupMenu] = {
+    AutomationUtils.sendClick(widgetMenu, widgetMenu.getWidth / 2, widgetMenu.getHeight / 2)
+
+    if (AutomationUtils.waitUntil(widgetMenu.popup.isVisible)) {
+      Option(widgetMenu.popup)
+    } else {
+      None
+    }
+  }
+
+  def openAlignmentMenu(): Option[PopupMenu] = {
+    AutomationUtils.sendClick(alignmentMenu, alignmentMenu.getWidth / 2, alignmentMenu.getHeight / 2)
+
+    if (AutomationUtils.waitUntil(alignmentMenu.popup.isVisible)) {
+      Option(alignmentMenu.popup)
+    } else {
+      None
+    }
+  }
+
   class WidgetMenu extends JPanel(new GridBagLayout) with RoundedBorderPanel with ThemeSync with MouseUtils {
     private val label = new JLabel(I18N.gui.get("tabs.run.addWidget"))
     private val arrow = new DropdownArrow
@@ -422,7 +443,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
         }
       })
 
-    private val popup = new PopupMenu
+    val popup = new PopupMenu
 
     popup.add(new JLabel("Arrange selected widgets") {
       setBorder(new EmptyBorder(0, 6, 0, 0))

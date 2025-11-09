@@ -106,6 +106,10 @@ class CodeEditor(accessor: PropertyAccessor[String], compiler: CompilerServices,
   }
 
   override def requestFocus(): Unit = { editor.requestFocus() }
+
+  override def hasFocus: Boolean =
+    editor.hasFocus
+
   override def setEnabled(state: Boolean): Unit = {
     def setEnabledRecursive(component: Container, state: Boolean): Unit = {
       component.getComponents().foreach(c => {
