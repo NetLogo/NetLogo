@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import java.awt.{ BorderLayout, Dialog, Dimension, Window }
+import java.awt.{ BorderLayout, Dialog, Dimension, EventQueue, Window }
 import java.awt.event.{ WindowAdapter, WindowEvent }
 import java.net.URI
 import javax.swing.{ JDialog, JPanel, WindowConstants }
@@ -11,7 +11,7 @@ import javax.swing.border.EmptyBorder
 import org.nlogo.api.Version
 import org.nlogo.awt.Positioning
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ BrowserLauncher, ButtonPanel, DialogButton, Implicits, Transparent, Utils },
+import org.nlogo.swing.{ BrowserLauncher, ButtonPanel, DialogButton, Implicits, Transparent, Utils, WindowAutomator },
   BrowserLauncher.docPath, Implicits.thunk2action
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
@@ -28,7 +28,7 @@ class EditDialog(window: Window, target: Editable, editPanel: EditPanel, modal: 
   private val mainPanel = new JPanel(new BorderLayout) with Transparent
 
   val okButton = new DialogButton(true, I18N.gui.get("common.buttons.ok"), () => {
-    if (editPanel.valid) {
+    if (editPanel.valid(false)) {
       if (editPanel.changed)
         new Events.DirtyEvent(None).raise(window)
 
@@ -41,7 +41,7 @@ class EditDialog(window: Window, target: Editable, editPanel: EditPanel, modal: 
 
   var sendEditFinishedOnCancel = false
   val applyButton = new DialogButton(false, I18N.gui.get("common.buttons.apply"), () => {
-    if (editPanel.valid) {
+    if (editPanel.valid(false)) {
       sendEditFinishedOnCancel = true
       editPanel.apply()
       target.editFinished()
@@ -72,6 +72,14 @@ class EditDialog(window: Window, target: Editable, editPanel: EditPanel, modal: 
     setBorder(new EmptyBorder(0, 0, 6, 0))
   }
 
+  WindowAutomator.automate(this, Some(() => {
+    if (editPanel.valid(true) || editPanel.autoFill()) {
+      EventQueue.invokeAndWait(() => {
+        okButton.doClick()
+      })
+    }
+  }))
+
   getContentPane.setLayout(new BorderLayout)
   getContentPane.add(mainPanel, BorderLayout.CENTER)
 
@@ -87,7 +95,7 @@ class EditDialog(window: Window, target: Editable, editPanel: EditPanel, modal: 
   addWindowListener(new WindowAdapter {
     override def windowClosing(e: WindowEvent): Unit = {
       if (sendEditFinishedOnCancel) {
-        if (editPanel.valid) {
+        if (editPanel.valid(false)) {
           editPanel.apply()
 
           if (target.editFinished())

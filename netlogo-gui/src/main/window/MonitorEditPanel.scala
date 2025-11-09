@@ -7,6 +7,7 @@ import java.awt.{ GridBagConstraints, Insets }
 import org.nlogo.api.CompilerServices
 import org.nlogo.core.I18N
 import org.nlogo.editor.Colorizer
+import org.nlogo.swing.AutomationUtils
 
 class MonitorEditPanel(target: MonitorWidget, compiler: CompilerServices, colorizer: Colorizer)
   extends WidgetEditPanel(target) {
@@ -121,5 +122,10 @@ class MonitorEditPanel(target: MonitorWidget, compiler: CompilerServices, colori
 
   override def requestFocus(): Unit = {
     wrapSource.requestFocus()
+  }
+
+  override def autoFill(): Boolean = {
+    AutomationUtils.sendChars(name, s"test-${System.currentTimeMillis}")
+    AutomationUtils.sendChars(wrapSource, s"count turtles")
   }
 }
