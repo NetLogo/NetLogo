@@ -100,12 +100,10 @@ class LibrariesDialog( parent:          Frame
     status.setForeground(InterfaceColors.dialogText())
   }
 
-  // used by GUI tests, adds the specified text to the search field and returns the resulting list (Isaac B 11/2/25)
-  def searchFor(text: String, expectedSize: Int): Option[Seq[LibraryInfo]] =
+  private [app] def searchFor(text: String, expectedSize: Int): Option[Seq[LibraryInfo]] =
     tab.searchFor(text, expectedSize)
 
-  // used by GUI tests, installs and uninstalls the specified extension (Isaac B 11/2/25)
-  def testInstall(info: LibraryInfo): Unit = {
+  private [app] def testInstall(info: LibraryInfo): Unit = {
     tab.testInstall(info)
   }
 }
