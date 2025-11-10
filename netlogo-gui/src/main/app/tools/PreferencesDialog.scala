@@ -227,8 +227,7 @@ class PreferencesDialog(parent: Frame & ThemeSync, tabManager: TabsInterface, wi
     loggingMessage.setForeground(InterfaceColors.dialogText())
   }
 
-  // used by GUI tests to make sure all preferences can be changed without blowing up (Isaac B 11/2/25)
-  def scramble(): Unit = {
+  private [app] def scramble(): Unit = {
     setSelectedIndex(0)
 
     generalPreferences.foreach { pref =>

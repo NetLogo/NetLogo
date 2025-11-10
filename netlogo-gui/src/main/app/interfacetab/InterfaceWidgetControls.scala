@@ -257,8 +257,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
     syncTheme()
   }
 
-  // used by GUI tests, opens the Add Widget menu and returns the resulting popup (Isaac B 11/8/25)
-  def openWidgetMenu(): Option[PopupMenu] = {
+  private [app] def openWidgetMenu(): Option[PopupMenu] = {
     AutomationUtils.sendClick(widgetMenu, widgetMenu.getWidth / 2, widgetMenu.getHeight / 2)
 
     if (AutomationUtils.waitUntil(widgetMenu.popup.isVisible)) {
@@ -268,7 +267,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
     }
   }
 
-  def openAlignmentMenu(): Option[PopupMenu] = {
+  private [app] def openAlignmentMenu(): Option[PopupMenu] = {
     AutomationUtils.sendClick(alignmentMenu, alignmentMenu.getWidth / 2, alignmentMenu.getHeight / 2)
 
     if (AutomationUtils.waitUntil(alignmentMenu.popup.isVisible)) {

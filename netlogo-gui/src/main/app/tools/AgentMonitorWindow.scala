@@ -203,8 +203,7 @@ class AgentMonitorWindow(val agentKind: AgentKind, _agent: Agent, radius: Double
     monitor.syncTheme()
   }
 
-  // used by GUI tests to ensure that the fields are correctly populated with agent values (Isaac B 11/2/25)
-  def validateFields(expected: Agent): Boolean = {
+  private [app] def validateFields(expected: Agent): Boolean = {
     agentKind == expected.kind && monitor.getEditors.forall { editor =>
       Dump.logoObject(expected.getVariable(editor.index), true, false) == editor.getText
     }

@@ -1425,8 +1425,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
   override def allWidgets: Seq[CoreWidget] =
     getWidgetsForSaving
 
-  // used by GUI tests to validate and manipulate placed widgets (Isaac B 11/9/25)
-  def getPermanentWidgets: Array[WidgetWrapper] = {
+  private [app] def getPermanentWidgets: Array[WidgetWrapper] = {
     getComponents.collect {
       case w: WidgetWrapper if !w.isPlacing =>
         w
