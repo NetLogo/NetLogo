@@ -83,7 +83,6 @@ abstract class EditPanel(target: Editable) extends JPanel(new GridBagLayout) wit
     syncExtraComponents()
   }
 
-  // used by GUI tests to automate widget creation (Isaac B 11/8/25)
   def autoFill(): Boolean =
     true
 }

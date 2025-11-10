@@ -121,8 +121,7 @@ class ThemesPanel(frame: Frame & ThemeSync) extends JPanel(new GridBagLayout) wi
     classicButton.syncTheme()
   }
 
-  // used by GUI tests to make sure all preferences can be changed without blowing up (Isaac B 11/2/25)
-  def scramble(): Unit = {
+  private [app] def scramble(): Unit = {
     if (lightButton.isSelected) {
       darkButton.setSelected(true)
     } else {
