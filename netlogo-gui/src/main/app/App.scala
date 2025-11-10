@@ -189,8 +189,7 @@ object App {
     }
   }
 
-  // used by GUI tests to restore the default behavior in between suites (Isaac B 11/5/25)
-  def reset(): Unit = {
+  private [app] def reset(): Unit = {
     if (app != null) {
       WindowAutomator.resetWindows()
 
