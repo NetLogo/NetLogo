@@ -17,7 +17,6 @@ object FileDialog {
     */
   private var currentDirectory: Option[String] = None
 
-  // used by GUI tests, prevents blocking dialog from showing (Isaac B 10/30/25)
   private var automated = false
 
   def setAutomated(automated: Boolean): Unit = {
