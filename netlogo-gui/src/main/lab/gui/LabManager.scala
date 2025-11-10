@@ -87,7 +87,6 @@ class LabManager(val workspace:        GUIWorkspace,
     dialog.syncTheme()
   }
 
-  // used by GUI tests to automate running BehaviorSpace experiments
   def getDialog: ManagerDialog =
     dialog
 
