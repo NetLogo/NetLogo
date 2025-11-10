@@ -37,7 +37,7 @@ import scala.language.implicitConversions
 object ModelsLibraryDialog {
   private var me: ModelsLibraryDialog = null
 
-  def dialog: Option[ModelsLibraryDialog] =
+  private [app] def dialog: Option[ModelsLibraryDialog] =
     Option(me)
 
   // finish is a callback called *on the UI Thread* with the URI of the selected model
@@ -169,7 +169,6 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
   private var sourceURI = Option.empty[URI]
   private val savedExpandedPaths: JList[TreePath] = new LinkedList[TreePath]()
 
-  // public for automated GUI tests (Isaac B 10/31/25)
   val searchField = new TextField
 
   private var searchText = Option.empty[String]
@@ -568,8 +567,7 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
     }
   }
 
-  // used by GUI tests to validate search results (Isaac B 11/1/25)
-  def visibleModels: Seq[String] = {
+  private [app] def visibleModels: Seq[String] = {
     (0 until tree.getRowCount).collect {
       case row if tree.isVisible(tree.getPathForRow(row)) && !tree.isExpanded(row) =>
         tree.getPathForRow(row).getLastPathComponent.toString

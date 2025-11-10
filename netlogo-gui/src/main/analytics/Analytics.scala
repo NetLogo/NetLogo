@@ -261,7 +261,6 @@ object Analytics {
     sendEnabled = NetLogoPreferences.getBoolean("sendAnalytics", false)
   }
 
-  // used by GUI tests to prevent GitHub Actions from diluting the analytics data (Isaac B 10/29/25)
   def silence(): Unit = {
     silent = true
   }
