@@ -96,8 +96,7 @@ class AgentMonitorEditor(parent: AgentMonitor) extends JPanel with ThemeSync {
     editors.foreach(_.syncTheme())
   }
 
-  // used by GUI tests to validate the values shown in property fields
-  def getEditors: Seq[AgentVarEditor] =
+  private [app] def getEditors: Seq[AgentVarEditor] =
     editors
 }
 

@@ -365,11 +365,9 @@ class ManagerDialog(manager:       LabManager,
     dialogFactory.syncTheme()
   }
 
-  // used by GUI tests to validate loaded experiments (Isaac B 11/2/25)
   def getExperiments: Seq[LabProtocol] =
     manager.protocols.toSeq
 
-  // used by GUI tests, edits the selected experiment and closes it to check for errors (Isaac B 11/2/25)
   def editAndClose(): Unit = {
     val protocol: LabProtocol = selectedProtocol
     val editable = new ProtocolEditable(protocol, manager.workspace.getFrame, manager.workspace, colorizer,
@@ -383,8 +381,6 @@ class ManagerDialog(manager:       LabManager,
     dialog.okButton.doClick()
   }
 
-  // used by GUI tests, runs the selected experiment with automated
-  // dialogs and waits for its completion (Isaac B 11/2/25)
   def runForTesting(): Unit = {
     editIndex = selectedIndex
 

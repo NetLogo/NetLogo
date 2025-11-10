@@ -19,7 +19,6 @@ public final class PrinterManager {
    */
   private List<List<Object>> textPages;
 
-  // used by GUI tests, prevents blocking print dialog from appearing (Isaac B 10/30/25)
   private static boolean automated = false;
 
   /**

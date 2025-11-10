@@ -571,8 +571,7 @@ class LibrariesTab( category:        String
     info.syncTheme()
   }
 
-  // used by GUI tests, adds the specified text to the search field and returns the resulting list (Isaac B 11/2/25)
-  def searchFor(text: String, expectedSize: Int): Option[Seq[LibraryInfo]] = {
+  private [app] def searchFor(text: String, expectedSize: Int): Option[Seq[LibraryInfo]] = {
     filterField.requestFocus()
 
     // make sure all focus-related events are processed (Isaac B 11/6/25)
@@ -594,8 +593,7 @@ class LibrariesTab( category:        String
     }
   }
 
-  // used by GUI tests, installs and uninstalls the specified extension (Isaac B 11/2/25)
-  def testInstall(info: LibraryInfo): Unit = {
+  private [app] def testInstall(info: LibraryInfo): Unit = {
     install(info)
 
     // wait for any resulting events to be processed (Isaac B 11/2/25)
