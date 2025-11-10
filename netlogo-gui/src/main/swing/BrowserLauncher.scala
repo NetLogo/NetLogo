@@ -19,7 +19,6 @@ object BrowserLauncher {
   val unableToOpenBrowserError = "We were unable to open a browser on your system.\n" +
       "This error can be reported to bugs@ccl.northwestern.edu"
 
-  // used by GUI tests, prevents the inevitable onslaught of random tabs being opened (Isaac B 11/5/25)
   private var automated = false
 
   def setAutomated(automated: Boolean): Unit = {
