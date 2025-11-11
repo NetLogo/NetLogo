@@ -195,17 +195,11 @@ class ExtensionManager(val workspace: ExtendableWorkspace, loader: ExtensionLoad
     newJarContainer
   }
 
-  private def initializedClassManager(cm: ClassManager): ClassManager =
-    try {
-      if (!workspace.compilerTestingMode)
-        cm.runOnce(this)
-      cm
-    } catch {
-      case ex: ExtensionException =>
-        System.err.println("Error while initializing extension.")
-        System.err.println("Error is: " + ex)
-        throw ex
-    }
+  private def initializedClassManager(cm: ClassManager): ClassManager = {
+    if (!workspace.compilerTestingMode)
+      cm.runOnce(this)
+    cm
+  }
 
   @throws(classOf[CompilerException])
   def readFromString(source: String): AnyRef =
