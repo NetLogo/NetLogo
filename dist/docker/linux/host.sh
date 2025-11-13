@@ -8,7 +8,7 @@ if [ $(/usr/bin/id -u) -ne 0 ]; then
 fi
 
 if [ -z "${NL_BUILD_VERSION}" ]; then
-  echo "You must set the NL_BUILD_VERSION variable for naming the build artifacts (e.g. NL_BUILD_VERSION=7.0.2)"
+  echo "You must set the NL_BUILD_VERSION variable for naming the build artifacts (e.g. NL_BUILD_VERSION=7.0.3-beta1)"
   exit 1
 fi
 

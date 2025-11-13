@@ -172,7 +172,7 @@ lazy val netlogo = project.in(file("netlogo-gui")).
           TranslationHelper.settings: _*).
   settings(
     name := "NetLogo",
-    version := "7.0.2",
+    version := "7.0.3-beta1",
     isSnapshot := true,
     publishTo := { Some("Cloudsmith API" at "https://maven.cloudsmith.io/netlogo/netlogo/") },
     Compile / mainClass := Some("org.nlogo.app.App"),

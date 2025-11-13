@@ -15,6 +15,33 @@ For help running models made in old versions, see the
 
 </div>
 
+## Version 7.0.3 (November 2025)
+
+- When a runtime error was generated, the application was not jumping to the line of code that generated it
+- A slider widget could sometimes ignore its initial value
+- The "Jump sliders to click location" preference was preventing proper dragging of the "speed" slider knob
+- The "Jump sliders to click location" preference was canceling drags of slider widget knobs as soon as the mouse cursor went outside of the slider
+- Slider widgets were not correctly changing their dimensions when toggling the "vertical?" setting
+- Slider values could get rounded towards the slider's increment, even when manually set to a specific value
+- `user-yes-or-no?` was raising an error when "Halt" was selected in the resultant dialog
+- Preferences were only toggleable by clicking their respective checkbox, instead of also allowing clicks on the text describing the preference
+- The "Auto-detect" option for the interface language preference was defaulting to the previously-selected language, instead of the system default one
+- The Extension Manager was not offering to automatically install libraries when it could easily do so
+- The GoGo extension was not loading all of its libraries correctly
+- The GoGo extension could leave an orphan process running after NetLogo closed
+- The block-comment/-uncomment functionality was not properly handling text selections where at least one line was entirely commented out and at least one line wasn't
+- Extensions were not properly raising errors when they occurred within a separate thread
+- Multiple models had one or more improperly sized widgets, after their conversion to NetLogo 7's new widget format
+- Compiling NetLogo code with the system locale set to Turkish could cause compilation errors
+- NetLogo 3D was not respecting non-default patch sizes
+- NetLogo 3D was failed to report turtle coordinates after setting them in turtle monitors
+- "Quick Help" would raise an error if used on `;`
+- "Edit" dialogs could sometimes have the wrong focus behavior
+- The `.nlogox` file icon was unusually narrow
+- In the Models Library dialog, the file selector's border would glow in response to mouse clicks
+- The System Dynamics Modeler dialog was not being closed when Escape was pressed
+- The "Print" option was unconventionally appearing below "Quit" in the file menu
+
 ## Version 7.0.2 (October 2025)
 
 ### Major bugs fixed
