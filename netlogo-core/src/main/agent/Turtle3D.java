@@ -770,8 +770,8 @@ public final class Turtle3D
     this.xcor = newX;
     this.ycor = newY;
 
-    variables()[VAR_XCOR3D] = null;
-    variables()[VAR_YCOR3D] = null;
+    variables()[VAR_XCOR3D] = (xcor == newX) ? xcor : null;
+    variables()[VAR_YCOR3D] = (ycor == newY) ? ycor : null;
     currentPatch = null;
     Patch targetPatch = getPatchHere();
     if (originalPatch != targetPatch) {
@@ -838,9 +838,9 @@ public final class Turtle3D
     this.ycor = newY;
     this.zcor = newZ;
 
-    variables()[VAR_XCOR3D] = null;
-    variables()[VAR_YCOR3D] = null;
-    variables()[VAR_ZCOR3D] = null;
+    variables()[VAR_XCOR3D] = (xcor == newX) ? xcor : null;
+    variables()[VAR_YCOR3D] = (ycor == newY) ? ycor : null;
+    variables()[VAR_ZCOR3D] = (zcor == newZ) ? zcor : null;
 
     currentPatch = null;
     Patch targetPatch = getPatchHere();
