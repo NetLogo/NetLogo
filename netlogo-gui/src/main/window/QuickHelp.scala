@@ -39,7 +39,7 @@ object QuickHelp {
 
   private def loadHelp(path: String): Map[String, String] = {
     FileIO.getResourceAsStringArray(path).map(line => {
-      (line.substring(0, line.indexOf(' ')), line.substring(line.indexOf(' ') + 1))
+      (line.substring(0, line.indexOf(' ')), line.substring(line.lastIndexOf(' ') + 1))
     }).toMap
   }
 
