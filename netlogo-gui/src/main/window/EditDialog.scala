@@ -20,7 +20,7 @@ class EditDialog(window: Window, target: Editable, editPanel: EditPanel, modal: 
                   if (modal)
                     Dialog.ModalityType.DOCUMENT_MODAL
                   else
-                    Dialog.DEFAULT_MODALITY_TYPE) with ThemeSync {
+                    Dialog.ModalityType.MODELESS) with ThemeSync {
 
   var canceled = false
 
