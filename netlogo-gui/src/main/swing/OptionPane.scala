@@ -35,6 +35,8 @@ class OptionPane(parent: Component, title: String, message: String, options: Seq
                     case _ => null
                   }, title, Dialog.ModalityType.APPLICATION_MODAL) {
 
+  WindowAutomator.automate(this)
+
   // this constructor makes it easier to access from Java (Isaac B 7/14/25)
   def this(parent: Component, title: String, message: String, options: CollectionSeq[String]) =
     this(parent, title, message, options.toSeq, OptionPane.Icons.None)

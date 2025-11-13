@@ -87,6 +87,9 @@ class LabManager(val workspace:        GUIWorkspace,
     dialog.syncTheme()
   }
 
+  def getDialog: ManagerDialog =
+    dialog
+
   class ShowLabManager extends AbstractAction(I18N.gui.get(s"menu.tools.behaviorSpace")) with MenuAction {
     category    = ToolsCategory
     group       = ToolsDialogsGroup

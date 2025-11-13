@@ -2,27 +2,25 @@
 
 package org.nlogo.app.tools
 
-import java.awt.{ BorderLayout, Component, Dimension, FlowLayout, Font, GridBagConstraints, GridBagLayout, GridLayout,
-                  Insets }
+import java.awt.{ BorderLayout, Component, Dimension, EventQueue, FlowLayout, Font, GridBagConstraints, GridBagLayout,
+                  GridLayout, Insets, Toolkit }
+import java.awt.event.KeyEvent
 import java.awt.font.TextAttribute
 import java.io.IOException
 import java.nio.file.Path
-import java.util.Locale
+import java.util.{ Collections, Locale }
 import javax.swing.{ Action, Box, DefaultListModel, Icon, JLabel, JList, JPanel, ListCellRenderer, ListModel }
 import javax.swing.border.LineBorder
 import javax.swing.event.{ AncestorEvent, AncestorListener, ListDataEvent, ListDataListener }
 
-import java.util.Collections
-
-import scala.collection.mutable.Buffer
-
 import org.nlogo.api.{ LibraryInfoDownloader, LibraryManager, Version }
-import org.nlogo.awt.EventQueue
 import org.nlogo.core.{ I18N, LibraryInfo, LibraryStatus, Token, TokenType }
-import org.nlogo.swing.{ BrowserLauncher, Button, EmptyIcon, FilterableListModel, OptionPane, RichAction, ScalableIcon,
-                         ScrollPane, SwingWorker, TextArea, TextField, Transparent, Utils }
+import org.nlogo.swing.{ AutomationUtils, BrowserLauncher, Button, EmptyIcon, FilterableListModel, OptionPane,
+                         RichAction, ScalableIcon, ScrollPane, SwingWorker, TextArea, TextField, Transparent, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.workspace.ModelsLibrary
+
+import scala.collection.mutable.Buffer
 
 object LibrariesTab {
   // this may look overly complex, but when rewriting the user's source code, we need to be absolutely sure
@@ -571,5 +569,39 @@ class LibrariesTab( category:        String
     infoScroll.setBackground(InterfaceColors.textAreaBackground())
 
     info.syncTheme()
+  }
+
+  private [app] def searchFor(text: String, expectedSize: Int): Option[Seq[LibraryInfo]] = {
+    filterField.requestFocus()
+
+    // make sure all focus-related events are processed (Isaac B 11/6/25)
+    if (!AutomationUtils.waitUntil(() => filterField.hasFocus))
+      return None
+
+    val queue: EventQueue = Toolkit.getDefaultToolkit.getSystemEventQueue
+
+    text.foreach { char =>
+      queue.postEvent(new KeyEvent(filterField, KeyEvent.KEY_TYPED, System.currentTimeMillis, 0,
+                                   KeyEvent.VK_UNDEFINED, char))
+    }
+
+    // wait for the list to update extension visibilities (Isaac B 11/2/25)
+    if (AutomationUtils.waitUntil(() => listModel.getSize == expectedSize)) {
+      Option((0 until listModel.getSize).map(listModel.getElementAt))
+    } else {
+      None
+    }
+  }
+
+  private [app] def testInstall(info: LibraryInfo): Unit = {
+    install(info)
+
+    // wait for any resulting events to be processed (Isaac B 11/2/25)
+    EventQueue.invokeAndWait(() => {})
+
+    uninstall(info)
+
+    // wait for any resulting events to be processed (Isaac B 11/2/25)
+    EventQueue.invokeAndWait(() => {})
   }
 }

@@ -135,6 +135,15 @@ abstract class GUIWorkspace(world: World, kioskLevel: GUIWorkspace.KioskLevel, f
 
   private var _isModel3D = false
 
+  private var testing = false
+
+  def setTesting(testing: Boolean): Unit = {
+    this.testing = testing
+  }
+
+  def isTesting: Boolean =
+    testing
+
   def getSwitchTo3DViewAction: Action =
     switchTo3DViewAction
 
@@ -680,14 +689,16 @@ abstract class GUIWorkspace(world: World, kioskLevel: GUIWorkspace.KioskLevel, f
   }
 
   private def open3DView(): Unit = {
-    try {
-      glView.open()
-      set2DViewEnabled(false)
-    } catch {
-      case e: JOGLLoadingException =>
-        Utils.alert("3D View", e.getMessage, "" + e.getCause, I18N.gui.get("common.buttons.continue"))
+    if (!testing) {
+      try {
+        glView.open()
+        set2DViewEnabled(false)
+      } catch {
+        case e: JOGLLoadingException =>
+          Utils.alert("3D View", e.getMessage, "" + e.getCause, I18N.gui.get("common.buttons.continue"))
 
-        switchTo3DViewAction.setEnabled(false)
+          switchTo3DViewAction.setEnabled(false)
+      }
     }
   }
 
