@@ -22,15 +22,15 @@ class ShowUsageBoxAction(showUsageBox: ShowUsageBox) extends DocumentAction(I18N
     if (component.isInstanceOf[AbstractEditorArea]) {
       val editor = component.asInstanceOf[AbstractEditorArea]
       showUsageBox.init(editor)
-    }
 
-    val caretScreenPosition = component.getCaret.getMagicCaretPosition
+      val caretScreenPosition = component.getCaret.getMagicCaretPosition
 
-    if (caretScreenPosition != null) {
-      val screenPosition = component.getLocationOnScreen
-      screenPosition.x += caretScreenPosition.x;
-      screenPosition.y += caretScreenPosition.y;
-      showUsageBox.showBox(screenPosition, component.getCaretPosition)
+      if (caretScreenPosition != null) {
+        val screenPosition = component.getLocationOnScreen
+        screenPosition.x += caretScreenPosition.x;
+        screenPosition.y += caretScreenPosition.y;
+        showUsageBox.showBox(screenPosition, component.getCaretPosition)
+      }
     }
   }
 }
