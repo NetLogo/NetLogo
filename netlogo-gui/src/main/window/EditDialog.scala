@@ -8,6 +8,7 @@ import java.net.URI
 import javax.swing.{ JDialog, JPanel, WindowConstants }
 import javax.swing.border.EmptyBorder
 
+import org.nlogo.api.Version
 import org.nlogo.awt.Positioning
 import org.nlogo.core.I18N
 import org.nlogo.swing.{ BrowserLauncher, ButtonPanel, DialogButton, Implicits, Transparent, Utils },
@@ -57,8 +58,8 @@ class EditDialog(window: Window, target: Editable, editPanel: EditPanel, modal: 
     val (mainLink, anchor) =
       if (splitLink.length > 1) (splitLink(0), splitLink(1))
       else                      (splitLink.head, "")
-    BrowserLauncher.tryOpenURI(this, new URI(s"https://docs.netlogo.org/7.0.2/$link"), docPath(mainLink),
-                               anchor)
+    BrowserLauncher.tryOpenURI(this, new URI(s"https://docs.netlogo.org/${Version.versionNumberNo3D}/$link"),
+                               docPath(mainLink), anchor)
   })
 
   private val buttons = Seq(

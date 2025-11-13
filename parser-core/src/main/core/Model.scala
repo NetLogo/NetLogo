@@ -10,7 +10,7 @@ import scala.reflect.ClassTag
 case class Model(code: String = "",
   widgets: Seq[Widget] = List(View()),
   info: String = "",
-  version: String = "NetLogo 7.0.2",
+  version: String = Model.defaultVersion,
   turtleShapes: Seq[VectorShape] = Model.defaultTurtleShapes,
   linkShapes: Seq[LinkShape] = Model.defaultLinkShapes,
   optionalSections: Seq[OptionalSection[?]] = Seq(),
@@ -48,6 +48,8 @@ case class Model(code: String = "",
 
 object Model {
   val defaultCode = ""
+  lazy val defaultVersion: String =
+    Resource.lines("/version.txt").toSeq.head.trim
   lazy val defaultTurtleShapes: Seq[VectorShape] =
     parseVectorShapes(Resource.lines("/system/defaultTurtleShapes.txt").toSeq)
   lazy val libraryTurtleShapes: Seq[VectorShape] =

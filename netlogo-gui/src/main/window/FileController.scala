@@ -120,8 +120,9 @@ class FileController(owner: Component, modelTracker: ModelTracker) extends OpenM
     response match {
       case 0 => true
       case 1 =>
-        BrowserLauncher.openURI(owner, new URI(I18N.gui.get("file.open.transitionGuide.url")))
-        showVersionWarningAndGetResponse(version)
+        BrowserLauncher.openURI(owner,
+          new URI(s"https://docs.netlogo.org/${Version.versionNumberNo3D}/transition.html"))
+        false
       case _ => false
     }
   }

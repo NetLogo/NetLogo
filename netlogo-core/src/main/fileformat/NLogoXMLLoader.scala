@@ -176,7 +176,7 @@ class NLogoXMLLoader(headless: Boolean, literalParser: LiteralParser, editNames:
 
   def emptyModel(extension: String): Model = {
     if (isCompatible(extension)) {
-      ModelXMLLoader.emptyModel(Version.is3D, defaultInfo)
+      ModelXMLLoader.emptyModel(Version.version, Version.is3D, defaultInfo)
     } else {
       throw new Exception(s"""Unable to create empty model with format "${extension}".""")
     }

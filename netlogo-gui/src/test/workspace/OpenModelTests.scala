@@ -20,7 +20,7 @@ class OpenModelTests extends AnyFunSuite {
   trait OpenTest {
     val uri: URI = testURI
     def modelChanges: Model => Model = identity
-    def currentVersion = "NetLogo 7.0.2"
+    def currentVersion = s"NetLogo ${Version.versionNumberNo3D}"
     def autoconverter: ModelConversion = FileFormat.defaultConverter
 
     def userContinuesOpen() = controller.openModel(true)
@@ -32,7 +32,6 @@ class OpenModelTests extends AnyFunSuite {
     def nlogo3dformat = new NLogoThreeDFormat
     object VersionInfo extends Version {
       override def is3D = currentVersion.contains("3D")
-      override def knownVersion(v: String) = v == currentVersion || super.knownVersion(v)
     }
     lazy val loader = new ConfigurableModelLoader().addFormat[String, MockFormat](format)
     lazy val openedModel = OpenModelFromURI(uri, controller, loader, autoconverter, VersionInfo)
@@ -79,11 +78,11 @@ class OpenModelTests extends AnyFunSuite {
   } }
 
   test("if the model is in 2D, but NetLogo is open in 3D, notifies the user") { new OpenTest {
-    override def currentVersion = "NetLogo 3D 7.0.2"
+    override def currentVersion = s"NetLogo 3D ${Version.versionNumberNo3D}"
     userContinuesOpen()
     assert(openedModel.isDefined)
     assert(controller.notifiedModelArity   == 2)
-    assert(controller.notifiedModelVersion == "NetLogo 7.0.2")
+    assert(controller.notifiedModelVersion == super.currentVersion)
   } }
 
   test("if the model is not a known version, checks before opening") { new OpenTest {
@@ -131,7 +130,7 @@ class OpenModelTests extends AnyFunSuite {
   } }
 
   test("serializes various version in the model") { new OpenTest {
-    assert(nlogoformat.version.serialize(new Model()) === Array[String]("NetLogo 7.0.2"))
+    assert(nlogoformat.version.serialize(new Model()) === Array[String](currentVersion))
     assert(nlogoformat.version.serialize(new Model(version = "NetLogo 3D 6.3")) ===
       Array[String]("NetLogo 3D 6.3"))
   } }

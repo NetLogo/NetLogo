@@ -12,17 +12,19 @@ import scala.util.{ Failure, Try }
 
 object ModelXMLLoader {
 
-  def emptyModel(is3D: Boolean, defaultInfo: String): Model = {
-    val (name, dims) =
-      if (is3D)
-        ("NetLogo 3D 7.0.2", new WorldDimensions3D(-16, 16, -16, 16, -16, 16, 13.0))
-      else
-        ("NetLogo 7.0.2", WorldDimensions(-16, 16, -16, 16, 13.0))
+  def emptyModel(version: String, is3D: Boolean, defaultInfo: String): Model = {
+    val dims = {
+      if (is3D) {
+        new WorldDimensions3D(-16, 16, -16, 16, -16, 16, 13.0)
+      } else {
+        WorldDimensions(-16, 16, -16, 16, 13.0)
+      }
+    }
 
     val widgets =
       List(Model.defaultView.copy(dimensions = dims))
 
-    Model(Model.defaultCode, widgets, defaultInfo, name, Model.defaultTurtleShapes, Model.defaultLinkShapes)
+    Model(Model.defaultCode, widgets, defaultInfo, version, Model.defaultTurtleShapes, Model.defaultLinkShapes)
   }
 
   def loadBasics(root: XMLElement, defaultInfo: String, parser: LiteralParser): (Try[Model], Seq[XMLElement]) = {
