@@ -27,7 +27,10 @@ private [gui] class ProgressDialog(parent: Window, supervisor: Supervisor, compi
   private val totalRuns = protocol.countRuns
   private val progressArea = new TextArea(10 min (protocol.valueSets(0).size + 3), 0)
   private val scrollPane = new ScrollPane(progressArea, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
-                                          ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED)
+                                          ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED) {
+    override def getMinimumSize: Dimension =
+      this.getPreferredSize
+  }
   private val timer = new Timer(PeriodicUpdateDelay.DelayInMilliseconds, periodicUpdateAction)
   private val displaySwitch = new CheckBox(displaySwitchAction)
   private val plotsAndMonitorsSwitch = new CheckBox(plotsAndMonitorsSwitchAction)
@@ -122,7 +125,6 @@ private [gui] class ProgressDialog(parent: Window, supervisor: Supervisor, compi
       add(Box.createVerticalStrut(6))
 
       updateProgressArea(true)
-      scrollPane.setMinimumSize(scrollPane.getPreferredSize())
 
       add(new JPanel with Transparent {
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
