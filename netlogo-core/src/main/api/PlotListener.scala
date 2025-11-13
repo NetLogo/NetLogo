@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.plot
+package org.nlogo.api
 
 trait PlotListener {
   def clearAll(): Unit
