@@ -355,6 +355,7 @@ lazy val macApp = project.in(file("mac-app")).
 
 // this project is all about packaging NetLogo for distribution
 lazy val dist = project.in(file("dist")).
+  settings(version := (netlogo / version).value).
   settings(NetLogoBuild.settings: _*).
   settings(NetLogoPackaging.settings(netlogo, macApp, behaviorsearchProject): _*)
 
