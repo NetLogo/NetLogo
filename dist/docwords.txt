@@ -92,11 +92,13 @@ Djava
 Doenitz
 Dorg
 Drawbar
+Dropdown
 Dsun
 EEC
 EPFL
 EPL
 ESRI
+EXPR
 Esc
 Evanston
 EventQueue
@@ -220,6 +222,7 @@ LogoListBuilder
 LogoLists
 Lossy
 Lucida
+MAXTIME
 MX
 MacFarlane
 MacOS
@@ -319,6 +322,7 @@ Rifman
 Rompf
 Rugby
 SBE
+SETUPFILE
 SP
 SQL
 SRS
@@ -359,6 +363,7 @@ TI
 TM
 TMPDIR
 TNG
+TOC
 Taiko
 Telecom
 Tetris
@@ -368,6 +373,7 @@ Tiark
 Timbale
 Tutte
 UCBLogo
+UI
 USB
 UTF
 Ubuntu
@@ -442,6 +448,7 @@ awt
 backquote
 backticks
 barycenter
+basename
 behaviorspace
 betweenness
 bf
@@ -459,6 +466,7 @@ bitxor
 bk
 bl
 bluewin
+bolded
 bookmark
 bookquote
 boolean
@@ -468,6 +476,7 @@ bootclasspath
 breed's
 breeded
 browser's
+bspace
 bugParade
 bugfix
 bugfixes
@@ -492,8 +501,10 @@ chmod
 classloader
 classpath
 clickable
+codetab
 col
 colorized
+colorpicker
 cols
 com
 comR
@@ -514,6 +525,8 @@ copyleft
 cos
 coverages
 cp
+cpu
+cpus
 cro
 crosshair
 crt
@@ -538,10 +551,12 @@ dimensionally
 dir
 directedness
 dirs
+discoverable
 displayChanged
 distancexy
 distancexyz
 dll
+dmS
 doc
 docs
 documentedExtensions
@@ -572,6 +587,7 @@ ethnocentrism
 exitCondition
 exp
 experiment's
+exps
 ext
 facexy
 facexyz
@@ -598,10 +614,12 @@ github
 globals
 gnirts
 gnutar
+gobutton
 gogo
 gogoboard
 gogowiki
 gov
+gpu
 graphml
 grayscale
 grd
@@ -610,6 +628,7 @@ grumpy
 guppy
 handheld
 headlessly
+hh
 histogrammed
 histogramming
 homepage
@@ -639,11 +658,13 @@ init
 inquirelearning
 instantiation
 int
+interfacetab
 interoperable
 ints
 invertible
 invokeAndWait
 io
+iter
 java
 javac
 javatester
@@ -695,6 +716,8 @@ markup
 mathematica
 maxint
 maxnum
+maxtime
+mb
 md
 mediastream
 menubar
@@ -720,9 +743,12 @@ myworld
 nVidia
 namespace
 narrowcast
+ne
 netlogo
+netlogopreferences
 newInstance
 nlogo
+nlogox
 nls
 noncommercial
 note's
@@ -755,6 +781,7 @@ piecewise
 plabel
 plist
 plotname
+plotwindow
 plotxy
 plugin
 plugins
@@ -785,6 +812,7 @@ pt
 pu
 publically
 pxcor
+py
 pycor
 pzcor
 qtj
@@ -848,6 +876,7 @@ setProperty
 setSize
 setVisible
 setbg
+setupcode
 setxy
 setxyz
 sh
@@ -880,6 +909,7 @@ sudo
 surfaceA
 susie
 synced
+sys
 tab's
 tabonuco
 tarball
@@ -912,6 +942,7 @@ tutte
 txt
 typesafe
 ubuntu
+uname
 unbreeded
 uncheck
 unchecking
@@ -953,6 +984,7 @@ www
 xcor
 xfs
 xml
+xmls
 xn
 xor
 xy

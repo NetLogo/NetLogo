@@ -26,10 +26,12 @@ object SpellCheck {
       }
 
       recurseFiles(new File("autogen/docs")).foreach { path =>
-        val lines: Seq[String] = (Process(path) #> "aspell -H -p dist/docwords.txt -d en_US list").lineStream
+        if (!path.toString.contains("behaviorspace-spanish")) {
+          val lines: Seq[String] = (Process(path) #> "aspell -H -p ./dist/docwords.txt -d en_US list").lineStream
 
-        if (lines.nonEmpty)
-          println(lines.mkString(path.toString, "\n  ", ""))
+          if (lines.nonEmpty)
+            println(lines.mkString(path.toString + "\n  ", "\n  ", ""))
+        }
       }
     }
   }
