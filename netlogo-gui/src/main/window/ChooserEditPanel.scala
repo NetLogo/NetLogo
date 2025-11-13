@@ -9,7 +9,7 @@ import org.nlogo.core.I18N
 import org.nlogo.editor.Colorizer
 
 class ChooserEditPanel(target: ChooserWidget, compiler: CompilerServices, colorizer: Colorizer,
-                       extensionManager: ExtensionManager) extends EditPanel(target) {
+                       extensionManager: ExtensionManager) extends WidgetEditPanel(target) {
 
   private val nameWrapper =
     new IdentifierEditor(
