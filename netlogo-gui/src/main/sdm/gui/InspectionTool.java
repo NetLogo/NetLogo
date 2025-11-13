@@ -76,7 +76,7 @@ class InspectionTool
         Figure figure =
             drawing().findFigure(e.getX(), e.getY());
 
-	fillInputs(figure, view);
+  fillInputs(figure, view);
 
         if (figure != null) {
           inspectFigure(figure);
@@ -124,4 +124,3 @@ class InspectionTool
     return new AggregateUndoableTool(new org.jhotdraw.standard.DragTracker(editor(), f), editor);
   }
 }
-

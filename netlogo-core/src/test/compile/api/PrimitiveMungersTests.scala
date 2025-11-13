@@ -184,4 +184,4 @@ class PrimitiveMungersTests extends AnyFunSuite with Inside {
       m.matchReporterBlock()
     }
   }
-} 
+}

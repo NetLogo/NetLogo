@@ -86,7 +86,7 @@ trait Argument {
   @throws(classOf[ExtensionException])
   @throws(classOf[LogoException])
   def getDouble: java.lang.Double
-  
+
   /**
    * Returns the value of the argument as an unboxed <code>double</code>.
    *

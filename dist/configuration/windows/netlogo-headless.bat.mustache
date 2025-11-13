@@ -29,9 +29,9 @@ FOR %%a IN (%*) DO (
   ) ELSE (
     IF "!ARG:~0,2!" == "-D" (
       SET "JVM_OPTS=!JVM_OPTS! !ARG!"
-	  ) ELSE (
+    ) ELSE (
       SET "ARGS=!ARGS! !ARG!"
-	  )
+    )
   )
 )
 
