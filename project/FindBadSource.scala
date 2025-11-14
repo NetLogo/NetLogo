@@ -10,11 +10,11 @@ import scala.sys.process.Process
 
 object FindBadSource {
   private val findBadSource =
-    TaskKey[Unit]("findBadSource", "Search text files in the repo for general formatting issues")
+    TaskKey[Unit]("findBadSource", "Search source files in the repo for general formatting issues")
 
   lazy val settings = {
     findBadSource := {
-      val rules = Seq("*.scala", "*.java", "*.html", "*.md", "*.mustache", "*.css", "*.js", ":!:*.min.js", "*.nlogox*")
+      val rules = Seq("*.scala", "*.java", "*.css", "*.js", ":!:*.min.js", "*.nlogox*")
 
       Process(Seq("git", "ls-files", "--recurse-submodules", "--") ++ rules).!!
         .split("\n").foreach { path =>

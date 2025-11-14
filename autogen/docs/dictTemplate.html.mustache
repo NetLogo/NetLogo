@@ -1,61 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <base href="../" />
-        <title>{{ dictTitle }}:{{#containedPrims}} {{.}}{{/containedPrims}}</title>
-        <link rel="icon" type="image/png" href="favicon/favicon-96x96.png" sizes="96x96" />
-        <link rel="icon" type="image/svg+xml" href="favicon/favicon.svg" />
-        <link rel="shortcut icon" href="favicon/favicon.ico" />
-        <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png" />
-        <meta name="apple-mobile-web-app-title" content="Docs" />
-        <link rel="manifest" href="favicon/site.webmanifest" />
-        <link rel="stylesheet" href="netlogo.css" type="text/css" />
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-    </head>
-    <body class="dictionary-entry-page">
-        {{{header}}}
-        <script>
-            window.netlogo = {
-                ...(window.netlogo || {}),
-                redirectPath: '{{primRoot}}' === 'dict' ? undefined : '{{primRoot}}.html',
-            };
-        </script>
-        <div class="dictionary-layout">
-            <section class="sidebar">
-                <input type="checkbox" id="prim-toggle" hidden />
-                <div class="heading-section sidebar-folded">
-                    <!-- Hamburger controls for mobile using checkbox hack -->
-                    <label class="hamburger" for="prim-toggle"> <span></span><span></span><span></span> </label>
-                    <div id="active-primitive" class="hidden-lg">
-                        <span class="active-primitive-name"><i>primitive: </i>{{ primTitle }}</span>
-                    </div>
-                </div>
-                <div class="heading-section primitive-list">
-                    <!-- primMap: Map[String, String] where key is primitive name and value is href to the primitive's documentation -->
+	<head>
+		<base href="../" />
+		<title>{{ dictTitle }}:{{#containedPrims}} {{.}}{{/containedPrims}}</title>
+		<link rel="icon" type="image/png" href="favicon/favicon-96x96.png" sizes="96x96" />
+		<link rel="icon" type="image/svg+xml" href="favicon/favicon.svg" />
+		<link rel="shortcut icon" href="favicon/favicon.ico" />
+		<link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png" />
+		<meta name="apple-mobile-web-app-title" content="Docs" />
+		<link rel="manifest" href="favicon/site.webmanifest" />
+		<link rel="stylesheet" href="netlogo.css" type="text/css" />
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+	</head>
+	<body class="dictionary-entry-page">
+		{{{header}}}
+		<script>
+			window.netlogo = {
+				...(window.netlogo || {}),
+				redirectPath: '{{primRoot}}' === 'dict' ? undefined : '{{primRoot}}.html',
+			};
+		</script>
+		<div class="dictionary-layout">
+			<section class="sidebar">
+				<input type="checkbox" id="prim-toggle" hidden />
+				<div class="heading-section sidebar-folded">
+					<!-- Hamburger controls for mobile using checkbox hack -->
+					<label class="hamburger" for="prim-toggle"> <span></span><span></span><span></span> </label>
+					<div id="active-primitive" class="hidden-lg">
+						<span class="active-primitive-name"><i>primitive: </i>{{ primTitle }}</span>
+					</div>
+				</div>
+				<div class="heading-section primitive-list">
+					<!-- primMap: Map[String, String] where key is primitive name and value is href to the primitive's documentation -->
 
-                    <div class="heading-sticky">
-                        <!-- List -->
-                        <span class="heading-title">{{ dictTitle }}</span>
-                        <!-- Search -->
-                        <input class="search-bar" type="text" id="search-input" placeholder="Search primitives..." />
-                    </div>
-                    <ul class="heading-items">
-                        {{#primMap}}
-                        <li title="{{ key }}" aria-label="{{ key }}">
-                            <a href="{{ primRoot }}/{{ value }}">{{ key }}</a>
-                        </li>
-                        {{/primMap}}
-                    </ul>
-                </div>
-            </section>
-            <main class="prose content" style="min-height: 75vh">
-                {{{html}}}
-                <p style="padding: var(--space-sm)">
-                    Take me to the full <a href="{{ dictHome }}">{{ dictTitle }}</a>
-                </p>
-            </main>
-        </div>
-        <script src="scripts/dictionary.js"></script>
-    </body>
+					<div class="heading-sticky">
+						<!-- List -->
+						<span class="heading-title">{{ dictTitle }}</span>
+						<!-- Search -->
+						<input class="search-bar" type="text" id="search-input" placeholder="Search primitives..." />
+					</div>
+					<ul class="heading-items">
+						{{#primMap}}
+						<li title="{{ key }}" aria-label="{{ key }}">
+							<a href="{{ primRoot }}/{{ value }}">{{ key }}</a>
+						</li>
+						{{/primMap}}
+					</ul>
+				</div>
+			</section>
+			<main class="prose content" style="min-height: 75vh">
+				{{{html}}}
+				<p style="padding: var(--space-sm)">
+					Take me to the full <a href="{{ dictHome }}">{{ dictTitle }}</a>
+				</p>
+			</main>
+		</div>
+		<script src="scripts/dictionary.js"></script>
+	</body>
 </html>
