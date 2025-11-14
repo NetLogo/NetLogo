@@ -84,10 +84,25 @@ class LibrariesTab( category:        String
 
   import LibrariesTab._
 
-  private val libraries       = manager.getExtensionInfos
-  private val install         = manager.installExtension
-  private val uninstall       = manager.uninstallExtension
-  private val updateLists     = () => manager.reloadMetadata()
+  private val libraries = manager.getExtensionInfos ++ manager.getPackageInfos
+
+  private def install(info: LibraryInfo): Unit = {
+    if (info.isExtension) {
+      manager.installExtension(info)
+    } else {
+      manager.installPackage(info)
+    }
+  }
+
+  private def uninstall(info: LibraryInfo): Unit = {
+    if (info.isExtension) {
+      manager.uninstallExtension(info)
+    } else {
+      manager.uninstallPackage(info)
+    }
+  }
+
+  private val updateLists = () => manager.reloadMetadata()
 
   implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("tools.libraries")
 

@@ -90,7 +90,7 @@ extends scala.util.parsing.combinator.Parsers {
           decs ++ procs }
 
   def declaration: Parser[Declaration] =
-    includes | extensions | breed | directedLinkBreed | undirectedLinkBreed |
+    `export` | `import` | includes | extensions | breed | directedLinkBreed | undirectedLinkBreed |
       variables("GLOBALS") | variables("TURTLES-OWN") | variables("PATCHES-OWN") |
       variables("LINKS-OWN") | breedVariables
 
@@ -98,6 +98,47 @@ extends scala.util.parsing.combinator.Parsers {
     keyword("__INCLUDES") ~! stringList ^^ {
       case token ~ names =>
         Includes(token, names) }
+
+  def `export`: Parser[Export] =
+    keyword("EXPORT") ~! openBracket ~> identifier ~ exportSpecList <~ closeBracket ^^ {
+      case ident ~ specs =>
+        Export(ident.name, specs, ident.token)
+    }
+
+  def exportSpecList: Parser[Seq[ExportSpec]] =
+    openBracket ~> rep(exportSpec) <~ closeBracket
+
+  def exportSpec: Parser[ExportSpec] =
+    simpleExport
+
+  def simpleExport: Parser[SimpleExport] =
+    identifier ^^ {
+      case ident =>
+        SimpleExport(ident.name)
+    }
+
+  def `import`: Parser[Import] =
+    keyword("IMPORT") ~ openBracket ~ identifier ~ identifier ~ rep(importOption) <~ closeBracket ^^ {
+      case keyword ~ _ ~ packageName ~ moduleName ~ options =>
+        Import(Some(packageName.name), moduleName.name, options, keyword)
+    } |
+    keyword("IMPORT") ~ openBracket ~ identifier ~ rep(importOption) <~ closeBracket ^^ {
+      case keyword ~ _ ~ moduleName ~ options =>
+        Import(None, moduleName.name, options, keyword)
+    }
+
+  def importOption: Parser[ImportOption] =
+    importAlias
+
+  def importAlias: Parser[ImportAlias] =
+    openBracket ~> importAliasKeyword ~! identifier <~ closeBracket ^^ {
+      case keyword ~ ident =>
+        ImportAlias(ident.name, keyword) }
+
+  def importAliasKeyword: Parser[Token] =
+    acceptMatch("ALIAS", {
+      case token @ Token(_, TokenType.Ident, "ALIAS") =>
+        token })
 
   def extensions: Parser[Extensions] =
     keyword("EXTENSIONS") ~! identifierList ^^ {
@@ -148,7 +189,7 @@ extends scala.util.parsing.combinator.Parsers {
     (keyword("TO") | keyword("TO-REPORT")) ~!
       identifier ~
       opt(identifierList) ~
-      rep(nonKeyword) ~
+      rep(identifierToken | nonKeyword) ~
       (keyword("END") | failure("END expected")) ^^ {
         case to ~ name ~ names ~ body ~ end =>
           Procedure(name,
@@ -169,15 +210,32 @@ extends scala.util.parsing.combinator.Parsers {
   def closeBracket: Parser[Token] =
     tokenType("closing bracket", TokenType.CloseBracket)
 
+  def colon: Parser[Token] =
+    tokenType("colon", TokenType.Colon)
+
+  def plainIdentifier: Parser[Token] =
+    tokenType("identifier", TokenType.Ident)
+
+  def anyKeyword: Parser[Token] =
+    tokenType("keyword", TokenType.Keyword)
+
+  def identifierToken: Parser[Token] =
+    chainl1(plainIdentifier, plainIdentifier | literalToken | anyKeyword, colon ^^ {_ => {
+      case (p, x) => {
+        val newText = p.text + ":" + x.text
+        val newValue = p.value.asInstanceOf[String] + ":" + x.value
+        val newSourcelocation = p.sourceLocation.copy(end = x.sourceLocation.end)
+
+        p.copy(text = newText, value = newValue)(newSourcelocation) }}})
+
   def identifier: Parser[Identifier] =
-    tokenType("identifier", TokenType.Ident) ^^ {
-      token =>
-        Identifier(token.value.asInstanceOf[String], token) }
+    identifierToken ^^ {x => Identifier(x.value.toString, x)}
+
+  def literalToken: Parser[Token] =
+    tokenType("literal", TokenType.Literal)
 
   def literal: Parser[Identifier] =
-    tokenType("literal", TokenType.Literal) ^^ {
-      token =>
-        Identifier(token.value.toString, token) }
+    literalToken ^^ {token => Identifier(token.value.toString, token)}
 
   def identifierList: Parser[Seq[Identifier]] =
     openBracket ~> commit(rep(identifier | literal) <~ closeBracket)

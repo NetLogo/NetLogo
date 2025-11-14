@@ -1,6 +1,6 @@
 package org.nlogo.workspace
 
-import org.nlogo.api.{ ExtensionManager => APIEM, LibraryManager }
+import org.nlogo.api.{ PackageManager => APIPM, ExtensionManager => APIEM, LibraryManager }
 import org.nlogo.core.{ LibraryInfo, LibraryStatus }
 
 object ExtensionInstaller {
@@ -14,7 +14,7 @@ object ExtensionInstaller {
     hasRun = true
 
     println(APIEM.userExtensionsPath)
-    val libraryManager = new LibraryManager(APIEM.userExtensionsPath, () => {})
+    val libraryManager = new LibraryManager(APIPM.userPackagesPath, APIEM.userExtensionsPath, () => {})
     libraryManager.reloadMetadata(isFirstLoad = false, useBundled = false)
     Thread.sleep(2500)
     val extensionInfos = libraryManager.getExtensionInfos
