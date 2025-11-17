@@ -1,5 +1,7 @@
 import org.scalajs.linker.interface.ESVersion
 
+import sbt.util.CacheImplicits.StringJsonFormat
+
 import sbtcrossproject.CrossPlugin.autoImport.{ crossProject, CrossType }
 import sbtcrossproject.Platform
 
@@ -186,7 +188,41 @@ lazy val netlogo = project.in(file("netlogo-gui")).
     Compile / resourceGenerators           += Def.task {
       import scala.sys.process.Process
       Process("bash" :: "stage.sh" :: Nil, baseDirectory.value / "colorpicker").!
-      Seq(baseDirectory.value / "colorpicker" / "out")
+
+      val inDir = autogenRoot.value / "images"
+      val outDir = (Compile / resourceManaged).value / "images"
+
+      // add version number to banner images (Isaac B 11/17/25)
+      def generateBanners(): Set[File] = {
+        val font = (inDir / "Inter-Medium.ttf").toString.replace("\\", "/")
+        val dispVersion = version.value.split("-").head
+
+        outDir.mkdirs()
+
+        Process(Seq("magick", (inDir / "banner.png").toString, "-gravity", "SouthEast", "-fill", "#454545",
+                    "-font", font, "-pointsize", "96", "-annotate", "+100+80", s"v$dispVersion",
+                    (outDir / "banner.png").toString)).!
+
+        Process(Seq("magick", (inDir / "banner-dark.png").toString, "-gravity", "SouthEast", "-fill", "#FFFFFF",
+                    "-font", font,  "-pointsize", "96", "-annotate", "+100+80", s"v$dispVersion",
+                    (outDir / "banner-dark.png").toString)).!
+
+        Set(outDir / "banner.png", outDir / "banner-dark.png")
+      }
+
+      // invalidate banner images when version changes or when base image changes (Isaac B 11/17/25)
+      val versionCache = streams.value.cacheStoreFactory.make("version")
+      val bannersCache = streams.value.cacheDirectory / "banners"
+
+      val banners = Tracked.inputChanged[String, Set[File]](versionCache) { (changed, _) =>
+        if (changed) {
+          generateBanners()
+        } else {
+          FileFunction.cached(bannersCache)(_ => generateBanners())(Set(inDir))
+        }
+      }
+
+      Seq(baseDirectory.value / "colorpicker" / "out") ++ banners(version.value)
     }.taskValue,
     libraryDependencies ++= {
       lazy val osName = (System.getProperty("os.name"), System.getProperty("os.arch")) match {
