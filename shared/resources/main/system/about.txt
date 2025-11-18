@@ -1,4 +1,3 @@
-
 NetLogo author: Uri Wilensky
 Core development team: Jason Bertsche, Aaron Brandes, Omar Ibrahim, Jeremy Baker and Isaac Brown.
 
