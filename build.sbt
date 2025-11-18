@@ -269,7 +269,8 @@ lazy val netlogo = project.in(file("netlogo-gui")).
         Extensions.extensions,
         NativeLibs.nativeLibs,
         ModelsLibrary.modelIndex,
-        Compile / doc
+        Compile / doc,
+        NetLogoWebExport.nlwUpdateExportFile
       ).value
     }
   , Test / baseDirectory := baseDirectory.value.getParentFile
