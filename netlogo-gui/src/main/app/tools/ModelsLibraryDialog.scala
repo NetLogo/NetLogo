@@ -366,7 +366,7 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
       buttonPanel.add(cancelButton)
     }
     buttonPanel.add(Box.createRigidArea(new Dimension(40, 0)))
-    buttonPanel.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2))
+    buttonPanel.setBorder(BorderFactory.createEmptyBorder(8, 0, 8, 0))
 
     contentPane.add(topPanel)
     contentPane.add(buttonPanel)
