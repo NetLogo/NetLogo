@@ -10,7 +10,7 @@ import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 
 class FileIOTests extends AnyFunSuite {
   test("getResourceLines") {
-    val expected = "\nNetLogo author: Uri Wilensky"
+    val expected = "NetLogo author: Uri Wilensky"
     assert(FileIO.getResourceAsString("/system/about.txt").take(expected.size) ===
       expected)
   }
