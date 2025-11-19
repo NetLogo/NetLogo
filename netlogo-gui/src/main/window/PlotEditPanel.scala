@@ -2,10 +2,13 @@
 
 package org.nlogo.window
 
+import java.awt.BorderLayout
+import javax.swing.JPanel
+
 import org.nlogo.api.CompilerServices
 import org.nlogo.core.I18N
 import org.nlogo.editor.Colorizer
-import org.nlogo.swing.DynamicRowLayout
+import org.nlogo.swing.{ DynamicRowLayout, Transparent }
 
 class PlotEditPanel(target: PlotWidget, compiler: CompilerServices, colorizer: Colorizer)
   extends WidgetEditPanel(target) {
@@ -165,7 +168,12 @@ class PlotEditPanel(target: PlotWidget, compiler: CompilerServices, colorizer: C
     rowLayout.addRow(Seq(setupCode), expandY = () => !setupCode.collapsed)
     rowLayout.addRow(Seq(updateCode), expandY = () => !updateCode.collapsed)
     rowLayout.addRow(Seq(editPlotPens), expandY = () => setupCode.collapsed && updateCode.collapsed)
-    rowLayout.addRow(Seq(oldSize))
+
+    val row = new JPanel(new BorderLayout) with Transparent {
+      add(oldSize, BorderLayout.WEST)
+    }
+
+    rowLayout.addRow(Seq(row))
   }
 
   override def propertyEditors: Seq[PropertyEditor[?]] =

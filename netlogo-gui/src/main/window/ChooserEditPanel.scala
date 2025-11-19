@@ -58,7 +58,8 @@ class ChooserEditPanel(target: ChooserWidget, compiler: CompilerServices, colori
 
     add(choicesLabeled, c)
 
-    c.fill = GridBagConstraints.HORIZONTAL
+    c.anchor = GridBagConstraints.WEST
+    c.fill = GridBagConstraints.NONE
     c.weighty = 0
 
     add(oldSize, c)

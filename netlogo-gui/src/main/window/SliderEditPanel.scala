@@ -131,7 +131,6 @@ class SliderEditPanel(target: SliderWidget, compiler: CompilerServices, colorize
 
     c.gridy = 3
     c.gridwidth = 3
-    c.fill = GridBagConstraints.HORIZONTAL
     c.weightx = 1
     c.insets = new Insets(0, 6, 6, 6)
 

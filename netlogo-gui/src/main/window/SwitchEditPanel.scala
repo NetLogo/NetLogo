@@ -40,6 +40,7 @@ class SwitchEditPanel(target: SwitchWidget, compiler: CompilerServices, extensio
 
     add(name, c)
 
+    c.fill = GridBagConstraints.NONE
     c.insets = new Insets(0, 6, 6, 6)
 
     add(oldSize, c)

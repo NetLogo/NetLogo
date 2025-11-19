@@ -105,6 +105,7 @@ class MonitorEditPanel(target: MonitorWidget, compiler: CompilerServices, colori
     add(fontSize, c)
 
     c.gridy = 4
+    c.fill = GridBagConstraints.NONE
 
     add(oldSize, c)
   }
