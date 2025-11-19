@@ -218,6 +218,8 @@ lazy val netlogo = project.in(file("netlogo-gui")).
         "com.softwaremill.sttp.client4" %% "upickle" % "4.0.9",
         "com.softwaremill.sttp.client4" %% "pekko-http-backend" % "4.0.9",
         "org.apache.pekko" %% "pekko-stream" % "1.1.5",
+        // If we don't opt into slf4j, jSystemThemeDetector and Matomo will whine. --Jason B. (11/19/25)
+        "org.slf4j" % "slf4j-nop" % "2.0.13",
         "org.openani.jsystemthemedetector" % "jSystemThemeDetector" % "3.8"
       ) ++ Seq("base", "controls", "graphics", "swing", "web")
         .map(m => "org.openjfx" % s"javafx-$m" % "21.0.6" classifier osName)
