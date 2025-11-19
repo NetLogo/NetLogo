@@ -5,10 +5,10 @@ package org.nlogo.hubnet.server
 import org.nlogo.api.ConfigurableModelLoader
 import org.nlogo.fileformat.{ FileFormat, NLogoFormat, NLogoHubNetFormat }
 import org.nlogo.hubnet.connection.HubNetException
+import org.nlogo.util.AnyFunSuiteEx
 import org.nlogo.workspace.DummyAbstractWorkspace
-import org.scalatest.funsuite.AnyFunSuite
 
-class HubNetManagerTests extends AnyFunSuite {
+class HubNetManagerTests extends AnyFunSuiteEx {
 
   hubnetTest("test Update View False") { (manager, connectionManager) =>
     HubNetUtils.viewMirroring=false

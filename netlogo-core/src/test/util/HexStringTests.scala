@@ -2,12 +2,12 @@
 
 package org.nlogo.util
 
-import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.propspec.AnyPropSpec
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
+
 import HexString._
 
-class HexStringTests extends AnyFunSuite {
+class HexStringTests extends AnyFunSuiteEx {
   test("bytes0") {
     assert("" === toHexString(Array[Byte]())) }
   test("bytes1") {

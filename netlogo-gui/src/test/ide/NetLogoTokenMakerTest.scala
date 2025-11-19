@@ -9,10 +9,9 @@ import org.fife.ui.rsyntaxtextarea.{ Token => RstaToken, TokenTypes }
 import org.nlogo.core.TokenType
 import org.nlogo.api.DummyExtensionManager
 import org.nlogo.nvm.ExtensionManager
+import org.nlogo.util.AnyFunSuiteEx
 
-import org.scalatest.funsuite.AnyFunSuite
-
-class NetLogoTokenMakerTest extends AnyFunSuite {
+class NetLogoTokenMakerTest extends AnyFunSuiteEx {
   trait Helper {
     var text: String = ""
     val offset = 0

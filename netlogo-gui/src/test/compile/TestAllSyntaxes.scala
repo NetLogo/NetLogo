@@ -7,11 +7,11 @@ package org.nlogo.compile
 // against regressions.  (It also means new primitives have to be added here at the same time they
 // are added to tokens.txt.) - ST 12/5/09
 
-import org.scalatest.funsuite.AnyFunSuite
-import org.nlogo.core.Instruction
 import org.nlogo.api.NetLogoLegacyDialect
+import org.nlogo.core.Instruction
+import org.nlogo.util.AnyFunSuiteEx
 
-class TestAllSyntaxes extends AnyFunSuite {
+class TestAllSyntaxes extends AnyFunSuiteEx {
   val mapper = NetLogoLegacyDialect.tokenMapper
   def shorten(i: Instruction) =
     i.getClass.getSimpleName

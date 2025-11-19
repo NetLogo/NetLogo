@@ -2,11 +2,11 @@
 
 package org.nlogo.hubnet.mirroring
 
-import org.scalatest.funsuite.AnyFunSuite
-
 import java.io.{ ByteArrayInputStream, DataInputStream }
 
-class DiffBufferTests extends AnyFunSuite {
+import org.nlogo.util.AnyFunSuiteEx
+
+class DiffBufferTests extends AnyFunSuiteEx {
   test("empty -> byte array") {
     val out = new DiffBuffer
     val is = new DataInputStream(new ByteArrayInputStream(out.toByteArray))

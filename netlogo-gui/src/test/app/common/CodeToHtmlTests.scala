@@ -2,11 +2,10 @@
 
 package org.nlogo.app.common
 
-import org.scalatest.funsuite.AnyFunSuite
 import org.nlogo.api.{ FileIO, Version }
-import org.nlogo.util.SlowTest
+import org.nlogo.util.{ AnyFunSuiteEx, SlowTest }
 
-class CodeToHtmlTests extends AnyFunSuite with SlowTest {
+class CodeToHtmlTests extends AnyFunSuiteEx with SlowTest {
   val converter = CodeToHtml.newInstance
   import converter.convert
   test("basic", SlowTest.Tag) {

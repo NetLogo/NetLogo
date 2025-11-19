@@ -6,12 +6,11 @@ import org.nlogo.core.{ Button, Chooser, Chooseable, Femto, Horizontal,
   ChooseableDouble, ChooseableString, ChooseableBoolean, ChooseableList,
   LiteralParser, LogoList, Monitor, Slider, Switch, Vertical, View, Widget,
   WorldDimensions }
-
 import org.nlogo.core.model.WidgetReader
+import org.nlogo.util.AnyFunSuiteEx
 
 import org.scalacheck.{ Arbitrary, Gen }
 
-import org.scalatest.funsuite.AnyFunSuite
 import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 
 object HubNetGenerators {
@@ -146,7 +145,7 @@ object HubNetGenerators {
     Femto.scalaSingleton[LiteralParser]("org.nlogo.parse.CompilerUtilities")
 }
 
-class HubNetWidgetReadersTest extends AnyFunSuite with ScalaCheckDrivenPropertyChecks {
+class HubNetWidgetReadersTest extends AnyFunSuiteEx with ScalaCheckDrivenPropertyChecks {
 
   import HubNetGenerators._
 

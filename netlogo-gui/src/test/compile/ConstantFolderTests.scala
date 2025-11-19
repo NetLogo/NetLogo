@@ -3,9 +3,9 @@
 package org.nlogo.compile
 
 import org.nlogo.core.{ CompilerException, Program }
-import org.scalatest.funsuite.AnyFunSuite
+import org.nlogo.util.AnyFunSuiteEx
 
-class ConstantFolderTests extends AnyFunSuite {
+class ConstantFolderTests extends AnyFunSuiteEx {
 
   def compile(source: String): String = {
     val program = Program.empty()

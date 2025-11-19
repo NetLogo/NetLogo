@@ -4,14 +4,14 @@ package org.nlogo.nvm
 
 import java.util.{ List => JList }
 
-import org.scalatest.funsuite.AnyFunSuite
+import org.nlogo.util.AnyFunSuiteEx
 
 import org.nlogo.{ api, agent, core },
   agent.{ AgentSet, World2D, DummyLiteralParser },
   api.{ Dump, ExtensionManager => ApiExtensionManager , ClassManager, WorkspaceContext },
   core.{ ExtensionObject, File, ErrorSource, Primitive, TokenDSL}
 
-class ImportHandlerTests extends AnyFunSuite {
+class ImportHandlerTests extends AnyFunSuiteEx {
   import TokenDSL._
 
   test("parses agent and agent set literals") {

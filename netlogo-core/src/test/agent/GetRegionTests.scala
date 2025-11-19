@@ -4,9 +4,9 @@ package org.nlogo.agent
 
 import java.util.ArrayList
 
-import org.scalatest.funsuite.AnyFunSuite
+import org.nlogo.util.AnyFunSuiteEx
 
-class GetRegionTests extends AnyFunSuite {
+class GetRegionTests extends AnyFunSuiteEx {
 
   def toArrayList(l: List[(Int, Int)]): ArrayList[(Int, Int)] = {
     val res = new ArrayList[(Int, Int)]

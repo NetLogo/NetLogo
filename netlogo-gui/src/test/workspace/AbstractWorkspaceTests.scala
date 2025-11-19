@@ -3,15 +3,13 @@
 package org.nlogo.workspace
 
 import org.nlogo.api.Version
+import org.nlogo.util.{ AnyFunSuiteEx, PathUtils }
 
-import org.nlogo.util.PathUtils
-
-import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.{ BeforeAndAfterEach, OneInstancePerTest }
 
 import scala.jdk.CollectionConverters.SeqHasAsJava
 
-class AbstractWorkspaceTests extends AnyFunSuite with BeforeAndAfterEach with OneInstancePerTest {
+class AbstractWorkspaceTests extends AnyFunSuiteEx with BeforeAndAfterEach with OneInstancePerTest {
   val workspace = new DummyAbstractWorkspace
   override def afterEach(): Unit = { workspace.dispose() }
 ///

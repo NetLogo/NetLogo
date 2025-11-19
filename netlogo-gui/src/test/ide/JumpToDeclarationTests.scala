@@ -2,10 +2,10 @@
 
 package org.nlogo.ide
 
-import org.nlogo.core.{SourceLocation, Token, TokenType}
-import org.scalatest.funsuite.AnyFunSuite
+import org.nlogo.core.{ SourceLocation, Token, TokenType }
+import org.nlogo.util.AnyFunSuiteEx
 
-class JumpToDeclarationTests extends AnyFunSuite {
+class JumpToDeclarationTests extends AnyFunSuiteEx {
 
   val source1 =
     """

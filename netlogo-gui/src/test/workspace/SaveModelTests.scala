@@ -5,16 +5,13 @@ package org.nlogo.workspace
 import java.net.URI
 import java.nio.file.Paths
 
-import org.nlogo.core.Model
 import org.nlogo.api.{ ConfigurableModelLoader, ModelType, Version }
-
-import org.scalatest.funsuite.AnyFunSuite
-
-import org.nlogo.util.PathUtils
+import org.nlogo.core.Model
+import org.nlogo.util.{ AnyFunSuiteEx, PathUtils }
 
 import scala.util.{ Failure, Try }
 
-class SaveModelTests extends AnyFunSuite {
+class SaveModelTests extends AnyFunSuiteEx {
   val model = Model()
 
   def testSave(withModel: Model => Model = identity,

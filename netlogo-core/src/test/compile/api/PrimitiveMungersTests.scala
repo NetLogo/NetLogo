@@ -6,7 +6,8 @@ import org.nlogo.core.{ Command => CoreCommand, Reporter => CoreReporter,
   SourceLocation, Syntax }
 import org.nlogo.core.prim.{ _const => _coreconst }
 import org.nlogo.nvm.{ Command, Context, Reporter }
-import org.scalatest.funsuite.AnyFunSuite
+import org.nlogo.util.AnyFunSuiteEx
+
 import org.scalatest.Inside
 
 object PrimitiveMungersTests {
@@ -26,7 +27,7 @@ object PrimitiveMungersTests {
 
 import PrimitiveMungersTests._
 
-class PrimitiveMungersTests extends AnyFunSuite with Inside {
+class PrimitiveMungersTests extends AnyFunSuiteEx with Inside {
 
   trait TestCommand {
     val command = new DummyCommand()

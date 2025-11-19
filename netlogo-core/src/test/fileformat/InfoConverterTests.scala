@@ -2,9 +2,9 @@
 
 package org.nlogo.fileformat
 
-import org.scalatest.funsuite.AnyFunSuite
+import org.nlogo.util.AnyFunSuiteEx
 
-class InfoConverterTests extends AnyFunSuite {
+class InfoConverterTests extends AnyFunSuiteEx {
   import InfoConverter.convert
   test("oneSection") {
     assertResult("## WHAT IS IT?\n\nWho knows?")(

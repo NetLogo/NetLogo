@@ -2,12 +2,13 @@
 
 package org.nlogo.agent
 
-import org.scalatest.funsuite.AnyFunSuite
-import org.scalatest.OneInstancePerTest
+import org.nlogo.api.{ ImporterUser, PlotInterface }
 import org.nlogo.core.WorldDimensions
-import org.nlogo.api.{PlotInterface, ImporterUser}
+import org.nlogo.util.AnyFunSuiteEx
 
-class ImporterTests extends AnyFunSuite with OneInstancePerTest {
+import org.scalatest.OneInstancePerTest
+
+class ImporterTests extends AnyFunSuiteEx with OneInstancePerTest {
   val IGNORE_ERROR_HANDLER =
     new ImporterJ.ErrorHandler() {
       def showError(title: String, errorDetails: String, fatalError: Boolean) =

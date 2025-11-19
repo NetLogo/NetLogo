@@ -2,16 +2,17 @@
 
 package org.nlogo.headless
 
+import java.io.File
+
+import org.nlogo.api.FileIO.fileToString
+import org.nlogo.api.{ SimpleJobOwner, Version }
 import org.nlogo.core.{ AgentKind, Model, WorldDimensions, WorldDimensions3D }
 import org.nlogo.headless.test.{ Parser, LanguageTest, Open, Declaration, Command,
   Reporter, Compile, Success, CompileError, RuntimeError, StackTrace }
-import org.scalatest.funsuite.AnyFunSuite
+import org.nlogo.util.{ AnyFunSuiteEx, SlowTest, Utils }
+
 import org.scalatest.Tag
 import org.scalatest.exceptions.TestFailedException
-import org.nlogo.api.{ SimpleJobOwner, Version }
-import org.nlogo.api.FileIO.fileToString
-import java.io.File
-import org.nlogo.util.{ Utils, SlowTest }
 
 object LanguageTestTag extends Tag("org.nlogo.headless.LanguageTestTag")
 
@@ -111,7 +112,7 @@ object TestLanguage {
 }
 // We parse the tests first, then run them.
 // Parsing is separate so we can write tests for the parser itself.
-abstract class TestLanguage(files: Iterable[File]) extends AnyFunSuite with SlowTest {
+abstract class TestLanguage(files: Iterable[File]) extends AnyFunSuiteEx with SlowTest {
   def tag: Tag = SlowTest.Tag
 
   import TestLanguage._
@@ -173,7 +174,7 @@ object TestParser {
 
 // And here are tests for the parser:
 
-class TestParser extends AnyFunSuite {
+class TestParser extends AnyFunSuiteEx {
 
   // most of parsing tests are in headless, this is just a sanity check
   test("parse a simple test", SlowTest.Tag) {

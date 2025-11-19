@@ -2,9 +2,9 @@
 
 package org.nlogo.hubnet.client
 
-import org.scalatest.funsuite.AnyFunSuite
+import org.nlogo.util.AnyFunSuiteEx
 
-class TimedSetTests extends AnyFunSuite {
+class TimedSetTests extends AnyFunSuiteEx {
 
   // note that this doesn't really test much of anything -- it just tests that you can add stuff, it
   // doesn't test that the adds are actually handled properly - ST 1/28/05

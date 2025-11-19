@@ -5,10 +5,9 @@ package org.nlogo.parse
 import java.awt.Color
 
 import org.nlogo.core.{ ColorizerTheme, TokenType }
+import org.nlogo.util.AnyFunSuiteEx
 
-import org.scalatest.funsuite.AnyFunSuite
-
-class ColorizerTests extends AnyFunSuite {
+class ColorizerTests extends AnyFunSuiteEx {
 
   private val theme = ColorizerTheme.Light
 

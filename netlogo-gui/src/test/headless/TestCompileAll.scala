@@ -7,11 +7,10 @@ import scala.util.{ Failure, Success, Try }
 import org.nlogo.api.{ ExtensionManager, PreviewCommands, Version }
 import org.nlogo.core.CompilerException
 import org.nlogo.nvm.Workspace
-import org.nlogo.util.SlowTest
+import org.nlogo.util.{ AnyFunSuiteEx, SlowTest }
 import org.nlogo.workspace.ModelsLibrary
-import org.scalatest.funsuite.AnyFunSuite
 
-class TestCompileAll extends AnyFunSuite with SlowTest {
+class TestCompileAll extends AnyFunSuiteEx with SlowTest {
 
   // Models whose path contains any of these strings will not be tested at all:
   def excludeModel(path: String): Boolean = {

@@ -2,17 +2,15 @@
 
 package org.nlogo.headless.hubnet
 
-import org.nlogo.core.{ LiteralParser, Widget => CoreWidget }
-import org.nlogo.fileformat.{ FileFormat, NLogoFormat, NLogoHubNetFormat }
-import org.nlogo.hubnet.protocol.ComputerInterface
-import org.nlogo.headless.TestUsingWorkspace
-
-import java.io.{ByteArrayInputStream, ObjectOutputStream, ByteArrayOutputStream}
+import java.io.{ ByteArrayInputStream, ByteArrayOutputStream, ObjectOutputStream }
 import java.nio.file.Paths
 
-import org.nlogo.util.ClassLoaderObjectInputStream
+import org.nlogo.core.{ LiteralParser, Widget => CoreWidget }
+import org.nlogo.fileformat.{ FileFormat, NLogoFormat, NLogoHubNetFormat }
+import org.nlogo.headless.TestUsingWorkspace
+import org.nlogo.hubnet.protocol.ComputerInterface
 
-import org.scalatest.funsuite.AnyFunSuite
+import org.nlogo.util.{ AnyFunSuiteEx, ClassLoaderObjectInputStream }
 
 class TestClientInterface extends TestUsingWorkspace {
 
@@ -84,7 +82,7 @@ object TestUtils {
 }
 
 // this class tests the utility functions in TestUtils.
-class TestUtilsTests extends AnyFunSuite {
+class TestUtilsTests extends AnyFunSuiteEx {
   import TestUtils._
 
   // fails in sbt unless we use ClassLoaderObjectInputStream instead of a regular ObjectInputStream

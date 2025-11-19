@@ -2,17 +2,16 @@
 
 package org.nlogo.headless
 
+import org.nlogo.api.{ LogoException, ModelCreator, PlotCompilationErrorAction, Version }
+import org.nlogo.util.AnyFunSuiteEx
+
 import scala.util.DynamicVariable
-import org.scalatest.funsuite.AnyFunSuite
-import org.nlogo.api.{LogoException, Version}
-import org.nlogo.api.ModelCreator
-import org.nlogo.api.PlotCompilationErrorAction
 
 /**
  * A DSL for testing models.
  */
 
-trait AbstractTestModels extends AnyFunSuite with ModelCreator {
+trait AbstractTestModels extends AnyFunSuiteEx with ModelCreator {
 
   /**
    * test a model created in code

@@ -6,9 +6,9 @@ import java.io.File
 
 import org.nlogo.api.{ ExtensionManager => APIEM, Version }
 
-import org.scalatest.funsuite.AnyFunSuite
+import org.nlogo.util.AnyFunSuiteEx
 
-class ModelsLibraryTests extends AnyFunSuite {
+class ModelsLibraryTests extends AnyFunSuiteEx {
   test("needsModelScan returns true when a scan needs to be performed") {
     ModelsLibrary.rootNode = None
     assert(ModelsLibrary.needsModelScan)

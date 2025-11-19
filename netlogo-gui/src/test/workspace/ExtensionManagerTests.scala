@@ -2,17 +2,17 @@
 
 package org.nlogo.workspace
 
-import org.nlogo.api.{ ExtensionManager => APIEM, ExtensionException }
+import org.nlogo.api.{ ExtensionException, ExtensionManager => APIEM }
 import org.nlogo.core.TokenType
+import org.nlogo.util.AnyFunSuiteEx
 
 import org.scalatest.BeforeAndAfter
-import org.scalatest.funsuite.AnyFunSuite
 
 import scala.jdk.CollectionConverters.{ IterableHasAsScala, SeqHasAsJava }
 
 import ExtensionManager.ExtensionLoader
 
-class ExtensionManagerTests extends AnyFunSuite with BeforeAndAfter {
+class ExtensionManagerTests extends AnyFunSuiteEx with BeforeAndAfter {
   before {
   }
 

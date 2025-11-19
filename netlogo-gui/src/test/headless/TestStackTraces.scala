@@ -23,11 +23,10 @@ its ok that these tests don't run in 'run' mode because we are only testing
 the stack traces, not the results.
  */
 
-import org.scalatest.funsuite.AnyFunSuite
-import org.nlogo.api.{LogoException, ExtensionException, Argument, Context, Command, Version}
-import org.nlogo.core.{ Syntax, WorldDimensions3D }
-import org.nlogo.workspace.{DummyClassManager, InMemoryExtensionLoader}
-import org.nlogo.core.{WorldDimensions, View, Model}
+import org.nlogo.api.{ Argument, Command, Context, ExtensionException, LogoException, Version }
+import org.nlogo.core.{ Model, Syntax, View, WorldDimensions, WorldDimensions3D }
+import org.nlogo.util.AnyFunSuiteEx
+import org.nlogo.workspace.{ DummyClassManager, InMemoryExtensionLoader }
 
 class TestStackTraces extends AbstractTestModels {
 
@@ -95,7 +94,7 @@ error while observer running __BOOM
   }
 }
 
-class TestExtensionStackTraces extends AnyFunSuite {
+class TestExtensionStackTraces extends AnyFunSuiteEx {
   test("extension exceptions keep causes") {
     val primaryCause = new Exception()
     val wrapperCause = new Exception(primaryCause)

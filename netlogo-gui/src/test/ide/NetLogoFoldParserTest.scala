@@ -3,10 +3,9 @@
 package org.nlogo.ide
 
 import org.nlogo.api.ProgramGenerator
+import org.nlogo.util.AnyFunSuiteEx
 
-import org.scalatest.funsuite.AnyFunSuite
-
-class NetLogoFoldParserTest extends AnyFunSuite with ProgramGenerator {
+class NetLogoFoldParserTest extends AnyFunSuiteEx with ProgramGenerator {
   def sections(text: String) = NetLogoFoldParser.sections(text)
 
   test("an empty document has empty root elements") {

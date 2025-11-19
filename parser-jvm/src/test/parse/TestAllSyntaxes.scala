@@ -8,9 +8,9 @@ package org.nlogo.parse
 // are added to tokens.txt.) - ST 12/5/09
 
 import org.nlogo.core.Instruction
-import org.scalatest.funsuite.AnyFunSuite
+import org.nlogo.util.AnyFunSuiteEx
 
-class TestAllSyntaxes extends AnyFunSuite {
+class TestAllSyntaxes extends AnyFunSuiteEx {
   def shorten(name: String) =
     Class.forName(name).getSimpleName
   def instruction(name: String) =
