@@ -2,14 +2,14 @@
 
 package org.nlogo.agent
 
-import org.scalatest.funsuite.AnyFunSuite
-import org.nlogo.core.WorldDimensions
 import org.nlogo.api.TrailDrawerInterface
+import org.nlogo.core.WorldDimensions
+import org.nlogo.util.AnyFunSuiteEx
 
 // This test is used primarily to verify exact numeric reproducibility between NetLogo desktop
 // and NetLogo Web. If there are discrepancies found between the two in the area of trail-drawing
 // new tests should be added here.
-class TrailDrawingTests extends AnyFunSuite {
+class TrailDrawingTests extends AnyFunSuiteEx {
 
   case class LineSeg(x0: Double, y0: Double, x1: Double, y1: Double, color: AnyRef, size: Double, mode: String)
   class DummyTrailDrawer extends TrailDrawerInterface {

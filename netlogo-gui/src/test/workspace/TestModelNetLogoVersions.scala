@@ -4,14 +4,12 @@ package org.nlogo.workspace
 
 import java.nio.file.Paths
 
-import org.scalatest.funsuite.AnyFunSuite
-
 import org.nlogo.api.Version
 import org.nlogo.core.{ Femto, LiteralParser }
-import org.nlogo.util.SlowTest
 import org.nlogo.fileformat.FileFormat
+import org.nlogo.util.{ AnyFunSuiteEx, SlowTest }
 
-class TestModelNetLogoVersions extends AnyFunSuite with SlowTest {
+class TestModelNetLogoVersions extends AnyFunSuiteEx with SlowTest {
   val paths = ModelsLibrary.getModelPaths ++ ModelsLibrary.getModelPathsAtRoot("extensions")
   val dummyWorkspace = new DummyWorkspace()
   val extensionManager = new ExtensionManager(dummyWorkspace, new JarLoader(dummyWorkspace))

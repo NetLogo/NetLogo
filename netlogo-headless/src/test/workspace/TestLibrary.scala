@@ -2,10 +2,11 @@
 
 package org.nlogo.workspace
 
-import org.scalatest.funsuite.AnyFunSuite
+import org.nlogo.util.AnyFunSuiteEx
+
 import ModelsLibrary._
 
-class TestLibrary extends AnyFunSuite {
+class TestLibrary extends AnyFunSuiteEx {
   test("every model has a unique name") {
     val names = new collection.mutable.HashSet[String]
     for(path <- getModelPaths) {

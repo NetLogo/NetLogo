@@ -2,16 +2,12 @@
 
 package org.nlogo.nvm
 
-import
-  org.nlogo.core.Let
+import org.nlogo.core.Let
+import org.nlogo.util.AnyFunSuiteEx
 
-import
-  org.scalatest.funsuite.AnyFunSuite
+import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 
-import
-  org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
-
-class BindingTests extends AnyFunSuite with ScalaCheckDrivenPropertyChecks {
+class BindingTests extends AnyFunSuiteEx with ScalaCheckDrivenPropertyChecks {
 
   trait BindingTestHelper {
     val abc = Let("abc")

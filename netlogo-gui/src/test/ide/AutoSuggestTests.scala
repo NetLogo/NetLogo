@@ -3,10 +3,9 @@
 package org.nlogo.ide
 
 import org.nlogo.core.NetLogoCore
+import org.nlogo.util.AnyFunSuiteEx
 
-import org.scalatest.funsuite.AnyFunSuite
-
-class AutoSuggestTests extends AnyFunSuite {
+class AutoSuggestTests extends AnyFunSuiteEx {
   private val autoSuggest = AutoSuggest(NetLogoCore, None)
 
   test("invalid string") {

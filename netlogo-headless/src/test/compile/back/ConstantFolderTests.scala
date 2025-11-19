@@ -4,9 +4,9 @@ package org.nlogo.compile
 package back
 
 import org.nlogo.core.CompilerException
-import org.scalatest.funsuite.AnyFunSuite
+import org.nlogo.util.AnyFunSuiteEx
 
-class ConstantFolderTests extends AnyFunSuite {
+class ConstantFolderTests extends AnyFunSuiteEx {
 
   def compile(source: String): String = {
     val procdef = Scaffold.apply("to-report __test report " + source + "\nend") match {

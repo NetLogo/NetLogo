@@ -4,12 +4,11 @@ package org.nlogo.app.tools
 
 import org.nlogo.api.DummyExtensionManager
 import org.nlogo.core.{ Femto, FrontEndInterface, NetLogoCore, Token }
-
-import org.scalatest.funsuite.AnyFunSuite
+import org.nlogo.util.AnyFunSuiteEx
 
 import LibrariesTab.addExtsToSource
 
-class LibrariesTabTests extends AnyFunSuite {
+class LibrariesTabTests extends AnyFunSuiteEx {
   private val frontEnd = Femto.scalaSingleton[FrontEndInterface]("org.nlogo.parse.FrontEnd")
   private val extensionManager = new DummyExtensionManager
 

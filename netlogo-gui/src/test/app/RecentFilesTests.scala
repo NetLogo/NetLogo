@@ -4,12 +4,11 @@ package org.nlogo.app
 
 import java.io.File
 
-import org.scalatest.funsuite.AnyFunSuite
-
 import org.nlogo.api.{ ModelType, Version }
 import org.nlogo.core.NetLogoPreferences
+import org.nlogo.util.AnyFunSuiteEx
 
-class RecentFilesTests extends AnyFunSuite {
+class RecentFilesTests extends AnyFunSuiteEx {
 
   val rf = new RecentFiles
   val models = (1 to rf.maxEntries).map(makePath).map(ModelEntry(_, ModelType.Normal)).toList ++

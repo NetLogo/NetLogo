@@ -2,19 +2,18 @@
 
 package org.nlogo.workspace
 
-import org.scalatest.funsuite.AnyFunSuite
-
 import java.net.URI
 import java.nio.file.{ Path, Paths }
 
-import org.nlogo.core.{ Model, View, WorldDimensions, WorldDimensions3D }
-import org.nlogo.fileformat.{ ConversionError, FailedConversionResult, FileFormat
-                            , SuccessfulConversion, ErroredConversion, NLogoFormat, NLogoThreeDFormat }
-import org.nlogo.fileformat.FileFormat.ModelConversion
 import org.nlogo.api.{ ConfigurableModelLoader, Version }
+import org.nlogo.core.{ Model, View, WorldDimensions, WorldDimensions3D }
+import org.nlogo.fileformat.{ ConversionError, FailedConversionResult, FileFormat, SuccessfulConversion
+                            , ErroredConversion, NLogoFormat, NLogoThreeDFormat }, FileFormat.ModelConversion
+import org.nlogo.util.AnyFunSuiteEx
+
 import scala.util.{ Success, Try }
 
-class OpenModelTests extends AnyFunSuite {
+class OpenModelTests extends AnyFunSuiteEx {
   val testURI = Paths.get("test/fileformat/non-nlogo-extension.txt").toUri
 
   trait OpenTest {

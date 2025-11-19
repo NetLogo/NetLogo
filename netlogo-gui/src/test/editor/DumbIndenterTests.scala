@@ -4,9 +4,9 @@ package org.nlogo.editor
 
 import javax.swing.JTextArea
 
-import org.scalatest.funsuite.AnyFunSuite
+import org.nlogo.util.AnyFunSuiteEx
 
-class DumbIndenterTests extends AnyFunSuite {
+class DumbIndenterTests extends AnyFunSuiteEx {
   private val dummy = new JTextArea
   private val indenter = new DumbIndenter(dummy)
 

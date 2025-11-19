@@ -5,13 +5,12 @@ package org.nlogo.headless.misc
 import java.io.File
 
 import org.nlogo.headless.{ ChecksumsAndPreviews, HeadlessWorkspace }
-import org.nlogo.util.SlowTest
+import org.nlogo.util.{ AnyFunSuiteEx, SlowTest }
 import org.nlogo.workspace.Checksummer
 
 import org.scalatest.{ Args, Status, SucceededStatus }
-import org.scalatest.funsuite.AnyFunSuite
 
-class TestChecksums extends AnyFunSuite  {
+class TestChecksums extends AnyFunSuiteEx  {
 
   // overriding this so we can pass in a model filter to run checksums against one
   // model, or a subset. example: `ts GenDrift`

@@ -2,12 +2,12 @@
 
 package org.nlogo.generate
 
-import org.scalatest.funsuite.AnyFunSuite
 import org.nlogo.nvm.Context
+import org.nlogo.util.AnyFunSuiteEx
 
 import scala.language.existentials
 
-class PeepholeSafeCheckerTests extends AnyFunSuite {
+class PeepholeSafeCheckerTests extends AnyFunSuiteEx {
 
   val checker = new PeepholeSafeChecker
   import checker._

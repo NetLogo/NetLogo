@@ -2,13 +2,14 @@
 
 package org.nlogo.workspace
 
-import org.scalatest.funsuite.AnyFunSuite
 import java.io.PrintWriter
+
+import org.nlogo.util.AnyFunSuiteEx
 
 // At the moment these tests don't make much sense, but the next step is to make
 // the checksummer calculate separate checksums for the separate sections. - ST 7/15/10
 
-class ChecksummerTests extends AnyFunSuite {
+class ChecksummerTests extends AnyFunSuiteEx {
   def foo(fn: PrintWriter): Unit = {
     fn.println("FOO")
     fn.println("hi there")

@@ -5,11 +5,10 @@ package misc
 
 import java.lang.ref.Cleaner
 
-import org.scalatest.funsuite.AnyFunSuite
-import org.nlogo.util.SlowTest
 import org.nlogo.{ core, api, nvm }
+import org.nlogo.util.{ AnyFunSuiteEx, SlowTest }
 
-class TestHalt extends AnyFunSuite  {
+class TestHalt extends AnyFunSuiteEx  {
   @volatile var finalized = false
   // I've had weird Heisenbug-type problems with the workspace not getting GC'ed if
   // it's a local variable rather than a top-level class member - ST 1/8/13

@@ -6,12 +6,10 @@ package misc
 import org.nlogo.api.{ FileIO, Version }
 import org.nlogo.core.{ Femto, LiteralParser }
 import org.nlogo.fileformat.FileFormat
+import org.nlogo.util.{ AnyFunSuiteEx, SlowTest }
 import org.nlogo.workspace.ModelsLibrary
-import org.scalatest.funsuite.AnyFunSuite
-import org.nlogo.util.SlowTest
 
-import
-  scala.util.matching.Regex
+import scala.util.matching.Regex
 
 object TestCompileAll {
   val HeadlessSupportedExtensions =
@@ -59,7 +57,7 @@ object TestCompileAll {
   }
 }
 
-class TestCompileAll extends AnyFunSuite  {
+class TestCompileAll extends AnyFunSuiteEx  {
   for {
     path <- ModelsLibrary.getModelPaths.filterNot(TestCompileAll.badPath)
     text <- TestCompileAll.goodModel(FileIO.fileToString(path))

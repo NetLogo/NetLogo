@@ -4,15 +4,15 @@ package org.nlogo.headless
 
 import java.nio.charset.StandardCharsets
 
-import org.scalatest.funsuite.AnyFunSuite
-import org.scalatest.{ OneInstancePerTest, BeforeAndAfterEach }
 import org.nlogo.api.{ FileIO, Perspective, Version }
+import org.nlogo.util.{ AnyFunSuiteEx, SlowTest }
 import org.nlogo.workspace.Checksummer
-import org.nlogo.util.SlowTest
+
+import org.scalatest.{ OneInstancePerTest, BeforeAndAfterEach }
 
 import scala.io.Source
 
-class TestImportExport extends AnyFunSuite with AbstractTestLanguage
+class TestImportExport extends AnyFunSuiteEx with AbstractTestLanguage
 with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
 
   override def beforeEach(): Unit = {

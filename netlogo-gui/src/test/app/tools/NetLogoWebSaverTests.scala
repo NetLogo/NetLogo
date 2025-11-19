@@ -2,9 +2,9 @@
 
 package org.nlogo.app.tools
 
-import org.scalatest.funsuite.AnyFunSuite
+import org.nlogo.util.AnyFunSuiteEx
 
-class NetLogoWebSaverTests extends AnyFunSuite {
+class NetLogoWebSaverTests extends AnyFunSuiteEx {
   test("nlw jar file locator raises exception when file cannot be located") {
     val loader = new JarTemplateLoader("notfound.html")
     intercept[Exception] {
