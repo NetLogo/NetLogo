@@ -2,10 +2,10 @@
 
 package org.nlogo.agent
 
-import org.scalatest.funsuite.AnyFunSuite
 import org.nlogo.api.{ MersenneTwisterFast, WorldType }
+import org.nlogo.util.AnyFunSuiteEx
 
-class TopologyDiffusionTests extends AnyFunSuite {
+class TopologyDiffusionTests extends AnyFunSuiteEx {
 
   val random = new MersenneTwisterFast()
 

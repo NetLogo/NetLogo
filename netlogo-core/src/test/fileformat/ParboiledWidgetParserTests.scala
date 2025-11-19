@@ -2,9 +2,9 @@
 
 package org.nlogo.fileformat
 
-import org.scalatest.funsuite.AnyFunSuite
+import org.nlogo.util.AnyFunSuiteEx
 
-class ParboiledWidgetParserTests extends AnyFunSuite {
+class ParboiledWidgetParserTests extends AnyFunSuiteEx {
   // strip/restoreLines
   test("StripSimple") {
     assertResult("foo")(ParsingStringUtils.stripLines("foo"))

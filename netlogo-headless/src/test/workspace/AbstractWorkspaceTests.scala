@@ -2,11 +2,13 @@
 
 package org.nlogo.workspace
 
-import org.scalatest.funsuite.AnyFunSuite
+import org.nlogo.util.AnyFunSuiteEx
+
 import org.scalatest.BeforeAndAfterEach
+
 import AbstractWorkspace.makeModelNameForDisplay
 
-class AbstractWorkspaceTests extends AnyFunSuite with BeforeAndAfterEach {
+class AbstractWorkspaceTests extends AnyFunSuiteEx with BeforeAndAfterEach {
   val workspace = new DummyAbstractWorkspace
   override def afterEach(): Unit = { workspace.dispose() }
   test("MakeModelNameForDisplay") {

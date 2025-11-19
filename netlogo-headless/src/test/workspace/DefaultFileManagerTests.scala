@@ -2,23 +2,18 @@
 
 package org.nlogo.workspace
 
-import
-  java.io.{ BufferedReader, File => JFile, FileReader, IOException, PrintWriter }
+import java.io.{ BufferedReader, File => JFile, FileReader, IOException, PrintWriter }
 
-import
-org.nlogo.{core, agent, api, nvm},
-    agent.OutputObject,
-    api.{ ExtensionManager => APIExtensionManager, LibraryManager => APILibraryManager, SourceOwner },
-    core.{ CompilerException, CompilerUtilitiesInterface, CompilationEnvironment,
-           File, FileMode, FrontEndInterface, LiteralImportHandler, Program},
-    nvm.{Procedure, CompilerFlags, CompilerInterface, CompilerResults, Reporter},
-      FrontEndInterface.ProceduresMap
+import org.nlogo.agent.OutputObject
+import org.nlogo.api.{ ExtensionManager => APIExtensionManager, LibraryManager => APILibraryManager, SourceOwner }
+import org.nlogo.core.{ CompilerException, CompilerUtilitiesInterface, CompilationEnvironment, ExtensionManager, File,
+                        FileMode, FrontEndInterface, LiteralImportHandler, Program }, FrontEndInterface.ProceduresMap
+import org.nlogo.nvm.{ CompilerFlags, CompilerInterface, CompilerResults, Procedure, Reporter }
+import org.nlogo.util.AnyFunSuiteEx
 
-import
-  org.scalatest.funsuite.AnyFunSuite,
-  org.scalatest.OneInstancePerTest
+import org.scalatest.OneInstancePerTest
 
-class DefaultFileManagerTests extends AnyFunSuite with OneInstancePerTest {
+class DefaultFileManagerTests extends AnyFunSuiteEx with OneInstancePerTest {
 
   private val root: String = {
     if (System.getProperty("os.name").toLowerCase.contains("windows")) {
@@ -341,7 +336,7 @@ class DefaultFileManagerTests extends AnyFunSuite with OneInstancePerTest {
     override def isReporter(s: String,
                             program: Program,
                             procedures: ProceduresMap,
-                            extensionManager: core.ExtensionManager): Boolean = ???
+                            extensionManager: ExtensionManager): Boolean = ???
 
     override def isReporter(s: String): Boolean = ???
 

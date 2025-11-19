@@ -2,15 +2,13 @@
 
 package org.nlogo.headless
 
-import org.scalatest.funsuite.AnyFunSuite
-
 import org.nlogo.api.Version
-import org.nlogo.util.SlowTest
 import org.nlogo.headless.ChecksumsAndPreviewsSettings.DumpsPath
+import org.nlogo.util.{ AnyFunSuiteEx, SlowTest }
 
 import scala.io.Source
 
-class TestCompileBenchmarks extends AnyFunSuite with SlowTest {
+class TestCompileBenchmarks extends AnyFunSuiteEx with SlowTest {
 
   private val names = Seq(
     "ANN", "Ants", "Bureaucrats", "BZ", "CA1D", "Erosion", "Fire", "FireBig", "Flocking", "GasLabCirc",

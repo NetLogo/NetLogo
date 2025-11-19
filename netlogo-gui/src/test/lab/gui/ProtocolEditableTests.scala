@@ -4,16 +4,15 @@ package org.nlogo.lab.gui
 
 import java.util.List
 
-import org.scalatest.funsuite.AnyFunSuite
-
 import org.nlogo.api.{ DummyCompilerServices, FileIO, GlobalsIdentifier, NetLogoLegacyDialect, NetLogoThreeDDialect,
                        Version }
 import org.nlogo.core.{ Femto, LiteralParser }
 import org.nlogo.fileformat.FileFormat
 import org.nlogo.nvm.PresentationCompilerInterface
+import org.nlogo.util.AnyFunSuiteEx
 import org.nlogo.window.EditorColorizer
 
-class ProtocolEditableTests extends AnyFunSuite {
+class ProtocolEditableTests extends AnyFunSuiteEx {
   val compiler = Femto.get[PresentationCompilerInterface](
     "org.nlogo.compile.Compiler", if (Version.is3D) NetLogoThreeDDialect else NetLogoLegacyDialect)
   val literalParser = Femto.scalaSingleton[LiteralParser]("org.nlogo.parse.CompilerUtilities")

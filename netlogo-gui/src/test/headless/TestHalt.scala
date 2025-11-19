@@ -4,11 +4,10 @@ package org.nlogo.headless
 
 import java.lang.ref.Cleaner
 
-import org.scalatest.funsuite.AnyFunSuite
 import org.nlogo.api.{ AggregateManagerInterface, LogoException, RendererInterface, Version }
 import org.nlogo.agent.{ CompilationManagement, World }
 import org.nlogo.nvm.{ PresentationCompilerInterface, HaltException }
-import org.nlogo.util.SlowTest
+import org.nlogo.util.{ AnyFunSuiteEx, SlowTest }
 
 object TestHalt {
   // This is ugly, but since we use PicoContainer to instantiate HeadlessWorkspace it's hard to
@@ -16,7 +15,7 @@ object TestHalt {
   class MyWorkspace(world: World & CompilationManagement, compiler: PresentationCompilerInterface, renderer: RendererInterface, aggregateManager: AggregateManagerInterface)
   extends HeadlessWorkspace(world, compiler, renderer, aggregateManager, null)
 }
-class TestHalt extends AnyFunSuite with SlowTest {
+class TestHalt extends AnyFunSuiteEx with SlowTest {
   @volatile var finalized = false
   if(!Version.is3D)
     test("halt", SlowTest.Tag) {

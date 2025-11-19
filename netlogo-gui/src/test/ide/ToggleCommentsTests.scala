@@ -4,9 +4,9 @@ package org.nlogo.ide
 
 import javax.swing.JTextArea
 
-import org.scalatest.funsuite.AnyFunSuite
+import org.nlogo.util.AnyFunSuiteEx
 
-class ToggleCommentsTests extends AnyFunSuite {
+class ToggleCommentsTests extends AnyFunSuiteEx {
   private val textField = new JTextArea
   private val toggle = () => ToggleComments.perform(textField, textField.getDocument)
 

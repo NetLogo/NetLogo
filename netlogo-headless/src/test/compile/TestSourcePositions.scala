@@ -2,13 +2,13 @@
 
 package org.nlogo.compile
 
-import org.scalatest.funsuite.AnyFunSuite
 import org.nlogo.api.Version.useGenerator
 import org.nlogo.api.{ DummyExtensionManager, DummyLibraryManager }
 import org.nlogo.core.{ DummyCompilationEnvironment, Program }
 import org.nlogo.nvm.Procedure.NoProcedures
+import org.nlogo.util.AnyFunSuiteEx
 
-class TestSourcePositions extends AnyFunSuite {
+class TestSourcePositions extends AnyFunSuiteEx {
   val program = Program.empty()
   def compileReporter(source: String) =
     Compiler.compileMoreCode(

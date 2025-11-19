@@ -2,14 +2,10 @@
 
 package org.nlogo.fileformat
 
+import org.nlogo.core.{ Button, CompilerException, Model, Monitor, Pen, Plot, Slider, SourceRewriter, Switch, View }
+import org.nlogo.util.AnyFunSuiteEx
 
-import org.nlogo.core.{ Model, SourceRewriter }
-import org.nlogo.core.{ Button, CompilerException, Monitor,
-  Pen, Plot, Slider, Switch, View }
-
-import org.scalatest.funsuite.AnyFunSuite
-
-class ModelConverterTests extends AnyFunSuite with ConversionHelper {
+class ModelConverterTests extends AnyFunSuiteEx with ConversionHelper {
   if (canTestConversions) {
     test("if the model is empty, returns the model") {
       val model = Model()

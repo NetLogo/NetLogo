@@ -4,9 +4,9 @@ package org.nlogo.hubnet.connection
 
 import java.net.{ Inet4Address, NetworkInterface }
 
-import org.scalatest.funsuite.AnyFunSuite
+import org.nlogo.util.AnyFunSuiteEx
 
-class NetworkUtilsTest extends AnyFunSuite {
+class NetworkUtilsTest extends AnyFunSuiteEx {
   test("findViableInterfaces should not return empty") {
     assert(! NetworkUtils.findViableInterfaces.isEmpty)
   }

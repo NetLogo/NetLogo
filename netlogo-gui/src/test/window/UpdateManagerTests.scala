@@ -2,10 +2,10 @@
 
 package org.nlogo.window
 
-import org.scalatest.funsuite.AnyFunSuite
 import org.nlogo.core.UpdateMode, UpdateMode._
+import org.nlogo.util.AnyFunSuiteEx
 
-class UpdateManagerTests extends AnyFunSuite {
+class UpdateManagerTests extends AnyFunSuiteEx {
 
   // at present, we're not testing the stateful parts of UpdateManager, we're just testing
   // the (functional) formulas in the two UpdatePolicy objects. - ST 2/28/11

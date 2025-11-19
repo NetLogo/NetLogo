@@ -2,10 +2,11 @@
 
 package org.nlogo.app.infotab
 
-import org.scalatest.funsuite.AnyFunSuite
 import java.io.ByteArrayInputStream
 
-class InfoFormatterTests extends AnyFunSuite {
+import org.nlogo.util.AnyFunSuiteEx
+
+class InfoFormatterTests extends AnyFunSuiteEx {
 
   import InfoFormatter._
 

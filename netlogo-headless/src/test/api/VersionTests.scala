@@ -2,10 +2,11 @@
 
 package org.nlogo.api
 
-import org.scalatest.funsuite.AnyFunSuite
+import org.nlogo.util.AnyFunSuiteEx
+
 import Version._
 
-class VersionTests extends AnyFunSuite {
+class VersionTests extends AnyFunSuiteEx {
   /// update this section every time the version changes -- ev 11/7/07
   test("currentVersion") {
     // these differ from the current version in suffix only

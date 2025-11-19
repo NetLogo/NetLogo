@@ -3,10 +3,10 @@
 package org.nlogo.compile
 package back
 
-import org.scalatest.funsuite.AnyFunSuite
 import org.nlogo.nvm
+import org.nlogo.util.AnyFunSuiteEx
 
-class AssemblerTests extends AnyFunSuite {
+class AssemblerTests extends AnyFunSuiteEx {
 
   def compile(keyword: String, source: String): nvm.Procedure = {
     val defs = Scaffold.apply(

@@ -3,13 +3,11 @@
 package org.nlogo.parse
 
 import org.nlogo.core.ColorizerTheme
-import org.nlogo.util.SlowTest
-
-import org.scalatest.funsuite.AnyFunSuite
+import org.nlogo.util.{ AnyFunSuiteEx, SlowTest }
 
 import scala.io.Source
 
-class SlowColorizerTests extends AnyFunSuite  {
+class SlowColorizerTests extends AnyFunSuiteEx  {
 
   // very long Code tabs shouldn't blow the stack.
   // slow, hence SlowTest

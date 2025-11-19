@@ -4,11 +4,11 @@ package org.nlogo.workspace
 
 import java.net.URL
 
+import org.nlogo.util.AnyFunSuiteEx
+
 import ExtensionManager.ExtensionData
 
-import org.scalatest.funsuite.AnyFunSuite
-
-class InMemoryExtensionLoaderTests extends AnyFunSuite {
+class InMemoryExtensionLoaderTests extends AnyFunSuiteEx {
   val dummyClassManager = new DummyClassManager()
   val loader = new InMemoryExtensionLoader("foo", dummyClassManager)
   val extURL = new URL("file:/tmp/extension/foo")

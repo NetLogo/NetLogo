@@ -2,11 +2,12 @@
 
 package org.nlogo.awt
 
-import org.scalatest.funsuite.AnyFunSuite
-import java.awt.image.BufferedImage
 import java.awt.Font
+import java.awt.image.BufferedImage
 
-class LineBreakerTests extends AnyFunSuite {
+import org.nlogo.util.AnyFunSuiteEx
+
+class LineBreakerTests extends AnyFunSuiteEx {
   test("don't blow up") {
     val image = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB)  // arbitrary type
     val metrics = image.getGraphics.getFontMetrics(new Font("courier", Font.PLAIN, 400))

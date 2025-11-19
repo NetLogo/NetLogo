@@ -2,9 +2,9 @@
 
 package org.nlogo.plot
 
-import org.scalatest.funsuite.AnyFunSuite
+import org.nlogo.util.AnyFunSuiteEx
 
-trait SimplePlotTest extends AnyFunSuite {
+trait SimplePlotTest extends AnyFunSuiteEx {
 
   def testPlot(name: String)(f: Plot => Unit): Unit = {
     test(name) {
