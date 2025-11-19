@@ -3,9 +3,9 @@
 package org.nlogo.lab
 
 import org.nlogo.api.{ RefEnumeratedValueSet, LabProtocol, SteppedValueSet }
-import org.scalatest.funsuite.AnyFunSuite
+import org.nlogo.util.AnyFunSuiteEx
 
-class ProtocolTests extends AnyFunSuite {
+class ProtocolTests extends AnyFunSuiteEx {
 
   val valueSet123 = List(new RefEnumeratedValueSet("foo", List(1d, 2d, 3d).map(Double.box)))
   val valueSet115 = List(new SteppedValueSet("foo", 1d, 1d, 5d))

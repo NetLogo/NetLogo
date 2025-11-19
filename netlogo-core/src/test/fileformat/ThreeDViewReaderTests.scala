@@ -3,13 +3,13 @@
 package org.nlogo.fileformat
 
 import org.nlogo.core.{ Femto, LiteralParser, UpdateMode, View, WorldDimensions3D }
+import org.nlogo.util.AnyFunSuiteEx
 
 import org.scalacheck.{ Arbitrary, Gen }
 
-import org.scalatest.funsuite.AnyFunSuite
 import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 
-class ThreeDViewReaderTest extends AnyFunSuite with ScalaCheckDrivenPropertyChecks {
+class ThreeDViewReaderTest extends AnyFunSuiteEx with ScalaCheckDrivenPropertyChecks {
   val dimensionsThreeD: Gen[WorldDimensions3D] = for {
     minPx     <- Arbitrary.arbInt.arbitrary
     maxPx     <- Arbitrary.arbInt.arbitrary.map(_.abs + minPx)

@@ -8,12 +8,13 @@ import java.util.jar.{ JarOutputStream, Manifest => JarManifest }
 import java.util.zip.ZipEntry
 
 import org.nlogo.api.ClassManager
-import ExtensionManager.ExtensionData
+import org.nlogo.util.AnyFunSuiteEx
 
 import org.scalatest.BeforeAndAfter
-import org.scalatest.funsuite.AnyFunSuite
 
-class JarLoaderTests extends AnyFunSuite with BeforeAndAfter {
+import ExtensionManager.ExtensionData
+
+class JarLoaderTests extends AnyFunSuiteEx with BeforeAndAfter {
   val dummyWorkspace = new DummyWorkspace
 
   val jarLoader = new JarLoader(dummyWorkspace)

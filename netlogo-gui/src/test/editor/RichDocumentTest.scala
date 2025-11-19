@@ -4,11 +4,10 @@ package org.nlogo.editor
 
 import javax.swing.text.PlainDocument
 
-import org.scalatest.funsuite.AnyFunSuite
-
 import org.nlogo.editor.RichDocument._
+import org.nlogo.util.AnyFunSuiteEx
 
-class RichDocumentTest extends AnyFunSuite {
+class RichDocumentTest extends AnyFunSuiteEx {
   trait Helper {
     val text: String
 

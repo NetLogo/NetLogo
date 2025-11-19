@@ -2,15 +2,17 @@
 
 package org.nlogo.generate
 
-import org.scalatest.funsuite.AnyFunSuite
 import java.lang.reflect.Method
+
+import org.nlogo.nvm.Instruction
+import org.nlogo.util.AnyFunSuiteEx
+
 import org.objectweb.asm.Opcodes.INVOKESTATIC
 import org.objectweb.asm.Type
-import org.nlogo.nvm.Instruction
 
 // MethodRipper won't let inlinable methods call helper methods in the same class.
 
-class TestHelperMethodSafe extends AnyFunSuite with AllPrimitivesTester {
+class TestHelperMethodSafe extends AnyFunSuiteEx with AllPrimitivesTester {
   override def makeVisitor(method: Method) =
     new EmptyMethodVisitor {
       override def visitMethodInsn(opcode: Int, owner: String, name: String, desc: String): Unit = {

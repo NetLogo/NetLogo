@@ -4,12 +4,11 @@ package org.nlogo.fileformat
 
 import org.nlogo.api.{ FileIO, XMLReader }
 import org.nlogo.core.{ Femto, LiteralParser, Model }
-
-import org.scalatest.funsuite.AnyFunSuite
+import org.nlogo.util.AnyFunSuiteEx
 
 import scala.io.Source
 
-class XMLTester extends AnyFunSuite {
+class XMLTester extends AnyFunSuiteEx {
   protected val loader =
     new NLogoXMLLoader(false, Femto.scalaSingleton[LiteralParser]("org.nlogo.parse.CompilerUtilities"), false)
 

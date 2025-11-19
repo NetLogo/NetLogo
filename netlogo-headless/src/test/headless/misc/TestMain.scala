@@ -3,13 +3,13 @@
 package org.nlogo.headless
 package misc
 
-import org.scalatest.funsuite.AnyFunSuite
 import org.nlogo.api
+import org.nlogo.util.AnyFunSuiteEx
 
 // headless.Main.main() is our main entry point for command-line users.
 // so it should have at least a little basic smoke testing.
 
-class TestMain extends AnyFunSuite {
+class TestMain extends AnyFunSuiteEx {
 
   def capture(body: => Unit): (String, String) = {
     val out = new java.io.ByteArrayOutputStream()

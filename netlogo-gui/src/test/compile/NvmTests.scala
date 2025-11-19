@@ -2,8 +2,6 @@
 
 package org.nlogo.compile
 
-import org.scalatest.funsuite.AnyFunSuite
-
 import org.nlogo.api.SimpleJobOwner
 import org.nlogo.compile.api.{ Expression, ProcedureDefinition,
   ReporterApp, ReporterBuilder, StatementsBuilderBase }
@@ -18,6 +16,7 @@ import org.nlogo.nvm.{ Binding, Command, Context, ExclusiveJob, Procedure }
 import org.nlogo.prim.{ _call, _callreport, _carefully, _constdouble, _conststring,
   _done, _equal, _lessthan, _let, _letvariable, _repeat, _repeatlocal,
   _return, _setletvariable }
+import org.nlogo.util.AnyFunSuiteEx
 
 // Q: Why is there an nvm test in the compile package?
 // A: Because much of nvm's behavior depends on the prim
@@ -25,7 +24,7 @@ import org.nlogo.prim.{ _call, _callreport, _carefully, _constdouble, _conststri
 //    in some future, we will isolate things so that `nvm`
 //    can be tested without reference to `prim`, until then
 //    this test lives here. RG 1/30/17
-class NvmTests extends AnyFunSuite {
+class NvmTests extends AnyFunSuiteEx {
   def token(s: String): Token = Token(s.toUpperCase, TokenType.Command, null)(SourceLocation(0, 0, ""))
 
   val loc = SourceLocation(0, 0, "")

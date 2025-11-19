@@ -2,13 +2,15 @@
 
 package org.nlogo.generate
 
-import org.scalatest.funsuite.AnyFunSuite
 import java.lang.reflect.Method
-import org.objectweb.asm.{ ClassReader, Type, MethodVisitor }
+
 import org.nlogo.api.Version
 import org.nlogo.nvm.Instruction
+import org.nlogo.util.AnyFunSuiteEx
 
-trait AllPrimitivesTester extends AnyFunSuite {
+import org.objectweb.asm.{ ClassReader, Type, MethodVisitor }
+
+trait AllPrimitivesTester extends AnyFunSuiteEx {
 
   def makeVisitor(m: Method): MethodVisitor
   def filter(c: Class[?]): Boolean = true

@@ -1,10 +1,10 @@
 package org.nlogo.api
 
-import org.scalatest.funsuite.AnyFunSuite
+import org.nlogo.util.AnyFunSuiteEx
 
 import scala.math.pow
 
-class DoubleRangeTest extends AnyFunSuite {
+class DoubleRangeTest extends AnyFunSuiteEx {
   // Tests are given as:
   // (start, stop, step, expected length of list)
   val exclusiveCases = Seq[(Double, Double, Double, Int)](

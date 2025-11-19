@@ -6,11 +6,10 @@ import java.net.URI
 import java.nio.file.{ Files, Paths }
 import java.util.Arrays
 
-import org.scalatest.funsuite.AnyFunSuite
-
 import org.nlogo.api.{ AbstractModelLoader, ComponentSerialization, ConfigurableModelLoader, Version }
 import org.nlogo.core.{ DummyCompilationEnvironment, DummyExtensionManager, Model, ModelSettings, Shape, Widget },
   Shape.{ LinkShape, VectorShape }
+import org.nlogo.util.AnyFunSuiteEx
 
 import scala.jdk.CollectionConverters.ListHasAsScala
 
@@ -28,7 +27,7 @@ abstract class NLogoFormatTest[A] extends ModelSectionTest[Array[String], NLogoF
     a.mkString(s"Array[${a.length}](", ",\n", ")")
 }
 
-class NLogoFormatIOTest extends AnyFunSuite {
+class NLogoFormatIOTest extends AnyFunSuiteEx {
   lazy val modelsLibrary = System.getProperty("netlogo.models.dir", "models")
 
   val extensionManager = new DummyExtensionManager()
@@ -77,7 +76,7 @@ class NLogoFormatIOTest extends AnyFunSuite {
   }
 }
 
-class NLogoFormatConversionTest extends AnyFunSuite with ConversionHelper {
+class NLogoFormatConversionTest extends AnyFunSuiteEx with ConversionHelper {
   if (canTestConversions) {
     def testLoader: AbstractModelLoader =
       new ConfigurableModelLoader().addFormat[Array[String], NLogoFormat](new NLogoFormat)

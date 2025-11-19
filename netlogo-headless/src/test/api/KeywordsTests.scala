@@ -3,9 +3,9 @@
 package org.nlogo.api
 
 import org.nlogo.core.Keywords
-import org.scalatest.funsuite.AnyFunSuite
+import org.nlogo.util.AnyFunSuiteEx
 
-class KeywordsTests extends AnyFunSuite {
+class KeywordsTests extends AnyFunSuiteEx {
   import Keywords.isKeyword
   test("OneKeyword1") { assert(isKeyword("to")) }
   test("OneKeyword2") { assert(isKeyword("TO")) }

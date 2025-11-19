@@ -2,17 +2,19 @@
 
 package org.nlogo.util
 
-import org.scalatest.funsuite.AnyFunSuite
-import org.jmock.{ AbstractExpectations, Expectations, Mockery, Sequence }
-import org.jmock.imposters.ByteBuddyClassImposteriser
-import org.jmock.lib.concurrent.Synchroniser
-import org.jmock.junit5.JUnit5Mockery
-import scala.util.DynamicVariable
 import org.hamcrest.{ Description, BaseMatcher, Matcher }
+
+import org.jmock.{ AbstractExpectations, Expectations, Mockery, Sequence }
 import org.jmock.api.Action
-import scala.reflect.ClassTag
+import org.jmock.imposters.ByteBuddyClassImposteriser
+import org.jmock.junit5.JUnit5Mockery
+import org.jmock.lib.concurrent.Synchroniser
+
+import org.nlogo.util.AnyFunSuiteEx
 
 import scala.language.implicitConversions
+import scala.reflect.ClassTag
+import scala.util.DynamicVariable
 
 /**
   This is a little internal DSL to make JMock easier to use from Scala.
@@ -62,7 +64,7 @@ import scala.language.implicitConversions
 //    [info] what happened before this: nothing!
 // - ST 8/16/11
 
-trait MockSuite extends AnyFunSuite {
+trait MockSuite extends AnyFunSuiteEx {
 
   // this is the main test method provided by this trait.
   def mockTest(name: String)(f: => Unit): Unit = {

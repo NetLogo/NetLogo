@@ -2,9 +2,9 @@
 
 package org.nlogo.api
 
-import org.scalatest.funsuite.AnyFunSuite
+import org.nlogo.util.AnyFunSuiteEx
 
-class VectTests extends AnyFunSuite {
+class VectTests extends AnyFunSuiteEx {
   def v(x: Double, y: Double, z: Double) = new Vect(x, y, z)
   test("ToString") {
     assertResult("Vect(1.0,2.0,3.0)")(v(1, 2, 3).toString)

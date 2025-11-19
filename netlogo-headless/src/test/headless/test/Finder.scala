@@ -3,13 +3,12 @@
 package org.nlogo.headless.test
 
 import java.io.File
-import org.scalatest.funsuite.AnyFunSuite
-import org.scalatest.Tag
 
-import
-  org.nlogo.{ api, core },
-    api.FileIO.fileToString,
-    core.{ Model, Resource }
+import org.nlogo.api.FileIO.fileToString
+import org.nlogo.core.{ Model, Resource }
+import org.nlogo.util.AnyFunSuiteEx
+
+import org.scalatest.Tag
 
 /// top level entry points
 
@@ -52,7 +51,7 @@ abstract class ExtensionTests extends Finder {
 
 // don't use FixtureSuite here because we may need two fixtures, not just
 // one, and FixtureSuite assumes one - ST 8/7/13
-trait Finder extends AnyFunSuite  {
+trait Finder extends AnyFunSuiteEx  {
   def extraTags: Seq[Tag] = Seq()
   def files: Iterable[(String, String)]
   def suiteName(f: File): String =
@@ -141,7 +140,7 @@ trait Finder extends AnyFunSuite  {
   // didn't branch the extensions, so we still need to filter those out - ST 1/13/12
   def shouldRun(t: LanguageTest, mode: TestMode) =
     !t.testName.endsWith("_3D") && {
-      import api.Version.useGenerator
+      import org.nlogo.api.Version.useGenerator
       if (t.testName.startsWith("Generator"))
         useGenerator
       else if (t.testName.startsWith("NoGenerator"))
@@ -149,7 +148,7 @@ trait Finder extends AnyFunSuite  {
       else true
     }
   val StandardWidgets = {
-    import core.{ Plot, Pen, View }
+    import org.nlogo.core.{ Plot, Pen, View }
     List(
       View.square(5),
       Plot(display = Some("plot1"), pens = List(Pen(display = "pen1"), Pen(display = "pen2"))),

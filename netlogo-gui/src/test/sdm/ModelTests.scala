@@ -2,10 +2,10 @@
 
 package org.nlogo.sdm
 
-import org.scalatest.funsuite.AnyFunSuite
 import org.nlogo.api.DummyCompilerServices
+import org.nlogo.util.AnyFunSuiteEx
 
-class ModelTests extends AnyFunSuite {
+class ModelTests extends AnyFunSuiteEx {
   val model = {
     val testModel = new Model("ExponentialGrowth",1)
     val stock = new Stock("stock")

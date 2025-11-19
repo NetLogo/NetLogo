@@ -2,13 +2,14 @@
 
 package org.nlogo.util
 
-import org.scalatest.funsuite.AnyFunSuite
+import org.nlogo.util.AnyFunSuiteEx
+
 import org.scalatest.propspec.AnyPropSpec
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 
 // These are actually tests for the Utils class.
 // Not to be confused with utilities for tests (TestUtils)
-class UtilsTests extends AnyFunSuite {
+class UtilsTests extends AnyFunSuiteEx {
   test("getStackTrace") {
     val expected = "java.lang.Throwable\n" +
       " at org.nlogo.util.UtilsTests.testFun$proxy1$1(UtilsTests.scala:"

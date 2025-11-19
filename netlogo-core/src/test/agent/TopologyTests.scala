@@ -2,10 +2,11 @@
 
 package org.nlogo.agent
 
-import org.scalatest.funsuite.AnyFunSuite
+import org.nlogo.util.AnyFunSuiteEx
+
 import Topology.wrapPcor
 
-class TopologyTests extends AnyFunSuite {
+class TopologyTests extends AnyFunSuiteEx {
 
   def wrap(pos: Double, min: Double, max: Double): Double =
     Topology.wrap(pos, min, max)
