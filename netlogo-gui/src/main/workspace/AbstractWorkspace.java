@@ -44,6 +44,7 @@ public abstract class AbstractWorkspace
     EditorWorkspace,
     ExtendableWorkspace,
     org.nlogo.api.LogoThunkFactory,
+    org.nlogo.api.CompilerServices,
     org.nlogo.api.HubNetWorkspaceInterface,
     GlobalsIdentifier {
 

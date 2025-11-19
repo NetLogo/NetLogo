@@ -13,7 +13,7 @@ import api.AgentVariableNumbers._
 
 import scala.jdk.CollectionConverters.IterableHasAsJava
 
-class FakeWorld(state: State) extends api.World {
+class FakeWorld(state: State) extends api.WorldWithWorldRenderable {
 
   import World.Variables._
 
@@ -277,6 +277,9 @@ class FakeWorld(state: State) extends api.World {
   def getDimensions: core.WorldDimensions = unsupported
   def realloc(): Unit = unsupported
   def clearGlobals(): Unit = unsupported
+  def markPatchColorsClean(): Unit = unsupported
+  def markPatchColorsDirty(): Unit = unsupported
+  def patchColorsDirty: Boolean = unsupported
 
   private def unsupported = throw new UnsupportedOperationException
 }

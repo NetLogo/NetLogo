@@ -14,12 +14,8 @@ class TestCompileAll extends AnyFunSuiteEx with SlowTest {
 
   // Models whose path contains any of these strings will not be tested at all:
   def excludeModel(path: String): Boolean = {
-    val sep = java.io.File.separator
     if (Version.is3D) ! path.contains(makePath("3D")) // when in 3D, skip models that aren't in the 3D directory.
     else (path.endsWith(".nlogo3d") || path.endsWith(".nlogox3d") || // when not in 3D, skip 3D models
-      path.contains(s"${sep}vid${sep}") || // the vid extension loads javafx on startup, which we don't want in headless mode.
-      path.contains(s"${sep}r${sep}") || // the r extension relies on R, which is system-dependent and we don't want to depend on.
-      path.contains(s"${sep}time${sep}") || // the time extension includes some non-standard testing models that break here
       path.endsWith("5.x.nlogo") || // This is a LS model specifically for testing version problems.
       path.endsWith("LS-Widgets.nlogox")) // This is a LS model designed to test widgets with errors.
   }
