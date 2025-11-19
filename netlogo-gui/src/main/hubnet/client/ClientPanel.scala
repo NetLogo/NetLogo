@@ -142,89 +142,93 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
     }
   }
 
-  private def findWidget(name: String): Widget = {
-    clientGUI.getInterfaceComponents.collect { case w: Widget if w.displayName == name => w }.headOption.orNull
+  private def findWidget(name: String): Option[Widget] = {
+    clientGUI.getInterfaceComponents.collect { case w: Widget if w.displayName == name => w }.headOption
   }
 
   // this is the master method for handling plot messages. it should probably be redone.
   private def handlePlotControlMessage(value: Any, plotName:String): Unit = {
     org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
-    val plotWidget = findWidget(plotName).asInstanceOf[Option[PlotWidget]].get // horrible.
-    value match {
-      // This instance sets the current-plot-pen
-      case s:String =>
-        plotWidget.plot.currentPen=plotWidget.plot.getPen(s).getOrElse(plotWidget.plot.createPlotPen(s, true))
-      // This instance sets the plot-pen-color
-      case i: Int => plotWidget.plot.currentPen.get.color=(i)
-      // This instance sets plot-pen-up and down
-      case b: Boolean =>
-        plotWidget.plot.currentPen.get.isDown = b
-        plotWidget.makeDirty()
-        plotWidget.repaintIfNeeded()
-      // This instance is a point to plot
-      case p: HubNetPlotPoint =>
-        // points may or may not contain a specific X coordinate.
-        // however, this is only the case in narrowcast plotting
-        // plot mirroring always sends both coordinates even if
-        // auto-plot is on. ev 8/18/08
-        if (p.specifiesXCor) plotWidget.plot.currentPen.get.plot(p.xcor, p.ycor)
-        // if not, we'll just let the plot use the next one.
-        else plotWidget.plot.currentPen.get.plot(p.ycor)
-        plotWidget.makeDirty()
-        plotWidget.repaintIfNeeded()
-      // These instances do various plotting commands
-      case c: Char => {
-        try c match {
-          case 'c' =>
-            plotWidget.plot.clear()
+    findWidget(plotName) match {
+      case Some(plotWidget: PlotWidget) =>
+        value match {
+          // This instance sets the current-plot-pen
+          case s:String =>
+            plotWidget.plot.currentPen=plotWidget.plot.getPen(s).getOrElse(plotWidget.plot.createPlotPen(s, true))
+          // This instance sets the plot-pen-color
+          case i: Int => plotWidget.plot.currentPen.get.color=(i)
+          // This instance sets plot-pen-up and down
+          case b: Boolean =>
+            plotWidget.plot.currentPen.get.isDown = b
             plotWidget.makeDirty()
             plotWidget.repaintIfNeeded()
-          case 'r' =>
-            plotWidget.plot.currentPen.get.hardReset()
+          // This instance is a point to plot
+          case p: HubNetPlotPoint =>
+            // points may or may not contain a specific X coordinate.
+            // however, this is only the case in narrowcast plotting
+            // plot mirroring always sends both coordinates even if
+            // auto-plot is on. ev 8/18/08
+            if (p.specifiesXCor) plotWidget.plot.currentPen.get.plot(p.xcor, p.ycor)
+            // if not, we'll just let the plot use the next one.
+            else plotWidget.plot.currentPen.get.plot(p.ycor)
             plotWidget.makeDirty()
             plotWidget.repaintIfNeeded()
-          case 'p' =>
-            plotWidget.plot.currentPen.get.softReset()
+          // These instances do various plotting commands
+          case c: Char => {
+            try c match {
+              case 'c' =>
+                plotWidget.plot.clear()
+                plotWidget.makeDirty()
+                plotWidget.repaintIfNeeded()
+              case 'r' =>
+                plotWidget.plot.currentPen.get.hardReset()
+                plotWidget.makeDirty()
+                plotWidget.repaintIfNeeded()
+              case 'p' =>
+                plotWidget.plot.currentPen.get.softReset()
+                plotWidget.makeDirty()
+                plotWidget.repaintIfNeeded()
+              case 'n' =>
+                plotWidget.plot.state = plotWidget.plot.state.copy(autoPlotX = true, autoPlotY = true)
+              case 'f' =>
+                plotWidget.plot.state = plotWidget.plot.state.copy(autoPlotX = false, autoPlotY = false)
+              case 'x' =>
+                plotWidget.plot.state = plotWidget.plot.state.copy(autoPlotX = true)
+              case 'z' =>
+                plotWidget.plot.state = plotWidget.plot.state.copy(autoPlotX = false)
+              case 'y' =>
+                plotWidget.plot.state = plotWidget.plot.state.copy(autoPlotY = true)
+              case 'w' =>
+                plotWidget.plot.state = plotWidget.plot.state.copy(autoPlotY = false)
+              case _ => throw new IllegalStateException()
+            } catch {case ex: RuntimeException => org.nlogo.api.Exceptions.handle(ex)}
+          }
+          // This instance changes the plot-pen-mode
+          case s:Short =>
+            plotWidget.plot.currentPen.get.mode = s.toInt
             plotWidget.makeDirty()
             plotWidget.repaintIfNeeded()
-          case 'n' =>
-            plotWidget.plot.state = plotWidget.plot.state.copy(autoPlotX = true, autoPlotY = true)
-          case 'f' =>
-            plotWidget.plot.state = plotWidget.plot.state.copy(autoPlotX = false, autoPlotY = false)
-          case 'x' =>
-            plotWidget.plot.state = plotWidget.plot.state.copy(autoPlotX = true)
-          case 'z' =>
-            plotWidget.plot.state = plotWidget.plot.state.copy(autoPlotX = false)
-          case 'y' =>
-            plotWidget.plot.state = plotWidget.plot.state.copy(autoPlotY = true)
-          case 'w' =>
-            plotWidget.plot.state = plotWidget.plot.state.copy(autoPlotY = false)
-          case _ => throw new IllegalStateException()
-        } catch {case ex: RuntimeException => org.nlogo.api.Exceptions.handle(ex)}
-      }
-      // This instance changes the plot-pen-mode
-      case s:Short =>
-        plotWidget.plot.currentPen.get.mode = s.toInt
-        plotWidget.makeDirty()
-        plotWidget.repaintIfNeeded()
-      // This instance changes the plot-pen-interval
-      case d:Double => plotWidget.plot.currentPen.get.interval = d
-      // This instance is used for anything that has a lot of data
-      case list: List[?] => list(0) match {
-        case 'x' =>
-          val min: Double = list(1).asInstanceOf[Double]
-          val max: Double = list(2).asInstanceOf[Double]
-          plotWidget.plot.state = plotWidget.plot.state.copy(xMin = min, xMax = max)
-          plotWidget.makeDirty()
-          plotWidget.repaintIfNeeded()
-        case _ =>
-          val min: Double = list(1).asInstanceOf[Double]
-          val max: Double = list(2).asInstanceOf[Double]
-          plotWidget.plot.state = plotWidget.plot.state.copy(yMin = min, yMax = max)
-          plotWidget.makeDirty()
-          plotWidget.repaintIfNeeded()
-      }
-      case _ => throw new Exception(s"Unexpected message: $value")
+          // This instance changes the plot-pen-interval
+          case d:Double => plotWidget.plot.currentPen.get.interval = d
+          // This instance is used for anything that has a lot of data
+          case list: List[?] => list(0) match {
+            case 'x' =>
+              val min: Double = list(1).asInstanceOf[Double]
+              val max: Double = list(2).asInstanceOf[Double]
+              plotWidget.plot.state = plotWidget.plot.state.copy(xMin = min, xMax = max)
+              plotWidget.makeDirty()
+              plotWidget.repaintIfNeeded()
+            case _ =>
+              val min: Double = list(1).asInstanceOf[Double]
+              val max: Double = list(2).asInstanceOf[Double]
+              plotWidget.plot.state = plotWidget.plot.state.copy(yMin = min, yMax = max)
+              plotWidget.makeDirty()
+              plotWidget.repaintIfNeeded()
+          }
+          case _ => throw new Exception(s"Unexpected message: $value")
+        }
+
+      case _ =>
     }
   }
 
