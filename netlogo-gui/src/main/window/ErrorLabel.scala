@@ -17,6 +17,7 @@ class ErrorLabel extends JPanel {
     setBorder(null)
     setContentType("text/html")
     setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR))
+    setCaretColor(InterfaceColors.Transparent)
 
     override def getMaximumSize: Dimension =
       new Dimension(ErrorLabel.this.getWidth, super.getMaximumSize.height)
