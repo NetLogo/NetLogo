@@ -64,11 +64,7 @@ class ConnectionManager(val connection: ConnectionInterface,
   protected var running = false
   val clients = collection.mutable.HashMap[String, ServerSideConnection]()
   val plotManager = new ServerPlotManager(workspace, this,
-    // these two arguments are by name params,
-    // as they need be evaluated each time.
-    // i wanted to avoid giving the entire plot manager to ServerPlotManager
-    // JC - 12/20/10
-    workspace.plotManager.plots, workspace.plotManager.currentPlot.get) {
+    () => workspace.plotManager.plots, () => workspace.plotManager.currentPlot.get) {
     workspace.plotManager.listener = this
   }
 
