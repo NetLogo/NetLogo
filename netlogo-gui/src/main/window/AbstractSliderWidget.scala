@@ -157,10 +157,14 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
           slider.setValue(slider.getValue + 1)
 
           setValueFromSlider()
+
+          e.consume()
         } else if (e.getKeyCode == KeyEvent.VK_DOWN) {
           slider.setValue(slider.getValue - 1)
 
           setValueFromSlider()
+
+          e.consume()
         }
       }
     })
