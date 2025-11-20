@@ -11,18 +11,18 @@ import org.nlogo.plot.{Plot, PlotListener}
 // We really ought to only send bunched diffs the way we do with view updates.
 // - JOSH COUGH 8/21/10, 12/28/10
 class ServerPlotManager(workspace: AbstractWorkspaceScala, connectionManager: ConnectionManager,
-                        plots: => List[Plot], currentPlot: => Plot) extends PlotListener {
+                        getPlots: () => List[Plot], getCurrentPlot: () => Plot) extends PlotListener {
   private val narrowcastPlots = new collection.mutable.ListBuffer[String]()
 
   // just add listeners to the plots that we might be mirroring
   // make sure to update if the client interface changes ev 1/16/07
   def initPlotListeners(): Unit = {
-    for(plot <- plots){
+    for (plot <- getPlots()) {
       if (isBroadcast(plot.name)) plot.setPlotListener(this) else plot.removePlotListener()
     }
   }
 
-  private def broadcastToClients(a: Any): Unit = { broadcastToClients(a, currentPlot.name) }
+  private def broadcastToClients(a: Any): Unit = { broadcastToClients(a, getCurrentPlot().name) }
   private def broadcastToClients(a: Any, plotName: String): Unit = {
     if (broadcastEnabled && isBroadcast(plotName)) {
       connectionManager.broadcastPlotControl(a,plotName)
@@ -33,8 +33,8 @@ class ServerPlotManager(workspace: AbstractWorkspaceScala, connectionManager: Co
   }
 
   private def sendToClient(clientId: String, a: Any): Unit = {
-    if (workspace.hubNetRunning && isNarrowcast(currentPlot.name)) {
-      connectionManager.sendPlotControl(clientId, a, currentPlot.name)
+    if (workspace.hubNetRunning && isNarrowcast(getCurrentPlot().name)) {
+      connectionManager.sendPlotControl(clientId, a, getCurrentPlot().name)
     }
   }
 
@@ -45,13 +45,13 @@ class ServerPlotManager(workspace: AbstractWorkspaceScala, connectionManager: Co
   // called when plot mirroring is enabled to send all existing data
   // to all existing clients
   def broadcastPlots(): Unit = {
-    for(p<-plots; if (isBroadcast(p.name))) connectionManager.broadcast(p)
+    for (p <- getPlots(); if (isBroadcast(p.name))) connectionManager.broadcast(p)
   }
 
   // called when a new client logs in and needs to be brought up to date
   def sendPlots(client:String): Unit = {
     if (broadcastEnabled)
-      for(p<-plots; if (isBroadcast(p.name))) {
+      for (p <- getPlots(); if (isBroadcast(p.name))) {
         connectionManager.sendPlot(client, p)
       }
   }
@@ -60,7 +60,7 @@ class ServerPlotManager(workspace: AbstractWorkspaceScala, connectionManager: Co
    * designates a particular plot as narrow-cast (by name).
    * @return true if the given plot exists, false otherwise.
    */
-  def addNarrowcastPlot(plotName: String) = plots.find(_.name == plotName) match {
+  def addNarrowcastPlot(plotName: String) = getPlots().find(_.name == plotName) match {
     case Some(plot) =>
       narrowcastPlots += plotName
       plot.removePlotListener() // don't need a listener on narrowcast plots
@@ -104,7 +104,7 @@ class ServerPlotManager(workspace: AbstractWorkspaceScala, connectionManager: Co
   // Sends a java.lang.Double, which is the current plot-pen-interval
   def narrowcastSetInterval(clientId: String, interval: Double): Unit = {sendToClient(clientId, interval.toDouble)}
   def narrowcastSetHistogramNumBars(clientId: String, num: Int): Unit = {
-    narrowcastSetInterval(clientId, (currentPlot.xMax - currentPlot.xMin) / num)
+    narrowcastSetInterval(clientId, (getCurrentPlot().xMax - getCurrentPlot().xMin) / num)
   }
   // Sends the java.lang.Character 'r' or 'p', indicating reset-plot-pen and whether to resetPoints
   def resetPen(resetPoints: Boolean): Unit = {if (resetPoints) broadcastToClients('r') else broadcastToClients('p')}
@@ -112,7 +112,7 @@ class ServerPlotManager(workspace: AbstractWorkspaceScala, connectionManager: Co
   def penDown(penDown: Boolean): Unit = {broadcastToClients(penDown)}
   // Sends as a plot-pen-interval
   // TODO: I dont think this really works... Its ignoring the argument! - JC 8/21/10
-  def setHistogramNumBars(num: Int): Unit = {for(pen <- currentPlot.currentPen) setInterval(pen.interval)}
+  def setHistogramNumBars(num: Int): Unit = { for (pen <- getCurrentPlot().currentPen) setInterval(pen.interval) }
   // TODO: Note - send strings to mean pen name, ints for color, doubles for interval, boolean for pen down...BAD!
   // Sends a java.lang.String, which is the name of the current plot pen
   def currentPen(penName: String): Unit = {broadcastToClients(penName)}
@@ -121,8 +121,8 @@ class ServerPlotManager(workspace: AbstractWorkspaceScala, connectionManager: Co
   def setInterval(interval: Double): Unit = {broadcastToClients(interval)}
   def xRange(min: Double, max: Double): Unit = {broadcastToClients(List('x', min, max))}
   def yRange(min: Double, max: Double): Unit = {broadcastToClients(List('y', min, max))}
-  def xMin(min: Double): Unit = {xRange(min, currentPlot.xMax)}
-  def xMax(max: Double): Unit = {xRange(currentPlot.xMin, max)}
-  def yMin(min: Double): Unit = {yRange(min, currentPlot.yMax)}
-  def yMax(max: Double): Unit = {yRange(currentPlot.yMin, max)}
+  def xMin(min: Double): Unit = { xRange(min, getCurrentPlot().xMax) }
+  def xMax(max: Double): Unit = { xRange(getCurrentPlot().xMin, max) }
+  def yMin(min: Double): Unit = { yRange(min, getCurrentPlot().yMax) }
+  def yMax(max: Double): Unit = { yRange(getCurrentPlot().yMin, max) }
 }
