@@ -2,15 +2,10 @@
 
 package org.nlogo.plot
 
-import
-  org.nlogo.core.{ Color, ColorConstants },
-    ColorConstants.White
+import java.io.{ IOException, ObjectInputStream, ObjectOutputStream, Serializable => JSerializable }
 
-import
-  org.nlogo.api.{ PlotAction, PlotInterface, PlotPenInterface, PlotState }
-
-import
-  java.io.{ Serializable => JSerializable }
+import org.nlogo.api.{ PlotAction, PlotInterface, PlotPenInterface, PlotState }
+import org.nlogo.core.{ Color, ColorConstants }, ColorConstants.White
 
 // normally, to create a new Plot, you have to go through PlotManager.newPlot
 // this makes sense because the PlotManager then controls compilation
@@ -286,6 +281,38 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with JSerializ
     }
 
     histogram = None
+  }
+
+  @throws(classOf[IOException])
+  private def writeObject(out: ObjectOutputStream): Unit = {
+    out.writeObject(name)
+    out.writeBoolean(autoPlotX)
+    out.writeBoolean(autoPlotY)
+    out.writeDouble(xMin)
+    out.writeDouble(xMax)
+    out.writeDouble(yMin)
+    out.writeDouble(yMax)
+    out.writeObject(pens)
+    out.writeObject(currentPen.map(_.name))
+  }
+
+  @throws(classOf[IOException])
+  @throws(classOf[ClassNotFoundException])
+  private def readObject(in: ObjectInputStream): Unit = {
+    name = in.readObject().toString
+    val autoPlotX = in.readBoolean
+    val autoPlotY = in.readBoolean
+    val xMin = in.readDouble
+    val xMax = in.readDouble
+    val yMin = in.readDouble
+    val yMax = in.readDouble
+    state = PlotState(autoPlotX, autoPlotY, xMin, xMax, yMin, yMax)
+    plotListener = None
+    pens = in.readObject.asInstanceOf[List[PlotPen]]
+    val currentPenName = in.readObject.asInstanceOf[Option[String]]
+    currentPenName.foreach{ name => _currentPen = pens.find(_.name == name) }
+    histogram = None
+    pens.foreach(_.plot = this)
   }
 }
 
