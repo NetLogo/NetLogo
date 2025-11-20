@@ -35,27 +35,31 @@ private class RoboClientPanel(editorFactory: EditorFactory, errorHandler: ErrorH
     var running = true
 
     override def run(): Unit = {
-      val components = clientGUI.getInterfaceComponents
-      while (running) {
-        val comp = components(r.nextInt(components.length))
-        if (comp.isInstanceOf[Widget])
-          if (comp.isInstanceOf[ClientView]) {
-            sendRoboViewMessage()
-            Thread.sleep(waitTime)
-          }
-          else if (comp.isInstanceOf[SliderWidget] || comp.isInstanceOf[ButtonWidget] || comp.isInstanceOf[SwitchWidget]) {
-            getAndSendRoboWidgetMessage(comp.asInstanceOf[Widget])
-            Thread.sleep(waitTime)
-          }
+      clientGUI.foreach { gui =>
+        val components = gui.getInterfaceComponents
+        while (running) {
+          val comp = components(r.nextInt(components.length))
+          if (comp.isInstanceOf[Widget])
+            if (comp.isInstanceOf[ClientView]) {
+              sendRoboViewMessage()
+              Thread.sleep(waitTime)
+            }
+            else if (comp.isInstanceOf[SliderWidget] || comp.isInstanceOf[ButtonWidget] || comp.isInstanceOf[SwitchWidget]) {
+              getAndSendRoboWidgetMessage(comp.asInstanceOf[Widget])
+              Thread.sleep(waitTime)
+            }
+        }
       }
     }
 
     @throws(classOf[InterruptedException])
-    private def sendRoboViewMessage(): Unit ={
+    private def sendRoboViewMessage(): Unit = {
       def randomCor(min:Double, max:Double) = min + r.nextDouble() * (max - min) - 0.5
-      invokeAndWait(() =>
-        sendMouseMessage(randomCor(viewWidget.world.minPxcor, viewWidget.world.maxPxcor),
-                          randomCor(viewWidget.world.minPycor, viewWidget.world.maxPycor), true))
+      viewWidget.foreach { view =>
+        invokeAndWait(() =>
+          sendMouseMessage(randomCor(view.world.minPxcor, view.world.maxPxcor),
+                           randomCor(view.world.minPycor, view.world.maxPycor), true))
+      }
     }
 
     /**

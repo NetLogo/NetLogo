@@ -38,11 +38,12 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
   extends JPanel(new BorderLayout) with Transparent with AddJobEvent.Handler with ExportPlotEvent.Handler
   with InterfaceGlobalEvent.Handler with AddSliderConstraintEvent.Handler with ThemeSync {
 
-  var clientGUI:ClientGUI = null
-  var viewWidget:ClientView = null
+  protected var clientGUI: Option[ClientGUI] = None
+  protected var viewWidget: Option[ClientView] = None
+
   private val plotManager = new PlotManager(new DummyLogoThunkFactory(), new MersenneTwisterFast())
 
-  def setDisplayOn(on: Boolean): Unit = { if (viewWidget != null) viewWidget.setDisplayOn(on) }
+  def setDisplayOn(on: Boolean): Unit = { viewWidget.foreach(_.setDisplayOn(on)) }
 
   def sendMouseMessage(mouseXCor: Double, mouseYCor: Double, down: Boolean): Unit = {
     org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
@@ -51,12 +52,14 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
   }
 
   def handlePlotUpdate(msg: PlotInterface): Unit = {
-    for (pw <- clientGUI.getInterfaceComponents.collect {case pw: PlotWidget => pw}) {
-      if (pw.plot.name == msg.name) {
-        pw.plot.clear()
-        updatePlot(msg.asInstanceOf[org.nlogo.plot.Plot], pw.plot)
-        pw.makeDirty()
-        pw.repaintIfNeeded()
+    clientGUI.foreach { gui =>
+      for (pw <- gui.getInterfaceComponents.collect {case pw: PlotWidget => pw}) {
+        if (pw.plot.name == msg.name) {
+          pw.plot.clear()
+          updatePlot(msg.asInstanceOf[org.nlogo.plot.Plot], pw.plot)
+          pw.makeDirty()
+          pw.repaintIfNeeded()
+        }
       }
     }
   }
@@ -121,29 +124,35 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
   private def handleWidgetControlMessage(value: AnyRef, widgetName: String): Unit = {
     org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
     if (widgetName == "VIEW") value match {
-      case t: HubNetTurtleStamp => viewWidget.renderer.stamp(t)
-      case ls: HubNetLinkStamp => viewWidget.renderer.stamp(ls)
-      case l: HubNetLine => viewWidget.renderer.drawLine(l)
-      case _ => viewWidget.renderer.clearDrawing()
+      case t: HubNetTurtleStamp => viewWidget.foreach(_.renderer.stamp(t))
+      case ls: HubNetLinkStamp => viewWidget.foreach(_.renderer.stamp(ls))
+      case l: HubNetLine => viewWidget.foreach(_.renderer.drawLine(l))
+      case _ => viewWidget.foreach(_.renderer.clearDrawing())
     }
     else if (widgetName=="ALL PLOTS") {
       plotManager.clearAll()
-      for (pw <- clientGUI.getInterfaceComponents.collect { case pw: PlotWidget => pw }) {
-        pw.makeDirty()
-        pw.repaintIfNeeded()
+      clientGUI.foreach { gui =>
+        for (pw <- gui.getInterfaceComponents.collect { case pw: PlotWidget => pw }) {
+          pw.makeDirty()
+          pw.repaintIfNeeded()
+        }
       }
     }
-    // `foreach` is the reasonable choice here; a Plot for a Monitor will share the same
-    // name as the Monitor and can intercept the search if we use `find`! -- JAB (5/9/12)
-    clientGUI.getInterfaceComponents collect { case w: Widget if w.displayName == widgetName => w } foreach {
-      case i: InterfaceGlobalWidget => i.valueObject(value)
-      case m: MonitorWidget         => m.value(value)
-      case _                        => // Ignore
+    clientGUI.foreach { gui =>
+      // `foreach` is the reasonable choice here; a Plot for a Monitor will share the same
+      // name as the Monitor and can intercept the search if we use `find`! -- JAB (5/9/12)
+      gui.getInterfaceComponents collect { case w: Widget if w.displayName == widgetName => w } foreach {
+        case i: InterfaceGlobalWidget => i.valueObject(value)
+        case m: MonitorWidget         => m.value(value)
+        case _                        => // Ignore
+      }
     }
   }
 
   private def findWidget(name: String): Option[Widget] = {
-    clientGUI.getInterfaceComponents.collect { case w: Widget if w.displayName == name => w }.headOption
+    clientGUI.flatMap { gui =>
+      gui.getInterfaceComponents.collect { case w: Widget if w.displayName == name => w }.headOption
+    }
   }
 
   // this is the master method for handling plot messages. it should probably be redone.
@@ -239,12 +248,14 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
   def completeLogin(handshake: HandshakeFromServer): Unit = {
     errorHandler.completeLogin()
     activityName = handshake.activityName
-    if (clientGUI != null) remove(clientGUI)
+    clientGUI.foreach(remove)
     plotManager.forgetAll()
-    viewWidget = new ClientView(this)
-    clientGUI = new ClientGUI(editorFactory, viewWidget, plotManager, compiler, extensionManager)
-    add(clientGUI, java.awt.BorderLayout.CENTER)
-    clientGUI.setStatus(userid, activityName, hostip, port)
+    val view = new ClientView(this)
+    viewWidget = Some(view)
+    val gui = new ClientGUI(editorFactory, view, plotManager, compiler, extensionManager)
+    clientGUI = Some(gui)
+    add(gui, java.awt.BorderLayout.CENTER)
+    gui.setStatus(userid, activityName, hostip, port)
     val clientInterface = handshake.clientInterface match {
       case c: ComputerInterface => c
       case _                    => throw new IllegalStateException()
@@ -253,15 +264,15 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
     new LoadWidgetsEvent(widgets, false).raise(this)
     // so that constrained widgets can initialize themselves -- CLB
     new AfterLoadEvent().raise(this)
-    clientGUI.setChoices(clientInterface.chooserChoices.toMap)
-    viewWidget.renderer.replaceTurtleShapes(clientInterface.turtleShapes)
-    viewWidget.renderer.replaceLinkShapes(clientInterface.linkShapes)
+    gui.setChoices(clientInterface.chooserChoices.toMap)
+    view.renderer.replaceTurtleShapes(clientInterface.turtleShapes)
+    view.renderer.replaceLinkShapes(clientInterface.linkShapes)
     sendDataAndWait(EnterMessage)
     connected.set(true)
     invokeLater(() => {
       getFrame(ClientPanel.this).pack()
       // in robo fixture, this generated exceptions now and again
-      clientGUI.requestFocus()
+      gui.requestFocus()
     })
   }
 
@@ -272,19 +283,20 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
       case ExitMessage(reason) => disconnect(reason)
       case WidgetControl(content, tag) => handleWidgetControlMessage(content, tag)
       case DisableView => setDisplayOn(false)
-      case ViewUpdate(worldData) => viewWidget.updateDisplay(worldData)
+      case ViewUpdate(worldData) => viewWidget.foreach(_.updateDisplay(worldData))
       case PlotControl(content, plotName) => handlePlotControlMessage(content, plotName)
       case PlotUpdate(plot) => handlePlotUpdate(plot)
-      case OverrideMessage(data, clear) => viewWidget.handleOverrideList(data.asInstanceOf[OverrideList], clear)
-      case ClearOverrideMessage => viewWidget.clearOverrides()
-      case AgentPerspectiveMessage(bytes) => viewWidget.handleAgentPerspective(bytes)
+      case OverrideMessage(data, clear) =>
+        viewWidget.foreach(_.handleOverrideList(data.asInstanceOf[OverrideList], clear))
+      case ClearOverrideMessage => viewWidget.foreach(_.clearOverrides())
+      case AgentPerspectiveMessage(bytes) => viewWidget.foreach(_.handleAgentPerspective(bytes))
       case Text(content, messageType) => messageType match {
-        case Text.MessageType.TEXT => clientGUI.addMessage(content.toString)
+        case Text.MessageType.TEXT => clientGUI.foreach(_.addMessage(content.toString))
         case Text.MessageType.USER =>
           new OptionPane(getFrame(this), I18N.gui.get("common.messages.userMessage"), content.toString,
                          Seq(I18N.gui.get("common.buttons.ok"), I18N.gui.get("common.buttons.halt")),
                          OptionPane.Icons.Info)
-        case Text.MessageType.CLEAR => clientGUI.clearMessages()
+        case Text.MessageType.CLEAR => clientGUI.foreach(_.clearMessages())
       }
       case _ => throw new Exception(s"Unexpected message: $message")
     }
@@ -445,7 +457,6 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
   }
 
   override def syncTheme(): Unit = {
-    if (clientGUI != null)
-      clientGUI.syncTheme()
+    clientGUI.foreach(_.syncTheme())
   }
 }
