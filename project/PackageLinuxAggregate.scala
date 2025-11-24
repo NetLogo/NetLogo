@@ -50,6 +50,8 @@ object PackageLinuxAggregate {
     val versionedAppImageDir = appImageDir.getParentFile / s"${appImageDir.getName} $version"
     Files.move(appImageDir.toPath, versionedAppImageDir.toPath)
 
+    NetLogoPackaging.generateChecksums(log, versionedAppImageDir, webDir.getParentFile)
+
     log.info("Creating the compressed archive file")
     val archiveName  = s"NetLogo-$version-$arch.tgz"
     val tarBuildDir  = appImageDir.getParentFile
