@@ -110,7 +110,10 @@ Buttons perform actions when clicked.  They have a rich blue background color.
 
 Slider, switch, chooser and (text) input widgets allow setting a global
 variable from the Interface tab.  They are colored in shades of blue (lighter
-for the Light Theme, darker for the Dark Theme).
+for the Light Theme, darker for the Dark Theme).  Any NetLogo code that sets
+a global variable to a value that could not be chosen with the corresponding
+widget will generate a runtime error.  The one exception to this is that sliders
+can be set to any number, regardless of the slider's min, max, and increment.
 
 Monitors, plots, and output widgets display information in the Interface tab
 in response to running NetLogo code.  Monitors are output widgets that display
