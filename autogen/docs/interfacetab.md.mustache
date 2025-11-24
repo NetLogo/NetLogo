@@ -106,15 +106,22 @@ chart below.
 
 ## Charts: Interface Widgets
 
-Buttons perform actions when clicked. The input widgets set values for
-global variables. The input widgets are: sliders,
-switches, choosers and inputs. Monitors and plots are two output widgets
-that display a global variable value. There is also the output area which
-can be written to by the model as it runs. Notes are used to add labels, instructions and
-other information to the interface. Buttons are blue. Input widgets are a
-shades of blue (lighter for the Light Theme, darker for the Dark Theme).
-Output widgets are shades of grey. The background and font colors for notes
-are user settable.
+Buttons perform actions when clicked.  They have a rich blue background color.
+
+Slider, switch, chooser and (text) input widgets allow setting a global
+variable from the Interface tab.  They are colored in shades of blue (lighter
+for the Light Theme, darker for the Dark Theme).
+
+Monitors, plots, and output widgets display information in the Interface tab
+in response to running NetLogo code.  Monitors are output widgets that display
+the code results as text, while plots are output widgets that display the code
+results as lines, bars and/or points.  Output area widget can be written to
+with the primitives that start with `output-`.  Output widgets are colored
+in shades of gray.
+
+Notes are used to add labels, instructions and other information to the
+interface.  Their background and font colors can be customized by editing the
+widget.
 
 ### Widget Appearance: Light and Dark Themes
 
