@@ -1,16 +1,24 @@
+import com.dynatrace.hash4j.hashing.Hashing
+
+import java.nio.file.{ Files, Path }
+import java.nio.file.attribute.PosixFilePermission
+
 import sbt._
 import sbt.complete.Parser, Parser._
-import Keys.{ baseDirectory, buildStructure, dependencyClasspath, packageBin, state, streams, target, version }
+
+import scala.collection.JavaConverters.asScalaIteratorConverter
+import scala.sys.process.Process
+
+import ujson.{ Obj, Str }
+
 import ChecksumsAndPreviews.allPreviews
 import Docs.{ allDocs, docsDest }
 import Extensions.{ extensions, extensionRoot }
+import Keys.{ baseDirectory, buildStructure, dependencyClasspath, packageBin, state, streams, target, version }
 import ModelsLibrary.{ modelsDirectory, modelIndex }
 import NativeLibs.nativeLibs
 import NetLogoBuild.{ all, buildDate, year }
 import Running.makeMainTask
-import java.nio.file.Paths
-import java.nio.file.Files
-import scala.sys.process.Process
 
 object NetLogoPackaging {
 
@@ -595,6 +603,42 @@ object NetLogoPackaging {
       None
     else
       Some(m.map(t => t._1 ^^^ t._2).reduceLeft(_ | _))
+  }
+
+  // generate checksums for files in the unpackaged build, used by the installer application
+  // to verify build integrity and check for updates (Isaac B 11/21/25)
+  def generateChecksums(log: Logger, version: String, arch: String, sourceDir: Path, targetDir: Path): Unit = {
+    def listFilesRecursive(file: File): Array[File] =
+      Option(file.listFiles).getOrElse(Array[File]()).flatMap(file => file +: listFilesRecursive(file))
+
+    log.info("Generating build checksums...")
+
+    val checksums: Map[Path, Long] = Files.walk(sourceDir).iterator.asScala.filterNot(Files.isDirectory(_)).map { path =>
+      sourceDir.relativize(path) -> Hashing.xxh3_64.hashBytesToLong(Files.readAllBytes(path))
+    }.toMap
+
+    val rootChecksum: Long = checksums.toSeq.sortBy(_._1.toString.replace("\\", "/"))
+                                      .foldLeft(Hashing.xxh3_64.hashStream) {
+      case (stream, (_, value)) =>
+        stream.putLong(value)
+    }.getAsLong
+
+    log.info("Writing build checksums...")
+
+    val windows: Boolean = System.getProperty("os.name").toLowerCase.startsWith("win")
+
+    Files.writeString(targetDir.resolve(s"$version-$arch.json"), ujson.write(Obj(
+      "root" -> rootChecksum.toString,
+      "checksums" -> checksums.map {
+        case (path, checksum) =>
+          path.toString.replace("\\", "/") -> Str(checksum.toString)
+      }.toSeq.sortBy(_._1),
+      "executable" -> checksums.keys.filter { path =>
+        !windows && Files.getPosixFilePermissions(targetDir.resolve(path)).contains(PosixFilePermission.OWNER_EXECUTE)
+      }.map(_.toString.replace("\\", "/")).toSeq.sorted
+    ), 2) + "\n")
+
+    Files.writeString(sourceDir.resolve(".checksum"), s"$rootChecksum\n")
   }
 
   object RunProcess {

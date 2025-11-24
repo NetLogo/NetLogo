@@ -232,6 +232,8 @@ object PackageMacAggregate {
     log.info("Signing standalone libs in bundles and natives.")
     runCodeSign(appSigningOptions, orderedFilesToBeSigned.map(_.toString) ++ extraLibsToSign, "app bundles")
 
+    NetLogoPackaging.generateChecksums(log, version, arch, bundleDir.toPath, webDir.getParentFile.toPath)
+
     log.info(s"Creating $dmgName")
     val dmgPath = Paths.get(dmgName)
     Files.deleteIfExists(dmgPath)
