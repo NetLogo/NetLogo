@@ -154,6 +154,10 @@ class GUIHubNetManager(workspace: GUIWorkspace,
     }
   }
 
+  override def syncMirroring(): Unit = {
+    Option(controlCenter).foreach(_.syncMirroring())
+  }
+
   private def getNameAndSelectedNetwork(): (String, Option[(NetworkInterface, InetAddress)]) = {
     val networkChoices = NetworkUtils.findViableInterfaces
     val preferredNetworkInterface = NetworkUtils.recallNetworkInterface

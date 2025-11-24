@@ -63,6 +63,11 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
     }
   }
 
+  def syncMirroring(): Unit = {
+    setViewMirroring(HubNetUtils.viewMirroring)
+    setPlotMirroring(HubNetUtils.plotMirroring)
+  }
+
   // Kicks a client and notifies it.
   def kickClient(clientId: String): Unit = {
     EventQueue.mustBeEventDispatchThread()

@@ -65,6 +65,7 @@ trait HubNetInterface extends ViewInterface with ModelSections.ModelSaveable {
   def kickAll(): Unit
   def setViewMirroring(on:Boolean): Unit
   def setPlotMirroring(on:Boolean): Unit
+  def syncMirroring(): Unit
 
   /// clients
   @throws(classOf[LogoException])

@@ -668,6 +668,8 @@ abstract class GUIWorkspace(world: World, kioskLevel: GUIWorkspace.KioskLevel, f
     if (world.program.dialect.is3D)
       open3DView()
 
+    hubNetManager.foreach(_.syncMirroring())
+
     try {
       evaluateCommands(new SimpleJobOwner("startup", world.mainRNG, AgentKind.Observer),
                        "without-interruption [ startup ]", false)
