@@ -1,16 +1,20 @@
+import com.dynatrace.hash4j.hashing.Hashing
+
+import java.nio.file.{ Files, Paths }
+
 import sbt._
 import sbt.complete.Parser, Parser._
-import Keys.{ baseDirectory, buildStructure, dependencyClasspath, packageBin, state, streams, target }
+
+import scala.sys.process.Process
+
 import ChecksumsAndPreviews.allPreviews
 import Docs.{ allDocs, docsRoot, extensionDocs, htmlDocs, manualPDF }
 import Extensions.{ extensions, extensionRoot }
+import Keys.{ baseDirectory, buildStructure, dependencyClasspath, packageBin, state, streams, target }
 import ModelsLibrary.{ modelsDirectory, modelIndex }
 import NativeLibs.nativeLibs
 import NetLogoBuild.{ all, buildDate, marketingVersion, numericMarketingVersion, year }
 import Running.makeMainTask
-import java.nio.file.Paths
-import java.nio.file.Files
-import scala.sys.process.Process
 
 object NetLogoPackaging {
 
@@ -569,6 +573,52 @@ object NetLogoPackaging {
       None
     else
       Some(m.map(t => t._1 ^^^ t._2).reduceLeft(_ | _))
+  }
+
+  // generate checksums for files in the unpackaged build, used by the installer application
+  // to verify build integrity and check for updates (Isaac B 11/21/25)
+  def generateChecksums(log: Logger, sourceDir: File, targetDir: File): Unit = {
+    log.info("Generating build checksums.")
+
+    def listFilesRecursive(file: File): Array[File] =
+      Option(file.listFiles).getOrElse(Array[File]()).flatMap(file => file +: listFilesRecursive(file))
+
+    val checksums: Map[File, Long] = listFilesRecursive(sourceDir).filterNot(_.isDirectory).map { file =>
+      (file -> Hashing.xxh3_64.hashBytesToLong(Files.readAllBytes(file.toPath)))
+    }.toMap
+
+    log.info("Writing build checksums.")
+
+    val rootChecksum = checksums.values.toSeq.sortBy(_.toString).foldLeft(Hashing.xxh3_64.hashStream) {
+      case (stream, value) =>
+        stream.putLong(value)
+    }.getAsLong
+
+    Files.writeString((sourceDir / ".checksum").toPath, rootChecksum.toString + "\n")
+
+    val checksumDir = targetDir / "checksums"
+
+    IO.delete(checksumDir)
+
+    checksumDir.mkdirs()
+
+    Files.writeString((checksumDir / ".checksum").toPath, rootChecksum.toString + "\n")
+
+    checksums.foreach {
+      case (file, checksum) =>
+        val dest = checksumDir.toPath.resolve(sourceDir.toPath.relativize(file.toPath))
+
+        dest.toFile.getParentFile.mkdirs()
+
+        Files.copy(file.toPath, dest)
+        Files.writeString(dest.resolveSibling(dest.getFileName.toString + ".checksum"), checksum.toString + "\n")
+    }
+
+    log.info("Compressing build checksums.")
+
+    Process(Seq("tar", "-czf", "checksums.zip", "checksums"), targetDir).!
+
+    IO.delete(checksumDir)
   }
 
   object RunProcess {

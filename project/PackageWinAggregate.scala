@@ -227,6 +227,8 @@ object PackageWinAggregate {
         launcherExes, platformVars,
         (msiBuildDir / "NetLogoApp.wxs").toPath)
 
+    NetLogoPackaging.generateChecksums(log, appImageDir, webDir.getParentFile)
+
     log.info("Running WiX MSI packager")
     val msiName = s"NetLogo-$version-$arch.msi"
     val buildCommand = Seq[String](
