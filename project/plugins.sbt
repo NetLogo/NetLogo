@@ -35,6 +35,8 @@ libraryDependencies ++= Seq(
 , "org.apache.commons"                %  "commons-lang3"         % "3.13.0"
 , "commons-io"                        %  "commons-io"            % "2.14.0"
 , "com.thesamet.scalapb"              %% "compilerplugin"        % "0.11.17"
+, "com.softwaremill.sttp.client4"     %% "upickle"               % "4.0.9"
+, "com.dynatrace.hash4j"              %  "hash4j"                % "0.28.0"
 )
 
 {
