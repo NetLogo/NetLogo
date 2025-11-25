@@ -90,7 +90,13 @@ object Analytics {
     val json = buildJson(
       Map(
         "name" -> name,
-        "value" -> value
+        "value" -> {
+          if (name == "logDirectory") {
+            ""
+          } else {
+            value
+          }
+        }
       )
     )
 
