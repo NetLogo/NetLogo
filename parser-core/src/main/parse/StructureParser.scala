@@ -161,7 +161,7 @@ object StructureParser {
           .filter(_.tpe == TokenType.Literal)
           .map(_.value)
           .collect {
-            case s: String => resolveIncludePath(s)
+            case s: String => resolveIncludePath(s).replace("\\", "/")
           }.toSeq
     }
   }

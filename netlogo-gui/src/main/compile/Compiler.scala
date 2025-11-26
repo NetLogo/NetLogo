@@ -187,7 +187,7 @@ class Compiler(dialect: Dialect) extends PresentationCompilerInterface {
           .map(_ => Map.empty[String, String])
       }
     } else
-      Some((includes zip includes.map(compilationEnvironment.resolvePath)).toMap)
+      Some((includes zip includes.map(i => compilationEnvironment.resolvePath(i).replace("\\", "/"))).toMap)
   }
 
   // used by IdentifierEditor (Isaac B 7/15/25)
