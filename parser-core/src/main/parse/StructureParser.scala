@@ -92,6 +92,10 @@ object StructureParser {
                 processedImports += currentImport.moduleName
               }
 
+              if (newResults.extensions.nonEmpty) {
+                exception(I18N.errors.getN("compiler.StructureParser.importContainsExtensions"), currentImport.token)
+              }
+
               if (newResults.program != previousResults.program) {
                 exception(I18N.errors.getN("compiler.StructureParser.importContainsNonProcedure"), currentImport.token)
               }
