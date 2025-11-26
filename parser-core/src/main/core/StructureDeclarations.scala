@@ -17,4 +17,17 @@ object StructureDeclarations {
   case class Procedure(name: Identifier, isReporter: Boolean, inputs: Seq[Identifier], tokens: Seq[Token])
       extends Declaration
   case class Identifier(name: String, token: Token)
+
+  case class Export(name: String, exportSpecs: Seq[ExportSpec], token: Token)
+      extends Declaration
+  sealed trait ExportSpec
+  case class SimpleExport(name: String)
+      extends ExportSpec
+
+
+  case class Import(isRelative: Boolean, components: Seq[String], importList: Seq[String] , alias: Option[String], token: Token)
+      extends Declaration
+  sealed trait ImportOption
+  case class ImportAlias(name: String, token: Token)
+      extends ImportOption
 }

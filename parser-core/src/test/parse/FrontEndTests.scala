@@ -206,9 +206,9 @@ class FrontEndTests extends AnyFunSuite with BaseParserTest {
   }
 
   /// duplicate name tests
-  def frontEndError(src: String, error: String) = {
+  def frontEndError[T](find: String => Seq[T], src: String, error: String) = {
     val e = intercept[CompilerException] {
-        FrontEnd.findIncludes(src)
+        find(src)
       }
       assertResult(error)(e.getMessage.takeWhile(_ != ','))
   }
@@ -216,12 +216,23 @@ class FrontEndTests extends AnyFunSuite with BaseParserTest {
   test("findIncludes lists all includes when there is a valid includes statement") {
     assertResult(Seq())(FrontEnd.findIncludes(""))
     assertResult(Seq("foo.nls"))(FrontEnd.findIncludes("__includes ;; comment\n;; com2\n [\"foo.nls\"]"))
-    frontEndError("__includes \"foo.nls\"]", "Did not find expected open bracket for __includes declaration")
+    frontEndError(FrontEnd.findIncludes, "__includes \"foo.nls\"]", "Did not find expected open bracket for __includes declaration")
     assertResult(Seq())(FrontEnd.findIncludes("__includes [ ]"))
     assertResult(Seq("foo.nls"))(FrontEnd.findIncludes("__includes [\"foo.nls\"]"))
     assertResult(Seq("foo.nls"))(FrontEnd.findIncludes("__includes [\"foo.nls\"] to foo show \"bar\" end"))
     assertResult(Seq("foo.nls"))(FrontEnd.findIncludes("__includes [\"foo.nls\"] foo \"bar\" end"))
     assertResult(Seq("foo.nls", "bar"))(FrontEnd.findIncludes("__includes [\"foo.nls\" foo \"bar\" end"))
+  }
+
+  test("findImports lists all modules when there is a valid import statement") {
+    assertResult(Seq())(FrontEnd.findImports(""))
+    assertResult(Seq((None, "FOO")))(FrontEnd.findImports("import ;; comment\n;; com2\n [foo]"))
+    frontEndError(FrontEnd.findImports, "import foo]", "Did not find expected open bracket for import declaration")
+    assertResult(Seq((None, "FOO")))(FrontEnd.findImports("import [foo]"))
+    assertResult(Seq((None, "FOO")))(FrontEnd.findImports("import [foo [alias bar]]"))
+    assertResult(Seq((None, "FOO")))(FrontEnd.findImports("import [foo] to foo show \"bar\" end"))
+    assertResult(Seq((None, "FOO")))(FrontEnd.findImports("import [foo] foo \"bar\" end"))
+    assertResult(Seq((None, "FOO"), (None, "BAZ")))(FrontEnd.findImports("import [foo [alias bar]] to foo show \"bar\" end import [baz [alias qaz]]"))
   }
 
   test("findProcedurePositions maps procedures to their critical syntax tokens") {
