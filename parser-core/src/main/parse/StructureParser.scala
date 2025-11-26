@@ -92,6 +92,10 @@ object StructureParser {
                 processedImports += currentImport.moduleName
               }
 
+              if (newResults.program != previousResults.program) {
+                exception(I18N.errors.getN("compiler.StructureParser.importContainsNonProcedure"), currentImport.token)
+              }
+
               val prefix = currentImport.alias.getOrElse(currentImport.moduleName) + ":"
               val exportedNames =
                 newResults.`export`.map(_.exportedNames.toSet).getOrElse(newResults.procedures.keys.map(_._1).toSet)
