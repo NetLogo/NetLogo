@@ -8,6 +8,7 @@ app.common.Restart
 # org.nlogo.window package
 
 window.AboutToCloseFiles
+window.AboutToSaveExternalFile
 window.AboutToSaveModel
 window.AboutToQuit
 window.AddBooleanConstraint - String varname - Boolean defaultValue
