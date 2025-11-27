@@ -3,7 +3,7 @@
 package org.nlogo.app.codetab
 
 import java.awt.FileDialog
-import java.io.{ File, IOException }
+import java.io.IOException
 
 import org.nlogo.api.FileIO
 import org.nlogo.app.common.{ Dialogs, Events => AppEvents, TabsInterface }
@@ -16,7 +16,7 @@ import org.nlogo.workspace.{ AbstractWorkspace, ModelTracker }
 import scala.util.matching.Regex
 
 object TemporaryCodeTab {
-  private[app] def stripPath(filename: String): String = filename.split(Regex.quote(File.separator)).last
+  private[app] def stripPath(filename: String): String = filename.split(Regex.quote("/")).last
 }
 
 class TemporaryCodeTab(workspace: AbstractWorkspace & ModelTracker,

@@ -4,11 +4,13 @@ package org.nlogo.headless
 
 import java.nio.file.Files
 
+import org.nlogo.util.PathUtils
+
 // this test is modeled after info found in:
 // http://download.oracle.com/javase/tutorial/i18n/text/string.html
 class TestFilePrimsUTF8 extends AbstractTestModels {
 
-  val testDir = Files.createTempDirectory("file-prim-files").toString.replace("\\", "/")
+  val testDir = PathUtils.standardize(Files.createTempDirectory("file-prim-files").toString)
 
   val code = s"""
 globals [f utf-string]

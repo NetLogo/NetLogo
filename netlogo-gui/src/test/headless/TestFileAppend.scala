@@ -4,15 +4,17 @@ package org.nlogo.headless
 
 import java.nio.file.Files
 
+import org.nlogo.util.PathUtils
+
 class TestFileAppend extends AbstractTestModels {
   private val temp = Files.createTempDirectory(null)
   private val path = temp.resolve("test.txt")
 
   private val code = s"""|to test
-                         |  file-open "${path.toString.replace("\\", "/")}"
+                         |  file-open "${PathUtils.standardize(path.toString)}"
                          |  file-print "test1"
                          |  file-close
-                         |  file-open "${path.toString.replace("\\", "/")}"
+                         |  file-open "${PathUtils.standardize(path.toString)}"
                          |  file-print "test2"
                          |  file-close
                          |end

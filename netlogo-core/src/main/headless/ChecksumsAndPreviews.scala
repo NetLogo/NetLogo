@@ -11,6 +11,7 @@ import org.nlogo.api.{ FileIO, Version }
 import org.nlogo.core.CompilerException
 import org.nlogo.headless.ChecksumsAndPreviewsSettings.ChecksumsFilePath
 import org.nlogo.nvm.Workspace
+import org.nlogo.util.PathUtils
 import org.nlogo.workspace.{ Checksummer, ModelsLibrary, PreviewCommandsRunner }
 
 import scala.io.Source
@@ -26,7 +27,7 @@ object ChecksumsAndPreviews {
   def main(argv: Array[String]): Unit = {
     Main.setHeadlessProperty()
     def paths(fn: String => Boolean, includeBenchmarks: Boolean) = {
-      val allLibrary = ModelsLibrary.getModelPaths(true, false).map(_.replace("\\", "/")).toList
+      val allLibrary = ModelsLibrary.getModelPaths(true, false).map(PathUtils.standardize).toList
       val library = if (includeBenchmarks)
         allBenchmarks.map("models/test/benchmarks/" + _ + " Benchmark.nlogox") ::: allLibrary
       else
