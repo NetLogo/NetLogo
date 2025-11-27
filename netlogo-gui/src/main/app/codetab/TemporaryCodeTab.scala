@@ -3,20 +3,21 @@
 package org.nlogo.app.codetab
 
 import java.awt.FileDialog
-import java.io.{ File, IOException }
+import java.io.IOException
 
 import org.nlogo.api.FileIO
 import org.nlogo.app.common.{ Dialogs, Events => AppEvents, TabsInterface }
 import org.nlogo.core.I18N
 import org.nlogo.ide.FocusedOnlyAction
 import org.nlogo.swing.{ CloseableTab, FileDialog => SwingFileDialog, UserAction }
+import org.nlogo.util.PathUtils
 import org.nlogo.window.{ Events => WindowEvents, ExternalFileInterface }
 import org.nlogo.workspace.{ AbstractWorkspace, ModelTracker }
 
 import scala.util.matching.Regex
 
 object TemporaryCodeTab {
-  private[app] def stripPath(filename: String): String = filename.split(Regex.quote(File.separator)).last
+  private[app] def stripPath(filename: String): String = filename.split(Regex.quote("/")).last
 }
 
 class TemporaryCodeTab(workspace: AbstractWorkspace & ModelTracker,
@@ -36,9 +37,9 @@ class TemporaryCodeTab(workspace: AbstractWorkspace & ModelTracker,
 
   def filename_=(newName: Either[String, String]): Unit = {
     val oldFilename = _filename
-    _filename = newName
-    if (oldFilename.isRight && oldFilename != newName) {
-      externalFileManager.nameChanged(oldFilename.getOrElse(null), newName.getOrElse(null))
+    _filename = newName.map(PathUtils.standardize)
+    if (oldFilename.isRight && oldFilename != _filename) {
+      externalFileManager.nameChanged(oldFilename.getOrElse(null), _filename.getOrElse(null))
     } else if (oldFilename.isLeft) {
       externalFileManager.add(this)
     }

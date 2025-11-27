@@ -4,6 +4,8 @@ package org.nlogo.workspace
 
 import org.nlogo.api.Version
 
+import org.nlogo.util.PathUtils
+
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.{ BeforeAndAfterEach, OneInstancePerTest }
 
@@ -35,15 +37,17 @@ class AbstractWorkspaceTests extends AnyFunSuite with BeforeAndAfterEach with On
   }
   test("AttachModelDir1") {
     workspace.setModelPath("/tmp/foo.nlogox")
-    assertResult("/tmp/abc.txt")("[A-Z]:".r.replaceFirstIn(workspace.attachModelDir("abc.txt").replace("\\", "/"), ""))
+    assertResult("/tmp/abc.txt")(
+      "[A-Z]:".r.replaceFirstIn(PathUtils.standardize(workspace.attachModelDir("abc.txt")), ""))
   }
   test("AttachModelDir2") {
     workspace.setModelPath("/tmp/foo.nlogox")
-    assertResult("/usr/abc.txt")("[A-Z]:".r.replaceFirstIn(workspace.attachModelDir("/usr/abc.txt").replace("\\", "/"), ""))
+    assertResult("/usr/abc.txt")(
+      "[A-Z]:".r.replaceFirstIn(PathUtils.standardize(workspace.attachModelDir("/usr/abc.txt")), ""))
   }
   test("AttachModelDir3") {
-    val home = System.getProperty("user.home").replace("\\", "/")
-    assertResult(s"$home/abc.txt")(workspace.attachModelDir("abc.txt").replace("\\", "/"))
+    val home = PathUtils.standardize(System.getProperty("user.home"))
+    assertResult(s"$home/abc.txt")(PathUtils.standardize(workspace.attachModelDir("abc.txt")))
   }
 
   // GlobalsIdentifier

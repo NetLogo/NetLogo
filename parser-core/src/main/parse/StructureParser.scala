@@ -20,10 +20,12 @@ package org.nlogo.parse
 
 import java.util.Locale
 
-import org.nlogo.core.{ CompilationEnvironment, CompilationOperand, CompilerException, ErrorSource, I18N, ProcedureSyntax, Program, StructureResults, Token, TokenizerInterface, TokenType }
+import org.nlogo.core.{ CompilationEnvironment, CompilationOperand, CompilerException, ErrorSource, I18N,
+                        ProcedureSyntax, Program, StructureResults, Token, TokenizerInterface, TokenType }
 import org.nlogo.core.Fail._
 import org.nlogo.core.FrontEndInterface.ProceduresMap
 import org.nlogo.core.LibraryStatus.CanInstall
+import org.nlogo.util.PathUtils
 
 object StructureParser {
   val IncludeFilesEndInNLS = "Included files must end with .nls"
@@ -161,7 +163,7 @@ object StructureParser {
           .filter(_.tpe == TokenType.Literal)
           .map(_.value)
           .collect {
-            case s: String => resolveIncludePath(s)
+            case s: String => PathUtils.standardize(resolveIncludePath(s))
           }.toSeq
     }
   }

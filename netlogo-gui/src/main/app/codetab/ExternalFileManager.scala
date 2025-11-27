@@ -2,6 +2,7 @@
 
 package org.nlogo.app.codetab
 
+import org.nlogo.util.PathUtils
 import org.nlogo.window.{ ExternalFileManager => WindowExternalFileManager }
 
 class ExternalFileManager extends WindowExternalFileManager {
@@ -26,10 +27,6 @@ class ExternalFileManager extends WindowExternalFileManager {
         Map.empty[String, TemporaryCodeTab])
   }
 
-  def getTab(filename: String): Option[TemporaryCodeTab] =
-    externalTabs.get(filename)
-
-  def getSource(filename: String): Option[String] = {
-    getTab(filename).map(_.innerSource)
-  }
+  def getSource(filename: String): Option[String] =
+    externalTabs.get(PathUtils.standardize(filename)).map(_.innerSource)
 }

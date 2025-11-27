@@ -7,6 +7,7 @@ import java.util.Locale
 import org.nlogo.core.{ CompilerException, Program }
 import org.nlogo.api.{ AgentException, Exceptions, JobOwner, LogoException, SourceOwner, ValueConstraint }
 import org.nlogo.nvm.CompilerResults
+import org.nlogo.util.PathUtils
 import org.nlogo.workspace.AbstractWorkspace
 import org.nlogo.window.Event.LinkChild
 import org.nlogo.window.Events.{
@@ -214,7 +215,7 @@ class CompilerManager(val workspace: AbstractWorkspace,
         val owner = procedure.filename match {
           case ""          => proceduresInterface
           case "aggregate" => workspace.aggregateManager
-          case fileName    => new ExternalFileInterface(fileName)
+          case fileName    => new ExternalFileInterface(PathUtils.standardize(fileName))
         }
         procedure.owner = owner
       }
@@ -227,7 +228,7 @@ class CompilerManager(val workspace: AbstractWorkspace,
         val errorSource = error.filename match {
           case ""          => proceduresInterface
           case "aggregate" => workspace.aggregateManager
-          case fileName    => new ExternalFileInterface(fileName)
+          case fileName    => new ExternalFileInterface(PathUtils.standardize(fileName))
         }
         raiseEvent(new CompiledEvent(errorSource, null, null, error))
         false

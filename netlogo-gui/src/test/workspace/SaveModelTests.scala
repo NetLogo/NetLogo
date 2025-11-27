@@ -10,6 +10,8 @@ import org.nlogo.api.{ ConfigurableModelLoader, ModelType, Version }
 
 import org.scalatest.funsuite.AnyFunSuite
 
+import org.nlogo.util.PathUtils
+
 import scala.util.{ Failure, Try }
 
 class SaveModelTests extends AnyFunSuite {
@@ -38,10 +40,10 @@ class SaveModelTests extends AnyFunSuite {
       val res =
         if (forcePathSelect)
           SaveModelAs(model, loader, controller, modelTracker, Version)
-            .map(_.apply().map(u => "[A-Z]:".r.replaceFirstIn(Paths.get(u).toString.replace("\\", "/"), "")))
+            .map(_.apply().map(u => "[A-Z]:".r.replaceFirstIn(PathUtils.standardize(Paths.get(u).toString), "")))
         else
           SaveModel(model, loader, controller, modelTracker, Version)
-            .map(_.apply().map(u => "[A-Z]:".r.replaceFirstIn(Paths.get(u).toString.replace("\\", "/"), "")))
+            .map(_.apply().map(u => "[A-Z]:".r.replaceFirstIn(PathUtils.standardize(Paths.get(u).toString), "")))
       assertion(res, controller)
   }
 
@@ -68,10 +70,10 @@ class SaveModelTests extends AnyFunSuite {
       val res =
         if (forcePathSelect)
           SaveModelAs(model, loader, controller, modelTracker, Version)
-            .map(_.apply().map(u => "[A-Z]:".r.replaceFirstIn(Paths.get(u).toString.replace("\\", "/"), "")))
+            .map(_.apply().map(u => "[A-Z]:".r.replaceFirstIn(PathUtils.standardize(Paths.get(u).toString), "")))
         else
           SaveModel(model, loader, controller, modelTracker, Version)
-            .map(_.apply().map(u => "[A-Z]:".r.replaceFirstIn(Paths.get(u).toString.replace("\\", "/"), "")))
+            .map(_.apply().map(u => "[A-Z]:".r.replaceFirstIn(PathUtils.standardize(Paths.get(u).toString), "")))
       assertion(res, controller)
   }
 

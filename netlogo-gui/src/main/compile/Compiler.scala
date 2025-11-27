@@ -4,11 +4,11 @@ package org.nlogo.compile
 
 import java.util.Locale
 
+import org.nlogo.api.{ ExtensionManager, LibraryManager, SourceOwner, World }
 import org.nlogo.core.{ CompilationEnvironment, CompilerException, CompilerUtilitiesInterface, Dialect, Femto,
                         FrontEndInterface, ProcedureSyntax, Program, Token, TokenType }
-import org.nlogo.api.{ SourceOwner, World }
-import org.nlogo.nvm.{ PresentationCompilerInterface, CompilerFlags, CompilerResults, ImportHandler, Procedure }
-import org.nlogo.api.{ ExtensionManager, LibraryManager }
+import org.nlogo.nvm.{ CompilerFlags, CompilerResults, ImportHandler, PresentationCompilerInterface, Procedure }
+import org.nlogo.util.PathUtils
 
 import scala.collection.immutable.ListMap
 
@@ -187,7 +187,7 @@ class Compiler(dialect: Dialect) extends PresentationCompilerInterface {
           .map(_ => Map.empty[String, String])
       }
     } else
-      Some((includes zip includes.map(compilationEnvironment.resolvePath)).toMap)
+      Some((includes zip includes.map(i => PathUtils.standardize(compilationEnvironment.resolvePath(i)))).toMap)
   }
 
   // used by IdentifierEditor (Isaac B 7/15/25)
