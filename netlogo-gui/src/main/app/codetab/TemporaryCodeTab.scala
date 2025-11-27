@@ -106,6 +106,9 @@ class TemporaryCodeTab(workspace: AbstractWorkspace & ModelTracker,
   def save(saveAs: Boolean) = {
     if (saveAs || filename.isLeft)
       filename = Right(userChooseSavePath())
+
+    new WindowEvents.AboutToSaveExternalFileEvent().raise(this)
+
     FileIO.writeFile(filename.getOrElse(null), text.getText)
     saveNeeded = false
     compileIfDirty()
