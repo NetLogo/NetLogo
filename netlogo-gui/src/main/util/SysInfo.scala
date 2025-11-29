@@ -23,7 +23,7 @@ object SysInfo
   def isLibgcj =
     getVMInfoString.indexOf("libgcj") != -1
   def getOSInfoString =
-    "operating system: " + getProperty("os.name") +
+    "Operating system: " + getProperty("os.name") +
       " " + getProperty("os.version") +
       " ("  + getProperty("os.arch") + " processor)"
   def getMemoryInfoString = {
