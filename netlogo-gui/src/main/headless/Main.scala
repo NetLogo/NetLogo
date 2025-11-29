@@ -45,7 +45,14 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
 
   def main(args: Array[String]): Unit = {
     setHeadlessProperty()
-    parseArgs(args).foreach(runExperiment(_))
+
+    try {
+      parseArgs(args).foreach(runExperiment(_))
+    } catch {
+      case e: Exception =>
+        System.err.println(e)
+        System.exit(1)
+    }
   }
 
   def runExperiment(settings: Settings, finish: () => Unit = () => {}): Unit = {
