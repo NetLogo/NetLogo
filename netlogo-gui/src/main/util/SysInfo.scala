@@ -22,10 +22,12 @@ object SysInfo
   }
   def isLibgcj =
     getVMInfoString.indexOf("libgcj") != -1
-  def getOSInfoString =
-    "Operating system: " + getProperty("os.name") +
-      " " + getProperty("os.version") +
-      " ("  + getProperty("os.arch") + " processor)"
+  def getOSInfoString = {
+    val name    = getProperty("os.name")
+    val version = getProperty("os.version")
+    val arch    = getProperty("os.arch")
+    s"Operating system: $name $version ($arch processor)"
+  }
   def getMemoryInfoString = {
     val runtime = Runtime.getRuntime()
     System.gc()
