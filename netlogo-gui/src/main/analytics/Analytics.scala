@@ -86,17 +86,12 @@ object Analytics {
       wrapRequest(MatomoRequests.event(category, "App Exit", null, length.toDouble).build(), true)
   }
 
-  def preferenceChange(name: String, value: String): Unit = {
+  def preferenceChange(name: String, origValue: String): Unit = {
+    val value = if (name == "logDirectory") "" else origValue
     val json = buildJson(
       Map(
         "name" -> name,
-        "value" -> {
-          if (name == "logDirectory") {
-            ""
-          } else {
-            value
-          }
-        }
+        "value" -> value
       )
     )
 
