@@ -35,7 +35,7 @@ class TokenLexer {
       }
       (r._1.get, r._2)
     } else
-      (Token.Eof, input)
+      (Token.eof(input.filename), input)
   }
 
   def fastForwardWhitespace(input: WrappedInput): (Int, WrappedInput) = {

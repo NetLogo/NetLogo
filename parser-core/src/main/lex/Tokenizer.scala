@@ -63,7 +63,7 @@ object Tokenizer extends TokenizerInterface {
     private var lastToken = Option.empty[Token]
     private var lastInput = initialInput
 
-    override def hasNext: Boolean = ! lastToken.contains(Token.Eof)
+    override def hasNext: Boolean = ! lastToken.contains(Token.eof(initialInput.filename))
 
     override def next(): (Token, WrappedInput) = {
       val (t, i) = lexer(lastInput)

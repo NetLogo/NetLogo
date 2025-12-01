@@ -12,7 +12,8 @@ package org.nlogo.core
 // makes test cases annoying to write.
 
 object Token {
-  val Eof = new Token("", TokenType.Eof, "")(SourceLocation(Int.MaxValue, Int.MaxValue, ""))
+  def eof(filename: String): Token =
+    new Token("", TokenType.Eof, "")(SourceLocation(Int.MaxValue, Int.MaxValue, filename))
 }
 
 case class Token(text: String, tpe: TokenType, value: AnyRef)(val sourceLocation: SourceLocation) extends SourceLocatable {

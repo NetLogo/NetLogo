@@ -58,7 +58,7 @@ object CompilerUtilities extends CompilerUtilitiesInterface {
           .map(Namer0)
       val sp =
         new StructureParser(None, true)
-      val results = sp.parse(namedTokens, StructureResults(program, procedures))
+      val results = sp.parse(namedTokens, StructureResults(program, procedures), "")
       val proc = results.procedures.values.head
       val namer =
         new Namer(program, procedures ++ results.procedures, proc, extensionManager)

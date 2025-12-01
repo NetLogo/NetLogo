@@ -15,7 +15,7 @@ class StructureParserTests extends AnyFunSuite {
 
   def compile(source: String): StructureResults =
     new StructureParser(None, false).parse(
-      tokenizer.tokenizeString(source).map(Namer0), core.StructureResults.empty)
+      tokenizer.tokenizeString(source).map(Namer0), core.StructureResults.empty, "")
 
   def expectError(source: String, error: String): Unit = {
     val e = intercept[CompilerException] {
