@@ -104,8 +104,11 @@ class TemporaryCodeTab(workspace: AbstractWorkspace & ModelTracker,
   def filenameForDisplay = (filename map TemporaryCodeTab.stripPath).merge
 
   def save(saveAs: Boolean) = {
-    if (saveAs || filename.isLeft)
+    if (saveAs || filename.isLeft) {
       filename = Right(userChooseSavePath())
+
+      compile()
+    }
 
     new WindowEvents.AboutToSaveExternalFileEvent().raise(this)
 
