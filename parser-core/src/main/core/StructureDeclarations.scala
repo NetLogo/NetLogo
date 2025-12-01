@@ -18,12 +18,8 @@ object StructureDeclarations {
       extends Declaration
   case class Identifier(name: String, token: Token)
 
-  case class Export(name: String, exportSpecs: Seq[ExportSpec], token: Token)
+  case class Export(exportedNames: Seq[Identifier], token: Token)
       extends Declaration
-  sealed trait ExportSpec
-  case class SimpleExport(name: String)
-      extends ExportSpec
-
 
   case class Import(isRelative: Boolean, components: Seq[String], importList: Seq[String] , alias: Option[String], token: Token)
       extends Declaration
