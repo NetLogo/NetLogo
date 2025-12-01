@@ -136,6 +136,8 @@ class TabLabel(startPane: FloatingTabbedPane, text: String, tab: Component) exte
 
   def setText(text: String): Unit = {
     rawText = text
+
+    repaint()
   }
 
   def getText: String =
