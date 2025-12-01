@@ -15,7 +15,7 @@ object DelayedBlock {
           args,
           body,
           unterminatedTokens.last,
-          openBracket +: unterminatedTokens :+ Token.Eof,
+          openBracket +: unterminatedTokens :+ Token.eof(openBracket.sourceLocation.filename),
           symbols)
       case None =>
         new AmbiguousDelayedBlock(openBracket, unterminatedTokens, scope)
@@ -55,7 +55,7 @@ class ArrowLambdaBlock(
 
   val isArrowLambda = true
 
-  lazy val tokens = (openBracket +: bodyTokens :+ closingBracket) :+ Token.Eof
+  lazy val tokens = (openBracket +: bodyTokens :+ closingBracket) :+ Token.eof(openBracket.sourceLocation.filename)
 
   override def isCommand = bodyTokens
     .dropWhile(_.tpe == TokenType.OpenParen).headOption
@@ -93,7 +93,7 @@ class AmbiguousDelayedBlock(
       openBracket.sourceLocation.copy(end = unterminatedTokens.lastOption.map(_.end)
         .getOrElse(openBracket.end)))
 
-  lazy val tokens = openBracket +: unterminatedTokens :+ Token.Eof
+  lazy val tokens = openBracket +: unterminatedTokens :+ Token.eof(openBracket.sourceLocation.filename)
 
   lazy val isCommand =
     unterminatedTokens.dropWhile(_.tpe == TokenType.OpenParen)

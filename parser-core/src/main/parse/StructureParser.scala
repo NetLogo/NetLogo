@@ -89,7 +89,7 @@ object StructureParser {
         tokenizer.tokenizeString(source, filename)
           .filter(_.tpe != TokenType.Comment)
           .map(Namer0)
-      structureParser.parse(tokens, oldResults)
+      structureParser.parse(tokens, oldResults, filename)
     }
 
   private[parse] def usedNames(program: Program, procedures: ProceduresMap): SymbolTable = {
@@ -196,8 +196,8 @@ class StructureParser(
   displayName: Option[String],
   subprogram: Boolean) {
 
-  def parse(tokens: Iterator[Token], oldResults: StructureResults): StructureResults =
-    StructureCombinators.parse(tokens) match {
+  def parse(tokens: Iterator[Token], oldResults: StructureResults, filename: String): StructureResults =
+    StructureCombinators.parse(tokens, filename) match {
       case Right(declarations) =>
         StructureChecker.rejectMisplacedConstants(declarations)
         StructureChecker.rejectDuplicateDeclarations(declarations)

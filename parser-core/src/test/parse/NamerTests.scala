@@ -14,7 +14,8 @@ class NamerTests extends AnyFunSuite {
     val results = new StructureParser(None,false)
       .parse(
         FrontEnd.tokenizer.tokenizeString(wrappedSource).map(parse.Namer0),
-        StructureResults(program))
+        StructureResults(program),
+        "")
     assertResult(1)(results.procedures.size)
     val procedure = results.procedures.values.iterator.next()
     val namer = new Namer(results.program, results.procedures, procedure, new DummyExtensionManager)
