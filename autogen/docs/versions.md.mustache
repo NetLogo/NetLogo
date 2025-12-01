@@ -35,12 +35,16 @@ For help running models made in old versions, see the
 - Compiling NetLogo code with the system locale set to Turkish could cause compilation errors
 - NetLogo 3D was not respecting non-default patch sizes
 - NetLogo 3D was failed to report turtle coordinates after setting them in turtle monitors
-- "Quick Help" would raise an error if used on `;`
+- "Quick Help" would raise an error if used on a semi-colon (";")
 - "Edit" dialogs could sometimes have the wrong focus behavior
-- The `.nlogox` file icon was unusually narrow
+- The `.nlogox` file icon was too narrow
 - In the Models Library dialog, the file selector's border would glow in response to mouse clicks
 - The System Dynamics Modeler dialog was not being closed when Escape was pressed
 - The "Print" option was unconventionally appearing below "Quit" in the file menu
+- The "headless" version of NetLogo would hang after encountering errors
+- The analytics functionality was uploading values entered for the “Directory to store logs” preference.  We did not previously realize that this information could be de-anonymizing, so we have now ceased collecting data about what that preference is set to.  Only about one user per thousand had data for that preference uploaded to our data collection server, and the data has since been purged.
+- On Windows, `__includes` files were always displaying their full path, instead of just the file name
+- On Windows, `__includes` files would generate warnings and behave incorrectly if `/` was used as the path separator, instead of `\`
 
 ## Version 7.0.2 (October 2025)
 
