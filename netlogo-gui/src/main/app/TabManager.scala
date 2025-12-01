@@ -522,26 +522,28 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
   def closeExternalFile(filename: Filename): Unit = {
     getTabWithFilename(filename) match {
       case Some(tab) =>
-        closeExternalTab(tab)
+        closeExternalTab(tab, true)
 
       case _ =>
     }
   }
 
-  def closeExternalTab(tab: TemporaryCodeTab): Unit = {
+  private def closeExternalTab(tab: TemporaryCodeTab, permanent: Boolean): Unit = {
     if (separateTabsWindow.isVisible) {
       separateTabs.remove(tab)
     } else {
       mainTabs.remove(tab)
     }
 
-    externalFileManager.remove(tab)
+    if (permanent) {
+      externalFileManager.remove(tab)
 
-    if (getExternalFileTabs.isEmpty)
-      revokeAction(saveAllAction)
+      if (getExternalFileTabs.isEmpty)
+        revokeAction(saveAllAction)
 
-    updateTabActions()
-    saveOpenTabs()
+      updateTabActions()
+      saveOpenTabs()
+    }
   }
 
   def removeTab(tab: Component): Unit = {
@@ -627,7 +629,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
 
   def handle(e: LoadBeginEvent): Unit = {
     if (!reloading) {
-      getExternalFileTabs.foreach(closeExternalTab)
+      getExternalFileTabs.foreach(closeExternalTab(_, true))
       mainTabs.setSelectedComponent(interfaceTab)
     }
   }
@@ -772,9 +774,12 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
   }
 
   def handle(e: ExternalFileSavedEvent): Unit = {
+    // close any existing tabs with the same name to prevent duplicate tabs (Isaac B 12/1/25)
+    getExternalFileTabs.filter(_.filename == Right(e.path)).dropRight(1).foreach(closeExternalTab(_, false))
+
     getTabWithFilename(Right(e.path)).foreach(tab => {
       if (separateTabsWindow.isVisible) {
-        separateTabs.getTabLabelAt(separateTabs.indexOfComponent(tab))foreach(_.setText(tab.filenameForDisplay))
+        separateTabs.getTabLabelAt(separateTabs.indexOfComponent(tab)).foreach(_.setText(tab.filenameForDisplay))
       } else {
         mainTabs.getTabLabelAt(mainTabs.indexOfComponent(tab)).foreach(_.setText(tab.filenameForDisplay))
       }
