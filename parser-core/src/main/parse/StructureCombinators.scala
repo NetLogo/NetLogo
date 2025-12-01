@@ -100,21 +100,9 @@ extends scala.util.parsing.combinator.Parsers {
         Includes(token, names) }
 
   def `export`: Parser[Export] =
-    keyword("EXPORT") ~! openBracket ~> identifier ~ exportSpecList <~ closeBracket ^^ {
-      case ident ~ specs =>
-        Export(ident.name, specs, ident.token)
-    }
-
-  def exportSpecList: Parser[Seq[ExportSpec]] =
-    openBracket ~> rep(exportSpec) <~ closeBracket
-
-  def exportSpec: Parser[ExportSpec] =
-    simpleExport
-
-  def simpleExport: Parser[SimpleExport] =
-    identifier ^^ {
-      case ident =>
-        SimpleExport(ident.name)
+    keyword("EXPORT") ~! identifierList ^^ {
+      case keyword ~ exportedNames =>
+        Export(exportedNames, keyword)
     }
 
   def `import`: Parser[Import] =
