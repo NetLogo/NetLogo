@@ -109,25 +109,28 @@ object XMLReader {
 
     def readElement(): Try[XMLElement] = {
       def parseElement(acc: XMLElement): Try[XMLElement] = {
-        if (reader.hasNext)
-          reader.next match {
-            case XMLStreamConstants.START_ELEMENT =>
-              readElement().flatMap(nexties =>
-                parseElement(acc.copy(children = acc.children :+ nexties)))
-            case XMLStreamConstants.END_ELEMENT =>
-              Try(acc)
-            case XMLStreamConstants.CHARACTERS =>
-              if (reader.isWhiteSpace)
+        if (reader.hasNext) {
+          Try {
+            reader.next match {
+              case XMLStreamConstants.START_ELEMENT =>
+                readElement().flatMap(nexties =>
+                  parseElement(acc.copy(children = acc.children :+ nexties)))
+              case XMLStreamConstants.END_ELEMENT =>
+                Try(acc)
+              case XMLStreamConstants.CHARACTERS =>
+                if (reader.isWhiteSpace)
+                  parseElement(acc)
+                else
+                  parseElement(acc.copy(text = s"]]${XMLElement.CDataEscape}>".r.replaceAllIn(reader.getText, "]]>")))
+              case XMLStreamConstants.COMMENT =>
                 parseElement(acc)
-              else
-                parseElement(acc.copy(text = s"]]${XMLElement.CDataEscape}>".r.replaceAllIn(reader.getText, "]]>")))
-            case XMLStreamConstants.COMMENT =>
-              parseElement(acc)
-            case x =>
-              Failure(throw new Exception(s"Unexpected value found while parsing XML: ${x}"))
-          }
-        else
+              case x =>
+                Failure(throw new Exception(s"Unexpected value found while parsing XML: ${x}"))
+            }
+          }.flatten
+        } else {
           Try(acc)
+        }
       }
 
       val attributes =
