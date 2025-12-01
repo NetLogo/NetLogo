@@ -111,8 +111,6 @@ class TemporaryCodeTab(workspace: AbstractWorkspace & ModelTracker,
 
     FileIO.writeFile(filename.getOrElse(null), text.getText)
     saveNeeded = false
-    compileIfDirty()
-    dirty = false
 
     new WindowEvents.ExternalFileSavedEvent(filename.merge).raise(this)
   }
@@ -126,11 +124,6 @@ class TemporaryCodeTab(workspace: AbstractWorkspace & ModelTracker,
     }
     closing = true
     tabs.closeExternalFile(_filename)
-  }
-
-  def compileIfDirty(): Unit = {
-    if (dirty)
-      compile()
   }
 
   override def handle(e: WindowEvents.CompiledEvent) = {
