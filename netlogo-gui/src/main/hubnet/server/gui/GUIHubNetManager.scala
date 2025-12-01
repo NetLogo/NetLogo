@@ -101,8 +101,8 @@ class GUIHubNetManager(workspace: GUIWorkspace,
     _clientEditor.setTitle(name, dir, modelType)
   }
 
-  def showControlCenter(): Unit = {
-    if (controlCenter == null) {
+  override def showControlCenter(reinit: Boolean): Unit = {
+    if (controlCenter == null || reinit) {
       controlCenter =
         new ControlCenter(connectionManager, workspace.getFrame, serverName, workspace.modelNameForDisplay, serverInterface.map(_._2))
       controlCenter.pack()
@@ -150,12 +150,8 @@ class GUIHubNetManager(workspace: GUIWorkspace,
     }
     serverInterface.foreach { nw =>
       connectionManager.startup(serverName, nw)
-      showControlCenter()
+      showControlCenter(true)
     }
-  }
-
-  override def syncMirroring(): Unit = {
-    Option(controlCenter).foreach(_.syncMirroring())
   }
 
   private def getNameAndSelectedNetwork(): (String, Option[(NetworkInterface, InetAddress)]) = {

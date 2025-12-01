@@ -84,7 +84,7 @@ class HubNetControlCenterAction(workspace: GUIWorkspace)
     accelerator = KeyBindings.keystroke('H', withMenu = true, withShift = true)
 
     override def actionPerformed(e: ActionEvent): Unit = {
-      workspace.hubNetManager.get.showControlCenter()
+      workspace.hubNetManager.get.showControlCenter(false)
     }
 }
 

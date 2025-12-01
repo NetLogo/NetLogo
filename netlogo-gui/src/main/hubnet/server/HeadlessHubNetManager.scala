@@ -83,9 +83,6 @@ class HeadlessHubNetManager(workspace: AbstractWorkspaceScala, loader: AbstractM
   def openClientEditor(): Unit = {}
   def closeClientEditor(): Unit = {}
 
-  // no control center, so no need to sync the properties (Isaac B 11/23/25)
-  override def syncMirroring(): Unit = {}
-
   // other no-op gui related stuff
   def setTitle(name: String, dir: String, modelType: ModelType): Unit = {}
   def importClientInterface(model: Model, client: Boolean): Unit = {} // only called from the File menu.
@@ -123,5 +120,5 @@ class HeadlessHubNetManager(workspace: AbstractWorkspaceScala, loader: AbstractM
     }
   }
 
-  def showControlCenter(): Unit = {} // maybe we could log a message here.
+  def showControlCenter(reinit: Boolean): Unit = {} // maybe we could log a message here.
 }
