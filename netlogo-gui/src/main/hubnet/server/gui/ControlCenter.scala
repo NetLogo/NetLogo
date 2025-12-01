@@ -37,6 +37,9 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
 
   private val clientWindows = Set[ClientAppInterface]()
 
+  setViewMirroring(HubNetUtils.viewMirroring)
+  setPlotMirroring(HubNetUtils.plotMirroring)
+
   setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE)
   getContentPane.setLayout(new BorderLayout())
   getContentPane.add(serverPanel, BorderLayout.CENTER)
