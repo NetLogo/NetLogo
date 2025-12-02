@@ -11,6 +11,8 @@ import org.nlogo.nvm.DummyPrimaryWorkspace
 import org.nlogo.nvm.LabInterface.{ Settings, Worker }
 
 object Main {
+  private object CancelException extends Exception
+
   // *TODO*: Get this I18N'd and also a way to keep it in sync with the BehaviorSpace docs.
   private val HelpString = """
 Run NetLogo using the NetLogo_Console app with the --headless command line argument.  The NetLogo_Console script supports the following arguments:
@@ -45,7 +47,12 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
 
   def main(args: Array[String]): Unit = {
     setHeadlessProperty()
-    runExperiment(parseArgs(args))
+
+    try {
+      runExperiment(parseArgs(args))
+    } catch {
+      case CancelException =>
+    }
   }
 
   def runExperiment(settings: Settings, finish: () => Unit = () => {}): Unit = {
@@ -132,15 +139,16 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
     var updatePlots = false
     var runsCompleted = 0
 
-    def die(msg: String): Unit = {
-      System.err.println(msg)
-      System.exit(1)
+    def die(message: String): Unit = {
+      System.err.println(message)
+
+      throw CancelException
     }
 
     def printAndExit(message: String): Unit = {
-      println(message)
+      System.out.println(message)
 
-      System.exit(0)
+      throw CancelException
     }
 
     val it = args.iterator
@@ -149,13 +157,10 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
       val arg = it.next().toLowerCase
 
       def nextOrDie(): String = {
-        if (!it.hasNext) {
+        if (!it.hasNext)
           die("missing argument after " + arg)
 
-          ""
-        } else {
-          it.next()
-        }
+        it.next()
       }
 
       arg match {
