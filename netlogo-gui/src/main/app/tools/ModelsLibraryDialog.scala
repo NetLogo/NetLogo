@@ -25,8 +25,8 @@ import javax.swing.event.{ AncestorEvent, AncestorListener, DocumentEvent, Docum
 import org.nlogo.core.I18N
 import org.nlogo.api.FileIO
 import org.nlogo.awt.{ Positioning, UserCancelException }
-import org.nlogo.swing.{ BrowserLauncher, Button, DialogButton, ModalProgressTask, OptionPane, ScrollPane, TextField,
-                         Utils }, Utils.addEscKeyAction
+import org.nlogo.swing.{ BrowserLauncher, Button, DialogButton, ModalProgressTask, OptionPane,
+                         ScrollPane, TextField, Utils, WindowAutomator }, Utils.addEscKeyAction
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.workspace.ModelsLibrary
 
@@ -36,6 +36,9 @@ import scala.language.implicitConversions
 
 object ModelsLibraryDialog {
   private var me: ModelsLibraryDialog = null
+
+  private [app] def dialog: Option[ModelsLibraryDialog] =
+    Option(me)
 
   // finish is a callback called *on the UI Thread* with the URI of the selected model
   @throws(classOf[UserCancelException])
@@ -55,7 +58,9 @@ object ModelsLibraryDialog {
         }
       })
     } else {
-      finishOpen(me, onSelect)
+      SwingUtilities.invokeLater(() => {
+        finishOpen(me, onSelect)
+      })
     }
   }
 
@@ -158,10 +163,14 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
   with TreeExpansionListener
   with ThemeSync {
 
+  WindowAutomator.automate(this)
+
   private var selected = Option.empty[Node]
   private var sourceURI = Option.empty[URI]
   private val savedExpandedPaths: JList[TreePath] = new LinkedList[TreePath]()
-  private val searchField = new TextField
+
+  val searchField = new TextField
+
   private var searchText = Option.empty[String]
   private val searchIcon = new JLabel
 
@@ -397,6 +406,12 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
     })
   }
 
+  override def dispose(): Unit = {
+    super.dispose()
+
+    ModelsLibraryDialog.me = null
+  }
+
   def selectAll(): Unit = searchField.selectAll
 
   def setSearchText(newText: String): Unit = {
@@ -549,6 +564,13 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
     invalidate()
     if (tree.getSelectionPath != null) {
       tree.scrollPathToVisible(tree.getSelectionPath)
+    }
+  }
+
+  private [app] def visibleModels: Seq[String] = {
+    (0 until tree.getRowCount).collect {
+      case row if tree.isVisible(tree.getPathForRow(row)) && !tree.isExpanded(row) =>
+        tree.getPathForRow(row).getLastPathComponent.toString
     }
   }
 

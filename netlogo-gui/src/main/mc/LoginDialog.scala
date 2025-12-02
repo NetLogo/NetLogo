@@ -7,7 +7,8 @@ import java.net.URI
 import javax.swing.{ JDialog, JLabel, JPanel }
 
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ BrowserLauncher, ButtonPanel, DialogButton, Positioning, TextField, Transparent }
+import org.nlogo.swing.{ BrowserLauncher, ButtonPanel, DialogButton, Positioning, TextField, Transparent
+                       , WindowAutomator }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 import scala.concurrent.Future
@@ -17,6 +18,8 @@ import sttp.client4.Backend
 
 class LoginDialog(parent: Frame, backend: Backend[Future])
   extends JDialog(parent, I18N.gui.get("dialog.mc.login"), true) with ThemeSync {
+
+  WindowAutomator.automate(this)
 
   private val message = new JLabel(I18N.gui.get("dialog.mc.login.message"))
 

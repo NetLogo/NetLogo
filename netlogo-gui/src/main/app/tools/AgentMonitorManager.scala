@@ -159,4 +159,7 @@ class AgentMonitorManager(val workspace: GUIWorkspace) extends Event.LinkChild w
     monitorWindows.values.foreach(_.syncTheme())
     emptyMonitorWindows.values.foreach(_.syncTheme())
   }
+
+  private [app] def getMonitorWindows: Seq[AgentMonitorWindow] =
+    monitorWindows.values.toSeq
 }

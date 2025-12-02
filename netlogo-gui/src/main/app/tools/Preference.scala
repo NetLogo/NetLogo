@@ -22,4 +22,5 @@ trait Preference(val i18nKey: String, val requirement: Option[RequiredAction],
   def load(): Unit
   def save(): Unit
   def changed: Boolean
+  private [app] def scramble(): Unit
 }

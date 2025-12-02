@@ -19,6 +19,9 @@ import MessageDialog._
 
 class MessageDialog(owner: Component, dismissName: String = "Dismiss") extends JDialog(Hierarchy.getFrame(owner))
                                                                        with ThemeSync {
+
+  WindowAutomator.automate(this)
+
   private def parentFrame: Frame = Hierarchy.getFrame(owner)
 
   protected val textArea = new TextArea(DefaultRows, DefaultColumns) {
