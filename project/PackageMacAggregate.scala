@@ -175,6 +175,7 @@ object PackageMacAggregate {
     log: sbt.util.Logger
   , version: String
   , arch: String
+  , buildDir: File
   , destDir: File
   , bundleDir: File
   , configDir: File
@@ -235,13 +236,24 @@ object PackageMacAggregate {
     val dmgPath = Paths.get(dmgName)
     Files.deleteIfExists(dmgPath)
 
-    val dmgArgs = Seq("hdiutil", "create",
-      dmgName,
-      "-srcfolder", destDir.getAbsolutePath,
-      "-size", "1200m",
-      "-fs", "HFS+",
-      "-volname", buildName, "-ov"
+    val backgroundPath = (configDir / "macosx" / "dmg-background.png").getAbsolutePath
+
+    // ensure the provided background image has the correct dimensions and does not specify any
+    // physical dimensions (Isaac B 12/2/25)
+    Process(Seq("magick", backgroundPath, "-resize", "500x375", "-define", "png:exclude-chunk=pHYs", backgroundPath)).!
+
+    val dmgArgs = Seq(
+      "create-dmg",
+      "--volname", s"Install $buildName",
+      "--volicon", (buildDir / "NetLogo.icns").getAbsolutePath,
+      "--background", backgroundPath,
+      "--window-size", "500", "375",
+      "--icon", buildName, "125", "137",
+      "--app-drop-link", "375", "137",
+      dmgPath.toString,
+      destDir.getAbsolutePath
     )
+
     RunProcess(dmgArgs, destDir, "disk image (dmg) packaging")
 
     log.info(s"Signing dmg.")
