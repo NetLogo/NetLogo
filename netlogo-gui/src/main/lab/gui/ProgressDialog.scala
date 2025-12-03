@@ -229,7 +229,7 @@ private [gui] class ProgressDialog(parent: Window, supervisor: Supervisor, compi
 
     Positioning.center(this, parent)
 
-    Analytics.bspaceRun()
+    Analytics.bspaceRun(protocol.table, protocol.spreadsheet, protocol.stats, protocol.lists)
 
     timer.start()
 

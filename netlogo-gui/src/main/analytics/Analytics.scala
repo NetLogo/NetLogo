@@ -106,8 +106,17 @@ object Analytics {
     wrapRequest(MatomoRequests.event(category, "BehaviorSpace Open", null, null).build())
   }
 
-  def bspaceRun(): Unit = {
-    wrapRequest(MatomoRequests.event(category, "BehaviorSpace Run", null, null).build())
+  def bspaceRun(table: String, spreadsheet: String, stats: String, lists: String): Unit = {
+    val json = buildJson(
+      Map(
+        "table" -> table.trim.nonEmpty,
+        "spreadsheet" -> spreadsheet.trim.nonEmpty,
+        "stats" -> stats.trim.nonEmpty,
+        "lists" -> lists.trim.nonEmpty
+      )
+    )
+
+    wrapRequest(MatomoRequests.event(category, "BehaviorSpace Run", json, null).build())
   }
 
   def threedViewOpen(): Unit = {
