@@ -83,9 +83,9 @@ class DummyButtonWidget extends SingleErrorWidget with Editable {
     val nameSize = nameLabel.getPreferredSize
     val keySize = keyLabel.getPreferredSize
 
-    nameLabel.setBounds(getWidth / 2 - nameSize.width / 2, getHeight / 2 - nameSize.height / 2, nameSize.width,
-                        nameSize.height)
-    keyLabel.setBounds(getWidth - keySize.width - 4, 2, keySize.width, keySize.height)
+    nameLabel.setBounds((getWidth / 2 - nameSize.width / 2).max(6), getHeight / 2 - nameSize.height / 2,
+                        nameSize.width.min(getWidth - keySize.width - 9), nameSize.height)
+    keyLabel.setBounds(getWidth - keySize.width - 3, getHeight / 2 - keySize.height / 2, keySize.width, keySize.height)
   }
 
   override def syncTheme(): Unit = {

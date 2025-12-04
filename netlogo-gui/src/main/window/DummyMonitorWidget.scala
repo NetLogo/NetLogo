@@ -2,31 +2,74 @@
 
 package org.nlogo.window
 
-import java.awt.{ Dimension, Graphics }
+import java.awt.{ Dimension, Graphics, GridBagConstraints, GridBagLayout, Insets }
+import javax.swing.{ JLabel, JPanel }
 
 import org.nlogo.core.{ I18N, Monitor => CoreMonitor, Widget => CoreWidget }
-import org.nlogo.theme.InterfaceColors
-
-object DummyMonitorWidget {
-  private val LeftMargin = 5;
-  private val RightMargin = 6;
-  private val BottomMargin = 6;
-  private val FontPadding = 12;
-  private val MinWidth = 50;
-  private val MaxHeight = 49;
-  private val DefaultDecimalPlaces = 3
-  private val DefaultFontSize = 11
-}
+import org.nlogo.swing.RoundedBorderPanel
+import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 class DummyMonitorWidget extends SingleErrorWidget with MonitorWidget.ToMonitorModel with Editable {
-  import DummyMonitorWidget._
-
   private var _name: String = ""
-  private var _decimalPlaces: Int = DefaultDecimalPlaces
+  private var _decimalPlaces = 3
   private var _units: String = ""
 
+  private val nameLabel = new JLabel(" ")
+
+  private val valuePanel = new JPanel(new GridBagLayout) with RoundedBorderPanel with ThemeSync {
+    override def paintComponent(g: Graphics): Unit = {
+      setDiameter(zoom(6))
+
+      super.paintComponent(g)
+    }
+
+    override def syncTheme(): Unit = {
+      setBackgroundColor(InterfaceColors.displayAreaBackground())
+      setBorderColor(InterfaceColors.monitorBorder())
+    }
+  }
+
+  setLayout(new GridBagLayout)
+
+  initGUI()
+
+  override def initGUI(): Unit = {
+    removeAll()
+
+    val c = new GridBagConstraints
+
+    c.gridx = 0
+    c.gridwidth = 2
+    c.weightx = 1
+    c.anchor = GridBagConstraints.NORTHWEST
+    c.insets = {
+      if (_oldSize) {
+        new Insets(zoom(3), zoom(6), 0, zoom(6))
+      } else {
+        new Insets(zoom(6), zoom(8), zoom(6), zoom(8))
+      }
+    }
+
+    add(nameLabel, c)
+
+    nameLabel.setFont(nameLabel.getFont.deriveFont(_boldState))
+
+    c.gridwidth = 1
+    c.fill = GridBagConstraints.BOTH
+    c.weighty = 1
+    c.insets = {
+      if (_oldSize) {
+        new Insets(0, zoom(6), zoom(6), zoom(6))
+      } else {
+        new Insets(0, zoom(8), zoom(8), zoom(8))
+      }
+    }
+
+    add(valuePanel, c)
+  }
+
   def innerSource = ""
-  def fontSize = DefaultFontSize
+  def fontSize = 11
 
   def name: String = _name
 
@@ -34,6 +77,12 @@ class DummyMonitorWidget extends SingleErrorWidget with MonitorWidget.ToMonitorM
     val suffix = if (_units.isEmpty) "" else (" " + _units)
     _name = name + suffix
     displayName = name
+
+    if (_name.trim.isEmpty) {
+      nameLabel.setText(" ")
+    } else {
+      nameLabel.setText(_name)
+    }
   }
 
   def units: String = _units
@@ -50,35 +99,28 @@ class DummyMonitorWidget extends SingleErrorWidget with MonitorWidget.ToMonitorM
 
   override def getEditable: Option[Editable] = Some(this)
 
-  override def getMinimumSize: Dimension =
-    new Dimension(MinWidth, MaxHeight)
-
-  override def getPreferredSize: Dimension = {
-    val size = getMinimumSize
-    val fontMetrics = getFontMetrics(getFont)
-    size.width = StrictMath.max(size.width, fontMetrics.stringWidth(displayName) + FontPadding)
-    size.height = StrictMath.max(size.height, fontMetrics.getMaxDescent + fontMetrics.getMaxAscent + FontPadding)
-    size
+  override def getMinimumSize: Dimension = {
+    if (_oldSize) {
+      new Dimension(50, (fontSize * 4) + 1)
+    } else {
+      new Dimension(100, 60)
+    }
   }
 
-  override def paintComponent(g: Graphics): Unit = {
-    super.paintComponent(g) // paint background
-    val fm = g.getFontMetrics;
-    val labelHeight = fm.getMaxDescent + fm.getMaxAscent
-    val d = getSize()
-    val boxHeight = StrictMath.ceil(labelHeight * 1.4).toInt
-
-    g.setColor(InterfaceColors.widgetText())
-    g.drawString(displayName, LeftMargin,
-        d.height - BottomMargin - boxHeight - fm.getMaxDescent - 1)
-
-    g.setColor(InterfaceColors.displayAreaBackground())
-    g.fillRect(LeftMargin, d.height - BottomMargin - boxHeight,
-        d.width - LeftMargin - RightMargin - 1, boxHeight)
+  override def getPreferredSize: Dimension = {
+    if (_oldSize) {
+      new Dimension(100, getMinimumSize.height)
+    } else {
+      new Dimension(100, 60)
+    }
   }
 
   override def syncTheme(): Unit = {
     setBackgroundColor(InterfaceColors.monitorBackground())
+
+    nameLabel.setForeground(InterfaceColors.widgetText())
+
+    valuePanel.syncTheme()
   }
 
   def decimalPlaces: Int = _decimalPlaces
