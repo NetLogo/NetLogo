@@ -14,7 +14,7 @@ class DummyMonitorWidget extends SingleErrorWidget with MonitorWidget.ToMonitorM
   private var _decimalPlaces = 3
   private var _units: String = ""
 
-  private val nameLabel = new JLabel(" ")
+  private val nameLabel = new JLabel(I18N.gui.get("edit.monitor.previewName"))
 
   private val valuePanel = new JPanel(new GridBagLayout) with RoundedBorderPanel with ThemeSync {
     override def paintComponent(g: Graphics): Unit = {
@@ -79,7 +79,7 @@ class DummyMonitorWidget extends SingleErrorWidget with MonitorWidget.ToMonitorM
     displayName = name
 
     if (_name.trim.isEmpty) {
-      nameLabel.setText(" ")
+      nameLabel.setText(I18N.gui.get("edit.monitor.previewName"))
     } else {
       nameLabel.setText(_name)
     }
