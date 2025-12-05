@@ -170,6 +170,32 @@ object JavaPackager {
     if (returnValue != 0) {
       sys.error("packaging failed!")
     }
+
+    // required for subprocesses like the GoGo daemon to use the bundled Java
+    log.info("Copying Java executable into runtime")
+
+    val os = System.getProperty("os.name").toLowerCase
+
+    val javaExec: File = {
+      if (os.startsWith("win")) {
+        jpackage.getParentFile / "java.exe"
+      } else {
+        jpackage.getParentFile / "java"
+      }
+    }
+
+    val javaDest: File = {
+      if (os.startsWith("linux")) {
+        destDir / "NetLogo" / "lib" / "runtime" / "bin" / javaExec.getName
+      } else {
+        destDir / "NetLogo" / "runtime" / "bin" / javaExec.getName
+      }
+    }
+
+    javaDest.getParentFile.mkdirs()
+
+    FileActions.copyFile(javaExec, javaDest)
+
     destDir.listFiles.head
   }
 
