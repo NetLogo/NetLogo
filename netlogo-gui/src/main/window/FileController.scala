@@ -131,13 +131,7 @@ class FileController(owner: Component, modelTracker: ModelTracker) extends OpenM
     val userPath = FileDialog.showFiles(
       owner, I18N.gui.get("menu.file.saveAs"), AWTFileDialog.SAVE,
       guessFileName, List[String](ModelReader.modelSuffix))
-    val extensionPath = FileIO.ensureExtension(userPath, ModelReader.modelSuffix)
-    val path = Paths.get(extensionPath)
-    if (!path.toFile.exists) {
-      Some(path.toUri)
-    } else {
-      FileDialog.confirmFileOverwrite(owner, extensionPath).map((_) => path.toUri)
-    }
+    Option(userPath).map(Paths.get(_).toUri)
   }
 
   /**

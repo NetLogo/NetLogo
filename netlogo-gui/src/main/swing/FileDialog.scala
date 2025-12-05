@@ -33,20 +33,12 @@ object FileDialog {
     */
   @throws[UserCancelException]
   def showFiles(component: Component, title: String, mode: Int, file: String, allowed: List[String] = Nil): String =
-    showFiles(Hierarchy.getFrame(component), title, mode, file, allowed)
+    showFiles(Hierarchy.getFrame(component), title, mode, new File(file), allowed)
 
-  def confirmFileOverwrite(owner: Component, path: String) = {
-    // The FileDialog checks for overwrite, but we munge extensions after
-    // so we need to check with the user to see if they really meant to use
-    // the extension so we don't overwrite anything we're not meant to.
-    // -Jeremy B June 2021
-    if (new OptionPane(owner, I18N.gui.get("common.netlogo"), I18N.gui.getN("file.save.warn.overwrite", path),
-                       Seq(I18N.gui.get("common.buttons.replace"), I18N.gui.get("common.buttons.cancel")),
-                       OptionPane.Icons.Question).getSelectedIndex != 0) {
-      None
-    } else {
-      Some(path)
-    }
+  private def confirmFileOverwrite(owner: Component, path: String): Boolean = {
+    new OptionPane(owner, I18N.gui.get("common.netlogo"), I18N.gui.getN("file.save.warn.overwrite", path),
+                   Seq(I18N.gui.get("common.buttons.replace"), I18N.gui.get("common.buttons.cancel")),
+                   OptionPane.Icons.Question).getSelectedIndex == 0
   }
 
   /**
@@ -71,21 +63,33 @@ object FileDialog {
   }
 
   @throws[UserCancelException]
-  private def showFiles(parentFrame: Frame, title: String, mode: Int, file: String, allowed: List[String]): String = {
-    val chooser = new AWTFileDialog(parentFrame, title, mode)
-    chooser.setDirectory(getDirectory)
+  private def showFiles(parentFrame: Frame, title: String, mode: Int, file: File, allowed: List[String]): String = {
+    val chooser = new JFileChooser(getDirectory) {
+      override def approveSelection(): Unit = {
+        val path = getSelectedFile.getAbsolutePath
+        val munged = org.nlogo.api.FileIO.ensureExtension(path, org.nlogo.api.ModelReader.modelSuffix)
+
+        if (!new File(munged).exists || confirmFileOverwrite(this, munged))
+          super.approveSelection()
+      }
+    }
+    chooser.setDialogTitle(title)
+    chooser.setFileSelectionMode(JFileChooser.FILES_ONLY)
     if (file != null)
-      chooser.setFile(file)
-    chooser.setVisible(true)
-    if (chooser.getFile == null)
+      chooser.setSelectedFile(file)
+    val result = {
+      if (mode == AWTFileDialog.LOAD) {
+        chooser.showOpenDialog(parentFrame)
+      } else {
+        chooser.showSaveDialog(parentFrame)
+      }
+    }
+    if (result != JFileChooser.APPROVE_OPTION)
       throw new UserCancelException
-    setDirectory(chooser.getDirectory)
-    if (mode == AWTFileDialog.LOAD && !new File(getDirectory + chooser.getFile).exists)
-      return showFiles(parentFrame, title, mode, chooser.getFile, allowed)
-    if (chooser.getDirectory == null)
-      chooser.getFile
-    else
-      chooser.getDirectory + chooser.getFile
+    setDirectory(selectedDirectory(chooser))
+    if (mode == AWTFileDialog.LOAD && !chooser.getSelectedFile.exists)
+      return showFiles(parentFrame, title, mode, chooser.getSelectedFile, allowed)
+    chooser.getSelectedFile.getAbsolutePath
   }
 
   private def selectedDirectory(chooser: JFileChooser): String = {

@@ -8,7 +8,6 @@ import java.awt.image.BufferedImage
 import java.io.{ IOException, InputStream, PrintWriter, Reader }
 import java.lang.Thread
 import java.net.MalformedURLException
-import java.nio.file.Paths
 import java.util.Locale
 import java.util.concurrent.TimeoutException
 import javax.swing.{ AbstractAction, Action, Timer }
@@ -969,17 +968,8 @@ abstract class GUIWorkspace(world: World, kioskLevel: GUIWorkspace.KioskLevel, f
   def doExportView(exportee: LocalViewInterface): Unit = {
     val exportPathOption =
       try {
-        val userPath      = FileDialog.showFiles(getExportWindowFrame, I18N.gui.get("menu.file.export.view"),
-                                                 AwtFileDialog.SAVE, guessExportName("view.png"))
-        val extensionPath = FileIO.ensureExtension(userPath, "png")
-        val path          = Paths.get(extensionPath)
-
-        if (!path.toFile.exists || userPath == extensionPath) {
-          Some(extensionPath)
-        } else {
-          FileDialog.confirmFileOverwrite(frame, extensionPath)
-        }
-
+        Option(FileDialog.showFiles(getExportWindowFrame, I18N.gui.get("menu.file.export.view"),
+                                    AwtFileDialog.SAVE, guessExportName("view.png")))
       } catch {
         case ex: UserCancelException =>
           Exceptions.ignore(ex)
