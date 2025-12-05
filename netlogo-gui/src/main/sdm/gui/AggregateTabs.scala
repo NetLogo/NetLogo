@@ -25,6 +25,8 @@ class AggregateTabs(editor: AggregateModelEditor, editorTab: AggregateEditorTab,
 
   setSelectedComponent(editorTab)
 
+  syncTheme()
+
   override def stateChanged(e: ChangeEvent): Unit = {
     proceduresTab.setText(editor.toNetLogoCode)
   }
