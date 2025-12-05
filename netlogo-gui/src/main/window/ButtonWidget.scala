@@ -302,7 +302,7 @@ class ButtonWidget(random: MersenneTwisterFast, compiler: CompilerServices, colo
   def mouseMoved(e: MouseEvent): Unit = {}
   def mouseClicked(e: MouseEvent): Unit = {
     if (!e.isPopupTrigger() && error().isDefined && !lastMousePressedWasPopupTrigger && hasButton1(e))
-      new Events.EditWidgetEvent(this).raise(this)
+      new Events.EditWidgetEvent(widgetContainer.orNull, this).raise(this)
   }
 
   /// editability

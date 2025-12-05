@@ -442,7 +442,7 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
     foreground()
 
     if (e.getClickCount == 2) {
-      widget.getEditable.foreach(new EditWidgetEvent(_).raise(this))
+      widget.getEditable.foreach(new EditWidgetEvent(interfacePanel, _).raise(this))
 
       return
     }
@@ -798,7 +798,7 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
           def actionPerformed(e: ActionEvent): Unit = {
             selected(true)
             foreground()
-            new EditWidgetEvent(editable).raise(WidgetWrapper.this)
+            new EditWidgetEvent(interfacePanel, editable).raise(WidgetWrapper.this)
           }
         }))
 

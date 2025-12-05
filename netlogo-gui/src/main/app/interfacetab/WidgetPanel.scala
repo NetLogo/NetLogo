@@ -164,7 +164,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
       if (focus)
         requestFocus()
 
-      new InterfaceModeChangedEvent(mode).raise(this)
+      new InterfaceModeChangedEvent(this, mode).raise(this)
     }
   }
 
@@ -693,7 +693,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
       case InterfaceMode.Edit =>
         if (e.getButton == MouseEvent.BUTTON1) {
-          wrapperAtPoint(e.getPoint).flatMap(_.widget.getEditable).foreach(new EditWidgetEvent(_).raise(this))
+          wrapperAtPoint(e.getPoint).flatMap(_.widget.getEditable).foreach(new EditWidgetEvent(this, _).raise(this))
         } else {
           wrapperAtPoint(e.getPoint) match {
             case Some(w) =>
@@ -997,7 +997,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
     setInterfaceMode(InterfaceMode.Interact, false)
 
-    wrapper.widget.getEditable.foreach(new EditWidgetEvent(_).raise(this))
+    wrapper.widget.getEditable.foreach(new EditWidgetEvent(this, _).raise(this))
 
     placedShadowWidgets = false
 

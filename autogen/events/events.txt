@@ -24,7 +24,7 @@ window.CompileAll
 window.CompileMoreSource - org.nlogo.api.JobOwner owner
 window.Compiled - org.nlogo.api.SourceOwner sourceOwner - org.nlogo.core.Program program - org.nlogo.nvm.Procedure procedure - org.nlogo.core.CompilerException error
 window.Dirty - scala.Option<String> path
-window.EditWidget - org.nlogo.window.Editable widget
+window.EditWidget - java.awt.Component source - org.nlogo.window.Editable widget
 window.EditView3D - org.nlogo.window.Editable settings
 window.Enable2D - boolean enabled
 window.ExportPlot - org.nlogo.window.PlotWidgetExport plotExport - String exportFilename - Runnable onCompletion
@@ -34,7 +34,7 @@ window.ExternalFileSaved - String path
 window.Iconified - java.awt.Frame frame - boolean iconified
 window.InputBoxLoseFocus
 window.InterfaceGlobal - InterfaceGlobalWidget widget - boolean nameChanged - boolean updating - boolean valueChanged - boolean buttonReleased
-window.InterfaceModeChanged - org.nlogo.window.InterfaceMode mode
+window.InterfaceModeChanged - java.awt.Component source - org.nlogo.window.InterfaceMode mode
 window.JobRemoved - org.nlogo.api.JobOwner owner
 window.JobStopping - org.nlogo.api.JobOwner owner
 window.Load3DShapes - String filename

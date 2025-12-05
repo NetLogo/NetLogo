@@ -344,5 +344,8 @@ abstract class WorldViewSettings(protected val workspace: GUIWorkspace, protecte
   def sourceOffset: Int =
     // we should never be dealing with errors
     // related to the view
-    throw new IllegalStateException();
+    throw new IllegalStateException()
+
+  def widgetContainer: Option[WidgetContainer] =
+    gWidget.getWidgetContainer
 }
