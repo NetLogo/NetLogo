@@ -93,7 +93,7 @@ class ViewUpdatePanel(workspace: GUIWorkspace, speedSlider: SpeedSliderPanel, di
       if (is3D) {
         new Events.EditView3DEvent(settings).raise(e.getSource)
       } else {
-        new Events.EditWidgetEvent(settings).raise(e.getSource)
+        new Events.EditWidgetEvent(settings.widgetContainer.orNull, settings).raise(e.getSource)
       }
     }
   }

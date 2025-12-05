@@ -2,12 +2,13 @@
 
 package org.nlogo.window
 
-import org.nlogo.core.{ Widget => CoreWidget }
 import java.awt.{ Component, Rectangle }
+
+import org.nlogo.core.{ Widget => CoreWidget }
 
 // implemented by WidgetPanel and InterfacePanelLite - ST 10/14/03
 
-trait WidgetContainer {
+trait WidgetContainer extends Component {
   def getUnzoomedBounds(component: Component): Rectangle
 
   def resetZoomInfo(widget: Widget): Unit

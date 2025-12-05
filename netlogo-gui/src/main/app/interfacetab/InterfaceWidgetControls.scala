@@ -12,8 +12,8 @@ import org.nlogo.core.I18N
 import org.nlogo.swing.{ DropdownArrow, MenuItem, MouseUtils, PopupMenu, RoundedBorderPanel, ToolBarToggleButton,
                          Transparent, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
-import org.nlogo.window.{ Editable, EditDialog, EditDialogFactory, Events => WindowEvents, GUIWorkspace, InterfaceMode,
-                          JobWidget, Widget, WidgetInfo, WorldViewSettings }
+import org.nlogo.window.{ Editable, EditDialogFactory, Events => WindowEvents, GUIWorkspace, InterfaceMode, JobWidget,
+                          Widget, WidgetInfo, WorldViewSettings }
 
 import scala.collection.mutable.HashSet
 
@@ -101,7 +101,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
   class EditAction extends AbstractAction {
     def actionPerformed(e: ActionEvent): Unit = {
       if (editButton.isSelected) {
-        new WindowEvents.EditWidgetEvent(null).raise(InterfaceWidgetControls.this)
+        new WindowEvents.EditWidgetEvent(wPanel, null).raise(InterfaceWidgetControls.this)
 
         wPanel.setInterfaceMode(InterfaceMode.Edit, true)
       }
@@ -126,22 +126,24 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
   private var editTarget: Option[Editable] = None
 
   def handle(e: WindowEvents.EditWidgetEvent): Unit = {
-    // this is to support the "Edit..." button in the view control strip - ST 7/18/03
-    val targetOption = Option(e.widget).orElse {
-      if (!editButton.isEnabled) None
-      editTarget
-    }.filter(wPanel.contains)
-    for (target <- targetOption) {
-      def suppress(b: Boolean): Unit = {
-        target match {
-          case w: JobWidget => w.suppressRecompiles(b)
-          case _ =>
+    if (e.source == wPanel) {
+      // this is to support the "Edit..." button in the view control strip - ST 7/18/03
+      val targetOption = Option(e.widget).orElse {
+        if (!editButton.isEnabled) None
+        editTarget
+      }.filter(wPanel.contains)
+      for (target <- targetOption) {
+        def suppress(b: Boolean): Unit = {
+          target match {
+            case w: JobWidget => w.suppressRecompiles(b)
+            case _ =>
+          }
         }
+        wPanel.haltIfRunning()
+        suppress(true)
+        wPanel.editWidgetFinished(target, dialogFactory.canceled(frame, target))
+        suppress(false)
       }
-      wPanel.haltIfRunning()
-      suppress(true)
-      wPanel.editWidgetFinished(target, dialogFactory.canceled(frame, target))
-      suppress(false)
     }
   }
 
@@ -149,7 +151,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
     e.settings match {
       case wvs: WorldViewSettings =>
         wPanel.haltIfRunning()
-        wPanel.editWidgetFinished(wvs, new EditDialog(frame, wvs, wvs.editPanel3D, true).canceled)
+        wPanel.editWidgetFinished(wvs, dialogFactory.canceled(frame, wvs))
 
       case _ =>
     }
@@ -236,25 +238,27 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
   }
 
   def handle(e: WindowEvents.InterfaceModeChangedEvent): Unit = {
-    e.mode match {
-      case InterfaceMode.Interact =>
-        interactButton.setSelected(true)
+    if (e.source == wPanel) {
+      e.mode match {
+        case InterfaceMode.Interact =>
+          interactButton.setSelected(true)
 
-      case InterfaceMode.Select =>
-        selectButton.setSelected(true)
+        case InterfaceMode.Select =>
+          selectButton.setSelected(true)
 
-      case InterfaceMode.Edit =>
-        editButton.setSelected(true)
+        case InterfaceMode.Edit =>
+          editButton.setSelected(true)
 
-      case InterfaceMode.Delete =>
-        deleteButton.setSelected(true)
+        case InterfaceMode.Delete =>
+          deleteButton.setSelected(true)
 
-      case InterfaceMode.Add =>
-        buttonGroup.clearSelection()
+        case InterfaceMode.Add =>
+          buttonGroup.clearSelection()
 
+      }
+
+      syncTheme()
     }
-
-    syncTheme()
   }
 
   class WidgetMenu extends JPanel(new GridBagLayout) with RoundedBorderPanel with ThemeSync with MouseUtils {
