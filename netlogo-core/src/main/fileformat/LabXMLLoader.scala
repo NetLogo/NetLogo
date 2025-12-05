@@ -2,7 +2,7 @@
 
 package org.nlogo.fileformat
 
-import org.nlogo.api.{ Dump, LabProtocol, RefEnumeratedValueSet, RefValueSet, SteppedValueSet }
+import org.nlogo.api.{ Dump, LabProtocol, RefEnumeratedValueSet, RefValueSet, SteppedValueSet, Version }
 import org.nlogo.core.{ LiteralParser, XMLElement }
 
 object LabXMLLoader {
@@ -81,7 +81,7 @@ object LabXMLLoader {
 
   }
 
-  def writeExperiment(experiment: LabProtocol): XMLElement = {
+  def writeExperiment(experiment: LabProtocol, includeVersion: Boolean): XMLElement = {
 
     def makeBabyMaybe(cond: => Boolean)
                       (tagName: String, text: String, subBabies: Seq[XMLElement]): Option[XMLElement] =
@@ -125,7 +125,13 @@ object LabXMLLoader {
          , "repetitions"         -> experiment.repetitions.toString
          , "sequentialRunOrder"  -> experiment.sequentialRunOrder.toString
          , "runMetricsEveryStep" -> experiment.runMetricsEveryStep.toString
-         )
+         ) ++ {
+        if (includeVersion) {
+          Map("version" -> Version.version)
+        } else {
+          Map()
+        }
+      }
 
     val attributes =
       baseAttributes ++
