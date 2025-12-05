@@ -133,7 +133,7 @@ class FileController(owner: Component, modelTracker: ModelTracker) extends OpenM
       guessFileName, List[String](ModelReader.modelSuffix))
     val extensionPath = FileIO.ensureExtension(userPath, ModelReader.modelSuffix)
     val path = Paths.get(extensionPath)
-    if (!path.toFile.exists) {
+    if (!path.toFile.exists || userPath == extensionPath) {
       Some(path.toUri)
     } else {
       FileDialog.confirmFileOverwrite(owner, extensionPath).map((_) => path.toUri)
