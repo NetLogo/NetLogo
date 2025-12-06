@@ -399,6 +399,14 @@ class ButtonWidget(random: MersenneTwisterFast, compiler: CompilerServices, colo
     repaint()
   }
 
+  override def setZoomFactor(zoomFactor: Double): Unit = {
+    super.setZoomFactor(zoomFactor)
+
+    syncTheme()
+    revalidate()
+    repaint()
+  }
+
   def popUpStoppingButton(): Unit = {
     buttonUp = true
     running = false
@@ -533,11 +541,11 @@ class ButtonWidget(random: MersenneTwisterFast, compiler: CompilerServices, colo
   }
 
   override def syncTheme(): Unit = {
-    foreverIcon = Utils.iconScaledWithColor("/images/forever.png", 15, 15,
+    foreverIcon = Utils.iconScaledWithColor("/images/forever.png", zoom(15), zoom(15),
                                             InterfaceColors.buttonText())
-    foreverIconPressed = Utils.iconScaledWithColor("/images/forever.png", 15, 15,
+    foreverIconPressed = Utils.iconScaledWithColor("/images/forever.png", zoom(15), zoom(15),
                                                    InterfaceColors.buttonTextPressed())
-    foreverIconDisabled = Utils.iconScaledWithColor("/images/forever.png", 15, 15,
+    foreverIconDisabled = Utils.iconScaledWithColor("/images/forever.png", zoom(15), zoom(15),
                                                     InterfaceColors.buttonTextDisabled())
   }
 
