@@ -76,3 +76,6 @@
 [submodule "extensions/sr"]
 	path = extensions/sr
 	url = https://github.com/NetLogo/SimpleR-Extension
+[submodule "test/exports"]
+	path = test/exports
+	url = https://github.com/NetLogo/Model-Exports

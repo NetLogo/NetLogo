@@ -5,6 +5,6 @@ package org.nlogo.headless
 import org.nlogo.api.Version
 
 object ChecksumsAndPreviewsSettings {
-  val ChecksumsFilePath = if (Version.is3D) "test/checksums3d.txt" else "test/checksums.txt"
+  val ChecksumsPath = if (Version.is3D) "test/exports/threed" else "test/exports/gui"
   val DumpsPath = "test/benchdumps/"
 }

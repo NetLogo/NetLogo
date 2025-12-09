@@ -20,12 +20,7 @@ object ChecksumsAndPreviews {
     Def.setting(checksum, makeTask("--checksum")),
     Def.setting(allChecksums, makeTask("--checksums")),
     Def.setting(preview, makeTask("--preview")),
-    Def.setting(allPreviews, makeTask("--previews")),
-    Def.setting(checksumExport, makeTask("--checksum-export")),
-    Def.setting(allChecksumsExport, makeTask("--checksum-exports")),
-    Def.setting(allRevisions, Running.makeMainTask("org.nlogo.headless.ChecksumsAndPreviews",
-                                                   Seq("--revisions"),
-                                                   workingDirectory = baseDirectory(_.getParentFile)))
+    Def.setting(allPreviews, makeTask("--previews"))
   )
 
   private def makeTask(flag: String): Def.Initialize[InputTask[Try[Unit]]] =
