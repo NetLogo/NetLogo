@@ -2,126 +2,156 @@
 
 package org.nlogo.headless
 
-import collection.mutable.LinkedHashMap
-
-import java.io.{ File, FileWriter }
-import java.nio.file.{ Files, Paths }
+import java.io.File
+import java.nio.file.{ Files, Path, Paths }
+import javax.imageio.ImageIO
 
 import org.nlogo.api.{ FileIO, PreviewCommands, Version }
 import org.nlogo.core.CompilerException
-import org.nlogo.headless.ChecksumsAndPreviewsSettings.ChecksumsFilePath
+import org.nlogo.headless.ChecksumsAndPreviewsSettings.ChecksumsPath
 import org.nlogo.nvm.Workspace
-import org.nlogo.util.PathUtils
 import org.nlogo.workspace.{ Checksummer, ModelsLibrary, PreviewCommandsRunner }
 
 import scala.io.Source
-import scala.sys.process.Process
 
 object ChecksumsAndPreviews {
 
   val allBenchmarks =
-    List("ANN", "Ants", "Bureaucrats", "BZ", "CA1D", "Erosion", "Fire", "FireBig", "Flocking", "GasLabCirc",
-         "GasLabNew", "GasLabOld", "GridWalk", "Heatbugs", "Ising", "Life", "PrefAttach",
-         "Team", "Termites", "VirusNet", "Wealth", "Wolf", "ImportWorld")
+    Seq("ANN", "Ants", "Bureaucrats", "BZ", "CA1D", "Erosion", "Fire", "FireBig", "Flocking", "GasLabCirc",
+        "GasLabNew", "GasLabOld", "GridWalk", "Heatbugs", "Ising", "Life", "PrefAttach",
+        "Team", "Termites", "VirusNet", "Wealth", "Wolf", "ImportWorld")
 
   def main(argv: Array[String]): Unit = {
     Main.setHeadlessProperty()
-    def paths(includeBenchmarks: Boolean) = {
-      val allLibrary = ModelsLibrary.getModelPaths(true, false).map(PathUtils.standardize).toList
-      val library = if (includeBenchmarks)
-        allBenchmarks.map("models/test/benchmarks/" + _ + " Benchmark.nlogox") ::: allLibrary
-      else
-        allLibrary
 
-      library
-        .map(p => {
-          val iOf = p.indexOf(ModelsLibrary.modelsRoot)
-          val r = p.substring(iOf)
-          r
-        })
-        .distinct
-        .toList
+    def paths(includeBenchmarks: Boolean): Seq[Path] = {
+      val allLibrary: Seq[Path] = ModelsLibrary.getModelPaths(true, false).map { path =>
+        Paths.get(ModelsLibrary.modelsRoot).toAbsolutePath.getParent.relativize(Paths.get(path))
+      }.toSeq
+
+      if (includeBenchmarks) {
+        allBenchmarks.map(name => Paths.get(s"models/test/benchmarks/$name Benchmark.nlogox")) ++ allLibrary
+      } else {
+        allLibrary
+      }
     }
 
-    def readVariants(): Map[String, Seq[String]] = {
-      val lines = Source.fromFile("test/checksum-variants.txt").getLines()
-        .map((s: String) => s.trim.split("#")(0))
-        .filter((s: String) => !s.startsWith("#") && !s.isEmpty)
+    def readVariants(): Map[Path, Seq[String]] = {
+      val source = Source.fromFile("test/checksum-variants.txt")
+      val lines = source.getLines.collect {
+        case line if !line.trim.startsWith("#") && line.trim.nonEmpty =>
+          line.trim
+      }
+
       if (!lines.hasNext) {
+        source.close()
+
         return Map()
       }
+
       val firstModelLine = lines.next()
+
       if (!firstModelLine.startsWith("*")) {
+        source.close()
+
         throw new IllegalStateException(s"variants file must start with a '*' model entry: $lines")
       }
 
-      def cleanModelPath(path: String): String = path.split("\\*")(1).trim
+      def getModelPath(path: String): Path = Paths.get(path.stripPrefix("*").trim)
 
-      def mapper(current: (String, Map[String, Seq[String]]), line: String): (String, Map[String, Seq[String]]) = {
+      def mapper(current: (Path, Map[Path, Seq[String]]), line: String): (Path, Map[Path, Seq[String]]) = {
         if (line.startsWith("*")) {
-          val newModel = cleanModelPath(line)
+          val newModel = getModelPath(line)
           (newModel, current._2 + (newModel -> Seq()))
         } else {
           val currentVariants = current._2.getOrElse(current._1, Seq())
-          (current._1, current._2 + (current._1 -> (currentVariants :+ line)))
+          (current._1, current._2 + (current._1 -> (currentVariants :+ line.trim)))
         }
       }
 
-      val firstModel = cleanModelPath(firstModelLine)
-      val starter: (String, Map[String, Seq[String]]) = (firstModel, Map(firstModel -> Seq("")))
-      val variants = lines.foldLeft(starter)(mapper)
+      val firstModel = getModelPath(firstModelLine)
+      val variants = lines.foldLeft((firstModel, Map(firstModel -> Seq())))(mapper)
+
+      source.close()
+
       variants._2
     }
 
-    // The option names correspond to task names in sbt - ST 2/12/09
-    // except "checksums" is "all-checksums" since in sbt the former
-    // is already taken - ST 6/28/12
-    argv match {
-      case Array("--checksum", path) =>
-        Checksums.update(List(path), readVariants())
-      case Array("--checksums") =>
-        Checksums.update(paths(includeBenchmarks = !Version.is3D), readVariants())
-      case Array("--preview", path) =>
-        Previews.remake(path)
-      case Array("--previews") =>
-        paths(false).foreach(Previews.remake)
-      case Array("--checksum-export", path) =>
-        ChecksumExports.`export`(List(path))
-      case Array("--checksum-exports") =>
-        ChecksumExports.`export`(paths(includeBenchmarks = !Version.is3D))
-      case Array("--revisions") =>
-        Checksums.updateRevisions()
-      case _ =>
-        throw new Exception(s"Unexpected input arguments: $argv")
+    try {
+      // The option names correspond to task names in sbt - ST 2/12/09
+      // except "checksums" is "all-checksums" since in sbt the former
+      // is already taken - ST 6/28/12
+      argv match {
+        case Array("--checksum", path) =>
+          Checksums.update(Seq(Paths.get(path)), readVariants())
+        case Array("--checksums") =>
+          Checksums.update(paths(includeBenchmarks = !Version.is3D), readVariants())
+        case Array("--preview", path) =>
+          Previews.remake(Paths.get(path))
+        case Array("--previews") =>
+          paths(false).foreach(Previews.remake)
+        case _ =>
+          throw new Exception(s"Unexpected input arguments: $argv")
+      }
+
+      println("done")
+
+      // this call forces any lingering resources to be cleaned up, ensuring
+      // that the task always exits immediately (Isaac B 10/2/25)
+      System.exit(0)
+    } catch {
+      case e: Exception =>
+        e.printStackTrace()
+
+        System.exit(1)
     }
-    println("done")
-    // this call forces any lingering resources to be cleaned up, ensuring
-    // that the task always exits immediately (Isaac B 10/2/25)
-    System.exit(0)
   }
+
+  def checksumEntries(file: File = new File(ChecksumsPath)): Array[Entry] = {
+    val children = file.listFiles
+
+    if (children.exists(_.isDirectory)) {
+      children.flatMap(checksumEntries)
+    } else {
+      val name = file.getName
+
+      val (baseName, variant) = {
+        val extIndex = name.lastIndexOf(".nlogox")
+        val varIndex = name.indexOf('(', extIndex)
+
+        if (varIndex == -1) {
+          (name, None)
+        } else {
+          (name.substring(0, varIndex - 1), Option(name.substring(varIndex + 1, name.lastIndexOf(')'))))
+        }
+      }
+
+      val checksumPath = file.toPath
+      val modelPath = Paths.get(ChecksumsPath).relativize(checksumPath).resolveSibling(baseName)
+
+      Array(Entry(modelPath, checksumPath, variant))
+    }
+  }
+
+  case class Entry(modelPath: Path, checksumPath: Path, variant: Option[String])
 
   object Previews {
 
     def needsManualPreview(previewCommands: String) =
       previewCommands.contains("need-to-manually-make-preview-for-this-model")
 
-    def remake(path: String): Unit = {
-      if (path.contains("GenJam - Duple") || path.contains("Frogger") || path.contains("Sound Machines")) {
-        println("skipping: " + path + "\n (uses sound extension)")
-        return
-      }
-      val previewPath = path.replaceFirst(".nlogox(3d)?", ".png")
+    def remake(path: Path): Unit = {
       try {
         val runner = PreviewCommandsRunner.fromModelPath(new WorkspaceFactory {
           def openCurrentModelIn(workspace: Workspace): Unit = {}
-        }, path)
-        println("making preview for: " + path)
-        FileIO.writeImageFile(runner.previewImage.get, previewPath, "PNG")
+        }, path.toString)
+        println(s"making preview for: $path")
+        FileIO.writeImageFile(runner.previewImage.get, s"$path.png", "PNG")
       } catch {
         case _: PreviewCommandsRunner.NonCompilableCommandsException =>
-          println("skipping: " + path + "\n  (non-compilable preview commands)")
+          println(s"skipping: $path\n  (non-compilable preview commands)")
         case e: CompilerException =>
-          println("skipping: " + path + "\n  " + e.getMessage)
+          println(s"skipping: $path\n  ${e.getMessage}")
       }
     }
 
@@ -131,165 +161,71 @@ object ChecksumsAndPreviews {
 
   object Checksums {
 
-    val separator = " * " // used to separate fields in the checksums file
-
-    def variantKey(path: String, variant: String): String =
-      s"$path${if (variant == "") "" else s" ($variant)"}"
-
-    case class Entry(path: String, variant: String, worldSum: String, graphicsSum: String, revision: String) {
-
-      def equalsExceptRevision(other: Entry) =
-        path == other.path && variant == other.variant && worldSum == other.worldSum && graphicsSum == other.graphicsSum
-
-      val key = Checksums.variantKey(path, variant)
-
-      override def toString =
-        List(path, variant, worldSum, graphicsSum, revision).mkString(separator)
-
+    private def variantPath(path: Path, variant: String): Path = {
+      if (variant.isEmpty) {
+        path
+      } else {
+        path.resolveSibling(s"${path.getFileName} ($variant)")
+      }
     }
 
-    type ChecksumMap = LinkedHashMap[String, Entry]
-
-    def update(paths: List[String], variants: Map[String, Seq[String]]): Unit = {
+    def update(paths: Seq[Path], variants: Map[Path, Seq[String]]): Unit = {
       // prevent annoying JAI message on Linux when using JAI extension
       // (old.nabble.com/get-rid-of-%22Could-not-find-mediaLib-accelerator-wrapper-classes%22-td11025745.html)
       System.setProperty("com.sun.media.jai.disableMediaLib", "true")
 
-      val m = load()
-      val results: List[(String, Exception)] = paths.flatMap( (p) => updateOne(m, p, variants.getOrElse(p, Seq())) )
-      write(m, ChecksumsFilePath)
-      if (!results.isEmpty) {
-        val errors = results.map({ case (model, ex) => s"Exception in $model: ${ex.toString()}" }).mkString("\n\n")
-        throw new Exception(s"Not all checksums completed.  Review the errors and resolve them.\n\n$errors")
-      }
+      paths.foreach(p => updateOne(p, variants.getOrElse(p, Seq())))
     }
 
-    def updateOne(m: ChecksumMap, model: String, variants: Seq[String]): Option[(String, Exception)] = {
+    private def updateOne(modelPath: Path, variants: Seq[String]): Unit = {
       val workspace = HeadlessWorkspace.newInstance
+
       workspace.silent = true
-      try {
-        if (!new File(model).exists && m.contains(model)) {
-          // if the model doesn't exist and it's in the checksum file just remove it. if it's not in
-          // the checksum file let it fall through and report the error
-          m.remove(model)
-          println("Model does not exist, deleting checksum for: " + model)
-          if (variants.length != 0) {
-            variants.foreach((v) => m.remove(Checksums.variantKey(model, v)))
-            println(s"** Variants found for a deleted model, they should be removed if the model is really gone or changed if the model moved: $variants")
-          }
-        }
-        else {
-          workspace.open(model, true)
 
-          if (workspace.previewCommands != PreviewCommands.Manual) {
-            updateOneHelper(m, model, "", workspace)
-            variants.sortWith(_ < _).foreach(updateOneHelper(m, model, _, workspace))
-          }
+      if (Files.exists(modelPath)) {
+        workspace.open(modelPath.toString, true)
+
+        if (workspace.previewCommands != PreviewCommands.Manual) {
+          updateOneHelper(modelPath, "", workspace)
+
+          variants.foreach(updateOneHelper(modelPath, _, workspace))
+        }
+      } else {
+        // if the model doesn't exist and it's in the checksum directory just remove it. if it's not in
+        // the checksum directory let it fall through and report the error
+        println(s"Model does not exist, deleting checksum for: $modelPath")
+
+        if (variants.nonEmpty) {
+          println(s"** Variants found for a deleted model, they should be removed if the model is really gone or changed if the model moved: $variants")
+
+          variants.foreach(v => deleteRecursive(variantPath(modelPath, v).toFile))
         }
       }
-      catch {
-        case e: Exception =>
-          println(s"Exception occurred making checksums for $model")
-          return Some((model, e))
-      }
-      finally { workspace.dispose() }
-      None
+
+      workspace.dispose()
     }
 
-    def updateOneHelper(m: ChecksumMap, model: String, variant: String, workspace: HeadlessWorkspace): Unit = {
-      val key = Checksums.variantKey(model, variant)
+    private def updateOneHelper(modelPath: Path, variant: String, workspace: HeadlessWorkspace): Unit = {
+      val checksumPath = variantPath(Paths.get(ChecksumsPath).resolve(modelPath), variant)
+
+      println(s"Making checksum for: $modelPath")
+
       Checksummer.initModelForChecksumming(workspace, variant)
-      val newCheckSum = Checksummer.calculateWorldChecksum(workspace)
-      val newGraphicsChecksum = Checksummer.calculateGraphicsChecksum(workspace)
-      val revision = getRevisionNumber(workspace.getModelPath)
-      val oldEntry = m.get(key)
-      val newEntry = Entry(model, variant, newCheckSum, newGraphicsChecksum, revision)
-      // figure out if the entry is new, changed, or the same
-      val action =
-        if (!m.contains(key)) "* Added"
-        else if (oldEntry.get == newEntry) "Didn't change"
-        else if (oldEntry.get.equalsExceptRevision(newEntry)) "* Changed rev # only"
-        else "* Changed"
-      m.put(newEntry.key, newEntry)
-      if (action != "Didn't change")
-        println(action + ": \"" + newEntry.toString + "\"")
+
+      Files.createDirectories(checksumPath)
+
+      Files.writeString(checksumPath.resolve("world.csv"), Checksummer.exportWorld(workspace))
+      ImageIO.write(workspace.renderer.exportView(workspace), "png", checksumPath.resolve("graphics.png").toFile)
     }
 
-    // helper for only updating revision numbers, which can be optimized
-    // since it doesn't require compilation (Isaac B 8/28/25)
-    def updateRevisions(): Unit = {
-      write(load().map {
-        case (key, entry) =>
-          val newRevision = getRevisionNumber(entry.path)
+    private def deleteRecursive(file: File): Unit = {
+      if (file.isDirectory) {
+        file.listFiles.foreach(deleteRecursive)
 
-          if (newRevision != entry.revision) {
-            val newEntry = entry.copy(revision = newRevision)
-
-            println(s"* Changed rev # only: \"$newEntry\"")
-
-            (key, newEntry)
-          } else {
-            (key, entry)
-          }
-      }, ChecksumsFilePath)
-    }
-
-    def load(): ChecksumMap = {
-      val m = new ChecksumMap
-      for (line <- Source.fromFile(ChecksumsFilePath).getLines().map(_.trim))
-        if (!line.startsWith("#") && !line.isEmpty) {
-          val strs = line.split(java.util.regex.Pattern.quote(separator))
-          if (strs.size != 5)
-            throw new IllegalStateException("bad line: " + line)
-          val entry = Entry(strs(0), strs(1), strs(2), strs(3), strs(4))
-          m.put(entry.key, entry)
-        }
-      m
-    }
-
-    def write(m: ChecksumMap, path: String): Unit = {
-      val fw = new FileWriter(path)
-      m.values.foreach(entry => fw.write(entry.toString + '\n'))
-      fw.close()
-    }
-
-    def getRevisionNumber(modelPath: String): String = {
-      Process(Seq("git", "log", "--pretty=format:%H", new File(modelPath).getAbsolutePath),
-                  new File(ModelsLibrary.modelsRoot)).!!.trim.take(10)
-    }
-  }
-
-  // For when you need to know what the checksummed world exports are
-  object ChecksumExports {
-
-    def `export`(paths: List[String]): Unit = {
-      paths.foreach(exportOne)
-    }
-
-    def exportOne(path: String): Unit = {
-      val workspace = HeadlessWorkspace.newInstance
-      try {
-        import scala.jdk.CollectionConverters.IteratorHasAsScala
-        workspace.open(path)
-        Checksummer.initModelForChecksumming(workspace, "")
-        val modelPath = Paths.get(path)
-        val modelIndex = modelPath.iterator.asScala.indexWhere(_.toString == "models")
-        val pathCount = modelPath.getNameCount
-        val modelName = modelPath.getName(pathCount - 1).toString
-        val exportPath =
-          Paths.get("tmp/checksum-exports")
-            .resolve(
-              modelPath.subpath(modelIndex, pathCount - 2)
-                .resolve(modelName.replace(".nlogox", ".csv")))
-
-        Files.createDirectories(exportPath.getParent)
-        workspace.exportWorld(exportPath.toString)
-      } catch {
-        case e: Exception =>
-          println("SKIPPING MODEL: " + path + "\n  because of exception:")
-          e.printStackTrace()
+        file.delete()
+      } else {
+        file.delete()
       }
-      finally { workspace.dispose() }
     }
 
   }

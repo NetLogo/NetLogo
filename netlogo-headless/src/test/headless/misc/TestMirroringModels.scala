@@ -65,26 +65,10 @@ class TestMirroringModels extends AnyFunSuiteEx  {
     }
   }
 
-  val exclusions = Seq(
-    "Diffusion on a Directed Network", // link shapes don't work properly
-    "Link Breeds Example", // link shapes don't work properly
-    "GIS General Examples", // the GIS ext. bypasses the trailDrawer
-    "GIS Gradient Example",
-    "Movie Example"
-  )
-
-  // exclude features not existing on core branch
-  val moreExclusions = Seq("/GIS/", "/System Dynamics/")
-
-  def checksums =
-    ChecksumsAndPreviews.Checksums.load()
-
-  for {
-    path <- checksums.values.map(_.path).toSet
-    if !exclusions.exists(name => path.endsWith(name + ".nlogox"))
-    if !moreExclusions.exists(name => path.containsSlice(name))
-  } test("Mirroring: " + path, SlowTest.Tag) {
-    modelRenderingTest(path)
+  ChecksumsAndPreviews.checksumEntries().map(_.modelPath).distinct.foreach { path =>
+    test(s"Mirroring: $path", SlowTest.Tag) {
+      modelRenderingTest(path.toString)
+    }
   }
 
 }
