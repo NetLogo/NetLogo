@@ -154,5 +154,11 @@ jobs:
 
       - uses: mfinelli/setup-imagemagick@v7
 
+      - uses: actions/upload-artifact@v5
+        with:
+          name: graphics-diffs
+          path: tmp/TestChecksums/*.png
+          if-no-files-found: ignore
+
       - name: ${{ matrix.test }}
         run: sbt "${{ matrix.test }}"

@@ -41,7 +41,10 @@ object Running {
         val args = spaceDelimited("").parsed
         val runner = new ForkRun(ForkOptions()
           .withWorkingDirectory(workingDirectory.value)
-          .withRunJVMOptions(Vector("-Dorg.nlogo.is3d=" + System.getProperty("org.nlogo.is3d"))))
+          .withRunJVMOptions(Vector(
+            "-Dorg.nlogo.is3d=" + System.getProperty("org.nlogo.is3d"),
+            "-Dfile.encoding=UTF-8" // this fixes headless model loading bugs on Windows (Isaac B 12/9/25)
+          )))
         runner.run(mainClass,
           classpath.value.map(_.data), prefixArgs ++ args, streams.value.log)
       }

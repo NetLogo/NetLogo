@@ -3,55 +3,46 @@
 package org.nlogo.headless
 package misc
 
-import scala.collection.parallel.CollectionConverters.IterableIsParallelizable
+import scala.collection.parallel.CollectionConverters.ArrayIsParallelizable
 
 // The purpose here is to run all the model checksums (in parallel!) and report
 // what the slowest models were, so we can try to shorten their runtimes so the
 // whole thing won't take so long.
 
-import ChecksumsAndPreviews.Checksums
-
 object ChecksumReport {
 
-  val tester = new ChecksumTester(println)
-  import tester.info
+  val tester = new ChecksumTester
 
   def main(args: Array[String]): Unit = {
-    val entries = Checksums.load().values
-    val results =
-      for {
-        entry <- entries.par
-        millis <- time(entry)
-      } yield entry.path -> millis
-    printReport(results.seq.toMap)
+    printReport(ChecksumsAndPreviews.checksumEntries().par.map { entry =>
+      time(entry).map((entry.modelPath.toString, _))
+    }.flatten.seq.toMap)
   }
 
-  def time(entry: Checksums.Entry): Option[Long] =
+  def time(entry: ChecksumsAndPreviews.Entry): Option[Long] =
     try {
       print(".")
       val start = System.currentTimeMillis
-      tester.testChecksum(entry.path, entry.variant, entry.worldSum, entry.graphicsSum, entry.revision)
+      tester.testChecksum(entry)
       Some(System.currentTimeMillis - start)
     }
     catch {
       case t: Throwable =>
-        info(entry.path + ": ")
+        println(s"${entry.modelPath}: ")
         t.printStackTrace()
-        tester.addFailure(entry.path + ": " + t.getMessage)
+        tester.fail(s"${entry.modelPath}: ${t.getMessage}")
         None
     }
 
   def printReport(runTimes: Map[String, Long]): Unit = {
     val numWinners = 30
-    info(s"\n$numWinners slowest models:")
+    println(s"\n$numWinners slowest models:")
     val sorted =
       runTimes.keys.toSeq
         .sortBy(runTimes)
         .reverse
     for (key <- sorted.take(numWinners))
-      info(s"  $key ${runTimes(key) / 1000} seconds")
-    if (tester.failures.toString.nonEmpty)
-      info("but there were failures...!")
+      println(s"  $key ${runTimes(key) / 1000} seconds")
   }
 
 }

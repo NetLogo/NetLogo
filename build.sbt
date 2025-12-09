@@ -137,6 +137,14 @@ lazy val root =
   project.in(file(".")).
   aggregate(netlogo, parserJVM)
 
+lazy val osName = (System.getProperty("os.name"), System.getProperty("os.arch")) match {
+  case (n, _) if n.startsWith("Linux") => "linux"
+  case (n, arch) if n.startsWith("Mac") && arch == "aarch64" => "mac-aarch64"
+  case (n, _) if n.startsWith("Mac") => "mac"
+  case (n, _) if n.startsWith("Windows") => "win"
+  case _ => throw new Exception("Unknown platform!")
+}
+
 lazy val netlogo = project.in(file("netlogo-gui")).
   dependsOn(parserJVM % "test->test;compile->compile").
   settings(NetLogoBuild.settings: _*).
@@ -224,42 +232,33 @@ lazy val netlogo = project.in(file("netlogo-gui")).
 
       Seq(baseDirectory.value / "colorpicker" / "out") ++ banners(version.value)
     }.taskValue,
-    libraryDependencies ++= {
-      lazy val osName = (System.getProperty("os.name"), System.getProperty("os.arch")) match {
-        case (n, _) if n.startsWith("Linux") => "linux"
-        case (n, arch) if n.startsWith("Mac") && arch == "aarch64" => "mac-aarch64"
-        case (n, _) if n.startsWith("Mac") => "mac"
-        case (n, _) if n.startsWith("Windows") => "win"
-        case _ => throw new Exception("Unknown platform!")
-      }
-      Seq(
-        "com.formdev" % "flatlaf" % "3.5.4",
-        "org.picocontainer" % "picocontainer" % "2.15.2",
-        "javax.media" % "jmf" % "2.1.1e",
-        "commons-codec" % "commons-codec" % "1.18.0",
-        "org.parboiled" %% "parboiled" % "2.5.1",
-        "org.jogamp.jogl" % "jogl-all" % "2.4.0" from cclArtifacts("jogl-all-2.4.0.jar"),
-        "org.jogamp.gluegen" % "gluegen-rt" % "2.4.0" from cclArtifacts("gluegen-rt-2.4.0.jar"),
-        "org.jhotdraw" % "jhotdraw" % "6.0b1" % "provided,optional" from cclArtifacts("jhotdraw-6.0b1.jar"),
-        "com.googlecode.json-simple" % "json-simple" % "1.1.1",
-        "com.fifesoft" % "rsyntaxtextarea" % "3.5.4",
-        "com.typesafe" % "config" % "1.4.3",
-        "net.lingala.zip4j" % "zip4j" % "2.11.5",
-        "org.scala-lang.modules" %% "scala-parallel-collections" % "1.2.0",
-        "org.scala-lang" %% "scala3-compiler" % "3.7.0",
-        "org.piwik.java.tracking" % "matomo-java-tracker" % "3.4.0",
-        "it.unimi.dsi" % "fastutil" % "8.5.16",
-        "net.java.dev.jna" % "jna-platform" % "5.17.0",
-        "com.softwaremill.sttp.client4" %% "core" % "4.0.9",
-        "com.softwaremill.sttp.client4" %% "upickle" % "4.0.9",
-        "com.softwaremill.sttp.client4" %% "pekko-http-backend" % "4.0.9",
-        "org.apache.pekko" %% "pekko-stream" % "1.1.5",
-        // If we don't opt into slf4j, jSystemThemeDetector and Matomo will whine. --Jason B. (11/19/25)
-        "org.slf4j" % "slf4j-nop" % "2.0.13",
-        "org.openani.jsystemthemedetector" % "jSystemThemeDetector" % "3.8"
-      ) ++ Seq("base", "controls", "graphics", "swing", "web")
-        .map(m => "org.openjfx" % s"javafx-$m" % "21.0.6" classifier osName)
-    },
+    libraryDependencies ++= Seq(
+      "com.formdev" % "flatlaf" % "3.5.4",
+      "org.picocontainer" % "picocontainer" % "2.15.2",
+      "javax.media" % "jmf" % "2.1.1e",
+      "commons-codec" % "commons-codec" % "1.18.0",
+      "org.parboiled" %% "parboiled" % "2.5.1",
+      "org.jogamp.jogl" % "jogl-all" % "2.4.0" from cclArtifacts("jogl-all-2.4.0.jar"),
+      "org.jogamp.gluegen" % "gluegen-rt" % "2.4.0" from cclArtifacts("gluegen-rt-2.4.0.jar"),
+      "org.jhotdraw" % "jhotdraw" % "6.0b1" % "provided,optional" from cclArtifacts("jhotdraw-6.0b1.jar"),
+      "com.googlecode.json-simple" % "json-simple" % "1.1.1",
+      "com.fifesoft" % "rsyntaxtextarea" % "3.5.4",
+      "com.typesafe" % "config" % "1.4.3",
+      "net.lingala.zip4j" % "zip4j" % "2.11.5",
+      "org.scala-lang.modules" %% "scala-parallel-collections" % "1.2.0",
+      "org.scala-lang" %% "scala3-compiler" % "3.7.0",
+      "org.piwik.java.tracking" % "matomo-java-tracker" % "3.4.0",
+      "it.unimi.dsi" % "fastutil" % "8.5.16",
+      "net.java.dev.jna" % "jna-platform" % "5.17.0",
+      "com.softwaremill.sttp.client4" %% "core" % "4.0.9",
+      "com.softwaremill.sttp.client4" %% "upickle" % "4.0.9",
+      "com.softwaremill.sttp.client4" %% "pekko-http-backend" % "4.0.9",
+      "org.apache.pekko" %% "pekko-stream" % "1.1.5",
+      // If we don't opt into slf4j, jSystemThemeDetector and Matomo will whine. --Jason B. (11/19/25)
+      "org.slf4j" % "slf4j-nop" % "2.0.13",
+      "org.openani.jsystemthemedetector" % "jSystemThemeDetector" % "3.8"
+    ) ++ Seq("base", "controls", "graphics", "swing", "web")
+      .map(m => "org.openjfx" % s"javafx-$m" % "21.0.6" classifier osName),
     Compile / compile := (Compile / compile).dependsOn(NativeLibs.nativeLibs).value,
     all := {},
     all := {
@@ -341,7 +340,8 @@ lazy val headless = (project in file ("netlogo-headless")).
       "org.reflections" % "reflections" % "0.10.2" % "test",
       "org.scala-lang.modules" %% "scala-parallel-collections" % "1.2.0",
       "it.unimi.dsi" % "fastutil" % "8.5.16"
-    ),
+    ) ++ Seq("base", "controls", "graphics", "swing", "web")
+      .map(m => "org.openjfx" % s"javafx-$m" % "21.0.6" classifier osName),
     (Runtime / fullClasspath)  ++= (parserJVM / Runtime / fullClasspath).value,
     Compile / resourceDirectory := baseDirectory.value / "resources" / "main",
     Compile / unmanagedResourceDirectories ++= (sharedResources / Compile / unmanagedResourceDirectories).value,

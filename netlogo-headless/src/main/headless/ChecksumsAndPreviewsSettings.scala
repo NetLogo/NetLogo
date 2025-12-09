@@ -3,6 +3,6 @@
 package org.nlogo.headless
 
 object ChecksumsAndPreviewsSettings {
-  val ChecksumsFilePath = "test/checksums-headless.txt"
+  val ChecksumsPath = "test/checksums-headless"
   val DumpsPath = "test/benchdumps-headless/"
 }
