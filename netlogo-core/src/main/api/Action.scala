@@ -5,6 +5,8 @@ package org.nlogo.api
 import org.nlogo.core.{ Listener, Publisher }
 
 import scala.collection.mutable.ArrayBuffer
+import scala.concurrent.{ Await, ExecutionContext, Future }
+import scala.concurrent.duration.Duration
 
 trait Action
 
@@ -14,6 +16,12 @@ trait ActionRunner[A <: Action] {
 
 trait ActionBroker[A <: Action] extends Publisher[A] {
   val runner: ActionRunner[A]
+
+  // some actions can be quite slow to prepare and execute, so they are first marked as incoming,
+  // then prepared and published on a background thread. this reduces unnecessary computation up front,
+  // passing the work on to `grab` if it is called before a relevant background thread has completed.
+  // (Isaac B 12/12/25)
+  private var incoming = Set[Future[A]]()
 
   override def publish(action: A): Unit = {
     super.publish(action)
@@ -31,6 +39,18 @@ trait ActionBroker[A <: Action] extends Publisher[A] {
    */
   def publishWithoutRunning(action: A): Unit = {
     super.publish(action)
+  }
+
+  def publishIncomingWithoutRunning(future: Future[A]): Unit = {
+    incoming += future
+  }
+
+  def waitForIncoming(): Unit = {
+    implicit val ec: ExecutionContext = ExecutionContext.global
+
+    Await.result(Future.sequence(incoming), Duration.Inf).foreach(super.publish)
+
+    incoming = Set()
   }
 }
 
@@ -61,6 +81,7 @@ class ActionBuffer[A <: Action](broker: ActionBroker[A]) extends Listener[A] {
 
   /** Returns a vector of actions in the buffer and clears the buffer */
   def grab(): Vector[A] = {
+    broker.waitForIncoming()
     val actions = buffer.toVector
     clear()
     actions

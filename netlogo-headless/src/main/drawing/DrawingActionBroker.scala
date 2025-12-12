@@ -8,18 +8,17 @@ import java.nio.file.Paths
 import java.util.Base64
 import javax.imageio.ImageIO
 
-import org.nlogo.api
-import DrawingAction._
-
-import
-  org.nlogo.api.{ ActionBroker, Link, Turtle }
-
+import org.nlogo.api.{ ActionBroker, Agent, Link, TrailDrawerInterface, Turtle }
 import org.nlogo.core.File
 
+import scala.concurrent.{ ExecutionContext, Future }
+
+import DrawingAction._
+
 class DrawingActionBroker(
-  val trailDrawer: api.TrailDrawerInterface)
+  val trailDrawer: TrailDrawerInterface)
   extends ActionBroker[DrawingAction]
-  with api.TrailDrawerInterface {
+  with TrailDrawerInterface {
 
   override val runner = new DrawingActionRunner(trailDrawer)
 
@@ -47,7 +46,7 @@ class DrawingActionBroker(
 
   override def sendPixels(dirty: Boolean): Unit = { publish(SendPixels(dirty)) }
 
-  override def stamp(agent: api.Agent, erase: Boolean): Unit = {
+  override def stamp(agent: Agent, erase: Boolean): Unit = {
 
     /*
      * The way TrailDrawer.stamp currently works, it is too dependent on
@@ -57,27 +56,31 @@ class DrawingActionBroker(
      * do for now. NP 2013-02-04.
      */
     trailDrawer.stamp(agent, erase)
-    val image = trailDrawer.getDrawing.asInstanceOf[BufferedImage]
-    val bytes = imageToBytes(image)
 
-    val stamp =
-      agent match {
-        case l: Link   =>
-          import l._
-          LinkStamp(x1, y1, end2.xcor, end2.ycor,
-                    midpointX, midpointY, heading, color, shape,
-                    lineThickness, isDirectedLink, size, hidden,
-                    if (erase) "erase" else "normal")
-        case t: Turtle =>
-          import t._
-          TurtleStamp(xcor, ycor, size, heading, color, shape,
-                      if (erase) "erase" else "normal")
-        case _ =>
-          throw new IllegalStateException
-      }
+    val image = trailDrawer.getDrawing.asInstanceOf[BufferedImage]
 
     // Actually running the Action would needlessly re-apply the bitmap.
-    publishWithoutRunning(StampImage(bytes, stamp))
+    publishIncomingWithoutRunning(Future {
+      val bytes = imageToBytes(image)
+
+      val stamp =
+        agent match {
+          case l: Link   =>
+            import l._
+            LinkStamp(x1, y1, end2.xcor, end2.ycor,
+                      midpointX, midpointY, heading, color, shape,
+                      lineThickness, isDirectedLink, size, hidden,
+                      if (erase) "erase" else "normal")
+          case t: Turtle =>
+            import t._
+            TurtleStamp(xcor, ycor, size, heading, color, shape,
+                        if (erase) "erase" else "normal")
+          case _ =>
+            throw new IllegalStateException
+        }
+
+      StampImage(bytes, stamp)
+    }(using ExecutionContext.global))
 
   }
 
