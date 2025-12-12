@@ -3,55 +3,59 @@
 package org.nlogo.headless
 package misc
 
-import scala.collection.parallel.CollectionConverters.IterableIsParallelizable
+import org.nlogo.workspace.Checksummer
 
 // The purpose here is to run all the model checksums (in parallel!) and report
 // what the slowest models were, so we can try to shorten their runtimes so the
 // whole thing won't take so long.
 
-import ChecksumsAndPreviews.Checksums
+// addendum: it doesn't work properly in parallel for some reason, but it doesn't
+// take that long sequentially so it's not worth it to fix at the moment. maybe
+// fix later. (Isaac B 12/10/25)
 
 object ChecksumReport {
-
-  val tester = new ChecksumTester(println)
-  import tester.info
-
   def main(args: Array[String]): Unit = {
-    val entries = Checksums.load().values
-    val results =
-      for {
-        entry <- entries.par
-        millis <- time(entry)
-      } yield entry.path -> millis
-    printReport(results.seq.toMap)
+    printReport(ChecksumsAndPreviews.checksumEntries().map { entry =>
+      time(entry).map((entry.modelPath.toString, _))
+    }.flatten.toSeq)
   }
 
-  def time(entry: Checksums.Entry): Option[Long] =
+  def time(entry: ChecksumsAndPreviews.Entry): Option[Long] = {
+    println(entry.modelPath)
+
+    val workspace = HeadlessWorkspace.newInstance
+
     try {
-      print(".")
-      val start = System.currentTimeMillis
-      tester.testChecksum(entry.path, entry.variant, entry.worldSum, entry.graphicsSum, entry.revision)
-      Some(System.currentTimeMillis - start)
-    }
-    catch {
-      case t: Throwable =>
-        info(entry.path + ": ")
-        t.printStackTrace()
-        tester.addFailure(entry.path + ": " + t.getMessage)
-        None
-    }
+      workspace.silent = true
 
-  def printReport(runTimes: Map[String, Long]): Unit = {
-    val numWinners = 30
-    info(s"\n$numWinners slowest models:")
-    val sorted =
-      runTimes.keys.toSeq
-        .sortBy(runTimes)
-        .reverse
-    for (key <- sorted.take(numWinners))
-      info(s"  $key ${runTimes(key) / 1000} seconds")
-    if (tester.failures.toString.nonEmpty)
-      info("but there were failures...!")
+      workspace.open(entry.modelPath.toString, true)
+
+      val start = System.currentTimeMillis
+
+      Checksummer.initModelForChecksumming(workspace, entry.variant.getOrElse(""))
+
+      val end = System.currentTimeMillis
+
+      workspace.dispose()
+
+      Some(end - start)
+    } catch {
+      case ex: Exception =>
+        ex.printStackTrace()
+
+        None
+    } finally {
+      workspace.dispose()
+    }
   }
 
+  def printReport(runTimes: Seq[(String, Long)]): Unit = {
+    val numWinners = 30
+
+    println(s"\n$numWinners slowest models:")
+
+    runTimes.sortBy(_._2).reverse.take(numWinners).foreach { (model, time) =>
+      println(s"  $model ${time / 1000} seconds")
+    }
+  }
 }

@@ -28,6 +28,14 @@ case class _hubnetclearoverrides() extends Command {
   def syntax = Syntax.commandSyntax(right = List(Syntax.StringType))
 }
 
+case class _hubnetclearplot() extends Command {
+  def syntax = Syntax.commandSyntax(right = List(Syntax.StringType))
+}
+
+case class _hubnetcreateclient() extends Command {
+  def syntax = Syntax.commandSyntax(agentClassString = "O---")
+}
+
 case class _hubnetclientslist() extends Reporter {
   def syntax = Syntax.reporterSyntax(ret = Syntax.ListType)
 }
@@ -52,6 +60,10 @@ case class _hubnetkickclient() extends Command {
   def syntax = Syntax.commandSyntax(right = List(Syntax.StringType))
 }
 
+case class _hubnetmakeplotnarrowcast() extends Command {
+  def syntax = Syntax.commandSyntax(right = List(Syntax.StringType))
+}
+
 case class _hubnetmessage() extends Reporter {
   def syntax = Syntax.reporterSyntax(ret = Syntax.WildcardType)
 }
@@ -66,6 +78,10 @@ case class _hubnetmessagetag() extends Reporter {
 
 case class _hubnetmessagewaiting() extends Reporter {
   def syntax = Syntax.reporterSyntax(ret = Syntax.BooleanType)
+}
+
+case class _hubnetplot() extends Command {
+  def syntax = Syntax.commandSyntax(right = List(Syntax.StringType, Syntax.NumberType))
 }
 
 case class _hubnetreset() extends Command {

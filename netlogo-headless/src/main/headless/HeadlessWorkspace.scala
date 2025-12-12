@@ -12,10 +12,11 @@ import
     api.{ AggregateManagerInterface, CommandRunnable, LogoException, ModelReader, RendererInterface, ReporterRunnable,
           SimpleJobOwner, WorkspaceContext },
       ModelReader.modelSuffix,
-    core.{ AgentKind, CompilerException, Femto, File, FileMode, Model, Output, UpdateMode, WorldDimensions },
+    core.{ AgentKind, CompilerException, Femto, File, FileMode, Model, NetLogoCore, Output, UpdateMode,
+           WorldDimensions },
     drawing.DrawingActionBroker,
     fileformat.{ FileFormat, NLogoFormat, NLogoPreviewCommandsFormat },
-    nvm.{ CompilerInterface, Context, LabInterface, PrimaryWorkspace },
+    nvm.{ Context, LabInterface, PresentationCompilerInterface, PrimaryWorkspace },
     workspace.{ AbstractWorkspace, WorldLoaderInterface }
 
 import java.io.InputStream
@@ -38,8 +39,8 @@ object HeadlessWorkspace {
   def newInstance(subclass: Class[? <: HeadlessWorkspace]): HeadlessWorkspace = {
     val world = new World2D
     Femto.get(subclass, world,
-      Femto.scalaSingleton[CompilerInterface](
-        "org.nlogo.compile.Compiler"),
+      Femto.get[PresentationCompilerInterface](
+        "org.nlogo.compile.Compiler", NetLogoCore),
       Femto.get[RendererInterface](
         "org.nlogo.render.Renderer", world),
       Femto.get[AggregateManagerInterface](
@@ -69,7 +70,7 @@ object HeadlessWorkspace {
  */
 class HeadlessWorkspace(
   _world: World,
-  val compiler: CompilerInterface,
+  val compiler: PresentationCompilerInterface,
   val renderer: RendererInterface,
   val aggregateManager: AggregateManagerInterface)
 extends AbstractWorkspace(_world) with WorldLoaderInterface with PrimaryWorkspace {
