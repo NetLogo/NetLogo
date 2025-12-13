@@ -19,6 +19,7 @@ object TokenType {
   case object Command extends TokenType
   case object Reporter extends TokenType
   case object Keyword extends TokenType
+  case object Colon extends TokenType
   case object Comma extends TokenType
   case object Comment extends TokenType
   case object Bad extends TokenType        // characters the tokenizer couldn't digest
