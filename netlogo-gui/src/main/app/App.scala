@@ -576,7 +576,7 @@ class App extends org.nlogo.window.Event.LinkChild
             if (files.size == 1) {
               val path = files(0).toString
 
-              if (path.endsWith("." + ModelReader.modelSuffix)) {
+              if ("\\.nlogox?(3d)?$".r.findFirstIn(path).isDefined) {
                 open(path)
 
                 e.dropComplete(true)
