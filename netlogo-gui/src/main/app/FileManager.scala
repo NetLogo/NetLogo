@@ -328,7 +328,7 @@ class FileManager(workspace: AbstractWorkspaceScala,
   @throws(classOf[UserCancelException])
   def quit(): Unit = {
     aboutToCloseFiles()
-    ModelConfig.pruneAutoSaves()
+    ModelConfig.pruneModelConfigs()
     new AboutToQuitEvent().raise(eventRaiser)
     workspace.getExtensionManager.reset()
     Analytics.appExit()
