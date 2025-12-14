@@ -96,20 +96,32 @@ object ModelConfig {
   }
 
   // for each tracked model, including the empty/new model, get rid of any autosaves that
-  // are older than 10 versions (Isaac B 7/1/25)
-  def pruneAutoSaves(): Unit = {
+  // are older than 10 versions. if the model hasn't been modified in a while, get rid of
+  // the whole config directory instead. (Isaac B 7/1/25, 12/13/25)
+  def pruneModelConfigs(): Unit = {
     val configDir = Paths.get(System.getProperty("user.home"), ".nlogo", "modelConfigs")
 
-    if (configDir.toFile.exists) {
+    if (Files.exists(configDir)) {
       Files.list(configDir).toScala(Seq).foreach { configPath =>
-        val autosaves = configPath.resolve("autosaves")
+        val lastModified: Array[Long] = listRecursive(configPath.toFile).map(_.lastModified)
 
-        if (autosaves.toFile.exists) {
-          Files.list(autosaves).toScala(Seq).sortBy(-_.toFile.lastModified).drop(10).foreach { path =>
-            try {
-              path.toFile.delete()
-            } catch {
-              case e: IOException =>
+        // if not modified in more than 30 days
+        if (lastModified.nonEmpty && System.currentTimeMillis - lastModified.max > 2592000000L) {
+          try {
+            deleteRecursive(configPath.toFile)
+          } catch {
+            case e: IOException =>
+          }
+        } else {
+          val autosaves = configPath.resolve("autosaves")
+
+          if (autosaves.toFile.exists) {
+            Files.list(autosaves).toScala(Seq).sortBy(-_.toFile.lastModified).drop(10).foreach { path =>
+              try {
+                Files.delete(path)
+              } catch {
+                case e: IOException =>
+              }
             }
           }
         }
@@ -126,6 +138,23 @@ object ModelConfig {
       } catch {
         case e: IOException =>
       }
+    }
+  }
+
+  private def listRecursive(file: File): Array[File] = {
+    if (file.isDirectory) {
+      file.listFiles.flatMap(listRecursive)
+    } else {
+      Array(file)
+    }
+  }
+
+  private def deleteRecursive(file: File): Unit = {
+    if (file.isDirectory) {
+      file.listFiles.foreach(deleteRecursive)
+      file.delete()
+    } else {
+      file.delete()
     }
   }
 }
