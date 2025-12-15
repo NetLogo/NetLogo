@@ -87,7 +87,7 @@ trait ModelLoader extends AbstractModelLoader {
     formats.find(_.isCompatible(uri)) match {
       case None =>
         Failure(new Exception(
-          s"Unable to open model with current format: ${uri.getPath}"))
+          s"Unable to open model with current format: ${uri.getPath}."))
       case Some(formatter) => formatter.load(uri)
     }
   }
@@ -96,7 +96,7 @@ trait ModelLoader extends AbstractModelLoader {
     formats.find(_.isCompatible(source)) match {
       case None =>
         Failure(new Exception(
-          s"Unable to open model with current format: $extension"))
+          s"Unable to open model with current format: $extension."))
       case Some(formatter) => formatter.load(source)
     }
   }
@@ -104,7 +104,7 @@ trait ModelLoader extends AbstractModelLoader {
   def save(model: Model, uri: URI): Try[URI] = {
     formats.find(_.isCompatible(model)) match {
       case None =>
-        Failure(new Exception("Unable to save NetLogo model in format specified by " + uri.getPath))
+        Failure(new Exception(s"Unable to save NetLogo model in format specified by ${uri.getPath}."))
       case Some(formatter) => formatter.save(model, uri)
     }
   }
@@ -113,14 +113,14 @@ trait ModelLoader extends AbstractModelLoader {
     formats.find(_.isCompatible(model)) match {
       case None =>
         Failure(new Exception(
-          "Unable to get source for NetLogo model in format: " + extension))
+          s"Unable to get source for NetLogo model in format: $extension."))
       case Some(formatter) => formatter.sourceString(model)
     }
   }
 
   def emptyModel(extension: String): Model = {
     val format = formats.find(_.name == extension)
-      .getOrElse(throw new Exception("Unable to create empty NetLogo model for format: " + extension))
+      .getOrElse(throw new Exception(s"Unable to create empty NetLogo model for format: $extension."))
     format.emptyModel
   }
 
