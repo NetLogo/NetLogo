@@ -235,7 +235,7 @@ object JavaPackager {
     Mustache(
       scriptSource,
       headlessFile,
-      Map("javaOptions" -> javaOptions.asJava, headlessClasspath, "mainClass" -> "org.nlogo.headless.Main")
+      Map("javaOptions" -> javaOptions.mkString(" "), headlessClasspath, "mainClass" -> "org.nlogo.headless.Main")
     )
     headlessFile.setExecutable(true)
 
@@ -243,7 +243,7 @@ object JavaPackager {
     Mustache(
       scriptSource,
       guiFile,
-      Map("javaOptions" -> javaOptions.asJava, headlessClasspath, "mainClass" -> "org.nlogo.app.App")
+      Map("javaOptions" -> javaOptions.mkString(" "), headlessClasspath, "mainClass" -> "org.nlogo.app.App")
     )
     guiFile.setExecutable(true)
   }
