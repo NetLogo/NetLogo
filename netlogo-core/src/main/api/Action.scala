@@ -8,24 +8,28 @@ import scala.collection.mutable.ArrayBuffer
 import scala.concurrent.{ Await, ExecutionContext, Future }
 import scala.concurrent.duration.Duration
 
+given ExecutionContext = ExecutionContext.global
+
+def blockFor[T](future: Future[T]): T =
+  Await.result(future, Duration.Inf)
+
 trait Action
 
 trait ActionRunner[A <: Action] {
   def run(action: A): Unit
 }
 
-trait ActionBroker[A <: Action] extends Publisher[A] {
+trait ActionBroker[A <: Action] extends Publisher[Future[A]] {
   val runner: ActionRunner[A]
 
-  // some actions can be quite slow to prepare and execute, so they are first marked as incoming,
-  // then prepared and published on a background thread. this reduces unnecessary computation up front,
-  // passing the work on to `grab` if it is called before a relevant background thread has completed.
-  // (Isaac B 12/12/25)
-  private var incoming = Set[Future[A]]()
-
-  override def publish(action: A): Unit = {
-    super.publish(action)
+  def publish(action: A): Unit = {
+    publishWithoutRunning(Future.successful(action))
     runner.run(action)
+  }
+
+  override def publish(action: Future[A]): Unit = {
+    publishWithoutRunning(action)
+    runner.run(blockFor(action))
   }
 
   /**
@@ -37,21 +41,10 @@ trait ActionBroker[A <: Action] extends Publisher[A] {
    * a hack and I wish we had another way of handling stamping so we
    * could (amongst other things) get rid of this method. NP 2013-02-04
    */
-  def publishWithoutRunning(action: A): Unit = {
+  def publishWithoutRunning(action: Future[A]): Unit = {
     super.publish(action)
   }
 
-  def publishIncomingWithoutRunning(future: Future[A]): Unit = {
-    incoming += future
-  }
-
-  def waitForIncoming(): Unit = {
-    implicit val ec: ExecutionContext = ExecutionContext.global
-
-    Await.result(Future.sequence(incoming), Duration.Inf).foreach(super.publish)
-
-    incoming = Set()
-  }
 }
 
 /**
@@ -59,8 +52,8 @@ trait ActionBroker[A <: Action] extends Publisher[A] {
  * ActionBroker. Actions can be grabbed (which clears the buffer)
  * and the buffer can be cleared independently. NP 2013-01-25.
  */
-class ActionBuffer[A <: Action](broker: ActionBroker[A]) extends Listener[A] {
-  private val buffer = ArrayBuffer[A]()
+class ActionBuffer[A <: Action](broker: ActionBroker[A]) extends Listener[Future[A]] {
+  private val buffer = ArrayBuffer[Future[A]]()
 
   def suspend(): Unit = {
     broker.unsubscribe(this)
@@ -70,7 +63,7 @@ class ActionBuffer[A <: Action](broker: ActionBroker[A]) extends Listener[A] {
     broker.subscribe(this)
   }
 
-  override def handle(action: A): Unit = {
+  override def handle(action: Future[A]): Unit = {
     buffer += action
   }
 
@@ -81,12 +74,12 @@ class ActionBuffer[A <: Action](broker: ActionBroker[A]) extends Listener[A] {
 
   /** Returns a vector of actions in the buffer and clears the buffer */
   def grab(): Vector[A] = {
-    broker.waitForIncoming()
-    val actions = buffer.toVector
+    val actions = list
     clear()
     actions
   }
 
   /** Returns a vector of actions contained in the buffer without clearing it */
-  def list: Vector[A] = buffer.toVector
+  def list: Vector[A] =
+    blockFor(Future.sequence(buffer)).toVector
 }

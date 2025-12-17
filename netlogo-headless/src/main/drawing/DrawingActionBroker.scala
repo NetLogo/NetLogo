@@ -60,7 +60,7 @@ class DrawingActionBroker(
     val image = trailDrawer.getDrawing.asInstanceOf[BufferedImage]
 
     // Actually running the Action would needlessly re-apply the bitmap.
-    publishIncomingWithoutRunning(Future {
+    val future = Future {
       val bytes = imageToBytes(image)
 
       val stamp =
@@ -80,7 +80,9 @@ class DrawingActionBroker(
         }
 
       StampImage(bytes, stamp)
-    }(using ExecutionContext.global))
+    }(using ExecutionContext.global)
+
+    publishWithoutRunning(future)
 
   }
 
