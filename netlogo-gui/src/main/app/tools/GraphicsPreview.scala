@@ -2,57 +2,62 @@
 
 package org.nlogo.app.tools
 
-import java.awt.{ Color, Dimension, Graphics, Graphics2D, Image, RenderingHints }
+import java.awt.{ Dimension, Graphics, Graphics2D, Image, RenderingHints }
 import javax.swing.JPanel
 
 import org.nlogo.awt.Images.loadImageFile
-import org.nlogo.swing.{ PreferredSize, Zoomable }
+import org.nlogo.swing.{ PreferredSize, Transparent, Zoomable }
 import org.nlogo.window.GraphicsPreviewInterface
 
 // not JComponent otherwise super.paintComponent() doesn't paint the
 // background color for reasons I can't fathom - ST 8/3/03
-class GraphicsPreview extends JPanel with GraphicsPreviewInterface with PreferredSize with Zoomable {
-  private var image: Option[Image] = None
-
-  setBackground(Color.BLACK)
-  setOpaque(true)
+class GraphicsPreview extends JPanel with Transparent with GraphicsPreviewInterface with PreferredSize with Zoomable {
+  private var image: Option[ImageInfo] = None
 
   def setImage(imagePath: String): Unit =
     setImage(Option(imagePath).map(loadImageFile(_, false)).orNull)
 
   def setImage(newImage: Image): Unit = {
     if (!image.exists(_ == newImage)) {
-      image = Option(newImage)
+      image = Option(newImage).map(ImageInfo(_))
       repaint()
     }
   }
 
-  override def getPreferredSize: Dimension =
-    new Dimension(zoom(400), zoom(400))
+  override def getPreferredSize: Dimension = {
+    image.fold(new Dimension(zoom(400), 0)) {
+      case ImageInfo(_, width, height) =>
+        new Dimension(zoom(width), zoom(height))
+    }
+  }
 
   override def paintComponent(g: Graphics): Unit = {
-    image match {
-      case None => super.paintComponent(g)
-      case Some(image) =>
-        val size: Int = zoom(400)
+    super.paintComponent(g)
 
+    image match {
+      case Some(ImageInfo(img, width, height)) =>
         g.asInstanceOf[Graphics2D].setRenderingHint(
           RenderingHints.KEY_RENDERING,
           RenderingHints.VALUE_RENDER_QUALITY)
-        val ratio = image.getWidth(null) / image.getHeight(null).toDouble
-        val (w, h) = ratio match {
-          case 1.0          => (size, size)
-          case r if r < 1.0 => ((size * r).toInt, size)
-          case r if r > 1.0 => (size, (size / r).toInt)
-          case _            => throw new IllegalStateException
-        }
-        val x = (size - w) / 2
-        val y = (size - h) / 2
-        if (ratio != 1.0) {
-          g.setColor(Color.black)
-          g.fillRect(0, 0, size, size)
-        }
-        g.drawImage(image, x, y, w, h, this)
+
+        g.drawImage(img, 0, 0, zoom(width), zoom(height), this)
+
+      case _ =>
     }
   }
+
+  private object ImageInfo {
+    def apply(image: Image): ImageInfo = {
+      val width: Int = image.getWidth(null)
+      val height: Int = image.getHeight(null)
+
+      if (width >= height) {
+        ImageInfo(image, 400, (400f * height / width).toInt)
+      } else {
+        ImageInfo(image, (400f * width / height).toInt, 400)
+      }
+    }
+  }
+
+  private case class ImageInfo(image: Image, width: Int, height: Int)
 }

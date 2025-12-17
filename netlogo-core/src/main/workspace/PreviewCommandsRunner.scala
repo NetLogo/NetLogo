@@ -12,6 +12,8 @@ object PreviewCommandsRunner {
   class NonCompilableCommandsException
     extends IllegalStateException("Preview commands must be compilable")
 
+  class ManualPreviewException extends Exception
+
   def fromFactory(
     workspaceFactory: WorkspaceFactory): PreviewCommandsRunner = {
     this(workspaceFactory, workspaceFactory.openCurrentModelIn)
@@ -80,9 +82,10 @@ object PreviewCommandsRunner {
 
     try {
       ws.previewCommands match {
-        case compilableCommands: PreviewCommands.Compilable =>
-          val procedure = ws.compileCommands(compilableCommands.source)
-          new PreviewCommandsRunner(ws, procedure)
+        case PreviewCommands.Manual(_, _) =>
+          throw new ManualPreviewException
+        case commands: PreviewCommands if commands.compilable =>
+          new PreviewCommandsRunner(ws, ws.compileCommands(commands.source))
         case _ => // non-compilable preview commands
           ws.dispose()
           throw new NonCompilableCommandsException

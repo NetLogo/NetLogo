@@ -15,7 +15,6 @@ import java.net.URI
 import java.util.{ Enumeration, LinkedList, List => JList, Locale }
 import javax.swing.{ AbstractAction, Action, Box, Icon, InputMap, JComponent, JDialog, JEditorPane, JLabel, JTree,
                      KeyStroke, SwingUtilities, UIManager, WindowConstants }
-import javax.swing.border.LineBorder
 import javax.swing.text.{ BadLocationException, DefaultHighlighter }
 import javax.swing.tree.{ DefaultMutableTreeNode, DefaultTreeCellRenderer, DefaultTreeModel, TreePath,
                           TreeSelectionModel }
@@ -588,9 +587,7 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
   }
 
   private class ModelPreviewPanel extends BoxColumn(BoxAlign.Start) with HyperlinkListener with ThemeSync {
-    private val graphicsPreview: GraphicsPreview = new GraphicsPreview {
-      setBorder(new LineBorder(Color.DARK_GRAY, 1))
-    }
+    private val graphicsPreview = new GraphicsPreview
 
     private val textArea = new JEditorPane with PreferredSize {
       setContentType("text/html")
@@ -684,8 +681,6 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
     }
 
     override def syncTheme(): Unit = {
-      setBackground(InterfaceColors.modelPreviewBackground())
-
       textArea.setForeground(InterfaceColors.dialogText())
     }
   }

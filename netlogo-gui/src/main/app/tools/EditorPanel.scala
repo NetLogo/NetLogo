@@ -5,7 +5,7 @@ package org.nlogo.app.tools
 import java.awt.Dimension
 import java.awt.event.{ FocusEvent, TextEvent, TextListener }
 
-import org.nlogo.api.{ CompilerServices, PreviewCommands }, PreviewCommands.{ Compilable, Custom, Default, Manual }
+import org.nlogo.api.{ CompilerServices, PreviewCommands }, PreviewCommands.{ Custom, Default, Manual }
 import org.nlogo.core.I18N
 import org.nlogo.editor.{ EditorArea, EditorConfiguration }
 import org.nlogo.swing.{ BoxColumn, BoxRow, Button, ComboBox, HasPropertyChangeSupport, MaximumHeight, PreferredSize,
@@ -79,7 +79,7 @@ class EditorPanel(compiler: CompilerServices, colorizer: EditorColorizer) extend
 
   def update(previewCommands: PreviewCommands): Unit = {
     editor.setText(previewCommands.source)
-    editor.setEnabled(previewCommands.isInstanceOf[Compilable])
+    editor.setEnabled(previewCommands.compilable)
     dirty = false
     compileButton.repaint()
   }
@@ -89,20 +89,19 @@ class EditorPanel(compiler: CompilerServices, colorizer: EditorColorizer) extend
 case class PreviewCommandsWrapper(commands: PreviewCommands) {
   override def toString: String = {
     commands match {
-      case Manual => I18N.gui.get("tools.previewCommands.manual")
+      case _: Manual => I18N.gui.get("tools.previewCommands.manual")
       case Default => I18N.gui.get("tools.previewCommands.default")
       case _: Custom => I18N.gui.get("tools.previewCommands.custom")
-      case c => c.toString
     }
   }
 }
 
 class PreviewCommandsComboBox extends ComboBox[PreviewCommandsWrapper](
-  List(Default, Custom(Default.source), Manual).map(PreviewCommandsWrapper(_))) {
+  List(Default, Custom(Default.source), Manual.Empty).map(PreviewCommandsWrapper(_))) {
 
   def updateCommands(newPreviewCommands: PreviewCommands): Unit = {
     if (newPreviewCommands.isInstanceOf[Custom])
-      setItems(List(Default, newPreviewCommands, Manual).map(PreviewCommandsWrapper(_)))
+      setItems(List(Default, newPreviewCommands, Manual.Empty).map(PreviewCommandsWrapper(_)))
 
     setSelectedItem(PreviewCommandsWrapper(newPreviewCommands))
   }

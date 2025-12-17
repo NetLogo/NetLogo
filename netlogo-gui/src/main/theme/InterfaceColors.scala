@@ -197,7 +197,6 @@ object InterfaceColors {
   def colorPickerCheckmark(): Color = theme.colorPickerCheckmark
   def colorPickerCopyHover(): Color = theme.colorPickerCopyHover
   def agentMonitorSeparator(): Color = theme.agentMonitorSeparator
-  def modelPreviewBackground(): Color = theme.modelPreviewBackground
   def modelsLibraryFolder(): Color = theme.modelsLibraryFolder
   def modelsLibraryFolderSelected(): Color = theme.modelsLibraryFolderSelected
   def modelsLibraryLeaf(): Color = theme.modelsLibraryLeaf
@@ -396,7 +395,6 @@ trait ColorTheme {
   def colorPickerCheckmark: Color
   def colorPickerCopyHover: Color
   def agentMonitorSeparator: Color
-  def modelPreviewBackground: Color
   def modelsLibraryFolder: Color
   def modelsLibraryFolderSelected: Color
   def modelsLibraryLeaf: Color
@@ -568,7 +566,6 @@ object ClassicTheme extends ColorTheme {
   override def colorPickerCheckmark: Color = new Color(62, 184, 79)
   override def colorPickerCopyHover: Color = new Color(197, 197, 197)
   override def agentMonitorSeparator: Color = MediumGray
-  override def modelPreviewBackground: Color = LightGray1
   override def modelsLibraryFolder: Color = DarkGray
   override def modelsLibraryFolderSelected: Color = Color.WHITE
   override def modelsLibraryLeaf: Color = MediumBlue
@@ -740,7 +737,6 @@ object LightTheme extends ColorTheme {
   override def colorPickerCheckmark: Color = new Color(62, 184, 79)
   override def colorPickerCopyHover: Color = new Color(197, 197, 197)
   override def agentMonitorSeparator: Color = MediumGray
-  override def modelPreviewBackground: Color = LightGray1
   override def modelsLibraryFolder: Color = DarkGray
   override def modelsLibraryFolderSelected: Color = Color.WHITE
   override def modelsLibraryLeaf: Color = MediumBlue
@@ -912,7 +908,6 @@ object DarkTheme extends ColorTheme {
   override def colorPickerCheckmark: Color = new Color(62, 184, 79)
   override def colorPickerCopyHover: Color = new Color(57, 57, 57)
   override def agentMonitorSeparator: Color = LightGray2
-  override def modelPreviewBackground: Color = MediumBlueGray
   override def modelsLibraryFolder: Color = MediumGray
   override def modelsLibraryFolderSelected: Color = MediumGray
   override def modelsLibraryLeaf: Color = MediumBlue
