@@ -1,1 +1,13 @@
 * text=auto
+
+*.nls linguist-detectable
+*.nlogo linguist-detectable
+*.nlogo3d linguist-detectable
+*.nlogox linguist-detectable
+*.nlogox3d linguist-detectable
+
+*.nls linguist-language=NetLogo
+*.nlogo linguist-language=NetLogo
+*.nlogo3d linguist-language=NetLogo
+*.nlogox linguist-language=NetLogo
+*.nlogox3d linguist-language=NetLogo
