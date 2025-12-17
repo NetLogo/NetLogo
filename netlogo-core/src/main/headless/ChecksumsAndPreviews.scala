@@ -6,7 +6,7 @@ import java.io.File
 import java.nio.file.{ Files, Path, Paths }
 import javax.imageio.ImageIO
 
-import org.nlogo.api.{ FileIO, PreviewCommands, Version }
+import org.nlogo.api.{ FileIO, Version }
 import org.nlogo.core.CompilerException
 import org.nlogo.headless.ChecksumsAndPreviewsSettings.ChecksumsPath
 import org.nlogo.nvm.Workspace
@@ -137,9 +137,6 @@ object ChecksumsAndPreviews {
 
   object Previews {
 
-    def needsManualPreview(previewCommands: String) =
-      previewCommands.contains("need-to-manually-make-preview-for-this-model")
-
     def remake(path: Path): Unit = {
       try {
         val runner = PreviewCommandsRunner.fromModelPath(new WorkspaceFactory {
@@ -190,11 +187,7 @@ object ChecksumsAndPreviews {
       if (Files.exists(modelPath)) {
         workspace.open(modelPath.toString, true)
 
-        if (workspace.previewCommands != PreviewCommands.Manual) {
-          updateOneHelper(modelPath, "", workspace)
-
-          variants.foreach(updateOneHelper(modelPath, _, workspace))
-        }
+        ("" +: variants).foreach(updateOneHelper(modelPath, _, workspace))
       } else {
         // if the model doesn't exist and it's in the checksum directory just remove it. if it's not in
         // the checksum directory let it fall through and report the error
