@@ -8,8 +8,6 @@ import scala.collection.mutable.ArrayBuffer
 import scala.concurrent.{ Await, ExecutionContext, Future }
 import scala.concurrent.duration.Duration
 
-given ExecutionContext = ExecutionContext.global
-
 def blockFor[T](future: Future[T]): T =
   Await.result(future, Duration.Inf)
 
@@ -80,6 +78,8 @@ class ActionBuffer[A <: Action](broker: ActionBroker[A]) extends Listener[Future
   }
 
   /** Returns a vector of actions contained in the buffer without clearing it */
-  def list: Vector[A] =
+  def list: Vector[A] = {
+    given ExecutionContext = ExecutionContext.global
     blockFor(Future.sequence(buffer)).toVector
+  }
 }
