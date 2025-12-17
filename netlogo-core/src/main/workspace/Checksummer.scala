@@ -7,18 +7,17 @@ import java.io.{ ByteArrayOutputStream, PrintWriter }
 import java.security.MessageDigest
 import javax.imageio.ImageIO
 
-import org.nlogo.api.{ PreviewCommands, Workspace }
+import org.nlogo.api.Workspace
 import org.nlogo.util.HexString
 
 object Checksummer {
   def initModelForChecksumming(workspace: Workspace, variant: String): Unit = {
     workspace.renderer.setRenderLabelsAsRectangles(true)
-    val source = workspace.previewCommands match {
-      case PreviewCommands.Custom(source) => source
-      case _ => PreviewCommands.Default.source // may or may not compile, but we'll try
+
+    if (workspace.previewCommands.compilable) {
+      workspace.seedRNGs(0)
+      workspace.command(s"${workspace.previewCommands.source}\n$variant")
     }
-    workspace.seedRNGs(0)
-    workspace.command(s"$source\n$variant")
   }
 
   def exportWorld(workspace: Workspace): String = {

@@ -37,7 +37,7 @@ object NLogoThreeDPreviewCommandsFormat extends ComponentSerialization[Array[Str
   def componentName: String = "org.nlogo.modelsection.previewcommands"
 
   override def addDefault = { (m: Model) =>
-    m.withOptionalSection[PreviewCommands](componentName, None, PreviewCommands.Manual)
+    m.withOptionalSection[PreviewCommands](componentName, None, PreviewCommands.Manual.Empty)
   }
 
   def serialize(m: Model): Array[String] = {
@@ -45,7 +45,7 @@ object NLogoThreeDPreviewCommandsFormat extends ComponentSerialization[Array[Str
       case Some(PreviewCommands.Default) => Array("")
       case Some(commands) =>
         commands.source.linesIterator.map(_.stripTrailingWhiteSpace).toArray
-      case _ => PreviewCommands.Manual.source.linesIterator.map(_.stripTrailingWhiteSpace).toArray
+      case _ => PreviewCommands.ManualSource.linesIterator.map(_.stripTrailingWhiteSpace).toArray
     }
   }
 
@@ -53,7 +53,7 @@ object NLogoThreeDPreviewCommandsFormat extends ComponentSerialization[Array[Str
 
   override def deserialize(commands: Array[String]) = { (m: Model) =>
     Try {
-      m.withOptionalSection[PreviewCommands](componentName, Some(PreviewCommands(commands.mkString("\n"))), PreviewCommands.Manual)
+      m.withOptionalSection[PreviewCommands](componentName, Some(PreviewCommands(commands.mkString("\n"))), PreviewCommands.Manual.Empty)
     }
   }
 }

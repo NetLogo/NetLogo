@@ -18,32 +18,47 @@ import org.nlogo.util.Implicits.RichString
  * procedure, if present, runs before the preview commands.
  */
 sealed trait PreviewCommands extends ModelSections.ModelSaveable {
-  def source: String
+  val compilable: Boolean = true
+  val source: String
+
   override def updateModel(m: Model): Model = {
     m.withOptionalSection[PreviewCommands]("org.nlogo.modelsection.previewcommands", Some(this), PreviewCommands.Default)
   }
 }
 
 object PreviewCommands {
-  case object Manual extends PreviewCommands {
-    override val source = "need-to-manually-make-preview-for-this-model"
+  val ManualSource = "need-to-manually-make-preview-for-this-model"
+
+  case class Manual(override val source: String, override val compilable: Boolean) extends PreviewCommands
+
+  object Manual {
+    val Empty = Manual(ManualSource, false)
   }
-  trait Compilable extends PreviewCommands
-  case object Default extends Compilable {
+
+  case object Default extends PreviewCommands {
     override val source = "setup repeat 75 [ go ]"
   }
-  case class Custom(override val source: String) extends Compilable
+
+  case class Custom(override val source: String) extends PreviewCommands
+
   def apply(source: List[String]): PreviewCommands = {
     apply(source.mkString(""))
   }
-  def apply(source: String): PreviewCommands = {
+
+  def apply(source: String, manual: Boolean = false): PreviewCommands = {
     val strippedSource = source.stripTrailingWhiteSpace
-    strippedSource.toLowerCase match {
-      case ""                               => Default
-      case Default.source                   => Default
-      case s if s.startsWith(Manual.source) => Manual
-      case _                                => Custom(strippedSource)
+
+    if (manual) {
+      Manual(strippedSource, true)
+    } else {
+      strippedSource.toLowerCase match {
+        case ""                              => Default
+        case Default.source                  => Default
+        case s if s.startsWith(ManualSource) => Manual.Empty
+        case _                               => Custom(strippedSource)
+      }
     }
   }
+
   def DEFAULT = Default // for access through GUIWorkspace.java
 }

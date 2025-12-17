@@ -124,8 +124,7 @@ class ConnectionManager(val connection: ConnectionInterface,
     }
     catch {
       case ex: BindException =>
-        val message = "Could not start the HubNet server. No ports are available."
-        org.nlogo.api.Exceptions.handle(new Exception(message, ex))
+        org.nlogo.api.Exceptions.handle(new Exception(ex.getMessage, ex))
       false
     }
   }

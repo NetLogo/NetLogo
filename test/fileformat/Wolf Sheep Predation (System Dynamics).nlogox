@@ -813,7 +813,7 @@ To inquire about commercial licenses for either NetLogo or specific models from 
       </indicator>
     </shape>
   </linkShapes>
-  <previewCommands>need-to-manually-make-preview-for-this-model</previewCommands>
+  <previewCommands manual="true"></previewCommands>
   <systemDynamics dt="0.001">
     <stock name="sheep" allowNegative="false" x="233" y="88">100</stock>
     <stock name="wolves" allowNegative="false" x="279" y="275">30</stock>
