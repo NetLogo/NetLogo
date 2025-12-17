@@ -848,5 +848,5 @@ To inquire about commercial licenses for either NetLogo or specific models from 
     <binding startFigure="13" endFigure="9"></binding>
     <binding startFigure="1" endFigure="9"></binding>
   </systemDynamics>
-  <previewCommands>need-to-manually-make-preview-for-this-model</previewCommands>
+  <previewCommands manual="true"></previewCommands>
 </model>
