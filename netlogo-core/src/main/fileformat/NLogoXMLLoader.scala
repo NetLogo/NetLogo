@@ -56,8 +56,10 @@ class NLogoXMLLoader(headless: Boolean, literalParser: LiteralParser, editNames:
 
           element.children.foldLeft((model, Set[String]())) {
 
-            case ((model, sections), XMLElement("previewCommands", _, commands, _)) =>
-              val section = new Section("org.nlogo.modelsection.previewcommands", PreviewCommands(commands))
+            case ((model, sections), el @ XMLElement("previewCommands", _, commands, _)) =>
+              val section = new Section("org.nlogo.modelsection.previewcommands",
+                                        PreviewCommands(commands, el("manual", "false").toBoolean))
+
               (model.map((m) => m.copy(optionalSections = m.optionalSections :+ section)), sections)
 
             case ((model, sections), el @ XMLElement("systemDynamics", _, _, _)) =>
@@ -112,9 +114,16 @@ class NLogoXMLLoader(headless: Boolean, literalParser: LiteralParser, editNames:
     for (section <- model.optionalSections) {
       section.key match {
         case "org.nlogo.modelsection.previewcommands" =>
-          writer.startElement("previewCommands")
-          writer.escapedText(section.get.get.asInstanceOf[PreviewCommands].source)
-          writer.endElement("previewCommands")
+          val commands = section.get.get.asInstanceOf[PreviewCommands]
+          val attributes: Map[String, String] = {
+            if (commands.isInstanceOf[PreviewCommands.Manual]) {
+              Map("manual" -> "true")
+            } else {
+              Map()
+            }
+          }
+
+          writer.element(XMLElement("previewCommands", attributes, commands.source, Seq()))
 
         case "org.nlogo.modelsection.systemdynamics" | "org.nlogo.modelsection.systemdynamics.gui" =>
           Option(section.get.get.asInstanceOf[AggregateDrawingInterface].write()).foreach(writer.element)

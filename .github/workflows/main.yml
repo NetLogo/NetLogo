@@ -160,6 +160,7 @@ jobs:
         run: sbt "${{ matrix.test }}"
 
       - uses: actions/upload-artifact@v6
+        if: failure()
         with:
           name: checksum-diffs
           path: tmp/TestChecksums/*
