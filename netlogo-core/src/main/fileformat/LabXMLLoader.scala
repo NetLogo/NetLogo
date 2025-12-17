@@ -120,18 +120,24 @@ object LabXMLLoader {
       }
     }
 
-    val baseAttributes =
-      Map( "name"                -> experiment.name
-         , "repetitions"         -> experiment.repetitions.toString
-         , "sequentialRunOrder"  -> experiment.sequentialRunOrder.toString
-         , "runMetricsEveryStep" -> experiment.runMetricsEveryStep.toString
-         ) ++ {
-        if (includeVersion) {
+    val baseAttributes = {
+
+      val required =
+        Map( "name"                -> experiment.name
+           , "repetitions"         -> experiment.repetitions.toString
+           , "sequentialRunOrder"  -> experiment.sequentialRunOrder.toString
+           , "runMetricsEveryStep" -> experiment.runMetricsEveryStep.toString
+           )
+
+      val extras =
+        if (includeVersion)
           Map("version" -> Version.version)
-        } else {
+        else
           Map()
-        }
-      }
+
+      required ++ extras
+
+    }
 
     val attributes =
       baseAttributes ++
