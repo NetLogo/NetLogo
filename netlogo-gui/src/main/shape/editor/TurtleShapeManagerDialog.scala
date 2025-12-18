@@ -8,15 +8,17 @@ import org.nlogo.analytics.Analytics
 import org.nlogo.api.{ AbstractModelLoader, World }
 import org.nlogo.core.{ AgentKind, I18N, Model, Shape, ShapeList },
   Shape.{ VectorShape => CoreVectorShape }, ShapeList.isDefaultShapeName
-import org.nlogo.shape.{ ShapeConverter, VectorShape },
+import org.nlogo.shape.{ ShapeConverter, TurtleShapesManagerInterface, VectorShape },
   ShapeConverter.baseVectorShapeToVectorShape
 import org.nlogo.swing.{ Button, DialogButton }
 
 class TurtleShapeManagerDialog(parentFrame: Frame,
                                world: World,
                                modelLoader: AbstractModelLoader)
-        extends ManagerDialog[VectorShape](parentFrame, modelLoader, world.turtleShapes)
-                with org.nlogo.shape.TurtleShapesManagerInterface {
+  extends ManagerDialog[VectorShape](parentFrame, modelLoader, world.turtleShapes) with TurtleShapesManagerInterface {
+
+  private lazy val libraryButton = new DialogButton(false, I18N.gui.get("tools.shapesEditor.importFromLibrary"),
+                                                    () => importFromLibrary())
 
   shapesList.addListSelectionListener(this)
 
@@ -24,8 +26,7 @@ class TurtleShapeManagerDialog(parentFrame: Frame,
 
   override def modelShapes(m: Model): Seq[Shape] = m.turtleShapes
 
-  override def additionalButton: Option[Button] =
-    Some(new DialogButton(false, I18N.gui.get("tools.shapesEditor.importFromLibrary"), () => importFromLibrary()))
+  override def additionalButton: Option[Button] = Some(libraryButton)
 
   def displayableShapeFromCoreShape(shape: Shape): Option[VectorShape] = {
     shape match {

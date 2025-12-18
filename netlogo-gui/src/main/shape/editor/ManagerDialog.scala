@@ -142,7 +142,7 @@ abstract class ManagerDialog[A <: CoreShape](parentFrame: Frame, modelLoader: Ab
     pack()
   }
 
-  def additionalButton: Option[Button] = None
+  protected def additionalButton: Option[Button] = None
 
   // Initialize then display the manager
   def init(title: String): Unit = {
