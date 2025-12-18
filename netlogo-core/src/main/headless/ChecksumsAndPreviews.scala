@@ -161,6 +161,11 @@ object ChecksumsAndPreviews {
 
   object Checksums {
 
+    // image output stream caching can result in null pointer exceptions at the end of checksum
+    // generation, and it's not really necessary for what we're doing here, so it can be disabled.
+    // (Isaac B 12/17/25)
+    ImageIO.setUseCache(false)
+
     private def variantPath(path: Path, variant: String): Path = {
       if (variant.isEmpty) {
         path
