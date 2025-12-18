@@ -13,6 +13,8 @@ import org.nlogo.shape.{ Circle, Element, Line, Polygon, Rectangle, VectorShape 
 import org.nlogo.swing.Utils
 
 class ShapeView(editorDialog: EditorDialog, shape: VectorShape) extends JPanel with PropertyChangeListener {
+  private val HandleRadius = 3
+
   // Starting point for the shape, where mouse started
   private var start = new Point(0, 0)
   // Most recent location of mouse
@@ -182,9 +184,9 @@ class ShapeView(editorDialog: EditorDialog, shape: VectorShape) extends JPanel w
 
     handles = selectedElement.map(_.getHandles.map(handle => {
       g2d.setColor(Color.WHITE)
-      g.drawRect(handle.x - 2, handle.y - 2, 4, 4)
+      g.drawRect(handle.x - HandleRadius - 1, handle.y - HandleRadius - 1, HandleRadius * 2 + 2, HandleRadius * 2 + 2)
       g2d.setColor(Color.BLACK)
-      g.fillRect(handle.x - 1, handle.y - 1, 3, 3)
+      g.fillRect(handle.x - HandleRadius, handle.y - HandleRadius, HandleRadius * 2, HandleRadius * 2)
 
       handle
     }).toSeq).getOrElse(handles)
@@ -192,11 +194,9 @@ class ShapeView(editorDialog: EditorDialog, shape: VectorShape) extends JPanel w
 
   // Return the index in the handles if a handle was hit, else -1
   private def checkHandles(start: Point): Int = {
-    // handles are 5 pixels wide & high, but for mousing purposes
-    // we allow one extra pixel of slop, hence it's the center point
-    // plus or minus 3 pixels - SAB/ST 6/11/04
     handles.indexWhere(handle => {
-      start.x < handle.x + 3 && start.x > handle.x - 3 && start.y < handle.y + 3 && start.y > handle.y - 3
+      start.x <= handle.x + HandleRadius && start.x >= handle.x - HandleRadius &&
+      start.y <= handle.y + HandleRadius && start.y >= handle.y - HandleRadius
     })
   }
 
