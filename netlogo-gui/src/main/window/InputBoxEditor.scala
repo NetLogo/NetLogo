@@ -17,6 +17,8 @@ class InputBoxEditor[InputType <: InputBox#InputType](accessor: PropertyAccessor
 
   private val label = new JLabel(accessor.name)
   private val typeCombo = new ComboBox[InputType](options.values) {
+    setSelectedItem(originalOption)
+
     addItemListener(_ => {
       apply()
 
