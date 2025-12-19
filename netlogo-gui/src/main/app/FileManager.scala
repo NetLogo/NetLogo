@@ -86,9 +86,10 @@ object FileManager {
 
     @throws(classOf[UserCancelException])
     override def action(): Unit = {
-      manager.aboutToCloseFiles()
-      ModelsLibraryDialog.open(frame,
-      { sourceURI => manager.openFromURI(sourceURI, ModelType.Library) })
+      ModelsLibraryDialog.open(frame, { sourceURI =>
+        manager.aboutToCloseFiles()
+        manager.openFromURI(sourceURI, ModelType.Library)
+      })
     }
   }
 
