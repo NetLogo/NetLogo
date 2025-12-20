@@ -5,11 +5,6 @@ package org.nlogo.api
 import org.nlogo.core.{ Listener, Publisher }
 
 import scala.collection.mutable.ArrayBuffer
-import scala.concurrent.{ Await, ExecutionContext, Future }
-import scala.concurrent.duration.Duration
-
-def blockFor[T](future: Future[T]): T =
-  Await.result(future, Duration.Inf)
 
 trait Action
 
@@ -17,17 +12,12 @@ trait ActionRunner[A <: Action] {
   def run(action: A): Unit
 }
 
-trait ActionBroker[A <: Action] extends Publisher[Future[A]] {
+trait ActionBroker[A <: Action] extends Publisher[A] {
   val runner: ActionRunner[A]
 
-  def publish(action: A): Unit = {
-    publishWithoutRunning(Future.successful(action))
-    runner.run(action)
-  }
-
-  override def publish(action: Future[A]): Unit = {
+  override def publish(action: A): Unit = {
     publishWithoutRunning(action)
-    runner.run(blockFor(action))
+    runner.run(action)
   }
 
   /**
@@ -39,7 +29,7 @@ trait ActionBroker[A <: Action] extends Publisher[Future[A]] {
    * a hack and I wish we had another way of handling stamping so we
    * could (amongst other things) get rid of this method. NP 2013-02-04
    */
-  def publishWithoutRunning(action: Future[A]): Unit = {
+  def publishWithoutRunning(action: A): Unit = {
     super.publish(action)
   }
 
@@ -50,8 +40,8 @@ trait ActionBroker[A <: Action] extends Publisher[Future[A]] {
  * ActionBroker. Actions can be grabbed (which clears the buffer)
  * and the buffer can be cleared independently. NP 2013-01-25.
  */
-class ActionBuffer[A <: Action](broker: ActionBroker[A]) extends Listener[Future[A]] {
-  private val buffer = ArrayBuffer[Future[A]]()
+class ActionBuffer[A <: Action](broker: ActionBroker[A]) extends Listener[A] {
+  private val buffer = ArrayBuffer[A]()
 
   def suspend(): Unit = {
     broker.unsubscribe(this)
@@ -61,7 +51,7 @@ class ActionBuffer[A <: Action](broker: ActionBroker[A]) extends Listener[Future
     broker.subscribe(this)
   }
 
-  override def handle(action: Future[A]): Unit = {
+  override def handle(action: A): Unit = {
     buffer += action
   }
 
@@ -72,14 +62,8 @@ class ActionBuffer[A <: Action](broker: ActionBroker[A]) extends Listener[Future
 
   /** Returns a vector of actions in the buffer and clears the buffer */
   def grab(): Vector[A] = {
-    val actions = list
+    val actions = buffer.toVector
     clear()
     actions
-  }
-
-  /** Returns a vector of actions contained in the buffer without clearing it */
-  def list: Vector[A] = {
-    given ExecutionContext = ExecutionContext.global
-    blockFor(Future.sequence(buffer)).toVector
   }
 }
