@@ -6,7 +6,8 @@ import java.io.ByteArrayInputStream
 import java.util.Base64
 import javax.imageio.ImageIO
 
-import org.nlogo.api.{ ActionRunner, TrailDrawerInterface }
+import org.nlogo.api.{ ActionRunner, AgentSet, Link, Patch, TrailDrawerInterface, Turtle, World }
+import org.nlogo.core.AgentKind
 
 import DrawingAction._
 
@@ -25,8 +26,14 @@ class DrawingActionRunner(val trailDrawer: TrailDrawerInterface) extends ActionR
       trailDrawer.sendPixels(dirty)
     case ReadImage(imageBytes) =>
       trailDrawer.readImage(new ByteArrayInputStream(imageBytes))
-    case StampImage(imageBytes, _) =>
-      trailDrawer.readImage(new ByteArrayInputStream(imageBytes))
+    case StampImage(stamp) =>
+      stamp match {
+        case ts: TurtleStamp =>
+          trailDrawer.stamp(new DummyTurtle(ts), ts.erase)
+
+        case ls: LinkStamp =>
+          trailDrawer.stamp(new DummyLink(ls), ls.erase)
+      }
     case CreateDrawing(dirty: Boolean) =>
       trailDrawer.getAndCreateDrawing(dirty)
     case ImportDrawing(base64) =>
@@ -50,6 +57,67 @@ class DrawingActionRunner(val trailDrawer: TrailDrawerInterface) extends ActionR
     }
     val bytes = Base64.getDecoder.decode(byteString)
     (bytes, contentType)
+  }
+
+  private class DummyTurtle(stamp: TurtleStamp) extends Turtle {
+    override def xcor: Double = stamp.x
+    override def ycor: Double = stamp.y
+    override def size: Double = stamp.size
+    override def heading: Double = stamp.heading
+    override def color: AnyRef = stamp.color
+    override def shape: String = stamp.shapeName
+    override def lineThickness: Double = stamp.thickness
+
+    override def alpha: Int = ???
+    override def classDisplayName: String = ???
+    override def getVariable(vn: Int): AnyRef = ???
+    override def id: Long = ???
+    override def kind: AgentKind = ???
+    override def setVariable(vn: Int, value: AnyRef): Unit = ???
+    override def variables: Array[AnyRef] = ???
+    override def world: World = ???
+    override def getBreed: AgentSet = ???
+    override def getBreedIndex: Int = ???
+    override def getPatchHere: Patch = ???
+    override def hasLabel: Boolean = ???
+    override def heading(d: Double): Unit = ???
+    override def hidden: Boolean = ???
+    override def jump(distance: Double): Unit = ???
+    override def labelColor: AnyRef = ???
+    override def labelString: String = ???
+  }
+
+  private class DummyLink(stamp: LinkStamp) extends Link {
+    override def x1: Double = stamp.x1
+    override def x2: Double = stamp.x2
+    override def y1: Double = stamp.y1
+    override def y2: Double = stamp.y2
+    override def midpointX: Double = stamp.midpointX
+    override def midpointY: Double = stamp.midpointY
+    override def heading: Double = stamp.heading
+    override def color: AnyRef = stamp.color
+    override def shape: String = stamp.shapeName
+    override def lineThickness: Double = stamp.thickness
+    override def isDirectedLink: Boolean = stamp.isDirected
+    override def size: Double = stamp.size
+    override def hidden: Boolean = stamp.isHidden
+    override def hasLabel: Boolean = stamp.hasLabel
+    override def labelString: String = stamp.labelString
+    override def labelColor: AnyRef = stamp.labelColor
+    override def linkDestinationSize: Double = stamp.destinationSize
+
+    override def alpha: Int = ???
+    override def classDisplayName: String = ???
+    override def getVariable(vn: Int): AnyRef = ???
+    override def id: Long = ???
+    override def kind: org.nlogo.core.AgentKind = ???
+    override def setVariable(vn: Int, value: AnyRef): Unit = ???
+    override def variables: Array[AnyRef] = ???
+    override def world: org.nlogo.api.World = ???
+    override def end1: org.nlogo.api.Turtle = ???
+    override def end2: org.nlogo.api.Turtle = ???
+    override def getBreed: org.nlogo.api.AgentSet = ???
+    override def getBreedIndex: Int = ???
   }
 
 }

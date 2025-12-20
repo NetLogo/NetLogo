@@ -217,13 +217,13 @@ class TestMirroring extends FixtureSuite {
 
     workspace.command("random-seed 0 crt 1 [ set color [4 7 9] set heading 0 stamp die ]")
     val expectedLL1    = LogoList.fromVector(Vector[java.lang.Double](4, 7, 9))
-    val expectedStamp1 = TurtleStamp(0, 0, 1, 0, expectedLL1, "default", "normal")
+    val expectedStamp1 = TurtleStamp(0, 0, 1, 0, expectedLL1, "default", 1, false)
     val   actualStamp1 = drawingActionBuffer.grab()(0).asInstanceOf[StampImage].stamp
     assertResult(actualStamp1)(expectedStamp1)
 
     workspace.command("random-seed 0 crt 1 [ set color [4 7 9 1] set heading 0 stamp die ]")
     val expectedLL2    = LogoList.fromVector(Vector[java.lang.Double](4, 7, 9, 1))
-    val expectedStamp2 = TurtleStamp(0, 0, 1, 0, expectedLL2, "default", "normal")
+    val expectedStamp2 = TurtleStamp(0, 0, 1, 0, expectedLL2, "default", 1, false)
     val   actualStamp2 = drawingActionBuffer.grab()(0).asInstanceOf[StampImage].stamp
     assertResult(actualStamp2)(expectedStamp2)
 

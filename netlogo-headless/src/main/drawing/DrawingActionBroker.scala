@@ -11,8 +11,6 @@ import javax.imageio.ImageIO
 import org.nlogo.api.{ ActionBroker, Agent, Link, TrailDrawerInterface, Turtle }
 import org.nlogo.core.File
 
-import scala.concurrent.{ ExecutionContext, Future }
-
 import DrawingAction._
 
 class DrawingActionBroker(
@@ -57,32 +55,22 @@ class DrawingActionBroker(
      */
     trailDrawer.stamp(agent, erase)
 
-    val image = trailDrawer.getDrawing.asInstanceOf[BufferedImage]
-
     // Actually running the Action would needlessly re-apply the bitmap.
-    val future = Future {
-      val bytes = imageToBytes(image)
+    val stamp: AgentStamp = {
+      agent match {
+        case l: Link =>
+          import l._
+          LinkStamp(x1, y1, end2.xcor, end2.ycor, midpointX, midpointY, heading, color, shape, lineThickness,
+                    isDirectedLink, size, hidden, hasLabel, labelString, labelColor, linkDestinationSize, erase)
+        case t: Turtle =>
+          import t._
+          TurtleStamp(xcor, ycor, size, heading, color, shape, lineThickness, erase)
+        case _ =>
+          throw new IllegalStateException
+      }
+    }
 
-      val stamp =
-        agent match {
-          case l: Link   =>
-            import l._
-            LinkStamp(x1, y1, end2.xcor, end2.ycor,
-                      midpointX, midpointY, heading, color, shape,
-                      lineThickness, isDirectedLink, size, hidden,
-                      if (erase) "erase" else "normal")
-          case t: Turtle =>
-            import t._
-            TurtleStamp(xcor, ycor, size, heading, color, shape,
-                        if (erase) "erase" else "normal")
-          case _ =>
-            throw new IllegalStateException
-        }
-
-      StampImage(bytes, stamp)
-    }(using ExecutionContext.global)
-
-    publishWithoutRunning(future)
+    publishWithoutRunning(StampImage(stamp))
 
   }
 
