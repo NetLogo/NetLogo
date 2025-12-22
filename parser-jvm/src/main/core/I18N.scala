@@ -31,7 +31,7 @@ object I18N {
       }
       catch {
         // security manager might say no
-        case _: java.security.AccessControlException =>
+        case _: SecurityException =>
           None
       }
     (getPref("user.language"), getPref("user.country")) match {

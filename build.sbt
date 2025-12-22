@@ -34,7 +34,7 @@ lazy val scalaSettings = Seq(
   Test / scalaSource    := baseDirectory.value / "src" / "test",
   crossPaths            := false, // don't cross-build for different Scala versions
   scalacOptions ++=
-    "-deprecation -unchecked -feature -encoding us-ascii -release 11 -Xfatal-warnings -Wunused:linted"
+    "-deprecation -unchecked -feature -encoding us-ascii -release 17 -Xfatal-warnings -Wunused:linted"
       .split(" ").toSeq
 )
 
@@ -178,7 +178,7 @@ lazy val netlogo = project.in(file("netlogo-gui")).
     isSnapshot := true,
     publishTo := { Some("Cloudsmith API" at "https://maven.cloudsmith.io/netlogo/netlogo/") },
     Compile / mainClass := Some("org.nlogo.app.App"),
-    javacOptions   ++= Seq("--release", "11"),
+    javacOptions   ++= Seq("--release", "17"),
     modelsDirectory := baseDirectory.value.getParentFile / "models",
     extensionRoot   := (baseDirectory.value.getParentFile / "extensions").getAbsoluteFile,
     autogenRoot     := baseDirectory.value.getParentFile / "autogen",
@@ -330,7 +330,7 @@ lazy val headless = (project in file ("netlogo-headless")).
     publishTo     := { Some("Cloudsmith API" at "https://maven.cloudsmith.io/netlogo/netlogo/") },
     autogenRoot   := (baseDirectory.value.getParentFile / "autogen").getAbsoluteFile,
     extensionRoot := baseDirectory.value.getParentFile / "extensions",
-    javacOptions ++= Seq("--release", "11"),
+    javacOptions ++= Seq("--release", "17"),
     Compile / mainClass         := Some("org.nlogo.headless.Main"),
     libraryDependencies        ++= Seq(
       "org.parboiled" %% "parboiled" % "2.5.1",
@@ -368,9 +368,6 @@ lazy val macApp = project.in(file("mac-app")).
   settings(Running.settings).
   settings(
     Compile / run / mainClass           := Some("org.nlogo.app.MacApplication"),
-    // all other projects can use `--release 11`, but since this one uses `--add-exports`
-    // for a system library it is incompatible.  So we let it target 17, as it will only
-    // use the bundled Java.  -Jeremy B August 2022
     javacOptions ++= Seq("-source", "17", "-target", "17"),
     run / fork                          := true,
     name                                := "NetLogo-Mac-App",
@@ -454,7 +451,7 @@ lazy val parser = crossProject(JSPlatform, JVMPlatform).
   jvmSettings(jvmSettings: _*).
   jvmSettings(scalatestSettings: _*).
   jvmSettings(
-    javacOptions ++= Seq("--release", "11"),
+    javacOptions ++= Seq("--release", "17"),
     libraryDependencies += "org.scala-lang.modules" %% "scala-parser-combinators" % "2.4.0",
     // you can get these included by just depending on the `sharedResources` project directly
     // but then when you publish the parser JVM package, the POM file lists sharedResources

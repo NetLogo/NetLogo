@@ -60,7 +60,7 @@ trait Version {
     // can't check arbitrary properties from applets... - ST 10/4/04, 1/31/05
     // no more applets - is this still needed - AAB 05/2012
     catch {
-      case _: java.security.AccessControlException => false
+      case _: SecurityException => false
     }
 
   def set3D(value: Boolean): Unit = {
@@ -80,7 +80,7 @@ trait Version {
     // can't check arbitrary properties from applets... - ST 10/4/04, 1/31/05
     // no more applets - is this still needed - AAB 05/2012
     catch {
-      case _: java.security.AccessControlException =>
+      case _: SecurityException =>
         false
     }
 
@@ -97,7 +97,7 @@ trait Version {
         false
       // can't check arbitrary properties from applets... - ST 10/4/04, 1/31/05
       // no more applets - is this still needed - AAB 05/2012
-      case _: java.security.AccessControlException =>
+      case _: SecurityException =>
         false
     }
 

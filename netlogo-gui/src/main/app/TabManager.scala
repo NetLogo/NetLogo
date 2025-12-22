@@ -173,7 +173,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     this.dirtyMonitor = dirtyMonitor
     this.menuBar = menuBar
 
-    actions.foreach(separateTabsWindow.menuBar.offerAction)
+    actions.foreach(separateTabsWindow.jMenuBar.offerAction)
     permanentMenuActions.foreach(offerAction)
 
     updateTabActions()
@@ -307,12 +307,12 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
 
   def offerAction(action: UserAction.MenuAction): Unit = {
     menuBar.offerAction(action)
-    separateTabsWindow.menuBar.offerAction(action)
+    separateTabsWindow.jMenuBar.offerAction(action)
   }
 
   def revokeAction(action: UserAction.MenuAction): Unit = {
     menuBar.revokeAction(action)
-    separateTabsWindow.menuBar.revokeAction(action)
+    separateTabsWindow.jMenuBar.revokeAction(action)
   }
 
   def smartTabbingEnabled: Boolean = smartTabbing

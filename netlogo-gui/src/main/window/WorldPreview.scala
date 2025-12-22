@@ -137,7 +137,7 @@ class WorldPreview(width: Int, height: Int) extends JPanel(new BorderLayout) wit
     }
 
     override def getPreferredSize: Dimension =
-      new Dimension(width, height)
+      new Dimension(WorldPreview.this.width, WorldPreview.this.height)
 
     override def paintComponent(g: Graphics): Unit = {
       val g2d = Utils.initGraphics2D(g)

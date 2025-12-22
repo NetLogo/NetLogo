@@ -18,7 +18,7 @@ object ComboBox {
 class ComboBox[T](private var items: Seq[T] = Seq())
   extends JPanel(new GridBagLayout) with RoundedBorderPanel with ThemeSync with ItemSelectable {
 
-  private val mouseListener = new MouseAdapter {
+  private val popupMouseListener = new MouseAdapter {
     override def mousePressed(e: MouseEvent): Unit = {
       if (isEnabled)
         popup.show(ComboBox.this, 0, getHeight)
@@ -59,9 +59,9 @@ class ComboBox[T](private var items: Seq[T] = Seq())
       add(arrow, new GridBagConstraints)
     }, c)
 
-    addMouseListener(mouseListener)
-    choiceDisplay.addMouseListener(mouseListener)
-    arrow.addMouseListener(mouseListener)
+    addMouseListener(popupMouseListener)
+    choiceDisplay.addMouseListener(popupMouseListener)
+    arrow.addMouseListener(popupMouseListener)
 
     addKeyListener(new KeyAdapter {
       override def keyPressed(e: KeyEvent): Unit = {
@@ -189,7 +189,7 @@ class ComboBox[T](private var items: Seq[T] = Seq())
 
           add(child, c)
 
-          child.addMouseListener(mouseListener)
+          child.addMouseListener(popupMouseListener)
 
         case a =>
           val child = new JLabel(a.toString)
@@ -198,7 +198,7 @@ class ComboBox[T](private var items: Seq[T] = Seq())
 
           add(child, c)
 
-          child.addMouseListener(mouseListener)
+          child.addMouseListener(popupMouseListener)
       })
 
       syncTheme()

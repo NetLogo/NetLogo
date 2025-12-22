@@ -65,7 +65,7 @@ class UploadDialog(parent: Frame, backend: Backend[Future], loginInfo: LoginInfo
   private val group = new JLabel(I18N.gui.get("dialog.mc.upload.group"))
   private val groupDropdown = new ComboBox[Group](Group(-1, " ") +: loginInfo.groups)
 
-  private val visible = new JLabel(I18N.gui.get("dialog.mc.upload.visible"))
+  private val visibleLabel = new JLabel(I18N.gui.get("dialog.mc.upload.visible"))
   private val visibleDropdown = new ComboBox[Permissions](Seq(Everyone, OnlyGroup, OnlyYou))
 
   private val changeable = new JLabel(I18N.gui.get("dialog.mc.upload.changeable"))
@@ -141,7 +141,7 @@ class UploadDialog(parent: Frame, backend: Backend[Future], loginInfo: LoginInfo
         add(existingName, c)
         add(comment, c)
         add(group, c)
-        add(visible, c)
+        add(visibleLabel, c)
         add(changeable, c)
         add(preview, c)
 
@@ -263,7 +263,7 @@ class UploadDialog(parent: Frame, backend: Backend[Future], loginInfo: LoginInfo
     group.setEnabled(newModelButton.isSelected)
     groupDropdown.setEnabled(newModelButton.isSelected)
 
-    visible.setEnabled(newModelButton.isSelected)
+    visibleLabel.setEnabled(newModelButton.isSelected)
     visibleDropdown.setEnabled(newModelButton.isSelected)
 
     changeable.setEnabled(newModelButton.isSelected)
@@ -450,7 +450,7 @@ class UploadDialog(parent: Frame, backend: Backend[Future], loginInfo: LoginInfo
     existingName.setForeground(InterfaceColors.dialogText())
     comment.setForeground(InterfaceColors.dialogText())
     group.setForeground(InterfaceColors.dialogText())
-    visible.setForeground(InterfaceColors.dialogText())
+    visibleLabel.setForeground(InterfaceColors.dialogText())
     changeable.setForeground(InterfaceColors.dialogText())
     preview.setForeground(InterfaceColors.dialogText())
     fileLabel.setForeground(InterfaceColors.dialogText())
