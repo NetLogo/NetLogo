@@ -84,13 +84,36 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
     }
 
     override def processMouseEvent(e: MouseEvent): Unit = {
-      e.translatePoint(-e.getPoint.y - e.getPoint.x, e.getPoint.x - e.getPoint.y)
+      if (vertical)
+        e.translatePoint(-e.getPoint.y - e.getPoint.x, e.getPoint.x - e.getPoint.y)
+
       super.processMouseEvent(e)
+
+      if (vertical) {
+        AbstractSliderWidget.this.revalidate()
+        AbstractSliderWidget.this.repaint()
+      }
     }
 
     override def processMouseMotionEvent(e: MouseEvent): Unit = {
-      e.translatePoint(-e.getPoint.y - e.getPoint.x, e.getPoint.x - e.getPoint.y)
+      if (vertical)
+        e.translatePoint(-e.getPoint.y - e.getPoint.x, e.getPoint.x - e.getPoint.y)
+
       super.processMouseMotionEvent(e)
+
+      if (vertical) {
+        AbstractSliderWidget.this.revalidate()
+        AbstractSliderWidget.this.repaint()
+      }
+    }
+
+    override def processKeyEvent(e: KeyEvent): Unit = {
+      super.processKeyEvent(e)
+
+      if (vertical) {
+        AbstractSliderWidget.this.revalidate()
+        AbstractSliderWidget.this.repaint()
+      }
     }
 
     override def paintComponent(g: Graphics): Unit = {
