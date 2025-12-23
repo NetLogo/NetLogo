@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import java.awt.{ Color, Dimension }
+import java.awt.Dimension
 import java.awt.event.{ ActionEvent, ActionListener }
 import javax.swing.{ JLabel, JPanel }
 
@@ -15,6 +15,7 @@ class RuntimeErrorDisplay(accessor: PropertyAccessor[Option[Exception]])
 
   private var dismissed = false
 
+  setOpaque(true)
   layoutErrorPanel()
 
   private def dismissError(): Unit = {
@@ -59,13 +60,7 @@ trait RuntimeErrorDisplayer extends JPanel with ActionListener with ThemeSync {
     button
   }
 
-  lazy val errorLabel = {
-    implicit val i18nPrefix = I18N.Prefix("edit.plot.error")
-    val label = new JLabel(I18N.gui("runtimeError"))
-    label.setIcon(Utils.icon("/images/error.png"))
-    label
-  }
-
+  lazy val errorLabel = new JLabel(I18N.gui.get("edit.plot.error.runtimeError"))
   lazy val messageLabel = new JLabel
 
   protected def layoutErrorPanel(): Unit = {
@@ -83,8 +78,10 @@ trait RuntimeErrorDisplayer extends JPanel with ActionListener with ThemeSync {
   override def syncTheme(): Unit = {
     setBackground(InterfaceColors.errorLabelBackground())
 
-    errorLabel.setForeground(Color.WHITE)
-    messageLabel.setForeground(Color.WHITE)
+    errorLabel.setForeground(InterfaceColors.errorLabelText())
+    messageLabel.setForeground(InterfaceColors.errorLabelText())
+
+    errorLabel.setIcon(Utils.iconScaledWithColor("/images/error.png", 15, 15, InterfaceColors.errorLabelText()))
 
     dismissButton.syncTheme()
   }
