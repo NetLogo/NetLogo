@@ -3,12 +3,12 @@
 package org.nlogo.window
 
 import java.awt.BorderLayout
-import javax.swing.JPanel
+import javax.swing.{ Box, BoxLayout, JPanel }
 
 import org.nlogo.api.CompilerServices
 import org.nlogo.core.I18N
 import org.nlogo.editor.Colorizer
-import org.nlogo.swing.{ DynamicRowLayout, Transparent }
+import org.nlogo.swing.{ Button, DynamicRowLayout, Transparent }
 
 class PlotEditPanel(target: PlotWidget, compiler: CompilerServices, colorizer: Colorizer)
   extends WidgetEditPanel(target) {
@@ -136,6 +136,12 @@ class PlotEditPanel(target: PlotWidget, compiler: CompilerServices, colorizer: C
         () => apply()),
       compiler, colorizer, true, true, err = () => target.error(I18N.gui.get("edit.plot.updateCode")))
 
+  private val checkButton = new Button(I18N.gui.get("edit.plot.checkCommands"), () => {
+    target.compile()
+    setupCode.resetError()
+    updateCode.resetError()
+  })
+
   private val editPlotPens =
     new PlotPensEditor(
       new PropertyAccessor(
@@ -167,6 +173,12 @@ class PlotEditPanel(target: PlotWidget, compiler: CompilerServices, colorizer: C
     rowLayout.addRow(Seq(runtimeError))
     rowLayout.addRow(Seq(setupCode), expandY = () => !setupCode.collapsed)
     rowLayout.addRow(Seq(updateCode), expandY = () => !updateCode.collapsed)
+    rowLayout.addRow(Seq(new JPanel with Transparent {
+      setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
+
+      add(checkButton)
+      add(Box.createHorizontalGlue)
+    }))
     rowLayout.addRow(Seq(editPlotPens), expandY = () => setupCode.collapsed && updateCode.collapsed)
 
     val row = new JPanel(new BorderLayout) with Transparent {
