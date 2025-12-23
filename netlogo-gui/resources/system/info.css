@@ -73,6 +73,7 @@ p {
 }
 pre {
     background: {CODE-BACKGROUND};
+    color: {CODE-COLOR};
     font-family: monospace;
     font-size: {BODY-FONT-SIZE}pt;
     padding-left: 10px;

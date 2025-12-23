@@ -57,6 +57,7 @@ object InfoFormatter {
             replace("{H6-FONT-SIZE}", fontSize.toString).
             replace("{P-COLOR}", colorString(InterfaceColors.infoPColor())).
             replace("{CODE-BACKGROUND}", colorString(InterfaceColors.infoCodeBackground())).
+            replace("{CODE-COLOR}", colorString(InterfaceColors.infoCodeText())).
             replace("{BLOCK-BAR}", colorString(InterfaceColors.infoBlockBar())).
             replace("{INFO-BACKGROUND}", colorString(InterfaceColors.infoBackground())).
             replace("{LINK-COLOR}", colorString(InterfaceColors.infoLink())) + "\n-->\n</style>"
