@@ -108,6 +108,7 @@ object InterfaceColors {
   def infoH4Color(): Color = theme.infoH4Color
   def infoPColor(): Color = theme.infoPColor
   def infoCodeBackground(): Color = theme.infoCodeBackground
+  def infoCodeText(): Color = theme.infoCodeText
   def infoBlockBar(): Color = theme.infoBlockBar
   def infoLink(): Color = theme.infoLink
   def checkFilled(): Color = theme.checkFilled
@@ -304,6 +305,7 @@ trait ColorTheme {
   def infoH4Color: Color
   def infoPColor: Color
   def infoCodeBackground: Color
+  def infoCodeText: Color
   def infoBlockBar: Color
   def infoLink: Color
   def checkFilled: Color
@@ -467,6 +469,7 @@ object ClassicTheme extends ColorTheme {
   override def infoH4Color: Color = new Color(115, 115, 115)
   override def infoPColor: Color = Color.BLACK
   override def infoCodeBackground: Color = LightGray
+  override def infoCodeText: Color = Color.BLACK
   override def infoBlockBar: Color = new Color(96, 96, 96)
   override def infoLink: Color = new Color(0, 110, 240)
   override def checkFilled: Color = new Color(0, 173, 90)
@@ -630,6 +633,7 @@ object LightTheme extends ColorTheme {
   override def infoH4Color: Color = new Color(115, 115, 115)
   override def infoPColor: Color = Color.BLACK
   override def infoCodeBackground: Color = LightGray
+  override def infoCodeText: Color = Color.BLACK
   override def infoBlockBar: Color = new Color(96, 96, 96)
   override def infoLink: Color = new Color(0, 110, 240)
   override def checkFilled: Color = new Color(0, 173, 90)
@@ -793,6 +797,7 @@ object DarkTheme extends ColorTheme {
   override def infoH4Color: Color = new Color(173, 183, 196)
   override def infoPColor: Color = Color.WHITE
   override def infoCodeBackground: Color = new Color(67, 67, 67)
+  override def infoCodeText: Color = Color.WHITE
   override def infoBlockBar: Color = MediumGray
   override def infoLink: Color = new Color(0, 110, 240)
   override def checkFilled: Color = new Color(0, 173, 90)
