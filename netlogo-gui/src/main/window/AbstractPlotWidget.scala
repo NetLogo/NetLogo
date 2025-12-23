@@ -252,6 +252,10 @@ abstract class AbstractPlotWidget(val plot: Plot, val plotManager: PlotManagerIn
   def defaultAutoPlotY = plot.defaultAutoPlotY
   def setDefaultAutoPlotY(defaultAutoPlotY: Boolean): Unit = { plot.defaultAutoPlotY = defaultAutoPlotY }
 
+  def compile(): Unit = {
+    plotManager.compilePlot(plot)
+  }
+
   /// sizing
   override def getMinimumSize = AbstractPlotWidget.MIN_SIZE
   override def getPreferredSize = AbstractPlotWidget.PREF_SIZE

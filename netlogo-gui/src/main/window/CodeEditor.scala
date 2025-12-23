@@ -97,7 +97,7 @@ class CodeEditor(accessor: PropertyAccessor[String], compiler: CompilerServices,
     editor.setText(value)
     setVisibility(value.nonEmpty)
     editor.select(0, 0)
-    errorLabel.setError(err(), accessor.target.sourceOffset)
+    resetError()
     editor.resetUndoHistory()
   }
 
@@ -120,6 +120,10 @@ class CodeEditor(accessor: PropertyAccessor[String], compiler: CompilerServices,
 
     super.setEnabled(state)
     setEnabledRecursive(this, state)
+  }
+
+  def resetError(): Unit = {
+    errorLabel.setError(err(), accessor.target.sourceOffset)
   }
 
   override def syncTheme(): Unit = {
