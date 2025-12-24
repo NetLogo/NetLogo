@@ -2,9 +2,10 @@
 
 package org.nlogo.api
 
-import org.nlogo.core.{ CompilationEnvironment, CompilerException, Model, LiteralParser, LogoList }
+import java.awt.image.BufferedImage
+import java.io.{ IOException, PrintWriter, Reader }
 
-import java.io.IOException
+import org.nlogo.core.{ CompilationEnvironment, CompilerException, Model, LiteralParser, LogoList }
 
 trait Workspace extends ImporterUser with LiteralParser with RandomServices
 with ViewSettings with Controllable {
@@ -17,7 +18,7 @@ with ViewSettings with Controllable {
   def waitFor(runnable: CommandRunnable): Unit
   def waitForResult[T](runnable: ReporterRunnable[T]): T
   @throws(classOf[IOException])
-  def importWorld(reader: java.io.Reader): Unit
+  def importWorld(reader: Reader): Unit
   @throws(classOf[IOException])
   def importWorld(path: String): Unit
   @throws(classOf[IOException])
@@ -27,22 +28,27 @@ with ViewSettings with Controllable {
   def exportDrawing(path: String, format: String): Unit
   @throws(classOf[IOException])
   def exportView(path: String, format: String): Unit
-  def exportView: java.awt.image.BufferedImage
+  def exportView: BufferedImage
   @throws(classOf[IOException])
   def exportInterface(path: String): Unit
   @throws(classOf[IOException])
   def exportWorld(path: String): Unit
   @throws(classOf[IOException])
-  def exportWorld(writer: java.io.PrintWriter): Unit
+  def exportWorld(writer: PrintWriter): Unit
   @throws(classOf[IOException])
   def exportOutput(path: String): Unit
   @throws(classOf[IOException])
   def exportPlot(plotName: String, path: String): Unit
   @throws(classOf[IOException])
   def exportAllPlots(path: String): Unit
-  def getAndCreateDrawing(): java.awt.image.BufferedImage
+  def getAndCreateDrawing(): BufferedImage
+  // this is used in headless to register arbitrary drawing actions with DrawingActionBroker. ideally,
+  // all drawing actions would go through NetLogo APIs, but that would require a bunch of additional
+  // infrastructure to support complex drawing actions in extensions like bitmap and gis. (Isaac B 12/24/25)
+  def syncDrawing(image: BufferedImage): Unit = {}
   def waitForQueuedEvents(): Unit
-  def outputObject(obj: AnyRef, owner: AnyRef, addNewline: Boolean, readable: Boolean, destination: OutputDestination): Unit
+  def outputObject(obj: AnyRef, owner: AnyRef, addNewline: Boolean, readable: Boolean,
+                   destination: OutputDestination): Unit
   def clearOutput(): Unit
   def clearAll(): Unit
   def getModelPath: String

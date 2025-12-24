@@ -19,6 +19,7 @@ import
     nvm.{ Context, LabInterface, PresentationCompilerInterface, PrimaryWorkspace },
     workspace.{ AbstractWorkspace, WorldLoaderInterface }
 
+import java.awt.image.BufferedImage
 import java.io.InputStream
 import java.nio.file.Paths
 
@@ -221,6 +222,9 @@ extends AbstractWorkspace(_world) with WorldLoaderInterface with PrimaryWorkspac
   override def clearDrawing(): Unit = {
     world.clearDrawing()
     drawingActionBroker.clearDrawing()
+  }
+  override def syncDrawing(image: BufferedImage): Unit = {
+    drawingActionBroker.readImage(image)
   }
   override def exportDrawing(filename: String, format: String): Unit = {
     val stream = new java.io.FileOutputStream(new java.io.File(filename))
