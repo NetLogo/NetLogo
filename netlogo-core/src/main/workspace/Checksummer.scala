@@ -2,6 +2,7 @@
 
 package org.nlogo.workspace
 
+import java.awt.image.BufferedImage
 import java.io.{ ByteArrayOutputStream, PrintWriter }
 import java.security.MessageDigest
 import javax.imageio.ImageIO
@@ -45,11 +46,12 @@ object Checksummer {
     stream.toByteArray
   }
 
-  def calculateGraphicsChecksum(workspace: Workspace): String = {
-    calculateChecksum { writer =>
-      val raster = workspace.renderer.exportView(workspace)
+  def calculateGraphicsChecksum(workspace: Workspace): String =
+    calculateGraphicsChecksum(workspace.renderer.exportView(workspace))
 
-      raster.getData.getPixels(0, 0, raster.getWidth, raster.getHeight, null: Array[Int]).foreach(writer.println)
+  def calculateGraphicsChecksum(image: BufferedImage): String = {
+    calculateChecksum { writer =>
+      image.getData.getPixels(0, 0, image.getWidth, image.getHeight, null: Array[Int]).foreach(writer.println)
     }
   }
 

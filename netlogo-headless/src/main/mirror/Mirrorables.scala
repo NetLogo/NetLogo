@@ -152,8 +152,8 @@ object Mirrorables {
       (WrappingAllowedInX.id, Boolean.box(world.wrappingAllowedInX)),
       (WrappingAllowedInY.id, Boolean.box(world.wrappingAllowedInY)),
       (PatchesAllBlack.id, Boolean.box(world.patchesAllBlack)),
-      (TurtleBreeds.id, Seq("TURTLES") ++ world.program.breeds.map((b) => b._1)),
-      (LinkBreeds.id, Seq("LINKS") ++ world.program.linkBreeds.map((b) => b._1)),
+      (TurtleBreeds.id, world.program.breeds.map((b) => b._1)),
+      (LinkBreeds.id, world.program.linkBreeds.map((b) => b._1)),
       (UnbreededLinksAreDirected.id, Boolean.box(world.links.isDirected))
     )
   }

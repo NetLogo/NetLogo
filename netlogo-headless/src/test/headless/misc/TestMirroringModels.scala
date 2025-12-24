@@ -3,6 +3,9 @@
 package org.nlogo.headless
 package misc
 
+import java.io.File
+import javax.imageio.ImageIO
+
 import org.nlogo.{ api, mirror }
 import org.nlogo.drawing.DrawingActionRunner
 import org.nlogo.util.{ AnyFunSuiteEx, SlowTest }
@@ -47,13 +50,13 @@ class TestMirroringModels extends AnyFunSuiteEx  {
       val realChecksum =
         Checksummer.calculateGraphicsChecksum(ws)
       val mirrorChecksum =
-        Checksummer.calculateGraphicsChecksum(ws)
+        Checksummer.calculateGraphicsChecksum(renderer.exportView(ws))
 
       def exportPNG(r: api.RendererInterface, suffix: String) = {
-        new java.io.File("tmp").mkdir()
-        val outputFile = new java.io.File(path).getName + "." + suffix + ".png"
-        val outputPath = new java.io.File("tmp/" + outputFile)
-        javax.imageio.ImageIO.write(r.exportView(ws), "png", outputPath)
+        new File("tmp").mkdir()
+        val outputFile = new File(path).getName + "." + suffix + ".png"
+        val outputPath = new File("tmp/" + outputFile)
+        ImageIO.write(r.exportView(ws), "png", outputPath)
       }
 
       if (mirrorChecksum != realChecksum) {
@@ -61,7 +64,7 @@ class TestMirroringModels extends AnyFunSuiteEx  {
         exportPNG(renderer, "mirror")
       }
 
-      assertResult(realChecksum) { mirrorChecksum }
+      assertResult(realChecksum)(mirrorChecksum)
     }
   }
 

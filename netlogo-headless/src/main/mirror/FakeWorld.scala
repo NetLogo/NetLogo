@@ -204,17 +204,20 @@ class FakeWorld(state: State) extends api.WorldWithWorldRenderable {
     )
   }
 
-  private def makeBreeds[A <: FakeAgent](
+  private def makeBreeds[A <: FakeAgent, B](
     breeds: Iterable[Breed],
     allAgents: FakeAgentSet[A],
-    breedVariableIndex: Int): Map[String, FakeAgentSet[?]] =
+    breedVariableIndex: Int,
+    sorter: A => B)(implicit ord: Ordering[B]): Map[String, FakeAgentSet[?]] =
     breeds.map { breed =>
       val agentSeq = allAgents.agentSeq.filter(_.vars(breedVariableIndex) == breed.name)
-      breed.name -> new FakeAgentSet[A](allAgents.kind, agentSeq, breed.isDirected)
+      breed.name -> new FakeAgentSet[A](allAgents.kind, agentSeq, breed.isDirected) {
+        override val agents = (this.agentSeq.sortBy(sorter): Iterable[api.Agent]).asJava
+      }
     }.toMap
 
-  private val turtleBreeds = makeBreeds(program.breeds.values, turtles, VAR_BREED)
-  private val linkBreeds = makeBreeds(program.linkBreeds.values, links, VAR_LBREED)
+  private val turtleBreeds = makeBreeds(program.breeds.values, turtles, VAR_BREED, _.id)
+  private val linkBreeds = makeBreeds(program.linkBreeds.values, links, VAR_LBREED, l => (l.end1.id, l.end2.id))
 
   override def getBreed(name: String) = turtleBreeds(name)
   override def getLinkBreed(name: String) = linkBreeds(name)
