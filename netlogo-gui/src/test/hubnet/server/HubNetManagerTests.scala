@@ -2,6 +2,8 @@
 
 package org.nlogo.hubnet.server
 
+import java.awt.EventQueue
+
 import org.nlogo.api.ConfigurableModelLoader
 import org.nlogo.fileformat.{ FileFormat, NLogoFormat, NLogoHubNetFormat }
 import org.nlogo.hubnet.connection.HubNetException
@@ -15,6 +17,7 @@ class HubNetManagerTests extends AnyFunSuiteEx {
     // we need to reset after changing clientsHaveView.
     manager.reset()
     manager.incrementalUpdateFromEventThread()
+    EventQueue.invokeAndWait(() => {})
     assert("[]" === connectionManager.getResults)
   }
   hubnetTest("test Update View True") { (manager, connectionManager) =>
@@ -23,6 +26,7 @@ class HubNetManagerTests extends AnyFunSuiteEx {
     //we need to reset after changing clientsHaveView.
     manager.reset()
     manager.incrementalUpdateFromEventThread()
+    EventQueue.invokeAndWait(() => {})
     // all patches are dirty, since they've just been created.
     assert("[UPDATE]" === connectionManager.getResults)
   }
@@ -31,6 +35,7 @@ class HubNetManagerTests extends AnyFunSuiteEx {
     // we need to reset after changing clientsHaveView.
     manager.reset()
     manager.incrementalUpdateFromEventThread()
+    EventQueue.invokeAndWait(() => {})
     assert("[]" === connectionManager.getResults)
   }
   hubnetTest("test Full Update View True") { (manager, connectionManager) =>
@@ -39,6 +44,7 @@ class HubNetManagerTests extends AnyFunSuiteEx {
     // we need to reset after changing clientsHaveView.
     manager.reset()
     manager.incrementalUpdateFromEventThread()
+    EventQueue.invokeAndWait(() => {})
     // still empty, since no patches are dirty...
     assert("[UPDATE]" === connectionManager.getResults)
   }
