@@ -15,6 +15,7 @@ import org.nlogo.agent.{ Link, Turtle }
 import org.nlogo.fileformat.FailedConversionResult
 import org.nlogo.fileformat.FileFormat.ModelConversion
 
+import java.awt.EventQueue
 import java.nio.file.Paths
 import java.net.URI
 import java.io.{ Serializable => JSerializable }
@@ -294,16 +295,24 @@ abstract class HubNetManager(workspace: Workspace, modelLoader: AbstractModelLoa
    def paintImmediately(force: Boolean): Unit = { if (force || _framesSkipped) incrementalUpdateFromEventThread() }
 
    def incrementalUpdateFromEventThread(): Unit = {
-     // HeadlessWorkspace will call this function on a tick or display.
-     // this is why we now check isRunning here. this is probably good from GUIWorkspace too.
-     // also, for some yet unknown reason, not having the check was causing
-     // https://trac.assembla.com/nlogo/ticket/1128, as something was getting into an infinite
-     // loop in the mirroring code. since this change makes that problem go away,
-     // im not going to dig into that problem. however, its possible that the problem might
-     // come back up, which is my i comment it here.
-     // - JC 1/7/11
-     if (someNodesHaveView && connectionManager.isRunning) {connectionManager.incrementalViewUpdate()}
-     _framesSkipped = false
+    // HeadlessWorkspace will call this function on a tick or display.
+    // this is why we now check isRunning here. this is probably good from GUIWorkspace too.
+    // also, for some yet unknown reason, not having the check was causing
+    // https://trac.assembla.com/nlogo/ticket/1128, as something was getting into an infinite
+    // loop in the mirroring code. since this change makes that problem go away,
+    // im not going to dig into that problem. however, its possible that the problem might
+    // come back up, which is my i comment it here.
+    // - JC 1/7/11
+    if (someNodesHaveView && connectionManager.isRunning) {
+      // despite the name of this method, it is not always called from the event thread,
+      // and attempting to do so in the calling classes angers the dependency checker,
+      // so it goes here instead. (Isaac B 12/25/25)
+      EventQueue.invokeLater(() => {
+        connectionManager.incrementalViewUpdate()
+      })
+    }
+
+    _framesSkipped = false
    }
    def repaint(): Unit = {}
 
