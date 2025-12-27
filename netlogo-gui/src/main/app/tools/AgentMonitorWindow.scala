@@ -10,6 +10,8 @@ import scala.jdk.CollectionConverters.SeqHasAsJava
 
 import org.nlogo.agent.{ Agent, Link, Observer, Turtle }
 import org.nlogo.analytics.Analytics
+import org.nlogo.api.Dump
+import org.nlogo.app.common.CommandLine
 import org.nlogo.core.{ AgentKind, I18N }
 import org.nlogo.swing.{ NetLogoIcon, Utils => SwingUtils }
 import org.nlogo.theme.ThemeSync
@@ -200,4 +202,13 @@ class AgentMonitorWindow(val agentKind: AgentKind, _agent: Agent, radius: Double
   override def syncTheme(): Unit = {
     monitor.syncTheme()
   }
+
+  private [app] def validateFields(expected: Agent): Boolean = {
+    agentKind == expected.kind && monitor.getEditors.forall { editor =>
+      Dump.logoObject(expected.getVariable(editor.index), true, false) == editor.getText
+    }
+  }
+
+  def commandLine: CommandLine =
+    monitor.commandLine
 }
