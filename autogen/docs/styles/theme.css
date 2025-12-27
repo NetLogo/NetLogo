@@ -198,6 +198,10 @@ a.code {
     font-family: var(--font-mono);
 }
 
+a.code {
+    white-space: nowrap;
+}
+
 /* HR */
 hr {
     color: var(--netlogo-black);
