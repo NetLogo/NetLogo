@@ -2,15 +2,20 @@
 
 package org.nlogo.analytics
 
-import java.net.URI
+import java.net.{ HttpURLConnection, NetworkInterface, URI }
 
 import org.matomo.java.tracking.{ MatomoException, MatomoRequest, MatomoRequests, MatomoTracker, TrackerConfiguration }
 
 import org.nlogo.core.{ NetLogoPreferences, Token, TokenType }
 
 import scala.concurrent.{ ExecutionContext, Future }
+import scala.jdk.CollectionConverters.EnumerationHasAsScala
+import scala.util.Try
 
 object Analytics {
+  private val endpoint = "https://ccl.northwestern.edu:8080/matomo.php"
+
+  private var available = false
   private var sendEnabled = false
 
   private val category: String = {
@@ -22,16 +27,24 @@ object Analytics {
   }
 
   private val config = TrackerConfiguration.builder
-                                           .apiEndpoint(URI.create("https://ccl.northwestern.edu:8080/matomo.php"))
+                                           .apiEndpoint(URI.create(endpoint))
                                            .defaultSiteId(1)
                                            .build()
 
   private val tracker = new MatomoTracker(config)
 
   private var startTime = 0L
+  private var lastCheck = 0L
+
+  checkNetwork()
 
   private def wrapRequest(request: MatomoRequest, synchronous: Boolean = false): Unit = {
-    if (sendEnabled) {
+    // if network connection is lost, stop sending analytics data, then retest the connection
+    // every 30 seconds to see if we can start sending analytics data again. (Isaac B 1/1/26)
+    if (!available && System.currentTimeMillis - lastCheck >= 5000)
+      checkNetwork()
+
+    if (available && sendEnabled) {
       if (synchronous) {
         try {
           new Thread {
@@ -40,14 +53,20 @@ object Analytics {
             }
           }.join(4000)
         } catch {
-          case e: MatomoException => println(e)
-          case _: InterruptedException =>
+          case _: MatomoException | _: InterruptedException =>
+            checkNetwork()
         }
       } else {
-        tracker.sendBulkRequestAsync(request).handle((_, error) => {
-          if (error != null)
-            println(error)
-        })
+        tracker.sendBulkRequestAsync(request).handle { (_, error) =>
+          if (error != null) {
+            error.getCause match {
+              case _: MatomoException =>
+                checkNetwork()
+
+              case _ =>
+            }
+          }
+        }
       }
     }
   }
@@ -232,5 +251,13 @@ object Analytics {
 
   def refreshPreference(): Unit = {
     sendEnabled = NetLogoPreferences.getBoolean("sendAnalytics", false)
+  }
+
+  private def checkNetwork(): Unit = {
+    available = NetworkInterface.getNetworkInterfaces.asScala.exists(_.isUp) &&
+      Try(URI.create(endpoint).toURL.openConnection.asInstanceOf[HttpURLConnection].getResponseCode)
+        .toOption.contains(200)
+
+    lastCheck = System.currentTimeMillis
   }
 }
