@@ -180,7 +180,8 @@ lazy val netlogo = project.in(file("netlogo-gui")).
           FindBadSource.settings ++
           Ruler.settings ++
           SpellCheck.settings ++
-          TranslationHelper.settings: _*).
+          TranslationHelper.settings ++
+          CheckTranslations.settings: _*).
   settings(
     name := "NetLogo",
     version := "7.0.3",
