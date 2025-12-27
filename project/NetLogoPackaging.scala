@@ -20,6 +20,7 @@ object NetLogoPackaging {
   lazy val buildNetLogo            = taskKey[Unit]("build NetLogo")
   lazy val configRoot              = settingKey[File]("configuration directory")
   lazy val resaveModels            = taskKey[Unit]("prep models library for packaging")
+  lazy val checkTranslations       = inputKey[Unit]("check for missing translation keys")
   lazy val buildMathematicaLink    = taskKey[Unit]("build and package Mathematica Link submodule")
   lazy val generateLocalWebsite    = taskKey[File]("package the web download pages")
   lazy val mathematicaRoot         = settingKey[File]("root of Mathematica-Link directory")
@@ -85,6 +86,10 @@ object NetLogoPackaging {
       makeMainTask("org.nlogo.tools.ModelResaver",
         classpath = (netlogo / Test / Keys.fullClasspath),
         workingDirectory = baseDirectory(_.getParentFile)).toTask("").dependsOn(netlogo / extensions).value
+    },
+
+    checkTranslations := {
+      makeMainTask("org.nlogo.tools.CheckTranslations", classpath = (netlogo / Test / Keys.fullClasspath)).evaluated
     },
 
     buildMathematicaLink := {
