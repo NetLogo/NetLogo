@@ -48,7 +48,7 @@ class CodeEditor(accessor: PropertyAccessor[String], compiler: CompilerServices,
 
   private val nameLabel = new JLabel(accessor.name) {
     addMouseListener(new MouseAdapter {
-      override def mouseClicked(e: MouseEvent): Unit = {
+      override def mouseReleased(e: MouseEvent): Unit = {
         setVisibility(collapsed)
       }
     })
@@ -60,7 +60,7 @@ class CodeEditor(accessor: PropertyAccessor[String], compiler: CompilerServices,
     if (collapsible) {
       add(new JLabel(arrow) {
         addMouseListener(new MouseAdapter {
-          override def mouseClicked(e: MouseEvent): Unit = {
+          override def mouseReleased(e: MouseEvent): Unit = {
             setVisibility(collapsed)
           }
         })
