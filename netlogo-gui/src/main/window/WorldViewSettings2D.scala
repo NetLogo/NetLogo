@@ -107,6 +107,7 @@ class WorldViewSettings2D(workspace: GUIWorkspace, gw: ViewWidget, tickCounter: 
 
         world.clearTurtles()
         world.clearLinks()
+        workspace.clearTicks()
         world.createPatches(newMinX, newMaxX, newMinY, newMaxY)
         workspace.patchesCreatedNotify()
         gWidget.resetSize()

@@ -333,6 +333,7 @@ abstract class WorldViewSettings(protected val workspace: GUIWorkspace, protecte
     workspace.jobManager.haltNonObserverJobs()
     workspace.world.clearTurtles()
     workspace.world.clearLinks()
+    workspace.clearTicks()
   }
 
   private[window] def finishWorldResize(): Unit = {

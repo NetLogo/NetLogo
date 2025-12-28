@@ -138,6 +138,7 @@ class WorldViewSettings3D(workspace: GUIWorkspace, gw: ViewWidget, tickCounter: 
           new RemoveAllJobsEvent().raise(gWidget)
           world.clearTurtles()
           world.clearLinks()
+          workspace.clearTicks()
           world.createPatches(newMinX, newMaxX,
             newMinY, newMaxY, newMinZ, newMaxZ)
           workspace.patchesCreatedNotify()
