@@ -19,6 +19,8 @@ class UpdateModeChooser(workspace: GUIWorkspace) extends ComboBox[String] {
       case _ =>
         workspace.updateMode(UpdateMode.TickBased)
     }
+
+    new Events.UpdateModeChangedEvent().raiseOnEDT(workspace.getFrame)
   })
 
   def refreshSelection(): Unit = {

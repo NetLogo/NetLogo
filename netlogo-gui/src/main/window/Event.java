@@ -2,6 +2,8 @@
 
 package org.nlogo.window;
 
+import java.awt.EventQueue;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -120,6 +122,16 @@ public abstract class Event {
   public void raise(Object raiser) {
     raisingThread = Thread.currentThread();
     doRaise(raiser);
+  }
+
+  public void raiseOnEDT(Object raiser) throws InterruptedException, InvocationTargetException {
+    if (EventQueue.isDispatchThread()) {
+      raise(raiser);
+    } else {
+      EventQueue.invokeAndWait(() -> {
+        raise(raiser);
+      });
+    }
   }
 
   ///

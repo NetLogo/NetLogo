@@ -21,6 +21,7 @@ with WidgetRemovedEvent.Handler
 with DirtyEvent.Handler
 with ModelSavedEvent.Handler
 with ExternalFileSavedEvent.Handler
+with UpdateModeChangedEvent.Handler
 with SaveModel.Controller
 {
   // we don't want auto save to kick in when a model isn't completely loaded yet - ST 8/6/09
@@ -115,6 +116,10 @@ with SaveModel.Controller
   }
 
   def handle(e: WidgetRemovedEvent): Unit = {
+    setDirty(true)
+  }
+
+  override def handle(e: UpdateModeChangedEvent): Unit = {
     setDirty(true)
   }
 
