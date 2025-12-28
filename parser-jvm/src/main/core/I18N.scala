@@ -2,6 +2,7 @@
 
 package org.nlogo.core
 
+import java.text.MessageFormat
 import java.util.{ MissingResourceException, Locale, ResourceBundle }
 
 object I18N {
@@ -45,7 +46,7 @@ object I18N {
 
   class BundleKind(name: String) extends I18NJava {
 
-    val defaultLocale = {
+    var defaultLocale: Locale = {
       // if the users locale from the preferences is available, use it.
       localeFromPreferences.getOrElse(
         // if not, see if the default (from the OS or JVM) is available. if so, use it.
@@ -70,20 +71,28 @@ object I18N {
       def getFromBundle(bundle: ResourceBundle): Option[String] =
         try Some(bundle.getString(key))
         catch { case m: MissingResourceException => None }
-      val preformattedText = getFromBundle(defaultBundle).getOrElse{
-        // fallback to english here.
-        println(s"unable to find translation for: $key in $name for locale: ${defaultBundle.getLocale}")
-        getFromBundle(englishBundle)
-          .getOrElse(
-            throw new IllegalArgumentException(s"internal error, bad translation key: $key for $name"))
+      getFromBundle(defaultBundle) match {
+        case Some(text) =>
+          new MessageFormat(text, defaultLocale).format(args.toArray)
+
+        case _ => // fallback to english here.
+          println(s"unable to find translation for: $key in $name for locale: $defaultLocale")
+
+          val text = getFromBundle(englishBundle).getOrElse {
+            throw new IllegalArgumentException(s"internal error, bad translation key: $key for $name")
+          }
+
+          new MessageFormat(text, Locale.US).format(args.toArray)
       }
-      java.text.MessageFormat.format(preformattedText, args*)
     }
     // internal use only
     def withLanguage[T](locale: Locale)(f: => T): T = {
+      val oldLocale = defaultLocale
       val oldBundle = defaultBundle
+      defaultLocale = locale
       defaultBundle = getBundle(locale)
       val v = f
+      defaultLocale = oldLocale
       defaultBundle = oldBundle
       v
     }
@@ -94,8 +103,10 @@ object I18N {
       getBundle(locale).keySet.asScala.toSet
     }
     // internal use only, used to set the locale for error messages in the GUI only.
-    def setLanguage(locale: Locale) =
+    def setLanguage(locale: Locale): Unit = {
+      defaultLocale = locale
       defaultBundle = getBundle(locale)
+    }
 
     // for use in Java classes that we don't want to depend on I18N
     override val fn = get
@@ -109,5 +120,14 @@ object I18N {
   def errorsJ: I18NJava = errors
 
   def guiJ: I18NJava = gui
+
+  // used by tests to enforce English localization of output/error messages (Isaac B 12/28/25)
+  def setAllLanguages(locale: Locale, includeGui: Boolean = true): Unit = {
+    errors.setLanguage(locale)
+    shared.setLanguage(locale)
+
+    if (includeGui)
+      gui.setLanguage(locale)
+  }
 
 }

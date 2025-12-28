@@ -3,9 +3,10 @@
 package org.nlogo.headless.test
 
 import java.io.File
+import java.util.Locale
 
 import org.nlogo.api.FileIO.fileToString
-import org.nlogo.core.{ Model, Resource }
+import org.nlogo.core.{ I18N, Model, Resource }
 import org.nlogo.util.AnyFunSuiteEx
 
 import org.scalatest.Tag
@@ -52,6 +53,9 @@ abstract class ExtensionTests extends Finder {
 // don't use FixtureSuite here because we may need two fixtures, not just
 // one, and FixtureSuite assumes one - ST 8/7/13
 trait Finder extends AnyFunSuiteEx  {
+  // ensure that output/error messages are formatted as expected (Isaac B 12/28/25)
+  I18N.setAllLanguages(Locale.US, false)
+
   def extraTags: Seq[Tag] = Seq()
   def files: Iterable[(String, String)]
   def suiteName(f: File): String =

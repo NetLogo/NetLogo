@@ -2,6 +2,8 @@
 
 package org.nlogo.window
 
+import java.util.Locale
+
 import org.nlogo.core.UpdateMode
 import System.nanoTime
 import StrictMath.pow
@@ -156,9 +158,9 @@ abstract class UpdateManager extends UpdateManagerInterface {
 
   // used for unit testing and debugging
   def debugInfo =
-    "speed = %.0f, frameRateGap = %.2f fps, nanoGap = %.2f fps, slowdown = %.1f ms, every %.3f ticks".format(
-      speed, 1000000000.0 / frameRateGap, 1000000000.0 / nanoGap,
-      updatePolicy.slowdown / 1000000.0, tickGap)
+    "speed = %.0f, frameRateGap = %.2f fps, nanoGap = %.2f fps, slowdown = %.1f ms, every %.3f ticks"
+      .formatLocal(Locale.US, speed, 1000000000.0 / frameRateGap, 1000000000.0 / nanoGap,
+                   updatePolicy.slowdown / 1000000.0, tickGap)
 
   // a nasty bit of stateful logic here.  might not be too hard to get rid of, actually - ST 2/28/11
   private def checkTicks() = {

@@ -2,10 +2,12 @@
 
 package org.nlogo.headless
 
+import java.util.Locale
+
 import org.scalatest.Assertions
 import org.nlogo.agent.CompilationManagement
 import org.nlogo.api.{ Equality, JobOwner, LogoException, NetLogoLegacyDialect, NetLogoThreeDDialect, Version }
-import org.nlogo.core.{ AgentKind, CompilerException, Model, Program, WorldDimensions, WorldDimensions3D }
+import org.nlogo.core.{ AgentKind, CompilerException, I18N, Model, Program, WorldDimensions, WorldDimensions3D }
 import org.nlogo.nvm.PresentationCompilerInterface
 import org.nlogo.core.Femto
 
@@ -29,6 +31,9 @@ trait AbstractTestLanguage extends Assertions {
     ws.silent = true
     ws
   }
+
+  // ensure that output/error messages are formatted as expected (Isaac B 12/28/25)
+  I18N.setAllLanguages(Locale.US)
 
   def owner: JobOwner = workspace.defaultOwner
 

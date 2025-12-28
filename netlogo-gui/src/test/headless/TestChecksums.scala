@@ -3,8 +3,10 @@
 package org.nlogo.headless
 
 import java.io.File
+import java.util.Locale
 import java.util.concurrent.{ Executors, TimeUnit }
 
+import org.nlogo.core.I18N
 import org.nlogo.util.{ AnyFunSuiteEx, SlowTest }
 import org.nlogo.workspace.Checksummer
 
@@ -13,6 +15,8 @@ import org.scalatest.{ Args, Status, SucceededStatus }
 import scala.language.implicitConversions
 
 class TestChecksums extends AnyFunSuiteEx {
+  // ensure that output/error messages are formatted as expected (Isaac B 12/28/25)
+  I18N.setAllLanguages(Locale.US)
 
   // overriding this so we can pass in a model filter to run checksums against a single model.
   // example   sbt> checksums model=Echo

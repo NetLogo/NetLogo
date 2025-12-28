@@ -3,7 +3,9 @@
 package org.nlogo.headless.misc
 
 import java.io.File
+import java.util.Locale
 
+import org.nlogo.core.I18N
 import org.nlogo.headless.{ ChecksumsAndPreviews, HeadlessWorkspace }
 import org.nlogo.util.{ AnyFunSuiteEx, SlowTest }
 import org.nlogo.workspace.Checksummer
@@ -11,6 +13,8 @@ import org.nlogo.workspace.Checksummer
 import org.scalatest.{ Args, Status, SucceededStatus }
 
 class TestChecksums extends AnyFunSuiteEx  {
+  // ensure that output/error messages are formatted as expected (Isaac B 12/28/25)
+  I18N.setAllLanguages(Locale.US, false)
 
   // overriding this so we can pass in a model filter to run checksums against one
   // model, or a subset. example: `ts GenDrift`
