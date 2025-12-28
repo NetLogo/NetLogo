@@ -32,7 +32,7 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
   extends JFrame(I18N.gui.get("menu.tools.hubNetControlCenter")) with ThemeSync {
 
   private val serverPanel = new ServerOptionsPanel(HubNetUtils.viewMirroring, HubNetUtils.plotMirroring)
-  private val clientsPanel = new ClientsPanel(server.clients.keys)
+  private val clientsPanel = new ClientsPanel(server.getClients)
   private val messagePanel = new MessagePanel
 
   private val clientWindows = Set[ClientAppInterface]()

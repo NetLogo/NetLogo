@@ -62,7 +62,7 @@ class ConnectionManager(val connection: ConnectionInterface,
   @volatile private var serverOn: Boolean = false
 
   protected var running = false
-  val clients = collection.mutable.HashMap[String, ServerSideConnection]()
+  private val clients = collection.mutable.HashMap[String, ServerSideConnection]()
   val plotManager = new ServerPlotManager(workspace, this,
     () => workspace.plotManager.plots, () => workspace.plotManager.currentPlot.get) {
     workspace.plotManager.listener = this
@@ -197,6 +197,12 @@ class ConnectionManager(val connection: ConnectionInterface,
     new ServerSideConnection(Streamable(newSocket), newSocket.getRemoteSocketAddress.toString, this).start()
   }
 
+  def getClients: Iterable[String] = {
+    clients synchronized {
+      clients.keys
+    }
+  }
+
   /// client code
 
   /**
@@ -311,9 +317,9 @@ class ConnectionManager(val connection: ConnectionInterface,
     sendUserMessage(node, new Text(text, Text.MessageType.USER))
 
   private def sendUserMessage(userid:String, message:Message): Boolean = {
-    val c = clients.get(userid)
-    c.foreach(_.sendData(message))
-    c.isDefined
+    (clients synchronized {
+      clients.get(userid)
+    }).map(_.sendData(message)).nonEmpty
   }
 
   def broadcastUserMessage(text:String): Unit = { broadcastMessage(new Text(text, Text.MessageType.USER)) }
@@ -398,8 +404,9 @@ class ConnectionManager(val connection: ConnectionInterface,
   }
 
   def sendPlot(clientId:String, plot:PlotInterface): Unit = {
-    val c = clients.get(clientId)
-    if (c.isDefined) c.get.sendData(new PlotUpdate(plot))
+    clients synchronized {
+      clients.get(clientId)
+    } foreach(_.sendData(new PlotUpdate(plot)))
   }
 
   def sendPlots(clientId:String): Unit ={ plotManager.sendPlots(clientId) }

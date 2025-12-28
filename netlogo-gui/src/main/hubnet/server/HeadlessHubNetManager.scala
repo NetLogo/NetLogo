@@ -98,9 +98,11 @@ class HeadlessHubNetManager(workspace: AbstractWorkspaceScala, loader: AbstractM
     // JC - 3/30/11
     executor.submit(new Runnable(){
       override def run(): Unit = {
-        val client =
-          new TestClient(userId="Local " + clientIds.next(), port=connectionManager.port)
-        clientsAddedViaNewClient.synchronized(clientsAddedViaNewClient += client)
+        clientIds synchronized {
+          val client = new TestClient(s"Local ${clientIds.next()}", port = connectionManager.port)
+
+          clientsAddedViaNewClient.synchronized(clientsAddedViaNewClient += client)
+        }
       }
     })
 

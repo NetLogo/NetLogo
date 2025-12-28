@@ -228,18 +228,18 @@ abstract class HubNetManager( workspace: AbstractWorkspaceScala, modelLoader: Ab
     messagesList.size()
   }
 
-  def clients:Iterable[String] = connectionManager.clients.keys
+  def clients:Iterable[String] = connectionManager.getClients
   def kick(userId:String): Unit ={ connectionManager.removeClient(userId, true, "Kicked out.") }
   def kickAll(): Unit ={ connectionManager.removeAllClients() }
   def setViewMirroring(onOff:Boolean): Unit ={ HubNetUtils.viewMirroring = onOff }
   def setPlotMirroring(onOff:Boolean): Unit ={ HubNetUtils.plotMirroring = onOff }
 
   def waitForClients(numClientsToWaitFor:Int, timeoutMillis: Long): (Boolean, Int) = {
-    waitForEvents(numClientsToWaitFor, timeoutMillis)(workspace.getHubNetManager.map(_.clients.size).get)
+    waitForEvents(numClientsToWaitFor, timeoutMillis)(clients.size)
   }
 
   def waitForMessages(numMessagesToWaitFor:Int, timeoutMillis: Long): (Boolean, Int) = {
-    waitForEvents(numMessagesToWaitFor, timeoutMillis)(workspace.getHubNetManager.map(_.getInQueueSize).get)
+    waitForEvents(numMessagesToWaitFor, timeoutMillis)(getInQueueSize)
   }
 
   // this is called from __hubnet-wait-for-clients and __hubnet-wait-for-messages.
