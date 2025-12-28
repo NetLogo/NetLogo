@@ -39,12 +39,12 @@ abstract class AbstractPlotWidget(val plot: Plot, val plotManager: PlotManagerIn
 
     override def paintComponent(g: Graphics): Unit = {
       setDiameter(zoom(6))
+      setBackgroundColor(new Color(plot.backgroundColor))
 
       super.paintComponent(g)
     }
 
     override def syncTheme(): Unit = {
-      setBackgroundColor(Color.WHITE)
       setBorderColor(InterfaceColors.plotBorder())
     }
   }
