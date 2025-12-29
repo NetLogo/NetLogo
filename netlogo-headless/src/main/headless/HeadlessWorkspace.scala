@@ -133,11 +133,17 @@ extends AbstractWorkspace(_world) with WorldLoaderInterface with PrimaryWorkspac
    * Kills all turtles, clears all patch variables, and makes a new patch grid.
    */
   def setDimensions(d: WorldDimensions): Unit = {
+    clearTurtles()
+    world.clearLinks()
+    clearTicks()
     world.createPatches(d)
     clearDrawing()
   }
 
   def setDimensions(d: WorldDimensions, patchSize: Double): Unit = {
+    clearTurtles()
+    world.clearLinks()
+    clearTicks()
     world.patchSize(patchSize)
     if (!compilerTestingMode) {
       world.createPatches(d)
