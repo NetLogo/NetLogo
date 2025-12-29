@@ -166,6 +166,12 @@ case class EditorConfiguration(
       ).foreach { case ((key, mod), action) => editor.getInputMap().put(KeyStroke.getKeyStroke(key, mod), action)}
     }
 
+    TextActions.applyToComponent(editor)
+
+    // these text actions need to be added manually because RSyntaxTextArea
+    // registers them differently (Isaac B 12/29/25)
+    editor.getInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, CtrlKey),
+                           new TextActions.CorrectDeletePrevWordAction(editor))
     editor.getInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, CtrlKey),
                            new TextActions.CorrectDeleteNextWordAction(editor))
 
