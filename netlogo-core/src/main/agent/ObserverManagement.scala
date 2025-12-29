@@ -4,7 +4,7 @@ package org.nlogo.agent
 
 import java.util.Locale
 
-import org.nlogo.api.{ AgentException, LogoException }
+import org.nlogo.api.{ AgentException, LogoException, Perspective }
 import org.nlogo.log.LogManager
 
 import World.Zero
@@ -40,7 +40,11 @@ trait ObserverManagement extends WorldKernel {
 
   def wrappedObserverX(x: Double): Double = {
     try {
-      topology.wrapX(x - topology.followOffsetX)
+      if (observer.perspective.isInstanceOf[Perspective.Follow] && !topology.xWraps) {
+        topology.wrapX(x - topology.followOffsetX) - observer.oxcor
+      } else {
+        topology.wrapX(x - topology.followOffsetX)
+      }
     } catch {
       case e: AgentException =>
         org.nlogo.api.Exceptions.ignore(e)
@@ -50,7 +54,11 @@ trait ObserverManagement extends WorldKernel {
 
   def wrappedObserverY(y: Double): Double = {
     try {
-      topology.wrapY(y - topology.followOffsetY)
+      if (observer.perspective.isInstanceOf[Perspective.Follow] && !topology.yWraps) {
+        topology.wrapY(y - topology.followOffsetY) - observer.oycor
+      } else {
+        topology.wrapY(y - topology.followOffsetY)
+      }
     } catch {
       case e: AgentException =>
         org.nlogo.api.Exceptions.ignore(e);

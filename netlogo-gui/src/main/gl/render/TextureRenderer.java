@@ -154,43 +154,49 @@ class TextureRenderer {
           gl.glTranslatef((scale * (horzPieceCenter - 0.5f)), 0.0f, 0.0f);
 
           // check if the piece is off the world (and should be wrapped)
-          if ((xOffset + tileWidth * horzPieceCenter < wrapXLine)
-              && wrapXLeft) {
-            gl.glTranslatef((width * scale / tileWidth), 0.0f, 0.0f);
-          } else if ((xOffset + tileWidth * horzPieceCenter > wrapXLine)
-              && !wrapXLeft) {
-            gl.glTranslatef(-(width * scale / tileWidth), 0.0f, 0.0f);
-          }
+          boolean wrapPosX = (xOffset + tileWidth * horzPieceCenter < wrapXLine) && wrapXLeft;
+          boolean wrapNegX = (xOffset + tileWidth * horzPieceCenter > wrapXLine) && !wrapXLeft;
 
-          for (int v = 0; v < vertPieces; v++) {
-            gl.glPushMatrix();
-
-            // locate the size and center (relative to top-left) of the piece
-            float vertPieceSize = (v == 0) ? vertSplit : (1.0f - vertSplit);
-            float vertPieceCenter = (vertPieceSize / 2) + ((v == 0) ?
-                0.0f : vertSplit);
-
-            // we need to translate from the center of the tile to the
-            // center of the piece
-            gl.glTranslatef(0.0f, (scale * ((1 - vertPieceCenter) - 0.5f)),
-                0.0f);
-
-            // check if the piece is off the world (and should be wrapped)
-            if ((yOffset - tileHeight * vertPieceCenter < wrapYLine)
-                && wrapYDown) {
-              gl.glTranslatef(0.0f, (height * scale / tileHeight), 0.0f);
-            } else if ((yOffset - tileHeight * vertPieceCenter > wrapYLine)
-                && !wrapYDown) {
-              gl.glTranslatef(0.0f, -(height * scale / tileHeight), 0.0f);
+          if (world.wrappingAllowedInX() || (!wrapPosX && !wrapNegX)) {
+            if (wrapPosX) {
+              gl.glTranslatef((width * scale / tileWidth), 0.0f, 0.0f);
+            } else if (wrapNegX) {
+              gl.glTranslatef(-(width * scale / tileWidth), 0.0f, 0.0f);
             }
 
-            // render the piece
-            TextureUtils.renderInPlane(gl, horzPieceSize, vertPieceSize, 1.0f,
-                (horzPieceSize * tileWidth), (vertPieceSize * tileHeight),
-                textureSize, ((h == 0) ? 0.0f : (horzSplit * tileWidth)),
-                ((v == 0) ? 0.0f : (vertSplit * tileHeight)));
+            for (int v = 0; v < vertPieces; v++) {
+              gl.glPushMatrix();
 
-            gl.glPopMatrix();
+              // locate the size and center (relative to top-left) of the piece
+              float vertPieceSize = (v == 0) ? vertSplit : (1.0f - vertSplit);
+              float vertPieceCenter = (vertPieceSize / 2) + ((v == 0) ?
+                  0.0f : vertSplit);
+
+              // we need to translate from the center of the tile to the
+              // center of the piece
+              gl.glTranslatef(0.0f, (scale * ((1 - vertPieceCenter) - 0.5f)),
+                  0.0f);
+
+              // check if the piece is off the world (and should be wrapped)
+              boolean wrapPosY = (yOffset - tileHeight * vertPieceCenter < wrapYLine) && wrapYDown;
+              boolean wrapNegY = (yOffset - tileHeight * vertPieceCenter > wrapYLine) && !wrapYDown;
+
+              if (world.wrappingAllowedInY() || (!wrapPosY && !wrapNegY)) {
+                if (wrapPosY) {
+                  gl.glTranslatef(0.0f, (height * scale / tileHeight), 0.0f);
+                } else if (wrapNegY) {
+                  gl.glTranslatef(0.0f, -(height * scale / tileHeight), 0.0f);
+                }
+
+                // render the piece
+                TextureUtils.renderInPlane(gl, horzPieceSize, vertPieceSize, 1.0f,
+                    (horzPieceSize * tileWidth), (vertPieceSize * tileHeight),
+                    textureSize, ((h == 0) ? 0.0f : (horzSplit * tileWidth)),
+                    ((v == 0) ? 0.0f : (vertSplit * tileHeight)));
+              }
+
+              gl.glPopMatrix();
+            }
           }
           gl.glPopMatrix();
         }
