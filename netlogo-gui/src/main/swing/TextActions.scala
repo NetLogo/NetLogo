@@ -19,23 +19,32 @@ object TextActions {
     comp.getActionMap.put(DefaultEditorKit.forwardAction, new CorrectForwardAction(comp))
   }
 
+  // copied from org.nlogo.lex.Charset, which is used during lexing
+  // to determine valid NetLogo identifiers (Isaac B 12/29/25)
+  private def isIdentChar(c: Char): Boolean =
+    c.isLetterOrDigit || "_.?=*!<>:#+/%$^'&-".contains(c)
+
   class CorrectPreviousWordAction(comp: JTextComponent, select: Boolean)
     extends TextAction("previous word") {
 
     def actionPerformed(e: ActionEvent): Unit = {
       if (comp.getCaretPosition > 0) {
-        if (comp.getText()(comp.getCaretPosition - 1).isLetterOrDigit) {
-          while (comp.getCaretPosition > 0 && comp.getText()(comp.getCaretPosition - 1).isLetterOrDigit) {
-            if (select) {
-              comp.moveCaretPosition(comp.getCaretPosition - 1)
-            } else {
-              comp.setCaretPosition(comp.getCaretPosition - 1)
-            }
+        val text = comp.getText
+
+        while (comp.getCaretPosition > 0 && !isIdentChar(text(comp.getCaretPosition - 1))) {
+          if (select) {
+            comp.moveCaretPosition(comp.getCaretPosition - 1)
+          } else {
+            comp.setCaretPosition(comp.getCaretPosition - 1)
           }
-        } else if (select) {
-          comp.moveCaretPosition(comp.getCaretPosition - 1)
-        } else {
-          comp.setCaretPosition(comp.getCaretPosition - 1)
+        }
+
+        while (comp.getCaretPosition > 0 && isIdentChar(text(comp.getCaretPosition - 1))) {
+          if (select) {
+            comp.moveCaretPosition(comp.getCaretPosition - 1)
+          } else {
+            comp.setCaretPosition(comp.getCaretPosition - 1)
+          }
         }
       }
     }
@@ -43,20 +52,23 @@ object TextActions {
 
   class CorrectNextWordAction(comp: JTextComponent, select: Boolean) extends TextAction("next word") {
     def actionPerformed(e: ActionEvent): Unit = {
-      if (comp.getCaretPosition < comp.getText().size) {
-        if (comp.getText()(comp.getCaretPosition).isLetterOrDigit) {
-          while (comp.getCaretPosition < comp.getText().size &&
-                 comp.getText()(comp.getCaretPosition).isLetterOrDigit) {
-            if (select) {
-              comp.moveCaretPosition(comp.getCaretPosition + 1)
-            } else {
-              comp.setCaretPosition(comp.getCaretPosition + 1)
-            }
+      val text = comp.getText
+
+      if (comp.getCaretPosition < text.size) {
+        while (comp.getCaretPosition < text.size && !isIdentChar(text(comp.getCaretPosition))) {
+          if (select) {
+            comp.moveCaretPosition(comp.getCaretPosition + 1)
+          } else {
+            comp.setCaretPosition(comp.getCaretPosition + 1)
           }
-        } else if (select) {
-          comp.moveCaretPosition(comp.getCaretPosition + 1)
-        } else {
-          comp.setCaretPosition(comp.getCaretPosition + 1)
+        }
+
+        while (comp.getCaretPosition < text.size && isIdentChar(text(comp.getCaretPosition))) {
+          if (select) {
+            comp.moveCaretPosition(comp.getCaretPosition + 1)
+          } else {
+            comp.setCaretPosition(comp.getCaretPosition + 1)
+          }
         }
       }
     }
@@ -64,24 +76,50 @@ object TextActions {
 
   class CorrectSelectWordAction(comp: JTextComponent) extends TextAction("select word") {
     def actionPerformed(e: ActionEvent): Unit = {
-      new CorrectPreviousWordAction(comp, false).actionPerformed(e)
-      new CorrectNextWordAction(comp, true).actionPerformed(e)
+      val text = comp.getText
+
+      if (text.nonEmpty) {
+        val start = isIdentChar(text((comp.getCaretPosition).min(text.size - 1))) ||
+                    isIdentChar(text((comp.getCaretPosition - 1).max(0)))
+
+        while (comp.getCaretPosition > 0 && isIdentChar(text(comp.getCaretPosition - 1)) == start)
+          comp.setCaretPosition(comp.getCaretPosition - 1)
+
+        while (comp.getCaretPosition < text.size && isIdentChar(text(comp.getCaretPosition)) == start)
+          comp.moveCaretPosition(comp.getCaretPosition + 1)
+      }
     }
   }
 
   class CorrectDeletePrevWordAction(comp: JTextComponent) extends TextAction("delete previous word") {
     def actionPerformed(e: ActionEvent): Unit = {
-      new CorrectPreviousWordAction(comp, true).actionPerformed(e)
+      if (comp.getCaretPosition > 0) {
+        val text = comp.getText
+        val start = isIdentChar(text(comp.getCaretPosition - 1))
 
-      comp.replaceSelection(null)
+        while (comp.getCaretPosition > 0 && isIdentChar(text(comp.getCaretPosition - 1)) == start)
+          comp.moveCaretPosition(comp.getCaretPosition - 1)
+
+        comp.replaceSelection(null)
+        comp.setCaretPosition(comp.getCaretPosition)
+      }
     }
   }
 
   class CorrectDeleteNextWordAction(comp: JTextComponent) extends TextAction("delete next word") {
     def actionPerformed(e: ActionEvent): Unit = {
-      new CorrectNextWordAction(comp, true).actionPerformed(e)
+      val text = comp.getText
 
-      comp.replaceSelection(null)
+      if (comp.getCaretPosition < text.size) {
+        val startPos = comp.getCaretPosition
+        val start = isIdentChar(text(startPos))
+
+        while (comp.getCaretPosition < text.size && isIdentChar(text(comp.getCaretPosition)) == start)
+          comp.moveCaretPosition(comp.getCaretPosition + 1)
+
+        comp.replaceSelection(null)
+        comp.setCaretPosition(startPos)
+      }
     }
   }
 
@@ -95,7 +133,7 @@ object TextActions {
     }
   }
 
-  class CorrectForwardAction(comp: JTextComponent) extends TextAction("caret backward") {
+  class CorrectForwardAction(comp: JTextComponent) extends TextAction("caret forward") {
     def actionPerformed(e: ActionEvent): Unit = {
       if (comp.getSelectionStart == comp.getSelectionEnd) {
         comp.setCaretPosition((comp.getCaretPosition + 1).min(comp.getText.size))
