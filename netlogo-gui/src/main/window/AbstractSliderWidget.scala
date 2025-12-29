@@ -153,7 +153,10 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
             setValueFromSlider()
 
           case _ =>
+            super.processKeyEvent(e)
         }
+      } else {
+        super.processKeyEvent(e)
       }
     }
   }
