@@ -102,14 +102,14 @@ public abstract class TrailDrawerJ
 
     topology.prepareToPaint(this, width, height);
 
-    // we use world.patchSize here because the drawing does not
+    // we use world.fixedPatchSize here because the drawing does not
     // change resolution due to zooming. ev 4/2/08
     if (agent instanceof org.nlogo.api.Turtle) {
       turtleDrawer.drawTurtleShape
-          (tg, topology, (org.nlogo.api.Turtle) agent, world.patchSize());
+          (tg, topology, (org.nlogo.api.Turtle) agent, world.fixedPatchSize());
     } else if (agent instanceof org.nlogo.api.Link) {
       linkDrawer.drawLink
-          (tg, topology, (org.nlogo.api.Link) agent, world.patchSize(), false);
+          (tg, topology, (org.nlogo.api.Link) agent, world.fixedPatchSize(), false);
     }
     tg.antiAliasing(false);
 
@@ -146,7 +146,7 @@ public abstract class TrailDrawerJ
     double maxx = world.maxPxcor() + 0.4999999;
     double miny = world.minPycor() - 0.5;
     double minx = world.minPxcor() - 0.5;
-    double pixelSize = 1 / world.patchSize();
+    double pixelSize = 1 / world.fixedPatchSize();
 
     int count = 0;
 
