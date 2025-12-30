@@ -2,6 +2,8 @@
 
 package org.nlogo.agent
 
+import java.util.ArrayList
+
 import
   org.nlogo.{ api, core },
     core.{ AgentKind, LogoList },
@@ -136,7 +138,7 @@ extends AgentSet(kind, printName) {
 
   // parent enumeration class
   final private class Iterator extends AgentIterator {
-    private val iter = _agents.values.iterator
+    private val iter = new ArrayList(_agents.values).iterator
     override def hasNext = iter.hasNext
     override def next() = iter.next()
   }
