@@ -217,6 +217,11 @@ public class ClientWorld
     return perspectiveMode == PerspectiveMode.SERVER ? patchSize : ((StrictMath.max(viewWidth, viewHeight)) / ((radius * 2) + 1));
   }
 
+  @Override
+  public double fixedPatchSize() {
+    return patchSize;
+  }
+
   public double zoom() {
     return patchSize() / patchSize;
   }

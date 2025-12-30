@@ -67,9 +67,9 @@ public class BoxRenderer extends AbstractTopologyRenderer {
   @Override
   public void drawLine(GraphicsInterface g, double startX, double startY,
                        double endX, double endY, double penSize) {
-    g.drawLine(graphicsXNoOffset(startX, world.patchSize()),
-        graphicsYNoOffset(startY, world.patchSize()),
-        graphicsXNoOffset(endX, world.patchSize()),
-        graphicsYNoOffset(endY, world.patchSize()));
+    g.drawLine(graphicsXNoOffset(startX, world.fixedPatchSize()),
+        graphicsYNoOffset(startY, world.fixedPatchSize()),
+        graphicsXNoOffset(endX, world.fixedPatchSize()),
+        graphicsYNoOffset(endY, world.fixedPatchSize()));
   }
 }
