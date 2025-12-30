@@ -1,0 +1,94 @@
+<experiments>
+  <experiment name="inverseX" repetitions="1" sequentialRunOrder="true" runMetricsEveryStep="true" timeLimit="1">
+    <constants>
+      <enumeratedValueSet variable="min-pxcor">
+        <value value="-5"></value>
+        <value value="-2"></value>
+        <value value="10"></value>
+      </enumeratedValueSet>
+      <enumeratedValueSet variable="max-pxcor">
+        <value value="5"></value>
+        <value value="2"></value>
+        <value value="-10"></value>
+      </enumeratedValueSet>
+    </constants>
+  </experiment>
+  <experiment name="inverseY" repetitions="1" sequentialRunOrder="true" runMetricsEveryStep="true" timeLimit="1">
+    <constants>
+      <enumeratedValueSet variable="min-pycor">
+        <value value="-5"></value>
+        <value value="-2"></value>
+        <value value="10"></value>
+      </enumeratedValueSet>
+      <enumeratedValueSet variable="max-pycor">
+        <value value="5"></value>
+        <value value="2"></value>
+        <value value="-10"></value>
+      </enumeratedValueSet>
+    </constants>
+  </experiment>
+  <experiment name="boundsX" repetitions="1" sequentialRunOrder="true" runMetricsEveryStep="true" timeLimit="1">
+    <constants>
+      <enumeratedValueSet variable="min-pxcor">
+        <value value="0"></value>
+        <value value="5"></value>
+        <value value="-16"></value>
+      </enumeratedValueSet>
+      <enumeratedValueSet variable="max-pxcor">
+        <value value="5"></value>
+        <value value="7"></value>
+        <value value="16"></value>
+      </enumeratedValueSet>
+    </constants>
+  </experiment>
+  <experiment name="boundsY" repetitions="1" sequentialRunOrder="true" runMetricsEveryStep="true" timeLimit="1">
+    <constants>
+      <enumeratedValueSet variable="min-pycor">
+        <value value="0"></value>
+        <value value="5"></value>
+        <value value="-16"></value>
+      </enumeratedValueSet>
+      <enumeratedValueSet variable="max-pycor">
+        <value value="5"></value>
+        <value value="7"></value>
+        <value value="16"></value>
+      </enumeratedValueSet>
+    </constants>
+  </experiment>
+  <experiment name="minX" repetitions="1" sequentialRunOrder="true" runMetricsEveryStep="true" timeLimit="1">
+    <constants>
+      <enumeratedValueSet variable="min-pxcor">
+        <value value="0"></value>
+        <value value="5"></value>
+        <value value="-16"></value>
+      </enumeratedValueSet>
+    </constants>
+  </experiment>
+  <experiment name="maxX" repetitions="1" sequentialRunOrder="true" runMetricsEveryStep="true" timeLimit="1">
+    <constants>
+      <enumeratedValueSet variable="max-pxcor">
+        <value value="0"></value>
+        <value value="-5"></value>
+        <value value="16"></value>
+      </enumeratedValueSet>
+    </constants>
+  </experiment>
+  <experiment name="minY" repetitions="1" sequentialRunOrder="true" runMetricsEveryStep="true" timeLimit="1">
+    <constants>
+      <enumeratedValueSet variable="min-pycor">
+        <value value="0"></value>
+        <value value="5"></value>
+        <value value="-16"></value>
+      </enumeratedValueSet>
+    </constants>
+  </experiment>
+  <experiment name="maxY" repetitions="1" sequentialRunOrder="true" runMetricsEveryStep="true" timeLimit="1">
+    <constants>
+      <enumeratedValueSet variable="max-pycor">
+        <value value="0"></value>
+        <value value="-5"></value>
+        <value value="16"></value>
+      </enumeratedValueSet>
+    </constants>
+  </experiment>
+</experiments>

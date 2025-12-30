@@ -1,0 +1,48 @@
+<experiments>
+  <experiment name="inverseZ" repetitions="1" sequentialRunOrder="true" runMetricsEveryStep="true" timeLimit="1">
+    <constants>
+      <enumeratedValueSet variable="min-pzcor">
+        <value value="-5"></value>
+        <value value="-2"></value>
+        <value value="10"></value>
+      </enumeratedValueSet>
+      <enumeratedValueSet variable="max-pzcor">
+        <value value="5"></value>
+        <value value="2"></value>
+        <value value="-10"></value>
+      </enumeratedValueSet>
+    </constants>
+  </experiment>
+  <experiment name="boundsZ" repetitions="1" sequentialRunOrder="true" runMetricsEveryStep="true" timeLimit="1">
+    <constants>
+      <enumeratedValueSet variable="min-pzcor">
+        <value value="0"></value>
+        <value value="5"></value>
+        <value value="-16"></value>
+      </enumeratedValueSet>
+      <enumeratedValueSet variable="max-pzcor">
+        <value value="5"></value>
+        <value value="7"></value>
+        <value value="16"></value>
+      </enumeratedValueSet>
+    </constants>
+  </experiment>
+  <experiment name="minZ" repetitions="1" sequentialRunOrder="true" runMetricsEveryStep="true" timeLimit="1">
+    <constants>
+      <enumeratedValueSet variable="min-pzcor">
+        <value value="0"></value>
+        <value value="5"></value>
+        <value value="-16"></value>
+      </enumeratedValueSet>
+    </constants>
+  </experiment>
+  <experiment name="maxZ" repetitions="1" sequentialRunOrder="true" runMetricsEveryStep="true" timeLimit="1">
+    <constants>
+      <enumeratedValueSet variable="max-pzcor">
+        <value value="0"></value>
+        <value value="-5"></value>
+        <value value="16"></value>
+      </enumeratedValueSet>
+    </constants>
+  </experiment>
+</experiments>
