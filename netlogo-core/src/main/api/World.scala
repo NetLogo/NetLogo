@@ -6,6 +6,11 @@ import org.nlogo.core, core.{ Program, ShapeList, ShapeListTracker }
 
 trait World {
   def patchSize: Double
+  // HubNet reports a different value for the above patchSize method when following an agent, which
+  // breaks some parts of the drawing code. this fixedPatchSize method allows the trail drawer to know the
+  // original patch size of the model without requiring any risky changes to how HubNet uses patchSize.
+  // (Isaac B 12/30/25)
+  def fixedPatchSize: Double = patchSize
   def worldWidth: Int
   def worldHeight: Int
   def minPxcor: Int
