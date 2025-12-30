@@ -220,7 +220,7 @@ class _hubnetbroadcastmessage extends Command with HubNetPrim {
 
   override def perform(context: Context): Unit = {
     val data = args(0).report(context)
-    hubNetManager.foreach(_.broadcast(Dump.logoObject(data) + "\n"))
+    hubNetManager.foreach(_.broadcast(Dump.logoObject(data)))
     context.ip = next
   }
 }

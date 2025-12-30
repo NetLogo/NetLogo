@@ -292,7 +292,7 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
       val newMessage = "" + currentTime + "   " + message
       // we use setText instead of append to ensure scrolling
       messageTextArea.setText(
-        messageTextArea.getText() + (if (newMessage.endsWith("\n")) newMessage else newMessage) + "\n")
+        messageTextArea.getText() + (if (newMessage.endsWith("\n")) newMessage else newMessage + "\n"))
     }
 
     override def syncTheme(): Unit = {
