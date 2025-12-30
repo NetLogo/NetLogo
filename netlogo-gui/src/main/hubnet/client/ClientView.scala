@@ -140,6 +140,14 @@ class ClientView(clientPanel: ClientPanel) extends Widget with ViewWidgetInterfa
   def viewOffsetX = world.followOffsetX
   def viewOffsetY = world.followOffsetY
   def renderPerspective = true
-  def drawSpotlight = world.serverMode() || world.perspective.isInstanceOf[Perspective.Follow]
+  def drawSpotlight: Boolean = {
+    world.serverMode() || (world.perspective match {
+      case _: Perspective.Watch | _: Perspective.Follow =>
+        true
+
+      case _ =>
+        false
+    })
+  }
   def getAdditionalHeight = 0
 }
