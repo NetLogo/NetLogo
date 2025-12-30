@@ -197,6 +197,7 @@ private class ManagerDialog(manager:       LabManager,
     Analytics.bspaceOpen()
     val editable = new ProtocolEditable(protocol, manager.workspace.getFrame,
                                         manager.workspace, dialogFactory.colorizer, manager.workspace.world,
+                                        manager.workspace.world.getDimensions,
                                         manager.protocols.map(_.name).filter(isNew || _ != protocol.name).toSeq)
     dialogFactory.create(manager.workspace.getFrame, editable, success => {
       blockActions = false

@@ -14,6 +14,8 @@ case class WorldDimensions(
   def width = maxPxcor - minPxcor + 1
   def height = maxPycor - minPycor + 1
 
+  def get3D: WorldDimensions3D =
+    new WorldDimensions3D(minPxcor, maxPxcor, minPycor, maxPycor, 0, 0)
 }
 
 /** for wrapping up dimensions to resize the world using WorldResizer

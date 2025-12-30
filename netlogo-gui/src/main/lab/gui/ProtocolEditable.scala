@@ -4,8 +4,8 @@ package org.nlogo.lab.gui
 
 import java.awt.Window
 
-import org.nlogo.api.{ CompilerServices, GlobalsIdentifier, LabProtocol, LabVariableParser }
-import org.nlogo.core.{ CompilerException, I18N }
+import org.nlogo.api.{ CompilerServices, GlobalsIdentifier, LabProtocol, LabVariableParser, RefValueSet }
+import org.nlogo.core.{ CompilerException, I18N, WorldDimensions, WorldDimensions3D }
 import org.nlogo.editor.Colorizer
 import org.nlogo.swing.OptionPane
 import org.nlogo.window.{ DummyErrorHandler, Editable, EditPanel }
@@ -17,6 +17,7 @@ private [gui] class ProtocolEditable(protocol: LabProtocol,
                                      compiler: CompilerServices & GlobalsIdentifier,
                                      colorizer: Colorizer,
                                      worldLock: AnyRef,
+                                     currentDims: WorldDimensions,
                                      experimentNames: Seq[String] = Seq[String]())
   extends Editable with DummyErrorHandler {
   // these are for Editable
@@ -129,56 +130,106 @@ private [gui] class ProtocolEditable(protocol: LabProtocol,
       Some(I18N.gui.getN("edit.behaviorSpace.name.duplicate", name.trim))
     } else {
       LabVariableParser.parseVariables(valueSets, repetitions, worldLock, compiler) match {
+        case Success((constants, subExperiments)) =>
+          checkWorldDimensions(constants, subExperiments).orElse(checkCodeEditors())
+
         case Failure(t) =>
-          return Some(I18N.gui.getN("edit.behaviorSpace.compilerError",
-                                    I18N.gui.get("edit.behaviorSpace.variableSpec"), t.getMessage))
-
-        case _ =>
+          Some(I18N.gui.getN("edit.behaviorSpace.compilerError", I18N.gui.get("edit.behaviorSpace.variableSpec"),
+                             t.getMessage))
       }
-
-      def checkCommand(name: String, text: String): Option[String] = {
-        try {
-          val trimmed = text.trim
-
-          if (trimmed.nonEmpty && !trimmed.startsWith(";"))
-            compiler.checkCommandSyntax(trimmed)
-        } catch {
-          case e: CompilerException =>
-            return Some(I18N.gui.getN("edit.behaviorSpace.compilerError", name, e.getMessage))
-        }
-
-        None
-      }
-
-      def checkReporter(name: String, text: String): Option[String] = {
-        try {
-          val trimmed = text.trim
-
-          if (trimmed.nonEmpty && !trimmed.startsWith(";"))
-            compiler.checkReporterSyntax(trimmed)
-        } catch {
-          case e: CompilerException =>
-            return Some(I18N.gui.getN("edit.behaviorSpace.compilerError", name, e.getMessage))
-        }
-
-        None
-      }
-
-      metrics.split("\n").foldLeft(Option.empty[String]) {
-        case (None, m) => checkReporter(I18N.gui.get("edit.behaviorSpace.metrics"), m)
-        case (e, _) => e
-      }.orElse(checkReporter(I18N.gui.get("edit.behaviorSpace.runMetricsCondition"), runMetricsCondition))
-       .orElse(checkCommand(I18N.gui.get("edit.behaviorSpace.preExperimentCommands"), preExperimentCommands))
-       .orElse(checkCommand(I18N.gui.get("edit.behaviorSpace.setupCommands"), setupCommands))
-       .orElse(checkCommand(I18N.gui.get("edit.behaviorSpace.goCommands"), goCommands))
-       .orElse {
-          val trimmed: Option[String] = exitCondition.split("\n").dropWhile(_.trim.startsWith(";"))
-                                          .dropWhile(_.trim.isEmpty).headOption
-
-          trimmed.flatMap(checkReporter(I18N.gui.get("edit.behaviorSpace.exitCondition"), _))
-        }
-       .orElse(checkCommand(I18N.gui.get("edit.behaviorSpace.postRunCommands"), postRunCommands))
-       .orElse(checkCommand(I18N.gui.get("edit.behaviorSpace.postExperimentCommands"), postExperimentCommands))
     }
+  }
+
+  // ensure that all provided value combinations for world dimensions are valid. this is done here instead
+  // of in LabVariableParser, because the condition can't be checked one variable at a time. (Isaac B 12/30/25)
+  private def checkWorldDimensions(constants: List[RefValueSet],
+                                   subExperiments: List[List[RefValueSet]]): Option[String] = {
+    LabProtocol.refElementsFor(constants, subExperiments).flatMap { vars =>
+      // pzcor variables get rejected earlier in 2D, so here we can consider all 6 dimensions
+      // to make the logic simpler and the code more readable (Isaac B 1/3/26)
+      val newDims: WorldDimensions3D = vars.foldLeft(currentDims.get3D) {
+        case (dims, (name, value: Double)) =>
+          val lower = name.toLowerCase
+
+          if (lower == "min-pxcor") {
+            dims.copyThreeD(minPxcor = value.toInt)
+          } else if (lower == "max-pxcor") {
+            dims.copyThreeD(maxPxcor = value.toInt)
+          } else if (lower == "min-pycor") {
+            dims.copyThreeD(minPycor = value.toInt)
+          } else if (lower == "max-pycor") {
+            dims.copyThreeD(maxPycor = value.toInt)
+          } else if (lower == "min-pzcor") {
+            dims.copyThreeD(minPzcor = value.toInt)
+          } else if (lower == "max-pzcor") {
+            dims.copyThreeD(maxPzcor = value.toInt)
+          } else {
+            dims
+          }
+
+        case (dims, _) =>
+          dims
+      }
+
+      if (invalidDims(newDims.minPxcor, newDims.maxPxcor)) {
+        Some(I18N.gui.get("edit.behaviorSpace.invalidDimsX"))
+      } else if (invalidDims(newDims.minPycor, newDims.maxPycor)) {
+        Some(I18N.gui.get("edit.behaviorSpace.invalidDimsY"))
+      } else if (invalidDims(newDims.minPzcor, newDims.maxPzcor)) {
+        Some(I18N.gui.get("edit.behaviorSpace.invalidDimsZ"))
+      } else {
+        None
+      }
+    }.nextOption
+  }
+
+  private def invalidDims(min: Int, max: Int): Boolean =
+    max < min || (min < 0 && max < 0) || (min > 0 && max > 0)
+
+  private def checkCommand(name: String, text: String): Option[String] = {
+    try {
+      val trimmed = text.trim
+
+      if (trimmed.nonEmpty && !trimmed.startsWith(";"))
+        compiler.checkCommandSyntax(trimmed)
+
+      None
+    } catch {
+      case e: CompilerException =>
+        Some(I18N.gui.getN("edit.behaviorSpace.compilerError", name, e.getMessage))
+    }
+  }
+
+  private def checkReporter(name: String, text: String): Option[String] = {
+    try {
+      val trimmed = text.trim
+
+      if (trimmed.nonEmpty && !trimmed.startsWith(";"))
+        compiler.checkReporterSyntax(trimmed)
+
+      None
+    } catch {
+      case e: CompilerException =>
+        Some(I18N.gui.getN("edit.behaviorSpace.compilerError", name, e.getMessage))
+    }
+  }
+
+  // ensure that all provided commands and reporters are compilable (Isaac B 12/30/25)
+  private def checkCodeEditors(): Option[String] = {
+    metrics.split("\n").foldLeft(Option.empty[String]) {
+      case (None, m) => checkReporter(I18N.gui.get("edit.behaviorSpace.metrics"), m)
+      case (e, _) => e
+    }.orElse(checkReporter(I18N.gui.get("edit.behaviorSpace.runMetricsCondition"), runMetricsCondition))
+    .orElse(checkCommand(I18N.gui.get("edit.behaviorSpace.preExperimentCommands"), preExperimentCommands))
+    .orElse(checkCommand(I18N.gui.get("edit.behaviorSpace.setupCommands"), setupCommands))
+    .orElse(checkCommand(I18N.gui.get("edit.behaviorSpace.goCommands"), goCommands))
+    .orElse {
+        val trimmed: Option[String] = exitCondition.split("\n").dropWhile(_.trim.startsWith(";"))
+                                        .dropWhile(_.trim.isEmpty).headOption
+
+        trimmed.flatMap(checkReporter(I18N.gui.get("edit.behaviorSpace.exitCondition"), _))
+      }
+    .orElse(checkCommand(I18N.gui.get("edit.behaviorSpace.postRunCommands"), postRunCommands))
+    .orElse(checkCommand(I18N.gui.get("edit.behaviorSpace.postExperimentCommands"), postExperimentCommands))
   }
 }

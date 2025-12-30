@@ -3,6 +3,8 @@
 package org.nlogo.api
 
 object LabProtocol {
+  private type AnyRefSettingsIterator = Iterator[List[(String, AnyRef)]]
+
   def defaultGUIProtocol: LabProtocol = {
     new LabProtocol(
       LabDefaultValues.getDefaultName,
@@ -42,6 +44,10 @@ object LabProtocol {
       Nil
     )
   }
+
+  def refElementsFor(constants: List[RefValueSet],
+                     subExperiments: List[List[RefValueSet]]): AnyRefSettingsIterator =
+    defaultGUIProtocol.copy(constants = constants, subExperiments = subExperiments).refElements
 }
 
 class LabProtocol(
@@ -70,6 +76,8 @@ class LabProtocol(
   var mirrorHeadlessOutput: Boolean = LabDefaultValues.getDefaultMirrorHeadlessOutput,
   var runsCompleted: Int = 0
 ) {
+  import LabProtocol.AnyRefSettingsIterator
+
   def valueSets: List[List[RefValueSet]] = {
     if (subExperiments.isEmpty) {
       List(constants)
@@ -88,8 +96,6 @@ class LabProtocol(
   }
 
   def countRuns = repetitions * valueSets.map(_.map(_.length.toInt).product).sum
-
-  type AnyRefSettingsIterator = Iterator[List[(String, AnyRef)]]
 
   def refElements: AnyRefSettingsIterator = {
     def combinations(sets: List[RefValueSet]): AnyRefSettingsIterator =
