@@ -427,7 +427,10 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
 
   def mouseClicked(e: MouseEvent): Unit = {}
   def mouseEntered(e: MouseEvent): Unit = {}
-  def mouseExited(e: MouseEvent): Unit = {}
+
+  def mouseExited(e: MouseEvent): Unit = {
+    interfacePanel.setCursor(Cursor.getDefaultCursor)
+  }
 
   def mousePressed(e: MouseEvent): Unit = {
     if (e.isPopupTrigger && mouseMode != MouseMode.DRAG) {
