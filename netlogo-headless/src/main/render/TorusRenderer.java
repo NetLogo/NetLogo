@@ -206,10 +206,10 @@ public class TorusRenderer extends AbstractTopologyRenderer {
   @Override
   public void drawLine(GraphicsInterface g, double startX, double startY,
                        double endX, double endY, double penSize) {
-    double x1 = graphicsXNoOffset(startX, world.patchSize());
-    double y1 = graphicsYNoOffset(startY, world.patchSize());
-    double x2 = graphicsXNoOffset(endX, world.patchSize());
-    double y2 = graphicsYNoOffset(endY, world.patchSize());
+    double x1 = graphicsXNoOffset(startX, world.fixedPatchSize());
+    double y1 = graphicsYNoOffset(startY, world.fixedPatchSize());
+    double x2 = graphicsXNoOffset(endX, world.fixedPatchSize());
+    double y2 = graphicsYNoOffset(endY, world.fixedPatchSize());
 
     double size = penSize / 2;
 
