@@ -38,7 +38,7 @@ import org.nlogo.theme.{ ClassicTheme, DarkTheme, InterfaceColors, LightTheme, T
 import org.nlogo.util.{ NullAppHandler, Pico }
 import org.nlogo.window._
 import org.nlogo.window.Events._
-import org.nlogo.workspace.{ AbstractWorkspace, AbstractWorkspaceScala, Controllable, HubNetManagerFactory,
+import org.nlogo.workspace.{ AbstractWorkspace, AbstractWorkspaceScala, Controllable, HubNetManagerFactory, JarLoader,
                              ModelsLibrary, WorkspaceFactory }
 
 import org.picocontainer.parameters.{ ComponentParameter, ConstantParameter }
@@ -105,6 +105,9 @@ object App {
 
         Utils.setUIScale(scale)
       }
+
+      // remove cached copies of extension directories to reduce tmpdir bloat (Isaac B 1/2/26)
+      JarLoader.deleteCopies()
 
       // this call is reflective to avoid complicating dependencies
       appHandler.getClass.getDeclaredMethod("init").invoke(appHandler)
