@@ -39,36 +39,40 @@ object Analytics {
   checkNetwork()
 
   private def wrapRequest(request: MatomoRequest, synchronous: Boolean = false): Unit = {
-    // if network connection is lost, stop sending analytics data, then retest the connection
-    // every 30 seconds to see if we can start sending analytics data again. (Isaac B 1/1/26)
-    if (!available && System.currentTimeMillis - lastCheck >= 5000)
-      checkNetwork()
 
-    if (available && sendEnabled) {
-      if (synchronous) {
-        try {
-          new Thread {
-            override def run(): Unit = {
-              tracker.sendBulkRequest(request)
-            }
-          }.join(4000)
-        } catch {
-          case _: MatomoException | _: InterruptedException =>
-            checkNetwork()
-        }
-      } else {
-        tracker.sendBulkRequestAsync(request).handle { (_, error) =>
-          if (error != null) {
-            error.getCause match {
-              case _: MatomoException =>
-                checkNetwork()
+    if (sendEnabled) {
 
-              case _ =>
+      if (!available && System.currentTimeMillis() - lastCheck >= 5000)
+        checkNetwork()
+
+      if (available) {
+        if (synchronous) {
+          try {
+            new Thread {
+              override def run(): Unit = {
+                tracker.sendBulkRequest(request)
+              }
+            }.join(4000)
+          } catch {
+            case _: MatomoException | _: InterruptedException =>
+              checkNetwork()
+          }
+        } else {
+          tracker.sendBulkRequestAsync(request).handle { (_, error) =>
+            if (error != null) {
+              error.getCause match {
+                case _: MatomoException =>
+                  checkNetwork()
+
+                case _ =>
+              }
             }
           }
         }
       }
+
     }
+
   }
 
   // non-recursively builds a simple subset of JSON to avoid unnecessary
@@ -84,7 +88,7 @@ object Analytics {
   }
 
   def appStart(version: String, is3D: Boolean): Unit = {
-    startTime = System.currentTimeMillis
+    startTime = System.currentTimeMillis()
 
     val json = buildJson(
       Map(
@@ -99,7 +103,7 @@ object Analytics {
   }
 
   def appExit(): Unit = {
-    val length = (System.currentTimeMillis - startTime) / 60000
+    val length = (System.currentTimeMillis() - startTime) / 60000
 
     if (length > 0)
       wrapRequest(MatomoRequests.event(category, "App Exit", null, length.toDouble).build(), true)
@@ -254,10 +258,10 @@ object Analytics {
   }
 
   private def checkNetwork(): Unit = {
-    available = NetworkInterface.getNetworkInterfaces.asScala.exists(_.isUp) &&
-      Try(URI.create(endpoint).toURL.openConnection.asInstanceOf[HttpURLConnection].getResponseCode)
+    available = NetworkInterface.getNetworkInterfaces().asScala.exists(_.isUp) &&
+      Try(URI.create(endpoint).toURL.openConnection().asInstanceOf[HttpURLConnection].getResponseCode())
         .toOption.contains(200)
 
-    lastCheck = System.currentTimeMillis
+    lastCheck = System.currentTimeMillis()
   }
 }
