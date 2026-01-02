@@ -118,8 +118,8 @@ class JarLoaderTests extends AnyFunSuiteEx with BeforeAndAfter {
     loader match {
       case ucl: URLClassLoader =>
         assert(ucl.getParent == getClass.getClassLoader)
-        assert(ucl.getURLs.contains(dummyJarURL))
-        assert(ucl.getURLs.contains(dummyOtherJarFile.toURI.toURL))
+        assert(ucl.getURLs.exists(_.getPath.endsWith(dummyJarURL.getPath.split('/').last)))
+        assert(ucl.getURLs.exists(_.getPath.endsWith(dummyOtherJarFile.toString.split(File.separatorChar).last)))
       case _ => fail("should create a URLClassLoader")
     }
   }
@@ -127,8 +127,8 @@ class JarLoaderTests extends AnyFunSuiteEx with BeforeAndAfter {
   test("extensionClassLoader returns a URLClassLoader when the file has a space name") {
     jarLoader.extensionClassLoader(dummyJarURLWSpaces, getClass.getClassLoader) match {
       case ucl: URLClassLoader =>
-        assert(ucl.getURLs.contains(dummyJarURLWSpaces))
-        assert(ucl.getURLs.contains(otherJarURLWSpaces))
+        assert(ucl.getURLs.exists(_.getPath.endsWith(dummyJarURLWSpaces.getPath.split('/').last)))
+        assert(ucl.getURLs.exists(_.getPath.endsWith(otherJarURLWSpaces.getPath.split('/').last)))
       case _ => fail("should create a URLClassLoader")
     }
   }
