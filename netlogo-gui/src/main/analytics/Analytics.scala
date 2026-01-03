@@ -42,7 +42,7 @@ object Analytics {
 
     if (sendEnabled) {
 
-      if (!available && System.currentTimeMillis() - lastCheck >= 5000)
+      if (!available && System.currentTimeMillis() - lastCheck >= 30000)
         checkNetwork()
 
       if (available) {
