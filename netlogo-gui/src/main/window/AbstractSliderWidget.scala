@@ -6,7 +6,7 @@ import java.awt.{ Dimension, Graphics, Point }
 import java.awt.event.{ ActionEvent, ActionListener, FocusAdapter, FocusEvent, KeyAdapter, KeyEvent, MouseAdapter,
                         MouseEvent }
 import java.lang.NumberFormatException
-import javax.swing.{ BorderFactory, JLabel, JSlider, JTextField, SwingConstants }
+import javax.swing.{ BorderFactory, JLabel, JTextField, SwingConstants }
 import javax.swing.text.{ AttributeSet, PlainDocument }
 
 import org.nlogo.agent.SliderConstraint
@@ -138,17 +138,17 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
   val nameComponent = new Label(I18N.gui.get("edit.slider.previewName"))
   val valueComponent = new TextField
   val unitsComponent = new Label("")
-  val slider = new JSlider(0, ((maximum - minimum) / increment).toInt, 50) {
+  val slider = new Slider(minimum, increment, maximum, this) {
     override def processKeyEvent(e: KeyEvent): Unit = {
       if (e.getID == KeyEvent.KEY_PRESSED) {
         e.getKeyCode match {
           case KeyEvent.VK_LEFT | KeyEvent.VK_DOWN =>
-            this.setValue(getValue - 1)
+            decrease()
 
             setValueFromSlider()
 
           case KeyEvent.VK_RIGHT | KeyEvent.VK_UP =>
-            this.setValue(getValue + 1)
+            increase()
 
             setValueFromSlider()
 
@@ -180,13 +180,13 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
     valueComponent.addKeyListener(new KeyAdapter {
       override def keyPressed(e: KeyEvent): Unit = {
         if (e.getKeyCode == KeyEvent.VK_UP) {
-          slider.setValue(slider.getValue + 1)
+          slider.increase()
 
           setValueFromSlider()
 
           e.consume()
         } else if (e.getKeyCode == KeyEvent.VK_DOWN) {
-          slider.setValue(slider.getValue - 1)
+          slider.decrease()
 
           setValueFromSlider()
 
@@ -195,8 +195,6 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
       }
     })
   }
-
-  slider.setUI(new SliderWidgetUI(this, slider))
 
   setLayout(null)
 
@@ -214,9 +212,10 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
 
   def constraint = sliderData.constraint
   def setSliderConstraint(con: SliderConstraint) = {
-    slider.setMinimum(0)
-    slider.setMaximum(((con.maximum.get - con.minimum.get) / con.increment.get).asInstanceOf[Int])
-    slider.setValue(((value - con.minimum.get) / con.increment.get).round.asInstanceOf[Int])
+    slider.setMinimum(con.minimum.get)
+    slider.setIncrement(con.increment.get)
+    slider.setMaximum(con.maximum.get)
+    slider.setValue(value)
     sliderData.setSliderConstraint(con)
   }
   def name: String = _name
@@ -245,7 +244,7 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
     if (sliderData.value != d) {
       sliderData.value = roundToPrecision(d)
       valueComponent.setText(valueString(value))
-      slider.setValue(((value - minimum) / increment).round.asInstanceOf[Int])
+      slider.setValue(value)
       repaint()
       new Events.DirtyEvent(None).raise(this)
     }
@@ -254,22 +253,22 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
   def forceValue(d: Double): Unit = {
     sliderData.value = d
     valueComponent.setText(valueString(value))
-    slider.setValue(((value - minimum) / increment).round.asInstanceOf[Int])
+    slider.setValue(value)
     repaint()
   }
 
   def coerceValue(value: Double): Double = {
     val ret = sliderData.coerceValue(value)
     valueComponent.setText(valueString(value))
-    slider.setValue(((value - minimum) / increment).round.asInstanceOf[Int])
+    slider.setValue(value)
     repaint()
     ret
   }
 
   // sets the internal value based on the slider position
   // used for alternative input methods like keys and clicking (Isaac B 4/4/25)
-  def setValueFromSlider(): Unit = {
-    setValue(minimum + slider.getValue * increment)
+  private def setValueFromSlider(): Unit = {
+    setValue(slider.getValue)
   }
 
   def units = _units
