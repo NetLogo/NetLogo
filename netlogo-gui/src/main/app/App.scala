@@ -22,8 +22,9 @@ import org.nlogo.agent.{ Agent, World2D, World3D }
 import org.nlogo.analytics.Analytics
 import org.nlogo.agent.{ CompilationManagement, World }
 import org.nlogo.api.{ Agent => ApiAgent, AggregateManagerInterface, AnnouncementsInfoDownloader, APIVersion,
-                       Exceptions, FileIO, LogoException, MetadataLoadingException, ModelSections, ModelType,
-                       NetLogoLegacyDialect, NetLogoThreeDDialect, RendererInterface, SimpleJobOwner, Version }
+                       Exceptions, FileIO, LogoException, MetadataLoadingException, ModelSaver, ModelSections,
+                       ModelType, NetLogoLegacyDialect, NetLogoThreeDDialect, RendererInterface, SimpleJobOwner,
+                       Version }
 import org.nlogo.app.codetab.{ ExternalFileManager, TemporaryCodeTab }
 import org.nlogo.app.common.{ Events => AppEvents, FileActions, FindDialog }
 import org.nlogo.app.interfacetab.{ CommandCenter, InterfaceTab, InterfaceWidgetControls, WidgetPanel }
@@ -400,7 +401,7 @@ class App(args: App.CommandLineArgs) extends LinkChild with Exceptions.Handler w
   private val recentFilesMenu = new RecentFilesMenu(frame, fileManager)
 
   private val labManager = new LabManager(workspace, editDialogFactory, colorizer, menuBarFactory, workspaceFactory,
-                                          modelLoader)
+                                          modelLoader, modelSaver)
 
   private val turtleShapesManager = new TurtleShapeManagerDialog(frame, world, modelLoader)
   private val linkShapesManager = new LinkShapeManagerDialog(frame, world, modelLoader)

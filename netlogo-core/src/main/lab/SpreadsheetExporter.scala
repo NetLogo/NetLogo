@@ -2,7 +2,7 @@
 
 package org.nlogo.lab
 
-import org.nlogo.api.{LabExporterType, LabProtocol}
+import org.nlogo.api.{ LabExporterType, LabProtocol, PartialData }
 import org.nlogo.core.WorldDimensions
 import org.nlogo.nvm.Workspace
 
@@ -192,18 +192,4 @@ class SpreadsheetExporter(modelFileName: String,
         .filter(_.size == measurements.size)
         .map(_.sum / measurements.size)
   }
-}
-
-class PartialData
-{
-  var runNumbers: String = ""
-  var variables: Seq[String] = Seq[String]()
-  var reporters: String = ""
-  var finals: String = ""
-  var mins: String = ""
-  var maxes: String = ""
-  var means: String = ""
-  var steps: String = ""
-  var dataHeaders: String = ""
-  var data: Seq[String] = Seq[String]()
 }
