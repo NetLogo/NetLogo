@@ -2,11 +2,13 @@
 
 package org.nlogo.prim
 
-import scala.collection.mutable.Map
+import java.util.concurrent.ConcurrentHashMap
 
 import org.nlogo.api.Dump
 import org.nlogo.core.{ I18N, LogoList }
 import org.nlogo.nvm.{ Context, Command, RuntimePrimitiveException, Workspace }
+
+import scala.jdk.CollectionConverters.ConcurrentMapHasAsScala
 
 case class NestException(list: LogoList) extends Throwable
 
@@ -41,7 +43,7 @@ private class NestedListIter(private var list: LogoList) {
 object MultiAssign {
   // While there can only ever be a single multi-assignment happening at a time, because of BehaviorSpace we can have
   // multiple across workspaces so we track them this way.  -Jeremy B February 2024
-  private val currentLists: Map[Workspace, NestedListIter] = Map()
+  private val currentLists = new ConcurrentHashMap[Workspace, NestedListIter]().asScala
 
   def setCurrentList(workspace: Workspace, list: LogoList): Unit = {
     if (MultiAssign.currentLists.contains(workspace)) {
