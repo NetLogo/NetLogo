@@ -157,7 +157,7 @@ jobs:
       - name: ${{ matrix.test }}
         run: sbt "${{ matrix.test }}"
 
-      - uses: actions/upload-artifact@v5
+      - uses: actions/upload-artifact@v6
         with:
           name: graphics-diffs
           path: tmp/TestChecksums/*.png
