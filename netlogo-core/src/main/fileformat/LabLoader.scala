@@ -101,7 +101,7 @@ class LabLoader(literalParser: LiteralParser) {
       }
       existingNames += name
     }
-    new LabProtocol(
+    LabProtocol(
       name,
       readOptional("preExperiment"),
       readOptional("setup"),

@@ -6,7 +6,7 @@ object LabProtocol {
   private type AnyRefSettingsIterator = Iterator[List[(String, AnyRef)]]
 
   def defaultGUIProtocol: LabProtocol = {
-    new LabProtocol(
+    LabProtocol(
       LabDefaultValues.getDefaultName,
       LabDefaultValues.getDefaultPreExperimentCommands,
       LabDefaultValues.getDefaultSetupCommands,
@@ -26,7 +26,7 @@ object LabProtocol {
   }
 
   def defaultCodeProtocol(name: String): LabProtocol = {
-    new LabProtocol(
+    LabProtocol(
       name,
       "",
       "",
@@ -50,7 +50,7 @@ object LabProtocol {
     defaultGUIProtocol.copy(constants = constants, subExperiments = subExperiments).refElements
 }
 
-class LabProtocol(
+case class LabProtocol(
   var name: String,
   var preExperimentCommands: String,
   var setupCommands: String,
@@ -120,90 +120,4 @@ class LabProtocol(
   def metrics: List[String] =
     metricsForSaving.filter(!_.trim.startsWith(";")).map(m => ";.*$".r.replaceFirstIn(m, "").trim)
 
-  def copy(
-    name: String = name,
-    preExperimentCommands: String = preExperimentCommands,
-    setupCommands: String = setupCommands,
-    goCommands: String = goCommands,
-    postRunCommands: String = postRunCommands,
-    postExperimentCommands: String = postExperimentCommands,
-    repetitions: Int = repetitions,
-    sequentialRunOrder: Boolean = sequentialRunOrder,
-    runMetricsEveryStep: Boolean = runMetricsEveryStep,
-    runMetricsCondition: String = runMetricsCondition,
-    timeLimit: Int = timeLimit,
-    exitCondition: String = exitCondition,
-    metrics: List[String] = metrics,
-    constants: List[RefValueSet] = constants,
-    subExperiments: List[List[RefValueSet]] = subExperiments,
-    threadCount: Int = threadCount,
-    table: String = table,
-    spreadsheet: String = spreadsheet,
-    stats: String = stats,
-    lists: String = lists,
-    updateView: Boolean = updateView,
-    updatePlotsAndMonitors: Boolean = updatePlotsAndMonitors,
-    mirrorHeadlessOutput: Boolean = mirrorHeadlessOutput,
-    runsCompleted: Int = runsCompleted
-  ): LabProtocol = {
-    new LabProtocol(
-      name,
-      preExperimentCommands,
-      setupCommands,
-      goCommands,
-      postRunCommands,
-      postExperimentCommands,
-      repetitions,
-      sequentialRunOrder,
-      runMetricsEveryStep,
-      runMetricsCondition,
-      timeLimit,
-      exitCondition,
-      metrics,
-      constants,
-      subExperiments,
-      threadCount,
-      table,
-      spreadsheet,
-      stats,
-      lists,
-      updateView,
-      updatePlotsAndMonitors,
-      mirrorHeadlessOutput,
-      runsCompleted
-    )
-  }
-
-  override def equals(other: Any): Boolean = {
-    other match {
-      case protocol: LabProtocol =>
-        name == protocol.name &&
-        preExperimentCommands == protocol.preExperimentCommands &&
-        setupCommands == protocol.setupCommands &&
-        goCommands == protocol.goCommands &&
-        postRunCommands == protocol.postRunCommands &&
-        postExperimentCommands == protocol.postExperimentCommands &&
-        repetitions == protocol.repetitions &&
-        sequentialRunOrder == protocol.sequentialRunOrder &&
-        runMetricsEveryStep == protocol.runMetricsEveryStep &&
-        runMetricsCondition == protocol.runMetricsCondition &&
-        timeLimit == protocol.timeLimit &&
-        exitCondition == protocol.exitCondition &&
-        metrics == protocol.metrics &&
-        constants == protocol.constants &&
-        subExperiments == protocol.subExperiments &&
-        threadCount == protocol.threadCount &&
-        table == protocol.table &&
-        spreadsheet == protocol.spreadsheet &&
-        stats == protocol.stats &&
-        lists == protocol.lists &&
-        updateView == protocol.updateView &&
-        updatePlotsAndMonitors == protocol.updatePlotsAndMonitors &&
-        mirrorHeadlessOutput == protocol.mirrorHeadlessOutput &&
-        runsCompleted == protocol.runsCompleted
-
-      case _ =>
-        false
-    }
-  }
 }
