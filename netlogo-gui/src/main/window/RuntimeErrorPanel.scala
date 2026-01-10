@@ -4,7 +4,8 @@ package org.nlogo.window
 
 import java.awt.Dimension
 import java.awt.event.{ ActionEvent, ActionListener }
-import javax.swing.{ JLabel, JPanel }
+import javax.swing.{ Box, BoxLayout, JLabel, JPanel }
+import javax.swing.border.EmptyBorder
 
 import org.nlogo.core.I18N
 import org.nlogo.swing.{ Button, Utils }
@@ -65,13 +66,19 @@ trait RuntimeErrorDisplayer extends JPanel with ActionListener with ThemeSync {
   lazy val errorLabel = new JLabel(I18N.gui.get("edit.plot.error.runtimeError"))
   lazy val messageLabel = new JLabel
 
+  setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
+  setBorder(new EmptyBorder(6, 6, 6, 6))
+
   protected def layoutErrorPanel(): Unit = {
     exceptionMessage.foreach { message =>
       messageLabel.setText(message)
 
       add(errorLabel)
+      add(Box.createHorizontalStrut(6))
       add(messageLabel)
+      add(Box.createHorizontalStrut(6))
       add(dismissButton)
+      add(Box.createHorizontalGlue)
     }
   }
 
