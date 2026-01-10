@@ -46,4 +46,10 @@ class EditorField(
     }
     super.replaceSelection(content)
   }
+
+  override def setText(text: String): Unit = {
+    super.setText(text)
+
+    resetUndoHistory()
+  }
 }
