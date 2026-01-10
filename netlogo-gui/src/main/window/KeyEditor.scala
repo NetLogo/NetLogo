@@ -9,6 +9,8 @@ import javax.swing.event.{ DocumentEvent, DocumentListener }
 import org.nlogo.swing.{ FixedLengthDocument, TextField }
 import org.nlogo.theme.InterfaceColors
 
+import scala.util.{ Success, Try }
+
 class KeyEditor(accessor: PropertyAccessor[Char]) extends PropertyEditor(accessor) {
   private val label = new JLabel(accessor.name)
 
@@ -42,7 +44,7 @@ class KeyEditor(accessor: PropertyAccessor[Char]) extends PropertyEditor(accesso
   add(label, BorderLayout.WEST)
   add(editor, BorderLayout.CENTER)
 
-  override def get: Option[Char] = Some(
+  override def get: Try[Char] = Success(
     if (editor.getText.isEmpty) '\u0000'
     else editor.getText.charAt(0))
 

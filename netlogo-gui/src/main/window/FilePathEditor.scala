@@ -12,6 +12,8 @@ import org.nlogo.swing.Implicits.thunk2documentListener
 import org.nlogo.swing.{ Button, FileDialog, TextField, Transparent }
 import org.nlogo.theme.InterfaceColors
 
+import scala.util.{ Success, Try }
+
 class FilePathEditor(accessor: PropertyAccessor[String], parent: Component, currentDirectory: Option[Path],
                      suggestedFile: Option[String]) extends PropertyEditor(accessor) {
 
@@ -69,14 +71,8 @@ class FilePathEditor(accessor: PropertyAccessor[String], parent: Component, curr
     }
   }
 
-  override def get: Option[String] = {
-    val currentText = getCurrentText
-    if (currentText == "") {
-      Option(currentText)
-    } else {
-      Option(asPath(currentText).toString)
-    }
-  }
+  override def get: Try[String] =
+    Success(Option(getCurrentText).filter(_.nonEmpty).map(asPath(_).toString).getOrElse(""))
 
   override def set(value: String): Unit = { editor.setText(value) }
 

@@ -10,6 +10,8 @@ import org.nlogo.core.I18N
 import org.nlogo.editor.Colorizer
 import org.nlogo.swing.{ DynamicRowLayout, Transparent }
 
+import scala.util.Try
+
 class PlotEditPanel(target: PlotWidget, compiler: CompilerServices, colorizer: Colorizer)
   extends WidgetEditPanel(target) {
 
@@ -22,8 +24,8 @@ class PlotEditPanel(target: PlotWidget, compiler: CompilerServices, colorizer: C
         name => target.setPlotName(name.getOrElse("")),
         () => apply())) {
 
-      override def get: Option[String] =
-        super.get.map(_.trim).filter(_.nonEmpty)
+      override def get: Try[String] =
+        super.get.map(_.trim).filter(_.nonEmpty).orElse(defaultError)
     }
 
   private val xLabel =

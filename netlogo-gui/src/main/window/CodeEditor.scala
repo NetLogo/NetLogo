@@ -12,6 +12,8 @@ import org.nlogo.editor.{ Colorizer, EditorArea, EditorConfiguration }
 import org.nlogo.swing.{ CollapsibleArrow, ScrollPane, Transparent }
 import org.nlogo.theme.InterfaceColors
 
+import scala.util.{ Success, Try }
+
 object CodeEditor {
   def apply(displayName: String, compiler: CompilerServices, colorizer: Colorizer, collapsible: Boolean = false,
             collapseWhenEmpty: Boolean = false, rows: Int = 5, columns: Int = 30,
@@ -92,7 +94,7 @@ class CodeEditor(accessor: PropertyAccessor[String], compiler: CompilerServices,
     }
   }
 
-  override def get: Option[String] = Option(editor.getText)
+  override def get: Try[String] = Success(Option(editor.getText).getOrElse(""))
   override def set(value: String): Unit = {
     editor.setText(value)
     setVisibility(value.nonEmpty)
@@ -136,6 +138,6 @@ class NonEmptyCodeEditor(accessor: PropertyAccessor[String], compiler: CompilerS
                          err: () => Option[Exception] = () => None)
   extends CodeEditor(accessor, compiler, colorizer, err = err) {
 
-  override def get: Option[String] =
-    super.get.map(_.trim).filter(_.nonEmpty)
+  override def get: Try[String] =
+    super.get.map(_.trim).filter(_.nonEmpty).orElse(defaultError)
 }

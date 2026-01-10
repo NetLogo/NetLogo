@@ -9,6 +9,8 @@ import org.nlogo.core.I18N
 import org.nlogo.swing.{ OptionPane, Transparent }
 import org.nlogo.theme.ThemeSync
 
+import scala.util.Failure
+
 // This is the contents of an EditDialog, except for the buttons at the bottom (OK/Apply/Cancel).
 abstract class EditPanel(target: Editable) extends JPanel(new GridBagLayout) with Transparent with ThemeSync {
   // allows EditDialog to reset its minimum size if this panel's minimum size changes
@@ -38,10 +40,12 @@ abstract class EditPanel(target: Editable) extends JPanel(new GridBagLayout) wit
     propertyEditors.exists(_.changed)
 
   def valid: Boolean = {
-    propertyEditors.find(editor => editor.get.isEmpty && !editor.handlesOwnErrors) match {
-      case Some(editor) =>
-        new OptionPane(this, I18N.gui.get("edit.general.invalidSettings"),
-                       I18N.gui.getN("edit.general.invalidValue", editor.accessor.name), OptionPane.Options.Ok,
+    propertyEditors.filter(!_.handlesOwnErrors).map(_.get).collectFirst {
+      case Failure(error) =>
+        error.getMessage
+    } match {
+      case Some(error) =>
+        new OptionPane(this, I18N.gui.get("edit.general.invalidSettings"), error, OptionPane.Options.Ok,
                        OptionPane.Icons.Error)
 
         false

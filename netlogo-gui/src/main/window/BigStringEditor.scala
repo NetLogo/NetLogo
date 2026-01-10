@@ -10,6 +10,8 @@ import org.nlogo.swing.Implicits.thunk2documentListener
 import org.nlogo.swing.{ ScrollPane, TextArea }
 import org.nlogo.theme.InterfaceColors
 
+import scala.util.{ Success, Try }
+
 class BigStringEditor(accessor: PropertyAccessor[String]) extends PropertyEditor(accessor) {
   private val label = new JLabel(accessor.name) {
     setVerticalAlignment(SwingConstants.TOP)
@@ -30,7 +32,7 @@ class BigStringEditor(accessor: PropertyAccessor[String]) extends PropertyEditor
   add(label, BorderLayout.NORTH)
   add(scrollPane, BorderLayout.CENTER)
 
-  override def get: Option[String] = Option(editor.getText())
+  override def get: Try[String] = Success(Option(editor.getText()).getOrElse(""))
   override def set(value: String): Unit = {
     editor.setText(value)
     editor.select(0, 0)
