@@ -2,8 +2,8 @@
 
 package org.nlogo.window
 
-import java.awt.{ BorderLayout, Color, Cursor, Dimension, Font, Frame, Graphics, GridBagConstraints, GridBagLayout,
-                  Insets }
+import java.awt.{ BorderLayout, Color, Component, Cursor, Dimension, Font, Frame, Graphics, GridBagConstraints,
+                  GridBagLayout, Insets }
 import java.awt.event.ActionEvent
 import java.util.Locale
 import javax.swing.{ AbstractAction, AbstractCellEditor, JButton, JLabel, JPanel, JTable }
@@ -19,6 +19,8 @@ import org.nlogo.editor.{ Colorizer, EditorField }
 import org.nlogo.plot.{ Plot, PlotManagerInterface, PlotPen }
 import org.nlogo.swing.{ Button, OptionPane, Popup, ScrollPane, Transparent, Utils }
 import org.nlogo.theme.InterfaceColors
+
+import scala.collection.mutable.ArrayBuffer
 
 object PlotPensEditor {
   sealed trait CodeType
@@ -153,7 +155,9 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], compiler: Compil
     def colorColumn = getColumn(ColorColumnName)
     def buttonsColumn = getColumn(ButtonsColumnName)
 
-    val model = new PenTableModel()
+    private val cellFactory = new CodeCellFactory
+
+    val model = new PenTableModel(cellFactory)
 
     locally {
       setModel(model)
@@ -177,8 +181,8 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], compiler: Compil
       colorColumn.setMinWidth(40)
       colorColumn.setCellRenderer(new ColorRenderer)
 
-      updateCommandsColumn.setCellRenderer(new CodeCellRenderer)
-      updateCommandsColumn.setCellEditor(new CodeCellEditor)
+      updateCommandsColumn.setCellRenderer(cellFactory)
+      updateCommandsColumn.setCellEditor(cellFactory)
       updateCommandsColumn.setMinWidth(250)
 
       val buttonCell = new ButtonCellEditor
@@ -361,37 +365,46 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], compiler: Compil
       def getCellEditorValue = ""
     }
 
-    class CodeCellRenderer extends TableCellRenderer {
-      val font = new Font(platformMonospacedFont, Font.PLAIN, 12)
-      val editor = new EditorField(30, font, true, compiler, colorizer)
+    class CodeCellFactory extends AbstractCellEditor with TableCellRenderer with TableCellEditor {
+      private val font = new Font(platformMonospacedFont, Font.PLAIN, 12)
+      private val editors = ArrayBuffer[EditorField]()
+
+      private var lastEditor: Option[EditorField] = None
+
       setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR))
-      def getTableCellRendererComponent(table: JTable, value: Object,
-                                        isSelected: Boolean, hasFocus: Boolean, row: Int, col: Int) = {
-        // This null check is from strange behavior in java
-        // http://stackoverflow.com/questions/3054775/jtable-strange-behavior-from-getaccessiblechild-method-resulting-in-null-point
-        // RG 2/22/16
-        if (value != null) {
-          editor.setText(value.asInstanceOf[String])
+
+      override def getTableCellRendererComponent(table: JTable, value: AnyRef, isSelected: Boolean, hasFocus: Boolean,
+                                                 row: Int, col: Int): Component =
+        editors(row)
+
+      override def getTableCellEditorComponent(table: JTable, value: AnyRef, isSelected: Boolean, row: Int,
+                                               col: Int): Component = {
+        val editor = editors(row)
+
+        lastEditor = Option(editor)
+
+        editor
+      }
+
+      override def getCellEditorValue: String =
+        lastEditor.fold("")(_.getText)
+
+      def addEditor(text: String): Unit = {
+        val editor = new EditorField(30, font, true, compiler, colorizer) {
+          setBackground(InterfaceColors.textAreaBackground())
+          setCaretColor(InterfaceColors.textAreaText())
+          setText(text)
         }
-        editor.setBackground(InterfaceColors.textAreaBackground())
-        editor.setCaretColor(InterfaceColors.textAreaText())
-        editor
+
+        editors += editor
+      }
+
+      def removeEditor(row: Int): Unit = {
+        editors.remove(row)
       }
     }
 
-    class CodeCellEditor extends AbstractCellEditor with TableCellEditor {
-      val goodFont = new Font(platformMonospacedFont, Font.PLAIN, 12)
-      val editor = new EditorField(30, goodFont, true, compiler, colorizer)
-      def getTableCellEditorComponent(table: JTable, value: Object, isSelected: Boolean, row: Int, col: Int) = {
-        editor.setText(value.asInstanceOf[String])
-        editor.setBackground(InterfaceColors.textAreaBackground())
-        editor.setCaretColor(InterfaceColors.textAreaText())
-        editor
-      }
-      def getCellEditorValue = editor.getText()
-    }
-
-    class PenTableModel extends AbstractTableModel {
+    class PenTableModel(cellFactory: CodeCellFactory) extends AbstractTableModel {
       val columnNames = scala.List(ColorColumnName, NameColumnName, UpdateCommandsColumnName, ButtonsColumnName)
       def clear() = pens.clear()
       val pens = scala.collection.mutable.ListBuffer[Pen]()
@@ -413,7 +426,7 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], compiler: Compil
 
       override def getColumnClass(c: Int) = {
         columnNames(c) match {
-          case UpdateCommandsColumnName => classOf[CodeCellRenderer]
+          case UpdateCommandsColumnName => classOf[CodeCellFactory]
           case _ => classOf[String]
         }
       }
@@ -431,14 +444,19 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], compiler: Compil
         }
       }
 
-      def addPen(p: Pen): Unit = {pens += p; fireTableDataChanged}
+      def addPen(p: Pen): Unit = {
+        pens += p
+        fireTableDataChanged()
+        cellFactory.addEditor(p.updateCode)
+      }
 
       def removePen(index: Int): Unit = {
         if (index != -1) {
           pens.remove(index)
           fireTableRowsDeleted(index, index)
-          removeEditor
-          revalidate
+          cellFactory.removeEditor(index)
+          removeEditor()
+          revalidate()
           repaint()
         }
       }
