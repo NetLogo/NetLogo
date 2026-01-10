@@ -9,6 +9,8 @@ import javax.swing.{ JLabel, JPanel }
 import org.nlogo.swing.{ RoundedBorderPanel, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
+import scala.util.Success
+
 class ColorEditor(accessor: PropertyAccessor[Color], frame: Frame) extends PropertyEditor(accessor) {
   private val label = new JLabel(accessor.name)
   private val colorButton = new ColorButton
@@ -24,7 +26,7 @@ class ColorEditor(accessor: PropertyAccessor[Color], frame: Frame) extends Prope
     colorButton.setColor(color)
   }
 
-  override def get = Some(colorButton.getColor)
+  override def get = Success(colorButton.getColor)
   override def set(value: Color): Unit = { setColor(value) }
   override def requestFocus(): Unit = { colorButton.requestFocus() }
 

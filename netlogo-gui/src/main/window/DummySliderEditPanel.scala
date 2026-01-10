@@ -68,7 +68,7 @@ class DummySliderEditPanel(target: DummySliderWidget) extends WidgetEditPanel(ta
         I18N.gui.get("edit.slider.vertical"),
         () => target.vertical,
         _.foreach(target.setVertical),
-        () => apply(vertical.get.exists(_ != vertical.originalValue))))
+        () => apply(vertical.get.toOption.exists(_ != vertical.originalValue))))
 
   private val oldSize =
     new BooleanEditor(

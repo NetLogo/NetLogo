@@ -10,6 +10,8 @@ import org.nlogo.core.I18N
 import org.nlogo.swing.{ Button, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
+import scala.util.{ Success, Try }
+
 class RuntimeErrorDisplay(accessor: PropertyAccessor[Option[Exception]])
   extends PropertyEditor(accessor, true) with RuntimeErrorDisplayer {
 
@@ -28,15 +30,15 @@ class RuntimeErrorDisplay(accessor: PropertyAccessor[Option[Exception]])
     dismissed = false
   }
 
-  override def get: Option[Option[Exception]] = {
+  override def get: Try[Option[Exception]] = {
     if (dismissed) {
-      Some(None)
+      Success(None)
     } else {
-      Some(accessor.getter())
+      Success(accessor.getter())
     }
   }
 
-  override def exceptionMessage: Option[String] = get.flatten.map(_.getMessage)
+  override def exceptionMessage: Option[String] = get.fold(_ => None, _.map(_.getMessage))
 
   override def actionPerformed(e: ActionEvent): Unit = { dismissError() }
 

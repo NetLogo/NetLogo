@@ -9,6 +9,8 @@ import org.nlogo.api.Options
 import org.nlogo.swing.ComboBox
 import org.nlogo.theme.InterfaceColors
 
+import scala.util.{ Success, Try }
+
 class OptionsEditor[T](accessor: PropertyAccessor[Options[T]]) extends PropertyEditor(accessor) {
   private val options: Options[T] = accessor.getter()
   private val originalOption: T = options.chosenValue
@@ -23,9 +25,9 @@ class OptionsEditor[T](accessor: PropertyAccessor[Options[T]]) extends PropertyE
   add(label, BorderLayout.WEST)
   add(combo, BorderLayout.CENTER)
 
-  override def get: Option[Options[T]] = {
+  override def get: Try[Options[T]] = {
     options.selectByName(combo.getSelectedItem.getOrElse(""))
-    Some(options)
+    Success(options)
   }
 
   override def set(value: Options[T]): Unit = {

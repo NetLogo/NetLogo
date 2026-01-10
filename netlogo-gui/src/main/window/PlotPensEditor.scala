@@ -17,10 +17,11 @@ import org.nlogo.awt.Fonts.platformMonospacedFont
 import org.nlogo.core.{ CompilerException, I18N }
 import org.nlogo.editor.{ Colorizer, EditorField }
 import org.nlogo.plot.{ Plot, PlotManagerInterface, PlotPen }
-import org.nlogo.swing.{ Button, OptionPane, Popup, ScrollPane, Transparent, Utils }
+import org.nlogo.swing.{ Button, Popup, ScrollPane, Transparent, Utils }
 import org.nlogo.theme.InterfaceColors
 
 import scala.collection.mutable.ArrayBuffer
+import scala.util.{ Failure, Success, Try }
 
 object PlotPensEditor {
   sealed trait CodeType
@@ -83,7 +84,7 @@ object PlotPensEditor {
 }
 
 class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], compiler: CompilerServices, colorizer: Colorizer,
-                     target: PlotWidget) extends PropertyEditor(accessor, true) {
+                     target: PlotWidget) extends PropertyEditor(accessor) {
 
   import PlotPensEditor._
 
@@ -118,21 +119,21 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], compiler: Compil
 
   private def frame: Frame = Hierarchy.getFrame(this)
 
-  override def get: Option[List[PlotPen]] = {
+  override def get: Try[List[PlotPen]] = {
     if (table.isEditing) table.getCellEditor.stopCellEditing
-    val names = table.model.pens.map(_.name)
+
     // It was an intentional decision made Q2 2011 to allow multiple pens with
     // a blank name. - RG 2/21/2018
-    val groupedNames = (names.groupBy(_.toUpperCase(Locale.ENGLISH)) - "").toSeq
-    val duplicateNames = groupedNames.filter(_._2.length > 1)
+    val groupedNames = table.model.pens.map(_.name.toUpperCase(Locale.ENGLISH)).groupBy(name => name) - ""
+    val duplicateNames = groupedNames.collect {
+      case (name, list) if list.length > 1 =>
+        name
+    }
+
     if (duplicateNames.nonEmpty) {
-      new OptionPane(this, I18N.gui.get("edit.plot.pen.invalidEntry"),
-                     I18N.gui.getN("edit.plot.pen.duplicateNames",
-                                   duplicateNames.map(_._1.toUpperCase(Locale.ENGLISH)).mkString(", ")),
-                     OptionPane.Options.Ok, OptionPane.Icons.Error)
-      None
+      Failure(new Exception(I18N.gui.getN("edit.plot.pen.duplicateNames", duplicateNames.mkString(", "))))
     } else {
-      Some(table.getPlotPens)
+      Success(table.getPlotPens)
     }
   }
 
@@ -208,7 +209,14 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], compiler: Compil
 
     // add a dummy pen to the list so that the user can then modify it.
     def newPen(): Unit = {
-      val nextName = "pen-" + model.pens.size
+      var nextNum = model.pens.size
+      var nextName = s"pen-$nextNum"
+
+      while (model.pens.exists(_.name.toUpperCase(Locale.ENGLISH) == nextName.toUpperCase(Locale.ENGLISH))) {
+        nextNum += 1
+        nextName = s"pen-$nextNum"
+      }
+
       val nextColor = {
         val colorsInUse:List[ColorInfo] = model.pens.toList.map(_.color)
         val defaults:List[ColorInfo] = ColorInfo.defaults.toList filterNot (_ == ColorInfo(Color.WHITE))

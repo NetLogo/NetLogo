@@ -9,7 +9,7 @@ import org.nlogo.swing.TextField
 import org.nlogo.swing.Implicits.thunk2documentListener
 import org.nlogo.theme.InterfaceColors
 
-import util.control.Exception.catching
+import scala.util.{ Success, Try }
 
 class IntegerEditor(accessor: PropertyAccessor[Int]) extends PropertyEditor(accessor) with WorldIntegerEditor {
   private val label = new JLabel(accessor.name)
@@ -22,8 +22,7 @@ class IntegerEditor(accessor: PropertyAccessor[Int]) extends PropertyEditor(acce
   add(label, BorderLayout.WEST)
   add(editor, BorderLayout.CENTER)
 
-  override def get: Option[Int] =
-    catching(classOf[NumberFormatException]).opt(editor.getText.toInt)
+  override def get: Try[Int] = editor.getText.toIntOption.fold(defaultError)(Success(_))
   override def set(value: Int): Unit = { editor.setText(value.toString) }
 
   override def setToolTipText(text: String): Unit = {
@@ -45,11 +44,11 @@ class IntegerEditor(accessor: PropertyAccessor[Int]) extends PropertyEditor(acce
 }
 
 class NegativeIntegerEditor(accessor: PropertyAccessor[Int]) extends IntegerEditor(accessor) {
-  override def get: Option[Int] =
-    super.get.filter(_ <= 0)
+  override def get: Try[Int] =
+    super.get.filter(_ <= 0).orElse(defaultError)
 }
 
 class PositiveIntegerEditor(accessor: PropertyAccessor[Int]) extends IntegerEditor(accessor) {
-  override def get: Option[Int] =
-    super.get.filter(_ >= 0)
+  override def get: Try[Int] =
+    super.get.filter(_ >= 0).orElse(defaultError)
 }

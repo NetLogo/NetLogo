@@ -78,7 +78,7 @@ class SliderEditPanel(target: SliderWidget, compiler: CompilerServices, colorize
         I18N.gui.get("edit.slider.vertical"),
         () => target.vertical,
         _.foreach(target.setVertical),
-        () => apply(vertical.get.exists(_ != vertical.originalValue))))
+        () => apply(vertical.get.toOption.exists(_ != vertical.originalValue))))
 
   private val oldSize =
     new BooleanEditor(
@@ -87,7 +87,7 @@ class SliderEditPanel(target: SliderWidget, compiler: CompilerServices, colorize
         I18N.gui.get("edit.general.oldSize"),
         () => target.oldSize,
         _.foreach(target.oldSize),
-        () => apply(vertical.get.exists(_ != vertical.originalValue))))
+        () => apply(vertical.get.toOption.exists(_ != vertical.originalValue))))
 
   locally {
     val c = new GridBagConstraints
