@@ -6,6 +6,8 @@ import org.nlogo.api.CompilerServices
 import org.nlogo.core.{ CompilerException, LogoList, Nobody }
 import org.nlogo.editor.Colorizer
 
+import scala.util.Try
+
 class LogoListEditor(accessor: PropertyAccessor[String], compiler: CompilerServices, colorizer: Colorizer)
   extends CodeEditor(accessor, compiler, colorizer) {
 
@@ -17,7 +19,7 @@ class LogoListEditor(accessor: PropertyAccessor[String], compiler: CompilerServi
     }
   }
 
-  override def get: Option[String] = {
+  override def get: Try[String] = {
     super.get.filter { code =>
       try {
         compiler.readFromString(s"[ $code ]") match {
@@ -27,6 +29,6 @@ class LogoListEditor(accessor: PropertyAccessor[String], compiler: CompilerServi
       } catch {
         case _: CompilerException => false
       }
-    }
+    }.orElse(defaultError)
   }
 }

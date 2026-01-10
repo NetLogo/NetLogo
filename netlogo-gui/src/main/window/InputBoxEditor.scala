@@ -8,6 +8,8 @@ import org.nlogo.api.Options
 import org.nlogo.theme.InterfaceColors
 import org.nlogo.swing.{ CheckBox, ComboBox }
 
+import scala.util.{ Success, Try }
+
 class InputBoxEditor[InputType <: InputBox#InputType](accessor: PropertyAccessor[Options[InputType]])
   extends PropertyEditor(accessor) {
 
@@ -43,10 +45,10 @@ class InputBoxEditor[InputType <: InputBox#InputType](accessor: PropertyAccessor
     multiline.setSelected(t.multiline)
   }
 
-  override def get: Option[Options[InputType]] = {
+  override def get: Try[Options[InputType]] = {
     options.selectByName(selected.map(_.displayName).getOrElse(""))
     options.chosenValue.multiline(multiline.isSelected)
-    Some(options)
+    Success(options)
   }
 
   override def revert(): Unit = {

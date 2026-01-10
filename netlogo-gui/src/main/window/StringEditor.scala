@@ -9,6 +9,8 @@ import org.nlogo.swing.TextField
 import org.nlogo.swing.Implicits.thunk2documentListener
 import org.nlogo.theme.InterfaceColors
 
+import scala.util.{ Success, Try }
+
 class StringEditor(accessor: PropertyAccessor[String]) extends PropertyEditor(accessor) {
   private val label = new JLabel(accessor.name)
   private val editor = new TextField(12) {
@@ -20,7 +22,7 @@ class StringEditor(accessor: PropertyAccessor[String]) extends PropertyEditor(ac
   add(label, BorderLayout.WEST)
   add(editor, BorderLayout.CENTER)
 
-  override def get: Option[String] = Option(editor.getText)
+  override def get: Try[String] = Success(Option(editor.getText).getOrElse(""))
   override def set(value: String): Unit = { editor.setText(value) }
 
   override def setToolTipText(text: String): Unit = {

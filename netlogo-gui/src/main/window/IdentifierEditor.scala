@@ -4,8 +4,10 @@ package org.nlogo.window
 
 import org.nlogo.api.{ CompilerServices, ExtensionManager }
 
+import scala.util.Try
+
 class IdentifierEditor(accessor: PropertyAccessor[String], compiler: CompilerServices,
                        extensionManager: ExtensionManager) extends StringEditor(accessor) {
-  override def get: Option[String] =
-    super.get.map(_.trim).filter(s => compiler.isValidIdentifier(s, extensionManager))
+  override def get: Try[String] =
+    super.get.map(_.trim).filter(s => compiler.isValidIdentifier(s, extensionManager)).orElse(defaultError)
 }

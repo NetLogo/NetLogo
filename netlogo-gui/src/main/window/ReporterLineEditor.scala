@@ -11,6 +11,8 @@ import org.nlogo.awt.Fonts.platformMonospacedFont
 import org.nlogo.editor.{ Colorizer, EditorField }
 import org.nlogo.swing.ScrollPane
 
+import scala.util.Try
+
 class ReporterLineEditor(accessor: PropertyAccessor[String], compiler: CompilerServices, colorizer: Colorizer,
                          optional: Boolean)
   extends CodeEditor(accessor, compiler, colorizer, false, false) {
@@ -29,12 +31,6 @@ class ReporterLineEditor(accessor: PropertyAccessor[String], compiler: CompilerS
     ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER,
     ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER)
 
-  override def get: Option[String] = {
-    val trimmed = super.get.map(_.trim)
-    if (optional) {
-      trimmed
-    } else {
-      trimmed.filter(_.nonEmpty)
-    }
-  }
+  override def get: Try[String] =
+    super.get.map(_.trim).filter(optional || _.nonEmpty).orElse(defaultError)
 }

@@ -4,6 +4,8 @@ package org.nlogo.window
 
 import org.nlogo.swing.ComboBox
 
+import scala.util.{ Failure, Success, Try }
+
 abstract class WorldEditPanel(target: WorldViewSettings) extends EditPanel(target) {
   protected val previewPanel = new WorldPreview(200, 200)
 
@@ -18,9 +20,9 @@ abstract class WorldEditPanel(target: WorldViewSettings) extends EditPanel(targe
   protected def editors: Seq[IntegerEditor]
 
   // this is weird old code that probably could be improved, it's just here for compatibility with other old code (Isaac B 4/2/25)
-  protected def previewChanged(field: String, value: Option[Any]): Unit = {
+  protected def previewChanged(field: String, value: Try[Any]): Unit = {
     value match {
-      case Some(i: Int) =>
+      case Success(i: Int) =>
         previewPanel.updateInt(field, i)
 
         if (originTypes.getSelectedItem.exists(_ == OriginType.Center) && editors.nonEmpty) {
@@ -33,10 +35,10 @@ abstract class WorldEditPanel(target: WorldViewSettings) extends EditPanel(targe
           }
         }
 
-      case Some(b: Boolean) =>
+      case Success(b: Boolean) =>
         previewPanel.updateBoolean(field, b)
 
-      case None =>
+      case Failure(_) =>
         if (field == "minPxcor" || field == "maxPxcor" || field == "minPycor" || field == "maxPycor" ||
             field == "minPzcor" || field == "maxPzcor") {
           previewPanel.setError(field)

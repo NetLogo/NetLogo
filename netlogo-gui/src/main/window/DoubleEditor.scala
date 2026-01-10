@@ -10,7 +10,7 @@ import org.nlogo.swing.Implicits.thunk2documentListener
 import org.nlogo.swing.TextField
 import org.nlogo.theme.InterfaceColors
 
-import util.control.Exception.catching
+import scala.util.{ Success, Try }
 
 class DoubleEditor(accessor: PropertyAccessor[Double]) extends PropertyEditor(accessor) {
   private val label = new JLabel(accessor.name)
@@ -29,8 +29,9 @@ class DoubleEditor(accessor: PropertyAccessor[Double]) extends PropertyEditor(ac
     label.setEnabled(enabled)
   }
 
-  override def get: Option[Double] =
-    catching(classOf[NumberFormatException]) opt editor.getText.toDouble
+  override def get: Try[Double] =
+    editor.getText.toDoubleOption.fold(defaultError)(Success(_))
+
   override def set(value: Double): Unit = { editor.setText(Dump.number(value)) }
 
   override def requestFocus(): Unit = { editor.requestFocus() }
@@ -43,6 +44,6 @@ class DoubleEditor(accessor: PropertyAccessor[Double]) extends PropertyEditor(ac
 }
 
 class StrictlyPositiveDoubleEditor(accessor: PropertyAccessor[Double]) extends DoubleEditor(accessor) {
-  override def get: Option[Double] =
-    super.get.filter(_ > 0)
+  override def get: Try[Double] =
+    super.get.filter(_ > 0).orElse(defaultError)
 }
