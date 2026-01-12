@@ -18,14 +18,14 @@ object ToggleComments {
     val nonEmptyLines: Seq[String] = (startLine to endLine).map { line =>
       val start = document.lineToStartOffset(line)
 
-      document.getText(start, document.lineToEndOffset(line) - start).trim
-    }.filter(_.nonEmpty)
+      document.getText(start, document.lineToEndOffset(line) - start)
+    }.filter(_.trim.nonEmpty)
 
     if (nonEmptyLines.isEmpty) {
       (startLine to endLine).foreach { line =>
         document.insertString(document.lineToStartOffset(line), "; ", null)
       }
-    } else if (nonEmptyLines.forall(_.startsWith(";"))) {
+    } else if (nonEmptyLines.forall(_.trim.startsWith(";"))) {
       (startLine to endLine).foreach { line =>
         val start = document.lineToStartOffset(line)
         val lineText = document.getText(start, document.lineToEndOffset(line) - start)
@@ -40,11 +40,13 @@ object ToggleComments {
         }
       }
     } else {
+      val offset = nonEmptyLines.map(_.indexWhere(!_.isWhitespace)).min
+
       (startLine to endLine).foreach { line =>
         val start = document.lineToStartOffset(line)
 
         if (document.getText(start, document.lineToEndOffset(line) - start).trim.nonEmpty)
-          document.insertString(start, "; ", null)
+          document.insertString(start + offset, "; ", null)
       }
     }
   }
