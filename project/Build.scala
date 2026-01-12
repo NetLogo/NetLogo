@@ -3,12 +3,12 @@ import Keys._
 import librarymanagement.ModuleDescriptorConfiguration
 
 object NetLogoBuild {
-  lazy val all = TaskKey[Unit]("all", "build everything!!!")
-
   def cclArtifacts(path: String): String =
     s"https://s3.amazonaws.com/ccl-artifacts/$path"
 
   val autogenRoot = taskKey[File]("source root for autogeneration files")
+
+  val extensionRoot = SettingKey[File]("extensionRoot", "source root for extension submodules")
 
   val netlogoVersion = TaskKey[String]("netlogo-version", "from api.Version")
 

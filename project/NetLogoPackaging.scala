@@ -3,10 +3,10 @@ import sbt.complete.Parser, Parser._
 import Keys.{ baseDirectory, buildStructure, dependencyClasspath, packageBin, state, streams, target }
 import ChecksumsAndPreviews.allPreviews
 import Docs.{ allDocs, docsRoot, extensionDocs, htmlDocs, manualPDF }
-import Extensions.{ extensions, extensionRoot }
 import ModelsLibrary.{ modelsDirectory, modelIndex }
 import NativeLibs.nativeLibs
-import NetLogoBuild.{ all, buildDate, marketingVersion, numericMarketingVersion, year }
+import NetLogoBuild.{ buildDate, extensionRoot, marketingVersion, numericMarketingVersion, year }
+import NetLogoWebExport.nlwUpdateExportFile
 import Running.makeMainTask
 import java.nio.file.Paths
 import java.nio.file.Files
@@ -40,7 +40,7 @@ object NetLogoPackaging {
       { (platform: String, arch: String) =>
         val nlDir = (netlogo / baseDirectory).value
         Seq(
-          new ExtensionDir((netlogo / extensionRoot).value, platform, arch),
+          new ExtensionDir(extensionRoot.value, platform, arch),
           new ModelsDir((netlogo / modelsDirectory).value),
           new DocsDir((netlogo / docsRoot).value),
           new BehaviorsearchDir((behaviorsearchProject / baseDirectory).value, platform)
@@ -72,7 +72,11 @@ object NetLogoPackaging {
     netLogoLongVersion := { if (marketingVersion.value.length == 3) marketingVersion.value + ".0" else marketingVersion.value },
 
     buildNetLogo := {
-      (netlogo / all).value
+      (netlogo / Test / packageBin).value
+      // extensions.value
+      (netlogo / nativeLibs).value
+      (netlogo / modelIndex).value
+      (netlogo / nlwUpdateExportFile).value
       (netlogo / allDocs).value
       // allPreviews doesn't technically depend on resaveModels, but if they're allowed to run concurrently it causes
       // problems when allPreviews tries to read a file that resaveModels is writing to (Isaac B 8/23/25)
@@ -84,7 +88,7 @@ object NetLogoPackaging {
     resaveModels := {
       makeMainTask("org.nlogo.tools.ModelResaver",
         classpath = (netlogo / Test / Keys.fullClasspath),
-        workingDirectory = baseDirectory(_.getParentFile)).toTask("").dependsOn(netlogo / extensions).value
+        workingDirectory = baseDirectory(_.getParentFile)).toTask("").value
     },
 
     buildMathematicaLink := {

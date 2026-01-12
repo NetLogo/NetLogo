@@ -1,8 +1,7 @@
 import sbt._
 import Keys._
-import NetLogoBuild.{ buildDate, marketingVersion, year, autogenRoot }
+import NetLogoBuild.{ autogenRoot, buildDate, extensionRoot, marketingVersion, year }
 import ModelsLibrary.modelsDirectory
-import Extensions.extensionRoot
 
 object Docs {
   lazy val netLogoDocs                  = taskKey[NetLogoDocs]("netlogo docs object used to build documentation")

@@ -13,6 +13,7 @@ Compile / unmanagedJars += {
 
 resolvers ++= Seq(
   "netlogo-publish-versioned" at "https://dl.cloudsmith.io/public/netlogo/publish-versioned/maven/"
+, "netlogo-extension-plugin"        at "https://dl.cloudsmith.io/public/netlogo/netlogo-extension-plugin/maven/"
 , "netlogo-extension-documentation" at "https://dl.cloudsmith.io/public/netlogo/netlogo-extension-documentation/maven/"
 )
 
@@ -20,6 +21,7 @@ addSbtPlugin("org.scalastyle"     %% "scalastyle-sbt-plugin"           % "1.0.0"
 addSbtPlugin("org.portable-scala" %  "sbt-scalajs-crossproject"        % "1.3.2")
 addSbtPlugin("org.scala-js"       %  "sbt-scalajs"                     % "1.19.0")
 addSbtPlugin("org.nlogo"          %  "publish-versioned-plugin"        % "3.0.0")
+addSbtPlugin("org.nlogo"          %  "netlogo-extension-plugin"        % "7.0.2")
 addSbtPlugin("org.nlogo"          %  "netlogo-extension-documentation" % "0.8.3")
 addSbtPlugin("com.timushev.sbt"   %  "sbt-updates"                     % "0.6.4")
 
