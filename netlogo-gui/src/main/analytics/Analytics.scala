@@ -236,6 +236,10 @@ object Analytics {
     wrapRequest(MatomoRequests.event(category, "Save as NetLogo Web", null, null).build())
   }
 
+  def previewCommandsOpen(): Unit = {
+    wrapRequest(MatomoRequests.event(category, "Preview Commands Open", null, null).build())
+  }
+
   def refreshPreference(): Unit = {
     sendEnabled = NetLogoPreferences.getBoolean("sendAnalytics", false)
   }

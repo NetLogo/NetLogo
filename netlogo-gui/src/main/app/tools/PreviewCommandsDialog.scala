@@ -7,6 +7,7 @@ import java.awt.event.{ ActionEvent, ItemEvent, ItemListener }
 import java.beans.{ PropertyChangeEvent, PropertyChangeListener }
 import javax.swing.{ AbstractAction, JDialog, JPanel }
 
+import org.nlogo.analytics.Analytics
 import org.nlogo.api.PreviewCommands
 import org.nlogo.awt.Positioning
 import org.nlogo.core.{ AgentKind, CompilerException, I18N, Model }
@@ -119,4 +120,11 @@ class PreviewCommandsDialog(
 
   pack()
   Positioning.center(this, owner)
+
+  override def setVisible(visible: Boolean): Unit = {
+    if (visible)
+      Analytics.previewCommandsOpen()
+
+    super.setVisible(visible)
+  }
 }
