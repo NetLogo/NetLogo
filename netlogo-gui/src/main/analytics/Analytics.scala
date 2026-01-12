@@ -40,7 +40,7 @@ object Analytics {
 
   checkNetwork()
 
-  private def wrapRequest(request: MatomoRequest, synchronous: Boolean = false): Future[Unit] =
+  private def wrapRequest(request: MatomoRequest): Future[Unit] =
     Future {
 
       if (sendEnabled) {
@@ -49,28 +49,11 @@ object Analytics {
           checkNetwork()
 
         if (available) {
-          if (synchronous) {
-            try {
-              new Thread {
-                override def run(): Unit = {
-                  tracker.sendBulkRequest(request)
-                }
-              }.join(4000)
-            } catch {
-              case _: MatomoException | _: InterruptedException =>
-                checkNetwork()
-            }
-          } else {
-            tracker.sendBulkRequestAsync(request).handle { (_, error) =>
-              if (error != null) {
-                error.getCause match {
-                  case _: MatomoException =>
-                    checkNetwork()
-
-                  case _ =>
-                }
-              }
-            }
+          try {
+            tracker.sendBulkRequest(request)
+          } catch {
+            case _: MatomoException =>
+              checkNetwork()
           }
         }
 
@@ -106,12 +89,9 @@ object Analytics {
   }
 
   def appExit(): Future[Unit] = {
-    val length = (System.currentTimeMillis() - startTime) / 60000
+    val length = (System.currentTimeMillis() - startTime) / 60000.0
 
-    if (length > 0)
-      wrapRequest(MatomoRequests.event(category, "App Exit", null, length.toDouble).build(), true)
-    else
-      Future.successful(())
+    wrapRequest(MatomoRequests.event(category, "App Exit", null, length.ceil).build())
   }
 
   def preferenceChange(name: String, origValue: String): Unit = {
