@@ -32,11 +32,11 @@ class ToggleCommentsTests extends AnyFunSuiteEx {
 
     toggle()
 
-    assert(textField.getText == "to test\n;   print 0\nend\n")
+    assert(textField.getText == "to test\n  ; print 0\nend\n")
   }
 
   test("Uncomment current line") {
-    textField.setText("to test\n;   print 0\nend\n")
+    textField.setText("to test\n  ; print 0\nend\n")
     textField.setCaretPosition(15)
 
     toggle()
@@ -150,5 +150,23 @@ class ToggleCommentsTests extends AnyFunSuiteEx {
     toggle()
 
     assert(textField.getText == "to test\n  print 0 ; testing one two three\nend\n")
+  }
+
+  test("Comment indented lines") {
+    textField.setText("  to test\n    if true [\n      print 0\n      print 1\n      print 2\n    ]\n  end")
+    textField.selectAll()
+
+    toggle()
+
+    assert(textField.getText == "  ; to test\n  ;   if true [\n  ;     print 0\n  ;     print 1\n  ;     print 2\n  ;   ]\n  ; end")
+  }
+
+  test("Uncomment indented lines") {
+    textField.setText("  ; to test\n  ;   if true [\n  ;     print 0\n  ;     print 1\n  ;     print 2\n  ;   ]\n  ; end")
+    textField.selectAll()
+
+    toggle()
+
+    assert(textField.getText == "  to test\n    if true [\n      print 0\n      print 1\n      print 2\n    ]\n  end")
   }
 }
