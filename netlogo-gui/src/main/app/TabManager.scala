@@ -2,7 +2,7 @@
 
 package org.nlogo.app
 
-import java.awt.{ Component, KeyboardFocusManager }
+import java.awt.{ Component, Font, KeyboardFocusManager }
 import java.awt.event.{ ActionEvent, KeyEvent, WindowAdapter, WindowEvent, WindowFocusListener }
 import java.awt.print.PrinterAbortException
 import java.io.{ File, PrintWriter }
@@ -18,6 +18,7 @@ import org.nlogo.app.infotab.InfoTab
 import org.nlogo.app.interfacetab.InterfaceTab
 import org.nlogo.awt.UserCancelException
 import org.nlogo.core.{ I18N, NetLogoPreferences }
+import org.nlogo.editor.EditorConfiguration
 import org.nlogo.swing.{ OptionPane, Printable, PrinterManager, TabLabel, UserAction }
 import org.nlogo.theme.ThemeSync
 import org.nlogo.window.Events.{ AboutToCloseFilesEvent, AboutToSaveExternalFileEvent, AboutToSaveModelEvent,
@@ -72,6 +73,8 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
   private var loadingTabs = false
 
   private var ignoreChanges = false
+
+  private var codeFont: Font = EditorConfiguration.defaultFont
 
   addTabWithLabel(mainTabs, I18N.gui.get("tabs.run"), interfaceTab)
   addTabWithLabel(mainTabs, I18N.gui.get("tabs.info"), infoTab)
@@ -463,6 +466,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
         mainTabs.setSelectedComponent(tab)
     }
 
+    tab.text.setFont(codeFont)
     tab.syncTheme()
 
     updateTabActions()
@@ -618,6 +622,12 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
   override def setJumpOnClick(value: Boolean): Unit = {
     interfaceTab.iP.setJumpOnClick(value)
     interfaceTab.speedSlider.setJumpOnClick(value)
+  }
+
+  override def setCodeFont(font: Option[Font]): Unit = {
+    codeFont = font.getOrElse(EditorConfiguration.defaultFont)
+
+    (mainCodeTab +: getExternalFileTabs).foreach(_.text.setFont(codeFont))
   }
 
   def reload(): Unit = {

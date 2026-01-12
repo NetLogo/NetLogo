@@ -15,13 +15,27 @@ object ComboBox {
   }
 }
 
-class ComboBox[T](private var items: Seq[T] = Seq())
+class ComboBox[T](private var items: Seq[T] = Seq(), openOnPress: Boolean = true)
   extends JPanel(new GridBagLayout) with RoundedBorderPanel with ThemeSync with ItemSelectable {
 
-  private val mouseListener = new MouseAdapter {
-    override def mousePressed(e: MouseEvent): Unit = {
-      if (isEnabled)
-        popup.show(ComboBox.this, 0, getHeight)
+  // popups with lots of items can overlap the mouse when the dropdown is clicked, causing one of
+  // the items to be erroneously selected when the mouse is released. this makes it difficult to
+  // interact with the popup, so wait until the mouse is released in those cases. (Isaac B 1/12/26)
+  private val mouseListener: MouseAdapter = {
+    if (openOnPress) {
+      new MouseAdapter {
+        override def mousePressed(e: MouseEvent): Unit = {
+          if (isEnabled)
+            popup.show(ComboBox.this, 0, getHeight)
+        }
+      }
+    } else {
+      new MouseAdapter {
+        override def mouseReleased(e: MouseEvent): Unit = {
+          if (isEnabled)
+            popup.show(ComboBox.this, 0, getHeight)
+        }
+      }
     }
   }
 

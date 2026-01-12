@@ -2,7 +2,7 @@
 
 package org.nlogo.app.common
 
-import java.awt.Component
+import java.awt.{ Component, Font }
 
 object TabsInterface {
   /**
@@ -39,4 +39,6 @@ trait TabsInterface {
   def showCodeTabPreferences(): Unit
 
   def setJumpOnClick(value: Boolean): Unit
+
+  def setCodeFont(font: Option[Font]): Unit
 }
