@@ -7,7 +7,7 @@ import java.awt.event.{ KeyAdapter, KeyEvent, MouseAdapter, MouseEvent }
 import javax.swing.{ Action, JMenu, JMenuItem, JPopupMenu }
 import javax.swing.text.EditorKit
 
-import org.fife.ui.rtextarea.{ Gutter, RTextArea }
+import org.fife.ui.rtextarea.{ Gutter, RTextArea, RUndoManager }
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea
 
 import org.nlogo.swing.{ Menu, MenuItem, PopupMenu, UserAction, WrappedAction },
@@ -30,6 +30,14 @@ class AdvancedEditorArea(val configuration: EditorConfiguration)
   private var defaultSelectionColor = getSelectionColor
 
   configuration.configureAdvancedEditorArea(this)
+
+  override def createUndoManager(): RUndoManager = {
+    val manager = super.createUndoManager()
+
+    manager.setLimit(500)
+
+    manager
+  }
 
   def enableBracketMatcher(enable: Boolean): Unit = {
     setBracketMatchingEnabled(enable)
