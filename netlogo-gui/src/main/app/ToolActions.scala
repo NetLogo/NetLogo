@@ -55,7 +55,8 @@ with MenuAction {
       Preferences.FocusOnError,
       Preferences.StartSeparateCodeTab,
       new Preferences.IndentAutomatically(frame),
-      new Preferences.EditorLineNumbers(tabs)
+      new Preferences.EditorLineNumbers(tabs),
+      new Preferences.CodeFont(tabs)
     ),
     Seq(
       Preferences.IsLoggingEnabled,

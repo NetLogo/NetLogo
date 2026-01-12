@@ -2,7 +2,8 @@
 
 package org.nlogo.app.tools
 
-import java.awt.{ BorderLayout, Component, Frame, GridBagConstraints, GridBagLayout, Insets }
+import java.awt.{ BorderLayout, Component, Font, Frame, GraphicsEnvironment, GridBagConstraints, GridBagLayout,
+                  Insets }
 import java.awt.event.ActionEvent
 import java.io.File
 import java.util.Locale
@@ -302,5 +303,53 @@ object Preferences {
     override def onSelect(selected: Boolean): Unit = {
       Analytics.refreshPreference()
     }
+  }
+
+  class CodeFont(tabs: TabsInterface) extends Preference("codeFont", None) {
+    case class FontWrapper(font: Option[Font]) {
+      override def toString: String =
+        font.fold(I18N.gui.get("tools.preferences.defaultFont"))(_.getName)
+    }
+
+    val DefaultFont = FontWrapper(None)
+
+    private val fonts: Seq[FontWrapper] = {
+      DefaultFont +: GraphicsEnvironment.getLocalGraphicsEnvironment.getAvailableFontFamilyNames
+        .filterNot(_.startsWith(".")).map(name => FontWrapper(Some(new Font(name, Font.PLAIN, 12)))).toSeq
+    }
+
+    private val comboBox = new ComboBox(fonts, false) {
+      addItemListener(_ => {
+        getSelectedItem.foreach { font =>
+          if (font != getPreference)
+            Analytics.preferenceChange(i18nKey, font.toString)
+
+          tabs.setCodeFont(font.font)
+        }
+      })
+    }
+
+    override def component: JComponent & ThemeSync =
+      comboBox
+
+    private def getPreference: FontWrapper =
+      FontWrapper(Option(NetLogoPreferences.get(i18nKey, null)).map(new Font(_, Font.PLAIN, 12)))
+
+    override def load(): Unit = {
+      comboBox.setSelectedItem(getPreference)
+    }
+
+    override def save(): Unit = {
+      comboBox.getSelectedItem.foreach(_.font match {
+        case Some(font) =>
+          NetLogoPreferences.put(i18nKey, font.getName)
+
+        case _ =>
+          NetLogoPreferences.remove(i18nKey)
+      })
+    }
+
+    override def changed: Boolean =
+      !comboBox.getSelectedItem.contains(getPreference)
   }
 }
