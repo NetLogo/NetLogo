@@ -36,44 +36,47 @@ object Analytics {
   private var startTime = 0L
   private var lastCheck = 0L
 
+  private given ExecutionContext = ExecutionContext.global
+
   checkNetwork()
 
-  private def wrapRequest(request: MatomoRequest, synchronous: Boolean = false): Unit = {
+  private def wrapRequest(request: MatomoRequest, synchronous: Boolean = false): Future[Unit] =
+    Future {
 
-    if (sendEnabled) {
+      if (sendEnabled) {
 
-      if (!available && System.currentTimeMillis() - lastCheck >= 5000)
-        checkNetwork()
+        if (!available && System.currentTimeMillis() - lastCheck >= 5000)
+          checkNetwork()
 
-      if (available) {
-        if (synchronous) {
-          try {
-            new Thread {
-              override def run(): Unit = {
-                tracker.sendBulkRequest(request)
-              }
-            }.join(4000)
-          } catch {
-            case _: MatomoException | _: InterruptedException =>
-              checkNetwork()
-          }
-        } else {
-          tracker.sendBulkRequestAsync(request).handle { (_, error) =>
-            if (error != null) {
-              error.getCause match {
-                case _: MatomoException =>
-                  checkNetwork()
+        if (available) {
+          if (synchronous) {
+            try {
+              new Thread {
+                override def run(): Unit = {
+                  tracker.sendBulkRequest(request)
+                }
+              }.join(4000)
+            } catch {
+              case _: MatomoException | _: InterruptedException =>
+                checkNetwork()
+            }
+          } else {
+            tracker.sendBulkRequestAsync(request).handle { (_, error) =>
+              if (error != null) {
+                error.getCause match {
+                  case _: MatomoException =>
+                    checkNetwork()
 
-                case _ =>
+                  case _ =>
+                }
               }
             }
           }
         }
+
       }
 
     }
-
-  }
 
   // non-recursively builds a simple subset of JSON to avoid unnecessary
   // dependencies or object structures (Isaac B 7/2/25)
@@ -196,7 +199,7 @@ object Analytics {
 
   def primUsage(tokens: Iterator[Token]): Unit = {
     Future {
-      val prims = tokens.foldLeft(Map[String, Int]()) {
+      tokens.foldLeft(Map[String, Int]()) {
         case (map, token) =>
           if (token.tpe == TokenType.Command || token.tpe == TokenType.Reporter) {
             val name = token.text.toLowerCase
@@ -206,15 +209,14 @@ object Analytics {
             map
           }
       }
-
-      if (prims.nonEmpty)
-        wrapRequest(MatomoRequests.event(category, "Primitive Usage", buildJson(prims), null).build())
-    } (using ExecutionContext.global)
+    }.filter(_.nonEmpty).flatMap {
+      prims => wrapRequest(MatomoRequests.event(category, "Primitive Usage", buildJson(prims), null).build())
+    }
   }
 
   def keywordUsage(tokens: Iterator[Token]): Unit = {
     Future {
-      val keywords = tokens.foldLeft(Map[String, Int]()) {
+      tokens.foldLeft(Map[String, Int]()) {
         case (map, token) =>
           if (token.tpe == TokenType.Keyword) {
             val name = token.text.toLowerCase
@@ -224,10 +226,9 @@ object Analytics {
             map
           }
       }
-
-      if (keywords.nonEmpty)
-        wrapRequest(MatomoRequests.event(category, "Keyword Usage", buildJson(keywords), null).build())
-    } (using ExecutionContext.global)
+    }.filter(_.nonEmpty).flatMap {
+      keywords => wrapRequest(MatomoRequests.event(category, "Keyword Usage", buildJson(keywords), null).build())
+    }
   }
 
   def includeExtensions(extensions: Array[String]): Unit = {
