@@ -6,8 +6,7 @@ import sbtcrossproject.CrossPlugin.autoImport.{ crossProject, CrossType }
 import sbtcrossproject.Platform
 
 import ModelsLibrary.modelsDirectory
-import Extensions.{ excludedExtensions, extensionNetLogoJar, extensionRoot }
-import NetLogoBuild.{ all, autogenRoot, cclArtifacts, includeInPackaging,
+import NetLogoBuild.{ autogenRoot, cclArtifacts, extensionRoot, includeInPackaging,
   marketingVersion, netlogoVersion, shareSourceDirectory }
 import Docs.htmlDocs
 import Dump.dumpClassName
@@ -168,7 +167,6 @@ lazy val netlogo = project.in(file("netlogo-gui")).
           Dump.settings ++
           //Scaladoc.settings ++
           ChecksumsAndPreviews.settings ++
-          Extensions.settings ++
           InfoTab.infoTabTask ++
           ModelsLibrary.settings ++
           NativeLibs.nativeLibsTask ++
@@ -260,23 +258,7 @@ lazy val netlogo = project.in(file("netlogo-gui")).
     ) ++ Seq("base", "controls", "graphics", "swing", "web")
       .map(m => "org.openjfx" % s"javafx-$m" % "21.0.6" classifier osName),
     Compile / compile := (Compile / compile).dependsOn(NativeLibs.nativeLibs).value,
-    all := {},
-    all := {
-      all.dependsOn(
-        htmlDocs,
-        Test / packageBin,
-        Extensions.extensions,
-        NativeLibs.nativeLibs,
-        ModelsLibrary.modelIndex,
-        Compile / doc,
-        NetLogoWebExport.nlwUpdateExportFile
-      ).value
-    }
-  , Test / baseDirectory := baseDirectory.value.getParentFile
-  , extensionNetLogoJar := {
-    (Test / packageBin).value
-    (Compile / packageBin).value
-  }
+    Test / baseDirectory := baseDirectory.value.getParentFile
   // I don't think this `apiMappings` setup works anymore for the JDK.  I'm not going to worry about it because it
   // hasn't worked in the last few releases, no one has noticed, and the JDK docs are easy enough to lookup outside of
   // NetLogo's docs.  There is a `-jdk-api-doc-base` option in Scala 2.13+, and a more generalized/powerful
@@ -316,7 +298,6 @@ lazy val headless = (project in file ("netlogo-headless")).
   settings(Testing.settings: _*).
   settings(Testing.useLanguageTestPrefix("org.nlogo.headless.lang.Test"): _*).
   settings(Depend.dependTask: _*).
-  settings(Extensions.settings: _*).
   settings(JFlexRunner.settings: _*).
   settings(includeInPackaging(parserJVM): _*).
   settings(shareSourceDirectory("netlogo-core"): _*).
@@ -328,7 +309,6 @@ lazy val headless = (project in file ("netlogo-headless")).
     isSnapshot    := true,
     publishTo     := { Some("Cloudsmith API" at "https://maven.cloudsmith.io/netlogo/netlogo/") },
     autogenRoot   := (baseDirectory.value.getParentFile / "autogen").getAbsoluteFile,
-    extensionRoot := baseDirectory.value.getParentFile / "extensions",
     javacOptions ++= Seq("--release", "11"),
     Compile / mainClass         := Some("org.nlogo.headless.Main"),
     libraryDependencies        ++= Seq(
@@ -347,15 +327,7 @@ lazy val headless = (project in file ("netlogo-headless")).
     Compile / unmanagedResourceDirectories ++= (sharedResources / Compile / unmanagedResourceDirectories).value,
     Test / resourceDirectory    := baseDirectory.value.getParentFile / "test",
     dumpClassName               := "org.nlogo.headless.misc.Dump",
-    excludedExtensions          := Seq("arduino", "bitmap", "gis", "gogo", "ls", "palette", "sound", "vid", "view2.5d"),
-    extensionNetLogoJar         := (netlogo / extensionNetLogoJar).value,
-    all := { val _ = (
-      (Compile / packageBin).value,
-      (Test / packageBin).value,
-      (Test / compile).value,
-      Extensions.extensions
-    )}
-  , Test / baseDirectory := baseDirectory.value.getParentFile
+    Test / baseDirectory := baseDirectory.value.getParentFile
   )
 
  // this project exists as a wrapper for the mac-specific NetLogo components
@@ -393,8 +365,11 @@ lazy val macApp = project.in(file("mac-app")).
     javacOptions ++= Seq("-bootclasspath", System.getProperty("java.home") + "/lib/rt.jar"))
 
 // this project is all about packaging NetLogo for distribution
-lazy val dist = project.in(file("dist")).
-  settings(version := (netlogo / version).value).
+lazy val dist = project.in(file("dist"))
+  settings(
+    version := (netlogo / version).value,
+    extensionRoot := (netlogo / extensionRoot).value
+  ).
   settings(NetLogoBuild.settings: _*).
   settings(NetLogoPackaging.settings(netlogo, macApp, behaviorsearchProject): _*)
 
@@ -483,3 +458,53 @@ lazy val behaviorsearchProject: Project =
   project.in(file("behaviorsearch"))
     .dependsOn(netlogo % "test-internal->test;compile-internal->compile")
     .settings(description := "subproject of NetLogo")
+
+lazy val arduino = project.in(file("extensions/arduino")).dependsOn(netlogo)
+lazy val array = project.in(file("extensions/array")).dependsOn(netlogo)
+lazy val bitmap = project.in(file("extensions/bitmap")).dependsOn(netlogo)
+lazy val csv = project.in(file("extensions/csv")).dependsOn(netlogo)
+lazy val gis = project.in(file("extensions/gis")).dependsOn(netlogo)
+lazy val gogo = project.in(file("extensions/gogo")).dependsOn(netlogo)
+lazy val ls = project.in(file("extensions/ls")).dependsOn(netlogo)
+lazy val matrix = project.in(file("extensions/matrix")).dependsOn(netlogo)
+lazy val nw = project.in(file("extensions/nw")).dependsOn(netlogo)
+lazy val palette = project.in(file("extensions/palette")).dependsOn(netlogo)
+lazy val profiler = project.in(file("extensions/profiler")).dependsOn(netlogo)
+lazy val py = project.in(file("extensions/py")).dependsOn(netlogo)
+lazy val resource = project.in(file("extensions/resource")).dependsOn(netlogo)
+lazy val rnd = project.in(file("extensions/rnd")).dependsOn(netlogo)
+lazy val sample = project.in(file("extensions/sample")).dependsOn(netlogo)
+lazy val sampleScala = project.in(file("extensions/sample-scala")).dependsOn(netlogo)
+lazy val sound = project.in(file("extensions/sound")).dependsOn(netlogo)
+lazy val sr = project.in(file("extensions/sr")).dependsOn(netlogo)
+lazy val table = project.in(file("extensions/table")).dependsOn(netlogo)
+lazy val time = project.in(file("extensions/time")).dependsOn(netlogo)
+lazy val vid = project.in(file("extensions/vid")).dependsOn(netlogo)
+lazy val view25d = project.in(file("extensions/view2.5d")).dependsOn(netlogo)
+
+lazy val extensions = TaskKey[Unit]("extensions", "Package all extensions")
+
+extensions := {
+  (arduino / Compile / packageBin).value
+  (array / Compile / packageBin).value
+  (bitmap / Compile / packageBin).value
+  (csv / Compile / packageBin).value
+  (gis / Compile / packageBin).value
+  (gogo / Compile / packageBin).value
+  (ls / Compile / packageBin).value
+  (matrix / Compile / packageBin).value
+  (nw / Compile / packageBin).value
+  (palette / Compile / packageBin).value
+  (profiler / Compile / packageBin).value
+  (py / Compile / packageBin).value
+  (resource / Compile / packageBin).value
+  (rnd / Compile / packageBin).value
+  (sample / Compile / packageBin).value
+  (sampleScala / Compile / packageBin).value
+  (sound / Compile / packageBin).value
+  (sr / Compile / packageBin).value
+  (table / Compile / packageBin).value
+  (time / Compile / packageBin).value
+  (vid / Compile / packageBin).value
+  (view25d / Compile / packageBin).value
+}
