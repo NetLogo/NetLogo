@@ -105,11 +105,13 @@ object Analytics {
     wrapRequest(MatomoRequests.event(category, "App Start", json, null).build())
   }
 
-  def appExit(): Unit = {
+  def appExit(): Future[Unit] = {
     val length = (System.currentTimeMillis() - startTime) / 60000
 
     if (length > 0)
       wrapRequest(MatomoRequests.event(category, "App Exit", null, length.toDouble).build(), true)
+    else
+      Future.successful(())
   }
 
   def preferenceChange(name: String, origValue: String): Unit = {

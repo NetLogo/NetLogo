@@ -7,6 +7,7 @@ import java.io.{ File, IOException }
 import java.net.{ URI, URISyntaxException }
 import java.nio.file.Paths
 
+import scala.concurrent.Await
 import scala.util.{ Failure, Try }
 
 import org.nlogo.analytics.Analytics
@@ -328,12 +329,17 @@ class FileManager(workspace: AbstractWorkspaceScala,
 
   @throws(classOf[UserCancelException])
   def quit(): Unit = {
+
+    import scala.concurrent.duration.DurationInt
+
     aboutToCloseFiles()
     ModelConfig.pruneModelConfigs()
     new AboutToQuitEvent().raise(eventRaiser)
     workspace.getExtensionManager.reset()
-    Analytics.appExit()
+    Await.ready(Analytics.appExit(), 20.seconds)
+
     System.exit(0)
+
   }
 
   /**
