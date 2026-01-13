@@ -67,7 +67,7 @@ object Docs {
     },
     extensionDocs := {
       extensionDocsGen.value.generateExtensionDocs(
-        docsRoot.value, docsRoot.value, autoDocumentedExtensions.value, marketingVersion.value)
+        docsRoot.value, autogenRoot.value / "docs", autoDocumentedExtensions.value, marketingVersion.value)
       .map(_.toFile)
     },
     extensionDocsGen := {
