@@ -318,7 +318,7 @@ object Preferences {
         .filterNot(_.startsWith(".")).map(name => FontWrapper(Some(new Font(name, Font.PLAIN, 12)))).toSeq
     }
 
-    private val comboBox = new ComboBox(fonts, false) {
+    private val comboBox = new ComboBox(fonts, false, true) {
       addItemListener(_ => {
         getSelectedItem.foreach { font =>
           if (font != getPreference)

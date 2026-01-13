@@ -15,7 +15,7 @@ object ComboBox {
   }
 }
 
-class ComboBox[T](private var items: Seq[T] = Seq(), openOnPress: Boolean = true)
+class ComboBox[T](private var items: Seq[T] = Seq(), openOnPress: Boolean = true, searchable: Boolean = false)
   extends JPanel(new GridBagLayout) with RoundedBorderPanel with ThemeSync with ItemSelectable {
 
   // popups with lots of items can overlap the mouse when the dropdown is clicked, causing one of
@@ -44,9 +44,18 @@ class ComboBox[T](private var items: Seq[T] = Seq(), openOnPress: Boolean = true
   private val choiceDisplay = new ChoiceDisplay
   private val arrow = new DropdownArrow
 
-  private val popup = new PopupMenu {
-    override def getPreferredSize: Dimension =
-      new Dimension(ComboBox.this.getWidth.max(super.getPreferredSize.width), super.getPreferredSize.height)
+  private val popup: PopupMenu = {
+    if (searchable) {
+      new SearchablePopupMenu {
+        override def getPreferredSize: Dimension =
+          new Dimension(ComboBox.this.getWidth.max(super.getPreferredSize.width), super.getPreferredSize.height)
+      }
+    } else {
+      new PopupMenu {
+        override def getPreferredSize: Dimension =
+          new Dimension(ComboBox.this.getWidth.max(super.getPreferredSize.width), super.getPreferredSize.height)
+      }
+    }
   }
 
   private var itemListeners = Set[ItemListener]()
