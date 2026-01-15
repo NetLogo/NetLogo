@@ -38,8 +38,6 @@ object Analytics {
 
   private given ExecutionContext = ExecutionContext.global
 
-  checkNetwork()
-
   private def wrapRequest(request: MatomoRequest): Future[Unit] =
     Future {
 
