@@ -252,6 +252,8 @@ private class ManagerDialog(manager:       LabManager,
         }
       }
 
+      val lastSelected = selectedIndex
+
       val dialog = new java.awt.FileDialog(manager.workspace.getFrame, I18N.gui("import.dialog"))
 
       dialog.setDirectory(System.getProperty("user.home"))
@@ -272,6 +274,7 @@ private class ManagerDialog(manager:       LabManager,
       }
 
       update()
+      select(lastSelected)
     } catch {
       case e: org.nlogo.awt.UserCancelException => org.nlogo.api.Exceptions.ignore(e)
     }
@@ -327,12 +330,8 @@ private class ManagerDialog(manager:       LabManager,
     jlist.setSelectedIndices(Array(index))
     jlist.ensureIndexIsVisible(index)
   }
-  private def selectedIndex: Int = {
-    jlist.getSelectedIndices match {
-      case Array(i: Int) => i
-      case _ => -1
-    }
-  }
+  private def selectedIndex: Int =
+    jlist.getSelectedIndices.headOption.getOrElse(-1)
 
   private def selectedProtocol: LabProtocol =
     manager.protocols(jlist.getSelectedIndices()(0))
