@@ -2,7 +2,8 @@
 
 package org.nlogo.lab.gui
 
-import java.awt.{ Component, Dimension, FlowLayout, GridBagConstraints, GridBagLayout, Insets }
+import java.awt.{ Component, Dimension, FileDialog => JFileDialog, FlowLayout, GridBagConstraints, GridBagLayout,
+                  Insets }
 import java.awt.event.ActionEvent
 import java.io.PrintWriter
 import javax.swing.{ AbstractAction, JDialog, JLabel, JList, JMenuBar, JPanel, ListCellRenderer }
@@ -254,12 +255,14 @@ private class ManagerDialog(manager:       LabManager,
 
       val lastSelected = selectedIndex
 
-      val dialog = new java.awt.FileDialog(manager.workspace.getFrame, I18N.gui("import.dialog"))
+      val dialog = new JFileDialog(manager.workspace.getFrame, I18N.gui("import.dialog"))
 
-      dialog.setDirectory(System.getProperty("user.home"))
+      dialog.setDirectory(FileDialog.getDirectory)
       dialog.setFilenameFilter(new XMLFilter)
       dialog.setMultipleMode(true)
       dialog.setVisible(true)
+
+      FileDialog.setDirectory(dialog.getDirectory)
 
       for (file <- dialog.getFiles) {
         manager.modelLoader.readExperiments(Source.fromFile(file).mkString, true,
