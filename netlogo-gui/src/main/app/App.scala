@@ -43,8 +43,8 @@ import org.nlogo.nvm.{ PresentationCompilerInterface, Workspace }
 import org.nlogo.render.Renderer
 import org.nlogo.sdm.gui.{ GUIAggregateManager, NLogoGuiSDMFormat, NLogoThreeDGuiSDMFormat, SDMGuiAutoConvertable }
 import org.nlogo.shape.editor.{ LinkShapeManagerDialog, TurtleShapeManagerDialog }
-import org.nlogo.swing.{ DropdownOptionPane, InputOptionPane, Menu, OptionPane, Positioning, SetSystemLookAndFeel,
-                         UserAction, Utils },
+import org.nlogo.swing.{ BrowserLauncher, DropdownOptionPane, FileDialog, InputOptionPane, Menu, OptionPane,
+                         Positioning, PrinterManager, SetSystemLookAndFeel, UserAction, Utils, WindowAutomator },
   UserAction.{ ActionCategoryKey, EditCategory, FileCategory, HelpCategory, MenuAction, ToolsCategory }
 import org.nlogo.theme.{ ClassicTheme, DarkTheme, InterfaceColors, LightTheme, ThemeSync }
 import org.nlogo.util.AppHandler
@@ -88,7 +88,11 @@ object App {
       } else {
         "light"
       }
-    })
+    }),
+    // only for testing, certain user-focused behaviors will be disabled (Isaac B 10/31/25)
+    testing: Boolean = false,
+    // only for testing, interactable GUI components will be automated (Isaac B 10/27/25)
+    automated: Boolean = false
   )
 
   // ideally this would be an Option[App], but that would break all the code that uses App.app,
@@ -149,6 +153,11 @@ object App {
 
       val cmdArgs = processCommandLineArguments(args)
 
+      WindowAutomator.setAutomated(cmdArgs.automated)
+      FileDialog.setAutomated(cmdArgs.automated)
+      PrinterManager.setAutomated(cmdArgs.automated)
+      BrowserLauncher.setAutomated(cmdArgs.automated)
+
       SetSystemLookAndFeel.setSystemLookAndFeel()
 
       InterfaceColors.setTheme(cmdArgs.colorTheme match {
@@ -177,6 +186,14 @@ object App {
     } catch {
       case ex: Throwable =>
         StartupError.report(ex)
+    }
+  }
+
+  private [app] def reset(): Unit = {
+    if (app != null) {
+      WindowAutomator.resetWindows()
+
+      app.frame.dispose()
     }
   }
 
@@ -248,6 +265,12 @@ object App {
 
         case "--3d" =>
           Version.set3D(true)
+
+        case "--testing" =>
+          current = current.copy(testing = true)
+
+        case "--automated" =>
+          current = current.copy(automated = true)
 
         case token if token.startsWith("--") =>
           // TODO: Decide: should we do System.exit() here?
@@ -328,6 +351,8 @@ class App(args: App.CommandLineArgs) extends LinkChild with Exceptions.Handler w
       override def updateMode = workspace.updateMode
     }
 
+    setTesting(args.testing)
+
     def aggregateManager: AggregateManagerInterface =
       new GUIAggregateManager(frame, menuBarFactory, this, colorizer, editDialogFactory, extensionManager)
 
@@ -364,28 +389,30 @@ class App(args: App.CommandLineArgs) extends LinkChild with Exceptions.Handler w
                                 Some(ModelSettings(false)))
   }
 
-  private val monitorManager = new AgentMonitorManager(workspace)
+  val monitorManager = new AgentMonitorManager(workspace)
+
   private val colorizer = new EditorColorizer(workspace)
 
   private val interfaceTab = new InterfaceTab(workspace, monitorManager, editDialogFactory, colorizer,
                                               new CommandCenter(workspace, true))
 
-  private val modelLoader = FileFormat.standardAnyLoader(false, workspace, true)
+  val modelLoader = FileFormat.standardAnyLoader(false, workspace, true)
+
   private val modelSaver = new ModelSaver(this, modelLoader)
 
   val tabManager = new TabManager(workspace, interfaceTab, externalFileManager)
 
-  private val dirtyMonitor = new DirtyMonitor(frame, modelSaver, modelLoader, workspace,
-                                              _.fold(modelTitle())(externalFileTitle), tabManager.separateTabsWindow)
+  val dirtyMonitor = new DirtyMonitor(frame, modelSaver, modelLoader, workspace,
+                                      _.fold(modelTitle())(externalFileTitle), tabManager.separateTabsWindow)
 
   private val converter = FileFormat.converter(workspace.getExtensionManager, workspace.getLibraryManager,
                                                workspace.getCompilationEnvironment, workspace,
                                                FileFormat.defaultAutoConvertables :+ SDMGuiAutoConvertable)
                                               (workspace.dialect)
 
-  private val mainMenuBar = new MainMenuBar(AbstractWorkspace.isApp)
+  val mainMenuBar = new MainMenuBar(AbstractWorkspace.isApp)
 
-  private val workspaceFactory = new WorkspaceFactory {
+  val workspaceFactory = new WorkspaceFactory {
     def newInstance: AbstractWorkspaceScala = HeadlessWorkspace.newInstance
 
     def openCurrentModelIn(w: Workspace): Unit = {
@@ -395,15 +422,17 @@ class App(args: App.CommandLineArgs) extends LinkChild with Exceptions.Handler w
   }
 
   val fileManager = new FileManager(workspace, modelLoader, converter, dirtyMonitor, modelSaver, mainMenuBar,
-                                    frame, tabManager, workspaceFactory)
+                                    frame, tabManager, workspaceFactory, args.testing)
 
   private val recentFilesMenu = new RecentFilesMenu(frame, fileManager)
 
-  private val labManager = new LabManager(workspace, editDialogFactory, colorizer, menuBarFactory, workspaceFactory,
-                                          modelLoader)
+  val labManager = new LabManager(workspace, editDialogFactory, colorizer, menuBarFactory, workspaceFactory,
+                                  modelLoader)
 
   private val turtleShapesManager = new TurtleShapeManagerDialog(frame, world, modelLoader)
   private val linkShapesManager = new LinkShapeManagerDialog(frame, world, modelLoader)
+
+  val graphicsPreview = new GraphicsPreview
 
   private lazy val owner = new SimpleJobOwner("App", world.mainRNG, AgentKind.Observer)
 
@@ -572,26 +601,30 @@ class App(args: App.CommandLineArgs) extends LinkChild with Exceptions.Handler w
 
       syncWindowThemes()
 
-      if (analyticsConsent) {
-        val sendAnalytics = new OptionPane(frame, I18N.gui.get("dialog.analyticsConsent"),
-                                           I18N.gui.get("dialog.analyticsConsent.message"), OptionPane.Options.YesNo,
-                                           OptionPane.Icons.Info).getSelectedIndex == 0
+      if (args.testing) {
+        Analytics.silence()
+      } else {
+        if (analyticsConsent) {
+          val sendAnalytics = new OptionPane(frame, I18N.gui.get("dialog.analyticsConsent"),
+                                            I18N.gui.get("dialog.analyticsConsent.message"), OptionPane.Options.YesNo,
+                                            OptionPane.Icons.Info).getSelectedIndex == 0
 
-        NetLogoPreferences.putBoolean("sendAnalytics", sendAnalytics)
+          NetLogoPreferences.putBoolean("sendAnalytics", sendAnalytics)
 
-        val request = quickRequest.post(uri"https://backend.netlogo.org/items/NetLogo_Desktop_Analytics")
-                                  .body(s"""{"enabled": $sendAnalytics}""")
-                                  .contentType("application/json")
+          val request = quickRequest.post(uri"https://backend.netlogo.org/items/NetLogo_Desktop_Analytics")
+                                    .body(s"""{"enabled": $sendAnalytics}""")
+                                    .contentType("application/json")
 
-        val backend = PekkoHttpBackend()
+          val backend = PekkoHttpBackend()
 
-        request.send(backend).onComplete { _ =>
-          backend.close()
+          request.send(backend).onComplete { _ =>
+            backend.close()
+          }
         }
-      }
 
-      Analytics.refreshPreference()
-      Analytics.appStart(Version.versionNumberNo3D, Version.is3D)
+        Analytics.refreshPreference()
+        Analytics.appStart(Version.versionNumberNo3D, Version.is3D)
+      }
     } catch {
       case ex: Throwable => StartupError.report(ex)
     }
@@ -761,7 +794,7 @@ class App(args: App.CommandLineArgs) extends LinkChild with Exceptions.Handler w
       new OpenHubNetClientEditor(workspace, frame),
       workspace.hubNetControlCenterAction,
       new PreviewCommandsEditor.EditPreviewCommands(
-        new PreviewCommandsEditor(frame, workspaceFactory, new GraphicsPreview), workspace,
+        new PreviewCommandsEditor(frame, workspaceFactory, graphicsPreview), workspace,
         () => modelSaver.currentModel),
       FindDialog.FIND_ACTION,
       FindDialog.FIND_NEXT_ACTION,

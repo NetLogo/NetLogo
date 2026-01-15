@@ -169,6 +169,9 @@ abstract class AgentMonitor(val workspace: GUIWorkspace, window: JDialog)
     commandLine.syncTheme()
   }
 
+  private [app] def getEditors: Seq[AgentVarEditor] =
+    agentEditor.getEditors
+
   private class AgentLinePrompt(commandLine: CommandLine) extends LinePrompt(commandLine, false) {
     override def getPrompt: String = {
       agent match {
