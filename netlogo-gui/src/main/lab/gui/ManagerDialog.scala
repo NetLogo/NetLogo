@@ -192,8 +192,9 @@ private class ManagerDialog(manager:       LabManager,
   private def edit(): Unit = { editProtocol(selectedProtocol, false) }
   private def editProtocol(protocol: LabProtocol, isNew: Boolean): Unit = {
     blockActions = true
-    if (!isNew) editIndex = selectedIndex
+    editIndex = selectedIndex
     update()
+    select(editIndex)
     Analytics.bspaceOpen()
     val editable = new ProtocolEditable(protocol, manager.workspace.getFrame,
                                         manager.workspace, dialogFactory.colorizer, manager.workspace.world,
@@ -212,6 +213,7 @@ private class ManagerDialog(manager:       LabManager,
         select(newProtocol)
       } else {
         update()
+        select(editIndex)
       }
     })
   }
