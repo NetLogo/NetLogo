@@ -466,7 +466,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
         mainTabs.setSelectedComponent(tab)
     }
 
-    tab.text.setFont(codeFont)
+    tab.setCodeFont(codeFont)
     tab.syncTheme()
 
     updateTabActions()
@@ -627,7 +627,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
   override def setCodeFont(font: Option[Font]): Unit = {
     codeFont = font.getOrElse(EditorConfiguration.defaultFont)
 
-    (mainCodeTab +: getExternalFileTabs).foreach(_.text.setFont(codeFont))
+    (mainCodeTab +: getExternalFileTabs).foreach(_.setCodeFont(codeFont))
   }
 
   def reload(): Unit = {
