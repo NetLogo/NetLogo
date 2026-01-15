@@ -255,6 +255,13 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
     includedFilesMenu.setAlwaysVisible(visible)
   }
 
+  def setCodeFont(font: Font): Unit = {
+    text.setFont(font)
+
+    revalidate()
+    repaint()
+  }
+
   def isTextSelected: Boolean = text.getSelectedText != null && !text.getSelectedText.isEmpty
 
   def close(): Unit = {}
