@@ -177,6 +177,9 @@ private [gui] class ProgressDialog(parent: Window, supervisor: Supervisor, compi
     if (supervisor.highestCompleted >= protocol.countRuns) {
       saveProtocol(protocol, 0)
     } else {
+      protocol.updateView = displaySwitch.isSelected
+      protocol.updatePlotsAndMonitors = updatePlots
+
       saveProtocol(protocol, supervisor.highestCompleted)
     }
   }
