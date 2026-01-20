@@ -89,7 +89,7 @@ object Analytics {
   }
 
   def appExit(): Future[Unit] = {
-    val length = (System.currentTimeMillis() - startTime) / 60000.0
+    val length = (System.currentTimeMillis() - startTime) / 60000d
 
     wrapRequest(MatomoRequests.event(category, "App Exit", null, length.ceil).build())
   }
