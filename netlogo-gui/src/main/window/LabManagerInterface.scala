@@ -10,4 +10,5 @@ import org.nlogo.window.Event.LinkChild
 trait LabManagerInterface extends LinkChild with ModelSaveable with ThemeSync {
   def show(): Unit
   def actions: Seq[MenuAction]
+  def anyPaused: Boolean
 }

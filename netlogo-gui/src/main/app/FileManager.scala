@@ -22,7 +22,7 @@ import org.nlogo.fileformat.{ FailedConversionResult, SuccessfulConversion }
 import org.nlogo.fileformat.FileFormat.ModelConversion
 import org.nlogo.mc.ModelingCommons
 import org.nlogo.swing.{ FileDialog, ModalProgressTask, OptionPane, UserAction }, UserAction.MenuAction
-import org.nlogo.window.{ Events, FileController, GUIWorkspace, ReconfigureWorkspaceUI },
+import org.nlogo.window.{ Events, FileController, GUIWorkspace, LabManagerInterface, ReconfigureWorkspaceUI },
                           Events.{ AboutToCloseFilesEvent, AboutToQuitEvent, AboutToSaveModelEvent, LoadModelEvent,
                                    LoadErrorEvent, ModelSavedEvent, OpenModelEvent }
 import org.nlogo.workspace.{ AbstractWorkspaceScala, OpenModel, OpenModelFromURI, OpenModelFromSource, SaveModel,
@@ -300,7 +300,8 @@ class FileManager(workspace: AbstractWorkspaceScala,
   eventRaiser: AnyRef,
   parent: Container,
   tabManager: TabManager,
-  workspaceFactory: WorkspaceFactory)
+  workspaceFactory: WorkspaceFactory,
+  labManager: LabManagerInterface)
     extends OpenModelEvent.Handler
     with LoadModelEvent.Handler {
   private var firstLoad: Boolean = true
@@ -316,6 +317,12 @@ class FileManager(workspace: AbstractWorkspaceScala,
   }
 
   private[app] def aboutToCloseFiles(): Unit = {
+    if (labManager.anyPaused &&
+        new OptionPane(parent, I18N.gui.get("file.close.warn.pausedExperiments"),
+                       I18N.gui.get("file.close.warn.pausedExperiments.message"), OptionPane.Options.YesNo,
+                       OptionPane.Icons.Warning).getSelectedIndex != 0)
+      throw new UserCancelException
+
     if (dirtyMonitor.modelDirty) {
       if (Dialogs.userWantsToSaveFirst(I18N.gui.get("file.save.offer.thisModel"), parent)) {
         saveModel(false)
