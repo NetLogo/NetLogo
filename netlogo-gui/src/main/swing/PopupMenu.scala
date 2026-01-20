@@ -42,7 +42,7 @@ class SearchablePopupMenu extends PopupMenu {
 
   override def processKeyEvent(e: KeyEvent, path: Array[MenuElement], manager: MenuSelectionManager): Unit = {
     if (e.getID == KeyEvent.KEY_PRESSED && e.getKeyChar.isLetterOrDigit) {
-      if (System.currentTimeMillis - lastKey > 750)
+      if (System.currentTimeMillis - lastKey > 1500)
         search = ""
 
       search += e.getKeyChar.toLower
