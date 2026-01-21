@@ -182,7 +182,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     updateTabActions()
   }
 
-  def startWatcherThread(modelPath: String = workspace.getModelPath): Unit = {
+  private def startWatcherThread(modelPath: String = workspace.getModelPath): Unit = {
     // Stop the current thread if there's one. This ensures that there can be
     // at most one thread.
     stopWatcherThread()
@@ -474,7 +474,8 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
 
     // if a new included file is added, the file watcher thread needs to be
     // restarted with the updated includes (Isaac B 7/29/25)
-    startWatcherThread()
+    if (getAutoReload)
+      startWatcherThread()
 
     // for some reason the event system gets confused when temporary tabs are added in certain ways,
     // so reset the events here just in case (Isaac B 9/14/25)
@@ -797,7 +798,8 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
 
     // before saving, the watcher thread is stopped so it doesn't detect our own write,
     // so we need to start it up again after the save is complete (Isaac B 11/26/25)
-    startWatcherThread()
+    if (getAutoReload)
+      startWatcherThread()
   }
 
   def handle(e: AboutToCloseFilesEvent): Unit =
@@ -806,7 +808,8 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
   // before saving, the watcher thread is stopped so it doesn't detect our own write,
   // so we need to start it up again after the save is complete (Isaac B 9/7/25)
   def handle(e: ModelSavedEvent): Unit = {
-    startWatcherThread()
+    if (getAutoReload)
+      startWatcherThread()
   }
 
   def handle(e: AutoIndentEvent): Unit = {
