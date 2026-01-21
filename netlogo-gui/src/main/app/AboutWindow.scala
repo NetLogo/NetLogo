@@ -48,7 +48,7 @@ class AboutWindow(parent: Frame) extends JDialog(parent, I18N.gui.get("dialog.ab
           | (${Version.buildDate})
           |</b><br><br>
           |<font size=-1><b>web site</b>
-          |<a href="http://ccl.northwestern.edu/netlogo/">ccl.northwestern.edu/netlogo</a><br><br>
+          |<a href="https://www.netlogo.org">netlogo.org</a><br><br>
           |&copy 1999-${year} Uri Wilensky<br><br>
           |Please cite as:<br>
           |Wilensky, U. 1999. NetLogo. http://ccl.northwestern.edu/netlogo/.<br>
@@ -59,7 +59,7 @@ class AboutWindow(parent: Frame) extends JDialog(parent, I18N.gui.get("dialog.ab
     setHorizontalAlignment(SwingConstants.CENTER)
     addMouseListener(new MouseAdapter {
       override def mouseClicked(e: MouseEvent): Unit = {
-        BrowserLauncher.openURI(AboutWindow.this, new URI("http://ccl.northwestern.edu/netlogo/"))
+        BrowserLauncher.openURI(AboutWindow.this, new URI("https://www.netlogo.org/"))
       }
     })
   }

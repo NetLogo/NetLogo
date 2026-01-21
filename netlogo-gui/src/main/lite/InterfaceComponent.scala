@@ -26,7 +26,7 @@ class InterfaceComponent(frame: java.awt.Frame)
 extends LitePanel(frame,
                     new java.awt.event.MouseAdapter {
                       override def mouseClicked(e: java.awt.event.MouseEvent): Unit = {
-                        BrowserLauncher.openURI(frame, new URI("http://ccl.northwestern.edu/netlogo/"))
+                        BrowserLauncher.openURI(frame, new URI("https://www.netlogo.org/"))
                       }})
 with Event.LinkChild {
 
