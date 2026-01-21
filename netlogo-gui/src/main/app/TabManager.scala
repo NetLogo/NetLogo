@@ -631,8 +631,11 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     (mainCodeTab +: getExternalFileTabs).foreach(_.setCodeFont(codeFont))
   }
 
-  def reload(): Unit = {
-    if (!reloading) {
+  private def reload(): Unit = {
+    // when saving a file to OneDrive, it automatically syncs and re-writes the file contents. this check prevents
+    // the model from being unnecessarily reloaded if the contents of the file match the contents of the model
+    // current loaded in NetLogo. (Isaac B 1/20/26)
+    if (!reloading && !fileManager.modelMatchesFile()) {
       reloading = true
       workspace.reload()
     }

@@ -5,7 +5,7 @@ package org.nlogo.app
 import java.awt.{ Component, Container, FileDialog => AWTFileDialog }
 import java.io.{ File, IOException }
 import java.net.{ URI, URISyntaxException }
-import java.nio.file.Paths
+import java.nio.file.{ Files, Paths }
 import java.util.concurrent.TimeoutException
 
 import scala.concurrent.Await
@@ -567,5 +567,11 @@ class FileManager(workspace: AbstractWorkspaceScala,
       else              "NetLogo 5.3.1"
     val convertIncludeFile = new ConvertIncludeFile(modelConverter, version)
     new ConvertNlsAction(t, modelSaver, convertIncludeFile, workspace, controller)
+  }
+
+  // used by file watcher thread to prevent unnecessary model reloads (Isaac B 1/20/26)
+  def modelMatchesFile(): Boolean = {
+    Files.readString(Paths.get(workspace.getModelPath)) ==
+      modelSaver.modelAsString(modelSaver.currentModel, ModelReader.modelSuffix)
   }
 }
