@@ -6,6 +6,7 @@ import java.awt.{ Component, Container, FileDialog => AWTFileDialog }
 import java.io.{ File, IOException }
 import java.net.{ URI, URISyntaxException }
 import java.nio.file.Paths
+import java.util.concurrent.TimeoutException
 
 import scala.concurrent.Await
 import scala.util.{ Failure, Try }
@@ -343,7 +344,13 @@ class FileManager(workspace: AbstractWorkspaceScala,
     ModelConfig.pruneModelConfigs()
     new AboutToQuitEvent().raise(eventRaiser)
     workspace.getExtensionManager.reset()
-    Await.ready(Analytics.appExit(), 20.seconds)
+
+    try {
+      Await.ready(Analytics.appExit(), 5.seconds)
+    } catch {
+      case e: TimeoutException =>
+        println(e)
+    }
 
     System.exit(0)
 
