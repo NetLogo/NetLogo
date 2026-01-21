@@ -44,7 +44,7 @@ class ComboBox[T](private var items: Seq[T] = Seq(), openOnPress: Boolean = true
   private val choiceDisplay = new ChoiceDisplay
   private val arrow = new DropdownArrow
 
-  private val popup: PopupMenu = {
+  protected val popup: PopupMenu = {
     if (searchable) {
       new SearchablePopupMenu {
         override def getPreferredSize: Dimension =

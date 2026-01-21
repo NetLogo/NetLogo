@@ -327,6 +327,8 @@ object Preferences {
           tabs.setCodeFont(font.font)
         }
       })
+
+      popup.getComponents.zip(fonts).foreach((c, f) => f.font.foreach(c.setFont))
     }
 
     override def component: JComponent & ThemeSync =
