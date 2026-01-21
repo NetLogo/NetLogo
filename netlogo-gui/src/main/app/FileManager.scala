@@ -318,7 +318,7 @@ class FileManager(workspace: AbstractWorkspaceScala,
 
   private[app] def aboutToCloseFiles(): Unit = {
     if (labManager.anyPaused &&
-        new OptionPane(parent, I18N.gui.get("file.close.warn.pausedExperiments"),
+        new OptionPane(parent, I18N.gui.get("common.messages.warning"),
                        I18N.gui.get("file.close.warn.pausedExperiments.message"), OptionPane.Options.YesNo,
                        OptionPane.Icons.Warning).getSelectedIndex != 0)
       throw new UserCancelException
