@@ -13,7 +13,7 @@ import java.lang.ProcessHandle
 import java.net.URL
 import java.util.{ List => JList }
 import java.util.zip.GZIPInputStream
-import javax.swing.{ JFrame, JMenu }
+import javax.swing.{ JFrame, JMenu, ToolTipManager }
 
 import scala.concurrent.ExecutionContext
 import scala.io.{ Codec, Source }
@@ -368,6 +368,9 @@ class App extends org.nlogo.window.Event.LinkChild
   def quit(): Unit ={ fileManager.quit() }
 
   locally {
+
+    ToolTipManager.sharedInstance().setDismissDelay(Int.MaxValue)
+
     frame.addLinkComponent(this)
     pico.addComponent(frame)
 
