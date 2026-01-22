@@ -512,7 +512,6 @@ object NetLogoPackaging {
         log
       , version
       , buildJDK.architecture
-      , buildDir
       , destDir
       , bundleDir
       , configDir
