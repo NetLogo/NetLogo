@@ -570,7 +570,7 @@ object LightTheme extends ColorTheme {
   override def buttonBackgroundHover: Color = new Color(31, 134, 255)
   override def buttonBackgroundPressed: Color = new Color(0, 52, 115)
   override def buttonBackgroundPressedHover: Color = new Color(0, 35, 77)
-  override def buttonBackgroundDisabled: Color = new Color(213, 213, 213)
+  override def buttonBackgroundDisabled: Color = new Color(222, 222, 222)
   override def buttonText: Color = Color.WHITE
   override def buttonTextPressed: Color = Color.WHITE
   override def buttonTextDisabled: Color = new Color(115, 115, 115)
