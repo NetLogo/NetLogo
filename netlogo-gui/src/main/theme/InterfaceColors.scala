@@ -697,7 +697,7 @@ object LightTheme extends ColorTheme {
   override def announceXPressed: Color = MediumGray
   override def announceRelease: Color = new Color(237, 205, 255)
   override def announceAdvisory: Color = new Color(255, 194, 154)
-  override def announceEvent: Color = new Color(108, 252, 221)
+  override def announceEvent: Color = new Color(108, 202, 251)
   override def colorPickerOutputBackground: Color = new Color(125, 125, 125)
   override def colorPickerCheckmark: Color = new Color(62, 184, 79)
   override def colorPickerCopyHover: Color = new Color(197, 197, 197)
