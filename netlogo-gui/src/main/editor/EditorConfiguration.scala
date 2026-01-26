@@ -11,6 +11,7 @@ import javax.swing.text.{ DefaultEditorKit, TextAction }
 import org.fife.ui.rtextarea.RTextAreaEditorKit
 
 import org.nlogo.api.CompilerServices
+import org.nlogo.core.NetLogoPreferences
 import org.nlogo.editor.KeyBinding._
 import org.nlogo.swing.{ TextActions, UserAction }
 
@@ -18,15 +19,21 @@ object EditorConfiguration {
   private def os(s: String) =
     System.getProperty("os.name").startsWith(s)
 
-  lazy val platformMonospacedFont =
-    if (os("Mac"))
+  private lazy val platformMonospacedFont: String = {
+    if (os("Mac")) {
       "Menlo"
-    else if (os("Windows"))
+    } else if (os("Windows")) {
       GraphicsEnvironment.getLocalGraphicsEnvironment.getAvailableFontFamilyNames
         .find(_.equalsIgnoreCase("Consolas")).getOrElse("Monospaced")
-    else "Monospaced"
+    } else {
+      "Monospaced"
+    }
+  }
 
-  val defaultFont = new Font(platformMonospacedFont, Font.PLAIN, 12)
+  private lazy val defaultFont = new Font(platformMonospacedFont, Font.PLAIN, 12)
+
+  private var defaultCodeFont: Option[Font] =
+    Option(NetLogoPreferences.get("codeFont", null)).map(new Font(_, Font.PLAIN, 12))
 
   private val emptyListener =
     new TextListener() { override def textValueChanged(e: TextEvent): Unit = { } }
@@ -40,8 +47,18 @@ object EditorConfiguration {
     }
 
   def default(rows: Int, columns: Int, compiler: CompilerServices, colorizer: Colorizer) =
-    EditorConfiguration(rows, columns, defaultFont, emptyListener, compiler, colorizer, Map(),
+    EditorConfiguration(rows, columns, getCodeFont, emptyListener, compiler, colorizer, Map(),
                         defaultContextActions(colorizer), Seq(), false, false, false, false, emptyMenu, () => None)
+
+  def getMonospacedFont: Font =
+    defaultFont
+
+  def getCodeFont: Font =
+    defaultCodeFont.getOrElse(defaultFont)
+
+  def setCodeFont(font: Option[Font]): Unit = {
+    defaultCodeFont = font
+  }
 }
 
 case class EditorConfiguration(

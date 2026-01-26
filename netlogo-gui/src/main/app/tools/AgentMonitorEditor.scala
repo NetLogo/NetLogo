@@ -2,16 +2,15 @@
 
 package org.nlogo.app.tools
 
-import java.awt.{ BorderLayout, FlowLayout, Font, GridBagConstraints, GridBagLayout, Insets, Rectangle }
+import java.awt.{ BorderLayout, FlowLayout, GridBagConstraints, GridBagLayout, Insets, Rectangle }
 import java.awt.event.{ FocusEvent, FocusListener, KeyEvent, KeyListener }
 import java.util.Locale
 import javax.swing.{ JLabel, JPanel, ScrollPaneConstants }
 
 import org.nlogo.agent.{ Agent, AgentSet, Turtle, Patch, Link }
 import org.nlogo.api.{ AgentVariables, Dump }
-import org.nlogo.awt.Fonts
 import org.nlogo.core.{ AgentKind, I18N, Nobody, Widget => CoreWidget }
-import org.nlogo.editor.EditorField
+import org.nlogo.editor.{ EditorConfiguration, EditorField }
 import org.nlogo.nvm.Procedure
 import org.nlogo.swing.{ OptionPane, ScrollPane, Transparent }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
@@ -140,9 +139,8 @@ with ThemeSync {
 
   setLayout(new BorderLayout)
 
-  private val editor = new EditorField(17, new Font(Fonts.platformMonospacedFont, Font.PLAIN, 12), true,
-                                       workspace, new EditorColorizer(workspace))
-  editor.setFont(editor.getFont.deriveFont(10f))
+  private val editor = new EditorField(17, EditorConfiguration.getCodeFont.deriveFont(10f), true, workspace,
+                                       new EditorColorizer(workspace))
   private val scrollPane = new ScrollPane(editor, ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER,
                                           ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER)
   add(scrollPane, BorderLayout.CENTER)

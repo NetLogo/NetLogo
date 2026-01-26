@@ -50,13 +50,13 @@ with MenuAction {
       Preferences.SendAnalytics
     ) ++ (if (System.getProperty("os.name").contains("Linux")) Seq(Preferences.UIScale) else Nil),
     Seq(
-      new Preferences.CodeFont(tabs),
       Preferences.ProceduresMenuSortOrder,
       new Preferences.IncludedFilesMenu(tabs),
       Preferences.FocusOnError,
       Preferences.StartSeparateCodeTab,
       new Preferences.IndentAutomatically(frame),
-      new Preferences.EditorLineNumbers(tabs)
+      new Preferences.EditorLineNumbers(tabs),
+      new Preferences.CodeFont(tabs)
     ),
     Seq(
       Preferences.IsLoggingEnabled,
