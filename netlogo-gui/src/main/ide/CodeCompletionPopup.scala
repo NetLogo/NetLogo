@@ -2,15 +2,15 @@
 
 package org.nlogo.ide
 
-import java.awt.{ Component, Dimension, Font, GraphicsEnvironment }
+import java.awt.{ Color, Component, Dimension, Font, GraphicsEnvironment }
 import java.awt.event.{ KeyEvent, KeyListener, MouseAdapter, MouseEvent }
 import javax.swing.{ DefaultListModel, JDialog, JLabel, JList, ListCellRenderer, ListSelectionModel,
                      ScrollPaneConstants }
 import javax.swing.event.DocumentEvent
 import javax.swing.text.JTextComponent
 
-import org.nlogo.awt.Fonts
 import org.nlogo.core.{ Dialect, Femto, NetLogoCore, Token, TokenizerInterface, TokenType }
+import org.nlogo.editor.EditorConfiguration
 import org.nlogo.nvm.ExtensionManager
 import org.nlogo.swing.ScrollPane
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
@@ -225,19 +225,23 @@ case class CodeCompletionPopup(autoSuggest: AutoSuggest,
   *
   * @param editorArea
   */
-class SuggestionListRenderer(dialect: Dialect, extensionManager: Option[ExtensionManager]) extends ListCellRenderer[String]{
+class SuggestionListRenderer(dialect: Dialect, extensionManager: Option[ExtensionManager])
+  extends ListCellRenderer[String] {
 
-  var font: Font = Fonts.monospacedFont
+  var font: Font = EditorConfiguration.getMonospacedFont
 
-  override def getListCellRendererComponent(list: JList[? <: String], value: String, index: Int, isSelected: Boolean, cellHasFocus: Boolean): Component = {
+  override def getListCellRendererComponent(list: JList[? <: String], value: String, index: Int, isSelected: Boolean,
+                                            cellHasFocus: Boolean): Component = {
     val label = new JLabel(value)
 
-    val fgColor =
+    val fgColor: Color = {
       if (dialect.tokenMapper.getCommand(value).nonEmpty ||
-        extensionManager.flatMap(_.cachedType(value)).contains(TokenType.Command))
+          extensionManager.flatMap(_.cachedType(value)).contains(TokenType.Command)) {
         InterfaceColors.commandColor()
-      else
+      } else {
         InterfaceColors.reporterColor()
+      }
+    }
 
     label.setOpaque(true)
     label.setForeground(fgColor)

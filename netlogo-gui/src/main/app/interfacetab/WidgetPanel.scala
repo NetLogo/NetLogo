@@ -9,7 +9,7 @@ import javax.swing.{ AbstractAction, JComponent, JLayeredPane, SwingUtilities }
 
 import org.nlogo.analytics.Analytics
 import org.nlogo.app.common.EditorFactory
-import org.nlogo.awt.{ Fonts => NlogoFonts, Mouse => NlogoMouse }
+import org.nlogo.awt.{ Mouse => NlogoMouse }
 import org.nlogo.core.{ I18N, Button => CoreButton, Chooser => CoreChooser, InputBox => CoreInputBox,
   Monitor => CoreMonitor, Plot => CorePlot, Slider => CoreSlider, Switch => CoreSwitch, TextBox => CoreTextBox,
   View => CoreView, Widget => CoreWidget }
@@ -628,12 +628,10 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
   protected def textEditorConfiguration: EditorConfiguration =
     editorFactory.defaultConfiguration(1, 20)
-      .withFont(NlogoFonts.monospacedFont)
       .withFocusTraversalEnabled(true)
 
   protected def dialogEditorConfiguration: EditorConfiguration =
     editorFactory.defaultConfiguration(5, 20)
-      .withFont(NlogoFonts.monospacedFont)
 
   def mouseReleased(e: MouseEvent): Unit = {
     interfaceMode match {

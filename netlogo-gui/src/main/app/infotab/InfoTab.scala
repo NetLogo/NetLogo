@@ -2,7 +2,7 @@
 
 package org.nlogo.app.infotab
 
-import java.awt.{ Font, Dimension, BorderLayout, Graphics }
+import java.awt.{ Dimension, BorderLayout, Graphics }
 import java.awt.event.{ ActionEvent, FocusEvent, FocusListener }
 import java.awt.print.PageFormat
 import java.io.File
@@ -16,8 +16,9 @@ import javax.swing.text.html.HTMLDocument
 
 import org.nlogo.api.{ ExternalResourceManager, Version }
 import org.nlogo.app.common.{ Events => AppEvents, FindDialog, MenuTab, UndoRedoActions }
-import org.nlogo.awt.{ Fonts, Hierarchy }
+import org.nlogo.awt.Hierarchy
 import org.nlogo.core.I18N
+import org.nlogo.editor.EditorConfiguration
 import org.nlogo.swing.Implicits._
 import org.nlogo.swing.{ OptionPane, ScrollableTextComponent, ScrollPane, TextArea, ToolBar, ToolBarActionButton,
                          ToolBarToggleButton, Printable, PrinterManager, BrowserLauncher, UndoManager, Utils }
@@ -243,7 +244,7 @@ class InfoTab(attachModelDir: String => String, resourceManager: ExternalResourc
     setWrapStyleWord(true)
     getDocument.addDocumentListener(InfoTab.this)
     getDocument.addUndoableEditListener(undoManager)
-    setFont(new Font(Fonts.platformMonospacedFont, Font.PLAIN, 12))
+    setFont(EditorConfiguration.getMonospacedFont)
 
     override def scrollPane: Option[JScrollPane] =
       Option(InfoTab.this.scrollPane)

@@ -2,8 +2,8 @@
 
 package org.nlogo.window
 
-import java.awt.{ Color, Dimension, Font, Graphics, Graphics2D }
-import javax.swing.{ BorderFactory, Box, BoxLayout, Icon }
+import java.awt.{ Color, Dimension, Graphics, Graphics2D }
+import javax.swing.{ BorderFactory, Box, BoxLayout, Icon, JLabel }
 
 import org.nlogo.swing.Utils.icon
 
@@ -23,10 +23,8 @@ extends javax.swing.JPanel {
     add(rotatedIcon)
   }
 
-  private class JVertLabel(label: String) extends javax.swing.JLabel(label) {
-    setFont(
-      new Font(
-        org.nlogo.awt.Fonts.platformFont, Font.PLAIN, 10))
+  private class JVertLabel(label: String) extends JLabel(label) {
+    setFont(getFont.deriveFont(10f))
 
     override def getPreferredSize = rotate(super.getPreferredSize)
     override def getMaximumSize = rotate(super.getMaximumSize)
@@ -39,8 +37,7 @@ extends javax.swing.JPanel {
     }
   }
 
-  private class RotatedIconHolder(icon: Icon) extends javax.swing.JLabel {
-
+  private class RotatedIconHolder(icon: Icon) extends JLabel {
     setIcon(icon)
 
     override def getPreferredSize = rotate(super.getPreferredSize)

@@ -4,11 +4,11 @@ package org.nlogo.app.common
 
 // pulled this out of CommandLine.java so I could translate it separately to Scala - ST 8/19/10
 
-import java.awt.{ Font, Insets }
+import java.awt.Insets
 import java.awt.event.{ ActionEvent, MouseAdapter, MouseEvent }
 import javax.swing.{ AbstractAction, JButton }
 
-import org.nlogo.awt.{ Fonts, Mouse }
+import org.nlogo.awt.Mouse
 import org.nlogo.core.{ AgentKind, I18N }
 import org.nlogo.swing.{ MenuItem, PopupMenu, Utils }
 
@@ -21,7 +21,7 @@ class HistoryPrompt(commandLine: CommandLine) extends JButton {
   }
   setEnabled(false)
   setOpaque(true) // needed as of quaqua 3.4.1 - ST 10/4/05
-  setFont(new Font(Fonts.platformFont, Font.PLAIN, 9)) // play nice with zoomer
+  setFont(getFont.deriveFont(9f)) // play nice with zoomer
   addMouseListener(
     new MouseAdapter {
       override def mousePressed(e: MouseEvent): Unit = {

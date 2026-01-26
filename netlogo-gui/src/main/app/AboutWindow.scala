@@ -2,15 +2,16 @@
 
 package org.nlogo.app
 
-import java.awt.{ BorderLayout, Cursor, Dimension, Font, Frame }
+import java.awt.{ BorderLayout, Cursor, Dimension, Frame }
 import java.awt.event.{ WindowAdapter, WindowEvent, MouseAdapter, MouseEvent }
 import java.net.URI
 import javax.swing.{ JDialog, JLabel, SwingConstants, Timer, WindowConstants }
 import javax.swing.border.{ EmptyBorder, LineBorder }
 
 import org.nlogo.api.{ APIVersion, FileIO, Version }
-import org.nlogo.awt.{ Fonts, Positioning }
+import org.nlogo.awt.Positioning
 import org.nlogo.core.I18N
+import org.nlogo.editor.EditorConfiguration
 import org.nlogo.swing.{ BrowserLauncher, RichAction, ScrollPane, TabbedPane, TextArea, Utils }
 import org.nlogo.theme.{ DarkTheme, InterfaceColors, ThemeSync }
 import org.nlogo.util.SysInfo
@@ -18,7 +19,7 @@ import org.nlogo.util.SysInfo
 class AboutWindow(parent: Frame) extends JDialog(parent, I18N.gui.get("dialog.about"), false) with ThemeSync {
   private val refreshTimer: Timer = new Timer(2000, _ => refreshSystemText())
   private val system = new TextArea(0, 0, "") {
-    setFont(new Font(Fonts.platformMonospacedFont, Font.PLAIN, 12))
+    setFont(EditorConfiguration.getMonospacedFont)
     setLineWrap(true)
     setWrapStyleWord(true)
     setBorder(new EmptyBorder(5, 10, 5, 10))
@@ -65,7 +66,7 @@ class AboutWindow(parent: Frame) extends JDialog(parent, I18N.gui.get("dialog.ab
   }
 
   private val credits = new TextArea(15, 0, FileIO.getResourceAsString("/system/about.txt")) {
-    setFont(new Font(Fonts.platformMonospacedFont, Font.PLAIN, 12))
+    setFont(EditorConfiguration.getMonospacedFont)
     setDragEnabled(false)
     setLineWrap(true)
     setWrapStyleWord(true)

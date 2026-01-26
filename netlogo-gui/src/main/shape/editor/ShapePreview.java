@@ -77,9 +77,7 @@ class ShapePreview
     int y = x;
     g.setColor(java.awt.Color.BLACK);
     g.fillRect(x, y, scale, scale);
-    g.setFont
-        (new java.awt.Font(org.nlogo.awt.Fonts.platformFont(),
-            java.awt.Font.PLAIN, 10));
+    g.setFont(g.getFont().deriveFont(10f));
     g.drawString(Integer.toString(scale),
         (getWidth() - g.getFontMetrics().stringWidth(Integer.toString(scale))) / 2,
         y + scale + g.getFontMetrics().getHeight() + 2);
