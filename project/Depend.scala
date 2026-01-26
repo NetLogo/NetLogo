@@ -94,7 +94,6 @@ object Depend {
       "lab" -> List("nvm"),
       "lab/gui" -> List("lab","window"),
       "lex" -> List("api"),
-      "lite" -> List("window"),
       "log" -> List("api"),
       "mc" -> List("analytics", "swing", "workspace"),
       "nvm" -> List("agent"),
