@@ -47,9 +47,11 @@ class Menu(text: String, var menuModel: MenuModel[Action, String]) extends JMenu
         val g2d = Utils.initGraphics2D(g)
 
         if (isSelected) {
-          g2d.setColor(InterfaceColors.toolbarTextSelected())
+          g2d.setColor(selectionForeground)
+        } else if (isEnabled) {
+          g2d.setColor(getForeground)
         } else {
-          g2d.setColor(InterfaceColors.toolbarText())
+          g2d.setColor(disabledForeground)
         }
 
         g2d.drawLine(x, y + 1, x + getIconWidth - 1, y + getIconHeight / 2 + 1)
