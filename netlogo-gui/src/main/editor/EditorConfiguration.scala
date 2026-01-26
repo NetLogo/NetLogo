@@ -19,12 +19,14 @@ object EditorConfiguration {
   private def os(s: String) =
     System.getProperty("os.name").startsWith(s)
 
+  private lazy val availableFonts: Array[String] =
+    GraphicsEnvironment.getLocalGraphicsEnvironment.getAvailableFontFamilyNames
+
   private lazy val platformMonospacedFont: String = {
     if (os("Mac")) {
       "Menlo"
     } else if (os("Windows")) {
-      GraphicsEnvironment.getLocalGraphicsEnvironment.getAvailableFontFamilyNames
-        .find(_.equalsIgnoreCase("Consolas")).getOrElse("Monospaced")
+      availableFonts.find(_.equalsIgnoreCase("Consolas")).getOrElse("Monospaced")
     } else {
       "Monospaced"
     }
@@ -32,8 +34,11 @@ object EditorConfiguration {
 
   private lazy val defaultFont = new Font(platformMonospacedFont, Font.PLAIN, 12)
 
-  private var defaultCodeFont: Option[Font] =
-    Option(NetLogoPreferences.get("codeFont", null)).map(new Font(_, Font.PLAIN, 12))
+  private var defaultCodeFont: Option[Font] = {
+    Option(NetLogoPreferences.get("codeFont", null))
+      .filter(font => availableFonts.exists(_.toLowerCase == font.toLowerCase))
+      .map(new Font(_, Font.PLAIN, 12))
+  }
 
   private val emptyListener =
     new TextListener() { override def textValueChanged(e: TextEvent): Unit = { } }
