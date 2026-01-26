@@ -15,11 +15,10 @@ import org.nlogo.api.{ CompilerServices, Dump, Exceptions, LogoException, Option
 import org.nlogo.api.Approximate.approximate
 import org.nlogo.api.Color.{ getColor, getColorNameByIndex, modulateDouble }
 import org.nlogo.agent.InputBoxConstraint
-import org.nlogo.awt.Fonts.platformMonospacedFont
 import org.nlogo.awt.{ Hierarchy, Positioning }
 import org.nlogo.core.{ BoxedValue, CompilerException, I18N, InputBox => CoreInputBox, LogoList, NumericInput,
                         StringInput, Widget => CoreWidget }
-import org.nlogo.editor.AbstractEditorArea
+import org.nlogo.editor.{ AbstractEditorArea, EditorConfiguration }
 import org.nlogo.swing.{ Button, ButtonPanel, DialogButton, OptionPane, RoundedBorderPanel,
                          ScrollPane, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
@@ -681,7 +680,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     textArea.getEditorKitForContentType("String"),
     javax.swing.UIManager.getFont("Label.font").deriveFont(12.0f)){}
 
-  def plainFont = new Font(platformMonospacedFont, Font.PLAIN, 12)
+  def plainFont: Font = EditorConfiguration.getMonospacedFont
 
   private class ReporterInputType(kit: EditorKit) extends InputType("String (reporter)", "string.reporter", kit, plainFont) {
     override def defaultValue = "0"

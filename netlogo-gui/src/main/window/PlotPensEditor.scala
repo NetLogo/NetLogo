@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import java.awt.{ BorderLayout, Color, Component, Cursor, Dimension, Font, Frame, Graphics, GridBagConstraints,
+import java.awt.{ BorderLayout, Color, Component, Cursor, Dimension, Frame, Graphics, GridBagConstraints,
                   GridBagLayout, Insets }
 import java.awt.event.ActionEvent
 import java.util.Locale
@@ -13,9 +13,8 @@ import javax.swing.table.{ DefaultTableCellRenderer, AbstractTableModel, TableCe
 
 import org.nlogo.api.CompilerServices
 import org.nlogo.awt.Hierarchy
-import org.nlogo.awt.Fonts.platformMonospacedFont
 import org.nlogo.core.{ CompilerException, I18N }
-import org.nlogo.editor.{ Colorizer, EditorField }
+import org.nlogo.editor.{ Colorizer, EditorConfiguration, EditorField }
 import org.nlogo.plot.{ Plot, PlotManagerInterface, PlotPen }
 import org.nlogo.swing.{ Button, Popup, ScrollPane, Transparent, Utils }
 import org.nlogo.theme.InterfaceColors
@@ -374,7 +373,6 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], compiler: Compil
     }
 
     class CodeCellFactory extends AbstractCellEditor with TableCellRenderer with TableCellEditor {
-      private val font = new Font(platformMonospacedFont, Font.PLAIN, 12)
       private val editors = ArrayBuffer[EditorField]()
 
       private var lastEditor: Option[EditorField] = None
@@ -398,7 +396,7 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], compiler: Compil
         lastEditor.fold("")(_.getText)
 
       def addEditor(text: String): Unit = {
-        val editor = new EditorField(30, font, true, compiler, colorizer) {
+        val editor = new EditorField(30, EditorConfiguration.getCodeFont, true, compiler, colorizer) {
           setBackground(InterfaceColors.textAreaBackground())
           setCaretColor(InterfaceColors.textAreaText())
           setText(text)

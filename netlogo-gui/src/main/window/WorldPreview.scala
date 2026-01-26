@@ -2,10 +2,10 @@
 
 package org.nlogo.window
 
-import java.awt.{ Color, BorderLayout, Dimension, Font, Graphics, GridBagConstraints, GridBagLayout, Insets }
+import java.awt.{ Color, BorderLayout, Dimension, Graphics, GridBagConstraints, GridBagLayout, Insets }
 import javax.swing.{ JLabel, JPanel }
 
-import org.nlogo.awt.Fonts
+import org.nlogo.editor.EditorConfiguration
 import org.nlogo.swing.{ Transparent, Utils }
 import org.nlogo.theme.InterfaceColors
 
@@ -84,7 +84,7 @@ class WorldPreview(width: Int, height: Int) extends JPanel(new BorderLayout) wit
     private val errorLabel = new JLabel(
       "<html>Invalid world dimensions. The origin (0, 0) must be inside the dimensions of the world.</html>")
 
-    private val font = new Font(Fonts.platformMonospacedFont, Font.PLAIN, 10)
+    private val font = EditorConfiguration.getMonospacedFont.deriveFont(10f)
 
     locally {
       val c = new GridBagConstraints

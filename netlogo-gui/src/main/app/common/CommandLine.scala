@@ -7,9 +7,8 @@ import java.awt.event.{ ActionEvent, ActionListener, KeyEvent, KeyListener }
 import javax.swing.{ KeyStroke, ScrollPaneConstants }
 
 import org.nlogo.agent.{ Agent, AgentSet, OutputObject }
-import org.nlogo.awt.Fonts
 import org.nlogo.core.{ AgentKind, CompilerException, I18N, Widget => CoreWidget }
-import org.nlogo.editor.EditorField
+import org.nlogo.editor.{ EditorConfiguration, EditorField }
 import org.nlogo.ide.{ AutoSuggestAction, CodeCompletionPopup }
 import org.nlogo.swing.{ ScrollPane, Transparent }
 import org.nlogo.theme.InterfaceColors
@@ -51,19 +50,15 @@ class CommandLine(commandCenter: CommandCenterInterface,
   private var historyBaseClass: AgentKind = AgentKind.Observer
   private var history: List[ExecutionString] = List()
 
-  val codeCompletionPopup = CodeCompletionPopup(workspace.dialect, workspace.getExtensionManager)
-  val actionMap = Map(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_SPACE, java.awt.event.InputEvent.CTRL_DOWN_MASK)
-    -> new AutoSuggestAction("auto-suggest", codeCompletionPopup))
+  lazy val codeCompletionPopup = CodeCompletionPopup(workspace.dialect, workspace.getExtensionManager)
+  lazy val actionMap = Map(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_SPACE, java.awt.event.InputEvent.CTRL_DOWN_MASK)
+                             -> new AutoSuggestAction("auto-suggest", codeCompletionPopup))
 
-  val textField: EditorField =
-    new EditorField(30,
-      new Font(Fonts.platformMonospacedFont,
-        Font.PLAIN, 12),
-      true, workspace, new EditorColorizer(workspace), actionMap)
+  lazy val textField = new EditorField(30, EditorConfiguration.getCodeFont.deriveFont(fontSize.toFloat), true,
+                                       workspace, new EditorColorizer(workspace), actionMap)
 
   agentKind(AgentKind.Observer)
 
-  textField.setFont(textField.getFont().deriveFont(fontSize.toFloat))
   textField.addKeyListener(this)
 
   setLayout(new BorderLayout)
@@ -99,6 +94,10 @@ class CommandLine(commandCenter: CommandCenterInterface,
 
   private def setText(s: String): Unit = {
     textField.setText(s)
+  }
+
+  override def setFont(font: Font): Unit = {
+    textField.setFont(font.deriveFont(fontSize.toFloat))
   }
 
   ///
