@@ -6,7 +6,7 @@ import org.nlogo.core.FrontEndProcedure
 import org.nlogo.core,
   core.StructureDeclarations.Procedure
 
-class RawProcedure(val procedureDeclaration: Procedure, val displayNameOption: Option[String])
+class RawProcedure(val procedureDeclaration: Procedure, val module: Option[String], val displayNameOption: Option[String])
   extends FrontEndProcedure {
 
   val nameToken: core.Token = procedureDeclaration.tokens.tail.head
