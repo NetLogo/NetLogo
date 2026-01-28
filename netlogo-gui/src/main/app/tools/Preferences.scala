@@ -55,6 +55,8 @@ object Preferences {
   abstract class StringPreference(i18nKey: String, requirement: Option[RequiredAction], default: String)
     extends Preference(i18nKey, requirement) {
 
+    private var loading = false
+
     val textField = new TextField(20, default) {
       getDocument.addDocumentListener(new DocumentListener {
         override def changedUpdate(e: DocumentEvent): Unit = changed()
@@ -66,7 +68,7 @@ object Preferences {
         new Insets(3, 3, 3, 0)
 
       private def changed(): Unit = {
-        if (getText != getPreference)
+        if (!loading && getText != getPreference)
           Analytics.preferenceChange(i18nKey, getText)
       }
     }
@@ -78,7 +80,11 @@ object Preferences {
       NetLogoPreferences.get(i18nKey, default)
 
     override def load(): Unit = {
+      loading = true
+
       textField.setText(getPreference)
+
+      loading = false
     }
 
     override def save(): Unit = {
