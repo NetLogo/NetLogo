@@ -171,7 +171,11 @@ object JavaPackager {
       sys.error("packaging failed!")
     }
 
-    // required for subprocesses like the GoGo daemon to use the bundled Java
+    destDir.listFiles.head
+  }
+
+  // required for subprocesses like the GoGo daemon to use the bundled Java (Isaac B 1/28/26)
+  def copyJavaExecutable(log: Logger, jpackage: File, imageDir: File): Unit = {
     log.info("Copying Java executable into runtime")
 
     val os = System.getProperty("os.name").toLowerCase
@@ -186,17 +190,17 @@ object JavaPackager {
 
     val javaDest: File = {
       if (os.startsWith("linux")) {
-        destDir / "NetLogo" / "lib" / "runtime" / "bin" / javaExec.getName
+        imageDir / "lib" / "runtime" / "bin" / javaExec.getName
+      } else if (os.startsWith("mac")) {
+        imageDir / "runtime" / "Contents" / "Home" / "bin" / javaExec.getName
       } else {
-        destDir / "NetLogo" / "runtime" / "bin" / javaExec.getName
+        imageDir / "runtime" / "bin" / javaExec.getName
       }
     }
 
     javaDest.getParentFile.mkdirs()
 
     FileActions.copyFile(javaExec, javaDest)
-
-    destDir.listFiles.head
   }
 
   def copyExtraFiles(log: Logger, extraDirs: Seq[BundledDirectory], platform: String, arch: String, appImageDir: File, appDir: File, rootFiles: Seq[File]) = {

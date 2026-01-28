@@ -260,6 +260,8 @@ object NetLogoPackaging {
       FileActions.remove(destDir)
       val appImageDir = JavaPackager.generateAppImage(log, buildJDK.jpackage, platform, mainLauncher, configDir, buildDir, inputDir, destDir, launchers)
 
+      JavaPackager.copyJavaExecutable(log, buildJDK.jpackage, appImageDir)
+
       val extraDirs = bundledDirs(netlogo, behaviorsearchProject).value(platform, buildJDK.architecture)
       JavaPackager.copyExtraFiles(log, extraDirs, platform, buildJDK.architecture, appImageDir, appImageDir, rootFiles)
       JavaPackager.createScripts(log, appImageDir, appImageDir / "lib" / "app", configDir, "netlogo-headless.sh", "netlogo-gui.sh")
@@ -336,6 +338,8 @@ object NetLogoPackaging {
       val destDir   = buildDir / s"${platform}-dest-${buildJDK.version}-${buildJDK.architecture}"
       FileActions.remove(destDir)
       val appImageDir = JavaPackager.generateAppImage(log, buildJDK.jpackage, platform, mainLauncher, configDir, buildDir, inputDir, destDir, launchers)
+
+      JavaPackager.copyJavaExecutable(log, buildJDK.jpackage, appImageDir)
 
       val extraDirs = bundledDirs(netlogo, behaviorsearchProject).value(platform, buildJDK.architecture)
       JavaPackager.copyExtraFiles(log, extraDirs, platform, buildJDK.architecture, appImageDir, appImageDir, rootFiles)
@@ -489,7 +493,9 @@ object NetLogoPackaging {
       FileActions.copyFile(buildDir / "BehaviorSearchModel.icns", destDir / s"${launchers(3).name}.app" / "Contents" / "Resources" / "BehaviorSearchModel.icns")
 
       val appImageDir = destDir / s"NetLogo ${version}"
-      FileActions.remove(appImageDir)
+
+      JavaPackager.copyJavaExecutable(log, buildJDK.jpackage, appImageDir)
+
       val extraDirs = bundledDirs(netlogo, behaviorsearchProject).value(platform, buildJDK.architecture)
       JavaPackager.copyExtraFiles(log, extraDirs, platform, buildJDK.architecture, appImageDir, appImageDir, rootFiles)
       val bundleDir = PackageMacAggregate.createBundleDir(log, version, destDir, configDir, launchers)
