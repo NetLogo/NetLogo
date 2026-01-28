@@ -67,7 +67,6 @@ object Extensions {
     extensions := {
       val nlJar = extensionNetLogoJar.value.getAbsolutePath
       val excluded = excludedExtensions.value
-      Process("git -C " + baseDirectory.value + " submodule --quiet update --init") ! streams.value.log
       extensionDirs(extensionRoot.value).filterNot(f => excluded.contains(f.getName)).foreach { dir =>
         sbtExec(dir, "package", nlJar)
       }
