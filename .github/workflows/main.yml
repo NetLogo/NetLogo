@@ -89,7 +89,9 @@ jobs:
       - uses: mfinelli/setup-imagemagick@v7
 
       - name: Test Extensions
-        run: sbt netlogo/Test/extensionTests
+        run: |
+          sbt netlogo/Test/extensionTests
+          sbt headless/Test/extensionTests
 
   test:
     runs-on: ubuntu-latest

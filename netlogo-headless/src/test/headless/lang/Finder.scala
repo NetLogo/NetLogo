@@ -28,4 +28,7 @@ trait TaggedSlowTest extends Finder {
 class TestCommands extends CommandTests with TaggedLanguageTest
 class TestReporters extends ReporterTests with TaggedLanguageTest
 class TestModels extends ModelTests with TaggedSlowTest
-class TestExtensions extends ExtensionTests with TaggedSlowTest
+class TestExtensions extends ExtensionTests with TaggedSlowTest {
+  override def extraTags: Seq[Tag] =
+    super.extraTags :+ SlowTest.ExtensionTag
+}
