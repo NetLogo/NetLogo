@@ -1,0 +1,8 @@
+on open fileList
+    set openPath to quoted form of POSIX path of ((path to me as text) & "::NetLogo {{version}}.app")
+    set arg to quoted form of POSIX path of (first item of fileList)
+
+    do shell script "open -n " & openPath & " --args " & arg
+end open
+
+do shell script "open -n " & quoted form of POSIX path of ((path to me as text) & "::NetLogo {{version}}.app")

@@ -504,9 +504,16 @@ object NetLogoPackaging {
 
       log.info("Creating launcher")
 
-      RunProcess(Seq("sh", "build.sh", appImageDir.getAbsolutePath, version,
-                     (buildDir / "NetLogo.icns").getAbsolutePath), configDir / platform / "launcher",
-                 "create launcher")
+      val scriptSource = configDir / platform / "launcher" / "launch.applescript.mustache"
+      val scriptDest = appImageDir / "launch.applescript"
+
+      Mustache(scriptSource, scriptDest, Map("version" -> version))
+
+      val launcherDest = appImageDir / s"NetLogo Launcher $version.app"
+
+      RunProcess(Seq("osacompile", "-o", launcherDest.getAbsolutePath, scriptDest.getAbsolutePath), "create launcher")
+
+      FileActions.copyFile(buildDir / "NetLogo.icns", launcherDest / "Contents" / "Resources" / "droplet.icns")
 
       // clean up unwanted icon files
       FileActions.listDirectory(appImageDir.toPath).foreach(path => {
