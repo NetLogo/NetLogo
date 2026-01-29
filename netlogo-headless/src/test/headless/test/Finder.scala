@@ -28,14 +28,16 @@ abstract class ModelTests extends Finder {
 abstract class ExtensionTests extends Finder {
   override def files = new Iterable[(String, String)] {
     override def iterator = {
-      val includedExtensions =
-        Seq("array", "matrix", "profiler", "sample", "sample-scala", "table")
-      def filesInDir(parent: File): Iterable[File] =
-        parent.listFiles.flatMap{f =>
-          if (f.isDirectory && includedExtensions.contains(f.getName))
+      def filesInDir(parent: File): Iterable[File] = {
+        parent.listFiles.flatMap { f =>
+          if (f.isDirectory) {
             filesInDir(f)
-          else
-            List(f).filter(_.getName == "tests.txt")}
+          } else {
+            Seq(f).filter(_.getName == "tests.txt")
+          }
+        }
+      }
+
       val extensionsDir =
         Option(System.getProperty("netlogo.extensions.dir", "extensions"))
           .flatMap(path => Option(new File(path)))
