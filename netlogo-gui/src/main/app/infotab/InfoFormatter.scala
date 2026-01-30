@@ -57,7 +57,8 @@ object InfoFormatter {
             replace("{CODE-COLOR}", colorString(InterfaceColors.infoCodeText())).
             replace("{BLOCK-BAR}", colorString(InterfaceColors.infoBlockBar())).
             replace("{INFO-BACKGROUND}", colorString(InterfaceColors.infoBackground())).
-            replace("{LINK-COLOR}", colorString(InterfaceColors.infoLink())) + "\n-->\n</style>"
+            replace("{LINK-COLOR}", colorString(InterfaceColors.infoLink())).
+            replace("{SCROLLBAR-COLOR}", colorString(InterfaceColors.scrollBarForeground())) + "\n-->\n</style>"
 
   def apply(content: String, modelDir: String = null,
             resourceManager: ExternalResourceManager = new ExternalResourceManager,
