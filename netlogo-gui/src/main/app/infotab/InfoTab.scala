@@ -15,6 +15,7 @@ import javax.swing.event.{ DocumentListener, DocumentEvent }
 import javafx.application.Platform
 import javafx.concurrent.Worker
 import javafx.embed.swing.JFXPanel
+import javafx.scene.input.ScrollEvent
 import javafx.scene.Scene
 import javafx.scene.web.{ WebEngine, WebView }
 
@@ -80,8 +81,8 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
   // there are some funny casts around because of this, and maybe we should clean it up.
   // -JC 9/7/10
   private var view: JComponent = htmlPanel
-  private val scrollPane = new ScrollPane(view, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
-                                          ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED)
+  private val scrollPane = new ScrollPane(view, ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER,
+                                          ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER)
 
   scrollPane.setBorder(null)
 
@@ -106,9 +107,7 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
   }
 
   private def resetBorders(): Unit = {
-    val border = BorderFactory.createEmptyBorder(4, 7, 4, 7)
-    textArea.setBorder(border)
-    htmlPanel.setBorder(border)
+    textArea.setBorder(BorderFactory.createEmptyBorder(4, 7, 4, 7))
   }
 
   override def doLayout(): Unit = {
@@ -116,9 +115,8 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
     // may affect the answer returned by textArea.getPreferredScrollableViewportSize, causing the
     // layout to jump around - ST 10/7/09
     resetBorders()
-    val extraWidth = StrictMath.max(7, getWidth - textArea.getPreferredScrollableViewportSize.width - 7)
+    val extraWidth = (getWidth - textArea.getPreferredScrollableViewportSize.width - 7).max(7)
     textArea.setBorder(BorderFactory.createEmptyBorder(4, 7, 4, extraWidth))
-    htmlPanel.setBorder(BorderFactory.createEmptyBorder(4, 7, 4, extraWidth))
     super.doLayout()
   }
 
@@ -145,11 +143,26 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
   def resetView(): Unit = {
     if (view.isInstanceOf[JTextArea]) {
       scrollPane.setViewportView(htmlPanel)
-      view = htmlPanel
+      setView(htmlPanel)
       editableButton.setSelected(false)
     }
     updateEditorPane()
     scrollPane.getVerticalScrollBar.setValue(0)
+  }
+
+  private def setView(view: JComponent): Unit = {
+    this.view = view
+
+    // the WebView panel needs to handle its own scrolling instead of Swing's JScrollPane,
+    // otherwise it throws a bunch of exceptions about trying to render a view that's
+    // too large. (Isaac B 1/29/26)
+    if (view == htmlPanel) {
+      scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER)
+      scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER)
+    } else {
+      scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED)
+      scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED)
+    }
   }
 
   override def syncTheme(): Unit = {
@@ -240,18 +253,18 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
 
   private class HTMLPanel extends JFXPanel {
     private var engine: Option[WebEngine] = None
-    private var height: Option[Int] = None
     private var text = ""
 
     Platform.runLater(() => {
       val webView = new WebView
 
       webView.setContextMenuEnabled(false)
-      webView.setOnScroll { event =>
-        val bar = scrollPane.getVerticalScrollBar
 
-        bar.setValue((bar.getValue - event.getDeltaY / 2).toInt)
-      }
+      webView.addEventFilter(ScrollEvent.SCROLL, event => {
+        engine.foreach(_.executeScript(s"window.scrollBy(${-event.getDeltaX / 4}, ${-event.getDeltaY / 4})"))
+
+        event.consume()
+      })
 
       setScene(new Scene(webView))
 
@@ -295,26 +308,7 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
       this.text = str
 
       Platform.runLater(() => {
-        engine.foreach { eng =>
-          eng.loadContent(str, "text/html")
-
-          height synchronized {
-            height = eng.executeScript("document.body == null ? -1 : document.body.scrollHeight")
-                        .toString.replace("px", "").toInt match {
-              case -1 =>
-                None
-
-              case i =>
-                Some(i)
-            }
-          }
-        }
-      })
-    }
-
-    override def getPreferredSize: Dimension = {
-      new Dimension(super.getPreferredSize.width, height synchronized {
-        height.fold(super.getPreferredSize.height)(_ + 100)
+        engine.foreach(_.loadContent(str, "text/html"))
       })
     }
   }
@@ -328,10 +322,10 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
       if (view.isInstanceOf[JTextArea]) {
         updateEditorPane()
         scrollPane.setViewportView(htmlPanel)
-        view = htmlPanel
+        setView(htmlPanel)
       } else {
         scrollPane.setViewportView(textArea)
-        view = textArea
+        setView(textArea)
       }
       toggleHelpButton()
       requestFocus()
