@@ -250,6 +250,14 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
   }
 
   private class HTMLPanel extends JFXPanel {
+    private val scrollFactor: Double = {
+      if (System.getProperty("os.name").toLowerCase.startsWith("mac")) {
+        0.25
+      } else {
+        0.5
+      }
+    }
+
     private var engine: Option[WebEngine] = None
     private var text = ""
 
@@ -259,7 +267,9 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
       webView.setContextMenuEnabled(false)
 
       webView.addEventFilter(ScrollEvent.SCROLL, event => {
-        engine.foreach(_.executeScript(s"window.scrollBy(${-event.getDeltaX / 4}, ${-event.getDeltaY / 4})"))
+        engine.foreach(_.executeScript(
+          s"window.scrollBy(${-event.getDeltaX * scrollFactor}, ${-event.getDeltaY * scrollFactor})"
+        ))
 
         event.consume()
       })
