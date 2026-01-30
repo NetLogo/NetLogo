@@ -190,8 +190,10 @@ class NLogoXMLLoader(headless: Boolean, literalParser: LiteralParser, editNames:
     })
   }
 
-  def writeExperiments(experiments: Seq[LabProtocol], writer: Writer): Try[Unit] = {
+  def writeExperiments(experiments: Seq[LabProtocol], writer: Writer, includeHeader: Boolean): Try[Unit] = {
     val xmlWriter     = new XMLWriter(writer)
+    if (includeHeader)
+      xmlWriter.startDocument()
     val writeStatuses = experiments.map(LabXMLLoader.writeExperiment(_, true)).toList
     val result = Try(xmlWriter.element(XMLElement("experiments", Map(), "", writeStatuses)))
     xmlWriter.close()
