@@ -154,7 +154,7 @@ public class View
     // lock. probably not a 100% correct fix, but an
     // improvement, at least - ST 1/10/07
     {
-      if (workspace.jobManager.isInterrupted()) {
+      if (workspace.jobManager().isInterrupted()) {
         return false;
       }
       if (offscreenImage == null) {
