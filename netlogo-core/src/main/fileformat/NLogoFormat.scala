@@ -134,9 +134,11 @@ trait AbstractNLogoFormat[A <: ModelFormat[Array[String], A]] extends ModelForma
   def readExperiments(source: String, editNames: Boolean, existingNames: Set[String]): Try[(Seq[LabProtocol], Set[String])] =
     Failure(new Exception) // this is not supported
 
-  def writeExperiments(experiments: Seq[LabProtocol], writer: Writer): Try[Unit] = {
+  def writeExperiments(experiments: Seq[LabProtocol], writer: Writer, includeHeader: Boolean): Try[Unit] = {
     Try {
-      writer.write(s"${LabLoader.XMLVER}\n${LabLoader.DOCTYPE}\n")
+      if (includeHeader)
+        writer.write(s"${LabLoader.XMLVER}\n${LabLoader.DOCTYPE}\n")
+
       writer.write(LabSaver.save(experiments))
     }
   }

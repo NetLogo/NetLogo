@@ -21,7 +21,7 @@ trait AbstractModelLoader {
   def emptyModel(extension: String): Model
   // these next two allow ManagerDialog to use the correct format for experiment loading/saving (Isaac B 8/17/24)
   def readExperiments(source: String, editNames: Boolean, existingNames: Set[String]): Try[(Seq[LabProtocol], Set[String])]
-  def writeExperiments(experiments: Seq[LabProtocol], writer: Writer): Try[Unit]
+  def writeExperiments(experiments: Seq[LabProtocol], writer: Writer, includeHeader: Boolean = false): Try[Unit]
 }
 
 object AbstractModelLoader {
@@ -69,8 +69,8 @@ class FormatterPair[A, B <: ModelFormat[A, B]](
     def readExperiments(source: String, editNames: Boolean, existingNames: Set[String]): Try[(Seq[LabProtocol], Set[String])] =
       modelFormat.readExperiments(source, editNames, existingNames)
 
-    def writeExperiments(experiments: Seq[LabProtocol], writer: Writer): Try[Unit] =
-      modelFormat.writeExperiments(experiments, writer)
+    def writeExperiments(experiments: Seq[LabProtocol], writer: Writer, includeHeader: Boolean): Try[Unit] =
+      modelFormat.writeExperiments(experiments, writer, includeHeader)
 
   }
 
@@ -131,10 +131,10 @@ trait ModelLoader extends AbstractModelLoader {
     }
   }
 
-  def writeExperiments(experiments: Seq[LabProtocol], writer: Writer): Try[Unit] = {
+  def writeExperiments(experiments: Seq[LabProtocol], writer: Writer, includeHeader: Boolean): Try[Unit] = {
     val init: Try[Unit] = Failure(new Exception("Unable to write experiments."))
     formats.foldLeft(init) {
-      case (acc, format) => if (acc.isSuccess) acc else format.writeExperiments(experiments, writer)
+      case (acc, format) => if (acc.isSuccess) acc else format.writeExperiments(experiments, writer, includeHeader)
     }
   }
 }

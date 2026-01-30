@@ -76,7 +76,7 @@ trait ModelFormat[Section, Format <: ModelFormat[Section, Format]] {
   }
 
   def readExperiments(source: String, editNames: Boolean, existingNames: Set[String]): Try[(Seq[LabProtocol], Set[String])]
-  def writeExperiments(experiments: Seq[LabProtocol], writer: Writer): Try[Unit]
+  def writeExperiments(experiments: Seq[LabProtocol], writer: Writer, includeHeader: Boolean): Try[Unit]
 
   private def addSerializedSection(model: Model)(sections: Map[String, Section], component: ComponentSerialization[Section, Format]): Map[String, Section] = {
     sections + (component.componentName -> component.serialize(model))
