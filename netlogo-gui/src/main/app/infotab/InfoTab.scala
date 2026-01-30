@@ -147,6 +147,7 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
       editableButton.setSelected(false)
     }
     updateEditorPane()
+    scrollPane.getVerticalScrollBar.setValue(0)
   }
 
   override def syncTheme(): Unit = {
