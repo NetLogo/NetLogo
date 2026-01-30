@@ -305,7 +305,7 @@ private class ManagerDialog(manager:       LabManager,
 
       val out = new PrintWriter(path)
 
-      manager.modelLoader.writeExperiments(selectedProtocols, out)
+      manager.modelLoader.writeExperiments(selectedProtocols, out, true)
 
       out.println()
       out.close()

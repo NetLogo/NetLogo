@@ -27,7 +27,7 @@ class MockFormat(val model: Model, error: Option[Exception]) extends ModelFormat
     error.map(Failure.apply).getOrElse(Success(location))
   override def readExperiments(source: String, editNames: Boolean, existingNames: Set[String]): Try[(Seq[LabProtocol], Set[String])] =
     Failure(new UnsupportedOperationException("MockFormat doesn't support this operation"))
-  override def writeExperiments(experiments: Seq[LabProtocol], writer: Writer): Try[Unit] =
+  override def writeExperiments(experiments: Seq[LabProtocol], writer: Writer, includeHeader: Boolean): Try[Unit] =
     Failure(new UnsupportedOperationException("MockFormat doesn't support this operation"))
   object DefaultSerialization extends ComponentSerialization[String, MockFormat] {
     def componentName: String = "org.nlogo.modelsection.code"

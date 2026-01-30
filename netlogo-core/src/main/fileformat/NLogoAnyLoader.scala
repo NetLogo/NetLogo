@@ -57,9 +57,9 @@ class NLogoAnyLoader(loaders: List[AbstractModelLoader]) extends ConfigurableMod
     bruteForce(_ => true, _.readExperiments(source, editNames, existingNames))(errorMessage)
   }
 
-  override def writeExperiments(experiments: Seq[LabProtocol], writer: Writer): Try[Unit] = {
+  override def writeExperiments(experiments: Seq[LabProtocol], writer: Writer, includeHeader: Boolean): Try[Unit] = {
     val errorMessage = "Unable to write experiments."
-    bruteForce(_ => true, _.writeExperiments(experiments, writer))(errorMessage)
+    bruteForce(_ => true, _.writeExperiments(experiments, writer, includeHeader))(errorMessage)
   }
 
   override def addSerializers[A, B <: ModelFormat[A, B]](ss: Seq[ComponentSerialization[A, B]])
