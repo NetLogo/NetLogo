@@ -11,12 +11,23 @@
 :visited { color: rgb(110,0,110); }
 body {
     margin-left: 5px;
+    margin-bottom: 50px;
     font-family: arial, sans-serif;
     background: {BODY-BACKGROUND};
     font-size: {BODY-FONT-SIZE}pt;
-    overflow-x: hidden;
-    overflow-y: hidden;
     width: 650px;
+}
+body::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+    background: {BODY-BACKGROUND};
+}
+body::-webkit-scrollbar-corner {
+    background: {BODY-BACKGROUND};
+}
+body::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+    background: {SCROLLBAR-COLOR};
 }
 h1 {
     background: {H1-BACKGROUND};
