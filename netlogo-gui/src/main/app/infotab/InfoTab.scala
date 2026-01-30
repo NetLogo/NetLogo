@@ -150,6 +150,7 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
       editableButton.setSelected(false)
     }
     updateEditorPane()
+    scrollPane.getVerticalScrollBar.setValue(0)
   }
 
   def setCodeFont(font: Font): Unit = {
