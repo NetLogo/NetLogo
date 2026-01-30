@@ -67,6 +67,7 @@ class DummyWorkspace extends Workspace {
   override def lastRunTimes = unsupported
   override def completedActivations = unsupported
   override def compiler = unsupported
+  override def jobManager = unsupported
   override def open(modelPath: String, shouldAutoInstallLibs: Boolean) = unsupported
   override def dispose(): Unit = { }
   override def lastLogoException = unsupported

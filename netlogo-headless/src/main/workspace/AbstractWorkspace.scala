@@ -20,7 +20,7 @@ import
   core.{ CompilationEnvironment, AgentKind, CompilerException, Femto, File, FileMode, I18N, LiteralParser},
   fileformat.FileFormat,
   nvm.{ Activation, Command, Context, FileManager, ImportHandler,
-    Instruction, Job, MutableLong, Procedure, RuntimePrimitiveException, Workspace },
+    Instruction, Job, JobManagerInterface, MutableLong, Procedure, RuntimePrimitiveException, Workspace },
     Procedure.{ NoProcedures, ProceduresMap },
   plot.{ CorePlotExporter, PlotManager }
 
@@ -587,9 +587,13 @@ object AbstractWorkspaceTraits {
   }
 
   trait Jobs { this: AbstractWorkspace =>
-    val jobManager: nvm.JobManagerInterface =
+    private val manager: JobManagerInterface =
       Femto.get("org.nlogo.job.JobManager",
         this, world, world)
+
+    override def jobManager: JobManagerInterface =
+      manager
+
     def halt(): Unit = {
       jobManager.haltPrimary()
       world.displayOn(true)

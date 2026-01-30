@@ -53,7 +53,13 @@ public abstract class AbstractWorkspace
 
   public final World _world;
 
-  public final org.nlogo.nvm.JobManagerInterface jobManager;
+  private final org.nlogo.nvm.JobManagerInterface jobManager;
+
+  @Override
+  public org.nlogo.nvm.JobManagerInterface jobManager() {
+    return jobManager;
+  }
+
   public final Evaluator evaluator;
   public final ExtensionManager extensionManager;
 

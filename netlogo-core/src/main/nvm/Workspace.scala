@@ -17,6 +17,8 @@ trait Workspace extends ApiWorkspace with JobManagerOwner {
 
   def compiler: CompilerInterface
 
+  def jobManager: JobManagerInterface
+
   def procedures: Procedure.ProceduresMap
   def procedures_=(procedures: Procedure.ProceduresMap): Unit
 
