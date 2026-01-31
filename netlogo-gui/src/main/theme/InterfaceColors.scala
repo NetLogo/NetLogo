@@ -2,11 +2,48 @@
 
 package org.nlogo.theme
 
-import java.awt.Color
+import com.jthemedetecor.OsThemeDetector
 
-import org.nlogo.core.{ ColorizerTheme, TokenType }
+import java.awt.Color
+import java.io.PrintWriter
+import java.nio.file.{ Files, Path, Paths }
+
+import org.nlogo.core.{ ColorizerTheme, I18N, NetLogoPreferences, TokenType }
+
+import scala.io.Source
+import scala.jdk.CollectionConverters.IteratorHasAsScala
+import scala.util.Try
 
 object InterfaceColors {
+  val Transparent = new Color(0, 0, 0, 0)
+
+  private lazy val defaultTheme: String = {
+    if (OsThemeDetector.getDetector.isDark) {
+      DarkTheme.name
+    } else {
+      LightTheme.name
+    }
+  }
+
+  private lazy val customRoot: Path = Paths.get(System.getProperty("user.home"), ".nlogo", "themes")
+
+  private lazy val customThemes: Map[String, ColorTheme] = {
+    if (Files.exists(customRoot) && Files.isDirectory(customRoot)) {
+      Files.list(customRoot).iterator.asScala.foldLeft(Set[(String, ColorTheme)]()) {
+        case (themes, path) =>
+          loadTheme(path) match {
+            case Some(theme) if !reservedName(theme.name) && !themes.exists(_._1 == theme.name) =>
+              themes + ((path.getFileName.toString.stripSuffix(".theme").trim, theme))
+
+            case _ =>
+              themes
+          }
+      }.toMap
+    } else {
+      Map()
+    }
+  }
+
   private var theme: ColorTheme = LightTheme
 
   def setTheme(theme: ColorTheme): Unit = {
@@ -16,7 +53,405 @@ object InterfaceColors {
   def getTheme: ColorTheme =
     theme
 
-  val Transparent = new Color(0, 0, 0, 0)
+  def prefsTheme: ColorTheme = {
+    // two options for each built-in theme for compatibility with old preference values (Isaac B 1/30/26)
+    NetLogoPreferences.get("colorTheme", defaultTheme) match {
+      case "classic" | ClassicTheme.name => ClassicTheme
+      case "light" | LightTheme.name => LightTheme
+      case "dark" | DarkTheme.name => DarkTheme
+      case name =>
+        customThemes.get(name).getOrElse {
+          if (defaultTheme == LightTheme.name) {
+            LightTheme
+          } else {
+            DarkTheme
+          }
+        }
+    }
+  }
+
+  def getPermanentThemes: Array[ColorTheme] =
+    Array(ClassicTheme, LightTheme, DarkTheme)
+
+  def getCustomThemes: Array[ColorTheme] =
+    customThemes.values.toArray
+
+  private def reservedName(name: String): Boolean = {
+    name == "classic" || name == "light" || name == "dark" ||
+    name == ClassicTheme.name || name == LightTheme.name || name == DarkTheme.name
+  }
+
+  private def loadTheme(path: Path): Option[ColorTheme] = {
+    Try {
+      val source: Source = Source.fromFile(path.toFile)
+      val lines: Iterator[String] = source.getLines
+
+      val isDark = lines.next.toBoolean
+
+      val default: ColorTheme = {
+        if (isDark) {
+          DarkTheme
+        } else {
+          LightTheme
+        }
+      }
+
+      val colors: Map[String, Color] = {
+        lines.map { line =>
+          val split = line.split(" = ")
+
+          (split(0), new Color(split(1).toInt))
+        }.toMap
+      }
+
+      source.close()
+
+      new ColorTheme(path.getFileName.toString.stripSuffix(".theme").trim, isDark, false) {
+        override def widgetText: Color = colors.getOrElse("widgetText", default.widgetText)
+        override def widgetTextError: Color = colors.getOrElse("widgetTextError", default.widgetTextError)
+        override def widgetHoverShadow: Color = colors.getOrElse("widgetHoverShadow", default.widgetHoverShadow)
+        override def widgetPreviewCover: Color = colors.getOrElse("widgetPreviewCover", default.widgetPreviewCover)
+        override def widgetPreviewCoverNote: Color = colors.getOrElse("widgetPreviewCoverNote", default.widgetPreviewCoverNote)
+        override def widgetHandle: Color = colors.getOrElse("widgetHandle", default.widgetHandle)
+        override def displayAreaBackground: Color = colors.getOrElse("displayAreaBackground", default.displayAreaBackground)
+        override def displayAreaText: Color = colors.getOrElse("displayAreaText", default.displayAreaText)
+        override def scrollBarBackground: Color = colors.getOrElse("scrollBarBackground", default.scrollBarBackground)
+        override def scrollBarForeground: Color = colors.getOrElse("scrollBarForeground", default.scrollBarForeground)
+        override def scrollBarForegroundHover: Color = colors.getOrElse("scrollBarForegroundHover", default.scrollBarForegroundHover)
+        override def interfaceBackground: Color = colors.getOrElse("interfaceBackground", default.interfaceBackground)
+        override def commandCenterBackground: Color = colors.getOrElse("commandCenterBackground", default.commandCenterBackground)
+        override def commandCenterText: Color = colors.getOrElse("commandCenterText", default.commandCenterText)
+        override def locationToggleImage: Color = colors.getOrElse("locationToggleImage", default.locationToggleImage)
+        override def commandOutputBackground: Color = colors.getOrElse("commandOutputBackground", default.commandOutputBackground)
+        override def splitPaneDividerBackground: Color = colors.getOrElse("splitPaneDividerBackground", default.splitPaneDividerBackground)
+        override def speedSliderBarBackground: Color = colors.getOrElse("speedSliderBarBackground", default.speedSliderBarBackground)
+        override def speedSliderBarBackgroundFilled: Color = colors.getOrElse("speedSliderBarBackgroundFilled", default.speedSliderBarBackgroundFilled)
+        override def speedSliderThumb: Color = colors.getOrElse("speedSliderThumb", default.speedSliderThumb)
+        override def speedSliderThumbDisabled: Color = colors.getOrElse("speedSliderThumbDisabled", default.speedSliderThumbDisabled)
+        override def buttonBackground: Color = colors.getOrElse("buttonBackground", default.buttonBackground)
+        override def buttonBackgroundHover: Color = colors.getOrElse("buttonBackgroundHover", default.buttonBackgroundHover)
+        override def buttonBackgroundPressed: Color = colors.getOrElse("buttonBackgroundPressed", default.buttonBackgroundPressed)
+        override def buttonBackgroundPressedHover: Color = colors.getOrElse("buttonBackgroundPressedHover", default.buttonBackgroundPressedHover)
+        override def buttonBackgroundDisabled: Color = colors.getOrElse("buttonBackgroundDisabled", default.buttonBackgroundDisabled)
+        override def buttonText: Color = colors.getOrElse("buttonText", default.buttonText)
+        override def buttonTextPressed: Color = colors.getOrElse("buttonTextPressed", default.buttonTextPressed)
+        override def buttonTextDisabled: Color = colors.getOrElse("buttonTextDisabled", default.buttonTextDisabled)
+        override def sliderBackground: Color = colors.getOrElse("sliderBackground", default.sliderBackground)
+        override def sliderBarBackground: Color = colors.getOrElse("sliderBarBackground", default.sliderBarBackground)
+        override def sliderBarBackgroundFilled: Color = colors.getOrElse("sliderBarBackgroundFilled", default.sliderBarBackgroundFilled)
+        override def sliderThumbBorder: Color = colors.getOrElse("sliderThumbBorder", default.sliderThumbBorder)
+        override def sliderThumbBackground: Color = colors.getOrElse("sliderThumbBackground", default.sliderThumbBackground)
+        override def sliderThumbBackgroundPressed: Color = colors.getOrElse("sliderThumbBackgroundPressed", default.sliderThumbBackgroundPressed)
+        override def switchBackground: Color = colors.getOrElse("switchBackground", default.switchBackground)
+        override def switchToggle: Color = colors.getOrElse("switchToggle", default.switchToggle)
+        override def switchToggleBackgroundOn: Color = colors.getOrElse("switchToggleBackgroundOn", default.switchToggleBackgroundOn)
+        override def switchToggleBackgroundOff: Color = colors.getOrElse("switchToggleBackgroundOff", default.switchToggleBackgroundOff)
+        override def chooserBackground: Color = colors.getOrElse("chooserBackground", default.chooserBackground)
+        override def chooserBorder: Color = colors.getOrElse("chooserBorder", default.chooserBorder)
+        override def inputBackground: Color = colors.getOrElse("inputBackground", default.inputBackground)
+        override def inputBorder: Color = colors.getOrElse("inputBorder", default.inputBorder)
+        override def viewBackground: Color = colors.getOrElse("viewBackground", default.viewBackground)
+        override def viewBorder: Color = colors.getOrElse("viewBorder", default.viewBorder)
+        override def monitorBackground: Color = colors.getOrElse("monitorBackground", default.monitorBackground)
+        override def monitorBorder: Color = colors.getOrElse("monitorBorder", default.monitorBorder)
+        override def plotBackground: Color = colors.getOrElse("plotBackground", default.plotBackground)
+        override def plotBorder: Color = colors.getOrElse("plotBorder", default.plotBorder)
+        override def plotMouseBackground: Color = colors.getOrElse("plotMouseBackground", default.plotMouseBackground)
+        override def plotMouseText: Color = colors.getOrElse("plotMouseText", default.plotMouseText)
+        override def outputBackground: Color = colors.getOrElse("outputBackground", default.outputBackground)
+        override def outputBorder: Color = colors.getOrElse("outputBorder", default.outputBorder)
+        override def toolbarBackground: Color = colors.getOrElse("toolbarBackground", default.toolbarBackground)
+        override def tabBackground: Color = colors.getOrElse("tabBackground", default.tabBackground)
+        override def tabBackgroundHover: Color = colors.getOrElse("tabBackgroundHover", default.tabBackgroundHover)
+        override def tabBackgroundSelected: Color = colors.getOrElse("tabBackgroundSelected", default.tabBackgroundSelected)
+        override def tabBackgroundError: Color = colors.getOrElse("tabBackgroundError", default.tabBackgroundError)
+        override def tabText: Color = colors.getOrElse("tabText", default.tabText)
+        override def tabTextSelected: Color = colors.getOrElse("tabTextSelected", default.tabTextSelected)
+        override def tabTextError: Color = colors.getOrElse("tabTextError", default.tabTextError)
+        override def tabBorder: Color = colors.getOrElse("tabBorder", default.tabBorder)
+        override def tabSeparator: Color = colors.getOrElse("tabSeparator", default.tabSeparator)
+        override def tabCloseButtonBackgroundHover: Color = colors.getOrElse("tabCloseButtonBackgroundHover", default.tabCloseButtonBackgroundHover)
+        override def toolbarText: Color = colors.getOrElse("toolbarText", default.toolbarText)
+        override def toolbarTextSelected: Color = colors.getOrElse("toolbarTextSelected", default.toolbarTextSelected)
+        override def toolbarControlBackground: Color = colors.getOrElse("toolbarControlBackground", default.toolbarControlBackground)
+        override def toolbarControlBackgroundHover: Color = colors.getOrElse("toolbarControlBackgroundHover", default.toolbarControlBackgroundHover)
+        override def toolbarControlBackgroundPressed: Color = colors.getOrElse("toolbarControlBackgroundPressed", default.toolbarControlBackgroundPressed)
+        override def toolbarControlBorder: Color = colors.getOrElse("toolbarControlBorder", default.toolbarControlBorder)
+        override def toolbarControlBorderSelected: Color = colors.getOrElse("toolbarControlBorderSelected", default.toolbarControlBorderSelected)
+        override def toolbarControlFocus: Color = colors.getOrElse("toolbarControlFocus", default.toolbarControlFocus)
+        override def toolbarToolSelected: Color = colors.getOrElse("toolbarToolSelected", default.toolbarToolSelected)
+        override def toolbarImage: Color = colors.getOrElse("toolbarImage", default.toolbarImage)
+        override def toolbarImageSelected: Color = colors.getOrElse("toolbarImageSelected", default.toolbarImageSelected)
+        override def toolbarImageDisabled: Color = colors.getOrElse("toolbarImageDisabled", default.toolbarImageDisabled)
+        override def toolbarSeparator: Color = colors.getOrElse("toolbarSeparator", default.toolbarSeparator)
+        override def infoBackground: Color = colors.getOrElse("infoBackground", default.infoBackground)
+        override def infoH1Background: Color = colors.getOrElse("infoH1Background", default.infoH1Background)
+        override def infoH1Color: Color = colors.getOrElse("infoH1Color", default.infoH1Color)
+        override def infoH2Background: Color = colors.getOrElse("infoH2Background", default.infoH2Background)
+        override def infoH2Color: Color = colors.getOrElse("infoH2Color", default.infoH2Color)
+        override def infoH3Color: Color = colors.getOrElse("infoH3Color", default.infoH3Color)
+        override def infoH4Color: Color = colors.getOrElse("infoH4Color", default.infoH4Color)
+        override def infoPColor: Color = colors.getOrElse("infoPColor", default.infoPColor)
+        override def infoCodeBackground: Color = colors.getOrElse("infoCodeBackground", default.infoCodeBackground)
+        override def infoCodeText: Color = colors.getOrElse("infoCodeText", default.infoCodeText)
+        override def infoBlockBar: Color = colors.getOrElse("infoBlockBar", default.infoBlockBar)
+        override def infoLink: Color = colors.getOrElse("infoLink", default.infoLink)
+        override def checkFilled: Color = colors.getOrElse("checkFilled", default.checkFilled)
+        override def errorLabelText: Color = colors.getOrElse("errorLabelText", default.errorLabelText)
+        override def errorLabelBackground: Color = colors.getOrElse("errorLabelBackground", default.errorLabelBackground)
+        override def warningLabelText: Color = colors.getOrElse("warningLabelText", default.warningLabelText)
+        override def warningLabelBackground: Color = colors.getOrElse("warningLabelBackground", default.warningLabelBackground)
+        override def errorHighlight: Color = colors.getOrElse("errorHighlight", default.errorHighlight)
+        override def codeBackground: Color = colors.getOrElse("codeBackground", default.codeBackground)
+        override def codeLineHighlight: Color = colors.getOrElse("codeLineHighlight", default.codeLineHighlight)
+        override def codeBracketHighlight: Color = colors.getOrElse("codeBracketHighlight", default.codeBracketHighlight)
+        override def codeSelection: Color = colors.getOrElse("codeSelection", default.codeSelection)
+        override def codeSeparator: Color = colors.getOrElse("codeSeparator", default.codeSeparator)
+        override def checkboxBackgroundSelected: Color = colors.getOrElse("checkboxBackgroundSelected", default.checkboxBackgroundSelected)
+        override def checkboxBackgroundSelectedHover: Color = colors.getOrElse("checkboxBackgroundSelectedHover", default.checkboxBackgroundSelectedHover)
+        override def checkboxBackgroundUnselected: Color = colors.getOrElse("checkboxBackgroundUnselected", default.checkboxBackgroundUnselected)
+        override def checkboxBackgroundUnselectedHover: Color = colors.getOrElse("checkboxBackgroundUnselectedHover", default.checkboxBackgroundUnselectedHover)
+        override def checkboxBackgroundDisabled: Color = colors.getOrElse("checkboxBackgroundDisabled", default.checkboxBackgroundDisabled)
+        override def checkboxBorder: Color = colors.getOrElse("checkboxBorder", default.checkboxBorder)
+        override def checkboxCheck: Color = colors.getOrElse("checkboxCheck", default.checkboxCheck)
+        override def menuBarBorder: Color = colors.getOrElse("menuBarBorder", default.menuBarBorder)
+        override def menuBackground: Color = colors.getOrElse("menuBackground", default.menuBackground)
+        override def menuBackgroundHover: Color = colors.getOrElse("menuBackgroundHover", default.menuBackgroundHover)
+        override def menuBorder: Color = colors.getOrElse("menuBorder", default.menuBorder)
+        override def menuTextHover: Color = colors.getOrElse("menuTextHover", default.menuTextHover)
+        override def menuTextDisabled: Color = colors.getOrElse("menuTextDisabled", default.menuTextDisabled)
+        override def dialogBackground: Color = colors.getOrElse("dialogBackground", default.dialogBackground)
+        override def dialogBackgroundSelected: Color = colors.getOrElse("dialogBackgroundSelected", default.dialogBackgroundSelected)
+        override def dialogText: Color = colors.getOrElse("dialogText", default.dialogText)
+        override def dialogTextSelected: Color = colors.getOrElse("dialogTextSelected", default.dialogTextSelected)
+        override def radioButtonBackground: Color = colors.getOrElse("radioButtonBackground", default.radioButtonBackground)
+        override def radioButtonBackgroundHover: Color = colors.getOrElse("radioButtonBackgroundHover", default.radioButtonBackgroundHover)
+        override def radioButtonSelected: Color = colors.getOrElse("radioButtonSelected", default.radioButtonSelected)
+        override def radioButtonSelectedHover: Color = colors.getOrElse("radioButtonSelectedHover", default.radioButtonSelectedHover)
+        override def radioButtonBorder: Color = colors.getOrElse("radioButtonBorder", default.radioButtonBorder)
+        override def primaryButtonBackground: Color = colors.getOrElse("primaryButtonBackground", default.primaryButtonBackground)
+        override def primaryButtonBackgroundHover: Color = colors.getOrElse("primaryButtonBackgroundHover", default.primaryButtonBackgroundHover)
+        override def primaryButtonBackgroundPressed: Color = colors.getOrElse("primaryButtonBackgroundPressed", default.primaryButtonBackgroundPressed)
+        override def primaryButtonBorder: Color = colors.getOrElse("primaryButtonBorder", default.primaryButtonBorder)
+        override def primaryButtonText: Color = colors.getOrElse("primaryButtonText", default.primaryButtonText)
+        override def secondaryButtonBackground: Color = colors.getOrElse("secondaryButtonBackground", default.secondaryButtonBackground)
+        override def secondaryButtonBackgroundHover: Color = colors.getOrElse("secondaryButtonBackgroundHover", default.secondaryButtonBackgroundHover)
+        override def secondaryButtonBackgroundPressed: Color = colors.getOrElse("secondaryButtonBackgroundPressed", default.secondaryButtonBackgroundPressed)
+        override def secondaryButtonBorder: Color = colors.getOrElse("secondaryButtonBorder", default.secondaryButtonBorder)
+        override def secondaryButtonText: Color = colors.getOrElse("secondaryButtonText", default.secondaryButtonText)
+        override def textAreaBackground: Color = colors.getOrElse("textAreaBackground", default.textAreaBackground)
+        override def textAreaText: Color = colors.getOrElse("textAreaText", default.textAreaText)
+        override def textAreaBorderEditable: Color = colors.getOrElse("textAreaBorderEditable", default.textAreaBorderEditable)
+        override def textAreaBorderNoneditable: Color = colors.getOrElse("textAreaBorderNoneditable", default.textAreaBorderNoneditable)
+        override def tabbedPaneText: Color = colors.getOrElse("tabbedPaneText", default.tabbedPaneText)
+        override def tabbedPaneTextSelected: Color = colors.getOrElse("tabbedPaneTextSelected", default.tabbedPaneTextSelected)
+        override def infoIcon: Color = colors.getOrElse("infoIcon", default.infoIcon)
+        override def warningIcon: Color = colors.getOrElse("warningIcon", default.warningIcon)
+        override def errorIcon: Color = colors.getOrElse("errorIcon", default.errorIcon)
+        override def updateIcon: Color = colors.getOrElse("updateIcon", default.updateIcon)
+        override def stockBackground: Color = colors.getOrElse("stockBackground", default.stockBackground)
+        override def converterBackground: Color = colors.getOrElse("converterBackground", default.converterBackground)
+        override def announceX: Color = colors.getOrElse("announceX", default.announceX)
+        override def announceXHovered: Color = colors.getOrElse("announceXHovered", default.announceXHovered)
+        override def announceXPressed: Color = colors.getOrElse("announceXPressed", default.announceXPressed)
+        override def announceRelease: Color = colors.getOrElse("announceRelease", default.announceRelease)
+        override def announceAdvisory: Color = colors.getOrElse("announceAdvisory", default.announceAdvisory)
+        override def announceEvent: Color = colors.getOrElse("announceEvent", default.announceEvent)
+        override def colorPickerOutputBackground: Color = colors.getOrElse("colorPickerOutputBackground", default.colorPickerOutputBackground)
+        override def colorPickerCheckmark: Color = colors.getOrElse("colorPickerCheckmark", default.colorPickerCheckmark)
+        override def colorPickerCopyHover: Color = colors.getOrElse("colorPickerCopyHover", default.colorPickerCopyHover)
+        override def agentMonitorSeparator: Color = colors.getOrElse("agentMonitorSeparator", default.agentMonitorSeparator)
+
+        override def colorizerTheme: ColorizerTheme = new ColorizerTheme {
+          override def getColor(tpe: TokenType): Color = {
+            tpe match {
+              case TokenType.Literal  => colors.getOrElse("constantColor", default.colorizerTheme.getColor(TokenType.Literal))
+              case TokenType.Command  => colors.getOrElse("commandColor", default.colorizerTheme.getColor(TokenType.Command))
+              case TokenType.Reporter => colors.getOrElse("reporterColor", default.colorizerTheme.getColor(TokenType.Reporter))
+              case TokenType.Keyword  => colors.getOrElse("keywordColor", default.colorizerTheme.getColor(TokenType.Keyword))
+              case TokenType.Comment  => colors.getOrElse("commentColor", default.colorizerTheme.getColor(TokenType.Comment))
+              case _                  => colors.getOrElse("defaultColor", default.colorizerTheme.getColor(null))
+            }
+          }
+        }
+      }
+    }.toOption
+  }
+
+  def saveTheme(theme: ColorTheme): Unit = {
+    Files.createDirectories(customRoot)
+
+    val writer = new PrintWriter(customRoot.resolve(s"${theme.name}.theme").toFile)
+
+    writer.println(theme.isDark.toString)
+
+    writer.println(s"widgetText = ${theme.widgetText.getRGB}")
+    writer.println(s"widgetTextError = ${theme.widgetTextError.getRGB}")
+    writer.println(s"widgetHoverShadow = ${theme.widgetHoverShadow.getRGB}")
+    writer.println(s"widgetPreviewCover = ${theme.widgetPreviewCover.getRGB}")
+    writer.println(s"widgetPreviewCoverNote = ${theme.widgetPreviewCoverNote.getRGB}")
+    writer.println(s"widgetHandle = ${theme.widgetHandle.getRGB}")
+    writer.println(s"displayAreaBackground = ${theme.displayAreaBackground.getRGB}")
+    writer.println(s"displayAreaText = ${theme.displayAreaText.getRGB}")
+    writer.println(s"scrollBarBackground = ${theme.scrollBarBackground.getRGB}")
+    writer.println(s"scrollBarForeground = ${theme.scrollBarForeground.getRGB}")
+    writer.println(s"scrollBarForegroundHover = ${theme.scrollBarForegroundHover.getRGB}")
+    writer.println(s"interfaceBackground = ${theme.interfaceBackground.getRGB}")
+    writer.println(s"commandCenterBackground = ${theme.commandCenterBackground.getRGB}")
+    writer.println(s"commandCenterText = ${theme.commandCenterText.getRGB}")
+    writer.println(s"locationToggleImage = ${theme.locationToggleImage.getRGB}")
+    writer.println(s"commandOutputBackground = ${theme.commandOutputBackground.getRGB}")
+    writer.println(s"splitPaneDividerBackground = ${theme.splitPaneDividerBackground.getRGB}")
+    writer.println(s"speedSliderBarBackground = ${theme.speedSliderBarBackground.getRGB}")
+    writer.println(s"speedSliderBarBackgroundFilled = ${theme.speedSliderBarBackgroundFilled.getRGB}")
+    writer.println(s"speedSliderThumb = ${theme.speedSliderThumb.getRGB}")
+    writer.println(s"speedSliderThumbDisabled = ${theme.speedSliderThumbDisabled.getRGB}")
+    writer.println(s"buttonBackground = ${theme.buttonBackground.getRGB}")
+    writer.println(s"buttonBackgroundHover = ${theme.buttonBackgroundHover.getRGB}")
+    writer.println(s"buttonBackgroundPressed = ${theme.buttonBackgroundPressed.getRGB}")
+    writer.println(s"buttonBackgroundPressedHover = ${theme.buttonBackgroundPressedHover.getRGB}")
+    writer.println(s"buttonBackgroundDisabled = ${theme.buttonBackgroundDisabled.getRGB}")
+    writer.println(s"buttonText = ${theme.buttonText.getRGB}")
+    writer.println(s"buttonTextPressed = ${theme.buttonTextPressed.getRGB}")
+    writer.println(s"buttonTextDisabled = ${theme.buttonTextDisabled.getRGB}")
+    writer.println(s"sliderBackground = ${theme.sliderBackground.getRGB}")
+    writer.println(s"sliderBarBackground = ${theme.sliderBarBackground.getRGB}")
+    writer.println(s"sliderBarBackgroundFilled = ${theme.sliderBarBackgroundFilled.getRGB}")
+    writer.println(s"sliderThumbBorder = ${theme.sliderThumbBorder.getRGB}")
+    writer.println(s"sliderThumbBackground = ${theme.sliderThumbBackground.getRGB}")
+    writer.println(s"sliderThumbBackgroundPressed = ${theme.sliderThumbBackgroundPressed.getRGB}")
+    writer.println(s"switchBackground = ${theme.switchBackground.getRGB}")
+    writer.println(s"switchToggle = ${theme.switchToggle.getRGB}")
+    writer.println(s"switchToggleBackgroundOn = ${theme.switchToggleBackgroundOn.getRGB}")
+    writer.println(s"switchToggleBackgroundOff = ${theme.switchToggleBackgroundOff.getRGB}")
+    writer.println(s"chooserBackground = ${theme.chooserBackground.getRGB}")
+    writer.println(s"chooserBorder = ${theme.chooserBorder.getRGB}")
+    writer.println(s"inputBackground = ${theme.inputBackground.getRGB}")
+    writer.println(s"inputBorder = ${theme.inputBorder.getRGB}")
+    writer.println(s"viewBackground = ${theme.viewBackground.getRGB}")
+    writer.println(s"viewBorder = ${theme.viewBorder.getRGB}")
+    writer.println(s"monitorBackground = ${theme.monitorBackground.getRGB}")
+    writer.println(s"monitorBorder = ${theme.monitorBorder.getRGB}")
+    writer.println(s"plotBackground = ${theme.plotBackground.getRGB}")
+    writer.println(s"plotBorder = ${theme.plotBorder.getRGB}")
+    writer.println(s"plotMouseBackground = ${theme.plotMouseBackground.getRGB}")
+    writer.println(s"plotMouseText = ${theme.plotMouseText.getRGB}")
+    writer.println(s"outputBackground = ${theme.outputBackground.getRGB}")
+    writer.println(s"outputBorder = ${theme.outputBorder.getRGB}")
+    writer.println(s"toolbarBackground = ${theme.toolbarBackground.getRGB}")
+    writer.println(s"tabBackground = ${theme.tabBackground.getRGB}")
+    writer.println(s"tabBackgroundHover = ${theme.tabBackgroundHover.getRGB}")
+    writer.println(s"tabBackgroundSelected = ${theme.tabBackgroundSelected.getRGB}")
+    writer.println(s"tabBackgroundError = ${theme.tabBackgroundError.getRGB}")
+    writer.println(s"tabText = ${theme.tabText.getRGB}")
+    writer.println(s"tabTextSelected = ${theme.tabTextSelected.getRGB}")
+    writer.println(s"tabTextError = ${theme.tabTextError.getRGB}")
+    writer.println(s"tabBorder = ${theme.tabBorder.getRGB}")
+    writer.println(s"tabSeparator = ${theme.tabSeparator.getRGB}")
+    writer.println(s"tabCloseButtonBackgroundHover = ${theme.tabCloseButtonBackgroundHover.getRGB}")
+    writer.println(s"toolbarText = ${theme.toolbarText.getRGB}")
+    writer.println(s"toolbarTextSelected = ${theme.toolbarTextSelected.getRGB}")
+    writer.println(s"toolbarControlBackground = ${theme.toolbarControlBackground.getRGB}")
+    writer.println(s"toolbarControlBackgroundHover = ${theme.toolbarControlBackgroundHover.getRGB}")
+    writer.println(s"toolbarControlBackgroundPressed = ${theme.toolbarControlBackgroundPressed.getRGB}")
+    writer.println(s"toolbarControlBorder = ${theme.toolbarControlBorder.getRGB}")
+    writer.println(s"toolbarControlBorderSelected = ${theme.toolbarControlBorderSelected.getRGB}")
+    writer.println(s"toolbarControlFocus = ${theme.toolbarControlFocus.getRGB}")
+    writer.println(s"toolbarToolSelected = ${theme.toolbarToolSelected.getRGB}")
+    writer.println(s"toolbarImage = ${theme.toolbarImage.getRGB}")
+    writer.println(s"toolbarImageSelected = ${theme.toolbarImageSelected.getRGB}")
+    writer.println(s"toolbarImageDisabled = ${theme.toolbarImageDisabled.getRGB}")
+    writer.println(s"toolbarSeparator = ${theme.toolbarSeparator.getRGB}")
+    writer.println(s"infoBackground = ${theme.infoBackground.getRGB}")
+    writer.println(s"infoH1Background = ${theme.infoH1Background.getRGB}")
+    writer.println(s"infoH1Color = ${theme.infoH1Color.getRGB}")
+    writer.println(s"infoH2Background = ${theme.infoH2Background.getRGB}")
+    writer.println(s"infoH2Color = ${theme.infoH2Color.getRGB}")
+    writer.println(s"infoH3Color = ${theme.infoH3Color.getRGB}")
+    writer.println(s"infoH4Color = ${theme.infoH4Color.getRGB}")
+    writer.println(s"infoPColor = ${theme.infoPColor.getRGB}")
+    writer.println(s"infoCodeBackground = ${theme.infoCodeBackground.getRGB}")
+    writer.println(s"infoCodeText = ${theme.infoCodeText.getRGB}")
+    writer.println(s"infoBlockBar = ${theme.infoBlockBar.getRGB}")
+    writer.println(s"infoLink = ${theme.infoLink.getRGB}")
+    writer.println(s"checkFilled = ${theme.checkFilled.getRGB}")
+    writer.println(s"errorLabelText = ${theme.errorLabelText.getRGB}")
+    writer.println(s"errorLabelBackground = ${theme.errorLabelBackground.getRGB}")
+    writer.println(s"warningLabelText = ${theme.warningLabelText.getRGB}")
+    writer.println(s"warningLabelBackground = ${theme.warningLabelBackground.getRGB}")
+    writer.println(s"errorHighlight = ${theme.errorHighlight.getRGB}")
+    writer.println(s"codeBackground = ${theme.codeBackground.getRGB}")
+    writer.println(s"codeLineHighlight = ${theme.codeLineHighlight.getRGB}")
+    writer.println(s"codeBracketHighlight = ${theme.codeBracketHighlight.getRGB}")
+    writer.println(s"codeSelection = ${theme.codeSelection.getRGB}")
+    writer.println(s"codeSeparator = ${theme.codeSeparator.getRGB}")
+    writer.println(s"checkboxBackgroundSelected = ${theme.checkboxBackgroundSelected.getRGB}")
+    writer.println(s"checkboxBackgroundSelectedHover = ${theme.checkboxBackgroundSelectedHover.getRGB}")
+    writer.println(s"checkboxBackgroundUnselected = ${theme.checkboxBackgroundUnselected.getRGB}")
+    writer.println(s"checkboxBackgroundUnselectedHover = ${theme.checkboxBackgroundUnselectedHover.getRGB}")
+    writer.println(s"checkboxBackgroundDisabled = ${theme.checkboxBackgroundDisabled.getRGB}")
+    writer.println(s"checkboxBorder = ${theme.checkboxBorder.getRGB}")
+    writer.println(s"checkboxCheck = ${theme.checkboxCheck.getRGB}")
+    writer.println(s"menuBarBorder = ${theme.menuBarBorder.getRGB}")
+    writer.println(s"menuBackground = ${theme.menuBackground.getRGB}")
+    writer.println(s"menuBackgroundHover = ${theme.menuBackgroundHover.getRGB}")
+    writer.println(s"menuBorder = ${theme.menuBorder.getRGB}")
+    writer.println(s"menuTextHover = ${theme.menuTextHover.getRGB}")
+    writer.println(s"menuTextDisabled = ${theme.menuTextDisabled.getRGB}")
+    writer.println(s"dialogBackground = ${theme.dialogBackground.getRGB}")
+    writer.println(s"dialogBackgroundSelected = ${theme.dialogBackgroundSelected.getRGB}")
+    writer.println(s"dialogText = ${theme.dialogText.getRGB}")
+    writer.println(s"dialogTextSelected = ${theme.dialogTextSelected.getRGB}")
+    writer.println(s"radioButtonBackground = ${theme.radioButtonBackground.getRGB}")
+    writer.println(s"radioButtonBackgroundHover = ${theme.radioButtonBackgroundHover.getRGB}")
+    writer.println(s"radioButtonSelected = ${theme.radioButtonSelected.getRGB}")
+    writer.println(s"radioButtonSelectedHover = ${theme.radioButtonSelectedHover.getRGB}")
+    writer.println(s"radioButtonBorder = ${theme.radioButtonBorder.getRGB}")
+    writer.println(s"primaryButtonBackground = ${theme.primaryButtonBackground.getRGB}")
+    writer.println(s"primaryButtonBackgroundHover = ${theme.primaryButtonBackgroundHover.getRGB}")
+    writer.println(s"primaryButtonBackgroundPressed = ${theme.primaryButtonBackgroundPressed.getRGB}")
+    writer.println(s"primaryButtonBorder = ${theme.primaryButtonBorder.getRGB}")
+    writer.println(s"primaryButtonText = ${theme.primaryButtonText.getRGB}")
+    writer.println(s"secondaryButtonBackground = ${theme.secondaryButtonBackground.getRGB}")
+    writer.println(s"secondaryButtonBackgroundHover = ${theme.secondaryButtonBackgroundHover.getRGB}")
+    writer.println(s"secondaryButtonBackgroundPressed = ${theme.secondaryButtonBackgroundPressed.getRGB}")
+    writer.println(s"secondaryButtonBorder = ${theme.secondaryButtonBorder.getRGB}")
+    writer.println(s"secondaryButtonText = ${theme.secondaryButtonText.getRGB}")
+    writer.println(s"textAreaBackground = ${theme.textAreaBackground.getRGB}")
+    writer.println(s"textAreaText = ${theme.textAreaText.getRGB}")
+    writer.println(s"textAreaBorderEditable = ${theme.textAreaBorderEditable.getRGB}")
+    writer.println(s"textAreaBorderNoneditable = ${theme.textAreaBorderNoneditable.getRGB}")
+    writer.println(s"tabbedPaneText = ${theme.tabbedPaneText.getRGB}")
+    writer.println(s"tabbedPaneTextSelected = ${theme.tabbedPaneTextSelected.getRGB}")
+    writer.println(s"infoIcon = ${theme.infoIcon.getRGB}")
+    writer.println(s"warningIcon = ${theme.warningIcon.getRGB}")
+    writer.println(s"errorIcon = ${theme.errorIcon.getRGB}")
+    writer.println(s"updateIcon = ${theme.updateIcon.getRGB}")
+    writer.println(s"stockBackground = ${theme.stockBackground.getRGB}")
+    writer.println(s"converterBackground = ${theme.converterBackground.getRGB}")
+    writer.println(s"announceX = ${theme.announceX.getRGB}")
+    writer.println(s"announceXHovered = ${theme.announceXHovered.getRGB}")
+    writer.println(s"announceXPressed = ${theme.announceXPressed.getRGB}")
+    writer.println(s"announceRelease = ${theme.announceRelease.getRGB}")
+    writer.println(s"announceAdvisory = ${theme.announceAdvisory.getRGB}")
+    writer.println(s"announceEvent = ${theme.announceEvent.getRGB}")
+    writer.println(s"colorPickerOutputBackground = ${theme.colorPickerOutputBackground.getRGB}")
+    writer.println(s"colorPickerCheckmark = ${theme.colorPickerCheckmark.getRGB}")
+    writer.println(s"colorPickerCopyHover = ${theme.colorPickerCopyHover.getRGB}")
+    writer.println(s"agentMonitorSeparator = ${theme.agentMonitorSeparator.getRGB}")
+    writer.println(s"constantColor = ${theme.colorizerTheme.getColor(TokenType.Literal).getRGB}")
+    writer.println(s"commandColor = ${theme.colorizerTheme.getColor(TokenType.Command).getRGB}")
+    writer.println(s"reporterColor = ${theme.colorizerTheme.getColor(TokenType.Reporter).getRGB}")
+    writer.println(s"keywordColor = ${theme.colorizerTheme.getColor(TokenType.Keyword).getRGB}")
+    writer.println(s"commentColor = ${theme.colorizerTheme.getColor(TokenType.Comment).getRGB}")
+    writer.println(s"defaultColor = ${theme.colorizerTheme.getColor(null).getRGB}")
+
+    writer.close()
+  }
+
+  def deleteTheme(theme: ColorTheme): Unit = {
+    Files.deleteIfExists(customRoot.resolve(s"${theme.name}.theme"))
+  }
 
   def widgetText(): Color = theme.widgetText
   def widgetTextError(): Color = theme.widgetTextError
@@ -26,7 +461,6 @@ object InterfaceColors {
   def widgetHandle(): Color = theme.widgetHandle
   def displayAreaBackground(): Color = theme.displayAreaBackground
   def displayAreaText(): Color = theme.displayAreaText
-  def textBoxBackground(): Color = theme.textBoxBackground
   def scrollBarBackground(): Color = theme.scrollBarBackground
   def scrollBarForeground(): Color = theme.scrollBarForeground
   def scrollBarForegroundHover(): Color = theme.scrollBarForegroundHover
@@ -34,7 +468,6 @@ object InterfaceColors {
   def commandCenterBackground(): Color = theme.commandCenterBackground
   def commandCenterText(): Color = theme.commandCenterText
   def locationToggleImage(): Color = theme.locationToggleImage
-  def commandLineBackground(): Color = theme.commandLineBackground
   def commandOutputBackground(): Color = theme.commandOutputBackground
   def splitPaneDividerBackground(): Color = theme.splitPaneDividerBackground
   def speedSliderBarBackground(): Color = theme.speedSliderBarBackground
@@ -92,8 +525,6 @@ object InterfaceColors {
   def toolbarControlBorder(): Color = theme.toolbarControlBorder
   def toolbarControlBorderSelected(): Color = theme.toolbarControlBorderSelected
   def toolbarControlFocus(): Color = theme.toolbarControlFocus
-  def toolbarButtonHover(): Color = theme.toolbarButtonHover
-  def toolbarToolPressed(): Color = theme.toolbarToolPressed
   def toolbarToolSelected(): Color = theme.toolbarToolSelected
   def toolbarImage(): Color = theme.toolbarImage
   def toolbarImageSelected(): Color = theme.toolbarImageSelected
@@ -160,7 +591,6 @@ object InterfaceColors {
   def textAreaBorderNoneditable(): Color = theme.textAreaBorderNoneditable
   def tabbedPaneText(): Color = theme.tabbedPaneText
   def tabbedPaneTextSelected(): Color = theme.tabbedPaneTextSelected
-  def bspaceHintBackground(): Color = theme.bspaceHintBackground
   def infoIcon(): Color = theme.infoIcon
   def warningIcon(): Color = theme.warningIcon
   def errorIcon(): Color = theme.errorIcon
@@ -185,7 +615,7 @@ object InterfaceColors {
   def agentMonitorSeparator(): Color = theme.agentMonitorSeparator
 }
 
-trait ColorTheme {
+abstract class ColorTheme(val name: String, val isDark: Boolean, val permanent: Boolean) {
   protected val ClassicLavender = new Color(188, 188, 230)
   protected val ClassicLightGreen = new Color(130, 188, 183)
   protected val ClassicDarkGreen = new Color(65, 94, 91)
@@ -223,7 +653,6 @@ trait ColorTheme {
   def widgetHandle: Color
   def displayAreaBackground: Color
   def displayAreaText: Color
-  def textBoxBackground: Color
   def scrollBarBackground: Color
   def scrollBarForeground: Color
   def scrollBarForegroundHover: Color
@@ -231,7 +660,6 @@ trait ColorTheme {
   def commandCenterBackground: Color
   def commandCenterText: Color
   def locationToggleImage: Color
-  def commandLineBackground: Color
   def commandOutputBackground: Color
   def splitPaneDividerBackground: Color
   def speedSliderBarBackground: Color
@@ -289,8 +717,6 @@ trait ColorTheme {
   def toolbarControlBorder: Color
   def toolbarControlBorderSelected: Color
   def toolbarControlFocus: Color
-  def toolbarButtonHover: Color
-  def toolbarToolPressed: Color
   def toolbarToolSelected: Color
   def toolbarImage: Color
   def toolbarImageSelected: Color
@@ -357,7 +783,6 @@ trait ColorTheme {
   def textAreaBorderNoneditable: Color
   def tabbedPaneText: Color
   def tabbedPaneTextSelected: Color
-  def bspaceHintBackground: Color
   def infoIcon: Color
   def warningIcon: Color
   def errorIcon: Color
@@ -378,7 +803,7 @@ trait ColorTheme {
   def colorizerTheme: ColorizerTheme
 }
 
-object ClassicTheme extends ColorTheme {
+object ClassicTheme extends ColorTheme(I18N.gui.get("menu.tools.themesManager.classic"), false, true) {
   override def widgetText: Color = Color.BLACK
   override def widgetTextError: Color = LightRed
   override def widgetHoverShadow: Color = new Color(75, 75, 75)
@@ -387,7 +812,6 @@ object ClassicTheme extends ColorTheme {
   override def widgetHandle: Color = DarkGray
   override def displayAreaBackground: Color = Color.WHITE
   override def displayAreaText: Color = Color.BLACK
-  override def textBoxBackground: Color = Color.WHITE
   override def scrollBarBackground: Color = LightGray
   override def scrollBarForeground: Color = MediumGray
   override def scrollBarForegroundHover: Color = LightGrayOutline
@@ -395,7 +819,6 @@ object ClassicTheme extends ColorTheme {
   override def commandCenterBackground: Color = LightGray
   override def commandCenterText: Color = Color.BLACK
   override def locationToggleImage: Color = Color.BLACK
-  override def commandLineBackground: Color = Color.WHITE
   override def commandOutputBackground: Color = Color.WHITE
   override def splitPaneDividerBackground: Color = MediumGray
   override def speedSliderBarBackground: Color = MediumGray
@@ -453,8 +876,6 @@ object ClassicTheme extends ColorTheme {
   override def toolbarControlBorder: Color = MediumGray
   override def toolbarControlBorderSelected: Color = InterfaceColors.Transparent
   override def toolbarControlFocus: Color = MediumBlue
-  override def toolbarButtonHover: Color = LightGray2
-  override def toolbarToolPressed: Color = MediumGray
   override def toolbarToolSelected: Color = MediumBlue
   override def toolbarImage: Color = new Color(85, 87, 112)
   override def toolbarImageSelected: Color = Color.WHITE
@@ -521,7 +942,6 @@ object ClassicTheme extends ColorTheme {
   override def textAreaBorderNoneditable: Color = LightGray
   override def tabbedPaneText: Color = Color.BLACK
   override def tabbedPaneTextSelected: Color = Color.WHITE
-  override def bspaceHintBackground: Color = new Color(128, 200, 128, 64)
   override def infoIcon: Color = new Color(50, 150, 200)
   override def warningIcon: Color = new Color(220, 170, 50)
   override def errorIcon: Color = new Color(220, 50, 50)
@@ -542,7 +962,7 @@ object ClassicTheme extends ColorTheme {
   override def colorizerTheme: ColorizerTheme = ColorizerTheme.Classic
 }
 
-object LightTheme extends ColorTheme {
+object LightTheme extends ColorTheme(I18N.gui.get("menu.tools.themesManager.light"), false, true) {
   override def widgetText: Color = new Color(53, 54, 74)
   override def widgetTextError: Color = LightRed
   override def widgetHoverShadow: Color = new Color(75, 75, 75)
@@ -551,7 +971,6 @@ object LightTheme extends ColorTheme {
   override def widgetHandle: Color = DarkGray
   override def displayAreaBackground: Color = Color.WHITE
   override def displayAreaText: Color = Color.BLACK
-  override def textBoxBackground: Color = Color.WHITE
   override def scrollBarBackground: Color = LightGray
   override def scrollBarForeground: Color = MediumGray
   override def scrollBarForegroundHover: Color = LightGrayOutline
@@ -559,7 +978,6 @@ object LightTheme extends ColorTheme {
   override def commandCenterBackground: Color = LightGray
   override def commandCenterText: Color = new Color(53, 54, 74)
   override def locationToggleImage: Color = Color.BLACK
-  override def commandLineBackground: Color = Color.WHITE
   override def commandOutputBackground: Color = Color.WHITE
   override def splitPaneDividerBackground: Color = MediumGray
   override def speedSliderBarBackground: Color = MediumGray
@@ -617,8 +1035,6 @@ object LightTheme extends ColorTheme {
   override def toolbarControlBorder: Color = MediumGray
   override def toolbarControlBorderSelected: Color = InterfaceColors.Transparent
   override def toolbarControlFocus: Color = MediumBlue
-  override def toolbarButtonHover: Color = LightGray2
-  override def toolbarToolPressed: Color = MediumGray
   override def toolbarToolSelected: Color = MediumBlue
   override def toolbarImage: Color = new Color(85, 87, 112)
   override def toolbarImageSelected: Color = Color.WHITE
@@ -685,7 +1101,6 @@ object LightTheme extends ColorTheme {
   override def textAreaBorderNoneditable: Color = LightGray
   override def tabbedPaneText: Color = Color.BLACK
   override def tabbedPaneTextSelected: Color = Color.WHITE
-  override def bspaceHintBackground: Color = new Color(128, 200, 128, 64)
   override def infoIcon: Color = new Color(50, 150, 200)
   override def warningIcon: Color = new Color(220, 170, 50)
   override def errorIcon: Color = new Color(220, 50, 50)
@@ -706,7 +1121,7 @@ object LightTheme extends ColorTheme {
   override def colorizerTheme: ColorizerTheme = ColorizerTheme.Light
 }
 
-object DarkTheme extends ColorTheme {
+object DarkTheme extends ColorTheme(I18N.gui.get("menu.tools.themesManager.dark"), true, true) {
   override def widgetText: Color = Color.WHITE
   override def widgetTextError: Color = LightRed
   override def widgetHoverShadow: Color = new Color(75, 75, 75)
@@ -715,7 +1130,6 @@ object DarkTheme extends ColorTheme {
   override def widgetHandle: Color = MediumGray
   override def displayAreaBackground: Color = Color.BLACK
   override def displayAreaText: Color = Color.WHITE
-  override def textBoxBackground: Color = AlmostBlack
   override def scrollBarBackground: Color = new Color(40, 40, 40)
   override def scrollBarForeground: Color = DarkGray
   override def scrollBarForegroundHover: Color = LightGrayOutline
@@ -723,7 +1137,6 @@ object DarkTheme extends ColorTheme {
   override def commandCenterBackground: Color = BlueGray
   override def commandCenterText: Color = Color.WHITE
   override def locationToggleImage: Color = Color.WHITE
-  override def commandLineBackground: Color = DarkGray
   override def commandOutputBackground: Color = DarkBlueGray
   override def splitPaneDividerBackground: Color = new Color(204, 204, 204)
   override def speedSliderBarBackground: Color = MediumGray
@@ -781,8 +1194,6 @@ object DarkTheme extends ColorTheme {
   override def toolbarControlBorder: Color = LightGrayOutline
   override def toolbarControlBorderSelected: Color = LightGrayOutline
   override def toolbarControlFocus: Color = Color.WHITE
-  override def toolbarButtonHover: Color = MediumBlueGray
-  override def toolbarToolPressed: Color = DarkBlueGray2
   override def toolbarToolSelected: Color = MediumBlue2
   override def toolbarImage: Color = new Color(168, 170, 194)
   override def toolbarImageSelected: Color = LightGray2
@@ -849,7 +1260,6 @@ object DarkTheme extends ColorTheme {
   override def textAreaBorderNoneditable: Color = LightGrayOutline
   override def tabbedPaneText: Color = Color.WHITE
   override def tabbedPaneTextSelected: Color = Color.WHITE
-  override def bspaceHintBackground: Color = new Color(128, 200, 128, 64)
   override def infoIcon: Color = new Color(50, 150, 200)
   override def warningIcon: Color = new Color(220, 170, 50)
   override def errorIcon: Color = new Color(220, 50, 50)

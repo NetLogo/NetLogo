@@ -9,9 +9,6 @@ import javax.swing.event._
 import scala.language.implicitConversions
 
 object Implicits {
-  implicit def thunk2action[T](fn: () => T): Action = new AbstractAction {
-    override def actionPerformed(e: ActionEvent) = fn()
-  }
   implicit def thunk2windowAdapter[T](fn: () => T): java.awt.event.WindowAdapter = new WindowAdapter {
     override def windowClosing(e: WindowEvent) = fn()
   }

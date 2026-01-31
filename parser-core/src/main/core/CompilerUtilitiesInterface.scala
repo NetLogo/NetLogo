@@ -28,7 +28,7 @@ trait CompilerUtilitiesInterface extends LiteralParser {
   def colorizer: TokenColorizer
 }
 
-sealed abstract trait ColorizerTheme {
+abstract class ColorizerTheme {
   def getColor(tpe: TokenType): Color
 }
 

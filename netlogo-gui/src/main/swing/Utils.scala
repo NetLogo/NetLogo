@@ -3,10 +3,10 @@
 package org.nlogo.swing
 
 import java.awt.{ Color, Component, Font, Graphics, Graphics2D, Image, RenderingHints }
-import java.awt.event.KeyEvent
+import java.awt.event.{ ActionEvent, KeyEvent }
 import java.awt.geom.AffineTransform
 import java.awt.image.BufferedImage
-import javax.swing.{ Action, Icon, ImageIcon, InputMap, JComponent, JDialog, JWindow, KeyStroke }
+import javax.swing.{ AbstractAction, Action, Icon, ImageIcon, InputMap, JComponent, JDialog, JWindow, KeyStroke }
 
 import org.nlogo.core.I18N
 
@@ -77,6 +77,22 @@ object Utils {
   def addEscKeyAction(component: JComponent, inputMap: InputMap, action: Action): Unit = {
     inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0, false), "ESC_ACTION")
     component.getActionMap.put("ESC_ACTION", action)
+  }
+
+  def addEscKeyAction(dialog: JDialog, action: () => Unit): Unit = {
+    addEscKeyAction(dialog, new AbstractAction {
+      override def actionPerformed(e: ActionEvent): Unit = {
+        action()
+      }
+    })
+  }
+
+  def addEscKeyAction(component: JComponent, action: () => Unit): Unit = {
+    addEscKeyAction(component, new AbstractAction {
+      override def actionPerformed(e: ActionEvent): Unit = {
+        action()
+      }
+    })
   }
 
   def initGraphics2D(g: Graphics): Graphics2D = {

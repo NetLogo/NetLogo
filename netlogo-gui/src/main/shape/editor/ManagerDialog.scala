@@ -12,7 +12,6 @@ import org.nlogo.api.AbstractModelLoader
 import org.nlogo.core.{ AgentKind, I18N, Model, Shape => CoreShape, ShapeList, ShapeListTracker },
   ShapeList.{ shapesToMap, isDefaultShapeName }
 import org.nlogo.swing.{ Button, DialogButton, OptionPane, ScrollPane, TextField, Transparent, Utils }
-import org.nlogo.swing.Implicits.thunk2action
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 import scala.reflect.ClassTag
