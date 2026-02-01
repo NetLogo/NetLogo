@@ -19,5 +19,5 @@ trait EditableTheme(base: ColorTheme) {
   protected val colors: Seq[EditableColor] = base.colors.map((key, color) => new EditableColor(key, color)).toSeq
 
   protected def getStaticTheme: ColorTheme =
-    ColorTheme(name, isDark, false, colors.map(color => (color.key, color.value)).toMap)
+    ColorTheme(name, name, isDark, false, colors.map(color => (color.key, color.value)).toMap)
 }

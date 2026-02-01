@@ -20,15 +20,20 @@ object InterfaceColors {
 
   val Transparent = new Color(0, 0, 0, 0)
 
-  val ClassicTheme = loadTheme(I18N.gui("classic"), getClass.getResource("/themes/Classic.theme"), true).get
-  val LightTheme = loadTheme(I18N.gui("light"), getClass.getResource("/themes/Light.theme"), true).get
-  val DarkTheme = loadTheme(I18N.gui("dark"), getClass.getResource("/themes/Dark.theme"), true).get
+  val ClassicTheme: ColorTheme =
+    loadTheme(I18N.gui("classic"), "classic", getClass.getResource("/themes/Classic.theme"), true).get
+
+  val LightTheme: ColorTheme =
+    loadTheme(I18N.gui("light"), "light", getClass.getResource("/themes/Light.theme"), true).get
+
+  val DarkTheme: ColorTheme =
+    loadTheme(I18N.gui("dark"), "dark", getClass.getResource("/themes/Dark.theme"), true).get
 
   private val defaultTheme: String = {
     if (OsThemeDetector.getDetector.isDark) {
-      DarkTheme.name
+      DarkTheme.prefName
     } else {
-      LightTheme.name
+      LightTheme.prefName
     }
   }
 
@@ -43,7 +48,7 @@ object InterfaceColors {
           if (reservedName(name) || themes.exists(_._1 == name)) {
             themes
           } else {
-            themes ++ loadTheme(name, path.toUri.toURL, false).map((name, _))
+            themes ++ loadTheme(name, name, path.toUri.toURL, false).map((name, _))
           }
       }.toMap
     } else {
@@ -61,14 +66,13 @@ object InterfaceColors {
     theme
 
   def prefsTheme: ColorTheme = {
-    // two options for each built-in theme for compatibility with old preference values (Isaac B 1/30/26)
-    NetLogoPreferences.get("colorTheme", defaultTheme) match {
-      case "classic" | ClassicTheme.name => ClassicTheme
-      case "light" | LightTheme.name => LightTheme
-      case "dark" | DarkTheme.name => DarkTheme
+    NetLogoPreferences.get("customColorTheme", NetLogoPreferences.get("colorTheme", defaultTheme)) match {
+      case ClassicTheme.prefName => ClassicTheme
+      case LightTheme.prefName => LightTheme
+      case DarkTheme.prefName => DarkTheme
       case name =>
         customThemes.get(name).getOrElse {
-          if (defaultTheme == LightTheme.name) {
+          if (defaultTheme == LightTheme.prefName) {
             LightTheme
           } else {
             DarkTheme
@@ -83,12 +87,10 @@ object InterfaceColors {
   def getCustomThemes: Array[ColorTheme] =
     customThemes.values.toArray
 
-  private def reservedName(name: String): Boolean = {
-    name == "classic" || name == "light" || name == "dark" ||
+  private def reservedName(name: String): Boolean =
     name == ClassicTheme.name || name == LightTheme.name || name == DarkTheme.name
-  }
 
-  private def loadTheme(name: String, url: URL, permanent: Boolean): Option[ColorTheme] = {
+  private def loadTheme(name: String, prefName: String, url: URL, permanent: Boolean): Option[ColorTheme] = {
     Try {
       val source: Source = Source.fromURL(url)
       val lines: Iterator[String] = source.getLines
@@ -106,7 +108,7 @@ object InterfaceColors {
       source.close()
 
       if (permanent) {
-        ColorTheme(name, isDark, true, colors)
+        ColorTheme(name, prefName, isDark, true, colors)
       } else {
         val default: ColorTheme = {
           if (isDark) {
@@ -116,7 +118,8 @@ object InterfaceColors {
           }
         }
 
-        ColorTheme(name, isDark, false, default.colors.map((key, color) => (key, colors.getOrElse(key, color))))
+        ColorTheme(name, prefName, isDark, false,
+                   default.colors.map((key, color) => (key, colors.getOrElse(key, color))))
       }
     }.toOption
   }
@@ -299,7 +302,9 @@ object InterfaceColors {
   def agentMonitorSeparator(): Color = theme.colors("agentMonitorSeparator")
 }
 
-case class ColorTheme(name: String, isDark: Boolean, permanent: Boolean, colors: Map[String, Color]) {
+case class ColorTheme(name: String, prefName: String, isDark: Boolean, permanent: Boolean,
+                      colors: Map[String, Color]) {
+
   def colorizerTheme: ColorizerTheme = {
     new ColorizerTheme {
       override def getColor(tpe: TokenType): Color = {

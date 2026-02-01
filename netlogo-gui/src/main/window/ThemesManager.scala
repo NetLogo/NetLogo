@@ -158,12 +158,12 @@ class ThemesManager(appFrame: Frame & ThemeSync)
 
         if (theme.name != InterfaceColors.prefsTheme.name) {
           if (theme.permanent) {
-            Analytics.preferenceChange("colorTheme", theme.name)
+            Analytics.preferenceChange("colorTheme", theme.prefName)
           } else {
-            Analytics.preferenceChange("colorTheme", "Custom")
+            Analytics.preferenceChange("colorTheme", "custom")
           }
 
-          NetLogoPreferences.put("colorTheme", theme.name)
+          NetLogoPreferences.put("customColorTheme", theme.prefName)
         }
 
         appFrame.syncTheme()
