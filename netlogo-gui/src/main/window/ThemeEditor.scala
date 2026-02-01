@@ -66,7 +66,7 @@ class ThemeEditor(manager: ThemesManager, baseTheme: ColorTheme, appFrame: Theme
 
       c.gridwidth = 1
 
-      orderedColors.foreach { color =>
+      colors.foreach { color =>
         c.gridx = 0
         c.weightx = 0
         c.insets = new Insets(0, 0, 6, 6)
@@ -126,7 +126,7 @@ class ThemeEditor(manager: ThemesManager, baseTheme: ColorTheme, appFrame: Theme
       new OptionPane(this, I18N.gui.get("menu.tools.themeEditor.invalidName"),
                      I18N.gui.getN("menu.tools.themeEditor.emptyName", name), OptionPane.Options.Ok,
                      OptionPane.Icons.Error)
-    } else if (manager.themeExists(name)) {
+    } else if (name != baseTheme.name && manager.themeExists(name)) {
       new OptionPane(this, I18N.gui.get("menu.tools.themeEditor.invalidName"),
                      I18N.gui.getN("menu.tools.themeEditor.duplicateName", name), OptionPane.Options.Ok,
                      OptionPane.Icons.Error)
@@ -179,7 +179,7 @@ class ThemeEditor(manager: ThemesManager, baseTheme: ColorTheme, appFrame: Theme
   }
 
   private class ColorEditor(color: EditableColor) extends RoundedBorderPanel with ThemeSync {
-    setColor(color.get)
+    setColor(color.value)
     setDiameter(6)
     enableHover()
     enablePressed()
@@ -187,7 +187,7 @@ class ThemeEditor(manager: ThemesManager, baseTheme: ColorTheme, appFrame: Theme
 
     addMouseListener(new MouseAdapter {
       override def mousePressed(e: MouseEvent): Unit = {
-        new JFXColorPicker(null, true, RGBAOnly, Some(RGBA.fromJavaColor(color.get)), str => {
+        new JFXColorPicker(null, true, RGBAOnly, Some(RGBA.fromJavaColor(color.value)), str => {
           val rgb = """^\[(\d{1,3}) (\d{1,3}) (\d{1,3})\]$""".r
           val rgba = """^\[(\d{1,3}) (\d{1,3}) (\d{1,3}) (\d{1,3})\]$""".r
 
@@ -200,7 +200,7 @@ class ThemeEditor(manager: ThemesManager, baseTheme: ColorTheme, appFrame: Theme
                 new Color(r.toInt, g.toInt, b.toInt, a.toInt)
 
               case _ =>
-                color.get
+                color.value
             }
           }
 
@@ -212,7 +212,7 @@ class ThemeEditor(manager: ThemesManager, baseTheme: ColorTheme, appFrame: Theme
     })
 
     private def setColor(color: Color): Unit = {
-      this.color.set(color)
+      this.color.value = color
 
       setBackgroundColor(color)
       setBackgroundHoverColor(color)

@@ -9,11 +9,11 @@ import org.nlogo.util.AnyFunSuiteEx
 
 class ColorizerTests extends AnyFunSuiteEx {
 
-  private val theme = ColorizerTheme.Light
+  private val theme = ColorizerTheme.TestTheme
 
   def simple(s: String, color: Color): Unit = {
     assertResult(Vector.fill(s.length)(color)) {
-      Colorizer.colorizeLine(s, ColorizerTheme.Light)
+      Colorizer.colorizeLine(s, theme)
     }
   }
 

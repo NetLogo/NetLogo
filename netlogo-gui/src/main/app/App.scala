@@ -32,7 +32,7 @@ import org.nlogo.nvm.{ PresentationCompilerInterface, Workspace }
 import org.nlogo.shape.{ LinkShapesManagerInterface, ShapesManagerInterface, TurtleShapesManagerInterface }
 import org.nlogo.swing.{ DropdownOptionPane, InputOptionPane, OptionPane, SetSystemLookAndFeel, UserAction, Utils },
   UserAction.{ ActionCategoryKey, EditCategory, FileCategory, HelpCategory, MenuAction, ToolsCategory }
-import org.nlogo.theme.{ ClassicTheme, ColorTheme, DarkTheme, InterfaceColors, LightTheme, ThemeSync }
+import org.nlogo.theme.{ ColorTheme, InterfaceColors, ThemeSync }
 import org.nlogo.util.{ NullAppHandler, Pico }
 import org.nlogo.window._
 import org.nlogo.window.Events._
@@ -260,9 +260,9 @@ object App {
       else if (token == "--color-theme") {
         colorTheme = {
           nextToken() match {
-            case "classic" => ClassicTheme
-            case "light" => LightTheme
-            case "dark" => DarkTheme
+            case "classic" => InterfaceColors.ClassicTheme
+            case "light" => InterfaceColors.LightTheme
+            case "dark" => InterfaceColors.DarkTheme
             case theme => throw new IllegalArgumentException(I18N.errors.getN("themes.unknown", theme))
           }
         }
