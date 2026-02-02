@@ -12,7 +12,7 @@ import org.nlogo.api.Version
 import org.nlogo.awt.Positioning
 import org.nlogo.core.I18N
 import org.nlogo.swing.{ BrowserLauncher, ButtonPanel, DialogButton, Implicits, Transparent, Utils },
-  BrowserLauncher.docPath, Implicits.thunk2action
+  Implicits.thunk2action
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 // contains an EditPanel, plus some buttons at the bottom (OK/Apply/Help/Cancel).
@@ -53,13 +53,10 @@ class EditDialog(window: Window, target: Editable, editPanel: EditPanel, modal: 
   })
 
   val helpButton = new DialogButton(false, I18N.gui.get("common.buttons.help"), () => {
-    val link = target.helpLink.getOrElse("")
-    val splitLink = link.split("#")
-    val (mainLink, anchor) =
-      if (splitLink.length > 1) (splitLink(0), splitLink(1))
-      else                      (splitLink.head, "")
+    val link = target.helpLink.fold("")((page, anchor) => s"$page.html#$anchor")
+
     BrowserLauncher.tryOpenURI(this, new URI(s"https://docs.netlogo.org/${Version.versionNumberNo3D}/$link"),
-                               docPath(mainLink), anchor)
+                               QuickHelp.docPath(target.helpLink.map(_ + "-" + _)))
   })
 
   private val buttons = Seq(

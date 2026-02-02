@@ -9,7 +9,6 @@ import ModelsLibrary.modelsDirectory
 import Extensions.{ excludedExtensions, extensionNetLogoJar, extensionRoot }
 import NetLogoBuild.{ all, autogenRoot, cclArtifacts, includeInPackaging,
   marketingVersion, netlogoVersion, shareSourceDirectory }
-import Docs.htmlDocs
 import Dump.dumpClassName
 import Testing.testTempDirectory
 
@@ -267,7 +266,6 @@ lazy val netlogo = project.in(file("netlogo-gui")).
     all := {},
     all := {
       all.dependsOn(
-        htmlDocs,
         Test / packageBin,
         Extensions.extensions,
         NativeLibs.nativeLibs,
@@ -400,6 +398,7 @@ lazy val macApp = project.in(file("mac-app")).
 lazy val dist = project.in(file("dist")).
   settings(version := (netlogo / version).value).
   settings(NetLogoBuild.settings: _*).
+  settings(marketingVersion := (Compile / version).value).
   settings(NetLogoPackaging.settings(netlogo, macApp, behaviorsearchProject): _*)
 
 lazy val sharedResources = (project in file ("shared")).

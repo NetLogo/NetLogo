@@ -177,7 +177,7 @@ abstract class AbstractPlotWidget(val plot: Plot, val plotManager: PlotManagerIn
     // but canvas isnt created yet.
     if(fullyConstructed) canvas.makeDirty()
   }
-  override def helpLink = Some("programming.html#plotting")
+  override def helpLink = Some(("programming", "plotting"))
 
   def legendHeight: Int =
     legend.getHeight

@@ -4,10 +4,10 @@ package org.nlogo.window
 
 import java.awt.Component
 import java.net.URI
-import java.nio.file.Path
+import java.nio.file.{ Files, Path, Paths }
 import java.util.Locale
 
-import org.nlogo.api.{ FileIO, Version }
+import org.nlogo.api.Version
 import org.nlogo.core.I18N
 import org.nlogo.swing.{ BrowserLauncher, OptionPane }
 
@@ -24,31 +24,40 @@ object QuickHelp {
    * <p/>
    * ~Forrest (4/26/2007)
    */
-  private val QUICKHELPWORDS_PATH = "/system/dict.txt"
-  private val QUICKHELPWORDS_PATH3D = "/system/dict3d.txt"
 
-  private lazy val quickHelpWords = loadHelp(QUICKHELPWORDS_PATH)
+  private val docsRoot: String = System.getProperty("netlogo.docs.dir")
+
   // if we're not in 3D don't load the 3d dictionary words
   // cause we don't need 'em and they'll override the 2d
   // dictionary ev 10/25/07
-  private lazy val quickHelpWords3d =
-    if (Version.is3D)
-      loadHelp(QUICKHELPWORDS_PATH3D)
-    else
-      Map[String, String]()
+  private lazy val quickHelpWords: Map[String, Entry] =
+    loadHelp(false)
 
-  private def loadHelp(path: String): Map[String, String] = {
-    FileIO.getResourceAsStringArray(path).map(line => {
-      (line.substring(0, line.indexOf(' ')), line.substring(line.lastIndexOf(' ') + 1))
-    }).toMap
+  private lazy val quickHelpWords3d: Map[String, Entry] = {
+    if (Version.is3D) {
+      loadHelp(true)
+    } else {
+      Map()
+    }
   }
 
-  private def docPath(docName: String): Path =
-    BrowserLauncher.docPath(docName)
+  def docPath(anchor: Option[String]): Path =
+    Paths.get(docsRoot, "NetLogo_User_Manual.pdf" + anchor.fold("")("#" + _))
 
-  private def openDictionary(comp: Component, word: String, words: Map[String, String]): Unit = {
-    BrowserLauncher.tryOpenURI(comp, new URI(s"https://docs.netlogo.org/${Version.versionNumberNo3D}/dict/${words(word)}"),
-                               docPath(s"dict/${words(word)}"))
+  private def loadHelp(threed: Boolean): Map[String, Entry] = {
+    Files.readString(Paths.get(docsRoot, "manual-links.csv")).split('\n').flatMap { line =>
+      val split = line.split(',')
+
+      Entry.parse(split.tail, threed).map((split.head, _))
+    }.toMap
+  }
+
+  private def openDictionary(comp: Component, word: String, words: Map[String, Entry]): Unit = {
+    BrowserLauncher.tryOpenURI(
+      comp,
+      new URI(s"https://docs.netlogo.org/${Version.versionNumberNo3D}/${words(word).docsUrl}"),
+      docPath(Some(words(word).pdfAnchor))
+    )
   }
 
   def doHelp(comp: Component, token: String): Unit = {
@@ -59,17 +68,30 @@ object QuickHelp {
 
     // if there is an entry in the 3D dictionary then it overrides
     // the 2D entry ev 10/25/07
-    if (quickHelpWords3d.contains(tokenLower))
+    if (quickHelpWords3d.contains(tokenLower)) {
       openDictionary(comp, tokenLower, quickHelpWords3d)
-    else if (quickHelpWords.contains(tokenLower))
+    } else if (quickHelpWords.contains(tokenLower)) {
       openDictionary(comp, tokenLower, quickHelpWords)
-    else {
+    } else {
       if (new OptionPane(comp, I18N.gui.get("common.netlogo"),
                          I18N.gui.getN("tabs.code.rightclick.quickhelp.notfound",
                          tokenLower.toUpperCase(Locale.ENGLISH)), OptionPane.Options.OkCancel,
                          OptionPane.Icons.Error).getSelectedIndex == 0)
-        BrowserLauncher.tryOpenURI(comp, new URI(s"https://docs.netlogo.org/${Version.versionNumberNo3D}/dictionary.html"),
-                                   docPath("dictionary.html"))
+        BrowserLauncher.tryOpenURI(comp,
+          new URI(s"https://docs.netlogo.org/${Version.versionNumberNo3D}/dictionary.html"),
+          docPath(Some("dictionary-netlogo-dictionary")))
     }
   }
+
+  private object Entry {
+    def parse(els: Array[String], threed: Boolean): Option[Entry] = {
+      if (els.size == 3 && (els(0) == "3d") == threed) {
+        Some(Entry(els(1), els(2)))
+      } else {
+        None
+      }
+    }
+  }
+
+  private case class Entry(docsUrl: String, pdfAnchor: String)
 }

@@ -3,7 +3,7 @@
 package org.nlogo.window
 
 trait Editable {
-  def helpLink: Option[String]
+  def helpLink: Option[(String, String)]
   def liveUpdate: Boolean = true
   def classDisplayName: String
   def editFinished(): Boolean

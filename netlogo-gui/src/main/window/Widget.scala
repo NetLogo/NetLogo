@@ -50,7 +50,7 @@ abstract class MultiErrorWidget extends Widget with MultiErrorHandler {
 }
 
 abstract class Widget extends JPanel with RoundedBorderPanel with ThemeSync with InterfaceModeChangedEvent.Handler {
-  def helpLink: Option[String] = None
+  def helpLink: Option[(String, String)] = None
   var originalFont: Font = null
   var displayName: String = ""
   var deleteable: Boolean = true

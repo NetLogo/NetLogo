@@ -79,3 +79,6 @@
 [submodule "test/exports"]
 	path = test/exports
 	url = https://github.com/NetLogo/Model-Exports
+[submodule "helio"]
+	path = helio
+	url = https://github.com/NetLogo/Helio

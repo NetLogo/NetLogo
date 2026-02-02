@@ -6,7 +6,7 @@ import java.awt.{ Font, Dimension, BorderLayout, Graphics }
 import java.awt.event.{ ActionEvent, FocusEvent, FocusListener }
 import java.awt.print.PageFormat
 import java.io.File
-import java.nio.file.Path
+import java.net.URI
 import javax.swing.{ AbstractAction, Action, BorderFactory, JEditorPane, JPanel, JScrollPane, JTextArea,
                      ScrollPaneConstants }
 import javax.swing.border.EmptyBorder
@@ -14,16 +14,15 @@ import javax.swing.event.{ DocumentListener, HyperlinkListener, DocumentEvent, H
 import javax.swing.text.JTextComponent
 import javax.swing.text.html.HTMLDocument
 
-import org.nlogo.api.ExternalResourceManager
+import org.nlogo.api.{ ExternalResourceManager, Version }
 import org.nlogo.app.common.{ Events => AppEvents, FindDialog, MenuTab, UndoRedoActions }
 import org.nlogo.awt.{ Fonts, Hierarchy }
 import org.nlogo.core.I18N
 import org.nlogo.swing.Implicits._
 import org.nlogo.swing.{ OptionPane, ScrollableTextComponent, ScrollPane, TextArea, ToolBar, ToolBarActionButton,
-                         ToolBarToggleButton, Printable, PrinterManager, BrowserLauncher, UndoManager, Utils },
-  BrowserLauncher.docPath
+                         ToolBarToggleButton, Printable, PrinterManager, BrowserLauncher, UndoManager, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
-import org.nlogo.window.{ Events => WindowEvents, Zoomable }
+import org.nlogo.window.{ Events => WindowEvents, QuickHelp, Zoomable }
 
 class InfoTab(attachModelDir: String => String, resourceManager: ExternalResourceManager)
   extends JPanel
@@ -39,8 +38,6 @@ class InfoTab(attachModelDir: String => String, resourceManager: ExternalResourc
   with WindowEvents.ZoomedEvent.Handler
   with Zoomable
   with ThemeSync {
-
-  val baseDocPath: Path = docPath("infotab.html")
 
   private val undoManager = new UndoManager
   // 90 columns seems reasonable: wide enough to not waste screen real estate, but narrow enough so
@@ -61,7 +58,9 @@ class InfoTab(attachModelDir: String => String, resourceManager: ExternalResourc
   private val findButton = new ToolBarActionButton(FindDialog.FIND_ACTION)
   private val helpButton = new ToolBarActionButton(new AbstractAction(I18N.gui.get("tabs.info.help")) {
     override def actionPerformed(e: ActionEvent): Unit = {
-      BrowserLauncher.openPath(InfoTab.this, baseDocPath, "information")
+      BrowserLauncher.tryOpenURI(
+        InfoTab.this, new URI(s"https://netlogo.org/${Version.versionNumberNo3D}/infotab#information"),
+        QuickHelp.docPath(Some("infotab-information")))
     }
   })
   helpButton.setIcon(Utils.iconScaledWithColor("/images/help.png", 15, 15, InterfaceColors.toolbarImage()))
@@ -204,7 +203,9 @@ class InfoTab(attachModelDir: String => String, resourceManager: ExternalResourc
                            I18N.gui.get("tabs.info.invalidURL"),
                            Seq(I18N.gui.get("common.buttons.help"), I18N.gui.get("common.buttons.cancel")),
                            OptionPane.Icons.Error).getSelectedIndex == 1) // Help
-          BrowserLauncher.openPath(this, baseDocPath, "links")
+          BrowserLauncher.tryOpenURI(
+            this, new URI(s"https://netlogo.org/${Version.versionNumberNo3D}/infotab#links"),
+            QuickHelp.docPath(Some("infotab-links")))
       }
       else BrowserLauncher.openURI(this, e.getURL.toURI)
     }
