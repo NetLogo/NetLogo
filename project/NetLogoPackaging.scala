@@ -2,7 +2,7 @@ import sbt._
 import sbt.complete.Parser, Parser._
 import Keys.{ baseDirectory, buildStructure, dependencyClasspath, packageBin, state, streams, target }
 import ChecksumsAndPreviews.allPreviews
-import Docs.{ allDocs, docsRoot, extensionDocs, htmlDocs, manualPDF }
+import Docs.{ allDocs, docsDest }
 import Extensions.{ extensions, extensionRoot }
 import ModelsLibrary.{ modelsDirectory, modelIndex }
 import NativeLibs.nativeLibs
@@ -42,7 +42,7 @@ object NetLogoPackaging {
         Seq(
           new ExtensionDir((netlogo / extensionRoot).value, platform, arch),
           new ModelsDir((netlogo / modelsDirectory).value),
-          new DocsDir((netlogo / docsRoot).value),
+          new DocsDir((netlogo / docsDest).value),
           new BehaviorSearchDir((behaviorsearchProject / baseDirectory).value, platform)
         ) ++ (platform match {
           case "windows" => Seq(new NativesDir(nlDir / "natives", "windows-amd64", "windows-i586"))
@@ -113,7 +113,7 @@ object NetLogoPackaging {
         "date" -> buildDate.value
       ))
 
-      Seq(target.value / "readme.md", netLogoRoot.value / "NetLogo User Manual.pdf", packagedMathematicaLink.value)
+      Seq(target.value / "readme.md", netLogoRoot.value / "NetLogo_User_Manual.pdf", packagedMathematicaLink.value)
     },
 
     webTarget := target.value / "downloadPages",
@@ -160,7 +160,7 @@ object NetLogoPackaging {
       FileActions.copyDirectory(webTarget.value, localSiteTarget)
       FileActions.copyDirectory((netlogo / modelsDirectory).value, localSiteTarget / "models")
       FileActions.copyDirectory(netLogoRoot.value / "docs", localSiteTarget / "docs")
-      FileActions.copyFile(netLogoRoot.value / "NetLogo User Manual.pdf", localSiteTarget / "docs" / "NetLogo User Manual.pdf")
+      FileActions.copyFile(netLogoRoot.value / "NetLogo_User_Manual.pdf", localSiteTarget / "docs" / "NetLogo_User_Manual.pdf")
       localSiteTarget
     },
 
@@ -182,8 +182,8 @@ object NetLogoPackaging {
       val host = "ccl.northwestern.edu"
       val sourceDir = netLogoRoot.value / "docs"
       val targetDir = s"/usr/local/www/netlogo/${netLogoLongVersion.value}"
-      val manualSource = netLogoRoot.value / "NetLogo User Manual.pdf"
-      val manualTarget = s"$targetDir/docs/NetLogo User Manual.pdf"
+      val manualSource = netLogoRoot.value / "NetLogo_User_Manual.pdf"
+      val manualTarget = s"$targetDir/docs/NetLogo_User_Manual.pdf"
       (netlogo / allDocs).value
       RunProcess(Seq("rsync", "-rltv", "--inplace", "--progress", sourceDir.getPath, s"$user@$host:$targetDir"), "rsync docs")
       RunProcess(Seq("rsync", "-rltv", "--inplace", "--progress", manualSource.getPath, s"$user@$host:$manualTarget"), "rsync user manual")
@@ -193,7 +193,7 @@ object NetLogoPackaging {
       val versionDir = tempDocs / marketingVersion.value
       RunProcess(Seq("git", "clone", "https://github.com/NetLogo/docs", tempDocs.toString), "clone docs repo")
       FileActions.copyDirectory(sourceDir, versionDir)
-      FileActions.copyFile(manualSource, versionDir / "NetLogo User Manual.pdf")
+      FileActions.copyFile(manualSource, versionDir / "NetLogo_User_Manual.pdf")
       RunProcess(Seq("git", "-C", tempDocs.toString, "add", "."), "stage changed files")
       RunProcess(Seq("git", "-C", tempDocs.toString, "commit", "-m", s"Upload ${marketingVersion.value} docs"), "create commit")
       RunProcess(Seq("git", "-C", tempDocs.toString, "push"), "push commit to remote")
@@ -240,7 +240,7 @@ object NetLogoPackaging {
       val extraJavaOptions = Seq(
         "-Dnetlogo.extensions.dir=$APPDIR/../../extensions"
       , "-Dnetlogo.models.dir=$APPDIR/../../models"
-      , "-Dnetlogo.docs.dir=$APPDIR/../../docs"
+      , "-Dnetlogo.docs.dir=$APPDIR/../.."
       , s"-Djava.library.path=$$APPDIR/../../natives/linux-${buildJDK.nativesArch}"
       )
       val mainLauncher = new NetLogoLauncher(version, "NetLogo.png", extraJavaOptions)
@@ -318,7 +318,7 @@ object NetLogoPackaging {
       val extraJavaOptions = Seq(
         "-Dnetlogo.extensions.dir=$APPDIR/../extensions"
       , "-Dnetlogo.models.dir=$APPDIR/../models"
-      , "-Dnetlogo.docs.dir=$APPDIR/../docs"
+      , "-Dnetlogo.docs.dir=$APPDIR/.."
       , s"-Djava.library.path=$$APPDIR/../natives/windows-${buildJDK.nativesArch}"
       )
       val mainLauncher = new NetLogoLauncher(version, "NetLogo.ico", extraJavaOptions, Seq("icon="))
@@ -407,7 +407,7 @@ object NetLogoPackaging {
       // 2022
       , "-Dnetlogo.extensions.dir={{{ROOTDIR}}}/extensions"
       , "-Dnetlogo.models.dir={{{ROOTDIR}}}/models"
-      , "-Dnetlogo.docs.dir={{{ROOTDIR}}}/docs"
+      , "-Dnetlogo.docs.dir={{{ROOTDIR}}}"
       , "-Djava.library.path={{{ROOTDIR}}}/natives/macosx-universal"
       , "-Djogamp.gluegen.UseTempJarCache=false"
       )

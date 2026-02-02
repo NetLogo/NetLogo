@@ -3,6 +3,7 @@
 package org.nlogo.window
 
 import java.awt.Component
+import java.net.URI
 import javax.swing.text.JTextComponent
 
 import org.nlogo.api.{ LogoException, Version }
@@ -196,7 +197,9 @@ extends ErrorDialog(owner, I18N.gui.get("error.dialog.outOfMemory.title")) {
 
   override def makeButtons() = {
     super.makeButtons() :+ new DialogButton(false, I18N.gui.get("error.dialog.openFAQ"), () => {
-      BrowserLauncher.openPath(owner, BrowserLauncher.docPath("faq.html"), "howbig")
+      BrowserLauncher.openURI(
+        owner,
+        new URI(s"https://docs.netlogo.org/${Version.versionNumberNo3D}/faq#how-big-can-my-model-be-how-many-turtles-patches-procedures-buttons-and-so-on-can-my-model-contain"))
     })
   }
 }

@@ -21,7 +21,7 @@ private [gui] class ProtocolEditable(protocol: LabProtocol,
                                      experimentNames: Seq[String] = Seq[String]())
   extends Editable with DummyErrorHandler {
   // these are for Editable
-  def helpLink = Some("behaviorspace.html#creating-an-experiment-setup")
+  def helpLink = Some(("behaviorspace", "creating-an-experiment-setup"))
   val classDisplayName = "Experiment"
   val sourceOffset = 0
 

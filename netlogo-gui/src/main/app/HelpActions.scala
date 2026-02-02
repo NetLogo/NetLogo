@@ -10,10 +10,9 @@ import javax.swing.AbstractAction
 
 import org.nlogo.core.I18N
 import org.nlogo.api.Version
-import org.nlogo.swing.{ BrowserLauncher, UserAction },
-  BrowserLauncher.docPath,
-  UserAction._
+import org.nlogo.swing.{ BrowserLauncher, UserAction }, UserAction._
 import org.nlogo.theme.ThemeSync
+import org.nlogo.window.QuickHelp
 
 class TryRemoteBrowseAction(name: String, uri: URI, fallback: Path, group: String)
 extends AbstractAction(name)
@@ -41,10 +40,10 @@ object HelpActions {
   def apply: Seq[MenuAction] = {
     Seq(
     new TryRemoteBrowseAction(I18N.gui.get("menu.help.netLogoUserManual"),
-      new URI(s"https://docs.netlogo.org/${Version.versionNumberNo3D}"), docPath("index.html"), HelpDocGroup),
+      new URI(s"https://docs.netlogo.org/${Version.versionNumberNo3D}"), QuickHelp.docPath(None), HelpDocGroup),
     new TryRemoteBrowseAction(I18N.gui.get("menu.help.netLogoDictionary"),
-      new URI(s"https://docs.netlogo.org/${Version.versionNumberNo3D}/dictionary.html"), docPath("dictionary.html"),
-      HelpDocGroup),
+      new URI(s"https://docs.netlogo.org/${Version.versionNumberNo3D}/dictionary.html"),
+      QuickHelp.docPath(Some("dictionary-netlogo-dictionary")), HelpDocGroup),
     new RemoteBrowseAction(I18N.gui.get("menu.help.bind"),
       new URI("https://ccl.northwestern.edu/netlogo/bind"), HelpDocGroup),
     new RemoteBrowseAction(I18N.gui.get("menu.help.introToABM"),

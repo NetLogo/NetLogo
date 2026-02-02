@@ -6,7 +6,7 @@ import java.awt.{ Component, Desktop }
 import java.io.IOException
 import java.lang.Process
 import java.net.{ HttpURLConnection, NetworkInterface, URI, URISyntaxException, URL }
-import java.nio.file.{ Path, Paths }
+import java.nio.file.{ Files, Path, Paths, StandardOpenOption }
 import javax.swing.JDialog
 
 import org.nlogo.core.I18N
@@ -51,25 +51,26 @@ object BrowserLauncher {
     openURI(dialog, uri)
   }
 
-  def tryOpenURI(comp: Component, uri: URI, fallback: Path, anchor: String = ""): Unit = {
+  def tryOpenURI(comp: Component, uri: URI, fallback: Path): Unit = {
     if (hasConnection()) {
       openURI(comp, uri)
     } else {
-      openPath(comp, fallback, anchor)
+      openPath(comp, fallback)
     }
   }
 
-  def openPath(comp: Component, path: Path, anchor: String): Unit = {
-    val u = path.toUri
-    if (anchor == null || anchor == "") {
-      openURI(comp, u)
-    } else {
-      openURI(comp, new URI(u.getScheme, u.getHost, u.getPath, anchor))
-    }
-  }
+  // non-browser PDF viewers typically ignore instructions to go to a particular place in the PDF,
+  // so this little hack ensures that it gets opened in a browser. (Isaac B 2/1/26)
+  def openPath(comp: Component, path: Path): Unit = {
+    val temp = Paths.get(System.getProperty("user.home"), ".nlogo", "load-pdf.html")
 
-  def openPath(path: Path, anchor: String): Unit = {
-    openPath(new JDialog, path, anchor)
+    temp.toFile.deleteOnExit()
+
+    val html = s"<html><script>window.location = \"file://$path\";</script></html>"
+
+    Files.writeString(temp, html, StandardOpenOption.CREATE)
+
+    openURI(comp, temp.toUri)
   }
 
   def makeURI(comp: Component, s: String): URI = {
@@ -82,11 +83,6 @@ object BrowserLauncher {
                        OptionPane.Options.Ok, OptionPane.Icons.Error)
       null
     }
-  }
-
-  def docPath(docName: String): Path = {
-    val docRoot = System.getProperty("netlogo.docs.dir", "docs")
-    Paths.get(docRoot + "/" + docName)
   }
 
   // first check if there's a valid network interface, then ensure that it can open a connection to the docs

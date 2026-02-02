@@ -141,7 +141,7 @@ class RunOptionsDialog(parent: Window, dialogFactory: EditDialogFactory, current
                                                                 totalProcessors.toString)
 
     // boilerplate for Editable
-    def helpLink = Some("behaviorspace.html#running-an-experiment")
+    def helpLink = Some(("behaviorspace", "running-an-experiment"))
     val sourceOffset = 0
     def editFinished() = true
   }

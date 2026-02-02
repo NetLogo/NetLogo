@@ -109,7 +109,7 @@ class StockFigure extends RectangleFigure with ModelElementFigure with Editable 
 
   /// For org.nlogo.window.Editable
 
-  def helpLink: Option[String] =
+  def helpLink: Option[(String, String)] =
     None
 
   def classDisplayName: String =

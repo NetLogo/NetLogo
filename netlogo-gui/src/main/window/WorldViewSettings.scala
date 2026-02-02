@@ -152,7 +152,7 @@ abstract class WorldViewSettings(protected val workspace: GUIWorkspace, protecte
     workspace.dualView(on)
   }
 
-  def helpLink = Option.empty[String]
+  def helpLink: Option[(String, String)] = None
 
   override def liveUpdate: Boolean = false
 

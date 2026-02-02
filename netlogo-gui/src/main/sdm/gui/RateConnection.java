@@ -327,7 +327,7 @@ public class RateConnection
 
   /// For org.nlogo.window.Editable
 
-  public scala.Option<String> helpLink() {
+  public scala.Option<scala.Tuple2<String, String>> helpLink() {
     return scala.Option.apply(null);
   }
 

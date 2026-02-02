@@ -4,77 +4,44 @@ import NetLogoBuild.{ buildDate, marketingVersion, year, autogenRoot }
 import ModelsLibrary.modelsDirectory
 import Extensions.extensionRoot
 
+import java.nio.file.{ Files, StandardCopyOption }
+
+import scala.sys.process.Process
+
 object Docs {
-  lazy val netLogoDocs                  = taskKey[NetLogoDocs]("netlogo docs object used to build documentation")
-  lazy val allDocs                      = taskKey[Seq[File]]("all documentation: html and pdf")
-  lazy val htmlDocs                     = taskKey[Seq[File]]("html documentation and prim indices")
-  lazy val manualPDF                    = taskKey[File]("NetLogo manual PDF")
-  lazy val docsRoot                     = settingKey[File]("location to which docs are generated")
-  lazy val autoDocumentedExtensions     = settingKey[Seq[(String, String)]]("list of extensions setup to use the documenter")
-  lazy val extensionDocConfigFile       = settingKey[File]("extension documentation config file")
-  lazy val extensionDocs                = taskKey[Seq[File]]("generate extension documentation")
-  lazy val extensionDocsGen             = taskKey[ExtensionDocs]("extension docs object used to build extension documentation")
+  lazy val allDocs                      = taskKey[Unit]("all documentation: html and pdf")
+  lazy val manualPDF                    = taskKey[Unit]("NetLogo manual PDF")
+  lazy val helioRoot                    = settingKey[File]("location of helio root")
+  lazy val docsSource                   = settingKey[File]("location of docs source files")
+  lazy val docsDest                     = settingKey[File]("location to which docs are generated")
   lazy val testDocLinks                 = taskKey[Map[String, Seq[String]]]("check for broken links in the documentation")
 
   lazy val settings = Seq(
-    javaOptions    += "-Dnetlogo.docs.dir=" + docsRoot.value.getAbsolutePath.toString,
-    docsRoot       := baseDirectory.value / "docs",
-    netLogoDocs := {
-      new NetLogoDocs(
-        autogenRoot.value / "docs",
-        docsRoot.value.getAbsoluteFile,
-        baseDirectory.value,
-        modelsDirectory.value,
-        extensionDocsGen.value,
-        extensionRoot.value)
-    },
+    javaOptions += "-Dnetlogo.docs.dir=" + baseDirectory.value.getAbsolutePath,
+    helioRoot   := baseDirectory.value.getParentFile / "helio",
+    docsSource  := helioRoot.value / "apps" / "docs",
+    docsDest    := baseDirectory.value / "docs",
     allDocs := {
-      htmlDocs.value :+ manualPDF.value :+ (Compile / doc).value
-    },
-    htmlDocs := {
-      netLogoDocs.value.generateHTML(marketingVersion.value, year.value, autoDocumentedExtensions.value)
+      manualPDF.value
+      (Compile / doc).value
     },
     manualPDF := {
-      netLogoDocs.value.generatePDF(marketingVersion.value, year.value, autoDocumentedExtensions.value)
-    },
-    extensionDocConfigFile := {
-      baseDirectory.value.getParentFile / "project" / "documentation.conf"
-    },
-    // keys are page name / extension name, values are title in sidebar
-    autoDocumentedExtensions := {
-      Seq(
-        "arduino"  -> "Arduino",
-        "array"    -> "Array",
-        "bitmap"   -> "Bitmap",
-        "csv"      -> "CSV",
-        "gis"      -> "GIS",
-        "gogo"     -> "GoGo",
-        "ls"       -> "LevelSpace",
-        "matrix"   -> "Matrix",
-        "nw"       -> "Networks",
-        "palette"  -> "Palette",
-        "profiler" -> "Profiler",
-        "py"       -> "Python",
-        "resource" -> "Resource",
-        "rnd"      -> "Rnd",
-        "sr"       -> "Simple R",
-        "sound"    -> "Sound",
-        "table"    -> "Table",
-        "time"     -> "Time",
-        "vid"      -> "Vid",
-        "view2.5d" -> "View2.5D"
-      )
-    },
-    extensionDocs := {
-      extensionDocsGen.value.generateExtensionDocs(
-        docsRoot.value, autogenRoot.value / "docs", autoDocumentedExtensions.value, marketingVersion.value)
-      .map(_.toFile)
-    },
-    extensionDocsGen := {
-      new ExtensionDocs(extensionRoot.value, extensionDocConfigFile.value, docsRoot.value.getAbsoluteFile / "header.html")
+      Process(Seq("yarn", "run", "init"), helioRoot.value).!
+      Process(Seq("yarn", "run", "docs:build"), docsSource.value).!
+      Process(Seq("yarn", "run", "docs:generate-manual"), docsSource.value).!
+
+      val manualSource = (docsSource.value / ".build" / "NetLogo_User_Manual.pdf").toPath
+      val manualDest = (baseDirectory.value / "NetLogo_User_Manual.pdf").toPath
+
+      Files.copy(manualSource, manualDest, StandardCopyOption.REPLACE_EXISTING)
+
+      val linksSource = (docsSource.value / ".build" / "manual-links.csv").toPath
+      val linksDest = (baseDirectory.value / "manual-links.csv").toPath
+
+      Files.copy(linksSource, linksDest, StandardCopyOption.REPLACE_EXISTING)
     },
     testDocLinks := {
-      val res = NetLogoDocsTest(docsRoot.value.getAbsoluteFile)
+      val res = NetLogoDocsTest(docsDest.value.getAbsoluteFile)
       res.foreach {
         case (file, links) =>
           println(file)
