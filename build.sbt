@@ -250,9 +250,9 @@ lazy val netlogo = project.in(file("netlogo-gui")).
       "org.piwik.java.tracking" % "matomo-java-tracker" % "3.4.0",
       "it.unimi.dsi" % "fastutil" % "8.5.16",
       "net.java.dev.jna" % "jna-platform" % "5.17.0",
-      "com.softwaremill.sttp.client4" %% "core" % "4.0.9",
-      "com.softwaremill.sttp.client4" %% "upickle" % "4.0.9",
-      "com.softwaremill.sttp.client4" %% "pekko-http-backend" % "4.0.9",
+      "com.softwaremill.sttp.client4" %% "core" % "4.0.15",
+      "com.softwaremill.sttp.client4" %% "upickle" % "4.0.15",
+      "com.softwaremill.sttp.client4" %% "pekko-http-backend" % "4.0.15",
       "org.apache.pekko" %% "pekko-stream" % "1.1.5",
       // If we don't opt into slf4j, jSystemThemeDetector and Matomo will whine. --Jason B. (11/19/25)
       "org.slf4j" % "slf4j-nop" % "2.0.13",
