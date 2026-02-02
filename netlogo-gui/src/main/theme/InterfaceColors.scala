@@ -276,8 +276,6 @@ object InterfaceColors {
   def textAreaText(): Color = theme.colors("textAreaText")
   def textAreaBorderEditable(): Color = theme.colors("textAreaBorderEditable")
   def textAreaBorderNoneditable(): Color = theme.colors("textAreaBorderNoneditable")
-  def tabbedPaneText(): Color = theme.colors("tabbedPaneText")
-  def tabbedPaneTextSelected(): Color = theme.colors("tabbedPaneTextSelected")
   def infoIcon(): Color = theme.colors("infoIcon")
   def warningIcon(): Color = theme.colors("warningIcon")
   def errorIcon(): Color = theme.colors("errorIcon")

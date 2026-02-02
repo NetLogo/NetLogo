@@ -9,8 +9,8 @@ import javax.swing.event.{ DocumentEvent, DocumentListener }
 import javax.swing.border.EmptyBorder
 
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ ButtonPanel, CheckBox, DialogButton, OptionPane, Positioning, RoundedBorderPanel, ScrollPane,
-                         TextField, Transparent, Utils }
+import org.nlogo.swing.{ ButtonPanel, CheckBox, CollapsibleArrow, DialogButton, OptionPane, Positioning,
+                         RoundedBorderPanel, ScrollPane, TextField, Transparent, Utils }
 import org.nlogo.theme.{ ColorTheme, InterfaceColors, ThemeSync }
 
 class ThemeEditor(manager: ThemesManager, baseTheme: ColorTheme, appFrame: ThemeSync)
@@ -46,9 +46,9 @@ class ThemeEditor(manager: ThemesManager, baseTheme: ColorTheme, appFrame: Theme
       val c = new GridBagConstraints
 
       c.gridx = 0
-      c.gridwidth = 2
-      c.anchor = GridBagConstraints.WEST
-      c.insets = new Insets(0, 0, 6, 0)
+      c.weightx = 1
+      c.anchor = GridBagConstraints.NORTHWEST
+      c.insets = new Insets(0, 0, 6, 12)
 
       add(new JPanel with Transparent {
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
@@ -64,24 +64,10 @@ class ThemeEditor(manager: ThemesManager, baseTheme: ColorTheme, appFrame: Theme
         add(darkCheckbox)
       }, c)
 
-      c.gridwidth = 1
+      c.weighty = 1
 
-      colors.foreach { color =>
-        c.gridx = 0
-        c.weightx = 0
-        c.insets = new Insets(0, 0, 6, 6)
-
-        add(new JLabel(color.name) with ThemeSync {
-          override def syncTheme(): Unit = {
-            setForeground(InterfaceColors.dialogText())
-          }
-        }, c)
-
-        c.gridx = 1
-        c.weightx = 1
-        c.insets = new Insets(0, 0, 6, 12)
-
-        add(new ColorEditor(color), c)
+      colorGroups.foreach { (name, colors) =>
+        add(new CollapsiblePanel(name, colors), c)
       }
     }
   }
@@ -175,6 +161,87 @@ class ThemeEditor(manager: ThemesManager, baseTheme: ColorTheme, appFrame: Theme
         ts.syncTheme()
 
       case _ =>
+    }
+  }
+
+  private class CollapsiblePanel(name: String, colors: Seq[EditableColor])
+    extends JPanel(new GridBagLayout) with Transparent with ThemeSync {
+
+    private val label = new JLabel(name)
+    private val arrow = new CollapsibleArrow(false)
+
+    private val colorPanel = new JPanel(new GridBagLayout) with Transparent {
+      locally {
+        val c = new GridBagConstraints
+
+        c.anchor = GridBagConstraints.WEST
+
+        colors.foreach { color =>
+          c.gridx = 0
+          c.weightx = 1
+          c.insets = new Insets(0, 0, 6, 6)
+
+          add(new JLabel(color.name) with ThemeSync {
+            override def syncTheme(): Unit = {
+              setForeground(InterfaceColors.dialogText())
+            }
+          }, c)
+
+          c.gridx = 1
+          c.weightx = 0
+          c.insets = new Insets(0, 0, 6, 0)
+
+          add(new ColorEditor(color), c)
+        }
+
+        setVisible(false)
+      }
+    }
+
+    locally {
+      val c = new GridBagConstraints
+
+      c.gridx = 0
+      c.weightx = 1
+      c.anchor = GridBagConstraints.NORTHWEST
+
+      add(new JPanel with Transparent {
+        setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
+
+        add(new JLabel(arrow))
+        add(Box.createHorizontalStrut(6))
+        add(label)
+
+        addMouseListener(new MouseAdapter {
+          override def mouseReleased(e: MouseEvent): Unit = {
+            setOpen(!colorPanel.isVisible)
+          }
+        })
+      }, c)
+
+      c.weighty = 1
+      c.insets = new Insets(6, arrow.getIconWidth + 6, 0, 0)
+
+      add(colorPanel, c)
+    }
+
+    private def setOpen(open: Boolean): Unit = {
+      colorPanel.setVisible(open)
+      arrow.setOpen(open)
+    }
+
+    override def getPreferredSize: Dimension =
+      new Dimension(500, super.getPreferredSize.height)
+
+    override def syncTheme(): Unit = {
+      label.setForeground(InterfaceColors.dialogText())
+
+      colorPanel.getComponents.foreach {
+        case ts: ThemeSync =>
+          ts.syncTheme()
+
+        case _ =>
+      }
     }
   }
 
