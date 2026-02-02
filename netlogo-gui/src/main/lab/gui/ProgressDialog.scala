@@ -228,14 +228,12 @@ private [gui] class ProgressDialog(parent: Window, supervisor: Supervisor, compi
   }
 
   override def setVisible(visible: Boolean): Unit = {
-    syncTheme()
-
-    Positioning.center(this, parent)
-
-    Analytics.bspaceRun(protocol.table, protocol.spreadsheet, protocol.stats, protocol.lists)
-
-    timer.start()
-
+    if (visible) {
+      syncTheme()
+      Positioning.center(this, parent)
+      Analytics.bspaceRun(protocol.table, protocol.spreadsheet, protocol.stats, protocol.lists)
+      timer.start()
+    }
     super.setVisible(visible)
   }
 
