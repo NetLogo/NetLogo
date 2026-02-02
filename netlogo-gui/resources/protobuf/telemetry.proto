@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// HEY!  Don't make modifications to this.  If you need to change the format, make a new one
+// and then add it to `telemetry.proto` in the telemetry2 repository. --Jason B. (1/26/26)
+message TelemetryEventV1 {
+  uint32   format_version = 1; // In the Scala code, should always be `1` for `TelemetryEventV1`; `2` for `V2`, etc.
+  sfixed64 uuid1          = 2;
+  sfixed64 uuid2          = 3;
+  bool     is_developer   = 4;
+  uint32   event_type     = 5;
+  string   payload        = 6; // When no payload, set to ""
+}

@@ -35,7 +35,9 @@ lazy val scalaSettings = Seq(
   crossPaths            := false, // don't cross-build for different Scala versions
   scalacOptions ++=
     "-deprecation -unchecked -feature -encoding us-ascii -release 11 -Xfatal-warnings -Wunused:linted"
-      .split(" ").toSeq
+      .split(" ").toSeq,
+  // Silence warnings from generated sources --Jason B. (1/26/26)
+  scalacOptions += s"-Wconf:src=${(Compile / sourceManaged).value.getAbsolutePath}/.*:silent"
 )
 
 // These settings are common to all builds that compile against Java
@@ -247,19 +249,21 @@ lazy val netlogo = project.in(file("netlogo-gui")).
       "net.lingala.zip4j" % "zip4j" % "2.11.5",
       "org.scala-lang.modules" %% "scala-parallel-collections" % "1.2.0",
       "org.scala-lang" %% "scala3-compiler" % "3.7.0",
-      "org.piwik.java.tracking" % "matomo-java-tracker" % "3.4.0",
       "it.unimi.dsi" % "fastutil" % "8.5.16",
       "net.java.dev.jna" % "jna-platform" % "5.17.0",
+      "com.thesamet.scalapb" %% "scalapb-runtime" % scalapb.compiler.Version.scalapbVersion % "protobuf",
       "com.softwaremill.sttp.client4" %% "core" % "4.0.15",
       "com.softwaremill.sttp.client4" %% "upickle" % "4.0.15",
       "com.softwaremill.sttp.client4" %% "pekko-http-backend" % "4.0.15",
       "org.apache.pekko" %% "pekko-stream" % "1.1.5",
-      // If we don't opt into slf4j, jSystemThemeDetector and Matomo will whine. --Jason B. (11/19/25)
+      // If we don't opt into slf4j, jSystemThemeDetector will whine. --Jason B. (11/19/25)
       "org.slf4j" % "slf4j-nop" % "2.0.13",
       "org.openani.jsystemthemedetector" % "jSystemThemeDetector" % "3.8"
     ) ++ Seq("base", "controls", "graphics", "swing", "web")
       .map(m => "org.openjfx" % s"javafx-$m" % "21.0.6" classifier osName),
     Compile / compile := (Compile / compile).dependsOn(NativeLibs.nativeLibs).value,
+    Compile / PB.protoSources := Seq((Compile / resourceDirectory).value / "protobuf"),
+    Compile / PB.targets := Seq(scalapb.gen() -> (Compile / sourceManaged).value / "scalapb"),
     all := {},
     all := {
       all.dependsOn(

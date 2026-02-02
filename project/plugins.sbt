@@ -16,22 +16,25 @@ resolvers ++= Seq(
 , "netlogo-extension-documentation" at "https://dl.cloudsmith.io/public/netlogo/netlogo-extension-documentation/maven/"
 )
 
+
 addSbtPlugin("org.scalastyle"     %% "scalastyle-sbt-plugin"           % "1.0.0")
 addSbtPlugin("org.portable-scala" %  "sbt-scalajs-crossproject"        % "1.3.2")
 addSbtPlugin("org.scala-js"       %  "sbt-scalajs"                     % "1.19.0")
 addSbtPlugin("org.nlogo"          %  "publish-versioned-plugin"        % "3.0.0")
 addSbtPlugin("org.nlogo"          %  "netlogo-extension-documentation" % "0.8.3")
 addSbtPlugin("com.timushev.sbt"   %  "sbt-updates"                     % "0.6.4")
+addSbtPlugin("com.thesamet"       %  "sbt-protoc"                      % "1.0.8")
 
 libraryDependencies ++= Seq(
-  "com.github.spullara.mustache.java" % "compiler"              % "0.9.14"
-, "de.jflex"                          % "jflex"                 % "1.9.1"
-, "classycle"                         % "classycle"             % "1.4.2" from
+  "com.github.spullara.mustache.java" %  "compiler"              % "0.9.14"
+, "de.jflex"                          %  "jflex"                 % "1.9.1"
+, "classycle"                         %  "classycle"             % "1.4.2" from
   "https://s3.amazonaws.com/ccl-artifacts/classycle-1.4.2.jar"
-, "com.github.spullara.mustache.java" % "scala-extensions-2.11" % "0.9.14"
-, "org.jsoup"                         % "jsoup"                 % "1.15.4"
-, "org.apache.commons"                % "commons-lang3"         % "3.13.0"
-, "commons-io"                        % "commons-io"            % "2.14.0"
+, "com.github.spullara.mustache.java" %  "scala-extensions-2.11" % "0.9.14"
+, "org.jsoup"                         %  "jsoup"                 % "1.15.4"
+, "org.apache.commons"                %  "commons-lang3"         % "3.13.0"
+, "commons-io"                        %  "commons-io"            % "2.14.0"
+, "com.thesamet.scalapb"              %% "compilerplugin"        % "0.11.17"
 )
 
 {

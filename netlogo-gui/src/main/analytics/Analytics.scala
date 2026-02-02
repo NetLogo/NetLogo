@@ -2,179 +2,114 @@
 
 package org.nlogo.analytics
 
-import java.net.{ HttpURLConnection, NetworkInterface, URI }
-
-import org.matomo.java.tracking.{ MatomoException, MatomoRequest, MatomoRequests, MatomoTracker, TrackerConfiguration }
-
-import org.nlogo.core.{ NetLogoPreferences, Token, TokenType }
-
 import scala.concurrent.{ ExecutionContext, Future }
-import scala.jdk.CollectionConverters.EnumerationHasAsScala
-import scala.util.Try
+
+import org.nlogo.core.{ Token, TokenType }
+
+import AnalyticsEventType._
 
 object Analytics {
-  private val endpoint = "https://ccl.northwestern.edu:8080/matomo.php"
-
-  private var available = false
-  private var sendEnabled = false
-
-  private val category: String = {
-    if (System.getProperty("org.nlogo.release") == "true") {
-      "Desktop"
-    } else {
-      "Desktop (Devel)"
-    }
-  }
-
-  private val config = TrackerConfiguration.builder
-                                           .apiEndpoint(URI.create(endpoint))
-                                           .defaultSiteId(1)
-                                           .build()
-
-  private val tracker = new MatomoTracker(config)
-
-  private var startTime = 0L
-  private var lastCheck = 0L
 
   private given ExecutionContext = ExecutionContext.global
 
-  private def wrapRequest(request: MatomoRequest): Future[Unit] =
-    Future {
-
-      if (sendEnabled) {
-
-        if (!available && System.currentTimeMillis() - lastCheck >= 5000)
-          checkNetwork()
-
-        if (available) {
-          try {
-            tracker.sendBulkRequest(request)
-          } catch {
-            case _: MatomoException =>
-              checkNetwork()
-          }
-        }
-
-      }
-
-    }
-
-  // non-recursively builds a simple subset of JSON to avoid unnecessary
-  // dependencies or object structures (Isaac B 7/2/25)
-  private def buildJson(properties: Map[String, Any]): String = {
-    properties.map {
-      case (key, value: String) => s"\"$key\": \"$value\""
-      case (key, value: Double) => s"\"$key\": $value"
-      case (key, value: Int) => s"\"$key\": $value"
-      case (key, value: Boolean) => s"\"$key\": $value"
-      case (key, value) => s"\"$key\": \"null\""
-    }.mkString("{ ", ", ", " }")
-  }
+  private var startTime = 0L
 
   def appStart(version: String, is3D: Boolean): Unit = {
     startTime = System.currentTimeMillis()
-
-    val json = buildJson(
+    val payload =
       Map(
-        "version" -> version,
-        "threed" -> is3D,
-        "os" -> System.getProperty("os.name"),
-        "arch" -> System.getProperty("os.arch")
+        "version" -> version
+      , "is3D"    -> is3D
+      , "os"      -> System.getProperty("os.name")
+      , "arch"    -> System.getProperty("os.arch")
       )
-    )
-
-    wrapRequest(MatomoRequests.event(category, "App Start", json, null).build())
+    AnalyticsSender(AppStart, payload)
   }
 
   def appExit(): Future[Unit] = {
     val length = (System.currentTimeMillis() - startTime) / 60000d
-
-    wrapRequest(MatomoRequests.event(category, "App Exit", null, length.ceil).build())
+    AnalyticsSender(AppExit, Map("appMinutes" -> length.round.toInt)).map {
+      _ => AnalyticsSender.shutdown()
+    }
   }
 
   def preferenceChange(name: String, origValue: String): Unit = {
-    val value = if (name == "logDirectory") "" else origValue
-    val json = buildJson(
-      Map(
-        "name" -> name,
-        "value" -> value
-      )
-    )
-
-    wrapRequest(MatomoRequests.event(category, "Preference Change", json, null).build())
+    val value   = if (name == "logDirectory") "" else origValue
+    val payload = Map("name"  -> name, "value" -> value)
+    AnalyticsSender(PreferenceChange, payload)
   }
 
   def sdmOpen(): Unit = {
-    wrapRequest(MatomoRequests.event(category, "SDM Open", null, null).build())
+    AnalyticsSender(SDMOpen)
   }
 
   def bspaceOpen(): Unit = {
-    wrapRequest(MatomoRequests.event(category, "BehaviorSpace Open", null, null).build())
+    AnalyticsSender(BehaviorSpaceOpen)
   }
 
   def bspaceRun(table: String, spreadsheet: String, stats: String, lists: String): Unit = {
-    val json = buildJson(
+    val payload =
       Map(
-        "table" -> table.trim.nonEmpty,
-        "spreadsheet" -> spreadsheet.trim.nonEmpty,
-        "stats" -> stats.trim.nonEmpty,
-        "lists" -> lists.trim.nonEmpty
-      )
-    )
-
-    wrapRequest(MatomoRequests.event(category, "BehaviorSpace Run", json, null).build())
+        "usedTable"       -> table
+      , "usedSpreadsheet" -> spreadsheet
+      , "usedStats"       -> stats
+      , "usedLists"       -> lists
+      ).view
+       .mapValues(_.trim.nonEmpty)
+       .toMap
+    AnalyticsSender(BehaviorSpaceRun, payload)
   }
 
   def threedViewOpen(): Unit = {
-    wrapRequest(MatomoRequests.event(category, "3D View Open", null, null).build())
+    AnalyticsSender(Open3DView)
   }
 
   def turtleShapeEditorOpen(): Unit = {
-    wrapRequest(MatomoRequests.event(category, "Turtle Shape Editor Open", null, null).build())
+    AnalyticsSender(TurtleShapeEditorOpen)
   }
 
   def turtleShapeEdit(): Unit = {
-    wrapRequest(MatomoRequests.event(category, "Turtle Shape Edit", null, null).build())
+    AnalyticsSender(TurtleShapeEdit)
   }
 
   def linkShapeEditorOpen(): Unit = {
-    wrapRequest(MatomoRequests.event(category, "Link Shape Editor Open", null, null).build())
+    AnalyticsSender(LinkShapeEditorOpen)
   }
 
   def linkShapeEdit(): Unit = {
-    wrapRequest(MatomoRequests.event(category, "Link Shape Edit", null, null).build())
+    AnalyticsSender(LinkShapeEdit)
   }
 
   def colorPickerOpen(): Unit = {
-    wrapRequest(MatomoRequests.event(category, "Color Picker Open", null, null).build())
+    AnalyticsSender(ColorPickerOpen)
   }
 
   def hubNetEditorOpen(): Unit = {
-    wrapRequest(MatomoRequests.event(category, "HubNet Editor Open", null, null).build())
+    AnalyticsSender(HubNetEditorOpen)
   }
 
   def hubNetClientOpen(): Unit = {
-    wrapRequest(MatomoRequests.event(category, "HubNet Client Open", null, null).build())
+    AnalyticsSender(HubNetClientOpen)
   }
 
   def globalsMonitorOpen(): Unit = {
-    wrapRequest(MatomoRequests.event(category, "Globals Monitor Open", null, null).build())
+    AnalyticsSender(GlobalsMonitorOpen)
   }
 
   def turtleMonitorOpen(): Unit = {
-    wrapRequest(MatomoRequests.event(category, "Turtle Monitor Open", null, null).build())
+    AnalyticsSender(TurtleMonitorOpen)
   }
 
   def patchMonitorOpen(): Unit = {
-    wrapRequest(MatomoRequests.event(category, "Patch Monitor Open", null, null).build())
+    AnalyticsSender(PatchMonitorOpen)
   }
 
   def linkMonitorOpen(): Unit = {
-    wrapRequest(MatomoRequests.event(category, "Link Monitor Open", null, null).build())
+    AnalyticsSender(LinkMonitorOpen)
   }
 
   def codeHash(hash: Int): Unit = {
-    wrapRequest(MatomoRequests.event(category, "Model Code Hash", hash.toString, null).build())
+    AnalyticsSender(ModelCodeHash, Map("hash" -> hash))
   }
 
   def primUsage(tokens: Iterator[Token]): Unit = {
@@ -183,15 +118,12 @@ object Analytics {
         case (map, token) =>
           if (token.tpe == TokenType.Command || token.tpe == TokenType.Reporter) {
             val name = token.text.toLowerCase
-
             map + ((name, map.getOrElse(name, 0) + 1))
           } else {
             map
           }
       }
-    }.filter(_.nonEmpty).flatMap {
-      prims => wrapRequest(MatomoRequests.event(category, "Primitive Usage", buildJson(prims), null).build())
-    }
+    }.filter(_.nonEmpty).flatMap(AnalyticsSender(PrimitiveUsage, _))
   }
 
   def keywordUsage(tokens: Iterator[Token]): Unit = {
@@ -200,53 +132,46 @@ object Analytics {
         case (map, token) =>
           if (token.tpe == TokenType.Keyword) {
             val name = token.text.toLowerCase
-
             map + ((name, map.getOrElse(name, 0) + 1))
           } else {
             map
           }
       }
-    }.filter(_.nonEmpty).flatMap {
-      keywords => wrapRequest(MatomoRequests.event(category, "Keyword Usage", buildJson(keywords), null).build())
-    }
+    }.filter(_.nonEmpty)
+     .flatMap(AnalyticsSender(KeywordUsage, _))
   }
 
   def includeExtensions(extensions: Array[String]): Unit = {
-    extensions.foreach { extension =>
-      wrapRequest(MatomoRequests.event(category, "Include Extension", extension, null).build())
+    extensions.foreach {
+      extension =>
+        AnalyticsSender(IncludeExtension, Map("name" -> extension))
     }
   }
 
   def loadOldSizeWidgets(widgets: Int): Unit = {
-    if (widgets > 0)
-      wrapRequest(MatomoRequests.event(category, "Load Old Size Widgets", null, widgets.toDouble).build())
+    if (widgets > 0) {
+      AnalyticsSender(LoadOldSizeWidgets, Map("numWidgets" -> widgets.toDouble))
+    }
   }
 
   def modelingCommonsOpen(): Unit = {
-    wrapRequest(MatomoRequests.event(category, "Modeling Commons Open", null, null).build())
+    AnalyticsSender(ModelingCommonsOpen)
   }
 
   def modelingCommonsUpload(): Unit = {
-    wrapRequest(MatomoRequests.event(category, "Modeling Commons Upload", null, null).build())
+    AnalyticsSender(ModelingCommonsUpload)
   }
 
   def saveAsNetLogoWeb(): Unit = {
-    wrapRequest(MatomoRequests.event(category, "Save as NetLogo Web", null, null).build())
+    AnalyticsSender(SaveAsNetLogoWeb)
   }
 
   def previewCommandsOpen(): Unit = {
-    wrapRequest(MatomoRequests.event(category, "Preview Commands Open", null, null).build())
+    AnalyticsSender(PreviewCommandsOpen)
   }
 
   def refreshPreference(): Unit = {
-    sendEnabled = NetLogoPreferences.getBoolean("sendAnalytics", false)
+    AnalyticsSender.refreshPreference()
   }
 
-  private def checkNetwork(): Unit = {
-    available = NetworkInterface.getNetworkInterfaces().asScala.exists(_.isUp) &&
-      Try(URI.create(endpoint).toURL.openConnection().asInstanceOf[HttpURLConnection].getResponseCode())
-        .toOption.contains(200)
-
-    lastCheck = System.currentTimeMillis()
-  }
 }
