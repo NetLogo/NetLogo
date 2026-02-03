@@ -225,7 +225,9 @@ async function main() {
 
     const fileUrl = 'file://' + filePath;
     console.log(`Handling: ${file}`);
-    await myPage.goto(fileUrl, { waitUntil: 'networkidle0' });
+
+    // longer timeout for this step because it is slow on GitHub Actions (Isaac B 2/3/26)
+    await myPage.goto(fileUrl, { waitUntil: 'networkidle0', timeout: 300000 });
 
     /**
      * Extract the table of contents entries from the page.
