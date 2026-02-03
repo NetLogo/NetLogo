@@ -1,11 +1,10 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.window
+package org.nlogo.theme
 
 import java.awt.Color
 
 import org.nlogo.core.I18N
-import org.nlogo.theme.ColorTheme
 
 class EditableColor(val key: String, var value: Color) {
   def name: String =

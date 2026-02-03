@@ -2,18 +2,18 @@
 
 package org.nlogo.window
 
-import java.awt.{ BorderLayout, Color, Dialog, Dimension, GridBagConstraints, GridBagLayout, Insets }
+import java.awt.{ BorderLayout, Color, Dialog, Dimension, Graphics, GridBagConstraints, GridBagLayout, Insets }
 import java.awt.event.{ MouseAdapter, MouseEvent, WindowAdapter, WindowEvent }
 import javax.swing.{ Box, BoxLayout, JDialog, JLabel, JPanel, ScrollPaneConstants, WindowConstants }
 import javax.swing.event.{ DocumentEvent, DocumentListener }
 import javax.swing.border.EmptyBorder
 
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ ButtonPanel, CheckBox, CollapsibleArrow, DialogButton, OptionPane, Positioning,
+import org.nlogo.swing.{ ButtonPanel, CheckBox, CollapsibleArrow, DialogButton, OptionPane, PackedLayout, Positioning,
                          RoundedBorderPanel, ScrollPane, TextField, Transparent, Utils }
-import org.nlogo.theme.{ ColorTheme, InterfaceColors, ThemeSync }
+import org.nlogo.theme.{ ColorTheme, EditableColor, EditableTheme, InterfaceColors, ThemeSync }
 
-class ThemeEditor(manager: ThemesManager, baseTheme: ColorTheme, appFrame: ThemeSync)
+class ThemeEditor(manager: ThemesManager, baseTheme: ColorTheme, appFrame: ThemeSync, isNew: Boolean)
   extends JDialog(manager, I18N.gui.get("menu.tools.themeEditor"), Dialog.ModalityType.DOCUMENT_MODAL) with ThemeSync
   with EditableTheme(baseTheme) {
 
@@ -41,52 +41,40 @@ class ThemeEditor(manager: ThemesManager, baseTheme: ColorTheme, appFrame: Theme
     setSelected(isDark)
   }
 
-  private val panel = new JPanel(new GridBagLayout) with Transparent {
-    locally {
-      val c = new GridBagConstraints
+  private val colorPicker = new ThemeColorPicker(setColor)
+  private val divider = new Divider
 
-      c.gridx = 0
-      c.weightx = 1
-      c.anchor = GridBagConstraints.NORTHWEST
-      c.insets = new Insets(0, 0, 6, 12)
+  private val groupsPanel = new JPanel with Transparent {
+    setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
+    setBorder(new EmptyBorder(0, 0, 0, 12))
 
-      add(new JPanel with Transparent {
-        setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
+    add(new PackedLayout(Seq(nameLabel, nameField, darkCheckbox), spacing = 6))
+    add(Box.createVerticalStrut(6))
 
-        add(nameLabel)
-        add(Box.createHorizontalStrut(6))
-        add(nameField)
-      }, c)
-
-      add(new JPanel with Transparent {
-        setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
-
-        add(darkCheckbox)
-      }, c)
-
-      c.weighty = 1
-
-      colorGroups.foreach { (name, colors) =>
-        add(new CollapsiblePanel(name, colors), c)
-      }
+    colorGroups.foreach { (name, colors) =>
+      add(new CollapsiblePanel(name, colors))
+      add(Box.createVerticalStrut(6))
     }
   }
 
-  private val scrollPane = new ScrollPane(panel, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+  private val scrollPane = new ScrollPane(groupsPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
                                           ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER) {
     setBorder(null)
 
     override def getPreferredSize: Dimension =
-      new Dimension(super.getPreferredSize.width, 500)
+      new Dimension(super.getPreferredSize.width.max(250), 500)
   }
+
+  private var currentEditor: Option[ColorEditor] = None
 
   private val cancelButton = new DialogButton(false, I18N.gui.get("common.buttons.cancel"), _ => cancel())
   private val okButton = new DialogButton(true, I18N.gui.get("common.buttons.ok"), _ => accept())
 
-  setLayout(new BorderLayout(6, 6))
+  setLayout(new BorderLayout(12, 6))
 
   getRootPane.setBorder(new EmptyBorder(6, 6, 6, 6))
 
+  add(new PackedLayout(Seq(colorPicker, divider), spacing = 12), BorderLayout.WEST)
   add(scrollPane, BorderLayout.CENTER)
   add(new ButtonPanel(Seq(cancelButton, okButton)), BorderLayout.SOUTH)
 
@@ -112,7 +100,7 @@ class ThemeEditor(manager: ThemesManager, baseTheme: ColorTheme, appFrame: Theme
       new OptionPane(this, I18N.gui.get("menu.tools.themeEditor.invalidName"),
                      I18N.gui.getN("menu.tools.themeEditor.emptyName", name), OptionPane.Options.Ok,
                      OptionPane.Icons.Error)
-    } else if (name != baseTheme.name && manager.themeExists(name)) {
+    } else if (isNew && manager.themeExists(name)) {
       new OptionPane(this, I18N.gui.get("menu.tools.themeEditor.invalidName"),
                      I18N.gui.getN("menu.tools.themeEditor.duplicateName", name), OptionPane.Options.Ok,
                      OptionPane.Icons.Error)
@@ -133,6 +121,24 @@ class ThemeEditor(manager: ThemesManager, baseTheme: ColorTheme, appFrame: Theme
     appFrame.syncTheme()
 
     syncTheme()
+    repaint()
+  }
+
+  private def setCurrentEditor(editor: ColorEditor): Unit = {
+    currentEditor.foreach(_.setCurrent(false))
+
+    currentEditor = Option(editor)
+
+    currentEditor.foreach { editor =>
+      editor.setCurrent(true)
+
+      colorPicker.setColor(editor.getColor)
+    }
+  }
+
+  def setColor(color: Color): Unit = {
+    currentEditor.foreach(_.setColor(color))
+    applyPreview()
   }
 
   def getTheme: Option[ColorTheme] = {
@@ -151,16 +157,33 @@ class ThemeEditor(manager: ThemesManager, baseTheme: ColorTheme, appFrame: Theme
     nameLabel.setForeground(InterfaceColors.dialogText())
     darkCheckbox.setForeground(InterfaceColors.dialogText())
 
+    colorPicker.syncTheme()
+    divider.syncTheme()
     nameField.syncTheme()
     darkCheckbox.syncTheme()
     cancelButton.syncTheme()
     okButton.syncTheme()
 
-    panel.getComponents.foreach {
+    groupsPanel.getComponents.foreach {
       case ts: ThemeSync =>
         ts.syncTheme()
 
       case _ =>
+    }
+  }
+
+  private class Divider extends JPanel with ThemeSync {
+    override def getPreferredSize: Dimension =
+      new Dimension(1, getParent.getHeight)
+
+    override def getMinimumSize: Dimension =
+      getPreferredSize
+
+    override def getMaximumSize: Dimension =
+      getPreferredSize
+
+    override def syncTheme(): Unit = {
+      setBackground(InterfaceColors.toolbarControlBorder())
     }
   }
 
@@ -205,13 +228,7 @@ class ThemeEditor(manager: ThemesManager, baseTheme: ColorTheme, appFrame: Theme
       c.weightx = 1
       c.anchor = GridBagConstraints.NORTHWEST
 
-      add(new JPanel with Transparent {
-        setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
-
-        add(new JLabel(arrow))
-        add(Box.createHorizontalStrut(6))
-        add(label)
-
+      add(new PackedLayout(Seq(new JLabel(arrow), label), alignment = PackedLayout.Leading, spacing = 6) {
         addMouseListener(new MouseAdapter {
           override def mouseReleased(e: MouseEvent): Unit = {
             setOpen(!colorPanel.isVisible)
@@ -230,9 +247,6 @@ class ThemeEditor(manager: ThemesManager, baseTheme: ColorTheme, appFrame: Theme
       arrow.setOpen(open)
     }
 
-    override def getPreferredSize: Dimension =
-      new Dimension(500, super.getPreferredSize.height)
-
     override def syncTheme(): Unit = {
       label.setForeground(InterfaceColors.dialogText())
 
@@ -246,6 +260,9 @@ class ThemeEditor(manager: ThemesManager, baseTheme: ColorTheme, appFrame: Theme
   }
 
   private class ColorEditor(color: EditableColor) extends RoundedBorderPanel with ThemeSync {
+    private var current = false
+    private var borderColor: Color = Color.WHITE
+
     setColor(color.value)
     setDiameter(6)
     enableHover()
@@ -254,36 +271,27 @@ class ThemeEditor(manager: ThemesManager, baseTheme: ColorTheme, appFrame: Theme
 
     addMouseListener(new MouseAdapter {
       override def mousePressed(e: MouseEvent): Unit = {
-        new JFXColorPicker(null, true, RGBAOnly, Some(RGBA.fromJavaColor(color.value)), str => {
-          val rgb = """^\[(\d{1,3}) (\d{1,3}) (\d{1,3})\]$""".r
-          val rgba = """^\[(\d{1,3}) (\d{1,3}) (\d{1,3}) (\d{1,3})\]$""".r
-
-          val newColor: Color = {
-            str match {
-              case rgb(r, g, b) =>
-                new Color(r.toInt, g.toInt, b.toInt)
-
-              case rgba(r, g, b, a) =>
-                new Color(r.toInt, g.toInt, b.toInt, a.toInt)
-
-              case _ =>
-                color.value
-            }
-          }
-
-          setColor(newColor)
-          repaint()
-          applyPreview()
-        }).setVisible(true)
+        setCurrentEditor(ColorEditor.this)
       }
     })
 
-    private def setColor(color: Color): Unit = {
+    def getColor: Color =
+      color.value
+
+    def setColor(color: Color): Unit = {
       this.color.value = color
 
       setBackgroundColor(color)
       setBackgroundHoverColor(color)
       setBackgroundPressedColor(color)
+
+      repaint()
+    }
+
+    def setCurrent(current: Boolean): Unit = {
+      this.current = current
+
+      repaint()
     }
 
     override def getPreferredSize: Dimension =
@@ -295,8 +303,18 @@ class ThemeEditor(manager: ThemesManager, baseTheme: ColorTheme, appFrame: Theme
     override def getMaximumSize: Dimension =
       getPreferredSize
 
+    override def paintComponent(g: Graphics): Unit = {
+      if (current) {
+        setBorderColor(InterfaceColors.toolbarControlBorderSelected())
+      } else {
+        setBorderColor(borderColor)
+      }
+
+      super.paintComponent(g)
+    }
+
     override def syncTheme(): Unit = {
-      setBorderColor(InterfaceColors.toolbarControlBorder())
+      borderColor = InterfaceColors.toolbarControlBorder()
     }
   }
 }

@@ -85,7 +85,7 @@ class ThemesManager(appFrame: Frame & ThemeSync)
   private def duplicate(): Unit = {
     themeList.getSelectedValue match {
       case ThemeEntry(baseTheme) =>
-        new ThemeEditor(this, baseTheme, appFrame).getTheme.foreach { theme =>
+        new ThemeEditor(this, baseTheme, appFrame, true).getTheme.foreach { theme =>
           val entry = ThemeEntry(theme)
 
           themeModel.addElement(entry)
@@ -103,7 +103,7 @@ class ThemesManager(appFrame: Frame & ThemeSync)
   private def edit(): Unit = {
     themeList.getSelectedValue match {
       case ThemeEntry(baseTheme) =>
-        new ThemeEditor(this, baseTheme, appFrame).getTheme.foreach { theme =>
+        new ThemeEditor(this, baseTheme, appFrame, false).getTheme.foreach { theme =>
           themeModel.set(themeList.getSelectedIndex, ThemeEntry(theme))
 
           if (theme.name != baseTheme.name)
@@ -174,7 +174,7 @@ class ThemesManager(appFrame: Frame & ThemeSync)
 
   def themeExists(name: String): Boolean = {
     themeModel.toArray.exists {
-      case ThemeEntry(theme) if theme.name == name =>
+      case ThemeEntry(theme) if theme.name == name || theme.prefName == name =>
         true
 
       case _ =>
