@@ -91,7 +91,7 @@ object ModelXMLLoader {
     )
 
     writer.startElement("code")
-    writer.escapedText(model.code)
+    writer.escapedText(model.code, true)
     writer.endElement("code")
 
     writer.startElement("widgets")
@@ -99,7 +99,7 @@ object ModelXMLLoader {
     writer.endElement("widgets")
 
     writer.startElement("info")
-    writer.escapedText(model.info)
+    writer.escapedText(model.info, true)
     writer.endElement("info")
 
     writer.element(XMLElement("turtleShapes", Map(), "", model.turtleShapes.map(ShapeXMLLoader.writeShape).toList))
