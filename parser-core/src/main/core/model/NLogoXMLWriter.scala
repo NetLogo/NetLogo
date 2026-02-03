@@ -10,7 +10,7 @@ trait NLogoXMLWriter {
   def startElement(e: String): Unit
   def endElement(e: String): Unit
   def attribute(name: String, value: String): Unit
-  def escapedText(text: String): Unit
+  def escapedText(text: String, force: Boolean = false): Unit
   def element(el: XMLElement): Unit
   def close(): Unit
 }
