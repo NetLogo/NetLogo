@@ -40,11 +40,12 @@ class XMLWriter(dest: Writer) extends NLogoXMLWriter {
     writer.writeAttribute(name, value)
   }
 
-  def escapedText(text: String): Unit = {
-    if (text.contains('<') || text.contains('>') || text.contains('&'))
+  def escapedText(text: String, force: Boolean): Unit = {
+    if (force || text.contains('<') || text.contains('>') || text.contains('&')) {
       writer.writeCData("]]>".r.replaceAllIn(text, s"]]${XMLElement.CDataEscape}>"))
-    else
+    } else {
       writer.writeCharacters(text)
+    }
   }
 
   def endElement(name: String): Unit = {
