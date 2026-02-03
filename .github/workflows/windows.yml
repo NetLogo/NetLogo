@@ -1,9 +1,8 @@
 name: package-windows
 
 on:
-  push:
-  pull_request:
-  workflow_dispatch:
+  schedule:
+    - cron: "0 10 * * *"
 
 jobs:
   package:
