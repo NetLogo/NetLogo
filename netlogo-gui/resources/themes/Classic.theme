@@ -1,159 +1,159 @@
 false
-checkboxBackgroundDisabled = -5263441
-menuBarBorder = -2631721
-widgetPreviewCover = 1694498815
-infoH2Background = -2889729
-textAreaBorderNoneditable = -1118482
-announceRelease = -1192449
-sliderBackground = -8209225
-switchBackground = -8209225
-tabBackgroundSelected = -16355091
-colorPickerCheckmark = -12666801
-toolbarControlBackgroundHover = -657931
-displayAreaText = -16777216
-infoCodeBackground = -1118482
-radioButtonBackgroundHover = -657931
-toolbarImageDisabled = 1080321124
-outputBorder = -5263441
-dialogText = -16777216
-errorLabelBackground = -303019
-infoIcon = -13461816
-sliderThumbBorder = -3643545
-codeLineHighlight = -52
-textAreaText = -16777216
-widgetHandle = -11579569
-announceXHovered = -8882056
-infoPColor = -16777216
-buttonBackgroundPressed = -16777216
-chooserBackground = -8209225
-codeBackground = -1
-textAreaBackground = -1
-buttonBackgroundDisabled = -4408090
-infoCodeText = -16777216
-primaryButtonBorder = -16355091
-announceAdvisory = -15718
-menuBorder = -5263441
-locationToggleImage = -16777216
-secondaryButtonBackground = -1
-switchToggleBackgroundOff = -12493221
-speedSliderThumbDisabled = -5263441
-converterBackground = -8209225
-toolbarImageSelected = -1
-toolbarTextSelected = -1
-widgetTextError = -303019
-tabBorder = -5263441
-codeBracketHighlight = -3618561
-tabText = -16777216
-reporterToken = -10092394
-warningIcon = -2315726
-plotBackground = -1973834
-toolbarImage = -11184272
-primaryButtonBackground = -16355091
-secondaryButtonBackgroundHover = -657931
-dialogBackgroundSelected = -16355091
-chooserBorder = -12493221
-infoH2Color = -16753976
-tabSeparator = -5263441
-tabCloseButtonBackgroundHover = 1073741824
-literalToken = -6932736
-commandCenterBackground = -1118482
-checkboxBackgroundSelected = -16355091
-tabTextError = -303019
-toolbarBackground = -1118482
-toolbarControlBorder = -5263441
-buttonBackgroundPressedHover = -16777216
-buttonText = -16777216
-checkFilled = -16732838
-radioButtonBackground = -1
-infoLink = -16748816
-sliderBarBackground = -12493221
-sliderBarBackgroundFilled = -12493221
-viewBackground = -5263441
-checkboxCheck = -1
-infoH4Color = -9211021
-checkboxBackgroundSelectedHover = -16750877
-commandCenterText = -16777216
-commandOutputBackground = -1
-codeSelection = -3618561
-scrollBarBackground = -1118482
-toolbarText = -16777216
-announceEvent = -9634595
-menuBackground = -1
-primaryButtonBackgroundPressed = -16758587
-inputBorder = -12493221
-infoBackground = -1
-speedSliderThumb = -16355091
-tabBackgroundHover = -1118482
-widgetText = -16777216
-sliderThumbBackgroundPressed = -3643545
-menuBackgroundHover = -16355091
-speedSliderBarBackgroundFilled = -16355091
-menuTextDisabled = -5263441
-keywordToken = -16744599
-buttonBackgroundHover = -4408090
-buttonBackground = -4408090
-menuTextHover = -1
-updateIcon = -1025280
-widgetPreviewCoverNote = 1269804975
-infoH3Color = -10987432
-colorPickerCopyHover = -3815995
-toolbarControlFocus = -16355091
-switchToggleBackgroundOn = -12493221
-interfaceBackground = -1
-codeSeparator = -1118482
-warningLabelText = -1
-buttonTextPressed = -4408090
-tabTextSelected = -1
-buttonTextDisabled = -16777216
-commentToken = -8882056
-plotMouseText = -16777216
-infoBlockBar = -10461088
-radioButtonBorder = -5263441
-errorLabelText = -1
-primaryButtonBackgroundHover = -16753447
-toolbarControlBackground = -1
-toolbarControlBorderSelected = 0
-displayAreaBackground = -1
-primaryButtonText = -1
-plotMouseBackground = -1973834
-infoH1Color = -15528570
-textAreaBorderEditable = -5263441
-speedSliderBarBackground = -5263441
-toolbarToolSelected = -16355091
-announceXPressed = -5263441
-stockBackground = -1973834
-warningLabelBackground = -24576
-checkboxBackgroundUnselected = -1
-tabBackgroundError = -303019
-viewBorder = -16777216
-secondaryButtonText = -16777216
-secondaryButtonBorder = -5263441
-tabBackground = -1
-radioButtonSelectedHover = -16750877
-announceX = -11579569
-widgetHoverShadow = -11842741
-infoH1Background = -3026689
-switchToggle = -3643545
-colorPickerOutputBackground = -8553091
-inputBackground = -8209225
-monitorBorder = -5263441
-scrollBarForegroundHover = -8882056
-toolbarSeparator = -5263441
-plotBorder = -5263441
-agentMonitorSeparator = -5263441
-scrollBarForeground = -5263441
-monitorBackground = -1973834
-errorIcon = -2346446
-radioButtonSelected = -16355091
-secondaryButtonBackgroundPressed = -2631721
-toolbarControlBackgroundPressed = -2631721
-outputBackground = -1973834
-sliderThumbBackground = -3643545
-errorHighlight = -303019
-dialogTextSelected = -1
-checkboxBorder = -5263441
-defaultToken = -16777216
-splitPaneDividerBackground = -5263441
-checkboxBackgroundUnselectedHover = -657931
-dialogBackground = -657931
-commandToken = -16777046
+checkboxBackgroundDisabled 175 175 175 255
+menuBarBorder 215 215 215 255
+widgetPreviewCover 255 255 255 100
+infoH2Background 211 231 255 255
+textAreaBorderNoneditable 238 238 238 255
+announceRelease 237 205 255 255
+sliderBackground 130 188 183 255
+switchBackground 130 188 183 255
+tabBackgroundSelected 6 112 237 255
+colorPickerCheckmark 62 184 79 255
+toolbarControlBackgroundHover 245 245 245 255
+displayAreaText 0 0 0 255
+infoCodeBackground 238 238 238 255
+radioButtonBackgroundHover 245 245 245 255
+toolbarImageDisabled 100 100 100 64
+outputBorder 175 175 175 255
+dialogText 0 0 0 255
+errorLabelBackground 251 96 85 255
+infoIcon 50 150 200 255
+sliderThumbBorder 200 103 103 255
+codeLineHighlight 255 255 204 255
+textAreaText 0 0 0 255
+widgetHandle 79 79 79 255
+announceXHovered 120 120 120 255
+infoPColor 0 0 0 255
+buttonBackgroundPressed 0 0 0 255
+chooserBackground 130 188 183 255
+codeBackground 255 255 255 255
+textAreaBackground 255 255 255 255
+buttonBackgroundDisabled 188 188 230 255
+infoCodeText 0 0 0 255
+primaryButtonBorder 6 112 237 255
+announceAdvisory 255 194 154 255
+menuBorder 175 175 175 255
+locationToggleImage 0 0 0 255
+secondaryButtonBackground 255 255 255 255
+switchToggleBackgroundOff 65 94 91 255
+speedSliderThumbDisabled 175 175 175 255
+converterBackground 130 188 183 255
+toolbarImageSelected 255 255 255 255
+toolbarTextSelected 255 255 255 255
+widgetTextError 251 96 85 255
+tabBorder 175 175 175 255
+codeBracketHighlight 200 200 255 255
+tabText 0 0 0 255
+reporterToken 102 0 150 255
+warningIcon 220 170 50 255
+plotBackground 225 225 182 255
+toolbarImage 85 87 112 255
+primaryButtonBackground 6 112 237 255
+secondaryButtonBackgroundHover 245 245 245 255
+dialogBackgroundSelected 6 112 237 255
+chooserBorder 65 94 91 255
+infoH2Color 0 90 200 255
+tabSeparator 175 175 175 255
+tabCloseButtonBackgroundHover 0 0 0 64
+literalToken 150 55 0 255
+commandCenterBackground 238 238 238 255
+checkboxBackgroundSelected 6 112 237 255
+tabTextError 251 96 85 255
+toolbarBackground 238 238 238 255
+toolbarControlBorder 175 175 175 255
+buttonBackgroundPressedHover 0 0 0 255
+buttonText 0 0 0 255
+checkFilled 0 173 90 255
+radioButtonBackground 255 255 255 255
+infoLink 0 110 240 255
+sliderBarBackground 65 94 91 255
+sliderBarBackgroundFilled 65 94 91 255
+viewBackground 175 175 175 255
+checkboxCheck 255 255 255 255
+infoH4Color 115 115 115 255
+checkboxBackgroundSelectedHover 0 102 227 255
+commandCenterText 0 0 0 255
+commandOutputBackground 255 255 255 255
+codeSelection 200 200 255 255
+scrollBarBackground 238 238 238 255
+toolbarText 0 0 0 255
+announceEvent 108 252 221 255
+menuBackground 255 255 255 255
+primaryButtonBackgroundPressed 0 72 197 255
+inputBorder 65 94 91 255
+infoBackground 255 255 255 255
+speedSliderThumb 6 112 237 255
+tabBackgroundHover 238 238 238 255
+widgetText 0 0 0 255
+sliderThumbBackgroundPressed 200 103 103 255
+menuBackgroundHover 6 112 237 255
+speedSliderBarBackgroundFilled 6 112 237 255
+menuTextDisabled 175 175 175 255
+keywordToken 0 127 105 255
+buttonBackgroundHover 188 188 230 255
+buttonBackground 188 188 230 255
+menuTextHover 255 255 255 255
+updateIcon 240 91 0 255
+widgetPreviewCoverNote 175 175 175 75
+infoH3Color 88 88 88 255
+colorPickerCopyHover 197 197 197 255
+toolbarControlFocus 6 112 237 255
+switchToggleBackgroundOn 65 94 91 255
+interfaceBackground 255 255 255 255
+codeSeparator 238 238 238 255
+warningLabelText 255 255 255 255
+buttonTextPressed 188 188 230 255
+tabTextSelected 255 255 255 255
+buttonTextDisabled 0 0 0 255
+commentToken 120 120 120 255
+plotMouseText 0 0 0 255
+infoBlockBar 96 96 96 255
+radioButtonBorder 175 175 175 255
+errorLabelText 255 255 255 255
+primaryButtonBackgroundHover 0 92 217 255
+toolbarControlBackground 255 255 255 255
+toolbarControlBorderSelected 0 0 0 0
+displayAreaBackground 255 255 255 255
+primaryButtonText 255 255 255 255
+plotMouseBackground 225 225 182 255
+infoH1Color 19 13 134 255
+textAreaBorderEditable 175 175 175 255
+speedSliderBarBackground 175 175 175 255
+toolbarToolSelected 6 112 237 255
+announceXPressed 175 175 175 255
+stockBackground 225 225 182 255
+warningLabelBackground 255 160 0 255
+checkboxBackgroundUnselected 255 255 255 255
+tabBackgroundError 251 96 85 255
+viewBorder 0 0 0 255
+secondaryButtonText 0 0 0 255
+secondaryButtonBorder 175 175 175 255
+tabBackground 255 255 255 255
+radioButtonSelectedHover 0 102 227 255
+announceX 79 79 79 255
+widgetHoverShadow 75 75 75 255
+infoH1Background 209 208 255 255
+switchToggle 200 103 103 255
+colorPickerOutputBackground 125 125 125 255
+inputBackground 130 188 183 255
+monitorBorder 175 175 175 255
+scrollBarForegroundHover 120 120 120 255
+toolbarSeparator 175 175 175 255
+plotBorder 175 175 175 255
+agentMonitorSeparator 175 175 175 255
+scrollBarForeground 175 175 175 255
+monitorBackground 225 225 182 255
+errorIcon 220 50 50 255
+radioButtonSelected 6 112 237 255
+secondaryButtonBackgroundPressed 215 215 215 255
+toolbarControlBackgroundPressed 215 215 215 255
+outputBackground 225 225 182 255
+sliderThumbBackground 200 103 103 255
+errorHighlight 251 96 85 255
+dialogTextSelected 255 255 255 255
+checkboxBorder 175 175 175 255
+defaultToken 0 0 0 255
+splitPaneDividerBackground 175 175 175 255
+checkboxBackgroundUnselectedHover 245 245 245 255
+dialogBackground 245 245 245 255
+commandToken 0 0 170 255

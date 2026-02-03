@@ -99,9 +99,9 @@ object InterfaceColors {
 
       val colors: Map[String, Color] = {
         lines.map { line =>
-          val split = line.split(" = ")
+          val split = line.split(" ")
 
-          (split(0), new Color(split(1).toInt, true))
+          (split(0), new Color(split(1).toInt, split(2).toInt, split(3).toInt, split(4).toInt))
         }.toMap
       }
 
@@ -131,7 +131,9 @@ object InterfaceColors {
 
     writer.println(theme.isDark.toString)
 
-    theme.colors.foreach((key, color) => writer.println(s"$key = ${color.getRGB}"))
+    theme.colors.foreach { (key, color) =>
+      writer.println(s"$key ${color.getRed} ${color.getGreen} ${color.getBlue} ${color.getAlpha}")
+    }
 
     writer.close()
   }
