@@ -54,6 +54,11 @@ jobs:
           pip3 install numpy
           pip3 install scikit-learn
 
+      - uses: apple-actions/import-codesign-certs@v6
+        with:
+          p12-file-base64: ${{ secrets.APPSTORE_CERTIFICATES_FILE_BASE64 }}
+          p12-password: ${{ secrets.APPSTORE_CERTIFICATES_PASSWORD }}
+
       - name: Setup Packaging Environment
         run: |
           echo "- vendor: 'OpenJDK'" > .jdks.yaml
@@ -126,6 +131,11 @@ jobs:
         run: |
           pip3 install numpy
           pip3 install scikit-learn
+
+      - uses: apple-actions/import-codesign-certs@v6
+        with:
+          p12-file-base64: ${{ secrets.APPSTORE_CERTIFICATES_FILE_BASE64 }}
+          p12-password: ${{ secrets.APPSTORE_CERTIFICATES_PASSWORD }}
 
       - name: Setup Packaging Environment
         run: |
