@@ -5,11 +5,9 @@ package org.nlogo.lab
 import java.io.{ File, FileWriter, PrintWriter }
 import java.lang.{ Double => JDouble }
 import java.net.SocketException
-import java.util.Base64
 
 import org.nlogo.api.{ Dump, LabProtocol, LabPostProcessorInputFormat, PartialData }
 import org.nlogo.core.I18N
-import org.nlogo.mirror.{ Mirrorables, Mirroring, Serializer }
 import org.nlogo.nvm.{ LabInterface, PrimaryWorkspace, Workspace }
 
 import scala.collection.mutable.Queue
@@ -206,59 +204,57 @@ class Lab extends LabInterface {
           }
 
           override def runStarted(w: Workspace, runNumber: Int, settings: List[(String, Any)]): Unit = {
-            handler.writeLine(ujson.write(Obj(
-              "type" -> "run_start",
-              "number" -> runNumber,
-              "settings" -> settings.map((name, value) => Obj(
-                "name" -> name,
-                "value" -> Dump.logoObject(value.asInstanceOf[AnyRef])
-              ))
-            ))).recover {
-              case _: SocketException =>
-                abort()
+            if (w == workspaces.head) {
+              handler.writeLine(ujson.write(Obj(
+                "type" -> "run_start",
+                "number" -> runNumber,
+                "settings" -> settings.map((name, value) => Obj(
+                  "name" -> name,
+                  "value" -> Dump.logoObject(value.asInstanceOf[AnyRef])
+                ))
+              ))).recover {
+                case _: SocketException =>
+                  abort()
+              }
             }
           }
 
           override def stepCompleted(w: Workspace, steps: Int): Unit = {
-            handler.writeLine(ujson.write(Obj(
-              "type" -> "step_complete",
-              "number" -> steps
-            ))).recover {
-              case _: SocketException =>
-                abort()
-            }
-
             if (w == workspaces.head) {
-              val mirrorables = Mirrorables.allMirrorables(w.world)
-              val bytes = Serializer.toBytes(Mirroring.diffs(Map(), mirrorables)._2)
-
               handler.writeLine(ujson.write(Obj(
-                "type" -> "mirror_world",
-                "state" -> Base64.getEncoder.encodeToString(bytes)
-              )))
+                "type" -> "step_complete",
+                "number" -> steps
+              ))).recover {
+                case _: SocketException =>
+                  abort()
+              }
             }
           }
 
           override def measurementsTaken(w: Workspace, runNumber: Int, step: Int, values: List[AnyRef]): Unit = {
-            handler.writeLine(ujson.write(Obj(
-              "type" -> "measurements",
-              "values" -> values.collect {
-                case d: JDouble => Num(d)
+            if (w == workspaces.head) {
+              handler.writeLine(ujson.write(Obj(
+                "type" -> "measurements",
+                "values" -> values.collect {
+                  case d: JDouble => Num(d)
+                }
+              ))).recover {
+                case _: SocketException =>
+                  abort()
               }
-            ))).recover {
-              case _: SocketException =>
-                abort()
             }
           }
 
           override def runCompleted(w: Workspace, runNumber: Int, step: Int): Unit = {
-            handler.writeLine(ujson.write(Obj(
-              "type" -> "run_complete",
-              "number" -> runNumber,
-              "step" -> step
-            ))).recover {
-              case _: SocketException =>
-                abort()
+            if (w == workspaces.head) {
+              handler.writeLine(ujson.write(Obj(
+                "type" -> "run_complete",
+                "number" -> runNumber,
+                "step" -> step
+              ))).recover {
+                case _: SocketException =>
+                  abort()
+              }
             }
 
             queue.synchronized { if (!paused) queue.enqueue(w) }
