@@ -4,7 +4,7 @@ package org.nlogo.app
 
 import com.jthemedetecor.OsThemeDetector
 
-import java.awt.{ Dimension, EventQueue, Frame, GraphicsEnvironment, KeyboardFocusManager, Toolkit, BorderLayout}
+import java.awt.{ Dimension, EventQueue, Frame, KeyboardFocusManager, Toolkit, BorderLayout}
 import java.awt.datatransfer.DataFlavor
 import java.awt.dnd.{ DropTarget, DropTargetDragEvent, DropTargetDropEvent, DropTargetEvent, DropTargetListener }
 import java.awt.event.ActionEvent
@@ -44,10 +44,10 @@ import org.nlogo.nvm.{ PresentationCompilerInterface, Workspace }
 import org.nlogo.render.Renderer
 import org.nlogo.sdm.gui.{ GUIAggregateManager, NLogoGuiSDMFormat, NLogoThreeDGuiSDMFormat, SDMGuiAutoConvertable }
 import org.nlogo.shape.editor.{ LinkShapeManagerDialog, TurtleShapeManagerDialog }
-import org.nlogo.swing.{ BrowserLauncher, DropdownOptionPane, FileDialog, InputOptionPane, Menu, OptionPane,
-                         Positioning, PrinterManager, SetSystemLookAndFeel, UserAction, Utils, WindowAutomator },
+import org.nlogo.swing.{ AppUtils, BrowserLauncher, DropdownOptionPane, FileDialog, InputOptionPane, Menu, OptionPane,
+                         Positioning, PrinterManager, UserAction, WindowAutomator },
   UserAction.{ ActionCategoryKey, EditCategory, FileCategory, HelpCategory, MenuAction, ToolsCategory }
-import org.nlogo.theme.{ ClassicTheme, DarkTheme, InterfaceColors, LightTheme, ThemeSync }
+import org.nlogo.theme.{ DarkTheme, InterfaceColors, LightTheme, ThemeSync }
 import org.nlogo.util.AppHandler
 import org.nlogo.window._
 import org.nlogo.window.{ MenuBarFactory => WindowMenuBarFactory }
@@ -83,13 +83,7 @@ object App {
     logEvents: Option[String] = None,
     logDirectory: Option[String] = None,
     popOutCodeTab: Boolean = false,
-    colorTheme: String = NetLogoPreferences.get("colorTheme", {
-      if (OsThemeDetector.getDetector.isDark) {
-        "dark"
-      } else {
-        "light"
-      }
-    }),
+    colorTheme: String = AppUtils.defaultTheme,
     // only for testing, certain user-focused behaviors will be disabled (Isaac B 10/31/25)
     testing: Boolean = false,
     // only for testing, interactable GUI components will be automated (Isaac B 10/27/25)
@@ -134,19 +128,6 @@ object App {
     }
 
     try {
-      val scalePref = NetLogoPreferences.getDouble("uiScale", 1.0)
-
-      if (scalePref > 1.0) {
-        System.setProperty("sun.java2d.uiScale", scalePref.toString)
-
-        Utils.setUIScale(scalePref)
-      } else {
-        val devices = GraphicsEnvironment.getLocalGraphicsEnvironment.getScreenDevices
-        val scale = devices(0).getDefaultConfiguration.getDefaultTransform.getScaleX
-
-        Utils.setUIScale(scale)
-      }
-
       appHandler.init()
 
       AbstractWorkspace.isApp(true)
@@ -154,22 +135,12 @@ object App {
 
       val cmdArgs = processCommandLineArguments(args)
 
+      AppUtils.setupGUI(Option(cmdArgs.colorTheme))
+
       WindowAutomator.setAutomated(cmdArgs.automated)
       FileDialog.setAutomated(cmdArgs.automated)
       PrinterManager.setAutomated(cmdArgs.automated)
       BrowserLauncher.setAutomated(cmdArgs.automated)
-
-      SetSystemLookAndFeel.setSystemLookAndFeel()
-
-      InterfaceColors.setTheme(cmdArgs.colorTheme match {
-        case "classic" => ClassicTheme
-        case "light" => LightTheme
-        case "dark" => DarkTheme
-        case _ => InterfaceColors.systemTheme
-      })
-
-      System.setProperty("flatlaf.menuBarEmbedded", "false")
-      System.setProperty("sun.awt.noerasebackground", "true") // stops view2.5d and 3d windows from blanking to white until next interaction
 
       Splash.beginSplash() // also initializes AWT
 

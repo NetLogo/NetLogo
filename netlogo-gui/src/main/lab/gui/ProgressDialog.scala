@@ -16,6 +16,14 @@ import org.nlogo.swing.{ Button, ButtonPanel, CheckBox, OptionPane, RichAction, 
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ GUIWorkspace, PlotWidget, SpeedSliderPanel }
 
+object ProgressDialog {
+  trait GUIListener {
+    def speedChanged(value: Double): Unit
+    def updateViewChanged(value: Boolean): Unit
+    def updatePlotsChanged(value: Boolean): Unit
+  }
+}
+
 private [gui] class ProgressDialog(parent: Window, supervisor: Supervisor, compiler: CompilerServices,
                                    colorizer: Colorizer, saveProtocol: (LabProtocol, Int) => Unit)
               extends JDialog(parent, Dialog.DEFAULT_MODALITY_TYPE) with ThemeSync {
@@ -42,7 +50,9 @@ private [gui] class ProgressDialog(parent: Window, supervisor: Supervisor, compi
     supervisor.abort()
   }
   private val abortButton = new Button(abortAction)
-  private val speedSlider = new SpeedSliderPanel(workspace)
+  private val speedSlider = new SpeedSliderPanel(workspace, speedChanged = speed => {
+    guiListeners.foreach(_.speedChanged(speed))
+  })
 
   private var updatePlots = false
   private var started = 0L
@@ -92,6 +102,8 @@ private [gui] class ProgressDialog(parent: Window, supervisor: Supervisor, compi
     }
     else None
   }
+
+  private var guiListeners = Set[ProgressDialog.GUIListener]()
 
   locally {
     setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE)
@@ -164,15 +176,31 @@ private [gui] class ProgressDialog(parent: Window, supervisor: Supervisor, compi
     updateProgressArea(false)
     plotWidgetOption.foreach{ plotWidget => if (updatePlots) plotWidget.handle(null) }
   }
-  lazy val displaySwitchAction = RichAction(I18N.gui("updateView")) { e =>
-    workspace.displaySwitchOn(e.getSource.asInstanceOf[CheckBox].isSelected)
+  lazy val displaySwitchAction = RichAction(I18N.gui("updateView")) {
+    _.getSource match {
+      case check: CheckBox =>
+        workspace.displaySwitchOn(check.isSelected)
+
+        guiListeners.foreach(_.updateViewChanged(check.isSelected))
+
+      case _ =>
+    }
   }
-  lazy val plotsAndMonitorsSwitchAction = RichAction(I18N.gui("updatePlotsAndMonitors")) { e =>
-    updatePlots = e.getSource.asInstanceOf[CheckBox].isSelected
-    if (updatePlots) workspace.setPeriodicUpdatesEnabled(true)
-    else {
-      workspace.setPeriodicUpdatesEnabled(false)
-      workspace.jobManager.finishSecondaryJobs(null)
+  lazy val plotsAndMonitorsSwitchAction = RichAction(I18N.gui("updatePlotsAndMonitors")) {
+    _.getSource match {
+      case check: CheckBox =>
+        updatePlots = check.isSelected
+
+        if (updatePlots) {
+          workspace.setPeriodicUpdatesEnabled(true)
+        } else {
+          workspace.setPeriodicUpdatesEnabled(false)
+          workspace.jobManager.finishSecondaryJobs(null)
+        }
+
+        guiListeners.foreach(_.updatePlotsChanged(updatePlots))
+
+      case _ =>
     }
   }
 
@@ -194,6 +222,8 @@ private [gui] class ProgressDialog(parent: Window, supervisor: Supervisor, compi
   def updateView(check: Boolean): Unit = {
     displaySwitch.setSelected(check)
     workspace.displaySwitchOn(check)
+
+    guiListeners.foreach(_.updateViewChanged(check))
   }
 
   def setUpdateView(status: Boolean): Unit = {
@@ -206,6 +236,8 @@ private [gui] class ProgressDialog(parent: Window, supervisor: Supervisor, compi
     if (!check) {
       workspace.jobManager.finishSecondaryJobs(null)
     }
+
+    guiListeners.foreach(_.updatePlotsChanged(check))
   }
 
   def setPlotsAndMonitorsSwitch(status: Boolean): Unit = {
@@ -277,6 +309,10 @@ private [gui] class ProgressDialog(parent: Window, supervisor: Supervisor, compi
 
   def measurementsTaken(values: Seq[Double]): Unit = {
     plotNextPoint(values)
+  }
+
+  def addGUIListener(listener: ProgressDialog.GUIListener): Unit = {
+    guiListeners += listener
   }
 
   private def invokeAndWait(f: => Unit) =

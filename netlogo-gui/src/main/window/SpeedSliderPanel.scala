@@ -14,11 +14,9 @@ import org.nlogo.swing.{ Button, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.Events.LoadBeginEvent
 
-class SpeedSliderPanel(workspace: GUIWorkspace, ticksLabel: Component = null) extends JPanel
-                                                                              with MouseListener
-                                                                              with ChangeListener
-                                                                              with LoadBeginEvent.Handler
-                                                                              with ThemeSync {
+class SpeedSliderPanel(workspace: GUIWorkspace, ticksLabel: Component = null, speedChanged: Double => Unit = _ => {})
+  extends JPanel with MouseListener with ChangeListener with LoadBeginEvent.Handler with ThemeSync {
+
   implicit val prefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("tabs.run.speedslider")
 
   val speedSlider = {
@@ -132,6 +130,8 @@ class SpeedSliderPanel(workspace: GUIWorkspace, ticksLabel: Component = null) ex
 
     LogManager.speedSliderChanged(adjustedValue)
     workspace.updateManager.nudgeSleeper()
+
+    speedChanged(adjustedValue)
   }
 
   // mouse listener junk

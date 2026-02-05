@@ -2,21 +2,18 @@
 
 package org.nlogo.headless
 
-import java.io.{ File, IOException }
-import java.net.SocketException
+import java.io.File
 
-import org.nlogo.agent.OutputObject
-import org.nlogo.api.{ APIVersion, ExportPlotWarningAction, IPCHandler, LabDefaultValues, LabProtocol, LogoException,
-                       PlotCompilationErrorAction, Version }
-import org.nlogo.core.{ CompilerException, WorldDimensions }
-import org.nlogo.nvm.{ DummyPrimaryWorkspace, EngineException, PrimaryWorkspace }
+import org.nlogo.core.WorldDimensions
+import org.nlogo.api.{ APIVersion, ExportPlotWarningAction, LabDefaultValues, LabProtocol, PlotCompilationErrorAction,
+                       Version }
+import org.nlogo.nvm.{ DummyPrimaryWorkspace, PrimaryWorkspace }
 import org.nlogo.nvm.LabInterface.{ Settings, Worker }
 
-import ujson.Obj
-
 object Main {
+
   // *TODO*: Get this I18N'd and also a way to keep it in sync with the BehaviorSpace docs.
-  private val HelpString = """
+  private val HELP_STRING = """
 Run NetLogo using the NetLogo_Console app with the --headless command line argument.  The NetLogo_Console script supports the following arguments:
 
 * --headless: Enable headless mode to run a BehaviorSpace experiment (required, will open the graphical interface otherwise).
@@ -29,7 +26,6 @@ Run NetLogo using the NetLogo_Console app with the --headless command line argum
 * --stats <path>: pathname to send statistics output to (or - for standard output)
 * --threads <number>: use this many threads to do model runs in parallel, or 1 to disable parallel runs. defaults to floor( .75 * number of processors).
 * --update-plots: enable plot updates. Include this if you want to export plot data, or exclude it for better performance.
-* --skip <number>: skip the specified number of runs instead of starting at the beginning of the experiment
 * --min-pxcor <number>: override world size setting in model file
 * --max-pxcor <number>: override world size setting in model file
 * --min-pycor <number>: override world size setting in model file
@@ -51,7 +47,7 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
     setHeadlessProperty()
 
     try {
-      runExperiment(parseArgs(args))
+      parseArgs(args).foreach(runExperiment(_))
     } catch {
       case e: Exception =>
         System.err.println(e)
@@ -80,8 +76,7 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
     }
     proto match {
       case Some(protocol) =>
-        runExperimentWithProtocol(settings, protocol, _ => {})
-        finish()
+        runExperimentWithProtocol(settings, protocol, _ => {}, finish, new DummyPrimaryWorkspace)
 
       case None =>
         throw new IllegalArgumentException("Invalid run, specify experiment name or setup file")
@@ -90,48 +85,10 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
 
   // used in bspace extension
   def runExperimentWithProtocol(settings: Settings, protocol: LabProtocol, assignWorker: Worker => Unit,
+                                finish: () => Unit, primaryWorkspace: PrimaryWorkspace,
                                 loadedExtensions: Seq[String] = Seq()): Unit = {
     var plotCompilationErrorAction: PlotCompilationErrorAction = PlotCompilationErrorAction.Output
     var exportPlotWarningAction: ExportPlotWarningAction = ExportPlotWarningAction.Output
-
-    settings.ipcHandler.foreach(_.connect())
-
-    val lab = HeadlessWorkspace.newLab
-
-    val primaryWorkspace: PrimaryWorkspace = settings.ipcHandler.fold(new DummyPrimaryWorkspace) { handler =>
-      new DummyPrimaryWorkspace {
-        override def mirrorOutput(oo: OutputObject, toOutputArea: Boolean): Unit = {
-          handler.writeLine(ujson.write(Obj(
-            "type" -> "mirror",
-            "caption" -> oo.caption,
-            "message" -> oo.message,
-            "newline" -> oo.addNewline,
-            "temporary" -> oo.isTemporary,
-            "area" -> toOutputArea
-          ))).recover {
-            case _: SocketException =>
-              lab.abort()
-          }
-        }
-
-        override def runtimeError(t: Throwable): Unit = {
-          handler.writeLine(ujson.write(Obj(
-            "type" -> "error",
-            "exception" -> (t match {
-              case _: CompilerException => "compiler"
-              case _: LogoException | EngineException => "runtime"
-              case _: IOException => "io"
-              case _ => "other"
-            }),
-            "message" -> t.getMessage
-          ))).recover {
-            case _: SocketException =>
-              lab.abort()
-          }
-        }
-      }
-    }
-
     def newWorkspace = {
       val w = HeadlessWorkspace.newInstance
       w.setPrimaryWorkspace(primaryWorkspace)
@@ -144,14 +101,11 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
       w.setMirrorHeadlessOutput(settings.mirrorHeadlessOutput)
       w
     }
-
-    val worker = lab.newWorker(protocol.copy(runsCompleted = protocol.runsCompleted.max(settings.runsCompleted)))
-
+    val lab = HeadlessWorkspace.newLab
+    val worker = lab.newWorker(protocol)
     assignWorker(worker)
-
     lab.run(settings, worker, primaryWorkspace, () => newWorkspace)
-
-    settings.ipcHandler.foreach(_.close())
+    finish()
   }
 
   def setHeadlessProperty(): Unit = {
@@ -165,7 +119,7 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
     }
   }
 
-  private def parseArgs(args: Array[String]): Settings = {
+  private def parseArgs(args: Array[String]): Option[Settings] = {
     var model: Option[String] = None
     var minPxcor: Option[String] = None
     var maxPxcor: Option[String] = None
@@ -180,98 +134,153 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
     var threads =  LabDefaultValues.getDefaultThreads
     var suppressErrors = false
     var updatePlots = false
-    var mirrorHeadless = false
-    var runsCompleted = 0
-    var ipc = false
+    val it = args.iterator
 
     def die(msg: String): Unit = {
       System.err.println(msg)
       System.exit(1)
     }
 
-    def printAndExit(message: String): Unit = {
-      println(message)
-
-      System.exit(0)
-    }
-
-    val it = args.iterator
-
     while (it.hasNext) {
       val arg = it.next().toLowerCase
 
-      def nextOrDie(): String = {
-        if (!it.hasNext) {
+      def requireHasNext(): Unit = {
+        if (!it.hasNext)
           die("missing argument after " + arg)
-
-          ""
-        } else {
-          it.next()
-        }
       }
 
-      arg match {
-        case "--headless" => // noop to avoid tripping unknown argument error
-        case "--help" => printAndExit(HelpString)
-        case "--version" => printAndExit(Version.version)
-        case "--extension-api-version" => printAndExit(APIVersion.version)
-        case "--builddate" => printAndExit(Version.buildDate)
-        case "--fullversion" => printAndExit(Version.fullVersion)
-        case "--3d" => Version.set3D(true)
-        case "--model" => model = Some(nextOrDie())
-        case "--min-pxcor" => minPxcor = Some(nextOrDie())
-        case "--max-pxcor" => maxPxcor = Some(nextOrDie())
-        case "--min-pycor" => minPycor = Some(nextOrDie())
-        case "--max-pycor" => maxPycor = Some(nextOrDie())
-        case "--setup-file" => setupFile = Some(new File(nextOrDie()))
-        case "--experiment" => experiment = Some(nextOrDie())
-        case "--table" => table = Option(nextOrDie())
-        case "--spreadsheet" => spreadsheet = Option(nextOrDie())
-        case "--lists" => lists = Option(nextOrDie())
-        case "--stats" => stats = Option(nextOrDie())
-        case "--threads" => threads = nextOrDie().toInt
-        case "--suppress-errors" => suppressErrors = true
-        case "--update-plots" => updatePlots = true
-        case "--mirror-headless" => mirrorHeadless = true
-        case "--skip" => runsCompleted = nextOrDie().toInt
-        case "--ipc" => ipc = true
-        case _ => die("unknown argument: " + arg)
+      if (arg == "--headless") {
+        // noop to avoid tripping unknown argument error
+
+      } else if (arg == "--help") {
+        println(Main.HELP_STRING)
+        return None
+
+      } else if (arg == "--version") {
+        println(Version.version)
+        return None
+
+      } else if (arg == "--extension-api-version") {
+        println(APIVersion.version)
+        return None
+
+      } else if (arg == "--builddate") {
+        println(Version.buildDate)
+        return None
+
+      } else if (arg == "--fullversion") {
+        println(Version.fullVersion)
+        return None
+
+      } else if (arg == "--3d") {
+        Version.set3D(true)
+
+      } else if (arg == "--model") {
+        requireHasNext()
+        model = Some(it.next())
+
+      } else if (arg == "--min-pxcor") {
+        requireHasNext()
+        minPxcor = Some(it.next())
+
+      } else if (arg == "--max-pxcor") {
+        requireHasNext()
+        maxPxcor = Some(it.next())
+
+      } else if (arg == "--min-pycor") {
+        requireHasNext()
+        minPycor = Some(it.next())
+
+      } else if (arg == "--max-pycor") {
+        requireHasNext()
+        maxPycor = Some(it.next())
+
+      } else if (arg == "--setup-file") {
+        requireHasNext()
+        setupFile = Some(new File(it.next()))
+
+      } else if (arg == "--experiment") {
+        requireHasNext()
+        experiment = Some(it.next())
+
+      } else if (arg == "--table") {
+        requireHasNext()
+        table = Some(it.next().trim)
+
+      } else if (arg == "--spreadsheet") {
+        requireHasNext()
+        spreadsheet = Some(it.next().trim)
+
+      } else if (arg == "--lists") {
+        requireHasNext()
+        lists = Some(it.next().trim)
+
+      } else if (arg == "--stats") {
+        requireHasNext()
+        stats = Some(it.next().trim)
+      }
+
+      else if (arg == "--threads") {
+        requireHasNext()
+        threads = it.next().toInt
+
+      } else if (arg == "--suppress-errors") {
+        suppressErrors = true
+
+      } else if (arg == "--update-plots") {
+        updatePlots = true
+      } else {
+        die("unknown argument: " + arg)
       }
     }
 
-    if (model.isEmpty)
+    if (model == None) {
       die("You must specify --model.  Try --help for more information.")
+    }
 
-    if (setupFile.isEmpty && experiment.isEmpty)
+    if (setupFile == None && experiment == None) {
       die("You must specify either --setup-file or --experiment (or both).  Try --help for more information.")
+    }
 
-    if (lists.isDefined && table.isEmpty && spreadsheet.isEmpty)
+    if (lists != None && table == None && spreadsheet == None) {
       die("You cannot specify --lists without also specifying --table or --spreadsheet. Try --help for more information.")
+    }
 
-    val dimStrings = Seq(minPxcor, maxPxcor, minPycor, maxPycor)
-
-    if (dimStrings.exists(_.isDefined) && dimStrings.exists(!_.isDefined))
+    val dimStrings = List(minPxcor, maxPxcor, minPycor, maxPycor)
+    if (dimStrings.exists(_.isDefined) && dimStrings.exists(!_.isDefined)) {
       die("If any of min/max-px/ycor are specified, all four must be specified.  Try --help for more information.")
+    }
 
-    if (stats.isDefined && (table.isEmpty && spreadsheet.isEmpty))
+    if (stats != None && (table == None && spreadsheet == None)) {
       die("You cannot specify --stats without also specifying --table or --spreadsheet. Try --help for more information.")
+    }
 
-    val dims = if (dimStrings.exists(!_.isDefined)) {
+    val dims = if (dimStrings.forall(!_.isDefined)) {
       None
     } else {
-      Some(new WorldDimensions(minPxcor.get.toInt, maxPxcor.get.toInt,
-                               minPycor.get.toInt, maxPycor.get.toInt))
+      Some(new WorldDimensions(
+        minPxcor.get.toInt
+      , maxPxcor.get.toInt
+      , minPycor.get.toInt
+      , maxPycor.get.toInt
+      ))
     }
 
-    val ipcHandler: Option[IPCHandler] = {
-      if (ipc) {
-        Some(IPCHandler(false))
-      } else {
-        None
-      }
-    }
-
-    Settings(model.get, experiment, setupFile, table, spreadsheet, stats, lists, dims, threads, suppressErrors,
-             updatePlots, mirrorHeadless, runsCompleted, ipcHandler)
+    Some(new Settings(
+      model.get
+    , experiment
+    , setupFile
+    , table
+    , spreadsheet
+    , stats
+    , lists
+    , dims
+    , threads
+    , suppressErrors
+    , updatePlots
+    , false
+    , 0
+    , None
+    ))
   }
 }

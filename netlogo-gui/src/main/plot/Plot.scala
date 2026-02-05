@@ -284,20 +284,6 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with JSerializ
     histogram = None
   }
 
-  override def clone = {
-    val newPlot = new Plot(name)
-    newPlot.state = state
-    newPlot._pens = _pens.map(_.clone)
-    newPlot._currentPen = currentPen.flatMap { p =>
-      newPlot._pens.find(_.name == p.name)
-    }
-    newPlot.legendIsOpen = legendIsOpen
-    newPlot.setupCode = setupCode
-    newPlot.updateCode = updateCode
-    // newPlot.dirty will be true by default, which is fine
-    newPlot
-  }
-
   @throws(classOf[IOException])
   private def writeObject(out: ObjectOutputStream): Unit = {
     out.writeObject(name)

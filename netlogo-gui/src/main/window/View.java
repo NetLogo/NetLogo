@@ -220,31 +220,10 @@ public class View
     }
   }
 
-  RendererInterface sourceRenderer = null;
-
-  public void paintFromRenderer(RendererInterface renderer) {
-    sourceRenderer = renderer;
-
-    paintImmediately();
-
-    sourceRenderer = null;
-  }
-
   @Override
   public void paintComponent(java.awt.Graphics g) {
     frameCount++;
-    if (sourceRenderer != null) {
-      if (offscreenImage == null) {
-        offscreenImage = createImage(getWidth(), getHeight());
-        gOff = (java.awt.Graphics2D)offscreenImage.getGraphics();
-        gOff.setFont(getFont());
-      }
-      synchronized (workspace.world()) {
-        sourceRenderer.paint(gOff, this);
-      }
-      g.drawImage(offscreenImage, 0, 0, null);
-      framesSkipped = false;
-    } else if (frozen || !workspace.world().displayOn()) {
+    if (frozen || !workspace.world().displayOn()) {
       if (dirty) {
         g.setColor(InterfaceColors.viewBackground());
         g.fillRect(0, 0, getWidth(), getHeight());
