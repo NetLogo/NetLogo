@@ -150,6 +150,9 @@ with org.nlogo.api.ViewSettings with PrimaryWorkspace {
     resourceManager.setResources(model.resources)
   }
 
+  def getOpenModel: Option[Model] =
+    _openModel
+
   val outputAreaBuffer = new StringBuilder
 
   /**
