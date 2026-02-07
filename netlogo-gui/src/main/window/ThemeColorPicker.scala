@@ -2,30 +2,25 @@
 
 package org.nlogo.window
 
-import java.awt.{ Color, Dimension, Graphics, LinearGradientPaint }
+import java.awt.{ Color, Container, Dimension, Graphics, GridBagConstraints, GridBagLayout, Insets,
+                  LinearGradientPaint }
 import java.awt.event.{ MouseAdapter, MouseEvent }
-import javax.swing.{ Box, BoxLayout, JLabel, JPanel }
+import javax.swing.{ JLabel, JPanel }
 
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ Button, ComboBox, PackedLayout, Transparent, Utils }
+import org.nlogo.swing.{ Button, ComboBox, Implicits, PackedLayout, TextField, Transparent, Utils },
+  Implicits.thunk2documentListener
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
-class ThemeColorPicker(updateColor: Color => Unit) extends JPanel with Transparent with ThemeSync {
+class ThemeColorPicker(updateColor: Color => Unit) extends JPanel(new GridBagLayout) with Transparent with ThemeSync {
   private var mode: Mode = RGBA
 
   private var copied: Option[Color] = None
 
-  private val rhLabel = new JLabel("R")
-  private val gsLabel = new JLabel("G")
-  private val bLabel = new JLabel("B")
-  private val aLabel = new JLabel("A")
-
-  private val rhSlider = new Slider(0)
-  private val gsSlider = new Slider(1)
-  private val bSlider = new Slider(2)
-  private val aSlider = new Slider(3)
-
-  private val preview = new PreviewPanel
+  private val rhSlider = new ColorSlider(0)
+  private val gsSlider = new ColorSlider(1)
+  private val bSlider = new ColorSlider(2)
+  private val aSlider = new ColorSlider(3)
 
   private val modeLabel = new JLabel(I18N.gui.get("menu.tools.themeEditor.mode"))
   private val modeDropdown = new ComboBox(Seq(RGBA, HSBA)) {
@@ -44,21 +39,41 @@ class ThemeColorPicker(updateColor: Color => Unit) extends JPanel with Transpare
   private val copyButton = new Button(I18N.gui.get("menu.tools.themeEditor.copy"), copyColor)
   private val pasteButton = new Button(I18N.gui.get("menu.tools.themeEditor.paste"), pasteColor)
 
-  setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
+  locally {
+    val c = new GridBagConstraints
 
-  add(new PackedLayout(Seq(modeLabel, modeDropdown, copyButton, pasteButton), alignment = PackedLayout.Leading,
-                       spacing = 6))
-  add(Box.createVerticalStrut(6))
-  add(new PackedLayout(Seq(rhLabel, rhSlider), spacing = 6))
-  add(Box.createVerticalStrut(6))
-  add(new PackedLayout(Seq(gsLabel, gsSlider), spacing = 6))
-  add(Box.createVerticalStrut(6))
-  add(new PackedLayout(Seq(bLabel, bSlider), spacing = 6))
-  add(Box.createVerticalStrut(6))
-  add(new PackedLayout(Seq(aLabel, aSlider), spacing = 6))
-  add(Box.createVerticalStrut(6))
-  add(new PackedLayout(Seq(preview), alignment = PackedLayout.Trailing))
-  add(Box.createVerticalGlue)
+    c.gridwidth = 3
+    c.anchor = GridBagConstraints.WEST
+    c.insets = new Insets(0, 0, 6, 0)
+
+    add(new PackedLayout(Seq(modeLabel, modeDropdown, copyButton, pasteButton), spacing = 6), c)
+
+    c.gridx = GridBagConstraints.RELATIVE
+    c.gridy = 1
+    c.gridwidth = 1
+    c.insets = new Insets(0, 0, 6, 6)
+
+    rhSlider.addComponents(this, c)
+
+    c.gridy = 2
+
+    gsSlider.addComponents(this, c)
+
+    c.gridy = 3
+
+    bSlider.addComponents(this, c)
+
+    c.gridy = 4
+
+    aSlider.addComponents(this, c)
+
+    c.gridx = 1
+    c.gridy = 5
+    c.weighty = 1
+    c.anchor = GridBagConstraints.NORTHWEST
+
+    add(new PreviewPanel, c)
+  }
 
   private def setMode(mode: Mode): Unit = {
     val color = getColor
@@ -67,8 +82,8 @@ class ThemeColorPicker(updateColor: Color => Unit) extends JPanel with Transpare
 
     setColor(color)
 
-    rhLabel.setText(mode.toString()(0).toString)
-    gsLabel.setText(mode.toString()(1).toString)
+    rhSlider.updateLabel()
+    gsSlider.updateLabel()
 
     repaint()
   }
@@ -89,7 +104,6 @@ class ThemeColorPicker(updateColor: Color => Unit) extends JPanel with Transpare
         rhSlider.setValue(color.getRed / 255f)
         gsSlider.setValue(color.getGreen / 255f)
         bSlider.setValue(color.getBlue / 255f)
-        aSlider.setValue(color.getAlpha / 255f)
 
       case HSBA =>
         val comps = Color.RGBtoHSB(color.getRed, color.getGreen, color.getBlue, null)
@@ -97,8 +111,9 @@ class ThemeColorPicker(updateColor: Color => Unit) extends JPanel with Transpare
         rhSlider.setValue(comps(0))
         gsSlider.setValue(comps(1))
         bSlider.setValue(comps(2))
-        aSlider.setValue(color.getAlpha / 255f)
     }
+
+    aSlider.setValue(color.getAlpha / 255f)
 
     repaint()
     updateColor(getColor)
@@ -119,12 +134,12 @@ class ThemeColorPicker(updateColor: Color => Unit) extends JPanel with Transpare
   }
 
   override def syncTheme(): Unit = {
-    rhLabel.setForeground(InterfaceColors.dialogText())
-    gsLabel.setForeground(InterfaceColors.dialogText())
-    bLabel.setForeground(InterfaceColors.dialogText())
-    aLabel.setForeground(InterfaceColors.dialogText())
     modeLabel.setForeground(InterfaceColors.dialogText())
 
+    rhSlider.syncTheme()
+    gsSlider.syncTheme()
+    bSlider.syncTheme()
+    aSlider.syncTheme()
     modeDropdown.syncTheme()
     copyButton.syncTheme()
     pasteButton.syncTheme()
@@ -138,15 +153,63 @@ class ThemeColorPicker(updateColor: Color => Unit) extends JPanel with Transpare
   private case object RGBA extends Mode("RGBA")
   private case object HSBA extends Mode("HSBA")
 
-  private class Slider(which: Int) extends JPanel with Transparent {
-    private var position = getWidth / 2
+  private class ColorField(which: Int, slider: ColorSlider) extends TextField(3) {
+    private var updating = false
+
+    getDocument.addDocumentListener(() => updateSlider())
+
+    override def setText(text: String): Unit = {
+      if (!updating) {
+        updating = true
+
+        super.setText(text)
+
+        updating = false
+      }
+    }
+
+    private def getValue(): Option[Float] = {
+      mode match {
+        case RGBA =>
+          getText.toIntOption.filter(n => n >= 0 && n <= 255).map(_ / 255f)
+
+        case HSBA =>
+          if (which == 0) {
+            getText.toFloatOption.filter(n => n >= 0 && n <= 360).map(_ / 360)
+          } else {
+            getText.toFloatOption.filter(n => n >= 0 && n <= 1)
+          }
+      }
+    }
+
+    private def updateSlider(): Unit = {
+      if (!updating) {
+        updating = true
+
+        getValue().foreach { value =>
+          slider.setValue(value)
+          setColor(getColor)
+        }
+
+        updating = false
+      }
+    }
+  }
+
+  private class ColorSlider(which: Int) extends JPanel with Transparent with ThemeSync {
+    private val label = new JLabel
+    private val field = new ColorField(which, this)
+
+    private var position = 0
 
     addMouseListener(new MouseAdapter {
       override def mousePressed(e: MouseEvent): Unit = {
         position = e.getX.min(getWidth).max(0)
 
         ThemeColorPicker.this.repaint()
+
         updateColor(getColor)
+        updateField()
       }
     })
 
@@ -155,9 +218,14 @@ class ThemeColorPicker(updateColor: Color => Unit) extends JPanel with Transpare
         position = e.getX.min(getWidth).max(0)
 
         ThemeColorPicker.this.repaint()
+
         updateColor(getColor)
+        updateField()
       }
     })
+
+    updateLabel()
+    updateField()
 
     def value: Float =
       (position.toFloat / getWidth).min(1).max(0)
@@ -167,6 +235,32 @@ class ThemeColorPicker(updateColor: Color => Unit) extends JPanel with Transpare
 
     def setValue(value: Float): Unit = {
       position = (value * getWidth).toInt
+
+      updateField()
+    }
+
+    def updateLabel(): Unit = {
+      label.setText(mode.toString(which).toString)
+    }
+
+    private def updateField(): Unit = {
+      mode match {
+        case RGBA =>
+          field.setText(rgbValue.toString)
+
+        case HSBA =>
+          if (which == 0) {
+            field.setText((value * 360).round.toString)
+          } else {
+            field.setText(value.toString)
+          }
+      }
+    }
+
+    def addComponents(container: Container, c: GridBagConstraints): Unit = {
+      container.add(label, c)
+      container.add(this, c)
+      container.add(field, c)
     }
 
     override def getPreferredSize: Dimension =
@@ -233,6 +327,12 @@ class ThemeColorPicker(updateColor: Color => Unit) extends JPanel with Transpare
 
       g2d.setColor(Color.WHITE)
       g2d.fillRoundRect((position - 2).min(getWidth - 4).max(0), 1, 4, getHeight - 2, 6, 6)
+    }
+
+    override def syncTheme(): Unit = {
+      label.setForeground(InterfaceColors.dialogText())
+
+      field.syncTheme()
     }
   }
 
