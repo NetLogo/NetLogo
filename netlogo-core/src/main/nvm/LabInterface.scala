@@ -4,7 +4,7 @@ package org.nlogo.nvm
 
 import java.io.{ File, PrintWriter }
 
-import org.nlogo.api.{ IPCHandler, LabPostProcessorInputFormat, LabProtocol, PartialData }
+import org.nlogo.api.{ LabPostProcessorInputFormat, LabProtocol, PartialData }
 import org.nlogo.core.WorldDimensions
 
 object LabInterface {
@@ -46,14 +46,22 @@ object LabInterface {
     suppressErrors: Boolean,
     updatePlots: Boolean,
     mirrorHeadlessOutput: Boolean,
-    runsCompleted: Int,
-    ipcHandler: Option[IPCHandler]
+    runsCompleted: Int
   )
+
+  sealed abstract trait Result
+
+  object Result {
+    case object Aborted extends Result
+    case object Paused extends Result
+    case object Completed extends Result
+  }
 }
 
 trait LabInterface {
   def newWorker(protocol: LabProtocol): LabInterface.Worker
   def run(settings: LabInterface.Settings, worker: LabInterface.Worker, primaryWorkspace: PrimaryWorkspace,
-          fn: () => Workspace): Unit
+          fn: () => Workspace): LabInterface.Result
+  def pause(): Unit
   def abort(): Unit
 }
