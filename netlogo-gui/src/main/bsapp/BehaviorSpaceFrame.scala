@@ -14,7 +14,7 @@ class BehaviorSpaceFrame(app: BehaviorSpaceApp)
 
   addWindowListener(new WindowAdapter {
     override def windowClosing(e: WindowEvent): Unit = {
-      app.exit()
+      app.abort()
     }
   })
 }
