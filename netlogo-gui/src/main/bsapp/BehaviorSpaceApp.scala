@@ -124,6 +124,8 @@ class BehaviorSpaceApp(args: BehaviorSpaceApp.CommandLineArgs) {
 
     val protocol: LabProtocol = BehaviorSpaceCoordinator.selectProtocol(settings).get
 
+    protocol.runsCompleted = args.skip
+
     val interfaceTab = new InterfaceTab(workspace)
 
     frame.addLinkComponent(workspace)
@@ -242,7 +244,7 @@ class BehaviorSpaceApp(args: BehaviorSpaceApp.CommandLineArgs) {
           "type" -> "pause",
           "update_view" -> workspace.getUpdateView,
           "update_plots" -> workspace.getUpdatePlotsAndMonitors,
-          "completed" -> completed
+          "completed" -> highestCompleted
         )))
 
       case _ =>

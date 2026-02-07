@@ -28,7 +28,7 @@ class Lab extends LabInterface {
 
     // pool of workspaces is the same size as the thread pool
     // unless there are fewer runs than threads (Isaac B 6/27/25)
-    val actualThreads = threads.min(worker.protocol.countRuns)
+    val actualThreads = threads.min(worker.protocol.countRuns - worker.protocol.runsCompleted)
 
     val workspaces = (1 to actualThreads).map(_ => fn()).toList
 
