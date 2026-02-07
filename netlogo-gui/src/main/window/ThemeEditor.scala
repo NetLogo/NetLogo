@@ -44,18 +44,7 @@ class ThemeEditor(manager: ThemesManager, baseTheme: ColorTheme, appFrame: Theme
   private val colorPicker = new ThemeColorPicker(setColor)
   private val divider = new Divider
 
-  private val groupsPanel = new JPanel with Transparent {
-    setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
-    setBorder(new EmptyBorder(0, 0, 0, 12))
-
-    add(new PackedLayout(Seq(nameLabel, nameField, darkCheckbox), spacing = 6))
-    add(Box.createVerticalStrut(6))
-
-    colorGroups.foreach { (name, colors) =>
-      add(new CollapsiblePanel(name, colors))
-      add(Box.createVerticalStrut(6))
-    }
-  }
+  private val groupsPanel = new GroupsPanel
 
   private val scrollPane = new ScrollPane(groupsPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
                                           ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER) {
@@ -70,13 +59,15 @@ class ThemeEditor(manager: ThemesManager, baseTheme: ColorTheme, appFrame: Theme
   private val cancelButton = new DialogButton(false, I18N.gui.get("common.buttons.cancel"), _ => cancel())
   private val okButton = new DialogButton(true, I18N.gui.get("common.buttons.ok"), _ => accept())
 
+  private val buttonPanel = new ButtonPanel(Seq(cancelButton, okButton))
+
   setLayout(new BorderLayout(12, 6))
 
   getRootPane.setBorder(new EmptyBorder(6, 6, 6, 6))
 
   add(new PackedLayout(Seq(colorPicker, divider), spacing = 12), BorderLayout.WEST)
   add(scrollPane, BorderLayout.CENTER)
-  add(new ButtonPanel(Seq(cancelButton, okButton)), BorderLayout.SOUTH)
+  add(buttonPanel, BorderLayout.SOUTH)
 
   pack()
   syncTheme()
@@ -93,6 +84,10 @@ class ThemeEditor(manager: ThemesManager, baseTheme: ColorTheme, appFrame: Theme
 
   Utils.addEscKeyAction(this, () => cancel())
 
+  colorPicker.setColor(Color.BLACK)
+
+  setMinimumSize(new Dimension(colorPicker.getPreferredSize.width + groupsPanel.getPreferredSize.width + 36,
+                               colorPicker.getPreferredSize.height + buttonPanel.getPreferredSize.height + 24))
   setVisible(true)
 
   private def accept(): Unit = {
@@ -187,6 +182,27 @@ class ThemeEditor(manager: ThemesManager, baseTheme: ColorTheme, appFrame: Theme
     }
   }
 
+  private class GroupsPanel extends JPanel with Transparent {
+    private val groups = colorGroups.map(new CollapsiblePanel(_, _))
+
+    setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
+    setBorder(new EmptyBorder(0, 0, 0, 12))
+
+    add(new PackedLayout(Seq(nameLabel, nameField, darkCheckbox), spacing = 6))
+    add(Box.createVerticalStrut(6))
+
+    groups.foreach { group =>
+      add(group)
+      add(Box.createVerticalStrut(6))
+    }
+
+    override def getPreferredSize: Dimension =
+      new Dimension(groups.map(_.getPreferredSize.width).max, super.getPreferredSize.height)
+
+    override def getMinimumSize: Dimension =
+      getPreferredSize
+  }
+
   private class CollapsiblePanel(name: String, colors: Seq[EditableColor])
     extends JPanel(new GridBagLayout) with Transparent with ThemeSync {
 
@@ -246,6 +262,12 @@ class ThemeEditor(manager: ThemesManager, baseTheme: ColorTheme, appFrame: Theme
       colorPanel.setVisible(open)
       arrow.setOpen(open)
     }
+
+    override def getPreferredSize: Dimension =
+      new Dimension(colorPanel.getPreferredSize.width, super.getPreferredSize.height)
+
+    override def getMinimumSize: Dimension =
+      getPreferredSize
 
     override def syncTheme(): Unit = {
       label.setForeground(InterfaceColors.dialogText())
