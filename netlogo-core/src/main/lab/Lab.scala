@@ -3,18 +3,13 @@
 package org.nlogo.lab
 
 import java.io.{ File, FileWriter, PrintWriter }
-import java.lang.{ Double => JDouble }
-import java.net.SocketException
 
-import org.nlogo.api.{ Dump, LabProtocol, LabPostProcessorInputFormat, PartialData }
+import org.nlogo.api.{ LabProtocol, LabPostProcessorInputFormat, PartialData }
 import org.nlogo.core.I18N
 import org.nlogo.nvm.{ LabInterface, PrimaryWorkspace, Workspace }
 
 import scala.collection.mutable.Queue
 import scala.io.Source
-import scala.util.Try
-
-import ujson.{ Num, Obj }
 
 class Lab extends LabInterface {
   private var worker: Option[LabInterface.Worker] = None
@@ -22,11 +17,13 @@ class Lab extends LabInterface {
   private var paused = false
   private var aborted = false
 
+  private val queue = new Queue[Workspace]
+
   override def newWorker(protocol: LabProtocol) =
     new Worker(protocol)
 
   override def run(settings: LabInterface.Settings, worker: LabInterface.Worker, primaryWorkspace: PrimaryWorkspace,
-          fn: () => Workspace): Unit = {
+                   fn: () => Workspace): LabInterface.Result = {
     import settings._
 
     // pool of workspaces is the same size as the thread pool
@@ -34,7 +31,6 @@ class Lab extends LabInterface {
     val actualThreads = threads.min(worker.protocol.countRuns)
 
     val workspaces = (1 to actualThreads).map(_ => fn()).toList
-    val queue = new Queue[Workspace]
 
     workspaces.foreach(queue.enqueue)
 
@@ -51,17 +47,7 @@ class Lab extends LabInterface {
     }
 
     def error(message: String): Unit = {
-      ipcHandler match {
-        case Some(handler) =>
-          handler.writeLine(ujson.write(Obj(
-            "type" -> "error",
-            "exception" -> "runtime",
-            "message" -> message
-          )))
-
-        case _ =>
-          println(message)
-      }
+      primaryWorkspace.runtimeError(new RuntimeException(message))
 
       abort()
     }
@@ -181,111 +167,21 @@ class Lab extends LabInterface {
     }
 
     if (!aborted) {
-      val listener: LabInterface.ProgressListener = ipcHandler.fold {
-        new LabInterface.ProgressListener {
-          override def runCompleted(w: Workspace, runNumber: Int, step: Int): Unit = {
-            queue.synchronized { queue.enqueue(w) }
-          }
-
-          override def runtimeError(w: Workspace, runNumber: Int, t: Throwable): Unit = {
-            if (!suppressErrors)
-              primaryWorkspace.runtimeError(t)
+      val listener = new LabInterface.ProgressListener {
+        override def runCompleted(w: Workspace, runNumber: Int, step: Int): Unit = {
+          queue.synchronized {
+            if (!paused)
+              queue.enqueue(w)
           }
         }
-      } { handler =>
-        new LabInterface.ProgressListener {
-          override def experimentStarted(): Unit = {
-            handler.writeLine(ujson.write(Obj(
-              "type" -> "experiment_start",
-            ))).recover {
-              case _: SocketException =>
-                abort()
-            }
-          }
 
-          override def runStarted(w: Workspace, runNumber: Int, settings: List[(String, Any)]): Unit = {
-            if (w == workspaces.head) {
-              handler.writeLine(ujson.write(Obj(
-                "type" -> "run_start",
-                "number" -> runNumber,
-                "settings" -> settings.map((name, value) => Obj(
-                  "name" -> name,
-                  "value" -> Dump.logoObject(value.asInstanceOf[AnyRef])
-                ))
-              ))).recover {
-                case _: SocketException =>
-                  abort()
-              }
-            }
-          }
-
-          override def stepCompleted(w: Workspace, steps: Int): Unit = {
-            if (w == workspaces.head) {
-              handler.writeLine(ujson.write(Obj(
-                "type" -> "step_complete",
-                "number" -> steps
-              ))).recover {
-                case _: SocketException =>
-                  abort()
-              }
-            }
-          }
-
-          override def measurementsTaken(w: Workspace, runNumber: Int, step: Int, values: List[AnyRef]): Unit = {
-            if (w == workspaces.head) {
-              handler.writeLine(ujson.write(Obj(
-                "type" -> "measurements",
-                "values" -> values.collect {
-                  case d: JDouble => Num(d)
-                }
-              ))).recover {
-                case _: SocketException =>
-                  abort()
-              }
-            }
-          }
-
-          override def runCompleted(w: Workspace, runNumber: Int, step: Int): Unit = {
-            if (w == workspaces.head) {
-              handler.writeLine(ujson.write(Obj(
-                "type" -> "run_complete",
-                "number" -> runNumber,
-                "step" -> step
-              ))).recover {
-                case _: SocketException =>
-                  abort()
-              }
-            }
-
-            queue.synchronized { if (!paused) queue.enqueue(w) }
-          }
-
-          override def runtimeError(w: Workspace, runNumber: Int, t: Throwable): Unit = {
-            if (!suppressErrors)
-              primaryWorkspace.runtimeError(t)
-          }
+        override def runtimeError(w: Workspace, runNumber: Int, t: Throwable): Unit = {
+          if (!suppressErrors)
+            primaryWorkspace.runtimeError(t)
         }
       }
 
       worker.addListener(listener)
-
-      ipcHandler.foreach { handler =>
-        new Thread {
-          override def run(): Unit = {
-            while (!paused && !aborted) {
-              handler.readLine().flatMap { str =>
-                Try {
-                  if (ujson.read(str)("type").str == "pause")
-                    queue.synchronized { paused = true }
-                }
-              }.recover {
-                case _: SocketException =>
-                  abort()
-              }
-            }
-          }
-        }.start()
-      }
 
       this.worker = Option(worker)
 
@@ -301,6 +197,18 @@ class Lab extends LabInterface {
         case _: InterruptedException =>
       }
     }
+
+    if (aborted) {
+      LabInterface.Result.Aborted
+    } else if (paused) {
+      LabInterface.Result.Paused
+    } else {
+      LabInterface.Result.Completed
+    }
+  }
+
+  override def pause(): Unit = {
+    queue synchronized { paused = true }
   }
 
   override def abort(): Unit = {

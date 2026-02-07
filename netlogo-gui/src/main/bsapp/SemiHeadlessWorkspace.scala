@@ -2,7 +2,7 @@
 
 package org.nlogo.bsapp
 
-import org.nlogo.agent.{ AgentSet, CompilationManagement, World, World2D, World3D }
+import org.nlogo.agent.{ AgentSet, CompilationManagement, OutputObject, World, World2D, World3D }
 import org.nlogo.api.{ CommandRunnable, JobOwner, NetLogoLegacyDialect, NetLogoThreeDDialect, Version }
 import org.nlogo.compile.Compiler
 import org.nlogo.core.{ AgentKind, Dialect, UpdateMode }
@@ -11,7 +11,7 @@ import org.nlogo.hubnet.server.HeadlessHubNetManagerFactory
 import org.nlogo.render.Renderer
 import org.nlogo.sdm.AggregateManagerLite
 import org.nlogo.window.{ CompilerManager, Event, Events, JobWidget, PeriodicUpdater, ProceduresInterface, ThreadUtils,
-                          UpdateManager }
+                          UpdateManager, WorkspaceWithSpeed }
 
 // this extension of HeadlessWorkspace enables a model to be displayed
 // in the interface without all the baggage carried by the GUIWorkspace
@@ -20,7 +20,7 @@ import org.nlogo.window.{ CompilerManager, Event, Events, JobWidget, PeriodicUpd
 // interaction that shouldn't exist when running BehaviorSpace. (Isaac B 2/4/26)
 
 object SemiHeadlessWorkspace {
-  def create(frame: BehaviorSpaceFrame, updateView: Boolean): SemiHeadlessWorkspace = {
+  def create(frame: BehaviorSpaceFrame, updateView: Boolean, updatePlots: Boolean): SemiHeadlessWorkspace = {
     val world: World & CompilationManagement = {
       if (Version.is3D) {
         new World3D
@@ -37,16 +37,17 @@ object SemiHeadlessWorkspace {
       }
     }
 
-    new SemiHeadlessWorkspace(frame, world, dialect, updateView)
+    new SemiHeadlessWorkspace(frame, world, dialect, updateView, updatePlots)
   }
 }
 
 class SemiHeadlessWorkspace(frame: BehaviorSpaceFrame, world: World & CompilationManagement, dialect: Dialect,
-                            private var updateView: Boolean)
+                            private var updateView: Boolean, private var updatePlotsAndMonitors: Boolean)
   extends HeadlessWorkspace(world, new Compiler(dialect), new Renderer(world), new AggregateManagerLite,
                             new HeadlessHubNetManagerFactory)
-    with ProceduresInterface with Event.LinkParent with Event.LinkChild with Events.AddJobEvent.Handler with Events.RemoveJobEvent.Handler
-    with Events.JobStoppingEvent.Handler with Events.RemoveAllJobsEvent.Handler {
+    with ProceduresInterface with WorkspaceWithSpeed with Event.LinkParent with Event.LinkChild
+    with Events.AddJobEvent.Handler with Events.RemoveJobEvent.Handler with Events.JobStoppingEvent.Handler
+    with Events.RemoveAllJobsEvent.Handler {
 
   val viewWidget = new ViewWidget(this)
 
@@ -82,8 +83,6 @@ class SemiHeadlessWorkspace(frame: BehaviorSpaceFrame, world: World & Compilatio
     }
   }
 
-  private var updatePlotsAndMonitors = true
-
   set3d(Version.is3D)
 
   frame.addLinkComponent(new CompilerManager(this, world, this))
@@ -91,12 +90,18 @@ class SemiHeadlessWorkspace(frame: BehaviorSpaceFrame, world: World & Compilatio
   periodicUpdater.start()
   lifeguard.start()
 
+  def getUpdateView: Boolean =
+    updateView
+
   def setUpdateView(updateView: Boolean): Unit = {
     this.updateView = updateView
 
     if (!updateView)
       viewWidget.reset()
   }
+
+  def getUpdatePlotsAndMonitors: Boolean =
+    updatePlotsAndMonitors
 
   def setUpdatePlotsAndMonitors(updatePlotsAndMonitors: Boolean): Unit = {
     this.updatePlotsAndMonitors = updatePlotsAndMonitors
@@ -237,6 +242,30 @@ class SemiHeadlessWorkspace(frame: BehaviorSpaceFrame, world: World & Compilatio
 
   override def kind: AgentKind =
     AgentKind.Observer
+
+  override def speedSliderPosition(): Double = {
+    val s = updateManager.speed * 2
+
+    if (s > 0) {
+      s + 10
+    } else if (s < 0) {
+      s - 10
+    } else {
+      s
+    }
+  }
+
+  override def speedSliderPosition(speed: Double): Unit = {
+    updateManager.speed = speed
+  }
+
+  override def sendOutput(oo: OutputObject, toOutputArea: Boolean): Unit = {
+    if (toOutputArea)
+      outputAreaBuffer.append(oo.get)
+
+    if (mirrorHeadlessOutput)
+      getPrimaryWorkspace.mirrorOutput(oo, toOutputArea)
+  }
 
   override def dispose(): Unit = {
     periodicUpdater.stop()

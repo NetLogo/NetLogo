@@ -165,6 +165,6 @@ object Main {
         Some(new WorldDimensions(minPxcor.get.toInt, maxPxcor.get.toInt,
                                  minPycor.get.toInt, maxPycor.get.toInt))
     Some(new Settings(model.get, experiment, setupFile, table, spreadsheet, stats, lists, dims, threads,
-                      suppressErrors, updatePlots, false, 0, None))
+                      suppressErrors, updatePlots, false, 0))
   }
 }

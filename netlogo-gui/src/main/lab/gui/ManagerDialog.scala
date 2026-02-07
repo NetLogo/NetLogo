@@ -11,7 +11,8 @@ import javax.swing.{ AbstractAction, JDialog, JLabel, JList, JMenuBar, JPanel, L
 import javax.swing.event.ListSelectionListener
 
 import org.nlogo.analytics.Analytics
-import org.nlogo.api.{ RefEnumeratedValueSet, LabProtocol }
+import org.nlogo.api.{ Exceptions, LabProtocol, RefEnumeratedValueSet }
+import org.nlogo.awt.UserCancelException
 import org.nlogo.core.I18N
 import org.nlogo.editor.Colorizer
 import org.nlogo.swing.{ Button, FileDialog, OptionPane, Positioning, ScrollPane, Transparent, Utils, WindowAutomator }
@@ -185,10 +186,11 @@ class ManagerDialog(manager:       LabManager,
 
       manager.modelLoader.save(manager.modelSaver.currentModel, temp.toUri)
 
-      new Supervisor(this, manager.workspace, temp, selectedProtocol, manager.workspaceFactory, dialogFactory,
-                     manager.workspace, colorizer, saveProtocol, false).start()
+      new Supervisor(this, manager.workspace, temp, selectedProtocol, dialogFactory, saveProtocol, false).start()
+    } catch {
+      case ex: UserCancelException =>
+        Exceptions.ignore(ex)
     }
-    catch { case ex: org.nlogo.awt.UserCancelException => org.nlogo.api.Exceptions.ignore(ex) }
   }
   private def makeNew(): Unit = {
     editProtocol(
@@ -396,8 +398,7 @@ class ManagerDialog(manager:       LabManager,
     })
 
     val supervisor = new Supervisor(this, manager.workspace, Paths.get(manager.workspace.getModelPath),
-                                    selectedProtocol, manager.workspaceFactory, dialogFactory, manager.workspace,
-                                    colorizer, saveProtocol, true)
+                                    selectedProtocol, dialogFactory, saveProtocol, true)
 
     EventQueue.invokeAndWait(() => {
       supervisor.start()
