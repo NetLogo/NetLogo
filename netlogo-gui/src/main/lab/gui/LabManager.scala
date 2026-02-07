@@ -87,6 +87,13 @@ class LabManager(val workspace:        GUIWorkspace,
   override def anyPaused: Boolean =
     protocols.exists(_.runsCompleted > 0)
 
+  override def anyRunning: Boolean =
+    dialog.anyRunning
+
+  override def abort(): Unit = {
+    dialog.abortAll()
+  }
+
   override def syncTheme(): Unit = {
     dialog.syncTheme()
   }
