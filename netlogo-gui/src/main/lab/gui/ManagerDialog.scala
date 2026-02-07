@@ -418,7 +418,7 @@ class ManagerDialog(manager:       LabManager,
     dialog.okButton.doClick()
   }
 
-  def runForTesting(): Unit = {
+  def runForTesting(): Boolean = {
     editIndex = selectedIndex
 
     EventQueue.invokeAndWait(() => {
@@ -433,6 +433,7 @@ class ManagerDialog(manager:       LabManager,
     })
 
     supervisor.join()
+    supervisor.succeeded
   }
 
   class ProtocolRenderer extends JPanel(new FlowLayout(FlowLayout.LEFT)) with ListCellRenderer[LabProtocol] {
