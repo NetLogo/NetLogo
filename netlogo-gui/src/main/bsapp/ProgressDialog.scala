@@ -4,6 +4,7 @@ package org.nlogo.bsapp
 
 import java.awt.{ Dimension, EventQueue, GridBagConstraints, GridBagLayout, Insets }
 import java.awt.event.{ WindowAdapter, WindowEvent }
+import java.lang.{ Double => JDouble }
 import javax.swing.{ JDialog, JPanel, ScrollPaneConstants, Timer, WindowConstants }
 import javax.swing.border.{ EmptyBorder, LineBorder }
 
@@ -231,7 +232,7 @@ class ProgressDialog(app: BehaviorSpaceApp, workspace: SemiHeadlessWorkspace, la
     }
   }
 
-  def measurementsTaken(values: Seq[Double]): Unit = {
+  def measurementsTaken(values: Seq[AnyRef]): Unit = {
     plotNextPoint(values)
   }
 
@@ -275,12 +276,17 @@ class ProgressDialog(app: BehaviorSpaceApp, workspace: SemiHeadlessWorkspace, la
     }
   }
 
-  private def plotNextPoint(measurements: Seq[Double]): Unit = {
+  private def plotNextPoint(measurements: Seq[AnyRef]): Unit = {
     if (workspace.getUpdatePlotsAndMonitors) {
       plotWidgetOption.foreach { plotWidget =>
         invokeAndWait {
           protocol.metrics.indices.foreach { metric =>
-            plotWidget.plot.getPen(getPenName(metric)).get.plot(steps, measurements(metric))
+            measurements(metric) match {
+              case d: JDouble =>
+                plotWidget.plot.getPen(getPenName(metric)).get.plot(steps, d)
+
+              case _ =>
+            }
           }
 
           plotWidget.plot.makeDirty()
