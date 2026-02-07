@@ -212,6 +212,10 @@ class BehaviorSpaceApp(args: BehaviorSpaceApp.CommandLineArgs) {
           highestCompleted += 1
       }
 
+      override def experimentCompleted(): Unit = {
+        progressDialog.writing()
+      }
+
       override def runtimeError(w: Workspace, runNumber: Int, t: Throwable): Unit = {
         primaryWorkspace.runtimeError(t)
       }
