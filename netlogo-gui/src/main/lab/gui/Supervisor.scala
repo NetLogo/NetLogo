@@ -23,6 +23,8 @@ class Supervisor(parent: Window, workspace: GUIWorkspace, modelPath: Path, proto
 
   private var process: Option[Process] = None
 
+  private var success = false
+
   override def start(): Unit = {
     if (protocol.runsCompleted == 0 && !automated) {
       new RunOptionsDialog(parent, dialogFactory, Option(workspace.getModelDir).map(new File(_).toPath),
@@ -61,7 +63,8 @@ class Supervisor(parent: Window, workspace: GUIWorkspace, modelPath: Path, proto
                                strToArg("--table", protocol.table.trim) ++
                                strToArg("--spreadsheet", protocol.spreadsheet.trim) ++
                                strToArg("--stats", protocol.stats.trim) ++
-                               strToArg("--lists", protocol.lists.trim))
+                               strToArg("--lists", protocol.lists.trim) ++
+                               boolToArg("--automated", automated))
                          .run(ProcessLogger(println, processError)))
 
       handler.connect()
@@ -103,11 +106,19 @@ class Supervisor(parent: Window, workspace: GUIWorkspace, modelPath: Path, proto
 
           saveProtocol(protocol, json("completed").num.toInt)
 
+        case "complete" =>
+          success = true
+
+          saveProtocol(protocol, 0)
+
         case _ =>
           saveProtocol(protocol, 0)
       }
     }
   }
+
+  def succeeded: Boolean =
+    success
 
   def abort(): Unit = {
     process.foreach(_.destroy())
