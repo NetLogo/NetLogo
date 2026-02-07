@@ -285,7 +285,8 @@ class DialogTests extends AnyFunSuite with BeforeAndAfterAll {
     // make sure the dialog is really closed (Isaac B 11/2/25)
     EventQueue.invokeAndWait(() => {})
 
-    dialog.runForTesting()
+    if (!dialog.runForTesting())
+      fail("Experiment was not completed.")
 
     labManager.close()
   }
