@@ -2,20 +2,24 @@
 
 package org.nlogo.bsapp
 
-import java.awt.{ Dimension, EventQueue, FlowLayout }
-import javax.swing.{ Box, BoxLayout, JDialog, JPanel, ScrollPaneConstants, Timer, WindowConstants }
+import java.awt.{ Dimension, EventQueue, GridBagConstraints, GridBagLayout, Insets }
+import java.awt.event.{ WindowAdapter, WindowEvent }
+import javax.swing.{ JDialog, JPanel, ScrollPaneConstants, Timer, WindowConstants }
 import javax.swing.border.{ EmptyBorder, LineBorder }
 
 import org.nlogo.analytics.Analytics
-import org.nlogo.api.{ Color, ExportPlotWarningAction, LabProtocol, PeriodicUpdateDelay }
-import org.nlogo.awt.Positioning
+import org.nlogo.api.{ Color, Exceptions, ExportPlotWarningAction, LabProtocol }
+import org.nlogo.awt.Fonts
 import org.nlogo.core.I18N
 import org.nlogo.editor.Colorizer
 import org.nlogo.nvm.LabInterface
 import org.nlogo.plot.DummyPlotManager
-import org.nlogo.swing.{ Button, ButtonPanel, CheckBox, OptionPane, RichAction, ScrollPane, TextArea, Transparent }
+import org.nlogo.swing.{ Button, ButtonPanel, CheckBox, OptionPane, Positioning, RichAction, ScrollPane, TextArea,
+                         Transparent }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ PlotWidget, SpeedSliderPanel }
+
+import scala.concurrent.duration.DurationLong
 
 class ProgressDialog(app: BehaviorSpaceApp, workspace: SemiHeadlessWorkspace, lab: LabInterface,
                      colorizer: Colorizer, protocol: LabProtocol)
@@ -25,34 +29,40 @@ class ProgressDialog(app: BehaviorSpaceApp, workspace: SemiHeadlessWorkspace, la
   private implicit val i18nPrefix: I18N.Prefix = I18N.Prefix("tools.behaviorSpace.progressDialog")
 
   private val totalRuns = protocol.countRuns
-  private val progressArea = new TextArea(10.min(protocol.valueSets.headOption.fold(0)(_.size) + 3), 0)
+
+  private val progressArea = new TextArea(10.min(protocol.valueSets.headOption.fold(0)(_.size) + 3), 0) {
+    setEditable(false)
+    setBorder(new EmptyBorder(6, 6, 6, 6))
+  }
+
   private val scrollPane = new ScrollPane(progressArea, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
                                           ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED) {
     override def getMinimumSize: Dimension =
       this.getPreferredSize
   }
-  private val timer = new Timer(PeriodicUpdateDelay.DelayInMilliseconds, periodicUpdateAction)
-  private val displaySwitch = new CheckBox(displaySwitchAction)
-  private val plotsAndMonitorsSwitch = new CheckBox(plotsAndMonitorsSwitchAction)
-  private val pauseAction = RichAction(I18N.gui("pause")) { _ =>
-    pause()
-  }
-  private val pauseButton = new Button(pauseAction)
-  private val abortAction = RichAction(I18N.gui.get("tools.behaviorSpace.abort")) { _ =>
-    app.abort()
-  }
-  private val abortButton = new Button(abortAction)
+
+  private val timer = new Timer(1000, RichAction(_ => updateProgressArea()))
+
+  private val updateViewCheckbox = new CheckBox(I18N.gui("updateView"), workspace.setUpdateView)
+  private val plotsAndMonitorsSwitch = new CheckBox(I18N.gui("updatePlotsAndMonitors"), checked => {
+    workspace.setUpdatePlotsAndMonitors(checked)
+
+    if (!checked)
+      workspace.jobManager.finishSecondaryJobs(null)
+  })
+
+  private val pauseButton = new Button(I18N.gui("pause"), pause)
+  private val abortButton = new Button(I18N.gui.get("tools.behaviorSpace.abort"), app.abort)
+
   private val speedSlider = new SpeedSliderPanel(workspace)
 
-  private var updatePlots = false
   private var started = 0L
   private var runCount = 0
-  private var elapsed = "0:00:00"
   private var settingsString = ""
   private var steps = 0
 
   private val plotWidgetOption: Option[PlotWidget] = {
-    if ((protocol.runMetricsEveryStep || !protocol.runMetricsCondition.isEmpty) && protocol.metrics.length > 0) {
+    if ((protocol.runMetricsEveryStep || protocol.runMetricsCondition.nonEmpty) && protocol.metrics.nonEmpty) {
       // don't use the real plot manager here, use a dummy one.
       // fixes http://trac.assembla.com/nlogo/ticket/1259
       // the reason for this is that plots normally get added to the plot manager
@@ -88,144 +98,82 @@ class ProgressDialog(app: BehaviorSpaceApp, workspace: SemiHeadlessWorkspace, la
       plotWidget.setYLabel(I18N.gui("plot.behavior"))
       plotWidget.clear()
       plotWidget.togglePenList()
+
       Some(plotWidget)
+    } else {
+      None
     }
-    else None
   }
 
   locally {
     setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE)
-    addWindowListener(new java.awt.event.WindowAdapter {
-      override def windowClosing(e: java.awt.event.WindowEvent): Unit = { abortAction.actionPerformed(null) }
+
+    addWindowListener(new WindowAdapter {
+      override def windowClosing(e: WindowEvent): Unit = {
+        app.abort()
+      }
     })
+
     setResizable(true)
 
-    val container = new JPanel with Transparent {
-      setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
-      setBorder(new EmptyBorder(6, 6, 6, 6))
+    add(new JPanel(new GridBagLayout) with Transparent {
+      val c = new GridBagConstraints
 
-      add(new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0)) with Transparent {
-        add(speedSlider)
-      })
+      c.gridx = 0
+      c.weightx = 1
+      c.insets = new Insets(6, 6, 6, 6)
 
-      add(Box.createVerticalStrut(6))
+      add(speedSlider, c)
 
-      plotWidgetOption.foreach{ plotWidget =>
-        add(plotWidget)
-        add(Box.createVerticalStrut(6))
+      c.weighty = 1
+      c.fill = GridBagConstraints.BOTH
+      c.insets = new Insets(0, 6, 6, 6)
+
+      plotWidgetOption.foreach { plotWidget =>
+        add(plotWidget, c)
+
+        c.weighty = 0
+        c.fill = GridBagConstraints.HORIZONTAL
       }
 
-      progressArea.setEditable(false)
-      progressArea.setBorder(new EmptyBorder(6, 6, 6, 6))
+      add(scrollPane, c)
 
-      add(scrollPane)
-      add(Box.createVerticalStrut(6))
+      c.weighty = 0
+      c.fill = GridBagConstraints.HORIZONTAL
+      c.anchor = GridBagConstraints.WEST
 
-      updateProgressArea(true)
+      add(updateViewCheckbox, c)
+      add(plotsAndMonitorsSwitch, c)
 
-      add(new JPanel with Transparent {
-        setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
+      c.anchor = GridBagConstraints.CENTER
 
-        add(displaySwitch)
-        add(Box.createHorizontalGlue)
-      })
+      add(new ButtonPanel(Seq(pauseButton, abortButton)), c)
+    })
 
-      add(new JPanel with Transparent {
-        setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
-
-        add(plotsAndMonitorsSwitch)
-        add(Box.createHorizontalGlue)
-      })
-
-      add(Box.createVerticalStrut(6))
-
-      add(new ButtonPanel(Seq(pauseButton, abortButton)))
-    }
-
-    getContentPane.add(container)
-
-    pack()
     setSize(getMinimumSize)
 
     Positioning.center(this, app.getFrame)
 
-    updateView(workspace.getUpdateView)
-    plotsAndMonitorsSwitch(workspace.getUpdatePlotsAndMonitors)
+    updateViewCheckbox.setSelected(workspace.getUpdateView)
+    plotsAndMonitorsSwitch.setSelected(workspace.getUpdatePlotsAndMonitors)
+
+    updateProgressArea()
 
     setVisible(true)
   }
 
-  override def getMinimumSize = getPreferredSize
-  override def getPreferredSize = new Dimension(super.getPreferredSize.width max 450, super.getPreferredSize.height)
+  override def getMinimumSize: Dimension =
+    getPreferredSize
+
+  override def getPreferredSize: Dimension =
+    new Dimension(super.getPreferredSize.width.max(450), super.getPreferredSize.height)
 
   def pause(): Unit = {
     timer.stop()
-    pauseAction.setEnabled(false)
-    abortAction.setEnabled(false)
+    pauseButton.setEnabled(false)
+    abortButton.setEnabled(false)
     progressArea.setText(I18N.gui("waiting"))
     lab.pause()
-  }
-
-  lazy val periodicUpdateAction = RichAction(I18N.gui("updateTime")) { _ =>
-    updateProgressArea(false)
-    plotWidgetOption.foreach{ plotWidget => if (updatePlots) plotWidget.handle(null) }
-  }
-  lazy val displaySwitchAction = RichAction(I18N.gui("updateView")) {
-    _.getSource match {
-      case check: CheckBox =>
-        workspace.setUpdateView(check.isSelected)
-
-      case _ =>
-    }
-  }
-  lazy val plotsAndMonitorsSwitchAction = RichAction(I18N.gui("updatePlotsAndMonitors")) {
-    _.getSource match {
-      case check: CheckBox =>
-        updatePlots = check.isSelected
-
-        if (updatePlots) {
-          workspace.setUpdatePlotsAndMonitors(true)
-        } else {
-          workspace.setUpdatePlotsAndMonitors(false)
-          workspace.jobManager.finishSecondaryJobs(null)
-        }
-
-      case _ =>
-    }
-  }
-
-  def updateView(check: Boolean): Unit = {
-    displaySwitch.setSelected(check)
-    workspace.setUpdateView(check)
-  }
-
-  def setUpdateView(status: Boolean): Unit = {
-    updateView(status)
-  }
-
-  def plotsAndMonitorsSwitch(check: Boolean): Unit = {
-    plotsAndMonitorsSwitch.setSelected(check)
-    workspace.setUpdatePlotsAndMonitors(check)
-    if (!check) {
-      workspace.jobManager.finishSecondaryJobs(null)
-    }
-  }
-
-  def setPlotsAndMonitorsSwitch(status: Boolean): Unit = {
-    plotsAndMonitorsSwitch(status)
-    updatePlots = status
-  }
-
-  def enablePlotsAndMonitorsSwitch(enabled: Boolean): Unit = {
-    plotsAndMonitorsSwitch.setEnabled(enabled)
-  }
-
-  def close(): Unit = {
-    timer.stop()
-    setVisible(false)
-    dispose()
-    workspace.setUpdateView(true)
-    workspace.setUpdatePlotsAndMonitors(true)
   }
 
   def writing(): Unit = {
@@ -255,8 +203,7 @@ class ProgressDialog(app: BehaviorSpaceApp, workspace: SemiHeadlessWorkspace, la
     runCount = runNumber
     steps = 0
     resetPlot()
-    settingsString = settings.map((name, value) => s"$name = $value").mkString("\n")
-    updateProgressArea(true)
+    settingsString = settings.map(_ + " = " + _).mkString("\n")
 
     plotWidgetOption.foreach(_.refreshGUI())
 
@@ -269,9 +216,13 @@ class ProgressDialog(app: BehaviorSpaceApp, workspace: SemiHeadlessWorkspace, la
   }
 
   def stepCompleted(step: Int): Unit = {
-    this.steps = step
+    steps = step
+
+    updateProgressArea()
+
     if (workspace.triedToExportPlot && workspace.exportPlotWarningAction == ExportPlotWarningAction.Warn) {
       workspace.setExportPlotWarningAction(ExportPlotWarningAction.Ignore)
+
       EventQueue.invokeLater(() => {
         new OptionPane(app.getFrame, I18N.gui("updatingPlotsWarningTitle"),
                        I18N.shared.get("tools.behaviorSpace.runoptions.updateplotsandmonitors.error"),
@@ -284,21 +235,24 @@ class ProgressDialog(app: BehaviorSpaceApp, workspace: SemiHeadlessWorkspace, la
     plotNextPoint(values)
   }
 
-  private def invokeAndWait(f: => Unit) =
-    try EventQueue.invokeAndWait(() => f)
-    catch {
+  private def invokeAndWait(f: => Unit): Unit = {
+    try {
+      EventQueue.invokeAndWait(() => f)
+    } catch {
       case ex: InterruptedException =>
         // we may get interrupted if the user aborts the run - ST 10/30/03
-        org.nlogo.api.Exceptions.ignore(ex)
+        Exceptions.ignore(ex)
     }
+  }
 
   private def resetPlot(): Unit = {
     plotWidgetOption.foreach { plotWidget =>
       invokeAndWait {
         plotWidget.clear()
-        for (metricNumber <- 0 until protocol.metrics.length) {
-          val pen = plotWidget.plot.createPlotPen(getPenName(metricNumber), true)
-          pen.color = Color.getColor(Double.box(metricNumber % 14 * 10 + 5)).getRGB
+
+        protocol.metrics.indices.foreach { metric =>
+          plotWidget.plot.createPlotPen(getPenName(metric), true).color =
+            Color.getColor(Double.box(metric % 14 * 10 + 5)).getRGB
         }
       }
     }
@@ -306,46 +260,53 @@ class ProgressDialog(app: BehaviorSpaceApp, workspace: SemiHeadlessWorkspace, la
 
   // this is only called when we KNOW we have a plot, so plotWidgetOption.get is ok
   private def getPenName(metricNumber: Int): String = {
-    val buf = new StringBuilder()
-    if (protocol.metrics.length > 1) buf.append(metricNumber.toString + " ")
-    buf.append(org.nlogo.awt.Fonts.shortenStringToFit(
-      protocol.metrics(metricNumber).trim.replaceAll("\\s+", " "),
-      100, // an arbitrary limit to keep the pen names from getting too wide
-      plotWidgetOption.get.getFontMetrics(plotWidgetOption.get.getFont)))
-    buf.toString
+    val name: String = {
+      Fonts.shortenStringToFit(
+        protocol.metrics(metricNumber).trim.replaceAll("\\s+", " "),
+        100, // an arbitrary limit to keep the pen names from getting too wide
+        plotWidgetOption.get.getFontMetrics(plotWidgetOption.get.getFont)
+      )
+    }
+
+    if (protocol.metrics.length > 1) {
+      s"$metricNumber $name"
+    } else {
+      name
+    }
   }
 
   private def plotNextPoint(measurements: Seq[Double]): Unit = {
-    plotWidgetOption.foreach { plotWidget => invokeAndWait {
-      for (metricNumber <- 0 until protocol.metrics.length)
-        plotWidget.plot.getPen(getPenName(metricNumber)).get.plot(steps, measurements(metricNumber))
+    if (workspace.getUpdatePlotsAndMonitors) {
+      plotWidgetOption.foreach { plotWidget =>
+        invokeAndWait {
+          protocol.metrics.indices.foreach { metric =>
+            plotWidget.plot.getPen(getPenName(metric)).get.plot(steps, measurements(metric))
+          }
 
-      plotWidget.plot.makeDirty()
-    }}
+          plotWidget.plot.makeDirty()
+          plotWidget.repaintIfNeeded()
+        }
+      }
+    }
   }
 
-  private def updateProgressArea(force: Boolean): Unit = {
-    def pad(s: String) = if (s.length == 1) ("0" + s) else s
-
+  private def updateProgressArea(): Unit = {
     if (started == 0) {
-      EventQueue.invokeLater(() => {
-        progressArea.setText(I18N.gui("init"))
-        progressArea.setCaretPosition(0)
-      })
+      progressArea.setText(I18N.gui("init"))
     } else {
-      val elapsedMillis: Int = ((System.currentTimeMillis - started) / 1000).toInt
-      val hours = (elapsedMillis / 3600).toString
-      val minutes = pad(((elapsedMillis % 3600) / 60).toString)
-      val seconds = pad((elapsedMillis % 60).toString)
-      val newElapsed = hours + ":" + minutes + ":" + seconds
-      if (force || elapsed != newElapsed) {
-        elapsed = newElapsed
-        EventQueue.invokeLater(() => {
-          progressArea.setText(I18N.gui("progressArea", runCount.toString,
-            totalRuns.toString, steps.toString, elapsed, settingsString))
-          progressArea.setCaretPosition(0)
-        })
+      def pad(num: Long): String = {
+        if (num < 10) {
+          "0" + num
+        } else {
+          num.toString
+        }
       }
+
+      val duration = (System.currentTimeMillis - started).millis
+      val formatted = s"${pad(duration.toHours)}:${pad(duration.toMinutes % 60)}:${pad(duration.toSeconds % 60)}"
+
+      progressArea.setText(I18N.gui("progressArea", runCount.toString, totalRuns.toString, steps.toString, formatted,
+                                    settingsString))
     }
   }
 
@@ -357,7 +318,7 @@ class ProgressDialog(app: BehaviorSpaceApp, workspace: SemiHeadlessWorkspace, la
     scrollPane.setBorder(new LineBorder(InterfaceColors.textAreaBorderNoneditable()))
     scrollPane.setBackground(InterfaceColors.textAreaBackground())
 
-    displaySwitch.setForeground(InterfaceColors.dialogText())
+    updateViewCheckbox.setForeground(InterfaceColors.dialogText())
     plotsAndMonitorsSwitch.setForeground(InterfaceColors.dialogText())
 
     speedSlider.syncTheme()
