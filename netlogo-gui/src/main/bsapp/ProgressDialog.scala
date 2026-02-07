@@ -1,37 +1,31 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.lab.gui
+package org.nlogo.bsapp
 
-import java.awt.{ Dialog, Dimension, EventQueue, FlowLayout, Window }
+import java.awt.{ Dimension, EventQueue, FlowLayout }
 import javax.swing.{ Box, BoxLayout, JDialog, JPanel, ScrollPaneConstants, Timer, WindowConstants }
 import javax.swing.border.{ EmptyBorder, LineBorder }
 
 import org.nlogo.analytics.Analytics
-import org.nlogo.api.{ Color, CompilerServices, ExportPlotWarningAction, LabProtocol, PeriodicUpdateDelay }
+import org.nlogo.api.{ Color, ExportPlotWarningAction, LabProtocol, PeriodicUpdateDelay }
 import org.nlogo.awt.Positioning
 import org.nlogo.core.I18N
 import org.nlogo.editor.Colorizer
+import org.nlogo.nvm.LabInterface
 import org.nlogo.plot.DummyPlotManager
 import org.nlogo.swing.{ Button, ButtonPanel, CheckBox, OptionPane, RichAction, ScrollPane, TextArea, Transparent }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
-import org.nlogo.window.{ GUIWorkspace, PlotWidget, SpeedSliderPanel }
+import org.nlogo.window.{ PlotWidget, SpeedSliderPanel }
 
-object ProgressDialog {
-  trait GUIListener {
-    def speedChanged(value: Double): Unit
-    def updateViewChanged(value: Boolean): Unit
-    def updatePlotsChanged(value: Boolean): Unit
-  }
-}
+class ProgressDialog(app: BehaviorSpaceApp, workspace: SemiHeadlessWorkspace, lab: LabInterface,
+                     colorizer: Colorizer, protocol: LabProtocol)
+  extends JDialog(app.getFrame, I18N.gui.getN("tools.behaviorSpace.progressDialog.title", protocol.name))
+  with ThemeSync {
 
-private [gui] class ProgressDialog(parent: Window, supervisor: Supervisor, compiler: CompilerServices,
-                                   colorizer: Colorizer, saveProtocol: (LabProtocol, Int) => Unit)
-              extends JDialog(parent, Dialog.DEFAULT_MODALITY_TYPE) with ThemeSync {
-  val protocol = supervisor.protocol
-  val workspace = supervisor.workspace.asInstanceOf[GUIWorkspace]
-  private implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("tools.behaviorSpace.progressDialog")
+  private implicit val i18nPrefix: I18N.Prefix = I18N.Prefix("tools.behaviorSpace.progressDialog")
+
   private val totalRuns = protocol.countRuns
-  private val progressArea = new TextArea(10 min (protocol.valueSets(0).size + 3), 0)
+  private val progressArea = new TextArea(10.min(protocol.valueSets.headOption.fold(0)(_.size) + 3), 0)
   private val scrollPane = new ScrollPane(progressArea, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
                                           ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED) {
     override def getMinimumSize: Dimension =
@@ -41,18 +35,14 @@ private [gui] class ProgressDialog(parent: Window, supervisor: Supervisor, compi
   private val displaySwitch = new CheckBox(displaySwitchAction)
   private val plotsAndMonitorsSwitch = new CheckBox(plotsAndMonitorsSwitchAction)
   private val pauseAction = RichAction(I18N.gui("pause")) { _ =>
-    if (!supervisor.paused)
-      supervisor.pause()
-      pause()
+    pause()
   }
   private val pauseButton = new Button(pauseAction)
   private val abortAction = RichAction(I18N.gui.get("tools.behaviorSpace.abort")) { _ =>
-    supervisor.abort()
+    app.abort()
   }
   private val abortButton = new Button(abortAction)
-  private val speedSlider = new SpeedSliderPanel(workspace, speedChanged = speed => {
-    guiListeners.foreach(_.speedChanged(speed))
-  })
+  private val speedSlider = new SpeedSliderPanel(workspace)
 
   private var updatePlots = false
   private var started = 0L
@@ -75,7 +65,7 @@ private [gui] class ProgressDialog(parent: Window, supervisor: Supervisor, compi
       // except of course, for the measurements that this plot is displaying.
       // JC - 4/4/11
       val plotManager = new DummyPlotManager
-      val plotWidget = new PlotWidget(plotManager.newPlot(I18N.gui("plot.title")), plotManager, compiler, colorizer) {
+      val plotWidget = new PlotWidget(plotManager.newPlot(I18N.gui("plot.title")), plotManager, workspace, colorizer) {
         // the default plot size assumes there is no legend, so add the legend height
         // to ensure that enough canvas area is visible by default (Isaac B 7/22/25)
         override def getMinimumSize: Dimension =
@@ -103,14 +93,11 @@ private [gui] class ProgressDialog(parent: Window, supervisor: Supervisor, compi
     else None
   }
 
-  private var guiListeners = Set[ProgressDialog.GUIListener]()
-
   locally {
     setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE)
     addWindowListener(new java.awt.event.WindowAdapter {
       override def windowClosing(e: java.awt.event.WindowEvent): Unit = { abortAction.actionPerformed(null) }
     })
-    setTitle(I18N.gui("title", protocol.name))
     setResizable(true)
 
     val container = new JPanel with Transparent {
@@ -160,7 +147,12 @@ private [gui] class ProgressDialog(parent: Window, supervisor: Supervisor, compi
     pack()
     setSize(getMinimumSize)
 
-    Positioning.center(this, parent)
+    Positioning.center(this, app.getFrame)
+
+    updateView(workspace.getUpdateView)
+    plotsAndMonitorsSwitch(workspace.getUpdatePlotsAndMonitors)
+
+    setVisible(true)
   }
 
   override def getMinimumSize = getPreferredSize
@@ -171,7 +163,9 @@ private [gui] class ProgressDialog(parent: Window, supervisor: Supervisor, compi
     pauseAction.setEnabled(false)
     abortAction.setEnabled(false)
     progressArea.setText(I18N.gui("waiting"))
+    lab.pause()
   }
+
   lazy val periodicUpdateAction = RichAction(I18N.gui("updateTime")) { _ =>
     updateProgressArea(false)
     plotWidgetOption.foreach{ plotWidget => if (updatePlots) plotWidget.handle(null) }
@@ -179,9 +173,7 @@ private [gui] class ProgressDialog(parent: Window, supervisor: Supervisor, compi
   lazy val displaySwitchAction = RichAction(I18N.gui("updateView")) {
     _.getSource match {
       case check: CheckBox =>
-        workspace.displaySwitchOn(check.isSelected)
-
-        guiListeners.foreach(_.updateViewChanged(check.isSelected))
+        workspace.setUpdateView(check.isSelected)
 
       case _ =>
     }
@@ -192,38 +184,19 @@ private [gui] class ProgressDialog(parent: Window, supervisor: Supervisor, compi
         updatePlots = check.isSelected
 
         if (updatePlots) {
-          workspace.setPeriodicUpdatesEnabled(true)
+          workspace.setUpdatePlotsAndMonitors(true)
         } else {
-          workspace.setPeriodicUpdatesEnabled(false)
+          workspace.setUpdatePlotsAndMonitors(false)
           workspace.jobManager.finishSecondaryJobs(null)
         }
-
-        guiListeners.foreach(_.updatePlotsChanged(updatePlots))
 
       case _ =>
     }
   }
 
-  def saveProtocolP(): Unit = {
-    if (supervisor.highestCompleted >= protocol.countRuns) {
-      saveProtocol(protocol, 0)
-    } else {
-      protocol.updateView = displaySwitch.isSelected
-      protocol.updatePlotsAndMonitors = updatePlots
-
-      saveProtocol(protocol, supervisor.highestCompleted)
-    }
-  }
-
-  def resetProtocol(): Unit = {
-    saveProtocol(protocol, 0)
-  }
-
   def updateView(check: Boolean): Unit = {
     displaySwitch.setSelected(check)
-    workspace.displaySwitchOn(check)
-
-    guiListeners.foreach(_.updateViewChanged(check))
+    workspace.setUpdateView(check)
   }
 
   def setUpdateView(status: Boolean): Unit = {
@@ -232,12 +205,10 @@ private [gui] class ProgressDialog(parent: Window, supervisor: Supervisor, compi
 
   def plotsAndMonitorsSwitch(check: Boolean): Unit = {
     plotsAndMonitorsSwitch.setSelected(check)
-    workspace.setPeriodicUpdatesEnabled(check)
+    workspace.setUpdatePlotsAndMonitors(check)
     if (!check) {
       workspace.jobManager.finishSecondaryJobs(null)
     }
-
-    guiListeners.foreach(_.updatePlotsChanged(check))
   }
 
   def setPlotsAndMonitorsSwitch(status: Boolean): Unit = {
@@ -253,8 +224,8 @@ private [gui] class ProgressDialog(parent: Window, supervisor: Supervisor, compi
     timer.stop()
     setVisible(false)
     dispose()
-    workspace.displaySwitchOn(true)
-    workspace.setPeriodicUpdatesEnabled(true)
+    workspace.setUpdateView(true)
+    workspace.setUpdatePlotsAndMonitors(true)
   }
 
   def writing(): Unit = {
@@ -265,10 +236,14 @@ private [gui] class ProgressDialog(parent: Window, supervisor: Supervisor, compi
   override def setVisible(visible: Boolean): Unit = {
     if (visible) {
       syncTheme()
-      Positioning.center(this, parent)
+
+      Positioning.center(this, app.getFrame)
+
       Analytics.bspaceRun(protocol.table, protocol.spreadsheet, protocol.stats, protocol.lists)
+
       timer.start()
     }
+
     super.setVisible(visible)
   }
 
@@ -290,8 +265,6 @@ private [gui] class ProgressDialog(parent: Window, supervisor: Supervisor, compi
     EventQueue.invokeLater(() => {
       pack()
       setSize(getMinimumSize)
-
-      Positioning.center(this, parent)
     })
   }
 
@@ -300,19 +273,15 @@ private [gui] class ProgressDialog(parent: Window, supervisor: Supervisor, compi
     if (workspace.triedToExportPlot && workspace.exportPlotWarningAction == ExportPlotWarningAction.Warn) {
       workspace.setExportPlotWarningAction(ExportPlotWarningAction.Ignore)
       EventQueue.invokeLater(() => {
-        new OptionPane(workspace.getFrame, I18N.gui("updatingPlotsWarningTitle"),
-                        I18N.shared.get("tools.behaviorSpace.runoptions.updateplotsandmonitors.error"),
-                        OptionPane.Options.Ok, OptionPane.Icons.Warning)
+        new OptionPane(app.getFrame, I18N.gui("updatingPlotsWarningTitle"),
+                       I18N.shared.get("tools.behaviorSpace.runoptions.updateplotsandmonitors.error"),
+                       OptionPane.Options.Ok, OptionPane.Icons.Warning)
       })
     }
   }
 
   def measurementsTaken(values: Seq[Double]): Unit = {
     plotNextPoint(values)
-  }
-
-  def addGUIListener(listener: ProgressDialog.GUIListener): Unit = {
-    guiListeners += listener
   }
 
   private def invokeAndWait(f: => Unit) =
