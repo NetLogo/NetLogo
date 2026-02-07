@@ -4,9 +4,10 @@ package org.nlogo.window
 
 import java.awt.{ Color, Container, Dimension, Graphics, GridBagConstraints, GridBagLayout, Insets,
                   LinearGradientPaint }
-import java.awt.event.{ MouseAdapter, MouseEvent }
+import java.awt.event.{ FocusAdapter, FocusEvent, MouseAdapter, MouseEvent }
 import javax.swing.{ JLabel, JPanel }
 
+import org.nlogo.api.Approximate
 import org.nlogo.core.I18N
 import org.nlogo.swing.{ Button, ComboBox, Implicits, PackedLayout, TextField, Transparent, Utils },
   Implicits.thunk2documentListener
@@ -91,29 +92,29 @@ class ThemeColorPicker(updateColor: Color => Unit) extends JPanel(new GridBagLay
   private def getColor: Color = {
     mode match {
       case RGBA =>
-        new Color(rhSlider.rgbValue, gsSlider.rgbValue, bSlider.rgbValue, aSlider.rgbValue)
+        new Color(rhSlider.intValue, gsSlider.intValue, bSlider.intValue, aSlider.intValue)
 
       case HSBA =>
-        hsba(rhSlider.value, gsSlider.value, bSlider.value, aSlider.rgbValue)
+        hsba(rhSlider.floatValue, gsSlider.floatValue, bSlider.floatValue, aSlider.intValue)
     }
   }
 
   def setColor(color: Color): Unit = {
     mode match {
       case RGBA =>
-        rhSlider.setValue(color.getRed / 255f)
-        gsSlider.setValue(color.getGreen / 255f)
-        bSlider.setValue(color.getBlue / 255f)
+        rhSlider.setValue(IntValue(color.getRed))
+        gsSlider.setValue(IntValue(color.getGreen))
+        bSlider.setValue(IntValue(color.getBlue))
 
       case HSBA =>
         val comps = Color.RGBtoHSB(color.getRed, color.getGreen, color.getBlue, null)
 
-        rhSlider.setValue(comps(0))
-        gsSlider.setValue(comps(1))
-        bSlider.setValue(comps(2))
+        rhSlider.setValue(FloatValue(comps(0)))
+        gsSlider.setValue(FloatValue(comps(1)))
+        bSlider.setValue(FloatValue(comps(2)))
     }
 
-    aSlider.setValue(color.getAlpha / 255f)
+    aSlider.setValue(IntValue(color.getAlpha))
 
     repaint()
     updateColor(getColor)
@@ -153,10 +154,37 @@ class ThemeColorPicker(updateColor: Color => Unit) extends JPanel(new GridBagLay
   private case object RGBA extends Mode("RGBA")
   private case object HSBA extends Mode("HSBA")
 
+  private sealed abstract trait ColorValue {
+    def intValue: Int
+    def floatValue: Float
+  }
+
+  private case class IntValue(value: Int) extends ColorValue {
+    override def intValue: Int =
+      value
+
+    override def floatValue: Float =
+      value.toFloat
+  }
+
+  private case class FloatValue(value: Float) extends ColorValue {
+    override def intValue: Int =
+      value.toInt
+
+    override def floatValue: Float =
+      value
+  }
+
   private class ColorField(which: Int, slider: ColorSlider) extends TextField(3) {
     private var updating = false
 
     getDocument.addDocumentListener(() => updateSlider())
+
+    addFocusListener(new FocusAdapter {
+      override def focusLost(e: FocusEvent): Unit = {
+        slider.updateField()
+      }
+    })
 
     override def setText(text: String): Unit = {
       if (!updating) {
@@ -168,16 +196,21 @@ class ThemeColorPicker(updateColor: Color => Unit) extends JPanel(new GridBagLay
       }
     }
 
-    private def getValue(): Option[Float] = {
+    private def getValue(): Option[ColorValue] = {
       mode match {
         case RGBA =>
-          getText.toIntOption.filter(n => n >= 0 && n <= 255).map(_ / 255f)
+          getText.toIntOption.filter(n => n >= 0 && n <= 255).map(IntValue(_))
 
         case HSBA =>
-          if (which == 0) {
-            getText.toFloatOption.filter(n => n >= 0 && n <= 360).map(_ / 360)
-          } else {
-            getText.toFloatOption.filter(n => n >= 0 && n <= 1)
+          which match {
+            case 0 =>
+              getText.toFloatOption.filter(n => n >= 0 && n <= 360).map(n => FloatValue(n / 360))
+
+            case 3 =>
+              getText.toIntOption.filter(n => n >= 0 && n <= 255).map(IntValue(_))
+
+            case _ =>
+              getText.toFloatOption.filter(n => n >= 0 && n <= 1).map(FloatValue(_))
           }
       }
     }
@@ -200,41 +233,31 @@ class ThemeColorPicker(updateColor: Color => Unit) extends JPanel(new GridBagLay
     private val label = new JLabel
     private val field = new ColorField(which, this)
 
-    private var position = 0
+    private var value: ColorValue = IntValue(0)
 
     addMouseListener(new MouseAdapter {
       override def mousePressed(e: MouseEvent): Unit = {
-        position = e.getX.min(getWidth).max(0)
-
-        ThemeColorPicker.this.repaint()
-
-        updateColor(getColor)
-        updateField()
+        updateValue(e.getX)
       }
     })
 
     addMouseMotionListener(new MouseAdapter {
       override def mouseDragged(e: MouseEvent): Unit = {
-        position = e.getX.min(getWidth).max(0)
-
-        ThemeColorPicker.this.repaint()
-
-        updateColor(getColor)
-        updateField()
+        updateValue(e.getX)
       }
     })
 
     updateLabel()
     updateField()
 
-    def value: Float =
-      (position.toFloat / getWidth).min(1).max(0)
+    def intValue: Int =
+      value.intValue
 
-    def rgbValue: Int =
-      (value * 255).toInt
+    def floatValue: Float =
+      value.floatValue
 
-    def setValue(value: Float): Unit = {
-      position = (value * getWidth).toInt
+    def setValue(value: ColorValue): Unit = {
+      this.value = value
 
       updateField()
     }
@@ -243,16 +266,33 @@ class ThemeColorPicker(updateColor: Color => Unit) extends JPanel(new GridBagLay
       label.setText(mode.toString(which).toString)
     }
 
-    private def updateField(): Unit = {
-      mode match {
-        case RGBA =>
-          field.setText(rgbValue.toString)
+    private def updateValue(pos: Int): Unit = {
+      val position = pos.min(getWidth).max(0)
 
-        case HSBA =>
+      mode match {
+        case HSBA if which != 3 =>
+          value = FloatValue(position.toFloat / getWidth)
+
+        case _ =>
+          value = IntValue(position * 255 / getWidth)
+      }
+
+      ThemeColorPicker.this.repaint()
+
+      updateColor(getColor)
+      updateField()
+    }
+
+    def updateField(): Unit = {
+      value match {
+        case IntValue(n) =>
+          field.setText(n.toString)
+
+        case FloatValue(n) =>
           if (which == 0) {
-            field.setText((value * 360).round.toString)
+            field.setText((n * 360).round.toString)
           } else {
-            field.setText(value.toString)
+            field.setText(Approximate.approximate(n, 3).toString)
           }
       }
     }
@@ -280,7 +320,7 @@ class ThemeColorPicker(updateColor: Color => Unit) extends JPanel(new GridBagLay
 
       mode match {
         case RGBA =>
-          val (r, g, b) = (rhSlider.rgbValue, gsSlider.rgbValue, bSlider.rgbValue)
+          val (r, g, b) = (rhSlider.intValue, gsSlider.intValue, bSlider.intValue)
 
           which match {
             case 0 =>
@@ -301,7 +341,7 @@ class ThemeColorPicker(updateColor: Color => Unit) extends JPanel(new GridBagLay
           }
 
         case HSBA =>
-          val (h, s, l) = (rhSlider.value, gsSlider.value, bSlider.value)
+          val (h, s, l) = (rhSlider.floatValue, gsSlider.floatValue, bSlider.floatValue)
 
           which match {
             case 0 =>
@@ -324,6 +364,16 @@ class ThemeColorPicker(updateColor: Color => Unit) extends JPanel(new GridBagLay
       }
 
       g2d.fillRoundRect(1, 1, getWidth - 2, getHeight - 2, 6, 6)
+
+      val position: Int = {
+        value match {
+          case IntValue(n) =>
+            n * getWidth / 255
+
+          case FloatValue(n) =>
+            (n * getWidth).toInt
+        }
+      }
 
       g2d.setColor(Color.WHITE)
       g2d.fillRoundRect((position - 2).min(getWidth - 4).max(0), 1, 4, getHeight - 2, 6, 6)
