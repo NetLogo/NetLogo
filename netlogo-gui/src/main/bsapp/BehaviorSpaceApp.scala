@@ -4,16 +4,15 @@ package org.nlogo.bsapp
 
 import java.awt.EventQueue
 import java.io.IOException
-import java.lang.{ Double => JDouble }
 import java.net.SocketException
-import java.util.{ Timer, TimerTask }
+import javax.swing.Timer
 
 import org.nlogo.agent.OutputObject
 import org.nlogo.api.{ Dump, IPCHandler, LabProtocol }
 import org.nlogo.core.{ CompilerException, I18N }
 import org.nlogo.headless.{ BehaviorSpaceCoordinator, HeadlessWorkspace }
 import org.nlogo.nvm.{ DummyPrimaryWorkspace, LabInterface, Workspace }
-import org.nlogo.swing.{ AppUtils, OptionPane, WindowAutomator }
+import org.nlogo.swing.{ AppUtils, OptionPane, RichAction, WindowAutomator }
 import org.nlogo.window.{ Events, ThreadUtils }
 
 import ujson.Obj
@@ -83,6 +82,11 @@ class BehaviorSpaceApp(args: BehaviorSpaceApp.CommandLineArgs) {
   private val frame = new BehaviorSpaceFrame(this)
 
   private val ipcHandler = IPCHandler(false)
+
+  // lab.abort() should do its job pretty much immediately, so if it takes more than a few seconds,
+  // something is definitely broken or frozen. this timer is a failsafe that forces an exit in this case
+  // so the user doesn't have to manually quit the process. (Isaac B 2/6/26)
+  private val timer = new Timer(5000, RichAction(_ => System.exit(0)))
 
   private val primaryWorkspace = new DummyPrimaryWorkspace {
     override def mirrorOutput(oo: OutputObject, toOutputArea: Boolean): Unit = {
@@ -200,12 +204,8 @@ class BehaviorSpaceApp(args: BehaviorSpaceApp.CommandLineArgs) {
       }
 
       override def measurementsTaken(w: Workspace, runNumber: Int, step: Int, values: List[AnyRef]): Unit = {
-        if (w == workspace) {
-          progressDialog.measurementsTaken(values.collect {
-            case d: JDouble =>
-              d
-          })
-        }
+        if (w == workspace)
+          progressDialog.measurementsTaken(values)
       }
 
       override def runCompleted(w: Workspace, runNumber: Int, step: Int): Unit = {
@@ -270,6 +270,7 @@ class BehaviorSpaceApp(args: BehaviorSpaceApp.CommandLineArgs) {
         }
     }
 
+    timer.stop()
     ipcHandler.close()
 
     System.exit(0)
@@ -293,15 +294,7 @@ class BehaviorSpaceApp(args: BehaviorSpaceApp.CommandLineArgs) {
     frame
 
   def abort(): Unit = {
-    // lab.abort() should do its job pretty much immediately, so if it takes more than a few seconds,
-    // something is definitely broken or frozen. this timer is a failsafe that forces an exit in this case
-    // so the user doesn't have to manually quit the process. (Isaac B 2/6/26)
-    new Timer().schedule(new TimerTask {
-      override def run(): Unit = {
-        System.exit(0)
-      }
-    }, 5000)
-
+    timer.start()
     lab.abort()
   }
 }
