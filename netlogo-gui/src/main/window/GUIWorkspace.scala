@@ -59,7 +59,8 @@ abstract class GUIWorkspace(world: World, kioskLevel: GUIWorkspace.KioskLevel, f
   with RemoveJobEvent.Handler with AddSliderConstraintEvent.Handler with RemoveConstraintEvent.Handler
   with AddBooleanConstraintEvent.Handler with AddChooserConstraintEvent.Handler with AddInputBoxConstraintEvent.Handler
   with CompiledEvent.Handler with ExportPlotEvent.Handler with ExportWidgetEvent.Handler with LoadModelEvent.Handler
-  with TrailDrawerInterface with DrawingInterface with ModelSections.ModelSaveable with PrimaryWorkspace {
+  with TrailDrawerInterface with DrawingInterface with ModelSections.ModelSaveable with PrimaryWorkspace
+  with WorkspaceWithSpeed {
 
   val viewManager = new ViewManager
 
