@@ -13,7 +13,7 @@ import org.nlogo.api.{ Dump, IPCHandler, LabProtocol }
 import org.nlogo.core.{ CompilerException, I18N }
 import org.nlogo.headless.{ BehaviorSpaceCoordinator, HeadlessWorkspace }
 import org.nlogo.nvm.{ DummyPrimaryWorkspace, LabInterface, Workspace }
-import org.nlogo.swing.{ AppUtils, OptionPane }
+import org.nlogo.swing.{ AppUtils, OptionPane, WindowAutomator }
 import org.nlogo.window.{ Events, ThreadUtils }
 
 import ujson.Obj
@@ -57,6 +57,11 @@ object BehaviorSpaceApp {
 
       case (current, "--lists") if argsIter.hasNext =>
         current.copy(lists = Option(argsIter.next.trim))
+
+      case (current, "--automated") =>
+        WindowAutomator.setAutomated(true)
+
+        current
 
       case (current, _) =>
         current
@@ -239,18 +244,30 @@ class BehaviorSpaceApp(args: BehaviorSpaceApp.CommandLineArgs) {
           "type" -> "abort"
         )))
 
-      case LabInterface.Result.Paused if highestCompleted < protocol.countRuns =>
-        ipcHandler.writeLine(ujson.write(Obj(
-          "type" -> "pause",
-          "update_view" -> workspace.getUpdateView,
-          "update_plots" -> workspace.getUpdatePlotsAndMonitors,
-          "completed" -> highestCompleted
-        )))
+      case LabInterface.Result.Paused =>
+        if (highestCompleted < protocol.countRuns) {
+          ipcHandler.writeLine(ujson.write(Obj(
+            "type" -> "pause",
+            "update_view" -> workspace.getUpdateView,
+            "update_plots" -> workspace.getUpdatePlotsAndMonitors,
+            "completed" -> highestCompleted
+          )))
+        } else {
+          ipcHandler.writeLine(ujson.write(Obj(
+            "type" -> "complete"
+          )))
+        }
 
-      case _ =>
-        ipcHandler.writeLine(ujson.write(Obj(
-          "type" -> "complete"
-        )))
+      case LabInterface.Result.Completed =>
+        if (highestCompleted >= protocol.countRuns) {
+          ipcHandler.writeLine(ujson.write(Obj(
+            "type" -> "complete"
+          )))
+        } else {
+          ipcHandler.writeLine(ujson.write(Obj(
+            "type" -> "abort"
+          )))
+        }
     }
 
     ipcHandler.close()
