@@ -8,7 +8,6 @@ import java.net.SocketException
 import java.nio.file.Path
 
 import org.nlogo.api.{ IPCHandler, LabProtocol, Version }
-import org.nlogo.awt.{ EventQueue, UserCancelException }
 import org.nlogo.core.I18N
 import org.nlogo.swing.OptionPane
 import org.nlogo.window.{ EditDialogFactory, GUIWorkspace }
@@ -22,17 +21,12 @@ class Supervisor(parent: Window, workspace: GUIWorkspace, modelPath: Path, proto
 
   private val handler = IPCHandler(true)
 
-  override def start(): Unit = {
-    EventQueue.mustBeEventDispatchThread()
+  private var process: Option[Process] = None
 
+  override def start(): Unit = {
     if (protocol.runsCompleted == 0 && !automated) {
-      try {
-        new RunOptionsDialog(parent, dialogFactory, Option(workspace.getModelDir).map(new File(_).toPath),
-                             workspace.guessExportName(protocol.name), protocol).run()
-      } catch {
-        case _: UserCancelException =>
-          return
-      }
+      new RunOptionsDialog(parent, dialogFactory, Option(workspace.getModelDir).map(new File(_).toPath),
+                           workspace.guessExportName(protocol.name), protocol).run()
     }
 
     super.start()
@@ -54,8 +48,6 @@ class Supervisor(parent: Window, workspace: GUIWorkspace, modelPath: Path, proto
         Seq()
       }
     }
-
-    var process: Option[Process] = None
 
     try {
       process = Option(Process(Seq(ProcessHandle.current.info.command.get, "-Xmx2G", "-cp",
@@ -115,5 +107,9 @@ class Supervisor(parent: Window, workspace: GUIWorkspace, modelPath: Path, proto
           saveProtocol(protocol, 0)
       }
     }
+  }
+
+  def abort(): Unit = {
+    process.foreach(_.destroy())
   }
 }
