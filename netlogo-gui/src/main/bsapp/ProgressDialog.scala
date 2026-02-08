@@ -158,6 +158,9 @@ class ProgressDialog(app: BehaviorSpaceApp, workspace: SemiHeadlessWorkspace, la
     updateViewCheckbox.setSelected(workspace.getUpdateView)
     plotsAndMonitorsSwitch.setSelected(workspace.getUpdatePlotsAndMonitors)
 
+    pauseButton.setEnabled(false)
+    abortButton.setEnabled(false)
+
     updateProgressArea()
 
     setVisible(true)
@@ -198,6 +201,9 @@ class ProgressDialog(app: BehaviorSpaceApp, workspace: SemiHeadlessWorkspace, la
 
   def experimentStarted(): Unit = {
     started = System.currentTimeMillis
+
+    pauseButton.setEnabled(true)
+    abortButton.setEnabled(true)
   }
 
   def runStarted(runNumber: Int, settings: Seq[(String, String)]): Unit = {
