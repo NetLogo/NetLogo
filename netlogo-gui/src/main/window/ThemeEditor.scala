@@ -96,7 +96,7 @@ class ThemeEditor(manager: ThemesManager, baseTheme: ColorTheme, appFrame: Theme
       new OptionPane(this, I18N.gui.get("menu.tools.themeEditor.invalidName"),
                      I18N.gui.getN("menu.tools.themeEditor.emptyName", name), OptionPane.Options.Ok,
                      OptionPane.Icons.Error)
-    } else if (isNew && manager.themeExists(name)) {
+    } else if (isNew && InterfaceColors.themeExists(name)) {
       new OptionPane(this, I18N.gui.get("menu.tools.themeEditor.invalidName"),
                      I18N.gui.getN("menu.tools.themeEditor.duplicateName", name), OptionPane.Options.Ok,
                      OptionPane.Icons.Error)

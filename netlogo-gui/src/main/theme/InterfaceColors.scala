@@ -7,7 +7,7 @@ import com.jthemedetecor.OsThemeDetector
 import java.awt.Color
 import java.io.PrintWriter
 import java.net.URL
-import java.nio.file.{ Files, Path, Paths }
+import java.nio.file.{ Files, Path, Paths, StandardCopyOption }
 
 import org.nlogo.core.{ ColorizerTheme, I18N, NetLogoPreferences, TokenType }
 
@@ -39,24 +39,11 @@ object InterfaceColors {
 
   private val customRoot: Path = Paths.get(System.getProperty("user.home"), ".nlogo", "themes")
 
-  private val customThemes: Map[String, ColorTheme] = {
-    if (Files.exists(customRoot) && Files.isDirectory(customRoot)) {
-      Files.list(customRoot).iterator.asScala.foldLeft(Set[(String, ColorTheme)]()) {
-        case (themes, path) =>
-          val name = path.getFileName.toString.stripSuffix(".theme").trim
-
-          if (reservedName(name) || themes.exists(_._1 == name)) {
-            themes
-          } else {
-            themes ++ loadTheme(name, name, path.toUri.toURL, false).map((name, _))
-          }
-      }.toMap
-    } else {
-      Map()
-    }
-  }
+  private var customThemes = Map[String, ColorTheme]()
 
   private var theme: ColorTheme = LightTheme
+
+  loadCustomThemes()
 
   def setTheme(theme: ColorTheme): Unit = {
     this.theme = theme
@@ -87,12 +74,54 @@ object InterfaceColors {
   def getCustomThemes: Array[ColorTheme] =
     customThemes.values.toArray
 
-  private def reservedName(name: String): Boolean =
-    name == ClassicTheme.name || name == LightTheme.name || name == DarkTheme.name
+  def themeExists(name: String): Boolean = {
+    (getPermanentThemes ++ getCustomThemes).exists { theme =>
+      theme.name == name || theme.prefName == name
+    }
+  }
+
+  def importTheme(path: Path): Boolean = {
+    val dest = customRoot.resolve(path.getFileName)
+
+    Files.copy(path, dest, StandardCopyOption.REPLACE_EXISTING)
+
+    loadCustomThemes()
+
+    if (getCustomThemes.exists(_.name == path.getFileName.toString.stripSuffix(".theme").trim)) {
+      true
+    } else {
+      Files.delete(dest)
+
+      false
+    }
+  }
+
+  private def loadCustomThemes(): Unit = {
+    customThemes = {
+      if (Files.exists(customRoot) && Files.isDirectory(customRoot)) {
+        Files.list(customRoot).iterator.asScala.foldLeft(Set[(String, ColorTheme)]()) {
+          case (themes, path) =>
+            val name = path.getFileName.toString.stripSuffix(".theme").trim
+
+            if (reservedName(name) || themes.exists(_._1 == name)) {
+              themes
+            } else {
+              themes ++ loadTheme(name, name, path.toUri.toURL, false).map((name, _))
+            }
+        }.toMap
+      } else {
+        Map()
+      }
+    }
+  }
+
+  def reservedName(name: String): Boolean =
+    getPermanentThemes.exists(theme => name == theme.name || name == theme.prefName)
 
   private def loadTheme(name: String, prefName: String, url: URL, permanent: Boolean): Option[ColorTheme] = {
-    Try {
-      val source: Source = Source.fromURL(url)
+    val source: Source = Source.fromURL(url)
+
+    val result: Option[ColorTheme] = Try {
       val lines: Iterator[String] = source.getLines
 
       val isDark = lines.next.toBoolean
@@ -104,8 +133,6 @@ object InterfaceColors {
           (split(0), new Color(split(1).toInt, split(2).toInt, split(3).toInt, split(4).toInt))
         }.toMap
       }
-
-      source.close()
 
       if (permanent) {
         ColorTheme(name, prefName, isDark, true, colors)
@@ -122,12 +149,18 @@ object InterfaceColors {
                    default.colors.map((key, color) => (key, colors.getOrElse(key, color))))
       }
     }.toOption
+
+    source.close()
+
+    result
   }
 
-  def saveTheme(theme: ColorTheme): Unit = {
-    Files.createDirectories(customRoot)
+  def saveTheme(theme: ColorTheme, path: Option[Path] = None): Unit = {
+    val dest = path.getOrElse(customRoot)
 
-    val writer = new PrintWriter(customRoot.resolve(s"${theme.name}.theme").toFile)
+    Files.createDirectories(dest)
+
+    val writer = new PrintWriter(dest.resolve(s"${theme.name}.theme").toFile)
 
     writer.println(theme.isDark.toString)
 
