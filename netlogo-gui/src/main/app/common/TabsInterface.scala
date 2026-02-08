@@ -27,6 +27,9 @@ trait TabsInterface {
 
   def setIncludedFilesShown(visible: Boolean): Unit
 
+  def remoteCommandsEnabled: Boolean
+  def remoteCommandsEnabled_=(b: Boolean): Unit
+
   def watchingFiles: Boolean
   def watchingFiles_=(b: Boolean): Unit
 

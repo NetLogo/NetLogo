@@ -13,14 +13,15 @@ import org.json.simple.parser.JSONParser
 import org.scalasbt.ipcsocket.{ UnixDomainServerSocket, Win32NamedPipeServerSocket }
 
 import scala.jdk.CollectionConverters._
-import scala.sys.addShutdownHook
+import scala.sys.{ addShutdownHook, ShutdownHookThread }
 import scala.util.Properties.isWin
+import scala.util.Try
 
-import java.net.ServerSocket
-import java.io.{ BufferedReader, BufferedWriter, InputStreamReader, OutputStreamWriter }
+import java.net.{ ServerSocket, Socket }
+import java.io.{ BufferedReader, BufferedWriter, InputStream, InputStreamReader, OutputStream, OutputStreamWriter }
 import java.nio.file.{ Files, Paths }
 
-private class CommandRequest(var agent: AgentKind = AgentKind.Observer, var code: String = "") {
+private class CommandRequest(var code: String = "") {
   // Example: {"type": "nl-run-code", "code": "show 123"}
   def fromJSONString(input: String): Boolean = {
     val parser = new JSONParser()
@@ -50,45 +51,56 @@ private class CommandRequest(var agent: AgentKind = AgentKind.Observer, var code
   }
 }
 
-private class CommandThread(serverSocket: ServerSocket, callback: CommandRequest => Unit) extends Thread {
+private class CommandThread(serverSocket: CommandServerSocket, callback: CommandRequest => Unit) extends Thread {
   override def run() = {
-    while (true) {
-      val request = new CommandRequest
-      val socket = serverSocket.accept
+    var socket: Option[Socket] = None
+    var input: Option[InputStream] = None
+    var output: Option[OutputStream] = None
 
-      val input = socket.getInputStream
-      val reader = new BufferedReader(new InputStreamReader(input))
+    try {
+      while (!isInterrupted) {
+        socket = Some(serverSocket.accept())
+        input = socket.map(_.getInputStream())
+        output = socket.map(_.getOutputStream())
 
-      val output = socket.getOutputStream
-      val writer = new BufferedWriter(new OutputStreamWriter(output))
-
-      for (line <- reader.lines.iterator.asScala) {
-        if (request.fromJSONString(line)) {
-          callback(request)
-          writer.write(s"{\"type\": \"nl-status\", \"status\": \"ok\"}\n")
-        } else {
-          writer.write(s"{\"type\": \"nl-status\", \"status\": \"failed\", \"message\": \"Failed to parse request\"}\n")
+        (input, output) match {
+          case (Some(x), Some(y)) => processRequests(x, y)
+          case _ => throw new IllegalStateException("Failed to open input/output stream")
         }
+      }
+    } catch {
+      case _: InterruptedException => ()
+    } finally {
+      input.foreach(_.close)
+      output.foreach(_.close)
+      socket.foreach(_.close)
+    }
+  }
 
-        writer.flush
+  private def processRequests(input: InputStream, output: OutputStream): Unit = {
+    val request = new CommandRequest
+    val reader = new BufferedReader(new InputStreamReader(input))
+    val writer = new BufferedWriter(new OutputStreamWriter(output))
+
+    for (line <- reader.lines.iterator.asScala) {
+      if (request.fromJSONString(line)) {
+        callback(request)
+        writer.write(s"{\"type\": \"nl-status\", \"status\": \"ok\"}\n")
+      } else {
+        writer.write(s"{\"type\": \"nl-status\", \"status\": \"failed\", \"message\": \"Failed to parse request\"}\n")
       }
 
-      input.close
-      output.close
-      socket.close
+      writer.flush
     }
   }
 }
 
-class CommandServer(commandLine: CommandLine) {
+class CommandServerSocket {
+  val path: String = getSocketPath
+  private var shutdownHookThread: Option[ShutdownHookThread] = None
+  private val socket: ServerSocket = makeSocket(getSocketPath)
 
-  makeServerSocket().foreach(x => new CommandThread(x, commandCallback).start)
-
-  private def commandCallback(request: CommandRequest) = {
-    EventQueue.invokeAndWait(() => commandLine.execute(AgentKind.Observer, request.code, true))
-  }
-
-  private def getServerSocketPath: String = {
+  private def getSocketPath: String = {
     val pid: Long = ProcessHandle.current.pid
 
     if (isWin) {
@@ -101,24 +113,61 @@ class CommandServer(commandLine: CommandLine) {
     }
   }
 
-  private def makeServerSocket(): Option[ServerSocket] = {
-    val path = getServerSocketPath
-    val socket =
-      try {
-        if (isWin) {
-          Some(new Win32NamedPipeServerSocket(path))
-        } else {
-          addShutdownHook(Files.deleteIfExists(Paths.get(path)))
-          Some(new UnixDomainServerSocket(path))
-        }
-      } catch {
-        case _ => {
-          System.err.println(s"Failed to create remote command socket at ${path}")
-          None
-        }
-      }
+  private def makeSocket(path: String): ServerSocket = {
+    println(s"Creating remote command socket at ${path}")
 
-    println(s"Created remote command socket at ${path}")
-    socket
+    if (isWin) {
+      new Win32NamedPipeServerSocket(path)
+    } else {
+      shutdownHookThread = Some(addShutdownHook(Files.deleteIfExists(Paths.get(path))))
+      new UnixDomainServerSocket(path)
+    }
+  }
+
+  def accept(): Socket = {
+    socket.accept()
+  }
+
+  def close(): Unit = {
+    socket.close()
+    shutdownHookThread.foreach({x =>
+      x.run()
+      x.remove()
+    })
+  }
+}
+
+class CommandServer(commandLine: CommandLine) {
+
+  private var serverSocket: Option[CommandServerSocket] = None
+  private var serverThread: Option[Thread] = None
+
+  def start(): Unit = {
+    stop()
+    initServerSocket()
+    serverThread = serverSocket.map(x => new CommandThread(x, commandCallback))
+    serverThread.map(_.start)
+  }
+
+  def stop(): Unit = {
+    serverThread.foreach(_.interrupt())
+    serverThread = None
+    serverSocket.foreach(_.close())
+    serverSocket = None
+  }
+
+  def running: Boolean = serverThread.isDefined
+
+  private def commandCallback(request: CommandRequest) = {
+    EventQueue.invokeAndWait(() => commandLine.execute(AgentKind.Observer, request.code, true))
+  }
+
+  private def initServerSocket(): Unit = {
+    serverSocket.foreach(_.close())
+    serverSocket = Try(new CommandServerSocket).toOption
+
+    if (serverSocket.isEmpty) {
+      System.err.println(s"Failed to create remote command socket")
+    }
   }
 }

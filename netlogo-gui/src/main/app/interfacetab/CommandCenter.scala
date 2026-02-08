@@ -5,7 +5,6 @@ package org.nlogo.app.interfacetab
 import java.awt.{ BorderLayout, Component, Dimension, FileDialog, Font, GridBagConstraints, GridBagLayout,
                   Insets }
 import java.awt.event.{ ActionEvent, MouseAdapter, MouseEvent }
-import java.util.prefs.Preferences
 import javax.swing.{ AbstractAction, Action, Box, JButton, JLabel, JPanel }
 import javax.swing.border.EmptyBorder
 
@@ -27,6 +26,7 @@ class CommandCenter(workspace: AbstractWorkspace, showToggle: Boolean) extends J
 
   // true = echo commands to output
   val commandLine = new CommandLine(this, true, 12, workspace)
+  val commandServer = new CommandServer(commandLine)
   private val prompt = new LinePrompt(commandLine, true)
   private val northPanel = new JPanel(new GridBagLayout)
   private val southPanel = new JPanel
@@ -35,12 +35,6 @@ class CommandCenter(workspace: AbstractWorkspace, showToggle: Boolean) extends J
     override def mousePressed(e: MouseEvent): Unit = { if(e.isPopupTrigger) { e.consume(); doPopup(e) }}
     override def mouseReleased(e: MouseEvent): Unit = { if(e.isPopupTrigger) { e.consume(); doPopup(e) }}
   })
-
-  var commandServer: Option[CommandServer] = None
-
-  if (Preferences.userRoot.node("/org/nlogo/NetLogo").get("enableRemoteCommands", "false").toBoolean) {
-    commandServer = Some(new CommandServer(commandLine))
-  }
 
   private val locationToggleButton = new JButton with RoundedBorderPanel with ThemeSync {
     setBorder(new EmptyBorder(3, 5, 3, 6))
