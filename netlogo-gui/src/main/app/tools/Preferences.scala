@@ -199,6 +199,8 @@ object Preferences {
     }
   }
 
+  object EnableRemoteCommands extends BooleanPreference("enableRemoteCommands", Some(RequiredAction.Restart), false)
+
   object IsLoggingEnabled extends BooleanPreference("loggingEnabled", Some(RequiredAction.Restart), false)
 
   class LogDirectory(val frame: Frame) extends StringPreference("logDirectory", Some(RequiredAction.Restart), "") {
