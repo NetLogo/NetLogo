@@ -61,13 +61,14 @@ class ThemeEditor(manager: ThemesManager, baseTheme: ColorTheme, appFrame: Theme
 
   private val buttonPanel = new ButtonPanel(Seq(cancelButton, okButton))
 
-  setLayout(new BorderLayout(12, 6))
+  add(new JPanel with Transparent {
+    setLayout(new BorderLayout(12, 6))
+    setBorder(new EmptyBorder(6, 6, 6, 6))
 
-  getRootPane.setBorder(new EmptyBorder(6, 6, 6, 6))
-
-  add(new PackedLayout(Seq(colorPicker, divider), spacing = 12), BorderLayout.WEST)
-  add(scrollPane, BorderLayout.CENTER)
-  add(buttonPanel, BorderLayout.SOUTH)
+    add(new PackedLayout(Seq(colorPicker, divider), spacing = 12), BorderLayout.WEST)
+    add(scrollPane, BorderLayout.CENTER)
+    add(buttonPanel, BorderLayout.SOUTH)
+  })
 
   pack()
   syncTheme()
@@ -145,7 +146,6 @@ class ThemeEditor(manager: ThemesManager, baseTheme: ColorTheme, appFrame: Theme
   }
 
   override def syncTheme(): Unit = {
-    getRootPane.setBackground(InterfaceColors.dialogBackground())
     getContentPane.setBackground(InterfaceColors.dialogBackground())
     scrollPane.setBackground(InterfaceColors.dialogBackground())
 
