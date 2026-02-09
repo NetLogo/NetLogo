@@ -127,6 +127,12 @@ class BehaviorSpaceApp(args: BehaviorSpaceApp.CommandLineArgs) extends Thread.Un
   private val lab = HeadlessWorkspace.newLab
 
   def run(): Unit = {
+    ipcHandler.connect()
+
+    ipcHandler.writeLine(ujson.write(Obj(
+      "type" -> "launch"
+    )))
+
     AppUtils.setupGUI(None)
 
     val settings = LabInterface.Settings(args.model, Option(args.experiment), None, args.table, args.spreadsheet,
@@ -156,8 +162,6 @@ class BehaviorSpaceApp(args: BehaviorSpaceApp.CommandLineArgs) extends Thread.Un
     }
 
     frame.setVisible(true)
-
-    ipcHandler.connect()
 
     new Thread {
       override def run(): Unit = {
