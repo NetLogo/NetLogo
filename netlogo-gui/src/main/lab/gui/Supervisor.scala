@@ -22,6 +22,7 @@ class Supervisor(parent: Window, workspace: GUIWorkspace, modelPath: Path, proto
   private var process: Option[Process] = None
 
   private var success = false
+  private var saved = false
 
   override def start(): Unit = {
     if (protocol.runsCompleted == 0 && !automated) {
@@ -85,6 +86,9 @@ class Supervisor(parent: Window, workspace: GUIWorkspace, modelPath: Path, proto
     process.foreach(_.destroy())
 
     handler.close()
+
+    if (!saved)
+      saveProtocol(protocol, 0)
   }
 
   private def processMessage(str: String): Unit = {
@@ -98,13 +102,12 @@ class Supervisor(parent: Window, workspace: GUIWorkspace, modelPath: Path, proto
 
           saveProtocol(protocol, json("completed").num.toInt)
 
+          saved = true
+
         case "complete" =>
           success = true
 
-          saveProtocol(protocol, 0)
-
         case _ =>
-          saveProtocol(protocol, 0)
       }
     }
   }
