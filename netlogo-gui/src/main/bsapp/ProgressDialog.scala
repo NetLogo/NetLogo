@@ -151,6 +151,7 @@ class ProgressDialog(app: BehaviorSpaceApp, workspace: SemiHeadlessWorkspace, la
       add(new ButtonPanel(Seq(pauseButton, abortButton)), c)
     })
 
+    pack()
     setSize(getMinimumSize)
 
     Positioning.center(this, app.getFrame)
