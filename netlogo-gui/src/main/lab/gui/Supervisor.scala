@@ -8,6 +8,8 @@ import java.net.SocketException
 import java.nio.file.Path
 
 import org.nlogo.api.{ IPCHandler, LabProtocol, Version }
+import org.nlogo.core.I18N
+import org.nlogo.swing.OptionPane
 import org.nlogo.window.{ EditDialogFactory, GUIWorkspace }
 
 import scala.sys.process.Process
@@ -21,6 +23,7 @@ class Supervisor(parent: Window, workspace: GUIWorkspace, modelPath: Path, proto
 
   private var process: Option[Process] = None
 
+  private var launched = false
   private var success = false
   private var saved = false
 
@@ -51,7 +54,15 @@ class Supervisor(parent: Window, workspace: GUIWorkspace, modelPath: Path, proto
     }
 
     try {
-      process = Option(Process(Seq(ProcessHandle.current.info.command.get, "-Xmx2G", "-cp",
+      val memoryLimit: Option[String] = {
+        if (protocol.memoryLimit == 0) {
+          None
+        } else {
+          Some(s"-Xmx${protocol.memoryLimit}M")
+        }
+      }
+
+      process = Option(Process(Seq(ProcessHandle.current.info.command.get) ++ memoryLimit ++ Seq("-cp",
                                    System.getProperty("java.class.path"), s"-Dorg.nlogo.is3d=${Version.is3D}",
                                    "-Dapple.awt.application.appearance=system",
                                    "org.nlogo.bsapp.BehaviorSpaceApp", modelPath.toString, protocol.name,
@@ -90,6 +101,11 @@ class Supervisor(parent: Window, workspace: GUIWorkspace, modelPath: Path, proto
 
     if (!saved)
       saveProtocol(protocol, 0)
+
+    if (!launched)
+      new OptionPane(parent, I18N.gui.get("common.messages.error"),
+                     I18N.gui.get("tools.behaviorSpace.error.memoryLimit"), OptionPane.Options.Ok,
+                     OptionPane.Icons.Error)
   }
 
   private def processMessage(str: String): Unit = {
@@ -97,6 +113,9 @@ class Supervisor(parent: Window, workspace: GUIWorkspace, modelPath: Path, proto
       val json = ujson.read(str)
 
       json("type").str match {
+        case "launch" =>
+          launched = true
+
         case "pause" =>
           protocol.updateView = json("update_view").bool
           protocol.updatePlotsAndMonitors = json("update_plots").bool
