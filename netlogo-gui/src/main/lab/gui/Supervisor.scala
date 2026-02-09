@@ -53,6 +53,7 @@ class Supervisor(parent: Window, workspace: GUIWorkspace, modelPath: Path, proto
     try {
       process = Option(Process(Seq(ProcessHandle.current.info.command.get, "-Xmx2G", "-cp",
                                    System.getProperty("java.class.path"), s"-Dorg.nlogo.is3d=${Version.is3D}",
+                                   "-Dapple.awt.application.appearance=system",
                                    "org.nlogo.bsapp.BehaviorSpaceApp", modelPath.toString, protocol.name,
                                    "--threads", protocol.threadCount.toString,
                                    "--skip", protocol.runsCompleted.toString) ++
