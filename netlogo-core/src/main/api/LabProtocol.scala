@@ -67,6 +67,7 @@ case class LabProtocol(
   var constants: List[RefValueSet],
   var subExperiments: List[List[RefValueSet]],
   var threadCount: Int = LabDefaultValues.getDefaultThreads,
+  var memoryLimit: Int = LabDefaultValues.getDefaultMemoryLimit,
   var table: String = LabDefaultValues.getDefaultTable,
   var spreadsheet: String = LabDefaultValues.getDefaultSpreadsheet,
   var stats: String = LabDefaultValues.getDefaultStats,

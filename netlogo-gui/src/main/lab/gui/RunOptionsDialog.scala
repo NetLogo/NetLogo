@@ -131,6 +131,11 @@ class RunOptionsDialog(parent: Window, dialogFactory: EditDialogFactory, current
       protocol.threadCount = i
     }
 
+    def memoryLimit: Int = protocol.memoryLimit
+    def setMemoryLimit(i: Int): Unit = {
+      protocol.memoryLimit = i
+    }
+
     def mirrorHeadlessOutput: Boolean = protocol.mirrorHeadlessOutput
     def setMirrorHeadlessOutput(b: Boolean): Unit = {
       protocol.mirrorHeadlessOutput = b

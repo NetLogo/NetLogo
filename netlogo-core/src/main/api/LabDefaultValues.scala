@@ -21,6 +21,7 @@ object LabDefaultValues {
   // Determines the number of threads in BehaviorSpace if the user has not specified a value
   def getDefaultThreads: Int = (Runtime.getRuntime.availableProcessors * 0.75).floor.toInt
   def getRecommendedMaxThreads: Int = Runtime.getRuntime.availableProcessors
+  def getDefaultMemoryLimit: Int = 0
   def getDefaultTable: String = ""
   def getDefaultSpreadsheet: String = ""
   def getDefaultStats: String = ""
