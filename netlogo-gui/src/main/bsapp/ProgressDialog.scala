@@ -306,7 +306,7 @@ class ProgressDialog(app: BehaviorSpaceApp, workspace: SemiHeadlessWorkspace, la
   private def updateProgressArea(): Unit = {
     if (started == 0) {
       progressArea.setText(I18N.gui("init"))
-    } else {
+    } else if (timer.isRunning) {
       def pad(num: Long): String = {
         if (num < 10) {
           "0" + num
