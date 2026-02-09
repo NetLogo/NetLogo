@@ -8,11 +8,9 @@ import java.net.SocketException
 import java.nio.file.Path
 
 import org.nlogo.api.{ IPCHandler, LabProtocol, Version }
-import org.nlogo.core.I18N
-import org.nlogo.swing.OptionPane
 import org.nlogo.window.{ EditDialogFactory, GUIWorkspace }
 
-import scala.sys.process.{ Process, ProcessLogger }
+import scala.sys.process.Process
 import scala.util.Try
 
 class Supervisor(parent: Window, workspace: GUIWorkspace, modelPath: Path, protocol: LabProtocol,
@@ -64,8 +62,7 @@ class Supervisor(parent: Window, workspace: GUIWorkspace, modelPath: Path, proto
                                strToArg("--spreadsheet", protocol.spreadsheet.trim) ++
                                strToArg("--stats", protocol.stats.trim) ++
                                strToArg("--lists", protocol.lists.trim) ++
-                               boolToArg("--automated", automated))
-                         .run(ProcessLogger(println, processError)))
+                               boolToArg("--automated", automated)).run())
 
       handler.connect()
 
@@ -88,11 +85,6 @@ class Supervisor(parent: Window, workspace: GUIWorkspace, modelPath: Path, proto
     process.foreach(_.destroy())
 
     handler.close()
-  }
-
-  private def processError(str: String): Unit = {
-    new OptionPane(workspace.getFrame, I18N.gui.get("tools.behaviorSpace.error.title"), str, OptionPane.Options.Ok,
-                   OptionPane.Icons.Error)
   }
 
   private def processMessage(str: String): Unit = {

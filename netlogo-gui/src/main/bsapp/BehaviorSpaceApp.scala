@@ -8,12 +8,12 @@ import java.net.SocketException
 import javax.swing.Timer
 
 import org.nlogo.agent.OutputObject
-import org.nlogo.api.{ Dump, IPCHandler, LabProtocol }
+import org.nlogo.api.{ Dump, IPCHandler, LabProtocol, LogoException }
 import org.nlogo.core.{ CompilerException, I18N }
 import org.nlogo.headless.{ BehaviorSpaceCoordinator, HeadlessWorkspace }
 import org.nlogo.nvm.{ DummyPrimaryWorkspace, LabInterface, Workspace }
 import org.nlogo.swing.{ AppUtils, OptionPane, RichAction, WindowAutomator }
-import org.nlogo.window.{ Events, ThreadUtils }
+import org.nlogo.window.{ ErrorDialogManager, Events, ThreadUtils }
 
 import ujson.Obj
 
@@ -76,12 +76,14 @@ object BehaviorSpaceApp {
                              lists: Option[String] = None)
 }
 
-class BehaviorSpaceApp(args: BehaviorSpaceApp.CommandLineArgs) {
+class BehaviorSpaceApp(args: BehaviorSpaceApp.CommandLineArgs) extends Thread.UncaughtExceptionHandler {
   private implicit val i18nPrefix: I18N.Prefix = I18N.Prefix("tools.behaviorSpace")
 
   private val frame = new BehaviorSpaceFrame(this)
 
   private val ipcHandler = IPCHandler(false)
+
+  private val errorDialogManager = new ErrorDialogManager(frame)
 
   // lab.abort() should do its job pretty much immediately, so if it takes more than a few seconds,
   // something is definitely broken or frozen. this timer is a failsafe that forces an exit in this case
@@ -288,6 +290,23 @@ class BehaviorSpaceApp(args: BehaviorSpaceApp.CommandLineArgs) {
 
   private def displayError(message: String): Unit = {
     new OptionPane(frame, I18N.gui("error.title"), message, OptionPane.Options.Ok, OptionPane.Icons.Error)
+  }
+
+  override def uncaughtException(thread: Thread, ex: Throwable): Unit = {
+    try {
+      if (!ex.isInstanceOf[LogoException]) {
+        ex.printStackTrace(System.err)
+
+        if (errorDialogManager.safeToIgnore(ex))
+          return
+      }
+
+      if (!errorDialogManager.alreadyVisible)
+        EventQueue.invokeLater(() => errorDialogManager.show(null, null, Thread.currentThread, ex))
+    } catch {
+      case ex: RuntimeException =>
+        ex.printStackTrace(System.err)
+    }
   }
 
   def getFrame: BehaviorSpaceFrame =
