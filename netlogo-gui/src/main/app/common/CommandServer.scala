@@ -10,16 +10,14 @@ import org.nlogo.core.AgentKind
 import org.json.simple.JSONObject
 import org.json.simple.parser.JSONParser
 
-import org.scalasbt.ipcsocket.{ UnixDomainServerSocket, Win32NamedPipeServerSocket }
+import org.newsclub.net.unix.{ AFUNIXServerSocket, AFUNIXSocketAddress }
 
 import scala.jdk.CollectionConverters._
-import scala.sys.{ addShutdownHook, ShutdownHookThread }
-import scala.util.Properties.isWin
 import scala.util.Try
 
 import java.net.{ ServerSocket, Socket }
-import java.io.{ BufferedReader, BufferedWriter, InputStream, InputStreamReader, OutputStream, OutputStreamWriter }
-import java.nio.file.{ Files, Paths }
+import java.io.{ BufferedReader, BufferedWriter, File, InputStream, InputStreamReader, IOException,
+  OutputStream, OutputStreamWriter }
 
 private class CommandRequest(var code: String = "") {
   // Example: {"type": "nl-run-code", "code": "show 123"}
@@ -70,6 +68,10 @@ private class CommandThread(serverSocket: CommandServerSocket, callback: Command
       }
     } catch {
       case _: InterruptedException => ()
+
+      // This exception is raised when accept() is waiting for a connection and the server socket is closed. This can
+      // happen when we stop the thread. - February 2026 Kritphong M
+      case _: IOException => ()
     } finally {
       input.foreach(_.close)
       output.foreach(_.close)
@@ -97,31 +99,22 @@ private class CommandThread(serverSocket: CommandServerSocket, callback: Command
 
 class CommandServerSocket {
   val path: String = getSocketPath
-  private var shutdownHookThread: Option[ShutdownHookThread] = None
   private val socket: ServerSocket = makeSocket(getSocketPath)
 
   private def getSocketPath: String = {
     val pid: Long = ProcessHandle.current.pid
 
-    if (isWin) {
-      s"\\\\.\\pipe\\netlogo-$pid"
-    } else {
-      Option(System.getenv("XDG_RUNTIME_DIR")) match {
-        case Some(x) => s"${x}/netlogo-$pid"
-        case None => FileIO.perUserFile(s"netlogo-$pid", false)
-      }
+    Option(System.getenv("XDG_RUNTIME_DIR")) match {
+      case Some(x) => s"${x}/netlogo-$pid"
+      case None => FileIO.perUserFile(s"netlogo-$pid", false)
     }
   }
 
   private def makeSocket(path: String): ServerSocket = {
     println(s"Creating remote command socket at ${path}")
-
-    if (isWin) {
-      new Win32NamedPipeServerSocket(path)
-    } else {
-      shutdownHookThread = Some(addShutdownHook(Files.deleteIfExists(Paths.get(path))))
-      new UnixDomainServerSocket(path)
-    }
+    val file = new File(path)
+    file.deleteOnExit()
+    AFUNIXServerSocket.bindOn(AFUNIXSocketAddress.of(file), true)
   }
 
   def accept(): Socket = {
@@ -130,10 +123,6 @@ class CommandServerSocket {
 
   def close(): Unit = {
     socket.close()
-    shutdownHookThread.foreach({x =>
-      x.run()
-      x.remove()
-    })
   }
 }
 
@@ -151,8 +140,13 @@ class CommandServer(commandLine: CommandLine) {
 
   def stop(): Unit = {
     serverThread.foreach(_.interrupt())
-    serverThread = None
+
+    // Calling interrupt() doesn't stop the accept() call from blocking, so just calling join() here can result in
+    // deadlock. Instead, we can close the socket which will trigger an exception and allow the thread to exit.
+    // - February 2026 Kritphong M
     serverSocket.foreach(_.close())
+    serverThread.foreach(_.join())
+    serverThread = None
     serverSocket = None
   }
 
