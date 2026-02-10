@@ -2,11 +2,15 @@
 
 package org.nlogo.theme
 
+import com.jthemedetecor.OsThemeDetector
+
 import java.awt.Color
 
 import org.nlogo.core.{ ColorizerTheme, TokenType }
 
 object InterfaceColors {
+  private val detector: OsThemeDetector = OsThemeDetector.getDetector
+
   private var theme: ColorTheme = LightTheme
 
   def setTheme(theme: ColorTheme): Unit = {
@@ -15,6 +19,14 @@ object InterfaceColors {
 
   def getTheme: ColorTheme =
     theme
+
+  def systemTheme: ColorTheme = {
+    if (detector.isDark) {
+      DarkTheme
+    } else {
+      LightTheme
+    }
+  }
 
   val Transparent = new Color(0, 0, 0, 0)
 
