@@ -162,6 +162,6 @@ jobs:
 
       - uses: actions/upload-artifact@v6
         with:
-          name: graphics-diffs
-          path: tmp/TestChecksums/*.png
+          name: checksum-diffs
+          path: tmp/TestChecksums/*
           if-no-files-found: ignore

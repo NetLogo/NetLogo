@@ -54,7 +54,15 @@ class ChecksumTester extends AnyFunSuiteEx {
     val expectedWorld = Files.readString(entry.checksumPath.resolve("world.csv")).replace("\r\n", "\n")
     val actualWorld = Checksummer.exportWorld(workspace)
 
-    assert(expectedWorld == actualWorld)
+    if (expectedWorld != actualWorld) {
+      val out = Paths.get(s"tmp/TestChecksums/${entry.checksumPath.getFileName}.csv")
+
+      out.getParent.toFile.mkdirs()
+
+      Files.writeString(out, actualWorld)
+
+      fail("World file did not match expected.")
+    }
 
     val expectedGraphics = Files.readAllBytes(entry.checksumPath.resolve("graphics.png"))
     val actualGraphics = Checksummer.exportGraphics(workspace)
