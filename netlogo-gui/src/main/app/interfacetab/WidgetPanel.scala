@@ -2,7 +2,7 @@
 
 package org.nlogo.app.interfacetab
 
-import java.awt.{ Color => AwtColor, Component, Cursor, Dimension, Graphics, MouseInfo, Point, Rectangle }
+import java.awt.{ Color => AwtColor, Component, Cursor, Dimension, EventQueue, Graphics, MouseInfo, Point, Rectangle }
 import java.awt.event.{ ActionEvent, FocusEvent, FocusAdapter, KeyAdapter, KeyEvent, KeyListener, MouseAdapter,
                         MouseEvent, MouseListener, MouseMotionAdapter, MouseMotionListener }
 import javax.swing.{ AbstractAction, JComponent, JLayeredPane, SwingUtilities }
@@ -848,6 +848,16 @@ class WidgetPanel(val workspace: GUIWorkspace)
     selectedWrappers.foreach(_.selected(false))
   }
 
+  private def raiseWidgetAdded(widget: Widget): Unit = {
+    if (EventQueue.isDispatchThread) {
+      widget.raiseWidgetAdded()
+    } else {
+      EventQueue.invokeAndWait(() => {
+        widget.raiseWidgetAdded()
+      })
+    }
+  }
+
   def addWidget(widget: Widget, x: Int, y: Int, select: Boolean, loadingWidget: Boolean): WidgetWrapper = {
     widget.setWidgetContainer(this)
 
@@ -859,6 +869,8 @@ class WidgetPanel(val workspace: GUIWorkspace)
     // and zooms accordingly - ST 6/16/02
     add(wrapper, JLayeredPane.DEFAULT_LAYER)
     moveToFront(wrapper)
+
+    raiseWidgetAdded(widget)
 
     if (select || ! loadingWidget) {
       wrapper.setSize(wrapper.getPreferredSize)
@@ -883,6 +895,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
       wrapper.originalBounds = wrapper.getBounds
     }
+
     LogManager.widgetAdded(loadingWidget, widget.classDisplayName, widget.displayName)
     wrapper
   }
@@ -895,6 +908,9 @@ class WidgetPanel(val workspace: GUIWorkspace)
     // and zooms accordingly - ST 6/16/02
     add(widgetWrapper, JLayeredPane.DEFAULT_LAYER)
     moveToFront(widgetWrapper)
+
+    raiseWidgetAdded(widgetWrapper.widget)
+
     widgetWrapper.validate()
     widgetWrapper.syncTheme()
     widgetWrapper.setVisible(true)
@@ -917,6 +933,8 @@ class WidgetPanel(val workspace: GUIWorkspace)
     add(wrapper, JLayeredPane.DEFAULT_LAYER)
 
     moveToFront(wrapper)
+
+    raiseWidgetAdded(newWidget)
 
     val mouse = MouseInfo.getPointerInfo.getLocation
 
@@ -960,6 +978,8 @@ class WidgetPanel(val workspace: GUIWorkspace)
       add(wrapper, JLayeredPane.DEFAULT_LAYER)
 
       moveToFront(wrapper)
+
+      raiseWidgetAdded(newWidget)
 
       wrapper.setLocation(start.x + widget.x - min.x, start.y + widget.y - min.y)
       wrapper.setSize(widget.width, widget.height)
