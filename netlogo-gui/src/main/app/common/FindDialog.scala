@@ -43,6 +43,8 @@ object FindDialog extends ThemeSync {
                            instance.owner.getLocation.y + instance.owner.getHeight / 2 -
                            instance.getPreferredSize.height / 2)
       instance.notFoundLabel.setVisible(false)
+
+      instance.pack()
     }
   }
 
@@ -85,6 +87,8 @@ object FindDialog extends ThemeSync {
                                codeInstance.getPreferredSize.width, codeInstance.owner.getLocation.y +
                                codeInstance.owner.getHeight / 2 - codeInstance.getPreferredSize.height / 2)
       codeInstance.notFoundLabel.setVisible(false)
+
+      codeInstance.pack()
     }
   }
 
@@ -201,6 +205,8 @@ class FindDialog(val owner: Frame) extends JDialog(owner, I18N.gui.get("dialog.f
     } else {
       notFoundLabel.setVisible(false)
     }
+
+    pack()
   })
 
   private val prevButton = new DialogButton(false, I18N.gui.get("dialog.find.previous"), () => {
@@ -210,6 +216,8 @@ class FindDialog(val owner: Frame) extends JDialog(owner, I18N.gui.get("dialog.f
     } else {
       notFoundLabel.setVisible(false)
     }
+
+    pack()
   })
 
   private val replaceButton = new DialogButton(false, I18N.gui.get("dialog.find.replace"), () => {
@@ -234,6 +242,8 @@ class FindDialog(val owner: Frame) extends JDialog(owner, I18N.gui.get("dialog.f
     } else {
       notFoundLabel.setVisible(false);
     }
+
+    pack()
   })
 
   private val replaceAllButton = new DialogButton(false, I18N.gui.get("dialog.find.replaceAll"), () => {
@@ -331,6 +341,8 @@ class FindDialog(val owner: Frame) extends JDialog(owner, I18N.gui.get("dialog.f
       case _ =>
         notFoundLabel.setVisible(false)
     }
+
+    pack()
   }
 
   // helper function for centering found or replaced text in the view (Isaac B 7/26/25)
