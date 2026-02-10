@@ -7,7 +7,7 @@ import java.awt.event.{ ActionEvent, MouseAdapter, MouseEvent, MouseMotionAdapte
 import javax.swing.{ AbstractAction, Action, JButton, JLayeredPane, JPanel, JSplitPane }
 
 import org.nlogo.core.I18N
-import org.nlogo.theme.InterfaceColors
+import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 private class SizeButton(expand: Boolean, splitPane: SplitPane) extends JButton with Transparent {
   setBorder(null)
@@ -65,14 +65,12 @@ private class SizeButton(expand: Boolean, splitPane: SplitPane) extends JButton 
   }
 }
 
-private class SplitPaneDivider(splitPane: SplitPane) extends JPanel(null) {
+private class SplitPaneDivider(splitPane: SplitPane) extends JPanel(null) with ThemeSync {
   private val expandButton = new SizeButton(true, splitPane)
   private val contractButton = new SizeButton(false, splitPane)
 
   add(expandButton)
   add(contractButton)
-
-  setBackground(InterfaceColors.splitPaneDividerBackground())
 
   private val dragRadius = 3
 
@@ -129,10 +127,14 @@ private class SplitPaneDivider(splitPane: SplitPane) extends JPanel(null) {
     g2d.setColor(Color.WHITE)
     g2d.fillOval(getWidth / 2 - dragRadius, getHeight / 2 - dragRadius, dragRadius * 2, dragRadius * 2)
   }
+
+  override def syncTheme(): Unit = {
+    setBackground(InterfaceColors.splitPaneDividerBackground())
+  }
 }
 
 class SplitPane(mainComponent: Component, topComponent: Component, commandCenterToggleAction: Option[Action])
-  extends JLayeredPane {
+  extends JLayeredPane with ThemeSync {
 
   private val divider = new SplitPaneDivider(this)
 
@@ -255,5 +257,9 @@ class SplitPane(mainComponent: Component, topComponent: Component, commandCenter
   override def getPreferredSize: Dimension = {
     new Dimension(mainComponent.getPreferredSize.width,
                   mainComponent.getPreferredSize.height + topComponent.getPreferredSize.height + dividerSize)
+  }
+
+  override def syncTheme(): Unit = {
+    divider.syncTheme()
   }
 }

@@ -409,7 +409,7 @@ object ClassicTheme extends ColorTheme {
   override def locationToggleImage: Color = Color.BLACK
   override def commandLineBackground: Color = Color.WHITE
   override def commandOutputBackground: Color = Color.WHITE
-  override def splitPaneDividerBackground: Color = MediumGray
+  override def splitPaneDividerBackground: Color = new Color(204, 204, 204)
   override def speedSliderBarBackground: Color = MediumGray
   override def speedSliderBarBackgroundFilled: Color = MediumBlue
   override def speedSliderThumb: Color = MediumBlue
@@ -573,7 +573,7 @@ object LightTheme extends ColorTheme {
   override def locationToggleImage: Color = Color.BLACK
   override def commandLineBackground: Color = Color.WHITE
   override def commandOutputBackground: Color = Color.WHITE
-  override def splitPaneDividerBackground: Color = MediumGray
+  override def splitPaneDividerBackground: Color = new Color(204, 204, 204)
   override def speedSliderBarBackground: Color = MediumGray
   override def speedSliderBarBackgroundFilled: Color = MediumBlue
   override def speedSliderThumb: Color = MediumBlue
