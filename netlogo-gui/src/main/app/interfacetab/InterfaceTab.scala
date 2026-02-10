@@ -356,5 +356,6 @@ class InterfaceTab(workspace: GUIWorkspace,
     commandCenter.syncTheme()
     locationToggleAction.syncTheme()
     announcementBar.syncTheme()
+    splitPane.syncTheme()
   }
 }
