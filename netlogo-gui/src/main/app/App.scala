@@ -113,17 +113,8 @@ object App {
       org.nlogo.window.VMCheck.detectBadJVMs()
       processCommandLineArguments(args)
 
-      if (App.colorTheme == null) {
-        val defaultTheme = {
-          if (OsThemeDetector.getDetector.isDark) {
-            "dark"
-          } else {
-            "light"
-          }
-        }
-
-        App.colorTheme = NetLogoPreferences.get("colorTheme", defaultTheme)
-      }
+      if (App.colorTheme == null)
+        App.colorTheme = NetLogoPreferences.get("colorTheme2", NetLogoPreferences.get("colorTheme", "system"))
 
       SetSystemLookAndFeel.setSystemLookAndFeel()
 
@@ -131,6 +122,7 @@ object App {
         case "classic" => ClassicTheme
         case "light" => LightTheme
         case "dark" => DarkTheme
+        case _ => InterfaceColors.systemTheme
       })
 
       Splash.beginSplash() // also initializes AWT
@@ -279,8 +271,10 @@ object App {
         colorTheme = nextToken()
 
         colorTheme match {
+          case "system" =>
           case "classic" =>
           case "light" =>
+          case "dark" =>
           case _ => throw new IllegalArgumentException(I18N.errors.getN("themes.unknown", colorTheme))
         }
       }
@@ -368,6 +362,18 @@ class App extends org.nlogo.window.Event.LinkChild
   def quit(): Unit ={ fileManager.quit() }
 
   locally {
+
+    OsThemeDetector.getDetector.registerListener { dark =>
+      if (NetLogoPreferences.get("colorTheme2", "system") == "system") {
+        if (dark) {
+          InterfaceColors.setTheme(DarkTheme)
+        } else {
+          InterfaceColors.setTheme(LightTheme)
+        }
+
+        syncWindowThemes()
+      }
+    }
 
     ToolTipManager.sharedInstance().setDismissDelay(Int.MaxValue)
 
