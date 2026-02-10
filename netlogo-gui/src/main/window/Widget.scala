@@ -10,6 +10,7 @@ import org.nlogo.api.CompilerServices
 import org.nlogo.core.{ NetLogoPreferences, TokenType, Widget => CoreWidget }
 import org.nlogo.swing.{ PopupMenu, RoundedBorderPanel }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
+import org.nlogo.window.Event
 import org.nlogo.window.Events.{ InterfaceModeChangedEvent, WidgetAddedEvent, WidgetErrorEvent, WidgetRemovedEvent }
 
 object Widget {
@@ -214,8 +215,6 @@ abstract class Widget extends JPanel with RoundedBorderPanel with ThemeSync with
   override def addNotify: Unit = {
     super.addNotify
     if (originalFont == null) { originalFont = getFont }
-    org.nlogo.window.Event.rehash()
-    raiseWidgetAdded()
   }
 
   // The methods to raise widget added/removed are here so they can be overridden by child classes.  Some of those
@@ -226,7 +225,9 @@ abstract class Widget extends JPanel with RoundedBorderPanel with ThemeSync with
     new WidgetRemovedEvent(this).raise(this)
   }
   def raiseWidgetAdded(): Unit = {
-    new WidgetAddedEvent(this).raise(this)
+    Event.rehash()
+
+    widgetContainer.foreach(new WidgetAddedEvent(this).raise(_))
   }
 
   def handle(e: InterfaceModeChangedEvent): Unit = {
