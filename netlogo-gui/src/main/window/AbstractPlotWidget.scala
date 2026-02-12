@@ -352,9 +352,9 @@ abstract class AbstractPlotWidget(val plot: Plot, val plotManager: PlotManagerIn
   def anyErrors: Boolean = plotManager.hasErrors(plot)
   def removeAllErrors() = throw new UnsupportedOperationException
   def error(key: Object): Option[Exception] = {
-    if (key == I18N.gui.get("edit.plot.setupCode")) {
+    if (key == "setupCode") {
       plotManager.getPlotSetupError(plot)
-    } else if (key == I18N.gui.get("edit.plot.updateCode")) {
+    } else if (key == "updateCode") {
       plotManager.getPlotUpdateError(plot)
     } else {
       None
