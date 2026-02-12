@@ -117,15 +117,15 @@ object App {
       processCommandLineArguments(args)
 
       if (App.colorTheme == null)
-        App.colorTheme = NetLogoPreferences.get("colorTheme", "system")
+        App.colorTheme = NetLogoPreferences.get("colorTheme2", NetLogoPreferences.get("colorTheme", "system"))
 
       SetSystemLookAndFeel.setSystemLookAndFeel()
 
       InterfaceColors.setTheme(App.colorTheme match {
-        case "system" => InterfaceColors.systemTheme
         case "classic" => ClassicTheme
         case "light" => LightTheme
         case "dark" => DarkTheme
+        case _ => InterfaceColors.systemTheme
       })
 
       Splash.beginSplash() // also initializes AWT
@@ -367,7 +367,7 @@ class App extends org.nlogo.window.Event.LinkChild
   locally {
 
     OsThemeDetector.getDetector.registerListener { dark =>
-      if (NetLogoPreferences.get("colorTheme", "system") == "system") {
+      if (NetLogoPreferences.get("colorTheme2", "system") == "system") {
         if (dark) {
           InterfaceColors.setTheme(DarkTheme)
         } else {
