@@ -126,7 +126,7 @@ class PlotEditPanel(target: PlotWidget, compiler: CompilerServices, colorizer: C
         () => target.setupCode,
         _.foreach(target.setSetupCode),
         () => apply()),
-      compiler, colorizer, true, true, err = () => target.error(I18N.gui.get("edit.plot.setupCode")))
+      compiler, colorizer, true, true, err = () => target.error("setupCode"))
 
   private val updateCode =
     new CodeEditor(
@@ -136,7 +136,7 @@ class PlotEditPanel(target: PlotWidget, compiler: CompilerServices, colorizer: C
         () => target.updateCode,
         _.foreach(target.setUpdateCode),
         () => apply()),
-      compiler, colorizer, true, true, err = () => target.error(I18N.gui.get("edit.plot.updateCode")))
+      compiler, colorizer, true, true, err = () => target.error("updateCode"))
 
   private val editPlotPens =
     new PlotPensEditor(
