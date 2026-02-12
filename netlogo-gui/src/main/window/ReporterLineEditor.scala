@@ -12,8 +12,8 @@ import org.nlogo.swing.ScrollPane
 import scala.util.Try
 
 class ReporterLineEditor(accessor: PropertyAccessor[String], compiler: CompilerServices, colorizer: Colorizer,
-                         optional: Boolean)
-  extends CodeEditor(accessor, compiler, colorizer, false, false) {
+                         optional: Boolean, err: () => Option[Exception] = () => None)
+  extends CodeEditor(accessor, compiler, colorizer, false, false, err = err) {
 
   override lazy val editor = {
     new EditorField(30, EditorConfiguration.getCodeFont, true, compiler, colorizer) with AutoIndentHandler {

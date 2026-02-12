@@ -4,6 +4,7 @@ package org.nlogo.window
 
 import java.awt.{ GridBagConstraints, Insets }
 
+import org.nlogo.agent.SliderConstraint
 import org.nlogo.api.{ CompilerServices, ExtensionManager }
 import org.nlogo.core.I18N
 import org.nlogo.editor.Colorizer
@@ -29,7 +30,7 @@ class SliderEditPanel(target: SliderWidget, compiler: CompilerServices, colorize
         () => target.minimumCode,
         _.foreach(target.setMinimumCode),
         () => apply()),
-      compiler, colorizer, false)
+      compiler, colorizer, false, () => target.error(SliderConstraint.Min.fieldName))
 
   private val minimumLabeled = new LabeledEditor(minimumCode, I18N.gui.get("edit.slider.minmax.message"))
 
@@ -41,9 +42,9 @@ class SliderEditPanel(target: SliderWidget, compiler: CompilerServices, colorize
         () => target.incrementCode,
         _.foreach(target.setIncrementCode),
         () => apply()),
-      compiler, colorizer, false)
+      compiler, colorizer, false, () => target.error(SliderConstraint.Inc.fieldName))
 
-  private val maximumCode =
+  private val maximumCode: ReporterLineEditor =
     new ReporterLineEditor(
       new PropertyAccessor(
         target,
@@ -51,7 +52,7 @@ class SliderEditPanel(target: SliderWidget, compiler: CompilerServices, colorize
         () => target.maximumCode,
         _.foreach(target.setMaximumCode),
         () => apply()),
-      compiler, colorizer, false)
+      compiler, colorizer, false, () => target.error(SliderConstraint.Max.fieldName))
 
   private val value =
     new DoubleEditor(
