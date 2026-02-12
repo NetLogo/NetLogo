@@ -21,7 +21,7 @@ class ThemesPanel(frame: Frame & ThemeSync) extends JPanel(new GridBagLayout) wi
   private val darkButton = new RadioButton(I18N.gui("dark"), () => setTheme(Some(DarkTheme)))
 
   private var startTheme: Option[ColorTheme] = {
-    NetLogoPreferences.get("colorTheme", "system") match {
+    NetLogoPreferences.get("colorTheme2", NetLogoPreferences.get("colorTheme", "system")) match {
       case "system" => None
       case "classic" => Some(ClassicTheme)
       case "light" => Some(LightTheme)
@@ -64,7 +64,7 @@ class ThemesPanel(frame: Frame & ThemeSync) extends JPanel(new GridBagLayout) wi
 
   def init(): Unit = {
     startTheme = {
-      if (NetLogoPreferences.get("colorTheme", "system") == "system") {
+      if (NetLogoPreferences.get("colorTheme2", "system") == "system") {
         None
       } else {
         Some(InterfaceColors.getTheme)
@@ -95,10 +95,10 @@ class ThemesPanel(frame: Frame & ThemeSync) extends JPanel(new GridBagLayout) wi
       case _ => "system"
     }
 
-    if (themeString != NetLogoPreferences.get("colorTheme", "system"))
-      Analytics.preferenceChange("colorTheme", themeString)
+    if (themeString != NetLogoPreferences.get("colorTheme2", "system"))
+      Analytics.preferenceChange("colorTheme2", themeString)
 
-    NetLogoPreferences.put("colorTheme", themeString)
+    NetLogoPreferences.put("colorTheme2", themeString)
 
     frame.syncTheme()
   }
