@@ -18,7 +18,8 @@ import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ CommandCenterInterface, Events => WindowEvents, OutputArea, TextMenuActions, Zoomable }
 import org.nlogo.workspace.{ AbstractWorkspace, ExportOutput }
 
-class CommandCenter(workspace: AbstractWorkspace, showToggle: Boolean) extends JPanel
+class CommandCenter(workspace: AbstractWorkspace, showToggle: Boolean, packSplitPane: () => Unit = () => {})
+  extends JPanel
   with Zoomable with CommandCenterInterface
   with WindowEvents.LoadBeginEvent.Handler
   with WindowEvents.ZoomedEvent.Handler
@@ -115,6 +116,8 @@ class CommandCenter(workspace: AbstractWorkspace, showToggle: Boolean) extends J
     locally {
       val c = new GridBagConstraints
 
+      c.weighty = 1
+      c.anchor = GridBagConstraints.SOUTH
       c.insets = new Insets(3, 6, 3, 6)
 
       southPanel.add(prompt, c)
@@ -136,7 +139,7 @@ class CommandCenter(workspace: AbstractWorkspace, showToggle: Boolean) extends J
         historyPanel.add(Box.createHorizontalStrut(12), BorderLayout.EAST)
 
       c.weightx = 0
-      c.fill = GridBagConstraints.VERTICAL
+      c.fill = GridBagConstraints.NONE
 
       southPanel.add(historyPanel, c)
     }
@@ -155,7 +158,17 @@ class CommandCenter(workspace: AbstractWorkspace, showToggle: Boolean) extends J
       output.getMinimumSize.height +
       southPanel.getMinimumSize.height)
 
-  def repaintPrompt(): Unit = { prompt.repaint() }
+  override def repaintPrompt(): Unit = {
+    prompt.repaint()
+  }
+
+  override def fitPrompt(): Unit = {
+    revalidate()
+    repaint()
+
+    packSplitPane()
+  }
+
   override def requestFocus(): Unit = { getDefaultComponentForFocus().requestFocus() }
   override def requestFocusInWindow(): Boolean = {
     getDefaultComponentForFocus().requestFocusInWindow()

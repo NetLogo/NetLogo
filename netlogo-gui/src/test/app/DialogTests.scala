@@ -9,7 +9,7 @@ import org.nlogo.api.{ LibraryManager, ModelType, Version }
 import org.nlogo.app.tools.{ AgentMonitorManager, LibrariesDialog, ModelsLibraryDialog, PreferencesDialog,
                              PreviewCommandsDialog, PreviewCommandsEditor }
 import org.nlogo.core.LibraryInfo
-import org.nlogo.editor.EditorField
+import org.nlogo.editor.EditorArea
 import org.nlogo.lab.gui.{ LabManager, ManagerDialog }
 import org.nlogo.swing.AutomationUtils
 import org.nlogo.util.GuiTest
@@ -25,7 +25,7 @@ class DialogTests extends AnyFunSuite with BeforeAndAfterAll {
   private lazy val fileManager: FileManager = App.app.fileManager
   private lazy val tabManager: TabManager = App.app.tabManager
   private lazy val monitorManager: AgentMonitorManager = App.app.monitorManager
-  private lazy val commandLine: EditorField = tabManager.interfaceTab.commandCenter.commandLine.textField
+  private lazy val commandLine: EditorArea = tabManager.interfaceTab.commandCenter.commandLine.textField
   private lazy val labManager: LabManager = App.app.labManager
   private lazy val libraryManager: LibraryManager = workspace.getLibraryManager
 

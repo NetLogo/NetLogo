@@ -92,15 +92,32 @@ abstract class AgentMonitor(val workspace: GUIWorkspace, window: JDialog)
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
         setBorder(new CompoundBorder(separator, new EmptyBorder(6, 6, 6, 6)))
 
-        add(prompt)
+        add(new JPanel with Transparent {
+          setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
+
+          add(Box.createVerticalGlue)
+          add(prompt)
+        })
+
         add(Box.createHorizontalStrut(6))
         add(commandLine)
         add(Box.createHorizontalStrut(6))
-        add(historyPrompt)
+
+        add(new JPanel with Transparent {
+          setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
+
+          add(Box.createVerticalGlue)
+          add(historyPrompt)
+        })
       }, BorderLayout.SOUTH)
 
       Some(panel)
     }
+
+  override def fitPrompt(): Unit = {
+    revalidate()
+    repaint()
+  }
 
   // confusing method name, should be "tabKeyPressed" or something - ST 8/16/03
   def cycleAgentType(forward: Boolean): Unit = {
