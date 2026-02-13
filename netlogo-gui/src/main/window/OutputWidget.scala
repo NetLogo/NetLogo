@@ -54,8 +54,9 @@ class OutputWidget extends SingleErrorWidget with CommandCenterInterface
 
   // satisfy CommandCenterInterface, which we must implement in order
   // to be used in NetLogoComponent - ST 9/13/04
-  def repaintPrompt(): Unit ={}
-  def cycleAgentType(forward:Boolean): Unit ={}
+  override def repaintPrompt(): Unit = {}
+  override def fitPrompt(): Unit = {}
+  override def cycleAgentType(forward: Boolean): Unit = {}
 
   override def populateContextMenu(menu: PopupMenu, p: Point): Unit = {
     // at least on Macs, Command-C to copy may not work, so this
