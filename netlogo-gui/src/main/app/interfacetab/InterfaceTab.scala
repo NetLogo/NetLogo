@@ -346,6 +346,18 @@ class InterfaceTab(workspace: GUIWorkspace,
     splitPane.resetToPreferredSizes()
   }
 
+  def sizeToFit(): Unit = {
+    splitPane.getOrientation match {
+      case JSplitPane.HORIZONTAL_SPLIT if commandCenter.getHeight < commandCenter.getPreferredSize.height =>
+        resetSplitPane()
+
+      case JSplitPane.VERTICAL_SPLIT if commandCenter.getWidth < commandCenter.getPreferredSize.width =>
+        resetSplitPane()
+
+      case _ =>
+    }
+  }
+
   def getMinimumWidth: Int =
     toolBar.getMinimumWidth
 
