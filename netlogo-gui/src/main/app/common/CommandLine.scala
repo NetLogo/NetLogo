@@ -8,9 +8,9 @@ import javax.swing.{ KeyStroke, ScrollPaneConstants }
 
 import org.nlogo.agent.{ Agent, AgentSet, OutputObject }
 import org.nlogo.core.{ AgentKind, CompilerException, I18N, Widget => CoreWidget }
-import org.nlogo.editor.{ EditorConfiguration, EditorField }
+import org.nlogo.editor.{ EditorArea, EditorConfiguration }
 import org.nlogo.ide.{ AutoSuggestAction, CodeCompletionPopup }
-import org.nlogo.swing.{ ScrollPane, Transparent }
+import org.nlogo.swing.{ Implicits, ScrollPane, Transparent }, Implicits.thunk2documentListener
 import org.nlogo.theme.InterfaceColors
 import org.nlogo.window.{ Editable, CommandCenterInterface, EditorColorizer, InterfaceMode, JobWidget,
                           Events => WindowEvents }
@@ -52,8 +52,25 @@ class CommandLine(commandCenter: CommandCenterInterface,
   lazy val actionMap = Map(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_SPACE, java.awt.event.InputEvent.CTRL_DOWN_MASK)
                              -> new AutoSuggestAction("auto-suggest", codeCompletionPopup))
 
-  lazy val textField = new EditorField(30, EditorConfiguration.getCodeFont.deriveFont(fontSize.toFloat), true,
-                                       workspace, new EditorColorizer(workspace), actionMap)
+  lazy val textField = new EditorArea(EditorConfiguration.default(1, 30, workspace, new EditorColorizer(workspace))
+                                                         .withFont(EditorConfiguration.getCodeFont)
+                                                         .withFocusTraversalEnabled(true)
+                                                         .withKeymap(actionMap)) {
+    getDocument.addDocumentListener(() => commandCenter.fitPrompt())
+
+    override def setText(text: String): Unit = {
+      super.setText(text)
+
+      resetUndoHistory()
+    }
+
+    override def getPreferredScrollableViewportSize: Dimension =
+      new Dimension(super.getPreferredScrollableViewportSize.width, getRowHeight * (this.getText.count(_ == '\n') + 1))
+
+    override def getPreferredSize: Dimension = {
+      new Dimension(super.getPreferredSize.width, getRowHeight * (this.getText.count(_ == '\n') + 1))
+    }
+  }
 
   agentKind(AgentKind.Observer)
 
@@ -116,6 +133,8 @@ class CommandLine(commandCenter: CommandCenterInterface,
     new WindowEvents.SetInterfaceModeEvent(InterfaceMode.Interact, false).raise(CommandLine.this)
 
     e.getKeyCode match {
+      case KeyEvent.VK_ENTER if e.isShiftDown =>
+        textField.replaceSelection("\n")
       case KeyEvent.VK_ENTER =>
         executeCurrentBuffer()
         e.consume()
