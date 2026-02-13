@@ -123,13 +123,16 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
   /// Message Handlers
   private def handleWidgetControlMessage(value: AnyRef, widgetName: String): Unit = {
     org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
-    if (widgetName == "VIEW") value match {
-      case t: HubNetTurtleStamp => viewWidget.foreach(_.renderer.stamp(t))
-      case ls: HubNetLinkStamp => viewWidget.foreach(_.renderer.stamp(ls))
-      case l: HubNetLine => viewWidget.foreach(_.renderer.drawLine(l))
-      case _ => viewWidget.foreach(_.renderer.clearDrawing())
-    }
-    else if (widgetName=="ALL PLOTS") {
+    if (widgetName == "VIEW") {
+      value match {
+        case t: HubNetTurtleStamp => viewWidget.foreach(_.renderer.stamp(t))
+        case ls: HubNetLinkStamp => viewWidget.foreach(_.renderer.stamp(ls))
+        case l: HubNetLine => viewWidget.foreach(_.renderer.drawLine(l))
+        case _ => viewWidget.foreach(_.renderer.clearDrawing())
+      }
+
+      viewWidget.foreach(_.repaint())
+    } else if (widgetName=="ALL PLOTS") {
       plotManager.clearAll()
       clientGUI.foreach { gui =>
         for (pw <- gui.getInterfaceComponents.collect { case pw: PlotWidget => pw }) {
