@@ -9,7 +9,7 @@ import org.nlogo.api.{ ModelType, Version }
 import org.nlogo.app.tools.{ AgentMonitorManager, LibrariesDialog, ModelsLibraryDialog, PreferencesDialog,
                              PreviewCommandsDialog, PreviewCommandsEditor }
 import org.nlogo.core.LibraryInfo
-import org.nlogo.editor.EditorField
+import org.nlogo.editor.EditorArea
 import org.nlogo.lab.gui.{ LabManager, ManagerDialog }
 import org.nlogo.swing.AutomationUtils
 import org.nlogo.util.GuiTest
@@ -25,7 +25,7 @@ class DialogTests extends AnyFunSuite with BeforeAndAfterAll {
   private lazy val fileManager: FileManager = App.app.fileManager
   private lazy val tabManager: TabManager = App.app.tabManager
   private lazy val monitorManager: AgentMonitorManager = App.app.monitorManager
-  private lazy val commandLine: EditorField = tabManager.interfaceTab.commandCenter.commandLine.textField
+  private lazy val commandLine: EditorArea = tabManager.interfaceTab.commandCenter.commandLine.textField
   private lazy val labManager: LabManager = App.app.labManager
 
   test("Search for standard model in Models Library dialog", GuiTest.Tag) {

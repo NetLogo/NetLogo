@@ -122,7 +122,7 @@ class EditorArea(val configuration: EditorConfiguration)
   private def getColumnWidth: Int =
     getFontMetrics(getFont).charWidth('m')
 
-  private def getRowHeight: Int =
+  protected def getRowHeight: Int =
     getFontMetrics(getFont).getHeight
 
   def resetUndoHistory(): Unit = {

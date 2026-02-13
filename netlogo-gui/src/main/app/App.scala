@@ -393,8 +393,9 @@ class App(args: App.CommandLineArgs) extends LinkChild with Exceptions.Handler w
 
   private val colorizer = new EditorColorizer(workspace)
 
-  private val interfaceTab = new InterfaceTab(workspace, monitorManager, editDialogFactory, colorizer,
-                                              new CommandCenter(workspace, true))
+  private val interfaceTab: InterfaceTab = new InterfaceTab(workspace, monitorManager, editDialogFactory, colorizer,
+                                                            new CommandCenter(workspace, true,
+                                                                              interfaceTab.sizeToFit))
 
   val modelLoader = FileFormat.standardAnyLoader(false, workspace, true)
 
