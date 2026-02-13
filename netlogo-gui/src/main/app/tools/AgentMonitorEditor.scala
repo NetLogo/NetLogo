@@ -2,7 +2,7 @@
 
 package org.nlogo.app.tools
 
-import java.awt.{ BorderLayout, FlowLayout, GridBagConstraints, GridBagLayout, Insets, Rectangle }
+import java.awt.{ BorderLayout, Dimension, FlowLayout, GridBagConstraints, GridBagLayout, Insets, Rectangle }
 import java.awt.event.{ FocusEvent, FocusListener, KeyEvent, KeyListener }
 import java.util.Locale
 import javax.swing.{ JLabel, JPanel, ScrollPaneConstants }
@@ -421,6 +421,9 @@ with ThemeSync {
         throw new org.nlogo.api.AgentException(I18N.gui.get("tools.agentMonitor.editor.edpectedLinkBreed"))
       breed
     }
+
+  override def getPreferredSize: Dimension =
+    editor.getPreferredSize
 
   /// load and save are inapplicable
 
