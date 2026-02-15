@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <model version="NetLogo 7.0.0-beta2" snapToGrid="true">
-  <code><![CDATA[globals [ max-sheep ]  ; don't let the sheep population grow too large
+  <code><![CDATA[
+globals [ max-sheep ]  ; don't let the sheep population grow too large
 
 ; Sheep and wolves are both breeds of turtles
 breed [ sheep a-sheep ]  ; sheep is its own plural, so we use "a-sheep" as the singular
@@ -151,7 +152,8 @@ end
 
 
 ; Copyright 1997 Uri Wilensky.
-; See Info tab for full copyright and license.]]></code>
+; See Info tab for full copyright and license.
+]]></code>
   <widgets>
     <view x="355" wrappingAllowedX="true" y="10" frameRate="30.0" minPycor="-25" height="514" showTickCounter="true" patchSize="10.0" fontSize="14" wrappingAllowedY="true" width="514" tickCounterLabel="ticks" maxPycor="25" updateMode="1" maxPxcor="25" minPxcor="-25"></view>
     <slider x="5" step="1" y="60" max="250" display="initial-number-sheep" height="33" min="0" direction="Horizontal" default="100.0" variable="initial-number-sheep" width="174" sizeVersion="0"></slider>
@@ -190,7 +192,8 @@ end
       <choice type="string" value="sheep-wolves-grass"></choice>
     </chooser>
   </widgets>
-  <info><![CDATA[## WHAT IS IT?
+  <info><![CDATA[
+## WHAT IS IT?
 
 This model explores the stability of predator-prey ecosystems. Such a system is called unstable if it tends to result in extinction for one or more species involved.  In contrast, a system is stable if it tends to maintain itself over time, despite fluctuations in population sizes.
 
@@ -367,7 +370,8 @@ This model was created as part of the project: CONNECTED MATHEMATICS: MAKING SEN
 
 This model was converted to NetLogo as part of the projects: PARTICIPATORY SIMULATIONS: NETWORK-BASED DESIGN FOR SYSTEMS LEARNING IN CLASSROOMS and/or INTEGRATED SIMULATION AND MODELING ENVIRONMENT. The project gratefully acknowledges the support of the National Science Foundation (REPP & ROLE programs) -- grant numbers REC #9814682 and REC-0126227. Converted from StarLogoT to NetLogo, 2000.
 
-<!-- 1997 2000 -->]]></info>
+<!-- 1997 2000 -->
+]]></info>
   <turtleShapes>
     <shape name="default" rotatable="true" editableColorIndex="0">
       <polygon color="-1920102913" filled="true" marked="true">

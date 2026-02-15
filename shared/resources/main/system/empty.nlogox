@@ -4,7 +4,8 @@
   <widgets>
     <view x="368" maxPycor="16" updateMode="0" wrappingAllowedX="true" y="10" frameRate="30.0" minPycor="-16" height="434" showTickCounter="true" patchSize="13.0" fontSize="10" wrappingAllowedY="true" width="433" maxPxcor="16" minPxcor="-16"></view>
   </widgets>
-  <info>## WHAT IS IT?
+  <info>
+## WHAT IS IT?
 
 (a general understanding of what the model is trying to show or explain)
 
