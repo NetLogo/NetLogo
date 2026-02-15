@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <model version="NetLogo 7.0.0-beta2" snapToGrid="false">
-  <code>to test-code
+  <code>
+to test-code
   print "hello from the code"
-end</code>
+end
+</code>
   <widgets>
     <view x="435" wrappingAllowedX="true" y="19" frameRate="30.0" minPycor="-16" height="434" showTickCounter="true" patchSize="13.0" fontSize="10" wrappingAllowedY="true" width="433" tickCounterLabel="ticks" maxPycor="16" updateMode="0" maxPxcor="16" minPxcor="-16"></view>
     <button x="12" actionKey="P" y="15" height="35" disableUntilTicks="false" forever="false" kind="Observer" display="print-test" width="83" sizeVersion="0">print "test"</button>
@@ -44,7 +46,8 @@ string</input>
     <output x="13" y="383" height="54" fontSize="8" width="240"></output>
     <note x="214" y="181" backgroundDark="-13791810" fontSize="25" width="150" markdown="false" height="42" textColorDark="-1" textColorLight="-16777216" backgroundLight="-13791810">nota bene</note>
   </widgets>
-  <info>## WHAT IS IT?
+  <info>
+## WHAT IS IT?
 
 (a general understanding of what the model is trying to show or explain)
 
@@ -78,7 +81,8 @@ string</input>
 
 ## CREDITS AND REFERENCES
 
-(a reference to the model's URL on the web if it has one, as well as any other necessary credits, citations, and links)</info>
+(a reference to the model's URL on the web if it has one, as well as any other necessary credits, citations, and links)
+</info>
   <turtleShapes>
     <shape name="default" rotatable="true" editableColorIndex="0">
       <polygon color="-1920102913" filled="true" marked="true">
