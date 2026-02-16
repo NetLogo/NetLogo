@@ -8,7 +8,7 @@ import java.io.IOException
 import org.nlogo.api.FileIO
 import org.nlogo.app.common.{ Dialogs, Events => AppEvents, TabsInterface }
 import org.nlogo.core.I18N
-import org.nlogo.ide.FocusedOnlyAction
+import org.nlogo.editor.FocusedOnlyAction
 import org.nlogo.swing.{ CloseableTab, FileDialog => SwingFileDialog, UserAction }
 import org.nlogo.util.PathUtils
 import org.nlogo.window.{ Events => WindowEvents, ExternalFileInterface }

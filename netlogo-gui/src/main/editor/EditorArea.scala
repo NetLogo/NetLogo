@@ -64,6 +64,7 @@ class EditorArea(val configuration: EditorConfiguration)
 
     getKeymap.addActionForKeyStroke(keystroke(KeyEvent.VK_Z, mask), UndoManager.undoAction)
     getKeymap.addActionForKeyStroke(keystroke(KeyEvent.VK_Y, mask), UndoManager.redoAction)
+    getKeymap.addActionForKeyStroke(keystroke(KeyEvent.VK_SEMICOLON, mask), new ToggleComments)
 
     configuration.configureEditorArea(this)
 

@@ -6,7 +6,7 @@ import java.awt.event.{ ActionEvent, KeyEvent }
 import javax.swing.text.{ Document, JTextComponent }
 
 import org.nlogo.core.I18N
-import org.nlogo.editor.{ DocumentAction, RichDocument }, RichDocument._
+import org.nlogo.editor.{ DocumentAction, FocusedOnlyAction, RichDocument }, RichDocument._
 import org.nlogo.swing.UserAction,
   UserAction.{ EditCategory, EditFormatGroup, KeyBindings, MenuAction },
     KeyBindings.keystroke
