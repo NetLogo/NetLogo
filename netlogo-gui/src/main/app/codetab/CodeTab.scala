@@ -15,8 +15,7 @@ import org.fife.ui.rsyntaxtextarea.{ Style, SyntaxScheme, TokenTypes }
 import org.nlogo.agent.Observer
 import org.nlogo.app.common.{CodeToHtml, EditorFactory, FindDialog, MenuTab, TabsInterface, Events => AppEvents}
 import org.nlogo.core.{ AgentKind, CompilerException, I18N }
-import org.nlogo.editor.{ AdvancedEditorArea, DumbIndenter, EditorAreaWrapper, SmartIndenter }
-import org.nlogo.ide.FocusedOnlyAction
+import org.nlogo.editor.{ AdvancedEditorArea, DumbIndenter, EditorAreaWrapper, FocusedOnlyAction, SmartIndenter }
 import org.nlogo.swing.{ Button, CheckBox, PrinterManager, ToolBar, ToolBarActionButton, UserAction,
                          Printable => NlogoPrintable, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }

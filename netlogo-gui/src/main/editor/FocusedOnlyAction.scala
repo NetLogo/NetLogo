@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.ide
+package org.nlogo.editor
 
 import java.awt.event.{ FocusEvent, FocusListener }
 import org.nlogo.editor.{ AbstractEditorArea, InstallableAction }
