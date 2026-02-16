@@ -9,8 +9,9 @@ import javax.swing.KeyStroke
 import org.nlogo.api.{ CompilerServices, Version }
 import org.nlogo.core.NetLogoPreferences
 import org.nlogo.ide.{ AutoSuggestAction, CodeCompletionPopup, JumpToDeclarationAction,
-  NetLogoFoldParser, NetLogoTokenMakerFactory, ShiftActions, ShowUsageBox, ShowUsageBoxAction, ToggleComments }
-import org.nlogo.editor.{ AbstractEditorArea, AdvancedEditorArea, EditorConfiguration, EditorScrollPane }
+  NetLogoFoldParser, NetLogoTokenMakerFactory, ShiftActions, ShowUsageBox, ShowUsageBoxAction }
+import org.nlogo.editor.{ AbstractEditorArea, AdvancedEditorArea, EditorConfiguration, EditorScrollPane,
+                          ToggleComments }
 import org.nlogo.nvm.ExtensionManager
 import org.nlogo.swing.UserAction.MenuAction
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }

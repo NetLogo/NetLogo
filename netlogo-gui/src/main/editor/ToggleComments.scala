@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.ide
+package org.nlogo.editor
 
 import java.awt.event.{ ActionEvent, KeyEvent }
 import javax.swing.text.{ Document, JTextComponent }

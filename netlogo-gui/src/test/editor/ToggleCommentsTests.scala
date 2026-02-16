@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.ide
+package org.nlogo.editor
 
 import javax.swing.JTextArea
 
