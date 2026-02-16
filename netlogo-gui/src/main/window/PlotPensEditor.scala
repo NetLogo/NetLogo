@@ -14,7 +14,7 @@ import javax.swing.table.{ DefaultTableCellRenderer, AbstractTableModel, TableCe
 import org.nlogo.api.CompilerServices
 import org.nlogo.awt.Hierarchy
 import org.nlogo.core.{ CompilerException, I18N }
-import org.nlogo.editor.{ Colorizer, EditorConfiguration, EditorField }
+import org.nlogo.editor.{ Colorizer, EditorArea, EditorConfiguration }
 import org.nlogo.plot.{ Plot, PlotManagerInterface, PlotPen }
 import org.nlogo.swing.{ Button, Popup, ScrollPane, Transparent, Utils }
 import org.nlogo.theme.InterfaceColors
@@ -373,9 +373,9 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], compiler: Compil
     }
 
     class CodeCellFactory extends AbstractCellEditor with TableCellRenderer with TableCellEditor {
-      private val editors = ArrayBuffer[EditorField]()
+      private val editors = ArrayBuffer[EditorComponent]()
 
-      private var lastEditor: Option[EditorField] = None
+      private var lastEditor: Option[EditorArea] = None
 
       setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR))
 
@@ -385,28 +385,38 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], compiler: Compil
 
       override def getTableCellEditorComponent(table: JTable, value: AnyRef, isSelected: Boolean, row: Int,
                                                col: Int): Component = {
-        val editor = editors(row)
+        val component = editors(row)
 
-        lastEditor = Option(editor)
+        lastEditor = Option(component.editor)
 
-        editor
+        component
       }
 
       override def getCellEditorValue: String =
         lastEditor.fold("")(_.getText)
 
       def addEditor(text: String): Unit = {
-        val editor = new EditorField(30, EditorConfiguration.getCodeFont, true, compiler, colorizer) {
+        val editor = new EditorArea(EditorConfiguration.default(1, 30, compiler, colorizer)) {
           setBackground(InterfaceColors.textAreaBackground())
           setCaretColor(InterfaceColors.textAreaText())
           setText(text)
+
+          override def setText(text: String): Unit = {
+            super.setText(text)
+
+            resetUndoHistory()
+          }
         }
 
-        editors += editor
+        editors += EditorComponent(editor)
       }
 
       def removeEditor(row: Int): Unit = {
         editors.remove(row)
+      }
+
+      private case class EditorComponent(editor: EditorArea) extends ScrollPane(editor) {
+        setBorder(null)
       }
     }
 
@@ -471,23 +481,14 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], compiler: Compil
     var lastColumn = 0
     private class RowListener extends ListSelectionListener {
       def valueChanged(event: ListSelectionEvent): Unit = {
-        if (!event.getValueIsAdjusting && getSelectedRow != -1) {
-          if(table.getSelectedColumn == 2) {
-            if(model.pens(getSelectedRow).updateCode.contains("\n"))
-              openAdvancedPenEditor(model.pens(getSelectedRow))
-          }
+        if (!event.getValueIsAdjusting && getSelectedRow != -1)
           lastColumn = table.getSelectedColumn
-        }
       }
     }
     private class ColumnListener extends ListSelectionListener {
       def valueChanged(event: ListSelectionEvent): Unit = {
-        if (!event.getValueIsAdjusting && getSelectedRow != -1) {
-          if(table.getSelectedColumn == 2 && lastColumn != 2)
-            if(model.pens(getSelectedRow).updateCode.contains("\n"))
-              openAdvancedPenEditor(model.pens(getSelectedRow))
+        if (!event.getValueIsAdjusting && getSelectedRow != -1)
           lastColumn = table.getSelectedColumn
-        }
       }
     }
   }
