@@ -3,7 +3,7 @@
 package org.nlogo.core.model
 
 import org.nlogo.core.{ DummyView, ExternalResource, LiteralParser, Model, ModelSettings, Section, WorldDimensions,
-                        WorldDimensions3D, XMLElement }
+                        VersionUtils, WorldDimensions3D, XMLElement }
 
 import scala.util.{ Failure, Try }
 
@@ -34,6 +34,9 @@ object ModelXMLLoader {
         import Model.{ defaultCode, defaultTurtleShapes, defaultLinkShapes }
 
         val version = root("version")
+
+        val stripNewlines = VersionUtils.numericValue(version) >= VersionUtils.numericValue("NetLogo 7.1.0-internal0")
+
         val snapToGrid = root("snapToGrid", "false").toBoolean
 
         val settings = new Section("org.nlogo.modelsection.modelsettings", ModelSettings(snapToGrid))
@@ -47,10 +50,18 @@ object ModelXMLLoader {
             (model.map(_.copy(widgets = children.map(WidgetXMLLoader.readWidget(_, parser)).flatten)), sections)
 
           case ((model, sections), XMLElement("info", _, text, _)) =>
-            (model.map(_.copy(info = text)), sections)
+            if (stripNewlines) {
+              (model.map(_.copy(info = text.stripPrefix("\n").stripSuffix("\n"))), sections)
+            } else {
+              (model.map(_.copy(info = text)), sections)
+            }
 
           case ((model, sections), XMLElement("code", _, text, _)) =>
-            (model.map(_.copy(code = text)), sections)
+            if (stripNewlines) {
+              (model.map(_.copy(code = text.stripPrefix("\n").stripSuffix("\n"))), sections)
+            } else {
+              (model.map(_.copy(code = text)), sections)
+            }
 
           case ((model, sections), el @ XMLElement("turtleShapes", _, _, _)) =>
             (model.map(_.copy(turtleShapes = el.getChildren("shape").map(ShapeXMLLoader.readShape))), sections)
@@ -91,7 +102,7 @@ object ModelXMLLoader {
     )
 
     writer.startElement("code")
-    writer.escapedText(model.code, true)
+    writer.escapedText(s"\n${model.code}\n", true)
     writer.endElement("code")
 
     writer.startElement("widgets")
@@ -99,7 +110,7 @@ object ModelXMLLoader {
     writer.endElement("widgets")
 
     writer.startElement("info")
-    writer.escapedText(model.info, true)
+    writer.escapedText(s"\n${model.info}\n", true)
     writer.endElement("info")
 
     writer.element(XMLElement("turtleShapes", Map(), "", model.turtleShapes.map(ShapeXMLLoader.writeShape).toList))
