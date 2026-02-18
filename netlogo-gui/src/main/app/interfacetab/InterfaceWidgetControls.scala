@@ -12,8 +12,8 @@ import org.nlogo.core.I18N
 import org.nlogo.swing.{ DropdownArrow, MenuItem, MouseUtils, PopupMenu, RoundedBorderPanel, ToolBarToggleButton,
                          Transparent, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
-import org.nlogo.window.{ Editable, EditDialogFactory, Events => WindowEvents, GUIWorkspace, InterfaceMode, JobWidget,
-                          Widget, WidgetInfo, WorldViewSettings }
+import org.nlogo.window.{ Editable, EditDialog, EditDialogFactory, Events => WindowEvents, GUIWorkspace, InterfaceMode,
+                          JobWidget, Widget, WidgetInfo, WorldViewSettings }
 
 import scala.collection.mutable.HashSet
 
@@ -151,7 +151,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
     e.settings match {
       case wvs: WorldViewSettings =>
         wPanel.haltIfRunning()
-        wPanel.editWidgetFinished(wvs, dialogFactory.canceled(frame, wvs))
+        wPanel.editWidgetFinished(wvs, new EditDialog(frame, wvs, wvs.editPanel3D, true).canceled)
 
       case _ =>
     }
