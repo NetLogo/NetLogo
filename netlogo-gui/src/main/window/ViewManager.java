@@ -13,21 +13,29 @@ public class ViewManager {
   }
 
   public void setPrimary(LocalViewInterface view) {
-    views.remove(view);
-    views.addFirst(view);
+    synchronized (views) {
+      views.remove(view);
+      views.addFirst(view);
+    }
   }
 
   public void setSecondary(ViewInterface view) {
-    views.remove(view);
-    views.add(1, view);
+    synchronized (views) {
+      views.remove(view);
+      views.add(1, view);
+    }
   }
 
   public void add(ViewInterface v) {
-    views.addLast(v);
+    synchronized (views) {
+      views.addLast(v);
+    }
   }
 
   public void remove(ViewInterface v) {
-    views.remove(v);
+    synchronized (views) {
+      views.remove(v);
+    }
   }
 
   void paintImmediately(boolean force) {
@@ -37,8 +45,10 @@ public class ViewManager {
   }
 
   void framesSkipped() {
-    for (ViewInterface v : views) {
-      v.framesSkipped();
+    synchronized (views) {
+      for (ViewInterface v : views) {
+        v.framesSkipped();
+      }
     }
   }
 
@@ -61,7 +71,7 @@ public class ViewManager {
     try {
       org.nlogo.awt.EventQueue.invokeAndWait(updateRunnable);
     } catch (InterruptedException ex) {
-      getPrimary().repaint();
+      views.get(0).repaint();
     }
   }
 
@@ -101,7 +111,7 @@ public class ViewManager {
         return view.mouseXCor();
       }
     }
-    return getPrimary().mouseXCor();
+    return views.get(0).mouseXCor();
   }
 
   public double mouseYCor() {
@@ -110,7 +120,7 @@ public class ViewManager {
         return view.mouseYCor();
       }
     }
-    return getPrimary().mouseYCor();
+    return views.get(0).mouseYCor();
   }
 
   public void resetMouseCors() {
