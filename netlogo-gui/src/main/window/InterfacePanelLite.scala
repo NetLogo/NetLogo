@@ -2,7 +2,7 @@
 
 package org.nlogo.window;
 
-import java.awt.{ Component, Dimension, Rectangle }
+import java.awt.{ Component, Dimension, EventQueue, Rectangle }
 import java.awt.event.{ FocusListener, FocusEvent,
   KeyEvent, KeyAdapter, MouseAdapter, MouseEvent }
 import java.awt.image.BufferedImage
@@ -182,6 +182,15 @@ class InterfacePanelLite(val viewWidget: ViewWidgetInterface, compiler: Compiler
     widget.addPopupListeners()
     add(widget, JLayeredPane.DEFAULT_LAYER)
     moveToFront(widget)
+
+    if (EventQueue.isDispatchThread) {
+      widget.raiseWidgetAdded()
+    } else {
+      EventQueue.invokeAndWait(() => {
+        widget.raiseWidgetAdded()
+      })
+    }
+
     widget.setLocation(x, y)
     widget.validate()
     widget.syncTheme()
