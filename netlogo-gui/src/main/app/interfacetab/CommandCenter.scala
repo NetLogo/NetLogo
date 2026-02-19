@@ -9,7 +9,7 @@ import javax.swing.{ AbstractAction, Action, Box, JButton, JLabel, JPanel }
 import javax.swing.border.EmptyBorder
 
 import org.nlogo.api.Exceptions
-import org.nlogo.app.common.{ CommandLine, HistoryPrompt, LinePrompt }
+import org.nlogo.app.common.{ CommandLine, CommandServer, HistoryPrompt, LinePrompt }
 import org.nlogo.awt.{ Hierarchy, UserCancelException }
 import org.nlogo.core.{ AgentKind, I18N }
 import org.nlogo.swing.{ FileDialog => SwingFileDialog, ModalProgressTask, MenuItem, PopupMenu, RichAction,
@@ -27,6 +27,7 @@ class CommandCenter(workspace: AbstractWorkspace, showToggle: Boolean, packSplit
 
   // true = echo commands to output
   val commandLine = new CommandLine(this, true, 12, workspace)
+  val commandServer = new CommandServer(commandLine)
   private val prompt = new LinePrompt(commandLine, true)
   private val northPanel = new JPanel(new GridBagLayout)
   private val southPanel = new JPanel

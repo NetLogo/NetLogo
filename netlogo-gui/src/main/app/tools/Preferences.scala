@@ -199,6 +199,14 @@ object Preferences {
     }
   }
 
+  class EnableRemoteCommands(tabs: TabsInterface)
+    extends BooleanPreference("enableRemoteCommands", None, false) {
+
+    override def onSelect(selected: Boolean): Unit = {
+      tabs.remoteCommandsEnabled = selected
+    }
+  }
+
   object IsLoggingEnabled extends BooleanPreference("loggingEnabled", Some(RequiredAction.Restart), false)
 
   class LogDirectory(val frame: Frame) extends StringPreference("logDirectory", Some(RequiredAction.Restart), "") {

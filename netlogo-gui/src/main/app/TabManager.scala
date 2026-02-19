@@ -336,10 +336,23 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     getExternalFileTabs.foreach(_.setIncludedFilesShown(visible))
   }
 
+  def remoteCommandsEnabled: Boolean = interfaceTab.commandCenter.commandServer.running
+  def remoteCommandsEnabled_=(b: Boolean): Unit = {
+    if (b) {
+      interfaceTab.commandCenter.commandServer.start()
+    } else {
+      interfaceTab.commandCenter.commandServer.stop()
+    }
+  }
+
+  remoteCommandsEnabled = getRemoteCommands
+
   def watchingFiles: Boolean = watcherThread != null
   def watchingFiles_=(value: Boolean): Unit = setWatchingFiles(value)
 
   watchingFiles = getAutoReload
+
+  def getRemoteCommands: Boolean = NetLogoPreferences.get("enableRemoteCommands", "false").toBoolean
 
   def getAutoReload: Boolean = NetLogoPreferences.get("reloadOnExternalChanges", "false").toBoolean
 
