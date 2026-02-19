@@ -1,5 +1,7 @@
 import org.scalajs.linker.interface.ESVersion
 
+import java.nio.file.Paths
+
 import sbt.util.CacheImplicits.StringJsonFormat
 
 import sbtcrossproject.CrossPlugin.autoImport.{ crossProject, CrossType }
@@ -36,7 +38,13 @@ lazy val scalaSettings = Seq(
     "-deprecation -unchecked -feature -encoding us-ascii -release 11 -Xfatal-warnings -Wunused:linted"
       .split(" ").toSeq,
   // Silence warnings from generated sources --Jason B. (1/26/26)
-  scalacOptions += s"-Wconf:src=${(Compile / sourceManaged).value.getAbsolutePath}/.*:silent"
+  scalacOptions += {
+    val current = Paths.get(".").toAbsolutePath
+    val managed = (Compile / sourceManaged).value.toPath
+    val relative = current.relativize(managed).toString.replace("\\", "/")
+
+    s"-Wconf:src=$relative/.*:silent"
+  }
 )
 
 // These settings are common to all builds that compile against Java
