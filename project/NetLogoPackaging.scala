@@ -43,7 +43,7 @@ object NetLogoPackaging {
           new ExtensionDir((netlogo / extensionRoot).value, platform, arch),
           new ModelsDir((netlogo / modelsDirectory).value),
           new DocsDir((netlogo / docsRoot).value),
-          new BehaviorsearchDir((behaviorsearchProject / baseDirectory).value, platform)
+          new BehaviorSearchDir((behaviorsearchProject / baseDirectory).value, platform)
         ) ++ (platform match {
           case "windows" => Seq(new NativesDir(nlDir / "natives", "windows-amd64", "windows-i586"))
           case "linux"   => Seq(new NativesDir(nlDir / "natives", "linux-amd64", "linux-i586"))
@@ -229,9 +229,9 @@ object NetLogoPackaging {
         configDir / "NetLogo.png",
         configDir / "NetLogo3D.png",
         configDir / "HubNetClient.png",
-        configDir / "Behaviorsearch.png",
+        configDir / "BehaviorSearch.png",
         configDir / "Model.png",
-        configDir / "BehaviorsearchModel.png"
+        configDir / "BehaviorSearchModel.png"
       )
 
       icons.foreach(i => FileActions.copyFile(i, buildDir / i.getName))
@@ -249,7 +249,7 @@ object NetLogoPackaging {
         // 2022
         new NetLogo3dLauncher(version, "NetLogo3D.png", extraJavaOptions) { override def id: String = "NetLogo3D" }
       , new HubNetClientLauncher(version, "HubNetClient.png", extraJavaOptions) { override def id: String = "HubNetClient" }
-      , new BehaviorsearchLauncher(version, "Behaviorsearch.png", extraJavaOptions ++ Seq(
+      , new BehaviorSearchLauncher(version, "BehaviorSearch.png", extraJavaOptions ++ Seq(
           "-Dbsearch.appfolder=$APPDIR/../../behaviorsearch",
           "-Dbsearch.startupfolder=$APPDIR/../.."
         ))
@@ -295,10 +295,10 @@ object NetLogoPackaging {
         configDir / "NetLogo.png",
         configDir / "NetLogo3D.png",
         configDir / "HubNetClient.png",
-        configDir / "Behaviorsearch.png",
+        configDir / "BehaviorSearch.png",
         configDir / "Model.png",
         configDir / "ModelOld.png",
-        configDir / "BehaviorsearchModel.png"
+        configDir / "BehaviorSearchModel.png"
       )
 
       icons.foreach { icon =>
@@ -329,7 +329,7 @@ object NetLogoPackaging {
         }
       , new NetLogo3dLauncher(version, "NetLogo3D.ico", extraJavaOptions)
       , new HubNetClientLauncher(version, "HubNetClient.ico", extraJavaOptions)
-      , new BehaviorsearchLauncher(version, "Behaviorsearch.ico", extraJavaOptions)
+      , new BehaviorSearchLauncher(version, "BehaviorSearch.ico", extraJavaOptions)
       )
 
       val inputDir  = JavaPackager.setupAppImageInput(log, version, buildJDK, buildDir, netLogoJar, dependencies)
@@ -374,10 +374,10 @@ object NetLogoPackaging {
         configDir / "NetLogo.png",
         configDir / "NetLogo3D.png",
         configDir / "HubNetClient.png",
-        configDir / "Behaviorsearch.png",
+        configDir / "BehaviorSearch.png",
         configDir / "Model.png",
         configDir / "ModelOld.png",
-        configDir / "BehaviorsearchModel.png"
+        configDir / "BehaviorSearchModel.png"
       )
 
       icons.foreach { icon =>
@@ -454,17 +454,17 @@ object NetLogoPackaging {
         ) {
           override def name = s"HubNet Client ${this.version}"
         }
-      , new BehaviorsearchLauncher(
+      , new BehaviorSearchLauncher(
           version
-        , "Behaviorsearch.icns"
+        , "BehaviorSearch.icns"
         , extraJavaOptions ++ Seq(
-            "-Xdock:name=Behaviorsearch"
+            "-Xdock:name=BehaviorSearch"
           , "-Dorg.nlogo.mac.appClassName=bsearch.fx.MainGUIEntry"
           , "-Dbsearch.appfolder={{{ROOTDIR}}}/behaviorsearch"
           , "-Dbsearch.startupfolder={{{ROOTDIR}}}"
           )
         ) {
-          override def name = s"Behaviorsearch ${this.version}"
+          override def name = s"BehaviorSearch ${this.version}"
         }
       )
 
@@ -486,7 +486,7 @@ object NetLogoPackaging {
       FileActions.copyFile(buildDir / "Model.icns", destDir / s"${launchers(1).name}.app" / "Contents" / "Resources" / "Model.icns")
       FileActions.copyFile(buildDir / "ModelOld.icns", destDir / s"${launchers(0).name}.app" / "Contents" / "Resources" / "ModelOld.icns")
       FileActions.copyFile(buildDir / "ModelOld.icns", destDir / s"${launchers(1).name}.app" / "Contents" / "Resources" / "ModelOld.icns")
-      FileActions.copyFile(buildDir / "BehaviorsearchModel.icns", destDir / s"${launchers(3).name}.app" / "Contents" / "Resources" / "BehaviorsearchModel.icns")
+      FileActions.copyFile(buildDir / "BehaviorSearchModel.icns", destDir / s"${launchers(3).name}.app" / "Contents" / "Resources" / "BehaviorSearchModel.icns")
 
       val appImageDir = destDir / s"NetLogo ${version}"
       FileActions.remove(appImageDir)

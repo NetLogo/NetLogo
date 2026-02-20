@@ -194,10 +194,10 @@ object PackageWinAggregate {
           "launchArgs" -> """--launch "%1""""
         ).asJava,
         Map[String, AnyRef](
-          "componentFriendlyName" -> "Behaviorsearch",
-          "noSpaceName"           -> "Behaviorsearch",
-          "componentId"           -> "Behaviorsearch.exe",
-          "componentFileName"     -> "Behaviorsearch.exe",
+          "componentFriendlyName" -> "BehaviorSearch",
+          "noSpaceName"           -> "BehaviorSearch",
+          "componentId"           -> "BehaviorSearch.exe",
+          "componentFileName"     -> "BehaviorSearch.exe",
           "lowerDashName"         -> "behaviorsearch",
           "componentGuid"         -> archUUIDs("behaviorSearchExecutableId"),
           "desktopShortcutId"     -> archUUIDs("behaviorSearchDesktopShortcutId"),
@@ -206,8 +206,8 @@ object PackageWinAggregate {
           "fileAssociations"      -> Array(
             Map(
               "extension" -> "bsearch",
-              "icon"      -> "BehaviorsearchExperimentIcon",
-              "type"      -> "Behaviorsearch Experiment"
+              "icon"      -> "BehaviorSearchExperimentIcon",
+              "type"      -> "BehaviorSearch Experiment"
             ).asJava
           ),
           "launchArgs" -> """"%1""""

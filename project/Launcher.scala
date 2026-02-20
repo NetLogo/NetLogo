@@ -72,7 +72,7 @@ class HubNetClientLauncher(
   def mainClass: String = customMainClass.getOrElse("org.nlogo.hubnet.client.App")
 }
 
-class BehaviorsearchLauncher(
+class BehaviorSearchLauncher(
   val version: String
 , val icon: String
 , extraJavaOptions: Seq[String] = Seq()
@@ -80,10 +80,10 @@ class BehaviorsearchLauncher(
 , customMainJar: Option[String] = None
 , customMainClass: Option[String] = None
 ) extends Launcher {
-  def id: String = "Behaviorsearch"
+  def id: String = "BehaviorSearch"
   def mustachePrefix: String = "behaviorsearch-launcher"
   def javaOptions: Seq[String] = Seq(
-    // Behaviorsearch has issues with the post Java 8 GCs, particularly on 32-bit systems.
+    // BehaviorSearch has issues with the post Java 8 GCs, particularly on 32-bit systems.
     // -Jeremy B September 2022
     "-XX:MaxRAMPercentage=50"
   , "-XX:+UseParallelGC"

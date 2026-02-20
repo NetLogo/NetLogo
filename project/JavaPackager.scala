@@ -22,7 +22,7 @@ Oh hello.  We use `jpackage` to create "app images" on macOS, Windows, and Linux
 are the base binaries/executables/directories that we take to finalize a distribution
 package.
 
-Netlogo bundles 4 apps, NetLogo, NetLogo 3D, HubNet Client, and Behaviorsearch.
+Netlogo bundles 4 apps, NetLogo, NetLogo 3D, HubNet Client, and BehaviorSearch.
 
 For Linux and Windows we use the `--add-launcher` flag to specify the settings for the
 extra 3 launchers beyond NetLogo.

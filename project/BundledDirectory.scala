@@ -123,7 +123,7 @@ class DocsDir(sourceDir: File) extends BundledDirectory(sourceDir) {
   }
 }
 
-class BehaviorsearchDir(baseDirectory: File, platformShortName: String) extends BundledDirectory(baseDirectory) {
+class BehaviorSearchDir(baseDirectory: File, platformShortName: String) extends BundledDirectory(baseDirectory) {
   val directoryName = "behaviorsearch"
   private def headlessScriptMapping: (File, String) = {
     val distInclude = baseDirectory / "dist" / "dist_include"

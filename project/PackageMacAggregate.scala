@@ -110,19 +110,19 @@ object PackageMacAggregate {
       , "packageID"        -> "APPL????"
       , "version"          -> version
      )
-    , "Behaviorsearch" -> Map(
-        "appName"             -> s"Behaviorsearch $version"
-      , "bundleIdentifier"    -> "org.nlogo.Behaviorsearch"
-      , "bundleName"          -> "Behaviorsearch"
+    , "BehaviorSearch" -> Map(
+        "appName"             -> s"BehaviorSearch $version"
+      , "bundleIdentifier"    -> "org.nlogo.BehaviorSearch"
+      , "bundleName"          -> "BehaviorSearch"
       , "bundleSignature"     -> "????"
       , "fileAssociations"    -> Array(
         Map(
           "extension" -> "bsearch"
-        , "icon"      -> "BehaviorsearchModel.icns"
-        , "type"      -> "Behaviorsearch Model"
+        , "icon"      -> "BehaviorSearchModel.icns"
+        , "type"      -> "BehaviorSearch Model"
         ).asJava
       )
-      , "iconFile"            -> s"Behaviorsearch $version.icns"
+      , "iconFile"            -> s"BehaviorSearch $version.icns"
       , "packageID"           -> "APPL????"
       , "version"             -> version
       )
