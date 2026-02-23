@@ -22,6 +22,7 @@ jobs:
         with:
           fetch-depth: 0
           submodules: true
+          token: ${{ secrets.HELIO_TOKEN }}
 
       - uses: actions/setup-java@v4
         with:
