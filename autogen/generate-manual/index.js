@@ -14,7 +14,7 @@
  * and are located in:
  *   * Mustache files: autogen/docs
  *   * HTML output files: netlogo-gui/docs
- *   * SBT scripts invoking this script: project/Docs.scala and project/NetLogoDocs.scala
+ *   * SBT scripts invoking this script: project/Docs.scala
  */
 
 const path = require('path');
