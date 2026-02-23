@@ -31,7 +31,7 @@ jobs:
       - name: Install ImageMagick
         run: winget install ImageMagick.Q16-HDRI --accept-package-agreements --accept-source-agreements --disable-interactivity
 
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: 23
           cache: npm

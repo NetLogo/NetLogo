@@ -30,7 +30,7 @@ jobs:
 
       - uses: mfinelli/setup-imagemagick@v7
 
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: 23
           cache: npm
