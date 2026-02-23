@@ -13,7 +13,6 @@ class SlowColorizerTests extends AnyFunSuiteEx  {
   // slow, hence SlowTest
   test("don't blow stack", SlowTest.Tag) {
     val longCode = Source.fromFile("models/test/Really Long Code.nls").mkString
-    assertResult(1042326)(
-      Colorizer.toHtml(longCode, ColorizerTheme.Light).size)
+    assertResult(1042326)(Colorizer.toHtml(longCode, ColorizerTheme.TestTheme).size)
   }
 }

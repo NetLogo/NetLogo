@@ -12,9 +12,8 @@ import org.nlogo.api.Announcement
 import org.nlogo.app.common.{Events => AppEvents, MenuTab}, AppEvents.SwitchedTabsEvent
 import org.nlogo.app.tools.AgentMonitorManager
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ Implicits, PrinterManager, Printable => NlogoPrintable, ScrollPane, SplitPane, ToolBar,
-                         UserAction, Utils },
-                       Implicits.thunk2action, UserAction.{ MenuAction, ToolsCategory }
+import org.nlogo.swing.{ PrinterManager, Printable => NlogoPrintable, ScrollPane, SplitPane, ToolBar, UserAction,
+                         Utils }, UserAction.{ MenuAction, ToolsCategory }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ EditDialogFactory, GUIWorkspace, InterfaceMode, SpeedSliderPanel, ViewUpdatePanel,
                           WidgetInfo, Events => WindowEvents, WorkspaceActions },

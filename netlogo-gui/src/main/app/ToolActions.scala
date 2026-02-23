@@ -16,7 +16,7 @@ import org.nlogo.core.{ I18N, Token }
 import org.nlogo.shape.ShapesManagerInterface
 import org.nlogo.swing.{ OptionPane, UserAction }, UserAction._
 import org.nlogo.theme.ThemeSync
-import org.nlogo.window.{ AbstractWidgetPanel, CopyOnly, JFXColorPicker, LinkRoot, NLNumber }
+import org.nlogo.window.{ AbstractWidgetPanel, CopyOnly, JFXColorPicker, LinkRoot, NLNumber, ThemesManager }
 import org.nlogo.workspace.AbstractWorkspaceScala
 
 abstract class ShowDialogAction(name: String) extends AbstractAction(name) with ThemeSync {
@@ -164,4 +164,14 @@ class ConvertWidgetSizes(frame: Frame, widgetPanel: WidgetPanel)
       App.app.smartPack(frame.getPreferredSize, false)
     }
   }
+}
+
+class OpenThemesManager(frame: Frame & ThemeSync)
+  extends ShowDialogAction(I18N.gui.get("menu.tools.themes")) with MenuAction {
+
+  category = ToolsCategory
+  group = ToolsSettingsGroup
+
+  override def createDialog(): ThemesManager =
+    new ThemesManager(frame)
 }

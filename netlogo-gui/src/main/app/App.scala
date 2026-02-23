@@ -2,8 +2,6 @@
 
 package org.nlogo.app
 
-import com.jthemedetecor.OsThemeDetector
-
 import java.awt.{ Dimension, EventQueue, Frame, GraphicsEnvironment, KeyboardFocusManager, Toolkit, BorderLayout}
 import java.awt.datatransfer.DataFlavor
 import java.awt.dnd.{ DropTarget, DropTargetDragEvent, DropTargetDropEvent, DropTargetEvent, DropTargetListener }
@@ -34,7 +32,7 @@ import org.nlogo.nvm.{ PresentationCompilerInterface, Workspace }
 import org.nlogo.shape.{ LinkShapesManagerInterface, ShapesManagerInterface, TurtleShapesManagerInterface }
 import org.nlogo.swing.{ DropdownOptionPane, InputOptionPane, OptionPane, SetSystemLookAndFeel, UserAction, Utils },
   UserAction.{ ActionCategoryKey, EditCategory, FileCategory, HelpCategory, MenuAction, ToolsCategory }
-import org.nlogo.theme.{ ClassicTheme, DarkTheme, InterfaceColors, LightTheme, ThemeSync }
+import org.nlogo.theme.{ ColorTheme, InterfaceColors, ThemeSync }
 import org.nlogo.util.{ NullAppHandler, Pico }
 import org.nlogo.window._
 import org.nlogo.window.Events._
@@ -68,7 +66,7 @@ object App {
   private var logEvents: String = null
   private var logDirectory: String = null
   private var popOutCodeTab = false
-  private var colorTheme: String = null
+  private var colorTheme: ColorTheme = InterfaceColors.prefsTheme
   /**
    * Should be called once at startup to create the application and
    * start it running.  May not be called more than once.  Once
@@ -113,25 +111,9 @@ object App {
       org.nlogo.window.VMCheck.detectBadJVMs()
       processCommandLineArguments(args)
 
-      if (App.colorTheme == null) {
-        val defaultTheme = {
-          if (OsThemeDetector.getDetector.isDark) {
-            "dark"
-          } else {
-            "light"
-          }
-        }
-
-        App.colorTheme = NetLogoPreferences.get("colorTheme", defaultTheme)
-      }
-
       SetSystemLookAndFeel.setSystemLookAndFeel()
 
-      InterfaceColors.setTheme(App.colorTheme match {
-        case "classic" => ClassicTheme
-        case "light" => LightTheme
-        case "dark" => DarkTheme
-      })
+      InterfaceColors.setTheme(App.colorTheme)
 
       Splash.beginSplash() // also initializes AWT
       pico.add("org.nlogo.compile.Compiler")
@@ -276,12 +258,13 @@ object App {
         commandLineURL = nextToken()
       }
       else if (token == "--color-theme") {
-        colorTheme = nextToken()
-
-        colorTheme match {
-          case "classic" =>
-          case "light" =>
-          case _ => throw new IllegalArgumentException(I18N.errors.getN("themes.unknown", colorTheme))
+        colorTheme = {
+          nextToken() match {
+            case "classic" => InterfaceColors.ClassicTheme
+            case "light" => InterfaceColors.LightTheme
+            case "dark" => InterfaceColors.DarkTheme
+            case theme => throw new IllegalArgumentException(I18N.errors.getN("themes.unknown", theme))
+          }
         }
       }
       else if (token == "--version") printAndExit(Version.version)
@@ -357,6 +340,8 @@ class App extends org.nlogo.window.Event.LinkChild
   val isMac = System.getProperty("os.name").startsWith("Mac")
 
   private val analyticsConsent = NetLogoPreferences.get("sendAnalytics", "$$$") == "$$$"
+
+  private var syncing = false
 
   /**
    * Quits NetLogo by exiting the JVM.  Asks user for confirmation first
@@ -794,6 +779,8 @@ class App extends org.nlogo.window.Event.LinkChild
                            , () => workspace.getExtensionPathMappings())
   }
 
+  lazy val openThemesManager = new OpenThemesManager(frame)
+
   lazy val allActions: Seq[MenuAction] = {
     // If we're running in the mac wrapper, it takes care of displaying these
     // items for us - RG 2/26/18
@@ -816,7 +803,8 @@ class App extends org.nlogo.window.Event.LinkChild
         () => pico.getComponent(classOf[ModelSaver]).asInstanceOf[ModelSaver].currentModel),
       FindDialog.FIND_ACTION,
       FindDialog.FIND_NEXT_ACTION,
-      new ConvertWidgetSizes(frame, _tabManager.interfaceTab.iP)
+      new ConvertWidgetSizes(frame, _tabManager.interfaceTab.iP),
+      openThemesManager
     ) ++
     HelpActions.apply ++
     FileActions(workspace, menuBar.fileMenu) ++
@@ -949,51 +937,57 @@ class App extends org.nlogo.window.Event.LinkChild
   }
 
   def syncWindowThemes(): Unit = {
-    FindDialog.syncTheme()
+    if (!syncing) {
+      syncing = true
 
-    menuBar.syncTheme()
+      FindDialog.syncTheme()
 
-    tabManager.syncTheme()
-    frame.repaint()
-    tabManager.separateTabsWindow.repaint()
+      menuBar.syncTheme()
 
-    workspace.glView.syncTheme()
-    workspace.glView.repaint()
+      tabManager.syncTheme()
+      frame.repaint()
+      tabManager.separateTabsWindow.repaint()
 
-    monitorManager.syncTheme()
+      workspace.glView.syncTheme()
+      workspace.glView.repaint()
 
-    _turtleShapesManager match {
-      case ts: ThemeSync => ts.syncTheme()
-      case _ =>
+      monitorManager.syncTheme()
+
+      _turtleShapesManager match {
+        case ts: ThemeSync => ts.syncTheme()
+        case _ =>
+      }
+
+      _linkShapesManager match {
+        case ts: ThemeSync => ts.syncTheme()
+        case _ =>
+      }
+
+      labManager.syncTheme()
+
+      openPreferencesDialog.syncTheme()
+      openAboutDialog.syncTheme()
+      openRGBAColorDialog.syncTheme()
+      openLibrariesDialog.syncTheme()
+      openThemesManager.syncTheme()
+
+      workspace.hubNetManager match {
+        case Some(manager: ThemeSync) => manager.syncTheme()
+        case _ =>
+      }
+
+      aggregateManager match {
+        case ts: ThemeSync => ts.syncTheme()
+        case _ =>
+      }
+
+      errorDialogManager.syncTheme()
+
+      // this allows external objects like extension GUIs to sync with the theme (Isaac B 1/12/25)
+      themeSyncManager.syncAll()
+
+      syncing = false
     }
-
-    _linkShapesManager match {
-      case ts: ThemeSync => ts.syncTheme()
-      case _ =>
-    }
-
-    labManager.syncTheme()
-
-    openPreferencesDialog.syncTheme()
-    openAboutDialog.syncTheme()
-    openRGBAColorDialog.syncTheme()
-    openLibrariesDialog.syncTheme()
-
-    workspace.hubNetManager match {
-      case Some(manager: ThemeSync) => manager.syncTheme()
-      case _ =>
-    }
-
-    aggregateManager match {
-      case ts: ThemeSync => ts.syncTheme()
-      case _ =>
-    }
-
-    errorDialogManager.syncTheme()
-
-    // this allows external objects like extension GUIs to sync with the theme (Isaac B 1/12/25)
-    themeSyncManager.syncAll()
-
   }
 
   /**

@@ -53,9 +53,9 @@ class AggregateTabs(editor: AggregateModelEditor, editorTab: AggregateEditorTab,
     for (i <- 0 until getTabCount) {
       if (getForegroundAt(i) != ErrorColor) {
         if (i == getSelectedIndex)
-          setForegroundAt(i, InterfaceColors.tabbedPaneTextSelected())
+          setForegroundAt(i, InterfaceColors.tabTextSelected())
         else
-          setForegroundAt(i, InterfaceColors.tabbedPaneText())
+          setForegroundAt(i, InterfaceColors.tabText())
       }
     }
   }

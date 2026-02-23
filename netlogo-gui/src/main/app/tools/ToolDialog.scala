@@ -6,7 +6,7 @@ import java.awt.Frame
 import javax.swing.JDialog
 
 import org.nlogo.core.I18N
-import org.nlogo.swing.Implicits.{ thunk2action, thunk2windowAdapter }
+import org.nlogo.swing.Implicits.thunk2windowAdapter
 import org.nlogo.swing.Positioning
 import org.nlogo.swing.Utils.addEscKeyAction
 

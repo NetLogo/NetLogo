@@ -69,9 +69,9 @@ class TabbedPane extends JTabbedPane with ThemeSync {
   protected def setTabForegrounds(): Unit = {
     for (i <- 0 until getTabCount) {
       if (i == getSelectedIndex)
-        setForegroundAt(i, InterfaceColors.tabbedPaneTextSelected())
+        setForegroundAt(i, InterfaceColors.tabTextSelected())
       else
-        setForegroundAt(i, InterfaceColors.tabbedPaneText())
+        setForegroundAt(i, InterfaceColors.tabText())
     }
   }
 

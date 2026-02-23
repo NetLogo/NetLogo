@@ -15,7 +15,7 @@ object Colorizer extends TokenColorizer {
   // for standalone use, for example on a web server
   def main(argv: Array[String]): Unit = {
     for (line <- Source.fromInputStream(System.in).getLines())
-      println(Colorizer.toHtml(line, ColorizerTheme.Light))
+      println(Colorizer.toHtml(line, ColorizerTheme.TestTheme))
   }
 
   // just enough of a subset of Namer to do syntax highlighting with;

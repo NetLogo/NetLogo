@@ -24,7 +24,6 @@ class PreferencesDialog(parent: Frame & ThemeSync, generalPreferences: Seq[Prefe
   private lazy val generalPreferencesPanel = new PreferenceContainer(generalPreferences)
   private lazy val codePreferencesPanel = new PreferenceContainer(codePreferences)
   private lazy val loggingPreferencesPanel = new PreferenceContainer(loggingPreferences)
-  private lazy val themesPanel = new ThemesPanel(parent)
 
   private lazy val codeMessage = new JLabel(I18N.gui("code.message"))
   private lazy val loggingMessage = new JLabel(I18N.gui("logging.message"))
@@ -33,21 +32,15 @@ class PreferencesDialog(parent: Frame & ThemeSync, generalPreferences: Seq[Prefe
   private lazy val cancelButton = new DialogButton(false, I18N.gui.get("common.buttons.cancel"), () => cancel())
 
   override def setVisible(visible: Boolean): Unit = {
-    if (visible)
-      themesPanel.init()
-
     pack()
 
     super.setVisible(visible)
   }
 
-  // sync parameter prevents infinite recursion with syncTheme on load (Isaac B 5/22/25)
-  private def reset(sync: Boolean): Unit = {
+  private def reset(): Unit = {
     generalPreferences.foreach(_.load())
     codePreferences.foreach(_.load())
     loggingPreferences.foreach(_.load())
-
-    themesPanel.revert(sync)
   }
 
   private def ok(): Unit = {
@@ -78,7 +71,7 @@ class PreferencesDialog(parent: Frame & ThemeSync, generalPreferences: Seq[Prefe
   }
 
   private def cancel(): Unit = {
-    reset(true)
+    reset()
     setVisible(false)
   }
 
@@ -167,17 +160,16 @@ class PreferencesDialog(parent: Frame & ThemeSync, generalPreferences: Seq[Prefe
     tabs.addTabWithLabel(generalPreferencesContainer, new TabLabel(tabs, I18N.gui("general"), generalPreferencesContainer))
     tabs.addTabWithLabel(codePreferencesContainer, new TabLabel(tabs, I18N.gui("code"), codePreferencesContainer))
     tabs.addTabWithLabel(loggingPreferencesContainer, new TabLabel(tabs, I18N.gui("logging"), loggingPreferencesContainer))
-    tabs.addTabWithLabel(themesPanel, new TabLabel(tabs, I18N.gui("themes"), themesPanel))
 
     add(tabs, BorderLayout.CENTER)
     add(buttonPanel, BorderLayout.SOUTH)
 
-    reset(false)
+    reset()
 
     setResizable(false)
   }
 
-  override def onClose() = reset(true)
+  override def onClose() = reset()
 
   def setSelectedIndex(index: Int): Unit = {
     tabs.setSelectedIndex(index)
@@ -194,7 +186,6 @@ class PreferencesDialog(parent: Frame & ThemeSync, generalPreferences: Seq[Prefe
     generalPreferencesPanel.syncTheme()
     codePreferencesPanel.syncTheme()
     loggingPreferencesPanel.syncTheme()
-    themesPanel.syncTheme()
 
     codeMessage.setForeground(InterfaceColors.dialogText())
     loggingMessage.setForeground(InterfaceColors.dialogText())

@@ -4,12 +4,12 @@ package org.nlogo.app.common
 
 import java.awt.Component
 
-import org.nlogo.core.{ ColorizerTheme, Dialect, Femto }
+import org.nlogo.core.{ Dialect, Femto }
 import org.nlogo.api.{ Version, FileIO }
 import org.nlogo.nvm.CompilerInterface
 import org.nlogo.swing.UserAction,
   UserAction.{ FileCategory, FileExportSubcategory, MenuAction }
-import org.nlogo.theme.{ ClassicTheme, DarkTheme, InterfaceColors, LightTheme }
+import org.nlogo.theme.InterfaceColors
 import org.nlogo.workspace.AbstractWorkspace
 
 import scala.io.Source
@@ -44,12 +44,7 @@ object CodeToHtml {
 
 class CodeToHtml(compiler: CompilerInterface) {
   def convert(source:String, wrapped: Boolean = true): String = {
-    val theme: ColorizerTheme = InterfaceColors.getTheme match {
-      case ClassicTheme => ColorizerTheme.Classic
-      case LightTheme => ColorizerTheme.Light
-      case DarkTheme => ColorizerTheme.Dark
-    }
-    val code = compiler.utilities.colorizer.toHtml(source, theme)
+    val code = compiler.utilities.colorizer.toHtml(source, InterfaceColors.getTheme.colorizerTheme)
     if (wrapped) s"<pre>$code\n</pre>\n" else code
   }
 }

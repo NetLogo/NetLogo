@@ -5,7 +5,7 @@ package org.nlogo.app
 import javax.swing.{ JLabel, JWindow }
 
 import org.nlogo.swing.Utils
-import org.nlogo.theme.{ DarkTheme, InterfaceColors }
+import org.nlogo.theme.InterfaceColors
 
 object Splash {
   private var splashWindow: JWindow = null
@@ -26,7 +26,7 @@ object Splash {
 
   private def scale(x: Int) = (x / 7.2).toInt
 
-  val splash = new JLabel(Utils.iconScaled(if (InterfaceColors.getTheme == DarkTheme) {
+  val splash = new JLabel(Utils.iconScaled(if (InterfaceColors.getTheme.isDark) {
     "/images/banner-dark.png"
   } else {
     "/images/banner.png"

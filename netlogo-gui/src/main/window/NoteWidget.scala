@@ -18,7 +18,7 @@ import javax.swing.text.DefaultCaret
 
 import org.nlogo.core.{ I18N, TextBox => CoreTextBox, Widget => CoreWidget }
 import org.nlogo.swing.Transparent
-import org.nlogo.theme.{ ClassicTheme, DarkTheme, InterfaceColors, LightTheme }
+import org.nlogo.theme.InterfaceColors
 
 class NoteWidget extends SingleErrorWidget with Transparent with Editable {
   private val textPane = new JEditorPane("text/html", "") {
@@ -174,16 +174,12 @@ class NoteWidget extends SingleErrorWidget with Transparent with Editable {
     new Dimension(MIN_WIDTH.max(_width), MIN_HEIGHT.max(textPane.getPreferredSize.height + 8))
 
   override def syncTheme(): Unit = {
-    InterfaceColors.getTheme match {
-      case ClassicTheme | LightTheme =>
-        setBackgroundColor(_backgroundLight)
-        textPane.setForeground(_textColorLight)
-
-      case DarkTheme =>
-        setBackgroundColor(_backgroundDark)
-        textPane.setForeground(_textColorDark)
-
-      case _ => throw new IllegalStateException
+    if (InterfaceColors.getTheme.isDark) {
+      setBackgroundColor(_backgroundDark)
+      textPane.setForeground(_textColorDark)
+    } else {
+      setBackgroundColor(_backgroundLight)
+      textPane.setForeground(_textColorLight)
     }
 
     repaint()

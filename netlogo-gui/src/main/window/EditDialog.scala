@@ -11,8 +11,7 @@ import javax.swing.border.EmptyBorder
 import org.nlogo.api.Version
 import org.nlogo.awt.Positioning
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ BrowserLauncher, ButtonPanel, DialogButton, Implicits, Transparent, Utils },
-  BrowserLauncher.docPath, Implicits.thunk2action
+import org.nlogo.swing.{ BrowserLauncher, ButtonPanel, DialogButton, Transparent, Utils }, BrowserLauncher.docPath
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 // contains an EditPanel, plus some buttons at the bottom (OK/Apply/Help/Cancel).
