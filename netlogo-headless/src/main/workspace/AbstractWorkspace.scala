@@ -185,6 +185,7 @@ with ExtendableWorkspace with ExtensionCompilationEnvironment with APIConformant
     jobManager.die()
     plotManager.forgetAll()
     getExtensionManager.reset()
+    getHubNetManager.foreach(_.disconnect())
   }
 
   override def mainRNG = world.mainRNG

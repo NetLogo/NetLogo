@@ -80,9 +80,8 @@ object PreviewCommandsRunner {
 
     try {
       ws.previewCommands match {
-        case compilableCommands: PreviewCommands.Compilable =>
-          val procedure = ws.compileCommands(compilableCommands.source)
-          new PreviewCommandsRunner(ws, procedure)
+        case commands: PreviewCommands if commands.compilable =>
+          new PreviewCommandsRunner(ws, ws.compileCommands(commands.source))
         case _ => // non-compilable preview commands
           ws.dispose()
           throw new NonCompilableCommandsException
