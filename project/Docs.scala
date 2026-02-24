@@ -17,10 +17,11 @@ object Docs {
   lazy val testDocLinks                 = taskKey[Map[String, Seq[String]]]("check for broken links in the documentation")
 
   lazy val settings = Seq(
-    javaOptions += "-Dnetlogo.docs.dir=" + baseDirectory.value.getAbsolutePath,
-    helioRoot   := baseDirectory.value.getParentFile / "helio",
-    docsSource  := helioRoot.value / "apps" / "docs",
-    docsDest    := baseDirectory.value / "docs",
+    javaOptions        += "-Dnetlogo.docs.dir=" + baseDirectory.value.getAbsolutePath,
+    Test / javaOptions += "-Dnetlogo.docs.dir=" + baseDirectory.value.getAbsolutePath,
+    helioRoot          := baseDirectory.value.getParentFile / "helio",
+    docsSource         := helioRoot.value / "apps" / "docs",
+    docsDest           := baseDirectory.value / "docs",
     allDocs := {
       manualPDF.value
       (Compile / doc).value
