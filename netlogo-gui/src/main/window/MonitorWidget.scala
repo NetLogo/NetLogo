@@ -2,15 +2,17 @@
 
 package org.nlogo.window
 
-import java.awt.event.MouseEvent
-import java.awt.{ Color, Component, EventQueue, Font, Graphics, GridBagConstraints, GridBagLayout, Insets, Dimension }
-import javax.swing.{ JLabel, JPanel }
+import java.awt.{ Color, Component, Dimension, EventQueue, Font, Graphics, GridBagConstraints, GridBagLayout, Insets,
+                  Point }
+import java.awt.datatransfer.StringSelection
+import java.awt.event.{ ActionEvent, MouseEvent }
+import javax.swing.{ AbstractAction, JLabel, JPanel }
 
 import org.nlogo.api.{ CompilerServices, Dump, MersenneTwisterFast }
 import org.nlogo.core.{ AgentKind, AgentKindJ, I18N, Monitor => CoreMonitor, Widget => CoreWidget }
 import org.nlogo.editor.Colorizer
 import org.nlogo.nvm.Procedure
-import org.nlogo.swing.RoundedBorderPanel
+import org.nlogo.swing.{ MenuItem, PopupMenu, RoundedBorderPanel }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.Events.{ AddJobEvent, EditWidgetEvent,
   RuntimeErrorEvent, PeriodicUpdateEvent, JobRemovedEvent, RemoveJobEvent }
@@ -287,6 +289,17 @@ class MonitorWidget(random: MersenneTwisterFast, compiler: CompilerServices, col
       recompilePending(false)
 
     super.suppressRecompiles(suppressRecompiles)
+  }
+
+  override def hasContextMenu: Boolean =
+    true
+
+  override def populateContextMenu(menu: PopupMenu, p: Point): Unit = {
+    menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.copytext")) {
+      def actionPerformed(e: ActionEvent): Unit = {
+        getToolkit.getSystemClipboard.setContents(new StringSelection(valueLabel.getText), null)
+      }
+    }))
   }
 
   override def syncTheme(): Unit = {
