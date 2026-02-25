@@ -64,7 +64,7 @@ class ThemesPanel(frame: Frame & ThemeSync) extends JPanel(new GridBagLayout) wi
 
   def init(): Unit = {
     startTheme = {
-      if (NetLogoPreferences.get("colorTheme2", "system") == "system") {
+      if (NetLogoPreferences.get("colorTheme2", null) == "system") {
         None
       } else {
         Some(InterfaceColors.getTheme)
