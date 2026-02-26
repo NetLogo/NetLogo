@@ -32,7 +32,7 @@ jobs:
 
       - uses: actions/setup-node@v6
         with:
-          node-version: 24.13
+          node-version: 23
           cache: npm
           cache-dependency-path: netlogo-gui/colorpicker/package-lock.json
 
@@ -61,16 +61,10 @@ jobs:
           echo "  architecture: '64'" >> .jdks.yaml
           echo "  path: '${{ env.JAVA_HOME }}'" >> .jdks.yaml
 
-      - name: Build NetLogo
-        run: sbt dist/buildNetLogo
-
-      - name: Package NetLogo
-        uses: actions/setup-node@v6
-        with:
-          node-version: 22
-          cache: yarn
-          cache-dependency-path: helio/yarn.lock
-      - run: sbt "dist/packageLinuxAggregate OpenJDK_17.0.2_64"
+      - name: Build and Package NetLogo
+        run: |
+          sbt dist/buildNetLogo
+          sbt "dist/packageLinuxAggregate OpenJDK_17.0.2_64"
 
       - uses: actions/upload-artifact@v6
         with:
