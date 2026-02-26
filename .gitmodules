@@ -81,4 +81,4 @@
 	url = https://github.com/NetLogo/Model-Exports
 [submodule "helio"]
 	path = helio
-	url = https://github.com/NetLogo/Helio
+	url = git@github.com:NetLogo/Helio
