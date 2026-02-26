@@ -12,13 +12,38 @@ if [ -z "${NL_BUILD_VERSION}" ]; then
   exit 1
 fi
 
-apt install -y docker.io
+if [ -z "${HELIO_TOKEN}" ]; then
+  echo "You must set the HELIO_TOKEN variable for cloning Helio (e.g. HELIO_TOKEN=github_pat_aLotOfLettersAndNumbersAndAnUnderscore)"
+  exit 1
+fi
+
+if [ ! -x /usr/bin/docker ]; then
+
+  echo "No Docker installation found.  Installing...."
+
+  apt update
+  apt install ca-certificates curl gnupg lsb-release
+  mkdir -p /etc/apt/keyrings
+  curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+  echo \
+    "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+    $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+  apt update
+  apt install -y docker-ce docker-ce-cli
+
+fi
+
 docker pull ubuntu:20.04
 
 NL_DOCKER_ID=`sudo docker run -dit ubuntu:20.04 /bin/bash`
+
+docker exec $NL_DOCKER_ID bash -c "mkdir /root/.ssh/"
+docker cp "$PRIV_KEY_PATH" $NL_DOCKER_ID:/root/.ssh/
+
 docker cp ./container.sh $NL_DOCKER_ID:/root/
 docker exec $NL_DOCKER_ID bash -c "chmod +x /root/container.sh"
-docker exec $NL_DOCKER_ID /root/container.sh
+docker exec -e HELIO_TOKEN=$HELIO_TOKEN -e NL_BUILD_VERSION=$NL_BUILD_VERSION $NL_DOCKER_ID /root/container.sh
 
 docker cp $NL_DOCKER_ID:/root/NL-Linux-64.tgz ./NetLogo-$NL_BUILD_VERSION-64.tgz
 docker cp $NL_DOCKER_ID:/root/NL-Linux-32.tgz ./NetLogo-$NL_BUILD_VERSION-32.tgz

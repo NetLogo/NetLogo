@@ -32,10 +32,22 @@ DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends tzdata
 # Required by Puppeteer/Chromium for generating NetLogo User Manual PDF
 apt install -y libglib2.0-0 libnspr4 libnss3 libdbus-1-3 libatk1.0-0 libatk-bridge2.0-0 libcups2 libxkbcommon0 libxcomposite1 libxdamage1 libxfixes3 libxrandr2 libgbm1 libcairo2 libpango1.0-0 libasound2
 
+# By default `imagemagick` installs v6 (`convert`).  We ought to be using v7 (`magick`).
+# But this is a passable solution, I suppose.
+# Needed for generating the splash screen
+apt install -y imagemagick
+ln -s /usr/bin/convert /usr/local/bin/magick
+
+# Install Yarn for Helio
+curl -fsSL https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor -o /usr/share/keyrings/yarn.gpg
+echo "deb [signed-by=/usr/share/keyrings/yarn.gpg] https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+apt update
+apt install -y yarn
+
 # NPM installation for NL color picker
 wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
 . /root/.nvm/nvm.sh
-nvm install 20.16
+nvm install 24.13
 
 mkdir /root/jvm-store/
 
@@ -61,7 +73,13 @@ ln -s $JAVA_HOME/bin/java /usr/bin/java
 # Initialize NetLogo repo
 git clone https://github.com/NetLogo/NetLogo
 cd NetLogo
+git submodule set-url helio https://${HELIO_TOKEN}@github.com/NetLogo/Helio.git
 git submodule update --init --recursive
+
+# Set the version number to show up in the user manual PDF
+sed -i -e "s/^PRODUCT_VERSION=.*/PRODUCT_VERSION=\"$NL_BUILD_VERSION\"/" \
+       -e "s/^PRODUCT_DISPLAY_NAME=.*/PRODUCT_DISPLAY_NAME=\"$NL_BUILD_VERSION\"/" \
+       helio/apps/docs/.env
 
 # Create JDK conf file for NL release
 cat > /root/NetLogo/.jdks.yaml << EOF
@@ -75,6 +93,10 @@ cat > /root/NetLogo/.jdks.yaml << EOF
   architecture: "64"
   path:         "/root/jvm-store/openjdk-17.0.2/"
 EOF
+
+sbt netlogo/resources
+
+nvm install 22
 
 sbt dist/buildNetLogo
 
