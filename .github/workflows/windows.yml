@@ -3,6 +3,7 @@ name: package-windows
 on:
   schedule:
     - cron: "0 10 * * *"
+  workflow_dispatch:
 
 jobs:
   package:
@@ -33,7 +34,7 @@ jobs:
 
       - uses: actions/setup-node@v6
         with:
-          node-version: 23
+          node-version: 24
           cache: npm
           cache-dependency-path: netlogo-gui/colorpicker/package-lock.json
 
@@ -69,8 +70,18 @@ jobs:
           "  architecture: '64'" >> .jdks.yaml
           "  path: '${{ env.JAVA_HOME }}'" >> .jdks.yaml
 
-      - name: Build and Package NetLogo
-        run: |
+      - name: Build NetLogo
+        run: sbt netlogo/all
+
+      # The previous step built the color picker with NodeJS 24.
+      # Next up: Helio with NodeJS 22.  --Jason B. (2/26/26)
+      - name: Package NetLogo
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: yarn
+          cache-dependency-path: helio/yarn.lock
+      - run: |
           sbt dist/buildNetLogo
           sbt "dist/packageWinAggregate OpenJDK_17.0.2_64"
 
