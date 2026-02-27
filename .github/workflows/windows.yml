@@ -20,6 +20,15 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.HELIO_TOKEN }}
 
+      - name: Test Yarn
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: yarn
+          cache-dependency-path: helio/yarn.lock
+      - run: |
+          yarn --version
+
       - uses: actions/setup-java@v5
         with:
           distribution: zulu
