@@ -27,6 +27,7 @@ jobs:
           cache: yarn
           cache-dependency-path: helio/yarn.lock
       - run: |
+          npm install -g yarn
           yarn --version
 
       - uses: actions/setup-java@v5
