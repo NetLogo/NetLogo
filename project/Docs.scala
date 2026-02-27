@@ -26,9 +26,16 @@ object Docs {
       (Compile / doc).value
     },
     manualPDF := {
-      Process(Seq("yarn", "run", "init"), helioRoot.value).!
-      Process(Seq("yarn", "run", "docs:build"), docsSource.value, "HELIO_HEADLESS" -> "1").!
-      Process(Seq("yarn", "run", "docs:generate-manual"), docsSource.value).!
+
+      val yarnExe =
+        if (System.getProperty("os.name").startsWith("Windows"))
+          "yarn.cmd"
+        else
+          "yarn"
+
+      Process(Seq(yarnExe, "run", "init"), helioRoot.value).!
+      Process(Seq(yarnExe, "run", "docs:build"), docsSource.value, "HELIO_HEADLESS" -> "1").!
+      Process(Seq(yarnExe, "run", "docs:generate-manual"), docsSource.value).!
 
       val manualSource = (docsSource.value / ".build" / "NetLogo_User_Manual.pdf").toPath
       val manualDest = (baseDirectory.value / "NetLogo_User_Manual.pdf").toPath
