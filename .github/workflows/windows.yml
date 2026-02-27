@@ -71,7 +71,7 @@ jobs:
           "  path: '${{ env.JAVA_HOME }}'" >> .jdks.yaml
 
       - name: Build NetLogo
-        run: sbt netlogo/all
+        run: sbt netlogo/resources
 
       # The previous step built the color picker with NodeJS 24.
       # Next up: Helio with NodeJS 22.  --Jason B. (2/26/26)
