@@ -20,6 +20,17 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.HELIO_TOKEN }}
 
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: yarn
+          cache-dependency-path: helio/yarn.lock
+
+      - name: Test PDF
+        shell: bash
+        working-directory: helio
+        run: sh scripts/release.sh
+
       - uses: actions/setup-java@v5
         with:
           distribution: zulu
@@ -75,13 +86,14 @@ jobs:
 
       # The previous step built the color picker with NodeJS 24.
       # Next up: Helio with NodeJS 22.  --Jason B. (2/26/26)
-      - name: Package NetLogo
-        uses: actions/setup-node@v6
+      - uses: actions/setup-node@v6
         with:
           node-version: 22
           cache: yarn
           cache-dependency-path: helio/yarn.lock
-      - run: |
+
+      - name: Package NetLogo
+        run: |
           sbt dist/buildNetLogo
           sbt "dist/packageWinAggregate OpenJDK_17.0.2_64"
 
