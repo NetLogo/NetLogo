@@ -176,8 +176,22 @@ class Lab extends LabInterface {
         }
 
         override def runtimeError(w: Workspace, runNumber: Int, t: Throwable): Unit = {
-          if (!suppressErrors)
-            primaryWorkspace.runtimeError(t)
+          errorBehavior match {
+            case LabProtocol.AbortRun =>
+              primaryWorkspace.runtimeError(t)
+
+              queue.synchronized {
+                if (!paused)
+                  queue.enqueue(w)
+              }
+
+            case LabProtocol.AbortExperiment =>
+              primaryWorkspace.runtimeError(t)
+
+              abort()
+
+            case _ =>
+          }
         }
       }
 

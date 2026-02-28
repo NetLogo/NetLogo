@@ -26,6 +26,7 @@ Run NetLogo using the NetLogo_Console app with the --headless command line argum
 * --stats <path>: pathname to send statistics output to (or - for standard output)
 * --threads <number>: use this many threads to do model runs in parallel, or 1 to disable parallel runs. defaults to floor( .75 * number of processors).
 * --update-plots: enable plot updates. Include this if you want to export plot data, or exclude it for better performance.
+* --error-behavior <behavior>: controls how the experiment should proceed in the event of a runtime error (ignore, abortRun, abortExperiment)
 * --min-pxcor <number>: override world size setting in model file
 * --max-pxcor <number>: override world size setting in model file
 * --min-pycor <number>: override world size setting in model file
@@ -132,8 +133,8 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
     var stats: Option[String] = None
     var lists: Option[String] = None
     var threads =  LabDefaultValues.getDefaultThreads
-    var suppressErrors = false
     var updatePlots = false
+    var errorBehavior: LabProtocol.ErrorBehavior = LabProtocol.AbortRun
     val it = args.iterator
 
     def die(msg: String): Unit = {
@@ -224,11 +225,23 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
         requireHasNext()
         threads = it.next().toInt
 
-      } else if (arg == "--suppress-errors") {
-        suppressErrors = true
-
       } else if (arg == "--update-plots") {
         updatePlots = true
+      } else if (arg == "--error-behavior") {
+        requireHasNext()
+        it.next().trim match {
+          case LabProtocol.IgnoreErrors.key =>
+            errorBehavior = LabProtocol.IgnoreErrors
+
+          case LabProtocol.AbortRun.key =>
+            errorBehavior = LabProtocol.AbortRun
+
+          case LabProtocol.AbortExperiment.key =>
+            errorBehavior = LabProtocol.AbortExperiment
+
+          case str =>
+            die("Unknown error behavior: " + str)
+        }
       } else {
         die("unknown argument: " + arg)
       }
@@ -276,9 +289,9 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
     , lists
     , dims
     , threads
-    , suppressErrors
     , updatePlots
     , false
+    , errorBehavior
     , 0
     ))
   }

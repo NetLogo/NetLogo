@@ -10,10 +10,10 @@ import org.nlogo.swing.SplitPane
 import org.nlogo.theme.ThemeSync
 import org.nlogo.window.Events
 
-class InterfaceTab(workspace: SemiHeadlessWorkspace)
+class InterfaceTab(frame: BehaviorSpaceFrame, workspace: SemiHeadlessWorkspace)
   extends JPanel(new BorderLayout) with ThemeSync with Events.OutputEvent.Handler {
 
-  private val interfacePanel = new BlockedInterfacePanel(workspace)
+  private val interfacePanel = new BlockedInterfacePanel(frame, workspace)
   private val outputPanel = new OutputPanel
   private val splitPane = new SplitPane(interfacePanel, outputPanel, None)
 

@@ -29,4 +29,5 @@ object LabDefaultValues {
   def getDefaultUpdateView: Boolean = true
   def getDefaultUpdatePlotsAndMonitors: Boolean = true
   def getDefaultMirrorHeadlessOutput: Boolean = false
+  def getDefaultErrorBehavior: LabProtocol.ErrorBehavior = LabProtocol.AbortRun
 }

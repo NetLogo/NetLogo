@@ -45,6 +45,21 @@ object BehaviorSpaceApp {
       case (current, "--mirror-headless") =>
         current.copy(mirrorHeadless = true)
 
+      case (current, "--error-behavior") if argsIter.hasNext =>
+        argsIter.next.trim match {
+          case LabProtocol.IgnoreErrors.key =>
+            current.copy(errorBehavior = LabProtocol.IgnoreErrors)
+
+          case LabProtocol.AbortRun.key =>
+            current.copy(errorBehavior = LabProtocol.AbortRun)
+
+          case LabProtocol.AbortExperiment.key =>
+            current.copy(errorBehavior = LabProtocol.AbortExperiment)
+
+          case _ =>
+            current
+        }
+
       case (current, "--table") if argsIter.hasNext =>
         current.copy(table = Option(argsIter.next.trim))
 
@@ -71,9 +86,10 @@ object BehaviorSpaceApp {
 
   case class CommandLineArgs(model: String, experiment: String, threads: Int = 1, skip: Int = 0,
                              updateView: Boolean = false, updatePlots: Boolean = false,
-                             mirrorHeadless: Boolean = false, table: Option[String] = None,
-                             spreadsheet: Option[String] = None, stats: Option[String] = None,
-                             lists: Option[String] = None)
+                             mirrorHeadless: Boolean = false,
+                             errorBehavior: LabProtocol.ErrorBehavior = LabProtocol.AbortRun,
+                             table: Option[String] = None, spreadsheet: Option[String] = None,
+                             stats: Option[String] = None, lists: Option[String] = None)
 }
 
 class BehaviorSpaceApp(args: BehaviorSpaceApp.CommandLineArgs) extends Thread.UncaughtExceptionHandler {
@@ -108,16 +124,16 @@ class BehaviorSpaceApp(args: BehaviorSpaceApp.CommandLineArgs) extends Thread.Un
     override def runtimeError(t: Throwable): Unit = {
       t match {
         case _: CompilerException =>
-          displayError(s"${I18N.gui("error.compilation")}\n${t.getMessage}")
+          displayError(s"${I18N.gui("error.compilation")} ${t.getMessage}")
 
         case _: RuntimeException =>
-          displayError(s"${I18N.gui("error.runtime")}\n${t.getMessage}")
+          displayError(s"${I18N.gui("error.runtime")} ${t.getMessage}")
 
         case _: IOException =>
-          displayError(s"${I18N.gui("error.io")}\n${t.getMessage}")
+          displayError(s"${I18N.gui("error.io")} ${t.getMessage}")
 
         case _ =>
-          displayError(s"${I18N.gui("error.general")}\n${Option(t.getMessage).getOrElse(t)}")
+          displayError(Option(t.getMessage).getOrElse(t.toString))
       }
     }
   }
@@ -136,14 +152,15 @@ class BehaviorSpaceApp(args: BehaviorSpaceApp.CommandLineArgs) extends Thread.Un
     AppUtils.setupGUI(None)
 
     val settings = LabInterface.Settings(args.model, Option(args.experiment), None, args.table, args.spreadsheet,
-                                         args.stats, args.lists, None, args.threads, false, args.updatePlots,
-                                         args.mirrorHeadless, args.skip)
+                                         args.stats, args.lists, None, args.threads, args.updatePlots,
+                                         args.mirrorHeadless, args.errorBehavior, args.skip)
 
     val protocol: LabProtocol = BehaviorSpaceCoordinator.selectProtocol(settings).get
 
+    protocol.errorBehavior = args.errorBehavior
     protocol.runsCompleted = args.skip
 
-    val interfaceTab = new InterfaceTab(workspace)
+    val interfaceTab = new InterfaceTab(frame, workspace)
 
     frame.addLinkComponent(workspace)
 
@@ -227,10 +244,6 @@ class BehaviorSpaceApp(args: BehaviorSpaceApp.CommandLineArgs) extends Thread.Un
 
       override def experimentCompleted(): Unit = {
         progressDialog.writing()
-      }
-
-      override def runtimeError(w: Workspace, runNumber: Int, t: Throwable): Unit = {
-        primaryWorkspace.runtimeError(t)
       }
     })
 

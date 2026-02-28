@@ -178,6 +178,8 @@ class InterfacePanelLite(val viewWidget: ViewWidgetInterface, compiler: Compiler
   ///
 
   private def addWidget(widget: Widget, x: Int, y: Int): Unit = {
+    widget.setWidgetContainer(this)
+
     // this is really no good in the long term, because widgets
     // don't have unique names. For now, who cares? - mmh
     widgets += widget.displayName -> widget
