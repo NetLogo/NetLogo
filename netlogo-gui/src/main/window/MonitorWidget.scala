@@ -258,6 +258,14 @@ class MonitorWidget(random: MersenneTwisterFast, compiler: CompilerServices, col
     }
 
     nameLabel.setText(displayName)
+  }
+
+  // behold the mighty regular expression
+  private def getSourceName: String =
+    innerSource.trim.replaceAll("\\s+", " ")
+
+  override def doLayout(): Unit = {
+    super.doLayout()
 
     if (nameLabel.getPreferredSize.width > nameLabel.getWidth) {
       nameLabel.setToolTipText(nameLabel.getText)
@@ -265,10 +273,6 @@ class MonitorWidget(random: MersenneTwisterFast, compiler: CompilerServices, col
       nameLabel.setToolTipText(null)
     }
   }
-
-  // behold the mighty regular expression
-  private def getSourceName: String =
-    innerSource.trim.replaceAll("\\s+", " ")
 
   override def removeNotify(): Unit = {
     // This is a little kludgy.  Normally removeNotify would run on the

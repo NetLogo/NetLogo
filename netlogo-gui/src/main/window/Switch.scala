@@ -128,6 +128,16 @@ abstract class Switch extends MultiErrorWidget with Events.AfterLoadEvent.Handle
     }
   }
 
+  override def doLayout(): Unit = {
+    super.doLayout()
+
+    if (label.getPreferredSize.width > label.getWidth) {
+      label.setToolTipText(label.getText)
+    } else {
+      label.setToolTipText(null)
+    }
+  }
+
   override def syncTheme(): Unit = {
     setBackgroundColor(InterfaceColors.switchBackground())
 

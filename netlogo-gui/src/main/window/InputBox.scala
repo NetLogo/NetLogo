@@ -298,6 +298,16 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     add(colorSwatch, c)
   }
 
+  override def doLayout(): Unit = {
+    super.doLayout()
+
+    if (widgetLabel.getPreferredSize.width > widgetLabel.getWidth) {
+      widgetLabel.setToolTipText(widgetLabel.getText)
+    } else {
+      widgetLabel.setToolTipText(null)
+    }
+  }
+
   override def paintComponent(g: Graphics) = {
     setBackgroundColor(InterfaceColors.inputBackground())
 
