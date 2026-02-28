@@ -145,6 +145,16 @@ trait Chooser extends SingleErrorWidget {
 
   ///
 
+  override def doLayout(): Unit = {
+    super.doLayout()
+
+    if (label.getPreferredSize.width > label.getWidth) {
+      label.setToolTipText(label.getText)
+    } else {
+      label.setToolTipText(null)
+    }
+  }
+
   override def paintComponent(g: Graphics): Unit = {
     super.paintComponent(g)
 
