@@ -5,8 +5,9 @@ package org.nlogo.lab.gui
 import java.awt.{ GridBagConstraints, Insets }
 import java.nio.file.Path
 
+import org.nlogo.api.LabProtocol
 import org.nlogo.core.I18N
-import org.nlogo.window.{ BooleanEditor, EditPanel, FilePathEditor, IntegerEditor, LabeledEditor,
+import org.nlogo.window.{ BooleanEditor, EditPanel, FilePathEditor, IntegerEditor, LabeledEditor, OptionsEditor,
                           PositiveIntegerEditor, PropertyAccessor, PropertyEditor }
 
 class RunOptionsEditPanel(target: RunOptionsDialog#EditableRunOptions, currentDirectory: Option[Path],
@@ -110,10 +111,20 @@ class RunOptionsEditPanel(target: RunOptionsDialog#EditableRunOptions, currentDi
         _.foreach(target.setMirrorHeadlessOutput),
         () => apply()))
 
+  private val errorBehavior =
+    new OptionsEditor[LabProtocol.ErrorBehavior](
+      new PropertyAccessor(
+        target,
+        I18N.gui.get("tools.behaviorSpace.runoptions.errorBehavior"),
+        () => target.errorBehavior,
+        _.foreach(target.setErrorBehavior),
+        () => apply()))
+
   locally {
     val c = new GridBagConstraints
 
     c.gridx = 0
+    c.anchor = GridBagConstraints.WEST
     c.fill = GridBagConstraints.HORIZONTAL
     c.weightx = 1
     c.insets = new Insets(6, 6, 6, 6)
@@ -128,12 +139,19 @@ class RunOptionsEditPanel(target: RunOptionsDialog#EditableRunOptions, currentDi
     add(updateView, c)
     add(updateLabeled, c)
     add(threadCountLabeled, c)
+
+    c.fill = GridBagConstraints.NONE
+
+    add(errorBehavior, c)
+
+    c.fill = GridBagConstraints.HORIZONTAL
+
     add(memoryLimitLabeled, c)
     add(mirrorHeadlessOutput, c)
   }
 
   override def propertyEditors: Seq[PropertyEditor[?]] =
-    Seq(spreadsheet, table, stats, lists, updateView, updatePlotsAndMonitors, threadCount, memoryLimit,
+    Seq(spreadsheet, table, stats, lists, updateView, updatePlotsAndMonitors, threadCount, errorBehavior, memoryLimit,
         mirrorHeadlessOutput)
 
   // since this edit panel's changes are not saved in the model file,

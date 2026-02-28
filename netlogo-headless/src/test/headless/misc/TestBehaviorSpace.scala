@@ -71,7 +71,7 @@ class TestBehaviorSpace extends AnyFunSuiteEx
     // let's go through headless.Main here so that code gets some testing - ST 3/9/09
     Main.main(Array("--model", modelPath, "--experiment", experimentName,
                     "--table", tablePath, "--spreadsheet", spreadsheetPath,
-                    "--threads", threads.toString, "--suppress-errors"))
+                    "--threads", threads.toString, "--error-behavior", "ignore"))
     if (wantTable)
       assertResult(slurp(filename + "-table.csv"))(
         withoutFirst6Lines(slurp(tablePath)))
