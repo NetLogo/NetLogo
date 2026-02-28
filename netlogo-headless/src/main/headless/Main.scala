@@ -93,8 +93,8 @@ object Main {
     var stats: Option[String] = None
     var lists: Option[String] = None
     var threads = LabDefaultValues.getDefaultThreads
-    var suppressErrors = false
     var updatePlots = false
+    var errorBehavior: LabProtocol.ErrorBehavior = LabProtocol.AbortRun
     val it = args.iterator
     def die(msg: String): Unit = { Console.err.println(msg); throw new CancelException }
     while(it.hasNext) {
@@ -139,10 +139,24 @@ object Main {
         { requireHasNext(); lists = Some(it.next().trim) }
       else if(arg == "--threads")
         { requireHasNext(); threads = it.next().toInt }
-      else if(arg == "--suppress-errors")
-        { suppressErrors = true }
       else if (arg == "--update-plots")
         { updatePlots = true }
+      else if (arg == "--error-behavior") {
+        requireHasNext()
+        it.next().trim match {
+          case LabProtocol.IgnoreErrors.key =>
+            errorBehavior = LabProtocol.IgnoreErrors
+
+          case LabProtocol.AbortRun.key =>
+            errorBehavior = LabProtocol.AbortRun
+
+          case LabProtocol.AbortExperiment.key =>
+            errorBehavior = LabProtocol.AbortExperiment
+
+          case str =>
+            die("Unknown error behavior: " + str)
+        }
+      }
       else
         die("unknown argument: " + arg)
     }
@@ -164,7 +178,7 @@ object Main {
       else
         Some(new WorldDimensions(minPxcor.get.toInt, maxPxcor.get.toInt,
                                  minPycor.get.toInt, maxPycor.get.toInt))
-    Some(new Settings(model.get, experiment, setupFile, table, spreadsheet, stats, lists, dims, threads,
-                      suppressErrors, updatePlots, false, 0))
+    Some(new Settings(model.get, experiment, setupFile, table, spreadsheet, stats, lists, dims, threads, updatePlots,
+                      false, errorBehavior, 0))
   }
 }

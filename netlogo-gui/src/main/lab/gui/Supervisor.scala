@@ -67,6 +67,7 @@ class Supervisor(parent: Window, workspace: GUIWorkspace, modelPath: Path, proto
                                    "-Dapple.awt.application.appearance=system",
                                    "org.nlogo.bsapp.BehaviorSpaceApp", modelPath.toString, protocol.name,
                                    "--threads", protocol.threadCount.toString,
+                                   "--error-behavior", protocol.errorBehavior.key,
                                    "--skip", protocol.runsCompleted.toString) ++
                                boolToArg("--update-view", protocol.updateView) ++
                                boolToArg("--update-plots", protocol.updatePlotsAndMonitors) ++
