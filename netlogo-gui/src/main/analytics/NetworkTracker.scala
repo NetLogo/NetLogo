@@ -11,12 +11,14 @@ class NetworkTracker(domain: String) {
   private var available = false
   private var lastCheck = 0L
 
-  private [analytics] def isAvailable(): Boolean = {
+  private [analytics] def checkAvailable(): (Boolean, Boolean) = {
     synchronized {
+      val wasAvailable = available
+
       if (!available && System.currentTimeMillis() - lastCheck >= 5000)
         updateAvailable()
 
-      available
+      (wasAvailable, available)
     }
   }
 
