@@ -264,8 +264,12 @@ class Worker(val protocol: LabProtocol)
         if (ws.lastLogoException != null) {
           val ex = ws.lastLogoException
           ws.clearLastLogoException()
-          if (!aborted)
+          if (!aborted) {
             eachListener(_.runtimeError(ws, runNumber, ex))
+
+            if (protocol.errorBehavior == LabProtocol.AbortRun)
+              aborted = true
+          }
         }
       }
       ws.behaviorSpaceRunNumber(runNumber)
