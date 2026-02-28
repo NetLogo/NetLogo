@@ -2,7 +2,7 @@
 
 package org.nlogo.headless
 
-import java.io.{ File, FileWriter, PrintWriter }
+import java.io.File
 
 import org.nlogo.core.WorldDimensions
 import org.nlogo.api.{ APIVersion, ExportPlotWarningAction, LabDefaultValues, LabProtocol, PlotCompilationErrorAction,
@@ -26,6 +26,7 @@ Run NetLogo using the NetLogo_Console app with the --headless command line argum
 * --stats <path>: pathname to send statistics output to (or - for standard output)
 * --threads <number>: use this many threads to do model runs in parallel, or 1 to disable parallel runs. defaults to floor( .75 * number of processors).
 * --update-plots: enable plot updates. Include this if you want to export plot data, or exclude it for better performance.
+* --error-behavior <behavior>: controls how the experiment should proceed in the event of a runtime error (ignore, abortRun, abortExperiment)
 * --min-pxcor <number>: override world size setting in model file
 * --max-pxcor <number>: override world size setting in model file
 * --min-pycor <number>: override world size setting in model file
@@ -127,31 +128,19 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
     var maxPycor: Option[String] = None
     var setupFile: Option[File] = None
     var experiment: Option[String] = None
-    var tableWriter: Option[PrintWriter] = None
-    var spreadsheetWriter: Option[PrintWriter] = None
-    var statsWriter: Option[(PrintWriter, String)] = None
-    var listsWriter: Option[(PrintWriter, String)] = None
+    var table: Option[String] = None
+    var spreadsheet: Option[String] = None
+    var stats: Option[String] = None
+    var lists: Option[String] = None
     var threads =  LabDefaultValues.getDefaultThreads
-    var suppressErrors = false
     var updatePlots = false
+    var errorBehavior: LabProtocol.ErrorBehavior = LabProtocol.AbortRun
     val it = args.iterator
 
     def die(msg: String): Unit = {
       System.err.println(msg)
       System.exit(1)
     }
-
-    def path2writer(path: String) =
-      if (path == "-") {
-        new PrintWriter(System.out) {
-          // don't close System.out - ST 6/9/09
-          override def close(): Unit = { }
-        }
-      } else {
-        new PrintWriter(new FileWriter(path.trim))
-      }
-
-    var outputPath = ""
 
     while (it.hasNext) {
       val arg = it.next().toLowerCase
@@ -217,34 +206,42 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
 
       } else if (arg == "--table") {
         requireHasNext()
-        outputPath = it.next()
-        tableWriter = Some(path2writer(outputPath))
+        table = Some(it.next().trim)
 
       } else if (arg == "--spreadsheet") {
         requireHasNext()
-        val localOut = it.next()
-        if (outputPath.isEmpty)
-          outputPath = localOut
-        spreadsheetWriter = Some(path2writer(localOut))
+        spreadsheet = Some(it.next().trim)
 
       } else if (arg == "--lists") {
         requireHasNext()
-        listsWriter = Some((path2writer(it.next()), outputPath))
+        lists = Some(it.next().trim)
 
       } else if (arg == "--stats") {
         requireHasNext()
-        statsWriter = Some((path2writer(it.next()), outputPath))
+        stats = Some(it.next().trim)
       }
 
       else if (arg == "--threads") {
         requireHasNext()
         threads = it.next().toInt
 
-      } else if (arg == "--suppress-errors") {
-        suppressErrors = true
-
       } else if (arg == "--update-plots") {
         updatePlots = true
+      } else if (arg == "--error-behavior") {
+        requireHasNext()
+        it.next().trim match {
+          case LabProtocol.IgnoreErrors.key =>
+            errorBehavior = LabProtocol.IgnoreErrors
+
+          case LabProtocol.AbortRun.key =>
+            errorBehavior = LabProtocol.AbortRun
+
+          case LabProtocol.AbortExperiment.key =>
+            errorBehavior = LabProtocol.AbortExperiment
+
+          case str =>
+            die("Unknown error behavior: " + str)
+        }
       } else {
         die("unknown argument: " + arg)
       }
@@ -258,7 +255,7 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
       die("You must specify either --setup-file or --experiment (or both).  Try --help for more information.")
     }
 
-    if (listsWriter != None && tableWriter == None && spreadsheetWriter == None) {
+    if (lists != None && table == None && spreadsheet == None) {
       die("You cannot specify --lists without also specifying --table or --spreadsheet. Try --help for more information.")
     }
 
@@ -267,7 +264,7 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
       die("If any of min/max-px/ycor are specified, all four must be specified.  Try --help for more information.")
     }
 
-    if (statsWriter != None && (tableWriter == None && spreadsheetWriter == None)) {
+    if (stats != None && (table == None && spreadsheet == None)) {
       die("You cannot specify --stats without also specifying --table or --spreadsheet. Try --help for more information.")
     }
 
@@ -286,14 +283,16 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
       model.get
     , experiment
     , setupFile
-    , tableWriter
-    , spreadsheetWriter
-    , statsWriter
-    , listsWriter
+    , table
+    , spreadsheet
+    , stats
+    , lists
     , dims
     , threads
-    , suppressErrors
     , updatePlots
+    , false
+    , errorBehavior
+    , 0
     ))
   }
 }

@@ -123,7 +123,9 @@ class InterfacePanelLite(val viewWidget: ViewWidgetInterface, compiler: Compiler
     var maxY = 0
     for (component <- getComponents) {
       val location = component.getLocation
-      val size = component.getSize
+      val realSize = component.getSize
+      val prefSize = component.getPreferredSize
+      val size = new Dimension(realSize.width.max(prefSize.width), realSize.height.max(prefSize.height))
       val x = location.x + size.width
       val y = location.y + size.height
       if (x > maxX)
@@ -176,6 +178,8 @@ class InterfacePanelLite(val viewWidget: ViewWidgetInterface, compiler: Compiler
   ///
 
   private def addWidget(widget: Widget, x: Int, y: Int): Unit = {
+    widget.setWidgetContainer(this)
+
     // this is really no good in the long term, because widgets
     // don't have unique names. For now, who cares? - mmh
     widgets += widget.displayName -> widget

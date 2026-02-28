@@ -6,21 +6,22 @@ import java.util.Locale
 import java.util.concurrent.{ Callable, Executors, TimeUnit }
 
 import org.nlogo.core.{ AgentKind, I18N, WorldDimensions }
-import org.nlogo.api.{ Dump, ExportPlotWarningAction, LabProtocol,
-  LogoException, MersenneTwisterFast, LabPostProcessorInputFormat, WorldDimensionException, SimpleJobOwner }
+import org.nlogo.api.{ Dump, ExportPlotWarningAction, LabPostProcessorInputFormat, LabProtocol, LogoException,
+                       MersenneTwisterFast, PartialData, SimpleJobOwner, WorldDimensionException }
 import org.nlogo.nvm.{ Command, LabInterface, Workspace }
 
 import LabInterface.ProgressListener
 
-class Worker(val protocol: LabProtocol, val supervisorWriting: () => Unit = () => {})
+class Worker(val protocol: LabProtocol)
   extends LabInterface.Worker
 {
   val listeners = new collection.mutable.ListBuffer[ProgressListener]
   def addListener(listener: ProgressListener): Unit = {
     listeners += listener
   }
-  def addSpreadsheetWriter(modelFileName: String, initialDims: WorldDimensions, w: java.io.PrintWriter): Unit = {
-    addListener(new SpreadsheetExporter(modelFileName, initialDims, protocol, w))
+  def addSpreadsheetWriter(modelFileName: String, initialDims: WorldDimensions, w: java.io.PrintWriter,
+                           partialData: PartialData = new PartialData): Unit = {
+    addListener(new SpreadsheetExporter(modelFileName, initialDims, protocol, w, partialData))
   }
   def addTableWriter(modelFileName: String, initialDims: WorldDimensions, w: java.io.PrintWriter): Unit = {
     addListener(new TableExporter(modelFileName, initialDims, protocol, w))
@@ -75,7 +76,6 @@ class Worker(val protocol: LabProtocol, val supervisorWriting: () => Unit = () =
       }
       executor.shutdown()
       executor.awaitTermination(java.lang.Integer.MAX_VALUE, TimeUnit.SECONDS)
-      supervisorWriting()
       listeners.foreach(_.experimentCompleted())
       // this will cause the first ExecutionException we got to be thrown - ST 3/10/09
       futures.foreach(_.get)
@@ -101,7 +101,6 @@ class Worker(val protocol: LabProtocol, val supervisorWriting: () => Unit = () =
   def compile(w: Workspace): Unit = { new Procedures(w) }
   override def abort(): Unit = {
     if (runners != null) runners.foreach(_.aborted = true)
-    supervisorWriting()
   }
   class Procedures(workspace: Workspace) {
     val preExperimentProcedure = workspace.compileCommands(protocol.preExperimentCommands)
@@ -265,8 +264,12 @@ class Worker(val protocol: LabProtocol, val supervisorWriting: () => Unit = () =
         if (ws.lastLogoException != null) {
           val ex = ws.lastLogoException
           ws.clearLastLogoException()
-          if (!aborted)
+          if (!aborted) {
             eachListener(_.runtimeError(ws, runNumber, ex))
+
+            if (protocol.errorBehavior == LabProtocol.AbortRun)
+              aborted = true
+          }
         }
       }
       ws.behaviorSpaceRunNumber(runNumber)

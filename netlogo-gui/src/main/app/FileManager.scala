@@ -13,8 +13,8 @@ import scala.util.{ Failure, Try }
 
 import org.nlogo.analytics.Analytics
 import org.nlogo.core.{ I18N, Model }
-import org.nlogo.api.{ AbstractModelLoader, Exceptions, FileIO, ModelReader, ModelType, Version, Workspace },
-  ModelReader.{ emptyModelPath, modelSuffix }
+import org.nlogo.api.{ AbstractModelLoader, Exceptions, FileIO, ModelReader, ModelSaver, ModelType, Version,
+                       Workspace }, ModelReader.{ emptyModelPath, modelSuffix }
 import org.nlogo.app.common.{ Actions, Dialogs, ExceptionCatchingAction, ModelConfig }, Actions.Ellipsis
 import org.nlogo.app.codetab.TemporaryCodeTab
 import org.nlogo.app.tools.{ ModelsLibraryDialog, NetLogoWebSaver }
@@ -319,9 +319,17 @@ class FileManager(workspace: AbstractWorkspaceScala,
   }
 
   private[app] def aboutToCloseFiles(): Unit = {
+    if (labManager.anyRunning &&
+        new OptionPane(parent, I18N.gui.get("common.messages.warning"),
+                       I18N.gui.get("file.close.warn.runningExperiments"), OptionPane.Options.YesNo,
+                       OptionPane.Icons.Warning).getSelectedIndex != 0)
+      throw new UserCancelException
+
+    labManager.abort()
+
     if (labManager.anyPaused &&
         new OptionPane(parent, I18N.gui.get("common.messages.warning"),
-                       I18N.gui.get("file.close.warn.pausedExperiments.message"), OptionPane.Options.YesNo,
+                       I18N.gui.get("file.close.warn.pausedExperiments"), OptionPane.Options.YesNo,
                        OptionPane.Icons.Warning).getSelectedIndex != 0)
       throw new UserCancelException
 

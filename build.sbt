@@ -350,7 +350,8 @@ lazy val headless = (project in file ("netlogo-headless")).
       "com.googlecode.json-simple" % "json-simple" % "1.1.1",
       "org.reflections" % "reflections" % "0.10.2" % "test",
       "org.scala-lang.modules" %% "scala-parallel-collections" % "1.2.0",
-      "it.unimi.dsi" % "fastutil" % "8.5.16"
+      "it.unimi.dsi" % "fastutil" % "8.5.16",
+      "com.softwaremill.sttp.client4" %% "upickle" % "4.0.9"
     ) ++ Seq("base", "controls", "graphics", "swing", "web")
       .map(m => "org.openjfx" % s"javafx-$m" % "21.0.6" classifier osName),
     (Runtime / fullClasspath)  ++= (parserJVM / Runtime / fullClasspath).value,

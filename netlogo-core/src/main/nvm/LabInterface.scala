@@ -2,22 +2,27 @@
 
 package org.nlogo.nvm
 
-import org.nlogo.api.{ LabPostProcessorInputFormat, LabProtocol }
+import java.io.{ File, PrintWriter }
+
+import org.nlogo.api.{ LabPostProcessorInputFormat, LabProtocol, PartialData }
 import org.nlogo.core.WorldDimensions
 
 object LabInterface {
   trait Worker {
     def protocol: LabProtocol
     def addListener(l: ProgressListener): Unit
-    def addTableWriter(modelFileName: String, initialDims: WorldDimensions, w: java.io.PrintWriter): Unit
-    def addSpreadsheetWriter(modelFileName: String, initialDims: WorldDimensions, w: java.io.PrintWriter): Unit
-    def addStatsWriter(modelFileName: String, initialDims: WorldDimensions, w: java.io.PrintWriter, in: LabPostProcessorInputFormat.Format): Unit
-    def addListsWriter(modelFileName: String, initialDims: WorldDimensions, w: java.io.PrintWriter,
+    def addTableWriter(modelFileName: String, initialDims: WorldDimensions, w: PrintWriter): Unit
+    def addSpreadsheetWriter(modelFileName: String, initialDims: WorldDimensions, w: PrintWriter,
+                             partialData: PartialData = new PartialData): Unit
+    def addStatsWriter(modelFileName: String, initialDims: WorldDimensions, w: PrintWriter,
+                       in: LabPostProcessorInputFormat.Format): Unit
+    def addListsWriter(modelFileName: String, initialDims: WorldDimensions, w: PrintWriter,
                        in: LabPostProcessorInputFormat.Format): Unit
     def run(testWorkspace: Workspace, fn: () => Workspace, threads: Int): Unit
     def abort(): Unit
     def compile(w: Workspace): Unit // only for testing purposes
   }
+
   trait ProgressListener {
     def experimentStarted(): Unit = { }
     def experimentAborted(): Unit = { }
@@ -28,22 +33,35 @@ object LabInterface {
     def runCompleted(w: Workspace, runNumber: Int, steps: Int): Unit = { }
     def runtimeError(w: Workspace, runNumber: Int, t: Throwable): Unit = { }
   }
+
   case class Settings(modelPath: String,
     protocolName: Option[String],
-    externalXMLFile: Option[java.io.File],
-    tableWriter: Option[java.io.PrintWriter],
-    spreadsheetWriter: Option[java.io.PrintWriter],
-    statsWriter: Option[(java.io.PrintWriter, String)],
-    listsWriter: Option[(java.io.PrintWriter, String)],
+    externalXMLFile: Option[File],
+    table: Option[String],
+    spreadsheet: Option[String],
+    stats: Option[String],
+    lists: Option[String],
     dims: Option[WorldDimensions],
     threads: Int,
-    suppressErrors: Boolean,
     updatePlots: Boolean,
-    mirrorHeadlessOutput: Boolean = false
-    )
+    mirrorHeadlessOutput: Boolean,
+    errorBehavior: LabProtocol.ErrorBehavior,
+    runsCompleted: Int
+  )
+
+  sealed abstract trait Result
+
+  object Result {
+    case object Aborted extends Result
+    case object Paused extends Result
+    case object Completed extends Result
+  }
 }
+
 trait LabInterface {
-  import LabInterface._
-  def newWorker(protocol: LabProtocol): Worker
-  def run(settings: Settings, worker: Worker, primaryWorkspace: PrimaryWorkspace, fn: () => Workspace): Unit
+  def newWorker(protocol: LabProtocol): LabInterface.Worker
+  def run(settings: LabInterface.Settings, worker: LabInterface.Worker, primaryWorkspace: PrimaryWorkspace,
+          fn: () => Workspace): LabInterface.Result
+  def pause(): Unit
+  def abort(): Unit
 }

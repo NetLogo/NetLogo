@@ -3,7 +3,9 @@
 package org.nlogo.headless
 package misc
 
-import org.nlogo.api
+import java.io.{ ByteArrayOutputStream, PrintStream }
+
+import org.nlogo.api.{ LabExporterVersion, Version }
 import org.nlogo.util.AnyFunSuiteEx
 
 // headless.Main.main() is our main entry point for command-line users.
@@ -12,13 +14,26 @@ import org.nlogo.util.AnyFunSuiteEx
 class TestMain extends AnyFunSuiteEx {
 
   def capture(body: => Unit): (String, String) = {
-    val out = new java.io.ByteArrayOutputStream()
-    val err = new java.io.ByteArrayOutputStream()
-    Console.withOut(out) {
-      Console.withErr(err) {
-        body
-      }
-    }
+    val out = new ByteArrayOutputStream
+    val err = new ByteArrayOutputStream
+
+    val oldOut = System.out
+    val oldErr = System.err
+
+    val newOut = new PrintStream(out)
+    val newErr = new PrintStream(err)
+
+    System.setOut(newOut)
+    System.setErr(newErr)
+
+    body
+
+    newOut.close()
+    newErr.close()
+
+    System.setOut(oldOut)
+    System.setErr(oldErr)
+
     (out.toString, err.toString)
   }
 
@@ -27,7 +42,7 @@ class TestMain extends AnyFunSuiteEx {
       Main.main(Array("--version"))
     }
     assertResult("")(err)
-    assertResult(s"${api.Version.version}\r?\n".r.matches(out))
+    assertResult(s"${Version.version}\r?\n".r.matches(out))
   }
 
   test("bad arg") {
@@ -93,8 +108,8 @@ class TestMain extends AnyFunSuiteEx {
          |""".stripMargin
     assertResult("")(err)
     // version number varies, date and time varies, compare carefully!
-    assertResult(expected.replaceFirst("VERSION", api.Version.version)
-                          .replaceFirst("EXPORTER_VERSION", api.LabExporterVersion.version))(
+    assertResult(expected.replaceFirst("VERSION", Version.version)
+                         .replaceFirst("EXPORTER_VERSION", LabExporterVersion.version))(
       out.replaceAll(
         """"\d\d/\d\d/\d\d\d\d \d\d:\d\d:\d\d:\d\d\d .\d\d\d\d"\r?\n""",
         "").replace("\r\n", "\n"))
