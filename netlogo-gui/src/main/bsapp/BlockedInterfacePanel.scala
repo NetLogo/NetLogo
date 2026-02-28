@@ -2,18 +2,18 @@
 
 package org.nlogo.bsapp
 
-import java.awt.Dimension
+import java.awt.{ Component, Dimension }
 import java.awt.event.MouseAdapter
 import javax.swing.{ JLayeredPane, JPanel }
 
 import org.nlogo.plot.PlotManager
 import org.nlogo.swing.Transparent
-import org.nlogo.window.{ DefaultEditorFactory, InterfacePanelLite }
+import org.nlogo.window.{ DefaultEditorFactory, Event, InterfacePanelLite }
 
-class BlockedInterfacePanel(workspace: SemiHeadlessWorkspace)
+class BlockedInterfacePanel(frame: BehaviorSpaceFrame, workspace: SemiHeadlessWorkspace)
   extends InterfacePanelLite(workspace.viewWidget, workspace, workspace,
                              new PlotManager(workspace, workspace.world.mainRNG.clone),
-                             new DefaultEditorFactory(workspace), workspace.extensionManager) {
+                             new DefaultEditorFactory(workspace), workspace.extensionManager) with Event.LinkChild {
 
   private val interceptPanel = new JPanel with Transparent {
     setFocusable(true)
@@ -36,6 +36,9 @@ class BlockedInterfacePanel(workspace: SemiHeadlessWorkspace)
   }
 
   add(interceptPanel, JLayeredPane.DRAG_LAYER)
+
+  override def getLinkParent: Component =
+    frame
 
   override def doLayout(): Unit = {
     super.doLayout()
