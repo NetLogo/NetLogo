@@ -4,6 +4,7 @@ package org.nlogo.analytics
 
 import java.net.{ HttpURLConnection, NetworkInterface, URI }
 import java.net.http.{ HttpClient, HttpRequest, HttpResponse }
+import java.nio.file.{ Files, Paths, StandardOpenOption }
 import java.util.UUID
 
 import scala.concurrent.{ ExecutionContext, Future }
@@ -50,6 +51,8 @@ object AnalyticsSender {
       .version(HttpClient.Version.HTTP_1_1)
       .build()
 
+  private val cachePath = Paths.get(System.getProperty("user.home"), ".nlogo", "analyticsCache")
+
   private[analytics] def apply(eventType: AnalyticsEventType): Future[Unit] =
     trySending(eventType, None)
 
@@ -81,11 +84,18 @@ object AnalyticsSender {
     } else {
       Future {
         if (sendEnabled) {
-          if (!available && System.currentTimeMillis() - lastCheck >= 5000) {
+          val wasAvailable = available
+
+          if (!available && System.currentTimeMillis() - lastCheck >= 5000)
             checkNetwork()
-          }
+
           if (available) {
             send(eventType, payloadOpt)
+
+            if (!wasAvailable)
+              sendCache()
+          } else {
+            cacheEvent(eventType, payloadOpt)
           }
         }
       }
@@ -119,6 +129,30 @@ object AnalyticsSender {
         println(s"Telemetry exception: $e")
         checkNetwork()
     }
+
+  private def cacheEvent(eventType: AnalyticsEventType, payloadOpt: Option[String]): Unit = {
+    Files.createDirectories(cachePath.getParent)
+
+    val line = s"${eventType.ordinal},${payloadOpt.getOrElse("")}\n"
+
+    Files.writeString(cachePath, line, StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.APPEND)
+  }
+
+  private def sendCache(): Unit = {
+    if (Files.exists(cachePath) && !Files.isDirectory(cachePath)) {
+      Files.readAllLines(cachePath).forEach { line =>
+        val split = line.split(",", 2).map(_.trim)
+
+        if (split.size == 2) {
+          split(0).toIntOption.foreach { tpe =>
+            Future(send(AnalyticsEventType.fromOrdinal(tpe), Option(split(1)).filter(_.nonEmpty)))
+          }
+        }
+      }
+
+      Files.delete(cachePath)
+    }
+  }
 
   private def checkNetwork(): Unit = {
     available =
