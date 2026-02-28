@@ -5,6 +5,12 @@ package org.nlogo.api
 object LabProtocol {
   private type AnyRefSettingsIterator = Iterator[List[(String, AnyRef)]]
 
+  sealed abstract trait ErrorBehavior(val key: String)
+
+  case object IgnoreErrors extends ErrorBehavior("ignore")
+  case object AbortRun extends ErrorBehavior("abortRun")
+  case object AbortExperiment extends ErrorBehavior("abortExperiment")
+
   def defaultGUIProtocol: LabProtocol = {
     LabProtocol(
       LabDefaultValues.getDefaultName,
@@ -75,6 +81,7 @@ case class LabProtocol(
   var updateView: Boolean = LabDefaultValues.getDefaultUpdateView,
   var updatePlotsAndMonitors: Boolean = LabDefaultValues.getDefaultUpdatePlotsAndMonitors,
   var mirrorHeadlessOutput: Boolean = LabDefaultValues.getDefaultMirrorHeadlessOutput,
+  var errorBehavior: LabProtocol.ErrorBehavior = LabDefaultValues.getDefaultErrorBehavior,
   var runsCompleted: Int = 0
 ) {
   import LabProtocol.AnyRefSettingsIterator
