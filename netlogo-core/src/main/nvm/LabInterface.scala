@@ -43,9 +43,9 @@ object LabInterface {
     lists: Option[String],
     dims: Option[WorldDimensions],
     threads: Int,
-    suppressErrors: Boolean,
     updatePlots: Boolean,
     mirrorHeadlessOutput: Boolean,
+    errorBehavior: LabProtocol.ErrorBehavior,
     runsCompleted: Int
   )
 
