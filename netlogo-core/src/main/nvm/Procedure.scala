@@ -9,8 +9,8 @@ import org.nlogo.{ api, core },
 import scala.collection.immutable.ListMap
 
 object Procedure {
-  type ProceduresMap = ListMap[String, Procedure]
-  val NoProcedures = ListMap[String, Procedure]()
+  type ProceduresMap = ListMap[(String, Option[String]), Procedure]
+  val NoProcedures = ListMap[(String, Option[String]), Procedure]()
 }
 
 class Procedure(
@@ -19,6 +19,7 @@ class Procedure(
   val nameToken:            Token,
   val argTokens:            Seq[Token],
   val procedureDeclaration: StructureDeclarations.Procedure,
+  val module:               Option[String],
   val baseDisplayName:      Option[String] = None) extends ProcedureJ with FrontEndProcedure {
 
     args = argTokens.map(_.text).toVector
@@ -28,7 +29,7 @@ class Procedure(
         p.isReporter, p.name, p.nameToken, p.argTokens, p.procedureDeclaration,
         if (p.displayName == "") None else Some(p.displayName))
 
-    val filename = nameToken.filename
+    val filename: String = nameToken.filename
     val isLambda = false
 
     var pos: Int = 0

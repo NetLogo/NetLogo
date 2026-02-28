@@ -33,14 +33,14 @@ private[compile] object CompilerMain {
     displayName:           Option[String],
     program:               Program,
     subprogram:            Boolean,
-    oldProcedures:         ListMap[String, Procedure],
+    oldProcedures:         ListMap[(String, Option[String]), Procedure],
     extensionManager:      ExtensionManager,
     libManager:            LibraryManager,
     compilationEnv:        CompilationEnvironment,
     shouldAutoInstallLibs: Boolean = false
-  ): (ListMap[String, Procedure], Program) = {
+  ): (ListMap[(String, Option[String]), Procedure], Program) = {
 
-    val oldProceduresListMap = ListMap[String, Procedure](oldProcedures.toSeq*)
+    val oldProceduresListMap = ListMap[(String, Option[String]), Procedure](oldProcedures.toSeq*)
     val (topLevelDefs, feStructureResults) =
       frontEnd.frontEnd(CompilationOperand( sources, extensionManager, libManager, compilationEnv, program
                                           , oldProceduresListMap, subprogram, displayName
@@ -64,7 +64,7 @@ private[compile] object CompilerMain {
       allDefs
         .map(assembleProcedure(_, feStructureResults.program, compilationEnv))
         .filterNot(_.isLambda)
-        .map(p => p.name -> p)
+        .map(p => (p.name, p.module) -> p)
 
     val returnedProcedures = ListMap(newProcedures*) ++ oldProcedures
     // only return top level procedures.

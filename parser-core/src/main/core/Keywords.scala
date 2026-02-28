@@ -11,7 +11,7 @@ object Keywords {
     "TO", "TO-REPORT", "END",
     "GLOBALS", "TURTLES-OWN", "LINKS-OWN", "PATCHES-OWN",
     "DIRECTED-LINK-BREED", "UNDIRECTED-LINK-BREED",
-    "EXTENSIONS", "__INCLUDES")
+    "EXTENSIONS", "EXPORT", "IMPORT", "__INCLUDES")
   def isKeyword(s: String) =
     keywords.contains(s.toUpperCase(Locale.ENGLISH)) || s.toUpperCase(Locale.ENGLISH).endsWith("-OWN")
 }

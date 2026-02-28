@@ -12,7 +12,7 @@ import scala.collection.immutable.ListMap
 object FrontMiddleBridge extends FrontMiddleBridgeInterface {
   def apply(
     structureResults: StructureResults,
-    oldProcedures:    ListMap[String, nvm.Procedure],
+    oldProcedures:    ListMap[(String, Option[String]), nvm.Procedure],
     topLevelDefs:     Seq[core.ProcedureDefinition],
     backifier:        ApiBackifier
   ): Seq[ProcedureDefinition] = {
@@ -22,8 +22,11 @@ object FrontMiddleBridge extends FrontMiddleBridgeInterface {
       case (k, p) => k -> fromApiProcedure(p)
     }.toMap
     val astBackifier = new middle.ASTBackifier(backifier, ListMap((newProcedures ++ oldProcedures).toSeq*))
-    newProcedures.values.lazyZip(topLevelDefs)
-      .map(astBackifier.backify)
+    newProcedures
+      .filter{case ((name, module), v) => name == v.name && module == v.module}
+      .values
+      .map(x => (x, topLevelDefs.find(y => x.name == y.procedure.name && x.module == y.procedure.module).get))
+      .map{case (x, y) => astBackifier.backify(x, y)}
       .toSeq
   }
   private def fromApiProcedure(p: FrontEndProcedure): Procedure = {
@@ -33,10 +36,12 @@ object FrontMiddleBridge extends FrontMiddleBridgeInterface {
       nameToken = p.nameToken,
       argTokens = p.argTokens,
       procedureDeclaration = p.procedureDeclaration,
+      module = p.module,
       baseDisplayName = if (p.displayName == "") None else Some(p.displayName)
     )
     proc.agentClassString = p.agentClassString
     proc.topLevel = p.topLevel
+    proc.aliases = p.aliases
     proc.args = p.args
     proc.size = p.args.length
     proc

@@ -36,7 +36,7 @@ class Namer(
     new AgentVariableReporterHandler(program),
     new ExtensionPrimitiveHandler(extensionManager),
     new ProcedureVariableHandler(procedure.args),
-    new CallHandler(procedures))
+    new CallHandler(procedures, procedure.module))
 
   def validateProcedure(): Unit = {
     for (token <- procedure.nameToken +: procedure.argTokens)

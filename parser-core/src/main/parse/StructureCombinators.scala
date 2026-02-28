@@ -90,7 +90,7 @@ extends scala.util.parsing.combinator.Parsers {
           decs ++ procs }
 
   def declaration: Parser[Declaration] =
-    includes | extensions | breed | directedLinkBreed | undirectedLinkBreed |
+    `export` | `import` | includes | extensions | breed | directedLinkBreed | undirectedLinkBreed |
       variables("GLOBALS") | variables("TURTLES-OWN") | variables("PATCHES-OWN") |
       variables("LINKS-OWN") | breedVariables
 
@@ -98,6 +98,34 @@ extends scala.util.parsing.combinator.Parsers {
     keyword("__INCLUDES") ~! stringList ^^ {
       case token ~ names =>
         Includes(token, names) }
+
+  def `export`: Parser[Export] =
+    keyword("EXPORT") ~! identifierList ^^ {
+      case keyword ~ exportedNames =>
+        Export(exportedNames, keyword)
+    }
+
+  def `import`: Parser[Import] =
+    keyword("IMPORT") ~ opt(colon) ~ rep1sep(plainIdentifier, colon) ~ opt(exactIdentifier("AS") ~> identifier) ^^ {
+      case keyword ~ prefix ~ components ~ rename =>
+        Import(prefix.isDefined, components.map(_.text), Seq(), rename.map(x => x.name), keyword)
+    } |
+    keyword("IMPORT") ~ opt(colon) ~ rep1sep(plainIdentifier, colon) ~ opt(colon ~> plainIdentifierList) ^^ {
+      case keyword ~ prefix ~ components ~ importList =>
+        Import(prefix.isDefined, components.map(_.text), importList.map(_.map(_.text)).getOrElse(Seq()), None, keyword) }
+
+  def importOption: Parser[ImportOption] =
+    importAlias
+
+  def importAlias: Parser[ImportAlias] =
+    openBracket ~> importAliasKeyword ~! identifier <~ closeBracket ^^ {
+      case keyword ~ ident =>
+        ImportAlias(ident.name, keyword) }
+
+  def importAliasKeyword: Parser[Token] =
+    acceptMatch("ALIAS", {
+      case token @ Token(_, TokenType.Ident, "ALIAS") =>
+        token })
 
   def extensions: Parser[Extensions] =
     keyword("EXTENSIONS") ~! identifierList ^^ {
@@ -148,7 +176,7 @@ extends scala.util.parsing.combinator.Parsers {
     (keyword("TO") | keyword("TO-REPORT")) ~!
       identifier ~
       opt(identifierList) ~
-      rep(nonKeyword) ~
+      rep(identifierToken | nonKeyword) ~
       (keyword("END") | failure("END expected")) ^^ {
         case to ~ name ~ names ~ body ~ end =>
           Procedure(name,
@@ -169,18 +197,43 @@ extends scala.util.parsing.combinator.Parsers {
   def closeBracket: Parser[Token] =
     tokenType("closing bracket", TokenType.CloseBracket)
 
+  def colon: Parser[Token] =
+    tokenType("colon", TokenType.Colon)
+
+  def plainIdentifier: Parser[Token] =
+    tokenType("identifier", TokenType.Ident)
+
+  def anyKeyword: Parser[Token] =
+    tokenType("keyword", TokenType.Keyword)
+
+  def exactIdentifier(text: String): Parser[Token] =
+    acceptMatch("identifier", {
+      case t @ Token(text, TokenType.Ident, _) =>
+        t })
+
+  def identifierToken: Parser[Token] =
+    chainl1(plainIdentifier, plainIdentifier | literalToken | anyKeyword, colon ^^ {_ => {
+      case (p, x) => {
+        val newText = p.text + ":" + x.text
+        val newValue = p.value.asInstanceOf[String] + ":" + x.value
+        val newSourcelocation = p.sourceLocation.copy(end = x.sourceLocation.end)
+
+        p.copy(text = newText, value = newValue)(newSourcelocation) }}})
+
   def identifier: Parser[Identifier] =
-    tokenType("identifier", TokenType.Ident) ^^ {
-      token =>
-        Identifier(token.value.asInstanceOf[String], token) }
+    identifierToken ^^ {x => Identifier(x.value.toString, x)}
+
+  def literalToken: Parser[Token] =
+    tokenType("literal", TokenType.Literal)
 
   def literal: Parser[Identifier] =
-    tokenType("literal", TokenType.Literal) ^^ {
-      token =>
-        Identifier(token.value.toString, token) }
+    literalToken ^^ {token => Identifier(token.value.toString, token)}
 
   def identifierList: Parser[Seq[Identifier]] =
     openBracket ~> commit(rep(identifier | literal) <~ closeBracket)
+
+  def plainIdentifierList: Parser[Seq[Token]] =
+    openBracket ~> commit(rep(plainIdentifier | literalToken) <~ closeBracket)
 
   def stringList: Parser[Seq[Token]] =
     openBracket ~> commit(rep(string) <~ closeBracket)

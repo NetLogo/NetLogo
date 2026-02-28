@@ -20,11 +20,11 @@ class DefaultCompilerServices(compiler: CompilerInterface & AuxiliaryCompilerInt
     compiler.readNumberFromString(source, null, null)
   def checkReporterSyntax(source: String) =
     compiler.checkReporterSyntax(source, emptyProgram,
-                                 new ListMap[String,Procedure],
+                                 new ListMap[(String, Option[String]), Procedure],
                                  null, false, new DummyCompilationEnvironment())
   def checkCommandSyntax(source: String) =
     compiler.checkCommandSyntax(source, emptyProgram,
-                                new ListMap[String,Procedure],
+                                new ListMap[(String, Option[String]), Procedure],
                                 null, true, new DummyCompilationEnvironment())
   def readFromString(source: String) =
     compiler.readFromString(source)
@@ -33,7 +33,7 @@ class DefaultCompilerServices(compiler: CompilerInterface & AuxiliaryCompilerInt
   def isValidIdentifier(s: String, extensionManager: ExtensionManager) =
     compiler.isValidIdentifier(s, extensionManager)
   def isReporter(s: String) =
-    compiler.isReporter(s, emptyProgram, new ListMap[String, Procedure],
+    compiler.isReporter(s, emptyProgram, new ListMap[(String, Option[String]), Procedure],
                         new org.nlogo.api.DummyExtensionManager, new DummyCompilationEnvironment())
   def tokenizeForColorization(source: String) =
     compiler.tokenizeForColorization(

@@ -9,28 +9,54 @@ import org.nlogo.core,
 
 object StructureConverter {
 
-  import core.StructureDeclarations._
+  import org.nlogo.core.Fail.exception
+  import core.{Import, Export}
+  import core.StructureDeclarations.{Import => ImportDecl, Export => ExportDecl, _}
 
   def convert(declarations: Seq[Declaration],
               displayName: Option[String],
+              module: Option[String],
               oldResults: StructureResults,
               subprogram: Boolean): StructureResults = {
+    val ims = declarations.collect {
+      case l: ImportDecl =>
+        val filename = l.token.sourceLocation.filename
+        val moduleFilename = if (filename.isEmpty()) None else Some(filename)
+
+        // This should be fine, because the parser requires components to be non-empty. - Kritphong M November 2025
+        val moduleName = l.components.last.toUpperCase
+
+        if (l.isRelative) {
+          Import(None, moduleName, moduleFilename, l.alias, l.token)
+        } else {
+          Import(l.components.headOption.map(_.toUpperCase), moduleName, moduleFilename, l.alias, l.token)
+        }
+    }
+    val exs = declarations.collect {
+      case ex: ExportDecl =>
+        val filename = ex.token.sourceLocation.filename
+        val exportedNames = ex.exportedNames.map(_.token.value.asInstanceOf[String])
+        Export(if (filename.isEmpty()) None else Some(filename), exportedNames, ex.token)
+    }
     val is = declarations.collect {
       case i: Includes =>
         i.names
     }.flatten
     val ps = declarations.collect {
       case p: Procedure =>
-        buildProcedure(p, displayName)
+        buildProcedure(p, module, displayName)
     }
     ps.foreach(_._1.topLevel = subprogram)
+    if (exs.size > 1) {
+      exception(I18N.errors.get("compiler.StructureParser.exportMultiple"), exs(1).token)
+    }
     StructureResults(
       program =
         updateProgram(oldResults.program, declarations),
       procedures = oldResults.procedures ++
-        ps.map { case (pp, _) => pp.name -> pp},
+        ps.map { case (pp, _) => (pp.name, pp.module) -> pp},
       procedureTokens = oldResults.procedureTokens ++ ps.map {
-        case (p, toks) => p.name -> toks
+        case (p, toks) => (p.name, p.module) -> toks
       },
       includes = oldResults.includes ++ is,
       includedSources = oldResults.includedSources,
@@ -38,11 +64,13 @@ object StructureConverter {
         declarations.collect {
           case e: Extensions =>
             e.names.map(_.token)
-        }.flatten)
+        }.flatten,
+      imports = oldResults.imports ++ ims,
+      `export` = exs.headOption)
   }
 
-  def buildProcedure(p: Procedure, displayName: Option[String]): (FrontEndProcedure, Iterable[Token]) = {
-    val proc = new RawProcedure(p, displayName)
+  def buildProcedure(p: Procedure, module: Option[String], displayName: Option[String]): (FrontEndProcedure, Iterable[Token]) = {
+    val proc = new RawProcedure(p, module, displayName)
     (proc, p.tokens.drop(2).init :+
       new Token("", TokenType.Eof, "")(p.tokens.last.sourceLocation))
   }

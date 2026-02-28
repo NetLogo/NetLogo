@@ -17,9 +17,13 @@ trait NetLogoParser {
     val structureResults = StructureParser.parseSources(tokenizer, compilationOperand)
     val globallyUsedNames =
       StructureParser.usedNames(structureResults.program,
-        oldProcedures ++ structureResults.procedures)
+        (oldProcedures ++ structureResults.procedures).filter{case ((_, procModule), _ ) => procModule.isEmpty})
 
-    val newTopLevelProcedures = (structureResults.procedures -- oldProcedures.keys)
+    val nonAliasProcedures = structureResults.procedures.filter {
+      case ((name, module), proc) => name == proc.name && module == proc.module
+    }
+
+    val newTopLevelProcedures = (nonAliasProcedures -- oldProcedures.keys)
 
     val topLevelDefs = newTopLevelProcedures.values
       .map(parseProcedure(structureResults, globallyUsedNames, oldProcedures, extensionManager)).toSeq
@@ -31,10 +35,11 @@ trait NetLogoParser {
     globallyUsedNames: SymbolTable,
     oldProcedures:     ProceduresMap,
     extensionManager:  ExtensionManager)(procedure: FrontEndProcedure): ProcedureDefinition = {
-    val rawTokens = structureResults.procedureTokens(procedure.name)
+    val rawTokens = structureResults.procedureTokens((procedure.name, procedure.module))
     val usedNames = globallyUsedNames.addSymbols(procedure.args, SymbolType.ProcedureVariable)
     val namedTokens = {
-      val letNamedTokens = TransformableTokenStream(rawTokens.iterator, LetNamer)
+      val consolidatedTokens = ConsolidatingTokenStream(rawTokens.iterator, ScopedIdentifierConsolidator)
+      val letNamedTokens = TransformableTokenStream(consolidatedTokens, LetNamer)
       val namer = new Namer(
           structureResults.program
         , oldProcedures ++ structureResults.procedures

@@ -52,10 +52,13 @@ class ModelConverter(
         libraryManager         = libManager,
         compilationEnvironment =
           new CompilationEnvironment {
+            def exists(path: String): Boolean = compilationEnv.exists(path)
             def getSource(filename: String) = compilationEnv.getSource(filename)
             def profilingEnabled = compilationEnv.profilingEnabled
             def resolvePath(path: String): String =
               FileIO.resolvePath(path, modelPath).map(_.normalize.toString).getOrElse(path)
+            def resolveModule(currentFile: Option[String], packageName: Option[String], moduleName: String): String =
+              compilationEnv.resolveModule(currentFile, packageName, moduleName)
           },
         oldProcedures          = procedures,
         containingProgram      = program,

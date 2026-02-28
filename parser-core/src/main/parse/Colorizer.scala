@@ -59,7 +59,7 @@ object Colorizer extends TokenColorizer {
   def colorizeLine(line: String, theme: ColorizerTheme): Vector[Color] = {
     val result = Array.fill(line.size)(theme.getColor(null))
     for {
-      tok <- FrontEnd.tokenizer.tokenizeString(line)
+      tok <- FrontEnd.tokenizeStringConsolidated(line)
       j <- tok.start until tok.end
       // guard against any bugs in tokenization causing out-of-bounds positions
       if result.isDefinedAt(j)

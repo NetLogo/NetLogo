@@ -10,7 +10,7 @@ import scala.collection.immutable.ListMap
 trait FrontMiddleBridgeInterface {
   def apply(
     structureResults: StructureResults,
-    oldProcedures:    ListMap[String, nvm.Procedure],
+    oldProcedures:    ListMap[(String, Option[String]), nvm.Procedure],
     topLevelDefs:     Seq[core.ProcedureDefinition],
     backifier:        Backifier
   ): Seq[ProcedureDefinition]

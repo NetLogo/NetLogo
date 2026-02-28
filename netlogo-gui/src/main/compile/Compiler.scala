@@ -11,6 +11,7 @@ import org.nlogo.nvm.{ CompilerFlags, CompilerResults, ImportHandler, Presentati
 import org.nlogo.util.PathUtils
 
 import scala.collection.immutable.ListMap
+import scala.util.Try
 
 // This is intended to be called from Java as well as Scala, so @throws declarations are included.
 // No other classes in this package are public. - ST 2/20/08, 4/9/08, 1/21/09
@@ -29,8 +30,8 @@ class Compiler(dialect: Dialect) extends PresentationCompilerInterface {
   val parserTokenizer = Femto.scalaSingleton[org.nlogo.core.TokenizerInterface]("org.nlogo.lex.Tokenizer")
 
   // some private helpers
-  private type ProceduresMap = ListMap[String, Procedure]
-  private val noProcedures: ProceduresMap = ListMap.empty[String, Procedure]
+  private type ProceduresMap = ListMap[(String, Option[String]), Procedure]
+  private val noProcedures: ProceduresMap = ListMap.empty[(String, Option[String]), Procedure]
 
   // used to compile the Code tab, including declarations
   @throws(classOf[CompilerException])
@@ -133,7 +134,7 @@ class Compiler(dialect: Dialect) extends PresentationCompilerInterface {
   @throws(classOf[CompilerException])
   private def checkSyntax(source: String, subprogram: Boolean, program: Program, oldProcedures: ProceduresMap, extensionManager: ExtensionManager, parse: Boolean, compilationEnv: CompilationEnvironment): Unit = {
 
-    val oldProceduresListMap = ListMap[String, Procedure](oldProcedures.toSeq*)
+    val oldProceduresListMap = ListMap[(String, Option[String]), Procedure](oldProcedures.toSeq*)
     val (topLevelDefs, feStructureResults) =
       frontEnd.frontEnd(source, None, program, subprogram, oldProceduresListMap, extensionManager)
   }
@@ -169,25 +170,40 @@ class Compiler(dialect: Dialect) extends PresentationCompilerInterface {
   def findProcedurePositions(source: String): Map[String, ProcedureSyntax] =
     frontEnd.findProcedurePositions(source, Some(dialect))
 
+  // TODO: Update for the new import syntax
+  def findAllImportedFiles(source: String, compilationEnvironment: CompilationEnvironment, currentFile: Option[String] = None): Seq[String] = {
+    val imports = frontEnd.findImports(source)
+    val paths = imports.map((packageName, moduleName) => compilationEnvironment.resolveModule(currentFile, packageName, moduleName))
+    val sources = paths.flatMap(x => Try(compilationEnvironment.getSource(x)).toOption)
+
+    paths ++ (sources zip paths).flatMap((x, y) => findAllImportedFiles(x, compilationEnvironment, Some(y)))
+  }
+
   // used for includes menu
   @throws(classOf[CompilerException])
   def findIncludes(sourceFileName: String, source: String,
     compilationEnvironment: CompilationEnvironment): Option[Map[String, String]] = {
     val includes = frontEnd.findIncludes(source)
-    if (includes.isEmpty) { // this allows the includes menu to be displayed for __includes []
-      // This is a workaround for slow tokenizing/parsing when looking for `__includes`.  We do a quick/basic regex
-      // check and do not do the big parsing if the declaration doesn't exist in the file.  A better way is probably
-      // to update the `findIncludes()` API to return `Some(Seq())` when `__includes []` exists and `None` when it does
-      // not, but I don't want to make that big a change at the moment.  -Jeremy B November 2020
-      if (!FrontEndInterface.hasIncludes(source)) {
-        None
-      } else {
-        parserTokenizer.tokenizeString(source)
-          .find(t => t.text.equalsIgnoreCase("__includes"))
-          .map(_ => Map.empty[String, String])
-      }
-    } else
-      Some((includes zip includes.map(i => PathUtils.standardize(compilationEnvironment.resolvePath(i)))).toMap)
+    val includesMap =
+      if (includes.isEmpty) { // this allows the includes menu to be displayed for __includes []
+        // This is a workaround for slow tokenizing/parsing when looking for `__includes`.  We do a quick/basic regex
+        // check and do not do the big parsing if the declaration doesn't exist in the file.  A better way is probably
+        // to update the `findIncludes()` API to return `Some(Seq())` when `__includes []` exists and `None` when it does
+        // not, but I don't want to make that big a change at the moment.  -Jeremy B November 2020
+        if (!FrontEndInterface.hasIncludes(source)) {
+          None
+        } else {
+          parserTokenizer.tokenizeString(source)
+            .find(t => t.text.equalsIgnoreCase("__includes"))
+            .map(_ => Map.empty[String, String])
+        }
+      } else
+        Some((includes zip includes.map(i => PathUtils.standardize(compilationEnvironment.resolvePath(i)))).toMap)
+
+    val imports = findAllImportedFiles(source, compilationEnvironment)
+    val importsMap = Some((imports zip imports.map(compilationEnvironment.resolvePath)).toMap)
+
+    Some(includesMap.getOrElse(Map.empty[String, String]) ++ importsMap.getOrElse(Map.empty[String, String]))
   }
 
   // used by IdentifierEditor (Isaac B 7/15/25)
@@ -200,7 +216,7 @@ class Compiler(dialect: Dialect) extends PresentationCompilerInterface {
 
   // used by CommandLine
   def isReporter(s: String, program: Program, procedures: ProceduresMap, extensionManager: ExtensionManager, compilationEnv: CompilationEnvironment) = {
-    val proceduresListMap = ListMap[String, Procedure](procedures.toSeq*)
+    val proceduresListMap = ListMap[(String, Option[String]), Procedure](procedures.toSeq*)
     utilities.isReporter(s, program, proceduresListMap, extensionManager)
   }
 

@@ -15,8 +15,8 @@ object TestHelper {
   import scala.collection.immutable.ListMap
   // returns proccedures which have been fully compiled, but not yet optimized
   private[compile] def compiledProcedures(source: String, program: Program, is3D: Boolean = false): Seq[ProcedureDefinition] = {
-    val oldProceduresListMap = ListMap[String, FrontEndProcedure]()
-    val oldNvmProceduresListMap = ListMap[String, org.nlogo.nvm.Procedure]()
+    val oldProceduresListMap = ListMap[(String, Option[String]), FrontEndProcedure]()
+    val oldNvmProceduresListMap = ListMap[(String, Option[String]), org.nlogo.nvm.Procedure]()
     val extensionManager = new DummyExtensionManager
     val (topLevelDefs, feStructureResults) =
       frontEnd.frontEnd(source, None, program, false, oldProceduresListMap, extensionManager)

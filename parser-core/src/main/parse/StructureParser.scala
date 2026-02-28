@@ -19,8 +19,7 @@ package org.nlogo.parse
 // include further files.)
 
 import java.util.Locale
-
-import org.nlogo.core.{ CompilationEnvironment, CompilationOperand, CompilerException, ErrorSource, I18N,
+import org.nlogo.core.{ CompilationEnvironment, CompilationOperand, CompilerException, ErrorSource, I18N, Import,
                         ProcedureSyntax, Program, StructureResults, Token, TokenizerInterface, TokenType }
 import org.nlogo.core.Fail._
 import org.nlogo.core.FrontEndInterface.ProceduresMap
@@ -39,27 +38,166 @@ object StructureParser {
         val firstResults =
           sources.foldLeft(StructureResults(program, oldProcedures)) {
             case (results, (filename, source)) =>
-              parseOne(tokenizer, structureParser, source, filename, results)
+              parseOne(tokenizer, structureParser, source, filename, None, results)
           }
+
         if (subprogram)
           firstResults
         else {
-          Iterator.iterate(firstResults) { results =>
-            val suppliedPath = resolveIncludePath(results.includes.head.value.asInstanceOf[String])
-            cAssert(suppliedPath.endsWith(".nls"), IncludeFilesEndInNLS, results.includes.head)
-            includeFile(compilationEnvironment, suppliedPath) match {
-              case Some((path, fileContents)) =>
-                parseOne(tokenizer, structureParser, fileContents, path,
-                  results.copy(includes = results.includes.tail,
-                    includedSources = results.includedSources :+ suppliedPath))
-              case None =>
-                exception(I18N.errors.getN("compiler.StructureParser.includeNotFound", suppliedPath), results.includes.head)
+          // Check for duplicate import statements. We're doing this check instead of relying on the duplicate symbol
+          // check so that we can provide a more specific error message.
+          val (maybeDuplicateImport, _) = firstResults.imports.foldLeft((None: Option[Import], Set())) {
+            case ((None, previousNames), x) => {
+              val key = (x.packageName, x.moduleName)
+              val maybeDuplicate = if (previousNames.contains(key)) Some(x) else None
+              (maybeDuplicate, previousNames + key)
             }
-          }.dropWhile(_.includes.nonEmpty).next()
+
+            // No need to update previousNames now that we've found something
+            case ((token @ Some(_), previousNames), _) => (token, previousNames)
+          }
+
+          maybeDuplicateImport.foreach(x => exception(I18N.errors.get("compiler.StructureParser.importMultipleImports"), x.token))
+
+          var processedImports: Set[String] = Set()
+
+          Iterator.iterate(firstResults) { results =>
+            var newResults: StructureResults = results
+
+            // Handle imports
+            if (newResults.imports.nonEmpty) {
+              val previousResults = newResults
+              val currentImport = results.imports.head
+              val separator = System.getProperty("file.separator")
+
+              val suppliedPath = compilationEnvironment.resolveModule(currentImport.filename, currentImport.packageName, currentImport.moduleName)
+
+              val currentModule = for {
+                pathString <- currentImport.filename
+                basename = pathString.split(separator).last.toUpperCase()
+              } yield raw".NLS$$".r.replaceFirstIn(basename, "")
+
+              newResults = includeFile(compilationEnvironment, suppliedPath) match {
+                case Some((path, fileContents)) =>
+                  parseOne(tokenizer, structureParser, fileContents, path, Some(currentImport.moduleName),
+                    newResults.copy(imports = newResults.imports.tail,
+                      includedSources = newResults.includedSources :+ suppliedPath))
+                case None =>
+                  exception(I18N.errors.getN("compiler.StructureParser.importNotFound", suppliedPath), currentImport.token)
+              }
+
+              if (processedImports.contains(currentImport.moduleName)) {
+                exception(I18N.errors.getN("compiler.StructureParser.importLoop", currentImport.moduleName), currentImport.token)
+              } else {
+                processedImports += currentImport.moduleName
+              }
+
+              if (newResults.extensions.nonEmpty) {
+                exception(I18N.errors.getN("compiler.StructureParser.importContainsExtensions"), currentImport.token)
+              }
+
+              if (newResults.program != previousResults.program) {
+                exception(I18N.errors.getN("compiler.StructureParser.importContainsNonProcedure"), currentImport.token)
+              }
+
+              val prefix = currentImport.alias.getOrElse(currentImport.moduleName) + ":"
+              val exportedNames =
+                newResults.`export`.map(_.exportedNames.toSet).getOrElse(newResults.procedures.keys.map(_._1).toSet)
+              val newProcedures = addProcedureAliases(
+                previousResults.procedures,
+                newResults.procedures,
+                exportedNames,
+                currentModule,
+                prefix
+              )
+              val newProcedureTokens = addProcedureTokenAliases(
+                previousResults.procedureTokens,
+                newResults.procedureTokens,
+                exportedNames,
+                currentModule,
+                currentImport.filename,
+                prefix
+              )
+
+              newResults = newResults.copy(
+                program = firstResults.program, // Exclude globals, breeds, and breed variables in modules
+                procedures = newProcedures,
+                procedureTokens = newProcedureTokens
+              )
+            }
+
+            // Handle includes
+            if (newResults.includes.nonEmpty) {
+              val suppliedPath = resolveIncludePath(newResults.includes.head.value.asInstanceOf[String])
+              cAssert(suppliedPath.endsWith(".nls"), IncludeFilesEndInNLS, newResults.includes.head)
+              newResults = includeFile(compilationEnvironment, suppliedPath) match {
+                case Some((path, fileContents)) =>
+                  parseOne(tokenizer, structureParser, fileContents, path, None,
+                    newResults.copy(includes = newResults.includes.tail,
+                      includedSources = newResults.includedSources :+ suppliedPath))
+                case None =>
+                  exception(I18N.errors.getN("compiler.StructureParser.includeNotFound", suppliedPath), newResults.includes.head)
+              }
+            }
+
+            newResults
+          }.dropWhile(x => x.includes.nonEmpty || x.imports.nonEmpty).next()
         }
       }
   }
 
+  private def addProcedureAliases(
+    oldProcedures: ProceduresMap,
+    newProcedures: ProceduresMap,
+    exportedNames: Set[String],
+    module: Option[String],
+    prefix: String): ProceduresMap = {
+
+    val changedProcedures = newProcedures.removedAll(oldProcedures.keys)
+    val exportedProcedures = changedProcedures.filter{case ((name, _), _) =>
+      exportedNames.contains(name)
+    }
+
+    val aliases = exportedProcedures.map{case ((name, _), proc) =>
+      val key = (prefix.toUpperCase + name, module)
+      proc.aliases = proc.aliases :+ key
+      key -> proc}
+
+    val oldProcedureKeys = oldProcedures.keys.toSet
+
+    aliases.keys.find(x => oldProcedureKeys.contains(x)) match {
+      case Some(x) => {
+        val message = I18N.errors.getN("compiler.StructureParser.importConflict", "procedure", x._1)
+        exception(message, oldProcedures(x).nameToken)
+      }
+      case None => ()
+    }
+
+    newProcedures ++ aliases
+  }
+
+  private def addProcedureTokenAliases(
+    oldProcedureTokens: Map[(String, Option[String]), Iterable[Token]],
+    newProcedureTokens: Map[(String, Option[String]), Iterable[Token]],
+    exportedNames: Set[String],
+    module: Option[String],
+    filename: Option[String],
+    prefix: String): Map[(String, Option[String]), Iterable[Token]] = {
+
+    val changedProcedureTokens = newProcedureTokens.removedAll(oldProcedureTokens.keys)
+    val exportedProcedureTokens = changedProcedureTokens.filter{case ((name, _), _) =>
+      exportedNames.contains(name)
+    }
+
+    // addProcedureAliases() already checks for name conflicts, so no need to check again here.
+    val aliases = exportedProcedureTokens.map{case ((name, _), proc) =>
+      (prefix.toUpperCase + name, module) -> proc
+    }
+
+    newProcedureTokens ++ aliases
+  }
+
+  // TODO: extend to work with modules
   private def parsingWithExtensions(compilationData: CompilationOperand)
                                    (results: => StructureResults): StructureResults = {
     if (compilationData.subprogram)
@@ -84,12 +222,12 @@ object StructureParser {
     }
   }
 
-  private def parseOne(tokenizer: TokenizerInterface, structureParser: StructureParser, source: String, filename: String, oldResults: StructureResults): StructureResults = {
+  private def parseOne(tokenizer: TokenizerInterface, structureParser: StructureParser, source: String, filename: String, module: Option[String], oldResults: StructureResults): StructureResults = {
       val tokens =
         tokenizer.tokenizeString(source, filename)
           .filter(_.tpe != TokenType.Comment)
           .map(Namer0)
-      structureParser.parse(tokens, oldResults, filename)
+      structureParser.parse(tokens, module, oldResults, filename)
     }
 
   private[parse] def usedNames(program: Program, procedures: ProceduresMap): SymbolTable = {
@@ -105,7 +243,7 @@ object StructureParser {
         .addSymbols(program.breeds.keys, SymbolType.TurtleBreed)
         .addSymbols(program.linkBreeds.values.map(_.singular), SymbolType.LinkBreedSingular)
         .addSymbols(program.linkBreeds.keys, SymbolType.LinkBreed)
-        .addSymbols(procedures.keys, SymbolType.ProcedureSymbol)
+        .addSymbols(procedures.keys.map(_._1), SymbolType.ProcedureSymbol)
 
     program.breeds.values.foldLeft(symTable) {
       case (table, breed) if breed.isLinkBreed =>
@@ -168,6 +306,38 @@ object StructureParser {
     }
   }
 
+  @throws(classOf[CompilerException])
+  def findImports(tokens: Iterator[Token]): Seq[(Option[String], String)] = {
+    val importPositionedTokens =
+      tokens.dropWhile(! _.text.equalsIgnoreCase("import"))
+    val result =
+      if (importPositionedTokens.isEmpty)
+        Seq()
+      else {
+        importPositionedTokens.next()
+        val importWithoutComments = importPositionedTokens.filter(_.tpe != TokenType.Comment)
+        if (importWithoutComments.next().tpe != TokenType.OpenBracket)
+          exception("Did not find expected open bracket for import declaration", tokens.next())
+        else {
+          val nameTokens = importWithoutComments
+            .takeWhile((x) => x.tpe != TokenType.OpenBracket && x.tpe != TokenType.CloseBracket)
+            .filter(_.tpe == TokenType.Ident)
+            .map(_.value.toString)
+            .toSeq
+          nameTokens.length match {
+            case 1 => Seq((None, nameTokens.head))
+            case 2 => Seq((Some(nameTokens.head), nameTokens(1)))
+            case _ => exception("Malformed import", tokens.next()) // Malformed import
+          }
+        }
+      }
+    if (result.isEmpty) {
+      result
+    } else {
+      result ++ findImports(tokens)
+    }
+  }
+
   def resolveIncludePath(path: String) = {
     val name = System.getProperty("os.name")
 
@@ -196,16 +366,16 @@ class StructureParser(
   displayName: Option[String],
   subprogram: Boolean) {
 
-  def parse(tokens: Iterator[Token], oldResults: StructureResults, filename: String): StructureResults =
+  def parse(tokens: Iterator[Token], module: Option[String], oldResults: StructureResults, filename: String): StructureResults =
     StructureCombinators.parse(tokens, filename) match {
       case Right(declarations) =>
         StructureChecker.rejectMisplacedConstants(declarations)
         StructureChecker.rejectDuplicateDeclarations(declarations)
         StructureChecker.rejectDuplicateNames(declarations,
           StructureParser.usedNames(
-            oldResults.program, oldResults.procedures))
+            oldResults.program, oldResults.procedures.filter{case ((_, procModule), _) => procModule == module}))
         StructureChecker.rejectMissingReport(declarations)
-        StructureConverter.convert(declarations, displayName,
+        StructureConverter.convert(declarations, displayName, module,
           if (subprogram)
             StructureResults(program = oldResults.program)
           else oldResults,
