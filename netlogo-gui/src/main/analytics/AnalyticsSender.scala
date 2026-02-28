@@ -4,6 +4,7 @@ package org.nlogo.analytics
 
 import java.net.URI
 import java.net.http.{ HttpClient, HttpRequest, HttpResponse }
+import java.nio.file.{ Files, Paths, StandardOpenOption }
 import java.util.UUID
 
 import org.nlogo.core.NetLogoPreferences
@@ -47,6 +48,8 @@ object AnalyticsSender {
 
   private val networkTracker = new NetworkTracker(domain)
 
+  private val cachePath = Paths.get(System.getProperty("user.home"), ".nlogo", "analyticsCache")
+
   private[analytics] def apply(eventType: AnalyticsEventType): Future[Unit] =
     trySending(eventType, None)
 
@@ -74,8 +77,18 @@ object AnalyticsSender {
 
   private def trySending(eventType: AnalyticsEventType, payloadOpt: Option[String]): Future[Unit] =
     Future {
-      if (!silent && sendEnabled && networkTracker.isAvailable())
-        send(eventType, payloadOpt)
+      if (!silent && sendEnabled) {
+        val (wasAvailable, available) = networkTracker.checkAvailable()
+
+        if (available) {
+          send(eventType, payloadOpt)
+
+          if (!wasAvailable)
+            sendCache()
+        } else {
+          cacheEvent(eventType, payloadOpt)
+        }
+      }
     }
 
   private def send(eventType: AnalyticsEventType, payloadOpt: Option[String]): Unit =
@@ -104,13 +117,37 @@ object AnalyticsSender {
       case e: Exception =>
         println(s"Telemetry exception: $e")
         networkTracker.checkNetwork()
-        if (networkTracker.isAvailable()) {
+        if (networkTracker.checkAvailable()._2) {
           println(s"Network is available.  Retrying telemetry event of type '$eventType'....")
           send(eventType, payloadOpt)
         } else {
           println(s"Network unavailable.  Not retrying telemetry event of type '$eventType'.")
         }
     }
+
+  private def cacheEvent(eventType: AnalyticsEventType, payloadOpt: Option[String]): Unit = {
+    Files.createDirectories(cachePath.getParent)
+
+    val line = s"${eventType.ordinal},${payloadOpt.getOrElse("")}\n"
+
+    Files.writeString(cachePath, line, StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.APPEND)
+  }
+
+  private def sendCache(): Unit = {
+    if (Files.exists(cachePath) && !Files.isDirectory(cachePath)) {
+      Files.readAllLines(cachePath).forEach { line =>
+        val split = line.split(",", 2).map(_.trim)
+
+        if (split.size == 2) {
+          split(0).toIntOption.foreach { tpe =>
+            Future(send(AnalyticsEventType.fromOrdinal(tpe), Option(split(1)).filter(_.nonEmpty)))
+          }
+        }
+      }
+
+      Files.delete(cachePath)
+    }
+  }
 
   // used by GUI tests to prevent GitHub Actions from diluting the analytics data (Isaac B 10/29/25)
   def silence(): Unit = {
