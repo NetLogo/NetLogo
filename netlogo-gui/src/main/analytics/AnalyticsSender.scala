@@ -2,15 +2,13 @@
 
 package org.nlogo.analytics
 
-import java.net.{ HttpURLConnection, NetworkInterface, URI }
+import java.net.URI
 import java.net.http.{ HttpClient, HttpRequest, HttpResponse }
 import java.util.UUID
 
-import scala.concurrent.{ ExecutionContext, Future }
-import scala.jdk.CollectionConverters.EnumerationHasAsScala
-import scala.util.Try
-
 import org.nlogo.core.NetLogoPreferences
+
+import scala.concurrent.{ ExecutionContext, Future }
 
 import telemetry.TelemetryEventV1
 
@@ -20,10 +18,7 @@ object AnalyticsSender {
 
   private val domain = "https://telemetry.netlogo.org"
 
-  private var available   = false
   private var sendEnabled = false
-
-  private var lastCheck = 0L
 
   private val isDeveloper = System.getProperty("org.nlogo.release") != "true"
 
@@ -48,6 +43,8 @@ object AnalyticsSender {
     HttpClient.newBuilder()
       .version(HttpClient.Version.HTTP_1_1)
       .build()
+
+  private val networkTracker = new NetworkTracker(domain)
 
   private[analytics] def apply(eventType: AnalyticsEventType): Future[Unit] =
     trySending(eventType, None)
@@ -76,14 +73,8 @@ object AnalyticsSender {
 
   private def trySending(eventType: AnalyticsEventType, payloadOpt: Option[String]): Future[Unit] =
     Future {
-      if (sendEnabled) {
-        if (!available && System.currentTimeMillis() - lastCheck >= 5000) {
-          checkNetwork()
-        }
-        if (available) {
-          send(eventType, payloadOpt)
-        }
-      }
+      if (sendEnabled && networkTracker.isAvailable())
+        send(eventType, payloadOpt)
     }
 
   private def send(eventType: AnalyticsEventType, payloadOpt: Option[String]): Unit =
@@ -111,20 +102,7 @@ object AnalyticsSender {
     } catch {
       case e: Exception =>
         println(s"Telemetry exception: $e")
-        checkNetwork()
+        networkTracker.checkNetwork()
     }
-
-  private def checkNetwork(): Unit = {
-    available =
-      NetworkInterface.getNetworkInterfaces().asScala.exists(_.isUp) &&
-        Try {
-          val url  = URI.create(s"$domain/telemetry/diagnostic").toURL
-          val conn = url.openConnection().asInstanceOf[HttpURLConnection]
-          conn.setConnectTimeout(5000)
-          conn.   setReadTimeout(5000)
-          conn.getResponseCode()
-        }.toOption.contains(200)
-    lastCheck = System.currentTimeMillis()
-  }
 
 }
