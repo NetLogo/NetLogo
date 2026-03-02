@@ -289,6 +289,8 @@ class InterfacePanelLite(val viewWidget: ViewWidgetInterface, compiler: Compiler
   def interfaceImage: BufferedImage =
     Images.paintToImage(this)
 
+  override def editWidget(widget: Editable): Unit = {}
+
   override def syncTheme(): Unit = {
     setBackground(InterfaceColors.interfaceBackground())
 

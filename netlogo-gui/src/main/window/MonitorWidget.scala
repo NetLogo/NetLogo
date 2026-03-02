@@ -12,8 +12,7 @@ import org.nlogo.editor.Colorizer
 import org.nlogo.nvm.Procedure
 import org.nlogo.swing.RoundedBorderPanel
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
-import org.nlogo.window.Events.{ AddJobEvent, EditWidgetEvent,
-  RuntimeErrorEvent, PeriodicUpdateEvent, JobRemovedEvent, RemoveJobEvent }
+import org.nlogo.window.Events.{ AddJobEvent, RuntimeErrorEvent, PeriodicUpdateEvent, JobRemovedEvent, RemoveJobEvent }
 
 object MonitorWidget {
   private val MinWidth = 50
@@ -403,7 +402,7 @@ class MonitorWidget(random: MersenneTwisterFast, compiler: CompilerServices, col
   def mouseClicked(e: MouseEvent): Unit = {
     if (e.getButton == MouseEvent.BUTTON1 && !e.isPopupTrigger && error().isDefined &&
         !lastMousePressedWasPopupTrigger)
-      new EditWidgetEvent(widgetContainer.orNull, this).raise(this)
+      widgetContainer.foreach(_.editWidget(this))
   }
 
   def mousePressed(e: MouseEvent): Unit = {
