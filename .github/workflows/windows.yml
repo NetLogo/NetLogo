@@ -85,7 +85,7 @@ jobs:
           sbt dist/buildNetLogo
           sbt "dist/packageWinAggregate OpenJDK_17.0.2_64"
 
-      - uses: actions/upload-artifact@v6
+      - uses: actions/upload-artifact@v7
         with:
           name: windows-64
           path: dist/target/downloadPages/*
