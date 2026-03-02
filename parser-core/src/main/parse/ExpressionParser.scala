@@ -108,7 +108,7 @@ object ExpressionParser {
                     new core.ReporterApp(r, Seq(), set.token.sourceLocation)
 
                   case _ =>
-                    exception(s"Command found in multi-set where a variable name was expected: ${set.token.text.toUpperCase(Locale.ENGLISH)}.", set.token.sourceLocation)
+                    exception(I18N.errors.get("compiler.SetVisitor.notSettable"), set.token.sourceLocation)
 
                 }
 
