@@ -74,13 +74,7 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
     } finally {
       openWs.dispose()
     }
-    proto match {
-      case Some(protocol) =>
-        runExperimentWithProtocol(settings, protocol, _ => {}, finish, new DummyPrimaryWorkspace)
-
-      case None =>
-        throw new IllegalArgumentException("Invalid run, specify experiment name or setup file")
-    }
+    runExperimentWithProtocol(settings, proto.get, _ => {}, finish, new DummyPrimaryWorkspace)
   }
 
   // used in bspace extension
