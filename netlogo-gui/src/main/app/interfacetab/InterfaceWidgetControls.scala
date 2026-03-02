@@ -19,7 +19,7 @@ import scala.collection.mutable.HashSet
 
 class InterfaceWidgetControls(wPanel: WidgetPanel,
                               workspace: GUIWorkspace,
-                              WidgetInfos: List[WidgetInfo],
+                              widgetInfos: Seq[WidgetInfo],
                               frame: Frame,
                               dialogFactory: EditDialogFactory)
   extends JPanel(new GridBagLayout)
@@ -28,7 +28,6 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
   with WindowEvents.InterfaceModeChangedEvent.Handler
   with WindowEvents.WidgetForegroundedEvent.Handler
   with WindowEvents.WidgetRemovedEvent.Handler
-  with WindowEvents.EditWidgetEvent.Handler
   with WindowEvents.EditView3DEvent.Handler
   with WindowEvents.WidgetAddedEvent.Handler
   with ThemeSync {
@@ -101,13 +100,11 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
   class EditAction extends AbstractAction {
     def actionPerformed(e: ActionEvent): Unit = {
       if (editButton.isSelected) {
-        new WindowEvents.EditWidgetEvent(wPanel, null).raise(InterfaceWidgetControls.this)
-
+        editWidget(null)
         wPanel.setInterfaceMode(InterfaceMode.Edit, true)
-      }
-
-      else
+      } else {
         editButton.doClick()
+      }
     }
   }
 
@@ -125,25 +122,23 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
 
   private var editTarget: Option[Editable] = None
 
-  def handle(e: WindowEvents.EditWidgetEvent): Unit = {
-    if (e.source == wPanel) {
-      // this is to support the "Edit..." button in the view control strip - ST 7/18/03
-      val targetOption = Option(e.widget).orElse {
-        if (!editButton.isEnabled) None
-        editTarget
-      }.filter(wPanel.contains)
-      for (target <- targetOption) {
-        def suppress(b: Boolean): Unit = {
-          target match {
-            case w: JobWidget => w.suppressRecompiles(b)
-            case _ =>
-          }
+  private [interfacetab] def editWidget(widget: Editable): Unit = {
+    // this is to support the "Edit..." button in the view control strip - ST 7/18/03
+    val targetOption = Option(widget).orElse {
+      if (!editButton.isEnabled) None
+      editTarget
+    }.filter(wPanel.contains)
+    for (target <- targetOption) {
+      def suppress(b: Boolean): Unit = {
+        target match {
+          case w: JobWidget => w.suppressRecompiles(b)
+          case _ =>
         }
-        wPanel.haltIfRunning()
-        suppress(true)
-        wPanel.editWidgetFinished(target, dialogFactory.canceled(frame, target))
-        suppress(false)
       }
+      wPanel.haltIfRunning()
+      suppress(true)
+      wPanel.editWidgetFinished(target, dialogFactory.canceled(frame, target))
+      suppress(false)
     }
   }
 
@@ -278,7 +273,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
     }
 
     private val actions =
-      WidgetInfos.map(spec => new MenuItem(new AbstractAction(spec.displayName, spec.icon) {
+      widgetInfos.map(spec => new MenuItem(new AbstractAction(spec.displayName, spec.icon) {
         def actionPerformed(e: ActionEvent): Unit = {
           chosenItem = spec.displayName
 
@@ -312,7 +307,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
     })
 
     def getSelectedWidget =
-      WidgetInfos.find(_.displayName == chosenItem).get.coreWidget
+      widgetInfos.find(_.displayName == chosenItem).get.coreWidget
 
     override def syncTheme(): Unit = {
       setBackgroundColor(InterfaceColors.toolbarControlBackground())
