@@ -2,7 +2,10 @@ name: build-and-test
 
 on:
   push:
-  pull_request:
+  # This should change back to simply `pull_request`, once Helio is no longer private.
+  # We need to do `pull_request_target`, so people's PRs can get the private token to
+  # clone Helio. --Jason B. (3/2/26)
+  pull_request_target:
   workflow_dispatch:
 
 env:
