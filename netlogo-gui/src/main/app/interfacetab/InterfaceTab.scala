@@ -17,7 +17,7 @@ import org.nlogo.swing.{ Implicits, PrinterManager, Printable => NlogoPrintable,
                        Implicits.thunk2action, UserAction.{ MenuAction, ToolsCategory }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ EditDialogFactory, GUIWorkspace, InterfaceMode, SpeedSliderPanel, ViewUpdatePanel,
-                          WidgetInfo, Events => WindowEvents, WorkspaceActions },
+                          Events => WindowEvents, WorkspaceActions },
                         WindowEvents.{ AfterLoadEvent, Enable2DEvent, LoadBeginEvent, OutputEvent }
 
 object InterfaceTab {
@@ -45,7 +45,7 @@ class InterfaceTab(workspace: GUIWorkspace,
   setFocusTraversalPolicy(new InterfaceTabFocusTraversalPolicy)
   private val locationToggleAction = new CommandCenterLocationToggleAction
   commandCenter.locationToggleAction = locationToggleAction
-  val iP = new InterfacePanel(workspace.viewWidget, workspace, dialogFactory.colorizer)
+  val iP = new InterfacePanel(workspace.viewWidget, workspace, dialogFactory)
 
   val commandCenterToggleAction = new CommandCenterToggleAction()
 
@@ -76,14 +76,6 @@ class InterfaceTab(workspace: GUIWorkspace,
 
   commandCenter.setMinimumSize(new Dimension(0, 0))
 
-  private val widgetControls = {
-    import WidgetInfo._
-
-    val buttons = List(button, slider, switch, chooser, input, monitor, plot, output, note)
-
-    new InterfaceWidgetControls(iP, workspace, buttons, workspace.getFrame, dialogFactory)
-  }
-
   val speedSlider = new SpeedSliderPanel(workspace, workspace.viewWidget.tickCounter)
 
   private val viewUpdatePanel = new ViewUpdatePanel(workspace, speedSlider, workspace.viewWidget.displaySwitch,
@@ -104,7 +96,7 @@ class InterfaceTab(workspace: GUIWorkspace,
   val northWrapper = new JPanel
   northWrapper.setLayout(new BoxLayout(northWrapper, BoxLayout.PAGE_AXIS))
 
-  private val toolBar = new DynamicToolbar(widgetControls, speedSlider, viewUpdatePanel)
+  private val toolBar = new DynamicToolbar(iP.widgetControls, speedSlider, viewUpdatePanel)
 
   northWrapper.add(toolBar)
 
@@ -200,7 +192,7 @@ class InterfaceTab(workspace: GUIWorkspace,
       Printable.PAGE_EXISTS
     }
 
-  class DynamicToolbar(widgetControls: InterfaceWidgetControls, speedSlider: SpeedSliderPanel,
+  class DynamicToolbar(widgetControls: Component, speedSlider: SpeedSliderPanel,
                        viewUpdatePanel: ViewUpdatePanel)
     extends ToolBar with ThemeSync {
 
@@ -259,7 +251,6 @@ class InterfaceTab(workspace: GUIWorkspace,
     override def syncTheme(): Unit = {
       setBackground(InterfaceColors.toolbarBackground())
 
-      widgetControls.syncTheme()
       viewUpdatePanel.syncTheme()
     }
   }

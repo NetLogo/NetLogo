@@ -2,6 +2,7 @@
 
 package org.nlogo.window
 
+import java.awt.Component
 import javax.swing.JLayeredPane
 
 import org.nlogo.core.{ Widget => CoreWidget }
@@ -15,4 +16,5 @@ abstract class AbstractWidgetPanel extends JLayeredPane with Zoomable with Theme
   def hasView: Boolean
   def empty: Boolean
   def setBoldWidgetText(value: Boolean): Unit
+  def widgetControls: Component
 }
