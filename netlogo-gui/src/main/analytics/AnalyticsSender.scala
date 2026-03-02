@@ -103,6 +103,12 @@ object AnalyticsSender {
       case e: Exception =>
         println(s"Telemetry exception: $e")
         networkTracker.checkNetwork()
+        if (networkTracker.isAvailable()) {
+          println(s"Network is available.  Retrying telemetry event of type '$eventType'....")
+          send(eventType, payloadOpt)
+        } else {
+          println(s"Network unavailable.  Not retrying telemetry event of type '$eventType'.")
+        }
     }
 
 }
