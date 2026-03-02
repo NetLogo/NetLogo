@@ -1,0 +1,63 @@
+name: build-docs
+
+on:
+  workflow_call:
+    secrets:
+        HELIO_TOKEN:
+          required: true
+    outputs:
+      pdf-artifact:
+        description: "Artifact name for the generated PDF manual"
+        value: ${{ jobs.build-docs.outputs.pdf-artifact }}
+      csv-artifact:
+        description: "Artifact name for the manual links CSV"
+        value: ${{ jobs.build-docs.outputs.csv-artifact }}
+
+jobs:
+  build-docs:
+    runs-on: ubuntu-latest
+    outputs:
+      pdf-artifact: "NetLogo_User_Manual.pdf"
+      csv-artifact: "manual-links.csv"
+    env:
+      HELIO_SKIP_CHECKS: "1"
+      NUXT_TELEMETRY_DISABLED: "1"
+      HELIO_HEADLESS: "1"
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          submodules: true
+          fetch-depth: 0
+          token: ${{ secrets.HELIO_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "yarn"
+          cache-dependency-path: helio/yarn.lock
+
+      - name: Setup Helio
+        working-directory: helio
+        shell: bash
+        run: yarn run init
+
+      - name: Build Docs and Generate Manual
+        working-directory: helio/apps/docs
+        shell: bash
+        run: |
+          yarn run docs:build-and-generate-manual
+
+      - uses: actions/upload-artifact@v6
+        id: upload-pdf
+        with:
+          name: "NetLogo_User_Manual.pdf"
+          path: ./helio/apps/docs/.build/NetLogo_User_Manual.pdf
+          if-no-files-found: error
+
+      - uses: actions/upload-artifact@v6
+        id: upload-csv
+        with:
+          name: "manual-links.csv"
+          path: ./helio/apps/docs/.build/manual-links.csv
+          if-no-files-found: error

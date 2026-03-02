@@ -6,7 +6,12 @@ on:
   workflow_dispatch:
 
 jobs:
+  build-docs:
+    uses: ./.github/workflows/build-docs.yml
+    secrets: inherit
+
   package:
+    needs: build-docs
     runs-on: ubuntu-latest
     steps:
       - name: Cancel Previous Runs
@@ -61,6 +66,18 @@ jobs:
           echo "  version: '17.0.2'" >> .jdks.yaml
           echo "  architecture: '64'" >> .jdks.yaml
           echo "  path: '${{ env.JAVA_HOME }}'" >> .jdks.yaml
+
+      - name: Download User Manual
+        uses: actions/download-artifact@v6
+        with:
+          name: ${{ needs.build-docs.outputs.pdf-artifact }}
+          path: ./helio/apps/docs/.build
+
+      - name: Download CSV of Manual Links
+        uses: actions/download-artifact@v6
+        with:
+          name: ${{ needs.build-docs.outputs.csv-artifact }}
+          path: ./helio/apps/docs/.build
 
       - name: Build NetLogo
         run: sbt netlogo/resources
