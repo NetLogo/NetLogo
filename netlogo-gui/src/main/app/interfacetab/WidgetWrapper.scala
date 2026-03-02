@@ -13,7 +13,7 @@ import org.nlogo.core.I18N
 import org.nlogo.swing.{ MenuItem, PopupMenu, WrappingPopupMenu, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ InterfaceMode, MouseMode, ViewWidget, Widget, WidgetWrapperInterface }
-import org.nlogo.window.Events.{ DirtyEvent, EditWidgetEvent, ExportWidgetEvent, WidgetForegroundedEvent }
+import org.nlogo.window.Events.{ DirtyEvent, ExportWidgetEvent, WidgetForegroundedEvent }
 
 object WidgetWrapper {
   private val HandleSize = 7
@@ -445,7 +445,7 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
     foreground()
 
     if (e.getClickCount == 2) {
-      widget.getEditable.foreach(new EditWidgetEvent(interfacePanel, _).raise(this))
+      widget.getEditable.foreach(interfacePanel.editWidget)
 
       return
     }
@@ -801,7 +801,7 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
           def actionPerformed(e: ActionEvent): Unit = {
             selected(true)
             foreground()
-            new EditWidgetEvent(interfacePanel, editable).raise(WidgetWrapper.this)
+            interfacePanel.editWidget(editable)
           }
         }))
 

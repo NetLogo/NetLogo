@@ -21,18 +21,10 @@ class HubNetClientEditor(workspace: GUIWorkspace,
         with org.nlogo.window.Events.ZoomedEvent.Handler
         with ThemeSync
         with NetLogoIcon {
-  val interfacePanel: AbstractWidgetPanel = iFactory.widgetPanel(workspace)
+  val interfacePanel: AbstractWidgetPanel = iFactory.widgetPanel(this, workspace, WidgetInfo.hubNetInfos)
   private val scrollPane = new ScrollPane(interfacePanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
                                           ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED) {
     setBorder(null)
-  }
-
-  private val widgetControls = {
-    import WidgetInfo._
-
-    val buttons = List(button, slider, switch, chooser, input, monitor, plot, note, view)
-
-    iFactory.widgetControls(interfacePanel, workspace, buttons, HubNetClientEditor.this)
   }
 
   private val toolbar = new ToolBar {
@@ -45,7 +37,7 @@ class HubNetClientEditor(workspace: GUIWorkspace,
       c.weightx = 1
       c.insets = new Insets(6, 0, 6, 0)
 
-      add(widgetControls, c)
+      add(interfacePanel.widgetControls, c)
     }
   }
 
@@ -105,11 +97,6 @@ class HubNetClientEditor(workspace: GUIWorkspace,
     interfacePanel.syncTheme()
 
     scrollPane.setBackground(InterfaceColors.interfaceBackground())
-
-    widgetControls match {
-      case ts: ThemeSync => ts.syncTheme()
-      case _ =>
-    }
 
     toolbar.setBackground(InterfaceColors.toolbarBackground())
 

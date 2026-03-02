@@ -2,8 +2,8 @@
 
 package org.nlogo.app.interfacetab
 
-import java.awt.{ Color => AwtColor, Component, Cursor, Dimension, EventQueue, Font, Graphics, MouseInfo, Point
-                , Rectangle }
+import java.awt.{ Color => AwtColor, Component, Cursor, Dimension, EventQueue, Font, Frame, Graphics, MouseInfo, Point,
+                  Rectangle }
 import java.awt.event.{ ActionEvent, FocusEvent, FocusAdapter, KeyAdapter, KeyEvent, KeyListener, MouseAdapter,
                         MouseEvent, MouseListener, MouseMotionAdapter, MouseMotionListener }
 import javax.swing.{ AbstractAction, JComponent, JLayeredPane, SwingUtilities }
@@ -20,11 +20,12 @@ import org.nlogo.nvm.DefaultCompilerServices
 import org.nlogo.swing.{ MenuItem, PopupMenu, UndoManager }
 import org.nlogo.theme.InterfaceColors
 import org.nlogo.window.{ AbstractPlotWidget, AbstractWidgetPanel, AutoIndentHandler, ButtonWidget, ClipboardUtils,
-                          CopyPasteTarget, Editable, Events => WindowEvents, GUIWorkspace, InterfaceMode, OutputWidget,
-                          Widget, WidgetContainer, WidgetRegistry, DummyChooserWidget, DummyInputBoxWidget,
-                          DummyPlotWidget, DummyViewWidget, PlotWidget, SliderWidget, ViewWidget },
-  WindowEvents.{ CompileAllEvent, DirtyEvent, EditWidgetEvent, InterfaceModeChangedEvent, LoadBeginEvent,
-                 SetInterfaceModeEvent, WidgetRemovedEvent, ZoomedEvent }
+                          CopyPasteTarget, Editable, EditDialogFactory, Events => WindowEvents, GUIWorkspace,
+                          InterfaceMode, OutputWidget, Widget, WidgetContainer, WidgetRegistry, DummyChooserWidget,
+                          DummyInputBoxWidget, DummyPlotWidget, DummyViewWidget, PlotWidget, SliderWidget, ViewWidget,
+                          WidgetInfo },
+  WindowEvents.{ CompileAllEvent, DirtyEvent, InterfaceModeChangedEvent, LoadBeginEvent, SetInterfaceModeEvent,
+                 WidgetRemovedEvent, ZoomedEvent }
 
 // note that an instance of this class is used for the hubnet client editor
 // and its subclass InterfacePanel is used for the interface tab.
@@ -32,7 +33,7 @@ import org.nlogo.window.{ AbstractPlotWidget, AbstractWidgetPanel, AutoIndentHan
 // (eg the way it handles plots) which is overridden in the subclass. ev 1/25/07
 
 // public for widget extension - ST 6/12/08
-class WidgetPanel(val workspace: GUIWorkspace)
+class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[WidgetInfo], dialogFactory: EditDialogFactory)
     extends AbstractWidgetPanel
     with WidgetContainer
     with MouseListener
@@ -42,6 +43,9 @@ class WidgetPanel(val workspace: GUIWorkspace)
     with LoadBeginEvent.Handler
     with SetInterfaceModeEvent.Handler
     with CopyPasteTarget {
+
+  override val widgetControls: InterfaceWidgetControls =
+    new InterfaceWidgetControls(this, workspace, widgetInfos, frame, dialogFactory)
 
   protected var selectionRect: Rectangle = null // convert to Option?
   var widgetsBeingDragged: Seq[WidgetWrapper] = Seq()
@@ -692,7 +696,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
       case InterfaceMode.Edit =>
         if (e.getButton == MouseEvent.BUTTON1) {
-          wrapperAtPoint(e.getPoint).flatMap(_.widget.getEditable).foreach(new EditWidgetEvent(this, _).raise(this))
+          wrapperAtPoint(e.getPoint).flatMap(_.widget.getEditable).foreach(editWidget)
         } else {
           wrapperAtPoint(e.getPoint) match {
             case Some(w) =>
@@ -1016,7 +1020,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
     setInterfaceMode(InterfaceMode.Interact, false)
 
-    wrapper.widget.getEditable.foreach(new EditWidgetEvent(this, _).raise(this))
+    wrapper.widget.getEditable.foreach(editWidget)
 
     placedShadowWidgets = false
 
@@ -1103,6 +1107,10 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
     revalidate()
     repaint()
+  }
+
+  override def editWidget(widget: Editable): Unit = {
+    widgetControls.editWidget(widget)
   }
 
   def editWidgetFinished(target: Editable, canceled: Boolean): Unit = {
@@ -1685,6 +1693,8 @@ class WidgetPanel(val workspace: GUIWorkspace)
     setBackground(InterfaceColors.interfaceBackground())
 
     setCursor(interfaceMode.cursor)
+
+    widgetControls.syncTheme()
 
     getWrappers.foreach(_.syncTheme())
 

@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import java.awt.{ Component, Frame }
+import java.awt.Frame
 
 import org.nlogo.core.{ I18N, View => CoreView, Widget => CoreWidget,
   Button => CoreButton, Chooser => CoreChooser, InputBox => CoreInputBox,
@@ -26,6 +26,9 @@ object WidgetInfo {
   val output  = WidgetInfo("output", "output.png", () => CoreOutput(0, 0, 0, 0, 13))
   val note    = WidgetInfo("note", "note.png", () => CoreTextBox(None, fontSize = 11))
   val view    = WidgetInfo("view", "view.gif", () => CoreView())
+
+  val primaryInfos: Seq[WidgetInfo] = Seq(button, slider, switch, chooser, input, monitor, plot, output, note)
+  val hubNetInfos: Seq[WidgetInfo] = Seq(button, slider, switch, chooser, input, monitor, plot, note, view)
 }
 
 case class WidgetInfo(displayName: String, widgetThunk: () => CoreWidget, imageName: String) {
@@ -34,8 +37,5 @@ case class WidgetInfo(displayName: String, widgetThunk: () => CoreWidget, imageN
 }
 
 trait InterfaceFactory {
-  def widgetPanel(workspace: GUIWorkspace): AbstractWidgetPanel
-
-  def widgetControls(interfacePanel: AbstractWidgetPanel, workspace: GUIWorkspace, buttons: List[WidgetInfo],
-                     frame: Frame): Component
+  def widgetPanel(frame: Frame, workspace: GUIWorkspace, widgetInfos: Seq[WidgetInfo]): AbstractWidgetPanel
 }
