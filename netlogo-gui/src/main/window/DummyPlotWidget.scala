@@ -39,12 +39,15 @@ class DummyPlotWidget(plot: Plot, plotManager: PlotManager) extends AbstractPlot
   }
 
   def createNameOptions(): Options[Plot] = {
-    val nameOptions = new Options[Plot]
-    for((plot,i) <- plotManager.plots.zipWithIndex){
-      nameOptions.addOption(plot.name, plot)
-      if(i==0) nameOptions.selectValue(plot)
+    new Options[Plot] {
+      if (plotManager.plots.isEmpty) {
+        addOption(plot.name, plot)
+      } else {
+        plotManager.plots.foreach(plot => addOption(plot.name, plot))
+      }
+
+      selectValue(values.head)
     }
-    nameOptions
   }
 
   override def savePens(s: StringBuilder): Unit = {
