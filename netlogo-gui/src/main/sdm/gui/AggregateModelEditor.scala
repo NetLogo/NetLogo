@@ -14,7 +14,6 @@ import org.jhotdraw.util.{ Command, CommandMenu, RedoCommand, UndoCommand, UndoM
 
 import org.nlogo.analytics.Analytics
 import org.nlogo.api.{ CompilerServices, ExtensionManager, SourceOwner }
-import org.nlogo.awt.EventQueue
 import org.nlogo.core.{ CompilerException, I18N }
 import org.nlogo.editor.Colorizer
 import org.nlogo.sdm.Translator
@@ -137,14 +136,9 @@ class AggregateModelEditor(
     setTool(selectionTool)
     setPreferredSize(WindowSize)
     pack()
-    setVisible(true)
 
-    EventQueue.invokeLater(new Runnable() {
-      def run(): Unit = { toFront() }
-    })
+    syncTheme()
   }
-
-  syncTheme()
 
   override def setVisible(visible: Boolean): Unit = {
     super.setVisible(visible)

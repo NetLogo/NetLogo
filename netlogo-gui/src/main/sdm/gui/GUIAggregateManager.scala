@@ -2,6 +2,8 @@
 
 package org.nlogo.sdm.gui
 
+import java.awt.EventQueue
+
 import org.nlogo.api.{ AggregateManagerInterface, CompilerServices, ExtensionManager }
 import org.nlogo.core.{ AgentKind, LiteralParser, Model => CoreModel }
 import org.nlogo.editor.Colorizer
@@ -51,8 +53,11 @@ with ThemeSync {
       .foreach { drawing =>
         editor = new AggregateModelEditor(
           linkParent, colorizer, menuBarFactory, drawing, compiler, dialogFactory, extensionManager)
-        if (drawing.getModel.elements.isEmpty)
-          editor.setVisible(false)
+        if (drawing.getModel.elements.nonEmpty) {
+          editor.setVisible(true)
+
+          EventQueue.invokeLater(() => editor.toFront())
+        }
       }
   }
 
