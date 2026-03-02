@@ -24,7 +24,7 @@ import org.nlogo.analytics.Analytics
 import org.nlogo.api._
 import org.nlogo.app.codetab.{ ExternalFileManager, TemporaryCodeTab }
 import org.nlogo.app.common.{ CodeToHtml, Events => AppEvents, FileActions, FindDialog }
-import org.nlogo.app.interfacetab.{ CommandCenter, InterfaceTab, InterfaceWidgetControls, WidgetPanel }
+import org.nlogo.app.interfacetab.{ CommandCenter, InterfaceTab, WidgetPanel }
 import org.nlogo.app.tools.{ AgentMonitorManager, GraphicsPreview, LibraryManagerErrorDialog, PreviewCommandsEditor }
 import org.nlogo.awt.UserCancelException
 import org.nlogo.core.{ AgentKind, CompilerException, ExternalResource, I18N, Model, ModelSettings, NetLogoPreferences,
@@ -392,12 +392,8 @@ class App extends org.nlogo.window.Event.LinkChild
     })
 
     val interfaceFactory = new InterfaceFactory() {
-      def widgetPanel(workspace: GUIWorkspace): AbstractWidgetPanel =
-        new WidgetPanel(workspace)
-      def widgetControls(wp: AbstractWidgetPanel, workspace: GUIWorkspace, buttons: List[WidgetInfo], frame: Frame) = {
-        new InterfaceWidgetControls(wp.asInstanceOf[WidgetPanel], workspace, buttons, frame,
-          pico.getComponent(classOf[EditDialogFactory]))
-      }
+      def widgetPanel(frame: Frame, workspace: GUIWorkspace, widgetInfos: Seq[WidgetInfo]): AbstractWidgetPanel =
+        new WidgetPanel(frame, workspace, widgetInfos, pico.getComponent(classOf[EditDialogFactory]))
     }
     pico.add(classOf[HubNetManagerFactory], "org.nlogo.hubnet.server.gui.HubNetManagerFactory",
           Array[Parameter] (
