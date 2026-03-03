@@ -214,7 +214,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     ignoreChanges = ignore
   }
 
-  private def handleFileChange(): Boolean = {
+  private def handleFileChange(trigger: Path): Boolean = {
     // We stop the file watcher thread after the dialog is shown, so we need to
     // start it back up in these callbacks.
 
@@ -222,7 +222,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
       startWatcherThread()
 
     def okCallback(): Unit = {
-      reload()
+      reload(trigger)
       startWatcherThread()
     }
 
@@ -239,7 +239,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
         cancelCallback()
       }
     } else {
-      reload()
+      reload(trigger)
     }
 
     // Return 'dirty' to stop the file watcher thread if file is dirty. This is
@@ -630,11 +630,13 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     interfaceTab.commandCenter.commandLine.setFont(EditorConfiguration.getCodeFont)
   }
 
-  private def reload(): Unit = {
+  private def reload(trigger: Path): Unit = {
+    val isInclude = trigger != Paths.get(workspace.getModelPath).toAbsolutePath
+
     // when saving a file to OneDrive, it automatically syncs and re-writes the file contents. this check prevents
     // the model from being unnecessarily reloaded if the contents of the file match the contents of the model
     // current loaded in NetLogo. (Isaac B 1/20/26)
-    if (!reloading && !fileManager.modelMatchesFile()) {
+    if (!reloading && (isInclude || !fileManager.modelMatchesFile())) {
       reloading = true
       workspace.reload()
     }
