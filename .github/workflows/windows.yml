@@ -87,18 +87,8 @@ jobs:
           name: ${{ needs.build-docs.outputs.csv-artifact }}
           path: ./helio/apps/docs/.build
 
-      - name: Build NetLogo
-        run: sbt netlogo/resources
-
-      # The previous step built the color picker with NodeJS 24.
-      # Next up: Helio with NodeJS 22.  --Jason B. (2/26/26)
-      - name: Package NetLogo
-        uses: actions/setup-node@v6
-        with:
-          node-version: 22
-          cache: yarn
-          cache-dependency-path: helio/yarn.lock
-      - run: |
+      - name: Build and Package NetLogo
+        run: |
           sbt dist/buildNetLogo
           sbt "dist/packageWinAggregate OpenJDK_17.0.2_64"
 
