@@ -226,13 +226,12 @@ class FrontEndTests extends AnyFunSuite with BaseParserTest {
 
   test("findImports lists all modules when there is a valid import statement") {
     assertResult(Seq())(FrontEnd.findImports(""))
-    assertResult(Seq((None, "FOO")))(FrontEnd.findImports("import ;; comment\n;; com2\n [foo]"))
-    frontEndError(FrontEnd.findImports, "import foo]", "Did not find expected open bracket for import declaration")
-    assertResult(Seq((None, "FOO")))(FrontEnd.findImports("import [foo]"))
-    assertResult(Seq((None, "FOO")))(FrontEnd.findImports("import [foo [alias bar]]"))
-    assertResult(Seq((None, "FOO")))(FrontEnd.findImports("import [foo] to foo show \"bar\" end"))
-    assertResult(Seq((None, "FOO")))(FrontEnd.findImports("import [foo] foo \"bar\" end"))
-    assertResult(Seq((None, "FOO"), (None, "BAZ")))(FrontEnd.findImports("import [foo [alias bar]] to foo show \"bar\" end import [baz [alias qaz]]"))
+    assertResult(Seq(Seq("FOO")))(FrontEnd.findImports("import ;; comment\n;; com2\n foo"))
+    assertResult(Seq(Seq("FOO")))(FrontEnd.findImports("import foo"))
+    assertResult(Seq(Seq("FOO")))(FrontEnd.findImports("import foo as bar"))
+    assertResult(Seq(Seq("FOO")))(FrontEnd.findImports("import foo to foo show \"bar\" end"))
+    assertResult(Seq(Seq("FOO")))(FrontEnd.findImports("import foo to go foo \"bar\" end"))
+    assertResult(Seq(Seq("FOO"), Seq("BAZ")))(FrontEnd.findImports("import foo as bar import baz to foo show \"bar\" end"))
   }
 
   test("findProcedurePositions maps procedures to their critical syntax tokens") {

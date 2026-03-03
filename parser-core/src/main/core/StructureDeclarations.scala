@@ -38,9 +38,18 @@ object StructureDeclarations {
       override val end: Token = token
   }
 
-  case class Import(isRelative: Boolean, components: Seq[String], importList: Seq[String] , alias: Option[String], token: Token)
-      extends Declaration {
+  case class Import(
+    // List of all components in the module path.
+    pathComponents: Seq[String],
 
+    // Alias for the module path.
+    pathAlias: Option[String],
+
+    // Map indicating what identifiers should be imported and optionally how they should be renamed.
+    importedIdentifiers: Map[String, String],
+
+    token: Token
+  ) extends Declaration {
       override val start: Token = token
       override val end: Token = token
   }

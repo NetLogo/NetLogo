@@ -12,6 +12,7 @@ object FrontEndInterface {
   // The first string in the key is the procedure name. The second string is the name of the module it's supposed to be
   // visible in, if any. For procedures visible to the model, this will be None. - Kritphong M November 2025
   type ProceduresMap = ListMap[(String, Option[String]), FrontEndProcedure]
+  type ProcedureTokensMap = Map[(String, Option[String]), Iterable[Token]]
   val NoProcedures: ProceduresMap = ListMap()
   type FrontEndResults = (Seq[ProcedureDefinition], StructureResults)
 
@@ -76,7 +77,7 @@ trait FrontEndInterface {
   def findIncludes(source: String): Seq[String]
 
   // lists the names of imported libraries
-  def findImports(source: String): Seq[(Option[String], String)]
+  def findImports(source: String): Seq[Seq[String]]
 
   // these do enough tokenization to be used by the frontEnd.
   // It's up to to the caller to decide whether they want a Seq or an Iterator

@@ -170,10 +170,9 @@ class Compiler(dialect: Dialect) extends PresentationCompilerInterface {
   def findProcedurePositions(source: String): Map[String, ProcedureSyntax] =
     frontEnd.findProcedurePositions(source, Some(dialect))
 
-  // TODO: Update for the new import syntax
   def findAllImportedFiles(source: String, compilationEnvironment: CompilationEnvironment, currentFile: Option[String] = None): Seq[String] = {
     val imports = frontEnd.findImports(source)
-    val paths = imports.map((packageName, moduleName) => compilationEnvironment.resolveModule(currentFile, packageName, moduleName))
+    val paths = imports.flatMap(compilationEnvironment.resolveModulePath(currentFile, _))
     val sources = paths.flatMap(x => Try(compilationEnvironment.getSource(x)).toOption)
 
     paths ++ (sources zip paths).flatMap((x, y) => findAllImportedFiles(x, compilationEnvironment, Some(y)))

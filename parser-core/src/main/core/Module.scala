@@ -3,10 +3,10 @@
 package org.nlogo.core
 
 case class Import(
-  packageName: Option[String],
-  moduleName: String,
   filename: Option[String],
-  alias: Option[String],
+  pathComponents: Seq[String],
+  pathAlias: Option[String],
+  importedIdentifiers: Map[String, String],
   token: Token
 )
 
