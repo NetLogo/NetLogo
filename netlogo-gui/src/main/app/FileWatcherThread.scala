@@ -8,7 +8,7 @@ import java.nio.file.StandardWatchEventKinds.{ ENTRY_CREATE, ENTRY_MODIFY }
 import scala.jdk.CollectionConverters.ListHasAsScala
 import scala.util.Try
 
-private class FileWatcherThread(paths: List[Path], callback: () => Boolean) extends Thread {
+private class FileWatcherThread(paths: List[Path], callback: Path => Boolean) extends Thread {
   private val watchService: WatchService = FileSystems.getDefault.newWatchService
   private val parentSet: Set[Path] = paths.map(_.getParent).toSet
 
@@ -29,7 +29,7 @@ private class FileWatcherThread(paths: List[Path], callback: () => Boolean) exte
           val fullEventPath: Path = maybeDirPath.get.resolve(eventPath)
 
           if (paths.contains(fullEventPath)) {
-            done = callback()
+            done = callback(fullEventPath.toAbsolutePath)
           }
         }
 
