@@ -43,7 +43,7 @@ object AnnouncementsInfoDownloader extends InfoDownloader {
       val iter   = arr.iterator()
 
       val announcements =
-        iter.asScala.toVector.map {
+        iter.asScala.toVector.flatMap {
           case obj: JSONObject =>
 
             val id       = obj.get(      "id").asInstanceOf[Number].intValue
@@ -74,7 +74,15 @@ object AnnouncementsInfoDownloader extends InfoDownloader {
               else
                 Option(date.plusDays(lifespan))
 
-            Announcement(id, title, date, endDate, annType, summary, content)
+            val versions = Option(obj.get("versions")).fold(Array[String]()) {
+              _.asInstanceOf[JSONArray].toArray.map(_.asInstanceOf[String])
+            }
+
+            if (versions.isEmpty || versions.contains(Version.versionNumberNo3D)) {
+              Some(Announcement(id, title, date, endDate, annType, summary, content))
+            } else {
+              None
+            }
 
           case o =>
             throw new IllegalStateException
