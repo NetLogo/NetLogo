@@ -20,17 +20,10 @@ object StructureConverter {
               subprogram: Boolean): StructureResults = {
     val ims = declarations.collect {
       case l: ImportDecl =>
-        val filename = l.token.sourceLocation.filename
-        val moduleFilename = if (filename.isEmpty()) None else Some(filename)
+        val tokenFilename = l.token.sourceLocation.filename
+        val filename = if (tokenFilename.isEmpty()) None else Some(tokenFilename)
 
-        // This should be fine, because the parser requires components to be non-empty. - Kritphong M November 2025
-        val moduleName = l.components.last.toUpperCase
-
-        if (l.isRelative) {
-          Import(None, moduleName, moduleFilename, l.alias, l.token)
-        } else {
-          Import(l.components.headOption.map(_.toUpperCase), moduleName, moduleFilename, l.alias, l.token)
-        }
+        Import(filename, l.pathComponents, l.pathAlias, l.importedIdentifiers, l.token)
     }
     val exs = declarations.collect {
       case ex: ExportDecl =>

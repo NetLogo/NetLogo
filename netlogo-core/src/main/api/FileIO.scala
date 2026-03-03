@@ -14,6 +14,8 @@ import scala.io.Source
 object FileIO {
 
   def exists(path: String): Boolean = Files.exists(Paths.get(path))
+  def isRegularFile(path: String): Boolean = Files.isRegularFile(Paths.get(path))
+  def isDirectory(path: String): Boolean = Files.isDirectory(Paths.get(path))
 
   @throws(classOf[java.io.IOException])
   def fileToString(file: java.io.File) = {
