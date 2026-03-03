@@ -26,6 +26,18 @@ object StructureChecker {
     }
   }
 
+  def rejectExtensionsInModule(declarations: Seq[Declaration], isModule: Boolean): Unit = {
+    if (isModule) {
+      for (declaration <- declarations) {
+        declaration match {
+          case Extensions(start, _, _) =>
+            exception(I18N.errors.getN("compiler.StructureParser.importContainsExtensions"), start)
+          case _ =>
+        }
+      }
+    }
+  }
+
   def rejectMisplacedConstants(declarations: Seq[Declaration]): Unit = {
     for (declaration <- declarations) {
       declaration match {

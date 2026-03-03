@@ -102,27 +102,30 @@ extends scala.util.parsing.combinator.Parsers {
         Export(exportedNames, keyword)
     }
 
-  def `import`: Parser[Import] =
-    keyword("IMPORT") ~ opt(colon) ~ rep1sep(plainIdentifier, colon) ~ opt(exactIdentifier("AS") ~> identifier) ^^ {
-      case keyword ~ prefix ~ components ~ rename =>
-        Import(prefix.isDefined, components.map(_.text), Seq(), rename.map(x => x.name), keyword)
-    } |
-    keyword("IMPORT") ~ opt(colon) ~ rep1sep(plainIdentifier, colon) ~ opt(colon ~> plainIdentifierList) ^^ {
-      case keyword ~ prefix ~ components ~ importList =>
-        Import(prefix.isDefined, components.map(_.text), importList.map(_.map(_.text)).getOrElse(Seq()), None, keyword) }
+  def `import`: Parser[Import] = importSimple | importIdentifiers
 
-  def importOption: Parser[ImportOption] =
-    importAlias
+  def importSimple: Parser[Import] =
+    keyword("IMPORT") ~ rep1sep(plainIdentifier, colon) ~ opt(exactIdentifier("AS") ~> identifier) ^^ {
+      case keyword ~ components ~ pathAliasOption =>
+        Import(components.map(_.text.toUpperCase), pathAliasOption.map(_.name), Map(), keyword)
+    }
 
-  def importAlias: Parser[ImportAlias] =
-    openBracket ~> importAliasKeyword ~! identifier <~ closeBracket ^^ {
-      case keyword ~ ident =>
-        ImportAlias(ident.name, keyword) }
+  def importIdentifiers: Parser[Import] =
+    keyword("IMPORT") ~ importedIdentifierList ~ exactIdentifier("FROM") ~ rep1sep(plainIdentifier, colon) ^^ {
+      case keyword ~ importList ~ _ ~ components =>
+        Import(components.map(_.text.toUpperCase), None, importList, keyword)
+    }
 
-  def importAliasKeyword: Parser[Token] =
-    acceptMatch("ALIAS", {
-      case token @ Token(_, TokenType.Ident, "ALIAS") =>
-        token })
+  def renamableIdentifier: Parser[(String, String)] =
+    identifier ~ opt(exactIdentifier("AS") ~ identifier) ^^ {
+      case from ~ Some(_ ~ to) => (from.name, to.name)
+      case x ~ None => (x.name, x.name)
+    }
+
+  def importedIdentifierList: Parser[Map[String, String]] =
+    openBracket ~> commit(rep(renamableIdentifier) <~ closeBracket) ^^ {
+      case x => x.toMap
+    }
 
   def extensions: Parser[Extensions] =
     keyword("EXTENSIONS") ~! identifierList ^^ {

@@ -3,10 +3,11 @@
 package org.nlogo.workspace
 
 import java.io.{ ByteArrayInputStream, File, IOException }
-import java.nio.file.{ Path, Paths }
+import java.nio.file.{ Files, FileVisitOption, Path, Paths }
 import java.util.Base64
 
 import scala.collection.mutable.WeakHashMap
+import scala.jdk.CollectionConverters.IteratorHasAsScala
 import scala.util.Try
 import org.nlogo.agent.{ World, Agent, OutputObject }
 import org.nlogo.api.{ Dump, PackageManager => APIPM, ExtensionManager => APIEM, FileIO, HubNetInterface, LibraryManager, LogoException,
@@ -178,30 +179,39 @@ abstract class AbstractWorkspaceScala(val world: World, val hubNetManagerFactory
             throw new IllegalStateException(s"$path is not a valid pathname: $ex")
         }
       }
-      def resolveModule(currentFile: Option[String], packageName: Option[String], moduleName: String): String = {
+      def resolveModulePath(currentFile: Option[String], modulePath: Seq[String]): Seq[String] = {
         val separator = System.getProperty("file.separator")
+        val packageName: String = modulePath.headOption.map(_.toLowerCase).getOrElse("")
 
-        (currentFile, packageName) match {
-          // If packageName is provided, load module from either the package folder in CWD or the central package
-          // directory.
-          case (_, Some(x)) => {
-            val localPkgPath = x.toLowerCase + separator + moduleName.toLowerCase + ".nls"
-            val resolvedLocalPkgPath = resolvePath(localPkgPath)
+        val pathPrefixes = Seq(
+          currentFile.map(x => Paths.get(x).getParent.toString + separator).getOrElse(""),
+          APIPM.userPackagesPath.resolve(packageName).toString + separator,
+          APIPM.packagesPath.resolve(packageName).toString + separator
+        )
 
-            if (exists(resolvedLocalPkgPath)) {
-              resolvedLocalPkgPath
+        pathPrefixes.foldLeft(Seq()) { (p, pathPrefix) =>
+          // If we already found some paths, just return those.
+          if (p.nonEmpty) {
+            p
+          } else {
+            val path = resolvePath(pathPrefix + modulePath.mkString(separator).toLowerCase)
+
+            if (FileIO.isDirectory(path)) {
+              // If the path points to a directory, search for module files in subdirectories.
+              val fileIterator =
+                Files.walk(Paths.get(path), FileVisitOption.FOLLOW_LINKS).iterator.asScala
+              val isModuleFile =
+                (x: Path) => Files.isRegularFile(x) && x.getFileName.toString.toLowerCase.endsWith(".nls")
+
+              fileIterator.filter(isModuleFile).map(_.toString).toSeq
+            } else if (FileIO.isRegularFile(path + ".nls")) {
+              // If the path points to a file, just return that file.
+              Seq(path + ".nls")
             } else {
-              resolvePath(FileIO.perUserFile("packages" + separator + localPkgPath, false))
+              // Otherwise, return nothing and just move on to the next prefix.
+              Seq()
             }
           }
-          // If packageName is not provided but currentFile is available, load the module relative to currentFile's
-          // parent directory.
-          case (Some(x), None) => {
-            resolvePath(Paths.get(x).getParent.toString + separator + moduleName.toLowerCase + ".nls")
-          }
-          // Otherwise, try to load the module from CWD.
-          case _ =>
-            resolvePath(moduleName.toLowerCase + ".nls")
         }
       }
     }

@@ -116,16 +116,16 @@ class StructureParserTests extends AnyFunSuite {
     val results = compile("import foo")
     assertResult(0)(results.procedures.size)
     assertResult(1)(results.imports.size)
-    assertResult("FOO")(results.imports.head.moduleName)
-    assertResult(None)(results.imports.head.alias)
+    assertResult("FOO")(results.imports.head.pathComponents.head)
+    assertResult(None)(results.imports.head.pathAlias)
   }
 
   test("import with alias") {
     val results = compile("import foo as bar")
     assertResult(0)(results.procedures.size)
     assertResult(1)(results.imports.size)
-    assertResult("FOO")(results.imports.head.moduleName)
-    assertResult(Some("BAR"))(results.imports.head.alias)
+    assertResult("FOO")(results.imports.head.pathComponents.head)
+    assertResult(Some("BAR"))(results.imports.head.pathAlias)
   }
 
   test("includes") {
@@ -295,10 +295,24 @@ class StructureParserTests extends AnyFunSuite {
   }
 
   def compileAll(src: String, nlsSrc1: String, nlsSrc2: String = ""): StructureResults = {
+    class TestCompilationEnvironment extends DummyCompilationEnvironment {
+      override def resolveModulePath(currentFile: Option[String], modulePath: Seq[String]) = {
+        val separator = System.getProperty("file.separator")
+        val getParentDir = (x: String) => x.dropRight(x.length - x.lastIndexOf(separator))
+        val parentDir = currentFile.map(getParentDir(_)).flatMap(x => if (x.isEmpty) None else Some(x))
+
+        (parentDir, modulePath) match {
+          case (None, Seq("FOO")) => Seq("foo.nls")
+          case (None, Seq("BAR")) if nlsSrc2.nonEmpty => Seq("bar.nls")
+          case _ => Seq()
+        }
+      }
+    }
+
     StructureParser.parseSources(
       tokenizer,
       CompilationOperand( Map("" -> src), new DummyExtensionManager, new DummyLibraryManager
-                        , new DummyCompilationEnvironment, subprogram = false),
+                        , new TestCompilationEnvironment, subprogram = false),
       (_, name) =>
         name match {
           case "foo.nls" => Some(("foo.nls", nlsSrc1))
@@ -315,11 +329,15 @@ class StructureParserTests extends AnyFunSuite {
   }
 
   test("import nonexistent module") {
-    expectParseAllError("""import :foobar""", "Could not find foobar.nls")
+    expectParseAllError("""import foobar""", "Could not find FOOBAR")
+  }
+
+  test("import nonexistent submodule") {
+    expectParseAllError("""import foobar:baz""", "Could not find FOOBAR:BAZ")
   }
 
   test("import syntax returns correct results") {
-    val results = compileAll("""import :foo""", "")
+    val results = compileAll("""import foo""", "")
     assert(results.imports.nonEmpty || results.includedSources.nonEmpty)
   }
 
@@ -327,16 +345,8 @@ class StructureParserTests extends AnyFunSuite {
     expectParseAllError("import foo import bar import foo as baz", "Attempted to import a module multiple times")
   }
 
-  test("import syntax detects import loops") {
-    expectParseAllError(
-      "import :foo",
-      "Module FOO has already been imported",
-      "import :bar",
-      "import :foo")
-  }
-
   test("import syntax default alias") {
-    val src = """import :foo"""
+    val src = """import foo"""
     val nlsSrc = """
       |to test
       |  show 12345
@@ -349,7 +359,7 @@ class StructureParserTests extends AnyFunSuite {
   }
 
   test("import syntax custom alias") {
-    val src = """import :foo as bar"""
+    val src = """import foo as bar"""
     val nlsSrc = """
       |to test
       |  show 12345
@@ -363,20 +373,23 @@ class StructureParserTests extends AnyFunSuite {
 
   test("import module from another module") {
     val mainSrc = """
-      |import :foo
+      |import foo
       |
       |to hello
       |  foo:hello
       |end
       """.stripMargin
     val fooSrc = """
-      |import :bar
+      |import bar
+      |export [hello]
       |
       |to hello
       |  bar:hello
       |end
       """.stripMargin
     val barSrc = """
+      |export [hello]
+      |
       |to hello
       |  show 123
       |end
@@ -384,10 +397,10 @@ class StructureParserTests extends AnyFunSuite {
     val results = compileAll(mainSrc, fooSrc, barSrc)
     val expected = Set(
       ("HELLO", None),
-      ("HELLO", Some("FOO")),
+      ("HELLO", Some("foo.nls")),
       ("FOO:HELLO", None),
-      ("HELLO", Some("BAR")),
-      ("BAR:HELLO", Some("FOO"))
+      ("HELLO", Some("bar.nls")),
+      ("BAR:HELLO", Some("foo.nls"))
     )
 
     assert(results.procedures.keys.toSet === expected)
@@ -395,7 +408,7 @@ class StructureParserTests extends AnyFunSuite {
 
   test("import syntax name conflict") {
     val src = """
-      |import :foo as a
+      |import foo as a
       |
       |to a:test
       |  show 1234
