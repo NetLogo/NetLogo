@@ -2,11 +2,12 @@
 
 package org.nlogo.core
 
+import scala.collection.immutable.ListMap
 import FrontEndInterface._
 
 case class StructureResults(program: Program,
                         procedures: ProceduresMap = NoProcedures,
-                        procedureTokens: Map[(String, Option[String]), Iterable[Token]] = Map(),
+                        procedureTokens: ListMap[(String, Option[String]), Iterable[Token]] = ListMap(),
                         includes: Seq[Token] = Seq(),
                         includedSources: Seq[String] = Seq(),
                         extensions: Seq[Token] = Seq(),
