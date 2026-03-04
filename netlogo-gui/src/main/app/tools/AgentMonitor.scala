@@ -101,7 +101,7 @@ abstract class AgentMonitor(val workspace: GUIWorkspace, window: JDialog)
 
         add(Box.createHorizontalStrut(6))
         add(commandLine)
-        add(Box.createHorizontalStrut(6))
+        add(Box.createHorizontalStrut(3))
 
         add(new JPanel with Transparent {
           setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
@@ -184,6 +184,7 @@ abstract class AgentMonitor(val workspace: GUIWorkspace, window: JDialog)
     propertiesPane.syncTheme()
     separator.syncTheme()
     commandLine.syncTheme()
+    historyPrompt.syncTheme()
   }
 
   private [app] def getEditors: Seq[AgentVarEditor] =
