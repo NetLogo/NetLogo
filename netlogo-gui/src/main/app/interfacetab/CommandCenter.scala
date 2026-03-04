@@ -5,7 +5,7 @@ package org.nlogo.app.interfacetab
 import java.awt.{ BorderLayout, Component, Dimension, FileDialog, Font, GridBagConstraints, GridBagLayout,
                   Insets }
 import java.awt.event.{ ActionEvent, MouseAdapter, MouseEvent }
-import javax.swing.{ AbstractAction, Action, Box, JButton, JLabel, JPanel }
+import javax.swing.{ AbstractAction, Action, JButton, JLabel, JPanel }
 import javax.swing.border.EmptyBorder
 
 import org.nlogo.api.Exceptions
@@ -73,9 +73,12 @@ class CommandCenter(workspace: AbstractWorkspace, showToggle: Boolean, packSplit
     }
   }
 
+  private val historyPrompt = new HistoryPrompt(commandLine)
+
   locally {
     setOpaque(true)  // so background color shows up - ST 10/4/05
     setLayout(new BorderLayout)
+    setBorder(new EmptyBorder(0, 6, 0, 6))
 
     //NORTH
     //-----------------------------------------
@@ -89,7 +92,7 @@ class CommandCenter(workspace: AbstractWorkspace, showToggle: Boolean, packSplit
     c.anchor = GridBagConstraints.WEST
     c.weightx = 1
     c.fill = GridBagConstraints.VERTICAL
-    c.insets = new Insets(6, 6, 6, 6)
+    c.insets = new Insets(6, 0, 6, 0)
 
     northPanel.add(titleLabel, c)
 
@@ -99,6 +102,8 @@ class CommandCenter(workspace: AbstractWorkspace, showToggle: Boolean, packSplit
 
     if (showToggle)
       northPanel.add(locationToggleButton, c)
+
+    c.insets = new Insets(6, 0, 6, 0)
 
     northPanel.add(clearButton, c)
 
@@ -118,7 +123,7 @@ class CommandCenter(workspace: AbstractWorkspace, showToggle: Boolean, packSplit
 
       c.weighty = 1
       c.anchor = GridBagConstraints.SOUTH
-      c.insets = new Insets(3, 6, 3, 6)
+      c.insets = new Insets(3, 0, 3, 6)
 
       southPanel.add(prompt, c)
 
@@ -128,20 +133,11 @@ class CommandCenter(workspace: AbstractWorkspace, showToggle: Boolean, packSplit
 
       southPanel.add(commandLine, c)
 
-      val historyPanel = new JPanel
-
-      historyPanel.setOpaque(false)
-      historyPanel.setLayout(new BorderLayout)
-
-      historyPanel.add(new HistoryPrompt(commandLine), BorderLayout.CENTER)
-
-      if (System.getProperty("os.name").startsWith("Mac"))
-        historyPanel.add(Box.createHorizontalStrut(12), BorderLayout.EAST)
-
       c.weightx = 0
       c.fill = GridBagConstraints.NONE
+      c.insets = new Insets(3, 3, 3, 0)
 
-      southPanel.add(historyPanel, c)
+      southPanel.add(historyPrompt, c)
     }
 
     add(southPanel, BorderLayout.SOUTH)
@@ -204,6 +200,7 @@ class CommandCenter(workspace: AbstractWorkspace, showToggle: Boolean, packSplit
     clearButton.syncTheme()
     output.syncTheme()
     commandLine.syncTheme()
+    historyPrompt.syncTheme()
   }
 
   /// event handlers
