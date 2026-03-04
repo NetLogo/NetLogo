@@ -25,7 +25,16 @@ object CommandLine {
 
   val MAX_HISTORY_SIZE = 40
 
-  case class ExecutionString(agentClass: AgentKind, string: String)
+  case class ExecutionString(agentClass: AgentKind, string: String) {
+    def getPrompt: String = {
+      agentClass match {
+        case AgentKind.Observer => OBSERVER_PROMPT
+        case AgentKind.Turtle   => TURTLE_PROMPT
+        case AgentKind.Patch    => PATCH_PROMPT
+        case AgentKind.Link     => LINK_PROMPT
+      }
+    }
+  }
 }
 
 class CommandLine(commandCenter: CommandCenterInterface,
