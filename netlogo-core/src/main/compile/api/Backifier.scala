@@ -7,6 +7,6 @@ import org.nlogo.{ core, nvm }
 import scala.collection.immutable.ListMap
 
 trait Backifier {
-  def apply(procedures: ListMap[String, nvm.Procedure], c: core.Command): nvm.Command
-  def apply(procedures: ListMap[String, nvm.Procedure], r: core.Reporter): nvm.Reporter
+  def apply(procedures: ListMap[(String, Option[String]), nvm.Procedure], c: core.Command): nvm.Command
+  def apply(procedures: ListMap[(String, Option[String]), nvm.Procedure], r: core.Reporter): nvm.Reporter
 }

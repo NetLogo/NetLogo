@@ -191,8 +191,8 @@ public abstract class AbstractWorkspace
     return file.toURL();
   }
 
-  public abstract scala.collection.immutable.ListMap<String, Procedure> procedures();
-  public abstract void setProcedures(scala.collection.immutable.ListMap<String, Procedure> procedures);
+  public abstract scala.collection.immutable.ListMap<scala.Tuple2<String, scala.Option<String>>, Procedure> procedures();
+  public abstract void setProcedures(scala.collection.immutable.ListMap<scala.Tuple2<String, scala.Option<String>>, Procedure> procedures);
 
   public abstract void init();
 
