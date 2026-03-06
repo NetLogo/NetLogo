@@ -8,7 +8,7 @@ import javax.swing.{ AbstractAction, Action, Icon, JCheckBox }
 
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
-class CheckBox(text: String = "") extends JCheckBox(text) with MouseUtils with ThemeSync {
+class CheckBox(text: String = "") extends JCheckBox(text) with MouseUtils with FocusUtils with ThemeSync {
   def this(action: Action) = {
     this(action.getValue(Action.NAME).toString)
 
@@ -64,8 +64,14 @@ class CheckBox(text: String = "") extends JCheckBox(text) with MouseUtils with T
         g2d.setColor(InterfaceColors.checkboxBorder())
         g2d.drawRoundRect(x, y, 14, 14, 4, 4)
       }
+
+      if (hasFocus && shouldPaintFocus) {
+        g2d.setColor(InterfaceColors.checkboxFocus())
+        g2d.drawRoundRect(x, y, 14, 14, 4, 4)
+      }
     }
   })
 
+  override def paintFocus(g: Graphics): Unit = {} // focus done in paintIcon (Isaac B 3/4/26)
   override def syncTheme(): Unit = {} // sync done in paintIcon (Isaac B 11/4/24)
 }

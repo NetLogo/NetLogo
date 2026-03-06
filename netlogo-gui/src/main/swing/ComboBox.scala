@@ -83,7 +83,10 @@ class ComboBox[T](private var items: Seq[T] = Seq(), openOnPress: Boolean = true
   def initGUI(): Unit = {
     removeAll()
 
+    setFocusable(true)
     setDiameter(zoom(6))
+    setPrimaryAction(showPopup)
+    enableHover()
 
     // the arrow looks uneven if the width is even, so make sure it's odd after scaling
     // to the zoomed value (Isaac B 3/19/26)
@@ -113,6 +116,8 @@ class ComboBox[T](private var items: Seq[T] = Seq(), openOnPress: Boolean = true
     c.insets = new Insets(0, 0, 0, zoom(6))
 
     add(new JPanel(new GridBagLayout) with Transparent {
+      setFocusable(false)
+
       add(arrow, new GridBagConstraints)
     }, c)
 
@@ -216,6 +221,7 @@ class ComboBox[T](private var items: Seq[T] = Seq(), openOnPress: Boolean = true
     setBackgroundHoverColor(InterfaceColors.toolbarControlBackgroundHover())
     setBackgroundPressedColor(InterfaceColors.toolbarControlBackgroundPressed())
     setBorderColor(InterfaceColors.toolbarControlBorder())
+    setFocusColor(InterfaceColors.toolbarControlFocus())
 
     choiceDisplay.syncTheme()
 
@@ -229,6 +235,8 @@ class ComboBox[T](private var items: Seq[T] = Seq(), openOnPress: Boolean = true
     c.fill = GridBagConstraints.HORIZONTAL
     c.weightx = 1
 
+    setFocusable(false)
+
     def setItem(item: Option[T]): Unit = {
       removeAll()
 
@@ -236,18 +244,20 @@ class ComboBox[T](private var items: Seq[T] = Seq(), openOnPress: Boolean = true
         case comp: (Component & ComboBox.Clone) =>
           val child = comp.getClone
 
-          add(child, c)
-
+          child.setFocusable(false)
           child.addMouseListener(mouseListener)
+
+          add(child, c)
 
         case a =>
-          val child = new JLabel(a.toString)
+          val child = new JLabel(a.toString) {
+            setFocusable(false)
+            setFont(getFont)
 
-          child.setFont(getFont)
+            addMouseListener(mouseListener)
+          }
 
           add(child, c)
-
-          child.addMouseListener(mouseListener)
       })
 
       syncTheme()

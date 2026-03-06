@@ -17,7 +17,7 @@ import org.nlogo.core.{ I18N, Button => CoreButton, Chooser => CoreChooser, Inpu
 import org.nlogo.editor.{ EditorArea, EditorConfiguration }
 import org.nlogo.log.LogManager
 import org.nlogo.nvm.DefaultCompilerServices
-import org.nlogo.swing.{ ClipboardUtils, MenuItem, PopupMenu, UndoManager }
+import org.nlogo.swing.{ ClipboardUtils, FocusRoot, FocusUtils, MenuItem, PopupMenu, UndoManager }
 import org.nlogo.theme.InterfaceColors
 import org.nlogo.window.{ AbstractPlotWidget, AbstractWidgetPanel, AutoIndentHandler, ButtonWidget, CopyPasteTarget,
                           Editable, EditDialogFactory, Events => WindowEvents, GUIWorkspace, InterfaceMode,
@@ -42,7 +42,9 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
     with WidgetRemovedEvent.Handler
     with LoadBeginEvent.Handler
     with SetInterfaceModeEvent.Handler
-    with CopyPasteTarget {
+    with CopyPasteTarget
+    with FocusRoot
+    with FocusUtils {
 
   override val widgetControls: InterfaceWidgetControls =
     new InterfaceWidgetControls(this, workspace, widgetInfos, frame, dialogFactory)
@@ -86,6 +88,7 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
 
   protected class InterceptPane extends JComponent {
     setEnabled(false)
+    setFocusable(false)
 
     addMouseListener(new MouseAdapter {
       override def mousePressed(e: MouseEvent): Unit = {
@@ -182,6 +185,9 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
   setOpaque(true)
   setBackground(AwtColor.WHITE)
   setAutoscrolls(true)
+  setImplicitDownCycleTraversal(false)
+  setSecondaryAction(() => doPopup(new Point(50, 50)))
+
   selectionPane.setOpaque(false)
   selectionPane.setVisible(false)
 
@@ -204,6 +210,9 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
       }
     }
   })
+
+  override def getDefaultComponent: Option[Component] =
+    getPermanentWidgets.headOption
 
   // our children may overlap
   override def isOptimizedDrawingEnabled: Boolean = false
@@ -1704,6 +1713,7 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
 
   override def syncTheme(): Unit = {
     setBackground(InterfaceColors.interfaceBackground())
+    setFocusColor(InterfaceColors.interfaceFocus())
 
     setCursor(interfaceMode.cursor)
 

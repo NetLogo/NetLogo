@@ -10,6 +10,7 @@ import org.nlogo.theme.InterfaceColors
 class DropdownArrow extends JPanel {
   setOpaque(false)
   setPreferredSize(new Dimension(9, 5))
+  setFocusable(false)
 
   override def paintComponent(g: Graphics): Unit = {
     val g2d = Utils.initGraphics2D(g)
