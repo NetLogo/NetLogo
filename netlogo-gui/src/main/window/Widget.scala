@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import java.awt.{ Component, Container, Dimension, Font, Graphics, Point, Rectangle, event },
+import java.awt.{ Color, Component, Container, Dimension, Font, Graphics, Point, Rectangle, event },
                 event.{ MouseAdapter, MouseEvent, MouseListener }
 import javax.swing.{ JPanel, JMenuItem }
 
@@ -57,6 +57,7 @@ abstract class Widget extends JPanel with RoundedBorderPanel with ThemeSync with
   var deleteable: Boolean = true
 
   setBorderColor(InterfaceColors.Transparent)
+  setFocusable(false)
 
   private var zoomFactor = 1.0
 
@@ -216,6 +217,12 @@ abstract class Widget extends JPanel with RoundedBorderPanel with ThemeSync with
     super.addNotify
     if (originalFont == null) { originalFont = getFont }
   }
+
+  def getFocusColor: Color =
+    focusColor
+
+  def getDefaultComponent: Option[Component] =
+    None
 
   // The methods to raise widget added/removed are here so they can be overridden by child classes.  Some of those
   // classes are not "actual" widgets they just use the UI functionality of this class, and changes to those items
