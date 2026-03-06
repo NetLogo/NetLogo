@@ -3,7 +3,7 @@
 package org.nlogo.swing
 
 import java.awt.{ Color, Graphics }
-import java.awt.event.{ FocusEvent, FocusListener, InputEvent, KeyAdapter, KeyEvent }
+import java.awt.event.{ FocusEvent, FocusListener, KeyAdapter, KeyEvent }
 import javax.swing.JComponent
 
 trait FocusUtils extends JComponent {
@@ -46,7 +46,7 @@ trait FocusUtils extends JComponent {
   addKeyListener(new KeyAdapter {
     override def keyReleased(e: KeyEvent): Unit = {
       if (hasFocus && shouldPaintFocus && e.getKeyCode == KeyEvent.VK_SPACE) {
-        if ((e.getModifiersEx & InputEvent.SHIFT_DOWN_MASK) == InputEvent.SHIFT_DOWN_MASK) {
+        if (e.isShiftDown) {
           secondaryAction.foreach(_())
         } else {
           primaryAction.foreach(_())
