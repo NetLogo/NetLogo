@@ -2,7 +2,7 @@
 
 package org.nlogo.app.interfacetab
 
-import java.awt.{ Dimension, Frame, GridBagConstraints, GridBagLayout, Insets }
+import java.awt.{ Dimension, Frame, GridBagConstraints, GridBagLayout, Insets, Point }
 import java.awt.event.{ ActionEvent, MouseAdapter, MouseEvent }
 import javax.swing.{ AbstractAction, Action, ButtonGroup, JLabel, JPanel }
 import javax.swing.border.EmptyBorder
@@ -296,7 +296,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
     private val arrow = new DropdownArrow
 
     setDiameter(6)
-    setPrimaryAction(showPopup)
+    setPrimaryAction(() => showPopup(true))
     enableHover()
 
     locally {
@@ -308,14 +308,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
       add(arrow, c)
     }
 
-    private val actions =
-      WidgetInfos.map(spec => new MenuItem(new AbstractAction(spec.displayName, spec.icon) {
-        def actionPerformed(e: ActionEvent): Unit = {
-          chosenItem = spec.displayName
-
-          wPanel.createShadowWidget(widgetMenu.getSelectedWidget)
-        }
-      }))
+    private val actions = WidgetInfos.map(WidgetMenuItem.apply)
 
     private var chosenItem = ""
 
@@ -336,15 +329,18 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
 
     addMouseListener(new MouseAdapter {
       override def mousePressed(e: MouseEvent): Unit = {
-        showPopup()
+        showPopup(false)
       }
     })
 
     def getSelectedWidget =
       WidgetInfos.find(_.displayName == chosenItem).get.coreWidget
 
-    private def showPopup(): Unit = {
-      actions.foreach(action => action.setEnabled(wPanel.canAddWidget(action.getText)))
+    private def showPopup(focusTraversal: Boolean): Unit = {
+      actions.foreach { action =>
+        action.setEnabled(wPanel.canAddWidget(action.getText))
+        action.setFocusTraversal(focusTraversal)
+      }
 
       popup.show(WidgetMenu.this, 0, getHeight)
     }
@@ -359,6 +355,26 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
       label.setForeground(InterfaceColors.toolbarText())
 
       popup.syncTheme()
+    }
+
+    private class WidgetMenuItem(spec: WidgetInfo) extends MenuItem(null) {
+      private var focusTraversal = false
+
+      setAction(new AbstractAction(spec.displayName, spec.icon) {
+        def actionPerformed(e: ActionEvent): Unit = {
+          chosenItem = spec.displayName
+
+          if (focusTraversal) {
+            wPanel.createShadowWidget(widgetMenu.getSelectedWidget, Some(new Point(50, 50)))
+          } else {
+            wPanel.createShadowWidget(widgetMenu.getSelectedWidget)
+          }
+        }
+      })
+
+      def setFocusTraversal(value: Boolean): Unit = {
+        focusTraversal = value
+      }
     }
   }
 
