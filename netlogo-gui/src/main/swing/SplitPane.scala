@@ -9,8 +9,11 @@ import javax.swing.{ AbstractAction, Action, JButton, JLayeredPane, JPanel, JSpl
 import org.nlogo.core.I18N
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
-private class SizeButton(expand: Boolean, splitPane: SplitPane) extends JButton with Transparent {
+private class SizeButton(expand: Boolean, splitPane: SplitPane)
+  extends JButton with Transparent with FocusUtils with ThemeSync {
+
   setBorder(null)
+  setFocusDiameter(6)
 
   if (expand) {
     setAction(new AbstractAction {
@@ -63,9 +66,13 @@ private class SizeButton(expand: Boolean, splitPane: SplitPane) extends JButton 
         }
     }
   }
+
+  override def syncTheme(): Unit = {
+    setFocusColor(InterfaceColors.splitPaneDividerFocus())
+  }
 }
 
-private class SplitPaneDivider(splitPane: SplitPane) extends JPanel(null) with ThemeSync {
+private class SplitPaneDivider(splitPane: SplitPane) extends JPanel(null) with FocusUtils with ThemeSync {
   private val expandButton = new SizeButton(true, splitPane)
   private val contractButton = new SizeButton(false, splitPane)
 
@@ -130,6 +137,10 @@ private class SplitPaneDivider(splitPane: SplitPane) extends JPanel(null) with T
 
   override def syncTheme(): Unit = {
     setBackground(InterfaceColors.splitPaneDividerBackground())
+    setFocusColor(InterfaceColors.splitPaneDividerFocus())
+
+    expandButton.syncTheme()
+    contractButton.syncTheme()
   }
 }
 
