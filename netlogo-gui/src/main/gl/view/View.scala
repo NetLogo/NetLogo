@@ -5,7 +5,7 @@ package org.nlogo.gl.view
 import com.jogamp.opengl.{ GLCapabilities, GLProfile }
 import com.jogamp.opengl.awt.GLJPanel
 
-import java.awt.Frame
+import java.awt.{ Frame, Point }
 import java.awt.event.{ KeyEvent, KeyAdapter, MouseEvent }
 import java.awt.image.BufferedImage
 
@@ -14,8 +14,8 @@ import org.nlogo.api.{ DrawingInterface, Version, World3D, WorldRenderable, Worl
 import org.nlogo.gl.render.{ LinkRenderer, LinkRenderer3D, PatchRenderer, PatchRenderer3D, Renderer, Renderer3D,
                              ShapeRenderer, ShapeRenderer3D, TurtleRenderer, TurtleRenderer3D, WorldRenderer,
                              WorldRenderer3D }
-import org.nlogo.swing.{ NetLogoIcon, WindowAutomator }
-import org.nlogo.theme.ThemeSync
+import org.nlogo.swing.{ FocusUtils, NetLogoIcon, WindowAutomator }
+import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.Event.LinkChild
 
 abstract class View(title: String, val viewManager: ViewManager, var renderer: Renderer)
@@ -23,7 +23,7 @@ abstract class View(title: String, val viewManager: ViewManager, var renderer: R
 
   WindowAutomator.automate(this)
 
-  var canvas: GLJPanel = null
+  var canvas: GLPanel = null
   val picker = new Picker(this)
 
   if (Version.is3D) {
@@ -78,7 +78,7 @@ abstract class View(title: String, val viewManager: ViewManager, var renderer: R
     capabilities.setSampleBuffers(antiAliasing)
     capabilities.setNumSamples(4)
     capabilities.setStencilBits(1)
-    canvas = new GLJPanel(capabilities)
+    canvas = new GLPanel(capabilities)
     canvas.addGLEventListener(renderer)
     canvas.addMouseListener(inputHandler)
     canvas.addMouseMotionListener(inputHandler)
@@ -143,6 +143,11 @@ abstract class View(title: String, val viewManager: ViewManager, var renderer: R
     bufferedImage
   }
 
+  override def syncTheme(): Unit = {
+    if (canvas != null)
+      canvas.syncTheme()
+  }
+
   /// properties
 
   def editFinished(): Boolean = {
@@ -156,8 +161,20 @@ abstract class View(title: String, val viewManager: ViewManager, var renderer: R
     e.consume()
   }
 
+  private def doPopup(): Unit = {
+    renderer.queuePick(new Point(canvas.getWidth / 2, canvas.getHeight / 2), picker)
+  }
+
   override def dispose(): Unit = {
     renderer.cleanUp()
     super.dispose()
+  }
+
+  class GLPanel(capabilities: GLCapabilities) extends GLJPanel(capabilities) with FocusUtils with ThemeSync {
+    setSecondaryAction(doPopup)
+
+    override def syncTheme(): Unit = {
+      setFocusColor(InterfaceColors.interfaceFocus())
+    }
   }
 }

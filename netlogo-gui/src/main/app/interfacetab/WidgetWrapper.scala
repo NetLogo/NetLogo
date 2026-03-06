@@ -2,7 +2,7 @@
 
 package org.nlogo.app.interfacetab
 
-import java.awt.{ Cursor, Dimension, Graphics, Point, Rectangle }
+import java.awt.{ Component, Cursor, Dimension, Graphics, Point, Rectangle }
 import java.awt.event.{ ActionEvent, InputEvent, MouseAdapter, MouseEvent, MouseListener,  MouseMotionAdapter,
                         MouseMotionListener }
 import javax.swing.{ AbstractAction, JComponent, JLayeredPane, JPanel }
@@ -10,7 +10,7 @@ import javax.swing.{ AbstractAction, JComponent, JLayeredPane, JPanel }
 import org.nlogo.app.common.Events.WidgetSelectedEvent
 import org.nlogo.awt.{ Coordinates, Mouse }
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ MenuItem, PopupMenu, WrappingPopupMenu, Utils }
+import org.nlogo.swing.{ FocusRoot, FocusUtils, MenuItem, PopupMenu, WrappingPopupMenu, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ InterfaceMode, MouseMode, ViewWidget, Widget, WidgetWrapperInterface }
 import org.nlogo.window.Events.{ DirtyEvent, EditWidgetEvent, ExportWidgetEvent, WidgetForegroundedEvent }
@@ -34,6 +34,8 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
   with MouseListener
   with MouseMotionListener
   with WidgetForegroundedEvent.Handler
+  with FocusRoot
+  with FocusUtils
   with ThemeSync {
 
   import WidgetWrapper._
@@ -68,9 +70,11 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
   // white widget wrapper.  I don't know why setting the background to a
   // transparent color doesn't work.  but it doesn't ev 6/8/07
   setOpaque(false)
-
   setBackground(widget.getBackground)
   setLayout(null)
+  setImplicitDownCycleTraversal(false)
+  setPaintFocusOnClick(true)
+  setSecondaryAction(doPopup)
 
   add(glass, JLayeredPane.DRAG_LAYER)
   add(widget)
@@ -94,6 +98,9 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
         doPopup(e)
     }
   })
+
+  override def getDefaultComponent: Option[Component] =
+    widget.getDefaultComponent
 
   def isNew: Boolean =
     _isNew
@@ -776,6 +783,11 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
 
   ///
 
+  private def doPopup(): Unit = {
+    doPopup(new MouseEvent(this, MouseEvent.MOUSE_RELEASED, System.currentTimeMillis, 0, getWidth / 2, getHeight / 2,
+                           1, true))
+  }
+
   private def doPopup(e: MouseEvent): Unit = {
     if (interfacePanel != null) {
       val menu = new WrappingPopupMenu
@@ -1020,12 +1032,20 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
     }
   }
 
+  override def paintFocus(g: Graphics): Unit = {
+    val g2d = Utils.initGraphics2D(g)
+
+    g2d.setColor(widget.getFocusColor)
+    g2d.drawRoundRect(widget.getX, widget.getY, widget.getWidth - 1, widget.getHeight - 1, 6, 6)
+  }
+
   override def syncTheme(): Unit = {
     widget.syncTheme()
   }
 
   private class ShadowPane extends JPanel {
     setOpaque(false)
+    setFocusable(false)
 
     override def paintComponent(g: Graphics): Unit = {
       val g2d = Utils.initGraphics2D(g)

@@ -16,7 +16,7 @@ import org.nlogo.core.{ I18N, Button => CoreButton, Chooser => CoreChooser, Inpu
 import org.nlogo.editor.{ EditorArea, EditorConfiguration }
 import org.nlogo.log.LogManager
 import org.nlogo.nvm.DefaultCompilerServices
-import org.nlogo.swing.{ MenuItem, PopupMenu, UndoManager }
+import org.nlogo.swing.{ FocusRoot, FocusUtils, MenuItem, PopupMenu, UndoManager }
 import org.nlogo.theme.InterfaceColors
 import org.nlogo.window.{ AbstractPlotWidget, AbstractWidgetPanel, AutoIndentHandler, ButtonWidget, ClipboardUtils,
                           CopyPasteTarget, Editable, Events => WindowEvents, GUIWorkspace, InterfaceMode, OutputWidget,
@@ -40,7 +40,9 @@ class WidgetPanel(val workspace: GUIWorkspace)
     with WidgetRemovedEvent.Handler
     with LoadBeginEvent.Handler
     with SetInterfaceModeEvent.Handler
-    with CopyPasteTarget {
+    with CopyPasteTarget
+    with FocusRoot
+    with FocusUtils {
 
   protected var selectionRect: Rectangle = null // convert to Option?
   var widgetsBeingDragged: Seq[WidgetWrapper] = Seq()
@@ -81,6 +83,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
   protected class InterceptPane extends JComponent {
     setEnabled(false)
+    setFocusable(false)
 
     addMouseListener(new MouseAdapter {
       override def mousePressed(e: MouseEvent): Unit = {
@@ -177,6 +180,9 @@ class WidgetPanel(val workspace: GUIWorkspace)
   setOpaque(true)
   setBackground(AwtColor.WHITE)
   setAutoscrolls(true)
+  setImplicitDownCycleTraversal(false)
+  setSecondaryAction(() => doPopup(new Point(50, 50)))
+
   selectionPane.setOpaque(false)
   selectionPane.setVisible(false)
 
@@ -199,6 +205,9 @@ class WidgetPanel(val workspace: GUIWorkspace)
       }
     }
   })
+
+  override def getDefaultComponent: Option[Component] =
+    getPermanentWidgets.headOption
 
   // our children may overlap
   override def isOptimizedDrawingEnabled: Boolean = false
@@ -1681,6 +1690,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
   override def syncTheme(): Unit = {
     setBackground(InterfaceColors.interfaceBackground())
+    setFocusColor(InterfaceColors.interfaceFocus())
 
     setCursor(interfaceMode.cursor)
 

@@ -36,9 +36,8 @@ class CommandCenter(workspace: AbstractWorkspace, showToggle: Boolean, packSplit
     override def mouseReleased(e: MouseEvent): Unit = { if(e.isPopupTrigger) { e.consume(); doPopup(e) }}
   })
 
-  private val locationToggleButton = new JButton with RoundedBorderPanel with ThemeSync {
+  val locationToggleButton = new JButton with RoundedBorderPanel with ThemeSync {
     setBorder(new EmptyBorder(3, 5, 3, 6))
-    setFocusable(false)
     setDiameter(6)
     enableHover()
     enablePressed()
@@ -59,7 +58,6 @@ class CommandCenter(workspace: AbstractWorkspace, showToggle: Boolean, packSplit
     _ => output.clear()
   }) with RoundedBorderPanel with ThemeSync {
     setBorder(new EmptyBorder(3, 12, 3, 12))
-    setFocusable(false)
     setDiameter(6)
     enableHover()
     enablePressed()
@@ -77,6 +75,7 @@ class CommandCenter(workspace: AbstractWorkspace, showToggle: Boolean, packSplit
 
   locally {
     setOpaque(true)  // so background color shows up - ST 10/4/05
+    setFocusable(false)
     setLayout(new BorderLayout)
     setBorder(new EmptyBorder(0, 6, 0, 6))
 
@@ -86,6 +85,7 @@ class CommandCenter(workspace: AbstractWorkspace, showToggle: Boolean, packSplit
     add(northPanel, BorderLayout.NORTH)
 
     northPanel.setOpaque(false)
+    northPanel.setFocusable(false)
 
     val c = new GridBagConstraints
 
@@ -116,6 +116,7 @@ class CommandCenter(workspace: AbstractWorkspace, showToggle: Boolean, packSplit
     //SOUTH
     //-----------------------------------------
     southPanel.setOpaque(false)
+    southPanel.setFocusable(false)
     southPanel.setLayout(new GridBagLayout)
 
     locally {
