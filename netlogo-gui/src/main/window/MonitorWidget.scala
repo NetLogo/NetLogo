@@ -56,6 +56,8 @@ class MonitorWidget(random: MersenneTwisterFast, compiler: CompilerServices, col
 
   private class ValuePanel(label: JLabel) extends JPanel(new GridBagLayout) with RoundedBorderPanel with ThemeSync {
     locally {
+      setFocusable(false)
+
       val c = new GridBagConstraints
 
       c.weightx = 1
@@ -96,6 +98,10 @@ class MonitorWidget(random: MersenneTwisterFast, compiler: CompilerServices, col
   private val unitsLabel = new JLabel
 
   unitsLabel.setVisible(false)
+
+  nameLabel.setFocusable(false)
+  valueLabel.setFocusable(false)
+  unitsLabel.setFocusable(false)
 
   addMouseListener(this)
 
@@ -304,6 +310,7 @@ class MonitorWidget(random: MersenneTwisterFast, compiler: CompilerServices, col
 
   override def syncTheme(): Unit = {
     setBackgroundColor(InterfaceColors.monitorBackground())
+    setFocusColor(InterfaceColors.widgetFocus())
 
     if (anyErrors) {
       nameLabel.setForeground(Color.RED)

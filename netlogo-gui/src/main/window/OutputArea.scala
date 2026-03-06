@@ -31,6 +31,7 @@ import OutputArea._
 
 class OutputArea(val text: TextArea) extends JPanel with RoundedBorderPanel with ThemeSync {
   setOpaque(false)
+  setFocusable(false)
 
   var zoomFactor = 1.0
 
@@ -38,6 +39,7 @@ class OutputArea(val text: TextArea) extends JPanel with RoundedBorderPanel with
     new ScrollPane(text, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
                    ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED) {
     setBorder(null)
+    setFocusable(false)
   }
 
   // when someone prints something that
@@ -53,6 +55,8 @@ class OutputArea(val text: TextArea) extends JPanel with RoundedBorderPanel with
   //
   text.setEditable(false)
   text.setDragEnabled(false)
+  text.setFocusable(false)
+
   fontSize(12)
   setLayout(new GridBagLayout)
 

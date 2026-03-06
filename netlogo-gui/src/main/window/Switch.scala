@@ -4,12 +4,12 @@ package org.nlogo.window
 
 import org.nlogo.agent.BooleanConstraint
 import org.nlogo.core.I18N
-import org.nlogo.swing.Utils
+import org.nlogo.swing.{ FocusUtils, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
-import java.awt._
+import java.awt.{ Component, Dimension, Graphics, GridBagConstraints, GridBagLayout, Insets, RadialGradientPaint }
+import java.awt.event.{ MouseAdapter, MouseEvent }
 import javax.swing.{ JLabel, JPanel }
-import event.{ MouseEvent, MouseAdapter }
 
 object Switch {
   val MINWIDTH: Int = 90
@@ -30,6 +30,8 @@ abstract class Switch extends MultiErrorWidget with Events.AfterLoadEvent.Handle
     setLayout(new GridBagLayout)
 
     initGUI()
+
+    label.setFocusable(false)
 
     val mouseListener = new MouseAdapter {
       override def mousePressed(e: MouseEvent): Unit = {
@@ -128,25 +130,24 @@ abstract class Switch extends MultiErrorWidget with Events.AfterLoadEvent.Handle
     }
   }
 
+  override def getDefaultComponent: Option[Component] =
+    Option(toggle)
+
   override def syncTheme(): Unit = {
     setBackgroundColor(InterfaceColors.switchBackground())
+    setFocusColor(InterfaceColors.widgetFocus())
 
     label.setForeground(InterfaceColors.widgetText())
+
+    toggle.syncTheme()
   }
 
-  protected class Toggle extends JPanel {
+  protected class Toggle extends JPanel with FocusUtils with ThemeSync {
     private var hover = false
 
-    override def getMinimumSize: Dimension =
-      new Dimension(zoom(10), super.getPreferredSize.height)
-
-    override def getPreferredSize: Dimension =
-      getMinimumSize
-
-    override def getMaximumSize: Dimension =
-      getMinimumSize
-
     setOpaque(false)
+    setFocusDiameter(getPreferredSize.width)
+    setPrimaryAction(() => isOn = !isOn)
 
     addMouseListener(new MouseAdapter {
       override def mouseEntered(e: MouseEvent): Unit = {
@@ -161,6 +162,15 @@ abstract class Switch extends MultiErrorWidget with Events.AfterLoadEvent.Handle
         repaint()
       }
     })
+
+    override def getMinimumSize: Dimension =
+      new Dimension(zoom(10), super.getPreferredSize.height)
+
+    override def getPreferredSize: Dimension =
+      getMinimumSize
+
+    override def getMaximumSize: Dimension =
+      getMinimumSize
 
     override def paintComponent(g: Graphics): Unit = {
       val g2d = Utils.initGraphics2D(g)
@@ -182,6 +192,10 @@ abstract class Switch extends MultiErrorWidget with Events.AfterLoadEvent.Handle
       g2d.fillOval(0, y, getWidth, getWidth)
       g2d.setColor(InterfaceColors.switchToggle())
       g2d.fillOval(1, y + 1, getWidth - 2, getWidth - 2)
+    }
+
+    override def syncTheme(): Unit = {
+      setFocusColor(InterfaceColors.widgetFocus())
     }
   }
 }

@@ -89,7 +89,9 @@ class CommandLine(commandCenter: CommandCenterInterface,
   displayName(classDisplayName)
 
   private val scrollPane = new ScrollPane(textField, ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER,
-                                          ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER) with Transparent
+                                          ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER) with Transparent {
+    setFocusable(false)
+  }
 
   add(scrollPane, BorderLayout.CENTER)
 

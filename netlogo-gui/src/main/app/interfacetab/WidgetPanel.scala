@@ -5,7 +5,7 @@ package org.nlogo.app.interfacetab
 import java.awt.{ Color => AwtColor, Component, Cursor, Dimension, EventQueue, Graphics, MouseInfo, Point, Rectangle }
 import java.awt.event.{ ActionEvent, FocusEvent, FocusAdapter, KeyAdapter, KeyEvent, KeyListener, MouseAdapter,
                         MouseEvent, MouseListener, MouseMotionAdapter, MouseMotionListener }
-import javax.swing.{ AbstractAction, JComponent, JLayeredPane, SwingUtilities }
+import javax.swing.{ AbstractAction, JComponent, JLayeredPane, KeyStroke, SwingUtilities }
 
 import org.nlogo.analytics.Analytics
 import org.nlogo.app.common.EditorFactory
@@ -16,7 +16,7 @@ import org.nlogo.core.{ I18N, Button => CoreButton, Chooser => CoreChooser, Inpu
 import org.nlogo.editor.{ EditorArea, EditorConfiguration }
 import org.nlogo.log.LogManager
 import org.nlogo.nvm.DefaultCompilerServices
-import org.nlogo.swing.{ MenuItem, PopupMenu, UndoManager }
+import org.nlogo.swing.{ FocusRoot, FocusUtils, MenuItem, PopupMenu, UndoManager }
 import org.nlogo.theme.InterfaceColors
 import org.nlogo.window.{ AbstractPlotWidget, AbstractWidgetPanel, AutoIndentHandler, ButtonWidget, ClipboardUtils,
                           CopyPasteTarget, Editable, Events => WindowEvents, GUIWorkspace, InterfaceMode, OutputWidget,
@@ -40,7 +40,9 @@ class WidgetPanel(val workspace: GUIWorkspace)
     with WidgetRemovedEvent.Handler
     with LoadBeginEvent.Handler
     with SetInterfaceModeEvent.Handler
-    with CopyPasteTarget {
+    with CopyPasteTarget
+    with FocusRoot
+    with FocusUtils {
 
   protected var selectionRect: Rectangle = null // convert to Option?
   var widgetsBeingDragged: Seq[WidgetWrapper] = Seq()
@@ -81,6 +83,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
   protected class InterceptPane extends JComponent {
     setEnabled(false)
+    setFocusable(false)
 
     addMouseListener(new MouseAdapter {
       override def mousePressed(e: MouseEvent): Unit = {
@@ -177,6 +180,9 @@ class WidgetPanel(val workspace: GUIWorkspace)
   setOpaque(true)
   setBackground(AwtColor.WHITE)
   setAutoscrolls(true)
+  setImplicitDownCycleTraversal(false)
+  setSecondaryAction(() => doPopup(new Point(50, 50), true))
+
   selectionPane.setOpaque(false)
   selectionPane.setVisible(false)
 
@@ -199,6 +205,18 @@ class WidgetPanel(val workspace: GUIWorkspace)
       }
     }
   })
+
+  getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
+    .put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0, false), "Interact")
+
+  getActionMap.put("Interact", new AbstractAction {
+    override def actionPerformed(e: ActionEvent): Unit = {
+      setInterfaceMode(InterfaceMode.Interact, true)
+    }
+  })
+
+  override def getDefaultComponent: Option[Component] =
+    getPermanentWidgets.headOption
 
   // our children may overlap
   override def isOptimizedDrawingEnabled: Boolean = false
@@ -540,18 +558,14 @@ class WidgetPanel(val workspace: GUIWorkspace)
     }
   }
 
-  // this is bordering on comical its so confusing.
-  // this method runs for the hubnet client editor.
-  // im not yet sure if it runs anywhere else.
-  // that seems like bugs waiting to happen. JC - 12/20/10
-  protected def doPopup(point: Point): Unit = {
+  protected def doPopup(point: Point, focusTraversal: Boolean = false): Unit = {
     if (interfaceMode == InterfaceMode.Interact)
       interceptPane.disableIntercept()
 
     val menu = new PopupMenu
 
     def menuItem(keyName: String, widget: CoreWidget): WidgetCreationMenuItem = {
-      new WidgetCreationMenuItem(I18N.gui.get(s"tabs.run.widgets.$keyName"), widget)
+      new WidgetCreationMenuItem(I18N.gui.get(s"tabs.run.widgets.$keyName"), widget, focusTraversal)
     }
     val plot = menuItem("plot", CorePlot(None))
     val menuItems = Seq(
@@ -586,10 +600,14 @@ class WidgetPanel(val workspace: GUIWorkspace)
     menu.show(this, point.x, point.y)
   }
 
-  protected class WidgetCreationMenuItem(displayName: String, coreWidget: CoreWidget)
+  protected class WidgetCreationMenuItem(displayName: String, coreWidget: CoreWidget, focusTraversal: Boolean)
     extends MenuItem(new AbstractAction(displayName) {
       def actionPerformed(e: ActionEvent): Unit = {
-        createShadowWidget(coreWidget)
+        if (focusTraversal) {
+          createShadowWidget(coreWidget, Some(new Point(50, 50)))
+        } else {
+          createShadowWidget(coreWidget)
+        }
       }
     })
 
@@ -725,14 +743,41 @@ class WidgetPanel(val workspace: GUIWorkspace)
   }
 
   def keyPressed(e: KeyEvent): Unit = {
-    if (e.getKeyCode == KeyEvent.VK_ESCAPE) {
-      setInterfaceMode(InterfaceMode.Interact, true)
-    } else if (interfaceMode == InterfaceMode.Interact) {
+    if (interfaceMode == InterfaceMode.Interact) {
       if (System.getProperty("os.name").contains("Mac")) {
         if (e.getKeyCode == KeyEvent.VK_META)
           interceptPane.enableIntercept()
       } else if (e.getKeyCode == KeyEvent.VK_CONTROL) {
         interceptPane.enableIntercept()
+      }
+    } else if (interfaceMode == InterfaceMode.Add) {
+      val dist = if (e.isShiftDown) 10 else 1
+
+      e.getKeyCode match {
+        case KeyEvent.VK_SPACE =>
+          placeShadowWidgets()
+
+        case KeyEvent.VK_UP =>
+          moveShadowWidgets(0, -dist)
+
+          e.consume()
+
+        case KeyEvent.VK_RIGHT =>
+          moveShadowWidgets(dist, 0)
+
+          e.consume()
+
+        case KeyEvent.VK_DOWN =>
+          moveShadowWidgets(0, dist)
+
+          e.consume()
+
+        case KeyEvent.VK_LEFT =>
+          moveShadowWidgets(-dist, 0)
+
+          e.consume()
+
+        case _ =>
       }
     } else if (interfaceMode == InterfaceMode.Select && selectedWrappers.nonEmpty) {
       val dist = if (e.isShiftDown) 10 else 1
@@ -923,7 +968,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
   }
 
   // create shadow widget to be placed and edited (Isaac B 6/16/25)
-  def createShadowWidget(widget: CoreWidget): Unit = {
+  def createShadowWidget(widget: CoreWidget, point: Option[Point] = None): Unit = {
     val newWidget = makeWidget(widget)
 
     newWidget.setWidgetContainer(this)
@@ -940,7 +985,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
     SwingUtilities.convertPointFromScreen(mouse, this)
 
-    wrapper.setLocation(mouse.x.max(0), mouse.y.max(0))
+    wrapper.setLocation(point.getOrElse(new Point(mouse.x.max(0), mouse.y.max(0))))
     wrapper.setSize(wrapper.getPreferredSize)
     wrapper.setPlacing(true)
     wrapper.validate()
@@ -996,6 +1041,26 @@ class WidgetPanel(val workspace: GUIWorkspace)
     shadowWidgets = Some(PastedShadowWidgets(wrappers, wrappers.find {
       case (_, point) => point.x == 0 && point.y == 0
     }.get._1))
+  }
+
+  private def moveShadowWidgets(dx: Int, dy: Int): Unit = {
+    shadowWidgets.foreach(_ match {
+      case NewShadowWidget(wrapper) =>
+        wrapper.setLocation((wrapper.getX + dx).max(0), (wrapper.getY + dy).max(0))
+        wrapper.originalBounds = wrapper.getBounds
+
+      case PastedShadowWidgets(wrappers, _) =>
+        val minX = wrappers.minBy(_._1.getX)._1
+        val minY = wrappers.minBy(_._1.getY)._1
+
+        val dxClamp = (minX.getX + dx).max(0) - minX.getX
+        val dyClamp = (minY.getY + dy).max(0) - minY.getY
+
+        wrappers.foreach { (wrapper, _) =>
+          wrapper.setLocation(wrapper.getX + dxClamp, wrapper.getY + dyClamp)
+          wrapper.originalBounds = wrapper.getBounds
+        }
+    })
   }
 
   private def placeShadowWidgets(): Unit = {
@@ -1681,6 +1746,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
   override def syncTheme(): Unit = {
     setBackground(InterfaceColors.interfaceBackground())
+    setFocusColor(InterfaceColors.interfaceFocus())
 
     setCursor(interfaceMode.cursor)
 

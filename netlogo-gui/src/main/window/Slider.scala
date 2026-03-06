@@ -6,12 +6,12 @@ import java.awt.{ Dimension, Graphics, Point, RadialGradientPaint }
 import java.awt.event.{ MouseAdapter, MouseEvent }
 import javax.swing.{ JPanel, SwingConstants }
 
-import org.nlogo.swing.{ Transparent, Utils }
-import org.nlogo.theme.InterfaceColors
+import org.nlogo.swing.{ FocusUtils, Transparent, Utils }
+import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 // custom slider implementation to work around the fact that JSlider only supports integer values (Isaac B 1/2/26)
 class Slider(private var minimum: Double, private var increment: Double, private var maximum: Double,
-             widget: AbstractSliderWidget) extends JPanel with Transparent {
+             widget: AbstractSliderWidget) extends JPanel with Transparent with FocusUtils with ThemeSync {
 
   private var orientation = SwingConstants.HORIZONTAL
   private var value = 0.0
@@ -20,6 +20,7 @@ class Slider(private var minimum: Double, private var increment: Double, private
   private var pressed = false
 
   setLayout(null)
+  setFocusDiameter(6)
 
   addMouseListener(new MouseAdapter {
     override def mousePressed(e: MouseEvent): Unit = {
@@ -234,5 +235,11 @@ class Slider(private var minimum: Double, private var increment: Double, private
     }
 
     g2d.fillOval(thumb.x - radius + border, thumb.y - radius + border, diameter - border * 2, diameter - border * 2)
+
+    super.paintComponent(g2d)
+  }
+
+  override def syncTheme(): Unit = {
+    setFocusColor(InterfaceColors.sliderBarFocus())
   }
 }

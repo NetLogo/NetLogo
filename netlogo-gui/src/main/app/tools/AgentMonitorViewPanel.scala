@@ -22,7 +22,6 @@ class AgentMonitorViewPanel(workspace: GUIWorkspace) extends JPanel(new BorderLa
   view.setSize(workspace.world.worldWidth, workspace.world.worldHeight, 255.toDouble / workspace.world.worldWidth)
   view.applyNewFontSize(workspace.view.fontSize, 0)
   view.addPopupListener()
-  watchButton.setFocusable(false)
   private val controls = new JPanel
   controls.add(watchButton)
   controls.add(zoomer)

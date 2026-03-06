@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import java.awt.{ Dimension, Graphics, GridBagConstraints, GridBagLayout, Insets, LinearGradientPaint }
+import java.awt.{ Component, Dimension, Graphics, GridBagConstraints, GridBagLayout, Insets, LinearGradientPaint }
 import javax.swing.JLabel
 
 import org.nlogo.agent.ChooserConstraint
@@ -31,7 +31,10 @@ trait Chooser extends SingleErrorWidget {
   protected var _name = ""
 
   // sub-elements of Switch
-  protected val label = new JLabel(I18N.gui.get("edit.chooser.previewName"))
+  protected val label = new JLabel(I18N.gui.get("edit.chooser.previewName")) {
+    setFocusable(false)
+  }
+
   private val control = new ComboBox[String] {
     addItemListener(_ => index(getSelectedIndex))
 
@@ -145,6 +148,9 @@ trait Chooser extends SingleErrorWidget {
 
   ///
 
+  override def getDefaultComponent: Option[Component] =
+    Option(control)
+
   override def paintComponent(g: Graphics): Unit = {
     super.paintComponent(g)
 
@@ -165,6 +171,7 @@ trait Chooser extends SingleErrorWidget {
 
   override def syncTheme(): Unit = {
     setBackgroundColor(InterfaceColors.chooserBackground())
+    setFocusColor(InterfaceColors.widgetFocus())
 
     label.setForeground(InterfaceColors.widgetText())
 

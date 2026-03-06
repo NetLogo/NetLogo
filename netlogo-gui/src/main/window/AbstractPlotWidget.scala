@@ -24,6 +24,7 @@ abstract class AbstractPlotWidget(val plot: Plot, val plotManager: PlotManagerIn
   import AbstractPlotWidget._
 
   private class CanvasPanel(canvas: PlotCanvas) extends JPanel with RoundedBorderPanel with ThemeSync {
+    setFocusable(false)
     setLayout(new GridBagLayout)
 
     locally {
@@ -53,10 +54,18 @@ abstract class AbstractPlotWidget(val plot: Plot, val plotManager: PlotManagerIn
 
   private var fullyConstructed = false
   plot.dirtyListener = Some(this)
-  val canvas = new PlotCanvas(plot)
+
+  val canvas = new PlotCanvas(plot) {
+    setFocusable(false)
+  }
+
   private val canvasPanel = new CanvasPanel(canvas)
   private val legend = new PlotLegend(this)
-  private val nameLabel = new JLabel(originalName)
+
+  private val nameLabel = new JLabel(originalName) {
+    setFocusable(false)
+  }
+
   private val xAxis = new XAxisLabels(this)
   private val yAxis = new YAxisLabels(this)
 
@@ -401,7 +410,14 @@ object AbstractPlotWidget {
     private val max: JLabel = new JLabel()
 
     val gridbag: GridBagLayout = new GridBagLayout
+
+    setFocusable(false)
     setLayout(gridbag)
+
+    min.setFocusable(false)
+    label.setFocusable(false)
+    max.setFocusable(false)
+
     val c: GridBagConstraints = new GridBagConstraints
     c.insets = new Insets(0, 0, 0, plot.zoom(3))
     c.gridheight = 1
@@ -456,7 +472,14 @@ object AbstractPlotWidget {
     private val min: JLabel = new JLabel()
 
     val gridbag: GridBagLayout = new GridBagLayout
+
+    setFocusable(false)
     setLayout(gridbag)
+
+    min.setFocusable(false)
+    label.setFocusable(false)
+    max.setFocusable(false)
+
     val c: GridBagConstraints = new GridBagConstraints
     c.insets = new Insets(plot.zoom(3), 0, 0, 0)
     c.gridwidth = GridBagConstraints.REMAINDER
@@ -509,6 +532,8 @@ object AbstractPlotWidget {
 
   private class VerticalLabel extends JPanel {
     private var text = ""
+
+    setFocusable(false)
 
     def getText: String = text
     def setText(text: String): Unit = {

@@ -62,11 +62,13 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     val scrollPane = new ScrollPane(textArea, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
                                     ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER) {
       setBorder(null)
+      setFocusable(false)
     }
 
     textArea.setOpaque(false)
     textArea.setBackground(InterfaceColors.Transparent)
 
+    setFocusable(false)
     setLayout(new GridBagLayout)
 
     initGUI()
@@ -223,6 +225,8 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
 
   colorSwatch.setVisible(false)
 
+  widgetLabel.setFocusable(false)
+
   // focus listener for in place editing
   textArea.addFocusListener(
     new FocusListener() {
@@ -298,8 +302,17 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     add(colorSwatch, c)
   }
 
+  override def getDefaultComponent: Option[Component] = {
+    if (scroller.isVisible) {
+      Option(textArea)
+    } else {
+      Option(colorSwatch)
+    }
+  }
+
   override def paintComponent(g: Graphics) = {
     setBackgroundColor(InterfaceColors.inputBackground())
+    setFocusColor(InterfaceColors.widgetFocus())
 
     widgetLabel.setForeground(InterfaceColors.widgetText())
 
