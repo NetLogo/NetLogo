@@ -76,13 +76,13 @@ jobs:
           "  path: '${{ env.JAVA_HOME }}'" >> .jdks.yaml
 
       - name: Download User Manual
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v8
         with:
           name: ${{ needs.build-docs.outputs.pdf-artifact }}
           path: ./helio/apps/docs/.build
 
       - name: Download CSV of Manual Links
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v8
         with:
           name: ${{ needs.build-docs.outputs.csv-artifact }}
           path: ./helio/apps/docs/.build
