@@ -126,6 +126,36 @@ class StructureParserTests extends AnyFunSuite {
       "link-breeds EDGES = Breed(EDGES, EDGE, LWEIGHT, false)"), dump)
   }
 
+  test("configurableExtension") {
+    var results = compile("extension [foo]")
+    assert(results.configurableExtensions.size == 1)
+    assert(results.configurableExtensions.head.name.name.toLowerCase() == "foo")
+    
+    results = compile("extension [foo] extension [bar]")
+    assert(results.configurableExtensions.size == 2)
+    assert(results.configurableExtensions.exists(_.name.name.toLowerCase() == "foo"))
+    assert(results.configurableExtensions.exists(_.name.name.toLowerCase() == "bar"))
+
+    results = compile("extension [foo] extension [bar [ url \"text\"]]")
+    assert(results.configurableExtensions.size == 2)
+    assert(results.configurableExtensions.exists(_.name.name.toLowerCase() == "foo"))
+    assert(results.configurableExtensions.exists(_.name.name.toLowerCase() == "bar"))
+    assert(results.configurableExtensions.exists(_.url.isDefined))
+    assert(results.configurableExtensions.find(_.name.name.toLowerCase() == "bar").get.url.get.name == "text")
+    assert(results.configurableExtensions.find(_.name.name.toLowerCase() == "foo").get.url.isEmpty)
+
+    results = compile("extensions [foo bar] extension [baz] extension [qux [url \"text\"]]")
+    assert(results.configurableExtensions.size == 2)
+    assert(results.extensions.size == 2) 
+    assert(results.configurableExtensions.exists(_.name.name.toLowerCase() == "baz"))
+    assert(results.configurableExtensions.exists(_.name.name.toLowerCase() == "qux"))
+    assert(results.configurableExtensions.exists(_.url.isDefined))
+    assert(results.configurableExtensions.find(_.name.name.toLowerCase() == "qux").get.url.get.name == "text")
+    assert(results.configurableExtensions.find(_.name.name.toLowerCase() == "baz").get.url.isEmpty)
+    assert(results.extensions.exists(_.text.toLowerCase() == "foo"))
+    assert(results.extensions.exists(_.text.toLowerCase() == "bar"))
+  }
+
   test("declarations1") {
     val results = compile("extensions [foo] globals [g1 g2] turtles-own [t1 t2] patches-own [p1 p2]")
     assert(results.procedures.isEmpty)
