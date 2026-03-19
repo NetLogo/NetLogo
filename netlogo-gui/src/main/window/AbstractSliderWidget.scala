@@ -341,8 +341,8 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
                                    valueComponent.getPreferredSize.width, valueComponent.getPreferredSize.height)
         }
 
-        slider.setBounds(getWidth - zoom(slider.getPreferredSize.width) + 1, zoom(6),
-                         zoom(slider.getPreferredSize.width), getHeight - zoom(12))
+        slider.setBounds(getWidth - slider.getPreferredSize.width + 1, zoom(6), slider.getPreferredSize.width,
+                         getHeight - zoom(12))
       } else {
         nameComponent.setBounds(zoom(6), zoom(2), nameComponent.getPreferredSize.width.min(
                                                     getWidth - unitsComponent.getPreferredSize.width -
@@ -360,8 +360,8 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
                                    valueComponent.getPreferredSize.width, valueComponent.getPreferredSize.height)
         }
 
-        slider.setBounds(zoom(6), getHeight - zoom(slider.getPreferredSize.height) + 1, getWidth - zoom(12),
-                         zoom(slider.getPreferredSize.height))
+        slider.setBounds(zoom(6), getHeight - slider.getPreferredSize.height + 1, getWidth - zoom(12),
+                         slider.getPreferredSize.height)
       }
     } else {
       if (vertical) {
@@ -381,8 +381,8 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
                                    valueComponent.getPreferredSize.width, valueComponent.getPreferredSize.height)
         }
 
-        slider.setBounds(getWidth - zoom(slider.getPreferredSize.width) - 2, zoom(8),
-                         zoom(slider.getPreferredSize.width), getHeight - zoom(16))
+        slider.setBounds(getWidth - slider.getPreferredSize.width - 2, zoom(8), slider.getPreferredSize.width,
+                         getHeight - zoom(16))
       } else {
         nameComponent.setBounds(zoom(8), zoom(8), nameComponent.getPreferredSize.width.min(
                                                     getWidth - unitsComponent.getPreferredSize.width -
@@ -400,8 +400,8 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
                                    valueComponent.getPreferredSize.width, valueComponent.getPreferredSize.height)
         }
 
-        slider.setBounds(zoom(8), getHeight - zoom(slider.getPreferredSize.height) - 2, getWidth - zoom(16),
-                         zoom(slider.getPreferredSize.height))
+        slider.setBounds(zoom(8), getHeight - slider.getPreferredSize.height - 2, getWidth - zoom(16),
+                         slider.getPreferredSize.height)
       }
     }
 
