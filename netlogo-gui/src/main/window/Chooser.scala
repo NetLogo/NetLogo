@@ -33,13 +33,8 @@ trait Chooser extends SingleErrorWidget {
   // sub-elements of Switch
   protected val label = new JLabel(I18N.gui.get("edit.chooser.previewName"))
   private val control = new ComboBox[String] {
+    setZoomFunc(zoom)
     addItemListener(_ => index(getSelectedIndex))
-
-    override def paintComponent(g: Graphics): Unit = {
-      setDiameter(zoom(6))
-
-      super.paintComponent(g)
-    }
   }
 
   setLayout(new GridBagLayout)
@@ -48,6 +43,8 @@ trait Chooser extends SingleErrorWidget {
 
   override def initGUI(): Unit = {
     removeAll()
+
+    control.initGUI()
 
     val c = new GridBagConstraints
 

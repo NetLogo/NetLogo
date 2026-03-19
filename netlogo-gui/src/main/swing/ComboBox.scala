@@ -60,41 +60,67 @@ class ComboBox[T](private var items: Seq[T] = Seq(), openOnPress: Boolean = true
 
   private var itemListeners = Set[ItemListener]()
 
-  locally {
-    setFocusable(true)
-    setDiameter(6)
-    enableHover()
+  private var zoom: Double => Int = d => d.toInt
+
+  setFocusable(true)
+  enableHover()
+
+  addMouseListener(mouseListener)
+  choiceDisplay.addMouseListener(mouseListener)
+  arrow.addMouseListener(mouseListener)
+
+  addKeyListener(new KeyAdapter {
+    override def keyPressed(e: KeyEvent): Unit = {
+      if (e.getKeyCode == KeyEvent.VK_DOWN && isEnabled)
+        popup.show(ComboBox.this, 0, getHeight)
+    }
+  })
+
+  initGUI()
+
+  setItems(items)
+
+  def initGUI(): Unit = {
+    removeAll()
+
+    setDiameter(zoom(6))
+
+    // the arrow looks uneven if the width is even, so make sure it's odd after scaling
+    // to the zoomed value (Isaac B 3/19/26)
+    val arrowWidth: Int = {
+      val width = zoom(9)
+
+      if (width % 2 == 0) {
+        width + 1
+      } else {
+        width
+      }
+    }
+
+    arrow.setPreferredSize(new Dimension(arrowWidth, (arrowWidth / 1.8).ceil.toInt))
 
     val c = new GridBagConstraints
 
     c.fill = GridBagConstraints.HORIZONTAL
     c.weightx = 1
-    c.insets = new Insets(3, 6, 3, 6)
+    c.insets = new Insets(zoom(3), zoom(6), zoom(3), zoom(6))
 
     add(choiceDisplay, c)
 
     c.fill = GridBagConstraints.VERTICAL
     c.weightx = 0
     c.weighty = 1
-    c.insets = new Insets(0, 0, 0, 6)
+    c.insets = new Insets(0, 0, 0, zoom(6))
 
     add(new JPanel(new GridBagLayout) with Transparent {
       add(arrow, new GridBagConstraints)
     }, c)
 
-    addMouseListener(mouseListener)
-    choiceDisplay.addMouseListener(mouseListener)
-    arrow.addMouseListener(mouseListener)
-
-    addKeyListener(new KeyAdapter {
-      override def keyPressed(e: KeyEvent): Unit = {
-        if (e.getKeyCode == KeyEvent.VK_DOWN && isEnabled)
-          popup.show(ComboBox.this, 0, getHeight)
-      }
-    })
-
-    setItems(items)
     syncTheme()
+  }
+
+  def setZoomFunc(func: Double => Int): Unit = {
+    zoom = func
   }
 
   def showPopup(): Unit = {
