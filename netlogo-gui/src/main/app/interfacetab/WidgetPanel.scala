@@ -60,11 +60,11 @@ class WidgetPanel(val workspace: GUIWorkspace)
       override def paintComponent(g: Graphics): Unit = {
         if (selectionRect != null) {
           g.setColor(AwtColor.WHITE)
-          g.drawRect(selectionRect.x, selectionRect.y,
-            selectionRect.width - 1, selectionRect.height - 1)
+          g.drawRect(selectionRect.x + 1, selectionRect.y + 1,
+            selectionRect.width - 3, selectionRect.height - 3)
           g.setColor(new AwtColor(180, 180, 180, 120))
-          g.fillRect(selectionRect.x, selectionRect.y,
-            selectionRect.width - 1, selectionRect.height - 1)
+          g.fillRect(selectionRect.x + 1, selectionRect.y + 1,
+            selectionRect.width - 3, selectionRect.height - 3)
         }
       }
     }
