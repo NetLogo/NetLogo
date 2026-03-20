@@ -10,7 +10,7 @@ import com.vladsch.flexmark.ext.escaped.character.EscapedCharacterExtension
 import com.vladsch.flexmark.ext.autolink.AutolinkExtension
 import com.vladsch.flexmark.ext.typographic.TypographicExtension
 
-import java.awt.{ Color, Dimension, Rectangle }
+import java.awt.{ Color, Dimension, Font, Rectangle }
 import java.util.ArrayList
 import javax.swing.{ Box, BoxLayout, JEditorPane }
 import javax.swing.border.EmptyBorder
@@ -24,8 +24,11 @@ class NoteWidget extends SingleErrorWidget with Transparent with Editable {
   private val textPane = new JEditorPane("text/html", "") {
     setEditable(false)
     setOpaque(false)
-
     setCaret(new SilentCaret)
+
+    override def setFont(font: Font): Unit = {
+      super.setFont(font.deriveFont(zoom(_fontSize).toFloat))
+    }
   }
 
   locally {
@@ -42,7 +45,7 @@ class NoteWidget extends SingleErrorWidget with Transparent with Editable {
 
   private var _width: Int = DEFAULT_WIDTH
   private var _text: String = ""
-  private var _fontSize: Int = textPane.getFont.getSize
+  private var _fontSize: Int = 12
   private var _textColorLight = Color.BLACK
   private var _textColorDark = Color.WHITE
   private var _backgroundLight = InterfaceColors.Transparent
@@ -111,13 +114,7 @@ class NoteWidget extends SingleErrorWidget with Transparent with Editable {
   def fontSize: Int = _fontSize
   def setFontSize(size: Int): Unit = {
     _fontSize = size
-    if (isZoomed && originalFont != null) {
-      val zoomDiff: Int = getFont.getSize - originalFont.getSize
-      textPane.setFont(textPane.getFont.deriveFont((size + zoomDiff).toFloat))
-    } else {
-      textPane.setFont(textPane.getFont.deriveFont(size.toFloat))
-    }
-    if (originalFont != null) originalFont = (originalFont.deriveFont(size.toFloat))
+    textPane.setFont(textPane.getFont)
     resetZoomInfo()
     resetSizeInfo()
     wrapText()
