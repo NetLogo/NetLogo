@@ -25,10 +25,10 @@ class NetLogoFoldParserTest extends AnyFunSuiteEx with ProgramGenerator {
   test("a document with globals and a procedure has both as elements") {
     val code = "globals [ baz ] to foo bar end"
     assert(sections(code).length === 2)
-    assert(sections(code)(0).length === 4) // this counts tokens, not characters
-    assert(sections(code)(0).map(_.text).mkString(" ") === "globals [ baz ]")
-    assert(sections(code)(1).length === 4)
-    assert(sections(code)(1).map(_.text).mkString(" ") === "to foo bar end")
+    assert(sections(code)(0).length === 3) // this counts tokens, not characters
+    assert(sections(code)(0).map(_.text).mkString(" ") === "globals [ baz")
+    assert(sections(code)(1).length === 3)
+    assert(sections(code)(1).map(_.text).mkString(" ") === "to foo bar")
   }
 
   test("handles bad tokens without error") {
