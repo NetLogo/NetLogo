@@ -29,7 +29,7 @@ object NetLogoFoldParser {
     def takeUntilCloseBracketOrKeyword(acc: Seq[Token]): Seq[Token] =
       if (! tokens.hasNext) acc
       else tokens.head.tpe match {
-        case TokenType.CloseBracket                  => tokens.next() +: acc
+        case TokenType.CloseBracket                  => tokens.next(); acc
         case TokenType.OpenBracket if acc.length > 1 => acc
         case TokenType.Ident if tokens.head.text.equalsIgnoreCase("BREED") => acc
         case TokenType.Keyword | TokenType.Eof       => acc
@@ -40,7 +40,7 @@ object NetLogoFoldParser {
     def takeUntilEnd(acc: Seq[Token]): Seq[Token] =
       if (! tokens.hasNext) acc
       else tokens.head.tpe match {
-        case TokenType.Keyword if (tokens.head.value == "END") => tokens.next() +: acc
+        case TokenType.Keyword if (tokens.head.value == "END") => tokens.next(); acc
         case TokenType.Keyword | TokenType.Eof => acc
         case _ => takeUntilEnd(tokens.next() +: acc)
       }
@@ -50,7 +50,7 @@ object NetLogoFoldParser {
       if (! tokens.hasNext) acc
       else tokens.head.tpe match {
         case TokenType.Comment => takeUntilNonComment(tokens.next() +: acc)
-        case _                 => acc
+        case _                 => acc.tail
       }
 
     def takeUntilEof(acc: Seq[Seq[Token]]): Seq[Seq[Token]] =
@@ -99,5 +99,5 @@ class NetLogoFoldParser extends FoldParser {
   }
 
   private def singleLineDeclaration(text: String)(toks: Seq[Token]): Boolean =
-    !text.slice(toks.head.start, toks.last.end).contains("\n")
+    toks.isEmpty || !text.slice(toks.head.start, toks.last.end).contains("\n")
 }
