@@ -42,8 +42,8 @@ class AnnouncementBanner extends JPanel with MouseUtils with ThemeSync {
     setBorder(BorderFactory.createMatteBorder(1, 0, 1, 0, InterfaceColors.viewBorder()))
     setLayout(new GridBagLayout)
 
-    Util.modifyFont(annTitle)(_.deriveFont(20f))
-    Util.modifyFont(annText )(_.deriveFont(16f))
+    Util.modifyFont(annTitle)(_.deriveFont(18f))
+    Util.modifyFont(annText )(_.deriveFont(14f))
 
     addMouseListener(new MouseAdapter() {
 
@@ -143,7 +143,7 @@ class AnnouncementBanner extends JPanel with MouseUtils with ThemeSync {
   }
 
   override def getPreferredSize: Dimension =
-    new Dimension(super.getPreferredSize.width, 80)
+    new Dimension(super.getPreferredSize.width, 66)
 
   override def syncTheme(): Unit = {
     renderData()
@@ -172,7 +172,7 @@ private class XButton(dismissItem: () => Unit) extends JButton with MouseUtils w
 
   private def defaultXColor() = InterfaceColors.announceX()
 
-  private val setXColor = (color: Color) => setIcon(Utils.iconScaledWithColor("/images/close-light.png", 18, 18, color))
+  private val setXColor = (color: Color) => setIcon(Utils.iconScaledWithColor("/images/close-light.png", 15, 15, color))
 
   setBorderPainted(false)
   setContentAreaFilled(false)
@@ -221,10 +221,10 @@ private class ComplexXWrapper(dismissItem: () => Unit) extends JPanel with Mouse
   private val complexXNum = new JLabel
 
   setOpaque(false)
-  setBorder(new EmptyBorder(2, 12, 2, 12))
+  setBorder(new EmptyBorder(1, 8, 1, 8))
 
-  Util.modifyFont(complexXNum)(_.deriveFont(16f))
-  complexXNum.setBorder(new EmptyBorder(0, 0, 0, 7))
+  Util.modifyFont(complexXNum)(_.deriveFont(14f))
+  complexXNum.setBorder(new EmptyBorder(0, 0, 0, 3))
 
   complexX.setIcon(Utils.iconScaledWithColor("/images/chevron-right.png", 10, 10, InterfaceColors.announceX()))
 
@@ -273,7 +273,7 @@ private class ComplexXWrapper(dismissItem: () => Unit) extends JPanel with Mouse
     val g2 = g.asInstanceOf[Graphics2D]
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
     g2.setColor(getBackground())
-    g2.fillRoundRect(0, 0, getWidth(), getHeight(), 50, 50)
+    g2.fillRoundRect(0, 0, getWidth(), getHeight(), 40, 40)
   }
 
 }
