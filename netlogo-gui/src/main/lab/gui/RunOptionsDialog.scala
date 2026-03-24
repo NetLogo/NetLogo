@@ -5,7 +5,7 @@ package org.nlogo.lab.gui
 import java.awt.Window
 import java.nio.file.Path
 
-import org.nlogo.api.{ LabDefaultValues, LabProtocol }
+import org.nlogo.api.{ LabDefaultValues, LabProtocol, Options }
 import org.nlogo.awt.UserCancelException
 import org.nlogo.core.{ I18N, NetLogoPreferences }
 import org.nlogo.window.{ DummyErrorHandler, Editable, EditDialogFactory, EditPanel }
@@ -72,6 +72,7 @@ class RunOptionsDialog(parent: Window, dialogFactory: EditDialogFactory, current
     def updatePlotsAndMonitors = NetLogoPreferences.getBoolean("updatePlotsAndMonitors", true)
     def threadCount = NetLogoPreferences.getInt("threadCount", defaultProcessors)
     def mirrorHeadlessOutput = NetLogoPreferences.getBoolean("mirrorHeadlessOutput", false)
+    def errorBehavior = NetLogoPreferences.get("errorBehavior", LabProtocol.AbortRun.key)
     def updateFrom(protocol: LabProtocol): Unit = {
       NetLogoPreferences.put("spreadsheet", parentDirectory(protocol.spreadsheet))
       NetLogoPreferences.put("table", parentDirectory(protocol.table))
@@ -81,6 +82,7 @@ class RunOptionsDialog(parent: Window, dialogFactory: EditDialogFactory, current
       NetLogoPreferences.putBoolean("updatePlotsAndMonitors", protocol.updatePlotsAndMonitors)
       NetLogoPreferences.putInt("threadCount", protocol.threadCount)
       NetLogoPreferences.putBoolean("mirrorHeadlessOutput", protocol.mirrorHeadlessOutput)
+      NetLogoPreferences.put("errorBehavior", protocol.errorBehavior.key)
     }
   }
 
@@ -95,6 +97,14 @@ class RunOptionsDialog(parent: Window, dialogFactory: EditDialogFactory, current
     private implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("tools.behaviorSpace.runoptions")
 
     val classDisplayName = I18N.gui("title")
+
+    var errorBehaviorOptions = new Options[LabProtocol.ErrorBehavior] {
+      addOption(I18N.gui(LabProtocol.IgnoreErrors.key), LabProtocol.IgnoreErrors)
+      addOption(I18N.gui(LabProtocol.AbortRun.key), LabProtocol.AbortRun)
+      addOption(I18N.gui(LabProtocol.AbortExperiment.key), LabProtocol.AbortExperiment)
+
+      selectValue(protocol.errorBehavior)
+    }
 
     def spreadsheet: String = protocol.spreadsheet
     def setSpreadsheet(s: String): Unit = {
@@ -131,9 +141,20 @@ class RunOptionsDialog(parent: Window, dialogFactory: EditDialogFactory, current
       protocol.threadCount = i
     }
 
+    def memoryLimit: Int = protocol.memoryLimit
+    def setMemoryLimit(i: Int): Unit = {
+      protocol.memoryLimit = i
+    }
+
     def mirrorHeadlessOutput: Boolean = protocol.mirrorHeadlessOutput
     def setMirrorHeadlessOutput(b: Boolean): Unit = {
       protocol.mirrorHeadlessOutput = b
+    }
+
+    def errorBehavior: Options[LabProtocol.ErrorBehavior] = errorBehaviorOptions
+    def setErrorBehavior(options: Options[LabProtocol.ErrorBehavior]): Unit = {
+      errorBehaviorOptions = options
+      protocol.errorBehavior = options.chosenValue
     }
 
     override def editPanel: EditPanel = new RunOptionsEditPanel(this, currentDirectory, spreadsheetFile, tableFile,

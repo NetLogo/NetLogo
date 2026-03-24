@@ -6,11 +6,13 @@ import java.awt.{ Component, Dimension, EventQueue, FileDialog => JFileDialog, F
                   GridBagLayout, Insets }
 import java.awt.event.ActionEvent
 import java.io.PrintWriter
-import javax.swing.{ AbstractAction, JDialog, JLabel, JList, JMenuBar, JPanel, ListCellRenderer }
-import javax.swing.event.ListSelectionListener
+import java.nio.file.{ Files, Paths }
+import javax.swing.{ AbstractAction, DefaultListModel, JDialog, JLabel, JList, JMenuBar, JPanel, ListCellRenderer }
+import javax.swing.event.{ ListSelectionEvent, ListSelectionListener }
 
 import org.nlogo.analytics.Analytics
-import org.nlogo.api.{ RefEnumeratedValueSet, LabProtocol }
+import org.nlogo.api.{ Exceptions, LabProtocol, RefEnumeratedValueSet }
+import org.nlogo.awt.UserCancelException
 import org.nlogo.core.I18N
 import org.nlogo.editor.Colorizer
 import org.nlogo.swing.{ Button, FileDialog, OptionPane, Positioning, ScrollPane, Transparent, Utils, WindowAutomator }
@@ -26,16 +28,12 @@ class ManagerDialog(manager:       LabManager,
                     menuFactory:   MenuBarFactory)
   extends JDialog(manager.workspace.getFrame) with ListSelectionListener with ThemeSync {
 
-  WindowAutomator.automate(this)
+  private implicit val i18NPrefix: I18N.Prefix = I18N.Prefix("tools.behaviorSpace")
 
-  def saveProtocol(protocol: LabProtocol, runsCompleted: Int): Unit = {
-    protocol.runsCompleted = runsCompleted
-    update()
-    select(protocol)
-  }
   private val jlist = new JList[LabProtocol]
-  private val listModel = new javax.swing.DefaultListModel[LabProtocol]
-  private implicit val i18NPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("tools.behaviorSpace")
+  private val listModel = new DefaultListModel[LabProtocol]
+
+  private var running = Map[LabProtocol, Supervisor]()
 
   /// actions
   private def makeAction(name: String, fn: () => Unit) = {
@@ -58,6 +56,8 @@ class ManagerDialog(manager:       LabManager,
 
   private var blockActions = false
   private var editIndex = 0
+
+  WindowAutomator.automate(this)
 
   /// initialization
   setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE)
@@ -143,11 +143,27 @@ class ManagerDialog(manager:       LabManager,
   Utils.addEscKeyAction(this, closeAction)
   getRootPane.setDefaultButton(runButton)
 
+  def anyRunning: Boolean =
+    running.nonEmpty
+
   override def getPreferredSize: Dimension =
     new Dimension(super.getPreferredSize.width.max(400), super.getPreferredSize.height.max(300))
 
+  private def saveProtocol(protocol: LabProtocol, runsCompleted: Int): Unit = {
+    running.get(protocol).foreach { supervisor =>
+      supervisor.abort()
+
+      running -= protocol
+    }
+
+    protocol.runsCompleted = runsCompleted
+
+    update()
+    select(protocol)
+  }
+
   /// implement ListSelectionListener
-  def valueChanged(e: javax.swing.event.ListSelectionEvent): Unit = {
+  def valueChanged(e: ListSelectionEvent): Unit = {
     if (blockActions) {
       editAction.setEnabled(false)
       newAction.setEnabled(false)
@@ -160,15 +176,16 @@ class ManagerDialog(manager:       LabManager,
       runAction.setEnabled(false)
     } else {
       val count = jlist.getSelectedIndices.length
-      editAction.setEnabled(count == 1 && selectedProtocol.runsCompleted == 0)
+
+      editAction.setEnabled(count == 1 && selectedProtocol.runsCompleted == 0 && !running.contains(selectedProtocol))
       newAction.setEnabled(true)
-      deleteAction.setEnabled(count > 0)
+      deleteAction.setEnabled(count > 0 && !selectedProtocols.exists(running.contains))
       duplicateAction.setEnabled(count == 1)
       importAction.setEnabled(true)
       exportAction.setEnabled(count > 0)
       closeAction.setEnabled(true)
-      abortAction.setEnabled(count == 1 && selectedProtocol.runsCompleted != 0)
-      runAction.setEnabled(count == 1)
+      abortAction.setEnabled(count == 1 && (selectedProtocol.runsCompleted != 0 || running.contains(selectedProtocol)))
+      runAction.setEnabled(count == 1 && !running.contains(selectedProtocol))
     }
   }
   /// action implementations
@@ -178,10 +195,24 @@ class ManagerDialog(manager:       LabManager,
 
       manager.prepareForRun()
 
-      new Supervisor(this, manager.workspace, selectedProtocol, manager.workspaceFactory, dialogFactory,
-                     manager.workspace, colorizer, saveProtocol, false).start()
+      val temp = Files.createTempFile("temp-model", ".nlogox")
+
+      temp.toFile.deleteOnExit()
+
+      manager.modelLoader.save(manager.modelSaver.currentModel, temp.toUri)
+
+      val supervisor = new Supervisor(this, manager.workspace, temp, selectedProtocol, dialogFactory, saveProtocol,
+                                      false)
+
+      supervisor.start()
+
+      running += ((selectedProtocol, supervisor))
+
+      update()
+    } catch {
+      case ex: UserCancelException =>
+        Exceptions.ignore(ex)
     }
-    catch { case ex: org.nlogo.awt.UserCancelException => org.nlogo.api.Exceptions.ignore(ex) }
   }
   private def makeNew(): Unit = {
     editProtocol(
@@ -321,6 +352,12 @@ class ManagerDialog(manager:       LabManager,
   private def abort(): Unit = {
     saveProtocol(selectedProtocol, 0)
   }
+
+  def abortAll(): Unit = {
+    running.values.foreach(_.abort())
+    running = Map()
+  }
+
   /// helpers
   def update(): Unit = {
     listModel.clear
@@ -381,21 +418,22 @@ class ManagerDialog(manager:       LabManager,
     dialog.okButton.doClick()
   }
 
-  def runForTesting(): Unit = {
+  def runForTesting(): Boolean = {
     editIndex = selectedIndex
 
     EventQueue.invokeAndWait(() => {
       manager.prepareForRun()
     })
 
-    val supervisor = new Supervisor(this, manager.workspace, selectedProtocol, manager.workspaceFactory, dialogFactory,
-                                    manager.workspace, colorizer, saveProtocol, true)
+    val supervisor = new Supervisor(this, manager.workspace, Paths.get(manager.workspace.getModelPath),
+                                    selectedProtocol, dialogFactory, saveProtocol, true)
 
     EventQueue.invokeAndWait(() => {
       supervisor.start()
     })
 
     supervisor.join()
+    supervisor.succeeded
   }
 
   class ProtocolRenderer extends JPanel(new FlowLayout(FlowLayout.LEFT)) with ListCellRenderer[LabProtocol] {
@@ -406,8 +444,10 @@ class ManagerDialog(manager:       LabManager,
     def getListCellRendererComponent(list: JList[? <: LabProtocol], proto: LabProtocol, index: Int,
                                      isSelected: Boolean, cellHasFocus: Boolean): Component = {
       label.setText(
-        if (proto.runsCompleted != 0) {
-          I18N.gui("inProgress", proto.name, proto.runsCompleted.toString, proto.countRuns.toString)
+        if (running.contains(proto)) {
+          I18N.gui("inProgress", proto.name)
+        } else if (proto.runsCompleted != 0) {
+          I18N.gui("paused", proto.name, proto.runsCompleted.toString, proto.countRuns.toString)
         } else {
           s"${proto.name} (${proto.countRuns} run${(if (proto.countRuns != 1) "s" else "")})"
         })

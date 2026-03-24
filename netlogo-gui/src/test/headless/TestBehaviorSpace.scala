@@ -83,20 +83,20 @@ with OneInstancePerTest with BeforeAndAfterEach {
       if (wantTable && wantSpreadsheet) {
         Main.main(Array("--model", modelPath, "--experiment", experimentName,
                 "--table", tablePath, "--spreadsheet", spreadsheetPath, "--stats", statsPath, "--lists", listsPath,
-                "--threads", threads.toString, "--suppress-errors"))
+                "--threads", threads.toString, "--error-behavior", "ignore"))
       } else if (wantTable) {
         Main.main(Array("--model", modelPath, "--experiment", experimentName,
                 "--table", tablePath, "--stats", statsPath, "--lists", listsPath,
-                "--threads", threads.toString, "--suppress-errors"))
+                "--threads", threads.toString, "--error-behavior", "ignore"))
       } else if (wantSpreadsheet) {
         Main.main(Array("--model", modelPath, "--experiment", experimentName,
                 "--spreadsheet", spreadsheetPath, "--stats", statsPath, "--lists", listsPath,
-                "--threads", threads.toString, "--suppress-errors"))
+                "--threads", threads.toString, "--error-behavior", "ignore"))
       }
     } else {
         Main.main(Array("--model", modelPath, "--experiment", experimentName,
                   "--table", tablePath, "--spreadsheet", spreadsheetPath, "--stats", statsPath, "--lists", listsPath,
-                  "--threads", threads.toString, "--suppress-errors"))
+                  "--threads", threads.toString, "--error-behavior", "ignore"))
     }
     if (!wantStats && wantTable)
       assertResult(slurp(filename + "-table.csv"))(
