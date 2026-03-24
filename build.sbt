@@ -85,6 +85,7 @@ lazy val scalatestSettings = Seq(
   , s"-Dorg.nlogo.is3d=${System.getProperty("org.nlogo.is3d", "false")}"
   , s"-Dorg.nlogo.noGenerator=${System.getProperty("org.nlogo.noGenerator", "false")}"
   , s"-Dorg.nlogo.noOptimizer=${System.getProperty("org.nlogo.noOptimizer", "false")}"
+  , "-Dfile.encoding=UTF-8", // this fixes headless model loading bugs on Windows (Isaac B 1/4/26)
   ) }
   // Tests must be forked to get the above `javaOptions`
 , Test / fork := true

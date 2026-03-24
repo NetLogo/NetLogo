@@ -4,7 +4,7 @@ package org.nlogo.headless
 
 import scala.util.{ Failure, Success, Try }
 
-import org.nlogo.api.{ ExtensionManager, PreviewCommands, Version }
+import org.nlogo.api.{ ExtensionManager, Version }
 import org.nlogo.core.CompilerException
 import org.nlogo.nvm.Workspace
 import org.nlogo.util.{ AnyFunSuiteEx, SlowTest }
@@ -53,7 +53,7 @@ class TestCompileAll extends AnyFunSuiteEx with SlowTest {
   }
 
   def compilePreviewCommands(ws: Workspace): Unit =
-    if (ws.previewCommands.isInstanceOf[PreviewCommands.Compilable]) {
+    if (ws.previewCommands.compilable) {
       Try (ws.compileCommands(ws.previewCommands.source)) match {
         case Failure(e: CompilerException) =>
           fail("Error compiling preview commands: " + e.getMessage)
