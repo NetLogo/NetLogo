@@ -62,7 +62,7 @@ trait RoundedBorderPanel extends Transparent with MouseUtils {
       g2d.setColor(backgroundColor)
     }
 
-    g2d.fillRoundRect(0, 0, getWidth, getHeight, diameter, diameter)
+    g2d.fillRoundRect(1, 1, getWidth - 2, getHeight - 2, diameter, diameter)
     g2d.setColor(borderColor)
     g2d.drawRoundRect(0, 0, getWidth - 1, getHeight - 1, diameter, diameter)
 
