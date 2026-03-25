@@ -4,10 +4,11 @@ package org.nlogo.headless
 
 import java.io.File
 import java.nio.file.{ Files, Path, Paths }
+import java.util.Locale
 import javax.imageio.ImageIO
 
 import org.nlogo.api.{ FileIO, PreviewCommands, Version }
-import org.nlogo.core.CompilerException
+import org.nlogo.core.{ CompilerException, I18N }
 import org.nlogo.headless.ChecksumsAndPreviewsSettings.ChecksumsPath
 import org.nlogo.nvm.Workspace
 import org.nlogo.workspace.{ Checksummer, ModelsLibrary, PreviewCommandsRunner }
@@ -23,6 +24,8 @@ object ChecksumsAndPreviews {
 
   def main(argv: Array[String]): Unit = {
     Main.setHeadlessProperty()
+
+    I18N.setAllLanguages(Locale.US)
 
     def paths(includeBenchmarks: Boolean): Seq[Path] = {
       val allLibrary: Seq[Path] = ModelsLibrary.getModelPaths(true, false).map { path =>
