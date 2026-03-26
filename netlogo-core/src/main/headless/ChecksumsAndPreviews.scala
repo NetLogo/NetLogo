@@ -25,7 +25,7 @@ object ChecksumsAndPreviews {
   def main(argv: Array[String]): Unit = {
     Main.setHeadlessProperty()
 
-    I18N.setAllLanguages(Locale.US)
+    I18N.setAllLanguages(Locale.US, false)
 
     def paths(includeBenchmarks: Boolean): Seq[Path] = {
       val allLibrary: Seq[Path] = ModelsLibrary.getModelPaths(true, false).map { path =>
