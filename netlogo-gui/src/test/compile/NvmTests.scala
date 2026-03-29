@@ -68,13 +68,13 @@ class NvmTests extends AnyFunSuiteEx {
 
     def commandProcedure(name: String, i: Int = 0): Procedure = {
       val args = (0 until i).map(j => "PROCEDUREVAR" + j)
-      val p = new Procedure(false, name.toUpperCase, token(name.toUpperCase), args.map(token), null)
+      val p = new Procedure(false, name.toUpperCase, token(name.toUpperCase), args.map(token), null, None)
       p.topLevel = true
       p
     }
 
     def reporterProcedure(name: String): Procedure = {
-      val p = new Procedure(true, name.toUpperCase, token(name.toUpperCase), Seq.empty[Token], null)
+      val p = new Procedure(true, name.toUpperCase, token(name.toUpperCase), Seq.empty[Token], null, None)
       p.topLevel = true
       p
     }

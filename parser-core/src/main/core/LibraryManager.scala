@@ -9,12 +9,16 @@ import LibraryStatus.{ CanInstall, CanUpdate, UpToDate }
 trait LibraryManager {
   def installExtension(info: LibraryInfo): Unit
   def lookupExtension(name: String, version: String): Option[LibraryInfo]
+  def installPackage(info: LibraryInfo): Unit
+  def lookupPackage(name: String, version: String): Option[LibraryInfo]
   def reloadMetadata(): Unit
 }
 
 class DummyLibraryManager extends LibraryManager {
   def installExtension(info: LibraryInfo): Unit = {}
   def lookupExtension(name: String, version: String): Option[LibraryInfo] = None
+  def installPackage(info: LibraryInfo): Unit = {}
+  def lookupPackage(name: String, version: String): Option[LibraryInfo] = None
   def reloadMetadata(): Unit = {}
 }
 
@@ -57,7 +61,8 @@ case class LibraryInfo(
   bundled: Boolean,
   installedVersionOpt: Option[String],
   minNetLogoVersion: Option[String],
-  rootURL: URL
+  rootURL: URL,
+  isExtension: Boolean
 ) {
 
 
@@ -78,8 +83,13 @@ case class LibraryInfo(
       VersionUtils.isNetLogoVersionString(v) && (VersionUtils.numericValue(currentVersion) >= VersionUtils.numericValue(v))
     ).getOrElse(true)
 
-  def downloadURL: URL =
-    new URL(s"$rootURL/extensions/$codeName-$version.zip")
+  def downloadURL: URL = {
+    if (isExtension) {
+      new URL(s"$rootURL/extensions/$codeName-$version.zip")
+    } else {
+      new URL(s"$rootURL/packages/$codeName-$version.zip")
+    }
+  }
 
   // We override `equals`, because we don't want to compare URLs directly. Checking equality
   // for URLs (which is what the case class would do otherwise), results in
