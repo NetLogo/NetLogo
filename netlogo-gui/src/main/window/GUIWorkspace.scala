@@ -848,10 +848,8 @@ abstract class GUIWorkspace(world: World, kioskLevel: GUIWorkspace.KioskLevel, f
     world.turtleShapes.replaceShapes(e.model.turtleShapes.map(ShapeConverter.baseShapeToShape))
     world.linkShapes.replaceShapes(e.model.linkShapes.map(ShapeConverter.baseLinkShapeToLinkShape))
 
-    e.model.optionalSectionValue[ModelSettings]("org.nlogo.modelsection.modelsettings") match {
-      case Some(settings: ModelSettings) => setSnapOn(settings.snapToGrid)
-      case _ =>
-    }
+    setSnapOn(!e.model.optionalSectionValue[ModelSettings]("org.nlogo.modelsection.modelsettings")
+                .exists(!_.snapToGrid))
 
     _isModel3D = e.model.view.dimensions.isInstanceOf[WorldDimensions3D]
   }
