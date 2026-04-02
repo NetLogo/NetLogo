@@ -516,6 +516,8 @@ object NetLogoPackaging {
 
       FileActions.copyFile(buildDir / "NetLogo.icns", launcherDest / "Contents" / "Resources" / "droplet.icns")
 
+      FileActions.remove(scriptDest)
+
       // clean up unwanted icon files
       FileActions.listDirectory(appImageDir.toPath).foreach(path => {
         if (path.toString.endsWith(".icns"))
