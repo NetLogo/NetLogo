@@ -113,7 +113,8 @@ object NetLogoPackaging {
         "date" -> buildDate.value
       ))
 
-      Seq(target.value / "readme.md", netLogoRoot.value / "NetLogo_User_Manual.pdf", packagedMathematicaLink.value)
+      Seq(target.value / "readme.md", netLogoRoot.value / "NetLogo_User_Manual.pdf",
+          netLogoRoot.value / "manual-links.csv", packagedMathematicaLink.value)
     },
 
     webTarget := target.value / "downloadPages",
