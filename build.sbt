@@ -9,8 +9,7 @@ import sbtcrossproject.Platform
 
 import ModelsLibrary.modelsDirectory
 import Extensions.{ excludedExtensions, extensionNetLogoJar, extensionRoot }
-import NetLogoBuild.{ all, autogenRoot, cclArtifacts, includeInPackaging,
-  marketingVersion, netlogoVersion, shareSourceDirectory }
+import NetLogoBuild.{ all, apiVersion, autogenRoot, cclArtifacts, includeInPackaging, shareSourceDirectory }
 import Dump.dumpClassName
 import Testing.testTempDirectory
 
@@ -308,9 +307,9 @@ lazy val netlogo = project.in(file("netlogo-gui")).
     , "-encoding", "us-ascii"
     , "-sourcepath", baseDirectory.value.getParentFile.getAbsolutePath
     , "-doc-title", "NetLogo"
-    , "-doc-version", netlogoVersion.value
+    , "-doc-version", apiVersion.value
     , "-skip-by-regex", Scaladoc.excludedPackages.mkString(",")
-    , "-doc-source-url", s"github://NetLogo/NetLogo/${netlogoVersion.value}"
+    , "-doc-source-url", s"github://NetLogo/NetLogo/${apiVersion.value}"
     )
   )
 
@@ -378,7 +377,6 @@ lazy val headless = (project in file ("netlogo-headless")).
 // this project is all about packaging NetLogo for distribution
 lazy val dist = project.in(file("dist")).
   settings(version := (netlogo / version).value).
-  settings(marketingVersion := (Compile / version).value).
   settings(NetLogoBuild.settings: _*).
   settings(NetLogoPackaging.settings(netlogo, behaviorsearchProject): _*)
 
