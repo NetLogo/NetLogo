@@ -3,15 +3,17 @@
 package org.nlogo.editor
 
 import java.awt.{ Color, Component, Dimension }
-import java.awt.event.{ KeyAdapter, KeyEvent, MouseAdapter, MouseEvent }
-import javax.swing.{ Action, JMenu, JMenuItem, JPopupMenu }
+import java.awt.event.{ ActionEvent, KeyAdapter, KeyEvent, MouseAdapter, MouseEvent }
+import javax.swing.{ AbstractAction, Action, JMenu, JMenuItem, JPopupMenu }
 import javax.swing.text.EditorKit
 
 import org.fife.ui.rtextarea.{ Gutter, RTextArea, RUndoManager }
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea
 
-import org.nlogo.swing.{ Menu, MenuItem, PopupMenu, UserAction, WrappedAction },
-  UserAction.{ EditCategory, EditFoldSubcategory, EditUndoGroup, KeyBindings, MenuAction }
+import org.nlogo.core.I18N
+import org.nlogo.swing.{ Implicits, Menu, MenuItem, PopupMenu, UserAction, WrappedAction },
+  Implicits.thunk2documentListener, UserAction.{ EditCategory, EditFoldSubcategory, EditUndoGroup, KeyBindings,
+                                                 MenuAction }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 class AdvancedEditorArea(val configuration: EditorConfiguration)
@@ -26,6 +28,8 @@ class AdvancedEditorArea(val configuration: EditorConfiguration)
   // the language style is configured primarily in app.common.EditorFactory
   setSyntaxEditingStyle(if (configuration.is3Dlanguage) "netlogo3d" else "netlogo")
   setCodeFoldingEnabled(true)
+
+  getDocument.addDocumentListener(() => updateUndoStates())
 
   private var defaultSelectionColor = getSelectionColor
 
@@ -65,6 +69,7 @@ class AdvancedEditorArea(val configuration: EditorConfiguration)
 
   def resetUndoHistory(): Unit = {
     discardAllEdits()
+    updateUndoStates()
   }
 
   override def createPopupMenu(): PopupMenu = {
@@ -183,11 +188,42 @@ class AdvancedEditorArea(val configuration: EditorConfiguration)
     }
   })
 
-  def undoAction = new WrappedAction(RTextArea.getAction(RTextArea.UNDO_ACTION), EditCategory, null, EditUndoGroup,
-                                     KeyBindings.keystroke('Z', withMenu = true))
+  override val undoAction: MenuAction = {
+    new AbstractAction(I18N.gui.get("menu.edit.undo")) with MenuAction {
+      category = EditCategory
+      group = EditUndoGroup
+      accelerator = KeyBindings.keystroke('Z', withMenu = true)
 
-  def redoAction = new WrappedAction(RTextArea.getAction(RTextArea.REDO_ACTION), EditCategory, null, EditUndoGroup,
-                                     KeyBindings.keystroke('Y', withMenu = true))
+      private val action: Action = RTextArea.getAction(RTextArea.UNDO_ACTION)
+
+      override def actionPerformed(e: ActionEvent): Unit = {
+        action.actionPerformed(e)
+
+        updateUndoStates()
+      }
+    }
+  }
+
+  override val redoAction: MenuAction = {
+    new AbstractAction(I18N.gui.get("menu.edit.redo")) with MenuAction {
+      category = EditCategory
+      group = EditUndoGroup
+      accelerator = KeyBindings.keystroke('Y', withMenu = true)
+
+      private val action: Action = RTextArea.getAction(RTextArea.REDO_ACTION)
+
+      override def actionPerformed(e: ActionEvent): Unit = {
+        action.actionPerformed(e)
+
+        updateUndoStates()
+      }
+    }
+  }
+
+  private def updateUndoStates(): Unit = {
+    undoAction.setEnabled(canUndo)
+    redoAction.setEnabled(canRedo)
+  }
 
   // These methods are used only by the input widget, which uses editor.EditorArea
   // exclusively at present. - RG 10/28/16
