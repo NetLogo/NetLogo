@@ -11,4 +11,6 @@ trait LabManagerInterface extends LinkChild with ModelSaveable with ThemeSync {
   def show(): Unit
   def actions: Seq[MenuAction]
   def anyPaused: Boolean
+  def anyRunning: Boolean
+  def abort(): Unit
 }

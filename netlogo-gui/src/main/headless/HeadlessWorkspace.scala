@@ -130,7 +130,7 @@ with org.nlogo.api.ViewSettings with PrimaryWorkspace {
     primaryWorkspace = workspace
   }
 
-  private var mirrorHeadlessOutput = false
+  protected var mirrorHeadlessOutput = false
 
   def setMirrorHeadlessOutput(b: Boolean): Unit = {
     mirrorHeadlessOutput = b
@@ -149,6 +149,9 @@ with org.nlogo.api.ViewSettings with PrimaryWorkspace {
 
     resourceManager.setResources(model.resources)
   }
+
+  def getOpenModel: Option[Model] =
+    _openModel
 
   val outputAreaBuffer = new StringBuilder
 
