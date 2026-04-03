@@ -3,6 +3,7 @@
 package org.nlogo.window
 
 import java.awt.BorderLayout
+import java.awt.event.{ FocusAdapter, FocusEvent }
 import javax.swing.JPanel
 
 import org.nlogo.api.CompilerServices
@@ -158,6 +159,20 @@ class PlotEditPanel(target: PlotWidget, compiler: CompilerServices, colorizer: C
         () => apply()))
 
   locally {
+    setupCode.addFocusListener(new FocusAdapter {
+      override def focusLost(e: FocusEvent): Unit = {
+        target.compile()
+        setupCode.resetError()
+      }
+    })
+
+    updateCode.addFocusListener(new FocusAdapter {
+      override def focusLost(e: FocusEvent): Unit = {
+        target.compile()
+        updateCode.resetError()
+      }
+    })
+
     val rowLayout = new DynamicRowLayout(this, 6)
 
     setLayout(rowLayout)
