@@ -13,7 +13,7 @@ class ErrorLabel extends JLabel {
   setBorder(new EmptyBorder(6, 6, 6, 6))
   setVisible(false)
 
-  def setError(error: Option[Exception], offset: Int): Unit = {
+  def setError(error: Option[Exception], offset: Int, respectFocus: Boolean = true): Unit = {
     error match {
       case Some(e) =>
         setForeground(InterfaceColors.errorLabelText())
