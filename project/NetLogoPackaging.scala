@@ -1,12 +1,12 @@
 import sbt._
 import sbt.complete.Parser, Parser._
-import Keys.{ baseDirectory, buildStructure, dependencyClasspath, packageBin, state, streams, target }
+import Keys.{ baseDirectory, buildStructure, dependencyClasspath, packageBin, state, streams, target, version }
 import ChecksumsAndPreviews.allPreviews
 import Docs.{ allDocs, docsDest }
 import Extensions.{ extensions, extensionRoot }
 import ModelsLibrary.{ modelsDirectory, modelIndex }
 import NativeLibs.nativeLibs
-import NetLogoBuild.{ all, buildDate, marketingVersion, numericMarketingVersion, year }
+import NetLogoBuild.{ all, buildDate, year }
 import Running.makeMainTask
 import java.nio.file.Paths
 import java.nio.file.Files
@@ -24,6 +24,7 @@ object NetLogoPackaging {
   lazy val buildMathematicaLink    = taskKey[Unit]("build and package Mathematica Link submodule")
   lazy val generateLocalWebsite    = taskKey[File]("package the web download pages")
   lazy val mathematicaRoot         = settingKey[File]("root of Mathematica-Link directory")
+  lazy val netLogoVersion          = settingKey[String]("NetLogo version")
   lazy val netLogoLongVersion      = settingKey[String]("Long version number (including trailing zero) of NetLogo under construction")
   lazy val netLogoRoot             = settingKey[File]("Root directory of NetLogo project")
   lazy val packagedMathematicaLink = taskKey[File]("Mathematica link, ready for packaging")
@@ -70,7 +71,14 @@ object NetLogoPackaging {
     mathematicaRoot := netLogoRoot.value.getParentFile / "Mathematica-Link",
     configRoot      := baseDirectory.value / "configuration",
     aggregateJDKParser := Def.toSParser(jdkParser),
-    netLogoLongVersion := { if (marketingVersion.value.length == 3) marketingVersion.value + ".0" else marketingVersion.value },
+    netLogoVersion := (netlogo / version).value,
+    netLogoLongVersion := {
+      if (netLogoVersion.value.length == 3) {
+        netLogoVersion.value + ".0"
+      } else {
+        netLogoVersion.value
+      }
+    },
 
     buildNetLogo := {
       (netlogo / all).value
@@ -113,7 +121,7 @@ object NetLogoPackaging {
 
     aggregateOnlyFiles := {
       Mustache(baseDirectory.value / "readme.md", target.value / "readme.md", Map(
-        "version" -> marketingVersion.value,
+        "version" -> netLogoVersion.value,
         "year" -> year.value,
         "date" -> buildDate.value
       ))
@@ -128,12 +136,12 @@ object NetLogoPackaging {
       val webSource = baseDirectory.value / "downloadPages"
       val downloadLocations =
         Map(
-          "macInstallerIntel"    -> s"NetLogo-${marketingVersion.value}-x86_64.dmg",
-          "macInstallerSilicon"  -> s"NetLogo-${marketingVersion.value}-aarch64.dmg",
-          "winInstaller32"       -> s"NetLogo-${marketingVersion.value}-32.msi",
-          "winInstaller64"       -> s"NetLogo-${marketingVersion.value}-64.msi",
-          "linuxInstaller32"     -> s"NetLogo-${marketingVersion.value}-32.tgz",
-          "linuxInstaller64"     -> s"NetLogo-${marketingVersion.value}-64.tgz")
+          "macInstallerIntel"    -> s"NetLogo-${netLogoVersion.value}-x86_64.dmg",
+          "macInstallerSilicon"  -> s"NetLogo-${netLogoVersion.value}-aarch64.dmg",
+          "winInstaller32"       -> s"NetLogo-${netLogoVersion.value}-32.msi",
+          "winInstaller64"       -> s"NetLogo-${netLogoVersion.value}-64.msi",
+          "linuxInstaller32"     -> s"NetLogo-${netLogoVersion.value}-32.tgz",
+          "linuxInstaller64"     -> s"NetLogo-${netLogoVersion.value}-64.tgz")
               .map(t => (t._1, webTarget.value / t._2))
 
       downloadLocations.map(_._2).filterNot(_.exists).foreach { f =>
@@ -147,8 +155,7 @@ object NetLogoPackaging {
 
       val buildVariables =
         Map[String, String](
-          "version"            -> marketingVersion.value,
-          "numericOnlyVersion" -> numericMarketingVersion.value,
+          "version"            -> netLogoVersion.value,
           "year"               -> buildDate.value.takeRight(4),
           "date"               -> buildDate.value
         )
@@ -162,7 +169,7 @@ object NetLogoPackaging {
     },
 
     generateLocalWebsite := {
-      val localSiteTarget = target.value / marketingVersion.value
+      val localSiteTarget = target.value / netLogoVersion.value
       FileActions.copyDirectory(webTarget.value, localSiteTarget)
       FileActions.copyDirectory((netlogo / modelsDirectory).value, localSiteTarget / "models")
       FileActions.copyDirectory(netLogoRoot.value / "docs", localSiteTarget / "docs")
@@ -179,8 +186,8 @@ object NetLogoPackaging {
       // and it needs to be re-uploaded, the directory should be wiped on the server and then this task can be re-run.  If
       // just the docs need to be updated, see `uploadDocs` below, which will change existing files.  -Jeremy B October 2021
       RunProcess(Seq("rsync", "-rltv", "--ignore-existing", "--progress", generatedSite.getPath, s"${user}@${host}:${targetDir}"), "rsync")
-      RunProcess(Seq("ssh", s"${user}@${host}", "chgrp", "-R", "apache", s"${targetDir}/${marketingVersion.value}"), "ssh - change release group")
-      RunProcess(Seq("ssh", s"${user}@${host}", "chmod", "-R", "g+rwX",  s"${targetDir}/${marketingVersion.value}"), "ssh - change release permissions")
+      RunProcess(Seq("ssh", s"${user}@${host}", "chgrp", "-R", "apache", s"${targetDir}/${netLogoVersion.value}"), "ssh - change release group")
+      RunProcess(Seq("ssh", s"${user}@${host}", "chmod", "-R", "g+rwX",  s"${targetDir}/${netLogoVersion.value}"), "ssh - change release permissions")
     },
 
     uploadDocs := {
@@ -196,12 +203,12 @@ object NetLogoPackaging {
       RunProcess(Seq("ssh", s"$user@$host", "chgrp", "-R", "apache", targetDir), "ssh - change release group")
       RunProcess(Seq("ssh", s"$user@$host", "chmod", "-R", "g+rwX", targetDir), "ssh - change release permissions")
       val tempDocs = file("docs-" + System.currentTimeMillis)
-      val versionDir = tempDocs / marketingVersion.value
+      val versionDir = tempDocs / netLogoVersion.value
       RunProcess(Seq("git", "clone", "https://github.com/NetLogo/docs", tempDocs.toString), "clone docs repo")
       FileActions.copyDirectory(sourceDir, versionDir)
       FileActions.copyFile(manualSource, versionDir / "NetLogo_User_Manual.pdf")
       RunProcess(Seq("git", "-C", tempDocs.toString, "add", "."), "stage changed files")
-      RunProcess(Seq("git", "-C", tempDocs.toString, "commit", "-m", s"Upload ${marketingVersion.value} docs"), "create commit")
+      RunProcess(Seq("git", "-C", tempDocs.toString, "commit", "-m", s"Upload ${netLogoVersion.value} docs"), "create commit")
       RunProcess(Seq("git", "-C", tempDocs.toString, "push"), "push commit to remote")
       FileActions.remove(tempDocs)
     },
@@ -222,7 +229,6 @@ object NetLogoPackaging {
 
     packageLinuxAggregate := {
       val log          = streams.value.log
-      val version      = marketingVersion.value
       val buildJDK     = aggregateJDKParser.parsed
       val buildDir     = target.value
       val platform     = "linux"
@@ -249,19 +255,24 @@ object NetLogoPackaging {
       , "-Dnetlogo.docs.dir=$APPDIR/../.."
       , s"-Djava.library.path=$$APPDIR/../../natives/linux-${buildJDK.nativesArch}"
       )
-      val mainLauncher = new NetLogoLauncher(version, "NetLogo.png", extraJavaOptions)
+      val mainLauncher = new NetLogoLauncher(netLogoVersion.value, "NetLogo.png", extraJavaOptions)
       val launchers    = Seq(
         // Linux apps usually avoid spaces in directories and binary names, so we follow along.  -Jeremy B September
         // 2022
-        new NetLogo3dLauncher(version, "NetLogo3D.png", extraJavaOptions) { override def id: String = "NetLogo3D" }
-      , new HubNetClientLauncher(version, "HubNetClient.png", extraJavaOptions) { override def id: String = "HubNetClient" }
-      , new BehaviorSearchLauncher(version, "BehaviorSearch.png", extraJavaOptions ++ Seq(
+        new NetLogo3dLauncher(netLogoVersion.value, "NetLogo3D.png", extraJavaOptions) {
+          override def id: String = "NetLogo3D"
+        }
+      , new HubNetClientLauncher(netLogoVersion.value, "HubNetClient.png", extraJavaOptions) {
+          override def id: String = "HubNetClient"
+        }
+      , new BehaviorSearchLauncher(netLogoVersion.value, "BehaviorSearch.png", extraJavaOptions ++ Seq(
           "-Dbsearch.appfolder=$APPDIR/../../behaviorsearch",
           "-Dbsearch.startupfolder=$APPDIR/../.."
         ))
       )
 
-      val inputDir = JavaPackager.setupAppImageInput(log, version, buildJDK, buildDir, netLogoJar, dependencies)
+      val inputDir = JavaPackager.setupAppImageInput(log, netLogoVersion.value, buildJDK, buildDir, netLogoJar,
+                                                     dependencies)
       val destDir  = buildDir / s"${platform}-dest-${buildJDK.version}-${buildJDK.architecture}"
       FileActions.remove(destDir)
       val appImageDir = JavaPackager.generateAppImage(log, buildJDK.jpackage, platform, mainLauncher, configDir, buildDir, inputDir, destDir, launchers)
@@ -278,7 +289,7 @@ object NetLogoPackaging {
 
       PackageLinuxAggregate(
         log
-      , version
+      , netLogoVersion.value
       , buildJDK.architecture
       , configDir
       , destDir / "NetLogo"
@@ -290,7 +301,6 @@ object NetLogoPackaging {
 
     packageWinAggregate := {
       val log          = streams.value.log
-      val version      = marketingVersion.value
       val buildJDK     = aggregateJDKParser.parsed
       val buildDir     = target.value
       val platform     = "windows"
@@ -329,18 +339,19 @@ object NetLogoPackaging {
       , "-Dnetlogo.docs.dir=$APPDIR/.."
       , s"-Djava.library.path=$$APPDIR/../natives/windows-${buildJDK.nativesArch}"
       )
-      val mainLauncher = new NetLogoLauncher(version, "NetLogo.ico", extraJavaOptions, Seq("icon="))
+      val mainLauncher = new NetLogoLauncher(netLogoVersion.value, "NetLogo.ico", extraJavaOptions, Seq("icon="))
       val launchers = Seq(
-        new NetLogoLauncher(version, "NetLogo.ico", extraJavaOptions, Seq("win-console=true")) {
+        new NetLogoLauncher(netLogoVersion.value, "NetLogo.ico", extraJavaOptions, Seq("win-console=true")) {
           override def id = "NetLogo_Console"
           override def mustachePrefix = "win-console-launcher"
         }
-      , new NetLogo3dLauncher(version, "NetLogo3D.ico", extraJavaOptions)
-      , new HubNetClientLauncher(version, "HubNetClient.ico", extraJavaOptions)
-      , new BehaviorSearchLauncher(version, "BehaviorSearch.ico", extraJavaOptions)
+      , new NetLogo3dLauncher(netLogoVersion.value, "NetLogo3D.ico", extraJavaOptions)
+      , new HubNetClientLauncher(netLogoVersion.value, "HubNetClient.ico", extraJavaOptions)
+      , new BehaviorSearchLauncher(netLogoVersion.value, "BehaviorSearch.ico", extraJavaOptions)
       )
 
-      val inputDir  = JavaPackager.setupAppImageInput(log, version, buildJDK, buildDir, netLogoJar, dependencies)
+      val inputDir  = JavaPackager.setupAppImageInput(log, netLogoVersion.value, buildJDK, buildDir, netLogoJar,
+                                                      dependencies)
       val destDir   = buildDir / s"${platform}-dest-${buildJDK.version}-${buildJDK.architecture}"
       FileActions.remove(destDir)
       val appImageDir = JavaPackager.generateAppImage(log, buildJDK.jpackage, platform, mainLauncher, configDir, buildDir, inputDir, destDir, launchers)
@@ -359,7 +370,7 @@ object NetLogoPackaging {
 
       PackageWinAggregate(
         log
-      , version
+      , netLogoVersion.value
       , buildJDK.architecture
       , configDir
       , destDir / "NetLogo"
@@ -371,7 +382,6 @@ object NetLogoPackaging {
 
     packageMacAggregate := {
       val log          = streams.value.log
-      val version      = marketingVersion.value
       val buildJDK     = aggregateJDKParser.parsed
       val buildDir     = target.value
       val platform     = "macosx"
@@ -423,7 +433,7 @@ object NetLogoPackaging {
       )
       val launchers = Seq(
         new NetLogoLauncher(
-          version
+          netLogoVersion.value
         , "NetLogo.icns"
         , extraJavaOptions ++ Seq(
             "-Xdock:name=NetLogo"
@@ -434,7 +444,7 @@ object NetLogoPackaging {
           override def name = s"NetLogo ${this.version}"
         }
       , new NetLogo3dLauncher(
-          version
+          netLogoVersion.value
         , "NetLogo3D.icns"
         , extraJavaOptions ++ Seq(
             "\"-Xdock:name=NetLogo 3D\""
@@ -445,7 +455,7 @@ object NetLogoPackaging {
           override def name = s"NetLogo 3D ${this.version}"
         }
       , new HubNetClientLauncher(
-          version
+          netLogoVersion.value
         , "HubNetClient.icns"
         , extraJavaOptions ++ Seq(
             "-Xdock:name=HubNet"
@@ -456,7 +466,7 @@ object NetLogoPackaging {
           override def name = s"HubNet Client ${this.version}"
         }
       , new BehaviorSearchLauncher(
-          version
+          netLogoVersion.value
         , "BehaviorSearch.icns"
         , extraJavaOptions ++ Seq(
             "-Xdock:name=BehaviorSearch"
@@ -469,7 +479,8 @@ object NetLogoPackaging {
         }
       )
 
-      val inputDir = JavaPackager.setupAppImageInput(log, version, buildJDK, buildDir, netLogoJar, dependencies)
+      val inputDir = JavaPackager.setupAppImageInput(log, netLogoVersion.value, buildJDK, buildDir, netLogoJar,
+                                                     dependencies)
 
       val destDir = buildDir / s"${platform}-dest-${buildJDK.version}-${buildJDK.architecture}"
       FileActions.remove(destDir)
@@ -483,13 +494,13 @@ object NetLogoPackaging {
       FileActions.copyFile(buildDir / "ModelOld.icns", destDir / s"${launchers(1).name}.app" / "Contents" / "Resources" / "ModelOld.icns")
       FileActions.copyFile(buildDir / "BehaviorSearchModel.icns", destDir / s"${launchers(3).name}.app" / "Contents" / "Resources" / "BehaviorSearchModel.icns")
 
-      val appImageDir = destDir / s"NetLogo ${version}"
+      val appImageDir = destDir / s"NetLogo ${netLogoVersion.value}"
 
       JavaPackager.copyJavaExecutable(log, buildJDK.jpackage, appImageDir)
 
       val extraDirs = bundledDirs(netlogo, behaviorsearchProject).value(platform, buildJDK.architecture)
       JavaPackager.copyExtraFiles(log, extraDirs, platform, buildJDK.architecture, appImageDir, appImageDir, rootFiles)
-      val bundleDir = PackageMacAggregate.createBundleDir(log, version, destDir, configDir, launchers)
+      val bundleDir = PackageMacAggregate.createBundleDir(log, netLogoVersion.value, destDir, configDir, launchers)
       JavaPackager.createScripts(log, bundleDir, bundleDir / "app", configDir, "netlogo-headless.sh", "netlogo-gui.sh",
                                  Seq("--add-exports=java.desktop/com.apple.laf=ALL-UNNAMED"))
 
@@ -498,9 +509,9 @@ object NetLogoPackaging {
       val scriptSource = configDir / platform / "launcher" / "launch.applescript.mustache"
       val scriptDest = appImageDir / "launch.applescript"
 
-      Mustache(scriptSource, scriptDest, Map("version" -> version))
+      Mustache(scriptSource, scriptDest, Map("version" -> netLogoVersion.value))
 
-      val launcherDest = appImageDir / s"NetLogo Launcher $version.app"
+      val launcherDest = appImageDir / s"NetLogo Launcher ${netLogoVersion.value}.app"
 
       RunProcess(Seq("osacompile", "-o", launcherDest.getAbsolutePath, scriptDest.getAbsolutePath), "create launcher")
 
@@ -516,7 +527,7 @@ object NetLogoPackaging {
 
       PackageMacAggregate(
         log
-      , version
+      , netLogoVersion.value
       , buildJDK.architecture
       , buildDir
       , destDir
