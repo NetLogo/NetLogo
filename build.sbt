@@ -9,8 +9,7 @@ import sbtcrossproject.Platform
 
 import ModelsLibrary.modelsDirectory
 import Extensions.{ excludedExtensions, extensionNetLogoJar, extensionRoot }
-import NetLogoBuild.{ all, autogenRoot, cclArtifacts, includeInPackaging,
-  marketingVersion, netlogoVersion, shareSourceDirectory, zipJars }
+import NetLogoBuild.{ all, apiVersion, autogenRoot, cclArtifacts, includeInPackaging, shareSourceDirectory, zipJars }
 import Dump.dumpClassName
 import Testing.testTempDirectory
 
@@ -307,9 +306,9 @@ lazy val netlogo = project.in(file("netlogo-gui")).
     , "-encoding", "us-ascii"
     , "-sourcepath", baseDirectory.value.getParentFile.getAbsolutePath
     , "-doc-title", "NetLogo"
-    , "-doc-version", netlogoVersion.value
+    , "-doc-version", apiVersion.value
     , "-skip-by-regex", Scaladoc.excludedPackages.mkString(",")
-    , "-doc-source-url", s"github://NetLogo/NetLogo/${netlogoVersion.value}"
+    , "-doc-source-url", s"github://NetLogo/NetLogo/${apiVersion.value}"
     )
   , assembly / assemblyJarName := "NetLogo.jar"
   , assembly / assemblyMergeStrategy := (_ => MergeStrategy.first)
@@ -414,7 +413,6 @@ lazy val macApp = project.in(file("mac-app")).
 lazy val dist = project.in(file("dist")).
   settings(version := (netlogo / version).value).
   settings(NetLogoBuild.settings: _*).
-  settings(marketingVersion := (Compile / version).value).
   settings(NetLogoPackaging.settings(netlogo, macApp, behaviorsearchProject): _*).
   settings(
     zipJars := {
@@ -425,7 +423,7 @@ lazy val dist = project.in(file("dist")).
           case Array(file, name) =>
             (new File(file), s"extensions/${ext.getName}/$name")
         })
-      }, target.value / s"NetLogo-${marketingVersion.value}.zip", None)
+      }, target.value / s"NetLogo-${version.value}.zip", None)
     },
     zipJars := zipJars.dependsOn(netlogo / assembly, netlogo / Extensions.extensions).value
   )

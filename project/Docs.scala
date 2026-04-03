@@ -1,6 +1,6 @@
 import sbt._
 import Keys._
-import NetLogoBuild.{ buildDate, marketingVersion, year, autogenRoot }
+import NetLogoBuild.{ buildDate, year, autogenRoot }
 import NetLogoPackaging.RunProcess
 import ModelsLibrary.modelsDirectory
 import Extensions.extensionRoot
