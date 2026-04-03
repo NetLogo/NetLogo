@@ -3,7 +3,7 @@
 package org.nlogo.window
 
 import java.awt.{ BorderLayout, Component, Container }
-import java.awt.event.{ HierarchyEvent, MouseAdapter, MouseEvent, TextListener, TextEvent }
+import java.awt.event.{ FocusListener, HierarchyEvent, MouseAdapter, MouseEvent, TextListener, TextEvent }
 import javax.swing.{ JLabel, JPanel, ScrollPaneConstants }
 
 import org.nlogo.api.CompilerServices
@@ -107,7 +107,7 @@ class CodeEditor(accessor: PropertyAccessor[String], compiler: CompilerServices,
     editor.setText(value)
     setVisibility(value.nonEmpty)
     editor.select(0, 0)
-    errorLabel.setError(err(), accessor.target.sourceOffset)
+    resetError()
     editor.resetUndoHistory()
   }
 
@@ -130,6 +130,14 @@ class CodeEditor(accessor: PropertyAccessor[String], compiler: CompilerServices,
 
     super.setEnabled(state)
     setEnabledRecursive(this, state)
+  }
+
+  override def addFocusListener(listener: FocusListener): Unit = {
+    editor.addFocusListener(listener)
+  }
+
+  def resetError(): Unit = {
+    errorLabel.setError(err(), accessor.target.sourceOffset, false)
   }
 
   override def syncTheme(): Unit = {
