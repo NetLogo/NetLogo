@@ -12,17 +12,13 @@ object NetLogoBuild {
 
   val autogenRoot = taskKey[File]("source root for autogeneration files")
 
-  val netlogoVersion = TaskKey[String]("netlogo-version", "from api.Version")
+  val apiVersion = TaskKey[String]("netlogo-version", "from api.Version")
 
   lazy val buildDate = taskKey[String]("date of build")
 
   lazy val year = taskKey[String]("year of build")
 
-  lazy val marketingVersion = settingKey[String]("Version attached to the build for end-user identification")
-  lazy val numericMarketingVersion = settingKey[String]("Numeric-only version attached to the build for end-user identification").withRank(KeyRanks.Invisible)
-
   val settings = Seq(
-    numericMarketingVersion := (Compile / version).value,
     buildDate := {
       val source = Source.fromFile("shared/resources/main/version.txt")
       val date = source.getLines.drop(1).next()
@@ -32,7 +28,7 @@ object NetLogoBuild {
       date
     },
     year := buildDate.value.takeRight(4),
-    netlogoVersion := {
+    apiVersion := {
       val loader = (Test / testLoader).value
       val klass = loader.loadClass("org.nlogo.api.Version$")
       val version = klass.getField("MODULE$").get(klass)
