@@ -40,7 +40,10 @@ class RoundTripTests extends AnyFunSuite with BeforeAndAfterAll {
       path.listFiles.foreach(recurseModels)
     } else if (path.getName.endsWith(s".$extension")) {
       test(path.toString, GuiTest.Tag) {
-        val oldChecksum = MurmurHash3.stringHash(Files.readString(path.toPath).replace("\r\n", "\n"))
+        val originalText = Files.readString(path.toPath).replace("\r\n", "\n")
+        var newText = ""
+
+        val oldChecksum = MurmurHash3.stringHash(originalText)
         var newChecksum: Option[Int] = None
 
         var failures = 0
@@ -53,6 +56,8 @@ class RoundTripTests extends AnyFunSuite with BeforeAndAfterAll {
 
             modelLoader.sourceString(fileManager.currentModel, extension) match {
               case Success(str) =>
+                newText = str
+
                 MurmurHash3.stringHash(str)
 
               case Failure(t) =>
@@ -68,7 +73,8 @@ class RoundTripTests extends AnyFunSuite with BeforeAndAfterAll {
         }
 
         if (newChecksum.isDefined) {
-          assert(newChecksum.contains(oldChecksum))
+          if (!newChecksum.contains(oldChecksum))
+            assert(originalText == newText)
         } else {
           fail("Too many load timeouts, there is likely an infinite loop in the model loading process.")
         }
