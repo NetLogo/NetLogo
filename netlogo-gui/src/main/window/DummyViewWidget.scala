@@ -46,6 +46,13 @@ class DummyViewWidget(val world: World) extends SingleErrorWidget with Editable 
     true
   }
 
+  override def setBounds(rect: Rectangle): Unit = {
+    if (rect.width == 401)
+      Thread.dumpStack()
+
+    super.setBounds(rect)
+  }
+
   override def getMinimumSize: Dimension =
     new Dimension(world.worldWidth, world.worldHeight)
 

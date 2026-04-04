@@ -1383,6 +1383,8 @@ class WidgetPanel(val workspace: GUIWorkspace)
   }
 
   protected def makeAndLoadWidget(coreWidget: CoreWidget, x: Int, y: Int): Widget = {
+    if (coreWidget.isInstanceOf[CoreView])
+      println(coreWidget)
     val newGuy = makeWidget(coreWidget)
     if (newGuy != null) {
       newGuy.load(coreWidget)
@@ -1488,6 +1490,13 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
     // enforce maximum
     val maximumSize = component.getMaximumSize
+
+    if (component.isInstanceOf[org.nlogo.window.DummyViewWidget]) {
+      println(size)
+      println(minimumSize)
+      println(maximumSize)
+    }
+
     if (maximumSize != null) {
       if (size.width > maximumSize.width && maximumSize.width > 0) {
         size.width = maximumSize.width
