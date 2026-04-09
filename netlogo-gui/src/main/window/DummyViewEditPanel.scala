@@ -21,8 +21,8 @@ class DummyViewEditPanel(target: DummyViewWidget) extends WidgetEditPanel(target
       new PropertyAccessor(
         target,
         I18N.gui.get("edit.hubnet.view.height"),
-        () => target.width(),
-        _.foreach(target.setWidth),
+        () => target.height(),
+        _.foreach(target.setHeight),
         () => apply()))
 
   locally {
