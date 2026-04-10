@@ -809,8 +809,6 @@ class App(args: App.CommandLineArgs) extends LinkChild with Exceptions.Handler w
       new PreviewCommandsEditor.EditPreviewCommands(
         new PreviewCommandsEditor(frame, workspaceFactory, graphicsPreview), workspace,
         () => modelSaver.currentModel),
-      FindDialog.FIND_ACTION,
-      FindDialog.FIND_NEXT_ACTION,
       new ConvertWidgetSizes(frame, tabManager.interfaceTab.iP)
     ) ++
     HelpActions.apply ++

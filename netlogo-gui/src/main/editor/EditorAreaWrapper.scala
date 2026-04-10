@@ -2,14 +2,13 @@
 
 package org.nlogo.editor
 
-import javax.swing.JTextArea
-import javax.swing.text.{ AbstractDocument, JTextComponent }
+import javax.swing.text.AbstractDocument
 
 import org.nlogo.api.EditorAreaInterface
 
 // wraps an EditorArea to satisfy EditorAreaInterface, for the benefit of SmartIndenter
 
-class EditorAreaWrapper(text: JTextComponent) extends EditorAreaInterface {
+class EditorAreaWrapper(text: EditorArea) extends EditorAreaInterface {
   def getLineOfText(lineNum: Int) = {
     val lineStart = lineToStartOffset(lineNum)
     val lineEnd = lineToEndOffset(lineNum)
@@ -20,8 +19,6 @@ class EditorAreaWrapper(text: JTextComponent) extends EditorAreaInterface {
   def getText(start: Int, len: Int) = text.getDocument.getText(start, len)
   def getSelectionStart = text.getSelectionStart
   def getSelectionEnd = text.getSelectionEnd
-  def setSelectionStart(pos: Int): Unit = { text.setSelectionStart(pos) }
-  def setSelectionEnd(pos: Int): Unit = { text.setSelectionEnd(pos) }
   def offsetToLine(offset: Int) =
     text.getDocument.getDefaultRootElement.getElementIndex(offset)
   def lineToStartOffset(line: Int) =
@@ -35,17 +32,12 @@ class EditorAreaWrapper(text: JTextComponent) extends EditorAreaInterface {
   def replaceSelection(s: String): Unit = { text.replaceSelection(s) }
   def replace(start: Int, len: Int, str: String): Unit = {
     try {
-      text match {
-        case textArea: JTextArea =>
-          textArea.replaceRange(str, start, start + len)
-        case _ =>
-          text.getDocument match {
-            case abstractDoc: AbstractDocument =>
-              abstractDoc.replace(start, len, str, null)
-            case doc =>
-              doc.remove(start, len)
-              doc.insertString(start, str, null)
-          }
+      text.getDocument match {
+        case abstractDoc: AbstractDocument =>
+          abstractDoc.replace(start, len, str, null)
+        case doc =>
+          doc.remove(start, len)
+          doc.insertString(start, str, null)
       }
     } catch {
       case ex: IllegalArgumentException =>
@@ -60,18 +52,6 @@ class EditorAreaWrapper(text: JTextComponent) extends EditorAreaInterface {
     } catch {
       case ex: javax.swing.text.BadLocationException =>
         throw ex
-    }
-  }
-  override def beginCompoundEdit(): Unit = {
-    text match {
-      case a: AdvancedEditorArea => a.beginCompoundEdit()
-      case _ => super.beginCompoundEdit()
-    }
-  }
-  override def endCompoundEdit(): Unit = {
-    text match {
-      case a: AdvancedEditorArea => a.endCompoundEdit()
-      case _ => super.endCompoundEdit()
     }
   }
 }

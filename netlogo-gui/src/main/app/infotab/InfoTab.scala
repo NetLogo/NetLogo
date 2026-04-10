@@ -6,8 +6,7 @@ import java.awt.{ Dimension, BorderLayout, Font, Graphics }
 import java.awt.event.{ ActionEvent, FocusEvent, FocusListener }
 import java.awt.print.PageFormat
 import java.net.URI
-import javax.swing.{ AbstractAction, Action, BorderFactory, JComponent, JPanel, JScrollPane, JTextArea,
-                     ScrollPaneConstants }
+import javax.swing.{ AbstractAction, Action, BorderFactory, JComponent, JPanel, JTextArea, ScrollPaneConstants }
 import javax.swing.border.EmptyBorder
 import javax.swing.event.{ DocumentListener, DocumentEvent }
 
@@ -24,7 +23,8 @@ import org.nlogo.core.I18N
 import org.nlogo.editor.EditorConfiguration
 import org.nlogo.swing.Implicits._
 import org.nlogo.swing.{ ScrollableTextComponent, ScrollPane, TextArea, ToolBar, ToolBarActionButton,
-                         ToolBarToggleButton, Printable, PrinterManager, BrowserLauncher, UndoManager, Utils }
+                         ToolBarToggleButton, Printable, PrinterManager, BrowserLauncher, UndoManager, UserAction,
+                         Utils }, UserAction.MenuAction
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ Events => WindowEvents, QuickHelp, Zoomable }
 
@@ -86,7 +86,8 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
 
   override def zoomTarget = scrollPane
 
-  override val activeMenuActions = Seq(undoAction, redoAction)
+  override val activeMenuActions: Seq[MenuAction] =
+    Seq(undoAction, redoAction, FindDialog.FIND_ACTION, FindDialog.FIND_NEXT_ACTION)
 
   private val toolBar = new ToolBar {
     setBorder(new EmptyBorder(24, 10, 12, 6))
@@ -256,8 +257,14 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
     getDocument.addUndoableEditListener(undoManager)
     setFont(EditorConfiguration.getMonospacedFont)
 
-    override def scrollPane: Option[JScrollPane] =
-      Option(InfoTab.this.scrollPane)
+    override def scrollTo(index: Int): Unit = {
+      val pos = modelToView2D(index)
+      val xBar = scrollPane.getHorizontalScrollBar
+      val yBar = scrollPane.getVerticalScrollBar
+
+      xBar.setValue((pos.getX - xBar.getVisibleAmount / 2).toInt)
+      yBar.setValue((pos.getY - yBar.getVisibleAmount / 2).toInt)
+    }
   }
 
   private class HTMLPanel extends JFXPanel {

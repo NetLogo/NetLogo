@@ -17,8 +17,8 @@ import org.nlogo.core.{
   View => CoreView, Widget => CoreWidget }
 import org.nlogo.editor.EditorArea
 import org.nlogo.log.LogManager
-import org.nlogo.swing.{ MenuItem, PopupMenu }
-import org.nlogo.window.{ AutoIndentHandler, ButtonWidget, ChooserWidget, ClipboardUtils, Editable, EditDialogFactory,
+import org.nlogo.swing.{ ClipboardUtils, MenuItem, PopupMenu }
+import org.nlogo.window.{ AutoIndentHandler, ButtonWidget, ChooserWidget, Editable, EditDialogFactory,
                           Events => WindowEvents, GUIWorkspace, InputBoxWidget, InterfaceGlobalWidget, InterfaceMode,
                           MonitorWidget, PlotWidget, SliderWidget, SwitchWidget, ViewWidget, ViewWidgetInterface,
                           Widget, WidgetInfo, WidgetRegistry },

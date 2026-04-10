@@ -2,20 +2,18 @@
 
 package org.nlogo.app.codetab
 
-import java.awt.{ BorderLayout, Color, Dimension, Font, Graphics, Insets }
-import java.awt.event.{ ActionEvent, FocusEvent, FocusListener, TextEvent, TextListener }
+import java.awt.{ BorderLayout, Dimension, Font, Graphics }
+import java.awt.event.{ ActionEvent, FocusAdapter, FocusEvent, TextEvent, TextListener }
 import java.awt.print.PageFormat
 import java.io.IOException
 import java.net.MalformedURLException
-import javax.swing.{ AbstractAction, JComponent, JPanel, JScrollPane }
+import javax.swing.{ AbstractAction, JPanel }
 import javax.swing.border.EmptyBorder
-
-import org.fife.ui.rsyntaxtextarea.{ Style, SyntaxScheme, TokenTypes }
 
 import org.nlogo.agent.Observer
 import org.nlogo.app.common.{CodeToHtml, EditorFactory, FindDialog, MenuTab, TabsInterface, Events => AppEvents}
 import org.nlogo.core.{ AgentKind, CompilerException, I18N }
-import org.nlogo.editor.{ AdvancedEditorArea, DumbIndenter, EditorAreaWrapper, FocusedOnlyAction, SmartIndenter }
+import org.nlogo.editor.{ AdvancedEditorArea, EditorConfiguration }
 import org.nlogo.swing.{ Button, CheckBox, PrinterManager, ToolBar, ToolBarActionButton, UserAction,
                          Printable => NlogoPrintable, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
@@ -73,19 +71,18 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
 
   lazy val editorFactory = new EditorFactory(workspace, workspace.getExtensionManager)
 
-  def editorConfiguration =
-    editorFactory.defaultConfiguration(100, 80)
-      .withCurrentLineHighlighted(true)
-      .withListener(listener)
-      .withScrollPaneGetter(() => scrollPane)
+  private val configuration: EditorConfiguration = editorFactory.defaultConfiguration(100, 80).withListener(listener)
 
-  val text = {
-    val editor = editorFactory.newEditor(editorConfiguration, true)
-    editor.setMargin(new Insets(4, 7, 4, 7))
+  protected def editorConfiguration: EditorConfiguration =
+    configuration
 
-    editor.addFocusListener(new FocusListener {
-      def focusGained(fe: FocusEvent): Unit = { FindDialog.watch(editor, true) }
-      def focusLost(fe: FocusEvent): Unit = {}
+  protected val text: AdvancedEditorArea = {
+    val editor = new AdvancedEditorArea(editorConfiguration)
+
+    editor.addFocusListener(new FocusAdapter {
+      override def focusGained(e: FocusEvent): Unit = {
+        FindDialog.watch(editor, true)
+      }
     })
 
     editor
@@ -93,31 +90,22 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
 
   private val includedFilesMenu = new IncludedFilesMenu(getIncludesTable, tabs)
 
-  lazy val undoAction: UserAction.MenuAction = text.undoAction
-  lazy val redoAction: UserAction.MenuAction = text.redoAction
-
   override def zoomTarget = text
 
   val errorLabel = new CommentableError(text)
   val toolBar = getToolBar
-  val scrollableEditor = editorFactory.scrollPane(text)
   def compiler = workspace
   def program = workspace.world.program
-
-  scrollableEditor.setBorder(null)
 
   locally {
     setLayout(new BorderLayout)
     add(toolBar, BorderLayout.NORTH)
     val codePanel = new JPanel(new BorderLayout) {
-      add(scrollableEditor, BorderLayout.CENTER)
+      add(text, BorderLayout.CENTER)
       add(errorLabel.component, BorderLayout.NORTH)
     }
     add(codePanel, BorderLayout.CENTER)
   }
-
-  private def scrollPane: Option[JScrollPane] =
-    Option(scrollableEditor)
 
   def getToolBar = new ToolBar {
     setBorder(new EmptyBorder(24, 10, 12, 6))
@@ -126,17 +114,9 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
       // Only want to add toolbar items once
       // This method gets called when the code tab pops in or pops out
       // because org.nlogo.swing.ToolBar overrides addNotify. AAB 10/2020
-      if (getActionMap.get("procmenu") == null) {
-        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(UserAction.KeyBindings.keystroke('G', withMenu = true),
-                                                           "procmenu")
-        getActionMap.put("procmenu", proceduresMenu.getAction)
-
+      if (getComponents.isEmpty) {
         add(compileButton)
         add(findButton)
-
-        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(UserAction.KeyBindings.keystroke('F', withMenu = true), "find")
-        getActionMap.put("find", FindDialog.FIND_ACTION_CODE)
-
         add(proceduresMenu)
         add(includedFilesMenu)
         add(separate)
@@ -145,12 +125,13 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
     }
   }
 
-  override val permanentMenuActions =
-    Seq(new CodeToHtml.Action(workspace, this, () => getText)) ++ editorConfiguration.permanentActions
+  override val permanentMenuActions: Seq[UserAction.MenuAction] = {
+    text.permanentMenuActions ++ editorConfiguration.getAdditionalActions :+
+      new CodeToHtml.Action(workspace, this, () => getText)
+  }
 
-  override val activeMenuActions =
-    editorConfiguration.contextActions.filter(_.isInstanceOf[FocusedOnlyAction]) ++ Seq(undoAction, redoAction) ++
-      text.additionalMenuActions
+  override def activeMenuActions: Seq[UserAction.MenuAction] =
+    text.activeMenuActions :+ FindDialog.FIND_ACTION_CODE :+ FindDialog.FIND_NEXT_ACTION_CODE
 
   // don't let the editor influence the preferred size,
   // since the editor tends to want to be huge - ST
@@ -200,7 +181,6 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
     if (originalFontSize == -1)
       originalFontSize = text.getFont.getSize
     text.setFont(text.getFont.deriveFont(StrictMath.ceil(originalFontSize * zoomFactor).toFloat))
-    scrollableEditor.setFont(text.getFont)
     errorLabel.zoom(zoomFactor)
   }
 
@@ -225,8 +205,6 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
 
   override def innerSource_=(s: String) = {
     text.setText(s)
-    text.setCaretPosition(0)
-    text.resetUndoHistory()
   }
 
   def select(start: Int, end: Int) = text.select(start, end)
@@ -240,15 +218,18 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
     printer.printText(g, pageFormat, pageIndex, text.getText)
 
   def setIndenter(isSmart: Boolean): Unit = {
-    if(isSmart) text.setIndenter(new SmartIndenter(new EditorAreaWrapper(text), workspace))
-    else text.setIndenter(new DumbIndenter(text))
+    text.setIndenter(isSmart)
   }
 
   def setSeparate(selected: Boolean): Unit =
     separate.setSelected(selected)
 
-  def lineNumbersVisible = scrollableEditor.lineNumbersEnabled
-  def lineNumbersVisible_=(visible: Boolean) = scrollableEditor.setLineNumbersEnabled(visible)
+  def lineNumbersVisible: Boolean =
+    text.lineNumbersVisible
+
+  def lineNumbersVisible_=(visible: Boolean) = {
+    text.setLineNumbersVisible(visible)
+  }
 
   def setIncludedFilesShown(visible: Boolean): Unit = {
     includedFilesMenu.setAlwaysVisible(visible)
@@ -266,9 +247,6 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
   def close(): Unit = {}
 
   override def syncTheme(): Unit = {
-    def boldStyle(color: Color): Style =
-      new Style(color, Style.DEFAULT_BACKGROUND, text.getFont.deriveFont(Font.BOLD), false)
-
     setBackground(InterfaceColors.codeBackground())
 
     toolBar.setBackground(InterfaceColors.toolbarBackground())
@@ -283,36 +261,7 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
 
     prefsButton.syncTheme()
 
-    text.setBackground(InterfaceColors.codeBackground())
-    text.setCaretColor(InterfaceColors.textAreaText())
-
-    text match {
-      case editor: AdvancedEditorArea =>
-        editor.setCurrentLineHighlightColor(InterfaceColors.codeLineHighlight())
-        editor.setDefaultSelectionColor(InterfaceColors.codeSelection())
-        editor.setMatchedBracketBGColor(InterfaceColors.codeBracketHighlight())
-        editor.setMatchedBracketBorderColor(InterfaceColors.codeBracketHighlight())
-        editor.setSyntaxScheme(new SyntaxScheme(true) {
-          setStyle(TokenTypes.IDENTIFIER, new Style(InterfaceColors.defaultColor()))
-          setStyle(TokenTypes.RESERVED_WORD, boldStyle(InterfaceColors.keywordColor()))
-          setStyle(TokenTypes.COMMENT_KEYWORD, new Style(InterfaceColors.commentColor()))
-          setStyle(TokenTypes.FUNCTION, new Style(InterfaceColors.reporterColor()))
-          setStyle(TokenTypes.LITERAL_BOOLEAN, boldStyle(InterfaceColors.constantColor()))
-          setStyle(TokenTypes.LITERAL_NUMBER_FLOAT, new Style(InterfaceColors.constantColor()))
-          setStyle(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, new Style(InterfaceColors.constantColor()))
-          setStyle(TokenTypes.LITERAL_BACKQUOTE, new Style(InterfaceColors.constantColor()))
-          setStyle(TokenTypes.OPERATOR, new Style(InterfaceColors.commandColor()))
-          setStyle(TokenTypes.SEPARATOR, new Style(InterfaceColors.defaultColor()))
-          setStyle(TokenTypes.ERROR_IDENTIFIER, new Style(InterfaceColors.defaultColor()))
-        })
-
-      case _ =>
-    }
-
-    scrollableEditor.setBackground(InterfaceColors.codeBackground())
-    scrollableEditor.getViewport.setBackground(InterfaceColors.codeBackground())
-    scrollableEditor.getHorizontalScrollBar.setBackground(InterfaceColors.codeBackground())
-    scrollableEditor.getVerticalScrollBar.setBackground(InterfaceColors.codeBackground())
+    text.syncTheme()
 
     // for code completion popup
     editorFactory.syncTheme()

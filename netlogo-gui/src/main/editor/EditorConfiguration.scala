@@ -4,11 +4,8 @@ package org.nlogo.editor
 
 import java.awt.{ Font, GraphicsEnvironment }
 import java.awt.event.{ KeyEvent, TextEvent, TextListener }
-import java.awt.event.InputEvent.{ ALT_DOWN_MASK => AltKey, CTRL_DOWN_MASK => CtrlKey, SHIFT_DOWN_MASK => ShiftKey }
-import javax.swing.{ Action, InputMap, JScrollPane, KeyStroke }
-import javax.swing.text.{ DefaultEditorKit, TextAction }
-
-import org.fife.ui.rtextarea.RTextAreaEditorKit
+import java.awt.event.InputEvent.{ CTRL_DOWN_MASK => CtrlKey, SHIFT_DOWN_MASK => ShiftKey }
+import javax.swing.{ JScrollPane, KeyStroke }
 
 import org.nlogo.api.CompilerServices
 import org.nlogo.core.NetLogoPreferences
@@ -75,7 +72,7 @@ case class EditorConfiguration(
   colorizer:            Colorizer,
   /* additionalActions are added to the input map and added to
    * top-level menus if appropriate */
-  additionalActions:    Map[KeyStroke, TextAction & UserAction.MenuAction],
+  additionalActions:    Map[KeyStroke, UserAction.MenuAction],
   /* contextActions are presented in the right-click context menu */
   contextActions:       Seq[UserAction.MenuAction],
   /* menuActions are made available to top-level menus, but not otherwise available */
@@ -103,9 +100,9 @@ case class EditorConfiguration(
     copy(menuActions = menuActions ++ actions)
   def forThreeDLanguage(is3D: Boolean) =
     copy(is3Dlanguage = is3D)
-  def addKeymap(key: KeyStroke, action: TextAction & UserAction.MenuAction) =
+  def addKeymap(key: KeyStroke, action: UserAction.MenuAction) =
     copy(additionalActions = additionalActions + (key -> action))
-  def withKeymap(keymap: Map[KeyStroke, TextAction & UserAction.MenuAction]) =
+  def withKeymap(keymap: Map[KeyStroke, UserAction.MenuAction]) =
     copy(additionalActions = keymap)
   def withMenu(newMenu: EditorMenu) =
     copy(menu = newMenu)
@@ -115,13 +112,11 @@ case class EditorConfiguration(
   def configureEditorArea(editor: EditorArea) = {
 
     editor.setEditorKit(new HighlightEditorKit(colorizer))
+    editor.addTextListener(listener)
 
-    val editorListener = new EditorListener(e => listener.textValueChanged(null))
-    editorListener.install(editor)
     DocumentProperties.install(editor)
 
-    val indenter = new DumbIndenter(editor)
-    editor.setIndenter(indenter)
+    editor.setIndenter(new DumbIndenter(editor))
 
     if (highlightCurrentLine) {
       new LinePainter(editor)
@@ -147,7 +142,7 @@ case class EditorConfiguration(
       case (k, v) => editor.getInputMap.put(k, v)
     }
 
-    (contextActions ++ menuActions).foreach {
+    (contextActions ++ menuActions ++ additionalActions.values).foreach {
       case e: InstallableAction => e.install(editor)
       case _ =>
     }
@@ -155,18 +150,12 @@ case class EditorConfiguration(
     TextActions.applyToComponent(editor)
   }
 
-  def configureAdvancedEditorArea(editor: AbstractEditorArea) = {
-    DocumentProperties.install(editor)
-
-    val editorListener = new EditorListener(e => listener.textValueChanged(null))
-    editorListener.install(editor)
-
-    val indenter = new DumbIndenter(editor)
-    editor.setIndenter(indenter)
-
+  def configureAdvancedEditorArea(editor: AdvancedEditorArea) = {
+    editor.addTextListener(listener)
+    editor.setIndenter(false)
     editor.setFont(font)
 
-    (contextActions ++ menuActions).foreach {
+    (contextActions ++ menuActions ++ additionalActions.values).foreach {
       case e: InstallableAction => e.install(editor)
       case _ =>
     }
@@ -174,37 +163,9 @@ case class EditorConfiguration(
     additionalActions.foreach {
       case (k, v) => editor.getInputMap.put(k, v)
     }
-
-    if (EditorConfiguration.os("Mac")) {
-      Seq(
-        (KeyEvent.VK_BACK_SPACE, AltKey)  -> RTextAreaEditorKit.rtaDeletePrevWordAction,
-        // Unfortunately, `rtaDeleteNextWordAction` is not implemented by rta.
-        // Leaving this here for posterity wondering why alt-delete doesn't
-        // work on Macs. - BCH 11/7/2016
-        //(KeyEvent.VK_DELETE,     AltKey)  -> RTextAreaEditorKit.rtaDeleteNextWordAction,
-        (KeyEvent.VK_A,          CtrlKey) -> DefaultEditorKit.beginLineAction,
-        (KeyEvent.VK_E,          CtrlKey) -> DefaultEditorKit.endLineAction,
-        (KeyEvent.VK_K,          CtrlKey) -> RTextAreaEditorKit.rtaDeleteRestOfLineAction
-      ).foreach { case ((key, mod), action) => editor.getInputMap().put(KeyStroke.getKeyStroke(key, mod), action)}
-    }
-
-    editor.getInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, CtrlKey),
-                           new TextActions.CorrectDeleteNextWordAction(editor))
-
-    // there doesn't seem to be a way to directly remove an undesired action if it's in a parent map,
-    // so recursively search through the parents to find the correct map to remove it from (Isaac B 4/13/25)
-    def removeQuote(map: InputMap): Unit = {
-      if (map.keys != null && map.keys.exists(_.getKeyChar == '"')) {
-        map.remove(KeyStroke.getKeyStroke('"'))
-      } else if (map.getParent != null) {
-        removeQuote(map.getParent)
-      }
-    }
-
-    removeQuote(editor.getInputMap)
   }
 
-  def permanentActions: Seq[UserAction.MenuAction] = additionalActions.values.toSeq ++ menuActions
+  def getAdditionalActions: Seq[UserAction.MenuAction] = additionalActions.values.toSeq
 
-  def editorOnlyActions: Seq[Action] = Seq()
+  def permanentActions: Seq[UserAction.MenuAction] = getAdditionalActions ++ menuActions
 }
