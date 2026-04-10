@@ -65,6 +65,7 @@ object FindDialog extends ThemeSync {
   class FindActionCode extends TextAction(I18N.gui.get("menu.edit.find")) with MenuAction {
     category = EditCategory
     group = EditFindGroup
+    accelerator = KeyBindings.keystroke('F', withMenu = true)
 
     setEnabled(false)
 
@@ -348,20 +349,6 @@ class FindDialog(val owner: Frame) extends JDialog(owner, I18N.gui.get("dialog.f
     pack()
   }
 
-  // helper function for centering found or replaced text in the view (Isaac B 7/26/25)
-  private def setScrollPosition(offset: Int): Unit = {
-    target.foreach { t =>
-      t.scrollPane.foreach { pane =>
-        val pos = t.modelToView2D(offset)
-        val xBar = pane.getHorizontalScrollBar
-        val yBar = pane.getVerticalScrollBar
-
-        xBar.setValue((pos.getX - xBar.getVisibleAmount / 2).toInt)
-        yBar.setValue((pos.getY - yBar.getVisibleAmount / 2).toInt)
-      }
-    }
-  }
-
   private def next(search: String, ignoreCase: Boolean, wrapAround: Boolean): Boolean = {
     target.map { t =>
       var searchMut = search
@@ -379,9 +366,8 @@ class FindDialog(val owner: Frame) extends JDialog(owner, I18N.gui.get("dialog.f
         matchIndex = text.indexOf(searchMut)
 
       if (matchIndex > -1) {
-        setScrollPosition(matchIndex)
-        t.setSelectionStart(matchIndex)
-        t.setSelectionEnd(matchIndex + searchMut.length)
+        t.scrollTo(matchIndex)
+        t.select(matchIndex, matchIndex + searchMut.length)
         true
       } else {
         false
@@ -406,9 +392,8 @@ class FindDialog(val owner: Frame) extends JDialog(owner, I18N.gui.get("dialog.f
         matchIndex = text.lastIndexOf(searchMut)
 
       if (matchIndex > -1) {
-        setScrollPosition(matchIndex)
-        t.setSelectionStart(matchIndex)
-        t.setSelectionEnd(matchIndex + searchMut.length)
+        t.scrollTo(matchIndex)
+        t.select(matchIndex, matchIndex + searchMut.length)
         true
       } else {
         false
@@ -422,9 +407,8 @@ class FindDialog(val owner: Frame) extends JDialog(owner, I18N.gui.get("dialog.f
         Toolkit.getDefaultToolkit.beep()
       } else {
         try {
-          setScrollPosition(t.getSelectionStart)
-          t.getDocument.remove(t.getSelectionStart, t.getSelectionEnd - t.getSelectionStart)
-          t.getDocument.insertString(t.getCaretPosition, replacement, null)
+          t.scrollTo(t.getSelectionStart)
+          t.replaceSelection(replacement)
         } catch {
           case ex: BadLocationException =>
             Toolkit.getDefaultToolkit.beep()
@@ -435,8 +419,7 @@ class FindDialog(val owner: Frame) extends JDialog(owner, I18N.gui.get("dialog.f
 
   private def replaceAll(search: String, ignoreCase: Boolean, replacement: String): Int = {
     target.map { t =>
-      t.setSelectionStart(0)
-      t.setSelectionEnd(0)
+      t.select(0, 0)
 
       if (next(search, ignoreCase, false)) {
         var i = 1

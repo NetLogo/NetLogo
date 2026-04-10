@@ -5,7 +5,7 @@ package org.nlogo.window
 import java.awt.event.KeyEvent
 
 import org.nlogo.api.CompilerServices
-import org.nlogo.editor.{ AbstractEditorArea, Colorizer, EditorConfiguration, EditorScrollPane }
+import org.nlogo.editor.{ Colorizer, EditorArea, EditorConfiguration }
 import org.nlogo.swing.UserAction
 
 trait EditorFactory {
@@ -22,7 +22,5 @@ trait EditorFactory {
         TextMenuActions.SelectAllAction))
     .addKeymap(UserAction.KeyBindings.keystroke(KeyEvent.VK_F1), TextMenuActions.keyboardQuickHelp(colorizer))
 
-  def newEditor(configuration: EditorConfiguration): AbstractEditorArea
-
-  def scrollPane(editor: AbstractEditorArea): EditorScrollPane
+  def newEditor(configuration: EditorConfiguration): EditorArea
 }

@@ -8,7 +8,6 @@ import java.io.IOException
 import org.nlogo.api.FileIO
 import org.nlogo.app.common.{ Dialogs, Events => AppEvents, TabsInterface }
 import org.nlogo.core.I18N
-import org.nlogo.editor.FocusedOnlyAction
 import org.nlogo.swing.{ CloseableTab, FileDialog => SwingFileDialog, UserAction }
 import org.nlogo.util.PathUtils
 import org.nlogo.window.{ Events => WindowEvents, ExternalFileInterface }
@@ -71,11 +70,8 @@ class TemporaryCodeTab(workspace: AbstractWorkspace & ModelTracker,
   lineNumbersVisible = tabs.lineNumbersVisible
   setIndenter(tabs.smartTabbingEnabled)
 
-  override val activeMenuActions = {
-    Seq(undoAction, redoAction) ++
-      editorConfiguration.contextActions.filter(_.isInstanceOf[FocusedOnlyAction]) ++
-      filename.fold(_ => Seq(), name => Seq(conversionAction(this)))
-  }
+  override def activeMenuActions: Seq[UserAction.MenuAction] =
+    super.activeMenuActions ++ filename.fold(_ => Seq(), name => Seq(conversionAction(this)))
 
   // if included file is not saved and not referenced in the main Code tab,
   // disable Check button and show warning banner (Isaac B 6/26/25)

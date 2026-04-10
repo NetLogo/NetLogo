@@ -17,11 +17,11 @@ import org.nlogo.core.{ I18N, Button => CoreButton, Chooser => CoreChooser, Inpu
 import org.nlogo.editor.{ EditorArea, EditorConfiguration }
 import org.nlogo.log.LogManager
 import org.nlogo.nvm.DefaultCompilerServices
-import org.nlogo.swing.{ MenuItem, PopupMenu, UndoManager }
+import org.nlogo.swing.{ ClipboardUtils, MenuItem, PopupMenu, UndoManager }
 import org.nlogo.theme.InterfaceColors
-import org.nlogo.window.{ AbstractPlotWidget, AbstractWidgetPanel, AutoIndentHandler, ButtonWidget, ClipboardUtils,
-                          CopyPasteTarget, Editable, EditDialogFactory, Events => WindowEvents, GUIWorkspace,
-                          InterfaceMode, OutputWidget, Widget, WidgetContainer, WidgetRegistry, DummyChooserWidget,
+import org.nlogo.window.{ AbstractPlotWidget, AbstractWidgetPanel, AutoIndentHandler, ButtonWidget, CopyPasteTarget,
+                          Editable, EditDialogFactory, Events => WindowEvents, GUIWorkspace, InterfaceMode,
+                          OutputWidget, Widget, WidgetContainer, WidgetRegistry, DummyChooserWidget,
                           DummyInputBoxWidget, DummyPlotWidget, DummyViewWidget, PlotWidget, SliderWidget, ViewWidget,
                           WidgetInfo },
   WindowEvents.{ CompileAllEvent, DirtyEvent, InterfaceModeChangedEvent, LoadBeginEvent, SetInterfaceModeEvent,

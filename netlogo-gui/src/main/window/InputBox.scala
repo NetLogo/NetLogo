@@ -18,7 +18,7 @@ import org.nlogo.agent.InputBoxConstraint
 import org.nlogo.awt.{ Hierarchy, Positioning }
 import org.nlogo.core.{ BoxedValue, CompilerException, I18N, InputBox => CoreInputBox, LogoList, NumericInput,
                         StringInput, Widget => CoreWidget }
-import org.nlogo.editor.{ AbstractEditorArea, EditorConfiguration }
+import org.nlogo.editor.{ EditorArea, EditorConfiguration }
 import org.nlogo.swing.{ Button, ButtonPanel, DialogButton, OptionPane, RoundedBorderPanel,
                          ScrollPane, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
@@ -28,8 +28,8 @@ object InputBox {
   val MinHeight = 60
 }
 
-abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: AbstractEditorArea,
-                        compiler: CompilerServices, nextComponent: Component)
+abstract class InputBox(textArea: EditorArea, editDialogTextArea: EditorArea, compiler: CompilerServices,
+                        nextComponent: Component)
   extends SingleErrorWidget with Editable with Events.InputBoxLoseFocusEvent.Handler {
 
   import InputBox._
@@ -58,7 +58,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     }
   }
 
-  protected class InputScrollPane(textArea: AbstractEditorArea) extends JPanel with RoundedBorderPanel with ThemeSync {
+  protected class InputScrollPane(textArea: EditorArea) extends JPanel with RoundedBorderPanel with ThemeSync {
     val scrollPane = new ScrollPane(textArea, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
                                     ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER) {
       setBorder(null)
@@ -540,7 +540,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
   override def getDefaultExportName = "export.txt"
   override def hasContextMenu = true
 
-  protected class InputDialog(parent: Frame, title: String, inputType: InputType, textArea: AbstractEditorArea)
+  protected class InputDialog(parent: Frame, title: String, inputType: InputType, textArea: EditorArea)
     extends JDialog(parent, title) with ThemeSync {
 
     private val label = new JLabel(inputType.toString)
