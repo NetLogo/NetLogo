@@ -6,14 +6,13 @@ import java.awt.{ KeyboardFocusManager, Toolkit }
 import java.awt.datatransfer.DataFlavor
 import java.awt.event.{ ActionEvent, KeyEvent }
 import java.lang.IllegalStateException
-import javax.swing.Action
-import javax.swing.text.{ Document, JTextComponent }
+import javax.swing.{ AbstractAction, Action }
 
 import org.nlogo.api.Refreshable
 import org.nlogo.awt.Hierarchy
 import org.nlogo.core.I18N
-import org.nlogo.editor.{ Actions, Colorizer, DocumentAction, QuickHelpAction }
-import org.nlogo.swing.{ WrappedAction, UserAction },
+import org.nlogo.editor.{ Actions, Colorizer, EditorAwareAction, QuickHelpAction }
+import org.nlogo.swing.{ ClipboardUtils, UserAction, WrappedAction },
   UserAction.{ EditCategory, EditClipboardGroup, EditSelectionGroup, HelpCategory,
     HelpContextGroup, KeyBindings, MenuAction },
     KeyBindings.keystroke
@@ -72,8 +71,9 @@ object TextMenuActions {
     }
   }
 
-  class KeyboardQuickHelpAction(val colorizer: Colorizer)
-    extends DocumentAction(I18N.gui.get("menu.help.lookUpInDictionary"))
+  class KeyboardQuickHelpAction(protected val colorizer: Colorizer)
+    extends AbstractAction(I18N.gui.get("menu.help.lookUpInDictionary"))
+    with EditorAwareAction
     with QuickHelpAction
     with MenuAction {
 
@@ -81,9 +81,8 @@ object TextMenuActions {
     group       = HelpContextGroup
     accelerator = KeyBindings.keystroke(KeyEvent.VK_F1)
 
-    override def perform(component: JTextComponent, document: Document, e: ActionEvent): Unit = {
-      val targetOffset = component.getSelectionEnd
-      doHelp(component.getDocument, targetOffset, Hierarchy.getFrame(component))
+    override def actionPerformed(e: ActionEvent): Unit = {
+      doHelp(editor, Hierarchy.getFrame(editor))
     }
   }
 }

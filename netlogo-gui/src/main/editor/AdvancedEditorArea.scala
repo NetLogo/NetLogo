@@ -2,244 +2,527 @@
 
 package org.nlogo.editor
 
-import java.awt.{ Color, Component, Dimension }
-import java.awt.event.{ ActionEvent, KeyAdapter, KeyEvent, MouseAdapter, MouseEvent }
-import javax.swing.{ AbstractAction, Action, JMenu, JMenuItem, JPopupMenu }
-import javax.swing.text.EditorKit
+import java.awt.{ Color, EventQueue, Font, Point }
+import java.awt.event.{ ActionEvent, KeyEvent, MouseAdapter, MouseEvent, TextListener }
+import java.util.Base64
 
-import org.fife.ui.rtextarea.{ Gutter, RTextArea, RUndoManager }
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea
+import javafx.application.Platform
+import javafx.beans.value.ChangeListener
+import javafx.beans.value.ObservableValue
+import javafx.concurrent.Worker.State
+import javafx.embed.swing.JFXPanel
+import javafx.scene.input.ScrollEvent
+import javafx.scene.Scene
+import javafx.scene.web.{ WebEngine, WebView }
+
+import javax.swing.AbstractAction
+
+import netscape.javascript.JSObject
 
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ Implicits, Menu, MenuItem, PopupMenu, UserAction, WrappedAction },
-  Implicits.thunk2documentListener, UserAction.{ EditCategory, EditFoldSubcategory, EditUndoGroup, KeyBindings,
-                                                 MenuAction }
+import org.nlogo.editor.MouseQuickHelpAction
+import org.nlogo.swing.{ ClipboardUtils, Menu, MenuItem, PopupMenu, ScrollableTextComponent, UserAction },
+  UserAction.{ EditCategory, EditClipboardGroup, EditFoldGroup, EditFoldSubcategory, EditFormatGroup,
+               EditSelectionGroup, EditUndoGroup, KeyBindings, MenuAction }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
-class AdvancedEditorArea(val configuration: EditorConfiguration)
-  extends RSyntaxTextArea(configuration.rows, configuration.columns) with AbstractEditorArea {
+import scala.collection.mutable.Buffer
 
-  private lazy val toggleFoldsAction = new ToggleFoldsAction(this)
+class AdvancedEditorArea(configuration: EditorConfiguration)
+  extends JFXPanel with AbstractEditorArea with ScrollableTextComponent with ThemeSync {
 
-  private var gutter: Option[Gutter] = None
+  private implicit val prefix: I18N.Prefix = I18N.Prefix("menu.edit")
 
-  var indenter: Option[Indenter] = None
+  private val bridge = new Bridge
 
-  // the language style is configured primarily in app.common.EditorFactory
-  setSyntaxEditingStyle(if (configuration.is3Dlanguage) "netlogo3d" else "netlogo")
-  setCodeFoldingEnabled(true)
+  private var webEngine: Option[WebEngine] = None
 
-  getDocument.addDocumentListener(() => updateUndoStates())
+  private var currentText = ""
 
-  private var defaultSelectionColor = getSelectionColor
+  private var refreshText = false
 
-  configuration.configureAdvancedEditorArea(this)
+  private lazy val textListeners = Buffer[TextListener]()
 
-  override def createUndoManager(): RUndoManager = {
-    val manager = super.createUndoManager()
-
-    manager.setLimit(500)
-
-    manager
-  }
-
-  def enableBracketMatcher(enable: Boolean): Unit = {
-    setBracketMatchingEnabled(enable)
-  }
-
-  def setGutter(gutter: Gutter): Unit = {
-    this.gutter = Option(gutter)
-  }
-
-  override def getActions(): Array[Action] = {
-    super.getActions.filter(_.getValue(Action.NAME) != "RSTA.GoToMatchingBracketAction").toArray[Action]
-  }
-
-  override def additionalMenuActions: Seq[MenuAction] = {
-    // this is a little jank, but we're probably going to switch to a different text component
-    // before this one gets an update anyway. (Isaac B 7/19/25)
-    super.createPopupMenu.getComponents.toSeq.collect {
-      case menu: JMenu =>
-        menu.getMenuComponents.collect {
-          case item: JMenuItem => new WrappedAction(item.getAction, EditCategory, EditFoldSubcategory, null,
-                                                    item.getAccelerator)
-        }
-    }.flatten :+ toggleFoldsAction
-  }
-
-  def resetUndoHistory(): Unit = {
-    discardAllEdits()
-    updateUndoStates()
-  }
-
-  override def createPopupMenu(): PopupMenu = {
-    new PopupMenu {
-      // RSyntaxTextArea creates menu items that don't sync with the color theme,
-      // so we have to convert them to the synced versions (Isaac B 11/5/24)
-      AdvancedEditorArea.super.createPopupMenu.getComponents.foreach(_ match {
-        case menu: JMenu => add(new Menu(menu.getText) {
-          menu.getMenuComponents.foreach(_ match {
-            case item: JMenuItem => add(new MenuItem(item.getAction))
-            case _ =>
-          })
-          add(new MenuItem(toggleFoldsAction))
-        })
-        case item: JMenuItem => add(new MenuItem(item.getAction))
-        case separator: JPopupMenu.Separator => addSeparator()
-        case _ =>
-      })
-
-      addSeparator()
-
-      configuration.contextActions.foreach(action => add(new MenuItem(action)))
-
-      addPopupMenuListener(new SuspendCaretPopupListener(AdvancedEditorArea.this))
-
-      override def show(component: Component, x: Int, y: Int): Unit = {
-        setBackground(InterfaceColors.menuBackground())
-
-        getComponents.foreach(_ match {
-          case ts: ThemeSync => ts.syncTheme()
-          case _ =>
-        })
-
-        super.show(component, x, y)
-      }
-    }
-  }
-
-  def setIndenter(indenter: Indenter): Unit = {
-    indenter.addActions(configuration, getInputMap)
-    this.indenter = Some(indenter)
-  }
-
-  // without this helper, ToggleFoldsAction causes an inconsistent state where the line
-  // numbers don't align with the procedures (Isaac B 7/21/25)
-  def repaintGutter(): Unit = {
-    gutter.foreach(_.repaint())
-  }
-
-  // This method will receive null input if a partial accent character is entered in the editor, e.g., via Option+e on
-  // MacOS. This also occurs when int'l keyboards enter "^" -- BCH 12/31/2016, RGG 1/3/17
-  override def replaceSelection(s: String): Unit = if (s != null) {
-    val selection = s.dropWhile(c => Character.getType(c) == Character.FORMAT).replace("\t", "  ")
-    super.replaceSelection(s)
-    indenter.foreach(_.handleInsertion(selection))
-  } else {
-    super.replaceSelection(s)
-  }
-
-  // this needs to be implemented if we ever allow tab-based focus traversal
-  // with this editor area
-  def setSelection(s: Boolean): Unit = { }
-
-  def selectNormal(): Unit = {
-    setSelectionColor(defaultSelectionColor)
-
-    select(getSelectionStart, getSelectionEnd)
-  }
-
-  def selectError(start: Int, end: Int): Unit = {
-    setSelectionColor(InterfaceColors.errorHighlight())
-
-    select(start, end)
-  }
-
-  override def setSelectionStart(i: Int): Unit = {
-    Option(getFoldManager.getFoldForLine(getFoldManager.getVisibleLineAbove(getLineOfOffset(i))))
-      .foreach(_.setCollapsed(false))
-
-    super.setSelectionStart(i)
-  }
-
-  override def setSelectionEnd(i: Int): Unit = {
-    Option(getFoldManager.getFoldForLine(getFoldManager.getVisibleLineAbove(getLineOfOffset(i))))
-      .foreach(_.setCollapsed(false))
-
-    super.setSelectionEnd(i)
-  }
-
-  override def select(start: Int, end: Int): Unit = {
-    for (i <- 0 until getFoldManager.getFoldCount) {
-      val fold = getFoldManager.getFold(i)
-
-      if (fold.getStartOffset < end && fold.getEndOffset > start)
-        fold.setCollapsed(false)
-    }
-
-    super.select(start, end)
-  }
-
-  def setDefaultSelectionColor(color: Color): Unit = {
-    defaultSelectionColor = color
-
-    setSelectionColor(color)
-  }
-
-  addMouseListener(new MouseAdapter {
-    override def mousePressed(e: MouseEvent): Unit = {
-      setSelectionColor(defaultSelectionColor)
-    }
-  })
-
-  addKeyListener(new KeyAdapter {
-    override def keyPressed(e: KeyEvent): Unit = {
-      setSelectionColor(defaultSelectionColor)
-    }
-  })
-
-  override val undoAction: MenuAction = {
-    new AbstractAction(I18N.gui.get("menu.edit.undo")) with MenuAction {
+  private val undoAction: MenuAction = {
+    new AbstractAction(I18N.gui("undo")) with MenuAction {
       category = EditCategory
       group = EditUndoGroup
       accelerator = KeyBindings.keystroke('Z', withMenu = true)
 
-      private val action: Action = RTextArea.getAction(RTextArea.UNDO_ACTION)
-
       override def actionPerformed(e: ActionEvent): Unit = {
-        action.actionPerformed(e)
-
-        updateUndoStates()
+        runInWeb("window.undo()")
       }
     }
   }
 
-  override val redoAction: MenuAction = {
-    new AbstractAction(I18N.gui.get("menu.edit.redo")) with MenuAction {
+  private val redoAction: MenuAction = {
+    new AbstractAction(I18N.gui("redo")) with MenuAction {
       category = EditCategory
       group = EditUndoGroup
       accelerator = KeyBindings.keystroke('Y', withMenu = true)
 
-      private val action: Action = RTextArea.getAction(RTextArea.REDO_ACTION)
-
       override def actionPerformed(e: ActionEvent): Unit = {
-        action.actionPerformed(e)
-
-        updateUndoStates()
+        runInWeb("window.redo()")
       }
     }
   }
 
-  private def updateUndoStates(): Unit = {
-    undoAction.setEnabled(canUndo)
-    redoAction.setEnabled(canRedo)
+  private val copyAction: MenuAction = {
+    new AbstractAction(I18N.gui("copy")) with MenuAction {
+      category = EditCategory
+      group = EditClipboardGroup
+      accelerator = KeyBindings.keystroke('C', withMenu = true)
+
+      override def actionPerformed(e: ActionEvent): Unit = {
+        runInWeb("window.copy(window.view)")
+      }
+    }
   }
 
-  // These methods are used only by the input widget, which uses editor.EditorArea
-  // exclusively at present. - RG 10/28/16
-  def getEditorKitForContentType(contentType: String): EditorKit = null
-  def getEditorKit(): EditorKit =
-    getUI.getEditorKit(this)
-  def setEditorKit(kit: EditorKit): Unit = { }
+  private val cutAction: MenuAction = {
+    new AbstractAction(I18N.gui("cut")) with MenuAction {
+      category = EditCategory
+      group = EditClipboardGroup
+      accelerator = KeyBindings.keystroke('X', withMenu = true)
 
-  def beginCompoundEdit(): Unit = {
-    beginAtomicEdit()
+      override def actionPerformed(e: ActionEvent): Unit = {
+        runInWeb("window.cut(window.view)")
+      }
+    }
   }
 
-  def endCompoundEdit(): Unit = {
-    endAtomicEdit()
+  private val pasteAction: MenuAction = {
+    new AbstractAction(I18N.gui("paste")) with MenuAction {
+      category = EditCategory
+      group = EditClipboardGroup
+      accelerator = KeyBindings.keystroke('V', withMenu = true)
+
+      override def actionPerformed(e: ActionEvent): Unit = {
+        runInWeb("window.paste(window.view)")
+      }
+    }
   }
 
-  override def getPreferredSize: Dimension =
-    new Dimension(super.getPreferredSize.width, getLineHeight * (getLineCount + 1))
+  private val deleteAction: MenuAction = {
+    new AbstractAction(I18N.gui("delete")) with MenuAction {
+      category = EditCategory
+      group = EditClipboardGroup
+      accelerator = KeyBindings.keystroke(KeyEvent.VK_DELETE)
+
+      override def actionPerformed(e: ActionEvent): Unit = {
+        replaceSelection("")
+      }
+    }
+  }
+
+  private val selectAllAction: MenuAction = {
+    new AbstractAction(I18N.gui("selectAll")) with MenuAction {
+      category = EditCategory
+      group = EditSelectionGroup
+      accelerator = KeyBindings.keystroke('A', withMenu = true)
+
+      override def actionPerformed(e: ActionEvent): Unit = {
+        runInWeb("window.selectAll()")
+      }
+    }
+  }
+
+  private val toggleCommentsAction: MenuAction = {
+    new AbstractAction(s"${I18N.gui("comment")} / ${I18N.gui("uncomment")}")
+      with MenuAction {
+
+      category = EditCategory
+      group = EditFormatGroup
+      accelerator = KeyBindings.keystroke(KeyEvent.VK_SEMICOLON, withMenu = true)
+
+      override def actionPerformed(e: ActionEvent): Unit = {
+        runInWeb("window.toggleComments(window.view)")
+      }
+    }
+  }
+
+  private val shiftLeftAction: MenuAction = {
+    new AbstractAction(I18N.gui("shiftLeft")) with MenuAction {
+      category = EditCategory
+      group = EditFormatGroup
+      accelerator = KeyBindings.keystroke(KeyEvent.VK_OPEN_BRACKET, withMenu = true)
+
+      override def actionPerformed(e: ActionEvent): Unit = {
+        runInWeb("window.shiftLeft()")
+      }
+    }
+  }
+
+  private val shiftRightAction: MenuAction = {
+    new AbstractAction(I18N.gui("shiftRight")) with MenuAction {
+      category = EditCategory
+      group = EditFormatGroup
+      accelerator = KeyBindings.keystroke(KeyEvent.VK_CLOSE_BRACKET, withMenu = true)
+
+      override def actionPerformed(e: ActionEvent): Unit = {
+        runInWeb("window.shiftRight()")
+      }
+    }
+  }
+
+  private val foldSelectedAction: MenuAction = {
+    new AbstractAction(I18N.gui("foldSelected")) with MenuAction {
+      category = EditCategory
+      subcategory = EditFoldSubcategory
+      group = EditFoldGroup
+      accelerator = KeyBindings.keystroke(KeyEvent.VK_OPEN_BRACKET, withMenu = true, withShift = true)
+
+      override def actionPerformed(e: ActionEvent): Unit = {
+        runInWeb("window.foldSelected()")
+      }
+    }
+  }
+
+  private val unfoldSelectedAction: MenuAction = {
+    new AbstractAction(I18N.gui("unfoldSelected")) with MenuAction {
+      category = EditCategory
+      subcategory = EditFoldSubcategory
+      group = EditFoldGroup
+      accelerator = KeyBindings.keystroke(KeyEvent.VK_CLOSE_BRACKET, withMenu = true, withShift = true)
+
+      override def actionPerformed(e: ActionEvent): Unit = {
+        runInWeb("window.unfoldSelected()")
+      }
+    }
+  }
+
+  private val foldAllAction: MenuAction = {
+    new AbstractAction(I18N.gui("foldAll")) with MenuAction {
+      category = EditCategory
+      subcategory = EditFoldSubcategory
+      group = EditFoldGroup
+      accelerator = KeyBindings.keystroke(KeyEvent.VK_OPEN_BRACKET, withMenu = true, withAlt = true)
+
+      override def actionPerformed(e: ActionEvent): Unit = {
+        runInWeb("window.foldAll()")
+      }
+    }
+  }
+
+  private val unfoldAllAction: MenuAction = {
+    new AbstractAction(I18N.gui("unfoldAll")) with MenuAction {
+      category = EditCategory
+      subcategory = EditFoldSubcategory
+      group = EditFoldGroup
+      accelerator = KeyBindings.keystroke(KeyEvent.VK_CLOSE_BRACKET, withMenu = true, withAlt = true)
+
+      override def actionPerformed(e: ActionEvent): Unit = {
+        runInWeb("window.unfoldAll()")
+      }
+    }
+  }
+
+  private val quickHelpAction = new MouseQuickHelpAction(configuration.colorizer)
+  private val jumpToDeclarationAction = new JumpToDeclarationAction(this)
+
+  val permanentMenuActions: Seq[MenuAction] = {
+    Seq(
+      copyAction,
+      cutAction,
+      pasteAction,
+      deleteAction,
+      selectAllAction
+    )
+  }
+
+  val activeMenuActions: Seq[MenuAction] = {
+    Seq(
+      undoAction,
+      redoAction,
+      toggleCommentsAction,
+      shiftLeftAction,
+      shiftRightAction,
+      jumpToDeclarationAction,
+      foldSelectedAction,
+      unfoldSelectedAction,
+      foldAllAction,
+      unfoldAllAction
+    )
+  }
+
+  private val popupMenu = new PopupMenu {
+    add(new MenuItem(undoAction))
+    add(new MenuItem(redoAction))
+
+    addSeparator()
+
+    add(new MenuItem(cutAction))
+    add(new MenuItem(copyAction))
+    add(new MenuItem(pasteAction))
+    add(new MenuItem(deleteAction))
+
+    addSeparator()
+
+    add(new MenuItem(selectAllAction))
+
+    addSeparator()
+
+    add(new Menu(I18N.gui("folding")) {
+      add(new MenuItem(foldSelectedAction))
+      add(new MenuItem(unfoldSelectedAction))
+      add(new MenuItem(foldAllAction))
+      add(new MenuItem(unfoldAllAction))
+    })
+
+    addSeparator()
+
+    add(new MenuItem(quickHelpAction))
+    add(new MenuItem(toggleCommentsAction))
+    add(new MenuItem(shiftLeftAction))
+    add(new MenuItem(shiftRightAction))
+    add(new MenuItem(jumpToDeclarationAction))
+  }
+
+  private val menuKeyMask: Int = getToolkit.getMenuShortcutKeyMaskEx
+
+  configuration.configureAdvancedEditorArea(this)
+
+  quickHelpAction.install(this)
+  jumpToDeclarationAction.install(this)
+
+  addMouseListener(new MouseAdapter {
+    override def mousePressed(e: MouseEvent): Unit = {
+      if (!e.isPopupTrigger)
+        selectNormal()
+    }
+
+    override def mouseReleased(e: MouseEvent): Unit = {
+      if (e.isPopupTrigger)
+        showPopup(e.getPoint)
+    }
+  })
+
+  Platform.runLater(() => {
+    val webView = new WebView
+
+    webView.setContextMenuEnabled(false)
+    webView.setFontScale(0.75)
+
+    val engine = webView.getEngine
+
+    engine.getLoadWorker.stateProperty.addListener(new ChangeListener[State] {
+      override def changed(ov: ObservableValue[? <: State], oldState: State, newState: State): Unit = {
+        if (newState == State.SUCCEEDED) {
+          engine.executeScript("window").asInstanceOf[JSObject].setMember("bridge", bridge)
+
+          webEngine = Some(engine)
+        }
+      }
+    })
+
+    webView.addEventFilter(ScrollEvent.SCROLL, event => {
+      webEngine.foreach(_.executeScript(
+        s"window.scrollBy(${-event.getDeltaX}, ${-event.getDeltaY})"
+      ))
+
+      event.consume()
+    })
+
+    setScene(new Scene(webView))
+
+    engine.load(getClass.getResource("/codetab/index.html").toExternalForm)
+  })
+
+  def showPopup(point: Point): Unit = {
+    popupMenu.syncTheme()
+    popupMenu.show(this, point.x, point.y)
+  }
+
+  override def processKeyEvent(e: KeyEvent): Unit = {
+    selectNormal()
+
+    if ((e.getModifiersEx & menuKeyMask) == menuKeyMask && e.isShiftDown) {
+      e.getKeyCode match {
+        case KeyEvent.VK_OPEN_BRACKET =>
+          runInWeb("window.foldSelected()")
+
+        case KeyEvent.VK_CLOSE_BRACKET =>
+          runInWeb("window.unfoldSelected()")
+
+        case _ =>
+          super.processKeyEvent(e)
+      }
+    } else {
+      super.processKeyEvent(e)
+    }
+  }
+
+  override def requestFocus(): Unit = {
+    super.requestFocus()
+
+    runInWeb("window.view.focus()")
+  }
+
+  override def isEditable: Boolean =
+    getWebValue("window.isEditable()", true)
+
+  def setEditable(editable: Boolean): Unit = {
+    runInWeb(s"window.setEditable($editable)")
+  }
+
+  override def setSelection(value: Boolean): Unit = {}
+
+  override def setIndenter(smart: Boolean): Unit = {
+    runInWeb(s"window.setIndenter($smart)")
+  }
+
+  def lineNumbersVisible: Boolean =
+    getWebValue("window.getLineNumbers()", true)
+
+  def setLineNumbersVisible(visible: Boolean): Unit = {
+    runInWeb(s"window.setLineNumbers($visible)")
+  }
+
+  override def setText(text: String): Unit = {
+    webEngine synchronized {
+      currentText = text
+
+      refreshText = false
+    }
+
+    runInWeb(s"window.setText('${Base64.getEncoder.encodeToString(text.getBytes)}')")
+  }
+
+  override def getText: String = {
+    webEngine synchronized {
+      if (refreshText) {
+        currentText = new String(Base64.getDecoder.decode(getWebValue("window.getText()", "")))
+
+        refreshText = false
+      }
+
+      currentText
+    }
+  }
+
+  override def getSelectedText: String =
+    new String(Base64.getDecoder.decode(getWebValue("window.getSelectedText()", "")))
+
+  override def getSelectionStart: Int =
+    getWebValue("window.getSelectionStart()", 0)
+
+  override def getSelectionEnd: Int =
+    getWebValue("window.getSelectionEnd()", 0)
+
+  override def getTokenAtCaret: Option[String] =
+    Option(getWebValue("window.getTokenAtCaret()", "")).filter(_.nonEmpty)
+
+  override def select(start: Int, end: Int): Unit = {
+    runInWeb(s"window.select($start, $end)")
+  }
+
+  override def selectNormal(): Unit = {
+    runInWeb("window.setNormalSelection()")
+  }
+
+  override def selectError(start: Int, end: Int): Unit = {
+    runInWeb("window.setErrorSelection()")
+
+    select(start, end)
+  }
+
+  override def replaceSelection(text: String): Unit = {
+    runInWeb(s"window.replaceSelection('$text')")
+  }
+
+  override def getCaretPosition: Int =
+    getWebValue("window.getCaretPosition()", 0)
+
+  override def setFont(font: Font): Unit = {
+    super.setFont(font)
+
+    runInWeb(s"window.setFont('${font.getFamily}', ${font.getSize})")
+  }
+
+  override def addTextListener(listener: TextListener): Unit = {
+    textListeners += listener
+  }
+
+  override def scrollTo(index: Int): Unit = {}
+
+  private def runInWeb(function: String): Unit = {
+    Platform.runLater(() => {
+      webEngine.foreach(_.executeScript(function))
+    })
+  }
+
+  private def getWebValue[T](function: String, default: T): T = {
+    webEngine synchronized {
+      var value: Option[T] = None
+
+      Platform.runLater(() => {
+        val result = webEngine.fold(default)(_.executeScript(function).asInstanceOf[T])
+
+        webEngine synchronized {
+          value = Some(result)
+        }
+      })
+
+      while (value.isEmpty)
+        webEngine.wait(10)
+
+      value.getOrElse(default)
+    }
+  }
+
+  private def colorString(color: Color): String =
+    s"rgba(${color.getRed}, ${color.getGreen}, ${color.getBlue}, ${color.getAlpha / 255f})"
+
+  override def syncTheme(): Unit = {
+    runInWeb(s"""window.syncTheme({
+      |  background: "${colorString(InterfaceColors.codeBackground())}",
+      |  gutterBorder: "${colorString(InterfaceColors.codeSeparator())}",
+      |  scrollBarBackground: "${colorString(InterfaceColors.scrollBarBackground())}",
+      |  scrollBarForeground: "${colorString(InterfaceColors.scrollBarForeground())}",
+      |  scrollBarForegroundHover: "${colorString(InterfaceColors.scrollBarForegroundHover())}",
+      |  caret: "${colorString(InterfaceColors.textAreaText())}",
+      |  lineHighlight: "${colorString(InterfaceColors.codeLineHighlight())}",
+      |  selection: "${colorString(InterfaceColors.codeSelection())}",
+      |  selectionError: "${colorString(InterfaceColors.errorHighlight())}",
+      |  default: "${colorString(InterfaceColors.defaultColor())}",
+      |  comment: "${colorString(InterfaceColors.commentColor())}",
+      |  constant: "${colorString(InterfaceColors.constantColor())}",
+      |  keyword: "${colorString(InterfaceColors.keywordColor())}",
+      |  command: "${colorString(InterfaceColors.commandColor())}",
+      |  reporter: "${colorString(InterfaceColors.reporterColor())}"
+      })""".stripMargin)
+  }
+
+  private class Bridge {
+    def log(message: String): Unit = {
+      println(message)
+    }
+
+    def textUpdated(overwriting: Boolean, canUndo: Boolean, canRedo: Boolean): Unit = {
+      webEngine synchronized {
+        refreshText = true
+      }
+
+      undoAction.setEnabled(canUndo)
+      redoAction.setEnabled(canRedo)
+
+      if (!overwriting) {
+        EventQueue.invokeLater(() => {
+          textListeners.foreach(_.textValueChanged(null))
+        })
+      }
+    }
+
+    def writeClipboard(text: String): Unit = {
+      webEngine synchronized {
+        ClipboardUtils.writeString(text)
+      }
+    }
+
+    def readClipboard(): String = {
+      webEngine synchronized {
+        ClipboardUtils.readString()
+      }
+    }
+  }
 }

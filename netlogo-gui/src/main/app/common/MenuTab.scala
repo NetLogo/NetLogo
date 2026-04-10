@@ -5,6 +5,6 @@ package org.nlogo.app.common
 import org.nlogo.swing.UserAction.MenuAction
 
 trait MenuTab {
-  val activeMenuActions = Seq[MenuAction]()
-  val permanentMenuActions = Seq[MenuAction]()
+  def activeMenuActions = Seq[MenuAction]()
+  def permanentMenuActions = Seq[MenuAction]()
 }
