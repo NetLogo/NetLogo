@@ -5,9 +5,9 @@ package org.nlogo.window
 import java.awt.Component
 
 import org.nlogo.api.CompilerServices
-import org.nlogo.editor.AbstractEditorArea
+import org.nlogo.editor.EditorArea
 
-class DummyInputBoxWidget(textArea: AbstractEditorArea, dialogTextArea: AbstractEditorArea,
+class DummyInputBoxWidget(textArea: EditorArea, dialogTextArea: EditorArea,
                           nextComponent: Component, compiler: CompilerServices) extends
   InputBox(textArea, dialogTextArea, compiler, nextComponent) {
 

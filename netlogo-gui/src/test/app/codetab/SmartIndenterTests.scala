@@ -24,12 +24,10 @@ object SmartIndenterTests {
       _caretPosition = pos
     }
     def getSelectionStart = selectionStart
-    def setSelectionStart(pos: Int): Unit = {
-      selectionStart = pos
-    }
     def getSelectionEnd = selectionEnd
-    def setSelectionEnd(pos: Int): Unit = {
-      selectionEnd = pos
+    def select(start: Int, end: Int): Unit = {
+      selectionStart = start
+      selectionEnd = end
     }
     selectAll()
     def lines: Array[String] = {
@@ -128,8 +126,7 @@ class SmartIndenterTests extends AnyFunSuiteEx {
 
   test("handleCloseBracket correctly indents line") {
     val code = new Scaffold("[\n  abc\n  ")
-    code.setSelectionStart(10)
-    code.setSelectionEnd(10)
+    code.select(10, 10)
     code.setCaretPosition(10)
     new SmartIndenter(code, compiler).handleCloseBracket()
     assert("[\n  abc\n]" == code.text)
@@ -166,8 +163,7 @@ class SmartIndenterTests extends AnyFunSuiteEx {
       } {
         val code = new Scaffold(in)
         val indenter = new SmartIndenter(code, compiler)
-        code.setSelectionStart(code.lineToStartOffset(lineNumber))
-        code.setSelectionEnd(code.lineToEndOffset(lineNumber) - 1)
+        code.select(code.lineToStartOffset(lineNumber), code.lineToEndOffset(lineNumber) - 1)
         indenter.handleTab()
         assert(out.linesIterator.toSeq(lineNumber) === code.lines(lineNumber))
         if (lineNumber > 0) {
@@ -187,8 +183,7 @@ class SmartIndenterTests extends AnyFunSuiteEx {
         if (i < out.linesIterator.length) {
           val code = new Scaffold(in)
           val indenter = new SmartIndenter(code, compiler)
-          code.setSelectionStart(newLine.start)
-          code.setSelectionEnd(newLine.end)
+          code.select(newLine.start, newLine.end)
           indenter.handleEnter()
           assert(out.linesIterator.toSeq(i + 1) === code.lines(i + 1))
         }
@@ -213,8 +208,7 @@ class SmartIndenterTests extends AnyFunSuiteEx {
         (char, index) <- in.zipWithIndex if ! char.isWhitespace
       } {
         val code = new Scaffold(in)
-        code.setSelectionStart(index)
-        code.setSelectionEnd(index)
+        code.select(index, index)
         code.setCaretPosition(index)
         new SmartIndenter(code, compiler).handleEnter()
         val startOffset = code.getCaretPosition.min(code.text.size - 1).max(0)

@@ -1,9 +1,8 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.ide
+package org.nlogo.editor
 
 import java.util.Locale
-import javax.swing.text.JTextComponent
 
 import org.nlogo.core._
 
@@ -16,8 +15,8 @@ object JumpToDeclaration {
     iterator.find(p => p.start < position && p.end >= position)
   }
 
-  def jumpToDeclaration(cursorPosition: Int, editorArea: JTextComponent): Unit = {
-    findTokenContainingPosition(editorArea.getText(), cursorPosition).foreach { token =>
+  def jumpToDeclaration(cursorPosition: Int, editorArea: AbstractEditorArea): Unit = {
+    findTokenContainingPosition(editorArea.getText, cursorPosition).foreach { token =>
       val mapper = Femto.get[TokenMapperInterface]("org.nlogo.parse.TokenMapper")
 
       if (token.tpe == TokenType.Ident && !mapper.allCommandNames.contains(token.text) &&

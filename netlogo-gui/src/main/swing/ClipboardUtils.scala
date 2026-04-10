@@ -1,9 +1,9 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.window
+package org.nlogo.swing
 
 import java.awt.Toolkit
-import java.awt.datatransfer.{ DataFlavor, Transferable }
+import java.awt.datatransfer.{ DataFlavor, StringSelection, Transferable }
 import java.util.ArrayList
 
 import org.nlogo.core.Widget
@@ -15,6 +15,18 @@ object ClipboardUtils {
 
   // Seq is not serializable, which prevents cross-instance copy/paste, so use ArrayList instead (Isaac B 6/16/25)
   val widgetsFlavor = new DataFlavor(classOf[ArrayList[Widget]], "NetLogo Widgets")
+
+  def readString(): String = {
+    if (clipboard.isDataFlavorAvailable(DataFlavor.stringFlavor)) {
+      clipboard.getData(DataFlavor.stringFlavor).asInstanceOf[String]
+    } else {
+      ""
+    }
+  }
+
+  def writeString(text: String): Unit = {
+    clipboard.setContents(new StringSelection(text), null)
+  }
 
   def readWidgets(): Seq[Widget] = {
     if (clipboard.isDataFlavorAvailable(widgetsFlavor)) {

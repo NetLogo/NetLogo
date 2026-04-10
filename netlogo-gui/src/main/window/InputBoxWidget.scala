@@ -6,10 +6,10 @@ import java.awt.Component
 
 import org.nlogo.api.{ CompilerServices, ExtensionManager }
 import org.nlogo.core.{ BoxedValue, I18N }
-import org.nlogo.editor.AbstractEditorArea
+import org.nlogo.editor.EditorArea
 import org.nlogo.window.Events.{ InterfaceGlobalEvent, PeriodicUpdateEvent }
 
-class InputBoxWidget(textArea: AbstractEditorArea, dialogTextArea: AbstractEditorArea,
+class InputBoxWidget(textArea: EditorArea, dialogTextArea: EditorArea,
                      compiler: CompilerServices, extensionManager: ExtensionManager, nextComponent: Component)
   extends InputBox(textArea, dialogTextArea, compiler, nextComponent)
   with InterfaceGlobalWidget
