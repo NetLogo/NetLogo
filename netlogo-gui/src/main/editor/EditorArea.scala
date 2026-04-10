@@ -10,15 +10,16 @@ package org.nlogo.editor
 
 import java.awt.{ Component, Dimension, Point, Toolkit }
 import java.awt.datatransfer.DataFlavor
-import java.awt.event.{ FocusListener, KeyAdapter, KeyEvent, MouseAdapter, MouseEvent }
-import javax.swing.{ Action, JEditorPane }
-import javax.swing.text.{ Document, TextAction, PlainDocument, BadLocationException }
+import java.awt.event.{ FocusListener, KeyAdapter, KeyEvent, MouseAdapter, MouseEvent, TextListener }
+import javax.swing.JEditorPane
+import javax.swing.text.{ Document, PlainDocument, BadLocationException }
 
 import org.nlogo.core.NetLogoPreferences
 import org.nlogo.swing.{ MenuItem, PopupMenu, UndoManager }
 import org.nlogo.theme.InterfaceColors
 
 import KeyBinding.keystroke
+import RichDocument.RichDoc
 
 object EditorArea {
   def defaultSize = new Dimension(400, 400)
@@ -26,7 +27,7 @@ object EditorArea {
 
 import EditorArea.defaultSize
 
-class EditorArea(val configuration: EditorConfiguration)
+class EditorArea(configuration: EditorConfiguration)
   extends JEditorPane
   with AbstractEditorArea
   with FocusTraversable
@@ -73,7 +74,7 @@ class EditorArea(val configuration: EditorConfiguration)
 
   private var bracketMatcherEnabled: Boolean = true
 
-  override def enableBracketMatcher(enabled: Boolean): Unit = {
+  def enableBracketMatcher(enabled: Boolean): Unit = {
     if (bracketMatcherEnabled != enabled) {
       if (enabled)
         addCaretListener(bracketMatcher)
@@ -94,12 +95,6 @@ class EditorArea(val configuration: EditorConfiguration)
     } else {
       setIndenter(new DumbIndenter(this))
     }
-  }
-
-  override def getActions: Array[Action] = {
-    val extraActions =
-      (configuration.editorOnlyActions :+ new MouseQuickHelpAction(colorizer)).toArray[Action]
-    TextAction.augmentList(super.getActions, extraActions)
   }
 
   override def getPreferredScrollableViewportSize: Dimension = {
@@ -270,6 +265,20 @@ class EditorArea(val configuration: EditorConfiguration)
       case ex: BadLocationException => throw new IllegalStateException(ex)
     }
 
+  override def getTokenAtCaret: Option[String] = {
+    val offset = getSelectionEnd
+
+    if (offset != -1) {
+      val document = getDocument.asInstanceOf[PlainDocument]
+
+      document.getLineText(document.offsetToLine(offset)).flatMap { text =>
+        colorizer.getTokenAtPosition(text, offset - document.lineToStartOffset(document.offsetToLine(offset)))
+      }
+    } else {
+      None
+    }
+  }
+
   ///
 
   def getHelpTarget(startition: Int): Option[String] = {
@@ -289,4 +298,8 @@ class EditorArea(val configuration: EditorConfiguration)
 
   def undoAction = UndoManager.undoAction
   def redoAction = UndoManager.redoAction
+
+  override def addTextListener(listener: TextListener): Unit = {
+    new EditorListener(_ => listener.textValueChanged(null)).install(this)
+  }
 }

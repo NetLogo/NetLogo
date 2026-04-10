@@ -5,36 +5,25 @@ package org.nlogo.editor
 import java.awt.Component
 import java.awt.event.ActionEvent
 import javax.swing.{ AbstractAction, SwingUtilities }
-import javax.swing.text.Document
 
 import org.nlogo.core.I18N
 import org.nlogo.swing.UserAction.MenuAction
 
-import RichDocument._
-
 trait QuickHelpAction {
-  def colorizer: Colorizer
+  protected def colorizer: Colorizer
 
-  def doHelp(document: Document, offset: Int, component: Component): Unit = {
-    if (offset != -1) {
-      val lineNumber = document.offsetToLine(offset)
-      for {
-        lineText    <- document.getLineText(document.offsetToLine(offset))
-        tokenString <- colorizer.getTokenAtPosition(lineText, offset - document.lineToStartOffset(lineNumber))
-      } {
-        colorizer.doHelp(component, tokenString)
-      }
-    }
+  def doHelp(editor: AbstractEditorArea, component: Component): Unit = {
+    editor.getTokenAtCaret.foreach(colorizer.doHelp(component, _))
   }
 }
 
-class MouseQuickHelpAction(val colorizer: Colorizer)
+class MouseQuickHelpAction(protected val colorizer: Colorizer)
   extends AbstractAction(I18N.gui.get("tabs.code.rightclick.quickhelp"))
   with EditorAwareAction
   with QuickHelpAction
   with MenuAction {
 
   override def actionPerformed(e: ActionEvent): Unit = {
-    doHelp(editor.getDocument, documentOffset, SwingUtilities.getWindowAncestor(editor))
+    doHelp(editor, SwingUtilities.getWindowAncestor(editor))
   }
 }

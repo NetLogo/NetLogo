@@ -6,7 +6,7 @@ import java.awt.event.{ ActionEvent, KeyEvent }
 import javax.swing.text.{ Document, JTextComponent }
 
 import org.nlogo.core.I18N
-import org.nlogo.editor.{ AdvancedEditorArea, DocumentAction, RichDocument }, RichDocument._
+import org.nlogo.editor.{ DocumentAction, RichDocument }, RichDocument._
 import org.nlogo.swing.UserAction,
   UserAction.{ EditCategory, EditFormatGroup, KeyBindings, MenuAction },
     KeyBindings.keystroke
@@ -62,17 +62,6 @@ class ToggleComments
   accelerator = keystroke(KeyEvent.VK_SEMICOLON, withMenu = true)
 
   override def perform(component: JTextComponent, document: Document, e: ActionEvent): Unit = {
-    component match {
-      case editor: AdvancedEditorArea =>
-        editor.beginCompoundEdit()
-
-        ToggleComments.perform(component, document)
-
-        editor.endCompoundEdit()
-
-      case _ =>
-        ToggleComments.perform(component, document)
-
-    }
+    ToggleComments.perform(component, document)
   }
 }

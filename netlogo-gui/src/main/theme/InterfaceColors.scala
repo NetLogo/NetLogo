@@ -491,7 +491,7 @@ object ClassicTheme extends ColorTheme {
   override def warningLabelBackground: Color = new Color(255, 160, 0)
   override def errorHighlight: Color = LightRed
   override def codeBackground: Color = Color.WHITE
-  override def codeLineHighlight: Color = new Color(255, 255, 204)
+  override def codeLineHighlight: Color = new Color(255, 255, 204, 200)
   override def codeBracketHighlight: Color = new Color(200, 200, 255)
   override def codeSelection: Color = new Color(200, 200, 255)
   override def codeSeparator: Color = LightGray
@@ -655,7 +655,7 @@ object LightTheme extends ColorTheme {
   override def warningLabelBackground: Color = new Color(255, 160, 0)
   override def errorHighlight: Color = LightRed
   override def codeBackground: Color = Color.WHITE
-  override def codeLineHighlight: Color = new Color(255, 255, 204)
+  override def codeLineHighlight: Color = new Color(255, 255, 204, 200)
   override def codeBracketHighlight: Color = new Color(200, 200, 255)
   override def codeSelection: Color = new Color(200, 200, 255)
   override def codeSeparator: Color = LightGray
@@ -819,7 +819,7 @@ object DarkTheme extends ColorTheme {
   override def warningLabelBackground: Color = new Color(255, 160, 0)
   override def errorHighlight: Color = LightRed
   override def codeBackground: Color = AlmostBlack
-  override def codeLineHighlight: Color = new Color(35, 35, 35)
+  override def codeLineHighlight: Color = new Color(35, 35, 35, 200)
   override def codeBracketHighlight: Color = DarkGray
   override def codeSelection: Color = DarkGray
   override def codeSeparator: Color = DarkGray

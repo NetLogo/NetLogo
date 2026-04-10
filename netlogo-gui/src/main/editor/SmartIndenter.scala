@@ -60,25 +60,20 @@ class SmartIndenter(code: EditorAreaInterface, compiler: CompilerServices) exten
 
   /// first, the five handle* methods in IndenterInterface
   def handleTab(): Unit = {
-    code.beginCompoundEdit()
     val indentations = lineIndentation(code.getSelectionStart, code.getSelectionEnd)
     if (indentations.nonEmpty) {
       executeIndentations(indentations, Some(code.getCaretPosition))
     }
-    code.endCompoundEdit()
   }
 
   def handleUntab(): Unit = {
-    code.beginCompoundEdit()
     val indentations = lineIndentation(code.getSelectionStart, code.getSelectionEnd)
     if (indentations.nonEmpty) {
       executeIndentations(indentations, Some(code.getCaretPosition))
     }
-    code.endCompoundEdit()
   }
 
   def handleEnter(): Unit = {
-    code.beginCompoundEdit()
     code.replaceSelection("\n")
     val originalCaretPosition = code.getCaretPosition
     val line = code.offsetToLine(code.getSelectionEnd)
@@ -89,24 +84,19 @@ class SmartIndenter(code: EditorAreaInterface, compiler: CompilerServices) exten
     if (indentations.nonEmpty) {
       executeIndentations(indentations, Some(originalCaretPosition))
     }
-    code.endCompoundEdit()
   }
 
   def handleInsertion(s: String): Unit = {
-    code.beginCompoundEdit()
     if(List("e", "n", "d").contains(s.toLowerCase)) {
       val lineNum = code.offsetToLine(code.getSelectionStart)
       if(code.getLineOfText(lineNum).trim.equalsIgnoreCase("end"))
         indentSelectedLine()
     }
-    code.endCompoundEdit()
   }
 
   def handleCloseBracket(): Unit = {
-    code.beginCompoundEdit()
     code.replaceSelection("]")
     indentSelectedLine()
-    code.endCompoundEdit()
   }
 
   def indentSelectedLine(): Unit = {

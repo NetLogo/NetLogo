@@ -7,8 +7,6 @@ trait EditorAreaInterface {
   def getSelectionEnd: Int
   def getCaretPosition: Int
   def setCaretPosition(pos: Int): Unit
-  def setSelectionStart(pos: Int): Unit
-  def setSelectionEnd(pos: Int): Unit
   def offsetToLine(pos: Int): Int
   def lineToStartOffset(pos: Int): Int
   def lineToEndOffset(pos: Int): Int
@@ -18,6 +16,4 @@ trait EditorAreaInterface {
   def replaceSelection(text: String): Unit
   def replace(start: Int, len: Int, str: String): Unit
   def remove(start: Int, len: Int): Unit
-  def beginCompoundEdit(): Unit = {}
-  def endCompoundEdit(): Unit = {}
 }
