@@ -13,7 +13,7 @@ extends RuntimeException(message) {
                                 token.start, token.end, token.filename)
 
   override def toString =
-    getMessage + " at position " + start + " in " + filename
+    getMessage
 }
 object CompilerException {
   val RuntimeErrorAtCompileTimePrefix = "Runtime error: "
