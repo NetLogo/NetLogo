@@ -26,7 +26,10 @@ object StructureChecker {
         case Variables(_, names) =>
           for (name <- names) {
             if (name.token.tpe == TokenType.Literal) {
-              exception(I18N.errors.get("compiler.StructureChecker.variableConstant"), name.token)
+              if (!Constants.get(name.token.text).isEmpty) {
+                exception(I18N.errors.get("compiler.StructureChecker.variableConstant"), name.token)
+              }
+              exception(I18N.errors.get("compiler.StructureChecker.variableLiteral"), name.token)
             }
           }
         case Procedure(_, _, inputs, _) =>
