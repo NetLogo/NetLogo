@@ -167,6 +167,12 @@ class StructureParserTests extends AnyFunSuite {
   test("constant in globals") {
     expectError("globals [d e f]",
       "Variable name conflicts with a constant.") }
+  test("string in globals") {
+    expectError("globals [g \"varname\"]",
+      "You cannot use a string/number as a global variable name.") }
+  test("number in globals") {
+    expectError("globals [d 2 f]",
+      "You cannot use a string/number as a global variable name.") }
   test("constant in turtles-own") {
     expectError("turtles-own [d e f]",
       "Variable name conflicts with a constant.") }
