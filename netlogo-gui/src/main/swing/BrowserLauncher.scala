@@ -66,7 +66,8 @@ object BrowserLauncher {
 
     temp.toFile.deleteOnExit()
 
-    val html = s"<html><script>window.location = \"file://$path\";</script></html>"
+    val windowsFriendlyPath = path.toString.replace("\\", "/")
+    val html                = s"""<html><script>window.location = "file://$windowsFriendlyPath";</script></html>"""
 
     Files.writeString(temp, html, StandardOpenOption.CREATE)
 
