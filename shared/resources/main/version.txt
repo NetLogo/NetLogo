@@ -1,5 +1,5 @@
-NetLogo 7.0.4-beta1
-March 25, 2026
+NetLogo 7.0.4
+April 16, 2026
 NetLogo 7.0.3
 NetLogo 7.0.2
 NetLogo 7.0.1
