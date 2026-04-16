@@ -76,11 +76,6 @@ cd NetLogo
 git submodule set-url helio https://${HELIO_TOKEN}@github.com/NetLogo/Helio.git
 git submodule update --init --recursive
 
-# Set the version number to show up in the user manual PDF
-sed -i -e "s/^PRODUCT_VERSION=.*/PRODUCT_VERSION=\"$NL_BUILD_VERSION\"/" \
-       -e "s/^PRODUCT_DISPLAY_NAME=.*/PRODUCT_DISPLAY_NAME=\"$NL_BUILD_VERSION\"/" \
-       helio/apps/docs/.env
-
 # Create JDK conf file for NL release
 cat > /root/NetLogo/.jdks.yaml << EOF
 - vendor:       "Liberica"
@@ -96,7 +91,7 @@ EOF
 
 sbt netlogo/resources
 
-nvm install 22
+nvm install 24
 
 sbt dist/buildNetLogo
 
