@@ -1,12 +1,11 @@
 import sbt._
 import Keys._
 import NetLogoBuild.{ buildDate, marketingVersion, year, autogenRoot }
+import NetLogoPackaging.RunProcess
 import ModelsLibrary.modelsDirectory
 import Extensions.extensionRoot
 
 import java.nio.file.{ Files, StandardCopyOption }
-
-import scala.sys.process.Process
 
 object Docs {
   lazy val allDocs                      = taskKey[Unit]("all documentation: html and pdf")
@@ -32,9 +31,10 @@ object Docs {
             "yarn"
           else
             "yarn.cmd"
-        Process(Seq(yarnBin, "run", "init"), helioRoot.value).!
-        Process(Seq(yarnBin, "run", "docs:build"), docsSource.value, "HELIO_HEADLESS" -> "1").!
-        Process(Seq(yarnBin, "run", "docs:generate-manual"), docsSource.value).!
+        RunProcess(Seq(yarnBin, "run", "init"), helioRoot.value, "Initialize Helio")
+        RunProcess(Seq(yarnBin, "run", "docs:build"), docsSource.value, "Build documentation pages",
+                   "HELIO_HEADLESS" -> "1")
+        RunProcess(Seq(yarnBin, "run", "docs:generate-manual"), docsSource.value, "Generate manual PDF")
       }
 
       val manualSource = (docsSource.value / ".build" / "NetLogo_User_Manual.pdf").toPath

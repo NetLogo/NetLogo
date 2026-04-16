@@ -601,8 +601,13 @@ object NetLogoPackaging {
       apply(args, Some(workingDirectory), taskName)
     }
 
-    def apply(args: Seq[String], workingDirectory: Option[File], taskName: String): Unit = {
-      val res = Process(args, workingDirectory).!
+    def apply(args: Seq[String], workingDirectory: File, taskName: String, environment: (String, String)*): Unit = {
+      apply(args, Some(workingDirectory), taskName, environment*)
+    }
+
+    def apply(args: Seq[String], workingDirectory: Option[File], taskName: String,
+              environment: (String, String)*): Unit = {
+      val res = Process(args, workingDirectory, environment*).!
       if (res != 0) {
         sys.error(s"$taskName failed!\n" +
           args.map(_.replace(" ", "\\ ")).mkString(" "))
