@@ -2,7 +2,7 @@
 
 package org.nlogo.app.tools
 
-import java.awt.Window
+import java.awt.{ Font, Window }
 
 import scala.collection.mutable
 
@@ -153,6 +153,11 @@ class AgentMonitorManager(val workspace: GUIWorkspace) extends Event.LinkChild w
 
   def refresh(): Unit = {
     monitorWindows.values.foreach(_.refresh())
+  }
+
+  def setCodeFont(font: Font): Unit = {
+    monitorWindows.values.foreach(_.setCodeFont(font))
+    emptyMonitorWindows.values.foreach(_.setCodeFont(font))
   }
 
   override def syncTheme(): Unit = {

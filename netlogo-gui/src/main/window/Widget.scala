@@ -237,6 +237,8 @@ abstract class Widget extends JPanel with RoundedBorderPanel with ThemeSync with
   protected def checkRecursive(compiler: CompilerServices, source: String, name: String): Boolean =
     compiler.tokenizeForColorization(source).exists(token => token.tpe == TokenType.Ident && token.text == name)
 
+  def setCodeFont(font: Font): Unit = {}
+
   implicit class RichStringOption(s: Option[String]) {
     def optionToPotentiallyEmptyString = s.getOrElse("")
   }

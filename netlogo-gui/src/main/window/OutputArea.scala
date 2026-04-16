@@ -2,12 +2,11 @@
 
 package org.nlogo.window
 
-import java.awt.{ Component, Dimension, EventQueue, Graphics, GridBagConstraints, GridBagLayout, Insets }
+import java.awt.{ Component, Dimension, EventQueue, Font, Graphics, GridBagConstraints, GridBagLayout, Insets }
 import javax.swing.{ JPanel, ScrollPaneConstants }
 
 import org.nlogo.agent.OutputObject
 import org.nlogo.awt.LineBreaker
-import org.nlogo.editor.EditorConfiguration
 import org.nlogo.swing.{ RoundedBorderPanel, ScrollPane, TextArea }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
@@ -83,7 +82,11 @@ class OutputArea(val text: TextArea) extends JPanel with RoundedBorderPanel with
     text.getFont.getSize
 
   def fontSize(fontSize: Int): Unit = {
-    text.setFont(EditorConfiguration.getMonospacedFont.deriveFont(fontSize))
+    text.setFont(text.getFont.deriveFont(fontSize))
+  }
+
+  override def setFont(font: Font): Unit = {
+    text.setFont(font.deriveFont(fontSize))
   }
 
   def clear(): Unit = {

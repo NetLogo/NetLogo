@@ -2,7 +2,7 @@
 
 package org.nlogo.app.interfacetab
 
-import java.awt.{ BorderLayout, Component, Container, ContainerOrderFocusTraversalPolicy, Dimension, Graphics,
+import java.awt.{ BorderLayout, Component, Container, ContainerOrderFocusTraversalPolicy, Dimension, Font, Graphics,
                   Graphics2D }
 import java.awt.event.{ ActionEvent, FocusEvent, FocusListener }
 import java.awt.print.{ PageFormat, Printable }
@@ -139,6 +139,11 @@ class InterfaceTab(workspace: GUIWorkspace,
   }
 
   def getInterfacePanel = iP
+
+  def setCodeFont(font: Font): Unit = {
+    commandCenter.setCodeFont(font)
+    iP.setCodeFont(font)
+  }
 
   // When we get focus, we want to focus the command center first
   // to prevent keyboard shortcuts (copy, cut, paste) from affecting

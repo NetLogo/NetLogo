@@ -39,8 +39,8 @@ object InfoFormatter {
 
   def styleSheetFile: CSS = FileIO.getResourceAsString("/system/info.css")
   val defaultFontSize = 14
-  val defaultStyleSheet: CSS = styleSheet(defaultFontSize)
-  def styleSheet(fontSize: Int): CSS = "<style type=\"text/css\">\n<!--\n"+
+  val defaultStyleSheet: CSS = styleSheet("monospace", defaultFontSize)
+  def styleSheet(fontFamily: String, fontSize: Int): CSS = "<style type=\"text/css\">\n<!--\n"+
           styleSheetFile.
             replace("{BODY-FONT-SIZE}", fontSize.toString).
             replace("{H1-BACKGROUND}", colorString(InterfaceColors.infoH1Background())).
@@ -56,18 +56,19 @@ object InfoFormatter {
             replace("{H5-FONT-SIZE}", (fontSize * 1.14).toString).
             replace("{H6-FONT-SIZE}", fontSize.toString).
             replace("{P-COLOR}", colorString(InterfaceColors.infoPColor())).
+            replace("{CODE-FONT}", fontFamily).
             replace("{CODE-BACKGROUND}", colorString(InterfaceColors.infoCodeBackground())).
             replace("{CODE-COLOR}", colorString(InterfaceColors.infoCodeText())).
             replace("{BLOCK-BAR}", colorString(InterfaceColors.infoBlockBar())).
             replace("{INFO-BACKGROUND}", colorString(InterfaceColors.infoBackground())).
             replace("{LINK-COLOR}", colorString(InterfaceColors.infoLink())) + "\n-->\n</style>"
 
-  def apply(content: String, fontSize: Int = defaultFontSize) = {
-    wrapHtml(toInnerHtml(content), fontSize)
+  def apply(content: String, fontFamily: String = "monospace", fontSize: Int = defaultFontSize) = {
+    wrapHtml(toInnerHtml(content), fontFamily, fontSize)
   }
 
-  def wrapHtml(body: HTML, fontSize: Int = defaultFontSize): HTML =
-    "<html><head>"+styleSheet(fontSize)+"</head><body>"+body+"</body></html>"
+  def wrapHtml(body: HTML, fontFamily: String = "monospace", fontSize: Int = defaultFontSize): HTML =
+    s"<html><head>${styleSheet(fontFamily, fontSize)}</head><body>$body</body></html>"
 
   def toInnerHtml(content: String): String = {
     val extensions = new JArrayList[Extension]()

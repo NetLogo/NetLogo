@@ -2,11 +2,12 @@
 
 package org.nlogo.window
 
-import java.awt.{ GridBagConstraints, GridBagLayout, Insets, Point }
+import java.awt.{ GridBagConstraints, GridBagLayout, Font, Insets, Point }
 import java.awt.event.ActionEvent
 import javax.swing.AbstractAction
 
 import org.nlogo.core.{ I18N, Output => CoreOutput, Widget => CoreWidget }
+import org.nlogo.editor.EditorConfiguration
 import org.nlogo.swing.{ MenuItem, PopupMenu }
 import org.nlogo.theme.InterfaceColors
 
@@ -15,7 +16,9 @@ class OutputWidget extends SingleErrorWidget with CommandCenterInterface
 
   displayName(I18N.gui.get("tabs.run.widgets.output"))
 
-  val outputArea = new OutputArea()
+  val outputArea = new OutputArea {
+    setFont(EditorConfiguration.getCodeFont)
+  }
 
   setLayout(new GridBagLayout)
 
@@ -71,6 +74,14 @@ class OutputWidget extends SingleErrorWidget with CommandCenterInterface
         outputArea.clear()
       }
     }))
+  }
+
+  override def setCodeFont(font: Font): Unit = {
+    val scaled: Font = font.deriveFont(fontSize)
+
+    outputArea.setFont(scaled)
+
+    originalFont = scaled
   }
 
   override def syncTheme(): Unit = {

@@ -162,6 +162,11 @@ class CommandCenter(workspace: AbstractWorkspace, showToggle: Boolean) extends J
   }
   def getDefaultComponentForFocus(): Component = commandLine.textField
 
+  def setCodeFont(font: Font): Unit = {
+    output.setFont(font)
+    commandLine.setFont(font)
+  }
+
   private def doPopup(e: MouseEvent): Unit = {
     new PopupMenu {
       add(new MenuItem(TextMenuActions.CopyAction))

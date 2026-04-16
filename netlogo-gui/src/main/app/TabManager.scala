@@ -16,6 +16,7 @@ import org.nlogo.app.common.Events.SwitchedTabsEvent
 import org.nlogo.app.common.TabsInterface.Filename
 import org.nlogo.app.infotab.InfoTab
 import org.nlogo.app.interfacetab.InterfaceTab
+import org.nlogo.app.tools.AgentMonitorManager
 import org.nlogo.awt.UserCancelException
 import org.nlogo.core.{ I18N, NetLogoPreferences }
 import org.nlogo.editor.EditorConfiguration
@@ -54,9 +55,10 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
 
   private var previousTab: Component = interfaceTab
 
-  var fileManager: FileManager = null
-  var dirtyMonitor: DirtyMonitor = null
-  var menuBar: MainMenuBar = null
+  var fileManager: Option[FileManager] = None
+  var dirtyMonitor: Option[DirtyMonitor] = None
+  var monitorManager: Option[AgentMonitorManager] = None
+  var menuBar: Option[MainMenuBar] = None
 
   private var widgetErrors = Set[Widget]()
 
@@ -167,12 +169,13 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
   smartTabbingEnabled = NetLogoPreferences.getBoolean("indentAutomatically", true)
   lineNumbersVisible = NetLogoPreferences.getBoolean("editorLineNumbers", true)
 
-  def init(fileManager: FileManager, dirtyMonitor: DirtyMonitor, menuBar: MainMenuBar,
-           actions: Seq[UserAction.MenuAction]): Unit = {
+  def init(fileManager: FileManager, dirtyMonitor: DirtyMonitor, monitorManager: AgentMonitorManager,
+           menuBar: MainMenuBar, actions: Seq[UserAction.MenuAction]): Unit = {
 
-    this.fileManager = fileManager
-    this.dirtyMonitor = dirtyMonitor
-    this.menuBar = menuBar
+    this.fileManager = Option(fileManager)
+    this.dirtyMonitor = Option(dirtyMonitor)
+    this.monitorManager = Option(monitorManager)
+    this.menuBar = Option(menuBar)
 
     actions.foreach(separateTabsWindow.menuBar.offerAction)
     permanentMenuActions.foreach(offerAction)
@@ -226,7 +229,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
       startWatcherThread()
     }
 
-    val dirty = dirtyMonitor.modelDirty
+    val dirty = dirtyMonitor.fold(false)(_.modelDirty)
 
     if (dirty) {
       val index = new OptionPane(workspace.getFrame, I18N.gui.get("dirty.dialog.title"),
@@ -256,7 +259,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
 
     @throws(classOf[UserCancelException])
     override def action(): Unit = {
-      fileManager.saveModel(false)
+      fileManager.foreach(_.saveModel(false))
       getExternalFileTabs.foreach(_.save(false))
     }
   }
@@ -284,7 +287,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
 
   def permanentMenuActions: Seq[UserAction.MenuAction] =
     mainCodeTab.permanentMenuActions ++ interfaceTab.permanentMenuActions ++ interfaceTab.activeMenuActions ++
-      fileManager.saveModelActions(workspace.getFrame) :+ printAction
+      fileManager.fold(Seq())(_.saveModelActions(workspace.getFrame)) :+ printAction
 
   def setMenuActions(oldTab: Component, newTab: Component): Unit = {
     oldTab match {
@@ -307,12 +310,12 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
   }
 
   def offerAction(action: UserAction.MenuAction): Unit = {
-    menuBar.offerAction(action)
+    menuBar.foreach(_.offerAction(action))
     separateTabsWindow.menuBar.offerAction(action)
   }
 
   def revokeAction(action: UserAction.MenuAction): Unit = {
-    menuBar.revokeAction(action)
+    menuBar.foreach(_.revokeAction(action))
     separateTabsWindow.menuBar.revokeAction(action)
   }
 
@@ -449,7 +452,8 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     if (getExternalFileTabs.isEmpty)
       offerAction(saveAllAction)
 
-    val tab = new TemporaryCodeTab(workspace, this, name, externalFileManager, fileManager.convertTabAction(_),
+    val tab = new TemporaryCodeTab(workspace, this, name, externalFileManager,
+                                   tab => fileManager.fold(null)(_.convertTabAction(tab)),
                                    separateTabsWindow.isVisible)
 
     if (separateTabsWindow.isVisible) {
@@ -625,9 +629,14 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
   override def setCodeFont(font: Option[Font]): Unit = {
     EditorConfiguration.setCodeFont(font)
 
-    (mainCodeTab +: getExternalFileTabs).foreach(_.setCodeFont(EditorConfiguration.getCodeFont))
+    val codeFont: Font = EditorConfiguration.getCodeFont
 
-    interfaceTab.commandCenter.commandLine.setFont(EditorConfiguration.getCodeFont)
+    interfaceTab.setCodeFont(codeFont)
+    infoTab.setCodeFont(codeFont)
+
+    (mainCodeTab +: getExternalFileTabs).foreach(_.setCodeFont(codeFont))
+
+    monitorManager.foreach(_.setCodeFont(codeFont))
   }
 
   private def reload(trigger: Path): Unit = {
@@ -636,7 +645,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     // when saving a file to OneDrive, it automatically syncs and re-writes the file contents. this check prevents
     // the model from being unnecessarily reloaded if the contents of the file match the contents of the model
     // current loaded in NetLogo. (Isaac B 1/20/26)
-    if (!reloading && (isInclude || !fileManager.modelMatchesFile())) {
+    if (!reloading && (isInclude || !fileManager.fold(true)(_.modelMatchesFile()))) {
       reloading = true
       workspace.reload()
     }

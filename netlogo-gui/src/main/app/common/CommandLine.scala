@@ -61,7 +61,9 @@ class CommandLine(commandCenter: CommandCenterInterface,
 
   textField.addKeyListener(this)
 
+  setFont(EditorConfiguration.getCodeFont)
   setLayout(new BorderLayout)
+
   displayName(classDisplayName)
 
   private val scrollPane = new ScrollPane(textField, ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER,

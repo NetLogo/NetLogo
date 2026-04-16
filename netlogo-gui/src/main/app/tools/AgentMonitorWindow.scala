@@ -2,7 +2,7 @@
 
 package org.nlogo.app.tools
 
-import java.awt.{ BorderLayout, Container, Frame }
+import java.awt.{ BorderLayout, Container, Font, Frame }
 import java.awt.event.{ ActionEvent, WindowAdapter, WindowEvent }
 import javax.swing.{ AbstractAction, JDialog, LayoutFocusTraversalPolicy }
 
@@ -92,6 +92,10 @@ class AgentMonitorWindow(val agentKind: AgentKind, _agent: Agent, radius: Double
       pack()
     if(getUpdatedTitle != getTitle)
       setTitle(getUpdatedTitle)
+  }
+
+  def setCodeFont(font: Font): Unit = {
+    monitor.setCodeFont(font)
   }
 
   def getUpdatedTitle = {

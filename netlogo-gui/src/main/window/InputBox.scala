@@ -7,7 +7,7 @@ import java.awt.{ Color, Component, Dimension, Font, Frame, Graphics, GridBagCon
 import java.awt.event.{ ActionEvent, ActionListener, FocusEvent, FocusListener, KeyEvent, WindowAdapter, WindowEvent }
 import java.lang.{ Double => JDouble }
 
-import javax.swing.{ AbstractAction, JButton, JDialog, JLabel, JPanel, ScrollPaneConstants }
+import javax.swing.{ AbstractAction, JButton, JDialog, JLabel, JPanel, ScrollPaneConstants, UIManager }
 import javax.swing.KeyStroke.getKeyStroke
 import javax.swing.text.EditorKit
 
@@ -485,6 +485,10 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     }
   }
 
+  override def setCodeFont(font: Font): Unit = {
+    textArea.setFont(inputType.getFont)
+  }
+
   override def load(model: CoreWidget): Unit = {
     model match {
       case input: CoreInputBox =>
@@ -654,7 +658,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     }
   }
 
-  case class InputType(baseName: String, i18nKey: String, editorKit: EditorKit, font: Font) {
+  case class InputType(baseName: String, i18nKey: String, editorKit: EditorKit, codeFont: Boolean) {
     def defaultValue: AnyRef = ""
     def multiline = InputBox.this.multiline
     def multiline(newMultiline: Boolean): Unit = {InputBox.this.multiline(newMultiline)}
@@ -662,7 +666,13 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     def saveName = baseName
     def displayName = I18N.gui.get("edit.input.type." + i18nKey)
     def getEditorKit = editorKit
-    def getFont = font
+    def getFont: Font = {
+      if (codeFont) {
+        EditorConfiguration.getCodeFont
+      } else {
+        UIManager.getFont("Label.font").deriveFont(12f)
+      }
+    }
     def colorPanel(panel: ColorButton): Unit = {
       panel.setVisible(false)
       scroller.setVisible(true)
@@ -685,14 +695,10 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
       StringInput(text, StringInput.StringLabel, multiline)
   }
 
-  private class StringInputType extends InputType(
-    "String", "string",
-    textArea.getEditorKitForContentType("String"),
-    javax.swing.UIManager.getFont("Label.font").deriveFont(12.0f)){}
+  private class StringInputType
+    extends InputType("String", "string", textArea.getEditorKitForContentType("String"), false)
 
-  def plainFont: Font = EditorConfiguration.getMonospacedFont
-
-  private class ReporterInputType(kit: EditorKit) extends InputType("String (reporter)", "string.reporter", kit, plainFont) {
+  private class ReporterInputType(kit: EditorKit) extends InputType("String (reporter)", "string.reporter", kit, true) {
     override def defaultValue = "0"
     override def enableBracketMatcher = true
     @throws(classOf[ValueConstraint.Violation])
@@ -709,7 +715,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
       StringInput(text, StringInput.ReporterLabel, this.multiline)
   }
 
-  private class CommandInputType(kit: EditorKit) extends InputType("String (commands)", "string.commands", kit, plainFont) {
+  private class CommandInputType(kit: EditorKit) extends InputType("String (commands)", "string.commands", kit, true) {
     override def enableBracketMatcher = true
     @throws(classOf[ValueConstraint.Violation])
     @throws(classOf[CompilerException])
@@ -725,7 +731,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
       StringInput(text, StringInput.CommandLabel, this.multiline)
   }
 
-  private class NumberInputType(kit: EditorKit) extends InputType("Number", "number", kit, plainFont) {
+  private class NumberInputType(kit: EditorKit) extends InputType("Number", "number", kit, true) {
     @throws(classOf[CompilerException])
     override def readValue(text: String) = compiler.readNumberFromString(text)
     override def boxValue(text: String): BoxedValue = {
@@ -741,7 +747,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     override def defaultValue = org.nlogo.agent.World.Zero
   }
 
-  private class ColorInputType(kit: EditorKit) extends InputType("Color", "color", kit, plainFont) {
+  private class ColorInputType(kit: EditorKit) extends InputType("Color", "color", kit, true) {
     @throws(classOf[CompilerException])
     override def readValue(text: String) =
       compiler.readNumberFromString(text)

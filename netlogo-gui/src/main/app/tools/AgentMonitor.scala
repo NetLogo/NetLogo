@@ -2,7 +2,7 @@
 
 package org.nlogo.app.tools
 
-import java.awt.{ BorderLayout, Dimension }
+import java.awt.{ BorderLayout, Dimension, Font }
 import java.util.{ List => JList }
 import javax.swing.{ Box, BoxLayout, JDialog, JPanel, ScrollPaneConstants }
 import javax.swing.border.{ CompoundBorder, EmptyBorder, MatteBorder }
@@ -144,6 +144,11 @@ abstract class AgentMonitor(val workspace: GUIWorkspace, window: JDialog)
   // but for some reason calling repaint doesn't always repaint it (Isaac B 5/29/25)
   def setPrompt(): Unit = {
     prompt.setText(prompt.getPrompt)
+  }
+
+  def setCodeFont(font: Font): Unit = {
+    commandLine.setFont(font)
+    agentEditor.setCodeFont(font)
   }
 
   /// helpers

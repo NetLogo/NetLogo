@@ -2,7 +2,7 @@
 
 package org.nlogo.app.tools
 
-import java.awt.{ BorderLayout, FlowLayout, GridBagConstraints, GridBagLayout, Insets, Rectangle }
+import java.awt.{ BorderLayout, FlowLayout, Font, GridBagConstraints, GridBagLayout, Insets, Rectangle }
 import java.awt.event.{ FocusEvent, FocusListener, KeyEvent, KeyListener }
 import java.util.Locale
 import javax.swing.{ JLabel, JPanel, ScrollPaneConstants }
@@ -83,6 +83,10 @@ class AgentMonitorEditor(parent: AgentMonitor) extends JPanel with ThemeSync {
   def agentKind = parent.agentKind
   def setAgent(agent: Agent): Unit = { parent.setAgent(agent, 3) }
   def workspace = parent.workspace
+
+  def setCodeFont(font: Font): Unit = {
+    editors.foreach(_.setCodeFont(font))
+  }
 
   override def syncTheme(): Unit = {
     setBackground(InterfaceColors.dialogBackground())
@@ -220,6 +224,10 @@ with ThemeSync {
       }
     agents(agentset)
     source(header, innerSource, "\n" + footer)  // the \n protects against comments
+  }
+
+  override def setCodeFont(font: Font): Unit = {
+    editor.setFont(font.deriveFont(10f))
   }
 
   ///

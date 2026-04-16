@@ -2,7 +2,8 @@
 
 package org.nlogo.app.interfacetab
 
-import java.awt.{ Color => AwtColor, Component, Cursor, Dimension, EventQueue, Graphics, MouseInfo, Point, Rectangle }
+import java.awt.{ Color => AwtColor, Component, Cursor, Dimension, EventQueue, Font, Graphics, MouseInfo, Point
+                , Rectangle }
 import java.awt.event.{ ActionEvent, FocusEvent, FocusAdapter, KeyAdapter, KeyEvent, KeyListener, MouseAdapter,
                         MouseEvent, MouseListener, MouseMotionAdapter, MouseMotionListener }
 import javax.swing.{ AbstractAction, JComponent, JLayeredPane, SwingUtilities }
@@ -1669,6 +1670,15 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
     if (interceptPane.isEnabled)
       interceptPane.setSize(width - 10, height - 10)
+  }
+
+  def setCodeFont(font: Font): Unit = {
+    getComponents.foreach {
+      case wrapper: WidgetWrapper =>
+        wrapper.widget.setCodeFont(font)
+
+      case _ =>
+    }
   }
 
   override def syncTheme(): Unit = {

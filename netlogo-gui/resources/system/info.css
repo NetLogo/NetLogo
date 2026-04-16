@@ -85,7 +85,7 @@ pre {
     margin-bottom:0px;
 }
 code {
-    font-family: monospace;
+    font-family: {CODE-FONT};
     font-size: {BODY-FONT-SIZE}pt;
 }
 blockquote {

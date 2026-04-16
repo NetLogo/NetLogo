@@ -544,7 +544,7 @@ class App extends org.nlogo.window.Event.LinkChild
       app.setMenuBar(menuBar)
       frame.setJMenuBar(menuBar)
 
-      _tabManager.init(fileManager, dirtyMonitor, menuBar, allActions)
+      _tabManager.init(fileManager, dirtyMonitor, monitorManager, menuBar, allActions)
 
       FindDialog.init(frame, _tabManager.separateTabsWindow)
 

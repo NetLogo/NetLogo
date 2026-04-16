@@ -2,7 +2,7 @@
 
 package org.nlogo.app.infotab
 
-import java.awt.{ Dimension, BorderLayout, Graphics }
+import java.awt.{ Dimension, BorderLayout, Font, Graphics }
 import java.awt.event.{ ActionEvent, FocusEvent, FocusListener }
 import java.awt.print.PageFormat
 import java.io.File
@@ -91,6 +91,8 @@ class InfoTab(attachModelDir: String => String, resourceManager: ExternalResourc
     }
   }
 
+  private var codeFont: Option[Font] = None
+
   locally {
     resetBorders()
     setLayout(new BorderLayout)
@@ -132,7 +134,7 @@ class InfoTab(attachModelDir: String => String, resourceManager: ExternalResourc
   private def updateEditorPane(str: String, force: Boolean): Unit = {
     if (force || str != editorPane.getText) {
       editorPane.getDocument.asInstanceOf[HTMLDocument].setBase(new File(attachModelDir(".")).toURI.toURL)
-      editorPane.setText(InfoFormatter(str, editorPaneFontSize))
+      editorPane.setText(InfoFormatter(str, codeFont.fold("monospace")(_.getFamily), editorPaneFontSize))
       editorPane.setCaretPosition(0)
     }
     toggleHelpButton()
@@ -145,6 +147,14 @@ class InfoTab(attachModelDir: String => String, resourceManager: ExternalResourc
       editableButton.setSelected(false)
     }
     updateEditorPane()
+  }
+
+  def setCodeFont(font: Font): Unit = {
+    codeFont = Option(font)
+
+    textArea.setFont(font)
+
+    updateEditorPane(true)
   }
 
   override def syncTheme(): Unit = {
