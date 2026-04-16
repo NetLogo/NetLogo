@@ -52,6 +52,8 @@ tmp/
 /.idea
 *.iml
 
+/.wix/
+
 # other
 /.ensime
 /.ensime_lucene/
