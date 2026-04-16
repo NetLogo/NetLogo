@@ -2,6 +2,7 @@
 
 package org.nlogo.analytics
 
+// Add only to the end!  --Jason B. (4/16/26)
 enum AnalyticsEventType {
   case
     AppStart
@@ -31,5 +32,6 @@ enum AnalyticsEventType {
   , ModelingCommonsUpload
   , SaveAsNetLogoWeb
   , PreviewCommandsOpen
+  , AnnouncementClicked
 }
 

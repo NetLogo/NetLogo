@@ -11,6 +11,7 @@ import javax.swing.{ BoxLayout, JButton, JLabel, JPanel }
 import javax.swing.border.EmptyBorder
 import javax.swing.BorderFactory
 
+import org.nlogo.analytics.Analytics
 import org.nlogo.api.{ Advisory, Announcement, Event, Release }
 import org.nlogo.core.NetLogoPreferences
 import org.nlogo.swing.{ BrowserLauncher, MouseUtils, Utils }
@@ -50,6 +51,7 @@ class AnnouncementBanner extends JPanel with MouseUtils with ThemeSync {
       override def mouseClicked(e: MouseEvent): Unit = {
         announcements.headOption.foreach {
           ann =>
+            Analytics.announcementBannerClicked(ann.id)
             BrowserLauncher.openURI(new URI(s"https://www.netlogo.org/announcements#news-item-${ann.id}"))
             ggGoNext()
         }

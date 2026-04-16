@@ -170,6 +170,10 @@ object Analytics {
     AnalyticsSender(PreviewCommandsOpen)
   }
 
+  def announcementBannerClicked(annID: Int): Unit = {
+    AnalyticsSender(AnnouncementClicked, Map("announcementID" -> annID))
+  }
+
   def refreshPreference(): Unit = {
     AnalyticsSender.refreshPreference()
   }
