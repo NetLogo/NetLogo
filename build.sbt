@@ -209,8 +209,10 @@ lazy val netlogo = project.in(file("netlogo-gui")).
       // uses Git Bash (Isaac B 3/6/26)
       if (System.getProperty("os.name").toLowerCase.startsWith("win")) {
         Process("sh" :: "stage.sh" :: Nil, baseDirectory.value / "colorpicker").!
+        Process("sh" :: "stage.sh" :: Nil, baseDirectory.value / "codetab").!
       } else {
         Process("bash" :: "stage.sh" :: Nil, baseDirectory.value / "colorpicker").!
+        Process("bash" :: "stage.sh" :: Nil, baseDirectory.value / "codetab").!
       }
 
       val inDir = autogenRoot.value / "images"
@@ -246,7 +248,8 @@ lazy val netlogo = project.in(file("netlogo-gui")).
         }
       }
 
-      Seq(baseDirectory.value / "colorpicker" / "out") ++ banners(version.value)
+      Seq(baseDirectory.value / "colorpicker" / "out", baseDirectory.value / "codetab" / "out") ++
+        banners(version.value)
     }.taskValue,
     libraryDependencies ++= Seq(
       "com.formdev" % "flatlaf" % "3.5.4",
@@ -257,7 +260,6 @@ lazy val netlogo = project.in(file("netlogo-gui")).
       "org.jogamp.gluegen" % "gluegen-rt" % "2.4.0" from cclArtifacts("gluegen-rt-2.4.0.jar"),
       "org.jhotdraw" % "jhotdraw" % "6.0b1" % "provided,optional" from cclArtifacts("jhotdraw-6.0b1.jar"),
       "com.googlecode.json-simple" % "json-simple" % "1.1.1",
-      "com.fifesoft" % "rsyntaxtextarea" % "3.5.4",
       "com.typesafe" % "config" % "1.4.3",
       "net.lingala.zip4j" % "zip4j" % "2.11.5",
       "org.scala-lang.modules" %% "scala-parallel-collections" % "1.2.0",

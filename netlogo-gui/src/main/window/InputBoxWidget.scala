@@ -6,10 +6,10 @@ import java.awt.Component
 
 import org.nlogo.api.{ CompilerServices, Dump, ExtensionManager }
 import org.nlogo.core.I18N
-import org.nlogo.editor.AbstractEditorArea
+import org.nlogo.editor.EditorArea
 import org.nlogo.window.Events.{ InterfaceGlobalEvent, PeriodicUpdateEvent }
 
-class InputBoxWidget(textArea: AbstractEditorArea, dialogTextArea: AbstractEditorArea,
+class InputBoxWidget(textArea: EditorArea, dialogTextArea: EditorArea,
                      compiler: CompilerServices, extensionManager: ExtensionManager, nextComponent: Component)
   extends InputBox(textArea, dialogTextArea, compiler, nextComponent)
   with InterfaceGlobalWidget
@@ -41,7 +41,7 @@ class InputBoxWidget(textArea: AbstractEditorArea, dialogTextArea: AbstractEdito
       oldText = text
       text = Dump.logoObject(toAnyRef(value))
       this.value = Option(toAnyRef(value))
-      if (!text.equals(textArea.getText())) textArea.setText(text)
+      if (!text.equals(textArea.getText)) textArea.setText(text)
       if (raiseEvent) new InterfaceGlobalEvent(this, false, false, true, false).raise(this)
       inputType.colorPanel(colorSwatch)
       new Events.DirtyEvent(None).raise(this)

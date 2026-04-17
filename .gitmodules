@@ -82,3 +82,6 @@
 [submodule "helio"]
 	path = helio
 	url = https://github.com/NetLogo/Helio
+[submodule "netlogo-gui/codetab"]
+	path = netlogo-gui/codetab
+	url = https://github.com/NetLogo/Desktop-Code-Tab
