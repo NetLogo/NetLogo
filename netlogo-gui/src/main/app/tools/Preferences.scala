@@ -307,7 +307,7 @@ object Preferences {
 
   object SendAnalytics extends BooleanPreference("sendAnalytics", None, false) {
     override def onSelect(selected: Boolean): Unit = {
-      Analytics.refreshPreference()
+      Analytics.setPreference(selected)
     }
   }
 

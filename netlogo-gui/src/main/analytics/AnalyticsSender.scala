@@ -64,8 +64,8 @@ object AnalyticsSender {
     trySending(eventType, Option(buildJson(payload)))
   }
 
-  private[analytics] def refreshPreference(): Unit = {
-    sendEnabled = NetLogoPreferences.getBoolean("sendAnalytics", false)
+  private[analytics] def setPreference(enabled: Boolean): Unit = {
+    sendEnabled = enabled
   }
 
   private[analytics] def shutdown(): Unit = {

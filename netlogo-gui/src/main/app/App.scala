@@ -641,7 +641,7 @@ class App extends org.nlogo.window.Event.LinkChild
         }
       }
 
-      Analytics.refreshPreference()
+      Analytics.setPreference(NetLogoPreferences.getBoolean("sendAnalytics", false))
       Analytics.appStart(Version.versionNumberNo3D, Version.is3D)
     }
     catch {

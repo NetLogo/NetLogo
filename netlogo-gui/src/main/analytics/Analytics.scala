@@ -174,8 +174,8 @@ object Analytics {
     AnalyticsSender(AnnouncementClicked, Map("announcementID" -> annID))
   }
 
-  def refreshPreference(): Unit = {
-    AnalyticsSender.refreshPreference()
+  def setPreference(enabled: Boolean): Unit = {
+    AnalyticsSender.setPreference(enabled)
   }
 
 }
