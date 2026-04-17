@@ -73,7 +73,6 @@ ln -s $JAVA_HOME/bin/java /usr/bin/java
 # Initialize NetLogo repo
 git clone https://github.com/NetLogo/NetLogo
 cd NetLogo
-git submodule set-url helio https://${HELIO_TOKEN}@github.com/NetLogo/Helio.git
 git submodule update --init --recursive
 
 # Create JDK conf file for NL release
@@ -90,9 +89,6 @@ cat > /root/NetLogo/.jdks.yaml << EOF
 EOF
 
 sbt netlogo/resources
-
-nvm install 24
-
 sbt dist/buildNetLogo
 
 sbt "dist/packageLinuxAggregate OpenJDK_17.0.2_64"
