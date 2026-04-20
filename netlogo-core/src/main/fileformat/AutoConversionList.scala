@@ -36,7 +36,7 @@ object AutoConversionList {
         "movie-grab-view"      -> "vid:record-view",
         "movie-grab-interface" -> "vid:record-interface")
 
-      val targets = CommandReplacements.map(_._1) ++ Seq("movie-start", "movie-status")
+      val targets = CommandReplacements.map(_._1) ++ Seq("movie-set-frame-rate", "movie-start", "movie-status")
 
       val sharedTransformations =
         CommandReplacements
