@@ -2,9 +2,6 @@ name: build-docs
 
 on:
   workflow_call:
-    secrets:
-        HELIO_TOKEN:
-          required: true
     outputs:
       pdf-artifact:
         description: "Artifact name for the generated PDF manual"
@@ -31,10 +28,10 @@ jobs:
           token: ${{ secrets.HELIO_TOKEN }}
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
-          node-version: "22"
-          cache: "yarn"
+          node-version: 24
+          cache: yarn
           cache-dependency-path: helio/yarn.lock
 
       - name: Setup Helio
