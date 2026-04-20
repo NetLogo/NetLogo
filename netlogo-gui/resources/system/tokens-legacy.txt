@@ -35,6 +35,7 @@ C face-nowrap etc._facenowrap
 C facexy etc._facexy
 C facexy-nowrap etc._facexynowrap
 C histogram-from dead._histogramfrom
+C hubnet-set-client-interface dead._hubnetsetclientinterface
 C move-to etc._moveto
 C movie-cancel dead._moviecancel
 C movie-close dead._movieclose
