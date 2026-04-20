@@ -175,7 +175,8 @@ object WhiteSpace {
       def statementStart(s: Statement) = s.start max s.command.token.start
       c.seq(
         tagLeadingWhitespace(path, stmt.command.token.sourceLocation.copy(start = statementStart(stmt))),
-        super.visitStatement(stmt, path)(using _))
+        super.visitStatement(stmt, path)(using _),
+        tagTrailingWhitespace(stmt, path)(_))
     }
 
     override def visitCommandBlock(blk: CommandBlock, path: AstPath)(implicit c: Context): Context = {

@@ -94,6 +94,8 @@ class Formatter extends PositionalAstFolder[AstFormat] {
         val ws = leadingWhitespace(position)
         val newContext = c.appendText(ws + c.instructionToString(stmt.command))
         super.visitStatement(stmt, position)(using newContext).copy(instructionToString = c.instructionToString)
+          .appendText(c.wsMap.backMargin(position))
+          .appendText(c.wsMap.trailing(position))
       }
   }
 
