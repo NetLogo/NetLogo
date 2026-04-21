@@ -149,7 +149,9 @@ object ChecksumsAndPreviews {
           def openCurrentModelIn(workspace: Workspace): Unit = {}
         }, path.toString)
         println(s"making preview for: $path")
-        FileIO.writeImageFile(runner.previewImage.get, s"$path.png", "PNG")
+        val pngName = path.getFileName.toString.replaceAll("\\.[^.]+$", ".png")
+        val pngPath = path.resolveSibling(pngName)
+        FileIO.writeImageFile(runner.previewImage.get, pngPath.toString, "PNG")
       } catch {
         case _: PreviewCommandsRunner.NonCompilableCommandsException =>
           println(s"skipping: $path\n  (non-compilable preview commands)")
