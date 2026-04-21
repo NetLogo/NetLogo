@@ -61,14 +61,25 @@ object BrowserLauncher {
 
   // non-browser PDF viewers typically ignore instructions to go to a particular place in the PDF,
   // so this little hack ensures that it gets opened in a browser. (Isaac B 2/1/26)
+  //
+  // Notice that Linux stores files in a different place.  This code needs to open an HTML
+  // file in a web browser.  But browsers installed through the Ubuntu Snap Store come with
+  // a security policy that forbids opening local files outside of the user's home directory
+  // or inside of a hidden directory.  So we have to use a new folder on Ubuntu, just for
+  // this. --Jason B. (4/21/26)
   def openPath(comp: Component, path: Path): Unit = {
-    val temp = Paths.get(System.getProperty("user.home"), ".nlogo", "load-pdf.html")
+    val temp: Path =
+      if (osName.toLowerCase.startsWith("linux"))
+        Paths.get(System.getProperty("user.home"), "_nlogo", "load-pdf.html")
+      else
+        Files.createTempFile("load-pdf-", ".html")
 
     temp.toFile.deleteOnExit()
 
     val windowsFriendlyPath = path.toString.replace("\\", "/")
     val html                = s"""<html><script>window.location = "file://$windowsFriendlyPath";</script></html>"""
 
+    Files.createDirectories(temp.getParent)
     Files.writeString(temp, html, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)
 
     openURI(comp, temp.toUri)
