@@ -69,7 +69,7 @@ object BrowserLauncher {
     val windowsFriendlyPath = path.toString.replace("\\", "/")
     val html                = s"""<html><script>window.location = "file://$windowsFriendlyPath";</script></html>"""
 
-    Files.writeString(temp, html, StandardOpenOption.CREATE)
+    Files.writeString(temp, html, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)
 
     openURI(comp, temp.toUri)
   }
