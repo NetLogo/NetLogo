@@ -40,13 +40,13 @@ class AggregateTabs(editor: AggregateModelEditor, editorTab: AggregateEditorTab,
     setSelectedComponent(proceduresTab)
     proceduresTab.setError(e, offset)
     editorTab.setError(e, offset)
-    setForegroundAt(indexOfComponent(proceduresTab), ErrorColor)
+    recolorTab(proceduresTab, true)
   }
 
   private[gui] def clearError(): Unit = {
     editorTab.clearError()
     proceduresTab.clearError()
-    setForegroundAt(indexOfComponent(proceduresTab), null)
+    recolorTab(proceduresTab, false)
   }
 
   override def setTabForegrounds(): Unit = {
