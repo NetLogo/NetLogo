@@ -506,7 +506,8 @@ object NetLogoPackaging {
       JavaPackager.copyExtraFiles(log, extraDirs, platform, buildJDK.architecture, appImageDir, appImageDir, rootFiles)
       val bundleDir = PackageMacAggregate.createBundleDir(log, version, destDir, configDir, launchers)
       JavaPackager.createScripts(log, bundleDir, bundleDir / "app", configDir, "netlogo-headless.sh", "netlogo-gui.sh",
-                                 Seq("--add-exports=java.desktop/com.apple.laf=ALL-UNNAMED"))
+                                 Seq("--add-exports=java.desktop/com.apple.laf=ALL-UNNAMED",
+                                     "-Dapple.awt.application.appearance=system"))
 
       log.info("Creating launcher")
 
