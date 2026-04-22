@@ -648,7 +648,7 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
     }
 
     override def syncTheme(): Unit = {
-      setBackground(InterfaceColors.dialogBackground())
+      setBackground(InterfaceColors.modelPreviewBackground())
 
       textArea.setForeground(InterfaceColors.dialogText())
     }

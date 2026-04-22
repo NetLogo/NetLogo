@@ -195,6 +195,7 @@ object InterfaceColors {
   def colorPickerCheckmark(): Color = theme.colorPickerCheckmark
   def colorPickerCopyHover(): Color = theme.colorPickerCopyHover
   def agentMonitorSeparator(): Color = theme.agentMonitorSeparator
+  def modelPreviewBackground(): Color = theme.modelPreviewBackground
 }
 
 trait ColorTheme {
@@ -386,6 +387,7 @@ trait ColorTheme {
   def colorPickerCheckmark: Color
   def colorPickerCopyHover: Color
   def agentMonitorSeparator: Color
+  def modelPreviewBackground: Color
 
   def colorizerTheme: ColorizerTheme
 }
@@ -550,6 +552,7 @@ object ClassicTheme extends ColorTheme {
   override def colorPickerCheckmark: Color = new Color(62, 184, 79)
   override def colorPickerCopyHover: Color = new Color(197, 197, 197)
   override def agentMonitorSeparator: Color = MediumGray
+  override def modelPreviewBackground: Color = LightGray1
 
   override def colorizerTheme: ColorizerTheme = ColorizerTheme.Classic
 }
@@ -714,6 +717,7 @@ object LightTheme extends ColorTheme {
   override def colorPickerCheckmark: Color = new Color(62, 184, 79)
   override def colorPickerCopyHover: Color = new Color(197, 197, 197)
   override def agentMonitorSeparator: Color = MediumGray
+  override def modelPreviewBackground: Color = LightGray1
 
   override def colorizerTheme: ColorizerTheme = ColorizerTheme.Light
 }
@@ -878,6 +882,7 @@ object DarkTheme extends ColorTheme {
   override def colorPickerCheckmark: Color = new Color(62, 184, 79)
   override def colorPickerCopyHover: Color = new Color(57, 57, 57)
   override def agentMonitorSeparator: Color = LightGray2
+  override def modelPreviewBackground: Color = MediumBlueGray
 
   override def colorizerTheme: ColorizerTheme = ColorizerTheme.Dark
 }
