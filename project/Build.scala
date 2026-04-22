@@ -2,6 +2,8 @@ import sbt._
 import Keys._
 import librarymanagement.ModuleDescriptorConfiguration
 
+import scala.io.Source
+
 object NetLogoBuild {
   lazy val all = TaskKey[Unit]("all", "build everything!!!")
 
@@ -22,9 +24,12 @@ object NetLogoBuild {
   val settings = Seq(
     numericMarketingVersion := (Compile / version).value,
     buildDate := {
-      val dateFormat =
-        new java.text.SimpleDateFormat("MMMMMMMMMMMMMMM d, yyyy")
-      dateFormat.format(new java.util.Date())
+      val source = Source.fromFile("shared/resources/main/version.txt")
+      val date = source.getLines.drop(1).next()
+
+      source.close()
+
+      date
     },
     year := buildDate.value.takeRight(4),
     netlogoVersion := {
