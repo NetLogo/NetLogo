@@ -93,7 +93,7 @@ class PreviewCommandsDialog(
     override def propertyChange(evt: PropertyChangeEvent): Unit = {
       previewPanel.button.setAction(
         evt.getNewValue match {
-          case Some(_: PreviewCommands.Compilable) =>
+          case commands: PreviewCommands if commands.compilable =>
             previewPanel.executeCommandsAction(guiState.previewCommandsRunnable)
           case _ =>
             previewPanel.loadManualPreviewAction(Option(modelPath).map(getImagePath))
