@@ -412,11 +412,11 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], compiler: Compil
           setBackground(InterfaceColors.textAreaBackground())
           setCaretColor(InterfaceColors.textAreaText())
           setText(text)
-          setCaretPosition(0)
 
           override def setText(text: String): Unit = {
             super.setText(text)
 
+            setCaretPosition(0)
             resetUndoHistory()
           }
         }
