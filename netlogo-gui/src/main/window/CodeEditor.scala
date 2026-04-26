@@ -3,7 +3,7 @@
 package org.nlogo.window
 
 import java.awt.{ BorderLayout, Component, Container }
-import java.awt.event.{ MouseAdapter, MouseEvent, TextListener, TextEvent }
+import java.awt.event.{ HierarchyEvent, MouseAdapter, MouseEvent, TextListener, TextEvent }
 import javax.swing.{ JLabel, JPanel, ScrollPaneConstants }
 
 import org.nlogo.api.CompilerServices
@@ -38,6 +38,14 @@ class CodeEditor(accessor: PropertyAccessor[String], compiler: CompilerServices,
   protected lazy val scrollPane = new ScrollPane(editor, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
                                             ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED)
   private val errorLabel = new EditorAreaErrorLabel(editor)
+
+  addHierarchyListener(
+    event => {
+      if ((event.getChangeFlags & HierarchyEvent.SHOWING_CHANGED) != 0 && isShowing()) {
+        editor.setCaretPosition(0)
+      }
+    }
+  )
 
   // the panel that should collapse
   private val collapso = new JPanel(new BorderLayout) with Transparent {
