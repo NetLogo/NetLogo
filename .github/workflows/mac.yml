@@ -23,7 +23,6 @@ jobs:
         with:
           submodules: true
           fetch-depth: 0
-          token: ${{ secrets.HELIO_TOKEN }}
 
       - uses: actions/setup-java@v5
         with:
@@ -115,7 +114,6 @@ jobs:
         with:
           submodules: true
           fetch-depth: 0
-          token: ${{ secrets.HELIO_TOKEN }}
 
       - uses: actions/setup-java@v5
         with:
