@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<model version="NetLogo 7.0.0-beta2" snapToGrid="false">
-  <code></code>
+<model version="NetLogo 7.1.0-beta1" snapToGrid="false">
+  <code><![CDATA[
+
+]]></code>
   <widgets>
     <view x="210" wrappingAllowedX="true" y="10" frameRate="30.0" minPycor="-16" height="438" showTickCounter="true" patchSize="13.0" fontSize="10" wrappingAllowedY="true" width="437" tickCounterLabel="ticks" maxPycor="16" updateMode="0" maxPxcor="16" minPxcor="-16"></view>
     <plot x="3" autoPlotX="true" yMax="10.0" autoPlotY="true" y="11" xMin="0.0" height="150" legend="true" xMax="10.0" yMin="0.0" display="plot" width="200" sizeVersion="0">
@@ -16,7 +18,8 @@
       </pen>
     </plot>
   </widgets>
-  <info>## WHAT IS IT?
+  <info><![CDATA[
+## WHAT IS IT?
 
 (a general understanding of what the model is trying to show or explain)
 
@@ -50,7 +53,8 @@
 
 ## CREDITS AND REFERENCES
 
-(a reference to the model's URL on the web if it has one, as well as any other necessary credits, citations, and links)</info>
+(a reference to the model's URL on the web if it has one, as well as any other necessary credits, citations, and links)
+]]></info>
   <turtleShapes>
     <shape name="default" rotatable="true" editableColorIndex="0">
       <polygon color="-1920102913" filled="true" marked="true">
