@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<model version="NetLogo 7.0.0-beta2" snapToGrid="false">
-  <code></code>
+<model version="NetLogo 7.1.0-beta1" snapToGrid="false">
+  <code><![CDATA[
+
+]]></code>
   <widgets>
     <view x="265" wrappingAllowedX="true" y="10" frameRate="30.0" minPycor="0" height="300" showTickCounter="true" patchSize="300.0" fontSize="10" wrappingAllowedY="true" width="300" tickCounterLabel="ticks" maxPycor="0" updateMode="0" maxPxcor="0" minPxcor="0"></view>
     <plot x="37" autoPlotX="true" yMax="10.0" autoPlotY="true" y="72" xMin="0.0" height="150" legend="false" xMax="10.0" yMin="0.0" display="plot 2" width="200" sizeVersion="0">
@@ -12,7 +14,9 @@
       </pen>
     </plot>
   </widgets>
-  <info></info>
+  <info><![CDATA[
+
+]]></info>
   <turtleShapes>
     <shape name="default" rotatable="true" editableColorIndex="0">
       <polygon color="-1920102913" filled="true" marked="true">

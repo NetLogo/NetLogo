@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<model version="NetLogo 7.0.0-beta2" snapToGrid="false">
-  <code><![CDATA[globals [
+<model version="NetLogo 7.1.0-beta1" snapToGrid="false">
+  <code><![CDATA[
+globals [
   initial-trees   ;; how many trees (green patches) we started with
   burned-trees    ;; how many have burned so far
 ]
@@ -47,7 +48,8 @@ to fade-embers
       if color < red - 4     ;; are we almost at black?
         [ set pcolor color
           die ] ]
-end]]></code>
+end
+]]></code>
   <widgets>
     <view x="200" wrappingAllowedX="true" y="10" frameRate="30.0" minPycor="-100" height="411" showTickCounter="true" patchSize="2.0" fontSize="10" wrappingAllowedY="true" width="410" tickCounterLabel="ticks" maxPycor="100" updateMode="0" maxPxcor="100" minPxcor="-100"></view>
     <monitor x="43" precision="1" y="125" height="45" fontSize="11" display="percent burned" width="115" sizeVersion="0">(burned-trees / initial-trees)
@@ -56,7 +58,9 @@ end]]></code>
     <button x="106" y="35" height="36" disableUntilTicks="false" forever="true" kind="Observer" display="go" width="69" sizeVersion="0">go</button>
     <button x="26" y="35" height="36" disableUntilTicks="false" forever="false" kind="Observer" display="setup" width="70" sizeVersion="0">setup</button>
   </widgets>
-  <info></info>
+  <info><![CDATA[
+
+]]></info>
   <turtleShapes>
     <shape name="default" rotatable="true" editableColorIndex="0">
       <polygon color="-1920102913" filled="true" marked="true">
