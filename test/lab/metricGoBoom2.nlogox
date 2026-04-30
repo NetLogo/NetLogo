@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<model version="NetLogo 7.0.0-beta2" snapToGrid="false">
-  <code>to setup
+<model version="NetLogo 7.1.0-beta1" snapToGrid="false">
+  <code><![CDATA[
+to setup
   clear-all
   create-turtles 1
   reset-ticks
@@ -19,11 +20,14 @@ to use-fake-metric
   let [c d f g] ["A" "B" "C" "D"]
   let [h i j k l m] [true false false true false false ]
   ask turtles with [color = blue] [ fd (a + b) ]
-end</code>
+end
+]]></code>
   <widgets>
     <view x="210" wrappingAllowedX="true" y="10" frameRate="30.0" minPycor="-16" height="438" showTickCounter="true" patchSize="13.0" fontSize="10" wrappingAllowedY="true" width="437" tickCounterLabel="ticks" maxPycor="16" updateMode="0" maxPxcor="16" minPxcor="-16"></view>
   </widgets>
-  <info></info>
+  <info><![CDATA[
+
+]]></info>
   <turtleShapes>
     <shape name="default" rotatable="true" editableColorIndex="0">
       <polygon color="-1920102913" filled="true" marked="true">
