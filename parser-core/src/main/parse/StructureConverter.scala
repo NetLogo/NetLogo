@@ -60,9 +60,9 @@ object StructureConverter {
   def updateProgram(program: Program, declarations: Seq[Declaration]): Program = {
     def updateVariables(program: Program): Program =
       declarations.foldLeft(program) {
-        case (program, Variables(Identifier("GLOBALS", _), identifiers)) =>
+        case (program, Variables(Identifier("GLOBALS", _), identifiers, _)) =>
           program.copy(userGlobals = program.userGlobals ++ identifiers.map(_.name))
-        case (program, Variables(Identifier("TURTLES-OWN", _), identifiers)) =>
+        case (program, Variables(Identifier("TURTLES-OWN", _), identifiers, _)) =>
           checkForDuplicates(identifiers, program.turtleVars.keySet, SymbolType.typeName(SymbolType.TurtleVariable))
           program.breeds.foreach {
             case (name, breed) =>
@@ -70,10 +70,10 @@ object StructureConverter {
                                  SymbolType.typeName(SymbolType.BreedVariable(name)))
           }
           program.copy(turtleVars = program.turtleVars ++ identifiers.map(i => i.name -> Syntax.WildcardType))
-        case (program, Variables(Identifier("PATCHES-OWN", _), identifiers)) =>
+        case (program, Variables(Identifier("PATCHES-OWN", _), identifiers, _)) =>
           checkForDuplicates(identifiers, program.patchVars.keySet, SymbolType.typeName(SymbolType.PatchVariable))
           program.copy(patchVars = program.patchVars ++ identifiers.map(i => i.name -> Syntax.WildcardType))
-        case (program, Variables(Identifier("LINKS-OWN", _), identifiers)) =>
+        case (program, Variables(Identifier("LINKS-OWN", _), identifiers, _)) =>
           checkForDuplicates(identifiers, program.linkVars.keySet, SymbolType.typeName(SymbolType.LinkVariable))
           program.linkBreeds.foreach {
             case (name, breed) =>
@@ -81,14 +81,14 @@ object StructureConverter {
                                  SymbolType.typeName(SymbolType.LinkBreedVariable(name)))
           }
           program.copy(linkVars = program.linkVars ++ identifiers.map(i => i.name -> Syntax.WildcardType))
-        case (program, Variables(Identifier(breedOwn, tok), identifiers)) =>
+        case (program, Variables(Identifier(breedOwn, tok), identifiers, _)) =>
           updateBreedVariables(program, breedOwn.stripSuffix("-OWN"), identifiers, tok)
         case (program, _) =>
           program
       }
     def updateBreeds(program: Program): Program =
       declarations.foldLeft(program) {
-        case (program, Breed(plural, singular, isLinkBreed, isDirected)) =>
+        case (program, Breed(_, plural, singular, isLinkBreed, isDirected, _)) =>
           val breed = core.Breed(plural.name, singular.name, plural.token.text, singular.token.text, isLinkBreed = isLinkBreed, isDirected = isDirected)
           if (isLinkBreed)
             program.copy(

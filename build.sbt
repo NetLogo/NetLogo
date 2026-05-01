@@ -461,8 +461,7 @@ lazy val parser = crossProject(JSPlatform, JVMPlatform).
     libraryDependencies ++= {
       import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
       Seq(
-        "org.scala-lang.modules" %%% "scala-parser-combinators" %    "2.4.0"
-      ,          "org.scalatest" %%%                "scalatest" %   "3.2.19" % Test
+                 "org.scalatest" %%%                "scalatest" %   "3.2.19" % Test
       ,      "org.scalatestplus" %%%          "scalacheck-1-18" % "3.2.19.0" % Test
       ,      "io.github.cquiroz" %%%       "scala-java-locales" %    "1.2.0"
       )
@@ -472,7 +471,6 @@ lazy val parser = crossProject(JSPlatform, JVMPlatform).
   jvmSettings(scalatestSettings: _*).
   jvmSettings(
     javacOptions ++= Seq("--release", "11"),
-    libraryDependencies += "org.scala-lang.modules" %% "scala-parser-combinators" % "2.4.0",
     // you can get these included by just depending on the `sharedResources` project directly
     // but then when you publish the parser JVM package, the POM file lists sharedResources
     // as a dependency.  It seems like a weird thing to publish separately, so this just

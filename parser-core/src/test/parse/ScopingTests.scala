@@ -75,11 +75,11 @@ class ScopingTests extends AnyFunSuite with BaseParserTest {
   }
   test("BreedOnlyOneName") {
     duplicateName("breed [xs]",
-      "Breed declarations must have plural and singular. BREED [XS] has only one name.")
+      "Breed declarations must have plural and singular. BREED \"XS\" has only one name.")
   }
   test("LinkBreedOnlyOneName") {
     duplicateName("directed-link-breed [xs]",
-      "Breed declarations must have plural and singular. DIRECTED-LINK-BREED [XS] has only one name.")
+      "Breed declarations must have plural and singular. DIRECTED-LINK-BREED \"XS\" has only one name.")
   }
   test("BreedPrimSameNameAsBuiltInPrim") {
     duplicateName("breed [strings string]",

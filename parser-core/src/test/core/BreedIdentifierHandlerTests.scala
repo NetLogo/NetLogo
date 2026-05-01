@@ -97,6 +97,6 @@ class BreedIdentifierHandlerTests extends AnyFunSuite {
     def dummyToken(s: String): Token = Token(s, TokenType.Ident, "")(SourceLocation(1, 2, ""))
     def dummyIdent(s: String): Identifier = Identifier(s, dummyToken(s))
 
-    StructureDeclarations.Breed(dummyIdent(plural), dummyIdent(singular), isLink, isDirected)
+    StructureDeclarations.Breed(dummyToken("BREED"), dummyIdent(plural), dummyIdent(singular), isLink, isDirected, Seq())
   }
 }

@@ -199,6 +199,7 @@ class StructureParser(
   def parse(tokens: Iterator[Token], oldResults: StructureResults, filename: String): StructureResults =
     StructureCombinators.parse(tokens, filename) match {
       case Right(declarations) =>
+        StructureChecker.rejectDeclarationAfterProcedure(declarations)
         StructureChecker.rejectMisplacedConstants(declarations)
         StructureChecker.rejectDuplicateDeclarations(declarations)
         StructureChecker.rejectDuplicateNames(declarations,
@@ -212,7 +213,9 @@ class StructureParser(
           subprogram)
       case Left((msg, token)) =>
         if (token.tpe == TokenType.Keyword) {
-          exception(s"""Keyword ${token.text.toUpperCase(Locale.ENGLISH)} cannot be used in this context.""", token)
+          val name = token.text.toUpperCase(Locale.ENGLISH)
+
+          exception(I18N.errors.getN("compiler.StructureChecker.misplacedKeyword", name), token)
         } else {
           exception(msg, token)
         }

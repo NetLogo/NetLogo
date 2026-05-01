@@ -15,7 +15,7 @@ class StructureParserTests extends AnyFunSuite {
 
   def compile(source: String): StructureResults =
     new StructureParser(None, false).parse(
-      tokenizer.tokenizeString(source).map(Namer0), core.StructureResults.empty, "")
+      tokenizer.tokenizeWithWhitespace(source, "").map(Namer0), core.StructureResults.empty, "")
 
   def expectError(source: String, error: String): Unit = {
     val e = intercept[CompilerException] {
@@ -163,7 +163,7 @@ class StructureParserTests extends AnyFunSuite {
     expectError("globals [", "closing bracket expected") }
   test("missing close bracket in globals") {
     expectError("globals [g turtles-own [t]",
-      "Keyword TURTLES-OWN cannot be used in this context.") }
+      "closing bracket expected") }
   test("constant in globals") {
     expectError("globals [d e f]",
       "Variable name conflicts with a constant.") }
@@ -184,7 +184,7 @@ class StructureParserTests extends AnyFunSuite {
       "Input name conflicts with a constant.") }
   test("missing breed singular") {
     expectError("breed [xs]",
-      "Breed declarations must have plural and singular. BREED [XS] has only one name.") }
+      "Breed declarations must have plural and singular. BREED \"XS\" has only one name.") }
   test("attempt primitive as variable") {
     expectError("globals [turtle]",
       "There is already a primitive reporter called TURTLE") }
@@ -240,7 +240,7 @@ class StructureParserTests extends AnyFunSuite {
   // https://github.com/NetLogo/NetLogo/issues/414
   test("missing end 1") {
     expectError("to foo to bar",
-      "Keyword TO cannot be used in this context.") }
+      "END expected") }
   test("missing end 2") {
     expectError("to foo fd 1",
       "END expected") }
@@ -252,10 +252,10 @@ class StructureParserTests extends AnyFunSuite {
       "closing bracket expected") }
   test("missing close bracket in formals 1") {
     expectError("to foo [ end",
-      "Keyword END cannot be used in this context.") }
+      "closing bracket expected") }
   test("missing close bracket in formals 2") {
     expectError("to foo [ to",
-      "Keyword TO cannot be used in this context.") }
+      "closing bracket expected") }
   test("declaration after procedure") {
     expectError("to foo end globals []",
       "Keyword GLOBALS cannot be used in this context.") }
