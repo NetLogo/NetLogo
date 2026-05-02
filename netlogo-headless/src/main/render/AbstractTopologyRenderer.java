@@ -23,6 +23,9 @@ public abstract class AbstractTopologyRenderer implements TopologyRenderer {
   int viewWidth;
   int viewHeight;
 
+  int unzoomedWidth;
+  int unzoomedHeight;
+
   int worldAndViewPreMultipliedX;
   int worldAndViewPreMultipliedY;
   double viewOffsetX;
@@ -33,6 +36,11 @@ public abstract class AbstractTopologyRenderer implements TopologyRenderer {
     this.height = height;
     viewWidth = (int) StrictMath.round(settings.viewWidth() * settings.patchSize());
     viewHeight = (int) StrictMath.round(settings.viewHeight() * settings.patchSize());
+
+    double zoomFactor = world.patchSize() / settings.patchSize();
+
+    unzoomedWidth = (int)(width * zoomFactor);
+    unzoomedHeight = (int)(height * zoomFactor);
 
     if (settings.renderPerspective()) {
       viewOffsetX = settings.viewOffsetX();

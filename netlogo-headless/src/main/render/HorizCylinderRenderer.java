@@ -125,10 +125,10 @@ public class HorizCylinderRenderer extends AbstractTopologyRenderer {
     g.drawLine(x1, y1, x2, y2);
 
     if (penSize > 1) {
-      if (y2 + size > width) {
-        g.drawLine(x1, y1 - height, x2, y2 - height);
+      if (y2 + size > unzoomedHeight) {
+        g.drawLine(x1, y1 - unzoomedHeight, x2, y2 - unzoomedHeight);
       } else if (y1 - size < 0) {
-        g.drawLine(x1, y1 + height, x2, y2 + height);
+        g.drawLine(x1, y1 + unzoomedHeight, x2, y2 + unzoomedHeight);
       }
     }
   }
