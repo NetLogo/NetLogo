@@ -219,29 +219,29 @@ public class TorusRenderer extends AbstractTopologyRenderer {
       boolean wrapXLeft = false;
       boolean wrapXRight = false;
 
-      if (x2 + size > width) {
-        g.drawLine(x1 - width, y1, x2 - width, y2);
+      if (x2 + size > unzoomedWidth) {
+        g.drawLine(x1 - unzoomedWidth, y1, x2 - unzoomedWidth, y2);
         wrapXRight = true;
       }
       if (x1 - size < 0) {
-        g.drawLine(x1 + width, y1, x2 + width, y2);
+        g.drawLine(x1 + unzoomedWidth, y1, x2 + unzoomedWidth, y2);
         wrapXLeft = true;
       }
-      if (y2 + size > width) {
-        g.drawLine(x1, y1 - height, x2, y2 - height);
+      if (y2 + size > unzoomedHeight) {
+        g.drawLine(x1, y1 - unzoomedHeight, x2, y2 - unzoomedHeight);
         if (wrapXRight) {
-          g.drawLine(x1 - width, y1 - height, x2 - width, y2 - height);
+          g.drawLine(x1 - unzoomedWidth, y1 - unzoomedHeight, x2 - unzoomedWidth, y2 - unzoomedHeight);
         }
         if (wrapXLeft) {
-          g.drawLine(x1 + width, y1 - height, x2 + width, y2 - height);
+          g.drawLine(x1 + unzoomedWidth, y1 - unzoomedHeight, x2 + unzoomedWidth, y2 - unzoomedHeight);
         }
       } else if (y1 - size < 0) {
-        g.drawLine(x1, y1 + height, x2, y2 + height);
+        g.drawLine(x1, y1 + unzoomedHeight, x2, y2 + unzoomedHeight);
         if (wrapXRight) {
-          g.drawLine(x1 - width, y1 + height, x2 - width, y2 + height);
+          g.drawLine(x1 - unzoomedWidth, y1 + unzoomedHeight, x2 - unzoomedWidth, y2 + unzoomedHeight);
         }
         if (wrapXLeft) {
-          g.drawLine(x1 + width, y1 + height, x2 + width, y2 + height);
+          g.drawLine(x1 + unzoomedWidth, y1 + unzoomedHeight, x2 + unzoomedWidth, y2 + unzoomedHeight);
         }
       }
     }

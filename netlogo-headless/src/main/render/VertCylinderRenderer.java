@@ -125,11 +125,11 @@ public class VertCylinderRenderer extends AbstractTopologyRenderer {
     g.drawLine(x1, y1, x2, y2);
 
     if (penSize > 1) {
-      if (x2 + size > width) {
-        g.drawLine(x1 - width, y1, x2 - width, y2);
+      if (x2 + size > unzoomedWidth) {
+        g.drawLine(x1 - unzoomedWidth, y1, x2 - unzoomedWidth, y2);
       }
       if (x1 - size < 0) {
-        g.drawLine(x1 + width, y1, x2 + width, y2);
+        g.drawLine(x1 + unzoomedWidth, y1, x2 + unzoomedWidth, y2);
       }
     }
   }
