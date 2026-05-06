@@ -5,7 +5,7 @@ package org.nlogo.api
 import java.io.{ File, InputStream }
 import java.lang.Boolean
 import java.net.{ HttpURLConnection, URL }
-import java.nio.file.{ Files, Paths, StandardCopyOption }
+import java.nio.file.{ Files, Path, StandardCopyOption }
 import java.security.{ DigestInputStream, MessageDigest }
 import java.util.Arrays
 
@@ -16,6 +16,8 @@ import scala.concurrent.{ ExecutionContext, Future, Promise }
 trait InfoDownloader {
 
   def prefsKey: String
+
+  def getPath(name: String): Path
 
   def enabled: Boolean =
     !Boolean.getBoolean(s"netlogo.$prefsKey.disabled")
@@ -50,11 +52,11 @@ trait InfoDownloader {
           val md     = MessageDigest.getInstance("MD5")
           val digest = new DigestInputStream(inputStream, md)
 
-          Files.copy(digest, Paths.get(FileIO.perUserFile(urlToHash(url))), StandardCopyOption.REPLACE_EXISTING)
+          Files.copy(digest, getPath(urlToHash(url)), StandardCopyOption.REPLACE_EXISTING)
 
           val localHash = NetLogoPreferences.getByteArray(urlToFullHash(url), null)
           val newHash   = md.digest
-          val file      = new File(FileIO.perUserFile(urlToHash(url)))
+          val file      = getPath(urlToHash(url)).toFile
           val isWriting = !Arrays.equals(localHash, newHash)
 
           if (isWriting) {

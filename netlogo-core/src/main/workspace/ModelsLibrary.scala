@@ -116,7 +116,7 @@ object ModelsLibrary {
           case n                          => n
         }
 
-        val extensionsRoot = new File(FileIO.perUserDir("extensions", true), "").getCanonicalFile
+        val extensionsRoot = FileIO.perUserExtensionDir("extensions").toFile
         val extensionsNode = scanDirectory(extensionsRoot.toPath, exclusive, Some(extensionManagerSamples))
 
         extensionsNode match {

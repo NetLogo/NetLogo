@@ -186,7 +186,7 @@ object FileIO {
       else
         System.getProperty("user.home") + "/.netlogo"
 
-    Paths.get(appData, APIVersion.version, path)
+    Paths.get(appData, "extensions", APIVersion.version, path)
   }
 
   def resolvePath(name: String): Option[Path] = resolvePath(name, None)
