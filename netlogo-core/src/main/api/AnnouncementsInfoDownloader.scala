@@ -4,6 +4,7 @@ package org.nlogo.api
 
 import java.io.File
 import java.net.URL
+import java.nio.file.{ Path, Paths }
 import java.time.LocalDate
 
 import scala.io.Source
@@ -20,6 +21,9 @@ object AnnouncementsInfoDownloader extends InfoDownloader {
   override val prefsKey = "announcements"
 
   val defaultURL = new URL("https://backend.netlogo.org/items/announcements")
+
+  override def getPath(name: String): Path =
+    Paths.get(FileIO.perUserFile(name))
 
   def fetch(): Future[Seq[Announcement]] = {
     import ExecutionContext.Implicits.global

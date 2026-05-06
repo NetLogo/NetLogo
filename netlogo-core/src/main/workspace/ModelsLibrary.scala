@@ -114,7 +114,7 @@ object ModelsLibrary {
         val unverified = I18N.shared.get("modelsLibrary.unverified")
         val extensionSamples = I18N.shared.get("modelsLibrary.extensionSamples")
 
-        val extensionsRoot = new File(FileIO.perUserDir("extensions", true), "").getCanonicalFile
+        val extensionsRoot = FileIO.perUserExtensionDir("extensions").toFile
         val extensionsNode = scanDirectory(extensionsRoot.toPath, exclusive)
 
         extensionsNode.fold(Seq()) {
