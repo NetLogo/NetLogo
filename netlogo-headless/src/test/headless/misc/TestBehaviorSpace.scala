@@ -3,7 +3,7 @@
 package org.nlogo.headless
 package misc
 
-import org.nlogo.api.FileIO
+import org.nlogo.api.{ FileIO, LabProtocol }
 import org.nlogo.core.{ Model, View, WorldDimensions }
 import org.nlogo.nvm.{ LabInterface, Workspace }
 import org.nlogo.util.{ AnyFunSuiteEx, SlowTest }
@@ -28,6 +28,7 @@ class TestBehaviorSpace extends AnyFunSuiteEx
       BehaviorSpaceCoordinator.externalProtocols(TestProtocolsFilePath)
         .flatMap(_.find(_.name == name))
         .getOrElse(throw new Exception(s"Invalid protocol: $name"))
+        .copy(errorBehavior = LabProtocol.IgnoreErrors)
     HeadlessWorkspace.newLab.newWorker(protocol)
   }
 
