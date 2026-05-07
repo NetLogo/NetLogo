@@ -7,9 +7,9 @@ import java.util.Locale
 
 import org.nlogo.api.FileIO.fileToString
 import org.nlogo.core.{ I18N, Model, Resource }
-import org.nlogo.util.AnyFunSuiteEx
 
 import org.scalatest.Tag
+import org.scalatest.funsuite.AnyFunSuite
 
 /// top level entry points
 
@@ -54,7 +54,7 @@ abstract class ExtensionTests extends Finder {
 
 // don't use FixtureSuite here because we may need two fixtures, not just
 // one, and FixtureSuite assumes one - ST 8/7/13
-trait Finder extends AnyFunSuiteEx  {
+trait Finder extends AnyFunSuite {
   // ensure that output/error messages are formatted as expected (Isaac B 12/28/25)
   I18N.setAllLanguages(Locale.US, false)
 
