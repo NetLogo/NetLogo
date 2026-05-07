@@ -2,7 +2,7 @@
 
 package org.nlogo.headless
 
-import org.nlogo.api.{ FileIO, LabPostProcessorInputFormat, Version }
+import org.nlogo.api.{ FileIO, LabPostProcessorInputFormat, LabProtocol, Version }
 import org.nlogo.nvm.{ LabInterface, Workspace }
 import org.nlogo.util.{ AnyFunSuiteEx, SlowTest }
 
@@ -25,6 +25,7 @@ with OneInstancePerTest with BeforeAndAfterEach {
       BehaviorSpaceCoordinator.externalProtocols(TestProtocolsFilePath)
         .flatMap(_.find(_.name == name))
         .getOrElse(throw new Exception(s"Invalid protocol: $name"))
+        .copy(errorBehavior = LabProtocol.IgnoreErrors)
     HeadlessWorkspace.newLab.newWorker(protocol)
   }
 
