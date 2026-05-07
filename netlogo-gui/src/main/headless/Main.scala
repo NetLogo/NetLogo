@@ -75,7 +75,8 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
     } finally {
       openWs.dispose()
     }
-    runExperimentWithProtocol(settings, proto.get, _ => {}, finish, new DummyPrimaryWorkspace)
+    runExperimentWithProtocol(settings, proto.get.copy(errorBehavior = settings.errorBehavior), _ => {}, finish,
+                              new DummyPrimaryWorkspace)
   }
 
   // used in bspace extension
