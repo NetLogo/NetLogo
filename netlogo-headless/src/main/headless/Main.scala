@@ -43,7 +43,7 @@ object Main {
     }
     proto match {
       case Some(protocol) =>
-        runExperimentWithProtocol(settings, protocol, _ => {}, finish)
+        runExperimentWithProtocol(settings, protocol.copy(errorBehavior = settings.errorBehavior), _ => {}, finish)
 
       case None =>
         throw new IllegalArgumentException("Invalid run, specify experiment name or setup file")
