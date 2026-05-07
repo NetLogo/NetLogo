@@ -40,6 +40,8 @@ private class FileWatcherThread(paths: List[Path], callback: Path => Boolean) ex
       case e: InterruptedException => ()
 
       // Other exceptions are unexpected, so we allow them to propagate.
+    } finally {
+      watchService.close()
     }
   }
 }
