@@ -7,7 +7,7 @@ import java.io.File
 import java.net.SocketException
 import java.nio.file.Path
 
-import org.nlogo.api.{ IPCHandler, LabProtocol, Version }
+import org.nlogo.api.{ IPCServerHandler, LabProtocol, Version }
 import org.nlogo.core.I18N
 import org.nlogo.swing.OptionPane
 import org.nlogo.window.{ EditDialogFactory, GUIWorkspace }
@@ -19,7 +19,7 @@ class Supervisor(parent: Window, workspace: GUIWorkspace, modelPath: Path, proto
                  dialogFactory: EditDialogFactory, saveProtocol: (LabProtocol, Int) => Unit, automated: Boolean)
   extends Thread("BehaviorSpace Supervisor") {
 
-  private val handler = IPCHandler(true)
+  private val handler = new IPCServerHandler
 
   private var process: Option[Process] = None
 
@@ -62,13 +62,16 @@ class Supervisor(parent: Window, workspace: GUIWorkspace, modelPath: Path, proto
         }
       }
 
+      handler.connect()
+
       process = Option(Process(Seq(ProcessHandle.current.info.command.get) ++ memoryLimit ++ Seq("-cp",
                                    System.getProperty("java.class.path"), s"-Dorg.nlogo.is3d=${Version.is3D}",
                                    "-Dapple.awt.application.appearance=system",
                                    "org.nlogo.bsapp.BehaviorSpaceApp", modelPath.toString, protocol.name,
                                    "--threads", protocol.threadCount.toString,
                                    "--error-behavior", protocol.errorBehavior.key,
-                                   "--skip", protocol.runsCompleted.toString) ++
+                                   "--skip", protocol.runsCompleted.toString,
+                                   "--port", handler.getPort.toString) ++
                                boolToArg("--update-view", protocol.updateView) ++
                                boolToArg("--update-plots", protocol.updatePlotsAndMonitors) ++
                                boolToArg("--mirror-headless", protocol.mirrorHeadlessOutput) ++
@@ -77,8 +80,6 @@ class Supervisor(parent: Window, workspace: GUIWorkspace, modelPath: Path, proto
                                strToArg("--stats", protocol.stats.trim) ++
                                strToArg("--lists", protocol.lists.trim) ++
                                boolToArg("--automated", automated)).run())
-
-      handler.connect()
 
       new Thread {
         override def run(): Unit = {
