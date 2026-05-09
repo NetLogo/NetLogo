@@ -15,8 +15,6 @@ trait IPCHandler {
 
   protected var connectionThread: Option[Thread] = None
 
-  def connect(): Unit
-
   def readLine(): Try[String] = {
     connectionThread match {
       case Some(thread) if thread.isAlive =>
@@ -55,27 +53,37 @@ trait IPCHandler {
 
 object IPCHandler {
   val Address = "127.0.0.1"
-  val Port = 18711
-
-  def apply(server: Boolean): IPCHandler = {
-    if (server) {
-      new IPCServerHandler
-    } else {
-      new IPCClientHandler
-    }
-  }
 }
 
 class IPCServerHandler extends IPCHandler {
   private var server: Option[ServerSocket] = None
   private var client: Option[Socket] = None
 
-  override def connect(): Unit = {
+  private var port: Int = -1
+
+  def getPort: Int = {
+    synchronized {
+      while (port == -1)
+        wait(50)
+
+      port
+    }
+  }
+
+  private def setPort(port: Int): Unit = {
+    synchronized {
+      this.port = port
+    }
+  }
+
+  def connect(): Unit = {
     val thread = new Thread {
       override def run(): Unit = {
-        val server = new ServerSocket(IPCHandler.Port, 0, InetAddress.getByName(IPCHandler.Address))
+        val server = new ServerSocket(0, 0, InetAddress.getByName(IPCHandler.Address))
 
         IPCServerHandler.this.server = Option(server)
+
+        setPort(server.getLocalPort)
 
         try {
           val client = server.accept()
@@ -105,10 +113,10 @@ class IPCServerHandler extends IPCHandler {
 class IPCClientHandler extends IPCHandler {
   private var socket: Option[Socket] = None
 
-  override def connect(): Unit = {
+  def connect(port: Int): Unit = {
     val thread = new Thread {
       override def run(): Unit = {
-        val socket = new Socket(IPCHandler.Address, IPCHandler.Port)
+        val socket = new Socket(IPCHandler.Address, port)
 
         IPCClientHandler.this.socket = Option(socket)
 
