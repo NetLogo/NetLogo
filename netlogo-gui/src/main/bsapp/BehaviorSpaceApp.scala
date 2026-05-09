@@ -8,7 +8,7 @@ import java.net.SocketException
 import javax.swing.Timer
 
 import org.nlogo.agent.OutputObject
-import org.nlogo.api.{ Dump, IPCHandler, LabProtocol, LogoException }
+import org.nlogo.api.{ Dump, IPCClientHandler, LabProtocol, LogoException }
 import org.nlogo.core.{ CompilerException, I18N }
 import org.nlogo.headless.{ BehaviorSpaceCoordinator, HeadlessWorkspace }
 import org.nlogo.nvm.{ DummyPrimaryWorkspace, LabInterface, Workspace }
@@ -72,6 +72,9 @@ object BehaviorSpaceApp {
       case (current, "--lists") if argsIter.hasNext =>
         current.copy(lists = Option(argsIter.next.trim))
 
+      case (current, "--port") if argsIter.hasNext =>
+        current.copy(port = argsIter.next.toInt)
+
       case (current, "--automated") =>
         WindowAutomator.setAutomated(true)
 
@@ -89,7 +92,8 @@ object BehaviorSpaceApp {
                              mirrorHeadless: Boolean = false,
                              errorBehavior: LabProtocol.ErrorBehavior = LabProtocol.AbortRun,
                              table: Option[String] = None, spreadsheet: Option[String] = None,
-                             stats: Option[String] = None, lists: Option[String] = None)
+                             stats: Option[String] = None, lists: Option[String] = None,
+                             port: Int = -1)
 }
 
 class BehaviorSpaceApp(args: BehaviorSpaceApp.CommandLineArgs) extends Thread.UncaughtExceptionHandler {
@@ -97,7 +101,7 @@ class BehaviorSpaceApp(args: BehaviorSpaceApp.CommandLineArgs) extends Thread.Un
 
   private val frame = new BehaviorSpaceFrame(this)
 
-  private val ipcHandler = IPCHandler(false)
+  private val ipcHandler = new IPCClientHandler
 
   private val errorDialogManager = new ErrorDialogManager(frame)
 
@@ -143,7 +147,7 @@ class BehaviorSpaceApp(args: BehaviorSpaceApp.CommandLineArgs) extends Thread.Un
   private val lab = HeadlessWorkspace.newLab
 
   def run(): Unit = {
-    ipcHandler.connect()
+    ipcHandler.connect(args.port)
 
     ipcHandler.writeLine(ujson.write(Obj(
       "type" -> "launch"
