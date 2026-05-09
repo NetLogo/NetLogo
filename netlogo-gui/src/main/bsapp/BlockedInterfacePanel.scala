@@ -6,13 +6,11 @@ import java.awt.{ Component, Dimension }
 import java.awt.event.MouseAdapter
 import javax.swing.{ JLayeredPane, JPanel }
 
-import org.nlogo.plot.PlotManager
 import org.nlogo.swing.Transparent
 import org.nlogo.window.{ DefaultEditorFactory, Event, InterfacePanelLite }
 
 class BlockedInterfacePanel(frame: BehaviorSpaceFrame, workspace: SemiHeadlessWorkspace)
-  extends InterfacePanelLite(workspace.viewWidget, workspace, workspace,
-                             new PlotManager(workspace, workspace.world.mainRNG.clone),
+  extends InterfacePanelLite(workspace.viewWidget, workspace, workspace, workspace.plotManager,
                              new DefaultEditorFactory(workspace), workspace.extensionManager) with Event.LinkChild {
 
   private val interceptPanel = new JPanel with Transparent {
