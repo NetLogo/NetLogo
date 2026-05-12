@@ -2,7 +2,7 @@
 
 package org.nlogo.parse
 
-import org.nlogo.core.{ AstNode, ReporterApp, Statement, prim },
+import org.nlogo.core.{ AstNode, AstVisitor, ReporterApp, Statement, prim },
   prim._unknowncommand
 
 import scala.util.matching.Regex
@@ -21,15 +21,17 @@ class _dummycmd(text: String) extends Reporter {
 
 object NoopFolder extends PositionalAstFolder[AstEdit] {}
 
-class RemovalVisitor(droppedCommand: String) extends PositionalAstFolder[AstEdit] {
+class RemovalVisitor(droppedCommand: String) extends AstVisitor {
+  private var ranges = Seq[(Int, Int)]()
 
-  def delete(formatter: Formatter, astNode: AstNode, path: AstPath, ctx: AstFormat): AstFormat = ctx
+  def getRanges: Seq[(Int, Int)] =
+    ranges
 
-  override def visitStatement(stmt: Statement, position: AstPath)(implicit edits: AstEdit): AstEdit = {
+  override def visitStatement(stmt: Statement): Unit = {
     if (stmt.command.token.text.equalsIgnoreCase(droppedCommand))
-      super.visitStatement(stmt, position)(using edits.addOperation(position, delete))
-    else
-      super.visitStatement(stmt, position)
+      ranges = ranges :+ (stmt.start, stmt.end)
+
+    super.visitStatement(stmt)
   }
 }
 

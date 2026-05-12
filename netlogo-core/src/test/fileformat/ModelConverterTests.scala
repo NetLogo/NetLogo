@@ -195,6 +195,27 @@ class ModelConverterTests extends AnyFunSuiteEx with ConversionHelper {
         .map(_._2)
         assertResult(convertedSource)(convert(Model(code = originalSource), conversionSet*).code)
     }
+
+    test("removes movie prims with parentheses") {
+      val originalSource =
+        """|to start
+           |  movie-set-frame-rate (1 + (42 / 100))
+           |end""".stripMargin
+
+      val convertedSource =
+        """|extensions [vid]
+           |globals [_recording-save-file-name]
+           |to start
+           |end""".stripMargin
+
+      val conversionSet = AutoConversionList.conversions.collect {
+        case ("NetLogo 6.0-M9", set) =>
+          set
+      }
+
+      assertResult(convertedSource)(convert(Model(code = originalSource), conversionSet*).code)
+    }
+
     test("lambda-izes") {
       val conversionSet= AutoConversionList.conversions.filter(_._1 == "NetLogo 6.0-RC1").map(_._2).head
       val model = Model(code = """|to foo run task [ clear-all ] foreach [] [ tick ] end to bar __ignore sort-by [?1 > ?2] [1 2 3] end

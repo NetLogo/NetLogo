@@ -24,7 +24,24 @@ class AstRewriter(val tokenizer: TokenizerInterface, op: CompilationOperand) ext
     header + procedures + footer
 
   def remove(dropCommand: String): String = {
-    rewrite(new RemovalVisitor(dropCommand), preserveBody)
+    val visitor = new RemovalVisitor(dropCommand)
+
+    basicParse(op)._1.foreach(visitor.visitProcedureDefinition)
+
+    val ranges = visitor.getRanges.sortBy(_._1)
+    val source = op.sources("")
+
+    if (ranges.nonEmpty) {
+      ranges.sliding(2).foldLeft(source.substring(0, ranges(0)._1).stripTrailing) {
+        case (acc, Seq((_, start), (end, _))) =>
+          acc + source.substring(start, end).stripTrailing
+
+        case (acc, _) =>
+          acc
+      } + source.substring(ranges.last._2)
+    } else {
+      source
+    }
   }
 
   def addCommand(addCommand: (String, String)): String = {

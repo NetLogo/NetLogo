@@ -70,6 +70,10 @@ class AstRewriterTests extends AnyFunSuiteEx {
     assertResult("fd 1 end to bar")(remove("fd 1 end to bar bk 2", "bk"))
     assertResult("fd 1 end to bar")(remove("fd 1 bk 1 end to bar", "bk"))
     assertResult("run [ user-message (word \"abc\" \"123\") ]")(remove("run [ user-message (word \"abc\" \"123\") ]", "fd"))
+    assertResult("")(remove("show (word \"one\" \"two\" \"three\")", "show"))
+    assertResult("")(remove("show ((word \"one\" \"two\" \"three\"))", "show"))
+    assertResult("")(remove("(show ((word \"one\" \"two\" \"three\")))", "show"))
+    assertResult("show 1 show 3")(remove("show 1 print (word (1 + 5) 2 (3 + 7)) show 3", "print"))
   }
 
   test("adds new command based on existing command") {
