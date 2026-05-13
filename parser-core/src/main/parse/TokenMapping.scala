@@ -14,6 +14,7 @@ object TokenMapping {
        , "__EXPERIMENTSTEPEND"           -> "org.nlogo.core.prim.etc._experimentstepend"
        , "__EXPORT-DRAWING"              -> "org.nlogo.core.prim.etc._exportdrawing"
        , "__FOREVERBUTTONEND"            -> "org.nlogo.core.prim.etc._foreverbuttonend"
+       , "__FOREVERBUTTONSTART"          -> "org.nlogo.core.prim.etc._foreverbuttonstart"
        , "__HUBNET-CLEAR-PLOT"           -> "org.nlogo.core.prim.hubnet._hubnetclearplot"
        , "__HUBNET-CREATE-CLIENT"        -> "org.nlogo.core.prim.hubnet._hubnetcreateclient"
        , "__HUBNET-MAKE-PLOT-NARROWCAST" -> "org.nlogo.core.prim.hubnet._hubnetmakeplotnarrowcast"
@@ -541,6 +542,7 @@ object TokenMapping {
       case "org.nlogo.core.prim.etc._follow"                        => new org.nlogo.core.prim.etc._follow
       case "org.nlogo.core.prim.etc._foreach"                       => new org.nlogo.core.prim.etc._foreach
       case "org.nlogo.core.prim.etc._foreverbuttonend"              => new org.nlogo.core.prim.etc._foreverbuttonend
+      case "org.nlogo.core.prim.etc._foreverbuttonstart"            => new org.nlogo.core.prim.etc._foreverbuttonstart
       case "org.nlogo.core.prim.etc._hidelink"                      => new org.nlogo.core.prim.etc._hidelink
       case "org.nlogo.core.prim.etc._hideturtle"                    => new org.nlogo.core.prim.etc._hideturtle
       case "org.nlogo.core.prim.etc._histogram"                     => new org.nlogo.core.prim.etc._histogram

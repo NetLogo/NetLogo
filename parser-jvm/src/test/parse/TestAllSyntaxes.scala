@@ -338,6 +338,7 @@ class TestAllSyntaxes extends AnyFunSuiteEx {
                     |_followme ,-T--,None,0,0,0
                     |_foreach list/anonymous command,OTPL,None,0,2,2
                     |_foreverbuttonend ,OTPL,None,0,0,0
+                    |_foreverbuttonstart ,OTPL,None,0,0,0
                     |_hatch number/command block (optional),-T--,Some(-T--),0,2,2
                     |_hidelink ,---L,None,0,0,0
                     |_hideturtle ,-T--,None,0,0,0

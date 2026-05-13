@@ -355,6 +355,10 @@ case class _foreverbuttonend() extends Command {
   override def syntax =
     Syntax.commandSyntax(canBeConcise = false)
 }
+case class _foreverbuttonstart() extends Command {
+  override def syntax =
+    Syntax.commandSyntax(canBeConcise = false)
+}
 case class _fput() extends Reporter with Pure {
   override def syntax =
     Syntax.reporterSyntax(

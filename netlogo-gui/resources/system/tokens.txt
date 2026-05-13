@@ -9,6 +9,7 @@ C __experimentstepend etc._experimentstepend
 C __export-drawing etc._exportdrawing
 C __fire etc._fire
 C __foreverbuttonend etc._foreverbuttonend
+C __foreverbuttonstart etc._foreverbuttonstart
 C __git etc._git
 C __hubnet-broadcast-user-message hubnet._hubnetbroadcastusermessage
 C __hubnet-clear-plot hubnet._hubnetclearplot

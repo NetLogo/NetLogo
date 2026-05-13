@@ -450,7 +450,14 @@ class ButtonWidget(random: MersenneTwisterFast, compiler: CompilerServices, colo
   }
 
   def recompile(): Unit ={
-    val header = "to __button [] " + buttonType.toHeaderCode + (if(forever) " loop [ " else "")
+    val start = {
+      if (_goTime) {
+        "__foreverbuttonstart "
+      } else {
+        ""
+      }
+    }
+    val header = "to __button [] " + buttonType.toHeaderCode + (if (forever) s" loop [ $start" else "")
     val footer = "\n" + // protect against comments
       (if(forever) "__foreverbuttonend ] " else "__done ") + "end"
     new Events.RemoveJobEvent(this).raise(this)
