@@ -264,7 +264,7 @@ class StructureParserTests extends AnyFunSuite {
       "Keyword TO cannot be used in this context.") }
   test("declaration after procedure") {
     expectError("to foo end globals []",
-      "Keyword GLOBALS cannot be used in this context.") }
+      "All declarations must come before procedures.") }
 
   test("singular breed name matches plural") {
     expectError("breed [ cats cats ]", "A breed cannot have the same plural and singular name")

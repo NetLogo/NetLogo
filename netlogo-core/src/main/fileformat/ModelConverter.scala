@@ -10,8 +10,8 @@ import scala.util.matching.Regex
 import org.nlogo.api.{ AutoConverter, AutoConvertable, FileIO }
 import org.nlogo.core.{ CompilationEnvironment, CompilationOperand, Dialect, ExtensionManager, Femto,
                         FrontEndInterface, LibraryManager, LiteralParser, Model, Program, SourceRewriter,
-                        StructureResults, VersionUtils }
-import org.nlogo.core.FrontEndInterface.ProceduresMap
+                        StructureDeclarations, StructureResults, VersionUtils },
+  FrontEndInterface.ProceduresMap, StructureDeclarations.{ Declaration, Procedure }
 
 import FileFormat.ModelConversion
 
@@ -64,6 +64,8 @@ class ModelConverter(
 
     val tokenizer =
       Femto.scalaSingleton[org.nlogo.core.TokenizerInterface]("org.nlogo.lex.Tokenizer")
+
+    val frontEnd = Femto.scalaSingleton[FrontEndInterface]("org.nlogo.parse.FrontEnd")
 
     def rewriterOp(operand: CompilationOperand): SourceRewriter = {
       Femto.get[SourceRewriter]("org.nlogo.parse.AstRewriter", tokenizer, operand)
@@ -124,9 +126,8 @@ class ModelConverter(
           Program.fromDialect(aggregateConversionDialect).copy(interfaceGlobals = model.interfaceGlobals),
           FrontEndInterface.NoProcedures)
 
-        val fe = Femto.scalaSingleton[FrontEndInterface]("org.nlogo.parse.FrontEnd")
         Try {
-          val (_, results) = fe.frontEnd(newCompilation)
+          val (_, results) = frontEnd.frontEnd(newCompilation)
           results
         }
       }
@@ -156,7 +157,38 @@ class ModelConverter(
       modelWithConvertedComponents(convertedCodeTab)
     }
 
-    applicableConversions(model).foldLeft[ConversionResult](SuccessfulConversion(model, model)) {
+    val decls: Seq[Declaration] = frontEnd.findDeclarations(model.code, modelPath.getFileName.toString)
+
+    val reordered: String = {
+      if (decls.nonEmpty) {
+        val source: String = model.code
+
+        val sorted: Seq[Declaration] = decls.sortBy(_.start.start)
+
+        val firstRange: (Declaration, String) = (sorted(0), source.substring(0, sorted(0).end.end))
+
+        val ranges: Seq[(Declaration, String)] = sorted.sliding(2).foldLeft(Seq(firstRange)) {
+          case (acc, Seq(one, two)) =>
+            acc :+ (two, source.substring(one.end.end, two.end.end))
+
+          case (acc, _) =>
+            acc
+        }
+
+        val (valid, (invalid, procs)) = ranges.span(!_._1.isInstanceOf[Procedure]) match {
+          case (valid, other) =>
+            (valid, other.partition(!_._1.isInstanceOf[Procedure]))
+        }
+
+        (valid :++ invalid :++ procs).map(_._2).mkString + source.substring(sorted.last.end.end)
+      } else {
+        model.code
+      }
+    }
+
+    val newModel: Model = model.copy(code = reordered)
+
+    applicableConversions(newModel).foldLeft[ConversionResult](SuccessfulConversion(newModel, newModel)) {
       case (cr, conversion) =>
         cr.mergeResult(runConversion(conversion, cr.model))
     }

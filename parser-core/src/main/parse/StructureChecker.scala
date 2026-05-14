@@ -20,10 +20,16 @@ import SymbolType._
 
 object StructureChecker {
 
+  def rejectMisplacedDeclarations(declarations: Seq[Declaration]): Unit = {
+    declarations.dropWhile(!_.isInstanceOf[Procedure]).find(!_.isInstanceOf[Procedure]).foreach { decl =>
+      exception(I18N.errors.get("compiler.StructureChecker.declOrder"), decl.start)
+    }
+  }
+
   def rejectMisplacedConstants(declarations: Seq[Declaration]): Unit = {
     for (declaration <- declarations) {
       declaration match {
-        case Variables(_, names) =>
+        case Variables(_, names, _, _) =>
           for (name <- names) {
             if (name.token.tpe == TokenType.Literal) {
               if (!Constants.get(name.token.text).isEmpty) {
@@ -51,9 +57,9 @@ object StructureChecker {
         case (v1: Variables, v2: Variables) if v1.kind == v2.kind =>
           Some((v1.kind.name, v2.kind.token))
         case (_: Extensions, e: Extensions) =>
-          Some(("EXTENSIONS", e.token))
+          Some(("EXTENSIONS", e.start))
         case (_: Includes, i: Includes) =>
-          Some(("INCLUDES", i.token))
+          Some(("INCLUDES", i.start))
         case _ =>
           None
       }
@@ -85,7 +91,7 @@ object StructureChecker {
     }
 
     declarations.foreach {
-      case Breed(plural, singular, _, _) =>
+      case Breed(plural, singular, _, _, _, _) =>
         cAssert(plural.name != singular.name, I18N.errors.get("compiler.StructureChecker.pluralSingular"),
                 singular.token)
 
@@ -94,7 +100,7 @@ object StructureChecker {
 
     val occurrences = occurrencesFromDeclarations(declarations)
 
-    for { case usage@Occurrence(Breed(_, _, _, _), _, _, _) <- occurrences.iterator } {
+    for { case usage@Occurrence(_: Breed, _, _, _) <- occurrences.iterator } {
       checkForBreedPrimsDuplicatingBuiltIn(usage, usedNames)
     }
 
@@ -147,7 +153,7 @@ object StructureChecker {
 
   private def checkForBreedPrimsDuplicatingBuiltIn(usage: Occurrence, usedNames: SymbolTable): Unit = {
     usage.declaration match {
-      case breed@Breed(_, _, _, _) =>
+      case breed: Breed =>
         val matchedPrimAndType =
           BreedIdentifierHandler.breedCommands(breed).filter(c => usedNames.contains(c.toUpperCase(Locale.ENGLISH)))
                                                      .map(i => (i, BreedCommand)) ++
@@ -163,7 +169,7 @@ object StructureChecker {
 
   private def occurrencesFromDeclarations(declarations: Seq[Declaration]): Seq[Occurrence] = {
     val os = declarations.foldLeft(Seq[Occurrence]()) {
-      case (occs, decl@Variables(kind, names)) =>
+      case (occs, decl@Variables(kind, names, _, _)) =>
         val vars = kind.name.toUpperCase(Locale.ENGLISH) match {
           case "TURTLES-OWN" => names.map(Occurrence(decl, _, TurtleVariable))
           case "PATCHES-OWN" => names.map(Occurrence(decl, _, PatchVariable))
@@ -182,7 +188,7 @@ object StructureChecker {
         occs ++ vars
       case (occs , decl@Procedure(name, _, inputs, _)) =>
         (Occurrence(decl, name, ProcedureSymbol) +: inputs.map(Occurrence(decl, _, ProcedureVariable, isGlobal = false))) ++ occs
-      case (occs, decl@Breed(plural, singular, _, _)) =>
+      case (occs, decl@Breed(plural, singular, _, _, _, _)) =>
         val (symType, singularSymType) =
           if (decl.isLinkBreed) (LinkBreed, LinkBreedSingular)
           else (TurtleBreed, TurtleBreedSingular)

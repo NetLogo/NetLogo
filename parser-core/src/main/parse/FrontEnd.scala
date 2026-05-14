@@ -5,7 +5,7 @@ package org.nlogo.parse
 import org.nlogo.core,
   core.{AstTransformer, CompilationOperand, Dialect, Femto,
     ExtensionManager, FrontEndInterface, CompilerException,
-    TokenizerInterface }
+    StructureDeclarations, TokenizerInterface }
 
 object FrontEnd extends FrontEnd {
   val tokenizer: TokenizerInterface =
@@ -74,4 +74,7 @@ trait FrontEndMain extends NetLogoParser {
 
   def findExtensions(source: String): Seq[String] =
     StructureParser.findExtensions(tokenizer.tokenizeString(source))
+
+  def findDeclarations(source: String, filename: String): Seq[StructureDeclarations.Declaration] =
+    StructureCombinators.parse(tokenizer.tokenizeString(source).map(Namer0), filename).getOrElse(Seq())
 }

@@ -72,4 +72,6 @@ trait FrontEndInterface {
   def tokenizeWithWhitespace(source: String, dialect: Dialect, extensionManager: ExtensionManager): Iterator[Token]
 
   def findExtensions(source: String): Seq[String]
+
+  def findDeclarations(source: String, filename: String): Seq[StructureDeclarations.Declaration]
 }

@@ -387,5 +387,33 @@ class ModelConverterTests extends AnyFunSuiteEx with ConversionHelper {
       assertResult(expectedModel.code)(result.code)
       assertResult(expectedModel.widgets.collect { case p: Plot => p })(result.widgets.collect { case p: Plot => p })
     }
+
+    test("moves declarations before procedures") {
+      val originalSource =
+        """|breed [ ones one ]
+           |
+           |to test
+           |  __change-topology true true
+           |  create-ones 10
+           |  create-twos 10
+           |end
+           |
+           |breed [ twos two ]
+           |""".stripMargin
+
+      val convertedSource =
+        """|breed [ ones one ]
+           |
+           |breed [ twos two ]
+           |
+           |to test
+           |  set-topology true true
+           |  create-ones 10
+           |  create-twos 10
+           |end
+           |""".stripMargin
+
+      assertResult(convertedSource)(convert(Model(code = originalSource), AutoConversionList.conversions.map(_._2)*).code)
+    }
   }
 }

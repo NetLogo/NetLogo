@@ -199,6 +199,7 @@ class StructureParser(
   def parse(tokens: Iterator[Token], oldResults: StructureResults, filename: String): StructureResults =
     StructureCombinators.parse(tokens, filename) match {
       case Right(declarations) =>
+        StructureChecker.rejectMisplacedDeclarations(declarations)
         StructureChecker.rejectMisplacedConstants(declarations)
         StructureChecker.rejectDuplicateDeclarations(declarations)
         StructureChecker.rejectDuplicateNames(declarations,

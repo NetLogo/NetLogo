@@ -84,10 +84,7 @@ extends scala.util.parsing.combinator.Parsers {
 
   // top level entry point. output will be a Seq[Declaration]
   def program: Parser[Seq[Declaration]] =
-    phrase(
-      rep(declaration) ~ (procedures | noProcedures)) ^^ {
-        case decs ~ procs =>
-          decs ++ procs }
+    rep(declaration | procedure) <~ (eof | failure("keyword expected"))
 
   def declaration: Parser[Declaration] =
     includes | extensions | breed | directedLinkBreed | undirectedLinkBreed |
@@ -96,18 +93,18 @@ extends scala.util.parsing.combinator.Parsers {
 
   def includes: Parser[Includes] =
     keyword("__INCLUDES") ~! stringList ^^ {
-      case token ~ names =>
-        Includes(token, names) }
+      case token ~ (names ~ closeBracket) =>
+        Includes(token, names, closeBracket) }
 
   def extensions: Parser[Extensions] =
     keyword("EXTENSIONS") ~! identifierList ^^ {
-      case token ~ names =>
-        Extensions(token, names) }
+      case token ~ (names ~ closeBracket) =>
+        Extensions(token, names, closeBracket) }
 
   def variables(key: String): Parser[Variables] =
     keyword(key) ~! identifierList ^^ {
-      case keyToken ~ names =>
-        Variables(Identifier(key, keyToken), names) }
+      case keyToken ~ (names ~ closeBracket) =>
+        Variables(Identifier(key, keyToken), names, keyToken, closeBracket) }
 
   def breedVariables: Parser[Variables] =
     acceptMatch("<breed>-own", {
@@ -115,34 +112,35 @@ extends scala.util.parsing.combinator.Parsers {
           if value.endsWith("-OWN") =>
         token }) ~!
       identifierList ^^ {
-        case token ~ names =>
-          Variables(Identifier(token.value.asInstanceOf[String], token), names) }
+        case token ~ (names ~ closeBracket) =>
+          Variables(Identifier(token.value.asInstanceOf[String], token), names, token, closeBracket) }
 
   def breed: Parser[Breed] = {
-    breedKeyword ~! breedBlock("BREED") ^^ (_._2) // (_._2) drops BREED token
+    breedKeyword ~! breedBlock("BREED") ^^ {
+      case keyword ~ (plural ~ singular ~ closeBracket) =>
+        Breed(plural, singular, false, false, keyword, closeBracket)
+    }
   }
 
-  def breedBlock(breedWord: String): Parser[Breed] = {
-    val breedNames: Parser[Breed] = identifier ~ identifier ^^ {
-      case plural ~ singular => Breed(plural, singular)
-    }
+  def breedBlock(breedWord: String): Parser[Identifier ~ Identifier ~ Token] = {
+    val breedNames: Parser[Identifier ~ Identifier] = identifier ~ identifier
     val singleBreedName: Parser[Nothing] =
       identifier >> (i =>
           failure(s"Breed declarations must have plural and singular. $breedWord [${i.name}] has only one name."))
-    (openBracket ~> (breedNames | singleBreedName) <~ closeBracket)
+    (openBracket ~> (breedNames | singleBreedName) ~ closeBracket)
   }
 
   def directedLinkBreed: Parser[Breed] =
-    keyword("DIRECTED-LINK-BREED") ~! breedBlock("DIRECTED-LINK-BREED") ^^ (_._2.copy(isLinkBreed = true, isDirected = true))
+    keyword("DIRECTED-LINK-BREED") ~! breedBlock("DIRECTED-LINK-BREED") ^^ {
+      case keyword ~ (plural ~ singular ~ closeBracket) =>
+        Breed(plural, singular, true, true, keyword, closeBracket)
+    }
 
   def undirectedLinkBreed: Parser[Breed] =
-    keyword("UNDIRECTED-LINK-BREED") ~! breedBlock("UNDIRECTED-LINK-BREED") ^^ (_._2.copy(isLinkBreed = true, isDirected = false))
-
-  def procedures: Parser[Seq[Procedure]] =
-    rep1(procedure) <~ (eof | failure("TO or TO-REPORT expected"))
-
-  def noProcedures: Parser[Seq[Procedure]] =
-    eof ^^ { case _ => Seq() } | failure("keyword expected")
+    keyword("UNDIRECTED-LINK-BREED") ~! breedBlock("UNDIRECTED-LINK-BREED") ^^ {
+      case keyword ~ (plural ~ singular ~ closeBracket) =>
+        Breed(plural, singular, true, false, keyword, closeBracket)
+    }
 
   def procedure: Parser[Procedure] =
     (keyword("TO") | keyword("TO-REPORT")) ~!
@@ -150,10 +148,12 @@ extends scala.util.parsing.combinator.Parsers {
       opt(identifierList) ~
       rep(nonKeyword) ~
       (keyword("END") | failure("END expected")) ^^ {
-        case to ~ name ~ names ~ body ~ end =>
-          Procedure(name,
-            to.value == "TO-REPORT", names.getOrElse(Seq()),
-            to +: name.token +: body :+ end) }
+        case to ~ name ~ Some(names ~ closeBracket) ~ body ~ end =>
+          Procedure(name, to.value == "TO-REPORT", names, to +: name.token +: body :+ end)
+
+        case to ~ name ~ None ~ body ~ end =>
+          Procedure(name, to.value == "TO-REPORT", Seq(), to +: name.token +: body :+ end)
+      }
 
   /// helpers
 
@@ -179,11 +179,11 @@ extends scala.util.parsing.combinator.Parsers {
       token =>
         Identifier(token.value.toString, token) }
 
-  def identifierList: Parser[Seq[Identifier]] =
-    openBracket ~> commit(rep(identifier | literal) <~ closeBracket)
+  def identifierList: Parser[Seq[Identifier] ~ Token] =
+    openBracket ~> commit(rep(identifier | literal) ~ closeBracket)
 
-  def stringList: Parser[Seq[Token]] =
-    openBracket ~> commit(rep(string) <~ closeBracket)
+  def stringList: Parser[Seq[Token] ~ Token] =
+    openBracket ~> commit(rep(string) ~ closeBracket)
 
   def string: Parser[Token] =
     acceptMatch("string", {
