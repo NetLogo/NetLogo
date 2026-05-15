@@ -2,140 +2,93 @@
 
 package org.nlogo.parse
 
-import org.nlogo.core.{ AstNode, AstVisitor, ReporterApp, Statement, prim },
-  prim._unknowncommand
+import org.nlogo.core.{ AstFolder, ProcedureDefinition, ReporterApp, Statement }
 
-import scala.util.matching.Regex
+object NoopFolder extends PositionalAstFolder[AstEdit]
 
-import org.nlogo.core.{ Reporter, SourceLocation, Syntax, Token, TokenType }
+case class RewriteContext(source: String, text: String = "", position: Int = 0) {
+  def inserted(text: String): RewriteContext =
+    RewriteContext(source, this.text + text, position)
 
-class _dummyrep(text: String) extends Reporter {
-  val syntax = Syntax.reporterSyntax(ret = Syntax.WildcardType)
-  token = Token(text, TokenType.Reporter, text)(SourceLocation(0, 0, ""))
+  def through(position: Int, text: Option[String] = None): RewriteContext =
+    RewriteContext(source, this.text + text.getOrElse(source.substring(this.position, position)), position)
+
+  def throughEnd: RewriteContext =
+    RewriteContext(source, text + source.substring(position))
 }
 
-class _dummycmd(text: String) extends Reporter {
-  val syntax = Syntax.commandSyntax()
-  token = Token(text, TokenType.Command, text)(SourceLocation(0, 0, ""))
+class RewriteFolder extends AstFolder[RewriteContext] {
+  override def visitProcedureDefinition(proc: ProcedureDefinition)(ctx: RewriteContext): RewriteContext =
+    super.visitProcedureDefinition(proc)(ctx).through(proc.end)
+
+  override def visitReporterApp(app: ReporterApp)(implicit ctx: RewriteContext): RewriteContext =
+    ctx.through(app.end)
 }
 
-object NoopFolder extends PositionalAstFolder[AstEdit] {}
-
-class RemovalVisitor(droppedCommand: String) extends AstVisitor {
-  private var ranges = Seq[(Int, Int)]()
-
-  def getRanges: Seq[(Int, Int)] =
-    ranges
-
-  override def visitStatement(stmt: Statement): Unit = {
-    if (stmt.command.token.text.equalsIgnoreCase(droppedCommand))
-      ranges = ranges :+ (stmt.start, stmt.end)
-
-    super.visitStatement(stmt)
-  }
-}
-
-class ReplaceReporterVisitor(alteration: (String, String)) extends PositionalAstFolder[AstEdit] {
-  def replace(formatter: Formatter, astNode: AstNode, path: AstPath, ctx: AstFormat): AstFormat = {
-    astNode match {
-      case app: ReporterApp =>
-        ctx.copy(text = ctx.text + ctx.wsMap.leading(path) + alteration._2)
-      case _ => ctx
-    }
-  }
-
-  override def visitReporterApp(app: ReporterApp, position: AstPath)(implicit edits: AstEdit): AstEdit = {
-    if (app.reporter.token.text.equalsIgnoreCase(alteration._1))
-      super.visitReporterApp(app, position)(using edits.addOperation(position, replace))
-    else
-      super.visitReporterApp(app, position)
-  }
-}
-
-class AddVisitor(val addition: (String, String)) extends StatementManipulationVisitor {
-  override def manipulate(formatter: Formatter, astNode: AstNode, position: AstPath, ctx: AstFormat): AstFormat = {
-    astNode match {
-      case stmt: Statement =>
-        val newCmd = new _unknowncommand(stmt.command.syntax)
-        stmt.command.token.refine(newPrim = newCmd, text = addedCommand)
-        val newArgs = addedArgument.map(id => Seq(stmt.args(id))).getOrElse(Seq())
-        val newStmt = stmt.copy(command = newCmd, args = newArgs)
-        val c1 =
-          formatter.visitStatement(newStmt, position / AstPath.Stmt(-1))(using ctx.copy(
-            text = ctx.text + " ",
-            operations = ctx.operations - position))
-        formatter.visitStatement(stmt, position)(using c1.copy(
-          text = c1.text + ctx.wsMap.trailing(position),
-          operations = ctx.operations - position))
-      case _               => ctx
+class RemoveVisitor(command: String) extends RewriteFolder {
+  override def visitStatement(stmt: Statement)(implicit ctx: RewriteContext): RewriteContext = {
+    if (stmt.command.token.text.equalsIgnoreCase(command)) {
+      ctx.through(stmt.start).through(stmt.end, Some(""))
+    } else {
+      super.visitStatement(stmt)
     }
   }
 }
 
-// handles argument transfer for 1 argument at the moment. Should be expanded if more arguments are needed
-class ReplaceVisitor(val addition: (String, String)) extends StatementManipulationVisitor {
-  override def manipulate(formatter: Formatter, astNode: AstNode, position: AstPath, ctx: AstFormat): AstFormat = {
-    astNode match {
-      case stmt: Statement =>
-        stmt.command.token.refine(newPrim = stmt.command, text = addedCommand)
-        val newStmt =
-          if (addedArgument.isEmpty) stmt.copy(args = Seq())
-          else stmt.copy(args = Seq(stmt.args(addedArgument.get)))
-        val stmtAdded = formatter.visitStatement(newStmt, position / AstPath.Stmt(-1))(using
-          ctx.copy(operations = ctx.operations - position))
-        afterCommand
-          .map(afterText => stmtAdded.copy(text = stmtAdded.text + afterText))
-          .getOrElse(stmtAdded)
-      case _ => ctx
+class AddVisitor(command: String, addition: String) extends RewriteFolder {
+  override def visitStatement(stmt: Statement)(implicit ctx: RewriteContext): RewriteContext = {
+    if (stmt.command.token.text.equalsIgnoreCase(command)) {
+      val args: Seq[String] = stmt.args.foldLeft(Seq[String]()) {
+        case (acc, arg) =>
+          acc :+ visitExpression(arg)(using RewriteContext(ctx.source, "", arg.start)).text
+      }
+
+      val formatted: String = "\\{(\\d)\\}".r.replaceAllIn(addition, m => args(m.group(1).toInt)) + {
+        // if the existing command is the first command on its line, add the new command on the previous line for
+        // cleaner formatting. but doing so when the target command is in the middle of its line might break the
+        // execution order, so in that case insert it right before the existing command. (Isaac B 5/14/26)
+        Option(ctx.source.substring(ctx.source.lastIndexOf("\n", stmt.start).max(0), stmt.start))
+          .filter(_.trim.isEmpty).getOrElse(" ")
+      }
+
+      super.visitStatement(stmt)(using ctx.through(stmt.start).inserted(formatted))
+    } else {
+      super.visitStatement(stmt)
     }
   }
 }
 
-// handles argument transfer for 1 argument at the moment. Should be expanded if more arguments are needed
-trait StatementManipulationVisitor extends PositionalAstFolder[AstEdit] {
-  def addition: (String, String)
+class ReplaceVisitor(primitive: String, replacement: String) extends RewriteFolder {
+  override def visitReporterApp(app: ReporterApp)(implicit ctx: RewriteContext): RewriteContext = {
+    if (app.reporter.token.text.equalsIgnoreCase(primitive)) {
+      val args: Seq[String] = app.args.foldLeft(Seq[String]()) {
+        case (acc, arg) =>
+          acc :+ visitExpression(arg)(using RewriteContext(ctx.source, "", arg.start)).text
+      }
 
-  val pattern = new Regex("([^{]+)(\\{\\d+\\})?(.*)", "command", "arg", "afterCommand")
+      val formatted: String = "\\{(\\d)\\}".r.replaceAllIn(replacement, m => args(m.group(1).toInt))
 
-  val targetCommand = addition._1
+      ctx.through(app.start).through(app.end, Some(formatted))
+    } else {
+      app.args.foldLeft(ctx.through(app.start)) {
+        case (ctx, arg) =>
+          visitExpression(arg)(using ctx)
+      }.through(app.end)
+    }
+  }
 
-  val addedCommand = pattern.findFirstMatchIn(addition._2)
-    .map(_.group("command").stripSuffix(" ")).getOrElse(addition._2)
-  val addedArgument = pattern.findFirstMatchIn(addition._2)
-    .flatMap(m => Option(m.group("arg")))
-    .map(_.drop(1).dropRight(1).toInt)
-  val afterCommand = pattern.findFirstMatchIn(addition._2).map(_.group("afterCommand"))
+  override def visitStatement(stmt: Statement)(implicit ctx: RewriteContext): RewriteContext = {
+    if (stmt.command.token.text.equalsIgnoreCase(primitive)) {
+      val args: Seq[String] = stmt.args.foldLeft(Seq[String]()) {
+        case (acc, arg) =>
+          acc :+ visitExpression(arg)(using RewriteContext(ctx.source, "", arg.start)).text
+      }
 
-  // AstPath.Stmt(-1) delimits that the whitespace here is actually being *inserted* and
-  // is not original to the AST.
-  def newWsMap(wsMap: WhitespaceMap, position: AstPath, stmt: Statement): WhitespaceMap =
-    addedArgument.map { i =>
-      val oldArgPosition = position / AstPath.Expression(stmt.args(i), i)
-      val newArgPosition = position / AstPath.Stmt(-1) / AstPath.Expression(stmt.args(i), 0)
-      val newPositions =
-        wsMap.toMap.filter {
-          case ((k, _), _) => oldArgPosition.isParentOf(k)
-        }.map {
-          case ((k, p), v) => (k.repath(oldArgPosition, newArgPosition), p) -> v
-        }
-      wsMap ++ new WhitespaceMap(newPositions)
-    }.getOrElse(wsMap)
+      val formatted: String = "\\{(\\d)\\}".r.replaceAllIn(replacement, m => args(m.group(1).toInt))
 
-  def manipulate(formatter: Formatter, astNode: AstNode, position: AstPath, ctx: AstFormat): AstFormat
-
-  override def visitStatement(stmt: Statement, position: AstPath)(implicit edits: AstEdit): AstEdit = {
-    if (stmt.command.token.text.equalsIgnoreCase(targetCommand)) {
-      val repositionedWs =
-        new WhitespaceMap(
-          edits.wsMap.toMap
-            .filter { case ((k, _), _) => k == position }
-            .map { case ((k, p), v) => (k.repath(position, position / AstPath.Stmt(-1)), p) -> v }
-          )
-      super.visitStatement(stmt, position)(using
-        edits
-          .addOperation(position, manipulate)
-          .copy(wsMap = newWsMap(edits.wsMap, position, stmt) ++ repositionedWs))
-    } else
-      super.visitStatement(stmt, position)
+      ctx.through(stmt.start).through(stmt.end, Some(formatted))
+    } else {
+      super.visitStatement(stmt)
+    }
   }
 }

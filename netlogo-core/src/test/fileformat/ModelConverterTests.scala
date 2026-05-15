@@ -37,7 +37,7 @@ class ModelConverterTests extends AnyFunSuiteEx with ConversionHelper {
 
     test("if a model component doesn't compile, returns a component failure") {
       val model = Model(widgets = Seq(View(), Button(Some("fd 1 foobar"), 0, 0, 0, 0, true)))
-      tryConvert(model, conversion(name = "fd to back", otherCodeConversions = Seq(_.replaceCommand("fd" -> "bk {0}")), targets = Seq("fd"))) match {
+      tryConvert(model, conversion(name = "fd to back", otherCodeConversions = Seq(_.replace("fd", "bk")), targets = Seq("fd"))) match {
         case ConversionWithErrors(_, m, e) =>
           assert(e.head.componentDescription === "NetLogo interface")
           assert(e.head.conversionDescription === "fd to back")
@@ -49,8 +49,8 @@ class ModelConverterTests extends AnyFunSuiteEx with ConversionHelper {
     test("applies multiple conversions when supplied") {
       val model = Model(code = "to foo fd 1 bk 1 end")
       assert(convert(model,
-        conversion(codeTabConversions = Seq(_.replaceCommand("fd" -> "rt 90")), targets = Seq("fd")),
-        conversion(codeTabConversions = Seq(_.replaceCommand("bk" -> "lt 90")), targets = Seq("bk"))).code ==
+        conversion(codeTabConversions = Seq(_.replace("fd", "rt 90")), targets = Seq("fd")),
+        conversion(codeTabConversions = Seq(_.replace("bk", "lt 90")), targets = Seq("bk"))).code ==
           "to foo rt 90 lt 90 end")
     }
 
@@ -81,23 +81,23 @@ class ModelConverterTests extends AnyFunSuiteEx with ConversionHelper {
 
     test("if a widget contains the affected prims, runs the source rewrites on the widget") {
       val model = Model(widgets = Seq(View(), Button(Some("fd 1"), 0, 0, 0, 0, true)))
-      assertResult("bk 1")(convert(model, conversion(otherCodeConversions = Seq((_.replaceCommand("fd" -> "bk 1"))), targets = Seq("fd"))).widgets(1).asInstanceOf[Button].source.get)
+      assertResult("bk 1")(convert(model, conversion(otherCodeConversions = Seq((_.replace("fd", "bk 1"))), targets = Seq("fd"))).widgets(1).asInstanceOf[Button].source.get)
     }
 
     test("if the model has a widgets which don't compile, converts all compiling widgets") {
       val model = Model(widgets = Seq(View(), Button(Some("fd 1"), 0, 0, 0, 0, true), Button(Some("qux"), 0, 0, 0, 0, true)))
-      assertResult("bk 1")(convert(model, conversion(otherCodeConversions = Seq((_.replaceCommand("fd" -> "bk 1"))), targets = Seq("fd"))).widgets(1).asInstanceOf[Button].source.get)
+      assertResult("bk 1")(convert(model, conversion(otherCodeConversions = Seq((_.replace("fd", "bk 1"))), targets = Seq("fd"))).widgets(1).asInstanceOf[Button].source.get)
     }
 
     test("converts widgets which reference code tab code") {
       val model = Model(code = "to qux rt 30 end", widgets = Seq(View(), Button(Some("fd 1"), 0, 0, 0, 0, true), Button(Some("qux fd 2"), 0, 0, 0, 0, true)))
-      assertResult("bk 1")(convert(model, conversion(otherCodeConversions = Seq(_.replaceCommand("fd" -> "bk 1")), targets = Seq("fd"))).widgets(1).asInstanceOf[Button].source.get)
-      assertResult("qux bk 1")(convert(model, conversion(otherCodeConversions = Seq((_.replaceCommand("fd" -> "bk 1"))), targets = Seq("fd"))).widgets(2).asInstanceOf[Button].source.get)
+      assertResult("bk 1")(convert(model, conversion(otherCodeConversions = Seq(_.replace("fd", "bk 1")), targets = Seq("fd"))).widgets(1).asInstanceOf[Button].source.get)
+      assertResult("qux bk 1")(convert(model, conversion(otherCodeConversions = Seq((_.replace("fd", "bk 1"))), targets = Seq("fd"))).widgets(2).asInstanceOf[Button].source.get)
     }
 
     test("converts code tab when referencing interface values") {
       val model = Model(code = "to foo if on? [ fd 1 ] end", widgets = Seq(View(), Switch(Some("on?"))))
-      assertResult("to foo if on? [ bk 1 ] end")(convert(model, conversion(codeTabConversions = Seq(_.replaceCommand("fd" -> "bk 1")), targets = Seq("fd"))).code)
+      assertResult("to foo if on? [ bk 1 ] end")(convert(model, conversion(codeTabConversions = Seq(_.replace("fd", "bk 1")), targets = Seq("fd"))).code)
     }
 
     test("if the model has a widgets which don't compile, continues to convert the code tab") {
@@ -143,13 +143,13 @@ class ModelConverterTests extends AnyFunSuiteEx with ConversionHelper {
       val changes = Seq[SourceRewriter => String](
         _.addGlobal("_recording-save-file-name"),
         _.addExtension("vid"),
-        _.replaceCommand("movie-grab-view" -> "vid:record-view"),
-        _.replaceCommand("movie-grab-interface" -> "vid:record-interface"),
-        _.replaceCommand("movie-cancel" -> "vid:reset-recorder"),
-        _.replaceCommand("movie-close" -> "vid:save-recording _recording-save-file-name"),
-        _.addCommand("movie-start" -> "set _recording-save-file-name {0}"),
-        _.replaceCommand("movie-start" -> "vid:start-recorder"),
-        _.replaceReporter("movie-status" -> "vid:recorder-status"))
+        _.replace("movie-grab-view", "vid:record-view"),
+        _.replace("movie-grab-interface", "vid:record-interface"),
+        _.replace("movie-cancel", "vid:reset-recorder"),
+        _.replace("movie-close", "vid:save-recording _recording-save-file-name"),
+        _.addCommand("movie-start", "set _recording-save-file-name {0}"),
+        _.replace("movie-start", "vid:start-recorder"),
+        _.replace("movie-status", "vid:recorder-status"))
       val targets = Seq("movie-start", "movie-cancel", "movie-close", "movie-grab-view", "movie-grab-interface", "movie-status")
       val converted = convert(model, conversion(codeTabConversions = changes, targets = targets))
       assertResult(convertedSource)(converted.code)
@@ -206,6 +206,7 @@ class ModelConverterTests extends AnyFunSuiteEx with ConversionHelper {
         """|extensions [vid]
            |globals [_recording-save-file-name]
            |to start
+           |  
            |end""".stripMargin
 
       val conversionSet = AutoConversionList.conversions.collect {
@@ -239,7 +240,7 @@ class ModelConverterTests extends AnyFunSuiteEx with ConversionHelper {
       |; comment at end""".stripMargin
 
       val model = Model(code = originalSource)
-      val changes = Seq[SourceRewriter => String](_.replaceCommand("movie-cancel" -> "vid:reset-recorder"))
+      val changes = Seq[SourceRewriter => String](_.replace("movie-cancel", "vid:reset-recorder"))
       val targets = Seq("movie-cancel")
       val converted = convert(model, conversion(codeTabConversions = changes, targets = targets))
       assertResult(expectedSource)(converted.code)
@@ -260,7 +261,7 @@ class ModelConverterTests extends AnyFunSuiteEx with ConversionHelper {
       |  rt 90
       |end""".stripMargin
       val model = Model(code = originalSource)
-      val converted = convert(model, conversion(codeTabConversions = Seq(_.replaceCommand("fd" -> "rt 90")), targets = Seq("fd")))
+      val converted = convert(model, conversion(codeTabConversions = Seq(_.replace("fd", "rt 90")), targets = Seq("fd")))
       assertResult(expectedSource)(converted.code)
     }
 
@@ -272,7 +273,7 @@ class ModelConverterTests extends AnyFunSuiteEx with ConversionHelper {
       |  fd 1
       |end""".stripMargin
       val model = Model(code = originalSource)
-      val conversions = Seq[SourceRewriter => String](_.replaceCommand("fd" -> "rt 90"))
+      val conversions = Seq[SourceRewriter => String](_.replace("fd", "rt 90"))
       tryConvert(model,
         conversion(codeTabConversions = conversions, targets = Seq("fd"))) match {
           case ErroredConversion(_, error) => assert(error.errors.exists(_.getMessage.contains("bar.nls")))

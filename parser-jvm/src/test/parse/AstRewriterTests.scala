@@ -65,54 +65,54 @@ class AstRewriterTests extends AnyFunSuiteEx {
     assertResult("bk 1")(remove("fd 1 bk 1", "fd"))
     assertResult("; bk 1")(remove("; bk 1\n", "bk"))
     assertResult("create-turtles 10 [ fd 1 ]")(remove("create-turtles 10 [ fd 1 ]", "bk"))
-    assertResult("create-turtles 10 [ ]")(remove("create-turtles 10 [ fd 1 ]", "fd"))
-    assertResult("ask turtles [ ask one-of other turtles [ ] ]")(remove("ask turtles [ ask one-of other turtles [ set color blue ] ]", "set"))
+    assertResult("create-turtles 10 [  ]")(remove("create-turtles 10 [ fd 1 ]", "fd"))
+    assertResult("ask turtles [ ask one-of other turtles [  ] ]")(remove("ask turtles [ ask one-of other turtles [ set color blue ] ]", "set"))
     assertResult("fd 1 end to bar")(remove("fd 1 end to bar bk 2", "bk"))
-    assertResult("fd 1 end to bar")(remove("fd 1 bk 1 end to bar", "bk"))
+    assertResult("fd 1  end to bar")(remove("fd 1 bk 1 end to bar", "bk"))
     assertResult("run [ user-message (word \"abc\" \"123\") ]")(remove("run [ user-message (word \"abc\" \"123\") ]", "fd"))
     assertResult("")(remove("show (word \"one\" \"two\" \"three\")", "show"))
     assertResult("")(remove("show ((word \"one\" \"two\" \"three\"))", "show"))
     assertResult("")(remove("(show ((word \"one\" \"two\" \"three\")))", "show"))
-    assertResult("show 1 show 3")(remove("show 1 print (word (1 + 5) 2 (3 + 7)) show 3", "print"))
+    assertResult("show 1  show 3")(remove("show 1 print (word (1 + 5) 2 (3 + 7)) show 3", "print"))
   }
 
   test("adds new command based on existing command") {
-    assertResult("fd 1 bk 1")(addCommand("bk 1", "bk" -> "fd 1"))
-    assertResult("fd 2 bk 2")(addCommand("bk 2", "bk" -> "fd {0}"))
-    assertResult("; bk 2")(addCommand("; bk 2\n", "bk" -> "fd {0}"))
-    assertResult("fd exp 10 bk exp 10")(addCommand("bk exp 10", "bk" -> "fd {0}"))
-    assertResult("set foo exp 10 bk exp 10")(addCommand("bk exp 10", "bk" -> "set foo {0}"))
-    assertResult("set foo 2 setxy 1 2")(addCommand("setxy 1 2", "setxy" -> "set foo {1}"))
-    assertResult("fd exp 3 setxy 2 exp 3")(addCommand("setxy 2 exp 3", "setxy" -> "fd {1}"))
-    assertResult("ask turtles [  fd 1 bk 1 ]")(addCommand("ask turtles [ bk 1 ]", "bk" -> "fd 1"))
-    assertResult("if (1 = 2) [  fd 1 bk 1 ]")(addCommand("if (1 = 2) [ bk 1 ]", "bk" -> "fd 1"))
+    assertResult("fd 1 bk 1")(addCommand("bk 1", "bk", "fd 1"))
+    assertResult("fd 2 bk 2")(addCommand("bk 2", "bk", "fd {0}"))
+    assertResult("; bk 2")(addCommand("; bk 2\n", "bk", "fd {0}"))
+    assertResult("fd exp 10 bk exp 10")(addCommand("bk exp 10", "bk", "fd {0}"))
+    assertResult("set foo exp 10 bk exp 10")(addCommand("bk exp 10", "bk", "set foo {0}"))
+    assertResult("set foo 2 setxy 1 2")(addCommand("setxy 1 2", "setxy", "set foo {1}"))
+    assertResult("fd exp 3 setxy 2 exp 3")(addCommand("setxy 2 exp 3", "setxy", "fd {1}"))
+    assertResult("ask turtles [ fd 1 bk 1 ]")(addCommand("ask turtles [ bk 1 ]", "bk", "fd 1"))
+    assertResult("if (1 = 2) [ fd 1 bk 1 ]")(addCommand("if (1 = 2) [ bk 1 ]", "bk", "fd 1"))
   }
 
   test("rename command and manipulate arguments") {
-    assertResult("bk 1  forward 1")(replaceCommand("bk 1  fd 1", "fd" -> "forward {0}"))
-    assertResult("file-close-all")(replaceCommand("file-close", "file-close" -> "file-close-all"))
-    assertResult("fd 1")(replaceCommand("bk 1", "bk" -> "fd 1"))
-    assertResult("; bk 1")(replaceCommand("; bk 1\n", "bk" -> "fd 1"))
-    assertResult("fd exp 3")(replaceCommand("bk exp 3", "bk" -> "fd {0}"))
-    assertResult("fd exp 3")(replaceCommand("setxy 2 exp 3", "setxy" -> "fd {1}"))
-    assertResult("(fd exp 3)")(replaceCommand("setxy 2 exp 3", "setxy" -> "(fd {1})"))
+    assertResult("bk 1  forward 1")(replaceCommand("bk 1  fd 1", "fd", "forward {0}"))
+    assertResult("file-close-all")(replaceCommand("file-close", "file-close", "file-close-all"))
+    assertResult("fd 1")(replaceCommand("bk 1", "bk", "fd 1"))
+    assertResult("; bk 1")(replaceCommand("; bk 1\n", "bk", "fd 1"))
+    assertResult("fd exp 3")(replaceCommand("bk exp 3", "bk", "fd {0}"))
+    assertResult("fd exp 3")(replaceCommand("setxy 2 exp 3", "setxy", "fd {1}"))
+    assertResult("(fd exp 3)")(replaceCommand("setxy 2 exp 3", "setxy", "(fd {1})"))
   }
 
   test("replace reporter") {
-    assertResult("2")(replaceReporter("1", "1" -> "2"))
-    assertResult("\"z\"")(replaceReporter("\"a\"", "\"a\"" -> "\"z\""))
-    assertResult("true")(replaceReporter("false", "false" -> "true")) // reality only exists in the mind
-    assertResult("pi")(replaceReporter("e", "e" -> "pi"))
-    assertResult("distance one-of other turtles")(replaceReporter("distance one-of turtles", "turtles" -> "other turtles"))
-    assertResult("2 ; 1 + 2")(replaceReporter("2 ; 1 + 2\n", "1" -> "2"))
-    assertResult("2 + 2")(replaceReporter("1 + 2", "1" -> "2"))
-    assertResult("2 + 2 + 2")(replaceReporter("1 + 2", "1" -> "2 + 2"))
-    assertResult("2 + 2 + 2")(replaceReporter("2 + 1", "1" -> "2 + 2"))
-    assertResult("netlogo-web?")(replaceReporter("netlogo-applet?", "netlogo-applet?" -> "netlogo-web?"))
+    assertResult("2")(replaceReporter("1", "1", "2"))
+    assertResult("\"z\"")(replaceReporter("\"a\"", "\"a\"", "\"z\""))
+    assertResult("true")(replaceReporter("false", "false", "true")) // reality only exists in the mind
+    assertResult("pi")(replaceReporter("e", "e", "pi"))
+    assertResult("distance one-of other turtles")(replaceReporter("distance one-of turtles", "turtles", "other turtles"))
+    assertResult("2 ; 1 + 2")(replaceReporter("2 ; 1 + 2\n", "1", "2"))
+    assertResult("2 + 2")(replaceReporter("1 + 2", "1", "2"))
+    assertResult("2 + 2 + 2")(replaceReporter("1 + 2", "1", "2 + 2"))
+    assertResult("2 + 2 + 2")(replaceReporter("2 + 1", "1", "2 + 2"))
+    assertResult("netlogo-web?")(replaceReporter("netlogo-applet?", "netlogo-applet?", "netlogo-web?"))
     // This doesn't work on literal lists right now.
     // This test just documents that behavior.
     // Could be added, but I don't really see a need most of the time.
-    assertResult("[4 2 3]")(replaceReporter("[4 2 3]", "4" -> "1"))
+    assertResult("[4 2 3]")(replaceReporter("[4 2 3]", "4", "1"))
   }
 
   testLambda("let baz []", "let baz []")
@@ -229,20 +229,20 @@ class AstRewriterTests extends AnyFunSuiteEx {
     rewritten.stripPrefix(preamble.trim).stripSuffix(postamble.trim).trim
   }
 
-  def addCommand(source: String, target: (String, String)): String =
-    trimmedRewriteCommand(source, _.addCommand(target))
+  def addCommand(source: String, command: String, addition: String): String =
+    trimmedRewriteCommand(source, _.addCommand(command, addition))
 
   def replaceReporterToken(source: String, target: (String, String)): String =
     trimmedRewriteCommand(source, _.replaceToken(target._1, target._2), "TO-REPORT FOO REPORT ")
 
-  def replaceCommand(source: String, target: (String, String)): String =
-    trimmedRewriteCommand(source, _.replaceCommand(target))
+  def replaceCommand(source: String, command: String, replacement: String): String =
+    trimmedRewriteCommand(source, _.replace(command, replacement))
 
   def remove(source: String, removeCommand: String): String =
     trimmedRewriteCommand(source, _.remove(removeCommand))
 
-  def replaceReporter(source: String, target: (String, String)): String =
-    trimmedRewriteCommand(source, _.replaceReporter(target), "TO-REPORT FOO REPORT ")
+  def replaceReporter(source: String, reporter: String, replacement: String): String =
+    trimmedRewriteCommand(source, _.replace(reporter, replacement), "TO-REPORT FOO REPORT ")
 
   def assertPreservesSource(source: String, header: String = "TO FOO ", footer: String = " END"): Unit = {
     val rewrittenSource =

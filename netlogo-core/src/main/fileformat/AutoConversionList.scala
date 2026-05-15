@@ -40,12 +40,12 @@ object AutoConversionList {
 
       val sharedTransformations =
         CommandReplacements
-          .map(replacement => ((rewriter: SourceRewriter) => rewriter.replaceCommand(replacement))) ++
+          .map((original, replacement) => ((rewriter: SourceRewriter) => rewriter.replace(original, replacement))) ++
           Seq[SourceRewriter => String](
             _.remove("movie-set-frame-rate"),
-            _.addCommand("movie-start"       -> "set _recording-save-file-name {0}"),
-            _.replaceCommand("movie-start"   -> "vid:start-recorder"),
-            _.replaceReporter("movie-status" -> "vid:recorder-status"))
+            _.addCommand("movie-start", "set _recording-save-file-name {0}"),
+            _.replace("movie-start", "vid:start-recorder"),
+            _.replace("movie-status", "vid:recorder-status"))
 
       val codeTabOnlyReplacements = Seq[SourceRewriter => String](
         _.addGlobal("_recording-save-file-name"),

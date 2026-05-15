@@ -23,38 +23,21 @@ class AstRewriter(val tokenizer: TokenizerInterface, op: CompilationOperand) ext
   def preserveBody(structureResults: StructureResults, header: String, procedures: String, footer: String): String =
     header + procedures + footer
 
-  def remove(dropCommand: String): String = {
-    val visitor = new RemovalVisitor(dropCommand)
-
-    basicParse(op)._1.foreach(visitor.visitProcedureDefinition)
-
-    val ranges = visitor.getRanges.sortBy(_._1)
-    val source = op.sources("")
-
-    if (ranges.nonEmpty) {
-      ranges.sliding(2).foldLeft(source.substring(0, ranges(0)._1).stripTrailing) {
-        case (acc, Seq((_, start), (end, _))) =>
-          acc + source.substring(start, end).stripTrailing
-
-        case (acc, _) =>
-          acc
-      } + source.substring(ranges.last._2)
-    } else {
-      source
-    }
+  private def rewriteSimple(visitor: RewriteFolder): String = {
+    basicParse(op)._1.filter(_.procedure.filename == "").foldLeft(RewriteContext(op.sources(""))) {
+      case (ctx, proc) =>
+        visitor.visitProcedureDefinition(proc)(ctx)
+    }.throughEnd.text
   }
 
-  def addCommand(addCommand: (String, String)): String = {
-    rewrite(new AddVisitor(addCommand), preserveBody)
-  }
+  override def remove(command: String): String =
+    rewriteSimple(new RemoveVisitor(command))
 
-  def replaceCommand(replaceCommand: (String, String)): String = {
-    rewrite(new ReplaceVisitor(replaceCommand), preserveBody)
-  }
+  override def addCommand(command: String, addition: String): String =
+    rewriteSimple(new AddVisitor(command, addition))
 
-  def replaceReporter(replaceReporter: (String, String)): String = {
-    rewrite(new ReplaceReporterVisitor(replaceReporter), preserveBody)
-  }
+  override def replace(primitive: String, replacement: String): String =
+    rewriteSimple(new ReplaceVisitor(primitive, replacement))
 
   def lambdaize(): String = {
     rewrite(new Lambdaizer, preserveBody)

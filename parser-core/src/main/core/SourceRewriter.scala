@@ -7,10 +7,9 @@ trait SourceRewriter {
   def addExtension(extension: String): String
   def removeExtension(extension: String): String
   def addReporterProcedure(name: String, args: Seq[String], body: String): String
-  def remove(commandName: String): String
+  def remove(command: String): String
   def replaceToken(originalToken: String, replaceToken:String): String
-  def addCommand(sourceAndNewCommand: (String, String)): String
-  def replaceCommand(sourceAndDestCommand: (String, String)): String
-  def replaceReporter(sourceAndDestReporter: (String, String)): String
+  def addCommand(command: String, addition: String): String
+  def replace(primitive: String, replacement: String): String
   def lambdaize(): String
 }

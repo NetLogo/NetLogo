@@ -93,7 +93,7 @@ class NLogoFormatConversionTest extends AnyFunSuiteEx with ConversionHelper {
 
     test("performs listed autoconversions") {
       val m = Model(code = "to foo fd 1 end")
-      val conversions = Seq(conversion(codeTabConversions = Seq(_.replaceCommand("fd" -> "forward {0}")), targets = Seq("fd")))
+      val conversions = Seq(conversion(codeTabConversions = Seq(_.replace("fd", "forward {0}")), targets = Seq("fd")))
       val rereadModel = readAndConvertModel(m, conversions)
       assertResult("to foo forward 1 end")(rereadModel.code)
     }
