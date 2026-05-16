@@ -19,6 +19,41 @@ object AutoConversionList {
     ConversionSet(name, changes, changes, targets)
   }
 
+  lazy val preConversions = Seq(
+    // this conversion exists to work around a bug in older versions of NetLogo where creating a breed
+    // whose name conflicts with an existing is-<type>? reporter would just shadow the new is-<breed>?
+    // reporter instead of throwing a compiler error. (Isaac B 5/15/26)
+    ConversionSet("rename conflicting breeds", Seq(
+      _.renameBreedSingular("agent", "an-agent"),
+      _.renameBreedSingular("agentset", "an-agentset"),
+      _.renameBreedSingular("boolean", "a-boolean"),
+      _.renameBreedSingular("directed-link", "a-directed-link"),
+      _.renameBreedSingular("link", "a-link"),
+      _.renameBreedSingular("link-set", "a-link-set"),
+      _.renameBreedSingular("list", "a-list"),
+      _.renameBreedSingular("number", "a-number"),
+      _.renameBreedSingular("patch-set", "a-patch-set"),
+      _.renameBreedSingular("string", "a-string"),
+      _.renameBreedSingular("turtle-set", "a-turtle-set"),
+      _.renameBreedSingular("undirected-link", "an-undirected-link"),
+      _.renameBreedPlural("agent", "agents"),
+      _.renameBreedPlural("agentset", "agentsets"),
+      _.renameBreedPlural("boolean", "booleans"),
+      _.renameBreedPlural("directed-link", "directed-links"),
+      _.renameBreedPlural("link", "links"),
+      _.renameBreedPlural("link-set", "link-sets"),
+      _.renameBreedPlural("list", "lists"),
+      _.renameBreedPlural("number", "numbers"),
+      _.renameBreedPlural("patch-set", "patch-sets"),
+      _.renameBreedPlural("string", "strings"),
+      _.renameBreedPlural("turtle-set", "turtle-sets"),
+      _.renameBreedPlural("undirected-link", "undirected-links")
+    )),
+    // this conversion exists to work around a bug in older versions of NetLogo where declarations could
+    // be placed after the procedures without incurring a compiler error. (Isaac B 5/15/26)
+    ConversionSet("reorder declarations", Seq(_.reorderDeclarations()))
+  )
+
   lazy val conversions: ConversionList = Seq(
     "NetLogo 5.2" -> {
       changeAllCode("hsb correction", Seq(_.replaceToken("hsb", "__hsb-old")), Seq("hsb"))

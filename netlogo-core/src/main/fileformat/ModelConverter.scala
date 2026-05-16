@@ -10,8 +10,8 @@ import scala.util.matching.Regex
 import org.nlogo.api.{ AutoConverter, AutoConvertable, FileIO }
 import org.nlogo.core.{ CompilationEnvironment, CompilationOperand, Dialect, ExtensionManager, Femto,
                         FrontEndInterface, LibraryManager, LiteralParser, Model, Program, SourceRewriter,
-                        StructureDeclarations, StructureResults, VersionUtils },
-  FrontEndInterface.ProceduresMap, StructureDeclarations.{ Declaration, Procedure }
+                        StructureResults, VersionUtils },
+  FrontEndInterface.ProceduresMap
 
 import FileFormat.ModelConversion
 
@@ -68,7 +68,7 @@ class ModelConverter(
     val frontEnd = Femto.scalaSingleton[FrontEndInterface]("org.nlogo.parse.FrontEnd")
 
     def rewriterOp(operand: CompilationOperand): SourceRewriter = {
-      Femto.get[SourceRewriter]("org.nlogo.parse.AstRewriter", tokenizer, operand)
+      Femto.get[SourceRewriter]("org.nlogo.parse.AstRewriter", tokenizer, frontEnd, operand)
     }
 
     val aggregateConversionDialect = applicableConversions(model).map(_.conversionDialect)
@@ -157,38 +157,15 @@ class ModelConverter(
       modelWithConvertedComponents(convertedCodeTab)
     }
 
-    val decls: Seq[Declaration] = frontEnd.findDeclarations(model.code, modelPath.getFileName.toString)
-
-    val reordered: String = {
-      if (decls.nonEmpty) {
-        val source: String = model.code
-
-        val sorted: Seq[Declaration] = decls.sortBy(_.start.start)
-
-        val firstRange: (Declaration, String) = (sorted(0), source.substring(0, sorted(0).end.end))
-
-        val ranges: Seq[(Declaration, String)] = sorted.sliding(2).foldLeft(Seq(firstRange)) {
-          case (acc, Seq(one, two)) =>
-            acc :+ (two, source.substring(one.end.end, two.end.end))
-
-          case (acc, _) =>
-            acc
-        }
-
-        val (valid, (invalid, procs)) = ranges.span(!_._1.isInstanceOf[Procedure]) match {
-          case (valid, other) =>
-            (valid, other.partition(!_._1.isInstanceOf[Procedure]))
-        }
-
-        (valid :++ invalid :++ procs).map(_._2).mkString + source.substring(sorted.last.end.end)
-      } else {
-        model.code
-      }
+    // pre-conversions prepare the source code for the full parse steps needed in the standard auto-conversion set,
+    // using less strict methods of parsing to allow the auto-conversion of models that were created prior to various
+    // changes to the core NetLogo syntax. (Isaac B 5/15/26)
+    val result = AutoConversionList.preConversions.foldLeft[ConversionResult](SuccessfulConversion(model, model)) {
+      case (cr, conversion) =>
+        cr.mergeResult(applyConversion(conversion, cr.model))
     }
 
-    val newModel: Model = model.copy(code = reordered)
-
-    applicableConversions(newModel).foldLeft[ConversionResult](SuccessfulConversion(newModel, newModel)) {
+    applicableConversions(model).foldLeft[ConversionResult](result) {
       case (cr, conversion) =>
         cr.mergeResult(runConversion(conversion, cr.model))
     }

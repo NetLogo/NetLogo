@@ -28,7 +28,7 @@ class ModelConverterTests extends AnyFunSuiteEx with ConversionHelper {
       tryConvert(model, conversion(name = "add global foo", codeTabConversions = Seq(_.addGlobal("foo")), targets = Seq("fd"))) match {
         case ErroredConversion(m, e) =>
           assertResult(model)(m)
-          assert(e.conversionDescription === "add global foo")
+          assert(e.conversionDescription === "rename conflicting breeds")
           assert(e.componentDescription === "code tab")
           assert(e.errors.head.isInstanceOf[CompilerException])
         case other => fail(s"Expected failure, got $other")
@@ -203,11 +203,7 @@ class ModelConverterTests extends AnyFunSuiteEx with ConversionHelper {
            |end""".stripMargin
 
       val convertedSource =
-        """|extensions [vid]
-           |globals [_recording-save-file-name]
-           |to start
-           |  
-           |end""".stripMargin
+        "extensions [vid]\nglobals [_recording-save-file-name]\nto start\n  \nend"
 
       val conversionSet = AutoConversionList.conversions.collect {
         case ("NetLogo 6.0-M9", set) =>
@@ -415,6 +411,150 @@ class ModelConverterTests extends AnyFunSuiteEx with ConversionHelper {
            |""".stripMargin
 
       assertResult(convertedSource)(convert(Model(code = originalSource), AutoConversionList.conversions.map(_._2)*).code)
+    }
+
+    test("renames conflicting singular breed names") {
+      val originalSource =
+        """|breed [ agents agent ]
+           |breed [ booleans boolean ]
+           |
+           |to test
+           |  create-agents 10 [ show is-agent? self ]
+           |  create-booleans 10 [ show is-boolean? self ]
+           |end
+           |""".stripMargin
+
+      val convertedSource =
+        """|breed [ agents an-agent ]
+           |breed [ booleans a-boolean ]
+           |
+           |to test
+           |  create-agents 10 [ show is-an-agent? self ]
+           |  create-booleans 10 [ show is-a-boolean? self ]
+           |end
+           |""".stripMargin
+
+      assertResult(convertedSource)(convert(Model(code = originalSource), AutoConversionList.preConversions*).code)
+    }
+
+    test("renames conflicting plural breed names") {
+      val originalSource =
+        """|breed [ agent an-agent ]
+           |breed [ boolean a-boolean ]
+           |
+           |agent-own [ one two ]
+           |
+           |to test
+           |  create-agent 10 [ show is-an-agent? self ]
+           |  create-boolean 10 [ show is-a-boolean? self ]
+           |end
+           |""".stripMargin
+
+      val convertedSource =
+        """|breed [ agents an-agent ]
+           |breed [ booleans a-boolean ]
+           |
+           |agents-own [ one two ]
+           |
+           |to test
+           |  create-agents 10 [ show is-an-agent? self ]
+           |  create-booleans 10 [ show is-a-boolean? self ]
+           |end
+           |""".stripMargin
+
+      assertResult(convertedSource)(convert(Model(code = originalSource), AutoConversionList.preConversions*).code)
+    }
+
+    test("excludes link breed primitives when renaming turtle breed") {
+      val originalSource =
+        """|breed [ agents agent ]
+           |
+           |to create-agent-with
+           |end
+           |
+           |to create-an-agent-with
+           |end
+           |
+           |to create-agents-with
+           |end
+           |
+           |to test
+           |  create-agents 10 [ show is-agent? self ]
+           |
+           |  create-agent-with
+           |  create-an-agent-with
+           |  create-agents-with
+           |end
+           |""".stripMargin
+
+      val convertedSource =
+        """|breed [ agents an-agent ]
+           |
+           |to create-agent-with
+           |end
+           |
+           |to create-an-agent-with
+           |end
+           |
+           |to create-agents-with
+           |end
+           |
+           |to test
+           |  create-agents 10 [ show is-an-agent? self ]
+           |
+           |  create-agent-with
+           |  create-an-agent-with
+           |  create-agents-with
+           |end
+           |""".stripMargin
+
+      assertResult(convertedSource)(convert(Model(code = originalSource), AutoConversionList.preConversions*).code)
+    }
+
+    test("excludes turtle breed primitives when renaming link breed") {
+      val originalSource =
+        """|directed-link-breed [ agents agent ]
+           |
+           |to hatch-agent
+           |end
+           |
+           |to hatch-an-agent
+           |end
+           |
+           |to hatch-agents
+           |end
+           |
+           |to test
+           |  ask turtle 0 create-agent-with turtle 1
+           |
+           |  hatch-agent
+           |  hatch-an-agent
+           |  hatch-agents
+           |end
+           |""".stripMargin
+
+      val convertedSource =
+        """|directed-link-breed [ agents an-agent ]
+           |
+           |to hatch-agent
+           |end
+           |
+           |to hatch-an-agent
+           |end
+           |
+           |to hatch-agents
+           |end
+           |
+           |to test
+           |  ask turtle 0 create-an-agent-with turtle 1
+           |
+           |  hatch-agent
+           |  hatch-an-agent
+           |  hatch-agents
+           |end
+           |""".stripMargin
+
+      assertResult(convertedSource)(convert(Model(code = originalSource), AutoConversionList.preConversions*).code)
     }
   }
 }

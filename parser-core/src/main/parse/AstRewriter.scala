@@ -4,24 +4,165 @@ package org.nlogo.parse
 
 import java.util.Locale
 
-import org.nlogo.core.{
-  CompilationOperand,
-  ProcedureDefinition,
-  ProcedureSyntax,
-  SourceLocation,
-  SourceRewriter,
-  StructureResults,
-  Token,
-  TokenType,
-  TokenizerInterface
-}
+import org.nlogo.core.{ CompilationOperand, FrontEndInterface, ProcedureDefinition, ProcedureSyntax, SourceLocation,
+  SourceRewriter, StructureResults, Token, TokenType, TokenizerInterface }
+import org.nlogo.core.StructureDeclarations.{ Breed, Identifier, Declaration, Procedure }
 
 import scala.util.matching.Regex
 
-class AstRewriter(val tokenizer: TokenizerInterface, op: CompilationOperand) extends SourceRewriter with NetLogoParser {
+class AstRewriter(val tokenizer: TokenizerInterface, frontEnd: FrontEndInterface, op: CompilationOperand) extends SourceRewriter with NetLogoParser {
 
   def preserveBody(structureResults: StructureResults, header: String, procedures: String, footer: String): String =
     header + procedures + footer
+
+  override def renameBreedSingular(breed: String, replacement: String): String = {
+    val source: String = op.sources("")
+
+    val result = frontEnd.findDeclarations(source, "").find {
+      case Breed(_, Identifier(name, _), _, _, _, _) =>
+        name.equalsIgnoreCase(breed)
+
+      case _ =>
+        false
+    } match {
+      case Some(Breed(_, Identifier(_, token), linkBreed, _, _, _)) =>
+        val newSource: String = source.substring(0, token.start) + replacement + source.substring(token.end)
+
+        tokenizer.tokenizeWithWhitespace(newSource, "").map { token =>
+          if (token.text.equalsIgnoreCase(breed)) {
+            replacement
+          } else if (token.text.equalsIgnoreCase(s"is-$breed?")) {
+            s"is-$replacement?"
+          } else {
+            if (linkBreed) {
+              if (token.text.equalsIgnoreCase(s"create-$breed-from")) {
+                s"create-$replacement-from"
+              } else if (token.text.equalsIgnoreCase(s"create-$breed-to")) {
+                s"create-$replacement-to"
+              } else if (token.text.equalsIgnoreCase(s"create-$breed-with")) {
+                s"create-$replacement-with"
+              } else if (token.text.equalsIgnoreCase(s"in-$breed-from")) {
+                s"in-$replacement-from"
+              } else if (token.text.equalsIgnoreCase(s"in-$breed-neighbor?")) {
+                s"in-$replacement-neighbor"
+              } else if (token.text.equalsIgnoreCase(s"in-$breed-neighbors")) {
+                s"in-$replacement-neighbors"
+              } else if (token.text.equalsIgnoreCase(s"$breed-neighbor?")) {
+                s"$replacement-neighbor?"
+              } else if (token.text.equalsIgnoreCase(s"$breed-neighbors")) {
+                s"$replacement-neighbors"
+              } else if (token.text.equalsIgnoreCase(s"$breed-with")) {
+                s"$replacement-with"
+              } else if (token.text.equalsIgnoreCase(s"out-$breed-neighbor?")) {
+                s"out-$replacement-neighbor?"
+              } else if (token.text.equalsIgnoreCase(s"out-$breed-neighbors")) {
+                s"out-$replacement-neighbors"
+              } else if (token.text.equalsIgnoreCase(s"out-$breed-to")) {
+                s"out-$replacement-to"
+              } else {
+                token.text
+              }
+            } else {
+              token.text
+            }
+          }
+        }.mkString
+
+      case _ =>
+        source
+    }
+
+    result
+  }
+
+  override def renameBreedPlural(breed: String, replacement: String): String = {
+    val source: String = op.sources("")
+
+    frontEnd.findDeclarations(source, "").find {
+      case Breed(Identifier(name, _), _, _, _, _, _) =>
+        name.equalsIgnoreCase(breed)
+
+      case _ =>
+        false
+    } match {
+      case Some(Breed(Identifier(_, token), _, linkBreed, _, _, _)) =>
+        val newSource: String = source.substring(0, token.start) + replacement + source.substring(token.end)
+
+        tokenizer.tokenizeWithWhitespace(newSource, "").map { token =>
+          if (token.text.equalsIgnoreCase(breed)) {
+            replacement
+          } else if (token.text.equalsIgnoreCase(s"$breed-own")) {
+            s"$replacement-own"
+          } else {
+            if (linkBreed) {
+              if (token.text.equalsIgnoreCase(s"create-$breed-from")) {
+                s"create-$replacement-from"
+              } else if (token.text.equalsIgnoreCase(s"create-$breed-to")) {
+                s"create-$replacement-to"
+              } else if (token.text.equalsIgnoreCase(s"create-$breed-with")) {
+                s"create-$replacement-with"
+              } else if (token.text.equalsIgnoreCase(s"my-$breed")) {
+                s"my-$replacement"
+              } else if (token.text.equalsIgnoreCase(s"my-in-$breed")) {
+                s"my-in-$replacement"
+              } else if (token.text.equalsIgnoreCase(s"my-out-$breed")) {
+                s"my-out-$replacement"
+              } else {
+                token.text
+              }
+            } else if (token.text.equalsIgnoreCase(s"$breed-at")) {
+              s"$replacement-at"
+            } else if (token.text.equalsIgnoreCase(s"$breed-here")) {
+              s"$replacement-here"
+            } else if (token.text.equalsIgnoreCase(s"$breed-on")) {
+              s"$replacement-on"
+            } else if (token.text.equalsIgnoreCase(s"create-$breed")) {
+              s"create-$replacement"
+            } else if (token.text.equalsIgnoreCase(s"create-ordered-$breed")) {
+              s"create-ordered-$replacement"
+            } else if (token.text.equalsIgnoreCase(s"hatch-$breed")) {
+              s"hatch-$replacement"
+            } else if (token.text.equalsIgnoreCase(s"sprout-$breed")) {
+              s"sprout-$replacement"
+            } else {
+              token.text
+            }
+          }
+        }.mkString
+
+      case _ =>
+        source
+    }
+  }
+
+  override def reorderDeclarations(): String = {
+    val source: String = op.sources("")
+
+    val decls: Seq[Declaration] = frontEnd.findDeclarations(source, "")
+
+    if (decls.nonEmpty) {
+      val sorted: Seq[Declaration] = decls.sortBy(_.start.start)
+
+      val firstRange: (Declaration, String) = (sorted(0), source.substring(0, sorted(0).end.end))
+
+      val ranges: Seq[(Declaration, String)] = sorted.sliding(2).foldLeft(Seq(firstRange)) {
+        case (acc, Seq(one, two)) =>
+          acc :+ (two, source.substring(one.end.end, two.end.end))
+
+        case (acc, _) =>
+          acc
+      }
+
+      val (valid, (invalid, procs)) = ranges.span(!_._1.isInstanceOf[Procedure]) match {
+        case (valid, other) =>
+          (valid, other.partition(!_._1.isInstanceOf[Procedure]))
+      }
+
+      (valid :++ invalid :++ procs).map(_._2).mkString + source.substring(sorted.last.end.end)
+    } else {
+      source
+    }
+  }
 
   private def rewriteSimple(visitor: RewriteFolder): String = {
     basicParse(op)._1.filter(_.procedure.filename == "").foldLeft(RewriteContext(op.sources(""))) {

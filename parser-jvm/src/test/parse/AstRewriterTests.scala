@@ -43,7 +43,7 @@ class AstRewriterTests extends AnyFunSuiteEx {
   test("multi-source compilation") {
     val singleFileOp = compilationOp("to foo bar end\nto baz tick end")
     val multiFileOp = singleFileOp.copy(sources = singleFileOp.sources + ("other" -> "to bar tick end"))
-    val rw = new AstRewriter(tokenizer, multiFileOp)
+    val rw = new AstRewriter(tokenizer, FrontEnd, multiFileOp)
     val rewrittenSource = rw.rewrite(NoopFolder, rw.preserveBody)
     assertResult("to foo bar end\nto baz tick end")(rewrittenSource)
   }
@@ -203,7 +203,7 @@ class AstRewriterTests extends AnyFunSuiteEx {
   def rewriter(source: String): AstRewriter = rewriter(compilationOp(source))
 
   def rewriter(op: CompilationOperand): AstRewriter =
-    new AstRewriter(tokenizer, op)
+    new AstRewriter(tokenizer, FrontEnd, op)
 
   def addExtension(source: String, extension: String): String = {
     val added = rewriter(source).addExtension(extension)

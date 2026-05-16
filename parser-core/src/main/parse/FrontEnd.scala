@@ -2,10 +2,8 @@
 
 package org.nlogo.parse
 
-import org.nlogo.core,
-  core.{AstTransformer, CompilationOperand, Dialect, Femto,
-    ExtensionManager, FrontEndInterface, CompilerException,
-    StructureDeclarations, TokenizerInterface }
+import org.nlogo.core.{ AstTransformer, CompilationOperand, CompilerException, Dialect, ExtensionManager, Fail, Femto,
+                        FrontEndInterface, StructureDeclarations, Token, TokenizerInterface, TokenType }
 
 object FrontEnd extends FrontEnd {
   val tokenizer: TokenizerInterface =
@@ -46,16 +44,16 @@ trait FrontEndMain extends NetLogoParser {
     Seq(new LetReducer, new CarefullyVisitor, new ClosureTagger, new SourceTagger(compilationOperand))
   }
 
-  def tokenizeForColorization(source: String, dialect: Dialect, extensionManager: ExtensionManager): Seq[core.Token] = {
+  def tokenizeForColorization(source: String, dialect: Dialect, extensionManager: ExtensionManager): Seq[Token] = {
     tokenizer.tokenizeString(source).map(Namer.basicNamer(dialect, extensionManager)).toSeq
   }
 
-  def tokenizeForColorizationIterator(source: String, dialect: Dialect, extensionManager: ExtensionManager): Iterator[core.Token] = {
+  def tokenizeForColorizationIterator(source: String, dialect: Dialect, extensionManager: ExtensionManager): Iterator[Token] = {
     tokenizer.tokenizeString(source).map(Namer.basicNamer(dialect, extensionManager))
   }
 
   def tokenizeWithWhitespace(source: String, dialect: Dialect,
-                             extensionManager: ExtensionManager): Iterator[core.Token] =
+                             extensionManager: ExtensionManager): Iterator[Token] =
     tokenizer.tokenizeWithWhitespace(source, null).map(Namer.basicNamer(dialect, extensionManager))
 
   @throws(classOf[CompilerException])
@@ -75,6 +73,16 @@ trait FrontEndMain extends NetLogoParser {
   def findExtensions(source: String): Seq[String] =
     StructureParser.findExtensions(tokenizer.tokenizeString(source))
 
-  def findDeclarations(source: String, filename: String): Seq[StructureDeclarations.Declaration] =
-    StructureCombinators.parse(tokenizer.tokenizeString(source).map(Namer0), filename).getOrElse(Seq())
+  def findDeclarations(source: String, filename: String): Seq[StructureDeclarations.Declaration] = {
+    val tokens = tokenizer.tokenizeString(source).filter(_.tpe != TokenType.Comment).map(Namer0)
+
+    StructureCombinators.parse(tokens, filename).fold(
+      (msg, token) => {
+        Fail.exception(msg, token)
+
+        Seq()
+      },
+      decls => decls
+    )
+  }
 }
