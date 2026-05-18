@@ -3,16 +3,15 @@
 package org.nlogo.app
 
 import java.awt.{ BorderLayout, Cursor, Dimension, Frame }
-import java.awt.event.{ WindowAdapter, WindowEvent, MouseAdapter, MouseEvent }
-import java.net.URI
-import javax.swing.{ JDialog, JLabel, SwingConstants, Timer, WindowConstants }
+import java.awt.event.{ WindowAdapter, WindowEvent }
+import javax.swing.{ JDialog, JEditorPane, JLabel, Timer, WindowConstants }
 import javax.swing.border.{ EmptyBorder, LineBorder }
 
 import org.nlogo.api.{ APIVersion, FileIO, Version }
 import org.nlogo.awt.Positioning
 import org.nlogo.core.I18N
 import org.nlogo.editor.EditorConfiguration
-import org.nlogo.swing.{ BrowserLauncher, RichAction, ScrollPane, TabbedPane, TextArea, Utils }
+import org.nlogo.swing.{ RichAction, ScrollPane, TabbedPane, TextArea, Utils }
 import org.nlogo.theme.{ DarkTheme, InterfaceColors, ThemeSync }
 import org.nlogo.util.SysInfo
 
@@ -40,29 +39,29 @@ class AboutWindow(parent: Frame) extends JDialog(parent, I18N.gui.get("dialog.ab
     setBorder(new EmptyBorder(10, 10, 0, 10))
   }
 
-  private val label = new JLabel {
-    val year = Version.buildDate.takeRight(4)
-    setText(
-      s"""|<html>
-          |<center>
-          |<b>${Version.versionDropZeroPatch}
-          | (${Version.buildDate})
-          |</b><br><br>
-          |<font size=-1><b>web site</b>
-          |<a href="https://www.netlogo.org">netlogo.org</a><br><br>
-          |&copy 1999-${year} Uri Wilensky<br><br>
-          |Please cite as:<br>
-          |Wilensky, U. 1999. NetLogo. http://ccl.northwestern.edu/netlogo/.<br>
-          |Center for Connected Learning and Computer-Based Modeling,<br>
-          |Northwestern University. Evanston, IL.
-          |</center> </html>""".stripMargin
-    )
-    setHorizontalAlignment(SwingConstants.CENTER)
-    addMouseListener(new MouseAdapter {
-      override def mouseClicked(e: MouseEvent): Unit = {
-        BrowserLauncher.openURI(AboutWindow.this, new URI("https://www.netlogo.org/"))
-      }
-    })
+  private val citationText =
+    s"""|<html>
+        |<center>
+        |<b>${Version.versionDropZeroPatch}
+        | (${Version.buildDate})
+        |</b><br><br>
+        |<font size=-1><b>web site</b></font>
+        |<a href="https://www.netlogo.org">netlogo.org</a><br><br>
+        |&copy 1999-${Version.buildDate.takeRight(4)} Uri Wilensky<br><br>
+        |Please cite as:<br>
+        |Wilensky, U. 1999. NetLogo. http://ccl.northwestern.edu/netlogo/.<br>
+        |Center for Connected Learning and Computer-Based Modeling,<br>
+        |Northwestern University. Evanston, IL.
+        |</center> </html>""".stripMargin
+
+  private val label = new JEditorPane("text/html", citationText) with ThemeSync {
+    setEditable(false)
+    setDragEnabled(false)
+
+    override def syncTheme(): Unit = {
+      setBackground(InterfaceColors.dialogBackground())
+      setForeground(InterfaceColors.dialogText())
+    }
   }
 
   private val credits = new TextArea(15, 0, FileIO.getResourceAsString("/system/about.txt")) {
@@ -148,8 +147,7 @@ class AboutWindow(parent: Frame) extends JDialog(parent, I18N.gui.get("dialog.ab
       graphic.setIcon(Utils.iconScaled("/images/banner-versionless.png", 600, 231))
     }
 
-    label.setForeground(InterfaceColors.toolbarText())
-
+    label.syncTheme()
     credits.syncTheme()
     system.syncTheme()
 
