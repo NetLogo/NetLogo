@@ -20,6 +20,9 @@ object AutoConversionList {
   }
 
   lazy val preConversions = Seq(
+    ConversionSet("expand concise breeds", Seq(
+      _.expandConciseBreeds()
+    )),
     // this conversion exists to work around a bug in older versions of NetLogo where creating a breed
     // whose name conflicts with an existing is-<type>? reporter would just shadow the new is-<breed>?
     // reporter instead of throwing a compiler error. (Isaac B 5/15/26)

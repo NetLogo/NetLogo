@@ -15,6 +15,24 @@ class AstRewriter(val tokenizer: TokenizerInterface, frontEnd: FrontEndInterface
   def preserveBody(structureResults: StructureResults, header: String, procedures: String, footer: String): String =
     header + procedures + footer
 
+  override def expandConciseBreeds(): String = {
+    val source: String = op.sources("")
+
+    val breeds: Seq[Token] = tokenizer.tokenizeString(source).sliding(4).foldLeft(Seq()) {
+      case (acc, Seq(Token(_, _, "BREED"), Token(_, TokenType.OpenBracket, _), token @ Token(_, _, _),
+                     Token(_, TokenType.CloseBracket, _))) =>
+        acc :+ token
+
+      case (acc, _) =>
+        acc
+    }
+
+    breeds.foldLeft(RewriteContext(source)) {
+      case (ctx, token) =>
+        ctx.through(token.start).through(token.end, Some(s"${token.text} a-${token.text}"))
+    }.throughEnd.text
+  }
+
   override def renameBreedSingular(breed: String, replacement: String): String = {
     val source: String = op.sources("")
 

@@ -556,5 +556,29 @@ class ModelConverterTests extends AnyFunSuiteEx with ConversionHelper {
 
       assertResult(convertedSource)(convert(Model(code = originalSource), AutoConversionList.preConversions*).code)
     }
+
+    test("expands concise breed") {
+      val originalSource =
+        """|breed [ sheep ]
+           |breed [ wolves wolf ]
+           |
+           |to test
+           |  create-sheep 10
+           |  create-wolves 10 [ show is-wolf? self ]
+           |end
+           |""".stripMargin
+
+      val convertedSource =
+        """|breed [ sheep a-sheep ]
+           |breed [ wolves wolf ]
+           |
+           |to test
+           |  create-sheep 10
+           |  create-wolves 10 [ show is-wolf? self ]
+           |end
+           |""".stripMargin
+
+      assertResult(convertedSource)(convert(Model(code = originalSource), AutoConversionList.preConversions*).code)
+    }
   }
 }

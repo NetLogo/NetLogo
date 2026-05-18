@@ -3,6 +3,7 @@
 package org.nlogo.core
 
 trait SourceRewriter {
+  def expandConciseBreeds(): String
   def renameBreedSingular(breed: String, replacement: String): String
   def renameBreedPlural(breed: String, replacement: String): String
   def reorderDeclarations(): String
