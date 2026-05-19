@@ -59,7 +59,8 @@ class ModelConverter(
           },
         oldProcedures          = procedures,
         containingProgram      = program,
-        subprogram             = false)
+        subprogram             = false,
+        shouldAutoInstallLibs  = true)
     }
 
     val tokenizer =
@@ -209,7 +210,8 @@ class ModelConverter(
         compilationEnvironment = compilationEnv,
         oldProcedures          = results.procedures,
         containingProgram      = results.program,
-        subprogram             = true)
+        subprogram             = true,
+        shouldAutoInstallLibs  = true)
 
     private def convertWrappedSource(compilationOp: String => CompilationOperand)(source: String) = {
       otherCodeConversions.foldLeft(source) {
