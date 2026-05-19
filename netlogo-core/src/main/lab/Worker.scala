@@ -162,8 +162,8 @@ class Worker(val protocol: LabProtocol, val supervisorWriting: () => Unit = () =
             val v = value.asInstanceOf[java.lang.Double].intValue
             try { d = world.setDimensionVariable(name, v, d) }
             catch {
-              case e: WorldDimensionException =>
-                throw new FailedException("You cannot set " + name + " to " + v)
+              case WorldDimensionException(message) =>
+                throw new FailedException(message)
             }
           }
           else if (name.equalsIgnoreCase("RANDOM-SEED"))

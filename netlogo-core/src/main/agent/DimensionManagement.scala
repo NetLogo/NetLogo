@@ -6,7 +6,7 @@ import java.lang.{ Double => JDouble }
 import java.util.Locale
 
 import org.nlogo.api.{ AgentException, WorldDimensionException }
-import org.nlogo.core.WorldDimensions
+import org.nlogo.core.{ I18N, WorldDimensions }
 
 trait DimensionManagement { this: WorldJ =>
   def topology: Topology
@@ -78,12 +78,12 @@ trait DimensionManagement { this: WorldJ =>
       case "MIN-PYCOR" => d.copy(minPycor = value)
       case "MAX-PYCOR" => d.copy(maxPycor = value)
       case "WORLD-WIDTH" =>
-        val newMin = growMin(d.minPxcor, d.maxPxcor, value, d.minPxcor)
-        val newMax = growMax(d.minPxcor, d.maxPxcor, value, d.maxPxcor)
+        val newMin = growMin("WORLD-WIDTH", d.minPxcor, d.maxPxcor, value, d.minPxcor)
+        val newMax = growMax("WORLD-WIDTH", d.minPxcor, d.maxPxcor, value, d.maxPxcor)
         d.copy(minPxcor = newMin, maxPxcor = newMax)
       case "WORLD-HEIGHT" =>
-        val newMin = growMin(d.minPycor, d.maxPycor, value, d.minPycor)
-        val newMax = growMax(d.minPycor, d.maxPycor, value, d.maxPycor)
+        val newMin = growMin("WORLD-HEIGHT", d.minPycor, d.maxPycor, value, d.minPycor)
+        val newMax = growMax("WORLD-HEIGHT", d.minPycor, d.maxPycor, value, d.maxPycor)
         d.copy(minPycor = newMin, maxPycor = newMax)
       case _ => d
     }
@@ -99,14 +99,14 @@ trait DimensionManagement { this: WorldJ =>
     xc >= _minPxcor && xc <= _maxPxcor && yc >= _minPycor && yc <= _maxPycor
 
   @throws(classOf[WorldDimensionException])
-  def growMin(min: Int, max: Int, value: Int, d: Int): Int = {
+  protected def growMin(name: String, min: Int, max: Int, value: Int, d: Int): Int = {
     if (value < 1) {
-      throw new WorldDimensionException()
+      throw WorldDimensionException(I18N.errors.getN("view.dims.greaterEqOne", name))
     }
 
     if (max == -min) {
       if (value % 2 != 1) {
-        throw new WorldDimensionException()
+        throw WorldDimensionException(I18N.errors.getN("view.dims.odd", name))
       }
       -(value - 1) / 2
     } else if (max == 0) {
@@ -116,14 +116,14 @@ trait DimensionManagement { this: WorldJ =>
   }
 
   @throws(classOf[WorldDimensionException])
-  def growMax(min: Int, max: Int, value: Int, d: Int): Int = {
+  protected def growMax(name: String, min: Int, max: Int, value: Int, d: Int): Int = {
     if (value < 1) {
-      throw new WorldDimensionException()
+      throw WorldDimensionException(I18N.errors.getN("view.dims.greaterEqOne", name))
     }
 
     if (max == -min) {
       if (value % 2 != 1) {
-        throw new WorldDimensionException()
+        throw WorldDimensionException(I18N.errors.getN("view.dims.odd", name))
       }
       (value - 1) / 2
     } else if (min == 0) {

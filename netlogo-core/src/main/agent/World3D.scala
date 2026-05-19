@@ -305,8 +305,8 @@ class World3D extends World
       case "MIN-PZCOR" => wd.copyThreeD(minPzcor = value)
       case "MAX-PZCOR" => wd.copyThreeD(maxPzcor = value)
       case "WORLD-DEPTH" =>
-        val newMin = growMin(wd.minPzcor, wd.maxPzcor, value, wd.minPzcor)
-        val newMax = growMax(wd.minPzcor, wd.maxPzcor, value, wd.maxPzcor)
+        val newMin = growMin(variableName, wd.minPzcor, wd.maxPzcor, value, wd.minPzcor)
+        val newMax = growMax(variableName, wd.minPzcor, wd.maxPzcor, value, wd.maxPzcor)
         wd.copyThreeD(maxPzcor = newMax, minPzcor = newMin)
       case other =>
         val newWd = super.setDimensionVariable(variableName, value, d)

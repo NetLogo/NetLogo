@@ -2,4 +2,4 @@
 
 package org.nlogo.api
 
-class WorldDimensionException extends Exception
+case class WorldDimensionException(message: String) extends Exception(message)

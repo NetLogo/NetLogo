@@ -18,6 +18,7 @@ import org.nlogo.api.ExternalResourceManager;
 import org.nlogo.api.GlobalsIdentifier;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.PreviewCommands;
+import org.nlogo.api.WorldDimensionException;
 import org.nlogo.core.CompilerException;
 import org.nlogo.core.Femto;
 import org.nlogo.core.FileModeJ;
@@ -235,7 +236,7 @@ public abstract class AbstractWorkspace
 
   /// misc
 
-  public void checkGlobalVariable(String name, List<Object> values) throws Exception {
+  public void checkGlobalVariable(String name, List<Object> values) throws Exception, WorldDimensionException {
     String upperName = name.toUpperCase(Locale.ENGLISH);
 
     if (upperName.equals("RANDOM-SEED")) {
@@ -248,11 +249,7 @@ public abstract class AbstractWorkspace
       World worldCopy = _world.copy();
 
       for (Object o : values) {
-        try {
-          worldCopy.setDimensionVariable(upperName, ((Double)o).intValue(), _world.getDimensions());
-        } catch (Exception e) {
-          throw new Exception(I18N.guiJ().getN("edit.behaviorSpace.invalidValue", name));
-        }
+        worldCopy.setDimensionVariable(name, ((Double)o).intValue(), _world.getDimensions());
       }
     } else {
       synchronized (_world) {

@@ -169,20 +169,21 @@ private [gui] class ProtocolEditable(protocol: LabProtocol,
           dims
       }
 
-      if (invalidDims(newDims.minPxcor, newDims.maxPxcor)) {
-        Some(I18N.gui.get("edit.behaviorSpace.invalidDimsX"))
-      } else if (invalidDims(newDims.minPycor, newDims.maxPycor)) {
-        Some(I18N.gui.get("edit.behaviorSpace.invalidDimsY"))
-      } else if (invalidDims(newDims.minPzcor, newDims.maxPzcor)) {
-        Some(I18N.gui.get("edit.behaviorSpace.invalidDimsZ"))
-      } else {
-        None
-      }
+      invalidDims("MIN-PXCOR", "MAX-PXCOR", newDims.minPxcor, newDims.maxPxcor)
+        .orElse(invalidDims("MIN-PYCOR", "MAX-PYCOR",  newDims.minPycor, newDims.maxPycor))
+        .orElse(invalidDims("MIN-PZCOR", "MAX-PZCOR",  newDims.minPzcor, newDims.maxPzcor))
     }.nextOption
   }
 
-  private def invalidDims(min: Int, max: Int): Boolean =
-    max < min || (min < 0 && max < 0) || (min > 0 && max > 0)
+  private def invalidDims(minName: String, maxName: String, min: Int, max: Int): Option[String] = {
+    if (max < 0) {
+      Some(I18N.gui.getN("edit.behaviorSpace.dimNegative", maxName))
+    } else if (min > 0) {
+      Some(I18N.gui.getN("edit.behaviorSpace.dimPositive", minName))
+    } else {
+      None
+    }
+  }
 
   private def checkCommand(name: String, text: String): Option[String] = {
     try {
