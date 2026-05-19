@@ -85,6 +85,9 @@ class OutputArea(val text: TextArea) extends JPanel with RoundedBorderPanel with
     text.setFont(text.getFont.deriveFont(fontSize))
   }
 
+  override def getFont: Font =
+    text.getFont
+
   override def setFont(font: Font): Unit = {
     text.setFont(font.deriveFont(fontSize))
   }

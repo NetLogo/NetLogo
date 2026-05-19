@@ -98,6 +98,9 @@ class CommandLine(commandCenter: CommandCenterInterface,
     textField.setText(s)
   }
 
+  override def getFont: Font =
+    textField.getFont
+
   override def setFont(font: Font): Unit = {
     textField.setFont(font.deriveFont(fontSize.toFloat))
   }
