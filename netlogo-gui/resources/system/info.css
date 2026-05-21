@@ -12,6 +12,7 @@
 body {
     margin-left: 5px;
     margin-bottom: 50px;
+    padding-left: 5px;
     font-family: arial, sans-serif;
     background: {BODY-BACKGROUND};
     font-size: {BODY-FONT-SIZE}pt;
@@ -21,6 +22,9 @@ body::-webkit-scrollbar {
     width: 8px;
     height: 8px;
     background: {BODY-BACKGROUND};
+}
+body::-webkit-scrollbar-track {
+    background: {SCROLLBAR-BACKGROUND};
 }
 body::-webkit-scrollbar-corner {
     background: {BODY-BACKGROUND};
@@ -46,10 +50,10 @@ h2 {
     background: {H2-BACKGROUND};
     color: {H2-COLOR};
     font-size: {H2-FONT-SIZE}pt;
-    padding-left: 6px;
-    padding-right: 6px;
+    padding-left: 8px;
+    padding-right: 8px;
     padding-top: 8px;
-    padding-bottom: 6px;
+    padding-bottom: 7px;
 }
 h3 {
     margin-top: 20px;
