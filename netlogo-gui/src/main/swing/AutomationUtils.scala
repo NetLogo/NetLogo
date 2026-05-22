@@ -11,7 +11,7 @@ import scala.concurrent.duration.{ Duration, SECONDS }
 
 // various useful methods for automated GUI testing (Isaac B 11/8/25)
 object AutomationUtils {
-  private lazy val eventQueue: EventQueue = Toolkit.getDefaultToolkit.getSystemEventQueue
+  private var eventQueue: EventQueue = Toolkit.getDefaultToolkit.getSystemEventQueue
 
   def waitFor[T](function: () => T, seconds: Int = 5): Option[T] =
     timedFunction(function, seconds)
@@ -132,6 +132,14 @@ object AutomationUtils {
 
     // wait for mouse events to be processed (Isaac B 11/9/25)
     EventQueue.invokeAndWait(() => {})
+  }
+
+  def resetEventQueue(): Unit = {
+    val newQueue = new EventQueue
+
+    eventQueue.push(newQueue)
+
+    eventQueue = newQueue
   }
 
   private def timedFunction[T](function: () => T, seconds: Int): Option[T] = {
