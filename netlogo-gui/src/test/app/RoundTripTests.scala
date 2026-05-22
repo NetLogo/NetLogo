@@ -64,6 +64,8 @@ class RoundTripTests extends AnyFunSuite with BeforeAndAfterAll {
             failures += 1
 
             alert("EventQueue invocation took too long, trying again...")
+
+            AutomationUtils.resetEventQueue()
           }
         }
 
