@@ -3,13 +3,12 @@
 package org.nlogo.lite
 
 import org.nlogo.awt.EventQueue.invokeLater
-import org.nlogo.window.{ Event, VMCheck }
+import org.nlogo.window.Event
 import org.nlogo.workspace.AbstractWorkspace
 
 object AppletTester {
   def main(args: Array[String]): Unit = {
     System.setProperty("apple.awt.showGrowBox", "true")
-    VMCheck.detectBadJVMs()
     val (eventsArgs, otherArgs) = args.partition(_ == "--events")
     Event.logEvents = eventsArgs.nonEmpty
     val path = otherArgs.headOption.getOrElse(chooseModel)

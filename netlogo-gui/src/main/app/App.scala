@@ -110,7 +110,7 @@ object App {
       appHandler.getClass.getDeclaredMethod("init").invoke(appHandler)
 
       AbstractWorkspace.isApp(true)
-      org.nlogo.window.VMCheck.detectBadJVMs()
+
       processCommandLineArguments(args)
 
       if (App.colorTheme == null)
