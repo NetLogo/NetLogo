@@ -2,7 +2,7 @@
 
 package org.nlogo.app
 
-import java.awt.{ Component, EventQueue}
+import java.awt.Component
 
 import org.nlogo.agent.{ Link, Patch, Turtle }
 import org.nlogo.api.{ ModelType, Version }
@@ -32,7 +32,7 @@ class DialogTests extends AnyFunSuite with BeforeAndAfterAll {
     ModelsLibraryDialog.open(frame, fileManager.openFromURI(_, ModelType.Library))
 
     // make sure the dialog is really open (Isaac B 10/31/25)
-    EventQueue.invokeAndWait(() => {})
+    AutomationUtils.waitForGUI()
 
     ModelsLibraryDialog.dialog match {
       case Some(dialog) =>
@@ -43,7 +43,7 @@ class DialogTests extends AnyFunSuite with BeforeAndAfterAll {
         if (!AutomationUtils.waitUntilGUI(() => dialog.visibleModels.contains("Wolf Sheep Predation")))
           fail("Models Library dialog did not filter the model tree correctly.")
 
-        EventQueue.invokeAndWait(() => {
+        AutomationUtils.waitForGUI(() => {
           dialog.searchField.setText("")
           dialog.setVisible(false)
         })
@@ -57,7 +57,7 @@ class DialogTests extends AnyFunSuite with BeforeAndAfterAll {
     ModelsLibraryDialog.open(frame, fileManager.openFromURI(_, ModelType.Library))
 
     // make sure the dialog is really open (Isaac B 10/31/25)
-    EventQueue.invokeAndWait(() => {})
+    AutomationUtils.waitForGUI()
 
     ModelsLibraryDialog.dialog match {
       case Some(dialog) =>
@@ -68,7 +68,7 @@ class DialogTests extends AnyFunSuite with BeforeAndAfterAll {
         if (!AutomationUtils.waitUntilGUI(() => dialog.visibleModels.isEmpty))
           fail("Models Library dialog did not filter the model tree correctly.")
 
-        EventQueue.invokeAndWait(() => {
+        AutomationUtils.waitForGUI(() => {
           dialog.searchField.setText("")
           dialog.setVisible(false)
         })
@@ -81,7 +81,7 @@ class DialogTests extends AnyFunSuite with BeforeAndAfterAll {
   test("Change and revert all preferences", GuiTest.Tag) {
     var prefsDialog: Option[PreferencesDialog] = None
 
-    EventQueue.invokeAndWait(() => {
+    AutomationUtils.waitForGUI(() => {
       prefsDialog = Option(new PreferencesDialog(frame, tabManager, tabManager.interfaceTab.iP))
     })
 
@@ -90,7 +90,7 @@ class DialogTests extends AnyFunSuite with BeforeAndAfterAll {
       dialog.setVisible(true)
       dialog.scramble()
 
-      EventQueue.invokeAndWait(() => {
+      AutomationUtils.waitForGUI(() => {
         dialog.reset(true)
       })
 
@@ -105,7 +105,7 @@ class DialogTests extends AnyFunSuite with BeforeAndAfterAll {
         dialog.setVisible(true)
 
         // make sure the dialog is really open (Isaac B 11/2/25)
-        EventQueue.invokeAndWait(() => {})
+        AutomationUtils.waitForGUI()
 
         val infos: Seq[LibraryInfo] = dialog.searchFor("bspace", 1).getOrElse {
           fail("Extensions Manager dialog did not filter extensions correctly.")
@@ -129,7 +129,7 @@ class DialogTests extends AnyFunSuite with BeforeAndAfterAll {
         dialog.setVisible(true)
 
         // make sure the dialog is really open (Isaac B 11/2/25)
-        EventQueue.invokeAndWait(() => {})
+        AutomationUtils.waitForGUI()
 
         if (dialog.searchFor("lasagna", 0).isEmpty)
           fail("Extensions Manager dialog did not filter extensions correctly.")
@@ -244,7 +244,7 @@ class DialogTests extends AnyFunSuite with BeforeAndAfterAll {
     }
 
     // wait for any resulting events to be processed (Isaac B 11/2/25)
-    EventQueue.invokeAndWait(() => {})
+    AutomationUtils.waitForGUI()
 
     val dialog = new PreviewCommandsDialog(frame, PreviewCommandsEditor.title, fileManager.currentModel,
                                            workspace.getModelPath, App.app.workspaceFactory, App.app.graphicsPreview,
@@ -255,7 +255,7 @@ class DialogTests extends AnyFunSuite with BeforeAndAfterAll {
     dialog.previewPanel.button.doClick()
 
     // wait for any resulting events to be processed (Isaac B 11/2/25)
-    EventQueue.invokeAndWait(() => {})
+    AutomationUtils.waitForGUI()
 
     dialog.setVisible(false)
   }
@@ -268,12 +268,12 @@ class DialogTests extends AnyFunSuite with BeforeAndAfterAll {
     }
 
     // wait for any resulting events to be processed (Isaac B 11/2/25)
-    EventQueue.invokeAndWait(() => {})
+    AutomationUtils.waitForGUI()
 
     labManager.show()
 
     // make sure the dialog is really open (Isaac B 11/2/25)
-    EventQueue.invokeAndWait(() => {})
+    AutomationUtils.waitForGUI()
 
     val dialog: ManagerDialog = labManager.getDialog
 
@@ -283,7 +283,7 @@ class DialogTests extends AnyFunSuite with BeforeAndAfterAll {
     dialog.editAndClose()
 
     // make sure the dialog is really closed (Isaac B 11/2/25)
-    EventQueue.invokeAndWait(() => {})
+    AutomationUtils.waitForGUI()
 
     dialog.runForTesting()
 

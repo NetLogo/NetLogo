@@ -2,7 +2,6 @@
 
 package org.nlogo.app
 
-import java.awt.EventQueue
 import java.awt.event.KeyEvent
 
 import org.nlogo.api.{ ModelType, Version }
@@ -30,7 +29,7 @@ class InterfaceTests extends AnyFunSuite with BeforeAndAfterAll {
           case item: MenuItem =>
             val targetSize = interfacePanel.getPermanentWidgets.size + 1
 
-            EventQueue.invokeAndWait(() => {
+            AutomationUtils.waitForGUI(() => {
               item.doClick()
             })
 
@@ -60,7 +59,7 @@ class InterfaceTests extends AnyFunSuite with BeforeAndAfterAll {
       fileManager.openFromPath("models/test/Alignment.nlogox", ModelType.Library)
     }
 
-    EventQueue.invokeAndWait(() => {
+    AutomationUtils.waitForGUI(() => {
       widgetControls.selectButton.doClick()
     })
 
@@ -73,7 +72,7 @@ class InterfaceTests extends AnyFunSuite with BeforeAndAfterAll {
             item.doClick()
 
             // make sure any resulting events are processed (Isaac B 11/9/25)
-            EventQueue.invokeAndWait(() => {})
+            AutomationUtils.waitForGUI()
 
             // undo each alignment action, otherwise the widgets will converge at one point
             // and the rest of the alignment actions won't do anything (Isaac B 11/9/25)
@@ -95,7 +94,7 @@ class InterfaceTests extends AnyFunSuite with BeforeAndAfterAll {
       fileManager.openFromPath("models/Sample Models/Biology/Wolf Sheep Predation.nlogox", ModelType.Library)
     }
 
-    EventQueue.invokeAndWait(() => {
+    AutomationUtils.waitForGUI(() => {
       widgetControls.selectButton.doClick()
     })
 
@@ -105,12 +104,12 @@ class InterfaceTests extends AnyFunSuite with BeforeAndAfterAll {
       case Some(alignmentMenu) =>
         alignmentMenu.getComponents.foreach {
           case item: MenuItem =>
-            EventQueue.invokeAndWait(() => {
+            AutomationUtils.waitForGUI(() => {
               item.doClick()
             })
 
             // make sure any resulting events are processed (Isaac B 11/9/25)
-            EventQueue.invokeAndWait(() => {})
+            AutomationUtils.waitForGUI()
 
             // undo each alignment action, otherwise the widgets will converge at one point
             // and the rest of the alignment actions won't do anything (Isaac B 11/9/25)
@@ -132,7 +131,7 @@ class InterfaceTests extends AnyFunSuite with BeforeAndAfterAll {
       fileManager.openFromPath("models/Sample Models/Biology/Wolf Sheep Predation.nlogox", ModelType.Library)
     }
 
-    EventQueue.invokeAndWait(() => {
+    AutomationUtils.waitForGUI(() => {
       widgetControls.editButton.doClick()
     })
 
@@ -140,7 +139,7 @@ class InterfaceTests extends AnyFunSuite with BeforeAndAfterAll {
       AutomationUtils.sendClick(interfacePanel, widget.getX + widget.getWidth / 2, widget.getY + widget.getHeight / 2)
 
       // wait for widget edit to complete (Isaac B 11/9/25)
-      EventQueue.invokeAndWait(() => {})
+      AutomationUtils.waitForGUI()
 
       assert(!App.app.dirtyMonitor.modelDirty)
     }
