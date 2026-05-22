@@ -16,7 +16,7 @@ object AutomationUtils {
   def waitFor[T](function: () => T, seconds: Int = 5): Option[T] =
     timedFunction(function, seconds)
 
-  def waitForGUI[T](function: () => T, seconds: Int = 5): Option[T] = {
+  def waitForGUI[T](function: () => T = () => {}, seconds: Int = 5): Option[T] = {
     timedFunction(() => {
       var result: Option[T] = None
 

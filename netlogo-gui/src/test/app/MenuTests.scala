@@ -2,7 +2,7 @@
 
 package org.nlogo.app
 
-import java.awt.{ Component, EventQueue }
+import java.awt.Component
 import javax.swing.{ JMenu, JMenuItem }
 
 import org.nlogo.swing.{ AutomationUtils, WindowAutomator }
@@ -32,7 +32,7 @@ class MenuTests extends AnyFunSpec {
   }
 
   private def actionsForTab(tab: Component): Unit = {
-    EventQueue.invokeAndWait(() => {
+    AutomationUtils.waitForGUI(() => {
       tabManager.setSelectedTab(tab)
     })
 
@@ -66,7 +66,7 @@ class MenuTests extends AnyFunSpec {
             }
 
             // clear EventQueue so non-modal dialogs can receive their close events (Isaac B 10/30/25)
-            EventQueue.invokeAndWait(() => {})
+            AutomationUtils.waitForGUI()
 
             WindowAutomator.getVisibleWindows
               .headOption.foreach { window =>
