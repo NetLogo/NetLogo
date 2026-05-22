@@ -45,11 +45,17 @@ object QuickHelp {
     Paths.get(docsRoot, "NetLogo_User_Manual.pdf" + anchor.fold("")("#" + _))
 
   private def loadHelp(threed: Boolean): Map[String, Entry] = {
-    Files.readString(Paths.get(docsRoot, "manual-links.csv")).split('\n').flatMap { line =>
-      val split = line.split(',')
+    val links: Path = Paths.get(docsRoot, "manual-links.csv")
 
-      Entry.parse(split.tail, threed).map((split.head, _))
-    }.toMap
+    if (Files.exists(links)) {
+      Files.readString(links).split('\n').flatMap { line =>
+        val split = line.split(',')
+
+        Entry.parse(split.tail, threed).map((split.head, _))
+      }.toMap
+    } else {
+      Map()
+    }
   }
 
   private def openDictionary(comp: Component, word: String, words: Map[String, Entry]): Unit = {
