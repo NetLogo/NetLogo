@@ -10,7 +10,7 @@ import sbtcrossproject.Platform
 import ModelsLibrary.modelsDirectory
 import Extensions.{ excludedExtensions, extensionNetLogoJar, extensionRoot }
 import NetLogoBuild.{ all, autogenRoot, cclArtifacts, includeInPackaging,
-  marketingVersion, netlogoVersion, shareSourceDirectory }
+  marketingVersion, netlogoVersion, shareSourceDirectory, zipJars }
 import Dump.dumpClassName
 import Testing.testTempDirectory
 
@@ -311,6 +311,8 @@ lazy val netlogo = project.in(file("netlogo-gui")).
     , "-skip-by-regex", Scaladoc.excludedPackages.mkString(",")
     , "-doc-source-url", s"github://NetLogo/NetLogo/${netlogoVersion.value}"
     )
+  , assembly / assemblyJarName := "NetLogo.jar"
+  , assembly / assemblyMergeStrategy := (_ => MergeStrategy.first)
   )
 
 lazy val twod   = TaskKey[Unit]("twod", "disable NetLogo 3D")
@@ -413,7 +415,20 @@ lazy val dist = project.in(file("dist")).
   settings(version := (netlogo / version).value).
   settings(NetLogoBuild.settings: _*).
   settings(marketingVersion := (Compile / version).value).
-  settings(NetLogoPackaging.settings(netlogo, macApp, behaviorsearchProject): _*)
+  settings(NetLogoPackaging.settings(netlogo, macApp, behaviorsearchProject): _*).
+  settings(
+    zipJars := {
+      val nlJar: File = (netlogo / target).value / "NetLogo.jar"
+
+      IO.zip((nlJar, "NetLogo.jar") +: (netlogo / extensionRoot).value.listFiles.flatMap { ext =>
+        IO.readLines(ext / ".bundledFiles").distinct.map(_.split("->") match {
+          case Array(file, name) =>
+            (new File(file), s"extensions/${ext.getName}/$name")
+        })
+      }, target.value / s"NetLogo-${marketingVersion.value}.zip", None)
+    },
+    zipJars := zipJars.dependsOn(netlogo / assembly, netlogo / Extensions.extensions).value
+  )
 
 lazy val sharedResources = (project in file ("shared")).
   settings(commonSettings: _*).

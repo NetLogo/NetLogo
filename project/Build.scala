@@ -7,6 +7,8 @@ import scala.io.Source
 object NetLogoBuild {
   lazy val all = TaskKey[Unit]("all", "build everything!!!")
 
+  lazy val zipJars = TaskKey[Unit]("zipJars", "zip jars needed for the auto-converter service")
+
   def cclArtifacts(path: String): String =
     s"https://s3.amazonaws.com/ccl-artifacts/$path"
 

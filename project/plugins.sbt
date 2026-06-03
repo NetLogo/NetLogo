@@ -24,6 +24,7 @@ addSbtPlugin("org.nlogo"          %  "publish-versioned-plugin"        % "3.0.0"
 addSbtPlugin("org.nlogo"          %  "netlogo-extension-documentation" % "0.8.3")
 addSbtPlugin("com.timushev.sbt"   %  "sbt-updates"                     % "0.6.4")
 addSbtPlugin("com.thesamet"       %  "sbt-protoc"                      % "1.0.8")
+addSbtPlugin("com.eed3si9n"       %  "sbt-assembly"                    % "2.3.1")
 
 libraryDependencies ++= Seq(
   "com.github.spullara.mustache.java" %  "compiler"              % "0.9.14"
