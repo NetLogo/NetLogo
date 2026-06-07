@@ -116,7 +116,7 @@ case class Monitor(
   fontSize:  Int = 11,
   units: Option[String] = None) extends Widget {
     override def convertSource(conversion: String => String): Monitor =
-      this.copy(source = source.map(s => conversion(s"($s)")))
+      this.copy(source = source.map(conversion))
   }
 
 case class Output(

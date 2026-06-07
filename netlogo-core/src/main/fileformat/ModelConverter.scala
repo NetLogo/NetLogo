@@ -196,11 +196,11 @@ class ModelConverter(
     def appliesToSource(source: String): Boolean =
       containsAnyTargets(source)
 
-    private def rep(s: String): String = "to-report +++++ report " + s + " \nend"
+    private def rep(s: String): String = "to-report +++++ report ( " + s + " )\nend"
     private def cmd(s: String): String = "to ------ " + s + " \nend"
 
     private def uncmd(s: String): String = s.stripPrefix("to ------").stripSuffix("\nend").trim
-    private def unrep(s: String): String = s.stripPrefix("to-report +++++ report").stripSuffix("\nend").trim
+    private def unrep(s: String): String = s.stripPrefix("to-report +++++ report (").stripSuffix(")\nend").trim
 
     private def compilationOp(source: String): CompilationOperand =
       CompilationOperand(
