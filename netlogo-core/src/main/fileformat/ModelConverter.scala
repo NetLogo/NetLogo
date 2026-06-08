@@ -109,19 +109,6 @@ class ModelConverter(
     def applyConversion(conversionSet: ConversionSet, model: Model): ConversionResult = {
       import conversionSet._
 
-      lazy val convertedCodeTab: ConversionResult =
-        Try {
-          codeTabConversions.foldLeft(SuccessfulConversion(model, model)) {
-            case (SuccessfulConversion(original, converted), conversion) =>
-              val newProgram =
-                Program.fromDialect(aggregateConversionDialect).copy(interfaceGlobals = model.interfaceGlobals)
-              val newCode = conversion(rewriter(converted.code, newProgram))
-              SuccessfulConversion(original, model.copy(code = newCode))
-          }
-        }.recover {
-          case e: Exception => ErroredConversion(model, ConversionError(e, "code tab", conversionName))
-        }.get
-
       def newStructure(code: String): Try[StructureResults] = {
         val newCompilation = compilationOperand(code,
           Program.fromDialect(aggregateConversionDialect).copy(interfaceGlobals = model.interfaceGlobals),
@@ -155,7 +142,23 @@ class ModelConverter(
           case Failure(t) => throw t
         }
 
-      modelWithConvertedComponents(convertedCodeTab)
+      modelWithConvertedComponents(convertCodeTab(conversionSet, model))
+    }
+
+    def convertCodeTab(conversionSet: ConversionSet, model: Model): ConversionResult = {
+      import conversionSet._
+
+      Try {
+        codeTabConversions.foldLeft(SuccessfulConversion(model, model)) {
+          case (SuccessfulConversion(original, converted), conversion) =>
+            val newProgram =
+              Program.fromDialect(aggregateConversionDialect).copy(interfaceGlobals = model.interfaceGlobals)
+            val newCode = conversion(rewriter(converted.code, newProgram))
+            SuccessfulConversion(original, model.copy(code = newCode))
+        }
+      }.recover {
+        case e: Exception => ErroredConversion(model, ConversionError(e, "code tab", conversionName))
+      }.get
     }
 
     // pre-conversions prepare the source code for the full parse steps needed in the standard auto-conversion set,
@@ -163,7 +166,7 @@ class ModelConverter(
     // changes to the core NetLogo syntax. (Isaac B 5/15/26)
     val result = AutoConversionList.preConversions.foldLeft[ConversionResult](SuccessfulConversion(model, model)) {
       case (cr, conversion) =>
-        cr.mergeResult(applyConversion(conversion, cr.model))
+        cr.mergeResult(convertCodeTab(conversion, cr.model))
     }
 
     applicableConversions(model).foldLeft[ConversionResult](result) {
