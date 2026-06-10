@@ -21,7 +21,7 @@ private [gui] class ProtocolEditable(protocol: LabProtocol,
                                      experimentNames: Seq[String] = Seq[String]())
   extends Editable with DummyErrorHandler {
   // these are for Editable
-  def helpLink = Some(("behaviorspace", "creating-an-experiment-setup"))
+  def helpLink = Option(("behaviorspace", "creating-an-experiment-setup"))
   val classDisplayName = "Experiment"
   val sourceOffset = 0
 
@@ -113,7 +113,7 @@ private [gui] class ProtocolEditable(protocol: LabProtocol,
         protocol.constants = constants
         protocol.subExperiments = subExperiments
 
-        Some(protocol)
+        Option(protocol)
 
       case Failure(t) =>
         complain(t.getMessage)
@@ -123,19 +123,19 @@ private [gui] class ProtocolEditable(protocol: LabProtocol,
 
   override def errorString: Option[String] = {
     if (name.trim.isEmpty) {
-      Some(I18N.gui.get("edit.behaviorSpace.name.empty"))
+      Option(I18N.gui.get("edit.behaviorSpace.name.empty"))
     } else if (name.contains('/') || name.contains('\\')) {
-      Some(I18N.gui.get("edit.behaviorSpace.name.slashes"))
+      Option(I18N.gui.get("edit.behaviorSpace.name.slashes"))
     } else if (experimentNames.contains(name.trim)) {
-      Some(I18N.gui.getN("edit.behaviorSpace.name.duplicate", name.trim))
+      Option(I18N.gui.getN("edit.behaviorSpace.name.duplicate", name.trim))
     } else {
       LabVariableParser.parseVariables(valueSets, repetitions, worldLock, compiler) match {
         case Success((constants, subExperiments)) =>
           checkWorldDimensions(constants, subExperiments).orElse(checkCodeEditors())
 
         case Failure(t) =>
-          Some(I18N.gui.getN("edit.behaviorSpace.compilerError", I18N.gui.get("edit.behaviorSpace.variableSpec"),
-                             t.getMessage))
+          Option(I18N.gui.getN("edit.behaviorSpace.compilerError", I18N.gui.get("edit.behaviorSpace.variableSpec"),
+                               t.getMessage))
       }
     }
   }
@@ -177,9 +177,9 @@ private [gui] class ProtocolEditable(protocol: LabProtocol,
 
   private def invalidDims(minName: String, maxName: String, min: Int, max: Int): Option[String] = {
     if (max < 0) {
-      Some(I18N.gui.getN("edit.behaviorSpace.dimNegative", maxName))
+      Option(I18N.gui.getN("edit.behaviorSpace.dimNegative", maxName))
     } else if (min > 0) {
-      Some(I18N.gui.getN("edit.behaviorSpace.dimPositive", minName))
+      Option(I18N.gui.getN("edit.behaviorSpace.dimPositive", minName))
     } else {
       None
     }
@@ -195,7 +195,7 @@ private [gui] class ProtocolEditable(protocol: LabProtocol,
       None
     } catch {
       case e: CompilerException =>
-        Some(I18N.gui.getN("edit.behaviorSpace.compilerError", name, e.getMessage))
+        Option(I18N.gui.getN("edit.behaviorSpace.compilerError", name, e.getMessage))
     }
   }
 
@@ -209,7 +209,7 @@ private [gui] class ProtocolEditable(protocol: LabProtocol,
       None
     } catch {
       case e: CompilerException =>
-        Some(I18N.gui.getN("edit.behaviorSpace.compilerError", name, e.getMessage))
+        Option(I18N.gui.getN("edit.behaviorSpace.compilerError", name, e.getMessage))
     }
   }
 
