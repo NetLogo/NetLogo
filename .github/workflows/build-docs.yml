@@ -38,6 +38,13 @@ jobs:
         shell: bash
         run: yarn run init
 
+        # the auto-downloaded version of Chrome started breaking in GHA, so for now the best
+        # solution is to remove it and manually install the correct version. (Isaac B 6/15/26)
+      - name: Install Puppeteer
+        run: |
+          rm -rf ~/.cache/puppeteer
+          npx puppeteer browsers install chrome@142.0.7444.59 --platform linux
+
       - name: Build Docs and Generate Manual
         working-directory: helio/apps/docs
         shell: bash
