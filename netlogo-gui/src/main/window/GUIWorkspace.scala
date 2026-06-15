@@ -878,7 +878,7 @@ abstract class GUIWorkspace(world: World, kioskLevel: GUIWorkspace.KioskLevel, f
 
         case ib: InputBox =>
           exportToPath
-            .map((filename: String) => (filename, ib.valueText))(using SwingUnlockedExecutionContext)
+            .map((filename: String) => (filename, ib.valueObject().toString))(using SwingUnlockedExecutionContext)
             .map[Unit]({ // background
               case (filename: String, text: String) => FileIO.writeFile(filename, text, true); ()
             })(using NetLogoExecutionContext.backgroundExecutionContext).failed.foreach({ // on UI Thread

@@ -5,7 +5,6 @@ package org.nlogo.window
 import java.awt.{ Color, Component, Dimension, Font, Frame, Graphics, GridBagConstraints, GridBagLayout, Insets,
                   LinearGradientPaint }
 import java.awt.event.{ ActionEvent, ActionListener, FocusEvent, FocusListener, KeyEvent, WindowAdapter, WindowEvent }
-import java.lang.{ Double => JDouble }
 
 import javax.swing.{ AbstractAction, JButton, JDialog, JLabel, JPanel, ScrollPaneConstants, UIManager }
 import javax.swing.KeyStroke.getKeyStroke
@@ -16,7 +15,7 @@ import org.nlogo.api.Approximate.approximate
 import org.nlogo.api.Color.{ getColor, getColorNameByIndex, modulateDouble }
 import org.nlogo.agent.InputBoxConstraint
 import org.nlogo.awt.{ Hierarchy, Positioning }
-import org.nlogo.core.{ BoxedValue, CompilerException, I18N, InputBox => CoreInputBox, LogoList, NumericInput,
+import org.nlogo.core.{ BoxedValue, CompilerException, I18N, InputBox => CoreInputBox, NumericInput,
                         StringInput, Widget => CoreWidget }
 import org.nlogo.editor.{ AbstractEditorArea, EditorConfiguration }
 import org.nlogo.swing.{ Button, ButtonPanel, DialogButton, OptionPane, RoundedBorderPanel,
@@ -130,39 +129,29 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
 
   private val scroller = new InputScrollPane(textArea)
 
-  // most of the time text and value will be exactly the same
-  // however, for numbers there will be a Double rather than
-  // a String in the value field.  ev 8/13/06
-  protected var text = ""
-  protected var oldText = ""
-  protected var value: Option[AnyRef] = None
-  def valueText = text
-  def valueObject() = value.orNull
-  def valueObject(value: AnyRef): Unit = {valueObject(value, false)}
-  def valueObject(value: Any, raiseEvent: Boolean): Unit = {
-    oldText = text
-    text = Dump.logoObject(toAnyRef(value))
-    this.value = Option(toAnyRef(value))
-    if (text != textArea.getText) textArea.setText(text)
+  protected var boxedValue: BoxedValue = StringInput("", StringInput.StringLabel, false)
+  def valueObject(): AnyRef = boxedValue match {
+    case NumericInput(v, _)   => Double.box(v)
+    case StringInput(v, _, _) => v
+  }
+  def valueObject(value: BoxedValue): Unit = {valueObject(value, false)}
+  def valueObject(value: BoxedValue, raiseEvent: Boolean): Unit = {
+    boxedValue = value
+    if (boxedValue.defaultString != textArea.getText) textArea.setText(boxedValue.defaultString)
     new Events.DirtyEvent(None).raise(this)
   }
 
-  protected def toAnyRef(value: Any): AnyRef = {
-    value match {
-      case d: Double => Double.box(d)
-      case a: AnyRef => a
-      case v => throw new IllegalStateException
-    }
-  }
-
-  protected def inputText(input: Object): Unit = {
-    if (input != null) valueObject(input, true)
+  protected def getInput(optionBV: Option[BoxedValue]): Unit = {
+    optionBV.foreach(bv => valueObject(bv, true))
   }
 
   // multiline property
-  protected var multiline = false
-  def multiline(multiline: Boolean): Unit = {
-    this.multiline = multiline
+  def multiline(newMultiline: Boolean): Unit = {
+    boxedValue = boxedValue match {
+      case s: StringInput => s.copy(multiline=newMultiline)
+      case n: NumericInput => n
+    }
+
     changeButton.setVisible(inputType.changeVisible)
     editing = false
 
@@ -170,7 +159,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     // - BCH 05/13/2018
     textArea.getInputMap.put(getKeyStroke(KeyEvent.VK_ESCAPE, 0), new CancelAction())
     textArea.getInputMap.put(getKeyStroke(KeyEvent.VK_ENTER, 0),
-      if(multiline) null else new TransferFocusAction())
+      if(newMultiline) null else new TransferFocusAction())
     textArea.getInputMap.put(getKeyStroke(KeyEvent.VK_TAB, 0), new TransferFocusAction())
   }
 
@@ -215,7 +204,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
   textArea.setFont(inputType.getFont)
   textArea.enableBracketMatcher(inputType.enableBracketMatcher)
 
-  multiline(multiline)
+  multiline(false)
 
   setLayout(new GridBagLayout)
 
@@ -233,10 +222,10 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
       def focusLost(e: FocusEvent): Unit = {
         _hasFocus = false
         if (editing) {
-          try inputText(inputType.readValue(InputBox.this.textArea.getText))
+          try getInput(Option(inputType.readValue(InputBox.this.textArea.getText)))
           catch {
             case ex@(_:LogoException|_:CompilerException|_:ValueConstraint.Violation) =>
-              inputText(oldText)
+              getInput(Option(boxedValue))
           }
           editing = false
         }
@@ -350,36 +339,14 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
   private class SelectColorActionListener extends ActionListener {
     def actionPerformed(e: ActionEvent): Unit = {
 
-      val currValue =
-        valueObject() match {
-
-          case list: LogoList if (list.length > 2) && list.toVector.take(3).forall(_.isInstanceOf[Double]) =>
-
-            val (r, g, b) = list.take(3).asInstanceOf[Seq[Double]] match {
-              case Seq(r, g, b) => (r, g, b)
-              case _ => throw new IllegalStateException
-            }
-
-            val a =
-              if (list.length > 3 && list(3).isInstanceOf[Double]) {
-                list(3).asInstanceOf[Double]
-              } else {
-                RGBA.MaxAlpha.toDouble
-              }
-
-            RGBA(r, g, b, a)
-
-          case num: JDouble =>
-            NLNumber(num)
-
-          case _            =>
-            throw new Exception(s"Invalid color format: ${valueObject()}")
-
-        }
+      val currValue = boxedValue match {
+        case NumericInput(v, _) => NLNumber(Double.box(v))
+        case _                  => throw new Exception(s"Invalid color format: $boxedValue")
+      }
 
       new JFXColorPicker(Hierarchy.getFrame(InputBox.this), true, DoubleOnly, Option(currValue),
         (x: String) => {
-          valueObject(x.toDouble, true)
+          valueObject(NumericInput(x.toDouble, NumericInput.ColorLabel), true)
         }
       ).setVisible(true)
 
@@ -403,7 +370,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
 
   private class CancelAction extends AbstractAction {
     def actionPerformed(e:ActionEvent): Unit ={
-      textArea.setText(text)
+      textArea.setText(boxedValue.defaultString)
       stopEdit()
     }
   }
@@ -423,7 +390,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     super.editFinished()
     name(this.name, nameChanged)
     nameChanged = false
-    try inputText(constraint.coerceValue(inputType.readValue(text)))
+    try getInput(Option(inputType.readValue(boxedValue.defaultString)))
     catch {
       case ex: LogoException => throw new IllegalStateException(ex)
       case ex@(_: CompilerException | _: ValueConstraint.Violation) =>
@@ -437,17 +404,22 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     if (inputType.displayName != typeOptions.chosenValue.displayName) {
       inputType = typeOptions.chosenValue
       constraint.setType(inputType.baseName, inputType.defaultValue)
-      // if the current value doesn't comply with the new constraint
-      // set it to a default value ev 12/14/06
-      try constraint.assertConstraint(toAnyRef(value))
-      catch {
-        case v: ValueConstraint.Violation => valueObject(inputType.defaultValue, true)
+      val currentText = textArea.getText
+      val newBoxedValue = (boxedValue, inputType) match {
+        case (NumericInput(v, _), _: NumberInputType)      => NumericInput(v, NumericInput.NumberLabel)
+        case (NumericInput(v, _), _: ColorInputType)       => NumericInput(v, NumericInput.ColorLabel)
+        case (StringInput(v, _, ml), _: ReporterInputType) => StringInput(v, StringInput.ReporterLabel, ml)
+        case (StringInput(v, _, ml), _: CommandInputType)  => StringInput(v, StringInput.CommandLabel, ml)
+        case (StringInput(v, _, ml), _: StringInputType)   => StringInput(v, StringInput.StringLabel, ml)
+        case _                                             =>
+          try inputType.readValue(currentText)
+          catch { case _: Exception => inputType.defaultValue }
       }
       textArea.setEditorKit(inputType.getEditorKit)
       textArea.setFont(inputType.getFont)
       textArea.enableBracketMatcher(inputType.enableBracketMatcher)
       changeButton.setVisible(inputType.changeVisible)
-      inputType.colorPanel(colorSwatch)
+      valueObject(newBoxedValue, true)
     }
     scroller.scrollPane.setHorizontalScrollBarPolicy(
       if (inputType.multiline) {
@@ -506,10 +478,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
         }
 
         def setValue(i: BoxedValue): Unit = {
-          i match {
-            case NumericInput(value, _) => valueObject(value, true)
-            case StringInput(value, _, _) => valueObject(value, true)
-          }
+          valueObject(i, true)
         }
 
         setType(input.boxedValue)
@@ -528,12 +497,12 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
 
   override def model: CoreWidget = {
     val b = getUnzoomedBounds
-    val boxedValue = inputType.boxValue(text)
+    val bv = this.boxedValue
     CoreInputBox(
       x          = b.x, y = b.y, width = b.width, height = b.height,
       oldSize = _oldSize,
       variable   = name.potentiallyEmptyStringToOption,
-      boxedValue = boxedValue)
+      boxedValue = bv)
   }
 
   override def exportable = true
@@ -549,7 +518,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     private val okButton = new DialogButton(true, I18N.gui.get("common.buttons.ok"), () => {
       try{
         val value = inputType.readValue(textArea.getText)
-        inputText(value)
+        getInput(Option(value))
         editing = false
         dispose()
         dialog = null
@@ -659,9 +628,14 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
   }
 
   case class InputType(baseName: String, i18nKey: String, editorKit: EditorKit, codeFont: Boolean) {
-    def defaultValue: AnyRef = ""
-    def multiline = InputBox.this.multiline
-    def multiline(newMultiline: Boolean): Unit = {InputBox.this.multiline(newMultiline)}
+    def defaultValue: BoxedValue = StringInput("", StringInput.StringLabel, false)
+    def multiline = boxedValue.getMultiline
+    def multiline(newMultiline: Boolean): Unit = {
+      boxedValue = boxedValue match {
+        case s: StringInput => s.copy(multiline=newMultiline)
+        case n => n
+      }
+    }
     override def toString = displayName
     def saveName = baseName
     def displayName = I18N.gui.get("edit.input.type." + i18nKey)
@@ -680,9 +654,9 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     @throws(classOf[ValueConstraint.Violation])
     @throws(classOf[LogoException])
     @throws(classOf[CompilerException])
-    def readValue(text: String): Object = {
+    def readValue(text: String): BoxedValue = {
       constraint.assertConstraint(text)
-      return text
+      return StringInput(text, StringInput.StringLabel, multiline)
     }
     def changeVisible = multiline
     def enableMultiline = true
@@ -691,28 +665,28 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
       case it@InputType(bn, _, _, _) => bn == baseName
       case _ => false
     }}
-    def boxValue(text: String): BoxedValue =
-      StringInput(text, StringInput.StringLabel, multiline)
+    override def hashCode = baseName.hashCode
   }
 
   private class StringInputType
     extends InputType("String", "string", textArea.getEditorKitForContentType("String"), false)
 
   private class ReporterInputType(kit: EditorKit) extends InputType("String (reporter)", "string.reporter", kit, true) {
-    override def defaultValue = "0"
+    override def defaultValue = StringInput("0", StringInput.ReporterLabel, false)
     override def enableBracketMatcher = true
     @throws(classOf[ValueConstraint.Violation])
     @throws(classOf[CompilerException])
     override def readValue(text: String) = {
-      constraint.assertConstraint(text)
-      Exceptions.ignoring(classOf[CompilerException]) {
-        compiler.checkReporterSyntax(text)
+      if (text.isEmpty) {
+        StringInput("0", StringInput.ReporterLabel, this.multiline)
+      } else {
+        constraint.assertConstraint(text)
+        Exceptions.ignoring(classOf[CompilerException]) {
+          compiler.checkReporterSyntax(text)
+        }
+        StringInput(text, StringInput.ReporterLabel, this.multiline)
       }
-      text
     }
-
-    override def boxValue(text: String): BoxedValue =
-      StringInput(text, StringInput.ReporterLabel, this.multiline)
   }
 
   private class CommandInputType(kit: EditorKit) extends InputType("String (commands)", "string.commands", kit, true) {
@@ -724,17 +698,13 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
       Exceptions.ignoring(classOf[CompilerException]) {
         compiler.checkCommandSyntax(text)
       }
-      text
-    }
-
-    override def boxValue(text: String): BoxedValue =
       StringInput(text, StringInput.CommandLabel, this.multiline)
+    }
   }
 
   private class NumberInputType(kit: EditorKit) extends InputType("Number", "number", kit, true) {
     @throws(classOf[CompilerException])
-    override def readValue(text: String) = compiler.readNumberFromString(text)
-    override def boxValue(text: String): BoxedValue = {
+    override def readValue(text: String): BoxedValue = {
       if (text.isEmpty) {
         NumericInput(0, NumericInput.NumberLabel)
       } else {
@@ -744,15 +714,12 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     }
     override def multiline = false
     override def enableMultiline = false
-    override def defaultValue = org.nlogo.agent.World.Zero
+    override def defaultValue = NumericInput(org.nlogo.agent.World.Zero, NumericInput.NumberLabel)
   }
 
   private class ColorInputType(kit: EditorKit) extends InputType("Color", "color", kit, true) {
     @throws(classOf[CompilerException])
-    override def readValue(text: String) =
-      compiler.readNumberFromString(text)
-
-    override def boxValue(text: String): BoxedValue = {
+    override def readValue(text: String): BoxedValue = {
       val num = compiler.readNumberFromString(text).asInstanceOf[java.lang.Double]
       NumericInput(num.doubleValue, NumericInput.ColorLabel)
     }
@@ -761,12 +728,13 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
       panel.setVisible(true)
       scroller.setVisible(false)
 
-      val (colorval, c) =
-        if (value.exists(_.isInstanceOf[Double])) {
-          val cv = modulateDouble(value.get.asInstanceOf[Double]): java.lang.Double
+      val (colorval, c) = boxedValue match {
+        case NumericInput(v, _) =>
+          val cv = modulateDouble(v): java.lang.Double
           (cv, getColor(cv))
-        }
-        else (0d: java.lang.Double, Color.BLACK)
+        case _ =>
+          (0d: java.lang.Double, Color.BLACK)
+      }
 
       panel.setColor(c)
       panel.setForeground(if ((colorval % 10) > 5) Color.BLACK else Color.WHITE)
@@ -791,8 +759,8 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     }
     override def changeVisible = false
     override def enableMultiline = false
-    override def defaultValue = Double.box(15) // Initialize color picker to `red`, because some people might
-                                               // not know how to use a color picker.  Unironically.
-                                               // --Jason B. (7/10/25)
+    override def defaultValue = NumericInput(Double.box(15), NumericInput.ColorLabel) // Initialize color picker to `red`, because some people might
+                                                                                      // not know how to use a color picker.  Unironically.
+                                                                                      // --Jason B. (7/10/25)
   }
 }
