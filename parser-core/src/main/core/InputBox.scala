@@ -11,7 +11,7 @@ object BoxedValue {
     StringInput("", StringLabel, false),
     NumericInput(0, NumberLabel),
     NumericInput(0, ColorLabel),
-    StringInput("", ReporterLabel, false),
+    StringInput("0", ReporterLabel, false),
     StringInput("", CommandLabel, false))
 }
 
@@ -36,7 +36,8 @@ case class NumericInput(value: Double, label: NumericInput.NumericKind) extends 
   def constraint = NumericInputConstraintSpecification(name, value)
   def default = NumericInput(0, label)
   def asString = value.toString
-  def defaultString = value.toString
+  def defaultString = Dump.number(value)
+  def getMultiline = false
 }
 
 object StringInput {
@@ -62,6 +63,7 @@ case class StringInput(value: String, label: StringInput.StringKind, multiline: 
   def default = StringInput("", label, false)
   def asString = Dump.logoObject(value.toString)
   def defaultString = value.toString
+  def getMultiline = multiline
 }
 
 object InputBox {
@@ -78,6 +80,7 @@ sealed trait BoxedValue {
   def default: BoxedValue
   def asString: String
   def defaultString: String
+  def getMultiline: Boolean
 }
 
 case class InputBox(variable: Option[String],

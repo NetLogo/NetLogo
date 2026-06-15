@@ -4,8 +4,8 @@ package org.nlogo.window
 
 import java.awt.Component
 
-import org.nlogo.api.{ CompilerServices, Dump, ExtensionManager }
-import org.nlogo.core.I18N
+import org.nlogo.api.{ CompilerServices, ExtensionManager }
+import org.nlogo.core.{ BoxedValue, I18N }
 import org.nlogo.editor.AbstractEditorArea
 import org.nlogo.window.Events.{ InterfaceGlobalEvent, PeriodicUpdateEvent }
 
@@ -36,15 +36,18 @@ class InputBoxWidget(textArea: AbstractEditorArea, dialogTextArea: AbstractEdito
     if (!editing) new InterfaceGlobalEvent(this, false, true, false, false).raise(this)
   }
 
-  override def valueObject(value: Any, raiseEvent: Boolean): Unit = {
-    if (! this.value.contains(toAnyRef(value))) {
-      oldText = text
-      text = Dump.logoObject(toAnyRef(value))
-      this.value = Option(toAnyRef(value))
-      if (!text.equals(textArea.getText())) textArea.setText(text)
+  override def valueObject(value: AnyRef): Unit = {
+    valueObject(inputType.readValue(value.toString), false)
+  }
+
+  override def valueObject(value: BoxedValue, raiseEvent: Boolean): Unit = {
+    if (value.defaultString != textArea.getText) textArea.setText(value.defaultString)
+    if (boxedValue != value) {
+      boxedValue = value
       if (raiseEvent) new InterfaceGlobalEvent(this, false, false, true, false).raise(this)
       inputType.colorPanel(colorSwatch)
       new Events.DirtyEvent(None).raise(this)
     }
   }
+
 }
