@@ -146,13 +146,13 @@ class OutputArea(val text: TextArea) extends JPanel with RoundedBorderPanel with
       addCarriageReturn = true
     }
     val cut = {
-      val str = buf.toString
-
-      if (metrics.stringWidth(str) > 32767) {
-        str.substring(0, 32767 / metrics.charWidth('a') - 3) + "..."
-      } else {
-        str
-      }
+      buf.toString.split("\n").map { str =>
+        if (metrics.stringWidth(str) > 32767) {
+          str.substring(0, 32767 / metrics.charWidth('a') - 3) + "..."
+        } else {
+          str
+        }
+      }.mkString("\n")
     }
     text.append(cut)
     lastTemporaryAddition = None
