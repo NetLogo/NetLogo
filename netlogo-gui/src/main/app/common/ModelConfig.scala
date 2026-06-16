@@ -165,7 +165,7 @@ object ModelConfig {
       Files.createDirectories(history.getParent)
 
     Files.writeString(history, commands.collect {
-      case ExecutionString(AgentKind.Observer, string) => s"O>$string"
+      case ExecutionString(AgentKind.Observer, string) if !string.trim.startsWith("___") => s"O>$string"
       case ExecutionString(AgentKind.Turtle, string) => s"T>$string"
       case ExecutionString(AgentKind.Patch, string) => s"P>$string"
       case ExecutionString(AgentKind.Link, string) => s"L>$string"
