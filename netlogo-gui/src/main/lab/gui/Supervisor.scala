@@ -66,6 +66,7 @@ class Supervisor(parent: Window, workspace: GUIWorkspace, modelPath: Path, proto
 
       process = Option(Process(Seq(ProcessHandle.current.info.command.get) ++ memoryLimit ++ Seq("-cp",
                                    System.getProperty("java.class.path"), s"-Dorg.nlogo.is3d=${Version.is3D}",
+                                   s"-Dnetlogo.extensions.dir=${System.getProperty("netlogo.extensions.dir")}",
                                    "-Dapple.awt.application.appearance=system",
                                    "org.nlogo.bsapp.BehaviorSpaceApp", modelPath.toString, protocol.name,
                                    "--threads", protocol.threadCount.toString,
