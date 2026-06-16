@@ -147,9 +147,7 @@ extends MessageDialog(owner, I18N.gui.get("common.buttons.dismiss")) {
   override def makeButtons(): Seq[JComponent] = {
     val reportButton = new DialogButton(true, I18N.gui.get("dialog.error.report"), () => {
       new ReportDialog(this, details)
-
-      setVisible(false)
-    })
+    }: Unit)
 
     val dismissAction = new AbstractAction(I18N.gui.get("common.buttons.dismiss")) {
       override def actionPerformed(e: ActionEvent): Unit = {
