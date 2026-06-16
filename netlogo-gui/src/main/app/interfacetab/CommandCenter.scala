@@ -5,7 +5,7 @@ package org.nlogo.app.interfacetab
 import java.awt.{ BorderLayout, Component, Dimension, FileDialog, Font, GridBagConstraints, GridBagLayout,
                   Insets }
 import java.awt.event.{ ActionEvent, MouseAdapter, MouseEvent }
-import javax.swing.{ AbstractAction, Action, JButton, JLabel, JPanel }
+import javax.swing.{ AbstractAction, Action, Box, BoxLayout, JButton, JLabel, JPanel }
 import javax.swing.border.EmptyBorder
 
 import org.nlogo.api.Exceptions
@@ -13,7 +13,7 @@ import org.nlogo.app.common.{ CommandLine, CommandServer, HistoryPrompt, LinePro
 import org.nlogo.awt.{ Hierarchy, UserCancelException }
 import org.nlogo.core.{ AgentKind, I18N }
 import org.nlogo.swing.{ FileDialog => SwingFileDialog, ModalProgressTask, MenuItem, PopupMenu, RichAction,
-                         RoundedBorderPanel }
+                         RoundedBorderPanel, Transparent }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ CommandCenterInterface, Events => WindowEvents, OutputArea, TextMenuActions, Zoomable }
 import org.nlogo.workspace.{ AbstractWorkspace, ExportOutput }
@@ -138,7 +138,12 @@ class CommandCenter(workspace: AbstractWorkspace, showToggle: Boolean, packSplit
       c.fill = GridBagConstraints.NONE
       c.insets = new Insets(3, 3, 3, 0)
 
-      southPanel.add(historyPrompt, c)
+      southPanel.add(new JPanel with Transparent {
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
+
+        add(Box.createVerticalGlue)
+        add(historyPrompt)
+      }, c)
     }
 
     add(southPanel, BorderLayout.SOUTH)
