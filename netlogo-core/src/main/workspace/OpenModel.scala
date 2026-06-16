@@ -72,10 +72,10 @@ trait OpenModel[OpenParameter] {
     val modelArityDiffers = Version.is3D(model.version) != currentVersion.is3D
     if (modelArityDiffers)
       ! controller.shouldOpenModelOfDifferingArity(modelArity, model.version)
-    else if (! currentVersion.knownVersion(model.version))
-      ! controller.shouldOpenModelOfUnknownVersion(model.version)
     else if (! currentVersion.compatibleVersion(model.version))
       ! controller.shouldOpenModelOfLegacyVersion(model.version)
+    else if (! currentVersion.knownVersion(model.version))
+      ! controller.shouldOpenModelOfUnknownVersion(model.version)
     else
       false
   }
