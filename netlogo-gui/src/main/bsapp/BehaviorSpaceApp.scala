@@ -27,6 +27,12 @@ object BehaviorSpaceApp {
     if (args.size < 2)
       System.exit(1)
 
+    Thread.setDefaultUncaughtExceptionHandler((_, ex: Throwable) => {
+      ex.printStackTrace(System.err)
+
+      System.exit(1)
+    })
+
     val argsIter = args.drop(2).iterator
 
     val parsedArgs: CommandLineArgs = argsIter.foldLeft(CommandLineArgs(args(0), args(1))) {
