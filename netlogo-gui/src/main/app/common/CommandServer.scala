@@ -19,33 +19,27 @@ import java.net.{ ServerSocket, Socket }
 import java.io.{ BufferedReader, BufferedWriter, File, InputStream, InputStreamReader, IOException,
   OutputStream, OutputStreamWriter }
 
-private class CommandRequest(var code: String = "") {
+private case class CommandRequest(code: String)
+
+private object CommandRequest {
   // Example: {"type": "nl-run-code", "code": "show 123"}
-  def fromJSONString(input: String): Boolean = {
-    val parser = new JSONParser()
-    var successful = false
+  def fromJSONString(input: String): CommandRequest = {
+    new JSONParser().parse(input) match {
+      case obj: JSONObject =>
+        if (obj.get("type") != "nl-run-code")
+          throw RuntimeException("Unsupported remote command type")
 
-    try {
-      val obj = parser.parse(input).asInstanceOf[JSONObject]
+        obj.get("code") match {
+          case str: String =>
+            CommandRequest(str)
 
-      val type_ = obj.get("type").asInstanceOf[String]
-      if (type_ != "nl-run-code") {
-        throw RuntimeException("Unsupported remote command: " + type_)
-      }
+          case _ =>
+            throw RuntimeException("No code provided")
+        }
 
-      code = obj.get("code").asInstanceOf[String]
-
-      if (code == null) {
-        throw RuntimeException("No code provided")
-      } else {
-        successful = true
-      }
-    } catch {
-      case e: RuntimeException => System.err.println(e.getMessage)
-      case _ => System.err.println("Failed to parse remote command")
+      case _ =>
+        throw RuntimeException("Invalid command request")
     }
-
-    successful
   }
 }
 
@@ -80,16 +74,17 @@ private class CommandThread(serverSocket: CommandServerSocket, callback: Command
   }
 
   private def processRequests(input: InputStream, output: OutputStream): Unit = {
-    val request = new CommandRequest
     val reader = new BufferedReader(new InputStreamReader(input))
     val writer = new BufferedWriter(new OutputStreamWriter(output))
 
     for (line <- reader.lines.iterator.asScala) {
-      if (request.fromJSONString(line)) {
-        callback(request)
+      try {
+        callback(CommandRequest.fromJSONString(line))
         writer.write(s"{\"type\": \"nl-status\", \"status\": \"ok\"}\n")
-      } else {
-        writer.write(s"{\"type\": \"nl-status\", \"status\": \"failed\", \"message\": \"Failed to parse request\"}\n")
+      } catch {
+        case ex: Exception =>
+          System.err.println(ex.getMessage)
+          writer.write(s"{\"type\": \"nl-status\", \"status\": \"failed\", \"message\": \"Failed to parse request\"}\n")
       }
 
       writer.flush
