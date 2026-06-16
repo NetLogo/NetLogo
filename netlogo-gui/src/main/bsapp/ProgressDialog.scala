@@ -7,6 +7,7 @@ import java.awt.event.{ WindowAdapter, WindowEvent }
 import java.lang.{ Double => JDouble }
 import javax.swing.{ JDialog, JPanel, ScrollPaneConstants, Timer, WindowConstants }
 import javax.swing.border.{ EmptyBorder, LineBorder }
+import javax.swing.text.DefaultCaret
 
 import org.nlogo.analytics.Analytics
 import org.nlogo.api.{ Color, Exceptions, ExportPlotWarningAction, LabProtocol }
@@ -34,6 +35,10 @@ class ProgressDialog(app: BehaviorSpaceApp, workspace: SemiHeadlessWorkspace, la
   private val progressArea = new TextArea(10.min(protocol.valueSets.headOption.fold(0)(_.size) + 3), 0) {
     setEditable(false)
     setBorder(new EmptyBorder(6, 6, 6, 6))
+    setCaret(new DefaultCaret {
+      override def getUpdatePolicy: Int =
+        DefaultCaret.NEVER_UPDATE
+    })
   }
 
   private val scrollPane = new ScrollPane(progressArea, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
