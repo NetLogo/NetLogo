@@ -36,6 +36,9 @@ object BehaviorSpaceApp {
     val argsIter = args.drop(2).iterator
 
     val parsedArgs: CommandLineArgs = argsIter.foldLeft(CommandLineArgs(args(0), args(1))) {
+      case (current, "--original-path") if argsIter.hasNext =>
+        current.copy(originalPath = Option(argsIter.next.trim))
+
       case (current, "--threads") if argsIter.hasNext =>
         current.copy(threads = argsIter.next.toInt)
 
@@ -93,8 +96,8 @@ object BehaviorSpaceApp {
     new BehaviorSpaceApp(parsedArgs).run()
   }
 
-  case class CommandLineArgs(model: String, experiment: String, threads: Int = 1, skip: Int = 0,
-                             updateView: Boolean = false, updatePlots: Boolean = false,
+  case class CommandLineArgs(model: String, experiment: String, originalPath: Option[String] = None, threads: Int = 1,
+                             skip: Int = 0, updateView: Boolean = false, updatePlots: Boolean = false,
                              mirrorHeadless: Boolean = false,
                              errorBehavior: LabProtocol.ErrorBehavior = LabProtocol.AbortRun,
                              table: Option[String] = None, spreadsheet: Option[String] = None,
@@ -311,6 +314,8 @@ class BehaviorSpaceApp(args: BehaviorSpaceApp.CommandLineArgs) extends Thread.Un
     workspace.setPrimaryWorkspace(primaryWorkspace)
     workspace.setMirrorHeadlessOutput(args.mirrorHeadless)
     workspace.open(args.model, false)
+
+    args.originalPath.foreach(workspace.setModelPath)
 
     workspace
   }

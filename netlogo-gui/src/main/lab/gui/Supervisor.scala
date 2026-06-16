@@ -5,7 +5,6 @@ package org.nlogo.lab.gui
 import java.awt.Window
 import java.io.File
 import java.net.SocketException
-import java.nio.file.Path
 
 import org.nlogo.api.{ Exceptions, IPCServerHandler, LabProtocol, Version }
 import org.nlogo.core.I18N
@@ -15,8 +14,9 @@ import org.nlogo.window.{ EditDialogFactory, GUIWorkspace }
 import scala.sys.process.{ Process, ProcessLogger }
 import scala.util.Try
 
-class Supervisor(parent: Window, workspace: GUIWorkspace, modelPath: Path, protocol: LabProtocol,
-                 dialogFactory: EditDialogFactory, saveProtocol: (LabProtocol, Int) => Unit, automated: Boolean)
+class Supervisor(parent: Window, workspace: GUIWorkspace, modelPath: String, originalPath: String,
+                 protocol: LabProtocol, dialogFactory: EditDialogFactory, saveProtocol: (LabProtocol, Int) => Unit,
+                 automated: Boolean)
   extends Thread("BehaviorSpace Supervisor") {
 
   private val handler = new IPCServerHandler
@@ -72,7 +72,8 @@ class Supervisor(parent: Window, workspace: GUIWorkspace, modelPath: Path, proto
                                    System.getProperty("java.class.path"), s"-Dorg.nlogo.is3d=${Version.is3D}",
                                    s"-Dnetlogo.extensions.dir=${System.getProperty("netlogo.extensions.dir")}",
                                    "-Dapple.awt.application.appearance=system",
-                                   "org.nlogo.bsapp.BehaviorSpaceApp", modelPath.toString, protocol.name,
+                                   "org.nlogo.bsapp.BehaviorSpaceApp", modelPath, protocol.name,
+                                   "--original-path", originalPath,
                                    "--threads", protocol.threadCount.toString,
                                    "--error-behavior", protocol.errorBehavior.key,
                                    "--skip", protocol.runsCompleted.toString,
