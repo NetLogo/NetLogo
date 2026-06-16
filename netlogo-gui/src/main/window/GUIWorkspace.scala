@@ -829,6 +829,9 @@ abstract class GUIWorkspace(world: World, kioskLevel: GUIWorkspace.KioskLevel, f
       case err: SliderConstraint.ConstraintExceptionHolder =>
         for (cce <- err.getErrors)
           e.slider.error(cce.spec.fieldName, cce)
+
+      case err: SliderConstraint.ConstraintRuntimeException =>
+        e.slider.error(err.spec.fieldName, err)
     }
   }
 
