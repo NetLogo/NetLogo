@@ -7,6 +7,7 @@ import javax.swing.border.EmptyBorder
 
 import org.nlogo.agent.OutputObject
 import org.nlogo.core.I18N
+import org.nlogo.editor.EditorConfiguration
 import org.nlogo.swing.{ Button, Transparent }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.OutputArea
@@ -18,7 +19,9 @@ class OutputPanel extends JPanel with ThemeSync {
 
   private val clearButton = new Button(I18N.gui.get("tabs.run.commandcenter.clearButton"), clear)
 
-  private val outputArea = new OutputArea(new OutputArea.DefaultTextArea)
+  private val outputArea = new OutputArea(new OutputArea.DefaultTextArea) {
+    setFont(EditorConfiguration.getCodeFont)
+  }
 
   setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
   setBorder(new EmptyBorder(6, 6, 6, 6))
