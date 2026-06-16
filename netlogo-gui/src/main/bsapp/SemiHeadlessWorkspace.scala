@@ -2,6 +2,8 @@
 
 package org.nlogo.bsapp
 
+import java.awt.EventQueue
+
 import org.nlogo.agent.{ AgentSet, CompilationManagement, OutputObject, World, World2D, World3D }
 import org.nlogo.api.{ CommandRunnable, JobOwner, NetLogoLegacyDialect, NetLogoThreeDDialect, Version }
 import org.nlogo.compile.Compiler
@@ -260,8 +262,17 @@ class SemiHeadlessWorkspace(frame: BehaviorSpaceFrame, world: World & Compilatio
   }
 
   override def sendOutput(oo: OutputObject, toOutputArea: Boolean): Unit = {
-    if (toOutputArea)
-      outputAreaBuffer.append(oo.get)
+    val event = new Events.OutputEvent(false, oo, false, !toOutputArea, System.currentTimeMillis)
+
+    if (EventQueue.isDispatchThread) {
+      event.raise(this)
+    } else {
+      ThreadUtils.waitFor(this, new Runnable {
+        override def run(): Unit = {
+          event.raise(SemiHeadlessWorkspace.this)
+        }
+      })
+    }
 
     if (mirrorHeadlessOutput)
       getPrimaryWorkspace.mirrorOutput(oo, toOutputArea)
