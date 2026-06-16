@@ -7,12 +7,12 @@ import java.io.File
 import java.net.SocketException
 import java.nio.file.Path
 
-import org.nlogo.api.{ IPCServerHandler, LabProtocol, Version }
+import org.nlogo.api.{ Exceptions, IPCServerHandler, LabProtocol, Version }
 import org.nlogo.core.I18N
 import org.nlogo.swing.OptionPane
 import org.nlogo.window.{ EditDialogFactory, GUIWorkspace }
 
-import scala.sys.process.Process
+import scala.sys.process.{ Process, ProcessLogger }
 import scala.util.Try
 
 class Supervisor(parent: Window, workspace: GUIWorkspace, modelPath: Path, protocol: LabProtocol,
@@ -53,6 +53,8 @@ class Supervisor(parent: Window, workspace: GUIWorkspace, modelPath: Path, proto
       }
     }
 
+    var errorLines = Seq[String]()
+
     try {
       val memoryLimit: Option[String] = {
         if (protocol.memoryLimit == 0) {
@@ -63,6 +65,8 @@ class Supervisor(parent: Window, workspace: GUIWorkspace, modelPath: Path, proto
       }
 
       handler.connect()
+
+      val logger = ProcessLogger(println, line => errorLines = errorLines :+ line)
 
       process = Option(Process(Seq(ProcessHandle.current.info.command.get) ++ memoryLimit ++ Seq("-cp",
                                    System.getProperty("java.class.path"), s"-Dorg.nlogo.is3d=${Version.is3D}",
@@ -80,7 +84,7 @@ class Supervisor(parent: Window, workspace: GUIWorkspace, modelPath: Path, proto
                                strToArg("--spreadsheet", protocol.spreadsheet.trim) ++
                                strToArg("--stats", protocol.stats.trim) ++
                                strToArg("--lists", protocol.lists.trim) ++
-                               boolToArg("--automated", automated)).run())
+                               boolToArg("--automated", automated)).run(logger))
 
       new Thread {
         override def run(): Unit = {
@@ -105,10 +109,15 @@ class Supervisor(parent: Window, workspace: GUIWorkspace, modelPath: Path, proto
     if (!saved)
       saveProtocol(protocol, 0)
 
-    if (!launched)
-      new OptionPane(parent, I18N.gui.get("common.messages.error"),
-                     I18N.gui.get("tools.behaviorSpace.error.memoryLimit"), OptionPane.Options.Ok,
-                     OptionPane.Icons.Error)
+    if (!launched) {
+      if (errorLines.isEmpty) {
+        new OptionPane(parent, I18N.gui.get("common.messages.error"),
+                       I18N.gui.get("tools.behaviorSpace.error.memoryLimit"), OptionPane.Options.Ok,
+                       OptionPane.Icons.Error)
+      } else {
+        Exceptions.handle(new Exception(errorLines.mkString("\n")))
+      }
+    }
   }
 
   private def processMessage(str: String): Unit = {
