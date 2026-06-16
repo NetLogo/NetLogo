@@ -20,21 +20,25 @@ import SymbolType._
 
 object StructureChecker {
 
-  def rejectMisplacedDeclarations(declarations: Seq[Declaration]): Unit = {
-    declarations.dropWhile(!_.isInstanceOf[Procedure]).find(!_.isInstanceOf[Procedure]).foreach { decl =>
-      exception(I18N.errors.get("compiler.StructureChecker.declOrder"), decl.start)
-    }
-  }
-
-  def rejectExtensionsInModule(declarations: Seq[Declaration], isModule: Boolean): Unit = {
+  def rejectNonProceduresInModule(declarations: Seq[Declaration], isModule: Boolean): Unit = {
     if (isModule) {
       for (declaration <- declarations) {
         declaration match {
           case Extensions(start, _, _) =>
             exception(I18N.errors.getN("compiler.StructureParser.importContainsExtensions"), start)
+          case Breed(_, _, _, _, start, _) =>
+            exception(I18N.errors.getN("compiler.StructureParser.importContainsBreed"), start)
+          case Variables(_, _, start, _) =>
+            exception(I18N.errors.getN("compiler.StructureParser.importContainsVariables"), start)
           case _ =>
         }
       }
+    }
+  }
+
+  def rejectMisplacedDeclarations(declarations: Seq[Declaration]): Unit = {
+    declarations.dropWhile(!_.isInstanceOf[Procedure]).find(!_.isInstanceOf[Procedure]).foreach { decl =>
+      exception(I18N.errors.get("compiler.StructureChecker.declOrder"), decl.start)
     }
   }
 

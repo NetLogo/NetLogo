@@ -112,10 +112,6 @@ object StructureParser {
                       exception(I18N.errors.getN("compiler.StructureParser.importNotFound", currentPath), currentImport.token)
                   }
 
-                  if (newResults.program != results.program) {
-                    exception(I18N.errors.getN("compiler.StructureParser.importContainsNonProcedure"), currentImport.token)
-                  }
-
                   newImports ++= newResults.imports.toSet -- results.imports.toSet
 
                   val exportedNames =
@@ -424,7 +420,7 @@ class StructureParser(
       case Right(declarations) =>
         StructureChecker.rejectMisplacedDeclarations(declarations)
         StructureChecker.rejectMisplacedConstants(declarations)
-        StructureChecker.rejectExtensionsInModule(declarations, module.isDefined)
+        StructureChecker.rejectNonProceduresInModule(declarations, module.isDefined)
         StructureChecker.rejectDuplicateDeclarations(declarations)
         StructureChecker.rejectDuplicateNames(declarations,
           StructureParser.usedNames(
