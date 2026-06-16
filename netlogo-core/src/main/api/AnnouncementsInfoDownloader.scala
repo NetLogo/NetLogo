@@ -78,14 +78,12 @@ object AnnouncementsInfoDownloader extends InfoDownloader {
               else
                 Option(date.plusDays(lifespan))
 
-            val versions = Option(obj.get("versions")).fold(Array[String]()) {
-              _.asInstanceOf[JSONArray].toArray.map(_.asInstanceOf[String])
-            }
+            Option(obj.get("versions")) match {
+              case Some(arr: JSONArray) if !arr.contains(Version.versionNumberNo3D) =>
+                None
 
-            if (versions.isEmpty || versions.contains(Version.versionNumberNo3D)) {
-              Some(Announcement(id, title, date, endDate, annType, summary, content))
-            } else {
-              None
+              case _ =>
+                Some(Announcement(id, title, date, endDate, annType, summary, content))
             }
 
           case o =>
