@@ -201,8 +201,8 @@ class ManagerDialog(manager:       LabManager,
 
       manager.modelLoader.save(manager.modelSaver.currentModel, temp.toUri)
 
-      val supervisor = new Supervisor(this, manager.workspace, temp, selectedProtocol, dialogFactory, saveProtocol,
-                                      false)
+      val supervisor = new Supervisor(this, manager.workspace, temp.toString, manager.workspace.getModelPath,
+                                      selectedProtocol, dialogFactory, saveProtocol, false)
 
       supervisor.start()
 
@@ -425,8 +425,10 @@ class ManagerDialog(manager:       LabManager,
       manager.prepareForRun()
     })
 
-    val supervisor = new Supervisor(this, manager.workspace, Paths.get(manager.workspace.getModelPath),
-                                    selectedProtocol, dialogFactory, saveProtocol, true)
+    val modelPath: String = Paths.get(manager.workspace.getModelPath).toString
+
+    val supervisor = new Supervisor(this, manager.workspace, modelPath, modelPath, selectedProtocol, dialogFactory,
+                                    saveProtocol, true)
 
     EventQueue.invokeAndWait(() => {
       supervisor.start()
