@@ -186,15 +186,11 @@ public abstract class ImporterJ
     while (hasMoreLines(false)) {
       String[] fields = nextLine();
       for (int i = 0; i < fields.length; i++) {
-        outputString.append(fields[i]);
+        outputString.append((String) getTokenValue(fields[i], false, false));
       }
     }
-    if (outputString.length() > 0) {
-      importerUser.setOutputAreaContents((String) getTokenValue(outputString.toString(), false, false));
-    } else {
-      // blank the output area
-      importerUser.setOutputAreaContents("");
-    }
+
+    importerUser.setOutputAreaContents(outputString.toString());
   }
 
   void importDrawing()
