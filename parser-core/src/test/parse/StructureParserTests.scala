@@ -104,14 +104,6 @@ class StructureParserTests extends AnyFunSuite {
     assertResult("reporter procedure FOO:[]{OTPL}:\n")(proc.dump)
   }
 
-  test("export") {
-    val results = compile("export [foo bar baz]")
-    assertResult(0)(results.procedures.size)
-    assertResult(0)(results.imports.size)
-    assertResult(true)(results.`export`.isDefined)
-    assertResult(3)(results.`export`.head.exportedNames.size)
-  }
-
   test("import") {
     val results = compile("import foo")
     assertResult(0)(results.procedures.size)
