@@ -13,12 +13,24 @@ import java.util.Locale
 import
   org.nlogo.core,
     core.{ BreedIdentifierHandler, I18N, StructureDeclarations, Token, TokenType },
-      StructureDeclarations.{ Breed, Declaration, Extensions, Identifier, Includes, Procedure, Variables },
+      StructureDeclarations.{ Breed, Declaration, Export, Extensions, Identifier, Includes, Procedure, Variables },
     core.Fail._
 
 import SymbolType._
 
 object StructureChecker {
+
+  def rejectExportOutsideModule(declarations: Seq[Declaration], isModule: Boolean): Unit = {
+    if (!isModule) {
+      for (declaration <- declarations) {
+        declaration match {
+          case Export(_, token) =>
+            exception(I18N.errors.getN("compiler.StructureParser.exportOutsideModule"), token)
+          case _ =>
+        }
+      }
+    }
+  }
 
   def rejectNonProceduresInModule(declarations: Seq[Declaration], isModule: Boolean): Unit = {
     if (isModule) {

@@ -420,6 +420,7 @@ class StructureParser(
       case Right(declarations) =>
         StructureChecker.rejectMisplacedDeclarations(declarations)
         StructureChecker.rejectMisplacedConstants(declarations)
+        StructureChecker.rejectExportOutsideModule(declarations, module.isDefined)
         StructureChecker.rejectNonProceduresInModule(declarations, module.isDefined)
         StructureChecker.rejectDuplicateDeclarations(declarations)
         StructureChecker.rejectDuplicateNames(declarations,
