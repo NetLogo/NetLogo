@@ -115,13 +115,17 @@ class FileController(owner: Component, modelTracker: ModelTracker) extends OpenM
     val response = new OptionPane(owner, I18N.gui.get("common.messages.warning"),
                                   I18N.gui.getN("file.open.warn.version.older", version, Version.version),
                                   Seq(I18N.gui.get("common.buttons.continue"),
-                                      I18N.gui.get("file.open.warn.version.transitionGuide")),
+                                      I18N.gui.get("file.open.warn.version.transitionGuide"),
+                                      I18N.gui.get("file.open.warn.version.autoConverter")),
                                   OptionPane.Icons.Warning).getSelectedIndex
     response match {
       case 0 => true
       case 1 =>
         BrowserLauncher.openURI(owner,
           new URI(s"https://docs.netlogo.org/${Version.versionNumberNo3D}/transition.html"))
+        false
+      case 2 =>
+        BrowserLauncher.openURI(owner, new URI("https://convert.netlogo.org"))
         false
       case _ => false
     }
