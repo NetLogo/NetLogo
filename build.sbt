@@ -80,13 +80,38 @@ lazy val scalatestSettings = Seq(
   )
   // This lets us mock up some Java library classes for testing.
   // -Jeremy B August 2022
-, Test / javaOptions := { Seq(
-    "--add-opens", "java.desktop/java.awt=ALL-UNNAMED"
-  , "--add-opens", "java.base/java.io=ALL-UNNAMED"
-  , s"-Dorg.nlogo.is3d=${System.getProperty("org.nlogo.is3d", "false")}"
-  , s"-Dorg.nlogo.noGenerator=${System.getProperty("org.nlogo.noGenerator", "false")}"
-  , s"-Dorg.nlogo.noOptimizer=${System.getProperty("org.nlogo.noOptimizer", "false")}"
-  ) }
+, Test / javaOptions := {
+    val os: String = {
+      val name = System.getProperty("os.name").toLowerCase
+
+      if (name.startsWith("win")) {
+        "windows"
+      } else if (name.startsWith("mac")) {
+        "macosx"
+      } else {
+        "linux"
+      }
+    }
+
+    val arch: String = {
+      if (os == "macosx") {
+        "universal"
+      } else if (System.getProperty("os.arch").contains("x86")) {
+        "i586"
+      } else {
+        "amd64"
+      }
+    }
+
+    Seq(
+      "--add-opens", "java.desktop/java.awt=ALL-UNNAMED"
+    , "--add-opens", "java.base/java.io=ALL-UNNAMED"
+    , s"-Djava.library.path=${baseDirectory.value}/natives/$os-$arch"
+    , s"-Dorg.nlogo.is3d=${System.getProperty("org.nlogo.is3d", "false")}"
+    , s"-Dorg.nlogo.noGenerator=${System.getProperty("org.nlogo.noGenerator", "false")}"
+    , s"-Dorg.nlogo.noOptimizer=${System.getProperty("org.nlogo.noOptimizer", "false")}"
+    )
+  }
   // Tests must be forked to get the above `javaOptions`
 , Test / fork := true
 , twod   := { System.setProperty("org.nlogo.is3d", "false") }

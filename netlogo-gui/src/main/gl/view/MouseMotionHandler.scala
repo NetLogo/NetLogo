@@ -14,7 +14,7 @@ object MouseMotionHandler {
   case object InterfaceMode extends Mode
 }
 
-class MouseMotionHandler(view: View)
+class MouseMotionHandler(view: GLViewInterface)
 extends java.awt.event.MouseListener
 with java.awt.event.MouseMotionListener
 with java.awt.event.MouseWheelListener {
@@ -23,7 +23,7 @@ with java.awt.event.MouseWheelListener {
 
   private var movementMode: Mode = OrbitMode
   private var prevMouseX, prevMouseY = 0
-  val world = view.viewManager.world
+  val world = view.world
 
   def setMovementMode(mode: Mode): Unit = {
     if (mode == InterfaceMode) {

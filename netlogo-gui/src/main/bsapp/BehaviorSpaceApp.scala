@@ -93,6 +93,8 @@ object BehaviorSpaceApp {
         current
     }
 
+    AppUtils.setupGUI(None)
+
     new BehaviorSpaceApp(parsedArgs).run()
   }
 
@@ -161,8 +163,6 @@ class BehaviorSpaceApp(args: BehaviorSpaceApp.CommandLineArgs) extends Thread.Un
     ipcHandler.writeLine(ujson.write(Obj(
       "type" -> "launch"
     )))
-
-    AppUtils.setupGUI(None)
 
     val settings = LabInterface.Settings(args.model, Option(args.experiment), None, args.table, args.spreadsheet,
                                          args.stats, args.lists, None, args.threads, args.updatePlots,

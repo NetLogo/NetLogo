@@ -19,7 +19,7 @@ import org.nlogo.util.SysInfo
 
 import scala.collection.mutable.{ Map => MutableMap }
 
-class InterfacePanelLite(val viewWidget: ViewWidgetInterface, compiler: CompilerServices,
+class InterfacePanelLite(viewWidget: Option[ViewWidgetInterface], compiler: CompilerServices,
   random: RandomServices, plotManager: PlotManager, editorFactory: EditorFactory, extensionManager: ExtensionManager)
   extends JLayeredPane
   with WidgetContainer
@@ -27,6 +27,10 @@ class InterfacePanelLite(val viewWidget: ViewWidgetInterface, compiler: Compiler
   with LoadWidgetsEvent.Handler
   with OutputEvent.Handler
   with ThemeSync {
+
+  def this(viewWidget: ViewWidgetInterface, compiler: CompilerServices, random: RandomServices,
+           plotManager: PlotManager, editorFactory: EditorFactory, extensionManager: ExtensionManager) =
+    this(Option(viewWidget), compiler, random, plotManager, editorFactory, extensionManager)
 
   // widget name -> Widget
   private val widgets: MutableMap[String, Widget] = MutableMap[String, Widget]()
@@ -247,14 +251,16 @@ class InterfacePanelLite(val viewWidget: ViewWidgetInterface, compiler: Compiler
         case v: CoreView =>
           // the graphics widget (and the command center) are special cases because
           // they are not recreated at load time, but reused
-          try {
-            viewWidget.load(v)
-          } catch {
-            case ex: RuntimeException => Exceptions.handle(ex)
+          viewWidget.fold(null) { view =>
+            try {
+              view.load(v)
+            } catch {
+              case ex: RuntimeException => Exceptions.handle(ex)
+            }
+            view.setSize(view.getSize())
+            addWidget(view, x, y)
+            view
           }
-          viewWidget.setSize(viewWidget.getSize())
-          addWidget(viewWidget, x, y)
-          viewWidget
         case _ =>
           val name = coreWidget.getClass.getSimpleName
           val newGuy = widgetBuilderMap.get(name).flatMap(createWidget =>
