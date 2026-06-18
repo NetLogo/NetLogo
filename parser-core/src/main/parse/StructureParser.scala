@@ -261,7 +261,6 @@ object StructureParser {
     newProcedureTokens ++ aliases
   }
 
-  // TODO: extend to work with modules
   private def parsingWithExtensions(compilationData: CompilationOperand)
                                    (results: => StructureResults): StructureResults = {
     if (compilationData.subprogram)
