@@ -13,7 +13,7 @@ import org.nlogo.hubnet.server.HeadlessHubNetManagerFactory
 import org.nlogo.render.Renderer
 import org.nlogo.sdm.AggregateManagerLite
 import org.nlogo.window.{ CompilerManager, Event, Events, JobWidget, PeriodicUpdater, ProceduresInterface, ThreadUtils,
-                          UpdateManager, WorkspaceWithSpeed }
+                          UpdateManager, ViewWidgetInterface, WorkspaceWithSpeed }
 
 // this extension of HeadlessWorkspace enables a model to be displayed
 // in the interface without all the baggage carried by the GUIWorkspace
@@ -51,7 +51,15 @@ class SemiHeadlessWorkspace(frame: BehaviorSpaceFrame, world: World & Compilatio
     with Events.AddJobEvent.Handler with Events.RemoveJobEvent.Handler with Events.JobStoppingEvent.Handler
     with Events.RemoveAllJobsEvent.Handler {
 
-  val viewWidget = new ViewWidget(this)
+  val (view: ActiveView, viewWidget: Option[ViewWidgetInterface]) = {
+    if (Version.is3D) {
+      (new View3D(this), None)
+    } else {
+      val view = new ViewWidget(this)
+
+      (view, Option(view))
+    }
+  }
 
   val updateManager = new UpdateManager {
     override def defaultFrameRate: Double =
@@ -92,6 +100,11 @@ class SemiHeadlessWorkspace(frame: BehaviorSpaceFrame, world: World & Compilatio
   periodicUpdater.start()
   lifeguard.start()
 
+  world.displayOn(false)
+
+  def getFrame: BehaviorSpaceFrame =
+    frame
+
   def getUpdateView: Boolean =
     updateView
 
@@ -99,7 +112,7 @@ class SemiHeadlessWorkspace(frame: BehaviorSpaceFrame, world: World & Compilatio
     this.updateView = updateView
 
     if (!updateView)
-      viewWidget.reset()
+      view.disable()
   }
 
   def getUpdatePlotsAndMonitors: Boolean =
@@ -144,19 +157,15 @@ class SemiHeadlessWorkspace(frame: BehaviorSpaceFrame, world: World & Compilatio
       if (worldLock) {
         ThreadUtils.waitFor(this, new CommandRunnable {
           override def run(): Unit = {
-            viewWidget.paintBuffer()
+            view.paintView()
           }
         })
 
         while (!updateManager.isDoneSmoothing())
           ThreadUtils.waitForQueuedEvents(this)
       } else {
-        world synchronized {
-          viewWidget.paintBuffer()
-        }
+        EventQueue.invokeAndWait(() => view.paintView())
       }
-
-      viewWidget.repaint()
 
       updateManager.donePainting()
       updateManager.pause()

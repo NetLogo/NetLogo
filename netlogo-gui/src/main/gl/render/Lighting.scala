@@ -35,6 +35,8 @@ class LightManager {
 
   def init(gl: GL2): Unit = {
     glInstance = Some(gl)
+
+    lights.clear()
   }
 
   def addLight(light: Light): Unit = {

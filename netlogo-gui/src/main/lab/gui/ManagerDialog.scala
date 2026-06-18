@@ -11,7 +11,7 @@ import javax.swing.{ AbstractAction, DefaultListModel, JDialog, JLabel, JList, J
 import javax.swing.event.{ ListSelectionEvent, ListSelectionListener }
 
 import org.nlogo.analytics.Analytics
-import org.nlogo.api.{ Exceptions, LabProtocol, RefEnumeratedValueSet }
+import org.nlogo.api.{ Exceptions, LabProtocol, RefEnumeratedValueSet, Version }
 import org.nlogo.awt.UserCancelException
 import org.nlogo.core.I18N
 import org.nlogo.editor.Colorizer
@@ -195,7 +195,7 @@ class ManagerDialog(manager:       LabManager,
 
       manager.prepareForRun()
 
-      val temp = Files.createTempFile("temp-model", ".nlogox")
+      val temp = Files.createTempFile("temp-model", s".nlogox${if (Version.is3D) "3d" else ""}")
 
       temp.toFile.deleteOnExit()
 
