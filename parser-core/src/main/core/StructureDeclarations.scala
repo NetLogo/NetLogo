@@ -32,10 +32,10 @@ object StructureDeclarations {
   case class Identifier(name: String, token: Token)
 
   case class Export(exportedNames: Seq[Identifier], token: Token)
-      extends Declaration {
+    extends Declaration {
 
-      override val start: Token = token
-      override val end: Token = token
+    override val start: Token = token
+    override val end: Token = token
   }
 
   case class Import(
@@ -50,10 +50,10 @@ object StructureDeclarations {
 
     token: Token
   ) extends Declaration {
-      override val start: Token = token
-      override val end: Token = token
+    override val start: Token = token
+    override val end: Token = token
   }
   sealed trait ImportOption
   case class ImportAlias(name: String, token: Token)
-      extends ImportOption
+    extends ImportOption
 }
