@@ -265,8 +265,6 @@ class ViewManager(val workspace: GUIWorkspace,
   // keep track of it here.
   def applyNewFontSize(fontSize: Int, zoom: Int): Unit = {}
 
-  var warned = false
-
   override def syncTheme(): Unit = {
     observerView.foreach(_.syncTheme())
     fullscreenView.foreach(_.syncTheme())

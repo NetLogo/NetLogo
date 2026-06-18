@@ -66,11 +66,18 @@ class Supervisor(parent: Window, workspace: GUIWorkspace, modelPath: String, ori
 
       handler.connect()
 
-      val logger = ProcessLogger(println, line => errorLines = errorLines :+ line)
+      val logger = ProcessLogger(println, line => {
+        errorLines = errorLines :+ line
+
+        System.err.println(line)
+      })
 
       process = Option(Process(Seq(ProcessHandle.current.info.command.get) ++ memoryLimit ++ Seq("-cp",
                                    System.getProperty("java.class.path"), s"-Dorg.nlogo.is3d=${Version.is3D}",
                                    s"-Dnetlogo.extensions.dir=${System.getProperty("netlogo.extensions.dir")}",
+                                   s"-Djava.library.path=${System.getProperty("java.library.path")}",
+                                   "-Dswing.aatext=true",
+                                   "-Dsun.java2d.d3d=false",
                                    "-Dapple.awt.application.appearance=system",
                                    "org.nlogo.bsapp.BehaviorSpaceApp", modelPath, protocol.name,
                                    "--original-path", originalPath,

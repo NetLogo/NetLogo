@@ -14,7 +14,7 @@ import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 import MouseMotionHandler.{ Mode, OrbitMode, ZoomMode, TranslateMode, InterfaceMode }
 
-class ViewControlToolBar(view: View, inputHandler: MouseMotionHandler)
+class ViewControlToolBar(view: GLViewInterface, inputHandler: MouseMotionHandler)
   extends JPanel(new GridBagLayout) with ThemeSync {
 
   private implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("view.3d")
@@ -29,11 +29,11 @@ class ViewControlToolBar(view: View, inputHandler: MouseMotionHandler)
     val options = Seq(I18N.gui.get("common.buttons.continue"), I18N.gui.get("common.buttons.cancel"))
     val isWindows = System.getProperty("os.name").toLowerCase.startsWith("win")
 
-    if (!isWindows || view.viewManager.warned ||
+    if (!isWindows || view.warned ||
       (new OptionPane(view, I18N.gui.get("common.messages.warning"), I18N.gui("fullScreenWarning"), options,
                       OptionPane.Icons.Warning).getSelectedIndex == 0)) {
-      view.viewManager.setFullscreen(true)
-      view.viewManager.warned = true
+      view.setFullscreen(true)
+      view.warned = true
     }
   })
 
@@ -60,7 +60,7 @@ class ViewControlToolBar(view: View, inputHandler: MouseMotionHandler)
     add(zoomButton, c)
     add(moveButton, c)
 
-    if (!view.viewManager.workspace.world.program.dialect.is3D) {
+    if (!view.world.program.dialect.is3D) {
       add(interactButton, c)
       group.add(interactButton)
     }

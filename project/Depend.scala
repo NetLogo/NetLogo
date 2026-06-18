@@ -60,7 +60,7 @@ object Depend {
       "app/tools" -> List("app/common", "app/infotab"),
       "app/common" -> List("ide", "window"),
       "awt" -> Nil,
-      "bsapp" -> List("headless", "window"),
+      "bsapp" -> List("gl/render", "gl/view", "headless", "window"),
       "compile" -> List("compile/api", "compile/prim", "prim", "prim/dead", "prim/threed"),
       "compile/api" -> List("core", "nvm", "core/prim"),
       "compile/optimize" -> List("compile/middle"),
@@ -164,8 +164,8 @@ check [gl.render] independentOf [Sun-Swing] [bad-AWT]
 
 ### checks on external libraries
 
-# app doesn't depend on JOGL but it needs access to gl for initialization
-[JOGL-free-zone] = org.nlogo.* excluding [app] [gl.render] [gl.view]
+# app and bsapp don't depend on JOGL but they need access to gl for initialization
+[JOGL-free-zone] = org.nlogo.* excluding [app] [bsapp] [gl.render] [gl.view]
 [JOGL] = net.java.games.* com.jogamp.opengl.*
 check [JOGL-free-zone] independentOf [JOGL]
 

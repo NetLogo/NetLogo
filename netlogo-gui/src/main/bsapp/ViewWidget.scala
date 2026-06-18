@@ -11,7 +11,7 @@ import org.nlogo.swing.Utils
 import org.nlogo.theme.InterfaceColors
 import org.nlogo.window.{ Editable, ViewWidgetInterface }
 
-class ViewWidget(workspace: SemiHeadlessWorkspace) extends ViewWidgetInterface {
+class ViewWidget(workspace: SemiHeadlessWorkspace) extends ViewWidgetInterface with ActiveView {
   private var buffer: Option[ViewBuffer] = None
 
   override def getAdditionalHeight: Int =
@@ -51,13 +51,13 @@ class ViewWidget(workspace: SemiHeadlessWorkspace) extends ViewWidgetInterface {
   override def getMaximumSize: Dimension =
     getPreferredSize
 
-  def reset(): Unit = {
+  override def disable(): Unit = {
     buffer = None
 
     repaint()
   }
 
-  def paintBuffer(): Unit = {
+  override def paintView(): Unit = {
     if (buffer.isEmpty && getWidth > 0) {
       val image = new BufferedImage(getWidth, getHeight, BufferedImage.TYPE_INT_ARGB)
 
@@ -68,6 +68,8 @@ class ViewWidget(workspace: SemiHeadlessWorkspace) extends ViewWidgetInterface {
       case ViewBuffer(_, graphics) =>
         workspace.renderer.paint(graphics, workspace)
     }
+
+    repaint()
   }
 
   override def paintComponent(g: Graphics): Unit = {

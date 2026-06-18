@@ -10,6 +10,7 @@ import java.awt.event.{ KeyEvent, KeyAdapter, MouseEvent }
 import java.awt.image.BufferedImage
 
 import org.nlogo.analytics.Analytics
+import org.nlogo.agent.World
 import org.nlogo.api.{ DrawingInterface, Version, World3D, WorldRenderable, WorldWithWorldRenderable }
 import org.nlogo.gl.render.{ LinkRenderer, LinkRenderer3D, PatchRenderer, PatchRenderer3D, Renderer, Renderer3D,
                              ShapeRenderer, ShapeRenderer3D, TurtleRenderer, TurtleRenderer3D, WorldRenderer,
@@ -19,7 +20,7 @@ import org.nlogo.theme.ThemeSync
 import org.nlogo.window.Event.LinkChild
 
 abstract class View(title: String, val viewManager: ViewManager, var renderer: Renderer)
-  extends Frame(title) with LinkChild with ThemeSync with NetLogoIcon {
+  extends Frame(title) with GLViewInterface with LinkChild with ThemeSync with NetLogoIcon {
 
   WindowAutomator.automate(this)
 
@@ -71,6 +72,9 @@ abstract class View(title: String, val viewManager: ViewManager, var renderer: R
   add(canvas, java.awt.BorderLayout.CENTER)
   canvas.setCursor(new java.awt.Cursor(java.awt.Cursor.CROSSHAIR_CURSOR))
 
+  override def world: World =
+    viewManager.world
+
   def updatePerspectiveLabel(): Unit = { }
 
   def createCanvas(antiAliasing: Boolean): Unit = {
@@ -111,6 +115,10 @@ abstract class View(title: String, val viewManager: ViewManager, var renderer: R
       Analytics.threedViewOpen()
 
     super.setVisible(visible)
+  }
+
+  override def setFullscreen(fullscreen: Boolean): Unit = {
+    viewManager.setFullscreen(fullscreen)
   }
 
   def display(): Unit = {
