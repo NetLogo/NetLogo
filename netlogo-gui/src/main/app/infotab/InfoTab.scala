@@ -60,7 +60,7 @@ class InfoTab(attachModelDir: String => String, resourceManager: ExternalResourc
   private val helpButton = new ToolBarActionButton(new AbstractAction(I18N.gui.get("tabs.info.help")) {
     override def actionPerformed(e: ActionEvent): Unit = {
       BrowserLauncher.tryOpenURI(
-        InfoTab.this, new URI(s"https://netlogo.org/${Version.versionNumberNo3D}/infotab#information"),
+        InfoTab.this, new URI(s"https://docs.netlogo.org/${Version.versionNumberNo3D}/infotab#information"),
         QuickHelp.docPath(Some("infotab-information")))
     }
   })
@@ -215,7 +215,7 @@ class InfoTab(attachModelDir: String => String, resourceManager: ExternalResourc
                            Seq(I18N.gui.get("common.buttons.help"), I18N.gui.get("common.buttons.cancel")),
                            OptionPane.Icons.Error).getSelectedIndex == 1) // Help
           BrowserLauncher.tryOpenURI(
-            this, new URI(s"https://netlogo.org/${Version.versionNumberNo3D}/infotab#links"),
+            this, new URI(s"https://docs.netlogo.org/${Version.versionNumberNo3D}/infotab#links"),
             QuickHelp.docPath(Some("infotab-links")))
       }
       else BrowserLauncher.openURI(this, e.getURL.toURI)
