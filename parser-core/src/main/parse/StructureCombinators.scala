@@ -224,13 +224,13 @@ extends scala.util.parsing.combinator.Parsers {
         p.copy(text = newText, value = newValue)(newSourcelocation) }}})
 
   def identifier: Parser[Identifier] =
-    identifierToken ^^ {x => Identifier(x.value.toString, x)}
+    identifierToken ^^ (x => Identifier(x.value.toString, x))
 
   def literalToken: Parser[Token] =
     tokenType("literal", TokenType.Literal)
 
   def literal: Parser[Identifier] =
-    literalToken ^^ {token => Identifier(token.value.toString, token)}
+    literalToken ^^ (token => Identifier(token.value.toString, token))
 
   def identifierList: Parser[Seq[Identifier] ~ Token] =
     openBracket ~> commit(rep(identifier | literal) ~ closeBracket)

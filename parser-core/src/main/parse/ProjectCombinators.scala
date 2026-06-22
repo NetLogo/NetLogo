@@ -11,10 +11,10 @@ object ProjectCombinators {
 
     combinators.declarations(reader) match {
       case combinators.Success(declarations, next) if next.atEnd =>
-        val nameDeclarations = declarations.collect{case Declaration.Name(x) => x}
-        val versionDeclarations = declarations.collect{case Declaration.Version(x) => x}
-        val dependenciesDeclarations = declarations.collect{case Declaration.Dependencies(x) => x}
-        val sourceFilesDeclarations = declarations.collect{case Declaration.SourceFiles(x) => x}
+        val nameDeclarations = declarations.collect { case Declaration.Name(x) => x }
+        val versionDeclarations = declarations.collect { case Declaration.Version(x) => x }
+        val dependenciesDeclarations = declarations.collect { case Declaration.Dependencies(x) => x }
+        val sourceFilesDeclarations = declarations.collect { case Declaration.SourceFiles(x) => x }
 
         if (nameDeclarations.length > 1 ||
             versionDeclarations.length > 1 ||
@@ -80,9 +80,9 @@ extends scala.util.parsing.combinator.JavaTokenParsers {
     string ~ lowerVersionBound ~ literal("&&") ~! upperVersionBound ^^ {
       case name ~ lowerBound ~ _ ~ upperBound => Dependency(name, Some(lowerBound), Some(upperBound))
     } |
-    string ~ lowerVersionBound ^^ {case name ~ bound => Dependency(name, Some(bound), None)} |
-    string ~ upperVersionBound ^^ {case name ~ bound => Dependency(name, None, Some(bound))} |
-    string ~ exactVersionBound ^^ {case name ~ bound => Dependency(name, Some(bound), Some(bound))} |
+    string ~ lowerVersionBound ^^ { case name ~ bound => Dependency(name, Some(bound), None) } |
+    string ~ upperVersionBound ^^ { case name ~ bound => Dependency(name, None, Some(bound)) } |
+    string ~ exactVersionBound ^^ { case name ~ bound => Dependency(name, Some(bound), Some(bound)) } |
     string ^^ (name => Dependency(name, None, None))
 
   def nameDeclaration: Parser[Declaration] =
