@@ -86,17 +86,17 @@ object StructureParser {
               for (currentPath <- suppliedPaths) {
                 val prefix =
                   currentImport.pathAlias match {
-                    case Some(x) => x + ":"
+                    case Some(x) => s"$x:"
                     case None =>
                       if (currentImport.importedIdentifiers.nonEmpty) {
                         ""
                       } else if (suppliedPaths.length == 1) {
-                        currentImport.pathAlias.getOrElse(currentImport.pathComponents.last).toUpperCase + ":"
+                        s"${currentImport.pathAlias.getOrElse(currentImport.pathComponents.last).toUpperCase}:"
                       } else {
                         val basePath = compilationEnvironment.resolvePath(currentImport.filename.getOrElse(""))
                         val relativePath = currentPath.drop(basePath.length + 1) // Strip common prefix plus a separator
-
-                        raw"(?i)\.nls$$".r.replaceFirstIn(relativePath.replace(separator, ":").toUpperCase, "") + ":"
+                        val path = raw"(?i)\.nls$$".r.replaceFirstIn(relativePath.replace(separator, ":").toUpperCase, "")
+                        s"$path:"
                       }
                   }
 
@@ -171,14 +171,15 @@ object StructureParser {
                 } else {
                   val (procedures, procedureTokens) = moduleCache(currentPath)
 
-                  val procedureAliases = procedures.map{case ((name, _), proc) =>
-                    val key = (prefix.toUpperCase + name, currentImport.filename)
-                    proc.aliases = proc.aliases :+ key
-                    key -> proc
+                  val procedureAliases = procedures.map {
+                    case ((name, _), proc) =>
+                      val key = (prefix.toUpperCase + name, currentImport.filename)
+                      proc.aliases = proc.aliases :+ key
+                      key -> proc
                   }
 
-                  val procedureTokenAliases = procedureTokens.map{case ((name, _), proc) =>
-                    (prefix.toUpperCase + name, currentImport.filename) -> proc
+                  val procedureTokenAliases = procedureTokens.map {
+                    case ((name, _), proc) => (prefix.toUpperCase + name, currentImport.filename) -> proc
                   }
 
                   newResults = newResults.copy(
@@ -218,14 +219,16 @@ object StructureParser {
   ): ProceduresMap = {
 
     val changedProcedures = newProcedures.removedAll(oldProcedures.keys)
-    val exportedProcedures = changedProcedures.filter{case ((name, _), _) =>
-      renameMap.contains(name)
+    val exportedProcedures = changedProcedures.filter {
+      case ((name, _), _) => renameMap.contains(name)
     }
 
-    val aliases = exportedProcedures.map{case ((name, _), proc) =>
-      val key = (renameMap(name), module)
-      proc.aliases = proc.aliases :+ key
-      key -> proc}
+    val aliases = exportedProcedures.map{
+      case ((name, _), proc) =>
+        val key = (renameMap(name), module)
+        proc.aliases = proc.aliases :+ key
+        key -> proc
+    }
 
     val oldProcedureKeys = oldProcedures.keys.toSet
 
@@ -249,13 +252,13 @@ object StructureParser {
   ): ListMap[(String, Option[String]), Iterable[Token]] = {
 
     val changedProcedureTokens = newProcedureTokens.removedAll(oldProcedureTokens.keys)
-    val exportedProcedureTokens = changedProcedureTokens.filter{case ((name, _), _) =>
-      renameMap.contains(name)
+    val exportedProcedureTokens = changedProcedureTokens.filter {
+      case ((name, _), _) => renameMap.contains(name)
     }
 
     // addProcedureAliases() already checks for name conflicts, so no need to check again here.
-    val aliases = exportedProcedureTokens.map{case ((name, _), proc) =>
-      (renameMap(name), module) -> proc
+    val aliases = exportedProcedureTokens.map {
+      case ((name, _), proc) => (renameMap(name), module) -> proc
     }
 
     newProcedureTokens ++ aliases
@@ -424,7 +427,7 @@ class StructureParser(
         StructureChecker.rejectDuplicateDeclarations(declarations)
         StructureChecker.rejectDuplicateNames(declarations,
           StructureParser.usedNames(
-            oldResults.program, oldResults.procedures.filter{case ((_, procModule), _) => procModule == module}))
+            oldResults.program, oldResults.procedures.filter{ case ((_, procModule), _) => procModule == module }))
         StructureChecker.rejectMissingReport(declarations)
         StructureConverter.convert(declarations, displayName, module,
           if (subprogram)

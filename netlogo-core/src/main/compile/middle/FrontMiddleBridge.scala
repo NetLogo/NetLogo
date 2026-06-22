@@ -23,10 +23,10 @@ object FrontMiddleBridge extends FrontMiddleBridgeInterface {
     }.toMap
     val astBackifier = new middle.ASTBackifier(backifier, ListMap((newProcedures ++ oldProcedures).toSeq*))
     newProcedures
-      .filter{case ((name, module), v) => name == v.name && module == v.module}
+      .filter{ case ((name, module), v) => name == v.name && module == v.module }
       .values
       .map(x => (x, topLevelDefs.find(y => x.name == y.procedure.name && x.module == y.procedure.module).get))
-      .map{case (x, y) => astBackifier.backify(x, y)}
+      .map{ case (x, y) => astBackifier.backify(x, y) }
       .toSeq
   }
   private def fromApiProcedure(p: FrontEndProcedure): Procedure = {
