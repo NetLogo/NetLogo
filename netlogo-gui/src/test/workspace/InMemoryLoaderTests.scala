@@ -13,7 +13,7 @@ class InMemoryExtensionLoaderTests extends AnyFunSuiteEx {
   val loader = new InMemoryExtensionLoader("foo", dummyClassManager)
   val extURL = new URL("file:/tmp/extension/foo")
   val extensionData =
-    new ExtensionData("foo", extURL, "foo", classOf[DummyClassManager].getCanonicalName, Some("7.0"), 0)
+    new ExtensionData("foo", extURL, "foo", classOf[DummyClassManager].getCanonicalName, Some("7.1"), 0)
 
   test("InMemoryExtensionLoader returns None when asked to load an extension not matching its specified prefix") {
     assert(loader.locateExtension("bar").isEmpty)
