@@ -296,6 +296,37 @@ class FrontEndTests extends AnyFunSuite with BaseParserTest {
     assert(FrontEnd.findExtensions("extensions\n\n\t[     array\n\n\t\t\t\t    bitmap csv \t\t\t \n]")
                    .sameElements(Seq("ARRAY", "BITMAP", "CSV")))
   }
+
+  test("find configurable extensions") {
+    val code = "extension [foo]\n"                                         
+             + "extension [bar [ url \"https://example.com/bar.jar\" ]]\n"
+             + "extensions [ qux ]"
+
+    assert(
+      FrontEnd.findConfigurableExtensions(code).sameElements(
+        Seq(
+          ("FOO", None),
+          ("BAR", Some("https://example.com/bar.jar"))
+        )
+      )
+    )
+  }
+
+  test("find all extensions") {
+    val code = "extension [foo]\n"                                         
+             + "extension [bar [ url \"https://example.com/bar.jar\" ]]\n"
+             + "extensions [ qux ]"
+
+    assert(
+      FrontEnd.findAllExtensions(code).sameElements(
+        Seq(
+          ("QUX", None),
+          ("FOO", None),
+          ("BAR", Some("https://example.com/bar.jar"))
+        )
+      )
+    )
+  }
 }
 
 object FrontEndTests {

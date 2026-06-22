@@ -19,6 +19,7 @@ package org.nlogo.parse
 // include further files.)
 
 import java.util.Locale
+import scala.collection.mutable.ListBuffer
 
 import org.nlogo.core.{ CompilationEnvironment, CompilationOperand, CompilerException, ErrorSource, I18N,
                         ProcedureSyntax, Program, StructureResults, Token, TokenizerInterface, TokenType }
@@ -68,14 +69,28 @@ object StructureParser {
       compilationData.extensionManager.startFullCompilation()
 
       val r = results
+      val allExtensions =
+        r.extensions.map(                    // Old extensions
+          e => (
+            e.text.toLowerCase,
+            None,
+            new ErrorSource(e)
+        )) ++
+        r.configurableExtensions.map(        // Configurable extensions
+          e => (
+            e.name.name.toLowerCase,
+            e.url.map(_.name),
+            new ErrorSource(e.name.token)
+          )
+        )
+      
 
-      for (token <- r.extensions) {
-        val text = token.text.toLowerCase
+      for ((name, url, errorSource) <- allExtensions) {
         if (compilationData.shouldAutoInstallLibs) {
           val lm = compilationData.libraryManager
-          lm.lookupExtension(text, "").filter(_.status == CanInstall).foreach(lm.installExtension)
+          lm.lookupExtension(name, "").filter(_.status == CanInstall).foreach(lm.installExtension)
         }
-        compilationData.extensionManager.importExtension(text, new ErrorSource(token))
+        compilationData.extensionManager.importExtension(name, url, errorSource) // New importExtension method
       }
 
       compilationData.extensionManager.finishFullCompilation()
@@ -187,6 +202,62 @@ object StructureParser {
       openBracket.takeWhile(_.tpe != TokenType.CloseBracket).filter(_.tpe == TokenType.Ident)
                  .map(_.value.toString).toSeq
     }
+  }
+
+  def findConfigurableExtensions(tokens: Iterator[Token]): Seq[(String, Option[String])] = {
+    // Look for the keyword "EXTENSION"
+    // syntax: extension [name [url <url>]?]
+    val extensions = ListBuffer[(String, Option[String])]()
+    while (tokens.hasNext) {
+      val token = tokens.next() // Keep moving until we find "EXTENSION"
+      if (token.value == "EXTENSION") {
+        // Open bracket
+        if (!tokens.hasNext || tokens.next().tpe != TokenType.OpenBracket) {
+          exception("Expected open bracket after 'EXTENSION' keyword", token)
+        }
+
+        // Identifier for the extension name
+        val nameToken = tokens.next()
+        if (nameToken.tpe != TokenType.Ident) {
+          exception("Expected identifier after 'EXTENSION' keyword", nameToken)
+        }
+
+        // Optional URL
+        var url: Option[String] = None
+        if (tokens.hasNext) { 
+          val nextToken = tokens.next() // [url <url>]? is optional + ]
+          if (nextToken.tpe == TokenType.OpenBracket) {
+            // We have a URL specification
+            if (!tokens.hasNext || !tokens.next().value.toString.equalsIgnoreCase("url")) {
+              exception("Expected 'url' keyword after open bracket", nextToken)
+            }
+            val urlToken = tokens.next()
+            if (urlToken.tpe != TokenType.Literal) {
+              exception("Expected URL literal", urlToken)
+            }
+            if (!tokens.hasNext || tokens.next().tpe != TokenType.CloseBracket) {
+              exception("Expected close bracket after URL", urlToken)
+            }
+            url = Some(urlToken.value.toString)
+            
+            // Now consume the final close bracket
+            if (!tokens.hasNext || tokens.next().tpe != TokenType.CloseBracket) {
+              exception("Expected close bracket after extension declaration", urlToken)
+            }
+          } else if (nextToken.tpe == TokenType.CloseBracket) {
+            // No URL, just the closing bracket - this is fine
+          } else {
+            exception("Expected close bracket or URL specification", nextToken)
+          }
+        } else {
+          exception("Expected close bracket after extension name", nameToken)
+        }
+
+        // Add the extension to the list
+        extensions.addOne((nameToken.value.toString, url))
+      }
+    }
+    extensions.toSeq
   }
 }
 
