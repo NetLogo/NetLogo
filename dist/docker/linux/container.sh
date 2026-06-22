@@ -52,47 +52,47 @@ nvm install 24.13
 mkdir /root/jvm-store/
 
 # Liberica 32-bit JDK for 32-bit release
-wget https://download.bell-sw.com/java/17.0.15+10/bellsoft-jdk17.0.15+10-linux-i586.tar.gz
+wget https://download.bell-sw.com/java/21.0.11+11/bellsoft-jdk21.0.11+11-linux-i586.tar.gz
 gunzip bellsoft*
 tar -xf bellsoft*
 rm bellsoft*
-mv jdk-17.0.15 /root/jvm-store/liberica-jdk-17.0.15/
+mv jdk-21.0.11 /root/jvm-store/liberica-jdk-21.0.11/
 
 # OpenJDK 64-bit JDK for primary JDK and 64-bit release
-wget https://download.java.net/java/GA/jdk17.0.2/dfd4a8d0985749f896bed50d7138ee7f/8/GPL/openjdk-17.0.2_linux-x64_bin.tar.gz
+wget https://download.java.net/java/GA/jdk21.0.2/f2283984656d49d69e91c558476027ac/13/GPL/openjdk-21.0.2_linux-x64_bin.tar.gz
 gunzip openjdk*
 tar -xf openjdk*
 rm openjdk*
-mv jdk-17.0.2 /root/jvm-store/openjdk-17.0.2/
+mv jdk-21.0.2 /root/jvm-store/openjdk-21.0.2/
 
 # Configure Java for general NL build
-export JAVA_HOME=/root/jvm-store/openjdk-17.0.2/
+export JAVA_HOME=/root/jvm-store/openjdk-21.0.2/
 
 ln -s $JAVA_HOME/bin/java /usr/bin/java
 
 # Initialize NetLogo repo
-git clone https://github.com/NetLogo/NetLogo
+git clone https://github.com/NetLogo/NetLogo -b main-7.1 NetLogo
 cd NetLogo
 git submodule update --init --recursive
 
 # Create JDK conf file for NL release
 cat > /root/NetLogo/.jdks.yaml << EOF
 - vendor:       "Liberica"
-  version:      "17.0.15"
+  version:      "21.0.11"
   architecture: "32"
-  path:         "/root/jvm-store/liberica-jdk-17.0.15/"
+  path:         "/root/jvm-store/liberica-jdk-21.0.11/"
 
 - vendor:       "OpenJDK"
-  version:      "17.0.2"
+  version:      "21.0.2"
   architecture: "64"
-  path:         "/root/jvm-store/openjdk-17.0.2/"
+  path:         "/root/jvm-store/openjdk-21.0.2/"
 EOF
 
 sbt netlogo/resources
 sbt dist/buildNetLogo
 
-sbt "dist/packageLinuxAggregate OpenJDK_17.0.2_64"
+sbt "dist/packageLinuxAggregate OpenJDK_21.0.2_64"
 mv /root/NetLogo/dist/target/downloadPages/*.tgz /root/NL-Linux-64.tgz
 
-sbt "dist/packageLinuxAggregate Liberica_17.0.15_32"
+sbt "dist/packageLinuxAggregate Liberica_21.0.11_32"
 mv /root/NetLogo/dist/target/downloadPages/*.tgz /root/NL-Linux-32.tgz
