@@ -3,11 +3,10 @@
 package org.nlogo.workspace
 
 import java.io.{ ByteArrayInputStream, File, IOException }
-import java.nio.file.{ Files, FileVisitOption, Path, Paths }
+import java.nio.file.{ Path, Paths }
 import java.util.Base64
 
 import scala.collection.mutable.WeakHashMap
-import scala.jdk.CollectionConverters.IteratorHasAsScala
 import scala.util.Try
 import org.nlogo.agent.{ World, Agent, OutputObject }
 import org.nlogo.api.{ Dump, PackageManager => APIPM, ExtensionManager => APIEM, FileIO, HubNetInterface, LibraryManager, LogoException,
@@ -165,7 +164,7 @@ abstract class AbstractWorkspaceScala(val world: World, val hubNetManagerFactory
   }
 
   override def getCompilationEnvironment = {
-    new org.nlogo.core.CompilationEnvironment {
+    new org.nlogo.core.CompilationEnvironment with AbstractCompilationEnvironment {
       def exists(path: String): Boolean = FileIO.exists(path)
       def getSource(filename: String): String = AbstractWorkspaceScala.this.getSource(filename)
       def profilingEnabled: Boolean = AbstractWorkspaceScala.this.profilingEnabled
@@ -177,41 +176,6 @@ abstract class AbstractWorkspaceScala(val world: World, val hubNetManagerFactory
         } catch {
           case ex: Exception =>
             throw new IllegalStateException(s"$path is not a valid pathname: $ex")
-        }
-      }
-      def resolveModulePath(currentFile: Option[String], modulePath: Seq[String]): Seq[String] = {
-        val separator = System.getProperty("file.separator")
-        val packageName: String = modulePath.headOption.map(_.toLowerCase).getOrElse("")
-
-        val pathPrefixes = Seq(
-          currentFile.map(x => Paths.get(x).getParent.toString + separator).getOrElse(""),
-          APIPM.userPackagesPath.resolve(packageName).toString + separator,
-          APIPM.packagesPath.resolve(packageName).toString + separator
-        )
-
-        pathPrefixes.foldLeft(Seq()) { (p, pathPrefix) =>
-          // If we already found some paths, just return those.
-          if (p.nonEmpty) {
-            p
-          } else {
-            val path = resolvePath(pathPrefix + modulePath.mkString(separator).toLowerCase)
-
-            if (FileIO.isDirectory(path)) {
-              // If the path points to a directory, search for module files in subdirectories.
-              val fileIterator =
-                Files.walk(Paths.get(path), FileVisitOption.FOLLOW_LINKS).iterator.asScala
-              val isModuleFile =
-                (x: Path) => Files.isRegularFile(x) && x.getFileName.toString.toLowerCase.endsWith(".nls")
-
-              fileIterator.filter(isModuleFile).map(_.toString).toSeq
-            } else if (FileIO.isRegularFile(path + ".nls")) {
-              // If the path points to a file, just return that file.
-              Seq(path + ".nls")
-            } else {
-              // Otherwise, return nothing and just move on to the next prefix.
-              Seq()
-            }
-          }
         }
       }
     }
