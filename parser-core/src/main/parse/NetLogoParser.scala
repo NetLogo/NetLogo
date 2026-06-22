@@ -17,7 +17,7 @@ trait NetLogoParser {
     val structureResults = StructureParser.parseSources(tokenizer, compilationOperand)
     val globallyUsedNames =
       StructureParser.usedNames(structureResults.program,
-        (oldProcedures ++ structureResults.procedures).filter{case ((_, procModule), _ ) => procModule.isEmpty})
+        (oldProcedures ++ structureResults.procedures).filter { case ((_, procModule), _ ) => procModule.isEmpty })
 
     val nonAliasProcedures = structureResults.procedures.filter {
       case ((name, module), proc) => name == proc.name && module == proc.module

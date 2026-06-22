@@ -16,8 +16,8 @@ object ScopedIdentifierConsolidator extends TokenConsolidator[StateType] {
         (Seq(), (Some(pendingToken), true))
 
       case (t @ Token(text, TokenType.Ident, value: String), (Some(pendingToken), true)) => {
-        val newText = pendingToken.text + ":" + text
-        val newValue = pendingToken.value.asInstanceOf[String] + ":" + value
+        val newText = s"${pendingToken.text}:$text"
+        val newValue = s"${pendingToken.value.asInstanceOf[String]}:$value"
         val newSourcelocation = pendingToken.sourceLocation.copy(end = t.sourceLocation.end)
         val newStateToken = pendingToken.copy(text = newText, value = newValue)(newSourcelocation)
 
