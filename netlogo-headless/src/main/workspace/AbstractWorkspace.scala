@@ -7,10 +7,9 @@ package org.nlogo.workspace
 import java.io.{ ByteArrayInputStream, InputStream, IOException, PrintWriter }
 import java.util.Base64
 
-import java.nio.file.{ Files => NioFiles, FileVisitOption => NioFileVisitOption, Path => NioPath, Paths => NioPaths }
+import java.nio.file.{ Paths => NioPaths }
 
 import scala.collection.mutable.WeakHashMap
-import scala.jdk.CollectionConverters.IteratorHasAsScala
 
 import
   org.nlogo.{ agent, api, core, fileformat, nvm, plot },
@@ -158,7 +157,7 @@ with ExtendableWorkspace with ExtensionCompilationEnvironment with APIConformant
   override def getCompilationEnvironment = {
     import java.net.MalformedURLException
 
-    new org.nlogo.core.CompilationEnvironment {
+    new org.nlogo.core.CompilationEnvironment with AbstractCompilationEnvironment {
       def exists(path: String): Boolean = FileIO.exists(path)
       def getSource(filename: String): String = AbstractWorkspace.this.getSource(filename)
       def profilingEnabled: Boolean = AbstractWorkspace.this.profilingEnabled
@@ -173,41 +172,6 @@ with ExtendableWorkspace with ExtensionCompilationEnvironment with APIConformant
         } catch {
           case ex: MalformedURLException =>
             throw new IllegalStateException(s"$path is not a valid pathname: $ex")
-        }
-      }
-      def resolveModulePath(currentFile: Option[String], modulePath: Seq[String]): Seq[String] = {
-        val separator = System.getProperty("file.separator")
-        val packageName: String = modulePath.headOption.getOrElse("")
-
-        val pathPrefixes = Seq(
-          currentFile.map(x => NioPaths.get(x).getParent.toString + separator).getOrElse(""),
-          APIPM.userPackagesPath.resolve(packageName).toString,
-          APIPM.packagesPath.resolve(packageName).toString
-        )
-
-        pathPrefixes.foldLeft(Seq()) { (p, pathPrefix) =>
-          // If we already found some paths, just return those.
-          if (p.nonEmpty) {
-            p
-          } else {
-            val path = resolvePath(pathPrefix + modulePath.mkString(separator))
-
-            if (FileIO.isDirectory(path)) {
-              // If the path points to a directory, search for module files in subdirectories.
-              val fileIterator =
-                NioFiles.walk(NioPaths.get(path), NioFileVisitOption.FOLLOW_LINKS).iterator.asScala
-              val isModuleFile =
-                (x: NioPath) => NioFiles.isRegularFile(x) && x.getFileName.toString.toLowerCase.endsWith(".nls")
-
-              fileIterator.filter(isModuleFile).map(_.toString).toSeq
-            } else if (FileIO.isRegularFile(path + ".nls")) {
-              // If the path points to a file, just return that file.
-              Seq(path + ".nls")
-            } else {
-              // Otherwise, return nothing and just move on to the next prefix.
-              Seq()
-            }
-          }
         }
       }
     }
@@ -831,7 +795,8 @@ object AbstractWorkspaceTraits {
       result
     }
 
-    val compilationEnvironment = new CompilationEnvironment {
+    val compilationEnvironment = new CompilationEnvironment with AbstractCompilationEnvironment {
+
       def exists(path: String): Boolean =
         FileIO.exists(path)
 
@@ -855,41 +820,6 @@ object AbstractWorkspaceTraits {
         }
       }
 
-      def resolveModulePath(currentFile: Option[String], modulePath: Seq[String]): Seq[String] = {
-        val separator = System.getProperty("file.separator")
-        val packageName: String = modulePath.headOption.getOrElse("")
-
-        val pathPrefixes = Seq(
-          currentFile.map(x => NioPaths.get(x).getParent.toString + separator).getOrElse(""),
-          APIPM.userPackagesPath.resolve(packageName).toString,
-          APIPM.packagesPath.resolve(packageName).toString
-        )
-
-        pathPrefixes.foldLeft(Seq()) { (p, pathPrefix) =>
-          // If we already found some paths, just return those.
-          if (p.nonEmpty) {
-            p
-          } else {
-            val path = resolvePath(pathPrefix + modulePath.mkString(separator))
-
-            if (FileIO.isDirectory(path)) {
-              // If the path points to a directory, search for module files in subdirectories.
-              val fileIterator =
-                NioFiles.walk(NioPaths.get(path), NioFileVisitOption.FOLLOW_LINKS).iterator.asScala
-              val isModuleFile =
-                (x: NioPath) => NioFiles.isRegularFile(x) && x.getFileName.toString.toLowerCase.endsWith(".nls")
-
-              fileIterator.filter(isModuleFile).map(_.toString).toSeq
-            } else if (FileIO.isRegularFile(path + ".nls")) {
-              // If the path points to a file, just return that file.
-              Seq(path + ".nls")
-            } else {
-              // Otherwise, return nothing and just move on to the next prefix.
-              Seq()
-            }
-          }
-        }
-      }
     }
   }
 
