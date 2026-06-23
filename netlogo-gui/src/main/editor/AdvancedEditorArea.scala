@@ -27,6 +27,9 @@ import org.nlogo.swing.{ ClipboardUtils, Menu, MenuItem, PopupMenu, ScrollableTe
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 import scala.collection.mutable.Buffer
+import scala.concurrent.{ Await, Promise }
+import scala.concurrent.duration.{ Duration, SECONDS }
+import scala.util.Try
 
 class AdvancedEditorArea(configuration: EditorConfiguration)
   extends JFXPanel with AbstractEditorArea with ScrollableTextComponent with ThemeSync {
@@ -452,22 +455,13 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
   }
 
   private def getWebValue[T](function: String, default: T): T = {
-    webEngine synchronized {
-      var value: Option[T] = None
+    val value = Promise[T]()
 
-      Platform.runLater(() => {
-        val result = webEngine.fold(default)(_.executeScript(function).asInstanceOf[T])
+    Platform.runLater(() => {
+      value.success(webEngine.fold(default)(_.executeScript(function).asInstanceOf[T]))
+    })
 
-        webEngine synchronized {
-          value = Some(result)
-        }
-      })
-
-      while (value.isEmpty)
-        webEngine.wait(10)
-
-      value.getOrElse(default)
-    }
+    Try(Await.result(value.future, Duration(1, SECONDS))).getOrElse(default)
   }
 
   private def colorString(color: Color): String =
