@@ -518,5 +518,11 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
         ClipboardUtils.readString()
       }
     }
+
+    def jumpToDeclaration(): Unit = {
+      EventQueue.invokeLater(() => {
+        jumpToDeclarationAction.actionPerformed(null)
+      })
+    }
   }
 }
