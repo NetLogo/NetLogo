@@ -44,6 +44,8 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
 
   private var refreshText = false
 
+  private var errorSelection = false
+
   private lazy val textListeners = Buffer[TextListener]()
 
   private val undoAction: MenuAction = {
@@ -420,10 +422,16 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
   }
 
   override def selectNormal(): Unit = {
-    runInWeb("window.setNormalSelection()")
+    if (errorSelection) {
+      errorSelection = false
+
+      runInWeb("window.setNormalSelection()")
+    }
   }
 
   override def selectError(start: Int, end: Int): Unit = {
+    errorSelection = true
+
     runInWeb("window.setErrorSelection()")
 
     select(start, end)
