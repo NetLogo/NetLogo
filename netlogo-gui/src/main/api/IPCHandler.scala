@@ -5,6 +5,8 @@ package org.nlogo.api
 import java.io.{ BufferedReader, InputStreamReader, OutputStream }
 import java.net.{ InetAddress, ServerSocket, Socket, SocketException }
 
+import scala.concurrent.{ Await, Promise }
+import scala.concurrent.duration.Duration
 import scala.util.Try
 
 // created as an abstraction for communication with BehaviorSpace processes,
@@ -59,21 +61,13 @@ class IPCServerHandler extends IPCHandler {
   private var server: Option[ServerSocket] = None
   private var client: Option[Socket] = None
 
-  private var port: Int = -1
+  private val port = Promise[Int]()
 
-  def getPort: Int = {
-    synchronized {
-      while (port == -1)
-        wait(50)
-
-      port
-    }
-  }
+  def getPort: Int =
+    Await.result(port.future, Duration.Inf)
 
   private def setPort(port: Int): Unit = {
-    synchronized {
-      this.port = port
-    }
+    this.port.success(port)
   }
 
   def connect(): Unit = {
