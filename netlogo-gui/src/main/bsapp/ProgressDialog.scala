@@ -312,16 +312,8 @@ class ProgressDialog(app: BehaviorSpaceApp, workspace: SemiHeadlessWorkspace, la
     if (started == 0) {
       progressArea.setText(I18N.gui("init"))
     } else if (timer.isRunning) {
-      def pad(num: Long): String = {
-        if (num < 10) {
-          "0" + num
-        } else {
-          num.toString
-        }
-      }
-
       val duration = (System.currentTimeMillis - started).millis
-      val formatted = s"${pad(duration.toHours)}:${pad(duration.toMinutes % 60)}:${pad(duration.toSeconds % 60)}"
+      val formatted = f"${duration.toHours}%02d:${duration.toMinutes % 60}%02d:${duration.toSeconds % 60}%02d"
 
       progressArea.setText(I18N.gui("progressArea", runCount.toString, totalRuns.toString, steps.toString, formatted,
                                     settingsString))
