@@ -344,7 +344,7 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
 
   def snapToGrid(value: Int): Int = {
     if (interfacePanel.workspace.snapOn) {
-      interfacePanel.snapToGrid(value)
+      interfacePanel.snapToGrid(value, true)
     } else {
       value
     }

@@ -271,8 +271,13 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
 
   ///
 
-  def snapToGrid(value: Int): Int =
-    ((value / (5 * zoomFactor)).toInt * 5 * zoomFactor).toInt
+  def snapToGrid(value: Int, ceil: Boolean = false): Int = {
+    if (ceil) {
+      ((value / (5 * zoomFactor)).ceil.toInt * 5 * zoomFactor).toInt
+    } else {
+      ((value / (5 * zoomFactor)).floor.toInt * 5 * zoomFactor).toInt
+    }
+  }
 
   def getWrapper(widget: Widget): WidgetWrapper =
     widget.getParent.asInstanceOf[WidgetWrapper]
