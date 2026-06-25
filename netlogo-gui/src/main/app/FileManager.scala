@@ -13,8 +13,8 @@ import scala.util.{ Failure, Try }
 
 import org.nlogo.analytics.Analytics
 import org.nlogo.core.{ I18N, Model }
-import org.nlogo.api.{ AbstractModelLoader, Exceptions, FileIO, ModelReader, ModelType, Version, Workspace },
-  ModelReader.{ emptyModelPath, modelSuffix }
+import org.nlogo.api.{ AbstractModelLoader, Exceptions, FileIO, LibraryManager, ModelReader, ModelType, Version,
+                       Workspace }, ModelReader.{ emptyModelPath, modelSuffix }
 import org.nlogo.app.common.{ Actions, Dialogs, ExceptionCatchingAction }, Actions.Ellipsis
 import org.nlogo.app.codetab.TemporaryCodeTab
 import org.nlogo.app.tools.{ ModelsLibraryDialog, NetLogoWebSaver }
@@ -78,7 +78,7 @@ object FileManager {
     }
   }
 
-  class ModelsLibraryAction(manager: FileManager, parent: Component)
+  class ModelsLibraryAction(manager: FileManager, parent: Component, libraryManager: LibraryManager)
   extends ExceptionCatchingAction(I18N.gui.get("menu.file.modelsLibrary"), parent)
   with MenuAction {
     category    = UserAction.FileCategory
@@ -88,7 +88,7 @@ object FileManager {
 
     @throws(classOf[UserCancelException])
     override def action(): Unit = {
-      ModelsLibraryDialog.open(frame, { sourceURI =>
+      ModelsLibraryDialog.open(frame, libraryManager, { sourceURI =>
         manager.aboutToCloseFiles()
         manager.openFromURI(sourceURI, ModelType.Library)
       })
@@ -518,7 +518,7 @@ class FileManager(workspace: AbstractWorkspaceScala,
     Seq(
       new NewAction(this, parent),
       new OpenAction(this, parent),
-      new ModelsLibraryAction(this, parent),
+      new ModelsLibraryAction(this, parent, workspace.getLibraryManager),
       new UploadToModelingCommonsAction(parent, workspace, workspaceFactory, modelSaver),
       new SaveAsNetLogoWebAction(this, workspace, modelSaver, parent),
       new ImportClientAction(this, workspace, parent),
