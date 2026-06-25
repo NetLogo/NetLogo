@@ -322,7 +322,11 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
 
     webView.addEventFilter(ScrollEvent.SCROLL, event => {
       webEngine.foreach(_.executeScript(
-        s"window.scrollBy(${-event.getDeltaX}, ${-event.getDeltaY})"
+        if (event.isShiftDown) {
+          s"window.scrollBy(${-event.getDeltaY}, 0)"
+        } else {
+          s"window.scrollBy(0, ${-event.getDeltaY})"
+        }
       ))
 
       event.consume()
