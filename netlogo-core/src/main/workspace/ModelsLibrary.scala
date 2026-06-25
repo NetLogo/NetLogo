@@ -7,13 +7,15 @@ import java.nio.file.{ Files, Path }
 import java.util.Locale
 import javax.swing.tree.DefaultMutableTreeNode
 
-import org.nlogo.api.{ FileIO, Version }
+import org.nlogo.api.{ DummyLibraryManager, FileIO, LibraryManager, Version }
 import org.nlogo.core.I18N
 
 import scala.annotation.tailrec
 import scala.math.Ordering
 
 object ModelsLibrary {
+  private val dummyLibraryManager = new DummyLibraryManager
+
   var rootNode: Option[Node] = None
 
   def modelsRoot: String = System.getProperty("netlogo.models.dir", "models")
@@ -98,7 +100,8 @@ object ModelsLibrary {
 
   def scanForModels(exclusive: Boolean): Unit = scanForModels(exclusive, true)
 
-  def scanForModels(exclusive: Boolean, useExtensionExamples: Boolean): Unit = {
+  def scanForModels(exclusive: Boolean, useExtensionExamples: Boolean,
+                    libraryManager: LibraryManager = dummyLibraryManager): Unit = {
     if (! needsModelScan) {
       return
     }
@@ -107,31 +110,31 @@ object ModelsLibrary {
         if (!Version.is3D || !exclusive) new File(modelsRoot, "").getCanonicalFile
         else new File(modelsRoot, "3D").getCanonicalFile
 
-      def getExtensionExamples(): Option[Node] = {
-        val unverified              = I18N.shared.get("modelsLibrary.unverified")
-        val extensionManagerSamples = I18N.shared.get("modelsLibrary.extensionManagerSamples")
-
-        def unverifyIfTree(c: Node): Node = c match {
-          case Tree(name, path, children) => Tree(name = s"${name} $unverified", path = path, children = children)
-          case n                          => n
-        }
+      def getExtensionExamples(): Seq[Node] = {
+        val unverified = I18N.shared.get("modelsLibrary.unverified")
+        val extensionSamples = I18N.shared.get("modelsLibrary.extensionSamples")
 
         val extensionsRoot = new File(FileIO.perUserDir("extensions", true), "").getCanonicalFile
-        val extensionsNode = scanDirectory(extensionsRoot.toPath, exclusive, Some(extensionManagerSamples))
+        val extensionsNode = scanDirectory(extensionsRoot.toPath, exclusive)
 
-        extensionsNode match {
-          case Some(Tree(name, path, children)) =>
-            val unverifiedChildren = children.map(unverifyIfTree)
-            Some(Tree(name = name, path = path, children = unverifiedChildren))
+        extensionsNode.fold(Seq()) {
+          case tree: Tree =>
+            tree.children.map {
+              case tree: Tree =>
+                val displayName: String = libraryManager.lookupExtension(tree.name, "").fold(tree.name)(_.name)
 
-          case en => en
+                tree.copy(name = s"$displayName $extensionSamples $unverified")
+
+              case node => node
+            }
+
+          case node => Seq(node)
         }
       }
 
       rootNode = scanDirectory(directoryRoot.toPath, exclusive) match {
         case Some(Tree(name, _, children)) if useExtensionExamples => {
-          val extensionsNode = getExtensionExamples()
-          val allChildren    = children ++ extensionsNode.map((en) => Seq(en)).getOrElse(Seq())
+          val allChildren    = children ++ getExtensionExamples()
           Some(Tree(name = name, path = "", children = allChildren)(using new TopLevelOrdering(exclusive)))
         }
         case rn => rn
@@ -170,7 +173,7 @@ object ModelsLibrary {
     }
   }
 
-  private def scanDirectory(directory: Path, exclusive: Boolean, nameOverride: Option[String] = None): Option[Node] = {
+  private def scanDirectory(directory: Path, exclusive: Boolean): Option[Node] = {
     if (!Files.isDirectory(directory)) {
       None
     } else {
@@ -180,7 +183,7 @@ object ModelsLibrary {
           .filterNot(p => isBadName(p.getFileName.toString))
           .flatMap { (p: Path) =>
             if (Files.isDirectory(p)) {
-              scanDirectory(p, exclusive, nameOverride)
+              scanDirectory(p, exclusive)
             } else {
               val fileName = p.getFileName.toString.toUpperCase(Locale.ENGLISH)
               if (fileName.endsWith(".NLOGO") || fileName.endsWith(".NLOGO3D") ||
@@ -195,7 +198,7 @@ object ModelsLibrary {
       // don't add empty folders
       if (children.nonEmpty) {
         val path        = directory.toString + File.separator
-        val displayName = nameOverride.getOrElse(directory.getFileName.toString)
+        val displayName = directory.getFileName.toString
         Some(Tree(displayName, path, children.toSeq)(using NLogoModelOrdering))
       } else {
         None
@@ -232,15 +235,13 @@ object ModelsLibrary {
         if (! Version.is3D)
           Seq(
             "SAMPLE MODELS", "CURRICULAR MODELS", "CODE EXAMPLES",
-            "HUBNET ACTIVITIES", "IABM TEXTBOOK", "ALTERNATIVE VISUALIZATIONS",
-            "EXTENSION MANAGER SAMPLES")
+            "HUBNET ACTIVITIES", "IABM TEXTBOOK", "ALTERNATIVE VISUALIZATIONS")
         else if (Version.is3D && exclusive)
           Seq("3D")
         else if (Version.is3D && ! exclusive)
           Seq(
             "3D", "SAMPLE MODELS", "CURRICULAR MODELS", "CODE EXAMPLES",
-            "HUBNET ACTIVITIES", "IABM TEXTBOOK", "ALTERNATIVE VISUALIZATIONS",
-            "EXTENSION MANAGER SAMPLES")
+            "HUBNET ACTIVITIES", "IABM TEXTBOOK", "ALTERNATIVE VISUALIZATIONS")
         else
           Seq()
 
