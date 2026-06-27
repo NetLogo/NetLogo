@@ -117,9 +117,9 @@ extends scala.util.parsing.combinator.Parsers {
     }
 
   def renamableIdentifier: Parser[(String, String)] =
-    identifier ~ opt(exactIdentifier("AS") ~ identifier) ^^ {
-      case from ~ Some(_ ~ to) => (from.name, to.name)
-      case x ~ None => (x.name, x.name)
+    identifier ^^ (x => (x.name, x.name)) |
+    openParen ~>! identifier ~ exactIdentifier("AS") ~ identifier <~ closeParen ^^ {
+      case from ~ _ ~ to => (from.name, to.name)
     }
 
   def importedIdentifierList: Parser[Map[String, String]] =
@@ -199,6 +199,12 @@ extends scala.util.parsing.combinator.Parsers {
 
   def closeBracket: Parser[Token] =
     tokenType("closing bracket", TokenType.CloseBracket)
+
+  def openParen: Parser[Token] =
+    tokenType("opening paren", TokenType.OpenParen)
+
+  def closeParen: Parser[Token] =
+    tokenType("closing paren", TokenType.CloseParen)
 
   def colon: Parser[Token] =
     tokenType("colon", TokenType.Colon)
