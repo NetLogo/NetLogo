@@ -211,7 +211,7 @@ extends scala.util.parsing.combinator.Parsers {
 
   def exactIdentifier(text: String): Parser[Token] =
     acceptMatch("identifier", {
-      case t @ Token(text, TokenType.Ident, _) =>
+      case t @ Token(_, TokenType.Ident, `text`) =>
         t })
 
   def identifierToken: Parser[Token] =
