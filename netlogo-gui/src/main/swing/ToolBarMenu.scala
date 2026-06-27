@@ -14,6 +14,9 @@ abstract class ToolBarMenu(name: String) extends JButton with Transparent {
   protected val label = new JLabel(name)
   protected val arrow = new DropdownArrow
 
+  label.setFocusable(false)
+  arrow.setFocusable(false)
+
   add(label)
   add(arrow)
 
