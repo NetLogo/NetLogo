@@ -2,7 +2,7 @@
 
 package org.nlogo.swing
 
-import java.awt.{ Color, Graphics }
+import java.awt.{ Color, Graphics, KeyboardFocusManager }
 import java.awt.event.{ FocusEvent, FocusListener, KeyAdapter, KeyEvent }
 import javax.swing.JComponent
 
@@ -45,11 +45,20 @@ trait FocusUtils extends JComponent {
   // Tab context menu. (Isaac B 3/5/26)
   addKeyListener(new KeyAdapter {
     override def keyReleased(e: KeyEvent): Unit = {
-      if (hasFocus && shouldPaintFocus && e.getKeyCode == KeyEvent.VK_SPACE) {
-        if (e.isShiftDown) {
-          secondaryAction.foreach(_())
-        } else {
-          primaryAction.foreach(_())
+      if (hasFocus && shouldPaintFocus) {
+        e.getKeyCode match {
+          case KeyEvent.VK_SPACE =>
+            if (e.isShiftDown) {
+              secondaryAction.foreach(_())
+            } else {
+              primaryAction.foreach(_())
+            }
+
+          case KeyEvent.VK_ESCAPE =>
+            Option(KeyboardFocusManager.getCurrentKeyboardFocusManager.getCurrentFocusCycleRoot)
+              .foreach(_.requestFocus())
+
+          case _ =>
         }
       }
     }
