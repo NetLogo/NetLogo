@@ -2,8 +2,8 @@
 
 package org.nlogo.app.codetab
 
-import java.awt.{ BorderLayout, Dimension, Font, Graphics }
-import java.awt.event.{ ActionEvent, FocusAdapter, FocusEvent, TextEvent, TextListener }
+import java.awt.{ BorderLayout, Component, Dimension, Font, Graphics }
+import java.awt.event.{ ActionEvent, FocusAdapter, FocusEvent, KeyAdapter, KeyEvent, TextEvent, TextListener }
 import java.awt.print.PageFormat
 import java.io.IOException
 import java.net.MalformedURLException
@@ -12,10 +12,11 @@ import javax.swing.border.EmptyBorder
 
 import org.nlogo.agent.Observer
 import org.nlogo.app.common.{CodeToHtml, EditorFactory, FindDialog, MenuTab, TabsInterface, Events => AppEvents}
+import org.nlogo.awt.RowLayout
 import org.nlogo.core.{ AgentKind, CompilerException, I18N }
 import org.nlogo.editor.{ AdvancedEditorArea, EditorConfiguration }
-import org.nlogo.swing.{ Button, CheckBox, PrinterManager, ToolBar, ToolBarActionButton, UserAction,
-                         Printable => NlogoPrintable, Utils }
+import org.nlogo.swing.{ Button, CheckBox, FocusRoot, PrinterManager, ToolBarActionButton, UserAction,
+                         Printable => NlogoPrintable, Transparent, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ CommentableError, ProceduresInterface, Zoomable, Events => WindowEvents }
 import org.nlogo.workspace.AbstractWorkspace
@@ -29,11 +30,13 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
   with Zoomable
   with NlogoPrintable
   with MenuTab
+  with FocusRoot
   with ThemeSync {
 
   protected val compileButton = new ToolBarActionButton(new AbstractAction(I18N.gui.get("tabs.code.checkButton")) {
     override def actionPerformed(e: ActionEvent): Unit = {
       compile()
+      text.requestFocus()
     }
   }) {
     setEnabled(false)
@@ -77,53 +80,74 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
   protected def editorConfiguration: EditorConfiguration =
     configuration
 
-  protected val text: AdvancedEditorArea = {
-    val editor = new AdvancedEditorArea(editorConfiguration)
-
-    editor.addFocusListener(new FocusAdapter {
+  protected val text: AdvancedEditorArea = new AdvancedEditorArea(editorConfiguration) {
+    addFocusListener(new FocusAdapter {
       override def focusGained(e: FocusEvent): Unit = {
-        FindDialog.watch(editor, true)
+        FindDialog.watch(text, true)
       }
     })
 
-    editor
+    addKeyListener(new KeyAdapter {
+      override def keyPressed(e: KeyEvent): Unit = {
+        e.getKeyCode match {
+          case KeyEvent.VK_TAB if e.isControlDown =>
+            if (e.isShiftDown) {
+              transferFocusBackward()
+            } else {
+              transferFocus()
+            }
+
+            e.consume()
+
+          case _ =>
+        }
+      }
+    })
   }
 
   private val includedFilesMenu = new IncludedFilesMenu(getIncludesTable, tabs)
 
   override def zoomTarget = text
 
-  val errorLabel = new CommentableError(text)
-  val toolBar = getToolBar
+  protected val errorLabel = new CommentableError(text)
+
+  private val toolBar = new JPanel(new RowLayout(10, Component.LEFT_ALIGNMENT, Component.CENTER_ALIGNMENT)) {
+    setBorder(new EmptyBorder(24, 10, 12, 6))
+    setFocusable(false)
+
+    add(compileButton)
+    add(findButton)
+    add(proceduresMenu)
+    add(includedFilesMenu)
+    add(separate)
+    add(prefsButton)
+  }
+
   def compiler = workspace
   def program = workspace.world.program
 
   locally {
     setLayout(new BorderLayout)
+    setCanFocus(false)
+
     add(toolBar, BorderLayout.NORTH)
-    val codePanel = new JPanel(new BorderLayout) {
+    add(new JPanel(new BorderLayout) with Transparent {
+      setFocusable(false)
+
       add(text, BorderLayout.CENTER)
       add(errorLabel.component, BorderLayout.NORTH)
-    }
-    add(codePanel, BorderLayout.CENTER)
+    }, BorderLayout.CENTER)
   }
 
-  def getToolBar = new ToolBar {
-    setBorder(new EmptyBorder(24, 10, 12, 6))
+  override def getDefaultComponent: Option[Component] =
+    Option(text)
 
-    override def addControls(): Unit = {
-      // Only want to add toolbar items once
-      // This method gets called when the code tab pops in or pops out
-      // because org.nlogo.swing.ToolBar overrides addNotify. AAB 10/2020
-      if (getComponents.isEmpty) {
-        add(compileButton)
-        add(findButton)
-        add(proceduresMenu)
-        add(includedFilesMenu)
-        add(separate)
-        add(prefsButton)
-      }
-    }
+  override def getFocusOrder: Map[Component, (Component, Component)] = {
+    Map(
+      text -> (null, if (compileButton.isEnabled) compileButton else findButton),
+      findButton -> (if (compileButton.isEnabled) compileButton else text, null),
+      compileButton -> (text, null)
+    )
   }
 
   override val permanentMenuActions: Seq[UserAction.MenuAction] = {
