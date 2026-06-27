@@ -120,6 +120,24 @@ class StructureParserTests extends AnyFunSuite {
     assertResult(Some("BAR"))(results.imports.head.pathAlias)
   }
 
+  test("import specific identifiers") {
+    val results = compile("import [foo bar baz] from qaz")
+    assertResult(0)(results.procedures.size)
+    assertResult(1)(results.imports.size)
+    assertResult("QAZ")(results.imports.head.pathComponents.head)
+    assertResult(None)(results.imports.head.pathAlias)
+    assertResult(Map("FOO" -> "FOO", "BAR" -> "BAR", "BAZ" -> "BAZ"))(results.imports.head.importedIdentifiers)
+  }
+
+  test("import specific identifiers with renames") {
+    val results = compile("import [(foo as oof) bar (baz as zab)] from qaz")
+    assertResult(0)(results.procedures.size)
+    assertResult(1)(results.imports.size)
+    assertResult("QAZ")(results.imports.head.pathComponents.head)
+    assertResult(None)(results.imports.head.pathAlias)
+    assertResult(Map("FOO" -> "OOF", "BAR" -> "BAR", "BAZ" -> "ZAB"))(results.imports.head.importedIdentifiers)
+  }
+
   test("includes") {
     val results = compile("__includes [\"foo.nls\"]")
     assertResult(0)(results.procedures.size)
