@@ -2,11 +2,11 @@
 
 package org.nlogo.app.infotab
 
-import java.awt.{ Dimension, BorderLayout, Font, Graphics }
-import java.awt.event.{ ActionEvent, FocusEvent, FocusListener }
+import java.awt.{ BorderLayout, Component, Dimension, EventQueue, Font, Graphics }
+import java.awt.event.{ ActionEvent, FocusEvent, FocusListener, KeyAdapter, KeyEvent }
 import java.awt.print.PageFormat
 import java.net.URI
-import javax.swing.{ AbstractAction, Action, BorderFactory, JComponent, JPanel, JTextArea, ScrollPaneConstants }
+import javax.swing.{ AbstractAction, Action, JComponent, JPanel }
 import javax.swing.border.EmptyBorder
 import javax.swing.event.{ DocumentListener, DocumentEvent }
 
@@ -19,12 +19,12 @@ import javafx.scene.web.{ WebEngine, WebView }
 
 import org.nlogo.api.{ ExternalResourceManager, Version }
 import org.nlogo.app.common.{ Events => AppEvents, FindDialog, MenuTab, UndoRedoActions }
+import org.nlogo.awt.RowLayout
 import org.nlogo.core.I18N
 import org.nlogo.editor.EditorConfiguration
-import org.nlogo.swing.Implicits._
-import org.nlogo.swing.{ QuickHelp, ScrollableTextComponent, ScrollPane, TextArea, ToolBar, ToolBarActionButton,
-                         ToolBarToggleButton, Printable, PrinterManager, BrowserLauncher, UndoManager, UserAction,
-                         Utils }, UserAction.MenuAction
+import org.nlogo.swing.{ FocusRoot, FocusUtils, ScrollableTextComponent, ScrollPane, TextArea, ToolBarActionButton,
+                         ToolBarToggleButton, Printable, PrinterManager, BrowserLauncher, QuickHelp, Transparent,
+                         UndoManager, UserAction, Utils }, UserAction.MenuAction
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ Events => WindowEvents, Zoomable }
 
@@ -43,6 +43,7 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
   with WindowEvents.ResourcesChangedEvent.Handler
   with WindowEvents.ZoomedEvent.Handler
   with Zoomable
+  with FocusRoot
   with ThemeSync {
 
   private val undoManager = new UndoManager
@@ -51,8 +52,15 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
   private val textArea = new ScrollableTextArea
   private val htmlPanel = new HTMLPanel
 
-  private val editableButton = new ToolBarToggleButton(new EditableAction(I18N.gui.get("tabs.info.edit"))) with ThemeSync {
+  private val textScroll = new ScrollPane(textArea) {
+    setBorder(null)
+    setFocusable(false)
+  }
+
+  private val editableButton = new ToolBarToggleButton(new EditableAction(I18N.gui.get("tabs.info.edit"))) {
     override def syncTheme(): Unit = {
+      super.syncTheme()
+
       setIcon(Utils.iconScaledWithColor("/images/edit.png", 15, 15,
               if (isSelected) {
                 InterfaceColors.toolbarImageSelected()
@@ -71,7 +79,7 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
   })
   helpButton.setIcon(Utils.iconScaledWithColor("/images/help.png", 15, 15, InterfaceColors.toolbarImage()))
   helpButton.setVisible(false)
-  private def toggleHelpButton(): Unit ={ helpButton.setVisible(view == textArea) }
+  private def toggleHelpButton(): Unit ={ helpButton.setVisible(view == textScroll) }
 
   // this object is used as the html display and the editor
   // it starts off as the html display. when edit is clicked, it becomes the editor.
@@ -79,49 +87,48 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
   // there are some funny casts around because of this, and maybe we should clean it up.
   // -JC 9/7/10
   private var view: JComponent = htmlPanel
-  private val scrollPane = new ScrollPane(view, ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER,
-                                          ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER)
 
-  scrollPane.setBorder(null)
+  private val container = new InfoContainer
 
-  override def zoomTarget = scrollPane
+  override def zoomTarget = container
 
   override val activeMenuActions: Seq[MenuAction] =
     Seq(undoAction, redoAction, FindDialog.FIND_ACTION, FindDialog.FIND_NEXT_ACTION)
 
-  private val toolBar = new ToolBar {
+  private val toolBar = new JPanel(new RowLayout(10, Component.LEFT_ALIGNMENT, Component.CENTER_ALIGNMENT)) {
     setBorder(new EmptyBorder(24, 10, 12, 6))
+    setFocusable(false)
 
-    override def addControls(): Unit = {
-      this.addAll(findButton, editableButton, helpButton)
-    }
+    add(findButton)
+    add(editableButton)
+    add(helpButton)
   }
 
   private var codeFont: Option[Font] = None
 
   locally {
-    resetBorders()
     setLayout(new BorderLayout)
+    setCanFocus(false)
+
     add(toolBar, BorderLayout.NORTH)
-    scrollPane.getVerticalScrollBar.setUnitIncrement(16)
-    add(scrollPane, BorderLayout.CENTER)
+    add(container, BorderLayout.CENTER)
   }
 
-  private def resetBorders(): Unit = {
-    textArea.setBorder(BorderFactory.createEmptyBorder(4, 7, 4, 7))
+  override def getDefaultComponent: Option[Component] =
+    Option(view)
+
+  override def getFocusOrder: Map[Component, (Component, Component)] = {
+    Map(
+      htmlPanel -> (null, editableButton),
+      textArea -> (null, findButton),
+      findButton -> (textArea, null),
+      editableButton -> (if (findButton.isEnabled) findButton else htmlPanel, null)
+    )
   }
 
-  override def doLayout(): Unit = {
-    // we need to call resetBorders first, otherwise borders left over from last time we laid out
-    // may affect the answer returned by textArea.getPreferredScrollableViewportSize, causing the
-    // layout to jump around - ST 10/7/09
-    resetBorders()
-    val extraWidth = (getWidth - textArea.getPreferredScrollableViewportSize.width - 7).max(7)
-    textArea.setBorder(BorderFactory.createEmptyBorder(4, 7, 4, extraWidth))
-    super.doLayout()
+  override def requestFocus(): Unit = {
+    view.requestFocus()
   }
-
-  override def requestFocus(): Unit = { view.requestFocus() }
 
   def info = textArea.getText
   def info(str: String): Unit = {
@@ -143,13 +150,7 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
   }
 
   def resetView(): Unit = {
-    if (view.isInstanceOf[JTextArea]) {
-      scrollPane.setViewportView(htmlPanel)
-      setView(htmlPanel)
-      editableButton.setSelected(false)
-    }
-    updateEditorPane()
-    scrollPane.getVerticalScrollBar.setValue(0)
+    setView(htmlPanel)
   }
 
   def setCodeFont(font: Font): Unit = {
@@ -161,17 +162,18 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
   }
 
   private def setView(view: JComponent): Unit = {
-    this.view = view
+    if (this.view != view) {
+      this.view = view
 
-    // the WebView panel needs to handle its own scrolling instead of Swing's JScrollPane,
-    // otherwise it throws a bunch of exceptions about trying to render a view that's
-    // too large. (Isaac B 1/29/26)
-    if (view == htmlPanel) {
-      scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER)
-      scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER)
-    } else {
-      scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED)
-      scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED)
+      container.replaceView(view)
+
+      if (view == textScroll) {
+        FindDialog.watch(textArea)
+      } else {
+        FindDialog.dontWatch()
+
+        updateEditorPane()
+      }
     }
   }
 
@@ -184,16 +186,20 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
 
     helpButton.setIcon(Utils.iconScaledWithColor("/images/help.png", 15, 15, InterfaceColors.toolbarImage()))
 
-    scrollPane.setBackground(InterfaceColors.infoBackground())
+    textScroll.setBackground(InterfaceColors.infoBackground())
 
     textArea.syncTheme()
+    htmlPanel.syncTheme()
 
     updateEditorPane()
   }
 
   def handle(e: AppEvents.SwitchedTabsEvent): Unit = {
-    if (e.newTab != this)
+    if (e.newTab == this && view == textScroll) {
+      FindDialog.watch(textArea)
+    } else {
       FindDialog.dontWatch()
+    }
   }
 
   def handle(e: WindowEvents.LoadBeginEvent): Unit = {
@@ -234,18 +240,29 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
     printer.printText(g, pageFormat, pageIndex, textArea.getText)
   }
 
+  private class InfoContainer extends JPanel(new BorderLayout) with Transparent {
+    setFocusable(false)
+
+    add(view, BorderLayout.CENTER)
+
+    def replaceView(component: JComponent): Unit = {
+      removeAll()
+
+      add(component, BorderLayout.CENTER)
+
+      repaint()
+    }
+  }
+
   private class ScrollableTextArea extends TextArea(0, 90) with ScrollableTextComponent {
     addFocusListener(new FocusListener {
       def focusGained(fe: FocusEvent): Unit = {
-        FindDialog.watch(ScrollableTextArea.this)
         UndoManager.setCurrentManager(undoManager)
       }
 
       def focusLost(fe: FocusEvent): Unit = {
-        if (!fe.isTemporary) {
-          FindDialog.dontWatch()
+        if (!fe.isTemporary)
           UndoManager.setCurrentManager(null)
-        }
       }
     })
 
@@ -259,17 +276,34 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
 
     override def scrollTo(index: Int): Unit = {
       val pos = modelToView2D(index)
-      val xBar = scrollPane.getHorizontalScrollBar
-      val yBar = scrollPane.getVerticalScrollBar
+      val xBar = textScroll.getHorizontalScrollBar
+      val yBar = textScroll.getVerticalScrollBar
 
       xBar.setValue((pos.getX - xBar.getVisibleAmount / 2).toInt)
       yBar.setValue((pos.getY - yBar.getVisibleAmount / 2).toInt)
     }
   }
 
-  private class HTMLPanel extends JFXPanel {
+  private class HTMLPanel extends JFXPanel with FocusUtils with ThemeSync {
     private var engine: Option[WebEngine] = None
     private var text = ""
+
+    addKeyListener(new KeyAdapter {
+      override def keyPressed(e: KeyEvent): Unit = {
+        e.getKeyCode match {
+          case KeyEvent.VK_TAB =>
+            if (e.isShiftDown) {
+              transferFocusBackward()
+            } else {
+              transferFocus()
+            }
+
+            e.consume()
+
+          case _ =>
+        }
+      }
+    })
 
     Platform.runLater(() => {
       val webView = new WebView
@@ -333,25 +367,26 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
         engine.foreach(_.loadContent(str, "text/html"))
       })
     }
+
+    override def syncTheme(): Unit = {
+      setFocusColor(InterfaceColors.interfaceFocus())
+    }
   }
 
   private class EditableAction(label: String) extends AbstractAction(label) {
     putValue(Action.SMALL_ICON, Utils.iconScaledWithColor("/images/edit.png", 15, 15, InterfaceColors.toolbarImage()))
     def actionPerformed(e: ActionEvent): Unit = {
-      val scrollBar = scrollPane.getVerticalScrollBar
+      val scrollBar = textScroll.getVerticalScrollBar
       val (min, max) = (scrollBar.getMinimum, scrollBar.getMaximum)
-      val ratio = ((scrollBar.getValue - min).asInstanceOf[Double] / (max - min).asInstanceOf[Double])
-      if (view.isInstanceOf[JTextArea]) {
-        updateEditorPane()
-        scrollPane.setViewportView(htmlPanel)
+      val ratio = (scrollBar.getValue - min).toDouble / (max - min)
+      if (view == textScroll) {
         setView(htmlPanel)
       } else {
-        scrollPane.setViewportView(textArea)
-        setView(textArea)
+        setView(textScroll)
       }
       toggleHelpButton()
       requestFocus()
-      org.nlogo.awt.EventQueue.invokeLater(() => scrollBar.setValue((ratio * (max - min)).toInt))
+      EventQueue.invokeLater(() => scrollBar.setValue((ratio * (max - min)).toInt))
       editableButton.syncTheme()
     }
   }
