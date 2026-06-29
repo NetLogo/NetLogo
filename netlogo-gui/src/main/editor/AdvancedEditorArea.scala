@@ -292,8 +292,11 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
 
   addMouseListener(new MouseAdapter {
     override def mousePressed(e: MouseEvent): Unit = {
-      if (!e.isPopupTrigger)
+      if (e.isPopupTrigger) {
+        showPopup(e.getPoint)
+      } else {
         selectNormal()
+      }
     }
 
     override def mouseReleased(e: MouseEvent): Unit = {
