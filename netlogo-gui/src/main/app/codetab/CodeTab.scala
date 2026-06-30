@@ -71,7 +71,8 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
 
   lazy val editorFactory = new EditorFactory(workspace, workspace.getExtensionManager)
 
-  private val configuration: EditorConfiguration = editorFactory.defaultConfiguration(100, 80).withListener(listener)
+  private val configuration: EditorConfiguration =
+    editorFactory.defaultConfiguration(100, 80).withListener(listener).withSmartIndent(tabs.smartTabbingEnabled)
 
   protected def editorConfiguration: EditorConfiguration =
     configuration
