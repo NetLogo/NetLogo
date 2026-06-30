@@ -170,12 +170,25 @@ class Compiler(dialect: Dialect) extends PresentationCompilerInterface {
   def findProcedurePositions(source: String): Map[String, ProcedureSyntax] =
     frontEnd.findProcedurePositions(source, Some(dialect))
 
-  def findAllImportedFiles(source: String, compilationEnvironment: CompilationEnvironment, currentFile: Option[String] = None): Seq[String] = {
+  def findAllImportedFiles(
+    source: String,
+    compilationEnvironment: CompilationEnvironment,
+    currentFile: Option[String] = None,
+    oldPaths: Set[String] = Set()
+  ): Seq[String] = {
     val imports = frontEnd.findImports(source)
     val paths = imports.flatMap(compilationEnvironment.resolveModulePath(currentFile, _))
     val sources = paths.flatMap(x => Try(compilationEnvironment.getSource(x)).toOption)
 
-    paths ++ (sources zip paths).flatMap((x, y) => findAllImportedFiles(x, compilationEnvironment, Some(y)))
+    def findRecursively(source: String, path: String): Seq[String] = {
+      if (oldPaths contains path) {
+        Seq()
+      } else {
+        findAllImportedFiles(source, compilationEnvironment, Some(path), oldPaths + path)
+      }
+    }
+
+    paths ++ (sources zip paths).flatMap(findRecursively)
   }
 
   // used for includes menu
