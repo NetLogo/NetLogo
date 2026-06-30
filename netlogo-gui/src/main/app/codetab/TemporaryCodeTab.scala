@@ -68,7 +68,6 @@ class TemporaryCodeTab(workspace: AbstractWorkspace & ModelTracker,
 
   setSeparate(separateCodeWindow)
   lineNumbersVisible = tabs.lineNumbersVisible
-  setIndenter(tabs.smartTabbingEnabled)
 
   override def activeMenuActions: Seq[UserAction.MenuAction] =
     super.activeMenuActions ++ filename.fold(_ => Seq(), name => Seq(conversionAction(this)))
