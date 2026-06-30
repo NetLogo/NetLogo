@@ -27,7 +27,7 @@ import org.nlogo.swing.{ ClipboardUtils, Menu, MenuItem, PopupMenu, ScrollableTe
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 import scala.collection.mutable.Buffer
-import scala.concurrent.{ Await, Promise }
+import scala.concurrent.{ Await, ExecutionContext, Promise }
 import scala.concurrent.duration.{ Duration, SECONDS }
 import scala.util.Try
 
@@ -36,9 +36,13 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
 
   private implicit val prefix: I18N.Prefix = I18N.Prefix("menu.edit")
 
+  private implicit val ec: ExecutionContext = ExecutionContext.global
+
   private val bridge = new Bridge
 
   private var webEngine: Option[WebEngine] = None
+
+  private val engineReady = Promise[Unit]()
 
   private var currentText = ""
 
@@ -319,6 +323,8 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
           engine.executeScript("window").asInstanceOf[JSObject].setMember("bridge", bridge)
 
           webEngine = Some(engine)
+
+          engineReady.success({})
         }
       }
     })
@@ -464,9 +470,11 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
   override def scrollTo(index: Int): Unit = {}
 
   private def runInWeb(function: String): Unit = {
-    Platform.runLater(() => {
-      webEngine.foreach(_.executeScript(function))
-    })
+    engineReady.future.foreach { _ =>
+      Platform.runLater(() => {
+        webEngine.foreach(_.executeScript(function))
+      })
+    }
   }
 
   private def getWebValue[T](function: String, default: T): T = {

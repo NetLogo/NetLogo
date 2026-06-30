@@ -50,7 +50,8 @@ object EditorConfiguration {
 
   def default(rows: Int, columns: Int, compiler: CompilerServices, colorizer: Colorizer) =
     EditorConfiguration(rows, columns, getCodeFont, emptyListener, compiler, colorizer, Map(),
-                        defaultContextActions(colorizer), Seq(), false, false, false, false, emptyMenu, () => None)
+                        defaultContextActions(colorizer), Seq(), false, false, false, false, false, emptyMenu,
+                        () => None)
 
   def getMonospacedFont: Font =
     defaultFont
@@ -81,6 +82,7 @@ case class EditorConfiguration(
   highlightCurrentLine: Boolean,
   showLineNumbers:      Boolean,
   is3Dlanguage:         Boolean,
+  smartIndent:          Boolean,
   menu:                 EditorMenu,
   scrollPaneGetter:     () => Option[JScrollPane]) {
 
@@ -100,6 +102,8 @@ case class EditorConfiguration(
     copy(menuActions = menuActions ++ actions)
   def forThreeDLanguage(is3D: Boolean) =
     copy(is3Dlanguage = is3D)
+  def withSmartIndent(smart: Boolean) =
+    copy(smartIndent = smart)
   def addKeymap(key: KeyStroke, action: UserAction.MenuAction) =
     copy(additionalActions = additionalActions + (key -> action))
   def withKeymap(keymap: Map[KeyStroke, UserAction.MenuAction]) =
@@ -152,7 +156,7 @@ case class EditorConfiguration(
 
   def configureAdvancedEditorArea(editor: AdvancedEditorArea) = {
     editor.addTextListener(listener)
-    editor.setIndenter(false)
+    editor.setIndenter(smartIndent)
     editor.setFont(font)
 
     (contextActions ++ menuActions ++ additionalActions.values).foreach {
