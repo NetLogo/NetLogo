@@ -333,6 +333,30 @@ class StructureParserTests extends AnyFunSuite {
     assert(results.imports.nonEmpty || results.includedSources.nonEmpty)
   }
 
+  test("multiple import statements return correct results") {
+    val src = """
+      |import foo
+      |import bar
+      |
+      """.stripMargin
+    val nlsSrc1 = """
+      |to hello
+      |  show 12345
+      |end
+      """.stripMargin
+    val nlsSrc2 = """
+      |to bye
+      |  show 54321
+      |end
+      """.stripMargin
+    val results = compileAll(src, nlsSrc1, nlsSrc2)
+
+    if (!results.procedures.contains(("FOO:HELLO", None)) ||
+        !results.procedures.contains(("BAR:BYE", None))) {
+      fail()
+    }
+  }
+
   test("import syntax detects duplicate imports") {
     expectParseAllError("import foo import bar import foo as baz", "Attempted to import a module multiple times")
   }
