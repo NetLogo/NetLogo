@@ -164,7 +164,7 @@ object StructureParser {
                   )
 
                   newResults = newResults.copy(
-                    imports = newImports.toSeq,
+                    imports = newResults.imports ++ newImports.toSeq,
                     procedures = newProcedures,
                     procedureTokens = newProcedureTokens
                   )
