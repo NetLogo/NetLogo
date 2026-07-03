@@ -191,8 +191,9 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
       errorLabel.setError(Option(e.error), headerSource.length)
       compileButton.setEnabled(true)
     }
-    // this was needed to get extension colorization showing up reliably in the editor area - RG 23/3/16
-    text.revalidate()
+    text.setProgram(workspace.world.program, workspace.procedures,
+                    workspace.getExtensionManager.extensionCommandNames.toSeq,
+                    workspace.getExtensionManager.extensionReporterNames.toSeq)
   }
 
   protected def compile(): Unit = new WindowEvents.CompileAllEvent().raise(this)

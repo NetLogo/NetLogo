@@ -60,24 +60,27 @@ object BreedIdentifierHandler {
     handlers.to(LazyList).flatMap(_.process(token, program)).headOption
 
   def breedCommands(breed: DeclBreed): Seq[String] =
+    breedCommands(coreBreed(breed))
+
+  def breedCommands(breed: Breed): Seq[String] =
     handlers.collect(breedPrimitivesMatching(breed, Command) andThen refineName(breed))
 
   def breedReporters(breed: DeclBreed): Seq[String] =
+    breedReporters(coreBreed(breed))
+
+   def breedReporters(breed: Breed): Seq[String] =
     handlers.collect(breedPrimitivesMatching(breed, Reporter) andThen refineName(breed))
 
-  def breedHomonymProcedures(breed: DeclBreed): Seq[String] =
-    handlers.collect(primitivesNamedLike(breed) andThen refineName(breed)).distinct
+  private def coreBreed(breed: DeclBreed): Breed =
+    Breed(breed.plural.name, breed.singular.name, "", "", Seq(), breed.isLinkBreed, breed.isDirected)
 
-  private def breedPrimitivesMatching(breed: DeclBreed, tokenType: TokenType): SpecMatcher =
+  private def breedPrimitivesMatching(breed: Breed, tokenType: TokenType): SpecMatcher =
     breedPrimsMatching(tokenType, breed, !matchesBreedName(_))
-
-  private def primitivesNamedLike(breed: DeclBreed): SpecMatcher =
-    breedPrimsMatching(Reporter, breed, matchesBreedName)
 
   private def matchesBreedName(patternString: String): Boolean =
     patternString.matches(s"^$BreedPatternString$$")
 
-  private def breedPrimsMatching(tokenType: TokenType, breed: DeclBreed, matches: (String) => Boolean): SpecMatcher =
+  private def breedPrimsMatching(tokenType: TokenType, breed: Breed, matches: (String) => Boolean): SpecMatcher =
     if (breed.isLinkBreed && breed.isDirected) {
       case directedLink@DirectedLinkPrimitive(pattern, `tokenType`, _) if matches(pattern) => directedLink
       case link@LinkPrimitive(pattern, `tokenType`, _) if matches(pattern) => link
@@ -89,10 +92,10 @@ object BreedIdentifierHandler {
     else
       { case turtle@TurtlePrimitive(pattern, `tokenType`, _) if matches(pattern) => turtle }
 
-  private def refineName(breed: DeclBreed)(helper: BreedPrimSpec): String =
+  private def refineName(breed: Breed)(helper: BreedPrimSpec): String =
     helper.patternString.
-      replaceAll("<BREEDS>", breed.plural.name).
-      replaceAll("<BREED>", breed.singular.name)
+      replaceAll("<BREEDS>", breed.name).
+      replaceAll("<BREED>", breed.singular)
 
   trait BreedPrimSpec {
 
