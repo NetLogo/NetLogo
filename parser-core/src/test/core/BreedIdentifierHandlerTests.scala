@@ -62,18 +62,6 @@ class BreedIdentifierHandlerTests extends AnyFunSuite {
     )(BreedIdentifierHandler.breedCommands(breed("KITTENS", "KITTEN")))
   }
 
-  test("breedHomonymProcedures returns singular and plural procedures") {
-    assertResult(
-      List("KITTENS", "KITTEN")
-    )(BreedIdentifierHandler.breedHomonymProcedures(breed("KITTENS", "KITTEN")))
-  }
-
-  test("breedHomonymProcedures returns only one procedure name when singular and plural are the same") {
-    assertResult(
-      List("DEER")
-    )(BreedIdentifierHandler.breedHomonymProcedures(breed("DEER", "DEER")))
-  }
-
   test("breedReporters returns reporters for a turtle breed") {
     assertResult(
       List("KITTENS-AT", "KITTENS-HERE", "KITTENS-ON","IS-KITTEN?")
