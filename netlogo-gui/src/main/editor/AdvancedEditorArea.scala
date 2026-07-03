@@ -4,7 +4,7 @@ package org.nlogo.editor
 
 import java.awt.{ Color, EventQueue, Font, Point }
 import java.awt.event.{ ActionEvent, KeyEvent, MouseAdapter, MouseEvent, TextListener }
-import java.util.Base64
+import java.util.{ Base64, Locale }
 
 import javafx.application.Platform
 import javafx.beans.value.ChangeListener
@@ -19,8 +19,9 @@ import javax.swing.AbstractAction
 
 import netscape.javascript.JSObject
 
-import org.nlogo.core.I18N
+import org.nlogo.core.{ BreedIdentifierHandler, ColorConstants, I18N, Keywords, Program }
 import org.nlogo.editor.MouseQuickHelpAction
+import org.nlogo.nvm.Procedure
 import org.nlogo.swing.{ ClipboardUtils, Menu, MenuItem, PopupMenu, ScrollableTextComponent, UserAction },
   UserAction.{ EditCategory, EditClipboardGroup, EditFoldGroup, EditFoldSubcategory, EditFormatGroup,
                EditSelectionGroup, EditUndoGroup, KeyBindings, MenuAction }
@@ -334,9 +335,9 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
     webView.addEventFilter(ScrollEvent.SCROLL, event => {
       webEngine.foreach(_.executeScript(
         if (event.isShiftDown) {
-          s"window.scrollBy(${-event.getDeltaY}, 0)"
+          s"window.doScroll(${event.getX}, ${event.getY}, ${-event.getDeltaY}, 0)"
         } else {
-          s"window.scrollBy(0, ${-event.getDeltaY})"
+          s"window.doScroll(${event.getX}, ${event.getY}, 0, ${-event.getDeltaY})"
         }
       ))
 
@@ -470,6 +471,29 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
   }
 
   override def scrollTo(index: Int): Unit = {}
+
+  def setProgram(program: Program, procedures: Procedure.ProceduresMap, extensionCommands: Seq[String],
+                 extensionReporters: Seq[String]): Unit = {
+    def format(names: Seq[String]): String =
+      names.map(name => s"\"${name.toLowerCase(Locale.US)}\"").mkString("[", ",", "]")
+
+    val keywords: String = format(Keywords.keywords.toSeq ++ program.breeds.keys.map(name => s"$name-own"))
+    val constants: String = format(ColorConstants.ColorNames.toSeq ++
+                                   Seq("grey", "false", "true", "nobody", "e", "pi"))
+    val globals: String = format(program.globals ++ procedures.keys.map(_._1))
+    val variables: String = format(program.turtlesOwn ++ program.patchesOwn ++ program.linksOwn)
+
+    val coreCommands: Seq[String] = program.dialect.tokenMapper.allCommandNames.filterNot(_.startsWith("__")).toSeq
+    val coreReporters: Seq[String] = program.dialect.tokenMapper.allReporterNames.filterNot(_.startsWith("__")).toSeq
+
+    val breedCommands: Seq[String] = program.breeds.values.flatMap(BreedIdentifierHandler.breedCommands).toSeq
+    val breedReporters: Seq[String] = program.breeds.values.flatMap(BreedIdentifierHandler.breedReporters).toSeq
+
+    val commands: String = format(coreCommands ++ extensionCommands ++ breedCommands)
+    val reporters: String = format(coreReporters ++ extensionReporters ++ breedReporters)
+
+    runInWeb(s"window.setProgram($keywords, $constants, $globals, $variables, $commands, $reporters)")
+  }
 
   private def runInWeb(function: String): Unit = {
     engineReady.future.foreach { _ =>
