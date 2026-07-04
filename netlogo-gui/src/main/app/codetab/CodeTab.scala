@@ -191,6 +191,10 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
       errorLabel.setError(Option(e.error), headerSource.length)
       compileButton.setEnabled(true)
     }
+    setProgram()
+  }
+
+  protected def setProgram(): Unit = {
     text.setProgram(workspace.world.program, workspace.procedures.keys.map(_._1).toSeq,
                     workspace.getExtensionManager.extensionCommandNames.toSeq,
                     workspace.getExtensionManager.extensionReporterNames.toSeq)
