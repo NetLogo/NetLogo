@@ -21,7 +21,6 @@ import netscape.javascript.JSObject
 
 import org.nlogo.core.{ BreedIdentifierHandler, ColorConstants, I18N, Keywords, Program }
 import org.nlogo.editor.MouseQuickHelpAction
-import org.nlogo.nvm.Procedure
 import org.nlogo.swing.{ ClipboardUtils, Menu, MenuItem, PopupMenu, ScrollableTextComponent, UserAction },
   UserAction.{ EditCategory, EditClipboardGroup, EditFoldGroup, EditFoldSubcategory, EditFormatGroup,
                EditSelectionGroup, EditUndoGroup, KeyBindings, MenuAction }
@@ -472,7 +471,7 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
 
   override def scrollTo(index: Int): Unit = {}
 
-  def setProgram(program: Program, procedures: Procedure.ProceduresMap, extensionCommands: Seq[String],
+  def setProgram(program: Program, procedures: Seq[String], extensionCommands: Seq[String],
                  extensionReporters: Seq[String]): Unit = {
     def format(names: Seq[String]): String =
       names.map(name => s"\"${name.toLowerCase(Locale.US)}\"").mkString("[", ",", "]")
@@ -480,7 +479,7 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
     val keywords: String = format(Keywords.keywords.toSeq ++ program.breeds.keys.map(name => s"$name-own"))
     val constants: String = format(ColorConstants.ColorNames.toSeq ++
                                    Seq("grey", "false", "true", "nobody", "e", "pi"))
-    val globals: String = format(program.globals ++ procedures.keys.map(_._1))
+    val globals: String = format(program.globals ++ procedures)
     val variables: String = format(program.turtlesOwn ++ program.patchesOwn ++ program.linksOwn)
 
     val coreCommands: Seq[String] = program.dialect.tokenMapper.allCommandNames.filterNot(_.startsWith("__")).toSeq
