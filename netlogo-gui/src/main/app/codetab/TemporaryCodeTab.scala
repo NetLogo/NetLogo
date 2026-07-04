@@ -131,7 +131,9 @@ class TemporaryCodeTab(workspace: AbstractWorkspace & ModelTracker,
     e.sourceOwner match {
       case file: ExternalFileInterface if file.getFileName == filename.getOrElse(null) => setErrorLabel()
       // if the Code tab compiles then get rid of the error ev 7/26/07
-      case tab: CodeTab if e.error == null                                       => setErrorLabel()
+      case tab: CodeTab if e.error == null =>
+        setErrorLabel()
+        setProgram()
       case _ =>
     }
   }
