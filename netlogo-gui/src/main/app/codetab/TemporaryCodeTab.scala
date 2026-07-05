@@ -68,6 +68,7 @@ class TemporaryCodeTab(workspace: AbstractWorkspace & ModelTracker,
 
   setSeparate(separateCodeWindow)
   lineNumbersVisible = tabs.lineNumbersVisible
+  setCompleteOnType(tabs.getCompleteOnType)
 
   override def activeMenuActions: Seq[UserAction.MenuAction] =
     super.activeMenuActions ++ filename.fold(_ => Seq(), name => Seq(conversionAction(this)))

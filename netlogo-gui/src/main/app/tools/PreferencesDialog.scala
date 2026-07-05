@@ -39,6 +39,7 @@ class PreferencesDialog(parent: Frame & ThemeSync, tabManager: TabsInterface, wi
     Preferences.StartSeparateCodeTab,
     new Preferences.IndentAutomatically(parent),
     new Preferences.EditorLineNumbers(tabManager),
+    new Preferences.CompleteOnType(tabManager),
     new Preferences.CodeFont(tabManager)
   )
 

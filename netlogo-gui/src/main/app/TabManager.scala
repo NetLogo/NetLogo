@@ -63,6 +63,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
   private var widgetErrors = Set[Widget]()
 
   private var smartTabbing = true
+  private var completeOnType = true
 
   private var watcherThread: FileWatcherThread = null
 
@@ -330,6 +331,15 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
   def lineNumbersVisible_=(visible: Boolean): Unit = {
     mainCodeTab.lineNumbersVisible = visible
     getExternalFileTabs.foreach(_.lineNumbersVisible = visible)
+  }
+
+  def getCompleteOnType: Boolean =
+    completeOnType
+
+  def setCompleteOnType(enabled: Boolean): Unit = {
+    completeOnType = enabled
+    mainCodeTab.setCompleteOnType(enabled)
+    getExternalFileTabs.foreach(_.setCompleteOnType(enabled))
   }
 
   def setIncludedFilesShown(visible: Boolean): Unit = {

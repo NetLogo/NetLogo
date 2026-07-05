@@ -25,6 +25,9 @@ trait TabsInterface {
   def lineNumbersVisible: Boolean
   def lineNumbersVisible_=(b: Boolean): Unit
 
+  def getCompleteOnType: Boolean
+  def setCompleteOnType(enabled: Boolean): Unit
+
   def setIncludedFilesShown(visible: Boolean): Unit
 
   def remoteCommandsEnabled: Boolean
