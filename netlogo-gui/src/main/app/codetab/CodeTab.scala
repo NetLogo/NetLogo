@@ -237,6 +237,10 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
     text.setLineNumbersVisible(visible)
   }
 
+  def setCompleteOnType(enabled: Boolean): Unit = {
+    text.setCompleteOnType(enabled)
+  }
+
   def setIncludedFilesShown(visible: Boolean): Unit = {
     includedFilesMenu.setAlwaysVisible(visible)
   }
