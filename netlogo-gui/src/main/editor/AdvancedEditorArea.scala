@@ -398,6 +398,10 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
     runInWeb(s"window.setLineNumbers($visible)")
   }
 
+  def setCompleteOnType(enabled: Boolean): Unit = {
+    runInWeb(s"window.setCompleteOnType($enabled)")
+  }
+
   override def setText(text: String): Unit = {
     webEngine synchronized {
       currentText = text

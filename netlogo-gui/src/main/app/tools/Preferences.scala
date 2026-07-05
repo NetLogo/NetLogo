@@ -351,6 +351,12 @@ object Preferences {
     }
   }
 
+  class CompleteOnType(tabs: TabsInterface) extends BooleanPreference("completeOnType", None, true) {
+    override def onSelect(selected: Boolean): Unit = {
+      tabs.setCompleteOnType(selected)
+    }
+  }
+
   class JumpOnClick(tabs: TabsInterface) extends BooleanPreference("jumpOnClick", None, true) {
     override def onSelect(selected: Boolean): Unit = {
       tabs.setJumpOnClick(selected)
