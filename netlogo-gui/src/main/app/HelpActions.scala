@@ -10,9 +10,8 @@ import javax.swing.AbstractAction
 
 import org.nlogo.core.I18N
 import org.nlogo.api.Version
-import org.nlogo.swing.{ BrowserLauncher, UserAction }, UserAction._
+import org.nlogo.swing.{ BrowserLauncher, QuickHelp, UserAction }, UserAction._
 import org.nlogo.theme.ThemeSync
-import org.nlogo.window.QuickHelp
 
 class TryRemoteBrowseAction(name: String, uri: URI, fallback: Path, group: String)
 extends AbstractAction(name)

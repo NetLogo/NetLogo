@@ -22,11 +22,11 @@ import org.nlogo.app.common.{ Events => AppEvents, FindDialog, MenuTab, UndoRedo
 import org.nlogo.core.I18N
 import org.nlogo.editor.EditorConfiguration
 import org.nlogo.swing.Implicits._
-import org.nlogo.swing.{ ScrollableTextComponent, ScrollPane, TextArea, ToolBar, ToolBarActionButton,
+import org.nlogo.swing.{ QuickHelp, ScrollableTextComponent, ScrollPane, TextArea, ToolBar, ToolBarActionButton,
                          ToolBarToggleButton, Printable, PrinterManager, BrowserLauncher, UndoManager, UserAction,
                          Utils }, UserAction.MenuAction
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
-import org.nlogo.window.{ Events => WindowEvents, QuickHelp, Zoomable }
+import org.nlogo.window.{ Events => WindowEvents, Zoomable }
 
 import org.w3c.dom.events.{ Event, EventListener, EventTarget }
 import org.w3c.dom.html.HTMLAnchorElement

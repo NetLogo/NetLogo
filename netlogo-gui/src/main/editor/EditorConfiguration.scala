@@ -49,7 +49,8 @@ object EditorConfiguration {
     }
 
   def default(rows: Int, columns: Int, compiler: CompilerServices, colorizer: Colorizer) =
-    EditorConfiguration(rows, columns, getCodeFont, emptyListener, compiler, colorizer, Map(),
+    EditorConfiguration(rows, columns, getCodeFont, emptyListener, compiler, colorizer,
+                        Map(UserAction.KeyBindings.keystroke(KeyEvent.VK_F1) -> QuickHelpAction.keyboardQuickHelp),
                         defaultContextActions(colorizer), Seq(), false, false, false, false, false, emptyMenu,
                         () => None)
 

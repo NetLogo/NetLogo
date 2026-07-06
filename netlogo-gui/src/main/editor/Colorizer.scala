@@ -2,7 +2,7 @@
 
 package org.nlogo.editor
 
-import java.awt.{ Color, Component }
+import java.awt.Color
 import java.util.{ List => JList }
 
 import org.nlogo.core.TokenType
@@ -24,7 +24,4 @@ trait Colorizer {
   // but it deals with the tokenizer and we need it in the
   // same spots.  ev 1/17/07
   def getTokenAtPosition(text: String, position: Int): Option[String]
-
-  // this isn't colorizing either.. - ST 3/28/08
-  def doHelp(comp: Component, name: String): Unit
 }

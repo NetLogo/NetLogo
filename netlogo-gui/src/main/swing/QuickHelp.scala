@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.window
+package org.nlogo.swing
 
 import java.awt.Component
 import java.net.URI
@@ -9,7 +9,6 @@ import java.util.Locale
 
 import org.nlogo.api.Version
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ BrowserLauncher, OptionPane }
 
 object QuickHelp {
   /**

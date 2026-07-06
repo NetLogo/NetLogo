@@ -6,15 +6,12 @@ import java.awt.{ KeyboardFocusManager, Toolkit }
 import java.awt.datatransfer.DataFlavor
 import java.awt.event.{ ActionEvent, KeyEvent }
 import java.lang.IllegalStateException
-import javax.swing.{ AbstractAction, Action }
+import javax.swing.Action
 
 import org.nlogo.api.Refreshable
-import org.nlogo.awt.Hierarchy
-import org.nlogo.core.I18N
-import org.nlogo.editor.{ Actions, Colorizer, EditorAwareAction, QuickHelpAction }
+import org.nlogo.editor.Actions
 import org.nlogo.swing.{ ClipboardUtils, UserAction, WrappedAction },
-  UserAction.{ EditCategory, EditClipboardGroup, EditSelectionGroup, HelpCategory,
-    HelpContextGroup, KeyBindings, MenuAction },
+  UserAction.{ EditCategory, EditClipboardGroup, EditSelectionGroup, KeyBindings },
     KeyBindings.keystroke
 
 object TextMenuActions {
@@ -41,9 +38,6 @@ object TextMenuActions {
     new WrappedAction(
       Actions.SelectAllAction, EditCategory, null, EditSelectionGroup, keystroke('A', withMenu = true))
 
-  def keyboardQuickHelp(colorizer: Colorizer) =
-    new KeyboardQuickHelpAction(colorizer)
-
   class WrappedPasteAction(base: Action)
     extends WrappedAction(base, EditCategory, null, EditClipboardGroup, keystroke('V', withMenu = true))
     with Refreshable {
@@ -68,21 +62,6 @@ object TextMenuActions {
         case _ =>
           super.actionPerformed(e)
       }
-    }
-  }
-
-  class KeyboardQuickHelpAction(protected val colorizer: Colorizer)
-    extends AbstractAction(I18N.gui.get("menu.help.lookUpInDictionary"))
-    with EditorAwareAction
-    with QuickHelpAction
-    with MenuAction {
-
-    category    = HelpCategory
-    group       = HelpContextGroup
-    accelerator = KeyBindings.keystroke(KeyEvent.VK_F1)
-
-    override def actionPerformed(e: ActionEvent): Unit = {
-      doHelp(editor, Hierarchy.getFrame(editor))
     }
   }
 }
