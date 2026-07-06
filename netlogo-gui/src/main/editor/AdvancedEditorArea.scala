@@ -480,7 +480,7 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
     def format(names: Seq[String]): String =
       names.map(name => s"\"${name.toLowerCase(Locale.US)}\"").mkString("[", ",", "]")
 
-    val keywords: String = format(Keywords.keywords.toSeq ++ program.breeds.keys.map(name => s"$name-own"))
+    val keywords: String = format(Keywords.keywords.toSeq ++ program.breeds.keys.map(name => s"$name-own") :+ "breed")
     val constants: String = format(ColorConstants.ColorNames.toSeq ++
                                    Seq("grey", "false", "true", "nobody", "e", "pi"))
     val globals: String = format(program.globals ++ procedures)
