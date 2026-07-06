@@ -3,14 +3,14 @@
 package org.nlogo.app.common
 
 import java.awt.{ BorderLayout, Dimension, Font, Insets }
-import java.awt.event.{ ActionEvent, ActionListener, KeyEvent, KeyListener }
+import java.awt.event.{ ActionEvent, ActionListener, InputEvent, KeyEvent, KeyListener }
 import javax.swing.{ KeyStroke, ScrollPaneConstants }
 
 import org.nlogo.agent.{ Agent, AgentSet, OutputObject }
 import org.nlogo.core.{ AgentKind, CompilerException, I18N, Widget => CoreWidget }
 import org.nlogo.editor.{ EditorArea, EditorConfiguration }
 import org.nlogo.ide.{ AutoSuggestAction, CodeCompletionPopup }
-import org.nlogo.swing.{ Implicits, ScrollPane, Transparent }, Implicits.thunk2documentListener
+import org.nlogo.swing.{ Implicits, ScrollPane, Transparent, UserAction }, Implicits.thunk2documentListener
 import org.nlogo.theme.InterfaceColors
 import org.nlogo.window.{ Editable, CommandCenterInterface, EditorColorizer, InterfaceMode, JobWidget,
                           Events => WindowEvents }
@@ -58,13 +58,17 @@ class CommandLine(commandCenter: CommandCenterInterface,
   private var history = Seq[ExecutionString]()
 
   lazy val codeCompletionPopup = CodeCompletionPopup(workspace.dialect, workspace.getExtensionManager)
-  lazy val actionMap = Map(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_SPACE, java.awt.event.InputEvent.CTRL_DOWN_MASK)
-                             -> new AutoSuggestAction("auto-suggest", codeCompletionPopup))
 
-  lazy val textField = new EditorArea(EditorConfiguration.default(1, 30, workspace, new EditorColorizer(workspace))
-                                                         .withFont(EditorConfiguration.getCodeFont)
-                                                         .withFocusTraversalEnabled(true)
-                                                         .withKeymap(actionMap)) {
+  private lazy val configuration =
+    EditorConfiguration.default(1, 30, workspace, new EditorColorizer(workspace))
+                       .withFont(EditorConfiguration.getCodeFont)
+                       .withFocusTraversalEnabled(true)
+                       .addKeymap(
+                         KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, InputEvent.CTRL_DOWN_MASK),
+                           new AutoSuggestAction("auto-suggest", codeCompletionPopup)
+                       )
+
+  lazy val textField = new EditorArea(configuration) {
     getDocument.addDocumentListener(() => commandCenter.fitPrompt())
 
     override def setText(text: String): Unit = {
@@ -97,6 +101,9 @@ class CommandLine(commandCenter: CommandCenterInterface,
                                           ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER) with Transparent
 
   add(scrollPane, BorderLayout.CENTER)
+
+  def getAdditionalActions: Seq[UserAction.MenuAction] =
+    configuration.getAdditionalActions
 
   def agent(agent: Agent): Unit = {
     this.agent = agent

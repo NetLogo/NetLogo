@@ -53,6 +53,8 @@ class InterfaceTab(workspace: GUIWorkspace,
     WorkspaceActions.interfaceActions(workspace, iP) ++
     Seq(iP.undoAction, iP.redoAction, commandCenterToggleAction, new JumpToCommandCenterAction())
 
+  override val permanentMenuActions = commandCenter.commandLine.getAdditionalActions
+
   var lastFocusedComponent: JComponent = commandCenter
   setLayout(new BorderLayout)
   private val scrollPane = new ScrollPane(

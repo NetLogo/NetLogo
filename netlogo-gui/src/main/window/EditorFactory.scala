@@ -5,7 +5,7 @@ package org.nlogo.window
 import java.awt.event.KeyEvent
 
 import org.nlogo.api.CompilerServices
-import org.nlogo.editor.{ Colorizer, EditorArea, EditorConfiguration }
+import org.nlogo.editor.{ Colorizer, EditorArea, EditorConfiguration, QuickHelpAction }
 import org.nlogo.swing.UserAction
 
 trait EditorFactory {
@@ -20,7 +20,7 @@ trait EditorFactory {
         TextMenuActions.PasteAction,
         TextMenuActions.DeleteAction,
         TextMenuActions.SelectAllAction))
-    .addKeymap(UserAction.KeyBindings.keystroke(KeyEvent.VK_F1), TextMenuActions.keyboardQuickHelp(colorizer))
+    .addKeymap(UserAction.KeyBindings.keystroke(KeyEvent.VK_F1), QuickHelpAction.keyboardQuickHelp)
 
   def newEditor(configuration: EditorConfiguration): EditorArea
 }
