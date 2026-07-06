@@ -5,6 +5,7 @@ package org.nlogo.lab.gui
 import java.awt.Window
 import java.io.File
 import java.net.SocketException
+import java.nio.file.Paths
 
 import org.nlogo.api.{ Exceptions, IPCServerHandler, LabProtocol, Version }
 import org.nlogo.core.I18N
@@ -72,8 +73,20 @@ class Supervisor(parent: Window, workspace: GUIWorkspace, modelPath: String, ori
         System.err.println(line)
       })
 
-      process = Option(Process(Seq(ProcessHandle.current.info.command.get) ++ memoryLimit ++ Seq("-cp",
-                                   System.getProperty("java.class.path"), s"-Dorg.nlogo.is3d=${Version.is3D}",
+      val java: String = {
+        val exec: String = {
+          if (System.getProperty("os.name").toLowerCase.startsWith("win")) {
+            "java.exe"
+          } else {
+            "java"
+          }
+        }
+
+        Paths.get(System.getProperty("java.home"), "bin", exec).toAbsolutePath.toString
+      }
+
+      process = Option(Process(Seq(java) ++ memoryLimit ++ Seq("-cp", System.getProperty("java.class.path"),
+                                   s"-Dorg.nlogo.is3d=${Version.is3D}",
                                    s"-Dnetlogo.extensions.dir=${System.getProperty("netlogo.extensions.dir")}",
                                    s"-Djava.library.path=${System.getProperty("java.library.path")}",
                                    "-Dswing.aatext=true",
