@@ -98,8 +98,4 @@ class EditorColorizer(compiler: CompilerServices) extends Colorizer {
     Option(compiler.getTokenAtPosition(text, position))
       .map(_.text)
 
-  def doHelp(comp: java.awt.Component, name: String): Unit = {
-    QuickHelp.doHelp(comp, name)
-  }
-
 }
