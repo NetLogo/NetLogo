@@ -25,6 +25,12 @@ class AboutWindow(parent: Frame) extends JDialog(parent, I18N.gui.get("dialog.ab
     setDragEnabled(false)
     setEditable(false)
     setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR))
+
+    override def syncTheme(): Unit = {
+      super.syncTheme()
+
+      setCaretColor(InterfaceColors.Transparent)
+    }
   }
   private var graphicsInfo = ""
   private val staticInfo =
@@ -57,6 +63,7 @@ class AboutWindow(parent: Frame) extends JDialog(parent, I18N.gui.get("dialog.ab
   private val label = new JEditorPane("text/html", citationText) with ThemeSync {
     setEditable(false)
     setDragEnabled(false)
+    setCaretColor(InterfaceColors.Transparent)
 
     override def syncTheme(): Unit = {
       setBackground(InterfaceColors.dialogBackground())
@@ -72,6 +79,12 @@ class AboutWindow(parent: Frame) extends JDialog(parent, I18N.gui.get("dialog.ab
     setEditable(false)
     setBorder(new EmptyBorder(5, 10, 5, 10))
     setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR))
+
+    override def syncTheme(): Unit = {
+      super.syncTheme()
+
+      setCaretColor(InterfaceColors.Transparent)
+    }
   }
 
   private val creditsScrollPane = new ScrollPane(credits) {
