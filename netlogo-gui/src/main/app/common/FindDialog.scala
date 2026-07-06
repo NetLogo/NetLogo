@@ -32,6 +32,8 @@ object FindDialog extends ThemeSync {
 
       val instance = getInstance
 
+      instance.target.foreach(_.requestFocus())
+
       instance.setVisible(true)
       instance.findBox.requestFocus()
       instance.findBox.selectAll()

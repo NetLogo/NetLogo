@@ -36,6 +36,7 @@ object InterfaceColors {
   def widgetPreviewCover(): Color = theme.widgetPreviewCover
   def widgetPreviewCoverNote(): Color = theme.widgetPreviewCoverNote
   def widgetHandle(): Color = theme.widgetHandle
+  def widgetFocus(): Color = theme.widgetFocus
   def displayAreaBackground(): Color = theme.displayAreaBackground
   def displayAreaText(): Color = theme.displayAreaText
   def textBoxBackground(): Color = theme.textBoxBackground
@@ -43,16 +44,19 @@ object InterfaceColors {
   def scrollBarForeground(): Color = theme.scrollBarForeground
   def scrollBarForegroundHover(): Color = theme.scrollBarForegroundHover
   def interfaceBackground(): Color = theme.interfaceBackground
+  def interfaceFocus(): Color = theme.interfaceFocus
   def commandCenterBackground(): Color = theme.commandCenterBackground
   def commandCenterText(): Color = theme.commandCenterText
   def locationToggleImage(): Color = theme.locationToggleImage
   def commandLineBackground(): Color = theme.commandLineBackground
   def commandOutputBackground(): Color = theme.commandOutputBackground
   def splitPaneDividerBackground(): Color = theme.splitPaneDividerBackground
+  def splitPaneDividerFocus(): Color = theme.splitPaneDividerFocus
   def speedSliderBarBackground(): Color = theme.speedSliderBarBackground
   def speedSliderBarBackgroundFilled(): Color = theme.speedSliderBarBackgroundFilled
   def speedSliderThumb(): Color = theme.speedSliderThumb
   def speedSliderThumbDisabled(): Color = theme.speedSliderThumbDisabled
+  def speedSliderFocus(): Color = theme.speedSliderFocus
   def buttonBackground(): Color = theme.buttonBackground
   def buttonBackgroundHover(): Color = theme.buttonBackgroundHover
   def buttonBackgroundPressed(): Color = theme.buttonBackgroundPressed
@@ -61,9 +65,11 @@ object InterfaceColors {
   def buttonText(): Color = theme.buttonText
   def buttonTextPressed(): Color = theme.buttonTextPressed
   def buttonTextDisabled(): Color = theme.buttonTextDisabled
+  def buttonFocusDisabled(): Color = theme.buttonFocusDisabled
   def sliderBackground(): Color = theme.sliderBackground
   def sliderBarBackground(): Color = theme.sliderBarBackground
   def sliderBarBackgroundFilled(): Color = theme.sliderBarBackgroundFilled
+  def sliderBarFocus(): Color = theme.sliderBarFocus
   def sliderThumbBorder(): Color = theme.sliderThumbBorder
   def sliderThumbBackground(): Color = theme.sliderThumbBackground
   def sliderThumbBackgroundPressed(): Color = theme.sliderThumbBackgroundPressed
@@ -107,6 +113,7 @@ object InterfaceColors {
   def toolbarButtonHover(): Color = theme.toolbarButtonHover
   def toolbarToolPressed(): Color = theme.toolbarToolPressed
   def toolbarToolSelected(): Color = theme.toolbarToolSelected
+  def toolbarToolFocus(): Color = theme.toolbarToolFocus
   def toolbarImage(): Color = theme.toolbarImage
   def toolbarImageSelected(): Color = theme.toolbarImageSelected
   def toolbarImageDisabled(): Color = theme.toolbarImageDisabled
@@ -141,6 +148,7 @@ object InterfaceColors {
   def checkboxBackgroundDisabled(): Color = theme.checkboxBackgroundDisabled
   def checkboxBorder(): Color = theme.checkboxBorder
   def checkboxCheck(): Color = theme.checkboxCheck
+  def checkboxFocus(): Color = theme.checkboxFocus
   def menuBarBorder(): Color = theme.menuBarBorder
   def menuBackground(): Color = theme.menuBackground
   def menuBackgroundHover(): Color = theme.menuBackgroundHover
@@ -160,11 +168,13 @@ object InterfaceColors {
   def primaryButtonBackgroundHover(): Color = theme.primaryButtonBackgroundHover
   def primaryButtonBackgroundPressed(): Color = theme.primaryButtonBackgroundPressed
   def primaryButtonBorder(): Color = theme.primaryButtonBorder
+  def primaryButtonFocus(): Color = theme.primaryButtonFocus
   def primaryButtonText(): Color = theme.primaryButtonText
   def secondaryButtonBackground(): Color = theme.secondaryButtonBackground
   def secondaryButtonBackgroundHover(): Color = theme.secondaryButtonBackgroundHover
   def secondaryButtonBackgroundPressed(): Color = theme.secondaryButtonBackgroundPressed
   def secondaryButtonBorder(): Color = theme.secondaryButtonBorder
+  def secondaryButtonFocus(): Color = theme.secondaryButtonFocus
   def secondaryButtonText(): Color = theme.secondaryButtonText
   def textAreaBackground(): Color = theme.textAreaBackground
   def textAreaText(): Color = theme.textAreaText
@@ -234,6 +244,7 @@ trait ColorTheme {
   def widgetPreviewCover: Color
   def widgetPreviewCoverNote: Color
   def widgetHandle: Color
+  def widgetFocus: Color
   def displayAreaBackground: Color
   def displayAreaText: Color
   def textBoxBackground: Color
@@ -241,16 +252,19 @@ trait ColorTheme {
   def scrollBarForeground: Color
   def scrollBarForegroundHover: Color
   def interfaceBackground: Color
+  def interfaceFocus: Color
   def commandCenterBackground: Color
   def commandCenterText: Color
   def locationToggleImage: Color
   def commandLineBackground: Color
   def commandOutputBackground: Color
   def splitPaneDividerBackground: Color
+  def splitPaneDividerFocus: Color
   def speedSliderBarBackground: Color
   def speedSliderBarBackgroundFilled: Color
   def speedSliderThumb: Color
   def speedSliderThumbDisabled: Color
+  def speedSliderFocus: Color
   def buttonBackground: Color
   def buttonBackgroundHover: Color
   def buttonBackgroundPressed: Color
@@ -259,9 +273,11 @@ trait ColorTheme {
   def buttonText: Color
   def buttonTextPressed: Color
   def buttonTextDisabled: Color
+  def buttonFocusDisabled: Color
   def sliderBackground: Color
   def sliderBarBackground: Color
   def sliderBarBackgroundFilled: Color
+  def sliderBarFocus: Color
   def sliderThumbBorder: Color
   def sliderThumbBackground: Color
   def sliderThumbBackgroundPressed: Color
@@ -305,6 +321,7 @@ trait ColorTheme {
   def toolbarButtonHover: Color
   def toolbarToolPressed: Color
   def toolbarToolSelected: Color
+  def toolbarToolFocus: Color
   def toolbarImage: Color
   def toolbarImageSelected: Color
   def toolbarImageDisabled: Color
@@ -339,6 +356,7 @@ trait ColorTheme {
   def checkboxBackgroundDisabled: Color
   def checkboxBorder: Color
   def checkboxCheck: Color
+  def checkboxFocus: Color
   def menuBarBorder: Color
   def menuBackground: Color
   def menuBackgroundHover: Color
@@ -358,11 +376,13 @@ trait ColorTheme {
   def primaryButtonBackgroundHover: Color
   def primaryButtonBackgroundPressed: Color
   def primaryButtonBorder: Color
+  def primaryButtonFocus: Color
   def primaryButtonText: Color
   def secondaryButtonBackground: Color
   def secondaryButtonBackgroundHover: Color
   def secondaryButtonBackgroundPressed: Color
   def secondaryButtonBorder: Color
+  def secondaryButtonFocus: Color
   def secondaryButtonText: Color
   def textAreaBackground: Color
   def textAreaText: Color
@@ -399,6 +419,7 @@ object ClassicTheme extends ColorTheme {
   override def widgetPreviewCover: Color = new Color(255, 255, 255, 100)
   override def widgetPreviewCoverNote: Color = new Color(175, 175, 175, 75)
   override def widgetHandle: Color = DarkGray
+  override def widgetFocus: Color = MediumBlue
   override def displayAreaBackground: Color = Color.WHITE
   override def displayAreaText: Color = Color.BLACK
   override def textBoxBackground: Color = Color.WHITE
@@ -406,16 +427,19 @@ object ClassicTheme extends ColorTheme {
   override def scrollBarForeground: Color = MediumGray
   override def scrollBarForegroundHover: Color = LightGrayOutline
   override def interfaceBackground: Color = Color.WHITE
+  override def interfaceFocus: Color = Color.BLACK
   override def commandCenterBackground: Color = LightGray
   override def commandCenterText: Color = Color.BLACK
   override def locationToggleImage: Color = Color.BLACK
   override def commandLineBackground: Color = Color.WHITE
   override def commandOutputBackground: Color = Color.WHITE
   override def splitPaneDividerBackground: Color = new Color(204, 204, 204)
+  override def splitPaneDividerFocus: Color = MediumGray
   override def speedSliderBarBackground: Color = MediumGray
   override def speedSliderBarBackgroundFilled: Color = MediumBlue
   override def speedSliderThumb: Color = MediumBlue
   override def speedSliderThumbDisabled: Color = MediumGray
+  override def speedSliderFocus: Color = MediumBlue
   override def buttonBackground: Color = ClassicLavender
   override def buttonBackgroundHover: Color = ClassicLavender
   override def buttonBackgroundPressed: Color = Color.BLACK
@@ -424,9 +448,11 @@ object ClassicTheme extends ColorTheme {
   override def buttonText: Color = Color.BLACK
   override def buttonTextPressed: Color = ClassicLavender
   override def buttonTextDisabled: Color = Color.BLACK
+  override def buttonFocusDisabled: Color = Color.BLACK
   override def sliderBackground: Color = ClassicLightGreen
   override def sliderBarBackground: Color = ClassicDarkGreen
   override def sliderBarBackgroundFilled: Color = ClassicDarkGreen
+  override def sliderBarFocus: Color = Color.WHITE
   override def sliderThumbBorder: Color = ClassicOrange
   override def sliderThumbBackground: Color = ClassicOrange
   override def sliderThumbBackgroundPressed: Color = ClassicOrange
@@ -470,6 +496,7 @@ object ClassicTheme extends ColorTheme {
   override def toolbarButtonHover: Color = LightGray2
   override def toolbarToolPressed: Color = MediumGray
   override def toolbarToolSelected: Color = MediumBlue
+  override def toolbarToolFocus: Color = MediumGray
   override def toolbarImage: Color = new Color(85, 87, 112)
   override def toolbarImageSelected: Color = Color.WHITE
   override def toolbarImageDisabled: Color = new Color(100, 100, 100, 64)
@@ -504,6 +531,7 @@ object ClassicTheme extends ColorTheme {
   override def checkboxBackgroundDisabled: Color = MediumGray
   override def checkboxBorder: Color = MediumGray
   override def checkboxCheck: Color = Color.WHITE
+  override def checkboxFocus: Color = MediumGray
   override def menuBarBorder: Color = LightGray2
   override def menuBackground: Color = Color.WHITE
   override def menuBackgroundHover: Color = MediumBlue
@@ -523,11 +551,13 @@ object ClassicTheme extends ColorTheme {
   override def primaryButtonBackgroundHover: Color = MediumBlue3
   override def primaryButtonBackgroundPressed: Color = MediumBlue4
   override def primaryButtonBorder: Color = MediumBlue
+  override def primaryButtonFocus: Color = Color.BLACK
   override def primaryButtonText: Color = Color.WHITE
   override def secondaryButtonBackground: Color = Color.WHITE
   override def secondaryButtonBackgroundHover: Color = White2
   override def secondaryButtonBackgroundPressed: Color = LightGray2
   override def secondaryButtonBorder: Color = MediumGray
+  override def secondaryButtonFocus: Color = MediumBlue
   override def secondaryButtonText: Color = Color.BLACK
   override def textAreaBackground: Color = Color.WHITE
   override def textAreaText: Color = Color.BLACK
@@ -564,6 +594,7 @@ object LightTheme extends ColorTheme {
   override def widgetPreviewCover: Color = new Color(255, 255, 255, 100)
   override def widgetPreviewCoverNote: Color = new Color(175, 175, 175, 75)
   override def widgetHandle: Color = DarkGray
+  override def widgetFocus: Color = MediumBlue
   override def displayAreaBackground: Color = Color.WHITE
   override def displayAreaText: Color = Color.BLACK
   override def textBoxBackground: Color = Color.WHITE
@@ -571,16 +602,19 @@ object LightTheme extends ColorTheme {
   override def scrollBarForeground: Color = MediumGray
   override def scrollBarForegroundHover: Color = LightGrayOutline
   override def interfaceBackground: Color = Color.WHITE
+  override def interfaceFocus: Color = Color.BLACK
   override def commandCenterBackground: Color = LightGray
   override def commandCenterText: Color = new Color(53, 54, 74)
   override def locationToggleImage: Color = Color.BLACK
   override def commandLineBackground: Color = Color.WHITE
   override def commandOutputBackground: Color = Color.WHITE
   override def splitPaneDividerBackground: Color = new Color(204, 204, 204)
+  override def splitPaneDividerFocus: Color = MediumGray
   override def speedSliderBarBackground: Color = MediumGray
   override def speedSliderBarBackgroundFilled: Color = MediumBlue
   override def speedSliderThumb: Color = MediumBlue
   override def speedSliderThumbDisabled: Color = MediumGray
+  override def speedSliderFocus: Color = MediumBlue
   override def buttonBackground: Color = MediumBlue
   override def buttonBackgroundHover: Color = new Color(31, 134, 255)
   override def buttonBackgroundPressed: Color = new Color(0, 52, 115)
@@ -589,9 +623,11 @@ object LightTheme extends ColorTheme {
   override def buttonText: Color = Color.WHITE
   override def buttonTextPressed: Color = Color.WHITE
   override def buttonTextDisabled: Color = new Color(115, 115, 115)
+  override def buttonFocusDisabled: Color = Color.BLACK
   override def sliderBackground: Color = LightBlue
   override def sliderBarBackground: Color = MediumGray
   override def sliderBarBackgroundFilled: Color = MediumBlue
+  override def sliderBarFocus: Color = Color.WHITE
   override def sliderThumbBorder: Color = MediumBlue
   override def sliderThumbBackground: Color = Color.WHITE
   override def sliderThumbBackgroundPressed: Color = MediumBlue
@@ -635,6 +671,7 @@ object LightTheme extends ColorTheme {
   override def toolbarButtonHover: Color = LightGray2
   override def toolbarToolPressed: Color = MediumGray
   override def toolbarToolSelected: Color = MediumBlue
+  override def toolbarToolFocus: Color = MediumGray
   override def toolbarImage: Color = new Color(85, 87, 112)
   override def toolbarImageSelected: Color = Color.WHITE
   override def toolbarImageDisabled: Color = new Color(100, 100, 100, 64)
@@ -669,6 +706,7 @@ object LightTheme extends ColorTheme {
   override def checkboxBackgroundDisabled: Color = MediumGray
   override def checkboxBorder: Color = MediumGray
   override def checkboxCheck: Color = Color.WHITE
+  override def checkboxFocus: Color = MediumGray
   override def menuBarBorder: Color = LightGray2
   override def menuBackground: Color = Color.WHITE
   override def menuBackgroundHover: Color = MediumBlue
@@ -688,11 +726,13 @@ object LightTheme extends ColorTheme {
   override def primaryButtonBackgroundHover: Color = MediumBlue3
   override def primaryButtonBackgroundPressed: Color = MediumBlue4
   override def primaryButtonBorder: Color = MediumBlue
+  override def primaryButtonFocus: Color = Color.BLACK
   override def primaryButtonText: Color = Color.WHITE
   override def secondaryButtonBackground: Color = Color.WHITE
   override def secondaryButtonBackgroundHover: Color = White2
   override def secondaryButtonBackgroundPressed: Color = LightGray2
   override def secondaryButtonBorder: Color = MediumGray
+  override def secondaryButtonFocus: Color = MediumBlue
   override def secondaryButtonText: Color = Color.BLACK
   override def textAreaBackground: Color = Color.WHITE
   override def textAreaText: Color = Color.BLACK
@@ -729,6 +769,7 @@ object DarkTheme extends ColorTheme {
   override def widgetPreviewCover: Color = new Color(0, 0, 0, 85)
   override def widgetPreviewCoverNote: Color = new Color(100, 100, 100, 75)
   override def widgetHandle: Color = MediumGray
+  override def widgetFocus: Color = Color.WHITE
   override def displayAreaBackground: Color = Color.BLACK
   override def displayAreaText: Color = Color.WHITE
   override def textBoxBackground: Color = AlmostBlack
@@ -736,16 +777,19 @@ object DarkTheme extends ColorTheme {
   override def scrollBarForeground: Color = DarkGray
   override def scrollBarForegroundHover: Color = LightGrayOutline
   override def interfaceBackground: Color = AlmostBlack
+  override def interfaceFocus: Color = Color.WHITE
   override def commandCenterBackground: Color = BlueGray
   override def commandCenterText: Color = Color.WHITE
   override def locationToggleImage: Color = Color.WHITE
   override def commandLineBackground: Color = DarkGray
   override def commandOutputBackground: Color = DarkBlueGray
   override def splitPaneDividerBackground: Color = new Color(204, 204, 204)
+  override def splitPaneDividerFocus: Color = Color.WHITE
   override def speedSliderBarBackground: Color = MediumGray
   override def speedSliderBarBackgroundFilled: Color = MediumBlue
   override def speedSliderThumb: Color = MediumBlue
   override def speedSliderThumbDisabled: Color = MediumGray
+  override def speedSliderFocus: Color = Color.WHITE
   override def buttonBackground: Color = MediumBlue
   override def buttonBackgroundHover: Color = new Color(42, 140, 255)
   override def buttonBackgroundPressed: Color = new Color(0, 58, 127)
@@ -754,9 +798,11 @@ object DarkTheme extends ColorTheme {
   override def buttonText: Color = Color.WHITE
   override def buttonTextPressed: Color = Color.WHITE
   override def buttonTextDisabled: Color = new Color(154, 154, 154)
+  override def buttonFocusDisabled: Color = MediumBlue
   override def sliderBackground: Color = DarkBlue
   override def sliderBarBackground: Color = Color.BLACK
   override def sliderBarBackgroundFilled: Color = MediumBlue
+  override def sliderBarFocus: Color = Color.WHITE
   override def sliderThumbBorder: Color = MediumBlue
   override def sliderThumbBackground: Color = Color.WHITE
   override def sliderThumbBackgroundPressed: Color = MediumBlue
@@ -800,6 +846,7 @@ object DarkTheme extends ColorTheme {
   override def toolbarButtonHover: Color = MediumBlueGray
   override def toolbarToolPressed: Color = DarkBlueGray2
   override def toolbarToolSelected: Color = MediumBlue2
+  override def toolbarToolFocus: Color = Color.WHITE
   override def toolbarImage: Color = new Color(168, 170, 194)
   override def toolbarImageSelected: Color = LightGray2
   override def toolbarImageDisabled: Color = new Color(150, 150, 150, 64)
@@ -834,6 +881,7 @@ object DarkTheme extends ColorTheme {
   override def checkboxBackgroundDisabled: Color = LightGrayOutline
   override def checkboxBorder: Color = LightGrayOutline
   override def checkboxCheck: Color = Color.WHITE
+  override def checkboxFocus: Color = Color.WHITE
   override def menuBarBorder: Color = MediumBlueGray
   override def menuBackground: Color = BlueGray
   override def menuBackgroundHover: Color = new Color(6, 112, 237, 128)
@@ -853,11 +901,13 @@ object DarkTheme extends ColorTheme {
   override def primaryButtonBackgroundHover: Color = MediumBlue3
   override def primaryButtonBackgroundPressed: Color = MediumBlue4
   override def primaryButtonBorder: Color = MediumBlue
+  override def primaryButtonFocus: Color = Color.WHITE
   override def primaryButtonText: Color = Color.WHITE
   override def secondaryButtonBackground: Color = DarkBlueGray
   override def secondaryButtonBackgroundHover: Color = DarkBlueGray3
   override def secondaryButtonBackgroundPressed: Color = DarkBlueGray4
   override def secondaryButtonBorder: Color = MediumGray
+  override def secondaryButtonFocus: Color = Color.WHITE
   override def secondaryButtonText: Color = Color.WHITE
   override def textAreaBackground: Color = DarkBlueGray
   override def textAreaText: Color = Color.WHITE

@@ -24,6 +24,8 @@ class NoteWidget extends SingleErrorWidget with Transparent with Editable {
   private val textPane = new JEditorPane("text/html", "") {
     setEditable(false)
     setOpaque(false)
+    setFocusable(false)
+
     setCaret(new SilentCaret)
 
     override def setFont(font: Font): Unit = {

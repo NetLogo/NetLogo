@@ -10,7 +10,7 @@ import javax.swing.plaf.basic.BasicSliderUI
 
 import org.nlogo.core.{ I18N, NetLogoPreferences }
 import org.nlogo.log.LogManager
-import org.nlogo.swing.{ Button, Utils }
+import org.nlogo.swing.{ FocusUtils, Button, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.Events.LoadBeginEvent
 
@@ -19,16 +19,15 @@ class SpeedSliderPanel(workspace: WorkspaceWithSpeed, ticksLabel: Component = nu
 
   implicit val prefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("tabs.run.speedslider")
 
-  val speedSlider = {
-    val slider = new SpeedSlider(workspace.speedSliderPosition().toInt)
-    slider.setFocusable(false)
-    slider.addChangeListener(this)
-    slider.addMouseListener(this)
-    slider.setOpaque(false)
-    slider
+  val speedSlider = new SpeedSlider(workspace.speedSliderPosition().toInt) {
+    setOpaque(false)
+
+    addChangeListener(SpeedSliderPanel.this)
+    addMouseListener(SpeedSliderPanel.this)
   }
 
   setOpaque(false)
+  setFocusable(false)
   setLayout(new GridBagLayout)
 
   val slower = new Button("", () => speedSlider.setValue(speedSlider.getValue - 11)) {
@@ -60,7 +59,9 @@ class SpeedSliderPanel(workspace: WorkspaceWithSpeed, ticksLabel: Component = nu
     }
   }
 
-  val modelSpeed = new JLabel(I18N.gui("modelSpeed"), SwingConstants.CENTER)
+  val modelSpeed = new JLabel(I18N.gui("modelSpeed"), SwingConstants.CENTER) {
+    setFocusable(false)
+  }
 
   private var jumpOnClick = NetLogoPreferences.getBoolean("jumpOnClick", true)
 
@@ -70,31 +71,33 @@ class SpeedSliderPanel(workspace: WorkspaceWithSpeed, ticksLabel: Component = nu
   locally {
     val c = new GridBagConstraints
 
-    c.gridx = 0
-    c.gridy = 1
-
-    add(slower, c)
-
     c.gridx = 1
     c.gridy = 0
     c.weightx = 1
 
     add(modelSpeed, c)
 
-    c.gridx = 2
+    c.gridx = 0
     c.gridy = 1
+    c.weightx = 0
 
-    add(faster, c)
+    add(slower, c)
 
     c.gridx = 1
     c.fill = GridBagConstraints.HORIZONTAL
-    c.anchor = GridBagConstraints.CENTER
 
     add(speedSlider, c)
 
+    c.gridx = 2
+    c.gridy = 1
+    c.fill = GridBagConstraints.NONE
+
+    add(faster, c)
+
     if (ticksLabel != null) {
+      ticksLabel.setFocusable(false)
+
       c.gridy = 2
-      c.fill = GridBagConstraints.NONE
 
       add(ticksLabel, c)
     }
@@ -170,11 +173,12 @@ class SpeedSliderPanel(workspace: WorkspaceWithSpeed, ticksLabel: Component = nu
   override def syncTheme(): Unit = {
     slower.syncTheme()
     faster.syncTheme()
+    speedSlider.syncTheme()
 
     modelSpeed.setForeground(InterfaceColors.toolbarText())
   }
 
-  class SpeedSlider(defaultSpeed: Int) extends JSlider(-110, 112, defaultSpeed) with MouseWheelListener {
+  class SpeedSlider(defaultSpeed: Int) extends JSlider(-110, 112, defaultSpeed) with MouseWheelListener with FocusUtils with ThemeSync {
     private val sliderUI = new SpeedSliderUI
     private var lastThumbLocation = 0
 
@@ -182,6 +186,7 @@ class SpeedSliderPanel(workspace: WorkspaceWithSpeed, ticksLabel: Component = nu
 
     setExtent(1)
     setToolTipText(I18N.gui("tooltip"))
+    setFocusDiameter(6)
     setUI(sliderUI)
 
     addMouseWheelListener(this)
@@ -213,6 +218,10 @@ class SpeedSliderPanel(workspace: WorkspaceWithSpeed, ticksLabel: Component = nu
       g2d.drawLine(getWidth / 2 - 1, getHeight / 4, getWidth / 2 - 1, getHeight * 3 / 4)
 
       super.paintComponent(g)
+    }
+
+    override def syncTheme(): Unit = {
+      setFocusColor(InterfaceColors.speedSliderFocus())
     }
 
     private class SpeedSliderUI extends BasicSliderUI(this) {

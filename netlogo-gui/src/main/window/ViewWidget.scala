@@ -17,6 +17,7 @@ class ViewWidget(workspace: GUIWorkspace) extends Widget with ViewWidgetInterfac
   val displaySwitch = new DisplaySwitch(workspace)
 
   view.init()
+  view.setFocusable(false)
 
   setLayout(null)
   add(view)
@@ -179,6 +180,8 @@ class ViewWidget(workspace: GUIWorkspace) extends Widget with ViewWidgetInterfac
   override def syncTheme(): Unit = {
     setBackgroundColor(InterfaceColors.viewBackground())
     setBorder(new LineBorder(InterfaceColors.viewBorder(), 2))
+    setFocusColor(InterfaceColors.widgetFocus())
+
     tickCounter.syncTheme()
   }
 

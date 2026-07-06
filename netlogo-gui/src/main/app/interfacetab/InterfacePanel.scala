@@ -51,7 +51,7 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
 
   ///
 
-  override protected def doPopup(point: Point): Unit = {
+  override protected def doPopup(point: Point, focusTraversal: Boolean = false): Unit = {
     if (interfaceMode == InterfaceMode.Interact)
       interceptPane.disableIntercept()
 
@@ -67,17 +67,19 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
     .map(i => i.displayName -> i.widgetThunk)
     .foreach {
         case (displayName, widgetThunk) =>
-          menu.add(new WidgetCreationMenuItemIP(displayName, widgetThunk()))
+          menu.add(new WidgetCreationMenuItemIP(displayName, widgetThunk(), focusTraversal))
     }
 
     // add all the widgets
-    val outputItem = new WidgetCreationMenuItemIP(I18N.gui.get("tabs.run.widgets.output"), CoreOutput(0, 0, 0, 0, 11))
+    val outputItem = new WidgetCreationMenuItemIP(I18N.gui.get("tabs.run.widgets.output"), CoreOutput(0, 0, 0, 0, 11),
+                                                  focusTraversal)
     if (getOutputWidget != null) {
       outputItem.setEnabled(false)
     }
     menu.add(outputItem)
 
-    menu.add(new WidgetCreationMenuItemIP(I18N.gui.get("tabs.run.widgets.note"), CoreTextBox(None, fontSize = 11)))
+    menu.add(new WidgetCreationMenuItemIP(I18N.gui.get("tabs.run.widgets.note"), CoreTextBox(None, fontSize = 11),
+                                          focusTraversal))
 
     menu.addSeparator()
 
@@ -100,11 +102,16 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
     menu.show(this, point.x, point.y)
   }
 
-  class WidgetCreationMenuItemIP(val displayName: String, val coreWidget: CoreWidget)
+  class WidgetCreationMenuItemIP(displayName: String, coreWidget: CoreWidget, focusTraversal: Boolean)
     extends MenuItem(new AbstractAction(displayName) {
       def actionPerformed(e: ActionEvent): Unit = {
         unselectWidgets()
-        createShadowWidget(coreWidget)
+
+        if (focusTraversal) {
+          createShadowWidget(coreWidget, Some(new Point(50, 50)))
+        } else {
+          createShadowWidget(coreWidget)
+        }
       }
     })
 
