@@ -61,6 +61,7 @@ class AboutWindow(parent: Frame) extends JDialog(parent, I18N.gui.get("dialog.ab
   private val label = new JEditorPane("text/html", citationText) with ThemeSync {
     setEditable(false)
     setDragEnabled(false)
+    setCaretColor(InterfaceColors.Transparent)
 
     override def syncTheme(): Unit = {
       setBackground(InterfaceColors.dialogBackground())
