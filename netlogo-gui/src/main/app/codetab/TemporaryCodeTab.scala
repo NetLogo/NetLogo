@@ -3,15 +3,15 @@
 package org.nlogo.app.codetab
 
 import java.awt.FileDialog
-import java.io.IOException
+import java.io.{ File, IOException }
 
 import org.nlogo.api.FileIO
 import org.nlogo.app.common.{ Dialogs, Events => AppEvents, TabsInterface }
+import org.nlogo.awt.UserCancelException
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ CloseableTab, FileDialog => SwingFileDialog, UserAction }
+import org.nlogo.swing.{ CloseableTab, FileDialog => SwingFileDialog, OptionPane, UserAction }
 import org.nlogo.util.PathUtils
-import org.nlogo.window.{ Events => WindowEvents, ExternalFileInterface }
-import org.nlogo.workspace.{ AbstractWorkspace, ModelTracker }
+import org.nlogo.window.{ Events => WindowEvents, ExternalFileInterface, GUIWorkspace }
 
 import scala.util.matching.Regex
 
@@ -19,7 +19,7 @@ object TemporaryCodeTab {
   private[app] def stripPath(filename: String): String = filename.split(Regex.quote("/")).last
 }
 
-class TemporaryCodeTab(workspace: AbstractWorkspace & ModelTracker,
+class TemporaryCodeTab(workspace: GUIWorkspace,
   tabs:                           TabsInterface,
   private var _filename:          TabsInterface.Filename,
   externalFileManager:            ExternalFileManager,
@@ -103,9 +103,20 @@ class TemporaryCodeTab(workspace: AbstractWorkspace & ModelTracker,
 
   def save(saveAs: Boolean) = {
     if (saveAs || filename.isLeft) {
-      filename = Right(userChooseSavePath())
+      val path: String = userChooseSavePath()
+      val name: String = new File(path).getName.stripSuffix(".nls")
 
-      compile()
+      if (workspace.isValidIdentifier(name, workspace.getExtensionManager)) {
+        filename = Right(path)
+
+        compile()
+      } else {
+        new OptionPane(workspace.getFrame, I18N.gui.get("tabs.code.invalidName"),
+                       I18N.gui.getN("tabs.code.invalidName.message", s"$name.nls"), OptionPane.Options.Ok,
+                       OptionPane.Icons.Error)
+
+        throw new UserCancelException
+      }
     }
 
     new WindowEvents.AboutToSaveExternalFileEvent().raise(this)
