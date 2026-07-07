@@ -27,6 +27,8 @@ class TemporaryCodeTab(workspace: AbstractWorkspace & ModelTracker,
   separateCodeWindow:             Boolean)
   extends CodeTab(workspace, tabs) with CloseableTab {
 
+  private var includesTable: Option[Map[String, String]] = getIncludesTable
+
   var closing = false
   var saveNeeded = false // Has the buffer changed since the file was saved?
 
@@ -76,7 +78,7 @@ class TemporaryCodeTab(workspace: AbstractWorkspace & ModelTracker,
   // if included file is not saved and not referenced in the main Code tab,
   // disable Check button and show warning banner (Isaac B 6/26/25)
   private def checkCompilable(dirty: Boolean): Unit = {
-    if (getIncludesTable.exists(_.exists(_._2 == filename.getOrElse(null)))) {
+    if (includesTable.exists(_.exists(_._2 == filename.getOrElse(null)))) {
       compileButton.setEnabled(dirty)
       errorLabel.setWarning(None)
     } else {
@@ -133,6 +135,8 @@ class TemporaryCodeTab(workspace: AbstractWorkspace & ModelTracker,
       case file: ExternalFileInterface if file.getFileName == filename.getOrElse(null) => setErrorLabel()
       // if the Code tab compiles then get rid of the error ev 7/26/07
       case tab: CodeTab if e.error == null =>
+        includesTable = getIncludesTable
+
         setErrorLabel()
         setProgram()
       case _ =>
