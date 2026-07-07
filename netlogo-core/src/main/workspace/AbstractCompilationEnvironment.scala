@@ -12,13 +12,12 @@ trait AbstractCompilationEnvironment {
 
   def resolveModulePath(currentFile: Option[String], modulePath: Seq[String]): Seq[String] = {
 
-    val separator           = System.getProperty("file.separator")
     val packageName: String = modulePath.headOption.getOrElse("").toLowerCase
 
     val pathPrefixes =
-      Seq( currentFile.map(x => s"${Paths.get(x).getParent}$separator").getOrElse("")
-         , s"${APIPM.userPackagesPath.resolve(packageName)}$separator"
-         , s"${APIPM.    packagesPath.resolve(packageName)}$separator"
+      Seq( currentFile.map(x => s"${Paths.get(x).getParent}/").getOrElse("")
+         , s"${APIPM.userPackagesPath.resolve(packageName)}/"
+         , s"${APIPM.    packagesPath.resolve(packageName)}/"
          )
 
     pathPrefixes.foldLeft(Seq()) {
@@ -26,7 +25,7 @@ trait AbstractCompilationEnvironment {
         if (p.nonEmpty) { // If we already found some paths, just return those.
           p
         } else {
-          val path = resolvePath(s"$pathPrefix${modulePath.mkString(separator)}".toLowerCase)
+          val path = resolvePath(s"$pathPrefix${modulePath.mkString("/")}".toLowerCase)
 
           // If the path points to a directory, search for module files in subdirectories.
           if (FileIO.isDirectory(path)) {

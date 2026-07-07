@@ -193,8 +193,7 @@ class Compiler(dialect: Dialect) extends PresentationCompilerInterface {
 
   // used for includes menu
   @throws(classOf[CompilerException])
-  def findIncludes(sourceFileName: String, source: String,
-    compilationEnvironment: CompilationEnvironment): Option[Map[String, String]] = {
+  def findIncludes(name: String, source: String, env: CompilationEnvironment): Option[Map[String, String]] = {
     val includes = frontEnd.findIncludes(source)
     val includesMap =
       if (includes.isEmpty) { // this allows the includes menu to be displayed for __includes []
@@ -210,10 +209,10 @@ class Compiler(dialect: Dialect) extends PresentationCompilerInterface {
             .map(_ => Map.empty[String, String])
         }
       } else
-        Some((includes zip includes.map(i => PathUtils.standardize(compilationEnvironment.resolvePath(i)))).toMap)
+        Some((includes zip includes.map(i => PathUtils.standardize(env.resolvePath(i)))).toMap)
 
-    val imports = findAllImportedFiles(source, compilationEnvironment)
-    val importsMap = Some((imports zip imports.map(compilationEnvironment.resolvePath)).toMap)
+    val imports = findAllImportedFiles(source, env)
+    val importsMap = Some((imports zip imports.map(i => PathUtils.standardize(env.resolvePath(i)))).toMap)
 
     Some(includesMap.getOrElse(Map.empty[String, String]) ++ importsMap.getOrElse(Map.empty[String, String]))
   }
