@@ -19,7 +19,7 @@ import javax.swing.AbstractAction
 
 import netscape.javascript.JSObject
 
-import org.nlogo.core.{ BreedIdentifierHandler, ColorConstants, I18N, Keywords, Program }
+import org.nlogo.core.{ BreedIdentifierHandler, ColorConstants, I18N, Keywords, NetLogoCore, Program }
 import org.nlogo.editor.MouseQuickHelpAction
 import org.nlogo.swing.{ ClipboardUtils, Menu, MenuItem, PopupMenu, ScrollableTextComponent, UserAction },
   UserAction.{ EditCategory, EditClipboardGroup, EditFoldGroup, EditFoldSubcategory, EditFormatGroup,
@@ -343,6 +343,8 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
     engine.load(getClass.getResource("/codetab/index.html").toExternalForm)
   })
 
+  setCoreProgram()
+
   def showPopup(point: Point): Unit = {
     popupMenu.syncTheme()
     popupMenu.show(this, point.x, point.y)
@@ -470,27 +472,33 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
 
   override def scrollTo(index: Int): Unit = {}
 
-  def setProgram(program: Program, procedures: Seq[String], extensionCommands: Seq[String],
-                 extensionReporters: Seq[String]): Unit = {
-    def format(names: Seq[String]): String =
-      names.map(name => s"\"${name.toLowerCase(Locale.US)}\"").mkString("[", ",", "]")
+  private def format(names: Seq[String]): String =
+    names.map(name => s"\"${name.toLowerCase(Locale.US)}\"").mkString("[", ",", "]")
 
-    val keywords: String = format(Keywords.keywords.toSeq ++ program.breeds.keys.map(name => s"$name-own") :+ "breed")
+  private def setCoreProgram(): Unit = {
+    val keywords: String = format(Keywords.keywords.toSeq :+ "breed")
     val constants: String = format(ColorConstants.ColorNames.toSeq ++
                                    Seq("grey", "false", "true", "nobody", "e", "pi"))
+
+    val commands: String = format(NetLogoCore.tokenMapper.allCommandNames.filterNot(_.startsWith("__")).toSeq)
+    val reporters: String = format(NetLogoCore.tokenMapper.allReporterNames.filterNot(_.startsWith("__")).toSeq)
+
+    runInWeb(s"window.setCoreProgram($keywords, $constants, $commands, $reporters)")
+  }
+
+  def setProgram(program: Program, procedures: Seq[String], extensionCommands: Seq[String],
+                 extensionReporters: Seq[String]): Unit = {
+    val keywords: String = format(program.breeds.keys.map(name => s"$name-own").toSeq)
     val globals: String = format(program.globals ++ procedures)
     val variables: String = format(program.turtlesOwn ++ program.patchesOwn ++ program.linksOwn)
-
-    val coreCommands: Seq[String] = program.dialect.tokenMapper.allCommandNames.filterNot(_.startsWith("__")).toSeq
-    val coreReporters: Seq[String] = program.dialect.tokenMapper.allReporterNames.filterNot(_.startsWith("__")).toSeq
 
     val breedCommands: Seq[String] = program.breeds.values.flatMap(BreedIdentifierHandler.breedCommands).toSeq
     val breedReporters: Seq[String] = program.breeds.values.flatMap(BreedIdentifierHandler.breedReporters).toSeq
 
-    val commands: String = format(coreCommands ++ extensionCommands ++ breedCommands)
-    val reporters: String = format(coreReporters ++ extensionReporters ++ breedReporters)
+    val commands: String = format(extensionCommands ++ breedCommands)
+    val reporters: String = format(extensionReporters ++ breedReporters)
 
-    runInWeb(s"window.setProgram($keywords, $constants, $globals, $variables, $commands, $reporters)")
+    runInWeb(s"window.setCompiledProgram($keywords, $globals, $variables, $commands, $reporters)")
   }
 
   private def runInWeb(function: String): Unit = {
