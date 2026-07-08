@@ -127,7 +127,7 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
   }
 
   override val permanentMenuActions: Seq[UserAction.MenuAction] = {
-    text.permanentMenuActions ++ editorConfiguration.getAdditionalActions :+
+    editorConfiguration.getAdditionalActions :+
       new CodeToHtml.Action(workspace, this, () => getText)
   }
 
