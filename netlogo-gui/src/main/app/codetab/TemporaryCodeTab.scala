@@ -4,12 +4,13 @@ package org.nlogo.app.codetab
 
 import java.awt.FileDialog
 import java.io.{ File, IOException }
+import java.nio.file.{ Files, Paths }
 
 import org.nlogo.api.FileIO
 import org.nlogo.app.common.{ Dialogs, Events => AppEvents, TabsInterface }
 import org.nlogo.awt.UserCancelException
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ CloseableTab, FileDialog => SwingFileDialog, OptionPane, UserAction }
+import org.nlogo.swing.{ CloseableTab, FileDialog => SwingFileDialog, OptionPane, RenameableTab, UserAction }
 import org.nlogo.util.PathUtils
 import org.nlogo.window.{ Events => WindowEvents, ExternalFileInterface, GUIWorkspace }
 
@@ -25,7 +26,7 @@ class TemporaryCodeTab(workspace: GUIWorkspace,
   externalFileManager:            ExternalFileManager,
   conversionAction:               TemporaryCodeTab => UserAction.MenuAction,
   separateCodeWindow:             Boolean)
-  extends CodeTab(workspace, tabs) with CloseableTab {
+  extends CodeTab(workspace, tabs) with CloseableTab with RenameableTab {
 
   private var includesTable: Option[Map[String, String]] = getIncludesTable
 
@@ -125,6 +126,18 @@ class TemporaryCodeTab(workspace: GUIWorkspace,
     saveNeeded = false
 
     new WindowEvents.ExternalFileSavedEvent(filename.merge).raise(this)
+  }
+
+  override def rename(): Unit = {
+    val original: Either[String, String] = filename
+
+    try {
+      save(true)
+
+      original.foreach(path => Files.delete(Paths.get(path)))
+    } catch {
+      case _: UserCancelException =>
+    }
   }
 
   override def close(): Unit = {
