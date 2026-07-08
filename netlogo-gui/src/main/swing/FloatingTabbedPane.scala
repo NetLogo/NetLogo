@@ -7,6 +7,8 @@ import java.awt.event.{ MouseAdapter, MouseEvent, MouseMotionAdapter }
 import javax.swing.{ JComponent, JLabel, JPanel, JTabbedPane, SwingConstants }
 import javax.swing.plaf.basic.BasicTabbedPaneUI
 
+import org.nlogo.core.I18N
+import org.nlogo.swing.{ MenuItem, PopupMenu }
 import org.nlogo.theme.InterfaceColors
 
 import scala.util.Try
@@ -123,6 +125,10 @@ trait CloseableTab extends Component {
   def close(): Unit
 }
 
+trait RenameableTab {
+  def rename(): Unit
+}
+
 class TabLabel(startPane: FloatingTabbedPane, text: String, tab: Component) extends JPanel(new GridBagLayout) {
   private var tabbedPane: FloatingTabbedPane = startPane
 
@@ -147,6 +153,7 @@ class TabLabel(startPane: FloatingTabbedPane, text: String, tab: Component) exte
     new JLabel(s"<html><b>$rawText</b></html>").getPreferredSize.width
 
   private var closeButton: Option[CloseButton] = None
+  private var popupMenu: Option[PopupMenu] = None
 
   var error = false
 
@@ -180,6 +187,27 @@ class TabLabel(startPane: FloatingTabbedPane, text: String, tab: Component) exte
 
       case _ =>
     }
+
+    tab match {
+      case temp: RenameableTab =>
+        popupMenu = Some(new PopupMenu {
+          add(new MenuItem(I18N.gui.get("tabs.external.rename"), () => temp.rename()))
+        })
+
+        addMouseListener(new MouseAdapter {
+          override def mousePressed(e: MouseEvent): Unit = {
+            if (e.isPopupTrigger)
+              showPopup()
+          }
+
+          override def mouseReleased(e: MouseEvent): Unit = {
+            if (e.isPopupTrigger)
+              showPopup()
+          }
+        })
+
+      case _ =>
+    }
   }
 
   override def getPreferredSize: Dimension =
@@ -205,6 +233,13 @@ class TabLabel(startPane: FloatingTabbedPane, text: String, tab: Component) exte
     }
 
     super.paintComponent(g)
+  }
+
+  private def showPopup(): Unit = {
+    popupMenu.foreach { popup =>
+      popup.syncTheme()
+      popup.show(this, 0, getHeight)
+    }
   }
 }
 
