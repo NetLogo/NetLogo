@@ -138,6 +138,25 @@ class StructureParserTests extends AnyFunSuite {
     assertResult(Map("FOO" -> "OOF", "BAR" -> "BAR", "BAZ" -> "ZAB"))(results.imports.head.importedIdentifiers)
   }
 
+  test("import with duplicate identifiers") {
+    val src = """
+      |export [baz qaz]
+      |
+      |to baz
+      |  show "baz"
+      |end
+      |
+      |to qaz
+      |  show "qaz"
+      |end
+    """.stripMargin
+
+    expectParseAllError("import [baz baz] from foo", "Identifier list contains duplicates", src)
+    expectParseAllError("import [baz (qaz as baz)] from foo", "Identifier list contains duplicates", src)
+    expectParseAllError("import [(baz as zzz) (qaz as zzz)] from foo", "Identifier list contains duplicates", src)
+    expectParseAllError("import [(baz as zzz) (baz as yyy)] from foo", "Identifier list contains duplicates", src)
+  }
+
   test("includes") {
     val results = compile("__includes [\"foo.nls\"]")
     assertResult(0)(results.procedures.size)

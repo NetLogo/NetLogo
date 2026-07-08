@@ -26,7 +26,7 @@ package org.nlogo.parse
 // and discard input).
 
 import
-  org.nlogo.core.{ Token, TokenType, StructureDeclarations },
+  org.nlogo.core.{ I18N, Token, TokenType, StructureDeclarations },
   StructureDeclarations._
 
 object StructureCombinators {
@@ -122,10 +122,25 @@ extends scala.util.parsing.combinator.Parsers {
       case from ~ _ ~ to => (from.name, to.name)
     }
 
-  def importedIdentifierList: Parser[Map[String, String]] =
-    openBracket ~> commit(rep(renamableIdentifier) <~ closeBracket) ^^ {
-      case x => x.toMap
+  def importedIdentifierList: Parser[Map[String, String]] = {
+    def hasDuplicates(xs: List[String], found: Set[String] = Set()): Boolean = {
+      !xs.isEmpty && (found(xs.head) || hasDuplicates(xs.tail, found + xs.head))
     }
+
+    val parser = openBracket ~> commit(rep(renamableIdentifier) <~ closeBracket) ^^ {
+      case xs => {
+        val (src, dst) = xs.unzip
+
+        if (hasDuplicates(src) || hasDuplicates(dst)) {
+          Left(I18N.errors.get("compiler.StructureCombinators.duplicateIdentifiers"))
+        } else {
+          Right(xs.toMap)
+        }
+      }
+    }
+
+    parser.flatMap(_.fold(err, success))
+  }
 
   def extensions: Parser[Extensions] =
     keyword("EXTENSIONS") ~! identifierList ^^ {
