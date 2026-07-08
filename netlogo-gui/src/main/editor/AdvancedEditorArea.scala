@@ -229,20 +229,15 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
   private val quickHelpAction = new MouseQuickHelpAction(configuration.colorizer)
   private val jumpToDeclarationAction = new JumpToDeclarationAction(this)
 
-  val permanentMenuActions: Seq[MenuAction] = {
-    Seq(
-      copyAction,
-      cutAction,
-      pasteAction,
-      deleteAction,
-      selectAllAction
-    )
-  }
-
   val activeMenuActions: Seq[MenuAction] = {
     Seq(
       undoAction,
       redoAction,
+      copyAction,
+      cutAction,
+      pasteAction,
+      deleteAction,
+      selectAllAction,
       toggleCommentsAction,
       shiftLeftAction,
       shiftRightAction,
