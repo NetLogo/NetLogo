@@ -488,15 +488,21 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
 
   def setProgram(program: Program, procedures: Seq[String], extensionCommands: Seq[String],
                  extensionReporters: Seq[String]): Unit = {
-    val keywords: String = format(program.breeds.keys.map(name => s"$name-own").toSeq)
+    val turtleKeywords: Seq[String] = program.breeds.keys.map(name => s"$name-own").toSeq
+    val linkKeywords: Seq[String] = program.linkBreeds.keys.map(name => s"$name-own").toSeq
+
+    val keywords: String = format(turtleKeywords ++ linkKeywords)
     val globals: String = format(program.globals ++ procedures)
     val variables: String = format(program.turtlesOwn ++ program.patchesOwn ++ program.linksOwn)
 
-    val breedCommands: Seq[String] = program.breeds.values.flatMap(BreedIdentifierHandler.breedCommands).toSeq
-    val breedReporters: Seq[String] = program.breeds.values.flatMap(BreedIdentifierHandler.breedReporters).toSeq
+    val turtleCommands: Seq[String] = program.breeds.values.flatMap(BreedIdentifierHandler.breedCommands).toSeq
+    val turtleReporters: Seq[String] = program.breeds.values.flatMap(BreedIdentifierHandler.breedReporters).toSeq
 
-    val commands: String = format(extensionCommands ++ breedCommands)
-    val reporters: String = format(extensionReporters ++ breedReporters)
+    val linkCommands: Seq[String] = program.linkBreeds.values.flatMap(BreedIdentifierHandler.breedCommands).toSeq
+    val linkReporters: Seq[String] = program.linkBreeds.values.flatMap(BreedIdentifierHandler.breedReporters).toSeq
+
+    val commands: String = format(extensionCommands ++ turtleCommands ++ linkCommands)
+    val reporters: String = format(extensionReporters ++ turtleReporters ++ linkReporters)
 
     runInWeb(s"window.setCompiledProgram($keywords, $globals, $variables, $commands, $reporters)")
   }
