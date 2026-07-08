@@ -230,14 +230,20 @@ lazy val netlogo = project.in(file("netlogo-gui")).
     Compile / unmanagedResourceDirectories ++= (sharedResources / Compile / unmanagedResourceDirectories).value,
     Compile / resourceGenerators           += Def.task {
       import scala.sys.process.Process
+
+      def check(name: String, code: Int): Unit = {
+        if (code != 0)
+          throw new Exception(s"$name build failed.")
+      }
+
       // the `bash` command defaults to WSL on Windows, so we use `sh` instead so it
       // uses Git Bash (Isaac B 3/6/26)
       if (System.getProperty("os.name").toLowerCase.startsWith("win")) {
-        Process("sh" :: "stage.sh" :: Nil, baseDirectory.value / "colorpicker").!
-        Process("sh" :: "stage.sh" :: Nil, baseDirectory.value / "codetab").!
+        check("colorpicker", Process("sh" :: "stage.sh" :: Nil, baseDirectory.value / "colorpicker").!)
+        check("codetab", Process("sh" :: "stage.sh" :: Nil, baseDirectory.value / "codetab").!)
       } else {
-        Process("bash" :: "stage.sh" :: Nil, baseDirectory.value / "colorpicker").!
-        Process("bash" :: "stage.sh" :: Nil, baseDirectory.value / "codetab").!
+        check("colorpicker", Process("bash" :: "stage.sh" :: Nil, baseDirectory.value / "colorpicker").!)
+        check("codetab", Process("bash" :: "stage.sh" :: Nil, baseDirectory.value / "codetab").!)
       }
 
       val inDir = autogenRoot.value / "images"
