@@ -5,15 +5,15 @@ package org.nlogo.lab.gui
 import java.awt.{ Component, Dimension, EventQueue, FileDialog => JFileDialog, FlowLayout, GridBagConstraints,
                   GridBagLayout, Insets }
 import java.awt.event.ActionEvent
-import java.io.PrintWriter
-import java.nio.file.{ Files, Paths }
+import java.io.{ File, PrintWriter }
+import java.nio.file.{ Files, Path, Paths }
 import javax.swing.{ AbstractAction, DefaultListModel, JDialog, JLabel, JList, JMenuBar, JPanel, ListCellRenderer }
 import javax.swing.event.{ ListSelectionEvent, ListSelectionListener }
 
 import org.nlogo.analytics.Analytics
-import org.nlogo.api.{ Exceptions, LabProtocol, RefEnumeratedValueSet, Version }
+import org.nlogo.api.{ Exceptions, LabProtocol, ModelReader, RefEnumeratedValueSet }
 import org.nlogo.awt.UserCancelException
-import org.nlogo.core.I18N
+import org.nlogo.core.{ I18N, Model }
 import org.nlogo.editor.Colorizer
 import org.nlogo.swing.{ Button, FileDialog, OptionPane, Positioning, ScrollPane, Transparent, Utils, WindowAutomator }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
@@ -33,7 +33,7 @@ class ManagerDialog(manager:       LabManager,
   private val jlist = new JList[LabProtocol]
   private val listModel = new DefaultListModel[LabProtocol]
 
-  private var running = Map[LabProtocol, Supervisor]()
+  private var running = Map[LabProtocol, RunningExperiment]()
 
   /// actions
   private def makeAction(name: String, fn: () => Unit) = {
@@ -150,11 +150,9 @@ class ManagerDialog(manager:       LabManager,
     new Dimension(super.getPreferredSize.width.max(400), super.getPreferredSize.height.max(300))
 
   private def saveProtocol(protocol: LabProtocol, runsCompleted: Int): Unit = {
-    running.get(protocol).foreach { supervisor =>
-      supervisor.abort()
+    running.get(protocol).foreach(_.abort())
 
-      running -= protocol
-    }
+    running -= protocol
 
     protocol.runsCompleted = runsCompleted
 
@@ -195,18 +193,38 @@ class ManagerDialog(manager:       LabManager,
 
       manager.prepareForRun()
 
-      val temp = Files.createTempFile("temp-model", s".nlogox${if (Version.is3D) "3d" else ""}")
+      val model: Model = manager.modelSaver.currentModel
 
-      temp.toFile.deleteOnExit()
+      val defaultName: String = s"Untitled.${ModelReader.modelSuffix}"
+      val modelName: String = Option(manager.workspace.getModelFileName).getOrElse(defaultName)
+      val modelDir: Path = Option(manager.workspace.getModelDir).fold(Paths.get(""))(Paths.get(_))
+      val modelPath: Option[String] = Option(manager.workspace.getModelPath)
 
-      manager.modelLoader.save(manager.modelSaver.currentModel, temp.toUri)
+      val tempDir = Files.createTempDirectory("temp-model")
 
-      val supervisor = new Supervisor(this, manager.workspace, temp.toString, manager.workspace.getModelPath,
+      tempDir.toFile.deleteOnExit()
+
+      val tempModelPath: Path = tempDir.resolve(modelName)
+
+      manager.modelLoader.save(manager.modelSaver.currentModel, tempModelPath.toUri)
+
+      modelPath.foreach { path =>
+        manager.workspace.compiler.findIncludes(path, model.code, manager.workspace.getCompilationEnvironment)
+          .fold(Seq())(_.keys).foreach { include =>
+            val includePath: Path = Paths.get(include)
+            val tempIncludePath: Path = tempDir.resolve(modelDir.relativize(includePath))
+
+            Files.createDirectories(tempIncludePath.getParent)
+            Files.copy(includePath, tempIncludePath)
+          }
+      }
+
+      val supervisor = new Supervisor(this, manager.workspace, tempModelPath.toString, modelPath.getOrElse(""),
                                       selectedProtocol, dialogFactory, saveProtocol, false)
 
       supervisor.start()
 
-      running += ((selectedProtocol, supervisor))
+      running += ((selectedProtocol, RunningExperiment(tempDir.toFile, supervisor)))
 
       update()
     } catch {
@@ -384,6 +402,13 @@ class ManagerDialog(manager:       LabManager,
   private def selectedProtocols: Seq[LabProtocol] =
     jlist.getSelectedIndices.map(manager.protocols).toSeq
 
+  private def deleteRecursive(path: File): Unit = {
+    if (path.isDirectory)
+      path.listFiles.foreach(deleteRecursive)
+
+    path.delete()
+  }
+
   override def syncTheme(): Unit = {
     getContentPane.setBackground(InterfaceColors.dialogBackground())
     listLabel.setForeground(InterfaceColors.dialogText())
@@ -463,6 +488,14 @@ class ManagerDialog(manager:       LabManager,
       }
 
       this
+    }
+  }
+
+  private class RunningExperiment(path: File, supervisor: Supervisor) {
+    def abort(): Unit = {
+      supervisor.abort()
+
+      deleteRecursive(path)
     }
   }
 }
