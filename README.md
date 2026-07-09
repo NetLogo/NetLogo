@@ -56,22 +56,21 @@ A good place to start is in our [wiki](https://github.com/NetLogo/NetLogo/wiki).
 For extension developers, see the page on [the extensions API](https://github.com/NetLogo/NetLogo/wiki/Extensions-API). There is also a wiki page on [the controlling API](https://github.com/NetLogo/NetLogo/wiki/Controlling-API).
 
 Often extension and embedding developers have fairly specific questions.
-We encourage those developers to post to the [netlogo-devel](https://groups.google.com/forum/#!forum/netlogo-devel) Google Group or join us [on Gitter](https://gitter.im/NetLogo/NetLogo).
+We encourage those developers to post to the [netlogo-devel](https://groups.google.com/forum/#!forum/netlogo-devel) Google Group.
 
 ### Building from source
 
 Our goal is that users are able to build NetLogo from source on their platform of choice (Mac, OS X, or Linux).
 More information can be found on our [Building wiki page](https://github.com/NetLogo/NetLogo/wiki/Building).
 If the information on this page doesn't work for you or you have trouble or are confused,
-please post to [netlogo-devel](https://groups.google.com/forum/#!forum/netlogo-devel) Google Group or join us [on Gitter](https://gitter.im/NetLogo/NetLogo)
-and request help.
+please post to [netlogo-devel](https://groups.google.com/forum/#!forum/netlogo-devel) Google Group and request help.
 We're trying to make building NetLogo easy, so we would love to hear any suggestions you have or problems you encounter!
 
 ### For Other Help
 
 Please ask us!
 
-You can [email our feedback list](mailto:feedback@ccl.northwestern.edu) or ask your question [on Gitter](https://gitter.im/NetLogo/NetLogo).
+You can [email our feedback list](mailto:feedback@ccl.northwestern.edu).
 
 ## Issues
 
