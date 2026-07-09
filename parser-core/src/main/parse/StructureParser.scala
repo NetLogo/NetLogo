@@ -115,7 +115,7 @@ object StructureParser {
                   newImports ++= newResults.imports.toSet -- results.imports.toSet
 
                   val exportedNames =
-                    newResults.`export`.map(_.exportedNames.toSet).getOrElse(newResults.procedures.keys.map(_._1).toSet)
+                    newResults.`export`.map(_.exportedNames.toSet).getOrElse(Set())
 
                   val importedNames =
                     if (currentImport.importedIdentifiers.nonEmpty) {
