@@ -47,6 +47,13 @@ abstract class WorldViewSettings(protected val workspace: GUIWorkspace, protecte
 
   def model: CoreWidget
 
+  def modelTitle: String =
+    workspace.modelTitle.getOrElse("")
+
+  def setModelTitle(title: String): Unit = {
+    workspace.setModelTitle(Option(title).map(_.trim).filter(_.nonEmpty))
+  }
+
   val originTypes: Seq[OriginType] = Seq(OriginType.Center, OriginType.Corner, OriginType.Edge, OriginType.Custom)
 
   def cornerConfigs: Seq[OriginConfiguration]
