@@ -358,11 +358,15 @@ class StructureParserTests extends AnyFunSuite {
       |
       """.stripMargin
     val nlsSrc1 = """
+      |export [hello]
+      |
       |to hello
       |  show 12345
       |end
       """.stripMargin
     val nlsSrc2 = """
+      |export [bye]
+      |
       |to bye
       |  show 54321
       |end
@@ -382,6 +386,8 @@ class StructureParserTests extends AnyFunSuite {
   test("import syntax default alias") {
     val src = """import foo"""
     val nlsSrc = """
+      |export [test]
+      |
       |to test
       |  show 12345
       |end
@@ -395,6 +401,8 @@ class StructureParserTests extends AnyFunSuite {
   test("import syntax custom alias") {
     val src = """import foo as bar"""
     val nlsSrc = """
+      |export [test]
+      |
       |to test
       |  show 12345
       |end
@@ -449,12 +457,32 @@ class StructureParserTests extends AnyFunSuite {
       |end
       """.stripMargin
     val nlsSrc = """
+      |export [test]
+      |
       |to test
       |  show 5678
       |end
       """.stripMargin
 
     expectParseAllError(src, "There is already an imported procedure called A:TEST", nlsSrc)
+  }
+
+  test("nothing exported without an export statement") {
+    val src = """
+      |import foo
+      |
+      |to baz
+      |  foo:hello
+      |end
+    """.stripMargin
+    val nlsSrc = """
+      |to hello
+      |  show 1234
+      |end
+    """.stripMargin
+    val results = compileAll(src, nlsSrc)
+
+    assert(results.procedures.filter(_._1._2 == None).map(_._1._1) == List("BAZ"))
   }
 
   test("invalid included file") {
