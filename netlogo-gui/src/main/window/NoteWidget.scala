@@ -82,13 +82,21 @@ class NoteWidget extends SingleErrorWidget with Transparent with Editable {
 
   override def isNote = true
 
-  private val css = """<head>
-                      |  <style type="text/css">
-                      |    ul, ol {
-                      |      margin-left: 8px;
-                      |    }
-                      |  </style>
-                      |</head>""".stripMargin
+  private def css(width: Int): String = {
+    s"""|<head>
+        |  <style type="text/css">
+        |    body {
+        |      width: ${width / 1.3}px;
+        |    }
+        |    h1, h2, h3, h4, h5, h6, p {
+        |      margin-top: 0;
+        |    }
+        |    ul, ol {
+        |      margin-left: 8px;
+        |    }
+        |  </style>
+        |</head>""".stripMargin
+  }
 
   private def wrapText(): Unit = {
     if (_markdown) {
@@ -96,7 +104,7 @@ class NoteWidget extends SingleErrorWidget with Transparent with Editable {
 
       // for some reason setting the content width in CSS to the width of the JLabel always results in the rendered
       // content being 1.3 times larger. dividing the JLabel width by 1.3 solves the problem. (Isaac B 6/15/25)
-      textPane.setText(s"""<html>$css<body style="width: ${textPane.getWidth / 1.3}px">$text</body></html>""")
+      textPane.setText(s"""<html>${css(textPane.getWidth)}<body>$text</body></html>""")
     } else {
       textPane.setText(_text.replace("\n", "<br>"))
     }
