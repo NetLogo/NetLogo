@@ -327,6 +327,12 @@ class App(args: App.CommandLineArgs) extends LinkChild with Exceptions.Handler w
 
     setTesting(args.testing)
 
+    override def setModelTitle(title: Option[String]): Unit = {
+      super.setModelTitle(title)
+
+      setWindowTitles()
+    }
+
     def aggregateManager: AggregateManagerInterface =
       new GUIAggregateManager(frame, menuBarFactory, this, colorizer, editDialogFactory, extensionManager)
 
@@ -1052,11 +1058,13 @@ class App(args: App.CommandLineArgs) extends LinkChild with Exceptions.Handler w
   }
 
   private def modelTitle(allowDirtyMarker: Boolean = true): String = {
-    if (workspace.getModelFileName == null) "NetLogo"
-    else {
-      val title = frameTitle(workspace.modelNameForDisplay, allowDirtyMarker && dirtyMonitor.modelDirty)
-      // OS X UI guidelines prohibit paths in title bars, but oh well...
-      if (workspace.getModelType == ModelType.Normal) s"$title {${workspace.getModelDir}}" else title
+    title.getOrElse {
+      if (workspace.getModelFileName == null) "NetLogo"
+      else {
+        val title = frameTitle(workspace.modelNameForDisplay, allowDirtyMarker && dirtyMonitor.modelDirty)
+        // OS X UI guidelines prohibit paths in title bars, but oh well...
+        if (workspace.getModelType == ModelType.Normal) s"$title {${workspace.getModelDir}}" else title
+      }
     }
   }
 
@@ -1369,6 +1377,8 @@ class App(args: App.CommandLineArgs) extends LinkChild with Exceptions.Handler w
     f
   }
 
+  def title:            Option[String] =
+    workspace.modelTitle
   def procedureSource:  String =
     tabManager.mainCodeTab.innerSource
   def widgets:          Seq[CoreWidget] = {

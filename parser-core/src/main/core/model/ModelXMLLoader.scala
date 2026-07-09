@@ -24,7 +24,7 @@ object ModelXMLLoader {
     val widgets =
       List(Model.defaultView.copy(dimensions = dims))
 
-    Model(Model.defaultCode, widgets, defaultInfo, version, Model.defaultTurtleShapes, Model.defaultLinkShapes)
+    Model(None, Model.defaultCode, widgets, defaultInfo, version, Model.defaultTurtleShapes, Model.defaultLinkShapes)
   }
 
   def loadBasics(root: XMLElement, defaultInfo: String, parser: LiteralParser): (Try[Model], Seq[XMLElement]) = {
@@ -37,11 +37,13 @@ object ModelXMLLoader {
 
         val stripNewlines = VersionUtils.numericValue(version) >= VersionUtils.numericValue("NetLogo 7.1.0-internal0")
 
+        val title: Option[String] = root.get("title")
+
         val snapToGrid = root("snapToGrid", "false").toBoolean
 
         val settings = new Section("org.nlogo.modelsection.modelsettings", ModelSettings(snapToGrid))
 
-        val model = Model(defaultCode, List(DummyView), defaultInfo, version, defaultTurtleShapes,
+        val model = Model(title, defaultCode, List(DummyView), defaultInfo, version, defaultTurtleShapes,
                           defaultLinkShapes, List(settings), Seq())
 
         root.children.foldLeft((Try(model), Seq[XMLElement]())) {
@@ -96,6 +98,8 @@ object ModelXMLLoader {
     writer.startDocument()
     writer.startElement("model")
     writer.attribute("version", model.version)
+
+    model.title.foreach(writer.attribute("title", _))
 
     model.optionalSections.find(_.key == "org.nlogo.modelsection.modelsettings").foreach(section =>
       writer.attribute("snapToGrid", section.get.get.asInstanceOf[ModelSettings].snapToGrid.toString)

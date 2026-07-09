@@ -3,7 +3,7 @@
 package org.nlogo.window
 
 import java.awt.{ BorderLayout, GridBagConstraints, GridBagLayout, Insets }
-import javax.swing.{ JLabel, JPanel }
+import javax.swing.{ BoxLayout, JLabel, JPanel }
 import javax.swing.border.{ EmptyBorder, TitledBorder }
 
 import org.nlogo.core.I18N
@@ -12,6 +12,14 @@ import org.nlogo.theme.InterfaceColors
 
 class WorldEditPanel2D(target: WorldViewSettings2D, enableDualView: Boolean) extends WorldEditPanel(target) {
   private implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("edit.viewSettings")
+
+  private val modelTitle: StringEditor =
+    new StringEditor(
+      new PropertyAccessor(
+        target,
+        I18N.gui("modelTitle"),
+        () => target.modelTitle,
+        _.foreach(target.setModelTitle)))
 
   private val locationLabel = new JLabel(I18N.gui("origin.location"))
 
@@ -145,12 +153,13 @@ class WorldEditPanel2D(target: WorldViewSettings2D, enableDualView: Boolean) ext
         () => target.tickCounterLabel,
         target.tickCounterLabel))
 
+  private val modelBorder = new TitledBorder(I18N.gui("model"))
   private val worldBorder = new TitledBorder(I18N.gui("world"))
   private val viewBorder = new TitledBorder(I18N.gui("view"))
-  private val modelBorder = new TitledBorder(I18N.gui("tickCounter"))
+  private val tickBorder = new TitledBorder(I18N.gui("tickCounter"))
 
   locally {
-    setLayout(new BorderLayout)
+    setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
     setBorder(new EmptyBorder(6, 6, 6, 6))
 
     val configPanel = new JPanel(new GridBagLayout) with Transparent {
@@ -232,6 +241,18 @@ class WorldEditPanel2D(target: WorldViewSettings2D, enableDualView: Boolean) ext
       add(wrappingY, c)
     }
 
+    val modelPanel = new JPanel(new GridBagLayout) with Transparent {
+      setBorder(modelBorder)
+
+      val c = new GridBagConstraints
+
+      c.anchor = GridBagConstraints.WEST
+      c.weightx = 1
+      c.insets = new Insets(6, 6, 6, 6)
+
+      add(modelTitle, c)
+    }
+
     val worldPanel = new JPanel(new BorderLayout) with Transparent {
       setBorder(worldBorder)
 
@@ -284,8 +305,8 @@ class WorldEditPanel2D(target: WorldViewSettings2D, enableDualView: Boolean) ext
       }
     }
 
-    val modelPanel = new JPanel(new GridBagLayout) with Transparent {
-      setBorder(modelBorder)
+    val tickPanel = new JPanel(new GridBagLayout) with Transparent {
+      setBorder(tickBorder)
 
       val c = new GridBagConstraints
 
@@ -301,9 +322,10 @@ class WorldEditPanel2D(target: WorldViewSettings2D, enableDualView: Boolean) ext
       add(tickCounterLabel, c)
     }
 
-    add(worldPanel, BorderLayout.NORTH)
-    add(viewPanel, BorderLayout.CENTER)
-    add(modelPanel, BorderLayout.SOUTH)
+    add(modelPanel)
+    add(worldPanel)
+    add(viewPanel)
+    add(tickPanel)
 
     target.setTypeAndConfig()
 
@@ -314,16 +336,17 @@ class WorldEditPanel2D(target: WorldViewSettings2D, enableDualView: Boolean) ext
   }
 
   override def propertyEditors: Seq[PropertyEditor[?]] =
-    Seq(minPxcor, maxPxcor, minPycor, maxPycor, wrappingX, wrappingY, patchSize, fontSize, frameRate, dualView,
-        showTickCounter, tickCounterLabel)
+    Seq(modelTitle, minPxcor, maxPxcor, minPycor, maxPycor, wrappingX, wrappingY, patchSize, fontSize, frameRate,
+        dualView, showTickCounter, tickCounterLabel)
 
   override def editors: Seq[IntegerEditor] =
     Seq(minPxcor, maxPxcor, minPycor, maxPycor)
 
   override def syncExtraComponents(): Unit = {
+    modelBorder.setTitleColor(InterfaceColors.dialogText())
     worldBorder.setTitleColor(InterfaceColors.dialogText())
     viewBorder.setTitleColor(InterfaceColors.dialogText())
-    modelBorder.setTitleColor(InterfaceColors.dialogText())
+    tickBorder.setTitleColor(InterfaceColors.dialogText())
 
     locationLabel.setForeground(InterfaceColors.dialogText())
 

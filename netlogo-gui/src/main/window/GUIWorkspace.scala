@@ -138,6 +138,8 @@ abstract class GUIWorkspace(world: World, kioskLevel: GUIWorkspace.KioskLevel, f
 
   private var testing = false
 
+  private var title: Option[String] = None
+
   def setTesting(testing: Boolean): Unit = {
     this.testing = testing
   }
@@ -175,6 +177,13 @@ abstract class GUIWorkspace(world: World, kioskLevel: GUIWorkspace.KioskLevel, f
 
   def snapOn: Boolean =
     _snapOn
+
+  def modelTitle: Option[String] =
+    title
+
+  def setModelTitle(title: Option[String]): Unit = {
+    this.title = title
+  }
 
   def init(glView: GLViewManagerInterface): Unit =
     this.glView = glView
@@ -861,6 +870,8 @@ abstract class GUIWorkspace(world: World, kioskLevel: GUIWorkspace.KioskLevel, f
 
   def handle(e: LoadModelEvent): Unit = {
     loadFromModel(e.model)
+
+    setModelTitle(e.model.title)
 
     world.turtleShapes.replaceShapes(e.model.turtleShapes.map(ShapeConverter.baseShapeToShape))
     world.linkShapes.replaceShapes(e.model.linkShapes.map(ShapeConverter.baseLinkShapeToLinkShape))

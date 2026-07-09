@@ -175,7 +175,7 @@ class TestPlotModels extends FixtureSuite {
   test("stop in plot update code doesnt kill outer procedure") { implicit fixture =>
     import fixture._
     openModel(
-      Model(modelCode2,
+      Model(code = modelCode2,
         widgets = List(
           View(),
           Plot(display = Some(""), updateCode = "create-dogs 1 stop",
@@ -198,7 +198,7 @@ class TestPlotModels extends FixtureSuite {
   test("stop in plot update code doesnt kill outer procedure (2)") { implicit fixture =>
     import fixture._
     openModel(
-      Model(modelCode3, widgets = List(View(), Plot(display = Some(""), updateCode = "create-dogs 1 stop",
+      Model(code = modelCode3, widgets = List(View(), Plot(display = Some(""), updateCode = "create-dogs 1 stop",
                                   pens = List(Pen(display = "", updateCode = "create-dogs 42"))))))
     testCommand("ca")
     testReporter("count dogs", "0")
@@ -216,7 +216,7 @@ class TestPlotModels extends FixtureSuite {
   test("inner stop doesnt prevent pens from running") { implicit fixture =>
     import fixture._
     openModel(
-      Model(modelCode, widgets = List(
+      Model(code = modelCode, widgets = List(
         View(),
         Plot(display = Some(""), updateCode = "ask turtles [stop]",
              pens = List(Pen(display = "", updateCode = "create-dogs 8"))))))
@@ -228,7 +228,7 @@ class TestPlotModels extends FixtureSuite {
   test("stop in pen doesnt prevent other pens from running") { implicit fixture =>
     import fixture._
     openModel(
-      Model(modelCode, widgets = List(
+      Model(code = modelCode, widgets = List(
         View(),
         Plot(display = Some(""), pens = List(Pen(display = "", updateCode = "create-dogs 8 stop"),
                                             Pen(display = "", updateCode = "create-dogs 8 stop"))))))
@@ -249,7 +249,7 @@ class TestPlotModels extends FixtureSuite {
   test("plot code uses aux rng") { implicit fixture =>
     import fixture._
     openModel(
-      Model(modelCode4, widgets = List(
+      Model(code = modelCode4, widgets = List(
         View(),
         Plot(display = Some(""), updateCode = "set x n-values 10 [random 10]",
              pens = List(Pen(display = "", updateCode = "set x n-values 10 [random 10]"))))))
@@ -263,13 +263,14 @@ class TestPlotModels extends FixtureSuite {
 
   test("legend is correctly off") { implicit fixture =>
     import fixture._
-    openModel(Model("", widgets = List( View(), Plot(display = Some(""), updateCode = "", pens = List()))))
+    openModel(Model(code = "", widgets = List( View(), Plot(display = Some(""), updateCode = "", pens = List()))))
     assertResult(false)(workspace.plotManager.currentPlot.get.legendIsOpen)
   }
 
   test("legend is correctly on") { implicit fixture =>
     import fixture._
-    openModel(Model("", widgets = List( View(), Plot(display = Some(""), updateCode = "", pens = List(), legendOn = true))))
+    openModel(Model(code = "", widgets = List( View(), Plot(display = Some(""), updateCode = "", pens = List(),
+                    legendOn = true))))
     assertResult(true)(workspace.plotManager.currentPlot.get.legendIsOpen)
   }
 

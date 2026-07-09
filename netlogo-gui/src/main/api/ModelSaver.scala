@@ -12,6 +12,7 @@ class ModelSaver(model: ModelSections, loader: AbstractModelLoader) {
 
   def currentModel: Model = {
     val m = _currentModel.copy(
+      title         = model.title,
       code          = model.procedureSource,
       widgets       = model.widgets,
       info          = model.info,

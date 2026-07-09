@@ -10,6 +10,7 @@ import
   ModelSections._
 
 private[nlogo] trait ModelSections {
+  def title:              Option[String]
   def procedureSource:    String
   def widgets:            Seq[Widget]
   def info:               String

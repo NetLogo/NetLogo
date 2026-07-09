@@ -7,7 +7,8 @@ import Shape.{ VectorShape, LinkShape }
 import ShapeParser.{ parseVectorShapes, parseLinkShapes }
 import scala.reflect.ClassTag
 
-case class Model(code: String = "",
+case class Model(title: Option[String] = None,
+  code: String = "",
   widgets: Seq[Widget] = List(View()),
   info: String = "",
   version: String = Model.defaultVersion,
