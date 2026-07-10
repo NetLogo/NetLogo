@@ -17,7 +17,7 @@ class WorldEditPanel2D(target: WorldViewSettings2D, enableDualView: Boolean) ext
     new StringEditor(
       new PropertyAccessor(
         target,
-        I18N.gui("modelTitle"),
+        s"${I18N.gui("modelTitle")}:",
         () => target.modelTitle,
         _.foreach(target.setModelTitle)))
 
