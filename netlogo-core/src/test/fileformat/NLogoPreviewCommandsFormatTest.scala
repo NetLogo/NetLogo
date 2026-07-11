@@ -18,5 +18,5 @@ class NLogoPreviewCommandsFormatTest extends NLogoFormatTest[PreviewCommands] {
   testDeserializes("empty section", Array[String](), PreviewCommands.Default, _.source)
   testDeserializes("multiline section", Array[String]("crt 5 [", "  fd 1", "]"), PreviewCommands.Custom("crt 5 [\n  fd 1\n]"), _.source)
   testRoundTripsObjectForm("default preview commands", PreviewCommands.Default)
-  testRoundTripsObjectForm("manual preview", PreviewCommands.Manual)
+  testRoundTripsObjectForm("manual preview", PreviewCommands.Manual.Empty)
 }
