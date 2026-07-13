@@ -2,7 +2,7 @@
 
 package org.nlogo.workspace
 
-import java.net.URL
+import java.net.URI
 
 import org.nlogo.util.AnyFunSuiteEx
 
@@ -11,7 +11,7 @@ import ExtensionManager.ExtensionData
 class InMemoryExtensionLoaderTests extends AnyFunSuiteEx {
   val dummyClassManager = new DummyClassManager()
   val loader = new InMemoryExtensionLoader("foo", dummyClassManager)
-  val extURL = new URL("file:/tmp/extension/foo")
+  val extURL = URI.create("file:/tmp/extension/foo").toURL
   val extensionData =
     new ExtensionData("foo", extURL, "foo", classOf[DummyClassManager].getCanonicalName, Some("7.1"), 0)
 
@@ -24,7 +24,7 @@ class InMemoryExtensionLoaderTests extends AnyFunSuiteEx {
   }
 
   test("InMemoryExtensionLoader errors when asked for extension data at the wrong URL") {
-    intercept[ExtensionManagerException] { loader.extensionData("foo", new URL("file:/tmp/extension/bar")) }
+    intercept[ExtensionManagerException] { loader.extensionData("foo", URI.create("file:/tmp/extension/bar").toURL) }
   }
 
   test("InMemoryExtensionLoader produces data for its extension when given the URL back") {

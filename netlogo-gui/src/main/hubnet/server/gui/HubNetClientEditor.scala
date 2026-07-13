@@ -42,7 +42,7 @@ class HubNetClientEditor(workspace: GUIWorkspace,
     }
   }
 
-  private val menuBar = new MenuBar {
+  private val clientMenuBar = new MenuBar {
     add(menuFactory.createEditMenu)
     add(new HubNetToolsMenu)
     add(menuFactory.createZoomMenu)
@@ -53,7 +53,7 @@ class HubNetClientEditor(workspace: GUIWorkspace,
   getContentPane.setLayout(new BorderLayout())
   getContentPane.add(scrollPane, BorderLayout.CENTER)
   getContentPane.add(toolbar, BorderLayout.NORTH)
-  setJMenuBar(menuBar)
+  setJMenuBar(clientMenuBar)
   setSize(getPreferredSize)
 
   addWindowFocusListener(new WindowAdapter {
@@ -93,7 +93,7 @@ class HubNetClientEditor(workspace: GUIWorkspace,
   }
 
   override def syncTheme(): Unit = {
-    menuBar.syncTheme()
+    clientMenuBar.syncTheme()
 
     interfacePanel.syncTheme()
 

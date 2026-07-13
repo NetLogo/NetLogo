@@ -3,7 +3,7 @@
 package org.nlogo.api
 
 import java.io.File
-import java.net.URL
+import java.net.{ URI, URL }
 import java.nio.file.{ Files, FileAlreadyExistsException, Path, Paths }
 
 import scala.concurrent.{ ExecutionContext, Future }
@@ -27,7 +27,7 @@ object LibraryManager {
 
     val baseURLOptF =
       if (LibraryInfoDownloader.enabled)
-        LibraryInfoDownloader(new URL(s"$libsLocationSite/$libsLocation")).map(
+        LibraryInfoDownloader(URI.create(s"$libsLocationSite/$libsLocation").toURL).map(
           _.flatMap {
             case (file, _) =>
               Try(ConfigFactory.parseFile(file).getString("location")).toOption
@@ -39,13 +39,12 @@ object LibraryManager {
     baseURLOptF.map {
       opt =>
         val baseURL = opt.getOrElse(bundledsConfig.getString("fallback-libraries-location"))
-        val url = new URL(s"$baseURL/refs/heads/${APIVersion.version}")
-        url
+        URI.create(s"$baseURL/refs/heads/${APIVersion.version}").toURL
     }
 
   }
 
-  private val metadataURLFuture: Future[URL] = branchURLFuture.map(url => new URL(s"$url/$allLibsName"))
+  private val metadataURLFuture: Future[URL] = branchURLFuture.map(url => URI.create(s"$url/$allLibsName").toURL)
 
   private var loadedOnce = false
 
@@ -191,7 +190,7 @@ class LibraryManager(userPkgPath: Path, userExtPath: Path, unloadExtensions: () 
       val shortDesc   = config.getString("shortDescription")
       val longDesc    = config.getString("longDescription")
       val version     = config.getString("version")
-      val homepage    = new URL(config.getString("homepage"))
+      val homepage    = URI.create(config.getString("homepage")).toURL
 
       val installedVersionPath = s"""$category."$codeName".installedVersion"""
       val installedVersion     = getStringOption(installedLibsConf, installedVersionPath)

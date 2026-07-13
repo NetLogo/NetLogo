@@ -21,7 +21,7 @@ object CheckTranslations {
     val englishErrors: Set[String] = keySet(I18N.errors, Locale.US)
 
     args.foreach { lang =>
-      val locale = new Locale(lang)
+      val locale = Locale.of(lang)
 
       val missingGUI: Set[String] = englishGUI &~ keySet(I18N.gui, locale)
       val missingShared: Set[String] = englishShared &~ keySet(I18N.shared, locale)

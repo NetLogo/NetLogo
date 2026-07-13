@@ -10,7 +10,7 @@ import java.awt.dnd.{ DropTarget, DropTargetDragEvent, DropTargetDropEvent, Drop
 import java.awt.event.ActionEvent
 import java.io.File
 import java.lang.ProcessHandle
-import java.net.{ ConnectException, URI, URL }
+import java.net.{ ConnectException, URI }
 import java.util.{ List => JList }
 import javax.swing.{ JFrame, JMenu, ToolTipManager }
 
@@ -699,7 +699,7 @@ class App(args: App.CommandLineArgs) extends LinkChild with Exceptions.Handler w
               // manages to fail gloriously here! --JAB (8/22/12)
               import java.io.{ BufferedReader, InputStreamReader }
 
-              workspace.importWorld(new BufferedReader(new InputStreamReader(new URL(url).openStream())))
+              workspace.importWorld(new BufferedReader(new InputStreamReader(URI.create(url).toURL.openStream())))
               workspace.view.dirty()
               workspace.view.repaint()
             })

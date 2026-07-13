@@ -65,8 +65,8 @@ class UploadDialog(parent: Frame, backend: Backend[Future], loginInfo: LoginInfo
   private val group = new JLabel(I18N.gui.get("dialog.mc.upload.group"))
   private val groupDropdown = new ComboBox[Group](Group(-1, " ") +: loginInfo.groups)
 
-  private val visible = new JLabel(I18N.gui.get("dialog.mc.upload.visible"))
-  private val visibleDropdown = new ComboBox[Permissions](Seq(Everyone, OnlyGroup, OnlyYou))
+  private val amVisible = new JLabel(I18N.gui.get("dialog.mc.upload.visible"))
+  private val amVisibleDropdown = new ComboBox[Permissions](Seq(Everyone, OnlyGroup, OnlyYou))
 
   private val changeable = new JLabel(I18N.gui.get("dialog.mc.upload.changeable"))
   private val changeableDropdown = new ComboBox[Permissions](Seq(Everyone, OnlyGroup, OnlyYou))
@@ -141,7 +141,7 @@ class UploadDialog(parent: Frame, backend: Backend[Future], loginInfo: LoginInfo
         add(existingName, c)
         add(comment, c)
         add(group, c)
-        add(visible, c)
+        add(amVisible, c)
         add(changeable, c)
         add(preview, c)
 
@@ -182,7 +182,7 @@ class UploadDialog(parent: Frame, backend: Backend[Future], loginInfo: LoginInfo
 
         add(commentField, c)
         add(groupDropdown, c)
-        add(visibleDropdown, c)
+        add(amVisibleDropdown, c)
         add(changeableDropdown, c)
 
         add(new JPanel(new GridBagLayout) with Transparent {
@@ -263,8 +263,8 @@ class UploadDialog(parent: Frame, backend: Backend[Future], loginInfo: LoginInfo
     group.setEnabled(newModelButton.isSelected)
     groupDropdown.setEnabled(newModelButton.isSelected)
 
-    visible.setEnabled(newModelButton.isSelected)
-    visibleDropdown.setEnabled(newModelButton.isSelected)
+    amVisible.setEnabled(newModelButton.isSelected)
+    amVisibleDropdown.setEnabled(newModelButton.isSelected)
 
     changeable.setEnabled(newModelButton.isSelected)
     changeableDropdown.setEnabled(newModelButton.isSelected)
@@ -347,7 +347,7 @@ class UploadDialog(parent: Frame, backend: Backend[Future], loginInfo: LoginInfo
         JsonRequest("/upload/create_model", Seq(
           multipart("new_model[name]", name),
           multipart("new_model[uploaded_body]", modelBody).fileName(s"$name.nlogox"),
-          multipart("read_permission", visibleDropdown.getSelectedItem.fold("")(_.id)),
+          multipart("read_permission", amVisibleDropdown.getSelectedItem.fold("")(_.id)),
           multipart("write_permission", changeableDropdown.getSelectedItem.fold("")(_.id))
         ) ++ groupDropdown.getSelectedItem.collect {
           case group if group.id != -1 =>
@@ -450,7 +450,7 @@ class UploadDialog(parent: Frame, backend: Backend[Future], loginInfo: LoginInfo
     existingName.setForeground(InterfaceColors.dialogText())
     comment.setForeground(InterfaceColors.dialogText())
     group.setForeground(InterfaceColors.dialogText())
-    visible.setForeground(InterfaceColors.dialogText())
+    amVisible.setForeground(InterfaceColors.dialogText())
     changeable.setForeground(InterfaceColors.dialogText())
     preview.setForeground(InterfaceColors.dialogText())
     fileLabel.setForeground(InterfaceColors.dialogText())
@@ -463,7 +463,7 @@ class UploadDialog(parent: Frame, backend: Backend[Future], loginInfo: LoginInfo
     existingNameDropdown.syncTheme()
     commentField.syncTheme()
     groupDropdown.syncTheme()
-    visibleDropdown.syncTheme()
+    amVisibleDropdown.syncTheme()
     changeableDropdown.syncTheme()
     currentImageButton.syncTheme()
     generateImageButton.syncTheme()

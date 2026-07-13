@@ -9,7 +9,7 @@ import org.nlogo.editor.EditorConfiguration
 import org.nlogo.swing.{ Transparent, Utils }
 import org.nlogo.theme.InterfaceColors
 
-class WorldPreview(width: Int, height: Int) extends JPanel(new BorderLayout) with Transparent {
+class WorldPreview(myWidth: Int, myHeight: Int) extends JPanel(new BorderLayout) with Transparent {
   private var wrapX, wrapY = false
   private var minx, maxx, miny, maxy = 0
 
@@ -137,7 +137,7 @@ class WorldPreview(width: Int, height: Int) extends JPanel(new BorderLayout) wit
     }
 
     override def getPreferredSize: Dimension =
-      new Dimension(width, height)
+      new Dimension(myWidth, myHeight)
 
     override def paintComponent(g: Graphics): Unit = {
       val g2d = Utils.initGraphics2D(g)

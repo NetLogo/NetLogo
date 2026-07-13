@@ -87,7 +87,7 @@ class DiscoveryListener(@volatile var interfaceAddress: Option[InetAddress]) ext
         }
         catch {
           case timeout: SocketTimeoutException =>
-          case ex: java.security.AccessControlException =>
+          case ex: SecurityException =>
             System.err.println(ex)
             System.err.println(ex.getMessage)
             org.nlogo.api.Exceptions.ignore(ex)

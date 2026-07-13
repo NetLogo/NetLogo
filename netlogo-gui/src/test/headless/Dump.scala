@@ -2,6 +2,9 @@
 
 package org.nlogo.headless
 
+import java.nio.file.{ Files, Path }
+import java.util.Comparator
+
 import org.nlogo.api.SimpleJobOwner
 import org.nlogo.core.AgentKind
 import org.nlogo.headless.ChecksumsAndPreviewsSettings.DumpsPath
@@ -42,9 +45,13 @@ object Dump {
   }
 
   def dumpAll(): Unit = {
-    Runtime.getRuntime().exec("rm -r target/dumps").waitFor()
-    Runtime.getRuntime().exec("mkdir -p target/dumps").waitFor()
-    //
+
+    val dumps = Path.of("target/dumps")
+    if (Files.exists(dumps)) {
+      Files.walk(dumps).sorted(Comparator.reverseOrder()).forEach(Files.delete)
+    }
+    Files.createDirectories(dumps)
+
     for(path <- ModelsLibrary.getModelPaths; if include(path))
     {
       val name = path.split("/").last.toList.dropRight(".nlogox".size).mkString

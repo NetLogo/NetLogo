@@ -2,15 +2,20 @@
 
 package org.nlogo.api
 
+import java.io.{ BufferedInputStream, BufferedReader, InputStreamReader, IOException }
+import java.net.URI
+
 import org.nlogo.core.{ File, FileMode }
+import org.nlogo.util.Utils
 
 object RemoteFile {
   def exists(path: String): Boolean = {
-    val url = org.nlogo.util.Utils.escapeSpacesInURL(path)
-    try { new java.net.URL(url).openStream(); true }
-    catch {
-      case ex: java.io.IOException =>
-        false
+    val url = Utils.escapeSpacesInURL(path)
+    try {
+      URI.create(url).toURL.openStream()
+      true
+    } catch {
+      case ex: IOException => false
     }
   }
 }
@@ -19,26 +24,22 @@ class RemoteFile(filepath: String) extends File {
 
   override def getPrintWriter = null
 
-  @throws(classOf[java.io.IOException])
+  @throws(classOf[IOException])
   override def getInputStream =
-    new java.io.BufferedInputStream(
-      new java.net.URL(
-        org.nlogo.util.Utils.escapeSpacesInURL(getPath))
-      .openStream())
+    new BufferedInputStream(URI.create(Utils.escapeSpacesInURL(getPath)).toURL.openStream())
 
-  @throws(classOf[java.io.IOException])
+  @throws(classOf[IOException])
   override def open(mode: FileMode): Unit = {
     if (reader != null)
-      throw new java.io.IOException(
+      throw new IOException(
         "Attempted to open an already open file")
     mode match {
       case FileMode.Read =>
         pos = 0
         eof = false
-        reader = new java.io.BufferedReader(
-            new java.io.InputStreamReader(
-                new java.io.BufferedInputStream(
-                    new java.net.URL(org.nlogo.util.Utils.escapeSpacesInURL(filepath)).openStream()),
+        reader = new BufferedReader(
+            new InputStreamReader(
+                new BufferedInputStream(URI.create(Utils.escapeSpacesInURL(filepath)).toURL.openStream()),
               "UTF-8"))
         this.mode = mode
       case FileMode.Write | FileMode.Append | FileMode.None =>
@@ -47,18 +48,18 @@ class RemoteFile(filepath: String) extends File {
   }
 
   private def unsupported =
-    throw new java.io.IOException("Cannot write to remote files.")
+    throw new IOException("Cannot write to remote files.")
 
-  @throws(classOf[java.io.IOException])
+  @throws(classOf[IOException])
   override def print(str: String) = unsupported
-  @throws(classOf[java.io.IOException])
+  @throws(classOf[IOException])
   override def println(line: String) = unsupported
-  @throws(classOf[java.io.IOException])
+  @throws(classOf[IOException])
   override def println() = unsupported
 
   override def flush(): Unit = { }
 
-  @throws(classOf[java.io.IOException])
+  @throws(classOf[IOException])
   override def close(ok: Boolean): Unit = {
     mode match {
       case FileMode.Read =>

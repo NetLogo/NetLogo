@@ -12,7 +12,7 @@ object NumberParser {
   // this is used on error to determine whether a number
   // is truly invalid, or just too large
   private val decimalFormat = {
-    val f = NumberFormat.getInstance(new Locale("en", "US"))
+    val f = NumberFormat.getInstance(Locale.of("en", "US"))
     f match {
       case d: DecimalFormat => d.setParseBigDecimal(true)
       case _ =>

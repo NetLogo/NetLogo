@@ -3,6 +3,9 @@
 package org.nlogo.headless
 package misc
 
+import java.nio.file.{ Files, Path }
+import java.util.Comparator
+
 import org.nlogo.api.SimpleJobOwner
 import org.nlogo.headless.ChecksumsAndPreviewsSettings.DumpsPath
 import org.nlogo.workspace.ModelsLibrary
@@ -41,9 +44,13 @@ object Dump {
                 dump(benchPath(name)))
   }
   def dumpAll(): Unit = {
-    Runtime.getRuntime().exec("rm -r target/dumps").waitFor()
-    Runtime.getRuntime().exec("mkdir -p target/dumps").waitFor()
-    //
+
+    val dumps = Path.of("target/dumps")
+    if (Files.exists(dumps)) {
+      Files.walk(dumps).sorted(Comparator.reverseOrder()).forEach(Files.delete)
+    }
+    Files.createDirectories(dumps)
+
     for {
       path <- ModelsLibrary.getModelPaths
       if !TestCompileAll.badPath(path)

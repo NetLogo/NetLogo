@@ -2,6 +2,8 @@
 
 package org.nlogo.core
 
+import java.net.{ URI, URL }
+
 import scala.util.matching.Regex
 
 import LibraryStatus.{ CanInstall, CanUpdate, UpToDate }
@@ -21,8 +23,6 @@ class DummyLibraryManager extends LibraryManager {
   def lookupPackage(name: String, version: String): Option[LibraryInfo] = None
   def reloadMetadata(): Unit = {}
 }
-
-import java.net.URL
 
 object LibraryInfo {
   def isAvailableNewer(available: String, installed: String): Boolean = {
@@ -84,11 +84,13 @@ case class LibraryInfo(
     ).getOrElse(true)
 
   def downloadURL: URL = {
-    if (isExtension) {
-      new URL(s"$rootURL/extensions/$codeName-$version.zip")
-    } else {
-      new URL(s"$rootURL/packages/$codeName-$version.zip")
-    }
+    val path =
+      if (isExtension) {
+        s"$rootURL/extensions/$codeName-$version.zip"
+      } else {
+        s"$rootURL/packages/$codeName-$version.zip"
+      }
+    URI.create(path).toURL
   }
 
   // We override `equals`, because we don't want to compare URLs directly. Checking equality

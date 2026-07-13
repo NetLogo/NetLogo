@@ -2,7 +2,7 @@
 
 package org.nlogo.workspace
 
-import java.net.URL
+import java.net.{ URI, URL }
 
 import org.nlogo.api.ClassManager
 import ExtensionManager._
@@ -11,7 +11,7 @@ import ExtensionManagerException._
 class InMemoryExtensionLoader(prefix: String, classManager: ClassManager) extends ExtensionLoader {
   def locateExtension(extensionName: String): Option[URL] =
     if (extensionName == prefix)
-      Some(new URL(s"file:/tmp/extension/$prefix"))
+      Some(URI.create(s"file:/tmp/extension/$prefix").toURL)
     else
       None
 

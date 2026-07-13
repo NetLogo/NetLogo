@@ -3,7 +3,7 @@
 package org.nlogo.api
 
 import java.io.File
-import java.net.URL
+import java.net.URI
 import java.nio.file.{ Path, Paths }
 import java.time.LocalDate
 
@@ -20,7 +20,7 @@ object AnnouncementsInfoDownloader extends InfoDownloader {
 
   override val prefsKey = "announcements"
 
-  val defaultURL = new URL("https://backend.netlogo.org/items/announcements")
+  val defaultURL = URI.create("https://backend.netlogo.org/items/announcements").toURL
 
   override def getPath(name: String): Path =
     Paths.get(FileIO.perUserFile(name))

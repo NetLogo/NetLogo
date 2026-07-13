@@ -12,9 +12,9 @@ import org.nlogo.window.Event.LinkChild
 class CodeTabsWindow(parent: Frame, tabs: TabsPanel)
   extends JFrame with LinkChild with ThemeSync with NetLogoIcon with ModalProgress {
 
-  val menuBar: MainMenuBar = new MainMenuBar(false)
+  val mainMenuBar: MainMenuBar = new MainMenuBar(false)
 
-  setJMenuBar(menuBar)
+  setJMenuBar(mainMenuBar)
 
   setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE)
   setSize(new Dimension(675, 400))
@@ -30,7 +30,7 @@ class CodeTabsWindow(parent: Frame, tabs: TabsPanel)
   }
 
   override def syncTheme(): Unit = {
-    menuBar.syncTheme()
+    mainMenuBar.syncTheme()
   }
 
   private def findWindowLocation(): Point = {

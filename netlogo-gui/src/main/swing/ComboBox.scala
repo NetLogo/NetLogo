@@ -21,7 +21,7 @@ class ComboBox[T](private var items: Seq[T] = Seq(), openOnPress: Boolean = true
   // popups with lots of items can overlap the mouse when the dropdown is clicked, causing one of
   // the items to be erroneously selected when the mouse is released. this makes it difficult to
   // interact with the popup, so wait until the mouse is released in those cases. (Isaac B 1/12/26)
-  private val mouseListener: MouseAdapter = {
+  private val mouseAdapter: MouseAdapter = {
     if (openOnPress) {
       new MouseAdapter {
         override def mousePressed(e: MouseEvent): Unit = {
@@ -65,9 +65,9 @@ class ComboBox[T](private var items: Seq[T] = Seq(), openOnPress: Boolean = true
   setFocusable(true)
   enableHover()
 
-  addMouseListener(mouseListener)
-  choiceDisplay.addMouseListener(mouseListener)
-  arrow.addMouseListener(mouseListener)
+  addMouseListener(mouseAdapter)
+  choiceDisplay.addMouseListener(mouseAdapter)
+  arrow.addMouseListener(mouseAdapter)
 
   addKeyListener(new KeyAdapter {
     override def keyPressed(e: KeyEvent): Unit = {
@@ -238,7 +238,7 @@ class ComboBox[T](private var items: Seq[T] = Seq(), openOnPress: Boolean = true
 
           add(child, c)
 
-          child.addMouseListener(mouseListener)
+          child.addMouseListener(mouseAdapter)
 
         case a =>
           val child = new JLabel(a.toString)
@@ -247,7 +247,7 @@ class ComboBox[T](private var items: Seq[T] = Seq(), openOnPress: Boolean = true
 
           add(child, c)
 
-          child.addMouseListener(mouseListener)
+          child.addMouseListener(mouseAdapter)
       })
 
       syncTheme()

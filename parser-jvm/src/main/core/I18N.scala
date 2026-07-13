@@ -32,12 +32,12 @@ object I18N {
       }
       catch {
         // security manager might say no
-        case _: java.security.AccessControlException =>
+        case _: SecurityException =>
           None
       }
     (getPref("user.language"), getPref("user.country")) match {
-      case (Some(l), Some(r)) => localeIfAvailable(new Locale(l, r))
-      case (Some(l), _) => localeIfAvailable(new Locale(l))
+      case (Some(l), Some(r)) => localeIfAvailable(Locale.of(l, r))
+      case (Some(l), _) => localeIfAvailable(Locale.of(l))
       case _ => None
     }
   }

@@ -2,7 +2,7 @@
 
 package org.nlogo.workspace
 
-import java.net.{ URL, MalformedURLException, JarURLConnection }
+import java.net.{ URI, URL, MalformedURLException, JarURLConnection }
 import java.io.{ File, FileNotFoundException, IOException }
 
 import ExtensionManager.ExtensionData
@@ -59,7 +59,7 @@ class JarLoader(workspace: ExtendableWorkspace) extends ExtensionManager.Extensi
 
   private def connectToJar(fileURL: URL): JarURLConnection =
     try {
-      val jarURL = new URL("jar", "", fileURL.toString + "!/")
+      val jarURL = new URI("jar", s"$fileURL!/", null).toURL
       jarURL.openConnection.asInstanceOf[JarURLConnection]
     } catch {
       case _ : FileNotFoundException | _ : IOException =>

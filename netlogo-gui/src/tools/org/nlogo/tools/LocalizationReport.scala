@@ -13,14 +13,14 @@ import org.nlogo.core.I18N.BundleKind
  */
 object LocalizationReport {
   def main(args: Array[String]): Unit = {
-    if (args.length == 1) testLocalization(new Locale(args(0)), false)
-    if (args.length == 2) testLocalization(new Locale(args(0), args(1)), false)
-    if (args.length == 3) testLocalization(new Locale(args(0), args(1)), args(3).toBoolean)
+    if (args.length == 1) testLocalization(Locale.of(args(0)), false)
+    if (args.length == 2) testLocalization(Locale.of(args(0), args(1)), false)
+    if (args.length == 3) testLocalization(Locale.of(args(0), args(1)), args(3).toBoolean)
     else {
       println("Usage: testLocalization <language(optional, default es)> <country(optional)> <verbose(boolean, optional)>")
       println("executing testLocalization('es', false)")
       println()
-      testLocalization(new Locale("es"), false)
+      testLocalization(Locale.of("es"), false)
     }
   }
 
@@ -158,7 +158,7 @@ object LocalizationReport {
 
   // this is the main function of this class. it runs everything.
   def testLocalization(otherLanguageLocale: Locale, verbose: Boolean): Unit = {
-    val english = new Locale("en", "US")
+    val english = Locale.of("en", "US")
     trait TranslationStatus
     case class Good(result: String) extends TranslationStatus
     case class Exploded(e: Throwable) extends TranslationStatus

@@ -34,7 +34,7 @@ lazy val scalaSettings = Seq(
   Test / scalaSource    := baseDirectory.value / "src" / "test",
   crossPaths            := false, // don't cross-build for different Scala versions
   scalacOptions ++=
-    "-deprecation -unchecked -feature -encoding us-ascii -release 11 -Xfatal-warnings -Wunused:linted"
+    "-deprecation -unchecked -feature -encoding us-ascii -release 21 -Xfatal-warnings -Wunused:linted"
       .split(" ").toSeq,
   // Silence warnings from generated sources --Jason B. (1/26/26)
   scalacOptions += {
@@ -221,7 +221,7 @@ lazy val netlogo = project.in(file("netlogo-gui")).
     isSnapshot := false,
     publishTo := { Some("Cloudsmith API" at "https://maven.cloudsmith.io/netlogo/netlogo/") },
     Compile / mainClass := Some("org.nlogo.app.App"),
-    javacOptions   ++= Seq("--release", "11"),
+    javacOptions   ++= Seq("--release", "21"),
     modelsDirectory := baseDirectory.value.getParentFile / "models",
     extensionRoot   := (baseDirectory.value.getParentFile / "extensions").getAbsoluteFile,
     autogenRoot     := baseDirectory.value.getParentFile / "autogen",
@@ -381,7 +381,7 @@ lazy val headless = (project in file ("netlogo-headless")).
     publishTo     := { Some("Cloudsmith API" at "https://maven.cloudsmith.io/netlogo/netlogo/") },
     autogenRoot   := (baseDirectory.value.getParentFile / "autogen").getAbsoluteFile,
     extensionRoot := baseDirectory.value.getParentFile / "extensions",
-    javacOptions ++= Seq("--release", "11"),
+    javacOptions ++= Seq("--release", "21"),
     Compile / mainClass         := Some("org.nlogo.headless.Main"),
     libraryDependencies        ++= Seq(
       "org.parboiled" %% "parboiled" % "2.5.1",
@@ -486,7 +486,7 @@ lazy val parser = crossProject(JSPlatform, JVMPlatform).
   jvmSettings(jvmSettings: _*).
   jvmSettings(scalatestSettings: _*).
   jvmSettings(
-    javacOptions ++= Seq("--release", "11"),
+    javacOptions ++= Seq("--release", "21"),
     libraryDependencies += "org.scala-lang.modules" %% "scala-parser-combinators" % "2.4.0",
     // you can get these included by just depending on the `sharedResources` project directly
     // but then when you publish the parser JVM package, the POM file lists sharedResources

@@ -9,7 +9,7 @@ import org.nlogo.nvm.{ Command, Context }
 class _seterrorlocale extends Command {
 
   override def perform(context: Context): Unit = {
-    I18N.errors.setLanguage(new Locale(argEvalString(context, 0), argEvalString(context, 1)))
+    I18N.errors.setLanguage(Locale.of(argEvalString(context, 0), argEvalString(context, 1)))
     context.ip = next
   }
 }
@@ -17,14 +17,14 @@ class _seterrorlocale extends Command {
 class _spanish extends Command {
 
   override def perform(context: Context): Unit = {
-    I18N.errors.setLanguage(new Locale("es", "MX"))
+    I18N.errors.setLanguage(Locale.of("es", "MX"))
     context.ip = next
   }
 }
 class _english extends org.nlogo.nvm.Command {
 
   override def perform(context: Context): Unit = {
-    I18N.errors.setLanguage(new Locale("en", "US"))
+    I18N.errors.setLanguage(Locale.of("en", "US"))
     context.ip = next
   }
 }

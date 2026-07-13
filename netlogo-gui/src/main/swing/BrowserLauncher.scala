@@ -5,7 +5,7 @@ package org.nlogo.swing
 import java.awt.{ Component, Desktop }
 import java.io.IOException
 import java.lang.Process
-import java.net.{ HttpURLConnection, NetworkInterface, URI, URISyntaxException, URL }
+import java.net.{ HttpURLConnection, NetworkInterface, URI, URISyntaxException }
 import java.nio.file.{ Files, Path, Paths, StandardOpenOption }
 import javax.swing.JDialog
 
@@ -111,7 +111,7 @@ object BrowserLauncher {
   // as a connection test (Isaac B 9/26/25)
   private def hasConnection(): Boolean = {
     NetworkInterface.getNetworkInterfaces.asScala.exists(_.isUp) &&
-      Try(new URL("https://docs.netlogo.org").openConnection.asInstanceOf[HttpURLConnection].getResponseCode)
+      Try(URI.create("https://docs.netlogo.org").toURL.openConnection.asInstanceOf[HttpURLConnection].getResponseCode)
         .toOption.contains(200)
   }
 
