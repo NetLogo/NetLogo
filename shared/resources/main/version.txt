@@ -1,4 +1,4 @@
-NetLogo 7.1.0-beta1
+NetLogo 7.1.0-internal1
 July 13, 2026
 NetLogo 7.0.4
 NetLogo 7.0.3
