@@ -194,21 +194,12 @@ class TabLabel(startPane: FloatingTabbedPane, text: String, tab: Component) exte
           add(new MenuItem(I18N.gui.get("tabs.external.rename"), () => temp.rename()))
         })
 
-        addMouseListener(new MouseAdapter {
-          override def mousePressed(e: MouseEvent): Unit = {
-            if (e.isPopupTrigger)
-              showPopup()
-          }
-
-          override def mouseReleased(e: MouseEvent): Unit = {
-            if (e.isPopupTrigger)
-              showPopup()
-          }
-        })
-
       case _ =>
     }
   }
+
+  override def contains(x: Int, y: Int): Boolean =
+    closeButton.exists(button => button.contains(x - button.getX, y - button.getY))
 
   override def getPreferredSize: Dimension =
     new Dimension(boldWidth + closeButton.map(_.getPreferredSize.width + 10).getOrElse(0),
@@ -235,7 +226,7 @@ class TabLabel(startPane: FloatingTabbedPane, text: String, tab: Component) exte
     super.paintComponent(g)
   }
 
-  private def showPopup(): Unit = {
+  def showPopup(): Unit = {
     popupMenu.foreach { popup =>
       popup.syncTheme()
       popup.show(this, 0, getHeight)
@@ -283,6 +274,20 @@ class FloatingTabbedPane extends JTabbedPane(SwingConstants.TOP, JTabbedPane.SCR
       }
     }
   })
+
+  override def processMouseEvent(e: MouseEvent): Unit = {
+    if (e.getButton == MouseEvent.BUTTON3) {
+      mouse.flatMap(getTabLabelAt) match {
+        case Some(label) =>
+          label.showPopup()
+
+        case _ =>
+          super.processMouseEvent(e)
+      }
+    } else {
+      super.processMouseEvent(e)
+    }
+  }
 
   def addTabWithLabel(tab: Component, label: TabLabel): Unit = {
     addTab(null, tab)
