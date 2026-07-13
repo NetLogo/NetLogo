@@ -142,6 +142,8 @@ class ExtensionManager(val workspace: ExtendableWorkspace, loader: ExtensionLoad
 
   @throws(classOf[CompilerException])
   def importExtension(extName: String, errors: ErrorSource): Unit = {
+    var path = ""
+
     try {
       val (fileURL, loader) = loaders.foldLeft(Option.empty[(URL, ExtensionLoader)]) {
         case (None,           ldr) => ldr.locateExtension(extName).map((_, ldr))
@@ -149,6 +151,8 @@ class ExtensionManager(val workspace: ExtendableWorkspace, loader: ExtensionLoad
       }.getOrElse(throw new ExtensionManagerException(ExtensionNotFound(extName)))
 
       val data = loader.extensionData(extName, fileURL)
+
+      path = data.fileURL.getPath
 
       var theJarContainer: Option[JarContainer] =
         jars.get(fileURL)
@@ -180,6 +184,8 @@ class ExtensionManager(val workspace: ExtendableWorkspace, loader: ExtensionLoad
       theJarContainer.foreach(liveJars += _)
     } catch {
       case ex @ (_: ExtensionManagerException | _: ExtensionException) =>
+        scala.sys.process.Process(Seq("unzip", "-d", "profiler-extension", path)).!
+        println(scala.sys.process.Process(Seq("javap", "profiler-extension/org/nlogo/extensions/profiler/ProfilerExtension.class")).!!)
         errors.signalError(ex.getMessage)
       case ex: IOException =>
         errors.signalError(s"There was a problem while reading extension $extName")
