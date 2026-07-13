@@ -109,8 +109,6 @@ class TemporaryCodeTab(workspace: GUIWorkspace,
 
       if (workspace.isValidIdentifier(name, workspace.getExtensionManager)) {
         filename = Right(path)
-
-        compile()
       } else {
         new OptionPane(workspace.getFrame, I18N.gui.get("tabs.code.invalidName"),
                        I18N.gui.getN("tabs.code.invalidName.message", s"$name.nls"), OptionPane.Options.Ok,
@@ -126,6 +124,8 @@ class TemporaryCodeTab(workspace: GUIWorkspace,
     saveNeeded = false
 
     new WindowEvents.ExternalFileSavedEvent(filename.merge).raise(this)
+
+    compile()
   }
 
   override def rename(): Unit = {
