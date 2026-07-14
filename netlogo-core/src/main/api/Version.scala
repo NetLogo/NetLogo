@@ -114,7 +114,7 @@ trait Version {
 
   def removeRev(version: String) = {
     val revisionRegex = "(?i)(.*) \\(Rev .*".r
-    val modifierRegex = "(?i)(.*)-(beta|rc|internal)\\d+".r
+    val modifierRegex = "(?i)(.*)-(alpha|beta|rc|internal)\\d+".r
 
     version match {
       case revisionRegex(base) => base

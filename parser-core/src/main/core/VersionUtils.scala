@@ -32,7 +32,7 @@ object VersionUtils {
           val (major, minor, patch) = (majorText.toInt, minorText.toInt, Option(patchText).map(_.toInt).getOrElse(0))
           val baseVersion = calculateVersion(major, minor, patch)
           val modLower = modifier.toLowerCase
-          val validMod = modLower == "rc" || modLower == "beta" || modLower == "internal"
+          val validMod = modLower == "rc" || modLower == "alpha" || modLower == "beta" || modLower == "internal"
           (major, minor, patch) match {
             case (m, 0, 0) => baseVersion - 10000 +
               (modifierNum.toInt - 1) + (if (validMod) 5000 else 0)

@@ -19,6 +19,7 @@ class VersionUtilsTests extends AnyFunSuite {
     assert(numericValue("NetLogo 6.0-RC1") == 595000)
     assert(numericValue("NetLogo 6.0-RC2") == 595001)
     assert(numericValue("NetLogo 6.1-RC1") == 600900)
+    assert(numericValue("NetLogo 6.1-ALPHA1") == 600900)
     assert(numericValue("NetLogo 6.1-BETA1") == 600900)
     assert(numericValue("NetLogo 6.0.1-RC1") == 600006)
     assert(numericValue("NetLogo 3D Preview 5") == 390050)
@@ -29,6 +30,7 @@ class VersionUtilsTests extends AnyFunSuite {
   }
 
   test("isNetLogoVersionString") {
+    assert(isNetLogoVersionString("NetLogo 6.3.0-alpha1"))
     assert(isNetLogoVersionString("NetLogo 6.3.0-beta1"))
     assert(isNetLogoVersionString("NetLogo 6.2.0-MC1"))
     assert(isNetLogoVersionString("NetLogo 3D 6.2.0-MC1"))
