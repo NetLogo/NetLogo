@@ -185,7 +185,7 @@ class ExtensionManager(val workspace: ExtendableWorkspace, loader: ExtensionLoad
     } catch {
       case ex @ (_: ExtensionManagerException | _: ExtensionException) =>
         scala.sys.process.Process(Seq("unzip", "-d", "profiler-extension", path)).!
-        println(scala.sys.process.Process(Seq("javap", "profiler-extension/org/nlogo/extensions/profiler/ProfilerExtension.class")).!!)
+        println(scala.sys.process.Process(Seq("javap", "profiler-extension/ProfilerExtension.class")).!!)
         errors.signalError(ex.getMessage)
       case ex: IOException =>
         errors.signalError(s"There was a problem while reading extension $extName")
