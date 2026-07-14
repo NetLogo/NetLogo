@@ -13,8 +13,8 @@
 [submodule "extensions/matrix"]
 	path = extensions/matrix
 	url = https://github.com/NetLogo/Matrix-Extension.git
-[submodule "extensions/profiler"]
-	path = extensions/profiler
+[submodule "extensions/profilo"]
+	path = extensions/profilo
 	url = https://github.com/NetLogo/Profiler-Extension.git
 [submodule "extensions/sample"]
 	path = extensions/sample

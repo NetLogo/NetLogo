@@ -27,9 +27,9 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
   val useGenerator = org.nlogo.api.Version.useGenerator
   if(!useGenerator)
     test("no generator", SlowTest.Tag) {
-      defineProcedures("extensions [profiler]")
+      defineProcedures("extensions [profilo]")
       testCommandError(
-        "profiler:start",
+        "profilo:start",
         "Extension exception: The profiler extension requires the NetLogo bytecode " +
         "generator, which is currently turned off. See the org.nlogo.noGenerator " +
         "property.")
@@ -37,125 +37,125 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
   if(useGenerator)
     test("basics", SlowTest.Tag) {
       defineProcedures(
-        "extensions [profiler]\n" +
+        "extensions [profilo]\n" +
         "to dosomething crt 5 [ rt random 360 fd random 30 ] end\n" +
         "to-report saysomething report count turtles end\n" +
         "to wiggle rt random 360 fd 1 end\n" +
         "to somethingelse ask turtles [ set color saysomething wiggle ] end\n" +
-        "to profiler-test profiler:start dosomething repeat 50 [ somethingelse ] end\n" +
+        "to profiler-test profilo:start dosomething repeat 50 [ somethingelse ] end\n" +
         "to reload-profiler __reload-extensions end")
       testCommand("profiler-test")
-      testReporter("profiler:calls \"somethingelse\"", "50")
-      testReporter("profiler:calls \"nonexistent\"", "0")
-      testReporter("profiler:calls \"wiggle\"", "250")
-      testReporter("profiler:calls \"dosomething\"", "1")
+      testReporter("profilo:calls \"somethingelse\"", "50")
+      testReporter("profilo:calls \"nonexistent\"", "0")
+      testReporter("profilo:calls \"wiggle\"", "250")
+      testReporter("profilo:calls \"dosomething\"", "1")
       testCommand("somethingelse")
       testCommand("somethingelse")
-      testReporter("profiler:calls \"somethingelse\"", "52")
+      testReporter("profilo:calls \"somethingelse\"", "52")
     }
   if(useGenerator)
     test("stop", SlowTest.Tag) {
       defineProcedures(
-        "extensions [profiler]\n" +
+        "extensions [profilo]\n" +
         "to foo end")
-      testCommand("profiler:start")
-      testReporter("profiler:calls \"foo\"", "0")
+      testCommand("profilo:start")
+      testReporter("profilo:calls \"foo\"", "0")
       testCommand("foo")
-      testCommand("profiler:stop")
-      testReporter("profiler:calls \"foo\"", "1")
+      testCommand("profilo:stop")
+      testReporter("profilo:calls \"foo\"", "1")
       testCommand("foo")
-      testReporter("profiler:calls \"foo\"", "1")
+      testReporter("profilo:calls \"foo\"", "1")
     }
   if(useGenerator && timingSensitiveOK)
     // uses precision primitive to not be too picky about exact times
     test("wait", SlowTest.Tag) {
       defineProcedures(
-        "extensions [profiler]\n" +
+        "extensions [profilo]\n" +
         "to test1 wait 1 end\n" +
         "to test2 wait 0.1 end\n" +
         "to test3 wait 0.01 end")
-      testCommand("profiler:reset")
-      testCommand("profiler:start")
+      testCommand("profilo:reset")
+      testCommand("profilo:start")
       testCommand("test1")
-      testCommand("profiler:stop")
-      testReporter("profiler:exclusive-time \"test1\" >= 1000", "true")
-      testReporter("precision profiler:exclusive-time \"test1\" -3", "1000")
-      testReporter("profiler:inclusive-time \"test1\" >= 1000", "true")
-      testReporter("precision profiler:inclusive-time \"test1\" -3", "1000")
-      testCommand("profiler:reset")
-      testCommand("profiler:start")
+      testCommand("profilo:stop")
+      testReporter("profilo:exclusive-time \"test1\" >= 1000", "true")
+      testReporter("precision profilo:exclusive-time \"test1\" -3", "1000")
+      testReporter("profilo:inclusive-time \"test1\" >= 1000", "true")
+      testReporter("precision profilo:inclusive-time \"test1\" -3", "1000")
+      testCommand("profilo:reset")
+      testCommand("profilo:start")
       testCommand("test2")
-      testCommand("profiler:stop")
-      testReporter("profiler:exclusive-time \"test2\" >= 100", "true")
-      testReporter("precision profiler:exclusive-time \"test2\" -2", "100")
-      testReporter("profiler:inclusive-time \"test2\" >= 100", "true")
-      testReporter("precision profiler:inclusive-time \"test2\" -2", "100")
-      testCommand("profiler:reset")
-      testCommand("profiler:start")
+      testCommand("profilo:stop")
+      testReporter("profilo:exclusive-time \"test2\" >= 100", "true")
+      testReporter("precision profilo:exclusive-time \"test2\" -2", "100")
+      testReporter("profilo:inclusive-time \"test2\" >= 100", "true")
+      testReporter("precision profilo:inclusive-time \"test2\" -2", "100")
+      testCommand("profilo:reset")
+      testCommand("profilo:start")
       testCommand("test3")
-      testCommand("profiler:stop")
-      testReporter("profiler:exclusive-time \"test3\" >= 10", "true")
-      testReporter("precision profiler:exclusive-time \"test3\" -1", "10")
-      testReporter("profiler:inclusive-time \"test3\" >= 10", "true")
-      testReporter("precision profiler:inclusive-time \"test3\" -1", "10")
+      testCommand("profilo:stop")
+      testReporter("profilo:exclusive-time \"test3\" >= 10", "true")
+      testReporter("precision profilo:exclusive-time \"test3\" -1", "10")
+      testReporter("profilo:inclusive-time \"test3\" >= 10", "true")
+      testReporter("precision profilo:inclusive-time \"test3\" -1", "10")
     }
   if(useGenerator && timingSensitiveOK)
     test("ask turtles", SlowTest.Tag) {
       defineProcedures(
-        "extensions [profiler]\n" +
+        "extensions [profilo]\n" +
         "to test1 ask turtles [ test2 ] end\n" +
         "to test2 wait 0.01 end")
       testCommand("crt 10")
-      testCommand("profiler:reset")
-      testCommand("profiler:start")
+      testCommand("profilo:reset")
+      testCommand("profilo:start")
       testCommand("test1")
-      testCommand("profiler:stop")
-      testReporter("profiler:inclusive-time \"test2\" = profiler:exclusive-time \"test2\"", "true")
-      testReporter("profiler:inclusive-time \"test1\" >= profiler:inclusive-time \"test2\"", "true")
-      testReporter("profiler:exclusive-time \"test1\" < profiler:exclusive-time \"test2\"", "true")
-      testReporter("profiler:exclusive-time \"test1\" <= 5", "true")
-      testCommand("set glob1 profiler:exclusive-time \"test1\" + profiler:exclusive-time \"test2\"")
-      testReporter("precision (glob1 - profiler:inclusive-time \"test1\") 8", "0")
+      testCommand("profilo:stop")
+      testReporter("profilo:inclusive-time \"test2\" = profilo:exclusive-time \"test2\"", "true")
+      testReporter("profilo:inclusive-time \"test1\" >= profilo:inclusive-time \"test2\"", "true")
+      testReporter("profilo:exclusive-time \"test1\" < profilo:exclusive-time \"test2\"", "true")
+      testReporter("profilo:exclusive-time \"test1\" <= 5", "true")
+      testCommand("set glob1 profilo:exclusive-time \"test1\" + profilo:exclusive-time \"test2\"")
+      testReporter("precision (glob1 - profilo:inclusive-time \"test1\") 8", "0")
     }
   if(useGenerator && timingSensitiveOK)
     test("nested asks", SlowTest.Tag) {
       defineProcedures(
-        "extensions [profiler]\n" +
+        "extensions [profilo]\n" +
         "to go ask turtles [ go-turtles1 ] ask patches [ go-patches ] end\n" +
         "to go-turtles1 wait 0.0001 go-turtles2 end\n" +
         "to go-turtles2 ask turtles with [true] [ go-turtles3 ] end\n" +
         "to go-turtles3 wait 0.0001 end\n" +
         "to go-patches wait 0.0001 end")
       testCommand("crt 10")
-      testCommand("profiler:reset")
-      testCommand("profiler:start")
+      testCommand("profilo:reset")
+      testCommand("profilo:start")
       testCommand("repeat 10 [ go ]")
-      testCommand("profiler:stop")
-      testReporter("profiler:calls \"go-patches\" = count patches * 10", "true")
-      testReporter("profiler:calls \"go-turtles1\" = count turtles * 10", "true")
-      testReporter("profiler:calls \"go-turtles2\" = count turtles * 10", "true")
-      testReporter("profiler:calls \"go-turtles3\" = count turtles * count turtles * 10", "true")
-      testReporter("profiler:exclusive-time \"go-patches\" = profiler:inclusive-time \"go-patches\"", "true")
-      testReporter("profiler:exclusive-time \"go-turtles3\" = profiler:inclusive-time \"go-turtles3\"", "true")
-      testCommand("set glob3 profiler:exclusive-time \"go-turtles3\"")
-      testCommand("set glob2 profiler:exclusive-time \"go-turtles2\"")
-      testCommand("set glob1 profiler:exclusive-time \"go-turtles1\"")
-      testReporter("precision (glob2 + glob3 - profiler:inclusive-time \"go-turtles2\") 13", "0")
-      testReporter("precision (glob1 + glob2 + glob3 - profiler:inclusive-time \"go-turtles1\") 13", "0")
+      testCommand("profilo:stop")
+      testReporter("profilo:calls \"go-patches\" = count patches * 10", "true")
+      testReporter("profilo:calls \"go-turtles1\" = count turtles * 10", "true")
+      testReporter("profilo:calls \"go-turtles2\" = count turtles * 10", "true")
+      testReporter("profilo:calls \"go-turtles3\" = count turtles * count turtles * 10", "true")
+      testReporter("profilo:exclusive-time \"go-patches\" = profilo:inclusive-time \"go-patches\"", "true")
+      testReporter("profilo:exclusive-time \"go-turtles3\" = profilo:inclusive-time \"go-turtles3\"", "true")
+      testCommand("set glob3 profilo:exclusive-time \"go-turtles3\"")
+      testCommand("set glob2 profilo:exclusive-time \"go-turtles2\"")
+      testCommand("set glob1 profilo:exclusive-time \"go-turtles1\"")
+      testReporter("precision (glob2 + glob3 - profilo:inclusive-time \"go-turtles2\") 13", "0")
+      testReporter("precision (glob1 + glob2 + glob3 - profilo:inclusive-time \"go-turtles1\") 13", "0")
     }
   if(useGenerator && timingSensitiveOK)
     test("reporter procedures", SlowTest.Tag) {
       defineProcedures(
-        "extensions [profiler]\n" +
+        "extensions [profilo]\n" +
         "to-report some-value wait 0.1 report random 10 end")
       testCommand("crt 10")
-      testCommand("profiler:reset")
-      testCommand("profiler:start")
+      testCommand("profilo:reset")
+      testCommand("profilo:start")
       testCommand("ask turtles [ print some-value ]")
-      testCommand("profiler:stop")
-      testReporter("profiler:calls \"some-value\"", "10")
-      testReporter("profiler:exclusive-time \"some-value\" = profiler:inclusive-time \"some-value\"", "true")
-      testReporter("precision profiler:exclusive-time \"some-value\" -3", "1000")
+      testCommand("profilo:stop")
+      testReporter("profilo:calls \"some-value\"", "10")
+      testReporter("profilo:exclusive-time \"some-value\" = profilo:inclusive-time \"some-value\"", "true")
+      testReporter("precision profilo:exclusive-time \"some-value\" -3", "1000")
     }
 
   // kludginess ahead. this isn't really a test of the profiler extension per se.  the other
@@ -165,9 +165,9 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
   // and we don't want anything in test-fast or test-medium to depend on submodules like models and
   // extensions, so we put it here because it's a SlowTest.Tag - ST 1/19/12
   test("isReporter on extension prims", SlowTest.Tag) {
-    workspace.initForTesting(5, "extensions [profiler]")
-    assertResult(false) { workspace.isReporter("profiler:start") }
-    assertResult(true) { workspace.isReporter("profiler:report") }
+    workspace.initForTesting(5, "extensions [profilo]")
+    assertResult(false) { workspace.isReporter("profilo:start") }
+    assertResult(true) { workspace.isReporter("profilo:report") }
   }
 
 }
