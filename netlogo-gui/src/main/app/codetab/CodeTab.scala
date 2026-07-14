@@ -190,8 +190,8 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
     if (e.sourceOwner == this) {
       errorLabel.setError(Option(e.error), headerSource.length)
       compileButton.setEnabled(true)
+      setProgram()
     }
-    setProgram()
   }
 
   protected def setProgram(): Unit = {
