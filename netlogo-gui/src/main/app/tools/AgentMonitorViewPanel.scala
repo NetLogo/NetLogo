@@ -19,6 +19,7 @@ class AgentMonitorViewPanel(workspace: GUIWorkspace) extends JPanel(new BorderLa
   private val zoomer = new ZoomSlider(view)
 
   add(view, BorderLayout.CENTER)
+  view.init()
   view.setSize(workspace.world.worldWidth, workspace.world.worldHeight, 255.toDouble / workspace.world.worldWidth)
   view.applyNewFontSize(workspace.view.fontSize, 0)
   view.addPopupListener()
