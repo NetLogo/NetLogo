@@ -112,7 +112,7 @@ class Backifier(
         new nvmprim._turtleorlinkvariable(varName)
 
       case core.prim._callreport(proc) =>
-        new nvmprim._callreport(procedures((proc.name, None)))
+        new nvmprim._callreport(procedures((proc.name, proc.module)))
 
       case core.prim._errormessage(Some(let)) =>
         new nvmprim._errormessage(let)
