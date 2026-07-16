@@ -495,6 +495,10 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
     val globals: String = format(program.globals ++ procedures)
     val variables: String = format(program.turtlesOwn ++ program.patchesOwn ++ program.linksOwn)
 
+    val breedReporters: Seq[String] = (program.breeds.values ++ program.linkBreeds.values).flatMap { breed =>
+      Seq(breed.name, breed.singular)
+    }.toSeq
+
     val turtleCommands: Seq[String] = program.breeds.values.flatMap(BreedIdentifierHandler.breedCommands).toSeq
     val turtleReporters: Seq[String] = program.breeds.values.flatMap(BreedIdentifierHandler.breedReporters).toSeq
 
@@ -502,7 +506,7 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
     val linkReporters: Seq[String] = program.linkBreeds.values.flatMap(BreedIdentifierHandler.breedReporters).toSeq
 
     val commands: String = format(extensionCommands ++ turtleCommands ++ linkCommands)
-    val reporters: String = format(extensionReporters ++ turtleReporters ++ linkReporters)
+    val reporters: String = format(extensionReporters ++ breedReporters ++ turtleReporters ++ linkReporters)
 
     runInWeb(s"window.setCompiledProgram($keywords, $globals, $variables, $commands, $reporters)")
   }
