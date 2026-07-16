@@ -333,7 +333,7 @@ class App(args: App.CommandLineArgs) extends LinkChild with Exceptions.Handler w
       setWindowTitles()
     }
 
-    def aggregateManager: AggregateManagerInterface =
+    lazy val aggregateManager: AggregateManagerInterface =
       new GUIAggregateManager(frame, menuBarFactory, this, colorizer, editDialogFactory, extensionManager)
 
     def inspectAgent(agent: ApiAgent, radius: Double): Unit = {
