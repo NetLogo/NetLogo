@@ -164,9 +164,9 @@ class BehaviorSpaceApp(args: BehaviorSpaceApp.CommandLineArgs) extends Thread.Un
       "type" -> "launch"
     )))
 
-    val settings = LabInterface.Settings(args.model, Option(args.experiment), None, args.table, args.spreadsheet,
-                                         args.stats, args.lists, None, args.threads, args.updatePlots,
-                                         args.mirrorHeadless, args.errorBehavior, args.skip)
+    val settings = LabInterface.Settings(args.model, args.originalPath, Option(args.experiment), None, args.table,
+                                         args.spreadsheet,  args.stats, args.lists, None, args.threads,
+                                         args.updatePlots, args.mirrorHeadless, args.errorBehavior, args.skip)
 
     val protocol: LabProtocol = BehaviorSpaceCoordinator.selectProtocol(settings).get
 

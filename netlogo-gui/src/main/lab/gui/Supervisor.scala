@@ -15,7 +15,7 @@ import org.nlogo.window.{ EditDialogFactory, GUIWorkspace }
 import scala.sys.process.{ Process, ProcessLogger }
 import scala.util.Try
 
-class Supervisor(parent: Window, workspace: GUIWorkspace, modelPath: String, originalPath: String,
+class Supervisor(parent: Window, workspace: GUIWorkspace, modelPath: String, originalPath: Option[String],
                  protocol: LabProtocol, dialogFactory: EditDialogFactory, saveProtocol: (LabProtocol, Int) => Unit,
                  automated: Boolean)
   extends Thread("BehaviorSpace Supervisor") {
@@ -93,11 +93,11 @@ class Supervisor(parent: Window, workspace: GUIWorkspace, modelPath: String, ori
                                    "-Dsun.java2d.d3d=false",
                                    "-Dapple.awt.application.appearance=system",
                                    "org.nlogo.bsapp.BehaviorSpaceApp", modelPath, protocol.name,
-                                   "--original-path", originalPath,
                                    "--threads", protocol.threadCount.toString,
                                    "--error-behavior", protocol.errorBehavior.key,
                                    "--skip", protocol.runsCompleted.toString,
                                    "--port", handler.getPort.toString) ++
+                               originalPath.fold(Seq())(Seq("--original-path", _)) ++
                                boolToArg("--update-view", protocol.updateView) ++
                                boolToArg("--update-plots", protocol.updatePlotsAndMonitors) ++
                                boolToArg("--mirror-headless", protocol.mirrorHeadlessOutput) ++

@@ -276,6 +276,7 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
 
     Some(new Settings(
       model.get
+    , model
     , experiment
     , setupFile
     , table

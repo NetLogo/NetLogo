@@ -4,7 +4,7 @@ package org.nlogo.lab
 
 import java.io.{ File, FileWriter, PrintWriter }
 
-import org.nlogo.api.{ LabProtocol, LabPostProcessorInputFormat, PartialData }
+import org.nlogo.api.{ LabProtocol, LabPostProcessorInputFormat, ModelReader, PartialData }
 import org.nlogo.core.I18N
 import org.nlogo.nvm.{ LabInterface, PrimaryWorkspace, Workspace }
 
@@ -25,6 +25,8 @@ class Lab extends LabInterface {
   override def run(settings: LabInterface.Settings, worker: LabInterface.Worker, primaryWorkspace: PrimaryWorkspace,
                    fn: () => Workspace): LabInterface.Result = {
     import settings._
+
+    val displayPath: String = originalPath.getOrElse(s"Untitled.${ModelReader.modelSuffix}")
 
     // pool of workspaces is the same size as the thread pool
     // unless there are fewer runs than threads (Isaac B 6/27/25)
@@ -54,7 +56,7 @@ class Lab extends LabInterface {
 
     table.foreach { path =>
       if (path.trim == "-") {
-        worker.addTableWriter(modelPath, dims.getOrElse(modelDims), {
+        worker.addTableWriter(displayPath, dims.getOrElse(modelDims), {
           new PrintWriter(System.out) {
             // don't close System.out - ST 6/9/09
             override def close(): Unit = {}
@@ -63,14 +65,14 @@ class Lab extends LabInterface {
       } else if (worker.protocol.runsCompleted > 0 && !new File(path).exists) {
         error(I18N.gui.get("tools.behaviorSpace.error.pause.table"))
       } else {
-        worker.addTableWriter(modelPath, dims.getOrElse(modelDims),
+        worker.addTableWriter(displayPath, dims.getOrElse(modelDims),
                               new PrintWriter(new FileWriter(path, worker.protocol.runsCompleted > 0)))
       }
     }
 
     spreadsheet.foreach { path =>
       if (path.trim == "-") {
-        worker.addSpreadsheetWriter(modelPath, dims.getOrElse(modelDims), {
+        worker.addSpreadsheetWriter(displayPath, dims.getOrElse(modelDims), {
           new PrintWriter(System.out) {
             // don't close System.out - ST 6/9/09
             override def close(): Unit = {}
@@ -118,20 +120,20 @@ class Lab extends LabInterface {
           partialData.dataHeaders = "," + data.head.split(",", 2)(1)
           partialData.data = data.tail
 
-          worker.addSpreadsheetWriter(modelPath, dims.getOrElse(modelDims), new PrintWriter(path), partialData)
+          worker.addSpreadsheetWriter(displayPath, dims.getOrElse(modelDims), new PrintWriter(path), partialData)
         } catch {
           case _: Throwable =>
             error(I18N.gui.get("tools.behaviorSpace.error.pause.invalidSpreadsheet"))
         }
       } else {
-        worker.addSpreadsheetWriter(modelPath, dims.getOrElse(modelDims), new PrintWriter(path))
+        worker.addSpreadsheetWriter(displayPath, dims.getOrElse(modelDims), new PrintWriter(path))
       }
     }
 
     stats.foreach { path =>
       postProcessor match {
         case Some(processor) =>
-          worker.addStatsWriter(modelPath, dims.getOrElse(modelDims), {
+          worker.addStatsWriter(displayPath, dims.getOrElse(modelDims), {
             if (path.trim == "-") {
               new PrintWriter(System.out) {
                 // don't close System.out - ST 6/9/09
@@ -150,7 +152,7 @@ class Lab extends LabInterface {
     lists.foreach { path =>
       postProcessor match {
         case Some(processor) =>
-          worker.addListsWriter(modelPath, dims.getOrElse(modelDims), {
+          worker.addListsWriter(displayPath, dims.getOrElse(modelDims), {
             if (path.trim == "-") {
               new PrintWriter(System.out) {
                 // don't close System.out - ST 6/9/09

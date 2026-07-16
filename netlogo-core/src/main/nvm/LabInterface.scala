@@ -35,6 +35,7 @@ object LabInterface {
   }
 
   case class Settings(modelPath: String,
+    originalPath: Option[String],
     protocolName: Option[String],
     externalXMLFile: Option[File],
     table: Option[String],
