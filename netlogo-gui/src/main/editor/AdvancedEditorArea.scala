@@ -493,7 +493,12 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
 
     val keywords: String = format(turtleKeywords ++ linkKeywords)
     val globals: String = format(program.globals ++ procedures)
-    val variables: String = format(program.turtlesOwn ++ program.patchesOwn ++ program.linksOwn)
+
+    val breedsOwn: Seq[String] = program.breeds.values.flatMap(_.owns).toSeq
+    val linkBreedsOwn: Seq[String] = program.linkBreeds.values.flatMap(_.owns).toSeq
+
+    val variables: String = format(program.turtlesOwn ++ program.patchesOwn ++ program.linksOwn ++
+                                   breedsOwn ++ linkBreedsOwn)
 
     val breedReporters: Seq[String] = (program.breeds.values ++ program.linkBreeds.values).flatMap { breed =>
       Seq(breed.name, breed.singular)
