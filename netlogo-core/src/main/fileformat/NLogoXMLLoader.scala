@@ -109,7 +109,7 @@ class NLogoXMLLoader(headless: Boolean, literalParser: LiteralParser, editNames:
   }
 
   def writeExtras(writer: NLogoXMLWriter, model: Model): Unit = {
-    for (section <- model.optionalSections) {
+    for (section <- model.optionalSections.sortBy(_.key)) {
       section.key match {
         case "org.nlogo.modelsection.previewcommands" =>
           writer.startElement("previewCommands")
