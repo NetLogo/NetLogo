@@ -40,8 +40,11 @@ object QuickHelp {
     }
   }
 
-  def docPath(anchor: Option[String]): Path =
-    Paths.get(docsRoot, "NetLogo_User_Manual.pdf" + anchor.fold("")("#" + _))
+  def docPath(page: String): Path =
+    Paths.get(docsRoot, "docs", "static", s"$page.html")
+
+  private def sitePath(entry: Entry): URI =
+    new URI(s"https://docs.netlogo.org/${Version.versionNumberNo3D}/${entry.docsUrl}")
 
   private def loadHelp(threed: Boolean): Map[String, Entry] = {
     val links: Path = Paths.get(docsRoot, "manual-links.csv")
@@ -58,11 +61,7 @@ object QuickHelp {
   }
 
   private def openDictionary(comp: Component, word: String, words: Map[String, Entry]): Unit = {
-    BrowserLauncher.tryOpenURI(
-      comp,
-      new URI(s"https://docs.netlogo.org/${Version.versionNumberNo3D}/${words(word).docsUrl}"),
-      docPath(Some(words(word).pdfAnchor))
-    )
+    BrowserLauncher.tryOpenURI(comp, sitePath(words(word)), docPath(words(word).docsUrl))
   }
 
   def doHelp(comp: Component, token: String): Unit = {
@@ -84,19 +83,19 @@ object QuickHelp {
                          OptionPane.Icons.Error).getSelectedIndex == 0)
         BrowserLauncher.tryOpenURI(comp,
           new URI(s"https://docs.netlogo.org/${Version.versionNumberNo3D}/dictionary.html"),
-          docPath(Some("dictionary-netlogo-dictionary")))
+          docPath("dictionary"))
     }
   }
 
   private object Entry {
     def parse(els: Array[String], threed: Boolean): Option[Entry] = {
       if (els.size == 3 && (els(0) == "3d") == threed) {
-        Some(Entry(els(1), els(2)))
+        Some(Entry(els(1)))
       } else {
         None
       }
     }
   }
 
-  private case class Entry(docsUrl: String, pdfAnchor: String)
+  private case class Entry(docsUrl: String)
 }

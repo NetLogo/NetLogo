@@ -5,15 +5,15 @@ import NetLogoPackaging.RunProcess
 import ModelsLibrary.modelsDirectory
 import Extensions.extensionRoot
 
-import java.nio.file.{ Files, StandardCopyOption }
+import java.nio.file.{ Files, Path, StandardCopyOption }
 
 object Docs {
-  lazy val allDocs                      = taskKey[Unit]("all documentation: html and pdf")
-  lazy val manualPDF                    = taskKey[Unit]("NetLogo manual PDF")
-  lazy val helioRoot                    = settingKey[File]("location of helio root")
-  lazy val docsSource                   = settingKey[File]("location of docs source files")
-  lazy val docsDest                     = settingKey[File]("location to which docs are generated")
-  lazy val testDocLinks                 = taskKey[Map[String, Seq[String]]]("check for broken links in the documentation")
+  lazy val allDocs      = taskKey[Unit]("all documentation: html and pdf")
+  lazy val staticDocs   = taskKey[Unit]("NetLogo static documentation")
+  lazy val helioRoot    = settingKey[File]("location of helio root")
+  lazy val docsSource   = settingKey[File]("location of docs source files")
+  lazy val docsDest     = settingKey[File]("location to which docs are generated")
+  lazy val testDocLinks = taskKey[Map[String, Seq[String]]]("check for broken links in the documentation")
 
   lazy val settings = Seq(
     javaOptions        += "-Dnetlogo.docs.dir=" + baseDirectory.value.getAbsolutePath,
@@ -22,10 +22,10 @@ object Docs {
     docsSource         := helioRoot.value / "apps" / "docs",
     docsDest           := baseDirectory.value / "docs",
     allDocs := {
-      manualPDF.value
+      staticDocs.value
       (Compile / doc).value
     },
-    manualPDF := {
+    staticDocs := {
       if (System.getenv("CI") == null) {
         val yarnBin =
           if (!System.getProperty("os.name").toLowerCase.startsWith("windows"))
@@ -33,9 +33,8 @@ object Docs {
           else
             "yarn.cmd"
         RunProcess(Seq(yarnBin, "run", "init"), helioRoot.value, "Initialize Helio")
-        RunProcess(Seq(yarnBin, "run", "docs:build"), docsSource.value, "Build documentation pages",
+        RunProcess(Seq(yarnBin, "run", "docs:build:offline"), docsSource.value, "Build static documentation",
                    "HELIO_HEADLESS" -> "1")
-        RunProcess(Seq(yarnBin, "run", "docs:generate-manual"), docsSource.value, "Generate manual PDF")
       }
 
       val manualSource = (docsSource.value / ".build" / "NetLogo_User_Manual.pdf").toPath
@@ -47,6 +46,18 @@ object Docs {
       val linksDest = (baseDirectory.value / "manual-links.csv").toPath
 
       Files.copy(linksSource, linksDest, StandardCopyOption.REPLACE_EXISTING)
+
+      val htmlSource = (docsSource.value / ".build" / "latest").toPath
+      val htmlDest = (baseDirectory.value / "docs" / "static").toPath
+
+      Files.walk(htmlSource).forEach { path =>
+        if (!Files.isDirectory(path)) {
+          val dest: Path = htmlDest.resolve(htmlSource.relativize(path))
+
+          Files.createDirectories(dest.getParent)
+          Files.copy(path, dest, StandardCopyOption.REPLACE_EXISTING)
+        }
+      }
     },
     testDocLinks := {
       val res = NetLogoDocsTest(docsDest.value.getAbsoluteFile)
