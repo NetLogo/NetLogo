@@ -66,7 +66,7 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
     override def actionPerformed(e: ActionEvent): Unit = {
       BrowserLauncher.tryOpenURI(
         InfoTab.this, new URI(s"https://docs.netlogo.org/${Version.versionNumberNo3D}/infotab#information"),
-        QuickHelp.docPath(Some("infotab-information")))
+        QuickHelp.docPath("infotab"))
     }
   })
   helpButton.setIcon(Utils.iconScaledWithColor("/images/help.png", 15, 15, InterfaceColors.toolbarImage()))

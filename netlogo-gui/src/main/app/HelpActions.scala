@@ -39,10 +39,11 @@ object HelpActions {
   def apply: Seq[MenuAction] = {
     Seq(
     new TryRemoteBrowseAction(I18N.gui.get("menu.help.netLogoUserManual"),
-      new URI(s"https://docs.netlogo.org/${Version.versionNumberNo3D}"), QuickHelp.docPath(None), HelpDocGroup),
+      new URI(s"https://docs.netlogo.org/${Version.versionNumberNo3D}"), QuickHelp.docPath("index"),
+              HelpDocGroup),
     new TryRemoteBrowseAction(I18N.gui.get("menu.help.netLogoDictionary"),
       new URI(s"https://docs.netlogo.org/${Version.versionNumberNo3D}/dictionary.html"),
-      QuickHelp.docPath(Some("dictionary-netlogo-dictionary")), HelpDocGroup),
+      QuickHelp.docPath("dictionary"), HelpDocGroup),
     new RemoteBrowseAction(I18N.gui.get("menu.help.bind"),
       new URI("https://ccl.northwestern.edu/netlogo/bind"), HelpDocGroup),
     new RemoteBrowseAction(I18N.gui.get("menu.help.introToABM"),

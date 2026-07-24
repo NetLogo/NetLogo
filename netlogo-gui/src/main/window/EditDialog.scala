@@ -56,7 +56,7 @@ class EditDialog(window: Window, target: Editable, editPanel: EditPanel, modal: 
     val link = target.helpLink.fold("")((page, anchor) => s"$page.html#$anchor")
 
     BrowserLauncher.tryOpenURI(this, new URI(s"https://docs.netlogo.org/${Version.versionNumberNo3D}/$link"),
-                               QuickHelp.docPath(target.helpLink.map(_ + "-" + _)))
+                               QuickHelp.docPath(target.helpLink.fold("")(_._1)))
   })
 
   private val buttons = Seq(
