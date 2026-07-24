@@ -296,20 +296,35 @@ object StructureParser {
       structureParser.parse(tokens, ownerModuleFilename, oldResults, filename)
     }
 
-  private[parse] def usedNames(program: Program, procedures: ProceduresMap): SymbolTable = {
-    val symTable =
+  private[parse] def usedNames(program: Program, procedures: ProceduresMap, isModule: Boolean): SymbolTable = {
+    val baseSymTable =
       SymbolTable.empty
         .addSymbols(program.dialect.tokenMapper.allCommandNames, SymbolType.PrimitiveCommand)
         .addSymbols(program.dialect.tokenMapper.allReporterNames, SymbolType.PrimitiveReporter)
-        .addSymbols(program.globals, SymbolType.GlobalVariable)
-        .addSymbols(program.turtlesOwn, SymbolType.TurtleVariable)
-        .addSymbols(program.patchesOwn, SymbolType.PatchVariable)
-        .addSymbols(program.linksOwn.filterNot(program.turtlesOwn.contains), SymbolType.LinkVariable)
-        .addSymbols(program.breeds.values.map(_.singular), SymbolType.TurtleBreedSingular)
-        .addSymbols(program.breeds.keys, SymbolType.TurtleBreed)
-        .addSymbols(program.linkBreeds.values.map(_.singular), SymbolType.LinkBreedSingular)
-        .addSymbols(program.linkBreeds.keys, SymbolType.LinkBreed)
         .addSymbols(procedures.keys.map(_._1), SymbolType.ProcedureSymbol)
+    val symTable =
+      if(isModule) {
+        val emptyProgram = Program.empty()
+        baseSymTable
+          .addSymbols(emptyProgram.globals, SymbolType.GlobalVariable)
+          .addSymbols(emptyProgram.turtlesOwn, SymbolType.TurtleVariable)
+          .addSymbols(emptyProgram.patchesOwn, SymbolType.PatchVariable)
+          .addSymbols(emptyProgram.linksOwn.filterNot(emptyProgram.turtlesOwn.contains), SymbolType.LinkVariable)
+          .addSymbols(emptyProgram.breeds.values.map(_.singular), SymbolType.TurtleBreedSingular)
+          .addSymbols(emptyProgram.breeds.keys, SymbolType.TurtleBreed)
+          .addSymbols(emptyProgram.linkBreeds.values.map(_.singular), SymbolType.LinkBreedSingular)
+          .addSymbols(emptyProgram.linkBreeds.keys, SymbolType.LinkBreed)
+      } else {
+        baseSymTable
+          .addSymbols(program.globals, SymbolType.GlobalVariable)
+          .addSymbols(program.turtlesOwn, SymbolType.TurtleVariable)
+          .addSymbols(program.patchesOwn, SymbolType.PatchVariable)
+          .addSymbols(program.linksOwn.filterNot(program.turtlesOwn.contains), SymbolType.LinkVariable)
+          .addSymbols(program.breeds.values.map(_.singular), SymbolType.TurtleBreedSingular)
+          .addSymbols(program.breeds.keys, SymbolType.TurtleBreed)
+          .addSymbols(program.linkBreeds.values.map(_.singular), SymbolType.LinkBreedSingular)
+          .addSymbols(program.linkBreeds.keys, SymbolType.LinkBreed)
+      }
 
     program.breeds.values.foldLeft(symTable) {
       case (table, breed) if breed.isLinkBreed =>
@@ -427,7 +442,9 @@ class StructureParser(
         StructureChecker.rejectDuplicateDeclarations(declarations)
         StructureChecker.rejectDuplicateNames(declarations,
           StructureParser.usedNames(
-            oldResults.program, oldResults.procedures.filter{ case ((_, procModule), _) => procModule == module }))
+            oldResults.program,
+            oldResults.procedures.filter{ case ((_, procModule), _) => procModule == module },
+            module.isDefined))
         StructureChecker.rejectMissingReport(declarations)
         StructureConverter.convert(declarations, displayName, module,
           if (subprogram)

@@ -33,7 +33,7 @@ class Namer(
     new CommandHandler(program.dialect.tokenMapper),
     new ReporterHandler(program.dialect.tokenMapper),
     new BreedHandler(program),
-    new AgentVariableReporterHandler(program),
+    new AgentVariableReporterHandler(if (procedure.module.isDefined) Program.empty() else program),
     new ExtensionPrimitiveHandler(extensionManager),
     new ProcedureVariableHandler(procedure.args),
     new CallHandler(procedures, procedure.module))
