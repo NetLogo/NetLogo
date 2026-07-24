@@ -15,18 +15,19 @@ trait NetLogoParser {
   def basicParse(compilationOperand: CompilationOperand): (Seq[ProcedureDefinition], StructureResults) = {
     import compilationOperand.{ extensionManager, oldProcedures }
     val structureResults = StructureParser.parseSources(tokenizer, compilationOperand)
-    val globallyUsedNames =
-      StructureParser.usedNames(structureResults.program,
-        (oldProcedures ++ structureResults.procedures).filter { case ((_, procModule), _ ) => procModule.isEmpty })
-
     val nonAliasProcedures = structureResults.procedures.filter {
       case ((name, module), proc) => name == proc.name && module == proc.module
     }
 
-    val newTopLevelProcedures = (nonAliasProcedures -- oldProcedures.keys)
+    val allProcedures = oldProcedures ++ structureResults.procedures
+    val newTopLevelProcedures = nonAliasProcedures -- oldProcedures.keys
 
-    val topLevelDefs = newTopLevelProcedures.values
-      .map(parseProcedure(structureResults, globallyUsedNames, oldProcedures, extensionManager)).toSeq
+    val topLevelDefs = newTopLevelProcedures.values.map { x =>
+        val scope = StructureParser.usedNames(structureResults.program,
+          allProcedures.filter { case ((_, module), _ ) => module == x.module },
+          x.module.isDefined)
+        parseProcedure(structureResults, scope, oldProcedures, extensionManager)(x)
+      }.toSeq
     (topLevelDefs, structureResults)
   }
 
