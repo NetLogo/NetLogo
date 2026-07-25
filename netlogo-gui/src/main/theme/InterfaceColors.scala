@@ -184,6 +184,7 @@ object InterfaceColors {
   def reporterColor(): Color = theme.colorizerTheme.getColor(TokenType.Reporter)
   def keywordColor(): Color = theme.colorizerTheme.getColor(TokenType.Keyword)
   def constantColor(): Color = theme.colorizerTheme.getColor(TokenType.Literal)
+  def variableColor(): Color = theme.colorizerTheme.variableColor
   def defaultColor(): Color = theme.colorizerTheme.getColor(null)
   def announceX(): Color = theme.announceX
   def announceXHovered(): Color = theme.announceXHovered

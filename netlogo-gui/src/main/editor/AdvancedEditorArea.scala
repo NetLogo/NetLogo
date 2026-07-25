@@ -497,6 +497,8 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
 
     val keywords: String = format(turtleKeywords ++ linkKeywords)
 
+    val globals: String = format(program.globals)
+
     val breedsOwn: Seq[String] = program.breeds.values.flatMap(_.owns).toSeq
     val linkBreedsOwn: Seq[String] = program.linkBreeds.values.flatMap(_.owns).toSeq
 
@@ -515,9 +517,9 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
 
     val commands: String = format(extensionCommands ++ turtleCommands ++ linkCommands ++ commandProcs)
     val reporters: String = format(extensionReporters ++ breedReporters ++ turtleReporters ++ linkReporters ++
-                                   reporterProcs ++ program.globals)
+                                   reporterProcs)
 
-    runInWeb(s"window.setCompiledProgram($keywords, [], $variables, $commands, $reporters)")
+    runInWeb(s"window.setCompiledProgram($keywords, $globals, $variables, $commands, $reporters)")
   }
 
   private def runInWeb(function: String): Unit = {
@@ -557,7 +559,8 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
       |  constant: "${colorString(InterfaceColors.constantColor())}",
       |  keyword: "${colorString(InterfaceColors.keywordColor())}",
       |  command: "${colorString(InterfaceColors.commandColor())}",
-      |  reporter: "${colorString(InterfaceColors.reporterColor())}"
+      |  reporter: "${colorString(InterfaceColors.reporterColor())}",
+      |  variable: "${colorString(InterfaceColors.variableColor())}"
       })""".stripMargin)
   }
 
