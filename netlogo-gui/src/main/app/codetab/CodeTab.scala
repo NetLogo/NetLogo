@@ -202,14 +202,20 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
   }
 
   protected def setProgram(): Unit = {
-    val procedures: Seq[String] = {
-      workspace.procedures.keys.collect {
-        case (proc, None) =>
-          proc
-      }.toSeq
-    }
+    val (reporterMap, commandMap) = workspace.procedures.partition(_._2.isReporter)
 
-    text.setProgram(workspace.world.program, procedures, workspace.getExtensionManager.extensionCommandNames.toSeq,
+    val commands: Seq[String] = commandMap.keys.collect {
+      case (name, None) =>
+        name
+    }.toSeq
+
+    val reporters: Seq[String] = reporterMap.keys.collect {
+      case (name, None) =>
+        name
+    }.toSeq
+
+    text.setProgram(workspace.world.program, commands, reporters,
+                    workspace.getExtensionManager.extensionCommandNames.toSeq,
                     workspace.getExtensionManager.extensionReporterNames.toSeq)
   }
 
