@@ -399,6 +399,10 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
     runInWeb(s"window.setCompleteOnType($enabled)")
   }
 
+  def refresh(): Unit = {
+    runInWeb("window.refreshText()");
+  }
+
   override def setText(text: String): Unit = {
     webEngine synchronized {
       currentText = text
