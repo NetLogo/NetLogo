@@ -26,6 +26,7 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
   with ProceduresMenuTarget
   with AppEvents.SwitchedTabsEvent.Handler
   with WindowEvents.CompiledEvent.Handler
+  with WindowEvents.AfterLoadEvent.Handler
   with Zoomable
   with NlogoPrintable
   with MenuTab
@@ -192,6 +193,12 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
       compileButton.setEnabled(true)
       setProgram()
     }
+  }
+
+  // this forces CodeMirror to redo all syntax highlighting with the newly compiled
+  // program context (Isaac B 7/25/26)
+  override def handle(e: WindowEvents.AfterLoadEvent): Unit = {
+    text.refresh()
   }
 
   protected def setProgram(): Unit = {
