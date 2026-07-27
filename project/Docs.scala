@@ -23,7 +23,6 @@ object Docs {
     docsDest           := baseDirectory.value / "docs",
     allDocs := {
       staticDocs.value
-      (Compile / doc).value
     },
     staticDocs := {
       if (System.getenv("CI") == null) {
