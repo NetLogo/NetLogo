@@ -32,7 +32,7 @@ class Namer(
   lazy val handlers = Seq[Token => Option[(TokenType, core.Instruction)]](
     new CommandHandler(program.dialect.tokenMapper),
     new ReporterHandler(program.dialect.tokenMapper),
-    new BreedHandler(program),
+    new BreedHandler(if (procedure.module.isDefined) Program.empty() else program),
     new AgentVariableReporterHandler(if (procedure.module.isDefined) Program.empty() else program),
     new ExtensionPrimitiveHandler(extensionManager),
     new ProcedureVariableHandler(procedure.args),
