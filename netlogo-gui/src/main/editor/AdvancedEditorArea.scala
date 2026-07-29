@@ -520,6 +520,10 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
     runInWeb(s"window.setCompiledProgram($keywords, $globals, $variables, $commands, $reporters)")
   }
 
+  def unsetProgram(): Unit = {
+    runInWeb("window.setCompiledProgram([], [], [], [], [])")
+  }
+
   private def runInWeb(function: String): Unit = {
     engineReady.future.foreach { _ =>
       Platform.runLater(() => {

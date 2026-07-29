@@ -29,10 +29,13 @@ trait CompilerInterface {
   def makeLiteralReporter(value: AnyRef): Reporter
 }
 
+case class IncludeSource(val file: String, isImport: Boolean)
+
 trait AuxiliaryCompilerInterface {
   def defaultDialect: Dialect
 
-  def findIncludes(sourceFileName: String, source: String, environment: CompilationEnvironment): Option[Map[String, String]]
+  def findIncludes(sourceFileName: String, source: String,
+                   environment: CompilationEnvironment): Option[Map[String, IncludeSource]]
 
   @throws(classOf[CompilerException])
   def readFromString(source: String): AnyRef

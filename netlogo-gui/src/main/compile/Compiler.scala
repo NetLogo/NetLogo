@@ -7,7 +7,8 @@ import java.util.Locale
 import org.nlogo.api.{ ExtensionManager, LibraryManager, SourceOwner, World }
 import org.nlogo.core.{ CompilationEnvironment, CompilerException, CompilerUtilitiesInterface, Dialect, Femto,
                         FrontEndInterface, ProcedureSyntax, Program, Token, TokenType }
-import org.nlogo.nvm.{ CompilerFlags, CompilerResults, ImportHandler, PresentationCompilerInterface, Procedure }
+import org.nlogo.nvm.{ CompilerFlags, CompilerResults, ImportHandler, IncludeSource, PresentationCompilerInterface,
+                       Procedure }
 import org.nlogo.util.PathUtils
 
 import scala.collection.immutable.ListMap
@@ -193,7 +194,7 @@ class Compiler(dialect: Dialect) extends PresentationCompilerInterface {
 
   // used for includes menu
   @throws(classOf[CompilerException])
-  def findIncludes(name: String, source: String, env: CompilationEnvironment): Option[Map[String, String]] = {
+  def findIncludes(name: String, source: String, env: CompilationEnvironment): Option[Map[String, IncludeSource]] = {
     val includes = frontEnd.findIncludes(source)
     val includesMap =
       if (includes.isEmpty) { // this allows the includes menu to be displayed for __includes []
@@ -206,15 +207,18 @@ class Compiler(dialect: Dialect) extends PresentationCompilerInterface {
         } else {
           parserTokenizer.tokenizeString(source)
             .find(t => t.text.equalsIgnoreCase("__includes"))
-            .map(_ => Map.empty[String, String])
+            .map(_ => Map.empty[String, IncludeSource])
         }
       } else
-        Some((includes zip includes.map(i => PathUtils.standardize(env.resolvePath(i)))).toMap)
+        Some((includes zip includes.map(i => IncludeSource(PathUtils.standardize(env.resolvePath(i)), false))).toMap)
 
     val imports = findAllImportedFiles(source, env)
-    val importsMap = Some((imports zip imports.map(i => PathUtils.standardize(env.resolvePath(i)))).toMap)
+    val importsMap = Some((imports zip imports.map { i =>
+      IncludeSource(PathUtils.standardize(env.resolvePath(i)), true)
+    }).toMap)
 
-    Some(includesMap.getOrElse(Map.empty[String, String]) ++ importsMap.getOrElse(Map.empty[String, String]))
+    Some(includesMap.getOrElse(Map.empty[String, IncludeSource]) ++
+         importsMap.getOrElse(Map.empty[String, IncludeSource]))
   }
 
   // used by IdentifierEditor (Isaac B 7/15/25)

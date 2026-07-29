@@ -14,6 +14,7 @@ import org.nlogo.agent.Observer
 import org.nlogo.app.common.{CodeToHtml, EditorFactory, FindDialog, MenuTab, TabsInterface, Events => AppEvents}
 import org.nlogo.core.{ AgentKind, CompilerException, I18N }
 import org.nlogo.editor.{ AdvancedEditorArea, EditorConfiguration }
+import org.nlogo.nvm.IncludeSource
 import org.nlogo.swing.{ Button, CheckBox, PrinterManager, ToolBar, ToolBarActionButton, UserAction,
                          Printable => NlogoPrintable, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
@@ -139,7 +140,7 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
   // since the editor tends to want to be huge - ST
   override def getPreferredSize: Dimension = toolBar.getPreferredSize
 
-  def getIncludesTable: Option[Map[String, String]] = {
+  def getIncludesTable: Option[Map[String, IncludeSource]] = {
     Option(workspace.getModelPath).orElse {
       // we create an arbitrary model name for checking include paths when we don't have an actual
       // modelPath or directory
@@ -211,6 +212,10 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
 
     text.setProgram(workspace.world.program, procedures, workspace.getExtensionManager.extensionCommandNames.toSeq,
                     workspace.getExtensionManager.extensionReporterNames.toSeq)
+  }
+
+  protected def unsetProgram(): Unit = {
+    text.unsetProgram()
   }
 
   protected def compile(): Unit = new WindowEvents.CompileAllEvent().raise(this)
