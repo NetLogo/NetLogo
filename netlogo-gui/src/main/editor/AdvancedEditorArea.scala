@@ -341,7 +341,7 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
     engine.load(getClass.getResource("/codetab/index.html").toExternalForm)
   })
 
-  setCoreProgram()
+  setCoreProgram(false)
 
   def showPopup(point: Point): Unit = {
     popupMenu.syncTheme()
@@ -477,8 +477,15 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
   private def format(names: Seq[String]): String =
     names.map(name => s"\"${name.toLowerCase(Locale.US)}\"").mkString("[", ",", "]")
 
-  private def setCoreProgram(): Unit = {
-    val keywords: String = format(Keywords.keywords.toSeq :+ "breed")
+  def setCoreProgram(module: Boolean): Unit = {
+    val keywords: String = {
+      if (module) {
+        format(Seq("import", "export"))
+      } else {
+        format(Keywords.keywords.toSeq :+ "breed")
+      }
+    }
+
     val constants: String = format(ColorConstants.ColorNames.toSeq ++
                                    Seq("grey", "false", "true", "nobody", "e", "pi"))
 

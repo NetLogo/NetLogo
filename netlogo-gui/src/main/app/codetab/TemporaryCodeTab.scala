@@ -173,9 +173,11 @@ class TemporaryCodeTab(workspace: GUIWorkspace,
         })
 
         if (include) {
+          text.setCoreProgram(false)
           setProgram()
         } else {
-          unsetProgram()
+          text.setCoreProgram(true)
+          text.unsetProgram()
         }
 
       case _ =>

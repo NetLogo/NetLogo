@@ -214,10 +214,6 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
                     workspace.getExtensionManager.extensionReporterNames.toSeq)
   }
 
-  protected def unsetProgram(): Unit = {
-    text.unsetProgram()
-  }
-
   protected def compile(): Unit = new WindowEvents.CompileAllEvent().raise(this)
 
   override def requestFocus(): Unit = text.requestFocus()
