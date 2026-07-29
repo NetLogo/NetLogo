@@ -20,6 +20,13 @@ import SymbolType._
 
 object StructureChecker {
 
+  private val coreBreeds = Map[String, SymbolType](
+    "TURTLES" -> SymbolType.TurtleBreed,
+    "TURTLE" -> SymbolType.TurtleBreedSingular,
+    "LINKS" -> SymbolType.LinkBreed,
+    "LINK" -> SymbolType.LinkBreedSingular
+  )
+
   def rejectExportOutsideModule(declarations: Seq[Declaration], isModule: Boolean): Unit = {
     if (!isModule) {
       for (declaration <- declarations) {
@@ -181,7 +188,10 @@ object StructureChecker {
 
   private def checkForBreedPrimsDuplicatingBuiltIn(usage: Occurrence, usedNames: SymbolTable): Unit = {
     usage.declaration match {
-      case breed: Breed =>
+      case breed @ Breed(plural, singular, _, _, _, _) =>
+        coreBreeds.get(plural.name).foreach(t => exception(duplicateOf(t, plural.name), plural.token))
+        coreBreeds.get(singular.name).foreach(t => exception(duplicateOf(t, singular.name), singular.token))
+
         val matchedPrimAndType =
           BreedIdentifierHandler.breedCommands(breed).filter(c => usedNames.contains(c.toUpperCase(Locale.ENGLISH)))
                                                      .map(i => (i, BreedCommand)) ++

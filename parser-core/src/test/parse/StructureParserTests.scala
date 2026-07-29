@@ -265,6 +265,18 @@ class StructureParserTests extends AnyFunSuite {
   test("redeclaration of breed-singular") {
     expectError("breed [as a] breed [bs a]", "There is already a singular breed name called A")
   }
+  test("redeclaration of core breed plural") {
+    expectError("breed [turtles thing]", "There is already a breed called TURTLES")
+  }
+  test("redeclaration of core breed singular") {
+    expectError("breed [thing turtle]", "There is already a singular breed name called TURTLE")
+  }
+  test("redeclaration of core link breed plural") {
+    expectError("breed [links thing]", "There is already a link breed called LINKS")
+  }
+  test("redeclaration of core link breed singular") {
+    expectError("breed [thing link]", "There is already a singular link breed name called LINK")
+  }
   test("redeclaration of extensions") {
     expectError("extensions [foo] extensions [bar]",
       "Redeclaration of EXTENSIONS") }
