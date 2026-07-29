@@ -20,6 +20,7 @@ import org.nlogo.app.tools.AgentMonitorManager
 import org.nlogo.awt.UserCancelException
 import org.nlogo.core.{ I18N, NetLogoPreferences }
 import org.nlogo.editor.EditorConfiguration
+import org.nlogo.nvm.IncludeSource
 import org.nlogo.swing.{ OptionPane, Printable, PrinterManager, TabLabel, UserAction }
 import org.nlogo.theme.ThemeSync
 import org.nlogo.window.Events.{ AboutToCloseFilesEvent, AboutToSaveExternalFileEvent, AboutToSaveModelEvent,
@@ -190,7 +191,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     stopWatcherThread()
 
     if (modelPath != null && !ignoreChanges) {
-      def f(x: Map[String, String]): List[Path] = x.values.map(Paths.get(_)).toList
+      def f(x: Map[String, IncludeSource]): List[Path] = x.values.map(s => Paths.get(s.file)).toList
       val includes: List[Path] = mainCodeTab.getIncludesTable.map(f).getOrElse(List.empty)
 
       watcherThread = new FileWatcherThread(Paths.get(modelPath) :: includes, handleFileChange)

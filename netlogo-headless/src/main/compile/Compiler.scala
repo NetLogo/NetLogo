@@ -10,7 +10,7 @@ import org.nlogo.compile.api.{ BackEndInterface, CommandMunger, FrontMiddleBridg
 import org.nlogo.core.{ CompilationEnvironment, CompilationOperand, CompilerUtilitiesInterface, Dialect, Femto,
                         FrontEndInterface, NetLogoCore, ProcedureSyntax, Program, Token, TokenizerInterface,
                         TokenType }
-import org.nlogo.nvm.{ CompilerFlags, CompilerResults, ImportHandler, Optimizations => NvmOptimizations,
+import org.nlogo.nvm.{ CompilerFlags, CompilerResults, ImportHandler, IncludeSource, Optimizations => NvmOptimizations,
                        PresentationCompilerInterface, Procedure, Reporter },
   Procedure.{ ProceduresMap, NoProcedures }
 
@@ -141,7 +141,7 @@ class Compiler(dialect: Dialect) extends PresentationCompilerInterface {
   }
 
   override def findIncludes(sourceFileName: String, source: String,
-                            compilationEnv: CompilationEnvironment): Option[Map[String, String]] = {
+                            compilationEnv: CompilationEnvironment): Option[Map[String, IncludeSource]] = {
     val includes = frontEnd.findIncludes(source)
 
     if (includes.isEmpty) {
@@ -151,7 +151,7 @@ class Compiler(dialect: Dialect) extends PresentationCompilerInterface {
         parserTokenizer.tokenizeString(source).find(t => t.text.equalsIgnoreCase("__includes")).map(_ => Map())
       }
     } else {
-      Some(includes.zip(includes.map(compilationEnv.resolvePath)).toMap)
+      Some(includes.zip(includes.map(i => IncludeSource(compilationEnv.resolvePath(i), false))).toMap)
     }
   }
 

@@ -13,12 +13,13 @@ import scala.util.control.Exception.ignoring
 import org.nlogo.app.common.{ Actions, TabsInterface }, Actions.Ellipsis
 import org.nlogo.awt.UserCancelException
 import org.nlogo.core.{ I18N, NetLogoPreferences }
+import org.nlogo.nvm.IncludeSource
 import org.nlogo.swing.{ FileDialog => SwingFileDialog, MenuItem, OptionPane, PopupMenu, RoundedBorderPanel,
                          ToolBarMenu }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ Events => WindowEvents }
 
-class IncludedFilesMenu(includesTable: => Option[Map[String, String]], tabs: TabsInterface)
+class IncludedFilesMenu(includesTable: => Option[Map[String, IncludeSource]], tabs: TabsInterface)
 extends ToolBarMenu(I18N.gui.get("tabs.code.includedFiles"))
 with WindowEvents.CompiledEvent.Handler with RoundedBorderPanel with ThemeSync {
   implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("tabs.code.includedFiles")
@@ -50,7 +51,8 @@ with WindowEvents.CompiledEvent.Handler with RoundedBorderPanel with ThemeSync {
     includesTable match {
       case Some(includePaths) =>
         val filtered =
-          includePaths.keys.toSeq.filter(include => include.endsWith(".nls") && new File(includePaths(include)).exists)
+          includePaths.keys.toSeq.filter(include => include.endsWith(".nls") &&
+            new File(includePaths(include).file).exists)
 
         if (filtered.isEmpty)
           menu.add(new MenuItem(I18N.gui.get("common.menus.empty"))).setEnabled(false)
@@ -59,7 +61,7 @@ with WindowEvents.CompiledEvent.Handler with RoundedBorderPanel with ThemeSync {
           filtered.sortBy(_.toUpperCase(Locale.ENGLISH)).foreach(include =>
             menu.add(new MenuItem(new AbstractAction(include) {
               def actionPerformed(e: ActionEvent): Unit = {
-                tabs.openExternalFile(includePaths(include))
+                tabs.openExternalFile(includePaths(include).file)
               }
             })))
         }

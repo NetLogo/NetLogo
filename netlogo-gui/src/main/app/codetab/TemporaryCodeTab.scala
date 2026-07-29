@@ -10,6 +10,7 @@ import org.nlogo.api.FileIO
 import org.nlogo.app.common.{ Dialogs, Events => AppEvents, TabsInterface }
 import org.nlogo.awt.UserCancelException
 import org.nlogo.core.I18N
+import org.nlogo.nvm.IncludeSource
 import org.nlogo.swing.{ CloseableTab, FileDialog => SwingFileDialog, OptionPane, RenameableTab, UserAction }
 import org.nlogo.util.PathUtils
 import org.nlogo.window.{ Events => WindowEvents, ExternalFileInterface, GUIWorkspace }
@@ -28,7 +29,7 @@ class TemporaryCodeTab(workspace: GUIWorkspace,
   separateCodeWindow:             Boolean)
   extends CodeTab(workspace, tabs) with CloseableTab with RenameableTab {
 
-  private var includesTable: Option[Map[String, String]] = getIncludesTable
+  private var includesTable: Option[Map[String, IncludeSource]] = getIncludesTable
 
   var closing = false
   var saveNeeded = false // Has the buffer changed since the file was saved?
@@ -79,7 +80,7 @@ class TemporaryCodeTab(workspace: GUIWorkspace,
   // if included file is not saved and not referenced in the main Code tab,
   // disable Check button and show warning banner (Isaac B 6/26/25)
   private def checkCompilable(dirty: Boolean): Unit = {
-    if (includesTable.exists(_.exists(_._2 == filename.getOrElse(null)))) {
+    if (includesTable.exists(_.exists(_._2.file == filename.getOrElse(null)))) {
       compileButton.setEnabled(dirty)
       errorLabel.setWarning(None)
     } else {
@@ -162,7 +163,21 @@ class TemporaryCodeTab(workspace: GUIWorkspace,
         includesTable = getIncludesTable
 
         setErrorLabel()
-        setProgram()
+
+        val include: Boolean = includesTable.exists(_.exists {
+          case (_, IncludeSource(file, false)) if file == filename.getOrElse(null) =>
+            true
+
+          case _ =>
+            false
+        })
+
+        if (include) {
+          setProgram()
+        } else {
+          unsetProgram()
+        }
+
       case _ =>
     }
   }
