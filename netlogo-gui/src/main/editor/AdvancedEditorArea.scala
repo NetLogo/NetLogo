@@ -304,8 +304,6 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
     }
   })
 
-  runInWeb("window.setNormalSelection()")
-
   Platform.runLater(() => {
     val webView = new WebView
 
