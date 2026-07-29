@@ -132,9 +132,18 @@ object ModelsLibrary {
         }
       }
 
+      def reorder(node: Node): Node = {
+        node match {
+          case Tree("Sample Models", path, children) =>
+            Tree("Sample Models", path, children)(using new SampleOrdering)
+
+          case _ => node
+        }
+      }
+
       rootNode = scanDirectory(directoryRoot.toPath, exclusive) match {
         case Some(Tree(name, _, children)) if useExtensionExamples => {
-          val allChildren    = children ++ getExtensionExamples()
+          val allChildren    = children.map(reorder) ++ getExtensionExamples()
           Some(Tree(name = name, path = "", children = allChildren)(using new TopLevelOrdering(exclusive)))
         }
         case rn => rn
@@ -261,6 +270,16 @@ object ModelsLibrary {
           d
       }
     }
+
+  private class SampleOrdering extends Ordering[String] {
+    override def compare(a: String, b: String): Int = {
+      (a, b) match {
+        case ("Core", _) => -1
+        case (_, "Core") => 1
+        case _ => String.CASE_INSENSITIVE_ORDER.compare(a, b)
+      }
+    }
+  }
 
   private def isBadName(name: String): Boolean = {
     // ignore invisible stuff
