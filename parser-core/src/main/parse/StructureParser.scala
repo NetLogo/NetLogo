@@ -95,7 +95,7 @@ object StructureParser {
                       } else {
                         val basePath = compilationEnvironment.resolvePath(currentImport.filename.getOrElse(""))
                         val relativePath = currentPath.drop(basePath.length + 1) // Strip common prefix plus a separator
-                        val path = raw"(?i)\.nls$$".r.replaceFirstIn(relativePath.replace(separator, ":").toUpperCase, "")
+                        val path = raw"(?i)\.nlm$$".r.replaceFirstIn(relativePath.replace(separator, ":").toUpperCase, "")
                         s"$path:"
                       }
                   }

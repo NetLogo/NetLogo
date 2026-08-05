@@ -10,7 +10,7 @@ class ProjectParserTests extends AnyFunSuite {
       |name = "foo"
       |version = 1.0.0
       |dependencies = "libfoo", "libbar" > 1.0, "libbaz" >= 1.2.3 && < 4.5.6
-      |source-files = "foo.nls", "bar.nls", "baz.nls"
+      |source-files = "foo.nlm", "bar.nlm", "baz.nlm"
       """.stripMargin
     val result = ProjectCombinators.parse(input)
 
@@ -24,7 +24,7 @@ class ProjectParserTests extends AnyFunSuite {
           Some(VersionBound.Exclusive(VersionNumber(List(4, 5, 6))))
         )
       )
-    val expectedSourceFiles = List("foo.nls", "bar.nls", "baz.nls")
+    val expectedSourceFiles = List("foo.nlm", "bar.nlm", "baz.nlm")
     val expected = Some(Project("foo", VersionNumber(List(1, 0, 0)), expectedDependencies, expectedSourceFiles))
 
     assertResult(expected)(result)
@@ -35,7 +35,7 @@ class ProjectParserTests extends AnyFunSuite {
       |version = 1.0.0
       |dependencies = "libfoo", "libbar" > 1.0, "libbaz" >= 1.2.3 && < 4.5.6
       |name = "foo"
-      |source-files = "foo.nls", "bar.nls", "baz.nls"
+      |source-files = "foo.nlm", "bar.nlm", "baz.nlm"
       """.stripMargin
     val result = ProjectCombinators.parse(input)
 
@@ -49,7 +49,7 @@ class ProjectParserTests extends AnyFunSuite {
           Some(VersionBound.Exclusive(VersionNumber(List(4, 5, 6))))
         )
       )
-    val expectedSourceFiles = List("foo.nls", "bar.nls", "baz.nls")
+    val expectedSourceFiles = List("foo.nlm", "bar.nlm", "baz.nlm")
     val expected = Some(Project("foo", VersionNumber(List(1, 0, 0)), expectedDependencies, expectedSourceFiles))
 
     assertResult(expected)(result)
@@ -60,7 +60,7 @@ class ProjectParserTests extends AnyFunSuite {
       |name = "foo"
       |version = 1.0.0
       |dependencies = "libfoo", "libbar" > 1.0, "libbaz" >= 1.2.3 && < 4.5.6
-      |source-files = "foo.nls", "bar.nls", "baz.nls"
+      |source-files = "foo.nlm", "bar.nlm", "baz.nlm"
       |version = 2.0.0
       """.stripMargin
 
@@ -86,7 +86,7 @@ class ProjectParserTests extends AnyFunSuite {
     val input = """
       |name = "foo"
       |dependencies = "libfoo", "libbar" > 1.0, "libbaz" >= 1.2.3 && < 4.5.6
-      |source-files = "foo.nls", "bar.nls", "baz.nls"
+      |source-files = "foo.nlm", "bar.nlm", "baz.nlm"
       """.stripMargin
     val result = ProjectCombinators.parse(input)
 
@@ -98,7 +98,7 @@ class ProjectParserTests extends AnyFunSuite {
       |name = "foo"
       |version = 1.0.0.a
       |dependencies = "libfoo", "libbar" > 1.0, "libbaz" >= 1.2.3 && < 4.5.6
-      |source-files = "foo.nls", "bar.nls", "baz.nls"
+      |source-files = "foo.nlm", "bar.nlm", "baz.nlm"
       """.stripMargin
     val result = ProjectCombinators.parse(input)
 
@@ -110,7 +110,7 @@ class ProjectParserTests extends AnyFunSuite {
       |name = foo
       |version = 1.0.0
       |dependencies = "libfoo", "libbar" > 1.0, "libbaz" >= 1.2.3 && < 4.5.6
-      |source-files = "foo.nls", "bar.nls", "baz.nls"
+      |source-files = "foo.nlm", "bar.nlm", "baz.nlm"
       """.stripMargin
     val result = ProjectCombinators.parse(input)
 
@@ -122,7 +122,7 @@ class ProjectParserTests extends AnyFunSuite {
       |name = "foo
       |version = 1.0.0
       |dependencies = "libfoo", "libbar" > 1.0, "libbaz" >= 1.2.3 && < 4.5.6
-      |source-files = "foo.nls", "bar.nls", "baz.nls"
+      |source-files = "foo.nlm", "bar.nlm", "baz.nlm"
       """.stripMargin
     val result = ProjectCombinators.parse(input)
 
@@ -134,7 +134,7 @@ class ProjectParserTests extends AnyFunSuite {
       |name = "foo"
       |version = 1.0.0
       |dependencies = "libfoo", "libbar" > 1.0, "libbaz" < 1.2.3 && >= 4.5.6
-      |source-files = "foo.nls", "bar.nls", "baz.nls"
+      |source-files = "foo.nlm", "bar.nlm", "baz.nlm"
       """.stripMargin
     val result = ProjectCombinators.parse(input)
 

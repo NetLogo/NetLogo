@@ -151,10 +151,10 @@ class StructureParserTests extends AnyFunSuite {
       |end
     """.stripMargin
 
-    expectParseAllError("import [baz baz] from foo", "Identifier list contains duplicates", src)
-    expectParseAllError("import [baz (qaz as baz)] from foo", "Identifier list contains duplicates", src)
-    expectParseAllError("import [(baz as zzz) (qaz as zzz)] from foo", "Identifier list contains duplicates", src)
-    expectParseAllError("import [(baz as zzz) (baz as yyy)] from foo", "Identifier list contains duplicates", src)
+    expectParseAllError("import [baz baz] from foo", "Identifier list contains duplicates", SourceType.NLModule, src)
+    expectParseAllError("import [baz (qaz as baz)] from foo", "Identifier list contains duplicates", SourceType.NLModule, src)
+    expectParseAllError("import [(baz as zzz) (qaz as zzz)] from foo", "Identifier list contains duplicates", SourceType.NLModule, src)
+    expectParseAllError("import [(baz as zzz) (baz as yyy)] from foo", "Identifier list contains duplicates", SourceType.NLModule, src)
   }
 
   test("includes") {
@@ -335,16 +335,22 @@ class StructureParserTests extends AnyFunSuite {
     expectError("breed [ cats cats ]", "A breed cannot have the same plural and singular name")
   }
 
-  def compileAll(src: String, nlsSrc1: String, nlsSrc2: String = ""): StructureResults = {
+  enum SourceType(val suffix: String):
+    case NLInclude  extends SourceType("nls")
+    case NLModule   extends SourceType("nlm")
+
+  def compileAll(src: String, sourceType: SourceType, fooSrc: String, barSrc: String = ""): StructureResults = {
     class TestCompilationEnvironment extends DummyCompilationEnvironment {
       override def resolveModulePath(currentFile: Option[String], modulePath: Seq[String]) = {
+
         val separator = System.getProperty("file.separator")
+        val suffix = sourceType.suffix
         val getParentDir = (x: String) => x.dropRight(x.length - x.lastIndexOf(separator))
         val parentDir = currentFile.map(getParentDir(_)).flatMap(x => if (x.isEmpty) None else Some(x))
 
         (parentDir, modulePath) match {
-          case (None, Seq("FOO")) => Seq("foo.nls")
-          case (None, Seq("BAR")) if nlsSrc2.nonEmpty => Seq("bar.nls")
+          case (None, Seq("FOO")) => Seq(s"foo.$suffix")
+          case (None, Seq("BAR")) if barSrc.nonEmpty => Seq(s"bar.$suffix")
           case _ => Seq()
         }
       }
@@ -356,29 +362,29 @@ class StructureParserTests extends AnyFunSuite {
                         , new TestCompilationEnvironment, subprogram = false),
       (_, name) =>
         name match {
-          case "foo.nls" => Some(("foo.nls", nlsSrc1))
-          case "bar.nls" if nlsSrc2.nonEmpty => Some(("bar.nls", nlsSrc2))
+          case s"foo.$suffix" => Some((s"foo.$suffix", fooSrc))
+          case s"bar.$suffix" if barSrc.nonEmpty => Some((s"bar.$suffix", barSrc))
           case _ => None
         })
   }
 
-  def expectParseAllError(src: String, error: String, nlsSrc1: String = "", nlsSrc2: String = "") = {
+  def expectParseAllError(src: String, error: String, sourceType: SourceType, fooSrc: String = "", barSrc: String = "") = {
     val e = intercept[CompilerException] {
-      compileAll(src, nlsSrc1, nlsSrc2)
+      compileAll(src, sourceType, fooSrc, barSrc)
     }
     assertResult(error)(e.getMessage.takeWhile(_ != ','))
   }
 
   test("import nonexistent module") {
-    expectParseAllError("""import foobar""", "Could not find FOOBAR")
+    expectParseAllError("""import foobar""", "Could not find FOOBAR", SourceType.NLInclude)
   }
 
   test("import nonexistent submodule") {
-    expectParseAllError("""import foobar:baz""", "Could not find FOOBAR:BAZ")
+    expectParseAllError("""import foobar:baz""", "Could not find FOOBAR:BAZ", SourceType.NLInclude)
   }
 
   test("import syntax returns correct results") {
-    val results = compileAll("""import foo""", "")
+    val results = compileAll("""import foo""", SourceType.NLModule, "")
     assert(results.imports.nonEmpty || results.includedSources.nonEmpty)
   }
 
@@ -388,21 +394,21 @@ class StructureParserTests extends AnyFunSuite {
       |import bar
       |
       """.stripMargin
-    val nlsSrc1 = """
+    val fooSrc = """
       |export [hello]
       |
       |to hello
       |  show 12345
       |end
       """.stripMargin
-    val nlsSrc2 = """
+    val barSrc = """
       |export [bye]
       |
       |to bye
       |  show 54321
       |end
       """.stripMargin
-    val results = compileAll(src, nlsSrc1, nlsSrc2)
+    val results = compileAll(src, SourceType.NLModule, fooSrc, barSrc)
 
     if (!results.procedures.contains(("FOO:HELLO", None)) ||
         !results.procedures.contains(("BAR:BYE", None))) {
@@ -411,7 +417,7 @@ class StructureParserTests extends AnyFunSuite {
   }
 
   test("import syntax detects duplicate imports") {
-    expectParseAllError("import foo import bar import foo as baz", "Attempted to import a module multiple times")
+    expectParseAllError("import foo import bar import foo as baz", "Attempted to import a module multiple times", SourceType.NLInclude)
   }
 
   test("import syntax default alias") {
@@ -423,7 +429,7 @@ class StructureParserTests extends AnyFunSuite {
       |  show 12345
       |end
       """.stripMargin
-    val results = compileAll(src, nlsSrc)
+    val results = compileAll(src, SourceType.NLModule, nlsSrc)
     if (!results.procedures.contains(("FOO:TEST", None))) {
       fail()
     }
@@ -438,7 +444,7 @@ class StructureParserTests extends AnyFunSuite {
       |  show 12345
       |end
       """.stripMargin
-    val results = compileAll(src, nlsSrc)
+    val results = compileAll(src, SourceType.NLModule, nlsSrc)
     if (!results.procedures.contains(("BAR:TEST", None))) {
       fail()
     }
@@ -467,13 +473,13 @@ class StructureParserTests extends AnyFunSuite {
       |  show 123
       |end
       """.stripMargin
-    val results = compileAll(mainSrc, fooSrc, barSrc)
+    val results = compileAll(mainSrc, SourceType.NLModule, fooSrc, barSrc)
     val expected = Set(
       ("HELLO", None),
-      ("HELLO", Some("foo.nls")),
+      ("HELLO", Some("foo.nlm")),
       ("FOO:HELLO", None),
-      ("HELLO", Some("bar.nls")),
-      ("BAR:HELLO", Some("foo.nls"))
+      ("HELLO", Some("bar.nlm")),
+      ("BAR:HELLO", Some("foo.nlm"))
     )
 
     assert(results.procedures.keys.toSet === expected)
@@ -487,7 +493,7 @@ class StructureParserTests extends AnyFunSuite {
       |  show 1234
       |end
       """.stripMargin
-    val nlsSrc = """
+    val nlmSrc = """
       |export [test]
       |
       |to test
@@ -495,7 +501,7 @@ class StructureParserTests extends AnyFunSuite {
       |end
       """.stripMargin
 
-    expectParseAllError(src, "There is already an imported procedure called A:TEST", nlsSrc)
+    expectParseAllError(src, "There is already an imported procedure called A:TEST", SourceType.NLModule, nlmSrc)
   }
 
   test("nothing exported without an export statement") {
@@ -506,33 +512,33 @@ class StructureParserTests extends AnyFunSuite {
       |  foo:hello
       |end
     """.stripMargin
-    val nlsSrc = """
+    val nlmSrc = """
       |to hello
       |  show 1234
       |end
     """.stripMargin
-    val results = compileAll(src, nlsSrc)
+    val results = compileAll(src, SourceType.NLModule, nlmSrc)
 
     assert(results.procedures.filter(_._1._2 == None).map(_._1._1) == List("BAZ"))
   }
 
   test("invalid included file") {
-    expectParseAllError("""__includes [ "foobar.nlogox" ]""", "Included files must end with .nls")
+    expectParseAllError("""__includes [ "foobar.nlogox" ]""", "Included files must end with .nls", SourceType.NLInclude)
   }
 
   test("nonexistent included file") {
-    expectParseAllError("""__includes [ "foobar.nls" ]""", "Could not find foobar.nls")
+    expectParseAllError("""__includes [ "foobar.nls" ]""", "Could not find foobar.nls", SourceType.NLInclude)
   }
 
   test("included file returns correct results") {
-    val results = compileAll("""__includes [ "foo.nls" ]""", "")
+    val results = compileAll("""__includes [ "foo.nls" ]""", SourceType.NLInclude, "")
     assert(results.includes.nonEmpty || results.includedSources.nonEmpty)
   }
 
   test("included file merges globals and turtle vars") {
     val src = """__includes [ "foo.nls" ] globals [ a b c ] breed [ mice mouse ] turtles-own [ t1 t2 ] mice-own [ m1 m2 ]"""
     val nlsSrc = "globals [ d f g ] turtles-own [ t3 t4 ] mice-own [ m3 m4 ]"
-    val results = compileAll(src, nlsSrc)
+    val results = compileAll(src, SourceType.NLInclude, nlsSrc)
     val expected = """globals [A B C D F G]
       |interfaceGlobals []
       |turtles-own [WHO COLOR HEADING XCOR YCOR SHAPE LABEL LABEL-COLOR BREED HIDDEN? SIZE PEN-SIZE PEN-MODE T1 T2 T3 T4]
@@ -546,72 +552,84 @@ class StructureParserTests extends AnyFunSuite {
   test("included file detects duplicate breed declaration") {
     expectParseAllError("""__includes [ "foo.nls" ] breed [ stuffs stuff ]""",
       "There is already a breed called STUFFS",
+      SourceType.NLInclude,
       "breed [ stuffs stuff ]")
   }
 
   test("included file detects duplicate turtles own variables") {
     expectParseAllError("""__includes [ "foo.nls" ] turtles-own [ test ]""",
       "There is already a turtle variable called TEST",
+      SourceType.NLInclude,
       "turtles-own [ test ]")
   }
 
   test("included file detects turtles own / breeds own clashes") {
     expectParseAllError("""__includes [ "foo.nls" ] turtles-own [ test ]""",
       "There is already a turtle variable called TEST",
+      SourceType.NLInclude,
       "breed [ stuffs stuff ] stuffs-own [ test ]")
   }
 
   test("included file detects breeds own / turtles own clashes") {
     expectParseAllError("""__includes [ "foo.nls" ] breed [ stuffs stuff ] stuffs-own [ test ]""",
       "There is already a STUFFS-OWN variable called TEST",
+      SourceType.NLInclude,
       "turtles-own [ test ]")
   }
 
   test("included file detects duplicate breeds own variables") {
     expectParseAllError("""__includes [ "foo.nls" ] breed [ stuffs stuff ] stuffs-own [ test ]""",
       "There is already a STUFFS-OWN variable called TEST",
+      SourceType.NLInclude,
       "stuffs-own [ test ]")
   }
 
   test("included file detects duplicate links own variables") {
     expectParseAllError("""__includes [ "foo.nls" ] links-own [ test ]""",
       "There is already a link variable called TEST",
+      SourceType.NLInclude,
       "links-own [ test ]")
   }
 
   test("included file detects duplicate undirected link breeds own variables") {
     expectParseAllError("""__includes [ "foo.nls" ] undirected-link-breed [ stuffs stuff ] stuffs-own [ test ]""",
       "There is already a STUFFS-OWN variable called TEST",
+      SourceType.NLInclude,
       "stuffs-own [ test ]")
   }
 
   test("included file detects duplicate directed link breeds own variables") {
     expectParseAllError("""__includes [ "foo.nls" ] directed-link-breed [ stuffs stuff ] stuffs-own [ test ]""",
       "There is already a STUFFS-OWN variable called TEST",
+      SourceType.NLInclude,
       "stuffs-own [ test ]")
   }
 
   test("included file detects links own / undirected link breeds own clashes") {
     expectParseAllError("""__includes [ "foo.nls" ] links-own [ test ]""",
       "There is already a link variable called TEST",
+      SourceType.NLInclude,
       "undirected-link-breed [ stuffs stuff ] stuffs-own [ test ]")
   }
 
   test("included file detects links own / directed link breeds own clashes") {
     expectParseAllError("""__includes [ "foo.nls" ] links-own [ test ]""",
       "There is already a link variable called TEST",
+      SourceType.NLInclude,
       "directed-link-breed [ stuffs stuff ] stuffs-own [ test ]")
   }
 
   test("included file detects undirected link breed / links own clashes") {
     expectParseAllError("""__includes [ "foo.nls" ] undirected-link-breed [ stuffs stuff ] stuffs-own [ test ]""",
       "There is already a STUFFS-OWN variable called TEST",
+      SourceType.NLInclude,
       "stuffs-own [ test ]")
   }
 
   test("included file detects directed link breed / links own clashes") {
     expectParseAllError("""__includes [ "foo.nls" ] directed-link-breed [ stuffs stuff ] stuffs-own [ test ]""",
       "There is already a STUFFS-OWN variable called TEST",
+      SourceType.NLInclude,
       "stuffs-own [ test ]")
   }
 
