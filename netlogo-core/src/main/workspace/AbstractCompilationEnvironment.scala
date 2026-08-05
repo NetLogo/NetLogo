@@ -31,10 +31,10 @@ trait AbstractCompilationEnvironment {
           if (FileIO.isDirectory(path)) {
             import scala.jdk.CollectionConverters.IteratorHasAsScala
             val fileIterator = Files.walk(Paths.get(path), FileVisitOption.FOLLOW_LINKS).iterator.asScala
-            val isModuleFile = (x: Path) => Files.isRegularFile(x) && x.getFileName.toString.toLowerCase.endsWith(".nls")
+            val isModuleFile = (x: Path) => Files.isRegularFile(x) && x.getFileName.toString.toLowerCase.endsWith(".nlm")
             fileIterator.filter(isModuleFile).map(_.toString).toSeq
-          } else if (FileIO.isRegularFile(s"$path.nls")) { // If the path points to a file, just return that file.
-            Seq(s"$path.nls")
+          } else if (FileIO.isRegularFile(s"$path.nlm")) { // If the path points to a file, just return that file.
+            Seq(s"$path.nlm")
           } else { // Otherwise, return nothing and just move on to the next prefix.
             Seq()
           }
