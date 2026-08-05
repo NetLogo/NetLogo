@@ -171,6 +171,8 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
   smartTabbingEnabled = NetLogoPreferences.getBoolean("indentAutomatically", true)
   lineNumbersVisible = NetLogoPreferences.getBoolean("editorLineNumbers", true)
 
+  new LanguageServer(workspace.compiler, workspace.extensionManager).start()
+
   def init(fileManager: FileManager, dirtyMonitor: DirtyMonitor, monitorManager: AgentMonitorManager,
            menuBar: MainMenuBar, actions: Seq[UserAction.MenuAction]): Unit = {
 
