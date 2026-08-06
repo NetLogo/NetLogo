@@ -29,5 +29,22 @@ object StructureDeclarations {
     override val end: Token = tokens.last
   }
 
+  case class ExtensionDeclaration(
+    start: Token,    // This token is the "EXTENSION" keyword
+    name: Identifier,
+    url: Option[Identifier],
+    end: Token
+    // May be extended in the future to include more information
+    ) extends Declaration {
+      override def toString: String = {
+        val urlPart = url match {
+            case Some(u) => s"[url ${u.name}]"
+            case None => ""
+        }
+        // e.g. extension [phys[url <url>]]
+        s"extension [${name.name}$urlPart]"
+      }
+    }
+
   case class Identifier(name: String, token: Token)
 }
