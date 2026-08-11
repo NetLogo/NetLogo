@@ -196,6 +196,10 @@ object InterfaceColors {
   def colorPickerCopyHover(): Color = theme.colorPickerCopyHover
   def agentMonitorSeparator(): Color = theme.agentMonitorSeparator
   def modelPreviewBackground(): Color = theme.modelPreviewBackground
+  def modelsLibraryFolder(): Color = theme.modelsLibraryFolder
+  def modelsLibraryFolderSelected(): Color = theme.modelsLibraryFolderSelected
+  def modelsLibraryLeaf(): Color = theme.modelsLibraryLeaf
+  def modelsLibraryLeafSelected(): Color = theme.modelsLibraryLeafSelected
 }
 
 trait ColorTheme {
@@ -388,6 +392,10 @@ trait ColorTheme {
   def colorPickerCopyHover: Color
   def agentMonitorSeparator: Color
   def modelPreviewBackground: Color
+  def modelsLibraryFolder: Color
+  def modelsLibraryFolderSelected: Color
+  def modelsLibraryLeaf: Color
+  def modelsLibraryLeafSelected: Color
 
   def colorizerTheme: ColorizerTheme
 }
@@ -553,6 +561,10 @@ object ClassicTheme extends ColorTheme {
   override def colorPickerCopyHover: Color = new Color(197, 197, 197)
   override def agentMonitorSeparator: Color = MediumGray
   override def modelPreviewBackground: Color = LightGray1
+  override def modelsLibraryFolder: Color = DarkGray
+  override def modelsLibraryFolderSelected: Color = Color.WHITE
+  override def modelsLibraryLeaf: Color = MediumBlue
+  override def modelsLibraryLeafSelected: Color = Color.WHITE
 
   override def colorizerTheme: ColorizerTheme = ColorizerTheme.Classic
 }
@@ -718,6 +730,10 @@ object LightTheme extends ColorTheme {
   override def colorPickerCopyHover: Color = new Color(197, 197, 197)
   override def agentMonitorSeparator: Color = MediumGray
   override def modelPreviewBackground: Color = LightGray1
+  override def modelsLibraryFolder: Color = DarkGray
+  override def modelsLibraryFolderSelected: Color = Color.WHITE
+  override def modelsLibraryLeaf: Color = MediumBlue
+  override def modelsLibraryLeafSelected: Color = Color.WHITE
 
   override def colorizerTheme: ColorizerTheme = ColorizerTheme.Light
 }
@@ -883,6 +899,10 @@ object DarkTheme extends ColorTheme {
   override def colorPickerCopyHover: Color = new Color(57, 57, 57)
   override def agentMonitorSeparator: Color = LightGray2
   override def modelPreviewBackground: Color = MediumBlueGray
+  override def modelsLibraryFolder: Color = MediumGray
+  override def modelsLibraryFolderSelected: Color = MediumGray
+  override def modelsLibraryLeaf: Color = MediumBlue
+  override def modelsLibraryLeafSelected: Color = MediumGray
 
   override def colorizerTheme: ColorizerTheme = ColorizerTheme.Dark
 }

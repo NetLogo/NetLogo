@@ -7,14 +7,14 @@ package org.nlogo.app.tools
 // instead of sifting through all the files at that time cause that's
 // super slow. ev 3/26/09
 
-import java.awt.{ Color, Dimension, Frame, Toolkit }
+import java.awt.{ Color, Component, Dimension, Frame, Toolkit }
 import java.awt.event.{ ActionEvent, KeyAdapter, KeyEvent, MouseAdapter, MouseEvent, WindowAdapter, WindowEvent }
 import java.io.File
 import java.nio.file.Paths
 import java.net.URI
 import java.util.{ Enumeration, LinkedList, List => JList, Locale }
-import javax.swing.{ AbstractAction, Action, Box, BorderFactory, BoxLayout, InputMap, JComponent, JDialog, JEditorPane,
-                     JLabel, JPanel, JTree, KeyStroke, SwingUtilities, WindowConstants }
+import javax.swing.{ AbstractAction, Action, Box, BorderFactory, BoxLayout, Icon, InputMap, JComponent, JDialog,
+                     JEditorPane, JLabel, JPanel, JTree, KeyStroke, SwingUtilities, WindowConstants }
 import javax.swing.text.{ BadLocationException, DefaultHighlighter }
 import javax.swing.tree.{ DefaultMutableTreeNode, DefaultTreeCellRenderer, DefaultTreeModel, TreePath,
                           TreeSelectionModel }
@@ -181,14 +181,7 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
   }
 
   private val tree = new JTree(new SearchableModelTree(node)) with ThemeSync {
-    private val renderer = new DefaultTreeCellRenderer with ThemeSync {
-      override def syncTheme(): Unit = {
-        backgroundNonSelectionColor = InterfaceColors.dialogBackground()
-        backgroundSelectionColor = InterfaceColors.dialogBackgroundSelected()
-        textNonSelectionColor = InterfaceColors.dialogText()
-        textSelectionColor = InterfaceColors.dialogTextSelected()
-      }
-    }
+    val renderer = new TreeCellRenderer
 
     setCellRenderer(renderer)
 
@@ -762,5 +755,71 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
     selectButton.syncTheme()
     cancelButton.syncTheme()
     clearSearchButton.syncTheme()
+  }
+
+  private class TreeCellRenderer extends DefaultTreeCellRenderer with ThemeSync {
+    private val open = new SelectableIcon("/images/open.png", 14, 12, InterfaceColors.modelsLibraryFolder,
+                                          InterfaceColors.modelsLibraryFolderSelected)
+    private val closed = new SelectableIcon("/images/closed.png", 14, 12, InterfaceColors.modelsLibraryFolder,
+                                            InterfaceColors.modelsLibraryFolderSelected)
+    private val leaf = new SelectableIcon("/images/leaf.png", 12, 14, InterfaceColors.modelsLibraryLeaf,
+                                          InterfaceColors.modelsLibraryLeafSelected)
+
+    syncTheme()
+
+    override def getTreeCellRendererComponent(tree: JTree, value: AnyRef, selected: Boolean, expanded: Boolean,
+                                              leaf: Boolean, row: Int, hasFocus: Boolean): Component = {
+      super.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus)
+
+      val icon: SelectableIcon = {
+        if (leaf) {
+          this.leaf
+        } else if (expanded) {
+          open
+        } else {
+          closed
+        }
+      }
+
+      setIcon(icon.getIcon(selected))
+
+      this
+    }
+
+    override def getMinimumSize: Dimension =
+      getPreferredSize
+
+    override def syncTheme(): Unit = {
+      backgroundNonSelectionColor = InterfaceColors.dialogBackground()
+      backgroundSelectionColor = InterfaceColors.dialogBackgroundSelected()
+      textNonSelectionColor = InterfaceColors.dialogText()
+      textSelectionColor = InterfaceColors.dialogTextSelected()
+
+      open.syncTheme()
+      closed.syncTheme()
+      leaf.syncTheme()
+    }
+  }
+
+  private class SelectableIcon(path: String, width: Int, height: Int, normalColor: () => Color,
+                               selectedColor: () => Color) extends ThemeSync {
+
+    private var normal: Icon = null
+    private var selected: Icon = null
+
+    syncTheme()
+
+    def getIcon(selected: Boolean): Icon = {
+      if (selected) {
+        this.selected
+      } else {
+        normal
+      }
+    }
+
+    override def syncTheme(): Unit = {
+      normal = Utils.iconScaledWithColor(path, width, height, normalColor())
+      selected = Utils.iconScaledWithColor(path, width, height, selectedColor())
+    }
   }
 }
