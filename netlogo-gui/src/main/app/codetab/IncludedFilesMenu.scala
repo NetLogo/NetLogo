@@ -51,7 +51,7 @@ with WindowEvents.CompiledEvent.Handler with RoundedBorderPanel with ThemeSync {
     includesTable match {
       case Some(includePaths) =>
         val filtered =
-          includePaths.keys.toSeq.filter(include => include.endsWith(".nls") &&
+          includePaths.keys.toSeq.filter(include => (include.endsWith(".nls") || include.endsWith(".nlm")) &&
             new File(includePaths(include).file).exists)
 
         if (filtered.isEmpty)
