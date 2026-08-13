@@ -95,7 +95,7 @@ with WindowEvents.CompiledEvent.Handler with RoundedBorderPanel with ThemeSync {
     override def actionPerformed(e: ActionEvent): Unit = ignoring(classOf[UserCancelException]) {
       val path = SwingFileDialog.showFiles(IncludedFilesMenu.this, I18N.gui("open"), FileDialog.LOAD, null)
         .replace(File.separatorChar, '/')
-      if(path.endsWith(".nls"))
+      if(path.endsWith(".nls") || path.endsWith(".nlm"))
         tabs.openExternalFile(path)
       else
         new OptionPane(IncludedFilesMenu.this, I18N.gui.get("common.messages.error"),

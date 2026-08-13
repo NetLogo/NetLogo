@@ -106,13 +106,13 @@ class TemporaryCodeTab(workspace: GUIWorkspace,
   def save(saveAs: Boolean) = {
     if (saveAs || filename.isLeft) {
       val path: String = userChooseSavePath()
-      val name: String = new File(path).getName.stripSuffix(".nls")
+      val name: String = new File(path).getName.stripSuffix(".nlm")
 
       if (workspace.isValidIdentifier(name, workspace.getExtensionManager)) {
         filename = Right(path)
       } else {
         new OptionPane(workspace.getFrame, I18N.gui.get("tabs.code.invalidName"),
-                       I18N.gui.getN("tabs.code.invalidName.message", s"$name.nls"), OptionPane.Options.Ok,
+                       I18N.gui.getN("tabs.code.invalidName.message", s"$name.nlm"), OptionPane.Options.Ok,
                        OptionPane.Icons.Error)
 
         throw new UserCancelException
@@ -189,8 +189,8 @@ class TemporaryCodeTab(workspace: GUIWorkspace,
   private def userChooseSavePath(): String = {
     def appendIfNecessary(str: String, suffix: String) = if (str.endsWith(suffix)) str else str + suffix
 
-    val newFileName = appendIfNecessary(filenameForDisplay, ".nls")
+    val newFileName = appendIfNecessary(filenameForDisplay, ".nlm")
     val path = SwingFileDialog.showFiles(this, I18N.gui.get("file.save.external"), FileDialog.SAVE, newFileName)
-    appendIfNecessary(path, ".nls")
+    appendIfNecessary(path, ".nlm")
   }
 }
