@@ -634,7 +634,7 @@ object NetLogoPackaging {
           path.toString.replace("\\", "/") -> Str(checksum.toString)
       }.toSeq.sortBy(_._1),
       "executable" -> checksums.keys.filter { path =>
-        !windows && Files.getPosixFilePermissions(targetDir.resolve(path)).contains(PosixFilePermission.OWNER_EXECUTE)
+        !windows && Files.getPosixFilePermissions(sourceDir.resolve(path)).contains(PosixFilePermission.OWNER_EXECUTE)
       }.map(_.toString.replace("\\", "/")).toSeq.sorted
     ), 2) + "\n")
 
