@@ -94,7 +94,6 @@ object HarvestResources {
         val id = idSafe(pathElements.mkString("__"))
         fileNode.setAttribute("Source", nameSafe(sourceName))
         fileNode.setAttribute("ProcessorArchitecture", platformVars.platformArch)
-        fileNode.setAttribute("Id", id)
         activeComponent.appendChild(fileNode)
       }
       FileVisitResult.CONTINUE
