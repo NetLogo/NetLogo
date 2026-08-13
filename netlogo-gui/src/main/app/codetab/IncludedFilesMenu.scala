@@ -51,14 +51,16 @@ with WindowEvents.CompiledEvent.Handler with RoundedBorderPanel with ThemeSync {
     includesTable match {
       case Some(includePaths) =>
         val filtered =
-          includePaths.keys.toSeq.filter(include => (include.endsWith(".nls") || include.endsWith(".nlm")) &&
-            new File(includePaths(include).file).exists)
+          includePaths.filter((key, value) => (key.endsWith(".nls") || key.endsWith(".nlm")) &&
+            new File(value.file).exists)
 
         if (filtered.isEmpty)
           menu.add(new MenuItem(I18N.gui.get("common.menus.empty"))).setEnabled(false)
 
         else {
-          filtered.sortBy(_.toUpperCase(Locale.ENGLISH)).foreach(include =>
+          filtered.keys.map(_.split(File.separatorChar).last).toSeq.sortBy(_.toUpperCase(Locale.ENGLISH))
+            .foreach(include =>
+
             menu.add(new MenuItem(new AbstractAction(include) {
               def actionPerformed(e: ActionEvent): Unit = {
                 tabs.openExternalFile(includePaths(include).file)
