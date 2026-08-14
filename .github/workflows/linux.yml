@@ -27,7 +27,7 @@ jobs:
       - uses: actions/setup-java@v5
         with:
           distribution: zulu
-          java-version: 17.0.2
+          java-version: 21.0.2
           java-package: jdk+fx
           cache: sbt
 
@@ -62,7 +62,7 @@ jobs:
       - name: Setup Packaging Environment
         run: |
           echo "- vendor: 'OpenJDK'" > .jdks.yaml
-          echo "  version: '17.0.2'" >> .jdks.yaml
+          echo "  version: '21.0.2'" >> .jdks.yaml
           echo "  architecture: '64'" >> .jdks.yaml
           echo "  path: '${{ env.JAVA_HOME }}'" >> .jdks.yaml
 
