@@ -9,6 +9,9 @@ on:
       csv-artifact:
         description: "Artifact name for the manual links CSV"
         value: ${{ jobs.build-docs.outputs.csv-artifact }}
+      html-artifact:
+        description: "Artifact name for the static HTML docs"
+        value: ${{ jobs.build-docs.outputs.html-artifact }}
 
 jobs:
   build-docs:
@@ -16,6 +19,7 @@ jobs:
     outputs:
       pdf-artifact: "NetLogo_User_Manual.pdf"
       csv-artifact: "manual-links.csv"
+      html-artifact: "latest"
     env:
       HELIO_SKIP_CHECKS: "1"
       NUXT_TELEMETRY_DISABLED: "1"
@@ -49,7 +53,7 @@ jobs:
         working-directory: helio/apps/docs
         shell: bash
         run: |
-          yarn run docs:build-and-generate-manual
+          yarn run docs:build:offline
 
       - uses: actions/upload-artifact@v6
         id: upload-pdf
@@ -69,5 +73,5 @@ jobs:
         id: upload-html
         with:
           name: "latest"
-          path: ./helio/apps/docs/.build/latest
+          path: ./helio/apps/docs/.build/latest/
           if-no-files-found: error
