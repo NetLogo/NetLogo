@@ -64,3 +64,10 @@ jobs:
           name: "manual-links.csv"
           path: ./helio/apps/docs/.build/manual-links.csv
           if-no-files-found: error
+
+      - uses: actions/upload-artifact@v6
+        id: upload-html
+        with:
+          name: "latest"
+          path: ./helio/apps/docs/.build/latest
+          if-no-files-found: error
