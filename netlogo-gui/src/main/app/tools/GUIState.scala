@@ -6,7 +6,6 @@ import scala.util.{ Failure, Success, Try }
 
 import org.nlogo.core.{ CompilerException, Model }
 import org.nlogo.api.PreviewCommands
-import org.nlogo.api.PreviewCommands.Compilable
 import org.nlogo.swing.HasPropertyChangeSupport
 import org.nlogo.workspace.{ PreviewCommandsRunner, WorkspaceFactory }
 
@@ -31,7 +30,7 @@ class GUIState(
     val oldCompilerException = compilerException
     _previewCommands = Some(newPreviewCommands)
     _previewCommandsRunner = newPreviewCommands match {
-      case compilableCommands: Compilable =>
+      case commands: PreviewCommands if commands.compilable =>
         Try(PreviewCommandsRunner.fromModelContents(
           workspaceFactory, model, modelPath, newPreviewCommands
         )) match {
