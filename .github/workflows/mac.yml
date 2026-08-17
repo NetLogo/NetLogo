@@ -83,10 +83,16 @@ jobs:
           name: ${{ needs.build-docs.outputs.csv-artifact }}
           path: ./helio/apps/docs/.build
 
+      - name: Download static HTML docs
+        uses: actions/download-artifact@v8
+        with:
+          name: ${{ needs.build-docs.outputs.html-artifact }}
+          path: ./helio/apps/docs/.build/latest
+
       - name: Build and Package NetLogo
         run: |
           sbt dist/buildNetLogo
-          sbt "dist/packageMacAggregate OpenJDK_17.0.2_aarch64"
+          sbt "dist/packageMacAggregate OpenJDK_21.0.2_aarch64"
 
       - uses: actions/upload-artifact@v7
         with:
@@ -174,10 +180,16 @@ jobs:
           name: ${{ needs.build-docs.outputs.csv-artifact }}
           path: ./helio/apps/docs/.build
 
+      - name: Download static HTML docs
+        uses: actions/download-artifact@v8
+        with:
+          name: ${{ needs.build-docs.outputs.html-artifact }}
+          path: ./helio/apps/docs/.build/latest
+
       - name: Build and Package NetLogo
         run: |
           sbt dist/buildNetLogo
-          sbt "dist/packageMacAggregate OpenJDK_17.0.2_x86_64"
+          sbt "dist/packageMacAggregate OpenJDK_21.0.2_x86_64"
 
       - uses: actions/upload-artifact@v7
         with:
