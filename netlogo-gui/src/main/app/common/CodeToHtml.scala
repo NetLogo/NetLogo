@@ -3,6 +3,7 @@
 package org.nlogo.app.common
 
 import java.awt.Component
+import java.awt.event.KeyEvent
 
 import org.nlogo.core.{ ColorizerTheme, Dialect, Femto }
 import org.nlogo.api.{ Version, FileIO }
@@ -39,6 +40,7 @@ object CodeToHtml {
     category    = FileCategory
     subcategory = FileExportSubcategory
     rank        = 6
+    mnemonic    = KeyEvent.VK_C
   }
 }
 

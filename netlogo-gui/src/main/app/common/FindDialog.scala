@@ -3,7 +3,7 @@
 package org.nlogo.app.common
 
 import java.awt.{ BorderLayout, Frame, Toolkit }
-import java.awt.event.{ ActionEvent, ActionListener, FocusEvent }
+import java.awt.event.{ ActionEvent, ActionListener, FocusEvent, KeyEvent }
 import java.util.Locale
 import javax.swing.{ AbstractAction, Action, Box, BoxLayout, JDialog, JEditorPane, JLabel, JPanel, SwingConstants }
 import javax.swing.border.EmptyBorder
@@ -21,6 +21,7 @@ object FindDialog extends ThemeSync {
     category = EditCategory
     group = EditFindGroup
     accelerator = KeyBindings.keystroke('F', withMenu = true)
+    mnemonic = KeyEvent.VK_F
 
     setEnabled(false)
 
@@ -52,6 +53,8 @@ object FindDialog extends ThemeSync {
     category = EditCategory
     group = EditFindGroup
     accelerator = KeyBindings.keystroke('G', withMenu = true)
+    mnemonic = KeyEvent.VK_N
+    mnemonicIndex = 5
 
     setEnabled(false)
 
@@ -66,6 +69,7 @@ object FindDialog extends ThemeSync {
     category = EditCategory
     group = EditFindGroup
     accelerator = KeyBindings.keystroke('F', withMenu = true)
+    mnemonic = KeyEvent.VK_F
 
     setEnabled(false)
 
@@ -97,6 +101,8 @@ object FindDialog extends ThemeSync {
     category = EditCategory
     group = EditFindGroup
     accelerator = KeyBindings.keystroke('G', withMenu = true)
+    mnemonic = KeyEvent.VK_N
+    mnemonicIndex = 5
 
     setEnabled(false)
 

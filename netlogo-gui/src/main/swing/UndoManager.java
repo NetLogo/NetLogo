@@ -2,6 +2,7 @@
 
 package org.nlogo.swing;
 
+import java.awt.event.KeyEvent;
 import javax.swing.Timer;
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
@@ -166,6 +167,7 @@ public class UndoManager extends javax.swing.undo.UndoManager
       category_$eq("org.nlogo.swing.EditCategory");
       group_$eq("org.nlogo.swing.EditUndoGroup");
       accelerator_$eq(org.nlogo.swing.UserAction.KeyBindings$.MODULE$.keystroke('Z', true, false, false));
+      mnemonic_$eq(KeyEvent.VK_U);
 
       setEnabled(false);
     }
@@ -197,6 +199,7 @@ public class UndoManager extends javax.swing.undo.UndoManager
       category_$eq("org.nlogo.swing.EditCategory");
       group_$eq("org.nlogo.swing.EditUndoGroup");
       accelerator_$eq(org.nlogo.swing.UserAction.KeyBindings$.MODULE$.keystroke('Y', true, false, false));
+      mnemonic_$eq(KeyEvent.VK_R);
 
       setEnabled(false);
     }

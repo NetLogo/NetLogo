@@ -3,6 +3,7 @@
 package org.nlogo.app.common
 
 import java.awt.Component
+import java.awt.event.KeyEvent
 
 import org.nlogo.awt.UserCancelException
 import org.nlogo.agent.ImportPatchColors
@@ -37,6 +38,7 @@ object FileActions {
     category    = FileCategory
     subcategory = FileExportSubcategory
     rank        = 0
+    mnemonic    = KeyEvent.VK_W
   }
 
   class ExportGraphicsAction(workspace: GUIWorkspace, parent: Component)
@@ -45,6 +47,7 @@ object FileActions {
       category    = FileCategory
       subcategory = FileExportSubcategory
       rank        = 3
+      mnemonic    = KeyEvent.VK_V
 
       def beforeModalDialog(): String = promptForFilePath()
 
@@ -57,17 +60,21 @@ object FileActions {
   extends ExportAction("output", workspace.guessExportName("output.txt"), parent,
     { exportPath => workspace.exportOutput(exportPath) })
   with MenuAction {
-    category    = FileCategory
-    subcategory = FileExportSubcategory
-    rank        = 5
+    category      = FileCategory
+    subcategory   = FileExportSubcategory
+    rank          = 5
+    mnemonic      = KeyEvent.VK_O
+    mnemonicIndex = 7
   }
 
   class ExportPlotAction(workspace: GUIWorkspace, parent: Component)
     extends ExportBackgroundAction[(String, Plot)](parent, "plot", workspace.guessExportName("plot.csv"))
     with MenuAction {
-    category    = FileCategory
-    subcategory = FileExportSubcategory
-    rank        = 1
+    category      = FileCategory
+    subcategory   = FileExportSubcategory
+    rank          = 1
+    mnemonic      = KeyEvent.VK_P
+    mnemonicIndex = 7
 
     def beforeModalDialog(): (String, Plot) = {
       val plot = workspace.plotExportControls.choosePlot(frame)
@@ -88,6 +95,7 @@ object FileActions {
     category    = FileCategory
     subcategory = FileExportSubcategory
     rank        = 2
+    mnemonic    = KeyEvent.VK_A
 
     def beforeModalDialog(): String = {
       if (workspace.plotExportControls.plotNames.isEmpty) {
@@ -109,6 +117,7 @@ object FileActions {
     category    = FileCategory
     subcategory = FileExportSubcategory
     rank        = 4
+    mnemonic    = KeyEvent.VK_I
 
     def beforeModalDialog(): String = promptForFilePath()
 
@@ -126,6 +135,7 @@ object FileActions {
   with MenuAction {
     category    = FileCategory
     subcategory = FileImportSubcategory
+    mnemonic    = KeyEvent.VK_W
   }
 
   class ImportPatchColorsAction(workspace: GUIWorkspace, parent: Component)
@@ -140,8 +150,10 @@ object FileActions {
     workspace.view.repaint()
   })
   with MenuAction {
-    category    = FileCategory
-    subcategory = FileImportSubcategory
+    category      = FileCategory
+    subcategory   = FileImportSubcategory
+    mnemonic      = KeyEvent.VK_P
+    mnemonicIndex = 7
   }
 
   class ImportPatchColorsRGBAction(workspace: GUIWorkspace, parent: Component)
@@ -155,8 +167,10 @@ object FileActions {
     workspace.view.repaint()
   })
   with MenuAction {
-    category    = FileCategory
-    subcategory = FileImportSubcategory
+    category      = FileCategory
+    subcategory   = FileImportSubcategory
+    mnemonic      = KeyEvent.VK_R
+    mnemonicIndex = 20
   }
 
   class ImportDrawingAction(workspace: GUIWorkspace, parent: Component)
@@ -168,5 +182,6 @@ object FileActions {
   with MenuAction {
     category    = FileCategory
     subcategory = FileImportSubcategory
+    mnemonic    = KeyEvent.VK_D
   }
 }

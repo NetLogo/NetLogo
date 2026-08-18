@@ -4,7 +4,7 @@ package org.nlogo.app.interfacetab
 
 import java.awt.{ BorderLayout, Component, Container, ContainerOrderFocusTraversalPolicy, Dimension, Font, Graphics,
                   Graphics2D }
-import java.awt.event.{ ActionEvent, FocusEvent, FocusListener }
+import java.awt.event.{ ActionEvent, FocusEvent, FocusListener, KeyEvent }
 import java.awt.print.{ PageFormat, Printable }
 import javax.swing.{ AbstractAction, Action, BoxLayout, JComponent, JPanel, JSplitPane, ScrollPaneConstants }
 
@@ -298,6 +298,7 @@ class InterfaceTab(workspace: GUIWorkspace,
     category    = ToolsCategory
     group       = MenuGroup
     accelerator = UserAction.KeyBindings.keystroke('/', withMenu = true)
+    mnemonic    = KeyEvent.VK_I
 
     override def actionPerformed(e: ActionEvent): Unit = {
       if (splitPane.getDividerLocation < splitPane.maxClosedDividerLocation) {
@@ -315,6 +316,7 @@ class InterfaceTab(workspace: GUIWorkspace,
     category    = ToolsCategory
     group       = MenuGroup
     accelerator = UserAction.KeyBindings.keystroke('C', withMenu = true, withShift = true)
+    mnemonic    = KeyEvent.VK_J
 
     override def actionPerformed(e: ActionEvent): Unit = {
       if (! commandCenter.getDefaultComponentForFocus().isFocusOwner) {

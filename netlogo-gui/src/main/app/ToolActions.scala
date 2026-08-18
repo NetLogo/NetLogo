@@ -3,7 +3,7 @@
 package org.nlogo.app
 
 import java.awt.Frame
-import java.awt.event.ActionEvent
+import java.awt.event.{ ActionEvent, KeyEvent }
 import java.nio.file.Path
 import javax.swing.{ AbstractAction, JDialog }
 
@@ -39,6 +39,7 @@ extends AbstractAction(I18N.gui.get("menu.tools.preferences")) with ThemeSync
 with MenuAction {
   category = ToolsCategory
   group    = ToolsSettingsGroup
+  mnemonic = KeyEvent.VK_P
 
   private lazy val dialog = new PreferencesDialog(frame, tabs, widgetPanel)
 
@@ -67,6 +68,7 @@ class OpenLibrariesDialog( frame:              Frame
 
   category = ToolsCategory
   group    = ToolsSettingsGroup
+  mnemonic = KeyEvent.VK_E
 
   def createDialog() = new LibrariesDialog(frame, libManager, recompile, tokenizeSource, updateSource,
                                            getExtPathMappings())
@@ -77,6 +79,7 @@ class OpenRGBAColorDialog(frame: Frame) extends ShowDialogAction(I18N.gui.get("m
                                         with MenuAction {
   category = ToolsCategory
   group = ToolsDialogsGroup
+  mnemonic = KeyEvent.VK_C
 
   def createDialog() = new JFXColorPicker(frame, false, CopyOnly, Option(NLNumber(15)))
 
@@ -104,6 +107,7 @@ with MenuAction {
   category    = ToolsCategory
   group       = ToolsDialogsGroup
   accelerator = KeyBindings.keystroke('D', withMenu = true, withShift = true)
+  mnemonic    = KeyEvent.VK_D
 
   override def actionPerformed(e: ActionEvent): Unit = {
     aggregateManager.showEditor()
@@ -115,6 +119,7 @@ extends AbstractAction(I18N.gui.get("menu.tools.hubNetClientEditor"))
 with MenuAction {
   category = ToolsCategory
   group    = ToolsHubNetGroup
+  mnemonic = KeyEvent.VK_B
 
   override def actionPerformed(e: ActionEvent): Unit = {
     workspace.getHubNetManager.foreach { mgr =>
@@ -129,6 +134,7 @@ class ConvertWidgetSizes(frame: Frame, widgetPanel: WidgetPanel)
 
   category = ToolsCategory
   group    = ToolsWidgetGroup
+  mnemonic = KeyEvent.VK_W
 
   override def actionPerformed(e: ActionEvent): Unit = {
     if (new OptionPane(frame, I18N.gui.get("menu.tools.convertWidgetSizes"),

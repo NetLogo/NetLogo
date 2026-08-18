@@ -7,7 +7,7 @@ import com.jthemedetecor.OsThemeDetector
 import java.awt.{ Dimension, EventQueue, Frame, KeyboardFocusManager, Toolkit, BorderLayout}
 import java.awt.datatransfer.DataFlavor
 import java.awt.dnd.{ DropTarget, DropTargetDragEvent, DropTargetDropEvent, DropTargetEvent, DropTargetListener }
-import java.awt.event.ActionEvent
+import java.awt.event.{ ActionEvent, KeyEvent }
 import java.io.File
 import java.lang.ProcessHandle
 import java.net.{ ConnectException, URI }
@@ -783,8 +783,12 @@ class App(args: App.CommandLineArgs) extends LinkChild with Exceptions.Handler w
     val generalActions: Seq[MenuAction] = Seq(
       openLibrariesDialog,
       openRGBAColorDialog,
-      new ShowShapeManager("turtleShapesEditor", turtleShapesManager),
-      new ShowShapeManager("linkShapesEditor",   linkShapesManager),
+      new ShowShapeManager("turtleShapesEditor", turtleShapesManager) {
+        mnemonic = KeyEvent.VK_U
+      },
+      new ShowShapeManager("linkShapesEditor",   linkShapesManager) {
+        mnemonic = KeyEvent.VK_K
+      },
       new ShowSystemDynamicsModeler(workspace.aggregateManager),
       new OpenHubNetClientEditor(workspace, frame),
       workspace.hubNetControlCenterAction,

@@ -2,7 +2,7 @@
 
 package org.nlogo.editor
 
-import java.awt.event.ActionEvent
+import java.awt.event.{ ActionEvent, KeyEvent }
 import javax.swing.AbstractAction
 
 import org.nlogo.core.I18N
@@ -15,6 +15,7 @@ class JumpToDeclarationAction(editor: AbstractEditorArea)
   accelerator = KeyBindings.keystroke('E', withMenu = true)
   group       = EditFormatGroup
   category    = EditCategory
+  mnemonic    = KeyEvent.VK_J
 
   override def actionPerformed(e: ActionEvent): Unit = {
     JumpToDeclaration.jumpToDeclaration(editor.getCaretPosition, editor)

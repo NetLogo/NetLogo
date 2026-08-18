@@ -270,6 +270,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     category = UserAction.FileCategory
     group = UserAction.FilePrintGroup
     accelerator = UserAction.KeyBindings.keystroke('P', withMenu = true)
+    mnemonic = KeyEvent.VK_P
 
     def actionPerformed(e: ActionEvent): Unit =
       getSelectedTab match {

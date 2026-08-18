@@ -3,7 +3,7 @@
 package org.nlogo.swing
 
 import java.awt.Toolkit
-import java.awt.event.InputEvent
+import java.awt.event.{ InputEvent, KeyEvent }
 import javax.swing.{ AbstractAction, Action, KeyStroke }
 
 object UserAction {
@@ -57,6 +57,13 @@ object UserAction {
   val DefaultGroup = "UndefinedGroup"
   val DefaultRank  = Double.MaxValue
 
+  val subcategoryMnemonics = Map[String, Int](
+    EditFoldSubcategory -> KeyEvent.VK_O,
+    FileExportSubcategory -> KeyEvent.VK_E,
+    FileImportSubcategory -> KeyEvent.VK_I,
+    FileRecentSubcategory -> KeyEvent.VK_R
+  )
+
   trait Menu {
     def offerAction(action: MenuAction): Unit
     def revokeAction(action: MenuAction): Unit
@@ -107,6 +114,16 @@ object UserAction {
 
     def mnemonic_=(i: Int): Unit = {
       putValue(Action.MNEMONIC_KEY, i)
+    }
+
+    def mnemonicIndex: Option[Int] =
+      getValue(Action.DISPLAYED_MNEMONIC_INDEX_KEY) match {
+        case i: Integer => Some(i)
+        case _          => None
+      }
+
+    def mnemonicIndex_=(i: Int): Unit = {
+      putValue(Action.DISPLAYED_MNEMONIC_INDEX_KEY, i)
     }
 
     def category: Option[String] =
