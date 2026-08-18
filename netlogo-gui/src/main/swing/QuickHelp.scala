@@ -4,7 +4,7 @@ package org.nlogo.swing
 
 import java.awt.Component
 import java.net.URI
-import java.nio.file.{ Files, Path, Paths }
+import java.nio.file.{ Path, Paths }
 import java.util.Locale
 
 import org.nlogo.api.Version
@@ -47,16 +47,12 @@ object QuickHelp {
     new URI(s"https://docs.netlogo.org/${Version.versionNumberNo3D}/${entry.docsUrl}")
 
   private def loadHelp(threed: Boolean): Map[String, Entry] = {
-    val links: Path = Paths.get(docsRoot, "manual-links.csv")
-
-    if (Files.exists(links)) {
-      Files.readString(links).split('\n').flatMap { line =>
+    Option(getClass.getResourceAsStream("/system/manual-links.csv")).fold(Map()) { stream =>
+      new String(stream.readAllBytes).split('\n').flatMap { line =>
         val split = line.split(',')
 
         Entry.parse(split.tail, threed).map((split.head, _))
       }.toMap
-    } else {
-      Map()
     }
   }
 
