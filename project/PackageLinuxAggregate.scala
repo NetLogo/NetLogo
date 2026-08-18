@@ -37,8 +37,8 @@ object PackageLinuxAggregate {
 
     Files.setPosixFilePermissions((appImageDir / "install.sh").toPath, shellScriptPermissions)
 
-    log.info("Creating NetLogo_Console sym link")
-    FileActions.createRelativeSoftLink(appImageDir / "NetLogo_Console", appImageDir / "bin" / "NetLogo")
+    log.info("Creating NetLogo Console sym link")
+    FileActions.createRelativeSoftLink(appImageDir / "NetLogo Console", appImageDir / "bin" / "NetLogo")
 
     log.info("Setting headless/gui script posix permissions")
     val headlessFile = appImageDir / "netlogo-headless.sh"

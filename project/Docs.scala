@@ -33,7 +33,7 @@ object Docs {
       }
 
       val manualSource = (docsSource.value / ".build" / "NetLogo_User_Manual.pdf").toPath
-      val manualDest = (baseDirectory.value / "NetLogo_User_Manual.pdf").toPath
+      val manualDest = (baseDirectory.value / "NetLogo User Manual.pdf").toPath
 
       Files.copy(manualSource, manualDest, StandardCopyOption.REPLACE_EXISTING)
 

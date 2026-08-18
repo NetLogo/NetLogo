@@ -136,13 +136,13 @@ object NetLogoPackaging {
     },
 
     aggregateOnlyFiles := {
-      Mustache(baseDirectory.value / "readme.md", target.value / "readme.md", Map(
+      Mustache(baseDirectory.value / "README.md", target.value / "README.md", Map(
         "version" -> netLogoVersion.value,
         "year" -> year.value,
         "date" -> buildDate.value
       ))
 
-      Seq(target.value / "readme.md", netLogoRoot.value / "NetLogo_User_Manual.pdf", packagedMathematicaLink.value)
+      Seq(target.value / "README.md", netLogoRoot.value / "NetLogo User Manual.pdf", packagedMathematicaLink.value)
     },
 
     webTarget := target.value / "downloadPages",
@@ -188,7 +188,7 @@ object NetLogoPackaging {
       FileActions.copyDirectory(webTarget.value, localSiteTarget)
       FileActions.copyDirectory((netlogo / modelsDirectory).value, localSiteTarget / "models")
       FileActions.copyDirectory(netLogoRoot.value / "docs", localSiteTarget / "docs")
-      FileActions.copyFile(netLogoRoot.value / "NetLogo_User_Manual.pdf", localSiteTarget / "docs" / "NetLogo_User_Manual.pdf")
+      FileActions.copyFile(netLogoRoot.value / "NetLogo User Manual.pdf", localSiteTarget / "docs" / "NetLogo User Manual.pdf")
       localSiteTarget
     },
 
@@ -210,8 +210,8 @@ object NetLogoPackaging {
       val host = "ccl.northwestern.edu"
       val sourceDir = netLogoRoot.value / "docs"
       val targetDir = s"/usr/local/www/netlogo/${netLogoLongVersion.value}"
-      val manualSource = netLogoRoot.value / "NetLogo_User_Manual.pdf"
-      val manualTarget = s"$targetDir/docs/NetLogo_User_Manual.pdf"
+      val manualSource = netLogoRoot.value / "NetLogo User Manual.pdf"
+      val manualTarget = s"$targetDir/docs/NetLogo User Manual.pdf"
       (netlogo / staticDocs).value
       RunProcess(Seq("rsync", "-rltv", "--inplace", "--progress", sourceDir.getPath, s"$user@$host:$targetDir"), "rsync docs")
       RunProcess(Seq("rsync", "-rltv", "--inplace", "--progress", manualSource.getPath, s"$user@$host:$manualTarget"), "rsync user manual")
@@ -221,7 +221,7 @@ object NetLogoPackaging {
       val versionDir = tempDocs / netLogoVersion.value
       RunProcess(Seq("git", "clone", "https://github.com/NetLogo/docs", tempDocs.toString), "clone docs repo")
       FileActions.copyDirectory(sourceDir, versionDir)
-      FileActions.copyFile(manualSource, versionDir / "NetLogo_User_Manual.pdf")
+      FileActions.copyFile(manualSource, versionDir / "NetLogo User Manual.pdf")
       RunProcess(Seq("git", "-C", tempDocs.toString, "add", "."), "stage changed files")
       RunProcess(Seq("git", "-C", tempDocs.toString, "commit", "-m", s"Upload ${netLogoVersion.value} docs"), "create commit")
       RunProcess(Seq("git", "-C", tempDocs.toString, "push"), "push commit to remote")
@@ -357,7 +357,7 @@ object NetLogoPackaging {
       val mainLauncher = new NetLogoLauncher(netLogoVersion.value, "NetLogo.ico", extraJavaOptions, Seq("icon="))
       val launchers = Seq(
         new NetLogoLauncher(netLogoVersion.value, "NetLogo.ico", extraJavaOptions, Seq("win-console=true")) {
-          override def id = "NetLogo_Console"
+          override def id = "NetLogo Console"
           override def mustachePrefix = "win-console-launcher"
         }
       , new NetLogo3dLauncher(netLogoVersion.value, "NetLogo3D.ico", extraJavaOptions)

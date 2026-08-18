@@ -185,8 +185,8 @@ object PackageMacAggregate {
     val buildName = s"NetLogo $version"
     (bundleDir / "runtime" / "Contents" / "Home" / "lib" / "jspawnhelper").setExecutable(true)
 
-    log.info("Creating NetLogo_Console sym link")
-    FileActions.createRelativeSoftLink(bundleDir / "NetLogo_Console", bundleDir / s"$buildName.app" / "Contents" / "MacOS" / buildName)
+    log.info("Creating NetLogo Console sym link")
+    FileActions.createRelativeSoftLink(bundleDir / "NetLogo Console", bundleDir / s"$buildName.app" / "Contents" / "MacOS" / buildName)
 
     log.info("Gathering files to sign")
     val appNames = launchers.map(_.id) :+ s"NetLogo Launcher $version.app"

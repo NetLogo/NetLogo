@@ -177,14 +177,14 @@ object BSBench {
   private def printHelp(): Unit = {
     println("""required testing specifications
               |
-              |--new <path>             path to new NetLogo_Console
+              |--new <path>             path to new NetLogo Console
               |--model <path>           path to model
               |--experiment <string>    experiment name (must be specified with model)
               |--threads <number>       number of threads to use
               |
               |optional testing specifications
               |
-              |--old <path>             path to old NetLogo_Console
+              |--old <path>             path to old NetLogo Console
               |--setup-file <path>      path to setup file (alternative way to specify an experiment)
               |--trials <number>        number of identical trials to execute (default 1)
               |--update-plots           allows plots to be updated (default is plots are not updated)
