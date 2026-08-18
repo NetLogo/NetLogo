@@ -1,28 +1,28 @@
 *ToString1
-  (word [ -> fd 5 ]) => "(anonymous command: [ -> fd 5 ])"
+  (word [ -> fd 5 ]) => "(arrow command: [ -> fd 5 ])"
 
 *ToString2
-  (word [[x] -> ask turtles [ set color red] ]) => "(anonymous command: [ [x] -> ask turtles [ set color red ] ])"
+  (word [[x] -> ask turtles [ set color red] ]) => "(arrow command: [ [x] -> ask turtles [ set color red ] ])"
 
 *ToString3
-  (word [ x -> print x]) => "(anonymous command: [ x -> print x ])"
+  (word [ x -> print x]) => "(arrow command: [ x -> print x ])"
 
 *ToString4
-  (word [ -> print 5]) => "(anonymous command: [ -> print 5 ])"
+  (word [ -> print 5]) => "(arrow command: [ -> print 5 ])"
 
 *ToString5
-  (word [ x -> (foreach [1 2] [3 4] [ -> __ignore x + x])]) => "(anonymous command: [ x -> foreach [1 2] [3 4] [ -> __ignore x + x ] ])"
+  (word [ x -> (foreach [1 2] [3 4] [ -> __ignore x + x])]) => "(arrow command: [ x -> foreach [1 2] [3 4] [ -> __ignore x + x ] ])"
 
 *ToString6
-  (word [ [a b] -> rt a fd b ]) => "(anonymous command: [ [a b] -> rt a fd b ])"
+  (word [ [a b] -> rt a fd b ]) => "(arrow command: [ [a b] -> rt a fd b ])"
 
 *ToString7
   to foo end
-  (word [ -> foo]) => "(anonymous command: [ -> foo ])"
+  (word [ -> foo]) => "(arrow command: [ -> foo ])"
 
 ToStringWithLets
-  word "" [-> let xyz 0] => "(anonymous command: [ -> let xyz 0 ])"
-  word "" [-> if 1 > random 10 [ let x 100 ] ] => "(anonymous command: [ -> if 1 > random 10 [ let x 100 ] ])"
+  word "" [-> let xyz 0] => "(arrow command: [ -> let xyz 0 ])"
+  word "" [-> if 1 > random 10 [ let x 100 ] ] => "(arrow command: [ -> if 1 > random 10 [ let x 100 ] ])"
 
 CallTask
   globals [ glob1 ]
@@ -98,16 +98,16 @@ CloseOverProcedureVariable
   glob1 => 10
 
 *WrongTypeOfTask1
-  O> __ignore runresult [ -> __ignore 5] => COMPILER ERROR RUNRESULT expected this input to be a string or anonymous reporter, but got an anonymous command instead
+  O> __ignore runresult [ -> __ignore 5] => COMPILER ERROR RUNRESULT expected this input to be a string or arrow reporter, but got an arrow command instead
 
 WrongTypeOfTask2
-  O> run [ -> 5] => COMPILER ERROR RUN expected this input to be a string or anonymous command, but got an anonymous reporter instead
+  O> run [ -> 5] => COMPILER ERROR RUN expected this input to be a string or arrow command, but got an arrow reporter instead
 
 NotEnoughInputs
-  O> run [ x -> __ignore x] => ERROR anonymous procedure expected 1 input, but only got 0
+  O> run [ x -> __ignore x] => ERROR arrow procedure expected 1 input, but only got 0
 
 NotEnoughInputsForeach
-  O> foreach [1 2 3] [[x y] -> __ignore x + y] => ERROR anonymous procedure expected 2 inputs, but only got 1
+  O> foreach [1 2 3] [[x y] -> __ignore x + y] => ERROR arrow procedure expected 2 inputs, but only got 1
 
 command-and-reporter-tasks-close-over-same-let-variable
   globals [ glob1 glob2 glob3 ]
@@ -142,14 +142,14 @@ command-and-reporter-tasks-close-over-same-procedure-input
 *command-task-stack-trace
   O> run [ -> print __boom] => STACKTRACE boom! /
   error while observer running __BOOM /
-    called by (anonymous command: [ -> print __boom ]) /
+    called by (arrow command: [ -> print __boom ]) /
     called by procedure __EVALUATOR
 
 *command-task-in-command-task-stack-trace
   O> run [run [print __boom]] => STACKTRACE boom! /
   error while observer running __BOOM /
-    called by (anonymous command: [ print __boom ]) /
-    called by (anonymous command: [ run [ print __boom ] ]) /
+    called by (arrow command: [ print __boom ]) /
+    called by (arrow command: [ run [ print __boom ] ]) /
     called by procedure __EVALUATOR
 
 turtle-executing-command-task
@@ -186,9 +186,9 @@ deeply-nested-with-all-agent-types
   [plabel] of glob1 => "wow!"
 
 is-it-or-isnt-it
-  is-anonymous-command? 5 => false
-  is-anonymous-command? [ -> print timer] => true
-  is-anonymous-command? [ -> timer] => false
+  is-arrow-command? 5 => false
+  is-arrow-command? [ -> print timer] => true
+  is-arrow-command? [ -> timer] => false
 
 dont-close-over-current-agent
   globals [ glob1 glob2 ]
@@ -261,7 +261,7 @@ foreach-multiple-lists-length-mismatch
 empty-command-task-1
   globals [ glob1 ]
   O> set glob1 [ -> ]
-  is-anonymous-command? glob1 => true
+  is-arrow-command? glob1 => true
   O> run glob1  set glob1 5
   glob1 => 5
 
@@ -269,7 +269,7 @@ empty-command-task-2
   O> foreach [1 2 3] [ ]
 
 command-task-body-may-have-different-agent-type
-  is-anonymous-command? [ -> die] => true
+  is-arrow-command? [ -> die] => true
 
 command-task-body-gets-agent-type-check
   O> __ignore [ -> hatch 1 sprout 1] => COMPILER ERROR You can't use SPROUT in a turtle context, because SPROUT is patch-only.
@@ -363,5 +363,5 @@ AlternateSyntaxesSupported
   O> one-argument-unbracketed
 
 PrintCommandLambda
-  (word [ -> print 10 let v1 (list 10) ]) => "(anonymous command: [ -> print 10 let v1 ( list 10 ) ])"
-  (word [ -> let v1 (list 10 20 30) ]) => "(anonymous command: [ -> let v1 ( list 10 20 30 ) ])"
+  (word [ -> print 10 let v1 (list 10) ]) => "(arrow command: [ -> print 10 let v1 ( list 10 ) ])"
+  (word [ -> let v1 (list 10 20 30) ]) => "(arrow command: [ -> let v1 ( list 10 20 30 ) ])"

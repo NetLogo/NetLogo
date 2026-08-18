@@ -160,7 +160,7 @@
   to foo foreach [ 0 ] [ error "boom" ] end
   O> foo => STACKTRACE boom /
   error while observer running ERROR /
-    called by (anonymous command: [ error "boom" ]) /
+    called by (arrow command: [ error "boom" ]) /
     called by procedure FOO /
     called by procedure __EVALUATOR
 
@@ -182,7 +182,7 @@
   to foo foreach [ 0 ] [ repeat 1 [ error "boom" ] ] end
   O> foo => STACKTRACE boom /
   error while observer running ERROR /
-    called by (anonymous command: [ repeat 1 [ error "boom" ] ]) /
+    called by (arrow command: [ repeat 1 [ error "boom" ] ]) /
     called by procedure FOO /
     called by procedure __EVALUATOR
 
@@ -190,7 +190,7 @@
   to foo crt 1 foreach [ 0 ] [ ask turtles [ error "boom" ] ] end
   O> foo => STACKTRACE boom /
   error while turtle 0 running ERROR /
-    called by (anonymous command: [ ask turtles [ error "boom" ] ]) /
+    called by (arrow command: [ ask turtles [ error "boom" ] ]) /
     called by procedure FOO /
     called by procedure __EVALUATOR
 
@@ -199,7 +199,7 @@
   O> random-seed 0
   O> foo => STACKTRACE boom /
   error while turtle 0 running ERROR /
-    called by (anonymous command: [ repeat 1 [ crt 1 ask turtles [ error "boom" ] ] ]) /
+    called by (arrow command: [ repeat 1 [ crt 1 ask turtles [ error "boom" ] ] ]) /
     called by procedure FOO /
     called by procedure __EVALUATOR
 
@@ -209,7 +209,7 @@
   O> random-seed 0
   O> foo => STACKTRACE boom /
   error while turtle 1 running ERROR /
-    called by (anonymous command: [ repeat 1 [ crt 1 ask turtles [ error "boom" ] ] ]) /
+    called by (arrow command: [ repeat 1 [ crt 1 ask turtles [ error "boom" ] ] ]) /
     called by procedure BAR /
     called by procedure FOO /
     called by procedure __EVALUATOR

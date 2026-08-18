@@ -103,12 +103,12 @@ SetOnMultipleVariableTypes
 TaskDisplayPreservesMultis
   globals [t g1 g2]
   O> set t [ [x] -> let [v1 v2] (list x 100) ]
-  word t => "(anonymous command: [ [x] -> let [v1 v2] list x 100 ])"
+  word t => "(arrow command: [ [x] -> let [v1 v2] list x 100 ])"
   O> set t [ [x y] -> set [g1 g2] (list x y 300) ]
-  word t => "(anonymous command: [ [x y] -> set [g1 g2] ( list x y 300 ) ])"
+  word t => "(arrow command: [ [x y] -> set [g1 g2] ( list x y 300 ) ])"
   # once we have task args destructuring...
   # O> set t [ [[x y]] -> set [g1 g2] (list x y 300) ]
-  # word t => "(anonymous command: [ [[x y]] -> set [g1 g2] list x y 300 ] "
+  # word t => "(arrow command: [ [[x y]] -> set [g1 g2] list x y 300 ] "
 
 SingleNestLiteral
   globals [ g1 g2 g3 ]

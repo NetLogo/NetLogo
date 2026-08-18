@@ -100,7 +100,7 @@ Combo
   map [ a -> sort-by [[x y] -> x < y] a] [[2 1] [3 7 4]] => [[1 2] [3 4 7]]
 
 NotEnoughInputs
-  runresult [ x -> x] => ERROR anonymous procedure expected 1 input, but only got 0
+  runresult [ x -> x] => ERROR arrow procedure expected 1 input, but only got 0
 
 Map-Id-With-Variable
   globals [ glob1 ]
@@ -225,8 +225,8 @@ AlternateReporterSyntaxesSupported
   one-argument-unbracketed => [3 4 5]
 
 PrintReporterLambda
-  (word [ -> 5 ]) => "(anonymous reporter: [ -> 5 ])"
-  (word [ a -> a ]) => "(anonymous reporter: [ a -> a ])"
-  (word [ [a b] -> a + b ]) => "(anonymous reporter: [ [a b] -> a + b ])"
-  (word [ [a] -> (ifelse-value a = 10 [red] a = 20 [blue] [green]) ]) => "(anonymous reporter: [ [a] -> ( ifelse-value a = 10 [ red ] a = 20 [ blue ] [ green ] ) ])"
-  (word [ -> (list 10 20 30 40) ]) => "(anonymous reporter: [ -> ( list 10 20 30 40 ) ])"
+  (word [ -> 5 ]) => "(arrow reporter: [ -> 5 ])"
+  (word [ a -> a ]) => "(arrow reporter: [ a -> a ])"
+  (word [ [a b] -> a + b ]) => "(arrow reporter: [ [a b] -> a + b ])"
+  (word [ [a] -> (ifelse-value a = 10 [red] a = 20 [blue] [green]) ]) => "(arrow reporter: [ [a] -> ( ifelse-value a = 10 [ red ] a = 20 [ blue ] [ green ] ) ])"
+  (word [ -> (list 10 20 30 40) ]) => "(arrow reporter: [ -> ( list 10 20 30 40 ) ])"

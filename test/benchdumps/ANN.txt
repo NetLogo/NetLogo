@@ -3100,8 +3100,8 @@ procedure PROPOGATE:[]{OTPL}:
          L1
           RETURN
 
-   (anonymous command: [ [?1] -> ask ?1 [ update-activation ] ]):procedure PROPOGATE[]{OTPL}:
-   [0]_asm_propogate_anonymouscommand1ask1updateactivation_ask_0 "ask ?1 [ update-activation ]" Object => void
+   (arrow command: [ [?1] -> ask ?1 [ update-activation ] ]):procedure PROPOGATE[]{OTPL}:
+   [0]_asm_propogate_arrowcommand1ask1updateactivation_ask_0 "ask ?1 [ update-activation ]" Object => void
             _letvariable(?1) "?1" => Object
                 // parameter final  context
                L0
@@ -3109,7 +3109,7 @@ procedure PROPOGATE:[]{OTPL}:
                 GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
                 GETFIELD org/nlogo/nvm/Activation.binding : Lorg/nlogo/nvm/Binding;
                 ALOAD 0
-                GETFIELD org/nlogo/prim/_asm_propogate_anonymouscommand1ask1updateactivation_ask_0.kept2__let : Lorg/nlogo/core/Let;
+                GETFIELD org/nlogo/prim/_asm_propogate_arrowcommand1ask1updateactivation_ask_0.kept2__let : Lorg/nlogo/core/Let;
                 INVOKEVIRTUAL org/nlogo/nvm/Binding.getLet (Lorg/nlogo/core/Let;)Ljava/lang/Object;
                L1
                 ASTORE 2
@@ -3125,7 +3125,7 @@ procedure PROPOGATE:[]{OTPL}:
                 IFNE L3
                 ALOAD 3
                 ALOAD 0
-                GETFIELD org/nlogo/prim/_asm_propogate_anonymouscommand1ask1updateactivation_ask_0.world : Lorg/nlogo/agent/World;
+                GETFIELD org/nlogo/prim/_asm_propogate_arrowcommand1ask1updateactivation_ask_0.world : Lorg/nlogo/agent/World;
                 INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/TreeAgentSet;
                 IF_ACMPNE L4
                 NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -3141,7 +3141,7 @@ procedure PROPOGATE:[]{OTPL}:
                FRAME APPEND [java/lang/Object org/nlogo/agent/AgentSet]
                 ALOAD 3
                 ALOAD 0
-                GETFIELD org/nlogo/prim/_asm_propogate_anonymouscommand1ask1updateactivation_ask_0.world : Lorg/nlogo/agent/World;
+                GETFIELD org/nlogo/prim/_asm_propogate_arrowcommand1ask1updateactivation_ask_0.world : Lorg/nlogo/agent/World;
                 INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/IndexedAgentSet;
                 IF_ACMPNE L3
                 NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -3212,12 +3212,12 @@ procedure PROPOGATE:[]{OTPL}:
                 PUTFIELD org/nlogo/nvm/Context.ip : I
                L7
                 RETURN
-   [1]_asm_propogate_anonymouscommand1ask1updateactivation_call_1 "update-activation"
+   [1]_asm_propogate_arrowcommand1ask1updateactivation_call_1 "update-activation"
                L0
                 NEW org/nlogo/nvm/Activation
                 DUP
                 ALOAD 0
-                GETFIELD org/nlogo/prim/_asm_propogate_anonymouscommand1ask1updateactivation_call_1.kept1_procedure : Lorg/nlogo/nvm/Procedure;
+                GETFIELD org/nlogo/prim/_asm_propogate_arrowcommand1ask1updateactivation_call_1.kept1_procedure : Lorg/nlogo/nvm/Procedure;
                 ALOAD 1
                 GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
                 SIPUSH 1
@@ -3232,7 +3232,7 @@ procedure PROPOGATE:[]{OTPL}:
                 PUTFIELD org/nlogo/nvm/Context.ip : I
                L1
                 RETURN
-   [2]_asm_propogate_anonymouscommand1ask1updateactivation_done_2 => void
+   [2]_asm_propogate_arrowcommand1ask1updateactivation_done_2 => void
                 // parameter final  context
                L0
                 ALOAD 1
@@ -3240,7 +3240,7 @@ procedure PROPOGATE:[]{OTPL}:
                 PUTFIELD org/nlogo/nvm/Context.finished : Z
                L1
                 RETURN
-   [3]_asm_propogate_anonymouscommand1ask1updateactivation_done_3 => void
+   [3]_asm_propogate_arrowcommand1ask1updateactivation_done_3 => void
                 // parameter final  context
                L0
                 ALOAD 1
@@ -4249,8 +4249,8 @@ procedure SET-BIASES:[BIASES]{OTPL}:
          L1
           RETURN
 
-   (anonymous command: [ [?1 ?2] -> ask ?1 [ set-bias ?2 ] ]):procedure SET-BIASES[]{OTPL}:
-   [0]_asm_setbiases_anonymouscommand12ask1setbias2_ask_0 "ask ?1 [ set-bias ?2 ]" Object => void
+   (arrow command: [ [?1 ?2] -> ask ?1 [ set-bias ?2 ] ]):procedure SET-BIASES[]{OTPL}:
+   [0]_asm_setbiases_arrowcommand12ask1setbias2_ask_0 "ask ?1 [ set-bias ?2 ]" Object => void
             _letvariable(?1) "?1" => Object
                 // parameter final  context
                L0
@@ -4258,7 +4258,7 @@ procedure SET-BIASES:[BIASES]{OTPL}:
                 GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
                 GETFIELD org/nlogo/nvm/Activation.binding : Lorg/nlogo/nvm/Binding;
                 ALOAD 0
-                GETFIELD org/nlogo/prim/_asm_setbiases_anonymouscommand12ask1setbias2_ask_0.kept2__let : Lorg/nlogo/core/Let;
+                GETFIELD org/nlogo/prim/_asm_setbiases_arrowcommand12ask1setbias2_ask_0.kept2__let : Lorg/nlogo/core/Let;
                 INVOKEVIRTUAL org/nlogo/nvm/Binding.getLet (Lorg/nlogo/core/Let;)Ljava/lang/Object;
                L1
                 ASTORE 2
@@ -4274,7 +4274,7 @@ procedure SET-BIASES:[BIASES]{OTPL}:
                 IFNE L3
                 ALOAD 3
                 ALOAD 0
-                GETFIELD org/nlogo/prim/_asm_setbiases_anonymouscommand12ask1setbias2_ask_0.world : Lorg/nlogo/agent/World;
+                GETFIELD org/nlogo/prim/_asm_setbiases_arrowcommand12ask1setbias2_ask_0.world : Lorg/nlogo/agent/World;
                 INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/TreeAgentSet;
                 IF_ACMPNE L4
                 NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -4290,7 +4290,7 @@ procedure SET-BIASES:[BIASES]{OTPL}:
                FRAME APPEND [java/lang/Object org/nlogo/agent/AgentSet]
                 ALOAD 3
                 ALOAD 0
-                GETFIELD org/nlogo/prim/_asm_setbiases_anonymouscommand12ask1setbias2_ask_0.world : Lorg/nlogo/agent/World;
+                GETFIELD org/nlogo/prim/_asm_setbiases_arrowcommand12ask1setbias2_ask_0.world : Lorg/nlogo/agent/World;
                 INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/IndexedAgentSet;
                 IF_ACMPNE L3
                 NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -4361,14 +4361,14 @@ procedure SET-BIASES:[BIASES]{OTPL}:
                 PUTFIELD org/nlogo/nvm/Context.ip : I
                L7
                 RETURN
-   [1]_asm_setbiases_anonymouscommand12ask1setbias2_call_1 "set-bias ?2"
+   [1]_asm_setbiases_arrowcommand12ask1setbias2_call_1 "set-bias ?2"
             _letvariable(?2) "?2" => Object
                 // parameter final  context
                L0
                 NEW org/nlogo/nvm/Activation
                 DUP
                 ALOAD 0
-                GETFIELD org/nlogo/prim/_asm_setbiases_anonymouscommand12ask1setbias2_call_1.kept1_procedure : Lorg/nlogo/nvm/Procedure;
+                GETFIELD org/nlogo/prim/_asm_setbiases_arrowcommand12ask1setbias2_call_1.kept1_procedure : Lorg/nlogo/nvm/Procedure;
                 ALOAD 1
                 GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
                 SIPUSH 1
@@ -4380,7 +4380,7 @@ procedure SET-BIASES:[BIASES]{OTPL}:
                 GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
                 GETFIELD org/nlogo/nvm/Activation.binding : Lorg/nlogo/nvm/Binding;
                 ALOAD 0
-                GETFIELD org/nlogo/prim/_asm_setbiases_anonymouscommand12ask1setbias2_call_1.kept2__let : Lorg/nlogo/core/Let;
+                GETFIELD org/nlogo/prim/_asm_setbiases_arrowcommand12ask1setbias2_call_1.kept2__let : Lorg/nlogo/core/Let;
                 INVOKEVIRTUAL org/nlogo/nvm/Binding.getLet (Lorg/nlogo/core/Let;)Ljava/lang/Object;
                L2
                 AASTORE
@@ -4394,7 +4394,7 @@ procedure SET-BIASES:[BIASES]{OTPL}:
                 PUTFIELD org/nlogo/nvm/Context.ip : I
                L3
                 RETURN
-   [2]_asm_setbiases_anonymouscommand12ask1setbias2_done_2 => void
+   [2]_asm_setbiases_arrowcommand12ask1setbias2_done_2 => void
                 // parameter final  context
                L0
                 ALOAD 1
@@ -4402,7 +4402,7 @@ procedure SET-BIASES:[BIASES]{OTPL}:
                 PUTFIELD org/nlogo/nvm/Context.finished : Z
                L1
                 RETURN
-   [3]_asm_setbiases_anonymouscommand12ask1setbias2_done_3 => void
+   [3]_asm_setbiases_arrowcommand12ask1setbias2_done_3 => void
                 // parameter final  context
                L0
                 ALOAD 1
@@ -4447,8 +4447,8 @@ procedure SET-INPUT:[INPUT]{OTPL}:
          L1
           RETURN
 
-   (anonymous command: [ [?1 ?2] -> ask ?1 [ set-activation ?2 ] ]):procedure SET-INPUT[]{OTPL}:
-   [0]_asm_setinput_anonymouscommand12ask1setactivation2_ask_0 "ask ?1 [ set-activation ?2 ]" Object => void
+   (arrow command: [ [?1 ?2] -> ask ?1 [ set-activation ?2 ] ]):procedure SET-INPUT[]{OTPL}:
+   [0]_asm_setinput_arrowcommand12ask1setactivation2_ask_0 "ask ?1 [ set-activation ?2 ]" Object => void
             _letvariable(?1) "?1" => Object
                 // parameter final  context
                L0
@@ -4456,7 +4456,7 @@ procedure SET-INPUT:[INPUT]{OTPL}:
                 GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
                 GETFIELD org/nlogo/nvm/Activation.binding : Lorg/nlogo/nvm/Binding;
                 ALOAD 0
-                GETFIELD org/nlogo/prim/_asm_setinput_anonymouscommand12ask1setactivation2_ask_0.kept2__let : Lorg/nlogo/core/Let;
+                GETFIELD org/nlogo/prim/_asm_setinput_arrowcommand12ask1setactivation2_ask_0.kept2__let : Lorg/nlogo/core/Let;
                 INVOKEVIRTUAL org/nlogo/nvm/Binding.getLet (Lorg/nlogo/core/Let;)Ljava/lang/Object;
                L1
                 ASTORE 2
@@ -4472,7 +4472,7 @@ procedure SET-INPUT:[INPUT]{OTPL}:
                 IFNE L3
                 ALOAD 3
                 ALOAD 0
-                GETFIELD org/nlogo/prim/_asm_setinput_anonymouscommand12ask1setactivation2_ask_0.world : Lorg/nlogo/agent/World;
+                GETFIELD org/nlogo/prim/_asm_setinput_arrowcommand12ask1setactivation2_ask_0.world : Lorg/nlogo/agent/World;
                 INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/TreeAgentSet;
                 IF_ACMPNE L4
                 NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -4488,7 +4488,7 @@ procedure SET-INPUT:[INPUT]{OTPL}:
                FRAME APPEND [java/lang/Object org/nlogo/agent/AgentSet]
                 ALOAD 3
                 ALOAD 0
-                GETFIELD org/nlogo/prim/_asm_setinput_anonymouscommand12ask1setactivation2_ask_0.world : Lorg/nlogo/agent/World;
+                GETFIELD org/nlogo/prim/_asm_setinput_arrowcommand12ask1setactivation2_ask_0.world : Lorg/nlogo/agent/World;
                 INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/IndexedAgentSet;
                 IF_ACMPNE L3
                 NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -4559,14 +4559,14 @@ procedure SET-INPUT:[INPUT]{OTPL}:
                 PUTFIELD org/nlogo/nvm/Context.ip : I
                L7
                 RETURN
-   [1]_asm_setinput_anonymouscommand12ask1setactivation2_call_1 "set-activation ?2"
+   [1]_asm_setinput_arrowcommand12ask1setactivation2_call_1 "set-activation ?2"
             _letvariable(?2) "?2" => Object
                 // parameter final  context
                L0
                 NEW org/nlogo/nvm/Activation
                 DUP
                 ALOAD 0
-                GETFIELD org/nlogo/prim/_asm_setinput_anonymouscommand12ask1setactivation2_call_1.kept1_procedure : Lorg/nlogo/nvm/Procedure;
+                GETFIELD org/nlogo/prim/_asm_setinput_arrowcommand12ask1setactivation2_call_1.kept1_procedure : Lorg/nlogo/nvm/Procedure;
                 ALOAD 1
                 GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
                 SIPUSH 1
@@ -4578,7 +4578,7 @@ procedure SET-INPUT:[INPUT]{OTPL}:
                 GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
                 GETFIELD org/nlogo/nvm/Activation.binding : Lorg/nlogo/nvm/Binding;
                 ALOAD 0
-                GETFIELD org/nlogo/prim/_asm_setinput_anonymouscommand12ask1setactivation2_call_1.kept2__let : Lorg/nlogo/core/Let;
+                GETFIELD org/nlogo/prim/_asm_setinput_arrowcommand12ask1setactivation2_call_1.kept2__let : Lorg/nlogo/core/Let;
                 INVOKEVIRTUAL org/nlogo/nvm/Binding.getLet (Lorg/nlogo/core/Let;)Ljava/lang/Object;
                L2
                 AASTORE
@@ -4592,7 +4592,7 @@ procedure SET-INPUT:[INPUT]{OTPL}:
                 PUTFIELD org/nlogo/nvm/Context.ip : I
                L3
                 RETURN
-   [2]_asm_setinput_anonymouscommand12ask1setactivation2_done_2 => void
+   [2]_asm_setinput_arrowcommand12ask1setactivation2_done_2 => void
                 // parameter final  context
                L0
                 ALOAD 1
@@ -4600,7 +4600,7 @@ procedure SET-INPUT:[INPUT]{OTPL}:
                 PUTFIELD org/nlogo/nvm/Context.finished : Z
                L1
                 RETURN
-   [3]_asm_setinput_anonymouscommand12ask1setactivation2_done_3 => void
+   [3]_asm_setinput_arrowcommand12ask1setactivation2_done_3 => void
                 // parameter final  context
                L0
                 ALOAD 1
@@ -4828,8 +4828,8 @@ procedure SET-WEIGHTS:[WEIGHTS]{OTPL}:
          L1
           RETURN
 
-   (anonymous command: [ [?1 ?2] -> ask ?1 [ set-weight ?2 ] ]):procedure SET-WEIGHTS[]{OTPL}:
-   [0]_asm_setweights_anonymouscommand12ask1setweight2_ask_0 "ask ?1 [ set-weight ?2 ]" Object => void
+   (arrow command: [ [?1 ?2] -> ask ?1 [ set-weight ?2 ] ]):procedure SET-WEIGHTS[]{OTPL}:
+   [0]_asm_setweights_arrowcommand12ask1setweight2_ask_0 "ask ?1 [ set-weight ?2 ]" Object => void
             _letvariable(?1) "?1" => Object
                 // parameter final  context
                L0
@@ -4837,7 +4837,7 @@ procedure SET-WEIGHTS:[WEIGHTS]{OTPL}:
                 GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
                 GETFIELD org/nlogo/nvm/Activation.binding : Lorg/nlogo/nvm/Binding;
                 ALOAD 0
-                GETFIELD org/nlogo/prim/_asm_setweights_anonymouscommand12ask1setweight2_ask_0.kept2__let : Lorg/nlogo/core/Let;
+                GETFIELD org/nlogo/prim/_asm_setweights_arrowcommand12ask1setweight2_ask_0.kept2__let : Lorg/nlogo/core/Let;
                 INVOKEVIRTUAL org/nlogo/nvm/Binding.getLet (Lorg/nlogo/core/Let;)Ljava/lang/Object;
                L1
                 ASTORE 2
@@ -4853,7 +4853,7 @@ procedure SET-WEIGHTS:[WEIGHTS]{OTPL}:
                 IFNE L3
                 ALOAD 3
                 ALOAD 0
-                GETFIELD org/nlogo/prim/_asm_setweights_anonymouscommand12ask1setweight2_ask_0.world : Lorg/nlogo/agent/World;
+                GETFIELD org/nlogo/prim/_asm_setweights_arrowcommand12ask1setweight2_ask_0.world : Lorg/nlogo/agent/World;
                 INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/TreeAgentSet;
                 IF_ACMPNE L4
                 NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -4869,7 +4869,7 @@ procedure SET-WEIGHTS:[WEIGHTS]{OTPL}:
                FRAME APPEND [java/lang/Object org/nlogo/agent/AgentSet]
                 ALOAD 3
                 ALOAD 0
-                GETFIELD org/nlogo/prim/_asm_setweights_anonymouscommand12ask1setweight2_ask_0.world : Lorg/nlogo/agent/World;
+                GETFIELD org/nlogo/prim/_asm_setweights_arrowcommand12ask1setweight2_ask_0.world : Lorg/nlogo/agent/World;
                 INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/IndexedAgentSet;
                 IF_ACMPNE L3
                 NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -4940,14 +4940,14 @@ procedure SET-WEIGHTS:[WEIGHTS]{OTPL}:
                 PUTFIELD org/nlogo/nvm/Context.ip : I
                L7
                 RETURN
-   [1]_asm_setweights_anonymouscommand12ask1setweight2_call_1 "set-weight ?2"
+   [1]_asm_setweights_arrowcommand12ask1setweight2_call_1 "set-weight ?2"
             _letvariable(?2) "?2" => Object
                 // parameter final  context
                L0
                 NEW org/nlogo/nvm/Activation
                 DUP
                 ALOAD 0
-                GETFIELD org/nlogo/prim/_asm_setweights_anonymouscommand12ask1setweight2_call_1.kept1_procedure : Lorg/nlogo/nvm/Procedure;
+                GETFIELD org/nlogo/prim/_asm_setweights_arrowcommand12ask1setweight2_call_1.kept1_procedure : Lorg/nlogo/nvm/Procedure;
                 ALOAD 1
                 GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
                 SIPUSH 1
@@ -4959,7 +4959,7 @@ procedure SET-WEIGHTS:[WEIGHTS]{OTPL}:
                 GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
                 GETFIELD org/nlogo/nvm/Activation.binding : Lorg/nlogo/nvm/Binding;
                 ALOAD 0
-                GETFIELD org/nlogo/prim/_asm_setweights_anonymouscommand12ask1setweight2_call_1.kept2__let : Lorg/nlogo/core/Let;
+                GETFIELD org/nlogo/prim/_asm_setweights_arrowcommand12ask1setweight2_call_1.kept2__let : Lorg/nlogo/core/Let;
                 INVOKEVIRTUAL org/nlogo/nvm/Binding.getLet (Lorg/nlogo/core/Let;)Ljava/lang/Object;
                L2
                 AASTORE
@@ -4973,7 +4973,7 @@ procedure SET-WEIGHTS:[WEIGHTS]{OTPL}:
                 PUTFIELD org/nlogo/nvm/Context.ip : I
                L3
                 RETURN
-   [2]_asm_setweights_anonymouscommand12ask1setweight2_done_2 => void
+   [2]_asm_setweights_arrowcommand12ask1setweight2_done_2 => void
                 // parameter final  context
                L0
                 ALOAD 1
@@ -4981,7 +4981,7 @@ procedure SET-WEIGHTS:[WEIGHTS]{OTPL}:
                 PUTFIELD org/nlogo/nvm/Context.finished : Z
                L1
                 RETURN
-   [3]_asm_setweights_anonymouscommand12ask1setweight2_done_3 => void
+   [3]_asm_setweights_arrowcommand12ask1setweight2_done_3 => void
                 // parameter final  context
                L0
                 ALOAD 1
@@ -5970,8 +5970,8 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
          L1
           RETURN
 
-   (anonymous command: [ [?1] -> let layer-size ?1 let layer-num length layers let layer no-turtles crt layer-size [ set layer ( turtle-set layer self ) ] let x layer-num + 0.5 / num-layers * max-pxcor let i 0 foreach sort layer [ [??1] -> ask ??1 [ let y 2 * 0.5 - i + 0.5 / layer-size * max-pycor setxy x y set color grey ] set i i + 1 ] set layers lput layer layers ]):procedure SETUP[]{OTPL}:
-   [0]_asm_setup_anonymouscommand1letlayersize1letlayernumlengthlayersletlayernoturtl$279c3d00e353ba53c2f529234d56ee74$_let_0 "let ?1" Object => void
+   (arrow command: [ [?1] -> let layer-size ?1 let layer-num length layers let layer no-turtles crt layer-size [ set layer ( turtle-set layer self ) ] let x layer-num + 0.5 / num-layers * max-pxcor let i 0 foreach sort layer [ [??1] -> ask ??1 [ let y 2 * 0.5 - i + 0.5 / layer-size * max-pycor setxy x y set color grey ] set i i + 1 ] set layers lput layer layers ]):procedure SETUP[]{OTPL}:
+   [0]_asm_setup_arrowcommand1letlayersize1letlayernumlengthlayersletlayernoturtlesc$ddc22d654ee72958bf994a27939cf7d9$_let_0 "let ?1" Object => void
             _letvariable(?1) "?1" => Object
                 // parameter final  context
                 // parameter final  context
@@ -5981,7 +5981,7 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                 GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
                 GETFIELD org/nlogo/nvm/Activation.binding : Lorg/nlogo/nvm/Binding;
                 ALOAD 0
-                GETFIELD org/nlogo/prim/_asm_setup_anonymouscommand1letlayersize1letlayernumlengthlayersletlayernoturtl$279c3d00e353ba53c2f529234d56ee74$_let_0.kept2__let : Lorg/nlogo/core/Let;
+                GETFIELD org/nlogo/prim/_asm_setup_arrowcommand1letlayersize1letlayernumlengthlayersletlayernoturtlesc$ddc22d654ee72958bf994a27939cf7d9$_let_0.kept2__let : Lorg/nlogo/core/Let;
                 INVOKEVIRTUAL org/nlogo/nvm/Binding.getLet (Lorg/nlogo/core/Let;)Ljava/lang/Object;
                L1
                 ASTORE 2
@@ -5989,7 +5989,7 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                 GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
                 GETFIELD org/nlogo/nvm/Activation.binding : Lorg/nlogo/nvm/Binding;
                 ALOAD 0
-                GETFIELD org/nlogo/prim/_asm_setup_anonymouscommand1letlayersize1letlayernumlengthlayersletlayernoturtl$279c3d00e353ba53c2f529234d56ee74$_let_0.kept1__let : Lorg/nlogo/core/Let;
+                GETFIELD org/nlogo/prim/_asm_setup_arrowcommand1letlayersize1letlayernumlengthlayersletlayernoturtlesc$ddc22d654ee72958bf994a27939cf7d9$_let_0.kept1__let : Lorg/nlogo/core/Let;
                 ALOAD 2
                 INVOKEVIRTUAL org/nlogo/nvm/Binding.let (Lorg/nlogo/core/Let;Ljava/lang/Object;)V
                 ALOAD 1
@@ -5997,14 +5997,14 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                 PUTFIELD org/nlogo/nvm/Context.ip : I
                L2
                 RETURN
-   [1]_asm_setup_anonymouscommand1letlayersize1letlayernumlengthlayersletlayernoturtl$279c3d00e353ba53c2f529234d56ee74$_let_1 "let length layers" Object => void
+   [1]_asm_setup_arrowcommand1letlayersize1letlayernumlengthlayersletlayernoturtlesc$ddc22d654ee72958bf994a27939cf7d9$_let_1 "let length layers" Object => void
             _length "length layers" Object => double
               _observervariable:LAYERS "layers" => Object
                 // parameter final  context
                 // parameter final  value
                L0
                 ALOAD 0
-                GETFIELD org/nlogo/prim/_asm_setup_anonymouscommand1letlayersize1letlayernumlengthlayersletlayernoturtl$279c3d00e353ba53c2f529234d56ee74$_let_1.world : Lorg/nlogo/agent/World;
+                GETFIELD org/nlogo/prim/_asm_setup_arrowcommand1letlayersize1letlayernumlengthlayersletlayernoturtlesc$ddc22d654ee72958bf994a27939cf7d9$_let_1.world : Lorg/nlogo/agent/World;
                 INVOKEVIRTUAL org/nlogo/agent/World.observer ()Lorg/nlogo/agent/Observer;
                 ICONST_1
                 INVOKEVIRTUAL org/nlogo/agent/Observer.getVariable (I)Ljava/lang/Object;
@@ -6053,7 +6053,7 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                 GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
                 GETFIELD org/nlogo/nvm/Activation.binding : Lorg/nlogo/nvm/Binding;
                 ALOAD 0
-                GETFIELD org/nlogo/prim/_asm_setup_anonymouscommand1letlayersize1letlayernumlengthlayersletlayernoturtl$279c3d00e353ba53c2f529234d56ee74$_let_1.kept1__let : Lorg/nlogo/core/Let;
+                GETFIELD org/nlogo/prim/_asm_setup_arrowcommand1letlayersize1letlayernumlengthlayersletlayernoturtlesc$ddc22d654ee72958bf994a27939cf7d9$_let_1.kept1__let : Lorg/nlogo/core/Let;
                 ALOAD 2
                 INVOKEVIRTUAL org/nlogo/nvm/Binding.let (Lorg/nlogo/core/Let;Ljava/lang/Object;)V
                 ALOAD 1
@@ -6061,12 +6061,12 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                 PUTFIELD org/nlogo/nvm/Context.ip : I
                L5
                 RETURN
-   [2]_asm_setup_anonymouscommand1letlayersize1letlayernumlengthlayersletlayernoturtl$279c3d00e353ba53c2f529234d56ee74$_let_2 "let no-turtles" Object => void
+   [2]_asm_setup_arrowcommand1letlayersize1letlayernumlengthlayersletlayernoturtlesc$ddc22d654ee72958bf994a27939cf7d9$_let_2 "let no-turtles" Object => void
             _noturtles "no-turtles"
                 // parameter final  context
                 // parameter final  value
                 ALOAD 0
-                GETFIELD org/nlogo/prim/_asm_setup_anonymouscommand1letlayersize1letlayernumlengthlayersletlayernoturtl$279c3d00e353ba53c2f529234d56ee74$_let_2.keptinstr2 : Lorg/nlogo/prim/etc/_noturtles;
+                GETFIELD org/nlogo/prim/_asm_setup_arrowcommand1letlayersize1letlayernumlengthlayersletlayernoturtlesc$ddc22d654ee72958bf994a27939cf7d9$_let_2.keptinstr2 : Lorg/nlogo/prim/etc/_noturtles;
                 ALOAD 1
                 INVOKEVIRTUAL org/nlogo/prim/etc/_noturtles.report (Lorg/nlogo/nvm/Context;)Ljava/lang/Object;
                L0
@@ -6075,7 +6075,7 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                 GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
                 GETFIELD org/nlogo/nvm/Activation.binding : Lorg/nlogo/nvm/Binding;
                 ALOAD 0
-                GETFIELD org/nlogo/prim/_asm_setup_anonymouscommand1letlayersize1letlayernumlengthlayersletlayernoturtl$279c3d00e353ba53c2f529234d56ee74$_let_2.kept1__let : Lorg/nlogo/core/Let;
+                GETFIELD org/nlogo/prim/_asm_setup_arrowcommand1letlayersize1letlayernumlengthlayersletlayernoturtlesc$ddc22d654ee72958bf994a27939cf7d9$_let_2.kept1__let : Lorg/nlogo/core/Let;
                 ALOAD 2
                 INVOKEVIRTUAL org/nlogo/nvm/Binding.let (Lorg/nlogo/core/Let;Ljava/lang/Object;)V
                 ALOAD 1
@@ -6084,31 +6084,31 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                L1
                 RETURN
    [3]_createturtles:,+6 "crt layer-size [ set layer (turtle-set layer self) ]"
-            _asm_setup_anonymouscommand1letlayersize1letlayernumlengthlayersletlayernoturtl$279c3d00e353ba53c2f529234d56ee74$_letvariable_3 "layer-size" => Object
+            _asm_setup_arrowcommand1letlayersize1letlayernumlengthlayersletlayernoturtlesc$ddc22d654ee72958bf994a27939cf7d9$_letvariable_3 "layer-size" => Object
                   // parameter final  context
                  L0
                   ALOAD 1
                   GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
                   GETFIELD org/nlogo/nvm/Activation.binding : Lorg/nlogo/nvm/Binding;
                   ALOAD 0
-                  GETFIELD org/nlogo/prim/_asm_setup_anonymouscommand1letlayersize1letlayernumlengthlayersletlayernoturtl$279c3d00e353ba53c2f529234d56ee74$_letvariable_3.kept1__let : Lorg/nlogo/core/Let;
+                  GETFIELD org/nlogo/prim/_asm_setup_arrowcommand1letlayersize1letlayernumlengthlayersletlayernoturtlesc$ddc22d654ee72958bf994a27939cf7d9$_letvariable_3.kept1__let : Lorg/nlogo/core/Let;
                   INVOKEVIRTUAL org/nlogo/nvm/Binding.getLet (Lorg/nlogo/core/Let;)Ljava/lang/Object;
                  L1
                   ARETURN
-   [4]_asm_setup_anonymouscommand1letlayersize1letlayernumlengthlayersletlayernoturtl$279c3d00e353ba53c2f529234d56ee74$_setletvariable_4 "set layer (turtle-set layer self)" Object => void
+   [4]_asm_setup_arrowcommand1letlayersize1letlayernumlengthlayersletlayernoturtlesc$ddc22d654ee72958bf994a27939cf7d9$_setletvariable_4 "set layer (turtle-set layer self)" Object => void
             _turtleset "(turtle-set layer self)"
-              _asm_setup_anonymouscommand1letlayersize1letlayernumlengthlayersletlayernoturtl$279c3d00e353ba53c2f529234d56ee74$_letvariable_5 "layer" => Object
+              _asm_setup_arrowcommand1letlayersize1letlayernumlengthlayersletlayernoturtlesc$ddc22d654ee72958bf994a27939cf7d9$_letvariable_5 "layer" => Object
                     // parameter final  context
                    L0
                     ALOAD 1
                     GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
                     GETFIELD org/nlogo/nvm/Activation.binding : Lorg/nlogo/nvm/Binding;
                     ALOAD 0
-                    GETFIELD org/nlogo/prim/_asm_setup_anonymouscommand1letlayersize1letlayernumlengthlayersletlayernoturtl$279c3d00e353ba53c2f529234d56ee74$_letvariable_5.kept1__let : Lorg/nlogo/core/Let;
+                    GETFIELD org/nlogo/prim/_asm_setup_arrowcommand1letlayersize1letlayernumlengthlayersletlayernoturtlesc$ddc22d654ee72958bf994a27939cf7d9$_letvariable_5.kept1__let : Lorg/nlogo/core/Let;
                     INVOKEVIRTUAL org/nlogo/nvm/Binding.getLet (Lorg/nlogo/core/Let;)Ljava/lang/Object;
                    L1
                     ARETURN
-              _asm_setup_anonymouscommand1letlayersize1letlayernumlengthlayersletlayernoturtl$279c3d00e353ba53c2f529234d56ee74$_self_6 "self" => Agent
+              _asm_setup_arrowcommand1letlayersize1letlayernumlengthlayersletlayernoturtlesc$ddc22d654ee72958bf994a27939cf7d9$_self_6 "self" => Agent
                     // parameter final  context
                    L0
                     ALOAD 1
@@ -6118,7 +6118,7 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                 // parameter final  context
                 // parameter final  value
                 ALOAD 0
-                GETFIELD org/nlogo/prim/_asm_setup_anonymouscommand1letlayersize1letlayernumlengthlayersletlayernoturtl$279c3d00e353ba53c2f529234d56ee74$_setletvariable_4.keptinstr2 : Lorg/nlogo/prim/etc/_turtleset;
+                GETFIELD org/nlogo/prim/_asm_setup_arrowcommand1letlayersize1letlayernumlengthlayersletlayernoturtlesc$ddc22d654ee72958bf994a27939cf7d9$_setletvariable_4.keptinstr2 : Lorg/nlogo/prim/etc/_turtleset;
                 ALOAD 1
                 INVOKEVIRTUAL org/nlogo/prim/etc/_turtleset.report (Lorg/nlogo/nvm/Context;)Ljava/lang/Object;
                L0
@@ -6127,7 +6127,7 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                 GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
                 GETFIELD org/nlogo/nvm/Activation.binding : Lorg/nlogo/nvm/Binding;
                 ALOAD 0
-                GETFIELD org/nlogo/prim/_asm_setup_anonymouscommand1letlayersize1letlayernumlengthlayersletlayernoturtl$279c3d00e353ba53c2f529234d56ee74$_setletvariable_4.kept1__let : Lorg/nlogo/core/Let;
+                GETFIELD org/nlogo/prim/_asm_setup_arrowcommand1letlayersize1letlayernumlengthlayersletlayernoturtlesc$ddc22d654ee72958bf994a27939cf7d9$_setletvariable_4.kept1__let : Lorg/nlogo/core/Let;
                 ALOAD 2
                 INVOKEVIRTUAL org/nlogo/nvm/Binding.setLet (Lorg/nlogo/core/Let;Ljava/lang/Object;)V
                 ALOAD 1
@@ -6135,7 +6135,7 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                 PUTFIELD org/nlogo/nvm/Context.ip : I
                L1
                 RETURN
-   [5]_asm_setup_anonymouscommand1letlayersize1letlayernumlengthlayersletlayernoturtl$279c3d00e353ba53c2f529234d56ee74$_done_7 => void
+   [5]_asm_setup_arrowcommand1letlayersize1letlayernumlengthlayersletlayernoturtlesc$ddc22d654ee72958bf994a27939cf7d9$_done_7 => void
                 // parameter final  context
                L0
                 ALOAD 1
@@ -6143,7 +6143,7 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                 PUTFIELD org/nlogo/nvm/Context.finished : Z
                L1
                 RETURN
-   [6]_asm_setup_anonymouscommand1letlayersize1letlayernumlengthlayersletlayernoturtl$279c3d00e353ba53c2f529234d56ee74$_let_8 "let layer-num + 0.5 / num-layers * max-pxcor" Object => void
+   [6]_asm_setup_arrowcommand1letlayersize1letlayernumlengthlayersletlayernoturtlesc$ddc22d654ee72958bf994a27939cf7d9$_let_8 "let layer-num + 0.5 / num-layers * max-pxcor" Object => void
             _mult "layer-num + 0.5 / num-layers * max-pxcor" double,double => double
               _div "layer-num + 0.5 / num-layers" double,double => double
                 _plus "layer-num + 0.5" double,double => double
@@ -6163,7 +6163,7 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                 GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
                 GETFIELD org/nlogo/nvm/Activation.binding : Lorg/nlogo/nvm/Binding;
                 ALOAD 0
-                GETFIELD org/nlogo/prim/_asm_setup_anonymouscommand1letlayersize1letlayernumlengthlayersletlayernoturtl$279c3d00e353ba53c2f529234d56ee74$_let_8.kept5__let : Lorg/nlogo/core/Let;
+                GETFIELD org/nlogo/prim/_asm_setup_arrowcommand1letlayersize1letlayernumlengthlayersletlayernoturtlesc$ddc22d654ee72958bf994a27939cf7d9$_let_8.kept5__let : Lorg/nlogo/core/Let;
                 INVOKEVIRTUAL org/nlogo/nvm/Binding.getLet (Lorg/nlogo/core/Let;)Ljava/lang/Object;
                L5
                 ASTORE 2
@@ -6173,7 +6173,7 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                 INVOKEVIRTUAL java/lang/Double.doubleValue ()D
                 GOTO L6
                L1
-               FRAME FULL [org/nlogo/prim/_asm_setup_anonymouscommand1letlayersize1letlayernumlengthlayersletlayernoturtl$279c3d00e353ba53c2f529234d56ee74$_let_8 org/nlogo/nvm/Context java/lang/Object] [java/lang/ClassCastException]
+               FRAME FULL [org/nlogo/prim/_asm_setup_arrowcommand1letlayersize1letlayernumlengthlayersletlayernoturtlesc$ddc22d654ee72958bf994a27939cf7d9$_let_8 org/nlogo/nvm/Context java/lang/Object] [java/lang/ClassCastException]
                 POP
                 NEW org/nlogo/nvm/ArgumentTypeException
                 DUP
@@ -6195,13 +6195,13 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                 DLOAD 4
                 DADD
                 ALOAD 1
-                INVOKEVIRTUAL org/nlogo/prim/_asm_setup_anonymouscommand1letlayersize1letlayernumlengthlayersletlayernoturtl$279c3d00e353ba53c2f529234d56ee74$_let_8.validDouble (DLorg/nlogo/nvm/Context;)D
+                INVOKEVIRTUAL org/nlogo/prim/_asm_setup_arrowcommand1letlayersize1letlayernumlengthlayersletlayernoturtlesc$ddc22d654ee72958bf994a27939cf7d9$_let_8.validDouble (DLorg/nlogo/nvm/Context;)D
                L8
                 ALOAD 1
                 GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
                 GETFIELD org/nlogo/nvm/Activation.binding : Lorg/nlogo/nvm/Binding;
                 ALOAD 0
-                GETFIELD org/nlogo/prim/_asm_setup_anonymouscommand1letlayersize1letlayernumlengthlayersletlayernoturtl$279c3d00e353ba53c2f529234d56ee74$_let_8.kept7__let : Lorg/nlogo/core/Let;
+                GETFIELD org/nlogo/prim/_asm_setup_arrowcommand1letlayersize1letlayernumlengthlayersletlayernoturtlesc$ddc22d654ee72958bf994a27939cf7d9$_let_8.kept7__let : Lorg/nlogo/core/Let;
                 INVOKEVIRTUAL org/nlogo/nvm/Binding.getLet (Lorg/nlogo/core/Let;)Ljava/lang/Object;
                L9
                 ASTORE 2
@@ -6211,7 +6211,7 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                 INVOKEVIRTUAL java/lang/Double.doubleValue ()D
                 GOTO L10
                L3
-               FRAME FULL [org/nlogo/prim/_asm_setup_anonymouscommand1letlayersize1letlayernumlengthlayersletlayernoturtl$279c3d00e353ba53c2f529234d56ee74$_let_8 org/nlogo/nvm/Context java/lang/Object T D] [java/lang/ClassCastException]
+               FRAME FULL [org/nlogo/prim/_asm_setup_arrowcommand1letlayersize1letlayernumlengthlayersletlayernoturtlesc$ddc22d654ee72958bf994a27939cf7d9$_let_8 org/nlogo/nvm/Context java/lang/Object T D] [java/lang/ClassCastException]
                 POP
                 NEW org/nlogo/nvm/ArgumentTypeException
                 DUP
@@ -6223,7 +6223,7 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                 INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
                 ATHROW
                L10
-               FRAME FULL [org/nlogo/prim/_asm_setup_anonymouscommand1letlayersize1letlayernumlengthlayersletlayernoturtl$279c3d00e353ba53c2f529234d56ee74$_let_8 org/nlogo/nvm/Context java/lang/Object T D] [D D]
+               FRAME FULL [org/nlogo/prim/_asm_setup_arrowcommand1letlayersize1letlayernumlengthlayersletlayernoturtlesc$ddc22d654ee72958bf994a27939cf7d9$_let_8 org/nlogo/nvm/Context java/lang/Object T D] [D D]
                 DSTORE 4
                 DSTORE 2
                 DLOAD 4
@@ -6240,17 +6240,17 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                 INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
                 ATHROW
                L11
-               FRAME FULL [org/nlogo/prim/_asm_setup_anonymouscommand1letlayersize1letlayernumlengthlayersletlayernoturtl$279c3d00e353ba53c2f529234d56ee74$_let_8 org/nlogo/nvm/Context D D] []
+               FRAME FULL [org/nlogo/prim/_asm_setup_arrowcommand1letlayersize1letlayernumlengthlayersletlayernoturtlesc$ddc22d654ee72958bf994a27939cf7d9$_let_8 org/nlogo/nvm/Context D D] []
                 ALOAD 0
                 DLOAD 2
                 DLOAD 4
                 DDIV
                 ALOAD 1
-                INVOKEVIRTUAL org/nlogo/prim/_asm_setup_anonymouscommand1letlayersize1letlayernumlengthlayersletlayernoturtl$279c3d00e353ba53c2f529234d56ee74$_let_8.validDouble (DLorg/nlogo/nvm/Context;)D
+                INVOKEVIRTUAL org/nlogo/prim/_asm_setup_arrowcommand1letlayersize1letlayernumlengthlayersletlayernoturtlesc$ddc22d654ee72958bf994a27939cf7d9$_let_8.validDouble (DLorg/nlogo/nvm/Context;)D
                L12
                 GETSTATIC scala/Int$.MODULE$ : Lscala/Int$;
                 ALOAD 0
-                GETFIELD org/nlogo/prim/_asm_setup_anonymouscommand1letlayersize1letlayernumlengthlayersletlayernoturtl$279c3d00e353ba53c2f529234d56ee74$_let_8.world : Lorg/nlogo/agent/World;
+                GETFIELD org/nlogo/prim/_asm_setup_arrowcommand1letlayersize1letlayernumlengthlayersletlayernoturtlesc$ddc22d654ee72958bf994a27939cf7d9$_let_8.world : Lorg/nlogo/agent/World;
                 INVOKEVIRTUAL org/nlogo/agent/World.maxPxcor ()I
                 INVOKEVIRTUAL scala/Int$.int2double (I)D
                L13
@@ -6261,7 +6261,7 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                 DLOAD 4
                 DMUL
                 ALOAD 1
-                INVOKEVIRTUAL org/nlogo/prim/_asm_setup_anonymouscommand1letlayersize1letlayernumlengthlayersletlayernoturtl$279c3d00e353ba53c2f529234d56ee74$_let_8.validDouble (DLorg/nlogo/nvm/Context;)D
+                INVOKEVIRTUAL org/nlogo/prim/_asm_setup_arrowcommand1letlayersize1letlayernumlengthlayersletlayernoturtlesc$ddc22d654ee72958bf994a27939cf7d9$_let_8.validDouble (DLorg/nlogo/nvm/Context;)D
                L14
                 DSTORE 2
                 NEW java/lang/Double
@@ -6273,7 +6273,7 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                 GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
                 GETFIELD org/nlogo/nvm/Activation.binding : Lorg/nlogo/nvm/Binding;
                 ALOAD 0
-                GETFIELD org/nlogo/prim/_asm_setup_anonymouscommand1letlayersize1letlayernumlengthlayersletlayernoturtl$279c3d00e353ba53c2f529234d56ee74$_let_8.kept1__let : Lorg/nlogo/core/Let;
+                GETFIELD org/nlogo/prim/_asm_setup_arrowcommand1letlayersize1letlayernumlengthlayersletlayernoturtlesc$ddc22d654ee72958bf994a27939cf7d9$_let_8.kept1__let : Lorg/nlogo/core/Let;
                 ALOAD 2
                 INVOKEVIRTUAL org/nlogo/nvm/Binding.let (Lorg/nlogo/core/Let;Ljava/lang/Object;)V
                 ALOAD 1
@@ -6281,20 +6281,20 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                 PUTFIELD org/nlogo/nvm/Context.ip : I
                L15
                 RETURN
-   [7]_asm_setup_anonymouscommand1letlayersize1letlayernumlengthlayersletlayernoturtl$279c3d00e353ba53c2f529234d56ee74$_let_9 "let 0" Object => void
+   [7]_asm_setup_arrowcommand1letlayersize1letlayernumlengthlayersletlayernoturtlesc$ddc22d654ee72958bf994a27939cf7d9$_let_9 "let 0" Object => void
             _constdouble:0.0 "0" => Double
                 // parameter final  context
                 // parameter final  value
                L0
                 ALOAD 0
-                GETFIELD org/nlogo/prim/_asm_setup_anonymouscommand1letlayersize1letlayernumlengthlayersletlayernoturtl$279c3d00e353ba53c2f529234d56ee74$_let_9.kept2_value : Ljava/lang/Double;
+                GETFIELD org/nlogo/prim/_asm_setup_arrowcommand1letlayersize1letlayernumlengthlayersletlayernoturtlesc$ddc22d654ee72958bf994a27939cf7d9$_let_9.kept2_value : Ljava/lang/Double;
                L1
                 ASTORE 2
                 ALOAD 1
                 GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
                 GETFIELD org/nlogo/nvm/Activation.binding : Lorg/nlogo/nvm/Binding;
                 ALOAD 0
-                GETFIELD org/nlogo/prim/_asm_setup_anonymouscommand1letlayersize1letlayernumlengthlayersletlayernoturtl$279c3d00e353ba53c2f529234d56ee74$_let_9.kept1__let : Lorg/nlogo/core/Let;
+                GETFIELD org/nlogo/prim/_asm_setup_arrowcommand1letlayersize1letlayernumlengthlayersletlayernoturtlesc$ddc22d654ee72958bf994a27939cf7d9$_let_9.kept1__let : Lorg/nlogo/core/Let;
                 ALOAD 2
                 INVOKEVIRTUAL org/nlogo/nvm/Binding.let (Lorg/nlogo/core/Let;Ljava/lang/Object;)V
                 ALOAD 1
@@ -6310,7 +6310,7 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
       ]
       set i i + 1
     ]"
-            _asm_setup_anonymouscommand1letlayersize1letlayernumlengthlayersletlayernoturtl$279c3d00e353ba53c2f529234d56ee74$_sort_10 "sort layer" Object => Object
+            _asm_setup_arrowcommand1letlayersize1letlayernumlengthlayersletlayernoturtlesc$ddc22d654ee72958bf994a27939cf7d9$_sort_10 "sort layer" Object => Object
               _letvariable(LAYER) "layer" => Object
                   // parameter final  context
                  L0
@@ -6318,7 +6318,7 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                   GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
                   GETFIELD org/nlogo/nvm/Activation.binding : Lorg/nlogo/nvm/Binding;
                   ALOAD 0
-                  GETFIELD org/nlogo/prim/_asm_setup_anonymouscommand1letlayersize1letlayernumlengthlayersletlayernoturtl$279c3d00e353ba53c2f529234d56ee74$_sort_10.kept2__let : Lorg/nlogo/core/Let;
+                  GETFIELD org/nlogo/prim/_asm_setup_arrowcommand1letlayersize1letlayernumlengthlayersletlayernoturtlesc$ddc22d654ee72958bf994a27939cf7d9$_sort_10.kept2__let : Lorg/nlogo/core/Let;
                   INVOKEVIRTUAL org/nlogo/nvm/Binding.getLet (Lorg/nlogo/core/Let;)Ljava/lang/Object;
                  L1
                   ASTORE 2
@@ -6353,7 +6353,7 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                   INVOKEVIRTUAL org/nlogo/core/LogoList.javaIterator ()Ljava/util/Iterator;
                   ASTORE 7
                  L5
-                 FRAME FULL [org/nlogo/prim/_asm_setup_anonymouscommand1letlayersize1letlayernumlengthlayersletlayernoturtl$279c3d00e353ba53c2f529234d56ee74$_sort_10 org/nlogo/nvm/Context java/lang/Object org/nlogo/core/LogoList java/util/ArrayList java/util/ArrayList java/util/ArrayList java/util/Iterator] []
+                 FRAME FULL [org/nlogo/prim/_asm_setup_arrowcommand1letlayersize1letlayernumlengthlayersletlayernoturtlesc$ddc22d654ee72958bf994a27939cf7d9$_sort_10 org/nlogo/nvm/Context java/lang/Object org/nlogo/core/LogoList java/util/ArrayList java/util/ArrayList java/util/ArrayList java/util/Iterator] []
                   ALOAD 7
                   INVOKEINTERFACE java/util/Iterator.hasNext ()Z (itf)
                   IFEQ L6
@@ -6421,7 +6421,7 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                   INVOKESTATIC org/nlogo/core/LogoList.fromJava (Ljava/lang/Iterable;)Lorg/nlogo/core/LogoList;
                   GOTO L3
                  L4
-                 FRAME FULL [org/nlogo/prim/_asm_setup_anonymouscommand1letlayersize1letlayernumlengthlayersletlayernoturtl$279c3d00e353ba53c2f529234d56ee74$_sort_10 org/nlogo/nvm/Context java/lang/Object] []
+                 FRAME FULL [org/nlogo/prim/_asm_setup_arrowcommand1letlayersize1letlayernumlengthlayersletlayernoturtlesc$ddc22d654ee72958bf994a27939cf7d9$_sort_10 org/nlogo/nvm/Context java/lang/Object] []
                   NEW org/nlogo/nvm/ArgumentTypeException
                   DUP
                   ALOAD 1
@@ -6444,23 +6444,23 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
       ]
       set i i + 1
     ]"
-   [9]_asm_setup_anonymouscommand1letlayersize1letlayernumlengthlayersletlayernoturtl$279c3d00e353ba53c2f529234d56ee74$_setobservervariable_11 "set layers lput layer layers" Object => void
+   [9]_asm_setup_arrowcommand1letlayersize1letlayernumlengthlayersletlayernoturtlesc$ddc22d654ee72958bf994a27939cf7d9$_setobservervariable_11 "set layers lput layer layers" Object => void
             _lput "lput layer layers"
-              _asm_setup_anonymouscommand1letlayersize1letlayernumlengthlayersletlayernoturtl$279c3d00e353ba53c2f529234d56ee74$_letvariable_12 "layer" => Object
+              _asm_setup_arrowcommand1letlayersize1letlayernumlengthlayersletlayernoturtlesc$ddc22d654ee72958bf994a27939cf7d9$_letvariable_12 "layer" => Object
                     // parameter final  context
                    L0
                     ALOAD 1
                     GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
                     GETFIELD org/nlogo/nvm/Activation.binding : Lorg/nlogo/nvm/Binding;
                     ALOAD 0
-                    GETFIELD org/nlogo/prim/_asm_setup_anonymouscommand1letlayersize1letlayernumlengthlayersletlayernoturtl$279c3d00e353ba53c2f529234d56ee74$_letvariable_12.kept1__let : Lorg/nlogo/core/Let;
+                    GETFIELD org/nlogo/prim/_asm_setup_arrowcommand1letlayersize1letlayernumlengthlayersletlayernoturtlesc$ddc22d654ee72958bf994a27939cf7d9$_letvariable_12.kept1__let : Lorg/nlogo/core/Let;
                     INVOKEVIRTUAL org/nlogo/nvm/Binding.getLet (Lorg/nlogo/core/Let;)Ljava/lang/Object;
                    L1
                     ARETURN
-              _asm_setup_anonymouscommand1letlayersize1letlayernumlengthlayersletlayernoturtl$279c3d00e353ba53c2f529234d56ee74$_observervariable_13 "layers" => Object
+              _asm_setup_arrowcommand1letlayersize1letlayernumlengthlayersletlayernoturtlesc$ddc22d654ee72958bf994a27939cf7d9$_observervariable_13 "layers" => Object
                    L0
                     ALOAD 0
-                    GETFIELD org/nlogo/prim/_asm_setup_anonymouscommand1letlayersize1letlayernumlengthlayersletlayernoturtl$279c3d00e353ba53c2f529234d56ee74$_observervariable_13.world : Lorg/nlogo/agent/World;
+                    GETFIELD org/nlogo/prim/_asm_setup_arrowcommand1letlayersize1letlayernumlengthlayersletlayernoturtlesc$ddc22d654ee72958bf994a27939cf7d9$_observervariable_13.world : Lorg/nlogo/agent/World;
                     INVOKEVIRTUAL org/nlogo/agent/World.observer ()Lorg/nlogo/agent/Observer;
                     ICONST_1
                     INVOKEVIRTUAL org/nlogo/agent/Observer.getVariable (I)Ljava/lang/Object;
@@ -6468,14 +6468,14 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                     ARETURN
                 TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
                 ALOAD 0
-                GETFIELD org/nlogo/prim/_asm_setup_anonymouscommand1letlayersize1letlayernumlengthlayersletlayernoturtl$279c3d00e353ba53c2f529234d56ee74$_setobservervariable_11.keptinstr2 : Lorg/nlogo/prim/etc/_lput;
+                GETFIELD org/nlogo/prim/_asm_setup_arrowcommand1letlayersize1letlayernumlengthlayersletlayernoturtlesc$ddc22d654ee72958bf994a27939cf7d9$_setobservervariable_11.keptinstr2 : Lorg/nlogo/prim/etc/_lput;
                 ALOAD 1
                 INVOKEVIRTUAL org/nlogo/prim/etc/_lput.report (Lorg/nlogo/nvm/Context;)Ljava/lang/Object;
                L3
                 ASTORE 2
                L0
                 ALOAD 0
-                GETFIELD org/nlogo/prim/_asm_setup_anonymouscommand1letlayersize1letlayernumlengthlayersletlayernoturtl$279c3d00e353ba53c2f529234d56ee74$_setobservervariable_11.world : Lorg/nlogo/agent/World;
+                GETFIELD org/nlogo/prim/_asm_setup_arrowcommand1letlayersize1letlayernumlengthlayersletlayernoturtlesc$ddc22d654ee72958bf994a27939cf7d9$_setobservervariable_11.world : Lorg/nlogo/agent/World;
                 INVOKEVIRTUAL org/nlogo/agent/World.observer ()Lorg/nlogo/agent/Observer;
                 ICONST_1
                 ALOAD 2
@@ -6483,7 +6483,7 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                L1
                 GOTO L4
                L2
-               FRAME FULL [org/nlogo/prim/_asm_setup_anonymouscommand1letlayersize1letlayernumlengthlayersletlayernoturtl$279c3d00e353ba53c2f529234d56ee74$_setobservervariable_11 org/nlogo/nvm/Context java/lang/Object] [org/nlogo/api/AgentException]
+               FRAME FULL [org/nlogo/prim/_asm_setup_arrowcommand1letlayersize1letlayernumlengthlayersletlayernoturtlesc$ddc22d654ee72958bf994a27939cf7d9$_setobservervariable_11 org/nlogo/nvm/Context java/lang/Object] [org/nlogo/api/AgentException]
                 ASTORE 3
                 NEW org/nlogo/nvm/RuntimePrimitiveException
                 DUP
@@ -6500,7 +6500,7 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                 PUTFIELD org/nlogo/nvm/Context.ip : I
                L5
                 RETURN
-   [10]_asm_setup_anonymouscommand1letlayersize1letlayernumlengthlayersletlayernoturtl$279c3d00e353ba53c2f529234d56ee74$_done_14 => void
+   [10]_asm_setup_arrowcommand1letlayersize1letlayernumlengthlayersletlayernoturtlesc$ddc22d654ee72958bf994a27939cf7d9$_done_14 => void
                 // parameter final  context
                L0
                 ALOAD 1
@@ -6509,8 +6509,8 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                L1
                 RETURN
 
-   (anonymous command: [ [??1] -> ask ??1 [ let y 2 * 0.5 - i + 0.5 / layer-size * max-pycor setxy x y set color grey ] set i i + 1 ]):(anonymous command: [ [?1] -> let layer-size ?1 let layer-num length layers let layer no-turtles crt layer-size [ set layer ( turtle-set layer self ) ] let x layer-num + 0.5 / num-layers * max-pxcor let i 0 foreach sort layer [ [??1] -> ask ??1 [ let y 2 * 0.5 - i + 0.5 / layer-size * max-pycor setxy x y set color grey ] set i i + 1 ] set layers lput layer layers ])[]{OTPL}:
-   [0]_asm___lambda1_anonymouscommand1ask1lety205i05layersizemaxpycor$80793689c65a6ee9f9a4f23c28ca84fa$_ask_0 "ask ??1 let 2 * 0.5 - i + 0.5 / layer-size * max-pycor setxy x y [ set color grey ]" Object => void
+   (arrow command: [ [??1] -> ask ??1 [ let y 2 * 0.5 - i + 0.5 / layer-size * max-pycor setxy x y set color grey ] set i i + 1 ]):(arrow command: [ [?1] -> let layer-size ?1 let layer-num length layers let layer no-turtles crt layer-size [ set layer ( turtle-set layer self ) ] let x layer-num + 0.5 / num-layers * max-pxcor let i 0 foreach sort layer [ [??1] -> ask ??1 [ let y 2 * 0.5 - i + 0.5 / layer-size * max-pycor setxy x y set color grey ] set i i + 1 ] set layers lput layer layers ])[]{OTPL}:
+   [0]_asm___lambda1_arrowcommand1ask1lety205i05layersizemaxpycorset$4d6bcec55ae050aed405140b5abe2232$_ask_0 "ask ??1 let 2 * 0.5 - i + 0.5 / layer-size * max-pycor setxy x y [ set color grey ]" Object => void
             _letvariable(??1) "??1" => Object
                 // parameter final  context
                L0
@@ -6518,7 +6518,7 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                 GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
                 GETFIELD org/nlogo/nvm/Activation.binding : Lorg/nlogo/nvm/Binding;
                 ALOAD 0
-                GETFIELD org/nlogo/prim/_asm___lambda1_anonymouscommand1ask1lety205i05layersizemaxpycor$80793689c65a6ee9f9a4f23c28ca84fa$_ask_0.kept2__let : Lorg/nlogo/core/Let;
+                GETFIELD org/nlogo/prim/_asm___lambda1_arrowcommand1ask1lety205i05layersizemaxpycorset$4d6bcec55ae050aed405140b5abe2232$_ask_0.kept2__let : Lorg/nlogo/core/Let;
                 INVOKEVIRTUAL org/nlogo/nvm/Binding.getLet (Lorg/nlogo/core/Let;)Ljava/lang/Object;
                L1
                 ASTORE 2
@@ -6534,7 +6534,7 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                 IFNE L3
                 ALOAD 3
                 ALOAD 0
-                GETFIELD org/nlogo/prim/_asm___lambda1_anonymouscommand1ask1lety205i05layersizemaxpycor$80793689c65a6ee9f9a4f23c28ca84fa$_ask_0.world : Lorg/nlogo/agent/World;
+                GETFIELD org/nlogo/prim/_asm___lambda1_arrowcommand1ask1lety205i05layersizemaxpycorset$4d6bcec55ae050aed405140b5abe2232$_ask_0.world : Lorg/nlogo/agent/World;
                 INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/TreeAgentSet;
                 IF_ACMPNE L4
                 NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -6550,7 +6550,7 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                FRAME APPEND [java/lang/Object org/nlogo/agent/AgentSet]
                 ALOAD 3
                 ALOAD 0
-                GETFIELD org/nlogo/prim/_asm___lambda1_anonymouscommand1ask1lety205i05layersizemaxpycor$80793689c65a6ee9f9a4f23c28ca84fa$_ask_0.world : Lorg/nlogo/agent/World;
+                GETFIELD org/nlogo/prim/_asm___lambda1_arrowcommand1ask1lety205i05layersizemaxpycorset$4d6bcec55ae050aed405140b5abe2232$_ask_0.world : Lorg/nlogo/agent/World;
                 INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/IndexedAgentSet;
                 IF_ACMPNE L3
                 NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -6621,7 +6621,7 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                 PUTFIELD org/nlogo/nvm/Context.ip : I
                L7
                 RETURN
-   [1]_asm___lambda1_anonymouscommand1ask1lety205i05layersizemaxpycor$80793689c65a6ee9f9a4f23c28ca84fa$_let_1 "let 2 * 0.5 - i + 0.5 / layer-size * max-pycor" Object => void
+   [1]_asm___lambda1_arrowcommand1ask1lety205i05layersizemaxpycorset$4d6bcec55ae050aed405140b5abe2232$_let_1 "let 2 * 0.5 - i + 0.5 / layer-size * max-pycor" Object => void
             _mult "2 * 0.5 - i + 0.5 / layer-size * max-pycor" double,double => double
               _mult "2 * 0.5 - i + 0.5 / layer-size" double,double => double
                 _constdouble:2.0 "2" => double
@@ -6649,7 +6649,7 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                 GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
                 GETFIELD org/nlogo/nvm/Activation.binding : Lorg/nlogo/nvm/Binding;
                 ALOAD 0
-                GETFIELD org/nlogo/prim/_asm___lambda1_anonymouscommand1ask1lety205i05layersizemaxpycor$80793689c65a6ee9f9a4f23c28ca84fa$_let_1.kept9__let : Lorg/nlogo/core/Let;
+                GETFIELD org/nlogo/prim/_asm___lambda1_arrowcommand1ask1lety205i05layersizemaxpycorset$4d6bcec55ae050aed405140b5abe2232$_let_1.kept9__let : Lorg/nlogo/core/Let;
                 INVOKEVIRTUAL org/nlogo/nvm/Binding.getLet (Lorg/nlogo/core/Let;)Ljava/lang/Object;
                L7
                 ASTORE 2
@@ -6659,7 +6659,7 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                 INVOKEVIRTUAL java/lang/Double.doubleValue ()D
                 GOTO L8
                L1
-               FRAME FULL [org/nlogo/prim/_asm___lambda1_anonymouscommand1ask1lety205i05layersizemaxpycor$80793689c65a6ee9f9a4f23c28ca84fa$_let_1 org/nlogo/nvm/Context java/lang/Object] [java/lang/ClassCastException]
+               FRAME FULL [org/nlogo/prim/_asm___lambda1_arrowcommand1ask1lety205i05layersizemaxpycorset$4d6bcec55ae050aed405140b5abe2232$_let_1 org/nlogo/nvm/Context java/lang/Object] [java/lang/ClassCastException]
                 POP
                 NEW org/nlogo/nvm/ArgumentTypeException
                 DUP
@@ -6671,7 +6671,7 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                 INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
                 ATHROW
                L8
-               FRAME FULL [org/nlogo/prim/_asm___lambda1_anonymouscommand1ask1lety205i05layersizemaxpycor$80793689c65a6ee9f9a4f23c28ca84fa$_let_1 org/nlogo/nvm/Context java/lang/Object] [D D D]
+               FRAME FULL [org/nlogo/prim/_asm___lambda1_arrowcommand1ask1lety205i05layersizemaxpycorset$4d6bcec55ae050aed405140b5abe2232$_let_1 org/nlogo/nvm/Context java/lang/Object] [D D D]
                 LDC 0.5D
                L9
                 DSTORE 4
@@ -6681,13 +6681,13 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                 DLOAD 4
                 DADD
                 ALOAD 1
-                INVOKEVIRTUAL org/nlogo/prim/_asm___lambda1_anonymouscommand1ask1lety205i05layersizemaxpycor$80793689c65a6ee9f9a4f23c28ca84fa$_let_1.validDouble (DLorg/nlogo/nvm/Context;)D
+                INVOKEVIRTUAL org/nlogo/prim/_asm___lambda1_arrowcommand1ask1lety205i05layersizemaxpycorset$4d6bcec55ae050aed405140b5abe2232$_let_1.validDouble (DLorg/nlogo/nvm/Context;)D
                L10
                 ALOAD 1
                 GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
                 GETFIELD org/nlogo/nvm/Activation.binding : Lorg/nlogo/nvm/Binding;
                 ALOAD 0
-                GETFIELD org/nlogo/prim/_asm___lambda1_anonymouscommand1ask1lety205i05layersizemaxpycor$80793689c65a6ee9f9a4f23c28ca84fa$_let_1.kept11__let : Lorg/nlogo/core/Let;
+                GETFIELD org/nlogo/prim/_asm___lambda1_arrowcommand1ask1lety205i05layersizemaxpycorset$4d6bcec55ae050aed405140b5abe2232$_let_1.kept11__let : Lorg/nlogo/core/Let;
                 INVOKEVIRTUAL org/nlogo/nvm/Binding.getLet (Lorg/nlogo/core/Let;)Ljava/lang/Object;
                L11
                 ASTORE 2
@@ -6697,7 +6697,7 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                 INVOKEVIRTUAL java/lang/Double.doubleValue ()D
                 GOTO L12
                L3
-               FRAME FULL [org/nlogo/prim/_asm___lambda1_anonymouscommand1ask1lety205i05layersizemaxpycor$80793689c65a6ee9f9a4f23c28ca84fa$_let_1 org/nlogo/nvm/Context java/lang/Object T D] [java/lang/ClassCastException]
+               FRAME FULL [org/nlogo/prim/_asm___lambda1_arrowcommand1ask1lety205i05layersizemaxpycorset$4d6bcec55ae050aed405140b5abe2232$_let_1 org/nlogo/nvm/Context java/lang/Object T D] [java/lang/ClassCastException]
                 POP
                 NEW org/nlogo/nvm/ArgumentTypeException
                 DUP
@@ -6709,7 +6709,7 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                 INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
                 ATHROW
                L12
-               FRAME FULL [org/nlogo/prim/_asm___lambda1_anonymouscommand1ask1lety205i05layersizemaxpycor$80793689c65a6ee9f9a4f23c28ca84fa$_let_1 org/nlogo/nvm/Context java/lang/Object T D] [D D D D]
+               FRAME FULL [org/nlogo/prim/_asm___lambda1_arrowcommand1ask1lety205i05layersizemaxpycorset$4d6bcec55ae050aed405140b5abe2232$_let_1 org/nlogo/nvm/Context java/lang/Object T D] [D D D D]
                 DSTORE 4
                 DSTORE 2
                 DLOAD 4
@@ -6726,13 +6726,13 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                 INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
                 ATHROW
                L13
-               FRAME FULL [org/nlogo/prim/_asm___lambda1_anonymouscommand1ask1lety205i05layersizemaxpycor$80793689c65a6ee9f9a4f23c28ca84fa$_let_1 org/nlogo/nvm/Context D D] [D D]
+               FRAME FULL [org/nlogo/prim/_asm___lambda1_arrowcommand1ask1lety205i05layersizemaxpycorset$4d6bcec55ae050aed405140b5abe2232$_let_1 org/nlogo/nvm/Context D D] [D D]
                 ALOAD 0
                 DLOAD 2
                 DLOAD 4
                 DDIV
                 ALOAD 1
-                INVOKEVIRTUAL org/nlogo/prim/_asm___lambda1_anonymouscommand1ask1lety205i05layersizemaxpycor$80793689c65a6ee9f9a4f23c28ca84fa$_let_1.validDouble (DLorg/nlogo/nvm/Context;)D
+                INVOKEVIRTUAL org/nlogo/prim/_asm___lambda1_arrowcommand1ask1lety205i05layersizemaxpycorset$4d6bcec55ae050aed405140b5abe2232$_let_1.validDouble (DLorg/nlogo/nvm/Context;)D
                L14
                 DSTORE 4
                 DSTORE 2
@@ -6741,7 +6741,7 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                 DLOAD 4
                 DSUB
                 ALOAD 1
-                INVOKEVIRTUAL org/nlogo/prim/_asm___lambda1_anonymouscommand1ask1lety205i05layersizemaxpycor$80793689c65a6ee9f9a4f23c28ca84fa$_let_1.validDouble (DLorg/nlogo/nvm/Context;)D
+                INVOKEVIRTUAL org/nlogo/prim/_asm___lambda1_arrowcommand1ask1lety205i05layersizemaxpycorset$4d6bcec55ae050aed405140b5abe2232$_let_1.validDouble (DLorg/nlogo/nvm/Context;)D
                L15
                 DSTORE 4
                 DSTORE 2
@@ -6750,11 +6750,11 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                 DLOAD 4
                 DMUL
                 ALOAD 1
-                INVOKEVIRTUAL org/nlogo/prim/_asm___lambda1_anonymouscommand1ask1lety205i05layersizemaxpycor$80793689c65a6ee9f9a4f23c28ca84fa$_let_1.validDouble (DLorg/nlogo/nvm/Context;)D
+                INVOKEVIRTUAL org/nlogo/prim/_asm___lambda1_arrowcommand1ask1lety205i05layersizemaxpycorset$4d6bcec55ae050aed405140b5abe2232$_let_1.validDouble (DLorg/nlogo/nvm/Context;)D
                L16
                 GETSTATIC scala/Int$.MODULE$ : Lscala/Int$;
                 ALOAD 0
-                GETFIELD org/nlogo/prim/_asm___lambda1_anonymouscommand1ask1lety205i05layersizemaxpycor$80793689c65a6ee9f9a4f23c28ca84fa$_let_1.world : Lorg/nlogo/agent/World;
+                GETFIELD org/nlogo/prim/_asm___lambda1_arrowcommand1ask1lety205i05layersizemaxpycorset$4d6bcec55ae050aed405140b5abe2232$_let_1.world : Lorg/nlogo/agent/World;
                 INVOKEVIRTUAL org/nlogo/agent/World.maxPycor ()I
                 INVOKEVIRTUAL scala/Int$.int2double (I)D
                L17
@@ -6765,7 +6765,7 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                 DLOAD 4
                 DMUL
                 ALOAD 1
-                INVOKEVIRTUAL org/nlogo/prim/_asm___lambda1_anonymouscommand1ask1lety205i05layersizemaxpycor$80793689c65a6ee9f9a4f23c28ca84fa$_let_1.validDouble (DLorg/nlogo/nvm/Context;)D
+                INVOKEVIRTUAL org/nlogo/prim/_asm___lambda1_arrowcommand1ask1lety205i05layersizemaxpycorset$4d6bcec55ae050aed405140b5abe2232$_let_1.validDouble (DLorg/nlogo/nvm/Context;)D
                L18
                 DSTORE 2
                 NEW java/lang/Double
@@ -6777,7 +6777,7 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                 GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
                 GETFIELD org/nlogo/nvm/Activation.binding : Lorg/nlogo/nvm/Binding;
                 ALOAD 0
-                GETFIELD org/nlogo/prim/_asm___lambda1_anonymouscommand1ask1lety205i05layersizemaxpycor$80793689c65a6ee9f9a4f23c28ca84fa$_let_1.kept1__let : Lorg/nlogo/core/Let;
+                GETFIELD org/nlogo/prim/_asm___lambda1_arrowcommand1ask1lety205i05layersizemaxpycorset$4d6bcec55ae050aed405140b5abe2232$_let_1.kept1__let : Lorg/nlogo/core/Let;
                 ALOAD 2
                 INVOKEVIRTUAL org/nlogo/nvm/Binding.let (Lorg/nlogo/core/Let;Ljava/lang/Object;)V
                 ALOAD 1
@@ -6785,7 +6785,7 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                 PUTFIELD org/nlogo/nvm/Context.ip : I
                L19
                 RETURN
-   [2]_asm___lambda1_anonymouscommand1ask1lety205i05layersizemaxpycor$80793689c65a6ee9f9a4f23c28ca84fa$_setxy_2 "setxy x y" double,double => void
+   [2]_asm___lambda1_arrowcommand1ask1lety205i05layersizemaxpycorset$4d6bcec55ae050aed405140b5abe2232$_setxy_2 "setxy x y" double,double => void
             _letvariable(X) "x" => Object
             _letvariable(Y) "y" => Object
                 // parameter final  context
@@ -6798,7 +6798,7 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                 GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
                 GETFIELD org/nlogo/nvm/Activation.binding : Lorg/nlogo/nvm/Binding;
                 ALOAD 0
-                GETFIELD org/nlogo/prim/_asm___lambda1_anonymouscommand1ask1lety205i05layersizemaxpycor$80793689c65a6ee9f9a4f23c28ca84fa$_setxy_2.kept2__let : Lorg/nlogo/core/Let;
+                GETFIELD org/nlogo/prim/_asm___lambda1_arrowcommand1ask1lety205i05layersizemaxpycorset$4d6bcec55ae050aed405140b5abe2232$_setxy_2.kept2__let : Lorg/nlogo/core/Let;
                 INVOKEVIRTUAL org/nlogo/nvm/Binding.getLet (Lorg/nlogo/core/Let;)Ljava/lang/Object;
                L8
                 ASTORE 2
@@ -6808,7 +6808,7 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                 INVOKEVIRTUAL java/lang/Double.doubleValue ()D
                 GOTO L9
                L1
-               FRAME FULL [org/nlogo/prim/_asm___lambda1_anonymouscommand1ask1lety205i05layersizemaxpycor$80793689c65a6ee9f9a4f23c28ca84fa$_setxy_2 org/nlogo/nvm/Context java/lang/Object] [java/lang/ClassCastException]
+               FRAME FULL [org/nlogo/prim/_asm___lambda1_arrowcommand1ask1lety205i05layersizemaxpycorset$4d6bcec55ae050aed405140b5abe2232$_setxy_2 org/nlogo/nvm/Context java/lang/Object] [java/lang/ClassCastException]
                 POP
                 NEW org/nlogo/nvm/ArgumentTypeException
                 DUP
@@ -6825,7 +6825,7 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                 GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
                 GETFIELD org/nlogo/nvm/Activation.binding : Lorg/nlogo/nvm/Binding;
                 ALOAD 0
-                GETFIELD org/nlogo/prim/_asm___lambda1_anonymouscommand1ask1lety205i05layersizemaxpycor$80793689c65a6ee9f9a4f23c28ca84fa$_setxy_2.kept3__let : Lorg/nlogo/core/Let;
+                GETFIELD org/nlogo/prim/_asm___lambda1_arrowcommand1ask1lety205i05layersizemaxpycorset$4d6bcec55ae050aed405140b5abe2232$_setxy_2.kept3__let : Lorg/nlogo/core/Let;
                 INVOKEVIRTUAL org/nlogo/nvm/Binding.getLet (Lorg/nlogo/core/Let;)Ljava/lang/Object;
                L10
                 ASTORE 2
@@ -6847,7 +6847,7 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                 INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
                 ATHROW
                L11
-               FRAME FULL [org/nlogo/prim/_asm___lambda1_anonymouscommand1ask1lety205i05layersizemaxpycor$80793689c65a6ee9f9a4f23c28ca84fa$_setxy_2 org/nlogo/nvm/Context java/lang/Object] [D D]
+               FRAME FULL [org/nlogo/prim/_asm___lambda1_arrowcommand1ask1lety205i05layersizemaxpycorset$4d6bcec55ae050aed405140b5abe2232$_setxy_2 org/nlogo/nvm/Context java/lang/Object] [D D]
                 DSTORE 4
                 DSTORE 2
                 ALOAD 1
@@ -6866,7 +6866,7 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                L5
                 GOTO L12
                L6
-               FRAME FULL [org/nlogo/prim/_asm___lambda1_anonymouscommand1ask1lety205i05layersizemaxpycor$80793689c65a6ee9f9a4f23c28ca84fa$_setxy_2 org/nlogo/nvm/Context D D org/nlogo/agent/Turtle] [org/nlogo/api/AgentException]
+               FRAME FULL [org/nlogo/prim/_asm___lambda1_arrowcommand1ask1lety205i05layersizemaxpycorset$4d6bcec55ae050aed405140b5abe2232$_setxy_2 org/nlogo/nvm/Context D D org/nlogo/agent/Turtle] [org/nlogo/api/AgentException]
                 ASTORE 7
                 NEW org/nlogo/nvm/RuntimePrimitiveException
                 DUP
@@ -6896,12 +6896,12 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                 PUTFIELD org/nlogo/nvm/Context.ip : I
                L13
                 RETURN
-   [3]_asm___lambda1_anonymouscommand1ask1lety205i05layersizemaxpycor$80793689c65a6ee9f9a4f23c28ca84fa$_setturtleorlinkvariable_3 "set color grey" Object => void
+   [3]_asm___lambda1_arrowcommand1ask1lety205i05layersizemaxpycorset$4d6bcec55ae050aed405140b5abe2232$_setturtleorlinkvariable_3 "set color grey" Object => void
             _constdouble:5.0 "grey" => Double
                 TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
                L3
                 ALOAD 0
-                GETFIELD org/nlogo/prim/_asm___lambda1_anonymouscommand1ask1lety205i05layersizemaxpycor$80793689c65a6ee9f9a4f23c28ca84fa$_setturtleorlinkvariable_3.kept2_value : Ljava/lang/Double;
+                GETFIELD org/nlogo/prim/_asm___lambda1_arrowcommand1ask1lety205i05layersizemaxpycorset$4d6bcec55ae050aed405140b5abe2232$_setturtleorlinkvariable_3.kept2_value : Ljava/lang/Double;
                L4
                 ASTORE 2
                 ALOAD 1
@@ -6957,7 +6957,7 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                 PUTFIELD org/nlogo/nvm/Context.ip : I
                L9
                 RETURN
-   [4]_asm___lambda1_anonymouscommand1ask1lety205i05layersizemaxpycor$80793689c65a6ee9f9a4f23c28ca84fa$_done_4 => void
+   [4]_asm___lambda1_arrowcommand1ask1lety205i05layersizemaxpycorset$4d6bcec55ae050aed405140b5abe2232$_done_4 => void
                 // parameter final  context
                L0
                 ALOAD 1
@@ -6965,7 +6965,7 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                 PUTFIELD org/nlogo/nvm/Context.finished : Z
                L1
                 RETURN
-   [5]_asm___lambda1_anonymouscommand1ask1lety205i05layersizemaxpycor$80793689c65a6ee9f9a4f23c28ca84fa$_setletvariable_5 "set i i + 1" Object => void
+   [5]_asm___lambda1_arrowcommand1ask1lety205i05layersizemaxpycorset$4d6bcec55ae050aed405140b5abe2232$_setletvariable_5 "set i i + 1" Object => void
             _plus "i + 1" double,double => double
               _letvariable(I) "i" => Object
               _constdouble:1.0 "1" => double
@@ -6978,7 +6978,7 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                 GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
                 GETFIELD org/nlogo/nvm/Activation.binding : Lorg/nlogo/nvm/Binding;
                 ALOAD 0
-                GETFIELD org/nlogo/prim/_asm___lambda1_anonymouscommand1ask1lety205i05layersizemaxpycor$80793689c65a6ee9f9a4f23c28ca84fa$_setletvariable_5.kept3__let : Lorg/nlogo/core/Let;
+                GETFIELD org/nlogo/prim/_asm___lambda1_arrowcommand1ask1lety205i05layersizemaxpycorset$4d6bcec55ae050aed405140b5abe2232$_setletvariable_5.kept3__let : Lorg/nlogo/core/Let;
                 INVOKEVIRTUAL org/nlogo/nvm/Binding.getLet (Lorg/nlogo/core/Let;)Ljava/lang/Object;
                L3
                 ASTORE 2
@@ -6988,7 +6988,7 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                 INVOKEVIRTUAL java/lang/Double.doubleValue ()D
                 GOTO L4
                L1
-               FRAME FULL [org/nlogo/prim/_asm___lambda1_anonymouscommand1ask1lety205i05layersizemaxpycor$80793689c65a6ee9f9a4f23c28ca84fa$_setletvariable_5 org/nlogo/nvm/Context java/lang/Object] [java/lang/ClassCastException]
+               FRAME FULL [org/nlogo/prim/_asm___lambda1_arrowcommand1ask1lety205i05layersizemaxpycorset$4d6bcec55ae050aed405140b5abe2232$_setletvariable_5 org/nlogo/nvm/Context java/lang/Object] [java/lang/ClassCastException]
                 POP
                 NEW org/nlogo/nvm/ArgumentTypeException
                 DUP
@@ -7010,7 +7010,7 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                 DLOAD 4
                 DADD
                 ALOAD 1
-                INVOKEVIRTUAL org/nlogo/prim/_asm___lambda1_anonymouscommand1ask1lety205i05layersizemaxpycor$80793689c65a6ee9f9a4f23c28ca84fa$_setletvariable_5.validDouble (DLorg/nlogo/nvm/Context;)D
+                INVOKEVIRTUAL org/nlogo/prim/_asm___lambda1_arrowcommand1ask1lety205i05layersizemaxpycorset$4d6bcec55ae050aed405140b5abe2232$_setletvariable_5.validDouble (DLorg/nlogo/nvm/Context;)D
                L6
                 DSTORE 2
                 NEW java/lang/Double
@@ -7022,7 +7022,7 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                 GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
                 GETFIELD org/nlogo/nvm/Activation.binding : Lorg/nlogo/nvm/Binding;
                 ALOAD 0
-                GETFIELD org/nlogo/prim/_asm___lambda1_anonymouscommand1ask1lety205i05layersizemaxpycor$80793689c65a6ee9f9a4f23c28ca84fa$_setletvariable_5.kept1__let : Lorg/nlogo/core/Let;
+                GETFIELD org/nlogo/prim/_asm___lambda1_arrowcommand1ask1lety205i05layersizemaxpycorset$4d6bcec55ae050aed405140b5abe2232$_setletvariable_5.kept1__let : Lorg/nlogo/core/Let;
                 ALOAD 2
                 INVOKEVIRTUAL org/nlogo/nvm/Binding.setLet (Lorg/nlogo/core/Let;Ljava/lang/Object;)V
                 ALOAD 1
@@ -7030,7 +7030,7 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                 PUTFIELD org/nlogo/nvm/Context.ip : I
                L7
                 RETURN
-   [6]_asm___lambda1_anonymouscommand1ask1lety205i05layersizemaxpycor$80793689c65a6ee9f9a4f23c28ca84fa$_done_6 => void
+   [6]_asm___lambda1_arrowcommand1ask1lety205i05layersizemaxpycorset$4d6bcec55ae050aed405140b5abe2232$_done_6 => void
                 // parameter final  context
                L0
                 ALOAD 1
@@ -7039,8 +7039,8 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                L1
                 RETURN
 
-   (anonymous command: [ [?1 ?2] -> ask ?1 [ create-links-from ?2 [ set-weight 0 ] ] ]):procedure SETUP[]{OTPL}:
-   [0]_asm_setup_anonymouscommand12ask1createlinksfrom2setweight0_ask_0 "ask ?1 [ create-links-from ?2 [ set-weight 0 ] ]" Object => void
+   (arrow command: [ [?1 ?2] -> ask ?1 [ create-links-from ?2 [ set-weight 0 ] ] ]):procedure SETUP[]{OTPL}:
+   [0]_asm_setup_arrowcommand12ask1createlinksfrom2setweight0_ask_0 "ask ?1 [ create-links-from ?2 [ set-weight 0 ] ]" Object => void
             _letvariable(?1) "?1" => Object
                 // parameter final  context
                L0
@@ -7048,7 +7048,7 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                 GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
                 GETFIELD org/nlogo/nvm/Activation.binding : Lorg/nlogo/nvm/Binding;
                 ALOAD 0
-                GETFIELD org/nlogo/prim/_asm_setup_anonymouscommand12ask1createlinksfrom2setweight0_ask_0.kept2__let : Lorg/nlogo/core/Let;
+                GETFIELD org/nlogo/prim/_asm_setup_arrowcommand12ask1createlinksfrom2setweight0_ask_0.kept2__let : Lorg/nlogo/core/Let;
                 INVOKEVIRTUAL org/nlogo/nvm/Binding.getLet (Lorg/nlogo/core/Let;)Ljava/lang/Object;
                L1
                 ASTORE 2
@@ -7064,7 +7064,7 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                 IFNE L3
                 ALOAD 3
                 ALOAD 0
-                GETFIELD org/nlogo/prim/_asm_setup_anonymouscommand12ask1createlinksfrom2setweight0_ask_0.world : Lorg/nlogo/agent/World;
+                GETFIELD org/nlogo/prim/_asm_setup_arrowcommand12ask1createlinksfrom2setweight0_ask_0.world : Lorg/nlogo/agent/World;
                 INVOKEVIRTUAL org/nlogo/agent/World.turtles ()Lorg/nlogo/agent/TreeAgentSet;
                 IF_ACMPNE L4
                 NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -7080,7 +7080,7 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                FRAME APPEND [java/lang/Object org/nlogo/agent/AgentSet]
                 ALOAD 3
                 ALOAD 0
-                GETFIELD org/nlogo/prim/_asm_setup_anonymouscommand12ask1createlinksfrom2setweight0_ask_0.world : Lorg/nlogo/agent/World;
+                GETFIELD org/nlogo/prim/_asm_setup_arrowcommand12ask1createlinksfrom2setweight0_ask_0.world : Lorg/nlogo/agent/World;
                 INVOKEVIRTUAL org/nlogo/agent/World.patches ()Lorg/nlogo/agent/IndexedAgentSet;
                 IF_ACMPNE L3
                 NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -7152,24 +7152,24 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                L7
                 RETURN
    [1]_createlinksfrom:,+4 "create-links-from ?2 [ set-weight 0 ]"
-            _asm_setup_anonymouscommand12ask1createlinksfrom2setweight0_letvariable_1 "?2" => Object
+            _asm_setup_arrowcommand12ask1createlinksfrom2setweight0_letvariable_1 "?2" => Object
                   // parameter final  context
                  L0
                   ALOAD 1
                   GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
                   GETFIELD org/nlogo/nvm/Activation.binding : Lorg/nlogo/nvm/Binding;
                   ALOAD 0
-                  GETFIELD org/nlogo/prim/_asm_setup_anonymouscommand12ask1createlinksfrom2setweight0_letvariable_1.kept1__let : Lorg/nlogo/core/Let;
+                  GETFIELD org/nlogo/prim/_asm_setup_arrowcommand12ask1createlinksfrom2setweight0_letvariable_1.kept1__let : Lorg/nlogo/core/Let;
                   INVOKEVIRTUAL org/nlogo/nvm/Binding.getLet (Lorg/nlogo/core/Let;)Ljava/lang/Object;
                  L1
                   ARETURN
-   [2]_asm_setup_anonymouscommand12ask1createlinksfrom2setweight0_call_2 "set-weight 0"
+   [2]_asm_setup_arrowcommand12ask1createlinksfrom2setweight0_call_2 "set-weight 0"
             _constdouble:0.0 "0" => Double
                L0
                 NEW org/nlogo/nvm/Activation
                 DUP
                 ALOAD 0
-                GETFIELD org/nlogo/prim/_asm_setup_anonymouscommand12ask1createlinksfrom2setweight0_call_2.kept1_procedure : Lorg/nlogo/nvm/Procedure;
+                GETFIELD org/nlogo/prim/_asm_setup_arrowcommand12ask1createlinksfrom2setweight0_call_2.kept1_procedure : Lorg/nlogo/nvm/Procedure;
                 ALOAD 1
                 GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
                 SIPUSH 1
@@ -7178,7 +7178,7 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                 ICONST_0
                L1
                 ALOAD 0
-                GETFIELD org/nlogo/prim/_asm_setup_anonymouscommand12ask1createlinksfrom2setweight0_call_2.kept2_value : Ljava/lang/Double;
+                GETFIELD org/nlogo/prim/_asm_setup_arrowcommand12ask1createlinksfrom2setweight0_call_2.kept2_value : Ljava/lang/Double;
                L2
                 AASTORE
                 ICONST_3
@@ -7191,7 +7191,7 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                 PUTFIELD org/nlogo/nvm/Context.ip : I
                L3
                 RETURN
-   [3]_asm_setup_anonymouscommand12ask1createlinksfrom2setweight0_done_3 => void
+   [3]_asm_setup_arrowcommand12ask1createlinksfrom2setweight0_done_3 => void
                 // parameter final  context
                L0
                 ALOAD 1
@@ -7199,7 +7199,7 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                 PUTFIELD org/nlogo/nvm/Context.finished : Z
                L1
                 RETURN
-   [4]_asm_setup_anonymouscommand12ask1createlinksfrom2setweight0_done_4 => void
+   [4]_asm_setup_arrowcommand12ask1createlinksfrom2setweight0_done_4 => void
                 // parameter final  context
                L0
                 ALOAD 1
@@ -7207,7 +7207,7 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                 PUTFIELD org/nlogo/nvm/Context.finished : Z
                L1
                 RETURN
-   [5]_asm_setup_anonymouscommand12ask1createlinksfrom2setweight0_done_5 => void
+   [5]_asm_setup_arrowcommand12ask1createlinksfrom2setweight0_done_5 => void
                 // parameter final  context
                L0
                 ALOAD 1
