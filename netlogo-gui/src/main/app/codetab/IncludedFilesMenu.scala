@@ -58,14 +58,8 @@ with WindowEvents.CompiledEvent.Handler with RoundedBorderPanel with ThemeSync {
           menu.add(new MenuItem(I18N.gui.get("common.menus.empty"))).setEnabled(false)
 
         else {
-          filtered.keys.map(_.split(File.separatorChar).last).toSeq.sortBy(_.toUpperCase(Locale.ENGLISH))
-            .foreach(include =>
-
-            menu.add(new MenuItem(new AbstractAction(include) {
-              def actionPerformed(e: ActionEvent): Unit = {
-                tabs.openExternalFile(includePaths(include).file)
-              }
-            })))
+          filtered.map(_.split(File.separatorChar).last -> _).toSeq.sortBy(_._1.toUpperCase(Locale.ENGLISH))
+            .foreach((name, source) => menu.add(new MenuItem(name, () => tabs.openExternalFile(source.file))))
         }
       case None =>
         menu.add(new MenuItem(I18N.gui.get("common.menus.empty"))).setEnabled(false)
