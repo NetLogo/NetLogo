@@ -577,6 +577,7 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
     textArea.setContentType("text/html")
     textArea.setEditable(false)
     textArea.setOpaque(false)
+    textArea.setCaretColor(InterfaceColors.Transparent)
     textArea.addHyperlinkListener(this)
 
     add(graphicsPreview)
