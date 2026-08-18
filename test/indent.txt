@@ -231,12 +231,12 @@ MultiLineVariadicCommand
 ++]
 )
 
-AnonymousProcedure
+ArrowProcedure
 let func [ [x] ->
 ++x + 1
 ]
 
-AnonymousProcedureComment
+ArrowProcedureComment
 let func [ [x] -> ;; this does stuff
 ++x + 1
 ]
@@ -305,7 +305,7 @@ if true
 
 #
 # These are even more ambitious.
-# Fixing these requires lots of special casing with anonymous procedures and non-bracket openers
+# Fixing these requires lots of special casing with arrow procedures and non-bracket openers
 
 #WayIndentedCommands
 #ask turtles [ fd 1

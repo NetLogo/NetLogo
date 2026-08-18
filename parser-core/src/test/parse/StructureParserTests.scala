@@ -281,7 +281,7 @@ class StructureParserTests extends AnyFunSuite {
     expectError("extensions [foo] extensions [bar]",
       "Redeclaration of EXTENSIONS") }
 
-  def arrowError = "-> can only be used to create anonymous procedures"
+  def arrowError = "-> can only be used to create arrow procedures"
   test("misuse of arrow as procedure name") { expectError("to -> end", arrowError) }
   test("misuse of arrow as argument") { expectError("to x [->] end", arrowError) }
   test("misuse of arrow as agent variable") { expectError("turtles-own [->]", arrowError) }

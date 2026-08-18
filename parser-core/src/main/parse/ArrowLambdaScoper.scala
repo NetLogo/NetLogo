@@ -93,7 +93,7 @@ object ArrowLambdaScoper {
       val tok = toks.head
       if (tok.isArrow) {
         if (gatheredSymbols.length > 1)
-          exception("An anonymous procedures of two or more arguments must enclose its argument list in brackets", gatheredSymbols.head.start, gatheredSymbols.last.end, tok.filename)
+          exception("An arrow procedure of two or more arguments must enclose its argument list in brackets", gatheredSymbols.head.start, gatheredSymbols.last.end, tok.filename)
         else {
           val initTok = gatheredSymbols.head
           SymbolType.alreadyDefinedException(usedNames(initTok.text.toUpperCase(Locale.ENGLISH)), initTok)

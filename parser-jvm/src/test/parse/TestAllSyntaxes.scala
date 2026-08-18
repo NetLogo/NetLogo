@@ -30,7 +30,7 @@ class TestAllSyntaxes extends AnyFunSuiteEx {
                      |_all agentset/TRUE/FALSE block,TRUE/FALSE,OTPL,Some(?),10,2,2
                      |_and TRUE/FALSE,TRUE/FALSE,TRUE/FALSE,OTPL,None,4,1,1
                      |_any agentset,TRUE/FALSE,OTPL,None,10,1,1
-                     |_applyresult anonymous reporter/list,anything,OTPL,None,10,2,2
+                     |_applyresult arrow reporter/list,anything,OTPL,None,10,2,2
                      |_approximatehsb number/number/number,number,OTPL,None,10,3,3
                      |_approximatergb number/number/number,number,OTPL,None,10,3,3
                      |_asin number,number,OTPL,None,10,1,1
@@ -74,7 +74,7 @@ class TestAllSyntaxes extends AnyFunSuiteEx {
                      |_fileread ,number or TRUE/FALSE or string or list or NOBODY,OTPL,None,10,0,0
                      |_filereadchars number,string,OTPL,None,10,1,1
                      |_filereadline ,string,OTPL,None,10,0,0
-                     |_filter anonymous reporter/list,list,OTPL,None,10,2,2
+                     |_filter arrow reporter/list,list,OTPL,None,10,2,2
                      |_first string or list,anything,OTPL,None,10,1,1
                      |_floor number,number,OTPL,None,10,1,1
                      |_fput anything/list,list,OTPL,None,10,2,2
@@ -131,7 +131,7 @@ class TestAllSyntaxes extends AnyFunSuiteEx {
                      |_ln number,number,OTPL,None,10,1,1
                      |_log number/number,number,OTPL,None,10,2,2
                      |_lput anything/list,list,OTPL,None,10,2,2
-                     |_map anonymous reporter/list,list,OTPL,None,10,2,2
+                     |_map arrow reporter/list,list,OTPL,None,10,2,2
                      |_max list,number,OTPL,None,10,1,1
                      |_maxnof number/agentset/number block,agentset,OTPL,Some(?),10,3,3
                      |_maxoneof agentset/number block,agent,OTPL,Some(?),10,2,2
@@ -170,7 +170,7 @@ class TestAllSyntaxes extends AnyFunSuiteEx {
                      |_not TRUE/FALSE,TRUE/FALSE,OTPL,None,10,1,1
                      |_notequal anything,anything,TRUE/FALSE,OTPL,None,5,1,1
                      |_noturtles ,turtle agentset,OTPL,None,10,0,0
-                     |_nvalues number/anonymous reporter,list,OTPL,None,10,2,2
+                     |_nvalues number/arrow reporter,list,OTPL,None,10,2,2
                      |_of reporter block,agent or agentset,anything,OTPL,Some(?),11,1,1 [RIGHT ASSOCIATIVE]
                      |_oneof list or agentset,anything,OTPL,None,10,1,1
                      |_or TRUE/FALSE,TRUE/FALSE,TRUE/FALSE,OTPL,None,4,1,1
@@ -213,7 +213,7 @@ class TestAllSyntaxes extends AnyFunSuiteEx {
                      |_randomycor ,number,OTPL,None,10,0,0
                      |_range number,list,OTPL,None,10,1,1
                      |_readfromstring string,number or TRUE/FALSE or string or list or NOBODY,OTPL,None,10,1,1
-                     |_reduce anonymous reporter/list,anything,OTPL,None,10,2,2
+                     |_reduce arrow reporter/list,anything,OTPL,None,10,2,2
                      |_reference variable,list,OTPL,None,10,1,1
                      |_remainder number/number,number,OTPL,None,10,2,2
                      |_remove anything/string or list,string or list,OTPL,None,10,2,2
@@ -223,7 +223,7 @@ class TestAllSyntaxes extends AnyFunSuiteEx {
                      |_reverse string or list,string or list,OTPL,None,10,1,1
                      |_rgb number/number/number,list,OTPL,None,10,3,3
                      |_round number,number,OTPL,None,10,1,1
-                     |_runresult string or anonymous reporter/anything,anything,OTPL,None,10,1,1
+                     |_runresult string or arrow reporter/anything,anything,OTPL,None,10,1,1
                      |_scalecolor number/number/number/number,number,OTPL,None,10,4,4
                      |_self ,agent,-TPL,None,10,0,0
                      |_sentence anything,list,OTPL,None,10,2,0
@@ -232,7 +232,7 @@ class TestAllSyntaxes extends AnyFunSuiteEx {
                      |_shuffle list,list,OTPL,None,10,1,1
                      |_sin number,number,OTPL,None,10,1,1
                      |_sort list or agentset,list,OTPL,None,10,1,1
-                     |_sortby anonymous reporter/list or agentset,list,OTPL,Some(?),10,2,2
+                     |_sortby arrow reporter/list or agentset,list,OTPL,Some(?),10,2,2
                      |_sorton reporter block/agentset,list,OTPL,Some(?),10,2,2
                      |_sqrt number,number,OTPL,None,10,1,1
                      |_stacktrace ,string,OTPL,None,10,0,0
@@ -272,7 +272,7 @@ class TestAllSyntaxes extends AnyFunSuiteEx {
                      |_worldwidth ,number,OTPL,None,10,0,0
                      |_wrapcolor number,number,OTPL,None,10,1,1
                      |_xor TRUE/FALSE,TRUE/FALSE,TRUE/FALSE,OTPL,None,4,1,1""".stripMargin.replaceAll("\r\n", "\n")
-  val COMMANDS = """|_apply anonymous command/list,OTPL,None,0,2,2
+  val COMMANDS = """|_apply arrow command/list,OTPL,None,0,2,2
                     |_ask agent or agentset/command block,OTPL,Some(?),0,2,2
                     |_askconcurrent agentset/command block,OTPL,Some(?),0,2,2
                     |_autoplotoff ,OTPL,None,0,0,0
@@ -336,7 +336,7 @@ class TestAllSyntaxes extends AnyFunSuiteEx {
                     |_filewrite number or TRUE/FALSE or string or list or NOBODY,OTPL,None,0,1,1
                     |_follow turtle,O---,None,0,1,1
                     |_followme ,-T--,None,0,0,0
-                    |_foreach list/anonymous command,OTPL,None,0,2,2
+                    |_foreach list/arrow command,OTPL,None,0,2,2
                     |_foreverbuttonend ,OTPL,None,0,0,0
                     |_foreverbuttonstart ,OTPL,None,0,0,0
                     |_hatch number/command block (optional),-T--,Some(-T--),0,2,2
@@ -413,7 +413,7 @@ class TestAllSyntaxes extends AnyFunSuiteEx {
                     |_ride turtle,O---,None,0,1,1
                     |_rideme ,-T--,None,0,0,0
                     |_right number,-T--,None,0,1,1
-                    |_run string or anonymous command/anything,OTPL,None,0,1,1
+                    |_run string or arrow command/anything,OTPL,None,0,1,1
                     |_set anything/anything,OTPL,None,0,2,2
                     |_setcurdir string,OTPL,None,0,1,1
                     |_setcurrentplot string,OTPL,None,0,1,1

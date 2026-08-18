@@ -114,7 +114,7 @@ class FrontEndTests extends AnyFunSuite with BaseParserTest {
     runFailure("__ignore [[]->", "No closing bracket for this open bracket.", 9, 10)
   }
   test("invalidLambda4") {
-    runFailure("__ignore [ foo bar -> ]", "An anonymous procedures of two or more arguments must enclose its argument list in brackets", 11, 18)
+    runFailure("__ignore [ foo bar -> ]", "An arrow procedure of two or more arguments must enclose its argument list in brackets", 11, 18)
   }
   test("DoParseMap") {
     testParse("__ignore map [[x] -> round x] [1.2 1.7 3.2]",
@@ -132,7 +132,7 @@ class FrontEndTests extends AnyFunSuite with BaseParserTest {
       "_foreach()[_const([1.0, 2.0, 3.0])[], _commandlambda(_0)[[_print()[_lambdavariable(_0)[]]]]]")
   }
   test("DoParseForeachWithDone") {
-    runFailure("foreach [1 2 3] __done", "FOREACH expected at least 2 inputs, a list and an anonymous command.", 0, 7)
+    runFailure("foreach [1 2 3] __done", "FOREACH expected at least 2 inputs, a list and an arrow command.", 0, 7)
   }
   test("DoParselet") {
     testParse("let x 5 __ignore x",

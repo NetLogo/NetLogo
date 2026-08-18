@@ -57,7 +57,7 @@ object AnonymousProcedure {
   }
 
   def displayString(procedureType: String, source: String): String =
-    s"(anonymous $procedureType: $source)"
+    s"(arrow $procedureType: $source)"
 
   // The `right` argument for AnonymousProcedure syntax. AnonymousProcedures
   // can more arguments than their arity; thus, `RepeatableType` is used.
