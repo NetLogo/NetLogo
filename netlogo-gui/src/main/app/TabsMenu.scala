@@ -2,7 +2,7 @@
 
 package org.nlogo.app
 
-import java.awt.event.ActionEvent
+import java.awt.event.{ ActionEvent, KeyEvent }
 import javax.swing.AbstractAction
 
 import org.nlogo.swing.{ Menu, UserAction },
@@ -14,6 +14,20 @@ object TabsMenu {
       category    = TabsCategory
       rank        = index
       accelerator = KeyBindings.keystroke(('1' + index).toChar, withMenu = true)
+
+      index match {
+        case 0 =>
+          mnemonic = KeyEvent.VK_I
+
+        case 1 =>
+          mnemonic = KeyEvent.VK_N
+
+        case 2 =>
+          mnemonic = KeyEvent.VK_C
+
+        case _ =>
+      }
+
       override def actionPerformed(e: ActionEvent): Unit = {
         tabManager.setSelectedIndex(index)
       }

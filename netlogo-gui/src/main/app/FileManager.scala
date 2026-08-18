@@ -3,6 +3,7 @@
 package org.nlogo.app
 
 import java.awt.{ Component, Container, FileDialog => AWTFileDialog }
+import java.awt.event.KeyEvent
 import java.io.{ File, IOException }
 import java.net.{ URI, URISyntaxException }
 import java.nio.file.{ Files, Paths }
@@ -37,6 +38,7 @@ object FileManager {
     group       = UserAction.FileOpenGroup
     rank        = 1
     accelerator = UserAction.KeyBindings.keystroke('N', withMenu = true)
+    mnemonic    = KeyEvent.VK_N
 
     @throws(classOf[UserCancelException])
     @throws(classOf[IOException])
@@ -53,6 +55,7 @@ object FileManager {
     group       = UserAction.FileOpenGroup
     rank        = 2
     accelerator = UserAction.KeyBindings.keystroke('O', withMenu = true)
+    mnemonic    = KeyEvent.VK_O
 
     @throws(classOf[UserCancelException])
     @throws(classOf[IOException])
@@ -68,6 +71,7 @@ object FileManager {
     category    = UserAction.FileCategory
     group       = UserAction.FileQuitGroup
     accelerator = UserAction.KeyBindings.keystroke('Q', withMenu = true)
+    mnemonic    = KeyEvent.VK_Q
 
     override def action(): Unit = {
       try {
@@ -85,6 +89,7 @@ object FileManager {
     group       = UserAction.FileOpenGroup
     rank        = 3
     accelerator = UserAction.KeyBindings.keystroke('M', withMenu = true)
+    mnemonic    = KeyEvent.VK_M
 
     @throws(classOf[UserCancelException])
     override def action(): Unit = {
@@ -100,6 +105,7 @@ object FileManager {
   with MenuAction {
     category    = UserAction.FileCategory
     subcategory = UserAction.FileImportSubcategory
+    mnemonic    = KeyEvent.VK_H
 
     var exception = Option.empty[IOException]
 
@@ -144,6 +150,7 @@ object FileManager {
 
     category = UserAction.FileCategory
     group = UserAction.FileShareGroup
+    mnemonic = KeyEvent.VK_U
 
     override def action(): Unit = {
       ModelingCommons.upload(Hierarchy.getFrame(parent), modelSaver.modelAsString(modelSaver.currentModel, "nlogox"),
@@ -156,6 +163,7 @@ object FileManager {
   with MenuAction {
     category = UserAction.FileCategory
     group    = UserAction.FileShareGroup
+    mnemonic = KeyEvent.VK_W
 
     // disabled for 3-D since you can't do that in NetLogo Web - RG 9/10/15
     setEnabled(!Version.is3D)
@@ -280,6 +288,7 @@ object FileManager {
     category = UserAction.FileCategory
     group = UserAction.FileResourcesGroup
     rank = 1
+    mnemonic = KeyEvent.VK_B
 
     override def action(): Unit = {
       new ResourceManagerDialog(workspace.asInstanceOf[GUIWorkspace].getFrame, workspace).setVisible(true)
@@ -551,6 +560,13 @@ class FileManager(workspace: AbstractWorkspaceScala,
         group = UserAction.FileSaveGroup
         accelerator = UserAction.KeyBindings.keystroke('S', withMenu = true, withShift = saveAs)
         rank = 0
+
+        if (saveAs) {
+          mnemonic = KeyEvent.VK_A
+          mnemonicIndex = 5
+        } else {
+          mnemonic = KeyEvent.VK_S
+        }
 
         @throws(classOf[UserCancelException])
         override def action(): Unit = {

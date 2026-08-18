@@ -57,6 +57,7 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
       category = EditCategory
       group = EditUndoGroup
       accelerator = KeyBindings.keystroke('Z', withMenu = true)
+      mnemonic = KeyEvent.VK_U
 
       override def actionPerformed(e: ActionEvent): Unit = {
         runInWeb("window.undo()")
@@ -69,6 +70,7 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
       category = EditCategory
       group = EditUndoGroup
       accelerator = KeyBindings.keystroke('Y', withMenu = true)
+      mnemonic = KeyEvent.VK_R
 
       override def actionPerformed(e: ActionEvent): Unit = {
         runInWeb("window.redo()")
@@ -81,6 +83,7 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
       category = EditCategory
       group = EditClipboardGroup
       accelerator = KeyBindings.keystroke('C', withMenu = true)
+      mnemonic = KeyEvent.VK_C
 
       override def actionPerformed(e: ActionEvent): Unit = {
         runInWeb("window.copy(window.view)")
@@ -93,6 +96,7 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
       category = EditCategory
       group = EditClipboardGroup
       accelerator = KeyBindings.keystroke('X', withMenu = true)
+      mnemonic = KeyEvent.VK_T
 
       override def actionPerformed(e: ActionEvent): Unit = {
         runInWeb("window.cut(window.view)")
@@ -105,6 +109,7 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
       category = EditCategory
       group = EditClipboardGroup
       accelerator = KeyBindings.keystroke('V', withMenu = true)
+      mnemonic = KeyEvent.VK_P
 
       override def actionPerformed(e: ActionEvent): Unit = {
         runInWeb("window.paste(window.view)")
@@ -117,6 +122,7 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
       category = EditCategory
       group = EditClipboardGroup
       accelerator = KeyBindings.keystroke(KeyEvent.VK_DELETE)
+      mnemonic = KeyEvent.VK_D
 
       override def actionPerformed(e: ActionEvent): Unit = {
         replaceSelection("")
@@ -129,6 +135,7 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
       category = EditCategory
       group = EditSelectionGroup
       accelerator = KeyBindings.keystroke('A', withMenu = true)
+      mnemonic = KeyEvent.VK_A
 
       override def actionPerformed(e: ActionEvent): Unit = {
         runInWeb("window.selectAll()")
@@ -143,6 +150,7 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
       category = EditCategory
       group = EditFormatGroup
       accelerator = KeyBindings.keystroke(KeyEvent.VK_SEMICOLON, withMenu = true)
+      mnemonic = KeyEvent.VK_M
 
       override def actionPerformed(e: ActionEvent): Unit = {
         runInWeb("window.toggleComments(window.view)")
@@ -155,6 +163,7 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
       category = EditCategory
       group = EditFormatGroup
       accelerator = KeyBindings.keystroke(KeyEvent.VK_OPEN_BRACKET, withMenu = true)
+      mnemonic = KeyEvent.VK_S
 
       override def actionPerformed(e: ActionEvent): Unit = {
         runInWeb("window.shiftLeft()")
@@ -167,6 +176,7 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
       category = EditCategory
       group = EditFormatGroup
       accelerator = KeyBindings.keystroke(KeyEvent.VK_CLOSE_BRACKET, withMenu = true)
+      mnemonic = KeyEvent.VK_H
 
       override def actionPerformed(e: ActionEvent): Unit = {
         runInWeb("window.shiftRight()")
@@ -180,6 +190,7 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
       subcategory = EditFoldSubcategory
       group = EditFoldGroup
       accelerator = KeyBindings.keystroke(KeyEvent.VK_OPEN_BRACKET, withMenu = true, withShift = true)
+      mnemonic = KeyEvent.VK_C
 
       override def actionPerformed(e: ActionEvent): Unit = {
         runInWeb("window.foldSelected()")
@@ -193,6 +204,7 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
       subcategory = EditFoldSubcategory
       group = EditFoldGroup
       accelerator = KeyBindings.keystroke(KeyEvent.VK_CLOSE_BRACKET, withMenu = true, withShift = true)
+      mnemonic = KeyEvent.VK_E
 
       override def actionPerformed(e: ActionEvent): Unit = {
         runInWeb("window.unfoldSelected()")
@@ -206,6 +218,8 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
       subcategory = EditFoldSubcategory
       group = EditFoldGroup
       accelerator = KeyBindings.keystroke(KeyEvent.VK_OPEN_BRACKET, withMenu = true, withAlt = true)
+      mnemonic = KeyEvent.VK_A
+      mnemonicIndex = 9
 
       override def actionPerformed(e: ActionEvent): Unit = {
         runInWeb("window.foldAll()")
@@ -219,6 +233,7 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
       subcategory = EditFoldSubcategory
       group = EditFoldGroup
       accelerator = KeyBindings.keystroke(KeyEvent.VK_CLOSE_BRACKET, withMenu = true, withAlt = true)
+      mnemonic = KeyEvent.VK_F
 
       override def actionPerformed(e: ActionEvent): Unit = {
         runInWeb("window.unfoldAll()")
@@ -267,6 +282,8 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
     addSeparator()
 
     add(new Menu(I18N.gui("folding")) {
+      setMnemonic(KeyEvent.VK_O)
+
       add(new MenuItem(foldSelectedAction))
       add(new MenuItem(unfoldSelectedAction))
       add(new MenuItem(foldAllAction))

@@ -3,7 +3,7 @@
 package org.nlogo.app
 
 import java.awt.{ Frame, KeyboardFocusManager }
-import java.awt.event.{ ActionEvent, WindowAdapter, WindowEvent }
+import java.awt.event.{ ActionEvent, KeyEvent, WindowAdapter, WindowEvent }
 import java.net.URI
 import java.nio.file.Path
 import javax.swing.AbstractAction
@@ -13,22 +13,24 @@ import org.nlogo.api.Version
 import org.nlogo.swing.{ BrowserLauncher, QuickHelp, UserAction }, UserAction._
 import org.nlogo.theme.ThemeSync
 
-class TryRemoteBrowseAction(name: String, uri: URI, fallback: Path, group: String)
+class TryRemoteBrowseAction(name: String, uri: URI, fallback: Path, group: String, mnemonic: Int)
 extends AbstractAction(name)
 with MenuAction {
   category   = HelpCategory
   this.group = group
+  this.mnemonic = mnemonic
 
   override def actionPerformed(e: ActionEvent): Unit = {
     BrowserLauncher.tryOpenURI(KeyboardFocusManager.getCurrentKeyboardFocusManager.getFocusedWindow, uri, fallback)
   }
 }
 
-class RemoteBrowseAction(name: String, uri: URI, group: String)
+class RemoteBrowseAction(name: String, uri: URI, group: String, mnemonic: Int)
 extends AbstractAction(name)
 with MenuAction {
   category = HelpCategory
   this.group = group
+  this.mnemonic = mnemonic
 
   override def actionPerformed(e: ActionEvent): Unit = {
     BrowserLauncher.openURI(KeyboardFocusManager.getCurrentKeyboardFocusManager.getFocusedWindow, uri)
@@ -39,25 +41,29 @@ object HelpActions {
   def apply: Seq[MenuAction] = {
     Seq(
     new TryRemoteBrowseAction(I18N.gui.get("menu.help.netLogoUserManual"),
-      new URI(s"https://docs.netlogo.org/${Version.versionNumberNo3D}"), QuickHelp.docPath("index"),
-              HelpDocGroup),
+      new URI(s"https://docs.netlogo.org/${Version.versionNumberNo3D}"), QuickHelp.docPath("index"), HelpDocGroup,
+      KeyEvent.VK_U),
     new TryRemoteBrowseAction(I18N.gui.get("menu.help.netLogoDictionary"),
       new URI(s"https://docs.netlogo.org/${Version.versionNumberNo3D}/dictionary.html"),
-      QuickHelp.docPath("dictionary"), HelpDocGroup),
+      QuickHelp.docPath("dictionary"), HelpDocGroup, KeyEvent.VK_D),
     new RemoteBrowseAction(I18N.gui.get("menu.help.bind"),
-      new URI("https://ccl.northwestern.edu/netlogo/bind"), HelpDocGroup),
+      new URI("https://ccl.northwestern.edu/netlogo/bind"), HelpDocGroup, KeyEvent.VK_B),
     new RemoteBrowseAction(I18N.gui.get("menu.help.introToABM"),
-      new URI("https://mitpress.mit.edu/9780262731898/an-introduction-to-agent-based-modeling/"), HelpDocGroup),
+      new URI("https://mitpress.mit.edu/9780262731898/an-introduction-to-agent-based-modeling/"), HelpDocGroup,
+      KeyEvent.VK_I),
     new RemoteBrowseAction(I18N.gui.get("menu.help.forum"),
-      new URI("https://forum.netlogo.org"), HelpWebGroup),
+      new URI("https://forum.netlogo.org"), HelpWebGroup, KeyEvent.VK_F),
     new RemoteBrowseAction(I18N.gui.get("menu.help.netLogoUsersGroup"),
-      new URI("http://groups.google.com/d/forum/netlogo-users"), HelpWebGroup),
+      new URI("http://groups.google.com/d/forum/netlogo-users"), HelpWebGroup, KeyEvent.VK_G) {
+
+      mnemonicIndex = 14
+    },
     new RemoteBrowseAction(I18N.gui.get("menu.help.contact"),
-      new URI("https://www.netlogo.org/contact/"), HelpWebGroup),
+      new URI("https://www.netlogo.org/contact/"), HelpWebGroup, KeyEvent.VK_C),
     new RemoteBrowseAction(I18N.gui.get("menu.help.donate"),
-      new URI("https://www.netlogo.org/donate/"), HelpDonateGroup),
+      new URI("https://www.netlogo.org/donate/"), HelpDonateGroup, KeyEvent.VK_O),
     new RemoteBrowseAction(I18N.gui.get("menu.help.news"),
-      new URI("https://www.netlogo.org/announcements/"), HelpAboutGroup))
+      new URI("https://www.netlogo.org/announcements/"), HelpAboutGroup, KeyEvent.VK_N))
   }
 }
 
@@ -66,6 +72,7 @@ extends AbstractAction(I18N.gui.getN("menu.help.aboutVersion", Version.versionDr
 with MenuAction with ThemeSync {
   category = HelpCategory
   group    = HelpAboutGroup
+  mnemonic = KeyEvent.VK_A
 
   private var aboutWindow: Option[AboutWindow] = None
 

@@ -30,6 +30,7 @@ class MouseQuickHelpAction(protected val colorizer: Colorizer)
   with MenuAction {
 
   accelerator = KeyBindings.keystroke(KeyEvent.VK_F1)
+  mnemonic    = KeyEvent.VK_Q
 
   override def actionPerformed(e: ActionEvent): Unit = {
     doHelp(editor, SwingUtilities.getWindowAncestor(editor))
@@ -44,6 +45,7 @@ class KeyboardQuickHelpAction
   category    = UserAction.HelpCategory
   group       = UserAction.HelpContextGroup
   accelerator = KeyBindings.keystroke(KeyEvent.VK_F1)
+  mnemonic    = KeyEvent.VK_L
 
   override def actionPerformed(e: ActionEvent): Unit = {
     KeyboardFocusManager.getCurrentKeyboardFocusManager.getPermanentFocusOwner match {

@@ -2,7 +2,7 @@
 
 package org.nlogo.lab.gui
 
-import java.awt.event.ActionEvent
+import java.awt.event.{ ActionEvent, KeyEvent }
 import javax.swing.AbstractAction
 
 import org.nlogo.api.{ AbstractModelLoader, LabProtocol, ModelSaver }
@@ -105,6 +105,7 @@ class LabManager(val workspace:        GUIWorkspace,
     category    = ToolsCategory
     group       = ToolsDialogsGroup
     accelerator = KeyBindings.keystroke('B', withMenu = true, withShift = true)
+    mnemonic    = KeyEvent.VK_V
 
     override def actionPerformed(e: ActionEvent): Unit = {
       show()

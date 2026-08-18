@@ -153,6 +153,7 @@ class Menu(text: String, var menuModel: MenuModel[Action, String]) extends JMenu
         val itemToAdd = node match {
           case mm.Branch(model, key, group) =>
             val subMenu = new Menu(subcategoryNameAndGroup(key)._1, model)
+            UserAction.subcategoryMnemonics.get(key).foreach(subMenu.setMnemonic)
             subMenu.rebuildFromModel(subMenu.menuModel)
             subMenu
           case mm.Leaf(action, group) => createMenuItem(action)

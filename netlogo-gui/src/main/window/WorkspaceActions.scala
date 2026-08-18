@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import java.awt.event.ActionEvent
+import java.awt.event.{ ActionEvent, KeyEvent }
 
 import javax.swing.{ AbstractAction, Action }
 
@@ -18,12 +18,24 @@ object WorkspaceActions {
   def apply(workspace: GUIWorkspace): Seq[MenuAction] =
     Seq(
       new HaltAction(workspace),
-      new SimpleGUIWorkspaceAction(I18N.gui("globalsMonitor"), ToolsMonitorGroup, workspace, _.inspectAgent(AgentKind.Observer)),
-      new SimpleGUIWorkspaceAction(I18N.gui("turtleMonitor"), ToolsMonitorGroup, workspace, _.inspectAgent(AgentKind.Turtle)),
-      new SimpleGUIWorkspaceAction(I18N.gui("patchMonitor"), ToolsMonitorGroup, workspace, _.inspectAgent(AgentKind.Patch)),
-      new SimpleGUIWorkspaceAction(I18N.gui("linkMonitor"), ToolsMonitorGroup, workspace, _.inspectAgent(AgentKind.Link)),
-      new SimpleGUIWorkspaceAction(I18N.gui("closeAllAgentMonitors"), ToolsMonitorGroup, workspace, _.closeAgentMonitors()),
-      new SimpleGUIWorkspaceAction(I18N.gui("closeDeadAgentMonitors"), ToolsMonitorGroup, workspace, _.stopInspectingDeadAgents()),
+      new SimpleGUIWorkspaceAction(I18N.gui("globalsMonitor"), ToolsMonitorGroup, workspace, _.inspectAgent(AgentKind.Observer)) {
+        mnemonic = KeyEvent.VK_G
+      },
+      new SimpleGUIWorkspaceAction(I18N.gui("turtleMonitor"), ToolsMonitorGroup, workspace, _.inspectAgent(AgentKind.Turtle)) {
+        mnemonic = KeyEvent.VK_T
+      },
+      new SimpleGUIWorkspaceAction(I18N.gui("patchMonitor"), ToolsMonitorGroup, workspace, _.inspectAgent(AgentKind.Patch)) {
+        mnemonic = KeyEvent.VK_O
+      },
+      new SimpleGUIWorkspaceAction(I18N.gui("linkMonitor"), ToolsMonitorGroup, workspace, _.inspectAgent(AgentKind.Link)) {
+        mnemonic = KeyEvent.VK_L
+      },
+      new SimpleGUIWorkspaceAction(I18N.gui("closeAllAgentMonitors"), ToolsMonitorGroup, workspace, _.closeAgentMonitors()) {
+        mnemonic = KeyEvent.VK_A
+      },
+      new SimpleGUIWorkspaceAction(I18N.gui("closeDeadAgentMonitors"), ToolsMonitorGroup, workspace, _.stopInspectingDeadAgents()) {
+        mnemonic = KeyEvent.VK_M
+      },
     ) ++ (if (Version.is3D) Seq() else Seq(new Open3DViewAction(workspace)))
 
   def interfaceActions(workspace: GUIWorkspace, widgetPanel: AbstractWidgetPanel): Seq[MenuAction] =
@@ -51,6 +63,8 @@ object WorkspaceActions {
   class HaltAction(workspace: GUIWorkspace)
     extends SimpleGUIWorkspaceAction(I18N.gui("halt"), HaltGroup, workspace, _.halt) {
 
+    mnemonic = KeyEvent.VK_H
+
     override def isEnabled: Boolean =
       workspace.jobManager.anyPrimaryJobs()
   }
@@ -62,6 +76,7 @@ object WorkspaceActions {
     group       = ToolsDialogsGroup
     rank        = 0
     accelerator = KeyBindings.keystroke('T', withMenu = true, withShift = true)
+    mnemonic    = KeyEvent.VK_3
 
     override def performAction(workspace: GUIWorkspace): Unit = {
       if (!workspace.isTesting) {
@@ -97,6 +112,7 @@ class SnapToGridAction(workspace: GUIWorkspace, widgetPanel: AbstractWidgetPanel
 
   category = EditCategory
   group    = "SnapToGrid"
+  mnemonic = KeyEvent.VK_S
 
   putValue(Action.SELECTED_KEY,    checkedState)
 

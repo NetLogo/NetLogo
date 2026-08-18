@@ -3,7 +3,7 @@
 package org.nlogo.app.tools
 
 import java.awt.Frame
-import java.awt.event.ActionEvent
+import java.awt.event.{ ActionEvent, KeyEvent }
 import javax.swing.AbstractAction
 
 import org.nlogo.api.PreviewCommands
@@ -22,6 +22,7 @@ object PreviewCommandsEditor {
       category    = ToolsCategory
       group       = ToolsDialogsGroup
       accelerator = KeyBindings.keystroke('P', withMenu = true, withShift = true)
+      mnemonic    = KeyEvent.VK_R
 
       override def actionPerformed(actionEvent: ActionEvent): Unit = {
         val model = f()
