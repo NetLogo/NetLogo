@@ -129,11 +129,11 @@ class BehaviorSearchDir(baseDirectory: File, platformShortName: String) extends 
     val distInclude = baseDirectory / "dist" / "dist_include"
     platformShortName match {
       case "windows" =>
-        distInclude / "behaviorsearch_headless.bat" -> "behaviorsearch/behaviorsearch_headless.bat"
+        distInclude / "behaviorsearch-headless.bat" -> "behaviorsearch/behaviorsearch-headless.bat"
       case "linux"   =>
-        distInclude / "behaviorsearch_headless.sh"  -> "behaviorsearch/behaviorsearch_headless.sh"
+        distInclude / "behaviorsearch-headless.sh"  -> "behaviorsearch/behaviorsearch-headless.sh"
       case "macosx"  =>
-        distInclude / "behaviorsearch_headless.command"  -> "behaviorsearch/behaviorsearch_headless.command"
+        distInclude / "behaviorsearch-headless.command"  -> "behaviorsearch/behaviorsearch-headless.command"
     }
   }
 
