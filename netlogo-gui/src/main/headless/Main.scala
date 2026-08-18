@@ -14,7 +14,7 @@ object Main {
 
   // *TODO*: Get this I18N'd and also a way to keep it in sync with the BehaviorSpace docs.
   private val HELP_STRING = """
-Run NetLogo using the NetLogo_Console app with the --headless command line argument.  The NetLogo_Console script supports the following arguments:
+Run NetLogo using the NetLogo Console app with the --headless command line argument.  The NetLogo Console script supports the following arguments:
 
 * --headless: Enable headless mode to run a BehaviorSpace experiment (required, will open the graphical interface otherwise).
 * --model <path>: pathname of model to open (required)
@@ -36,7 +36,7 @@ The --model flag is required. If you don't specify --experiment, you must specif
 
 Here is an example of running an experiment already defined and saved within a model (path separators and line-continue slashes are for macOS or Linux, Windows would be different):
 
-./NetLogo_Console --headless \
+./NetLogo\ Console --headless \
   --model "models/IABM Textbook/chapter 4/Wolf Sheep Simple 5.nlogo" \
   --experiment "Wolf Sheep Simple model analysis" \
   --table -
