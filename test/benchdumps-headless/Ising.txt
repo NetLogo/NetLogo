@@ -2101,7 +2101,7 @@ procedure SETUP-PLOT:[]{OTPL}:
             LDC "axis"
            L1
             ARETURN
-[2]_autoplotoff "auto-plot-off"
+[2]_autoplotoff "autoplot-off"
 [3]_plotxy "plotxy 0 0"
       _asm_proceduresetupplot_constdouble_2 "0" => Double
             // parameter final  context
@@ -2132,7 +2132,7 @@ procedure SETUP-PLOT:[]{OTPL}:
             GETFIELD org/nlogo/prim/_asm_proceduresetupplot_constdouble_5.kept1_value : Ljava/lang/Double;
            L1
             ARETURN
-[5]_autoploton "auto-plot-on"
+[5]_autoploton "autoplot-on"
 [6]_asm_proceduresetupplot_return_6 => void
           // parameter final  context
          L0

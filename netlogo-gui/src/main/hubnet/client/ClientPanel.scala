@@ -179,7 +179,7 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
             // points may or may not contain a specific X coordinate.
             // however, this is only the case in narrowcast plotting
             // plot mirroring always sends both coordinates even if
-            // auto-plot is on. ev 8/18/08
+            // autoplot is on. ev 8/18/08
             if (p.specifiesXCor) plotWidget.plot.currentPen.get.plot(p.xcor, p.ycor)
             // if not, we'll just let the plot use the next one.
             else plotWidget.plot.currentPen.get.plot(p.ycor)

@@ -85,9 +85,9 @@ class ServerPlotManager(workspace: Workspace & HubNetWorkspaceInterface, connect
   def defaultYMax(defaultYMax: Double): Unit = {yMax(defaultYMax)}
   def defaultAutoPlotX(defaultAutoPlotX: Boolean): Unit = {autoPlotX(defaultAutoPlotX)}
   def defaultAutoPlotY(defaultAutoPlotY: Boolean): Unit = {autoPlotY(defaultAutoPlotY)}
-  // Sends the java.lang.Character 'x' or 'z', indicating a auto-plot-x-on and auto-plot-x-off respectively
+  // Sends the java.lang.Character 'x' or 'z', indicating a autoplot-x-on and autoplot-x-off respectively
   def autoPlotX(flag: Boolean): Unit = { if (flag) broadcastToClients('x') else broadcastToClients('z') }
-  // Sends the java.lang.Character 'y' or 'w', indicating a auto-plot-y-on and auto-plot-y-off respectively
+  // Sends the java.lang.Character 'y' or 'w', indicating a autoplot-y-on and autoplot-y-off respectively
   def autoPlotY(flag: Boolean): Unit = { if (flag) broadcastToClients('y') else broadcastToClients('w') }
   // Sends a java.lang.Short, which is the current plot-pen-mode
   def plotPenMode(plotPenMode: Int): Unit = {broadcastToClients(plotPenMode.toShort)}
