@@ -16,25 +16,25 @@ AutoPlotTrickery
   O> set-current-plot "plot1"
   O> create-temporary-plot-pen "foobar"
   autoplot? => true
-  autoplotx? => true
-  autoploty? => true
-  O> auto-plot-off
+  autoplot-x? => true
+  autoplot-y? => true
+  O> autoplot-off
   autoplot? => false
-  autoplotx? => false
-  autoploty? => false
-  O> auto-plot-x-on
+  autoplot-x? => false
+  autoplot-y? => false
+  O> autoplot-x-on
   autoplot? => false
-  autoplotx? => true
-  autoploty? => false
-  O> auto-plot-y-on
+  autoplot-x? => true
+  autoplot-y? => false
+  O> autoplot-y-on
   autoplot? => true
-  autoplotx? => true
-  autoploty? => true
-  O> auto-plot-x-off
+  autoplot-x? => true
+  autoplot-y? => true
+  O> autoplot-x-off
   autoplot? => false
-  autoplotx? => false
-  autoploty? => true
-  O> auto-plot-y-off
+  autoplot-x? => false
+  autoplot-y? => true
+  O> autoplot-y-off
   autoplot? => false
-  autoplotx? => false
-  autoploty? => false
+  autoplot-x? => false
+  autoplot-y? => false

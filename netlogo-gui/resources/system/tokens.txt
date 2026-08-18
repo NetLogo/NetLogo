@@ -56,11 +56,17 @@ C __zip-log-files gui._ziplogfiles
 C ask _ask
 C ask-concurrent _askconcurrent
 C auto-plot-off plot._autoplotoff
+C autoplot-off plot._autoplotoff
 C auto-plot-on plot._autoploton
+C autoplot-on plot._autoploton
 C auto-plot-x-off plot._autoplotxoff
+C autoplot-x-off plot._autoplotxoff
 C auto-plot-x-on plot._autoplotxon
+C autoplot-x-on plot._autoplotxon
 C auto-plot-y-off plot._autoplotyoff
+C autoplot-y-off plot._autoplotyoff
 C auto-plot-y-on plot._autoplotyon
+C autoplot-y-on plot._autoplotyon
 C back _bk
 C beep gui._beep
 C bk _bk
@@ -291,7 +297,9 @@ R at-points etc._atpoints
 R atan etc._atan
 R autoplot? plot._autoplot
 R autoplotx? plot._autoplotx
+R autoplot-x? plot._autoplotx
 R autoploty? plot._autoploty
+R autoplot-y? plot._autoploty
 R base-colors etc._basecolors
 R behaviorspace-experiment-name etc._behaviorspaceexperimentname
 R behaviorspace-run-number etc._behaviorspacerunnumber
