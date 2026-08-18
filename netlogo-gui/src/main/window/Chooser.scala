@@ -32,7 +32,7 @@ trait Chooser extends SingleErrorWidget {
 
   // sub-elements of Switch
   protected val label = new JLabel(I18N.gui.get("edit.chooser.previewName"))
-  private val control = new ComboBox[String] {
+  private val control = new ComboBox[String](searchable = true) {
     setZoomFunc(zoom)
     addItemListener(_ => index(getSelectedIndex))
   }
