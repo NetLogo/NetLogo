@@ -31,7 +31,7 @@ tmp/
 /docs/
 /netlogo-gui/docs/
 /netlogo-gui/NetLogo_User_Manual.pdf
-/netlogo-gui/manual-links.csv
+/netlogo-gui/resources/system/manual-links.csv
 /netlogo-gui/netlogo_logging.xml
 /dist/target2/
 

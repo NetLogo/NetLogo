@@ -8,7 +8,6 @@ import Extensions.extensionRoot
 import java.nio.file.{ Files, Path, StandardCopyOption }
 
 object Docs {
-  lazy val allDocs      = taskKey[Unit]("all documentation: html and pdf")
   lazy val staticDocs   = taskKey[Unit]("NetLogo static documentation")
   lazy val helioRoot    = settingKey[File]("location of helio root")
   lazy val docsSource   = settingKey[File]("location of docs source files")
@@ -21,9 +20,6 @@ object Docs {
     helioRoot          := baseDirectory.value.getParentFile / "helio",
     docsSource         := helioRoot.value / "apps" / "docs",
     docsDest           := baseDirectory.value / "docs",
-    allDocs := {
-      staticDocs.value
-    },
     staticDocs := {
       if (System.getenv("CI") == null) {
         val yarnBin =
@@ -42,7 +38,7 @@ object Docs {
       Files.copy(manualSource, manualDest, StandardCopyOption.REPLACE_EXISTING)
 
       val linksSource = (docsSource.value / ".build" / "manual-links.csv").toPath
-      val linksDest = (baseDirectory.value / "manual-links.csv").toPath
+      val linksDest = (baseDirectory.value / "resources" / "system" / "manual-links.csv").toPath
 
       Files.copy(linksSource, linksDest, StandardCopyOption.REPLACE_EXISTING)
 

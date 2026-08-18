@@ -12,7 +12,7 @@ import scala.sys.process.Process
 import ujson.{ Obj, Str }
 
 import ChecksumsAndPreviews.allPreviews
-import Docs.{ allDocs, docsDest }
+import Docs.{ docsDest, staticDocs }
 import Extensions.{ extensions, extensionRoot }
 import Keys.{ baseDirectory, buildStructure, dependencyClasspath, packageBin, state, streams, target, version }
 import ModelsLibrary.{ modelsDirectory, modelIndex }
@@ -90,8 +90,9 @@ object NetLogoPackaging {
     },
 
     buildNetLogo := {
-      (netlogo / all).value
-      (netlogo / allDocs).value
+      // staticDocs places manual-links.csv in the Java resources folder, so it needs to run to completion before
+      // the jar gets packaged by all (Isaac B 8/18/26)
+      (netlogo / all).dependsOn(netlogo / staticDocs).value
       // allPreviews doesn't technically depend on resaveModels, but if they're allowed to run concurrently it causes
       // problems when allPreviews tries to read a file that resaveModels is writing to (Isaac B 8/23/25)
       (netlogo / allPreviews).toTask("").dependsOn(resaveModels).value
@@ -141,8 +142,7 @@ object NetLogoPackaging {
         "date" -> buildDate.value
       ))
 
-      Seq(target.value / "readme.md", netLogoRoot.value / "NetLogo_User_Manual.pdf",
-          netLogoRoot.value / "manual-links.csv", packagedMathematicaLink.value)
+      Seq(target.value / "readme.md", netLogoRoot.value / "NetLogo_User_Manual.pdf", packagedMathematicaLink.value)
     },
 
     webTarget := target.value / "downloadPages",
@@ -212,7 +212,7 @@ object NetLogoPackaging {
       val targetDir = s"/usr/local/www/netlogo/${netLogoLongVersion.value}"
       val manualSource = netLogoRoot.value / "NetLogo_User_Manual.pdf"
       val manualTarget = s"$targetDir/docs/NetLogo_User_Manual.pdf"
-      (netlogo / allDocs).value
+      (netlogo / staticDocs).value
       RunProcess(Seq("rsync", "-rltv", "--inplace", "--progress", sourceDir.getPath, s"$user@$host:$targetDir"), "rsync docs")
       RunProcess(Seq("rsync", "-rltv", "--inplace", "--progress", manualSource.getPath, s"$user@$host:$manualTarget"), "rsync user manual")
       RunProcess(Seq("ssh", s"$user@$host", "chgrp", "-R", "apache", targetDir), "ssh - change release group")
