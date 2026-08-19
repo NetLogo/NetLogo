@@ -72,25 +72,42 @@ object StructureParser {
               val separator = System.getProperty("file.separator")
               val newImports: mutable.Set[Import] = mutable.Set()
 
-              val suppliedPaths =
-                compilationEnvironment.resolveModulePath(currentImport.filename, currentImport.pathComponents)
+              val key: String = currentImport.pathComponents.mkString(":")
 
-              if (suppliedPaths.isEmpty) {
-                exception(I18N.errors.getN("compiler.StructureParser.importNotFound", currentImport.pathComponents.mkString(":")), currentImport.token)
+              val imports: Seq[(String, String)] = compilationEnvironment.findBundledInclude(key) match {
+                case Some(contents) =>
+                  Seq((s"${currentImport.pathComponents.last}.nlm", contents))
+
+                case _ =>
+                  val suppliedPaths =
+                    compilationEnvironment.resolveModulePath(currentImport.filename, currentImport.pathComponents)
+
+                  if (suppliedPaths.isEmpty) {
+                    exception(I18N.errors.getN("compiler.StructureParser.importNotFound",
+                                               currentImport.pathComponents.mkString(":")), currentImport.token)
+                  }
+
+                  if (currentImport.importedIdentifiers.nonEmpty && suppliedPaths.length > 1) {
+                    exception(I18N.errors.getN("compiler.StructureParser.importSelectiveFromNonModule"),
+                              currentImport.token)
+                  }
+
+
+                  suppliedPaths.map { path =>
+                    includeFile(compilationEnvironment, path).getOrElse {
+                      exception(I18N.errors.getN("compiler.StructureParser.importNotFound", path), currentImport.token)
+                    }
+                  }
               }
 
-              if (currentImport.importedIdentifiers.nonEmpty && suppliedPaths.length > 1) {
-                exception(I18N.errors.getN("compiler.StructureParser.importSelectiveFromNonModule"), currentImport.token)
-              }
-
-              for (currentPath <- suppliedPaths) {
+              for ((currentPath, contents) <- imports) {
                 val prefix =
                   currentImport.pathAlias match {
                     case Some(x) => s"$x:"
                     case None =>
                       if (currentImport.importedIdentifiers.nonEmpty) {
                         ""
-                      } else if (suppliedPaths.length == 1) {
+                      } else if (imports.length == 1) {
                         s"${currentImport.pathAlias.getOrElse(currentImport.pathComponents.last).toUpperCase}:"
                       } else {
                         val basePath = compilationEnvironment.resolvePath(currentImport.filename.getOrElse(""))
@@ -101,16 +118,9 @@ object StructureParser {
                   }
 
                 if (!moduleCache.contains(currentPath)) {
-                  newResults = includeFile(compilationEnvironment, currentPath) match {
-                    case Some((path, fileContents)) => {
-                      parseOne(tokenizer, structureParser, fileContents, path, Some(path),
-                        newResults.copy(
-                          imports = results.imports.tail,
-                          includedSources = newResults.includedSources :+ currentPath))
-                    }
-                    case None =>
-                      exception(I18N.errors.getN("compiler.StructureParser.importNotFound", currentPath), currentImport.token)
-                  }
+                  newResults = parseOne(tokenizer, structureParser, contents, currentPath, Some(currentPath),
+                                        newResults.copy(imports = results.imports.tail,
+                                                        includedSources = newResults.includedSources :+ currentPath))
 
                   newImports ++= newResults.imports.toSet -- results.imports.toSet
 
@@ -193,16 +203,26 @@ object StructureParser {
 
             // Handle includes
             if (newResults.includes.nonEmpty) {
-              val suppliedPath = resolveIncludePath(newResults.includes.head.value.asInstanceOf[String])
-              cAssert(suppliedPath.endsWith(".nls"), IncludeFilesEndInNLS, newResults.includes.head)
-              newResults = includeFile(compilationEnvironment, suppliedPath) match {
-                case Some((path, fileContents)) =>
-                  parseOne(tokenizer, structureParser, fileContents, path, None,
-                    newResults.copy(includes = newResults.includes.tail,
-                      includedSources = newResults.includedSources :+ suppliedPath))
-                case None =>
-                  exception(I18N.errors.getN("compiler.StructureParser.includeNotFound", suppliedPath), newResults.includes.head)
+              val key: String = newResults.includes.head.value.asInstanceOf[String]
+
+              val (path, contents) = compilationEnvironment.findBundledInclude(key) match {
+                case Some(contents) =>
+                  (key, contents)
+
+                case _ =>
+                  val path: String = resolveIncludePath(key)
+
+                  includeFile(compilationEnvironment, path).getOrElse {
+                    exception(I18N.errors.getN("compiler.StructureParser.includeNotFound", path),
+                              newResults.includes.head)
+                  }
               }
+
+              cAssert(path.endsWith(".nls"), IncludeFilesEndInNLS, newResults.includes.head)
+
+              newResults = parseOne(tokenizer, structureParser, contents, path, None,
+                                    newResults.copy(includes = newResults.includes.tail,
+                                                    includedSources = newResults.includedSources :+ path))
             }
 
             newResults

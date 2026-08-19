@@ -8,6 +8,7 @@ trait CompilationEnvironment {
   def resolveModulePath(currentFile:Option[String], pathComponents: Seq[String]): Seq[String]
   def exists(path: String): Boolean
   def getSource(filename: String): String
+  def findBundledInclude(key: String): Option[String]
 }
 
 class DummyCompilationEnvironment extends CompilationEnvironment {
@@ -17,4 +18,5 @@ class DummyCompilationEnvironment extends CompilationEnvironment {
   def exists(filename: String): Boolean = false
   def getSource(filename: String): String =
     if (filename == "aggregate") "" else throw new UnsupportedOperationException
+  override def findBundledInclude(key: String): Option[String] = None
 }

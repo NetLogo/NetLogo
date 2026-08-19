@@ -61,7 +61,7 @@ object UserAction {
     EditFoldSubcategory -> KeyEvent.VK_O,
     FileExportSubcategory -> KeyEvent.VK_E,
     FileImportSubcategory -> KeyEvent.VK_I,
-    FileRecentSubcategory -> KeyEvent.VK_R
+    FileRecentSubcategory -> KeyEvent.VK_F
   )
 
   trait Menu {

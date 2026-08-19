@@ -178,6 +178,9 @@ abstract class AbstractWorkspaceScala(val world: World, val hubNetManagerFactory
             throw new IllegalStateException(s"$path is not a valid pathname: $ex")
         }
       }
+
+      override def findBundledInclude(key: String): Option[String] =
+        AbstractWorkspaceScala.this.findBundledInclude(key)
     }
   }
 

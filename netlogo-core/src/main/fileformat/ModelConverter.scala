@@ -59,6 +59,8 @@ class ModelConverter(
               FileIO.resolvePath(path, modelPath).map(_.normalize.toString).getOrElse(path)
             def resolveModulePath(currentFile: Option[String], modulePath: Seq[String]) =
               compilationEnv.resolveModulePath(currentFile, modulePath)
+            override def findBundledInclude(key: String): Option[String] =
+              model.includes.find(_.key == key).map(_.contents)
           },
         oldProcedures          = procedures,
         containingProgram      = program,

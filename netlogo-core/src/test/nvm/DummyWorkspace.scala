@@ -21,6 +21,7 @@ class DummyWorkspace extends Workspace {
   override def getLibraryManager   = unsupported
   override def getResourceManager = unsupported
   override def getCompilationEnvironment = new DummyCompilationEnvironment
+  override def findBundledInclude(key: String): Option[String] = unsupported
   override def waitFor(runnable: CommandRunnable) = unsupported
   override def waitForResult[T](runnable: ReporterRunnable[T]): T = unsupported
   override def importWorld(path: String) = unsupported

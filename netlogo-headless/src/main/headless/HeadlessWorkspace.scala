@@ -466,6 +466,9 @@ extends AbstractWorkspace(_world) with WorldLoaderInterface with PrimaryWorkspac
     super.halt()
   }
 
+  override def findBundledInclude(key: String): Option[String] =
+    _openModel.flatMap(_.includes.find(_.key == key).map(_.contents))
+
   def unsupported = throw new UnsupportedOperationException
 
 }

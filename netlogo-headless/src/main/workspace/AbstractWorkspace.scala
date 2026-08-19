@@ -174,6 +174,8 @@ with ExtendableWorkspace with ExtensionCompilationEnvironment with APIConformant
             throw new IllegalStateException(s"$path is not a valid pathname: $ex")
         }
       }
+      override def findBundledInclude(key: String): Option[String] =
+        AbstractWorkspace.this.findBundledInclude(key)
     }
   }
 
@@ -767,7 +769,7 @@ object AbstractWorkspaceTraits {
 
   }
 
-  trait ExtensionCompilationEnvironment { this: Paths & Profiling =>
+  trait ExtensionCompilationEnvironment { this: AbstractWorkspace =>
     import java.io.{ File => JFile }
     import java.net.MalformedURLException
     import java.nio.file.Paths
@@ -820,6 +822,8 @@ object AbstractWorkspaceTraits {
         }
       }
 
+      override def findBundledInclude(key: String): Option[String] =
+        ExtensionCompilationEnvironment.this.findBundledInclude(key)
     }
   }
 

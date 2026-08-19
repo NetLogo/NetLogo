@@ -367,6 +367,9 @@ class App(args: App.CommandLineArgs) extends LinkChild with Exceptions.Handler w
     def updateModel(model: Model): Model =
       model.withOptionalSection("org.nlogo.modelsection.modelsettings", Some(ModelSettings(snapOn)),
                                 Some(ModelSettings(false)))
+
+    override def findBundledInclude(key: String): Option[String] =
+      modelSaver.currentModel.includes.find(_.key == key).map(_.contents)
   }
 
   val monitorManager = new AgentMonitorManager(workspace)

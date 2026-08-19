@@ -15,6 +15,7 @@ with ViewSettings with Controllable {
   def getLibraryManager:   LibraryManager
   def getResourceManager: ExternalResourceManager
   def getCompilationEnvironment: CompilationEnvironment
+  def findBundledInclude(key: String): Option[String]
   def waitFor(runnable: CommandRunnable): Unit
   def waitForResult[T](runnable: ReporterRunnable[T]): T
   @throws(classOf[IOException])

@@ -16,6 +16,7 @@ case class Model(title: Option[String] = None,
   linkShapes: Seq[LinkShape] = Model.defaultLinkShapes,
   optionalSections: Seq[OptionalSection[?]] = Seq(),
   resources: Seq[ExternalResource] = Seq(),
+  includes: Seq[BundledInclude] = Seq(),
   // these are sections in the XML format that were not recognized by the current version but should
   // remain in the model file just in case for the user's benefit (Isaac B 7/6/25)
   unknownSections: Seq[XMLElement] = Seq()) {

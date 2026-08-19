@@ -582,5 +582,8 @@ with org.nlogo.api.ViewSettings with PrimaryWorkspace {
     super.halt()
   }
 
+  override def findBundledInclude(key: String): Option[String] =
+    _openModel.flatMap(_.includes.find(_.key == key).map(_.contents))
+
   def unsupported = throw new UnsupportedOperationException
 }

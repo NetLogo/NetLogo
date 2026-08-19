@@ -66,6 +66,7 @@ extends AbstractWorkspace(new World2D)
   override def report(source: String) = unsupported
   override def worldChecksum = unsupported
   override def graphicsChecksum = unsupported
+  override def findBundledInclude(key: String): Option[String] = unsupported
 
   // from ViewSettings
   override def drawSpotlight = unsupported

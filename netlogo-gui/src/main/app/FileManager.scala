@@ -6,14 +6,14 @@ import java.awt.{ Component, Container, FileDialog => AWTFileDialog }
 import java.awt.event.KeyEvent
 import java.io.{ File, IOException }
 import java.net.{ URI, URISyntaxException }
-import java.nio.file.{ Files, Paths }
+import java.nio.file.{ Files, Path, Paths, StandardOpenOption }
 import java.util.concurrent.TimeoutException
 
 import scala.concurrent.Await
-import scala.util.{ Failure, Try }
+import scala.util.{ Failure, Success, Try }
 
 import org.nlogo.analytics.Analytics
-import org.nlogo.core.{ I18N, Model }
+import org.nlogo.core.{ BundledInclude, CompilationEnvironment, I18N, Model }
 import org.nlogo.api.{ AbstractModelLoader, Exceptions, FileIO, LibraryManager, ModelReader, ModelSaver, ModelType,
                        Version, Workspace }, ModelReader.{ emptyModelPath, modelSuffix }
 import org.nlogo.app.common.{ Actions, Dialogs, ExceptionCatchingAction, ModelConfig }, Actions.Ellipsis
@@ -141,6 +141,74 @@ object FileManager {
           importTask(importPath, choice))
         exception.foreach(throw _)
       }
+    }
+  }
+
+  class BundleIncludesAction(parent: Component, workspace: AbstractWorkspaceScala, modelSaver: ModelSaver,
+                             modelLoader: AbstractModelLoader)
+    extends ExceptionCatchingAction(I18N.gui.get("menu.file.bundleIncludes"), parent) with MenuAction {
+
+    category = UserAction.FileCategory
+    group = UserAction.FileShareGroup
+    mnemonic = KeyEvent.VK_B
+
+    override def action(): Unit = {
+      val env: CompilationEnvironment = workspace.getCompilationEnvironment
+      val source: String = modelSaver.currentModel.code
+
+      val includes: Seq[RawInclude] = workspace.compiler.frontEnd.findIncludes(source).map(Include.apply) ++
+                                        workspace.compiler.frontEnd.findImports(source).map(Import.apply)
+
+      if (includes.nonEmpty) {
+        val bundled: Seq[BundledInclude] = includes.flatMap { include =>
+          include.getPath(env).flatMap { file =>
+            val path: Path = Paths.get(file)
+
+            if (Files.exists(path) && Files.isRegularFile(path)) {
+              Some(BundledInclude(include.getKey, Files.readString(path)))
+            } else {
+              None
+            }
+          }
+        }
+
+        modelLoader.sourceString(modelSaver.currentModel.copy(includes = bundled), ModelReader.modelSuffix) match {
+          case Success(str) =>
+            val path: String = FileDialog.showFiles(parent, I18N.gui.get("menu.file.saveBundle"), AWTFileDialog.SAVE,
+                                                    null, List(ModelReader.modelSuffix))
+
+            Files.writeString(Paths.get(path), str, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)
+
+          case Failure(ex) =>
+            new OptionPane(Hierarchy.getFrame(parent), I18N.gui.get("common.messages.error"),
+                            I18N.gui.getN("menu.file.bundleError", ex.getMessage), OptionPane.Options.Ok,
+                            OptionPane.Icons.Error)
+        }
+      } else {
+        new OptionPane(Hierarchy.getFrame(parent), I18N.gui.get("common.messages.warning"),
+                       I18N.gui.get("menu.file.noIncludes"), OptionPane.Options.Ok, OptionPane.Icons.Warning)
+      }
+    }
+
+    private sealed abstract trait RawInclude {
+      def getKey: String
+      def getPath(env: CompilationEnvironment): Option[String]
+    }
+
+    private case class Include(path: String) extends RawInclude {
+      override def getKey: String =
+        path
+
+      override def getPath(env: CompilationEnvironment): Option[String] =
+        Option(env.resolvePath(path))
+    }
+
+    private case class Import(comps: Seq[String]) extends RawInclude {
+      override def getKey: String =
+        comps.mkString(":")
+
+      override def getPath(env: CompilationEnvironment): Option[String] =
+        env.resolveModulePath(None, comps).headOption
     }
   }
 
@@ -288,7 +356,7 @@ object FileManager {
     category = UserAction.FileCategory
     group = UserAction.FileResourcesGroup
     rank = 1
-    mnemonic = KeyEvent.VK_B
+    mnemonic = KeyEvent.VK_R
 
     override def action(): Unit = {
       new ResourceManagerDialog(workspace.asInstanceOf[GUIWorkspace].getFrame, workspace).setVisible(true)
@@ -537,6 +605,7 @@ class FileManager(workspace: AbstractWorkspaceScala,
       new NewAction(this, parent),
       new OpenAction(this, parent),
       new ModelsLibraryAction(this, parent, workspace.getLibraryManager),
+      new BundleIncludesAction(parent, workspace, modelSaver, modelLoader),
       new UploadToModelingCommonsAction(parent, workspace, workspaceFactory, modelSaver),
       new SaveAsNetLogoWebAction(this, workspace, modelSaver, parent),
       new ImportClientAction(this, workspace, parent),
