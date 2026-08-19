@@ -123,7 +123,7 @@ object ModelsLibrary {
               case tree: Tree =>
                 val displayName: String = libraryManager.lookupExtension(tree.name, "").fold(tree.name)(_.name)
 
-                tree.copy(name = s"$displayName $extensionSamples $unverified")
+                tree.copy(name = s"$displayName $extensionSamples $unverified", children = tree.getLeaves)
 
               case node => node
             }
@@ -337,5 +337,12 @@ object ModelsLibrary {
     }
     def updateChildren(f: Seq[Node] => Seq[Node]) =
       copy(name, path, children = f(children).sortBy(_.name)(using childOrdering))
+
+    def getLeaves: Seq[Leaf] = {
+      children.flatMap {
+        case tree: Tree => tree.getLeaves
+        case leaf: Leaf => Seq(leaf)
+      }
+    }
   }
 }
