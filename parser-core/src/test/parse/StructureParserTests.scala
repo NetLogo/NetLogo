@@ -522,6 +522,10 @@ class StructureParserTests extends AnyFunSuite {
     assert(results.procedures.filter(_._1._2 == None).map(_._1._1) == List("BAZ"))
   }
 
+  test("export undefined procedure") {
+    expectParseAllError("import foo", "Nothing named TEST has been defined.", SourceType.NLModule, "export [test]")
+  }
+
   test("invalid included file") {
     expectParseAllError("""__includes [ "foobar.nlogox" ]""", "Included files must end with .nls", SourceType.NLInclude)
   }
