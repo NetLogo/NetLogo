@@ -25,6 +25,7 @@ class NoteWidget extends SingleErrorWidget with Transparent with Editable {
     setEditable(false)
     setOpaque(false)
     setCaret(new SilentCaret)
+    setCaretColor(InterfaceColors.Transparent)
 
     override def setFont(font: Font): Unit = {
       super.setFont(font.deriveFont(zoom(_fontSize).toFloat))
