@@ -47,6 +47,8 @@ object StructureChecker {
             exception(I18N.errors.getN("compiler.StructureParser.importContainsExtensions"), start)
           case Breed(_, _, _, _, start, _) =>
             exception(I18N.errors.getN("compiler.StructureParser.importContainsBreed"), start)
+          case Variables(kind, _, start, _) if kind.name.toLowerCase == "globals" =>
+            exception(I18N.errors.getN("compiler.StructureParser.importContainsGlobals"), start)
           case Variables(_, _, start, _) =>
             exception(I18N.errors.getN("compiler.StructureParser.importContainsVariables"), start)
           case _ =>
