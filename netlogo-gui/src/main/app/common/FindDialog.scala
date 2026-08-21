@@ -37,8 +37,7 @@ object FindDialog extends ThemeSync {
       instance.findBox.requestFocus()
       instance.findBox.selectAll()
 
-      instance.findBox.setText(instance.target.flatMap(t => Option(t.getSelectedText))
-                                              .getOrElse(codeInstance.findBox.getText))
+      instance.target.flatMap(t => Option(t.getSelectedText).filter(_.nonEmpty)).foreach(instance.findBox.setText)
 
       instance.setLocation(instance.owner.getLocation.x + instance.owner.getWidth - instance.getPreferredSize.width,
                            instance.owner.getLocation.y + instance.owner.getHeight / 2 -
@@ -85,8 +84,8 @@ object FindDialog extends ThemeSync {
       codeInstance.findBox.requestFocus()
       codeInstance.findBox.selectAll()
 
-      codeInstance.findBox.setText(codeInstance.target.flatMap(t => Option(t.getSelectedText))
-                                              .getOrElse(instance.findBox.getText))
+      codeInstance.target.flatMap(t => Option(t.getSelectedText).filter(_.nonEmpty))
+        .foreach(codeInstance.findBox.setText)
 
       codeInstance.setLocation(codeInstance.owner.getLocation.x + codeInstance.owner.getWidth -
                                codeInstance.getPreferredSize.width, codeInstance.owner.getLocation.y +
