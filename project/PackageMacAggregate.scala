@@ -247,7 +247,7 @@ object PackageMacAggregate {
     val dmgArgs = Seq(
       "create-dmg",
       "--volname", s"Install $buildName",
-      "--volicon", (buildDir / "NetLogo.icns").getAbsolutePath,
+      "--volicon", (configDir / "macosx" / "dmg-icon.icns").getAbsolutePath,
       "--background", backgroundPath,
       "--window-size", "500", "375",
       "--icon", buildName, "125", "137",
