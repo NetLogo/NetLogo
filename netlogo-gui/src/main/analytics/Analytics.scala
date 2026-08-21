@@ -158,10 +158,6 @@ object Analytics {
     AnalyticsSender(ModelingCommonsOpen)
   }
 
-  def modelingCommonsUpload(): Unit = {
-    AnalyticsSender(ModelingCommonsUpload)
-  }
-
   def saveAsNetLogoWeb(): Unit = {
     AnalyticsSender(SaveAsNetLogoWeb)
   }
