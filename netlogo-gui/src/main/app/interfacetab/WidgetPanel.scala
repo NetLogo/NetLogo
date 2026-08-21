@@ -17,13 +17,13 @@ import org.nlogo.core.{ I18N, Button => CoreButton, Chooser => CoreChooser, Inpu
 import org.nlogo.editor.{ EditorArea, EditorConfiguration }
 import org.nlogo.log.LogManager
 import org.nlogo.nvm.DefaultCompilerServices
-import org.nlogo.swing.{ ClipboardUtils, MenuItem, PopupMenu, UndoManager }
+import org.nlogo.swing.{ ClipboardUtils, MenuItem, PopupMenu, UndoManager, Utils }
 import org.nlogo.theme.InterfaceColors
 import org.nlogo.window.{ AbstractPlotWidget, AbstractWidgetPanel, AutoIndentHandler, ButtonWidget, CopyPasteTarget,
                           Editable, EditDialogFactory, Events => WindowEvents, GUIWorkspace, InterfaceMode,
                           OutputWidget, Widget, WidgetContainer, WidgetRegistry, DummyChooserWidget,
-                          DummyInputBoxWidget, DummyPlotWidget, DummyViewWidget, PlotWidget, SliderWidget, ViewWidget,
-                          WidgetInfo },
+                          DummyInputBoxWidget, DummyPlotWidget, DummyViewWidget, MouseMode, PlotWidget, SliderWidget,
+                          ViewWidget, WidgetInfo },
   WindowEvents.{ CompileAllEvent, DirtyEvent, InterfaceModeChangedEvent, LoadBeginEvent, SetInterfaceModeEvent,
                  WidgetRemovedEvent, ZoomedEvent }
 
@@ -179,6 +179,8 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
 
   private var placedShadowWidgets = false
 
+  private var snapLines = Seq[SnapLine]()
+
   setOpaque(true)
   setBackground(AwtColor.WHITE)
   setAutoscrolls(true)
@@ -279,6 +281,98 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
     }
   }
 
+  def snapLocationToWidgets(wrapper: WidgetWrapper, x: Int, y: Int): Point = {
+    snapLines = Seq()
+
+    val newX: Int = bestSnap(wrapper, snapPoints(x, wrapper.widgetWidth), x, SnapAxis.X)
+    val newY: Int = bestSnap(wrapper, snapPoints(y, wrapper.widgetHeight), y, SnapAxis.Y)
+
+    repaint()
+
+    new Point(newX, newY)
+  }
+
+  def snapBoundsToWidgets(wrapper: WidgetWrapper, bounds: Rectangle, mode: MouseMode): Rectangle = {
+    snapLines = Seq()
+
+    val newBounds: Rectangle = mode match {
+      case MouseMode.NW =>
+        val x: Int = bestSnap(wrapper, Seq(bounds.x), bounds.x, SnapAxis.X)
+        val y: Int = bestSnap(wrapper, Seq(bounds.y), bounds.y, SnapAxis.Y)
+
+        new Rectangle(x, y, bounds.right - x, bounds.bottom - y)
+
+      case MouseMode.N =>
+        val y: Int = bestSnap(wrapper, Seq(bounds.y), bounds.y, SnapAxis.Y)
+
+        new Rectangle(bounds.x, y, bounds.width, bounds.bottom - y)
+
+      case MouseMode.NE =>
+        val x: Int = bestSnap(wrapper, Seq(bounds.right), bounds.right, SnapAxis.X)
+        val y: Int = bestSnap(wrapper, Seq(bounds.y), bounds.y, SnapAxis.Y)
+
+        new Rectangle(bounds.x, y, x - bounds.x, bounds.bottom - y)
+
+      case MouseMode.W =>
+        val x: Int = bestSnap(wrapper, Seq(bounds.x), bounds.x, SnapAxis.X)
+
+        new Rectangle(x, bounds.y, bounds.right - x, bounds.height)
+
+      case MouseMode.E =>
+        val x: Int = bestSnap(wrapper, Seq(bounds.right), bounds.right, SnapAxis.X)
+
+        new Rectangle(bounds.x, bounds.y, x - bounds.x, bounds.height)
+
+      case MouseMode.SW =>
+        val x: Int = bestSnap(wrapper, Seq(bounds.x), bounds.x, SnapAxis.X)
+        val y: Int = bestSnap(wrapper, Seq(bounds.bottom), bounds.bottom, SnapAxis.Y)
+
+        new Rectangle(x, bounds.y, bounds.right - x, y - bounds.y)
+
+      case MouseMode.S =>
+        val y: Int = bestSnap(wrapper, Seq(bounds.bottom), bounds.bottom, SnapAxis.Y)
+
+        new Rectangle(bounds.x, bounds.y, bounds.width, y - bounds.y)
+
+      case MouseMode.SE =>
+        val x: Int = bestSnap(wrapper, Seq(bounds.right), bounds.right, SnapAxis.X)
+        val y: Int = bestSnap(wrapper, Seq(bounds.bottom), bounds.bottom, SnapAxis.Y)
+
+        new Rectangle(bounds.x, bounds.y, x - bounds.x, y - bounds.y)
+
+      case _ =>
+        bounds
+    }
+
+    repaint()
+
+    newBounds
+  }
+
+  private def snapPoints(location: Int, size: Int): Seq[Int] =
+    Seq(location, location + size / 2, location + size - 1)
+
+  private def bestSnap(wrapper: WidgetWrapper, wrapperPoints: Seq[Int], start: Int, axis: SnapAxis): Int = {
+    val targets: Seq[WidgetWrapper] = getWrappers.filter(_ != wrapper)
+
+    val pairs: Seq[(Int, Int)] = axis match {
+      case SnapAxis.X =>
+        targets.flatMap(target => validSnapPairs(snapPoints(target.widgetX, target.widgetWidth), wrapperPoints))
+
+      case SnapAxis.Y =>
+        targets.flatMap(target => validSnapPairs(snapPoints(target.widgetY, target.widgetHeight), wrapperPoints))
+    }
+
+    pairs.minByOption((_, point) => (point - start).abs).fold(start) { (target, point) =>
+      snapLines = snapLines :+ SnapLine(target, axis)
+
+      target + start - point
+    }
+  }
+
+  private def validSnapPairs(targetPoints: Seq[Int], wrapperPoints: Seq[Int]): Seq[(Int, Int)] =
+    targetPoints.flatMap(point => wrapperPoints.map(point -> _)).filter((a, b) => (a - b).abs < 10)
+
   def getWrapper(widget: Widget): WidgetWrapper =
     widget.getParent.asInstanceOf[WidgetWrapper]
 
@@ -297,13 +391,13 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
     }
   }
 
-  private[interfacetab] def dragSelectedWidgets(x: Int, y: Int): Unit = {
+  private[interfacetab] def dragSelectedWidgets(x: Int, y: Int, snapToWidgets: Boolean): Unit = {
     if (widgetsBeingDragged.nonEmpty) {
       val p = restrictDrag(x, y, widgetsBeingDragged)
       val first = widgetsBeingDragged(0)
 
-      if (workspace.snapOn) {
-        first.snapLocation(first.originalBounds.x + p.x, first.originalBounds.y + p.y)
+      if (workspace.snapOn || snapToWidgets) {
+        first.snapLocation(first.originalBounds.x + p.x, first.originalBounds.y + p.y, snapToWidgets)
       } else {
         first.setLocation(first.originalBounds.x + p.x, first.originalBounds.y + p.y)
       }
@@ -324,6 +418,10 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
     widgetsBeingDragged.foreach(_.doDrop())
     widgetsBeingDragged = Seq()
     setForegroundWrapper()
+
+    snapLines = Seq()
+
+    repaint()
   }
 
   def beginResizeWidget(w: WidgetWrapper): Unit = {
@@ -340,6 +438,9 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
     prevSelectedWrappers.foreach(_.selected(true, true))
 
     prevSelectedWrappers = Seq()
+    snapLines = Seq()
+
+    repaint()
   }
 
   def mouseMoved(e: MouseEvent): Unit = {
@@ -347,7 +448,9 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
       case InterfaceMode.Add =>
         shadowWidgets.foreach(_ match {
           case NewShadowWidget(wrapper) =>
-            if (workspace.snapOn && !NlogoMouse.hasCtrl(e)) {
+            if (NlogoMouse.hasCtrl(e)) {
+              wrapper.setLocation(snapLocationToWidgets(wrapper, e.getX, e.getY))
+            } else if (workspace.snapOn) {
               wrapper.setLocation(snapToGrid(e.getX), snapToGrid(e.getY))
             } else {
               wrapper.setLocation(e.getX, e.getY)
@@ -358,7 +461,9 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
           case PastedShadowWidgets(wrappers, _) =>
             wrappers.foreach {
               case (wrapper, offset) =>
-                if (workspace.snapOn && !NlogoMouse.hasCtrl(e)) {
+                if (NlogoMouse.hasCtrl(e)) {
+                  wrapper.setLocation(snapLocationToWidgets(wrapper, e.getX + offset.x, e.getY + offset.y))
+                } else if (workspace.snapOn) {
                   wrapper.setLocation(snapToGrid(e.getX + offset.x), snapToGrid(e.getY + offset.y))
                 } else {
                   wrapper.setLocation(e.getX + offset.x, e.getY + offset.y)
@@ -447,14 +552,14 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
                 case NewShadowWidget(wrapper) =>
                   val p2 = restrictDrag(e.getX - point.x, e.getY - point.y, Seq(wrapper))
 
-                  wrapper.snapLocation(point.x + p2.x, point.y + p2.y)
+                  wrapper.snapLocation(point.x + p2.x, point.y + p2.y, NlogoMouse.hasCtrl(e))
 
                 case PastedShadowWidgets(wrappers, control) =>
                   val p2 = restrictDrag(e.getX - point.x, e.getY - point.y, wrappers.map(_._1))
 
                   wrappers.foreach {
                     case (wrapper, offset) =>
-                      wrapper.snapLocation(point.x + p2.x + offset.x, point.y + p2.y + offset.y)
+                      wrapper.snapLocation(point.x + p2.x + offset.x, point.y + p2.y + offset.y, NlogoMouse.hasCtrl(e))
                   }
               })
 
@@ -769,7 +874,14 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
   }
 
   def keyReleased(e: KeyEvent): Unit = {
-    if (e.isAltDown && e.getKeyCode == KeyEvent.VK_1) {
+    if (isCtrl(e)) {
+      if (interfaceMode == InterfaceMode.Interact)
+        interceptPane.disableIntercept()
+
+      snapLines = Seq()
+
+      repaint()
+    } else if (e.isAltDown && e.getKeyCode == KeyEvent.VK_1) {
       dropSelectedWidgets()
       setInterfaceMode(InterfaceMode.Interact, true)
     } else if (e.isAltDown && e.getKeyCode == KeyEvent.VK_2) {
@@ -781,17 +893,18 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
     } else if (e.isAltDown && e.getKeyCode == KeyEvent.VK_4) {
       dropSelectedWidgets()
       setInterfaceMode(InterfaceMode.Delete, true)
-    } else if (interfaceMode == InterfaceMode.Interact) {
-      if (System.getProperty("os.name").contains("Mac")) {
-        if (e.getKeyCode == KeyEvent.VK_META)
-          interceptPane.disableIntercept()
-      } else if (e.getKeyCode == KeyEvent.VK_CONTROL) {
-        interceptPane.disableIntercept()
-      }
     }
   }
 
   def keyTyped(e: KeyEvent): Unit = {}
+
+  private def isCtrl(e: KeyEvent): Boolean = {
+    if (System.getProperty("os.name").toLowerCase.startsWith("mac")) {
+      e.getKeyCode == KeyEvent.VK_META
+    } else {
+      e.getKeyCode == KeyEvent.VK_CONTROL
+    }
+  }
 
   def copyWidgets(wrappers: Seq[WidgetWrapper]): Unit = {
     ClipboardUtils.writeWidgets(wrappers.map(_.widget.model))
@@ -1013,6 +1126,10 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
       case NewShadowWidget(wrapper) => placeSingleShadowWidget(wrapper)
       case PastedShadowWidgets(wrappers, _) => placeMultipleShadowWidgets(wrappers)
     })
+
+    snapLines = Seq()
+
+    repaint()
   }
 
   private def placeSingleShadowWidget(wrapper: WidgetWrapper): Unit = {
@@ -1116,6 +1233,10 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
   }
 
   override def editWidget(widget: Editable): Unit = {
+    snapLines = Seq()
+
+    repaint()
+
     widgetControls.editWidget(widget)
   }
 
@@ -1713,5 +1834,35 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
 
     // for code completion popup
     editorFactory.syncTheme()
+  }
+
+  override def paintChildren(g: Graphics): Unit = {
+    super.paintChildren(g)
+
+    val g2d = Utils.initGraphics2D(g)
+
+    g2d.setColor(new AwtColor(255, 128, 128))
+
+    snapLines.foreach {
+      case SnapLine(x, SnapAxis.X) =>
+        g2d.drawLine(x, 0, x, getHeight)
+
+      case SnapLine(y, SnapAxis.Y) =>
+        g2d.drawLine(0, y, getWidth, y)
+    }
+  }
+
+  private sealed abstract trait SnapAxis
+
+  private object SnapAxis {
+    case object X extends SnapAxis
+    case object Y extends SnapAxis
+  }
+
+  private case class SnapLine(position: Int, axis: SnapAxis)
+
+  implicit class RectanglePlus(rect: Rectangle) extends Rectangle(rect) {
+    val right: Int = x + width
+    val bottom: Int = y + height
   }
 }

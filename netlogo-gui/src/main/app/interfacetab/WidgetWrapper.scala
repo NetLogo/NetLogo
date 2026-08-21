@@ -146,21 +146,30 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
       interfacePanel.revalidate()
   }
 
-  def snapLocation(x: Int, y: Int): Unit = {
+  def snapLocation(x: Int, y: Int, snapToWidgets: Boolean): Unit = {
     if (snapped) {
-      setLocation(snapToGrid(x), snapToGrid(y))
+      if (snapToWidgets) {
+        setLocation(interfacePanel.snapLocationToWidgets(this, x, y))
+      } else {
+        setLocation(snapToGrid(x), snapToGrid(y))
+      }
     } else {
       val anchorDist = (x - originalBounds.x) * (x - originalBounds.x) + (y - originalBounds.y) * (y - originalBounds.y)
 
-      val xSnap = snapToGrid(x)
-      val ySnap = snapToGrid(y)
+      val snap: Point = {
+        if (snapToWidgets) {
+          interfacePanel.snapLocationToWidgets(this, x, y)
+        } else {
+          new Point(snapToGrid(x), snapToGrid(y))
+        }
+      }
 
-      val snapDist = (x - xSnap) * (x - xSnap) + (y - ySnap) * (y - ySnap)
+      val snapDist = (x - snap.x) * (x - snap.x) + (y - snap.y) * (y - snap.y)
 
       if (anchorDist <= snapDist) {
         setLocation(originalBounds.x, originalBounds.y)
       } else {
-        setLocation(xSnap, ySnap)
+        setLocation(snap)
 
         snapped = true
       }
@@ -274,7 +283,7 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
   def widgetBounds: Rectangle =
     new Rectangle(getX + widget.getX, getY + widget.getY, widget.getWidth, widget.getHeight)
 
-  def doResize(x: Int, y: Int, ignoreSnap: Boolean): Unit = {
+  private def doResize(x: Int, y: Int, snapToWidgets: Boolean): Unit = {
     /* x and y represent the distance from the original click and the dragged cursor position,
         so the widget can resize based on the position of the cursor. Interestingly, the
         x and y can be negative since the difference is calculated from the coordinates.
@@ -333,8 +342,8 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
       case _ => throw new IllegalStateException
     }
 
-    if (interfacePanel.workspace.snapOn && !ignoreSnap)
-      enforceGridSnapSize(bounds)
+    if (interfacePanel.workspace.snapOn || snapToWidgets)
+      enforceGridSnapSize(bounds, snapToWidgets)
 
     enforceMinimumSize(bounds)
     enforceMaximumSize(bounds)
@@ -504,7 +513,7 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
         }
       }
 
-      interfacePanel.dragSelectedWidgets(p.x - startPressX, p.y - startPressY)
+      interfacePanel.dragSelectedWidgets(p.x - startPressX, p.y - startPressY, Mouse.hasCtrl(e))
     } else if (mouseMode != MouseMode.IDLE) {
       doResize(p.x - startPressX, p.y - startPressY, Mouse.hasCtrl(e))
     }
@@ -691,47 +700,56 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
     }
   }
 
-  private def enforceGridSnapSize(r: Rectangle): Unit = {
+  private def enforceGridSnapSize(r: Rectangle, snapToWidgets: Boolean): Unit = {
     if (widget != null) {
-      val newWidth = interfacePanel.snapToGrid(r.width)
-      val newHeight = interfacePanel.snapToGrid(r.height)
+      if (snapToWidgets) {
+        val rect: Rectangle = interfacePanel.snapBoundsToWidgets(this, r, mouseMode)
 
-      mouseMode match {
-        case MouseMode.S =>
-          r.height = newHeight
+        r.x = rect.x
+        r.y = rect.y
+        r.width = rect.width
+        r.height = rect.height
+      } else {
+        val newWidth = interfacePanel.snapToGrid(r.width)
+        val newHeight = interfacePanel.snapToGrid(r.height)
 
-        case MouseMode.SW =>
-          r.x -= newWidth - r.width
-          r.width = newWidth
-          r.height = newHeight
+        mouseMode match {
+          case MouseMode.S =>
+            r.height = newHeight
 
-        case MouseMode.SE =>
-          r.width = newWidth
-          r.height = newHeight
+          case MouseMode.SW =>
+            r.x -= newWidth - r.width
+            r.width = newWidth
+            r.height = newHeight
 
-        case MouseMode.E =>
-          r.width = newWidth
+          case MouseMode.SE =>
+            r.width = newWidth
+            r.height = newHeight
 
-        case MouseMode.NW =>
-          r.x -= newWidth - r.width
-          r.y -= newHeight - r.height
-          r.width = newWidth
-          r.height = newHeight
+          case MouseMode.E =>
+            r.width = newWidth
 
-        case MouseMode.W =>
-          r.x -= newWidth - r.width
-          r.width = newWidth
+          case MouseMode.NW =>
+            r.x -= newWidth - r.width
+            r.y -= newHeight - r.height
+            r.width = newWidth
+            r.height = newHeight
 
-        case MouseMode.NE =>
-          r.y -= newHeight - r.height
-          r.width = newWidth
-          r.height = newHeight
+          case MouseMode.W =>
+            r.x -= newWidth - r.width
+            r.width = newWidth
 
-        case MouseMode.N =>
-          r.y -= newHeight - r.height
-          r.height = newHeight
+          case MouseMode.NE =>
+            r.y -= newHeight - r.height
+            r.width = newWidth
+            r.height = newHeight
 
-        case _ => throw new IllegalStateException
+          case MouseMode.N =>
+            r.y -= newHeight - r.height
+            r.height = newHeight
+
+          case _ => throw new IllegalStateException
+        }
       }
     }
   }
