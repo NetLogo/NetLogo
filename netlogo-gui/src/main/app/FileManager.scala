@@ -15,15 +15,14 @@ import scala.util.{ Failure, Try }
 import org.nlogo.analytics.Analytics
 import org.nlogo.core.{ I18N, Model }
 import org.nlogo.api.{ AbstractModelLoader, Exceptions, FileIO, LibraryManager, ModelReader, ModelSaver, ModelType,
-                       Version, Workspace }, ModelReader.{ emptyModelPath, modelSuffix }
+                       Version }, ModelReader.{ emptyModelPath, modelSuffix }
 import org.nlogo.app.common.{ Actions, Dialogs, ExceptionCatchingAction, ModelConfig }, Actions.Ellipsis
 import org.nlogo.app.codetab.TemporaryCodeTab
 import org.nlogo.app.tools.{ ModelsLibraryDialog, NetLogoWebSaver }
 import org.nlogo.awt.{ Hierarchy, UserCancelException }
 import org.nlogo.fileformat.{ FailedConversionResult, SuccessfulConversion }
 import org.nlogo.fileformat.FileFormat.ModelConversion
-import org.nlogo.mc.ModelingCommons
-import org.nlogo.swing.{ FileDialog, ModalProgressTask, OptionPane, UserAction }, UserAction.MenuAction
+import org.nlogo.swing.{ BrowserLauncher, FileDialog, ModalProgressTask, OptionPane, UserAction }, UserAction.MenuAction
 import org.nlogo.window.{ Events, FileController, GUIWorkspace, LabManagerInterface, ReconfigureWorkspaceUI },
                           Events.{ AboutToCloseFilesEvent, AboutToQuitEvent, AboutToSaveModelEvent, LoadModelEvent,
                                    LoadErrorEvent, ModelSavedEvent, OpenModelEvent }
@@ -144,8 +143,7 @@ object FileManager {
     }
   }
 
-  class UploadToModelingCommonsAction(parent: Component, workspace: Workspace, workspaceFactory: WorkspaceFactory,
-                                      modelSaver: ModelSaver)
+  class UploadToModelingCommonsAction(parent: Component)
     extends ExceptionCatchingAction(I18N.gui.get("menu.file.uploadMc"), parent) with MenuAction {
 
     category = UserAction.FileCategory
@@ -153,8 +151,9 @@ object FileManager {
     mnemonic = KeyEvent.VK_U
 
     override def action(): Unit = {
-      ModelingCommons.upload(Hierarchy.getFrame(parent), modelSaver.modelAsString(modelSaver.currentModel, "nlogox"),
-                             workspace, workspaceFactory)
+      Analytics.modelingCommonsOpen()
+
+      BrowserLauncher.openURI(parent, new URI("https://www.modelingcommons.org/models/upload"))
     }
   }
 
@@ -537,7 +536,7 @@ class FileManager(workspace: AbstractWorkspaceScala,
       new NewAction(this, parent),
       new OpenAction(this, parent),
       new ModelsLibraryAction(this, parent, workspace.getLibraryManager),
-      new UploadToModelingCommonsAction(parent, workspace, workspaceFactory, modelSaver),
+      new UploadToModelingCommonsAction(parent),
       new SaveAsNetLogoWebAction(this, workspace, modelSaver, parent),
       new ImportClientAction(this, workspace, parent),
       new ManageResourcesAction(this, workspace, parent)
