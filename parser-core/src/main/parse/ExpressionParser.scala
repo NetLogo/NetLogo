@@ -180,6 +180,9 @@ object ExpressionParser {
         val arguments = parsePotentiallyVariadicArgumentList(stmt.instruction.syntax, variadic, stmt, tokens, newScope)
         (stmt.withArguments(arguments), newScope)
 
+      case TokenType.Bad if token.value.isInstanceOf[String] =>
+        exception(token.value.asInstanceOf[String], token)
+
       case _ =>
         token.value match {
           case (_: core.prim._symbol | _: core.prim._unknownidentifier) if ! scope.contains(token.text.toUpperCase(Locale.ENGLISH)) =>
