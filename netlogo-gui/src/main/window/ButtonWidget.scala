@@ -145,6 +145,9 @@ class ButtonWidget(random: MersenneTwisterFast, compiler: CompilerServices, colo
 
   override def getEditable: Option[Editable] = Some(this)
 
+  override def getPrimaryAction: Option[() => Unit] =
+    Some(() => action())
+
   def buttonType_=(bt: ButtonType): Unit = {
     _buttonType = bt
     _buttonType.img(false) match {
