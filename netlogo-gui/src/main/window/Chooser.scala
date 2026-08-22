@@ -158,6 +158,9 @@ trait Chooser extends SingleErrorWidget {
   override def getDefaultComponent: Option[Component] =
     Option(control)
 
+  override def getPrimaryAction: Option[() => Unit] =
+    Some(() => control.showPopup())
+
   override def paintComponent(g: Graphics): Unit = {
     super.paintComponent(g)
 
