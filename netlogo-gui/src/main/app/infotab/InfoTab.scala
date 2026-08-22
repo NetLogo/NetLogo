@@ -300,6 +300,26 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
 
             e.consume()
 
+          case KeyEvent.VK_UP =>
+            scrollBy(0, -40)
+
+            e.consume()
+
+          case KeyEvent.VK_DOWN =>
+            scrollBy(0, 40)
+
+            e.consume()
+
+          case KeyEvent.VK_LEFT =>
+            scrollBy(-40, 0)
+
+            e.consume()
+
+          case KeyEvent.VK_RIGHT =>
+            scrollBy(40, 0)
+
+            e.consume()
+
           case _ =>
         }
       }
@@ -365,6 +385,12 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
 
       Platform.runLater(() => {
         engine.foreach(_.loadContent(str, "text/html"))
+      })
+    }
+
+    private def scrollBy(x: Int, y: Int): Unit = {
+      Platform.runLater(() => {
+        engine.foreach(_.executeScript(s"window.scrollBy($x, $y)"))
       })
     }
 
