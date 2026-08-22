@@ -68,10 +68,22 @@ trait FocusRoot extends Container {
       }
     }
 
-    override def getComponentBefore(root: Container, component: Component): Component =
-      getFocusOrder.get(component).flatMap((c, _) => Option(c)).getOrElse(super.getComponentBefore(root, component))
+    override def getComponentBefore(root: Container, component: Component): Component = {
+      getFocusOrder.get(component).flatMap((c, _) => Option(c)).getOrElse {
+        super.getComponentBefore(root, component) match {
+          case `root` => super.getComponentBefore(root, root)
+          case prev => prev
+        }
+      }
+    }
 
-    override def getComponentAfter(root: Container, component: Component): Component =
-      getFocusOrder.get(component).flatMap((_, c) => Option(c)).getOrElse(super.getComponentAfter(root, component))
+    override def getComponentAfter(root: Container, component: Component): Component = {
+      getFocusOrder.get(component).flatMap((_, c) => Option(c)).getOrElse {
+        super.getComponentAfter(root, component) match {
+          case `root` => super.getComponentAfter(root, root)
+          case next => next
+        }
+      }
+    }
   }
 }
