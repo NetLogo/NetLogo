@@ -153,6 +153,16 @@ object PackageWinAggregate {
               "extension" -> "nlogox",
               "icon"      -> "ModelIcon",
               "type"      -> "NetLogo Model"
+            ).asJava,
+            Map(
+              "extension" -> "nls",
+              "icon"      -> "ModelIcon",
+              "type"      -> "NetLogo Source"
+            ).asJava,
+            Map(
+              "extension" -> "nlm",
+              "icon"      -> "ModelIcon",
+              "type"      -> "NetLogo Module"
             ).asJava
           ),
           "launchArgs" -> """--launch "%1""""

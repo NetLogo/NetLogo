@@ -421,6 +421,10 @@ class FileManager(workspace: AbstractWorkspaceScala,
     openFromModel(model, uri, modelType)
   }
 
+  def openTempFile(path: String): Unit = {
+    tabManager.openExternalFile(path)
+  }
+
   private def runLoad( linkParent: Container, uri: URI, model: Model, modelType: ModelType
                      , shouldAutoInstallLibs: Boolean): Unit = {
     val convertWidgetSizes = {
