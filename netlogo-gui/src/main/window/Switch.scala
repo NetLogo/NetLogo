@@ -143,6 +143,9 @@ abstract class Switch extends MultiErrorWidget with Events.AfterLoadEvent.Handle
   override def getDefaultComponent: Option[Component] =
     Option(toggle)
 
+  override def getPrimaryAction: Option[() => Unit] =
+    Some(() => isOn = !isOn)
+
   override def syncTheme(): Unit = {
     setBackgroundColor(InterfaceColors.switchBackground())
     setFocusColor(InterfaceColors.widgetFocus())

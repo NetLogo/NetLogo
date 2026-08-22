@@ -224,6 +224,9 @@ abstract class Widget extends JPanel with RoundedBorderPanel with ThemeSync with
   def getDefaultComponent: Option[Component] =
     None
 
+  def getPrimaryAction: Option[() => Unit] =
+    None
+
   // The methods to raise widget added/removed are here so they can be overridden by child classes.  Some of those
   // classes are not "actual" widgets they just use the UI functionality of this class, and changes to those items
   // (monitors, command lines, etc) should not cause things like marking the model as "dirty".

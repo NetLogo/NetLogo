@@ -76,6 +76,8 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
   setPaintFocusOnClick(true)
   setSecondaryAction(doPopup)
 
+  widget.getPrimaryAction.foreach(setPrimaryAction)
+
   add(glass, JLayeredPane.DRAG_LAYER)
   add(widget)
   add(shadowPane, JLayeredPane.PALETTE_LAYER)
