@@ -78,7 +78,7 @@ class CommandLine(commandCenter: CommandCenterInterface,
     }
 
     override def getInsets: Insets =
-      new Insets(0, 6, 0, 6)
+      new Insets(this.getFont.getSize - getFontMetrics(this.getFont).getAscent, 6, 0, 6)
 
     override def getPreferredScrollableViewportSize: Dimension =
       new Dimension(super.getPreferredScrollableViewportSize.width, getRowHeight * (this.getText.count(_ == '\n') + 1))
