@@ -560,7 +560,7 @@ class App(args: App.CommandLineArgs) extends LinkChild with Exceptions.Handler w
             if (files.size == 1) {
               val path = files(0).toString
 
-              if ("\\.nlogox?(3d)?$".r.findFirstIn(path).isDefined) {
+              if ("\\.nl(s|m|ogox?(3d)?)$".r.findFirstIn(path).isDefined) {
                 open(path)
 
                 e.dropComplete(true)
@@ -1118,7 +1118,13 @@ class App(args: App.CommandLineArgs) extends LinkChild with Exceptions.Handler w
    */
   @throws(classOf[java.io.IOException])
   override def open(path: String, shouldAutoInstallLibs: Boolean = false): Unit = {
-    dispatchThreadOrBust(fileManager.openFromPath(path, ModelType.Normal, shouldAutoInstallLibs))
+    dispatchThreadOrBust {
+      if (path.endsWith(".nls") || path.endsWith(".nlm")) {
+        fileManager.openTempFile(path)
+      } else {
+        fileManager.openFromPath(path, ModelType.Normal, shouldAutoInstallLibs)
+      }
+    }
   }
 
   /**

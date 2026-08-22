@@ -74,6 +74,16 @@ object PackageMacAggregate {
         , "icon"      -> "Model.icns"
         , "type"      -> "NetLogo Model"
         ).asJava
+      , Map(
+          "extension" -> "nls"
+        , "icon"      -> "Model.icns"
+        , "type"      -> "NetLogo Source"
+        ).asJava
+      , Map(
+          "extension" -> "nlm"
+        , "icon"      -> "Model.icns"
+        , "type"      -> "NetLogo Module"
+        ).asJava
       )
       , "iconFile"            -> s"NetLogo $version.icns"
       , "packageID"           -> "APPLnLo1"
