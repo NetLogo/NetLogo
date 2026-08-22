@@ -97,6 +97,7 @@ class SpeedSliderPanel(workspace: WorkspaceWithSpeed, ticksLabel: Component = nu
     if (ticksLabel != null) {
       ticksLabel.setFocusable(false)
 
+      c.gridx = 1
       c.gridy = 2
 
       add(ticksLabel, c)
