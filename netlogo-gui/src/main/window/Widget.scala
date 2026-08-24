@@ -2,13 +2,14 @@
 
 package org.nlogo.window
 
-import java.awt.{ Component, Container, Dimension, Font, Graphics, Point, Rectangle, event },
+import java.awt.{ Component, Container, Dimension, Font, Graphics, Insets, Point, Rectangle, event },
                 event.{ MouseAdapter, MouseEvent, MouseListener }
 import javax.swing.{ JPanel, JMenuItem }
+import javax.swing.border.Border
 
 import org.nlogo.api.CompilerServices
 import org.nlogo.core.{ NetLogoPreferences, TokenType, Widget => CoreWidget }
-import org.nlogo.swing.{ PopupMenu, RoundedBorderPanel }
+import org.nlogo.swing.{ PopupMenu, PreferredSize, RoundedBorderPanel, Utils, Zoomable }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.Event
 import org.nlogo.window.Events.{ InterfaceModeChangedEvent, WidgetAddedEvent, WidgetErrorEvent, WidgetRemovedEvent }
@@ -50,15 +51,15 @@ abstract class MultiErrorWidget extends Widget with MultiErrorHandler {
   }
 }
 
-abstract class Widget extends JPanel with RoundedBorderPanel with ThemeSync with InterfaceModeChangedEvent.Handler {
+abstract class Widget extends JPanel with RoundedBorderPanel with Zoomable with ThemeSync
+                      with InterfaceModeChangedEvent.Handler {
+
   def helpLink: Option[(String, String)] = None
   var originalFont: Font = null
   var displayName: String = ""
   var deleteable: Boolean = true
 
   setBorderColor(InterfaceColors.Transparent)
-
-  private var zoomFactor = 1.0
 
   protected var _oldSize = false
   protected var _boldState = {
@@ -68,6 +69,8 @@ abstract class Widget extends JPanel with RoundedBorderPanel with ThemeSync with
       Font.PLAIN
     }
   }
+
+  protected var unzoomedBounds: Rectangle = new Rectangle(0, 0, 0, 0)
 
   protected var widgetContainer: Option[WidgetContainer] = None
 
@@ -81,39 +84,22 @@ abstract class Widget extends JPanel with RoundedBorderPanel with ThemeSync with
   def getEditable: Option[Editable]
   def copyable = true // only OutputWidget and ViewWidget are not copyable
   def constrainDrag(newBounds: Rectangle, originalBounds: Rectangle, mouseMode: MouseMode): Rectangle = newBounds
-  def isZoomed: Boolean = {
-    // this couldn't possibly happen ...right?
-    // well somehow it does happen when loading monitor widgets, so here we are (Isaac B 6/24/25)
-    widgetContainer != null && widgetContainer.exists(_.isZoomed)
-  }
 
   def model: CoreWidget
   def reAdd(): Unit = { }
   def load(widget: CoreWidget): Unit
   def sourceOffset = 0
   def hasContextMenuInApplet = false
-  def getUnzoomedPreferredSize: Dimension = getPreferredSize
   def isButton = false
   def isTurtleForeverButton = false
   def isLinkForeverButton = false
   def isNote = false
   def hasContextMenu = false
   def exportable = false
-  def setZoomFactor(zoomFactor: Double): Unit = {
-    this.zoomFactor = zoomFactor
-    initGUI()
-    revalidate()
-    repaint()
-  }
-  def getZoomFactor: Double =
-    zoomFactor
-  def zoom(d: Double): Int =
-    (zoomFactor * d).toInt
   def oldSize: Boolean =
     _oldSize
   def oldSize(value: Boolean): Unit = {
     _oldSize = value
-    initGUI()
     revalidate()
     repaint()
   }
@@ -123,7 +109,6 @@ abstract class Widget extends JPanel with RoundedBorderPanel with ThemeSync with
     } else {
       _boldState = Font.PLAIN
     }
-    initGUI()
     revalidate()
     repaint()
   }
@@ -147,13 +132,6 @@ abstract class Widget extends JPanel with RoundedBorderPanel with ThemeSync with
 
   def editFinished(): Boolean = {
     true
-  }
-
-  // this method is for widgets that need to redo their layout when a visual property changes (Isaac B 3/1/25)
-  def initGUI(): Unit = {}
-
-  protected def resetSizeInfo(): Unit = {
-    widgetContainer.foreach(_.resetSizeInfo(this))
   }
 
   private def doPopup(e: MouseEvent): Unit = {
@@ -180,10 +158,8 @@ abstract class Widget extends JPanel with RoundedBorderPanel with ThemeSync with
     repaint()
   }
 
-  override def paintComponent(g: Graphics): Unit = {
-    setDiameter(12 * zoomFactor)
-
-    super.paintComponent(g)
+  override def zoom(oldZoom: Float): Unit = {
+    setDiameter(Utils.zoom(12))
   }
 
   override def toString: String = {
@@ -197,12 +173,16 @@ abstract class Widget extends JPanel with RoundedBorderPanel with ThemeSync with
 
   def populateContextMenu(menu: PopupMenu, p: Point): Unit = {}
 
-  protected def resetZoomInfo(): Unit = {
-    widgetContainer.foreach(_.resetZoomInfo(this))
+  def getUnzoomedBounds: Rectangle =
+    unzoomedBounds
+
+  def setUnzoomedBounds(bounds: Rectangle): Unit = {
+    unzoomedBounds = bounds
   }
 
-  def getUnzoomedBounds: Rectangle =
-    widgetContainer.map(_.getUnzoomedBounds(this)).getOrElse(getBounds)
+  def setUnzoomedBounds(x: Int, y: Int, width: Int, height: Int): Unit = {
+    unzoomedBounds = new Rectangle(x, y, width, height)
+  }
 
   override def removeNotify: Unit = {
     if (java.awt.EventQueue.isDispatchThread) {
@@ -238,6 +218,41 @@ abstract class Widget extends JPanel with RoundedBorderPanel with ThemeSync with
     compiler.tokenizeForColorization(source).exists(token => token.tpe == TokenType.Ident && token.text == name)
 
   def setCodeFont(font: Font): Unit = {}
+
+  protected class AdaptableHorizontalStrut(oldSize: Int, newSize: Int) extends Component with PreferredSize {
+    override def getPreferredSize: Dimension = {
+      if (_oldSize) {
+        new Dimension(Utils.zoom(oldSize), 0)
+      } else {
+        new Dimension(Utils.zoom(newSize), 0)
+      }
+    }
+  }
+
+  protected class AdaptableVerticalStrut(oldSize: Int, newSize: Int) extends Component with PreferredSize {
+    override def getPreferredSize: Dimension = {
+      if (_oldSize) {
+        new Dimension(0, Utils.zoom(oldSize))
+      } else {
+        new Dimension(0, Utils.zoom(newSize))
+      }
+    }
+  }
+
+  protected class AdaptableBorder(oldInsets: Insets, newInsets: Insets) extends Border {
+    override def getBorderInsets(component: Component): Insets = {
+      if (_oldSize) {
+        Utils.zoomInsets(oldInsets)
+      } else {
+        Utils.zoomInsets(newInsets)
+      }
+    }
+
+    override def isBorderOpaque: Boolean =
+      false
+
+    override def paintBorder(c: Component, g: Graphics, x: Int, y: Int, width: Int, height: Int): Unit = {}
+  }
 
   implicit class RichStringOption(s: Option[String]) {
     def optionToPotentiallyEmptyString = s.getOrElse("")

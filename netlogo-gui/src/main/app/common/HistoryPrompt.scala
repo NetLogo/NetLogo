@@ -9,7 +9,7 @@ import java.awt.event.ActionEvent
 import javax.swing.AbstractAction
 
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ Button, CollapsibleArrow, MenuItem, PopupMenu }
+import org.nlogo.swing.{ Button, CollapsibleArrow, MenuItem, PopupMenu, Utils }
 
 class HistoryPrompt(commandLine: CommandLine) extends Button(null) {
   setAction(new AbstractAction {
@@ -23,7 +23,7 @@ class HistoryPrompt(commandLine: CommandLine) extends Button(null) {
   override def getPreferredSize: Dimension = {
     val height = commandLine.getPreferredSize.height
 
-    new Dimension(height + 3, height)
+    new Dimension(height + Utils.zoom(3), height)
   }
 
   private def doPopupMenu(): Unit = {

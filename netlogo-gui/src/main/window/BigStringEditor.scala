@@ -2,12 +2,11 @@
 
 package org.nlogo.window
 
-import java.awt.BorderLayout
-import javax.swing.{ JLabel, ScrollPaneConstants, SwingConstants }
+import javax.swing.{ Box, BoxLayout, JLabel, ScrollPaneConstants, SwingConstants }
 import javax.swing.border.LineBorder
 
 import org.nlogo.swing.Implicits.thunk2documentListener
-import org.nlogo.swing.{ ScrollPane, TextArea }
+import org.nlogo.swing.{ BoxRow, ScrollPane, TextArea, VerticalStrut }
 import org.nlogo.theme.InterfaceColors
 
 import scala.util.{ Success, Try }
@@ -27,10 +26,11 @@ class BigStringEditor(accessor: PropertyAccessor[String]) extends PropertyEditor
   private val scrollPane = new ScrollPane(editor, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
                                           ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER)
 
-  setLayout(new BorderLayout(0, 3))
+  setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
 
-  add(label, BorderLayout.NORTH)
-  add(scrollPane, BorderLayout.CENTER)
+  add(new BoxRow(Seq(label, Box.createHorizontalGlue)))
+  add(new VerticalStrut(3))
+  add(scrollPane)
 
   override def get: Try[String] = Success(Option(editor.getText()).getOrElse(""))
   override def set(value: String): Unit = {

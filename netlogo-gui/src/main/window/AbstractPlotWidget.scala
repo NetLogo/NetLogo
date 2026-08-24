@@ -2,14 +2,15 @@
 
 package org.nlogo.window
 
-import java.awt.{ Color, Dimension, Graphics, GridBagConstraints, GridBagLayout, Insets }
+import java.awt.{ Color, Dimension, Graphics, Insets }
 import java.awt.image.BufferedImage
 import java.util.Locale
-import javax.swing.{ JLabel, JPanel, SwingConstants }
+import javax.swing.{ Box, BoxLayout, JLabel, JPanel, SwingConstants }
 
 import org.nlogo.core.{ I18N, Pen => CorePen, Plot => CorePlot, Widget => CoreWidget }
 import org.nlogo.plot.{ PenListener, PlotManagerInterface, PlotLoader, PlotPen, Plot }
-import org.nlogo.swing.{ RoundedBorderPanel, Utils }
+import org.nlogo.swing.{ BoxRow, Centered, HorizontalStrut, RoundedBorderPanel, Utils, VerticalStrut, Zoomable,
+                         ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.Events.{ AfterLoadEvent, CompiledEvent, WidgetErrorEvent, WidgetRemovedEvent }
 
@@ -23,28 +24,18 @@ abstract class AbstractPlotWidget(val plot: Plot, val plotManager: PlotManagerIn
 
   import AbstractPlotWidget._
 
-  private class CanvasPanel(canvas: PlotCanvas) extends JPanel with RoundedBorderPanel with ThemeSync {
-    setLayout(new GridBagLayout)
+  private class CanvasPanel(canvas: PlotCanvas) extends JPanel with RoundedBorderPanel with Zoomable with ThemeSync {
+    setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
+    setBorder(new ZoomableBorder(3, 3, 3, 3))
 
-    locally {
-      val c = new GridBagConstraints
+    add(canvas)
 
-      c.weightx = 1
-      c.weighty = 1
-      c.fill = GridBagConstraints.BOTH
-      c.insets = new Insets(zoom(3), zoom(3), zoom(3), zoom(3))
-
-      add(canvas, c)
-    }
-
-    override def paintComponent(g: Graphics): Unit = {
-      setDiameter(zoom(6))
-      setBackgroundColor(new Color(plot.backgroundColor))
-
-      super.paintComponent(g)
+    override def zoom(oldZoom: Float): Unit = {
+      setDiameter(Utils.zoom(6))
     }
 
     override def syncTheme(): Unit = {
+      setBackgroundColor(new Color(plot.backgroundColor))
       setBorderColor(InterfaceColors.plotBorder())
     }
   }
@@ -55,10 +46,23 @@ abstract class AbstractPlotWidget(val plot: Plot, val plotManager: PlotManagerIn
   plot.dirtyListener = Some(this)
   val canvas = new PlotCanvas(plot)
   private val canvasPanel = new CanvasPanel(canvas)
-  private val legend = new PlotLegend(this)
-  private val nameLabel = new JLabel(originalName)
-  private val xAxis = new XAxisLabels(this)
-  private val yAxis = new YAxisLabels(this)
+
+  private val legend = new PlotLegend(this) {
+    setBoldState(_boldState)
+  }
+
+  private val nameLabel = new JLabel(originalName) {
+    setText(plot.name)
+    setFont(getFont.deriveFont(_boldState))
+  }
+
+  private val xAxis = new XAxisLabels(this) {
+    setBoldState(_boldState)
+  }
+
+  private val yAxis = new YAxisLabels(this) {
+    setBoldState(_boldState)
+  }
 
   plot.addPenListener(new PenListener {
     override def penAdded(): Unit = {
@@ -70,83 +74,20 @@ abstract class AbstractPlotWidget(val plot: Plot, val plotManager: PlotManagerIn
 
   plot.clear() // set current values to defaults
 
-  setLayout(new GridBagLayout)
+  setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
+  setBorder(new AdaptableBorder(new Insets(3, 6, 6, 6), new Insets(8, 10, 8, 10)))
 
-  initGUI()
+  add(new Centered(nameLabel))
+  add(new AdaptableVerticalStrut(6, 8))
+  add(new BoxRow(Seq(yAxis, new HorizontalStrut(3), canvasPanel)))
+  add(new VerticalStrut(3))
+  add(xAxis)
+  add(new VerticalStrut(2))
+  add(new Centered(legend))
 
-  override def initGUI(): Unit = {
-    removeAll()
-
-    val c = new GridBagConstraints
-
-    //ROW1
-    //-----------------------------------------
-    c.insets = {
-      if (_oldSize) {
-        new Insets(zoom(3), zoom(6), zoom(6), zoom(6))
-      } else {
-        new Insets(zoom(8), zoom(10), zoom(8), zoom(10))
-      }
-    }
-
-    c.gridx = 0
-    c.gridy = 0
-    c.gridwidth = 3
-    c.anchor = GridBagConstraints.CENTER
-
-    add(nameLabel, c)
-
-    nameLabel.setText(plot.name)
-    nameLabel.setFont(nameLabel.getFont.deriveFont(_boldState))
-
-    //ROW2
-    //-----------------------------------------
-    c.insets = new Insets(0, zoom(3), zoom(3), zoom(8))
-
-    c.gridy = 1
-    c.gridwidth = 1
-    c.fill = GridBagConstraints.VERTICAL
-
-    add(yAxis, c)
-
-    yAxis.setBoldState(_boldState)
-
-    c.gridx = 1
-    c.weightx = 1
-    c.weighty = 1
-    c.fill = GridBagConstraints.BOTH
-    c.insets = new Insets(0, 0, zoom(3), zoom(8))
-
-    add(canvasPanel, c)
-
-    //ROW3
-    //-----------------------------------------
-    c.insets = new Insets(0, zoom(3), 0, zoom(3))
-
-    c.gridy = 2
-    c.weightx = 0
-    c.weighty = 0
-    c.fill = GridBagConstraints.HORIZONTAL
-
-    add(xAxis, c)
-
-    xAxis.setBoldState(_boldState)
-
-    //ROW4
-    //-----------------------------------------
-    c.gridx = 0
-    c.gridy = 3
-    c.gridwidth = 2
-    c.insets = new Insets(zoom(2), zoom(10), zoom(8), zoom(10))
-
-    add(legend, c)
-
-    legend.setBoldState(_boldState)
-
-    // make sure to update the gui components in case
-    // something changed underneath ev 8/26/08
-    refreshGUI()
-  }
+  // make sure to update the gui components in case
+  // something changed underneath ev 8/26/08
+  refreshGUI()
 
   override def paintComponent(g: Graphics) = {
     setBackgroundColor(InterfaceColors.plotBackground())
@@ -257,8 +198,11 @@ abstract class AbstractPlotWidget(val plot: Plot, val plotManager: PlotManagerIn
   }
 
   /// sizing
-  override def getMinimumSize = AbstractPlotWidget.MIN_SIZE
-  override def getPreferredSize = AbstractPlotWidget.PREF_SIZE
+  override def getMinimumSize: Dimension =
+    Utils.zoomSize(new Dimension(160, 120))
+
+  override def getPreferredSize: Dimension =
+    Utils.zoomSize(new Dimension(230, 175))
 
   override def setBounds(x: Int, y: Int, width: Int, height: Int): Unit = {
     super.setBounds(x, y, width, height)
@@ -297,7 +241,7 @@ abstract class AbstractPlotWidget(val plot: Plot, val plotManager: PlotManagerIn
   }
 
   override def model: CoreWidget = {
-    val b = getUnzoomedBounds
+    val b = unzoomedBounds
 
     val displayName = plotName.potentiallyEmptyStringToOption
     val savedXLabel = xLabel.potentiallyEmptyStringToOption
@@ -395,38 +339,17 @@ abstract class AbstractPlotWidget(val plot: Plot, val plotManager: PlotManagerIn
 }
 
 object AbstractPlotWidget {
-  /// sizing
-  val MIN_SIZE = new Dimension(160, 120)
-  val PREF_SIZE = new Dimension(230, 175)
-
   class XAxisLabels(plot: AbstractPlotWidget) extends JPanel {
     private val min: JLabel = new JLabel()
     private val label: JLabel = new JLabel("", SwingConstants.CENTER)
     private val max: JLabel = new JLabel()
 
-    val gridbag: GridBagLayout = new GridBagLayout
-    setLayout(gridbag)
-    val c: GridBagConstraints = new GridBagConstraints
-    c.insets = new Insets(0, 0, 0, plot.zoom(3))
-    c.gridheight = 1
-    c.weighty = 0.0
-    c.fill = java.awt.GridBagConstraints.NONE
-    c.gridwidth = 1
-    c.weightx = 0.0
-    c.anchor = java.awt.GridBagConstraints.WEST
-    c.fill = java.awt.GridBagConstraints.NONE
-    gridbag.setConstraints(min, c)
+    setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
+
     add(min)
-    c.weightx = 100.0
-    c.anchor = java.awt.GridBagConstraints.CENTER
-    c.fill = java.awt.GridBagConstraints.HORIZONTAL
-    gridbag.setConstraints(label, c)
+    add(Box.createHorizontalGlue)
     add(label)
-    c.gridwidth = GridBagConstraints.REMAINDER
-    c.weightx = 0.0
-    c.anchor = java.awt.GridBagConstraints.EAST
-    c.fill = java.awt.GridBagConstraints.NONE
-    gridbag.setConstraints(max, c)
+    add(Box.createHorizontalGlue)
     add(max)
 
     def setBoldState(state: Int): Unit = {
@@ -459,27 +382,13 @@ object AbstractPlotWidget {
     private val max: JLabel = new JLabel()
     private val min: JLabel = new JLabel()
 
-    val gridbag: GridBagLayout = new GridBagLayout
-    setLayout(gridbag)
-    val c: GridBagConstraints = new GridBagConstraints
-    c.insets = new Insets(plot.zoom(3), 0, 0, 0)
-    c.gridwidth = GridBagConstraints.REMAINDER
-    c.gridheight = 1
-    c.weightx = 1.0
-    c.weighty = 0.0
-    c.anchor = java.awt.GridBagConstraints.EAST
-    c.fill = java.awt.GridBagConstraints.NONE
-    gridbag.setConstraints(max, c)
-    add(max)
-    c.weighty = 100.0
-    c.fill = java.awt.GridBagConstraints.VERTICAL
-    gridbag.setConstraints(label, c)
+    setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
+
+    add(new BoxRow(Seq(Box.createHorizontalGlue, max)))
+    add(Box.createVerticalGlue)
     add(label)
-    c.gridheight = GridBagConstraints.REMAINDER
-    c.weighty = 0.0
-    c.fill = java.awt.GridBagConstraints.NONE
-    gridbag.setConstraints(min, c)
-    add(min)
+    add(Box.createVerticalGlue)
+    add(new BoxRow(Seq(Box.createHorizontalGlue, min)))
 
     def setBoldState(state: Int): Unit = {
       min.setFont(min.getFont.deriveFont(state))

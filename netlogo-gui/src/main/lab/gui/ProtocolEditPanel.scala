@@ -2,6 +2,8 @@
 
 package org.nlogo.lab.gui
 
+import java.awt.Dimension
+
 import org.nlogo.api.CompilerServices
 import org.nlogo.core.I18N
 import org.nlogo.editor.Colorizer
@@ -220,6 +222,9 @@ class ProtocolEditPanel(target: ProtocolEditable, compiler: CompilerServices, co
 
   override def isResizable: Boolean =
     true
+
+  override def getMaximumSize: Dimension =
+    new Dimension(super.getMaximumSize.width, Int.MaxValue)
 
   override def requestFocus(): Unit = {
     name.requestFocus()

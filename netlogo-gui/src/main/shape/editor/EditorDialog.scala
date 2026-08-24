@@ -2,7 +2,7 @@
 
 package org.nlogo.shape.editor
 
-import java.awt.{ Color, Component, Cursor, Dimension, FlowLayout, Graphics, GridLayout, Insets }
+import java.awt.{ Color, Component, Cursor, Dimension, Graphics, GridLayout, Insets }
 import java.awt.event.{ ActionEvent, WindowAdapter, WindowEvent }
 import java.beans.{ PropertyChangeEvent, PropertyChangeListener }
 import javax.swing.{ AbstractAction, Action, Box, BoxLayout, ButtonGroup, JDialog, JLabel, JPanel, JToolBar,
@@ -11,11 +11,11 @@ import javax.swing.undo.{ AbstractUndoableEdit, UndoableEdit }
 
 import org.nlogo.analytics.Analytics
 import org.nlogo.api.{ Color => NLColor }
-import org.nlogo.awt.ColumnLayout
 import org.nlogo.core.{ I18N, Shape }
 import org.nlogo.shape.{ Element, VectorShape }
-import org.nlogo.swing.{ Button, ButtonPanel, CheckBox, ComboBox, DialogButton, MenuItem, OptionPane, TextField,
-                         ToggleButton, Transparent, Utils }
+import org.nlogo.swing.{ BoxColumn, BoxRow, Button, ButtonPanel, Centered, CheckBox, ComboBox, DialogButton,
+                         HorizontalStrut, MenuItem, OptionPane, PreferredSize, SyncZoom, TextField, ToggleButton,
+                         Transparent, Utils, VerticalStrut, ZoomActions }
 import org.nlogo.theme.InterfaceColors
 
 sealed trait ElementType
@@ -40,7 +40,7 @@ object EditorDialog {
 
 class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer, originalShape: VectorShape,
                    nameEditable: Boolean) extends JDialog(parent, I18N.gui.get("tools.shapesEditor"), true)
-                                          with PropertyChangeListener {
+                                          with PropertyChangeListener with ZoomActions {
 
   private implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("tools.shapesEditor")
 
@@ -51,7 +51,7 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
   private var elementColor = EditorDialog.getColor(shape.getEditableColorIndex)
   private var editingElements = false
 
-  private val previews = Array(
+  private val previews = Seq(
     new ShapePreview(shape, 9, 5),
     new ShapePreview(shape, 12, -4),
     new ShapePreview(shape, 20, 3),
@@ -181,7 +181,7 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
           shapeView.repaint()
         }
       })
-    }) {
+    }) with PreferredSize {
       setText(null)
       setBorder(null)
       setToolTipText(I18N.gui("drawIn") + " " + name)
@@ -189,7 +189,7 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
       setBackgroundHoverColor(color)
 
       override def getPreferredSize: Dimension =
-        new Dimension(20, 20)
+        new Dimension(Utils.zoom(20), Utils.zoom(20))
     }
 
     colorGrid.add(button)
@@ -236,11 +236,6 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
   })
 
   Utils.addEscKeyAction(this, closingAction)
-
-  private val leftPanel = new JPanel(new ColumnLayout(0, Component.CENTER_ALIGNMENT, Component.TOP_ALIGNMENT))
-                            with Transparent
-  private val rightPanel = new JPanel(new ColumnLayout(0, Component.CENTER_ALIGNMENT, Component.TOP_ALIGNMENT))
-                             with Transparent
 
   private val editingToolBar = new JToolBar with Transparent {
     setFloatable(false)
@@ -354,95 +349,89 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
     shapeView.repaint()
   })
 
-  leftPanel.add(editingToolBar)
-  leftPanel.add(snapToGridButton)
-  leftPanel.add(colorGrid)
-  leftPanel.add(Box.createVerticalStrut(10))
-  leftPanel.add(new JLabel(I18N.gui("colorChanges")) {
-    setForeground(InterfaceColors.dialogText())
-  })
-  leftPanel.add(Box.createVerticalStrut(3))
-  leftPanel.add(colorSelection)
-  leftPanel.add(deleteSelected)
-  leftPanel.add(duplicateSelected)
-  leftPanel.add(bringToFront)
-  leftPanel.add(sendToBack)
-  leftPanel.add(undoButton)
-  leftPanel.add(rotatableButton)
-
-  rightPanel.add(rotateLeftButton)
-  rightPanel.add(rotateRightButton)
-  rightPanel.add(flipHorizontalButton)
-  rightPanel.add(flipVerticalButton)
-
   private val done = new DialogButton(true, I18N.gui.get("common.buttons.ok"), () => saveShape())
   private val cancel = new DialogButton(false, I18N.gui.get("common.buttons.cancel"), () => dispose)
 
   previews.foreach(shape.addPropertyChangeListener)
 
-  private val previewPanel = new JPanel {
-    setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
+  locally {
+    val contents = new BoxColumn(Seq(
+      new VerticalStrut(10),
+      new BoxRow(Seq(
+        new HorizontalStrut(10),
+        new JLabel(I18N.gui("name")) {
+          setForeground(InterfaceColors.dialogText())
+        },
+        new HorizontalStrut(5),
+        nameText,
+        new HorizontalStrut(5)
+      )),
+      new VerticalStrut(15),
+      new BoxRow(Seq(
+        new HorizontalStrut(10),
+        new Centered(new BoxColumn(Seq(
+          editingToolBar,
+          new Centered(snapToGridButton),
+          new Centered(colorGrid),
+          new VerticalStrut(10),
+          new Centered(new JLabel(I18N.gui("colorChanges")) {
+            setForeground(InterfaceColors.dialogText())
+          }),
+          new VerticalStrut(3),
+          new Centered(colorSelection),
+          new Centered(deleteSelected),
+          new Centered(duplicateSelected),
+          new Centered(bringToFront),
+          new Centered(sendToBack),
+          new Centered(undoButton),
+          new Centered(rotatableButton)
+        ))),
+        new HorizontalStrut(15),
+        new BoxColumn(Seq(
+          shapeView,
+          new BoxRow(previews)
+        )),
+        new HorizontalStrut(15),
+        new BoxColumn(Seq(
+          new Centered(rotateLeftButton),
+          new Centered(rotateRightButton),
+          new Centered(flipHorizontalButton),
+          new Centered(flipVerticalButton),
+          Box.createVerticalGlue
+        )),
+        new HorizontalStrut(10)
+      )),
+      new VerticalStrut(15),
+      new ButtonPanel(Seq(done, cancel)),
+      new VerticalStrut(10)
+    )) with SyncZoom {
+      setOpaque(true)
+      setBackground(InterfaceColors.dialogBackground())
 
-    previews.foreach(add)
+      override def zoom(oldZoom: Float): Unit = {
+        super.zoom(oldZoom)
+
+        pack()
+      }
+    }
+
+    setContentPane(contents)
+
+    contents.syncZoom()
+
+    getRootPane.setDefaultButton(done)
+
+    previews.foreach(_.updateRotation(shapeRotatable))
+
+    pack()
+
+    nameText.requestFocus()
+
+    setEditingElements(true)
+    setVisible(true)
+
+    shape.changed()
   }
-
-  private val graphicPanel = new JPanel {
-    setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
-
-    add(shapeView)
-    add(previewPanel)
-  }
-
-  private val drawingPanel = new JPanel with Transparent {
-    setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
-
-    add(Box.createHorizontalStrut(10))
-    add(leftPanel)
-    add(Box.createHorizontalStrut(15))
-    add(graphicPanel)
-    add(Box.createHorizontalStrut(15))
-    add(rightPanel)
-    add(Box.createHorizontalStrut(10))
-  }
-
-  private val buttonPanel = new ButtonPanel(Seq(done, cancel))
-  private val nameLabel = new JLabel(I18N.gui("name")) {
-    setForeground(InterfaceColors.dialogText())
-  }
-
-  private val namePanel = new JPanel with Transparent {
-    setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
-
-    add(Box.createHorizontalStrut(10))
-    add(nameLabel)
-    add(Box.createHorizontalStrut(5))
-    add(nameText)
-    add(Box.createHorizontalStrut(5))
-  }
-
-  getContentPane.setLayout(new BoxLayout(getContentPane, BoxLayout.Y_AXIS))
-  getContentPane.setBackground(InterfaceColors.dialogBackground())
-
-  getContentPane.add(Box.createVerticalStrut(10))
-  getContentPane.add(namePanel)
-  getContentPane.add(Box.createVerticalStrut(15))
-  getContentPane.add(drawingPanel)
-  getContentPane.add(Box.createVerticalStrut(15))
-  getContentPane.add(buttonPanel)
-  getContentPane.add(Box.createVerticalStrut(10))
-
-  getRootPane.setDefaultButton(done)
-
-  previews.foreach(_.updateRotation(shapeRotatable))
-
-  pack()
-
-  nameText.requestFocus()
-
-  setEditingElements(true)
-  setVisible(true)
-
-  shape.changed()
 
   def getElementType: ElementType =
     elementType
@@ -561,8 +550,11 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
       toolbar.add(this)
       group.add(this)
 
-      override def getInsets: Insets =
-        new Insets(3, 3, 3, 3)
+      override def getInsets: Insets = {
+        val size: Int = Utils.zoom(3)
+
+        new Insets(size, size, size, size)
+      }
     }
   }
 
@@ -573,20 +565,27 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
     super.setVisible(visible)
   }
 
-  private class ColorPanel(index: Int) extends JPanel(new FlowLayout(FlowLayout.LEFT, 6, 0)) with Transparent
-                                                                                             with ComboBox.Clone {
+  private class ColorPanel(index: Int) extends JPanel with Transparent with ComboBox.Clone with SyncZoom {
     private val label = {
       val name = NLColor.getColorNameByIndex(index)
 
       new JLabel(name(0).toUpper.toString + name.substring(1))
     }
 
-    add(new JPanel {
+    setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
+
+    add(new JPanel with PreferredSize {
       setBackground(EditorDialog.getColor(index))
-      setPreferredSize(new Dimension(10, 10))
+
+      override def getPreferredSize: Dimension =
+        new Dimension(Utils.zoom(10), Utils.zoom(10))
     })
 
+    add(new HorizontalStrut(6))
     add(label)
+    add(Box.createHorizontalGlue)
+
+    syncZoom()
 
     override def paintComponent(g: Graphics): Unit = {
       getParent match {

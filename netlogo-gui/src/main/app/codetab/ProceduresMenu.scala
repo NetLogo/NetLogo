@@ -9,11 +9,11 @@ import java.text.Collator
 import org.nlogo.awt.EventQueue
 import org.nlogo.core.{ I18N, NetLogoPreferences }
 import org.nlogo.swing.Implicits._
-import org.nlogo.swing.{ MenuItem, PopupMenu, RoundedBorderPanel, TextField, ToolBarMenu }
+import org.nlogo.swing.{ MenuItem, PopupMenu, RoundedBorderPanel, TextField, ToolBarMenu, Zoomable, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 class ProceduresMenu(target: ProceduresMenuTarget)
-extends ToolBarMenu(I18N.gui.get("tabs.code.procedures")) with RoundedBorderPanel with ThemeSync {
+  extends ToolBarMenu(I18N.gui.get("tabs.code.procedures")) with RoundedBorderPanel with Zoomable with ThemeSync {
 
   // Locale-aware, case-insensitive ordering for optional alphabetic sorting of procedures:
   private lazy val ordering = {
@@ -21,7 +21,6 @@ extends ToolBarMenu(I18N.gui.get("tabs.code.procedures")) with RoundedBorderPane
     Ordering.comparatorToOrdering(using Collator.getInstance(locale))
   }
 
-  setDiameter(6)
   enableHover()
 
   override def populate(menu: PopupMenu): Unit = {
@@ -162,6 +161,10 @@ extends ToolBarMenu(I18N.gui.get("tabs.code.procedures")) with RoundedBorderPane
         case _ => noMatchScore orElse matchScore
       }
     }
+  }
+
+  override def zoom(oldZoom: Float): Unit = {
+    setDiameter(Utils.zoom(6))
   }
 
   override def syncTheme(): Unit = {

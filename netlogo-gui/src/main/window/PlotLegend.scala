@@ -6,7 +6,7 @@ import java.awt.{ Color, Component, Container, Dimension, Font, Graphics, Layout
 import javax.swing.{ Box, BoxLayout, JLabel, JPanel }
 
 import org.nlogo.plot.PlotPen
-import org.nlogo.swing.Transparent
+import org.nlogo.swing.{ Transparent, Utils }
 import org.nlogo.theme.InterfaceColors
 
 class PlotLegend(widget: AbstractPlotWidget) extends JPanel(new WrapLayout) with Transparent {
@@ -45,7 +45,7 @@ class PlotLegend(widget: AbstractPlotWidget) extends JPanel(new WrapLayout) with
       setBackground(new Color(pen.color))
 
       override def getPreferredSize: Dimension =
-        new Dimension(widget.zoom(15), widget.zoom(2))
+        new Dimension(Utils.zoom(15), Utils.zoom(2))
 
       override def getMaximumSize: Dimension =
         getPreferredSize

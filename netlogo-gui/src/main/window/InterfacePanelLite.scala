@@ -2,7 +2,7 @@
 
 package org.nlogo.window;
 
-import java.awt.{ Component, Dimension, EventQueue, Rectangle }
+import java.awt.{ Dimension, EventQueue }
 import java.awt.event.{ FocusListener, FocusEvent,
   KeyEvent, KeyAdapter, MouseAdapter, MouseEvent }
 import java.awt.image.BufferedImage
@@ -156,13 +156,6 @@ class InterfacePanelLite(viewWidget: Option[ViewWidgetInterface], compiler: Comp
     }
 
   ///
-
-  def getUnzoomedBounds(component: Component): Rectangle =
-    component.getBounds
-
-  def resetZoomInfo(widget: Widget): Unit = { }
-
-  def resetSizeInfo(widget: Widget): Unit = { }
 
   def isZoomed: Boolean = false
 

@@ -2,10 +2,12 @@
 
 package org.nlogo.window
 
-import java.awt.{ GridBagConstraints, Insets }
+import java.awt.Dimension
+import javax.swing.BoxLayout
 
 import org.nlogo.awt.Hierarchy
 import org.nlogo.core.I18N
+import org.nlogo.swing.{ BoxColumn, BoxRow, HorizontalStrut, VerticalStrut, ZoomableBorder }
 
 class NoteEditPanel(target: NoteWidget) extends WidgetEditPanel(target) {
   private val frame = Hierarchy.getFrame(this)
@@ -77,48 +79,31 @@ class NoteEditPanel(target: NoteWidget) extends WidgetEditPanel(target) {
         _.foreach(target.setMarkdown),
         () => apply()))
 
-  locally {
-    val c = new GridBagConstraints
+  setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
+  setBorder(new ZoomableBorder(6, 6, 6, 6))
 
-    c.gridy = 0
-    c.gridwidth = 2
-    c.fill = GridBagConstraints.BOTH
-    c.weightx = 1
-    c.weighty = 1
-    c.insets = new Insets(6, 6, 6, 6)
-
-    add(text, c)
-
-    c.gridy = 1
-    c.fill = GridBagConstraints.HORIZONTAL
-    c.weighty = 0
-    c.insets = new Insets(0, 6, 6, 6)
-
-    add(fontSize, c)
-
-    c.gridy = 2
-    c.gridwidth = 1
-
-    add(textColorLight, c)
-
-    c.insets = new Insets(0, 0, 6, 6)
-
-    add(textColorDark, c)
-
-    c.gridy = 3
-    c.insets = new Insets(0, 6, 6, 6)
-
-    add(backgroundLight, c)
-
-    c.insets = new Insets(0, 0, 6, 6)
-
-    add(backgroundDark, c)
-
-    c.gridy = 4
-    c.insets = new Insets(0, 6, 6, 6)
-
-    add(markdown, c)
-  }
+  add(text)
+  add(new VerticalStrut(6))
+  add(fontSize)
+  add(new VerticalStrut(6))
+  add(new BoxRow(Seq(
+    new BoxColumn(Seq(
+      textColorLight,
+      new VerticalStrut(6),
+      backgroundLight
+    )),
+    new HorizontalStrut(6),
+    new BoxColumn(Seq(
+      textColorDark,
+      new VerticalStrut(6),
+      backgroundDark
+    ))
+  )) {
+    override def getMaximumSize: Dimension =
+      new Dimension(super.getMaximumSize.width, getPreferredSize.height)
+  })
+  add(new VerticalStrut(6))
+  add(markdown)
 
   override def propertyEditors: Seq[PropertyEditor[?]] =
     Seq(text, fontSize, textColorLight, textColorDark, backgroundLight, backgroundDark, markdown)

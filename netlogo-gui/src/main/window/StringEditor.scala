@@ -2,10 +2,10 @@
 
 package org.nlogo.window
 
-import java.awt.BorderLayout
-import javax.swing.JLabel
+import java.awt.Dimension
+import javax.swing.{ BoxLayout, JLabel }
 
-import org.nlogo.swing.TextField
+import org.nlogo.swing.{ HorizontalStrut, TextField }
 import org.nlogo.swing.Implicits.thunk2documentListener
 import org.nlogo.theme.InterfaceColors
 
@@ -17,10 +17,11 @@ class StringEditor(accessor: PropertyAccessor[String]) extends PropertyEditor(ac
     getDocument.addDocumentListener(() => accessor.changed())
   }
 
-  setLayout(new BorderLayout(6, 0))
+  setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
 
-  add(label, BorderLayout.WEST)
-  add(editor, BorderLayout.CENTER)
+  add(label)
+  add(new HorizontalStrut(6))
+  add(editor)
 
   override def get: Try[String] = Success(Option(editor.getText).getOrElse(""))
   override def set(value: String): Unit = { editor.setText(value) }
@@ -33,6 +34,9 @@ class StringEditor(accessor: PropertyAccessor[String]) extends PropertyEditor(ac
 
   override def hasFocus(): Boolean =
     editor.hasFocus
+
+  override def getMaximumSize: Dimension =
+    new Dimension(super.getMaximumSize.width, getPreferredSize.height)
 
   override def syncTheme(): Unit = {
     label.setForeground(InterfaceColors.dialogText())

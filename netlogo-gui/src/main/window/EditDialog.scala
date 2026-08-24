@@ -6,13 +6,12 @@ import java.awt.{ BorderLayout, Dialog, Dimension, EventQueue, Window }
 import java.awt.event.{ WindowAdapter, WindowEvent }
 import java.net.URI
 import javax.swing.{ JDialog, JPanel, WindowConstants }
-import javax.swing.border.EmptyBorder
 
 import org.nlogo.api.Version
 import org.nlogo.awt.Positioning
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ BrowserLauncher, ButtonPanel, DialogButton, Implicits, QuickHelp, Transparent, Utils,
-                         WindowAutomator }, Implicits.thunk2action
+import org.nlogo.swing.{ BrowserLauncher, ButtonPanel, DialogButton, Implicits, PreferredSize, QuickHelp, SyncZoom,
+                         Utils, WindowAutomator, ZoomableBorder, ZoomActions }, Implicits.thunk2action
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 // contains an EditPanel, plus some buttons at the bottom (OK/Apply/Help/Cancel).
@@ -21,11 +20,9 @@ class EditDialog(window: Window, target: Editable, editPanel: EditPanel, modal: 
                   if (modal)
                     Dialog.ModalityType.DOCUMENT_MODAL
                   else
-                    Dialog.ModalityType.MODELESS) with ThemeSync {
+                    Dialog.ModalityType.MODELESS) with ZoomActions with ThemeSync {
 
   var canceled = false
-
-  private val mainPanel = new JPanel(new BorderLayout) with Transparent
 
   val okButton = new DialogButton(true, I18N.gui.get("common.buttons.ok"), () => {
     if (editPanel.valid(false)) {
@@ -65,10 +62,6 @@ class EditDialog(window: Window, target: Editable, editPanel: EditPanel, modal: 
     target.helpLink.map(_ => helpButton),
     Some(cancelButton)).flatten
 
-  private val buttonPanel = new ButtonPanel(buttons) {
-    setBorder(new EmptyBorder(0, 0, 6, 0))
-  }
-
   WindowAutomator.automate(this, Some(() => {
     if (editPanel.valid(true) || editPanel.autoFill()) {
       EventQueue.invokeAndWait(() => {
@@ -77,11 +70,22 @@ class EditDialog(window: Window, target: Editable, editPanel: EditPanel, modal: 
     }
   }))
 
-  getContentPane.setLayout(new BorderLayout)
-  getContentPane.add(mainPanel, BorderLayout.CENTER)
+  private val mainPanel = new JPanel(new BorderLayout) with SyncZoom {
+    add(editPanel, BorderLayout.CENTER)
+    add(new ButtonPanel(buttons) with PreferredSize {
+      setBorder(new ZoomableBorder(0, 0, 6, 0))
+    }, BorderLayout.SOUTH)
 
-  mainPanel.add(editPanel, BorderLayout.CENTER)
-  mainPanel.add(buttonPanel, BorderLayout.SOUTH)
+    override def zoom(oldZoom: Float): Unit = {
+      super.zoom(oldZoom)
+
+      pack()
+    }
+  }
+
+  setContentPane(mainPanel)
+
+  mainPanel.syncZoom()
 
   syncTheme()
 

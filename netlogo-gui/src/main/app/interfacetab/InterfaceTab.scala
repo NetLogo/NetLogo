@@ -6,14 +6,14 @@ import java.awt.{ BorderLayout, Component, Container, ContainerOrderFocusTravers
                   Graphics2D }
 import java.awt.event.{ ActionEvent, FocusEvent, FocusListener, KeyEvent }
 import java.awt.print.{ PageFormat, Printable }
-import javax.swing.{ AbstractAction, Action, BoxLayout, JComponent, JPanel, JSplitPane, ScrollPaneConstants }
+import javax.swing.{ AbstractAction, Action, JComponent, JPanel, JSplitPane, ScrollPaneConstants }
 
 import org.nlogo.api.Announcement
 import org.nlogo.app.common.{Events => AppEvents, MenuTab}, AppEvents.SwitchedTabsEvent
 import org.nlogo.app.tools.AgentMonitorManager
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ Implicits, PrinterManager, Printable => NlogoPrintable, ScrollPane, SplitPane, ToolBar,
-                         UserAction, Utils },
+import org.nlogo.swing.{ BoxColumn, Implicits, PrinterManager, Printable => NlogoPrintable, ScrollPane, SplitPane,
+                         ToolBar, UserAction, Utils, Zoomable },
                        Implicits.thunk2action, UserAction.{ MenuAction, ToolsCategory }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ EditDialogFactory, GUIWorkspace, InterfaceMode, SpeedSliderPanel, ViewUpdatePanel,
@@ -37,6 +37,7 @@ class InterfaceTab(workspace: GUIWorkspace,
   with SwitchedTabsEvent.Handler
   with NlogoPrintable
   with MenuTab
+  with Zoomable
   with ThemeSync {
 
   private var lastLoadTime = System.currentTimeMillis
@@ -95,17 +96,10 @@ class InterfaceTab(workspace: GUIWorkspace,
     override def focusLost(e: FocusEvent): Unit = { }
   }
 
-  val northWrapper = new JPanel
-  northWrapper.setLayout(new BoxLayout(northWrapper, BoxLayout.PAGE_AXIS))
-
   private val toolBar = new DynamicToolbar(iP.widgetControls, speedSlider, viewUpdatePanel)
-
-  northWrapper.add(toolBar)
-
   private val announcementBar = new AnnouncementBanner()
 
-  northWrapper.add(announcementBar)
-  add(northWrapper, BorderLayout.NORTH)
+  add(new BoxColumn(Seq(toolBar, announcementBar)), BorderLayout.NORTH)
 
   def appendAnnouncements(anns: Seq[Announcement]): Unit = {
     announcementBar.appendData(anns)
@@ -199,8 +193,7 @@ class InterfaceTab(workspace: GUIWorkspace,
       Printable.PAGE_EXISTS
     }
 
-  class DynamicToolbar(widgetControls: Component, speedSlider: SpeedSliderPanel,
-                       viewUpdatePanel: ViewUpdatePanel)
+  class DynamicToolbar(widgetControls: Component, speedSlider: SpeedSliderPanel, viewUpdatePanel: ViewUpdatePanel)
     extends ToolBar with ThemeSync {
 
     setLayout(null)
@@ -208,7 +201,7 @@ class InterfaceTab(workspace: GUIWorkspace,
     override def getPreferredSize: Dimension =
       new Dimension(super.getPreferredSize.width, widgetControls.getPreferredSize.height.
                                                   max(speedSlider.getPreferredSize.height).
-                                                  max(viewUpdatePanel.getPreferredSize.height) + 16)
+                                                  max(viewUpdatePanel.getPreferredSize.height) + Utils.zoom(16))
 
     override def addControls(): Unit = {
       add(widgetControls)
@@ -219,12 +212,12 @@ class InterfaceTab(workspace: GUIWorkspace,
     override def doLayout(): Unit = {
       if (speedSlider.isVisible) {
         val left = (getWidth / 2 - speedSlider.getPreferredSize.width / 2 -
-                    widgetControls.getPreferredSize.width - 180).max(0)
+                    widgetControls.getPreferredSize.width - Utils.zoom(180)).max(0)
 
         widgetControls.setBounds(left, getHeight / 2 - widgetControls.getPreferredSize.height / 2,
                                  widgetControls.getPreferredSize.width, widgetControls.getPreferredSize.height)
         speedSlider.setBounds((getWidth / 2 - speedSlider.getPreferredSize.width / 2).
-                              max(left + widgetControls.getWidth + 40),
+                              max(left + widgetControls.getWidth + Utils.zoom(40)),
                               getHeight / 2 - speedSlider.getPreferredSize.height / 2,
                               speedSlider.getPreferredSize.width, speedSlider.getPreferredSize.height)
         viewUpdatePanel.setBounds(speedSlider.getX + speedSlider.getWidth +
@@ -242,18 +235,18 @@ class InterfaceTab(workspace: GUIWorkspace,
 
       val gap = speedSlider.getX - (widgetControls.getX + widgetControls.getWidth)
 
-      if (speedSlider.isVisible && gap <= 80) {
+      if (speedSlider.isVisible && gap <= Utils.zoom(80)) {
         val g2d = Utils.initGraphics2D(g)
 
         g2d.setColor(InterfaceColors.toolbarSeparator())
-        g2d.fillRect(speedSlider.getX - gap / 2, getY + 8, 1, getHeight - 16)
-        g2d.fillRect(viewUpdatePanel.getX - gap / 2, getY + 8, 1, getHeight - 16)
+        g2d.fillRect(speedSlider.getX - gap / 2, getY + Utils.zoom(8), 1, getHeight - Utils.zoom(16))
+        g2d.fillRect(viewUpdatePanel.getX - gap / 2, getY + Utils.zoom(8), 1, getHeight - Utils.zoom(16))
       }
     }
 
     def getMinimumWidth: Int =
       widgetControls.getPreferredSize.width + speedSlider.getPreferredSize.width +
-        viewUpdatePanel.getPreferredSize.width + 96
+        viewUpdatePanel.getPreferredSize.width + Utils.zoom(96)
 
     override def syncTheme(): Unit = {
       setBackground(InterfaceColors.toolbarBackground())
@@ -264,7 +257,7 @@ class InterfaceTab(workspace: GUIWorkspace,
 
   /// command center stuff
 
-  private class CommandCenterLocationToggleAction extends AbstractAction with ThemeSync {
+  private class CommandCenterLocationToggleAction extends AbstractAction with Zoomable with ThemeSync {
     override def actionPerformed(e: ActionEvent): Unit = {
       splitPane.getOrientation match {
         case JSplitPane.VERTICAL_SPLIT => splitPane.setOrientation(JSplitPane.HORIZONTAL_SPLIT)
@@ -276,15 +269,25 @@ class InterfaceTab(workspace: GUIWorkspace,
       syncTheme()
     }
 
-    override def syncTheme(): Unit = {
+    private def setIcons(): Unit = {
+      val size: Int = Utils.zoom(10)
+
       splitPane.getOrientation match {
         case JSplitPane.VERTICAL_SPLIT =>
-          putValue(Action.SMALL_ICON, Utils.iconScaledWithColor("/images/shift-bottom.png", 10, 10,
+          putValue(Action.SMALL_ICON, Utils.iconScaledWithColor("/images/shift-bottom.png", size, size,
                                                                 InterfaceColors.locationToggleImage()))
         case JSplitPane.HORIZONTAL_SPLIT =>
-          putValue(Action.SMALL_ICON, Utils.iconScaledWithColor("/images/shift-right.png", 10, 10,
+          putValue(Action.SMALL_ICON, Utils.iconScaledWithColor("/images/shift-right.png", size, size,
                                                                 InterfaceColors.locationToggleImage()))
       }
+    }
+
+    override def zoom(oldZoom: Float): Unit = {
+      setIcons()
+    }
+
+    override def syncTheme(): Unit = {
+      setIcons()
     }
   }
 
@@ -358,6 +361,12 @@ class InterfaceTab(workspace: GUIWorkspace,
 
   def getMinimumWidth: Int =
     toolBar.getMinimumWidth
+
+  override def zoom(oldZoom: Float): Unit = {
+    locationToggleAction.zoom(oldZoom)
+
+    sizeToFit()
+  }
 
   override def syncTheme(): Unit = {
     toolBar.syncTheme()

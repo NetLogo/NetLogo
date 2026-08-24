@@ -2,6 +2,7 @@
 
 package org.nlogo.window
 
+import java.awt.Dimension
 import javax.swing.ScrollPaneConstants
 import javax.swing.event.{ DocumentEvent, DocumentListener}
 
@@ -32,4 +33,7 @@ class ReporterLineEditor(accessor: PropertyAccessor[String], compiler: CompilerS
 
   override def get: Try[String] =
     super.get.map(_.trim).filter(optional || _.nonEmpty).orElse(defaultError)
+
+  override def getMaximumSize: Dimension =
+    new Dimension(super.getMaximumSize.width, getPreferredSize.height)
 }
