@@ -4,20 +4,20 @@ package org.nlogo.app.tools
 
 import java.awt.{ BorderLayout, Dimension, Font }
 import java.util.{ List => JList }
-import javax.swing.{ Box, BoxLayout, JDialog, JPanel, ScrollPaneConstants }
+import javax.swing.{ Box, JDialog, JPanel, ScrollPaneConstants }
 import javax.swing.border.{ CompoundBorder, EmptyBorder, MatteBorder }
 
 import org.nlogo.agent.{ Agent, Link, Patch, Turtle }
 import org.nlogo.app.common.{ CommandLine, HistoryPrompt, LinePrompt }
 import org.nlogo.awt.Hierarchy
 import org.nlogo.core.{ AgentKind, I18N }
-import org.nlogo.swing.{ CollapsiblePane, ScrollPane, Transparent }
+import org.nlogo.swing.{ BoxColumn, BoxRow, CollapsiblePane, HorizontalStrut, ScrollPane, SyncZoom }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ CommandCenterInterface, GUIWorkspace }
 
 // implementing CommandCenterInterface lets us embed CommandLine
 abstract class AgentMonitor(val workspace: GUIWorkspace, window: JDialog)
-  extends JPanel(new BorderLayout) with CommandCenterInterface with ThemeSync {
+  extends JPanel(new BorderLayout) with CommandCenterInterface with SyncZoom with ThemeSync {
 
   private implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("tools.agentMonitor")
 
@@ -74,7 +74,7 @@ abstract class AgentMonitor(val workspace: GUIWorkspace, window: JDialog)
   private val panel = new AgentMonitorViewPanel(workspace)
   private val viewPane = new CollapsiblePane(I18N.gui("view"), panel, window)
   private val propertiesPane = new CollapsiblePane(I18N.gui("properties"), scrollPane, window)
-  private val viewPanel: Option[AgentMonitorViewPanel] =
+  private val viewPanel: Option[AgentMonitorViewPanel] = {
     if (agentKind == AgentKind.Observer) {
       // the observer monitor doesn't have a view or the command center. ev 6/4/08
       add(scrollPane, BorderLayout.CENTER)
@@ -88,31 +88,19 @@ abstract class AgentMonitor(val workspace: GUIWorkspace, window: JDialog)
       commandLine.agentKind(agentKind)
 
       // this panel contains the separator bar and command line (Isaac B 5/21/25)
-      add(new JPanel with Transparent {
-        setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
+      add(new BoxRow(Seq(
+        new BoxColumn(Seq(Box.createVerticalGlue, prompt)),
+        new HorizontalStrut(6),
+        commandLine,
+        new HorizontalStrut(3),
+        new BoxColumn(Seq(Box.createVerticalGlue, historyPrompt))
+      )) {
         setBorder(new CompoundBorder(separator, new EmptyBorder(6, 6, 6, 6)))
-
-        add(new JPanel with Transparent {
-          setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
-
-          add(Box.createVerticalGlue)
-          add(prompt)
-        })
-
-        add(Box.createHorizontalStrut(6))
-        add(commandLine)
-        add(Box.createHorizontalStrut(3))
-
-        add(new JPanel with Transparent {
-          setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
-
-          add(Box.createVerticalGlue)
-          add(historyPrompt)
-        })
       }, BorderLayout.SOUTH)
 
       Some(panel)
     }
+  }
 
   override def fitPrompt(): Unit = {
     revalidate()
@@ -176,6 +164,12 @@ abstract class AgentMonitor(val workspace: GUIWorkspace, window: JDialog)
 
   def close(): Unit = {
     viewPanel.foreach(_.close())
+  }
+
+  override def zoom(oldZoom: Float): Unit = {
+    super.zoom(oldZoom)
+
+    window.pack()
   }
 
   override def syncTheme(): Unit = {

@@ -2,9 +2,9 @@
 
 package org.nlogo.swing
 
-import java.awt.{ Component, Dialog, Dimension, GridBagConstraints, GridBagLayout, Insets, Window }
+import java.awt.{ Component, Dialog, Dimension, Window }
 import java.awt.event.{ ActionEvent, KeyEvent }
-import javax.swing.{ AbstractAction, Icon, JComponent, JDialog, JLabel, JPanel, KeyStroke }
+import javax.swing.{ AbstractAction, Box, BoxLayout, Icon, JComponent, JDialog, JLabel, JPanel, KeyStroke }
 
 import org.nlogo.awt.LineBreaker
 import org.nlogo.core.I18N
@@ -33,7 +33,7 @@ class OptionPane(parent: Component, title: String, message: String, options: Seq
   extends JDialog(parent match {
                     case w: Window => w
                     case _ => null
-                  }, title, Dialog.ModalityType.APPLICATION_MODAL) {
+                  }, title, Dialog.ModalityType.APPLICATION_MODAL) with ZoomActions {
 
   WindowAutomator.automate(this)
 
@@ -43,21 +43,29 @@ class OptionPane(parent: Component, title: String, message: String, options: Seq
 
   private var selectedOption: Option[String] = None
 
+  private val container = new JPanel with SyncZoom {
+    setBackground(InterfaceColors.dialogBackground())
+    setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
+
+    override def zoom(oldZoom: Float): Unit = {
+      super.zoom(oldZoom)
+
+      pack()
+    }
+  }
+
   locally {
-    getContentPane.setBackground(InterfaceColors.dialogBackground())
-    getContentPane.setLayout(new GridBagLayout)
+    setContentPane(container)
 
     addContents()
 
-    val c = new GridBagConstraints
-
-    c.gridx = 0
-    c.fill = GridBagConstraints.NONE
-    c.insets = new Insets(0, 6, 6, 6)
-
     val okButton = new DialogButton(true, options(0), selectAction(_))
 
-    add(new ButtonPanel(okButton +: options.tail.map(new DialogButton(false, _, selectAction(_)))), c)
+    add(new ButtonPanel(okButton +: options.tail.map(new DialogButton(false, _, selectAction(_)))) {
+      setBorder(new ZoomableBorder(0, 6, 6, 6))
+    })
+
+    container.syncZoom()
 
     packAndCenter()
 
@@ -86,31 +94,15 @@ class OptionPane(parent: Component, title: String, message: String, options: Seq
     selectedOption.map(options.indexOf).getOrElse(-1)
 
   protected def addContents(): Unit = {
-    val c = new GridBagConstraints
-
-    c.gridx = 0
-    c.fill = GridBagConstraints.BOTH
-    c.weightx = 1
-    c.weighty = 1
-    c.insets = new Insets(30, 30, 30, 30)
-
-    add(new JPanel(new GridBagLayout) with Transparent {
-      locally {
-        val c = new GridBagConstraints
-
-        c.insets = new Insets(0, 0, 0, 12)
-
-        add(new JLabel(icon), c)
-
-        c.fill = GridBagConstraints.HORIZONTAL
-        c.weightx = 1
-        c.insets = new Insets(0, 0, 0, 0)
-
-        add(new JLabel(getWrappedMessage) {
-          setForeground(InterfaceColors.dialogText())
-        }, c)
+    add(new BoxRow(Seq(
+      new JLabel(icon),
+      new HorizontalStrut(12),
+      new JLabel(getWrappedMessage) {
+        setForeground(InterfaceColors.dialogText())
       }
-    }, c)
+    )) {
+      setBorder(new ZoomableBorder(30, 30, 30, 30))
+    })
   }
 
   protected def getWrappedMessage: String =
@@ -135,7 +127,7 @@ class InputOptionPane(parent: Component, title: String, message: String, startin
   // lazy because addContents is called in super (Isaac B 11/16/24)
   private lazy val input = new TextField(0, startingInput) {
     override def getMinimumSize: Dimension =
-      new Dimension(250, super.getMinimumSize.height)
+      new Dimension(Utils.zoom(250), super.getMinimumSize.height)
 
     override def getPreferredSize: Dimension =
       getMinimumSize
@@ -153,39 +145,24 @@ class InputOptionPane(parent: Component, title: String, message: String, startin
   }
 
   override protected def addContents(): Unit = {
-    val c = new GridBagConstraints
+    add(new BoxRow(Seq(
+      new JLabel(icon),
+      new HorizontalStrut(12),
+      new BoxColumn(Seq(
+        new BoxRow(Seq(
+          new JLabel(getWrappedMessage) {
+            setForeground(InterfaceColors.dialogText())
+          },
+          Box.createHorizontalGlue
+        )),
+        new VerticalStrut(6),
+        input
+      ))
+    )) {
+      setBorder(new ZoomableBorder(30, 30, 30, 30))
+    })
 
-    c.gridx = 0
-    c.fill = GridBagConstraints.BOTH
-    c.weightx = 1
-    c.weighty = 1
-    c.insets = new Insets(30, 30, 30, 30)
-
-    add(new JPanel(new GridBagLayout) with Transparent {
-      locally {
-        val c = new GridBagConstraints
-
-        c.gridheight = 2
-        c.insets = new Insets(0, 0, 0, 12)
-
-        add(new JLabel(icon), c)
-
-        c.gridx = 1
-        c.gridheight = 1
-        c.anchor = GridBagConstraints.WEST
-        c.insets = new Insets(0, 0, 6, 0)
-
-        add(new JLabel(getWrappedMessage) {
-          setForeground(InterfaceColors.dialogText())
-        }, c)
-
-        c.insets = new Insets(0, 0, 0, 0)
-
-        add(input, c)
-
-        input.requestFocus()
-      }
-    }, c)
+    input.requestFocus()
   }
 }
 
@@ -212,40 +189,21 @@ class DropdownOptionPane[T](parent: Component, title: String, message: String, c
   }
 
   override protected def addContents(): Unit = {
-    val c = new GridBagConstraints
-
-    c.gridx = 0
-    c.fill = GridBagConstraints.BOTH
-    c.weightx = 1
-    c.weighty = 1
-    c.insets = new Insets(30, 30, 30, 30)
-
-    add(new JPanel(new GridBagLayout) with Transparent {
-      locally {
-        val c = new GridBagConstraints
-
-        c.gridheight = 2
-        c.insets = new Insets(0, 0, 0, 12)
-
-        add(new JLabel(icon), c)
-
-        c.gridx = 1
-        c.gridheight = 1
-        c.anchor = GridBagConstraints.WEST
-        c.insets = new Insets(0, 0, 6, 0)
-
-        add(new JLabel(getWrappedMessage) {
+    add(new BoxRow(Seq(
+      new JLabel(icon),
+      new HorizontalStrut(12),
+      new BoxColumn(Seq(
+        new JLabel(getWrappedMessage) {
           setForeground(InterfaceColors.dialogText())
-        }, c)
+        },
+        new VerticalStrut(6),
+        dropdown
+      ))
+    )) {
+      setBorder(new ZoomableBorder(30, 30, 30, 30))
+    })
 
-        c.insets = new Insets(0, 0, 0, 0)
-
-        add(dropdown, c)
-
-        dropdown.requestFocus()
-      }
-    }, c)
-
+    dropdown.requestFocus()
     dropdown.addItemListener(_ => {
       packAndCenter()
     })
@@ -256,14 +214,10 @@ class CustomOptionPane(parent: Component, title: String, contents: Component, op
   extends OptionPane(parent, title, "", options) {
 
   override protected def addContents(): Unit = {
-    val c = new GridBagConstraints
+    add(new JPanel with Transparent {
+      setBorder(new ZoomableBorder(30, 30, 30, 30))
 
-    c.gridx = 0
-    c.fill = GridBagConstraints.BOTH
-    c.weightx = 1
-    c.weighty = 1
-    c.insets = new Insets(30, 30, 30, 30)
-
-    add(contents, c)
+      add(contents)
+    })
   }
 }

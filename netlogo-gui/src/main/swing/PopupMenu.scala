@@ -4,7 +4,7 @@ package org.nlogo.swing
 
 import java.awt.Insets
 import java.awt.event.KeyEvent
-import javax.swing.{ JPopupMenu, MenuElement, MenuSelectionManager }
+import javax.swing.{ JPopupMenu, MenuElement, MenuSelectionManager, UIManager }
 import javax.swing.border.LineBorder
 
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
@@ -16,6 +16,8 @@ class PopupMenu(title: String = "") extends JPopupMenu(title) with ThemeSync {
     }
   }
 
+  UIManager.put("PopupMenu.borderCornerRadius", Utils.zoom(4))
+
   syncTheme()
 
   override def addSeparator(): Unit = {
@@ -23,7 +25,7 @@ class PopupMenu(title: String = "") extends JPopupMenu(title) with ThemeSync {
   }
 
   override def getInsets: Insets =
-    new Insets(5, 0, 5, 0)
+    new Insets(Utils.zoom(5), 0, Utils.zoom(5), 0)
 
   override def syncTheme(): Unit = {
     setBackground(InterfaceColors.menuBackground())

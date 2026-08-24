@@ -7,14 +7,16 @@ import java.awt.event.{ WindowAdapter, WindowEvent }
 
 import org.nlogo.api.Version
 import org.nlogo.gl.render.Renderer
+import org.nlogo.swing.Utils
 
 class ObserverView(viewManager: ViewManager, renderer: Renderer, bounds: Rectangle)
-extends View("3D View", viewManager, renderer) {
+extends View("3D View", viewManager, renderer, Option(bounds)) {
 
   def this(viewManager: ViewManager, renderer: Renderer) =
     this(viewManager, renderer, new Rectangle(600, 600))
 
-  setBounds(bounds)
+  setBounds(Utils.zoomBounds(bounds))
+
   val navBar = new ViewControlToolBar(this, inputHandler)
   add(navBar, BorderLayout.SOUTH)
   val controlStrip = new ViewControlStrip3D(viewManager.workspace, viewManager.tickCounterLabel)
@@ -31,6 +33,15 @@ extends View("3D View", viewManager, renderer) {
 
   override def updatePerspectiveLabel(): Unit = {
     navBar.setStatus(viewManager.world.observer.perspective)
+  }
+
+  override def setVisible(visible: Boolean): Unit = {
+    if (visible) {
+      controlStrip.syncZoom()
+      navBar.syncZoom()
+    }
+
+    super.setVisible(visible)
   }
 
   override def editFinished() = {

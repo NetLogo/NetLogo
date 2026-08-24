@@ -2,12 +2,11 @@
 
 package org.nlogo.window
 
-import java.awt.{ BorderLayout, GridBagConstraints, GridBagLayout, Insets }
-import javax.swing.{ BoxLayout, JLabel, JPanel }
-import javax.swing.border.{ EmptyBorder, TitledBorder }
+import javax.swing.{ Box, BoxLayout, JLabel }
+import javax.swing.border.TitledBorder
 
 import org.nlogo.core.I18N
-import org.nlogo.swing.Transparent
+import org.nlogo.swing.{ BoxColumn, BoxRow, Centered, HorizontalStrut, VerticalStrut, ZoomableBorder }
 import org.nlogo.theme.InterfaceColors
 
 class WorldEditPanel2D(target: WorldViewSettings2D, enableDualView: Boolean) extends WorldEditPanel(target) {
@@ -160,166 +159,106 @@ class WorldEditPanel2D(target: WorldViewSettings2D, enableDualView: Boolean) ext
 
   locally {
     setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
-    setBorder(new EmptyBorder(6, 6, 6, 6))
+    setBorder(new ZoomableBorder(6, 6, 6, 6))
 
-    val configPanel = new JPanel(new GridBagLayout) with Transparent {
-      val c = new GridBagConstraints
-
-      c.gridy = 0
-      c.fill = GridBagConstraints.HORIZONTAL
-      c.weightx = 1
-      c.insets = new Insets(6, 6, 6, 6)
-
-      add(locationLabel, c)
-
-      c.insets = new Insets(6, 0, 6, 6)
-
-      add(originTypes, c)
-
-      c.gridx = 0
-      c.gridy = GridBagConstraints.RELATIVE
-      c.gridwidth = 2
-      c.anchor = GridBagConstraints.EAST
-      c.fill = GridBagConstraints.NONE
-      c.insets = new Insets(0, 0, 6, 6)
-
-      add(originConfigs, c)
-
-      c.anchor = GridBagConstraints.WEST
-      c.fill = GridBagConstraints.HORIZONTAL
-      c.insets = new Insets(0, 6, 3, 6)
-
-      add(minPxcor, c)
-
-      c.insets = new Insets(0, 6, 6, 6)
-
-      add(minPxcorLabel, c)
-
-      c.insets = new Insets(0, 6, 3, 6)
-
-      add(maxPxcor, c)
-
-      c.insets = new Insets(0, 6, 6, 6)
-
-      add(maxPxcorLabel, c)
-
-      c.insets = new Insets(0, 6, 3, 6)
-
-      add(minPycor, c)
-
-      c.insets = new Insets(0, 6, 6, 6)
-
-      add(minPycorLabel, c)
-
-      c.insets = new Insets(0, 6, 3, 6)
-
-      add(maxPycor, c)
-
-      c.insets = new Insets(0, 6, 6, 6)
-
-      add(maxPycorLabel, c)
+    val configPanel = new BoxColumn(Seq(
+      new BoxRow(Seq(
+        locationLabel,
+        new HorizontalStrut(6),
+        originTypes
+      )),
+      new VerticalStrut(6),
+      new BoxRow(Seq(
+        Box.createHorizontalGlue,
+        originConfigs
+      )) {
+        setBorder(new ZoomableBorder(0, 0, 6, 0))
+      },
+      minPxcor,
+      new VerticalStrut(3),
+      new BoxRow(Seq(minPxcorLabel, Box.createHorizontalGlue)),
+      new VerticalStrut(6),
+      maxPxcor,
+      new VerticalStrut(3),
+      new BoxRow(Seq(maxPxcorLabel, Box.createHorizontalGlue)),
+      new VerticalStrut(6),
+      minPycor,
+      new VerticalStrut(3),
+      new BoxRow(Seq(minPycorLabel, Box.createHorizontalGlue)),
+      new VerticalStrut(6),
+      maxPycor,
+      new VerticalStrut(3),
+      new BoxRow(Seq(maxPycorLabel, Box.createHorizontalGlue))
+    )) {
+      setBorder(new ZoomableBorder(6, 6, 6, 6))
     }
 
-    val previewContainer = new JPanel(new GridBagLayout) with Transparent {
-      val c = new GridBagConstraints
-
-      c.gridx = 0
-      c.fill = GridBagConstraints.BOTH
-      c.weightx = 1
-      c.weighty = 1
-      c.insets = new Insets(6, 6, 6, 6)
-
-      add(previewPanel, c)
-
-      c.anchor = GridBagConstraints.WEST
-      c.fill = GridBagConstraints.NONE
-      c.weightx = 0
-      c.weighty = 0
-      c.insets = new Insets(0, 6, 6, 6)
-
-      add(wrappingX, c)
-      add(wrappingY, c)
+    val previewContainer = new BoxColumn(Seq(
+      previewPanel,
+      new VerticalStrut(6),
+      wrappingX,
+      new VerticalStrut(6),
+      wrappingY
+    )) {
+      setBorder(new ZoomableBorder(6, 6, 6, 6))
     }
 
-    val modelPanel = new JPanel(new GridBagLayout) with Transparent {
+    val modelPanel = new BoxRow(Seq(
+      new BoxRow(Seq(modelTitle)) {
+        setBorder(new ZoomableBorder(6, 6, 6, 6))
+      }
+    )) {
       setBorder(modelBorder)
-
-      val c = new GridBagConstraints
-
-      c.anchor = GridBagConstraints.WEST
-      c.weightx = 1
-      c.insets = new Insets(6, 6, 6, 6)
-
-      add(modelTitle, c)
     }
 
-    val worldPanel = new JPanel(new BorderLayout) with Transparent {
+    val worldPanel = new BoxRow(Seq(
+      new Centered(configPanel),
+      previewContainer
+    )) {
       setBorder(worldBorder)
-
-      add(configPanel, BorderLayout.WEST)
-      add(previewContainer, BorderLayout.CENTER)
     }
 
-    val viewPanel = new JPanel(new GridBagLayout) with Transparent {
+    val viewPanel = new BoxRow(Seq(
+      new BoxColumn(Seq(
+        new BoxRow(Seq(
+          new BoxColumn(Seq(
+            patchSize,
+            new VerticalStrut(3),
+            patchSizeLabel
+          )),
+          new HorizontalStrut(6),
+          new BoxColumn(Seq(
+            fontSize,
+            new VerticalStrut(3),
+            fontSizeLabel
+          ))
+        )),
+        new VerticalStrut(6),
+        frameRate,
+        new VerticalStrut(3),
+        frameRateLabel
+      )) {
+        setBorder(new ZoomableBorder(6, 6, 6, 6))
+      }
+    )) {
       setBorder(viewBorder)
 
-      val c = new GridBagConstraints
-
-      c.gridy = 0
-      c.anchor = GridBagConstraints.WEST
-      c.fill = GridBagConstraints.HORIZONTAL
-      c.weightx = 1
-      c.insets = new Insets(6, 6, 3, 6)
-
-      add(patchSize, c)
-
-      c.insets = new Insets(6, 0, 3, 6)
-
-      add(fontSize, c)
-
-      c.gridy = 1
-      c.insets = new Insets(0, 6, 6, 6)
-
-      add(patchSizeLabel, c)
-
-      c.insets = new Insets(0, 0, 6, 6)
-
-      add(fontSizeLabel, c)
-
-      c.gridy = 2
-      c.gridwidth = 2
-      c.insets = new Insets(0, 6, 3, 6)
-
-      add(frameRate, c)
-
-      c.gridy = 3
-      c.insets = new Insets(0, 6, 6, 6)
-
-      add(frameRateLabel, c)
-
       if (enableDualView) {
-        c.gridy = 4
-        c.insets = new Insets(0, 6, 3, 6)
-
-        add(dualView, c)
+        add(new VerticalStrut(6))
+        add(dualView)
       }
     }
 
-    val tickPanel = new JPanel(new GridBagLayout) with Transparent {
+    val tickPanel = new BoxRow(Seq(
+      new BoxColumn(Seq(
+        showTickCounter,
+        new VerticalStrut(6),
+        tickCounterLabel
+      )) {
+        setBorder(new ZoomableBorder(6, 6, 6, 6))
+      }
+    )) {
       setBorder(tickBorder)
-
-      val c = new GridBagConstraints
-
-      c.gridx = 0
-      c.fill = GridBagConstraints.HORIZONTAL
-      c.weightx = 1
-      c.insets = new Insets(6, 6, 6, 6)
-
-      add(showTickCounter, c)
-
-      c.insets = new Insets(0, 6, 6, 6)
-
-      add(tickCounterLabel, c)
     }
 
     add(modelPanel)

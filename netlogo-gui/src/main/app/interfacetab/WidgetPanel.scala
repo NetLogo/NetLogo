@@ -17,15 +17,14 @@ import org.nlogo.core.{ I18N, Button => CoreButton, Chooser => CoreChooser, Inpu
 import org.nlogo.editor.{ EditorArea, EditorConfiguration }
 import org.nlogo.log.LogManager
 import org.nlogo.nvm.DefaultCompilerServices
-import org.nlogo.swing.{ ClipboardUtils, MenuItem, PopupMenu, UndoManager, Utils }
+import org.nlogo.swing.{ ClipboardUtils, MenuItem, PopupMenu, UndoManager, Utils, Zoomable }
 import org.nlogo.theme.InterfaceColors
-import org.nlogo.window.{ AbstractPlotWidget, AbstractWidgetPanel, AutoIndentHandler, ButtonWidget, CopyPasteTarget,
-                          Editable, EditDialogFactory, Events => WindowEvents, GUIWorkspace, InterfaceMode,
-                          OutputWidget, Widget, WidgetContainer, WidgetRegistry, DummyChooserWidget,
-                          DummyInputBoxWidget, DummyPlotWidget, DummyViewWidget, MouseMode, PlotWidget, SliderWidget,
-                          ViewWidget, WidgetInfo },
+import org.nlogo.window.{ AbstractWidgetPanel, AutoIndentHandler, ButtonWidget, CopyPasteTarget, Editable,
+                          EditDialogFactory, Events => WindowEvents, GUIWorkspace, InterfaceMode, OutputWidget, Widget,
+                          WidgetContainer, WidgetRegistry, DummyChooserWidget, DummyInputBoxWidget, DummyPlotWidget,
+                          DummyViewWidget, MouseMode, PlotWidget, SliderWidget, ViewWidget, WidgetInfo },
   WindowEvents.{ CompileAllEvent, DirtyEvent, InterfaceModeChangedEvent, LoadBeginEvent, SetInterfaceModeEvent,
-                 WidgetRemovedEvent, ZoomedEvent }
+                 WidgetRemovedEvent }
 
 // note that an instance of this class is used for the hubnet client editor
 // and its subclass InterfacePanel is used for the interface tab.
@@ -42,7 +41,8 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
     with WidgetRemovedEvent.Handler
     with LoadBeginEvent.Handler
     with SetInterfaceModeEvent.Handler
-    with CopyPasteTarget {
+    with CopyPasteTarget
+    with Zoomable {
 
   override val widgetControls: InterfaceWidgetControls =
     new InterfaceWidgetControls(this, workspace, widgetInfos, frame, dialogFactory)
@@ -274,10 +274,12 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
   ///
 
   def snapToGrid(value: Int, ceil: Boolean = false): Int = {
+    val gridSize: Double = Utils.zoom(5f)
+
     if (ceil) {
-      ((value / (5 * zoomFactor)).ceil.toInt * 5 * zoomFactor).toInt
+      ((value / gridSize).ceil.toInt * gridSize).toInt
     } else {
-      ((value / (5 * zoomFactor)).floor.toInt * 5 * zoomFactor).toInt
+      ((value / gridSize).floor.toInt * gridSize).toInt
     }
   }
 
@@ -714,31 +716,37 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
   def makeWidget(widget: CoreWidget): Widget = {
     val widgetType = "Dummy " + widget.getClass.getSimpleName
     val fromRegistry = WidgetRegistry(widgetType)
-    if (fromRegistry != null) {
-      fromRegistry
-    } else {
-      widget match {
-        case v: CoreView    => new DummyViewWidget(workspace.world)
-        case c: CoreChooser =>
-          new DummyChooserWidget(new DefaultCompilerServices(workspace.compiler), editorFactory.colorizer)
-        case p: CorePlot    =>
-          // note that plots on the HubNet client must have the name of a plot
-          // on the server, thus, feed the dummy plot widget the names of
-          // the current plots so the user can select one. We override
-          // this method in InterfacePanel since regular plots are handled
-          // differently ev 1/25/07
-          val names = workspace.plotManager.getPlotNames
-          DummyPlotWidget(names.headOption.getOrElse("plot 1"), workspace.plotManager)
-        case i: CoreInputBox =>
-          new DummyInputBoxWidget(
-            new EditorArea(textEditorConfiguration) with AutoIndentHandler,
-            new EditorArea(dialogEditorConfiguration) with AutoIndentHandler,
-            this,
-            new DefaultCompilerServices(workspace.compiler))
-        case _ =>
-          throw new IllegalStateException("unknown widget type: " + widget.getClass)
+    val newWidget: Widget = {
+      if (fromRegistry != null) {
+        fromRegistry
+      } else {
+        widget match {
+          case v: CoreView    => new DummyViewWidget(workspace.world)
+          case c: CoreChooser =>
+            new DummyChooserWidget(new DefaultCompilerServices(workspace.compiler), editorFactory.colorizer)
+          case p: CorePlot    =>
+            // note that plots on the HubNet client must have the name of a plot
+            // on the server, thus, feed the dummy plot widget the names of
+            // the current plots so the user can select one. We override
+            // this method in InterfacePanel since regular plots are handled
+            // differently ev 1/25/07
+            val names = workspace.plotManager.getPlotNames
+            DummyPlotWidget(names.headOption.getOrElse("plot 1"), workspace.plotManager)
+          case i: CoreInputBox =>
+            new DummyInputBoxWidget(
+              new EditorArea(textEditorConfiguration) with AutoIndentHandler,
+              new EditorArea(dialogEditorConfiguration) with AutoIndentHandler,
+              this,
+              new DefaultCompilerServices(workspace.compiler))
+          case _ =>
+            throw new IllegalStateException("unknown widget type: " + widget.getClass)
+        }
       }
     }
+
+    Utils.zoomComponents(newWidget, 1)
+
+    newWidget
   }
 
   protected def textEditorConfiguration: EditorConfiguration =
@@ -984,12 +992,8 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
   def addWidget(widget: Widget, x: Int, y: Int, select: Boolean, loadingWidget: Boolean): WidgetWrapper = {
     widget.setWidgetContainer(this)
 
-    val size = widget.getSize()
     val wrapper = new WidgetWrapper(widget, this)
     wrapper.setVisible(false)
-    // we need to add the wrapper before we can call wrapper.getPreferredSize(), because
-    // that method looks at its parent and sees if it's an InterfacePanel
-    // and zooms accordingly - ST 6/16/02
     add(wrapper, JLayeredPane.DEFAULT_LAYER)
     moveToFront(wrapper)
 
@@ -998,20 +1002,20 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
     if (select || ! loadingWidget) {
       wrapper.setSize(wrapper.getPreferredSize)
     } else {
-      wrapper.setSize(size)
+      val bounds: Rectangle = widget.getUnzoomedBounds
+
+      wrapper.setSize(Utils.zoom(bounds.width), Utils.zoom(bounds.height))
     }
 
     if (workspace.snapOn && !loadingWidget) {
-      wrapper.setLocation(snapToGrid(x), snapToGrid(y))
+      wrapper.setLocation(Utils.zoom(snapToGrid(x)), Utils.zoom(snapToGrid(y)))
     } else {
-      wrapper.setLocation(x, y)
+      wrapper.setLocation(Utils.zoom(x), Utils.zoom(y))
     }
 
     wrapper.validate()
     wrapper.syncTheme()
     wrapper.setVisible(true)
-
-    zoomer.zoomWidget(wrapper, true, loadingWidget, 1.0, zoomFactor)
 
     if (select) {
       shadowWidgets = Some(NewShadowWidget(wrapper))
@@ -1039,7 +1043,6 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
     widgetWrapper.setVisible(true)
     widgetWrapper.widget.reAdd()
 
-    zoomer.zoomWidget(widgetWrapper, true, false, 1.0, zoomFactor)
     new CompileAllEvent().raise(this)
     LogManager.widgetAdded(false, widgetWrapper.widget.classDisplayName, widgetWrapper.widget.displayName)
     widgetWrapper
@@ -1067,8 +1070,6 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
     wrapper.setSize(wrapper.getPreferredSize)
     wrapper.setPlacing(true)
     wrapper.validate()
-
-    zoomer.zoomWidget(wrapper, true, false, 1.0, zoomFactor)
 
     setInterfaceMode(InterfaceMode.Add, true)
 
@@ -1108,8 +1109,6 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
       wrapper.setSize(widget.width, widget.height)
       wrapper.setPlacing(true)
       wrapper.validate()
-
-      zoomer.zoomWidget(wrapper, true, true, 1.0, zoomFactor)
 
       wrapper.syncTheme()
 
@@ -1155,17 +1154,17 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
 
   private def placeMultipleShadowWidgets(wrappers: Seq[(WidgetWrapper, Point)]): Unit = {
     wrappers.foreach {
-      case (wrapper, _) =>
-        if (maybeReplaceWidget(wrapper)) {
-          wrapper.foreground()
-          wrapper.setPlacing(false)
+      case (wrapper, _) if maybeReplaceWidget(wrapper) =>
+        wrapper.foreground()
+        wrapper.setPlacing(false)
 
-          WidgetActions.addWidget(this, wrapper)
+        wrapper.widget.setUnzoomedBounds(Utils.unzoomBounds(wrapper.widgetBounds))
 
-          LogManager.widgetAdded(false, wrapper.widget.classDisplayName, wrapper.widget.displayName)
-        }
+        WidgetActions.addWidget(this, wrapper)
 
-        resetZoomInfo(wrapper.widget)
+        LogManager.widgetAdded(false, wrapper.widget.classDisplayName, wrapper.widget.displayName)
+
+      case _ =>
     }
 
     shadowWidgets = None
@@ -1247,8 +1246,6 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
           case ww: WidgetWrapper =>
             ww.selected(false)
 
-            resetZoomInfo(ww.widget)
-
           case _ =>
         }
       case _ =>
@@ -1260,6 +1257,8 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
         case comp: Component =>
           comp.getParent match {
             case ww: WidgetWrapper if ww.isNew =>
+              ww.widget.setUnzoomedBounds(Utils.unzoomBounds(ww.widgetBounds))
+
               WidgetActions.addWidget(this, ww)
 
               LogManager.widgetAdded(false, ww.widget.classDisplayName, ww.widget.displayName)
@@ -1503,13 +1502,6 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
     this.sliderEventOnReleaseOnly = sliderEventOnReleaseOnly
   }
 
-  override def handle(e: ZoomedEvent): Unit = {
-    super.handle(e)
-    unselectWidgets()
-    zoomer.zoomWidgets(zoomFactor)
-    revalidate()
-  }
-
   /// loading and saving
 
   def loadWidget(coreWidget: CoreWidget): Widget = {
@@ -1520,6 +1512,7 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
     val newGuy = makeWidget(coreWidget)
     if (newGuy != null) {
       newGuy.load(coreWidget)
+      newGuy.setUnzoomedBounds(x, y, coreWidget.width, coreWidget.height)
       enforceMinimumAndMaximumWidgetSizes(newGuy)
       addWidget(newGuy, x, y, false, true)
     }
@@ -1549,7 +1542,6 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
     // removeAllWidgets doesn't completely delete the view, so we need to unselect it or it
     // gets sized incorrectly when the next model loads (Isaac B 7/22/25)
     unselectWidgets()
-    zoomer.forgetAllZoomInfo()
     WidgetActions.undoManager.discardAllEdits()
   }
 
@@ -1639,20 +1631,6 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
 
   /// dispatch WidgetContainer methods
 
-  def getUnzoomedBounds(component: Component): Rectangle =
-    zoomer.getUnzoomedBounds(component)
-
-  def resetZoomInfo(widget: Widget): Unit = {
-    zoomer.updateZoomInfo(widget)
-  }
-
-  def resetSizeInfo(widget: Widget): Unit = {
-    getWrapper(widget).widgetResized()
-  }
-
-  def isZoomed: Boolean =
-    zoomer.zoomFactor != 1.0
-
   def canAddWidget(widget: String): Boolean = {
     if (widget.equals(I18N.gui.get("tabs.run.widgets.view"))) {
       !hasView
@@ -1735,12 +1713,12 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
         // intelligent and aesthetic (Isaac B 7/17/25)
         w.widget match {
           case button: ButtonWidget =>
-            w.setSize(new Dimension(width, height.max(ButtonWidget.PrefHeight)))
+            w.setSize(new Dimension(width, height.max(button.getPreferredSize.height)))
 
           case plot: PlotWidget =>
-            val newHeight = (height + plot.legendHeight).max(AbstractPlotWidget.PREF_SIZE.height + plot.legendHeight)
+            val newHeight = (height + plot.legendHeight).max(plot.getPreferredSize.height + plot.legendHeight)
 
-            w.setSize(new Dimension(width.max(AbstractPlotWidget.PREF_SIZE.width), newHeight))
+            w.setSize(new Dimension(width.max(plot.getPreferredSize.width), newHeight))
 
           case _ =>
             w.setSize(new Dimension(width, height))
@@ -1784,8 +1762,6 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
       case _ =>
     })
 
-    getWrappers.foreach(w => resetZoomInfo(w.widget))
-
     revalidate()
     repaint()
 
@@ -1821,6 +1797,10 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
 
       case _ =>
     }
+  }
+
+  override def zoom(oldZoom: Float): Unit = {
+    getWrappers.foreach(_.zoomBounds())
   }
 
   override def syncTheme(): Unit = {

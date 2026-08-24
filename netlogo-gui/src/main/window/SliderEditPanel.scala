@@ -2,13 +2,13 @@
 
 package org.nlogo.window
 
-import java.awt.{ GridBagConstraints, Insets }
+import javax.swing.{ Box, BoxLayout }
 
 import org.nlogo.agent.SliderConstraint
 import org.nlogo.api.{ CompilerServices, ExtensionManager }
 import org.nlogo.core.I18N
 import org.nlogo.editor.Colorizer
-import org.nlogo.swing.AutomationUtils
+import org.nlogo.swing.{ AutomationUtils, BoxColumn, BoxRow, HorizontalStrut, VerticalStrut, ZoomableBorder }
 
 class SliderEditPanel(target: SliderWidget, compiler: CompilerServices, colorizer: Colorizer,
                       extensionManager: ExtensionManager) extends WidgetEditPanel(target) {
@@ -91,57 +91,32 @@ class SliderEditPanel(target: SliderWidget, compiler: CompilerServices, colorize
         _.foreach(target.oldSize),
         () => apply(vertical.get.toOption.exists(_ != vertical.originalValue))))
 
-  locally {
-    val c = new GridBagConstraints
+  setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
+  setBorder(new ZoomableBorder(6, 6, 6, 6))
 
-    c.gridy = 0
-    c.gridwidth = 3
-    c.fill = GridBagConstraints.HORIZONTAL
-    c.weightx = 1
-    c.insets = new Insets(6, 6, 6, 6)
+  add(nameWrapper)
+  add(new VerticalStrut(6))
 
-    add(nameWrapper, c)
+  add(new BoxRow(Seq(
+    minimumLabeled,
+    new HorizontalStrut(6),
+    new BoxColumn(Seq(
+      incrementCode,
+      Box.createVerticalGlue
+    )),
+    new HorizontalStrut(6),
+    new BoxColumn(Seq(
+      maximumCode,
+      Box.createVerticalGlue
+    ))
+  )))
 
-    c.gridy = 1
-    c.gridwidth = 1
-    c.anchor = GridBagConstraints.NORTHWEST
-    c.fill = GridBagConstraints.NONE
-    c.weightx = 0
-    c.insets = new Insets(0, 6, 6, 6)
-
-    add(minimumLabeled, c)
-
-    c.insets = new Insets(0, 0, 6, 6)
-
-    add(incrementCode, c)
-    add(maximumCode, c)
-
-    c.gridy = 2
-    c.gridwidth = 2
-    c.fill = GridBagConstraints.HORIZONTAL
-    c.weightx = 1
-    c.insets = new Insets(0, 6, 6, 6)
-
-    add(value, c)
-
-    c.gridwidth = 1
-    c.fill = GridBagConstraints.NONE
-    c.weightx = 0
-    c.insets = new Insets(0, 0, 6, 6)
-
-    add(units, c)
-
-    c.gridy = 3
-    c.gridwidth = 3
-    c.weightx = 1
-    c.insets = new Insets(0, 6, 6, 6)
-
-    add(vertical, c)
-
-    c.gridy = 4
-
-    add(oldSize, c)
-  }
+  add(new VerticalStrut(6))
+  add(new BoxRow(Seq(value, new HorizontalStrut(6), units)))
+  add(new VerticalStrut(6))
+  add(vertical)
+  add(new VerticalStrut(6))
+  add(oldSize)
 
   override def propertyEditors: Seq[PropertyEditor[?]] =
     Seq(nameWrapper, minimumCode, incrementCode, maximumCode, value, units, vertical, oldSize)

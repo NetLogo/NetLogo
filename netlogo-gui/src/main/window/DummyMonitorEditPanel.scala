@@ -2,9 +2,10 @@
 
 package org.nlogo.window
 
-import java.awt.{ GridBagConstraints, Insets }
+import javax.swing.BoxLayout
 
 import org.nlogo.core.I18N
+import org.nlogo.swing.{ VerticalStrut, ZoomableBorder }
 
 class DummyMonitorEditPanel(target: DummyMonitorWidget) extends WidgetEditPanel(target) {
   private val name =
@@ -34,23 +35,14 @@ class DummyMonitorEditPanel(target: DummyMonitorWidget) extends WidgetEditPanel(
         _.foreach(target.oldSize),
         () => apply()))
 
-  locally {
-    val c = new GridBagConstraints
+  setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
+  setBorder(new ZoomableBorder(6, 6, 6, 6))
 
-    c.gridx = 0
-    c.anchor = GridBagConstraints.WEST
-    c.fill = GridBagConstraints.HORIZONTAL
-    c.weightx = 1
-    c.insets = new Insets(6, 6, 6, 6)
-
-    add(name, c)
-
-    c.fill = GridBagConstraints.NONE
-    c.insets = new Insets(0, 6, 6, 6)
-
-    add(decimalPlaces, c)
-    add(oldSize, c)
-  }
+  add(name)
+  add(new VerticalStrut(6))
+  add(decimalPlaces)
+  add(new VerticalStrut(6))
+  add(oldSize)
 
   override def propertyEditors: Seq[PropertyEditor[?]] =
     Seq(name, decimalPlaces, oldSize)

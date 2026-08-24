@@ -2,9 +2,10 @@
 
 package org.nlogo.window
 
-import java.awt.{ GridBagConstraints, Insets }
+import javax.swing.BoxLayout
 
 import org.nlogo.core.I18N
+import org.nlogo.swing.ZoomableBorder
 
 class OutputEditPanel(target: OutputWidget) extends WidgetEditPanel(target) {
   private val fontSize =
@@ -16,15 +17,10 @@ class OutputEditPanel(target: OutputWidget) extends WidgetEditPanel(target) {
         _.foreach(target.setFontSize),
         () => apply()))
 
-  locally {
-    val c = new GridBagConstraints
+  setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
+  setBorder(new ZoomableBorder(6, 6, 6, 6))
 
-    c.fill = GridBagConstraints.HORIZONTAL
-    c.weightx = 1
-    c.insets = new Insets(6, 6, 6, 6)
-
-    add(fontSize, c)
-  }
+  add(fontSize)
 
   override def propertyEditors: Seq[PropertyEditor[?]] =
     Seq(fontSize)

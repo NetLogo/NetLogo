@@ -2,12 +2,11 @@
 
 package org.nlogo.window
 
-import java.awt.BorderLayout
-import javax.swing.JLabel
+import javax.swing.{ BoxLayout, JLabel }
 
 import org.nlogo.api.Dump
+import org.nlogo.swing.{ HorizontalStrut, TextField }
 import org.nlogo.swing.Implicits.thunk2documentListener
-import org.nlogo.swing.TextField
 import org.nlogo.theme.InterfaceColors
 
 import scala.util.{ Success, Try }
@@ -18,10 +17,11 @@ class DoubleEditor(accessor: PropertyAccessor[Double]) extends PropertyEditor(ac
     getDocument.addDocumentListener(() => accessor.changed())
   }
 
-  setLayout(new BorderLayout(6, 0))
+  setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
 
-  add(label, BorderLayout.WEST)
-  add(editor, BorderLayout.CENTER)
+  add(label)
+  add(new HorizontalStrut(6))
+  add(editor)
 
   override def setEnabled(enabled: Boolean): Unit = {
     super.setEnabled(enabled)

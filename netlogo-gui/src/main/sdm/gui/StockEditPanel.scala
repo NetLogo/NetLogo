@@ -2,11 +2,12 @@
 
 package org.nlogo.sdm.gui
 
-import java.awt.{ GridBagConstraints, Insets }
+import javax.swing.BoxLayout
 
 import org.nlogo.api.{ CompilerServices, ExtensionManager }
 import org.nlogo.core.I18N
 import org.nlogo.editor.Colorizer
+import org.nlogo.swing.{ VerticalStrut, ZoomableBorder }
 import org.nlogo.window.{ BooleanEditor, EditPanel, IdentifierEditor, NonEmptyCodeEditor, PropertyAccessor,
                           PropertyEditor }
 
@@ -42,29 +43,14 @@ class StockEditPanel(target: StockFigure, compiler: CompilerServices, colorizer:
         _.foreach(target.allowNegative),
         () => apply()))
 
-  locally {
-    val c = new GridBagConstraints
+  setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
+  setBorder(new ZoomableBorder(6, 6, 6, 6))
 
-    c.gridx = 0
-    c.gridwidth = 2
-    c.fill = GridBagConstraints.HORIZONTAL
-    c.weightx = 1
-    c.insets = new Insets(6, 6, 6, 6)
-
-    add(nameWrapper, c)
-
-    c.fill = GridBagConstraints.BOTH
-    c.weighty = 1
-    c.insets = new Insets(0, 6, 6, 6)
-
-    add(initialValueExpressionWrapper, c)
-
-    c.anchor = GridBagConstraints.WEST
-    c.fill = GridBagConstraints.HORIZONTAL
-    c.weighty = 0
-
-    add(allowNegative, c)
-  }
+  add(nameWrapper)
+  add(new VerticalStrut(6))
+  add(initialValueExpressionWrapper)
+  add(new VerticalStrut(6))
+  add(allowNegative)
 
   override def propertyEditors: Seq[PropertyEditor[?]] =
     Seq(nameWrapper, initialValueExpressionWrapper, allowNegative)

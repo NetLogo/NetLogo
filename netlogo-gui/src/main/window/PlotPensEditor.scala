@@ -2,12 +2,10 @@
 
 package org.nlogo.window
 
-import java.awt.{ BorderLayout, Color, Component, Cursor, Dimension, Frame, Graphics, GridBagConstraints,
-                  GridBagLayout, Insets }
+import java.awt.{ Color, Component, Cursor, Dimension, Frame, Graphics }
 import java.awt.event.ActionEvent
 import java.util.Locale
-import javax.swing.{ AbstractAction, AbstractCellEditor, JButton, JLabel, JPanel, JTable }
-import javax.swing.border.EmptyBorder
+import javax.swing.{ AbstractAction, AbstractCellEditor, BoxLayout, JButton, JLabel, JPanel, JTable }
 import javax.swing.event.{ ListSelectionEvent, ListSelectionListener }
 import javax.swing.table.{ DefaultTableCellRenderer, AbstractTableModel, TableCellEditor, TableCellRenderer }
 
@@ -16,7 +14,8 @@ import org.nlogo.awt.Hierarchy
 import org.nlogo.core.{ CompilerException, I18N }
 import org.nlogo.editor.{ Colorizer, EditorArea, EditorConfiguration }
 import org.nlogo.plot.{ Plot, PlotManagerInterface, PlotPen }
-import org.nlogo.swing.{ Button, Popup, ScrollPane, Transparent, Utils }
+import org.nlogo.swing.{ BoxRow, Button, HorizontalStrut, PreferredSize, Popup, ScrollPane, Utils, VerticalStrut,
+                         Zoomable, ZoomableBorder }
 import org.nlogo.theme.InterfaceColors
 
 import scala.collection.mutable.ArrayBuffer
@@ -104,15 +103,11 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], compiler: Compil
     table.initializePens()
   }
 
-  setLayout(new BorderLayout)
-  setMinimumSize(new Dimension(600, 200))
-  setPreferredSize(new Dimension(600, 200))
+  setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
 
-  add(scrollPane, BorderLayout.CENTER)
-  add(new JPanel with Transparent {
-    add(addButton)
-    add(checkButton)
-  }, BorderLayout.SOUTH)
+  add(scrollPane)
+  add(new VerticalStrut(6))
+  add(new BoxRow(Seq(addButton, new HorizontalStrut(6), checkButton)))
 
   def set(value: List[PlotPen]): Unit = {} // seemingly no need to do anything here
 
@@ -136,6 +131,12 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], compiler: Compil
     }
   }
 
+  override def getMinimumSize: Dimension =
+    new Dimension(Utils.zoom(600), Utils.zoom(200))
+
+  override def getPreferredSize: Dimension =
+    getMinimumSize
+
   override def syncTheme(): Unit = {
     scrollPane.setBackground(InterfaceColors.dialogBackground())
     table.setBackground(InterfaceColors.dialogBackground())
@@ -144,7 +145,7 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], compiler: Compil
     addButton.syncTheme()
   }
 
-  class PlotPensTable extends JTable { table =>
+  class PlotPensTable extends JTable with Zoomable { table =>
 
     val UpdateCommandsColumnName = I18N.gui("updateCommands")
     val NameColumnName = I18N.gui("name")
@@ -159,43 +160,42 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], compiler: Compil
 
     val model = new PenTableModel(cellFactory)
 
-    locally {
-      setModel(model)
-      setRowHeight(getRowHeight + 14)
-      setRowMargin(1)
-      setShowGrid(true)
-      setRowSelectionAllowed(false)
-      getTableHeader.setReorderingAllowed(false)
-      getTableHeader.setBorder(javax.swing.BorderFactory.createLineBorder(java.awt.Color.gray, 1))
-      getColumnModel().setColumnMargin(1)
+    private val cellEditor: ButtonCellEditor = new ButtonCellEditor
+    private val cellRenderer: ButtonCellEditor = new ButtonCellEditor
 
-      getSelectionModel.addListSelectionListener(new RowListener())
-      getColumnModel.getSelectionModel.addListSelectionListener(new ColumnListener())
+    setModel(model)
+    setRowHeight(getRowHeight + 14)
+    setRowMargin(1)
+    setShowGrid(true)
+    setRowSelectionAllowed(false)
+    getTableHeader.setReorderingAllowed(false)
+    getTableHeader.setBorder(javax.swing.BorderFactory.createLineBorder(java.awt.Color.gray, 1))
+    getColumnModel().setColumnMargin(1)
 
-      nameColumn.setCellRenderer(new NameRenderer)
-      nameColumn.setMinWidth(100)
-      nameColumn.setMaxWidth(160)
+    getSelectionModel.addListSelectionListener(new RowListener())
+    getColumnModel.getSelectionModel.addListSelectionListener(new ColumnListener())
 
-      colorColumn.setCellEditor(new ColorEditor)
-      colorColumn.setMaxWidth(40)
-      colorColumn.setMinWidth(40)
-      colorColumn.setCellRenderer(new ColorRenderer)
+    nameColumn.setCellRenderer(new NameRenderer)
+    nameColumn.setMinWidth(100)
+    nameColumn.setMaxWidth(160)
 
-      updateCommandsColumn.setCellRenderer(cellFactory)
-      updateCommandsColumn.setCellEditor(cellFactory)
-      updateCommandsColumn.setMinWidth(250)
+    colorColumn.setCellEditor(new ColorEditor)
+    colorColumn.setMaxWidth(40)
+    colorColumn.setMinWidth(40)
+    colorColumn.setCellRenderer(new ColorRenderer)
 
-      val buttonCell = new ButtonCellEditor
+    updateCommandsColumn.setCellRenderer(cellFactory)
+    updateCommandsColumn.setCellEditor(cellFactory)
+    updateCommandsColumn.setMinWidth(250)
 
-      buttonsColumn.setCellRenderer(buttonCell)
-      buttonsColumn.setCellEditor(new ButtonCellEditor)
-      buttonsColumn.setMaxWidth(buttonCell.buttonPanel.getPreferredSize.width)
-      buttonsColumn.setMinWidth(buttonCell.buttonPanel.getPreferredSize.width)
-      buttonsColumn.setHeaderValue("")
+    buttonsColumn.setCellRenderer(cellEditor)
+    buttonsColumn.setCellEditor(cellRenderer)
+    buttonsColumn.setMaxWidth(cellEditor.buttonPanel.getPreferredSize.width)
+    buttonsColumn.setMinWidth(cellEditor.buttonPanel.getPreferredSize.width)
+    buttonsColumn.setHeaderValue("")
 
-      // finally add all the actual plot pens to the table
-      initializePens()
-    }
+    // finally add all the actual plot pens to the table
+    initializePens()
 
     def initializePens(): Unit = {
       model.clear()
@@ -227,6 +227,10 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], compiler: Compil
 
     // someone pressed the delete button in the pens row.
     def removePen(index: Int): Unit = {model.removePen(index)}
+
+    override def zoom(oldZoom: Float): Unit = {
+      cellEditor.zoom(oldZoom)
+    }
 
     // shows the pens color as a colored rectangle
     class ColorRenderer extends JLabel with TableCellRenderer {
@@ -312,52 +316,61 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], compiler: Compil
     }
 
     def openAdvancedPenEditor(editingPen: Pen): Unit = {
-      showEditorPopup(editingPen, new PlotPenEditorAdvanced(editingPen, compiler, colorizer, plotManager))
+      showEditorPopup(editingPen, new PlotPenEditorAdvanced(editingPen, compiler, colorizer, plotManager) {
+        syncZoom()
+      })
     }
 
     // renders the delete and edit buttons for each column
-    class ButtonCellEditor extends AbstractCellEditor with TableCellRenderer with TableCellEditor {
-      val EditIcon   = Utils.iconScaledWithColor("/images/edit.png", 15, 15, InterfaceColors.toolbarImage())
-      val AlertIcon  = Utils.iconScaled("/images/edit-error.png", 15, 15)
-      val DeleteIcon = Utils.iconScaledWithColor("/images/delete.png", 15, 15, InterfaceColors.toolbarImage())
+    class ButtonCellEditor extends AbstractCellEditor with TableCellRenderer with TableCellEditor with Zoomable {
+      private var editIcon   = Utils.iconScaledWithColor("/images/edit.png", 15, 15, InterfaceColors.toolbarImage())
+      private var alertIcon  = Utils.iconScaled("/images/edit-error.png", 15, 15)
+      private var deleteIcon = Utils.iconScaledWithColor("/images/delete.png", 15, 15, InterfaceColors.toolbarImage())
 
-      val editButton = new Button("", () => {
+      private val editButton = new Button("", () => {
         openAdvancedPenEditor(model.pens(getSelectedRow))
-      }) {
-        setIcon(EditIcon)
-        setBorder(new EmptyBorder(6, 6, 6, 6))
+      }) with PreferredSize {
+        setIcon(editIcon)
+        setBorder(new ZoomableBorder(6, 6, 6, 6))
+
+        putClientProperty("JComponent.sizeVariant", "small")
+
+        override def getPreferredSize: Dimension = {
+          val width: Int = super.getPreferredSize.width
+
+          new Dimension(width, width)
+        }
       }
-      val deleteButton = new Button("", () => {
+
+      private val deleteButton = new Button("", () => {
         val index = getSelectedRow
         removeEditor()
         clearSelection()
         removePen(index)
-      }) {
-        setIcon(DeleteIcon)
-        setBorder(new EmptyBorder(6, 6, 6, 6))
+      }) with PreferredSize {
+        setIcon(deleteIcon)
+        setBorder(new ZoomableBorder(6, 6, 6, 6))
+
+        putClientProperty("JComponent.sizeVariant", "small")
+
+        override def getPreferredSize: Dimension = {
+          val width: Int = super.getPreferredSize.width
+
+          new Dimension(width, width)
+        }
       }
-      editButton.putClientProperty("JComponent.sizeVariant", "small")
-      deleteButton.putClientProperty("JComponent.sizeVariant", "small")
 
       setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR))
 
-      val buttonPanel = new JPanel(new GridBagLayout) with Transparent {
-        val c = new GridBagConstraints
-
-        c.insets = new Insets(6, 6, 6, 6)
-
-        add(editButton, c)
-
-        c.insets = new Insets(6, 0, 6, 6)
-
-        add(deleteButton, c)
+      val buttonPanel = new BoxRow(Seq(editButton, new HorizontalStrut(6), deleteButton)) {
+        setBorder(new ZoomableBorder(6, 6, 6, 6))
       }
 
       def showRow(row: Int): JPanel = {
         if (model.pens.length > row) {
           model.pens(row) match {
-            case pen: Pen if pen.hasErrors => editButton.setIcon(AlertIcon)
-            case pen: Pen => editButton.setIcon(EditIcon)
+            case pen: Pen if pen.hasErrors => editButton.setIcon(alertIcon)
+            case pen: Pen => editButton.setIcon(editIcon)
           }
         }
         buttonPanel
@@ -370,6 +383,14 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], compiler: Compil
       def getTableCellEditorComponent(table: JTable, value: Object,
                                       isSelected: Boolean, row: Int, col: Int) = showRow(row)
       def getCellEditorValue = ""
+
+      override def zoom(oldZoom: Float): Unit = {
+        val size: Int = Utils.zoom(15)
+
+        editIcon = Utils.iconScaledWithColor("/images/edit.png", size, size, InterfaceColors.toolbarImage())
+        alertIcon = Utils.iconScaled("/images/edit-error.png", size, size)
+        deleteIcon = Utils.iconScaledWithColor("/images/delete.png", size, size, InterfaceColors.toolbarImage())
+      }
     }
 
     class CodeCellFactory extends AbstractCellEditor with TableCellRenderer with TableCellEditor {

@@ -2,23 +2,26 @@
 
 package org.nlogo.app.tools
 
-import java.awt.{ BorderLayout, FlowLayout, Font, GridBagConstraints, GridBagLayout, Insets, Rectangle }
+import java.awt.{ BorderLayout, Component, Dimension, FlowLayout, Font, Rectangle }
 import java.awt.event.{ FocusEvent, FocusListener, KeyEvent, KeyListener }
 import java.util.Locale
-import javax.swing.{ JLabel, JPanel, ScrollPaneConstants }
+import javax.swing.{ Box, BoxLayout, JLabel, JPanel, ScrollPaneConstants }
 
 import org.nlogo.agent.{ Agent, AgentSet, Turtle, Patch, Link }
 import org.nlogo.api.{ AgentVariables, Dump }
 import org.nlogo.core.{ AgentKind, I18N, Nobody, Widget => CoreWidget }
 import org.nlogo.editor.{ EditorConfiguration, EditorField }
 import org.nlogo.nvm.Procedure
-import org.nlogo.swing.{ OptionPane, ScrollPane, Transparent }
+import org.nlogo.swing.{ BoxRow, HorizontalStrut, OptionPane, ScrollPane, SyncZoom, Transparent, Utils, VerticalStrut,
+                         ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ Editable, EditorColorizer, Events => WindowEvents, JobWidget }
 
 class AgentMonitorEditor(parent: AgentMonitor) extends JPanel with ThemeSync {
   private val noVarLabel = new JLabel(I18N.gui.get("tools.agentMonitor.editor.noVariables"))
-  private var editors: List[AgentVarEditor] = Nil
+
+  private var labels = Seq[Component]()
+  private var editors = Seq[AgentVarEditor]()
 
   reset()
 
@@ -32,49 +35,55 @@ class AgentMonitorEditor(parent: AgentMonitor) extends JPanel with ThemeSync {
 
   def reset(): Unit = {
     removeAll()
-    editors = Nil
+    labels = Seq()
+    editors = Seq()
     if(vars == null || vars.isEmpty) {
       setLayout(new FlowLayout)
       add(noVarLabel)
     }
     else fill()
+    editors.foreach(_.syncZoom())
     syncTheme()
   }
 
   private def fill(): Unit = {
     import scala.jdk.CollectionConverters.ListHasAsScala
 
-    setLayout(new GridBagLayout)
-    val labelConstraints = new GridBagConstraints
-    labelConstraints.gridx = 0
-    labelConstraints.anchor = GridBagConstraints.EAST
-    labelConstraints.insets = new Insets(0, 3, 0, 3)
-    val editorConstraints = new GridBagConstraints
-    editorConstraints.gridx = 1
-    editorConstraints.fill = GridBagConstraints.HORIZONTAL
-    editorConstraints.weightx = 1
-    editorConstraints.insets = new Insets(3, 0, 0, 3)
-    // add components
-    editors = for (variableName <- vars.asScala.toList) yield {
-      val label = new JLabel(variableName.toLowerCase)
+    setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
+    setBorder(new ZoomableBorder(3, 3, 0, 3))
+
+    vars.asScala.foreach { variableName =>
+      val label = new JLabel(variableName.toLowerCase) with SyncZoom
       val index =
         if (agent == null)
           workspace.world.indexOfVariable(agentKind, variableName)
         else
           workspace.world.indexOfVariable(agent, variableName)
+
       val editor = new AgentVarEditor(this, index, variableName, label)
+
       editor.agentKind(agentKind)
-      add(label, labelConstraints)
-      add(editor, editorConstraints)
-      editor
+
+      add(new BoxRow(Seq(
+        new BoxRow(Seq(Box.createHorizontalGlue, label)) {
+          override def getPreferredSize: Dimension =
+            new Dimension(maxLabelWidth, super.getPreferredSize.height)
+
+          override def getMaximumSize: Dimension =
+            getPreferredSize
+        },
+        new HorizontalStrut(3),
+        editor
+      )))
+
+      add(new VerticalStrut(3))
+
+      labels = labels :+ label
+      editors = editors :+ editor
     }
-    val fillerConstraints = new GridBagConstraints
-    fillerConstraints.gridx = 0
-    fillerConstraints.gridwidth = 2
-    fillerConstraints.fill = GridBagConstraints.BOTH
-    fillerConstraints.weighty = 1
-    val fillerPanel = new JPanel with Transparent
-    add(fillerPanel, fillerConstraints)
+
+    add(new JPanel with Transparent)
+
     revalidate()
   }
 
@@ -87,6 +96,9 @@ class AgentMonitorEditor(parent: AgentMonitor) extends JPanel with ThemeSync {
   def setCodeFont(font: Font): Unit = {
     editors.foreach(_.setCodeFont(font))
   }
+
+  private def maxLabelWidth: Int =
+    labels.map(_.getPreferredSize.width).max
 
   override def syncTheme(): Unit = {
     setBackground(InterfaceColors.dialogBackground())
@@ -111,6 +123,7 @@ extends JobWidget(parent.workspace.world.auxRNG)
 with KeyListener
 with FocusListener
 with WindowEvents.JobRemovedEvent.Handler
+with SyncZoom
 with ThemeSync {
   private def specialCase = {
     parent.agentKind match {
@@ -146,7 +159,7 @@ with ThemeSync {
 
   setLayout(new BorderLayout)
 
-  private val editor = new EditorField(17, EditorConfiguration.getCodeFont.deriveFont(10f), true, workspace,
+  private val editor = new EditorField(17, EditorConfiguration.getCodeFont.deriveFont(Utils.zoom(10f)), true, workspace,
                                        new EditorColorizer(workspace))
   private val scrollPane = new ScrollPane(editor, ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER,
                                           ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER)
@@ -233,7 +246,7 @@ with ThemeSync {
   }
 
   override def setCodeFont(font: Font): Unit = {
-    editor.setFont(font.deriveFont(10f))
+    editor.setFont(font.deriveFont(Utils.zoom(10f)))
   }
 
   ///
