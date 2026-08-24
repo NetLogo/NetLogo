@@ -2,11 +2,11 @@
 
 package org.nlogo.window
 
-import java.awt.{ Color, BorderLayout, Dimension, Graphics, GridBagConstraints, GridBagLayout, Insets }
-import javax.swing.{ JLabel, JPanel }
+import java.awt.{ Color, BorderLayout, Dimension, Graphics }
+import javax.swing.{ Box, BoxLayout, JLabel, JPanel }
 
 import org.nlogo.editor.EditorConfiguration
-import org.nlogo.swing.{ Transparent, Utils }
+import org.nlogo.swing.{ BoxRow, Transparent, Utils, Zoomable, ZoomableBorder }
 import org.nlogo.theme.InterfaceColors
 
 class WorldPreview(myWidth: Int, myHeight: Int) extends JPanel(new BorderLayout) with Transparent {
@@ -76,7 +76,7 @@ class WorldPreview(myWidth: Int, myHeight: Int) extends JPanel(new BorderLayout)
     shapeLabel.setText(s"$text: ${maxx - minx + 1} x ${maxy - miny + 1}")
   }
 
-  private class PreviewPanel extends JPanel(new GridBagLayout) {
+  private class PreviewPanel extends JPanel with Zoomable {
     private val topLeft = new JLabel
     private val topRight = new JLabel
     private val bottomLeft = new JLabel
@@ -84,63 +84,34 @@ class WorldPreview(myWidth: Int, myHeight: Int) extends JPanel(new BorderLayout)
     private val errorLabel = new JLabel(
       "<html>Invalid world dimensions. The origin (0, 0) must be inside the dimensions of the world.</html>")
 
-    private val font = EditorConfiguration.getMonospacedFont.deriveFont(10f)
+    private var monoFont = EditorConfiguration.getMonospacedFont.deriveFont(Utils.zoom(10f))
 
-    locally {
-      val c = new GridBagConstraints
+    topLeft.setForeground(Color.WHITE)
+    topRight.setForeground(Color.WHITE)
+    bottomLeft.setForeground(Color.WHITE)
+    bottomRight.setForeground(Color.WHITE)
+    errorLabel.setForeground(Color.WHITE)
 
-      c.gridx = 0
-      c.gridy = 0
-      c.anchor = GridBagConstraints.NORTHWEST
-      c.weightx = 1
-      c.weighty = 1
-      c.insets = new Insets(10, 10, 10, 10)
+    topLeft.setFont(monoFont)
+    topRight.setFont(monoFont)
+    bottomLeft.setFont(monoFont)
+    bottomRight.setFont(monoFont)
+    errorLabel.setFont(monoFont)
 
-      add(topLeft, c)
+    setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
+    setBorder(new ZoomableBorder(10, 10, 10, 10))
 
-      c.gridx = 1
-      c.anchor = GridBagConstraints.NORTHEAST
-
-      add(topRight, c)
-
-      c.gridx = 0
-      c.gridy = 1
-      c.anchor = GridBagConstraints.SOUTHWEST
-
-      add(bottomLeft, c)
-
-      c.gridx = 1
-      c.anchor = GridBagConstraints.SOUTHEAST
-
-      add(bottomRight, c)
-
-      c.gridx = 0
-      c.gridy = 0
-      c.gridwidth = 2
-      c.gridheight = 2
-      c.anchor = GridBagConstraints.CENTER
-      c.fill = GridBagConstraints.BOTH
-
-      add(errorLabel, c)
-
-      topLeft.setForeground(Color.WHITE)
-      topRight.setForeground(Color.WHITE)
-      bottomLeft.setForeground(Color.WHITE)
-      bottomRight.setForeground(Color.WHITE)
-      errorLabel.setForeground(Color.WHITE)
-
-      topLeft.setFont(font)
-      topRight.setFont(font)
-      bottomLeft.setFont(font)
-      bottomRight.setFont(font)
-      errorLabel.setFont(font)
-    }
+    add(new BoxRow(Seq(topLeft, Box.createHorizontalGlue, topRight)))
+    add(Box.createVerticalGlue)
+    add(new BoxRow(Seq(bottomLeft, Box.createHorizontalGlue, bottomRight)))
 
     override def getPreferredSize: Dimension =
-      new Dimension(myWidth, myHeight)
+      new Dimension(Utils.zoom(myWidth), Utils.zoom(myHeight))
 
     override def paintComponent(g: Graphics): Unit = {
       val g2d = Utils.initGraphics2D(g)
+
+      val border: Int = Utils.zoom(5)
 
       // basic frame
 
@@ -148,7 +119,7 @@ class WorldPreview(myWidth: Int, myHeight: Int) extends JPanel(new BorderLayout)
       g2d.fillRect(0, 0, getWidth, getHeight)
 
       g2d.setColor(Color.WHITE)
-      g2d.drawRect(5, 5, getWidth - 11, getHeight - 11)
+      g2d.drawRect(border, border, getWidth - border * 2 - 1, getHeight - border * 2 - 1)
 
       // origin and coordinates
 
@@ -162,17 +133,17 @@ class WorldPreview(myWidth: Int, myHeight: Int) extends JPanel(new BorderLayout)
       } else {
         errorLabel.setVisible(false)
 
-        val x = 10 + ((getWidth - 20) * -minx.toFloat / (maxx - minx)).toInt
-        val y = 10 + ((getHeight - 20) * maxy.toFloat / (maxy - miny)).toInt
+        val x = border * 2 + ((getWidth - border * 4) * -minx.toFloat / (maxx - minx)).toInt
+        val y = border * 2 + ((getHeight - border * 4) * maxy.toFloat / (maxy - miny)).toInt
 
         g2d.setColor(Color.RED)
-        g2d.fillOval(x - 4, y - 4, 9, 9)
+        g2d.fillOval(x - border + 1, y - border + 1, border * 2 - 1, border * 2 - 1)
 
         g2d.setColor(Color.WHITE)
-        g2d.drawLine(x - 5, y, x + 5, y)
-        g2d.drawLine(x, y - 5, x, y + 5)
+        g2d.drawLine(x - border, y, x + border, y)
+        g2d.drawLine(x, y - border, x, y + border)
 
-        g2d.setFont(font)
+        g2d.setFont(monoFont)
 
         val metrics = g2d.getFontMetrics
         val width = metrics.stringWidth("0, 0)")
@@ -199,44 +170,48 @@ class WorldPreview(myWidth: Int, myHeight: Int) extends JPanel(new BorderLayout)
       // horizontal wrap
 
       if (wrapX) {
-        val chunkSize = (getHeight - 10) / 16.0
+        val chunkSize = (getHeight - border * 2) / 16.0
 
         g2d.setColor(new Color(33, 204, 0))
-        g2d.fillRect(1, 5, 3, getHeight - 10)
-        g2d.fillRect(getWidth - 4, 5, 3, getHeight - 10)
+        g2d.fillRect(1, border, border - 2, getHeight - border * 2)
+        g2d.fillRect(getWidth - border + 1, border, border - 2, getHeight - border * 2)
 
         g2d.setColor(Color.BLACK)
 
         for (i <- 1 to 15) {
-          g2d.fillRect(1, 4 + (i * chunkSize).toInt, 3, 2)
-          g2d.fillRect(getWidth - 4, 4 + (i * chunkSize).toInt, 3, 2)
+          g2d.fillRect(1, border - 1 + (i * chunkSize).toInt, border - 2, 2)
+          g2d.fillRect(getWidth - border + 1, border - 1 + (i * chunkSize).toInt, border - 2, 2)
         }
       } else {
         g2d.setColor(Color.RED)
-        g2d.fillRect(1, 5, 3, getHeight - 10)
-        g2d.fillRect(getWidth - 4, 5, 3, getHeight - 10)
+        g2d.fillRect(1, border, border - 2, getHeight - border * 2)
+        g2d.fillRect(getWidth - border + 1, border, border - 2, getHeight - border * 2)
       }
 
       // vertical wrap
 
       if (wrapY) {
-        val chunkSize = (getWidth - 10) / 16.0
+        val chunkSize = (getWidth - border * 2) / 16.0
 
         g2d.setColor(new Color(33, 204, 0))
-        g2d.fillRect(5, 1, getWidth - 10, 3)
-        g2d.fillRect(5, getHeight - 4, getWidth - 10, 3)
+        g2d.fillRect(border, 1, getWidth - border * 2, border - 2)
+        g2d.fillRect(border, getHeight - border + 1, getWidth - border * 2, border - 2)
 
         g2d.setColor(Color.BLACK)
 
         for (i <- 1 to 15) {
-          g2d.fillRect(4 + (i * chunkSize).toInt, 1, 2, 3)
-          g2d.fillRect(4 + (i * chunkSize).toInt, getHeight - 4, 2, 3)
+          g2d.fillRect(border - 1 + (i * chunkSize).toInt, 1, 2, border - 2)
+          g2d.fillRect(border - 1 + (i * chunkSize).toInt, getHeight - border + 1, 2, border - 2)
         }
       } else {
         g2d.setColor(Color.RED)
-        g2d.fillRect(5, 1, getWidth - 10, 3)
-        g2d.fillRect(5, getHeight - 4, getWidth - 10, 3)
+        g2d.fillRect(border, 1, getWidth - border * 2, border - 2)
+        g2d.fillRect(border, getHeight - border + 1, getWidth - border * 2, border - 2)
       }
+    }
+
+    override def zoom(oldZoom: Float): Unit = {
+      monoFont = EditorConfiguration.getMonospacedFont.deriveFont(Utils.zoom(10f))
     }
   }
 }

@@ -266,42 +266,6 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
     )
   }
 
-  private val popupMenu = new PopupMenu {
-    add(new MenuItem(undoAction))
-    add(new MenuItem(redoAction))
-
-    addSeparator()
-
-    add(new MenuItem(cutAction))
-    add(new MenuItem(copyAction))
-    add(new MenuItem(pasteAction))
-    add(new MenuItem(deleteAction))
-
-    addSeparator()
-
-    add(new MenuItem(selectAllAction))
-
-    addSeparator()
-
-    add(new Menu(I18N.gui("folding")) {
-      setMnemonic(KeyEvent.VK_O)
-
-      add(new MenuItem(foldSelectedAction))
-      add(new MenuItem(unfoldSelectedAction))
-      add(new MenuItem(foldAllAction))
-      add(new MenuItem(unfoldAllAction))
-    })
-
-    addSeparator()
-
-    add(new MenuItem(quickHelpAction))
-    add(new MenuItem(toggleCommentsAction))
-    add(new MenuItem(shiftLeftAction))
-    add(new MenuItem(shiftRightAction))
-    add(new MenuItem(showUsageAction))
-    add(new MenuItem(jumpToDeclarationAction))
-  }
-
   private val menuKeyMask: Int = getToolkit.getMenuShortcutKeyMaskEx
 
   configuration.configureAdvancedEditorArea(this)
@@ -361,8 +325,41 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
   setCoreProgram(false)
 
   def showPopup(point: Point): Unit = {
-    popupMenu.syncTheme()
-    popupMenu.show(this, point.x, point.y)
+    new PopupMenu {
+      add(new MenuItem(undoAction))
+      add(new MenuItem(redoAction))
+
+      addSeparator()
+
+      add(new MenuItem(cutAction))
+      add(new MenuItem(copyAction))
+      add(new MenuItem(pasteAction))
+      add(new MenuItem(deleteAction))
+
+      addSeparator()
+
+      add(new MenuItem(selectAllAction))
+
+      addSeparator()
+
+      add(new Menu(I18N.gui("folding")) {
+        setMnemonic(KeyEvent.VK_O)
+
+        add(new MenuItem(foldSelectedAction))
+        add(new MenuItem(unfoldSelectedAction))
+        add(new MenuItem(foldAllAction))
+        add(new MenuItem(unfoldAllAction))
+      })
+
+      addSeparator()
+
+      add(new MenuItem(quickHelpAction))
+      add(new MenuItem(toggleCommentsAction))
+      add(new MenuItem(shiftLeftAction))
+      add(new MenuItem(shiftRightAction))
+      add(new MenuItem(showUsageAction))
+      add(new MenuItem(jumpToDeclarationAction))
+    }.show(this, point.x, point.y)
   }
 
   override def processKeyEvent(e: KeyEvent): Unit = {

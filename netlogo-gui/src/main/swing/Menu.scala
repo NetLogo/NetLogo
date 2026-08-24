@@ -2,8 +2,8 @@
 
 package org.nlogo.swing
 
-import java.awt.{ Component, Graphics }
-import javax.swing.{ Action, Icon, JMenu, JMenuItem, JPopupMenu }
+import java.awt.{ Component, Graphics, Insets }
+import javax.swing.{ Action, Icon, JMenu, JMenuItem, JPopupMenu, UIManager }
 import javax.swing.border.LineBorder
 import javax.swing.event.{ MenuEvent, MenuListener }
 import javax.swing.plaf.basic.BasicMenuUI
@@ -34,14 +34,14 @@ object Menu {
 }
 
 class Menu(text: String, var menuModel: MenuModel[Action, String]) extends JMenu(text) with UserAction.Menu
-                                                                   with ThemeSync {
+                                                                   with SyncZoom with ThemeSync {
 
   def this(text: String) = this(text, Menu.model)
 
   private val menuUI = new BasicMenuUI with ThemeSync {
     arrowIcon = new Icon {
-      override def getIconWidth: Int = 5
-      override def getIconHeight: Int = 9
+      override def getIconWidth: Int = Utils.zoom(5)
+      override def getIconHeight: Int = Utils.zoom(9)
 
       override def paintIcon(c: Component, g: Graphics, x: Int, y: Int): Unit = {
         val g2d = Utils.initGraphics2D(g)
@@ -78,14 +78,25 @@ class Menu(text: String, var menuModel: MenuModel[Action, String]) extends JMenu
     override def menuDeselected(e: MenuEvent): Unit = {}
 
     override def menuSelected(e: MenuEvent): Unit = {
-      getMenuComponents.foreach(_ match {
-        case menu: MenuItem => menu.updateEnabled()
+      getMenuComponents.foreach {
+        case item: MenuItem =>
+          item.updateEnabled()
+          item.syncZoom()
+
+        case sync: SyncZoom =>
+          sync.syncZoom()
+
         case _ =>
-      })
+      }
     }
   })
 
+  override def getInsets: Insets =
+    Utils.zoomInsets(super.getInsets)
+
   override def getPopupMenu: JPopupMenu = {
+    UIManager.put("PopupMenu.borderCornerRadius", Utils.zoom(4))
+
     val menu = super.getPopupMenu
 
     menu.setBackground(InterfaceColors.menuBackground())

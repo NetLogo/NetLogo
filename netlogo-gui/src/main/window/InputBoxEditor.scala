@@ -2,11 +2,11 @@
 
 package org.nlogo.window
 
-import javax.swing.JLabel
+import javax.swing.{ BoxLayout, JLabel }
 
 import org.nlogo.api.Options
 import org.nlogo.theme.InterfaceColors
-import org.nlogo.swing.{ CheckBox, ComboBox }
+import org.nlogo.swing.{ CheckBox, ComboBox, HorizontalStrut }
 
 import scala.util.{ Success, Try }
 
@@ -32,8 +32,12 @@ class InputBoxEditor[InputType <: InputBox#InputType](accessor: PropertyAccessor
     setSelected(originalMultiline)
   }
 
+  setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
+
   add(label)
+  add(new HorizontalStrut(6))
   add(typeCombo)
+  add(new HorizontalStrut(6))
   add(multiline)
 
   private def selected: Option[InputType] = typeCombo.getSelectedItem

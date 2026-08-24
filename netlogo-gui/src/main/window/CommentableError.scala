@@ -45,10 +45,6 @@ class CommentableError(val editorArea: AbstractEditorArea) {
     errorLabel.setWarning(warning)
   }
 
-  def zoom(zoomFactor: Double): Unit = {
-    errorLabel.zoom(zoomFactor)
-  }
-
   def setVisible(isVisible: Boolean): Unit = {
     component.setVisible(isVisible)
   }

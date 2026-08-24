@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import java.awt.BorderLayout
+import java.awt.{ BorderLayout, Dimension }
 
 import org.nlogo.swing.CheckBox
 import org.nlogo.theme.InterfaceColors
@@ -30,6 +30,9 @@ class BooleanEditor(accessor: PropertyAccessor[Boolean]) extends PropertyEditor(
   override def setToolTipText(text: String): Unit = {
     checkbox.setToolTipText(text)
   }
+
+  override def getMaximumSize: Dimension =
+    new Dimension(super.getMaximumSize.width, getPreferredSize.height)
 
   override def syncTheme(): Unit = {
     checkbox.setForeground(InterfaceColors.dialogText())

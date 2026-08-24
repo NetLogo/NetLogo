@@ -2,21 +2,22 @@
 
 package org.nlogo.app
 
-import java.awt.{ BorderLayout, Cursor, Dimension, Frame }
+import java.awt.{ Cursor, Dimension, Frame }
 import java.awt.event.{ WindowAdapter, WindowEvent }
 import javax.swing.{ JDialog, JEditorPane, JLabel, Timer, WindowConstants }
-import javax.swing.border.{ EmptyBorder, LineBorder }
+import javax.swing.border.LineBorder
 
 import org.nlogo.api.{ APIVersion, FileIO, Version }
 import org.nlogo.awt.Positioning
 import org.nlogo.core.I18N
 import org.nlogo.editor.EditorConfiguration
-import org.nlogo.swing.{ RichAction, ScrollPane, TabbedPane, TextArea, Utils, WindowAutomator }
+import org.nlogo.swing.{ BoxColumn, RichAction, ScrollPane, SyncZoom, TabbedPane, TextArea, Utils, VerticalStrut,
+                         WindowAutomator, ZoomableBorder, ZoomActions }
 import org.nlogo.theme.{ DarkTheme, InterfaceColors, ThemeSync }
 import org.nlogo.util.SysInfo
 
-class AboutWindow(parent: Frame) extends JDialog(parent, I18N.gui.get("dialog.about"), false)
-                                 with ThemeSync {
+class AboutWindow(parent: Frame)
+  extends JDialog(parent, I18N.gui.get("dialog.about"), false) with ZoomActions with ThemeSync {
 
   WindowAutomator.automate(this)
 
@@ -25,7 +26,7 @@ class AboutWindow(parent: Frame) extends JDialog(parent, I18N.gui.get("dialog.ab
     setFont(EditorConfiguration.getMonospacedFont)
     setLineWrap(true)
     setWrapStyleWord(true)
-    setBorder(new EmptyBorder(5, 10, 5, 10))
+    setBorder(new ZoomableBorder(5, 10, 5, 10))
     setDragEnabled(false)
     setEditable(false)
     setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR))
@@ -46,7 +47,7 @@ class AboutWindow(parent: Frame) extends JDialog(parent, I18N.gui.get("dialog.ab
       SysInfo.getScalaVersionString + "\n"
 
   private val graphic = new JLabel {
-    setBorder(new EmptyBorder(10, 10, 0, 10))
+    setBorder(new ZoomableBorder(10, 10, 0, 10))
   }
 
   private val citationText =
@@ -81,7 +82,7 @@ class AboutWindow(parent: Frame) extends JDialog(parent, I18N.gui.get("dialog.ab
     setLineWrap(true)
     setWrapStyleWord(true)
     setEditable(false)
-    setBorder(new EmptyBorder(5, 10, 5, 10))
+    setBorder(new ZoomableBorder(5, 10, 5, 10))
     setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR))
 
     override def syncTheme(): Unit = {
@@ -104,40 +105,52 @@ class AboutWindow(parent: Frame) extends JDialog(parent, I18N.gui.get("dialog.ab
     add(I18N.gui.get("dialog.about.system"), systemScrollPane)
   }
 
-  locally {
-    setResizable(false)
-    setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE)
+  private val contents = new BoxColumn(Seq(
+    graphic,
+    new VerticalStrut(10),
+    label,
+    new VerticalStrut(10),
+    tabs
+  )) with SyncZoom {
+    setOpaque(true)
 
-    refreshSystemText()
+    override def zoom(oldZoom: Float): Unit = {
+      super.zoom(oldZoom)
 
-    getContentPane.setLayout(new BorderLayout(0, 10))
-    getContentPane.add(graphic, BorderLayout.NORTH)
-
-    getContentPane.add(label, BorderLayout.CENTER)
-    getContentPane.add(tabs, BorderLayout.SOUTH)
-
-    syncTheme()
-
-    Utils.addEscKeyAction(this, RichAction{ _ => dispose() } )
-    pack()
-    Positioning.center(this,null)
-
-    // Bring the parent frame (the main NetLogo window) to front.
-    // Otherwise this will be obscured (sometimes completely) by
-    // the front window (e.g. the System Dynamics Modeler) on OS X,
-    // because of the way that non-modal dialogs are layered with
-    // their parent. Maybe this should be an independent frame and
-    // not a dialog...  - AZS 6/18/05
-    parent.toFront()
-
-    refreshTimer.start()
-
-    addWindowListener(new WindowAdapter {
-      override def windowClosed(e: WindowEvent): Unit = {
-        refreshTimer.stop()
-      }
-    })
+      pack()
+    }
   }
+
+  setResizable(false)
+  setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE)
+
+  refreshSystemText()
+
+  setContentPane(contents)
+
+  contents.syncZoom()
+
+  syncTheme()
+
+  Utils.addEscKeyAction(this, RichAction{ _ => dispose() } )
+  pack()
+  Positioning.center(this,null)
+
+  // Bring the parent frame (the main NetLogo window) to front.
+  // Otherwise this will be obscured (sometimes completely) by
+  // the front window (e.g. the System Dynamics Modeler) on OS X,
+  // because of the way that non-modal dialogs are layered with
+  // their parent. Maybe this should be an independent frame and
+  // not a dialog...  - AZS 6/18/05
+  parent.toFront()
+
+  refreshTimer.start()
+
+  addWindowListener(new WindowAdapter {
+    override def windowClosed(e: WindowEvent): Unit = {
+      refreshTimer.stop()
+    }
+  })
 
   private def refreshSystemText(): Unit = {
     val newGraphicsInfo = SysInfo.getMemoryInfoString + "\n\n" +
@@ -156,7 +169,7 @@ class AboutWindow(parent: Frame) extends JDialog(parent, I18N.gui.get("dialog.ab
   }
 
   override def syncTheme(): Unit = {
-    getContentPane.setBackground(InterfaceColors.dialogBackground())
+    contents.setBackground(InterfaceColors.dialogBackground())
 
     if (InterfaceColors.getTheme == DarkTheme) {
       graphic.setIcon(Utils.iconScaled("/images/banner-dark-versionless.png", 600, 231))

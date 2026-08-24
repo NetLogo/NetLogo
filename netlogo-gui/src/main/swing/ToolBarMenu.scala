@@ -2,19 +2,18 @@
 
 package org.nlogo.swing
 
-import java.awt.FlowLayout
 import java.awt.event.{ ActionEvent, MouseAdapter, MouseEvent }
-import javax.swing.{ AbstractAction, JButton, JLabel }
+import javax.swing.{ AbstractAction, BoxLayout, JButton, JLabel }
 
 abstract class ToolBarMenu(name: String) extends JButton with Transparent {
-  setBorder(null)
-
-  setLayout(new FlowLayout(FlowLayout.LEADING, 8, 6))
+  setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
+  setBorder(new ZoomableBorder(6, 8, 6, 8))
 
   protected val label = new JLabel(name)
   protected val arrow = new DropdownArrow
 
   add(label)
+  add(new HorizontalStrut(8))
   add(arrow)
 
   setAction(new AbstractAction {

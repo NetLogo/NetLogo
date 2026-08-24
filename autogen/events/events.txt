@@ -60,4 +60,3 @@ window.WidgetAdded - Object widget
 window.WidgetError - Widget widget - scala.Option<Exception> error
 window.WidgetForegrounded - Widget widget
 window.WidgetRemoved - Widget widget
-window.Zoomed - int action

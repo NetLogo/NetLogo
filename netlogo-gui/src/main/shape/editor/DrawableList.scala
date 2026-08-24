@@ -18,8 +18,7 @@ class DrawableList[A <: Shape](shapeTracker: ShapeListTracker, rows: Int, height
 
   setVisibleRowCount(rows)
   setModel(listModel)
-  setFixedCellHeight(height)
-  setCellRenderer(new ShapeCellRenderer())
+  setCellRenderer(new ShapeCellRenderer(height))
 
   //  Make sure the list of available shapes is up to date, filtering by name if provided
   def update(name: Option[String] = None): Unit = {

@@ -2,12 +2,13 @@
 
 package org.nlogo.window
 
-import java.awt.{ GridBagConstraints, Insets }
+import java.awt.Dimension
+import javax.swing.{ Box, BoxLayout }
 
 import org.nlogo.api.CompilerServices
 import org.nlogo.core.I18N
 import org.nlogo.editor.Colorizer
-import org.nlogo.swing.AutomationUtils
+import org.nlogo.swing.{ AutomationUtils, BoxColumn, BoxRow, HorizontalStrut, VerticalStrut, ZoomableBorder }
 
 class MonitorEditPanel(target: MonitorWidget, compiler: CompilerServices, colorizer: Colorizer)
   extends WidgetEditPanel(target) {
@@ -69,47 +70,28 @@ class MonitorEditPanel(target: MonitorWidget, compiler: CompilerServices, colori
         _.foreach(target.oldSize),
         () => apply()))
 
-  locally {
-    val c = new GridBagConstraints
+  setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
+  setBorder(new ZoomableBorder(6, 6, 6, 6))
 
-    c.gridy = 0
-    c.gridwidth = 2
-    c.anchor = GridBagConstraints.WEST
-    c.fill = GridBagConstraints.BOTH
-    c.weightx = 1
-    c.weighty = 1
-    c.insets = new Insets(6, 6, 6, 6)
-
-    add(wrapSource, c)
-
-    c.gridy = 1
-    c.fill = GridBagConstraints.HORIZONTAL
-    c.weighty = 0
-    c.insets = new Insets(0, 6, 6, 6)
-
-    add(name, c)
-
-    c.gridy = 2
-    c.gridwidth = 1
-    c.insets = new Insets(0, 6, 6, 6)
-
-    add(decimalLabeled, c)
-
-    c.insets = new Insets(0, 0, 6, 6)
-
-    add(units, c)
-
-    c.gridy = 3
-    c.gridwidth = 2
-    c.insets = new Insets(0, 6, 6, 6)
-
-    add(fontSize, c)
-
-    c.gridy = 4
-    c.fill = GridBagConstraints.NONE
-
-    add(oldSize, c)
-  }
+  add(wrapSource)
+  add(new VerticalStrut(6))
+  add(name)
+  add(new VerticalStrut(6))
+  add(new BoxRow(Seq(
+    decimalLabeled,
+    new HorizontalStrut(6),
+    new BoxColumn(Seq(
+      units,
+      Box.createVerticalGlue
+    ))
+  )) {
+    override def getMaximumSize: Dimension =
+      new Dimension(super.getMaximumSize.width, getPreferredSize.height)
+  })
+  add(new VerticalStrut(6))
+  add(fontSize)
+  add(new VerticalStrut(6))
+  add(oldSize)
 
   override def propertyEditors: Seq[PropertyEditor[?]] =
     Seq(wrapSource, name, decimalPlaces, units, fontSize, oldSize)

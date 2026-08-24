@@ -2,11 +2,11 @@
 
 package org.nlogo.window
 
-import java.awt.{ BorderLayout, EventQueue }
-import javax.swing.JLabel
+import java.awt.{ Dimension, EventQueue }
+import javax.swing.{ BoxLayout, JLabel }
 import javax.swing.event.{ DocumentEvent, DocumentListener }
 
-import org.nlogo.swing.{ FixedLengthDocument, TextField }
+import org.nlogo.swing.{ FixedLengthDocument, HorizontalStrut, TextField }
 import org.nlogo.theme.InterfaceColors
 
 import scala.util.{ Success, Try }
@@ -16,8 +16,6 @@ class KeyEditor(accessor: PropertyAccessor[Char]) extends PropertyEditor(accesso
 
   // 2 not 1 here otherwise "W" doesn't fit - ST 1/18/05
   private val editor = new TextField(2, "", new FixedLengthDocument(1)) {
-    setMaximumSize(getPreferredSize)
-
     // use a listener to make it so that after I type a character that character is selected, so if
     // I type another one it replaces the old one - ST 8/6/04
     val listener = new DocumentListener {
@@ -37,12 +35,16 @@ class KeyEditor(accessor: PropertyAccessor[Char]) extends PropertyEditor(accesso
     }
 
     getDocument.addDocumentListener(listener)
+
+    override def getMaximumSize: Dimension =
+      getPreferredSize
   }
 
-  setLayout(new BorderLayout(6, 0))
+  setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
 
-  add(label, BorderLayout.WEST)
-  add(editor, BorderLayout.CENTER)
+  add(label)
+  add(new HorizontalStrut(6))
+  add(editor)
 
   override def get: Try[Char] = Success(
     if (editor.getText.isEmpty) '\u0000'
@@ -54,6 +56,9 @@ class KeyEditor(accessor: PropertyAccessor[Char]) extends PropertyEditor(accesso
   }
 
   override def requestFocus(): Unit = { editor.requestFocus() }
+
+  override def getMaximumSize: Dimension =
+    new Dimension(super.getMaximumSize.width, getPreferredSize.height)
 
   override def syncTheme(): Unit = {
     label.setForeground(InterfaceColors.dialogText())

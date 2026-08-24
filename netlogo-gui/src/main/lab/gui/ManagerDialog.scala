@@ -2,12 +2,12 @@
 
 package org.nlogo.lab.gui
 
-import java.awt.{ Component, Dimension, EventQueue, FileDialog => JFileDialog, FlowLayout, GridBagConstraints,
-                  GridBagLayout, Insets }
+import java.awt.{ Component, Dimension, EventQueue, FileDialog => JFileDialog }
 import java.awt.event.ActionEvent
 import java.io.{ File, PrintWriter }
 import java.nio.file.{ Files, Path, Paths }
-import javax.swing.{ AbstractAction, DefaultListModel, JDialog, JLabel, JList, JMenuBar, JPanel, ListCellRenderer }
+import javax.swing.{ AbstractAction, Box, BoxLayout, DefaultListModel, JDialog, JLabel, JList, JMenuBar, JPanel,
+                     ListCellRenderer }
 import javax.swing.event.{ ListSelectionEvent, ListSelectionListener }
 
 import org.nlogo.analytics.Analytics
@@ -15,7 +15,8 @@ import org.nlogo.api.{ Exceptions, LabProtocol, ModelReader, RefEnumeratedValueS
 import org.nlogo.awt.UserCancelException
 import org.nlogo.core.{ I18N, Model }
 import org.nlogo.editor.Colorizer
-import org.nlogo.swing.{ Button, FileDialog, OptionPane, Positioning, ScrollPane, Transparent, Utils, WindowAutomator }
+import org.nlogo.swing.{ BoxColumn, BoxRow, Button, FileDialog, HorizontalStrut, OptionPane, Positioning, PreferredSize,
+                         ScrollPane, SyncZoom, Utils, VerticalStrut, WindowAutomator, ZoomableBorder, ZoomActions }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ EditDialog, EditDialogFactory, MenuBarFactory }
 
@@ -26,7 +27,7 @@ class ManagerDialog(manager:       LabManager,
                     dialogFactory: EditDialogFactory,
                     colorizer:     Colorizer,
                     menuFactory:   MenuBarFactory)
-  extends JDialog(manager.workspace.getFrame) with ListSelectionListener with ThemeSync {
+  extends JDialog(manager.workspace.getFrame) with ListSelectionListener with ZoomActions with ThemeSync {
 
   private implicit val i18NPrefix: I18N.Prefix = I18N.Prefix("tools.behaviorSpace")
 
@@ -76,7 +77,10 @@ class ManagerDialog(manager:       LabManager,
         edit()
       }
     } })
-  jlist.setCellRenderer(new ProtocolRenderer)
+
+  private val renderer = new ProtocolRenderer
+
+  jlist.setCellRenderer(renderer)
 
   private val listLabel = new JLabel(I18N.gui("experiments"))
   private val scrollPane = new ScrollPane(jlist)
@@ -90,44 +94,49 @@ class ManagerDialog(manager:       LabManager,
   private val abortButton = new Button(abortAction)
   private val runButton = new Button(runAction)
 
-  getContentPane.setLayout(new GridBagLayout)
+  private val contents = new BoxColumn(Seq(
+    new BoxRow(Seq(
+      listLabel,
+      Box.createHorizontalGlue
+    )),
+    new VerticalStrut(6),
+    scrollPane,
+    new VerticalStrut(6),
+    new BoxRow(Seq(
+      newButton,
+      new HorizontalStrut(6),
+      editButton,
+      new HorizontalStrut(6),
+      duplicateButton,
+      new HorizontalStrut(6),
+      deleteButton
+    )) with PreferredSize,
+    new VerticalStrut(6),
+    new BoxRow(Seq(
+      importButton,
+      new HorizontalStrut(6),
+      exportButton,
+      new HorizontalStrut(6),
+      abortButton,
+      new HorizontalStrut(6),
+      runButton
+    )) with PreferredSize
+  )) with SyncZoom {
+    setOpaque(true)
+    setBorder(new ZoomableBorder(6, 6, 6, 6))
 
-  locally {
-    val c = new GridBagConstraints
+    override def zoom(oldZoom: Float): Unit = {
+      super.zoom(oldZoom)
 
-    c.gridx = 0
-    c.anchor = GridBagConstraints.WEST
-    c.fill = GridBagConstraints.HORIZONTAL
-    c.weightx = 1
-    c.insets = new Insets(6, 6, 6, 6)
+      renderer.syncZoom()
 
-    getContentPane.add(listLabel, c)
-
-    c.anchor = GridBagConstraints.CENTER
-    c.fill = GridBagConstraints.BOTH
-    c.weighty = 1
-    c.insets = new Insets(0, 6, 6, 6)
-
-    getContentPane.add(scrollPane, c)
-
-    c.fill = GridBagConstraints.HORIZONTAL
-    c.weighty = 0
-    c.insets = new Insets(0, 6, 6, 6)
-
-    getContentPane.add(new JPanel(new FlowLayout(FlowLayout.CENTER, 6, 0)) with Transparent {
-      add(newButton)
-      add(editButton)
-      add(duplicateButton)
-      add(deleteButton)
-    }, c)
-
-    getContentPane.add(new JPanel(new FlowLayout(FlowLayout.CENTER, 6, 0)) with Transparent {
-      add(importButton)
-      add(exportButton)
-      add(abortButton)
-      add(runButton)
-    }, c)
+      pack()
+    }
   }
+
+  setContentPane(contents)
+
+  contents.syncZoom()
 
   pack()
 
@@ -146,8 +155,10 @@ class ManagerDialog(manager:       LabManager,
   def anyRunning: Boolean =
     running.nonEmpty
 
-  override def getPreferredSize: Dimension =
-    new Dimension(super.getPreferredSize.width.max(400), super.getPreferredSize.height.max(300))
+  override def getPreferredSize: Dimension = {
+    new Dimension(super.getPreferredSize.width.max(Utils.zoom(400)),
+                  super.getPreferredSize.height.max(Utils.zoom(300)))
+  }
 
   private def saveProtocol(protocol: LabProtocol, runsCompleted: Int): Unit = {
     running.get(protocol).foreach(_.abort())
@@ -410,7 +421,7 @@ class ManagerDialog(manager:       LabManager,
   }
 
   override def syncTheme(): Unit = {
-    getContentPane.setBackground(InterfaceColors.dialogBackground())
+    contents.setBackground(InterfaceColors.dialogBackground())
     listLabel.setForeground(InterfaceColors.dialogText())
     scrollPane.setBackground(InterfaceColors.dialogBackground())
     jlist.setBackground(InterfaceColors.dialogBackground())
@@ -463,10 +474,14 @@ class ManagerDialog(manager:       LabManager,
     supervisor.succeeded
   }
 
-  class ProtocolRenderer extends JPanel(new FlowLayout(FlowLayout.LEFT)) with ListCellRenderer[LabProtocol] {
+  class ProtocolRenderer extends JPanel with ListCellRenderer[LabProtocol] with SyncZoom {
     private val label = new JLabel
 
+    setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
+    setBorder(new ZoomableBorder(6, 6, 6, 6))
+
     add(label)
+    add(Box.createHorizontalGlue)
 
     def getListCellRendererComponent(list: JList[? <: LabProtocol], proto: LabProtocol, index: Int,
                                      isSelected: Boolean, cellHasFocus: Boolean): Component = {

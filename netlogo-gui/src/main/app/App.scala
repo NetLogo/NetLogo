@@ -4,7 +4,7 @@ package org.nlogo.app
 
 import com.jthemedetecor.OsThemeDetector
 
-import java.awt.{ Dimension, EventQueue, Frame, KeyboardFocusManager, Toolkit, BorderLayout}
+import java.awt.{ BorderLayout, Dimension, EventQueue, Frame, KeyboardFocusManager, Toolkit, Window }
 import java.awt.datatransfer.DataFlavor
 import java.awt.dnd.{ DropTarget, DropTargetDragEvent, DropTargetDropEvent, DropTargetEvent, DropTargetListener }
 import java.awt.event.{ ActionEvent, KeyEvent }
@@ -12,7 +12,7 @@ import java.io.File
 import java.lang.ProcessHandle
 import java.net.{ ConnectException, URI }
 import java.util.{ List => JList }
-import javax.swing.{ JFrame, JMenu, ToolTipManager }
+import javax.swing.{ JFrame, JMenu, JRootPane, ToolTipManager }
 
 import scala.concurrent.ExecutionContext
 import scala.io.{ Codec, Source }
@@ -45,7 +45,7 @@ import org.nlogo.render.Renderer
 import org.nlogo.sdm.gui.{ GUIAggregateManager, NLogoGuiSDMFormat, NLogoThreeDGuiSDMFormat, SDMGuiAutoConvertable }
 import org.nlogo.shape.editor.{ LinkShapeManagerDialog, TurtleShapeManagerDialog }
 import org.nlogo.swing.{ AppUtils, BrowserLauncher, DropdownOptionPane, FileDialog, InputOptionPane, Menu, OptionPane,
-                         Positioning, PrinterManager, UserAction, WindowAutomator },
+                         Positioning, PrinterManager, UserAction, Utils, WindowAutomator, ZoomActions },
   UserAction.{ ActionCategoryKey, EditCategory, FileCategory, HelpCategory, MenuAction, ToolsCategory }
 import org.nlogo.theme.{ DarkTheme, InterfaceColors, LightTheme, ThemeSync }
 import org.nlogo.util.AppHandler
@@ -275,7 +275,7 @@ class App(args: App.CommandLineArgs) extends LinkChild with Exceptions.Handler w
   with BeforeLoadEvent.Handler with LoadBeginEvent.Handler with LoadEndEvent.Handler with LoadModelEvent.Handler
   with ModelSavedEvent.Handler with ModelSections with AppEvents.SwitchedTabsEvent.Handler
   with AppEvents.OpenLibrariesDialogEvent.Handler with AppEvents.RestartEvent.Handler with AboutToQuitEvent.Handler
-  with ZoomedEvent.Handler with Controllable {
+  with Controllable {
 
   val frame = new AppFrame
 
@@ -512,6 +512,8 @@ class App(args: App.CommandLineArgs) extends LinkChild with Exceptions.Handler w
 
   private def finishStartup(appHandler: AppHandler): Unit = {
     try {
+      ZoomActions.init(zoomIn, zoomOut, resetZoom)
+
       frame.getContentPane.add(tabManager.mainTabs, BorderLayout.CENTER)
 
       allActions.foreach(mainMenuBar.offerAction)
@@ -522,6 +524,8 @@ class App(args: App.CommandLineArgs) extends LinkChild with Exceptions.Handler w
       tabManager.init(fileManager, dirtyMonitor, monitorManager, mainMenuBar, allActions)
 
       FindDialog.init(frame, tabManager.separateTabsWindow)
+
+      resetZoom()
 
       // OK, this is a little kludgy.  First we pack so everything
       // is realized, and all addNotify() methods are called.  But
@@ -749,12 +753,33 @@ class App(args: App.CommandLineArgs) extends LinkChild with Exceptions.Handler w
 
   /// zooming
 
-  def handle(e: ZoomedEvent): Unit = {
-    smartPack(frame.getPreferredSize, false)
+  def zoomIn(): Unit = {
+    setZoomFactor(Utils.getZoomFactor + 0.125f)
+  }
+
+  def zoomOut(): Unit = {
+    setZoomFactor((Utils.getZoomFactor - 0.125f).max(0.25f))
   }
 
   def resetZoom(): Unit = {
-    new ZoomedEvent(0).raise(this)
+    setZoomFactor(1)
+  }
+
+  private def setZoomFactor(factor: Float): Unit = {
+    val oldZoom: Float = Utils.getZoomFactor
+
+    Utils.setZoomFactor(factor)
+
+    Window.getWindows.flatMap(_.getComponents).collect {
+      case root: JRootPane =>
+        root.getContentPane
+    }.foreach(Utils.zoomComponents(_, oldZoom))
+
+    Utils.zoomMenuBar(mainMenuBar, oldZoom)
+
+    FindDialog.zoom(oldZoom)
+
+    smartPack(frame.getPreferredSize, false)
   }
 
   lazy val openPreferencesDialog = new ShowPreferencesDialog(frame, tabManager, tabManager.interfaceTab.iP)

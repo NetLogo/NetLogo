@@ -2,15 +2,15 @@
 
 package org.nlogo.app.tools
 
-import java.awt.{ Frame, GridBagConstraints, GridBagLayout, Insets }
-import javax.swing.{ ButtonGroup, JLabel, JPanel }
+import java.awt.Frame
+import javax.swing.{ BoxLayout, ButtonGroup, JLabel, JPanel }
 
 import org.nlogo.analytics.Analytics
 import org.nlogo.core.{ I18N, NetLogoPreferences }
-import org.nlogo.swing.{ RadioButton, Transparent }
+import org.nlogo.swing.{ BoxColumn, Centered, RadioButton, Transparent, VerticalStrut, ZoomableBorder }
 import org.nlogo.theme.{ ClassicTheme, ColorTheme, DarkTheme, InterfaceColors, LightTheme, ThemeSync }
 
-class ThemesPanel(frame: Frame & ThemeSync) extends JPanel(new GridBagLayout) with Transparent with ThemeSync {
+class ThemesPanel(frame: Frame & ThemeSync) extends JPanel with Transparent with ThemeSync {
   private implicit val i18nPrefix: I18N.Prefix = I18N.Prefix("tools.preferences.themes")
 
   private val label = new JLabel(s"<html>${I18N.gui("text")}</html>")
@@ -29,37 +29,26 @@ class ThemesPanel(frame: Frame & ThemeSync) extends JPanel(new GridBagLayout) wi
     }
   }
 
-  locally {
-    val c = new GridBagConstraints
+  setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
+  setBorder(new ZoomableBorder(24, 12, 24, 12))
 
-    c.gridx = 0
-    c.anchor = GridBagConstraints.NORTH
-    c.insets = new Insets(24, 12, 24, 12)
+  add(new Centered(label))
+  add(new VerticalStrut(12))
+  add(new Centered(BoxColumn(Seq(
+    systemButton,
+    new VerticalStrut(6),
+    lightButton,
+    new VerticalStrut(6),
+    darkButton,
+    new VerticalStrut(6),
+    classicButton
+  ))))
 
-    add(label, c)
-
-    c.weighty = 1
-    c.insets = new Insets(0, 12, 24, 12)
-
-    add(new JPanel(new GridBagLayout) with Transparent {
-      val c = new GridBagConstraints
-
-      c.gridx = 0
-      c.anchor = GridBagConstraints.WEST
-      c.insets = new Insets(0, 6, 6, 6)
-
-      add(systemButton, c)
-      add(lightButton, c)
-      add(darkButton, c)
-      add(classicButton, c)
-    }, c)
-
-    val themeButtons = new ButtonGroup
-
-    themeButtons.add(systemButton)
-    themeButtons.add(classicButton)
-    themeButtons.add(lightButton)
-    themeButtons.add(darkButton)
+  new ButtonGroup {
+    add(systemButton)
+    add(classicButton)
+    add(lightButton)
+    add(darkButton)
   }
 
   def init(): Unit = {

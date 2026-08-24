@@ -13,14 +13,14 @@ import org.nlogo.analytics.Analytics
 import org.nlogo.api.Dump
 import org.nlogo.app.common.CommandLine
 import org.nlogo.core.{ AgentKind, I18N }
-import org.nlogo.swing.{ NetLogoIcon, Utils => SwingUtils }
+import org.nlogo.swing.{ NetLogoIcon, Utils, ZoomActions }
 import org.nlogo.theme.ThemeSync
 import org.nlogo.window.{ Event, Events => WindowEvents }
 
 class AgentMonitorWindow(val agentKind: AgentKind, _agent: Agent, radius: Double,
                          manager: AgentMonitorManager, parent: Frame)
   extends JDialog(parent) with Event.LinkChild with WindowEvents.PeriodicUpdateEvent.Handler
-  with WindowEvents.PatchesCreatedEvent.Handler with WindowEvents.LoadBeginEvent.Handler with ThemeSync
+  with WindowEvents.PatchesCreatedEvent.Handler with WindowEvents.LoadBeginEvent.Handler with ZoomActions with ThemeSync
   with NetLogoIcon {
 
   private val monitor = {
@@ -46,7 +46,7 @@ class AgentMonitorWindow(val agentKind: AgentKind, _agent: Agent, radius: Double
       override def getFirstComponent(focusCycleRoot: Container) =
         monitor.commandLine.textField
     })
-  SwingUtils.addEscKeyAction(
+  Utils.addEscKeyAction(
     getRootPane, new AbstractAction {
       def actionPerformed(e: ActionEvent): Unit = {
         close()
@@ -142,9 +142,11 @@ class AgentMonitorWindow(val agentKind: AgentKind, _agent: Agent, radius: Double
         case AgentKind.Patch => Analytics.patchMonitorOpen()
         case AgentKind.Link => Analytics.linkMonitorOpen()
       }
-    }
 
-    pack()
+      monitor.syncZoom()
+
+      pack()
+    }
 
     super.setVisible(visible)
   }

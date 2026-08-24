@@ -38,10 +38,8 @@ class DummyViewWidget(val world: World) extends SingleErrorWidget with Editable 
   }
 
   override def editFinished(): Boolean = {
-    if (newWidth != getWidth || newHeight != getHeight) {
+    if (newWidth != getWidth || newHeight != getHeight)
       setSize(new Dimension(newWidth, newHeight))
-      resetSizeInfo()
-    }
 
     true
   }
@@ -66,7 +64,7 @@ class DummyViewWidget(val world: World) extends SingleErrorWidget with Editable 
 
   /// load & save
   override def model: CoreWidget = {
-    val b = getUnzoomedBounds
+    val b = unzoomedBounds
     CoreView(
       x = b.x, y = b.y, width = b.width, height = b.height,
       dimensions = world.getDimensions)

@@ -41,6 +41,8 @@ class DynamicRowLayout(target: Container, spacing: Int) extends LayoutManager2 {
 
   override def layoutContainer(target: Container): Unit = {
     target.getTreeLock synchronized {
+      val spacing: Int = Utils.zoom(this.spacing)
+
       val size = target.getSize
 
       existingSize = Option(size)
@@ -110,6 +112,8 @@ class DynamicRowLayout(target: Container, spacing: Int) extends LayoutManager2 {
   override def minimumLayoutSize(target: Container): Dimension = {
     cachedMinimumSize.getOrElse {
       target.getTreeLock synchronized {
+        val spacing: Int = Utils.zoom(this.spacing)
+
         val (maxWidth, totalHeight) = rows.foldLeft((0, 0)) {
           case ((width, height), Row(components, _, _)) =>
             val (rowWidth, rowHeight) = components.foldLeft((0, 0)) {

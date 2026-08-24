@@ -5,7 +5,8 @@ package org.nlogo.app.common
 import java.awt.{ BorderLayout, Frame, Toolkit }
 import java.awt.event.{ ActionEvent, ActionListener, FocusEvent, KeyEvent }
 import java.util.Locale
-import javax.swing.{ AbstractAction, Action, Box, BoxLayout, JDialog, JEditorPane, JLabel, JPanel, SwingConstants }
+import javax.swing.{ AbstractAction, Action, Box, BoxLayout, Icon, JDialog, JEditorPane, JLabel, JPanel,
+                     SwingConstants }
 import javax.swing.border.EmptyBorder
 import javax.swing.text.{ BadLocationException, TextAction }
 
@@ -13,10 +14,10 @@ import org.nlogo.core.I18N
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.swing.{ ButtonPanel, CheckBox, DialogButton, NonemptyTextFieldActionEnabler,
                          NonemptyTextFieldButtonEnabler, ScrollableTextComponent, TextField, TextFieldBox, Transparent,
-                         UserAction, Utils, WindowAutomator },
+                         UserAction, Utils, WindowAutomator, Zoomable },
   UserAction.{ EditCategory, EditFindGroup, KeyBindings, MenuAction }
 
-object FindDialog extends ThemeSync {
+object FindDialog extends Zoomable with ThemeSync {
   class FindAction extends TextAction(I18N.gui.get("menu.edit.find")) with MenuAction {
     category = EditCategory
     group = EditFindGroup
@@ -182,6 +183,20 @@ object FindDialog extends ThemeSync {
     }
   }
 
+  private def setIcons(): Unit = {
+    val size: Int = Utils.zoom(15)
+    val icon: Icon = Utils.iconScaledWithColor("/images/find.png", size, size, InterfaceColors.toolbarImage())
+
+    FIND_ACTION.putValue(Action.SMALL_ICON, icon)
+    FIND_ACTION_CODE.putValue(Action.SMALL_ICON, icon)
+    FIND_NEXT_ACTION.putValue(Action.SMALL_ICON, icon)
+    FIND_NEXT_ACTION_CODE.putValue(Action.SMALL_ICON, icon)
+  }
+
+  override def zoom(oldZoom: Float): Unit = {
+    setIcons()
+  }
+
   override def syncTheme(): Unit = {
     if (instance != null)
       instance.syncTheme()
@@ -189,14 +204,7 @@ object FindDialog extends ThemeSync {
     if (codeInstance != null)
       codeInstance.syncTheme()
 
-    FIND_ACTION.putValue(Action.SMALL_ICON, Utils.iconScaledWithColor("/images/find.png", 15, 15,
-                                                                      InterfaceColors.toolbarImage()))
-    FIND_ACTION_CODE.putValue(Action.SMALL_ICON, Utils.iconScaledWithColor("/images/find.png", 15, 15,
-                                                                           InterfaceColors.toolbarImage()))
-    FIND_NEXT_ACTION.putValue(Action.SMALL_ICON, Utils.iconScaledWithColor("/images/find.png", 15, 15,
-                                                                           InterfaceColors.toolbarImage()))
-    FIND_NEXT_ACTION_CODE.putValue(Action.SMALL_ICON, Utils.iconScaledWithColor("/images/find.png", 15, 15,
-                                                                                InterfaceColors.toolbarImage()))
+    setIcons()
   }
 }
 

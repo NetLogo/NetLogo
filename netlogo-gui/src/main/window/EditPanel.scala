@@ -2,7 +2,6 @@
 
 package org.nlogo.window
 
-import java.awt.GridBagLayout
 import javax.swing.JPanel
 
 import org.nlogo.core.I18N
@@ -12,7 +11,7 @@ import org.nlogo.theme.ThemeSync
 import scala.util.Failure
 
 // This is the contents of an EditDialog, except for the buttons at the bottom (OK/Apply/Cancel).
-abstract class EditPanel(target: Editable) extends JPanel(new GridBagLayout) with Transparent with ThemeSync {
+abstract class EditPanel(target: Editable) extends JPanel with Transparent with ThemeSync {
   // allows EditDialog to reset its minimum size if this panel's minimum size changes
   private var layoutListener: () => Unit = () => {}
 

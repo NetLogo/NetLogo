@@ -2,11 +2,12 @@
 
 package org.nlogo.lab.gui
 
-import java.awt.{ GridBagConstraints, Insets }
 import java.nio.file.Path
+import javax.swing.{ Box, BoxLayout }
 
 import org.nlogo.api.LabProtocol
 import org.nlogo.core.I18N
+import org.nlogo.swing.{ BoxRow, VerticalStrut, ZoomableBorder }
 import org.nlogo.window.{ BooleanEditor, EditPanel, FilePathEditor, IntegerEditor, LabeledEditor, OptionsEditor,
                           PositiveIntegerEditor, PropertyAccessor, PropertyEditor }
 
@@ -120,35 +121,30 @@ class RunOptionsEditPanel(target: RunOptionsDialog#EditableRunOptions, currentDi
         _.foreach(target.setErrorBehavior),
         () => apply()))
 
-  locally {
-    val c = new GridBagConstraints
+  setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
+  setBorder(new ZoomableBorder(6, 6, 6, 6))
 
-    c.gridx = 0
-    c.anchor = GridBagConstraints.WEST
-    c.fill = GridBagConstraints.HORIZONTAL
-    c.weightx = 1
-    c.insets = new Insets(6, 6, 6, 6)
-
-    add(spreadsheet, c)
-
-    c.insets = new Insets(0, 6, 6, 6)
-
-    add(table, c)
-    add(stats, c)
-    add(lists, c)
-    add(updateView, c)
-    add(updateLabeled, c)
-    add(threadCountLabeled, c)
-
-    c.fill = GridBagConstraints.NONE
-
-    add(errorBehavior, c)
-
-    c.fill = GridBagConstraints.HORIZONTAL
-
-    add(memoryLimitLabeled, c)
-    add(mirrorHeadlessOutput, c)
-  }
+  add(spreadsheet)
+  add(new VerticalStrut(6))
+  add(table)
+  add(new VerticalStrut(6))
+  add(table)
+  add(new VerticalStrut(6))
+  add(stats)
+  add(new VerticalStrut(6))
+  add(lists)
+  add(new VerticalStrut(6))
+  add(updateView)
+  add(new VerticalStrut(6))
+  add(updateLabeled)
+  add(new VerticalStrut(6))
+  add(threadCountLabeled)
+  add(new VerticalStrut(6))
+  add(new BoxRow(Seq(errorBehavior, Box.createHorizontalGlue)))
+  add(new VerticalStrut(6))
+  add(memoryLimitLabeled)
+  add(new VerticalStrut(6))
+  add(mirrorHeadlessOutput)
 
   override def propertyEditors: Seq[PropertyEditor[?]] =
     Seq(spreadsheet, table, stats, lists, updateView, updatePlotsAndMonitors, threadCount, errorBehavior, memoryLimit,

@@ -113,15 +113,13 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
       _selected = selected
       highlighted = selected
 
+      val border: Int = Utils.zoom(BorderSize)
+
       if (selected) {
-        setBounds(getX - BorderSize, getY - BorderSize,
-                  getWidth + BorderSize + BorderSize,
-                  getHeight + BorderSize + BorderSize)
+        setBounds(getX - border, getY - border, getWidth + border * 2, getHeight + border * 2)
       } else {
         isForeground(false)
-        setBounds(getX + BorderSize, getY + BorderSize,
-                  getWidth - BorderSize - BorderSize,
-                  getHeight - BorderSize - BorderSize)
+        setBounds(getX + border, getY + border, getWidth - border * 2, getHeight - border * 2)
       }
 
       revalidate()
@@ -191,6 +189,19 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
     }
   }
 
+  def zoomBounds(): Unit = {
+    val bounds: Rectangle = Utils.zoomBounds(widget.getUnzoomedBounds)
+
+    if (selected) {
+      val border: Int = Utils.zoom(BorderSize)
+
+      setBounds(new Rectangle(bounds.x - border, bounds.y - border, bounds.width + border * 2,
+                              bounds.height + border * 2))
+    } else {
+      setBounds(bounds)
+    }
+  }
+
   def isForeground: Boolean =
     _isForeground
 
@@ -223,16 +234,12 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
     if (dim == null)
       return null
 
-    val newDim =
-      getParent match {
-        case wp: WidgetPanel if !widget.isNote => wp.zoomer.zoomSize(dim)
-        case _ => dim
-      }
-
     if (selected) {
-      new Dimension(newDim.width + BorderSize + BorderSize, newDim.height + BorderSize + BorderSize)
+      val border: Int = Utils.zoom(BorderSize) * 2
+
+      new Dimension(dim.width + border, dim.height + border)
     } else {
-      newDim
+      dim
     }
   }
 
@@ -240,22 +247,17 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
     addWrapperBorder(widget.getMinimumSize)
 
   override def getPreferredSize: Dimension = {
-    addWrapperBorder(
-      if (widget.isNote) {
-        widget.getPreferredSize
-      } else {
-        widget.getUnzoomedPreferredSize
-      }
-    )
+    addWrapperBorder(widget.getPreferredSize)
   }
 
   override def getMaximumSize: Dimension =
     addWrapperBorder(widget.getMaximumSize)
 
   override def doLayout(): Unit = {
+    val border: Int = Utils.zoom(BorderSize)
+
     if (selected) {
-      widget.setBounds(BorderSize, BorderSize, getWidth - BorderSize - BorderSize,
-                       getHeight - BorderSize - BorderSize)
+      widget.setBounds(border, border, getWidth - border * 2, getHeight - border * 2)
     } else {
       widget.setBounds(0, 0, getWidth, getHeight)
     }
@@ -363,34 +365,38 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
   // purposes, BorderSize only contains the outer portion of GrabBuffer, but when checking for mouse clicks
   // we also want to have some GrabBuffer on the inside over top of the widget itself (Isaac B 7/11/25)
   private def getHandle(x: Int, y: Int): Option[MouseMode] = {
-    if (x < BorderSize + GrabBuffer) {
-      if (y < BorderSize + GrabBuffer) {
+    val border: Int = Utils.zoom(BorderSize)
+    val grab: Int = Utils.zoom(GrabBuffer)
+    val handle: Int = Utils.zoom(HandleSize)
+
+    if (x < border + grab) {
+      if (y < border + grab) {
         Some(MouseMode.NW)
-      } else if (y > getHeight - BorderSize - GrabBuffer) {
+      } else if (y > getHeight - border - grab) {
         Some(MouseMode.SW)
-      } else if (y <= (getHeight + HandleSize) / 2 + GrabBuffer && y >= (getHeight - HandleSize) / 2 - GrabBuffer) {
+      } else if (y <= (getHeight + handle) / 2 + grab && y >= (getHeight - handle) / 2 - grab) {
         Some(MouseMode.W)
       } else {
         None
       }
-    } else if (x > getWidth - BorderSize - GrabBuffer) {
-      if (y < BorderSize + GrabBuffer) {
+    } else if (x > getWidth - border - grab) {
+      if (y < border + grab) {
         Some(MouseMode.NE)
-      } else if (y > getHeight - BorderSize - GrabBuffer) {
+      } else if (y > getHeight - border - grab) {
         Some(MouseMode.SE)
-      } else if (y <= (getHeight + HandleSize) / 2 + GrabBuffer && y >= (getHeight - HandleSize) / 2 - GrabBuffer) {
+      } else if (y <= (getHeight + handle) / 2 + grab && y >= (getHeight - handle) / 2 - grab) {
         Some(MouseMode.E)
       } else {
         None
       }
-    } else if (y > getHeight - BorderSize - GrabBuffer) {
-      if (x <= (getWidth + HandleSize) / 2 + GrabBuffer && x >= (getWidth - HandleSize) / 2 - GrabBuffer) {
+    } else if (y > getHeight - border - grab) {
+      if (x <= (getWidth + handle) / 2 + grab && x >= (getWidth - handle) / 2 - grab) {
         Some(MouseMode.S)
       } else {
         None
       }
-    } else if (y < BorderSize + GrabBuffer) {
-      if (x <= (getWidth + HandleSize) / 2 + GrabBuffer && x >= (getWidth - HandleSize) / 2 - GrabBuffer) {
+    } else if (y < border + grab) {
+      if (x <= (getWidth + handle) / 2 + grab && x >= (getWidth - handle) / 2 - grab) {
         Some(MouseMode.N)
       } else {
         None
@@ -542,19 +548,12 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
     if (!startBoundsUnselected.contains(getUnselectedBounds))
       new DirtyEvent(None).raise(this)
 
-    getParent.asInstanceOf[WidgetPanel].zoomer.updateZoomInfo(widget)
-
     dragging = false
   }
 
   private def enforceMinimumSize(r: Rectangle): Unit = {
     if (widget != null) {
-      var minWidgetSize = widget.getMinimumSize
-
-      getParent match {
-        case wp: WidgetPanel => wp.zoomer.zoomSize(minWidgetSize)
-        case _ =>
-      }
+      var minWidgetSize = Utils.zoomSize(widget.getMinimumSize)
 
       minWidgetSize = new Dimension(minWidgetSize.width.max(MinWidgetWidth), minWidgetSize.height.max(MinWidgetHeight))
 
@@ -622,7 +621,7 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
 
   private def enforceMaximumSize(r: Rectangle): Unit = {
     if (widget != null) {
-      val maxWidgetSize = widget.getMaximumSize
+      var maxWidgetSize = widget.getMaximumSize
 
       if (maxWidgetSize == null)
         return
@@ -633,10 +632,7 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
       if (maxWidgetSize.width <= 0)
         maxWidgetSize.width = 10000
 
-      getParent match {
-        case wp: WidgetPanel => wp.zoomer.zoomSize(maxWidgetSize)
-        case _ =>
-      }
+      maxWidgetSize = Utils.zoomSize(maxWidgetSize)
 
       mouseMode match {
         case MouseMode.S =>
@@ -757,8 +753,9 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
   def widgetResized(): Unit = {
     super.setBounds(
       if (selected) {
-        new Rectangle(getX, getY, widget.getWidth + BorderSize + BorderSize,
-                      widget.getHeight + BorderSize + BorderSize)
+        val border: Int = Utils.zoom(BorderSize) * 2
+
+        new Rectangle(getX, getY, widget.getWidth + border, widget.getHeight + border)
       } else {
         new Rectangle(getX, getY, widget.getWidth, widget.getHeight)
       }
@@ -777,7 +774,9 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
   // is needed for the zooming code in InterfacePanel
   def getUnselectedLocation: Point = {
     if (selected) {
-      new Point(getX + BorderSize, getY + BorderSize)
+      val border: Int = Utils.zoom(BorderSize)
+
+      new Point(getX + border, getY + border)
     } else {
       getLocation
     }
@@ -785,8 +784,9 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
 
   def getUnselectedBounds: Rectangle = {
     if (selected) {
-      new Rectangle(getX + BorderSize, getY + BorderSize, getWidth - BorderSize - BorderSize,
-                    getHeight - BorderSize - BorderSize)
+      val border: Int = Utils.zoom(BorderSize)
+
+      new Rectangle(getX + border, getY + border, getWidth - border * 2, getHeight - border * 2)
     } else {
       getBounds
     }

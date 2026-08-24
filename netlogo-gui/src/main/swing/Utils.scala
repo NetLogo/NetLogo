@@ -2,7 +2,8 @@
 
 package org.nlogo.swing
 
-import java.awt.{ Color, Component, Font, Graphics, Graphics2D, Image, RenderingHints }
+import java.awt.{ Color, Component, Container, Dimension, Font, Graphics, Graphics2D, Image, Insets, Rectangle,
+                  RenderingHints }
 import java.awt.event.KeyEvent
 import java.awt.geom.AffineTransform
 import java.awt.image.BufferedImage
@@ -11,7 +12,61 @@ import javax.swing.{ Action, Icon, ImageIcon, InputMap, JComponent, JDialog, JWi
 import org.nlogo.core.I18N
 
 object Utils {
+  private var zoomFactor = 1f
   private var uiScale = 1.0
+
+  def getZoomFactor: Float =
+    zoomFactor
+
+  def setZoomFactor(zoomFactor: Float): Unit = {
+    this.zoomFactor = zoomFactor
+  }
+
+  def zoom(value: Int): Int =
+    (value * zoomFactor).toInt
+
+  def zoom(value: Float): Float =
+    value * zoomFactor
+
+  def zoomSize(size: Dimension): Dimension =
+    new Dimension(zoom(size.width), zoom(size.height))
+
+  def zoomInsets(insets: Insets): Insets =
+    new Insets(zoom(insets.top), zoom(insets.left), zoom(insets.bottom), zoom(insets.right))
+
+  def zoomBounds(bounds: Rectangle): Rectangle =
+    new Rectangle(Utils.zoom(bounds.x), Utils.zoom(bounds.y), Utils.zoom(bounds.width), Utils.zoom(bounds.height))
+
+  def zoomFont(font: Font, oldZoom: Float): Font =
+    font.deriveFont(font.getSize / oldZoom * zoomFactor)
+
+  def zoomComponents(component: Component, oldZoom: Float): Unit = {
+    Option(component.getFont).foreach(font => component.setFont(zoomFont(font, oldZoom)))
+
+    component match {
+      case container: Container =>
+        container.getComponents.foreach(zoomComponents(_, oldZoom))
+
+      case _ =>
+    }
+
+    component match {
+      case zoomable: Zoomable =>
+        zoomable.zoom(oldZoom)
+
+      case _ =>
+    }
+  }
+
+  def zoomMenuBar(menuBar: MenuBar, oldZoom: Float): Unit = {
+    menuBar.getComponents.foreach(menu => menu.setFont(zoomFont(menu.getFont, oldZoom)))
+  }
+
+  def unzoom(value: Int): Int =
+    (value / zoomFactor).toInt
+
+  def unzoomBounds(bounds: Rectangle): Rectangle =
+    new Rectangle(unzoom(bounds.x), unzoom(bounds.y), unzoom(bounds.width), unzoom(bounds.height))
 
   def getUIScale: Double =
     uiScale

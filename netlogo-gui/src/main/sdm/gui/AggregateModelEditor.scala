@@ -17,7 +17,7 @@ import org.nlogo.api.{ CompilerServices, ExtensionManager, SourceOwner }
 import org.nlogo.core.{ CompilerException, I18N }
 import org.nlogo.editor.Colorizer
 import org.nlogo.sdm.Translator
-import org.nlogo.swing.{ MenuBar, MenuItem, NetLogoIcon, Utils => SwingUtils, WindowAutomator }
+import org.nlogo.swing.{ MenuBar, MenuItem, NetLogoIcon, SyncZoom, Utils, WindowAutomator, ZoomActions }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ Editable, EditDialogFactory, Events, MenuBarFactory }
 import org.nlogo.window.Event.LinkChild
@@ -42,6 +42,7 @@ class AggregateModelEditor(
   with DrawingEditor
   with LinkChild
   with Events.LoadBeginEvent.Handler
+  with ZoomActions
   with ThemeSync
   with NetLogoIcon {
 
@@ -70,7 +71,7 @@ class AggregateModelEditor(
     // but is not disposed of until the model is closed. - AZS 6/18/05
     setDefaultCloseOperation(HIDE_ON_CLOSE)
 
-    SwingUtils.addEscKeyAction(getRootPane, new AbstractAction {
+    Utils.addEscKeyAction(getRootPane, new AbstractAction {
       override def actionPerformed(e: ActionEvent): Unit = {
         setVisible(false)
       }
@@ -83,11 +84,17 @@ class AggregateModelEditor(
 
   private val toolbar: AggregateModelEditorToolBar = new AggregateModelEditorToolBar(this, drawing.getModel)
 
-  val tabs: AggregateTabs = {
+  val tabs: AggregateTabs & SyncZoom = {
     val editorTab = new AggregateEditorTab(toolbar, view.asInstanceOf[Component])
     editorTab.setBorder(null)
     val proceduresTab = new AggregateProceduresTab(compiler, colorizer)
-    new AggregateTabs(this, editorTab, proceduresTab)
+    new AggregateTabs(this, editorTab, proceduresTab) with SyncZoom {
+      override def zoom(oldZoom: Float): Unit = {
+        super.zoom(oldZoom)
+
+        pack()
+      }
+    }
   }
 
   getContentPane.add(tabs)
@@ -144,8 +151,11 @@ class AggregateModelEditor(
   override def setVisible(visible: Boolean): Unit = {
     super.setVisible(visible)
 
-    if (visible)
+    if (visible) {
+      tabs.syncZoom()
+
       Analytics.sdmOpen()
+    }
   }
 
   def clearError(): Unit = {

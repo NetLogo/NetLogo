@@ -2,16 +2,17 @@
 
 package org.nlogo.shape.editor
 
-import java.awt.{ FlowLayout, Frame, GridBagConstraints, GridBagLayout, Insets }
+import java.awt.{ Dimension, Frame }
 import java.awt.event.MouseEvent
 import java.nio.file.Paths
-import javax.swing.{ JLabel, JPanel, JDialog }
+import javax.swing.{ Box, JLabel, JDialog }
 import javax.swing.event.{ DocumentEvent, DocumentListener, ListSelectionEvent, ListSelectionListener, MouseInputAdapter }
 
 import org.nlogo.api.AbstractModelLoader
 import org.nlogo.core.{ AgentKind, I18N, Model, Shape => CoreShape, ShapeList, ShapeListTracker },
   ShapeList.{ shapesToMap, isDefaultShapeName }
-import org.nlogo.swing.{ Button, DialogButton, OptionPane, ScrollPane, TextField, Transparent, Utils, WindowAutomator }
+import org.nlogo.swing.{ BoxColumn, BoxRow, Button, DialogButton, HorizontalStrut, OptionPane, ScrollPane, SyncZoom,
+                         TextField, Utils, VerticalStrut, WindowAutomator, ZoomableBorder, ZoomActions }
 import org.nlogo.swing.Implicits.thunk2action
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
@@ -20,7 +21,7 @@ import scala.util.{ Failure, Success }
 
 abstract class ManagerDialog[A <: CoreShape](parentFrame: Frame, modelLoader: AbstractModelLoader,
                                              shapeListTracker: ShapeListTracker)(implicit ct: ClassTag[A])
-  extends JDialog(parentFrame) with ListSelectionListener with ThemeSync {
+  extends JDialog(parentFrame) with ListSelectionListener with ZoomActions with ThemeSync {
 
   WindowAutomator.automate(this)
 
@@ -73,61 +74,55 @@ abstract class ManagerDialog[A <: CoreShape](parentFrame: Frame, modelLoader: Ab
         shapesList.update(searchOption)
       }
     })
+
+    override def getMaximumSize: Dimension =
+      new Dimension(super.getMaximumSize.width, getPreferredSize.height)
   }
 
-  private val searchIcon = new JLabel(Utils.iconScaledWithColor("/images/find.png", 15, 15,
-                                      InterfaceColors.toolbarImage()))
+  private val searchIcon = new JLabel
 
   locally {
-    getContentPane.setLayout(new GridBagLayout)
+    val contents = new BoxColumn(Seq(
+      new BoxRow(Seq(
+        newButton,
+        new HorizontalStrut(12),
+        modelImportButton
+      ) ++ additionalButton.fold(Seq())(button => Seq(new HorizontalStrut(12), button)) :+ Box.createHorizontalGlue) {
+        override def getMaximumSize: Dimension =
+          new Dimension(super.getMaximumSize.width, getPreferredSize.height)
+      },
+      new VerticalStrut(12),
+      scrollPane,
+      new VerticalStrut(12),
+      new BoxRow(Seq(
+        searchIcon,
+        new HorizontalStrut(12),
+        searchField,
+        new HorizontalStrut(12),
+        editButton,
+        new HorizontalStrut(12),
+        duplicateButton,
+        new HorizontalStrut(12),
+        deleteButton
+      )) {
+        override def getMaximumSize: Dimension =
+          new Dimension(super.getMaximumSize.width, getPreferredSize.height)
+      }
+    )) with SyncZoom {
+      setOpaque(true)
+      setBorder(new ZoomableBorder(12, 12, 12, 12))
 
-    val c = new GridBagConstraints
+      override def zoom(oldZoom: Float): Unit = {
+        super.zoom(oldZoom)
 
-    c.gridx = 0
-    c.gridwidth = 3
-    c.anchor = GridBagConstraints.WEST
-    c.fill = GridBagConstraints.HORIZONTAL
-    c.insets = new Insets(12, 0, 12, 0)
+        setIcons()
+        pack()
+      }
+    }
 
-    add(new JPanel(new FlowLayout(FlowLayout.LEFT, 12, 0)) with Transparent {
-      add(newButton)
-      add(modelImportButton)
-      additionalButton.foreach(add)
-    }, c)
+    setContentPane(contents)
 
-    c.fill = GridBagConstraints.BOTH
-    c.weightx = 1
-    c.weighty = 1
-    c.insets = new Insets(0, 12, 12, 12)
-
-    add(scrollPane, c)
-
-    c.gridx = 0
-    c.gridy = 2
-    c.gridwidth = 1
-    c.fill = GridBagConstraints.NONE
-    c.weightx = 0
-    c.weighty = 0
-
-    add(searchIcon, c)
-
-    c.gridx = 1
-    c.fill = GridBagConstraints.HORIZONTAL
-    c.weightx = 1
-    c.insets = new Insets(0, 0, 12, 0)
-
-    add(searchField, c)
-
-    c.gridx = 2
-    c.anchor = GridBagConstraints.EAST
-    c.weightx = 0
-    c.insets = new Insets(0, 0, 12, 0)
-
-    add(new JPanel(new FlowLayout(FlowLayout.LEFT, 12, 0)) with Transparent {
-      add(editButton)
-      add(duplicateButton)
-      add(deleteButton)
-    }, c)
+    contents.syncZoom()
 
     shapesList.addMouseListener(new MouseInputAdapter {
       // double click on a list item will edit it
@@ -152,11 +147,13 @@ abstract class ManagerDialog[A <: CoreShape](parentFrame: Frame, modelLoader: Ab
     shapesList.selectShapeName("default")
     setTitle(title)
     setVisible(true)
+    pack()
   }
 
   def reset(): Unit = {
     shapesList.update(searchOption)
     shapesList.selectShapeName("default")
+    pack()
   }
 
   // Import shapes from another model
@@ -217,6 +214,12 @@ abstract class ManagerDialog[A <: CoreShape](parentFrame: Frame, modelLoader: Ab
     }
   }
 
+  private def setIcons(): Unit = {
+    val size: Int = Utils.zoom(15)
+
+    searchIcon.setIcon(Utils.iconScaledWithColor("/images/find.png", size, size, InterfaceColors.toolbarImage()))
+  }
+
   override def syncTheme(): Unit = {
     getContentPane.setBackground(InterfaceColors.dialogBackground())
     scrollPane.setBackground(InterfaceColors.dialogBackground())
@@ -231,6 +234,6 @@ abstract class ManagerDialog[A <: CoreShape](parentFrame: Frame, modelLoader: Ab
 
     additionalButton.foreach(_.syncTheme())
 
-    searchIcon.setIcon(Utils.iconScaledWithColor("/images/find.png", 15, 15, InterfaceColors.toolbarImage()))
+    setIcons()
   }
 }

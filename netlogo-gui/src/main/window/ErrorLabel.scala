@@ -4,12 +4,11 @@ package org.nlogo.window
 
 import java.awt.{ Cursor, Dimension }
 import javax.swing.{ Box, BoxLayout, JLabel, JPanel, JTextPane }
-import javax.swing.border.EmptyBorder
 
-import org.nlogo.swing.Utils
+import org.nlogo.swing.{ HorizontalStrut, Utils, Zoomable, ZoomableBorder }
 import org.nlogo.theme.InterfaceColors
 
-class ErrorLabel extends JPanel {
+class ErrorLabel extends JPanel with Zoomable {
   private val icon = new JLabel
   private val label = new JTextPane {
     setEditable(false)
@@ -23,15 +22,20 @@ class ErrorLabel extends JPanel {
       new Dimension(ErrorLabel.this.getWidth, super.getMaximumSize.height)
   }
 
-  setOpaque(true)
-  setBorder(new EmptyBorder(6, 6, 6, 6))
-  setVisible(false)
+  private var currentIcon: IconType = IconType.Error
+
+  setBorder(new ZoomableBorder(6, 6, 6, 6))
   setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
 
   add(icon)
-  add(Box.createHorizontalStrut(6))
+  add(new HorizontalStrut(6))
   add(label)
   add(Box.createHorizontalGlue)
+
+  setVisible(false)
+
+  override def getMaximumSize: Dimension =
+    new Dimension(super.getMaximumSize.width, getPreferredSize.height)
 
   def setText(text: String): Unit = {
     label.setText(text)
@@ -40,10 +44,13 @@ class ErrorLabel extends JPanel {
   def setError(error: Option[Exception], offset: Int, respectFocus: Boolean = true): Unit = {
     error match {
       case Some(e) =>
+        currentIcon = IconType.Error
+
         label.setForeground(InterfaceColors.errorLabelText())
-        setBackground(InterfaceColors.errorLabelBackground())
-        icon.setIcon(Utils.iconScaledWithColor("/images/error.png", 15, 15, InterfaceColors.errorLabelText()))
         label.setText(s"<html><b>${encodeHTML(e.getMessage)}</b></html>")
+
+        setBackground(InterfaceColors.errorLabelBackground())
+        setIcon()
         setVisible(true)
 
       case _ =>
@@ -54,26 +61,18 @@ class ErrorLabel extends JPanel {
   def setWarning(warning: Option[String]): Unit = {
     warning match {
       case Some(str) =>
+        currentIcon = IconType.Warning
+
         label.setForeground(InterfaceColors.warningLabelText())
-        setBackground(InterfaceColors.warningLabelBackground())
-        icon.setIcon(Utils.iconScaledWithColor("/images/exclamation-triangle.png", 15, 15,
-                                          InterfaceColors.warningLabelText()))
         label.setText(s"<html><b>${encodeHTML(str)}</b></html>")
+
+        setBackground(InterfaceColors.warningLabelBackground())
+        setIcon()
         setVisible(true)
 
       case _ =>
         setVisible(false)
     }
-  }
-
-  private var originalFontSize = -1
-
-  def zoom(zoomFactor: Double): Unit = {
-    if(originalFontSize == -1)
-      originalFontSize = label.getFont.getSize
-    label.setFont(label.getFont.deriveFont((originalFontSize * zoomFactor).ceil.toFloat))
-    repaint()
-    revalidate()
   }
 
   private def encodeHTML(s: String): String = {
@@ -85,4 +84,27 @@ class ErrorLabel extends JPanel {
     s.flatMap(encode)
   }
 
+  private def setIcon(): Unit = {
+    val size: Int = Utils.zoom(15)
+
+    currentIcon match {
+      case IconType.Warning =>
+        icon.setIcon(Utils.iconScaledWithColor("/images/exclamation-triangle.png", size, size,
+                     InterfaceColors.warningLabelText()))
+
+      case IconType.Error =>
+        icon.setIcon(Utils.iconScaledWithColor("/images/error.png", size, size, InterfaceColors.errorLabelText()))
+    }
+  }
+
+  override def zoom(oldZoom: Float): Unit = {
+    setIcon()
+  }
+
+  private sealed abstract trait IconType
+
+  private object IconType {
+    case object Warning extends IconType
+    case object Error extends IconType
+  }
 }

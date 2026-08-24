@@ -15,7 +15,7 @@ import org.nlogo.theme.InterfaceColors
  * whatever you say to do in the given functions.
  */
 class Popup(parentFrame: Frame, title:String, panel: JPanel, cancel: => Unit, ok: => Boolean, i18n: String => String) {
-  val dialog = new JDialog(parentFrame, true)
+  val dialog = new JDialog(parentFrame, true) with ZoomActions
   dialog.setTitle(title)
   dialog.add(panel, BorderLayout.CENTER)
   dialog.setAutoRequestFocus(true)

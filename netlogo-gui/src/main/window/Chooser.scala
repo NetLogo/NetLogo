@@ -2,23 +2,14 @@
 
 package org.nlogo.window
 
-import java.awt.{ Dimension, Graphics, GridBagConstraints, GridBagLayout, Insets, LinearGradientPaint }
-import javax.swing.JLabel
+import java.awt.{ Dimension, Graphics, Insets, LinearGradientPaint }
+import javax.swing.{ Box, BoxLayout, JLabel }
 
 import org.nlogo.agent.ChooserConstraint
 import org.nlogo.api.{ CompilerServices, Dump }
 import org.nlogo.core.{ I18N, LogoList }
-import org.nlogo.swing.{ ComboBox, Utils }
+import org.nlogo.swing.{ BoxRow, ComboBox, Utils }
 import org.nlogo.theme.InterfaceColors
-
-object Chooser {
-  // visual parameters
-  private val MinWidth = 92
-  private val MinPreferredWidth = 120
-  private val ChooserHeight = 45
-}
-
-import Chooser._
 
 trait Chooser extends SingleErrorWidget {
   def compiler: CompilerServices
@@ -33,49 +24,15 @@ trait Chooser extends SingleErrorWidget {
   // sub-elements of Switch
   protected val label = new JLabel(I18N.gui.get("edit.chooser.previewName"))
   private val control = new ComboBox[String](searchable = true) {
-    setZoomFunc(zoom)
     addItemListener(_ => index(getSelectedIndex))
   }
 
-  setLayout(new GridBagLayout)
+  setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
+  setBorder(new AdaptableBorder(new Insets(3, 6, 6, 6), new Insets(6, 8, 8, 8)))
 
-  initGUI()
-
-  override def initGUI(): Unit = {
-    removeAll()
-
-    control.initGUI()
-
-    val c = new GridBagConstraints
-
-    c.gridx = 0
-    c.gridwidth = 1
-    c.weightx = 1
-    c.anchor = GridBagConstraints.NORTHWEST
-    c.insets = {
-      if (_oldSize) {
-        new Insets(zoom(3), zoom(6), 0, zoom(6))
-      } else {
-        new Insets(zoom(6), zoom(8), zoom(6), zoom(8))
-      }
-    }
-
-    add(label, c)
-
-    label.setFont(label.getFont.deriveFont(_boldState))
-
-    c.fill = GridBagConstraints.BOTH
-    c.weighty = 1
-    c.insets = {
-      if (_oldSize) {
-        new Insets(0, zoom(6), zoom(6), zoom(6))
-      } else {
-        new Insets(0, zoom(8), zoom(8), zoom(8))
-      }
-    }
-
-    add(control, c)
-  }
+  add(new BoxRow(Seq(label, Box.createHorizontalGlue)))
+  add(new AdaptableVerticalStrut(0, 6))
+  add(control)
 
   /// attributes
 
@@ -125,18 +82,22 @@ trait Chooser extends SingleErrorWidget {
   /// size calculations
 
   override def getMinimumSize: Dimension = {
-    if (_oldSize) {
-      new Dimension(MinWidth, ChooserHeight)
-    } else {
-      new Dimension(100, 60)
+    Utils.zoomSize {
+      if (_oldSize) {
+        new Dimension(92, 45)
+      } else {
+        new Dimension(100, 60)
+      }
     }
   }
 
   override def getPreferredSize: Dimension = {
-    if (_oldSize) {
-      new Dimension(MinPreferredWidth, ChooserHeight)
-    } else {
-      new Dimension(250, 60)
+    Utils.zoomSize {
+      if (_oldSize) {
+        new Dimension(120, 45)
+      } else {
+        new Dimension(250, 60)
+      }
     }
   }
 

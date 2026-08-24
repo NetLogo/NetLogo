@@ -145,7 +145,7 @@ class Slider(private var minimum: Double, private var increment: Double, private
   }
 
   private def trackThickness: Int =
-    widget.zoom(6)
+    Utils.zoom(6)
 
   private def thumbRadius: Int =
     trackThickness
@@ -185,7 +185,7 @@ class Slider(private var minimum: Double, private var increment: Double, private
     val thickness = trackThickness
     val radius = thumbRadius
     val diameter = radius * 2
-    val border = widget.zoom(1)
+    val border = Utils.zoom(1)
     val thumb = thumbPos()
 
     // track
@@ -211,9 +211,9 @@ class Slider(private var minimum: Double, private var increment: Double, private
     if (hover) {
       val shadow: Point = {
         if (orientation == SwingConstants.HORIZONTAL) {
-          new Point(thumb.x, thumb.y + widget.zoom(3))
+          new Point(thumb.x, thumb.y + Utils.zoom(3))
         } else {
-          new Point(thumb.x + widget.zoom(3), thumb.y)
+          new Point(thumb.x + Utils.zoom(3), thumb.y)
         }
       }
 

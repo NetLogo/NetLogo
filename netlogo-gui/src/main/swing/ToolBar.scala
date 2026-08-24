@@ -2,10 +2,8 @@
 
 package org.nlogo.swing
 
-import java.awt.{ Color, Component, Dimension, Graphics }
-import javax.swing.{ JComponent, JToolBar }
-
-import org.nlogo.awt.RowLayout
+import java.awt.{ Color, Dimension, Graphics }
+import javax.swing.{ BoxLayout, JComponent, JToolBar }
 
 object ToolBar {
   // It'd be easier to just use JToolBar.Separator,but at least
@@ -27,7 +25,7 @@ object ToolBar {
 
 abstract class ToolBar extends JToolBar {
   setFloatable(false)
-  setLayout(new RowLayout(10, Component.LEFT_ALIGNMENT, Component.CENTER_ALIGNMENT))
+  setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
 
   def addControls(): Unit
 

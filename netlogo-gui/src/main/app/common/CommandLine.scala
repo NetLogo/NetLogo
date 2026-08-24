@@ -10,7 +10,7 @@ import org.nlogo.agent.{ Agent, AgentSet, OutputObject }
 import org.nlogo.core.{ AgentKind, CompilerException, I18N, Widget => CoreWidget }
 import org.nlogo.editor.{ EditorArea, EditorConfiguration }
 import org.nlogo.ide.{ AutoSuggestAction, CodeCompletionPopup }
-import org.nlogo.swing.{ Implicits, ScrollPane, Transparent, UserAction }, Implicits.thunk2documentListener
+import org.nlogo.swing.{ Implicits, ScrollPane, Transparent, UserAction, Utils }, Implicits.thunk2documentListener
 import org.nlogo.theme.InterfaceColors
 import org.nlogo.window.{ Editable, CommandCenterInterface, EditorColorizer, InterfaceMode, JobWidget,
                           Events => WindowEvents }
@@ -136,7 +136,7 @@ class CommandLine(commandCenter: CommandCenterInterface,
     textField.getFont
 
   override def setFont(font: Font): Unit = {
-    textField.setFont(font.deriveFont(fontSize.toFloat))
+    textField.setFont(font.deriveFont(Utils.zoom(fontSize.toFloat)))
   }
 
   ///

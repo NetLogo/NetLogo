@@ -2,36 +2,40 @@
 
 package org.nlogo.swing
 
-import java.awt.{ BorderLayout, FlowLayout }
+import java.awt.BorderLayout
 import java.awt.event.{ MouseAdapter, MouseEvent }
-import javax.swing.{ JComponent, JDialog, JLabel, JPanel }
+import javax.swing.{ Box, JComponent, JDialog, JLabel, JPanel }
 
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 class CollapsiblePane(title: String, element: JComponent, parent: JDialog)
   extends JPanel(new BorderLayout) with ThemeSync {
 
-  private val titleLabel = new JLabel(title)
+  private val titleLabel = new JLabel(title) {
+    override def getIconTextGap: Int =
+      Utils.zoom(super.getIconTextGap)
+  }
+
   private val arrow = new CollapsibleArrow(element.isVisible)
 
   titleLabel.setIcon(arrow)
 
-  private val titlePanel = new JPanel(new FlowLayout(FlowLayout.LEADING))
-
-  titlePanel.add(titleLabel)
-
   locally {
-    val mouseListener = new MouseAdapter {
+    val listener = new MouseAdapter {
       override def mouseClicked(e: MouseEvent): Unit = {
         setOpen(!isOpen)
       }
     }
 
-    titlePanel.addMouseListener(mouseListener)
-    titleLabel.addMouseListener(mouseListener)
+    add(new BoxRow(Seq(titleLabel, Box.createHorizontalGlue)) {
+      setBorder(new ZoomableBorder(6, 6, 6, 6))
+
+      addMouseListener(listener)
+    }, BorderLayout.NORTH)
+
+    titleLabel.addMouseListener(listener)
   }
 
-  add(titlePanel, BorderLayout.NORTH)
   add(element, BorderLayout.CENTER)
 
   def setOpen(open: Boolean): Unit = {
@@ -46,7 +50,8 @@ class CollapsiblePane(title: String, element: JComponent, parent: JDialog)
   def isOpen = element.isVisible
 
   override def syncTheme(): Unit = {
-    titlePanel.setBackground(InterfaceColors.dialogBackground())
+    setBackground(InterfaceColors.dialogBackground())
+
     titleLabel.setForeground(InterfaceColors.dialogText())
 
     element match {

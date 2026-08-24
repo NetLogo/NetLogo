@@ -13,8 +13,9 @@ import java.io.File
 import java.nio.file.Paths
 import java.net.URI
 import java.util.{ Enumeration, LinkedList, List => JList, Locale }
-import javax.swing.{ AbstractAction, Action, Box, BorderFactory, BoxLayout, Icon, InputMap, JComponent, JDialog,
-                     JEditorPane, JLabel, JPanel, JTree, KeyStroke, SwingUtilities, WindowConstants }
+import javax.swing.{ AbstractAction, Action, Box, BoxLayout, Icon, InputMap, JComponent, JDialog, JEditorPane, JLabel,
+                     JPanel, JTree, KeyStroke, SwingUtilities, WindowConstants }
+import javax.swing.border.LineBorder
 import javax.swing.text.{ BadLocationException, DefaultHighlighter }
 import javax.swing.tree.{ DefaultMutableTreeNode, DefaultTreeCellRenderer, DefaultTreeModel, TreePath,
                           TreeSelectionModel }
@@ -25,8 +26,10 @@ import javax.swing.event.{ AncestorEvent, AncestorListener, DocumentEvent, Docum
 import org.nlogo.core.I18N
 import org.nlogo.api.{ FileIO, LibraryManager }
 import org.nlogo.awt.{ Positioning, UserCancelException }
-import org.nlogo.swing.{ BrowserLauncher, Button, DialogButton, ModalProgressTask, OptionPane,
-                         ScrollPane, TextField, Utils, WindowAutomator }, Utils.addEscKeyAction
+import org.nlogo.swing.{ BoxColumn, BoxRow, BrowserLauncher, Button, ButtonPanel, DialogButton, HorizontalStrut,
+                         ModalProgressTask, OptionPane, PreferredSize, ScrollPane, SyncZoom, TextField, Utils,
+                         WindowAutomator, Zoomable, ZoomableBorder, ZoomActions },
+                       Utils.addEscKeyAction
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.workspace.ModelsLibrary
 
@@ -67,6 +70,7 @@ object ModelsLibraryDialog {
   // must be called from the UI Thread
   private def finishOpen(me: ModelsLibraryDialog, onSelect: URI => Unit): Unit = {
     this.me = me
+
     me.syncTheme()
     me.setVisible(true)
     me.selectAll()
@@ -161,6 +165,7 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
   extends JDialog(parent, I18N.gui.get("menu.file.modelsLibrary"), true)
   with TreeSelectionListener
   with TreeExpansionListener
+  with ZoomActions
   with ThemeSync {
 
   WindowAutomator.automate(this)
@@ -172,7 +177,21 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
   val searchField = new TextField
 
   private var searchText = Option.empty[String]
-  private val searchIcon = new JLabel
+  private val searchIcon = new JLabel with Zoomable with ThemeSync {
+    private def updateIcon(): Unit = {
+      val size: Int = Utils.zoom(15)
+
+      setIcon(Utils.iconScaledWithColor("/images/find.png", size, size, InterfaceColors.toolbarImage()))
+    }
+
+    override def zoom(oldZoom: Float): Unit = {
+      updateIcon()
+    }
+
+    override def syncTheme(): Unit = {
+      updateIcon()
+    }
+  }
 
   private val modelPreviewPanel: ModelPreviewPanel = new ModelPreviewPanel()
 
@@ -180,10 +199,28 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
     setBorder(null)
   }
 
-  private val tree = new JTree(new SearchableModelTree(node)) with ThemeSync {
+  private val tree = new JTree(new SearchableModelTree(node)) with Zoomable with ThemeSync {
     val renderer = new TreeCellRenderer
 
     setCellRenderer(renderer)
+
+    // somehow the font internally gets set to 19pt without this line, but the components continue to display at
+    // 12pt, which breaks zooming. this line syncs everything up so that the tree zooms properly. (Isaac B 8/26/26)
+    renderer.setFont(renderer.getFont.deriveFont(12f))
+
+    override def getRowHeight: Int = {
+      if (renderer != null && renderer.getFont != null) {
+        getFontMetrics(getFont).getHeight + 2
+      } else {
+        super.getRowHeight
+      }
+    }
+
+    override def zoom(oldZoom: Float): Unit = {
+      renderer.syncZoom()
+
+      updateUI()
+    }
 
     override def syncTheme(): Unit = {
       setBackground(InterfaceColors.dialogBackground())
@@ -197,10 +234,6 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
   private val treeScrollPane = new ScrollPane(tree) {
     setBorder(null)
   }
-
-  private val contentPane = new JPanel
-
-  contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS))
 
   private val openAction: Action =
     new AbstractAction(I18N.gui.get("modelsLibrary.open")) {
@@ -260,6 +293,47 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
     searchField.setText("")
   })
 
+  private val contents = new BoxColumn(Seq(
+    new BoxRow(Seq(
+      new BoxColumn(Seq(
+        treeScrollPane,
+        new BoxRow(Seq(
+          searchIcon,
+          new HorizontalStrut(2),
+          searchField,
+          new HorizontalStrut(2),
+          clearSearchButton
+        )) {
+          setBorder(new ZoomableBorder(2, 2, 2, 2))
+
+          override def getMaximumSize: Dimension =
+            new Dimension(super.getMaximumSize.width, getPreferredSize.height)
+        }
+      )),
+      modelPreviewScrollPane
+    )),
+    new BoxRow(Seq(
+      new HorizontalStrut(40),
+      communityButton,
+      Box.createHorizontalGlue,
+      new ButtonPanel(Seq(selectButton, cancelButton)),
+      new HorizontalStrut(40)
+    )) {
+      setBorder(new ZoomableBorder(8, 0, 8, 0))
+
+      override def getMaximumSize: Dimension =
+        new Dimension(super.getMaximumSize.width, getPreferredSize.height)
+    }
+  )) with SyncZoom {
+    setOpaque(true)
+
+    override def zoom(oldZoom: Float): Unit = {
+      super.zoom(oldZoom)
+
+      pack()
+    }
+  }
+
   locally {
     setResizable(true)
     val findKeyStroke =
@@ -306,9 +380,6 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
 
     // lay out content pane & bottom buttons
 
-    val topPanel = new Box(BoxLayout.X_AXIS)
-
-    val searchPanel = new Box(BoxLayout.X_AXIS)
     searchField.getDocument.addDocumentListener(
       new DocumentListener() {
         def changedUpdate(e: DocumentEvent): Unit = {
@@ -340,39 +411,6 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
       }
     })
     searchField.setMaximumSize(new Dimension(Short.MaxValue, searchField.getMinimumSize.height))
-    searchPanel.add(searchIcon)
-    searchPanel.add(Box.createRigidArea(new java.awt.Dimension(2, 0)))
-    searchPanel.add(searchField)
-    searchPanel.add(Box.createRigidArea(new Dimension(2, 0)))
-    searchPanel.add(clearSearchButton)
-    searchPanel.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2))
-
-    val treePanel = new Box(BoxLayout.Y_AXIS)
-    treePanel.add(treeScrollPane)
-    treePanel.add(searchPanel)
-
-    topPanel.add(treePanel)
-    topPanel.add(modelPreviewScrollPane)
-
-    val buttonPanel = new Box(BoxLayout.X_AXIS)
-    buttonPanel.add(Box.createRigidArea(new Dimension(40, 0)))
-    buttonPanel.add(communityButton)
-    buttonPanel.add(Box.createHorizontalGlue)
-    if (System.getProperty("os.name").startsWith("Mac")) {
-      buttonPanel.add(cancelButton)
-      buttonPanel.add(Box.createRigidArea(new Dimension(10, 0)))
-      buttonPanel.add(selectButton)
-    } else {
-      buttonPanel.add(selectButton)
-      buttonPanel.add(Box.createRigidArea(new Dimension(10, 0)))
-      buttonPanel.add(cancelButton)
-    }
-    buttonPanel.add(Box.createRigidArea(new Dimension(40, 0)))
-    buttonPanel.setBorder(BorderFactory.createEmptyBorder(8, 0, 8, 0))
-
-    contentPane.add(topPanel)
-    contentPane.add(buttonPanel)
-    setContentPane(contentPane)
 
     // add an Esc key handler
     Utils.addEscKeyAction(this, cancelAction)
@@ -384,6 +422,10 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
         cancelAction.actionPerformed(null)
       }
     })
+
+    setContentPane(contents)
+
+    contents.syncZoom()
 
     this.setSize(740, 715)
     Positioning.center(this, parent)
@@ -397,6 +439,13 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
         modelPreviewPanel.showModel()
       }
     })
+  }
+
+  override def setVisible(visible: Boolean): Unit = {
+    if (visible)
+      contents.syncZoom()
+
+    super.setVisible(visible)
   }
 
   override def dispose(): Unit = {
@@ -570,21 +619,24 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
   private class ModelPreviewPanel extends JPanel with HyperlinkListener with ThemeSync {
     setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
 
-    private val graphicsPreview: GraphicsPreview = new GraphicsPreview()
-    graphicsPreview.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 1))
+    private val graphicsPreview: GraphicsPreview = new GraphicsPreview {
+      setBorder(new LineBorder(Color.DARK_GRAY, 1))
+    }
 
-    private val textArea = new JEditorPane()
-    textArea.setContentType("text/html")
-    textArea.setEditable(false)
-    textArea.setOpaque(false)
-    textArea.setCaretColor(InterfaceColors.Transparent)
+    private val textArea = new JEditorPane {
+      setContentType("text/html")
+      setEditable(false)
+      setOpaque(false)
+      setCaretColor(InterfaceColors.Transparent)
+    }
+
     textArea.addHyperlinkListener(this)
 
     add(graphicsPreview)
     add(textArea)
     add(Box.createVerticalGlue())
 
-    setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5))
+    setBorder(new ZoomableBorder(5, 5, 5, 5))
 
     def showModel(): Unit = {
       val image =
@@ -742,15 +794,14 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
   }
 
   override def syncTheme(): Unit = {
-    contentPane.setBackground(InterfaceColors.dialogBackground())
+    getContentPane.setBackground(InterfaceColors.dialogBackground())
     modelPreviewScrollPane.setBackground(InterfaceColors.dialogBackground())
     treeScrollPane.setBackground(InterfaceColors.dialogBackground())
 
     modelPreviewPanel.syncTheme()
     tree.syncTheme()
     searchField.syncTheme()
-
-    searchIcon.setIcon(Utils.iconScaledWithColor("/images/find.png", 15, 15, InterfaceColors.toolbarImage()))
+    searchIcon.syncTheme()
 
     communityButton.syncTheme()
     selectButton.syncTheme()
@@ -758,7 +809,7 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
     clearSearchButton.syncTheme()
   }
 
-  private class TreeCellRenderer extends DefaultTreeCellRenderer with ThemeSync {
+  private class TreeCellRenderer extends DefaultTreeCellRenderer with PreferredSize with SyncZoom with ThemeSync {
     private val open = new SelectableIcon("/images/open.png", 14, 12, InterfaceColors.modelsLibraryFolder,
                                           InterfaceColors.modelsLibraryFolderSelected)
     private val closed = new SelectableIcon("/images/closed.png", 14, 12, InterfaceColors.modelsLibraryFolder,
@@ -767,6 +818,15 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
                                           InterfaceColors.modelsLibraryLeafSelected)
 
     syncTheme()
+
+    def setIcons(): Unit = {
+      open.setIcons()
+      closed.setIcons()
+      leaf.setIcons()
+    }
+
+    override def getIconTextGap: Int =
+      Utils.zoom(super.getIconTextGap)
 
     override def getTreeCellRendererComponent(tree: JTree, value: AnyRef, selected: Boolean, expanded: Boolean,
                                               leaf: Boolean, row: Int, hasFocus: Boolean): Component = {
@@ -787,8 +847,11 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
       this
     }
 
-    override def getMinimumSize: Dimension =
-      getPreferredSize
+    override def zoom(oldZoom: Float): Unit = {
+      super.zoom(oldZoom)
+
+      setIcons()
+    }
 
     override def syncTheme(): Unit = {
       backgroundNonSelectionColor = InterfaceColors.dialogBackground()
@@ -796,19 +859,15 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
       textNonSelectionColor = InterfaceColors.dialogText()
       textSelectionColor = InterfaceColors.dialogTextSelected()
 
-      open.syncTheme()
-      closed.syncTheme()
-      leaf.syncTheme()
+      setIcons()
     }
   }
 
   private class SelectableIcon(path: String, width: Int, height: Int, normalColor: () => Color,
-                               selectedColor: () => Color) extends ThemeSync {
+                               selectedColor: () => Color) {
 
     private var normal: Icon = null
     private var selected: Icon = null
-
-    syncTheme()
 
     def getIcon(selected: Boolean): Icon = {
       if (selected) {
@@ -818,9 +877,9 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
       }
     }
 
-    override def syncTheme(): Unit = {
-      normal = Utils.iconScaledWithColor(path, width, height, normalColor())
-      selected = Utils.iconScaledWithColor(path, width, height, selectedColor())
+    def setIcons(): Unit = {
+      normal = Utils.iconScaledWithColor(path, Utils.zoom(width), Utils.zoom(height), normalColor())
+      selected = Utils.iconScaledWithColor(path, Utils.zoom(width), Utils.zoom(height), selectedColor())
     }
   }
 }

@@ -17,7 +17,7 @@ import javax.swing.border.EmptyBorder
 import javax.swing.text.DefaultCaret
 
 import org.nlogo.core.{ I18N, TextBox => CoreTextBox, Widget => CoreWidget }
-import org.nlogo.swing.Transparent
+import org.nlogo.swing.{ Transparent, Utils }
 import org.nlogo.theme.{ ClassicTheme, DarkTheme, InterfaceColors, LightTheme }
 
 class NoteWidget extends SingleErrorWidget with Transparent with Editable {
@@ -28,7 +28,7 @@ class NoteWidget extends SingleErrorWidget with Transparent with Editable {
     setCaretColor(InterfaceColors.Transparent)
 
     override def setFont(font: Font): Unit = {
-      super.setFont(font.deriveFont(zoom(_fontSize).toFloat))
+      super.setFont(font.deriveFont(Utils.zoom(_fontSize).toFloat))
     }
   }
 
@@ -40,11 +40,7 @@ class NoteWidget extends SingleErrorWidget with Transparent with Editable {
     add(Box.createVerticalGlue)
   }
 
-  val MIN_WIDTH = 15
-  val DEFAULT_WIDTH = 150
-  val MIN_HEIGHT = 18
-
-  private var _width: Int = DEFAULT_WIDTH
+  private var _width: Int = Utils.zoom(150)
   private var _text: String = ""
   private var _fontSize: Int = 12
   private var _textColorLight = Color.BLACK
@@ -124,8 +120,6 @@ class NoteWidget extends SingleErrorWidget with Transparent with Editable {
   def setFontSize(size: Int): Unit = {
     _fontSize = size
     textPane.setFont(textPane.getFont)
-    resetZoomInfo()
-    resetSizeInfo()
     wrapText()
   }
 
@@ -175,9 +169,11 @@ class NoteWidget extends SingleErrorWidget with Transparent with Editable {
     super.editFinished()
   }
 
-  override def getMinimumSize = new Dimension(MIN_WIDTH, MIN_HEIGHT)
+  override def getMinimumSize: Dimension =
+    Utils.zoomSize(new Dimension(15, 18))
+
   override def getPreferredSize: Dimension =
-    new Dimension(MIN_WIDTH.max(_width), MIN_HEIGHT.max(textPane.getPreferredSize.height + 8))
+    new Dimension(_width.max(Utils.zoom(15)), (textPane.getPreferredSize.height + Utils.zoom(8)).max(Utils.zoom(18)))
 
   override def syncTheme(): Unit = {
     InterfaceColors.getTheme match {
@@ -196,7 +192,7 @@ class NoteWidget extends SingleErrorWidget with Transparent with Editable {
   }
 
   override def model: CoreWidget = {
-    val b = getUnzoomedBounds
+    val b = unzoomedBounds
     val txt = if (text != null && text.trim != "") Some(text) else None
     CoreTextBox(display = txt,
       x = b.x, y = b.y, width = b.width, height = b.height,

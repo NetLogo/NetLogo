@@ -4,8 +4,8 @@ package org.nlogo.swing
 
 import java.awt.{ BorderLayout, Component, Frame }
 import java.awt.event.{ ActionEvent, WindowAdapter, WindowEvent }
-import javax.swing.{ AbstractAction, BorderFactory, JComponent, JDialog }
-import javax.swing.border.{ EmptyBorder, LineBorder }
+import javax.swing.{ AbstractAction, JComponent, JDialog, JPanel }
+import javax.swing.border.LineBorder
 
 import org.nlogo.awt.Hierarchy
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
@@ -17,8 +17,8 @@ object MessageDialog {
 
 import MessageDialog._
 
-class MessageDialog(owner: Component, dismissName: String = "Dismiss") extends JDialog(Hierarchy.getFrame(owner))
-                                                                       with ThemeSync {
+class MessageDialog(owner: Component, dismissName: String = "Dismiss")
+  extends JDialog(Hierarchy.getFrame(owner)) with ZoomActions with ThemeSync {
 
   WindowAutomator.automate(this)
 
@@ -29,7 +29,7 @@ class MessageDialog(owner: Component, dismissName: String = "Dismiss") extends J
     setLineWrap(true)
     setWrapStyleWord(true)
     setEditable(false)
-    setBorder(BorderFactory.createEmptyBorder(3, 5, 0, 5))
+    setBorder(new ZoomableBorder(3, 5, 0, 5))
   }
 
   val dismissAction =
@@ -39,9 +39,9 @@ class MessageDialog(owner: Component, dismissName: String = "Dismiss") extends J
       }
     }
 
-  private val buttonPanel = new ButtonPanel(makeButtons())
-
-  buttonPanel.setBorder(new EmptyBorder(6, 6, 6, 6))
+  private val buttonPanel = new ButtonPanel(makeButtons()) {
+    setBorder(new ZoomableBorder(6, 6, 6, 6))
+  }
 
   addWindowListener(new WindowAdapter {
     override def windowClosing(e: WindowEvent): Unit = {
@@ -51,9 +51,18 @@ class MessageDialog(owner: Component, dismissName: String = "Dismiss") extends J
 
   private val scrollPane = new ScrollPane(textArea)
 
-  getContentPane.setLayout(new BorderLayout())
-  getContentPane.add(scrollPane, BorderLayout.CENTER)
-  getContentPane.add(buttonPanel, BorderLayout.SOUTH)
+  private val contents = new JPanel with Transparent with Zoomable {
+    setLayout(new BorderLayout)
+
+    add(scrollPane, BorderLayout.CENTER)
+    add(buttonPanel, BorderLayout.SOUTH)
+
+    override def zoom(oldZoom: Float): Unit = {
+      pack()
+    }
+  }
+
+  add(contents)
 
   pack()
 

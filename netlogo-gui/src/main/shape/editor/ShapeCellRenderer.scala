@@ -8,17 +8,16 @@ import javax.swing.{ Box, BoxLayout, JLabel, JList, JPanel, ListCellRenderer }
 import org.nlogo.api.Graphics2DWrapper
 import org.nlogo.core.Shape
 import org.nlogo.shape.DrawableShape
-import org.nlogo.swing.Utils
+import org.nlogo.swing.{ HorizontalStrut, PreferredSize, Utils }
 import org.nlogo.theme.InterfaceColors
 
-class ShapeCellRenderer extends JPanel with ListCellRenderer[Shape] {
+class ShapeCellRenderer(height: Int) extends JPanel with ListCellRenderer[Shape] {
   protected var shape: Option[DrawableShape] = None
-  protected val dimension = new Dimension(90, 34)
   protected val shapeName = new JLabel
-  protected val shapeComponent = new Component {
-    setMinimumSize(dimension)
-    setPreferredSize(dimension)
-    setMaximumSize(dimension)
+
+  protected val shapeComponent = new Component with PreferredSize {
+    override def getPreferredSize: Dimension =
+      new Dimension(Utils.zoom(90), Utils.zoom(ShapeCellRenderer.this.height))
 
     private def preview(g2d: Graphics2D, clip: JShape, left: Int, top: Int, size: Int): Unit = {
       shape.foreach(shape => {
@@ -42,19 +41,19 @@ class ShapeCellRenderer extends JPanel with ListCellRenderer[Shape] {
       val g2d = Utils.initGraphics2D(g)
 
       g2d.setColor(getBackground)
-      g2d.fillRect(1, 1, dimension.width - 2, dimension.height - 2)
+      g2d.fillRect(1, 1, getWidth - 2, getHeight - 2)
 
-      preview(g2d, g2d.getClip, 2, 12, 9)
-      preview(g2d, g2d.getClip, 16, 11, 12)
-      preview(g2d, g2d.getClip, 33, 7, 20)
-      preview(g2d, g2d.getClip, 58, 2, 30)
+      preview(g2d, g2d.getClip, Utils.zoom(2), Utils.zoom(12), Utils.zoom(9))
+      preview(g2d, g2d.getClip, Utils.zoom(16), Utils.zoom(11), Utils.zoom(12))
+      preview(g2d, g2d.getClip, Utils.zoom(33), Utils.zoom(7), Utils.zoom(20))
+      preview(g2d, g2d.getClip, Utils.zoom(58), Utils.zoom(2), Utils.zoom(30))
     }
   }
 
   setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
 
   add(shapeComponent)
-  add(Box.createHorizontalStrut(20))
+  add(new HorizontalStrut(20))
   add(shapeName)
   add(Box.createHorizontalGlue)
 

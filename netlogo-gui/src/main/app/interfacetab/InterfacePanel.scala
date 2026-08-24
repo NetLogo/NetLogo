@@ -17,7 +17,7 @@ import org.nlogo.core.{
   View => CoreView, Widget => CoreWidget }
 import org.nlogo.editor.EditorArea
 import org.nlogo.log.LogManager
-import org.nlogo.swing.{ ClipboardUtils, MenuItem, PopupMenu }
+import org.nlogo.swing.{ ClipboardUtils, MenuItem, PopupMenu, Utils }
 import org.nlogo.window.{ AutoIndentHandler, ButtonWidget, ChooserWidget, Editable, EditDialogFactory,
                           Events => WindowEvents, GUIWorkspace, InputBoxWidget, InterfaceGlobalWidget, InterfaceMode,
                           MonitorWidget, PlotWidget, SliderWidget, SwitchWidget, ViewWidget, ViewWidgetInterface,
@@ -113,28 +113,34 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
   // is used in both places. - ST 3/17/04
   override def makeWidget(coreWidget: CoreWidget): Widget = {
     val fromRegistry = WidgetRegistry(coreWidget.getClass.getSimpleName)
-    if (fromRegistry != null)
-      fromRegistry
-    else coreWidget match {
-      case c: CoreChooser  => new ChooserWidget(workspace, dialogFactory.colorizer, workspace.getExtensionManager)
-      case b: CoreButton   => new ButtonWidget(workspace.world.mainRNG, workspace, dialogFactory.colorizer)
-      case p: CorePlot     => PlotWidget(workspace.plotManager, workspace, dialogFactory.colorizer)
-      case m: CoreMonitor  => new MonitorWidget(workspace.world.auxRNG, workspace, dialogFactory.colorizer)
-      case s: CoreSlider =>
-        new SliderWidget(workspace.world.auxRNG, workspace, dialogFactory.colorizer, workspace.getExtensionManager) {
-          override def sourceOffset: Int =
-            Evaluator.sourceOffset(AgentKind.Observer, false)
-        }
-      case s: CoreSwitch => new SwitchWidget(workspace, workspace.getExtensionManager)
-      case i: CoreInputBox =>
-        val textArea       = new EditorArea(textEditorConfiguration) with AutoIndentHandler
-        val dialogTextArea = new EditorArea(dialogEditorConfiguration) with AutoIndentHandler
+    val newWidget: Widget = {
+      if (fromRegistry != null)
+        fromRegistry
+      else coreWidget match {
+        case c: CoreChooser  => new ChooserWidget(workspace, dialogFactory.colorizer, workspace.getExtensionManager)
+        case b: CoreButton   => new ButtonWidget(workspace.world.mainRNG, workspace, dialogFactory.colorizer)
+        case p: CorePlot     => PlotWidget(workspace.plotManager, workspace, dialogFactory.colorizer)
+        case m: CoreMonitor  => new MonitorWidget(workspace.world.auxRNG, workspace, dialogFactory.colorizer)
+        case s: CoreSlider =>
+          new SliderWidget(workspace.world.auxRNG, workspace, dialogFactory.colorizer, workspace.getExtensionManager) {
+            override def sourceOffset: Int =
+              Evaluator.sourceOffset(AgentKind.Observer, false)
+          }
+        case s: CoreSwitch => new SwitchWidget(workspace, workspace.getExtensionManager)
+        case i: CoreInputBox =>
+          val textArea       = new EditorArea(textEditorConfiguration) with AutoIndentHandler
+          val dialogTextArea = new EditorArea(dialogEditorConfiguration) with AutoIndentHandler
 
-        new InputBoxWidget(textArea, dialogTextArea, workspace, workspace.getExtensionManager, this)
-      case v: CoreView => new ViewWidget(workspace)
-      case _ =>
-        throw new IllegalStateException("unknown widget type: " + coreWidget.getClass.getName)
+          new InputBoxWidget(textArea, dialogTextArea, workspace, workspace.getExtensionManager, this)
+        case v: CoreView => new ViewWidget(workspace)
+        case _ =>
+          throw new IllegalStateException("unknown widget type: " + coreWidget.getClass.getName)
+      }
     }
+
+    Utils.zoomComponents(newWidget, 1)
+
+    newWidget
   }
 
   override private[app] def deleteWidgets(hitList: Seq[WidgetWrapper]): Unit = {
@@ -185,22 +191,14 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
         // the graphics widget (and the command center) are special cases because
         // they are not recreated at load time, but reused
         viewWidget.load(view)
+        viewWidget.setUnzoomedBounds(x, y, view.width, view.height)
         // in 3D we don't add the viewWidget to the interface panel
         // so don't worry about all the sizing junk ev 7/5/07
         val parent = viewWidget.getParent
         if (parent != null) {
-          parent.setSize(viewWidget.getSize)
+          parent.setSize(Utils.zoomSize(viewWidget.getSize))
           enforceMinimumAndMaximumWidgetSizes(viewWidget)
-          parent.setLocation(x, y)
-          zoomer.zoomWidgetLocation(
-            getWrapper(viewWidget),
-                  true, true, 1.0, zoomer.zoomFactor)
-          zoomer.zoomWidgetSize(
-            getWrapper(viewWidget),
-                  true, true, 1.0, zoomer.zoomFactor)
-          zoomer.scaleComponentFont(
-            viewWidget.asInstanceOf[ViewWidget].view,
-                 zoomFactor, 1.0, false)
+          parent.setLocation(Utils.zoom(x), Utils.zoom(y))
         }
         viewWidget
       case _ =>

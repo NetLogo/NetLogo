@@ -5,10 +5,9 @@ package org.nlogo.window
 import java.awt.Dimension
 import java.awt.event.{ ActionEvent, ActionListener }
 import javax.swing.{ Box, BoxLayout, JLabel, JPanel }
-import javax.swing.border.EmptyBorder
 
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ Button, Utils }
+import org.nlogo.swing.{ Button, HorizontalStrut, Utils, Zoomable, ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 import scala.util.{ Success, Try }
@@ -51,7 +50,7 @@ class RuntimeErrorDisplay(accessor: PropertyAccessor[Option[Exception]])
   }
 }
 
-trait RuntimeErrorDisplayer extends JPanel with ActionListener with ThemeSync {
+trait RuntimeErrorDisplayer extends JPanel with ActionListener with Zoomable with ThemeSync {
 
   def exceptionMessage: Option[String]
 
@@ -67,16 +66,16 @@ trait RuntimeErrorDisplayer extends JPanel with ActionListener with ThemeSync {
   lazy val messageLabel = new JLabel
 
   setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
-  setBorder(new EmptyBorder(6, 6, 6, 6))
+  setBorder(new ZoomableBorder(6, 6, 6, 6))
 
   protected def layoutErrorPanel(): Unit = {
     exceptionMessage.foreach { message =>
       messageLabel.setText(message)
 
       add(errorLabel)
-      add(Box.createHorizontalStrut(6))
+      add(new HorizontalStrut(6))
       add(messageLabel)
-      add(Box.createHorizontalStrut(6))
+      add(new HorizontalStrut(6))
       add(dismissButton)
       add(Box.createHorizontalGlue)
     }
@@ -84,22 +83,30 @@ trait RuntimeErrorDisplayer extends JPanel with ActionListener with ThemeSync {
 
   override def actionPerformed(e: ActionEvent): Unit
 
+  private def setIcon(): Unit = {
+    val size: Int = Utils.zoom(15)
+
+    errorLabel.setIcon(Utils.iconScaledWithColor("/images/error.png", size, size, InterfaceColors.errorLabelText()))
+  }
+
+  override def zoom(oldZoom: Float): Unit = {
+    setIcon()
+  }
+
   override def syncTheme(): Unit = {
     setBackground(InterfaceColors.errorLabelBackground())
 
     errorLabel.setForeground(InterfaceColors.errorLabelText())
     messageLabel.setForeground(InterfaceColors.errorLabelText())
 
-    errorLabel.setIcon(Utils.iconScaledWithColor("/images/error.png", 15, 15, InterfaceColors.errorLabelText()))
-
     dismissButton.syncTheme()
+
+    setIcon()
   }
 }
 
 class RuntimeErrorPanel(e: Exception, onDismiss: (RuntimeErrorPanel) => Unit = {_ => }) extends RuntimeErrorDisplayer {
-
   layoutErrorPanel()
-  setMaximumSize(new Dimension(400, 100))
 
   syncTheme()
 
@@ -109,4 +116,7 @@ class RuntimeErrorPanel(e: Exception, onDismiss: (RuntimeErrorPanel) => Unit = {
     onDismiss(this)
     dismissButton.removeActionListener(this)
   }
+
+  override def getMaximumSize: Dimension =
+    new Dimension(Utils.zoom(400), Utils.zoom(100))
 }
