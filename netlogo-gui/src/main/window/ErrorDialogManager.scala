@@ -18,8 +18,9 @@ import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.util.{ SysInfo, Utils }
 
 import scala.annotation.tailrec
+import scala.concurrent.duration.DurationInt
 
-import sttp.client4.DefaultSyncBackend
+import sttp.client4.DefaultFutureBackend
 import sttp.client4.quick.{ quickRequest, UriContext }
 
 import ujson.Obj
@@ -297,7 +298,8 @@ private class ReportDialog(parent: Dialog, trace: String)
     quickRequest.post(uri"https://backend.netlogo.org/items/NetLogo_Desktop_Error_Reports")
                 .body(json)
                 .contentType("application/json")
-                .send(DefaultSyncBackend())
+                .readTimeout(15.seconds)
+                .send(DefaultFutureBackend())
   }
 
   override def syncTheme(): Unit = {
