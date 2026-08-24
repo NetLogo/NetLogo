@@ -2,25 +2,20 @@
 
 package org.nlogo.window
 
-import java.awt.{ Color, Component, Dimension, EventQueue, Font, Graphics, GridBagConstraints, GridBagLayout, Insets,
-                  Point }
+import java.awt.{ Color, Component, Dimension, EventQueue, Font, Insets, Point }
 import java.awt.datatransfer.StringSelection
 import java.awt.event.{ ActionEvent, MouseEvent }
-import javax.swing.{ AbstractAction, JLabel, JPanel }
+import javax.swing.{ AbstractAction, Box, BoxLayout, JLabel, JPanel }
 
 import org.nlogo.api.{ CompilerServices, Dump, MersenneTwisterFast }
 import org.nlogo.core.{ AgentKind, AgentKindJ, I18N, Monitor => CoreMonitor, Widget => CoreWidget }
 import org.nlogo.editor.Colorizer
 import org.nlogo.nvm.Procedure
-import org.nlogo.swing.{ MenuItem, PopupMenu, RoundedBorderPanel }
+import org.nlogo.swing.{ BoxRow, HorizontalStrut, MenuItem, PopupMenu, RoundedBorderPanel, Utils, Zoomable }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.Events.{ AddJobEvent, RuntimeErrorEvent, PeriodicUpdateEvent, JobRemovedEvent, RemoveJobEvent }
 
 object MonitorWidget {
-  private val MinWidth = 50
-  private val DefaultDecimalPlaces = 17
-  private val DefaultFontSize = 11
-
   trait ToMonitorModel { self: Widget & Component =>
     def decimalPlaces: Int
     def units: String
@@ -29,7 +24,7 @@ object MonitorWidget {
     def name: String
 
     override def model: CoreWidget = {
-      val b       = getUnzoomedBounds
+      val b       = unzoomedBounds
       val display = name.potentiallyEmptyStringToOption
       val src     = innerSource.potentiallyEmptyStringToOption
 
@@ -53,21 +48,16 @@ class MonitorWidget(random: MersenneTwisterFast, compiler: CompilerServices, col
     with JobRemovedEvent.Handler
     with java.awt.event.MouseListener {
 
-  private class ValuePanel(label: JLabel) extends JPanel(new GridBagLayout) with RoundedBorderPanel with ThemeSync {
-    locally {
-      val c = new GridBagConstraints
+  private class ValuePanel(label: JLabel) extends JPanel with RoundedBorderPanel with Zoomable with ThemeSync {
+    setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
 
-      c.weightx = 1
-      c.anchor = GridBagConstraints.WEST
-      c.insets = new Insets(0, zoom(6), 0, zoom(6))
+    add(new HorizontalStrut(6))
+    add(label)
+    add(Box.createHorizontalGlue)
+    add(new HorizontalStrut(6))
 
-      add(label, c)
-    }
-
-    override def paintComponent(g: Graphics): Unit = {
-      setDiameter(zoom(6))
-
-      super.paintComponent(g)
+    override def zoom(oldZoom: Float): Unit = {
+      setDiameter(Utils.zoom(6))
     }
 
     override def syncTheme(): Unit = {
@@ -81,77 +71,34 @@ class MonitorWidget(random: MersenneTwisterFast, compiler: CompilerServices, col
   private var _name: String = ""
   private var _value: Option[AnyRef] = Option.empty[AnyRef]
   private var valueString: String = ""
-  private var _decimalPlaces: Int = DefaultDecimalPlaces
+  private var _decimalPlaces: Int = 17
 
   // This is the same as the button so right-click on a monitor w/ error
   // brings up the popup menu not the edit dialog. ev 1/4/06
   private var lastMousePressedWasPopupTrigger: Boolean = false;
 
-  private var _fontSize = DefaultFontSize
+  private var _fontSize = 11
 
-  private val nameLabel = new JLabel(I18N.gui.get("edit.monitor.previewName"))
+  private val nameLabel = new JLabel(I18N.gui.get("edit.monitor.previewName")) {
+    this.setFont(getFont.deriveFont(_boldState))
+  }
+
   private lazy val valueLabel = new JLabel
   private val valuePanel = new ValuePanel(valueLabel)
-  private val unitsLabel = new JLabel
 
-  unitsLabel.setVisible(false)
+  private val unitsLabel = new JLabel {
+    this.setFont(getFont.deriveFont(_boldState))
+    setVisible(false)
+  }
 
   addMouseListener(this)
 
-  setLayout(new GridBagLayout)
+  setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
+  setBorder(new AdaptableBorder(new Insets(3, 6, 6, 6), new Insets(6, 8, 8, 8)))
 
-  initGUI()
-
-  override def initGUI(): Unit = {
-    removeAll()
-
-    val c = new GridBagConstraints
-
-    c.gridx = 0
-    c.gridwidth = 2
-    c.weightx = 1
-    c.anchor = GridBagConstraints.NORTHWEST
-    c.insets = {
-      if (_oldSize) {
-        new Insets(zoom(3), zoom(6), 0, zoom(6))
-      } else {
-        new Insets(zoom(6), zoom(8), zoom(6), zoom(8))
-      }
-    }
-
-    add(nameLabel, c)
-
-    nameLabel.setFont(nameLabel.getFont.deriveFont(_boldState))
-
-    c.gridwidth = 1
-    c.fill = GridBagConstraints.BOTH
-    c.weighty = 1
-    c.insets = {
-      if (_oldSize) {
-        new Insets(0, zoom(6), zoom(6), zoom(6))
-      } else {
-        new Insets(0, zoom(8), zoom(8), zoom(8))
-      }
-    }
-
-    add(valuePanel, c)
-
-    c.gridx = 1
-    c.fill = GridBagConstraints.NONE
-    c.weightx = 0
-    c.weighty = 0
-    c.insets = {
-      if (_oldSize) {
-        new Insets(0, 0, zoom(6), zoom(6))
-      } else {
-        new Insets(0, 0, zoom(8), zoom(8))
-      }
-    }
-
-    add(unitsLabel, c)
-
-    unitsLabel.setFont(unitsLabel.getFont.deriveFont(_boldState))
-  }
+  add(new BoxRow(Seq(nameLabel, Box.createHorizontalGlue)))
+  add(new AdaptableVerticalStrut(0, 6))
+  add(new BoxRow(Seq(valuePanel, new AdaptableHorizontalStrut(6, 8), unitsLabel)))
 
   def setDisplayName(name: String): Unit = {
     _name = name
@@ -176,26 +123,14 @@ class MonitorWidget(random: MersenneTwisterFast, compiler: CompilerServices, col
 
     if (originalFont != null)
       this.originalFont = originalFont.deriveFont(size.toFloat)
-
-    // These should reset the cached values in the Zoomer, but
-    // after one finishes a property widget edit, it appears to
-    // still cache the min height. -- CLB
-    resetZoomInfo()
-    resetSizeInfo()
   }
 
   override def setFont(f: Font): Unit = {
-    if (isZoomed || getFont == null) {
-      super.setFont(f)
+    val newFont = f.deriveFont(fontSize.toFloat)
 
-      valueLabel.setFont(f)
-    } else {
-      val newFont = getFont.deriveFont(fontSize.toFloat)
+    super.setFont(newFont)
 
-      super.setFont(newFont)
-
-      valueLabel.setFont(newFont)
-    }
+    valueLabel.setFont(newFont)
 
     revalidate()
     repaint()
@@ -322,17 +257,17 @@ class MonitorWidget(random: MersenneTwisterFast, compiler: CompilerServices, col
 
   override def getMinimumSize: Dimension = {
     if (_oldSize) {
-      new Dimension(MinWidth, (fontSize * 4) + 1)
+      new Dimension(Utils.zoom(50), (fontSize * 4) + Utils.zoom(1))
     } else {
-      new Dimension(100, 60)
+      Utils.zoomSize(new Dimension(100, 60))
     }
   }
 
   override def getPreferredSize: Dimension = {
     if (_oldSize) {
-      new Dimension(100, getMinimumSize.height)
+      new Dimension(Utils.zoom(100), getMinimumSize.height)
     } else {
-      new Dimension(100, 60)
+      Utils.zoomSize(new Dimension(100, 60))
     }
   }
 

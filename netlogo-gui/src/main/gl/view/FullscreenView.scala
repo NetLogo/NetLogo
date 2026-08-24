@@ -6,7 +6,7 @@ import org.nlogo.gl.render.Renderer
 import java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment
 
 private class FullscreenView(viewManager: ViewManager, renderer: Renderer)
-extends View("", viewManager, renderer) {
+extends View("", viewManager, renderer, None) {
 
   setUndecorated(true)
   setVisible(true)

@@ -2,14 +2,14 @@
 
 package org.nlogo.window
 
-import java.awt.{ BorderLayout, Component, Container }
+import java.awt.{ BorderLayout, Container }
 import java.awt.event.{ FocusListener, HierarchyEvent, MouseAdapter, MouseEvent, TextListener, TextEvent }
-import javax.swing.{ JLabel, JPanel, ScrollPaneConstants }
+import javax.swing.{ Box, BoxLayout, JLabel, JPanel, ScrollPaneConstants }
 
 import org.nlogo.api.CompilerServices
-import org.nlogo.awt.{ Hierarchy, RowLayout }
+import org.nlogo.awt.Hierarchy
 import org.nlogo.editor.{ Colorizer, EditorArea, EditorConfiguration }
-import org.nlogo.swing.{ CollapsibleArrow, ScrollPane, Transparent }
+import org.nlogo.swing.{ CollapsibleArrow, HorizontalStrut, ScrollPane, Transparent, VerticalStrut }
 import org.nlogo.theme.InterfaceColors
 
 import scala.util.{ Success, Try }
@@ -64,9 +64,11 @@ class CodeEditor(accessor: PropertyAccessor[String], compiler: CompilerServices,
     })
   }
 
-  setLayout(new BorderLayout(0, 3))
+  setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
 
-  add(new JPanel(new RowLayout(2, Component.LEFT_ALIGNMENT, Component.CENTER_ALIGNMENT)) with Transparent {
+  add(new JPanel with Transparent {
+    setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
+
     if (collapsible) {
       add(new JLabel(arrow) {
         addMouseListener(new MouseAdapter {
@@ -75,12 +77,16 @@ class CodeEditor(accessor: PropertyAccessor[String], compiler: CompilerServices,
           }
         })
       })
+
+      add(new HorizontalStrut(2))
     }
 
     add(nameLabel)
-  }, BorderLayout.NORTH)
+    add(Box.createHorizontalGlue)
+  })
 
-  add(collapso, BorderLayout.CENTER)
+  add(new VerticalStrut(3))
+  add(collapso)
 
   def collapsed: Boolean = !collapso.isVisible()
 

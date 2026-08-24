@@ -2,14 +2,14 @@
 
 package org.nlogo.app
 
-import java.awt.{ Component, FileDialog => AWTFileDialog, Font, Frame, GridBagConstraints, GridBagLayout, Insets }
+import java.awt.{ Component, FileDialog => AWTFileDialog, Font, Frame, Insets }
 import java.awt.event.ActionEvent
 import java.io.FileOutputStream
 import java.nio.ByteBuffer
 import java.nio.charset.{ MalformedInputException, StandardCharsets }
 import java.nio.file.{ Files, Paths }
 import java.util.Base64
-import javax.swing.{ AbstractAction, JDialog, JLabel, JPanel, JTable, ListSelectionModel }
+import javax.swing.{ AbstractAction, Box, BoxLayout, JDialog, JLabel, JPanel, JTable, ListSelectionModel }
 import javax.swing.border.MatteBorder
 import javax.swing.event.{ ListSelectionEvent, ListSelectionListener }
 import javax.swing.table.{ DefaultTableModel, TableCellRenderer }
@@ -17,13 +17,14 @@ import javax.swing.table.{ DefaultTableModel, TableCellRenderer }
 import org.nlogo.api.{ Workspace }
 import org.nlogo.awt.{ Positioning, UserCancelException }
 import org.nlogo.core.{ ExternalResource, I18N }
-import org.nlogo.swing.{ Button, FileDialog, InputOptionPane, OptionPane, ScrollPane, Transparent, Utils
-                       , WindowAutomator }
+import org.nlogo.swing.{ BoxColumn, BoxRow, Button, Centered, FileDialog, HorizontalStrut, InputOptionPane, OptionPane,
+                         ScrollPane, SyncZoom, Utils, VerticalStrut, WindowAutomator, Zoomable, ZoomableBorder,
+                         ZoomActions }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.Events.{ DirtyEvent, ResourcesChangedEvent }
 
 class ResourceManagerDialog(parent: Frame, workspace: Workspace)
-  extends JDialog(parent, I18N.gui.get("resource.manager"), true) with ThemeSync {
+  extends JDialog(parent, I18N.gui.get("resource.manager"), true) with ZoomActions with ThemeSync {
 
   WindowAutomator.automate(this)
 
@@ -31,14 +32,17 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
 
   private val tableModel = new DefaultTableModel(0, 2)
 
-  private val table = new JTable(tableModel) {
+  private val table = new JTable(tableModel) with Zoomable {
+    private val resourceRenderer = new ResourceCellRenderer
+    private val headerRenderer = new HeaderCellRenderer
+
     setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
     setCellSelectionEnabled(false)
     setRowSelectionAllowed(true)
 
     getTableHeader.setReorderingAllowed(false)
 
-    setDefaultRenderer(classOf[ResourceCellRenderer], new ResourceCellRenderer)
+    setDefaultRenderer(classOf[ResourceCellRenderer], resourceRenderer)
 
     getSelectionModel.addListSelectionListener(new ListSelectionListener {
       def valueChanged(e: ListSelectionEvent): Unit = {
@@ -49,16 +53,29 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
     val nameColumn = getColumnModel.getColumn(0)
 
     nameColumn.setHeaderValue("Name")
-    nameColumn.setCellRenderer(new ResourceCellRenderer)
-    nameColumn.setHeaderRenderer(new HeaderCellRenderer)
+    nameColumn.setCellRenderer(resourceRenderer)
+    nameColumn.setHeaderRenderer(headerRenderer)
 
     val extensionColumn = getColumnModel.getColumn(1)
 
     extensionColumn.setHeaderValue("Extension")
-    extensionColumn.setCellRenderer(new ResourceCellRenderer)
-    extensionColumn.setHeaderRenderer(new HeaderCellRenderer)
+    extensionColumn.setCellRenderer(resourceRenderer)
+    extensionColumn.setHeaderRenderer(headerRenderer)
 
     override def isCellEditable(row: Int, column: Int): Boolean = false
+
+    override def getRowHeight(row: Int): Int = {
+      if (row == 0) {
+        headerRenderer.getPreferredSize.height
+      } else {
+        resourceRenderer.getPreferredSize.height
+      }
+    }
+
+    override def zoom(oldZoom: Float): Unit = {
+      headerRenderer.syncZoom()
+      resourceRenderer.syncZoom()
+    }
   }
 
   private val scrollPane = new ScrollPane(table)
@@ -181,50 +198,52 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
     new ResourcesChangedEvent().raise(parent)
   })
 
-  locally {
-    setLayout(new GridBagLayout)
+  private val contents = new BoxColumn(Seq(
+    scrollPane,
+    new VerticalStrut(6),
+    new Centered(new BoxRow(Seq(
+      addButton,
+      new HorizontalStrut(6),
+      exportButton,
+      new HorizontalStrut(6),
+      renameButton,
+      new HorizontalStrut(6),
+      removeButton
+    )))
+  )) with SyncZoom {
+    setOpaque(true)
+    setBorder(new ZoomableBorder(6, 6, 6, 6))
 
-    val c = new GridBagConstraints
+    override def zoom(oldZoom: Float): Unit = {
+      super.zoom(oldZoom)
 
-    c.gridx = 0
-    c.fill = GridBagConstraints.BOTH
-    c.weightx = 1
-    c.weighty = 1
-    c.insets = new Insets(6, 6, 6, 6)
+      pack()
+    }
+  }
 
-    add(scrollPane, c)
+  setContentPane(contents)
 
-    c.fill = GridBagConstraints.HORIZONTAL
-    c.weightx = 0
-    c.weighty = 0
+  refreshList()
 
-    add(new JPanel(new GridBagLayout) with Transparent {
-      val c = new GridBagConstraints
+  contents.syncZoom()
 
-      c.insets = new Insets(0, 6, 6, 6)
+  pack()
 
-      add(addButton, c)
+  Positioning.center(this, parent)
 
-      c.insets = new Insets(0, 0, 6, 6)
+  Utils.addEscKeyAction(this, new AbstractAction {
+    override def actionPerformed(e: ActionEvent): Unit = {
+      setVisible(false)
+    }
+  })
 
-      add(exportButton, c)
-      add(renameButton, c)
-      add(removeButton, c)
-    }, c)
+  syncTheme()
 
-    refreshList()
+  override def setVisible(visible: Boolean): Unit = {
+    if (visible)
+      contents.syncZoom()
 
-    pack()
-
-    Positioning.center(this, parent)
-
-    Utils.addEscKeyAction(this, new AbstractAction {
-      override def actionPerformed(e: ActionEvent): Unit = {
-        setVisible(false)
-      }
-    })
-
-    syncTheme()
+    super.setVisible(visible)
   }
 
   private def refreshList(): Unit = {
@@ -244,10 +263,8 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
   }
 
   override def syncTheme(): Unit = {
-    getContentPane.setBackground(InterfaceColors.dialogBackground())
-
+    contents.setBackground(InterfaceColors.dialogBackground())
     scrollPane.setBackground(InterfaceColors.dialogBackground())
-
     table.setBackground(InterfaceColors.dialogBackground())
 
     addButton.syncTheme()
@@ -256,18 +273,16 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
     removeButton.syncTheme()
   }
 
-  private class ResourceCellRenderer extends JPanel(new GridBagLayout) with TableCellRenderer {
+  private class ResourceCellRenderer extends JPanel with TableCellRenderer with SyncZoom {
     private val label = new JLabel
 
-    locally {
-      val c = new GridBagConstraints
+    setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
 
-      c.anchor = GridBagConstraints.WEST
-      c.weightx = 1
-      c.insets = new Insets(3, 6, 3, 6)
+    add(label)
+    add(Box.createHorizontalGlue)
 
-      add(label, c)
-    }
+    override def getInsets: java.awt.Insets =
+      new Insets(Utils.zoom(3), Utils.zoom(6), Utils.zoom(3), Utils.zoom(6))
 
     def getTableCellRendererComponent(table: JTable, value: Object, isSelected: Boolean, hasFocus: Boolean, row: Int,
                                       column: Int): Component = {
@@ -295,20 +310,18 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
     }
   }
 
-  private class HeaderCellRenderer extends JPanel(new GridBagLayout) with TableCellRenderer {
-    private val label = new JLabel
-
-    locally {
-      label.setFont(label.getFont.deriveFont(Font.BOLD))
-
-      val c = new GridBagConstraints
-
-      c.anchor = GridBagConstraints.WEST
-      c.weightx = 1
-      c.insets = new Insets(3, 6, 3, 6)
-
-      add(label, c)
+  private class HeaderCellRenderer extends JPanel with TableCellRenderer with SyncZoom {
+    private val label = new JLabel {
+      setFont(getFont.deriveFont(Font.BOLD))
     }
+
+    setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
+
+    add(label)
+    add(Box.createHorizontalGlue)
+
+    override def getInsets: java.awt.Insets =
+      new Insets(Utils.zoom(3), Utils.zoom(6), Utils.zoom(3), Utils.zoom(6))
 
     def getTableCellRendererComponent(table: JTable, value: Object, isSelected: Boolean, hasFocus: Boolean, row: Int,
                                       column: Int): Component = {

@@ -2,11 +2,11 @@
 
 package org.nlogo.window
 
-import java.awt.{ BorderLayout, Color, Dimension, Frame, Graphics }
+import java.awt.{ Color, Dimension, Frame, Graphics }
 import java.awt.event.{ MouseAdapter, MouseEvent }
-import javax.swing.{ JLabel, JPanel }
+import javax.swing.{ Box, BoxLayout, JLabel, JPanel }
 
-import org.nlogo.swing.{ RoundedBorderPanel, Utils }
+import org.nlogo.swing.{ HorizontalStrut, PreferredSize, RoundedBorderPanel, Utils, Zoomable }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 import scala.util.Success
@@ -15,10 +15,12 @@ class ColorEditor(accessor: PropertyAccessor[Color], frame: Frame) extends Prope
   private val label = new JLabel(accessor.name)
   private val colorButton = new ColorButton
 
-  setLayout(new BorderLayout(6, 0))
+  setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
 
-  add(label, BorderLayout.CENTER)
-  add(colorButton, BorderLayout.EAST)
+  add(label)
+  add(new HorizontalStrut(6))
+  add(Box.createHorizontalGlue)
+  add(colorButton)
 
   setColor(originalValue)
 
@@ -41,12 +43,12 @@ class ColorEditor(accessor: PropertyAccessor[Color], frame: Frame) extends Prope
     colorButton.syncTheme()
   }
 
-  private class ColorButton extends JPanel with RoundedBorderPanel with ThemeSync {
+  private class ColorButton extends JPanel with RoundedBorderPanel with PreferredSize with Zoomable with ThemeSync {
     private var color = Color.BLACK
 
-    private val panel = new JPanel {
+    private val panel = new JPanel with PreferredSize {
       override def getPreferredSize: Dimension =
-        new Dimension(16, 16)
+        new Dimension(Utils.zoom(16), Utils.zoom(16))
 
       override def paintComponent(g: Graphics): Unit = {
         val g2d = Utils.initGraphics2D(g)
@@ -64,7 +66,7 @@ class ColorEditor(accessor: PropertyAccessor[Color], frame: Frame) extends Prope
       }
     }
 
-    setDiameter(6)
+    setDiameter(Utils.zoom(6))
     enableHover()
     enablePressed()
 
@@ -113,6 +115,10 @@ class ColorEditor(accessor: PropertyAccessor[Color], frame: Frame) extends Prope
 
     def getColor: Color =
       color
+
+    override def zoom(oldZoom: Float): Unit = {
+      setDiameter(Utils.zoom(6))
+    }
 
     override def syncTheme(): Unit = {
       setBackgroundColor(InterfaceColors.toolbarControlBackground())

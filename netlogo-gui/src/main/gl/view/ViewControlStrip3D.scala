@@ -5,12 +5,12 @@ package org.nlogo.gl.view
 import java.awt.{ BorderLayout, FlowLayout }
 import javax.swing.JPanel
 
-import org.nlogo.swing.Transparent
+import org.nlogo.swing.{ SyncZoom, Transparent }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ DisplaySwitch, GUIWorkspace, SpeedSliderPanel, TickCounterLabel, ViewUpdatePanel }
 
 class ViewControlStrip3D(workspace: GUIWorkspace, val tickCounter: TickCounterLabel)
-  extends JPanel(new BorderLayout) with ThemeSync {
+  extends JPanel(new BorderLayout) with SyncZoom with ThemeSync {
 
   val speedSlider = new SpeedSliderPanel(workspace, tickCounter)
   val displaySwitch = new DisplaySwitch(workspace)
@@ -33,7 +33,6 @@ class ViewControlStrip3D(workspace: GUIWorkspace, val tickCounter: TickCounterLa
   override def syncTheme(): Unit = {
     setBackground(InterfaceColors.toolbarBackground())
 
-    displaySwitch.syncTheme()
     controls.syncTheme()
   }
 }

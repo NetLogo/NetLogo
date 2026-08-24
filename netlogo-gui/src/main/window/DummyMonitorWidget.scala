@@ -2,11 +2,11 @@
 
 package org.nlogo.window
 
-import java.awt.{ Dimension, Graphics, GridBagConstraints, GridBagLayout, Insets }
-import javax.swing.{ JLabel, JPanel }
+import java.awt.{ Dimension, Insets }
+import javax.swing.{ Box, BoxLayout, JLabel, JPanel }
 
 import org.nlogo.core.{ I18N, Monitor => CoreMonitor, Widget => CoreWidget }
-import org.nlogo.swing.RoundedBorderPanel
+import org.nlogo.swing.{ BoxRow, RoundedBorderPanel, Utils, Zoomable }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 class DummyMonitorWidget extends SingleErrorWidget with MonitorWidget.ToMonitorModel with Editable {
@@ -16,11 +16,9 @@ class DummyMonitorWidget extends SingleErrorWidget with MonitorWidget.ToMonitorM
 
   private val nameLabel = new JLabel(I18N.gui.get("edit.monitor.previewName"))
 
-  private val valuePanel = new JPanel(new GridBagLayout) with RoundedBorderPanel with ThemeSync {
-    override def paintComponent(g: Graphics): Unit = {
-      setDiameter(zoom(6))
-
-      super.paintComponent(g)
+  private val valuePanel = new JPanel with RoundedBorderPanel with Zoomable with ThemeSync {
+    override def zoom(oldZoom: Float): Unit = {
+      setDiameter(Utils.zoom(6))
     }
 
     override def syncTheme(): Unit = {
@@ -29,44 +27,12 @@ class DummyMonitorWidget extends SingleErrorWidget with MonitorWidget.ToMonitorM
     }
   }
 
-  setLayout(new GridBagLayout)
+  setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
+  setBorder(new AdaptableBorder(new Insets(3, 6, 6, 6), new Insets(6, 8, 8, 8)))
 
-  initGUI()
-
-  override def initGUI(): Unit = {
-    removeAll()
-
-    val c = new GridBagConstraints
-
-    c.gridx = 0
-    c.gridwidth = 2
-    c.weightx = 1
-    c.anchor = GridBagConstraints.NORTHWEST
-    c.insets = {
-      if (_oldSize) {
-        new Insets(zoom(3), zoom(6), 0, zoom(6))
-      } else {
-        new Insets(zoom(6), zoom(8), zoom(6), zoom(8))
-      }
-    }
-
-    add(nameLabel, c)
-
-    nameLabel.setFont(nameLabel.getFont.deriveFont(_boldState))
-
-    c.gridwidth = 1
-    c.fill = GridBagConstraints.BOTH
-    c.weighty = 1
-    c.insets = {
-      if (_oldSize) {
-        new Insets(0, zoom(6), zoom(6), zoom(6))
-      } else {
-        new Insets(0, zoom(8), zoom(8), zoom(8))
-      }
-    }
-
-    add(valuePanel, c)
-  }
+  add(new BoxRow(Seq(nameLabel, Box.createHorizontalGlue)))
+  add(new AdaptableVerticalStrut(0, 6))
+  add(valuePanel)
 
   def innerSource = ""
   def fontSize = 11
@@ -101,17 +67,17 @@ class DummyMonitorWidget extends SingleErrorWidget with MonitorWidget.ToMonitorM
 
   override def getMinimumSize: Dimension = {
     if (_oldSize) {
-      new Dimension(50, (fontSize * 4) + 1)
+      new Dimension(Utils.zoom(50), (fontSize * 4) + Utils.zoom(1))
     } else {
-      new Dimension(100, 60)
+      Utils.zoomSize(new Dimension(100, 60))
     }
   }
 
   override def getPreferredSize: Dimension = {
     if (_oldSize) {
-      new Dimension(100, getMinimumSize.height)
+      new Dimension(Utils.zoom(100), getMinimumSize.height)
     } else {
-      new Dimension(100, 60)
+      Utils.zoomSize(new Dimension(100, 60))
     }
   }
 

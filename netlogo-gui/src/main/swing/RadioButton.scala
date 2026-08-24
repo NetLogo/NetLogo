@@ -16,8 +16,8 @@ class RadioButton(action: Action) extends JRadioButton(action) with MouseUtils w
   })
 
   setIcon(new Icon {
-    def getIconWidth: Int = 14
-    def getIconHeight: Int = 14
+    def getIconWidth: Int = Utils.zoom(14)
+    def getIconHeight: Int = Utils.zoom(14)
 
     def paintIcon(c: Component, g: Graphics, x: Int, y: Int): Unit = {
       val g2d = Utils.initGraphics2D(g)

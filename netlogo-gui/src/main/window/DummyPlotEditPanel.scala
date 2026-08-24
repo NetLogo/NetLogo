@@ -2,9 +2,10 @@
 
 package org.nlogo.window
 
-import java.awt.{ GridBagConstraints, Insets }
+import javax.swing.BoxLayout
 
 import org.nlogo.core.I18N
+import org.nlogo.swing.{ BoxRow, HorizontalStrut, VerticalStrut, ZoomableBorder }
 
 class DummyPlotEditPanel(target: DummyPlotWidget) extends WidgetEditPanel(target) {
   private val nameOptions =
@@ -106,55 +107,18 @@ class DummyPlotEditPanel(target: DummyPlotWidget) extends WidgetEditPanel(target
         _.foreach(target.oldSize),
         () => apply()))
 
-  locally {
-    val c = new GridBagConstraints
+  setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
+  setBorder(new ZoomableBorder(6, 6, 6, 6))
 
-    c.gridy = 0
-    c.gridwidth = 3
-    c.fill = GridBagConstraints.HORIZONTAL
-    c.weightx = 1
-    c.insets = new Insets(6, 6, 6, 6)
-
-    add(nameOptions, c)
-
-    c.gridy = 1
-    c.gridwidth = 1
-    c.insets = new Insets(0, 6, 6, 6)
-
-    add(xLabel, c)
-
-    c.insets = new Insets(0, 0, 6, 6)
-
-    add(xMin, c)
-    add(xMax, c)
-
-    c.gridy = 2
-    c.insets = new Insets(0, 6, 6, 6)
-
-    add(yLabel, c)
-
-    c.insets = new Insets(0, 0, 6, 6)
-
-    add(yMin, c)
-    add(yMax, c)
-
-    c.gridy = 3
-    c.insets = new Insets(0, 6, 6, 6)
-
-    add(autoPlotX, c)
-
-    c.insets = new Insets(0, 0, 6, 6)
-
-    add(autoPlotY, c)
-    add(showLegend, c)
-
-    c.gridy = 4
-    c.gridwidth = 3
-    c.anchor = GridBagConstraints.WEST
-    c.insets = new Insets(0, 6, 6, 6)
-
-    add(oldSize, c)
-  }
+  add(nameOptions)
+  add(new VerticalStrut(6))
+  add(new BoxRow(Seq(xLabel, new HorizontalStrut(6), xMin, new HorizontalStrut(6), xMax)))
+  add(new VerticalStrut(6))
+  add(new BoxRow(Seq(yLabel, new HorizontalStrut(6), yMin, new HorizontalStrut(6), yMax)))
+  add(new VerticalStrut(6))
+  add(new BoxRow(Seq(autoPlotX, new HorizontalStrut(6), autoPlotY, new HorizontalStrut(6), showLegend)))
+  add(new VerticalStrut(6))
+  add(oldSize)
 
   override def propertyEditors: Seq[PropertyEditor[?]] =
     Seq(nameOptions, xLabel, xMin, xMax, yLabel, yMin, yMax, autoPlotX, autoPlotY, showLegend, oldSize)

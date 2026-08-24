@@ -2,14 +2,14 @@
 
 package org.nlogo.window
 
-import java.awt.{ BorderLayout, Component, FileDialog => JFileDialog }
+import java.awt.{ Component, FileDialog => JFileDialog }
 import java.io.File
 import java.nio.file.Path
-import javax.swing.{ JLabel, JToolBar }
+import javax.swing.{ BoxLayout, JLabel, JToolBar }
 
 import org.nlogo.awt.UserCancelException
+import org.nlogo.swing.{ Button, FileDialog, HorizontalStrut, TextField, Transparent }
 import org.nlogo.swing.Implicits.thunk2documentListener
-import org.nlogo.swing.{ Button, FileDialog, TextField, Transparent }
 import org.nlogo.theme.InterfaceColors
 
 import scala.util.{ Success, Try }
@@ -37,18 +37,21 @@ class FilePathEditor(accessor: PropertyAccessor[String], parent: Component, curr
   private val disableButton = new Button("Disable", () => set(""))
 
   private val toolbar = new JToolBar with Transparent {
-    setLayout(new BorderLayout(6, 0))
+    setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
     setFloatable(false)
 
-    add(browseButton, BorderLayout.WEST)
-    add(disableButton, BorderLayout.CENTER)
+    add(browseButton)
+    add(new HorizontalStrut(6))
+    add(disableButton)
   }
 
-  setLayout(new BorderLayout(6, 0))
+  setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
 
-  add(label, BorderLayout.WEST)
-  add(editor, BorderLayout.CENTER)
-  add(toolbar, BorderLayout.EAST)
+  add(label)
+  add(new HorizontalStrut(6))
+  add(editor)
+  add(new HorizontalStrut(6))
+  add(toolbar)
 
   private def asPath(currentText: String): Path = {
     val currentPath = new File(currentText).toPath

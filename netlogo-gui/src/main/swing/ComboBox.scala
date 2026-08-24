@@ -2,21 +2,21 @@
 
 package org.nlogo.swing
 
-import java.awt.{ Component, Dimension, GridBagConstraints, GridBagLayout, Insets, ItemSelectable }
+import java.awt.{ Component, Dimension, ItemSelectable }
 import java.awt.event.{ ActionEvent, ItemEvent, ItemListener, KeyAdapter, KeyEvent, MouseAdapter, MouseEvent }
-import javax.swing.{ AbstractAction, JLabel, JPanel }
+import javax.swing.{ AbstractAction, Box, BoxLayout, JLabel, JPanel }
 
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 object ComboBox {
   // required for custom menu item components since they are only allowed in one place (Isaac B 11/17/24)
-  trait Clone {
+  trait Clone extends Component {
     def getClone: Component
   }
 }
 
 class ComboBox[T](private var items: Seq[T] = Seq(), openOnPress: Boolean = true, searchable: Boolean = false)
-  extends JPanel(new GridBagLayout) with RoundedBorderPanel with ThemeSync with ItemSelectable {
+  extends JPanel with RoundedBorderPanel with Zoomable with ThemeSync with ItemSelectable {
 
   // popups with lots of items can overlap the mouse when the dropdown is clicked, causing one of
   // the items to be erroneously selected when the mouse is released. this makes it difficult to
@@ -26,14 +26,14 @@ class ComboBox[T](private var items: Seq[T] = Seq(), openOnPress: Boolean = true
       new MouseAdapter {
         override def mousePressed(e: MouseEvent): Unit = {
           if (isEnabled)
-            popup.show(ComboBox.this, 0, getHeight)
+            showPopup()
         }
       }
     } else {
       new MouseAdapter {
         override def mouseReleased(e: MouseEvent): Unit = {
           if (isEnabled)
-            popup.show(ComboBox.this, 0, getHeight)
+            showPopup()
         }
       }
     }
@@ -42,26 +42,27 @@ class ComboBox[T](private var items: Seq[T] = Seq(), openOnPress: Boolean = true
   private var selectedItem: Option[T] = None
 
   private val choiceDisplay = new ChoiceDisplay
-  private val arrow = new DropdownArrow
+  private val arrow = new DropdownArrow {
+    override def getPreferredSize: Dimension = {
+      // the arrow looks uneven if the width is even, so make sure it's odd after scaling
+      // to the zoomed value (Isaac B 3/19/26)
+      val arrowWidth: Int = {
+        val width = Utils.zoom(9)
 
-  protected val popup: PopupMenu = {
-    if (searchable) {
-      new SearchablePopupMenu {
-        override def getPreferredSize: Dimension =
-          new Dimension(ComboBox.this.getWidth.max(super.getPreferredSize.width), super.getPreferredSize.height)
+        if (width % 2 == 0) {
+          width + 1
+        } else {
+          width
+        }
       }
-    } else {
-      new PopupMenu {
-        override def getPreferredSize: Dimension =
-          new Dimension(ComboBox.this.getWidth.max(super.getPreferredSize.width), super.getPreferredSize.height)
-      }
+
+      new Dimension(arrowWidth, (arrowWidth / 1.8).ceil.toInt)
     }
   }
 
   private var itemListeners = Set[ItemListener]()
 
-  private var zoom: Double => Int = d => d.toInt
-
+  setDiameter(Utils.zoom(6))
   setFocusable(true)
   enableHover()
 
@@ -72,90 +73,66 @@ class ComboBox[T](private var items: Seq[T] = Seq(), openOnPress: Boolean = true
   addKeyListener(new KeyAdapter {
     override def keyPressed(e: KeyEvent): Unit = {
       if (e.getKeyCode == KeyEvent.VK_DOWN && isEnabled)
-        popup.show(ComboBox.this, 0, getHeight)
+        showPopup()
     }
   })
 
-  initGUI()
-
   setItems(items)
 
-  def initGUI(): Unit = {
-    removeAll()
+  setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
+  setBorder(new ZoomableBorder(3, 6, 3, 6))
 
-    setDiameter(zoom(6))
+  add(choiceDisplay)
+  add(new HorizontalStrut(6))
+  add(Box.createHorizontalGlue)
+  add(arrow)
 
-    // the arrow looks uneven if the width is even, so make sure it's odd after scaling
-    // to the zoomed value (Isaac B 3/19/26)
-    val arrowWidth: Int = {
-      val width = zoom(9)
+  syncTheme()
 
-      if (width % 2 == 0) {
-        width + 1
+  protected def getPopup: PopupMenu = {
+    val popup: PopupMenu = {
+      if (searchable) {
+        new SearchablePopupMenu {
+          override def getPreferredSize: Dimension =
+            new Dimension(ComboBox.this.getWidth.max(super.getPreferredSize.width), super.getPreferredSize.height)
+        }
       } else {
-        width
+        new PopupMenu {
+          override def getPreferredSize: Dimension =
+            new Dimension(ComboBox.this.getWidth.max(super.getPreferredSize.width), super.getPreferredSize.height)
+        }
       }
     }
 
-    arrow.setPreferredSize(new Dimension(arrowWidth, (arrowWidth / 1.8).ceil.toInt))
+    items.foreach(_ match {
+      case c: Component =>
+        popup.add(new CustomMenuItem(c, new AbstractAction {
+          def actionPerformed(e: ActionEvent): Unit = {
+            selectItem(Option(c.asInstanceOf[T]))
+          }
+        }))
+      case a =>
+        popup.add(new MenuItem(new AbstractAction(a.toString) {
+          def actionPerformed(e: ActionEvent): Unit = {
+            selectItem(Option(a))
+          }
+        }))
+    })
 
-    val c = new GridBagConstraints
-
-    c.fill = GridBagConstraints.HORIZONTAL
-    c.weightx = 1
-    c.insets = new Insets(zoom(3), zoom(6), zoom(3), zoom(6))
-
-    add(choiceDisplay, c)
-
-    c.fill = GridBagConstraints.VERTICAL
-    c.weightx = 0
-    c.weighty = 1
-    c.insets = new Insets(0, 0, 0, zoom(6))
-
-    add(new JPanel(new GridBagLayout) with Transparent {
-      add(arrow, new GridBagConstraints)
-    }, c)
-
-    syncTheme()
-  }
-
-  def setZoomFunc(func: Double => Int): Unit = {
-    zoom = func
+    popup
   }
 
   def showPopup(): Unit = {
-    popup.setVisible(false)
-    popup.show(this, 0, getHeight)
-  }
-
-  def hidePopup(): Unit = {
-    popup.setVisible(false)
+    getPopup.show(this, 0, getHeight)
   }
 
   def setItems(items: Seq[T]): Unit = {
     this.items = items
 
-    popup.removeAll()
-
     if (items.isEmpty) {
       selectedItem = None
       choiceDisplay.setItem(None)
     } else {
-      items.foreach(_ match {
-        case c: Component =>
-          popup.add(new CustomMenuItem(c, new AbstractAction {
-            def actionPerformed(e: ActionEvent): Unit = {
-              selectItem(Option(c.asInstanceOf[T]))
-            }
-          }))
-        case a =>
-          popup.add(new MenuItem(new AbstractAction(a.toString) {
-            def actionPerformed(e: ActionEvent): Unit = {
-              selectItem(Option(a))
-            }
-          }))
-      })
-
       selectItem(Option(items(0)))
     }
   }
@@ -211,6 +188,13 @@ class ComboBox[T](private var items: Seq[T] = Seq(), openOnPress: Boolean = true
     choiceDisplay.setEnabled(enabled)
   }
 
+  override def getMaximumSize: Dimension =
+    new Dimension(super.getMaximumSize.width, getPreferredSize.height)
+
+  override def zoom(oldZoom: Float): Unit = {
+    setDiameter(Utils.zoom(6))
+  }
+
   override def syncTheme(): Unit = {
     setBackgroundColor(InterfaceColors.toolbarControlBackground())
     setBackgroundHoverColor(InterfaceColors.toolbarControlBackgroundHover())
@@ -218,37 +202,27 @@ class ComboBox[T](private var items: Seq[T] = Seq(), openOnPress: Boolean = true
     setBorderColor(InterfaceColors.toolbarControlBorder())
 
     choiceDisplay.syncTheme()
-
-    popup.syncTheme()
   }
 
-  private class ChoiceDisplay extends JPanel(new GridBagLayout) with Transparent with ThemeSync {
-    private val c = new GridBagConstraints
-
-    c.anchor = GridBagConstraints.WEST
-    c.fill = GridBagConstraints.HORIZONTAL
-    c.weightx = 1
+  private class ChoiceDisplay extends JPanel with Transparent with ThemeSync {
+    setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
 
     def setItem(item: Option[T]): Unit = {
       removeAll()
 
-      item.foreach(_ match {
-        case comp: (Component & ComboBox.Clone) =>
-          val child = comp.getClone
-
-          add(child, c)
-
-          child.addMouseListener(mouseAdapter)
+      item.map {
+        case comp: ComboBox.Clone =>
+          comp.getClone
 
         case a =>
-          val child = new JLabel(a.toString)
+          new JLabel(a.toString) {
+            setFont(ChoiceDisplay.this.getFont)
+          }
+      }.foreach { child =>
+        add(child)
 
-          child.setFont(getFont)
-
-          add(child, c)
-
-          child.addMouseListener(mouseAdapter)
-      })
+        child.addMouseListener(mouseAdapter)
+      }
 
       syncTheme()
       revalidate()
