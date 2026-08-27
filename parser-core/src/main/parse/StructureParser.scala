@@ -20,6 +20,7 @@ package org.nlogo.parse
 
 import scala.collection.immutable.ListMap
 import scala.collection.mutable
+import scala.util.matching.Regex
 import java.util.Locale
 import org.nlogo.core.{ CompilationEnvironment, CompilationOperand, CompilerException, ErrorSource, I18N, Import,
                         ProcedureSyntax, Program, StructureDeclarations, StructureResults, Token, TokenizerInterface,
@@ -90,13 +91,16 @@ object StructureParser {
                     case None =>
                       if (currentImport.importedIdentifiers.nonEmpty) {
                         ""
-                      } else if (suppliedPaths.length == 1) {
-                        s"${currentImport.pathAlias.getOrElse(currentImport.pathComponents.last).toUpperCase}:"
                       } else {
                         val basePath = compilationEnvironment.resolvePath(currentImport.filename.getOrElse(""))
-                        val relativePath = currentPath.drop(basePath.length + 1) // Strip common prefix plus a separator
+                        val relativePath = raw"^${Regex.quote(basePath + separator)}".r.replaceFirstIn(currentPath, "")
                         val path = raw"(?i)\.nlm$$".r.replaceFirstIn(relativePath.replace(separator, ":").toUpperCase, "")
-                        s"$path:"
+
+                        if (path.nonEmpty) {
+                          s"$path:"
+                        } else {
+                          ""
+                        }
                       }
                   }
 
