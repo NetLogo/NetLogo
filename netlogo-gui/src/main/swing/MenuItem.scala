@@ -2,7 +2,7 @@
 
 package org.nlogo.swing
 
-import java.awt.{ Component, Dimension, Graphics, Rectangle }
+import java.awt.{ Color, Component, Dimension, Graphics, Rectangle }
 import java.awt.event.ActionEvent
 import javax.swing.{ AbstractAction, Action, JCheckBoxMenuItem, JMenuItem }
 import javax.swing.plaf.basic.{ BasicCheckBoxMenuItemUI, BasicMenuItemUI }
@@ -38,7 +38,7 @@ class MenuItem(action: Action, showIcon: Boolean = true) extends JMenuItem(actio
     override def syncTheme(): Unit = {
       setForeground(InterfaceColors.toolbarText())
 
-      selectionBackground = InterfaceColors.menuBackgroundHover()
+      selectionBackground = backgroundHover
       selectionForeground = InterfaceColors.menuTextHover()
       acceleratorForeground = InterfaceColors.toolbarText()
       acceleratorSelectionForeground = InterfaceColors.menuTextHover()
@@ -48,6 +48,9 @@ class MenuItem(action: Action, showIcon: Boolean = true) extends JMenuItem(actio
 
   setUI(itemUI)
   syncTheme()
+
+  protected def backgroundHover: Color =
+    InterfaceColors.menuBackgroundHover()
 
   def updateEnabled(): Unit = {
     if (getAction.isInstanceOf[UserAction.MenuAction])
