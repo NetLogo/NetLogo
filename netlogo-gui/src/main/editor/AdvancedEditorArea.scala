@@ -242,6 +242,7 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
   }
 
   private val quickHelpAction = new MouseQuickHelpAction(configuration.colorizer)
+  private val showUsageAction = new ShowUsageAction(this, configuration.colorizer)
   private val jumpToDeclarationAction = new JumpToDeclarationAction(this)
 
   val activeMenuActions: Seq[MenuAction] = {
@@ -256,6 +257,7 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
       toggleCommentsAction,
       shiftLeftAction,
       shiftRightAction,
+      showUsageAction,
       jumpToDeclarationAction,
       foldSelectedAction,
       unfoldSelectedAction,
@@ -296,6 +298,7 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
     add(new MenuItem(toggleCommentsAction))
     add(new MenuItem(shiftLeftAction))
     add(new MenuItem(shiftRightAction))
+    add(new MenuItem(showUsageAction))
     add(new MenuItem(jumpToDeclarationAction))
   }
 
@@ -447,6 +450,24 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
   override def getTokenAtCaret: Option[String] =
     Option(getWebValue("window.getTokenAtCaret()", "")).filter(_.nonEmpty)
 
+  def getLinesForOffsets(offsets: Seq[Int]): Seq[Line] = {
+    val function = s"window.getLinesForOffsets(${offsets.mkString("[", ",", "]")})"
+    val lines = Promise[Seq[Line]]()
+
+    Platform.runLater(() => {
+      lines.success(webEngine.fold(Seq())(_.executeScript(function) match {
+        case obj: JSObject =>
+          (0 until obj.getMember("length").asInstanceOf[Int]).map { i =>
+            val line: JSObject = obj.getSlot(i).asInstanceOf[JSObject]
+
+            Line(line.getMember("number").asInstanceOf[Int], line.getMember("text").asInstanceOf[String].trim)
+          }
+      }))
+    })
+
+    Try(Await.result(lines.future, Duration(1, SECONDS))).getOrElse(Seq())
+  }
+
   override def select(start: Int, end: Int): Unit = {
     runInWeb(s"window.select($start, $end)")
   }
@@ -471,6 +492,12 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
 
   override def getCaretPosition: Int =
     getWebValue("window.getCaretPosition()", 0)
+
+  def getCaretX: Int =
+    getWebValue("window.getCaretX()", 0)
+
+  def getCaretY: Int =
+    getWebValue("window.getCaretY()", 0)
 
   override def setFont(font: Font): Unit = {
     super.setFont(font)
@@ -619,3 +646,5 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
     }
   }
 }
+
+case class Line(number: Int, text: String)
