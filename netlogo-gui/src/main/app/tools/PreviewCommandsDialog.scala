@@ -2,7 +2,7 @@
 
 package org.nlogo.app.tools
 
-import java.awt.{ Dimension, Frame }
+import java.awt.Frame
 import java.awt.event.{ ActionEvent, ItemEvent, ItemListener }
 import java.beans.{ PropertyChangeEvent, PropertyChangeListener }
 import javax.swing.{ AbstractAction, JDialog }
@@ -11,8 +11,8 @@ import org.nlogo.analytics.Analytics
 import org.nlogo.api.PreviewCommands
 import org.nlogo.awt.Positioning
 import org.nlogo.core.{ AgentKind, CompilerException, I18N, Model }
-import org.nlogo.swing.{ BoxColumn, BoxRow, Button, ButtonPanel, HorizontalStrut, SyncZoom, Utils, VerticalStrut,
-                         WindowAutomator, ZoomableBorder, ZoomActions }
+import org.nlogo.swing.{ BoxColumn, BoxRow, Button, ButtonPanel, MaximumHeight, SyncZoom, Utils, WindowAutomator,
+                         ZoomableBorder, ZoomActions }
 import org.nlogo.theme.InterfaceColors
 import org.nlogo.window.{ EditorColorizer, GraphicsPreviewInterface }
 import org.nlogo.workspace.{ Evaluator, WorkspaceFactory }
@@ -64,17 +64,9 @@ class PreviewCommandsDialog(
   getRootPane.setDefaultButton(okButton)
 
   private val contents = new BoxColumn(Seq(
-    new BoxRow(Seq(
-      editorPanel,
-      new HorizontalStrut(6),
-      previewPanel
-    )),
-    new VerticalStrut(6),
-    new ButtonPanel(Seq(okButton, new Button(cancelAction))) {
-      override def getMaximumSize: Dimension =
-        new Dimension(super.getMaximumSize.width, getPreferredSize.height)
-    }
-  )) with SyncZoom {
+    new BoxRow(Seq(editorPanel, previewPanel), 6),
+    new ButtonPanel(Seq(okButton, new Button(cancelAction))) with MaximumHeight
+  ), 6) with SyncZoom {
     setOpaque(true)
     setBackground(InterfaceColors.dialogBackground())
     setBorder(new ZoomableBorder(6, 6, 6, 6))

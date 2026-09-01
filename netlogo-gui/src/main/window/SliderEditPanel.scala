@@ -2,13 +2,11 @@
 
 package org.nlogo.window
 
-import javax.swing.{ Box, BoxLayout }
-
 import org.nlogo.agent.SliderConstraint
 import org.nlogo.api.{ CompilerServices, ExtensionManager }
 import org.nlogo.core.I18N
 import org.nlogo.editor.Colorizer
-import org.nlogo.swing.{ AutomationUtils, BoxColumn, BoxRow, HorizontalStrut, VerticalStrut, ZoomableBorder }
+import org.nlogo.swing.{ AutomationUtils, BoxAlign, BoxColumn, BoxRow }
 
 class SliderEditPanel(target: SliderWidget, compiler: CompilerServices, colorizer: Colorizer,
                       extensionManager: ExtensionManager) extends WidgetEditPanel(target) {
@@ -91,32 +89,15 @@ class SliderEditPanel(target: SliderWidget, compiler: CompilerServices, colorize
         _.foreach(target.oldSize),
         () => apply(vertical.get.toOption.exists(_ != vertical.originalValue))))
 
-  setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
-  setBorder(new ZoomableBorder(6, 6, 6, 6))
-
   add(nameWrapper)
-  add(new VerticalStrut(6))
-
   add(new BoxRow(Seq(
     minimumLabeled,
-    new HorizontalStrut(6),
-    new BoxColumn(Seq(
-      incrementCode,
-      Box.createVerticalGlue
-    )),
-    new HorizontalStrut(6),
-    new BoxColumn(Seq(
-      maximumCode,
-      Box.createVerticalGlue
-    ))
-  )))
-
-  add(new VerticalStrut(6))
-  add(new BoxRow(Seq(value, new HorizontalStrut(6), units)))
-  add(new VerticalStrut(6))
-  add(vertical)
-  add(new VerticalStrut(6))
-  add(oldSize)
+    new BoxColumn(incrementCode, BoxAlign.Start),
+    new BoxColumn(maximumCode, BoxAlign.Start)
+  ), 6))
+  add(new BoxRow(Seq(value, units), 6))
+  add(new BoxRow(vertical, BoxAlign.Start))
+  add(new BoxRow(oldSize, BoxAlign.Start))
 
   override def propertyEditors: Seq[PropertyEditor[?]] =
     Seq(nameWrapper, minimumCode, incrementCode, maximumCode, value, units, vertical, oldSize)

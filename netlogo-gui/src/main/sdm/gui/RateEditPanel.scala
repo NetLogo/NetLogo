@@ -2,12 +2,10 @@
 
 package org.nlogo.sdm.gui
 
-import javax.swing.{ Box, BoxLayout }
-
 import org.nlogo.api.{ CompilerServices, ExtensionManager }
 import org.nlogo.core.I18N
 import org.nlogo.editor.Colorizer
-import org.nlogo.swing.{ BoxRow, VerticalStrut, ZoomableBorder }
+import org.nlogo.swing.{ BoxAlign, BoxRow }
 import org.nlogo.window.{ EditPanel, IdentifierEditor, NonEmptyCodeEditor, OptionsEditor, PropertyAccessor,
                           PropertyEditor }
 
@@ -43,13 +41,8 @@ class RateEditPanel(target: RateConnection, compiler: CompilerServices, colorize
         () => apply()),
       compiler, colorizer)
 
-  setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
-  setBorder(new ZoomableBorder(6, 6, 6, 6))
-
   add(nameWrapper)
-  add(new VerticalStrut(6))
-  add(new BoxRow(Seq(inputs, Box.createHorizontalGlue)))
-  add(new VerticalStrut(6))
+  add(new BoxRow(inputs, BoxAlign.Start))
   add(expressionWrapper)
 
   override def propertyEditors: Seq[PropertyEditor[?]] =

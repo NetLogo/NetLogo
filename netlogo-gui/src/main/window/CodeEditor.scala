@@ -2,14 +2,14 @@
 
 package org.nlogo.window
 
-import java.awt.{ BorderLayout, Container }
+import java.awt.{ BorderLayout, Container, Dimension }
 import java.awt.event.{ FocusListener, HierarchyEvent, MouseAdapter, MouseEvent, TextListener, TextEvent }
-import javax.swing.{ Box, BoxLayout, JLabel, JPanel, ScrollPaneConstants }
+import javax.swing.{ JLabel, JPanel, ScrollPaneConstants }
 
 import org.nlogo.api.CompilerServices
 import org.nlogo.awt.Hierarchy
 import org.nlogo.editor.{ Colorizer, EditorArea, EditorConfiguration }
-import org.nlogo.swing.{ CollapsibleArrow, HorizontalStrut, ScrollPane, Transparent, VerticalStrut }
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, CollapsibleArrow, MaximumHeight, ScrollPane, Transparent }
 import org.nlogo.theme.InterfaceColors
 
 import scala.util.{ Success, Try }
@@ -28,7 +28,7 @@ object CodeEditor {
 class CodeEditor(accessor: PropertyAccessor[String], compiler: CompilerServices, colorizer: Colorizer,
                  collapsible: Boolean = false, collapseWhenEmpty: Boolean = false, rows: Int = 5, columns: Int = 30,
                  err: () => Option[Exception] = () => None)
-  extends PropertyEditor(accessor) {
+  extends BoxColumn(3) with PropertyEditor(accessor) {
 
   val editorConfig =
     EditorConfiguration.default(rows, columns, compiler, colorizer)
@@ -64,11 +64,7 @@ class CodeEditor(accessor: PropertyAccessor[String], compiler: CompilerServices,
     })
   }
 
-  setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
-
-  add(new JPanel with Transparent {
-    setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
-
+  add(new BoxRow(3, BoxAlign.Start) with MaximumHeight {
     if (collapsible) {
       add(new JLabel(arrow) {
         addMouseListener(new MouseAdapter {
@@ -77,18 +73,24 @@ class CodeEditor(accessor: PropertyAccessor[String], compiler: CompilerServices,
           }
         })
       })
-
-      add(new HorizontalStrut(2))
     }
 
     add(nameLabel)
-    add(Box.createHorizontalGlue)
   })
 
-  add(new VerticalStrut(3))
   add(collapso)
 
   def collapsed: Boolean = !collapso.isVisible()
+
+  override def getMaximumSize: Dimension = {
+    new Dimension(super.getMaximumSize.width, {
+      if (collapsible && collapsed) {
+        getPreferredSize.height
+      } else {
+        super.getMaximumSize.height
+      }
+    })
+  }
 
   private def setVisibility(newVisibility: Boolean): Unit = {
     if (collapsible && collapseWhenEmpty) {

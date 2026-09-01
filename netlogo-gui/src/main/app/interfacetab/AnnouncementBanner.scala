@@ -7,14 +7,13 @@ import java.awt.event.{ ActionEvent, ActionListener, MouseEvent, MouseAdapter }
 import java.awt.font.TextAttribute
 import java.net.URI
 import java.time.format.{ DateTimeFormatter, FormatStyle }
-import javax.swing.{ BoxLayout, JButton, JLabel, JPanel }
-import javax.swing.border.EmptyBorder
+import javax.swing.{ JButton, JLabel, JPanel }
 import javax.swing.BorderFactory
 
 import org.nlogo.analytics.Analytics
 import org.nlogo.api.{ Advisory, Announcement, Event, Release }
 import org.nlogo.core.NetLogoPreferences
-import org.nlogo.swing.{ BrowserLauncher, MouseUtils, Utils }
+import org.nlogo.swing.{ BoxRow, BrowserLauncher, MouseUtils, Utils, ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 class AnnouncementBanner extends JPanel with MouseUtils with ThemeSync {
@@ -156,12 +155,7 @@ class AnnouncementBanner extends JPanel with MouseUtils with ThemeSync {
 
 }
 
-private class TextPane(title: Component, text: Component) extends JPanel with ThemeSync {
-
-  setOpaque(false)
-  add(title)
-  add(text)
-  setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS))
+private class TextPane(title: Component, text: Component) extends BoxRow(Seq(title, text)) with ThemeSync {
 
   override def syncTheme(): Unit = {
     title.setForeground(InterfaceColors.widgetText())
@@ -223,10 +217,10 @@ private class ComplexXWrapper(dismissItem: () => Unit) extends JPanel with Mouse
   private val complexXNum = new JLabel
 
   setOpaque(false)
-  setBorder(new EmptyBorder(1, 8, 1, 8))
+  setBorder(new ZoomableBorder(1, 8, 1, 8))
 
   Util.modifyFont(complexXNum)(_.deriveFont(14f))
-  complexXNum.setBorder(new EmptyBorder(0, 0, 0, 3))
+  complexXNum.setBorder(new ZoomableBorder(0, 0, 0, 3))
 
   complexX.setIcon(Utils.iconScaledWithColor("/images/chevron-right.png", 10, 10, InterfaceColors.announceX()))
 

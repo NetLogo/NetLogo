@@ -5,13 +5,13 @@ package org.nlogo.window
 import java.awt.{ Color, Component, Dimension, EventQueue, Font, Insets, Point }
 import java.awt.datatransfer.StringSelection
 import java.awt.event.{ ActionEvent, MouseEvent }
-import javax.swing.{ AbstractAction, Box, BoxLayout, JLabel, JPanel }
+import javax.swing.{ AbstractAction, BoxLayout, JLabel }
 
 import org.nlogo.api.{ CompilerServices, Dump, MersenneTwisterFast }
 import org.nlogo.core.{ AgentKind, AgentKindJ, I18N, Monitor => CoreMonitor, Widget => CoreWidget }
 import org.nlogo.editor.Colorizer
 import org.nlogo.nvm.Procedure
-import org.nlogo.swing.{ BoxRow, HorizontalStrut, MenuItem, PopupMenu, RoundedBorderPanel, Utils, Zoomable }
+import org.nlogo.swing.{ BoxAlign, BoxRow, MenuItem, PopupMenu, RoundedBorderPanel, Utils, Zoomable, ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.Events.{ AddJobEvent, RuntimeErrorEvent, PeriodicUpdateEvent, JobRemovedEvent, RemoveJobEvent }
 
@@ -48,13 +48,13 @@ class MonitorWidget(random: MersenneTwisterFast, compiler: CompilerServices, col
     with JobRemovedEvent.Handler
     with java.awt.event.MouseListener {
 
-  private class ValuePanel(label: JLabel) extends JPanel with RoundedBorderPanel with Zoomable with ThemeSync {
-    setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
+  private class ValuePanel(label: JLabel)
+    extends BoxRow(label, BoxAlign.Start) with RoundedBorderPanel with Zoomable with ThemeSync {
 
-    add(new HorizontalStrut(6))
-    add(label)
-    add(Box.createHorizontalGlue)
-    add(new HorizontalStrut(6))
+    setBorder(new ZoomableBorder(0, 6, 0, 6))
+
+    override def getMaximumSize: Dimension =
+      new Dimension(super.getMaximumSize.width, Int.MaxValue)
 
     override def zoom(oldZoom: Float): Unit = {
       setDiameter(Utils.zoom(6))
@@ -96,7 +96,7 @@ class MonitorWidget(random: MersenneTwisterFast, compiler: CompilerServices, col
   setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
   setBorder(new AdaptableBorder(new Insets(3, 6, 6, 6), new Insets(6, 8, 8, 8)))
 
-  add(new BoxRow(Seq(nameLabel, Box.createHorizontalGlue)))
+  add(new BoxRow(nameLabel, BoxAlign.Start))
   add(new AdaptableVerticalStrut(0, 6))
   add(new BoxRow(Seq(valuePanel, new AdaptableHorizontalStrut(6, 8), unitsLabel)))
 

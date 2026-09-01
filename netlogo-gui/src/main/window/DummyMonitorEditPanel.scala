@@ -2,10 +2,8 @@
 
 package org.nlogo.window
 
-import javax.swing.BoxLayout
-
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ VerticalStrut, ZoomableBorder }
+import org.nlogo.swing.{ BoxAlign, BoxRow }
 
 class DummyMonitorEditPanel(target: DummyMonitorWidget) extends WidgetEditPanel(target) {
   private val name =
@@ -35,14 +33,10 @@ class DummyMonitorEditPanel(target: DummyMonitorWidget) extends WidgetEditPanel(
         _.foreach(target.oldSize),
         () => apply()))
 
-  setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
-  setBorder(new ZoomableBorder(6, 6, 6, 6))
 
   add(name)
-  add(new VerticalStrut(6))
   add(decimalPlaces)
-  add(new VerticalStrut(6))
-  add(oldSize)
+  add(new BoxRow(oldSize, BoxAlign.Start))
 
   override def propertyEditors: Seq[PropertyEditor[?]] =
     Seq(name, decimalPlaces, oldSize)

@@ -4,15 +4,14 @@ package org.nlogo.app.tools
 
 import java.awt.Frame
 import java.nio.file.Path
-import javax.swing.{ Box, JLabel }
+import javax.swing.JLabel
 
 import scala.concurrent.ExecutionContext
 
 import org.nlogo.api.LibraryManager
 import org.nlogo.core.{ I18N, LibraryInfo, Token }
-import org.nlogo.swing.{ BoxColumn, BoxRow, CustomOptionPane, DialogButton, HorizontalStrut, OptionPane,
-                         ProgressListener, ScrollPane, SyncZoom, TextArea, Utils, VerticalStrut, WindowAutomator,
-                         ZoomableBorder, ZoomActions }
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, CustomOptionPane, DialogButton, OptionPane, ProgressListener,
+                         ScrollPane, SyncZoom, TextArea, Utils, WindowAutomator, ZoomableBorder, ZoomActions }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 class LibrariesDialog( parent:          Frame
@@ -47,16 +46,12 @@ class LibrariesDialog( parent:          Frame
 
   private lazy val content = new BoxColumn(Seq(
     tab,
-    new VerticalStrut(10),
     new BoxRow(Seq(
-      Box.createHorizontalGlue,
       status,
-      new HorizontalStrut(6),
       libPathsButton,
-      new HorizontalStrut(6),
       updateAllButton
-    ))
-  )) with SyncZoom {
+    ), 6, BoxAlign.End)
+  ), 10) with SyncZoom {
     setBorder(new ZoomableBorder(10, 10, 10, 10))
 
     override def zoom(oldZoom: Float): Unit = {

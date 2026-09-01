@@ -5,15 +5,15 @@ package org.nlogo.window
 import java.awt.{ Component, Dialog }
 import java.awt.event.ActionEvent
 import java.net.URI
-import javax.swing.{ AbstractAction, Box, BoxLayout, JComponent, JDialog, JLabel, JPanel, ScrollPaneConstants }
-import javax.swing.border.{ EmptyBorder, LineBorder }
+import javax.swing.{ AbstractAction, JComponent, JDialog, JLabel, ScrollPaneConstants }
+import javax.swing.border.LineBorder
 import javax.swing.text.JTextComponent
 
 import org.nlogo.api.{ LogoException, Version }
 import org.nlogo.core.I18N
 import org.nlogo.nvm.{ Context, Instruction }
-import org.nlogo.swing.{ BrowserLauncher, ButtonPanel, CheckBox, DialogButton, MessageDialog, Positioning, ScrollPane,
-                         TextArea, Transparent, Utils => SwingUtils }
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, BrowserLauncher, ButtonPanel, CheckBox, DialogButton,
+                         MessageDialog, Positioning, ScrollPane, TextArea, Utils => SwingUtils, ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.util.{ SysInfo, Utils }
 
@@ -256,21 +256,13 @@ private class ReportDialog(parent: Dialog, trace: String)
     setVisible(false)
   })
 
-  add(new JPanel with Transparent {
-    setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
-    setBorder(new EmptyBorder(6, 6, 6, 6))
-
-    add(new JPanel with Transparent {
-      setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
-
-      add(label)
-      add(Box.createHorizontalGlue)
-    })
-
-    add(Box.createVerticalStrut(6))
-    add(scrollPane)
-    add(Box.createVerticalStrut(6))
-    add(new ButtonPanel(Seq(reportButton, cancelButton)))
+  setContentPane(new BoxColumn(Seq(
+    new BoxRow(label, BoxAlign.Start),
+    scrollPane,
+    new ButtonPanel(Seq(reportButton, cancelButton))
+  ), 6) {
+    setOpaque(true)
+    setBorder(new ZoomableBorder(6, 6, 6, 6))
   })
 
   syncTheme()
