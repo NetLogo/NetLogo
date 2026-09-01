@@ -2,25 +2,23 @@
 
 package org.nlogo.window
 
-import java.awt.Dimension
-import javax.swing.{ BoxLayout, JLabel }
+import javax.swing.JLabel
 
-import org.nlogo.swing.{ HorizontalStrut, TextField }
+import org.nlogo.swing.{ BoxRow, MaximumHeight, TextField }
 import org.nlogo.swing.Implicits.thunk2documentListener
 import org.nlogo.theme.InterfaceColors
 
 import scala.util.{ Success, Try }
 
-class StringEditor(accessor: PropertyAccessor[String]) extends PropertyEditor(accessor) {
+class StringEditor(accessor: PropertyAccessor[String])
+  extends BoxRow(6) with PropertyEditor(accessor) with MaximumHeight {
+
   private val label = new JLabel(accessor.name)
   private val editor = new TextField(12) {
     getDocument.addDocumentListener(() => accessor.changed())
   }
 
-  setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
-
   add(label)
-  add(new HorizontalStrut(6))
   add(editor)
 
   override def get: Try[String] = Success(Option(editor.getText).getOrElse(""))
@@ -34,9 +32,6 @@ class StringEditor(accessor: PropertyAccessor[String]) extends PropertyEditor(ac
 
   override def hasFocus(): Boolean =
     editor.hasFocus
-
-  override def getMaximumSize: Dimension =
-    new Dimension(super.getMaximumSize.width, getPreferredSize.height)
 
   override def syncTheme(): Unit = {
     label.setForeground(InterfaceColors.dialogText())

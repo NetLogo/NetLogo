@@ -66,8 +66,8 @@ object ButtonWidget {
     }
   }
 }
-class ButtonWidget(random: MersenneTwisterFast, compiler: CompilerServices, colorizer: Colorizer) extends JobWidget(random)
-  with Editable with MouseListener with MouseMotionListener
+class ButtonWidget(random: MersenneTwisterFast, compiler: CompilerServices, colorizer: Colorizer)
+  extends JobWidget(random) with Editable with MouseListener with MouseMotionListener
   with Events.JobRemovedEvent.Handler with Events.TickStateChangeEvent.Handler {
 
   import ButtonWidget._

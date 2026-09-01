@@ -4,7 +4,7 @@ package org.nlogo.swing
 
 import java.awt.BorderLayout
 import java.awt.event.{ MouseAdapter, MouseEvent }
-import javax.swing.{ Box, JComponent, JDialog, JLabel, JPanel }
+import javax.swing.{ JComponent, JDialog, JLabel, JPanel }
 
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
@@ -27,7 +27,7 @@ class CollapsiblePane(title: String, element: JComponent, parent: JDialog)
       }
     }
 
-    add(new BoxRow(Seq(titleLabel, Box.createHorizontalGlue)) {
+    add(new BoxRow(titleLabel, BoxAlign.Start) {
       setBorder(new ZoomableBorder(6, 6, 6, 6))
 
       addMouseListener(listener)

@@ -2,17 +2,17 @@
 
 package org.nlogo.shape.editor
 
-import java.awt.{ Dimension, Frame }
+import java.awt.Frame
 import java.awt.event.MouseEvent
 import java.nio.file.Paths
-import javax.swing.{ Box, JLabel, JDialog }
+import javax.swing.{ JLabel, JDialog }
 import javax.swing.event.{ DocumentEvent, DocumentListener, ListSelectionEvent, ListSelectionListener, MouseInputAdapter }
 
 import org.nlogo.api.AbstractModelLoader
 import org.nlogo.core.{ AgentKind, I18N, Model, Shape => CoreShape, ShapeList, ShapeListTracker },
   ShapeList.{ shapesToMap, isDefaultShapeName }
-import org.nlogo.swing.{ BoxColumn, BoxRow, Button, DialogButton, HorizontalStrut, OptionPane, ScrollPane, SyncZoom,
-                         TextField, Utils, VerticalStrut, WindowAutomator, ZoomableBorder, ZoomActions }
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, Button, DialogButton, MaximumHeight, OptionPane, ScrollPane,
+                         SyncZoom, TextField, Utils, WindowAutomator, ZoomableBorder, ZoomActions }
 import org.nlogo.swing.Implicits.thunk2action
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
@@ -62,7 +62,7 @@ abstract class ManagerDialog[A <: CoreShape](parentFrame: Frame, modelLoader: Ab
 
   private val scrollPane = new ScrollPane(shapesList)
 
-  private val searchField = new TextField {
+  private val searchField = new TextField with MaximumHeight {
     getDocument.addDocumentListener(new DocumentListener {
       override def changedUpdate(e: DocumentEvent): Unit = {}
 
@@ -74,9 +74,6 @@ abstract class ManagerDialog[A <: CoreShape](parentFrame: Frame, modelLoader: Ab
         shapesList.update(searchOption)
       }
     })
-
-    override def getMaximumSize: Dimension =
-      new Dimension(super.getMaximumSize.width, getPreferredSize.height)
   }
 
   private val searchIcon = new JLabel
@@ -85,30 +82,17 @@ abstract class ManagerDialog[A <: CoreShape](parentFrame: Frame, modelLoader: Ab
     val contents = new BoxColumn(Seq(
       new BoxRow(Seq(
         newButton,
-        new HorizontalStrut(12),
         modelImportButton
-      ) ++ additionalButton.fold(Seq())(button => Seq(new HorizontalStrut(12), button)) :+ Box.createHorizontalGlue) {
-        override def getMaximumSize: Dimension =
-          new Dimension(super.getMaximumSize.width, getPreferredSize.height)
-      },
-      new VerticalStrut(12),
+      ) ++ additionalButton, 12, BoxAlign.Start) with MaximumHeight,
       scrollPane,
-      new VerticalStrut(12),
       new BoxRow(Seq(
         searchIcon,
-        new HorizontalStrut(12),
         searchField,
-        new HorizontalStrut(12),
         editButton,
-        new HorizontalStrut(12),
         duplicateButton,
-        new HorizontalStrut(12),
         deleteButton
-      )) {
-        override def getMaximumSize: Dimension =
-          new Dimension(super.getMaximumSize.width, getPreferredSize.height)
-      }
-    )) with SyncZoom {
+      ), 12) with MaximumHeight
+    ), 12) with SyncZoom {
       setOpaque(true)
       setBorder(new ZoomableBorder(12, 12, 12, 12))
 

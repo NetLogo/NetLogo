@@ -6,16 +6,17 @@ import java.awt.{ BorderLayout, Component, Dimension, Font, Frame, GridBagConstr
 import java.awt.event.{ WindowAdapter, WindowEvent }
 import java.net.{ Inet4Address, InetAddress, NetworkInterface, UnknownHostException }
 import java.text.SimpleDateFormat
-import javax.swing.{ Box, BoxLayout, DefaultListModel, JFrame, JLabel, JList, JPanel, ListCellRenderer,
-                     ListSelectionModel, SwingConstants }
-import javax.swing.border.{ EmptyBorder, LineBorder }
+import javax.swing.{ DefaultListModel, JFrame, JLabel, JList, JPanel, ListCellRenderer, ListSelectionModel,
+                     SwingConstants }
+import javax.swing.border.LineBorder
 import javax.swing.event.{ ListSelectionEvent, ListSelectionListener }
 
 import org.nlogo.awt.{ EventQueue, Positioning }
 import org.nlogo.core.I18N
 import org.nlogo.hubnet.server.{ ConnectionManager, HubNetUtils }
-import org.nlogo.swing.{ Button, CheckBox, NonemptyTextFieldButtonEnabler, ScrollPane, SelectableJLabel, TextArea,
-                         TextField, TextFieldBox, Transparent }
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, Button, CheckBox, NonemptyTextFieldButtonEnabler, ScrollPane,
+                         SelectableJLabel, TextArea, TextField, TextFieldBox, Transparent, VerticalStrut,
+                         ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.ClientAppInterface
 
@@ -188,7 +189,7 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
     })
 
     locally {
-      setBorder(new EmptyBorder(12, 12, 12, 12))
+      setBorder(new ZoomableBorder(12, 12, 12, 12))
       setLayout(new BorderLayout(0, 4))
       add(clientsLabel, BorderLayout.NORTH)
       add(scrollPane, BorderLayout.CENTER)
@@ -260,7 +261,7 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
     private[gui] val buttonEnabler = new NonemptyTextFieldButtonEnabler(broadcastButton, List(inputField))
 
     locally {
-      setBorder(new EmptyBorder(12, 12, 12, 12))
+      setBorder(new ZoomableBorder(12, 12, 12, 12))
       setLayout(new BorderLayout(4, 4))
       add(new JPanel(new BorderLayout(8, 8)) with Transparent {
         add(inputField, BorderLayout.CENTER)
@@ -307,7 +308,8 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
   /**
    * Panel in HubNet Control Center displays server info  and server options.
    */
-  class ServerOptionsPanel(mirrorView: Boolean, mirrorPlots: Boolean) extends JPanel with Transparent with ThemeSync {
+  class ServerOptionsPanel(mirrorView: Boolean, mirrorPlots: Boolean) extends BoxColumn(BoxAlign.Start) with ThemeSync {
+
     private val mirrorViewCheckBox =
       new CheckBox(I18N.gui.get("menu.tools.hubnetControlCenter.mirrorViewOn2dClients"),
                    (selected) => setViewMirroring(selected)) {
@@ -328,24 +330,21 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
     private val fields = new TextFieldBox(SwingConstants.RIGHT, None, Some(new JLabel().getFont.deriveFont(Font.BOLD))) {
       addField(I18N.gui.get("menu.tools.hubnetControlCenter.name"), idLabel)
       addField(I18N.gui.get("menu.tools.hubnetControlCenter.activity"), activityLabel)
-      add(Box.createVerticalStrut(12))
+      add(new VerticalStrut(12))
       addField(I18N.gui.get("menu.tools.hubnetControlCenter.serverAddress"), addressLabel)
       addField(I18N.gui.get("menu.tools.hubnetControlCenter.portNumber"), portLabel)
     }
 
     private val settingsLabel = new JLabel(I18N.gui.get("menu.tools.hubnetControlCenter.settings"))
 
-    locally {
-      setBorder(new EmptyBorder(12, 12, 12, 12))
-      setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
-      add(fields)
-      add(Box.createVerticalStrut(30))
-      add(settingsLabel)
-      add(Box.createVerticalStrut(4))
-      add(mirrorViewCheckBox)
-      add(mirrorPlotsCheckBox)
-      add(Box.createVerticalGlue())
-    }
+    setBorder(new ZoomableBorder(12, 12, 12, 12))
+
+    add(fields)
+    add(new VerticalStrut(30))
+    add(new BoxRow(settingsLabel, BoxAlign.Start))
+    add(new VerticalStrut(4))
+    add(new BoxRow(mirrorViewCheckBox, BoxAlign.Start))
+    add(new BoxRow(mirrorPlotsCheckBox, BoxAlign.Start))
 
     private def findLocalHostAddress(): String =
       try

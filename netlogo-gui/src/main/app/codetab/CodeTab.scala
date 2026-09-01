@@ -7,14 +7,14 @@ import java.awt.event.{ ActionEvent, FocusAdapter, FocusEvent, TextEvent, TextLi
 import java.awt.print.PageFormat
 import java.io.IOException
 import java.net.MalformedURLException
-import javax.swing.{ AbstractAction, Box, JPanel }
+import javax.swing.{ AbstractAction, JPanel }
 
 import org.nlogo.agent.Observer
 import org.nlogo.app.common.{CodeToHtml, EditorFactory, FindDialog, MenuTab, TabsInterface, Events => AppEvents}
 import org.nlogo.core.{ AgentKind, CompilerException, I18N }
 import org.nlogo.editor.{ AdvancedEditorArea, EditorConfiguration }
 import org.nlogo.nvm.IncludeSource
-import org.nlogo.swing.{ Button, CheckBox, HorizontalStrut, PrinterManager, ToolBar, ToolBarActionButton, UserAction,
+import org.nlogo.swing.{ BoxAlign, BoxRow, Button, CheckBox, PrinterManager, ToolBarActionButton, UserAction,
                          Printable => NlogoPrintable, Utils, Zoomable, ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ CommentableError, ProceduresInterface, Events => WindowEvents }
@@ -87,7 +87,19 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
   private val includedFilesMenu = new IncludedFilesMenu(getIncludesTable, tabs)
 
   val errorLabel = new CommentableError(text)
-  val toolBar = getToolBar
+
+  val toolBar = new BoxRow(Seq(
+    compileButton,
+    findButton,
+    proceduresMenu,
+    includedFilesMenu,
+    separate,
+    prefsButton
+  ), 10, BoxAlign.Start) {
+    setOpaque(true)
+    setBorder(new ZoomableBorder(24, 10, 12, 6))
+  }
+
   def compiler = workspace
   def program = workspace.world.program
 
@@ -99,30 +111,6 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
       add(errorLabel.component, BorderLayout.NORTH)
     }
     add(codePanel, BorderLayout.CENTER)
-  }
-
-  def getToolBar = new ToolBar {
-    setBorder(new ZoomableBorder(24, 10, 12, 6))
-
-    override def addControls(): Unit = {
-      // Only want to add toolbar items once
-      // This method gets called when the code tab pops in or pops out
-      // because org.nlogo.swing.ToolBar overrides addNotify. AAB 10/2020
-      if (getComponents.isEmpty) {
-        add(compileButton)
-        add(new HorizontalStrut(10))
-        add(findButton)
-        add(new HorizontalStrut(10))
-        add(proceduresMenu)
-        add(new HorizontalStrut(10))
-        add(includedFilesMenu)
-        add(new HorizontalStrut(10))
-        add(separate)
-        add(new HorizontalStrut(10))
-        add(prefsButton)
-        add(Box.createHorizontalGlue)
-      }
-    }
   }
 
   override val permanentMenuActions: Seq[UserAction.MenuAction] = {

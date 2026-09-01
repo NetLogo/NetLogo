@@ -4,13 +4,12 @@ package org.nlogo.app.interfacetab
 
 import java.awt.{ Color, Dimension, Frame }
 import java.awt.event.{ ActionEvent, MouseAdapter, MouseEvent }
-import javax.swing.{ AbstractAction, Action, Box, BoxLayout, ButtonGroup, JLabel, JPanel }
+import javax.swing.{ AbstractAction, Action, ButtonGroup, JLabel }
 
 import org.nlogo.app.common.{ Events => AppEvents }
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ AutomationUtils, BoxColumn, DropdownArrow, HorizontalStrut, MenuItem, MouseUtils, PopupMenu,
-                         PreferredSize, RoundedBorderPanel, ToolBarToggleButton, Transparent, Utils, Zoomable,
-                         ZoomableBorder }
+import org.nlogo.swing.{ AutomationUtils, BoxAlign, BoxColumn, BoxRow, DropdownArrow, MenuItem, MouseUtils, PopupMenu,
+                         PreferredSize, RoundedBorderPanel, ToolBarToggleButton, Utils, Zoomable, ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ Editable, EditDialog, EditDialogFactory, Events => WindowEvents, GUIWorkspace, InterfaceMode,
                           JobWidget, Widget, WidgetInfo, WorldViewSettings }
@@ -22,8 +21,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
                               widgetInfos: Seq[WidgetInfo],
                               frame: Frame,
                               dialogFactory: EditDialogFactory)
-  extends JPanel
-  with Transparent
+  extends BoxRow(6)
   with AppEvents.WidgetSelectedEvent.Handler
   with WindowEvents.InterfaceModeChangedEvent.Handler
   with WindowEvents.WidgetForegroundedEvent.Handler
@@ -63,19 +61,13 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
   buttonGroup.add(editButton)
   buttonGroup.add(deleteButton)
 
-  setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
+  setBorder(new ZoomableBorder(0, 6, 0, 0))
 
-  add(new HorizontalStrut(6))
   add(widgetMenu)
-  add(new HorizontalStrut(6))
   add(alignmentMenu)
-  add(new HorizontalStrut(6))
   add(interactButton)
-  add(new HorizontalStrut(6))
   add(selectButton)
-  add(new HorizontalStrut(6))
   add(editButton)
-  add(new HorizontalStrut(6))
   add(deleteButton)
 
   interactButton.setSelected(true)
@@ -281,17 +273,15 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
     }
   }
 
-  class WidgetMenu extends JPanel with RoundedBorderPanel with Zoomable with ThemeSync with MouseUtils {
+  class WidgetMenu extends BoxRow(14) with RoundedBorderPanel with Zoomable with ThemeSync with MouseUtils {
     private val label = new JLabel(I18N.gui.get("tabs.run.addWidget"))
     private val arrow = new DropdownArrow
 
-    setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
     setBorder(new ZoomableBorder(6, 8, 6, 6))
     setDiameter(Utils.zoom(6))
 
     add(label)
-    add(new HorizontalStrut(14))
-    add(new BoxColumn(Seq(Box.createVerticalGlue, arrow, Box.createVerticalGlue)))
+    add(new BoxColumn(arrow, BoxAlign.Center))
 
     enableHover()
 
@@ -364,19 +354,17 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
     }
   }
 
-  class AlignmentMenu extends JPanel with RoundedBorderPanel with Zoomable with ThemeSync with MouseUtils {
+  class AlignmentMenu extends BoxRow(14) with RoundedBorderPanel with Zoomable with ThemeSync with MouseUtils {
     private implicit val i18nPrefix: I18N.Prefix = I18N.Prefix("tabs.run.widget")
 
     private val label = new JLabel(I18N.gui.get("tabs.run.alignWidgets"))
     private val arrow = new DropdownArrow
 
-    setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
     setBorder(new ZoomableBorder(6, 8, 6, 6))
     setDiameter(Utils.zoom(6))
 
     add(label)
-    add(new HorizontalStrut(14))
-    add(new BoxColumn(Seq(Box.createVerticalGlue, arrow, Box.createVerticalGlue)))
+    add(new BoxColumn(arrow, BoxAlign.Center))
 
     enableHover()
 

@@ -220,23 +220,35 @@ abstract class Widget extends JPanel with RoundedBorderPanel with Zoomable with 
   def setCodeFont(font: Font): Unit = {}
 
   protected class AdaptableHorizontalStrut(oldSize: Int, newSize: Int) extends Component with PreferredSize {
-    override def getPreferredSize: Dimension = {
+    override def getMinimumSize: Dimension = {
       if (_oldSize) {
         new Dimension(Utils.zoom(oldSize), 0)
       } else {
         new Dimension(Utils.zoom(newSize), 0)
       }
     }
+
+    override def getPreferredSize: Dimension =
+      getMinimumSize
+
+    override def getMaximumSize: Dimension =
+      new Dimension(getMinimumSize.width, Int.MaxValue)
   }
 
   protected class AdaptableVerticalStrut(oldSize: Int, newSize: Int) extends Component with PreferredSize {
-    override def getPreferredSize: Dimension = {
+    override def getMinimumSize: Dimension = {
       if (_oldSize) {
         new Dimension(0, Utils.zoom(oldSize))
       } else {
         new Dimension(0, Utils.zoom(newSize))
       }
     }
+
+    override def getPreferredSize: Dimension =
+      getMinimumSize
+
+    override def getMaximumSize: Dimension =
+      new Dimension(Int.MaxValue, getMinimumSize.height)
   }
 
   protected class AdaptableBorder(oldInsets: Insets, newInsets: Insets) extends Border {

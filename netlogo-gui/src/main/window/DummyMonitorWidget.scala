@@ -3,10 +3,10 @@
 package org.nlogo.window
 
 import java.awt.{ Dimension, Insets }
-import javax.swing.{ Box, BoxLayout, JLabel, JPanel }
+import javax.swing.{ BoxLayout, JLabel, JPanel }
 
 import org.nlogo.core.{ I18N, Monitor => CoreMonitor, Widget => CoreWidget }
-import org.nlogo.swing.{ BoxRow, RoundedBorderPanel, Utils, Zoomable }
+import org.nlogo.swing.{ BoxAlign, BoxRow, RoundedBorderPanel, Utils, Zoomable }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 class DummyMonitorWidget extends SingleErrorWidget with MonitorWidget.ToMonitorModel with Editable {
@@ -30,7 +30,7 @@ class DummyMonitorWidget extends SingleErrorWidget with MonitorWidget.ToMonitorM
   setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
   setBorder(new AdaptableBorder(new Insets(3, 6, 6, 6), new Insets(6, 8, 8, 8)))
 
-  add(new BoxRow(Seq(nameLabel, Box.createHorizontalGlue)))
+  add(new BoxRow(nameLabel, BoxAlign.Start))
   add(new AdaptableVerticalStrut(0, 6))
   add(valuePanel)
 

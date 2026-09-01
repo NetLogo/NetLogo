@@ -11,7 +11,7 @@ import org.nlogo.api.{ APIVersion, FileIO, Version }
 import org.nlogo.awt.Positioning
 import org.nlogo.core.I18N
 import org.nlogo.editor.EditorConfiguration
-import org.nlogo.swing.{ BoxColumn, RichAction, ScrollPane, SyncZoom, TabbedPane, TextArea, Utils, VerticalStrut,
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, RichAction, ScrollPane, SyncZoom, TabbedPane, TextArea, Utils,
                          WindowAutomator, ZoomableBorder, ZoomActions }
 import org.nlogo.theme.{ DarkTheme, InterfaceColors, ThemeSync }
 import org.nlogo.util.SysInfo
@@ -106,17 +106,16 @@ class AboutWindow(parent: Frame)
   }
 
   private val contents = new BoxColumn(Seq(
-    graphic,
-    new VerticalStrut(10),
+    new BoxRow(graphic, BoxAlign.Center),
     label,
-    new VerticalStrut(10),
     tabs
-  )) with SyncZoom {
+  ), 10) with SyncZoom {
     setOpaque(true)
 
     override def zoom(oldZoom: Float): Unit = {
       super.zoom(oldZoom)
 
+      setIcon()
       pack()
     }
   }
@@ -152,6 +151,9 @@ class AboutWindow(parent: Frame)
     }
   })
 
+  override def getPreferredSize: Dimension =
+    new Dimension(graphic.getPreferredSize.width, super.getPreferredSize.height)
+
   private def refreshSystemText(): Unit = {
     val newGraphicsInfo = SysInfo.getMemoryInfoString + "\n\n" +
             SysInfo.getJOGLInfoString + "\n" +SysInfo.getGLInfoString + "\n"
@@ -168,14 +170,19 @@ class AboutWindow(parent: Frame)
     }
   }
 
-  override def syncTheme(): Unit = {
-    contents.setBackground(InterfaceColors.dialogBackground())
+  private def setIcon(): Unit = {
+    val width: Int = Utils.zoom(600)
+    val height: Int = Utils.zoom(231)
 
     if (InterfaceColors.getTheme == DarkTheme) {
-      graphic.setIcon(Utils.iconScaled("/images/banner-dark-versionless.png", 600, 231))
+      graphic.setIcon(Utils.iconScaled("/images/banner-dark-versionless.png", width, height))
     } else {
-      graphic.setIcon(Utils.iconScaled("/images/banner-versionless.png", 600, 231))
+      graphic.setIcon(Utils.iconScaled("/images/banner-versionless.png", width, height))
     }
+  }
+
+  override def syncTheme(): Unit = {
+    contents.setBackground(InterfaceColors.dialogBackground())
 
     label.syncTheme()
     credits.syncTheme()
@@ -188,5 +195,7 @@ class AboutWindow(parent: Frame)
     systemScrollPane.setBackground(InterfaceColors.textAreaBackground())
 
     tabs.syncTheme()
+
+    setIcon()
   }
 }

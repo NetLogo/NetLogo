@@ -2,12 +2,10 @@
 
 package org.nlogo.window
 
-import javax.swing.BoxLayout
-
 import org.nlogo.api.{ CompilerServices, ExtensionManager }
 import org.nlogo.core.I18N
 import org.nlogo.editor.Colorizer
-import org.nlogo.swing.{ AutomationUtils, VerticalStrut, ZoomableBorder }
+import org.nlogo.swing.{ AutomationUtils, BoxAlign, BoxRow }
 
 class ChooserEditPanel(target: ChooserWidget, compiler: CompilerServices, colorizer: Colorizer,
                        extensionManager: ExtensionManager) extends WidgetEditPanel(target) {
@@ -43,14 +41,9 @@ class ChooserEditPanel(target: ChooserWidget, compiler: CompilerServices, colori
         _.foreach(target.oldSize),
         () => apply()))
 
-  setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
-  setBorder(new ZoomableBorder(6, 6, 6, 6))
-
   add(nameWrapper)
-  add(new VerticalStrut(6))
   add(choicesLabeled)
-  add(new VerticalStrut(6))
-  add(oldSize)
+  add(new BoxRow(oldSize, BoxAlign.Start))
 
   override def propertyEditors: Seq[PropertyEditor[?]] =
     Seq(nameWrapper, choicesWrapper, oldSize)

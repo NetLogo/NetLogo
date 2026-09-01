@@ -2,13 +2,10 @@
 
 package org.nlogo.window
 
-import java.awt.Dimension
-import javax.swing.{ Box, BoxLayout }
-
 import org.nlogo.api.CompilerServices
 import org.nlogo.core.I18N
 import org.nlogo.editor.Colorizer
-import org.nlogo.swing.{ BoxRow, HorizontalStrut, VerticalStrut, ZoomableBorder }
+import org.nlogo.swing.{ BoxAlign, BoxRow, MaximumHeight }
 
 class ButtonEditPanel(target: ButtonWidget, compiler: CompilerServices, colorizer: Colorizer)
   extends WidgetEditPanel(target) {
@@ -77,23 +74,12 @@ class ButtonEditPanel(target: ButtonWidget, compiler: CompilerServices, colorize
         _.foreach(target.oldSize),
         () => apply()))
 
-  setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
-  setBorder(new ZoomableBorder(6, 6, 6, 6))
-
-  add(new BoxRow(Seq(agentOptions, new HorizontalStrut(6), forever)) {
-    override def getMaximumSize: Dimension =
-      new Dimension(super.getMaximumSize.width, getPreferredSize.height)
-  })
-  add(new VerticalStrut(6))
-  add(goTime)
-  add(new VerticalStrut(6))
+  add(new BoxRow(Seq(agentOptions, forever), 6, BoxAlign.Start) with MaximumHeight)
+  add(new BoxRow(goTime, BoxAlign.Start))
   add(wrapSource)
-  add(new VerticalStrut(6))
   add(name)
-  add(new VerticalStrut(6))
-  add(new BoxRow(Seq(actionKey, Box.createHorizontalGlue)))
-  add(new VerticalStrut(6))
-  add(oldSize)
+  add(new BoxRow(actionKey, BoxAlign.Start))
+  add(new BoxRow(oldSize, BoxAlign.Start))
 
   override def propertyEditors: Seq[PropertyEditor[?]] =
     Seq(agentOptions, forever, goTime, wrapSource, name, actionKey, oldSize)

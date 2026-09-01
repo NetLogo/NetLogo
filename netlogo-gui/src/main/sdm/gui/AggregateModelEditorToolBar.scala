@@ -2,27 +2,47 @@
 
 package org.nlogo.sdm.gui
 
-import java.awt.FlowLayout
+import java.awt.{ Dimension, Graphics }
 import java.awt.event.{ ActionEvent, MouseEvent }
 import javax.swing.{ Action, AbstractAction, ButtonGroup, JLabel, JPanel, JToggleButton, SwingConstants }
-import javax.swing.JToolBar.Separator
 
 import org.jhotdraw.framework.{ DrawingEditor, DrawingView, Figure, FigureSelectionListener, Tool }
 import org.jhotdraw.standard.{ CreationTool, DeleteCommand }
 
 import org.nlogo.core.I18N
 import org.nlogo.sdm.Model
-import org.nlogo.swing.{ Button, InputOptionPane, OptionPane, ToolBar, ToolBarActionButton, ToolBarToggleButton,
-                         Transparent, Utils => SwingUtils }
+import org.nlogo.swing.{ BoxAlign, BoxRow, Button, InputOptionPane, OptionPane, ToolBarActionButton,
+                         ToolBarToggleButton, Utils => SwingUtils, ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
-class AggregateModelEditorToolBar(editor: AggregateModelEditor, model: Model) extends ToolBar with ThemeSync {
+class AggregateModelEditorToolBar(editor: AggregateModelEditor, model: Model)
+  extends BoxRow(6, BoxAlign.Start) with ThemeSync {
+
   implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("tools.sdm")
 
   // Invisible button allows no selection in visible buttongroup
   private val noToolButton = new JToggleButton("")
-  private var dtLabel: JLabel = null
-  private var dtButton: Button = null
+  private val dtLabel = new JLabel("dt = " + model.getDt) { setOpaque(false) }
+
+  private val dtButton = new Button(new AbstractAction(I18N.gui("edit")) {
+    def actionPerformed(e: ActionEvent): Unit = {
+      val newDt = new InputOptionPane(editor, I18N.gui("edit"), "dt", model.getDt.toString).getInput
+      try if (newDt != null) {
+        model.setDt(newDt.toDouble)
+        dtLabel.setText("dt = " + model.getDt)
+        new org.nlogo.window.Events.CompileAllEvent().raise(editor)
+        new org.nlogo.window.Events.DirtyEvent(None).raise(editor)
+      }
+      catch {
+        case ex: NumberFormatException => new OptionPane(null, I18N.gui.get("common.messages.error"),
+                                                         I18N.gui("dtNumberError"), OptionPane.Options.Ok,
+                                                         OptionPane.Icons.Error)
+        case ex: Model.ModelException => new OptionPane(null, I18N.gui.get("common.messages.error"),
+                                                        I18N.gui("dtZeroError"), OptionPane.Options.Ok,
+                                                        OptionPane.Icons.Error)
+      }
+    }
+  })
 
   private val compileAction = new MyAction("Check", "/images/check.png", enableMe = true) {
     def actionPerformed(e: ActionEvent): Unit = {new org.nlogo.window.Events.CompileAllEvent().raise(editor)}
@@ -42,50 +62,47 @@ class AggregateModelEditorToolBar(editor: AggregateModelEditor, model: Model) ex
   private val deleteButton = new ToolBarActionButton(deleteAction)
   private val compileButton = new ToolBarActionButton(compileAction)
 
-  override def addControls(): Unit = {
-    add(editButton)
-    add(deleteButton)
-    add(new Separator)
-    add(compileButton)
-    add(new Separator)
+  setOpaque(true)
+  setBorder(new ZoomableBorder(6, 6, 6, 6))
 
-    def makeButton(name:String, image:String, tool:Tool) = {
-      new ToolBarToggleButton(new ToolAction(I18N.gui(name.toLowerCase), image, tool)) {
-        setVerticalTextPosition(SwingConstants.BOTTOM)
-        setHorizontalTextPosition(SwingConstants.CENTER)
-      }
+  add(editButton)
+  add(deleteButton)
+  add(new Separator)
+  add(compileButton)
+  add(new Separator)
+
+  def makeButton(name:String, image:String, tool:Tool) = {
+    new ToolBarToggleButton(new ToolAction(I18N.gui(name.toLowerCase), image, tool)) {
+      setVerticalTextPosition(SwingConstants.BOTTOM)
+      setHorizontalTextPosition(SwingConstants.CENTER)
     }
-
-    val stockButton = makeButton("Stock", "/images/stock.gif", new StockFigureCreationTool(model, editor))
-    val variablButton = makeButton("Variable", "/images/converter.gif", new ConverterFigureCreationTool(model, editor))
-    val flowButton = makeButton("Flow", "/images/rate.gif", new RateConnectionTool(model, editor, RateConnection.create()))
-    val linkButton = makeButton("Link", "/images/connector.gif", new AggregateConnectionTool(model, editor, BindingConnection.create()))
-
-    val toolButtonGroup = new ButtonGroup() { add(noToolButton) }
-    for (b <- List(stockButton, variablButton, flowButton, linkButton)) {
-      add(b)
-      toolButtonGroup.add(b)
-    }
-    add(new Separator())
-
-    // dt Panel
-    dtLabel = new JLabel("dt = " + model.getDt) { setOpaque(false) }
-    add(new JPanel(new FlowLayout()) with Transparent {
-      add(dtLabel)
-      dtButton = new Button(changeDTAction)
-      add(dtButton)
-      setAlignmentX(1.0f)
-    })
-    // Event listeners
-    editor.view.addFigureSelectionListener(new FigureSelectionListener() {
-      def figureSelectionChanged(view: DrawingView): Unit = {
-        editAction.setEnabled(view.selectionCount == 1)
-        deleteAction.setEnabled(view.selectionCount == 1)
-      }
-    })
-
-    syncTheme()
   }
+
+  val stockButton = makeButton("Stock", "/images/stock.gif", new StockFigureCreationTool(model, editor))
+  val variableButton = makeButton("Variable", "/images/converter.gif", new ConverterFigureCreationTool(model, editor))
+  val flowButton = makeButton("Flow", "/images/rate.gif", new RateConnectionTool(model, editor, RateConnection.create()))
+  val linkButton = makeButton("Link", "/images/connector.gif", new AggregateConnectionTool(model, editor, BindingConnection.create()))
+
+  val toolButtonGroup = new ButtonGroup() { add(noToolButton) }
+
+  for (b <- List(stockButton, variableButton, flowButton, linkButton)) {
+    add(b)
+    toolButtonGroup.add(b)
+  }
+
+  add(new Separator)
+  add(dtLabel)
+  add(dtButton)
+
+  // Event listeners
+  editor.view.addFigureSelectionListener(new FigureSelectionListener() {
+    def figureSelectionChanged(view: DrawingView): Unit = {
+      editAction.setEnabled(view.selectionCount == 1)
+      deleteAction.setEnabled(view.selectionCount == 1)
+    }
+  })
+
+  syncTheme()
 
   def popButtons(): Unit = {noToolButton.setSelected(true)}
 
@@ -96,11 +113,8 @@ class AggregateModelEditorToolBar(editor: AggregateModelEditor, model: Model) ex
     deleteButton.syncTheme()
     compileButton.syncTheme()
 
-    if (dtLabel != null)
-      dtLabel.setForeground(InterfaceColors.toolbarText())
-
-    if (dtButton != null)
-      dtButton.syncTheme()
+    dtLabel.setForeground(InterfaceColors.toolbarText())
+    dtButton.syncTheme()
   }
 
   private class ModelElementCreationTool(model: Model, editor: DrawingEditor, figure: ModelElementFigure & Figure)
@@ -140,27 +154,28 @@ class AggregateModelEditorToolBar(editor: AggregateModelEditor, model: Model) ex
     putValue(Action.SMALL_ICON, SwingUtils.iconScaledWithColor(image, 15, 15, InterfaceColors.toolbarImage()))
     setEnabled(enableMe)
   }
-  val changeDTAction = new AbstractAction(I18N.gui("edit")) {
-    def actionPerformed(e: ActionEvent): Unit = {
-      val newDt = new InputOptionPane(editor, I18N.gui("edit"), "dt", model.getDt.toString).getInput
-      try if (newDt != null) {
-        model.setDt(newDt.toDouble)
-        dtLabel.setText("dt = " + model.getDt)
-        new org.nlogo.window.Events.CompileAllEvent().raise(editor)
-        new org.nlogo.window.Events.DirtyEvent(None).raise(editor)
-      }
-      catch {
-        case ex: NumberFormatException => new OptionPane(null, I18N.gui.get("common.messages.error"),
-                                                         I18N.gui("dtNumberError"), OptionPane.Options.Ok,
-                                                         OptionPane.Icons.Error)
-        case ex: Model.ModelException => new OptionPane(null, I18N.gui.get("common.messages.error"),
-                                                        I18N.gui("dtZeroError"), OptionPane.Options.Ok,
-                                                        OptionPane.Icons.Error)
-      }
-    }
-  }
+
   class ToolAction(toolName: String, iconName: String, tool: Tool) extends AbstractAction(toolName) {
     putValue(Action.SMALL_ICON, SwingUtils.icon(iconName))
     def actionPerformed(e: ActionEvent): Unit = {editor.setTool(tool)}
+  }
+
+  class Separator extends JPanel {
+    setBorder(new ZoomableBorder(0, 12, 0, 12))
+
+    override def getPreferredSize: Dimension =
+      new Dimension(1, super.getPreferredSize.height)
+
+    override def getMinimumSize: Dimension =
+      new Dimension(1, 0)
+
+    override def getMaximumSize: Dimension =
+      new Dimension(1, Int.MaxValue)
+
+    override def paintComponent(g: Graphics): Unit = {
+      setBackground(InterfaceColors.toolbarSeparator())
+
+      super.paintComponent(g)
+    }
   }
 }

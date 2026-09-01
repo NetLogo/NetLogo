@@ -3,12 +3,12 @@
 package org.nlogo.window
 
 import java.awt.{ Cursor, Dimension }
-import javax.swing.{ Box, BoxLayout, JLabel, JPanel, JTextPane }
+import javax.swing.{ JLabel, JTextPane }
 
-import org.nlogo.swing.{ HorizontalStrut, Utils, Zoomable, ZoomableBorder }
+import org.nlogo.swing.{ BoxAlign, BoxRow, MaximumHeight, Utils, Zoomable, ZoomableBorder }
 import org.nlogo.theme.InterfaceColors
 
-class ErrorLabel extends JPanel with Zoomable {
+class ErrorLabel extends BoxRow(6, BoxAlign.Start) with MaximumHeight with Zoomable {
   private val icon = new JLabel
   private val label = new JTextPane {
     setEditable(false)
@@ -24,18 +24,13 @@ class ErrorLabel extends JPanel with Zoomable {
 
   private var currentIcon: IconType = IconType.Error
 
+  setOpaque(true)
   setBorder(new ZoomableBorder(6, 6, 6, 6))
-  setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
 
   add(icon)
-  add(new HorizontalStrut(6))
   add(label)
-  add(Box.createHorizontalGlue)
 
   setVisible(false)
-
-  override def getMaximumSize: Dimension =
-    new Dimension(super.getMaximumSize.width, getPreferredSize.height)
 
   def setText(text: String): Unit = {
     label.setText(text)

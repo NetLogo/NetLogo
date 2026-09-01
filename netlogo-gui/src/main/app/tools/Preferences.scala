@@ -6,14 +6,14 @@ import java.awt.{ BorderLayout, Component, Font, Frame, GraphicsEnvironment, Ins
 import java.awt.event.ActionEvent
 import java.io.File
 import java.util.Locale
-import javax.swing.{ AbstractAction, Box, JComponent, JFileChooser, JLabel, JPanel }
+import javax.swing.{ AbstractAction, JComponent, JFileChooser, JLabel, JPanel }
 import javax.swing.event.{ DocumentEvent, DocumentListener }
 
 import org.nlogo.analytics.Analytics
 import org.nlogo.app.common.TabsInterface
 import org.nlogo.core.{ I18N, NetLogoPreferences }
-import org.nlogo.swing.{ BoxColumn, BoxRow, Button, CheckBox, ComboBox, PopupMenu, TextField, Transparent, Utils,
-                         VerticalStrut }
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, Button, CheckBox, ComboBox, PopupMenu, TextField, Transparent,
+                         Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.AbstractWidgetPanel
 import org.nlogo.window.Events.AutoIndentEvent
@@ -137,8 +137,10 @@ object Preferences {
 
     private val label = new JLabel
 
-    private val panel = new BoxColumn(Seq(comboBox, new VerticalStrut(3),
-                                          new BoxRow(Seq(Box.createHorizontalGlue, label)))) with ThemeSync {
+    private val panel = new BoxColumn(Seq(
+      comboBox,
+      new BoxRow(label, BoxAlign.End)
+    ), 3) with ThemeSync {
       override def syncTheme(): Unit = {
         label.setForeground(InterfaceColors.dialogText())
 

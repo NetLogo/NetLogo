@@ -4,13 +4,13 @@ package org.nlogo.hubnet.server.gui
 
 import java.awt.{ Component, Dimension }
 import java.awt.event.{ ActionEvent, WindowAdapter, WindowEvent }
-import javax.swing.{ AbstractAction, Box, BoxLayout, JFrame, ScrollPaneConstants }
+import javax.swing.{ AbstractAction, JFrame, ScrollPaneConstants }
 
 import org.nlogo.analytics.Analytics
 import org.nlogo.api.ModelType
 import org.nlogo.core.{ I18N, Widget => CoreWidget }
-import org.nlogo.swing.{ BoxColumn, Menu, MenuBar, NetLogoIcon, OptionPane, ScrollPane, SyncZoom, ToolBar, UserAction,
-                         Utils, WindowAutomator, ZoomableBorder }
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, MaximumHeight, Menu, MenuBar, NetLogoIcon, OptionPane, ScrollPane,
+                         SyncZoom, UserAction, Utils, WindowAutomator, ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ WidgetInfo, MenuBarFactory, InterfaceFactory, GUIWorkspace, AbstractWidgetPanel }
 
@@ -28,17 +28,9 @@ class HubNetClientEditor(workspace: GUIWorkspace,
     setBorder(null)
   }
 
-  private val toolbar = new ToolBar {
-    setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
+  private val toolbar = new BoxRow(interfacePanel.widgetControls, BoxAlign.Start) with MaximumHeight {
+    setOpaque(true)
     setBorder(new ZoomableBorder(6, 0, 6, 0))
-
-    override def addControls(): Unit = {
-      add(interfacePanel.widgetControls)
-      add(Box.createHorizontalGlue)
-    }
-
-    override def getMaximumSize: Dimension =
-      new Dimension(super.getMaximumSize.width, this.getPreferredSize.height)
   }
 
   private val clientMenuBar = new MenuBar {

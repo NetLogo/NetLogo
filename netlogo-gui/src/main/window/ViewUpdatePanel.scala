@@ -4,20 +4,23 @@ package org.nlogo.window
 
 import java.awt.Dimension
 import java.awt.event.{ ActionEvent, ItemEvent, ItemListener }
-import javax.swing.{ AbstractAction, Action, Box, BoxLayout, JCheckBox, JPanel }
+import javax.swing.{ AbstractAction, Action, JCheckBox }
 
 import org.nlogo.core.I18N, I18N.Prefix
-import org.nlogo.swing.{ BoxRow, Button, HorizontalStrut, PreferredSize, Transparent, VerticalStrut, ZoomableBorder }
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, Button, PreferredSize, ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.Events.LoadEndEvent
 
 class ViewUpdatePanel(workspace: GUIWorkspace, speedSlider: SpeedSliderPanel, displaySwitch: JCheckBox,
                       tickCounter: TickCounterLabel, is3D: Boolean)
-  extends JPanel with Transparent with LoadEndEvent.Handler with ThemeSync {
+  extends BoxColumn(3) with LoadEndEvent.Handler with ThemeSync {
 
   implicit val prefix: org.nlogo.core.I18N.Prefix = Prefix("tabs.run")
 
-  private val updateModeChooser = new UpdateModeChooser(workspace)
+  private val updateModeChooser = new UpdateModeChooser(workspace) {
+    override def getPreferredSize: Dimension =
+      new Dimension(displaySwitch.getPreferredSize.width, super.getPreferredSize.height)
+  }
 
   private val settingsButton = new SettingsButton(new EditSettings(workspace.viewWidget.settings))
 
@@ -25,12 +28,10 @@ class ViewUpdatePanel(workspace: GUIWorkspace, speedSlider: SpeedSliderPanel, di
 
   updateModeChooser.refreshSelection()
 
-  setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
   setBorder(new ZoomableBorder(6, 0, 6, 6))
 
-  add(new BoxRow(Seq(displaySwitch, Box.createHorizontalGlue)))
-  add(new VerticalStrut(3))
-  add(new BoxRow(Seq(updateModeChooser, new HorizontalStrut(12), Box.createHorizontalGlue, settingsButton)))
+  add(new BoxRow(displaySwitch, BoxAlign.Start))
+  add(new BoxRow(Seq(updateModeChooser, settingsButton), 12))
 
   override def addNotify(): Unit = {
     super.addNotify()

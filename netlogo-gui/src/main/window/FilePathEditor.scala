@@ -5,17 +5,17 @@ package org.nlogo.window
 import java.awt.{ Component, FileDialog => JFileDialog }
 import java.io.File
 import java.nio.file.Path
-import javax.swing.{ BoxLayout, JLabel, JToolBar }
+import javax.swing.JLabel
 
 import org.nlogo.awt.UserCancelException
-import org.nlogo.swing.{ Button, FileDialog, HorizontalStrut, TextField, Transparent }
+import org.nlogo.swing.{ BoxRow, Button, FileDialog, TextField }
 import org.nlogo.swing.Implicits.thunk2documentListener
 import org.nlogo.theme.InterfaceColors
 
 import scala.util.{ Success, Try }
 
 class FilePathEditor(accessor: PropertyAccessor[String], parent: Component, currentDirectory: Option[Path],
-                     suggestedFile: Option[String]) extends PropertyEditor(accessor) {
+                     suggestedFile: Option[String]) extends BoxRow(6) with PropertyEditor(accessor) {
 
   private val suggestedFileName: String = suggestedFile.map(_.trim).filter(_.nonEmpty).getOrElse(s"${accessor.name}-export.csv")
   private val homePath: Path = (new File(System.getProperty("user.home"))).toPath.toAbsolutePath
@@ -36,22 +36,10 @@ class FilePathEditor(accessor: PropertyAccessor[String], parent: Component, curr
 
   private val disableButton = new Button("Disable", () => set(""))
 
-  private val toolbar = new JToolBar with Transparent {
-    setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
-    setFloatable(false)
-
-    add(browseButton)
-    add(new HorizontalStrut(6))
-    add(disableButton)
-  }
-
-  setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
-
   add(label)
-  add(new HorizontalStrut(6))
   add(editor)
-  add(new HorizontalStrut(6))
-  add(toolbar)
+  add(browseButton)
+  add(disableButton)
 
   private def asPath(currentText: String): Path = {
     val currentPath = new File(currentText).toPath

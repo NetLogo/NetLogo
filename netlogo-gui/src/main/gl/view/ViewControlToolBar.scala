@@ -4,17 +4,17 @@ package org.nlogo.gl.view
 
 import java.awt.Font
 import java.awt.event.ActionEvent
-import javax.swing.{ AbstractAction, Box, BoxLayout, ButtonGroup, JLabel, JPanel }
+import javax.swing.{ AbstractAction, Box, ButtonGroup, JLabel }
 
 import org.nlogo.api.Perspective
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ Button, HorizontalStrut, OptionPane, SyncZoom, ToolBarToggleButton, ZoomableBorder }
+import org.nlogo.swing.{ BoxRow, Button, OptionPane, SyncZoom, ToolBarToggleButton, ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 import MouseMotionHandler.{ Mode, OrbitMode, ZoomMode, TranslateMode, InterfaceMode }
 
 class ViewControlToolBar(view: GLViewInterface, inputHandler: MouseMotionHandler)
-  extends JPanel with SyncZoom with ThemeSync {
+  extends BoxRow(6) with SyncZoom with ThemeSync {
 
   private implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("view.3d")
 
@@ -49,27 +49,22 @@ class ViewControlToolBar(view: GLViewInterface, inputHandler: MouseMotionHandler
     group.add(zoomButton)
     group.add(moveButton)
 
-    setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
+    setOpaque(true)
     setBorder(new ZoomableBorder(6, 6, 6, 6))
 
     add(orbitButton)
-    add(new HorizontalStrut(6))
     add(zoomButton)
-    add(new HorizontalStrut(6))
     add(moveButton)
 
     if (!view.world.program.dialect.is3D) {
-      add(new HorizontalStrut(6))
       add(interactButton)
 
       group.add(interactButton)
     }
 
-    add(new HorizontalStrut(6))
     add(status)
     add(Box.createHorizontalGlue)
     add(resetButton)
-    add(new HorizontalStrut(6))
     add(fullScreenButton)
 
     orbitButton.doClick()
