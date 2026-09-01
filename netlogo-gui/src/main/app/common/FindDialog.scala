@@ -2,19 +2,18 @@
 
 package org.nlogo.app.common
 
-import java.awt.{ BorderLayout, Frame, Toolkit }
+import java.awt.{ Frame, Toolkit }
 import java.awt.event.{ ActionEvent, ActionListener, FocusEvent, KeyEvent }
 import java.util.Locale
-import javax.swing.{ AbstractAction, Action, Box, BoxLayout, Icon, JDialog, JEditorPane, JLabel, JPanel,
-                     SwingConstants }
-import javax.swing.border.EmptyBorder
+import javax.swing.{ AbstractAction, Action, Icon, JDialog, JEditorPane, JLabel, SwingConstants }
 import javax.swing.text.{ BadLocationException, TextAction }
 
 import org.nlogo.core.I18N
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
-import org.nlogo.swing.{ ButtonPanel, CheckBox, DialogButton, NonemptyTextFieldActionEnabler,
-                         NonemptyTextFieldButtonEnabler, ScrollableTextComponent, TextField, TextFieldBox, Transparent,
-                         UserAction, Utils, WindowAutomator, Zoomable },
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, ButtonPanel, CheckBox, DialogButton,
+                         NonemptyTextFieldActionEnabler, NonemptyTextFieldButtonEnabler, ScrollableTextComponent,
+                         SyncZoom, TextField, TextFieldBox, UserAction, Utils, WindowAutomator, Zoomable,
+                         ZoomableBorder, ZoomActions },
   UserAction.{ EditCategory, EditFindGroup, KeyBindings, MenuAction }
 
 object FindDialog extends Zoomable with ThemeSync {
@@ -208,7 +207,7 @@ object FindDialog extends Zoomable with ThemeSync {
   }
 }
 
-class FindDialog(val owner: Frame) extends JDialog(owner, I18N.gui.get("dialog.find.title"), false)
+class FindDialog(val owner: Frame) extends JDialog(owner, I18N.gui.get("dialog.find.title"), false) with ZoomActions
                                    with ActionListener with ThemeSync {
 
   WindowAutomator.automate(this)
@@ -299,44 +298,42 @@ class FindDialog(val owner: Frame) extends JDialog(owner, I18N.gui.get("dialog.f
   setResizable(false)
   setVisible(false)
 
-  private val findPanel = new TextFieldBox(SwingConstants.LEFT)
+  private val findPanel = new TextFieldBox(SwingConstants.LEFT) {
+    setBorder(new ZoomableBorder(16, 8, 8, 8))
 
-  locally {
-    findPanel.setBorder(new EmptyBorder(16, 8, 8, 8))
-
-    findPanel.addField(I18N.gui.get("dialog.find.find"), findBox)
-    findPanel.addField(replaceLabel, replaceBox)
-
-    val optionsPanel = new JPanel with Transparent
-
-    optionsPanel.setLayout(new BoxLayout(optionsPanel, BoxLayout.X_AXIS))
-    optionsPanel.setBorder(new EmptyBorder(8, 8, 8, 8))
-
-    optionsPanel.add(ignoreCaseCheckBox)
-    optionsPanel.add(Box.createHorizontalStrut(12))
-    optionsPanel.add(wrapAroundCheckBox)
-    optionsPanel.add(Box.createHorizontalStrut(24))
-    optionsPanel.add(notFoundLabel)
-
-    val buttonPanel = new ButtonPanel(
-      Seq(
-        nextButton,
-        prevButton,
-        replaceButton,
-        replaceAndFindButton,
-        replaceAllButton
-      ))
-
-    buttonPanel.setBorder(new EmptyBorder(16, 8, 8, 8))
-
-    getContentPane.setLayout(new BorderLayout)
-
-    getContentPane.add(findPanel, BorderLayout.NORTH)
-    getContentPane.add(optionsPanel, BorderLayout.CENTER)
-    getContentPane.add(buttonPanel, BorderLayout.SOUTH)
-
-    pack()
+    addField(I18N.gui.get("dialog.find.find"), findBox)
+    addField(replaceLabel, replaceBox)
   }
+
+  private val contents = new BoxColumn(Seq(
+    new BoxRow(findPanel, BoxAlign.Start),
+    new BoxRow(Seq(ignoreCaseCheckBox, wrapAroundCheckBox, notFoundLabel), 12, BoxAlign.Start) {
+      setBorder(new ZoomableBorder(6, 6, 6, 6))
+    },
+    new ButtonPanel(Seq(
+      nextButton,
+      prevButton,
+      replaceButton,
+      replaceAndFindButton,
+      replaceAllButton
+    )) {
+      setBorder(new ZoomableBorder(16, 8, 8, 8))
+    }
+  )) with SyncZoom {
+    setOpaque(true)
+
+    override def zoom(oldZoom: Float): Unit = {
+      super.zoom(oldZoom)
+
+      pack()
+    }
+  }
+
+  setContentPane(contents)
+
+  contents.syncZoom()
+
+  pack()
 
   Utils.addEscKeyAction(this,
     new AbstractAction {
@@ -481,7 +478,7 @@ class FindDialog(val owner: Frame) extends JDialog(owner, I18N.gui.get("dialog.f
   }
 
   override def syncTheme(): Unit = {
-    getContentPane.setBackground(InterfaceColors.dialogBackground())
+    contents.setBackground(InterfaceColors.dialogBackground())
 
     nextButton.syncTheme()
     prevButton.syncTheme()

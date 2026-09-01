@@ -2,28 +2,24 @@
 
 package org.nlogo.window
 
-import java.awt.Dimension
-import javax.swing.{ Box, BoxLayout, JLabel, JPanel }
+import javax.swing.JLabel
 
 import org.nlogo.api.CompilerServices
 import org.nlogo.awt.Hierarchy
 import org.nlogo.core.I18N
 import org.nlogo.editor.Colorizer
 import org.nlogo.plot.PlotManagerInterface
-import org.nlogo.swing.{ BoxRow, CheckBox, ComboBox, HorizontalStrut, OptionPane, SyncZoom, TextField, Transparent,
-                         VerticalStrut, ZoomableBorder }
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, CheckBox, ComboBox, MaximumHeight, OptionPane, SyncZoom,
+                         TextField, ZoomableBorder }
 import org.nlogo.theme.InterfaceColors
 
 class PlotPenEditorAdvanced(inputPen: PlotPensEditor.Pen, compiler: CompilerServices, colorizer: Colorizer,
-                            plotManager: PlotManagerInterface) extends JPanel with Transparent with SyncZoom {
+                            plotManager: PlotManagerInterface) extends BoxColumn(6) with SyncZoom {
 
   private implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("edit.plot.pen")
 
   // pieces of the UI
-  private val intervalField = new TextField(8) {
-    override def getMaximumSize: Dimension =
-      new Dimension(super.getMaximumSize.width, getPreferredSize.height)
-  }
+  private val intervalField = new TextField(8) with MaximumHeight
 
   private val penModes = new ComboBox(List(I18N.gui("mode.line"), I18N.gui("mode.bar"), I18N.gui("mode.point")))
 
@@ -46,36 +42,23 @@ class PlotPenEditorAdvanced(inputPen: PlotPensEditor.Pen, compiler: CompilerServ
         repaint()
       }))
 
-  setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
   setBorder(new ZoomableBorder(6, 6, 6, 6))
 
   add(new BoxRow(Seq(
     new JLabel(I18N.gui("mode")) {
       setForeground(InterfaceColors.dialogText())
     },
-    new HorizontalStrut(6),
     penModes
-  )) {
-    override def getMaximumSize: Dimension =
-      new Dimension(super.getMaximumSize.width, getPreferredSize.height)
-  })
-
-  add(new VerticalStrut(6))
+  ), 6) with MaximumHeight)
 
   add(new BoxRow(Seq(
     new JLabel(I18N.gui("interval")) {
       setForeground(InterfaceColors.dialogText())
     },
-    new HorizontalStrut(6),
     intervalField
-  )) {
-    override def getMaximumSize: Dimension =
-      new Dimension(super.getMaximumSize.width, getPreferredSize.height)
-  })
+  ), 6) with MaximumHeight)
 
-  add(new VerticalStrut(6))
-  add(new BoxRow(Seq(showPenInLegend, Box.createHorizontalGlue)))
-  add(new VerticalStrut(6))
+  add(new BoxRow(showPenInLegend, BoxAlign.Start))
 
   runtimeErrorPanel.foreach(panel => {
     add(panel)
@@ -84,7 +67,6 @@ class PlotPenEditorAdvanced(inputPen: PlotPensEditor.Pen, compiler: CompilerServ
   })
 
   add(setupCode)
-  add(new VerticalStrut(6))
   add(updateCode)
 
   penModes.syncTheme()

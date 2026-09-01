@@ -3,12 +3,12 @@
 package org.nlogo.window
 
 import java.awt.{ Dimension, Graphics, Insets, LinearGradientPaint }
-import javax.swing.{ Box, BoxLayout, JLabel }
+import javax.swing.{ BoxLayout, JLabel }
 
 import org.nlogo.agent.ChooserConstraint
 import org.nlogo.api.{ CompilerServices, Dump }
 import org.nlogo.core.{ I18N, LogoList }
-import org.nlogo.swing.{ BoxRow, ComboBox, Utils }
+import org.nlogo.swing.{ BoxAlign, BoxRow, ComboBox, Utils }
 import org.nlogo.theme.InterfaceColors
 
 trait Chooser extends SingleErrorWidget {
@@ -30,7 +30,7 @@ trait Chooser extends SingleErrorWidget {
   setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
   setBorder(new AdaptableBorder(new Insets(3, 6, 6, 6), new Insets(6, 8, 8, 8)))
 
-  add(new BoxRow(Seq(label, Box.createHorizontalGlue)))
+  add(new BoxRow(label, BoxAlign.Start))
   add(new AdaptableVerticalStrut(0, 6))
   add(control)
 

@@ -2,16 +2,16 @@
 
 package org.nlogo.hubnet.client
 
-import java.awt.{ BorderLayout, Dimension, FlowLayout, Frame }
+import java.awt.{ BorderLayout, Dimension, Frame }
 import java.awt.event.{ ActionEvent, ActionListener, MouseAdapter, MouseEvent }
 import java.net.{ InetAddress, NetworkInterface }
-import javax.swing.{ Box, BoxLayout, JDialog, JPanel, JTable, SwingUtilities }
+import javax.swing.{ JDialog, JTable, SwingUtilities }
 import javax.swing.event.{ DocumentEvent, DocumentListener, ListSelectionEvent, ListSelectionListener }
 import javax.swing.table.{ AbstractTableModel, DefaultTableCellRenderer }
 
 import org.nlogo.hubnet.connection.NetworkUtils
-import org.nlogo.swing.{ ComboBox, DialogButton, NonemptyTextFieldButtonEnabler, ScrollPane, TextField, TextFieldBox,
-                         Transparent }
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, ComboBox, DialogButton, NonemptyTextFieldButtonEnabler,
+                         ScrollPane, TextField, TextFieldBox, Utils, VerticalStrut }
 import org.nlogo.theme.InterfaceColors
 
 abstract class LoginCallback{
@@ -59,32 +59,29 @@ class LoginDialog(parent: Frame, defaultUserId: String, defaultServerName: Strin
     // Layout the main components
     setLayout(new BorderLayout)
 
-    val centerPanel = new JPanel with Transparent {
-      setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
-      add(new TextFieldBox {
-        addField("User name:", nameField)
-        add(Box.createVerticalStrut(12))
-        addField("Server:", serverField)
-        addField("Port:", portField)
-      })
-    }
-
-    add(centerPanel, BorderLayout.CENTER)
-
-    centerPanel.add(Box.createVerticalStrut(12))
-    centerPanel.add(Box.createVerticalStrut(2))
-
     // Set up server table
     val serverTablePane = new ScrollPane(serverTable) {
-      setPreferredSize(new Dimension(100, 88))
+      setBackground(InterfaceColors.dialogBackground())
+
       this.setVisible(false)
 
-      setBackground(InterfaceColors.dialogBackground())
+      override def getPreferredSize: Dimension =
+        Utils.zoomSize(new Dimension(100, 88))
     }
-    centerPanel.add(serverTablePane)
-    if (interfaceChooser.itemCount > 1) {
-      centerPanel.add(interfaceChooser)
-    }
+
+    add(new BoxColumn(Seq(
+      new TextFieldBox {
+        addField("User name:", nameField)
+        add(new VerticalStrut(12))
+        addField("Server:", serverField)
+        addField("Port:", portField)
+      },
+      serverTablePane
+    ), 14, BoxAlign.Start) {
+      if (interfaceChooser.itemCount > 1) {
+        add(interfaceChooser)
+      }
+    }, BorderLayout.CENTER)
 
     // Register event handlers
     serverTable.getSelectionModel.addListSelectionListener(this)
@@ -100,11 +97,8 @@ class LoginDialog(parent: Frame, defaultUserId: String, defaultServerName: Strin
 
     serverTablePane.setVisible(true)
     serverTable.setActive(true)
-    centerPanel.add(Box.createVerticalGlue())
 
-    add(new JPanel(new FlowLayout(FlowLayout.RIGHT)) with Transparent {
-      add(enterButton)
-    }, BorderLayout.SOUTH)
+    add(new BoxRow(enterButton, BoxAlign.End), BorderLayout.SOUTH)
 
     pack()
   }

@@ -3,15 +3,17 @@
 package org.nlogo.window
 
 import java.awt.{ Dimension, EventQueue }
-import javax.swing.{ BoxLayout, JLabel }
+import javax.swing.JLabel
 import javax.swing.event.{ DocumentEvent, DocumentListener }
 
-import org.nlogo.swing.{ FixedLengthDocument, HorizontalStrut, TextField }
+import org.nlogo.swing.{ BoxRow, FixedLengthDocument, MaximumHeight, TextField }
 import org.nlogo.theme.InterfaceColors
 
 import scala.util.{ Success, Try }
 
-class KeyEditor(accessor: PropertyAccessor[Char]) extends PropertyEditor(accessor) {
+class KeyEditor(accessor: PropertyAccessor[Char])
+  extends BoxRow(6) with PropertyEditor(accessor) with MaximumHeight {
+
   private val label = new JLabel(accessor.name)
 
   // 2 not 1 here otherwise "W" doesn't fit - ST 1/18/05
@@ -40,10 +42,7 @@ class KeyEditor(accessor: PropertyAccessor[Char]) extends PropertyEditor(accesso
       getPreferredSize
   }
 
-  setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
-
   add(label)
-  add(new HorizontalStrut(6))
   add(editor)
 
   override def get: Try[Char] = Success(
@@ -56,9 +55,6 @@ class KeyEditor(accessor: PropertyAccessor[Char]) extends PropertyEditor(accesso
   }
 
   override def requestFocus(): Unit = { editor.requestFocus() }
-
-  override def getMaximumSize: Dimension =
-    new Dimension(super.getMaximumSize.width, getPreferredSize.height)
 
   override def syncTheme(): Unit = {
     label.setForeground(InterfaceColors.dialogText())

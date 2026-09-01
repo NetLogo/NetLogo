@@ -3,15 +3,15 @@
 package org.nlogo.shape.editor
 
 import java.awt.{ Component, Dimension, Graphics, Graphics2D, Shape => JShape }
-import javax.swing.{ Box, BoxLayout, JLabel, JList, JPanel, ListCellRenderer }
+import javax.swing.{ JLabel, JList, ListCellRenderer }
 
 import org.nlogo.api.Graphics2DWrapper
 import org.nlogo.core.Shape
 import org.nlogo.shape.DrawableShape
-import org.nlogo.swing.{ HorizontalStrut, PreferredSize, Utils }
+import org.nlogo.swing.{ BoxAlign, BoxRow, PreferredSize, Utils }
 import org.nlogo.theme.InterfaceColors
 
-class ShapeCellRenderer(height: Int) extends JPanel with ListCellRenderer[Shape] {
+class ShapeCellRenderer(height: Int) extends BoxRow(20, BoxAlign.Start) with ListCellRenderer[Shape] {
   protected var shape: Option[DrawableShape] = None
   protected val shapeName = new JLabel
 
@@ -50,12 +50,10 @@ class ShapeCellRenderer(height: Int) extends JPanel with ListCellRenderer[Shape]
     }
   }
 
-  setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
+  setOpaque(true)
 
   add(shapeComponent)
-  add(new HorizontalStrut(20))
   add(shapeName)
-  add(Box.createHorizontalGlue)
 
   // Method that actually renders the item
   override def getListCellRendererComponent(list: JList[? <: Shape], value: Shape, index: Int, isSelected: Boolean,

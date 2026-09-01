@@ -6,10 +6,10 @@ import java.awt.{ Color, BorderLayout, Dimension, Graphics }
 import javax.swing.{ Box, BoxLayout, JLabel, JPanel }
 
 import org.nlogo.editor.EditorConfiguration
-import org.nlogo.swing.{ BoxRow, Transparent, Utils, Zoomable, ZoomableBorder }
+import org.nlogo.swing.{ BoxRow, PreferredSize, Transparent, Utils, Zoomable, ZoomableBorder }
 import org.nlogo.theme.InterfaceColors
 
-class WorldPreview(myWidth: Int, myHeight: Int) extends JPanel(new BorderLayout) with Transparent {
+class WorldPreview(myWidth: Int, myHeight: Int) extends JPanel(new BorderLayout) with Transparent with PreferredSize {
   private var wrapX, wrapY = false
   private var minx, maxx, miny, maxy = 0
 

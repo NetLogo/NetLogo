@@ -4,7 +4,7 @@ package org.nlogo.swing
 
 import java.awt.{ Component, Dimension, ItemSelectable }
 import java.awt.event.{ ActionEvent, ItemEvent, ItemListener, KeyAdapter, KeyEvent, MouseAdapter, MouseEvent }
-import javax.swing.{ AbstractAction, Box, BoxLayout, JLabel, JPanel }
+import javax.swing.{ AbstractAction, Box, JLabel }
 
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
@@ -16,7 +16,7 @@ object ComboBox {
 }
 
 class ComboBox[T](private var items: Seq[T] = Seq(), openOnPress: Boolean = true, searchable: Boolean = false)
-  extends JPanel with RoundedBorderPanel with Zoomable with ThemeSync with ItemSelectable {
+  extends BoxRow(6) with RoundedBorderPanel with MaximumHeight with Zoomable with ThemeSync with ItemSelectable {
 
   // popups with lots of items can overlap the mouse when the dropdown is clicked, causing one of
   // the items to be erroneously selected when the mouse is released. this makes it difficult to
@@ -79,11 +79,9 @@ class ComboBox[T](private var items: Seq[T] = Seq(), openOnPress: Boolean = true
 
   setItems(items)
 
-  setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
   setBorder(new ZoomableBorder(3, 6, 3, 6))
 
   add(choiceDisplay)
-  add(new HorizontalStrut(6))
   add(Box.createHorizontalGlue)
   add(arrow)
 
@@ -188,9 +186,6 @@ class ComboBox[T](private var items: Seq[T] = Seq(), openOnPress: Boolean = true
     choiceDisplay.setEnabled(enabled)
   }
 
-  override def getMaximumSize: Dimension =
-    new Dimension(super.getMaximumSize.width, getPreferredSize.height)
-
   override def zoom(oldZoom: Float): Unit = {
     setDiameter(Utils.zoom(6))
   }
@@ -204,9 +199,7 @@ class ComboBox[T](private var items: Seq[T] = Seq(), openOnPress: Boolean = true
     choiceDisplay.syncTheme()
   }
 
-  private class ChoiceDisplay extends JPanel with Transparent with ThemeSync {
-    setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
-
+  private class ChoiceDisplay extends BoxRow with ThemeSync {
     def setItem(item: Option[T]): Unit = {
       removeAll()
 

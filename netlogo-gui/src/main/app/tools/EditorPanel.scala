@@ -4,20 +4,17 @@ package org.nlogo.app.tools
 
 import java.awt.Dimension
 import java.awt.event.{ FocusEvent, TextEvent, TextListener }
-import javax.swing.{ BoxLayout, JPanel }
 
 import org.nlogo.api.{ CompilerServices, PreviewCommands }, PreviewCommands.{ Compilable, Custom, Default, Manual }
 import org.nlogo.core.I18N
 import org.nlogo.editor.{ EditorArea, EditorConfiguration }
-import org.nlogo.swing.{ BoxRow, Button, ComboBox, HasPropertyChangeSupport, HorizontalStrut, PreferredSize, ScrollPane,
-                         Transparent, Utils, VerticalStrut, Zoomable }
+import org.nlogo.swing.{ BoxColumn, BoxRow, Button, ComboBox, HasPropertyChangeSupport, MaximumHeight, PreferredSize,
+                         ScrollPane, Utils, Zoomable }
 import org.nlogo.theme.InterfaceColors
 import org.nlogo.util.Implicits.RichString
 import org.nlogo.window.{ AutoIndentHandler, EditorAreaErrorLabel, EditorColorizer }
 
-class EditorPanel(compiler: CompilerServices, colorizer: EditorColorizer)
-  extends JPanel with Transparent with Zoomable {
-
+class EditorPanel(compiler: CompilerServices, colorizer: EditorColorizer) extends BoxColumn(6) with Zoomable {
   val comboBox = new PreviewCommandsComboBox
   val compileButton = new Button("", () => {
     if (dirty) {
@@ -68,20 +65,8 @@ class EditorPanel(compiler: CompilerServices, colorizer: EditorColorizer)
 
   updateCompileIcon()
 
-  setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
-
-  add(new BoxRow(Seq(
-    comboBox,
-    new HorizontalStrut(6),
-    compileButton
-  )) {
-    override def getMaximumSize: Dimension =
-      new Dimension(super.getMaximumSize.width, getPreferredSize.height)
-  })
-
-  add(new VerticalStrut(6))
+  add(new BoxRow(Seq(comboBox, compileButton), 6) with MaximumHeight)
   add(errorLabel)
-
   add(new ScrollPane(editor) {
     setBackground(InterfaceColors.codeBackground())
   })

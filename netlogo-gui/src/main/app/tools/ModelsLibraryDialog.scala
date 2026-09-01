@@ -13,8 +13,8 @@ import java.io.File
 import java.nio.file.Paths
 import java.net.URI
 import java.util.{ Enumeration, LinkedList, List => JList, Locale }
-import javax.swing.{ AbstractAction, Action, Box, BoxLayout, Icon, InputMap, JComponent, JDialog, JEditorPane, JLabel,
-                     JPanel, JTree, KeyStroke, SwingUtilities, WindowConstants }
+import javax.swing.{ AbstractAction, Action, Box, Icon, InputMap, JComponent, JDialog, JEditorPane, JLabel, JTree,
+                     KeyStroke, SwingUtilities, WindowConstants }
 import javax.swing.border.LineBorder
 import javax.swing.text.{ BadLocationException, DefaultHighlighter }
 import javax.swing.tree.{ DefaultMutableTreeNode, DefaultTreeCellRenderer, DefaultTreeModel, TreePath,
@@ -26,7 +26,7 @@ import javax.swing.event.{ AncestorEvent, AncestorListener, DocumentEvent, Docum
 import org.nlogo.core.I18N
 import org.nlogo.api.{ FileIO, LibraryManager }
 import org.nlogo.awt.{ Positioning, UserCancelException }
-import org.nlogo.swing.{ BoxColumn, BoxRow, BrowserLauncher, Button, ButtonPanel, DialogButton, HorizontalStrut,
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, BrowserLauncher, Button, ButtonPanel, DialogButton, MaximumHeight,
                          ModalProgressTask, OptionPane, PreferredSize, ScrollPane, SyncZoom, TextField, Utils,
                          WindowAutomator, Zoomable, ZoomableBorder, ZoomActions },
                        Utils.addEscKeyAction
@@ -174,7 +174,13 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
   private var sourceURI = Option.empty[URI]
   private val savedExpandedPaths: JList[TreePath] = new LinkedList[TreePath]()
 
-  val searchField = new TextField
+  val searchField = new TextField {
+    override def getMinimumSize: Dimension =
+      new Dimension(super.getMinimumSize.width, getPreferredSize.height)
+
+    override def getMaximumSize: Dimension =
+      new Dimension(super.getMaximumSize.width, getPreferredSize.height)
+  }
 
   private var searchText = Option.empty[String]
   private val searchIcon = new JLabel with Zoomable with ThemeSync {
@@ -299,30 +305,20 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
         treeScrollPane,
         new BoxRow(Seq(
           searchIcon,
-          new HorizontalStrut(2),
           searchField,
-          new HorizontalStrut(2),
           clearSearchButton
-        )) {
-          setBorder(new ZoomableBorder(2, 2, 2, 2))
-
-          override def getMaximumSize: Dimension =
-            new Dimension(super.getMaximumSize.width, getPreferredSize.height)
+        ), 6) with MaximumHeight {
+          setBorder(new ZoomableBorder(6, 6, 0, 6))
         }
       )),
       modelPreviewScrollPane
     )),
     new BoxRow(Seq(
-      new HorizontalStrut(40),
       communityButton,
       Box.createHorizontalGlue,
       new ButtonPanel(Seq(selectButton, cancelButton)),
-      new HorizontalStrut(40)
-    )) {
-      setBorder(new ZoomableBorder(8, 0, 8, 0))
-
-      override def getMaximumSize: Dimension =
-        new Dimension(super.getMaximumSize.width, getPreferredSize.height)
+    )) with MaximumHeight {
+      setBorder(new ZoomableBorder(8, 40, 8, 40))
     }
   )) with SyncZoom {
     setOpaque(true)
@@ -330,6 +326,7 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
     override def zoom(oldZoom: Float): Unit = {
       super.zoom(oldZoom)
 
+      modelPreviewPanel.showModel()
       pack()
     }
   }
@@ -616,9 +613,7 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
     }
   }
 
-  private class ModelPreviewPanel extends JPanel with HyperlinkListener with ThemeSync {
-    setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
-
+  private class ModelPreviewPanel extends BoxColumn(BoxAlign.Start) with HyperlinkListener with ThemeSync {
     private val graphicsPreview: GraphicsPreview = new GraphicsPreview {
       setBorder(new LineBorder(Color.DARK_GRAY, 1))
     }
@@ -632,16 +627,17 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
 
     textArea.addHyperlinkListener(this)
 
+    setBorder(new ZoomableBorder(5, 5, 5, 5))
+
     add(graphicsPreview)
     add(textArea)
-    add(Box.createVerticalGlue())
-
-    setBorder(new ZoomableBorder(5, 5, 5, 5))
 
     def showModel(): Unit = {
       val image =
         selected.filterNot(_.isFolder)
           .map(s => ModelsLibrary.getImagePath(s.path)).orNull
+
+      val fontStr = s"${Utils.zoom(12)}pt"
 
       graphicsPreview.setImage(image)
 
@@ -651,7 +647,7 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
       // See http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4765285
       // ER - 12/02/07
       textArea.setPreferredSize(null)
-      textArea.setMaximumSize(new Dimension(390, Short.MaxValue))
+      textArea.setMaximumSize(new Dimension(Utils.zoom(390), Int.MaxValue))
 
       selected match {
         case Some(selection) if ! selection.isFolder =>
@@ -661,7 +657,7 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
           val htmlDescription =
             s"""|<html>
                 |<head>
-                |<style>body {font-family: Dialog; font-size: 12pt; }</style>
+                |<style>body {font-family: Dialog; font-size: $fontStr; }</style>
                 |</head>
                 |<body>
                 |<h2>${selection.name}</h2>
@@ -691,7 +687,7 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
           textArea.setCaretPosition(0)
         case _ =>
           // no preview to show, so show explanatory message instead
-          val text = FileIO.getResourceAsString("/system/library.html")
+          val text = FileIO.getResourceAsString("/system/library.html").replace("12pt", fontStr)
           textArea.setText(text)
           textArea.setCaretPosition(0)
           graphicsPreview.setVisible(false)
@@ -699,7 +695,7 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
 
       // The conclusion of the above-mentioned work-around
       // ER - 12/02/07
-      textArea.setPreferredSize(new Dimension(390, textArea.getPreferredSize.height))
+      textArea.setPreferredSize(new Dimension(Utils.zoom(390), textArea.getPreferredSize.height))
       invalidate()
     }
 

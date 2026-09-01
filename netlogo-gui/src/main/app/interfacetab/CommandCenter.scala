@@ -4,14 +4,14 @@ package org.nlogo.app.interfacetab
 
 import java.awt.{ BorderLayout, Component, Dimension, FileDialog, Font }
 import java.awt.event.{ ActionEvent, MouseAdapter, MouseEvent }
-import javax.swing.{ AbstractAction, Action, Box, BoxLayout, JButton, JLabel, JPanel }
+import javax.swing.{ AbstractAction, Action, Box, JButton, JLabel, JPanel }
 
 import org.nlogo.api.Exceptions
 import org.nlogo.app.common.{ CommandLine, CommandServer, HistoryPrompt, LinePrompt }
 import org.nlogo.awt.{ Hierarchy, UserCancelException }
 import org.nlogo.core.{ AgentKind, I18N }
-import org.nlogo.swing.{ BoxColumn, Button, FileDialog => SwingFileDialog, HorizontalStrut, ModalProgressTask, MenuItem,
-                         PopupMenu, PreferredSize, RichAction, RoundedBorderPanel, Transparent, Utils, Zoomable,
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, Button, FileDialog => SwingFileDialog, ModalProgressTask,
+                         MenuItem, PopupMenu, PreferredSize, RichAction, RoundedBorderPanel, Utils, Zoomable,
                          ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ CommandCenterInterface, Events => WindowEvents, OutputArea, TextMenuActions }
@@ -37,6 +37,7 @@ class CommandCenter(workspace: AbstractWorkspace, showToggle: Boolean, packSplit
 
   private val locationToggleButton = new Button(null) with PreferredSize {
     setBorder(new ZoomableBorder(3, 5, 3, 6))
+    setVisible(showToggle)
 
     override def getPreferredSize: Dimension =
       new Dimension(super.getPreferredSize.width, clearButton.getPreferredSize.height)
@@ -76,31 +77,21 @@ class CommandCenter(workspace: AbstractWorkspace, showToggle: Boolean, packSplit
 
   private val historyPrompt = new HistoryPrompt(commandLine)
 
-  private val northPanel = new JPanel with PreferredSize with Transparent {
-    setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
+  private val northPanel = new BoxRow(Seq(
+    titleLabel,
+    Box.createHorizontalGlue,
+    locationToggleButton,
+    clearButton
+  ), 6) {
     setBorder(new ZoomableBorder(6, 0, 6, 0))
-
-    add(titleLabel)
-    add(Box.createHorizontalGlue)
-
-    if (showToggle) {
-      add(new HorizontalStrut(6))
-      add(locationToggleButton)
-    }
-
-    add(new HorizontalStrut(6))
-    add(clearButton)
   }
 
-  private val southPanel = new JPanel with Transparent {
-    setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
+  private val southPanel = new BoxRow(Seq(
+    prompt,
+    commandLine,
+    new BoxColumn(historyPrompt, BoxAlign.End)
+  ), 6) {
     setBorder(new ZoomableBorder(3, 0, 3, 0))
-
-    add(prompt)
-    add(new HorizontalStrut(6))
-    add(commandLine)
-    add(new HorizontalStrut(3))
-    add(new BoxColumn(Seq(Box.createVerticalGlue, historyPrompt)))
   }
 
   setLayout(new BorderLayout)

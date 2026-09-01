@@ -3,11 +3,11 @@
 package org.nlogo.window
 
 import java.awt.{ Component, Dimension, EventQueue, Font }
-import javax.swing.{ BoxLayout, JPanel, ScrollPaneConstants }
+import javax.swing.ScrollPaneConstants
 
 import org.nlogo.agent.OutputObject
 import org.nlogo.awt.LineBreaker
-import org.nlogo.swing.{ RoundedBorderPanel, ScrollPane, TextArea, Utils, Zoomable, ZoomableBorder }
+import org.nlogo.swing.{ BoxRow, RoundedBorderPanel, ScrollPane, TextArea, Utils, Zoomable, ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 object OutputArea {
@@ -24,9 +24,7 @@ object OutputArea {
 
 import OutputArea._
 
-class OutputArea(val text: TextArea) extends JPanel with RoundedBorderPanel with Zoomable with ThemeSync {
-  setOpaque(false)
-
+class OutputArea(val text: TextArea) extends BoxRow with RoundedBorderPanel with Zoomable with ThemeSync {
   private val scrollPane =
     new ScrollPane(text, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
                    ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED) {
@@ -49,7 +47,6 @@ class OutputArea(val text: TextArea) extends JPanel with RoundedBorderPanel with
 
   fontSize(12)
 
-  setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
   setBorder(new ZoomableBorder(3, 3, 3, 3))
 
   add(scrollPane)

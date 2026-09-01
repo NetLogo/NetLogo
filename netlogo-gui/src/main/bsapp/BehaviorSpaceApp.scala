@@ -2,17 +2,17 @@
 
 package org.nlogo.bsapp
 
-import java.awt.EventQueue
+import java.awt.{ EventQueue, Window }
 import java.io.IOException
 import java.net.SocketException
-import javax.swing.Timer
+import javax.swing.{ JRootPane, Timer }
 
 import org.nlogo.agent.OutputObject
 import org.nlogo.api.{ Dump, IPCClientHandler, LabProtocol, LogoException }
 import org.nlogo.core.{ CompilerException, I18N }
 import org.nlogo.headless.{ BehaviorSpaceCoordinator, HeadlessWorkspace }
 import org.nlogo.nvm.{ DummyPrimaryWorkspace, LabInterface, Workspace }
-import org.nlogo.swing.{ AppUtils, OptionPane, RichAction, WindowAutomator }
+import org.nlogo.swing.{ AppUtils, OptionPane, RichAction, Utils, WindowAutomator, ZoomActions, ZoomProvider }
 import org.nlogo.window.{ ErrorDialogManager, Events, ThreadUtils }
 
 import ujson.Obj
@@ -107,7 +107,9 @@ object BehaviorSpaceApp {
                              port: Int = -1)
 }
 
-class BehaviorSpaceApp(args: BehaviorSpaceApp.CommandLineArgs) extends Thread.UncaughtExceptionHandler {
+class BehaviorSpaceApp(args: BehaviorSpaceApp.CommandLineArgs)
+  extends Thread.UncaughtExceptionHandler with ZoomProvider {
+
   private implicit val i18nPrefix: I18N.Prefix = I18N.Prefix("tools.behaviorSpace")
 
   private val frame = new BehaviorSpaceFrame(this)
@@ -156,6 +158,8 @@ class BehaviorSpaceApp(args: BehaviorSpaceApp.CommandLineArgs) extends Thread.Un
   private val workspace: SemiHeadlessWorkspace = newWorkspace(args.updateView, args.updatePlots)
 
   private val lab = HeadlessWorkspace.newLab
+
+  ZoomActions.init(this)
 
   def run(): Unit = {
     ipcHandler.connect(args.port)
@@ -347,5 +351,18 @@ class BehaviorSpaceApp(args: BehaviorSpaceApp.CommandLineArgs) extends Thread.Un
   def abort(): Unit = {
     timer.start()
     lab.abort()
+  }
+
+  override def setZoomFactor(factor: Float): Unit = {
+    val oldZoom: Float = Utils.getZoomFactor
+
+    Utils.setZoomFactor(factor)
+
+    Window.getWindows.flatMap(_.getComponents).collect {
+      case root: JRootPane =>
+        root.getContentPane
+    }.foreach(Utils.zoomComponents(_, oldZoom))
+
+    frame.pack()
   }
 }

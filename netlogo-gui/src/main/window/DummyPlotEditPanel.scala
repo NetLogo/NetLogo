@@ -2,10 +2,8 @@
 
 package org.nlogo.window
 
-import javax.swing.BoxLayout
-
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ BoxRow, HorizontalStrut, VerticalStrut, ZoomableBorder }
+import org.nlogo.swing.{ BoxAlign, BoxRow }
 
 class DummyPlotEditPanel(target: DummyPlotWidget) extends WidgetEditPanel(target) {
   private val nameOptions =
@@ -107,18 +105,11 @@ class DummyPlotEditPanel(target: DummyPlotWidget) extends WidgetEditPanel(target
         _.foreach(target.oldSize),
         () => apply()))
 
-  setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
-  setBorder(new ZoomableBorder(6, 6, 6, 6))
-
-  add(nameOptions)
-  add(new VerticalStrut(6))
-  add(new BoxRow(Seq(xLabel, new HorizontalStrut(6), xMin, new HorizontalStrut(6), xMax)))
-  add(new VerticalStrut(6))
-  add(new BoxRow(Seq(yLabel, new HorizontalStrut(6), yMin, new HorizontalStrut(6), yMax)))
-  add(new VerticalStrut(6))
-  add(new BoxRow(Seq(autoPlotX, new HorizontalStrut(6), autoPlotY, new HorizontalStrut(6), showLegend)))
-  add(new VerticalStrut(6))
-  add(oldSize)
+  add(new BoxRow(nameOptions, BoxAlign.Start))
+  add(new BoxRow(Seq(xLabel, xMin, xMax), 6))
+  add(new BoxRow(Seq(yLabel, yMin, yMax), 6))
+  add(new BoxRow(Seq(autoPlotX, autoPlotY, showLegend), 6, BoxAlign.Start))
+  add(new BoxRow(oldSize, BoxAlign.Start))
 
   override def propertyEditors: Seq[PropertyEditor[?]] =
     Seq(nameOptions, xLabel, xMin, xMax, yLabel, yMin, yMax, autoPlotX, autoPlotY, showLegend, oldSize)

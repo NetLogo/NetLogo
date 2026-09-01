@@ -20,7 +20,7 @@ import org.nlogo.api.{ ExternalResourceManager, Version }
 import org.nlogo.app.common.{ Events => AppEvents, FindDialog, MenuTab, UndoRedoActions }
 import org.nlogo.core.I18N
 import org.nlogo.editor.EditorConfiguration
-import org.nlogo.swing.{ HorizontalStrut, QuickHelp, ScrollableTextComponent, ScrollPane, TextArea, ToolBar,
+import org.nlogo.swing.{ BoxAlign, BoxRow, QuickHelp, ScrollableTextComponent, ScrollPane, TextArea,
                          ToolBarActionButton, ToolBarToggleButton, Printable, PrinterManager, BrowserLauncher,
                          UndoManager, UserAction, Utils, Zoomable, ZoomableBorder }, UserAction.MenuAction
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
@@ -75,16 +75,9 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
   override val activeMenuActions: Seq[MenuAction] =
     Seq(undoAction, redoAction, FindDialog.FIND_ACTION, FindDialog.FIND_NEXT_ACTION)
 
-  private val toolBar = new ToolBar {
+  private val toolBar = new BoxRow(Seq(findButton, editableButton, helpButton), 10, BoxAlign.Start) {
+    setOpaque(true)
     setBorder(new ZoomableBorder(24, 10, 12, 6))
-
-    override def addControls(): Unit = {
-      add(findButton)
-      add(new HorizontalStrut(10))
-      add(editableButton)
-      add(new HorizontalStrut(10))
-      add(helpButton)
-    }
   }
 
   private var codeFont: Option[Font] = None

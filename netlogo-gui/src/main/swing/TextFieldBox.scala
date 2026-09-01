@@ -2,8 +2,8 @@
 
 package org.nlogo.swing
 
-import java.awt.{ Component, Dimension, Font }
-import javax.swing.{ Box, BoxLayout, JComponent, JDialog, JLabel, JPanel, SwingConstants }
+import java.awt.{ Dimension, Font }
+import javax.swing.{ Box, JComponent, JDialog, JLabel, SwingConstants }
 
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
@@ -34,13 +34,11 @@ object TextFieldBox {
  * A box for TextFields and their labels that keeps the fields and labels
  * nicely aligned.
  */
-class TextFieldBox(labelAlignment: Int = SwingConstants.LEFT, labelFont: Option[Font] = None, fieldFont: Option[Font] = None)
-  extends JPanel with Transparent with ThemeSync {
+class TextFieldBox(labelAlignment: Int = SwingConstants.LEFT, labelFont: Option[Font] = None,
+                   fieldFont: Option[Font] = None) extends BoxColumn(4) with ThemeSync {
 
   private var maxLabelWidth = 0
   private var labels = Seq[JLabel]()
-
-  setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
 
   /**
    * Adds a field.
@@ -66,24 +64,9 @@ class TextFieldBox(labelAlignment: Int = SwingConstants.LEFT, labelFont: Option[
 
     textField.setMaximumSize(textField.getPreferredSize)
 
-    val holder = new Box(BoxLayout.X_AXIS)
+    add(new BoxRow(Seq(label, textField), 8, BoxAlign.Start) with MaximumHeight)
 
     labels = labels :+ label
-
-    // Add the label and the textfield in a holder
-    label.setAlignmentX(Component.LEFT_ALIGNMENT)
-    textField.setAlignmentX(Component.LEFT_ALIGNMENT)
-
-    holder.add(label)
-    holder.add(Box.createHorizontalStrut(8))
-    holder.add((textField))
-    holder.setAlignmentX(Component.LEFT_ALIGNMENT)
-    holder.add(Box.createHorizontalGlue())
-    holder.setMaximumSize(new Dimension(holder.getMaximumSize().width, holder.getPreferredSize().height))
-
-    add(holder)
-
-    add(Box.createVerticalStrut(4))
 
     // Make sure all the labels have the same preferred width
     val w = label.getPreferredSize.width

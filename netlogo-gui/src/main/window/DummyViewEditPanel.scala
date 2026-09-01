@@ -2,10 +2,7 @@
 
 package org.nlogo.window
 
-import javax.swing.BoxLayout
-
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ VerticalStrut, ZoomableBorder }
 
 class DummyViewEditPanel(target: DummyViewWidget) extends WidgetEditPanel(target) {
   private val widthEditor =
@@ -26,11 +23,7 @@ class DummyViewEditPanel(target: DummyViewWidget) extends WidgetEditPanel(target
         _.foreach(target.setHeight),
         () => apply()))
 
-  setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
-  setBorder(new ZoomableBorder(6, 6, 6, 6))
-
   add(widthEditor)
-  add(new VerticalStrut(6))
   add(heightEditor)
 
   override def propertyEditors: Seq[PropertyEditor[?]] =

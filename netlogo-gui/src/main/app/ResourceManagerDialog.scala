@@ -9,7 +9,7 @@ import java.nio.ByteBuffer
 import java.nio.charset.{ MalformedInputException, StandardCharsets }
 import java.nio.file.{ Files, Paths }
 import java.util.Base64
-import javax.swing.{ AbstractAction, Box, BoxLayout, JDialog, JLabel, JPanel, JTable, ListSelectionModel }
+import javax.swing.{ AbstractAction, JDialog, JLabel, JTable, ListSelectionModel }
 import javax.swing.border.MatteBorder
 import javax.swing.event.{ ListSelectionEvent, ListSelectionListener }
 import javax.swing.table.{ DefaultTableModel, TableCellRenderer }
@@ -17,9 +17,8 @@ import javax.swing.table.{ DefaultTableModel, TableCellRenderer }
 import org.nlogo.api.{ Workspace }
 import org.nlogo.awt.{ Positioning, UserCancelException }
 import org.nlogo.core.{ ExternalResource, I18N }
-import org.nlogo.swing.{ BoxColumn, BoxRow, Button, Centered, FileDialog, HorizontalStrut, InputOptionPane, OptionPane,
-                         ScrollPane, SyncZoom, Utils, VerticalStrut, WindowAutomator, Zoomable, ZoomableBorder,
-                         ZoomActions }
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, Button, FileDialog, InputOptionPane, MaximumHeight, OptionPane,
+                         ScrollPane, SyncZoom, Utils, WindowAutomator, Zoomable, ZoomableBorder, ZoomActions }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.Events.{ DirtyEvent, ResourcesChangedEvent }
 
@@ -200,17 +199,13 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
 
   private val contents = new BoxColumn(Seq(
     scrollPane,
-    new VerticalStrut(6),
-    new Centered(new BoxRow(Seq(
+    new BoxRow(Seq(
       addButton,
-      new HorizontalStrut(6),
       exportButton,
-      new HorizontalStrut(6),
       renameButton,
-      new HorizontalStrut(6),
       removeButton
-    )))
-  )) with SyncZoom {
+    ), 6, BoxAlign.Center) with MaximumHeight
+  ), 6) with SyncZoom {
     setOpaque(true)
     setBorder(new ZoomableBorder(6, 6, 6, 6))
 
@@ -273,13 +268,12 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
     removeButton.syncTheme()
   }
 
-  private class ResourceCellRenderer extends JPanel with TableCellRenderer with SyncZoom {
+  private class ResourceCellRenderer extends BoxRow(BoxAlign.Start) with TableCellRenderer with SyncZoom {
     private val label = new JLabel
 
-    setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
+    setOpaque(true)
 
     add(label)
-    add(Box.createHorizontalGlue)
 
     override def getInsets: java.awt.Insets =
       new Insets(Utils.zoom(3), Utils.zoom(6), Utils.zoom(3), Utils.zoom(6))
@@ -310,15 +304,14 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
     }
   }
 
-  private class HeaderCellRenderer extends JPanel with TableCellRenderer with SyncZoom {
+  private class HeaderCellRenderer extends BoxRow(BoxAlign.Start) with TableCellRenderer with SyncZoom {
     private val label = new JLabel {
       setFont(getFont.deriveFont(Font.BOLD))
     }
 
-    setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
+    setOpaque(true)
 
     add(label)
-    add(Box.createHorizontalGlue)
 
     override def getInsets: java.awt.Insets =
       new Insets(Utils.zoom(3), Utils.zoom(6), Utils.zoom(3), Utils.zoom(6))

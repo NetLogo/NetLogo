@@ -4,18 +4,18 @@ package org.nlogo.window
 
 import java.awt.{ BasicStroke, Color, Component, Dimension, Graphics, Stroke }
 import java.awt.event.{ InputEvent, MouseAdapter, MouseEvent, MouseListener, MouseWheelEvent, MouseWheelListener }
-import javax.swing.{ Box, BoxLayout, JLabel, JPanel, JSlider, SwingConstants }
+import javax.swing.{ JLabel, JSlider, SwingConstants }
 import javax.swing.event.{ ChangeEvent, ChangeListener }
 import javax.swing.plaf.basic.BasicSliderUI
 
 import org.nlogo.core.{ I18N, NetLogoPreferences }
 import org.nlogo.log.LogManager
-import org.nlogo.swing.{ BoxRow, Button, PreferredSize, Utils }
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, Button, PreferredSize, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.Events.LoadBeginEvent
 
 class SpeedSliderPanel(workspace: WorkspaceWithSpeed, ticksLabel: Component = null)
-  extends JPanel with MouseListener with ChangeListener with LoadBeginEvent.Handler with ThemeSync {
+  extends BoxColumn with MouseListener with ChangeListener with LoadBeginEvent.Handler with ThemeSync {
 
   implicit val prefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("tabs.run.speedslider")
 
@@ -69,14 +69,11 @@ class SpeedSliderPanel(workspace: WorkspaceWithSpeed, ticksLabel: Component = nu
 
   private var jumpOnClick = NetLogoPreferences.getBoolean("jumpOnClick", true)
 
-  setOpaque(false)
-  setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
-
-  add(new BoxRow(Seq(Box.createHorizontalGlue, modelSpeed, Box.createHorizontalGlue)))
+  add(new BoxRow(modelSpeed, BoxAlign.Center))
   add(new BoxRow(Seq(slower, speedSlider, faster)))
 
   if (ticksLabel != null)
-    add(new BoxRow(Seq(Box.createHorizontalGlue, ticksLabel, Box.createHorizontalGlue)))
+    add(new BoxRow(ticksLabel, BoxAlign.Center))
 
   override def getMinimumSize: Dimension =
     new Dimension(super.getMinimumSize.width, modelSpeed.getPreferredSize.height +

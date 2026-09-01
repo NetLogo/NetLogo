@@ -2,11 +2,11 @@
 
 package org.nlogo.window
 
-import javax.swing.{ Box, BoxLayout, JLabel }
+import javax.swing.JLabel
 import javax.swing.border.TitledBorder
 
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ BoxColumn, BoxRow, Centered, HorizontalStrut, VerticalStrut, ZoomableBorder }
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, MaximumHeight, ZoomableBorder }
 import org.nlogo.theme.InterfaceColors
 
 class WorldEditPanel2D(target: WorldViewSettings2D, enableDualView: Boolean) extends WorldEditPanel(target) {
@@ -31,9 +31,7 @@ class WorldEditPanel2D(target: WorldViewSettings2D, enableDualView: Boolean) ext
         _.foreach(target.minPxcor),
         () => previewChanged("minPxcor", minPxcor.get)))
 
-  private val minPxcorLabel = new JLabel(I18N.gui("2D.minPxcor")) {
-    setFont(getFont.deriveFont(9.0f))
-  }
+  private val minPxcorLabeled = new LabeledEditor(minPxcor, I18N.gui("2D.minPxcor"))
 
   private val maxPxcor: PositiveIntegerEditor =
     new PositiveIntegerEditor(
@@ -44,9 +42,7 @@ class WorldEditPanel2D(target: WorldViewSettings2D, enableDualView: Boolean) ext
         _.foreach(target.maxPxcor),
         () => previewChanged("maxPxcor", maxPxcor.get)))
 
-  private val maxPxcorLabel = new JLabel(I18N.gui("2D.maxPxcor")) {
-    setFont(getFont.deriveFont(9.0f))
-  }
+  private val maxPxcorLabeled = new LabeledEditor(maxPxcor, I18N.gui("2D.maxPxcor"))
 
   private val minPycor: NegativeIntegerEditor =
     new NegativeIntegerEditor(
@@ -57,9 +53,7 @@ class WorldEditPanel2D(target: WorldViewSettings2D, enableDualView: Boolean) ext
         _.foreach(target.minPycor),
         () => previewChanged("minPycor", minPycor.get)))
 
-  private val minPycorLabel = new JLabel(I18N.gui("2D.minPycor")) {
-    setFont(getFont.deriveFont(9.0f))
-  }
+  private val minPycorLabeled = new LabeledEditor(minPycor, I18N.gui("2D.minPycor"))
 
   private val maxPycor: PositiveIntegerEditor =
     new PositiveIntegerEditor(
@@ -70,9 +64,7 @@ class WorldEditPanel2D(target: WorldViewSettings2D, enableDualView: Boolean) ext
         _.foreach(target.maxPycor),
         () => previewChanged("maxPycor", maxPycor.get)))
 
-  private val maxPycorLabel = new JLabel(I18N.gui("2D.maxPycor")) {
-    setFont(getFont.deriveFont(9.0f))
-  }
+  private val maxPycorLabeled = new LabeledEditor(maxPycor, I18N.gui("2D.maxPycor"))
 
   private val wrappingX: BooleanEditor =
     new BooleanEditor(
@@ -100,9 +92,7 @@ class WorldEditPanel2D(target: WorldViewSettings2D, enableDualView: Boolean) ext
         () => target.patchSize,
         _.foreach(target.patchSize)))
 
-  private val patchSizeLabel = new JLabel(I18N.gui("2D.patchSize.info")) {
-    setFont(getFont.deriveFont(9.0f))
-  }
+  private val patchSizeLabeled = new LabeledEditor(patchSize, I18N.gui("2D.patchSize.info"))
 
   private val fontSize =
     new PositiveIntegerEditor(
@@ -112,9 +102,7 @@ class WorldEditPanel2D(target: WorldViewSettings2D, enableDualView: Boolean) ext
         () => target.fontSize,
         _.foreach(target.fontSize)))
 
-  private val fontSizeLabel = new JLabel(I18N.gui("2D.fontSize.info")) {
-    setFont(getFont.deriveFont(9.0f))
-  }
+  private val fontSizeLabeled = new LabeledEditor(fontSize, I18N.gui("2D.fontSize.info"))
 
   private val frameRate =
     new StrictlyPositiveDoubleEditor(
@@ -124,9 +112,7 @@ class WorldEditPanel2D(target: WorldViewSettings2D, enableDualView: Boolean) ext
         () => target.frameRate,
         _.foreach(target.frameRate)))
 
-  private val frameRateLabel = new JLabel(I18N.gui("2D.frameRate.info")) {
-    setFont(getFont.deriveFont(9.0f))
-  }
+  private val frameRateLabeled = new LabeledEditor(frameRate, I18N.gui("2D.frameRate.info"))
 
   private val dualView =
     new BooleanEditor(
@@ -158,48 +144,22 @@ class WorldEditPanel2D(target: WorldViewSettings2D, enableDualView: Boolean) ext
   private val tickBorder = new TitledBorder(I18N.gui("tickCounter"))
 
   locally {
-    setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
-    setBorder(new ZoomableBorder(6, 6, 6, 6))
-
     val configPanel = new BoxColumn(Seq(
-      new BoxRow(Seq(
-        locationLabel,
-        new HorizontalStrut(6),
-        originTypes
-      )),
-      new VerticalStrut(6),
-      new BoxRow(Seq(
-        Box.createHorizontalGlue,
-        originConfigs
-      )) {
-        setBorder(new ZoomableBorder(0, 0, 6, 0))
-      },
-      minPxcor,
-      new VerticalStrut(3),
-      new BoxRow(Seq(minPxcorLabel, Box.createHorizontalGlue)),
-      new VerticalStrut(6),
-      maxPxcor,
-      new VerticalStrut(3),
-      new BoxRow(Seq(maxPxcorLabel, Box.createHorizontalGlue)),
-      new VerticalStrut(6),
-      minPycor,
-      new VerticalStrut(3),
-      new BoxRow(Seq(minPycorLabel, Box.createHorizontalGlue)),
-      new VerticalStrut(6),
-      maxPycor,
-      new VerticalStrut(3),
-      new BoxRow(Seq(maxPycorLabel, Box.createHorizontalGlue))
-    )) {
+      new BoxRow(Seq(locationLabel, originTypes), 6) with MaximumHeight,
+      new BoxRow(originConfigs, BoxAlign.End),
+      minPxcorLabeled,
+      maxPxcorLabeled,
+      minPycorLabeled,
+      maxPycorLabeled
+    ), 6) {
       setBorder(new ZoomableBorder(6, 6, 6, 6))
     }
 
     val previewContainer = new BoxColumn(Seq(
       previewPanel,
-      new VerticalStrut(6),
-      wrappingX,
-      new VerticalStrut(6),
-      wrappingY
-    )) {
+      new BoxRow(wrappingX, BoxAlign.Start),
+      new BoxRow(wrappingY, BoxAlign.Start)
+    ), 6) {
       setBorder(new ZoomableBorder(6, 6, 6, 6))
     }
 
@@ -212,7 +172,7 @@ class WorldEditPanel2D(target: WorldViewSettings2D, enableDualView: Boolean) ext
     }
 
     val worldPanel = new BoxRow(Seq(
-      new Centered(configPanel),
+      new BoxColumn(configPanel, BoxAlign.Center),
       previewContainer
     )) {
       setBorder(worldBorder)
@@ -220,41 +180,23 @@ class WorldEditPanel2D(target: WorldViewSettings2D, enableDualView: Boolean) ext
 
     val viewPanel = new BoxRow(Seq(
       new BoxColumn(Seq(
-        new BoxRow(Seq(
-          new BoxColumn(Seq(
-            patchSize,
-            new VerticalStrut(3),
-            patchSizeLabel
-          )),
-          new HorizontalStrut(6),
-          new BoxColumn(Seq(
-            fontSize,
-            new VerticalStrut(3),
-            fontSizeLabel
-          ))
-        )),
-        new VerticalStrut(6),
-        frameRate,
-        new VerticalStrut(3),
-        frameRateLabel
-      )) {
+        new BoxRow(Seq(patchSizeLabeled, fontSizeLabeled), 6),
+        frameRateLabeled
+      ), 6) {
         setBorder(new ZoomableBorder(6, 6, 6, 6))
+
+        if (enableDualView)
+          add(new BoxRow(dualView, BoxAlign.Start))
       }
     )) {
       setBorder(viewBorder)
-
-      if (enableDualView) {
-        add(new VerticalStrut(6))
-        add(dualView)
-      }
     }
 
     val tickPanel = new BoxRow(Seq(
       new BoxColumn(Seq(
-        showTickCounter,
-        new VerticalStrut(6),
+        new BoxRow(showTickCounter, BoxAlign.Start),
         tickCounterLabel
-      )) {
+      ), 6) {
         setBorder(new ZoomableBorder(6, 6, 6, 6))
       }
     )) {
@@ -289,13 +231,12 @@ class WorldEditPanel2D(target: WorldViewSettings2D, enableDualView: Boolean) ext
 
     locationLabel.setForeground(InterfaceColors.dialogText())
 
-    minPxcorLabel.setForeground(InterfaceColors.dialogText())
-    maxPxcorLabel.setForeground(InterfaceColors.dialogText())
-    minPycorLabel.setForeground(InterfaceColors.dialogText())
-    maxPycorLabel.setForeground(InterfaceColors.dialogText())
-
-    patchSizeLabel.setForeground(InterfaceColors.dialogText())
-    fontSizeLabel.setForeground(InterfaceColors.dialogText())
-    frameRateLabel.setForeground(InterfaceColors.dialogText())
+    minPxcorLabeled.syncTheme()
+    maxPxcorLabeled.syncTheme()
+    minPycorLabeled.syncTheme()
+    maxPycorLabeled.syncTheme()
+    patchSizeLabeled.syncTheme()
+    fontSizeLabeled.syncTheme()
+    frameRateLabeled.syncTheme()
   }
 }

@@ -13,7 +13,7 @@ import org.nlogo.app.common.{Events => AppEvents, MenuTab}, AppEvents.SwitchedTa
 import org.nlogo.app.tools.AgentMonitorManager
 import org.nlogo.core.I18N
 import org.nlogo.swing.{ BoxColumn, Implicits, PrinterManager, Printable => NlogoPrintable, ScrollPane, SplitPane,
-                         ToolBar, UserAction, Utils, Zoomable },
+                         UserAction, Utils, Zoomable },
                        Implicits.thunk2action, UserAction.{ MenuAction, ToolsCategory }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ EditDialogFactory, GUIWorkspace, InterfaceMode, SpeedSliderPanel, ViewUpdatePanel,
@@ -194,20 +194,18 @@ class InterfaceTab(workspace: GUIWorkspace,
     }
 
   class DynamicToolbar(widgetControls: Component, speedSlider: SpeedSliderPanel, viewUpdatePanel: ViewUpdatePanel)
-    extends ToolBar with ThemeSync {
+    extends JPanel with ThemeSync {
 
     setLayout(null)
+
+    add(widgetControls)
+    add(speedSlider)
+    add(viewUpdatePanel)
 
     override def getPreferredSize: Dimension =
       new Dimension(super.getPreferredSize.width, widgetControls.getPreferredSize.height.
                                                   max(speedSlider.getPreferredSize.height).
                                                   max(viewUpdatePanel.getPreferredSize.height) + Utils.zoom(16))
-
-    override def addControls(): Unit = {
-      add(widgetControls)
-      add(speedSlider)
-      add(viewUpdatePanel)
-    }
 
     override def doLayout(): Unit = {
       if (speedSlider.isVisible) {

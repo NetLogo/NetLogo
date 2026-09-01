@@ -2,16 +2,17 @@
 
 package org.nlogo.window
 
-import java.awt.Dimension
-import javax.swing.{ Box, BoxLayout, JLabel }
+import javax.swing.JLabel
 
 import org.nlogo.api.Options
-import org.nlogo.swing.{ ComboBox, HorizontalStrut, PreferredSize }
+import org.nlogo.swing.{ BoxRow, ComboBox, PreferredSize }
 import org.nlogo.theme.InterfaceColors
 
 import scala.util.{ Success, Try }
 
-class OptionsEditor[T](accessor: PropertyAccessor[Options[T]]) extends PropertyEditor(accessor) {
+class OptionsEditor[T](accessor: PropertyAccessor[Options[T]])
+  extends BoxRow(6) with PropertyEditor(accessor) with PreferredSize {
+
   private val options: Options[T] = accessor.getter()
   private val originalOption: T = options.chosenValue
 
@@ -20,12 +21,8 @@ class OptionsEditor[T](accessor: PropertyAccessor[Options[T]]) extends PropertyE
     addItemListener(_ => accessor.changed())
   }
 
-  setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
-
   add(label)
-  add(new HorizontalStrut(6))
   add(combo)
-  add(Box.createHorizontalGlue)
 
   override def get: Try[Options[T]] = {
     options.selectByName(combo.getSelectedItem.getOrElse(""))
@@ -44,9 +41,6 @@ class OptionsEditor[T](accessor: PropertyAccessor[Options[T]]) extends PropertyE
   override def requestFocus(): Unit = {
     combo.requestFocus()
   }
-
-  override def getMaximumSize: Dimension =
-    new Dimension(super.getMaximumSize.width, getPreferredSize.height)
 
   override def syncTheme(): Unit = {
     label.setForeground(InterfaceColors.dialogText())

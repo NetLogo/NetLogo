@@ -13,11 +13,10 @@ import com.vladsch.flexmark.ext.typographic.TypographicExtension
 import java.awt.{ Color, Dimension, Font, Rectangle }
 import java.util.ArrayList
 import javax.swing.{ Box, BoxLayout, JEditorPane }
-import javax.swing.border.EmptyBorder
 import javax.swing.text.DefaultCaret
 
 import org.nlogo.core.{ I18N, TextBox => CoreTextBox, Widget => CoreWidget }
-import org.nlogo.swing.{ Transparent, Utils }
+import org.nlogo.swing.{ Transparent, Utils, ZoomableBorder }
 import org.nlogo.theme.{ ClassicTheme, DarkTheme, InterfaceColors, LightTheme }
 
 class NoteWidget extends SingleErrorWidget with Transparent with Editable {
@@ -32,13 +31,11 @@ class NoteWidget extends SingleErrorWidget with Transparent with Editable {
     }
   }
 
-  locally {
-    setBorder(new EmptyBorder(0, 3, 0, 4))
-    setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
+  setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
+  setBorder(new ZoomableBorder(0, 3, 0, 4))
 
-    add(textPane)
-    add(Box.createVerticalGlue)
-  }
+  add(textPane)
+  add(Box.createVerticalGlue)
 
   private var _width: Int = Utils.zoom(150)
   private var _text: String = ""

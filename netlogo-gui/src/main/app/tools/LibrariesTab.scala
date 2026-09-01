@@ -2,21 +2,21 @@
 
 package org.nlogo.app.tools
 
-import java.awt.{ Component, Dimension, EventQueue, Font, Toolkit }
+import java.awt.{ Component, EventQueue, Font, Toolkit }
 import java.awt.event.KeyEvent
 import java.awt.font.TextAttribute
 import java.io.IOException
 import java.nio.file.Path
 import java.util.{ Collections, Locale }
-import javax.swing.{ Action, BoxLayout, DefaultListModel, Icon, JLabel, JList, JPanel, ListCellRenderer, ListModel }
+import javax.swing.{ Action, DefaultListModel, Icon, JLabel, JList, ListCellRenderer, ListModel }
 import javax.swing.border.LineBorder
 import javax.swing.event.{ AncestorEvent, AncestorListener, ListDataEvent, ListDataListener }
 
 import org.nlogo.api.{ LibraryInfoDownloader, LibraryManager, Version }
 import org.nlogo.core.{ I18N, LibraryInfo, LibraryStatus, Token, TokenType }
 import org.nlogo.swing.{ AutomationUtils, BoxColumn, BoxRow, BrowserLauncher, Button, EmptyIcon, FilterableListModel,
-                         HorizontalStrut, OptionPane, RichAction, ScalableIcon, ScrollPane, SwingWorker, SyncZoom,
-                         TextArea, TextField, Transparent, Utils, VerticalStrut, Zoomable, ZoomableBorder }
+                         HorizontalStrut, MaximumHeight, OptionPane, RichAction, ScalableIcon, ScrollPane, SwingWorker,
+                         SyncZoom, TextArea, TextField, Utils, VerticalStrut, Zoomable, ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.workspace.ModelsLibrary
 
@@ -80,7 +80,7 @@ class LibrariesTab( category:        String
                   , tokenizeSource:  String => Iterator[Token]
                   , updateSource:    ((String) => String) => Unit
                   , extPathMappings: Map[String, Path]
-                  ) extends JPanel with Transparent with Zoomable with ThemeSync {
+                  ) extends BoxColumn(6) with Zoomable with ThemeSync {
 
   import LibrariesTab._
 
@@ -152,10 +152,7 @@ class LibrariesTab( category:        String
 
   private val magIcon = new JLabel
 
-  private val filterField = new TextField {
-    override def getMaximumSize: Dimension =
-      new Dimension(super.getMaximumSize.width, getPreferredSize.height)
-  }
+  private val filterField = new TextField with MaximumHeight
 
   private val libraryScroll = new ScrollPane(libraryList)
 
@@ -222,25 +219,18 @@ class LibrariesTab( category:        String
     info.setWrapStyleWord(true)
     info.setEditable(false)
 
-    setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
-
-    add(new BoxRow(Seq(magIcon, new HorizontalStrut(6), filterField)))
-    add(new VerticalStrut(6))
+    add(new BoxRow(Seq(magIcon, filterField), 6))
     add(new BoxRow(Seq(
       libraryScroll,
-      new HorizontalStrut(6),
       new BoxColumn(Seq(
         new BoxRow(Seq(
-          installButton,
-          uninstallPanel,
-          new HorizontalStrut(6),
+          new BoxRow(Seq(
+            installButton,
+            uninstallPanel,
+          )),
           addToCodeTabButton,
-          new HorizontalStrut(6),
           homepageButton
-        )) {
-          override def getMaximumSize: Dimension =
-            new Dimension(super.getMaximumSize.width, getPreferredSize.height)
-        },
+        ), 6) with MaximumHeight,
         new VerticalStrut(6),
         new BoxRow(Seq(installedVersionLabel, installedVersion)),
         new BoxRow(Seq(latestVersionLabel, latestVersion)),
@@ -248,7 +238,7 @@ class LibrariesTab( category:        String
         new VerticalStrut(6),
         infoScroll
       ))
-    )))
+    ), 6))
 
     listModel.addListDataListener(
       new ListDataListener {
@@ -411,7 +401,7 @@ class LibrariesTab( category:        String
   private def updateSingleOperationStatus(operation: String, libName: String) =
     updateStatus(I18N.gui(operation, libName))
 
-  private class CellRenderer extends JPanel with ListCellRenderer[LibraryInfo] with SyncZoom {
+  private class CellRenderer extends BoxRow(6) with ListCellRenderer[LibraryInfo] with SyncZoom {
     private var noIcon: Icon = null
     private var upToDateIcon: Icon = null
     private var warningIcon: Icon = null
@@ -421,16 +411,11 @@ class LibrariesTab( category:        String
     private val nameLabel = new JLabel
     private val descLabel = new JLabel
 
-    setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
+    setOpaque(true)
     setBorder(new ZoomableBorder(6, 6, 6, 6))
 
     add(iconLabel)
-    add(new HorizontalStrut(6))
-    add(new BoxColumn(Seq(
-      nameLabel,
-      new VerticalStrut(6),
-      descLabel
-    )))
+    add(new BoxColumn(Seq(nameLabel, descLabel), 6))
 
     nameLabel.setFont(nameLabel.getFont.deriveFont(14.0f).deriveFont(Font.BOLD))
 

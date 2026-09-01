@@ -4,21 +4,20 @@ package org.nlogo.window
 
 import java.awt.{ Color, Dimension, Frame, Graphics }
 import java.awt.event.{ MouseAdapter, MouseEvent }
-import javax.swing.{ Box, BoxLayout, JLabel, JPanel }
+import javax.swing.{ Box, JLabel, JPanel }
 
-import org.nlogo.swing.{ HorizontalStrut, PreferredSize, RoundedBorderPanel, Utils, Zoomable }
+import org.nlogo.swing.{ BoxRow, PreferredSize, RoundedBorderPanel, Utils, Zoomable }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 import scala.util.Success
 
-class ColorEditor(accessor: PropertyAccessor[Color], frame: Frame) extends PropertyEditor(accessor) {
+class ColorEditor(accessor: PropertyAccessor[Color], frame: Frame)
+  extends BoxRow(6) with PropertyEditor(accessor) {
+
   private val label = new JLabel(accessor.name)
   private val colorButton = new ColorButton
 
-  setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
-
   add(label)
-  add(new HorizontalStrut(6))
   add(Box.createHorizontalGlue)
   add(colorButton)
 

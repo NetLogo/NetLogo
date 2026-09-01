@@ -5,8 +5,8 @@ package org.nlogo.window
 import java.awt.{ Color, Component, Dimension, Font, Frame, Graphics, Insets, LinearGradientPaint, Point }
 import java.awt.event.{ ActionEvent, ActionListener, FocusEvent, FocusListener, KeyEvent, WindowAdapter, WindowEvent }
 
-import javax.swing.{ AbstractAction, Box, BoxLayout, JButton, JDialog, JLabel, JPanel, ScrollPaneConstants,
-                     SwingUtilities, UIManager }
+import javax.swing.{ AbstractAction, Box, BoxLayout, JButton, JDialog, JLabel, ScrollPaneConstants, SwingUtilities,
+                     UIManager }
 import javax.swing.KeyStroke.getKeyStroke
 import javax.swing.text.EditorKit
 
@@ -18,8 +18,8 @@ import org.nlogo.awt.{ Hierarchy, Positioning }
 import org.nlogo.core.{ BoxedValue, CompilerException, I18N, InputBox => CoreInputBox, NumericInput,
                         StringInput, Widget => CoreWidget }
 import org.nlogo.editor.{ EditorArea, EditorConfiguration }
-import org.nlogo.swing.{ BoxColumn, BoxRow, Button, ButtonPanel, DialogButton, HorizontalStrut, OptionPane,
-                         RoundedBorderPanel, ScrollPane, Utils, VerticalStrut, Zoomable, ZoomableBorder }
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, Button, ButtonPanel, DialogButton, OptionPane, RoundedBorderPanel,
+                         ScrollPane, Utils, Zoomable, ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 abstract class InputBox(textArea: EditorArea, editDialogTextArea: EditorArea, compiler: CompilerServices,
@@ -46,7 +46,7 @@ abstract class InputBox(textArea: EditorArea, editDialogTextArea: EditorArea, co
   }
 
   protected class InputScrollPane(textArea: EditorArea)
-    extends JPanel with RoundedBorderPanel with Zoomable with ThemeSync {
+    extends BoxRow with RoundedBorderPanel with Zoomable with ThemeSync {
 
     val scrollPane = new ScrollPane(textArea, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
                                     ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER) {
@@ -57,7 +57,6 @@ abstract class InputBox(textArea: EditorArea, editDialogTextArea: EditorArea, co
     textArea.setBackground(InterfaceColors.Transparent)
     textArea.setBorder(new ZoomableBorder(2, 6, 2, 6))
 
-    setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
     setBorder(new ZoomableBorder(3, 3, 3, 3))
 
     add(scrollPane)
@@ -191,14 +190,10 @@ abstract class InputBox(textArea: EditorArea, editDialogTextArea: EditorArea, co
   setBorder(new AdaptableBorder(new Insets(3, 6, 6, 6), new Insets(6, 8, 8, 8)))
 
   add(new BoxRow(Seq(
-    new BoxColumn(Seq(
-      widgetLabel,
-      Box.createVerticalGlue
-    )),
-    new HorizontalStrut(6),
+    new BoxColumn(widgetLabel, BoxAlign.Start),
     Box.createHorizontalGlue,
     changeButton
-  )))
+  ), 6))
 
   add(new BoxRow(Seq(scroller, colorSwatch)))
 
@@ -496,15 +491,10 @@ abstract class InputBox(textArea: EditorArea, editDialogTextArea: EditorArea, co
     textArea.enableBracketMatcher(inputType.enableBracketMatcher)
 
     setContentPane(new BoxColumn(Seq(
-      new BoxRow(Seq(
-        label,
-        Box.createHorizontalGlue
-      )),
-      new VerticalStrut(6),
+      new BoxRow(label, BoxAlign.Start),
       scrollPane,
-      new VerticalStrut(6),
       new ButtonPanel(Seq(okButton, cancelButton))
-    )) {
+    ), 6) {
       setOpaque(true)
       setBorder(new ZoomableBorder(6, 6, 6, 6))
     })

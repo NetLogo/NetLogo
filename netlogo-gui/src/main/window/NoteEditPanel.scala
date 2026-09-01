@@ -2,12 +2,9 @@
 
 package org.nlogo.window
 
-import java.awt.Dimension
-import javax.swing.BoxLayout
-
 import org.nlogo.awt.Hierarchy
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ BoxColumn, BoxRow, HorizontalStrut, VerticalStrut, ZoomableBorder }
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, MaximumHeight }
 
 class NoteEditPanel(target: NoteWidget) extends WidgetEditPanel(target) {
   private val frame = Hierarchy.getFrame(this)
@@ -79,31 +76,13 @@ class NoteEditPanel(target: NoteWidget) extends WidgetEditPanel(target) {
         _.foreach(target.setMarkdown),
         () => apply()))
 
-  setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
-  setBorder(new ZoomableBorder(6, 6, 6, 6))
-
   add(text)
-  add(new VerticalStrut(6))
   add(fontSize)
-  add(new VerticalStrut(6))
   add(new BoxRow(Seq(
-    new BoxColumn(Seq(
-      textColorLight,
-      new VerticalStrut(6),
-      backgroundLight
-    )),
-    new HorizontalStrut(6),
-    new BoxColumn(Seq(
-      textColorDark,
-      new VerticalStrut(6),
-      backgroundDark
-    ))
-  )) {
-    override def getMaximumSize: Dimension =
-      new Dimension(super.getMaximumSize.width, getPreferredSize.height)
-  })
-  add(new VerticalStrut(6))
-  add(markdown)
+    new BoxColumn(Seq(textColorLight, backgroundLight), 6),
+    new BoxColumn(Seq(textColorDark, backgroundDark), 6)
+  ), 6) with MaximumHeight)
+  add(new BoxRow(markdown, BoxAlign.Start))
 
   override def propertyEditors: Seq[PropertyEditor[?]] =
     Seq(text, fontSize, textColorLight, textColorDark, backgroundLight, backgroundDark, markdown)

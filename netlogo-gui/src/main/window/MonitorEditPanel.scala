@@ -2,13 +2,10 @@
 
 package org.nlogo.window
 
-import java.awt.Dimension
-import javax.swing.{ Box, BoxLayout }
-
 import org.nlogo.api.CompilerServices
 import org.nlogo.core.I18N
 import org.nlogo.editor.Colorizer
-import org.nlogo.swing.{ AutomationUtils, BoxColumn, BoxRow, HorizontalStrut, VerticalStrut, ZoomableBorder }
+import org.nlogo.swing.{ AutomationUtils, BoxAlign, BoxColumn, BoxRow, MaximumHeight }
 
 class MonitorEditPanel(target: MonitorWidget, compiler: CompilerServices, colorizer: Colorizer)
   extends WidgetEditPanel(target) {
@@ -70,28 +67,14 @@ class MonitorEditPanel(target: MonitorWidget, compiler: CompilerServices, colori
         _.foreach(target.oldSize),
         () => apply()))
 
-  setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
-  setBorder(new ZoomableBorder(6, 6, 6, 6))
-
   add(wrapSource)
-  add(new VerticalStrut(6))
   add(name)
-  add(new VerticalStrut(6))
   add(new BoxRow(Seq(
     decimalLabeled,
-    new HorizontalStrut(6),
-    new BoxColumn(Seq(
-      units,
-      Box.createVerticalGlue
-    ))
-  )) {
-    override def getMaximumSize: Dimension =
-      new Dimension(super.getMaximumSize.width, getPreferredSize.height)
-  })
-  add(new VerticalStrut(6))
+    new BoxColumn(units, BoxAlign.Start)
+  ), 6) with MaximumHeight)
   add(fontSize)
-  add(new VerticalStrut(6))
-  add(oldSize)
+  add(new BoxRow(oldSize, BoxAlign.Start))
 
   override def propertyEditors: Seq[PropertyEditor[?]] =
     Seq(wrapSource, name, decimalPlaces, units, fontSize, oldSize)

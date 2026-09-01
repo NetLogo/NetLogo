@@ -3,10 +3,10 @@
 package org.nlogo.window
 
 import java.awt.{ Color, Component, Container, Dimension, Font, Graphics, LayoutManager }
-import javax.swing.{ Box, BoxLayout, JLabel, JPanel }
+import javax.swing.{ JLabel, JPanel }
 
 import org.nlogo.plot.PlotPen
-import org.nlogo.swing.{ Transparent, Utils }
+import org.nlogo.swing.{ BoxRow, PreferredSize, Transparent, Utils, ZoomableBorder }
 import org.nlogo.theme.InterfaceColors
 
 class PlotLegend(widget: AbstractPlotWidget) extends JPanel(new WrapLayout) with Transparent {
@@ -40,42 +40,33 @@ class PlotLegend(widget: AbstractPlotWidget) extends JPanel(new WrapLayout) with
     refresh()
   }
 
-  private class LegendItem(pen: PlotPen) extends JPanel with Transparent {
-    private val panel = new JPanel {
+  private class LegendItem(pen: PlotPen) extends BoxRow(10) with PreferredSize {
+    private val panel = new JPanel with PreferredSize {
       setBackground(new Color(pen.color))
 
       override def getPreferredSize: Dimension =
         new Dimension(Utils.zoom(15), Utils.zoom(2))
-
-      override def getMaximumSize: Dimension =
-        getPreferredSize
     }
 
-    setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
+    setBorder(new ZoomableBorder(0, 0, 0, 10))
 
-    add(Box.createHorizontalStrut(10))
     add(panel)
-    add(Box.createHorizontalStrut(10))
-
     add(new JLabel(pen.name) {
       setFont(getFont.deriveFont(boldState))
 
       override def paintComponent(g: Graphics): Unit = {
-        setSize(getWidth.min(LegendItem.this.getWidth - panel.getWidth - 30), getHeight)
-
         setForeground(InterfaceColors.widgetText())
 
         super.paintComponent(g)
       }
     })
-
-    add(Box.createHorizontalStrut(10))
   }
 }
 
 // FlowLayout wraps its content but doesn't change its vertical size, this custom layout does both (Isaac B 6/15/25)
 class WrapLayout extends LayoutManager {
-  private val rowGap = 10
+  private def rowGap: Int =
+    Utils.zoom(10)
 
   // don't need per-component strings (Isaac B 6/15/25)
   override def addLayoutComponent(name: String, component: Component): Unit = {}

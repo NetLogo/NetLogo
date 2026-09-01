@@ -45,7 +45,7 @@ import org.nlogo.render.Renderer
 import org.nlogo.sdm.gui.{ GUIAggregateManager, NLogoGuiSDMFormat, NLogoThreeDGuiSDMFormat, SDMGuiAutoConvertable }
 import org.nlogo.shape.editor.{ LinkShapeManagerDialog, TurtleShapeManagerDialog }
 import org.nlogo.swing.{ AppUtils, BrowserLauncher, DropdownOptionPane, FileDialog, InputOptionPane, Menu, OptionPane,
-                         Positioning, PrinterManager, UserAction, Utils, WindowAutomator, ZoomActions },
+                         Positioning, PrinterManager, UserAction, Utils, WindowAutomator, ZoomActions, ZoomProvider },
   UserAction.{ ActionCategoryKey, EditCategory, FileCategory, HelpCategory, MenuAction, ToolsCategory }
 import org.nlogo.theme.{ DarkTheme, InterfaceColors, LightTheme, ThemeSync }
 import org.nlogo.util.AppHandler
@@ -275,7 +275,7 @@ class App(args: App.CommandLineArgs) extends LinkChild with Exceptions.Handler w
   with BeforeLoadEvent.Handler with LoadBeginEvent.Handler with LoadEndEvent.Handler with LoadModelEvent.Handler
   with ModelSavedEvent.Handler with ModelSections with AppEvents.SwitchedTabsEvent.Handler
   with AppEvents.OpenLibrariesDialogEvent.Handler with AppEvents.RestartEvent.Handler with AboutToQuitEvent.Handler
-  with Controllable {
+  with Controllable with ZoomProvider {
 
   val frame = new AppFrame
 
@@ -512,7 +512,7 @@ class App(args: App.CommandLineArgs) extends LinkChild with Exceptions.Handler w
 
   private def finishStartup(appHandler: AppHandler): Unit = {
     try {
-      ZoomActions.init(zoomIn, zoomOut, resetZoom)
+      ZoomActions.init(this)
 
       frame.getContentPane.add(tabManager.mainTabs, BorderLayout.CENTER)
 
@@ -753,19 +753,7 @@ class App(args: App.CommandLineArgs) extends LinkChild with Exceptions.Handler w
 
   /// zooming
 
-  def zoomIn(): Unit = {
-    setZoomFactor(Utils.getZoomFactor + 0.125f)
-  }
-
-  def zoomOut(): Unit = {
-    setZoomFactor((Utils.getZoomFactor - 0.125f).max(0.25f))
-  }
-
-  def resetZoom(): Unit = {
-    setZoomFactor(1)
-  }
-
-  private def setZoomFactor(factor: Float): Unit = {
+  override def setZoomFactor(factor: Float): Unit = {
     val oldZoom: Float = Utils.getZoomFactor
 
     Utils.setZoomFactor(factor)

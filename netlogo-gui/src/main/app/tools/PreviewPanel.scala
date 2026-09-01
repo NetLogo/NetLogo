@@ -4,17 +4,17 @@ import java.awt.Image
 import java.awt.event.ActionEvent
 import java.io.{ File, IOException }
 import javax.imageio.ImageIO
-import javax.swing.{ AbstractAction, Action, Box, BoxLayout, JLabel, JPanel, SwingConstants }
+import javax.swing.{ AbstractAction, Action, JLabel, SwingConstants }
 
 import scala.util.{ Failure, Success }
 
 import org.nlogo.awt.Hierarchy.getFrame
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ Button, Centered, ModalProgressTask, Transparent, VerticalStrut }
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, Button, ModalProgressTask }
 import org.nlogo.window.GraphicsPreviewInterface
 import org.nlogo.workspace.PreviewCommandsRunner
 
-class PreviewPanel(graphicsPreview: GraphicsPreviewInterface) extends JPanel with Transparent {
+class PreviewPanel(graphicsPreview: GraphicsPreviewInterface) extends BoxColumn(6, BoxAlign.Start) {
   val button = new Button(null)
   val imageLabel = new JLabel {
     override val getPreferredSize = graphicsPreview.getPreferredSize
@@ -85,12 +85,7 @@ class PreviewPanel(graphicsPreview: GraphicsPreviewInterface) extends JPanel wit
     }
   }
 
-  setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
-
-  add(new Centered(button))
-  add(new VerticalStrut(6))
+  add(new BoxRow(button, BoxAlign.Center))
   add(imageLabel)
-  add(new VerticalStrut(6))
   add(graphicsPreview)
-  add(Box.createVerticalGlue)
 }

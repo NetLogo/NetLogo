@@ -6,14 +6,14 @@ import java.awt.{ BorderLayout, Component, Dimension, EventQueue, Frame }
 import java.awt.event.{ MouseAdapter, MouseEvent }
 import java.io.File
 import java.nio.file.Files
-import javax.swing.{ Box, BoxLayout, JLabel, JPanel }
+import javax.swing.JLabel
 
 import org.nlogo.app.common.TabsInterface
 import org.nlogo.app.common.Events.RestartEvent
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ BoxColumn, BoxRow, ButtonPanel, Centered, CheckBox, DialogButton, FloatingTabbedPane,
-                         HorizontalStrut, OptionPane, PreferredSize, TabLabel, TextField, Transparent, VerticalStrut,
-                         WindowAutomator, Zoomable, ZoomableBorder, ZoomActions }
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, ButtonPanel, CheckBox, DialogButton, FloatingTabbedPane,
+                         MaximumHeight, OptionPane, PreferredSize, TabLabel, TextField, WindowAutomator, Zoomable,
+                         ZoomableBorder, ZoomActions }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.AbstractWidgetPanel
 
@@ -60,8 +60,8 @@ class PreferencesDialog(parent: Frame & ThemeSync, tabManager: TabsInterface, wi
   private lazy val loggingPreferencesPanel = new PreferenceContainer(loggingPreferences)
   private lazy val themesPanel = new ThemesPanel(parent)
 
-  private lazy val codeMessage = new JLabel(I18N.gui("code.message"))
-  private lazy val loggingMessage = new JLabel(I18N.gui("logging.message"))
+  private lazy val codeMessage = new JLabel(I18N.gui("code.message")) with PreferredSize
+  private lazy val loggingMessage = new JLabel(I18N.gui("logging.message")) with PreferredSize
 
   private lazy val okButton = new DialogButton(true, I18N.gui.get("common.buttons.ok"), () => ok())
   private lazy val cancelButton = new DialogButton(false, I18N.gui.get("common.buttons.cancel"), () => cancel())
@@ -152,17 +152,21 @@ class PreferencesDialog(parent: Frame & ThemeSync, tabManager: TabsInterface, wi
   }
 
   override def initGUI(): Unit = {
-    val generalPreferencesContainer = new BoxColumn(Seq(generalPreferencesPanel, Box.createVerticalGlue)) {
+    val generalPreferencesContainer = new BoxColumn(generalPreferencesPanel, BoxAlign.Start) {
       setBorder(new ZoomableBorder(24, 12, 24, 12))
     }
 
-    val codePreferencesContainer = new BoxColumn(Seq(new Centered(codeMessage), new VerticalStrut(24),
-                                                     codePreferencesPanel)) {
+    val codePreferencesContainer = new BoxColumn(Seq(
+      new BoxRow(codeMessage, BoxAlign.Center),
+      codePreferencesPanel
+    ), 24) {
       setBorder(new ZoomableBorder(24, 12, 24, 12))
     }
 
-    val loggingPreferencesContainer = new BoxColumn(Seq(new Centered(loggingMessage), new VerticalStrut(24),
-                                                        loggingPreferencesPanel)) {
+    val loggingPreferencesContainer = new BoxColumn(Seq(
+      new BoxRow(loggingMessage, BoxAlign.Center),
+      loggingPreferencesPanel
+    ), 24) {
       setBorder(new ZoomableBorder(24, 12, 24, 12))
     }
 
@@ -242,10 +246,8 @@ class PreferencesDialog(parent: Frame & ThemeSync, tabManager: TabsInterface, wi
 
 // this is basically a reimplementation of GridBagLayout, but without the annoying issues that GridBagLayout has with
 // zooming and resizing. (Isaac B 8/26/26)
-private class PreferenceContainer(preferences: Seq[Preference]) extends JPanel with Transparent with ThemeSync {
+private class PreferenceContainer(preferences: Seq[Preference]) extends BoxColumn with ThemeSync {
   private implicit val i18nPrefix: I18N.Prefix = I18N.Prefix("tools.preferences")
-
-  setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
 
   private val (labels, components) = preferences.foldLeft((Seq[JLabel](), Seq[Component & ThemeSync]())) {
     case ((labels, components), pref) =>
@@ -253,19 +255,19 @@ private class PreferenceContainer(preferences: Seq[Preference]) extends JPanel w
 
       val labelComponent: Component = {
         if (pref.top) {
-          new BoxColumn(Seq(label, Box.createVerticalGlue))
+          new BoxColumn(label, BoxAlign.Start)
         } else {
           label
         }
       }
 
-      val prefRow = new BoxRow(Seq(pref.component, Box.createHorizontalGlue)) with PreferredSize {
+      val prefRow = new BoxRow(pref.component, BoxAlign.Start) with PreferredSize {
         override def getPreferredSize: Dimension =
           new Dimension(maxPrefWidth, super.getPreferredSize.height)
       }
 
       add(new BoxRow(Seq(
-        new BoxRow(Seq(labelComponent, Box.createHorizontalGlue)) {
+        new BoxRow(labelComponent, BoxAlign.Start) {
           override def getPreferredSize: Dimension =
             new Dimension(maxLabelWidth, super.getPreferredSize.height)
 
@@ -277,13 +279,9 @@ private class PreferenceContainer(preferences: Seq[Preference]) extends JPanel w
             }
           }
         },
-        new HorizontalStrut(6),
         prefRow
-      )) {
+      ), 6) with MaximumHeight {
         setBorder(new ZoomableBorder(3, 0, 3, 0))
-
-        override def getMaximumSize: Dimension =
-          new Dimension(super.getMaximumSize.width, getPreferredSize.height)
       })
 
       pref.component match {

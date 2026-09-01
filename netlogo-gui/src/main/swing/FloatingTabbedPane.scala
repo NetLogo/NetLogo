@@ -2,13 +2,12 @@
 
 package org.nlogo.swing
 
-import java.awt.{ Component, Dimension, FontMetrics, Graphics, GridBagConstraints, GridBagLayout, Insets }
+import java.awt.{ Component, Dimension, FontMetrics, Graphics, Insets }
 import java.awt.event.{ MouseAdapter, MouseEvent, MouseMotionAdapter }
-import javax.swing.{ JComponent, JLabel, JPanel, JTabbedPane, SwingConstants }
+import javax.swing.{ JComponent, JLabel, JTabbedPane, SwingConstants }
 import javax.swing.plaf.basic.BasicTabbedPaneUI
 
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ MenuItem, PopupMenu }
 import org.nlogo.theme.InterfaceColors
 
 import scala.util.Try
@@ -147,7 +146,7 @@ trait RenameableTab {
   def rename(): Unit
 }
 
-class TabLabel(startPane: FloatingTabbedPane, text: String, tab: Component) extends JPanel(new GridBagLayout) {
+class TabLabel(startPane: FloatingTabbedPane, text: String, tab: Component) extends BoxRow(10) {
   private var tabbedPane: FloatingTabbedPane = startPane
 
   def setTabbedPane(tabbedPane: FloatingTabbedPane): Unit = {
@@ -167,9 +166,9 @@ class TabLabel(startPane: FloatingTabbedPane, text: String, tab: Component) exte
   def getText: String =
     rawText
 
-  def boldWidth: Int = {
+  private def boldWidth: Int = {
     new JLabel(s"<html><b>$rawText</b></html>") {
-      setFont(Utils.zoomFont(getFont, 1))
+      this.setFont(TabLabel.this.getFont)
     }.getPreferredSize.width
   }
 
@@ -178,45 +177,33 @@ class TabLabel(startPane: FloatingTabbedPane, text: String, tab: Component) exte
 
   var error = false
 
-  locally {
-    setOpaque(false)
+  add(textLabel)
 
-    val c = new GridBagConstraints
+  tab match {
+    case closeable: CloseableTab =>
+      val button = new CloseButton
 
-    c.fill = GridBagConstraints.HORIZONTAL
-    c.weightx = 1
+      button.addMouseListener(new MouseAdapter {
+        override def mouseClicked(e: MouseEvent): Unit = {
+          if (e.getButton == MouseEvent.BUTTON1)
+            closeable.close()
+        }
+      })
 
-    add(textLabel, c)
+      add(button)
 
-    tab match {
-      case closeable: CloseableTab =>
-        val button = new CloseButton
+      closeButton = Some(button)
 
-        button.addMouseListener(new MouseAdapter {
-          override def mouseClicked(e: MouseEvent): Unit = {
-            if (e.getButton == MouseEvent.BUTTON1)
-              closeable.close()
-          }
-        })
+    case _ =>
+  }
 
-        c.fill = GridBagConstraints.NONE
-        c.weightx = 0
+  tab match {
+    case temp: RenameableTab =>
+      popupMenu = Some(new PopupMenu {
+        add(new MenuItem(I18N.gui.get("tabs.external.rename"), () => temp.rename()))
+      })
 
-        add(button, c)
-
-        closeButton = Some(button)
-
-      case _ =>
-    }
-
-    tab match {
-      case temp: RenameableTab =>
-        popupMenu = Some(new PopupMenu {
-          add(new MenuItem(I18N.gui.get("tabs.external.rename"), () => temp.rename()))
-        })
-
-      case _ =>
-    }
+    case _ =>
   }
 
   override def contains(x: Int, y: Int): Boolean =

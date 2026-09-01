@@ -6,8 +6,7 @@ import java.awt.{ Component, Dimension, EventQueue, FileDialog => JFileDialog }
 import java.awt.event.ActionEvent
 import java.io.{ File, PrintWriter }
 import java.nio.file.{ Files, Path, Paths }
-import javax.swing.{ AbstractAction, Box, BoxLayout, DefaultListModel, JDialog, JLabel, JList, JMenuBar, JPanel,
-                     ListCellRenderer }
+import javax.swing.{ AbstractAction, DefaultListModel, JDialog, JLabel, JList, JMenuBar, ListCellRenderer }
 import javax.swing.event.{ ListSelectionEvent, ListSelectionListener }
 
 import org.nlogo.analytics.Analytics
@@ -15,8 +14,8 @@ import org.nlogo.api.{ Exceptions, LabProtocol, ModelReader, RefEnumeratedValueS
 import org.nlogo.awt.UserCancelException
 import org.nlogo.core.{ I18N, Model }
 import org.nlogo.editor.Colorizer
-import org.nlogo.swing.{ BoxColumn, BoxRow, Button, FileDialog, HorizontalStrut, OptionPane, Positioning, PreferredSize,
-                         ScrollPane, SyncZoom, Utils, VerticalStrut, WindowAutomator, ZoomableBorder, ZoomActions }
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, Button, FileDialog, OptionPane, Positioning, PreferredSize,
+                         ScrollPane, SyncZoom, Utils, WindowAutomator, ZoomableBorder, ZoomActions }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ EditDialog, EditDialogFactory, MenuBarFactory }
 
@@ -95,33 +94,21 @@ class ManagerDialog(manager:       LabManager,
   private val runButton = new Button(runAction)
 
   private val contents = new BoxColumn(Seq(
-    new BoxRow(Seq(
-      listLabel,
-      Box.createHorizontalGlue
-    )),
-    new VerticalStrut(6),
+    new BoxRow(listLabel, BoxAlign.Start),
     scrollPane,
-    new VerticalStrut(6),
     new BoxRow(Seq(
       newButton,
-      new HorizontalStrut(6),
       editButton,
-      new HorizontalStrut(6),
       duplicateButton,
-      new HorizontalStrut(6),
       deleteButton
-    )) with PreferredSize,
-    new VerticalStrut(6),
+    ), 6) with PreferredSize,
     new BoxRow(Seq(
       importButton,
-      new HorizontalStrut(6),
       exportButton,
-      new HorizontalStrut(6),
       abortButton,
-      new HorizontalStrut(6),
       runButton
-    )) with PreferredSize
-  )) with SyncZoom {
+    ), 6) with PreferredSize
+  ), 6) with SyncZoom {
     setOpaque(true)
     setBorder(new ZoomableBorder(6, 6, 6, 6))
 
@@ -474,14 +461,13 @@ class ManagerDialog(manager:       LabManager,
     supervisor.succeeded
   }
 
-  class ProtocolRenderer extends JPanel with ListCellRenderer[LabProtocol] with SyncZoom {
+  class ProtocolRenderer extends BoxRow(BoxAlign.Start) with ListCellRenderer[LabProtocol] with SyncZoom {
     private val label = new JLabel
 
-    setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
+    setOpaque(true)
     setBorder(new ZoomableBorder(6, 6, 6, 6))
 
     add(label)
-    add(Box.createHorizontalGlue)
 
     def getListCellRendererComponent(list: JList[? <: LabProtocol], proto: LabProtocol, index: Int,
                                      isSelected: Boolean, cellHasFocus: Boolean): Component = {

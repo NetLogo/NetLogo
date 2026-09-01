@@ -9,7 +9,7 @@ import javax.swing.{ Box, BoxLayout, JLabel, JPanel, SwingConstants }
 
 import org.nlogo.core.{ I18N, Pen => CorePen, Plot => CorePlot, Widget => CoreWidget }
 import org.nlogo.plot.{ PenListener, PlotManagerInterface, PlotLoader, PlotPen, Plot }
-import org.nlogo.swing.{ BoxRow, Centered, HorizontalStrut, RoundedBorderPanel, Utils, VerticalStrut, Zoomable,
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, RoundedBorderPanel, Utils, VerticalStrut, Zoomable,
                          ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.Events.{ AfterLoadEvent, CompiledEvent, WidgetErrorEvent, WidgetRemovedEvent }
@@ -24,11 +24,10 @@ abstract class AbstractPlotWidget(val plot: Plot, val plotManager: PlotManagerIn
 
   import AbstractPlotWidget._
 
-  private class CanvasPanel(canvas: PlotCanvas) extends JPanel with RoundedBorderPanel with Zoomable with ThemeSync {
-    setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
-    setBorder(new ZoomableBorder(3, 3, 3, 3))
+  private class CanvasPanel(canvas: PlotCanvas)
+    extends BoxRow(Seq(canvas)) with RoundedBorderPanel with Zoomable with ThemeSync {
 
-    add(canvas)
+    setBorder(new ZoomableBorder(3, 3, 3, 3))
 
     override def zoom(oldZoom: Float): Unit = {
       setDiameter(Utils.zoom(6))
@@ -77,13 +76,13 @@ abstract class AbstractPlotWidget(val plot: Plot, val plotManager: PlotManagerIn
   setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
   setBorder(new AdaptableBorder(new Insets(3, 6, 6, 6), new Insets(8, 10, 8, 10)))
 
-  add(new Centered(nameLabel))
+  add(new BoxRow(nameLabel, BoxAlign.Center))
   add(new AdaptableVerticalStrut(6, 8))
-  add(new BoxRow(Seq(yAxis, new HorizontalStrut(3), canvasPanel)))
+  add(new BoxRow(Seq(yAxis, canvasPanel), 3))
   add(new VerticalStrut(3))
   add(xAxis)
   add(new VerticalStrut(2))
-  add(new Centered(legend))
+  add(new BoxRow(legend, BoxAlign.Center))
 
   // make sure to update the gui components in case
   // something changed underneath ev 8/26/08
@@ -339,12 +338,10 @@ abstract class AbstractPlotWidget(val plot: Plot, val plotManager: PlotManagerIn
 }
 
 object AbstractPlotWidget {
-  class XAxisLabels(plot: AbstractPlotWidget) extends JPanel {
+  class XAxisLabels(plot: AbstractPlotWidget) extends BoxRow {
     private val min: JLabel = new JLabel()
     private val label: JLabel = new JLabel("", SwingConstants.CENTER)
     private val max: JLabel = new JLabel()
-
-    setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
 
     add(min)
     add(Box.createHorizontalGlue)
@@ -359,8 +356,6 @@ object AbstractPlotWidget {
     }
 
     override def paintComponent(g: Graphics) = {
-      setBackground(InterfaceColors.plotBackground())
-
       min.setForeground(InterfaceColors.widgetText())
       label.setForeground(InterfaceColors.widgetText())
       max.setForeground(InterfaceColors.widgetText())
@@ -377,18 +372,16 @@ object AbstractPlotWidget {
     def getLabel = label.getText
   }
 
-  class YAxisLabels(plot: AbstractPlotWidget) extends JPanel {
+  class YAxisLabels(plot: AbstractPlotWidget) extends BoxColumn {
     private val label = new VerticalLabel
     private val max: JLabel = new JLabel()
     private val min: JLabel = new JLabel()
 
-    setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
-
-    add(new BoxRow(Seq(Box.createHorizontalGlue, max)))
+    add(new BoxRow(max, BoxAlign.End))
     add(Box.createVerticalGlue)
     add(label)
     add(Box.createVerticalGlue)
-    add(new BoxRow(Seq(Box.createHorizontalGlue, min)))
+    add(new BoxRow(min, BoxAlign.End))
 
     def setBoldState(state: Int): Unit = {
       min.setFont(min.getFont.deriveFont(state))
@@ -397,8 +390,6 @@ object AbstractPlotWidget {
     }
 
     override def paintComponent(g: Graphics) = {
-      setBackground(InterfaceColors.plotBackground())
-
       min.setForeground(InterfaceColors.widgetText())
       max.setForeground(InterfaceColors.widgetText())
 

@@ -5,7 +5,7 @@ package org.nlogo.window
 import java.awt.{ Color, Component, Cursor, Dimension, Frame, Graphics }
 import java.awt.event.ActionEvent
 import java.util.Locale
-import javax.swing.{ AbstractAction, AbstractCellEditor, BoxLayout, JButton, JLabel, JPanel, JTable }
+import javax.swing.{ AbstractAction, AbstractCellEditor, JButton, JLabel, JPanel, JTable }
 import javax.swing.event.{ ListSelectionEvent, ListSelectionListener }
 import javax.swing.table.{ DefaultTableCellRenderer, AbstractTableModel, TableCellEditor, TableCellRenderer }
 
@@ -14,8 +14,7 @@ import org.nlogo.awt.Hierarchy
 import org.nlogo.core.{ CompilerException, I18N }
 import org.nlogo.editor.{ Colorizer, EditorArea, EditorConfiguration }
 import org.nlogo.plot.{ Plot, PlotManagerInterface, PlotPen }
-import org.nlogo.swing.{ BoxRow, Button, HorizontalStrut, PreferredSize, Popup, ScrollPane, Utils, VerticalStrut,
-                         Zoomable, ZoomableBorder }
+import org.nlogo.swing.{ BoxColumn, BoxRow, Button, PreferredSize, Popup, ScrollPane, Utils, Zoomable, ZoomableBorder }
 import org.nlogo.theme.InterfaceColors
 
 import scala.collection.mutable.ArrayBuffer
@@ -82,7 +81,7 @@ object PlotPensEditor {
 }
 
 class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], compiler: CompilerServices, colorizer: Colorizer,
-                     target: PlotWidget) extends PropertyEditor(accessor) {
+                     target: PlotWidget) extends BoxColumn(6) with PropertyEditor(accessor) {
 
   import PlotPensEditor._
 
@@ -103,11 +102,8 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], compiler: Compil
     table.initializePens()
   }
 
-  setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
-
   add(scrollPane)
-  add(new VerticalStrut(6))
-  add(new BoxRow(Seq(addButton, new HorizontalStrut(6), checkButton)))
+  add(new BoxRow(Seq(addButton, checkButton), 6))
 
   def set(value: List[PlotPen]): Unit = {} // seemingly no need to do anything here
 
@@ -362,7 +358,7 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], compiler: Compil
 
       setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR))
 
-      val buttonPanel = new BoxRow(Seq(editButton, new HorizontalStrut(6), deleteButton)) {
+      val buttonPanel = new BoxRow(Seq(editButton, deleteButton), 6) {
         setBorder(new ZoomableBorder(6, 6, 6, 6))
       }
 
