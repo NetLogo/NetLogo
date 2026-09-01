@@ -5,19 +5,19 @@ package org.nlogo.app.tools
 import java.awt.{ BorderLayout, Component, Dimension, FlowLayout, Font, Rectangle }
 import java.awt.event.{ FocusEvent, FocusListener, KeyEvent, KeyListener }
 import java.util.Locale
-import javax.swing.{ Box, BoxLayout, JLabel, JPanel, ScrollPaneConstants }
+import javax.swing.{ JLabel, ScrollPaneConstants }
 
 import org.nlogo.agent.{ Agent, AgentSet, Turtle, Patch, Link }
 import org.nlogo.api.{ AgentVariables, Dump }
 import org.nlogo.core.{ AgentKind, I18N, Nobody, Widget => CoreWidget }
 import org.nlogo.editor.{ EditorConfiguration, EditorField }
 import org.nlogo.nvm.Procedure
-import org.nlogo.swing.{ BoxRow, HorizontalStrut, OptionPane, ScrollPane, SyncZoom, Transparent, Utils, VerticalStrut,
-                         ZoomableBorder }
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, MaximumHeight, OptionPane, PreferredSize, ScrollPane, SyncZoom,
+                         Utils, ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ Editable, EditorColorizer, Events => WindowEvents, JobWidget }
 
-class AgentMonitorEditor(parent: AgentMonitor) extends JPanel with ThemeSync {
+class AgentMonitorEditor(parent: AgentMonitor) extends BoxColumn(3, BoxAlign.Start) with ThemeSync {
   private val noVarLabel = new JLabel(I18N.gui.get("tools.agentMonitor.editor.noVariables"))
 
   private var labels = Seq[Component]()
@@ -49,7 +49,7 @@ class AgentMonitorEditor(parent: AgentMonitor) extends JPanel with ThemeSync {
   private def fill(): Unit = {
     import scala.jdk.CollectionConverters.ListHasAsScala
 
-    setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
+    setOpaque(true)
     setBorder(new ZoomableBorder(3, 3, 0, 3))
 
     vars.asScala.foreach { variableName =>
@@ -65,24 +65,16 @@ class AgentMonitorEditor(parent: AgentMonitor) extends JPanel with ThemeSync {
       editor.agentKind(agentKind)
 
       add(new BoxRow(Seq(
-        new BoxRow(Seq(Box.createHorizontalGlue, label)) {
+        new BoxRow(label, BoxAlign.End) with PreferredSize {
           override def getPreferredSize: Dimension =
             new Dimension(maxLabelWidth, super.getPreferredSize.height)
-
-          override def getMaximumSize: Dimension =
-            getPreferredSize
         },
-        new HorizontalStrut(3),
         editor
-      )))
-
-      add(new VerticalStrut(3))
+      ), 3) with MaximumHeight)
 
       labels = labels :+ label
       editors = editors :+ editor
     }
-
-    add(new JPanel with Transparent)
 
     revalidate()
   }

@@ -5,17 +5,16 @@ package org.nlogo.shape.editor
 import java.awt.{ Color, Component, Cursor, Dimension, Graphics, GridLayout, Insets }
 import java.awt.event.{ ActionEvent, WindowAdapter, WindowEvent }
 import java.beans.{ PropertyChangeEvent, PropertyChangeListener }
-import javax.swing.{ AbstractAction, Action, Box, BoxLayout, ButtonGroup, JDialog, JLabel, JPanel, JToolBar,
-                     WindowConstants }
+import javax.swing.{ AbstractAction, Action, ButtonGroup, JDialog, JLabel, JPanel, JToolBar, WindowConstants }
 import javax.swing.undo.{ AbstractUndoableEdit, UndoableEdit }
 
 import org.nlogo.analytics.Analytics
 import org.nlogo.api.{ Color => NLColor }
 import org.nlogo.core.{ I18N, Shape }
 import org.nlogo.shape.{ Element, VectorShape }
-import org.nlogo.swing.{ BoxColumn, BoxRow, Button, ButtonPanel, Centered, CheckBox, ComboBox, DialogButton,
-                         HorizontalStrut, MenuItem, OptionPane, PreferredSize, SyncZoom, TextField, ToggleButton,
-                         Transparent, Utils, VerticalStrut, ZoomActions }
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, Button, ButtonPanel, CheckBox, ComboBox, DialogButton, MenuItem,
+                         OptionPane, PreferredSize, SyncZoom, TextField, ToggleButton, Transparent, Utils,
+                         VerticalStrut, ZoomableBorder, ZoomActions }
 import org.nlogo.theme.InterfaceColors
 
 sealed trait ElementType
@@ -356,57 +355,48 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
 
   locally {
     val contents = new BoxColumn(Seq(
-      new VerticalStrut(10),
       new BoxRow(Seq(
-        new HorizontalStrut(10),
         new JLabel(I18N.gui("name")) {
           setForeground(InterfaceColors.dialogText())
         },
-        new HorizontalStrut(5),
-        nameText,
-        new HorizontalStrut(5)
-      )),
-      new VerticalStrut(15),
+        nameText
+      ), 5),
       new BoxRow(Seq(
-        new HorizontalStrut(10),
-        new Centered(new BoxColumn(Seq(
+        new BoxRow(new BoxColumn(Seq(
           editingToolBar,
-          new Centered(snapToGridButton),
-          new Centered(colorGrid),
+          new BoxRow(snapToGridButton, BoxAlign.Center),
+          new BoxRow(colorGrid, BoxAlign.Center),
           new VerticalStrut(10),
-          new Centered(new JLabel(I18N.gui("colorChanges")) {
+          new BoxRow(new JLabel(I18N.gui("colorChanges")) {
             setForeground(InterfaceColors.dialogText())
-          }),
+          }, BoxAlign.Center),
           new VerticalStrut(3),
-          new Centered(colorSelection),
-          new Centered(deleteSelected),
-          new Centered(duplicateSelected),
-          new Centered(bringToFront),
-          new Centered(sendToBack),
-          new Centered(undoButton),
-          new Centered(rotatableButton)
-        ))),
-        new HorizontalStrut(15),
+          new BoxRow(colorSelection, BoxAlign.Center),
+          new BoxRow(deleteSelected, BoxAlign.Center),
+          new BoxRow(duplicateSelected, BoxAlign.Center),
+          new BoxRow(bringToFront, BoxAlign.Center),
+          new BoxRow(sendToBack, BoxAlign.Center),
+          new BoxRow(undoButton, BoxAlign.Center),
+          new BoxRow(rotatableButton, BoxAlign.Center),
+        ), 6), BoxAlign.Center),
         new BoxColumn(Seq(
           shapeView,
           new BoxRow(previews)
         )),
-        new HorizontalStrut(15),
         new BoxColumn(Seq(
-          new Centered(rotateLeftButton),
-          new Centered(rotateRightButton),
-          new Centered(flipHorizontalButton),
-          new Centered(flipVerticalButton),
-          Box.createVerticalGlue
-        )),
-        new HorizontalStrut(10)
-      )),
-      new VerticalStrut(15),
-      new ButtonPanel(Seq(done, cancel)),
-      new VerticalStrut(10)
-    )) with SyncZoom {
+          new BoxRow(rotateLeftButton, BoxAlign.Center),
+          new BoxRow(rotateRightButton, BoxAlign.Center),
+          new BoxRow(flipHorizontalButton, BoxAlign.Center),
+          new BoxRow(flipVerticalButton, BoxAlign.Center),
+        ), 6, BoxAlign.Start)
+      ), 15) {
+        setBorder(new ZoomableBorder(0, 10, 0, 10))
+      },
+      new ButtonPanel(Seq(done, cancel))
+    ), 15) with SyncZoom {
       setOpaque(true)
       setBackground(InterfaceColors.dialogBackground())
+      setBorder(new ZoomableBorder(6, 6, 6, 6))
 
       override def zoom(oldZoom: Float): Unit = {
         super.zoom(oldZoom)
@@ -565,14 +555,12 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
     super.setVisible(visible)
   }
 
-  private class ColorPanel(index: Int) extends JPanel with Transparent with ComboBox.Clone with SyncZoom {
+  private class ColorPanel(index: Int) extends BoxRow(6, BoxAlign.Start) with ComboBox.Clone with SyncZoom {
     private val label = {
       val name = NLColor.getColorNameByIndex(index)
 
       new JLabel(name(0).toUpper.toString + name.substring(1))
     }
-
-    setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
 
     add(new JPanel with PreferredSize {
       setBackground(EditorDialog.getColor(index))
@@ -581,9 +569,7 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
         new Dimension(Utils.zoom(10), Utils.zoom(10))
     })
 
-    add(new HorizontalStrut(6))
     add(label)
-    add(Box.createHorizontalGlue)
 
     syncZoom()
 

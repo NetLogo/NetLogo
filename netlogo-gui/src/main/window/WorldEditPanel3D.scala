@@ -2,12 +2,11 @@
 
 package org.nlogo.window
 
-import java.awt.{ BorderLayout, GridBagConstraints, GridBagLayout, Insets }
-import javax.swing.{ BoxLayout, JLabel, JPanel }
-import javax.swing.border.{ EmptyBorder, TitledBorder }
+import javax.swing.JLabel
+import javax.swing.border.TitledBorder
 
 import org.nlogo.core.I18N
-import org.nlogo.swing.Transparent
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, MaximumHeight, ZoomableBorder }
 import org.nlogo.theme.InterfaceColors
 
 class WorldEditPanel3D(target: WorldViewSettings3D) extends WorldEditPanel(target) {
@@ -32,9 +31,7 @@ class WorldEditPanel3D(target: WorldViewSettings3D) extends WorldEditPanel(targe
         _.foreach(target.minPxcor),
         () => previewChanged("minPxcor", minPxcor.get)))
 
-  private val minPxcorLabel = new JLabel(I18N.gui("3D.minPxcor")) {
-    setFont(getFont.deriveFont(9.0f))
-  }
+  private val minPxcorLabeled = new LabeledEditor(minPxcor, I18N.gui("3D.minPxcor"))
 
   private val maxPxcor: PositiveIntegerEditor =
     new PositiveIntegerEditor(
@@ -45,9 +42,7 @@ class WorldEditPanel3D(target: WorldViewSettings3D) extends WorldEditPanel(targe
         _.foreach(target.maxPxcor),
         () => previewChanged("maxPxcor", maxPxcor.get)))
 
-  private val maxPxcorLabel = new JLabel(I18N.gui("3D.maxPxcor")) {
-    setFont(getFont.deriveFont(9.0f))
-  }
+  private val maxPxcorLabeled = new LabeledEditor(maxPxcor, I18N.gui("3D.maxPxcor"))
 
   private val minPycor: NegativeIntegerEditor =
     new NegativeIntegerEditor(
@@ -58,9 +53,7 @@ class WorldEditPanel3D(target: WorldViewSettings3D) extends WorldEditPanel(targe
         _.foreach(target.minPycor),
         () => previewChanged("minPycor", minPycor.get)))
 
-  private val minPycorLabel = new JLabel(I18N.gui("3D.minPycor")) {
-    setFont(getFont.deriveFont(9.0f))
-  }
+  private val minPycorLabeled = new LabeledEditor(minPycor, I18N.gui("3D.minPycor"))
 
   private val maxPycor: PositiveIntegerEditor =
     new PositiveIntegerEditor(
@@ -71,9 +64,7 @@ class WorldEditPanel3D(target: WorldViewSettings3D) extends WorldEditPanel(targe
         _.foreach(target.maxPycor),
         () => previewChanged("maxPycor", maxPycor.get)))
 
-  private val maxPycorLabel = new JLabel(I18N.gui("3D.maxPycor")) {
-    setFont(getFont.deriveFont(9.0f))
-  }
+  private val maxPycorLabeled = new LabeledEditor(maxPycor, I18N.gui("3D.maxPycor"))
 
   private val minPzcor: NegativeIntegerEditor =
     new NegativeIntegerEditor(
@@ -84,9 +75,7 @@ class WorldEditPanel3D(target: WorldViewSettings3D) extends WorldEditPanel(targe
         _.foreach(target.minPzcor),
         () => previewChanged("minPzcor", minPzcor.get)))
 
-  private val minPzcorLabel = new JLabel(I18N.gui("3D.minPzcor")) {
-    setFont(getFont.deriveFont(9.0f))
-  }
+  private val minPzcorLabeled = new LabeledEditor(minPzcor, I18N.gui("3D.minPzcor"))
 
   private val maxPzcor: PositiveIntegerEditor =
     new PositiveIntegerEditor(
@@ -97,9 +86,7 @@ class WorldEditPanel3D(target: WorldViewSettings3D) extends WorldEditPanel(targe
         _.foreach(target.maxPzcor),
         () => previewChanged("maxPzcor", maxPzcor.get)))
 
-  private val maxPzcorLabel = new JLabel(I18N.gui("3D.maxPzcor")) {
-    setFont(getFont.deriveFont(9.0f))
-  }
+  private val maxPzcorLabeled = new LabeledEditor(maxPzcor, I18N.gui("3D.maxPzcor"))
 
   // the wrapping properties are here to control the variables but they are not added to the GUI (Isaac B 4/2/25)
   private val wrappingX: BooleanEditor =
@@ -137,9 +124,7 @@ class WorldEditPanel3D(target: WorldViewSettings3D) extends WorldEditPanel(targe
         () => target.patchSize,
         _.foreach(target.patchSize)))
 
-  private val patchSizeLabel = new JLabel(I18N.gui("2D.patchSize.info")) {
-    setFont(getFont.deriveFont(9.0f))
-  }
+  private val patchSizeLabeled = new LabeledEditor(patchSize, I18N.gui("2D.patchSize.info"))
 
   private val fontSize =
     new PositiveIntegerEditor(
@@ -149,9 +134,7 @@ class WorldEditPanel3D(target: WorldViewSettings3D) extends WorldEditPanel(targe
         () => target.fontSize,
         _.foreach(target.fontSize)))
 
-  private val fontSizeLabel = new JLabel(I18N.gui("2D.fontSize.info")) {
-    setFont(getFont.deriveFont(9.0f))
-  }
+  private val fontSizeLabeled = new LabeledEditor(fontSize, I18N.gui("2D.fontSize.info"))
 
   private val frameRate =
     new StrictlyPositiveDoubleEditor(
@@ -161,9 +144,7 @@ class WorldEditPanel3D(target: WorldViewSettings3D) extends WorldEditPanel(targe
         () => target.frameRate,
         _.foreach(target.frameRate)))
 
-  private val frameRateLabel = new JLabel(I18N.gui("2D.frameRate.info")) {
-    setFont(getFont.deriveFont(9.0f))
-  }
+  private val frameRateLabeled = new LabeledEditor(frameRate, I18N.gui("2D.frameRate.info"))
 
   private val smooth =
     new BooleanEditor(
@@ -173,9 +154,7 @@ class WorldEditPanel3D(target: WorldViewSettings3D) extends WorldEditPanel(targe
         () => target.smooth,
         _.foreach(target.smooth)))
 
-  private val smoothLabel = new JLabel(I18N.gui("3D.affects")) {
-    setFont(getFont.deriveFont(9.0f))
-  }
+  private val smoothLabeled = new LabeledEditor(smooth, I18N.gui("3D.affects"))
 
   private val wireframe =
     new BooleanEditor(
@@ -185,9 +164,7 @@ class WorldEditPanel3D(target: WorldViewSettings3D) extends WorldEditPanel(targe
         () => target.wireframe,
         _.foreach(target.wireframe)))
 
-  private val wireframeLabel = new JLabel(I18N.gui("3D.affects")) {
-    setFont(getFont.deriveFont(9.0f))
-  }
+  private val wireframeLabeled = new LabeledEditor(wireframe, I18N.gui("3D.affects"))
 
   private val showTickCounter =
     new BooleanEditor(
@@ -211,175 +188,60 @@ class WorldEditPanel3D(target: WorldViewSettings3D) extends WorldEditPanel(targe
   private val tickBorder = new TitledBorder(I18N.gui("tickCounter"))
 
   locally {
-    setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
-    setBorder(new EmptyBorder(6, 6, 6, 6))
-
-    val configPanel = new JPanel(new GridBagLayout) with Transparent {
-      val c = new GridBagConstraints
-
-      c.gridy = 0
-      c.fill = GridBagConstraints.HORIZONTAL
-      c.weightx = 1
-      c.insets = new Insets(6, 6, 6, 6)
-
-      add(locationLabel, c)
-
-      c.insets = new Insets(6, 0, 6, 6)
-
-      add(originTypes, c)
-
-      c.gridx = 0
-      c.gridy = GridBagConstraints.RELATIVE
-      c.gridwidth = 2
-      c.anchor = GridBagConstraints.EAST
-      c.fill = GridBagConstraints.NONE
-      c.insets = new Insets(0, 0, 6, 6)
-
-      add(originConfigs, c)
-
-      c.anchor = GridBagConstraints.WEST
-      c.fill = GridBagConstraints.HORIZONTAL
-      c.insets = new Insets(0, 6, 3, 6)
-
-      add(minPxcor, c)
-
-      c.insets = new Insets(0, 6, 6, 6)
-
-      add(minPxcorLabel, c)
-
-      c.insets = new Insets(0, 6, 3, 6)
-
-      add(maxPxcor, c)
-
-      c.insets = new Insets(0, 6, 6, 6)
-
-      add(maxPxcorLabel, c)
-
-      c.insets = new Insets(0, 6, 3, 6)
-
-      add(minPycor, c)
-
-      c.insets = new Insets(0, 6, 6, 6)
-
-      add(minPycorLabel, c)
-
-      c.insets = new Insets(0, 6, 3, 6)
-
-      add(maxPycor, c)
-
-      c.insets = new Insets(0, 6, 6, 6)
-
-      add(maxPycorLabel, c)
-
-      c.insets = new Insets(0, 6, 3, 6)
-
-      add(minPzcor, c)
-
-      c.insets = new Insets(0, 6, 6, 6)
-
-      add(minPzcorLabel, c)
-
-      c.insets = new Insets(0, 6, 3, 6)
-
-      add(maxPzcor, c)
-
-      c.insets = new Insets(0, 6, 6, 6)
-
-      add(maxPzcorLabel, c)
+    val configPanel = new BoxColumn(Seq(
+      new BoxRow(Seq(locationLabel, originTypes), 6) with MaximumHeight,
+      new BoxRow(originConfigs, BoxAlign.End),
+      minPxcorLabeled,
+      maxPxcorLabeled,
+      minPycorLabeled,
+      maxPycorLabeled,
+      minPzcorLabeled,
+      maxPzcorLabeled
+    ), 6) {
+      setBorder(new ZoomableBorder(6, 6, 6, 6))
     }
 
-    val previewContainer = new JPanel with Transparent {
-      add(previewPanel)
+    val previewContainer = new BoxColumn(Seq(previewPanel), 6) {
+      setBorder(new ZoomableBorder(6, 6, 6, 6))
     }
 
-    val modelPanel = new JPanel(new GridBagLayout) with Transparent {
+    val modelPanel = new BoxRow(Seq(
+      new BoxRow(Seq(modelTitle)) {
+        setBorder(new ZoomableBorder(6, 6, 6, 6))
+      }
+    )) {
       setBorder(modelBorder)
-
-      val c = new GridBagConstraints
-
-      c.anchor = GridBagConstraints.WEST
-      c.weightx = 1
-      c.insets = new Insets(6, 6, 6, 6)
-
-      add(modelTitle, c)
     }
 
-    val worldPanel = new JPanel(new BorderLayout) with Transparent {
+    val worldPanel = new BoxRow(Seq(
+      new BoxColumn(configPanel, BoxAlign.Center),
+      previewContainer
+    )) {
       setBorder(worldBorder)
-
-      add(configPanel, BorderLayout.WEST)
-      add(previewContainer, BorderLayout.CENTER)
     }
 
-    val viewPanel = new JPanel(new GridBagLayout) with Transparent {
+    val viewPanel = new BoxRow(Seq(
+      new BoxColumn(Seq(
+        new BoxRow(Seq(patchSizeLabeled, fontSizeLabeled), 6),
+        frameRateLabeled,
+        smoothLabeled,
+        wireframeLabeled
+      ), 6) {
+        setBorder(new ZoomableBorder(6, 6, 6, 6))
+      }
+    )) {
       setBorder(viewBorder)
-
-      val c = new GridBagConstraints
-
-      c.gridy = 0
-      c.anchor = GridBagConstraints.WEST
-      c.fill = GridBagConstraints.HORIZONTAL
-      c.weightx = 1
-      c.insets = new Insets(6, 6, 3, 6)
-
-      add(patchSize, c)
-
-      c.insets = new Insets(6, 0, 3, 6)
-
-      add(fontSize, c)
-
-      c.gridy = 1
-      c.insets = new Insets(0, 6, 6, 6)
-
-      add(patchSizeLabel, c)
-
-      c.insets = new Insets(0, 0, 6, 6)
-
-      add(fontSizeLabel, c)
-
-      c.gridx = 0
-      c.gridy = GridBagConstraints.RELATIVE
-      c.gridwidth = 2
-      c.insets = new Insets(0, 6, 3, 6)
-
-      add(frameRate, c)
-
-      c.insets = new Insets(0, 6, 6, 6)
-
-      add(frameRateLabel, c)
-
-      c.insets = new Insets(0, 6, 3, 6)
-
-      add(smooth, c)
-
-      c.insets = new Insets(0, 6, 6, 6)
-
-      add(smoothLabel, c)
-
-      c.insets = new Insets(0, 6, 3, 6)
-
-      add(wireframe, c)
-
-      c.insets = new Insets(0, 6, 6, 6)
-
-      add(wireframeLabel, c)
     }
 
-    val tickPanel = new JPanel(new GridBagLayout) with Transparent {
+    val tickPanel = new BoxRow(Seq(
+      new BoxColumn(Seq(
+        new BoxRow(showTickCounter, BoxAlign.Start),
+        tickCounterLabel
+      ), 6) {
+        setBorder(new ZoomableBorder(6, 6, 6, 6))
+      }
+    )) {
       setBorder(tickBorder)
-
-      val c = new GridBagConstraints
-
-      c.gridx = 0
-      c.fill = GridBagConstraints.HORIZONTAL
-      c.weightx = 1
-      c.insets = new Insets(6, 6, 6, 6)
-
-      add(showTickCounter, c)
-
-      c.insets = new Insets(0, 6, 6, 6)
-
-      add(tickCounterLabel, c)
     }
 
     add(modelPanel)
@@ -410,17 +272,16 @@ class WorldEditPanel3D(target: WorldViewSettings3D) extends WorldEditPanel(targe
 
     locationLabel.setForeground(InterfaceColors.dialogText())
 
-    minPxcorLabel.setForeground(InterfaceColors.dialogText())
-    maxPxcorLabel.setForeground(InterfaceColors.dialogText())
-    minPycorLabel.setForeground(InterfaceColors.dialogText())
-    maxPycorLabel.setForeground(InterfaceColors.dialogText())
-    minPzcorLabel.setForeground(InterfaceColors.dialogText())
-    maxPzcorLabel.setForeground(InterfaceColors.dialogText())
-
-    patchSizeLabel.setForeground(InterfaceColors.dialogText())
-    fontSizeLabel.setForeground(InterfaceColors.dialogText())
-    frameRateLabel.setForeground(InterfaceColors.dialogText())
-    smoothLabel.setForeground(InterfaceColors.dialogText())
-    wireframeLabel.setForeground(InterfaceColors.dialogText())
+    minPxcorLabeled.syncTheme()
+    maxPxcorLabeled.syncTheme()
+    minPycorLabeled.syncTheme()
+    maxPycorLabeled.syncTheme()
+    minPzcorLabeled.syncTheme()
+    maxPzcorLabeled.syncTheme()
+    patchSizeLabeled.syncTheme()
+    fontSizeLabeled.syncTheme()
+    frameRateLabeled.syncTheme()
+    smoothLabeled.syncTheme()
+    wireframeLabeled.syncTheme()
   }
 }

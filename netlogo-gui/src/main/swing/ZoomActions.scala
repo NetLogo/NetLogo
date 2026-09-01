@@ -5,15 +5,27 @@ package org.nlogo.swing
 import java.awt.event.{ ActionEvent, InputEvent, KeyEvent }
 import javax.swing.{ AbstractAction, ActionMap, InputMap, JComponent, KeyStroke, RootPaneContainer }
 
-object ZoomActions {
-  private var zoomIn: Option[() => Unit] = None
-  private var zoomOut: Option[() => Unit] = None
-  private var resetZoom: Option[() => Unit] = None
+trait ZoomProvider {
+  def zoomIn(): Unit = {
+    setZoomFactor(Utils.getZoomFactor + 0.125f)
+  }
 
-  def init(zoomIn: () => Unit, zoomOut: () => Unit, resetZoom: () => Unit): Unit = {
-    this.zoomIn = Option(zoomIn)
-    this.zoomOut = Option(zoomOut)
-    this.resetZoom = Option(resetZoom)
+  def zoomOut(): Unit = {
+    setZoomFactor((Utils.getZoomFactor - 0.125f).max(0.25f))
+  }
+
+  def resetZoom(): Unit = {
+    setZoomFactor(1)
+  }
+
+  protected def setZoomFactor(factor: Float): Unit
+}
+
+object ZoomActions {
+  private var provider: Option[ZoomProvider] = None
+
+  def init(provider: ZoomProvider): Unit = {
+    this.provider = Option(provider)
   }
 }
 
@@ -29,19 +41,19 @@ trait ZoomActions extends RootPaneContainer {
 
     actionMap.put("zoomIn", new AbstractAction {
       override def actionPerformed(e: ActionEvent): Unit = {
-        ZoomActions.zoomIn.foreach(_())
+        ZoomActions.provider.foreach(_.zoomIn())
       }
     })
 
     actionMap.put("zoomOut", new AbstractAction {
       override def actionPerformed(e: ActionEvent): Unit = {
-        ZoomActions.zoomOut.foreach(_())
+        ZoomActions.provider.foreach(_.zoomOut())
       }
     })
 
     actionMap.put("resetZoom", new AbstractAction {
       override def actionPerformed(e: ActionEvent): Unit = {
-        ZoomActions.resetZoom.foreach(_())
+        ZoomActions.provider.foreach(_.resetZoom())
       }
     })
   }

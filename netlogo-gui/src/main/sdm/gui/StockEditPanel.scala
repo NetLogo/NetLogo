@@ -2,12 +2,10 @@
 
 package org.nlogo.sdm.gui
 
-import javax.swing.BoxLayout
-
 import org.nlogo.api.{ CompilerServices, ExtensionManager }
 import org.nlogo.core.I18N
 import org.nlogo.editor.Colorizer
-import org.nlogo.swing.{ VerticalStrut, ZoomableBorder }
+import org.nlogo.swing.{ BoxAlign, BoxRow }
 import org.nlogo.window.{ BooleanEditor, EditPanel, IdentifierEditor, NonEmptyCodeEditor, PropertyAccessor,
                           PropertyEditor }
 
@@ -43,14 +41,9 @@ class StockEditPanel(target: StockFigure, compiler: CompilerServices, colorizer:
         _.foreach(target.allowNegative),
         () => apply()))
 
-  setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
-  setBorder(new ZoomableBorder(6, 6, 6, 6))
-
   add(nameWrapper)
-  add(new VerticalStrut(6))
   add(initialValueExpressionWrapper)
-  add(new VerticalStrut(6))
-  add(allowNegative)
+  add(new BoxRow(allowNegative, BoxAlign.Start))
 
   override def propertyEditors: Seq[PropertyEditor[?]] =
     Seq(nameWrapper, initialValueExpressionWrapper, allowNegative)

@@ -2,21 +2,18 @@
 
 package org.nlogo.window
 
-import javax.swing.{ Box, BoxLayout, JLabel, JPanel }
+import javax.swing.JLabel
 
-import org.nlogo.swing.{ BoxRow, Transparent, VerticalStrut }
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
-class LabeledEditor(editor: PropertyEditor[?], text: String) extends JPanel with Transparent with ThemeSync {
+class LabeledEditor(editor: PropertyEditor[?], text: String) extends BoxColumn(3) with ThemeSync {
   private val label = new JLabel(text) {
     setFont(getFont.deriveFont(9.0f))
   }
 
-  setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
-
-  add(editor)
-  add(new VerticalStrut(3))
-  add(new BoxRow(Seq(label, Box.createHorizontalGlue)))
+  add(new BoxRow(editor, BoxAlign.Start))
+  add(new BoxRow(label, BoxAlign.Start))
 
   override def syncTheme(): Unit = {
     editor.syncTheme()

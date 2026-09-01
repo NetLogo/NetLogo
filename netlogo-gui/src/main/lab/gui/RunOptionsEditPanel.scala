@@ -3,11 +3,10 @@
 package org.nlogo.lab.gui
 
 import java.nio.file.Path
-import javax.swing.{ Box, BoxLayout }
 
 import org.nlogo.api.LabProtocol
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ BoxRow, VerticalStrut, ZoomableBorder }
+import org.nlogo.swing.{ BoxAlign, BoxRow }
 import org.nlogo.window.{ BooleanEditor, EditPanel, FilePathEditor, IntegerEditor, LabeledEditor, OptionsEditor,
                           PositiveIntegerEditor, PropertyAccessor, PropertyEditor }
 
@@ -121,30 +120,16 @@ class RunOptionsEditPanel(target: RunOptionsDialog#EditableRunOptions, currentDi
         _.foreach(target.setErrorBehavior),
         () => apply()))
 
-  setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
-  setBorder(new ZoomableBorder(6, 6, 6, 6))
-
   add(spreadsheet)
-  add(new VerticalStrut(6))
   add(table)
-  add(new VerticalStrut(6))
-  add(table)
-  add(new VerticalStrut(6))
   add(stats)
-  add(new VerticalStrut(6))
   add(lists)
-  add(new VerticalStrut(6))
-  add(updateView)
-  add(new VerticalStrut(6))
+  add(new BoxRow(updateView, BoxAlign.Start))
   add(updateLabeled)
-  add(new VerticalStrut(6))
   add(threadCountLabeled)
-  add(new VerticalStrut(6))
-  add(new BoxRow(Seq(errorBehavior, Box.createHorizontalGlue)))
-  add(new VerticalStrut(6))
+  add(new BoxRow(errorBehavior, BoxAlign.Start))
   add(memoryLimitLabeled)
-  add(new VerticalStrut(6))
-  add(mirrorHeadlessOutput)
+  add(new BoxRow(mirrorHeadlessOutput, BoxAlign.Start))
 
   override def propertyEditors: Seq[PropertyEditor[?]] =
     Seq(spreadsheet, table, stats, lists, updateView, updatePlotsAndMonitors, threadCount, errorBehavior, memoryLimit,

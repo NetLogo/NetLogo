@@ -2,14 +2,17 @@
 
 package org.nlogo.window
 
-import java.awt.{ BorderLayout, Dimension }
+import java.awt.BorderLayout
+import javax.swing.JPanel
 
-import org.nlogo.swing.CheckBox
+import org.nlogo.swing.{ CheckBox, PreferredSize, Transparent }
 import org.nlogo.theme.InterfaceColors
 
 import scala.util.{ Success, Try }
 
-class BooleanEditor(accessor: PropertyAccessor[Boolean]) extends PropertyEditor(accessor) {
+class BooleanEditor(accessor: PropertyAccessor[Boolean])
+  extends JPanel with Transparent with PropertyEditor(accessor) with PreferredSize {
+
   private val checkbox = new CheckBox(accessor.name) {
     addItemListener(_ => accessor.changed())
   }
@@ -30,9 +33,6 @@ class BooleanEditor(accessor: PropertyAccessor[Boolean]) extends PropertyEditor(
   override def setToolTipText(text: String): Unit = {
     checkbox.setToolTipText(text)
   }
-
-  override def getMaximumSize: Dimension =
-    new Dimension(super.getMaximumSize.width, getPreferredSize.height)
 
   override def syncTheme(): Unit = {
     checkbox.setForeground(InterfaceColors.dialogText())

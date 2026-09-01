@@ -4,7 +4,7 @@ package org.nlogo.swing
 
 import java.awt.{ Component, Dialog, Dimension, Window }
 import java.awt.event.{ ActionEvent, KeyEvent }
-import javax.swing.{ AbstractAction, Box, BoxLayout, Icon, JComponent, JDialog, JLabel, JPanel, KeyStroke }
+import javax.swing.{ AbstractAction, Icon, JComponent, JDialog, JLabel, JPanel, KeyStroke }
 
 import org.nlogo.awt.LineBreaker
 import org.nlogo.core.I18N
@@ -43,9 +43,9 @@ class OptionPane(parent: Component, title: String, message: String, options: Seq
 
   private var selectedOption: Option[String] = None
 
-  private val container = new JPanel with SyncZoom {
+  private val container = new BoxColumn with SyncZoom {
+    setOpaque(true)
     setBackground(InterfaceColors.dialogBackground())
-    setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
 
     override def zoom(oldZoom: Float): Unit = {
       super.zoom(oldZoom)
@@ -96,11 +96,10 @@ class OptionPane(parent: Component, title: String, message: String, options: Seq
   protected def addContents(): Unit = {
     add(new BoxRow(Seq(
       new JLabel(icon),
-      new HorizontalStrut(12),
       new JLabel(getWrappedMessage) {
         setForeground(InterfaceColors.dialogText())
       }
-    )) {
+    ), 12) {
       setBorder(new ZoomableBorder(30, 30, 30, 30))
     })
   }
@@ -147,18 +146,13 @@ class InputOptionPane(parent: Component, title: String, message: String, startin
   override protected def addContents(): Unit = {
     add(new BoxRow(Seq(
       new JLabel(icon),
-      new HorizontalStrut(12),
       new BoxColumn(Seq(
-        new BoxRow(Seq(
-          new JLabel(getWrappedMessage) {
-            setForeground(InterfaceColors.dialogText())
-          },
-          Box.createHorizontalGlue
-        )),
-        new VerticalStrut(6),
+        new BoxRow(new JLabel(getWrappedMessage) {
+          setForeground(InterfaceColors.dialogText())
+        }, BoxAlign.Start),
         input
-      ))
-    )) {
+      ), 6)
+    ), 12) {
       setBorder(new ZoomableBorder(30, 30, 30, 30))
     })
 
@@ -191,15 +185,13 @@ class DropdownOptionPane[T](parent: Component, title: String, message: String, c
   override protected def addContents(): Unit = {
     add(new BoxRow(Seq(
       new JLabel(icon),
-      new HorizontalStrut(12),
       new BoxColumn(Seq(
         new JLabel(getWrappedMessage) {
           setForeground(InterfaceColors.dialogText())
         },
-        new VerticalStrut(6),
         dropdown
-      ))
-    )) {
+      ), 6)
+    ), 12) {
       setBorder(new ZoomableBorder(30, 30, 30, 30))
     })
 

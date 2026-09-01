@@ -2,27 +2,25 @@
 
 package org.nlogo.swing
 
-import java.awt.event.{ ActionEvent, MouseAdapter, MouseEvent }
-import javax.swing.{ AbstractAction, BoxLayout, JButton, JLabel }
+import java.awt.event.{ MouseAdapter, MouseEvent }
+import javax.swing.JLabel
 
-abstract class ToolBarMenu(name: String) extends JButton with Transparent {
-  setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
+import org.nlogo.theme.{ InterfaceColors, ThemeSync }
+
+abstract class ToolBarMenu(name: String) extends BoxRow(8) with RoundedBorderPanel with Zoomable with ThemeSync {
+  private val label = new JLabel(name)
+  private val arrow = new DropdownArrow
+
   setBorder(new ZoomableBorder(6, 8, 6, 8))
-
-  protected val label = new JLabel(name)
-  protected val arrow = new DropdownArrow
+  setDiameter(Utils.zoom(6))
 
   add(label)
-  add(new HorizontalStrut(8))
   add(arrow)
 
-  setAction(new AbstractAction {
-    override def actionPerformed(e: ActionEvent): Unit = popup()
-  })
   // This is so a user may treat this like a menu drop down:
   // clicking and holding, dragging to the item of their choice, and releasing.
-  addMouseListener(new MouseAdapter() {
-    override def mousePressed(e: MouseEvent): Unit = doClick()
+  addMouseListener(new MouseAdapter {
+    override def mousePressed(e: MouseEvent): Unit = popup()
   })
 
   def popup(): Unit = {
@@ -36,4 +34,17 @@ abstract class ToolBarMenu(name: String) extends JButton with Transparent {
   }
 
   protected def populate(menu: PopupMenu): Unit
+
+  override def zoom(oldZoom: Float): Unit = {
+    setDiameter(Utils.zoom(6))
+  }
+
+  override def syncTheme(): Unit = {
+    setBackgroundColor(InterfaceColors.toolbarControlBackground())
+    setBackgroundHoverColor(InterfaceColors.toolbarControlBackgroundHover())
+    setBackgroundPressedColor(InterfaceColors.toolbarControlBackgroundPressed())
+    setBorderColor(InterfaceColors.toolbarControlBorder())
+
+    label.setForeground(InterfaceColors.toolbarText())
+  }
 }

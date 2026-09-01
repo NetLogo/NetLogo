@@ -4,14 +4,14 @@ package org.nlogo.app.tools
 
 import java.awt.{ BorderLayout, Dimension, Font }
 import java.util.{ List => JList }
-import javax.swing.{ Box, JDialog, JPanel, ScrollPaneConstants }
-import javax.swing.border.{ CompoundBorder, EmptyBorder, MatteBorder }
+import javax.swing.{ JDialog, JPanel, ScrollPaneConstants }
+import javax.swing.border.{ CompoundBorder, MatteBorder }
 
 import org.nlogo.agent.{ Agent, Link, Patch, Turtle }
 import org.nlogo.app.common.{ CommandLine, HistoryPrompt, LinePrompt }
 import org.nlogo.awt.Hierarchy
 import org.nlogo.core.{ AgentKind, I18N }
-import org.nlogo.swing.{ BoxColumn, BoxRow, CollapsiblePane, HorizontalStrut, ScrollPane, SyncZoom }
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, CollapsiblePane, ScrollPane, SyncZoom, ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ CommandCenterInterface, GUIWorkspace }
 
@@ -89,13 +89,11 @@ abstract class AgentMonitor(val workspace: GUIWorkspace, window: JDialog)
 
       // this panel contains the separator bar and command line (Isaac B 5/21/25)
       add(new BoxRow(Seq(
-        new BoxColumn(Seq(Box.createVerticalGlue, prompt)),
-        new HorizontalStrut(6),
+        new BoxColumn(prompt, BoxAlign.End),
         commandLine,
-        new HorizontalStrut(3),
-        new BoxColumn(Seq(Box.createVerticalGlue, historyPrompt))
-      )) {
-        setBorder(new CompoundBorder(separator, new EmptyBorder(6, 6, 6, 6)))
+        new BoxColumn(historyPrompt, BoxAlign.End)
+      ), 6) {
+        setBorder(new CompoundBorder(separator, new ZoomableBorder(6, 6, 6, 6)))
       }, BorderLayout.SOUTH)
 
       Some(panel)

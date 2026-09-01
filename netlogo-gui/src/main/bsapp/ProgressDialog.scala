@@ -2,11 +2,11 @@
 
 package org.nlogo.bsapp
 
-import java.awt.{ Dimension, EventQueue, GridBagConstraints, GridBagLayout, Insets }
+import java.awt.{ Dimension, EventQueue }
 import java.awt.event.{ WindowAdapter, WindowEvent }
 import java.lang.{ Double => JDouble }
-import javax.swing.{ JDialog, JPanel, ScrollPaneConstants, Timer, WindowConstants }
-import javax.swing.border.{ EmptyBorder, LineBorder }
+import javax.swing.{ JDialog, ScrollPaneConstants, Timer, WindowConstants }
+import javax.swing.border.LineBorder
 import javax.swing.text.DefaultCaret
 
 import org.nlogo.analytics.Analytics
@@ -16,8 +16,8 @@ import org.nlogo.core.I18N
 import org.nlogo.editor.Colorizer
 import org.nlogo.nvm.LabInterface
 import org.nlogo.plot.DummyPlotManager
-import org.nlogo.swing.{ Button, ButtonPanel, CheckBox, OptionPane, Positioning, RichAction, ScrollPane, TextArea,
-                         Transparent }
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, Button, ButtonPanel, CheckBox, OptionPane, Positioning,
+                         RichAction, ScrollPane, TextArea, Zoomable, ZoomableBorder, ZoomActions }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ PlotWidget, SpeedSliderPanel }
 
@@ -26,7 +26,7 @@ import scala.concurrent.duration.DurationLong
 class ProgressDialog(app: BehaviorSpaceApp, workspace: SemiHeadlessWorkspace, lab: LabInterface,
                      colorizer: Colorizer, protocol: LabProtocol)
   extends JDialog(app.getFrame, I18N.gui.getN("tools.behaviorSpace.progressDialog.title", protocol.name))
-  with ThemeSync {
+  with ThemeSync with ZoomActions {
 
   private implicit val i18nPrefix: I18N.Prefix = I18N.Prefix("tools.behaviorSpace.progressDialog")
 
@@ -34,7 +34,7 @@ class ProgressDialog(app: BehaviorSpaceApp, workspace: SemiHeadlessWorkspace, la
 
   private val progressArea = new TextArea(10.min(protocol.valueSets.headOption.fold(0)(_.size) + 3), 0) {
     setEditable(false)
-    setBorder(new EmptyBorder(6, 6, 6, 6))
+    setBorder(new ZoomableBorder(6, 6, 6, 6))
     setCaret(new DefaultCaret {
       override def getUpdatePolicy: Int =
         DefaultCaret.NEVER_UPDATE
@@ -122,38 +122,19 @@ class ProgressDialog(app: BehaviorSpaceApp, workspace: SemiHeadlessWorkspace, la
 
     setResizable(true)
 
-    add(new JPanel(new GridBagLayout) with Transparent {
-      val c = new GridBagConstraints
+    add(new BoxColumn(Seq(
+      new BoxRow(speedSlider, BoxAlign.Center)
+    ) ++ plotWidgetOption ++ Seq(
+      scrollPane,
+      new BoxRow(updateViewCheckbox, BoxAlign.Start),
+      new BoxRow(plotsAndMonitorsSwitch, BoxAlign.Start),
+      new ButtonPanel(Seq(pauseButton, abortButton))
+    ), 6) with Zoomable {
+      setBorder(new ZoomableBorder(6, 6, 6, 6))
 
-      c.gridx = 0
-      c.weightx = 1
-      c.insets = new Insets(6, 6, 6, 6)
-
-      add(speedSlider, c)
-
-      c.weighty = 1
-      c.fill = GridBagConstraints.BOTH
-      c.insets = new Insets(0, 6, 6, 6)
-
-      plotWidgetOption.foreach { plotWidget =>
-        add(plotWidget, c)
-
-        c.weighty = 0
-        c.fill = GridBagConstraints.HORIZONTAL
+      override def zoom(oldZoom: Float): Unit = {
+        pack()
       }
-
-      add(scrollPane, c)
-
-      c.weighty = 0
-      c.fill = GridBagConstraints.HORIZONTAL
-      c.anchor = GridBagConstraints.WEST
-
-      add(updateViewCheckbox, c)
-      add(plotsAndMonitorsSwitch, c)
-
-      c.anchor = GridBagConstraints.CENTER
-
-      add(new ButtonPanel(Seq(pauseButton, abortButton)), c)
     })
 
     pack()
