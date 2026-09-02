@@ -151,7 +151,7 @@ class AggregateModelEditorToolBar(editor: AggregateModelEditor, model: Model)
 
   abstract class MyAction(name:String, image:String, enableMe: Boolean)
           extends AbstractAction(I18N.gui(name.toLowerCase)) {
-    putValue(Action.SMALL_ICON, SwingUtils.iconScaledWithColor(image, 15, 15, InterfaceColors.toolbarImage()))
+    putValue(Action.SMALL_ICON, SwingUtils.iconScaledWithColor(image, 15, 15, () => InterfaceColors.toolbarImage()))
     setEnabled(enableMe)
   }
 
