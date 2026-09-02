@@ -6,7 +6,7 @@ import java.awt.{ Color, Graphics }
 
 import org.nlogo.theme.InterfaceColors
 
-trait RoundedBorderPanel extends Transparent with MouseUtils {
+trait RoundedBorderPanel extends Transparent with MouseUtils with FocusUtils {
   private var backgroundColor = Color.WHITE
   private var backgroundHoverColor = Color.WHITE
   private var backgroundPressedColor = Color.WHITE
@@ -36,6 +36,8 @@ trait RoundedBorderPanel extends Transparent with MouseUtils {
 
   def setDiameter(diameter: Double): Unit = {
     this.diameter = diameter.toInt
+
+    setFocusDiameter(diameter.toInt)
   }
 
   def getDiameter: Int =

@@ -14,6 +14,8 @@ class PlotLegend(widget: AbstractPlotWidget) extends JPanel(new WrapLayout) with
 
   var open = false
 
+  setFocusable(false)
+
   def addPen(pen: PlotPen): Unit = {
     if (open) {
       if (pen.inLegend)
@@ -42,6 +44,7 @@ class PlotLegend(widget: AbstractPlotWidget) extends JPanel(new WrapLayout) with
 
   private class LegendItem(pen: PlotPen) extends JPanel with Transparent {
     private val panel = new JPanel {
+      setFocusable(false)
       setBackground(new Color(pen.color))
 
       override def getPreferredSize: Dimension =
@@ -51,6 +54,7 @@ class PlotLegend(widget: AbstractPlotWidget) extends JPanel(new WrapLayout) with
         getPreferredSize
     }
 
+    setFocusable(false)
     setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
 
     add(Box.createHorizontalStrut(10))
@@ -58,6 +62,7 @@ class PlotLegend(widget: AbstractPlotWidget) extends JPanel(new WrapLayout) with
     add(Box.createHorizontalStrut(10))
 
     add(new JLabel(pen.name) {
+      setFocusable(false)
       setFont(getFont.deriveFont(boldState))
 
       override def paintComponent(g: Graphics): Unit = {

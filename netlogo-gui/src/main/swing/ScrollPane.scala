@@ -18,6 +18,8 @@ class ScrollPane(component: Component, vScroll: Int = ScrollPaneConstants.VERTIC
   setHorizontalScrollBar(new NLScrollBar(Adjustable.HORIZONTAL))
   setVerticalScrollBar(new NLScrollBar(Adjustable.VERTICAL))
 
+  getViewport.setFocusable(false)
+
   override def setBackground(color: Color): Unit = {
     super.setBackground(color)
 
@@ -28,6 +30,7 @@ class ScrollPane(component: Component, vScroll: Int = ScrollPaneConstants.VERTIC
 }
 
 class ScrollBar(orientation: Int) extends JScrollBar(orientation) with MouseUtils {
+  setFocusable(false)
   setUnitIncrement(50)
   setUI(new ScrollBarUI)
 
