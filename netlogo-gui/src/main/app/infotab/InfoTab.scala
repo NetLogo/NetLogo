@@ -22,7 +22,7 @@ import org.nlogo.core.I18N
 import org.nlogo.editor.EditorConfiguration
 import org.nlogo.swing.{ BoxAlign, BoxRow, QuickHelp, ScrollableTextComponent, ScrollPane, TextArea,
                          ToolBarActionButton, ToolBarToggleButton, Printable, PrinterManager, BrowserLauncher,
-                         UndoManager, UserAction, Utils, Zoomable, ZoomableBorder }, UserAction.MenuAction
+                         UndoManager, UserAction, Utils, ZoomableBorder }, UserAction.MenuAction
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ Events => WindowEvents }
 
@@ -39,7 +39,6 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
   with WindowEvents.LoadBeginEvent.Handler
   with WindowEvents.LoadModelEvent.Handler
   with WindowEvents.ResourcesChangedEvent.Handler
-  with Zoomable
   with ThemeSync {
 
   private val undoManager = new UndoManager
@@ -48,7 +47,16 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
   private val textArea = new ScrollableTextArea
   private val htmlPanel = new HTMLPanel
 
-  private val editableButton = new ToolBarToggleButton(new EditableAction(I18N.gui.get("tabs.info.edit")))
+  private val editableButton = new ToolBarToggleButton(new EditableAction(I18N.gui.get("tabs.info.edit"))) {
+    setIcon(Utils.iconScaledWithColor("/images/edit.png", 15, 15, () => {
+      if (isSelected) {
+        InterfaceColors.toolbarImageSelected()
+      } else {
+        InterfaceColors.toolbarImage()
+      }
+    }))
+  }
+
   private val findButton = new ToolBarActionButton(FindDialog.FIND_ACTION)
   private val helpButton = new ToolBarActionButton(new AbstractAction(I18N.gui.get("tabs.info.help")) {
     setVisible(false)
@@ -58,7 +66,10 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
         InfoTab.this, new URI(s"https://docs.netlogo.org/${Version.versionNumberNo3D}/infotab#information"),
         QuickHelp.docPath("infotab"))
     }
-  })
+  }) {
+    setIcon(Utils.iconScaledWithColor("/images/help.png", 15, 15, () => InterfaceColors.toolbarImage()))
+  }
+
   private def toggleHelpButton(): Unit ={ helpButton.setVisible(view == textArea) }
 
   // this object is used as the html display and the editor
@@ -158,24 +169,6 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
     }
   }
 
-  private def setIcons(): Unit = {
-    val size: Int = Utils.zoom(15)
-
-    editableButton.setIcon(Utils.iconScaledWithColor("/images/edit.png", size, size, {
-      if (editableButton.isSelected) {
-        InterfaceColors.toolbarImageSelected()
-      } else {
-        InterfaceColors.toolbarImage()
-      }
-    }))
-
-    helpButton.setIcon(Utils.iconScaledWithColor("/images/help.png", size, size, InterfaceColors.toolbarImage()))
-  }
-
-  override def zoom(oldZoom: Float): Unit = {
-    setIcons()
-  }
-
   override def syncTheme(): Unit = {
     toolBar.setBackground(InterfaceColors.toolbarBackground())
 
@@ -187,7 +180,6 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
     textArea.syncTheme()
 
     updateEditorPane()
-    setIcons()
   }
 
   def handle(e: AppEvents.SwitchedTabsEvent): Unit = {

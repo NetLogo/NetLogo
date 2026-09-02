@@ -2,7 +2,7 @@
 
 package org.nlogo.app.interfacetab
 
-import java.awt.{ Color, Dimension, Frame }
+import java.awt.{ Dimension, Frame }
 import java.awt.event.{ ActionEvent, MouseAdapter, MouseEvent }
 import javax.swing.{ AbstractAction, Action, ButtonGroup, JLabel }
 
@@ -28,15 +28,51 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
   with WindowEvents.WidgetRemovedEvent.Handler
   with WindowEvents.EditView3DEvent.Handler
   with WindowEvents.WidgetAddedEvent.Handler
-  with Zoomable
   with ThemeSync {
 
   private val selectedObjects = new HashSet[Widget]
 
-  val interactButton = new SquareButton(new InteractAction)
-  val selectButton = new SquareButton(new SelectAction)
-  val editButton = new SquareButton(new EditAction)
-  val deleteButton = new SquareButton(new DeleteAction)
+  val interactButton = new SquareButton(new InteractAction) {
+    setIcon(Utils.iconScaledWithColor("/images/interact.png", 18, 18, () => {
+      if (isSelected) {
+        InterfaceColors.toolbarImageSelected()
+      } else {
+        InterfaceColors.toolbarImage()
+      }
+    }))
+  }
+
+  val selectButton = new SquareButton(new SelectAction) {
+    setIcon(Utils.iconScaledWithColor("/images/select.png", 18, 18, () => {
+      if (isSelected) {
+        InterfaceColors.toolbarImageSelected()
+      } else {
+        InterfaceColors.toolbarImage()
+      }
+    }))
+  }
+
+  val editButton = new SquareButton(new EditAction) {
+    setIcon(Utils.iconScaledWithColor("/images/edit.png", 18, 18, () => {
+      if (isSelected) {
+        InterfaceColors.toolbarImageSelected()
+      } else {
+        InterfaceColors.toolbarImage()
+      }
+    }))
+  }
+
+  val deleteButton = new SquareButton(new DeleteAction) {
+    setIcon(Utils.iconScaledWithColor("/images/delete.png", 18, 18, () => {
+      if (!isEnabled) {
+        InterfaceColors.toolbarImageDisabled()
+      } else if (isSelected) {
+        InterfaceColors.toolbarImageSelected()
+      } else {
+        InterfaceColors.toolbarImage()
+      }
+    }))
+  }
 
   private val buttonGroup = new ButtonGroup
 
@@ -139,51 +175,11 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
     }
   }
 
-  private def setIcons(): Unit = {
-    val size: Int = Utils.zoom(18)
-
-    interactButton.setIcon(Utils.iconScaledWithColor("/images/interact.png", size, size,
-                           if (interactButton.isSelected) {
-                             InterfaceColors.toolbarImageSelected()
-                           } else {
-                             InterfaceColors.toolbarImage()
-                           }))
-
-    selectButton.setIcon(Utils.iconScaledWithColor("/images/select.png", size, size,
-                         if (selectButton.isSelected) {
-                           InterfaceColors.toolbarImageSelected()
-                         } else {
-                           InterfaceColors.toolbarImage()
-                         }))
-
-    editButton.setIcon(Utils.iconScaledWithColor("/images/edit.png", size, size,
-                       if (editButton.isSelected) {
-                         InterfaceColors.toolbarImageSelected()
-                       } else {
-                         InterfaceColors.toolbarImage()
-                       }))
-
-    deleteButton.setIcon(Utils.iconScaledWithColor("/images/delete.png", size, size,
-                         if (!deleteButton.isEnabled) {
-                           InterfaceColors.toolbarImageDisabled()
-                         } else if (deleteButton.isSelected) {
-                           InterfaceColors.toolbarImageSelected()
-                         } else {
-                           InterfaceColors.toolbarImage()
-                         }))
-  }
-
-  override def zoom(oldZoom: Float): Unit = {
-    setIcons()
-  }
-
   override def syncTheme(): Unit = {
     setBackground(InterfaceColors.toolbarBackground())
 
     widgetMenu.syncTheme()
     alignmentMenu.syncTheme()
-
-    setIcons()
   }
 
   def handle(e: WindowEvents.WidgetRemovedEvent): Unit = {
@@ -341,6 +337,8 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
     }
 
     private class WidgetMenuItem(info: WidgetInfo) extends MenuItem(info.displayName, () => createWidget(info)) {
+      setIcon(info.icon)
+
       override def addNotify(): Unit = {
         super.addNotify()
 
@@ -348,7 +346,8 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
       }
 
       override def zoom(oldZoom: Float): Unit = {
-        setIcon(info.icon)
+        super.zoom(oldZoom)
+
         setIconTextGap(Utils.zoom(4))
       }
     }
@@ -368,21 +367,22 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
 
     enableHover()
 
-    private val leftAction = new MenuItem(I18N.gui("alignLeft"), () => wPanel.alignLeft())
-    private val centerHorizontalAction = new MenuItem(I18N.gui("alignCenterHorizontal"),
-                                                      () => wPanel.alignCenterHorizontal())
-    private val rightAction = new MenuItem(I18N.gui("alignRight"), () => wPanel.alignRight())
-    private val topAction = new MenuItem(I18N.gui("alignTop"), () => wPanel.alignTop())
-    private val centerVerticalAction = new MenuItem(I18N.gui("alignCenterVertical"), () => wPanel.alignCenterVertical())
-    private val bottomAction = new MenuItem(I18N.gui("alignBottom"), () => wPanel.alignBottom())
-    private val distributeHorizontalAction = new MenuItem(I18N.gui("distributeHorizontal"),
-                                                          () => wPanel.distributeHorizontal())
-    private val distributeVerticalAction = new MenuItem(I18N.gui("distributeVertical"),
-                                                        () => wPanel.distributeVertical())
-    private val stretchLeftAction = new MenuItem(I18N.gui("stretchLeft"), () => wPanel.stretchLeft())
-    private val stretchRightAction = new MenuItem(I18N.gui("stretchRight"), () => wPanel.stretchRight())
-    private val stretchTopAction = new MenuItem(I18N.gui("stretchTop"), () => wPanel.stretchTop())
-    private val stretchBottomAction = new MenuItem(I18N.gui("stretchBottom"), () => wPanel.stretchBottom())
+    private val leftAction = new AlignMenuItem("alignLeft", "align-left.png", _.alignLeft())
+    private val centerHorizontalAction = new AlignMenuItem("alignCenterHorizontal", "align-horizontal-center.png",
+                                                           _.alignCenterHorizontal())
+    private val rightAction = new AlignMenuItem("alignRight", "align-right.png", _.alignRight())
+    private val topAction = new AlignMenuItem("alignTop", "align-top.png", _.alignTop())
+    private val centerVerticalAction = new AlignMenuItem("alignCenterVertical", "align-vertical-center.png",
+                                                         _.alignCenterVertical())
+    private val bottomAction = new AlignMenuItem("alignBottom", "align-bottom.png", _.alignBottom())
+    private val distributeHorizontalAction = new AlignMenuItem("distributeHorizontal", "distribute-horizontal.png",
+                                                               _.distributeHorizontal())
+    private val distributeVerticalAction = new AlignMenuItem("distributeVertical", "distribute-vertical.png",
+                                                             _.distributeVertical())
+    private val stretchLeftAction = new AlignMenuItem("stretchLeft", "stretch-left.png", _.stretchLeft())
+    private val stretchRightAction = new AlignMenuItem("stretchRight", "stretch-right.png", _.stretchRight())
+    private val stretchTopAction = new AlignMenuItem("stretchTop", "stretch-top.png", _.stretchTop())
+    private val stretchBottomAction = new AlignMenuItem("stretchBottom", "stretch-bottom.png", _.stretchBottom())
 
     var popup: PopupMenu = getPopup
 
@@ -431,29 +431,8 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
       }
     }
 
-    private def setIcons(): Unit = {
-      val size: Int = Utils.zoom(16)
-      val color: Color = InterfaceColors.toolbarImage()
-
-      leftAction.setIcon(Utils.iconScaledWithColor("/images/align-left.png", size, size, color))
-      centerHorizontalAction.setIcon(Utils.iconScaledWithColor("/images/align-horizontal-center.png", size, size,
-                                                               color))
-      rightAction.setIcon(Utils.iconScaledWithColor("/images/align-right.png", size, size, color))
-      topAction.setIcon(Utils.iconScaledWithColor("/images/align-top.png", size, size, color))
-      centerVerticalAction.setIcon(Utils.iconScaledWithColor("/images/align-vertical-center.png", size, size, color))
-      bottomAction.setIcon(Utils.iconScaledWithColor("/images/align-bottom.png", size, size, color))
-      distributeHorizontalAction.setIcon(Utils.iconScaledWithColor("/images/distribute-horizontal.png", size, size,
-                                                                   color))
-      distributeVerticalAction.setIcon(Utils.iconScaledWithColor("/images/distribute-vertical.png", size, size, color))
-      stretchLeftAction.setIcon(Utils.iconScaledWithColor("/images/stretch-left.png", size, size, color))
-      stretchRightAction.setIcon(Utils.iconScaledWithColor("/images/stretch-right.png", size, size, color))
-      stretchTopAction.setIcon(Utils.iconScaledWithColor("/images/stretch-top.png", size, size, color))
-      stretchBottomAction.setIcon(Utils.iconScaledWithColor("/images/stretch-bottom.png", size, size, color))
-    }
-
     override def zoom(oldZoom: Float): Unit = {
       setDiameter(Utils.zoom(6))
-      setIcons()
 
       Seq(
         leftAction,
@@ -478,8 +457,12 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
       setBorderColor(InterfaceColors.toolbarControlBorder())
 
       label.setForeground(InterfaceColors.toolbarText())
+    }
 
-      setIcons()
+    private class AlignMenuItem(name: String, image: String, action: WidgetPanel => Unit)
+      extends MenuItem(I18N.gui(name), () => action(wPanel)) {
+
+      setIcon(Utils.iconScaledWithColor(s"/images/$image", 16, 16, () => InterfaceColors.toolbarImage()))
     }
   }
 

@@ -7,7 +7,7 @@ import java.awt.event.{ ActionEvent, ActionListener }
 import javax.swing.JLabel
 
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ BoxAlign, BoxRow, Button, Utils, Zoomable, ZoomableBorder }
+import org.nlogo.swing.{ BoxAlign, BoxRow, Button, Utils, ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 import scala.util.{ Success, Try }
@@ -51,7 +51,7 @@ class RuntimeErrorDisplay(accessor: PropertyAccessor[Option[Exception]])
 }
 
 abstract class RuntimeErrorDisplayer
-  extends BoxRow(6, BoxAlign.Start) with ActionListener with Zoomable with ThemeSync {
+  extends BoxRow(6, BoxAlign.Start) with ActionListener with ThemeSync {
 
   def exceptionMessage: Option[String]
 
@@ -63,7 +63,10 @@ abstract class RuntimeErrorDisplayer
     button
   }
 
-  lazy val errorLabel = new JLabel(I18N.gui.get("edit.plot.error.runtimeError"))
+  lazy val errorLabel = new JLabel(I18N.gui.get("edit.plot.error.runtimeError")) {
+    setIcon(Utils.iconScaledWithColor("/images/error.png", 15, 15, () => InterfaceColors.errorLabelText()))
+  }
+
   lazy val messageLabel = new JLabel
 
   setOpaque(true)
@@ -81,16 +84,6 @@ abstract class RuntimeErrorDisplayer
 
   override def actionPerformed(e: ActionEvent): Unit
 
-  private def setIcon(): Unit = {
-    val size: Int = Utils.zoom(15)
-
-    errorLabel.setIcon(Utils.iconScaledWithColor("/images/error.png", size, size, InterfaceColors.errorLabelText()))
-  }
-
-  override def zoom(oldZoom: Float): Unit = {
-    setIcon()
-  }
-
   override def syncTheme(): Unit = {
     setBackground(InterfaceColors.errorLabelBackground())
 
@@ -98,8 +91,6 @@ abstract class RuntimeErrorDisplayer
     messageLabel.setForeground(InterfaceColors.errorLabelText())
 
     dismissButton.syncTheme()
-
-    setIcon()
   }
 }
 

@@ -766,8 +766,6 @@ class App(args: App.CommandLineArgs) extends LinkChild with Exceptions.Handler w
 
     Utils.zoomMenuBar(mainMenuBar, oldZoom)
 
-    FindDialog.zoom(oldZoom)
-
     smartPack(frame.getPreferredSize, false)
   }
 

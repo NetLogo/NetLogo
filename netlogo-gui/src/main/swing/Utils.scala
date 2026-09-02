@@ -78,34 +78,11 @@ object Utils {
   def icon(path: String): ImageIcon = new ImageIcon(getClass.getResource(path))
   def icon(path: String, w: Int, h: Int): ImageIcon = new CenteredImageIcon(icon(path), w, h)
 
-  def iconScaled(path: String, width: Int, height: Int): ScalableIcon = {
-    new ScalableIcon(new ImageIcon(icon(path).getImage.getScaledInstance((width * uiScale).toInt,
-                                                                         (height * uiScale).toInt,
-                                                                         Image.SCALE_SMOOTH)), width, height)
-  }
+  def iconScaled(path: String, width: Int, height: Int): ScalableIcon =
+    new ScalableIcon(icon(path).getImage, width, height)
 
-  def iconScaledWithColor(path: String, width: Int, height: Int, color: Color): ScalableIcon = {
-    val image = iconScaled(path, width, height)
-    val buffered = new BufferedImage(width * 2, height * 2, BufferedImage.TYPE_INT_ARGB)
-
-    image.paintIcon(null, buffered.getGraphics, 0, 0)
-
-    for (y <- 0 until buffered.getHeight) {
-      for (x <- 0 until buffered.getWidth) {
-        val c1 = buffered.getRGB(x, y)
-        val c2 = color.getRGB
-
-        val r = ((c1 & 255) * (c2 & 255)) / 255
-        val g = (((c1 >> 8) & 255) * ((c2 >> 8) & 255)) / 255
-        val b = (((c1 >> 16) & 255) * ((c2 >> 16) & 255)) / 255
-        val a = (((c1 >> 24) & 255) * ((c2 >> 24) & 255)) / 255
-
-        buffered.setRGB(x, y, r | (g << 8) | (b << 16) | (a << 24))
-      }
-    }
-
-    new ScalableIcon(new ImageIcon(buffered), width, height)
-  }
+  def iconScaledWithColor(path: String, width: Int, height: Int, color: () => Color): ScalableIconWithColor =
+    new ScalableIconWithColor(icon(path).getImage, width, height, color)
 
   def font(path: String): Font =
     Font.createFont(Font.TRUETYPE_FONT, getClass.getResourceAsStream(path))
@@ -141,11 +118,27 @@ object Utils {
   }
 }
 
-class ScalableIcon(icon: Icon, width: Int, height: Int) extends Icon {
-  override def getIconWidth: Int = width
-  override def getIconHeight: Int = height
+class ScalableIcon(image: Image, width: Int, height: Int) extends Icon {
+  protected var lastZoom = 0f
+
+  protected var icon: Icon = new ImageIcon(image)
+
+  override def getIconWidth: Int = Utils.zoom(width)
+  override def getIconHeight: Int = Utils.zoom(height)
+
+  protected def updateIcon(): Unit = {
+    if (lastZoom != Utils.getZoomFactor) {
+      icon = new ImageIcon(image.getScaledInstance(Utils.zoom(width * Utils.getUIScale.toFloat).toInt,
+                                                   Utils.zoom(height * Utils.getUIScale.toFloat).toInt,
+                                                   Image.SCALE_SMOOTH))
+
+      lastZoom = Utils.getZoomFactor
+    }
+  }
 
   override def paintIcon(c: Component, g: Graphics, x: Int, y: Int): Unit = {
+    updateIcon()
+
     val g2d = Utils.initGraphics2D(g)
 
     val transform = g2d.getTransform
@@ -161,5 +154,46 @@ class ScalableIcon(icon: Icon, width: Int, height: Int) extends Icon {
     icon.paintIcon(c, g2d, (x * scaleX).toInt, (y * scaleY).toInt)
 
     g2d.setTransform(transform)
+  }
+}
+
+class ScalableIconWithColor(image: Image, width: Int, height: Int, color: () => Color)
+  extends ScalableIcon(image, width, height) {
+
+  private var lastColor: Color = color()
+
+  override def updateIcon(): Unit = {
+    val newColor: Color = color()
+
+    if (lastZoom != Utils.getZoomFactor || lastColor != newColor) {
+      icon = new ImageIcon(image.getScaledInstance(Utils.zoom(width * Utils.getUIScale.toFloat).toInt,
+                                                   Utils.zoom(height * Utils.getUIScale.toFloat).toInt,
+                                                   Image.SCALE_SMOOTH))
+
+      if (getIconWidth > 0 && getIconHeight > 0) {
+        val buffered = new BufferedImage(getIconWidth * 2, getIconHeight * 2, BufferedImage.TYPE_INT_ARGB)
+
+        icon.paintIcon(null, buffered.getGraphics, 0, 0)
+
+        for (y <- 0 until buffered.getHeight) {
+          for (x <- 0 until buffered.getWidth) {
+            val c1 = buffered.getRGB(x, y)
+            val c2 = newColor.getRGB
+
+            val r = ((c1 & 255) * (c2 & 255)) / 255
+            val g = (((c1 >> 8) & 255) * ((c2 >> 8) & 255)) / 255
+            val b = (((c1 >> 16) & 255) * ((c2 >> 16) & 255)) / 255
+            val a = (((c1 >> 24) & 255) * ((c2 >> 24) & 255)) / 255
+
+            buffered.setRGB(x, y, r | (g << 8) | (b << 16) | (a << 24))
+          }
+        }
+
+        icon = new ImageIcon(buffered)
+      }
+
+      lastZoom = Utils.getZoomFactor
+      lastColor = newColor
+    }
   }
 }
