@@ -72,12 +72,12 @@ class ButtonWidget(random: MersenneTwisterFast, compiler: CompilerServices, colo
 
   import ButtonWidget._
 
-  private var foreverIcon = Utils.iconScaledWithColor("/images/forever.png", 15, 15,
-                                                      InterfaceColors.buttonText())
-  private var foreverIconPressed = Utils.iconScaledWithColor("/images/forever.png", 15, 15,
-                                                             InterfaceColors.buttonTextPressed())
-  private var foreverIconDisabled = Utils.iconScaledWithColor("/images/forever.png", 15, 15,
-                                                              InterfaceColors.buttonTextDisabled())
+  private val foreverIcon = Utils.iconScaledWithColor("/images/forever.png", 15, 15,
+                                                      () => InterfaceColors.buttonText())
+  private val foreverIconPressed = Utils.iconScaledWithColor("/images/forever.png", 15, 15,
+                                                             () => InterfaceColors.buttonTextPressed())
+  private val foreverIconDisabled = Utils.iconScaledWithColor("/images/forever.png", 15, 15,
+                                                              () => InterfaceColors.buttonTextDisabled())
 
   private var _buttonType: ButtonType = ButtonType.ObserverButton
 
@@ -518,24 +518,7 @@ class ButtonWidget(random: MersenneTwisterFast, compiler: CompilerServices, colo
     super.paintComponent(g)
   }
 
-  override def zoom(oldZoom: Float): Unit = {
-    super.zoom(oldZoom)
-
-    setIcons()
-  }
-
-  override def syncTheme(): Unit = {
-    setIcons()
-  }
-
-  private def setIcons(): Unit = {
-    foreverIcon = Utils.iconScaledWithColor("/images/forever.png", Utils.zoom(15), Utils.zoom(15),
-                                            InterfaceColors.buttonText())
-    foreverIconPressed = Utils.iconScaledWithColor("/images/forever.png", Utils.zoom(15), Utils.zoom(15),
-                                                   InterfaceColors.buttonTextPressed())
-    foreverIconDisabled = Utils.iconScaledWithColor("/images/forever.png", Utils.zoom(15), Utils.zoom(15),
-                                                    InterfaceColors.buttonTextDisabled())
-  }
+  override def syncTheme(): Unit = {}
 
   // saving and loading
   override def model: CoreWidget = {

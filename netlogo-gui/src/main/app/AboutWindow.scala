@@ -115,7 +115,6 @@ class AboutWindow(parent: Frame)
     override def zoom(oldZoom: Float): Unit = {
       super.zoom(oldZoom)
 
-      setIcon()
       pack()
     }
   }
@@ -170,19 +169,14 @@ class AboutWindow(parent: Frame)
     }
   }
 
-  private def setIcon(): Unit = {
-    val width: Int = Utils.zoom(600)
-    val height: Int = Utils.zoom(231)
-
-    if (InterfaceColors.getTheme == DarkTheme) {
-      graphic.setIcon(Utils.iconScaled("/images/banner-dark-versionless.png", width, height))
-    } else {
-      graphic.setIcon(Utils.iconScaled("/images/banner-versionless.png", width, height))
-    }
-  }
-
   override def syncTheme(): Unit = {
     contents.setBackground(InterfaceColors.dialogBackground())
+
+    if (InterfaceColors.getTheme == DarkTheme) {
+      graphic.setIcon(Utils.iconScaled("/images/banner-dark-versionless.png", 600, 231))
+    } else {
+      graphic.setIcon(Utils.iconScaled("/images/banner-versionless.png", 600, 231))
+    }
 
     label.syncTheme()
     credits.syncTheme()
@@ -195,7 +189,5 @@ class AboutWindow(parent: Frame)
     systemScrollPane.setBackground(InterfaceColors.textAreaBackground())
 
     tabs.syncTheme()
-
-    setIcon()
   }
 }
