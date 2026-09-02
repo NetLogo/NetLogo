@@ -12,11 +12,11 @@ import org.nlogo.core.I18N
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, ButtonPanel, CheckBox, DialogButton,
                          NonemptyTextFieldActionEnabler, NonemptyTextFieldButtonEnabler, ScrollableTextComponent,
-                         SyncZoom, TextField, TextFieldBox, UserAction, Utils, WindowAutomator, Zoomable,
-                         ZoomableBorder, ZoomActions },
+                         SyncZoom, TextField, TextFieldBox, UserAction, Utils, WindowAutomator, ZoomableBorder,
+                         ZoomActions },
   UserAction.{ EditCategory, EditFindGroup, KeyBindings, MenuAction }
 
-object FindDialog extends Zoomable with ThemeSync {
+object FindDialog extends ThemeSync {
   class FindAction extends TextAction(I18N.gui.get("menu.edit.find")) with MenuAction {
     category = EditCategory
     group = EditFindGroup
@@ -140,6 +140,13 @@ object FindDialog extends Zoomable with ThemeSync {
   def init(frame: Frame, codeFrame: Frame): Unit = {
     instance = new FindDialog(frame)
     codeInstance = new FindDialog(codeFrame)
+
+    val icon: Icon = Utils.iconScaledWithColor("/images/find.png", 15, 15, () => InterfaceColors.toolbarImage())
+
+    FIND_ACTION.putValue(Action.SMALL_ICON, icon)
+    FIND_ACTION_CODE.putValue(Action.SMALL_ICON, icon)
+    FIND_NEXT_ACTION.putValue(Action.SMALL_ICON, icon)
+    FIND_NEXT_ACTION_CODE.putValue(Action.SMALL_ICON, icon)
   }
 
   def getInstance: FindDialog = {
@@ -182,28 +189,12 @@ object FindDialog extends Zoomable with ThemeSync {
     }
   }
 
-  private def setIcons(): Unit = {
-    val size: Int = Utils.zoom(15)
-    val icon: Icon = Utils.iconScaledWithColor("/images/find.png", size, size, InterfaceColors.toolbarImage())
-
-    FIND_ACTION.putValue(Action.SMALL_ICON, icon)
-    FIND_ACTION_CODE.putValue(Action.SMALL_ICON, icon)
-    FIND_NEXT_ACTION.putValue(Action.SMALL_ICON, icon)
-    FIND_NEXT_ACTION_CODE.putValue(Action.SMALL_ICON, icon)
-  }
-
-  override def zoom(oldZoom: Float): Unit = {
-    setIcons()
-  }
-
   override def syncTheme(): Unit = {
     if (instance != null)
       instance.syncTheme()
 
     if (codeInstance != null)
       codeInstance.syncTheme()
-
-    setIcons()
   }
 }
 

@@ -14,7 +14,7 @@ import org.nlogo.awt.Hierarchy
 import org.nlogo.core.{ CompilerException, I18N }
 import org.nlogo.editor.{ Colorizer, EditorArea, EditorConfiguration }
 import org.nlogo.plot.{ Plot, PlotManagerInterface, PlotPen }
-import org.nlogo.swing.{ BoxColumn, BoxRow, Button, PreferredSize, Popup, ScrollPane, Utils, Zoomable, ZoomableBorder }
+import org.nlogo.swing.{ BoxColumn, BoxRow, Button, PreferredSize, Popup, ScrollPane, Utils, ZoomableBorder }
 import org.nlogo.theme.InterfaceColors
 
 import scala.collection.mutable.ArrayBuffer
@@ -141,7 +141,7 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], compiler: Compil
     addButton.syncTheme()
   }
 
-  class PlotPensTable extends JTable with Zoomable { table =>
+  class PlotPensTable extends JTable { table =>
 
     val UpdateCommandsColumnName = I18N.gui("updateCommands")
     val NameColumnName = I18N.gui("name")
@@ -223,10 +223,6 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], compiler: Compil
 
     // someone pressed the delete button in the pens row.
     def removePen(index: Int): Unit = {model.removePen(index)}
-
-    override def zoom(oldZoom: Float): Unit = {
-      cellEditor.zoom(oldZoom)
-    }
 
     // shows the pens color as a colored rectangle
     class ColorRenderer extends JLabel with TableCellRenderer {
@@ -318,10 +314,12 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], compiler: Compil
     }
 
     // renders the delete and edit buttons for each column
-    class ButtonCellEditor extends AbstractCellEditor with TableCellRenderer with TableCellEditor with Zoomable {
-      private var editIcon   = Utils.iconScaledWithColor("/images/edit.png", 15, 15, InterfaceColors.toolbarImage())
-      private var alertIcon  = Utils.iconScaled("/images/edit-error.png", 15, 15)
-      private var deleteIcon = Utils.iconScaledWithColor("/images/delete.png", 15, 15, InterfaceColors.toolbarImage())
+    class ButtonCellEditor extends AbstractCellEditor with TableCellRenderer with TableCellEditor {
+      private val editIcon   = Utils.iconScaledWithColor("/images/edit.png", 15, 15,
+                                                         () => InterfaceColors.toolbarImage())
+      private val alertIcon  = Utils.iconScaled("/images/edit-error.png", 15, 15)
+      private val deleteIcon = Utils.iconScaledWithColor("/images/delete.png", 15, 15,
+                                                         () => InterfaceColors.toolbarImage())
 
       private val editButton = new Button("", () => {
         openAdvancedPenEditor(model.pens(getSelectedRow))
@@ -379,14 +377,6 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], compiler: Compil
       def getTableCellEditorComponent(table: JTable, value: Object,
                                       isSelected: Boolean, row: Int, col: Int) = showRow(row)
       def getCellEditorValue = ""
-
-      override def zoom(oldZoom: Float): Unit = {
-        val size: Int = Utils.zoom(15)
-
-        editIcon = Utils.iconScaledWithColor("/images/edit.png", size, size, InterfaceColors.toolbarImage())
-        alertIcon = Utils.iconScaled("/images/edit-error.png", size, size)
-        deleteIcon = Utils.iconScaledWithColor("/images/delete.png", size, size, InterfaceColors.toolbarImage())
-      }
     }
 
     class CodeCellFactory extends AbstractCellEditor with TableCellRenderer with TableCellEditor {

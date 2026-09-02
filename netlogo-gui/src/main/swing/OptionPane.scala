@@ -21,10 +21,12 @@ object OptionPane {
 
   object Icons {
     val None: Icon = null
-    val Info = Utils.iconScaledWithColor("/images/exclamation-circle.png", 30, 30, InterfaceColors.infoIcon())
-    val Question = Utils.iconScaledWithColor("/images/question.png", 30, 30, InterfaceColors.infoIcon())
-    val Warning = Utils.iconScaledWithColor("/images/exclamation-triangle.png", 30, 30, InterfaceColors.warningIcon())
-    val Error = Utils.iconScaledWithColor("/images/exclamation-triangle.png", 30, 30, InterfaceColors.errorIcon())
+    val Info = Utils.iconScaledWithColor("/images/exclamation-circle.png", 30, 30, () => InterfaceColors.infoIcon())
+    val Question = Utils.iconScaledWithColor("/images/question.png", 30, 30, () => InterfaceColors.infoIcon())
+    val Warning = Utils.iconScaledWithColor("/images/exclamation-triangle.png", 30, 30,
+                                            () => InterfaceColors.warningIcon())
+    val Error = Utils.iconScaledWithColor("/images/exclamation-triangle.png", 30, 30,
+                                          () => InterfaceColors.errorIcon())
   }
 }
 

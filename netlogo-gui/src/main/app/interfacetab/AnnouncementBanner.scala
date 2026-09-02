@@ -149,7 +149,6 @@ class AnnouncementBanner extends JPanel with MouseUtils with ThemeSync {
   override def syncTheme(): Unit = {
     renderData()
     textPane.syncTheme()
-    simpleXButton.syncTheme()
     complexXWrapper.syncTheme()
   }
 
@@ -164,16 +163,17 @@ private class TextPane(title: Component, text: Component) extends BoxRow(Seq(tit
 
 }
 
-private class XButton(dismissItem: () => Unit) extends JButton with MouseUtils with ThemeSync {
+private class XButton(dismissItem: () => Unit) extends JButton with MouseUtils {
 
   private def defaultXColor() = InterfaceColors.announceX()
 
-  private val setXColor = (color: Color) => setIcon(Utils.iconScaledWithColor("/images/close-light.png", 15, 15, color))
+  private val setXColor = (color: () => Color) => {
+    setIcon(Utils.iconScaledWithColor("/images/close-light.png", 15, 15, color))
+  }
 
   setBorderPainted(false)
   setContentAreaFilled(false)
   setOpaque(false)
-  syncTheme()
 
   addActionListener(
     new ActionListener() {
@@ -186,26 +186,22 @@ private class XButton(dismissItem: () => Unit) extends JButton with MouseUtils w
   addMouseListener(new MouseAdapter() {
 
     override def mouseEntered(e: MouseEvent): Unit = {
-      setXColor(InterfaceColors.announceXHovered())
+      setXColor(InterfaceColors.announceXHovered)
     }
 
     override def mouseExited(e: MouseEvent): Unit = {
-      setXColor(defaultXColor())
+      setXColor(defaultXColor)
     }
 
     override def mousePressed(e: MouseEvent): Unit = {
-      setXColor(InterfaceColors.announceXPressed())
+      setXColor(InterfaceColors.announceXPressed)
     }
 
     override def mouseReleased(e: MouseEvent): Unit = {
-      setXColor(defaultXColor())
+      setXColor(defaultXColor)
     }
 
   })
-
-  override def syncTheme(): Unit = {
-    setXColor(defaultXColor())
-  }
 
 }
 
@@ -222,7 +218,7 @@ private class ComplexXWrapper(dismissItem: () => Unit) extends JPanel with Mouse
   Util.modifyFont(complexXNum)(_.deriveFont(14f))
   complexXNum.setBorder(new ZoomableBorder(0, 0, 0, 3))
 
-  complexX.setIcon(Utils.iconScaledWithColor("/images/chevron-right.png", 10, 10, InterfaceColors.announceX()))
+  complexX.setIcon(Utils.iconScaledWithColor("/images/chevron-right.png", 10, 10, () => InterfaceColors.announceX()))
 
   val complexGBC = new GridBagConstraints()
   setVisible(false)

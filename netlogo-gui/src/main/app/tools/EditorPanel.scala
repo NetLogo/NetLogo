@@ -9,20 +9,28 @@ import org.nlogo.api.{ CompilerServices, PreviewCommands }, PreviewCommands.{ Co
 import org.nlogo.core.I18N
 import org.nlogo.editor.{ EditorArea, EditorConfiguration }
 import org.nlogo.swing.{ BoxColumn, BoxRow, Button, ComboBox, HasPropertyChangeSupport, MaximumHeight, PreferredSize,
-                         ScrollPane, Utils, Zoomable }
+                         ScrollPane, Utils }
 import org.nlogo.theme.InterfaceColors
 import org.nlogo.util.Implicits.RichString
 import org.nlogo.window.{ AutoIndentHandler, EditorAreaErrorLabel, EditorColorizer }
 
-class EditorPanel(compiler: CompilerServices, colorizer: EditorColorizer) extends BoxColumn(6) with Zoomable {
+class EditorPanel(compiler: CompilerServices, colorizer: EditorColorizer) extends BoxColumn(6) {
   val comboBox = new PreviewCommandsComboBox
-  val compileButton = new Button("", () => {
+  val compileButton: Button = new Button("", () => {
     if (dirty) {
       dirty = false
-      updateCompileIcon()
+      compileButton.repaint()
       comboBox.updateCommands(PreviewCommands(editor.getText()))
     }
   }) with PreferredSize {
+    setIcon(Utils.iconScaledWithColor("/images/check.png", 15, 15, () => {
+      if (dirty) {
+        InterfaceColors.checkFilled()
+      } else {
+        InterfaceColors.toolbarImage()
+      }
+    }))
+
     override def getPreferredSize: Dimension = {
       val size: Int = comboBox.getPreferredSize.height
 
@@ -34,7 +42,7 @@ class EditorPanel(compiler: CompilerServices, colorizer: EditorColorizer) extend
   val textListener = new TextListener with HasPropertyChangeSupport {
     override def textValueChanged(e: TextEvent): Unit = {
       dirty = true
-      updateCompileIcon()
+      compileButton.repaint()
       // forward the event (which is always null) to whoever is interested
       propertyChangeSupport.firePropertyChange("textValueChanged", null, null)
     }
@@ -55,15 +63,13 @@ class EditorPanel(compiler: CompilerServices, colorizer: EditorColorizer) extend
       super.focusLost(fe)
       if (dirty) {
         dirty = false
-        updateCompileIcon()
+        compileButton.repaint()
         comboBox.updateCommands(PreviewCommands(getText))
       }
     }
   }
 
   val errorLabel = new EditorAreaErrorLabel(editor)
-
-  updateCompileIcon()
 
   add(new BoxRow(Seq(comboBox, compileButton), 6) with MaximumHeight)
   add(errorLabel)
@@ -75,22 +81,7 @@ class EditorPanel(compiler: CompilerServices, colorizer: EditorColorizer) extend
     editor.setText(previewCommands.source)
     editor.setEnabled(previewCommands.isInstanceOf[Compilable])
     dirty = false
-    updateCompileIcon()
-  }
-
-  private def updateCompileIcon(): Unit = {
-    val size: Int = Utils.zoom(15)
-
-    compileButton.setIcon(Utils.iconScaledWithColor("/images/check.png", size, size,
-                                                    if (dirty) {
-                                                      InterfaceColors.checkFilled()
-                                                    } else {
-                                                      InterfaceColors.toolbarImage()
-                                                    }))
-  }
-
-  override def zoom(oldZoom: Float): Unit = {
-    updateCompileIcon()
+    compileButton.repaint()
   }
 }
 

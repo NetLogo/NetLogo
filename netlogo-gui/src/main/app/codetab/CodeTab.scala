@@ -15,7 +15,7 @@ import org.nlogo.core.{ AgentKind, CompilerException, I18N }
 import org.nlogo.editor.{ AdvancedEditorArea, EditorConfiguration }
 import org.nlogo.nvm.IncludeSource
 import org.nlogo.swing.{ BoxAlign, BoxRow, Button, CheckBox, PrinterManager, ToolBarActionButton, UserAction,
-                         Printable => NlogoPrintable, Utils, Zoomable, ZoomableBorder }
+                         Printable => NlogoPrintable, Utils, ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ CommentableError, ProceduresInterface, Events => WindowEvents }
 import org.nlogo.workspace.AbstractWorkspace
@@ -29,7 +29,6 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
   with WindowEvents.AfterLoadEvent.Handler
   with NlogoPrintable
   with MenuTab
-  with Zoomable
   with ThemeSync {
 
   protected val compileButton = new ToolBarActionButton(new AbstractAction(I18N.gui.get("tabs.code.checkButton")) {
@@ -37,6 +36,7 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
       compile()
     }
   }) {
+    setIcon(Utils.iconScaledWithColor("/images/check.png", 15, 15, () => InterfaceColors.toolbarImage()))
     setEnabled(false)
   }
 
@@ -246,16 +246,6 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
 
   def close(): Unit = {}
 
-  private def setIcons(): Unit = {
-    val size: Int = Utils.zoom(15)
-
-    compileButton.setIcon(Utils.iconScaledWithColor("/images/check.png", size, size, InterfaceColors.toolbarImage()))
-  }
-
-  override def zoom(oldZoom: Float): Unit = {
-    setIcons()
-  }
-
   override def syncTheme(): Unit = {
     setBackground(InterfaceColors.codeBackground())
 
@@ -275,7 +265,5 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
 
     // for code completion popup
     editorFactory.syncTheme()
-
-    setIcons()
   }
 }

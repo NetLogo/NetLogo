@@ -14,9 +14,9 @@ import javax.swing.event.{ AncestorEvent, AncestorListener, ListDataEvent, ListD
 
 import org.nlogo.api.{ LibraryInfoDownloader, LibraryManager, Version }
 import org.nlogo.core.{ I18N, LibraryInfo, LibraryStatus, Token, TokenType }
-import org.nlogo.swing.{ AutomationUtils, BoxColumn, BoxRow, BrowserLauncher, Button, EmptyIcon, FilterableListModel,
-                         HorizontalStrut, MaximumHeight, OptionPane, RichAction, ScalableIcon, ScrollPane, SwingWorker,
-                         SyncZoom, TextArea, TextField, Utils, VerticalStrut, Zoomable, ZoomableBorder }
+import org.nlogo.swing.{ AutomationUtils, BoxColumn, BoxRow, BrowserLauncher, Button, FilterableListModel,
+                         HorizontalStrut, MaximumHeight, OptionPane, RichAction, ScrollPane, SwingWorker, SyncZoom,
+                         TextArea, TextField, Utils, VerticalStrut, Zoomable, ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.workspace.ModelsLibrary
 
@@ -150,7 +150,9 @@ class LibrariesTab( category:        String
 
     }
 
-  private val magIcon = new JLabel
+  private val magIcon = new JLabel {
+    setIcon(Utils.iconScaledWithColor("/images/find.png", 15, 15, () => InterfaceColors.toolbarImage()))
+  }
 
   private val filterField = new TextField with MaximumHeight
 
@@ -402,10 +404,12 @@ class LibrariesTab( category:        String
     updateStatus(I18N.gui(operation, libName))
 
   private class CellRenderer extends BoxRow(6) with ListCellRenderer[LibraryInfo] with SyncZoom {
-    private var noIcon: Icon = null
-    private var upToDateIcon: Icon = null
-    private var warningIcon: Icon = null
-    private var canUpdateIcon: Icon = null
+    private val upToDateIcon: Icon = Utils.iconScaledWithColor("/images/check.png", 24, 24,
+                                                               () => InterfaceColors.checkFilled())
+    private val warningIcon: Icon = Utils.iconScaledWithColor("/images/exclamation-triangle.png", 24, 24,
+                                                              () => InterfaceColors.warningIcon())
+    private val canUpdateIcon: Icon = Utils.iconScaledWithColor("/images/update.png", 24, 24,
+                                                                () => InterfaceColors.updateIcon())
 
     private val iconLabel = new JLabel
     private val nameLabel = new JLabel
@@ -420,7 +424,6 @@ class LibrariesTab( category:        String
     nameLabel.setFont(nameLabel.getFont.deriveFont(14.0f).deriveFont(Font.BOLD))
 
     syncZoom()
-    setIcons()
 
     override def getListCellRendererComponent(list: JList[? <: LibraryInfo], value: LibraryInfo, index: Int,
                                               isSelected: Boolean, hasFocus: Boolean): Component = {
@@ -444,32 +447,16 @@ class LibrariesTab( category:        String
       this
     }
 
-    def setIcons(): Unit = {
-      val size: Int = Utils.zoom(24)
-
-      noIcon = new ScalableIcon(new EmptyIcon(size, size), size, size)
-      upToDateIcon = Utils.iconScaledWithColor("/images/check.png", size, size, InterfaceColors.checkFilled())
-      warningIcon = Utils.iconScaledWithColor("/images/exclamation-triangle.png", size, size,
-                                              InterfaceColors.warningIcon())
-      canUpdateIcon = Utils.iconScaledWithColor("/images/update.png", size, size, InterfaceColors.updateIcon())
-    }
-
     private def statusIcon(status: LibraryStatus, extName: String): Icon =
       if (!extPathMappings.contains(extName)) {
         status match {
           case LibraryStatus.UpToDate   => upToDateIcon
           case LibraryStatus.CanUpdate  => canUpdateIcon
-          case LibraryStatus.CanInstall => noIcon
+          case LibraryStatus.CanInstall => null
         }
       } else {
         warningIcon
       }
-
-    override def zoom(oldZoom: Float): Unit = {
-      super.zoom(oldZoom)
-
-      setIcons()
-    }
   }
 
   private class Worker( operation: String, fn: LibraryInfo => Unit
@@ -515,16 +502,7 @@ class LibrariesTab( category:        String
 
   }
 
-  private def setIcons(): Unit = {
-    val size: Int = Utils.zoom(15)
-
-    magIcon.setIcon(Utils.iconScaledWithColor("/images/find.png", size, size, InterfaceColors.toolbarImage()))
-    renderer.setIcons()
-  }
-
   override def zoom(oldZoom: Float): Unit = {
-    setIcons()
-
     Utils.zoomComponents(renderer, oldZoom)
   }
 
@@ -551,8 +529,6 @@ class LibrariesTab( category:        String
     infoScroll.setBackground(InterfaceColors.textAreaBackground())
 
     info.syncTheme()
-
-    setIcons()
   }
 
   private [app] def searchFor(text: String, expectedSize: Int): Option[Seq[LibraryInfo]] = {

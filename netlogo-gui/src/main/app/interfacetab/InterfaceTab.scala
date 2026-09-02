@@ -111,6 +111,8 @@ class InterfaceTab(workspace: GUIWorkspace,
 
   Utils.addEscKeyAction(this, () => InterfaceTab.this.monitorManager.closeTopMonitor())
 
+  locationToggleAction.setIcon()
+
   private class InterfaceTabFocusTraversalPolicy extends ContainerOrderFocusTraversalPolicy {
     override def getComponentAfter(focusCycleRoot: Container, aComponent: Component) =
       if (aComponent == iP) {
@@ -255,7 +257,7 @@ class InterfaceTab(workspace: GUIWorkspace,
 
   /// command center stuff
 
-  private class CommandCenterLocationToggleAction extends AbstractAction with Zoomable with ThemeSync {
+  private class CommandCenterLocationToggleAction extends AbstractAction {
     override def actionPerformed(e: ActionEvent): Unit = {
       splitPane.getOrientation match {
         case JSplitPane.VERTICAL_SPLIT => splitPane.setOrientation(JSplitPane.HORIZONTAL_SPLIT)
@@ -264,28 +266,19 @@ class InterfaceTab(workspace: GUIWorkspace,
 
       splitPane.resetToPreferredSizes()
 
-      syncTheme()
+      setIcon()
     }
 
-    private def setIcons(): Unit = {
-      val size: Int = Utils.zoom(10)
-
+    def setIcon(): Unit = {
       splitPane.getOrientation match {
         case JSplitPane.VERTICAL_SPLIT =>
-          putValue(Action.SMALL_ICON, Utils.iconScaledWithColor("/images/shift-bottom.png", size, size,
-                                                                InterfaceColors.locationToggleImage()))
+          putValue(Action.SMALL_ICON, Utils.iconScaledWithColor("/images/shift-bottom.png", 10, 10,
+                                                                () => InterfaceColors.locationToggleImage()))
+
         case JSplitPane.HORIZONTAL_SPLIT =>
-          putValue(Action.SMALL_ICON, Utils.iconScaledWithColor("/images/shift-right.png", size, size,
-                                                                InterfaceColors.locationToggleImage()))
+          putValue(Action.SMALL_ICON, Utils.iconScaledWithColor("/images/shift-right.png", 10, 10,
+                                                                () => InterfaceColors.locationToggleImage()))
       }
-    }
-
-    override def zoom(oldZoom: Float): Unit = {
-      setIcons()
-    }
-
-    override def syncTheme(): Unit = {
-      setIcons()
     }
   }
 
@@ -361,8 +354,6 @@ class InterfaceTab(workspace: GUIWorkspace,
     toolBar.getMinimumWidth
 
   override def zoom(oldZoom: Float): Unit = {
-    locationToggleAction.zoom(oldZoom)
-
     sizeToFit()
   }
 
@@ -373,7 +364,6 @@ class InterfaceTab(workspace: GUIWorkspace,
     scrollPane.setBackground(InterfaceColors.interfaceBackground())
 
     commandCenter.syncTheme()
-    locationToggleAction.syncTheme()
     announcementBar.syncTheme()
     splitPane.syncTheme()
   }

@@ -76,7 +76,9 @@ abstract class ManagerDialog[A <: CoreShape](parentFrame: Frame, modelLoader: Ab
     })
   }
 
-  private val searchIcon = new JLabel
+  private val searchIcon = new JLabel {
+    setIcon(Utils.iconScaledWithColor("/images/find.png", 15, 15, () => InterfaceColors.toolbarImage()))
+  }
 
   locally {
     val contents = new BoxColumn(Seq(
@@ -99,7 +101,6 @@ abstract class ManagerDialog[A <: CoreShape](parentFrame: Frame, modelLoader: Ab
       override def zoom(oldZoom: Float): Unit = {
         super.zoom(oldZoom)
 
-        setIcons()
         pack()
       }
     }
@@ -198,12 +199,6 @@ abstract class ManagerDialog[A <: CoreShape](parentFrame: Frame, modelLoader: Ab
     }
   }
 
-  private def setIcons(): Unit = {
-    val size: Int = Utils.zoom(15)
-
-    searchIcon.setIcon(Utils.iconScaledWithColor("/images/find.png", size, size, InterfaceColors.toolbarImage()))
-  }
-
   override def syncTheme(): Unit = {
     getContentPane.setBackground(InterfaceColors.dialogBackground())
     scrollPane.setBackground(InterfaceColors.dialogBackground())
@@ -217,7 +212,5 @@ abstract class ManagerDialog[A <: CoreShape](parentFrame: Frame, modelLoader: Ab
     searchField.syncTheme()
 
     additionalButton.foreach(_.syncTheme())
-
-    setIcons()
   }
 }

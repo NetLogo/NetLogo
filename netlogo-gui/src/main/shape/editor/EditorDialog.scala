@@ -80,7 +80,7 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
       shapeView.selfFinishPolygon(true)
     }
   }) {
-    setIcon(Utils.iconScaledWithColor("/images/shapes-editor/arrow.png", 15, 15, InterfaceColors.toolbarText()))
+    setIcon(Utils.iconScaledWithColor("/images/shapes-editor/arrow.png", 15, 15, () => InterfaceColors.toolbarText()))
     setSelected(false)
   }
 
@@ -590,7 +590,7 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
     extends AbstractAction(name) {
 
     putValue(Action.SMALL_ICON, Utils.iconScaledWithColor("/images/shapes-editor/" + name + ".png", 15, 15,
-                                                          InterfaceColors.toolbarText()))
+                                                          () => InterfaceColors.toolbarText()))
     putValue(Action.SHORT_DESCRIPTION, I18N.gui(name))
 
     def actionPerformed(e: ActionEvent): Unit = {

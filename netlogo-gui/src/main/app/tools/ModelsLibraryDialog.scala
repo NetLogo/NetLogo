@@ -183,20 +183,8 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
   }
 
   private var searchText = Option.empty[String]
-  private val searchIcon = new JLabel with Zoomable with ThemeSync {
-    private def updateIcon(): Unit = {
-      val size: Int = Utils.zoom(15)
-
-      setIcon(Utils.iconScaledWithColor("/images/find.png", size, size, InterfaceColors.toolbarImage()))
-    }
-
-    override def zoom(oldZoom: Float): Unit = {
-      updateIcon()
-    }
-
-    override def syncTheme(): Unit = {
-      updateIcon()
-    }
+  private val searchIcon = new JLabel {
+    setIcon(Utils.iconScaledWithColor("/images/find.png", 15, 15, () => InterfaceColors.toolbarImage()))
   }
 
   private val modelPreviewPanel: ModelPreviewPanel = new ModelPreviewPanel()
@@ -797,7 +785,6 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
     modelPreviewPanel.syncTheme()
     tree.syncTheme()
     searchField.syncTheme()
-    searchIcon.syncTheme()
 
     communityButton.syncTheme()
     selectButton.syncTheme()
@@ -812,14 +799,6 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
                                             InterfaceColors.modelsLibraryFolderSelected)
     private val leaf = new SelectableIcon("/images/leaf.png", 12, 14, InterfaceColors.modelsLibraryLeaf,
                                           InterfaceColors.modelsLibraryLeafSelected)
-
-    syncTheme()
-
-    def setIcons(): Unit = {
-      open.setIcons()
-      closed.setIcons()
-      leaf.setIcons()
-    }
 
     override def getIconTextGap: Int =
       Utils.zoom(super.getIconTextGap)
@@ -843,27 +822,19 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
       this
     }
 
-    override def zoom(oldZoom: Float): Unit = {
-      super.zoom(oldZoom)
-
-      setIcons()
-    }
-
     override def syncTheme(): Unit = {
       backgroundNonSelectionColor = InterfaceColors.dialogBackground()
       backgroundSelectionColor = InterfaceColors.dialogBackgroundSelected()
       textNonSelectionColor = InterfaceColors.dialogText()
       textSelectionColor = InterfaceColors.dialogTextSelected()
-
-      setIcons()
     }
   }
 
   private class SelectableIcon(path: String, width: Int, height: Int, normalColor: () => Color,
                                selectedColor: () => Color) {
 
-    private var normal: Icon = null
-    private var selected: Icon = null
+    private val normal: Icon = Utils.iconScaledWithColor(path, width, height, normalColor)
+    private val selected: Icon = Utils.iconScaledWithColor(path, width, height, selectedColor)
 
     def getIcon(selected: Boolean): Icon = {
       if (selected) {
@@ -871,11 +842,6 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
       } else {
         normal
       }
-    }
-
-    def setIcons(): Unit = {
-      normal = Utils.iconScaledWithColor(path, Utils.zoom(width), Utils.zoom(height), normalColor())
-      selected = Utils.iconScaledWithColor(path, Utils.zoom(width), Utils.zoom(height), selectedColor())
     }
   }
 }
