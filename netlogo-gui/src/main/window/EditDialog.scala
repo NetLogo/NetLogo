@@ -113,7 +113,7 @@ class EditDialog(window: Window, target: Editable, editPanel: EditPanel, modal: 
   if (editPanel.isResizable) {
     setResizable(true)
 
-    editPanel.setLayoutListener(() => setMinimumSize(mainPanel.getMinimumSize))
+    editPanel.setLayoutListener(() => setMinimumSize(mainPanel.getPreferredSize))
   } else {
     setResizable(false)
   }

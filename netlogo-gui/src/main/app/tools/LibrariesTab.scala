@@ -13,7 +13,7 @@ import javax.swing.event.{ AncestorEvent, AncestorListener, ListDataEvent, ListD
 
 import org.nlogo.api.{ LibraryInfoDownloader, LibraryManager, Version }
 import org.nlogo.core.{ I18N, LibraryInfo, LibraryStatus, Token, TokenType }
-import org.nlogo.swing.{ AutomationUtils, BoxColumn, BoxRow, BrowserLauncher, Button, FilterableListModel,
+import org.nlogo.swing.{ AutomationUtils, BoxColumn, BoxRow, BrowserLauncher, Button, EmptyIcon, FilterableListModel,
                          HorizontalStrut, MaximumHeight, OptionPane, RichAction, ScrollPane, SwingWorker, TextArea,
                          TextField, Utils, VerticalStrut, Zoomable, ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
@@ -406,6 +406,7 @@ class LibrariesTab( category:        String
                                                               () => InterfaceColors.warningIcon())
     private val canUpdateIcon: Icon = Utils.iconScaledWithColor("/images/update.png", 24, 24,
                                                                 () => InterfaceColors.updateIcon())
+    private val noIcon: Icon = new EmptyIcon(24, 24)
 
     private val iconLabel = new JLabel
     private val descLabel = new JLabel with Zoomable
@@ -447,7 +448,7 @@ class LibrariesTab( category:        String
         status match {
           case LibraryStatus.UpToDate   => upToDateIcon
           case LibraryStatus.CanUpdate  => canUpdateIcon
-          case LibraryStatus.CanInstall => null
+          case LibraryStatus.CanInstall => noIcon
         }
       } else {
         warningIcon

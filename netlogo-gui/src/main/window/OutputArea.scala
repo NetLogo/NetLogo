@@ -68,14 +68,14 @@ class OutputArea(val text: TextArea) extends BoxRow with RoundedBorderPanel with
     text.getBaseFont.getSize
 
   def fontSize(fontSize: Int): Unit = {
-    text.setBaseFont(text.getFont.deriveFont(fontSize))
+    text.setBaseFont(text.getFont.deriveFont(fontSize.toFloat))
   }
 
   override def getFont: Font =
     text.getFont
 
   def setBaseFont(font: Font): Unit = {
-    text.setBaseFont(font.deriveFont(fontSize))
+    text.setBaseFont(font.deriveFont(fontSize.toFloat))
   }
 
   def clear(): Unit = {

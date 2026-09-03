@@ -33,9 +33,17 @@ trait ZoomActions extends RootPaneContainer {
   locally {
     val inputMap: InputMap = getRootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
 
-    inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_EQUALS, InputEvent.CTRL_DOWN_MASK), "zoomIn")
-    inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, InputEvent.CTRL_DOWN_MASK), "zoomOut")
-    inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_0, InputEvent.CTRL_DOWN_MASK), "resetZoom")
+    val mask: Int = {
+      if (System.getProperty("os.name").toLowerCase.startsWith("mac")) {
+        InputEvent.META_DOWN_MASK
+      } else {
+        InputEvent.CTRL_DOWN_MASK
+      }
+    }
+
+    inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_EQUALS, mask), "zoomIn")
+    inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, mask), "zoomOut")
+    inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_0, mask), "resetZoom")
 
     val actionMap: ActionMap = getRootPane.getActionMap
 
