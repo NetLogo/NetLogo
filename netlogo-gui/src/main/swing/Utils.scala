@@ -41,9 +41,9 @@ object Utils {
     new Insets(zoom(insets.top), zoom(insets.left), zoom(insets.bottom), zoom(insets.right))
 
   def zoomBounds(bounds: Rectangle): Rectangle =
-    new Rectangle(Utils.zoom(bounds.x), Utils.zoom(bounds.y), Utils.zoom(bounds.width), Utils.zoom(bounds.height))
+    new Rectangle(zoom(bounds.x), zoom(bounds.y), zoom(bounds.width), zoom(bounds.height))
 
-  def zoomComponents(component: Component): Unit = {
+  private def zoomComponents(component: Component): Unit = {
     component match {
       case container: Container =>
         container.getComponents.foreach(zoomComponents)
@@ -69,7 +69,7 @@ object Utils {
   }
 
   def zoomWindow(window: Window): Unit = {
-    window.getComponents.foreach(Utils.zoomComponents)
+    window.getComponents.foreach(zoomComponents)
 
     window match {
       case zoomable: ZoomableWindow =>
@@ -79,7 +79,7 @@ object Utils {
     }
   }
 
-  def unzoom(value: Int): Int =
+  private def unzoom(value: Int): Int =
     (value / zoomFactor).toInt
 
   def unzoomBounds(bounds: Rectangle): Rectangle =

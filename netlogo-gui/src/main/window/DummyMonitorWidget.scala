@@ -67,7 +67,7 @@ class DummyMonitorWidget extends SingleErrorWidget with MonitorWidget.ToMonitorM
     if (_oldSize) {
       new Dimension(Utils.zoom(50), (fontSize * 4) + Utils.zoomClamped(1))
     } else {
-      Utils.zoomSize(new Dimension(100, 60))
+      new Dimension(Utils.zoom(100), Utils.zoom(60))
     }
   }
 
@@ -75,7 +75,7 @@ class DummyMonitorWidget extends SingleErrorWidget with MonitorWidget.ToMonitorM
     if (_oldSize) {
       new Dimension(Utils.zoom(100), getMinimumSize.height)
     } else {
-      Utils.zoomSize(new Dimension(100, 60))
+      new Dimension(Utils.zoom(100), Utils.zoom(60))
     }
   }
 

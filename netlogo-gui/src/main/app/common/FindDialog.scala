@@ -290,21 +290,19 @@ class FindDialog(val owner: Frame) extends JDialog(owner, I18N.gui.get("dialog.f
   setResizable(false)
   setVisible(false)
 
-  private val findPanel = new BoxRow(Seq(
-    new BoxColumn(Seq(
-      new BoxRow(findLabel, BoxAlign.Start),
-      new BoxRow(replaceLabel, BoxAlign.Start)
-    ), 6) {
-      override def getMaximumSize: Dimension =
-        new Dimension(getPreferredSize.width, super.getMaximumSize.height)
-    },
-    new BoxColumn(Seq(findBox, replaceBox), 6)
-  ), 6) {
-    setBorder(new ZoomableBorder(16, 8, 8, 8))
-  }
-
   setContentPane(new BoxColumn(Seq(
-    new BoxRow(findPanel, BoxAlign.Start),
+    new BoxRow(Seq(
+      new BoxColumn(Seq(
+        new BoxRow(findLabel, BoxAlign.Start),
+        new BoxRow(replaceLabel, BoxAlign.Start)
+      ), 6) {
+        override def getMaximumSize: Dimension =
+          new Dimension(getPreferredSize.width, super.getMaximumSize.height)
+      },
+      new BoxColumn(Seq(findBox, replaceBox), 6)
+    ), 6, BoxAlign.Start) {
+      setBorder(new ZoomableBorder(16, 8, 8, 8))
+    },
     new BoxRow(Seq(ignoreCaseCheckBox, wrapAroundCheckBox, notFoundLabel), 12, BoxAlign.Start) {
       setBorder(new ZoomableBorder(6, 6, 6, 6))
     },

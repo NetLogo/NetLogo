@@ -13,7 +13,8 @@ import org.nlogo.api.{ LogoException, Version }
 import org.nlogo.core.I18N
 import org.nlogo.nvm.{ Context, Instruction }
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, BrowserLauncher, ButtonPanel, CheckBox, DialogButton,
-                         MessageDialog, Positioning, ScrollPane, TextArea, Utils => SwingUtils, ZoomableBorder }
+                         MessageDialog, Positioning, ScrollPane, TextArea, Utils => SwingUtils, Zoomable,
+                         ZoomableBorder, ZoomableWindow, ZoomActions }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.util.{ SysInfo, Utils }
 
@@ -238,9 +239,10 @@ extends ErrorDialog(owner, I18N.gui.get("error.dialog.outOfMemory.title")) {
 }
 
 private class ReportDialog(parent: Dialog, trace: String)
-  extends JDialog(parent, I18N.gui.get("dialog.error.report.title"), true) with ThemeSync {
+  extends JDialog(parent, I18N.gui.get("dialog.error.report.title"), true) with ZoomActions with ZoomableWindow
+  with ThemeSync {
 
-  private val label = new JLabel(I18N.gui.get("dialog.error.report.message"))
+  private val label = new JLabel(I18N.gui.get("dialog.error.report.message")) with Zoomable
 
   private val message = new TextArea(8, 40)
 
