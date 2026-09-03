@@ -15,11 +15,15 @@ class TabsPanel(val tabManager: TabManager) extends FloatingTabbedPane with Chan
 
   addMouseListener(new MouseAdapter {
     override def mouseClicked(e: MouseEvent): Unit = {
-      if (e.getClickCount == 1 && e.isControlDown && tabManager.getSelectedTab.isInstanceOf[CodeTab]) {
-        if (tabManager.separateTabsWindow.isAncestorOf(tabManager.getSelectedTab)) {
-          tabManager.switchWindow(false, true)
+      if (e.getClickCount == 1) {
+        if (e.isControlDown && tabManager.getSelectedTab.isInstanceOf[CodeTab]) {
+          if (tabManager.separateTabsWindow.isAncestorOf(tabManager.getSelectedTab)) {
+            tabManager.switchWindow(false, true)
+          } else {
+            tabManager.switchWindow(true)
+          }
         } else {
-          tabManager.switchWindow(true)
+          focusSelected()
         }
       }
     }

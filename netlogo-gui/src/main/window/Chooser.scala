@@ -23,7 +23,7 @@ trait Chooser extends SingleErrorWidget {
 
   // sub-elements of Switch
   protected val label = new JLabel(I18N.gui.get("edit.chooser.previewName")) with Zoomable
-  private val control = new ComboBox[String](searchable = true) {
+  private val control = new ComboBox[String](Seq(" "), searchable = true) {
     addItemListener(_ => index(getSelectedIndex))
   }
 
@@ -70,7 +70,13 @@ trait Chooser extends SingleErrorWidget {
     constraint.defaultValue
 
   def populate(): Unit = {
-    control.setItems(constraint.acceptedValues.map(Dump.logoObject).toList)
+    val items: Seq[String] = constraint.acceptedValues.map(Dump.logoObject)
+
+    if (items.nonEmpty) {
+      control.setItems(items)
+    } else {
+      control.setItems(Seq(" "))
+    }
   }
 
   override def updateConstraints(): Unit = {

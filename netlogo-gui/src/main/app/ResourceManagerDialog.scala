@@ -63,12 +63,8 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
 
     override def isCellEditable(row: Int, column: Int): Boolean = false
 
-    override def getRowHeight(row: Int): Int = {
-      if (row == 0) {
-        headerRenderer.getPreferredSize.height
-      } else {
-        resourceRenderer.getPreferredSize.height
-      }
+    override def zoomComponent(): Unit = {
+      setRowHeight(resourceRenderer.getPreferredSize.height)
     }
   }
 

@@ -14,7 +14,7 @@ import java.nio.file.Paths
 import java.net.URI
 import java.util.{ Enumeration, LinkedList, List => JList, Locale }
 import javax.swing.{ AbstractAction, Action, Box, Icon, InputMap, JComponent, JDialog, JEditorPane, JLabel, JTree,
-                     KeyStroke, SwingUtilities, WindowConstants }
+                     KeyStroke, SwingUtilities, UIManager, WindowConstants }
 import javax.swing.border.LineBorder
 import javax.swing.text.{ BadLocationException, DefaultHighlighter }
 import javax.swing.tree.{ DefaultMutableTreeNode, DefaultTreeCellRenderer, DefaultTreeModel, TreePath,
@@ -26,9 +26,9 @@ import javax.swing.event.{ AncestorEvent, AncestorListener, DocumentEvent, Docum
 import org.nlogo.core.I18N
 import org.nlogo.api.{ FileIO, LibraryManager }
 import org.nlogo.awt.{ Positioning, UserCancelException }
-import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, BrowserLauncher, Button, ButtonPanel, DialogButton, MaximumHeight,
-                         ModalProgressTask, OptionPane, PreferredSize, ScrollPane, TextField, Utils, WindowAutomator,
-                         Zoomable, ZoomableBorder, ZoomableWindow, ZoomActions },
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, BrowserLauncher, Button, ButtonPanel, CollapsibleArrow,
+                         DialogButton, MaximumHeight, ModalProgressTask, OptionPane, PreferredSize, ScrollPane,
+                         TextField, Utils, WindowAutomator, Zoomable, ZoomableBorder, ZoomableWindow, ZoomActions },
                        Utils.addEscKeyAction
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.workspace.ModelsLibrary
@@ -209,6 +209,13 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
       } else {
         super.getRowHeight
       }
+    }
+
+    override def zoomComponent(): Unit = {
+      UIManager.put("Tree.leftChildIndent", Utils.zoom(7))
+      UIManager.put("Tree.rightChildIndent", Utils.zoom(11))
+
+      updateUI()
     }
 
     override def syncTheme(): Unit = {
@@ -828,3 +835,6 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
     }
   }
 }
+
+class CollapsedArrow extends CollapsibleArrow(false)
+class ExpandedArrow extends CollapsibleArrow(true)
