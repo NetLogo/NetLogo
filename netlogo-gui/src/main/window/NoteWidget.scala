@@ -163,7 +163,7 @@ class NoteWidget extends SingleErrorWidget with Transparent with Editable {
   }
 
   override def getMinimumSize: Dimension =
-    Utils.zoomSize(new Dimension(15, 18))
+    new Dimension(Utils.zoom(15), Utils.zoom(18))
 
   override def getPreferredSize: Dimension =
     new Dimension(_width.max(Utils.zoom(15)), (textPane.getPreferredSize.height + Utils.zoom(8)).max(Utils.zoom(18)))

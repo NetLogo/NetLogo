@@ -386,7 +386,7 @@ abstract class InputBox(textArea: EditorArea, editDialogTextArea: EditorArea, co
               textArea.getInsets.right + textArea.getInsets.left + Utils.zoom(4)
       new Dimension(result.width.max(Utils.zoom(50)), result.height.max(Utils.zoom(60)))
     } else {
-      Utils.zoomSize(new Dimension(250, 60))
+      new Dimension(Utils.zoom(250), Utils.zoom(60))
     }
   }
 

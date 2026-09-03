@@ -66,7 +66,7 @@ class LoginDialog(parent: Frame, defaultUserId: String, defaultServerName: Strin
       this.setVisible(false)
 
       override def getPreferredSize: Dimension =
-        Utils.zoomSize(new Dimension(100, 88))
+        new Dimension(Utils.zoom(100), Utils.zoom(88))
     }
 
     add(new BoxColumn(Seq(
