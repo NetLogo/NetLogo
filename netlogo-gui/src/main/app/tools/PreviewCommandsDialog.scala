@@ -11,7 +11,7 @@ import org.nlogo.analytics.Analytics
 import org.nlogo.api.PreviewCommands
 import org.nlogo.awt.Positioning
 import org.nlogo.core.{ AgentKind, CompilerException, I18N, Model }
-import org.nlogo.swing.{ BoxColumn, BoxRow, Button, ButtonPanel, MaximumHeight, SyncZoom, Utils, WindowAutomator,
+import org.nlogo.swing.{ BoxColumn, BoxRow, Button, ButtonPanel, MaximumHeight, Utils, WindowAutomator, Zoomable,
                          ZoomableBorder, ZoomActions }
 import org.nlogo.theme.InterfaceColors
 import org.nlogo.window.{ EditorColorizer, GraphicsPreviewInterface }
@@ -63,24 +63,18 @@ class PreviewCommandsDialog(
 
   getRootPane.setDefaultButton(okButton)
 
-  private val contents = new BoxColumn(Seq(
+  setContentPane(new BoxColumn(Seq(
     new BoxRow(Seq(editorPanel, previewPanel), 6),
     new ButtonPanel(Seq(okButton, new Button(cancelAction))) with MaximumHeight
-  ), 6) with SyncZoom {
+  ), 6) with Zoomable {
     setOpaque(true)
     setBackground(InterfaceColors.dialogBackground())
     setBorder(new ZoomableBorder(6, 6, 6, 6))
 
-    override def zoom(oldZoom: Float): Unit = {
-      super.zoom(oldZoom)
-
+    override def zoomComponent(): Unit = {
       pack()
     }
-  }
-
-  setContentPane(contents)
-
-  contents.syncZoom()
+  })
 
   comboBox.addItemListener(new ItemListener {
     def itemStateChanged(evt: ItemEvent): Unit =

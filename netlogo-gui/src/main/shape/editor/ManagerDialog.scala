@@ -12,7 +12,7 @@ import org.nlogo.api.AbstractModelLoader
 import org.nlogo.core.{ AgentKind, I18N, Model, Shape => CoreShape, ShapeList, ShapeListTracker },
   ShapeList.{ shapesToMap, isDefaultShapeName }
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, Button, DialogButton, MaximumHeight, OptionPane, ScrollPane,
-                         SyncZoom, TextField, Utils, WindowAutomator, ZoomableBorder, ZoomActions }
+                         TextField, Utils, WindowAutomator, Zoomable, ZoomableBorder, ZoomActions }
 import org.nlogo.swing.Implicits.thunk2action
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
@@ -81,7 +81,7 @@ abstract class ManagerDialog[A <: CoreShape](parentFrame: Frame, modelLoader: Ab
   }
 
   locally {
-    val contents = new BoxColumn(Seq(
+    setContentPane(new BoxColumn(Seq(
       new BoxRow(Seq(
         newButton,
         modelImportButton
@@ -94,20 +94,14 @@ abstract class ManagerDialog[A <: CoreShape](parentFrame: Frame, modelLoader: Ab
         duplicateButton,
         deleteButton
       ), 12) with MaximumHeight
-    ), 12) with SyncZoom {
+    ), 12) with Zoomable {
       setOpaque(true)
       setBorder(new ZoomableBorder(12, 12, 12, 12))
 
-      override def zoom(oldZoom: Float): Unit = {
-        super.zoom(oldZoom)
-
+      override def zoomComponent(): Unit = {
         pack()
       }
-    }
-
-    setContentPane(contents)
-
-    contents.syncZoom()
+    })
 
     shapesList.addMouseListener(new MouseInputAdapter {
       // double click on a list item will edit it

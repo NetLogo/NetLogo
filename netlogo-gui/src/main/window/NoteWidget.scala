@@ -10,25 +10,21 @@ import com.vladsch.flexmark.ext.escaped.character.EscapedCharacterExtension
 import com.vladsch.flexmark.ext.autolink.AutolinkExtension
 import com.vladsch.flexmark.ext.typographic.TypographicExtension
 
-import java.awt.{ Color, Dimension, Font, Rectangle }
+import java.awt.{ Color, Dimension, Rectangle }
 import java.util.ArrayList
 import javax.swing.{ Box, BoxLayout, JEditorPane }
 import javax.swing.text.DefaultCaret
 
 import org.nlogo.core.{ I18N, TextBox => CoreTextBox, Widget => CoreWidget }
-import org.nlogo.swing.{ Transparent, Utils, ZoomableBorder }
+import org.nlogo.swing.{ Transparent, Utils, Zoomable, ZoomableBorder }
 import org.nlogo.theme.{ ClassicTheme, DarkTheme, InterfaceColors, LightTheme }
 
 class NoteWidget extends SingleErrorWidget with Transparent with Editable {
-  private val textPane = new JEditorPane("text/html", "") {
+  private val textPane = new JEditorPane("text/html", "") with Zoomable {
     setEditable(false)
     setOpaque(false)
     setCaret(new SilentCaret)
     setCaretColor(InterfaceColors.Transparent)
-
-    override def setFont(font: Font): Unit = {
-      super.setFont(font.deriveFont(Utils.zoom(_fontSize).toFloat))
-    }
   }
 
   setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
@@ -116,7 +112,7 @@ class NoteWidget extends SingleErrorWidget with Transparent with Editable {
   def fontSize: Int = _fontSize
   def setFontSize(size: Int): Unit = {
     _fontSize = size
-    textPane.setFont(textPane.getFont)
+    textPane.setBaseFont(textPane.getFont.deriveFont(size.toFloat))
     wrapText()
   }
 

@@ -132,7 +132,7 @@ class ProgressDialog(app: BehaviorSpaceApp, workspace: SemiHeadlessWorkspace, la
     ), 6) with Zoomable {
       setBorder(new ZoomableBorder(6, 6, 6, 6))
 
-      override def zoom(oldZoom: Float): Unit = {
+      override def zoomComponent(): Unit = {
         pack()
       }
     })

@@ -46,8 +46,8 @@ class TextFieldBox(labelAlignment: Int = SwingConstants.LEFT, labelFont: Option[
    * @param prompt    the text of the label
    * @param textField the field
    */
-  def addField(prompt: String, textField: JComponent): Unit = {
-    addField(new JLabel(prompt, labelAlignment), textField)
+  def addField(prompt: String, textField: JComponent & Zoomable): Unit = {
+    addField(new JLabel(prompt, labelAlignment) with Zoomable, textField)
   }
 
   /**
@@ -56,11 +56,11 @@ class TextFieldBox(labelAlignment: Int = SwingConstants.LEFT, labelFont: Option[
    * @param label     the text of the label
    * @param textField the field
    */
-  def addField(label: JLabel, textField: JComponent): Unit = {
+  def addField(label: JLabel & Zoomable, textField: JComponent & Zoomable): Unit = {
     label.setLabelFor(textField)
 
-    labelFont.foreach(label.setFont)
-    fieldFont.foreach(textField.setFont)
+    labelFont.foreach(label.setBaseFont)
+    fieldFont.foreach(textField.setBaseFont)
 
     textField.setMaximumSize(textField.getPreferredSize)
 

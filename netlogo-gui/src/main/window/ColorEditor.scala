@@ -14,7 +14,7 @@ import scala.util.Success
 class ColorEditor(accessor: PropertyAccessor[Color], frame: Frame)
   extends BoxRow(6) with PropertyEditor(accessor) {
 
-  private val label = new JLabel(accessor.name)
+  private val label = new JLabel(accessor.name) with Zoomable
   private val colorButton = new ColorButton
 
   add(label)
@@ -115,7 +115,7 @@ class ColorEditor(accessor: PropertyAccessor[Color], frame: Frame)
     def getColor: Color =
       color
 
-    override def zoom(oldZoom: Float): Unit = {
+    override def zoomComponent(): Unit = {
       setDiameter(Utils.zoom(6))
     }
 

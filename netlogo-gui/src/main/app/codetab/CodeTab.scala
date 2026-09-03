@@ -236,7 +236,7 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
   }
 
   def setCodeFont(font: Font): Unit = {
-    text.setFont(font)
+    text.setBaseFont(font)
 
     revalidate()
     repaint()

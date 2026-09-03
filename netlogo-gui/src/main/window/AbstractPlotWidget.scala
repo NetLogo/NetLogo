@@ -29,7 +29,7 @@ abstract class AbstractPlotWidget(val plot: Plot, val plotManager: PlotManagerIn
 
     setBorder(new ZoomableBorder(3, 3, 3, 3))
 
-    override def zoom(oldZoom: Float): Unit = {
+    override def zoomComponent(): Unit = {
       setDiameter(Utils.zoom(6))
     }
 
@@ -50,9 +50,9 @@ abstract class AbstractPlotWidget(val plot: Plot, val plotManager: PlotManagerIn
     setBoldState(_boldState)
   }
 
-  private val nameLabel = new JLabel(originalName) {
+  private val nameLabel = new JLabel(originalName) with Zoomable {
     setText(plot.name)
-    setFont(getFont.deriveFont(_boldState))
+    setBaseFont(getFont.deriveFont(_boldState))
   }
 
   private val xAxis = new XAxisLabels(this) {
@@ -339,9 +339,9 @@ abstract class AbstractPlotWidget(val plot: Plot, val plotManager: PlotManagerIn
 
 object AbstractPlotWidget {
   class XAxisLabels(plot: AbstractPlotWidget) extends BoxRow {
-    private val min: JLabel = new JLabel()
-    private val label: JLabel = new JLabel("", SwingConstants.CENTER)
-    private val max: JLabel = new JLabel()
+    private val min = new JLabel with Zoomable
+    private val label = new JLabel("", SwingConstants.CENTER) with Zoomable
+    private val max = new JLabel with Zoomable
 
     add(min)
     add(Box.createHorizontalGlue)
@@ -350,9 +350,9 @@ object AbstractPlotWidget {
     add(max)
 
     def setBoldState(state: Int): Unit = {
-      min.setFont(min.getFont.deriveFont(state))
-      label.setFont(label.getFont.deriveFont(state))
-      max.setFont(max.getFont.deriveFont(state))
+      min.setBaseFont(min.getBaseFont.deriveFont(state))
+      label.setBaseFont(label.getBaseFont.deriveFont(state))
+      max.setBaseFont(max.getBaseFont.deriveFont(state))
     }
 
     override def paintComponent(g: Graphics) = {
@@ -374,8 +374,8 @@ object AbstractPlotWidget {
 
   class YAxisLabels(plot: AbstractPlotWidget) extends BoxColumn {
     private val label = new VerticalLabel
-    private val max: JLabel = new JLabel()
-    private val min: JLabel = new JLabel()
+    private val max = new JLabel with Zoomable
+    private val min = new JLabel with Zoomable
 
     add(new BoxRow(max, BoxAlign.End))
     add(Box.createVerticalGlue)
@@ -384,9 +384,9 @@ object AbstractPlotWidget {
     add(new BoxRow(min, BoxAlign.End))
 
     def setBoldState(state: Int): Unit = {
-      min.setFont(min.getFont.deriveFont(state))
-      label.setFont(label.getFont.deriveFont(state))
-      max.setFont(max.getFont.deriveFont(state))
+      min.setBaseFont(min.getBaseFont.deriveFont(state))
+      label.setBaseFont(label.getBaseFont.deriveFont(state))
+      max.setBaseFont(max.getBaseFont.deriveFont(state))
     }
 
     override def paintComponent(g: Graphics) = {
@@ -411,7 +411,7 @@ object AbstractPlotWidget {
     }
   }
 
-  private class VerticalLabel extends JPanel {
+  private class VerticalLabel extends JPanel with Zoomable {
     private var text = ""
 
     def getText: String = text

@@ -6,7 +6,7 @@ import javax.swing.JLabel
 
 import org.nlogo.api.{ Dump, World }
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ Utils, Zoomable }
+import org.nlogo.swing.Zoomable
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.Events.{ AfterLoadEvent, PeriodicUpdateEvent, LoadBeginEvent }
 
@@ -59,10 +59,6 @@ class TickCounterLabel(world: World)
   }
 
   def label: String = _label
-
-  override def zoom(oldZoom: Float): Unit = {
-    setFont(getFont.deriveFont(Utils.zoom(12f)))
-  }
 
   override def syncTheme(): Unit = {
     setForeground(InterfaceColors.toolbarText())

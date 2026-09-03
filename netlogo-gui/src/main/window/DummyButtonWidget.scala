@@ -6,7 +6,7 @@ import java.awt.Dimension
 import javax.swing.JLabel
 
 import org.nlogo.core.{ AgentKind, I18N, Button => CoreButton, Widget => CoreWidget }
-import org.nlogo.swing.Utils
+import org.nlogo.swing.{ Utils, Zoomable }
 import org.nlogo.theme.InterfaceColors
 
 class DummyButtonWidget extends SingleErrorWidget with Editable {
@@ -14,10 +14,10 @@ class DummyButtonWidget extends SingleErrorWidget with Editable {
   private var _keyEnabled: Boolean = false
   private var _name: String = ""
 
-  private val nameLabel = new JLabel
-  private val keyLabel = new JLabel
-
-  keyLabel.setFont(keyLabel.getFont.deriveFont(11.0f))
+  private val nameLabel = new JLabel with Zoomable
+  private val keyLabel = new JLabel with Zoomable {
+    setBaseFont(getFont.deriveFont(11f))
+  }
 
   setLayout(null)
 
