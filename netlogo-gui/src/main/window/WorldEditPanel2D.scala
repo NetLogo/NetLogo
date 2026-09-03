@@ -6,7 +6,7 @@ import javax.swing.JLabel
 import javax.swing.border.TitledBorder
 
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, MaximumHeight, ZoomableBorder }
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, MaximumHeight, Utils, Zoomable, ZoomableBorder }
 import org.nlogo.theme.InterfaceColors
 
 class WorldEditPanel2D(target: WorldViewSettings2D, enableDualView: Boolean) extends WorldEditPanel(target) {
@@ -20,7 +20,7 @@ class WorldEditPanel2D(target: WorldViewSettings2D, enableDualView: Boolean) ext
         () => target.modelTitle,
         _.foreach(target.setModelTitle)))
 
-  private val locationLabel = new JLabel(I18N.gui("origin.location"))
+  private val locationLabel = new JLabel(I18N.gui("origin.location")) with Zoomable
 
   private val minPxcor: NegativeIntegerEditor =
     new NegativeIntegerEditor(
@@ -238,5 +238,12 @@ class WorldEditPanel2D(target: WorldViewSettings2D, enableDualView: Boolean) ext
     patchSizeLabeled.syncTheme()
     fontSizeLabeled.syncTheme()
     frameRateLabeled.syncTheme()
+  }
+
+  override def zoomComponent(): Unit = {
+    modelBorder.setTitleFont(modelBorder.getTitleFont.deriveFont(Utils.zoom(12f)))
+    worldBorder.setTitleFont(worldBorder.getTitleFont.deriveFont(Utils.zoom(12f)))
+    viewBorder.setTitleFont(viewBorder.getTitleFont.deriveFont(Utils.zoom(12f)))
+    tickBorder.setTitleFont(tickBorder.getTitleFont.deriveFont(Utils.zoom(12f)))
   }
 }

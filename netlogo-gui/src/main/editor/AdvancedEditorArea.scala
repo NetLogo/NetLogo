@@ -21,7 +21,7 @@ import netscape.javascript.JSObject
 
 import org.nlogo.core.{ BreedIdentifierHandler, ColorConstants, I18N, Keywords, NetLogoCore, Program }
 import org.nlogo.editor.MouseQuickHelpAction
-import org.nlogo.swing.{ ClipboardUtils, Menu, MenuItem, PopupMenu, ScrollableTextComponent, UserAction },
+import org.nlogo.swing.{ ClipboardUtils, Menu, MenuItem, PopupMenu, ScrollableTextComponent, UserAction, Zoomable },
   UserAction.{ EditCategory, EditClipboardGroup, EditFoldGroup, EditFoldSubcategory, EditFormatGroup,
                EditSelectionGroup, EditUndoGroup, KeyBindings, MenuAction }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
@@ -32,7 +32,7 @@ import scala.concurrent.duration.{ Duration, SECONDS }
 import scala.util.Try
 
 class AdvancedEditorArea(configuration: EditorConfiguration)
-  extends JFXPanel with AbstractEditorArea with ScrollableTextComponent with ThemeSync {
+  extends JFXPanel with AbstractEditorArea with ScrollableTextComponent with Zoomable with ThemeSync {
 
   private implicit val prefix: I18N.Prefix = I18N.Prefix("menu.edit")
 

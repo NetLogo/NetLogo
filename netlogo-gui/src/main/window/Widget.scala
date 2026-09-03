@@ -158,7 +158,7 @@ abstract class Widget extends JPanel with RoundedBorderPanel with Zoomable with 
     repaint()
   }
 
-  override def zoom(oldZoom: Float): Unit = {
+  override def zoomComponent(): Unit = {
     setDiameter(Utils.zoom(12))
   }
 

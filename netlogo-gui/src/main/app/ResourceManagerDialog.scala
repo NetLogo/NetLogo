@@ -18,7 +18,7 @@ import org.nlogo.api.{ Workspace }
 import org.nlogo.awt.{ Positioning, UserCancelException }
 import org.nlogo.core.{ ExternalResource, I18N }
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, Button, FileDialog, InputOptionPane, MaximumHeight, OptionPane,
-                         ScrollPane, SyncZoom, Utils, WindowAutomator, Zoomable, ZoomableBorder, ZoomActions }
+                         ScrollPane, Utils, WindowAutomator, Zoomable, ZoomableBorder, ZoomActions }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.Events.{ DirtyEvent, ResourcesChangedEvent }
 
@@ -69,11 +69,6 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
       } else {
         resourceRenderer.getPreferredSize.height
       }
-    }
-
-    override def zoom(oldZoom: Float): Unit = {
-      headerRenderer.syncZoom()
-      resourceRenderer.syncZoom()
     }
   }
 
@@ -197,7 +192,7 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
     new ResourcesChangedEvent().raise(parent)
   })
 
-  private val contents = new BoxColumn(Seq(
+  setContentPane(new BoxColumn(Seq(
     scrollPane,
     new BoxRow(Seq(
       addButton,
@@ -205,22 +200,16 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
       renameButton,
       removeButton
     ), 6, BoxAlign.Center) with MaximumHeight
-  ), 6) with SyncZoom {
+  ), 6) with Zoomable {
     setOpaque(true)
     setBorder(new ZoomableBorder(6, 6, 6, 6))
 
-    override def zoom(oldZoom: Float): Unit = {
-      super.zoom(oldZoom)
-
+    override def zoomComponent(): Unit = {
       pack()
     }
-  }
-
-  setContentPane(contents)
+  })
 
   refreshList()
-
-  contents.syncZoom()
 
   pack()
 
@@ -233,13 +222,6 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
   })
 
   syncTheme()
-
-  override def setVisible(visible: Boolean): Unit = {
-    if (visible)
-      contents.syncZoom()
-
-    super.setVisible(visible)
-  }
 
   private def refreshList(): Unit = {
     tableModel.setRowCount(0)
@@ -258,7 +240,8 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
   }
 
   override def syncTheme(): Unit = {
-    contents.setBackground(InterfaceColors.dialogBackground())
+    getContentPane.setBackground(InterfaceColors.dialogBackground())
+
     scrollPane.setBackground(InterfaceColors.dialogBackground())
     table.setBackground(InterfaceColors.dialogBackground())
 
@@ -268,8 +251,8 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
     removeButton.syncTheme()
   }
 
-  private class ResourceCellRenderer extends BoxRow(BoxAlign.Start) with TableCellRenderer with SyncZoom {
-    private val label = new JLabel
+  private class ResourceCellRenderer extends BoxRow(BoxAlign.Start) with TableCellRenderer {
+    private val label = new JLabel with Zoomable
 
     setOpaque(true)
 
@@ -304,9 +287,9 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
     }
   }
 
-  private class HeaderCellRenderer extends BoxRow(BoxAlign.Start) with TableCellRenderer with SyncZoom {
-    private val label = new JLabel {
-      setFont(getFont.deriveFont(Font.BOLD))
+  private class HeaderCellRenderer extends BoxRow(BoxAlign.Start) with TableCellRenderer {
+    private val label = new JLabel with Zoomable {
+      setBaseFont(getFont.deriveFont(Font.BOLD))
     }
 
     setOpaque(true)

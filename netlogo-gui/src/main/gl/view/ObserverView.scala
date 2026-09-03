@@ -35,15 +35,6 @@ extends View("3D View", viewManager, renderer, Option(bounds)) {
     navBar.setStatus(viewManager.world.observer.perspective)
   }
 
-  override def setVisible(visible: Boolean): Unit = {
-    if (visible) {
-      controlStrip.syncZoom()
-      navBar.syncZoom()
-    }
-
-    super.setVisible(visible)
-  }
-
   override def editFinished() = {
     super.editFinished()
     true

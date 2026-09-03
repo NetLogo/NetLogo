@@ -23,7 +23,7 @@ class CloseButton extends JPanel with Transparent with MouseUtils {
 
     val stroke: Stroke = g2d.getStroke
 
-    g2d.setStroke(new BasicStroke(Utils.zoom(1f), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND))
+    g2d.setStroke(new BasicStroke(Utils.zoomClamped(1f), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND))
     g2d.setColor(getForeground)
     g2d.drawLine(pad, pad, getWidth - pad - 1, getHeight - pad - 1)
     g2d.drawLine(getWidth - pad - 1, pad, pad, getHeight - pad - 1)

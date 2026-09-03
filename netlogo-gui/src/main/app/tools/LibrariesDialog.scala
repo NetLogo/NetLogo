@@ -11,7 +11,7 @@ import scala.concurrent.ExecutionContext
 import org.nlogo.api.LibraryManager
 import org.nlogo.core.{ I18N, LibraryInfo, Token }
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, CustomOptionPane, DialogButton, OptionPane, ProgressListener,
-                         ScrollPane, SyncZoom, TextArea, Utils, WindowAutomator, ZoomableBorder, ZoomActions }
+                         ScrollPane, TextArea, Utils, WindowAutomator, Zoomable, ZoomableBorder, ZoomActions }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 class LibrariesDialog( parent:          Frame
@@ -51,12 +51,10 @@ class LibrariesDialog( parent:          Frame
       libPathsButton,
       updateAllButton
     ), 6, BoxAlign.End)
-  ), 10) with SyncZoom {
+  ), 10) with Zoomable {
     setBorder(new ZoomableBorder(10, 10, 10, 10))
 
-    override def zoom(oldZoom: Float): Unit = {
-      super.zoom(oldZoom)
-
+    override def zoomComponent(): Unit = {
       resetSize()
     }
   }
@@ -84,8 +82,6 @@ class LibrariesDialog( parent:          Frame
       }
 
       libPathsButton.setVisible(extPathMappings.nonEmpty)
-
-      content.syncZoom()
 
     }
 

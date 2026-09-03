@@ -9,12 +9,12 @@ import org.nlogo.awt.Hierarchy
 import org.nlogo.core.I18N
 import org.nlogo.editor.Colorizer
 import org.nlogo.plot.PlotManagerInterface
-import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, CheckBox, ComboBox, MaximumHeight, OptionPane, SyncZoom,
-                         TextField, ZoomableBorder }
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, CheckBox, ComboBox, MaximumHeight, OptionPane, TextField,
+                         ZoomableBorder }
 import org.nlogo.theme.InterfaceColors
 
 class PlotPenEditorAdvanced(inputPen: PlotPensEditor.Pen, compiler: CompilerServices, colorizer: Colorizer,
-                            plotManager: PlotManagerInterface) extends BoxColumn(6) with SyncZoom {
+                            plotManager: PlotManagerInterface) extends BoxColumn(6) {
 
   private implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("edit.plot.pen")
 
