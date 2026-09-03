@@ -282,7 +282,7 @@ private object Util {
 
     val underlineValue = if (shouldUnderline) 1 else -1
 
-    c.setBaseFont(c.getFont.deriveFont(Map(TextAttribute.UNDERLINE -> Int.box(underlineValue)).asJava))
+    c.setBaseFont(c.getBaseFont.deriveFont(Map(TextAttribute.UNDERLINE -> Int.box(underlineValue)).asJava))
 
   }
 

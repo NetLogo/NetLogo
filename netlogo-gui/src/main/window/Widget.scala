@@ -55,7 +55,6 @@ abstract class Widget extends JPanel with RoundedBorderPanel with Zoomable with 
                       with InterfaceModeChangedEvent.Handler {
 
   def helpLink: Option[(String, String)] = None
-  var originalFont: Font = null
   var displayName: String = ""
   var deleteable: Boolean = true
 
@@ -187,11 +186,6 @@ abstract class Widget extends JPanel with RoundedBorderPanel with Zoomable with 
       raiseWidgetRemoved()
     }
     super.removeNotify()
-  }
-
-  override def addNotify: Unit = {
-    super.addNotify
-    if (originalFont == null) { originalFont = getFont }
   }
 
   // The methods to raise widget added/removed are here so they can be overridden by child classes.  Some of those

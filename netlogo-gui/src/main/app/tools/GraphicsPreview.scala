@@ -28,7 +28,7 @@ class GraphicsPreview extends JPanel with GraphicsPreviewInterface with Preferre
   }
 
   override def getPreferredSize: Dimension =
-    Utils.zoomSize(new Dimension(400, 400))
+    new Dimension(Utils.zoom(400), Utils.zoom(400))
 
   override def paintComponent(g: Graphics): Unit = {
     image match {

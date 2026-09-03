@@ -68,7 +68,7 @@ class DummyButtonWidget extends SingleErrorWidget with Editable {
   /// sizing
 
   override def getMinimumSize: Dimension =
-    Utils.zoomSize(new Dimension(55, 33))
+    new Dimension(Utils.zoom(55), Utils.zoom(33))
 
   override def doLayout(): Unit = {
     val nameSize = nameLabel.getPreferredSize

@@ -130,8 +130,7 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
 
   private def updateEditorPane(str: String, force: Boolean): Unit = {
     if (force || str != htmlPanel.getText)
-      htmlPanel.setText(InfoFormatter(str, getModelDir(), resourceManager, codeFont.fold("monospace")(_.getFamily),
-                                      editorPaneFontSize))
+      htmlPanel.setText(InfoFormatter(str, getModelDir(), resourceManager, codeFont.fold("monospace")(_.getFamily)))
 
     toggleHelpButton()
   }
@@ -199,8 +198,6 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
   override def handle(e: WindowEvents.ResourcesChangedEvent): Unit = {
     updateEditorPane(true)
   }
-
-  private val editorPaneFontSize = InfoFormatter.defaultFontSize
 
   // the textArea will give us an outlandlishly large preferred size unless we restrain it
   override def getPreferredSize = new Dimension(100, 100)

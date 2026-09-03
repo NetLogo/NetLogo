@@ -113,34 +113,28 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
   // is used in both places. - ST 3/17/04
   override def makeWidget(coreWidget: CoreWidget): Widget = {
     val fromRegistry = WidgetRegistry(coreWidget.getClass.getSimpleName)
-    val newWidget: Widget = {
-      if (fromRegistry != null)
-        fromRegistry
-      else coreWidget match {
-        case c: CoreChooser  => new ChooserWidget(workspace, dialogFactory.colorizer, workspace.getExtensionManager)
-        case b: CoreButton   => new ButtonWidget(workspace.world.mainRNG, workspace, dialogFactory.colorizer)
-        case p: CorePlot     => PlotWidget(workspace.plotManager, workspace, dialogFactory.colorizer)
-        case m: CoreMonitor  => new MonitorWidget(workspace.world.auxRNG, workspace, dialogFactory.colorizer)
-        case s: CoreSlider =>
-          new SliderWidget(workspace.world.auxRNG, workspace, dialogFactory.colorizer, workspace.getExtensionManager) {
-            override def sourceOffset: Int =
-              Evaluator.sourceOffset(AgentKind.Observer, false)
-          }
-        case s: CoreSwitch => new SwitchWidget(workspace, workspace.getExtensionManager)
-        case i: CoreInputBox =>
-          val textArea       = new EditorArea(textEditorConfiguration) with AutoIndentHandler
-          val dialogTextArea = new EditorArea(dialogEditorConfiguration) with AutoIndentHandler
+    if (fromRegistry != null)
+      fromRegistry
+    else coreWidget match {
+      case c: CoreChooser  => new ChooserWidget(workspace, dialogFactory.colorizer, workspace.getExtensionManager)
+      case b: CoreButton   => new ButtonWidget(workspace.world.mainRNG, workspace, dialogFactory.colorizer)
+      case p: CorePlot     => PlotWidget(workspace.plotManager, workspace, dialogFactory.colorizer)
+      case m: CoreMonitor  => new MonitorWidget(workspace.world.auxRNG, workspace, dialogFactory.colorizer)
+      case s: CoreSlider =>
+        new SliderWidget(workspace.world.auxRNG, workspace, dialogFactory.colorizer, workspace.getExtensionManager) {
+          override def sourceOffset: Int =
+            Evaluator.sourceOffset(AgentKind.Observer, false)
+        }
+      case s: CoreSwitch => new SwitchWidget(workspace, workspace.getExtensionManager)
+      case i: CoreInputBox =>
+        val textArea       = new EditorArea(textEditorConfiguration) with AutoIndentHandler
+        val dialogTextArea = new EditorArea(dialogEditorConfiguration) with AutoIndentHandler
 
-          new InputBoxWidget(textArea, dialogTextArea, workspace, workspace.getExtensionManager, this)
-        case v: CoreView => new ViewWidget(workspace)
-        case _ =>
-          throw new IllegalStateException("unknown widget type: " + coreWidget.getClass.getName)
-      }
+        new InputBoxWidget(textArea, dialogTextArea, workspace, workspace.getExtensionManager, this)
+      case v: CoreView => new ViewWidget(workspace)
+      case _ =>
+        throw new IllegalStateException("unknown widget type: " + coreWidget.getClass.getName)
     }
-
-    Utils.zoomComponents(newWidget)
-
-    newWidget
   }
 
   override private[app] def deleteWidgets(hitList: Seq[WidgetWrapper]): Unit = {

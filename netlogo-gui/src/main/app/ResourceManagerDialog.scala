@@ -233,7 +233,6 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
 
   override def syncTheme(): Unit = {
     getContentPane.setBackground(InterfaceColors.dialogBackground())
-
     scrollPane.setBackground(InterfaceColors.dialogBackground())
     table.setBackground(InterfaceColors.dialogBackground())
 

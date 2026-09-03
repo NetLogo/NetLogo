@@ -85,8 +85,6 @@ class AggregateModelEditor(
 
   private val toolbar: AggregateModelEditorToolBar = new AggregateModelEditorToolBar(this, drawing.getModel)
 
-  private val menuBar: MenuBar = new MenuBar
-
   val tabs: AggregateTabs = {
     val editorTab = new AggregateEditorTab(toolbar, view.asInstanceOf[Component])
     editorTab.setBorder(null)
@@ -97,6 +95,8 @@ class AggregateModelEditor(
   getContentPane.add(tabs)
 
   private val selectionTool = new InspectionTool(this, drawing.getModel)
+
+  private val menuBar: MenuBar = new MenuBar
 
   locally {
     // Build the menu bar. For OS X, we add a bunch of the menus from app

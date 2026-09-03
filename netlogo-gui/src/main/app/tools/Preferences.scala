@@ -384,9 +384,12 @@ object Preferences {
       override def getPopup: PopupMenu = {
         val popup: PopupMenu = super.getPopup
 
-        popup.getComponents.collect {
-          case zoomable: Zoomable => zoomable
-        }.zip(fonts).foreach((c, f) => f.font.foreach(c.setBaseFont))
+        popup.getComponents.zip(fonts).foreach {
+          case (zoomable: Zoomable, FontWrapper(Some(font))) =>
+            zoomable.setBaseFont(font)
+
+          case _ =>
+        }
 
         popup
       }

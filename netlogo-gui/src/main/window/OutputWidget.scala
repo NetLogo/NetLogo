@@ -29,12 +29,11 @@ class OutputWidget extends SingleErrorWidget with CommandCenterInterface
 
   override def getEditable: Option[Editable] = Some(this)
 
-  originalFont = outputArea.getFont
-  def fontSize = originalFont.getSize
+  def fontSize: Int =
+    outputArea.getBaseFont.getSize
+
   def setFontSize(newSize: Int): Unit = {
-    val zoomDiff = outputArea.fontSize - fontSize
-    outputArea.fontSize(newSize + zoomDiff)
-    originalFont = originalFont.deriveFont(newSize.toFloat)
+    outputArea.fontSize(newSize)
   }
 
   override def classDisplayName = I18N.gui.get("tabs.run.widgets.output")
@@ -67,11 +66,7 @@ class OutputWidget extends SingleErrorWidget with CommandCenterInterface
   }
 
   override def setCodeFont(font: Font): Unit = {
-    val scaled: Font = font.deriveFont(fontSize)
-
-    outputArea.setBaseFont(scaled)
-
-    originalFont = scaled
+    outputArea.setBaseFont(font.deriveFont(fontSize.toFloat))
   }
 
   override def syncTheme(): Unit = {

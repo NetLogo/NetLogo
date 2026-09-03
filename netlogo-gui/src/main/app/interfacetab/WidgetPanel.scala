@@ -715,37 +715,31 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
   def makeWidget(widget: CoreWidget): Widget = {
     val widgetType = "Dummy " + widget.getClass.getSimpleName
     val fromRegistry = WidgetRegistry(widgetType)
-    val newWidget: Widget = {
-      if (fromRegistry != null) {
-        fromRegistry
-      } else {
-        widget match {
-          case v: CoreView    => new DummyViewWidget(workspace.world)
-          case c: CoreChooser =>
-            new DummyChooserWidget(new DefaultCompilerServices(workspace.compiler), editorFactory.colorizer)
-          case p: CorePlot    =>
-            // note that plots on the HubNet client must have the name of a plot
-            // on the server, thus, feed the dummy plot widget the names of
-            // the current plots so the user can select one. We override
-            // this method in InterfacePanel since regular plots are handled
-            // differently ev 1/25/07
-            val names = workspace.plotManager.getPlotNames
-            DummyPlotWidget(names.headOption.getOrElse("plot 1"), workspace.plotManager)
-          case i: CoreInputBox =>
-            new DummyInputBoxWidget(
-              new EditorArea(textEditorConfiguration) with AutoIndentHandler,
-              new EditorArea(dialogEditorConfiguration) with AutoIndentHandler,
-              this,
-              new DefaultCompilerServices(workspace.compiler))
-          case _ =>
-            throw new IllegalStateException("unknown widget type: " + widget.getClass)
-        }
+    if (fromRegistry != null) {
+      fromRegistry
+    } else {
+      widget match {
+        case v: CoreView    => new DummyViewWidget(workspace.world)
+        case c: CoreChooser =>
+          new DummyChooserWidget(new DefaultCompilerServices(workspace.compiler), editorFactory.colorizer)
+        case p: CorePlot    =>
+          // note that plots on the HubNet client must have the name of a plot
+          // on the server, thus, feed the dummy plot widget the names of
+          // the current plots so the user can select one. We override
+          // this method in InterfacePanel since regular plots are handled
+          // differently ev 1/25/07
+          val names = workspace.plotManager.getPlotNames
+          DummyPlotWidget(names.headOption.getOrElse("plot 1"), workspace.plotManager)
+        case i: CoreInputBox =>
+          new DummyInputBoxWidget(
+            new EditorArea(textEditorConfiguration) with AutoIndentHandler,
+            new EditorArea(dialogEditorConfiguration) with AutoIndentHandler,
+            this,
+            new DefaultCompilerServices(workspace.compiler))
+        case _ =>
+          throw new IllegalStateException("unknown widget type: " + widget.getClass)
       }
     }
-
-    Utils.zoomComponents(newWidget)
-
-    newWidget
   }
 
   protected def textEditorConfiguration: EditorConfiguration =
@@ -1029,9 +1023,6 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
   def reAddWidget(widgetWrapper: WidgetWrapper): WidgetWrapper = {
     widgetWrapper.widget.setWidgetContainer(this)
     widgetWrapper.setVisible(false)
-    // we need to add the wrapper before we can call wrapper.getPreferredSize(), because
-    // that method looks at its parent and sees if it's an InterfacePanel
-    // and zooms accordingly - ST 6/16/02
     add(widgetWrapper, JLayeredPane.DEFAULT_LAYER)
     moveToFront(widgetWrapper)
 

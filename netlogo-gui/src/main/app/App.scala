@@ -525,8 +525,6 @@ class App(args: App.CommandLineArgs) extends LinkChild with Exceptions.Handler w
 
       FindDialog.init(frame, tabManager.separateTabsWindow)
 
-      resetZoom()
-
       // OK, this is a little kludgy.  First we pack so everything
       // is realized, and all addNotify() methods are called.  But
       // the actual size we get won't be right yet, because the

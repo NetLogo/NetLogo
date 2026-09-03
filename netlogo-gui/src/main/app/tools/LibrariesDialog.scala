@@ -44,19 +44,17 @@ class LibrariesDialog( parent:          Frame
   }: Unit)
   private lazy val updateAllButton = new DialogButton(true, tab.updateAllAction)
 
-  private lazy val content = new BoxColumn(Seq(
-    tab,
-    new BoxRow(Seq(
-      status,
-      libPathsButton,
-      updateAllButton
-    ), 6, BoxAlign.End)
-  ), 10) {
-    setBorder(new ZoomableBorder(10, 10, 10, 10))
-  }
-
   protected override def initGUI(): Unit = {
-    add(content)
+    add(new BoxColumn(Seq(
+      tab,
+      new BoxRow(Seq(
+        status,
+        libPathsButton,
+        updateAllButton
+      ), 6, BoxAlign.End)
+    ), 10) {
+      setBorder(new ZoomableBorder(10, 10, 10, 10))
+    })
 
     pack()
   }
@@ -85,17 +83,16 @@ class LibrariesDialog( parent:          Frame
   }
 
   override def getPreferredSize: Dimension =
-    Utils.zoomSize(new Dimension(650, 400))
+    new Dimension(Utils.zoom(650), Utils.zoom(400))
 
   override def syncTheme(): Unit = {
     getContentPane.setBackground(InterfaceColors.dialogBackground())
 
-    tab.syncTheme()
+    status.setForeground(InterfaceColors.dialogText())
 
+    tab.syncTheme()
     libPathsButton.syncTheme()
     updateAllButton.syncTheme()
-
-    status.setForeground(InterfaceColors.dialogText())
   }
 
   private [app] def searchFor(text: String, expectedSize: Int): Option[Seq[LibraryInfo]] =
