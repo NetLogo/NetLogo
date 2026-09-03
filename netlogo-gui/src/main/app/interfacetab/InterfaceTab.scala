@@ -44,8 +44,7 @@ class InterfaceTab(workspace: GUIWorkspace,
 
   setFocusCycleRoot(true)
   setFocusTraversalPolicy(new InterfaceTabFocusTraversalPolicy)
-  private val locationToggleAction = new CommandCenterLocationToggleAction
-  commandCenter.locationToggleAction = locationToggleAction
+
   val iP = new InterfacePanel(workspace.viewWidget, workspace, dialogFactory)
 
   val commandCenterToggleAction = new CommandCenterToggleAction()
@@ -86,6 +85,8 @@ class InterfaceTab(workspace: GUIWorkspace,
 
   private val splitPane = new SplitPane(scrollPane, commandCenter, Some(commandCenterToggleAction))
 
+  commandCenter.locationToggleAction = new CommandCenterLocationToggleAction
+
   add(splitPane, BorderLayout.CENTER)
 
   object TrackingFocusListener extends FocusListener {
@@ -110,8 +111,6 @@ class InterfaceTab(workspace: GUIWorkspace,
   commandCenter.getDefaultComponentForFocus().addFocusListener(TrackingFocusListener)
 
   Utils.addEscKeyAction(this, () => InterfaceTab.this.monitorManager.closeTopMonitor())
-
-  locationToggleAction.setIcon()
 
   private class InterfaceTabFocusTraversalPolicy extends ContainerOrderFocusTraversalPolicy {
     override def getComponentAfter(focusCycleRoot: Container, aComponent: Component) =
@@ -258,6 +257,8 @@ class InterfaceTab(workspace: GUIWorkspace,
   /// command center stuff
 
   private class CommandCenterLocationToggleAction extends AbstractAction {
+    setIcon()
+
     override def actionPerformed(e: ActionEvent): Unit = {
       splitPane.getOrientation match {
         case JSplitPane.VERTICAL_SPLIT => splitPane.setOrientation(JSplitPane.HORIZONTAL_SPLIT)

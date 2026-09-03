@@ -72,13 +72,14 @@ class MonitorWidget(random: MersenneTwisterFast, compiler: CompilerServices, col
   // brings up the popup menu not the edit dialog. ev 1/4/06
   private var lastMousePressedWasPopupTrigger: Boolean = false;
 
-  private var _fontSize = 11
-
   private val nameLabel = new JLabel(I18N.gui.get("edit.monitor.previewName")) with Zoomable {
     setBaseFont(getFont.deriveFont(_boldState))
   }
 
-  private lazy val valueLabel = new JLabel with Zoomable
+  private lazy val valueLabel = new JLabel with Zoomable {
+    setBaseFont(getFont.deriveFont(11f))
+  }
+
   private val valuePanel = new ValuePanel(valueLabel)
 
   private val unitsLabel = new JLabel with Zoomable {
@@ -103,35 +104,16 @@ class MonitorWidget(random: MersenneTwisterFast, compiler: CompilerServices, col
 
   def name: String = _name
 
+  override def fontSize: Int =
+    valueLabel.getBaseFont.getSize
+
   def setFontSize(size: Int): Unit = {
-    _fontSize = size
-    // If we are zoomed, we need to zoom the input font size and then
-    // set that as our widget font
-    val newFontSize =
-      if (originalFont != null) {
-        val zoomDiff = getFont.getSize - originalFont.getSize
-        zoomDiff + size
-      } else
-        size
-
-    setFont(getFont.deriveFont(newFontSize.toFloat))
-
-    if (originalFont != null)
-      this.originalFont = originalFont.deriveFont(size.toFloat)
+    valueLabel.setBaseFont(valueLabel.getFont.deriveFont(size.toFloat))
   }
 
-  override def setFont(f: Font): Unit = {
-    val newFont = f.deriveFont(fontSize.toFloat)
-
-    super.setFont(newFont)
-
-    valueLabel.setBaseFont(newFont)
-
-    revalidate()
-    repaint()
+  override def setFont(font: Font): Unit = {
+    valueLabel.setFont(font)
   }
-
-  def fontSize: Int = _fontSize
 
   def units: String = unitsLabel.getText
   def setUnits(value: String): Unit = {
@@ -254,7 +236,7 @@ class MonitorWidget(random: MersenneTwisterFast, compiler: CompilerServices, col
     if (_oldSize) {
       new Dimension(Utils.zoom(50), (fontSize * 4) + Utils.zoomClamped(1))
     } else {
-      Utils.zoomSize(new Dimension(100, 60))
+      new Dimension(Utils.zoom(100), Utils.zoom(60))
     }
   }
 
@@ -262,7 +244,7 @@ class MonitorWidget(random: MersenneTwisterFast, compiler: CompilerServices, col
     if (_oldSize) {
       new Dimension(Utils.zoom(100), getMinimumSize.height)
     } else {
-      Utils.zoomSize(new Dimension(100, 60))
+      new Dimension(Utils.zoom(100), Utils.zoom(60))
     }
   }
 
