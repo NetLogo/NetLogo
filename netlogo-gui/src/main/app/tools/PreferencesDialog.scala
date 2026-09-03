@@ -13,12 +13,12 @@ import org.nlogo.app.common.Events.RestartEvent
 import org.nlogo.core.I18N
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, ButtonPanel, CheckBox, DialogButton, FloatingTabbedPane,
                          MaximumHeight, OptionPane, PreferredSize, TabLabel, TextField, WindowAutomator, Zoomable,
-                         ZoomableBorder, ZoomActions }
+                         ZoomableBorder, ZoomableWindow, ZoomActions }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.AbstractWidgetPanel
 
 class PreferencesDialog(parent: Frame & ThemeSync, tabManager: TabsInterface, widgetPanel: AbstractWidgetPanel)
-  extends ToolDialog(parent, "preferences") with ZoomActions with ThemeSync {
+  extends ToolDialog(parent, "preferences") with ZoomActions with ZoomableWindow with ThemeSync {
 
   WindowAutomator.automate(this)
 
@@ -49,11 +49,7 @@ class PreferencesDialog(parent: Frame & ThemeSync, tabManager: TabsInterface, wi
     Preferences.LogEvents
   )
 
-  private lazy val tabs = new FloatingTabbedPane {
-    override def zoomComponent(): Unit = {
-      pack()
-    }
-  }
+  private lazy val tabs = new FloatingTabbedPane
 
   private lazy val generalPreferencesPanel = new PreferenceContainer(generalPreferences)
   private lazy val codePreferencesPanel = new PreferenceContainer(codePreferences)

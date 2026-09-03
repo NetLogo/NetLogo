@@ -6,7 +6,7 @@ import java.awt.{ Dimension, Insets }
 import javax.swing.{ BoxLayout, JLabel, JPanel }
 
 import org.nlogo.core.{ I18N, Monitor => CoreMonitor, Widget => CoreWidget }
-import org.nlogo.swing.{ BoxAlign, BoxRow, RoundedBorderPanel, Utils, Zoomable }
+import org.nlogo.swing.{ BoxAlign, BoxRow, RoundedBorderPanel, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 class DummyMonitorWidget extends SingleErrorWidget with MonitorWidget.ToMonitorModel with Editable {
@@ -16,10 +16,8 @@ class DummyMonitorWidget extends SingleErrorWidget with MonitorWidget.ToMonitorM
 
   private val nameLabel = new JLabel(I18N.gui.get("edit.monitor.previewName"))
 
-  private val valuePanel = new JPanel with RoundedBorderPanel with Zoomable with ThemeSync {
-    override def zoomComponent(): Unit = {
-      setDiameter(Utils.zoom(6))
-    }
+  private val valuePanel = new JPanel with RoundedBorderPanel with ThemeSync {
+    setDiameter(6)
 
     override def syncTheme(): Unit = {
       setBackgroundColor(InterfaceColors.displayAreaBackground())

@@ -14,7 +14,7 @@ import org.nlogo.core.{ I18N, Shape }
 import org.nlogo.shape.{ Element, VectorShape }
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, Button, ButtonPanel, CheckBox, ComboBox, DialogButton, MenuItem,
                          OptionPane, PreferredSize, TextField, ToggleButton, Transparent, Utils, VerticalStrut,
-                         Zoomable, ZoomableBorder, ZoomActions }
+                         Zoomable, ZoomableBorder, ZoomableWindow, ZoomActions }
 import org.nlogo.theme.InterfaceColors
 
 sealed trait ElementType
@@ -39,7 +39,7 @@ object EditorDialog {
 
 class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer, originalShape: VectorShape,
                    nameEditable: Boolean) extends JDialog(parent, I18N.gui.get("tools.shapesEditor"), true)
-                                          with PropertyChangeListener with ZoomActions {
+                                          with PropertyChangeListener with ZoomActions with ZoomableWindow {
 
   private implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("tools.shapesEditor")
 
@@ -392,14 +392,10 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
       setBorder(new ZoomableBorder(0, 10, 0, 10))
     },
     new ButtonPanel(Seq(done, cancel))
-  ), 15) with Zoomable {
+  ), 15) {
     setOpaque(true)
     setBackground(InterfaceColors.dialogBackground())
     setBorder(new ZoomableBorder(6, 6, 6, 6))
-
-    override def zoomComponent(): Unit = {
-      pack()
-    }
   })
 
   getRootPane.setDefaultButton(done)

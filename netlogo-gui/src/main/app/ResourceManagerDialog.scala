@@ -18,12 +18,12 @@ import org.nlogo.api.{ Workspace }
 import org.nlogo.awt.{ Positioning, UserCancelException }
 import org.nlogo.core.{ ExternalResource, I18N }
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, Button, FileDialog, InputOptionPane, MaximumHeight, OptionPane,
-                         ScrollPane, Utils, WindowAutomator, Zoomable, ZoomableBorder, ZoomActions }
+                         ScrollPane, Utils, WindowAutomator, Zoomable, ZoomableBorder, ZoomableWindow, ZoomActions }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.Events.{ DirtyEvent, ResourcesChangedEvent }
 
 class ResourceManagerDialog(parent: Frame, workspace: Workspace)
-  extends JDialog(parent, I18N.gui.get("resource.manager"), true) with ZoomActions with ThemeSync {
+  extends JDialog(parent, I18N.gui.get("resource.manager"), true) with ZoomActions with ZoomableWindow with ThemeSync {
 
   WindowAutomator.automate(this)
 
@@ -200,13 +200,9 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
       renameButton,
       removeButton
     ), 6, BoxAlign.Center) with MaximumHeight
-  ), 6) with Zoomable {
+  ), 6) {
     setOpaque(true)
     setBorder(new ZoomableBorder(6, 6, 6, 6))
-
-    override def zoomComponent(): Unit = {
-      pack()
-    }
   })
 
   refreshList()

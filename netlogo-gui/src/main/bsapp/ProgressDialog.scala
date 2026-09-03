@@ -17,7 +17,7 @@ import org.nlogo.editor.Colorizer
 import org.nlogo.nvm.LabInterface
 import org.nlogo.plot.DummyPlotManager
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, Button, ButtonPanel, CheckBox, OptionPane, Positioning,
-                         RichAction, ScrollPane, TextArea, Zoomable, ZoomableBorder, ZoomActions }
+                         RichAction, ScrollPane, TextArea, ZoomableBorder, ZoomableWindow, ZoomActions }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ PlotWidget, SpeedSliderPanel }
 
@@ -26,7 +26,7 @@ import scala.concurrent.duration.DurationLong
 class ProgressDialog(app: BehaviorSpaceApp, workspace: SemiHeadlessWorkspace, lab: LabInterface,
                      colorizer: Colorizer, protocol: LabProtocol)
   extends JDialog(app.getFrame, I18N.gui.getN("tools.behaviorSpace.progressDialog.title", protocol.name))
-  with ThemeSync with ZoomActions {
+  with ThemeSync with ZoomActions with ZoomableWindow {
 
   private implicit val i18nPrefix: I18N.Prefix = I18N.Prefix("tools.behaviorSpace.progressDialog")
 
@@ -129,12 +129,8 @@ class ProgressDialog(app: BehaviorSpaceApp, workspace: SemiHeadlessWorkspace, la
       new BoxRow(updateViewCheckbox, BoxAlign.Start),
       new BoxRow(plotsAndMonitorsSwitch, BoxAlign.Start),
       new ButtonPanel(Seq(pauseButton, abortButton))
-    ), 6) with Zoomable {
+    ), 6) {
       setBorder(new ZoomableBorder(6, 6, 6, 6))
-
-      override def zoomComponent(): Unit = {
-        pack()
-      }
     })
 
     pack()

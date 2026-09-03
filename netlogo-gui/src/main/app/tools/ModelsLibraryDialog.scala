@@ -28,7 +28,7 @@ import org.nlogo.api.{ FileIO, LibraryManager }
 import org.nlogo.awt.{ Positioning, UserCancelException }
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, BrowserLauncher, Button, ButtonPanel, DialogButton, MaximumHeight,
                          ModalProgressTask, OptionPane, PreferredSize, ScrollPane, TextField, Utils, WindowAutomator,
-                         Zoomable, ZoomableBorder, ZoomActions },
+                         Zoomable, ZoomableBorder, ZoomableWindow, ZoomActions },
                        Utils.addEscKeyAction
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.workspace.ModelsLibrary
@@ -166,6 +166,7 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
   with TreeSelectionListener
   with TreeExpansionListener
   with ZoomActions
+  with ZoomableWindow
   with ThemeSync {
 
   WindowAutomator.automate(this)
@@ -391,13 +392,8 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
       )) with MaximumHeight {
         setBorder(new ZoomableBorder(8, 40, 8, 40))
       }
-    )) with Zoomable {
+    )) {
       setOpaque(true)
-
-      override def zoomComponent(): Unit = {
-        modelPreviewPanel.showModel()
-        pack()
-      }
     })
 
     Positioning.center(this, parent)
@@ -582,7 +578,9 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
     }
   }
 
-  private class ModelPreviewPanel extends BoxColumn(BoxAlign.Start) with HyperlinkListener with ThemeSync {
+  private class ModelPreviewPanel
+    extends BoxColumn(BoxAlign.Start) with HyperlinkListener with Zoomable with ThemeSync {
+
     private val graphicsPreview: GraphicsPreview = new GraphicsPreview {
       setBorder(new LineBorder(Color.DARK_GRAY, 1))
     }
@@ -678,6 +676,10 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
             case Some(toOpen) => BrowserLauncher.openURI(this, toOpen)
           }
       }
+    }
+
+    override def zoomComponent(): Unit = {
+      showModel()
     }
 
     override def syncTheme(): Unit = {

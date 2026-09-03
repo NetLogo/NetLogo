@@ -3,7 +3,7 @@
 package org.nlogo.swing
 
 import java.awt.{ Color, Component, Container, Dimension, Font, Graphics, Graphics2D, Image, Insets, Rectangle,
-                  RenderingHints }
+                  RenderingHints, Window }
 import java.awt.event.KeyEvent
 import java.awt.geom.AffineTransform
 import java.awt.image.BufferedImage
@@ -63,6 +63,17 @@ object Utils {
     menuBar.getComponents.foreach {
       case zoomable: Zoomable =>
         zoomable.zoom()
+
+      case _ =>
+    }
+  }
+
+  def zoomWindow(window: Window): Unit = {
+    window.getComponents.foreach(Utils.zoomComponents)
+
+    window match {
+      case zoomable: ZoomableWindow =>
+        zoomable.zoomWindow()
 
       case _ =>
     }

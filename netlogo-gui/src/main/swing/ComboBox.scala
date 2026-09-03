@@ -16,7 +16,7 @@ object ComboBox {
 }
 
 class ComboBox[T](private var items: Seq[T] = Seq(), openOnPress: Boolean = true, searchable: Boolean = false)
-  extends BoxRow(6) with RoundedBorderPanel with MaximumHeight with Zoomable with ThemeSync with ItemSelectable {
+  extends BoxRow(6) with RoundedBorderPanel with MaximumHeight with ThemeSync with ItemSelectable {
 
   // popups with lots of items can overlap the mouse when the dropdown is clicked, causing one of
   // the items to be erroneously selected when the mouse is released. this makes it difficult to
@@ -62,7 +62,7 @@ class ComboBox[T](private var items: Seq[T] = Seq(), openOnPress: Boolean = true
 
   private var itemListeners = Set[ItemListener]()
 
-  setDiameter(Utils.zoom(6))
+  setDiameter(6)
   setFocusable(true)
   enableHover()
 
@@ -184,10 +184,6 @@ class ComboBox[T](private var items: Seq[T] = Seq(), openOnPress: Boolean = true
 
     arrow.setEnabled(enabled)
     choiceDisplay.setEnabled(enabled)
-  }
-
-  override def zoomComponent(): Unit = {
-    setDiameter(Utils.zoom(6))
   }
 
   override def syncTheme(): Unit = {

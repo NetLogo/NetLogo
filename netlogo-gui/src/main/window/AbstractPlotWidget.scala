@@ -24,14 +24,9 @@ abstract class AbstractPlotWidget(val plot: Plot, val plotManager: PlotManagerIn
 
   import AbstractPlotWidget._
 
-  private class CanvasPanel(canvas: PlotCanvas)
-    extends BoxRow(Seq(canvas)) with RoundedBorderPanel with Zoomable with ThemeSync {
-
+  private class CanvasPanel(canvas: PlotCanvas) extends BoxRow(Seq(canvas)) with RoundedBorderPanel with ThemeSync {
     setBorder(new ZoomableBorder(3, 3, 3, 3))
-
-    override def zoomComponent(): Unit = {
-      setDiameter(Utils.zoom(6))
-    }
+    setDiameter(6)
 
     override def syncTheme(): Unit = {
       setBackgroundColor(new Color(plot.backgroundColor))

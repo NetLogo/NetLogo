@@ -13,15 +13,15 @@ import org.nlogo.analytics.Analytics
 import org.nlogo.api.Dump
 import org.nlogo.app.common.CommandLine
 import org.nlogo.core.{ AgentKind, I18N }
-import org.nlogo.swing.{ NetLogoIcon, Utils, ZoomActions }
+import org.nlogo.swing.{ NetLogoIcon, Utils, ZoomableWindow, ZoomActions }
 import org.nlogo.theme.ThemeSync
 import org.nlogo.window.{ Event, Events => WindowEvents }
 
 class AgentMonitorWindow(val agentKind: AgentKind, _agent: Agent, radius: Double,
                          manager: AgentMonitorManager, parent: Frame)
   extends JDialog(parent) with Event.LinkChild with WindowEvents.PeriodicUpdateEvent.Handler
-  with WindowEvents.PatchesCreatedEvent.Handler with WindowEvents.LoadBeginEvent.Handler with ZoomActions with ThemeSync
-  with NetLogoIcon {
+  with WindowEvents.PatchesCreatedEvent.Handler with WindowEvents.LoadBeginEvent.Handler with ZoomActions
+  with ZoomableWindow with ThemeSync with NetLogoIcon {
 
   private val monitor = {
     agentKind match {

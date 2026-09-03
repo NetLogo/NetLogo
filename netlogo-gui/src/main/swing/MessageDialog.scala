@@ -2,9 +2,9 @@
 
 package org.nlogo.swing
 
-import java.awt.{ BorderLayout, Component, Frame }
+import java.awt.{ Component, Frame }
 import java.awt.event.{ ActionEvent, WindowAdapter, WindowEvent }
-import javax.swing.{ AbstractAction, JComponent, JDialog, JPanel }
+import javax.swing.{ AbstractAction, JComponent, JDialog }
 import javax.swing.border.LineBorder
 
 import org.nlogo.awt.Hierarchy
@@ -18,7 +18,7 @@ object MessageDialog {
 import MessageDialog._
 
 class MessageDialog(owner: Component, dismissName: String = "Dismiss")
-  extends JDialog(Hierarchy.getFrame(owner)) with ZoomActions with ThemeSync {
+  extends JDialog(Hierarchy.getFrame(owner)) with ZoomActions with ZoomableWindow with ThemeSync {
 
   WindowAutomator.automate(this)
 
@@ -51,18 +51,7 @@ class MessageDialog(owner: Component, dismissName: String = "Dismiss")
 
   private val scrollPane = new ScrollPane(textArea)
 
-  private val contents = new JPanel with Transparent with Zoomable {
-    setLayout(new BorderLayout)
-
-    add(scrollPane, BorderLayout.CENTER)
-    add(buttonPanel, BorderLayout.SOUTH)
-
-    override def zoomComponent(): Unit = {
-      pack()
-    }
-  }
-
-  add(contents)
+  add(new BoxColumn(Seq(scrollPane, buttonPanel)))
 
   pack()
 

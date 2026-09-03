@@ -35,7 +35,7 @@ class OptionPane(parent: Component, title: String, message: String, options: Seq
   extends JDialog(parent match {
                     case w: Window => w
                     case _ => null
-                  }, title, Dialog.ModalityType.APPLICATION_MODAL) with ZoomActions {
+                  }, title, Dialog.ModalityType.APPLICATION_MODAL) with ZoomActions with ZoomableWindow {
 
   WindowAutomator.automate(this)
 
@@ -46,13 +46,9 @@ class OptionPane(parent: Component, title: String, message: String, options: Seq
   private var selectedOption: Option[String] = None
 
   locally {
-    setContentPane(new BoxColumn with Zoomable {
+    setContentPane(new BoxColumn {
       setOpaque(true)
       setBackground(InterfaceColors.dialogBackground())
-
-      override def zoomComponent(): Unit = {
-        pack()
-      }
     })
 
     addContents()

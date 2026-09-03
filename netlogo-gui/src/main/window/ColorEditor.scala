@@ -42,7 +42,7 @@ class ColorEditor(accessor: PropertyAccessor[Color], frame: Frame)
     colorButton.syncTheme()
   }
 
-  private class ColorButton extends JPanel with RoundedBorderPanel with PreferredSize with Zoomable with ThemeSync {
+  private class ColorButton extends JPanel with RoundedBorderPanel with PreferredSize with ThemeSync {
     private var color = Color.BLACK
 
     private val panel = new JPanel with PreferredSize {
@@ -65,7 +65,7 @@ class ColorEditor(accessor: PropertyAccessor[Color], frame: Frame)
       }
     }
 
-    setDiameter(Utils.zoom(6))
+    setDiameter(6)
     enableHover()
     enablePressed()
 
@@ -114,10 +114,6 @@ class ColorEditor(accessor: PropertyAccessor[Color], frame: Frame)
 
     def getColor: Color =
       color
-
-    override def zoomComponent(): Unit = {
-      setDiameter(Utils.zoom(6))
-    }
 
     override def syncTheme(): Unit = {
       setBackgroundColor(InterfaceColors.toolbarControlBackground())

@@ -10,7 +10,7 @@ import org.nlogo.analytics.Analytics
 import org.nlogo.api.ModelType
 import org.nlogo.core.{ I18N, Widget => CoreWidget }
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, MaximumHeight, Menu, MenuBar, NetLogoIcon, OptionPane, ScrollPane,
-                         UserAction, Utils, WindowAutomator, Zoomable, ZoomableBorder }
+                         UserAction, Utils, WindowAutomator, ZoomableBorder, ZoomableWindow, ZoomActions }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ WidgetInfo, MenuBarFactory, InterfaceFactory, GUIWorkspace, AbstractWidgetPanel }
 
@@ -19,6 +19,8 @@ class HubNetClientEditor(workspace: GUIWorkspace,
                          iFactory: InterfaceFactory,
                          menuFactory: MenuBarFactory) extends JFrame
         with org.nlogo.window.Event.LinkChild
+        with ZoomActions
+        with ZoomableWindow
         with ThemeSync
         with NetLogoIcon {
   WindowAutomator.automate(this)
@@ -45,13 +47,7 @@ class HubNetClientEditor(workspace: GUIWorkspace,
   setContentPane(new BoxColumn(Seq(
     toolbar,
     scrollPane
-  )) with Zoomable {
-    override def zoomComponent(): Unit = {
-      Utils.zoomMenuBar(clientMenuBar)
-
-      pack()
-    }
-  })
+  )))
 
   setJMenuBar(clientMenuBar)
   setSize(getPreferredSize)
@@ -89,6 +85,12 @@ class HubNetClientEditor(workspace: GUIWorkspace,
     }
     // OS X UI guidelines prohibit paths in title bars, but oh well...
     if (mt == ModelType.Normal) t + " {" + directory + "}" else t
+  }
+
+  override def zoomWindow(): Unit = {
+    super.zoomWindow()
+
+    Utils.zoomMenuBar(clientMenuBar)
   }
 
   override def syncTheme(): Unit = {

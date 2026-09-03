@@ -12,7 +12,8 @@ import org.nlogo.core.I18N
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, ButtonPanel, CheckBox, DialogButton,
                          NonemptyTextFieldActionEnabler, NonemptyTextFieldButtonEnabler, ScrollableTextComponent,
-                         TextField, UserAction, Utils, WindowAutomator, Zoomable, ZoomableBorder, ZoomActions },
+                         TextField, UserAction, Utils, WindowAutomator, Zoomable, ZoomableBorder, ZoomableWindow,
+                         ZoomActions },
   UserAction.{ EditCategory, EditFindGroup, KeyBindings, MenuAction }
 
 object FindDialog extends ThemeSync {
@@ -198,7 +199,7 @@ object FindDialog extends ThemeSync {
 }
 
 class FindDialog(val owner: Frame) extends JDialog(owner, I18N.gui.get("dialog.find.title"), false) with ZoomActions
-                                   with ActionListener with ThemeSync {
+                                   with ActionListener with ZoomableWindow with ThemeSync {
 
   WindowAutomator.automate(this)
 
@@ -316,12 +317,8 @@ class FindDialog(val owner: Frame) extends JDialog(owner, I18N.gui.get("dialog.f
     )) {
       setBorder(new ZoomableBorder(16, 8, 8, 8))
     }
-  )) with Zoomable {
+  )) {
     setOpaque(true)
-
-    override def zoomComponent(): Unit = {
-      pack()
-    }
   })
 
   pack()

@@ -17,7 +17,7 @@ import org.nlogo.api.{ CompilerServices, ExtensionManager, SourceOwner }
 import org.nlogo.core.{ CompilerException, I18N }
 import org.nlogo.editor.Colorizer
 import org.nlogo.sdm.Translator
-import org.nlogo.swing.{ MenuBar, MenuItem, NetLogoIcon, Utils, WindowAutomator, Zoomable, ZoomActions }
+import org.nlogo.swing.{ MenuBar, MenuItem, NetLogoIcon, Utils, WindowAutomator, Zoomable, ZoomableWindow, ZoomActions }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ Editable, EditDialogFactory, Events, MenuBarFactory }
 import org.nlogo.window.Event.LinkChild
@@ -43,6 +43,7 @@ class AggregateModelEditor(
   with LinkChild
   with Events.LoadBeginEvent.Handler
   with ZoomActions
+  with ZoomableWindow
   with ThemeSync
   with NetLogoIcon {
 
@@ -90,13 +91,7 @@ class AggregateModelEditor(
     val editorTab = new AggregateEditorTab(toolbar, view.asInstanceOf[Component])
     editorTab.setBorder(null)
     val proceduresTab = new AggregateProceduresTab(compiler, colorizer)
-    new AggregateTabs(this, editorTab, proceduresTab) {
-      override def zoomComponent(): Unit = {
-        Utils.zoomMenuBar(menuBar)
-
-        pack()
-      }
-    }
+    new AggregateTabs(this, editorTab, proceduresTab)
   }
 
   getContentPane.add(tabs)
@@ -261,6 +256,12 @@ class AggregateModelEditor(
   def handle(e: Events.LoadBeginEvent): Unit = {
     undoManager.clearUndos()
     undoManager.clearRedos()
+  }
+
+  override def zoomWindow(): Unit = {
+    super.zoomWindow()
+
+    Utils.zoomMenuBar(menuBar)
   }
 
   override def syncTheme(): Unit = {

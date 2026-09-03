@@ -7,12 +7,12 @@ import javax.swing.JLabel
 
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
-abstract class ToolBarMenu(name: String) extends BoxRow(8) with RoundedBorderPanel with Zoomable with ThemeSync {
+abstract class ToolBarMenu(name: String) extends BoxRow(8) with RoundedBorderPanel with ThemeSync {
   private val label = new JLabel(name) with Zoomable
   private val arrow = new DropdownArrow
 
   setBorder(new ZoomableBorder(6, 8, 6, 8))
-  setDiameter(Utils.zoom(6))
+  setDiameter(6)
 
   add(label)
   add(arrow)
@@ -34,10 +34,6 @@ abstract class ToolBarMenu(name: String) extends BoxRow(8) with RoundedBorderPan
   }
 
   protected def populate(menu: PopupMenu): Unit
-
-  override def zoomComponent(): Unit = {
-    setDiameter(Utils.zoom(6))
-  }
 
   override def syncTheme(): Unit = {
     setBackgroundColor(InterfaceColors.toolbarControlBackground())

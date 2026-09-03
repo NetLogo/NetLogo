@@ -48,17 +48,12 @@ class MonitorWidget(random: MersenneTwisterFast, compiler: CompilerServices, col
     with JobRemovedEvent.Handler
     with java.awt.event.MouseListener {
 
-  private class ValuePanel(label: JLabel)
-    extends BoxRow(label, BoxAlign.Start) with RoundedBorderPanel with Zoomable with ThemeSync {
-
+  private class ValuePanel(label: JLabel) extends BoxRow(label, BoxAlign.Start) with RoundedBorderPanel with ThemeSync {
     setBorder(new ZoomableBorder(0, 6, 0, 6))
+    setDiameter(6)
 
     override def getMaximumSize: Dimension =
       new Dimension(super.getMaximumSize.width, Int.MaxValue)
-
-    override def zoomComponent(): Unit = {
-      setDiameter(Utils.zoom(6))
-    }
 
     override def syncTheme(): Unit = {
       setBackgroundColor(InterfaceColors.displayAreaBackground())

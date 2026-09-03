@@ -11,8 +11,7 @@ import org.nlogo.app.common.{ CommandLine, CommandServer, HistoryPrompt, LinePro
 import org.nlogo.awt.{ Hierarchy, UserCancelException }
 import org.nlogo.core.{ AgentKind, I18N }
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, Button, FileDialog => SwingFileDialog, ModalProgressTask,
-                         MenuItem, PopupMenu, PreferredSize, RichAction, RoundedBorderPanel, Utils, Zoomable,
-                         ZoomableBorder }
+                         MenuItem, PopupMenu, PreferredSize, RichAction, RoundedBorderPanel, Zoomable, ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ CommandCenterInterface, Events => WindowEvents, OutputArea, TextMenuActions }
 import org.nlogo.workspace.{ AbstractWorkspace, ExportOutput }
@@ -59,12 +58,9 @@ class CommandCenter(workspace: AbstractWorkspace, showToggle: Boolean, packSplit
   }) with RoundedBorderPanel with Zoomable with ThemeSync {
     setBorder(new ZoomableBorder(3, 12, 3, 12))
     setFocusable(false)
+    setDiameter(6)
     enableHover()
     enablePressed()
-
-    override def zoomComponent(): Unit = {
-      setDiameter(Utils.zoom(6))
-    }
 
     override def syncTheme(): Unit = {
       setBackgroundColor(InterfaceColors.toolbarControlBackground())

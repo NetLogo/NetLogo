@@ -60,6 +60,7 @@ abstract class Widget extends JPanel with RoundedBorderPanel with Zoomable with 
   var deleteable: Boolean = true
 
   setBorderColor(InterfaceColors.Transparent)
+  setDiameter(12)
 
   protected var _oldSize = false
   protected var _boldState = {
@@ -156,10 +157,6 @@ abstract class Widget extends JPanel with RoundedBorderPanel with Zoomable with 
     this.displayName = displayName
     invalidate()
     repaint()
-  }
-
-  override def zoomComponent(): Unit = {
-    setDiameter(Utils.zoom(12))
   }
 
   override def toString: String = {

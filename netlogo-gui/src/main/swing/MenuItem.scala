@@ -33,9 +33,6 @@ class MenuItem(action: Action, showIcon: Boolean = true) extends JMenuItem(actio
   override def getInsets: Insets =
     Utils.zoomInsets(super.getInsets)
 
-  override def getIconTextGap: Int =
-    Utils.zoom(super.getIconTextGap)
-
   def updateEnabled(): Unit = {
     if (getAction.isInstanceOf[UserAction.MenuAction])
       configurePropertiesFromAction(getAction)
@@ -44,6 +41,8 @@ class MenuItem(action: Action, showIcon: Boolean = true) extends JMenuItem(actio
   }
 
   override def zoomComponent(): Unit = {
+    setIconTextGap(Utils.zoom(4))
+
     itemUI.zoom()
   }
 

@@ -12,7 +12,7 @@ import org.nlogo.api.AbstractModelLoader
 import org.nlogo.core.{ AgentKind, I18N, Model, Shape => CoreShape, ShapeList, ShapeListTracker },
   ShapeList.{ shapesToMap, isDefaultShapeName }
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, Button, DialogButton, MaximumHeight, OptionPane, ScrollPane,
-                         TextField, Utils, WindowAutomator, Zoomable, ZoomableBorder, ZoomActions }
+                         TextField, Utils, WindowAutomator, ZoomableBorder, ZoomableWindow, ZoomActions }
 import org.nlogo.swing.Implicits.thunk2action
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
@@ -21,7 +21,7 @@ import scala.util.{ Failure, Success }
 
 abstract class ManagerDialog[A <: CoreShape](parentFrame: Frame, modelLoader: AbstractModelLoader,
                                              shapeListTracker: ShapeListTracker)(implicit ct: ClassTag[A])
-  extends JDialog(parentFrame) with ListSelectionListener with ZoomActions with ThemeSync {
+  extends JDialog(parentFrame) with ListSelectionListener with ZoomActions with ZoomableWindow with ThemeSync {
 
   WindowAutomator.automate(this)
 
@@ -94,13 +94,9 @@ abstract class ManagerDialog[A <: CoreShape](parentFrame: Frame, modelLoader: Ab
         duplicateButton,
         deleteButton
       ), 12) with MaximumHeight
-    ), 12) with Zoomable {
+    ), 12) {
       setOpaque(true)
       setBorder(new ZoomableBorder(12, 12, 12, 12))
-
-      override def zoomComponent(): Unit = {
-        pack()
-      }
     })
 
     shapesList.addMouseListener(new MouseInputAdapter {
