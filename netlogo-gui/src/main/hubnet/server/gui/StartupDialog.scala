@@ -10,12 +10,12 @@ import org.nlogo.awt.Positioning
 import org.nlogo.core.I18N
 import org.nlogo.swing.NonemptyTextFieldButtonEnabler
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, CheckBox, ComboBox, DialogButton, TextField, TextFieldBox,
-                         WindowAutomator, Zoomable, ZoomableBorder, ZoomActions }
+                         WindowAutomator, ZoomableBorder, ZoomableWindow, ZoomActions }
 import org.nlogo.theme.InterfaceColors
 
 class StartupDialog(parent: Frame, choices: Seq[(NetworkInterface, InetAddress)],
                     preferredNetworkConnection: Option[(NetworkInterface, InetAddress)])
-  extends JDialog(parent, I18N.gui.get("edit.hubnet.startActivity"), true) with ZoomActions {
+  extends JDialog(parent, I18N.gui.get("edit.hubnet.startActivity"), true) with ZoomActions with ZoomableWindow {
 
   WindowAutomator.automate(this)
 
@@ -58,7 +58,7 @@ class StartupDialog(parent: Frame, choices: Seq[(NetworkInterface, InetAddress)]
 
   getRootPane.setDefaultButton(okButton)
 
-  setContentPane(new BoxColumn(12) with Zoomable {
+  setContentPane(new BoxColumn(12) {
     setOpaque(true)
     setBackground(InterfaceColors.dialogBackground())
     setBorder(new ZoomableBorder(8, 8, 8, 8))
@@ -79,10 +79,6 @@ class StartupDialog(parent: Frame, choices: Seq[(NetworkInterface, InetAddress)]
     }
 
     add(new BoxRow(okButton, BoxAlign.End))
-
-    override def zoomComponent(): Unit = {
-      pack()
-    }
   })
 
   setResizable(false)

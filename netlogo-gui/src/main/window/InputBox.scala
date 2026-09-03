@@ -29,25 +29,19 @@ abstract class InputBox(textArea: EditorArea, editDialogTextArea: EditorArea, co
   protected class ColorButton extends JButton with RoundedBorderPanel with Zoomable with ThemeSync {
     setBorder(null)
     setBaseFont(getFont.deriveFont(9.0f))
-    setDiameter(Utils.zoom(6))
+    setDiameter(6)
 
     addActionListener(new SelectColorActionListener)
 
     override def getMaximumSize: Dimension =
       new Dimension(Int.MaxValue, Int.MaxValue)
 
-    override def zoomComponent(): Unit = {
-      setDiameter(Utils.zoom(6))
-    }
-
     override def syncTheme(): Unit = {
       setBorderColor(InterfaceColors.inputBorder())
     }
   }
 
-  protected class InputScrollPane(textArea: EditorArea)
-    extends BoxRow with RoundedBorderPanel with Zoomable with ThemeSync {
-
+  protected class InputScrollPane(textArea: EditorArea) extends BoxRow with RoundedBorderPanel with ThemeSync {
     val scrollPane = new ScrollPane(textArea, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
                                     ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER) {
       setBorder(null)
@@ -58,12 +52,9 @@ abstract class InputBox(textArea: EditorArea, editDialogTextArea: EditorArea, co
     textArea.setBorder(new ZoomableBorder(2, 6, 2, 6))
 
     setBorder(new ZoomableBorder(3, 3, 3, 3))
+    setDiameter(6)
 
     add(scrollPane)
-
-    override def zoomComponent(): Unit = {
-      setDiameter(Utils.zoom(6))
-    }
 
     override def paintComponent(g: Graphics): Unit = {
       // this mostly fixes some weird horizontal scrollbar issues (Isaac B 8/7/24)
