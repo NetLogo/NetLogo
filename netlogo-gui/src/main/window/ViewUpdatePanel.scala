@@ -18,8 +18,10 @@ class ViewUpdatePanel(workspace: GUIWorkspace, speedSlider: SpeedSliderPanel, di
   implicit val prefix: org.nlogo.core.I18N.Prefix = Prefix("tabs.run")
 
   private val updateModeChooser = new UpdateModeChooser(workspace) {
-    override def getPreferredSize: Dimension =
-      new Dimension(displaySwitch.getPreferredSize.width, super.getPreferredSize.height)
+    override def getPreferredSize: Dimension = {
+      new Dimension(displaySwitch.getPreferredSize.width.max(super.getPreferredSize.width),
+                    super.getPreferredSize.height)
+    }
   }
 
   private val settingsButton = new SettingsButton(new EditSettings(workspace.viewWidget.settings))

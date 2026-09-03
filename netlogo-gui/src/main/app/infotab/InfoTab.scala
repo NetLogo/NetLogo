@@ -22,7 +22,7 @@ import org.nlogo.core.I18N
 import org.nlogo.editor.EditorConfiguration
 import org.nlogo.swing.{ BoxAlign, BoxRow, QuickHelp, ScrollableTextComponent, ScrollPane, TextArea,
                          ToolBarActionButton, ToolBarToggleButton, Printable, PrinterManager, BrowserLauncher,
-                         UndoManager, UserAction, Utils, ZoomableBorder }, UserAction.MenuAction
+                         UndoManager, UserAction, Utils, Zoomable, ZoomableBorder }, UserAction.MenuAction
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ Events => WindowEvents }
 
@@ -149,7 +149,7 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
   def setCodeFont(font: Font): Unit = {
     codeFont = Option(font)
 
-    textArea.setFont(font)
+    textArea.setBaseFont(font)
 
     updateEditorPane(true)
   }
@@ -235,9 +235,10 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
     setEditable(true)
     setLineWrap(true)
     setWrapStyleWord(true)
+    setBaseFont(EditorConfiguration.getMonospacedFont)
+
     getDocument.addDocumentListener(InfoTab.this)
     getDocument.addUndoableEditListener(undoManager)
-    setFont(EditorConfiguration.getMonospacedFont)
 
     override def scrollTo(index: Int): Unit = {
       val pos = modelToView2D(index)
@@ -249,7 +250,8 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
     }
   }
 
-  private class HTMLPanel extends JFXPanel {
+  private class HTMLPanel extends JFXPanel with Zoomable {
+    private var view: Option[WebView] = None
     private var engine: Option[WebEngine] = None
     private var text = ""
 
@@ -271,6 +273,8 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
       })
 
       setScene(new Scene(webView))
+
+      view = Option(webView)
 
       val webEngine = webView.getEngine
 
@@ -313,6 +317,12 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
 
       Platform.runLater(() => {
         engine.foreach(_.loadContent(str, "text/html"))
+      })
+    }
+
+    override def zoomComponent(): Unit = {
+      Platform.runLater(() => {
+        view.foreach(_.setZoom(Utils.getZoomFactor))
       })
     }
   }

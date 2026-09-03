@@ -10,7 +10,7 @@ import javax.swing.{ AbstractAction, JComponent, JLayeredPane, JPanel }
 import org.nlogo.app.common.Events.WidgetSelectedEvent
 import org.nlogo.awt.{ Coordinates, Mouse }
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ MenuItem, PopupMenu, WrappingPopupMenu, Utils }
+import org.nlogo.swing.{ MenuItem, PopupMenu, WrappingPopupMenu, Utils, Zoomable }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ InterfaceMode, MouseMode, ViewWidget, Widget, WidgetWrapperInterface }
 import org.nlogo.window.Events.{ DirtyEvent, ExportWidgetEvent, WidgetForegroundedEvent }
@@ -34,6 +34,7 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
   with MouseListener
   with MouseMotionListener
   with WidgetForegroundedEvent.Handler
+  with Zoomable
   with ThemeSync {
 
   import WidgetWrapper._
@@ -189,7 +190,7 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
     }
   }
 
-  def zoomBounds(): Unit = {
+  override def zoomComponent(): Unit = {
     val bounds: Rectangle = Utils.zoomBounds(widget.getUnzoomedBounds)
 
     if (selected) {

@@ -17,7 +17,7 @@ class OutputWidget extends SingleErrorWidget with CommandCenterInterface
   displayName(I18N.gui.get("tabs.run.widgets.output"))
 
   val outputArea = new OutputArea {
-    setFont(EditorConfiguration.getCodeFont)
+    setBaseFont(EditorConfiguration.getCodeFont)
   }
 
   setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
@@ -69,7 +69,7 @@ class OutputWidget extends SingleErrorWidget with CommandCenterInterface
   override def setCodeFont(font: Font): Unit = {
     val scaled: Font = font.deriveFont(fontSize)
 
-    outputArea.setFont(scaled)
+    outputArea.setBaseFont(scaled)
 
     originalFont = scaled
   }

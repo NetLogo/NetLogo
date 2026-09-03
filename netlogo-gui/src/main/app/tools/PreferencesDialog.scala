@@ -49,8 +49,8 @@ class PreferencesDialog(parent: Frame & ThemeSync, tabManager: TabsInterface, wi
     Preferences.LogEvents
   )
 
-  private lazy val tabs = new FloatingTabbedPane with Zoomable {
-    override def zoom(oldZoom: Float): Unit = {
+  private lazy val tabs = new FloatingTabbedPane {
+    override def zoomComponent(): Unit = {
       pack()
     }
   }
@@ -60,8 +60,8 @@ class PreferencesDialog(parent: Frame & ThemeSync, tabManager: TabsInterface, wi
   private lazy val loggingPreferencesPanel = new PreferenceContainer(loggingPreferences)
   private lazy val themesPanel = new ThemesPanel(parent)
 
-  private lazy val codeMessage = new JLabel(I18N.gui("code.message")) with PreferredSize
-  private lazy val loggingMessage = new JLabel(I18N.gui("logging.message")) with PreferredSize
+  private lazy val codeMessage = new JLabel(I18N.gui("code.message")) with PreferredSize with Zoomable
+  private lazy val loggingMessage = new JLabel(I18N.gui("logging.message")) with PreferredSize with Zoomable
 
   private lazy val okButton = new DialogButton(true, I18N.gui.get("common.buttons.ok"), () => ok())
   private lazy val cancelButton = new DialogButton(false, I18N.gui.get("common.buttons.cancel"), () => cancel())
@@ -251,7 +251,7 @@ private class PreferenceContainer(preferences: Seq[Preference]) extends BoxColum
 
   private val (labels, components) = preferences.foldLeft((Seq[JLabel](), Seq[Component & ThemeSync]())) {
     case ((labels, components), pref) =>
-      val label = new JLabel(prefString(pref))
+      val label = new JLabel(prefString(pref)) with Zoomable
 
       val labelComponent: Component = {
         if (pref.top) {

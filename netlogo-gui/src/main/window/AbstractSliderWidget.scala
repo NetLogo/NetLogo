@@ -12,14 +12,14 @@ import javax.swing.text.{ AttributeSet, PlainDocument }
 import org.nlogo.agent.SliderConstraint
 import org.nlogo.api.{ Approximate, Dump }
 import org.nlogo.core.{ I18N, NetLogoPreferences }
-import org.nlogo.swing.{ Transparent, Utils, ZoomableBorder }
+import org.nlogo.swing.{ Transparent, Utils, Zoomable, ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.Events.InputBoxLoseFocusEvent
 
 import scala.math.Pi
 
 trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
-  protected class Label(text: String) extends JLabel(text) {
+  protected class Label(text: String) extends JLabel(text) with Zoomable {
     override def paintComponent(g: Graphics): Unit = {
       val g2d = Utils.initGraphics2D(g)
       if (vertical) {
@@ -30,9 +30,9 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
     }
   }
 
-  protected class TextField extends JTextField("50", 3) with Transparent {
+  protected class TextField extends JTextField("50", 3) with Transparent with Zoomable {
     setBorder(new ZoomableBorder(0, 3, 0, 2))
-    setFont(getFont.deriveFont(11f))
+    setBaseFont(getFont.deriveFont(11f))
     setHorizontalAlignment(SwingConstants.RIGHT)
 
     addActionListener(new ActionListener {
@@ -137,13 +137,13 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
   private val sliderData = new SliderData(this)
 
   val nameComponent = new Label(I18N.gui.get("edit.slider.previewName")) {
-    setFont(getFont.deriveFont(_boldState))
+    setBaseFont(getFont.deriveFont(_boldState))
   }
 
   val valueComponent = new TextField
 
   val unitsComponent = new Label("") {
-    setFont(getFont.deriveFont(_boldState))
+    setBaseFont(getFont.deriveFont(_boldState))
   }
 
   val slider = new Slider(minimum, increment, maximum, this) {

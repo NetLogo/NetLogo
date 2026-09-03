@@ -15,7 +15,7 @@ class WorldPreview(myWidth: Int, myHeight: Int) extends JPanel(new BorderLayout)
 
   private var errors = Set[String]()
 
-  private val shapeLabel = new JLabel("Torus") {
+  private val shapeLabel = new JLabel("Torus") with Zoomable {
     setForeground(InterfaceColors.dialogText())
   }
 
@@ -77,12 +77,13 @@ class WorldPreview(myWidth: Int, myHeight: Int) extends JPanel(new BorderLayout)
   }
 
   private class PreviewPanel extends JPanel with Zoomable {
-    private val topLeft = new JLabel
-    private val topRight = new JLabel
-    private val bottomLeft = new JLabel
-    private val bottomRight = new JLabel
+    private val topLeft = new JLabel with Zoomable
+    private val topRight = new JLabel with Zoomable
+    private val bottomLeft = new JLabel with Zoomable
+    private val bottomRight = new JLabel with Zoomable
     private val errorLabel = new JLabel(
       "<html>Invalid world dimensions. The origin (0, 0) must be inside the dimensions of the world.</html>")
+      with Zoomable
 
     private var monoFont = EditorConfiguration.getMonospacedFont.deriveFont(Utils.zoom(10f))
 
@@ -92,11 +93,11 @@ class WorldPreview(myWidth: Int, myHeight: Int) extends JPanel(new BorderLayout)
     bottomRight.setForeground(Color.WHITE)
     errorLabel.setForeground(Color.WHITE)
 
-    topLeft.setFont(monoFont)
-    topRight.setFont(monoFont)
-    bottomLeft.setFont(monoFont)
-    bottomRight.setFont(monoFont)
-    errorLabel.setFont(monoFont)
+    topLeft.setBaseFont(monoFont)
+    topRight.setBaseFont(monoFont)
+    bottomLeft.setBaseFont(monoFont)
+    bottomRight.setBaseFont(monoFont)
+    errorLabel.setBaseFont(monoFont)
 
     setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
     setBorder(new ZoomableBorder(10, 10, 10, 10))
@@ -210,7 +211,7 @@ class WorldPreview(myWidth: Int, myHeight: Int) extends JPanel(new BorderLayout)
       }
     }
 
-    override def zoom(oldZoom: Float): Unit = {
+    override def zoomComponent(): Unit = {
       monoFont = EditorConfiguration.getMonospacedFont.deriveFont(Utils.zoom(10f))
     }
   }

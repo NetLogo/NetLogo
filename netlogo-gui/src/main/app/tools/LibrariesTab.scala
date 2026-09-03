@@ -4,10 +4,9 @@ package org.nlogo.app.tools
 
 import java.awt.{ Component, EventQueue, Font, Toolkit }
 import java.awt.event.KeyEvent
-import java.awt.font.TextAttribute
 import java.io.IOException
 import java.nio.file.Path
-import java.util.{ Collections, Locale }
+import java.util.Locale
 import javax.swing.{ Action, DefaultListModel, Icon, JLabel, JList, ListCellRenderer, ListModel }
 import javax.swing.border.LineBorder
 import javax.swing.event.{ AncestorEvent, AncestorListener, ListDataEvent, ListDataListener }
@@ -15,8 +14,8 @@ import javax.swing.event.{ AncestorEvent, AncestorListener, ListDataEvent, ListD
 import org.nlogo.api.{ LibraryInfoDownloader, LibraryManager, Version }
 import org.nlogo.core.{ I18N, LibraryInfo, LibraryStatus, Token, TokenType }
 import org.nlogo.swing.{ AutomationUtils, BoxColumn, BoxRow, BrowserLauncher, Button, FilterableListModel,
-                         HorizontalStrut, MaximumHeight, OptionPane, RichAction, ScrollPane, SwingWorker, SyncZoom,
-                         TextArea, TextField, Utils, VerticalStrut, Zoomable, ZoomableBorder }
+                         HorizontalStrut, MaximumHeight, OptionPane, RichAction, ScrollPane, SwingWorker, TextArea,
+                         TextField, Utils, VerticalStrut, Zoomable, ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.workspace.ModelsLibrary
 
@@ -80,7 +79,7 @@ class LibrariesTab( category:        String
                   , tokenizeSource:  String => Iterator[Token]
                   , updateSource:    ((String) => String) => Unit
                   , extPathMappings: Map[String, Path]
-                  ) extends BoxColumn(6) with Zoomable with ThemeSync {
+                  ) extends BoxColumn(6) with ThemeSync {
 
   import LibrariesTab._
 
@@ -125,10 +124,6 @@ class LibrariesTab( category:        String
   private val listModel   = new FilterableListModel(baseListModel, containsLib)
   private val libraryList = new JList[LibraryInfo](listModel) with Zoomable {
     setCellRenderer(renderer)
-
-    override def zoom(oldZoom: Float): Unit = {
-      renderer.syncZoom()
-    }
   }
 
   private var actionIsInProgress = false
@@ -196,9 +191,17 @@ class LibrariesTab( category:        String
   private val info = new TextArea(2, 28)
   private val infoScroll = new ScrollPane(info)
 
-  private val installedVersionLabel  = new JLabel(s"${I18N.gui("installedVersion")}: ")
-  private val latestVersionLabel  = new JLabel(s"${I18N.gui("latestVersion")}: ")
-  private val minNetLogoVersionLabel = new JLabel(s"${I18N.gui("minimumVersion")}: ")
+  private val installedVersionLabel  = new JLabel(s"${I18N.gui("installedVersion")}: ") with Zoomable {
+    setBaseFont(getFont.deriveFont(Font.BOLD))
+  }
+
+  private val latestVersionLabel  = new JLabel(s"${I18N.gui("latestVersion")}: ") with Zoomable {
+    setBaseFont(getFont.deriveFont(Font.BOLD))
+  }
+
+  private val minNetLogoVersionLabel = new JLabel(s"${I18N.gui("minimumVersion")}: ") with Zoomable {
+    setBaseFont(getFont.deriveFont(Font.BOLD))
+  }
 
   private val installedVersion = new JLabel
   private val latestVersion = new JLabel
@@ -209,13 +212,6 @@ class LibrariesTab( category:        String
   locally {
 
     import org.nlogo.swing.Implicits.thunk2documentListener
-
-    def embolden(l: JLabel) =
-      l.setFont(l.getFont.deriveFont(Collections.singletonMap(TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD)))
-
-    embolden(installedVersionLabel)
-    embolden(latestVersionLabel)
-    embolden(minNetLogoVersionLabel)
 
     info.setLineWrap(true)
     info.setWrapStyleWord(true)
@@ -403,7 +399,7 @@ class LibrariesTab( category:        String
   private def updateSingleOperationStatus(operation: String, libName: String) =
     updateStatus(I18N.gui(operation, libName))
 
-  private class CellRenderer extends BoxRow(6) with ListCellRenderer[LibraryInfo] with SyncZoom {
+  private class CellRenderer extends BoxRow(6) with ListCellRenderer[LibraryInfo] {
     private val upToDateIcon: Icon = Utils.iconScaledWithColor("/images/check.png", 24, 24,
                                                                () => InterfaceColors.checkFilled())
     private val warningIcon: Icon = Utils.iconScaledWithColor("/images/exclamation-triangle.png", 24, 24,
@@ -412,18 +408,17 @@ class LibrariesTab( category:        String
                                                                 () => InterfaceColors.updateIcon())
 
     private val iconLabel = new JLabel
-    private val nameLabel = new JLabel
-    private val descLabel = new JLabel
+    private val descLabel = new JLabel with Zoomable
+
+    private val nameLabel = new JLabel with Zoomable {
+      setBaseFont(getFont.deriveFont(14.0f).deriveFont(Font.BOLD))
+    }
 
     setOpaque(true)
     setBorder(new ZoomableBorder(6, 6, 6, 6))
 
     add(iconLabel)
     add(new BoxColumn(Seq(nameLabel, descLabel), 6))
-
-    nameLabel.setFont(nameLabel.getFont.deriveFont(14.0f).deriveFont(Font.BOLD))
-
-    syncZoom()
 
     override def getListCellRendererComponent(list: JList[? <: LibraryInfo], value: LibraryInfo, index: Int,
                                               isSelected: Boolean, hasFocus: Boolean): Component = {
@@ -500,10 +495,6 @@ class LibrariesTab( category:        String
     actionIsInProgress = true
     libs.map(new Worker(operation, task, _, multiple = true, cb)).foreach(_.execute)
 
-  }
-
-  override def zoom(oldZoom: Float): Unit = {
-    Utils.zoomComponents(renderer, oldZoom)
   }
 
   override def syncTheme(): Unit = {

@@ -9,7 +9,8 @@ import javax.swing.{ JLabel, JPanel, ScrollPaneConstants }
 import org.nlogo.api.CompilerServices
 import org.nlogo.awt.Hierarchy
 import org.nlogo.editor.{ Colorizer, EditorArea, EditorConfiguration }
-import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, CollapsibleArrow, MaximumHeight, ScrollPane, Transparent }
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, CollapsibleArrow, MaximumHeight, ScrollPane, Transparent,
+                         Zoomable }
 import org.nlogo.theme.InterfaceColors
 
 import scala.util.{ Success, Try }
@@ -56,7 +57,7 @@ class CodeEditor(accessor: PropertyAccessor[String], compiler: CompilerServices,
 
   private val arrow = new CollapsibleArrow(!collapsed)
 
-  private val nameLabel = new JLabel(accessor.name) {
+  private val nameLabel = new JLabel(accessor.name) with Zoomable {
     addMouseListener(new MouseAdapter {
       override def mouseReleased(e: MouseEvent): Unit = {
         setVisibility(collapsed)

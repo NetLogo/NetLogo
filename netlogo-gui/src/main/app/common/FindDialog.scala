@@ -2,18 +2,17 @@
 
 package org.nlogo.app.common
 
-import java.awt.{ Frame, Toolkit }
+import java.awt.{ Dimension, Frame, Toolkit }
 import java.awt.event.{ ActionEvent, ActionListener, FocusEvent, KeyEvent }
 import java.util.Locale
-import javax.swing.{ AbstractAction, Action, Icon, JDialog, JEditorPane, JLabel, SwingConstants }
+import javax.swing.{ AbstractAction, Action, Icon, JDialog, JEditorPane, JLabel }
 import javax.swing.text.{ BadLocationException, TextAction }
 
 import org.nlogo.core.I18N
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, ButtonPanel, CheckBox, DialogButton,
                          NonemptyTextFieldActionEnabler, NonemptyTextFieldButtonEnabler, ScrollableTextComponent,
-                         SyncZoom, TextField, TextFieldBox, UserAction, Utils, WindowAutomator, ZoomableBorder,
-                         ZoomActions },
+                         TextField, UserAction, Utils, WindowAutomator, Zoomable, ZoomableBorder, ZoomActions },
   UserAction.{ EditCategory, EditFindGroup, KeyBindings, MenuAction }
 
 object FindDialog extends ThemeSync {
@@ -259,8 +258,9 @@ class FindDialog(val owner: Frame) extends JDialog(owner, I18N.gui.get("dialog.f
 
   private val findBox = new TextField(25)
   private val replaceBox = new TextField(25)
-  private val replaceLabel = new JLabel(I18N.gui.get("dialog.find.replaceWith"))
-  private val notFoundLabel = new JLabel(I18N.gui.get("dialog.find.notFound"))
+  private val findLabel = new JLabel(I18N.gui.get("dialog.find.find")) with Zoomable
+  private val replaceLabel = new JLabel(I18N.gui.get("dialog.find.replaceWith")) with Zoomable
+  private val notFoundLabel = new JLabel(I18N.gui.get("dialog.find.notFound")) with Zoomable
 
   new NonemptyTextFieldButtonEnabler(nextButton, List(findBox))
   new NonemptyTextFieldButtonEnabler(prevButton, List(findBox))
@@ -289,14 +289,20 @@ class FindDialog(val owner: Frame) extends JDialog(owner, I18N.gui.get("dialog.f
   setResizable(false)
   setVisible(false)
 
-  private val findPanel = new TextFieldBox(SwingConstants.LEFT) {
+  private val findPanel = new BoxRow(Seq(
+    new BoxColumn(Seq(
+      new BoxRow(findLabel, BoxAlign.Start),
+      new BoxRow(replaceLabel, BoxAlign.Start)
+    ), 6) {
+      override def getMaximumSize: Dimension =
+        new Dimension(getPreferredSize.width, super.getMaximumSize.height)
+    },
+    new BoxColumn(Seq(findBox, replaceBox), 6)
+  ), 6) {
     setBorder(new ZoomableBorder(16, 8, 8, 8))
-
-    addField(I18N.gui.get("dialog.find.find"), findBox)
-    addField(replaceLabel, replaceBox)
   }
 
-  private val contents = new BoxColumn(Seq(
+  setContentPane(new BoxColumn(Seq(
     new BoxRow(findPanel, BoxAlign.Start),
     new BoxRow(Seq(ignoreCaseCheckBox, wrapAroundCheckBox, notFoundLabel), 12, BoxAlign.Start) {
       setBorder(new ZoomableBorder(6, 6, 6, 6))
@@ -310,19 +316,13 @@ class FindDialog(val owner: Frame) extends JDialog(owner, I18N.gui.get("dialog.f
     )) {
       setBorder(new ZoomableBorder(16, 8, 8, 8))
     }
-  )) with SyncZoom {
+  )) with Zoomable {
     setOpaque(true)
 
-    override def zoom(oldZoom: Float): Unit = {
-      super.zoom(oldZoom)
-
+    override def zoomComponent(): Unit = {
       pack()
     }
-  }
-
-  setContentPane(contents)
-
-  contents.syncZoom()
+  })
 
   pack()
 
@@ -469,7 +469,7 @@ class FindDialog(val owner: Frame) extends JDialog(owner, I18N.gui.get("dialog.f
   }
 
   override def syncTheme(): Unit = {
-    contents.setBackground(InterfaceColors.dialogBackground())
+    getContentPane.setBackground(InterfaceColors.dialogBackground())
 
     nextButton.syncTheme()
     prevButton.syncTheme()
@@ -483,9 +483,8 @@ class FindDialog(val owner: Frame) extends JDialog(owner, I18N.gui.get("dialog.f
     findBox.syncTheme()
     replaceBox.syncTheme()
 
+    findLabel.setForeground(InterfaceColors.dialogText())
     replaceLabel.setForeground(InterfaceColors.dialogText())
     notFoundLabel.setForeground(InterfaceColors.dialogText())
-
-    findPanel.syncTheme()
   }
 }

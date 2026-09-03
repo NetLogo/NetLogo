@@ -354,14 +354,12 @@ class BehaviorSpaceApp(args: BehaviorSpaceApp.CommandLineArgs)
   }
 
   override def setZoomFactor(factor: Float): Unit = {
-    val oldZoom: Float = Utils.getZoomFactor
-
     Utils.setZoomFactor(factor)
 
     Window.getWindows.flatMap(_.getComponents).collect {
       case root: JRootPane =>
         root.getContentPane
-    }.foreach(Utils.zoomComponents(_, oldZoom))
+    }.foreach(Utils.zoomComponents)
 
     frame.pack()
   }

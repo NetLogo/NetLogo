@@ -5,12 +5,12 @@ package org.nlogo.window
 import java.awt.{ Cursor, Dimension }
 import javax.swing.{ JLabel, JTextPane }
 
-import org.nlogo.swing.{ BoxAlign, BoxRow, MaximumHeight, Utils, ZoomableBorder }
+import org.nlogo.swing.{ BoxAlign, BoxRow, MaximumHeight, Utils, Zoomable, ZoomableBorder }
 import org.nlogo.theme.InterfaceColors
 
 class ErrorLabel extends BoxRow(6, BoxAlign.Start) with MaximumHeight {
   private val icon = new JLabel
-  private val label = new JTextPane {
+  private val label = new JTextPane with Zoomable {
     setEditable(false)
     setOpaque(false)
     setBorder(null)

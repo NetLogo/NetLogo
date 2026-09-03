@@ -10,13 +10,13 @@ import scala.util.{ Failure, Success }
 
 import org.nlogo.awt.Hierarchy.getFrame
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, Button, ModalProgressTask }
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, Button, ModalProgressTask, Zoomable }
 import org.nlogo.window.GraphicsPreviewInterface
 import org.nlogo.workspace.PreviewCommandsRunner
 
 class PreviewPanel(graphicsPreview: GraphicsPreviewInterface) extends BoxColumn(6, BoxAlign.Start) {
   val button = new Button(null)
-  val imageLabel = new JLabel {
+  val imageLabel = new JLabel with Zoomable {
     override val getPreferredSize = graphicsPreview.getPreferredSize
     setHorizontalAlignment(SwingConstants.CENTER)
   }

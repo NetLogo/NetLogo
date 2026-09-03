@@ -9,8 +9,8 @@ import javax.swing.{ JDialog, JLabel, WindowConstants }
 import org.nlogo.awt.Positioning
 import org.nlogo.core.I18N
 import org.nlogo.swing.NonemptyTextFieldButtonEnabler
-import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, CheckBox, ComboBox, DialogButton, SyncZoom, TextField,
-                         TextFieldBox, WindowAutomator, ZoomableBorder, ZoomActions }
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, CheckBox, ComboBox, DialogButton, TextField, TextFieldBox,
+                         WindowAutomator, Zoomable, ZoomableBorder, ZoomActions }
 import org.nlogo.theme.InterfaceColors
 
 class StartupDialog(parent: Frame, choices: Seq[(NetworkInterface, InetAddress)],
@@ -56,7 +56,9 @@ class StartupDialog(parent: Frame, choices: Seq[(NetworkInterface, InetAddress)]
     // does this work via some magic side effect? or can it just be removed? JC - 8/21/10
   private[gui] val buttonEnabler = new NonemptyTextFieldButtonEnabler(okButton, List(nameField))
 
-  private val contents = new BoxColumn(12) with SyncZoom {
+  getRootPane.setDefaultButton(okButton)
+
+  setContentPane(new BoxColumn(12) with Zoomable {
     setOpaque(true)
     setBackground(InterfaceColors.dialogBackground())
     setBorder(new ZoomableBorder(8, 8, 8, 8))
@@ -78,18 +80,10 @@ class StartupDialog(parent: Frame, choices: Seq[(NetworkInterface, InetAddress)]
 
     add(new BoxRow(okButton, BoxAlign.End))
 
-    override def zoom(oldZoom: Float): Unit = {
-      super.zoom(oldZoom)
-
+    override def zoomComponent(): Unit = {
       pack()
     }
-  }
-
-  getRootPane.setDefaultButton(okButton)
-
-  setContentPane(contents)
-
-  contents.syncZoom()
+  })
 
   setResizable(false)
   pack()

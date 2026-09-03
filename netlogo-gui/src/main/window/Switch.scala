@@ -8,12 +8,12 @@ import javax.swing.{ Box, BoxLayout, JLabel, JPanel }
 
 import org.nlogo.agent.BooleanConstraint
 import org.nlogo.core.I18N
-import org.nlogo.swing.Utils
+import org.nlogo.swing.{ Utils, Zoomable }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 abstract class Switch extends MultiErrorWidget with Events.AfterLoadEvent.Handler with ThemeSync {
   protected var constraint = new BooleanConstraint
-  protected val label = new JLabel(I18N.gui.get("edit.switch.previewName"))
+  protected val label = new JLabel(I18N.gui.get("edit.switch.previewName")) with Zoomable
   protected val toggle = new Toggle
   protected var nameChanged = false
   protected var _name = ""

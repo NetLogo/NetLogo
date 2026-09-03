@@ -143,8 +143,6 @@ class AgentMonitorWindow(val agentKind: AgentKind, _agent: Agent, radius: Double
         case AgentKind.Link => Analytics.linkMonitorOpen()
       }
 
-      monitor.syncZoom()
-
       pack()
     }
 

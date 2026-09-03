@@ -7,13 +7,13 @@ import javax.swing.{ ButtonGroup, JLabel }
 
 import org.nlogo.analytics.Analytics
 import org.nlogo.core.{ I18N, NetLogoPreferences }
-import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, PreferredSize, RadioButton, ZoomableBorder }
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, PreferredSize, RadioButton, Zoomable, ZoomableBorder }
 import org.nlogo.theme.{ ClassicTheme, ColorTheme, DarkTheme, InterfaceColors, LightTheme, ThemeSync }
 
 class ThemesPanel(frame: Frame & ThemeSync) extends BoxColumn(24) with ThemeSync {
   private implicit val i18nPrefix: I18N.Prefix = I18N.Prefix("tools.preferences.themes")
 
-  private val label = new JLabel(s"<html>${I18N.gui("text")}</html>") with PreferredSize
+  private val label = new JLabel(s"<html>${I18N.gui("text")}</html>") with PreferredSize with Zoomable
 
   private val systemButton = new RadioButton(I18N.gui("system"), () => setTheme(None))
   private val classicButton = new RadioButton(I18N.gui("classic"), () => setTheme(Some(ClassicTheme)))

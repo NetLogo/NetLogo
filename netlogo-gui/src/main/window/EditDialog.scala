@@ -10,8 +10,8 @@ import javax.swing.{ JDialog, JPanel, WindowConstants }
 import org.nlogo.api.Version
 import org.nlogo.awt.Positioning
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ BrowserLauncher, ButtonPanel, DialogButton, Implicits, PreferredSize, QuickHelp, SyncZoom,
-                         Utils, WindowAutomator, ZoomableBorder, ZoomActions }, Implicits.thunk2action
+import org.nlogo.swing.{ BrowserLauncher, ButtonPanel, DialogButton, Implicits, PreferredSize, QuickHelp, Utils,
+                         WindowAutomator, Zoomable, ZoomableBorder, ZoomActions }, Implicits.thunk2action
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 // contains an EditPanel, plus some buttons at the bottom (OK/Apply/Help/Cancel).
@@ -70,22 +70,18 @@ class EditDialog(window: Window, target: Editable, editPanel: EditPanel, modal: 
     }
   }))
 
-  private val mainPanel = new JPanel(new BorderLayout) with SyncZoom {
+  private val mainPanel = new JPanel(new BorderLayout) with Zoomable {
     add(editPanel, BorderLayout.CENTER)
     add(new ButtonPanel(buttons) with PreferredSize {
       setBorder(new ZoomableBorder(0, 0, 6, 0))
     }, BorderLayout.SOUTH)
 
-    override def zoom(oldZoom: Float): Unit = {
-      super.zoom(oldZoom)
-
+    override def zoomComponent(): Unit = {
       pack()
     }
   }
 
   setContentPane(mainPanel)
-
-  mainPanel.syncZoom()
 
   syncTheme()
 

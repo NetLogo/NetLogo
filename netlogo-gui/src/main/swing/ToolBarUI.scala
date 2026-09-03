@@ -10,8 +10,8 @@ import org.nlogo.theme.InterfaceColors
 class ToolBarActionButton(action: Action) extends Button(action) {
   setBorder(new ZoomableBorder(6, 8, 6, 12))
 
-  override def zoom(oldZoom: Float): Unit = {
-    super.zoom(oldZoom)
+  override def zoomComponent(): Unit = {
+    super.zoomComponent()
 
     setIconTextGap(Utils.zoom(12))
   }
@@ -58,7 +58,7 @@ class ToolBarToggleButton(action: Action) extends JToggleButton(action) with Tra
     super.paintComponent(g)
   }
 
-  override def zoom(oldZoom: Float): Unit = {
+  override def zoomComponent(): Unit = {
     setIconTextGap(Utils.zoom(12))
   }
 }

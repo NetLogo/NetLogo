@@ -11,8 +11,8 @@ import org.nlogo.api.{ APIVersion, FileIO, Version }
 import org.nlogo.awt.Positioning
 import org.nlogo.core.I18N
 import org.nlogo.editor.EditorConfiguration
-import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, RichAction, ScrollPane, SyncZoom, TabbedPane, TextArea, Utils,
-                         WindowAutomator, ZoomableBorder, ZoomActions }
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, RichAction, ScrollPane, TabbedPane, TextArea, Utils,
+                         WindowAutomator, Zoomable, ZoomableBorder, ZoomActions }
 import org.nlogo.theme.{ DarkTheme, InterfaceColors, ThemeSync }
 import org.nlogo.util.SysInfo
 
@@ -23,7 +23,7 @@ class AboutWindow(parent: Frame)
 
   private val refreshTimer: Timer = new Timer(2000, _ => refreshSystemText())
   private val system = new TextArea(0, 0, "") {
-    setFont(EditorConfiguration.getMonospacedFont)
+    setBaseFont(EditorConfiguration.getMonospacedFont)
     setLineWrap(true)
     setWrapStyleWord(true)
     setBorder(new ZoomableBorder(5, 10, 5, 10))
@@ -65,7 +65,7 @@ class AboutWindow(parent: Frame)
         |Northwestern University. Evanston, IL.
         |</center> </html>""".stripMargin
 
-  private val label = new JEditorPane("text/html", citationText) with ThemeSync {
+  private val label = new JEditorPane("text/html", citationText) with Zoomable with ThemeSync {
     setEditable(false)
     setDragEnabled(false)
     setCaretColor(InterfaceColors.Transparent)
@@ -77,7 +77,7 @@ class AboutWindow(parent: Frame)
   }
 
   private val credits = new TextArea(15, 0, FileIO.getResourceAsString("/system/about.txt")) {
-    setFont(EditorConfiguration.getMonospacedFont)
+    setBaseFont(EditorConfiguration.getMonospacedFont)
     setDragEnabled(false)
     setLineWrap(true)
     setWrapStyleWord(true)
@@ -105,28 +105,22 @@ class AboutWindow(parent: Frame)
     add(I18N.gui.get("dialog.about.system"), systemScrollPane)
   }
 
-  private val contents = new BoxColumn(Seq(
-    new BoxRow(graphic, BoxAlign.Center),
-    label,
-    tabs
-  ), 10) with SyncZoom {
-    setOpaque(true)
-
-    override def zoom(oldZoom: Float): Unit = {
-      super.zoom(oldZoom)
-
-      pack()
-    }
-  }
-
   setResizable(false)
   setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE)
 
   refreshSystemText()
 
-  setContentPane(contents)
+  setContentPane(new BoxColumn(Seq(
+    new BoxRow(graphic, BoxAlign.Center),
+    label,
+    tabs
+  ), 10) with Zoomable {
+    setOpaque(true)
 
-  contents.syncZoom()
+    override def zoomComponent(): Unit = {
+      pack()
+    }
+  })
 
   syncTheme()
 
@@ -170,7 +164,7 @@ class AboutWindow(parent: Frame)
   }
 
   override def syncTheme(): Unit = {
-    contents.setBackground(InterfaceColors.dialogBackground())
+    getContentPane.setBackground(InterfaceColors.dialogBackground())
 
     if (InterfaceColors.getTheme == DarkTheme) {
       graphic.setIcon(Utils.iconScaled("/images/banner-dark-versionless.png", 600, 231))

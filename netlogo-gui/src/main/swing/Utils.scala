@@ -28,6 +28,12 @@ object Utils {
   def zoom(value: Float): Float =
     value * zoomFactor
 
+  def zoomClamped(value: Int): Int =
+    (value * zoomFactor).toInt.max(1)
+
+  def zoomClamped(value: Float): Float =
+    (value * zoomFactor).max(1f)
+
   def zoomSize(size: Dimension): Dimension =
     new Dimension(zoom(size.width), zoom(size.height))
 
@@ -37,29 +43,29 @@ object Utils {
   def zoomBounds(bounds: Rectangle): Rectangle =
     new Rectangle(Utils.zoom(bounds.x), Utils.zoom(bounds.y), Utils.zoom(bounds.width), Utils.zoom(bounds.height))
 
-  def zoomFont(font: Font, oldZoom: Float): Font =
-    font.deriveFont(font.getSize / oldZoom * zoomFactor)
-
-  def zoomComponents(component: Component, oldZoom: Float): Unit = {
-    Option(component.getFont).foreach(font => component.setFont(zoomFont(font, oldZoom)))
-
+  def zoomComponents(component: Component): Unit = {
     component match {
       case container: Container =>
-        container.getComponents.foreach(zoomComponents(_, oldZoom))
+        container.getComponents.foreach(zoomComponents)
 
       case _ =>
     }
 
     component match {
       case zoomable: Zoomable =>
-        zoomable.zoom(oldZoom)
+        zoomable.zoom()
 
       case _ =>
     }
   }
 
-  def zoomMenuBar(menuBar: MenuBar, oldZoom: Float): Unit = {
-    menuBar.getComponents.foreach(menu => menu.setFont(zoomFont(menu.getFont, oldZoom)))
+  def zoomMenuBar(menuBar: MenuBar): Unit = {
+    menuBar.getComponents.foreach {
+      case zoomable: Zoomable =>
+        zoomable.zoom()
+
+      case _ =>
+    }
   }
 
   def unzoom(value: Int): Int =

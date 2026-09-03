@@ -153,7 +153,7 @@ class TabLabel(startPane: FloatingTabbedPane, text: String, tab: Component) exte
     this.tabbedPane = tabbedPane
   }
 
-  private val textLabel = new JLabel(text)
+  private val textLabel = new JLabel(text) with Zoomable
 
   private var rawText = text
 
@@ -167,8 +167,8 @@ class TabLabel(startPane: FloatingTabbedPane, text: String, tab: Component) exte
     rawText
 
   private def boldWidth: Int = {
-    new JLabel(s"<html><b>$rawText</b></html>") {
-      this.setFont(TabLabel.this.getFont)
+    new JLabel(s"<html><b>$rawText</b></html>") with Zoomable {
+      zoom()
     }.getPreferredSize.width
   }
 
@@ -242,7 +242,7 @@ class TabLabel(startPane: FloatingTabbedPane, text: String, tab: Component) exte
   }
 }
 
-class FloatingTabbedPane extends JTabbedPane(SwingConstants.TOP, JTabbedPane.SCROLL_TAB_LAYOUT) {
+class FloatingTabbedPane extends JTabbedPane(SwingConstants.TOP, JTabbedPane.SCROLL_TAB_LAYOUT) with Zoomable {
   private val tabUI = new FloatingTabbedPaneUI(this)
   private var mouse: Option[Int] = None
 

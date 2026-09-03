@@ -34,7 +34,7 @@ object Menu {
 }
 
 class Menu(text: String, var menuModel: MenuModel[Action, String]) extends JMenu(text) with UserAction.Menu
-                                                                   with SyncZoom with ThemeSync {
+                                                                   with Zoomable with ThemeSync {
 
   def this(text: String) = this(text, Menu.model)
 
@@ -81,10 +81,10 @@ class Menu(text: String, var menuModel: MenuModel[Action, String]) extends JMenu
       getMenuComponents.foreach {
         case item: MenuItem =>
           item.updateEnabled()
-          item.syncZoom()
+          item.zoom()
 
-        case sync: SyncZoom =>
-          sync.syncZoom()
+        case zoomable: Zoomable =>
+          zoomable.zoom()
 
         case _ =>
       }

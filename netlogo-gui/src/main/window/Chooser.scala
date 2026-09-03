@@ -8,7 +8,7 @@ import javax.swing.{ BoxLayout, JLabel }
 import org.nlogo.agent.ChooserConstraint
 import org.nlogo.api.{ CompilerServices, Dump }
 import org.nlogo.core.{ I18N, LogoList }
-import org.nlogo.swing.{ BoxAlign, BoxRow, ComboBox, Utils }
+import org.nlogo.swing.{ BoxAlign, BoxRow, ComboBox, Utils, Zoomable }
 import org.nlogo.theme.InterfaceColors
 
 trait Chooser extends SingleErrorWidget {
@@ -22,7 +22,7 @@ trait Chooser extends SingleErrorWidget {
   protected var _name = ""
 
   // sub-elements of Switch
-  protected val label = new JLabel(I18N.gui.get("edit.chooser.previewName"))
+  protected val label = new JLabel(I18N.gui.get("edit.chooser.previewName")) with Zoomable
   private val control = new ComboBox[String](searchable = true) {
     addItemListener(_ => index(getSelectedIndex))
   }

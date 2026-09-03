@@ -13,7 +13,7 @@ import org.nlogo.analytics.Analytics
 import org.nlogo.app.common.TabsInterface
 import org.nlogo.core.{ I18N, NetLogoPreferences }
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, Button, CheckBox, ComboBox, PopupMenu, TextField, Transparent,
-                         Utils }
+                         Utils, Zoomable }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.AbstractWidgetPanel
 import org.nlogo.window.Events.AutoIndentEvent
@@ -135,7 +135,9 @@ object Preferences {
       })
     }
 
-    private val label = new JLabel
+    private val label = new JLabel with Zoomable {
+      setBaseFont(getFont.deriveFont(10f))
+    }
 
     private val panel = new BoxColumn(Seq(
       comboBox,
@@ -147,8 +149,6 @@ object Preferences {
         comboBox.syncTheme()
       }
     }
-
-    label.setFont(label.getFont.deriveFont(10f))
 
     override def component: JComponent & ThemeSync =
       panel
@@ -384,7 +384,9 @@ object Preferences {
       override def getPopup: PopupMenu = {
         val popup: PopupMenu = super.getPopup
 
-        popup.getComponents.zip(fonts).foreach((c, f) => f.font.foreach(c.setFont))
+        popup.getComponents.collect {
+          case zoomable: Zoomable => zoomable
+        }.zip(fonts).foreach((c, f) => f.font.foreach(c.setBaseFont))
 
         popup
       }

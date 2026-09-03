@@ -57,7 +57,7 @@ class MessageDialog(owner: Component, dismissName: String = "Dismiss")
     add(scrollPane, BorderLayout.CENTER)
     add(buttonPanel, BorderLayout.SOUTH)
 
-    override def zoom(oldZoom: Float): Unit = {
+    override def zoomComponent(): Unit = {
       pack()
     }
   }

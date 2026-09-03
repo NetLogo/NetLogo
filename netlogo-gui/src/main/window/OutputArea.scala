@@ -64,17 +64,17 @@ class OutputArea(val text: TextArea) extends BoxRow with RoundedBorderPanel with
   }
 
   def fontSize: Int =
-    text.getFont.getSize
+    text.getBaseFont.getSize
 
   def fontSize(fontSize: Int): Unit = {
-    text.setFont(text.getFont.deriveFont(fontSize))
+    text.setBaseFont(text.getFont.deriveFont(fontSize))
   }
 
   override def getFont: Font =
     text.getFont
 
-  override def setFont(font: Font): Unit = {
-    text.setFont(font.deriveFont(fontSize))
+  override def setBaseFont(font: Font): Unit = {
+    text.setBaseFont(font.deriveFont(fontSize))
   }
 
   def clear(): Unit = {
@@ -90,7 +90,7 @@ class OutputArea(val text: TextArea) extends BoxRow with RoundedBorderPanel with
 
   override def isFocusable: Boolean = false
 
-  override def zoom(oldZoom: Float): Unit = {
+  override def zoomComponent(): Unit = {
     setDiameter(Utils.zoom(6))
   }
 

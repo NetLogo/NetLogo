@@ -50,9 +50,9 @@ class CommandCenter(workspace: AbstractWorkspace, showToggle: Boolean, packSplit
     }
   }
 
-  private val titleLabel = new JLabel(I18N.gui.get("tabs.run.commandcenter"))
-
-  titleLabel.setFont(titleLabel.getFont.deriveFont(Font.BOLD))
+  private val titleLabel = new JLabel(I18N.gui.get("tabs.run.commandcenter")) with Zoomable {
+    setBaseFont(getFont.deriveFont(Font.BOLD))
+  }
 
   private val clearButton = new JButton(RichAction(I18N.gui.get("tabs.run.commandcenter.clearButton")) {
     _ => output.clear()
@@ -62,7 +62,7 @@ class CommandCenter(workspace: AbstractWorkspace, showToggle: Boolean, packSplit
     enableHover()
     enablePressed()
 
-    override def zoom(oldZoom: Float): Unit = {
+    override def zoomComponent(): Unit = {
       setDiameter(Utils.zoom(6))
     }
 
@@ -130,8 +130,8 @@ class CommandCenter(workspace: AbstractWorkspace, showToggle: Boolean, packSplit
   def getDefaultComponentForFocus(): Component = commandLine.textField
 
   def setCodeFont(font: Font): Unit = {
-    output.setFont(font)
-    commandLine.setFont(font)
+    output.setBaseFont(font)
+    commandLine.setBaseFont(font)
   }
 
   private def doPopup(e: MouseEvent): Unit = {

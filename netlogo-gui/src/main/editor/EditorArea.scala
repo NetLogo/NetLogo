@@ -15,7 +15,7 @@ import javax.swing.JEditorPane
 import javax.swing.text.{ Document, PlainDocument, BadLocationException }
 
 import org.nlogo.core.NetLogoPreferences
-import org.nlogo.swing.{ MenuItem, PopupMenu, UndoManager }
+import org.nlogo.swing.{ MenuItem, PopupMenu, UndoManager, Zoomable }
 import org.nlogo.theme.InterfaceColors
 
 import KeyBinding.keystroke
@@ -31,7 +31,8 @@ class EditorArea(configuration: EditorConfiguration)
   extends JEditorPane
   with AbstractEditorArea
   with FocusTraversable
-  with FocusListener {
+  with FocusListener
+  with Zoomable {
 
   val rows      = configuration.rows
   val columns   = configuration.columns
@@ -57,6 +58,7 @@ class EditorArea(configuration: EditorConfiguration)
     caret.setBlinkRate(blinkRate)
     setCaret(caret)
     setDragEnabled(false)
+    setBaseFont(EditorConfiguration.getCodeFont)
 
     undoManager.watch(this)
 

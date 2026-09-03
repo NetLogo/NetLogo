@@ -11,7 +11,7 @@ import javax.swing.table.{ AbstractTableModel, DefaultTableCellRenderer }
 
 import org.nlogo.hubnet.connection.NetworkUtils
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, ComboBox, DialogButton, NonemptyTextFieldButtonEnabler,
-                         ScrollPane, TextField, TextFieldBox, Utils, VerticalStrut }
+                         ScrollPane, TextField, TextFieldBox, Utils, VerticalStrut, Zoomable }
 import org.nlogo.theme.InterfaceColors
 
 abstract class LoginCallback{
@@ -184,7 +184,8 @@ class LoginDialog(parent: Frame, defaultUserId: String, defaultServerName: Strin
    * A JTable of the active servers. Part of the  { @link LoginDialog }.
    * Interfaces with the  { @link DiscoveryListener }.
    **/
-  class ServerTable(private var interfaceAddress: Option[InetAddress]) extends JTable with Runnable with AnnouncementListener with ActionListener {
+  class ServerTable(private var interfaceAddress: Option[InetAddress])
+    extends JTable with Runnable with AnnouncementListener with ActionListener with Zoomable {
 
     import ServerTable._
     import org.nlogo.hubnet.protocol.DiscoveryMessage
@@ -209,7 +210,7 @@ class LoginDialog(parent: Frame, defaultUserId: String, defaultServerName: Strin
       setIntercellSpacing(new java.awt.Dimension(0, 0))
 
       // Set the appearance of the table
-      setFont(getFont.deriveFont(FONT_SIZE))
+      setBaseFont(getFont.deriveFont(FONT_SIZE))
       setShowVerticalLines(false)
 
       // Set column sizes

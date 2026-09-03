@@ -9,7 +9,7 @@ import javax.swing.plaf.basic.{ BasicCheckBoxMenuItemUI, BasicMenuItemUI }
 
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
-class MenuItem(action: Action, showIcon: Boolean = true) extends JMenuItem(action) with SyncZoom with ThemeSync {
+class MenuItem(action: Action, showIcon: Boolean = true) extends JMenuItem(action) with Zoomable with ThemeSync {
   def this(text: String, function: () => Unit) = this(new AbstractAction(text) {
     def actionPerformed(e: ActionEvent): Unit = {
       function()
@@ -28,7 +28,6 @@ class MenuItem(action: Action, showIcon: Boolean = true) extends JMenuItem(actio
 
   setUI(itemUI)
 
-  syncZoom()
   syncTheme()
 
   override def getInsets: Insets =
@@ -44,10 +43,8 @@ class MenuItem(action: Action, showIcon: Boolean = true) extends JMenuItem(actio
     syncTheme()
   }
 
-  override def zoom(oldZoom: Float): Unit = {
-    super.zoom(oldZoom)
-
-    itemUI.zoom(oldZoom)
+  override def zoomComponent(): Unit = {
+    itemUI.zoom()
   }
 
   override def syncTheme(): Unit = {
@@ -57,7 +54,7 @@ class MenuItem(action: Action, showIcon: Boolean = true) extends JMenuItem(actio
       setIcon(null)
   }
 
-  private class MenuItemUI extends BasicMenuItemUI with Zoomable with ThemeSync {
+  private class MenuItemUI extends BasicMenuItemUI with ThemeSync {
     override def paintText(g: Graphics, menuItem: JMenuItem, rect: Rectangle, text: String): Unit = {
       super.paintText(g, menuItem, rect, text)
 
@@ -68,8 +65,8 @@ class MenuItem(action: Action, showIcon: Boolean = true) extends JMenuItem(actio
                           getHeight / 2 - icon.getIconHeight / 2)
     }
 
-    override def zoom(oldZoom: Float): Unit = {
-      acceleratorFont = Utils.zoomFont(acceleratorFont, oldZoom)
+    def zoom(): Unit = {
+      acceleratorFont = acceleratorFont.deriveFont(Utils.zoom(12f))
     }
 
     override def syncTheme(): Unit = {
@@ -84,7 +81,7 @@ class MenuItem(action: Action, showIcon: Boolean = true) extends JMenuItem(actio
   }
 }
 
-class PopupCheckBoxMenuItem(action: Action) extends JCheckBoxMenuItem(action) with SyncZoom with ThemeSync {
+class PopupCheckBoxMenuItem(action: Action) extends JCheckBoxMenuItem(action) with Zoomable with ThemeSync {
   private val itemUI = new BasicCheckBoxMenuItemUI with ThemeSync {
     override def syncTheme(): Unit = {
       setForeground(InterfaceColors.toolbarText())
@@ -99,9 +96,7 @@ class PopupCheckBoxMenuItem(action: Action) extends JCheckBoxMenuItem(action) wi
 
   setUI(itemUI)
 
-  override def zoom(oldZoom: Float): Unit = {
-    super.zoom(oldZoom)
-
+  override def zoomComponent(): Unit = {
     setIconTextGap(Utils.zoom(4))
   }
 

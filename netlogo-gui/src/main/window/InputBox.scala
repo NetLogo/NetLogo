@@ -28,7 +28,7 @@ abstract class InputBox(textArea: EditorArea, editDialogTextArea: EditorArea, co
 
   protected class ColorButton extends JButton with RoundedBorderPanel with Zoomable with ThemeSync {
     setBorder(null)
-    setFont(getFont.deriveFont(9.0f))
+    setBaseFont(getFont.deriveFont(9.0f))
     setDiameter(Utils.zoom(6))
 
     addActionListener(new SelectColorActionListener)
@@ -36,7 +36,7 @@ abstract class InputBox(textArea: EditorArea, editDialogTextArea: EditorArea, co
     override def getMaximumSize: Dimension =
       new Dimension(Int.MaxValue, Int.MaxValue)
 
-    override def zoom(oldZoom: Float): Unit = {
+    override def zoomComponent(): Unit = {
       setDiameter(Utils.zoom(6))
     }
 
@@ -61,7 +61,7 @@ abstract class InputBox(textArea: EditorArea, editDialogTextArea: EditorArea, co
 
     add(scrollPane)
 
-    override def zoom(oldZoom: Float): Unit = {
+    override def zoomComponent(): Unit = {
       setDiameter(Utils.zoom(6))
     }
 
@@ -85,8 +85,8 @@ abstract class InputBox(textArea: EditorArea, editDialogTextArea: EditorArea, co
 
   /// be editable
   override def classDisplayName = I18N.gui.get("tabs.run.widgets.input")
-  protected val widgetLabel = new JLabel(I18N.gui.get("edit.input.previewName")) {
-    setFont(getFont.deriveFont(_boldState))
+  protected val widgetLabel = new JLabel(I18N.gui.get("edit.input.previewName")) with Zoomable {
+    setBaseFont(getFont.deriveFont(_boldState))
   }
   protected var dialog: InputDialog = null
   private var _hasFocus = false
@@ -181,7 +181,7 @@ abstract class InputBox(textArea: EditorArea, editDialogTextArea: EditorArea, co
   InputType.addTypeOptions(typeOptions)
   typeOptions.selectValue(inputType)
   textArea.setEditorKit(inputType.getEditorKit)
-  textArea.setFont(inputType.getFont)
+  textArea.setBaseFont(inputType.getFont)
   textArea.enableBracketMatcher(inputType.enableBracketMatcher)
 
   multiline(false)
@@ -356,7 +356,7 @@ abstract class InputBox(textArea: EditorArea, editDialogTextArea: EditorArea, co
           catch { case _: Exception => inputType.defaultValue }
       }
       textArea.setEditorKit(inputType.getEditorKit)
-      textArea.setFont(inputType.getFont)
+      textArea.setBaseFont(inputType.getFont)
       textArea.enableBracketMatcher(inputType.enableBracketMatcher)
       changeButton.setVisible(inputType.changeVisible)
       valueObject(newBoxedValue, true)
@@ -400,7 +400,7 @@ abstract class InputBox(textArea: EditorArea, editDialogTextArea: EditorArea, co
   }
 
   override def setCodeFont(font: Font): Unit = {
-    textArea.setFont(inputType.getFont)
+    textArea.setBaseFont(inputType.getFont)
   }
 
   override def load(model: CoreWidget): Unit = {
@@ -412,7 +412,7 @@ abstract class InputBox(textArea: EditorArea, editDialogTextArea: EditorArea, co
         def setType(i: BoxedValue): Unit = {
           this.inputType = InputType.create(i)
           textArea.setEditorKit(this.inputType.getEditorKit)
-          textArea.setFont(this.inputType.getFont)
+          textArea.setBaseFont(this.inputType.getFont)
           textArea.enableBracketMatcher(this.inputType.enableBracketMatcher)
           typeOptions.selectByName(inputType.displayName)
           constraint.setType(this.inputType.baseName, this.inputType.defaultValue)
@@ -487,7 +487,7 @@ abstract class InputBox(textArea: EditorArea, editDialogTextArea: EditorArea, co
 
     setResizable(true)
     textArea.setEditorKit(inputType.getEditorKit)
-    textArea.setFont(inputType.getFont)
+    textArea.setBaseFont(inputType.getFont)
     textArea.enableBracketMatcher(inputType.enableBracketMatcher)
 
     setContentPane(new BoxColumn(Seq(

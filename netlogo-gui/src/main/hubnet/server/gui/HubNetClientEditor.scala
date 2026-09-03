@@ -10,7 +10,7 @@ import org.nlogo.analytics.Analytics
 import org.nlogo.api.ModelType
 import org.nlogo.core.{ I18N, Widget => CoreWidget }
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, MaximumHeight, Menu, MenuBar, NetLogoIcon, OptionPane, ScrollPane,
-                         SyncZoom, UserAction, Utils, WindowAutomator, ZoomableBorder }
+                         UserAction, Utils, WindowAutomator, Zoomable, ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ WidgetInfo, MenuBarFactory, InterfaceFactory, GUIWorkspace, AbstractWidgetPanel }
 
@@ -40,21 +40,19 @@ class HubNetClientEditor(workspace: GUIWorkspace,
     add(menuFactory.createHelpMenu)
   }
 
-  private val contents = new BoxColumn(Seq(
+  setTitle(getTitle(workspace.modelNameForDisplay, workspace.getModelDir, workspace.getModelType))
+
+  setContentPane(new BoxColumn(Seq(
     toolbar,
     scrollPane
-  )) with SyncZoom {
-    override def zoom(oldZoom: Float): Unit = {
-      super.zoom(oldZoom)
-
-      Utils.zoomMenuBar(clientMenuBar, oldZoom)
+  )) with Zoomable {
+    override def zoomComponent(): Unit = {
+      Utils.zoomMenuBar(clientMenuBar)
 
       pack()
     }
-  }
+  })
 
-  setTitle(getTitle(workspace.modelNameForDisplay, workspace.getModelDir, workspace.getModelType))
-  setContentPane(contents)
   setJMenuBar(clientMenuBar)
   setSize(getPreferredSize)
 
@@ -102,11 +100,8 @@ class HubNetClientEditor(workspace: GUIWorkspace,
   }
 
   override def setVisible(visible: Boolean): Unit = {
-    if (visible) {
-      contents.syncZoom()
-
+    if (visible)
       Analytics.hubNetEditorOpen()
-    }
 
     super.setVisible(visible)
   }

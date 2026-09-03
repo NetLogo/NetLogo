@@ -17,7 +17,7 @@ import org.nlogo.api.{ CompilerServices, ExtensionManager, SourceOwner }
 import org.nlogo.core.{ CompilerException, I18N }
 import org.nlogo.editor.Colorizer
 import org.nlogo.sdm.Translator
-import org.nlogo.swing.{ MenuBar, MenuItem, NetLogoIcon, SyncZoom, Utils, WindowAutomator, ZoomActions }
+import org.nlogo.swing.{ MenuBar, MenuItem, NetLogoIcon, Utils, WindowAutomator, Zoomable, ZoomActions }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ Editable, EditDialogFactory, Events, MenuBarFactory }
 import org.nlogo.window.Event.LinkChild
@@ -84,13 +84,15 @@ class AggregateModelEditor(
 
   private val toolbar: AggregateModelEditorToolBar = new AggregateModelEditorToolBar(this, drawing.getModel)
 
-  val tabs: AggregateTabs & SyncZoom = {
+  private val menuBar: MenuBar = new MenuBar
+
+  val tabs: AggregateTabs = {
     val editorTab = new AggregateEditorTab(toolbar, view.asInstanceOf[Component])
     editorTab.setBorder(null)
     val proceduresTab = new AggregateProceduresTab(compiler, colorizer)
-    new AggregateTabs(this, editorTab, proceduresTab) with SyncZoom {
-      override def zoom(oldZoom: Float): Unit = {
-        super.zoom(oldZoom)
+    new AggregateTabs(this, editorTab, proceduresTab) {
+      override def zoomComponent(): Unit = {
+        Utils.zoomMenuBar(menuBar)
 
         pack()
       }
@@ -100,8 +102,6 @@ class AggregateModelEditor(
   getContentPane.add(tabs)
 
   private val selectionTool = new InspectionTool(this, drawing.getModel)
-
-  private val menuBar: MenuBar = new MenuBar
 
   locally {
     // Build the menu bar. For OS X, we add a bunch of the menus from app
@@ -151,11 +151,8 @@ class AggregateModelEditor(
   override def setVisible(visible: Boolean): Unit = {
     super.setVisible(visible)
 
-    if (visible) {
-      tabs.syncZoom()
-
+    if (visible)
       Analytics.sdmOpen()
-    }
   }
 
   def clearError(): Unit = {
@@ -273,7 +270,7 @@ class AggregateModelEditor(
     view.syncTheme()
   }
 
-  private class SyncedCommandMenu(name: String) extends CommandMenu(name) with ThemeSync {
+  private class SyncedCommandMenu(name: String) extends CommandMenu(name) with Zoomable with ThemeSync {
     private val menuUI = new BasicMenuUI with ThemeSync {
       override def syncTheme(): Unit = {
         setForeground(InterfaceColors.toolbarText())

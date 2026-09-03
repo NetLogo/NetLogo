@@ -23,7 +23,7 @@ class Button(action: Action) extends JButton(action) with RoundedBorderPanel wit
 
   syncTheme()
 
-  override def zoom(oldZoom: Float): Unit = {
+  override def zoomComponent(): Unit = {
     setDiameter(Utils.zoom(6))
   }
 
@@ -55,7 +55,7 @@ class ToggleButton(action: Action) extends JToggleButton(action) with RoundedBor
   override def isHover: Boolean =
     super.isHover || isSelected
 
-  override def zoom(oldZoom: Float): Unit = {
+  override def zoomComponent(): Unit = {
     setDiameter(Utils.zoom(6))
   }
 

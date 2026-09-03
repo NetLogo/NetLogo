@@ -6,13 +6,13 @@ import javax.swing.{ JLabel, ScrollPaneConstants, SwingConstants }
 import javax.swing.border.LineBorder
 
 import org.nlogo.swing.Implicits.thunk2documentListener
-import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, ScrollPane, TextArea }
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, ScrollPane, TextArea, Zoomable }
 import org.nlogo.theme.InterfaceColors
 
 import scala.util.{ Success, Try }
 
 class BigStringEditor(accessor: PropertyAccessor[String]) extends BoxColumn(3) with PropertyEditor(accessor) {
-  private val label = new JLabel(accessor.name) {
+  private val label = new JLabel(accessor.name) with Zoomable {
     setVerticalAlignment(SwingConstants.TOP)
   }
 

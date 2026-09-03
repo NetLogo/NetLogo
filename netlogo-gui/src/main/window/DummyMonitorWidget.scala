@@ -17,7 +17,7 @@ class DummyMonitorWidget extends SingleErrorWidget with MonitorWidget.ToMonitorM
   private val nameLabel = new JLabel(I18N.gui.get("edit.monitor.previewName"))
 
   private val valuePanel = new JPanel with RoundedBorderPanel with Zoomable with ThemeSync {
-    override def zoom(oldZoom: Float): Unit = {
+    override def zoomComponent(): Unit = {
       setDiameter(Utils.zoom(6))
     }
 
@@ -67,7 +67,7 @@ class DummyMonitorWidget extends SingleErrorWidget with MonitorWidget.ToMonitorM
 
   override def getMinimumSize: Dimension = {
     if (_oldSize) {
-      new Dimension(Utils.zoom(50), (fontSize * 4) + Utils.zoom(1))
+      new Dimension(Utils.zoom(50), (fontSize * 4) + Utils.zoomClamped(1))
     } else {
       Utils.zoomSize(new Dimension(100, 60))
     }

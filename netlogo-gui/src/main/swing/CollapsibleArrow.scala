@@ -18,7 +18,7 @@ class CollapsibleArrow(private var isOpen: Boolean) extends Icon {
 
     val stroke: Stroke = g2d.getStroke
 
-    g2d.setStroke(new BasicStroke(Utils.zoom(1f), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND))
+    g2d.setStroke(new BasicStroke(Utils.zoomClamped(1f), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND))
 
     if (isOpen) {
       g2d.drawLine(x, y + Utils.zoom(2), x + Utils.zoom(4), y + Utils.zoom(6))

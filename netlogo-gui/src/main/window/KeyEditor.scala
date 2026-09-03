@@ -6,7 +6,7 @@ import java.awt.{ Dimension, EventQueue }
 import javax.swing.JLabel
 import javax.swing.event.{ DocumentEvent, DocumentListener }
 
-import org.nlogo.swing.{ BoxRow, FixedLengthDocument, MaximumHeight, TextField }
+import org.nlogo.swing.{ BoxRow, FixedLengthDocument, MaximumHeight, TextField, Zoomable }
 import org.nlogo.theme.InterfaceColors
 
 import scala.util.{ Success, Try }
@@ -14,7 +14,7 @@ import scala.util.{ Success, Try }
 class KeyEditor(accessor: PropertyAccessor[Char])
   extends BoxRow(6) with PropertyEditor(accessor) with MaximumHeight {
 
-  private val label = new JLabel(accessor.name)
+  private val label = new JLabel(accessor.name) with Zoomable
 
   // 2 not 1 here otherwise "W" doesn't fit - ST 1/18/05
   private val editor = new TextField(2, "", new FixedLengthDocument(1)) {

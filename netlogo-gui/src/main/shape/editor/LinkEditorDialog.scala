@@ -90,7 +90,7 @@ class LinkEditorDialog(parent: JDialog, list: DrawableList[LinkShape], shape: Li
       setBackground(InterfaceColors.dialogBackground())
       setBorder(new ZoomableBorder(6, 6, 6, 6))
 
-      override def zoom(oldZoom: Float): Unit = {
+      override def zoomComponent(): Unit = {
         pack()
       }
     })

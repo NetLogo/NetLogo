@@ -22,7 +22,7 @@ class DropdownArrow extends JPanel with PreferredSize {
       g2d.setColor(InterfaceColors.menuTextDisabled())
     }
 
-    val strokeWidth: Float = Utils.zoom(1f)
+    val strokeWidth: Float = Utils.zoomClamped(1f)
     val pad: Int = (strokeWidth / 2).toInt
 
     val stroke: Stroke = g2d.getStroke

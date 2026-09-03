@@ -8,7 +8,7 @@ import javax.swing.text.{ AttributeSet, DocumentFilter, PlainDocument }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 class TextArea(rows: Int, columns: Int, text: String = "")
-  extends JTextArea(text, rows, columns) with ThemeSync {
+  extends JTextArea(text, rows, columns) with Zoomable with ThemeSync {
 
   private val TabSize = 4
 

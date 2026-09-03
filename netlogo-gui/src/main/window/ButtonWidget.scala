@@ -12,7 +12,7 @@ import org.nlogo.awt.{ DarkenImageFilter, Mouse }, Mouse.hasButton1
 import org.nlogo.core.{ AgentKind, Button => CoreButton, I18N, Widget => CoreWidget }
 import org.nlogo.editor.Colorizer
 import org.nlogo.nvm.Procedure
-import org.nlogo.swing.{ BoxColumn, HorizontalStrut, Utils, ZoomableBorder }
+import org.nlogo.swing.{ BoxColumn, HorizontalStrut, Utils, Zoomable, ZoomableBorder }
 import org.nlogo.theme.InterfaceColors
 
 object ButtonWidget {
@@ -81,12 +81,12 @@ class ButtonWidget(random: MersenneTwisterFast, compiler: CompilerServices, colo
 
   private var _buttonType: ButtonType = ButtonType.ObserverButton
 
-  val keyLabel = new JLabel {
-    setFont(getFont.deriveFont(12.0f))
+  val keyLabel = new JLabel with Zoomable {
+    setBaseFont(getFont.deriveFont(12.0f))
   }
 
-  val nameLabel = new JLabel(I18N.gui.get("edit.button.previewName")) {
-    setFont(getFont.deriveFont(_boldState))
+  val nameLabel = new JLabel(I18N.gui.get("edit.button.previewName")) with Zoomable {
+    setBaseFont(getFont.deriveFont(_boldState))
   }
 
   val foreverLabel = new JLabel(foreverIcon)

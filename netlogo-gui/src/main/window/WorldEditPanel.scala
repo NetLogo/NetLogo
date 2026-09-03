@@ -2,11 +2,11 @@
 
 package org.nlogo.window
 
-import org.nlogo.swing.ComboBox
+import org.nlogo.swing.{ ComboBox, Zoomable }
 
 import scala.util.{ Failure, Success, Try }
 
-abstract class WorldEditPanel(target: WorldViewSettings) extends EditPanel(target) {
+abstract class WorldEditPanel(target: WorldViewSettings) extends EditPanel(target) with Zoomable {
   protected val previewPanel = new WorldPreview(200, 200)
 
   protected val originTypes = new ComboBox[OriginType](target.originTypes) {

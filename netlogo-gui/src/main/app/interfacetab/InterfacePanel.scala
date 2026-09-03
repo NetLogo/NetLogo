@@ -138,7 +138,7 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
       }
     }
 
-    Utils.zoomComponents(newWidget, 1)
+    Utils.zoomComponents(newWidget)
 
     newWidget
   }

@@ -270,7 +270,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
   }
 
   class WidgetMenu extends BoxRow(14) with RoundedBorderPanel with Zoomable with ThemeSync with MouseUtils {
-    private val label = new JLabel(I18N.gui.get("tabs.run.addWidget"))
+    private val label = new JLabel(I18N.gui.get("tabs.run.addWidget")) with Zoomable
     private val arrow = new DropdownArrow
 
     setBorder(new ZoomableBorder(6, 8, 6, 6))
@@ -315,10 +315,8 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
       }
     }
 
-    override def zoom(oldZoom: Float): Unit = {
+    override def zoomComponent(): Unit = {
       setDiameter(Utils.zoom(6))
-
-      actions.foreach(Utils.zoomComponents(_, oldZoom))
     }
 
     override def syncTheme(): Unit = {
@@ -345,8 +343,8 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
         setEnabled(wPanel.canAddWidget(info.displayName))
       }
 
-      override def zoom(oldZoom: Float): Unit = {
-        super.zoom(oldZoom)
+      override def zoomComponent(): Unit = {
+        super.zoomComponent()
 
         setIconTextGap(Utils.zoom(4))
       }
@@ -356,7 +354,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
   class AlignmentMenu extends BoxRow(14) with RoundedBorderPanel with Zoomable with ThemeSync with MouseUtils {
     private implicit val i18nPrefix: I18N.Prefix = I18N.Prefix("tabs.run.widget")
 
-    private val label = new JLabel(I18N.gui.get("tabs.run.alignWidgets"))
+    private val label = new JLabel(I18N.gui.get("tabs.run.alignWidgets")) with Zoomable
     private val arrow = new DropdownArrow
 
     setBorder(new ZoomableBorder(6, 8, 6, 6))
@@ -409,9 +407,8 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
 
     private def getPopup: PopupMenu = {
       new PopupMenu {
-        add(new JLabel("Arrange selected widgets") {
+        add(new JLabel("Arrange selected widgets") with Zoomable {
           setBorder(new ZoomableBorder(0, 6, 0, 0))
-          setFont(Utils.zoomFont(getFont, 1))
         }).setEnabled(false)
         addSeparator()
         add(leftAction)
@@ -431,23 +428,8 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
       }
     }
 
-    override def zoom(oldZoom: Float): Unit = {
+    override def zoomComponent(): Unit = {
       setDiameter(Utils.zoom(6))
-
-      Seq(
-        leftAction,
-        centerHorizontalAction,
-        rightAction,
-        topAction,
-        centerVerticalAction,
-        bottomAction,
-        distributeHorizontalAction,
-        distributeVerticalAction,
-        stretchLeftAction,
-        stretchRightAction,
-        stretchTopAction,
-        stretchBottomAction
-      ).foreach(Utils.zoomComponents(_, oldZoom))
     }
 
     override def syncTheme(): Unit = {

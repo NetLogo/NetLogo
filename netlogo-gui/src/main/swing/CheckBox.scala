@@ -8,7 +8,7 @@ import javax.swing.{ AbstractAction, Action, Icon, JCheckBox }
 
 import org.nlogo.theme.InterfaceColors
 
-class CheckBox(text: String = "") extends JCheckBox(text) with MouseUtils {
+class CheckBox(text: String = "") extends JCheckBox(text) with MouseUtils with Zoomable {
   def this(action: Action) = {
     this(action.getValue(Action.NAME).toString)
 
@@ -54,7 +54,7 @@ class CheckBox(text: String = "") extends JCheckBox(text) with MouseUtils {
 
         val stroke: Stroke = g2d.getStroke
 
-        g2d.setStroke(new BasicStroke(Utils.zoom(1f), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND))
+        g2d.setStroke(new BasicStroke(Utils.zoomClamped(1f), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND))
         g2d.setColor(InterfaceColors.checkboxCheck())
         g2d.drawLine(x + Utils.zoom(3), y + Utils.zoom(7), x + Utils.zoom(5), y + Utils.zoom(10))
         g2d.drawLine(x + Utils.zoom(5), y + Utils.zoom(10), x + Utils.zoom(10), y + Utils.zoom(3))

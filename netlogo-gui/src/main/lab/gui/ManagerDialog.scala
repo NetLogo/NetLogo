@@ -15,7 +15,7 @@ import org.nlogo.awt.UserCancelException
 import org.nlogo.core.{ I18N, Model }
 import org.nlogo.editor.Colorizer
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, Button, FileDialog, OptionPane, Positioning, PreferredSize,
-                         ScrollPane, SyncZoom, Utils, WindowAutomator, ZoomableBorder, ZoomActions }
+                         ScrollPane, Utils, WindowAutomator, Zoomable, ZoomableBorder, ZoomActions }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ EditDialog, EditDialogFactory, MenuBarFactory }
 
@@ -30,7 +30,7 @@ class ManagerDialog(manager:       LabManager,
 
   private implicit val i18NPrefix: I18N.Prefix = I18N.Prefix("tools.behaviorSpace")
 
-  private val jlist = new JList[LabProtocol]
+  private val jlist = new JList[LabProtocol] with Zoomable
   private val listModel = new DefaultListModel[LabProtocol]
 
   private var running = Map[LabProtocol, RunningExperiment]()
@@ -81,7 +81,7 @@ class ManagerDialog(manager:       LabManager,
 
   jlist.setCellRenderer(renderer)
 
-  private val listLabel = new JLabel(I18N.gui("experiments"))
+  private val listLabel = new JLabel(I18N.gui("experiments")) with Zoomable
   private val scrollPane = new ScrollPane(jlist)
 
   private val newButton = new Button(newAction)
@@ -93,7 +93,7 @@ class ManagerDialog(manager:       LabManager,
   private val abortButton = new Button(abortAction)
   private val runButton = new Button(runAction)
 
-  private val contents = new BoxColumn(Seq(
+  setContentPane(new BoxColumn(Seq(
     new BoxRow(listLabel, BoxAlign.Start),
     scrollPane,
     new BoxRow(Seq(
@@ -108,22 +108,14 @@ class ManagerDialog(manager:       LabManager,
       abortButton,
       runButton
     ), 6) with PreferredSize
-  ), 6) with SyncZoom {
+  ), 6) with Zoomable {
     setOpaque(true)
     setBorder(new ZoomableBorder(6, 6, 6, 6))
 
-    override def zoom(oldZoom: Float): Unit = {
-      super.zoom(oldZoom)
-
-      renderer.syncZoom()
-
+    override def zoomComponent(): Unit = {
       pack()
     }
-  }
-
-  setContentPane(contents)
-
-  contents.syncZoom()
+  })
 
   pack()
 
@@ -408,7 +400,8 @@ class ManagerDialog(manager:       LabManager,
   }
 
   override def syncTheme(): Unit = {
-    contents.setBackground(InterfaceColors.dialogBackground())
+    getContentPane.setBackground(InterfaceColors.dialogBackground())
+
     listLabel.setForeground(InterfaceColors.dialogText())
     scrollPane.setBackground(InterfaceColors.dialogBackground())
     jlist.setBackground(InterfaceColors.dialogBackground())
@@ -461,8 +454,8 @@ class ManagerDialog(manager:       LabManager,
     supervisor.succeeded
   }
 
-  class ProtocolRenderer extends BoxRow(BoxAlign.Start) with ListCellRenderer[LabProtocol] with SyncZoom {
-    private val label = new JLabel
+  class ProtocolRenderer extends BoxRow(BoxAlign.Start) with ListCellRenderer[LabProtocol] {
+    private val label = new JLabel with Zoomable
 
     setOpaque(true)
     setBorder(new ZoomableBorder(6, 6, 6, 6))

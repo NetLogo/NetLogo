@@ -56,7 +56,7 @@ class MonitorWidget(random: MersenneTwisterFast, compiler: CompilerServices, col
     override def getMaximumSize: Dimension =
       new Dimension(super.getMaximumSize.width, Int.MaxValue)
 
-    override def zoom(oldZoom: Float): Unit = {
+    override def zoomComponent(): Unit = {
       setDiameter(Utils.zoom(6))
     }
 
@@ -79,15 +79,15 @@ class MonitorWidget(random: MersenneTwisterFast, compiler: CompilerServices, col
 
   private var _fontSize = 11
 
-  private val nameLabel = new JLabel(I18N.gui.get("edit.monitor.previewName")) {
-    this.setFont(getFont.deriveFont(_boldState))
+  private val nameLabel = new JLabel(I18N.gui.get("edit.monitor.previewName")) with Zoomable {
+    setBaseFont(getFont.deriveFont(_boldState))
   }
 
-  private lazy val valueLabel = new JLabel
+  private lazy val valueLabel = new JLabel with Zoomable
   private val valuePanel = new ValuePanel(valueLabel)
 
-  private val unitsLabel = new JLabel {
-    this.setFont(getFont.deriveFont(_boldState))
+  private val unitsLabel = new JLabel with Zoomable {
+    setBaseFont(getFont.deriveFont(_boldState))
     setVisible(false)
   }
 
@@ -130,7 +130,7 @@ class MonitorWidget(random: MersenneTwisterFast, compiler: CompilerServices, col
 
     super.setFont(newFont)
 
-    valueLabel.setFont(newFont)
+    valueLabel.setBaseFont(newFont)
 
     revalidate()
     repaint()
@@ -257,7 +257,7 @@ class MonitorWidget(random: MersenneTwisterFast, compiler: CompilerServices, col
 
   override def getMinimumSize: Dimension = {
     if (_oldSize) {
-      new Dimension(Utils.zoom(50), (fontSize * 4) + Utils.zoom(1))
+      new Dimension(Utils.zoom(50), (fontSize * 4) + Utils.zoomClamped(1))
     } else {
       Utils.zoomSize(new Dimension(100, 60))
     }

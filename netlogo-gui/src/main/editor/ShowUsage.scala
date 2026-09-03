@@ -42,7 +42,7 @@ class ShowUsage(editorArea: AdvancedEditorArea, colorizer: Colorizer) extends Po
           add(new MenuItem(s"<html>$numberFormatted&nbsp$textFormatted</html>", () => {
             editorArea.select(token.start, token.end)
           }) {
-            setFont(EditorConfiguration.getCodeFont)
+            setBaseFont(EditorConfiguration.getCodeFont)
           })
       }
     }

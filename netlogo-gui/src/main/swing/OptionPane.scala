@@ -45,19 +45,15 @@ class OptionPane(parent: Component, title: String, message: String, options: Seq
 
   private var selectedOption: Option[String] = None
 
-  private val container = new BoxColumn with SyncZoom {
-    setOpaque(true)
-    setBackground(InterfaceColors.dialogBackground())
-
-    override def zoom(oldZoom: Float): Unit = {
-      super.zoom(oldZoom)
-
-      pack()
-    }
-  }
-
   locally {
-    setContentPane(container)
+    setContentPane(new BoxColumn with Zoomable {
+      setOpaque(true)
+      setBackground(InterfaceColors.dialogBackground())
+
+      override def zoomComponent(): Unit = {
+        pack()
+      }
+    })
 
     addContents()
 
@@ -66,8 +62,6 @@ class OptionPane(parent: Component, title: String, message: String, options: Seq
     add(new ButtonPanel(okButton +: options.tail.map(new DialogButton(false, _, selectAction(_)))) {
       setBorder(new ZoomableBorder(0, 6, 6, 6))
     })
-
-    container.syncZoom()
 
     packAndCenter()
 
@@ -98,7 +92,7 @@ class OptionPane(parent: Component, title: String, message: String, options: Seq
   protected def addContents(): Unit = {
     add(new BoxRow(Seq(
       new JLabel(icon),
-      new JLabel(getWrappedMessage) {
+      new JLabel(getWrappedMessage) with Zoomable {
         setForeground(InterfaceColors.dialogText())
       }
     ), 12) {
@@ -149,7 +143,7 @@ class InputOptionPane(parent: Component, title: String, message: String, startin
     add(new BoxRow(Seq(
       new JLabel(icon),
       new BoxColumn(Seq(
-        new BoxRow(new JLabel(getWrappedMessage) {
+        new BoxRow(new JLabel(getWrappedMessage) with Zoomable {
           setForeground(InterfaceColors.dialogText())
         }, BoxAlign.Start),
         input
@@ -188,7 +182,7 @@ class DropdownOptionPane[T](parent: Component, title: String, message: String, c
     add(new BoxRow(Seq(
       new JLabel(icon),
       new BoxColumn(Seq(
-        new JLabel(getWrappedMessage) {
+        new JLabel(getWrappedMessage) with Zoomable {
           setForeground(InterfaceColors.dialogText())
         },
         dropdown
