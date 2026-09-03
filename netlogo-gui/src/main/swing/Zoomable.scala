@@ -2,7 +2,7 @@
 
 package org.nlogo.swing
 
-import java.awt.{ Component, Font }
+import java.awt.{ Component, Font, Window }
 
 trait Zoomable extends Component {
   private var baseFont: Font = getFont
@@ -33,5 +33,11 @@ trait Zoomable extends Component {
     Option(baseFont).foreach { font =>
       setFont(font.deriveFont(Utils.zoom(font.getSize2D)))
     }
+  }
+}
+
+trait ZoomableWindow extends Window {
+  def zoomWindow(): Unit = {
+    pack()
   }
 }

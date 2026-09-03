@@ -11,13 +11,13 @@ import org.nlogo.agent.{ Agent, Link, Patch, Turtle }
 import org.nlogo.app.common.{ CommandLine, HistoryPrompt, LinePrompt }
 import org.nlogo.awt.Hierarchy
 import org.nlogo.core.{ AgentKind, I18N }
-import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, CollapsiblePane, ScrollPane, Zoomable, ZoomableBorder }
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, CollapsiblePane, ScrollPane, ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ CommandCenterInterface, GUIWorkspace }
 
 // implementing CommandCenterInterface lets us embed CommandLine
 abstract class AgentMonitor(val workspace: GUIWorkspace, window: JDialog)
-  extends JPanel(new BorderLayout) with CommandCenterInterface with Zoomable with ThemeSync {
+  extends JPanel(new BorderLayout) with CommandCenterInterface with ThemeSync {
 
   private implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("tools.agentMonitor")
 
@@ -162,10 +162,6 @@ abstract class AgentMonitor(val workspace: GUIWorkspace, window: JDialog)
 
   def close(): Unit = {
     viewPanel.foreach(_.close())
-  }
-
-  override def zoomComponent(): Unit = {
-    window.pack()
   }
 
   override def syncTheme(): Unit = {

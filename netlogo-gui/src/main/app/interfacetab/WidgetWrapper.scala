@@ -1063,8 +1063,10 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
             if (widget.isNote)
               g2d.setColor(InterfaceColors.widgetPreviewCoverNote())
 
-            g2d.fillRoundRect(widget.getX + 1, widget.getY + 1, widget.getWidth - 2, widget.getHeight - 2,
-                              widget.getDiameter, widget.getDiameter)
+            val diameter: Int = widget.getDiameter
+
+            g2d.fillRoundRect(widget.getX + 1, widget.getY + 1, widget.getWidth - 2, widget.getHeight - 2, diameter,
+                              diameter)
         }
       }
     }

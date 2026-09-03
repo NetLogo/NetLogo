@@ -12,7 +12,7 @@ import java.io.File
 import java.lang.ProcessHandle
 import java.net.{ ConnectException, URI }
 import java.util.{ List => JList }
-import javax.swing.{ JFrame, JMenu, JRootPane, ToolTipManager }
+import javax.swing.{ JFrame, JMenu, ToolTipManager }
 
 import scala.concurrent.ExecutionContext
 import scala.io.{ Codec, Source }
@@ -756,10 +756,7 @@ class App(args: App.CommandLineArgs) extends LinkChild with Exceptions.Handler w
   override def setZoomFactor(factor: Float): Unit = {
     Utils.setZoomFactor(factor)
 
-    Window.getWindows.flatMap(_.getComponents).collect {
-      case root: JRootPane =>
-        root.getContentPane
-    }.foreach(Utils.zoomComponents)
+    Window.getWindows.foreach(Utils.zoomWindow)
 
     Utils.zoomMenuBar(mainMenuBar)
 

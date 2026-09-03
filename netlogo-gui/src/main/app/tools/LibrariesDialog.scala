@@ -2,7 +2,7 @@
 
 package org.nlogo.app.tools
 
-import java.awt.Frame
+import java.awt.{ Dimension, Frame }
 import java.nio.file.Path
 import javax.swing.JLabel
 
@@ -11,7 +11,7 @@ import scala.concurrent.ExecutionContext
 import org.nlogo.api.LibraryManager
 import org.nlogo.core.{ I18N, LibraryInfo, Token }
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, CustomOptionPane, DialogButton, OptionPane, ProgressListener,
-                         ScrollPane, TextArea, Utils, WindowAutomator, Zoomable, ZoomableBorder, ZoomActions }
+                         ScrollPane, TextArea, Utils, WindowAutomator, ZoomableBorder, ZoomableWindow, ZoomActions }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 class LibrariesDialog( parent:          Frame
@@ -20,7 +20,7 @@ class LibrariesDialog( parent:          Frame
                      , tokenizeSource:  String => Iterator[Token]
                      , updateSource:    ((String) => String) => Unit
                      , extPathMappings: Map[String, Path]
-                     ) extends ToolDialog(parent, "libraries") with ZoomActions with ThemeSync {
+                     ) extends ToolDialog(parent, "libraries") with ZoomActions with ZoomableWindow with ThemeSync {
 
   WindowAutomator.automate(this)
 
@@ -51,18 +51,14 @@ class LibrariesDialog( parent:          Frame
       libPathsButton,
       updateAllButton
     ), 6, BoxAlign.End)
-  ), 10) with Zoomable {
+  ), 10) {
     setBorder(new ZoomableBorder(10, 10, 10, 10))
-
-    override def zoomComponent(): Unit = {
-      resetSize()
-    }
   }
 
   protected override def initGUI(): Unit = {
     add(content)
 
-    resetSize()
+    pack()
   }
 
   override def setVisible(isVisible: Boolean): Unit = {
@@ -88,9 +84,8 @@ class LibrariesDialog( parent:          Frame
     super.setVisible(isVisible)
   }
 
-  private def resetSize(): Unit = {
-    setSize(Utils.zoom(650), Utils.zoom(400))
-  }
+  override def getPreferredSize: Dimension =
+    Utils.zoomSize(new Dimension(650, 400))
 
   override def syncTheme(): Unit = {
     getContentPane.setBackground(InterfaceColors.dialogBackground())

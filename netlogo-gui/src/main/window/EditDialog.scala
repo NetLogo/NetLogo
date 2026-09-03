@@ -11,7 +11,7 @@ import org.nlogo.api.Version
 import org.nlogo.awt.Positioning
 import org.nlogo.core.I18N
 import org.nlogo.swing.{ BrowserLauncher, ButtonPanel, DialogButton, Implicits, PreferredSize, QuickHelp, Utils,
-                         WindowAutomator, Zoomable, ZoomableBorder, ZoomActions }, Implicits.thunk2action
+                         WindowAutomator, ZoomableBorder, ZoomableWindow, ZoomActions }, Implicits.thunk2action
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 // contains an EditPanel, plus some buttons at the bottom (OK/Apply/Help/Cancel).
@@ -20,7 +20,7 @@ class EditDialog(window: Window, target: Editable, editPanel: EditPanel, modal: 
                   if (modal)
                     Dialog.ModalityType.DOCUMENT_MODAL
                   else
-                    Dialog.ModalityType.MODELESS) with ZoomActions with ThemeSync {
+                    Dialog.ModalityType.MODELESS) with ZoomActions with ZoomableWindow with ThemeSync {
 
   var canceled = false
 
@@ -70,15 +70,11 @@ class EditDialog(window: Window, target: Editable, editPanel: EditPanel, modal: 
     }
   }))
 
-  private val mainPanel = new JPanel(new BorderLayout) with Zoomable {
+  private val mainPanel = new JPanel(new BorderLayout) {
     add(editPanel, BorderLayout.CENTER)
     add(new ButtonPanel(buttons) with PreferredSize {
       setBorder(new ZoomableBorder(0, 0, 6, 0))
     }, BorderLayout.SOUTH)
-
-    override def zoomComponent(): Unit = {
-      pack()
-    }
   }
 
   setContentPane(mainPanel)

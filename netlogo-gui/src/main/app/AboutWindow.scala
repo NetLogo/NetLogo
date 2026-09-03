@@ -12,12 +12,12 @@ import org.nlogo.awt.Positioning
 import org.nlogo.core.I18N
 import org.nlogo.editor.EditorConfiguration
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, RichAction, ScrollPane, TabbedPane, TextArea, Utils,
-                         WindowAutomator, Zoomable, ZoomableBorder, ZoomActions }
+                         WindowAutomator, Zoomable, ZoomableBorder, ZoomableWindow, ZoomActions }
 import org.nlogo.theme.{ DarkTheme, InterfaceColors, ThemeSync }
 import org.nlogo.util.SysInfo
 
 class AboutWindow(parent: Frame)
-  extends JDialog(parent, I18N.gui.get("dialog.about"), false) with ZoomActions with ThemeSync {
+  extends JDialog(parent, I18N.gui.get("dialog.about"), false) with ZoomActions with ZoomableWindow with ThemeSync {
 
   WindowAutomator.automate(this)
 
@@ -114,12 +114,8 @@ class AboutWindow(parent: Frame)
     new BoxRow(graphic, BoxAlign.Center),
     label,
     tabs
-  ), 10) with Zoomable {
+  ), 10) {
     setOpaque(true)
-
-    override def zoomComponent(): Unit = {
-      pack()
-    }
   })
 
   syncTheme()
