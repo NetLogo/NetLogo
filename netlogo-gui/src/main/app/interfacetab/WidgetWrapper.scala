@@ -537,6 +537,8 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
       } else if (mouseMode != MouseMode.IDLE) {
         interfacePanel.endResizeWidget()
         WidgetActions.resizeWidget(this)
+
+        widget.setUnzoomedBounds(Utils.unzoomBounds(widgetBounds))
       }
 
       mouseMode = MouseMode.IDLE
@@ -546,8 +548,11 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
   def doDrop(): Unit = {
     selected(true, true) // 2nd true = change was temporary
 
-    if (!startBoundsUnselected.contains(getUnselectedBounds))
+    if (!startBoundsUnselected.contains(getUnselectedBounds)) {
+      widget.setUnzoomedBounds(Utils.unzoomBounds(widgetBounds))
+
       new DirtyEvent(None).raise(this)
+    }
 
     dragging = false
   }
