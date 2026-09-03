@@ -11,8 +11,8 @@ import org.nlogo.analytics.Analytics
 import org.nlogo.api.PreviewCommands
 import org.nlogo.awt.Positioning
 import org.nlogo.core.{ AgentKind, CompilerException, I18N, Model }
-import org.nlogo.swing.{ BoxColumn, BoxRow, Button, ButtonPanel, MaximumHeight, Utils, WindowAutomator, Zoomable,
-                         ZoomableBorder, ZoomActions }
+import org.nlogo.swing.{ BoxColumn, BoxRow, Button, ButtonPanel, MaximumHeight, Utils, WindowAutomator, ZoomableBorder,
+                         ZoomableWindow, ZoomActions }
 import org.nlogo.theme.InterfaceColors
 import org.nlogo.window.{ EditorColorizer, GraphicsPreviewInterface }
 import org.nlogo.workspace.{ Evaluator, WorkspaceFactory }
@@ -27,7 +27,7 @@ class PreviewCommandsDialog(
   workspaceFactory: WorkspaceFactory,
   graphicsPreview: GraphicsPreviewInterface,
   modal: Boolean = true)
-  extends JDialog(owner, title, modal) with ZoomActions {
+  extends JDialog(owner, title, modal) with ZoomActions with ZoomableWindow {
 
   WindowAutomator.automate(this)
 
@@ -66,14 +66,10 @@ class PreviewCommandsDialog(
   setContentPane(new BoxColumn(Seq(
     new BoxRow(Seq(editorPanel, previewPanel), 6),
     new ButtonPanel(Seq(okButton, new Button(cancelAction))) with MaximumHeight
-  ), 6) with Zoomable {
+  ), 6) {
     setOpaque(true)
     setBackground(InterfaceColors.dialogBackground())
     setBorder(new ZoomableBorder(6, 6, 6, 6))
-
-    override def zoomComponent(): Unit = {
-      pack()
-    }
   })
 
   comboBox.addItemListener(new ItemListener {

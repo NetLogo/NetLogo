@@ -11,8 +11,6 @@ class ToolBarActionButton(action: Action) extends Button(action) {
   setBorder(new ZoomableBorder(6, 8, 6, 12))
 
   override def zoomComponent(): Unit = {
-    super.zoomComponent()
-
     setIconTextGap(Utils.zoom(12))
   }
 }

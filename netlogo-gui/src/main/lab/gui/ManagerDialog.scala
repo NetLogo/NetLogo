@@ -15,7 +15,7 @@ import org.nlogo.awt.UserCancelException
 import org.nlogo.core.{ I18N, Model }
 import org.nlogo.editor.Colorizer
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, Button, FileDialog, OptionPane, Positioning, PreferredSize,
-                         ScrollPane, Utils, WindowAutomator, Zoomable, ZoomableBorder, ZoomActions }
+                         ScrollPane, Utils, WindowAutomator, Zoomable, ZoomableBorder, ZoomableWindow, ZoomActions }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ EditDialog, EditDialogFactory, MenuBarFactory }
 
@@ -26,7 +26,8 @@ class ManagerDialog(manager:       LabManager,
                     dialogFactory: EditDialogFactory,
                     colorizer:     Colorizer,
                     menuFactory:   MenuBarFactory)
-  extends JDialog(manager.workspace.getFrame) with ListSelectionListener with ZoomActions with ThemeSync {
+  extends JDialog(manager.workspace.getFrame) with ListSelectionListener with ZoomActions with ZoomableWindow
+  with ThemeSync {
 
   private implicit val i18NPrefix: I18N.Prefix = I18N.Prefix("tools.behaviorSpace")
 
@@ -108,13 +109,9 @@ class ManagerDialog(manager:       LabManager,
       abortButton,
       runButton
     ), 6) with PreferredSize
-  ), 6) with Zoomable {
+  ), 6) {
     setOpaque(true)
     setBorder(new ZoomableBorder(6, 6, 6, 6))
-
-    override def zoomComponent(): Unit = {
-      pack()
-    }
   })
 
   pack()

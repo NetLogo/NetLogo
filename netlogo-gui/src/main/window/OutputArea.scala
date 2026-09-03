@@ -7,7 +7,7 @@ import javax.swing.ScrollPaneConstants
 
 import org.nlogo.agent.OutputObject
 import org.nlogo.awt.LineBreaker
-import org.nlogo.swing.{ BoxRow, RoundedBorderPanel, ScrollPane, TextArea, Utils, Zoomable, ZoomableBorder }
+import org.nlogo.swing.{ BoxRow, RoundedBorderPanel, ScrollPane, TextArea, Utils, ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 object OutputArea {
@@ -24,7 +24,7 @@ object OutputArea {
 
 import OutputArea._
 
-class OutputArea(val text: TextArea) extends BoxRow with RoundedBorderPanel with Zoomable with ThemeSync {
+class OutputArea(val text: TextArea) extends BoxRow with RoundedBorderPanel with ThemeSync {
   private val scrollPane =
     new ScrollPane(text, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
                    ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED) {
@@ -48,6 +48,7 @@ class OutputArea(val text: TextArea) extends BoxRow with RoundedBorderPanel with
   fontSize(12)
 
   setBorder(new ZoomableBorder(3, 3, 3, 3))
+  setDiameter(6)
 
   add(scrollPane)
 
@@ -73,7 +74,7 @@ class OutputArea(val text: TextArea) extends BoxRow with RoundedBorderPanel with
   override def getFont: Font =
     text.getFont
 
-  override def setBaseFont(font: Font): Unit = {
+  def setBaseFont(font: Font): Unit = {
     text.setBaseFont(font.deriveFont(fontSize))
   }
 
@@ -89,10 +90,6 @@ class OutputArea(val text: TextArea) extends BoxRow with RoundedBorderPanel with
     new Dimension(Utils.zoom(200), Utils.zoom(45))
 
   override def isFocusable: Boolean = false
-
-  override def zoomComponent(): Unit = {
-    setDiameter(Utils.zoom(6))
-  }
 
   override def syncTheme(): Unit = {
     setBackgroundColor(InterfaceColors.commandOutputBackground())

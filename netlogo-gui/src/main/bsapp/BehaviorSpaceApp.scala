@@ -5,7 +5,7 @@ package org.nlogo.bsapp
 import java.awt.{ EventQueue, Window }
 import java.io.IOException
 import java.net.SocketException
-import javax.swing.{ JRootPane, Timer }
+import javax.swing.Timer
 
 import org.nlogo.agent.OutputObject
 import org.nlogo.api.{ Dump, IPCClientHandler, LabProtocol, LogoException }
@@ -356,10 +356,7 @@ class BehaviorSpaceApp(args: BehaviorSpaceApp.CommandLineArgs)
   override def setZoomFactor(factor: Float): Unit = {
     Utils.setZoomFactor(factor)
 
-    Window.getWindows.flatMap(_.getComponents).collect {
-      case root: JRootPane =>
-        root.getContentPane
-    }.foreach(Utils.zoomComponents)
+    Window.getWindows.foreach(Utils.zoomWindow)
 
     frame.pack()
   }

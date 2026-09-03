@@ -10,14 +10,14 @@ import org.nlogo.analytics.Analytics
 import org.nlogo.core.{ I18N, Shape, ShapeList }
 import org.nlogo.shape.{ LinkLine, LinkShape, VectorShape }
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, Button, ButtonPanel, ComboBox, DialogButton, LabeledComponent,
-                         OptionPane, TextField, Utils, Zoomable, ZoomableBorder, ZoomActions }
+                         OptionPane, TextField, Utils, ZoomableBorder, ZoomableWindow, ZoomActions }
 import org.nlogo.theme.InterfaceColors
 
 import scala.util.{ Failure, Success, Try }
 
 class LinkEditorDialog(parent: JDialog, list: DrawableList[LinkShape], shape: LinkShape)
   extends JDialog(parent, I18N.gui.get("tools.linkEditor"), true) with EditorDialog.VectorShapeContainer
-  with ZoomActions {
+  with ZoomActions with ZoomableWindow {
 
   private implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("tools.linkEditor")
 
@@ -85,14 +85,10 @@ class LinkEditorDialog(parent: JDialog, list: DrawableList[LinkShape], shape: Li
         setForeground(InterfaceColors.dialogText())
       },
       new ButtonPanel(Seq(done, cancel))
-    ), 6) with Zoomable {
+    ), 6) {
       setOpaque(true)
       setBackground(InterfaceColors.dialogBackground())
       setBorder(new ZoomableBorder(6, 6, 6, 6))
-
-      override def zoomComponent(): Unit = {
-        pack()
-      }
     })
 
     getRootPane.setDefaultButton(done)

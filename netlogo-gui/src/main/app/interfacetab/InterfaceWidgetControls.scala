@@ -269,12 +269,12 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
     }
   }
 
-  class WidgetMenu extends BoxRow(14) with RoundedBorderPanel with Zoomable with ThemeSync with MouseUtils {
+  class WidgetMenu extends BoxRow(14) with RoundedBorderPanel with ThemeSync with MouseUtils {
     private val label = new JLabel(I18N.gui.get("tabs.run.addWidget")) with Zoomable
     private val arrow = new DropdownArrow
 
     setBorder(new ZoomableBorder(6, 8, 6, 6))
-    setDiameter(Utils.zoom(6))
+    setDiameter(6)
 
     add(label)
     add(new BoxColumn(arrow, BoxAlign.Center))
@@ -315,10 +315,6 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
       }
     }
 
-    override def zoomComponent(): Unit = {
-      setDiameter(Utils.zoom(6))
-    }
-
     override def syncTheme(): Unit = {
       setBackgroundColor(InterfaceColors.toolbarControlBackground())
       setBackgroundHoverColor(InterfaceColors.toolbarControlBackgroundHover())
@@ -342,23 +338,17 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
 
         setEnabled(wPanel.canAddWidget(info.displayName))
       }
-
-      override def zoomComponent(): Unit = {
-        super.zoomComponent()
-
-        setIconTextGap(Utils.zoom(4))
-      }
     }
   }
 
-  class AlignmentMenu extends BoxRow(14) with RoundedBorderPanel with Zoomable with ThemeSync with MouseUtils {
+  class AlignmentMenu extends BoxRow(14) with RoundedBorderPanel with ThemeSync with MouseUtils {
     private implicit val i18nPrefix: I18N.Prefix = I18N.Prefix("tabs.run.widget")
 
     private val label = new JLabel(I18N.gui.get("tabs.run.alignWidgets")) with Zoomable
     private val arrow = new DropdownArrow
 
     setBorder(new ZoomableBorder(6, 8, 6, 6))
-    setDiameter(Utils.zoom(6))
+    setDiameter(6)
 
     add(label)
     add(new BoxColumn(arrow, BoxAlign.Center))
@@ -426,10 +416,6 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
         add(stretchTopAction)
         add(stretchBottomAction)
       }
-    }
-
-    override def zoomComponent(): Unit = {
-      setDiameter(Utils.zoom(6))
     }
 
     override def syncTheme(): Unit = {
