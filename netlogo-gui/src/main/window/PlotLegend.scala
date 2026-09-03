@@ -6,7 +6,7 @@ import java.awt.{ Color, Component, Container, Dimension, Font, Graphics, Layout
 import javax.swing.{ JLabel, JPanel }
 
 import org.nlogo.plot.PlotPen
-import org.nlogo.swing.{ BoxRow, PreferredSize, Transparent, Utils, ZoomableBorder }
+import org.nlogo.swing.{ BoxRow, PreferredSize, Transparent, Utils, Zoomable, ZoomableBorder }
 import org.nlogo.theme.InterfaceColors
 
 class PlotLegend(widget: AbstractPlotWidget) extends JPanel(new WrapLayout) with Transparent {
@@ -51,8 +51,8 @@ class PlotLegend(widget: AbstractPlotWidget) extends JPanel(new WrapLayout) with
     setBorder(new ZoomableBorder(0, 0, 0, 10))
 
     add(panel)
-    add(new JLabel(pen.name) {
-      setFont(getFont.deriveFont(boldState))
+    add(new JLabel(pen.name) with Zoomable {
+      setBaseFont(getFont.deriveFont(boldState))
 
       override def paintComponent(g: Graphics): Unit = {
         setForeground(InterfaceColors.widgetText())

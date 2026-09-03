@@ -8,14 +8,12 @@ import javax.swing.{ AbstractAction, Box, ButtonGroup, JLabel }
 
 import org.nlogo.api.Perspective
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ BoxRow, Button, OptionPane, SyncZoom, ToolBarToggleButton, ZoomableBorder }
+import org.nlogo.swing.{ BoxRow, Button, OptionPane, ToolBarToggleButton, Zoomable, ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 import MouseMotionHandler.{ Mode, OrbitMode, ZoomMode, TranslateMode, InterfaceMode }
 
-class ViewControlToolBar(view: GLViewInterface, inputHandler: MouseMotionHandler)
-  extends BoxRow(6) with SyncZoom with ThemeSync {
-
+class ViewControlToolBar(view: GLViewInterface, inputHandler: MouseMotionHandler) extends BoxRow(6) with ThemeSync {
   private implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("view.3d")
 
   private val orbitButton = new ModeButton(I18N.gui("orbit"), OrbitMode)
@@ -36,8 +34,8 @@ class ViewControlToolBar(view: GLViewInterface, inputHandler: MouseMotionHandler
     }
   })
 
-  private val status = new JLabel {
-    setFont(getFont.deriveFont(Font.BOLD))
+  private val status = new JLabel with Zoomable {
+    setBaseFont(getFont.deriveFont(Font.BOLD))
   }
 
   private var perspective: Option[Perspective] = None

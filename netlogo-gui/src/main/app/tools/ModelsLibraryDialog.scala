@@ -27,8 +27,8 @@ import org.nlogo.core.I18N
 import org.nlogo.api.{ FileIO, LibraryManager }
 import org.nlogo.awt.{ Positioning, UserCancelException }
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, BrowserLauncher, Button, ButtonPanel, DialogButton, MaximumHeight,
-                         ModalProgressTask, OptionPane, PreferredSize, ScrollPane, SyncZoom, TextField, Utils,
-                         WindowAutomator, Zoomable, ZoomableBorder, ZoomActions },
+                         ModalProgressTask, OptionPane, PreferredSize, ScrollPane, TextField, Utils, WindowAutomator,
+                         Zoomable, ZoomableBorder, ZoomActions },
                        Utils.addEscKeyAction
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.workspace.ModelsLibrary
@@ -200,7 +200,7 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
 
     // somehow the font internally gets set to 19pt without this line, but the components continue to display at
     // 12pt, which breaks zooming. this line syncs everything up so that the tree zooms properly. (Isaac B 8/26/26)
-    renderer.setFont(renderer.getFont.deriveFont(12f))
+    renderer.setBaseFont(renderer.getFont.deriveFont(12f))
 
     override def getRowHeight: Int = {
       if (renderer != null && renderer.getFont != null) {
@@ -208,12 +208,6 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
       } else {
         super.getRowHeight
       }
-    }
-
-    override def zoom(oldZoom: Float): Unit = {
-      renderer.syncZoom()
-
-      updateUI()
     }
 
     override def syncTheme(): Unit = {
@@ -286,38 +280,6 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
   private val clearSearchButton = new Button(I18N.gui.get("modelsLibrary.clear"), () => {
     searchField.setText("")
   })
-
-  private val contents = new BoxColumn(Seq(
-    new BoxRow(Seq(
-      new BoxColumn(Seq(
-        treeScrollPane,
-        new BoxRow(Seq(
-          searchIcon,
-          searchField,
-          clearSearchButton
-        ), 6) with MaximumHeight {
-          setBorder(new ZoomableBorder(6, 6, 0, 6))
-        }
-      )),
-      modelPreviewScrollPane
-    )),
-    new BoxRow(Seq(
-      communityButton,
-      Box.createHorizontalGlue,
-      new ButtonPanel(Seq(selectButton, cancelButton)),
-    )) with MaximumHeight {
-      setBorder(new ZoomableBorder(8, 40, 8, 40))
-    }
-  )) with SyncZoom {
-    setOpaque(true)
-
-    override def zoom(oldZoom: Float): Unit = {
-      super.zoom(oldZoom)
-
-      modelPreviewPanel.showModel()
-      pack()
-    }
-  }
 
   locally {
     setResizable(true)
@@ -408,11 +370,36 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
       }
     })
 
-    setContentPane(contents)
+    setContentPane(new BoxColumn(Seq(
+      new BoxRow(Seq(
+        new BoxColumn(Seq(
+          treeScrollPane,
+          new BoxRow(Seq(
+            searchIcon,
+            searchField,
+            clearSearchButton
+          ), 6) with MaximumHeight {
+            setBorder(new ZoomableBorder(6, 6, 0, 6))
+          }
+        )),
+        modelPreviewScrollPane
+      )),
+      new BoxRow(Seq(
+        communityButton,
+        Box.createHorizontalGlue,
+        new ButtonPanel(Seq(selectButton, cancelButton)),
+      )) with MaximumHeight {
+        setBorder(new ZoomableBorder(8, 40, 8, 40))
+      }
+    )) with Zoomable {
+      setOpaque(true)
 
-    contents.syncZoom()
+      override def zoomComponent(): Unit = {
+        modelPreviewPanel.showModel()
+        pack()
+      }
+    })
 
-    this.setSize(740, 715)
     Positioning.center(this, parent)
 
     // This last bit is a fugly stopgap measure: the only way I found so far
@@ -422,15 +409,9 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
     SwingUtilities.invokeLater(new Runnable() {
       def run(): Unit = {
         modelPreviewPanel.showModel()
+        pack()
       }
     })
-  }
-
-  override def setVisible(visible: Boolean): Unit = {
-    if (visible)
-      contents.syncZoom()
-
-    super.setVisible(visible)
   }
 
   override def dispose(): Unit = {
@@ -792,7 +773,7 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
     clearSearchButton.syncTheme()
   }
 
-  private class TreeCellRenderer extends DefaultTreeCellRenderer with PreferredSize with SyncZoom with ThemeSync {
+  private class TreeCellRenderer extends DefaultTreeCellRenderer with PreferredSize with Zoomable with ThemeSync {
     private val open = new SelectableIcon("/images/open.png", 14, 12, InterfaceColors.modelsLibraryFolder,
                                           InterfaceColors.modelsLibraryFolderSelected)
     private val closed = new SelectableIcon("/images/closed.png", 14, 12, InterfaceColors.modelsLibraryFolder,

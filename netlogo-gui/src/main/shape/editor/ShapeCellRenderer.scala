@@ -8,12 +8,12 @@ import javax.swing.{ JLabel, JList, ListCellRenderer }
 import org.nlogo.api.Graphics2DWrapper
 import org.nlogo.core.Shape
 import org.nlogo.shape.DrawableShape
-import org.nlogo.swing.{ BoxAlign, BoxRow, PreferredSize, Utils }
+import org.nlogo.swing.{ BoxAlign, BoxRow, PreferredSize, Utils, Zoomable }
 import org.nlogo.theme.InterfaceColors
 
 class ShapeCellRenderer(height: Int) extends BoxRow(20, BoxAlign.Start) with ListCellRenderer[Shape] {
   protected var shape: Option[DrawableShape] = None
-  protected val shapeName = new JLabel
+  protected val shapeName = new JLabel with Zoomable
 
   protected val shapeComponent = new Component with PreferredSize {
     override def getPreferredSize: Dimension =

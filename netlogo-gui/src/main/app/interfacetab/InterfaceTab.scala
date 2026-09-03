@@ -353,7 +353,7 @@ class InterfaceTab(workspace: GUIWorkspace,
   def getMinimumWidth: Int =
     toolBar.getMinimumWidth
 
-  override def zoom(oldZoom: Float): Unit = {
+  override def zoomComponent(): Unit = {
     sizeToFit()
   }
 

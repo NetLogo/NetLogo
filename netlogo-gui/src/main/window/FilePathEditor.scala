@@ -8,7 +8,7 @@ import java.nio.file.Path
 import javax.swing.JLabel
 
 import org.nlogo.awt.UserCancelException
-import org.nlogo.swing.{ BoxRow, Button, FileDialog, TextField }
+import org.nlogo.swing.{ BoxRow, Button, FileDialog, TextField, Zoomable }
 import org.nlogo.swing.Implicits.thunk2documentListener
 import org.nlogo.theme.InterfaceColors
 
@@ -20,7 +20,7 @@ class FilePathEditor(accessor: PropertyAccessor[String], parent: Component, curr
   private val suggestedFileName: String = suggestedFile.map(_.trim).filter(_.nonEmpty).getOrElse(s"${accessor.name}-export.csv")
   private val homePath: Path = (new File(System.getProperty("user.home"))).toPath.toAbsolutePath
 
-  private val label = new JLabel(accessor.name)
+  private val label = new JLabel(accessor.name) with Zoomable
   private val editor = new TextField(12) {
     getDocument.addDocumentListener(() => accessor.changed())
   }

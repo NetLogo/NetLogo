@@ -10,7 +10,7 @@ import javax.swing.plaf.basic.BasicSliderUI
 
 import org.nlogo.core.{ I18N, NetLogoPreferences }
 import org.nlogo.log.LogManager
-import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, Button, PreferredSize, Utils }
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, Button, PreferredSize, Utils, Zoomable }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.Events.LoadBeginEvent
 
@@ -39,9 +39,9 @@ class SpeedSliderPanel(workspace: WorkspaceWithSpeed, ticksLabel: Component = nu
 
       val stroke: Stroke = g2d.getStroke
 
-      g2d.setStroke(new BasicStroke(Utils.zoom(1f), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND))
+      g2d.setStroke(new BasicStroke(Utils.zoomClamped(1f), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND))
       g2d.setColor(InterfaceColors.toolbarText())
-      g2d.fillRect(Utils.zoom(6), Utils.zoom(9), Utils.zoom(7), Utils.zoom(1))
+      g2d.fillRect(Utils.zoom(6), Utils.zoom(9), Utils.zoom(7), Utils.zoomClamped(1))
       g2d.setStroke(stroke)
     }
   }
@@ -57,15 +57,15 @@ class SpeedSliderPanel(workspace: WorkspaceWithSpeed, ticksLabel: Component = nu
 
       val stroke: Stroke = g2d.getStroke
 
-      g2d.setStroke(new BasicStroke(Utils.zoom(1f), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND))
+      g2d.setStroke(new BasicStroke(Utils.zoomClamped(1f), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND))
       g2d.setColor(InterfaceColors.toolbarText())
-      g2d.fillRect(Utils.zoom(6), Utils.zoom(9), Utils.zoom(7), Utils.zoom(1))
-      g2d.fillRect(Utils.zoom(9), Utils.zoom(6), Utils.zoom(1), Utils.zoom(7))
+      g2d.fillRect(Utils.zoom(6), Utils.zoom(9), Utils.zoom(7), Utils.zoomClamped(1))
+      g2d.fillRect(Utils.zoom(9), Utils.zoom(6), Utils.zoomClamped(1), Utils.zoom(7))
       g2d.setStroke(stroke)
     }
   }
 
-  val modelSpeed = new JLabel(I18N.gui("modelSpeed"), SwingConstants.CENTER)
+  val modelSpeed = new JLabel(I18N.gui("modelSpeed"), SwingConstants.CENTER) with Zoomable
 
   private var jumpOnClick = NetLogoPreferences.getBoolean("jumpOnClick", true)
 
@@ -149,7 +149,7 @@ class SpeedSliderPanel(workspace: WorkspaceWithSpeed, ticksLabel: Component = nu
     modelSpeed.setForeground(InterfaceColors.toolbarText())
   }
 
-  class SpeedSlider(defaultSpeed: Int) extends JSlider(-110, 112, defaultSpeed) with MouseWheelListener {
+  class SpeedSlider(defaultSpeed: Int) extends JSlider(-110, 112, defaultSpeed) with MouseWheelListener with Zoomable {
     private val sliderUI = new SpeedSliderUI
     private var lastThumbLocation = 0
 

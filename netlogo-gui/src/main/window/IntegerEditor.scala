@@ -4,7 +4,7 @@ package org.nlogo.window
 
 import javax.swing.JLabel
 
-import org.nlogo.swing.{ BoxRow, MaximumHeight, TextField }
+import org.nlogo.swing.{ BoxRow, MaximumHeight, TextField, Zoomable }
 import org.nlogo.swing.Implicits.thunk2documentListener
 import org.nlogo.theme.InterfaceColors
 
@@ -13,7 +13,7 @@ import scala.util.{ Success, Try }
 class IntegerEditor(accessor: PropertyAccessor[Int])
   extends BoxRow(6) with PropertyEditor(accessor) with WorldIntegerEditor with MaximumHeight {
 
-  private val label = new JLabel(accessor.name)
+  private val label = new JLabel(accessor.name) with Zoomable
   private val editor = new TextField(8) {
     getDocument.addDocumentListener(() => accessor.changed())
   }

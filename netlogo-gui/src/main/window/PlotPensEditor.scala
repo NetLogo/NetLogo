@@ -14,7 +14,7 @@ import org.nlogo.awt.Hierarchy
 import org.nlogo.core.{ CompilerException, I18N }
 import org.nlogo.editor.{ Colorizer, EditorArea, EditorConfiguration }
 import org.nlogo.plot.{ Plot, PlotManagerInterface, PlotPen }
-import org.nlogo.swing.{ BoxColumn, BoxRow, Button, PreferredSize, Popup, ScrollPane, Utils, ZoomableBorder }
+import org.nlogo.swing.{ BoxColumn, BoxRow, Button, PreferredSize, Popup, ScrollPane, Utils, Zoomable, ZoomableBorder }
 import org.nlogo.theme.InterfaceColors
 
 import scala.collection.mutable.ArrayBuffer
@@ -141,7 +141,7 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], compiler: Compil
     addButton.syncTheme()
   }
 
-  class PlotPensTable extends JTable { table =>
+  class PlotPensTable extends JTable with Zoomable { table =>
 
     val UpdateCommandsColumnName = I18N.gui("updateCommands")
     val NameColumnName = I18N.gui("name")
@@ -160,7 +160,6 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], compiler: Compil
     private val cellRenderer: ButtonCellEditor = new ButtonCellEditor
 
     setModel(model)
-    setRowHeight(getRowHeight + 14)
     setRowMargin(1)
     setShowGrid(true)
     setRowSelectionAllowed(false)
@@ -192,6 +191,9 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], compiler: Compil
 
     // finally add all the actual plot pens to the table
     initializePens()
+
+    override def getRowHeight: Int =
+      super.getRowHeight + Utils.zoom(14)
 
     def initializePens(): Unit = {
       model.clear()
@@ -308,9 +310,7 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], compiler: Compil
     }
 
     def openAdvancedPenEditor(editingPen: Pen): Unit = {
-      showEditorPopup(editingPen, new PlotPenEditorAdvanced(editingPen, compiler, colorizer, plotManager) {
-        syncZoom()
-      })
+      showEditorPopup(editingPen, new PlotPenEditorAdvanced(editingPen, compiler, colorizer, plotManager))
     }
 
     // renders the delete and edit buttons for each column

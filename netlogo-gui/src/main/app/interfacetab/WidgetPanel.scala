@@ -17,7 +17,7 @@ import org.nlogo.core.{ I18N, Button => CoreButton, Chooser => CoreChooser, Inpu
 import org.nlogo.editor.{ EditorArea, EditorConfiguration }
 import org.nlogo.log.LogManager
 import org.nlogo.nvm.DefaultCompilerServices
-import org.nlogo.swing.{ ClipboardUtils, MenuItem, PopupMenu, UndoManager, Utils, Zoomable }
+import org.nlogo.swing.{ ClipboardUtils, MenuItem, PopupMenu, UndoManager, Utils }
 import org.nlogo.theme.InterfaceColors
 import org.nlogo.window.{ AbstractWidgetPanel, AutoIndentHandler, ButtonWidget, CopyPasteTarget, Editable,
                           EditDialogFactory, Events => WindowEvents, GUIWorkspace, InterfaceMode, OutputWidget, Widget,
@@ -41,8 +41,7 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
     with WidgetRemovedEvent.Handler
     with LoadBeginEvent.Handler
     with SetInterfaceModeEvent.Handler
-    with CopyPasteTarget
-    with Zoomable {
+    with CopyPasteTarget {
 
   override val widgetControls: InterfaceWidgetControls =
     new InterfaceWidgetControls(this, workspace, widgetInfos, frame, dialogFactory)
@@ -744,7 +743,7 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
       }
     }
 
-    Utils.zoomComponents(newWidget, 1)
+    Utils.zoomComponents(newWidget)
 
     newWidget
   }
@@ -1797,10 +1796,6 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
 
       case _ =>
     }
-  }
-
-  override def zoom(oldZoom: Float): Unit = {
-    getWrappers.foreach(_.zoomBounds())
   }
 
   override def syncTheme(): Unit = {

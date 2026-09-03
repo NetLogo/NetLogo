@@ -186,7 +186,7 @@ class ComboBox[T](private var items: Seq[T] = Seq(), openOnPress: Boolean = true
     choiceDisplay.setEnabled(enabled)
   }
 
-  override def zoom(oldZoom: Float): Unit = {
+  override def zoomComponent(): Unit = {
     setDiameter(Utils.zoom(6))
   }
 
@@ -199,7 +199,7 @@ class ComboBox[T](private var items: Seq[T] = Seq(), openOnPress: Boolean = true
     choiceDisplay.syncTheme()
   }
 
-  private class ChoiceDisplay extends BoxRow with ThemeSync {
+  private class ChoiceDisplay extends BoxRow with Zoomable with ThemeSync {
     def setItem(item: Option[T]): Unit = {
       removeAll()
 
@@ -208,8 +208,8 @@ class ComboBox[T](private var items: Seq[T] = Seq(), openOnPress: Boolean = true
           comp.getClone
 
         case a =>
-          new JLabel(a.toString) {
-            setFont(ChoiceDisplay.this.getFont)
+          new JLabel(a.toString) with Zoomable {
+            setBaseFont(ChoiceDisplay.this.getBaseFont)
           }
       }.foreach { child =>
         add(child)

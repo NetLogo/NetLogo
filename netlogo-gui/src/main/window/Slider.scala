@@ -185,7 +185,7 @@ class Slider(private var minimum: Double, private var increment: Double, private
     val thickness = trackThickness
     val radius = thumbRadius
     val diameter = radius * 2
-    val border = Utils.zoom(1)
+    val border = Utils.zoomClamped(1)
     val thumb = thumbPos()
 
     // track

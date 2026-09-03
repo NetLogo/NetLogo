@@ -12,13 +12,13 @@ import org.nlogo.api.{ AgentVariables, Dump }
 import org.nlogo.core.{ AgentKind, I18N, Nobody, Widget => CoreWidget }
 import org.nlogo.editor.{ EditorConfiguration, EditorField }
 import org.nlogo.nvm.Procedure
-import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, MaximumHeight, OptionPane, PreferredSize, ScrollPane, SyncZoom,
-                         Utils, ZoomableBorder }
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, MaximumHeight, OptionPane, PreferredSize, ScrollPane, Utils,
+                         Zoomable, ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ Editable, EditorColorizer, Events => WindowEvents, JobWidget }
 
 class AgentMonitorEditor(parent: AgentMonitor) extends BoxColumn(3, BoxAlign.Start) with ThemeSync {
-  private val noVarLabel = new JLabel(I18N.gui.get("tools.agentMonitor.editor.noVariables"))
+  private val noVarLabel = new JLabel(I18N.gui.get("tools.agentMonitor.editor.noVariables")) with Zoomable
 
   private var labels = Seq[Component]()
   private var editors = Seq[AgentVarEditor]()
@@ -42,7 +42,6 @@ class AgentMonitorEditor(parent: AgentMonitor) extends BoxColumn(3, BoxAlign.Sta
       add(noVarLabel)
     }
     else fill()
-    editors.foreach(_.syncZoom())
     syncTheme()
   }
 
@@ -53,7 +52,7 @@ class AgentMonitorEditor(parent: AgentMonitor) extends BoxColumn(3, BoxAlign.Sta
     setBorder(new ZoomableBorder(3, 3, 0, 3))
 
     vars.asScala.foreach { variableName =>
-      val label = new JLabel(variableName.toLowerCase) with SyncZoom
+      val label = new JLabel(variableName.toLowerCase) with Zoomable
       val index =
         if (agent == null)
           workspace.world.indexOfVariable(agentKind, variableName)
@@ -115,7 +114,7 @@ extends JobWidget(parent.workspace.world.auxRNG)
 with KeyListener
 with FocusListener
 with WindowEvents.JobRemovedEvent.Handler
-with SyncZoom
+with Zoomable
 with ThemeSync {
   private def specialCase = {
     parent.agentKind match {
@@ -238,7 +237,7 @@ with ThemeSync {
   }
 
   override def setCodeFont(font: Font): Unit = {
-    editor.setFont(font.deriveFont(Utils.zoom(10f)))
+    editor.setBaseFont(font.deriveFont(Utils.zoom(10f)))
   }
 
   ///

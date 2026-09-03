@@ -11,7 +11,7 @@ import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 class CollapsiblePane(title: String, element: JComponent, parent: JDialog)
   extends JPanel(new BorderLayout) with ThemeSync {
 
-  private val titleLabel = new JLabel(title) {
+  private val titleLabel = new JLabel(title) with Zoomable {
     override def getIconTextGap: Int =
       Utils.zoom(super.getIconTextGap)
   }

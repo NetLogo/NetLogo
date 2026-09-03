@@ -16,7 +16,7 @@ import org.nlogo.api.{ DrawingInterface, Version, World3D, WorldRenderable, Worl
 import org.nlogo.gl.render.{ LinkRenderer, LinkRenderer3D, PatchRenderer, PatchRenderer3D, Renderer, Renderer3D,
                              ShapeRenderer, ShapeRenderer3D, TurtleRenderer, TurtleRenderer3D, WorldRenderer,
                              WorldRenderer3D }
-import org.nlogo.swing.{ NetLogoIcon, SyncZoom, Utils, WindowAutomator, ZoomActions }
+import org.nlogo.swing.{ NetLogoIcon, Utils, WindowAutomator, Zoomable, ZoomActions }
 import org.nlogo.theme.ThemeSync
 import org.nlogo.window.Event.LinkChild
 
@@ -25,7 +25,7 @@ abstract class View(title: String, val viewManager: ViewManager, var renderer: R
 
   WindowAutomator.automate(this)
 
-  var canvas: GLJPanel & SyncZoom = null
+  var canvas: GLJPanel & Zoomable = null
   val picker = new Picker(this)
 
   if (Version.is3D) {
@@ -83,10 +83,8 @@ abstract class View(title: String, val viewManager: ViewManager, var renderer: R
     capabilities.setSampleBuffers(antiAliasing)
     capabilities.setNumSamples(4)
     capabilities.setStencilBits(1)
-    canvas = new GLJPanel(capabilities) with SyncZoom {
-      override def zoom(oldZoom: Float): Unit = {
-        super.zoom(oldZoom)
-
+    canvas = new GLJPanel(capabilities) with Zoomable {
+      override def zoomComponent(): Unit = {
         View.this.bounds.map(Utils.zoomBounds).foreach(View.this.setBounds)
       }
     }
@@ -118,11 +116,8 @@ abstract class View(title: String, val viewManager: ViewManager, var renderer: R
   }
 
   override def setVisible(visible: Boolean): Unit = {
-    if (visible) {
-      canvas.syncZoom()
-
+    if (visible)
       Analytics.threedViewOpen()
-    }
 
     super.setVisible(visible)
   }
