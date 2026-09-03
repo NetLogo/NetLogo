@@ -4,14 +4,14 @@ package org.nlogo.app.tools
 
 import java.awt.{ BorderLayout, Dimension, Font }
 import java.util.{ List => JList }
-import javax.swing.{ Box, BoxLayout, JDialog, JPanel, ScrollPaneConstants }
-import javax.swing.border.{ CompoundBorder, EmptyBorder, MatteBorder }
+import javax.swing.{ JDialog, JPanel, ScrollPaneConstants }
+import javax.swing.border.{ CompoundBorder, MatteBorder }
 
 import org.nlogo.agent.{ Agent, Link, Patch, Turtle }
 import org.nlogo.app.common.{ CommandLine, HistoryPrompt, LinePrompt }
 import org.nlogo.awt.Hierarchy
 import org.nlogo.core.{ AgentKind, I18N }
-import org.nlogo.swing.{ CollapsiblePane, ScrollPane, Transparent }
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, CollapsiblePane, ScrollPane, ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ CommandCenterInterface, GUIWorkspace }
 
@@ -74,7 +74,7 @@ abstract class AgentMonitor(val workspace: GUIWorkspace, window: JDialog)
   private val panel = new AgentMonitorViewPanel(workspace)
   private val viewPane = new CollapsiblePane(I18N.gui("view"), panel, window)
   private val propertiesPane = new CollapsiblePane(I18N.gui("properties"), scrollPane, window)
-  private val viewPanel: Option[AgentMonitorViewPanel] =
+  private val viewPanel: Option[AgentMonitorViewPanel] = {
     if (agentKind == AgentKind.Observer) {
       // the observer monitor doesn't have a view or the command center. ev 6/4/08
       add(scrollPane, BorderLayout.CENTER)
@@ -88,31 +88,17 @@ abstract class AgentMonitor(val workspace: GUIWorkspace, window: JDialog)
       commandLine.agentKind(agentKind)
 
       // this panel contains the separator bar and command line (Isaac B 5/21/25)
-      add(new JPanel with Transparent {
-        setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
-        setBorder(new CompoundBorder(separator, new EmptyBorder(6, 6, 6, 6)))
-
-        add(new JPanel with Transparent {
-          setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
-
-          add(Box.createVerticalGlue)
-          add(prompt)
-        })
-
-        add(Box.createHorizontalStrut(6))
-        add(commandLine)
-        add(Box.createHorizontalStrut(3))
-
-        add(new JPanel with Transparent {
-          setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
-
-          add(Box.createVerticalGlue)
-          add(historyPrompt)
-        })
+      add(new BoxRow(Seq(
+        new BoxColumn(prompt, BoxAlign.End),
+        commandLine,
+        new BoxColumn(historyPrompt, BoxAlign.End)
+      ), 6) {
+        setBorder(new CompoundBorder(separator, new ZoomableBorder(6, 6, 6, 6)))
       }, BorderLayout.SOUTH)
 
       Some(panel)
     }
+  }
 
   override def fitPrompt(): Unit = {
     revalidate()
@@ -164,7 +150,7 @@ abstract class AgentMonitor(val workspace: GUIWorkspace, window: JDialog)
   }
 
   def setCodeFont(font: Font): Unit = {
-    commandLine.setFont(font)
+    commandLine.setBaseFont(font)
     agentEditor.setCodeFont(font)
   }
 

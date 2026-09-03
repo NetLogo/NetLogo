@@ -2,16 +2,17 @@
 
 package org.nlogo.app.tools
 
-import java.awt.{ BorderLayout, Frame }
+import java.awt.Frame
 import java.awt.event.{ ActionEvent, ItemEvent, ItemListener }
 import java.beans.{ PropertyChangeEvent, PropertyChangeListener }
-import javax.swing.{ AbstractAction, JDialog, JPanel }
+import javax.swing.{ AbstractAction, JDialog }
 
 import org.nlogo.analytics.Analytics
 import org.nlogo.api.PreviewCommands
 import org.nlogo.awt.Positioning
 import org.nlogo.core.{ AgentKind, CompilerException, I18N, Model }
-import org.nlogo.swing.{ Button, Transparent, Utils, WindowAutomator }
+import org.nlogo.swing.{ BoxColumn, BoxRow, Button, ButtonPanel, MaximumHeight, Utils, WindowAutomator, ZoomableBorder,
+                         ZoomableWindow, ZoomActions }
 import org.nlogo.theme.InterfaceColors
 import org.nlogo.window.{ EditorColorizer, GraphicsPreviewInterface }
 import org.nlogo.workspace.{ Evaluator, WorkspaceFactory }
@@ -26,7 +27,7 @@ class PreviewCommandsDialog(
   workspaceFactory: WorkspaceFactory,
   graphicsPreview: GraphicsPreviewInterface,
   modal: Boolean = true)
-  extends JDialog(owner, title, modal) {
+  extends JDialog(owner, title, modal) with ZoomActions with ZoomableWindow {
 
   WindowAutomator.automate(this)
 
@@ -62,14 +63,13 @@ class PreviewCommandsDialog(
 
   getRootPane.setDefaultButton(okButton)
 
-  add(new JPanel(new BorderLayout) {
+  setContentPane(new BoxColumn(Seq(
+    new BoxRow(Seq(editorPanel, previewPanel), 6),
+    new ButtonPanel(Seq(okButton, new Button(cancelAction))) with MaximumHeight
+  ), 6) {
+    setOpaque(true)
     setBackground(InterfaceColors.dialogBackground())
-    add(editorPanel, BorderLayout.CENTER)
-    add(previewPanel, BorderLayout.LINE_END)
-    add(new JPanel with Transparent {
-      add(okButton)
-      add(new Button(cancelAction))
-    }, BorderLayout.PAGE_END)
+    setBorder(new ZoomableBorder(6, 6, 6, 6))
   })
 
   comboBox.addItemListener(new ItemListener {

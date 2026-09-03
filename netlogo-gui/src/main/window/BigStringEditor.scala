@@ -2,18 +2,17 @@
 
 package org.nlogo.window
 
-import java.awt.BorderLayout
 import javax.swing.{ JLabel, ScrollPaneConstants, SwingConstants }
 import javax.swing.border.LineBorder
 
 import org.nlogo.swing.Implicits.thunk2documentListener
-import org.nlogo.swing.{ ScrollPane, TextArea }
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, ScrollPane, TextArea, Zoomable }
 import org.nlogo.theme.InterfaceColors
 
 import scala.util.{ Success, Try }
 
-class BigStringEditor(accessor: PropertyAccessor[String]) extends PropertyEditor(accessor) {
-  private val label = new JLabel(accessor.name) {
+class BigStringEditor(accessor: PropertyAccessor[String]) extends BoxColumn(3) with PropertyEditor(accessor) {
+  private val label = new JLabel(accessor.name) with Zoomable {
     setVerticalAlignment(SwingConstants.TOP)
   }
 
@@ -27,10 +26,8 @@ class BigStringEditor(accessor: PropertyAccessor[String]) extends PropertyEditor
   private val scrollPane = new ScrollPane(editor, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
                                           ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER)
 
-  setLayout(new BorderLayout(0, 3))
-
-  add(label, BorderLayout.NORTH)
-  add(scrollPane, BorderLayout.CENTER)
+  add(new BoxRow(label, BoxAlign.Start))
+  add(scrollPane)
 
   override def get: Try[String] = Success(Option(editor.getText()).getOrElse(""))
   override def set(value: String): Unit = {

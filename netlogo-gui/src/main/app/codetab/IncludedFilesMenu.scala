@@ -14,14 +14,12 @@ import org.nlogo.app.common.{ Actions, TabsInterface }, Actions.Ellipsis
 import org.nlogo.awt.UserCancelException
 import org.nlogo.core.{ I18N, NetLogoPreferences }
 import org.nlogo.nvm.IncludeSource
-import org.nlogo.swing.{ FileDialog => SwingFileDialog, MenuItem, OptionPane, PopupMenu, RoundedBorderPanel,
-                         ToolBarMenu }
-import org.nlogo.theme.{ InterfaceColors, ThemeSync }
+import org.nlogo.swing.{ FileDialog => SwingFileDialog, MenuItem, OptionPane, PopupMenu, ToolBarMenu }
 import org.nlogo.window.{ Events => WindowEvents }
 
 class IncludedFilesMenu(includesTable: => Option[Map[String, IncludeSource]], tabs: TabsInterface)
-extends ToolBarMenu(I18N.gui.get("tabs.code.includedFiles"))
-with WindowEvents.CompiledEvent.Handler with RoundedBorderPanel with ThemeSync {
+  extends ToolBarMenu(I18N.gui.get("tabs.code.includedFiles")) with WindowEvents.CompiledEvent.Handler {
+
   implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("tabs.code.includedFiles")
 
   private var alwaysVisible = NetLogoPreferences.get("includedFilesMenu", "false").toBoolean
@@ -29,8 +27,6 @@ with WindowEvents.CompiledEvent.Handler with RoundedBorderPanel with ThemeSync {
   private var isEmpty = true
 
   updateVisibility()
-
-  setDiameter(6)
   enableHover()
 
   def setAlwaysVisible(visible: Boolean): Unit = {
@@ -73,15 +69,6 @@ with WindowEvents.CompiledEvent.Handler with RoundedBorderPanel with ThemeSync {
 
   override def getMinimumSize = sizeIfVisible(super.getMinimumSize)
   override def getPreferredSize = sizeIfVisible(super.getPreferredSize)
-
-  override def syncTheme(): Unit = {
-    setBackgroundColor(InterfaceColors.toolbarControlBackground())
-    setBackgroundHoverColor(InterfaceColors.toolbarControlBackgroundHover())
-    setBackgroundPressedColor(InterfaceColors.toolbarControlBackgroundPressed())
-    setBorderColor(InterfaceColors.toolbarControlBorder())
-
-    label.setForeground(InterfaceColors.toolbarText())
-  }
 
   private class NewSourceEditorAction extends AbstractAction(I18N.gui("new")) {
     override def actionPerformed(e: ActionEvent) = tabs.newExternalFile()

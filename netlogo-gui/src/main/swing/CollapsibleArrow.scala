@@ -2,27 +2,33 @@
 
 package org.nlogo.swing
 
-import java.awt.{ Component, Graphics }
+import java.awt.{ BasicStroke, Component, Graphics, Stroke }
 import javax.swing.Icon
 
 import org.nlogo.theme.InterfaceColors
 
 class CollapsibleArrow(private var isOpen: Boolean) extends Icon {
-  def getIconWidth = 9
-  def getIconHeight = 9
+  def getIconWidth: Int = Utils.zoom(9)
+  def getIconHeight: Int = Utils.zoom(9)
 
   def paintIcon(c: Component, g: Graphics, x: Int, y: Int): Unit = {
     val g2d = Utils.initGraphics2D(g)
 
     g2d.setColor(InterfaceColors.dialogText())
 
+    val stroke: Stroke = g2d.getStroke
+
+    g2d.setStroke(new BasicStroke(Utils.zoomClamped(1f), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND))
+
     if (isOpen) {
-      g2d.drawLine(x, y + 2, x + 4, y + 6)
-      g2d.drawLine(x + 4, y + 6, x + 8, y + 2)
+      g2d.drawLine(x, y + Utils.zoom(2), x + Utils.zoom(4), y + Utils.zoom(6))
+      g2d.drawLine(x + Utils.zoom(4), y + Utils.zoom(6), x + Utils.zoom(8), y + Utils.zoom(2))
     } else {
-      g2d.drawLine(x + 2, y + 8, x + 6, y + 4)
-      g2d.drawLine(x + 6, y + 4, x + 2, y)
+      g2d.drawLine(x + Utils.zoom(2), y + Utils.zoom(8), x + Utils.zoom(6), y + Utils.zoom(4))
+      g2d.drawLine(x + Utils.zoom(6), y + Utils.zoom(4), x + Utils.zoom(2), y)
     }
+
+    g2d.setStroke(stroke)
   }
 
   def setOpen(open: Boolean): Unit = {

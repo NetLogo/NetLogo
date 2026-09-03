@@ -2,22 +2,27 @@
 
 package org.nlogo.window
 
-import java.awt.{ Dimension, GridBagConstraints, GridBagLayout, Insets }
+import java.awt.Dimension
 import java.awt.event.{ ActionEvent, ItemEvent, ItemListener }
-import javax.swing.{ AbstractAction, Action, JCheckBox, JPanel }
+import javax.swing.{ AbstractAction, Action, JCheckBox }
 
 import org.nlogo.core.I18N, I18N.Prefix
-import org.nlogo.swing.{ Button, Transparent }
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, Button, PreferredSize, ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.Events.LoadEndEvent
 
 class ViewUpdatePanel(workspace: GUIWorkspace, speedSlider: SpeedSliderPanel, displaySwitch: JCheckBox,
                       tickCounter: TickCounterLabel, is3D: Boolean)
-  extends JPanel(new GridBagLayout) with Transparent with LoadEndEvent.Handler with ThemeSync {
+  extends BoxColumn(3) with LoadEndEvent.Handler with ThemeSync {
 
   implicit val prefix: org.nlogo.core.I18N.Prefix = Prefix("tabs.run")
 
-  private val updateModeChooser = new UpdateModeChooser(workspace)
+  private val updateModeChooser = new UpdateModeChooser(workspace) {
+    override def getPreferredSize: Dimension = {
+      new Dimension(displaySwitch.getPreferredSize.width.max(super.getPreferredSize.width),
+                    super.getPreferredSize.height)
+    }
+  }
 
   private val settingsButton = new SettingsButton(new EditSettings(workspace.viewWidget.settings))
 
@@ -25,25 +30,10 @@ class ViewUpdatePanel(workspace: GUIWorkspace, speedSlider: SpeedSliderPanel, di
 
   updateModeChooser.refreshSelection()
 
-  locally {
-    val c = new GridBagConstraints
+  setBorder(new ZoomableBorder(6, 0, 6, 6))
 
-    c.gridy = 0
-    c.insets = new Insets(6, 0, 3, 12)
-
-    add(displaySwitch, c)
-
-    c.gridy = 1
-    c.fill = GridBagConstraints.HORIZONTAL
-    c.insets = new Insets(0, 0, 6, 12)
-
-    add(updateModeChooser, c)
-
-    c.fill = GridBagConstraints.NONE
-    c.insets = new Insets(0, 0, 6, 6)
-
-    add(settingsButton, c)
-  }
+  add(new BoxRow(displaySwitch, BoxAlign.Start))
+  add(new BoxRow(Seq(updateModeChooser, settingsButton), 12))
 
   override def addNotify(): Unit = {
     super.addNotify()
@@ -81,7 +71,7 @@ class ViewUpdatePanel(workspace: GUIWorkspace, speedSlider: SpeedSliderPanel, di
     }
   }
 
-  private class SettingsButton(action: Action) extends Button(action) {
+  private class SettingsButton(action: Action) extends Button(action) with PreferredSize {
     override def getPreferredSize: Dimension =
       new Dimension(super.getPreferredSize.width, updateModeChooser.getPreferredSize.height)
   }

@@ -2,8 +2,6 @@
 
 package org.nlogo.window
 
-import java.awt.{ GridBagConstraints, Insets }
-
 import org.nlogo.core.I18N
 
 class DummyViewEditPanel(target: DummyViewWidget) extends WidgetEditPanel(target) {
@@ -25,20 +23,8 @@ class DummyViewEditPanel(target: DummyViewWidget) extends WidgetEditPanel(target
         _.foreach(target.setHeight),
         () => apply()))
 
-  locally {
-    val c = new GridBagConstraints
-
-    c.gridx = 0
-    c.fill = GridBagConstraints.HORIZONTAL
-    c.weightx = 1
-    c.insets = new Insets(6, 6, 6, 6)
-
-    add(widthEditor, c)
-
-    c.insets = new Insets(0, 6, 6, 6)
-
-    add(heightEditor, c)
-  }
+  add(widthEditor)
+  add(heightEditor)
 
   override def propertyEditors: Seq[PropertyEditor[?]] =
     Seq(widthEditor, heightEditor)

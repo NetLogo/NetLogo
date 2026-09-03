@@ -4,23 +4,22 @@ package org.nlogo.swing
 
 import java.awt.event.ActionEvent
 import javax.swing.{ AbstractAction, Action, JButton, JToggleButton }
-import javax.swing.border.EmptyBorder
 
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
-class Button(action: Action) extends JButton(action) with RoundedBorderPanel with ThemeSync {
+class Button(action: Action) extends JButton(action) with RoundedBorderPanel with Zoomable with ThemeSync {
   def this(text: String, function: () => Unit) = this(new AbstractAction(text) {
     def actionPerformed(e: ActionEvent): Unit = {
       function()
     }
   })
 
-  setDiameter(6)
   enableHover()
   enablePressed()
-  setBorder(new EmptyBorder(3, 12, 3, 12))
+  setBorder(new ZoomableBorder(3, 12, 3, 12))
   setFocusable(false)
   setContentAreaFilled(false)
+  setDiameter(6)
 
   syncTheme()
 
@@ -33,19 +32,19 @@ class Button(action: Action) extends JButton(action) with RoundedBorderPanel wit
   }
 }
 
-class ToggleButton(action: Action) extends JToggleButton(action) with RoundedBorderPanel with ThemeSync {
+class ToggleButton(action: Action) extends JToggleButton(action) with RoundedBorderPanel with Zoomable with ThemeSync {
   def this(text: String, function: () => Unit) = this(new AbstractAction(text) {
     def actionPerformed(e: ActionEvent): Unit = {
       function()
     }
   })
 
-  setDiameter(6)
   enableHover()
   enablePressed()
-  setBorder(new EmptyBorder(3, 12, 3, 12))
+  setBorder(new ZoomableBorder(3, 12, 3, 12))
   setFocusable(false)
   setContentAreaFilled(false)
+  setDiameter(6)
 
   syncTheme()
 

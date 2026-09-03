@@ -2,39 +2,35 @@
 
 package org.nlogo.bsapp
 
-import javax.swing.{ Box, BoxLayout, JLabel, JPanel }
-import javax.swing.border.EmptyBorder
+import javax.swing.{ Box, JLabel }
 
 import org.nlogo.agent.OutputObject
 import org.nlogo.core.I18N
 import org.nlogo.editor.EditorConfiguration
-import org.nlogo.swing.{ Button, Transparent }
+import org.nlogo.swing.{ BoxColumn, BoxRow, Button, Zoomable, ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.OutputArea
 
 // this class is a variant of the command center that allows output but doesn't allow
 // any user input that could mess up the model while an experiment is running. (Isaac B 2/6/25)
-class OutputPanel extends JPanel with ThemeSync {
-  private val label = new JLabel(s"<html><b>${I18N.gui.get("tabs.run.commandcenter")}</b></html>")
+class OutputPanel extends BoxColumn(6) with ThemeSync {
+  private val label = new JLabel(s"<html><b>${I18N.gui.get("tabs.run.commandcenter")}</b></html>") with Zoomable
 
   private val clearButton = new Button(I18N.gui.get("tabs.run.commandcenter.clearButton"), clear)
 
   private val outputArea = new OutputArea(new OutputArea.DefaultTextArea) {
-    setFont(EditorConfiguration.getCodeFont)
+    setBaseFont(EditorConfiguration.getCodeFont)
   }
 
-  setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
-  setBorder(new EmptyBorder(6, 6, 6, 6))
+  setOpaque(true)
+  setBorder(new ZoomableBorder(6, 6, 6, 6))
 
-  add(new JPanel with Transparent {
-    setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
+  add(new BoxRow(Seq(
+    label,
+    Box.createHorizontalGlue,
+    clearButton
+  )))
 
-    add(label)
-    add(Box.createHorizontalGlue)
-    add(clearButton)
-  })
-
-  add(Box.createVerticalStrut(6))
   add(outputArea)
 
   def clear(): Unit = {

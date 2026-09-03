@@ -2,30 +2,31 @@
 
 package org.nlogo.app
 
-import java.awt.{ BorderLayout, Cursor, Dimension, Frame }
+import java.awt.{ Cursor, Dimension, Frame }
 import java.awt.event.{ WindowAdapter, WindowEvent }
 import javax.swing.{ JDialog, JEditorPane, JLabel, Timer, WindowConstants }
-import javax.swing.border.{ EmptyBorder, LineBorder }
+import javax.swing.border.LineBorder
 
 import org.nlogo.api.{ APIVersion, FileIO, Version }
 import org.nlogo.awt.Positioning
 import org.nlogo.core.I18N
 import org.nlogo.editor.EditorConfiguration
-import org.nlogo.swing.{ RichAction, ScrollPane, TabbedPane, TextArea, Utils, WindowAutomator }
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, RichAction, ScrollPane, TabbedPane, TextArea, Utils,
+                         WindowAutomator, Zoomable, ZoomableBorder, ZoomableWindow, ZoomActions }
 import org.nlogo.theme.{ DarkTheme, InterfaceColors, ThemeSync }
 import org.nlogo.util.SysInfo
 
-class AboutWindow(parent: Frame) extends JDialog(parent, I18N.gui.get("dialog.about"), false)
-                                 with ThemeSync {
+class AboutWindow(parent: Frame)
+  extends JDialog(parent, I18N.gui.get("dialog.about"), false) with ZoomActions with ZoomableWindow with ThemeSync {
 
   WindowAutomator.automate(this)
 
   private val refreshTimer: Timer = new Timer(2000, _ => refreshSystemText())
   private val system = new TextArea(0, 0, "") {
-    setFont(EditorConfiguration.getMonospacedFont)
+    setBaseFont(EditorConfiguration.getMonospacedFont)
     setLineWrap(true)
     setWrapStyleWord(true)
-    setBorder(new EmptyBorder(5, 10, 5, 10))
+    setBorder(new ZoomableBorder(5, 10, 5, 10))
     setDragEnabled(false)
     setEditable(false)
     setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR))
@@ -46,7 +47,7 @@ class AboutWindow(parent: Frame) extends JDialog(parent, I18N.gui.get("dialog.ab
       SysInfo.getScalaVersionString + "\n"
 
   private val graphic = new JLabel {
-    setBorder(new EmptyBorder(10, 10, 0, 10))
+    setBorder(new ZoomableBorder(10, 10, 0, 10))
   }
 
   private val citationText =
@@ -64,7 +65,7 @@ class AboutWindow(parent: Frame) extends JDialog(parent, I18N.gui.get("dialog.ab
         |Northwestern University. Evanston, IL.
         |</center> </html>""".stripMargin
 
-  private val label = new JEditorPane("text/html", citationText) with ThemeSync {
+  private val label = new JEditorPane("text/html", citationText) with Zoomable with ThemeSync {
     setEditable(false)
     setDragEnabled(false)
     setCaretColor(InterfaceColors.Transparent)
@@ -76,12 +77,12 @@ class AboutWindow(parent: Frame) extends JDialog(parent, I18N.gui.get("dialog.ab
   }
 
   private val credits = new TextArea(15, 0, FileIO.getResourceAsString("/system/about.txt")) {
-    setFont(EditorConfiguration.getMonospacedFont)
+    setBaseFont(EditorConfiguration.getMonospacedFont)
     setDragEnabled(false)
     setLineWrap(true)
     setWrapStyleWord(true)
     setEditable(false)
-    setBorder(new EmptyBorder(5, 10, 5, 10))
+    setBorder(new ZoomableBorder(5, 10, 5, 10))
     setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR))
 
     override def syncTheme(): Unit = {
@@ -104,40 +105,43 @@ class AboutWindow(parent: Frame) extends JDialog(parent, I18N.gui.get("dialog.ab
     add(I18N.gui.get("dialog.about.system"), systemScrollPane)
   }
 
-  locally {
-    setResizable(false)
-    setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE)
+  setResizable(false)
+  setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE)
 
-    refreshSystemText()
+  refreshSystemText()
 
-    getContentPane.setLayout(new BorderLayout(0, 10))
-    getContentPane.add(graphic, BorderLayout.NORTH)
+  setContentPane(new BoxColumn(Seq(
+    new BoxRow(graphic, BoxAlign.Center),
+    label,
+    tabs
+  ), 10) {
+    setOpaque(true)
+  })
 
-    getContentPane.add(label, BorderLayout.CENTER)
-    getContentPane.add(tabs, BorderLayout.SOUTH)
+  syncTheme()
 
-    syncTheme()
+  Utils.addEscKeyAction(this, RichAction{ _ => dispose() } )
+  pack()
+  Positioning.center(this,null)
 
-    Utils.addEscKeyAction(this, RichAction{ _ => dispose() } )
-    pack()
-    Positioning.center(this,null)
+  // Bring the parent frame (the main NetLogo window) to front.
+  // Otherwise this will be obscured (sometimes completely) by
+  // the front window (e.g. the System Dynamics Modeler) on OS X,
+  // because of the way that non-modal dialogs are layered with
+  // their parent. Maybe this should be an independent frame and
+  // not a dialog...  - AZS 6/18/05
+  parent.toFront()
 
-    // Bring the parent frame (the main NetLogo window) to front.
-    // Otherwise this will be obscured (sometimes completely) by
-    // the front window (e.g. the System Dynamics Modeler) on OS X,
-    // because of the way that non-modal dialogs are layered with
-    // their parent. Maybe this should be an independent frame and
-    // not a dialog...  - AZS 6/18/05
-    parent.toFront()
+  refreshTimer.start()
 
-    refreshTimer.start()
+  addWindowListener(new WindowAdapter {
+    override def windowClosed(e: WindowEvent): Unit = {
+      refreshTimer.stop()
+    }
+  })
 
-    addWindowListener(new WindowAdapter {
-      override def windowClosed(e: WindowEvent): Unit = {
-        refreshTimer.stop()
-      }
-    })
-  }
+  override def getPreferredSize: Dimension =
+    new Dimension(graphic.getPreferredSize.width, super.getPreferredSize.height)
 
   private def refreshSystemText(): Unit = {
     val newGraphicsInfo = SysInfo.getMemoryInfoString + "\n\n" +

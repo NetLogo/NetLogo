@@ -2,11 +2,10 @@
 
 package org.nlogo.sdm.gui
 
-import java.awt.{ GridBagConstraints, Insets }
-
 import org.nlogo.api.{ CompilerServices, ExtensionManager }
 import org.nlogo.core.I18N
 import org.nlogo.editor.Colorizer
+import org.nlogo.swing.{ BoxAlign, BoxRow }
 import org.nlogo.window.{ EditPanel, IdentifierEditor, NonEmptyCodeEditor, OptionsEditor, PropertyAccessor,
                           PropertyEditor }
 
@@ -42,28 +41,9 @@ class RateEditPanel(target: RateConnection, compiler: CompilerServices, colorize
         () => apply()),
       compiler, colorizer)
 
-  locally {
-    val c = new GridBagConstraints
-
-    c.gridx = 0
-    c.gridwidth = 2
-    c.fill = GridBagConstraints.HORIZONTAL
-    c.weightx = 1
-    c.insets = new Insets(6, 6, 6, 6)
-
-    add(nameWrapper, c)
-
-    c.anchor = GridBagConstraints.WEST
-    c.fill = GridBagConstraints.NONE
-    c.insets = new Insets(0, 6, 6, 6)
-
-    add(inputs, c)
-
-    c.fill = GridBagConstraints.BOTH
-    c.weighty = 1
-
-    add(expressionWrapper, c)
-  }
+  add(nameWrapper)
+  add(new BoxRow(inputs, BoxAlign.Start))
+  add(expressionWrapper)
 
   override def propertyEditors: Seq[PropertyEditor[?]] =
     Seq(nameWrapper, inputs, expressionWrapper)

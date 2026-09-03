@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import java.awt.{ Cursor, Graphics, Point }
+import java.awt.{ Cursor, Dimension, Graphics, Point }
 import java.awt.event.{ MouseAdapter, MouseEvent, MouseMotionListener }
 import java.lang.{ Double => JDouble }
 import javax.swing.JPanel
@@ -77,6 +77,9 @@ class PlotCanvas(private val plot: Plot) extends JPanel {
   def isDirty = _isDirty
 
   /// other methods
+
+  override def getMaximumSize: Dimension =
+    new Dimension(Int.MaxValue, Int.MaxValue)
 
   override def paintComponent(g: Graphics): Unit = {
     painter.setupOffscreenImage(getWidth(), getHeight())

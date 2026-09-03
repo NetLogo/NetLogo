@@ -2,7 +2,7 @@
 
 package org.nlogo.ide
 
-import java.awt.{ Color, Component, Dimension, Font, GraphicsEnvironment }
+import java.awt.{ Color, Component, Dimension, GraphicsEnvironment }
 import java.awt.event.{ KeyEvent, KeyListener, MouseAdapter, MouseEvent }
 import javax.swing.{ DefaultListModel, JDialog, JLabel, JList, ListCellRenderer, ListSelectionModel,
                      ScrollPaneConstants }
@@ -12,7 +12,7 @@ import javax.swing.text.JTextComponent
 import org.nlogo.core.{ Dialect, Femto, NetLogoCore, Token, TokenizerInterface, TokenType }
 import org.nlogo.editor.EditorConfiguration
 import org.nlogo.nvm.ExtensionManager
-import org.nlogo.swing.ScrollPane
+import org.nlogo.swing.{ ScrollPane, Zoomable }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 object CodeCompletionPopup {
@@ -54,7 +54,6 @@ case class CodeCompletionPopup(autoSuggest: AutoSuggest,
       suggestionDisplaylist.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION)
       suggestionDisplaylist.setLayoutOrientation(JList.VERTICAL)
       suggestionDisplaylist.setVisibleRowCount(10)
-      listRenderer.font = eA.getFont
       suggestionDisplaylist.setCellRenderer(listRenderer)
 
       suggestionDisplaylist.addMouseListener(new MouseAdapter {
@@ -228,11 +227,11 @@ case class CodeCompletionPopup(autoSuggest: AutoSuggest,
 class SuggestionListRenderer(dialect: Dialect, extensionManager: Option[ExtensionManager])
   extends ListCellRenderer[String] {
 
-  var font: Font = EditorConfiguration.getMonospacedFont
-
   override def getListCellRendererComponent(list: JList[? <: String], value: String, index: Int, isSelected: Boolean,
                                             cellHasFocus: Boolean): Component = {
-    val label = new JLabel(value)
+    val label = new JLabel(value) with Zoomable {
+      setBaseFont(EditorConfiguration.getMonospacedFont)
+    }
 
     val fgColor: Color = {
       if (dialect.tokenMapper.getCommand(value).nonEmpty ||
@@ -249,7 +248,6 @@ class SuggestionListRenderer(dialect: Dialect, extensionManager: Option[Extensio
                           InterfaceColors.menuBackgroundHover()
                         else
                           InterfaceColors.menuBackground())
-    label.setFont(font)
     label
   }
 }

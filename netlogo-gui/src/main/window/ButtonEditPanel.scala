@@ -2,11 +2,10 @@
 
 package org.nlogo.window
 
-import java.awt.{ GridBagConstraints, Insets }
-
 import org.nlogo.api.CompilerServices
 import org.nlogo.core.I18N
 import org.nlogo.editor.Colorizer
+import org.nlogo.swing.{ BoxAlign, BoxRow, MaximumHeight }
 
 class ButtonEditPanel(target: ButtonWidget, compiler: CompilerServices, colorizer: Colorizer)
   extends WidgetEditPanel(target) {
@@ -75,47 +74,12 @@ class ButtonEditPanel(target: ButtonWidget, compiler: CompilerServices, colorize
         _.foreach(target.oldSize),
         () => apply()))
 
-  locally {
-    val c = new GridBagConstraints
-
-    c.gridy = 0
-    c.anchor = GridBagConstraints.WEST
-    c.insets = new Insets(6, 6, 6, 6)
-
-    add(agentOptions, c)
-
-    c.weightx = 1
-    c.insets = new Insets(6, 0, 6, 6)
-
-    add(forever, c)
-
-    c.gridy = 1
-    c.gridwidth = 2
-    c.insets = new Insets(0, 6, 6, 6)
-
-    add(goTime, c)
-
-    c.gridy = 2
-    c.fill = GridBagConstraints.BOTH
-    c.weighty = 1
-
-    add(wrapSource, c)
-
-    c.gridy = 3
-    c.fill = GridBagConstraints.HORIZONTAL
-    c.weighty = 0
-
-    add(name, c)
-
-    c.gridy = 4
-    c.fill = GridBagConstraints.NONE
-
-    add(actionKey, c)
-
-    c.gridy = 5
-
-    add(oldSize, c)
-  }
+  add(new BoxRow(Seq(agentOptions, forever), 6, BoxAlign.Start) with MaximumHeight)
+  add(new BoxRow(goTime, BoxAlign.Start))
+  add(wrapSource)
+  add(name)
+  add(new BoxRow(actionKey, BoxAlign.Start))
+  add(new BoxRow(oldSize, BoxAlign.Start))
 
   override def propertyEditors: Seq[PropertyEditor[?]] =
     Seq(agentOptions, forever, goTime, wrapSource, name, actionKey, oldSize)

@@ -8,17 +8,16 @@ import java.awt.print.PageFormat
 import java.io.IOException
 import java.net.MalformedURLException
 import javax.swing.{ AbstractAction, JPanel }
-import javax.swing.border.EmptyBorder
 
 import org.nlogo.agent.Observer
 import org.nlogo.app.common.{CodeToHtml, EditorFactory, FindDialog, MenuTab, TabsInterface, Events => AppEvents}
 import org.nlogo.core.{ AgentKind, CompilerException, I18N }
 import org.nlogo.editor.{ AdvancedEditorArea, EditorConfiguration }
 import org.nlogo.nvm.IncludeSource
-import org.nlogo.swing.{ Button, CheckBox, PrinterManager, ToolBar, ToolBarActionButton, UserAction,
-                         Printable => NlogoPrintable, Utils }
+import org.nlogo.swing.{ BoxAlign, BoxRow, Button, CheckBox, PrinterManager, ToolBarActionButton, UserAction,
+                         Printable => NlogoPrintable, Utils, ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
-import org.nlogo.window.{ CommentableError, ProceduresInterface, Zoomable, Events => WindowEvents }
+import org.nlogo.window.{ CommentableError, ProceduresInterface, Events => WindowEvents }
 import org.nlogo.workspace.AbstractWorkspace
 
 abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
@@ -28,7 +27,6 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
   with AppEvents.SwitchedTabsEvent.Handler
   with WindowEvents.CompiledEvent.Handler
   with WindowEvents.AfterLoadEvent.Handler
-  with Zoomable
   with NlogoPrintable
   with MenuTab
   with ThemeSync {
@@ -38,13 +36,8 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
       compile()
     }
   }) {
+    setIcon(Utils.iconScaledWithColor("/images/check.png", 15, 15, () => InterfaceColors.toolbarImage()))
     setEnabled(false)
-
-    override def syncTheme(): Unit = {
-      super.syncTheme()
-
-      setIcon(Utils.iconScaledWithColor("/images/check.png", 15, 15, InterfaceColors.toolbarImage()))
-    }
   }
 
   private val findButton = new ToolBarActionButton(FindDialog.FIND_ACTION_CODE)
@@ -93,10 +86,20 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
 
   private val includedFilesMenu = new IncludedFilesMenu(getIncludesTable, tabs)
 
-  override def zoomTarget = text
-
   val errorLabel = new CommentableError(text)
-  val toolBar = getToolBar
+
+  val toolBar = new BoxRow(Seq(
+    compileButton,
+    findButton,
+    proceduresMenu,
+    includedFilesMenu,
+    separate,
+    prefsButton
+  ), 10, BoxAlign.Start) {
+    setOpaque(true)
+    setBorder(new ZoomableBorder(24, 10, 12, 6))
+  }
+
   def compiler = workspace
   def program = workspace.world.program
 
@@ -108,24 +111,6 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
       add(errorLabel.component, BorderLayout.NORTH)
     }
     add(codePanel, BorderLayout.CENTER)
-  }
-
-  def getToolBar = new ToolBar {
-    setBorder(new EmptyBorder(24, 10, 12, 6))
-
-    override def addControls(): Unit = {
-      // Only want to add toolbar items once
-      // This method gets called when the code tab pops in or pops out
-      // because org.nlogo.swing.ToolBar overrides addNotify. AAB 10/2020
-      if (getComponents.isEmpty) {
-        add(compileButton)
-        add(findButton)
-        add(proceduresMenu)
-        add(includedFilesMenu)
-        add(separate)
-        add(prefsButton)
-      }
-    }
   }
 
   override val permanentMenuActions: Seq[UserAction.MenuAction] = {
@@ -176,15 +161,6 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
       compile()
     if (!e.newTab.isInstanceOf[CodeTab])
       FindDialog.dontWatch(true)
-  }
-
-  private var originalFontSize = -1
-  override def handle(e: WindowEvents.ZoomedEvent): Unit = {
-    super.handle(e)
-    if (originalFontSize == -1)
-      originalFontSize = text.getFont.getSize
-    text.setFont(text.getFont.deriveFont(StrictMath.ceil(originalFontSize * zoomFactor).toFloat))
-    errorLabel.zoom(zoomFactor)
   }
 
   def handle(e: WindowEvents.CompiledEvent) = {
@@ -260,7 +236,7 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
   }
 
   def setCodeFont(font: Font): Unit = {
-    text.setFont(font)
+    text.setBaseFont(font)
 
     revalidate()
     repaint()

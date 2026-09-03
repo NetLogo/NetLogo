@@ -2,21 +2,18 @@
 
 package org.nlogo.gl.view
 
-import java.awt.{ Font, GridBagConstraints, GridBagLayout, Insets }
+import java.awt.Font
 import java.awt.event.ActionEvent
-import javax.swing.{ AbstractAction, ButtonGroup, JLabel, JPanel }
-import javax.swing.border.EmptyBorder
+import javax.swing.{ AbstractAction, Box, ButtonGroup, JLabel }
 
 import org.nlogo.api.Perspective
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ Button, OptionPane, ToolBarToggleButton, Transparent }
+import org.nlogo.swing.{ BoxRow, Button, OptionPane, ToolBarToggleButton, Zoomable, ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 import MouseMotionHandler.{ Mode, OrbitMode, ZoomMode, TranslateMode, InterfaceMode }
 
-class ViewControlToolBar(view: GLViewInterface, inputHandler: MouseMotionHandler)
-  extends JPanel(new GridBagLayout) with ThemeSync {
-
+class ViewControlToolBar(view: GLViewInterface, inputHandler: MouseMotionHandler) extends BoxRow(6) with ThemeSync {
   private implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("view.3d")
 
   private val orbitButton = new ModeButton(I18N.gui("orbit"), OrbitMode)
@@ -37,7 +34,9 @@ class ViewControlToolBar(view: GLViewInterface, inputHandler: MouseMotionHandler
     }
   })
 
-  private val status = new JLabel
+  private val status = new JLabel with Zoomable {
+    setBaseFont(getFont.deriveFont(Font.BOLD))
+  }
 
   private var perspective: Option[Perspective] = None
 
@@ -48,35 +47,23 @@ class ViewControlToolBar(view: GLViewInterface, inputHandler: MouseMotionHandler
     group.add(zoomButton)
     group.add(moveButton)
 
-    val c = new GridBagConstraints
+    setOpaque(true)
+    setBorder(new ZoomableBorder(6, 6, 6, 6))
 
-    c.gridy = 0
-    c.insets = new Insets(6, 6, 6, 6)
-
-    add(orbitButton, c)
-
-    c.insets = new Insets(6, 0, 6, 6)
-
-    add(zoomButton, c)
-    add(moveButton, c)
+    add(orbitButton)
+    add(zoomButton)
+    add(moveButton)
 
     if (!view.world.program.dialect.is3D) {
-      add(interactButton, c)
+      add(interactButton)
+
       group.add(interactButton)
     }
 
     add(status)
-
-    c.weightx = 1
-
-    add(new JPanel with Transparent, c)
-
-    c.weightx = 0
-
-    add(resetButton, c)
-    add(fullScreenButton, c)
-
-    status.setFont(status.getFont.deriveFont(Font.BOLD))
+    add(Box.createHorizontalGlue)
+    add(resetButton)
+    add(fullScreenButton)
 
     orbitButton.doClick()
 
@@ -140,6 +127,6 @@ class ViewControlToolBar(view: GLViewInterface, inputHandler: MouseMotionHandler
         inputHandler.setMovementMode(mode)
       }
     }) {
-      setBorder(new EmptyBorder(3, 12, 3, 12))
+      setBorder(new ZoomableBorder(3, 12, 3, 12))
     }
 }

@@ -2,18 +2,18 @@
 
 package org.nlogo.app.common
 
-import java.awt.{ BorderLayout, Frame, Toolkit }
+import java.awt.{ Dimension, Frame, Toolkit }
 import java.awt.event.{ ActionEvent, ActionListener, FocusEvent, KeyEvent }
 import java.util.Locale
-import javax.swing.{ AbstractAction, Action, Box, BoxLayout, JDialog, JEditorPane, JLabel, JPanel, SwingConstants }
-import javax.swing.border.EmptyBorder
+import javax.swing.{ AbstractAction, Action, Icon, JDialog, JEditorPane, JLabel }
 import javax.swing.text.{ BadLocationException, TextAction }
 
 import org.nlogo.core.I18N
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
-import org.nlogo.swing.{ ButtonPanel, CheckBox, DialogButton, NonemptyTextFieldActionEnabler,
-                         NonemptyTextFieldButtonEnabler, ScrollableTextComponent, TextField, TextFieldBox, Transparent,
-                         UserAction, Utils, WindowAutomator },
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, ButtonPanel, CheckBox, DialogButton,
+                         NonemptyTextFieldActionEnabler, NonemptyTextFieldButtonEnabler, ScrollableTextComponent,
+                         TextField, UserAction, Utils, WindowAutomator, Zoomable, ZoomableBorder, ZoomableWindow,
+                         ZoomActions },
   UserAction.{ EditCategory, EditFindGroup, KeyBindings, MenuAction }
 
 object FindDialog extends ThemeSync {
@@ -140,6 +140,13 @@ object FindDialog extends ThemeSync {
   def init(frame: Frame, codeFrame: Frame): Unit = {
     instance = new FindDialog(frame)
     codeInstance = new FindDialog(codeFrame)
+
+    val icon: Icon = Utils.iconScaledWithColor("/images/find.png", 15, 15, () => InterfaceColors.toolbarImage())
+
+    FIND_ACTION.putValue(Action.SMALL_ICON, icon)
+    FIND_ACTION_CODE.putValue(Action.SMALL_ICON, icon)
+    FIND_NEXT_ACTION.putValue(Action.SMALL_ICON, icon)
+    FIND_NEXT_ACTION_CODE.putValue(Action.SMALL_ICON, icon)
   }
 
   def getInstance: FindDialog = {
@@ -188,20 +195,11 @@ object FindDialog extends ThemeSync {
 
     if (codeInstance != null)
       codeInstance.syncTheme()
-
-    FIND_ACTION.putValue(Action.SMALL_ICON, Utils.iconScaledWithColor("/images/find.png", 15, 15,
-                                                                      InterfaceColors.toolbarImage()))
-    FIND_ACTION_CODE.putValue(Action.SMALL_ICON, Utils.iconScaledWithColor("/images/find.png", 15, 15,
-                                                                           InterfaceColors.toolbarImage()))
-    FIND_NEXT_ACTION.putValue(Action.SMALL_ICON, Utils.iconScaledWithColor("/images/find.png", 15, 15,
-                                                                           InterfaceColors.toolbarImage()))
-    FIND_NEXT_ACTION_CODE.putValue(Action.SMALL_ICON, Utils.iconScaledWithColor("/images/find.png", 15, 15,
-                                                                                InterfaceColors.toolbarImage()))
   }
 }
 
-class FindDialog(val owner: Frame) extends JDialog(owner, I18N.gui.get("dialog.find.title"), false)
-                                   with ActionListener with ThemeSync {
+class FindDialog(val owner: Frame) extends JDialog(owner, I18N.gui.get("dialog.find.title"), false) with ZoomActions
+                                   with ActionListener with ZoomableWindow with ThemeSync {
 
   WindowAutomator.automate(this)
 
@@ -261,8 +259,9 @@ class FindDialog(val owner: Frame) extends JDialog(owner, I18N.gui.get("dialog.f
 
   private val findBox = new TextField(25)
   private val replaceBox = new TextField(25)
-  private val replaceLabel = new JLabel(I18N.gui.get("dialog.find.replaceWith"))
-  private val notFoundLabel = new JLabel(I18N.gui.get("dialog.find.notFound"))
+  private val findLabel = new JLabel(I18N.gui.get("dialog.find.find")) with Zoomable
+  private val replaceLabel = new JLabel(I18N.gui.get("dialog.find.replaceWith")) with Zoomable
+  private val notFoundLabel = new JLabel(I18N.gui.get("dialog.find.notFound")) with Zoomable
 
   new NonemptyTextFieldButtonEnabler(nextButton, List(findBox))
   new NonemptyTextFieldButtonEnabler(prevButton, List(findBox))
@@ -291,44 +290,36 @@ class FindDialog(val owner: Frame) extends JDialog(owner, I18N.gui.get("dialog.f
   setResizable(false)
   setVisible(false)
 
-  private val findPanel = new TextFieldBox(SwingConstants.LEFT)
+  setContentPane(new BoxColumn(Seq(
+    new BoxRow(Seq(
+      new BoxColumn(Seq(
+        new BoxRow(findLabel, BoxAlign.Start),
+        new BoxRow(replaceLabel, BoxAlign.Start)
+      ), 6) {
+        override def getMaximumSize: Dimension =
+          new Dimension(getPreferredSize.width, super.getMaximumSize.height)
+      },
+      new BoxColumn(Seq(findBox, replaceBox), 6)
+    ), 6, BoxAlign.Start) {
+      setBorder(new ZoomableBorder(16, 8, 8, 8))
+    },
+    new BoxRow(Seq(ignoreCaseCheckBox, wrapAroundCheckBox, notFoundLabel), 12, BoxAlign.Start) {
+      setBorder(new ZoomableBorder(6, 6, 6, 6))
+    },
+    new ButtonPanel(Seq(
+      nextButton,
+      prevButton,
+      replaceButton,
+      replaceAndFindButton,
+      replaceAllButton
+    )) {
+      setBorder(new ZoomableBorder(16, 8, 8, 8))
+    }
+  )) {
+    setOpaque(true)
+  })
 
-  locally {
-    findPanel.setBorder(new EmptyBorder(16, 8, 8, 8))
-
-    findPanel.addField(I18N.gui.get("dialog.find.find"), findBox)
-    findPanel.addField(replaceLabel, replaceBox)
-
-    val optionsPanel = new JPanel with Transparent
-
-    optionsPanel.setLayout(new BoxLayout(optionsPanel, BoxLayout.X_AXIS))
-    optionsPanel.setBorder(new EmptyBorder(8, 8, 8, 8))
-
-    optionsPanel.add(ignoreCaseCheckBox)
-    optionsPanel.add(Box.createHorizontalStrut(12))
-    optionsPanel.add(wrapAroundCheckBox)
-    optionsPanel.add(Box.createHorizontalStrut(24))
-    optionsPanel.add(notFoundLabel)
-
-    val buttonPanel = new ButtonPanel(
-      Seq(
-        nextButton,
-        prevButton,
-        replaceButton,
-        replaceAndFindButton,
-        replaceAllButton
-      ))
-
-    buttonPanel.setBorder(new EmptyBorder(16, 8, 8, 8))
-
-    getContentPane.setLayout(new BorderLayout)
-
-    getContentPane.add(findPanel, BorderLayout.NORTH)
-    getContentPane.add(optionsPanel, BorderLayout.CENTER)
-    getContentPane.add(buttonPanel, BorderLayout.SOUTH)
-
-    pack()
-  }
+  pack()
 
   Utils.addEscKeyAction(this,
     new AbstractAction {
@@ -487,9 +478,8 @@ class FindDialog(val owner: Frame) extends JDialog(owner, I18N.gui.get("dialog.f
     findBox.syncTheme()
     replaceBox.syncTheme()
 
+    findLabel.setForeground(InterfaceColors.dialogText())
     replaceLabel.setForeground(InterfaceColors.dialogText())
     notFoundLabel.setForeground(InterfaceColors.dialogText())
-
-    findPanel.syncTheme()
   }
 }

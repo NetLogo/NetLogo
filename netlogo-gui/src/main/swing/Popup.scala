@@ -5,7 +5,6 @@ package org.nlogo.swing
 import java.awt.{ BorderLayout, Frame }
 import java.awt.event.{ ActionEvent, KeyEvent }
 import javax.swing.{ AbstractAction, JDialog, JPanel, KeyStroke }
-import javax.swing.border.EmptyBorder
 
 import org.nlogo.theme.InterfaceColors
 
@@ -15,7 +14,7 @@ import org.nlogo.theme.InterfaceColors
  * whatever you say to do in the given functions.
  */
 class Popup(parentFrame: Frame, title:String, panel: JPanel, cancel: => Unit, ok: => Boolean, i18n: String => String) {
-  val dialog = new JDialog(parentFrame, true)
+  val dialog = new JDialog(parentFrame, true) with ZoomActions
   dialog.setTitle(title)
   dialog.add(panel, BorderLayout.CENTER)
   dialog.setAutoRequestFocus(true)
@@ -25,7 +24,7 @@ class Popup(parentFrame: Frame, title:String, panel: JPanel, cancel: => Unit, ok
 
   private val buttonPanel = new ButtonPanel(
     Seq(okButton, new DialogButton(false, i18n("common.buttons.cancel"), () => { cancel; die() }))) {
-    setBorder(new EmptyBorder(0, 0, 6, 0))
+    setBorder(new ZoomableBorder(0, 0, 6, 0))
   }
 
   dialog.add(buttonPanel, BorderLayout.SOUTH)

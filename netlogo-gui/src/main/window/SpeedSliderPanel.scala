@@ -2,20 +2,20 @@
 
 package org.nlogo.window
 
-import java.awt.{ Color, Component, Dimension, Graphics, GridBagConstraints, GridBagLayout }
+import java.awt.{ BasicStroke, Color, Component, Dimension, Graphics, Stroke }
 import java.awt.event.{ InputEvent, MouseAdapter, MouseEvent, MouseListener, MouseWheelEvent, MouseWheelListener }
-import javax.swing.{ JLabel, JPanel, JSlider, SwingConstants }
+import javax.swing.{ JLabel, JSlider, SwingConstants }
 import javax.swing.event.{ ChangeEvent, ChangeListener }
 import javax.swing.plaf.basic.BasicSliderUI
 
 import org.nlogo.core.{ I18N, NetLogoPreferences }
 import org.nlogo.log.LogManager
-import org.nlogo.swing.{ Button, Utils }
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, Button, PreferredSize, Utils, Zoomable }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.Events.LoadBeginEvent
 
 class SpeedSliderPanel(workspace: WorkspaceWithSpeed, ticksLabel: Component = null)
-  extends JPanel with MouseListener with ChangeListener with LoadBeginEvent.Handler with ThemeSync {
+  extends BoxColumn with MouseListener with ChangeListener with LoadBeginEvent.Handler with ThemeSync {
 
   implicit val prefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("tabs.run.speedslider")
 
@@ -28,82 +28,57 @@ class SpeedSliderPanel(workspace: WorkspaceWithSpeed, ticksLabel: Component = nu
     slider
   }
 
-  setOpaque(false)
-  setLayout(new GridBagLayout)
-
-  val slower = new Button("", () => speedSlider.setValue(speedSlider.getValue - 11)) {
+  val slower = new Button("", () => speedSlider.setValue(speedSlider.getValue - 11)) with PreferredSize {
     override def getPreferredSize: Dimension =
-      new Dimension(19, 19)
+      new Dimension(Utils.zoom(19), Utils.zoom(19))
 
     override def paintComponent(g: Graphics): Unit = {
       super.paintComponent(g)
 
       val g2d = Utils.initGraphics2D(g)
 
+      val stroke: Stroke = g2d.getStroke
+
+      g2d.setStroke(new BasicStroke(Utils.zoomClamped(1f), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND))
       g2d.setColor(InterfaceColors.toolbarText())
-      g2d.fillRect(6, 9, 7, 1)
+      g2d.fillRect(Utils.zoom(6), Utils.zoom(9), Utils.zoom(7), Utils.zoomClamped(1))
+      g2d.setStroke(stroke)
     }
   }
 
-  val faster = new Button("", () => speedSlider.setValue(speedSlider.getValue + 11)) {
+  val faster = new Button("", () => speedSlider.setValue(speedSlider.getValue + 11)) with PreferredSize {
     override def getPreferredSize: Dimension =
-      new Dimension(19, 19)
+      new Dimension(Utils.zoom(19), Utils.zoom(19))
 
     override def paintComponent(g: Graphics): Unit = {
       super.paintComponent(g)
 
       val g2d = Utils.initGraphics2D(g)
 
+      val stroke: Stroke = g2d.getStroke
+
+      g2d.setStroke(new BasicStroke(Utils.zoomClamped(1f), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND))
       g2d.setColor(InterfaceColors.toolbarText())
-      g2d.fillRect(6, 9, 7, 1)
-      g2d.fillRect(9, 6, 1, 7)
+      g2d.fillRect(Utils.zoom(6), Utils.zoom(9), Utils.zoom(7), Utils.zoomClamped(1))
+      g2d.fillRect(Utils.zoom(9), Utils.zoom(6), Utils.zoomClamped(1), Utils.zoom(7))
+      g2d.setStroke(stroke)
     }
   }
 
-  val modelSpeed = new JLabel(I18N.gui("modelSpeed"), SwingConstants.CENTER)
+  val modelSpeed = new JLabel(I18N.gui("modelSpeed"), SwingConstants.CENTER) with Zoomable
 
   private var jumpOnClick = NetLogoPreferences.getBoolean("jumpOnClick", true)
 
-  slower.setFont(slower.getFont.deriveFont(10f))
-  faster.setFont(faster.getFont.deriveFont(10f))
+  add(new BoxRow(modelSpeed, BoxAlign.Center))
+  add(new BoxRow(Seq(slower, speedSlider, faster)))
 
-  locally {
-    val c = new GridBagConstraints
-
-    c.gridx = 0
-    c.gridy = 1
-
-    add(slower, c)
-
-    c.gridx = 1
-    c.gridy = 0
-    c.weightx = 1
-
-    add(modelSpeed, c)
-
-    c.gridx = 2
-    c.gridy = 1
-
-    add(faster, c)
-
-    c.gridx = 1
-    c.fill = GridBagConstraints.HORIZONTAL
-    c.anchor = GridBagConstraints.CENTER
-
-    add(speedSlider, c)
-
-    if (ticksLabel != null) {
-      c.gridy = 2
-      c.fill = GridBagConstraints.NONE
-
-      add(ticksLabel, c)
-    }
-  }
+  if (ticksLabel != null)
+    add(new BoxRow(ticksLabel, BoxAlign.Center))
 
   override def getMinimumSize: Dimension =
     new Dimension(super.getMinimumSize.width, modelSpeed.getPreferredSize.height +
                   speedSlider.getPreferredSize.height.max(faster.getPreferredSize.height) +
-                  Option(ticksLabel).map(_.getPreferredSize.height).getOrElse(0))
+                  Option(ticksLabel).fold(0)(_.getPreferredSize.height))
 
   override def getPreferredSize: Dimension =
     new Dimension(super.getPreferredSize.width, getMinimumSize.height)
@@ -174,7 +149,7 @@ class SpeedSliderPanel(workspace: WorkspaceWithSpeed, ticksLabel: Component = nu
     modelSpeed.setForeground(InterfaceColors.toolbarText())
   }
 
-  class SpeedSlider(defaultSpeed: Int) extends JSlider(-110, 112, defaultSpeed) with MouseWheelListener {
+  class SpeedSlider(defaultSpeed: Int) extends JSlider(-110, 112, defaultSpeed) with MouseWheelListener with Zoomable {
     private val sliderUI = new SpeedSliderUI
     private var lastThumbLocation = 0
 
@@ -187,10 +162,10 @@ class SpeedSliderPanel(workspace: WorkspaceWithSpeed, ticksLabel: Component = nu
     addMouseWheelListener(this)
 
     override def getPreferredSize: Dimension =
-      new Dimension(180, super.getPreferredSize.height)
+      new Dimension(Utils.zoom(180), super.getPreferredSize.height)
 
     override def getMinimumSize: Dimension =
-      new Dimension(60, super.getPreferredSize.height)
+      new Dimension(Utils.zoom(60), super.getPreferredSize.height)
 
     def reset(): Unit = {
       setValue(0)
@@ -231,7 +206,7 @@ class SpeedSliderPanel(workspace: WorkspaceWithSpeed, ticksLabel: Component = nu
         thumbRect.x
 
       override def getThumbSize: Dimension =
-        new Dimension(12, 12)
+        new Dimension(Utils.zoom(12), Utils.zoom(12))
 
       override def paintTrack(g: Graphics): Unit = {
         val g2d = Utils.initGraphics2D(g)
@@ -244,9 +219,11 @@ class SpeedSliderPanel(workspace: WorkspaceWithSpeed, ticksLabel: Component = nu
           g2d.setColor(InterfaceColors.speedSliderBarBackground())
         }
 
-        g2d.fillRoundRect(trackRect.x, startY, thumbRect.x, 2, 2, 2)
+        val diameter: Int = Utils.zoom(2)
+
+        g2d.fillRoundRect(trackRect.x, startY, thumbRect.x, diameter, diameter, diameter)
         g2d.setColor(InterfaceColors.speedSliderBarBackground())
-        g2d.fillRoundRect(thumbRect.x, startY, trackRect.width - thumbRect.x, 2, 2, 2)
+        g2d.fillRoundRect(thumbRect.x, startY, trackRect.width - thumbRect.x, diameter, diameter, diameter)
       }
 
       override def paintThumb(g: Graphics): Unit = {

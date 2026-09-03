@@ -2,47 +2,44 @@
 
 package org.nlogo.app.interfacetab
 
-import java.awt.{ BorderLayout, Component, Dimension, FileDialog, Font, GridBagConstraints, GridBagLayout,
-                  Insets }
+import java.awt.{ BorderLayout, Component, Dimension, FileDialog, Font }
 import java.awt.event.{ ActionEvent, MouseAdapter, MouseEvent }
-import javax.swing.{ AbstractAction, Action, Box, BoxLayout, JButton, JLabel, JPanel }
-import javax.swing.border.EmptyBorder
+import javax.swing.{ AbstractAction, Action, Box, JButton, JLabel, JPanel }
 
 import org.nlogo.api.Exceptions
 import org.nlogo.app.common.{ CommandLine, CommandServer, HistoryPrompt, LinePrompt }
 import org.nlogo.awt.{ Hierarchy, UserCancelException }
 import org.nlogo.core.{ AgentKind, I18N }
-import org.nlogo.swing.{ FileDialog => SwingFileDialog, ModalProgressTask, MenuItem, PopupMenu, RichAction,
-                         RoundedBorderPanel, Transparent }
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, Button, FileDialog => SwingFileDialog, ModalProgressTask,
+                         MenuItem, PopupMenu, PreferredSize, RichAction, RoundedBorderPanel, Zoomable, ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
-import org.nlogo.window.{ CommandCenterInterface, Events => WindowEvents, OutputArea, TextMenuActions, Zoomable }
+import org.nlogo.window.{ CommandCenterInterface, Events => WindowEvents, OutputArea, TextMenuActions }
 import org.nlogo.workspace.{ AbstractWorkspace, ExportOutput }
 
 class CommandCenter(workspace: AbstractWorkspace, showToggle: Boolean, packSplitPane: () => Unit = () => {})
   extends JPanel
-  with Zoomable with CommandCenterInterface
+  with CommandCenterInterface
   with WindowEvents.LoadBeginEvent.Handler
-  with WindowEvents.ZoomedEvent.Handler
   with ThemeSync {
 
   // true = echo commands to output
   val commandLine = new CommandLine(this, true, 12, workspace)
   val commandServer = new CommandServer(commandLine)
+
   private val prompt = new LinePrompt(commandLine, true)
-  private val northPanel = new JPanel(new GridBagLayout)
-  private val southPanel = new JPanel
+
   val output = OutputArea.withNextFocus(commandLine)
   output.text.addMouseListener(new MouseAdapter {
     override def mousePressed(e: MouseEvent): Unit = { if(e.isPopupTrigger) { e.consume(); doPopup(e) }}
     override def mouseReleased(e: MouseEvent): Unit = { if(e.isPopupTrigger) { e.consume(); doPopup(e) }}
   })
 
-  private val locationToggleButton = new JButton with RoundedBorderPanel with ThemeSync {
-    setBorder(new EmptyBorder(3, 5, 3, 6))
-    setFocusable(false)
-    setDiameter(6)
-    enableHover()
-    enablePressed()
+  private val locationToggleButton = new Button(null) with PreferredSize {
+    setBorder(new ZoomableBorder(3, 5, 3, 6))
+    setVisible(showToggle)
+
+    override def getPreferredSize: Dimension =
+      new Dimension(super.getPreferredSize.width, clearButton.getPreferredSize.height)
 
     override def syncTheme(): Unit = {
       setBackgroundColor(InterfaceColors.toolbarControlBackground())
@@ -52,14 +49,14 @@ class CommandCenter(workspace: AbstractWorkspace, showToggle: Boolean, packSplit
     }
   }
 
-  private val titleLabel = new JLabel(I18N.gui.get("tabs.run.commandcenter"))
-
-  titleLabel.setFont(titleLabel.getFont.deriveFont(Font.BOLD))
+  private val titleLabel = new JLabel(I18N.gui.get("tabs.run.commandcenter")) with Zoomable {
+    setBaseFont(getFont.deriveFont(Font.BOLD))
+  }
 
   private val clearButton = new JButton(RichAction(I18N.gui.get("tabs.run.commandcenter.clearButton")) {
     _ => output.clear()
-  }) with RoundedBorderPanel with ThemeSync {
-    setBorder(new EmptyBorder(3, 12, 3, 12))
+  }) with RoundedBorderPanel with Zoomable with ThemeSync {
+    setBorder(new ZoomableBorder(3, 12, 3, 12))
     setFocusable(false)
     setDiameter(6)
     enableHover()
@@ -76,78 +73,29 @@ class CommandCenter(workspace: AbstractWorkspace, showToggle: Boolean, packSplit
 
   private val historyPrompt = new HistoryPrompt(commandLine)
 
-  locally {
-    setOpaque(true)  // so background color shows up - ST 10/4/05
-    setLayout(new BorderLayout)
-    setBorder(new EmptyBorder(0, 6, 0, 6))
-
-    //NORTH
-    //-----------------------------------------
-
-    add(northPanel, BorderLayout.NORTH)
-
-    northPanel.setOpaque(false)
-
-    val c = new GridBagConstraints
-
-    c.anchor = GridBagConstraints.WEST
-    c.weightx = 1
-    c.fill = GridBagConstraints.VERTICAL
-    c.insets = new Insets(6, 0, 6, 0)
-
-    northPanel.add(titleLabel, c)
-
-    c.anchor = GridBagConstraints.EAST
-    c.weightx = 0
-    c.insets = new Insets(6, 0, 6, 6)
-
-    if (showToggle)
-      northPanel.add(locationToggleButton, c)
-
-    c.insets = new Insets(6, 0, 6, 0)
-
-    northPanel.add(clearButton, c)
-
-    resizeNorthPanel()
-
-    //CENTER
-    //-----------------------------------------
-    add(output, BorderLayout.CENTER)
-
-    //SOUTH
-    //-----------------------------------------
-    southPanel.setOpaque(false)
-    southPanel.setLayout(new GridBagLayout)
-
-    locally {
-      val c = new GridBagConstraints
-
-      c.weighty = 1
-      c.anchor = GridBagConstraints.SOUTH
-      c.insets = new Insets(3, 0, 3, 6)
-
-      southPanel.add(prompt, c)
-
-      c.weightx = 1
-      c.fill = GridBagConstraints.HORIZONTAL
-      c.insets = new Insets(3, 0, 3, 0)
-
-      southPanel.add(commandLine, c)
-
-      c.weightx = 0
-      c.fill = GridBagConstraints.NONE
-      c.insets = new Insets(3, 3, 3, 0)
-
-      southPanel.add(new JPanel with Transparent {
-        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
-
-        add(Box.createVerticalGlue)
-        add(historyPrompt)
-      }, c)
-    }
-
-    add(southPanel, BorderLayout.SOUTH)
+  private val northPanel = new BoxRow(Seq(
+    titleLabel,
+    Box.createHorizontalGlue,
+    locationToggleButton,
+    clearButton
+  ), 6) {
+    setBorder(new ZoomableBorder(6, 0, 6, 0))
   }
+
+  private val southPanel = new BoxRow(Seq(
+    prompt,
+    commandLine,
+    new BoxColumn(historyPrompt, BoxAlign.End)
+  ), 6) {
+    setBorder(new ZoomableBorder(3, 0, 3, 0))
+  }
+
+  setLayout(new BorderLayout)
+  setBorder(new ZoomableBorder(0, 6, 0, 6))
+
+  add(northPanel, BorderLayout.NORTH)
+  add(output, BorderLayout.CENTER)
+  add(southPanel, BorderLayout.SOUTH)
 
   private[interfacetab] def locationToggleAction_=(a: Action) =
     locationToggleButton.setAction(a)
@@ -178,8 +126,8 @@ class CommandCenter(workspace: AbstractWorkspace, showToggle: Boolean, packSplit
   def getDefaultComponentForFocus(): Component = commandLine.textField
 
   def setCodeFont(font: Font): Unit = {
-    output.setFont(font)
-    commandLine.setFont(font)
+    output.setBaseFont(font)
+    commandLine.setBaseFont(font)
   }
 
   private def doPopup(e: MouseEvent): Unit = {
@@ -220,14 +168,6 @@ class CommandCenter(workspace: AbstractWorkspace, showToggle: Boolean, packSplit
     commandLine.reset()
     repaintPrompt()
     output.clear()
-    resizeNorthPanel()
-  }
-
-  def resizeNorthPanel(): Unit = {
-    val preferredSize = northPanel.getPreferredSize
-    northPanel.setMaximumSize(new Dimension(
-      preferredSize.getWidth.toInt,
-      (northPanel.getMinimumSize.getHeight * zoomFactor).toInt))
   }
 
   def cycleAgentType(forward: Boolean): Unit = {

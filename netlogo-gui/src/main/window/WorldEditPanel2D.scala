@@ -2,12 +2,11 @@
 
 package org.nlogo.window
 
-import java.awt.{ BorderLayout, GridBagConstraints, GridBagLayout, Insets }
-import javax.swing.{ BoxLayout, JLabel, JPanel }
-import javax.swing.border.{ EmptyBorder, TitledBorder }
+import javax.swing.JLabel
+import javax.swing.border.TitledBorder
 
 import org.nlogo.core.I18N
-import org.nlogo.swing.Transparent
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, MaximumHeight, Utils, Zoomable, ZoomableBorder }
 import org.nlogo.theme.InterfaceColors
 
 class WorldEditPanel2D(target: WorldViewSettings2D, enableDualView: Boolean) extends WorldEditPanel(target) {
@@ -21,7 +20,7 @@ class WorldEditPanel2D(target: WorldViewSettings2D, enableDualView: Boolean) ext
         () => target.modelTitle,
         _.foreach(target.setModelTitle)))
 
-  private val locationLabel = new JLabel(I18N.gui("origin.location"))
+  private val locationLabel = new JLabel(I18N.gui("origin.location")) with Zoomable
 
   private val minPxcor: NegativeIntegerEditor =
     new NegativeIntegerEditor(
@@ -32,9 +31,7 @@ class WorldEditPanel2D(target: WorldViewSettings2D, enableDualView: Boolean) ext
         _.foreach(target.minPxcor),
         () => previewChanged("minPxcor", minPxcor.get)))
 
-  private val minPxcorLabel = new JLabel(I18N.gui("2D.minPxcor")) {
-    setFont(getFont.deriveFont(9.0f))
-  }
+  private val minPxcorLabeled = new LabeledEditor(minPxcor, I18N.gui("2D.minPxcor"))
 
   private val maxPxcor: PositiveIntegerEditor =
     new PositiveIntegerEditor(
@@ -45,9 +42,7 @@ class WorldEditPanel2D(target: WorldViewSettings2D, enableDualView: Boolean) ext
         _.foreach(target.maxPxcor),
         () => previewChanged("maxPxcor", maxPxcor.get)))
 
-  private val maxPxcorLabel = new JLabel(I18N.gui("2D.maxPxcor")) {
-    setFont(getFont.deriveFont(9.0f))
-  }
+  private val maxPxcorLabeled = new LabeledEditor(maxPxcor, I18N.gui("2D.maxPxcor"))
 
   private val minPycor: NegativeIntegerEditor =
     new NegativeIntegerEditor(
@@ -58,9 +53,7 @@ class WorldEditPanel2D(target: WorldViewSettings2D, enableDualView: Boolean) ext
         _.foreach(target.minPycor),
         () => previewChanged("minPycor", minPycor.get)))
 
-  private val minPycorLabel = new JLabel(I18N.gui("2D.minPycor")) {
-    setFont(getFont.deriveFont(9.0f))
-  }
+  private val minPycorLabeled = new LabeledEditor(minPycor, I18N.gui("2D.minPycor"))
 
   private val maxPycor: PositiveIntegerEditor =
     new PositiveIntegerEditor(
@@ -71,9 +64,7 @@ class WorldEditPanel2D(target: WorldViewSettings2D, enableDualView: Boolean) ext
         _.foreach(target.maxPycor),
         () => previewChanged("maxPycor", maxPycor.get)))
 
-  private val maxPycorLabel = new JLabel(I18N.gui("2D.maxPycor")) {
-    setFont(getFont.deriveFont(9.0f))
-  }
+  private val maxPycorLabeled = new LabeledEditor(maxPycor, I18N.gui("2D.maxPycor"))
 
   private val wrappingX: BooleanEditor =
     new BooleanEditor(
@@ -101,9 +92,7 @@ class WorldEditPanel2D(target: WorldViewSettings2D, enableDualView: Boolean) ext
         () => target.patchSize,
         _.foreach(target.patchSize)))
 
-  private val patchSizeLabel = new JLabel(I18N.gui("2D.patchSize.info")) {
-    setFont(getFont.deriveFont(9.0f))
-  }
+  private val patchSizeLabeled = new LabeledEditor(patchSize, I18N.gui("2D.patchSize.info"))
 
   private val fontSize =
     new PositiveIntegerEditor(
@@ -113,9 +102,7 @@ class WorldEditPanel2D(target: WorldViewSettings2D, enableDualView: Boolean) ext
         () => target.fontSize,
         _.foreach(target.fontSize)))
 
-  private val fontSizeLabel = new JLabel(I18N.gui("2D.fontSize.info")) {
-    setFont(getFont.deriveFont(9.0f))
-  }
+  private val fontSizeLabeled = new LabeledEditor(fontSize, I18N.gui("2D.fontSize.info"))
 
   private val frameRate =
     new StrictlyPositiveDoubleEditor(
@@ -125,9 +112,7 @@ class WorldEditPanel2D(target: WorldViewSettings2D, enableDualView: Boolean) ext
         () => target.frameRate,
         _.foreach(target.frameRate)))
 
-  private val frameRateLabel = new JLabel(I18N.gui("2D.frameRate.info")) {
-    setFont(getFont.deriveFont(9.0f))
-  }
+  private val frameRateLabeled = new LabeledEditor(frameRate, I18N.gui("2D.frameRate.info"))
 
   private val dualView =
     new BooleanEditor(
@@ -159,167 +144,63 @@ class WorldEditPanel2D(target: WorldViewSettings2D, enableDualView: Boolean) ext
   private val tickBorder = new TitledBorder(I18N.gui("tickCounter"))
 
   locally {
-    setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
-    setBorder(new EmptyBorder(6, 6, 6, 6))
-
-    val configPanel = new JPanel(new GridBagLayout) with Transparent {
-      val c = new GridBagConstraints
-
-      c.gridy = 0
-      c.fill = GridBagConstraints.HORIZONTAL
-      c.weightx = 1
-      c.insets = new Insets(6, 6, 6, 6)
-
-      add(locationLabel, c)
-
-      c.insets = new Insets(6, 0, 6, 6)
-
-      add(originTypes, c)
-
-      c.gridx = 0
-      c.gridy = GridBagConstraints.RELATIVE
-      c.gridwidth = 2
-      c.anchor = GridBagConstraints.EAST
-      c.fill = GridBagConstraints.NONE
-      c.insets = new Insets(0, 0, 6, 6)
-
-      add(originConfigs, c)
-
-      c.anchor = GridBagConstraints.WEST
-      c.fill = GridBagConstraints.HORIZONTAL
-      c.insets = new Insets(0, 6, 3, 6)
-
-      add(minPxcor, c)
-
-      c.insets = new Insets(0, 6, 6, 6)
-
-      add(minPxcorLabel, c)
-
-      c.insets = new Insets(0, 6, 3, 6)
-
-      add(maxPxcor, c)
-
-      c.insets = new Insets(0, 6, 6, 6)
-
-      add(maxPxcorLabel, c)
-
-      c.insets = new Insets(0, 6, 3, 6)
-
-      add(minPycor, c)
-
-      c.insets = new Insets(0, 6, 6, 6)
-
-      add(minPycorLabel, c)
-
-      c.insets = new Insets(0, 6, 3, 6)
-
-      add(maxPycor, c)
-
-      c.insets = new Insets(0, 6, 6, 6)
-
-      add(maxPycorLabel, c)
+    val configPanel = new BoxColumn(Seq(
+      new BoxRow(Seq(locationLabel, originTypes), 6) with MaximumHeight,
+      new BoxRow(originConfigs, BoxAlign.End),
+      minPxcorLabeled,
+      maxPxcorLabeled,
+      minPycorLabeled,
+      maxPycorLabeled
+    ), 6) {
+      setBorder(new ZoomableBorder(6, 6, 6, 6))
     }
 
-    val previewContainer = new JPanel(new GridBagLayout) with Transparent {
-      val c = new GridBagConstraints
-
-      c.gridx = 0
-      c.fill = GridBagConstraints.BOTH
-      c.weightx = 1
-      c.weighty = 1
-      c.insets = new Insets(6, 6, 6, 6)
-
-      add(previewPanel, c)
-
-      c.anchor = GridBagConstraints.WEST
-      c.fill = GridBagConstraints.NONE
-      c.weightx = 0
-      c.weighty = 0
-      c.insets = new Insets(0, 6, 6, 6)
-
-      add(wrappingX, c)
-      add(wrappingY, c)
+    val previewContainer = new BoxColumn(Seq(
+      previewPanel,
+      new BoxRow(wrappingX, BoxAlign.Start),
+      new BoxRow(wrappingY, BoxAlign.Start)
+    ), 6) {
+      setBorder(new ZoomableBorder(6, 6, 6, 6))
     }
 
-    val modelPanel = new JPanel(new GridBagLayout) with Transparent {
-      setBorder(modelBorder)
-
-      val c = new GridBagConstraints
-
-      c.anchor = GridBagConstraints.WEST
-      c.weightx = 1
-      c.insets = new Insets(6, 6, 6, 6)
-
-      add(modelTitle, c)
-    }
-
-    val worldPanel = new JPanel(new BorderLayout) with Transparent {
-      setBorder(worldBorder)
-
-      add(configPanel, BorderLayout.WEST)
-      add(previewContainer, BorderLayout.CENTER)
-    }
-
-    val viewPanel = new JPanel(new GridBagLayout) with Transparent {
-      setBorder(viewBorder)
-
-      val c = new GridBagConstraints
-
-      c.gridy = 0
-      c.anchor = GridBagConstraints.WEST
-      c.fill = GridBagConstraints.HORIZONTAL
-      c.weightx = 1
-      c.insets = new Insets(6, 6, 3, 6)
-
-      add(patchSize, c)
-
-      c.insets = new Insets(6, 0, 3, 6)
-
-      add(fontSize, c)
-
-      c.gridy = 1
-      c.insets = new Insets(0, 6, 6, 6)
-
-      add(patchSizeLabel, c)
-
-      c.insets = new Insets(0, 0, 6, 6)
-
-      add(fontSizeLabel, c)
-
-      c.gridy = 2
-      c.gridwidth = 2
-      c.insets = new Insets(0, 6, 3, 6)
-
-      add(frameRate, c)
-
-      c.gridy = 3
-      c.insets = new Insets(0, 6, 6, 6)
-
-      add(frameRateLabel, c)
-
-      if (enableDualView) {
-        c.gridy = 4
-        c.insets = new Insets(0, 6, 3, 6)
-
-        add(dualView, c)
+    val modelPanel = new BoxRow(Seq(
+      new BoxRow(Seq(modelTitle)) {
+        setBorder(new ZoomableBorder(6, 6, 6, 6))
       }
+    )) {
+      setBorder(modelBorder)
     }
 
-    val tickPanel = new JPanel(new GridBagLayout) with Transparent {
+    val worldPanel = new BoxRow(Seq(
+      new BoxColumn(configPanel, BoxAlign.Center),
+      previewContainer
+    )) {
+      setBorder(worldBorder)
+    }
+
+    val viewPanel = new BoxRow(Seq(
+      new BoxColumn(Seq(
+        new BoxRow(Seq(patchSizeLabeled, fontSizeLabeled), 6),
+        frameRateLabeled
+      ), 6) {
+        setBorder(new ZoomableBorder(6, 6, 6, 6))
+
+        if (enableDualView)
+          add(new BoxRow(dualView, BoxAlign.Start))
+      }
+    )) {
+      setBorder(viewBorder)
+    }
+
+    val tickPanel = new BoxRow(Seq(
+      new BoxColumn(Seq(
+        new BoxRow(showTickCounter, BoxAlign.Start),
+        tickCounterLabel
+      ), 6) {
+        setBorder(new ZoomableBorder(6, 6, 6, 6))
+      }
+    )) {
       setBorder(tickBorder)
-
-      val c = new GridBagConstraints
-
-      c.gridx = 0
-      c.fill = GridBagConstraints.HORIZONTAL
-      c.weightx = 1
-      c.insets = new Insets(6, 6, 6, 6)
-
-      add(showTickCounter, c)
-
-      c.insets = new Insets(0, 6, 6, 6)
-
-      add(tickCounterLabel, c)
     }
 
     add(modelPanel)
@@ -350,13 +231,19 @@ class WorldEditPanel2D(target: WorldViewSettings2D, enableDualView: Boolean) ext
 
     locationLabel.setForeground(InterfaceColors.dialogText())
 
-    minPxcorLabel.setForeground(InterfaceColors.dialogText())
-    maxPxcorLabel.setForeground(InterfaceColors.dialogText())
-    minPycorLabel.setForeground(InterfaceColors.dialogText())
-    maxPycorLabel.setForeground(InterfaceColors.dialogText())
+    minPxcorLabeled.syncTheme()
+    maxPxcorLabeled.syncTheme()
+    minPycorLabeled.syncTheme()
+    maxPycorLabeled.syncTheme()
+    patchSizeLabeled.syncTheme()
+    fontSizeLabeled.syncTheme()
+    frameRateLabeled.syncTheme()
+  }
 
-    patchSizeLabel.setForeground(InterfaceColors.dialogText())
-    fontSizeLabel.setForeground(InterfaceColors.dialogText())
-    frameRateLabel.setForeground(InterfaceColors.dialogText())
+  override def zoomComponent(): Unit = {
+    modelBorder.setTitleFont(modelBorder.getTitleFont.deriveFont(Utils.zoom(12f)))
+    worldBorder.setTitleFont(worldBorder.getTitleFont.deriveFont(Utils.zoom(12f)))
+    viewBorder.setTitleFont(viewBorder.getTitleFont.deriveFont(Utils.zoom(12f)))
+    tickBorder.setTitleFont(tickBorder.getTitleFont.deriveFont(Utils.zoom(12f)))
   }
 }

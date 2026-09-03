@@ -7,14 +7,13 @@ import java.awt.event.{ ActionEvent, ActionListener, MouseEvent, MouseAdapter }
 import java.awt.font.TextAttribute
 import java.net.URI
 import java.time.format.{ DateTimeFormatter, FormatStyle }
-import javax.swing.{ BoxLayout, JButton, JLabel, JPanel }
-import javax.swing.border.EmptyBorder
+import javax.swing.{ JButton, JLabel, JPanel }
 import javax.swing.BorderFactory
 
 import org.nlogo.analytics.Analytics
 import org.nlogo.api.{ Advisory, Announcement, Event, Release }
 import org.nlogo.core.NetLogoPreferences
-import org.nlogo.swing.{ BrowserLauncher, MouseUtils, Utils }
+import org.nlogo.swing.{ BoxRow, BrowserLauncher, MouseUtils, Utils, Zoomable, ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 class AnnouncementBanner extends JPanel with MouseUtils with ThemeSync {
@@ -22,8 +21,14 @@ class AnnouncementBanner extends JPanel with MouseUtils with ThemeSync {
   private val prefKey = "announce.latest-read-id"
 
   private var announcements = Seq[Announcement]()
-  private val annTitle      = new JLabel()
-  private val annText       = new JLabel()
+
+  private val annTitle = new JLabel with Zoomable {
+    setBaseFont(getFont.deriveFont(18f))
+  }
+
+  private val annText = new JLabel with Zoomable {
+    setBaseFont(getFont.deriveFont(14f))
+  }
 
   private val textPane = new TextPane(annTitle, annText)
 
@@ -42,9 +47,6 @@ class AnnouncementBanner extends JPanel with MouseUtils with ThemeSync {
 
     setBorder(BorderFactory.createMatteBorder(1, 0, 1, 0, InterfaceColors.viewBorder()))
     setLayout(new GridBagLayout)
-
-    Util.modifyFont(annTitle)(_.deriveFont(18f))
-    Util.modifyFont(annText )(_.deriveFont(14f))
 
     addMouseListener(new MouseAdapter() {
 
@@ -136,7 +138,7 @@ class AnnouncementBanner extends JPanel with MouseUtils with ThemeSync {
 
         setBackground(color)
         annTitle.setText(s"$title ($dateStr)")
-        Util.modifyFont(annTitle)(_.deriveFont(Font.BOLD))
+        annTitle.setBaseFont(annTitle.getFont.deriveFont(Font.BOLD))
         annText.setText(summary.replaceAll("\n", " ").replaceAll("  ", " "))
         setVisible(true)
 
@@ -150,18 +152,12 @@ class AnnouncementBanner extends JPanel with MouseUtils with ThemeSync {
   override def syncTheme(): Unit = {
     renderData()
     textPane.syncTheme()
-    simpleXButton.syncTheme()
     complexXWrapper.syncTheme()
   }
 
 }
 
-private class TextPane(title: Component, text: Component) extends JPanel with ThemeSync {
-
-  setOpaque(false)
-  add(title)
-  add(text)
-  setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS))
+private class TextPane(title: Component, text: Component) extends BoxRow(Seq(title, text)) with ThemeSync {
 
   override def syncTheme(): Unit = {
     title.setForeground(InterfaceColors.widgetText())
@@ -170,16 +166,17 @@ private class TextPane(title: Component, text: Component) extends JPanel with Th
 
 }
 
-private class XButton(dismissItem: () => Unit) extends JButton with MouseUtils with ThemeSync {
+private class XButton(dismissItem: () => Unit) extends JButton with MouseUtils {
 
   private def defaultXColor() = InterfaceColors.announceX()
 
-  private val setXColor = (color: Color) => setIcon(Utils.iconScaledWithColor("/images/close-light.png", 15, 15, color))
+  private val setXColor = (color: () => Color) => {
+    setIcon(Utils.iconScaledWithColor("/images/close-light.png", 15, 15, color))
+  }
 
   setBorderPainted(false)
   setContentAreaFilled(false)
   setOpaque(false)
-  syncTheme()
 
   addActionListener(
     new ActionListener() {
@@ -192,26 +189,22 @@ private class XButton(dismissItem: () => Unit) extends JButton with MouseUtils w
   addMouseListener(new MouseAdapter() {
 
     override def mouseEntered(e: MouseEvent): Unit = {
-      setXColor(InterfaceColors.announceXHovered())
+      setXColor(InterfaceColors.announceXHovered)
     }
 
     override def mouseExited(e: MouseEvent): Unit = {
-      setXColor(defaultXColor())
+      setXColor(defaultXColor)
     }
 
     override def mousePressed(e: MouseEvent): Unit = {
-      setXColor(InterfaceColors.announceXPressed())
+      setXColor(InterfaceColors.announceXPressed)
     }
 
     override def mouseReleased(e: MouseEvent): Unit = {
-      setXColor(defaultXColor())
+      setXColor(defaultXColor)
     }
 
   })
-
-  override def syncTheme(): Unit = {
-    setXColor(defaultXColor())
-  }
 
 }
 
@@ -220,15 +213,16 @@ private class ComplexXWrapper(dismissItem: () => Unit) extends JPanel with Mouse
   private def defaultWrapperColor() = InterfaceColors.scrollBarBackground()
 
   private val complexX    = new JLabel
-  private val complexXNum = new JLabel
+  private val complexXNum = new JLabel with Zoomable {
+    setBaseFont(getFont.deriveFont(14f))
+  }
 
   setOpaque(false)
-  setBorder(new EmptyBorder(1, 8, 1, 8))
+  setBorder(new ZoomableBorder(1, 8, 1, 8))
 
-  Util.modifyFont(complexXNum)(_.deriveFont(14f))
-  complexXNum.setBorder(new EmptyBorder(0, 0, 0, 3))
+  complexXNum.setBorder(new ZoomableBorder(0, 0, 0, 3))
 
-  complexX.setIcon(Utils.iconScaledWithColor("/images/chevron-right.png", 10, 10, InterfaceColors.announceX()))
+  complexX.setIcon(Utils.iconScaledWithColor("/images/chevron-right.png", 10, 10, () => InterfaceColors.announceX()))
 
   val complexGBC = new GridBagConstraints()
   setVisible(false)
@@ -282,18 +276,13 @@ private class ComplexXWrapper(dismissItem: () => Unit) extends JPanel with Mouse
 
 private object Util {
 
-  def modifyFont(elem: Component)(f: (Font) => Font): Unit = {
-    elem.setFont(f(elem.getFont))
-  }
-
-  def handleUnderline(shouldUnderline: Boolean, c: Component): Unit = {
+  def handleUnderline(shouldUnderline: Boolean, c: Zoomable): Unit = {
 
     import scala.jdk.CollectionConverters.MapHasAsJava
 
     val underlineValue = if (shouldUnderline) 1 else -1
-    Util.modifyFont(c) {
-      _.deriveFont(Map(TextAttribute.UNDERLINE -> Int.box(underlineValue)).asJava)
-    }
+
+    c.setBaseFont(c.getBaseFont.deriveFont(Map(TextAttribute.UNDERLINE -> Int.box(underlineValue)).asJava))
 
   }
 

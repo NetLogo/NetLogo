@@ -2,26 +2,30 @@
 
 package org.nlogo.window
 
-import java.awt.{ GridBagConstraints, GridBagLayout, Insets }
-import javax.swing.{ JLabel, JPanel }
+import javax.swing.JLabel
 
 import org.nlogo.api.CompilerServices
 import org.nlogo.awt.Hierarchy
 import org.nlogo.core.I18N
 import org.nlogo.editor.Colorizer
 import org.nlogo.plot.PlotManagerInterface
-import org.nlogo.swing.{ CheckBox, ComboBox, OptionPane, TextField, Transparent }
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, CheckBox, ComboBox, MaximumHeight, OptionPane, TextField,
+                         ZoomableBorder }
 import org.nlogo.theme.InterfaceColors
 
 class PlotPenEditorAdvanced(inputPen: PlotPensEditor.Pen, compiler: CompilerServices, colorizer: Colorizer,
-                            plotManager: PlotManagerInterface) extends JPanel(new GridBagLayout) with Transparent {
+                            plotManager: PlotManagerInterface) extends BoxColumn(6) {
 
   private implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("edit.plot.pen")
 
   // pieces of the UI
-  private val intervalField = new TextField(8)
+  private val intervalField = new TextField(8) with MaximumHeight
+
   private val penModes = new ComboBox(List(I18N.gui("mode.line"), I18N.gui("mode.bar"), I18N.gui("mode.point")))
-  private val showPenInLegend = new CheckBox(I18N.gui("showInLegend"))
+
+  private val showPenInLegend = new CheckBox(I18N.gui("showInLegend")) {
+    setForeground(InterfaceColors.dialogText())
+  }
 
   val setupCode = CodeEditor(I18N.gui("setupCommands"), compiler, colorizer, columns = 65,
                              err = () => inputPen.setupError)
@@ -38,8 +42,36 @@ class PlotPenEditorAdvanced(inputPen: PlotPensEditor.Pen, compiler: CompilerServ
         repaint()
       }))
 
-  // layout all the pieces of the ui
-  addWidgets()
+  setBorder(new ZoomableBorder(6, 6, 6, 6))
+
+  add(new BoxRow(Seq(
+    new JLabel(I18N.gui("mode")) {
+      setForeground(InterfaceColors.dialogText())
+    },
+    penModes
+  ), 6) with MaximumHeight)
+
+  add(new BoxRow(Seq(
+    new JLabel(I18N.gui("interval")) {
+      setForeground(InterfaceColors.dialogText())
+    },
+    intervalField
+  ), 6) with MaximumHeight)
+
+  add(new BoxRow(showPenInLegend, BoxAlign.Start))
+
+  runtimeErrorPanel.foreach(panel => {
+    add(panel)
+
+    panel.syncTheme()
+  })
+
+  add(setupCode)
+  add(updateCode)
+
+  penModes.syncTheme()
+  setupCode.syncTheme()
+  updateCode.syncTheme()
 
   /**
    * set the values of all the inputs to the values of the input pen
@@ -72,69 +104,5 @@ class PlotPenEditorAdvanced(inputPen: PlotPensEditor.Pen, compiler: CompilerServ
         setupCode = setupCode.get.getOrElse(""),
         updateCode = updateCode.get.getOrElse("")))
       else None
-  }
-
-  private def addWidgets(): Unit = {
-    showPenInLegend.setForeground(InterfaceColors.dialogText())
-
-    penModes.syncTheme()
-    setupCode.syncTheme()
-    updateCode.syncTheme()
-
-    val c = new GridBagConstraints
-
-    c.gridy = 0
-    c.anchor = GridBagConstraints.WEST
-    c.insets = new Insets(6, 6, 6, 6)
-
-    add(new JLabel(I18N.gui("mode")) {
-      setForeground(InterfaceColors.dialogText())
-    }, c)
-
-    c.fill = GridBagConstraints.HORIZONTAL
-    c.weightx = 1
-    c.insets = new Insets(6, 0, 6, 6)
-
-    add(penModes, c)
-
-    c.gridy = 1
-    c.fill = GridBagConstraints.NONE
-    c.weightx = 0
-    c.insets = new Insets(0, 6, 6, 6)
-
-    add(new JLabel(I18N.gui("interval")) {
-      setForeground(InterfaceColors.dialogText())
-    }, c)
-
-    c.fill = GridBagConstraints.HORIZONTAL
-    c.weightx = 1
-    c.insets = new Insets(0, 0, 6, 6)
-
-    add(intervalField, c)
-
-    c.gridy = 2
-    c.gridwidth = 2
-    c.insets = new Insets(0, 6, 6, 6)
-
-    add(showPenInLegend, c)
-
-    c.gridy = 3
-
-    runtimeErrorPanel.foreach(panel => {
-      panel.syncTheme()
-
-      add(panel, c)
-
-      c.gridy = 4
-    })
-
-    c.fill = GridBagConstraints.BOTH
-    c.weighty = 1
-
-    add(setupCode, c)
-
-    c.gridy += 1
-
-    add(updateCode, c)
   }
 }

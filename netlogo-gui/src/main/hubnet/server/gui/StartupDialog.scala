@@ -2,20 +2,20 @@
 
 package org.nlogo.hubnet.server.gui
 
-import java.awt.{ BorderLayout, Dimension, FlowLayout, Frame }
+import java.awt.{ Dimension, Frame }
 import java.net.{ InetAddress, NetworkInterface }
-import javax.swing.{ Box, BoxLayout, JDialog, JLabel, JPanel, WindowConstants }
-import javax.swing.border.EmptyBorder
+import javax.swing.{ JDialog, JLabel, WindowConstants }
 
 import org.nlogo.awt.Positioning
 import org.nlogo.core.I18N
 import org.nlogo.swing.NonemptyTextFieldButtonEnabler
-import org.nlogo.swing.{ CheckBox, ComboBox, DialogButton, TextField, TextFieldBox, Transparent, WindowAutomator }
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, CheckBox, ComboBox, DialogButton, TextField, TextFieldBox,
+                         WindowAutomator, ZoomableBorder, ZoomableWindow, ZoomActions }
 import org.nlogo.theme.InterfaceColors
 
 class StartupDialog(parent: Frame, choices: Seq[(NetworkInterface, InetAddress)],
                     preferredNetworkConnection: Option[(NetworkInterface, InetAddress)])
-  extends JDialog(parent, I18N.gui.get("edit.hubnet.startActivity"), true) {
+  extends JDialog(parent, I18N.gui.get("edit.hubnet.startActivity"), true) with ZoomActions with ZoomableWindow {
 
   WindowAutomator.automate(this)
 
@@ -56,37 +56,33 @@ class StartupDialog(parent: Frame, choices: Seq[(NetworkInterface, InetAddress)]
     // does this work via some magic side effect? or can it just be removed? JC - 8/21/10
   private[gui] val buttonEnabler = new NonemptyTextFieldButtonEnabler(okButton, List(nameField))
 
-  locally {
-    val content = new JPanel {
-      setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
-      setBorder(new EmptyBorder(8, 8, 8, 8))
-      setBackground(InterfaceColors.dialogBackground())
-      add(Box.createVerticalStrut(12))
-      add(new TextFieldBox {
-        addField("Session name:", nameField)
-        syncTheme()
-      })
-      add(Box.createVerticalStrut(12))
-      add(discoveryCheckBox)
-      if (networkChoices.size > 1) {
-        add(Box.createVerticalStrut(12))
-        add(new JLabel("Broadcast network connection on:") {
-          setForeground(InterfaceColors.dialogText())
-        })
-        add(Box.createVerticalStrut(4))
-        add(networkSelection)
-      }
-      add(Box.createVerticalStrut(12))
-      add(new JPanel(new FlowLayout(FlowLayout.RIGHT)) with Transparent {
-        add(okButton)
-      }, BorderLayout.SOUTH)
+  getRootPane.setDefaultButton(okButton)
+
+  setContentPane(new BoxColumn(12) {
+    setOpaque(true)
+    setBackground(InterfaceColors.dialogBackground())
+    setBorder(new ZoomableBorder(8, 8, 8, 8))
+
+    add(new TextFieldBox {
+      addField("Session name:", nameField)
+      syncTheme()
+    })
+
+    add(new BoxRow(discoveryCheckBox, BoxAlign.Start))
+
+    if (networkChoices.size > 1) {
+      add(new BoxRow(new JLabel("Broadcast network connection on:") {
+        setForeground(InterfaceColors.dialogText())
+      }, BoxAlign.Start))
+
+      add(new BoxRow(networkSelection, BoxAlign.Start))
     }
 
-    getRootPane.setDefaultButton(okButton)
-    setContentPane(content)
-    setResizable(false)
-    pack()
-    Positioning.center(this, parent)
-    setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE)
-  }
+    add(new BoxRow(okButton, BoxAlign.End))
+  })
+
+  setResizable(false)
+  pack()
+  Positioning.center(this, parent)
+  setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE)
 }

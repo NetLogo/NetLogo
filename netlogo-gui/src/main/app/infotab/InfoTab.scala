@@ -6,8 +6,7 @@ import java.awt.{ Dimension, BorderLayout, Font, Graphics }
 import java.awt.event.{ ActionEvent, FocusEvent, FocusListener }
 import java.awt.print.PageFormat
 import java.net.URI
-import javax.swing.{ AbstractAction, Action, BorderFactory, JComponent, JPanel, JTextArea, ScrollPaneConstants }
-import javax.swing.border.EmptyBorder
+import javax.swing.{ AbstractAction, JComponent, JPanel, JTextArea, ScrollPaneConstants }
 import javax.swing.event.{ DocumentListener, DocumentEvent }
 
 import javafx.application.Platform
@@ -21,12 +20,11 @@ import org.nlogo.api.{ ExternalResourceManager, Version }
 import org.nlogo.app.common.{ Events => AppEvents, FindDialog, MenuTab, UndoRedoActions }
 import org.nlogo.core.I18N
 import org.nlogo.editor.EditorConfiguration
-import org.nlogo.swing.Implicits._
-import org.nlogo.swing.{ QuickHelp, ScrollableTextComponent, ScrollPane, TextArea, ToolBar, ToolBarActionButton,
-                         ToolBarToggleButton, Printable, PrinterManager, BrowserLauncher, UndoManager, UserAction,
-                         Utils }, UserAction.MenuAction
+import org.nlogo.swing.{ BoxAlign, BoxRow, QuickHelp, ScrollableTextComponent, ScrollPane, TextArea,
+                         ToolBarActionButton, ToolBarToggleButton, Printable, PrinterManager, BrowserLauncher,
+                         UndoManager, UserAction, Utils, Zoomable, ZoomableBorder }, UserAction.MenuAction
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
-import org.nlogo.window.{ Events => WindowEvents, Zoomable }
+import org.nlogo.window.{ Events => WindowEvents }
 
 import org.w3c.dom.events.{ Event, EventListener, EventTarget }
 import org.w3c.dom.html.HTMLAnchorElement
@@ -41,8 +39,6 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
   with WindowEvents.LoadBeginEvent.Handler
   with WindowEvents.LoadModelEvent.Handler
   with WindowEvents.ResourcesChangedEvent.Handler
-  with WindowEvents.ZoomedEvent.Handler
-  with Zoomable
   with ThemeSync {
 
   private val undoManager = new UndoManager
@@ -51,26 +47,29 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
   private val textArea = new ScrollableTextArea
   private val htmlPanel = new HTMLPanel
 
-  private val editableButton = new ToolBarToggleButton(new EditableAction(I18N.gui.get("tabs.info.edit"))) with ThemeSync {
-    override def syncTheme(): Unit = {
-      setIcon(Utils.iconScaledWithColor("/images/edit.png", 15, 15,
-              if (isSelected) {
-                InterfaceColors.toolbarImageSelected()
-              } else {
-                InterfaceColors.toolbarImage()
-              }))
-    }
+  private val editableButton = new ToolBarToggleButton(new EditableAction(I18N.gui.get("tabs.info.edit"))) {
+    setIcon(Utils.iconScaledWithColor("/images/edit.png", 15, 15, () => {
+      if (isSelected) {
+        InterfaceColors.toolbarImageSelected()
+      } else {
+        InterfaceColors.toolbarImage()
+      }
+    }))
   }
+
   private val findButton = new ToolBarActionButton(FindDialog.FIND_ACTION)
   private val helpButton = new ToolBarActionButton(new AbstractAction(I18N.gui.get("tabs.info.help")) {
+    setVisible(false)
+
     override def actionPerformed(e: ActionEvent): Unit = {
       BrowserLauncher.tryOpenURI(
         InfoTab.this, new URI(s"https://docs.netlogo.org/${Version.versionNumberNo3D}/infotab#information"),
         QuickHelp.docPath("infotab"))
     }
-  })
-  helpButton.setIcon(Utils.iconScaledWithColor("/images/help.png", 15, 15, InterfaceColors.toolbarImage()))
-  helpButton.setVisible(false)
+  }) {
+    setIcon(Utils.iconScaledWithColor("/images/help.png", 15, 15, () => InterfaceColors.toolbarImage()))
+  }
+
   private def toggleHelpButton(): Unit ={ helpButton.setVisible(view == textArea) }
 
   // this object is used as the html display and the editor
@@ -84,17 +83,12 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
 
   scrollPane.setBorder(null)
 
-  override def zoomTarget = scrollPane
-
   override val activeMenuActions: Seq[MenuAction] =
     Seq(undoAction, redoAction, FindDialog.FIND_ACTION, FindDialog.FIND_NEXT_ACTION)
 
-  private val toolBar = new ToolBar {
-    setBorder(new EmptyBorder(24, 10, 12, 6))
-
-    override def addControls(): Unit = {
-      this.addAll(findButton, editableButton, helpButton)
-    }
+  private val toolBar = new BoxRow(Seq(findButton, editableButton, helpButton), 10, BoxAlign.Start) {
+    setOpaque(true)
+    setBorder(new ZoomableBorder(24, 10, 12, 6))
   }
 
   private var codeFont: Option[Font] = None
@@ -108,7 +102,7 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
   }
 
   private def resetBorders(): Unit = {
-    textArea.setBorder(BorderFactory.createEmptyBorder(4, 7, 4, 7))
+    textArea.setBorder(new ZoomableBorder(4, 7, 4, 7))
   }
 
   override def doLayout(): Unit = {
@@ -117,7 +111,7 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
     // layout to jump around - ST 10/7/09
     resetBorders()
     val extraWidth = (getWidth - textArea.getPreferredScrollableViewportSize.width - 7).max(7)
-    textArea.setBorder(BorderFactory.createEmptyBorder(4, 7, 4, extraWidth))
+    textArea.setBorder(new ZoomableBorder(4, 7, 4, extraWidth))
     super.doLayout()
   }
 
@@ -136,8 +130,7 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
 
   private def updateEditorPane(str: String, force: Boolean): Unit = {
     if (force || str != htmlPanel.getText)
-      htmlPanel.setText(InfoFormatter(str, getModelDir(), resourceManager, codeFont.fold("monospace")(_.getFamily),
-                                      editorPaneFontSize))
+      htmlPanel.setText(InfoFormatter(str, getModelDir(), resourceManager, codeFont.fold("monospace")(_.getFamily)))
 
     toggleHelpButton()
   }
@@ -155,7 +148,7 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
   def setCodeFont(font: Font): Unit = {
     codeFont = Option(font)
 
-    textArea.setFont(font)
+    textArea.setBaseFont(font)
 
     updateEditorPane(true)
   }
@@ -179,10 +172,7 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
     toolBar.setBackground(InterfaceColors.toolbarBackground())
 
     findButton.syncTheme()
-    editableButton.syncTheme()
     helpButton.syncTheme()
-
-    helpButton.setIcon(Utils.iconScaledWithColor("/images/help.png", 15, 15, InterfaceColors.toolbarImage()))
 
     scrollPane.setBackground(InterfaceColors.infoBackground())
 
@@ -207,17 +197,6 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
 
   override def handle(e: WindowEvents.ResourcesChangedEvent): Unit = {
     updateEditorPane(true)
-  }
-
-  private var editorPaneFontSize = InfoFormatter.defaultFontSize
-  private var originalFontSize = -1
-  override def handle(e: WindowEvents.ZoomedEvent): Unit = {
-    super.handle(e)
-    if(originalFontSize == -1)
-      originalFontSize = textArea.getFont.getSize
-    textArea.setFont(textArea.getFont.deriveFont(StrictMath.ceil(originalFontSize * zoomFactor).toFloat))
-    editorPaneFontSize = StrictMath.ceil(InfoFormatter.defaultFontSize * zoomFactor).toInt
-    updateEditorPane()
   }
 
   // the textArea will give us an outlandlishly large preferred size unless we restrain it
@@ -253,9 +232,10 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
     setEditable(true)
     setLineWrap(true)
     setWrapStyleWord(true)
+    setBaseFont(EditorConfiguration.getMonospacedFont)
+
     getDocument.addDocumentListener(InfoTab.this)
     getDocument.addUndoableEditListener(undoManager)
-    setFont(EditorConfiguration.getMonospacedFont)
 
     override def scrollTo(index: Int): Unit = {
       val pos = modelToView2D(index)
@@ -267,7 +247,8 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
     }
   }
 
-  private class HTMLPanel extends JFXPanel {
+  private class HTMLPanel extends JFXPanel with Zoomable {
+    private var view: Option[WebView] = None
     private var engine: Option[WebEngine] = None
     private var text = ""
 
@@ -289,6 +270,8 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
       })
 
       setScene(new Scene(webView))
+
+      view = Option(webView)
 
       val webEngine = webView.getEngine
 
@@ -333,10 +316,15 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
         engine.foreach(_.loadContent(str, "text/html"))
       })
     }
+
+    override def zoomComponent(): Unit = {
+      Platform.runLater(() => {
+        view.foreach(_.setZoom(Utils.getZoomFactor))
+      })
+    }
   }
 
   private class EditableAction(label: String) extends AbstractAction(label) {
-    putValue(Action.SMALL_ICON, Utils.iconScaledWithColor("/images/edit.png", 15, 15, InterfaceColors.toolbarImage()))
     def actionPerformed(e: ActionEvent): Unit = {
       val scrollBar = scrollPane.getVerticalScrollBar
       val (min, max) = (scrollBar.getMinimum, scrollBar.getMaximum)
@@ -352,7 +340,6 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
       toggleHelpButton()
       requestFocus()
       org.nlogo.awt.EventQueue.invokeLater(() => scrollBar.setValue((ratio * (max - min)).toInt))
-      editableButton.syncTheme()
     }
   }
 }

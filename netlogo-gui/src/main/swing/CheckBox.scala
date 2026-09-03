@@ -2,13 +2,13 @@
 
 package org.nlogo.swing
 
-import java.awt.{ Component, Graphics }
+import java.awt.{ BasicStroke, Component, Graphics, Stroke }
 import java.awt.event.ActionEvent
 import javax.swing.{ AbstractAction, Action, Icon, JCheckBox }
 
-import org.nlogo.theme.{ InterfaceColors, ThemeSync }
+import org.nlogo.theme.InterfaceColors
 
-class CheckBox(text: String = "") extends JCheckBox(text) with MouseUtils with ThemeSync {
+class CheckBox(text: String = "") extends JCheckBox(text) with MouseUtils with Zoomable {
   def this(action: Action) = {
     this(action.getValue(Action.NAME).toString)
 
@@ -30,11 +30,14 @@ class CheckBox(text: String = "") extends JCheckBox(text) with MouseUtils with T
   }
 
   setIcon(new Icon {
-    def getIconWidth: Int = 14
-    def getIconHeight: Int = 14
+    def getIconWidth: Int = Utils.zoom(14)
+    def getIconHeight: Int = Utils.zoom(14)
 
     def paintIcon(c: Component, g: Graphics, x: Int, y: Int): Unit = {
       val g2d = Utils.initGraphics2D(g)
+
+      val size: Int = getIconWidth
+      val diameter: Int = Utils.zoom(4)
 
       if (isSelected) {
         if (isEnabled) {
@@ -47,11 +50,15 @@ class CheckBox(text: String = "") extends JCheckBox(text) with MouseUtils with T
           g2d.setColor(InterfaceColors.checkboxBackgroundDisabled())
         }
 
-        g2d.fillRoundRect(x, y, 14, 14, 4, 4)
+        g2d.fillRoundRect(x, y, size, size, diameter, diameter)
 
+        val stroke: Stroke = g2d.getStroke
+
+        g2d.setStroke(new BasicStroke(Utils.zoomClamped(1f), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND))
         g2d.setColor(InterfaceColors.checkboxCheck())
-        g2d.drawLine(x + 3, y + 7, x + 5, y + 10)
-        g2d.drawLine(x + 5, y + 10, x + 10, y + 3)
+        g2d.drawLine(x + Utils.zoom(3), y + Utils.zoom(7), x + Utils.zoom(5), y + Utils.zoom(10))
+        g2d.drawLine(x + Utils.zoom(5), y + Utils.zoom(10), x + Utils.zoom(10), y + Utils.zoom(3))
+        g2d.setStroke(stroke)
       } else {
         if (isHover && isEnabled) {
           g2d.setColor(InterfaceColors.checkboxBackgroundUnselectedHover())
@@ -59,13 +66,14 @@ class CheckBox(text: String = "") extends JCheckBox(text) with MouseUtils with T
           g2d.setColor(InterfaceColors.checkboxBackgroundUnselected())
         }
 
-        g2d.fillRoundRect(x, y, 14, 14, 4, 4)
+        g2d.fillRoundRect(x, y, size, size, diameter, diameter)
 
         g2d.setColor(InterfaceColors.checkboxBorder())
-        g2d.drawRoundRect(x, y, 14, 14, 4, 4)
+        g2d.drawRoundRect(x, y, size, size, diameter, diameter)
       }
     }
   })
 
-  override def syncTheme(): Unit = {} // sync done in paintIcon (Isaac B 11/4/24)
+  override def getIconTextGap: Int =
+    Utils.zoom(super.getIconTextGap)
 }

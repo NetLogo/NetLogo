@@ -2,13 +2,12 @@
 
 package org.nlogo.swing
 
-import java.awt.{ Component, Dimension, Graphics, GridBagConstraints, GridBagLayout, Insets }
+import java.awt.{ Component, Dimension, FontMetrics, Graphics, Insets }
 import java.awt.event.{ MouseAdapter, MouseEvent, MouseMotionAdapter }
-import javax.swing.{ JComponent, JLabel, JPanel, JTabbedPane, SwingConstants }
+import javax.swing.{ JComponent, JLabel, JTabbedPane, SwingConstants }
 import javax.swing.plaf.basic.BasicTabbedPaneUI
 
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ MenuItem, PopupMenu }
 import org.nlogo.theme.InterfaceColors
 
 import scala.util.Try
@@ -17,8 +16,21 @@ private class FloatingTabbedPaneUI(tabbedPane: FloatingTabbedPane) extends Basic
   override def getContentBorderInsets(tabPlacement: Int) =
     new Insets(0, 0, 0, 0)
 
+  override def calculateTabWidth(tabPlacement: Int, tabIndex: Int, metrics: FontMetrics): Int = {
+    val tabWidth: Int = super.calculateTabWidth(tabPlacement, tabIndex, metrics)
+    val labelWidth: Int = tabbedPane.getTabLabelAt(tabIndex).fold(0)(_.getPreferredSize.width)
+
+    labelWidth + Utils.zoom(tabWidth - labelWidth)
+  }
+
+  def calculateTabWidth(tabPlacement: Int, tabIndex: Int): Int =
+    calculateTabWidth(tabPlacement, tabIndex, getFontMetrics)
+
   override def calculateTabHeight(tabPlacement: Int, tabIndex: Int, fontHeight: Int): Int =
-    fontHeight + 5
+    fontHeight + Utils.zoom(5)
+
+  def calculateTabHeight(tabPlacement: Int, tabIndex: Int): Int =
+    calculateTabHeight(tabPlacement, tabIndex, getFontMetrics.getHeight)
 
   override def getTabLabelShiftY(tabPlacement: Int, tabIndex: Int, isSelected: Boolean): Int =
     super.getTabLabelShiftY(tabPlacement, tabIndex, true)
@@ -27,9 +39,9 @@ private class FloatingTabbedPaneUI(tabbedPane: FloatingTabbedPane) extends Basic
     var x = tabbedPane.getWidth / 2
 
     for (i <- 0 until tabbedPane.getTabCount)
-      x -= calculateTabWidth(tabPlacement, i, getFontMetrics) / 2
+      x -= calculateTabWidth(tabPlacement, i) / 2
 
-    new Insets(10, x, 0, 0)
+    new Insets(Utils.zoom(10), x, 0, 0)
   }
 
   override def paintTabArea(g: Graphics, tabPlacement: Int, selectedIndex: Int): Unit = {
@@ -37,17 +49,17 @@ private class FloatingTabbedPaneUI(tabbedPane: FloatingTabbedPane) extends Basic
 
     val g2d = Utils.initGraphics2D(g)
 
-    var x = getTabAreaInsets(tabPlacement).left + calculateTabWidth(tabPlacement, 0, getFontMetrics)
+    var x = getTabAreaInsets(tabPlacement).left + calculateTabWidth(tabPlacement, 0)
     val y = getTabAreaInsets(tabPlacement).top
-    val height = calculateTabHeight(tabPlacement, 0, getFontMetrics.getHeight)
+    val height = calculateTabHeight(tabPlacement, 0)
 
     g2d.setColor(InterfaceColors.tabSeparator())
 
     for (i <- 1 until tabbedPane.getTabCount) {
       if (i != selectedIndex && i != selectedIndex + 1)
-        g2d.drawLine(x, y + 5, x, y + height - 5)
+        g2d.drawLine(x, y + Utils.zoom(5), x, y + height - Utils.zoom(5))
 
-      x += calculateTabWidth(tabPlacement, i, getFontMetrics)
+      x += calculateTabWidth(tabPlacement, i)
     }
   }
 
@@ -67,14 +79,16 @@ private class FloatingTabbedPaneUI(tabbedPane: FloatingTabbedPane) extends Basic
       g2d.setColor(InterfaceColors.tabBackground())
     }
 
+    val diameter: Int = Utils.zoom(10)
+
     if (tabbedPane.getTabCount == 1) {
-      g2d.fillRoundRect(x, y, w, h, 10, 10)
+      g2d.fillRoundRect(x, y, w, h, diameter, diameter)
     } else if (tabIndex == 0) {
-      g2d.fillRoundRect(x, y, w - 10, h, 10, 10)
-      g2d.fillRect(x + w - 20, y, 20, h)
+      g2d.fillRoundRect(x, y, w - diameter, h, diameter, diameter)
+      g2d.fillRect(x + w - diameter * 2, y, diameter * 2, h)
     } else if (tabIndex == tabbedPane.getTabCount - 1) {
-      g2d.fillRoundRect(x + 10, y, w - 10, h, 10, 10)
-      g2d.fillRect(x, y, 20, h)
+      g2d.fillRoundRect(x + diameter, y, w - diameter, h, diameter, diameter)
+      g2d.fillRect(x, y, diameter * 2, h)
     } else {
       g2d.fillRect(x, y, w, h)
     }
@@ -87,18 +101,21 @@ private class FloatingTabbedPaneUI(tabbedPane: FloatingTabbedPane) extends Basic
 
       g2d.setColor(InterfaceColors.tabBorder())
 
+      val diameter: Int = Utils.zoom(10)
+      val radius: Int = diameter / 2
+
       if (tabIndex == 0) {
-        g2d.drawArc(x, y, 10, 10, 90, 90)
-        g2d.drawArc(x, y + h - 11, 10, 10, 180, 90)
-        g2d.drawLine(x, y + 5, x, y + h - 5)
-        g2d.drawLine(x + 5, y, x + w, y)
-        g2d.drawLine(x + 5, y + h - 1, x + w, y + h - 1)
+        g2d.drawArc(x, y, diameter, diameter, 90, 90)
+        g2d.drawArc(x, y + h - diameter - 1, diameter, diameter, 180, 90)
+        g2d.drawLine(x, y + radius, x, y + h - radius)
+        g2d.drawLine(x + radius, y, x + w, y)
+        g2d.drawLine(x + radius, y + h - 1, x + w, y + h - 1)
       } else if (tabIndex == tabbedPane.getTabCount - 1) {
-        g2d.drawArc(x + w - 10, y, 10, 10, 0, 90)
-        g2d.drawArc(x + w - 10, y + h - 11, 10, 10, 270, 90)
-        g2d.drawLine(x + w, y + 5, x + w, y + h - 5)
-        g2d.drawLine(x, y, x + w - 5, y)
-        g2d.drawLine(x, y + h - 1, x + w - 5, y + h - 1)
+        g2d.drawArc(x + w - diameter, y, diameter, diameter, 0, 90)
+        g2d.drawArc(x + w - diameter, y + h - diameter - 1, diameter, diameter, 270, 90)
+        g2d.drawLine(x + w, y + radius, x + w, y + h - radius)
+        g2d.drawLine(x, y, x + w - radius, y)
+        g2d.drawLine(x, y + h - 1, x + w - radius, y + h - 1)
       } else {
         g2d.drawLine(x, y, x + w, y)
         g2d.drawLine(x, y + h - 1, x + w, y + h - 1)
@@ -129,14 +146,14 @@ trait RenameableTab {
   def rename(): Unit
 }
 
-class TabLabel(startPane: FloatingTabbedPane, text: String, tab: Component) extends JPanel(new GridBagLayout) {
+class TabLabel(startPane: FloatingTabbedPane, text: String, tab: Component) extends BoxRow(10) {
   private var tabbedPane: FloatingTabbedPane = startPane
 
   def setTabbedPane(tabbedPane: FloatingTabbedPane): Unit = {
     this.tabbedPane = tabbedPane
   }
 
-  private val textLabel = new JLabel(text)
+  private val textLabel = new JLabel(text) with Zoomable
 
   private var rawText = text
 
@@ -149,60 +166,51 @@ class TabLabel(startPane: FloatingTabbedPane, text: String, tab: Component) exte
   def getText: String =
     rawText
 
-  def boldWidth: Int =
-    new JLabel(s"<html><b>$rawText</b></html>").getPreferredSize.width
+  private def boldWidth: Int = {
+    new JLabel(s"<html><b>$rawText</b></html>") with Zoomable {
+      zoom()
+    }.getPreferredSize.width
+  }
 
   private var closeButton: Option[CloseButton] = None
   private var popupMenu: Option[PopupMenu] = None
 
   var error = false
 
-  locally {
-    setOpaque(false)
+  add(textLabel)
 
-    val c = new GridBagConstraints
+  tab match {
+    case closeable: CloseableTab =>
+      val button = new CloseButton
 
-    c.fill = GridBagConstraints.HORIZONTAL
-    c.weightx = 1
+      button.addMouseListener(new MouseAdapter {
+        override def mouseClicked(e: MouseEvent): Unit = {
+          if (e.getButton == MouseEvent.BUTTON1)
+            closeable.close()
+        }
+      })
 
-    add(textLabel, c)
+      add(button)
 
-    tab match {
-      case closeable: CloseableTab =>
-        val button = new CloseButton
+      closeButton = Some(button)
 
-        button.addMouseListener(new MouseAdapter {
-          override def mouseClicked(e: MouseEvent): Unit = {
-            if (e.getButton == MouseEvent.BUTTON1)
-              closeable.close()
-          }
-        })
+    case _ =>
+  }
 
-        c.fill = GridBagConstraints.NONE
-        c.weightx = 0
+  tab match {
+    case temp: RenameableTab =>
+      popupMenu = Some(new PopupMenu {
+        add(new MenuItem(I18N.gui.get("tabs.external.rename"), () => temp.rename()))
+      })
 
-        add(button, c)
-
-        closeButton = Some(button)
-
-      case _ =>
-    }
-
-    tab match {
-      case temp: RenameableTab =>
-        popupMenu = Some(new PopupMenu {
-          add(new MenuItem(I18N.gui.get("tabs.external.rename"), () => temp.rename()))
-        })
-
-      case _ =>
-    }
+    case _ =>
   }
 
   override def contains(x: Int, y: Int): Boolean =
     closeButton.exists(button => button.contains(x - button.getX, y - button.getY))
 
   override def getPreferredSize: Dimension =
-    new Dimension(boldWidth + closeButton.map(_.getPreferredSize.width + 10).getOrElse(0),
+    new Dimension(boldWidth + closeButton.fold(0)(_.getPreferredSize.width + Utils.zoom(10)),
                   super.getPreferredSize.height)
 
   override def paintComponent(g: Graphics): Unit = {
@@ -234,10 +242,11 @@ class TabLabel(startPane: FloatingTabbedPane, text: String, tab: Component) exte
   }
 }
 
-class FloatingTabbedPane extends JTabbedPane(SwingConstants.TOP, JTabbedPane.SCROLL_TAB_LAYOUT) {
+class FloatingTabbedPane extends JTabbedPane(SwingConstants.TOP, JTabbedPane.SCROLL_TAB_LAYOUT) with Zoomable {
+  private val tabUI = new FloatingTabbedPaneUI(this)
   private var mouse: Option[Int] = None
 
-  setUI(new FloatingTabbedPaneUI(this))
+  setUI(tabUI)
   setFocusable(false)
 
   addMouseListener(new MouseAdapter {
@@ -252,11 +261,20 @@ class FloatingTabbedPane extends JTabbedPane(SwingConstants.TOP, JTabbedPane.SCR
 
   addMouseMotionListener(new MouseMotionAdapter {
     override def mouseMoved(e: MouseEvent): Unit = {
-      (0 until getTabCount).find { i =>
-        val component = getTabComponentAt(i)
+      val insets: Insets = tabUI.getTabAreaInsets(SwingConstants.TOP)
 
-        component.getX - 10 <= e.getX && component.getX + 10 + component.getWidth >= e.getX &&
-        component.getY <= e.getY && component.getY + component.getHeight >= e.getY
+      var x: Int = insets.left
+      val y: Int = insets.top
+
+      (0 until getTabCount).find { i =>
+        val tabWidth: Int = tabUI.calculateTabWidth(SwingConstants.TOP, i)
+        val tabHeight: Int = tabUI.calculateTabHeight(SwingConstants.TOP, i)
+
+        val result: Boolean = x <= e.getX && x + tabWidth >= e.getX && y <= e.getY && y + tabHeight >= e.getY
+
+        x += tabWidth
+
+        result
       } match {
         case Some(i) =>
           if (!mouse.exists(_ == i)) {
@@ -301,7 +319,7 @@ class FloatingTabbedPane extends JTabbedPane(SwingConstants.TOP, JTabbedPane.SCR
     Try(getTabComponentAt(index)).map(c => Option(c.asInstanceOf[TabLabel])).getOrElse(None)
 
   def getError(index: Int): Boolean =
-    getTabLabelAt(index).map(_.error).getOrElse(false)
+    getTabLabelAt(index).fold(false)(_.error)
 
   def setError(index: Int, error: Boolean): Unit = {
     getTabLabelAt(index).foreach(_.error = error)

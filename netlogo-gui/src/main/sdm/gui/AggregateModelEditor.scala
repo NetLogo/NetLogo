@@ -17,7 +17,7 @@ import org.nlogo.api.{ CompilerServices, ExtensionManager, SourceOwner }
 import org.nlogo.core.{ CompilerException, I18N }
 import org.nlogo.editor.Colorizer
 import org.nlogo.sdm.Translator
-import org.nlogo.swing.{ MenuBar, MenuItem, NetLogoIcon, Utils => SwingUtils, WindowAutomator }
+import org.nlogo.swing.{ MenuBar, MenuItem, NetLogoIcon, Utils, WindowAutomator, Zoomable, ZoomableWindow, ZoomActions }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ Editable, EditDialogFactory, Events, MenuBarFactory }
 import org.nlogo.window.Event.LinkChild
@@ -42,6 +42,8 @@ class AggregateModelEditor(
   with DrawingEditor
   with LinkChild
   with Events.LoadBeginEvent.Handler
+  with ZoomActions
+  with ZoomableWindow
   with ThemeSync
   with NetLogoIcon {
 
@@ -70,7 +72,7 @@ class AggregateModelEditor(
     // but is not disposed of until the model is closed. - AZS 6/18/05
     setDefaultCloseOperation(HIDE_ON_CLOSE)
 
-    SwingUtils.addEscKeyAction(getRootPane, new AbstractAction {
+    Utils.addEscKeyAction(getRootPane, new AbstractAction {
       override def actionPerformed(e: ActionEvent): Unit = {
         setVisible(false)
       }
@@ -256,6 +258,12 @@ class AggregateModelEditor(
     undoManager.clearRedos()
   }
 
+  override def zoomWindow(): Unit = {
+    super.zoomWindow()
+
+    Utils.zoomMenuBar(menuBar)
+  }
+
   override def syncTheme(): Unit = {
     menuBar.syncTheme()
     tabs.syncTheme()
@@ -263,7 +271,7 @@ class AggregateModelEditor(
     view.syncTheme()
   }
 
-  private class SyncedCommandMenu(name: String) extends CommandMenu(name) with ThemeSync {
+  private class SyncedCommandMenu(name: String) extends CommandMenu(name) with Zoomable with ThemeSync {
     private val menuUI = new BasicMenuUI with ThemeSync {
       override def syncTheme(): Unit = {
         setForeground(InterfaceColors.toolbarText())

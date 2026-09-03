@@ -2,8 +2,7 @@
 
 package org.nlogo.app.tools
 
-import java.awt.{ BorderLayout, Component, Font, Frame, GraphicsEnvironment, GridBagConstraints, GridBagLayout,
-                  Insets }
+import java.awt.{ BorderLayout, Component, Font, Frame, GraphicsEnvironment, Insets }
 import java.awt.event.ActionEvent
 import java.io.File
 import java.util.Locale
@@ -13,7 +12,8 @@ import javax.swing.event.{ DocumentEvent, DocumentListener }
 import org.nlogo.analytics.Analytics
 import org.nlogo.app.common.TabsInterface
 import org.nlogo.core.{ I18N, NetLogoPreferences }
-import org.nlogo.swing.{ Button, CheckBox, ComboBox, TextField, Transparent }
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, Button, CheckBox, ComboBox, PopupMenu, TextField, Transparent,
+                         Utils, Zoomable }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.AbstractWidgetPanel
 import org.nlogo.window.Events.AutoIndentEvent
@@ -27,7 +27,9 @@ object Preferences {
         Analytics.preferenceChange(i18nKey, selected.toString)
 
       onSelect(selected)
-    })
+    }) with ThemeSync {
+      override def syncTheme(): Unit = {}
+    }
 
     override def component: JComponent & ThemeSync =
       checkBox
@@ -69,7 +71,7 @@ object Preferences {
       })
 
       override def getInsets: Insets =
-        new Insets(3, 3, 3, 0)
+        new Insets(Utils.zoom(3), Utils.zoom(3), Utils.zoom(3), 0)
 
       private def changed(): Unit = {
         if (!loading && getText != getPreference)
@@ -99,7 +101,7 @@ object Preferences {
       getPreference != textField.getText
   }
 
-  object Language extends Preference("uiLanguage", Some(RequiredAction.Restart), GridBagConstraints.NORTHWEST) {
+  object Language extends Preference("uiLanguage", Some(RequiredAction.Restart), true) {
     abstract sealed trait LocaleOption
 
     case object DetectLocale extends LocaleOption {
@@ -133,33 +135,20 @@ object Preferences {
       })
     }
 
-    private val label = new JLabel
+    private val label = new JLabel with Zoomable {
+      setBaseFont(getFont.deriveFont(10f))
+    }
 
-    private val panel = new JPanel(new GridBagLayout) with Transparent with ThemeSync {
-      locally {
-        val c = new GridBagConstraints
-
-        c.gridx = 0
-        c.fill = GridBagConstraints.HORIZONTAL
-        c.weightx = 1
-        c.insets = new Insets(0, 0, 3, 0)
-
-        add(comboBox, c)
-
-        c.anchor = GridBagConstraints.EAST
-        c.fill = GridBagConstraints.NONE
-
-        add(label, c)
-      }
-
+    private val panel = new BoxColumn(Seq(
+      comboBox,
+      new BoxRow(label, BoxAlign.End)
+    ), 3) with ThemeSync {
       override def syncTheme(): Unit = {
         label.setForeground(InterfaceColors.dialogText())
 
         comboBox.syncTheme()
       }
     }
-
-    label.setFont(label.getFont.deriveFont(10f))
 
     override def component: JComponent & ThemeSync =
       panel
@@ -392,7 +381,18 @@ object Preferences {
         }
       })
 
-      popup.getComponents.zip(fonts).foreach((c, f) => f.font.foreach(c.setFont))
+      override def getPopup: PopupMenu = {
+        val popup: PopupMenu = super.getPopup
+
+        popup.getComponents.zip(fonts).foreach {
+          case (zoomable: Zoomable, FontWrapper(Some(font))) =>
+            zoomable.setBaseFont(font)
+
+          case _ =>
+        }
+
+        popup
+      }
     }
 
     override def component: JComponent & ThemeSync =

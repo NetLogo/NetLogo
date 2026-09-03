@@ -2,11 +2,11 @@
 
 package org.nlogo.window
 
-import java.awt.{ Color, Component, Dimension, Font, Frame, Graphics, GridBagConstraints, GridBagLayout, Insets,
-                  LinearGradientPaint }
+import java.awt.{ Color, Component, Dimension, Font, Frame, Graphics, Insets, LinearGradientPaint, Point }
 import java.awt.event.{ ActionEvent, ActionListener, FocusEvent, FocusListener, KeyEvent, WindowAdapter, WindowEvent }
 
-import javax.swing.{ AbstractAction, JButton, JDialog, JLabel, JPanel, ScrollPaneConstants, UIManager }
+import javax.swing.{ AbstractAction, Box, BoxLayout, JButton, JDialog, JLabel, ScrollPaneConstants, SwingUtilities,
+                     UIManager }
 import javax.swing.KeyStroke.getKeyStroke
 import javax.swing.text.EditorKit
 
@@ -18,46 +18,30 @@ import org.nlogo.awt.{ Hierarchy, Positioning }
 import org.nlogo.core.{ BoxedValue, CompilerException, I18N, InputBox => CoreInputBox, NumericInput,
                         StringInput, Widget => CoreWidget }
 import org.nlogo.editor.{ EditorArea, EditorConfiguration }
-import org.nlogo.swing.{ Button, ButtonPanel, DialogButton, OptionPane, RoundedBorderPanel,
-                         ScrollPane, Utils }
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, Button, ButtonPanel, DialogButton, OptionPane, RoundedBorderPanel,
+                         ScrollPane, Utils, Zoomable, ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
-
-object InputBox {
-  val MinWidth  = 50
-  val MinHeight = 60
-}
 
 abstract class InputBox(textArea: EditorArea, editDialogTextArea: EditorArea, compiler: CompilerServices,
                         nextComponent: Component)
   extends SingleErrorWidget with Editable with Events.InputBoxLoseFocusEvent.Handler {
 
-  import InputBox._
-
-  protected class ColorButton extends JButton with RoundedBorderPanel with ThemeSync {
-    private var color = Color.black
-
+  protected class ColorButton extends JButton with RoundedBorderPanel with Zoomable with ThemeSync {
     setBorder(null)
-    setFont(getFont.deriveFont(9.0f))
+    setBaseFont(getFont.deriveFont(9.0f))
+    setDiameter(6)
 
     addActionListener(new SelectColorActionListener)
 
-    override def paintComponent(g: Graphics): Unit = {
-      setBackgroundColor(color)
-      setDiameter(zoom(6))
-
-      super.paintComponent(g)
-    }
-
-    def setColor(color: Color): Unit = {
-      this.color = color
-    }
+    override def getMaximumSize: Dimension =
+      new Dimension(Int.MaxValue, Int.MaxValue)
 
     override def syncTheme(): Unit = {
       setBorderColor(InterfaceColors.inputBorder())
     }
   }
 
-  protected class InputScrollPane(textArea: EditorArea) extends JPanel with RoundedBorderPanel with ThemeSync {
+  protected class InputScrollPane(textArea: EditorArea) extends BoxRow with RoundedBorderPanel with ThemeSync {
     val scrollPane = new ScrollPane(textArea, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
                                     ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER) {
       setBorder(null)
@@ -65,31 +49,16 @@ abstract class InputBox(textArea: EditorArea, editDialogTextArea: EditorArea, co
 
     textArea.setOpaque(false)
     textArea.setBackground(InterfaceColors.Transparent)
+    textArea.setBorder(new ZoomableBorder(2, 6, 2, 6))
 
-    setLayout(new GridBagLayout)
+    setBorder(new ZoomableBorder(3, 3, 3, 3))
+    setDiameter(6)
 
-    initGUI()
-
-    def initGUI(): Unit = {
-      removeAll()
-
-      val c = new GridBagConstraints
-
-      c.weightx = 1
-      c.weighty = 1
-      c.fill = GridBagConstraints.BOTH
-      c.insets = new Insets(zoom(3), zoom(3), zoom(3), zoom(3))
-
-      add(scrollPane, c)
-
-      textArea.setMargin(new Insets(zoom(2), zoom(6), zoom(2), zoom(6)))
-    }
+    add(scrollPane)
 
     override def paintComponent(g: Graphics): Unit = {
       // this mostly fixes some weird horizontal scrollbar issues (Isaac B 8/7/24)
       textArea.setSize(scrollPane.getWidth - 10, scrollPane.getHeight)
-
-      setDiameter(zoom(6))
 
       super.paintComponent(g)
     }
@@ -107,7 +76,9 @@ abstract class InputBox(textArea: EditorArea, editDialogTextArea: EditorArea, co
 
   /// be editable
   override def classDisplayName = I18N.gui.get("tabs.run.widgets.input")
-  protected val widgetLabel = new JLabel(I18N.gui.get("edit.input.previewName"))
+  protected val widgetLabel = new JLabel(I18N.gui.get("edit.input.previewName")) with Zoomable {
+    setBaseFont(getFont.deriveFont(_boldState))
+  }
   protected var dialog: InputDialog = null
   private var _hasFocus = false
   // grab the current editor kit from the editor area
@@ -201,14 +172,21 @@ abstract class InputBox(textArea: EditorArea, editDialogTextArea: EditorArea, co
   InputType.addTypeOptions(typeOptions)
   typeOptions.selectValue(inputType)
   textArea.setEditorKit(inputType.getEditorKit)
-  textArea.setFont(inputType.getFont)
+  textArea.setBaseFont(inputType.getFont)
   textArea.enableBracketMatcher(inputType.enableBracketMatcher)
 
   multiline(false)
 
-  setLayout(new GridBagLayout)
+  setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
+  setBorder(new AdaptableBorder(new Insets(3, 6, 6, 6), new Insets(6, 8, 8, 8)))
 
-  initGUI()
+  add(new BoxRow(Seq(
+    new BoxColumn(widgetLabel, BoxAlign.Start),
+    Box.createHorizontalGlue,
+    changeButton
+  ), 6))
+
+  add(new BoxRow(Seq(scroller, colorSwatch)))
 
   colorSwatch.setVisible(false)
 
@@ -230,62 +208,8 @@ abstract class InputBox(textArea: EditorArea, editDialogTextArea: EditorArea, co
           editing = false
         }
       }
-    })
-
-  override def initGUI(): Unit = {
-    removeAll()
-
-    val c = new GridBagConstraints
-
-    c.gridx = 0
-    c.gridy = 0
-    c.weightx = 1
-    c.anchor = GridBagConstraints.NORTHWEST
-    c.insets = {
-      if (_oldSize) {
-        new Insets(zoom(3), zoom(6), zoom(6), zoom(6))
-      } else {
-        new Insets(zoom(6), zoom(8), zoom(6), zoom(8))
-      }
     }
-
-    add(widgetLabel, c)
-
-    widgetLabel.setFont(widgetLabel.getFont.deriveFont(_boldState))
-
-    c.gridx = 1
-    c.weightx = 0
-    c.anchor = GridBagConstraints.EAST
-    c.insets = {
-      if (_oldSize) {
-        new Insets(zoom(3), 0, zoom(6), zoom(6))
-      } else {
-        new Insets(zoom(8), 0, zoom(6), zoom(8))
-      }
-    }
-
-    add(changeButton, c)
-
-    c.gridx = 0
-    c.gridy += 1
-    c.weighty = 1
-    c.weightx = 1
-    c.gridwidth = GridBagConstraints.REMAINDER
-    c.fill = GridBagConstraints.BOTH
-    c.anchor = GridBagConstraints.WEST
-    c.insets = {
-      if (_oldSize) {
-        new Insets(0, zoom(6), zoom(6), zoom(6))
-      } else {
-        new Insets(0, zoom(8), zoom(8), zoom(8))
-      }
-    }
-
-    scroller.initGUI()
-
-    add(scroller, c)
-    add(colorSwatch, c)
-  }
+  )
 
   override def doLayout(): Unit = {
     super.doLayout()
@@ -313,16 +237,23 @@ abstract class InputBox(textArea: EditorArea, editDialogTextArea: EditorArea, co
     if (isHover) {
       val g2d = Utils.initGraphics2D(g)
 
+      val offset: Int = Utils.zoom(3)
+      val diameter: Int = Utils.zoom(6)
+
       if (colorSwatch.isVisible) {
-        g2d.setPaint(new LinearGradientPaint(colorSwatch.getX.toFloat, (colorSwatch.getY + 3).toFloat, colorSwatch.getX.toFloat,
-                                            (colorSwatch.getY + colorSwatch.getHeight + 3).toFloat, Array(0f, 1f),
+        val pos: Point = SwingUtilities.convertPoint(colorSwatch, new Point(0, 0), this)
+
+        g2d.setPaint(new LinearGradientPaint(pos.x.toFloat, (pos.y + offset).toFloat, pos.x.toFloat,
+                                            (pos.y + colorSwatch.getHeight + offset).toFloat, Array(0f, 1f),
                                             Array(InterfaceColors.widgetHoverShadow(), InterfaceColors.Transparent)))
-        g2d.fillRoundRect(colorSwatch.getX, colorSwatch.getY + 3, colorSwatch.getWidth, colorSwatch.getHeight, 6, 6)
+        g2d.fillRoundRect(pos.x, pos.y + offset, colorSwatch.getWidth, colorSwatch.getHeight, diameter, diameter)
       } else {
-        g2d.setPaint(new LinearGradientPaint(scroller.getX.toFloat, (scroller.getY + 3).toFloat, scroller.getX.toFloat,
-                                            (scroller.getY + scroller.getHeight + 3).toFloat, Array(0f, 1f),
+        val pos: Point = SwingUtilities.convertPoint(scroller, new Point(0, 0), this)
+
+        g2d.setPaint(new LinearGradientPaint(pos.x.toFloat, (pos.y + offset).toFloat, pos.x.toFloat,
+                                            (pos.y + scroller.getHeight + offset).toFloat, Array(0f, 1f),
                                             Array(InterfaceColors.widgetHoverShadow(), InterfaceColors.Transparent)))
-        g2d.fillRoundRect(scroller.getX, scroller.getY + 3, scroller.getWidth, scroller.getHeight, 6, 6)
+        g2d.fillRoundRect(pos.x, pos.y + offset, scroller.getWidth, scroller.getHeight, diameter, diameter)
       }
     }
   }
@@ -416,7 +347,7 @@ abstract class InputBox(textArea: EditorArea, editDialogTextArea: EditorArea, co
           catch { case _: Exception => inputType.defaultValue }
       }
       textArea.setEditorKit(inputType.getEditorKit)
-      textArea.setFont(inputType.getFont)
+      textArea.setBaseFont(inputType.getFont)
       textArea.enableBracketMatcher(inputType.enableBracketMatcher)
       changeButton.setVisible(inputType.changeVisible)
       valueObject(newBoxedValue, true)
@@ -435,10 +366,12 @@ abstract class InputBox(textArea: EditorArea, editDialogTextArea: EditorArea, co
   }
 
   override def getMinimumSize = {
-    if (_oldSize) {
-      new Dimension(MinWidth, MinHeight)
-    } else {
-      new Dimension(100, 60)
+    Utils.zoomSize {
+      if (_oldSize) {
+        new Dimension(50, 60)
+      } else {
+        new Dimension(100, 60)
+      }
     }
   }
 
@@ -450,15 +383,15 @@ abstract class InputBox(textArea: EditorArea, editDialogTextArea: EditorArea, co
       // that we don't get a horizontal scroll bar at the default size. ev 9/28/06
       result.width =
               textArea.getPreferredSize.width + insets.left + insets.right +
-              textArea.getInsets.right + textArea.getInsets.left + 4
-      new Dimension(MinWidth.max(result.width), MinHeight.max(result.height))
+              textArea.getInsets.right + textArea.getInsets.left + Utils.zoom(4)
+      new Dimension(result.width.max(Utils.zoom(50)), result.height.max(Utils.zoom(60)))
     } else {
-      new Dimension(250, 60)
+      new Dimension(Utils.zoom(250), Utils.zoom(60))
     }
   }
 
   override def setCodeFont(font: Font): Unit = {
-    textArea.setFont(inputType.getFont)
+    textArea.setBaseFont(inputType.getFont)
   }
 
   override def load(model: CoreWidget): Unit = {
@@ -470,7 +403,7 @@ abstract class InputBox(textArea: EditorArea, editDialogTextArea: EditorArea, co
         def setType(i: BoxedValue): Unit = {
           this.inputType = InputType.create(i)
           textArea.setEditorKit(this.inputType.getEditorKit)
-          textArea.setFont(this.inputType.getFont)
+          textArea.setBaseFont(this.inputType.getFont)
           textArea.enableBracketMatcher(this.inputType.enableBracketMatcher)
           typeOptions.selectByName(inputType.displayName)
           constraint.setType(this.inputType.baseName, this.inputType.defaultValue)
@@ -496,7 +429,7 @@ abstract class InputBox(textArea: EditorArea, editDialogTextArea: EditorArea, co
   }
 
   override def model: CoreWidget = {
-    val b = getUnzoomedBounds
+    val b = unzoomedBounds
     val bv = this.boxedValue
     CoreInputBox(
       x          = b.x, y = b.y, width = b.width, height = b.height,
@@ -513,7 +446,11 @@ abstract class InputBox(textArea: EditorArea, editDialogTextArea: EditorArea, co
     extends JDialog(parent, title) with ThemeSync {
 
     private val label = new JLabel(inputType.toString)
-    private val scrollPane = new InputScrollPane(textArea)
+
+    private val scrollPane = new InputScrollPane(textArea) {
+      override def getMaximumSize: Dimension =
+        new Dimension(Int.MaxValue, Int.MaxValue)
+    }
 
     private val okButton = new DialogButton(true, I18N.gui.get("common.buttons.ok"), () => {
       try{
@@ -539,47 +476,31 @@ abstract class InputBox(textArea: EditorArea, editDialogTextArea: EditorArea, co
 
     private val cancelButton = new DialogButton(false, cancelAction)
 
-    locally {
-      setResizable(true)
-      textArea.setEditorKit(inputType.getEditorKit)
-      textArea.setFont(inputType.getFont)
-      textArea.enableBracketMatcher(inputType.enableBracketMatcher)
+    setResizable(true)
+    textArea.setEditorKit(inputType.getEditorKit)
+    textArea.setBaseFont(inputType.getFont)
+    textArea.enableBracketMatcher(inputType.enableBracketMatcher)
 
-      getContentPane.setLayout(new GridBagLayout)
+    setContentPane(new BoxColumn(Seq(
+      new BoxRow(label, BoxAlign.Start),
+      scrollPane,
+      new ButtonPanel(Seq(okButton, cancelButton))
+    ), 6) {
+      setOpaque(true)
+      setBorder(new ZoomableBorder(6, 6, 6, 6))
+    })
 
-      val c = new GridBagConstraints
+    Utils.addEscKeyAction(this, cancelAction)
 
-      c.insets = new Insets(zoom(3), zoom(3), zoom(3), zoom(3))
-      c.gridwidth = GridBagConstraints.REMAINDER
-      c.anchor = GridBagConstraints.WEST
-
-      getContentPane.add(label, c)
-
-      c.weightx = 1
-      c.weighty = 1
-      c.fill = GridBagConstraints.BOTH
-
-      getContentPane.add(scrollPane, c)
-
-      c.gridy = 2
-      c.anchor = GridBagConstraints.EAST
-      c.weightx = 0
-      c.weighty = 0
-
-      getContentPane.add(new ButtonPanel(Seq(okButton, cancelButton)), c)
-
-      Utils.addEscKeyAction(this, cancelAction)
-
-      pack()
-      Positioning.center(this, parent)
-      addWindowListener(new WindowAdapter() {
-        override def windowClosing(e: WindowEvent): Unit = {
-          dispose()
-          editing = false
-          dialog = null
-        }
-      })
-    }
+    pack()
+    Positioning.center(this, parent)
+    addWindowListener(new WindowAdapter() {
+      override def windowClosing(e: WindowEvent): Unit = {
+        dispose()
+        editing = false
+        dialog = null
+      }
+    })
 
     syncTheme()
 
@@ -598,7 +519,6 @@ abstract class InputBox(textArea: EditorArea, editDialogTextArea: EditorArea, co
       textArea.setCaretColor(InterfaceColors.textAreaText())
 
       scrollPane.syncTheme()
-
       okButton.syncTheme()
       cancelButton.syncTheme()
     }
@@ -736,7 +656,7 @@ abstract class InputBox(textArea: EditorArea, editDialogTextArea: EditorArea, co
           (0d: java.lang.Double, Color.BLACK)
       }
 
-      panel.setColor(c)
+      panel.setBackgroundColor(c)
       panel.setForeground(if ((colorval % 10) > 5) Color.BLACK else Color.WHITE)
       panel.setText(colorval match {
         // this logic is duplicated in ColorEditor; black and white are special cases

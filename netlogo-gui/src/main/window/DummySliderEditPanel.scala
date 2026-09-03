@@ -2,9 +2,8 @@
 
 package org.nlogo.window
 
-import java.awt.{ GridBagConstraints, Insets }
-
 import org.nlogo.core.I18N
+import org.nlogo.swing.{ BoxAlign, BoxRow }
 
 class DummySliderEditPanel(target: DummySliderWidget) extends WidgetEditPanel(target) {
   private val name =
@@ -79,49 +78,11 @@ class DummySliderEditPanel(target: DummySliderWidget) extends WidgetEditPanel(ta
         _.foreach(target.oldSize),
         () => apply()))
 
-  locally {
-    val c = new GridBagConstraints
-
-    c.gridy = 0
-    c.gridwidth = 3
-    c.fill = GridBagConstraints.HORIZONTAL
-    c.weightx = 1
-    c.insets = new Insets(6, 6, 6, 6)
-
-    add(name, c)
-
-    c.gridy = 1
-    c.gridwidth = 1
-    c.insets = new Insets(0, 6, 6, 6)
-
-    add(min, c)
-
-    c.insets = new Insets(0, 0, 6, 6)
-
-    add(inc, c)
-    add(max, c)
-
-    c.gridy = 2
-    c.gridwidth = 2
-    c.insets = new Insets(0, 6, 6, 6)
-
-    add(value, c)
-
-    c.gridwidth = 1
-    c.insets = new Insets(0, 0, 6, 6)
-
-    add(units, c)
-
-    c.gridy = 3
-    c.gridwidth = 3
-    c.insets = new Insets(0, 6, 6, 6)
-
-    add(vertical, c)
-
-    c.gridy = 4
-
-    add(oldSize, c)
-  }
+  add(name)
+  add(new BoxRow(Seq(min, inc, max), 6))
+  add(new BoxRow(Seq(value, units), 6))
+  add(new BoxRow(vertical, BoxAlign.Start))
+  add(new BoxRow(oldSize, BoxAlign.Start))
 
   override def propertyEditors: Seq[PropertyEditor[?]] =
     Seq(name, min, inc, max, value, units, vertical, oldSize)

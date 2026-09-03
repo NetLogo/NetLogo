@@ -2,35 +2,23 @@
 
 package org.nlogo.window
 
+import java.awt.{ Dimension, Graphics, Insets, RadialGradientPaint }
+import java.awt.event.{ MouseEvent, MouseAdapter }
+import javax.swing.{ Box, BoxLayout, JLabel, JPanel }
+
 import org.nlogo.agent.BooleanConstraint
 import org.nlogo.core.I18N
-import org.nlogo.swing.Utils
+import org.nlogo.swing.{ Utils, Zoomable }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
-import java.awt._
-import javax.swing.{ JLabel, JPanel }
-import event.{ MouseEvent, MouseAdapter }
-
-object Switch {
-  val MINWIDTH: Int = 90
-  val CHANNEL_HEIGHT: Int = 28
-  val MINHEIGHT: Int = CHANNEL_HEIGHT + 5
-}
-
 abstract class Switch extends MultiErrorWidget with Events.AfterLoadEvent.Handler with ThemeSync {
-  import Switch._
-
   protected var constraint = new BooleanConstraint
-  protected val label = new JLabel(I18N.gui.get("edit.switch.previewName"))
+  protected val label = new JLabel(I18N.gui.get("edit.switch.previewName")) with Zoomable
   protected val toggle = new Toggle
   protected var nameChanged = false
   protected var _name = ""
 
   locally {
-    setLayout(new GridBagLayout)
-
-    initGUI()
-
     val mouseListener = new MouseAdapter {
       override def mousePressed(e: MouseEvent): Unit = {
         new Events.InputBoxLoseFocusEvent().raise(Switch.this)
@@ -45,45 +33,13 @@ abstract class Switch extends MultiErrorWidget with Events.AfterLoadEvent.Handle
     toggle.addMouseListener(mouseListener)
   }
 
-  override def initGUI(): Unit = {
-    removeAll()
+  setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
+  setBorder(new AdaptableBorder(new Insets(6, 6, 6, 6), new Insets(8, 8, 8, 8)))
 
-    if (_oldSize) {
-      val c = new GridBagConstraints
-
-      c.insets = new Insets(0, zoom(6), 0, zoom(6))
-      c.fill = GridBagConstraints.HORIZONTAL
-      c.weightx = 1
-
-      add(label, c)
-
-      c.insets = new Insets(zoom(6), 0, zoom(6), zoom(6))
-      c.fill = GridBagConstraints.VERTICAL
-      c.weightx = 0
-      c.weighty = 1
-      c.anchor = GridBagConstraints.EAST
-
-      add(toggle, c)
-    } else {
-      val c = new GridBagConstraints
-
-      c.insets = new Insets(0, zoom(8), 0, zoom(8))
-      c.fill = GridBagConstraints.HORIZONTAL
-      c.weightx = 1
-
-      add(label, c)
-
-      label.setFont(label.getFont.deriveFont(_boldState))
-
-      c.insets = new Insets(zoom(8), 0, zoom(8), zoom(8))
-      c.fill = GridBagConstraints.VERTICAL
-      c.weightx = 0
-      c.weighty = 1
-      c.anchor = GridBagConstraints.EAST
-
-      add(toggle, c)
-    }
-  }
+  add(label)
+  add(Box.createHorizontalGlue)
+  add(new AdaptableHorizontalStrut(6, 8))
+  add(toggle)
 
   def isOn: Boolean = constraint.defaultValue.booleanValue
 
@@ -114,17 +70,19 @@ abstract class Switch extends MultiErrorWidget with Events.AfterLoadEvent.Handle
 
   override def getPreferredSize: Dimension = {
     if (_oldSize) {
-      new Dimension(super.getPreferredSize.width, MINHEIGHT)
+      new Dimension(super.getPreferredSize.width, Utils.zoom(33))
     } else {
-      new Dimension(super.getPreferredSize.width, 40)
+      new Dimension(super.getPreferredSize.width, Utils.zoom(40))
     }
   }
 
   override def getMinimumSize: Dimension = {
-    if (_oldSize) {
-      new Dimension(MINWIDTH, MINHEIGHT)
-    } else {
-      new Dimension(50, 40)
+    Utils.zoomSize {
+      if (_oldSize) {
+        new Dimension(90, 33)
+      } else {
+        new Dimension(50, 40)
+      }
     }
   }
 
@@ -147,14 +105,14 @@ abstract class Switch extends MultiErrorWidget with Events.AfterLoadEvent.Handle
   protected class Toggle extends JPanel {
     private var hover = false
 
-    override def getMinimumSize: Dimension =
-      new Dimension(zoom(10), super.getPreferredSize.height)
-
     override def getPreferredSize: Dimension =
-      getMinimumSize
+      new Dimension(Utils.zoom(10), super.getPreferredSize.height)
+
+    override def getMinimumSize: Dimension =
+      getPreferredSize
 
     override def getMaximumSize: Dimension =
-      getMinimumSize
+      new Dimension(getPreferredSize.width, Int.MaxValue)
 
     setOpaque(false)
 

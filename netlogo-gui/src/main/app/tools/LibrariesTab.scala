@@ -2,21 +2,20 @@
 
 package org.nlogo.app.tools
 
-import java.awt.{ BorderLayout, Component, Dimension, EventQueue, FlowLayout, Font, GridBagConstraints, GridBagLayout,
-                  GridLayout, Insets, Toolkit }
+import java.awt.{ Component, EventQueue, Font, Toolkit }
 import java.awt.event.KeyEvent
-import java.awt.font.TextAttribute
 import java.io.IOException
 import java.nio.file.Path
-import java.util.{ Collections, Locale }
-import javax.swing.{ Action, Box, DefaultListModel, Icon, JLabel, JList, JPanel, ListCellRenderer, ListModel }
+import java.util.Locale
+import javax.swing.{ Action, DefaultListModel, Icon, JLabel, JList, ListCellRenderer, ListModel }
 import javax.swing.border.LineBorder
 import javax.swing.event.{ AncestorEvent, AncestorListener, ListDataEvent, ListDataListener }
 
 import org.nlogo.api.{ LibraryInfoDownloader, LibraryManager, Version }
 import org.nlogo.core.{ I18N, LibraryInfo, LibraryStatus, Token, TokenType }
-import org.nlogo.swing.{ AutomationUtils, BrowserLauncher, Button, EmptyIcon, FilterableListModel, OptionPane,
-                         RichAction, ScalableIcon, ScrollPane, SwingWorker, TextArea, TextField, Transparent, Utils }
+import org.nlogo.swing.{ AutomationUtils, BoxColumn, BoxRow, BrowserLauncher, Button, EmptyIcon, FilterableListModel,
+                         HorizontalStrut, MaximumHeight, OptionPane, RichAction, ScrollPane, SwingWorker, TextArea,
+                         TextField, Utils, VerticalStrut, Zoomable, ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.workspace.ModelsLibrary
 
@@ -71,6 +70,8 @@ object LibrariesTab {
   }
 }
 
+// this tab can be converted back to a `JTabbedPane` once other libraries are added, like code modules or models.
+// -JeremyB April 2019
 class LibrariesTab( category:        String
                   , manager:         LibraryManager
                   , updateStatus:    String => Unit
@@ -78,7 +79,7 @@ class LibrariesTab( category:        String
                   , tokenizeSource:  String => Iterator[Token]
                   , updateSource:    ((String) => String) => Unit
                   , extPathMappings: Map[String, Path]
-                  ) extends JPanel(new BorderLayout) with ThemeSync {
+                  ) extends BoxColumn(6) with ThemeSync {
 
   import LibrariesTab._
 
@@ -118,8 +119,12 @@ class LibrariesTab( category:        String
       }
   }
 
+  private val renderer = new CellRenderer
+
   private val listModel   = new FilterableListModel(baseListModel, containsLib)
-  private val libraryList = new JList[LibraryInfo](listModel)
+  private val libraryList = new JList[LibraryInfo](listModel) with Zoomable {
+    setCellRenderer(renderer)
+  }
 
   private var actionIsInProgress = false
 
@@ -140,15 +145,13 @@ class LibrariesTab( category:        String
 
     }
 
-  private val topPanel = new JPanel(new GridBagLayout)
-  private val magIcon = new JLabel
-  private val filterField = new TextField
+  private val magIcon = new JLabel {
+    setIcon(Utils.iconScaledWithColor("/images/find.png", 15, 15, () => InterfaceColors.toolbarImage()))
+  }
+
+  private val filterField = new TextField with MaximumHeight
 
   private val libraryScroll = new ScrollPane(libraryList)
-
-  private val sidebar             = Box.createVerticalBox()
-  private val libraryButtonsPanel = new JPanel(new GridLayout(3, 1, 2, 2)) with Transparent
-  private val installationPanel   = new JPanel(new GridLayout(1, 2, 2, 2)) with Transparent
 
   private val installButton = new Button(I18N.gui("install"), () => {
     val installCheck = (lib: LibraryInfo) =>
@@ -183,91 +186,57 @@ class LibrariesTab( category:        String
     perform("uninstalling", uninstall, _.canUninstall, false)
   })
 
+  private val uninstallPanel = new BoxRow(Seq(new HorizontalStrut(6), uninstallButton))
+
   private val info = new TextArea(2, 28)
   private val infoScroll = new ScrollPane(info)
 
-  private val installedVersionLabel  = new JLabel(s"${I18N.gui("installedVersion")}: ")
-  private val latestVersionLabel  = new JLabel(s"${I18N.gui("latestVersion")}: ")
-  private val minNetLogoVersionLabel = new JLabel(s"${I18N.gui("minimumVersion")}: ")
+  private val installedVersionLabel  = new JLabel(s"${I18N.gui("installedVersion")}: ") with Zoomable {
+    setBaseFont(getFont.deriveFont(Font.BOLD))
+  }
+
+  private val latestVersionLabel  = new JLabel(s"${I18N.gui("latestVersion")}: ") with Zoomable {
+    setBaseFont(getFont.deriveFont(Font.BOLD))
+  }
+
+  private val minNetLogoVersionLabel = new JLabel(s"${I18N.gui("minimumVersion")}: ") with Zoomable {
+    setBaseFont(getFont.deriveFont(Font.BOLD))
+  }
 
   private val installedVersion = new JLabel
   private val latestVersion = new JLabel
   private val minNetLogoVersion = new JLabel
 
-  private val nlvPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0)) with Transparent
+  private val nlvPanel = new BoxRow(Seq(minNetLogoVersionLabel, minNetLogoVersion))
 
   locally {
 
     import org.nlogo.swing.Implicits.thunk2documentListener
 
-    def embolden(l: JLabel) =
-      l.setFont(l.getFont.deriveFont(Collections.singletonMap(TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD)))
-
-    libraryList.setCellRenderer(new CellRenderer)
-
-    installationPanel.add(installButton)
-
-    libraryButtonsPanel.add(installationPanel)
-    libraryButtonsPanel.add(addToCodeTabButton)
-    libraryButtonsPanel.add(homepageButton)
-
-    embolden(installedVersionLabel)
-    embolden(latestVersionLabel)
-    embolden(minNetLogoVersionLabel)
-
-    val ivPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0)) with Transparent
-
-    ivPanel.add(installedVersionLabel)
-    ivPanel.add(installedVersion)
-    ivPanel.setMaximumSize(new Dimension(Short.MaxValue, 20))
-
-    val lvPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0)) with Transparent
-
-    lvPanel.add(latestVersionLabel)
-    lvPanel.add(latestVersion)
-    lvPanel.setMaximumSize(new Dimension(Short.MaxValue, 20))
-
-    nlvPanel.add(minNetLogoVersionLabel)
-    nlvPanel.add(minNetLogoVersion)
-    nlvPanel.setMaximumSize(new Dimension(Short.MaxValue, 20))
-    nlvPanel.setVisible(true)
-
-    libraryButtonsPanel.setMaximumSize(new Dimension(Short.MaxValue, 20))
-
     info.setLineWrap(true)
     info.setWrapStyleWord(true)
     info.setEditable(false)
 
-    libraryButtonsPanel.setAlignmentX(Component.LEFT_ALIGNMENT)
-    ivPanel.setAlignmentX(Component.LEFT_ALIGNMENT)
-    lvPanel.setAlignmentX(Component.LEFT_ALIGNMENT)
-    nlvPanel.setAlignmentX(Component.LEFT_ALIGNMENT)
-    infoScroll.setAlignmentX(Component.LEFT_ALIGNMENT)
-
-    val d = new Dimension(5, 5)
-    sidebar.add(libraryButtonsPanel)
-    sidebar.add(new Box.Filler(d, d, d))
-    sidebar.add(ivPanel)
-    sidebar.add(lvPanel)
-    sidebar.add(nlvPanel)
-    sidebar.add(new Box.Filler(d, d, d))
-    sidebar.add(infoScroll)
-
-    val c = new GridBagConstraints
-
-    c.insets = new Insets(6, 6, 6, 6)
-
-    topPanel.add(magIcon, c)
-
-    c.insets = new Insets(6, 0, 6, 6)
-    c.fill = GridBagConstraints.HORIZONTAL
-    c.weightx = 1
-
-    topPanel.add(filterField, c)
-
-    add(libraryScroll, BorderLayout.CENTER)
-    add(sidebar, BorderLayout.EAST)
-    add(topPanel, BorderLayout.NORTH)
+    add(new BoxRow(Seq(magIcon, filterField), 6))
+    add(new BoxRow(Seq(
+      libraryScroll,
+      new BoxColumn(Seq(
+        new BoxRow(Seq(
+          new BoxRow(Seq(
+            installButton,
+            uninstallPanel,
+          )),
+          addToCodeTabButton,
+          homepageButton
+        ), 6) with MaximumHeight,
+        new VerticalStrut(6),
+        new BoxRow(Seq(installedVersionLabel, installedVersion)),
+        new BoxRow(Seq(latestVersionLabel, latestVersion)),
+        nlvPanel,
+        new VerticalStrut(6),
+        infoScroll
+      ))
+    ), 6))
 
     listModel.addListDataListener(
       new ListDataListener {
@@ -360,18 +329,8 @@ class LibrariesTab( category:        String
   }
 
   private def updateInstallationPanel() = {
-
-    installationPanel.removeAll()
-    if (!actionIsInProgress) {
-      if (selectedValues.length == 0 || selectedValues.exists(_.status != LibraryStatus.UpToDate))
-        installationPanel.add(installButton)
-      if (selectedValues.exists(_.status != LibraryStatus.CanInstall))
-        installationPanel.add(uninstallButton)
-    }
-
-    installationPanel.revalidate()
-    installationPanel.repaint()
-
+    installButton.setVisible(!actionIsInProgress && !selectedValues.forall(_.status == LibraryStatus.UpToDate))
+    uninstallPanel.setVisible(!actionIsInProgress && selectedValues.exists(_.status != LibraryStatus.CanInstall))
   }
 
   private def installButtonText: String =
@@ -440,43 +399,27 @@ class LibrariesTab( category:        String
   private def updateSingleOperationStatus(operation: String, libName: String) =
     updateStatus(I18N.gui(operation, libName))
 
-  private class CellRenderer extends JPanel(new GridBagLayout) with ListCellRenderer[LibraryInfo] {
-    private val noIcon        = new ScalableIcon(new EmptyIcon(24, 24), 24, 24)
-    private val upToDateIcon  = Utils.iconScaledWithColor("/images/check.png", 24, 24, InterfaceColors.checkFilled())
-    private val warningIcon   = Utils.iconScaledWithColor("/images/exclamation-triangle.png", 24, 24,
-                                                          InterfaceColors.warningIcon())
-    private val canUpdateIcon = Utils.iconScaledWithColor("/images/update.png", 24, 24, InterfaceColors.updateIcon())
+  private class CellRenderer extends BoxRow(6) with ListCellRenderer[LibraryInfo] {
+    private val upToDateIcon: Icon = Utils.iconScaledWithColor("/images/check.png", 24, 24,
+                                                               () => InterfaceColors.checkFilled())
+    private val warningIcon: Icon = Utils.iconScaledWithColor("/images/exclamation-triangle.png", 24, 24,
+                                                              () => InterfaceColors.warningIcon())
+    private val canUpdateIcon: Icon = Utils.iconScaledWithColor("/images/update.png", 24, 24,
+                                                                () => InterfaceColors.updateIcon())
+    private val noIcon: Icon = new EmptyIcon(24, 24)
 
     private val iconLabel = new JLabel
-    private val nameLabel = new JLabel
-    private val descLabel = new JLabel
+    private val descLabel = new JLabel with Zoomable
 
-    locally {
-      val c = new GridBagConstraints
-
-      c.gridx = 0
-      c.gridy = 0
-      c.gridheight = 2
-      c.anchor = GridBagConstraints.WEST
-      c.insets = new Insets(6, 6, 6, 6)
-
-      add(iconLabel, c)
-
-      c.gridx = 1
-      c.gridy = 0
-      c.gridheight = 1
-      c.weightx = 1
-      c.insets = new Insets(6, 0, 3, 6)
-
-      add(nameLabel, c)
-
-      c.gridy = 1
-      c.insets = new Insets(0, 0, 6, 6)
-
-      add(descLabel, c)
-
-      nameLabel.setFont(nameLabel.getFont.deriveFont(14.0f).deriveFont(Font.BOLD))
+    private val nameLabel = new JLabel with Zoomable {
+      setBaseFont(getFont.deriveFont(14.0f).deriveFont(Font.BOLD))
     }
+
+    setOpaque(true)
+    setBorder(new ZoomableBorder(6, 6, 6, 6))
+
+    add(iconLabel)
+    add(new BoxColumn(Seq(nameLabel, descLabel), 6))
 
     override def getListCellRendererComponent(list: JList[? <: LibraryInfo], value: LibraryInfo, index: Int,
                                               isSelected: Boolean, hasFocus: Boolean): Component = {
@@ -556,12 +499,6 @@ class LibrariesTab( category:        String
   }
 
   override def syncTheme(): Unit = {
-    setBackground(InterfaceColors.dialogBackground())
-
-    topPanel.setBackground(InterfaceColors.dialogBackground())
-
-    magIcon.setIcon(Utils.iconScaledWithColor("/images/find.png", 15, 15, InterfaceColors.toolbarImage()))
-
     filterField.syncTheme()
 
     libraryScroll.setBackground(InterfaceColors.dialogBackground())

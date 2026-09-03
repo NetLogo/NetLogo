@@ -2,15 +2,14 @@
 
 package org.nlogo.app.interfacetab
 
-import java.awt.{ Dimension, Frame, GridBagConstraints, GridBagLayout, Insets }
+import java.awt.{ Dimension, Frame }
 import java.awt.event.{ ActionEvent, MouseAdapter, MouseEvent }
-import javax.swing.{ AbstractAction, Action, ButtonGroup, JLabel, JPanel }
-import javax.swing.border.EmptyBorder
+import javax.swing.{ AbstractAction, Action, ButtonGroup, JLabel }
 
 import org.nlogo.app.common.{ Events => AppEvents }
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ AutomationUtils, DropdownArrow, MenuItem, MouseUtils, PopupMenu, RoundedBorderPanel,
-                         ToolBarToggleButton, Transparent, Utils }
+import org.nlogo.swing.{ AutomationUtils, BoxAlign, BoxColumn, BoxRow, DropdownArrow, MenuItem, MouseUtils, PopupMenu,
+                         PreferredSize, RoundedBorderPanel, ToolBarToggleButton, Utils, Zoomable, ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ Editable, EditDialog, EditDialogFactory, Events => WindowEvents, GUIWorkspace, InterfaceMode,
                           JobWidget, Widget, WidgetInfo, WorldViewSettings }
@@ -22,8 +21,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
                               widgetInfos: Seq[WidgetInfo],
                               frame: Frame,
                               dialogFactory: EditDialogFactory)
-  extends JPanel(new GridBagLayout)
-  with Transparent
+  extends BoxRow(6)
   with AppEvents.WidgetSelectedEvent.Handler
   with WindowEvents.InterfaceModeChangedEvent.Handler
   with WindowEvents.WidgetForegroundedEvent.Handler
@@ -34,10 +32,47 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
 
   private val selectedObjects = new HashSet[Widget]
 
-  val interactButton = new SquareButton(new InteractAction)
-  val selectButton = new SquareButton(new SelectAction)
-  val editButton = new SquareButton(new EditAction)
-  val deleteButton = new SquareButton(new DeleteAction)
+  val interactButton = new SquareButton(new InteractAction) {
+    setIcon(Utils.iconScaledWithColor("/images/interact.png", 18, 18, () => {
+      if (isSelected) {
+        InterfaceColors.toolbarImageSelected()
+      } else {
+        InterfaceColors.toolbarImage()
+      }
+    }))
+  }
+
+  val selectButton = new SquareButton(new SelectAction) {
+    setIcon(Utils.iconScaledWithColor("/images/select.png", 18, 18, () => {
+      if (isSelected) {
+        InterfaceColors.toolbarImageSelected()
+      } else {
+        InterfaceColors.toolbarImage()
+      }
+    }))
+  }
+
+  val editButton = new SquareButton(new EditAction) {
+    setIcon(Utils.iconScaledWithColor("/images/edit.png", 18, 18, () => {
+      if (isSelected) {
+        InterfaceColors.toolbarImageSelected()
+      } else {
+        InterfaceColors.toolbarImage()
+      }
+    }))
+  }
+
+  val deleteButton = new SquareButton(new DeleteAction) {
+    setIcon(Utils.iconScaledWithColor("/images/delete.png", 18, 18, () => {
+      if (!isEnabled) {
+        InterfaceColors.toolbarImageDisabled()
+      } else if (isSelected) {
+        InterfaceColors.toolbarImageSelected()
+      } else {
+        InterfaceColors.toolbarImage()
+      }
+    }))
+  }
 
   private val buttonGroup = new ButtonGroup
 
@@ -55,35 +90,23 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
     selectButton.setToolTipText(I18N.gui.getN("tabs.run.selectButton.tooltip", altText))
     editButton.setToolTipText(I18N.gui.getN("tabs.run.editButton.tooltip", altText))
     deleteButton.setToolTipText(I18N.gui.getN("tabs.run.deleteButton.tooltip", altText))
-
-    buttonGroup.add(interactButton)
-    buttonGroup.add(selectButton)
-    buttonGroup.add(editButton)
-    buttonGroup.add(deleteButton)
-
-    val c = new GridBagConstraints
-
-    c.anchor = GridBagConstraints.CENTER
-    c.fill = GridBagConstraints.VERTICAL
-    c.weighty = 1
-    c.insets = new Insets(0, 6, 0, 6)
-
-    add(widgetMenu, c)
-
-    c.insets = new Insets(0, 0, 0, 6)
-
-    add(alignmentMenu, c)
-
-    add(interactButton, c)
-    add(selectButton, c)
-    add(editButton, c)
-
-    c.insets = new Insets(0, 0, 0, 0)
-
-    add(deleteButton, c)
-
-    interactButton.setSelected(true)
   }
+
+  buttonGroup.add(interactButton)
+  buttonGroup.add(selectButton)
+  buttonGroup.add(editButton)
+  buttonGroup.add(deleteButton)
+
+  setBorder(new ZoomableBorder(0, 6, 0, 0))
+
+  add(widgetMenu)
+  add(alignmentMenu)
+  add(interactButton)
+  add(selectButton)
+  add(editButton)
+  add(deleteButton)
+
+  interactButton.setSelected(true)
 
   class InteractAction extends AbstractAction {
     def actionPerformed(e: ActionEvent): Unit = {
@@ -157,36 +180,6 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
 
     widgetMenu.syncTheme()
     alignmentMenu.syncTheme()
-
-    interactButton.setIcon(Utils.iconScaledWithColor("/images/interact.png", 18, 18,
-                           if (interactButton.isSelected) {
-                             InterfaceColors.toolbarImageSelected()
-                           } else {
-                             InterfaceColors.toolbarImage()
-                           }))
-
-    selectButton.setIcon(Utils.iconScaledWithColor("/images/select.png", 18, 18,
-                         if (selectButton.isSelected) {
-                           InterfaceColors.toolbarImageSelected()
-                         } else {
-                           InterfaceColors.toolbarImage()
-                         }))
-
-    editButton.setIcon(Utils.iconScaledWithColor("/images/edit.png", 18, 18,
-                       if (editButton.isSelected) {
-                         InterfaceColors.toolbarImageSelected()
-                       } else {
-                         InterfaceColors.toolbarImage()
-                       }))
-
-    deleteButton.setIcon(Utils.iconScaledWithColor("/images/delete.png", 18, 18,
-                         if (!deleteButton.isEnabled) {
-                           InterfaceColors.toolbarImageDisabled()
-                         } else if (deleteButton.isSelected) {
-                           InterfaceColors.toolbarImageSelected()
-                         } else {
-                           InterfaceColors.toolbarImage()
-                         }))
   }
 
   def handle(e: WindowEvents.WidgetRemovedEvent): Unit = {
@@ -276,51 +269,27 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
     }
   }
 
-  class WidgetMenu extends JPanel(new GridBagLayout) with RoundedBorderPanel with ThemeSync with MouseUtils {
-    private val label = new JLabel(I18N.gui.get("tabs.run.addWidget"))
+  class WidgetMenu extends BoxRow(14) with RoundedBorderPanel with ThemeSync with MouseUtils {
+    private val label = new JLabel(I18N.gui.get("tabs.run.addWidget")) with Zoomable
     private val arrow = new DropdownArrow
 
+    setBorder(new ZoomableBorder(6, 8, 6, 6))
     setDiameter(6)
+
+    add(label)
+    add(new BoxColumn(arrow, BoxAlign.Center))
+
     enableHover()
 
-    locally {
-      val c = new GridBagConstraints
-
-      c.insets = new Insets(6, 8, 6, 6)
-
-      add(label, c)
-      add(arrow, c)
-    }
-
-    private val actions =
-      widgetInfos.map(spec => new MenuItem(new AbstractAction(spec.displayName, spec.icon) {
-        def actionPerformed(e: ActionEvent): Unit = {
-          chosenItem = spec.displayName
-
-          wPanel.createShadowWidget(widgetMenu.getSelectedWidget)
-        }
-      }))
+    private val actions: Seq[WidgetMenuItem] = widgetInfos.map(new WidgetMenuItem(_))
 
     private var chosenItem = ""
 
-    val popup = new PopupMenu
-
-    popup.add(actions(0))
-    popup.addSeparator()
-    popup.add(actions(1))
-    popup.add(actions(2))
-    popup.add(actions(3))
-    popup.add(actions(4))
-    popup.addSeparator()
-    popup.add(actions(5))
-    popup.add(actions(6))
-    popup.add(actions(7))
-    popup.addSeparator()
-    popup.add(actions(8))
+    var popup: PopupMenu = getPopup
 
     addMouseListener(new MouseAdapter {
       override def mousePressed(e: MouseEvent): Unit = {
-        actions.foreach(action => action.setEnabled(wPanel.canAddWidget(action.getText)))
+        popup = getPopup
 
         popup.show(WidgetMenu.this, 0, getHeight)
       }
@@ -329,6 +298,23 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
     def getSelectedWidget =
       widgetInfos.find(_.displayName == chosenItem).get.coreWidget
 
+    private def getPopup: PopupMenu = {
+      new PopupMenu {
+        add(actions(0))
+        addSeparator()
+        add(actions(1))
+        add(actions(2))
+        add(actions(3))
+        add(actions(4))
+        addSeparator()
+        add(actions(5))
+        add(actions(6))
+        add(actions(7))
+        addSeparator()
+        add(actions(8))
+      }
+    }
+
     override def syncTheme(): Unit = {
       setBackgroundColor(InterfaceColors.toolbarControlBackground())
       setBackgroundHoverColor(InterfaceColors.toolbarControlBackgroundHover())
@@ -336,127 +322,57 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
       setBorderColor(InterfaceColors.toolbarControlBorder())
 
       label.setForeground(InterfaceColors.toolbarText())
+    }
 
-      popup.syncTheme()
+    private def createWidget(info: WidgetInfo): Unit = {
+      chosenItem = info.displayName
+
+      wPanel.createShadowWidget(widgetMenu.getSelectedWidget)
+    }
+
+    private class WidgetMenuItem(info: WidgetInfo) extends MenuItem(info.displayName, () => createWidget(info)) {
+      setIcon(info.icon)
+
+      override def addNotify(): Unit = {
+        super.addNotify()
+
+        setEnabled(wPanel.canAddWidget(info.displayName))
+      }
     }
   }
 
-  class AlignmentMenu extends JPanel(new GridBagLayout) with RoundedBorderPanel with ThemeSync with MouseUtils {
-    private val label = new JLabel(I18N.gui.get("tabs.run.alignWidgets"))
+  class AlignmentMenu extends BoxRow(14) with RoundedBorderPanel with ThemeSync with MouseUtils {
+    private implicit val i18nPrefix: I18N.Prefix = I18N.Prefix("tabs.run.widget")
+
+    private val label = new JLabel(I18N.gui.get("tabs.run.alignWidgets")) with Zoomable
     private val arrow = new DropdownArrow
 
+    setBorder(new ZoomableBorder(6, 8, 6, 6))
     setDiameter(6)
+
+    add(label)
+    add(new BoxColumn(arrow, BoxAlign.Center))
+
     enableHover()
 
-    locally {
-      val c = new GridBagConstraints
+    private val leftAction = new AlignMenuItem("alignLeft", "align-left.png", _.alignLeft())
+    private val centerHorizontalAction = new AlignMenuItem("alignCenterHorizontal", "align-horizontal-center.png",
+                                                           _.alignCenterHorizontal())
+    private val rightAction = new AlignMenuItem("alignRight", "align-right.png", _.alignRight())
+    private val topAction = new AlignMenuItem("alignTop", "align-top.png", _.alignTop())
+    private val centerVerticalAction = new AlignMenuItem("alignCenterVertical", "align-vertical-center.png",
+                                                         _.alignCenterVertical())
+    private val bottomAction = new AlignMenuItem("alignBottom", "align-bottom.png", _.alignBottom())
+    private val distributeHorizontalAction = new AlignMenuItem("distributeHorizontal", "distribute-horizontal.png",
+                                                               _.distributeHorizontal())
+    private val distributeVerticalAction = new AlignMenuItem("distributeVertical", "distribute-vertical.png",
+                                                             _.distributeVertical())
+    private val stretchLeftAction = new AlignMenuItem("stretchLeft", "stretch-left.png", _.stretchLeft())
+    private val stretchRightAction = new AlignMenuItem("stretchRight", "stretch-right.png", _.stretchRight())
+    private val stretchTopAction = new AlignMenuItem("stretchTop", "stretch-top.png", _.stretchTop())
+    private val stretchBottomAction = new AlignMenuItem("stretchBottom", "stretch-bottom.png", _.stretchBottom())
 
-      c.insets = new Insets(6, 8, 6, 6)
-
-      add(label, c)
-      add(arrow, c)
-    }
-
-    private val leftAction = new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.alignLeft")) {
-      def actionPerformed(e: ActionEvent): Unit = {
-        wPanel.alignLeft()
-      }
-    })
-
-    private val centerHorizontalAction = new MenuItem(
-      new AbstractAction(I18N.gui.get("tabs.run.widget.alignCenterHorizontal")) {
-        def actionPerformed(e: ActionEvent): Unit = {
-          wPanel.alignCenterHorizontal()
-        }
-      })
-
-    private val rightAction = new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.alignRight")) {
-      def actionPerformed(e: ActionEvent): Unit = {
-        wPanel.alignRight()
-      }
-    })
-
-    private val topAction = new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.alignTop")) {
-      def actionPerformed(e: ActionEvent): Unit = {
-        wPanel.alignTop()
-      }
-    })
-
-    private val centerVerticalAction = new MenuItem(
-      new AbstractAction(I18N.gui.get("tabs.run.widget.alignCenterVertical")) {
-        def actionPerformed(e: ActionEvent): Unit = {
-          wPanel.alignCenterVertical()
-        }
-      })
-
-    private val bottomAction = new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.alignBottom")) {
-      def actionPerformed(e: ActionEvent): Unit = {
-        wPanel.alignBottom()
-      }
-    })
-
-    private val distributeHorizontalAction = new MenuItem(
-      new AbstractAction(I18N.gui.get("tabs.run.widget.distributeHorizontal")) {
-        def actionPerformed(e: ActionEvent): Unit = {
-          wPanel.distributeHorizontal()
-        }
-      })
-
-    private val distributeVerticalAction = new MenuItem(
-      new AbstractAction(I18N.gui.get("tabs.run.widget.distributeVertical")) {
-        def actionPerformed(e: ActionEvent): Unit = {
-          wPanel.distributeVertical()
-        }
-      })
-
-    private val stretchLeftAction = new MenuItem(
-      new AbstractAction(I18N.gui.get("tabs.run.widget.stretchLeft")) {
-        def actionPerformed(e: ActionEvent): Unit = {
-          wPanel.stretchLeft()
-        }
-      })
-
-    private val stretchRightAction = new MenuItem(
-      new AbstractAction(I18N.gui.get("tabs.run.widget.stretchRight")) {
-        def actionPerformed(e: ActionEvent): Unit = {
-          wPanel.stretchRight()
-        }
-      })
-
-    private val stretchTopAction = new MenuItem(
-      new AbstractAction(I18N.gui.get("tabs.run.widget.stretchTop")) {
-        def actionPerformed(e: ActionEvent): Unit = {
-          wPanel.stretchTop()
-        }
-      })
-
-    private val stretchBottomAction = new MenuItem(
-      new AbstractAction(I18N.gui.get("tabs.run.widget.stretchBottom")) {
-        def actionPerformed(e: ActionEvent): Unit = {
-          wPanel.stretchBottom()
-        }
-      })
-
-    val popup = new PopupMenu
-
-    popup.add(new JLabel("Arrange selected widgets") {
-      setBorder(new EmptyBorder(0, 6, 0, 0))
-    }).setEnabled(false)
-    popup.addSeparator()
-    popup.add(leftAction)
-    popup.add(centerHorizontalAction)
-    popup.add(rightAction)
-    popup.add(topAction)
-    popup.add(centerVerticalAction)
-    popup.add(bottomAction)
-    popup.addSeparator()
-    popup.add(distributeHorizontalAction)
-    popup.add(distributeVerticalAction)
-    popup.addSeparator()
-    popup.add(stretchLeftAction)
-    popup.add(stretchRightAction)
-    popup.add(stretchTopAction)
-    popup.add(stretchBottomAction)
+    var popup: PopupMenu = getPopup
 
     addMouseListener(new MouseAdapter {
       override def mousePressed(e: MouseEvent): Unit = {
@@ -473,9 +389,34 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
         stretchTopAction.setEnabled(selectedObjects.size > 1)
         stretchBottomAction.setEnabled(selectedObjects.size > 1)
 
+        popup = getPopup
+
         popup.show(AlignmentMenu.this, 0, getHeight)
       }
     })
+
+    private def getPopup: PopupMenu = {
+      new PopupMenu {
+        add(new JLabel("Arrange selected widgets") with Zoomable {
+          setBorder(new ZoomableBorder(0, 6, 0, 0))
+        }).setEnabled(false)
+        addSeparator()
+        add(leftAction)
+        add(centerHorizontalAction)
+        add(rightAction)
+        add(topAction)
+        add(centerVerticalAction)
+        add(bottomAction)
+        addSeparator()
+        add(distributeHorizontalAction)
+        add(distributeVerticalAction)
+        addSeparator()
+        add(stretchLeftAction)
+        add(stretchRightAction)
+        add(stretchTopAction)
+        add(stretchBottomAction)
+      }
+    }
 
     override def syncTheme(): Unit = {
       setBackgroundColor(InterfaceColors.toolbarControlBackground())
@@ -484,39 +425,19 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
       setBorderColor(InterfaceColors.toolbarControlBorder())
 
       label.setForeground(InterfaceColors.toolbarText())
+    }
 
-      popup.syncTheme()
+    private class AlignMenuItem(name: String, image: String, action: WidgetPanel => Unit)
+      extends MenuItem(I18N.gui(name), () => action(wPanel)) {
 
-      leftAction.setIcon(Utils.iconScaledWithColor("/images/align-left.png", 16, 16, InterfaceColors.toolbarImage()))
-      centerHorizontalAction.setIcon(Utils.iconScaledWithColor("/images/align-horizontal-center.png", 16, 16,
-                                                               InterfaceColors.toolbarImage()))
-      rightAction.setIcon(Utils.iconScaledWithColor("/images/align-right.png", 16, 16, InterfaceColors.toolbarImage()))
-      topAction.setIcon(Utils.iconScaledWithColor("/images/align-top.png", 16, 16, InterfaceColors.toolbarImage()))
-      centerVerticalAction.setIcon(Utils.iconScaledWithColor("/images/align-vertical-center.png", 16, 16,
-                                                             InterfaceColors.toolbarImage()))
-      bottomAction.setIcon(Utils.iconScaledWithColor("/images/align-bottom.png", 16, 16, InterfaceColors.toolbarImage()))
-      distributeHorizontalAction.setIcon(Utils.iconScaledWithColor("/images/distribute-horizontal.png", 16, 16,
-                                                                   InterfaceColors.toolbarImage()))
-      distributeVerticalAction.setIcon(Utils.iconScaledWithColor("/images/distribute-vertical.png", 16, 16,
-                                                                 InterfaceColors.toolbarImage()))
-      stretchLeftAction.setIcon(Utils.iconScaledWithColor("/images/stretch-left.png", 16, 16,
-                                                          InterfaceColors.toolbarImage()))
-      stretchRightAction.setIcon(Utils.iconScaledWithColor("/images/stretch-right.png", 16, 16,
-                                                           InterfaceColors.toolbarImage()))
-      stretchTopAction.setIcon(Utils.iconScaledWithColor("/images/stretch-top.png", 16, 16,
-                                                         InterfaceColors.toolbarImage()))
-      stretchBottomAction.setIcon(Utils.iconScaledWithColor("/images/stretch-bottom.png", 16, 16,
-                                                            InterfaceColors.toolbarImage()))
+      setIcon(Utils.iconScaledWithColor(s"/images/$image", 16, 16, () => InterfaceColors.toolbarImage()))
     }
   }
 
-  class SquareButton(action: Action) extends ToolBarToggleButton(action) {
+  class SquareButton(action: Action) extends ToolBarToggleButton(action) with PreferredSize {
     setBorder(null)
 
-    override def getMinimumSize: Dimension =
-      new Dimension(widgetMenu.getPreferredSize.height, widgetMenu.getPreferredSize.height)
-
     override def getPreferredSize: Dimension =
-      getMinimumSize
+      new Dimension(widgetMenu.getPreferredSize.height, widgetMenu.getPreferredSize.height)
   }
 }

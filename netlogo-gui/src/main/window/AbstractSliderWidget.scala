@@ -6,20 +6,20 @@ import java.awt.{ Dimension, Graphics, Point }
 import java.awt.event.{ ActionEvent, ActionListener, FocusAdapter, FocusEvent, KeyAdapter, KeyEvent, MouseAdapter,
                         MouseEvent }
 import java.lang.NumberFormatException
-import javax.swing.{ BorderFactory, JLabel, JTextField, SwingConstants }
+import javax.swing.{ JLabel, JTextField, SwingConstants }
 import javax.swing.text.{ AttributeSet, PlainDocument }
 
 import org.nlogo.agent.SliderConstraint
 import org.nlogo.api.{ Approximate, Dump }
 import org.nlogo.core.{ I18N, NetLogoPreferences }
-import org.nlogo.swing.{ Transparent, Utils }
+import org.nlogo.swing.{ Transparent, Utils, Zoomable, ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.Events.InputBoxLoseFocusEvent
 
 import scala.math.Pi
 
 trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
-  protected class Label(text: String) extends JLabel(text) {
+  protected class Label(text: String) extends JLabel(text) with Zoomable {
     override def paintComponent(g: Graphics): Unit = {
       val g2d = Utils.initGraphics2D(g)
       if (vertical) {
@@ -30,9 +30,9 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
     }
   }
 
-  protected class TextField extends JTextField("50", 3) with Transparent {
-    setBorder(BorderFactory.createEmptyBorder(0, 3, 0, 2))
-    setFont(getFont.deriveFont(11f))
+  protected class TextField extends JTextField("50", 3) with Transparent with Zoomable {
+    setBorder(new ZoomableBorder(0, 3, 0, 2))
+    setBaseFont(getFont.deriveFont(11f))
     setHorizontalAlignment(SwingConstants.RIGHT)
 
     addActionListener(new ActionListener {
@@ -56,7 +56,8 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
     })
 
     override def getPreferredSize: Dimension =
-      new Dimension(25.max(getFontMetrics(getFont).stringWidth(getText) + 8), super.getPreferredSize.height)
+      new Dimension((getFontMetrics(getFont).stringWidth(getText) + Utils.zoom(8)).max(Utils.zoom(25)),
+                    super.getPreferredSize.height)
 
     protected override def createDefaultModel =
       new PlainDocument {
@@ -123,9 +124,9 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
         g2d.rotate(-Pi / 2)
       }
       g2d.setColor(InterfaceColors.inputBorder())
-      g2d.fillRoundRect(0, 0, getWidth, getHeight, zoom(6), zoom(6))
+      g2d.fillRoundRect(0, 0, getWidth, getHeight, Utils.zoom(6), Utils.zoom(6))
       g2d.setColor(InterfaceColors.displayAreaBackground())
-      g2d.fillRoundRect(1, 1, getWidth - 2, getHeight - 2, zoom(6), zoom(6))
+      g2d.fillRoundRect(1, 1, getWidth - 2, getHeight - 2, Utils.zoom(6), Utils.zoom(6))
       super.paintComponent(g)
     }
   }
@@ -135,9 +136,16 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
   private var _vertical = false
   private val sliderData = new SliderData(this)
 
-  val nameComponent = new Label(I18N.gui.get("edit.slider.previewName"))
+  val nameComponent = new Label(I18N.gui.get("edit.slider.previewName")) {
+    setBaseFont(getFont.deriveFont(_boldState))
+  }
+
   val valueComponent = new TextField
-  val unitsComponent = new Label("")
+
+  val unitsComponent = new Label("") {
+    setBaseFont(getFont.deriveFont(_boldState))
+  }
+
   val slider = new Slider(minimum, increment, maximum, this) {
     override def processKeyEvent(e: KeyEvent): Unit = {
       if (e.getID == KeyEvent.KEY_PRESSED) {
@@ -202,13 +210,6 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
   add(valueComponent)
   add(unitsComponent)
   add(slider)
-
-  initGUI()
-
-  override def initGUI(): Unit = {
-    nameComponent.setFont(nameComponent.getFont.deriveFont(_boldState))
-    unitsComponent.setFont(unitsComponent.getFont.deriveFont(_boldState))
-  }
 
   def constraint = sliderData.constraint
   def setSliderConstraint(con: SliderConstraint) = {
@@ -293,8 +294,6 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
   def setVertical(vert: Boolean): Unit = {
     if (vert != vertical) {
       _vertical = vert
-      resetZoomInfo()
-      resetSizeInfo()
       if (vert) {
         slider.setOrientation(SwingConstants.VERTICAL)
       } else {
@@ -325,82 +324,84 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
   override def doLayout(): Unit = {
     if (_oldSize) {
       if (vertical) {
-        nameComponent.setBounds(zoom(2), getHeight - zoom(6), nameComponent.getPreferredSize.width.min(
+        nameComponent.setBounds(Utils.zoom(2), getHeight - Utils.zoom(6), nameComponent.getPreferredSize.width.min(
                                                                 getHeight - unitsComponent.getPreferredSize.width -
-                                                                valueComponent.getPreferredSize.width - zoom(18)),
+                                                                valueComponent.getPreferredSize.width -
+                                                                Utils.zoom(18)),
                                 nameComponent.getPreferredSize.height)
-        unitsComponent.setBounds(zoom(2), unitsComponent.getPreferredSize.width + zoom(6),
+        unitsComponent.setBounds(Utils.zoom(2), unitsComponent.getPreferredSize.width + Utils.zoom(6),
                                  unitsComponent.getPreferredSize.width, unitsComponent.getPreferredSize.height)
 
         if (unitsComponent.getPreferredSize.width == 0) {
-          valueComponent.setBounds(zoom(2), valueComponent.getPreferredSize.width + zoom(6),
+          valueComponent.setBounds(Utils.zoom(2), valueComponent.getPreferredSize.width + Utils.zoom(6),
                                    valueComponent.getPreferredSize.width, valueComponent.getPreferredSize.height)
         } else {
-          valueComponent.setBounds(zoom(2), unitsComponent.getPreferredSize.width +
-                                        valueComponent.getPreferredSize.width + zoom(12),
+          valueComponent.setBounds(Utils.zoom(2), unitsComponent.getPreferredSize.width +
+                                        valueComponent.getPreferredSize.width + Utils.zoom(12),
                                    valueComponent.getPreferredSize.width, valueComponent.getPreferredSize.height)
         }
 
-        slider.setBounds(getWidth - slider.getPreferredSize.width + 1, zoom(6), slider.getPreferredSize.width,
-                         getHeight - zoom(12))
+        slider.setBounds(getWidth - slider.getPreferredSize.width + 1, Utils.zoom(6), slider.getPreferredSize.width,
+                         getHeight - Utils.zoom(12))
       } else {
-        nameComponent.setBounds(zoom(6), zoom(2), nameComponent.getPreferredSize.width.min(
+        nameComponent.setBounds(Utils.zoom(6), Utils.zoom(2), nameComponent.getPreferredSize.width.min(
                                                     getWidth - unitsComponent.getPreferredSize.width -
-                                                    valueComponent.getPreferredSize.width - zoom(18)),
+                                                    valueComponent.getPreferredSize.width - Utils.zoom(18)),
                                 nameComponent.getPreferredSize.height)
-        unitsComponent.setBounds(getWidth - unitsComponent.getPreferredSize.width - zoom(6), zoom(2),
+        unitsComponent.setBounds(getWidth - unitsComponent.getPreferredSize.width - Utils.zoom(6), Utils.zoom(2),
                                  unitsComponent.getPreferredSize.width, unitsComponent.getPreferredSize.height)
 
         if (unitsComponent.getPreferredSize.width == 0) {
-          valueComponent.setBounds(getWidth - valueComponent.getPreferredSize.width - zoom(6), zoom(2),
+          valueComponent.setBounds(getWidth - valueComponent.getPreferredSize.width - Utils.zoom(6), Utils.zoom(2),
                                    valueComponent.getPreferredSize.width, valueComponent.getPreferredSize.height)
         } else {
           valueComponent.setBounds(getWidth - unitsComponent.getPreferredSize.width -
-                                   valueComponent.getPreferredSize.width - zoom(12), zoom(2),
+                                   valueComponent.getPreferredSize.width - Utils.zoom(12), Utils.zoom(2),
                                    valueComponent.getPreferredSize.width, valueComponent.getPreferredSize.height)
         }
 
-        slider.setBounds(zoom(6), getHeight - slider.getPreferredSize.height + 1, getWidth - zoom(12),
+        slider.setBounds(Utils.zoom(6), getHeight - slider.getPreferredSize.height + 1, getWidth - Utils.zoom(12),
                          slider.getPreferredSize.height)
       }
     } else {
       if (vertical) {
-        nameComponent.setBounds(zoom(8), getHeight - zoom(8), nameComponent.getPreferredSize.width.min(
+        nameComponent.setBounds(Utils.zoom(8), getHeight - Utils.zoom(8), nameComponent.getPreferredSize.width.min(
                                                                 getHeight - unitsComponent.getPreferredSize.width -
-                                                                valueComponent.getPreferredSize.width - zoom(24)),
+                                                                valueComponent.getPreferredSize.width -
+                                                                Utils.zoom(24)),
                                 nameComponent.getPreferredSize.height)
-        unitsComponent.setBounds(zoom(8), unitsComponent.getPreferredSize.width + zoom(8),
+        unitsComponent.setBounds(Utils.zoom(8), unitsComponent.getPreferredSize.width + Utils.zoom(8),
                                  unitsComponent.getPreferredSize.width, unitsComponent.getPreferredSize.height)
 
         if (unitsComponent.getPreferredSize.width == 0) {
-          valueComponent.setBounds(zoom(8), valueComponent.getPreferredSize.width + zoom(8),
+          valueComponent.setBounds(Utils.zoom(8), valueComponent.getPreferredSize.width + Utils.zoom(8),
                                    valueComponent.getPreferredSize.width, valueComponent.getPreferredSize.height)
         } else {
-          valueComponent.setBounds(zoom(8), unitsComponent.getPreferredSize.width +
-                                              valueComponent.getPreferredSize.width + zoom(12),
+          valueComponent.setBounds(Utils.zoom(8), unitsComponent.getPreferredSize.width +
+                                              valueComponent.getPreferredSize.width + Utils.zoom(12),
                                    valueComponent.getPreferredSize.width, valueComponent.getPreferredSize.height)
         }
 
-        slider.setBounds(getWidth - slider.getPreferredSize.width - 2, zoom(8), slider.getPreferredSize.width,
-                         getHeight - zoom(16))
+        slider.setBounds(getWidth - slider.getPreferredSize.width - 2, Utils.zoom(8), slider.getPreferredSize.width,
+                         getHeight - Utils.zoom(16))
       } else {
-        nameComponent.setBounds(zoom(8), zoom(8), nameComponent.getPreferredSize.width.min(
+        nameComponent.setBounds(Utils.zoom(8), Utils.zoom(8), nameComponent.getPreferredSize.width.min(
                                                     getWidth - unitsComponent.getPreferredSize.width -
-                                                    valueComponent.getPreferredSize.width - zoom(24)),
+                                                    valueComponent.getPreferredSize.width - Utils.zoom(24)),
                                 nameComponent.getPreferredSize.height)
-        unitsComponent.setBounds(getWidth - unitsComponent.getPreferredSize.width - zoom(8), zoom(8),
+        unitsComponent.setBounds(getWidth - unitsComponent.getPreferredSize.width - Utils.zoom(8), Utils.zoom(8),
                                  unitsComponent.getPreferredSize.width, unitsComponent.getPreferredSize.height)
 
         if (unitsComponent.getPreferredSize.width == 0) {
-          valueComponent.setBounds(getWidth - valueComponent.getPreferredSize.width - zoom(8), zoom(8),
+          valueComponent.setBounds(getWidth - valueComponent.getPreferredSize.width - Utils.zoom(8), Utils.zoom(8),
                                    valueComponent.getPreferredSize.width, valueComponent.getPreferredSize.height)
         } else {
           valueComponent.setBounds(getWidth - unitsComponent.getPreferredSize.width -
-                                   valueComponent.getPreferredSize.width - zoom(12), zoom(8),
+                                   valueComponent.getPreferredSize.width - Utils.zoom(12), Utils.zoom(8),
                                    valueComponent.getPreferredSize.width, valueComponent.getPreferredSize.height)
         }
 
-        slider.setBounds(zoom(8), getHeight - slider.getPreferredSize.height - 2, getWidth - zoom(16),
+        slider.setBounds(Utils.zoom(8), getHeight - slider.getPreferredSize.height - 2, getWidth - Utils.zoom(16),
                          slider.getPreferredSize.height)
       }
     }
@@ -413,33 +414,37 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
   }
 
   override def getMinimumSize = {
-    if (_oldSize) {
-      if (vertical) {
-        new Dimension(33, 92)
+    Utils.zoomSize {
+      if (_oldSize) {
+        if (vertical) {
+          new Dimension(33, 92)
+        } else {
+          new Dimension(92, 33)
+        }
       } else {
-        new Dimension(92, 33)
-      }
-    } else {
-      if (vertical) {
-        new Dimension(50, 150)
-      } else {
-        new Dimension(150, 50)
+        if (vertical) {
+          new Dimension(50, 150)
+        } else {
+          new Dimension(150, 50)
+        }
       }
     }
   }
 
   override def getPreferredSize = {
-    if (_oldSize) {
-      if (vertical) {
-        new Dimension(33, 150)
+    Utils.zoomSize {
+      if (_oldSize) {
+        if (vertical) {
+          new Dimension(33, 150)
+        } else {
+          new Dimension(150, 33)
+        }
       } else {
-        new Dimension(150, 33)
-      }
-    } else {
-      if (vertical) {
-        new Dimension(50, 250)
-      } else {
-        new Dimension(250, 50)
+        if (vertical) {
+          new Dimension(50, 250)
+        } else {
+          new Dimension(250, 50)
+        }
       }
     }
   }

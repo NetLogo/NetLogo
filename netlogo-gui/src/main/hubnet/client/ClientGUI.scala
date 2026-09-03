@@ -3,13 +3,13 @@
 package org.nlogo.hubnet.client
 
 import java.awt.{ BorderLayout, Font, Insets }
-import javax.swing.{ Box, BoxLayout, JLabel, JPanel }
-import javax.swing.border.{ BevelBorder, EmptyBorder, LineBorder }
+import javax.swing.{ Box, JLabel, JPanel }
+import javax.swing.border.{ BevelBorder, LineBorder }
 
 import org.nlogo.api.{ CompilerServices, ExtensionManager, MersenneTwisterFast, RandomServices }
 import org.nlogo.awt.Hierarchy
 import org.nlogo.plot.PlotManager
-import org.nlogo.swing.{ ScrollPane, TextArea, Transparent }
+import org.nlogo.swing.{ BoxRow, ScrollPane, TextArea, Transparent, Zoomable, ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ ButtonWidget, ChooserWidget, EditorFactory, InterfacePanelLite }
 
@@ -96,12 +96,10 @@ class ClientGUI(editorFactory: EditorFactory, clientView: ClientView, plotManage
     }
   }
 
-  private class StatusPanel extends JPanel with Transparent with ThemeSync {
+  private class StatusPanel extends BoxRow with ThemeSync {
     private val username = new StatusField("User name", "")
     private val server = new StatusField("Server", "")
     private val port = new StatusField("Port", "")
-
-    setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
 
     add(username)
     add(Box.createHorizontalGlue)
@@ -124,17 +122,16 @@ class ClientGUI(editorFactory: EditorFactory, clientView: ClientView, plotManage
   }
 
   // Component shows label,value pair. For the status bar.
-  private class StatusField(labelStr: String, valueStr: String) extends JPanel with Transparent with ThemeSync {
-    private val label = new JLabel(labelStr + ": ") {
-      setFont(getFont.deriveFont((getFont.getSize - 2.0).toFloat).deriveFont(Font.BOLD))
+  private class StatusField(labelStr: String, valueStr: String) extends BoxRow with ThemeSync {
+    private val label = new JLabel(labelStr + ": ") with Zoomable {
+      setBaseFont(getFont.deriveFont(getFont.getSize - 2f).deriveFont(Font.BOLD))
     }
 
-    private val value = new JLabel(valueStr) {
-      setFont(getFont.deriveFont((getFont.getSize - 2.0).asInstanceOf[Float]))
+    private val value = new JLabel(valueStr) with Zoomable {
+      setBaseFont(getFont.deriveFont(getFont.getSize - 2f))
     }
 
-    setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
-    setBorder(new EmptyBorder(4, 4, 4, 4))
+    setBorder(new ZoomableBorder(4, 4, 4, 4))
 
     add(label)
     add(value)

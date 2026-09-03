@@ -2,23 +2,24 @@
 
 package org.nlogo.window
 
-import java.awt.{ BorderLayout, Color, Dimension, Frame, Graphics }
+import java.awt.{ Color, Dimension, Frame, Graphics }
 import java.awt.event.{ MouseAdapter, MouseEvent }
-import javax.swing.{ JLabel, JPanel }
+import javax.swing.{ Box, JLabel, JPanel }
 
-import org.nlogo.swing.{ RoundedBorderPanel, Utils }
+import org.nlogo.swing.{ BoxRow, PreferredSize, RoundedBorderPanel, Utils, Zoomable }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 import scala.util.Success
 
-class ColorEditor(accessor: PropertyAccessor[Color], frame: Frame) extends PropertyEditor(accessor) {
-  private val label = new JLabel(accessor.name)
+class ColorEditor(accessor: PropertyAccessor[Color], frame: Frame)
+  extends BoxRow(6) with PropertyEditor(accessor) {
+
+  private val label = new JLabel(accessor.name) with Zoomable
   private val colorButton = new ColorButton
 
-  setLayout(new BorderLayout(6, 0))
-
-  add(label, BorderLayout.CENTER)
-  add(colorButton, BorderLayout.EAST)
+  add(label)
+  add(Box.createHorizontalGlue)
+  add(colorButton)
 
   setColor(originalValue)
 
@@ -41,12 +42,12 @@ class ColorEditor(accessor: PropertyAccessor[Color], frame: Frame) extends Prope
     colorButton.syncTheme()
   }
 
-  private class ColorButton extends JPanel with RoundedBorderPanel with ThemeSync {
+  private class ColorButton extends JPanel with RoundedBorderPanel with PreferredSize with ThemeSync {
     private var color = Color.BLACK
 
-    private val panel = new JPanel {
+    private val panel = new JPanel with PreferredSize {
       override def getPreferredSize: Dimension =
-        new Dimension(16, 16)
+        new Dimension(Utils.zoom(16), Utils.zoom(16))
 
       override def paintComponent(g: Graphics): Unit = {
         val g2d = Utils.initGraphics2D(g)

@@ -2,19 +2,15 @@
 
 package org.nlogo.window
 
-import java.awt.{ Component, Dimension, EventQueue, Font, Graphics, GridBagConstraints, GridBagLayout, Insets }
-import javax.swing.{ JPanel, ScrollPaneConstants }
+import java.awt.{ Component, Dimension, EventQueue, Font }
+import javax.swing.ScrollPaneConstants
 
 import org.nlogo.agent.OutputObject
 import org.nlogo.awt.LineBreaker
-import org.nlogo.swing.{ RoundedBorderPanel, ScrollPane, TextArea }
+import org.nlogo.swing.{ BoxRow, RoundedBorderPanel, ScrollPane, TextArea, Utils, ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 object OutputArea {
-  private val PreferredWidth = 200
-  private val PreferredHeight = 45
-  private val MinimumWidth = 50
-  private val GuessScrollBarWidth = 24
   class DefaultTextArea extends TextArea(0, 0, "") {
     override def getMinimumSize: Dimension = new Dimension(50, (getRowHeight * 1.25).toInt)
   }
@@ -28,11 +24,7 @@ object OutputArea {
 
 import OutputArea._
 
-class OutputArea(val text: TextArea) extends JPanel with RoundedBorderPanel with ThemeSync {
-  setOpaque(false)
-
-  var zoomFactor = 1.0
-
+class OutputArea(val text: TextArea) extends BoxRow with RoundedBorderPanel with ThemeSync {
   private val scrollPane =
     new ScrollPane(text, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
                    ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED) {
@@ -52,19 +44,13 @@ class OutputArea(val text: TextArea) extends JPanel with RoundedBorderPanel with
   //
   text.setEditable(false)
   text.setDragEnabled(false)
+
   fontSize(12)
-  setLayout(new GridBagLayout)
 
-  locally {
-    val c = new GridBagConstraints
+  setBorder(new ZoomableBorder(3, 3, 3, 3))
+  setDiameter(6)
 
-    c.weightx = 1
-    c.weighty = 1
-    c.fill = GridBagConstraints.BOTH
-    c.insets = new Insets(3, 3, 3, 3)
-
-    add(scrollPane, c)
-  }
+  add(scrollPane)
 
   def this() = this(new DefaultTextArea())
 
@@ -79,17 +65,20 @@ class OutputArea(val text: TextArea) extends JPanel with RoundedBorderPanel with
   }
 
   def fontSize: Int =
-    text.getFont.getSize
+    text.getBaseFont.getSize
 
   def fontSize(fontSize: Int): Unit = {
-    text.setFont(text.getFont.deriveFont(fontSize))
+    text.setBaseFont(text.getFont.deriveFont(fontSize.toFloat))
   }
 
   override def getFont: Font =
     text.getFont
 
-  override def setFont(font: Font): Unit = {
-    text.setFont(font.deriveFont(fontSize))
+  def getBaseFont: Font =
+    text.getBaseFont
+
+  def setBaseFont(font: Font): Unit = {
+    text.setBaseFont(font.deriveFont(fontSize.toFloat))
   }
 
   def clear(): Unit = {
@@ -98,18 +87,12 @@ class OutputArea(val text: TextArea) extends JPanel with RoundedBorderPanel with
   }
 
   override def getMinimumSize: Dimension =
-    new Dimension(MinimumWidth, text.getMinimumSize.height)
+    new Dimension(Utils.zoom(50), text.getMinimumSize.height)
 
   override def getPreferredSize: Dimension =
-    new Dimension(PreferredWidth, PreferredHeight)
+    new Dimension(Utils.zoom(200), Utils.zoom(45))
 
   override def isFocusable: Boolean = false
-
-  override def paintComponent(g: Graphics): Unit = {
-    setDiameter(6 * zoomFactor)
-
-    super.paintComponent(g)
-  }
 
   override def syncTheme(): Unit = {
     setBackgroundColor(InterfaceColors.commandOutputBackground())
@@ -132,7 +115,7 @@ class OutputArea(val text: TextArea) extends JPanel with RoundedBorderPanel with
     lastTemporaryAddition = None
     val metrics = getFontMetrics(text.getFont)
     if (wrapLines) {
-      message = LineBreaker.breakLines(message, metrics, text.getWidth - GuessScrollBarWidth)
+      message = LineBreaker.breakLines(message, metrics, text.getWidth - 24)
                            .mkString("\n") + "\n"
     }
     val buf = new StringBuilder();

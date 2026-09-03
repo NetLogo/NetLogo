@@ -17,7 +17,7 @@ import org.nlogo.core.{
   View => CoreView, Widget => CoreWidget }
 import org.nlogo.editor.EditorArea
 import org.nlogo.log.LogManager
-import org.nlogo.swing.{ ClipboardUtils, MenuItem, PopupMenu }
+import org.nlogo.swing.{ ClipboardUtils, MenuItem, PopupMenu, Utils }
 import org.nlogo.window.{ AutoIndentHandler, ButtonWidget, ChooserWidget, Editable, EditDialogFactory,
                           Events => WindowEvents, GUIWorkspace, InputBoxWidget, InterfaceGlobalWidget, InterfaceMode,
                           MonitorWidget, PlotWidget, SliderWidget, SwitchWidget, ViewWidget, ViewWidgetInterface,
@@ -185,22 +185,14 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
         // the graphics widget (and the command center) are special cases because
         // they are not recreated at load time, but reused
         viewWidget.load(view)
+        viewWidget.setUnzoomedBounds(x, y, view.width, view.height)
         // in 3D we don't add the viewWidget to the interface panel
         // so don't worry about all the sizing junk ev 7/5/07
         val parent = viewWidget.getParent
         if (parent != null) {
-          parent.setSize(viewWidget.getSize)
+          parent.setSize(Utils.zoomSize(viewWidget.getSize))
           enforceMinimumAndMaximumWidgetSizes(viewWidget)
-          parent.setLocation(x, y)
-          zoomer.zoomWidgetLocation(
-            getWrapper(viewWidget),
-                  true, true, 1.0, zoomer.zoomFactor)
-          zoomer.zoomWidgetSize(
-            getWrapper(viewWidget),
-                  true, true, 1.0, zoomer.zoomFactor)
-          zoomer.scaleComponentFont(
-            viewWidget.asInstanceOf[ViewWidget].view,
-                 zoomFactor, 1.0, false)
+          parent.setLocation(Utils.zoom(x), Utils.zoom(y))
         }
         viewWidget
       case _ =>

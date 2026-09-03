@@ -6,24 +6,18 @@ import java.awt.Dimension
 import javax.swing.JLabel
 
 import org.nlogo.core.{ AgentKind, I18N, Button => CoreButton, Widget => CoreWidget }
+import org.nlogo.swing.{ Utils, Zoomable }
 import org.nlogo.theme.InterfaceColors
 
-object DummyButtonWidget {
-  private val MinimumWidth = 55
-  private val MinimumHeight = 33
-}
-
 class DummyButtonWidget extends SingleErrorWidget with Editable {
-  import DummyButtonWidget._
-
   private var _actionKey: Char = '\u0000'
   private var _keyEnabled: Boolean = false
   private var _name: String = ""
 
-  private val nameLabel = new JLabel
-  private val keyLabel = new JLabel
-
-  keyLabel.setFont(keyLabel.getFont.deriveFont(11.0f))
+  private val nameLabel = new JLabel with Zoomable
+  private val keyLabel = new JLabel with Zoomable {
+    setBaseFont(getFont.deriveFont(11f))
+  }
 
   setLayout(null)
 
@@ -74,18 +68,16 @@ class DummyButtonWidget extends SingleErrorWidget with Editable {
   /// sizing
 
   override def getMinimumSize: Dimension =
-    new Dimension(MinimumWidth, MinimumHeight)
-
-  override def getPreferredSize: Dimension =
-    new Dimension(MinimumWidth.max(super.getPreferredSize.width), MinimumHeight.max(super.getPreferredSize.height))
+    new Dimension(Utils.zoom(55), Utils.zoom(33))
 
   override def doLayout(): Unit = {
     val nameSize = nameLabel.getPreferredSize
     val keySize = keyLabel.getPreferredSize
 
-    nameLabel.setBounds((getWidth / 2 - nameSize.width / 2).max(6), getHeight / 2 - nameSize.height / 2,
-                        nameSize.width.min(getWidth - keySize.width - 9), nameSize.height)
-    keyLabel.setBounds(getWidth - keySize.width - 3, getHeight / 2 - keySize.height / 2, keySize.width, keySize.height)
+    nameLabel.setBounds((getWidth / 2 - nameSize.width / 2).max(Utils.zoom(6)), getHeight / 2 - nameSize.height / 2,
+                        nameSize.width.min(getWidth - keySize.width - Utils.zoom(9)), nameSize.height)
+    keyLabel.setBounds(getWidth - keySize.width - Utils.zoom(3), getHeight / 2 - keySize.height / 2, keySize.width,
+                       keySize.height)
   }
 
   override def syncTheme(): Unit = {
@@ -98,7 +90,7 @@ class DummyButtonWidget extends SingleErrorWidget with Editable {
   ///
 
   override def model: CoreWidget = {
-    val b = getUnzoomedBounds
+    val b = unzoomedBounds
     val savedActionKey =
       if (actionKey == 0 || actionKey == ' ') None else Some(actionKey)
     CoreButton(

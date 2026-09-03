@@ -11,7 +11,7 @@ import javax.swing.text.Document
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 class TextField(columns: Int = 0, text: String = null, document: Document = null)
-  extends JTextField(document, text, columns) with ThemeSync {
+  extends JTextField(document, text, columns) with Zoomable with ThemeSync {
 
   private lazy val undoManager = new UndoManager
 
@@ -61,7 +61,7 @@ class TextField(columns: Int = 0, text: String = null, document: Document = null
   }
 
   override def getInsets: Insets =
-    new Insets(0, 3, 0, 0)
+    new Insets(0, Utils.zoom(3), 0, 0)
 
   override def paintComponent(g: Graphics): Unit = {
     if (isEnabled) {

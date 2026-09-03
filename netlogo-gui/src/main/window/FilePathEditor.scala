@@ -2,25 +2,25 @@
 
 package org.nlogo.window
 
-import java.awt.{ BorderLayout, Component, FileDialog => JFileDialog }
+import java.awt.{ Component, FileDialog => JFileDialog }
 import java.io.File
 import java.nio.file.Path
-import javax.swing.{ JLabel, JToolBar }
+import javax.swing.JLabel
 
 import org.nlogo.awt.UserCancelException
+import org.nlogo.swing.{ BoxRow, Button, FileDialog, TextField, Zoomable }
 import org.nlogo.swing.Implicits.thunk2documentListener
-import org.nlogo.swing.{ Button, FileDialog, TextField, Transparent }
 import org.nlogo.theme.InterfaceColors
 
 import scala.util.{ Success, Try }
 
 class FilePathEditor(accessor: PropertyAccessor[String], parent: Component, currentDirectory: Option[Path],
-                     suggestedFile: Option[String]) extends PropertyEditor(accessor) {
+                     suggestedFile: Option[String]) extends BoxRow(6) with PropertyEditor(accessor) {
 
   private val suggestedFileName: String = suggestedFile.map(_.trim).filter(_.nonEmpty).getOrElse(s"${accessor.name}-export.csv")
   private val homePath: Path = (new File(System.getProperty("user.home"))).toPath.toAbsolutePath
 
-  private val label = new JLabel(accessor.name)
+  private val label = new JLabel(accessor.name) with Zoomable
   private val editor = new TextField(12) {
     getDocument.addDocumentListener(() => accessor.changed())
   }
@@ -36,19 +36,10 @@ class FilePathEditor(accessor: PropertyAccessor[String], parent: Component, curr
 
   private val disableButton = new Button("Disable", () => set(""))
 
-  private val toolbar = new JToolBar with Transparent {
-    setLayout(new BorderLayout(6, 0))
-    setFloatable(false)
-
-    add(browseButton, BorderLayout.WEST)
-    add(disableButton, BorderLayout.CENTER)
-  }
-
-  setLayout(new BorderLayout(6, 0))
-
-  add(label, BorderLayout.WEST)
-  add(editor, BorderLayout.CENTER)
-  add(toolbar, BorderLayout.EAST)
+  add(label)
+  add(editor)
+  add(browseButton)
+  add(disableButton)
 
   private def asPath(currentText: String): Path = {
     val currentPath = new File(currentText).toPath

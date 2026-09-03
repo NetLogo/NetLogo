@@ -1,8 +1,8 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.window;
+package org.nlogo.window
 
-import java.awt.{ Component, Dimension, EventQueue, Rectangle }
+import java.awt.{ Dimension, EventQueue }
 import java.awt.event.{ FocusListener, FocusEvent,
   KeyEvent, KeyAdapter, MouseAdapter, MouseEvent }
 import java.awt.image.BufferedImage
@@ -12,7 +12,7 @@ import org.nlogo.api.{ CompilerServices, Exceptions, ExtensionManager, RandomSer
 import org.nlogo.awt.Images
 import org.nlogo.core.{ Widget => CoreWidget, View => CoreView }
 import org.nlogo.plot.PlotManager
-import org.nlogo.swing.{ MenuItem, PopupMenu }
+import org.nlogo.swing.{ MenuItem, PopupMenu, Utils, Zoomable }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.Events.{ LoadWidgetsEvent, OutputEvent }
 import org.nlogo.util.SysInfo
@@ -26,6 +26,7 @@ class InterfacePanelLite(viewWidget: Option[ViewWidgetInterface], compiler: Comp
   with FocusListener
   with LoadWidgetsEvent.Handler
   with OutputEvent.Handler
+  with Zoomable
   with ThemeSync {
 
   def this(viewWidget: ViewWidgetInterface, compiler: CompilerServices, random: RandomServices,
@@ -157,13 +158,6 @@ class InterfacePanelLite(viewWidget: Option[ViewWidgetInterface], compiler: Comp
 
   ///
 
-  def getUnzoomedBounds(component: Component): Rectangle =
-    component.getBounds
-
-  def resetZoomInfo(widget: Widget): Unit = { }
-
-  def resetSizeInfo(widget: Widget): Unit = { }
-
   def isZoomed: Boolean = false
 
   ///
@@ -257,6 +251,7 @@ class InterfacePanelLite(viewWidget: Option[ViewWidgetInterface], compiler: Comp
             } catch {
               case ex: RuntimeException => Exceptions.handle(ex)
             }
+            view.setUnzoomedBounds(x, y, v.width, v.height)
             view.setSize(view.getSize())
             addWidget(view, x, y)
             view
@@ -273,6 +268,7 @@ class InterfacePanelLite(viewWidget: Option[ViewWidgetInterface], compiler: Comp
 
           newGuy.foreach { w =>
             w.load(coreWidget)
+            w.setUnzoomedBounds(x, y, coreWidget.width, coreWidget.height)
             addWidget(w, x, y)
           }
           newGuy.orNull
@@ -298,6 +294,15 @@ class InterfacePanelLite(viewWidget: Option[ViewWidgetInterface], compiler: Comp
     Images.paintToImage(this)
 
   override def editWidget(widget: Editable): Unit = {}
+
+  override def zoomComponent(): Unit = {
+    getComponents.foreach {
+      case widget: Widget =>
+        widget.setBounds(Utils.zoomBounds(widget.getUnzoomedBounds))
+
+      case _ =>
+    }
+  }
 
   override def syncTheme(): Unit = {
     setBackground(InterfaceColors.interfaceBackground())

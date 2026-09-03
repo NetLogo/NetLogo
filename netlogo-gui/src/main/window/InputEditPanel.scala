@@ -2,11 +2,9 @@
 
 package org.nlogo.window
 
-import java.awt.{ GridBagConstraints, Insets }
-
 import org.nlogo.api.{ CompilerServices, ExtensionManager }
 import org.nlogo.core.I18N
-import org.nlogo.swing.AutomationUtils
+import org.nlogo.swing.{ AutomationUtils, BoxAlign, BoxRow }
 
 class InputEditPanel(target: InputBoxWidget, compiler: CompilerServices, extensionManager: ExtensionManager)
   extends WidgetEditPanel(target) {
@@ -39,31 +37,8 @@ class InputEditPanel(target: InputBoxWidget, compiler: CompilerServices, extensi
         _.foreach(target.oldSize),
         () => apply()))
 
-  locally {
-    val c = new GridBagConstraints
-
-    c.gridy = 0
-    c.gridwidth = 2
-    c.fill = GridBagConstraints.HORIZONTAL
-    c.weightx = 1
-    c.insets = new Insets(6, 6, 6, 6)
-
-    add(nameWrapper, c)
-
-    c.gridy = 1
-    c.gridwidth = 1
-    c.anchor = GridBagConstraints.WEST
-    c.fill = GridBagConstraints.NONE
-    c.weightx = 0
-    c.insets = new Insets(0, 6, 6, 6)
-
-    add(typeOptions, c)
-
-    c.weightx = 1
-    c.insets = new Insets(0, 0, 6, 6)
-
-    add(oldSize, c)
-  }
+  add(nameWrapper)
+  add(new BoxRow(Seq(typeOptions, oldSize), 6, BoxAlign.Start))
 
   override def propertyEditors: Seq[PropertyEditor[?]] =
     Seq(nameWrapper, typeOptions, oldSize)

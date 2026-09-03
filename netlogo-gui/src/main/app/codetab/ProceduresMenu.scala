@@ -9,19 +9,15 @@ import java.text.Collator
 import org.nlogo.awt.EventQueue
 import org.nlogo.core.{ I18N, NetLogoPreferences }
 import org.nlogo.swing.Implicits._
-import org.nlogo.swing.{ MenuItem, PopupMenu, RoundedBorderPanel, TextField, ToolBarMenu }
-import org.nlogo.theme.{ InterfaceColors, ThemeSync }
+import org.nlogo.swing.{ MenuItem, PopupMenu, TextField, ToolBarMenu }
 
-class ProceduresMenu(target: ProceduresMenuTarget)
-extends ToolBarMenu(I18N.gui.get("tabs.code.procedures")) with RoundedBorderPanel with ThemeSync {
-
+class ProceduresMenu(target: ProceduresMenuTarget) extends ToolBarMenu(I18N.gui.get("tabs.code.procedures")) {
   // Locale-aware, case-insensitive ordering for optional alphabetic sorting of procedures:
   private lazy val ordering = {
     val locale = I18N.localeFromPreferences.getOrElse(I18N.gui.defaultLocale)
     Ordering.comparatorToOrdering(using Collator.getInstance(locale))
   }
 
-  setDiameter(6)
   enableHover()
 
   override def populate(menu: PopupMenu): Unit = {
@@ -162,14 +158,5 @@ extends ToolBarMenu(I18N.gui.get("tabs.code.procedures")) with RoundedBorderPane
         case _ => noMatchScore orElse matchScore
       }
     }
-  }
-
-  override def syncTheme(): Unit = {
-    setBackgroundColor(InterfaceColors.toolbarControlBackground())
-    setBackgroundHoverColor(InterfaceColors.toolbarControlBackgroundHover())
-    setBackgroundPressedColor(InterfaceColors.toolbarControlBackgroundPressed())
-    setBorderColor(InterfaceColors.toolbarControlBorder())
-
-    label.setForeground(InterfaceColors.toolbarText())
   }
 }

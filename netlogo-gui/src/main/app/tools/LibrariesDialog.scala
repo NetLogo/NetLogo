@@ -2,17 +2,16 @@
 
 package org.nlogo.app.tools
 
-import java.awt.{ BorderLayout, FlowLayout, Frame }
+import java.awt.{ Dimension, Frame }
 import java.nio.file.Path
-import javax.swing.{ JLabel, JPanel }
-import javax.swing.border.EmptyBorder
+import javax.swing.JLabel
 
 import scala.concurrent.ExecutionContext
 
 import org.nlogo.api.LibraryManager
 import org.nlogo.core.{ I18N, LibraryInfo, Token }
-import org.nlogo.swing.{ CustomOptionPane, DialogButton, OptionPane, ProgressListener, ScrollPane,
-                         TextArea, Transparent, WindowAutomator }
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, CustomOptionPane, DialogButton, OptionPane, ProgressListener,
+                         ScrollPane, TextArea, Utils, WindowAutomator, ZoomableBorder, ZoomableWindow, ZoomActions }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 class LibrariesDialog( parent:          Frame
@@ -21,18 +20,13 @@ class LibrariesDialog( parent:          Frame
                      , tokenizeSource:  String => Iterator[Token]
                      , updateSource:    ((String) => String) => Unit
                      , extPathMappings: Map[String, Path]
-                     ) extends ToolDialog(parent, "libraries") with ThemeSync {
+                     ) extends ToolDialog(parent, "libraries") with ZoomActions with ZoomableWindow with ThemeSync {
 
   WindowAutomator.automate(this)
 
-  // `tabs` can be converted back to a `JTabbedPane` once other libraries are added, like code modules or models.
-  // -JeremyB April 2019
-  private lazy val tabs            = new JPanel(new BorderLayout)
   private lazy val tab             = new LibrariesTab("extensions", manager, status.setText, recompile, tokenizeSource,
                                                       updateSource, extPathMappings)
-  private lazy val bottomPanel     = new JPanel(new BorderLayout)
   private lazy val status          = new JLabel
-  private lazy val buttonPanel     = new JPanel(new FlowLayout(FlowLayout.CENTER, 6, 0)) with Transparent
   private lazy val libPathsButton  = new DialogButton(false, I18N.gui("showLibPaths"), () => {
     val mappingsStr = extPathMappings.map { case (k, v) => s"  * $k: $v" }.toSeq.sorted.mkString("\n")
     val msg = s"""${I18N.gui("libPathsExplanation")}
@@ -51,20 +45,21 @@ class LibrariesDialog( parent:          Frame
   private lazy val updateAllButton = new DialogButton(true, tab.updateAllAction)
 
   protected override def initGUI(): Unit = {
-    tabs.add(tab)
+    add(new BoxColumn(Seq(
+      tab,
+      new BoxRow(Seq(
+        status,
+        libPathsButton,
+        updateAllButton
+      ), 6, BoxAlign.End)
+    ), 10) {
+      setBorder(new ZoomableBorder(10, 10, 10, 10))
+    })
 
-    bottomPanel.setBorder(new EmptyBorder(10, 10, 10, 10))
-    bottomPanel.add(status, BorderLayout.CENTER)
-    bottomPanel.add(buttonPanel, BorderLayout.EAST)
-
-    setLayout(new BorderLayout)
-    add(tabs, BorderLayout.CENTER)
-    add(bottomPanel, BorderLayout.SOUTH)
-    setSize(650, 400)
+    pack()
   }
 
   override def setVisible(isVisible: Boolean): Unit = {
-    super.setVisible(isVisible)
     if (isVisible) {
 
       val listener =
@@ -80,24 +75,24 @@ class LibrariesDialog( parent:          Frame
         _ => listener.finish()
       }
 
-      buttonPanel.getComponents.foreach(c => buttonPanel.remove(c))
-
-      if (!extPathMappings.isEmpty)
-        buttonPanel.add(libPathsButton)
-      buttonPanel.add(updateAllButton)
+      libPathsButton.setVisible(extPathMappings.nonEmpty)
 
     }
+
+    super.setVisible(isVisible)
   }
 
+  override def getPreferredSize: Dimension =
+    new Dimension(Utils.zoom(650), Utils.zoom(400))
+
   override def syncTheme(): Unit = {
-    tab.syncTheme()
-
-    bottomPanel.setBackground(InterfaceColors.dialogBackground())
-
-    libPathsButton.syncTheme()
-    updateAllButton.syncTheme()
+    getContentPane.setBackground(InterfaceColors.dialogBackground())
 
     status.setForeground(InterfaceColors.dialogText())
+
+    tab.syncTheme()
+    libPathsButton.syncTheme()
+    updateAllButton.syncTheme()
   }
 
   private [app] def searchFor(text: String, expectedSize: Int): Option[Seq[LibraryInfo]] =

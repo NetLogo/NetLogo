@@ -9,7 +9,7 @@ import javax.swing.plaf.basic.BasicTabbedPaneUI
 
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
-class TabbedPane extends JTabbedPane with ThemeSync {
+class TabbedPane extends JTabbedPane with Zoomable with ThemeSync {
   private class TabbedPaneUI extends BasicTabbedPaneUI with ThemeSync {
     override def getTabLabelShiftY(tabPlacement: Int, tabIndex: Int, isSelected: Boolean): Int =
       super.getTabLabelShiftY(tabPlacement, tabIndex, true)

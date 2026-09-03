@@ -2,14 +2,15 @@
 
 package org.nlogo.window
 
-import java.awt.{ BorderLayout, Component, Container }
+import java.awt.{ BorderLayout, Container, Dimension }
 import java.awt.event.{ FocusListener, HierarchyEvent, MouseAdapter, MouseEvent, TextListener, TextEvent }
 import javax.swing.{ JLabel, JPanel, ScrollPaneConstants }
 
 import org.nlogo.api.CompilerServices
-import org.nlogo.awt.{ Hierarchy, RowLayout }
+import org.nlogo.awt.Hierarchy
 import org.nlogo.editor.{ Colorizer, EditorArea, EditorConfiguration }
-import org.nlogo.swing.{ CollapsibleArrow, ScrollPane, Transparent }
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, CollapsibleArrow, MaximumHeight, ScrollPane, Transparent,
+                         Zoomable }
 import org.nlogo.theme.InterfaceColors
 
 import scala.util.{ Success, Try }
@@ -28,7 +29,7 @@ object CodeEditor {
 class CodeEditor(accessor: PropertyAccessor[String], compiler: CompilerServices, colorizer: Colorizer,
                  collapsible: Boolean = false, collapseWhenEmpty: Boolean = false, rows: Int = 5, columns: Int = 30,
                  err: () => Option[Exception] = () => None)
-  extends PropertyEditor(accessor) {
+  extends BoxColumn(3) with PropertyEditor(accessor) {
 
   val editorConfig =
     EditorConfiguration.default(rows, columns, compiler, colorizer)
@@ -56,7 +57,7 @@ class CodeEditor(accessor: PropertyAccessor[String], compiler: CompilerServices,
 
   private val arrow = new CollapsibleArrow(!collapsed)
 
-  private val nameLabel = new JLabel(accessor.name) {
+  private val nameLabel = new JLabel(accessor.name) with Zoomable {
     addMouseListener(new MouseAdapter {
       override def mouseReleased(e: MouseEvent): Unit = {
         setVisibility(collapsed)
@@ -64,9 +65,7 @@ class CodeEditor(accessor: PropertyAccessor[String], compiler: CompilerServices,
     })
   }
 
-  setLayout(new BorderLayout(0, 3))
-
-  add(new JPanel(new RowLayout(2, Component.LEFT_ALIGNMENT, Component.CENTER_ALIGNMENT)) with Transparent {
+  add(new BoxRow(3, BoxAlign.Start) with MaximumHeight {
     if (collapsible) {
       add(new JLabel(arrow) {
         addMouseListener(new MouseAdapter {
@@ -78,11 +77,21 @@ class CodeEditor(accessor: PropertyAccessor[String], compiler: CompilerServices,
     }
 
     add(nameLabel)
-  }, BorderLayout.NORTH)
+  })
 
-  add(collapso, BorderLayout.CENTER)
+  add(collapso)
 
   def collapsed: Boolean = !collapso.isVisible()
+
+  override def getMaximumSize: Dimension = {
+    new Dimension(super.getMaximumSize.width, {
+      if (collapsible && collapsed) {
+        getPreferredSize.height
+      } else {
+        super.getMaximumSize.height
+      }
+    })
+  }
 
   private def setVisibility(newVisibility: Boolean): Unit = {
     if (collapsible && collapseWhenEmpty) {

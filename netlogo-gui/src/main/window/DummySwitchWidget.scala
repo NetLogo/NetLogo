@@ -31,7 +31,7 @@ class DummySwitchWidget extends Switch with Editable {
   }
 
   override def model: CoreWidget = {
-    val b = getUnzoomedBounds
+    val b = unzoomedBounds
     val varName = if (_name != null && _name.trim != "") Some(_name) else None
     CoreSwitch(display = varName,
       x = b.x, y = b.y, width = b.width, height = b.height,

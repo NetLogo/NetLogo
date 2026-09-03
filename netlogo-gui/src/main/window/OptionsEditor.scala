@@ -2,28 +2,27 @@
 
 package org.nlogo.window
 
-import java.awt.BorderLayout
 import javax.swing.JLabel
 
 import org.nlogo.api.Options
-import org.nlogo.swing.ComboBox
+import org.nlogo.swing.{ BoxRow, ComboBox, PreferredSize }
 import org.nlogo.theme.InterfaceColors
 
 import scala.util.{ Success, Try }
 
-class OptionsEditor[T](accessor: PropertyAccessor[Options[T]]) extends PropertyEditor(accessor) {
+class OptionsEditor[T](accessor: PropertyAccessor[Options[T]])
+  extends BoxRow(6) with PropertyEditor(accessor) with PreferredSize {
+
   private val options: Options[T] = accessor.getter()
   private val originalOption: T = options.chosenValue
 
   private val label = new JLabel(accessor.name)
-  private val combo = new ComboBox[String](options.names) {
+  private val combo = new ComboBox[String](options.names) with PreferredSize {
     addItemListener(_ => accessor.changed())
   }
 
-  setLayout(new BorderLayout(6, 0))
-
-  add(label, BorderLayout.WEST)
-  add(combo, BorderLayout.CENTER)
+  add(label)
+  add(combo)
 
   override def get: Try[Options[T]] = {
     options.selectByName(combo.getSelectedItem.getOrElse(""))
