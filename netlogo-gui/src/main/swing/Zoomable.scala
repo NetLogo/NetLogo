@@ -2,7 +2,7 @@
 
 package org.nlogo.swing
 
-import java.awt.{ Component, Font, Window }
+import java.awt.{ Component, Dimension, Font, Window }
 
 trait Zoomable extends Component {
   private var baseFont: Font = getFont
@@ -39,5 +39,9 @@ trait Zoomable extends Component {
 trait ZoomableWindow extends Window {
   def zoomWindow(): Unit = {
     pack()
+
+    val screen: Dimension = getToolkit.getScreenSize
+
+    setLocation(getX.min(screen.width - getWidth).max(0), getY.min(screen.height - getHeight).max(0))
   }
 }
