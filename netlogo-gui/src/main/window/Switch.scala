@@ -70,14 +70,14 @@ abstract class Switch extends MultiErrorWidget with Events.AfterLoadEvent.Handle
 
   override def getPreferredSize: Dimension = {
     if (_oldSize) {
-      new Dimension(super.getPreferredSize.width, Utils.zoom(33))
+      new Dimension(super.getPreferredSize.width, zoom(33))
     } else {
-      new Dimension(super.getPreferredSize.width, Utils.zoom(40))
+      new Dimension(super.getPreferredSize.width, zoom(40))
     }
   }
 
   override def getMinimumSize: Dimension = {
-    Utils.zoomSize {
+    zoomSize {
       if (_oldSize) {
         new Dimension(90, 33)
       } else {
@@ -106,7 +106,7 @@ abstract class Switch extends MultiErrorWidget with Events.AfterLoadEvent.Handle
     private var hover = false
 
     override def getPreferredSize: Dimension =
-      new Dimension(Utils.zoom(10), super.getPreferredSize.height)
+      new Dimension(zoom(10), super.getPreferredSize.height)
 
     override def getMinimumSize: Dimension =
       getPreferredSize

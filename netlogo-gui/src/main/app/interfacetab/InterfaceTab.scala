@@ -206,17 +206,17 @@ class InterfaceTab(workspace: GUIWorkspace,
     override def getPreferredSize: Dimension =
       new Dimension(super.getPreferredSize.width, widgetControls.getPreferredSize.height.
                                                   max(speedSlider.getPreferredSize.height).
-                                                  max(viewUpdatePanel.getPreferredSize.height) + Utils.zoom(16))
+                                                  max(viewUpdatePanel.getPreferredSize.height) + zoom(16))
 
     override def doLayout(): Unit = {
       if (speedSlider.isVisible) {
         val left = (getWidth / 2 - speedSlider.getPreferredSize.width / 2 -
-                    widgetControls.getPreferredSize.width - Utils.zoom(180)).max(0)
+                    widgetControls.getPreferredSize.width - zoom(180)).max(0)
 
         widgetControls.setBounds(left, getHeight / 2 - widgetControls.getPreferredSize.height / 2,
                                  widgetControls.getPreferredSize.width, widgetControls.getPreferredSize.height)
         speedSlider.setBounds((getWidth / 2 - speedSlider.getPreferredSize.width / 2).
-                              max(left + widgetControls.getWidth + Utils.zoom(40)),
+                              max(left + widgetControls.getWidth + zoom(40)),
                               getHeight / 2 - speedSlider.getPreferredSize.height / 2,
                               speedSlider.getPreferredSize.width, speedSlider.getPreferredSize.height)
         viewUpdatePanel.setBounds(speedSlider.getX + speedSlider.getWidth +
@@ -234,18 +234,18 @@ class InterfaceTab(workspace: GUIWorkspace,
 
       val gap = speedSlider.getX - (widgetControls.getX + widgetControls.getWidth)
 
-      if (speedSlider.isVisible && gap <= Utils.zoom(80)) {
+      if (speedSlider.isVisible && gap <= zoom(80)) {
         val g2d = Utils.initGraphics2D(g)
 
         g2d.setColor(InterfaceColors.toolbarSeparator())
-        g2d.fillRect(speedSlider.getX - gap / 2, getY + Utils.zoom(8), 1, getHeight - Utils.zoom(16))
-        g2d.fillRect(viewUpdatePanel.getX - gap / 2, getY + Utils.zoom(8), 1, getHeight - Utils.zoom(16))
+        g2d.fillRect(speedSlider.getX - gap / 2, getY + zoom(8), 1, getHeight - zoom(16))
+        g2d.fillRect(viewUpdatePanel.getX - gap / 2, getY + zoom(8), 1, getHeight - zoom(16))
       }
     }
 
     def getMinimumWidth: Int =
       widgetControls.getPreferredSize.width + speedSlider.getPreferredSize.width +
-        viewUpdatePanel.getPreferredSize.width + Utils.zoom(96)
+        viewUpdatePanel.getPreferredSize.width + zoom(96)
 
     override def syncTheme(): Unit = {
       setBackground(InterfaceColors.toolbarBackground())
@@ -273,11 +273,11 @@ class InterfaceTab(workspace: GUIWorkspace,
     def setIcon(): Unit = {
       splitPane.getOrientation match {
         case JSplitPane.VERTICAL_SPLIT =>
-          putValue(Action.SMALL_ICON, Utils.iconScaledWithColor("/images/shift-bottom.png", 10, 10,
+          putValue(Action.SMALL_ICON, Utils.iconScaledWithColor(InterfaceTab.this, "/images/shift-bottom.png", 10, 10,
                                                                 () => InterfaceColors.locationToggleImage()))
 
         case JSplitPane.HORIZONTAL_SPLIT =>
-          putValue(Action.SMALL_ICON, Utils.iconScaledWithColor("/images/shift-right.png", 10, 10,
+          putValue(Action.SMALL_ICON, Utils.iconScaledWithColor(InterfaceTab.this, "/images/shift-right.png", 10, 10,
                                                                 () => InterfaceColors.locationToggleImage()))
       }
     }

@@ -18,7 +18,7 @@ object MessageDialog {
 import MessageDialog._
 
 class MessageDialog(owner: Component, dismissName: String = "Dismiss")
-  extends JDialog(Hierarchy.getFrame(owner)) with ZoomActions with ZoomableWindow with ThemeSync {
+  extends JDialog(Hierarchy.getFrame(owner)) with ZoomableWindow(Option(owner)) with ThemeSync {
 
   WindowAutomator.automate(this)
 

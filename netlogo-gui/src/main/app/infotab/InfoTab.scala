@@ -39,6 +39,7 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
   with WindowEvents.LoadBeginEvent.Handler
   with WindowEvents.LoadModelEvent.Handler
   with WindowEvents.ResourcesChangedEvent.Handler
+  with Zoomable
   with ThemeSync {
 
   private val undoManager = new UndoManager
@@ -48,7 +49,7 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
   private val htmlPanel = new HTMLPanel
 
   private val editableButton = new ToolBarToggleButton(new EditableAction(I18N.gui.get("tabs.info.edit"))) {
-    setIcon(Utils.iconScaledWithColor("/images/edit.png", 15, 15, () => {
+    setIcon(Utils.iconScaledWithColor(this, "/images/edit.png", 15, 15, () => {
       if (isSelected) {
         InterfaceColors.toolbarImageSelected()
       } else {
@@ -67,7 +68,7 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
         QuickHelp.docPath("infotab"))
     }
   }) {
-    setIcon(Utils.iconScaledWithColor("/images/help.png", 15, 15, () => InterfaceColors.toolbarImage()))
+    setIcon(Utils.iconScaledWithColor(this, "/images/help.png", 15, 15, () => InterfaceColors.toolbarImage()))
   }
 
   private def toggleHelpButton(): Unit ={ helpButton.setVisible(view == textArea) }
@@ -130,7 +131,8 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
 
   private def updateEditorPane(str: String, force: Boolean): Unit = {
     if (force || str != htmlPanel.getText)
-      htmlPanel.setText(InfoFormatter(str, getModelDir(), resourceManager, codeFont.fold("monospace")(_.getFamily)))
+      htmlPanel.setText(InfoFormatter(this, str, getModelDir(), resourceManager,
+                                      codeFont.fold("monospace")(_.getFamily)))
 
     toggleHelpButton()
   }
@@ -319,7 +321,7 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
 
     override def zoomComponent(): Unit = {
       Platform.runLater(() => {
-        view.foreach(_.setZoom(Utils.getZoomFactor))
+        view.foreach(_.setZoom(getZoomFactor))
       })
     }
   }

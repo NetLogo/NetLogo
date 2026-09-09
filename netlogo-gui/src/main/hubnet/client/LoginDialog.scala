@@ -11,7 +11,7 @@ import javax.swing.table.{ AbstractTableModel, DefaultTableCellRenderer }
 
 import org.nlogo.hubnet.connection.NetworkUtils
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, ComboBox, DialogButton, NonemptyTextFieldButtonEnabler,
-                         ScrollPane, TextField, TextFieldBox, Utils, VerticalStrut, Zoomable }
+                         ScrollPane, TextField, TextFieldBox, VerticalStrut, Zoomable, ZoomableWindow }
 import org.nlogo.theme.InterfaceColors
 
 abstract class LoginCallback{
@@ -22,7 +22,8 @@ abstract class LoginCallback{
  * The HubNet client login graphical interface.
  **/
 class LoginDialog(parent: Frame, defaultUserId: String, defaultServerName: String, defaultPort: Int)
-  extends JDialog(parent, "HubNet", true) with ListSelectionListener with DocumentListener {
+  extends JDialog(parent, "HubNet", true) with ListSelectionListener with DocumentListener
+  with ZoomableWindow(Option(parent)) {
 
   private val nameField = new TextField(14, defaultUserId)
   private val serverField = new TextField(26, defaultServerName)
@@ -66,7 +67,7 @@ class LoginDialog(parent: Frame, defaultUserId: String, defaultServerName: Strin
       this.setVisible(false)
 
       override def getPreferredSize: Dimension =
-        new Dimension(Utils.zoom(100), Utils.zoom(88))
+        new Dimension(zoom(100), zoom(88))
     }
 
     add(new BoxColumn(Seq(

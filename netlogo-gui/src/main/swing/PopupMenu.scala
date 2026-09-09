@@ -9,14 +9,14 @@ import javax.swing.border.LineBorder
 
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
-class PopupMenu(title: String = "") extends JPopupMenu(title) with ThemeSync {
+class PopupMenu(title: String = "") extends JPopupMenu(title) with Zoomable with ThemeSync {
   private class Separator extends JPopupMenu.Separator with ThemeSync {
     override def syncTheme(): Unit = {
       setForeground(InterfaceColors.menuBorder())
     }
   }
 
-  UIManager.put("PopupMenu.borderCornerRadius", Utils.zoom(4))
+  UIManager.put("PopupMenu.borderCornerRadius", zoom(4))
 
   syncTheme()
 
@@ -25,7 +25,7 @@ class PopupMenu(title: String = "") extends JPopupMenu(title) with ThemeSync {
   }
 
   override def getInsets: Insets =
-    new Insets(Utils.zoom(5), 0, Utils.zoom(5), 0)
+    new Insets(zoom(5), 0, zoom(5), 0)
 
   override def syncTheme(): Unit = {
     setBackground(InterfaceColors.menuBackground())

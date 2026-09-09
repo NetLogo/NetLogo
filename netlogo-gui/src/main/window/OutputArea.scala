@@ -7,7 +7,7 @@ import javax.swing.ScrollPaneConstants
 
 import org.nlogo.agent.OutputObject
 import org.nlogo.awt.LineBreaker
-import org.nlogo.swing.{ BoxRow, RoundedBorderPanel, ScrollPane, TextArea, Utils, ZoomableBorder }
+import org.nlogo.swing.{ BoxRow, RoundedBorderPanel, ScrollPane, TextArea, ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 object OutputArea {
@@ -74,10 +74,10 @@ class OutputArea(val text: TextArea) extends BoxRow with RoundedBorderPanel with
   override def getFont: Font =
     text.getFont
 
-  def getBaseFont: Font =
+  override def getBaseFont: Font =
     text.getBaseFont
 
-  def setBaseFont(font: Font): Unit = {
+  override def setBaseFont(font: Font): Unit = {
     text.setBaseFont(font.deriveFont(fontSize.toFloat))
   }
 
@@ -87,10 +87,10 @@ class OutputArea(val text: TextArea) extends BoxRow with RoundedBorderPanel with
   }
 
   override def getMinimumSize: Dimension =
-    new Dimension(Utils.zoom(50), text.getMinimumSize.height)
+    new Dimension(zoom(50), text.getMinimumSize.height)
 
   override def getPreferredSize: Dimension =
-    new Dimension(Utils.zoom(200), Utils.zoom(45))
+    new Dimension(zoom(200), zoom(45))
 
   override def isFocusable: Boolean = false
 

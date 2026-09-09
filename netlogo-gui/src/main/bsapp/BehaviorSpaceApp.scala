@@ -2,7 +2,7 @@
 
 package org.nlogo.bsapp
 
-import java.awt.{ EventQueue, Window }
+import java.awt.EventQueue
 import java.io.IOException
 import java.net.SocketException
 import javax.swing.Timer
@@ -12,7 +12,7 @@ import org.nlogo.api.{ Dump, IPCClientHandler, LabProtocol, LogoException }
 import org.nlogo.core.{ CompilerException, I18N }
 import org.nlogo.headless.{ BehaviorSpaceCoordinator, HeadlessWorkspace }
 import org.nlogo.nvm.{ DummyPrimaryWorkspace, LabInterface, Workspace }
-import org.nlogo.swing.{ AppUtils, OptionPane, RichAction, Utils, WindowAutomator, ZoomActions, ZoomProvider }
+import org.nlogo.swing.{ AppUtils, OptionPane, RichAction, WindowAutomator }
 import org.nlogo.window.{ ErrorDialogManager, Events, ThreadUtils }
 
 import ujson.Obj
@@ -107,9 +107,7 @@ object BehaviorSpaceApp {
                              port: Int = -1)
 }
 
-class BehaviorSpaceApp(args: BehaviorSpaceApp.CommandLineArgs)
-  extends Thread.UncaughtExceptionHandler with ZoomProvider {
-
+class BehaviorSpaceApp(args: BehaviorSpaceApp.CommandLineArgs) extends Thread.UncaughtExceptionHandler {
   private implicit val i18nPrefix: I18N.Prefix = I18N.Prefix("tools.behaviorSpace")
 
   private val frame = new BehaviorSpaceFrame(this)
@@ -158,8 +156,6 @@ class BehaviorSpaceApp(args: BehaviorSpaceApp.CommandLineArgs)
   private val workspace: SemiHeadlessWorkspace = newWorkspace(args.updateView, args.updatePlots)
 
   private val lab = HeadlessWorkspace.newLab
-
-  ZoomActions.init(this)
 
   def run(): Unit = {
     ipcHandler.connect(args.port)
@@ -325,7 +321,7 @@ class BehaviorSpaceApp(args: BehaviorSpaceApp.CommandLineArgs)
   }
 
   private def displayError(message: String): Unit = {
-    new OptionPane(frame, I18N.gui("error.title"), message, OptionPane.Options.Ok, OptionPane.Icons.Error)
+    new OptionPane(frame, I18N.gui("error.title"), message, OptionPane.Options.Ok, OptionPane.Icons.error)
   }
 
   override def uncaughtException(thread: Thread, ex: Throwable): Unit = {
@@ -351,13 +347,5 @@ class BehaviorSpaceApp(args: BehaviorSpaceApp.CommandLineArgs)
   def abort(): Unit = {
     timer.start()
     lab.abort()
-  }
-
-  override def setZoomFactor(factor: Float): Unit = {
-    Utils.setZoomFactor(factor)
-
-    Window.getWindows.foreach(Utils.zoomWindow)
-
-    frame.pack()
   }
 }

@@ -12,12 +12,12 @@ import org.nlogo.awt.Positioning
 import org.nlogo.core.I18N
 import org.nlogo.editor.EditorConfiguration
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, RichAction, ScrollPane, TabbedPane, TextArea, Utils,
-                         WindowAutomator, Zoomable, ZoomableBorder, ZoomableWindow, ZoomActions }
+                         WindowAutomator, Zoomable, ZoomableBorder, ZoomableWindow }
 import org.nlogo.theme.{ DarkTheme, InterfaceColors, ThemeSync }
 import org.nlogo.util.SysInfo
 
 class AboutWindow(parent: Frame)
-  extends JDialog(parent, I18N.gui.get("dialog.about"), false) with ZoomActions with ZoomableWindow with ThemeSync {
+  extends JDialog(parent, I18N.gui.get("dialog.about"), false) with ZoomableWindow(Option(parent)) with ThemeSync {
 
   WindowAutomator.automate(this)
 
@@ -163,9 +163,9 @@ class AboutWindow(parent: Frame)
     getContentPane.setBackground(InterfaceColors.dialogBackground())
 
     if (InterfaceColors.getTheme == DarkTheme) {
-      graphic.setIcon(Utils.iconScaled("/images/banner-dark-versionless.png", 600, 231))
+      graphic.setIcon(Utils.iconScaled(this, "/images/banner-dark-versionless.png", 600, 231))
     } else {
-      graphic.setIcon(Utils.iconScaled("/images/banner-versionless.png", 600, 231))
+      graphic.setIcon(Utils.iconScaled(this, "/images/banner-versionless.png", 600, 231))
     }
 
     label.syncTheme()

@@ -40,8 +40,8 @@ class Menu(text: String, var menuModel: MenuModel[Action, String]) extends JMenu
 
   private val menuUI = new BasicMenuUI with ThemeSync {
     arrowIcon = new Icon {
-      override def getIconWidth: Int = Utils.zoom(5)
-      override def getIconHeight: Int = Utils.zoom(9)
+      override def getIconWidth: Int = zoom(5)
+      override def getIconHeight: Int = zoom(9)
 
       override def paintIcon(c: Component, g: Graphics, x: Int, y: Int): Unit = {
         val g2d = Utils.initGraphics2D(g)
@@ -92,10 +92,10 @@ class Menu(text: String, var menuModel: MenuModel[Action, String]) extends JMenu
   })
 
   override def getInsets: Insets =
-    Utils.zoomInsets(super.getInsets)
+    zoomInsets(super.getInsets)
 
   override def getPopupMenu: JPopupMenu = {
-    UIManager.put("PopupMenu.borderCornerRadius", Utils.zoom(4))
+    UIManager.put("PopupMenu.borderCornerRadius", zoom(4))
 
     val menu = super.getPopupMenu
 

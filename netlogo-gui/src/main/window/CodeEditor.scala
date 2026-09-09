@@ -29,7 +29,7 @@ object CodeEditor {
 class CodeEditor(accessor: PropertyAccessor[String], compiler: CompilerServices, colorizer: Colorizer,
                  collapsible: Boolean = false, collapseWhenEmpty: Boolean = false, rows: Int = 5, columns: Int = 30,
                  err: () => Option[Exception] = () => None)
-  extends BoxColumn(3) with PropertyEditor(accessor) {
+  extends BoxColumn(3) with PropertyEditor(accessor) with Zoomable {
 
   val editorConfig =
     EditorConfiguration.default(rows, columns, compiler, colorizer)
@@ -55,7 +55,7 @@ class CodeEditor(accessor: PropertyAccessor[String], compiler: CompilerServices,
     if (collapseWhenEmpty) setVisible(false)
   }
 
-  private val arrow = new CollapsibleArrow(!collapsed)
+  private val arrow = new CollapsibleArrow(this, !collapsed)
 
   private val nameLabel = new JLabel(accessor.name) with Zoomable {
     addMouseListener(new MouseAdapter {

@@ -11,7 +11,7 @@ import scala.concurrent.ExecutionContext
 import org.nlogo.api.LibraryManager
 import org.nlogo.core.{ I18N, LibraryInfo, Token }
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, CustomOptionPane, DialogButton, OptionPane, ProgressListener,
-                         ScrollPane, TextArea, Utils, WindowAutomator, ZoomableBorder, ZoomableWindow, ZoomActions }
+                         ScrollPane, TextArea, WindowAutomator, ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 class LibrariesDialog( parent:          Frame
@@ -20,7 +20,7 @@ class LibrariesDialog( parent:          Frame
                      , tokenizeSource:  String => Iterator[Token]
                      , updateSource:    ((String) => String) => Unit
                      , extPathMappings: Map[String, Path]
-                     ) extends ToolDialog(parent, "libraries") with ZoomActions with ZoomableWindow with ThemeSync {
+                     ) extends ToolDialog(parent, "libraries") with ThemeSync {
 
   WindowAutomator.automate(this)
 
@@ -44,20 +44,18 @@ class LibrariesDialog( parent:          Frame
   }: Unit)
   private lazy val updateAllButton = new DialogButton(true, tab.updateAllAction)
 
-  protected override def initGUI(): Unit = {
-    add(new BoxColumn(Seq(
-      tab,
-      new BoxRow(Seq(
-        status,
-        libPathsButton,
-        updateAllButton
-      ), 6, BoxAlign.End)
-    ), 10) {
-      setBorder(new ZoomableBorder(10, 10, 10, 10))
-    })
+  add(new BoxColumn(Seq(
+    tab,
+    new BoxRow(Seq(
+      status,
+      libPathsButton,
+      updateAllButton
+    ), 6, BoxAlign.End)
+  ), 10) {
+    setBorder(new ZoomableBorder(10, 10, 10, 10))
+  })
 
-    pack()
-  }
+  pack()
 
   override def setVisible(isVisible: Boolean): Unit = {
     if (isVisible) {
@@ -83,7 +81,7 @@ class LibrariesDialog( parent:          Frame
   }
 
   override def getPreferredSize: Dimension =
-    new Dimension(Utils.zoom(650), Utils.zoom(400))
+    new Dimension(zoom(650), zoom(400))
 
   override def syncTheme(): Unit = {
     getContentPane.setBackground(InterfaceColors.dialogBackground())

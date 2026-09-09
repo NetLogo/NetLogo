@@ -12,7 +12,7 @@ import org.nlogo.api.AbstractModelLoader
 import org.nlogo.core.{ AgentKind, I18N, Model, Shape => CoreShape, ShapeList, ShapeListTracker },
   ShapeList.{ shapesToMap, isDefaultShapeName }
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, Button, DialogButton, MaximumHeight, OptionPane, ScrollPane,
-                         TextField, Utils, WindowAutomator, ZoomableBorder, ZoomableWindow, ZoomActions }
+                         TextField, Utils, WindowAutomator, Zoomable, ZoomableBorder, ZoomableWindow }
 import org.nlogo.swing.Implicits.thunk2action
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
@@ -21,7 +21,7 @@ import scala.util.{ Failure, Success }
 
 abstract class ManagerDialog[A <: CoreShape](parentFrame: Frame, modelLoader: AbstractModelLoader,
                                              shapeListTracker: ShapeListTracker)(implicit ct: ClassTag[A])
-  extends JDialog(parentFrame) with ListSelectionListener with ZoomActions with ZoomableWindow with ThemeSync {
+  extends JDialog(parentFrame) with ListSelectionListener with ZoomableWindow(Option(parentFrame)) with ThemeSync {
 
   WindowAutomator.automate(this)
 
@@ -76,8 +76,8 @@ abstract class ManagerDialog[A <: CoreShape](parentFrame: Frame, modelLoader: Ab
     })
   }
 
-  private val searchIcon = new JLabel {
-    setIcon(Utils.iconScaledWithColor("/images/find.png", 15, 15, () => InterfaceColors.toolbarImage()))
+  private val searchIcon = new JLabel with Zoomable {
+    setIcon(Utils.iconScaledWithColor(this, "/images/find.png", 15, 15, () => InterfaceColors.toolbarImage()))
   }
 
   locally {
@@ -141,7 +141,7 @@ abstract class ManagerDialog[A <: CoreShape](parentFrame: Frame, modelLoader: Ab
         .map(drawableListFromModelShapes) match {
           case Failure(ex) =>
             new OptionPane(this, I18N.gui("import"), I18N.gui("import.invalidError"), OptionPane.Options.Ok,
-                           OptionPane.Icons.Error)
+                           OptionPane.Icons.error)
           case Success(drawableList) =>
             if (drawableList.shapeList.isEmpty)
               importDialog.foreach(_.sendImportWarning(I18N.gui("import.error")))

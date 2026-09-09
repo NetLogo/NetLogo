@@ -14,7 +14,7 @@ import org.nlogo.core.{ I18N, Shape }
 import org.nlogo.shape.{ Element, VectorShape }
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, Button, ButtonPanel, CheckBox, ComboBox, DialogButton, MenuItem,
                          OptionPane, PreferredSize, TextField, ToggleButton, Transparent, Utils, VerticalStrut,
-                         Zoomable, ZoomableBorder, ZoomableWindow, ZoomActions }
+                         Zoomable, ZoomableBorder, ZoomableWindow }
 import org.nlogo.theme.InterfaceColors
 
 sealed trait ElementType
@@ -39,7 +39,7 @@ object EditorDialog {
 
 class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer, originalShape: VectorShape,
                    nameEditable: Boolean) extends JDialog(parent, I18N.gui.get("tools.shapesEditor"), true)
-                                          with PropertyChangeListener with ZoomActions with ZoomableWindow {
+                                          with PropertyChangeListener with ZoomableWindow(Option(parent)) {
 
   private implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("tools.shapesEditor")
 
@@ -80,7 +80,8 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
       shapeView.selfFinishPolygon(true)
     }
   }) {
-    setIcon(Utils.iconScaledWithColor("/images/shapes-editor/arrow.png", 15, 15, () => InterfaceColors.toolbarText()))
+    setIcon(Utils.iconScaledWithColor(this, "/images/shapes-editor/arrow.png", 15, 15,
+                                      () => InterfaceColors.toolbarText()))
     setSelected(false)
   }
 
@@ -188,7 +189,7 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
       setBackgroundHoverColor(color)
 
       override def getPreferredSize: Dimension =
-        new Dimension(Utils.zoom(20), Utils.zoom(20))
+        new Dimension(zoom(20), zoom(20))
     }
 
     colorGrid.add(button)
@@ -221,7 +222,7 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
     def actionPerformed(e: ActionEvent): Unit = {
       if (originalShape.toString != getCurrentShape.toString &&
           new OptionPane(EditorDialog.this, I18N.gui("confirmCancel"), I18N.gui("confirmCancel.message"),
-                         OptionPane.Options.YesNo, OptionPane.Icons.Question).getSelectedIndex != 0)
+                         OptionPane.Options.YesNo, OptionPane.Icons.question).getSelectedIndex != 0)
         return
 
       dispose()
@@ -479,7 +480,7 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
 
     // Make sure the shape has a name
     if (name.isEmpty) {
-      new OptionPane(this, I18N.gui("invalid"), I18N.gui("nameEmpty"), OptionPane.Options.Ok, OptionPane.Icons.Error)
+      new OptionPane(this, I18N.gui("invalid"), I18N.gui("nameEmpty"), OptionPane.Options.Ok, OptionPane.Icons.error)
 
       return
     }
@@ -488,7 +489,7 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
     // permission to do it
     if (container.exists(name) && name != originalShape.name &&
         new OptionPane(this, I18N.gui("confirmOverwrite"), I18N.gui("nameConflict"), OptionPane.Options.YesNo,
-                       OptionPane.Icons.Question).getSelectedIndex != 0)
+                       OptionPane.Icons.question).getSelectedIndex != 0)
       return
 
     val newShape = shape
@@ -529,7 +530,7 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
       group.add(this)
 
       override def getInsets: Insets = {
-        val size: Int = Utils.zoom(3)
+        val size: Int = zoom(3)
 
         new Insets(size, size, size, size)
       }
@@ -550,11 +551,11 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
       new JLabel(name(0).toUpper.toString + name.substring(1)) with Zoomable
     }
 
-    add(new JPanel with PreferredSize {
+    add(new JPanel with PreferredSize with Zoomable {
       setBackground(EditorDialog.getColor(index))
 
       override def getPreferredSize: Dimension =
-        new Dimension(Utils.zoom(10), Utils.zoom(10))
+        new Dimension(zoom(10), zoom(10))
     })
 
     add(label)
@@ -575,8 +576,8 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
   private class CreateAction(name: String, typeID: ElementType, filled: Boolean)
     extends AbstractAction(name) {
 
-    putValue(Action.SMALL_ICON, Utils.iconScaledWithColor("/images/shapes-editor/" + name + ".png", 15, 15,
-                                                          () => InterfaceColors.toolbarText()))
+    putValue(Action.SMALL_ICON, Utils.iconScaledWithColor(EditorDialog.this, "/images/shapes-editor/" + name + ".png",
+                                                          15, 15, () => InterfaceColors.toolbarText()))
     putValue(Action.SHORT_DESCRIPTION, I18N.gui(name))
 
     def actionPerformed(e: ActionEvent): Unit = {

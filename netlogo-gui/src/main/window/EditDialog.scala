@@ -11,7 +11,7 @@ import org.nlogo.api.Version
 import org.nlogo.awt.Positioning
 import org.nlogo.core.I18N
 import org.nlogo.swing.{ BrowserLauncher, ButtonPanel, DialogButton, Implicits, PreferredSize, QuickHelp, Utils,
-                         WindowAutomator, ZoomableBorder, ZoomableWindow, ZoomActions }, Implicits.thunk2action
+                         WindowAutomator, ZoomableBorder, ZoomableWindow }, Implicits.thunk2action
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 // contains an EditPanel, plus some buttons at the bottom (OK/Apply/Help/Cancel).
@@ -20,7 +20,7 @@ class EditDialog(window: Window, target: Editable, editPanel: EditPanel, modal: 
                   if (modal)
                     Dialog.ModalityType.DOCUMENT_MODAL
                   else
-                    Dialog.ModalityType.MODELESS) with ZoomActions with ZoomableWindow with ThemeSync {
+                    Dialog.ModalityType.MODELESS) with ZoomableWindow(Option(window)) with ThemeSync {
 
   var canceled = false
 

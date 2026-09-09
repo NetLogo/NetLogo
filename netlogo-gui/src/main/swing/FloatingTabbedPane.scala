@@ -20,14 +20,14 @@ private class FloatingTabbedPaneUI(tabbedPane: FloatingTabbedPane) extends Basic
     val tabWidth: Int = super.calculateTabWidth(tabPlacement, tabIndex, metrics)
     val labelWidth: Int = tabbedPane.getTabLabelAt(tabIndex).fold(0)(_.getPreferredSize.width)
 
-    labelWidth + Utils.zoom(tabWidth - labelWidth)
+    labelWidth + tabbedPane.zoom(tabWidth - labelWidth)
   }
 
   def calculateTabWidth(tabPlacement: Int, tabIndex: Int): Int =
     calculateTabWidth(tabPlacement, tabIndex, getFontMetrics)
 
   override def calculateTabHeight(tabPlacement: Int, tabIndex: Int, fontHeight: Int): Int =
-    fontHeight + Utils.zoom(5)
+    fontHeight + tabbedPane.zoom(5)
 
   def calculateTabHeight(tabPlacement: Int, tabIndex: Int): Int =
     calculateTabHeight(tabPlacement, tabIndex, getFontMetrics.getHeight)
@@ -41,7 +41,7 @@ private class FloatingTabbedPaneUI(tabbedPane: FloatingTabbedPane) extends Basic
     for (i <- 0 until tabbedPane.getTabCount)
       x -= calculateTabWidth(tabPlacement, i) / 2
 
-    new Insets(Utils.zoom(10), x, 0, 0)
+    new Insets(tabbedPane.zoom(10), x, 0, 0)
   }
 
   override def paintTabArea(g: Graphics, tabPlacement: Int, selectedIndex: Int): Unit = {
@@ -57,7 +57,7 @@ private class FloatingTabbedPaneUI(tabbedPane: FloatingTabbedPane) extends Basic
 
     for (i <- 1 until tabbedPane.getTabCount) {
       if (i != selectedIndex && i != selectedIndex + 1)
-        g2d.drawLine(x, y + Utils.zoom(5), x, y + height - Utils.zoom(5))
+        g2d.drawLine(x, y + tabbedPane.zoom(5), x, y + height - tabbedPane.zoom(5))
 
       x += calculateTabWidth(tabPlacement, i)
     }
@@ -79,7 +79,7 @@ private class FloatingTabbedPaneUI(tabbedPane: FloatingTabbedPane) extends Basic
       g2d.setColor(InterfaceColors.tabBackground())
     }
 
-    val diameter: Int = Utils.zoom(10)
+    val diameter: Int = tabbedPane.zoom(10)
 
     if (tabbedPane.getTabCount == 1) {
       g2d.fillRoundRect(x, y, w, h, diameter, diameter)
@@ -101,7 +101,7 @@ private class FloatingTabbedPaneUI(tabbedPane: FloatingTabbedPane) extends Basic
 
       g2d.setColor(InterfaceColors.tabBorder())
 
-      val diameter: Int = Utils.zoom(10)
+      val diameter: Int = tabbedPane.zoom(10)
       val radius: Int = diameter / 2
 
       if (tabIndex == 0) {
@@ -146,7 +146,7 @@ trait RenameableTab {
   def rename(): Unit
 }
 
-class TabLabel(startPane: FloatingTabbedPane, text: String, tab: Component) extends BoxRow(10) {
+class TabLabel(startPane: FloatingTabbedPane, text: String, tab: Component) extends BoxRow(10) with Zoomable {
   private var tabbedPane: FloatingTabbedPane = startPane
 
   def setTabbedPane(tabbedPane: FloatingTabbedPane): Unit = {
@@ -168,6 +168,9 @@ class TabLabel(startPane: FloatingTabbedPane, text: String, tab: Component) exte
 
   private def boldWidth: Int = {
     new JLabel(s"<html><b>$rawText</b></html>") with Zoomable {
+      override def getZoomFactor: Float =
+        TabLabel.this.getZoomFactor
+
       zoom()
     }.getPreferredSize.width
   }
@@ -210,8 +213,7 @@ class TabLabel(startPane: FloatingTabbedPane, text: String, tab: Component) exte
     closeButton.exists(button => button.contains(x - button.getX, y - button.getY))
 
   override def getPreferredSize: Dimension =
-    new Dimension(boldWidth + closeButton.fold(0)(_.getPreferredSize.width + Utils.zoom(10)),
-                  super.getPreferredSize.height)
+    new Dimension(boldWidth + closeButton.fold(0)(_.getPreferredSize.width + zoom(10)), super.getPreferredSize.height)
 
   override def paintComponent(g: Graphics): Unit = {
     if (tab == tabbedPane.getSelectedComponent) {

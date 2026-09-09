@@ -27,8 +27,9 @@ import org.nlogo.core.I18N
 import org.nlogo.api.{ FileIO, LibraryManager }
 import org.nlogo.awt.{ Positioning, UserCancelException }
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, BrowserLauncher, Button, ButtonPanel, CollapsibleArrow,
-                         DialogButton, MaximumHeight, ModalProgressTask, OptionPane, PreferredSize, ScrollPane,
-                         TextField, Utils, WindowAutomator, Zoomable, ZoomableBorder, ZoomableWindow, ZoomActions },
+                         DialogButton, DummyZoomable, MaximumHeight, ModalProgressTask, OptionPane, PreferredSize,
+                         ScrollPane, TextField, Utils, WindowAutomator, Zoomable, ZoomableBorder, ZoomableWindow,
+                         ZoomHelpers },
                        Utils.addEscKeyAction
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.workspace.ModelsLibrary
@@ -165,8 +166,7 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
   extends JDialog(parent, I18N.gui.get("menu.file.modelsLibrary"), true)
   with TreeSelectionListener
   with TreeExpansionListener
-  with ZoomActions
-  with ZoomableWindow
+  with ZoomableWindow(Option(parent))
   with ThemeSync {
 
   WindowAutomator.automate(this)
@@ -184,8 +184,8 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
   }
 
   private var searchText = Option.empty[String]
-  private val searchIcon = new JLabel {
-    setIcon(Utils.iconScaledWithColor("/images/find.png", 15, 15, () => InterfaceColors.toolbarImage()))
+  private val searchIcon = new JLabel with Zoomable {
+    setIcon(Utils.iconScaledWithColor(this, "/images/find.png", 15, 15, () => InterfaceColors.toolbarImage()))
   }
 
   private val modelPreviewPanel: ModelPreviewPanel = new ModelPreviewPanel()
@@ -212,8 +212,8 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
     }
 
     override def zoomComponent(): Unit = {
-      UIManager.put("Tree.leftChildIndent", Utils.zoom(7))
-      UIManager.put("Tree.rightChildIndent", Utils.zoom(11))
+      UIManager.put("Tree.leftChildIndent", zoom(7))
+      UIManager.put("Tree.rightChildIndent", zoom(11))
 
       updateUI()
     }
@@ -611,7 +611,7 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
         selected.filterNot(_.isFolder)
           .map(s => ModelsLibrary.getImagePath(s.path)).orNull
 
-      val fontStr = s"${Utils.zoom(12)}pt"
+      val fontStr = s"${zoom(12)}pt"
 
       graphicsPreview.setImage(image)
 
@@ -621,7 +621,7 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
       // See http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4765285
       // ER - 12/02/07
       textArea.setPreferredSize(null)
-      textArea.setMaximumSize(new Dimension(Utils.zoom(390), Int.MaxValue))
+      textArea.setMaximumSize(new Dimension(zoom(390), Int.MaxValue))
 
       selected match {
         case Some(selection) if ! selection.isFolder =>
@@ -669,7 +669,7 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
 
       // The conclusion of the above-mentioned work-around
       // ER - 12/02/07
-      textArea.setPreferredSize(new Dimension(Utils.zoom(390), textArea.getPreferredSize.height))
+      textArea.setPreferredSize(new Dimension(zoom(390), textArea.getPreferredSize.height))
       invalidate()
     }
 
@@ -679,7 +679,7 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
           .flatMap(u => Try(u.toURI).toOption) match {
             case None => new OptionPane(this, I18N.gui.get("common.messages.error"),
                                         I18N.gui.get("modelsLibrary.invalidURL"), OptionPane.Options.Ok,
-                                        OptionPane.Icons.Error)
+                                        OptionPane.Icons.error)
             case Some(toOpen) => BrowserLauncher.openURI(this, toOpen)
           }
       }
@@ -783,15 +783,15 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
   }
 
   private class TreeCellRenderer extends DefaultTreeCellRenderer with PreferredSize with Zoomable with ThemeSync {
-    private val open = new SelectableIcon("/images/open.png", 14, 12, InterfaceColors.modelsLibraryFolder,
+    private val open = new SelectableIcon(this, "/images/open.png", 14, 12, InterfaceColors.modelsLibraryFolder,
                                           InterfaceColors.modelsLibraryFolderSelected)
-    private val closed = new SelectableIcon("/images/closed.png", 14, 12, InterfaceColors.modelsLibraryFolder,
+    private val closed = new SelectableIcon(this, "/images/closed.png", 14, 12, InterfaceColors.modelsLibraryFolder,
                                             InterfaceColors.modelsLibraryFolderSelected)
-    private val leaf = new SelectableIcon("/images/leaf.png", 12, 14, InterfaceColors.modelsLibraryLeaf,
+    private val leaf = new SelectableIcon(this, "/images/leaf.png", 12, 14, InterfaceColors.modelsLibraryLeaf,
                                           InterfaceColors.modelsLibraryLeafSelected)
 
     override def getIconTextGap: Int =
-      Utils.zoom(super.getIconTextGap)
+      zoom(super.getIconTextGap)
 
     override def getTreeCellRendererComponent(tree: JTree, value: AnyRef, selected: Boolean, expanded: Boolean,
                                               leaf: Boolean, row: Int, hasFocus: Boolean): Component = {
@@ -820,11 +820,11 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
     }
   }
 
-  private class SelectableIcon(path: String, width: Int, height: Int, normalColor: () => Color,
+  private class SelectableIcon(zoom: ZoomHelpers, path: String, width: Int, height: Int, normalColor: () => Color,
                                selectedColor: () => Color) {
 
-    private val normal: Icon = Utils.iconScaledWithColor(path, width, height, normalColor)
-    private val selected: Icon = Utils.iconScaledWithColor(path, width, height, selectedColor)
+    private val normal: Icon = Utils.iconScaledWithColor(zoom, path, width, height, normalColor)
+    private val selected: Icon = Utils.iconScaledWithColor(zoom, path, width, height, selectedColor)
 
     def getIcon(selected: Boolean): Icon = {
       if (selected) {
@@ -836,5 +836,5 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
   }
 }
 
-class CollapsedArrow extends CollapsibleArrow(false)
-class ExpandedArrow extends CollapsibleArrow(true)
+class CollapsedArrow extends CollapsibleArrow(new DummyZoomable, false)
+class ExpandedArrow extends CollapsibleArrow(new DummyZoomable, true)

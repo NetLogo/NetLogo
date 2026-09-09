@@ -88,7 +88,7 @@ trait Chooser extends SingleErrorWidget {
   /// size calculations
 
   override def getMinimumSize: Dimension = {
-    Utils.zoomSize {
+    zoomSize {
       if (_oldSize) {
         new Dimension(92, 45)
       } else {
@@ -98,7 +98,7 @@ trait Chooser extends SingleErrorWidget {
   }
 
   override def getPreferredSize: Dimension = {
-    Utils.zoomSize {
+    zoomSize {
       if (_oldSize) {
         new Dimension(120, 45)
       } else {

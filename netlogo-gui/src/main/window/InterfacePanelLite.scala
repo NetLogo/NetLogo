@@ -12,7 +12,7 @@ import org.nlogo.api.{ CompilerServices, Exceptions, ExtensionManager, RandomSer
 import org.nlogo.awt.Images
 import org.nlogo.core.{ Widget => CoreWidget, View => CoreView }
 import org.nlogo.plot.PlotManager
-import org.nlogo.swing.{ MenuItem, PopupMenu, Utils, Zoomable }
+import org.nlogo.swing.{ MenuItem, PopupMenu, Zoomable }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.Events.{ LoadWidgetsEvent, OutputEvent }
 import org.nlogo.util.SysInfo
@@ -298,7 +298,7 @@ class InterfacePanelLite(viewWidget: Option[ViewWidgetInterface], compiler: Comp
   override def zoomComponent(): Unit = {
     getComponents.foreach {
       case widget: Widget =>
-        widget.setBounds(Utils.zoomBounds(widget.getUnzoomedBounds))
+        widget.setBounds(zoomBounds(widget.getUnzoomedBounds))
 
       case _ =>
     }
