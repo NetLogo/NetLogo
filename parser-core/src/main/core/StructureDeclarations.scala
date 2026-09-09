@@ -53,7 +53,4 @@ object StructureDeclarations {
     override val start: Token = token
     override val end: Token = token
   }
-  sealed trait ImportOption
-  case class ImportAlias(name: String, token: Token)
-    extends ImportOption
 }
