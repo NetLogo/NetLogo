@@ -1062,6 +1062,8 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
     wrapper.setPlacing(true)
     wrapper.validate()
 
+    newWidget.setUnzoomedBounds(unzoomBounds(wrapper.widgetBounds))
+
     setInterfaceMode(InterfaceMode.Add, true)
 
     wrapper.syncTheme()
@@ -1098,9 +1100,11 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
 
       wrapper.setLocation(start.x + widget.x - min.x, start.y + widget.y - min.y)
       wrapper.setSize(widget.width, widget.height)
+
+      newWidget.setUnzoomedBounds(unzoomBounds(wrapper.widgetBounds))
+
       wrapper.setPlacing(true)
       wrapper.validate()
-
       wrapper.syncTheme()
 
       (wrapper, new Point(widget.x - min.x, widget.y - min.y))
