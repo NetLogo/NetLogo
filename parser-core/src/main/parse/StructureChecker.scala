@@ -13,7 +13,7 @@ import java.util.Locale
 import
   org.nlogo.core,
     core.{ BreedIdentifierHandler, I18N, StructureDeclarations, Token, TokenType },
-      StructureDeclarations.{ Breed, Declaration, Export, Extensions, Identifier, Includes, Procedure, Variables },
+      StructureDeclarations.{ Breed, Declaration, Export, Extensions, Identifier, Import, Includes, Procedure, Variables },
     core.Fail._
 
 import SymbolType._
@@ -51,6 +51,20 @@ object StructureChecker {
             exception(I18N.errors.getN("compiler.StructureParser.importContainsVariables"), start)
           case _ =>
         }
+      }
+    }
+  }
+
+  def rejectPathSeparatorsInImportPaths(declarations: Seq[Declaration]): Unit = {
+    val separators = Set("/", System.getProperty("file.separator"))
+
+    for (declaration <- declarations) {
+      declaration match {
+        case Import(pathComponents, _, _, token) =>
+          if (pathComponents.exists(x => separators.exists(x.contains))) {
+            exception(I18N.errors.getN("compiler.StructureParser.importContainsPathSeparator"), token)
+          }
+        case _ =>
       }
     }
   }
