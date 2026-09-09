@@ -11,7 +11,7 @@ class ToolBarActionButton(action: Action) extends Button(action) {
   setBorder(new ZoomableBorder(6, 8, 6, 12))
 
   override def zoomComponent(): Unit = {
-    setIconTextGap(Utils.zoom(12))
+    setIconTextGap(zoom(12))
   }
 }
 
@@ -23,7 +23,7 @@ class ToolBarToggleButton(action: Action) extends JToggleButton(action) with Tra
   override def paintComponent(g: Graphics): Unit = {
     val g2d = Utils.initGraphics2D(g)
 
-    val diameter: Int = Utils.zoom(6)
+    val diameter: Int = zoom(6)
 
     if (!isEnabled) {
       g2d.setColor(InterfaceColors.Transparent)
@@ -57,6 +57,6 @@ class ToolBarToggleButton(action: Action) extends JToggleButton(action) with Tra
   }
 
   override def zoomComponent(): Unit = {
-    setIconTextGap(Utils.zoom(12))
+    setIconTextGap(zoom(12))
   }
 }

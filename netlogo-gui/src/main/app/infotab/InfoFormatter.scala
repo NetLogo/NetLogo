@@ -15,7 +15,7 @@ import com.vladsch.flexmark.ext.autolink.AutolinkExtension
 import com.vladsch.flexmark.ext.typographic.TypographicExtension
 
 import org.nlogo.api.{ ExternalResourceManager, FileIO }
-import org.nlogo.swing.Utils
+import org.nlogo.swing.{ DummyZoomable, ZoomHelpers }
 import org.nlogo.theme.InterfaceColors
 
 import scala.io.Source
@@ -29,15 +29,15 @@ object InfoFormatter {
    * for standalone use, for example on a web server
    */
   def main(argv: Array[String]): Unit = {
-    println(apply(read(System.in)))
+    println(apply(new DummyZoomable, read(System.in)))
   }
 
   def read(in: InputStream): String = Source.fromInputStream(in).mkString
 
   def styleSheetFile: String = FileIO.getResourceAsString("/system/info.css")
-  val defaultStyleSheet: String = styleSheet("monospace")
-  def styleSheet(fontFamily: String): String = {
-    val fontSize: Int = Utils.zoom(11)
+  val defaultStyleSheet: String = styleSheet(new DummyZoomable, "monospace")
+  def styleSheet(zoom: ZoomHelpers, fontFamily: String): String = {
+    val fontSize: Int = zoom.zoom(11)
 
     "<style type=\"text/css\">\n<!--\n"+
       styleSheetFile.
@@ -66,17 +66,17 @@ object InfoFormatter {
         replace("{SCROLLBAR-COLOR}", colorString(InterfaceColors.scrollBarForeground())) + "\n-->\n</style>"
   }
 
-  def apply(content: String, modelDir: String = null,
+  def apply(zoom: ZoomHelpers, content: String, modelDir: String = null,
             resourceManager: ExternalResourceManager = new ExternalResourceManager,
             fontFamily: String = "monospace") = {
 
-    wrapHtml(toInnerHtml(content, modelDir, resourceManager), fontFamily)
+    wrapHtml(zoom, toInnerHtml(content, modelDir, resourceManager), fontFamily)
   }
 
-  def wrapHtml(body: String, fontFamily: String = "monospace"): String = {
+  def wrapHtml(zoom: ZoomHelpers, body: String, fontFamily: String = "monospace"): String = {
     val mathJax = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
 
-    s"""<html><head>${styleSheet(fontFamily)}</head><body>$body</body><script>
+    s"""<html><head>${styleSheet(zoom, fontFamily)}</head><body>$body</body><script>
       window.MathJax = {
         tex: {
           inlineMath: [['$$', '$$']],

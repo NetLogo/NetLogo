@@ -36,7 +36,7 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
       compile()
     }
   }) {
-    setIcon(Utils.iconScaledWithColor("/images/check.png", 15, 15, () => InterfaceColors.toolbarImage()))
+    setIcon(Utils.iconScaledWithColor(this, "/images/check.png", 15, 15, () => InterfaceColors.toolbarImage()))
     setEnabled(false)
   }
 

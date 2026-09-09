@@ -28,7 +28,7 @@ class ViewControlToolBar(view: GLViewInterface, inputHandler: MouseMotionHandler
 
     if (!isWindows || view.warned ||
       (new OptionPane(view, I18N.gui.get("common.messages.warning"), I18N.gui("fullScreenWarning"), options,
-                      OptionPane.Icons.Warning).getSelectedIndex == 0)) {
+                      OptionPane.Icons.warning).getSelectedIndex == 0)) {
       view.setFullscreen(true)
       view.warned = true
     }

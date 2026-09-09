@@ -18,12 +18,12 @@ import org.nlogo.api.{ Workspace }
 import org.nlogo.awt.{ Positioning, UserCancelException }
 import org.nlogo.core.{ ExternalResource, I18N }
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, Button, FileDialog, InputOptionPane, MaximumHeight, OptionPane,
-                         ScrollPane, Utils, WindowAutomator, Zoomable, ZoomableBorder, ZoomableWindow, ZoomActions }
+                         ScrollPane, Utils, WindowAutomator, Zoomable, ZoomableBorder, ZoomableWindow }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.Events.{ DirtyEvent, ResourcesChangedEvent }
 
 class ResourceManagerDialog(parent: Frame, workspace: Workspace)
-  extends JDialog(parent, I18N.gui.get("resource.manager"), true) with ZoomActions with ZoomableWindow with ThemeSync {
+  extends JDialog(parent, I18N.gui.get("resource.manager"), true) with ZoomableWindow(Option(parent)) with ThemeSync {
 
   WindowAutomator.automate(this)
 
@@ -93,7 +93,7 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
 
         if (trimmed.isEmpty) {
           new OptionPane(parent, I18N.gui.get("common.messages.error"), I18N.gui.get("resource.nameEmpty"),
-                         OptionPane.Options.Ok, OptionPane.Icons.Error)
+                         OptionPane.Options.Ok, OptionPane.Icons.error)
         }
 
         else {
@@ -118,7 +118,7 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
 
           else {
             new OptionPane(parent, I18N.gui.get("common.messages.error"), I18N.gui.getN("resource.alreadyExists", trimmed),
-                           OptionPane.Options.Ok, OptionPane.Icons.Error)
+                           OptionPane.Options.Ok, OptionPane.Icons.error)
           }
         }
       }
@@ -156,7 +156,7 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
 
       if (trimmed.isEmpty) {
         new OptionPane(parent, I18N.gui.get("common.messages.error"), I18N.gui.get("resource.nameEmpty"),
-                       OptionPane.Options.Ok, OptionPane.Icons.Error)
+                       OptionPane.Options.Ok, OptionPane.Icons.error)
       }
 
       else if (trimmed != resource.name) {
@@ -173,7 +173,7 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
           manager.addResource(resource)
 
           new OptionPane(parent, I18N.gui.get("common.messages.error"), I18N.gui.getN("resource.alreadyExists", trimmed),
-                         OptionPane.Options.Ok, OptionPane.Icons.Error)
+                         OptionPane.Options.Ok, OptionPane.Icons.error)
         }
       }
     }
@@ -242,7 +242,7 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
     removeButton.syncTheme()
   }
 
-  private class ResourceCellRenderer extends BoxRow(BoxAlign.Start) with TableCellRenderer {
+  private class ResourceCellRenderer extends BoxRow(BoxAlign.Start) with TableCellRenderer with Zoomable {
     private val label = new JLabel with Zoomable
 
     setOpaque(true)
@@ -250,7 +250,7 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
     add(label)
 
     override def getInsets: java.awt.Insets =
-      new Insets(Utils.zoom(3), Utils.zoom(6), Utils.zoom(3), Utils.zoom(6))
+      new Insets(zoom(3), zoom(6), zoom(3), zoom(6))
 
     def getTableCellRendererComponent(table: JTable, value: Object, isSelected: Boolean, hasFocus: Boolean, row: Int,
                                       column: Int): Component = {
@@ -278,7 +278,7 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
     }
   }
 
-  private class HeaderCellRenderer extends BoxRow(BoxAlign.Start) with TableCellRenderer {
+  private class HeaderCellRenderer extends BoxRow(BoxAlign.Start) with TableCellRenderer with Zoomable {
     private val label = new JLabel with Zoomable {
       setBaseFont(getFont.deriveFont(Font.BOLD))
     }
@@ -288,7 +288,7 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
     add(label)
 
     override def getInsets: java.awt.Insets =
-      new Insets(Utils.zoom(3), Utils.zoom(6), Utils.zoom(3), Utils.zoom(6))
+      new Insets(zoom(3), zoom(6), zoom(3), zoom(6))
 
     def getTableCellRendererComponent(table: JTable, value: Object, isSelected: Boolean, hasFocus: Boolean, row: Int,
                                       column: Int): Component = {

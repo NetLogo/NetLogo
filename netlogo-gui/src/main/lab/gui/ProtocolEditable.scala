@@ -106,7 +106,7 @@ private [gui] class ProtocolEditable(protocol: LabProtocol,
   def get: Option[LabProtocol] = {
     def complain(message: String): Unit = {
       new OptionPane(window, I18N.gui("invalid"), I18N.gui.getN("edit.behaviorSpace.invalidVarySpec", message),
-                     OptionPane.Options.Ok, OptionPane.Icons.Error)
+                     OptionPane.Options.Ok, OptionPane.Icons.error)
     }
     LabVariableParser.parseVariables(valueSets, repetitions, worldLock, compiler) match {
       case Success((constants, subExperiments)) =>

@@ -13,6 +13,7 @@ import javax.xml.stream.{ XMLInputFactory, XMLStreamConstants }
 import com.typesafe.config.{ Config, ConfigException, ConfigFactory, ConfigParseOptions, ConfigSyntax }
 
 import org.nlogo.app.infotab.InfoFormatter
+import org.nlogo.swing.DummyZoomable
 import org.nlogo.workspace.ModelsLibrary
 
 object ModelsLibraryIndexReader {
@@ -51,7 +52,7 @@ object ModelsLibraryIndexReader {
     val whatIsItPattern = "(?s).*## WHAT IS IT\\?\\s*\\n"
     if (info.matches(whatIsItPattern + ".*")) {
       val firstParagraph = info.replaceFirst(whatIsItPattern, "").split('\n').head
-      val formattedFirstParagraph = InfoFormatter(firstParagraph)
+      val formattedFirstParagraph = InfoFormatter(new DummyZoomable, firstParagraph)
       Some(formattedFirstParagraph)
     } else {
       None

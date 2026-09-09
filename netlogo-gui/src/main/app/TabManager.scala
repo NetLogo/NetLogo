@@ -236,7 +236,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     if (dirty) {
       val index = new OptionPane(workspace.getFrame, I18N.gui.get("dirty.dialog.title"),
                                  I18N.gui.get("dirty.dialog.message"), OptionPane.Options.OkCancel,
-                                 OptionPane.Icons.Question).getSelectedIndex
+                                 OptionPane.Icons.question).getSelectedIndex
 
       if (index == 0) {
         okCallback()

@@ -7,7 +7,6 @@ import java.awt.event.{ WindowAdapter, WindowEvent }
 
 import org.nlogo.api.Version
 import org.nlogo.gl.render.Renderer
-import org.nlogo.swing.Utils
 
 class ObserverView(viewManager: ViewManager, renderer: Renderer, bounds: Rectangle)
 extends View("3D View", viewManager, renderer, Option(bounds)) {
@@ -15,7 +14,7 @@ extends View("3D View", viewManager, renderer, Option(bounds)) {
   def this(viewManager: ViewManager, renderer: Renderer) =
     this(viewManager, renderer, new Rectangle(600, 600))
 
-  setBounds(Utils.zoomBounds(bounds))
+  setBounds(zoomBounds(bounds))
 
   val navBar = new ViewControlToolBar(this, inputHandler)
   add(navBar, BorderLayout.SOUTH)
