@@ -383,6 +383,10 @@ class StructureParserTests extends AnyFunSuite {
     expectParseAllError("""import foobar:baz""", "Could not find FOOBAR:BAZ", SourceType.NLInclude)
   }
 
+  test("import rejects path separator") {
+    expectParseAllError("""import foo:bar/baz""", "Import paths may not contain slash or the system path separator", SourceType.NLModule)
+  }
+
   test("import syntax returns correct results") {
     val results = compileAll("""import foo""", SourceType.NLModule, "")
     assert(results.imports.nonEmpty || results.includedSources.nonEmpty)
