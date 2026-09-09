@@ -17,7 +17,7 @@ import org.nlogo.api.{ CompilerServices, ExtensionManager, SourceOwner }
 import org.nlogo.core.{ CompilerException, I18N }
 import org.nlogo.editor.Colorizer
 import org.nlogo.sdm.Translator
-import org.nlogo.swing.{ MenuBar, MenuItem, NetLogoIcon, Utils, WindowAutomator, Zoomable, ZoomableWindow, ZoomActions }
+import org.nlogo.swing.{ MenuBar, MenuItem, NetLogoIcon, Utils, WindowAutomator, Zoomable, ZoomableWindow }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ Editable, EditDialogFactory, Events, MenuBarFactory }
 import org.nlogo.window.Event.LinkChild
@@ -42,8 +42,7 @@ class AggregateModelEditor(
   with DrawingEditor
   with LinkChild
   with Events.LoadBeginEvent.Handler
-  with ZoomActions
-  with ZoomableWindow
+  with ZoomableWindow(Option(linkParent))
   with ThemeSync
   with NetLogoIcon {
 
@@ -256,12 +255,6 @@ class AggregateModelEditor(
   def handle(e: Events.LoadBeginEvent): Unit = {
     undoManager.clearUndos()
     undoManager.clearRedos()
-  }
-
-  override def zoomWindow(): Unit = {
-    super.zoomWindow()
-
-    Utils.zoomMenuBar(menuBar)
   }
 
   override def syncTheme(): Unit = {

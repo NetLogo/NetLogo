@@ -145,8 +145,8 @@ class LibrariesTab( category:        String
 
     }
 
-  private val magIcon = new JLabel {
-    setIcon(Utils.iconScaledWithColor("/images/find.png", 15, 15, () => InterfaceColors.toolbarImage()))
+  private val magIcon = new JLabel with Zoomable {
+    setIcon(Utils.iconScaledWithColor(this, "/images/find.png", 15, 15, () => InterfaceColors.toolbarImage()))
   }
 
   private val filterField = new TextField with MaximumHeight
@@ -169,7 +169,7 @@ class LibrariesTab( category:        String
 
         case _ =>
           new OptionPane(this, I18N.gui.get("common.messages.error"), I18N.gui.get("tools.libraries.failedToAdd"),
-                         OptionPane.Options.Ok, OptionPane.Icons.Error)
+                         OptionPane.Options.Ok, OptionPane.Icons.error)
 
           source
       }
@@ -362,7 +362,7 @@ class LibrariesTab( category:        String
     } catch {
       case ex: IOException =>
         new OptionPane(this, I18N.gui.get("common.messages.error"), I18N.gui("downloadFailed", lib.downloadURL),
-                       OptionPane.Options.Ok, OptionPane.Icons.Error)
+                       OptionPane.Options.Ok, OptionPane.Icons.error)
     }
 
   private def containsLib(info: LibraryInfo, text: String): Boolean =
@@ -399,14 +399,14 @@ class LibrariesTab( category:        String
   private def updateSingleOperationStatus(operation: String, libName: String) =
     updateStatus(I18N.gui(operation, libName))
 
-  private class CellRenderer extends BoxRow(6) with ListCellRenderer[LibraryInfo] {
-    private val upToDateIcon: Icon = Utils.iconScaledWithColor("/images/check.png", 24, 24,
+  private class CellRenderer extends BoxRow(6) with ListCellRenderer[LibraryInfo] with Zoomable {
+    private val upToDateIcon: Icon = Utils.iconScaledWithColor(this, "/images/check.png", 24, 24,
                                                                () => InterfaceColors.checkFilled())
-    private val warningIcon: Icon = Utils.iconScaledWithColor("/images/exclamation-triangle.png", 24, 24,
+    private val warningIcon: Icon = Utils.iconScaledWithColor(this, "/images/exclamation-triangle.png", 24, 24,
                                                               () => InterfaceColors.warningIcon())
-    private val canUpdateIcon: Icon = Utils.iconScaledWithColor("/images/update.png", 24, 24,
+    private val canUpdateIcon: Icon = Utils.iconScaledWithColor(this, "/images/update.png", 24, 24,
                                                                 () => InterfaceColors.updateIcon())
-    private val noIcon: Icon = new EmptyIcon(24, 24)
+    private val noIcon: Icon = new EmptyIcon(this, 24, 24)
 
     private val iconLabel = new JLabel
     private val descLabel = new JLabel with Zoomable

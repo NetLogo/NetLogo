@@ -72,11 +72,11 @@ class ButtonWidget(random: MersenneTwisterFast, compiler: CompilerServices, colo
 
   import ButtonWidget._
 
-  private val foreverIcon = Utils.iconScaledWithColor("/images/forever.png", 15, 15,
+  private val foreverIcon = Utils.iconScaledWithColor(this, "/images/forever.png", 15, 15,
                                                       () => InterfaceColors.buttonText())
-  private val foreverIconPressed = Utils.iconScaledWithColor("/images/forever.png", 15, 15,
+  private val foreverIconPressed = Utils.iconScaledWithColor(this, "/images/forever.png", 15, 15,
                                                              () => InterfaceColors.buttonTextPressed())
-  private val foreverIconDisabled = Utils.iconScaledWithColor("/images/forever.png", 15, 15,
+  private val foreverIconDisabled = Utils.iconScaledWithColor(this, "/images/forever.png", 15, 15,
                                                               () => InterfaceColors.buttonTextDisabled())
 
   private var _buttonType: ButtonType = ButtonType.ObserverButton
@@ -436,7 +436,7 @@ class ButtonWidget(random: MersenneTwisterFast, compiler: CompilerServices, colo
 
   /// sizing
   override def getMinimumSize: Dimension = {
-    Utils.zoomSize {
+    zoomSize {
       if (_oldSize) {
         new Dimension(55, 33)
       } else {
@@ -446,7 +446,7 @@ class ButtonWidget(random: MersenneTwisterFast, compiler: CompilerServices, colo
   }
 
   override def getPreferredSize =
-    new Dimension(getMinimumSize.width.max(super.getPreferredSize.width + Utils.zoom(12)), Utils.zoom(40))
+    new Dimension(getMinimumSize.width.max(super.getPreferredSize.width + zoom(12)), zoom(40))
 
   /// painting
   override def paintComponent(g: Graphics): Unit = {

@@ -46,7 +46,7 @@ abstract class EditPanel(target: Editable) extends BoxColumn(6) with ThemeSync {
       case Some(error) =>
         if (!silent) {
           new OptionPane(this, I18N.gui.get("edit.general.invalidSettings"), error, OptionPane.Options.Ok,
-                         OptionPane.Icons.Error)
+                         OptionPane.Icons.error)
         }
 
         false
@@ -56,7 +56,7 @@ abstract class EditPanel(target: Editable) extends BoxColumn(6) with ThemeSync {
           case Some(error) =>
             if (!silent) {
               new OptionPane(this, I18N.gui.get("edit.general.invalidSettings"), error, OptionPane.Options.Ok,
-                             OptionPane.Icons.Error)
+                             OptionPane.Icons.error)
             }
 
             false

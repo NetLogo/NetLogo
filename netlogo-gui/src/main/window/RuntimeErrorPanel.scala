@@ -7,7 +7,7 @@ import java.awt.event.{ ActionEvent, ActionListener }
 import javax.swing.JLabel
 
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ BoxAlign, BoxRow, Button, Utils, ZoomableBorder }
+import org.nlogo.swing.{ BoxAlign, BoxRow, Button, Utils, Zoomable, ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 import scala.util.{ Success, Try }
@@ -63,8 +63,8 @@ abstract class RuntimeErrorDisplayer
     button
   }
 
-  lazy val errorLabel = new JLabel(I18N.gui.get("edit.plot.error.runtimeError")) {
-    setIcon(Utils.iconScaledWithColor("/images/error.png", 15, 15, () => InterfaceColors.errorLabelText()))
+  lazy val errorLabel = new JLabel(I18N.gui.get("edit.plot.error.runtimeError")) with Zoomable {
+    setIcon(Utils.iconScaledWithColor(this, "/images/error.png", 15, 15, () => InterfaceColors.errorLabelText()))
   }
 
   lazy val messageLabel = new JLabel
@@ -94,7 +94,9 @@ abstract class RuntimeErrorDisplayer
   }
 }
 
-class RuntimeErrorPanel(e: Exception, onDismiss: (RuntimeErrorPanel) => Unit = {_ => }) extends RuntimeErrorDisplayer {
+class RuntimeErrorPanel(e: Exception, onDismiss: (RuntimeErrorPanel) => Unit = {_ => })
+  extends RuntimeErrorDisplayer with Zoomable {
+
   layoutErrorPanel()
 
   syncTheme()
@@ -107,5 +109,5 @@ class RuntimeErrorPanel(e: Exception, onDismiss: (RuntimeErrorPanel) => Unit = {
   }
 
   override def getMaximumSize: Dimension =
-    new Dimension(Utils.zoom(400), Utils.zoom(100))
+    new Dimension(zoom(400), zoom(100))
 }

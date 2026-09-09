@@ -114,7 +114,7 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
       _selected = selected
       highlighted = selected
 
-      val border: Int = Utils.zoom(BorderSize)
+      val border: Int = zoom(BorderSize)
 
       if (selected) {
         setBounds(getX - border, getY - border, getWidth + border * 2, getHeight + border * 2)
@@ -191,10 +191,10 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
   }
 
   override def zoomComponent(): Unit = {
-    val bounds: Rectangle = Utils.zoomBounds(widget.getUnzoomedBounds)
+    val bounds: Rectangle = zoomBounds(widget.getUnzoomedBounds)
 
     if (selected) {
-      val border: Int = Utils.zoom(BorderSize)
+      val border: Int = zoom(BorderSize)
 
       setBounds(new Rectangle(bounds.x - border, bounds.y - border, bounds.width + border * 2,
                               bounds.height + border * 2))
@@ -236,7 +236,7 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
       return null
 
     if (selected) {
-      val border: Int = Utils.zoom(BorderSize) * 2
+      val border: Int = zoom(BorderSize) * 2
 
       new Dimension(dim.width + border, dim.height + border)
     } else {
@@ -255,7 +255,7 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
     addWrapperBorder(widget.getMaximumSize)
 
   override def doLayout(): Unit = {
-    val border: Int = Utils.zoom(BorderSize)
+    val border: Int = zoom(BorderSize)
 
     if (selected) {
       widget.setBounds(border, border, getWidth - border * 2, getHeight - border * 2)
@@ -366,9 +366,9 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
   // purposes, BorderSize only contains the outer portion of GrabBuffer, but when checking for mouse clicks
   // we also want to have some GrabBuffer on the inside over top of the widget itself (Isaac B 7/11/25)
   private def getHandle(x: Int, y: Int): Option[MouseMode] = {
-    val border: Int = Utils.zoom(BorderSize)
-    val grab: Int = Utils.zoom(GrabBuffer)
-    val handle: Int = Utils.zoom(HandleSize)
+    val border: Int = zoom(BorderSize)
+    val grab: Int = zoom(GrabBuffer)
+    val handle: Int = zoom(HandleSize)
 
     if (x < border + grab) {
       if (y < border + grab) {
@@ -538,7 +538,7 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
         interfacePanel.endResizeWidget()
         WidgetActions.resizeWidget(this)
 
-        widget.setUnzoomedBounds(Utils.unzoomBounds(widgetBounds))
+        widget.setUnzoomedBounds(unzoomBounds(widgetBounds))
       }
 
       mouseMode = MouseMode.IDLE
@@ -549,7 +549,7 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
     selected(true, true) // 2nd true = change was temporary
 
     if (!startBoundsUnselected.contains(getUnselectedBounds)) {
-      widget.setUnzoomedBounds(Utils.unzoomBounds(widgetBounds))
+      widget.setUnzoomedBounds(unzoomBounds(widgetBounds))
 
       new DirtyEvent(None).raise(this)
     }
@@ -559,7 +559,7 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
 
   private def enforceMinimumSize(r: Rectangle): Unit = {
     if (widget != null) {
-      var minWidgetSize = Utils.zoomSize(widget.getMinimumSize)
+      var minWidgetSize = zoomSize(widget.getMinimumSize)
 
       minWidgetSize = new Dimension(minWidgetSize.width.max(MinWidgetWidth), minWidgetSize.height.max(MinWidgetHeight))
 
@@ -638,7 +638,7 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
       if (maxWidgetSize.width <= 0)
         maxWidgetSize.width = 10000
 
-      maxWidgetSize = Utils.zoomSize(maxWidgetSize)
+      maxWidgetSize = zoomSize(maxWidgetSize)
 
       mouseMode match {
         case MouseMode.S =>
@@ -759,7 +759,7 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
   def widgetResized(): Unit = {
     super.setBounds(
       if (selected) {
-        val border: Int = Utils.zoom(BorderSize) * 2
+        val border: Int = zoom(BorderSize) * 2
 
         new Rectangle(getX, getY, widget.getWidth + border, widget.getHeight + border)
       } else {
@@ -780,7 +780,7 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
   // is needed for the zooming code in InterfacePanel
   def getUnselectedLocation: Point = {
     if (selected) {
-      val border: Int = Utils.zoom(BorderSize)
+      val border: Int = zoom(BorderSize)
 
       new Point(getX + border, getY + border)
     } else {
@@ -790,7 +790,7 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
 
   def getUnselectedBounds: Rectangle = {
     if (selected) {
-      val border: Int = Utils.zoom(BorderSize)
+      val border: Int = zoom(BorderSize)
 
       new Rectangle(getX + border, getY + border, getWidth - border * 2, getHeight - border * 2)
     } else {

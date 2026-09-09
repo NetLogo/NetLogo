@@ -17,7 +17,7 @@ import org.nlogo.core.{
   View => CoreView, Widget => CoreWidget }
 import org.nlogo.editor.EditorArea
 import org.nlogo.log.LogManager
-import org.nlogo.swing.{ ClipboardUtils, MenuItem, PopupMenu, Utils }
+import org.nlogo.swing.{ ClipboardUtils, MenuItem, PopupMenu }
 import org.nlogo.window.{ AutoIndentHandler, ButtonWidget, ChooserWidget, Editable, EditDialogFactory,
                           Events => WindowEvents, GUIWorkspace, InputBoxWidget, InterfaceGlobalWidget, InterfaceMode,
                           MonitorWidget, PlotWidget, SliderWidget, SwitchWidget, ViewWidget, ViewWidgetInterface,
@@ -190,9 +190,9 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
         // so don't worry about all the sizing junk ev 7/5/07
         val parent = viewWidget.getParent
         if (parent != null) {
-          parent.setSize(Utils.zoomSize(viewWidget.getSize))
+          parent.setSize(zoomSize(viewWidget.getSize))
           enforceMinimumAndMaximumWidgetSizes(viewWidget)
-          parent.setLocation(Utils.zoom(x), Utils.zoom(y))
+          parent.setLocation(zoom(x), zoom(y))
         }
         viewWidget
       case _ =>

@@ -10,7 +10,7 @@ import org.nlogo.analytics.Analytics
 import org.nlogo.api.ModelType
 import org.nlogo.core.{ I18N, Widget => CoreWidget }
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, MaximumHeight, Menu, MenuBar, NetLogoIcon, OptionPane, ScrollPane,
-                         UserAction, Utils, WindowAutomator, ZoomableBorder, ZoomableWindow, ZoomActions }
+                         UserAction, WindowAutomator, ZoomableBorder, ZoomableWindow }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ WidgetInfo, MenuBarFactory, InterfaceFactory, GUIWorkspace, AbstractWidgetPanel }
 
@@ -19,8 +19,7 @@ class HubNetClientEditor(workspace: GUIWorkspace,
                          iFactory: InterfaceFactory,
                          menuFactory: MenuBarFactory) extends JFrame
         with org.nlogo.window.Event.LinkChild
-        with ZoomActions
-        with ZoomableWindow
+        with ZoomableWindow(Option(workspace.getFrame))
         with ThemeSync
         with NetLogoIcon {
   WindowAutomator.automate(this)
@@ -87,12 +86,6 @@ class HubNetClientEditor(workspace: GUIWorkspace,
     if (mt == ModelType.Normal) t + " {" + directory + "}" else t
   }
 
-  override def zoomWindow(): Unit = {
-    super.zoomWindow()
-
-    Utils.zoomMenuBar(clientMenuBar)
-  }
-
   override def syncTheme(): Unit = {
     toolbar.setBackground(InterfaceColors.toolbarBackground())
     scrollPane.setBackground(InterfaceColors.interfaceBackground())
@@ -122,7 +115,7 @@ class HubNetClientEditor(workspace: GUIWorkspace,
                          I18N.gui.get("menu.tools.convertWidgetSizes.prompt"),
                          Seq(I18N.gui.get("menu.tools.convertWidgetSizes.resizeAndAdjust"),
                              I18N.gui.get("common.buttons.cancel")),
-                         OptionPane.Icons.Info).getSelectedIndex == 0) {
+                         OptionPane.Icons.info).getSelectedIndex == 0) {
         interfacePanel.convertWidgetSizes()
 
         setSize(getPreferredSize)

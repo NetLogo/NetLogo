@@ -23,7 +23,7 @@ class EditorPanel(compiler: CompilerServices, colorizer: EditorColorizer) extend
       comboBox.updateCommands(PreviewCommands(editor.getText()))
     }
   }) with PreferredSize {
-    setIcon(Utils.iconScaledWithColor("/images/check.png", 15, 15, () => {
+    setIcon(Utils.iconScaledWithColor(this, "/images/check.png", 15, 15, () => {
       if (dirty) {
         InterfaceColors.checkFilled()
       } else {
@@ -56,7 +56,7 @@ class EditorPanel(compiler: CompilerServices, colorizer: EditorColorizer) extend
     setCaretColor(InterfaceColors.textAreaText())
 
     override def getPreferredSize: Dimension =
-      new Dimension(Utils.zoom(350), Utils.zoom(100))
+      new Dimension(zoom(350), zoom(100))
     override def setText(text: String) = super.setText(text.stripTrailingWhiteSpace + "\n")
     override def getText = super.getText().stripTrailingWhiteSpace + "\n"
     override def focusLost(fe: FocusEvent): Unit = {

@@ -8,7 +8,7 @@ import javax.swing.{ JLabel, JTextPane }
 import org.nlogo.swing.{ BoxAlign, BoxRow, MaximumHeight, Utils, Zoomable, ZoomableBorder }
 import org.nlogo.theme.InterfaceColors
 
-class ErrorLabel extends BoxRow(6, BoxAlign.Start) with MaximumHeight {
+class ErrorLabel extends BoxRow(6, BoxAlign.Start) with MaximumHeight with Zoomable {
   private val icon = new JLabel
   private val label = new JTextPane with Zoomable {
     setEditable(false)
@@ -39,7 +39,8 @@ class ErrorLabel extends BoxRow(6, BoxAlign.Start) with MaximumHeight {
       case Some(e) =>
         label.setForeground(InterfaceColors.errorLabelText())
         setBackground(InterfaceColors.errorLabelBackground())
-        icon.setIcon(Utils.iconScaledWithColor("/images/error.png", 15, 15, () => InterfaceColors.errorLabelText()))
+        icon.setIcon(Utils.iconScaledWithColor(this, "/images/error.png", 15, 15,
+                                               () => InterfaceColors.errorLabelText()))
         label.setText(s"<html><b>${encodeHTML(e.getMessage)}</b></html>")
         setVisible(true)
 
@@ -53,7 +54,7 @@ class ErrorLabel extends BoxRow(6, BoxAlign.Start) with MaximumHeight {
       case Some(str) =>
         label.setForeground(InterfaceColors.warningLabelText())
         setBackground(InterfaceColors.warningLabelBackground())
-        icon.setIcon(Utils.iconScaledWithColor("/images/exclamation-triangle.png", 15, 15,
+        icon.setIcon(Utils.iconScaledWithColor(this, "/images/exclamation-triangle.png", 15, 15,
                      () => InterfaceColors.warningLabelText()))
         label.setText(s"<html><b>${encodeHTML(str)}</b></html>")
         setVisible(true)

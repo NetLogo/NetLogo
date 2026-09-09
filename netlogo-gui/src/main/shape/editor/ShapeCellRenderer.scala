@@ -11,13 +11,13 @@ import org.nlogo.shape.DrawableShape
 import org.nlogo.swing.{ BoxAlign, BoxRow, PreferredSize, Utils, Zoomable }
 import org.nlogo.theme.InterfaceColors
 
-class ShapeCellRenderer(height: Int) extends BoxRow(20, BoxAlign.Start) with ListCellRenderer[Shape] {
+class ShapeCellRenderer(height: Int) extends BoxRow(20, BoxAlign.Start) with ListCellRenderer[Shape] with Zoomable {
   protected var shape: Option[DrawableShape] = None
   protected val shapeName = new JLabel with Zoomable
 
   protected val shapeComponent = new Component with PreferredSize {
     override def getPreferredSize: Dimension =
-      new Dimension(Utils.zoom(90), Utils.zoom(ShapeCellRenderer.this.height))
+      new Dimension(zoom(90), zoom(ShapeCellRenderer.this.height))
 
     private def preview(g2d: Graphics2D, clip: JShape, left: Int, top: Int, size: Int): Unit = {
       shape.foreach(shape => {
@@ -43,10 +43,10 @@ class ShapeCellRenderer(height: Int) extends BoxRow(20, BoxAlign.Start) with Lis
       g2d.setColor(getBackground)
       g2d.fillRect(1, 1, getWidth - 2, getHeight - 2)
 
-      preview(g2d, g2d.getClip, Utils.zoom(2), Utils.zoom(12), Utils.zoom(9))
-      preview(g2d, g2d.getClip, Utils.zoom(16), Utils.zoom(11), Utils.zoom(12))
-      preview(g2d, g2d.getClip, Utils.zoom(33), Utils.zoom(7), Utils.zoom(20))
-      preview(g2d, g2d.getClip, Utils.zoom(58), Utils.zoom(2), Utils.zoom(30))
+      preview(g2d, g2d.getClip, zoom(2), zoom(12), zoom(9))
+      preview(g2d, g2d.getClip, zoom(16), zoom(11), zoom(12))
+      preview(g2d, g2d.getClip, zoom(33), zoom(7), zoom(20))
+      preview(g2d, g2d.getClip, zoom(58), zoom(2), zoom(30))
     }
   }
 

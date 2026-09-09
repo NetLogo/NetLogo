@@ -26,7 +26,7 @@ abstract class InputBox(textArea: EditorArea, editDialogTextArea: EditorArea, co
                         nextComponent: Component)
   extends SingleErrorWidget with Editable with Events.InputBoxLoseFocusEvent.Handler {
 
-  protected class ColorButton extends JButton with RoundedBorderPanel with Zoomable with ThemeSync {
+  protected class ColorButton extends JButton with RoundedBorderPanel with ThemeSync {
     setBorder(null)
     setBaseFont(getFont.deriveFont(9.0f))
     setDiameter(6)
@@ -237,8 +237,8 @@ abstract class InputBox(textArea: EditorArea, editDialogTextArea: EditorArea, co
     if (isHover) {
       val g2d = Utils.initGraphics2D(g)
 
-      val offset: Int = Utils.zoom(3)
-      val diameter: Int = Utils.zoom(6)
+      val offset: Int = zoom(3)
+      val diameter: Int = zoom(6)
 
       if (colorSwatch.isVisible) {
         val pos: Point = SwingUtilities.convertPoint(colorSwatch, new Point(0, 0), this)
@@ -291,7 +291,7 @@ abstract class InputBox(textArea: EditorArea, editDialogTextArea: EditorArea, co
       if (msg.startsWith("REPORT expected 1 input."))
         msg = I18N.gui.get("edit.input.invalid.message")
       new OptionPane(frame, I18N.gui.getN("edit.input.invalid.title", inputType), msg, OptionPane.Options.Ok,
-                     OptionPane.Icons.Error)
+                     OptionPane.Icons.error)
     }
   }
 
@@ -366,7 +366,7 @@ abstract class InputBox(textArea: EditorArea, editDialogTextArea: EditorArea, co
   }
 
   override def getMinimumSize = {
-    Utils.zoomSize {
+    zoomSize {
       if (_oldSize) {
         new Dimension(50, 60)
       } else {
@@ -383,10 +383,10 @@ abstract class InputBox(textArea: EditorArea, editDialogTextArea: EditorArea, co
       // that we don't get a horizontal scroll bar at the default size. ev 9/28/06
       result.width =
               textArea.getPreferredSize.width + insets.left + insets.right +
-              textArea.getInsets.right + textArea.getInsets.left + Utils.zoom(4)
-      new Dimension(result.width.max(Utils.zoom(50)), result.height.max(Utils.zoom(60)))
+              textArea.getInsets.right + textArea.getInsets.left + zoom(4)
+      new Dimension(result.width.max(zoom(50)), result.height.max(zoom(60)))
     } else {
-      new Dimension(Utils.zoom(250), Utils.zoom(60))
+      new Dimension(zoom(250), zoom(60))
     }
   }
 

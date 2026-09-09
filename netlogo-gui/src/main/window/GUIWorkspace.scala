@@ -346,7 +346,7 @@ abstract class GUIWorkspace(world: World, kioskLevel: GUIWorkspace.KioskLevel, f
    */
   override def warningMessage(message: String): Boolean = {
     new OptionPane(getFrame, I18N.gui.get("common.messages.warning"), message,
-                   OptionPane.Options.OkCancel, OptionPane.Icons.Warning).getSelectedIndex == 0
+                   OptionPane.Options.OkCancel, OptionPane.Icons.warning).getSelectedIndex == 0
   }
 
   def resizeView(): Unit = {
