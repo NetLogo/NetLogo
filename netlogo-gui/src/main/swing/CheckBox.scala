@@ -30,14 +30,14 @@ class CheckBox(text: String = "") extends JCheckBox(text) with MouseUtils with Z
   }
 
   setIcon(new Icon {
-    def getIconWidth: Int = Utils.zoom(14)
-    def getIconHeight: Int = Utils.zoom(14)
+    def getIconWidth: Int = zoom(14)
+    def getIconHeight: Int = zoom(14)
 
     def paintIcon(c: Component, g: Graphics, x: Int, y: Int): Unit = {
       val g2d = Utils.initGraphics2D(g)
 
       val size: Int = getIconWidth
-      val diameter: Int = Utils.zoom(4)
+      val diameter: Int = zoom(4)
 
       if (isSelected) {
         if (isEnabled) {
@@ -54,10 +54,10 @@ class CheckBox(text: String = "") extends JCheckBox(text) with MouseUtils with Z
 
         val stroke: Stroke = g2d.getStroke
 
-        g2d.setStroke(new BasicStroke(Utils.zoomClamped(1f), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND))
+        g2d.setStroke(new BasicStroke(zoomClamped(1f), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND))
         g2d.setColor(InterfaceColors.checkboxCheck())
-        g2d.drawLine(x + Utils.zoom(3), y + Utils.zoom(7), x + Utils.zoom(5), y + Utils.zoom(10))
-        g2d.drawLine(x + Utils.zoom(5), y + Utils.zoom(10), x + Utils.zoom(10), y + Utils.zoom(3))
+        g2d.drawLine(x + zoom(3), y + zoom(7), x + zoom(5), y + zoom(10))
+        g2d.drawLine(x + zoom(5), y + zoom(10), x + zoom(10), y + zoom(3))
         g2d.setStroke(stroke)
       } else {
         if (isHover && isEnabled) {
@@ -75,5 +75,5 @@ class CheckBox(text: String = "") extends JCheckBox(text) with MouseUtils with Z
   })
 
   override def getIconTextGap: Int =
-    Utils.zoom(super.getIconTextGap)
+    zoom(super.getIconTextGap)
 }

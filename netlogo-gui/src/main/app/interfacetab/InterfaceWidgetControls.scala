@@ -32,47 +32,10 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
 
   private val selectedObjects = new HashSet[Widget]
 
-  val interactButton = new SquareButton(new InteractAction) {
-    setIcon(Utils.iconScaledWithColor("/images/interact.png", 18, 18, () => {
-      if (isSelected) {
-        InterfaceColors.toolbarImageSelected()
-      } else {
-        InterfaceColors.toolbarImage()
-      }
-    }))
-  }
-
-  val selectButton = new SquareButton(new SelectAction) {
-    setIcon(Utils.iconScaledWithColor("/images/select.png", 18, 18, () => {
-      if (isSelected) {
-        InterfaceColors.toolbarImageSelected()
-      } else {
-        InterfaceColors.toolbarImage()
-      }
-    }))
-  }
-
-  val editButton = new SquareButton(new EditAction) {
-    setIcon(Utils.iconScaledWithColor("/images/edit.png", 18, 18, () => {
-      if (isSelected) {
-        InterfaceColors.toolbarImageSelected()
-      } else {
-        InterfaceColors.toolbarImage()
-      }
-    }))
-  }
-
-  val deleteButton = new SquareButton(new DeleteAction) {
-    setIcon(Utils.iconScaledWithColor("/images/delete.png", 18, 18, () => {
-      if (!isEnabled) {
-        InterfaceColors.toolbarImageDisabled()
-      } else if (isSelected) {
-        InterfaceColors.toolbarImageSelected()
-      } else {
-        InterfaceColors.toolbarImage()
-      }
-    }))
-  }
+  val interactButton = new SquareButton(new InteractAction, "interact.png")
+  val selectButton = new SquareButton(new SelectAction, "select.png")
+  val editButton = new SquareButton(new EditAction, "edit.png")
+  val deleteButton = new SquareButton(new DeleteAction, "delete.png")
 
   private val buttonGroup = new ButtonGroup
 
@@ -331,7 +294,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
     }
 
     private class WidgetMenuItem(info: WidgetInfo) extends MenuItem(info.displayName, () => createWidget(info)) {
-      setIcon(info.icon)
+      setIcon(info.icon(this))
 
       override def addNotify(): Unit = {
         super.addNotify()
@@ -430,12 +393,20 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
     private class AlignMenuItem(name: String, image: String, action: WidgetPanel => Unit)
       extends MenuItem(I18N.gui(name), () => action(wPanel)) {
 
-      setIcon(Utils.iconScaledWithColor(s"/images/$image", 16, 16, () => InterfaceColors.toolbarImage()))
+      setIcon(Utils.iconScaledWithColor(this, s"/images/$image", 16, 16, () => InterfaceColors.toolbarImage()))
     }
   }
 
-  class SquareButton(action: Action) extends ToolBarToggleButton(action) with PreferredSize {
+  class SquareButton(action: Action, image: String) extends ToolBarToggleButton(action) with PreferredSize {
     setBorder(null)
+
+    setIcon(Utils.iconScaledWithColor(this, s"/images/$image", 18, 18, () => {
+      if (isSelected) {
+        InterfaceColors.toolbarImageSelected()
+      } else {
+        InterfaceColors.toolbarImage()
+      }
+    }))
 
     override def getPreferredSize: Dimension =
       new Dimension(widgetMenu.getPreferredSize.height, widgetMenu.getPreferredSize.height)

@@ -13,10 +13,10 @@ class CollapsiblePane(title: String, element: JComponent, parent: JDialog)
 
   private val titleLabel = new JLabel(title) with Zoomable {
     override def getIconTextGap: Int =
-      Utils.zoom(super.getIconTextGap)
+      zoom(super.getIconTextGap)
   }
 
-  private val arrow = new CollapsibleArrow(element.isVisible)
+  private val arrow = new CollapsibleArrow(titleLabel, element.isVisible)
 
   titleLabel.setIcon(arrow)
 

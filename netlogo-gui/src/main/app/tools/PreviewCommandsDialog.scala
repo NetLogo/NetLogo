@@ -12,7 +12,7 @@ import org.nlogo.api.PreviewCommands
 import org.nlogo.awt.Positioning
 import org.nlogo.core.{ AgentKind, CompilerException, I18N, Model }
 import org.nlogo.swing.{ BoxColumn, BoxRow, Button, ButtonPanel, MaximumHeight, Utils, WindowAutomator, ZoomableBorder,
-                         ZoomableWindow, ZoomActions }
+                         ZoomableWindow }
 import org.nlogo.theme.InterfaceColors
 import org.nlogo.window.{ EditorColorizer, GraphicsPreviewInterface }
 import org.nlogo.workspace.{ Evaluator, WorkspaceFactory }
@@ -27,7 +27,7 @@ class PreviewCommandsDialog(
   workspaceFactory: WorkspaceFactory,
   graphicsPreview: GraphicsPreviewInterface,
   modal: Boolean = true)
-  extends JDialog(owner, title, modal) with ZoomActions with ZoomableWindow {
+  extends JDialog(owner, title, modal) with ZoomableWindow(Option(owner)) {
 
   WindowAutomator.automate(this)
 

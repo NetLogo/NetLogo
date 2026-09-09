@@ -7,7 +7,7 @@ import javax.swing.{ AbstractAction, Action, JButton, JToggleButton }
 
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
-class Button(action: Action) extends JButton(action) with RoundedBorderPanel with Zoomable with ThemeSync {
+class Button(action: Action) extends JButton(action) with RoundedBorderPanel with ThemeSync {
   def this(text: String, function: () => Unit) = this(new AbstractAction(text) {
     def actionPerformed(e: ActionEvent): Unit = {
       function()
@@ -32,7 +32,7 @@ class Button(action: Action) extends JButton(action) with RoundedBorderPanel wit
   }
 }
 
-class ToggleButton(action: Action) extends JToggleButton(action) with RoundedBorderPanel with Zoomable with ThemeSync {
+class ToggleButton(action: Action) extends JToggleButton(action) with RoundedBorderPanel with ThemeSync {
   def this(text: String, function: () => Unit) = this(new AbstractAction(text) {
     def actionPerformed(e: ActionEvent): Unit = {
       function()

@@ -76,7 +76,7 @@ object QuickHelp {
       if (new OptionPane(comp, I18N.gui.get("common.netlogo"),
                          I18N.gui.getN("tabs.code.rightclick.quickhelp.notfound",
                          tokenLower.toUpperCase(Locale.ENGLISH)), OptionPane.Options.OkCancel,
-                         OptionPane.Icons.Error).getSelectedIndex == 0)
+                         OptionPane.Icons.error).getSelectedIndex == 0)
         BrowserLauncher.tryOpenURI(comp,
           new URI(s"https://docs.netlogo.org/${Version.versionNumberNo3D}/dictionary.html"),
           docPath("dictionary"))

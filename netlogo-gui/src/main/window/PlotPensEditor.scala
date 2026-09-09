@@ -81,7 +81,7 @@ object PlotPensEditor {
 }
 
 class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], compiler: CompilerServices, colorizer: Colorizer,
-                     target: PlotWidget) extends BoxColumn(6) with PropertyEditor(accessor) {
+                     target: PlotWidget) extends BoxColumn(6) with PropertyEditor(accessor) with Zoomable {
 
   import PlotPensEditor._
 
@@ -128,7 +128,7 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], compiler: Compil
   }
 
   override def getMinimumSize: Dimension =
-    new Dimension(Utils.zoom(600), Utils.zoom(200))
+    new Dimension(zoom(600), zoom(200))
 
   override def getPreferredSize: Dimension =
     getMinimumSize
@@ -193,7 +193,7 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], compiler: Compil
     initializePens()
 
     override def getRowHeight: Int =
-      super.getRowHeight + Utils.zoom(14)
+      super.getRowHeight + zoom(14)
 
     def initializePens(): Unit = {
       model.clear()
@@ -315,10 +315,10 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], compiler: Compil
 
     // renders the delete and edit buttons for each column
     class ButtonCellEditor extends AbstractCellEditor with TableCellRenderer with TableCellEditor {
-      private val editIcon   = Utils.iconScaledWithColor("/images/edit.png", 15, 15,
+      private val editIcon   = Utils.iconScaledWithColor(table, "/images/edit.png", 15, 15,
                                                          () => InterfaceColors.toolbarImage())
-      private val alertIcon  = Utils.iconScaled("/images/edit-error.png", 15, 15)
-      private val deleteIcon = Utils.iconScaledWithColor("/images/delete.png", 15, 15,
+      private val alertIcon  = Utils.iconScaled(table, "/images/edit-error.png", 15, 15)
+      private val deleteIcon = Utils.iconScaledWithColor(table, "/images/delete.png", 15, 15,
                                                          () => InterfaceColors.toolbarImage())
 
       private val editButton = new Button("", () => {

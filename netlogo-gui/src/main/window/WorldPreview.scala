@@ -85,7 +85,7 @@ class WorldPreview(myWidth: Int, myHeight: Int) extends JPanel(new BorderLayout)
       "<html>Invalid world dimensions. The origin (0, 0) must be inside the dimensions of the world.</html>")
       with Zoomable
 
-    private var monoFont = EditorConfiguration.getMonospacedFont.deriveFont(Utils.zoom(10f))
+    private var monoFont = EditorConfiguration.getMonospacedFont.deriveFont(zoom(10f))
 
     topLeft.setForeground(Color.WHITE)
     topRight.setForeground(Color.WHITE)
@@ -107,12 +107,12 @@ class WorldPreview(myWidth: Int, myHeight: Int) extends JPanel(new BorderLayout)
     add(new BoxRow(Seq(bottomLeft, Box.createHorizontalGlue, bottomRight)))
 
     override def getPreferredSize: Dimension =
-      new Dimension(Utils.zoom(myWidth), Utils.zoom(myHeight))
+      new Dimension(zoom(myWidth), zoom(myHeight))
 
     override def paintComponent(g: Graphics): Unit = {
       val g2d = Utils.initGraphics2D(g)
 
-      val border: Int = Utils.zoom(5)
+      val border: Int = zoom(5)
 
       // basic frame
 
@@ -212,7 +212,7 @@ class WorldPreview(myWidth: Int, myHeight: Int) extends JPanel(new BorderLayout)
     }
 
     override def zoomComponent(): Unit = {
-      monoFont = EditorConfiguration.getMonospacedFont.deriveFont(Utils.zoom(10f))
+      monoFont = EditorConfiguration.getMonospacedFont.deriveFont(zoom(10f))
     }
   }
 }

@@ -17,7 +17,7 @@ import org.nlogo.editor.Colorizer
 import org.nlogo.nvm.LabInterface
 import org.nlogo.plot.DummyPlotManager
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, Button, ButtonPanel, CheckBox, OptionPane, Positioning,
-                         RichAction, ScrollPane, TextArea, ZoomableBorder, ZoomableWindow, ZoomActions }
+                         RichAction, ScrollPane, TextArea, ZoomableBorder, ZoomableWindow }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ PlotWidget, SpeedSliderPanel }
 
@@ -26,7 +26,7 @@ import scala.concurrent.duration.DurationLong
 class ProgressDialog(app: BehaviorSpaceApp, workspace: SemiHeadlessWorkspace, lab: LabInterface,
                      colorizer: Colorizer, protocol: LabProtocol)
   extends JDialog(app.getFrame, I18N.gui.getN("tools.behaviorSpace.progressDialog.title", protocol.name))
-  with ThemeSync with ZoomActions with ZoomableWindow {
+  with ThemeSync with ZoomableWindow(Option(app.getFrame)) {
 
   private implicit val i18nPrefix: I18N.Prefix = I18N.Prefix("tools.behaviorSpace.progressDialog")
 
@@ -216,7 +216,7 @@ class ProgressDialog(app: BehaviorSpaceApp, workspace: SemiHeadlessWorkspace, la
       EventQueue.invokeLater(() => {
         new OptionPane(app.getFrame, I18N.gui("updatingPlotsWarningTitle"),
                        I18N.shared.get("tools.behaviorSpace.runoptions.updateplotsandmonitors.error"),
-                       OptionPane.Options.Ok, OptionPane.Icons.Warning)
+                       OptionPane.Options.Ok, OptionPane.Icons.warning)
       })
     }
   }

@@ -55,7 +55,7 @@ class CommandCenter(workspace: AbstractWorkspace, showToggle: Boolean, packSplit
 
   private val clearButton = new JButton(RichAction(I18N.gui.get("tabs.run.commandcenter.clearButton")) {
     _ => output.clear()
-  }) with RoundedBorderPanel with Zoomable with ThemeSync {
+  }) with RoundedBorderPanel with ThemeSync {
     setBorder(new ZoomableBorder(3, 12, 3, 12))
     setFocusable(false)
     setDiameter(6)

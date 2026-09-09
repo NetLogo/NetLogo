@@ -193,10 +193,10 @@ abstract class AbstractPlotWidget(val plot: Plot, val plotManager: PlotManagerIn
 
   /// sizing
   override def getMinimumSize: Dimension =
-    new Dimension(Utils.zoom(160), Utils.zoom(120))
+    new Dimension(zoom(160), zoom(120))
 
   override def getPreferredSize: Dimension =
-    new Dimension(Utils.zoom(230), Utils.zoom(175))
+    new Dimension(zoom(230), zoom(175))
 
   override def setBounds(x: Int, y: Int, width: Int, height: Int): Unit = {
     super.setBounds(x, y, width, height)

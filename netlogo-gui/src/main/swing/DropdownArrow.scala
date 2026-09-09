@@ -7,11 +7,11 @@ import javax.swing.JPanel
 
 import org.nlogo.theme.InterfaceColors
 
-class DropdownArrow extends JPanel with PreferredSize {
+class DropdownArrow extends JPanel with PreferredSize with Zoomable {
   setOpaque(false)
 
   override def getPreferredSize: Dimension =
-    new Dimension(Utils.zoom(9), Utils.zoom(5))
+    new Dimension(zoom(9), zoom(5))
 
   override def paintComponent(g: Graphics): Unit = {
     val g2d = Utils.initGraphics2D(g)
@@ -22,7 +22,7 @@ class DropdownArrow extends JPanel with PreferredSize {
       g2d.setColor(InterfaceColors.menuTextDisabled())
     }
 
-    val strokeWidth: Float = Utils.zoomClamped(1f)
+    val strokeWidth: Float = zoomClamped(1f)
     val pad: Int = (strokeWidth / 2).toInt
 
     val stroke: Stroke = g2d.getStroke

@@ -16,7 +16,7 @@ import javax.swing.{ Box, BoxLayout, JEditorPane }
 import javax.swing.text.DefaultCaret
 
 import org.nlogo.core.{ I18N, TextBox => CoreTextBox, Widget => CoreWidget }
-import org.nlogo.swing.{ Transparent, Utils, Zoomable, ZoomableBorder }
+import org.nlogo.swing.{ Transparent, Zoomable, ZoomableBorder }
 import org.nlogo.theme.{ ClassicTheme, DarkTheme, InterfaceColors, LightTheme }
 
 class NoteWidget extends SingleErrorWidget with Transparent with Editable {
@@ -33,7 +33,7 @@ class NoteWidget extends SingleErrorWidget with Transparent with Editable {
   add(textPane)
   add(Box.createVerticalGlue)
 
-  private var _width: Int = Utils.zoom(150)
+  private var _width: Int = zoom(150)
   private var _text: String = ""
   private var _fontSize: Int = 12
   private var _textColorLight = Color.BLACK
@@ -163,10 +163,10 @@ class NoteWidget extends SingleErrorWidget with Transparent with Editable {
   }
 
   override def getMinimumSize: Dimension =
-    new Dimension(Utils.zoom(15), Utils.zoom(18))
+    new Dimension(zoom(15), zoom(18))
 
   override def getPreferredSize: Dimension =
-    new Dimension(_width.max(Utils.zoom(15)), (textPane.getPreferredSize.height + Utils.zoom(8)).max(Utils.zoom(18)))
+    new Dimension(_width.max(zoom(15)), (textPane.getPreferredSize.height + zoom(8)).max(zoom(18)))
 
   override def syncTheme(): Unit = {
     InterfaceColors.getTheme match {

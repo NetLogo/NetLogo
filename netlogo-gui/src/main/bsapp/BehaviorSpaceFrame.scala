@@ -6,12 +6,12 @@ import java.awt.event.{ WindowAdapter, WindowEvent }
 import javax.swing.JFrame
 
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ NetLogoIcon, ZoomActions }
+import org.nlogo.swing.{ NetLogoIcon, ZoomableWindow }
 import org.nlogo.window.{ Event, LinkRoot }
 
 class BehaviorSpaceFrame(app: BehaviorSpaceApp)
   extends JFrame(I18N.gui.get("menu.tools.behaviorSpace")) with NetLogoIcon with LinkRoot with Event.LinkParent
-  with ZoomActions {
+  with ZoomableWindow(None) {
 
   addWindowListener(new WindowAdapter {
     override def windowClosing(e: WindowEvent): Unit = {

@@ -13,7 +13,7 @@ import org.nlogo.analytics.Analytics
 import org.nlogo.app.common.TabsInterface
 import org.nlogo.core.{ I18N, NetLogoPreferences }
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, Button, CheckBox, ComboBox, PopupMenu, TextField, Transparent,
-                         Utils, Zoomable }
+                         Zoomable }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.AbstractWidgetPanel
 import org.nlogo.window.Events.AutoIndentEvent
@@ -71,7 +71,7 @@ object Preferences {
       })
 
       override def getInsets: Insets =
-        new Insets(Utils.zoom(3), Utils.zoom(3), Utils.zoom(3), 0)
+        new Insets(zoom(3), zoom(3), zoom(3), 0)
 
       private def changed(): Unit = {
         if (!loading && getText != getPreference)

@@ -30,7 +30,7 @@ class SpeedSliderPanel(workspace: WorkspaceWithSpeed, ticksLabel: Component = nu
 
   val slower = new Button("", () => speedSlider.setValue(speedSlider.getValue - 11)) with PreferredSize {
     override def getPreferredSize: Dimension =
-      new Dimension(Utils.zoom(19), Utils.zoom(19))
+      new Dimension(zoom(19), zoom(19))
 
     override def paintComponent(g: Graphics): Unit = {
       super.paintComponent(g)
@@ -39,16 +39,16 @@ class SpeedSliderPanel(workspace: WorkspaceWithSpeed, ticksLabel: Component = nu
 
       val stroke: Stroke = g2d.getStroke
 
-      g2d.setStroke(new BasicStroke(Utils.zoomClamped(1f), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND))
+      g2d.setStroke(new BasicStroke(zoomClamped(1f), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND))
       g2d.setColor(InterfaceColors.toolbarText())
-      g2d.fillRect(Utils.zoom(6), Utils.zoom(9), Utils.zoom(7), Utils.zoomClamped(1))
+      g2d.fillRect(zoom(6), zoom(9), zoom(7), zoomClamped(1))
       g2d.setStroke(stroke)
     }
   }
 
   val faster = new Button("", () => speedSlider.setValue(speedSlider.getValue + 11)) with PreferredSize {
     override def getPreferredSize: Dimension =
-      new Dimension(Utils.zoom(19), Utils.zoom(19))
+      new Dimension(zoom(19), zoom(19))
 
     override def paintComponent(g: Graphics): Unit = {
       super.paintComponent(g)
@@ -57,10 +57,10 @@ class SpeedSliderPanel(workspace: WorkspaceWithSpeed, ticksLabel: Component = nu
 
       val stroke: Stroke = g2d.getStroke
 
-      g2d.setStroke(new BasicStroke(Utils.zoomClamped(1f), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND))
+      g2d.setStroke(new BasicStroke(zoomClamped(1f), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND))
       g2d.setColor(InterfaceColors.toolbarText())
-      g2d.fillRect(Utils.zoom(6), Utils.zoom(9), Utils.zoom(7), Utils.zoomClamped(1))
-      g2d.fillRect(Utils.zoom(9), Utils.zoom(6), Utils.zoomClamped(1), Utils.zoom(7))
+      g2d.fillRect(zoom(6), zoom(9), zoom(7), zoomClamped(1))
+      g2d.fillRect(zoom(9), zoom(6), zoomClamped(1), zoom(7))
       g2d.setStroke(stroke)
     }
   }
@@ -162,10 +162,10 @@ class SpeedSliderPanel(workspace: WorkspaceWithSpeed, ticksLabel: Component = nu
     addMouseWheelListener(this)
 
     override def getPreferredSize: Dimension =
-      new Dimension(Utils.zoom(180), super.getPreferredSize.height)
+      new Dimension(zoom(180), super.getPreferredSize.height)
 
     override def getMinimumSize: Dimension =
-      new Dimension(Utils.zoom(60), super.getPreferredSize.height)
+      new Dimension(zoom(60), super.getPreferredSize.height)
 
     def reset(): Unit = {
       setValue(0)
@@ -206,7 +206,7 @@ class SpeedSliderPanel(workspace: WorkspaceWithSpeed, ticksLabel: Component = nu
         thumbRect.x
 
       override def getThumbSize: Dimension =
-        new Dimension(Utils.zoom(12), Utils.zoom(12))
+        new Dimension(zoom(12), zoom(12))
 
       override def paintTrack(g: Graphics): Unit = {
         val g2d = Utils.initGraphics2D(g)
@@ -219,7 +219,7 @@ class SpeedSliderPanel(workspace: WorkspaceWithSpeed, ticksLabel: Component = nu
           g2d.setColor(InterfaceColors.speedSliderBarBackground())
         }
 
-        val diameter: Int = Utils.zoom(2)
+        val diameter: Int = zoom(2)
 
         g2d.fillRoundRect(trackRect.x, startY, thumbRect.x, diameter, diameter, diameter)
         g2d.setColor(InterfaceColors.speedSliderBarBackground())

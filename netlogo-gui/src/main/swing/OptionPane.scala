@@ -20,28 +20,36 @@ object OptionPane {
   }
 
   object Icons {
-    val None: Icon = null
-    val Info = Utils.iconScaledWithColor("/images/exclamation-circle.png", 30, 30, () => InterfaceColors.infoIcon())
-    val Question = Utils.iconScaledWithColor("/images/question.png", 30, 30, () => InterfaceColors.infoIcon())
-    val Warning = Utils.iconScaledWithColor("/images/exclamation-triangle.png", 30, 30,
-                                            () => InterfaceColors.warningIcon())
-    val Error = Utils.iconScaledWithColor("/images/exclamation-triangle.png", 30, 30,
-                                          () => InterfaceColors.errorIcon())
+    def none(zoom: ZoomHelpers): Icon =
+      null
+
+    def info(zoom: ZoomHelpers): Icon =
+      Utils.iconScaledWithColor(zoom, "/images/exclamation-circle.png", 30, 30, () => InterfaceColors.infoIcon())
+
+    def question(zoom: ZoomHelpers): Icon =
+      Utils.iconScaledWithColor(zoom, "/images/question.png", 30, 30, () => InterfaceColors.infoIcon())
+
+    def warning(zoom: ZoomHelpers): Icon =
+      Utils.iconScaledWithColor(zoom, "/images/exclamation-triangle.png", 30, 30, () => InterfaceColors.warningIcon())
+
+    def error(zoom: ZoomHelpers): Icon =
+      Utils.iconScaledWithColor(zoom, "/images/exclamation-triangle.png", 30, 30, () => InterfaceColors.errorIcon())
   }
 }
 
 // like OptionDialog, but allows synchronization with theme (Isaac B 11/16/24)
-class OptionPane(parent: Component, title: String, message: String, options: Seq[String], protected val icon: Icon)
+class OptionPane(parent: Component, title: String, message: String, options: Seq[String],
+                 protected val icon: ZoomHelpers => Icon)
   extends JDialog(parent match {
                     case w: Window => w
                     case _ => null
-                  }, title, Dialog.ModalityType.APPLICATION_MODAL) with ZoomActions with ZoomableWindow {
+                  }, title, Dialog.ModalityType.APPLICATION_MODAL) with ZoomableWindow(Option(parent)) {
 
   WindowAutomator.automate(this)
 
   // this constructor makes it easier to access from Java (Isaac B 7/14/25)
   def this(parent: Component, title: String, message: String, options: CollectionSeq[String]) =
-    this(parent, title, message, options.toSeq, OptionPane.Icons.None)
+    this(parent, title, message, options.toSeq, OptionPane.Icons.none)
 
   private var selectedOption: Option[String] = None
 
@@ -87,7 +95,7 @@ class OptionPane(parent: Component, title: String, message: String, options: Seq
 
   protected def addContents(): Unit = {
     add(new BoxRow(Seq(
-      new JLabel(icon),
+      new JLabel(icon(this)),
       new JLabel(getWrappedMessage) with Zoomable {
         setForeground(InterfaceColors.dialogText())
       }
@@ -113,12 +121,12 @@ class OptionPane(parent: Component, title: String, message: String, options: Seq
 }
 
 class InputOptionPane(parent: Component, title: String, message: String, startingInput: String = "")
-  extends OptionPane(parent, title, message, OptionPane.Options.OkCancel, OptionPane.Icons.Question) {
+  extends OptionPane(parent, title, message, OptionPane.Options.OkCancel, OptionPane.Icons.question) {
 
   // lazy because addContents is called in super (Isaac B 11/16/24)
   private lazy val input = new TextField(0, startingInput) {
     override def getMinimumSize: Dimension =
-      new Dimension(Utils.zoom(250), super.getMinimumSize.height)
+      new Dimension(zoom(250), super.getMinimumSize.height)
 
     override def getPreferredSize: Dimension =
       getMinimumSize
@@ -137,7 +145,7 @@ class InputOptionPane(parent: Component, title: String, message: String, startin
 
   override protected def addContents(): Unit = {
     add(new BoxRow(Seq(
-      new JLabel(icon),
+      new JLabel(icon(this)),
       new BoxColumn(Seq(
         new BoxRow(new JLabel(getWrappedMessage) with Zoomable {
           setForeground(InterfaceColors.dialogText())
@@ -153,7 +161,7 @@ class InputOptionPane(parent: Component, title: String, message: String, startin
 }
 
 class DropdownOptionPane[T](parent: Component, title: String, message: String, choices: Seq[T])
-  extends OptionPane(parent, title, message, OptionPane.Options.OkCancel, OptionPane.Icons.Question) {
+  extends OptionPane(parent, title, message, OptionPane.Options.OkCancel, OptionPane.Icons.question) {
 
   // lazy because addContents is called in super (Isaac B 11/16/24)
   private lazy val dropdown = new ComboBox[T](choices)
@@ -176,7 +184,7 @@ class DropdownOptionPane[T](parent: Component, title: String, message: String, c
 
   override protected def addContents(): Unit = {
     add(new BoxRow(Seq(
-      new JLabel(icon),
+      new JLabel(icon(this)),
       new BoxColumn(Seq(
         new JLabel(getWrappedMessage) with Zoomable {
           setForeground(InterfaceColors.dialogText())

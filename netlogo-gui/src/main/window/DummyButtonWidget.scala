@@ -6,7 +6,7 @@ import java.awt.Dimension
 import javax.swing.JLabel
 
 import org.nlogo.core.{ AgentKind, I18N, Button => CoreButton, Widget => CoreWidget }
-import org.nlogo.swing.{ Utils, Zoomable }
+import org.nlogo.swing.Zoomable
 import org.nlogo.theme.InterfaceColors
 
 class DummyButtonWidget extends SingleErrorWidget with Editable {
@@ -68,15 +68,15 @@ class DummyButtonWidget extends SingleErrorWidget with Editable {
   /// sizing
 
   override def getMinimumSize: Dimension =
-    new Dimension(Utils.zoom(55), Utils.zoom(33))
+    new Dimension(zoom(55), zoom(33))
 
   override def doLayout(): Unit = {
     val nameSize = nameLabel.getPreferredSize
     val keySize = keyLabel.getPreferredSize
 
-    nameLabel.setBounds((getWidth / 2 - nameSize.width / 2).max(Utils.zoom(6)), getHeight / 2 - nameSize.height / 2,
-                        nameSize.width.min(getWidth - keySize.width - Utils.zoom(9)), nameSize.height)
-    keyLabel.setBounds(getWidth - keySize.width - Utils.zoom(3), getHeight / 2 - keySize.height / 2, keySize.width,
+    nameLabel.setBounds((getWidth / 2 - nameSize.width / 2).max(zoom(6)), getHeight / 2 - nameSize.height / 2,
+                        nameSize.width.min(getWidth - keySize.width - zoom(9)), nameSize.height)
+    keyLabel.setBounds(getWidth - keySize.width - zoom(3), getHeight / 2 - keySize.height / 2, keySize.width,
                        keySize.height)
   }
 

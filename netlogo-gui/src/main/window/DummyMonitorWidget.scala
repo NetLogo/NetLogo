@@ -6,7 +6,7 @@ import java.awt.{ Dimension, Insets }
 import javax.swing.{ BoxLayout, JLabel, JPanel }
 
 import org.nlogo.core.{ I18N, Monitor => CoreMonitor, Widget => CoreWidget }
-import org.nlogo.swing.{ BoxAlign, BoxRow, RoundedBorderPanel, Utils }
+import org.nlogo.swing.{ BoxAlign, BoxRow, RoundedBorderPanel }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 class DummyMonitorWidget extends SingleErrorWidget with MonitorWidget.ToMonitorModel with Editable {
@@ -65,17 +65,17 @@ class DummyMonitorWidget extends SingleErrorWidget with MonitorWidget.ToMonitorM
 
   override def getMinimumSize: Dimension = {
     if (_oldSize) {
-      new Dimension(Utils.zoom(50), (fontSize * 4) + Utils.zoomClamped(1))
+      new Dimension(zoom(50), (fontSize * 4) + zoomClamped(1))
     } else {
-      new Dimension(Utils.zoom(100), Utils.zoom(60))
+      new Dimension(zoom(100), zoom(60))
     }
   }
 
   override def getPreferredSize: Dimension = {
     if (_oldSize) {
-      new Dimension(Utils.zoom(100), getMinimumSize.height)
+      new Dimension(zoom(100), getMinimumSize.height)
     } else {
-      new Dimension(Utils.zoom(100), Utils.zoom(60))
+      new Dimension(zoom(100), zoom(60))
     }
   }
 

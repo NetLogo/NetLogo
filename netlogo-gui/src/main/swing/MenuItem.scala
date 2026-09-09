@@ -31,7 +31,7 @@ class MenuItem(action: Action, showIcon: Boolean = true) extends JMenuItem(actio
   syncTheme()
 
   override def getInsets: Insets =
-    Utils.zoomInsets(super.getInsets)
+    zoomInsets(super.getInsets)
 
   def updateEnabled(): Unit = {
     if (getAction.isInstanceOf[UserAction.MenuAction])
@@ -41,7 +41,7 @@ class MenuItem(action: Action, showIcon: Boolean = true) extends JMenuItem(actio
   }
 
   override def zoomComponent(): Unit = {
-    setIconTextGap(Utils.zoom(4))
+    setIconTextGap(zoom(4))
 
     itemUI.zoom()
   }
@@ -65,7 +65,7 @@ class MenuItem(action: Action, showIcon: Boolean = true) extends JMenuItem(actio
     }
 
     def zoom(): Unit = {
-      acceleratorFont = acceleratorFont.deriveFont(Utils.zoom(12f))
+      acceleratorFont = acceleratorFont.deriveFont(MenuItem.this.zoom(12f))
     }
 
     override def syncTheme(): Unit = {
@@ -96,7 +96,7 @@ class PopupCheckBoxMenuItem(action: Action) extends JCheckBoxMenuItem(action) wi
   setUI(itemUI)
 
   override def zoomComponent(): Unit = {
-    setIconTextGap(Utils.zoom(4))
+    setIconTextGap(zoom(4))
   }
 
   override def syncTheme(): Unit = {

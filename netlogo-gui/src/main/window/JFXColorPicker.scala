@@ -24,12 +24,12 @@ import org.nlogo.analytics.Analytics
 import org.nlogo.api.{ Color => NLColor }
 import org.nlogo.awt.EventQueue
 import org.nlogo.core.{ Color => CoreColor, I18N, LogoList }
-import org.nlogo.swing.{ Positioning, WindowAutomator, Utils, Zoomable, ZoomActions }
+import org.nlogo.swing.{ Positioning, WindowAutomator, Zoomable, ZoomableWindow }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 class JFXColorPicker( frame: Frame, modal: Boolean, config: JFXCPConfig, initialValue: Option[NLColorValue] = None
                     , pickCallback: (String) => Unit = (_ => {}), cancelCallback: () => Unit = (() => {}))
-  extends JDialog(frame, I18N.gui.get("tools.colorpicker"), modal) with ZoomActions with ThemeSync {
+  extends JDialog(frame, I18N.gui.get("tools.colorpicker"), modal) with ZoomableWindow(Option(frame)) with ThemeSync {
 
   WindowAutomator.automate(this)
 
@@ -39,7 +39,7 @@ class JFXColorPicker( frame: Frame, modal: Boolean, config: JFXCPConfig, initial
   private val panel         = new JFXPanel with Zoomable {
     override def zoomComponent(): Unit = {
       Platform.runLater(() => {
-        view.foreach(_.setZoom(Utils.getZoomFactor))
+        view.foreach(_.setZoom(getZoomFactor))
       })
     }
   }

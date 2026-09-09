@@ -6,10 +6,10 @@ import java.awt.{ Color, Component, Container, Dimension, Font, Graphics, Layout
 import javax.swing.{ JLabel, JPanel }
 
 import org.nlogo.plot.PlotPen
-import org.nlogo.swing.{ BoxRow, PreferredSize, Transparent, Utils, Zoomable, ZoomableBorder }
+import org.nlogo.swing.{ BoxRow, PreferredSize, Transparent, Zoomable, ZoomableBorder, ZoomHelpers }
 import org.nlogo.theme.InterfaceColors
 
-class PlotLegend(widget: AbstractPlotWidget) extends JPanel(new WrapLayout) with Transparent {
+class PlotLegend(widget: AbstractPlotWidget) extends JPanel(new WrapLayout(widget)) with Transparent {
   private var boldState: Int = Font.PLAIN
 
   var open = false
@@ -41,11 +41,11 @@ class PlotLegend(widget: AbstractPlotWidget) extends JPanel(new WrapLayout) with
   }
 
   private class LegendItem(pen: PlotPen) extends BoxRow(10) with PreferredSize {
-    private val panel = new JPanel with PreferredSize {
+    private val panel = new JPanel with PreferredSize with Zoomable {
       setBackground(new Color(pen.color))
 
       override def getPreferredSize: Dimension =
-        new Dimension(Utils.zoom(15), Utils.zoom(2))
+        new Dimension(zoom(15), zoom(2))
     }
 
     setBorder(new ZoomableBorder(0, 0, 0, 10))
@@ -64,9 +64,9 @@ class PlotLegend(widget: AbstractPlotWidget) extends JPanel(new WrapLayout) with
 }
 
 // FlowLayout wraps its content but doesn't change its vertical size, this custom layout does both (Isaac B 6/15/25)
-class WrapLayout extends LayoutManager {
+class WrapLayout(zoom: ZoomHelpers) extends LayoutManager {
   private def rowGap: Int =
-    Utils.zoom(10)
+    zoom.zoom(10)
 
   // don't need per-component strings (Isaac B 6/15/25)
   override def addLayoutComponent(name: String, component: Component): Unit = {}

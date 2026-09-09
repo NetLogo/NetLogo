@@ -15,7 +15,7 @@ import org.nlogo.awt.UserCancelException
 import org.nlogo.core.{ I18N, Model }
 import org.nlogo.editor.Colorizer
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, Button, FileDialog, OptionPane, Positioning, PreferredSize,
-                         ScrollPane, Utils, WindowAutomator, Zoomable, ZoomableBorder, ZoomableWindow, ZoomActions }
+                         ScrollPane, Utils, WindowAutomator, Zoomable, ZoomableBorder, ZoomableWindow }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ EditDialog, EditDialogFactory, MenuBarFactory }
 
@@ -26,8 +26,8 @@ class ManagerDialog(manager:       LabManager,
                     dialogFactory: EditDialogFactory,
                     colorizer:     Colorizer,
                     menuFactory:   MenuBarFactory)
-  extends JDialog(manager.workspace.getFrame) with ListSelectionListener with ZoomActions with ZoomableWindow
-  with ThemeSync {
+  extends JDialog(manager.workspace.getFrame) with ListSelectionListener
+  with ZoomableWindow(Option(manager.workspace.getFrame)) with ThemeSync {
 
   private implicit val i18NPrefix: I18N.Prefix = I18N.Prefix("tools.behaviorSpace")
 
@@ -131,10 +131,8 @@ class ManagerDialog(manager:       LabManager,
   def anyRunning: Boolean =
     running.nonEmpty
 
-  override def getPreferredSize: Dimension = {
-    new Dimension(super.getPreferredSize.width.max(Utils.zoom(400)),
-                  super.getPreferredSize.height.max(Utils.zoom(300)))
-  }
+  override def getPreferredSize: Dimension =
+    new Dimension(super.getPreferredSize.width.max(zoom(400)), super.getPreferredSize.height.max(zoom(300)))
 
   private def saveProtocol(protocol: LabProtocol, runsCompleted: Int): Unit = {
     running.get(protocol).foreach(_.abort())
@@ -268,7 +266,7 @@ class ManagerDialog(manager:       LabManager,
         I18N.gui("delete.confirm.one", listModel.getElementAt(selected(0)).asInstanceOf[LabProtocol].name)
       }
     }
-    if (new OptionPane(this, I18N.gui("delete"), message, OptionPane.Options.YesNo, OptionPane.Icons.Question)
+    if (new OptionPane(this, I18N.gui("delete"), message, OptionPane.Options.YesNo, OptionPane.Icons.question)
           .getSelectedIndex == 0) {
       for(i <- 0 until selected.length)
         manager.protocols -= listModel.getElementAt(selected(i)).asInstanceOf[LabProtocol]
@@ -313,7 +311,7 @@ class ManagerDialog(manager:       LabManager,
 
           case Failure(_) =>
             new OptionPane(manager.workspace.getFrame, I18N.gui("invalid"), I18N.gui("error.import", file.getName),
-                           OptionPane.Options.Ok, OptionPane.Icons.Error)
+                           OptionPane.Options.Ok, OptionPane.Icons.error)
         }
       }
 

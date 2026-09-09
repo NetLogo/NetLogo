@@ -13,12 +13,12 @@ import org.nlogo.app.common.Events.RestartEvent
 import org.nlogo.core.I18N
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, ButtonPanel, CheckBox, DialogButton, FloatingTabbedPane,
                          MaximumHeight, OptionPane, PreferredSize, TabLabel, TextField, WindowAutomator, Zoomable,
-                         ZoomableBorder, ZoomableWindow, ZoomActions }
+                         ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.AbstractWidgetPanel
 
 class PreferencesDialog(parent: Frame & ThemeSync, tabManager: TabsInterface, widgetPanel: AbstractWidgetPanel)
-  extends ToolDialog(parent, "preferences") with ZoomActions with ZoomableWindow with ThemeSync {
+  extends ToolDialog(parent, "preferences") with ThemeSync {
 
   WindowAutomator.automate(this)
 
@@ -62,6 +62,42 @@ class PreferencesDialog(parent: Frame & ThemeSync, tabManager: TabsInterface, wi
   private lazy val okButton = new DialogButton(true, I18N.gui.get("common.buttons.ok"), () => ok())
   private lazy val cancelButton = new DialogButton(false, I18N.gui.get("common.buttons.cancel"), () => cancel())
 
+  locally {
+    val generalPreferencesContainer = new BoxColumn(generalPreferencesPanel, BoxAlign.Start) {
+      setBorder(new ZoomableBorder(24, 12, 24, 12))
+    }
+
+    val codePreferencesContainer = new BoxColumn(Seq(
+      new BoxRow(codeMessage, BoxAlign.Center),
+      codePreferencesPanel
+    ), 24) {
+      setBorder(new ZoomableBorder(24, 12, 24, 12))
+    }
+
+    val loggingPreferencesContainer = new BoxColumn(Seq(
+      new BoxRow(loggingMessage, BoxAlign.Center),
+      loggingPreferencesPanel
+    ), 24) {
+      setBorder(new ZoomableBorder(24, 12, 24, 12))
+    }
+
+    getRootPane.setDefaultButton(okButton)
+
+    tabs.addTabWithLabel(generalPreferencesContainer, new TabLabel(tabs, I18N.gui("general"), generalPreferencesContainer))
+    tabs.addTabWithLabel(codePreferencesContainer, new TabLabel(tabs, I18N.gui("code"), codePreferencesContainer))
+    tabs.addTabWithLabel(loggingPreferencesContainer, new TabLabel(tabs, I18N.gui("logging"), loggingPreferencesContainer))
+    tabs.addTabWithLabel(themesPanel, new TabLabel(tabs, I18N.gui("themes"), themesPanel))
+
+    add(tabs, BorderLayout.CENTER)
+    add(new ButtonPanel(Seq(okButton, cancelButton)) {
+      setBorder(new ZoomableBorder(6, 6, 6, 6))
+    }, BorderLayout.SOUTH)
+
+    reset(false)
+
+    setResizable(false)
+  }
+
   override def setVisible(visible: Boolean): Unit = {
     if (visible) {
       themesPanel.init()
@@ -96,7 +132,7 @@ class PreferencesDialog(parent: Frame & ThemeSync, tabManager: TabsInterface, wi
 
       if (restartPrompt) {
         if (new OptionPane(this, I18N.gui("restartPrompt"), I18N.gui("restartPrompt.message"),
-                           Seq(I18N.gui("restartNow"), I18N.gui("restartLater")), OptionPane.Icons.Info)
+                           Seq(I18N.gui("restartNow"), I18N.gui("restartLater")), OptionPane.Icons.info)
               .getSelectedIndex == 0)
           new RestartEvent().raise(parent)
       }
@@ -120,19 +156,19 @@ class PreferencesDialog(parent: Frame & ThemeSync, tabManager: TabsInterface, wi
       val file = new File(path)
       if (path.isEmpty) {
         new OptionPane(this, I18N.gui.get("common.messages.error"), I18N.gui.get("tools.preferences.emptyDirectory"),
-                       OptionPane.Options.Ok, OptionPane.Icons.Error)
+                       OptionPane.Options.Ok, OptionPane.Icons.error)
         return false
       }
       if (!file.exists) {
         if (new OptionPane(this, I18N.gui.get("common.messages.warning"),
                            I18N.gui.get("tools.preferences.missingDirectory"), OptionPane.Options.YesNo,
-                           OptionPane.Icons.Warning).getSelectedIndex != 0)
+                           OptionPane.Icons.warning).getSelectedIndex != 0)
           return false
         file.mkdirs
       }
       if (!Files.isWritable(file.toPath)) {
         new OptionPane(this, I18N.gui.get("common.messages.error"), I18N.gui.get("tools.preferences.badPermissions"),
-                       OptionPane.Options.Ok, OptionPane.Icons.Error)
+                       OptionPane.Options.Ok, OptionPane.Icons.error)
         return false
       }
     }
@@ -141,46 +177,10 @@ class PreferencesDialog(parent: Frame & ThemeSync, tabManager: TabsInterface, wi
     } catch {
       case e: NumberFormatException =>
         new OptionPane(this, I18N.gui.get("common.messages.error"), I18N.gui.get("tools.preferences.scaleError"),
-                       OptionPane.Options.Ok, OptionPane.Icons.Error)
+                       OptionPane.Options.Ok, OptionPane.Icons.error)
         return false
     }
     true
-  }
-
-  override def initGUI(): Unit = {
-    val generalPreferencesContainer = new BoxColumn(generalPreferencesPanel, BoxAlign.Start) {
-      setBorder(new ZoomableBorder(24, 12, 24, 12))
-    }
-
-    val codePreferencesContainer = new BoxColumn(Seq(
-      new BoxRow(codeMessage, BoxAlign.Center),
-      codePreferencesPanel
-    ), 24) {
-      setBorder(new ZoomableBorder(24, 12, 24, 12))
-    }
-
-    val loggingPreferencesContainer = new BoxColumn(Seq(
-      new BoxRow(loggingMessage, BoxAlign.Center),
-      loggingPreferencesPanel
-    ), 24) {
-      setBorder(new ZoomableBorder(24, 12, 24, 12))
-    }
-
-    getRootPane.setDefaultButton(okButton)
-
-    tabs.addTabWithLabel(generalPreferencesContainer, new TabLabel(tabs, I18N.gui("general"), generalPreferencesContainer))
-    tabs.addTabWithLabel(codePreferencesContainer, new TabLabel(tabs, I18N.gui("code"), codePreferencesContainer))
-    tabs.addTabWithLabel(loggingPreferencesContainer, new TabLabel(tabs, I18N.gui("logging"), loggingPreferencesContainer))
-    tabs.addTabWithLabel(themesPanel, new TabLabel(tabs, I18N.gui("themes"), themesPanel))
-
-    add(tabs, BorderLayout.CENTER)
-    add(new ButtonPanel(Seq(okButton, cancelButton)) {
-      setBorder(new ZoomableBorder(6, 6, 6, 6))
-    }, BorderLayout.SOUTH)
-
-    reset(false)
-
-    setResizable(false)
   }
 
   override def onClose() = reset(true)

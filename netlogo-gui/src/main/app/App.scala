@@ -4,7 +4,7 @@ package org.nlogo.app
 
 import com.jthemedetecor.OsThemeDetector
 
-import java.awt.{ BorderLayout, Dimension, EventQueue, Frame, KeyboardFocusManager, Toolkit, Window }
+import java.awt.{ BorderLayout, Dimension, EventQueue, Frame, KeyboardFocusManager, Toolkit }
 import java.awt.datatransfer.DataFlavor
 import java.awt.dnd.{ DropTarget, DropTargetDragEvent, DropTargetDropEvent, DropTargetEvent, DropTargetListener }
 import java.awt.event.{ ActionEvent, KeyEvent }
@@ -45,7 +45,7 @@ import org.nlogo.render.Renderer
 import org.nlogo.sdm.gui.{ GUIAggregateManager, NLogoGuiSDMFormat, NLogoThreeDGuiSDMFormat, SDMGuiAutoConvertable }
 import org.nlogo.shape.editor.{ LinkShapeManagerDialog, TurtleShapeManagerDialog }
 import org.nlogo.swing.{ AppUtils, BrowserLauncher, DropdownOptionPane, FileDialog, InputOptionPane, Menu, OptionPane,
-                         Positioning, PrinterManager, UserAction, Utils, WindowAutomator, ZoomActions, ZoomProvider },
+                         Positioning, PrinterManager, UserAction, WindowAutomator },
   UserAction.{ ActionCategoryKey, EditCategory, FileCategory, HelpCategory, MenuAction, ToolsCategory }
 import org.nlogo.theme.{ DarkTheme, InterfaceColors, LightTheme, ThemeSync }
 import org.nlogo.util.AppHandler
@@ -275,7 +275,7 @@ class App(args: App.CommandLineArgs) extends LinkChild with Exceptions.Handler w
   with BeforeLoadEvent.Handler with LoadBeginEvent.Handler with LoadEndEvent.Handler with LoadModelEvent.Handler
   with ModelSavedEvent.Handler with ModelSections with AppEvents.SwitchedTabsEvent.Handler
   with AppEvents.OpenLibrariesDialogEvent.Handler with AppEvents.RestartEvent.Handler with AboutToQuitEvent.Handler
-  with Controllable with ZoomProvider {
+  with Controllable {
 
   val frame = new AppFrame
 
@@ -506,14 +506,12 @@ class App(args: App.CommandLineArgs) extends LinkChild with Exceptions.Handler w
       val loggerFactory     = (p) => new JsonFileLogger(p)
       LogManager.start(addListener, loggerFactory, finalLogDirectory, events, studentName, () =>
         new OptionPane(frame, I18N.gui.get("common.messages.warning"), I18N.gui.get("error.dialog.logDirectory"),
-                       OptionPane.Options.Ok, OptionPane.Icons.Warning))
+                       OptionPane.Options.Ok, OptionPane.Icons.warning))
     }
   }
 
   private def finishStartup(appHandler: AppHandler): Unit = {
     try {
-      ZoomActions.init(this)
-
       frame.getContentPane.add(tabManager.mainTabs, BorderLayout.CENTER)
 
       allActions.foreach(mainMenuBar.offerAction)
@@ -604,7 +602,7 @@ class App(args: App.CommandLineArgs) extends LinkChild with Exceptions.Handler w
         if (analyticsConsent) {
           val sendAnalytics = new OptionPane(frame, I18N.gui.get("dialog.analyticsConsent"),
                                             I18N.gui.get("dialog.analyticsConsent.message"), OptionPane.Options.YesNo,
-                                            OptionPane.Icons.Info).getSelectedIndex == 0
+                                            OptionPane.Icons.info).getSelectedIndex == 0
 
           NetLogoPreferences.putBoolean("sendAnalytics", sendAnalytics)
 
@@ -732,7 +730,7 @@ class App(args: App.CommandLineArgs) extends LinkChild with Exceptions.Handler w
 
             new OptionPane(frame, I18N.gui.get("file.open.error.unloadable.title"),
                            I18N.gui.getN("file.open.error.unloadable.message", url),
-                           OptionPane.Options.OkCancel, OptionPane.Icons.Warning)
+                           OptionPane.Options.OkCancel, OptionPane.Icons.warning)
         }
 
       case _ =>
@@ -750,16 +748,6 @@ class App(args: App.CommandLineArgs) extends LinkChild with Exceptions.Handler w
   }
 
   /// zooming
-
-  override def setZoomFactor(factor: Float): Unit = {
-    Utils.setZoomFactor(factor)
-
-    Window.getWindows.foreach(Utils.zoomWindow)
-
-    Utils.zoomMenuBar(mainMenuBar)
-
-    smartPack(frame.getPreferredSize, false)
-  }
 
   lazy val openPreferencesDialog = new ShowPreferencesDialog(frame, tabManager, tabManager.interfaceTab.iP)
 
@@ -1155,7 +1143,7 @@ class App(args: App.CommandLineArgs) extends LinkChild with Exceptions.Handler w
       case ex: UserCancelException => org.nlogo.api.Exceptions.ignore(ex)
       case ex: java.io.IOException =>
         new OptionPane(frame, I18N.gui.get("common.messages.error"), ex.getMessage, OptionPane.Options.Ok,
-                       OptionPane.Icons.Error)
+                       OptionPane.Icons.error)
     }
   }
 

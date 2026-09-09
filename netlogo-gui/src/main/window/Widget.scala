@@ -9,7 +9,7 @@ import javax.swing.border.Border
 
 import org.nlogo.api.CompilerServices
 import org.nlogo.core.{ NetLogoPreferences, TokenType, Widget => CoreWidget }
-import org.nlogo.swing.{ PopupMenu, PreferredSize, RoundedBorderPanel, Utils, Zoomable }
+import org.nlogo.swing.{ PopupMenu, PreferredSize, RoundedBorderPanel, Zoomable, ZoomHelpers }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.Event
 import org.nlogo.window.Events.{ InterfaceModeChangedEvent, WidgetAddedEvent, WidgetErrorEvent, WidgetRemovedEvent }
@@ -51,9 +51,7 @@ abstract class MultiErrorWidget extends Widget with MultiErrorHandler {
   }
 }
 
-abstract class Widget extends JPanel with RoundedBorderPanel with Zoomable with ThemeSync
-                      with InterfaceModeChangedEvent.Handler {
-
+abstract class Widget extends JPanel with RoundedBorderPanel with ThemeSync with InterfaceModeChangedEvent.Handler {
   def helpLink: Option[(String, String)] = None
   var displayName: String = ""
   var deleteable: Boolean = true
@@ -210,12 +208,12 @@ abstract class Widget extends JPanel with RoundedBorderPanel with Zoomable with 
 
   def setCodeFont(font: Font): Unit = {}
 
-  protected class AdaptableHorizontalStrut(oldSize: Int, newSize: Int) extends Component with PreferredSize {
+  protected class AdaptableHorizontalStrut(oldSize: Int, newSize: Int) extends Zoomable with PreferredSize {
     override def getMinimumSize: Dimension = {
       if (_oldSize) {
-        new Dimension(Utils.zoom(oldSize), 0)
+        new Dimension(zoom(oldSize), 0)
       } else {
-        new Dimension(Utils.zoom(newSize), 0)
+        new Dimension(zoom(newSize), 0)
       }
     }
 
@@ -226,12 +224,12 @@ abstract class Widget extends JPanel with RoundedBorderPanel with Zoomable with 
       new Dimension(getMinimumSize.width, Int.MaxValue)
   }
 
-  protected class AdaptableVerticalStrut(oldSize: Int, newSize: Int) extends Component with PreferredSize {
+  protected class AdaptableVerticalStrut(oldSize: Int, newSize: Int) extends Zoomable with PreferredSize {
     override def getMinimumSize: Dimension = {
       if (_oldSize) {
-        new Dimension(0, Utils.zoom(oldSize))
+        new Dimension(0, zoom(oldSize))
       } else {
-        new Dimension(0, Utils.zoom(newSize))
+        new Dimension(0, zoom(newSize))
       }
     }
 
@@ -245,9 +243,21 @@ abstract class Widget extends JPanel with RoundedBorderPanel with Zoomable with 
   protected class AdaptableBorder(oldInsets: Insets, newInsets: Insets) extends Border {
     override def getBorderInsets(component: Component): Insets = {
       if (_oldSize) {
-        Utils.zoomInsets(oldInsets)
+        component match {
+          case zoom: ZoomHelpers =>
+            zoom.zoomInsets(oldInsets)
+
+          case _ =>
+            oldInsets
+        }
       } else {
-        Utils.zoomInsets(newInsets)
+        component match {
+          case zoom: ZoomHelpers =>
+            zoom.zoomInsets(newInsets)
+
+          case _ =>
+            newInsets
+        }
       }
     }
 

@@ -12,11 +12,11 @@ import org.jhotdraw.standard.{ CreationTool, DeleteCommand }
 import org.nlogo.core.I18N
 import org.nlogo.sdm.Model
 import org.nlogo.swing.{ BoxAlign, BoxRow, Button, InputOptionPane, OptionPane, ToolBarActionButton,
-                         ToolBarToggleButton, Utils => SwingUtils, ZoomableBorder }
+                         ToolBarToggleButton, Utils => SwingUtils, Zoomable, ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 class AggregateModelEditorToolBar(editor: AggregateModelEditor, model: Model)
-  extends BoxRow(6, BoxAlign.Start) with ThemeSync {
+  extends BoxRow(6, BoxAlign.Start) with Zoomable with ThemeSync {
 
   implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("tools.sdm")
 
@@ -36,10 +36,10 @@ class AggregateModelEditorToolBar(editor: AggregateModelEditor, model: Model)
       catch {
         case ex: NumberFormatException => new OptionPane(null, I18N.gui.get("common.messages.error"),
                                                          I18N.gui("dtNumberError"), OptionPane.Options.Ok,
-                                                         OptionPane.Icons.Error)
+                                                         OptionPane.Icons.error)
         case ex: Model.ModelException => new OptionPane(null, I18N.gui.get("common.messages.error"),
                                                         I18N.gui("dtZeroError"), OptionPane.Options.Ok,
-                                                        OptionPane.Icons.Error)
+                                                        OptionPane.Icons.error)
       }
     }
   })
@@ -151,7 +151,8 @@ class AggregateModelEditorToolBar(editor: AggregateModelEditor, model: Model)
 
   abstract class MyAction(name:String, image:String, enableMe: Boolean)
           extends AbstractAction(I18N.gui(name.toLowerCase)) {
-    putValue(Action.SMALL_ICON, SwingUtils.iconScaledWithColor(image, 15, 15, () => InterfaceColors.toolbarImage()))
+    putValue(Action.SMALL_ICON, SwingUtils.iconScaledWithColor(AggregateModelEditorToolBar.this, image, 15, 15,
+                                                               () => InterfaceColors.toolbarImage()))
     setEnabled(enableMe)
   }
 

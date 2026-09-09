@@ -45,9 +45,9 @@ class ColorEditor(accessor: PropertyAccessor[Color], frame: Frame)
   private class ColorButton extends JPanel with RoundedBorderPanel with PreferredSize with ThemeSync {
     private var color = Color.BLACK
 
-    private val panel = new JPanel with PreferredSize {
+    private val panel = new JPanel with PreferredSize with Zoomable {
       override def getPreferredSize: Dimension =
-        new Dimension(Utils.zoom(16), Utils.zoom(16))
+        new Dimension(zoom(16), zoom(16))
 
       override def paintComponent(g: Graphics): Unit = {
         val g2d = Utils.initGraphics2D(g)

@@ -47,7 +47,7 @@ class ComboBox[T](private var items: Seq[T] = Seq(), openOnPress: Boolean = true
       // the arrow looks uneven if the width is even, so make sure it's odd after scaling
       // to the zoomed value (Isaac B 3/19/26)
       val arrowWidth: Int = {
-        val width = Utils.zoom(9)
+        val width = zoom(9)
 
         if (width % 2 == 0) {
           width + 1

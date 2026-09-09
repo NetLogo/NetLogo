@@ -2,10 +2,14 @@
 
 package org.nlogo.swing
 
-import java.awt.{ Component, Dimension, Font, Window }
+import java.awt.{ Component, Font }
 
-trait Zoomable extends Component {
+import org.nlogo.awt.Hierarchy
+
+trait Zoomable extends Component with ZoomHelpers {
   private var baseFont: Font = getFont
+
+  private var window: Option[ZoomableWindow] = None
 
   def getBaseFont: Font =
     baseFont
@@ -24,24 +28,27 @@ trait Zoomable extends Component {
   override def addNotify(): Unit = {
     super.addNotify()
 
+    Hierarchy.getWindow(this) match {
+      case window: ZoomableWindow =>
+        this.window = Option(window)
+
+      case _ =>
+        this.window = None
+    }
+
     zoom()
   }
+
+  override def getZoomFactor: Float =
+    window.fold(1f)(_.getZoomFactor)
 
   protected def zoomComponent(): Unit = {}
 
   private def zoomFont(): Unit = {
     Option(baseFont).foreach { font =>
-      setFont(font.deriveFont(Utils.zoom(font.getSize2D)))
+      setFont(font.deriveFont(zoom(font.getSize2D)))
     }
   }
 }
 
-trait ZoomableWindow extends Window {
-  def zoomWindow(): Unit = {
-    pack()
-
-    val screen: Dimension = getToolkit.getScreenSize
-
-    setLocation(getX.min(screen.width - getWidth).max(0), getY.min(screen.height - getHeight).max(0))
-  }
-}
+class DummyZoomable extends Zoomable

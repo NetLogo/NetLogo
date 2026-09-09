@@ -12,8 +12,8 @@ import org.nlogo.api.{ AgentVariables, Dump }
 import org.nlogo.core.{ AgentKind, I18N, Nobody, Widget => CoreWidget }
 import org.nlogo.editor.{ EditorConfiguration, EditorField }
 import org.nlogo.nvm.Procedure
-import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, MaximumHeight, OptionPane, PreferredSize, ScrollPane, Utils,
-                         Zoomable, ZoomableBorder }
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, MaximumHeight, OptionPane, PreferredSize, ScrollPane, Zoomable,
+                         ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ Editable, EditorColorizer, Events => WindowEvents, JobWidget }
 
@@ -150,7 +150,7 @@ with ThemeSync {
 
   setLayout(new BorderLayout)
 
-  private val editor = new EditorField(17, EditorConfiguration.getCodeFont.deriveFont(Utils.zoom(10f)), true, workspace,
+  private val editor = new EditorField(17, EditorConfiguration.getCodeFont.deriveFont(zoom(10f)), true, workspace,
                                        new EditorColorizer(workspace))
   private val scrollPane = new ScrollPane(editor, ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER,
                                           ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER)
@@ -201,7 +201,7 @@ with ThemeSync {
       error(e.error)
       error().foreach { e =>
         new OptionPane(workspace.getFrame, I18N.gui.get("common.messages.error"), e.getMessage,
-                       OptionPane.Options.Ok, OptionPane.Icons.Error)
+                       OptionPane.Options.Ok, OptionPane.Icons.error)
         setEnabled(true)
         editor.setText(get)
         lastTextBeforeUserChangedAnything = editor.getText()
@@ -237,7 +237,7 @@ with ThemeSync {
   }
 
   override def setCodeFont(font: Font): Unit = {
-    editor.setBaseFont(font.deriveFont(Utils.zoom(10f)))
+    editor.setBaseFont(font.deriveFont(zoom(10f)))
   }
 
   ///

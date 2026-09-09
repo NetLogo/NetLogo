@@ -166,12 +166,12 @@ private class TextPane(title: Component, text: Component) extends BoxRow(Seq(tit
 
 }
 
-private class XButton(dismissItem: () => Unit) extends JButton with MouseUtils {
+private class XButton(dismissItem: () => Unit) extends JButton with MouseUtils with Zoomable {
 
   private def defaultXColor() = InterfaceColors.announceX()
 
   private val setXColor = (color: () => Color) => {
-    setIcon(Utils.iconScaledWithColor("/images/close-light.png", 15, 15, color))
+    setIcon(Utils.iconScaledWithColor(this, "/images/close-light.png", 15, 15, color))
   }
 
   setBorderPainted(false)
@@ -208,7 +208,7 @@ private class XButton(dismissItem: () => Unit) extends JButton with MouseUtils {
 
 }
 
-private class ComplexXWrapper(dismissItem: () => Unit) extends JPanel with MouseUtils with ThemeSync {
+private class ComplexXWrapper(dismissItem: () => Unit) extends JPanel with MouseUtils with Zoomable with ThemeSync {
 
   private def defaultWrapperColor() = InterfaceColors.scrollBarBackground()
 
@@ -222,7 +222,8 @@ private class ComplexXWrapper(dismissItem: () => Unit) extends JPanel with Mouse
 
   complexXNum.setBorder(new ZoomableBorder(0, 0, 0, 3))
 
-  complexX.setIcon(Utils.iconScaledWithColor("/images/chevron-right.png", 10, 10, () => InterfaceColors.announceX()))
+  complexX.setIcon(Utils.iconScaledWithColor(this, "/images/chevron-right.png", 10, 10,
+                                             () => InterfaceColors.announceX()))
 
   val complexGBC = new GridBagConstraints()
   setVisible(false)

@@ -128,7 +128,7 @@ class WorldViewSettings2D(workspace: GUIWorkspace, gw: ViewWidget, tickCounter: 
         new OptionPane(workspace.getFrame, I18N.gui.get("view.resize.hubnet.prompt"),
                        I18N.gui.get("view.resize.hubnet.warning"),
                        Seq(I18N.gui.get("view.resize.hubnet.kick"), I18N.gui.get("view.resize.hubnet.dontkick")),
-                       OptionPane.Icons.Question).getSelectedIndex
+                       OptionPane.Icons.question).getSelectedIndex
       } else
         HubNetIgnore
     }

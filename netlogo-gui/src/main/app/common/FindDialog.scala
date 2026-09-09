@@ -12,8 +12,7 @@ import org.nlogo.core.I18N
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, ButtonPanel, CheckBox, DialogButton,
                          NonemptyTextFieldActionEnabler, NonemptyTextFieldButtonEnabler, ScrollableTextComponent,
-                         TextField, UserAction, Utils, WindowAutomator, Zoomable, ZoomableBorder, ZoomableWindow,
-                         ZoomActions },
+                         TextField, UserAction, Utils, WindowAutomator, Zoomable, ZoomableBorder, ZoomableWindow },
   UserAction.{ EditCategory, EditFindGroup, KeyBindings, MenuAction }
 
 object FindDialog extends ThemeSync {
@@ -141,12 +140,16 @@ object FindDialog extends ThemeSync {
     instance = new FindDialog(frame)
     codeInstance = new FindDialog(codeFrame)
 
-    val icon: Icon = Utils.iconScaledWithColor("/images/find.png", 15, 15, () => InterfaceColors.toolbarImage())
+    val icon: Icon = Utils.iconScaledWithColor(instance, "/images/find.png", 15, 15,
+                                               () => InterfaceColors.toolbarImage())
+
+    val codeIcon: Icon = Utils.iconScaledWithColor(codeInstance, "/images/find.png", 15, 15,
+                                                   () => InterfaceColors.toolbarImage())
 
     FIND_ACTION.putValue(Action.SMALL_ICON, icon)
-    FIND_ACTION_CODE.putValue(Action.SMALL_ICON, icon)
+    FIND_ACTION_CODE.putValue(Action.SMALL_ICON, codeIcon)
     FIND_NEXT_ACTION.putValue(Action.SMALL_ICON, icon)
-    FIND_NEXT_ACTION_CODE.putValue(Action.SMALL_ICON, icon)
+    FIND_NEXT_ACTION_CODE.putValue(Action.SMALL_ICON, codeIcon)
   }
 
   def getInstance: FindDialog = {
@@ -198,8 +201,8 @@ object FindDialog extends ThemeSync {
   }
 }
 
-class FindDialog(val owner: Frame) extends JDialog(owner, I18N.gui.get("dialog.find.title"), false) with ZoomActions
-                                   with ActionListener with ZoomableWindow with ThemeSync {
+class FindDialog(val owner: Frame) extends JDialog(owner, I18N.gui.get("dialog.find.title"), false) with ActionListener
+                                   with ZoomableWindow(Option(owner)) with ThemeSync {
 
   WindowAutomator.automate(this)
 

@@ -17,7 +17,7 @@ import org.nlogo.core.{ I18N, Button => CoreButton, Chooser => CoreChooser, Inpu
 import org.nlogo.editor.{ EditorArea, EditorConfiguration }
 import org.nlogo.log.LogManager
 import org.nlogo.nvm.DefaultCompilerServices
-import org.nlogo.swing.{ ClipboardUtils, MenuItem, PopupMenu, UndoManager, Utils }
+import org.nlogo.swing.{ ClipboardUtils, MenuItem, PopupMenu, UndoManager, Utils, Zoomable }
 import org.nlogo.theme.InterfaceColors
 import org.nlogo.window.{ AbstractWidgetPanel, AutoIndentHandler, ButtonWidget, CopyPasteTarget, Editable,
                           EditDialogFactory, Events => WindowEvents, GUIWorkspace, InterfaceMode, OutputWidget, Widget,
@@ -41,7 +41,8 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
     with WidgetRemovedEvent.Handler
     with LoadBeginEvent.Handler
     with SetInterfaceModeEvent.Handler
-    with CopyPasteTarget {
+    with CopyPasteTarget
+    with Zoomable {
 
   override val widgetControls: InterfaceWidgetControls =
     new InterfaceWidgetControls(this, workspace, widgetInfos, frame, dialogFactory)
@@ -273,7 +274,7 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
   ///
 
   def snapToGrid(value: Int, ceil: Boolean = false): Int = {
-    val gridSize: Double = Utils.zoom(5f)
+    val gridSize: Double = zoom(5f)
 
     if (ceil) {
       ((value / gridSize).ceil.toInt * gridSize).toInt
@@ -997,13 +998,13 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
     } else {
       val bounds: Rectangle = widget.getUnzoomedBounds
 
-      wrapper.setSize(Utils.zoom(bounds.width), Utils.zoom(bounds.height))
+      wrapper.setSize(zoom(bounds.width), zoom(bounds.height))
     }
 
     if (workspace.snapOn && !loadingWidget) {
-      wrapper.setLocation(Utils.zoom(snapToGrid(x)), Utils.zoom(snapToGrid(y)))
+      wrapper.setLocation(zoom(snapToGrid(x)), zoom(snapToGrid(y)))
     } else {
-      wrapper.setLocation(Utils.zoom(x), Utils.zoom(y))
+      wrapper.setLocation(zoom(x), zoom(y))
     }
 
     wrapper.validate()
@@ -1148,7 +1149,7 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
         wrapper.foreground()
         wrapper.setPlacing(false)
 
-        wrapper.widget.setUnzoomedBounds(Utils.unzoomBounds(wrapper.widgetBounds))
+        wrapper.widget.setUnzoomedBounds(unzoomBounds(wrapper.widgetBounds))
 
         WidgetActions.addWidget(this, wrapper)
 
@@ -1247,7 +1248,7 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
         case comp: Component =>
           comp.getParent match {
             case ww: WidgetWrapper if ww.isNew =>
-              ww.widget.setUnzoomedBounds(Utils.unzoomBounds(ww.widgetBounds))
+              ww.widget.setUnzoomedBounds(unzoomBounds(ww.widgetBounds))
 
               WidgetActions.addWidget(this, ww)
 
