@@ -329,16 +329,6 @@ object Preferences {
     }
   }
 
-  object UIScale extends StringPreference("uiScale", Some(RequiredAction.Restart), "1.0") {
-    override def scramble(): Unit = {
-      if (textField.getText == "1.0") {
-        textField.setText("2.0")
-      } else {
-        textField.setText("1.0")
-      }
-    }
-  }
-
   class IndentAutomatically(raiser: Component) extends BooleanPreference("indentAutomatically", None, true) {
     override def onSelect(selected: Boolean): Unit = {
       new AutoIndentEvent(selected).raise(raiser)
