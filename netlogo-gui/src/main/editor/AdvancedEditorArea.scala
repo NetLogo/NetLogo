@@ -311,8 +311,11 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
 
   addMouseListener(new MouseAdapter {
     override def mousePressed(e: MouseEvent): Unit = {
-      if (e.isPopupTrigger)
+      if (e.isPopupTrigger) {
         showPopup(e.getPoint)
+      } else {
+        selectNormal()
+      }
     }
 
     override def mouseReleased(e: MouseEvent): Unit = {
@@ -366,6 +369,8 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
   }
 
   override def processKeyEvent(e: KeyEvent): Unit = {
+    selectNormal()
+
     if ((e.getModifiersEx & menuKeyMask) == menuKeyMask && e.isShiftDown) {
       e.getKeyCode match {
         case KeyEvent.VK_OPEN_BRACKET =>
@@ -476,14 +481,16 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
     if (errorSelection) {
       errorSelection = false
 
-      runInWeb("window.selectNormal()")
+      runInWeb("window.setNormalSelection()")
     }
   }
 
   override def selectError(start: Int, end: Int): Unit = {
     errorSelection = true
 
-    runInWeb(s"window.selectError($start, $end)")
+    runInWeb("window.setErrorSelection()")
+
+    select(start, end)
   }
 
   override def replaceSelection(text: String): Unit = {
