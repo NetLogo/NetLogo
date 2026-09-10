@@ -2,13 +2,13 @@
 
 package org.nlogo.window
 
-import java.awt.{ GridBagConstraints, GridBagLayout, Font, Insets, Point }
+import java.awt.{ Font, Point }
 import java.awt.event.ActionEvent
-import javax.swing.AbstractAction
+import javax.swing.{ AbstractAction, BoxLayout }
 
 import org.nlogo.core.{ I18N, Output => CoreOutput, Widget => CoreWidget }
 import org.nlogo.editor.EditorConfiguration
-import org.nlogo.swing.{ MenuItem, PopupMenu }
+import org.nlogo.swing.{ MenuItem, PopupMenu, ZoomableBorder }
 import org.nlogo.theme.InterfaceColors
 
 class OutputWidget extends SingleErrorWidget with CommandCenterInterface
@@ -17,38 +17,26 @@ class OutputWidget extends SingleErrorWidget with CommandCenterInterface
   displayName(I18N.gui.get("tabs.run.widgets.output"))
 
   val outputArea = new OutputArea {
-    setFont(EditorConfiguration.getCodeFont)
+    setBaseFont(EditorConfiguration.getCodeFont)
   }
 
-  setLayout(new GridBagLayout)
+  setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
+  setBorder(new ZoomableBorder(8, 8, 8, 8))
 
-  val c = new GridBagConstraints
-
-  c.weightx = 1
-  c.weighty = 1
-  c.fill = GridBagConstraints.BOTH
-  c.insets = new Insets(zoom(8), zoom(8), zoom(8), zoom(8))
-
-  add(outputArea, c)
+  add(outputArea)
 
   override def editPanel: EditPanel = new OutputEditPanel(this)
 
   override def getEditable: Option[Editable] = Some(this)
 
-  originalFont = outputArea.getFont
-  def fontSize = originalFont.getSize
+  def fontSize: Int =
+    outputArea.getBaseFont.getSize
+
   def setFontSize(newSize: Int): Unit = {
-    val zoomDiff = outputArea.fontSize - fontSize
-    outputArea.fontSize(newSize + zoomDiff)
-    originalFont = originalFont.deriveFont(newSize.toFloat)
+    outputArea.fontSize(newSize)
   }
 
   override def classDisplayName = I18N.gui.get("tabs.run.widgets.output")
-  override def setZoomFactor(zoomFactor: Double): Unit = {
-    super.setZoomFactor(zoomFactor)
-
-    outputArea.zoomFactor = zoomFactor
-  }
   override def exportable = true
   override def getDefaultExportName = "output.txt"
   def valueText: String = outputArea.text.getText
@@ -78,11 +66,7 @@ class OutputWidget extends SingleErrorWidget with CommandCenterInterface
   }
 
   override def setCodeFont(font: Font): Unit = {
-    val scaled: Font = font.deriveFont(fontSize)
-
-    outputArea.setFont(scaled)
-
-    originalFont = scaled
+    outputArea.setBaseFont(font.deriveFont(fontSize.toFloat))
   }
 
   override def syncTheme(): Unit = {
@@ -111,7 +95,7 @@ class OutputWidget extends SingleErrorWidget with CommandCenterInterface
   }
 
   override def model: CoreWidget = {
-    val b = getUnzoomedBounds
+    val b = unzoomedBounds
     CoreOutput(
       x = b.x, y = b.y, width = b.width, height = b.height,
       fontSize = fontSize)

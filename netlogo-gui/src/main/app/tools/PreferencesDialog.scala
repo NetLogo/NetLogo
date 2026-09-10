@@ -2,18 +2,18 @@
 
 package org.nlogo.app.tools
 
-import java.awt.{ BorderLayout, EventQueue, Frame, GridBagConstraints, GridBagLayout, Insets }
+import java.awt.{ BorderLayout, Component, Dimension, EventQueue, Frame }
 import java.awt.event.{ MouseAdapter, MouseEvent }
 import java.io.File
 import java.nio.file.Files
-import javax.swing.{ JLabel, JPanel }
-import javax.swing.border.EmptyBorder
+import javax.swing.JLabel
 
 import org.nlogo.app.common.TabsInterface
 import org.nlogo.app.common.Events.RestartEvent
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ ButtonPanel, CheckBox, DialogButton, FloatingTabbedPane, OptionPane, TabLabel,
-                         TextField, Transparent, WindowAutomator }
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, ButtonPanel, CheckBox, DialogButton, FloatingTabbedPane,
+                         MaximumHeight, OptionPane, PreferredSize, TabLabel, TextField, WindowAutomator, Zoomable,
+                         ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.AbstractWidgetPanel
 
@@ -56,17 +56,53 @@ class PreferencesDialog(parent: Frame & ThemeSync, tabManager: TabsInterface, wi
   private lazy val loggingPreferencesPanel = new PreferenceContainer(loggingPreferences)
   private lazy val themesPanel = new ThemesPanel(parent)
 
-  private lazy val codeMessage = new JLabel(I18N.gui("code.message"))
-  private lazy val loggingMessage = new JLabel(I18N.gui("logging.message"))
+  private lazy val codeMessage = new JLabel(I18N.gui("code.message")) with PreferredSize with Zoomable
+  private lazy val loggingMessage = new JLabel(I18N.gui("logging.message")) with PreferredSize with Zoomable
 
   private lazy val okButton = new DialogButton(true, I18N.gui.get("common.buttons.ok"), () => ok())
   private lazy val cancelButton = new DialogButton(false, I18N.gui.get("common.buttons.cancel"), () => cancel())
 
-  override def setVisible(visible: Boolean): Unit = {
-    if (visible)
-      themesPanel.init()
+  locally {
+    val generalPreferencesContainer = new BoxColumn(generalPreferencesPanel, BoxAlign.Start) {
+      setBorder(new ZoomableBorder(24, 12, 24, 12))
+    }
 
-    pack()
+    val codePreferencesContainer = new BoxColumn(Seq(
+      new BoxRow(codeMessage, BoxAlign.Center),
+      codePreferencesPanel
+    ), 24) {
+      setBorder(new ZoomableBorder(24, 12, 24, 12))
+    }
+
+    val loggingPreferencesContainer = new BoxColumn(Seq(
+      new BoxRow(loggingMessage, BoxAlign.Center),
+      loggingPreferencesPanel
+    ), 24) {
+      setBorder(new ZoomableBorder(24, 12, 24, 12))
+    }
+
+    getRootPane.setDefaultButton(okButton)
+
+    tabs.addTabWithLabel(generalPreferencesContainer, new TabLabel(tabs, I18N.gui("general"), generalPreferencesContainer))
+    tabs.addTabWithLabel(codePreferencesContainer, new TabLabel(tabs, I18N.gui("code"), codePreferencesContainer))
+    tabs.addTabWithLabel(loggingPreferencesContainer, new TabLabel(tabs, I18N.gui("logging"), loggingPreferencesContainer))
+    tabs.addTabWithLabel(themesPanel, new TabLabel(tabs, I18N.gui("themes"), themesPanel))
+
+    add(tabs, BorderLayout.CENTER)
+    add(new ButtonPanel(Seq(okButton, cancelButton)) {
+      setBorder(new ZoomableBorder(6, 6, 6, 6))
+    }, BorderLayout.SOUTH)
+
+    reset(false)
+
+    setResizable(false)
+  }
+
+  override def setVisible(visible: Boolean): Unit = {
+    if (visible) {
+      themesPanel.init()
+      pack()
+    }
 
     super.setVisible(visible)
   }
@@ -96,7 +132,7 @@ class PreferencesDialog(parent: Frame & ThemeSync, tabManager: TabsInterface, wi
 
       if (restartPrompt) {
         if (new OptionPane(this, I18N.gui("restartPrompt"), I18N.gui("restartPrompt.message"),
-                           Seq(I18N.gui("restartNow"), I18N.gui("restartLater")), OptionPane.Icons.Info)
+                           Seq(I18N.gui("restartNow"), I18N.gui("restartLater")), OptionPane.Icons.info)
               .getSelectedIndex == 0)
           new RestartEvent().raise(parent)
       }
@@ -120,19 +156,19 @@ class PreferencesDialog(parent: Frame & ThemeSync, tabManager: TabsInterface, wi
       val file = new File(path)
       if (path.isEmpty) {
         new OptionPane(this, I18N.gui.get("common.messages.error"), I18N.gui.get("tools.preferences.emptyDirectory"),
-                       OptionPane.Options.Ok, OptionPane.Icons.Error)
+                       OptionPane.Options.Ok, OptionPane.Icons.error)
         return false
       }
       if (!file.exists) {
         if (new OptionPane(this, I18N.gui.get("common.messages.warning"),
                            I18N.gui.get("tools.preferences.missingDirectory"), OptionPane.Options.YesNo,
-                           OptionPane.Icons.Warning).getSelectedIndex != 0)
+                           OptionPane.Icons.warning).getSelectedIndex != 0)
           return false
         file.mkdirs
       }
       if (!Files.isWritable(file.toPath)) {
         new OptionPane(this, I18N.gui.get("common.messages.error"), I18N.gui.get("tools.preferences.badPermissions"),
-                       OptionPane.Options.Ok, OptionPane.Icons.Error)
+                       OptionPane.Options.Ok, OptionPane.Icons.error)
         return false
       }
     }
@@ -141,70 +177,10 @@ class PreferencesDialog(parent: Frame & ThemeSync, tabManager: TabsInterface, wi
     } catch {
       case e: NumberFormatException =>
         new OptionPane(this, I18N.gui.get("common.messages.error"), I18N.gui.get("tools.preferences.scaleError"),
-                       OptionPane.Options.Ok, OptionPane.Icons.Error)
+                       OptionPane.Options.Ok, OptionPane.Icons.error)
         return false
     }
     true
-  }
-
-  override def initGUI(): Unit = {
-    val generalPreferencesContainer = new JPanel(new GridBagLayout) with Transparent {
-      val c = new GridBagConstraints
-
-      c.anchor = GridBagConstraints.NORTH
-      c.weighty = 1
-      c.insets = new Insets(24, 12, 24, 12)
-
-      add(generalPreferencesPanel, c)
-    }
-
-    val codePreferencesContainer = new JPanel(new GridBagLayout) with Transparent {
-      val c = new GridBagConstraints
-
-      c.gridx = 0
-      c.anchor = GridBagConstraints.NORTH
-      c.insets = new Insets(24, 12, 24, 12)
-
-      add(codeMessage, c)
-
-      c.weighty = 1
-      c.insets = new Insets(0, 12, 24, 12)
-
-      add(codePreferencesPanel, c)
-    }
-
-    val loggingPreferencesContainer = new JPanel(new GridBagLayout) with Transparent {
-      val c = new GridBagConstraints
-
-      c.gridx = 0
-      c.anchor = GridBagConstraints.NORTH
-      c.insets = new Insets(24, 12, 24, 12)
-
-      add(loggingMessage, c)
-
-      c.weighty = 1
-      c.insets = new Insets(0, 12, 24, 12)
-
-      add(loggingPreferencesPanel, c)
-    }
-
-    val buttonPanel = new ButtonPanel(Seq(okButton, cancelButton))
-
-    buttonPanel.setBorder(new EmptyBorder(6, 6, 6, 6))
-
-    getRootPane.setDefaultButton(okButton)
-
-    tabs.addTabWithLabel(generalPreferencesContainer, new TabLabel(tabs, I18N.gui("general"), generalPreferencesContainer))
-    tabs.addTabWithLabel(codePreferencesContainer, new TabLabel(tabs, I18N.gui("code"), codePreferencesContainer))
-    tabs.addTabWithLabel(loggingPreferencesContainer, new TabLabel(tabs, I18N.gui("logging"), loggingPreferencesContainer))
-    tabs.addTabWithLabel(themesPanel, new TabLabel(tabs, I18N.gui("themes"), themesPanel))
-
-    add(tabs, BorderLayout.CENTER)
-    add(buttonPanel, BorderLayout.SOUTH)
-
-    reset(false)
-
-    setResizable(false)
   }
 
   override def onClose() = reset(true)
@@ -264,20 +240,45 @@ class PreferencesDialog(parent: Frame & ThemeSync, tabManager: TabsInterface, wi
   }
 }
 
-private class PreferenceContainer(preferences: Seq[Preference])
-  extends JPanel(new GridBagLayout) with Transparent with ThemeSync {
-
+// this is basically a reimplementation of GridBagLayout, but without the annoying issues that GridBagLayout has with
+// zooming and resizing. (Isaac B 8/26/26)
+private class PreferenceContainer(preferences: Seq[Preference]) extends BoxColumn with ThemeSync {
   private implicit val i18nPrefix: I18N.Prefix = I18N.Prefix("tools.preferences")
 
-  val (labels, components) = preferences.foldLeft((Seq[JLabel](), Seq[ThemeSync]())) {
+  private val (labels, components) = preferences.foldLeft((Seq[JLabel](), Seq[Component & ThemeSync]())) {
     case ((labels, components), pref) =>
-      val c = new GridBagConstraints
+      val label = new JLabel(prefString(pref)) with Zoomable
 
-      c.gridx = 0
-      c.anchor = pref.anchor
-      c.insets = new Insets(3, 0, 3, 6)
+      val labelComponent: Component = {
+        if (pref.top) {
+          new BoxColumn(label, BoxAlign.Start)
+        } else {
+          label
+        }
+      }
 
-      val label = new JLabel(prefString(pref))
+      val prefRow = new BoxRow(pref.component, BoxAlign.Start) with PreferredSize {
+        override def getPreferredSize: Dimension =
+          new Dimension(maxPrefWidth, super.getPreferredSize.height)
+      }
+
+      add(new BoxRow(Seq(
+        new BoxRow(labelComponent, BoxAlign.Start) {
+          override def getPreferredSize: Dimension =
+            new Dimension(maxLabelWidth, super.getPreferredSize.height)
+
+          override def getMaximumSize: Dimension = {
+            if (pref.top) {
+              new Dimension(getPreferredSize.width, prefRow.getPreferredSize.height)
+            } else {
+              getPreferredSize
+            }
+          }
+        },
+        prefRow
+      ), 6) with MaximumHeight {
+        setBorder(new ZoomableBorder(3, 0, 3, 0))
+      })
 
       pref.component match {
         case cb: CheckBox =>
@@ -290,18 +291,17 @@ private class PreferenceContainer(preferences: Seq[Preference])
         case _ =>
       }
 
-      add(label, c)
-
-      c.gridx = 1
-      c.insets = new Insets(3, 0, 3, 0)
-
-      add(pref.component, c)
-
       (labels :+ label, components :+ pref.component)
   }
 
   private def prefString(pref: Preference): String =
     I18N.gui(pref.i18nKey) + pref.requirement.map(r => " " + I18N.gui(r.toString)).getOrElse("") + ":"
+
+  private def maxLabelWidth: Int =
+    labels.map(_.getPreferredSize.width).max
+
+  private def maxPrefWidth: Int =
+    components.map(_.getPreferredSize.width).max
 
   override def syncTheme(): Unit = {
     labels.foreach(_.setForeground(InterfaceColors.dialogText()))

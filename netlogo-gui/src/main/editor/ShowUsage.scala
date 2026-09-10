@@ -8,7 +8,7 @@ import org.nlogo.core.{ Femto, I18N, Token, TokenizerInterface }
 import org.nlogo.swing.{ MenuItem, PopupMenu }
 import org.nlogo.theme.InterfaceColors
 
-class ShowUsage(editorArea: AdvancedEditorArea, colorizer: Colorizer) extends PopupMenu {
+class ShowUsage(editorArea: AdvancedEditorArea, colorizer: Colorizer) extends PopupMenu(editorArea) {
   setBackground(InterfaceColors.codeBackground())
 
   locally {
@@ -42,7 +42,7 @@ class ShowUsage(editorArea: AdvancedEditorArea, colorizer: Colorizer) extends Po
           add(new MenuItem(s"<html>$numberFormatted&nbsp$textFormatted</html>", () => {
             editorArea.select(token.start, token.end)
           }) {
-            setFont(EditorConfiguration.getCodeFont)
+            setBaseFont(EditorConfiguration.getCodeFont)
           })
       }
     }

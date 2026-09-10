@@ -113,7 +113,7 @@ class TemporaryCodeTab(workspace: GUIWorkspace,
       } else {
         new OptionPane(workspace.getFrame, I18N.gui.get("tabs.code.invalidName"),
                        I18N.gui.getN("tabs.code.invalidName.message", s"$name.nlm"), OptionPane.Options.Ok,
-                       OptionPane.Icons.Error)
+                       OptionPane.Icons.error)
 
         throw new UserCancelException
       }

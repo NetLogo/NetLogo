@@ -9,7 +9,7 @@ import javax.swing.{ JLabel, JPanel }
 import org.nlogo.app.codetab.TemporaryCodeTab
 import org.nlogo.awt.UserCancelException
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ CheckBox, CustomOptionPane, ScrollPane, Transparent }
+import org.nlogo.swing.{ CheckBox, CustomOptionPane, ScrollPane, Transparent, Zoomable }
 import org.nlogo.theme.InterfaceColors
 
 import scala.collection.mutable.Map
@@ -30,7 +30,7 @@ object OfferSaveExternalsDialog {
         c.weightx = 1
         c.insets = new Insets(0, 0, 6, 0)
 
-        add(new JLabel(I18N.gui("filesChanged")) {
+        add(new JLabel(I18N.gui("filesChanged")) with Zoomable {
           setForeground(InterfaceColors.dialogText())
         }, c)
 
@@ -58,7 +58,7 @@ object OfferSaveExternalsDialog {
             c.weightx = 1
             c.insets = new Insets(3, 0, 3, 3)
 
-            add(new JLabel(file.filename.merge) {
+            add(new JLabel(file.filename.merge) with Zoomable {
               setForeground(InterfaceColors.toolbarText())
 
               addMouseListener(new MouseAdapter {

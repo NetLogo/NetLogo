@@ -22,6 +22,7 @@ import org.nlogo.core.I18N;
 import org.nlogo.swing.Menu;
 import org.nlogo.swing.MenuItem;
 import org.nlogo.swing.PopupMenu;
+import org.nlogo.swing.ZoomHelpers;
 import org.nlogo.theme.InterfaceColors;
 
 import scala.Option;
@@ -602,6 +603,11 @@ public class View
       this.submenu = submenu;
     }
 
+    @Override @SuppressWarnings("unchecked")
+    public Option<ZoomHelpers> org$nlogo$swing$Zoomable$$zoomRoot() {
+      return (Option<ZoomHelpers>)super.org$nlogo$swing$Zoomable$$zoomRoot();
+    }
+
     @Override
     public void menuSelectionChanged(boolean isIncluded) {
       super.menuSelectionChanged(isIncluded);
@@ -620,6 +626,11 @@ public class View
     AgentMenu(org.nlogo.agent.Agent agent) {
       super(agent.toString());
       this.agent = agent;
+    }
+
+    @Override @SuppressWarnings("unchecked")
+    public Option<ZoomHelpers> org$nlogo$swing$Zoomable$$zoomRoot() {
+      return (Option<ZoomHelpers>)super.org$nlogo$swing$Zoomable$$zoomRoot();
     }
 
     @Override

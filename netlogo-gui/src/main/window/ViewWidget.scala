@@ -97,7 +97,6 @@ class ViewWidget(workspace: GUIWorkspace) extends Widget with ViewWidgetInterfac
     setSize(dim.width + insetWidth,
         dim.height + getExtraHeight)
     doLayout()
-    resetZoomInfo()
   }
 
   // the border size was changed for 7.0, so there can be weird sizing issues with older views. this method is used
@@ -112,10 +111,8 @@ class ViewWidget(workspace: GUIWorkspace) extends Widget with ViewWidgetInterfac
   override def setBounds(x: Int, y: Int, width: Int, height: Int): Unit = {
     val bounds = getBounds()
     // only set the bounds if they've changed
-    if (width != bounds.width || height != bounds.height || x != bounds.x || y != bounds.y) {
+    if (width != bounds.width || height != bounds.height || x != bounds.x || y != bounds.y)
       super.setBounds(x, y, width, height)
-      resetSizeInfo()
-    }
   }
 
   override def setBounds(bounds: Rectangle): Unit = {

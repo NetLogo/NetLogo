@@ -2,14 +2,12 @@
 
 package org.nlogo.window
 
-import java.awt.BorderLayout
 import java.awt.event.{ FocusAdapter, FocusEvent }
-import javax.swing.JPanel
 
 import org.nlogo.api.CompilerServices
 import org.nlogo.core.I18N
 import org.nlogo.editor.Colorizer
-import org.nlogo.swing.{ DynamicRowLayout, Transparent }
+import org.nlogo.swing.{ BoxAlign, BoxRow, MaximumHeight }
 
 import scala.util.Try
 
@@ -158,40 +156,29 @@ class PlotEditPanel(target: PlotWidget, compiler: CompilerServices, colorizer: C
         _.foreach(target.oldSize),
         () => apply()))
 
-  locally {
-    setupCode.addFocusListener(new FocusAdapter {
-      override def focusLost(e: FocusEvent): Unit = {
-        target.compile()
-        setupCode.resetError()
-      }
-    })
-
-    updateCode.addFocusListener(new FocusAdapter {
-      override def focusLost(e: FocusEvent): Unit = {
-        target.compile()
-        updateCode.resetError()
-      }
-    })
-
-    val rowLayout = new DynamicRowLayout(this, 6)
-
-    setLayout(rowLayout)
-
-    rowLayout.addRow(Seq(plotName))
-    rowLayout.addRow(Seq(xLabel, xMin, xMax))
-    rowLayout.addRow(Seq(yLabel, yMin, yMax))
-    rowLayout.addRow(Seq(autoPlotX, autoPlotY, showLegend), expandX = false)
-    rowLayout.addRow(Seq(runtimeError))
-    rowLayout.addRow(Seq(setupCode), expandY = () => !setupCode.collapsed)
-    rowLayout.addRow(Seq(updateCode), expandY = () => !updateCode.collapsed)
-    rowLayout.addRow(Seq(editPlotPens), expandY = () => setupCode.collapsed && updateCode.collapsed)
-
-    val row = new JPanel(new BorderLayout) with Transparent {
-      add(oldSize, BorderLayout.WEST)
+  setupCode.addFocusListener(new FocusAdapter {
+    override def focusLost(e: FocusEvent): Unit = {
+      target.compile()
+      setupCode.resetError()
     }
+  })
 
-    rowLayout.addRow(Seq(row))
-  }
+  updateCode.addFocusListener(new FocusAdapter {
+    override def focusLost(e: FocusEvent): Unit = {
+      target.compile()
+      updateCode.resetError()
+    }
+  })
+
+  add(plotName)
+  add(new BoxRow(Seq(xLabel, xMin, xMax), 6) with MaximumHeight)
+  add(new BoxRow(Seq(yLabel, yMin, yMax), 6) with MaximumHeight)
+  add(new BoxRow(Seq(autoPlotX, autoPlotY, showLegend), 6, BoxAlign.Start) with MaximumHeight)
+  add(runtimeError)
+  add(setupCode)
+  add(updateCode)
+  add(editPlotPens)
+  add(new BoxRow(oldSize, BoxAlign.Start))
 
   override def propertyEditors: Seq[PropertyEditor[?]] =
     Seq(plotName, xLabel, xMin, xMax, yLabel, yMin, yMax, autoPlotX, autoPlotY, showLegend, runtimeError, setupCode,

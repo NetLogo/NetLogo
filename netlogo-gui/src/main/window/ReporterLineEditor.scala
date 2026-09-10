@@ -7,13 +7,13 @@ import javax.swing.event.{ DocumentEvent, DocumentListener}
 
 import org.nlogo.api.CompilerServices
 import org.nlogo.editor.{ Colorizer, EditorConfiguration, EditorField }
-import org.nlogo.swing.ScrollPane
+import org.nlogo.swing.{ MaximumHeight, ScrollPane }
 
 import scala.util.Try
 
 class ReporterLineEditor(accessor: PropertyAccessor[String], compiler: CompilerServices, colorizer: Colorizer,
                          optional: Boolean, err: () => Option[Exception] = () => None)
-  extends CodeEditor(accessor, compiler, colorizer, false, false, err = err) {
+  extends CodeEditor(accessor, compiler, colorizer, false, false, err = err) with MaximumHeight {
 
   override lazy val editor = {
     new EditorField(30, EditorConfiguration.getCodeFont, true, compiler, colorizer) with AutoIndentHandler {

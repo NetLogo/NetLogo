@@ -68,10 +68,10 @@ class OpenRecentFileAction(parent: Frame, modelEntry: ModelEntry, fileManager: F
       case ex: FileNotFoundException =>
         new OptionPane(parent, I18N.gui.get("common.messages.error"),
                        I18N.gui.getN("file.open.error.doesNotExist", modelEntry.path), OptionPane.Options.Ok,
-                       OptionPane.Icons.Error)
+                       OptionPane.Icons.error)
       case ex: IOException => {
         new OptionPane(parent, I18N.gui.get("common.messages.error"), ex.getMessage, OptionPane.Options.Ok,
-                       OptionPane.Icons.Error)
+                       OptionPane.Icons.error)
       }
     }
   }

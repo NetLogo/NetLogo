@@ -141,7 +141,7 @@ class ConvertWidgetSizes(frame: Frame, widgetPanel: WidgetPanel)
                        I18N.gui.get("menu.tools.convertWidgetSizes.prompt"),
                        Seq(I18N.gui.get("menu.tools.convertWidgetSizes.resizeAndAdjust"),
                            I18N.gui.get("common.buttons.cancel")),
-                       OptionPane.Icons.Info).getSelectedIndex == 0) {
+                       OptionPane.Icons.info).getSelectedIndex == 0) {
       widgetPanel.convertWidgetSizes()
 
       App.app.smartPack(frame.getPreferredSize, false)

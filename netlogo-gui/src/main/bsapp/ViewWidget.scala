@@ -7,11 +7,11 @@ import java.awt.image.BufferedImage
 import javax.swing.border.LineBorder
 
 import org.nlogo.core.{ View, Widget }
-import org.nlogo.swing.Utils
+import org.nlogo.swing.{ PreferredSize, Utils }
 import org.nlogo.theme.InterfaceColors
 import org.nlogo.window.{ Editable, ViewWidgetInterface }
 
-class ViewWidget(workspace: SemiHeadlessWorkspace) extends ViewWidgetInterface with ActiveView {
+class ViewWidget(workspace: SemiHeadlessWorkspace) extends ViewWidgetInterface with ActiveView with PreferredSize {
   private var buffer: Option[ViewBuffer] = None
 
   override def getAdditionalHeight: Int =
@@ -44,12 +44,6 @@ class ViewWidget(workspace: SemiHeadlessWorkspace) extends ViewWidgetInterface w
     new Dimension((workspace.world.worldWidth * workspace.patchSize).toInt,
                   (workspace.world.worldHeight * workspace.patchSize).toInt)
   }
-
-  override def getMinimumSize: Dimension =
-    getPreferredSize
-
-  override def getMaximumSize: Dimension =
-    getPreferredSize
 
   override def disable(): Unit = {
     buffer = None

@@ -4,17 +4,19 @@ package org.nlogo.swing
 
 import java.awt.Insets
 import java.awt.event.KeyEvent
-import javax.swing.{ JPopupMenu, MenuElement, MenuSelectionManager }
+import javax.swing.{ JPopupMenu, MenuElement, MenuSelectionManager, UIManager }
 import javax.swing.border.LineBorder
 
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
-class PopupMenu(title: String = "") extends JPopupMenu(title) with ThemeSync {
+class PopupMenu(parent: ZoomHelpers, title: String = "") extends JPopupMenu(title) with ThemeSync {
   private class Separator extends JPopupMenu.Separator with ThemeSync {
     override def syncTheme(): Unit = {
       setForeground(InterfaceColors.menuBorder())
     }
   }
+
+  UIManager.put("PopupMenu.borderCornerRadius", parent.zoom(4))
 
   syncTheme()
 
@@ -23,7 +25,7 @@ class PopupMenu(title: String = "") extends JPopupMenu(title) with ThemeSync {
   }
 
   override def getInsets: Insets =
-    new Insets(5, 0, 5, 0)
+    new Insets(parent.zoom(5), 0, parent.zoom(5), 0)
 
   override def syncTheme(): Unit = {
     setBackground(InterfaceColors.menuBackground())
@@ -36,7 +38,7 @@ class PopupMenu(title: String = "") extends JPopupMenu(title) with ThemeSync {
   }
 }
 
-class SearchablePopupMenu extends PopupMenu {
+class SearchablePopupMenu(parent: ZoomHelpers) extends PopupMenu(parent) {
   private var search = ""
   private var lastKey = 0L
 

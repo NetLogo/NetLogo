@@ -104,7 +104,7 @@ class ChooserWidget(val compiler: CompilerServices, colorizer: Colorizer, extens
   }
 
   override def model: CoreWidget = {
-    val b = getUnzoomedBounds
+    val b = unzoomedBounds
     val savedName = (name: String).potentiallyEmptyStringToOption
     CoreChooser(
       display       = savedName,

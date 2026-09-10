@@ -6,7 +6,7 @@ import java.awt.{ Color, Graphics }
 
 import org.nlogo.theme.InterfaceColors
 
-trait RoundedBorderPanel extends Transparent with MouseUtils {
+trait RoundedBorderPanel extends Transparent with MouseUtils with Zoomable {
   private var backgroundColor = Color.WHITE
   private var backgroundHoverColor = Color.WHITE
   private var backgroundPressedColor = Color.WHITE
@@ -34,12 +34,12 @@ trait RoundedBorderPanel extends Transparent with MouseUtils {
     borderColor = color
   }
 
-  def setDiameter(diameter: Double): Unit = {
-    this.diameter = diameter.toInt
+  def setDiameter(diameter: Int): Unit = {
+    this.diameter = diameter
   }
 
   def getDiameter: Int =
-    diameter
+    zoom(diameter)
 
   def enableHover(): Unit = {
     hoverEnabled = true
@@ -62,9 +62,11 @@ trait RoundedBorderPanel extends Transparent with MouseUtils {
       g2d.setColor(backgroundColor)
     }
 
-    g2d.fillRoundRect(1, 1, getWidth - 2, getHeight - 2, diameter, diameter)
+    val diam: Int = getDiameter
+
+    g2d.fillRoundRect(1, 1, getWidth - 2, getHeight - 2, diam, diam)
     g2d.setColor(borderColor)
-    g2d.drawRoundRect(0, 0, getWidth - 1, getHeight - 1, diameter, diameter)
+    g2d.drawRoundRect(0, 0, getWidth - 1, getHeight - 1, diam, diam)
 
     super.paintComponent(g)
   }

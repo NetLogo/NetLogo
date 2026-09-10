@@ -4,6 +4,7 @@ package org.nlogo.app.infotab
 
 import java.io.ByteArrayInputStream
 
+import org.nlogo.swing.DummyZoomable
 import org.nlogo.util.AnyFunSuiteEx
 
 class InfoFormatterTests extends AnyFunSuiteEx {
@@ -41,7 +42,7 @@ class InfoFormatterTests extends AnyFunSuiteEx {
   }
 
   test("main") {
-    val fullHtml = InfoFormatter(helloWorldMarkdown)
+    val fullHtml = InfoFormatter(new DummyZoomable, helloWorldMarkdown)
     // make sure the style sheet is there:
     assert(fullHtml.contains("<style type=\"text/css\">"))
     assert(fullHtml.contains(":link { color: rgb(110,0,110); }"))

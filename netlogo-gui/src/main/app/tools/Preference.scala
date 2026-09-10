@@ -2,7 +2,6 @@
 
 package org.nlogo.app.tools
 
-import java.awt.GridBagConstraints
 import javax.swing.JComponent
 
 import org.nlogo.theme.ThemeSync
@@ -16,8 +15,7 @@ object RequiredAction {
   }
 }
 
-trait Preference(val i18nKey: String, val requirement: Option[RequiredAction],
-                 val anchor: Int = GridBagConstraints.WEST) {
+trait Preference(val i18nKey: String, val requirement: Option[RequiredAction], val top: Boolean = false) {
   def component: JComponent & ThemeSync
   def load(): Unit
   def save(): Unit

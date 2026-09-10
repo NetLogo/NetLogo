@@ -2,39 +2,40 @@
 
 package org.nlogo.app
 
-import java.awt.event.KeyEvent
-import javax.swing.Action
+import java.awt.event.{ ActionEvent, KeyEvent }
+import javax.swing.AbstractAction
 
 import org.nlogo.core.I18N
+import org.nlogo.swing.{ Menu, UserAction }, UserAction.MenuAction
 
 // note that multiple instances of this class may exist as there are now multiple frames that each
 // have their own menu bar and menus  ev 8/25/05
-class ZoomMenu extends org.nlogo.swing.Menu(I18N.gui.get("menu.zoom")) {
-
-  implicit val i18nName: org.nlogo.core.I18N.Prefix = I18N.Prefix("menu.zoom")
+class ZoomMenu extends Menu(I18N.gui.get("menu.zoom")) {
+  private implicit val i18nPrefix: I18N.Prefix = I18N.Prefix("menu.zoom")
 
   setMnemonic('Z')
-  addMenuItem('=',new javax.swing.AbstractAction(I18N.gui("larger")) {
-    putValue(Action.MNEMONIC_KEY, KeyEvent.VK_L)
 
-    def actionPerformed(e:java.awt.event.ActionEvent): Unit = {
-      zoom(1)
-    }})
-  addMenuItem('0',new javax.swing.AbstractAction(I18N.gui("normalSize")) {
-    putValue(Action.MNEMONIC_KEY, KeyEvent.VK_N)
+  addMenuItem('=',new AbstractAction(I18N.gui("larger")) with MenuAction {
+    mnemonic = KeyEvent.VK_L
 
-    def actionPerformed(e:java.awt.event.ActionEvent): Unit = {
-      zoom(0)
-    }})
-  addMenuItem('-',new javax.swing.AbstractAction(I18N.gui("smaller")) {
-    putValue(Action.MNEMONIC_KEY, KeyEvent.VK_S)
+    def actionPerformed(e: ActionEvent): Unit = {
+      App.app.frame.zoomIn()
+    }
+  })
 
-    def actionPerformed(e:java.awt.event.ActionEvent): Unit = {
-      zoom(-1)
-    }})
+  addMenuItem('0',new AbstractAction(I18N.gui("normalSize")) with MenuAction {
+    mnemonic = KeyEvent.VK_N
 
-  def zoom(action: Int): Unit = {
-    new org.nlogo.window.Events.ZoomedEvent(action).raise(this)
-  }
+    def actionPerformed(e: ActionEvent): Unit = {
+      App.app.frame.resetZoom()
+    }
+  })
 
+  addMenuItem('-',new AbstractAction(I18N.gui("smaller")) with MenuAction {
+    mnemonic = KeyEvent.VK_S
+
+    def actionPerformed(e: ActionEvent): Unit = {
+      App.app.frame.zoomOut()
+    }
+  })
 }

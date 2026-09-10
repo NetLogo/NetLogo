@@ -15,6 +15,7 @@ import com.vladsch.flexmark.ext.autolink.AutolinkExtension
 import com.vladsch.flexmark.ext.typographic.TypographicExtension
 
 import org.nlogo.api.{ ExternalResourceManager, FileIO }
+import org.nlogo.swing.{ DummyZoomable, ZoomHelpers }
 import org.nlogo.theme.InterfaceColors
 
 import scala.io.Source
@@ -28,51 +29,54 @@ object InfoFormatter {
    * for standalone use, for example on a web server
    */
   def main(argv: Array[String]): Unit = {
-    println(apply(read(System.in)))
+    println(apply(new DummyZoomable, read(System.in)))
   }
 
   def read(in: InputStream): String = Source.fromInputStream(in).mkString
 
   def styleSheetFile: String = FileIO.getResourceAsString("/system/info.css")
-  val defaultFontSize = 11
-  val defaultStyleSheet: String = styleSheet("monospace", defaultFontSize)
-  def styleSheet(fontFamily: String, fontSize: Int): String = "<style type=\"text/css\">\n<!--\n"+
-          styleSheetFile.
-            replace("{BODY-BACKGROUND}", colorString(InterfaceColors.infoBackground())).
-            replace("{BODY-FONT-SIZE}", fontSize.toString).
-            replace("{H1-BACKGROUND}", colorString(InterfaceColors.infoH1Background())).
-            replace("{H1-COLOR}", colorString(InterfaceColors.infoH1Color())).
-            replace("{H1-FONT-SIZE}", (fontSize * 2).toInt.toString).
-            replace("{H2-BACKGROUND}", colorString(InterfaceColors.infoH2Background())).
-            replace("{H2-COLOR}", colorString(InterfaceColors.infoH2Color())).
-            replace("{H2-FONT-SIZE}", (fontSize * 1.75).toInt.toString).
-            replace("{H3-COLOR}", colorString(InterfaceColors.infoH3Color())).
-            replace("{H3-FONT-SIZE}", (fontSize * 1.5).toInt.toString).
-            replace("{H4-COLOR}", colorString(InterfaceColors.infoH4Color())).
-            replace("{H4-FONT-SIZE}", (fontSize * 1.28).toString).
-            replace("{H5-FONT-SIZE}", (fontSize * 1.14).toString).
-            replace("{H6-FONT-SIZE}", fontSize.toString).
-            replace("{P-COLOR}", colorString(InterfaceColors.infoPColor())).
-            replace("{CODE-FONT}", fontFamily).
-            replace("{CODE-BACKGROUND}", colorString(InterfaceColors.infoCodeBackground())).
-            replace("{CODE-COLOR}", colorString(InterfaceColors.infoCodeText())).
-            replace("{BLOCK-BAR}", colorString(InterfaceColors.infoBlockBar())).
-            replace("{INFO-BACKGROUND}", colorString(InterfaceColors.infoBackground())).
-            replace("{LINK-COLOR}", colorString(InterfaceColors.infoLink())).
-            replace("{SCROLLBAR-BACKGROUND}", colorString(InterfaceColors.scrollBarBackground())).
-            replace("{SCROLLBAR-COLOR}", colorString(InterfaceColors.scrollBarForeground())) + "\n-->\n</style>"
+  val defaultStyleSheet: String = styleSheet(new DummyZoomable, "monospace")
+  def styleSheet(zoom: ZoomHelpers, fontFamily: String): String = {
+    val fontSize: Int = zoom.zoom(11)
 
-  def apply(content: String, modelDir: String = null,
-            resourceManager: ExternalResourceManager = new ExternalResourceManager,
-            fontFamily: String = "monospace", fontSize: Int = defaultFontSize) = {
-
-    wrapHtml(toInnerHtml(content, modelDir, resourceManager), fontFamily, fontSize)
+    "<style type=\"text/css\">\n<!--\n"+
+      styleSheetFile.
+        replace("{BODY-BACKGROUND}", colorString(InterfaceColors.infoBackground())).
+        replace("{BODY-FONT-SIZE}", fontSize.toString).
+        replace("{H1-BACKGROUND}", colorString(InterfaceColors.infoH1Background())).
+        replace("{H1-COLOR}", colorString(InterfaceColors.infoH1Color())).
+        replace("{H1-FONT-SIZE}", (fontSize * 2).toInt.toString).
+        replace("{H2-BACKGROUND}", colorString(InterfaceColors.infoH2Background())).
+        replace("{H2-COLOR}", colorString(InterfaceColors.infoH2Color())).
+        replace("{H2-FONT-SIZE}", (fontSize * 1.75).toInt.toString).
+        replace("{H3-COLOR}", colorString(InterfaceColors.infoH3Color())).
+        replace("{H3-FONT-SIZE}", (fontSize * 1.5).toInt.toString).
+        replace("{H4-COLOR}", colorString(InterfaceColors.infoH4Color())).
+        replace("{H4-FONT-SIZE}", (fontSize * 1.28).toString).
+        replace("{H5-FONT-SIZE}", (fontSize * 1.14).toString).
+        replace("{H6-FONT-SIZE}", fontSize.toString).
+        replace("{P-COLOR}", colorString(InterfaceColors.infoPColor())).
+        replace("{CODE-FONT}", fontFamily).
+        replace("{CODE-BACKGROUND}", colorString(InterfaceColors.infoCodeBackground())).
+        replace("{CODE-COLOR}", colorString(InterfaceColors.infoCodeText())).
+        replace("{BLOCK-BAR}", colorString(InterfaceColors.infoBlockBar())).
+        replace("{INFO-BACKGROUND}", colorString(InterfaceColors.infoBackground())).
+        replace("{LINK-COLOR}", colorString(InterfaceColors.infoLink())).
+        replace("{SCROLLBAR-BACKGROUND}", colorString(InterfaceColors.scrollBarBackground())).
+        replace("{SCROLLBAR-COLOR}", colorString(InterfaceColors.scrollBarForeground())) + "\n-->\n</style>"
   }
 
-  def wrapHtml(body: String, fontFamily: String = "monospace", fontSize: Int = defaultFontSize): String = {
+  def apply(zoom: ZoomHelpers, content: String, modelDir: String = null,
+            resourceManager: ExternalResourceManager = new ExternalResourceManager,
+            fontFamily: String = "monospace") = {
+
+    wrapHtml(zoom, toInnerHtml(content, modelDir, resourceManager), fontFamily)
+  }
+
+  def wrapHtml(zoom: ZoomHelpers, body: String, fontFamily: String = "monospace"): String = {
     val mathJax = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
 
-    s"""<html><head>${styleSheet(fontFamily, fontSize)}</head><body>$body</body><script>
+    s"""<html><head>${styleSheet(zoom, fontFamily)}</head><body>$body</body><script>
       window.MathJax = {
         tex: {
           inlineMath: [['$$', '$$']],

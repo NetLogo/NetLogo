@@ -8,7 +8,9 @@ import javax.swing.{ AbstractAction, Action, Icon, JRadioButton }
 
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
-class RadioButton(action: Action) extends JRadioButton(action) with MouseUtils with Transparent with ThemeSync {
+class RadioButton(action: Action)
+  extends JRadioButton(action) with MouseUtils with Transparent with Zoomable with ThemeSync {
+
   def this(text: String, function: () => Unit) = this(new AbstractAction(text) {
     def actionPerformed(e: ActionEvent): Unit = {
       function()
@@ -16,8 +18,8 @@ class RadioButton(action: Action) extends JRadioButton(action) with MouseUtils w
   })
 
   setIcon(new Icon {
-    def getIconWidth: Int = 14
-    def getIconHeight: Int = 14
+    def getIconWidth: Int = zoom(14)
+    def getIconHeight: Int = zoom(14)
 
     def paintIcon(c: Component, g: Graphics, x: Int, y: Int): Unit = {
       val g2d = Utils.initGraphics2D(g)

@@ -7,7 +7,7 @@ import java.awt.event.{ WindowAdapter, WindowEvent }
 import javax.swing.{ JFrame, JLabel, WindowConstants }
 import javax.swing.border.LineBorder
 
-import org.nlogo.swing.{ ScrollPane, TextArea }
+import org.nlogo.swing.{ ScrollPane, TextArea, Zoomable }
 import org.nlogo.theme.InterfaceColors
 
 // Unfortunately errors can occur during startup of the NetLogo GUI.  On Windows these are swallowed by the launcher and
@@ -36,14 +36,16 @@ object StartupError {
 
     frame.getContentPane.setBackground(InterfaceColors.dialogBackground())
 
-    val title = new JLabel("NetLogo encountered an error while starting to run.  See the details below.") {
+    val title = new JLabel("NetLogo encountered an error while starting to run.  See the details below.")
+                  with Zoomable {
       setForeground(InterfaceColors.dialogText())
+      setBaseFont(getFont.deriveFont(16f))
     }
-    title.setFont(title.getFont().deriveFont(16f))
+
     frame.add(title, BorderLayout.NORTH)
 
     val report = new TextArea(0, 0, message) {
-      setFont(getFont.deriveFont(18f))
+      setBaseFont(getFont.deriveFont(18f))
       setEditable(false)
       setLineWrap(true)
     }

@@ -189,7 +189,7 @@ class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast,
     val savedName = name.potentiallyEmptyStringToOption
     val savedUnits = units.potentiallyEmptyStringToOption
     val dir = if (vertical) Vertical else Horizontal
-    val b = getUnzoomedBounds
+    val b = unzoomedBounds
     CoreSlider(display = savedName,
       x = b.x, y = b.y, width = b.width, height = b.height,
       oldSize = _oldSize,

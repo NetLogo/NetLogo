@@ -2,16 +2,15 @@
 
 package org.nlogo.window
 
-import javax.swing.JPanel
+import java.awt.Component
 
 import org.nlogo.core.I18N
-import org.nlogo.swing.Transparent
 import org.nlogo.theme.ThemeSync
 
 import scala.util.{ Failure, Try }
 
-abstract class PropertyEditor[T](val accessor: PropertyAccessor[T], val handlesOwnErrors: Boolean = false)
-  extends JPanel with Transparent with ThemeSync {
+trait PropertyEditor[T](val accessor: PropertyAccessor[T], val handlesOwnErrors: Boolean = false)
+  extends Component with ThemeSync {
 
   protected val defaultError = Failure(new Exception(I18N.gui.getN("edit.general.invalidValue", accessor.name)))
 

@@ -127,7 +127,7 @@ case class EditorConfiguration(
       new LinePainter(editor)
     }
 
-    editor.setFont(font)
+    editor.setBaseFont(font)
     editor.setFocusTraversalKeysEnabled(enableFocusTraversal)
 
     val focusTraversalListener = new FocusTraversalListener(editor)
@@ -158,7 +158,7 @@ case class EditorConfiguration(
   def configureAdvancedEditorArea(editor: AdvancedEditorArea) = {
     editor.addTextListener(listener)
     editor.setIndenter(smartIndent)
-    editor.setFont(font)
+    editor.setBaseFont(font)
 
     (contextActions ++ menuActions ++ additionalActions.values).foreach {
       case e: InstallableAction => e.install(editor)

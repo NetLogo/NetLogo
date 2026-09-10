@@ -6,14 +6,14 @@ import java.awt.{ Component, Dimension }
 import java.awt.event.MouseAdapter
 import javax.swing.{ JLayeredPane, JPanel }
 
-import org.nlogo.swing.Transparent
+import org.nlogo.swing.{ PreferredSize, Transparent }
 import org.nlogo.window.{ DefaultEditorFactory, Event, InterfacePanelLite }
 
 class BlockedInterfacePanel(frame: BehaviorSpaceFrame, workspace: SemiHeadlessWorkspace)
   extends InterfacePanelLite(workspace.viewWidget, workspace, workspace, workspace.plotManager,
                              new DefaultEditorFactory(workspace), workspace.extensionManager) with Event.LinkChild {
 
-  private val interceptPanel = new JPanel with Transparent {
+  private val interceptPanel = new JPanel with PreferredSize with Transparent {
     setFocusable(true)
     setLayout(null)
 
@@ -25,12 +25,6 @@ class BlockedInterfacePanel(frame: BehaviorSpaceFrame, workspace: SemiHeadlessWo
 
     override def getPreferredSize: Dimension =
       getParent.getSize
-
-    override def getMinimumSize: Dimension =
-      getPreferredSize
-
-    override def getMaximumSize: Dimension =
-      getPreferredSize
   }
 
   add(interceptPanel, JLayeredPane.DRAG_LAYER)

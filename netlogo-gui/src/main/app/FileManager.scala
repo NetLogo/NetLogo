@@ -131,7 +131,7 @@ object FileManager {
                          I18N.gui.get("menu.file.import.hubNetClientInterface.prompt"),
                          Seq(I18N.gui.get("menu.file.import.hubNetClientInterface.fromInterface"),
                              I18N.gui.get("menu.file.import.hubNetClientInterface.fromClient")),
-                         OptionPane.Icons.Question).getSelectedIndex
+                         OptionPane.Icons.question).getSelectedIndex
 
       if (choice != 2) {
         ModalProgressTask.onUIThread(
@@ -183,7 +183,7 @@ object FileManager {
       if (includes.nonEmpty &&
         new OptionPane(parent, I18N.gui.get("common.messages.warning"),
                        I18N.gui.get("menu.file.nlw.prompt.includesWarning"), OptionPane.Options.OkCancel,
-                       OptionPane.Icons.Warning).getSelectedIndex != 0)
+                       OptionPane.Icons.warning).getSelectedIndex != 0)
         throw new UserCancelException()
 
       Analytics.saveAsNetLogoWeb()
@@ -221,7 +221,7 @@ object FileManager {
                                   I18N.gui.get("menu.file.nlw.prompt.message." + typeKey),
                                   Seq(I18N.gui.get("menu.file.nlw.prompt." + typeKey),
                                       I18N.gui.get("menu.file.nlw.prompt.fromCurrentCopy")),
-                                  OptionPane.Icons.Question).getSelectedIndex
+                                  OptionPane.Icons.question).getSelectedIndex
       if (choice == 0)
         true
       else if (choice == 1)
@@ -330,7 +330,7 @@ class FileManager(workspace: AbstractWorkspaceScala,
     if (labManager.anyRunning &&
         new OptionPane(parent, I18N.gui.get("common.messages.warning"),
                        I18N.gui.get("file.close.warn.runningExperiments"), OptionPane.Options.YesNo,
-                       OptionPane.Icons.Warning).getSelectedIndex != 0)
+                       OptionPane.Icons.warning).getSelectedIndex != 0)
       throw new UserCancelException
 
     labManager.abort()
@@ -338,7 +338,7 @@ class FileManager(workspace: AbstractWorkspaceScala,
     if (labManager.anyPaused &&
         new OptionPane(parent, I18N.gui.get("common.messages.warning"),
                        I18N.gui.get("file.close.warn.pausedExperiments"), OptionPane.Options.YesNo,
-                       OptionPane.Icons.Warning).getSelectedIndex != 0)
+                       OptionPane.Icons.warning).getSelectedIndex != 0)
       throw new UserCancelException
 
     if (dirtyMonitor.modelDirty) {
@@ -384,7 +384,7 @@ class FileManager(workspace: AbstractWorkspaceScala,
     val newUri = ModelConfig.findAutoSave(Paths.get(uri).toString) match {
       case Some(path) if !testing =>
         if (new OptionPane(parent, I18N.gui.get("file.autosave.recover"), I18N.gui.get("file.autosave.recover.message"),
-                           OptionPane.Options.YesNo, OptionPane.Icons.Info).getSelectedIndex == 0) {
+                           OptionPane.Options.YesNo, OptionPane.Icons.info).getSelectedIndex == 0) {
           path.toUri
         } else {
           uri
@@ -434,7 +434,7 @@ class FileManager(workspace: AbstractWorkspaceScala,
         new OptionPane(parent, I18N.gui.get("menu.tools.convertWidgetSizes"),
                       I18N.gui.get("file.open.warn.convertWidgetSizes"),
                       Seq(I18N.gui.get("menu.tools.convertWidgetSizes.resizeAndAdjust"),
-                          I18N.gui.get("file.open.skip")), OptionPane.Icons.Info)
+                          I18N.gui.get("file.open.skip")), OptionPane.Icons.info)
           .getSelectedIndex == 0
       }
     }
@@ -490,7 +490,7 @@ class FileManager(workspace: AbstractWorkspaceScala,
       saver.result match {
         case Some(Failure(e: Throwable)) =>
           new OptionPane(parent, I18N.gui.get("common.netlogo"), I18N.gui.getN("menu.file.save.error", e.getMessage),
-                         OptionPane.Options.Ok, OptionPane.Icons.Error)
+                         OptionPane.Options.Ok, OptionPane.Icons.error)
         case _ =>
           ModelConfig.setLastModified(workspace.getModelPath)
       }

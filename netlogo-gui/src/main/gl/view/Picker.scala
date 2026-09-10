@@ -18,7 +18,7 @@ import org.nlogo.window.Events.EditView3DEvent
 class Picker(view: View) extends PickListener with ActionListener {
 
   def pick(mousePt: java.awt.Point, agents: JList[Agent]): Unit = {
-    val menu = new WrappingPopupMenu
+    val menu = new WrappingPopupMenu(view)
 
     menu.add(new MenuItem(new AbstractAction("Edit...") {
       def actionPerformed(e: ActionEvent): Unit = {

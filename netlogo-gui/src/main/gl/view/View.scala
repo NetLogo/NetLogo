@@ -5,9 +5,10 @@ package org.nlogo.gl.view
 import com.jogamp.opengl.{ GLCapabilities, GLProfile }
 import com.jogamp.opengl.awt.GLJPanel
 
-import java.awt.Frame
+import java.awt.{ Dimension, Rectangle }
 import java.awt.event.{ KeyEvent, KeyAdapter, MouseEvent }
 import java.awt.image.BufferedImage
+import javax.swing.JFrame
 
 import org.nlogo.analytics.Analytics
 import org.nlogo.agent.World
@@ -15,12 +16,13 @@ import org.nlogo.api.{ DrawingInterface, Version, World3D, WorldRenderable, Worl
 import org.nlogo.gl.render.{ LinkRenderer, LinkRenderer3D, PatchRenderer, PatchRenderer3D, Renderer, Renderer3D,
                              ShapeRenderer, ShapeRenderer3D, TurtleRenderer, TurtleRenderer3D, WorldRenderer,
                              WorldRenderer3D }
-import org.nlogo.swing.{ NetLogoIcon, WindowAutomator }
+import org.nlogo.swing.{ NetLogoIcon, PreferredSize, WindowAutomator, ZoomableWindow }
 import org.nlogo.theme.ThemeSync
 import org.nlogo.window.Event.LinkChild
 
-abstract class View(title: String, val viewManager: ViewManager, var renderer: Renderer)
-  extends Frame(title) with GLViewInterface with LinkChild with ThemeSync with NetLogoIcon {
+abstract class View(title: String, val viewManager: ViewManager, var renderer: Renderer, bounds: Option[Rectangle])
+  extends JFrame(title) with GLViewInterface with LinkChild with ZoomableWindow(Option(viewManager.getLinkParent))
+  with PreferredSize with ThemeSync with NetLogoIcon {
 
   WindowAutomator.automate(this)
 
@@ -119,6 +121,12 @@ abstract class View(title: String, val viewManager: ViewManager, var renderer: R
 
   override def setFullscreen(fullscreen: Boolean): Unit = {
     viewManager.setFullscreen(fullscreen)
+  }
+
+  override def getPreferredSize: Dimension = {
+    bounds.map(zoomBounds).fold(new Dimension(0, 0)) { zoomed =>
+      new Dimension(zoomed.width, zoomed.height)
+    }
   }
 
   def display(): Unit = {

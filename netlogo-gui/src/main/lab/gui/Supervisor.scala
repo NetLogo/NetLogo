@@ -134,7 +134,7 @@ class Supervisor(parent: Window, workspace: GUIWorkspace, modelPath: String, ori
       if (errorLines.isEmpty) {
         new OptionPane(parent, I18N.gui.get("common.messages.error"),
                        I18N.gui.get("tools.behaviorSpace.error.memoryLimit"), OptionPane.Options.Ok,
-                       OptionPane.Icons.Error)
+                       OptionPane.Icons.error)
       } else {
         Exceptions.handle(new Exception(errorLines.mkString("\n")))
       }

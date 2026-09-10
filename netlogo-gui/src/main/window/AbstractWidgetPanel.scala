@@ -8,7 +8,7 @@ import javax.swing.JLayeredPane
 import org.nlogo.core.{ Widget => CoreWidget }
 import org.nlogo.theme.ThemeSync
 
-abstract class AbstractWidgetPanel extends JLayeredPane with Zoomable with ThemeSync {
+abstract class AbstractWidgetPanel extends JLayeredPane with ThemeSync {
   def removeAllWidgets(): Unit
   def getWidgetsForSaving: Seq[CoreWidget]
   def loadWidgets(widgets: Seq[CoreWidget], convertWidgetSizes: Boolean): Unit

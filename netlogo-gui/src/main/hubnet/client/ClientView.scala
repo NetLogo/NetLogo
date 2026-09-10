@@ -126,7 +126,7 @@ class ClientView(clientPanel: ClientPanel) extends Widget with ViewWidgetInterfa
   }
 
   override def model: CoreWidget = {
-    val b = getUnzoomedBounds
+    val b = unzoomedBounds
     CoreView(
       x = b.x, y = b.y, width = b.width, height = b.height,
       dimensions = world.getDimensions)
