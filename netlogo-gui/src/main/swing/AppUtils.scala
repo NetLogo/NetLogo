@@ -9,6 +9,9 @@ import java.awt.GraphicsEnvironment
 import org.nlogo.core.NetLogoPreferences
 import org.nlogo.theme.{ ClassicTheme, DarkTheme, LightTheme, InterfaceColors }
 
+import scala.sys.process.Process
+import scala.util.matching.Regex
+
 // used by App and BehaviorSpaceApp to minimize duplicated GUI setup code and
 // ensure visual unity between instances of the app (Isaac B 2/4/26)
 object AppUtils {
@@ -23,17 +26,34 @@ object AppUtils {
   }
 
   def setupGUI(colorTheme: Option[String]): Unit = {
-    val scalePref = NetLogoPreferences.getDouble("uiScale", 1.0)
+    Option(System.getProperty("sun.java2d.uiScale")).flatMap(_.toFloatOption) match {
+      case Some(scale) =>
+        Utils.setUIScale(scale)
 
-    if (scalePref > 1.0) {
-      System.setProperty("sun.java2d.uiScale", scalePref.toString)
+      case _ if System.getProperty("os.name").toLowerCase.startsWith("linux") =>
+        try {
+          val query: String = Process(Seq("xrdb", "-query")).!!
+          val expr: Regex = """(?s).*?Xft\.dpi:\s*(\d+).*""".r
 
-      Utils.setUIScale(scalePref)
-    } else {
-      val devices = GraphicsEnvironment.getLocalGraphicsEnvironment.getScreenDevices
-      val scale = devices(0).getDefaultConfiguration.getDefaultTransform.getScaleX
+          query match {
+            case expr(dpiStr) =>
+              dpiStr.toIntOption.map(_ / 96f).foreach { dpi =>
+                System.setProperty("sun.java2d.uiScale", dpi.toString)
 
-      Utils.setUIScale(scale)
+                Utils.setUIScale(dpi)
+              }
+
+            case _ =>
+          }
+        } catch {
+          case _ =>
+        }
+
+      case _ =>
+        val devices = GraphicsEnvironment.getLocalGraphicsEnvironment.getScreenDevices
+        val scale = devices(0).getDefaultConfiguration.getDefaultTransform.getScaleX
+
+        Utils.setUIScale(scale)
     }
 
     SetSystemLookAndFeel.setSystemLookAndFeel()
