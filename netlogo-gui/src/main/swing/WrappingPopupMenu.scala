@@ -10,7 +10,7 @@ import java.awt.{ Component, Container, Dimension, LayoutManager, Toolkit }
 // This was inspired by cpol's 4/28/00 post to
 // http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4246124 .
 
-class WrappingPopupMenu extends PopupMenu {
+class WrappingPopupMenu(parent: ZoomHelpers) extends PopupMenu(parent) {
   override def show(invoker: Component, x: Int, y: Int): Unit = {
     setLayout(new WrappingLayout((Toolkit.getDefaultToolkit.getScreenSize.getHeight
                                   * 0.7 / getFontMetrics(getFont).getHeight).toInt))

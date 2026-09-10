@@ -20,6 +20,7 @@ class CommandCenter(workspace: AbstractWorkspace, showToggle: Boolean, packSplit
   extends JPanel
   with CommandCenterInterface
   with WindowEvents.LoadBeginEvent.Handler
+  with Zoomable
   with ThemeSync {
 
   // true = echo commands to output
@@ -131,7 +132,7 @@ class CommandCenter(workspace: AbstractWorkspace, showToggle: Boolean, packSplit
   }
 
   private def doPopup(e: MouseEvent): Unit = {
-    new PopupMenu {
+    new PopupMenu(this) {
       add(new MenuItem(TextMenuActions.CopyAction))
       add(new MenuItem(new AbstractAction(I18N.gui.get("menu.file.export")) {
         def actionPerformed(e: ActionEvent): Unit = {
