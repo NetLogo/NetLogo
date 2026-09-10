@@ -4,12 +4,13 @@ package org.nlogo.swing
 
 import java.awt.{ Component, Font }
 
-import org.nlogo.awt.Hierarchy
-
 trait Zoomable extends Component with ZoomHelpers {
   private var baseFont: Font = getFont
 
-  private var window: Option[ZoomableWindow] = None
+  private var zoomRoot: Option[ZoomHelpers] = None
+
+  def getZoomRoot: Option[ZoomHelpers] =
+    zoomRoot
 
   def getBaseFont: Font =
     baseFont
@@ -28,25 +29,34 @@ trait Zoomable extends Component with ZoomHelpers {
   override def addNotify(): Unit = {
     super.addNotify()
 
-    Hierarchy.getWindow(this) match {
-      case window: ZoomableWindow =>
-        this.window = Option(window)
-
-      case _ =>
-        this.window = None
-    }
+    zoomRoot = findZoomRoot(getParent)
 
     zoom()
   }
 
   override def getZoomFactor: Float =
-    window.fold(1f)(_.getZoomFactor)
+    zoomRoot.fold(1f)(_.getZoomFactor)
 
   protected def zoomComponent(): Unit = {}
 
   private def zoomFont(): Unit = {
     Option(baseFont).foreach { font =>
       setFont(font.deriveFont(zoom(font.getSize2D)))
+    }
+  }
+
+  private def findZoomRoot(component: Component): Option[ZoomHelpers] = {
+    Option(component).collect {
+      case window: ZoomableWindow =>
+        window
+    }.orElse(findZoomRoot(component.getParent)).orElse {
+      component match {
+        case zoom: ZoomHelpers =>
+          Option(zoom)
+
+        case _ =>
+          None
+      }
     }
   }
 }

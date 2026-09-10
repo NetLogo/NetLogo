@@ -15,7 +15,7 @@ object BoxAlign {
 }
 
 abstract class AbstractBoxLayout(axis: Int, components: Seq[Component], gap: Int, align: BoxAlign)
-  extends JPanel with Transparent {
+  extends JPanel with Transparent with Zoomable {
 
   setLayout(new BoxLayout(this, axis))
 

@@ -325,7 +325,7 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
   setCoreProgram(false)
 
   def showPopup(point: Point): Unit = {
-    new PopupMenu {
+    new PopupMenu(this) {
       add(new MenuItem(undoAction))
       add(new MenuItem(redoAction))
 

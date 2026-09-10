@@ -16,7 +16,7 @@ import org.nlogo.swing.{ BoxAlign, BoxRow, Button, InputOptionPane, OptionPane, 
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 class AggregateModelEditorToolBar(editor: AggregateModelEditor, model: Model)
-  extends BoxRow(6, BoxAlign.Start) with Zoomable with ThemeSync {
+  extends BoxRow(6, BoxAlign.Start) with ThemeSync {
 
   implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("tools.sdm")
 
@@ -161,7 +161,7 @@ class AggregateModelEditorToolBar(editor: AggregateModelEditor, model: Model)
     def actionPerformed(e: ActionEvent): Unit = {editor.setTool(tool)}
   }
 
-  class Separator extends JPanel {
+  class Separator extends JPanel with Zoomable {
     setBorder(new ZoomableBorder(0, 12, 0, 12))
 
     override def getPreferredSize: Dimension =

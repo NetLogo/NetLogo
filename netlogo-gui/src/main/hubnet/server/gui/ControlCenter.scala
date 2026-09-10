@@ -15,7 +15,7 @@ import org.nlogo.awt.{ EventQueue, Positioning }
 import org.nlogo.core.I18N
 import org.nlogo.hubnet.server.{ ConnectionManager, HubNetUtils }
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, Button, CheckBox, NonemptyTextFieldButtonEnabler, ScrollPane,
-                         SelectableJLabel, TextArea, TextField, TextFieldBox, Transparent, VerticalStrut,
+                         SelectableJLabel, TextArea, TextField, TextFieldBox, Transparent, VerticalStrut, Zoomable,
                          ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.ClientAppInterface
@@ -125,7 +125,7 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
    * Panel in HubNet Control Center displays client list
    */
   class ClientsPanel(initialClientEntries: Iterable[String]) extends JPanel with Transparent with ListSelectionListener
-                                                             with ThemeSync {
+                                                             with Zoomable with ThemeSync {
 
     private class ClientCellRenderer extends JPanel(new GridBagLayout) with ListCellRenderer[String] {
       private val label = new JLabel
@@ -240,7 +240,7 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
    * Panel in HubNet Control Center displays
    * and sends broadcast messages.
    */
-  class MessagePanel extends JPanel with Transparent with ThemeSync {
+  class MessagePanel extends JPanel with Transparent with Zoomable with ThemeSync {
     private val inputField = new TextField {
       addActionListener(_ => beginBroadcast())
     }

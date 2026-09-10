@@ -585,9 +585,7 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
     }
   }
 
-  private class ModelPreviewPanel
-    extends BoxColumn(BoxAlign.Start) with HyperlinkListener with Zoomable with ThemeSync {
-
+  private class ModelPreviewPanel extends BoxColumn(BoxAlign.Start) with HyperlinkListener with ThemeSync {
     private val graphicsPreview: GraphicsPreview = new GraphicsPreview {
       setBorder(new LineBorder(Color.DARK_GRAY, 1))
     }

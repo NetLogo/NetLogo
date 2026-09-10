@@ -11,12 +11,17 @@ import org.nlogo.agent.Turtle;
 import org.nlogo.api.Perspective;
 import org.nlogo.api.PerspectiveJ;
 import org.nlogo.swing.WrappingPopupMenu;
+import org.nlogo.swing.ZoomHelpers;
 import org.nlogo.window.GUIWorkspace;
 
-public class AgentMonitorView
-    extends org.nlogo.window.View {
-  public AgentMonitorView(GUIWorkspace workspace) {
+public class AgentMonitorView extends org.nlogo.window.View {
+  ZoomHelpers zoom;
+
+  public AgentMonitorView(GUIWorkspace workspace, ZoomHelpers zoom) {
     super(workspace);
+
+    this.zoom = zoom;
+
     radius = (workspace.world().worldWidth() - 1) / 2;
   }
 
@@ -167,7 +172,7 @@ public class AgentMonitorView
   }
 
   private void doPopup(java.awt.event.MouseEvent e) {
-    WrappingPopupMenu menu = new WrappingPopupMenu();
+    WrappingPopupMenu menu = new WrappingPopupMenu(zoom);
     java.awt.Point p = e.getPoint();
     populateContextMenu(menu, p);
     if (menu.getSubElements().length > 0) {

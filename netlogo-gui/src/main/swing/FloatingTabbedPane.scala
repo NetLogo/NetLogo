@@ -202,7 +202,7 @@ class TabLabel(startPane: FloatingTabbedPane, text: String, tab: Component) exte
 
   tab match {
     case temp: RenameableTab =>
-      popupMenu = Some(new PopupMenu {
+      popupMenu = Some(new PopupMenu(this) {
         add(new MenuItem(I18N.gui.get("tabs.external.rename"), () => temp.rename()))
       })
 

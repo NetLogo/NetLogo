@@ -206,7 +206,7 @@ class CustomOptionPane(parent: Component, title: String, contents: Component, op
   extends OptionPane(parent, title, "", options) {
 
   override protected def addContents(): Unit = {
-    add(new JPanel with Transparent {
+    add(new JPanel with Transparent with Zoomable {
       setBorder(new ZoomableBorder(30, 30, 30, 30))
 
       add(contents)

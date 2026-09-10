@@ -8,7 +8,7 @@ import org.nlogo.core.{ Femto, I18N, Token, TokenizerInterface }
 import org.nlogo.swing.{ MenuItem, PopupMenu }
 import org.nlogo.theme.InterfaceColors
 
-class ShowUsage(editorArea: AdvancedEditorArea, colorizer: Colorizer) extends PopupMenu {
+class ShowUsage(editorArea: AdvancedEditorArea, colorizer: Colorizer) extends PopupMenu(editorArea) {
   setBackground(InterfaceColors.codeBackground())
 
   locally {

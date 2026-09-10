@@ -262,7 +262,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
       widgetInfos.find(_.displayName == chosenItem).get.coreWidget
 
     private def getPopup: PopupMenu = {
-      new PopupMenu {
+      new PopupMenu(this) {
         add(actions(0))
         addSeparator()
         add(actions(1))
@@ -359,7 +359,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
     })
 
     private def getPopup: PopupMenu = {
-      new PopupMenu {
+      new PopupMenu(this) {
         add(new JLabel("Arrange selected widgets") with Zoomable {
           setBorder(new ZoomableBorder(0, 6, 0, 0))
         }).setEnabled(false)

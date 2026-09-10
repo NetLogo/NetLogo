@@ -22,7 +22,7 @@ import org.nlogo.core.I18N;
 import org.nlogo.swing.Menu;
 import org.nlogo.swing.MenuItem;
 import org.nlogo.swing.PopupMenu;
-import org.nlogo.swing.ZoomableWindow;
+import org.nlogo.swing.ZoomHelpers;
 import org.nlogo.theme.InterfaceColors;
 
 import scala.Option;
@@ -604,8 +604,8 @@ public class View
     }
 
     @Override @SuppressWarnings("unchecked")
-    public Option<ZoomableWindow> org$nlogo$swing$Zoomable$$window() {
-      return (Option<ZoomableWindow>)super.org$nlogo$swing$Zoomable$$window();
+    public Option<ZoomHelpers> org$nlogo$swing$Zoomable$$zoomRoot() {
+      return (Option<ZoomHelpers>)super.org$nlogo$swing$Zoomable$$zoomRoot();
     }
 
     @Override
@@ -629,8 +629,8 @@ public class View
     }
 
     @Override @SuppressWarnings("unchecked")
-    public Option<ZoomableWindow> org$nlogo$swing$Zoomable$$window() {
-      return (Option<ZoomableWindow>)super.org$nlogo$swing$Zoomable$$window();
+    public Option<ZoomHelpers> org$nlogo$swing$Zoomable$$zoomRoot() {
+      return (Option<ZoomHelpers>)super.org$nlogo$swing$Zoomable$$zoomRoot();
     }
 
     @Override

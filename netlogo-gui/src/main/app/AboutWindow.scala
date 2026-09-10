@@ -46,7 +46,7 @@ class AboutWindow(parent: Frame)
       SysInfo.getOSInfoString + "\n" +
       SysInfo.getScalaVersionString + "\n"
 
-  private val graphic = new JLabel {
+  private val graphic = new JLabel with Zoomable {
     setBorder(new ZoomableBorder(10, 10, 0, 10))
   }
 

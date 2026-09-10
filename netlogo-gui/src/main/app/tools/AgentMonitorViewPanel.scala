@@ -9,12 +9,12 @@ import javax.swing.{ AbstractAction, JPanel, JSlider }
 import org.nlogo.agent.Agent
 import org.nlogo.api.Perspective
 import org.nlogo.core.I18N
-import org.nlogo.swing.ToggleButton
+import org.nlogo.swing.{ ToggleButton, Zoomable }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.GUIWorkspace
 
-class AgentMonitorViewPanel(workspace: GUIWorkspace) extends JPanel(new BorderLayout) with ThemeSync {
-  private val view = new AgentMonitorView(workspace)
+class AgentMonitorViewPanel(workspace: GUIWorkspace) extends JPanel(new BorderLayout) with Zoomable with ThemeSync {
+  private val view = new AgentMonitorView(workspace, this)
   private val watchButton = new ToggleButton(new WatchAction)
   private val zoomer = new ZoomSlider(view)
 

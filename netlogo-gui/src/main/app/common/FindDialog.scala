@@ -5,7 +5,7 @@ package org.nlogo.app.common
 import java.awt.{ Dimension, Frame, Toolkit }
 import java.awt.event.{ ActionEvent, ActionListener, FocusEvent, KeyEvent }
 import java.util.Locale
-import javax.swing.{ AbstractAction, Action, Icon, JDialog, JEditorPane, JLabel }
+import javax.swing.{ AbstractAction, JDialog, JEditorPane, JLabel }
 import javax.swing.text.{ BadLocationException, TextAction }
 
 import org.nlogo.core.I18N
@@ -139,17 +139,6 @@ object FindDialog extends ThemeSync {
   def init(frame: Frame, codeFrame: Frame): Unit = {
     instance = new FindDialog(frame)
     codeInstance = new FindDialog(codeFrame)
-
-    val icon: Icon = Utils.iconScaledWithColor(instance, "/images/find.png", 15, 15,
-                                               () => InterfaceColors.toolbarImage())
-
-    val codeIcon: Icon = Utils.iconScaledWithColor(codeInstance, "/images/find.png", 15, 15,
-                                                   () => InterfaceColors.toolbarImage())
-
-    FIND_ACTION.putValue(Action.SMALL_ICON, icon)
-    FIND_ACTION_CODE.putValue(Action.SMALL_ICON, codeIcon)
-    FIND_NEXT_ACTION.putValue(Action.SMALL_ICON, icon)
-    FIND_NEXT_ACTION_CODE.putValue(Action.SMALL_ICON, codeIcon)
   }
 
   def getInstance: FindDialog = {

@@ -58,7 +58,10 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
     }))
   }
 
-  private val findButton = new ToolBarActionButton(FindDialog.FIND_ACTION)
+  private val findButton = new ToolBarActionButton(FindDialog.FIND_ACTION) {
+    setIcon(Utils.iconScaledWithColor(this, "/images/find.png", 15, 15, () => InterfaceColors.toolbarImage()))
+  }
+
   private val helpButton = new ToolBarActionButton(new AbstractAction(I18N.gui.get("tabs.info.help")) {
     setVisible(false)
 

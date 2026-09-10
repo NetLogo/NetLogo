@@ -16,7 +16,7 @@ class LinePrompt(commandLine: CommandLine, switchingEnabled: Boolean) extends JL
   addMouseListener(new MouseAdapter {
     override def mousePressed(e: MouseEvent): Unit =  {
       if (isEnabled && switchingEnabled) {
-        val popMenu = new PopupMenu("Ask who?")
+        val popMenu = new PopupMenu(LinePrompt.this, "Ask who?")
 
         def addItem(name: String, clazz: AgentKind): Unit = {
           popMenu.add(new MenuItem(new AbstractAction(name) {

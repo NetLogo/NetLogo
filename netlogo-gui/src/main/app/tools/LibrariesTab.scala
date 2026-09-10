@@ -203,9 +203,9 @@ class LibrariesTab( category:        String
     setBaseFont(getFont.deriveFont(Font.BOLD))
   }
 
-  private val installedVersion = new JLabel
-  private val latestVersion = new JLabel
-  private val minNetLogoVersion = new JLabel
+  private val installedVersion = new JLabel with Zoomable
+  private val latestVersion = new JLabel with Zoomable
+  private val minNetLogoVersion = new JLabel with Zoomable
 
   private val nlvPanel = new BoxRow(Seq(minNetLogoVersionLabel, minNetLogoVersion))
 
@@ -399,7 +399,7 @@ class LibrariesTab( category:        String
   private def updateSingleOperationStatus(operation: String, libName: String) =
     updateStatus(I18N.gui(operation, libName))
 
-  private class CellRenderer extends BoxRow(6) with ListCellRenderer[LibraryInfo] with Zoomable {
+  private class CellRenderer extends BoxRow(6) with ListCellRenderer[LibraryInfo] {
     private val upToDateIcon: Icon = Utils.iconScaledWithColor(this, "/images/check.png", 24, 24,
                                                                () => InterfaceColors.checkFilled())
     private val warningIcon: Icon = Utils.iconScaledWithColor(this, "/images/exclamation-triangle.png", 24, 24,

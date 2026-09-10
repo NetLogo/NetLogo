@@ -163,7 +163,7 @@ class InterfacePanelLite(viewWidget: Option[ViewWidgetInterface], compiler: Comp
   ///
 
   private def doPopup(e: MouseEvent): Unit = {
-    val menu = new PopupMenu
+    val menu = new PopupMenu(this)
 
     menu.add(new MenuItem(Version.version)).setEnabled(false)
     menu.add(new MenuItem(SysInfo.getOSInfoString)).setEnabled(false)

@@ -802,7 +802,7 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
 
   private def doPopup(e: MouseEvent): Unit = {
     if (interfacePanel != null) {
-      val menu = new WrappingPopupMenu
+      val menu = new WrappingPopupMenu(this)
 
       populateContextMenu(menu, e.getPoint)
 

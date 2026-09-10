@@ -40,7 +40,9 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
     setEnabled(false)
   }
 
-  private val findButton = new ToolBarActionButton(FindDialog.FIND_ACTION_CODE)
+  private val findButton = new ToolBarActionButton(FindDialog.FIND_ACTION_CODE) {
+    setIcon(Utils.iconScaledWithColor(this, "/images/find.png", 15, 15, () => InterfaceColors.toolbarImage()))
+  }
 
   private val proceduresMenu = new ProceduresMenu(CodeTab.this)
 
