@@ -24,7 +24,7 @@ abstract class ToolBarMenu(name: String) extends BoxRow(8) with RoundedBorderPan
   })
 
   def popup(): Unit = {
-    val menu = new WrappingPopupMenu
+    val menu = new WrappingPopupMenu(this)
     populate(menu)
     menu.setVisible(false)
     menu.show(this, 0, getHeight)

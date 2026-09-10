@@ -207,7 +207,7 @@ class EditorArea(configuration: EditorConfiguration)
     contextMenu.show(this, e.getX, e.getY)
   }
 
-  private class EditorContextMenu(colorizer: Colorizer) extends PopupMenu {
+  private class EditorContextMenu(colorizer: Colorizer) extends PopupMenu(this) {
     val copyItem  = new MenuItem(Actions.CopyAction)
     val cutItem   = new MenuItem(Actions.CutAction)
     val pasteItem = new MenuItem(Actions.PasteAction)

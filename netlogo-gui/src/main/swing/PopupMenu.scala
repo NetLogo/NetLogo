@@ -9,14 +9,14 @@ import javax.swing.border.LineBorder
 
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
-class PopupMenu(title: String = "") extends JPopupMenu(title) with Zoomable with ThemeSync {
+class PopupMenu(parent: ZoomHelpers, title: String = "") extends JPopupMenu(title) with ThemeSync {
   private class Separator extends JPopupMenu.Separator with ThemeSync {
     override def syncTheme(): Unit = {
       setForeground(InterfaceColors.menuBorder())
     }
   }
 
-  UIManager.put("PopupMenu.borderCornerRadius", zoom(4))
+  UIManager.put("PopupMenu.borderCornerRadius", parent.zoom(4))
 
   syncTheme()
 
@@ -25,7 +25,7 @@ class PopupMenu(title: String = "") extends JPopupMenu(title) with Zoomable with
   }
 
   override def getInsets: Insets =
-    new Insets(zoom(5), 0, zoom(5), 0)
+    new Insets(parent.zoom(5), 0, parent.zoom(5), 0)
 
   override def syncTheme(): Unit = {
     setBackground(InterfaceColors.menuBackground())
@@ -38,7 +38,7 @@ class PopupMenu(title: String = "") extends JPopupMenu(title) with Zoomable with
   }
 }
 
-class SearchablePopupMenu extends PopupMenu {
+class SearchablePopupMenu(parent: ZoomHelpers) extends PopupMenu(parent) {
   private var search = ""
   private var lastKey = 0L
 

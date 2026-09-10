@@ -134,7 +134,7 @@ abstract class Widget extends JPanel with RoundedBorderPanel with ThemeSync with
 
   private def doPopup(e: MouseEvent): Unit = {
     if (hasContextMenu) {
-      val menu = new PopupMenu
+      val menu = new PopupMenu(this)
 
       populateContextMenu(menu, e.getPoint)
 
