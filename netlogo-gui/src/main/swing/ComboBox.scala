@@ -90,12 +90,12 @@ class ComboBox[T](private var items: Seq[T] = Seq(), openOnPress: Boolean = true
   protected def getPopup: PopupMenu = {
     val popup: PopupMenu = {
       if (searchable) {
-        new SearchablePopupMenu {
+        new SearchablePopupMenu(this) {
           override def getPreferredSize: Dimension =
             new Dimension(ComboBox.this.getWidth.max(super.getPreferredSize.width), super.getPreferredSize.height)
         }
       } else {
-        new PopupMenu {
+        new PopupMenu(this) {
           override def getPreferredSize: Dimension =
             new Dimension(ComboBox.this.getWidth.max(super.getPreferredSize.width), super.getPreferredSize.height)
         }

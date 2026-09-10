@@ -665,7 +665,7 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
     if (interfaceMode == InterfaceMode.Interact)
       interceptPane.disableIntercept()
 
-    val menu = new PopupMenu
+    val menu = new PopupMenu(this)
 
     def menuItem(keyName: String, widget: CoreWidget): WidgetCreationMenuItem = {
       new WidgetCreationMenuItem(I18N.gui.get(s"tabs.run.widgets.$keyName"), widget)

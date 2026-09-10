@@ -55,7 +55,7 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
     if (interfaceMode == InterfaceMode.Interact)
       interceptPane.disableIntercept()
 
-    val menu = new PopupMenu
+    val menu = new PopupMenu(this)
 
     Seq(WidgetInfo.button,
       WidgetInfo.slider,
