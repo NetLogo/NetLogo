@@ -13,7 +13,7 @@ import org.nlogo.app.common.TabsInterface
 import org.nlogo.app.common.Events.RestartEvent
 import org.nlogo.core.I18N
 import org.nlogo.swing.{ ButtonPanel, CheckBox, DialogButton, FloatingTabbedPane, OptionPane, TabLabel,
-                         TextField, Transparent, WindowAutomator }
+                         Transparent, WindowAutomator }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.AbstractWidgetPanel
 
@@ -30,7 +30,7 @@ class PreferencesDialog(parent: Frame & ThemeSync, tabManager: TabsInterface, wi
     new Preferences.BoldWidgetText(widgetPanel),
     new Preferences.JumpOnClick(tabManager),
     Preferences.SendAnalytics
-  ) ++ (if (System.getProperty("os.name").contains("Linux")) Seq(Preferences.UIScale) else Nil)
+  )
 
   private lazy val codePreferences = Seq[Preference](
     Preferences.ProceduresMenuSortOrder,
@@ -135,14 +135,6 @@ class PreferencesDialog(parent: Frame & ThemeSync, tabManager: TabsInterface, wi
                        OptionPane.Options.Ok, OptionPane.Icons.Error)
         return false
       }
-    }
-    try {
-      generalPreferences.find(_.i18nKey == "uiScale").foreach(_.component.asInstanceOf[TextField].getText.toDouble)
-    } catch {
-      case e: NumberFormatException =>
-        new OptionPane(this, I18N.gui.get("common.messages.error"), I18N.gui.get("tools.preferences.scaleError"),
-                       OptionPane.Options.Ok, OptionPane.Icons.Error)
-        return false
     }
     true
   }
