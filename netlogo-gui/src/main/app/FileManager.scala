@@ -359,7 +359,7 @@ class FileManager(workspace: AbstractWorkspaceScala,
     import scala.concurrent.duration.DurationInt
 
     aboutToCloseFiles()
-    ModelConfig.pruneModelConfigs()
+    ModelConfig.pruneConfigs()
     new AboutToQuitEvent().raise(eventRaiser)
     workspace.getExtensionManager.reset()
 
@@ -382,7 +382,7 @@ class FileManager(workspace: AbstractWorkspaceScala,
   }
 
   def openFromURI(uri: URI, modelType: ModelType, shouldAutoInstallLibs: Boolean = false): Unit = {
-    val newUri = ModelConfig.findAutoSave(Paths.get(uri).toString) match {
+    val newUri = ModelConfig.findModelAutoSave(Paths.get(uri).toString) match {
       case Some(path) if !testing =>
         if (new OptionPane(parent, I18N.gui.get("file.autosave.recover"), I18N.gui.get("file.autosave.recover.message"),
                            OptionPane.Options.YesNo, OptionPane.Icons.Info).getSelectedIndex == 0) {

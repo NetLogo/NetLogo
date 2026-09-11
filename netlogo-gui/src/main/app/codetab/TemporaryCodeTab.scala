@@ -7,7 +7,7 @@ import java.io.{ File, IOException }
 import java.nio.file.{ Files, Paths }
 
 import org.nlogo.api.FileIO
-import org.nlogo.app.common.{ Dialogs, Events => AppEvents, TabsInterface }
+import org.nlogo.app.common.{ Dialogs, Events => AppEvents, ModelConfig, TabsInterface }
 import org.nlogo.awt.UserCancelException
 import org.nlogo.core.I18N
 import org.nlogo.nvm.IncludeSource
@@ -52,13 +52,29 @@ class TemporaryCodeTab(workspace: GUIWorkspace,
     var loaded: Boolean = false
 
     filename foreach { path =>
+      val newPath: String = ModelConfig.findIncludeAutoSave(Paths.get(path).toString).fold(path) { autosavePath =>
+        if (new OptionPane(workspace.getFrame, I18N.gui.get("file.autosave.recover"),
+                           I18N.gui.get("file.autosave.recover.include"), OptionPane.Options.YesNo,
+                           OptionPane.Icons.Info).getSelectedIndex == 0) {
+          autosavePath.toString
+        } else {
+          path
+        }
+      }
+
       try {
-        innerSource = FileIO.fileToString(path).replaceAll("\r\n", "\n")
+        innerSource = FileIO.fileToString(newPath).replaceAll("\r\n", "\n")
         dirty = false // Has the buffer changed since it was compiled?
         saveNeeded = false
         loaded = true
       } catch {
         case _: IOException => innerSource = ""
+      }
+
+      if (path == newPath) {
+        ModelConfig.discardNewIncludeAutoSaves(path)
+      } else {
+        save(false)
       }
     }
 
@@ -143,9 +159,14 @@ class TemporaryCodeTab(workspace: GUIWorkspace,
 
   override def close(): Unit = {
     if (saveNeeded) {
-      if (Dialogs.userWantsToSaveFirst(filenameForDisplay, this)) {
-        // The user is saving the file with its current name
-        save(false)
+      try {
+        if (Dialogs.userWantsToSaveFirst(filenameForDisplay, this)) {
+          // The user is saving the file with its current name
+          save(false)
+        }
+      } catch {
+        case _: UserCancelException =>
+          return
       }
     }
     closing = true
