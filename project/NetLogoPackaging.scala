@@ -14,7 +14,7 @@ import ujson.{ Obj, Str }
 import ChecksumsAndPreviews.allPreviews
 import Docs.{ docsDest, staticDocs }
 import Extensions.extensionRoot
-import Keys.{ baseDirectory, buildStructure, dependencyClasspath, packageBin, state, streams, target, version }
+import Keys.{ artifactPath, baseDirectory, dependencyClasspath, packageBin, state, streams, target, version }
 import ModelsLibrary.{ modelsDirectory, modelIndex }
 import NativeLibs.nativeLibs
 import NetLogoBuild.{ all, buildDate, year }
@@ -239,7 +239,7 @@ object NetLogoPackaging {
     },
 
     packagingMainJar := {
-      (netlogo / Compile / packageBin).value
+      (netlogo / Compile / packageBin / artifactPath).value
     },
 
     packageLinuxAggregate := {
@@ -248,7 +248,7 @@ object NetLogoPackaging {
       val buildDir     = target.value
       val platform     = "linux"
       val configDir    = configRoot.value
-      val netLogoJar   = (netlogo / Compile / packageBin).value
+      val netLogoJar   = (netlogo / Compile / packageBin / artifactPath).value
       val dependencies = packagingClasspath.value
       val rootFiles    = (packageLinuxAggregate / aggregateOnlyFiles).value
 
@@ -315,14 +315,39 @@ object NetLogoPackaging {
     },
 
     packageWinAggregate := {
-      val log          = streams.value.log
+      val log = streams.value.log
+
+      log.info("~~~~~ START PACKAGING ~~~~~")
+
+      IO.unzip(new File("netlogo-gui/target/netlogo-7.1.0-alpha1.jar"), new File("thing"))
+
+      new File("thing/system").listFiles.foreach { file =>
+        log.info(file.getAbsolutePath)
+      }
+
+      IO.delete(new File("thing"))
+
+      log.info("~~~~~ START PACKAGING ~~~~~")
+
       val buildJDK     = aggregateJDKParser.parsed
       val buildDir     = target.value
       val platform     = "windows"
       val configDir    = configRoot.value
-      val netLogoJar   = (netlogo / Compile / packageBin).value
+      val netLogoJar   = (netlogo / Compile / packageBin / artifactPath).value
       val dependencies = packagingClasspath.value
       val rootFiles    = (packageWinAggregate / aggregateOnlyFiles).value
+
+      log.info("~~~~~ AFTER REBUILD ~~~~~")
+
+      IO.unzip(netLogoJar, new File("thing"))
+
+      new File("thing/system").listFiles.foreach { file =>
+        log.info(file.getAbsolutePath)
+      }
+
+      IO.delete(new File("thing"))
+
+      log.info("~~~~~ AFTER REBUILD ~~~~~")
 
       val icons = Seq(
         configDir / "NetLogo.png",
@@ -383,6 +408,18 @@ object NetLogoPackaging {
           FileActions.remove(path.toFile)
       })
 
+      log.info("~~~~~ PACKAGE WIN AGGREGATE ~~~~~")
+
+      IO.unzip(appImageDir / "app" / "netlogo-7.1.0-alpha1.jar", new File("thing"))
+
+      new File("thing/system").listFiles.foreach { file =>
+        log.info(file.getAbsolutePath)
+      }
+
+      IO.delete(new File("thing"))
+
+      log.info("~~~~~ PACKAGE WIN AGGREGATE ~~~~~")
+
       PackageWinAggregate(
         log
       , netLogoVersion.value
@@ -401,7 +438,7 @@ object NetLogoPackaging {
       val buildDir     = target.value
       val platform     = "macosx"
       val configDir    = configRoot.value
-      val netLogoJar   = (netlogo / Compile / packageBin).value
+      val netLogoJar   = (netlogo / Compile / packageBin / artifactPath).value
       val dependencies = packagingClasspath.value
       val rootFiles    = (packageLinuxAggregate / aggregateOnlyFiles).value
 

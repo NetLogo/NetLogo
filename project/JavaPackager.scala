@@ -124,10 +124,34 @@ object JavaPackager {
       }
     })
 
+    log.info("~~~~~ SETUP APP IMAGE INPUT ~~~~~")
+
+    IO.unzip(inputDir / s"netlogo-$version.jar", new File("thing"))
+
+    new File("thing/system").listFiles.foreach { file =>
+      log.info(file.getAbsolutePath)
+    }
+
+    IO.delete(new File("thing"))
+
+    log.info("~~~~~ SETUP APP IMAGE INPUT ~~~~~")
+
     inputDir
   }
 
   def generateAppImage(log: Logger, jpackage: File, platform: String, mainLauncher: Launcher, configDir: File, buildDir: File, inputDir: File, destDir: File, extraLaunchers: Seq[Launcher]) = {
+
+    log.info("~~~~~ GENERATE APP IMAGE ~~~~~")
+
+    IO.unzip(inputDir / "netlogo-7.1.0-alpha1.jar", new File("thing"))
+
+    new File("thing/system").listFiles.foreach { file =>
+      log.info(file.getAbsolutePath)
+    }
+
+    IO.delete(new File("thing"))
+
+    log.info("~~~~~ GENERATE APP IMAGE ~~~~~")
 
     val extraLauncherArgs = extraLaunchers.flatMap { launcher =>
       val inFile  = configDir / s"extra-launcher.properties.mustache"

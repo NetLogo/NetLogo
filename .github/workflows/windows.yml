@@ -95,7 +95,15 @@ jobs:
       - name: Build and Package NetLogo
         run: |
           sbt dist/buildNetLogo
+          echo "~~~~~ BEFORE PACKAGING ~~~~~"
+          unzip -d thing netlogo-gui/target/netlogo-7.1.0-alpha1.jar
+          ls thing/system
+          echo "~~~~~ BEFORE PACKAGING ~~~~~"
           sbt "dist/packageWinAggregate OpenJDK_21.0.2_64"
+
+      - name: Test headless script
+        run: |
+          dist/target/windows-dest-21.0.2-64/NetLogo/netlogo-headless.bat --model "models/Curricular Models/BEAGLE Evolution/Red Queen.nlogox" --experiment Beta2
 
       - uses: actions/upload-artifact@v7
         with:
