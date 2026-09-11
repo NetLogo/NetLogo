@@ -383,7 +383,7 @@ class App(args: App.CommandLineArgs) extends LinkChild with Exceptions.Handler w
   val tabManager = new TabManager(workspace, interfaceTab, externalFileManager)
 
   val dirtyMonitor = new DirtyMonitor(frame, modelSaver, modelLoader, workspace,
-                                      _.fold(modelTitle())(externalFileTitle), tabManager.separateTabsWindow)
+                                      _.fold(modelTitle())(externalFileTitle), tabManager)
 
   private val converter = FileFormat.converter(workspace.getExtensionManager, workspace.getLibraryManager,
                                                workspace.getCompilationEnvironment, workspace,

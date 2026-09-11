@@ -4,7 +4,7 @@ package org.nlogo.app
 
 import java.net.URI
 import java.io.{ File, IOException }
-import java.nio.file.{ Files, Paths }
+import java.nio.file.{ Files, Paths, StandardOpenOption }
 import java.util.{ Timer, TimerTask }
 import javax.swing.JFrame
 
@@ -14,7 +14,7 @@ import org.nlogo.window.Events._
 import org.nlogo.workspace.{ ModelTracker, SaveModel }
 
 class DirtyMonitor(frame: JFrame, modelSaver: ModelSaver, modelLoader: AbstractModelLoader, modelTracker: ModelTracker,
-                   title: Option[String] => String, codeWindow: JFrame)
+                   title: Option[String] => String, tabManager: TabManager)
 extends BeforeLoadEvent.Handler
 with AfterLoadEvent.Handler
 with WidgetAddedEvent.Handler
@@ -27,62 +27,79 @@ with SaveModel.Controller
 {
   // we don't want auto save to kick in when a model isn't completely loaded yet - ST 8/6/09
   private var loading = true
-  private var _modelDirty = false
   private var lastAutoSaveFile: Option[File] = None
 
-  private var dirtyTimer = new Timer
+  private var dirtyPaths = Set[Option[String]]()
+  private var dirtyTimers = Map[Option[String], Timer]()
 
   def discardNewAutoSaves(): Unit = {
-    Option(modelTracker.getModelPath).foreach(ModelConfig.discardNewAutoSaves)
+    Option(modelTracker.getModelPath).foreach(ModelConfig.discardNewModelAutoSaves)
   }
 
-  def modelDirty = _modelDirty && !loading
+  def modelDirty: Boolean = dirtyPaths.contains(None) && !loading
   private def setDirty(dirty: Boolean, path: Option[String] = None): Unit = {
     if (dirty && !loading) {
-      dirtyTimer.cancel()
-      dirtyTimer.purge()
-
-      dirtyTimer = new Timer
+      dirtyTimers.get(path).foreach { timer =>
+        timer.cancel()
+        timer.purge()
+      }
 
       // auto save if no dirty event is received for a while (Isaac B 7/1/25)
-      dirtyTimer.schedule(new TimerTask {
-        override def run(): Unit = {
-          doAutoSave()
-        }
-      }, 5000)
+      dirtyTimers += ((path, new Timer {
+        schedule(new TimerTask {
+          override def run(): Unit = {
+            doAutoSave(path)
+          }
+        }, 5000)
+      }))
     }
 
-    if (!path.isDefined && dirty != _modelDirty && !loading) {
-      _modelDirty = dirty
+    if (!path.isDefined && dirty != dirtyPaths.contains(None) && !loading) {
       // on a Mac, this will make a gray dot appear in the red close button in the frame's title bar
       // to indicate that the document has unsaved changes, as documented at
       // developer.apple.com/qa/qa2001/qa1146.html - ST 7/30/04
       if (System.getProperty("os.name").startsWith("Mac"))
         frame.getRootPane.putClientProperty("Window.documentModified", dirty)
     }
+
+    if (dirty) {
+      dirtyPaths += path
+    } else {
+      dirtyPaths -= path
+    }
+
     App.app.setWindowTitles()
   }
 
-  private def doAutoSave(): Unit = {
-    if (modelDirty) {
+  private def doAutoSave(path: Option[String]): Unit = {
+    if (dirtyPaths.contains(path)) {
       try {
-        SaveModel(modelSaver.currentModel, modelLoader, this, TempFileModelTracker, Version).foreach { f =>
-          f().foreach { savedUri =>
-            if (System.getProperty("os.name").startsWith("Windows"))
-              Files.setAttribute(Paths.get(savedUri), "dos:hidden", true)
-
-            // if the model is new, we can't keep track of old autosaves as easily,
-            // so overwrite the previous autosave file instead of adding a new file (Isaac B 7/1/25)
-            if (modelTracker.getModelType == ModelType.New) {
-              try {
-                lastAutoSaveFile.foreach(_.delete())
-              } catch {
-                case e: IOException =>
-              }
+        path match {
+          case Some(includePath) =>
+            tabManager.getTabWithFilename(Right(includePath)).foreach { tab =>
+              Files.write(ModelConfig.getIncludeAutoSavePath(includePath), tab.getText.getBytes,
+                          StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)
             }
 
-            lastAutoSaveFile = Option(new File(savedUri.getPath))
-          }
+          case _ =>
+            SaveModel(modelSaver.currentModel, modelLoader, this, TempFileModelTracker, Version).foreach { f =>
+              f().foreach { savedUri =>
+                if (System.getProperty("os.name").startsWith("Windows"))
+                  Files.setAttribute(Paths.get(savedUri), "dos:hidden", true)
+
+                // if the model is new, we can't keep track of old autosaves as easily,
+                // so overwrite the previous autosave file instead of adding a new file (Isaac B 7/1/25)
+                if (modelTracker.getModelType == ModelType.New) {
+                  try {
+                    lastAutoSaveFile.foreach(_.delete())
+                  } catch {
+                    case e: IOException =>
+                  }
+                }
+
+                lastAutoSaveFile = Option(new File(savedUri.getPath))
+              }
+            }
         }
       } catch {
         case ex: java.io.IOException =>
@@ -130,7 +147,7 @@ with SaveModel.Controller
     def getExtensionManager(): org.nlogo.workspace.ExtensionManager = delegate.getExtensionManager()
     override def getModelType = delegate.getModelType
     override def getModelFileUri: Option[URI] =
-      Option(ModelConfig.getAutoSavePath(Option(delegate.getModelPath)).toUri)
+      Option(ModelConfig.getModelAutoSavePath(Option(delegate.getModelPath)).toUri)
   }
 
   // SaveModel.Controller
