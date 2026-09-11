@@ -59,6 +59,14 @@ jobs:
           pip3 install numpy
           pip3 install scikit-learn
 
+      - name: Install Homebrew
+        run: |
+          NONINTERACTIVE=1 /bin/bash -c \
+            "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+      - name: Install create-dmg
+        run: brew install create-dmg
+
       - uses: apple-actions/import-codesign-certs@v7
         with:
           p12-file-base64: ${{ secrets.APPSTORE_CERTIFICATES_FILE_BASE64 }}
@@ -155,6 +163,13 @@ jobs:
         run: |
           pip3 install numpy
           pip3 install scikit-learn
+
+      - name: Install create-dmg
+        run: |
+          curl -L https://github.com/create-dmg/create-dmg/archive/refs/tags/v1.3.0.zip -o create-dmg.zip
+          unzip create-dmg.zip
+          cd create-dmg-1.3.0
+          make install
 
       - uses: apple-actions/import-codesign-certs@v7
         with:
