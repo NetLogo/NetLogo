@@ -89,6 +89,11 @@ jobs:
           sbt dist/buildNetLogo
           sbt "dist/packageLinuxAggregate OpenJDK_21.0.2_64"
 
+      - name: Test headless script
+        run: |
+          sh "dist/target/linux-dest-21.0.2-64/NetLogo 7.1.0-alpha1/netlogo-headless.sh" \
+            --model "models/Curricular Models/BEAGLE Evolution/Red Queen.nlogox" --experiment Beta2
+
       - uses: actions/upload-artifact@v7
         with:
           name: linux-64
