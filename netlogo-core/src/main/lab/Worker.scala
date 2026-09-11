@@ -162,7 +162,7 @@ class Worker(val protocol: LabProtocol)
             try { d = world.setDimensionVariable(name, v, d) }
             catch {
               case WorldDimensionException(message) =>
-                throw new FailedException(message)
+                checkForRuntimeError()
             }
           }
           else if (name.equalsIgnoreCase("RANDOM-SEED"))
