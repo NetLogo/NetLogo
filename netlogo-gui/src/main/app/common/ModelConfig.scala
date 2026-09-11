@@ -19,10 +19,14 @@ import scala.util.hashing.MurmurHash3
 object ModelConfig {
   private val dateFormat = new SimpleDateFormat("yyyy-MM-dd.HH_mm_ss", Locale.US)
 
-  def getModelConfigPath(modelPath: String): Path = {
-    Paths.get(System.getProperty("user.home"), ".nlogo", "modelConfigs",
-              (MurmurHash3.stringHash(modelPath) & Int.MaxValue).toString)
-  }
+  def getModelConfigPath(modelPath: String): Path =
+    getConfigPath(modelPath, "modelConfigs")
+
+  def getIncludeConfigPath(includePath: String): Path =
+    getConfigPath(includePath.replace("\\", "/"), "includeConfigs")
+
+  private def getConfigPath(path: String, which: String): Path =
+    Paths.get(System.getProperty("user.home"), ".nlogo", which, (MurmurHash3.stringHash(path) & Int.MaxValue).toString)
 
   def getLastModified(modelPath: String): Option[String] = {
     val file = getModelConfigPath(modelPath).resolve("lastModified.txt").toFile
@@ -50,44 +54,59 @@ object ModelConfig {
     }.close()
   }
 
-  def findAutoSave(modelPath: String): Option[Path] = {
-    val autosaves = getModelConfigPath(modelPath).resolve("autosaves")
+  def findModelAutoSave(modelPath: String): Option[Path] =
+    findAutoSave(modelPath, getModelConfigPath(modelPath).resolve("autosaves"))
 
-    if (autosaves.toFile.exists) {
-      val lastModified = new File(modelPath).lastModified
+  def findIncludeAutoSave(includePath: String): Option[Path] =
+    findAutoSave(includePath, getIncludeConfigPath(includePath).resolve("autosaves"))
 
-      Files.list(autosaves).toScala(Seq).maxByOption(_.toFile.lastModified)
+  private def findAutoSave(path: String, autosavePath: Path): Option[Path] = {
+    if (autosavePath.toFile.exists) {
+      val lastModified = new File(path).lastModified
+
+      Files.list(autosavePath).toScala(Seq).maxByOption(_.toFile.lastModified)
            .filter(_.toFile.lastModified > lastModified)
     } else {
       None
     }
   }
 
-  def getAutoSavePath(modelPath: Option[String]): Path = {
-    val name = s"autosave_${dateFormat.format(new Date)}"
-
+  def getModelAutoSavePath(modelPath: Option[String]): Path = {
     modelPath match {
       case Some(path) =>
-        val save = getModelConfigPath(path).resolve(s"autosaves/$name.${path.split('.').last}")
-
-        if (!save.toFile.exists)
-          save.toFile.getParentFile.mkdirs()
-
-        save
+        getAutoSavePath(path, getModelConfigPath(path))
 
       case _ =>
-        Paths.get(System.getProperty("java.io.tmpdir"), s"$name.${ModelReader.modelSuffix}")
+        getAutoSavePath(ModelReader.modelSuffix, Paths.get(System.getProperty("java.io.tmpdir")))
     }
   }
 
+  def getIncludeAutoSavePath(includePath: String): Path =
+    getAutoSavePath(includePath, getIncludeConfigPath(includePath))
+
+  private def getAutoSavePath(path: String, configPath: Path): Path = {
+    val save = configPath.resolve(s"autosaves/autosave_${dateFormat.format(new Date)}.${path.split('.').last}")
+
+    if (!save.toFile.exists)
+      save.toFile.getParentFile.mkdirs()
+
+    save
+  }
+
   // discard all autosave files for the current model that are newer than its most recent manual save (Isaac B 7/1/25)
-  def discardNewAutoSaves(modelPath: String): Unit = {
-    val autosaves = getModelConfigPath(modelPath).resolve("autosaves")
+  def discardNewModelAutoSaves(modelPath: String): Unit =
+    discardNewAutoSaves(modelPath, getModelConfigPath(modelPath).resolve("autosaves"))
 
-    if (autosaves.toFile.exists) {
-      val lastModified = new File(modelPath).lastModified
+  // discard all autosave files for the specified include that are newer than its most recent manual save
+  // (Isaac B 9/11/26)
+  def discardNewIncludeAutoSaves(includePath: String): Unit =
+    discardNewAutoSaves(includePath, getIncludeConfigPath(includePath).resolve("autosaves"))
 
-      Files.list(autosaves).toScala(Seq).filter(_.toFile.lastModified > lastModified).foreach { path =>
+  private def discardNewAutoSaves(path: String, autosavePath: Path): Unit = {
+    if (autosavePath.toFile.exists) {
+      val lastModified = new File(path).lastModified
+
+      Files.list(autosavePath).toScala(Seq).filter(_.toFile.lastModified > lastModified).foreach { path =>
         try {
           path.toFile.delete()
         } catch {
@@ -97,14 +116,29 @@ object ModelConfig {
     }
   }
 
-  // for each tracked model, including the empty/new model, get rid of any autosaves that
-  // are older than 10 versions. if the model hasn't been modified in a while, get rid of
-  // the whole config directory instead. (Isaac B 7/1/25, 12/13/25)
-  def pruneModelConfigs(): Unit = {
-    val configDir = Paths.get(System.getProperty("user.home"), ".nlogo", "modelConfigs")
+  // for each tracked model including the empty/new model, as well as any tracked includes, get rid of any autosaves
+  // that are older than 10 versions. if the file hasn't been modified in a while, get rid of the whole config directory
+  // instead. (Isaac B 7/1/25, 12/13/25)
+  def pruneConfigs(): Unit = {
+    pruneDirectory(Paths.get(System.getProperty("user.home"), ".nlogo", "modelConfigs"))
+    pruneDirectory(Paths.get(System.getProperty("user.home"), ".nlogo", "includeConfigs"))
 
-    if (Files.exists(configDir)) {
-      Files.list(configDir).toScala(Seq).foreach { configPath =>
+    val autosaveRegex = s"^autosave_\\d\\d\\d\\d-\\d\\d-\\d\\d.\\d\\d_\\d\\d_\\d\\d.${ModelReader.modelSuffix}$$".r
+
+    Files.list(Paths.get(System.getProperty("java.io.tmpdir"))).toScala(Seq).filter { path =>
+      autosaveRegex.matches(path.getFileName.toString)
+    }.sortBy(-_.toFile.lastModified).drop(10).foreach { path =>
+      try {
+        path.toFile.delete()
+      } catch {
+        case e: IOException =>
+      }
+    }
+  }
+
+  private def pruneDirectory(path: Path): Unit = {
+    if (Files.exists(path)) {
+      Files.list(path).toScala(Seq).foreach { configPath =>
         val lastModified: Array[Long] = listRecursive(configPath.toFile).map(_.lastModified)
 
         // if not modified in more than 30 days
@@ -127,18 +161,6 @@ object ModelConfig {
             }
           }
         }
-      }
-    }
-
-    val autosaveRegex = s"^autosave_\\d\\d\\d\\d-\\d\\d-\\d\\d.\\d\\d_\\d\\d_\\d\\d.${ModelReader.modelSuffix}$$".r
-
-    Files.list(Paths.get(System.getProperty("java.io.tmpdir"))).toScala(Seq).filter { path =>
-      autosaveRegex.matches(path.getFileName.toString)
-    }.sortBy(-_.toFile.lastModified).drop(10).foreach { path =>
-      try {
-        path.toFile.delete()
-      } catch {
-        case e: IOException =>
       }
     }
   }
