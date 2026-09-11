@@ -51,7 +51,7 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
       parseArgs(args).foreach(runExperiment(_))
     } catch {
       case e: Exception =>
-        System.err.println(e)
+        e.printStackTrace()
         System.exit(1)
     }
   }

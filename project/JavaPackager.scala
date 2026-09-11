@@ -117,9 +117,13 @@ object JavaPackager {
     FileActions.remove(inputDir)
     FileActions.createDirectory(inputDir)
 
+    println(netLogoJar)
+
     FileActions.copyFile(netLogoJar, inputDir / s"netlogo-$version.jar")
     val netLogoDeps = dependencies.foreach( (jar) => {
       if (!jar.getName.equals(netLogoJar.getName)) {
+        println(s"  $jar")
+
         FileActions.copyFile(jar, inputDir / jar.getName)
       }
     })

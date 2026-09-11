@@ -35,13 +35,18 @@ trait DelegatingMapper extends TokenMapperInterface {
   def path:    String
   def pkgName: String
 
-  private def entries(entryType: String): Iterator[(String, String)] =
+  private def entries(entryType: String): Iterator[(String, String)] = {
+    System.getProperty("java.class.path").split(";").foreach(println)
+
+    println(path)
+
     for {
       line <- Resource.lines(path)
       if !line.startsWith("#")
       split = line.split(" ")
       if split(0) == entryType
     } yield split(1).toUpperCase(Locale.ENGLISH) -> (s"$pkgName.${split(2)}")
+  }
 
   lazy val commands  = entries("C").toMap
   lazy val reporters = entries("R").toMap
