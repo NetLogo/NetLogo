@@ -59,12 +59,10 @@ object StructureChecker {
     }
   }
 
-  def rejectNonProceduresInModule(declarations: Seq[Declaration], isModule: Boolean): Unit = {
+  def rejectDisallowedDeclarationsInModule(declarations: Seq[Declaration], isModule: Boolean): Unit = {
     if (isModule) {
       for (declaration <- declarations) {
         declaration match {
-          case Extensions(start, _, _) =>
-            exception(I18N.errors.getN("compiler.StructureParser.importContainsExtensions"), start)
           case Breed(_, _, _, _, start, _) =>
             exception(I18N.errors.getN("compiler.StructureParser.importContainsBreed"), start)
           case Variables(kind, _, start, _) if kind.name.toLowerCase == "globals" =>
