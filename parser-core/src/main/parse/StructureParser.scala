@@ -446,8 +446,8 @@ class StructureParser(
         StructureChecker.rejectMisplacedConstants(declarations)
         StructureChecker.rejectExportWithUndefinedNames(declarations)
         StructureChecker.rejectExportOutsideModule(declarations, module.isDefined)
-        StructureChecker.rejectNonProceduresInModule(declarations, module.isDefined)
         StructureChecker.rejectPathSeparatorsInImportPaths(declarations)
+        StructureChecker.rejectDisallowedDeclarationsInModule(declarations, module.isDefined)
         StructureChecker.rejectDuplicateDeclarations(declarations)
         StructureChecker.rejectDuplicateNames(declarations,
           StructureParser.usedNames(
