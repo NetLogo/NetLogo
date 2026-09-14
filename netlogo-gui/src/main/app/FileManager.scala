@@ -150,7 +150,7 @@ object FileManager {
 
     category = UserAction.FileCategory
     group = UserAction.FileShareGroup
-    mnemonic = KeyEvent.VK_U
+    mnemonic = 'U'
 
     override def action(): Unit = {
       ModelingCommons.upload(Hierarchy.getFrame(parent), modelSaver.modelAsString(modelSaver.currentModel, "nlogox"),
@@ -163,7 +163,7 @@ object FileManager {
   with MenuAction {
     category = UserAction.FileCategory
     group    = UserAction.FileShareGroup
-    mnemonic = KeyEvent.VK_W
+    mnemonic = 'W'
 
     // disabled for 3-D since you can't do that in NetLogo Web - RG 9/10/15
     setEnabled(!Version.is3D)
@@ -288,7 +288,7 @@ object FileManager {
     category = UserAction.FileCategory
     group = UserAction.FileResourcesGroup
     rank = 1
-    mnemonic = KeyEvent.VK_B
+    mnemonic = 'B'
 
     override def action(): Unit = {
       new ResourceManagerDialog(workspace.asInstanceOf[GUIWorkspace].getFrame, workspace).setVisible(true)
@@ -566,10 +566,10 @@ class FileManager(workspace: AbstractWorkspaceScala,
         rank = 0
 
         if (saveAs) {
-          mnemonic = KeyEvent.VK_A
+          mnemonic = 'A'
           mnemonicIndex = 5
         } else {
-          mnemonic = KeyEvent.VK_S
+          mnemonic = 'S'
         }
 
         @throws(classOf[UserCancelException])

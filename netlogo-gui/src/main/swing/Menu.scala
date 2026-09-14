@@ -3,6 +3,7 @@
 package org.nlogo.swing
 
 import java.awt.{ Component, Graphics }
+import java.awt.event.KeyEvent
 import javax.swing.{ Action, Icon, JMenu, JMenuItem, JPopupMenu }
 import javax.swing.border.LineBorder
 import javax.swing.event.{ MenuEvent, MenuListener }
@@ -162,6 +163,15 @@ class Menu(text: String, var menuModel: MenuModel[Action, String]) extends JMenu
         Some(node.groupName)
     }
     syncTheme()
+  }
+
+  override def setMnemonic(c: Char): Unit = {
+    super.setMnemonic(KeyEvent.getExtendedKeyCodeForChar(c))
+
+    val name: String = getText
+
+    if (!name.toLowerCase.contains(c.toString.toLowerCase))
+      setText(s"$name ($c)")
   }
 
   private def createMenuItem(action: Action): JMenuItem =

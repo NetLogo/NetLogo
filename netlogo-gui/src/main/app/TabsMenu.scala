@@ -2,7 +2,7 @@
 
 package org.nlogo.app
 
-import java.awt.event.{ ActionEvent, KeyEvent }
+import java.awt.event.ActionEvent
 import javax.swing.AbstractAction
 
 import org.nlogo.swing.{ Menu, UserAction },
@@ -17,13 +17,13 @@ object TabsMenu {
 
       index match {
         case 0 =>
-          mnemonic = KeyEvent.VK_I
+          mnemonic = 'I'
 
         case 1 =>
-          mnemonic = KeyEvent.VK_N
+          mnemonic = 'N'
 
         case 2 =>
-          mnemonic = KeyEvent.VK_C
+          mnemonic = 'C'
 
         case _ =>
       }
