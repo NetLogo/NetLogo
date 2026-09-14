@@ -40,15 +40,17 @@ object StructureChecker {
   }
 
   def rejectExportWithUndefinedNames(declarations: Seq[Declaration]): Unit = {
-    val (procedures, exportedNames) = declarations.foldLeft((Set.empty[String], Map.empty[String, Token])) { (p, x) =>
-      x match {
+    val (procedures, exportedNames) =
+      declarations.foldLeft((Set.empty[String], Map.empty[String, Token])) {
         // We require that EXPORT only be used at most once per file, so it is okay to just replace the 2nd element of
         // the tuple here. - Kritphong M. 2026-08-19
-        case Export(names, token) => (p._1, names.map(y => y.name -> y.token).toMap)
-        case Procedure(Identifier(name, _), _, _, _) => (p._1 + name, p._2)
-        case _ => p
+        case ((names, _), Export(newNames, token)) =>
+          (names, newNames.map(y => y.name -> y.token).toMap)
+        case ((names, procMap), Procedure(Identifier(name, _), _, _, _)) =>
+          (names + name, procMap)
+        case (acc, _) =>
+          acc
       }
-    }
 
     (exportedNames.keySet -- procedures).headOption match {
       case Some(x) =>
