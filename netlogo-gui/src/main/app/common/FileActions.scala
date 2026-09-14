@@ -95,7 +95,7 @@ object FileActions {
     category    = FileCategory
     subcategory = FileExportSubcategory
     rank        = 2
-    mnemonic    = KeyEvent.VK_A
+    mnemonic    = 'A'
 
     def beforeModalDialog(): String = {
       if (workspace.plotExportControls.plotNames.isEmpty) {

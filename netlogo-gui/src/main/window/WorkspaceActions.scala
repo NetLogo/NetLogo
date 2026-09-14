@@ -19,22 +19,22 @@ object WorkspaceActions {
     Seq(
       new HaltAction(workspace),
       new SimpleGUIWorkspaceAction(I18N.gui("globalsMonitor"), ToolsMonitorGroup, workspace, _.inspectAgent(AgentKind.Observer)) {
-        mnemonic = KeyEvent.VK_G
+        mnemonic = 'G'
       },
       new SimpleGUIWorkspaceAction(I18N.gui("turtleMonitor"), ToolsMonitorGroup, workspace, _.inspectAgent(AgentKind.Turtle)) {
-        mnemonic = KeyEvent.VK_T
+        mnemonic = 'T'
       },
       new SimpleGUIWorkspaceAction(I18N.gui("patchMonitor"), ToolsMonitorGroup, workspace, _.inspectAgent(AgentKind.Patch)) {
-        mnemonic = KeyEvent.VK_O
+        mnemonic = 'O'
       },
       new SimpleGUIWorkspaceAction(I18N.gui("linkMonitor"), ToolsMonitorGroup, workspace, _.inspectAgent(AgentKind.Link)) {
-        mnemonic = KeyEvent.VK_L
+        mnemonic = 'L'
       },
       new SimpleGUIWorkspaceAction(I18N.gui("closeAllAgentMonitors"), ToolsMonitorGroup, workspace, _.closeAgentMonitors()) {
-        mnemonic = KeyEvent.VK_A
+        mnemonic = 'A'
       },
       new SimpleGUIWorkspaceAction(I18N.gui("closeDeadAgentMonitors"), ToolsMonitorGroup, workspace, _.stopInspectingDeadAgents()) {
-        mnemonic = KeyEvent.VK_M
+        mnemonic = 'M'
       },
     ) ++ (if (Version.is3D) Seq() else Seq(new Open3DViewAction(workspace)))
 
@@ -63,7 +63,7 @@ object WorkspaceActions {
   class HaltAction(workspace: GUIWorkspace)
     extends SimpleGUIWorkspaceAction(I18N.gui("halt"), HaltGroup, workspace, _.halt) {
 
-    mnemonic = KeyEvent.VK_H
+    mnemonic = 'H'
 
     override def isEnabled: Boolean =
       workspace.jobManager.anyPrimaryJobs()
@@ -112,7 +112,7 @@ class SnapToGridAction(workspace: GUIWorkspace, widgetPanel: AbstractWidgetPanel
 
   category = EditCategory
   group    = "SnapToGrid"
-  mnemonic = KeyEvent.VK_S
+  mnemonic = 'S'
 
   putValue(Action.SELECTED_KEY,    checkedState)
 
