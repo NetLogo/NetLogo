@@ -6,8 +6,8 @@ import javax.swing.JTextArea
 
 import org.nlogo.util.AnyFunSuiteEx
 
-// the behavior tested here is mostly based on behaviors seen in VS Code and Vim,
-// with slight modifications to make "word" identification more NetLogo-y (Isaac 12/29/25)
+// the behavior tested here is mostly based on behaviors seen in VS Code, Vim, and CodeMirror,
+// with slight modifications to make "word" identification more NetLogo-y (Isaac B 12/29/25 and 9/15/26)
 class TestTextActions extends AnyFunSuiteEx {
   /// previous word
 
@@ -151,6 +151,9 @@ class TestTextActions extends AnyFunSuiteEx {
     testStateSelected("test", 0, selectWord, "test", 4, 0, 4)
     testStateSelected("test", 2, selectWord, "test", 4, 0, 4)
     testStateSelected("test", 4, selectWord, "test", 4, 0, 4)
+    testStateSelected("[][]test[][]", 4, selectWord, "[][]test[][]", 8, 4, 8)
+    testStateSelected("[][]test[][]", 6, selectWord, "[][]test[][]", 8, 4, 8)
+    testStateSelected("[][]test[][]", 8, selectWord, "[][]test[][]", 8, 4, 8)
     testStateSelected("    test    ", 4, selectWord, "    test    ", 8, 4, 8)
     testStateSelected("    test    ", 6, selectWord, "    test    ", 8, 4, 8)
     testStateSelected("    test    ", 8, selectWord, "    test    ", 8, 4, 8)
@@ -160,6 +163,9 @@ class TestTextActions extends AnyFunSuiteEx {
     testStateSelected("    ", 0, selectWord, "    ", 4, 0, 4)
     testStateSelected("    ", 2, selectWord, "    ", 4, 0, 4)
     testStateSelected("    ", 4, selectWord, "    ", 4, 0, 4)
+    testStateSelected("test[][]test", 5, selectWord, "test[][]test", 8, 4, 8)
+    testStateSelected("test[][]test", 6, selectWord, "test[][]test", 8, 4, 8)
+    testStateSelected("test[][]test", 7, selectWord, "test[][]test", 8, 4, 8)
     testStateSelected("test    test", 5, selectWord, "test    test", 8, 4, 8)
     testStateSelected("test    test", 6, selectWord, "test    test", 8, 4, 8)
     testStateSelected("test    test", 7, selectWord, "test    test", 8, 4, 8)
@@ -181,6 +187,7 @@ class TestTextActions extends AnyFunSuiteEx {
     testState("test", 2, deletePreviousWord, "st", 0)
     testState("test    test", 12, deletePreviousWord, "test    ", 8)
     testState("test    test", 10, deletePreviousWord, "test    st", 8)
+    testState("test    test ", 13, deletePreviousWord, "test    ", 8)
   }
 
   test("delete previous word does not skip trailing whitespace") {
@@ -198,7 +205,7 @@ class TestTextActions extends AnyFunSuiteEx {
   }
 
   test("delete previous word wraps to previous line") {
-    testState("test test\ntest", 10, deletePreviousWord, "test testtest", 9)
+    testState("test test\ntest", 10, deletePreviousWord, "test test", 5)
     testState("test test    \ntest", 14, deletePreviousWord, "test testtest", 9)
   }
 
@@ -214,6 +221,7 @@ class TestTextActions extends AnyFunSuiteEx {
     testState("test", 2, deleteNextWord, "te", 2)
     testState("test    test", 0, deleteNextWord, "    test", 0)
     testState("test    test", 2, deleteNextWord, "te    test", 2)
+    testState("test    test", 7, deleteNextWord, "test   ", 7)
   }
 
   test("delete next word does not skip leading whitespace") {
@@ -231,7 +239,7 @@ class TestTextActions extends AnyFunSuiteEx {
   }
 
   test("delete next word wraps to next line") {
-    testState("test test\ntest", 9, deleteNextWord, "test testtest", 9)
+    testState("test test\ntest", 9, deleteNextWord, "test test", 9)
     testState("test test    \ntest", 9, deleteNextWord, "test testtest", 9)
   }
 
