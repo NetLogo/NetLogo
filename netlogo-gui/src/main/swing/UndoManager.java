@@ -167,7 +167,7 @@ public class UndoManager extends javax.swing.undo.UndoManager
       category_$eq("org.nlogo.swing.EditCategory");
       group_$eq("org.nlogo.swing.EditUndoGroup");
       accelerator_$eq(org.nlogo.swing.UserAction.KeyBindings$.MODULE$.keystroke('Z', true, false, false));
-      mnemonic_$eq(KeyEvent.VK_U);
+      mnemonic_$eq('U');
 
       setEnabled(false);
     }
@@ -199,7 +199,7 @@ public class UndoManager extends javax.swing.undo.UndoManager
       category_$eq("org.nlogo.swing.EditCategory");
       group_$eq("org.nlogo.swing.EditUndoGroup");
       accelerator_$eq(org.nlogo.swing.UserAction.KeyBindings$.MODULE$.keystroke('Y', true, false, false));
-      mnemonic_$eq(KeyEvent.VK_R);
+      mnemonic_$eq('R');
 
       setEnabled(false);
     }

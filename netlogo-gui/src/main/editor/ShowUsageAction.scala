@@ -14,7 +14,7 @@ class ShowUsageAction(editorArea: AdvancedEditorArea, colorizer: Colorizer)
   category = EditCategory
   group = EditFormatGroup
   accelerator = KeyBindings.keystroke(KeyEvent.VK_U, withMenu = true)
-  mnemonic = KeyEvent.VK_W
+  mnemonic = 'W'
 
   override def actionPerformed(e: ActionEvent): Unit = {
     new ShowUsage(editorArea, colorizer)

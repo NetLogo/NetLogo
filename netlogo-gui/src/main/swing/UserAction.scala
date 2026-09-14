@@ -112,8 +112,13 @@ object UserAction {
         case _          => None
       }
 
-    def mnemonic_=(i: Int): Unit = {
-      putValue(Action.MNEMONIC_KEY, i)
+    def mnemonic_=(c: Char): Unit = {
+      putValue(Action.MNEMONIC_KEY, KeyEvent.getExtendedKeyCodeForChar(c))
+
+      val name: String = getValue(Action.NAME).toString
+
+      if (!name.toLowerCase.contains(c.toString.toLowerCase))
+        putValue(Action.NAME, s"$name ($c)")
     }
 
     def mnemonicIndex: Option[Int] =
@@ -123,7 +128,10 @@ object UserAction {
       }
 
     def mnemonicIndex_=(i: Int): Unit = {
-      putValue(Action.DISPLAYED_MNEMONIC_INDEX_KEY, i)
+      val name: String = getValue(Action.NAME).toString
+
+      if (name.size > i && mnemonic.exists(KeyEvent.getKeyText(_) == name(i).toString))
+        putValue(Action.DISPLAYED_MNEMONIC_INDEX_KEY, i)
     }
 
     def category: Option[String] =
