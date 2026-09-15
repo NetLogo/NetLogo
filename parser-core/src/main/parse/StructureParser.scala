@@ -90,13 +90,16 @@ object StructureParser {
                     case None =>
                       if (currentImport.importedIdentifiers.nonEmpty) {
                         ""
-                      } else if (suppliedPaths.length == 1) {
-                        s"${currentImport.pathAlias.getOrElse(currentImport.pathComponents.last).toUpperCase}:"
                       } else {
                         val basePath = compilationEnvironment.resolvePath(currentImport.filename.getOrElse(""))
-                        val relativePath = currentPath.drop(basePath.length + 1) // Strip common prefix plus a separator
-                        val path = raw"(?i)\.nlm$$".r.replaceFirstIn(relativePath.replace(separator, ":").toUpperCase, "")
-                        s"$path:"
+                        val relativePath = currentPath.stripPrefix(s"$basePath$separator")
+                        val path = relativePath.replace(separator, ":").toUpperCase(Locale.ROOT).stripSuffix(".NLM")
+
+                        if (path.nonEmpty) {
+                          s"$path:"
+                        } else {
+                          ""
+                        }
                       }
                   }
 
