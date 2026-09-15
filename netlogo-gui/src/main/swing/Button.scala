@@ -16,10 +16,10 @@ class Button(action: Action) extends JButton(action) with RoundedBorderPanel wit
   })
 
   setDiameter(6)
+  setFocusDiameter(6)
   enableHover()
   enablePressed()
   setBorder(new EmptyBorder(3, 12, 3, 12))
-  setFocusable(false)
   setContentAreaFilled(false)
 
   syncTheme()
@@ -29,6 +29,7 @@ class Button(action: Action) extends JButton(action) with RoundedBorderPanel wit
     setBackgroundHoverColor(InterfaceColors.toolbarControlBackgroundHover())
     setBackgroundPressedColor(InterfaceColors.toolbarControlBackgroundPressed())
     setBorderColor(InterfaceColors.toolbarControlBorder())
+    setFocusColor(InterfaceColors.toolbarControlFocus())
     setForeground(InterfaceColors.toolbarText())
   }
 }
@@ -44,7 +45,6 @@ class ToggleButton(action: Action) extends JToggleButton(action) with RoundedBor
   enableHover()
   enablePressed()
   setBorder(new EmptyBorder(3, 12, 3, 12))
-  setFocusable(false)
   setContentAreaFilled(false)
 
   syncTheme()
@@ -57,6 +57,7 @@ class ToggleButton(action: Action) extends JToggleButton(action) with RoundedBor
     setBackgroundHoverColor(InterfaceColors.toolbarControlBackgroundHover())
     setBackgroundPressedColor(InterfaceColors.toolbarControlBackgroundPressed())
     setBorderColor(InterfaceColors.toolbarControlBorder())
+    setFocusColor(InterfaceColors.toolbarControlFocus())
     setForeground(InterfaceColors.toolbarText())
   }
 }
@@ -70,8 +71,6 @@ class DialogButton(primary: Boolean, action: Action) extends Button(action) {
 
   def this(primary: Boolean, text: String, function: (String) => Unit) = this(primary, text, () => function(text))
 
-  setFocusable(true)
-
   syncTheme()
 
   override def syncTheme(): Unit = {
@@ -80,12 +79,14 @@ class DialogButton(primary: Boolean, action: Action) extends Button(action) {
       setBackgroundHoverColor(InterfaceColors.primaryButtonBackgroundHover())
       setBackgroundPressedColor(InterfaceColors.primaryButtonBackgroundPressed())
       setBorderColor(InterfaceColors.primaryButtonBorder())
+      setFocusColor(InterfaceColors.primaryButtonFocus())
       setForeground(InterfaceColors.primaryButtonText())
     } else {
       setBackgroundColor(InterfaceColors.secondaryButtonBackground())
       setBackgroundHoverColor(InterfaceColors.secondaryButtonBackgroundHover())
       setBackgroundPressedColor(InterfaceColors.secondaryButtonBackgroundPressed())
       setBorderColor(InterfaceColors.secondaryButtonBorder())
+      setFocusColor(InterfaceColors.secondaryButtonFocus())
       setForeground(InterfaceColors.secondaryButtonText())
     }
   }

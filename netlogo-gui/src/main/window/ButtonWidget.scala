@@ -88,6 +88,11 @@ class ButtonWidget(random: MersenneTwisterFast, compiler: CompilerServices, colo
   val foreverLabel = new JLabel(foreverIcon)
   val agentLabel = new JLabel
 
+  keyLabel.setFocusable(false)
+  nameLabel.setFocusable(false)
+  foreverLabel.setFocusable(false)
+  agentLabel.setFocusable(false)
+
   keyLabel.setFont(keyLabel.getFont.deriveFont(12.0f))
 
   agentLabel.setVisible(false)
@@ -139,6 +144,9 @@ class ButtonWidget(random: MersenneTwisterFast, compiler: CompilerServices, colo
   override def editPanel: EditPanel = new ButtonEditPanel(this, compiler, colorizer)
 
   override def getEditable: Option[Editable] = Some(this)
+
+  override def getPrimaryAction: Option[() => Unit] =
+    Some(() => action())
 
   def buttonType_=(bt: ButtonType): Unit = {
     _buttonType = bt
@@ -484,11 +492,13 @@ class ButtonWidget(random: MersenneTwisterFast, compiler: CompilerServices, colo
     if (disabledWaitingForSetup) {
       if (error().isDefined) {
         setBackgroundColor(InterfaceColors.widgetTextError())
+        setFocusColor(InterfaceColors.widgetFocus())
         keyLabel.setForeground(InterfaceColors.buttonText())
         nameLabel.setForeground(InterfaceColors.buttonText())
         foreverLabel.setIcon(foreverIcon)
       } else {
         setBackgroundColor(InterfaceColors.buttonBackgroundDisabled())
+        setFocusColor(InterfaceColors.buttonFocusDisabled())
         keyLabel.setForeground(InterfaceColors.buttonTextDisabled())
         nameLabel.setForeground(InterfaceColors.buttonTextDisabled())
         foreverLabel.setIcon(foreverIconDisabled)
@@ -504,6 +514,8 @@ class ButtonWidget(random: MersenneTwisterFast, compiler: CompilerServices, colo
         }
       )
 
+      setFocusColor(InterfaceColors.widgetFocus())
+
       keyLabel.setForeground(InterfaceColors.buttonText())
       nameLabel.setForeground(InterfaceColors.buttonText())
       foreverLabel.setIcon(foreverIcon)
@@ -517,6 +529,8 @@ class ButtonWidget(random: MersenneTwisterFast, compiler: CompilerServices, colo
           InterfaceColors.buttonBackgroundPressed()
         }
       )
+
+      setFocusColor(InterfaceColors.widgetFocus())
 
       keyLabel.setForeground(InterfaceColors.buttonTextPressed())
       if (error().isEmpty)

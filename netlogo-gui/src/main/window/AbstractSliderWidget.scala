@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import java.awt.{ Dimension, Graphics, Point }
+import java.awt.{ Component, Dimension, Graphics, Point }
 import java.awt.event.{ ActionEvent, ActionListener, FocusAdapter, FocusEvent, KeyAdapter, KeyEvent, MouseAdapter,
                         MouseEvent }
 import java.lang.NumberFormatException
@@ -20,6 +20,8 @@ import scala.math.Pi
 
 trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
   protected class Label(text: String) extends JLabel(text) {
+    setFocusable(false)
+
     override def paintComponent(g: Graphics): Unit = {
       val g2d = Utils.initGraphics2D(g)
       if (vertical) {
@@ -44,8 +46,6 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
         }
 
         setText(valueString(value))
-
-        getParent.requestFocus()
       }
     })
 
@@ -167,8 +167,6 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
     val mouseListener = new MouseAdapter {
       override def mousePressed(e: MouseEvent): Unit = {
         new InputBoxLoseFocusEvent().raise(AbstractSliderWidget.this)
-
-        slider.requestFocus()
       }
     }
 
@@ -176,6 +174,12 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
     nameComponent.addMouseListener(mouseListener)
     unitsComponent.addMouseListener(mouseListener)
     slider.addMouseListener(mouseListener)
+
+    addMouseListener(new MouseAdapter {
+      override def mousePressed(e: MouseEvent): Unit = {
+        requestFocus(FocusEvent.Cause.MOUSE_EVENT)
+      }
+    })
 
     valueComponent.addKeyListener(new KeyAdapter {
       override def keyPressed(e: KeyEvent): Unit = {
@@ -199,9 +203,9 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
   setLayout(null)
 
   add(nameComponent)
+  add(slider)
   add(valueComponent)
   add(unitsComponent)
-  add(slider)
 
   initGUI()
 
@@ -209,6 +213,9 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
     nameComponent.setFont(nameComponent.getFont.deriveFont(_boldState))
     unitsComponent.setFont(unitsComponent.getFont.deriveFont(_boldState))
   }
+
+  override def getDefaultComponent: Option[Component] =
+    Some(slider)
 
   def constraint = sliderData.constraint
   def setSliderConstraint(con: SliderConstraint) = {
@@ -446,11 +453,14 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
 
   override def syncTheme(): Unit = {
     setBackgroundColor(InterfaceColors.sliderBackground())
+    setFocusColor(InterfaceColors.widgetFocus())
 
     valueComponent.setForeground(InterfaceColors.displayAreaText())
     unitsComponent.setForeground(InterfaceColors.widgetText())
 
     valueComponent.setCaretColor(InterfaceColors.displayAreaText())
+
+    slider.syncTheme()
   }
 
   override def paintComponent(g: Graphics): Unit = {

@@ -19,7 +19,9 @@ class ViewUpdatePanel(workspace: GUIWorkspace, speedSlider: SpeedSliderPanel, di
 
   private val updateModeChooser = new UpdateModeChooser(workspace)
 
-  private val settingsButton = new SettingsButton(new EditSettings(workspace.viewWidget.settings))
+  val settingsButton = new SettingsButton(new EditSettings(workspace.viewWidget.settings))
+
+  setFocusable(false)
 
   displaySwitch.addItemListener(new ViewUpdateListener(speedSlider))
 
@@ -43,11 +45,6 @@ class ViewUpdatePanel(workspace: GUIWorkspace, speedSlider: SpeedSliderPanel, di
     c.insets = new Insets(0, 0, 6, 6)
 
     add(settingsButton, c)
-  }
-
-  override def addNotify(): Unit = {
-    super.addNotify()
-    getComponents.foreach(_.setFocusable(false))
   }
 
   def handle(e: LoadEndEvent): Unit = {
@@ -81,7 +78,7 @@ class ViewUpdatePanel(workspace: GUIWorkspace, speedSlider: SpeedSliderPanel, di
     }
   }
 
-  private class SettingsButton(action: Action) extends Button(action) {
+  class SettingsButton(action: Action) extends Button(action) {
     override def getPreferredSize: Dimension =
       new Dimension(super.getPreferredSize.width, updateModeChooser.getPreferredSize.height)
   }
