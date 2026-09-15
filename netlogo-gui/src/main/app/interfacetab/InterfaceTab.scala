@@ -2,9 +2,9 @@
 
 package org.nlogo.app.interfacetab
 
-import java.awt.{ BorderLayout, Component, Container, ContainerOrderFocusTraversalPolicy, Dimension, Font, Graphics,
-                  Graphics2D }
-import java.awt.event.{ ActionEvent, FocusEvent, FocusListener, KeyEvent }
+import java.awt.{ BasicStroke, BorderLayout, Component, Container, ContainerOrderFocusTraversalPolicy, Dimension, Font,
+                  Graphics, Graphics2D, Stroke }
+import java.awt.event.{ ActionEvent, FocusEvent, FocusListener, KeyEvent, MouseAdapter, MouseEvent }
 import java.awt.print.{ PageFormat, Printable }
 import javax.swing.{ AbstractAction, Action, JComponent, JPanel, JSplitPane, ScrollPaneConstants }
 
@@ -12,8 +12,8 @@ import org.nlogo.api.Announcement
 import org.nlogo.app.common.{Events => AppEvents, MenuTab}, AppEvents.SwitchedTabsEvent
 import org.nlogo.app.tools.AgentMonitorManager
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ BoxColumn, Implicits, PrinterManager, Printable => NlogoPrintable, ScrollPane, SplitPane,
-                         UserAction, Utils, Zoomable },
+import org.nlogo.swing.{ BoxColumn, Implicits, PreferredSize, PrinterManager, Printable => NlogoPrintable, ScrollPane,
+                         SplitPane, Transparent, UserAction, Utils, Zoomable },
                        Implicits.thunk2action, UserAction.{ MenuAction, ToolsCategory }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ EditDialogFactory, GUIWorkspace, InterfaceMode, SpeedSliderPanel, ViewUpdatePanel,
@@ -51,7 +51,7 @@ class InterfaceTab(workspace: GUIWorkspace,
 
   override val activeMenuActions =
     WorkspaceActions.interfaceActions(workspace, iP) ++
-    Seq(iP.undoAction, iP.redoAction, commandCenterToggleAction, new JumpToCommandCenterAction())
+    Seq(iP.undoAction, iP.redoAction, new ToolbarAction, commandCenterToggleAction, new JumpToCommandCenterAction())
 
   override val permanentMenuActions = commandCenter.commandLine.getAdditionalActions
 
@@ -197,19 +197,88 @@ class InterfaceTab(workspace: GUIWorkspace,
   class DynamicToolbar(widgetControls: Component, speedSlider: SpeedSliderPanel, viewUpdatePanel: ViewUpdatePanel)
     extends JPanel with ThemeSync {
 
+    private val handle = new JPanel with Transparent with PreferredSize {
+      addMouseListener(new MouseAdapter {
+        override def mouseEntered(e: MouseEvent): Unit = {
+          if (collapsed) {
+            collapsed = false
+            permanent = false
+
+            DynamicToolbar.this.revalidate()
+          }
+        }
+      })
+
+      override def getPreferredSize: Dimension =
+        new Dimension(zoom(128), DynamicToolbar.this.getPreferredSize.height)
+
+      override def paintComponent(g: Graphics): Unit = {
+        val g2d = Utils.initGraphics2D(g)
+
+        val halfHeight: Int = zoom(0.5f).toInt
+
+        val stroke: Stroke = g2d.getStroke
+
+        g2d.setStroke(new BasicStroke(zoom(1f), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND))
+        g2d.setColor(InterfaceColors.toolbarSeparator())
+        g2d.drawLine(getWidth / 4, getHeight / 2 - halfHeight, getWidth * 3 / 4, getHeight / 2 + halfHeight)
+        g2d.setStroke(stroke)
+      }
+    }
+
+    private var collapsed = false
+    private var permanent = true
+
     setLayout(null)
 
     add(widgetControls)
     add(speedSlider)
     add(viewUpdatePanel)
+    add(handle)
 
-    override def getPreferredSize: Dimension =
-      new Dimension(super.getPreferredSize.width, widgetControls.getPreferredSize.height.
-                                                  max(speedSlider.getPreferredSize.height).
-                                                  max(viewUpdatePanel.getPreferredSize.height) + zoom(16))
+    addMouseListener(new MouseAdapter {
+      override def mouseExited(e: MouseEvent): Unit = {
+        if (!collapsed && !permanent && !contains(e.getPoint)) {
+          collapsed = true
+          permanent = true
+
+          revalidate()
+        }
+      }
+    })
+
+    def setCollapsed(collapsed: Boolean): Unit = {
+      this.collapsed = collapsed
+
+      permanent = true
+
+      revalidate()
+    }
+
+    def isCollapsed: Boolean =
+      collapsed || !permanent
+
+    override def getPreferredSize: Dimension = {
+      if (collapsed) {
+        new Dimension(super.getPreferredSize.width, zoom(16))
+      } else {
+        new Dimension(super.getPreferredSize.width, widgetControls.getPreferredSize.height.
+                                                    max(speedSlider.getPreferredSize.height).
+                                                    max(viewUpdatePanel.getPreferredSize.height) + zoom(16))
+      }
+    }
 
     override def doLayout(): Unit = {
-      if (speedSlider.isVisible) {
+      handle.setVisible(collapsed)
+      widgetControls.setVisible(!collapsed)
+      speedSlider.setVisible(!collapsed)
+      viewUpdatePanel.setVisible(!collapsed)
+
+      if (collapsed) {
+        val size: Dimension = handle.getPreferredSize
+
+        handle.setBounds(getWidth / 2 - size.width / 2, getHeight / 2 - size.height / 2, size.width, size.height)
+      } else if (speedSlider.isVisible) {
         val left = (getWidth / 2 - speedSlider.getPreferredSize.width / 2 -
                     widgetControls.getPreferredSize.width - zoom(180)).max(0)
 
@@ -286,6 +355,22 @@ class InterfaceTab(workspace: GUIWorkspace,
   private def showCommandCenter(): Unit = {
     if (splitPane.getDividerLocation >= splitPane.maxClosedDividerLocation)
       splitPane.resetToLastOpenSizes()
+  }
+
+  class ToolbarAction extends AbstractAction(I18N.gui.get("menu.tools.collapseToolbar")) with MenuAction {
+    category = ToolsCategory
+    group = MenuGroup
+    mnemonic = KeyEvent.VK_T
+
+    override def actionPerformed(e: ActionEvent): Unit = {
+      toolBar.setCollapsed(!toolBar.isCollapsed)
+
+      if (toolBar.isCollapsed) {
+        putValue(Action.NAME, I18N.gui.get("menu.tools.expandToolbar"))
+      } else {
+        putValue(Action.NAME, I18N.gui.get("menu.tools.collapseToolbar"))
+      }
+    }
   }
 
   class CommandCenterToggleAction extends AbstractAction(I18N.gui.get("menu.tools.hideCommandCenter"))
