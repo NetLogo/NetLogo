@@ -298,7 +298,7 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
         case Text.MessageType.USER =>
           new OptionPane(getFrame(this), I18N.gui.get("common.messages.userMessage"), content.toString,
                          Seq(I18N.gui.get("common.buttons.ok"), I18N.gui.get("common.buttons.halt")),
-                         OptionPane.Icons.Info)
+                         OptionPane.Icons.info)
         case Text.MessageType.CLEAR => clientGUI.foreach(_.clearMessages())
       }
       case _ => throw new Exception(s"Unexpected message: $message")

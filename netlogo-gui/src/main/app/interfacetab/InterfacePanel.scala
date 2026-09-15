@@ -55,7 +55,7 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
     if (interfaceMode == InterfaceMode.Interact)
       interceptPane.disableIntercept()
 
-    val menu = new PopupMenu
+    val menu = new PopupMenu(this)
 
     Seq(WidgetInfo.button,
       WidgetInfo.slider,
@@ -185,22 +185,14 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
         // the graphics widget (and the command center) are special cases because
         // they are not recreated at load time, but reused
         viewWidget.load(view)
+        viewWidget.setUnzoomedBounds(x, y, view.width, view.height)
         // in 3D we don't add the viewWidget to the interface panel
         // so don't worry about all the sizing junk ev 7/5/07
         val parent = viewWidget.getParent
         if (parent != null) {
-          parent.setSize(viewWidget.getSize)
+          parent.setSize(zoomSize(viewWidget.getSize))
           enforceMinimumAndMaximumWidgetSizes(viewWidget)
-          parent.setLocation(x, y)
-          zoomer.zoomWidgetLocation(
-            getWrapper(viewWidget),
-                  true, true, 1.0, zoomer.zoomFactor)
-          zoomer.zoomWidgetSize(
-            getWrapper(viewWidget),
-                  true, true, 1.0, zoomer.zoomFactor)
-          zoomer.scaleComponentFont(
-            viewWidget.asInstanceOf[ViewWidget].view,
-                 zoomFactor, 1.0, false)
+          parent.setLocation(zoom(x), zoom(y))
         }
         viewWidget
       case _ =>

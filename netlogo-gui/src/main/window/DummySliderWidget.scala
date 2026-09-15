@@ -52,7 +52,7 @@ class DummySliderWidget extends AbstractSliderWidget with Editable {
   }
 
   override def model: CoreWidget = {
-    val b = getUnzoomedBounds
+    val b = unzoomedBounds
     val savedName = name.potentiallyEmptyStringToOption
     CoreSlider(
       display = savedName,

@@ -2,14 +2,15 @@
 
 package org.nlogo.hubnet.server.gui
 
-import java.awt.{ BorderLayout, Component, Dimension, GridBagConstraints, GridBagLayout, Insets }
+import java.awt.{ Component, Dimension }
 import java.awt.event.{ ActionEvent, WindowAdapter, WindowEvent }
 import javax.swing.{ AbstractAction, JFrame, ScrollPaneConstants }
 
 import org.nlogo.analytics.Analytics
 import org.nlogo.api.ModelType
 import org.nlogo.core.{ I18N, Widget => CoreWidget }
-import org.nlogo.swing.{ Menu, MenuBar, NetLogoIcon, OptionPane, ScrollPane, ToolBar, UserAction, WindowAutomator }
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, MaximumHeight, Menu, MenuBar, NetLogoIcon, OptionPane, ScrollPane,
+                         UserAction, WindowAutomator, ZoomableBorder, ZoomableWindow }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ WidgetInfo, MenuBarFactory, InterfaceFactory, GUIWorkspace, AbstractWidgetPanel }
 
@@ -18,7 +19,7 @@ class HubNetClientEditor(workspace: GUIWorkspace,
                          iFactory: InterfaceFactory,
                          menuFactory: MenuBarFactory) extends JFrame
         with org.nlogo.window.Event.LinkChild
-        with org.nlogo.window.Events.ZoomedEvent.Handler
+        with ZoomableWindow(Option(workspace.getFrame))
         with ThemeSync
         with NetLogoIcon {
   WindowAutomator.automate(this)
@@ -28,18 +29,9 @@ class HubNetClientEditor(workspace: GUIWorkspace,
     setBorder(null)
   }
 
-  private val toolbar = new ToolBar {
-    setLayout(new GridBagLayout)
-
-    override def addControls(): Unit = {
-      val c = new GridBagConstraints
-
-      c.anchor = GridBagConstraints.WEST
-      c.weightx = 1
-      c.insets = new Insets(6, 0, 6, 0)
-
-      add(interfacePanel.widgetControls, c)
-    }
+  private val toolbar = new BoxRow(interfacePanel.widgetControls, BoxAlign.Start) with MaximumHeight {
+    setOpaque(true)
+    setBorder(new ZoomableBorder(6, 0, 6, 0))
   }
 
   private val clientMenuBar = new MenuBar {
@@ -50,9 +42,12 @@ class HubNetClientEditor(workspace: GUIWorkspace,
   }
 
   setTitle(getTitle(workspace.modelNameForDisplay, workspace.getModelDir, workspace.getModelType))
-  getContentPane.setLayout(new BorderLayout())
-  getContentPane.add(scrollPane, BorderLayout.CENTER)
-  getContentPane.add(toolbar, BorderLayout.NORTH)
+
+  setContentPane(new BoxColumn(Seq(
+    toolbar,
+    scrollPane
+  )))
+
   setJMenuBar(clientMenuBar)
   setSize(getPreferredSize)
 
@@ -76,7 +71,6 @@ class HubNetClientEditor(workspace: GUIWorkspace,
     setSize(getPreferredSize)
   }
 
-  def handle(e: org.nlogo.window.Events.ZoomedEvent): Unit = {setSize(getPreferredSize)}
   def setTitle(title: String, directory: String, mt: ModelType): Unit = {setTitle(getTitle(title, directory, mt))}
 
   private def getTitle (title:String, directory:String, mt: ModelType) = {
@@ -93,15 +87,11 @@ class HubNetClientEditor(workspace: GUIWorkspace,
   }
 
   override def syncTheme(): Unit = {
-    clientMenuBar.syncTheme()
-
-    interfacePanel.syncTheme()
-
+    toolbar.setBackground(InterfaceColors.toolbarBackground())
     scrollPane.setBackground(InterfaceColors.interfaceBackground())
 
-    toolbar.setBackground(InterfaceColors.toolbarBackground())
-
-    repaint()
+    clientMenuBar.syncTheme()
+    interfacePanel.syncTheme()
   }
 
   override def setVisible(visible: Boolean): Unit = {
@@ -125,7 +115,7 @@ class HubNetClientEditor(workspace: GUIWorkspace,
                          I18N.gui.get("menu.tools.convertWidgetSizes.prompt"),
                          Seq(I18N.gui.get("menu.tools.convertWidgetSizes.resizeAndAdjust"),
                              I18N.gui.get("common.buttons.cancel")),
-                         OptionPane.Icons.Info).getSelectedIndex == 0) {
+                         OptionPane.Icons.info).getSelectedIndex == 0) {
         interfacePanel.convertWidgetSizes()
 
         setSize(getPreferredSize)

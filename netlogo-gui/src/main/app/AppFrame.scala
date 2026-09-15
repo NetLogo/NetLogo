@@ -7,13 +7,15 @@ import javax.swing.{ JFrame, WindowConstants }
 
 import org.nlogo.api.Exceptions
 import org.nlogo.awt.UserCancelException
-import org.nlogo.swing.{ ModalProgress, NetLogoIcon }
+import org.nlogo.swing.{ ModalProgress, NetLogoIcon, ZoomableWindow }
 import org.nlogo.theme.ThemeSync
 import org.nlogo.window.LinkRoot
 import org.nlogo.window.Event.LinkParent
 import org.nlogo.window.Events.IconifiedEvent
 
-class AppFrame extends JFrame with LinkParent with LinkRoot with NetLogoIcon with ModalProgress with ThemeSync {
+class AppFrame extends JFrame with LinkParent with LinkRoot with NetLogoIcon with ModalProgress
+               with ZoomableWindow(None) with ThemeSync {
+
   setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE)
 
   addWindowListener(new WindowAdapter() {
@@ -28,6 +30,14 @@ class AppFrame extends JFrame with LinkParent with LinkRoot with NetLogoIcon wit
       new IconifiedEvent(AppFrame.this, false).raise(App.app)
     }
   })
+
+  override def zoomWindow(): Unit = {
+    getComponents.foreach(zoomComponents)
+
+    zoomMenuBar(App.app.mainMenuBar)
+
+    App.app.smartPack(App.app.frame.getPreferredSize, false)
+  }
 
   override def syncTheme(): Unit = {
     App.app.syncWindowThemes()

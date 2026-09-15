@@ -2,20 +2,22 @@
 
 package org.nlogo.shape.editor
 
-import java.awt.{ BasicStroke, Component, Graphics, GridBagConstraints, GridBagLayout, Insets }
+import java.awt.{ BasicStroke, Component, Graphics }
 import java.awt.event.{ ActionEvent, WindowAdapter, WindowEvent }
 import javax.swing.{ AbstractAction, Icon, JDialog, JLabel, WindowConstants }
 
 import org.nlogo.analytics.Analytics
 import org.nlogo.core.{ I18N, Shape, ShapeList }
 import org.nlogo.shape.{ LinkLine, LinkShape, VectorShape }
-import org.nlogo.swing.{ Button, ButtonPanel, ComboBox, DialogButton, LabeledComponent, OptionPane, TextField, Utils }
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, Button, ButtonPanel, ComboBox, DialogButton, LabeledComponent,
+                         OptionPane, TextField, Utils, ZoomableBorder, ZoomableWindow }
 import org.nlogo.theme.InterfaceColors
 
 import scala.util.{ Failure, Success, Try }
 
 class LinkEditorDialog(parent: JDialog, list: DrawableList[LinkShape], shape: LinkShape)
-  extends JDialog(parent, I18N.gui.get("tools.linkEditor"), true) with EditorDialog.VectorShapeContainer {
+  extends JDialog(parent, I18N.gui.get("tools.linkEditor"), true) with EditorDialog.VectorShapeContainer
+  with ZoomableWindow(Option(parent)) {
 
   private implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("tools.linkEditor")
 
@@ -51,59 +53,45 @@ class LinkEditorDialog(parent: JDialog, list: DrawableList[LinkShape], shape: Li
         if (originalShape.toString != getCurrentShape.toString ||
             new OptionPane(LinkEditorDialog.this, I18N.gui.get("tools.shapesEditor.confirmCancel"),
                           I18N.gui.get("tools.shapesEditor.confirmCancel.message"), OptionPane.Options.YesNo,
-                          OptionPane.Icons.Question).getSelectedIndex != 0)
+                          OptionPane.Icons.question).getSelectedIndex != 0)
           return
 
         dispose()
       }
     })
 
-    setLayout(new GridBagLayout)
+    val done = new DialogButton(true, I18N.gui.get("common.buttons.ok"), () => saveShape())
+    val cancel = new DialogButton(false, I18N.gui.get("common.buttons.cancel"), () => dispose)
 
-    getContentPane.setBackground(InterfaceColors.dialogBackground())
-
-    locally {
-      val c = new GridBagConstraints
-
-      c.gridx = 0
-      c.fill = GridBagConstraints.HORIZONTAL
-      c.insets = new Insets(6, 6, 6, 6)
-
-      add(new LabeledComponent(I18N.gui("name"), name) {
+    setContentPane(new BoxColumn(Seq(
+      new LabeledComponent(I18N.gui("name"), name) {
         setForeground(InterfaceColors.dialogText())
-      }, c)
-
-      c.insets = new Insets(0, 6, 6, 6)
-
-      add(new LabeledComponent(I18N.gui("direction"), new Button(I18N.gui("edit"), () => {
+      },
+      new BoxRow(new LabeledComponent(I18N.gui("direction"), new Button(I18N.gui("edit"), () => {
         new EditorDialog(LinkEditorDialog.this, LinkEditorDialog.this, shape.directionIndicator, false)
       })) {
         setForeground(InterfaceColors.dialogText())
-      }, c)
-
-      add(new LabeledComponent(I18N.gui("curviness"), curviness) {
+      }, BoxAlign.Start),
+      new LabeledComponent(I18N.gui("curviness"), curviness) {
         setForeground(InterfaceColors.dialogText())
-      }, c)
-
-      add(new LabeledComponent(I18N.gui("leftLine"), dashes(2)) {
+      },
+      new LabeledComponent(I18N.gui("leftLine"), dashes(2)) {
         setForeground(InterfaceColors.dialogText())
-      }, c)
-
-      add(new LabeledComponent(I18N.gui("middleLine"), dashes(1)) {
+      },
+      new LabeledComponent(I18N.gui("middleLine"), dashes(1)) {
         setForeground(InterfaceColors.dialogText())
-      }, c)
-
-      add(new LabeledComponent(I18N.gui("rightLine"), dashes(0)) {
+      },
+      new LabeledComponent(I18N.gui("rightLine"), dashes(0)) {
         setForeground(InterfaceColors.dialogText())
-      }, c)
+      },
+      new ButtonPanel(Seq(done, cancel))
+    ), 6) {
+      setOpaque(true)
+      setBackground(InterfaceColors.dialogBackground())
+      setBorder(new ZoomableBorder(6, 6, 6, 6))
+    })
 
-      val done = new DialogButton(true, I18N.gui.get("common.buttons.ok"), () => saveShape())
-      val cancel = new DialogButton(false, I18N.gui.get("common.buttons.cancel"), () => dispose)
-
-      add(new ButtonPanel(Seq(done, cancel)), c)
-
-      getRootPane.setDefaultButton(done)
-    }
+    getRootPane.setDefaultButton(done)
 
     list.update()
 
@@ -134,7 +122,7 @@ class LinkEditorDialog(parent: JDialog, list: DrawableList[LinkShape], shape: Li
 
     // Make sure the shape has a name
     if (nameStr.isEmpty) {
-      new OptionPane(this, I18N.gui("invalid"), I18N.gui("nameEmpty"), OptionPane.Options.Ok, OptionPane.Icons.Error)
+      new OptionPane(this, I18N.gui("invalid"), I18N.gui("nameEmpty"), OptionPane.Options.Ok, OptionPane.Icons.error)
 
       return
     }
@@ -142,7 +130,7 @@ class LinkEditorDialog(parent: JDialog, list: DrawableList[LinkShape], shape: Li
     // If this is an attempt to overwrite a shape, prompt for permission to do it
     if (list.exists(nameStr) && nameStr != originalShape.name &&
         new OptionPane(this, I18N.gui("confirmOverwrite"), I18N.gui("nameConflict"), OptionPane.Options.YesNo,
-                       OptionPane.Icons.Question).getSelectedIndex != 0)
+                       OptionPane.Icons.question).getSelectedIndex != 0)
       return
 
     shape.name = nameStr
@@ -151,7 +139,7 @@ class LinkEditorDialog(parent: JDialog, list: DrawableList[LinkShape], shape: Li
       case Success(cv) => shape.curviness = cv
       case Failure(_) =>
         new OptionPane(this, I18N.gui("invalid"), I18N.gui("invalidCurviness"), OptionPane.Options.Ok,
-                       OptionPane.Icons.Error)
+                       OptionPane.Icons.error)
 
         return
     }

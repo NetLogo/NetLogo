@@ -5,19 +5,18 @@ package org.nlogo.app
 import java.awt.{ Dimension, Frame, GraphicsEnvironment, Point }
 import javax.swing.{ JFrame, WindowConstants }
 
-import org.nlogo.swing.{ ModalProgress, NetLogoIcon }
+import org.nlogo.swing.{ ModalProgress, NetLogoIcon, ZoomableWindow }
 import org.nlogo.theme.ThemeSync
 import org.nlogo.window.Event.LinkChild
 
 class CodeTabsWindow(parent: Frame, tabs: TabsPanel)
-  extends JFrame with LinkChild with ThemeSync with NetLogoIcon with ModalProgress {
+  extends JFrame with LinkChild with ZoomableWindow(Option(parent)) with ThemeSync with NetLogoIcon with ModalProgress {
 
   val mainMenuBar: MainMenuBar = new MainMenuBar(false)
 
   setJMenuBar(mainMenuBar)
 
   setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE)
-  setSize(new Dimension(675, 400))
   setVisible(false)
 
   add(tabs)
@@ -28,6 +27,9 @@ class CodeTabsWindow(parent: Frame, tabs: TabsPanel)
     setLocation(findWindowLocation())
     setVisible(true)
   }
+
+  override def getPreferredSize: Dimension =
+    new Dimension(zoom(675), zoom(400))
 
   override def syncTheme(): Unit = {
     mainMenuBar.syncTheme()

@@ -6,6 +6,7 @@ import javax.swing.JLabel
 
 import org.nlogo.api.{ Dump, World }
 import org.nlogo.core.I18N
+import org.nlogo.swing.Zoomable
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.Events.{ AfterLoadEvent, PeriodicUpdateEvent, LoadBeginEvent }
 
@@ -20,6 +21,7 @@ class TickCounterLabel(world: World)
   with AfterLoadEvent.Handler
   with LoadBeginEvent.Handler
   with PeriodicUpdateEvent.Handler
+  with Zoomable
   with ThemeSync {
   private var _label: String = TickCounterLabelDefault
 

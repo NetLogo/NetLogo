@@ -18,16 +18,16 @@ class HistoryPrompt(commandLine: CommandLine) extends Button(null) {
     }
   })
 
-  setIcon(new CollapsibleArrow(true))
+  setIcon(new CollapsibleArrow(this, true))
 
   override def getPreferredSize: Dimension = {
     val height = commandLine.getPreferredSize.height
 
-    new Dimension(height + 3, height)
+    new Dimension(height + zoom(3), height)
   }
 
   private def doPopupMenu(): Unit = {
-    val menu = new PopupMenu(I18N.gui.get("tabs.run.commandcenter.history"))
+    val menu = new PopupMenu(this, I18N.gui.get("tabs.run.commandcenter.history"))
 
     if (commandLine.getExecutionList.isEmpty) {
       menu.add(new MenuItem(I18N.gui.get("tabs.run.commandcenter.nohistory"))).setEnabled(false)

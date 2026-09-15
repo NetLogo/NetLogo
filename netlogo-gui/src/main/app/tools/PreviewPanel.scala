@@ -1,22 +1,22 @@
 package org.nlogo.app.tools
 
-import java.awt.{ GridBagConstraints, GridBagLayout, Image, Insets }
+import java.awt.Image
 import java.awt.event.ActionEvent
 import java.io.{ File, IOException }
 import javax.imageio.ImageIO
-import javax.swing.{ AbstractAction, Action, JLabel, JPanel, SwingConstants }
+import javax.swing.{ AbstractAction, Action, JLabel, SwingConstants }
 
 import scala.util.{ Failure, Success }
 
 import org.nlogo.awt.Hierarchy.getFrame
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ Button, ModalProgressTask, Transparent }
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, Button, ModalProgressTask, Zoomable }
 import org.nlogo.window.GraphicsPreviewInterface
 import org.nlogo.workspace.PreviewCommandsRunner
 
-class PreviewPanel(graphicsPreview: GraphicsPreviewInterface) extends JPanel(new GridBagLayout) with Transparent {
+class PreviewPanel(graphicsPreview: GraphicsPreviewInterface) extends BoxColumn(6, BoxAlign.Start) {
   val button = new Button(null)
-  val imageLabel = new JLabel {
+  val imageLabel = new JLabel with Zoomable {
     override val getPreferredSize = graphicsPreview.getPreferredSize
     setHorizontalAlignment(SwingConstants.CENTER)
   }
@@ -85,14 +85,7 @@ class PreviewPanel(graphicsPreview: GraphicsPreviewInterface) extends JPanel(new
     }
   }
 
-  locally {
-    val c = new GridBagConstraints
-
-    c.gridx = 0
-    c.insets = new Insets(6, 0, 0, 0)
-
-    add(button, c)
-    add(imageLabel, c)
-    add(graphicsPreview, c)
-  }
+  add(new BoxRow(button, BoxAlign.Center))
+  add(imageLabel)
+  add(graphicsPreview)
 }

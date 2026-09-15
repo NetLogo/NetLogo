@@ -6,18 +6,18 @@ import javax.swing.JLabel
 
 import org.nlogo.api.Options
 import org.nlogo.theme.InterfaceColors
-import org.nlogo.swing.{ CheckBox, ComboBox }
+import org.nlogo.swing.{ BoxRow, CheckBox, ComboBox, PreferredSize, Zoomable }
 
 import scala.util.{ Success, Try }
 
 class InputBoxEditor[InputType <: InputBox#InputType](accessor: PropertyAccessor[Options[InputType]])
-  extends PropertyEditor(accessor) {
+  extends BoxRow(6) with PropertyEditor(accessor) with PreferredSize {
 
   private val options: Options[InputType] = accessor.getter()
   private val originalOption: InputType = accessor.getter().chosenValue
   private val originalMultiline: Boolean = originalOption.multiline
 
-  private val label = new JLabel(accessor.name)
+  private val label = new JLabel(accessor.name) with Zoomable
   private val typeCombo = new ComboBox[InputType](options.values) {
     setSelectedItem(originalOption)
 

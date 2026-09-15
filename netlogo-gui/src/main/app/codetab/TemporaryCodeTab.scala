@@ -55,7 +55,7 @@ class TemporaryCodeTab(workspace: GUIWorkspace,
       val newPath: String = ModelConfig.findIncludeAutoSave(Paths.get(path).toString).fold(path) { autosavePath =>
         if (new OptionPane(workspace.getFrame, I18N.gui.get("file.autosave.recover"),
                            I18N.gui.get("file.autosave.recover.message"), OptionPane.Options.YesNo,
-                           OptionPane.Icons.Info).getSelectedIndex == 0) {
+                           OptionPane.Icons.info).getSelectedIndex == 0) {
           autosavePath.toString
         } else {
           path
@@ -125,7 +125,7 @@ class TemporaryCodeTab(workspace: GUIWorkspace,
       } else {
         new OptionPane(workspace.getFrame, I18N.gui.get("tabs.code.invalidName"),
                        I18N.gui.getN("tabs.code.invalidName.message", s"$name.nlm"), OptionPane.Options.Ok,
-                       OptionPane.Icons.Error)
+                       OptionPane.Icons.error)
 
         throw new UserCancelException
       }
