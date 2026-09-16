@@ -91,6 +91,8 @@ class ButtonWidget(random: MersenneTwisterFast, compiler: CompilerServices, colo
   keyLabel.setFont(keyLabel.getFont.deriveFont(12.0f))
 
   agentLabel.setVisible(false)
+  keyLabel.setVisible(false)
+  foreverLabel.setVisible(false)
 
   keyLabel.addMouseListener(this)
   nameLabel.addMouseListener(this)
@@ -190,6 +192,7 @@ class ButtonWidget(random: MersenneTwisterFast, compiler: CompilerServices, colo
   def setForever(newForever: Boolean): Unit = {
     if (newForever != _forever) {
       _forever = newForever
+      foreverLabel.setVisible(_forever)
       stopping = false
       recompile()
       repaint()
@@ -523,8 +526,6 @@ class ButtonWidget(random: MersenneTwisterFast, compiler: CompilerServices, colo
         nameLabel.setForeground(InterfaceColors.buttonTextPressed())
       foreverLabel.setIcon(foreverIconPressed)
     }
-
-    foreverLabel.setVisible(forever)
 
     if (nameLabel.getPreferredSize.width > nameLabel.getWidth) {
       nameLabel.setToolTipText(
