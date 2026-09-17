@@ -111,6 +111,7 @@ object InterfaceColors {
   def toolbarImageSelected(): Color = theme.toolbarImageSelected
   def toolbarImageDisabled(): Color = theme.toolbarImageDisabled
   def toolbarSeparator(): Color = theme.toolbarSeparator
+  def toolbarArrow(): Color = theme.toolbarArrow
   def infoBackground(): Color = theme.infoBackground
   def infoH1Background(): Color = theme.infoH1Background
   def infoH1Color(): Color = theme.infoH1Color
@@ -313,6 +314,7 @@ trait ColorTheme {
   def toolbarImageSelected: Color
   def toolbarImageDisabled: Color
   def toolbarSeparator: Color
+  def toolbarArrow: Color
   def infoBackground: Color
   def infoH1Background: Color
   def infoH1Color: Color
@@ -482,6 +484,7 @@ object ClassicTheme extends ColorTheme {
   override def toolbarImageSelected: Color = Color.WHITE
   override def toolbarImageDisabled: Color = new Color(100, 100, 100, 64)
   override def toolbarSeparator: Color = MediumGray
+  override def toolbarArrow: Color = MediumGray
   override def infoBackground: Color = Color.WHITE
   override def infoH1Background: Color = new Color(209, 208, 255)
   override def infoH1Color: Color = new Color(19, 13, 134)
@@ -651,6 +654,7 @@ object LightTheme extends ColorTheme {
   override def toolbarImageSelected: Color = Color.WHITE
   override def toolbarImageDisabled: Color = new Color(100, 100, 100, 64)
   override def toolbarSeparator: Color = MediumGray
+  override def toolbarArrow: Color = MediumGray
   override def infoBackground: Color = Color.WHITE
   override def infoH1Background: Color = new Color(209, 208, 255)
   override def infoH1Color: Color = new Color(19, 13, 134)
@@ -820,6 +824,7 @@ object DarkTheme extends ColorTheme {
   override def toolbarImageSelected: Color = LightGray2
   override def toolbarImageDisabled: Color = new Color(150, 150, 150, 64)
   override def toolbarSeparator: Color = LightGrayOutline
+  override def toolbarArrow: Color = MediumGray
   override def infoBackground: Color = AlmostBlack
   override def infoH1Background: Color = new Color(10, 0, 199)
   override def infoH1Color: Color = new Color(205, 202, 255)
