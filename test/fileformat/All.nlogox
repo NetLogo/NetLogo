@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<model version="NetLogo 7.1.0-internal1" snapToGrid="false">
+<model version="NetLogo 7.1.0-alpha1" snapToGrid="false">
   <code><![CDATA[
 
 to test-code
@@ -920,6 +920,7 @@ string</input>
       </indicator>
     </shape>
   </linkShapes>
+  <previewCommands>setup repeat 75 [ go ]</previewCommands>
   <systemDynamics dt="1.2">
     <stock name="random-stock" allowNegative="true" x="143" y="133">42</stock>
     <converter name="var42" x="365" y="126">random-stock + 42</converter>
@@ -927,5 +928,4 @@ string</input>
     <reservoir x="83" y="35"></reservoir>
     <rate name="flower" bivalent="false" startFigure="3" endFigure="0">-42</rate>
   </systemDynamics>
-  <previewCommands>setup repeat 75 [ go ]</previewCommands>
 </model>

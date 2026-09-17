@@ -3,12 +3,12 @@
 package org.nlogo.fileformat
 
 import org.nlogo.api.{ Dump, LabProtocol, RefEnumeratedValueSet, RefValueSet, SteppedValueSet, Version }
-import org.nlogo.core.{ LiteralParser, XMLElement }
+import org.nlogo.core.{ LiteralParser, VersionUtils, XMLElement }
 
 object LabXMLLoader {
 
   def readExperiment( element: XMLElement, literalParser: LiteralParser, editNames: Boolean
-                    , existingNames: Set[String]): (LabProtocol, Set[String]) = {
+                    , existingNames: Set[String], modelVersion: Option[String]): (LabProtocol, Set[String]) = {
 
     def readValueSet(element: XMLElement): RefValueSet = {
       element.name match {
@@ -34,13 +34,25 @@ object LabXMLLoader {
       timeLimit = element("timeLimit", "0").toInt
     )
 
+    val stripNewlines: Boolean = modelVersion.orElse(element.get("version")).fold(false) {
+      VersionUtils.numericValue(_) >= VersionUtils.numericValue("NetLogo 7.1.0-alpha1")
+    }
+
     element.children.foreach {
       case XMLElement("preExperiment", _, text, _) =>
         lab.preExperimentCommands = text
       case XMLElement("setup", _, text, _) =>
-        lab.setupCommands = text
+        if (stripNewlines) {
+          lab.setupCommands = text.stripPrefix("\n").stripSuffix("\n")
+        } else {
+          lab.setupCommands = text
+        }
       case XMLElement("go", _, text, _) =>
-        lab.goCommands = text
+        if (stripNewlines) {
+          lab.goCommands = text.stripPrefix("\n").stripSuffix("\n")
+        } else {
+          lab.goCommands = text
+        }
       case XMLElement("postRun", _, text, _) =>
         lab.postRunCommands = text
       case XMLElement("postExperiment", _, text, _) =>
@@ -92,6 +104,9 @@ object LabXMLLoader {
 
     def makeBabyMaybeSimple(getValue: (LabProtocol) => String, tagName: String): Option[XMLElement] =
       makeBabyMaybe(getValue(experiment).trim.nonEmpty)(tagName, getValue(experiment).trim, Seq())
+
+    def makeBabyMaybeWrapped(getValue: (LabProtocol) => String, tagName: String): Option[XMLElement] =
+      makeBabyMaybe(getValue(experiment).trim.nonEmpty)(tagName, s"\n${getValue(experiment).trim}\n", Seq())
 
     def writeValueSet(valueSet: RefValueSet): XMLElement = {
       valueSet match {
@@ -148,8 +163,8 @@ object LabXMLLoader {
     val children =
       Seq[XMLElement]() ++
         makeBabyMaybeSimple(_. preExperimentCommands,       "preExperiment") ++
-        makeBabyMaybeSimple(_.         setupCommands,               "setup") ++
-        makeBabyMaybeSimple(_.            goCommands,                  "go") ++
+        makeBabyMaybeWrapped(_.        setupCommands,               "setup") ++
+        makeBabyMaybeWrapped(_.           goCommands,                  "go") ++
         makeBabyMaybeSimple(_.       postRunCommands,             "postRun") ++
         makeBabyMaybeSimple(_.postExperimentCommands,      "postExperiment") ++
         makeBabyMaybeSimple(_.         exitCondition,       "exitCondition") ++

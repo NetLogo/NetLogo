@@ -75,7 +75,8 @@ class NLogoXMLLoader(headless: Boolean, literalParser: LiteralParser, editNames:
             case ((model, sections), XMLElement("experiments", _, _, children)) =>
               val (bspaceElems, _) = children.foldLeft((Seq[LabProtocol](), Set[String]())) {
                 case ((elems, accNames), child) => {
-                  val (elem, names) = LabXMLLoader.readExperiment(child, literalParser, editNames, accNames)
+                  val (elem, names) = LabXMLLoader.readExperiment(child, literalParser, editNames, accNames,
+                                                                  model.map(_.version).toOption)
                   (elems :+ elem, accNames ++ names)
                 }
               }
@@ -185,7 +186,7 @@ class NLogoXMLLoader(headless: Boolean, literalParser: LiteralParser, editNames:
   def readExperiments(source: String, editNames: Boolean, existingNames: Set[String]): Try[(Seq[LabProtocol], Set[String])] = {
     XMLReader.read(source).map(_.children.foldLeft((Seq[LabProtocol](), existingNames)) {
       case ((acc, names), elem) =>
-        val (proto, newNames) = LabXMLLoader.readExperiment(elem, literalParser, editNames, names)
+        val (proto, newNames) = LabXMLLoader.readExperiment(elem, literalParser, editNames, names, None)
         (acc :+ proto, newNames)
     })
   }
