@@ -37,6 +37,9 @@ trait ZoomHelpers {
     }
   }
 
+  def unzoom(value: Int): Int =
+    (value / getZoomFactor).toInt
+
   def unzoomBounds(bounds: Rectangle): Rectangle =
     new Rectangle(unzoom(bounds.x), unzoom(bounds.y), unzoom(bounds.width), unzoom(bounds.height))
 
@@ -55,7 +58,4 @@ trait ZoomHelpers {
       case _ =>
     }
   }
-
-  private def unzoom(value: Int): Int =
-    (value / getZoomFactor).toInt
 }

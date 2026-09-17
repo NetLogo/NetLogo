@@ -856,16 +856,16 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
 
       e.getKeyCode match {
         case KeyEvent.VK_RIGHT =>
-          WidgetActions.moveWidgets(selectedWrappers.map(w => (w, w.getX + dist, w.getY)))
+          WidgetActions.moveWidgets(this, selectedWrappers.map(w => (w, w.getX + dist, w.getY)))
 
         case KeyEvent.VK_LEFT if selectedWrappers.forall(_.widgetX - dist > 0) =>
-          WidgetActions.moveWidgets(selectedWrappers.map(w => (w, w.getX - dist, w.getY)))
+          WidgetActions.moveWidgets(this, selectedWrappers.map(w => (w, w.getX - dist, w.getY)))
 
         case KeyEvent.VK_UP if selectedWrappers.forall(_.widgetY - dist > 0) =>
-          WidgetActions.moveWidgets(selectedWrappers.map(w => (w, w.getX, w.getY - dist)))
+          WidgetActions.moveWidgets(this, selectedWrappers.map(w => (w, w.getX, w.getY - dist)))
 
         case KeyEvent.VK_DOWN =>
-          WidgetActions.moveWidgets(selectedWrappers.map(w => (w, w.getX, w.getY + dist)))
+          WidgetActions.moveWidgets(this, selectedWrappers.map(w => (w, w.getX, w.getY + dist)))
 
         case KeyEvent.VK_BACK_SPACE | KeyEvent.VK_DELETE =>
             deleteSelectedWidgets()
@@ -1330,7 +1330,7 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
     val ordered = selectedWrappers.sortBy(_.getX)
     val target = ordered(0)
 
-    WidgetActions.moveWidgets(validWrappers(ordered, (w) => {
+    WidgetActions.moveWidgets(this, validWrappers(ordered, (w) => {
       new Rectangle(target.widgetX, w.widgetY, w.widgetWidth, w.widgetHeight)
     }).map(w => (w, target.getX, w.getY)))
   }
@@ -1352,7 +1352,7 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
     val center = left.getX + (right.getX + right.getWidth - left.getX) / 2
     val ordered = selectedWrappers.sortBy(w => (w.getX + w.getWidth / 2 - center).abs)
 
-    WidgetActions.moveWidgets(validWrappers(ordered, (w) => {
+    WidgetActions.moveWidgets(this, validWrappers(ordered, (w) => {
       new Rectangle(center - w.widgetWidth / 2, w.widgetY, w.widgetWidth, w.widgetHeight)
     }).map(w => (w, center - w.getWidth / 2, w.getY)))
   }
@@ -1370,7 +1370,7 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
     val ordered = selectedWrappers.sortBy(w => w.getX + w.getWidth).reverse
     val target = ordered(0)
 
-    WidgetActions.moveWidgets(validWrappers(ordered, (w) => {
+    WidgetActions.moveWidgets(this, validWrappers(ordered, (w) => {
       new Rectangle(target.widgetX + target.widgetWidth - w.widgetWidth, w.widgetY, w.widgetWidth, w.widgetHeight)
     }).map(w => (w, target.getX + target.getWidth - w.getWidth, w.getY)))
   }
@@ -1388,7 +1388,7 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
     val ordered = selectedWrappers.sortBy(_.getY)
     val target = ordered(0)
 
-    WidgetActions.moveWidgets(validWrappers(ordered, (w) => {
+    WidgetActions.moveWidgets(this, validWrappers(ordered, (w) => {
       new Rectangle(w.widgetX, target.widgetY, w.widgetWidth, w.widgetHeight)
     }).map(w => (w, w.getX, target.getY)))
   }
@@ -1410,7 +1410,7 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
     val center = top.getY + (bottom.getY + bottom.getHeight - top.getY) / 2
     val ordered = selectedWrappers.sortBy(w => (w.getY + w.getHeight / 2 - center).abs)
 
-    WidgetActions.moveWidgets(validWrappers(ordered, (w) => {
+    WidgetActions.moveWidgets(this, validWrappers(ordered, (w) => {
       new Rectangle(w.widgetX, center - w.widgetHeight / 2, w.widgetWidth, w.widgetHeight)
     }).map(w => (w, w.getX, center - w.getHeight / 2)))
   }
@@ -1428,7 +1428,7 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
     val ordered = selectedWrappers.sortBy(w => w.getY + w.getHeight).reverse
     val target = ordered(0)
 
-    WidgetActions.moveWidgets(validWrappers(ordered, (w) => {
+    WidgetActions.moveWidgets(this, validWrappers(ordered, (w) => {
       new Rectangle(w.widgetX, target.widgetY + target.widgetHeight - w.widgetHeight, w.widgetWidth, w.widgetHeight)
     }).map(w => (w, w.getX, target.getY + target.getHeight - w.getHeight)))
   }
@@ -1440,7 +1440,7 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
 
     var start = ordered(0).getX + ordered(0).getWidth + space
 
-    WidgetActions.moveWidgets(ordered.drop(1).dropRight(1).map { w =>
+    WidgetActions.moveWidgets(this, ordered.drop(1).dropRight(1).map { w =>
       val out = (w, start, w.getY)
 
       start += w.getWidth + space
@@ -1456,7 +1456,7 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
 
     var start = ordered(0).getY + ordered(0).getHeight + space
 
-    WidgetActions.moveWidgets(ordered.drop(1).dropRight(1).map { w =>
+    WidgetActions.moveWidgets(this, ordered.drop(1).dropRight(1).map { w =>
       val out = (w, w.getX, start)
 
       start += w.getHeight + space
@@ -1468,29 +1468,29 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
   def stretchLeft(): Unit = {
     val target = selectedWrappers.minBy(_.getX)
 
-    WidgetActions.reboundWidgets(selectedWrappers.map(w =>
+    WidgetActions.stretchWidgets(this, selectedWrappers.map(w =>
       (w, new Rectangle(target.getX, w.getY, w.getX + w.getWidth - target.getX, w.getHeight))))
   }
 
   def stretchRight(): Unit = {
     val target = selectedWrappers.maxBy(w => w.getX + w.getWidth)
 
-    WidgetActions.resizeWidgets(selectedWrappers.map(w =>
-      (w, target.getX + target.getWidth - w.getX, w.getHeight)))
+    WidgetActions.stretchWidgets(this, selectedWrappers.map(w =>
+      (w, new Rectangle(w.getX, w.getY, target.getX + target.getWidth - w.getX, w.getHeight))))
   }
 
   def stretchTop(): Unit = {
     val target = selectedWrappers.minBy(_.getY)
 
-    WidgetActions.reboundWidgets(selectedWrappers.map(w =>
+    WidgetActions.stretchWidgets(this, selectedWrappers.map(w =>
       (w, new Rectangle(w.getX, target.getY, w.getWidth, w.getY + w.getHeight - target.getY))))
   }
 
   def stretchBottom(): Unit = {
     val target = selectedWrappers.maxBy(w => w.getY + w.getHeight)
 
-    WidgetActions.resizeWidgets(selectedWrappers.map(w =>
-      (w, w.getWidth, target.getY + target.getHeight - w.getY)))
+    WidgetActions.stretchWidgets(this, selectedWrappers.map(w =>
+      (w, new Rectangle(w.getX, w.getY, w.getWidth, target.getY + target.getHeight - w.getY))))
   }
 
   def sliderEventOnReleaseOnly(sliderEventOnReleaseOnly: Boolean): Unit = {
