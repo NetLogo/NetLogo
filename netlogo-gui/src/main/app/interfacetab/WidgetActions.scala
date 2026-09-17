@@ -29,53 +29,69 @@ object WidgetActions {
     undoManager.addEdit(new RemoveMultipleWidgets(widgetPanel, wws))
   }
 
-  def moveWidgets(moves: Seq[(WidgetWrapper, Int, Int)]): Unit = {
-    undoManager.addEdit(new MoveWidgets(moves.map(move => {
-      val oldBounds = move._1.getBounds()
-      val newBounds = new Rectangle(move._2, move._3, move._1.getWidth, move._1.getHeight)
+  def moveWidgets(widgetPanel: WidgetPanel, moves: Seq[(WidgetWrapper, Int, Int)]): Unit = {
+    undoManager.addEdit(new MoveWidgets(widgetPanel, moves.map {
+      case (wrapper: WidgetWrapper, x: Int, y: Int) =>
+        val oldBounds: Rectangle = wrapper.widget.getUnzoomedBounds
 
-      move._1.setBounds(newBounds)
+        wrapper.setLocation(x, y)
 
-      (move._1, oldBounds, newBounds)
-    })))
-  }
+        val newBounds: Rectangle = wrapper.unzoomBounds(wrapper.widgetBounds)
 
-  def moveSelectedWidgets(widgetPanel: WidgetPanel): Unit = {
-    val initialMap: Map[WidgetWrapper, Rectangle] = widgetPanel.widgetsBeingDragged.map(a => a -> {
-      addSelectionMargin(a.originalBounds)
-    }).toMap
-    val widgets = widgetPanel.widgetsBeingDragged
-    widgetPanel.dropSelectedWidgets()
-    val finalMap: Map[WidgetWrapper, Rectangle] = widgets.map(a => a -> a.getBounds()).toMap
-    undoManager.addEdit(new MoveSelectedWidgets(widgetPanel, widgets, initialMap, finalMap))
-  }
+        wrapper.widget.setUnzoomedBounds(newBounds)
 
-  def resizeWidget(widgetWrapper: WidgetWrapper): Unit = {
-    val initialBounds = addSelectionMargin(widgetWrapper.originalBounds)
-    widgetWrapper.doDrop()
-    undoManager.addEdit(new ResizeWidget(widgetWrapper, initialBounds, widgetWrapper.getBounds()))
-  }
-
-  def resizeWidgets(wrappers: Seq[(WidgetWrapper, Int, Int)]): Unit = {
-    undoManager.addEdit(new ReboundWidgets(wrappers.map {
-      case (ww, width, height) =>
-        val oldBounds = ww.getBounds()
-        val newBounds = new Rectangle(ww.getX, ww.getY, width, height)
-
-        ww.setBounds(newBounds)
-
-        (ww, oldBounds, newBounds)
+        (wrapper, oldBounds, newBounds)
     }))
   }
 
-  def reboundWidgets(wrappers: Seq[(WidgetWrapper, Rectangle)]): Unit = {
-    undoManager.addEdit(new ReboundWidgets(wrappers.map {
-      case (ww, newBounds) =>
-        val oldBounds = ww.getBounds()
+  def moveSelectedWidgets(widgetPanel: WidgetPanel): Unit = {
+    val wrappers: Seq[WidgetWrapper] = widgetPanel.widgetsBeingDragged
+    val oldBounds: Seq[Rectangle] = wrappers.map(_.widget.getUnzoomedBounds)
 
-        ww.setBounds(newBounds)
+    widgetPanel.dropSelectedWidgets()
 
-        (ww, oldBounds, newBounds)
+    val newBounds: Seq[Rectangle] = wrappers.map(wrapper => wrapper.unzoomBounds(wrapper.widgetBounds))
+
+    undoManager.addEdit(new MoveWidgets(widgetPanel, wrappers.lazyZip(oldBounds).lazyZip(newBounds).toSeq))
+  }
+
+  def resizeWidget(widgetPanel: WidgetPanel, wrapper: WidgetWrapper): Unit = {
+    val oldBounds: Rectangle = wrapper.widget.getUnzoomedBounds
+
+    wrapper.doDrop()
+
+    val newBounds: Rectangle = wrapper.unzoomBounds(wrapper.widgetBounds)
+
+    undoManager.addEdit(new ResizeWidgets(widgetPanel, Seq((wrapper, oldBounds, newBounds))))
+  }
+
+  def resizeWidgets(widgetPanel: WidgetPanel, resizes: Seq[(WidgetWrapper, Int, Int)]): Unit = {
+    undoManager.addEdit(new ResizeWidgets(widgetPanel, resizes.map {
+      case (wrapper: WidgetWrapper, width: Int, height: Int) =>
+        val oldBounds: Rectangle = wrapper.widget.getUnzoomedBounds
+
+        wrapper.setSize(width, height)
+
+        val newBounds: Rectangle = wrapper.unzoomBounds(wrapper.widgetBounds)
+
+        wrapper.widget.setUnzoomedBounds(newBounds)
+
+        (wrapper, oldBounds, newBounds)
+    }))
+  }
+
+  def stretchWidgets(widgetPanel: WidgetPanel, stretches: Seq[(WidgetWrapper, Rectangle)]): Unit = {
+    undoManager.addEdit(new StretchWidgets(widgetPanel, stretches.map {
+      case (wrapper: WidgetWrapper, bounds: Rectangle) =>
+        val oldBounds: Rectangle = wrapper.widget.getUnzoomedBounds
+
+        wrapper.setBounds(bounds)
+
+        val newBounds: Rectangle = wrapper.unzoomBounds(wrapper.widgetBounds)
+
+        wrapper.widget.setUnzoomedBounds(newBounds)
+
+        (wrapper, oldBounds, newBounds)
     }))
   }
 
@@ -83,18 +99,6 @@ object WidgetActions {
     undoManager.addEdit(new ConvertWidgetSizes(widgetPanel, wrappers.map {
       case (ww, oldBounds) => (ww, oldBounds, ww.getBounds())
     }))
-  }
-
-  private def addSelectionMargin(bounds: Rectangle): Rectangle = {
-    new Rectangle(bounds.x - WidgetWrapper.BorderSize, bounds.y - WidgetWrapper.BorderSize,
-                  bounds.width + WidgetWrapper.BorderSize + WidgetWrapper.BorderSize,
-                  bounds.height + WidgetWrapper.BorderSize + WidgetWrapper.BorderSize)
-  }
-
-  private def removeSelectionMargin(bounds: Rectangle): Rectangle = {
-    new Rectangle(bounds.x + WidgetWrapper.BorderSize, bounds.y + WidgetWrapper.BorderSize,
-                  bounds.width - WidgetWrapper.BorderSize - WidgetWrapper.BorderSize,
-                  bounds.height - WidgetWrapper.BorderSize - WidgetWrapper.BorderSize)
   }
 
   class AddWidget(widgetPanel: WidgetPanel, widgetWrapper: WidgetWrapper) extends AbstractUndoableEdit {
@@ -129,102 +133,49 @@ object WidgetActions {
     override def getPresentationName: String = "Widget(s) Deletion"
   }
 
-  class MoveWidgets(moves: Seq[(WidgetWrapper, Rectangle, Rectangle)]) extends AbstractUndoableEdit {
-    override def redo: Unit = {
-      for (move <- moves)
-        setBounds(move._1, move._3)
-    }
+  abstract class ChangeWidgetBounds(widgetPanel: WidgetPanel, changes: Seq[(WidgetWrapper, Rectangle, Rectangle)])
+    extends AbstractUndoableEdit {
 
-    override def undo: Unit = {
-      for (move <- moves)
-        setBounds(move._1, move._2)
-    }
-
-    override def getPresentationName = "Widget Movement"
-
-    private def setBounds(widgetWrapper: WidgetWrapper, bounds: Rectangle): Unit = {
-      widgetWrapper.setBounds(
-        if (widgetWrapper.selected)
-          bounds
-        else
-          removeSelectionMargin(bounds)
-      )
-    }
-  }
-
-  class MoveSelectedWidgets(widgetPanel: WidgetPanel, wws: Seq[WidgetWrapper], initialMap: Map[WidgetWrapper, Rectangle], finalMap: Map[WidgetWrapper, Rectangle]) extends AbstractUndoableEdit {
-    override def redo:Unit = {
-      positionWidgets(finalMap)
-    }
-
-    override def undo(): Unit = {
-      positionWidgets(initialMap)
-    }
-
-    override def getPresentationName: String = "Widget Movement"
-
-    def positionWidgets(map: Map[WidgetWrapper, Rectangle]): Unit = {
-      for (widgetWrapper <- wws) {
-        widgetWrapper.setBounds(
-          if (widgetWrapper.selected)
-            map(widgetWrapper)
-          else
-            removeSelectionMargin(map(widgetWrapper))
-        )
+    override def redo(): Unit = {
+      changes.foreach {
+        case (wrapper: WidgetWrapper, _, bounds: Rectangle) =>
+          setBounds(wrapper, bounds)
       }
 
       new Events.DirtyEvent(None).raise(widgetPanel)
     }
-  }
-
-  class ResizeWidget(widgetWrapper: WidgetWrapper, initialBounds: Rectangle, finalBounds: Rectangle) extends AbstractUndoableEdit {
-    override def redo(): Unit = {
-      setWidgetSize(finalBounds)
-    }
 
     override def undo(): Unit = {
-      setWidgetSize(initialBounds)
+      changes.foreach {
+        case (wrapper: WidgetWrapper, bounds: Rectangle, _) =>
+          setBounds(wrapper, bounds)
+      }
+
+      new Events.DirtyEvent(None).raise(widgetPanel)
     }
 
-    override def getPresentationName: String = "Widget Resizing"
-
-    def setWidgetSize(bounds: Rectangle): Unit = {
-      widgetWrapper.setBounds(
-        if (widgetWrapper.selected)
-          bounds
-        else
-          removeSelectionMargin(bounds)
-      )
-
-      new Events.DirtyEvent(None).raise(widgetWrapper)
+    private def setBounds(wrapper: WidgetWrapper, bounds: Rectangle): Unit = {
+      wrapper.setBounds(wrapper.addWrapperBorder(wrapper.zoomBounds(bounds)))
+      wrapper.widget.setUnzoomedBounds(bounds)
     }
   }
 
-  class ReboundWidgets(wrappers: Seq[(WidgetWrapper, Rectangle, Rectangle)]) extends AbstractUndoableEdit {
-    override def redo: Unit = {
-      for ((ww, _, bounds) <- wrappers)
-        setBounds(ww, bounds)
+  class MoveWidgets(widgetPanel: WidgetPanel, changes: Seq[(WidgetWrapper, Rectangle, Rectangle)])
+    extends ChangeWidgetBounds(widgetPanel, changes) {
 
-      wrappers.headOption.foreach(t => new Events.DirtyEvent(None).raise(t._1))
-    }
+    override def getPresentationName: String = "Widget Movement"
+  }
 
-    override def undo: Unit = {
-      for ((ww, bounds, _) <- wrappers)
-        setBounds(ww, bounds)
+  class ResizeWidgets(widgetPanel: WidgetPanel, changes: Seq[(WidgetWrapper, Rectangle, Rectangle)])
+    extends ChangeWidgetBounds(widgetPanel, changes) {
 
-      wrappers.headOption.foreach(t => new Events.DirtyEvent(None).raise(t._1))
-    }
+    override def getPresentationName: String = "Widget Resizing"
+  }
 
-    override def getPresentationName = "Widget Stretching"
+  class StretchWidgets(widgetPanel: WidgetPanel, changes: Seq[(WidgetWrapper, Rectangle, Rectangle)])
+    extends ChangeWidgetBounds(widgetPanel, changes) {
 
-    private def setBounds(widgetWrapper: WidgetWrapper, bounds: Rectangle): Unit = {
-      widgetWrapper.setBounds(
-        if (widgetWrapper.selected)
-          bounds
-        else
-          removeSelectionMargin(bounds)
-      )
-    }
+    override def getPresentationName: String = "Widget Stretching"
   }
 
   class ConvertWidgetSizes(widgetPanel: WidgetPanel, wrappers: Seq[(WidgetWrapper, Rectangle, Rectangle)]) extends AbstractUndoableEdit {

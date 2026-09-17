@@ -244,6 +244,16 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
     }
   }
 
+  def addWrapperBorder(bounds: Rectangle): Rectangle = {
+    if (selected) {
+      val border: Int = zoom(BorderSize)
+
+      new Rectangle(bounds.x - border, bounds.y - border, bounds.width + border * 2, bounds.height + border * 2)
+    } else {
+      bounds
+    }
+  }
+
   override def getMinimumSize: Dimension =
     addWrapperBorder(widget.getMinimumSize)
 
@@ -536,7 +546,7 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
         WidgetActions.moveSelectedWidgets(interfacePanel)
       } else if (mouseMode != MouseMode.IDLE) {
         interfacePanel.endResizeWidget()
-        WidgetActions.resizeWidget(this)
+        WidgetActions.resizeWidget(interfacePanel, this)
 
         widget.setUnzoomedBounds(unzoomBounds(widgetBounds))
       }
