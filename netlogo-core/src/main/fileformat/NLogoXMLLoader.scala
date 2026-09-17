@@ -56,11 +56,11 @@ class NLogoXMLLoader(headless: Boolean, literalParser: LiteralParser, editNames:
 
           element.children.foldLeft((model, Set[String]())) {
 
-            case ((model, sections), XMLElement("previewCommands", _, commands, _)) =>
+            case ((model, sections), XMLElement("previewCommands", _, commands, _, _)) =>
               val section = new Section("org.nlogo.modelsection.previewcommands", PreviewCommands(commands))
               (model.map((m) => m.copy(optionalSections = m.optionalSections :+ section)), sections)
 
-            case ((model, sections), el @ XMLElement("systemDynamics", _, _, _)) =>
+            case ((model, sections), el @ XMLElement("systemDynamics", _, _, _, _)) =>
               val section = {
                 if (headless) {
                   new Section("org.nlogo.modelsection.systemdynamics",
@@ -72,24 +72,25 @@ class NLogoXMLLoader(headless: Boolean, literalParser: LiteralParser, editNames:
               }
               (model.map((m) => m.copy(optionalSections = m.optionalSections :+ section)), sections)
 
-            case ((model, sections), XMLElement("experiments", _, _, children)) =>
+            case ((model, sections), XMLElement("experiments", _, _, children, _)) =>
               val (bspaceElems, _) = children.foldLeft((Seq[LabProtocol](), Set[String]())) {
                 case ((elems, accNames), child) => {
-                  val (elem, names) = LabXMLLoader.readExperiment(child, literalParser, editNames, accNames)
+                  val (elem, names) = LabXMLLoader.readExperiment(child, literalParser, editNames, accNames,
+                                                                  model.map(_.version).toOption)
                   (elems :+ elem, accNames ++ names)
                 }
               }
               val section = new Section("org.nlogo.modelsection.behaviorspace", bspaceElems)
               (model.map((m) => m.copy(optionalSections = m.optionalSections :+ section)), sections)
 
-            case ((model, sections), XMLElement("hubNetClient", _, _, children)) =>
+            case ((model, sections), XMLElement("hubNetClient", _, _, children, _)) =>
               val hnElems = children.map(WidgetXMLLoader.readWidget(_, literalParser)).flatten
               val section = new Section("org.nlogo.modelsection.hubnetclient", hnElems)
               (model.map((m) => m.copy(optionalSections = m.optionalSections :+ section)), sections)
 
             // ignore other sections for compatibility with other versions in the future (Isaac B 2/12/25)
             // but still keep track of them in case the user wanted them in there (Isaac B 7/6/25)
-            case ((model, sections), XMLElement(name, _, _, _)) =>
+            case ((model, sections), XMLElement(name, _, _, _, _)) =>
               (model, sections + name)
 
           } match {
@@ -185,7 +186,7 @@ class NLogoXMLLoader(headless: Boolean, literalParser: LiteralParser, editNames:
   def readExperiments(source: String, editNames: Boolean, existingNames: Set[String]): Try[(Seq[LabProtocol], Set[String])] = {
     XMLReader.read(source).map(_.children.foldLeft((Seq[LabProtocol](), existingNames)) {
       case ((acc, names), elem) =>
-        val (proto, newNames) = LabXMLLoader.readExperiment(elem, literalParser, editNames, names)
+        val (proto, newNames) = LabXMLLoader.readExperiment(elem, literalParser, editNames, names, None)
         (acc :+ proto, newNames)
     })
   }

@@ -70,7 +70,7 @@ class XMLWriter(dest: Writer) extends NLogoXMLWriter {
     if (el.text.isEmpty)
       el.children.foreach(element)
     else
-      escapedText(el.text)
+      escapedText(el.text, el.alwaysCDATA)
 
     endElement(el.name)
   }

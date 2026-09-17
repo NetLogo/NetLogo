@@ -38,19 +38,19 @@ object ShapeXMLLoader {
 
     val elements: Seq[Element] =
       element.children.collect {
-        case el @ XMLElement("circle", _, _, _) =>
+        case el @ XMLElement("circle", _, _, _, _) =>
           Circle( colorFromString(el("color")), el("filled").toBoolean, el("marked").toBoolean
                 , el("x").toInt, el("y").toInt, el("diameter").toInt)
 
-        case el @ XMLElement("line", _, _, _) =>
+        case el @ XMLElement("line", _, _, _, _) =>
           Line( colorFromString(el("color")), el("marked").toBoolean, (el("startX").toInt
               , el("startY").toInt), (el("endX").toInt, el("endY").toInt))
 
-        case el @ XMLElement("polygon", _, _, _) =>
+        case el @ XMLElement("polygon", _, _, _, _) =>
           Polygon( colorFromString(el("color")), el("filled").toBoolean, el("marked").toBoolean
                  , el.getChildren("point").map(point => (point("x").toInt, point("y").toInt)).toList)
 
-        case el @ XMLElement("rectangle", _, _, _) =>
+        case el @ XMLElement("rectangle", _, _, _, _) =>
           Rectangle( colorFromString(el("color")), el("filled").toBoolean, el("marked").toBoolean
                    , (el("startX").toInt, el("startY").toInt)
                    , (el("endX").toInt, el("endY").toInt))
@@ -137,17 +137,17 @@ object ShapeXMLLoader {
     val (lines, indicatorOpt) =
       element.children.foldLeft((Seq[LinkLine](), Option.empty[VectorShape])) {
 
-        case ((ls, indic), el @ XMLElement("lines", _, _, _)) =>
+        case ((ls, indic), el @ XMLElement("lines", _, _, _, _)) =>
           val xs =
             el.getChildren("line").map {
               e => new LinkLine(e("x").toDouble, e("visible").toBoolean, e.getChildren("dash").map(_("value").toFloat))
             }
           (xs, indic)
 
-        case ((ls, indic), el @ XMLElement("indicator", _, _, _)) =>
+        case ((ls, indic), el @ XMLElement("indicator", _, _, _, _)) =>
           (ls, Option(readShape(el.getChild("shape"))))
 
-        case (          _,      XMLElement(otherName, _, _, _)) =>
+        case (          _,      XMLElement(otherName, _, _, _, _)) =>
           throw new Exception(s"Unexpected link shape XML value: ${otherName}")
 
       }

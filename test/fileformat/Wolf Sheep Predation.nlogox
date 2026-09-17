@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<model version="NetLogo 7.1.0-internal1" snapToGrid="true">
+<model version="NetLogo 7.1.0-alpha1" snapToGrid="true">
   <code><![CDATA[
 
 globals [ max-sheep ]  ; don't let the sheep population grow too large
@@ -1209,10 +1209,6 @@ This model was converted to NetLogo as part of the projects: PARTICIPATORY SIMUL
       </indicator>
     </shape>
   </linkShapes>
-  <previewCommands>set model-version "sheep-wolves-grass"
-set show-energy? false
-setup
-repeat 75 [ go ]</previewCommands>
   <experiments>
     <experiment name="New BehaviorSpace Features" repetitions="3" sequentialRunOrder="true" runMetricsEveryStep="false" timeLimit="200">
       <preExperiment>reset-timer</preExperiment>
@@ -1235,9 +1231,11 @@ repeat 75 [ go ]</previewCommands>
       </subExperiments>
     </experiment>
     <experiment name="BehaviorSpace run 3 experiments" repetitions="1" sequentialRunOrder="true" runMetricsEveryStep="false" timeLimit="1500">
-      <setup>setup
+      <setup><![CDATA[
+setup
 print (word "sheep-reproduce: " sheep-reproduce ", wolf-reproduce: " wolf-reproduce)
-print (word "sheep-gain-from-food: " sheep-gain-from-food ", wolf-gain-from-food: " wolf-gain-from-food)</setup>
+print (word "sheep-gain-from-food: " sheep-gain-from-food ", wolf-gain-from-food: " wolf-gain-from-food)
+]]></setup>
       <go>go</go>
       <postRun>print (word "sheep: " count sheep ", wolves: " count wolves)
 print ""
@@ -1299,9 +1297,11 @@ wait 1</postRun>
       </subExperiments>
     </experiment>
     <experiment name="BehaviorSpace run 3 variable values per experiments" repetitions="1" sequentialRunOrder="true" runMetricsEveryStep="false" timeLimit="1500">
-      <setup>setup
+      <setup><![CDATA[
+setup
 print (word "sheep-reproduce: " sheep-reproduce ", wolf-reproduce: " wolf-reproduce)
-print (word "sheep-gain-from-food: " sheep-gain-from-food ", wolf-gain-from-food: " wolf-gain-from-food)</setup>
+print (word "sheep-gain-from-food: " sheep-gain-from-food ", wolf-gain-from-food: " wolf-gain-from-food)
+]]></setup>
       <go>go</go>
       <postRun>print (word "sheep: " count sheep ", wolves: " count wolves)
 print ""
@@ -1466,9 +1466,11 @@ wait 1</postRun>
     </experiment>
     <experiment name="New BehaviorSpace Features reproducible" repetitions="3" sequentialRunOrder="true" runMetricsEveryStep="false" timeLimit="200">
       <preExperiment>reset-timer</preExperiment>
-      <setup>random-seed (474 + behaviorspace-run-number)
+      <setup><![CDATA[
+random-seed (474 + behaviorspace-run-number)
 
-setup</setup>
+setup
+]]></setup>
       <go>go</go>
       <postExperiment>show timer</postExperiment>
       <runMetricsCondition>ticks mod 2 = 0</runMetricsCondition>
@@ -1511,4 +1513,8 @@ setup</setup>
       </subExperiments>
     </experiment>
   </experiments>
+  <previewCommands>set model-version "sheep-wolves-grass"
+set show-energy? false
+setup
+repeat 75 [ go ]</previewCommands>
 </model>

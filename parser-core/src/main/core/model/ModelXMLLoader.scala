@@ -48,30 +48,30 @@ object ModelXMLLoader {
 
         root.children.foldLeft((Try(model), Seq[XMLElement]())) {
 
-          case ((model, sections), XMLElement("widgets", _, _, children)) =>
+          case ((model, sections), XMLElement("widgets", _, _, children, _)) =>
             (model.map(_.copy(widgets = children.map(WidgetXMLLoader.readWidget(_, parser)).flatten)), sections)
 
-          case ((model, sections), XMLElement("info", _, text, _)) =>
+          case ((model, sections), XMLElement("info", _, text, _, _)) =>
             if (stripNewlines) {
               (model.map(_.copy(info = text.stripPrefix("\n").stripSuffix("\n"))), sections)
             } else {
               (model.map(_.copy(info = text)), sections)
             }
 
-          case ((model, sections), XMLElement("code", _, text, _)) =>
+          case ((model, sections), XMLElement("code", _, text, _, _)) =>
             if (stripNewlines) {
               (model.map(_.copy(code = text.stripPrefix("\n").stripSuffix("\n"))), sections)
             } else {
               (model.map(_.copy(code = text)), sections)
             }
 
-          case ((model, sections), el @ XMLElement("turtleShapes", _, _, _)) =>
+          case ((model, sections), el @ XMLElement("turtleShapes", _, _, _, _)) =>
             (model.map(_.copy(turtleShapes = el.getChildren("shape").map(ShapeXMLLoader.readShape))), sections)
 
-          case ((model, sections), el @ XMLElement("linkShapes", _, _, _)) =>
+          case ((model, sections), el @ XMLElement("linkShapes", _, _, _, _)) =>
             (model.map(_.copy(linkShapes = el.getChildren("shape").map(ShapeXMLLoader.readLinkShape))), sections)
 
-          case ((model, sections), el @ XMLElement("resources", _, _, _)) =>
+          case ((model, sections), el @ XMLElement("resources", _, _, _, _)) =>
             (model.map(_.copy(
               resources = el.getChildren("resource").map(
                 resource => ExternalResource(resource("name"), resource("extension"), resource.text)

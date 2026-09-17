@@ -55,7 +55,7 @@ class Model(modelName: String,
     setDt(element("dt").toDouble)
 
     val (refs, conns) = element.children.foldLeft((Seq[ModelElement](), Map[Rate, (Int, Int)]())) {
-      case ((refs, conns), el @ XMLElement("stock", _, text, _)) =>
+      case ((refs, conns), el @ XMLElement("stock", _, text, _, _)) =>
         val stock = new Stock
 
         stock.name = el("name")
@@ -66,7 +66,7 @@ class Model(modelName: String,
 
         (refs :+ stock, conns)
 
-      case ((refs, conns), el @ XMLElement("converter", _, text, _)) =>
+      case ((refs, conns), el @ XMLElement("converter", _, text, _, _)) =>
         val converter = new Converter
 
         converter.name = el("name")
@@ -76,7 +76,7 @@ class Model(modelName: String,
 
         (refs :+ converter, conns)
 
-      case ((refs, conns), el @ XMLElement("rate", _, text, _)) =>
+      case ((refs, conns), el @ XMLElement("rate", _, text, _, _)) =>
         val rate = new Rate
 
         rate.name = el("name")
@@ -86,12 +86,12 @@ class Model(modelName: String,
 
         (refs :+ rate, conns + (rate -> ((el("startFigure").toInt, el("endFigure").toInt))))
 
-      case ((refs, conns), el @ XMLElement("reservoir", _, _, _)) =>
+      case ((refs, conns), el @ XMLElement("reservoir", _, _, _, _)) =>
         val reservoir = new Reservoir
 
         (refs :+ reservoir, conns)
 
-      case ((refs, conns), el @ XMLElement("binding", _, _, _)) =>
+      case ((refs, conns), el @ XMLElement("binding", _, _, _, _)) =>
         (refs :+ null, conns)
 
       case ((refs, conns), _) => (refs, conns) // ignore other figures for compatibility with other versions in the future (Isaac B 2/12/25)

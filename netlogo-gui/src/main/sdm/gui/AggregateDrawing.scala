@@ -47,7 +47,7 @@ class AggregateDrawing extends StandardDrawing with AggregateDrawingInterface {
 
     val (refs, conns) = element.children.foldLeft((Seq[Figure](), Map[Figure, (Int, Int)]())) {
 
-      case ((refs, conns), el @ XMLElement("stock", _, text, _)) =>
+      case ((refs, conns), el @ XMLElement("stock", _, text, _, _)) =>
         val stock = new StockFigure
 
         stock.nameWrapper(el("name"))
@@ -60,7 +60,7 @@ class AggregateDrawing extends StandardDrawing with AggregateDrawingInterface {
 
         (refs :+ stock, conns)
 
-      case ((refs, conns), el @ XMLElement("converter", _, text, _)) =>
+      case ((refs, conns), el @ XMLElement("converter", _, text, _, _)) =>
         val converter = ConverterFigure.create()
 
         converter.nameWrapper(el("name"))
@@ -72,7 +72,7 @@ class AggregateDrawing extends StandardDrawing with AggregateDrawingInterface {
 
         (refs :+ converter, conns)
 
-      case ((refs, conns), el @ XMLElement("reservoir", _, _, _)) =>
+      case ((refs, conns), el @ XMLElement("reservoir", _, _, _, _)) =>
         val reservoir = ReservoirFigure.create()
 
         reservoir.displayBox( new Point(el("x").toInt, el("y").toInt)
@@ -82,14 +82,14 @@ class AggregateDrawing extends StandardDrawing with AggregateDrawingInterface {
 
         (refs :+ reservoir, conns)
 
-      case ((refs, conns), el @ XMLElement("binding", _, _, _)) =>
+      case ((refs, conns), el @ XMLElement("binding", _, _, _, _)) =>
         val binding = BindingConnection.create()
 
         add(binding)
 
         (refs :+ binding, conns + (binding -> ((el("startFigure").toInt, el("endFigure").toInt))))
 
-      case ((refs, conns), el @ XMLElement("rate", _, text, _)) =>
+      case ((refs, conns), el @ XMLElement("rate", _, text, _, _)) =>
 
         val rate = RateConnection.create()
 

@@ -9,7 +9,7 @@ object XMLElement {
 }
 
 case class XMLElement(val name: String, val attributes: Map[String, String], val text: String,
-                      val children: Seq[XMLElement]) {
+                      val children: Seq[XMLElement], val alwaysCDATA: Boolean = false) {
 
   private val hash: Int = MurmurHash3.unorderedHash(Seq(name, text) ++ attributes)
 
