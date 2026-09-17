@@ -49,9 +49,11 @@ class InterfaceTab(workspace: GUIWorkspace,
 
   val commandCenterToggleAction = new CommandCenterToggleAction()
 
+  private val toolbarAction = new ToolbarAction
+
   override val activeMenuActions =
     WorkspaceActions.interfaceActions(workspace, iP) ++
-    Seq(iP.undoAction, iP.redoAction, new ToolbarAction, commandCenterToggleAction, new JumpToCommandCenterAction())
+    Seq(iP.undoAction, iP.redoAction, toolbarAction, commandCenterToggleAction, new JumpToCommandCenterAction())
 
   override val permanentMenuActions = commandCenter.commandLine.getAdditionalActions
 
@@ -237,6 +239,14 @@ class InterfaceTab(workspace: GUIWorkspace,
     add(handle)
 
     addMouseListener(new MouseAdapter {
+      override def mouseClicked(e: MouseEvent): Unit = {
+        if (e.getButton == MouseEvent.BUTTON1 && e.getClickCount == 2) {
+          setCollapsed(!isCollapsed)
+
+          toolbarAction.updateAction()
+        }
+      }
+
       override def mouseExited(e: MouseEvent): Unit = {
         if (!collapsed && !permanent && !contains(e.getPoint)) {
           collapsed = true
@@ -365,6 +375,10 @@ class InterfaceTab(workspace: GUIWorkspace,
     override def actionPerformed(e: ActionEvent): Unit = {
       toolBar.setCollapsed(!toolBar.isCollapsed)
 
+      updateAction()
+    }
+
+    def updateAction(): Unit = {
       if (toolBar.isCollapsed) {
         putValue(Action.NAME, I18N.gui.get("menu.tools.expandToolbar"))
       } else {
