@@ -124,7 +124,7 @@ class JarLoader(workspace: ExtendableWorkspace) extends ExtensionManager.Extensi
   // directory and load it from there instead, allowing the removal of the original extension files to proceed
   // as expected. (Isaac B 1/2/26)
   private def getCopiedExtension(primary: URL): URLCache = {
-    if (!JarLoader.copiedURLs.contains(primary)) {
+    if (!JarLoader.copiedURLs.get(primary).exists(cache => Files.exists(Path.of(cache.primary.toURI)))) {
       Files.createDirectories(JarLoader.copyRoot)
 
       val jarPath = Path.of(primary.toURI)
