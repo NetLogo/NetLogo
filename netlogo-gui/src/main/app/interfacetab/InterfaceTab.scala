@@ -212,18 +212,19 @@ class InterfaceTab(workspace: GUIWorkspace,
       })
 
       override def getPreferredSize: Dimension =
-        new Dimension(zoom(128), DynamicToolbar.this.getPreferredSize.height)
+        new Dimension(zoom(128), DynamicToolbar.this.getPreferredSize.height - zoom(8))
 
       override def paintComponent(g: Graphics): Unit = {
         val g2d = Utils.initGraphics2D(g)
 
-        val halfHeight: Int = zoom(0.5f).toInt
-
         val stroke: Stroke = g2d.getStroke
 
-        g2d.setStroke(new BasicStroke(zoom(1f), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND))
-        g2d.setColor(InterfaceColors.toolbarSeparator())
-        g2d.drawLine(getWidth / 4, getHeight / 2 - halfHeight, getWidth * 3 / 4, getHeight / 2 + halfHeight)
+        g2d.setStroke(new BasicStroke(zoom(2f), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND))
+        g2d.setColor(InterfaceColors.toolbarArrow())
+
+        g2d.drawLine(getWidth / 2 - getHeight / 2, zoom(3), getWidth / 2, getHeight - zoom(3))
+        g2d.drawLine(getWidth / 2, getHeight - zoom(3), getWidth / 2 + getHeight / 2, zoom(3))
+
         g2d.setStroke(stroke)
       }
     }
@@ -270,11 +271,11 @@ class InterfaceTab(workspace: GUIWorkspace,
 
     override def getPreferredSize: Dimension = {
       if (collapsed) {
-        new Dimension(super.getPreferredSize.width, zoom(16))
+        new Dimension(super.getPreferredSize.width, zoom(18))
       } else {
         new Dimension(super.getPreferredSize.width, widgetControls.getPreferredSize.height.
                                                     max(speedSlider.getPreferredSize.height).
-                                                    max(viewUpdatePanel.getPreferredSize.height) + zoom(16))
+                                                    max(viewUpdatePanel.getPreferredSize.height) + zoom(18))
       }
     }
 
