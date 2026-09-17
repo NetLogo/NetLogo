@@ -24,6 +24,8 @@ object JarLoader {
 
   // called during initialization of App to reduce tmpdir bloat (Isaac B 1/2/26)
   def deleteCopies(): Unit = {
+    copiedURLs.clear()
+
     if (Files.exists(copyRoot))
       copyRoot.toFile.listFiles.foreach(deleteRecursive)
   }
@@ -124,7 +126,7 @@ class JarLoader(workspace: ExtendableWorkspace) extends ExtensionManager.Extensi
   // directory and load it from there instead, allowing the removal of the original extension files to proceed
   // as expected. (Isaac B 1/2/26)
   private def getCopiedExtension(primary: URL): URLCache = {
-    if (!JarLoader.copiedURLs.contains(primary)) {
+    if (!JarLoader.copiedURLs.get(primary).exists(cache => Files.exists(Paths.get(cache.primary.toURI)))) {
       Files.createDirectories(JarLoader.copyRoot)
 
       val jarPath = Path.of(primary.toURI)
