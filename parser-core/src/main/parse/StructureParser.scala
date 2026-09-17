@@ -79,20 +79,24 @@ object StructureParser {
                 exception(I18N.errors.getN("compiler.StructureParser.importNotFound", currentImport.pathComponents.mkString(":")), currentImport.token)
               }
 
-              if (currentImport.importedIdentifiers.nonEmpty && suppliedPaths.length > 1) {
-                exception(I18N.errors.getN("compiler.StructureParser.importSelectiveFromNonModule"), currentImport.token)
-              }
-
               for (currentPath <- suppliedPaths) {
+                val basePath = compilationEnvironment.resolvePath(currentImport.filename.getOrElse(""))
+                val relativePath = currentPath.stripPrefix(s"$basePath$separator")
+                val pathComponentCount = relativePath.split(separator).length
+                val modulePathComponentCount = currentImport.pathComponents.length
+                val isSelectiveImport = currentImport.importedIdentifiers.nonEmpty
+
+                if (isSelectiveImport && modulePathComponentCount < pathComponentCount) {
+                  exception(I18N.errors.getN("compiler.StructureParser.importSelectiveFromNonModule"), currentImport.token)
+                }
+
                 val prefix =
                   currentImport.pathAlias match {
                     case Some(x) => s"$x:"
                     case None =>
-                      if (currentImport.importedIdentifiers.nonEmpty) {
+                      if (isSelectiveImport) {
                         ""
                       } else {
-                        val basePath = compilationEnvironment.resolvePath(currentImport.filename.getOrElse(""))
-                        val relativePath = currentPath.stripPrefix(s"$basePath$separator")
                         val path = relativePath.replace(separator, ":").toUpperCase(Locale.ROOT).stripSuffix(".NLM")
 
                         if (path.nonEmpty) {
