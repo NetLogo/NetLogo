@@ -31,11 +31,7 @@ class AppFrame extends JFrame with LinkParent with LinkRoot with NetLogoIcon wit
     }
   })
 
-  override def zoomWindow(): Unit = {
-    getComponents.foreach(zoomComponents)
-
-    zoomMenuBar(App.app.mainMenuBar)
-
+  override def packWindow(): Unit = {
     App.app.smartPack(App.app.frame.getPreferredSize, false)
   }
 

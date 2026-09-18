@@ -30,6 +30,10 @@ trait ZoomHelpers {
 
   def zoomMenuBar(menuBar: MenuBar): Unit = {
     menuBar.getComponents.foreach {
+      case menu: Menu =>
+        menu.setPopupMenuVisible(false)
+        menu.zoom()
+
       case zoomable: Zoomable =>
         zoomable.zoom()
 
