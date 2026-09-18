@@ -74,11 +74,7 @@ trait ZoomableWindow(parent: Option[Component]) extends Window with RootPaneCont
       case _ =>
     }
 
-    pack()
-
-    val screen: Dimension = getToolkit.getScreenSize
-
-    setLocation(getX.min(screen.width - getWidth).max(0), getY.min(screen.height - getHeight).max(0))
+    packWindow()
   }
 
   def zoomIn(): Unit = {
@@ -91,6 +87,14 @@ trait ZoomableWindow(parent: Option[Component]) extends Window with RootPaneCont
 
   def resetZoom(): Unit = {
     setZoomFactor(1)
+  }
+
+  protected def packWindow(): Unit = {
+    pack()
+
+    val screen: Dimension = getToolkit.getScreenSize
+
+    setLocation(getX.min(screen.width - getWidth).max(0), getY.min(screen.height - getHeight).max(0))
   }
 
   private def setZoomFactor(factor: Float): Unit = {
