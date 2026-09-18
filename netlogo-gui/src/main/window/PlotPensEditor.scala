@@ -317,7 +317,7 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], compiler: Compil
     class ButtonCellEditor extends AbstractCellEditor with TableCellRenderer with TableCellEditor {
       private val editIcon   = Utils.iconScaledWithColor(table, "/images/edit.png", 15, 15,
                                                          () => InterfaceColors.toolbarImage())
-      private val alertIcon  = Utils.iconScaled(table, "/images/edit-error.png", 15, 15)
+      private val alertIcon  = Utils.iconScaledWithColor(table, "/images/edit.png", 15, 15, () => Color.RED)
       private val deleteIcon = Utils.iconScaledWithColor(table, "/images/delete.png", 15, 15,
                                                          () => InterfaceColors.toolbarImage())
 

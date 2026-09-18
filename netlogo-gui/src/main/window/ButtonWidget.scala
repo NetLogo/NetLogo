@@ -2,75 +2,21 @@
 
 package org.nlogo.window
 
-import java.awt.{ Cursor, Dimension, Graphics }
+import java.awt.{ Color, Cursor, Dimension, Graphics }
 import java.awt.event.{ MouseEvent, MouseListener, MouseMotionListener }
-import java.awt.image.FilteredImageSource
-import javax.swing.{ Box, BoxLayout, ImageIcon, JLabel }
+import javax.swing.{ Box, BoxLayout, Icon, JLabel }
 
 import org.nlogo.api.{ CompilerServices, MersenneTwisterFast, Options }
-import org.nlogo.awt.{ DarkenImageFilter, Mouse }, Mouse.hasButton1
+import org.nlogo.awt.Mouse.hasButton1
 import org.nlogo.core.{ AgentKind, Button => CoreButton, I18N, Widget => CoreWidget }
 import org.nlogo.editor.Colorizer
 import org.nlogo.nvm.Procedure
 import org.nlogo.swing.{ BoxColumn, HorizontalStrut, Utils, Zoomable, ZoomableBorder }
 import org.nlogo.theme.InterfaceColors
 
-object ButtonWidget {
-  object ButtonType {
-
-    // the 4 possible button types
-    val ObserverButton = ButtonType("observer", AgentKind.Observer, img = None, darkImg = None)
-    val TurtleButton = ButtonType("turtle", AgentKind.Turtle, "/images/turtle.png")
-    val LinkButton = ButtonType("link", AgentKind.Link, "/images/link.png")
-    val PatchButton = ButtonType("patch", AgentKind.Patch, "/images/patch.png")
-
-    val buttonTypes = List(ObserverButton, TurtleButton, LinkButton, PatchButton)
-
-    def darkImage(image: ImageIcon) = new ImageIcon(java.awt.Toolkit.getDefaultToolkit.createImage(
-      new FilteredImageSource(image.getImage.getSource, new DarkenImageFilter(0.5))))
-
-    private def apply(headerCode:String, agentKind:AgentKind, imagePath: String): ButtonType = {
-      val img = Utils.icon(imagePath)
-      new ButtonType(headerCode, agentKind, Some(img), Some(darkImage(img)))
-    }
-    def apply(c:AgentKind): ButtonType = {
-      buttonTypes.find(_.agentKind == c).getOrElse(ObserverButton) //TODO or should we say error("bad agent class")
-    }
-    def apply(name:String): ButtonType = {
-      buttonTypes.find(_.name == name).getOrElse(ObserverButton) //TODO or should we say error("bad agent name")
-    }
-    def getAgentClass(name:String) = {
-      //TODO or should we say error("bad agent name")
-      buttonTypes.find(_.name == name).map(_.agentKind).getOrElse(ObserverButton.agentKind)
-    }
-
-    // used for the dropdown in the button editor in the UI.
-    def defaultAgentOptions = new Options[String](){
-      implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("common")
-      addOption(I18N.gui("observer"), ButtonType.ObserverButton.name)
-      addOption(I18N.gui("turtles"), ButtonType.TurtleButton.name)
-      addOption(I18N.gui("patches"), ButtonType.PatchButton.name)
-      addOption(I18N.gui("links"), ButtonType.LinkButton.name)
-    }
-  }
-  // encapsulates what used to be a bunch of 4 way if statements.
-  // ButtonWidget now has a single ButtonType object that handles all this logic for it.
-  case class ButtonType(name: String, agentKind:AgentKind,
-                        img:Option[ImageIcon], darkImg:Option[ImageIcon]){
-    def img(dark:Boolean): Option[ImageIcon] = if(dark) darkImg else img
-    def toHeaderCode = "__" + name.toLowerCase + "code "
-    def toAgentOptions = {
-      val opts = ButtonType.defaultAgentOptions
-      opts.selectValue(name)
-      opts
-    }
-  }
-}
 class ButtonWidget(random: MersenneTwisterFast, compiler: CompilerServices, colorizer: Colorizer)
   extends JobWidget(random) with Editable with MouseListener with MouseMotionListener
   with Events.JobRemovedEvent.Handler with Events.TickStateChangeEvent.Handler {
-
-  import ButtonWidget._
 
   private val foreverIcon = Utils.iconScaledWithColor(this, "/images/forever.png", 15, 15,
                                                       () => InterfaceColors.buttonText())
@@ -553,6 +499,59 @@ class ButtonWidget(random: MersenneTwisterFast, compiler: CompilerServices, colo
         chooseDisplayName()
 
       case _ =>
+    }
+  }
+
+  object ButtonType {
+    // the 4 possible button types
+    val ObserverButton = ButtonType("observer", AgentKind.Observer, img = None, darkImg = None)
+    val TurtleButton = ButtonType("turtle", AgentKind.Turtle, "/images/turtle.png")
+    val LinkButton = ButtonType("link", AgentKind.Link, "/images/link.png")
+    val PatchButton = ButtonType("patch", AgentKind.Patch, "/images/patch.png")
+
+    val buttonTypes = List(ObserverButton, TurtleButton, LinkButton, PatchButton)
+
+    private def apply(headerCode: String, agentKind: AgentKind, imagePath: String): ButtonType = {
+      new ButtonType(headerCode, agentKind, Option(
+        Utils.iconScaled(ButtonWidget.this, imagePath, 16, 16)
+      ), Option(
+        Utils.iconScaledWithColor(ButtonWidget.this, imagePath, 16, 16, () => new Color(0, 0, 0, 128))
+      ))
+    }
+
+    def apply(c: AgentKind): ButtonType = {
+      buttonTypes.find(_.agentKind == c).getOrElse(ObserverButton) //TODO or should we say error("bad agent class")
+    }
+
+    def apply(name:String): ButtonType = {
+      buttonTypes.find(_.name == name).getOrElse(ObserverButton) //TODO or should we say error("bad agent name")
+    }
+
+    def getAgentClass(name:String) = {
+      //TODO or should we say error("bad agent name")
+      buttonTypes.find(_.name == name).map(_.agentKind).getOrElse(ObserverButton.agentKind)
+    }
+
+    // used for the dropdown in the button editor in the UI.
+    def defaultAgentOptions = new Options[String](){
+      implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("common")
+      addOption(I18N.gui("observer"), ButtonType.ObserverButton.name)
+      addOption(I18N.gui("turtles"), ButtonType.TurtleButton.name)
+      addOption(I18N.gui("patches"), ButtonType.PatchButton.name)
+      addOption(I18N.gui("links"), ButtonType.LinkButton.name)
+    }
+  }
+
+  // encapsulates what used to be a bunch of 4 way if statements.
+  // ButtonWidget now has a single ButtonType object that handles all this logic for it.
+  case class ButtonType(name: String, agentKind:AgentKind,
+                        img:Option[Icon], darkImg:Option[Icon]){
+    def img(dark:Boolean): Option[Icon] = if(dark) darkImg else img
+    def toHeaderCode = "__" + name.toLowerCase + "code "
+    def toAgentOptions = {
+      val opts = ButtonType.defaultAgentOptions
+      opts.selectValue(name)
+      opts
     }
   }
 }
