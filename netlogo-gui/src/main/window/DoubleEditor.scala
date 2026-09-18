@@ -2,26 +2,25 @@
 
 package org.nlogo.window
 
-import java.awt.BorderLayout
 import javax.swing.JLabel
 
 import org.nlogo.api.Dump
+import org.nlogo.swing.{ BoxRow, MaximumHeight, TextField, Zoomable }
 import org.nlogo.swing.Implicits.thunk2documentListener
-import org.nlogo.swing.TextField
 import org.nlogo.theme.InterfaceColors
 
 import scala.util.{ Success, Try }
 
-class DoubleEditor(accessor: PropertyAccessor[Double]) extends PropertyEditor(accessor) {
-  private val label = new JLabel(accessor.name)
+class DoubleEditor(accessor: PropertyAccessor[Double])
+  extends BoxRow(6) with PropertyEditor(accessor) with MaximumHeight {
+
+  private val label = new JLabel(accessor.name) with Zoomable
   private val editor = new TextField(8) {
     getDocument.addDocumentListener(() => accessor.changed())
   }
 
-  setLayout(new BorderLayout(6, 0))
-
-  add(label, BorderLayout.WEST)
-  add(editor, BorderLayout.CENTER)
+  add(label)
+  add(editor)
 
   override def setEnabled(enabled: Boolean): Unit = {
     super.setEnabled(enabled)

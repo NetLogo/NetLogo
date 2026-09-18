@@ -8,7 +8,7 @@ import org.nlogo.core.{ I18N, View => CoreView, Widget => CoreWidget,
   Button => CoreButton, Chooser => CoreChooser, InputBox => CoreInputBox,
   Monitor => CoreMonitor, Output => CoreOutput, Plot => CorePlot, Slider => CoreSlider,
   Switch => CoreSwitch, TextBox => CoreTextBox }
-import org.nlogo.swing.Utils
+import org.nlogo.swing.{ Utils, ZoomHelpers }
 
 object WidgetInfo {
   def apply(widgetType: String, imageName: String, widgetThunk: () => CoreWidget): WidgetInfo = {
@@ -32,7 +32,7 @@ object WidgetInfo {
 }
 
 case class WidgetInfo(displayName: String, widgetThunk: () => CoreWidget, imageName: String) {
-  def icon = Utils.iconScaled("/images/" + imageName, 27, 16)
+  def icon(zoom: ZoomHelpers) = Utils.iconScaled(zoom, "/images/" + imageName, 27, 16)
   def coreWidget = widgetThunk()
 }
 

@@ -17,15 +17,14 @@ import org.nlogo.core.{ I18N, Button => CoreButton, Chooser => CoreChooser, Inpu
 import org.nlogo.editor.{ EditorArea, EditorConfiguration }
 import org.nlogo.log.LogManager
 import org.nlogo.nvm.DefaultCompilerServices
-import org.nlogo.swing.{ ClipboardUtils, MenuItem, PopupMenu, UndoManager, Utils }
+import org.nlogo.swing.{ ClipboardUtils, MenuItem, PopupMenu, UndoManager, Utils, Zoomable }
 import org.nlogo.theme.InterfaceColors
-import org.nlogo.window.{ AbstractPlotWidget, AbstractWidgetPanel, AutoIndentHandler, ButtonWidget, CopyPasteTarget,
-                          Editable, EditDialogFactory, Events => WindowEvents, GUIWorkspace, InterfaceMode,
-                          OutputWidget, Widget, WidgetContainer, WidgetRegistry, DummyChooserWidget,
-                          DummyInputBoxWidget, DummyPlotWidget, DummyViewWidget, MouseMode, PlotWidget, SliderWidget,
-                          ViewWidget, WidgetInfo },
+import org.nlogo.window.{ AbstractWidgetPanel, AutoIndentHandler, ButtonWidget, CopyPasteTarget, Editable,
+                          EditDialogFactory, Events => WindowEvents, GUIWorkspace, InterfaceMode, OutputWidget, Widget,
+                          WidgetContainer, WidgetRegistry, DummyChooserWidget, DummyInputBoxWidget, DummyPlotWidget,
+                          DummyViewWidget, MouseMode, PlotWidget, SliderWidget, ViewWidget, WidgetInfo },
   WindowEvents.{ CompileAllEvent, DirtyEvent, InterfaceModeChangedEvent, LoadBeginEvent, SetInterfaceModeEvent,
-                 WidgetRemovedEvent, ZoomedEvent }
+                 WidgetRemovedEvent }
 
 // note that an instance of this class is used for the hubnet client editor
 // and its subclass InterfacePanel is used for the interface tab.
@@ -42,7 +41,8 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
     with WidgetRemovedEvent.Handler
     with LoadBeginEvent.Handler
     with SetInterfaceModeEvent.Handler
-    with CopyPasteTarget {
+    with CopyPasteTarget
+    with Zoomable {
 
   override val widgetControls: InterfaceWidgetControls =
     new InterfaceWidgetControls(this, workspace, widgetInfos, frame, dialogFactory)
@@ -274,10 +274,12 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
   ///
 
   def snapToGrid(value: Int, ceil: Boolean = false): Int = {
+    val gridSize: Double = zoom(5f)
+
     if (ceil) {
-      ((value / (5 * zoomFactor)).ceil.toInt * 5 * zoomFactor).toInt
+      ((value / gridSize).ceil.toInt * gridSize).toInt
     } else {
-      ((value / (5 * zoomFactor)).floor.toInt * 5 * zoomFactor).toInt
+      ((value / gridSize).floor.toInt * gridSize).toInt
     }
   }
 
@@ -663,7 +665,7 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
     if (interfaceMode == InterfaceMode.Interact)
       interceptPane.disableIntercept()
 
-    val menu = new PopupMenu
+    val menu = new PopupMenu(this)
 
     def menuItem(keyName: String, widget: CoreWidget): WidgetCreationMenuItem = {
       new WidgetCreationMenuItem(I18N.gui.get(s"tabs.run.widgets.$keyName"), widget)
@@ -854,16 +856,16 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
 
       e.getKeyCode match {
         case KeyEvent.VK_RIGHT =>
-          WidgetActions.moveWidgets(selectedWrappers.map(w => (w, w.getX + dist, w.getY)))
+          WidgetActions.moveWidgets(this, selectedWrappers.map(w => (w, w.getX + dist, w.getY)))
 
         case KeyEvent.VK_LEFT if selectedWrappers.forall(_.widgetX - dist > 0) =>
-          WidgetActions.moveWidgets(selectedWrappers.map(w => (w, w.getX - dist, w.getY)))
+          WidgetActions.moveWidgets(this, selectedWrappers.map(w => (w, w.getX - dist, w.getY)))
 
         case KeyEvent.VK_UP if selectedWrappers.forall(_.widgetY - dist > 0) =>
-          WidgetActions.moveWidgets(selectedWrappers.map(w => (w, w.getX, w.getY - dist)))
+          WidgetActions.moveWidgets(this, selectedWrappers.map(w => (w, w.getX, w.getY - dist)))
 
         case KeyEvent.VK_DOWN =>
-          WidgetActions.moveWidgets(selectedWrappers.map(w => (w, w.getX, w.getY + dist)))
+          WidgetActions.moveWidgets(this, selectedWrappers.map(w => (w, w.getX, w.getY + dist)))
 
         case KeyEvent.VK_BACK_SPACE | KeyEvent.VK_DELETE =>
             deleteSelectedWidgets()
@@ -984,12 +986,8 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
   def addWidget(widget: Widget, x: Int, y: Int, select: Boolean, loadingWidget: Boolean): WidgetWrapper = {
     widget.setWidgetContainer(this)
 
-    val size = widget.getSize()
     val wrapper = new WidgetWrapper(widget, this)
     wrapper.setVisible(false)
-    // we need to add the wrapper before we can call wrapper.getPreferredSize(), because
-    // that method looks at its parent and sees if it's an InterfacePanel
-    // and zooms accordingly - ST 6/16/02
     add(wrapper, JLayeredPane.DEFAULT_LAYER)
     moveToFront(wrapper)
 
@@ -998,20 +996,20 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
     if (select || ! loadingWidget) {
       wrapper.setSize(wrapper.getPreferredSize)
     } else {
-      wrapper.setSize(size)
+      val bounds: Rectangle = widget.getUnzoomedBounds
+
+      wrapper.setSize(zoom(bounds.width), zoom(bounds.height))
     }
 
     if (workspace.snapOn && !loadingWidget) {
-      wrapper.setLocation(snapToGrid(x), snapToGrid(y))
+      wrapper.setLocation(zoom(snapToGrid(x)), zoom(snapToGrid(y)))
     } else {
-      wrapper.setLocation(x, y)
+      wrapper.setLocation(zoom(x), zoom(y))
     }
 
     wrapper.validate()
     wrapper.syncTheme()
     wrapper.setVisible(true)
-
-    zoomer.zoomWidget(wrapper, true, loadingWidget, 1.0, zoomFactor)
 
     if (select) {
       shadowWidgets = Some(NewShadowWidget(wrapper))
@@ -1026,9 +1024,6 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
   def reAddWidget(widgetWrapper: WidgetWrapper): WidgetWrapper = {
     widgetWrapper.widget.setWidgetContainer(this)
     widgetWrapper.setVisible(false)
-    // we need to add the wrapper before we can call wrapper.getPreferredSize(), because
-    // that method looks at its parent and sees if it's an InterfacePanel
-    // and zooms accordingly - ST 6/16/02
     add(widgetWrapper, JLayeredPane.DEFAULT_LAYER)
     moveToFront(widgetWrapper)
 
@@ -1039,7 +1034,6 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
     widgetWrapper.setVisible(true)
     widgetWrapper.widget.reAdd()
 
-    zoomer.zoomWidget(widgetWrapper, true, false, 1.0, zoomFactor)
     new CompileAllEvent().raise(this)
     LogManager.widgetAdded(false, widgetWrapper.widget.classDisplayName, widgetWrapper.widget.displayName)
     widgetWrapper
@@ -1068,7 +1062,7 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
     wrapper.setPlacing(true)
     wrapper.validate()
 
-    zoomer.zoomWidget(wrapper, true, false, 1.0, zoomFactor)
+    newWidget.setUnzoomedBounds(unzoomBounds(wrapper.widgetBounds))
 
     setInterfaceMode(InterfaceMode.Add, true)
 
@@ -1106,11 +1100,11 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
 
       wrapper.setLocation(start.x + widget.x - min.x, start.y + widget.y - min.y)
       wrapper.setSize(widget.width, widget.height)
+
+      newWidget.setUnzoomedBounds(unzoomBounds(wrapper.widgetBounds))
+
       wrapper.setPlacing(true)
       wrapper.validate()
-
-      zoomer.zoomWidget(wrapper, true, true, 1.0, zoomFactor)
-
       wrapper.syncTheme()
 
       (wrapper, new Point(widget.x - min.x, widget.y - min.y))
@@ -1155,17 +1149,17 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
 
   private def placeMultipleShadowWidgets(wrappers: Seq[(WidgetWrapper, Point)]): Unit = {
     wrappers.foreach {
-      case (wrapper, _) =>
-        if (maybeReplaceWidget(wrapper)) {
-          wrapper.foreground()
-          wrapper.setPlacing(false)
+      case (wrapper, _) if maybeReplaceWidget(wrapper) =>
+        wrapper.foreground()
+        wrapper.setPlacing(false)
 
-          WidgetActions.addWidget(this, wrapper)
+        wrapper.widget.setUnzoomedBounds(unzoomBounds(wrapper.widgetBounds))
 
-          LogManager.widgetAdded(false, wrapper.widget.classDisplayName, wrapper.widget.displayName)
-        }
+        WidgetActions.addWidget(this, wrapper)
 
-        resetZoomInfo(wrapper.widget)
+        LogManager.widgetAdded(false, wrapper.widget.classDisplayName, wrapper.widget.displayName)
+
+      case _ =>
     }
 
     shadowWidgets = None
@@ -1247,8 +1241,6 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
           case ww: WidgetWrapper =>
             ww.selected(false)
 
-            resetZoomInfo(ww.widget)
-
           case _ =>
         }
       case _ =>
@@ -1260,6 +1252,8 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
         case comp: Component =>
           comp.getParent match {
             case ww: WidgetWrapper if ww.isNew =>
+              ww.widget.setUnzoomedBounds(unzoomBounds(ww.widgetBounds))
+
               WidgetActions.addWidget(this, ww)
 
               LogManager.widgetAdded(false, ww.widget.classDisplayName, ww.widget.displayName)
@@ -1336,7 +1330,7 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
     val ordered = selectedWrappers.sortBy(_.getX)
     val target = ordered(0)
 
-    WidgetActions.moveWidgets(validWrappers(ordered, (w) => {
+    WidgetActions.moveWidgets(this, validWrappers(ordered, (w) => {
       new Rectangle(target.widgetX, w.widgetY, w.widgetWidth, w.widgetHeight)
     }).map(w => (w, target.getX, w.getY)))
   }
@@ -1358,7 +1352,7 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
     val center = left.getX + (right.getX + right.getWidth - left.getX) / 2
     val ordered = selectedWrappers.sortBy(w => (w.getX + w.getWidth / 2 - center).abs)
 
-    WidgetActions.moveWidgets(validWrappers(ordered, (w) => {
+    WidgetActions.moveWidgets(this, validWrappers(ordered, (w) => {
       new Rectangle(center - w.widgetWidth / 2, w.widgetY, w.widgetWidth, w.widgetHeight)
     }).map(w => (w, center - w.getWidth / 2, w.getY)))
   }
@@ -1376,7 +1370,7 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
     val ordered = selectedWrappers.sortBy(w => w.getX + w.getWidth).reverse
     val target = ordered(0)
 
-    WidgetActions.moveWidgets(validWrappers(ordered, (w) => {
+    WidgetActions.moveWidgets(this, validWrappers(ordered, (w) => {
       new Rectangle(target.widgetX + target.widgetWidth - w.widgetWidth, w.widgetY, w.widgetWidth, w.widgetHeight)
     }).map(w => (w, target.getX + target.getWidth - w.getWidth, w.getY)))
   }
@@ -1394,7 +1388,7 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
     val ordered = selectedWrappers.sortBy(_.getY)
     val target = ordered(0)
 
-    WidgetActions.moveWidgets(validWrappers(ordered, (w) => {
+    WidgetActions.moveWidgets(this, validWrappers(ordered, (w) => {
       new Rectangle(w.widgetX, target.widgetY, w.widgetWidth, w.widgetHeight)
     }).map(w => (w, w.getX, target.getY)))
   }
@@ -1416,7 +1410,7 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
     val center = top.getY + (bottom.getY + bottom.getHeight - top.getY) / 2
     val ordered = selectedWrappers.sortBy(w => (w.getY + w.getHeight / 2 - center).abs)
 
-    WidgetActions.moveWidgets(validWrappers(ordered, (w) => {
+    WidgetActions.moveWidgets(this, validWrappers(ordered, (w) => {
       new Rectangle(w.widgetX, center - w.widgetHeight / 2, w.widgetWidth, w.widgetHeight)
     }).map(w => (w, w.getX, center - w.getHeight / 2)))
   }
@@ -1434,7 +1428,7 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
     val ordered = selectedWrappers.sortBy(w => w.getY + w.getHeight).reverse
     val target = ordered(0)
 
-    WidgetActions.moveWidgets(validWrappers(ordered, (w) => {
+    WidgetActions.moveWidgets(this, validWrappers(ordered, (w) => {
       new Rectangle(w.widgetX, target.widgetY + target.widgetHeight - w.widgetHeight, w.widgetWidth, w.widgetHeight)
     }).map(w => (w, w.getX, target.getY + target.getHeight - w.getHeight)))
   }
@@ -1446,7 +1440,7 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
 
     var start = ordered(0).getX + ordered(0).getWidth + space
 
-    WidgetActions.moveWidgets(ordered.drop(1).dropRight(1).map { w =>
+    WidgetActions.moveWidgets(this, ordered.drop(1).dropRight(1).map { w =>
       val out = (w, start, w.getY)
 
       start += w.getWidth + space
@@ -1462,7 +1456,7 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
 
     var start = ordered(0).getY + ordered(0).getHeight + space
 
-    WidgetActions.moveWidgets(ordered.drop(1).dropRight(1).map { w =>
+    WidgetActions.moveWidgets(this, ordered.drop(1).dropRight(1).map { w =>
       val out = (w, w.getX, start)
 
       start += w.getHeight + space
@@ -1474,40 +1468,33 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
   def stretchLeft(): Unit = {
     val target = selectedWrappers.minBy(_.getX)
 
-    WidgetActions.reboundWidgets(selectedWrappers.map(w =>
+    WidgetActions.stretchWidgets(this, selectedWrappers.map(w =>
       (w, new Rectangle(target.getX, w.getY, w.getX + w.getWidth - target.getX, w.getHeight))))
   }
 
   def stretchRight(): Unit = {
     val target = selectedWrappers.maxBy(w => w.getX + w.getWidth)
 
-    WidgetActions.resizeWidgets(selectedWrappers.map(w =>
-      (w, target.getX + target.getWidth - w.getX, w.getHeight)))
+    WidgetActions.stretchWidgets(this, selectedWrappers.map(w =>
+      (w, new Rectangle(w.getX, w.getY, target.getX + target.getWidth - w.getX, w.getHeight))))
   }
 
   def stretchTop(): Unit = {
     val target = selectedWrappers.minBy(_.getY)
 
-    WidgetActions.reboundWidgets(selectedWrappers.map(w =>
+    WidgetActions.stretchWidgets(this, selectedWrappers.map(w =>
       (w, new Rectangle(w.getX, target.getY, w.getWidth, w.getY + w.getHeight - target.getY))))
   }
 
   def stretchBottom(): Unit = {
     val target = selectedWrappers.maxBy(w => w.getY + w.getHeight)
 
-    WidgetActions.resizeWidgets(selectedWrappers.map(w =>
-      (w, w.getWidth, target.getY + target.getHeight - w.getY)))
+    WidgetActions.stretchWidgets(this, selectedWrappers.map(w =>
+      (w, new Rectangle(w.getX, w.getY, w.getWidth, target.getY + target.getHeight - w.getY))))
   }
 
   def sliderEventOnReleaseOnly(sliderEventOnReleaseOnly: Boolean): Unit = {
     this.sliderEventOnReleaseOnly = sliderEventOnReleaseOnly
-  }
-
-  override def handle(e: ZoomedEvent): Unit = {
-    super.handle(e)
-    unselectWidgets()
-    zoomer.zoomWidgets(zoomFactor)
-    revalidate()
   }
 
   /// loading and saving
@@ -1520,6 +1507,7 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
     val newGuy = makeWidget(coreWidget)
     if (newGuy != null) {
       newGuy.load(coreWidget)
+      newGuy.setUnzoomedBounds(x, y, coreWidget.width, coreWidget.height)
       enforceMinimumAndMaximumWidgetSizes(newGuy)
       addWidget(newGuy, x, y, false, true)
     }
@@ -1549,7 +1537,6 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
     // removeAllWidgets doesn't completely delete the view, so we need to unselect it or it
     // gets sized incorrectly when the next model loads (Isaac B 7/22/25)
     unselectWidgets()
-    zoomer.forgetAllZoomInfo()
     WidgetActions.undoManager.discardAllEdits()
   }
 
@@ -1639,20 +1626,6 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
 
   /// dispatch WidgetContainer methods
 
-  def getUnzoomedBounds(component: Component): Rectangle =
-    zoomer.getUnzoomedBounds(component)
-
-  def resetZoomInfo(widget: Widget): Unit = {
-    zoomer.updateZoomInfo(widget)
-  }
-
-  def resetSizeInfo(widget: Widget): Unit = {
-    getWrapper(widget).widgetResized()
-  }
-
-  def isZoomed: Boolean =
-    zoomer.zoomFactor != 1.0
-
   def canAddWidget(widget: String): Boolean = {
     if (widget.equals(I18N.gui.get("tabs.run.widgets.view"))) {
       !hasView
@@ -1735,12 +1708,12 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
         // intelligent and aesthetic (Isaac B 7/17/25)
         w.widget match {
           case button: ButtonWidget =>
-            w.setSize(new Dimension(width, height.max(ButtonWidget.PrefHeight)))
+            w.setSize(new Dimension(width, height.max(button.getPreferredSize.height)))
 
           case plot: PlotWidget =>
-            val newHeight = (height + plot.legendHeight).max(AbstractPlotWidget.PREF_SIZE.height + plot.legendHeight)
+            val newHeight = (height + plot.legendHeight).max(plot.getPreferredSize.height + plot.legendHeight)
 
-            w.setSize(new Dimension(width.max(AbstractPlotWidget.PREF_SIZE.width), newHeight))
+            w.setSize(new Dimension(width.max(plot.getPreferredSize.width), newHeight))
 
           case _ =>
             w.setSize(new Dimension(width, height))
@@ -1783,8 +1756,6 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
 
       case _ =>
     })
-
-    getWrappers.foreach(w => resetZoomInfo(w.widget))
 
     revalidate()
     repaint()

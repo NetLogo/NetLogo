@@ -2,12 +2,10 @@
 
 package org.nlogo.window
 
-import java.awt.{ GridBagConstraints, Insets }
-
 import org.nlogo.api.{ CompilerServices, ExtensionManager }
 import org.nlogo.core.I18N
 import org.nlogo.editor.Colorizer
-import org.nlogo.swing.AutomationUtils
+import org.nlogo.swing.{ AutomationUtils, BoxAlign, BoxRow }
 
 class ChooserEditPanel(target: ChooserWidget, compiler: CompilerServices, colorizer: Colorizer,
                        extensionManager: ExtensionManager) extends WidgetEditPanel(target) {
@@ -43,28 +41,9 @@ class ChooserEditPanel(target: ChooserWidget, compiler: CompilerServices, colori
         _.foreach(target.oldSize),
         () => apply()))
 
-  locally {
-    val c = new GridBagConstraints
-
-    c.gridx = 0
-    c.fill = GridBagConstraints.HORIZONTAL
-    c.weightx = 1
-    c.insets = new Insets(6, 6, 6, 6)
-
-    add(nameWrapper, c)
-
-    c.fill = GridBagConstraints.BOTH
-    c.weighty = 1
-    c.insets = new Insets(0, 6, 6, 6)
-
-    add(choicesLabeled, c)
-
-    c.anchor = GridBagConstraints.WEST
-    c.fill = GridBagConstraints.NONE
-    c.weighty = 0
-
-    add(oldSize, c)
-  }
+  add(nameWrapper)
+  add(choicesLabeled)
+  add(new BoxRow(oldSize, BoxAlign.Start))
 
   override def propertyEditors: Seq[PropertyEditor[?]] =
     Seq(nameWrapper, choicesWrapper, oldSize)

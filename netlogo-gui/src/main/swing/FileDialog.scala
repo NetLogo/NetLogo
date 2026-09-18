@@ -48,7 +48,7 @@ object FileDialog {
     // -Jeremy B June 2021
     if (new OptionPane(owner, I18N.gui.get("common.netlogo"), I18N.gui.getN("file.save.warn.overwrite", path),
                        Seq(I18N.gui.get("common.buttons.replace"), I18N.gui.get("common.buttons.cancel")),
-                       OptionPane.Icons.Question).getSelectedIndex != 0) {
+                       OptionPane.Icons.question).getSelectedIndex != 0) {
       None
     } else {
       Some(path)

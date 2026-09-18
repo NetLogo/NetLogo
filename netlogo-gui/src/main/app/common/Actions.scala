@@ -112,7 +112,7 @@ abstract class ExceptionCatchingAction(name: String, parent: Component) extends 
     } catch {
       case ex: UserCancelException => Exceptions.ignore(ex)
       case ex: IOException => new OptionPane(parent, I18N.gui.get("common.messages.error"), ex.getMessage,
-                                             OptionPane.Options.Ok, OptionPane.Icons.Error)
+                                             OptionPane.Options.Ok, OptionPane.Icons.error)
     }
   }
 }

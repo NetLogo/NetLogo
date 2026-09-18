@@ -2,19 +2,18 @@
 
 package org.nlogo.window
 
-import java.awt.GridBagLayout
-import javax.swing.JPanel
-
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ OptionPane, Transparent }
+import org.nlogo.swing.{ BoxColumn, OptionPane, ZoomableBorder }
 import org.nlogo.theme.ThemeSync
 
 import scala.util.Failure
 
 // This is the contents of an EditDialog, except for the buttons at the bottom (OK/Apply/Cancel).
-abstract class EditPanel(target: Editable) extends JPanel(new GridBagLayout) with Transparent with ThemeSync {
+abstract class EditPanel(target: Editable) extends BoxColumn(6) with ThemeSync {
   // allows EditDialog to reset its minimum size if this panel's minimum size changes
   private var layoutListener: () => Unit = () => {}
+
+  setBorder(new ZoomableBorder(6, 6, 6, 6))
 
   def setLayoutListener(listener: () => Unit): Unit = {
     layoutListener = listener
@@ -47,7 +46,7 @@ abstract class EditPanel(target: Editable) extends JPanel(new GridBagLayout) wit
       case Some(error) =>
         if (!silent) {
           new OptionPane(this, I18N.gui.get("edit.general.invalidSettings"), error, OptionPane.Options.Ok,
-                         OptionPane.Icons.Error)
+                         OptionPane.Icons.error)
         }
 
         false
@@ -57,7 +56,7 @@ abstract class EditPanel(target: Editable) extends JPanel(new GridBagLayout) wit
           case Some(error) =>
             if (!silent) {
               new OptionPane(this, I18N.gui.get("edit.general.invalidSettings"), error, OptionPane.Options.Ok,
-                             OptionPane.Icons.Error)
+                             OptionPane.Icons.error)
             }
 
             false

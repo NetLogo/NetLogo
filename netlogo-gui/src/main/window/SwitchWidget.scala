@@ -59,7 +59,7 @@ class SwitchWidget(compiler: CompilerServices, extensionManager: ExtensionManage
   }
 
   override def model: CoreWidget = {
-    val b = getUnzoomedBounds
+    val b = unzoomedBounds
     val savedDisplayName =
       if (displayName != null && displayName != "") Some(displayName) else None
     val varName =

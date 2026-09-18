@@ -2,22 +2,22 @@
 
 package org.nlogo.window
 
-import java.awt.{ BorderLayout, EventQueue }
+import java.awt.{ Dimension, EventQueue }
 import javax.swing.JLabel
 import javax.swing.event.{ DocumentEvent, DocumentListener }
 
-import org.nlogo.swing.{ FixedLengthDocument, TextField }
+import org.nlogo.swing.{ BoxRow, FixedLengthDocument, MaximumHeight, TextField, Zoomable }
 import org.nlogo.theme.InterfaceColors
 
 import scala.util.{ Success, Try }
 
-class KeyEditor(accessor: PropertyAccessor[Char]) extends PropertyEditor(accessor) {
-  private val label = new JLabel(accessor.name)
+class KeyEditor(accessor: PropertyAccessor[Char])
+  extends BoxRow(6) with PropertyEditor(accessor) with MaximumHeight {
+
+  private val label = new JLabel(accessor.name) with Zoomable
 
   // 2 not 1 here otherwise "W" doesn't fit - ST 1/18/05
   private val editor = new TextField(2, "", new FixedLengthDocument(1)) {
-    setMaximumSize(getPreferredSize)
-
     // use a listener to make it so that after I type a character that character is selected, so if
     // I type another one it replaces the old one - ST 8/6/04
     val listener = new DocumentListener {
@@ -37,12 +37,13 @@ class KeyEditor(accessor: PropertyAccessor[Char]) extends PropertyEditor(accesso
     }
 
     getDocument.addDocumentListener(listener)
+
+    override def getMaximumSize: Dimension =
+      getPreferredSize
   }
 
-  setLayout(new BorderLayout(6, 0))
-
-  add(label, BorderLayout.WEST)
-  add(editor, BorderLayout.CENTER)
+  add(label)
+  add(editor)
 
   override def get: Try[Char] = Success(
     if (editor.getText.isEmpty) '\u0000'

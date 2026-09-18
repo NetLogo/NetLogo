@@ -3,18 +3,19 @@
 package org.nlogo.swing
 
 import java.awt.Component
-import javax.swing.{ JComponent, JPanel }
-
-import org.nlogo.awt.RowLayout
 
 // handy for putting rows of buttons at the bottom of dialogs
 
-class ButtonPanel(buttons: Seq[JComponent])
-  extends JPanel(new RowLayout(10, Component.CENTER_ALIGNMENT, Component.CENTER_ALIGNMENT)) with Transparent {
-
+object ButtonPanel {
   // obey platform standards
-  if (System.getProperty("os.name").contains("Mac"))
-    buttons.reverse.foreach(add)
-  else
-    buttons.foreach(add)
+  private def platformButtons(buttons: Seq[Component]): Seq[Component] = {
+    if (System.getProperty("os.name").contains("Mac")) {
+      buttons.reverse
+    } else {
+      buttons
+    }
+  }
 }
+
+class ButtonPanel(buttons: Seq[Component])
+  extends BoxRow(ButtonPanel.platformButtons(buttons), 10, BoxAlign.Center) with MaximumHeight

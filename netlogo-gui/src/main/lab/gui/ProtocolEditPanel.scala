@@ -2,10 +2,12 @@
 
 package org.nlogo.lab.gui
 
+import java.awt.Dimension
+
 import org.nlogo.api.CompilerServices
 import org.nlogo.core.I18N
 import org.nlogo.editor.Colorizer
-import org.nlogo.swing.DynamicRowLayout
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, MaximumHeight }
 import org.nlogo.window.{ BooleanEditor, CodeEditor, EditPanel, IntegerEditor, PropertyAccessor, PropertyEditor,
                           ReporterLineEditor, StringEditor }
 
@@ -193,25 +195,24 @@ class ProtocolEditPanel(target: ProtocolEditable, compiler: CompilerServices, co
       setToolTipText(I18N.gui.get("tools.behaviorSpace.timeLimit.info"))
     }
 
-  locally {
-    val rowLayout = new DynamicRowLayout(this, 6)
-
-    setLayout(rowLayout)
-
-    rowLayout.addRow(Seq(name))
-    rowLayout.addRow(Seq(valueSets), expandY = () => true)
-    rowLayout.addRow(Seq(repetitions))
-    rowLayout.addRow(Seq(sequentialRunOrder))
-    rowLayout.addRow(Seq(metrics), expandY = () => true)
-    rowLayout.addRow(Seq(runMetricsEveryStep))
-    rowLayout.addRow(Seq(runMetricsCondition))
-    rowLayout.addRow(Seq(preExperimentCommands), expandY = () => !preExperimentCommands.collapsed)
-    rowLayout.addRow(Seq(setupCommands, goCommands), expandY = () => !setupCommands.collapsed || !goCommands.collapsed)
-    rowLayout.addRow(Seq(exitCondition, postRunCommands),
-                     expandY = () => !exitCondition.collapsed || !postRunCommands.collapsed)
-    rowLayout.addRow(Seq(postExperimentCommands), expandY = () => !postExperimentCommands.collapsed)
-    rowLayout.addRow(Seq(timeLimit))
-  }
+  add(name)
+  add(valueSets)
+  add(repetitions)
+  add(new BoxRow(sequentialRunOrder, BoxAlign.Start))
+  add(metrics)
+  add(new BoxRow(runMetricsEveryStep, BoxAlign.Start))
+  add(runMetricsCondition)
+  add(preExperimentCommands)
+  add(new BoxRow(Seq(
+    new BoxColumn(setupCommands, BoxAlign.Start),
+    new BoxColumn(goCommands, BoxAlign.Start)
+  ), 6))
+  add(new BoxRow(Seq(
+    new BoxColumn(exitCondition, BoxAlign.Start),
+    new BoxColumn(postRunCommands, BoxAlign.Start)
+  ), 6) with MaximumHeight)
+  add(postExperimentCommands)
+  add(timeLimit)
 
   override def propertyEditors: Seq[PropertyEditor[?]] =
     Seq(name, valueSets, repetitions, sequentialRunOrder, metrics, runMetricsEveryStep, runMetricsCondition,
@@ -220,6 +221,9 @@ class ProtocolEditPanel(target: ProtocolEditable, compiler: CompilerServices, co
 
   override def isResizable: Boolean =
     true
+
+  override def getMaximumSize: Dimension =
+    new Dimension(super.getMaximumSize.width, Int.MaxValue)
 
   override def requestFocus(): Unit = {
     name.requestFocus()

@@ -321,7 +321,7 @@ class BehaviorSpaceApp(args: BehaviorSpaceApp.CommandLineArgs) extends Thread.Un
   }
 
   private def displayError(message: String): Unit = {
-    new OptionPane(frame, I18N.gui("error.title"), message, OptionPane.Options.Ok, OptionPane.Icons.Error)
+    new OptionPane(frame, I18N.gui("error.title"), message, OptionPane.Options.Ok, OptionPane.Icons.error)
   }
 
   override def uncaughtException(thread: Thread, ex: Throwable): Unit = {

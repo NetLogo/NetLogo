@@ -2,93 +2,41 @@
 
 package org.nlogo.window
 
-import java.awt.{ Cursor, Dimension, Graphics, GridBagLayout, GridBagConstraints, Insets }
+import java.awt.{ Color, Cursor, Dimension, Graphics }
 import java.awt.event.{ MouseEvent, MouseListener, MouseMotionListener }
-import java.awt.image.FilteredImageSource
-import javax.swing.{ ImageIcon, JLabel }
+import javax.swing.{ Box, BoxLayout, Icon, JLabel }
 
 import org.nlogo.api.{ CompilerServices, MersenneTwisterFast, Options }
-import org.nlogo.awt.{ DarkenImageFilter, Mouse }, Mouse.hasButton1
+import org.nlogo.awt.Mouse.hasButton1
 import org.nlogo.core.{ AgentKind, Button => CoreButton, I18N, Widget => CoreWidget }
 import org.nlogo.editor.Colorizer
 import org.nlogo.nvm.Procedure
-import org.nlogo.swing.Utils
+import org.nlogo.swing.{ BoxColumn, HorizontalStrut, Utils, Zoomable, ZoomableBorder }
 import org.nlogo.theme.InterfaceColors
 
-object ButtonWidget {
-  val PrefHeight = 40
-
-  object ButtonType {
-
-    // the 4 possible button types
-    val ObserverButton = ButtonType("observer", AgentKind.Observer, img = None, darkImg = None)
-    val TurtleButton = ButtonType("turtle", AgentKind.Turtle, "/images/turtle.png")
-    val LinkButton = ButtonType("link", AgentKind.Link, "/images/link.png")
-    val PatchButton = ButtonType("patch", AgentKind.Patch, "/images/patch.png")
-
-    val buttonTypes = List(ObserverButton, TurtleButton, LinkButton, PatchButton)
-
-    def darkImage(image: ImageIcon) = new ImageIcon(java.awt.Toolkit.getDefaultToolkit.createImage(
-      new FilteredImageSource(image.getImage.getSource, new DarkenImageFilter(0.5))))
-
-    private def apply(headerCode:String, agentKind:AgentKind, imagePath: String): ButtonType = {
-      val img = Utils.icon(imagePath)
-      new ButtonType(headerCode, agentKind, Some(img), Some(darkImage(img)))
-    }
-    def apply(c:AgentKind): ButtonType = {
-      buttonTypes.find(_.agentKind == c).getOrElse(ObserverButton) //TODO or should we say error("bad agent class")
-    }
-    def apply(name:String): ButtonType = {
-      buttonTypes.find(_.name == name).getOrElse(ObserverButton) //TODO or should we say error("bad agent name")
-    }
-    def getAgentClass(name:String) = {
-      //TODO or should we say error("bad agent name")
-      buttonTypes.find(_.name == name).map(_.agentKind).getOrElse(ObserverButton.agentKind)
-    }
-
-    // used for the dropdown in the button editor in the UI.
-    def defaultAgentOptions = new Options[String](){
-      implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("common")
-      addOption(I18N.gui("observer"), ButtonType.ObserverButton.name)
-      addOption(I18N.gui("turtles"), ButtonType.TurtleButton.name)
-      addOption(I18N.gui("patches"), ButtonType.PatchButton.name)
-      addOption(I18N.gui("links"), ButtonType.LinkButton.name)
-    }
-  }
-  // encapsulates what used to be a bunch of 4 way if statements.
-  // ButtonWidget now has a single ButtonType object that handles all this logic for it.
-  case class ButtonType(name: String, agentKind:AgentKind,
-                        img:Option[ImageIcon], darkImg:Option[ImageIcon]){
-    def img(dark:Boolean): Option[ImageIcon] = if(dark) darkImg else img
-    def toHeaderCode = "__" + name.toLowerCase + "code "
-    def toAgentOptions = {
-      val opts = ButtonType.defaultAgentOptions
-      opts.selectValue(name)
-      opts
-    }
-  }
-}
-class ButtonWidget(random: MersenneTwisterFast, compiler: CompilerServices, colorizer: Colorizer) extends JobWidget(random)
-  with Editable with MouseListener with MouseMotionListener
+class ButtonWidget(random: MersenneTwisterFast, compiler: CompilerServices, colorizer: Colorizer)
+  extends JobWidget(random) with Editable with MouseListener with MouseMotionListener
   with Events.JobRemovedEvent.Handler with Events.TickStateChangeEvent.Handler {
 
-  import ButtonWidget._
-
-  private var foreverIcon = Utils.iconScaledWithColor("/images/forever.png", 15, 15,
-                                                      InterfaceColors.buttonText())
-  private var foreverIconPressed = Utils.iconScaledWithColor("/images/forever.png", 15, 15,
-                                                             InterfaceColors.buttonTextPressed())
-  private var foreverIconDisabled = Utils.iconScaledWithColor("/images/forever.png", 15, 15,
-                                                              InterfaceColors.buttonTextDisabled())
+  private val foreverIcon = Utils.iconScaledWithColor(this, "/images/forever.png", 15, 15,
+                                                      () => InterfaceColors.buttonText())
+  private val foreverIconPressed = Utils.iconScaledWithColor(this, "/images/forever.png", 15, 15,
+                                                             () => InterfaceColors.buttonTextPressed())
+  private val foreverIconDisabled = Utils.iconScaledWithColor(this, "/images/forever.png", 15, 15,
+                                                              () => InterfaceColors.buttonTextDisabled())
 
   private var _buttonType: ButtonType = ButtonType.ObserverButton
 
-  val keyLabel = new JLabel
-  val nameLabel = new JLabel(I18N.gui.get("edit.button.previewName"))
+  val keyLabel = new JLabel with Zoomable {
+    setBaseFont(getFont.deriveFont(12.0f))
+  }
+
+  val nameLabel = new JLabel(I18N.gui.get("edit.button.previewName")) with Zoomable {
+    setBaseFont(getFont.deriveFont(_boldState))
+  }
+
   val foreverLabel = new JLabel(foreverIcon)
   val agentLabel = new JLabel
-
-  keyLabel.setFont(keyLabel.getFont.deriveFont(12.0f))
 
   agentLabel.setVisible(false)
   keyLabel.setVisible(false)
@@ -99,44 +47,19 @@ class ButtonWidget(random: MersenneTwisterFast, compiler: CompilerServices, colo
   foreverLabel.addMouseListener(this)
   agentLabel.addMouseListener(this)
 
-  setLayout(new GridBagLayout)
+  setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
+  setBorder(new ZoomableBorder(3, 3, 3, 3))
 
-  locally {
-    val c = new GridBagConstraints
+  add(agentLabel)
+  add(new HorizontalStrut(6))
+  add(Box.createHorizontalGlue)
+  add(nameLabel)
+  add(Box.createHorizontalGlue)
+  add(new HorizontalStrut(3))
+  add(new BoxColumn(Seq(keyLabel, foreverLabel)))
 
-    c.gridy = 0
-    c.gridheight = 2
-    c.insets = new Insets(3, 6, 3, 0)
-
-    add(agentLabel, c)
-
-    c.weightx = 1
-    c.insets = new Insets(3, 6, 3, 3)
-
-    add(nameLabel, c)
-
-    c.gridheight = 1
-    c.weightx = 0
-    c.anchor = GridBagConstraints.NORTH
-    c.insets = new Insets(3, 0, 0, 3)
-
-    add(keyLabel, c)
-
-    c.gridy = 1
-    c.anchor = GridBagConstraints.SOUTH
-    c.insets = new Insets(0, 0, 3, 3)
-
-    add(foreverLabel, c)
-
-    initGUI()
-
-    addMouseListener(this)
-    addMouseMotionListener(this)
-  }
-
-  override def initGUI(): Unit = {
-    nameLabel.setFont(nameLabel.getFont.deriveFont(_boldState))
-  }
+  addMouseListener(this)
+  addMouseMotionListener(this)
 
   override def editPanel: EditPanel = new ButtonEditPanel(this, compiler, colorizer)
 
@@ -402,14 +325,6 @@ class ButtonWidget(random: MersenneTwisterFast, compiler: CompilerServices, colo
     repaint()
   }
 
-  override def setZoomFactor(zoomFactor: Double): Unit = {
-    super.setZoomFactor(zoomFactor)
-
-    syncTheme()
-    revalidate()
-    repaint()
-  }
-
   def popUpStoppingButton(): Unit = {
     buttonUp = true
     running = false
@@ -470,15 +385,17 @@ class ButtonWidget(random: MersenneTwisterFast, compiler: CompilerServices, colo
 
   /// sizing
   override def getMinimumSize: Dimension = {
-    if (_oldSize) {
-      new Dimension(55, 33)
-    } else {
-      new Dimension(55, 35)
+    zoomSize {
+      if (_oldSize) {
+        new Dimension(55, 33)
+      } else {
+        new Dimension(55, 35)
+      }
     }
   }
 
   override def getPreferredSize =
-    new Dimension(getMinimumSize.width.max(super.getPreferredSize.width + 12), ButtonWidget.PrefHeight)
+    new Dimension(getMinimumSize.width.max(super.getPreferredSize.width + zoom(12)), zoom(40))
 
   /// painting
   override def paintComponent(g: Graphics): Unit = {
@@ -548,18 +465,11 @@ class ButtonWidget(random: MersenneTwisterFast, compiler: CompilerServices, colo
     super.paintComponent(g)
   }
 
-  override def syncTheme(): Unit = {
-    foreverIcon = Utils.iconScaledWithColor("/images/forever.png", zoom(15), zoom(15),
-                                            InterfaceColors.buttonText())
-    foreverIconPressed = Utils.iconScaledWithColor("/images/forever.png", zoom(15), zoom(15),
-                                                   InterfaceColors.buttonTextPressed())
-    foreverIconDisabled = Utils.iconScaledWithColor("/images/forever.png", zoom(15), zoom(15),
-                                                    InterfaceColors.buttonTextDisabled())
-  }
+  override def syncTheme(): Unit = {}
 
   // saving and loading
   override def model: CoreWidget = {
-    val b              = getUnzoomedBounds
+    val b              = unzoomedBounds
     val savedActionKey = if (actionKey == 0 || actionKey == ' ') None else Some(actionKey)
     CoreButton(
       display = name.potentiallyEmptyStringToOption,
@@ -588,6 +498,59 @@ class ButtonWidget(random: MersenneTwisterFast, compiler: CompilerServices, colo
         chooseDisplayName()
 
       case _ =>
+    }
+  }
+
+  object ButtonType {
+    // the 4 possible button types
+    val ObserverButton = ButtonType("observer", AgentKind.Observer, img = None, darkImg = None)
+    val TurtleButton = ButtonType("turtle", AgentKind.Turtle, "/images/turtle.png")
+    val LinkButton = ButtonType("link", AgentKind.Link, "/images/link.png")
+    val PatchButton = ButtonType("patch", AgentKind.Patch, "/images/patch.png")
+
+    val buttonTypes = List(ObserverButton, TurtleButton, LinkButton, PatchButton)
+
+    private def apply(headerCode: String, agentKind: AgentKind, imagePath: String): ButtonType = {
+      new ButtonType(headerCode, agentKind, Option(
+        Utils.iconScaled(ButtonWidget.this, imagePath, 16, 16)
+      ), Option(
+        Utils.iconScaledWithColor(ButtonWidget.this, imagePath, 16, 16, () => new Color(0, 0, 0, 128))
+      ))
+    }
+
+    def apply(c: AgentKind): ButtonType = {
+      buttonTypes.find(_.agentKind == c).getOrElse(ObserverButton) //TODO or should we say error("bad agent class")
+    }
+
+    def apply(name:String): ButtonType = {
+      buttonTypes.find(_.name == name).getOrElse(ObserverButton) //TODO or should we say error("bad agent name")
+    }
+
+    def getAgentClass(name:String) = {
+      //TODO or should we say error("bad agent name")
+      buttonTypes.find(_.name == name).map(_.agentKind).getOrElse(ObserverButton.agentKind)
+    }
+
+    // used for the dropdown in the button editor in the UI.
+    def defaultAgentOptions = new Options[String](){
+      implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("common")
+      addOption(I18N.gui("observer"), ButtonType.ObserverButton.name)
+      addOption(I18N.gui("turtles"), ButtonType.TurtleButton.name)
+      addOption(I18N.gui("patches"), ButtonType.PatchButton.name)
+      addOption(I18N.gui("links"), ButtonType.LinkButton.name)
+    }
+  }
+
+  // encapsulates what used to be a bunch of 4 way if statements.
+  // ButtonWidget now has a single ButtonType object that handles all this logic for it.
+  case class ButtonType(name: String, agentKind:AgentKind,
+                        img:Option[Icon], darkImg:Option[Icon]){
+    def img(dark:Boolean): Option[Icon] = if(dark) darkImg else img
+    def toHeaderCode = "__" + name.toLowerCase + "code "
+    def toAgentOptions = {
+      val opts = ButtonType.defaultAgentOptions
+      opts.selectValue(name)
+      opts
     }
   }
 }
