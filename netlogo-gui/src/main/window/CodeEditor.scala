@@ -97,12 +97,6 @@ class CodeEditor(accessor: PropertyAccessor[String], compiler: CompilerServices,
     if (collapsible && collapseWhenEmpty) {
       collapso.setVisible(newVisibility)
 
-      if (newVisibility) {
-        add(collapso, BorderLayout.CENTER)
-      } else {
-        remove(collapso)
-      }
-
       arrow.setOpen(!collapsed)
 
       Hierarchy.getWindow(this).pack()
