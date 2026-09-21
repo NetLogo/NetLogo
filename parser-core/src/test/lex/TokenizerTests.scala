@@ -65,6 +65,15 @@ class TokenizerTests extends AnyFunSuite {
         "Token(?,Ident,?)"
     assertResult(expected)(tokens.mkString)
   }
+  test("TokenizeScopedIdentifier") {
+    val tokens = tokenize("foo:bar:baz")
+    val expected = """|Token(foo,Ident,FOO)
+                      |Token(:,Colon,null)
+                      |Token(bar,Ident,BAR)
+                      |Token(:,Colon,null)
+                      |Token(baz,Ident,BAZ)""".stripMargin.replaceAll("\n", "")
+    assertResult(expected)(tokens.mkString)
+  }
   test("ListOfLiterals") {
     val tokens = tokenize("[123 -456 \"a\"]")
     val expected = """|Token([,OpenBracket,null)
