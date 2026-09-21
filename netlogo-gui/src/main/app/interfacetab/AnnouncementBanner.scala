@@ -2,21 +2,22 @@
 
 package org.nlogo.app.interfacetab
 
-import java.awt.{ Color, Component, Dimension, Font, Graphics, Graphics2D, GridBagConstraints, GridBagLayout, Insets, RenderingHints }
+import java.awt.{ Color, Component, Dimension, Font }
 import java.awt.event.{ ActionEvent, ActionListener, MouseEvent, MouseAdapter }
 import java.awt.font.TextAttribute
 import java.net.URI
 import java.time.format.{ DateTimeFormatter, FormatStyle }
-import javax.swing.{ JButton, JLabel, JPanel }
-import javax.swing.BorderFactory
+import javax.swing.{ Box, JButton, JLabel }
+import javax.swing.border.MatteBorder
 
 import org.nlogo.analytics.Analytics
 import org.nlogo.api.{ Advisory, Announcement, Event, Release }
 import org.nlogo.core.NetLogoPreferences
-import org.nlogo.swing.{ BoxRow, BrowserLauncher, MouseUtils, Utils, Zoomable, ZoomableBorder }
+import org.nlogo.swing.{ BoxColumn, BoxRow, BrowserLauncher, MouseUtils, PreferredSize, RoundedBorderPanel, Utils,
+                         Zoomable, ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
-class AnnouncementBanner extends JPanel with MouseUtils with ThemeSync {
+class AnnouncementBanner extends BoxRow with MouseUtils with ThemeSync {
 
   private val prefKey = "announce.latest-read-id"
 
@@ -38,64 +39,42 @@ class AnnouncementBanner extends JPanel with MouseUtils with ThemeSync {
     renderData()
   }
 
-  private val simpleXButton   = new XButton(ggGoNext)
+  private val simpleXButton   = new XButton(ggGoNext) {
+    setVisible(false)
+  }
+
   private val complexXWrapper = new ComplexXWrapper(ggGoNext)
 
-  locally {
+  setHandCursor()
+  setBorder(new MatteBorder(1, 0, 1, 0, InterfaceColors.viewBorder()))
+  setOpaque(true)
 
-    setHandCursor()
+  addMouseListener(new MouseAdapter() {
 
-    setBorder(BorderFactory.createMatteBorder(1, 0, 1, 0, InterfaceColors.viewBorder()))
-    setLayout(new GridBagLayout)
-
-    addMouseListener(new MouseAdapter() {
-
-      override def mouseClicked(e: MouseEvent): Unit = {
-        announcements.headOption.foreach {
-          ann =>
-            Analytics.announcementBannerClicked(ann.id)
-            BrowserLauncher.openURI(new URI(s"https://www.netlogo.org/announcements#news-item-${ann.id}"))
-            ggGoNext()
-        }
+    override def mouseClicked(e: MouseEvent): Unit = {
+      announcements.headOption.foreach {
+        ann =>
+          Analytics.announcementBannerClicked(ann.id)
+          BrowserLauncher.openURI(new URI(s"https://www.netlogo.org/announcements#news-item-${ann.id}"))
+          ggGoNext()
       }
+    }
 
-      override def mouseEntered(e: MouseEvent): Unit = {
-        setSummaryUnderline(true)
-      }
+    override def mouseEntered(e: MouseEvent): Unit = {
+      setSummaryUnderline(true)
+    }
 
-      override def mouseExited(e: MouseEvent): Unit = {
-        setSummaryUnderline(false)
-      }
+    override def mouseExited(e: MouseEvent): Unit = {
+      setSummaryUnderline(false)
+    }
 
-    })
+  })
 
-    syncTheme()
-    customLayout()
+  add(new BoxRow(Seq(textPane, Box.createHorizontalGlue, simpleXButton, complexXWrapper), 20) {
+    setBorder(new ZoomableBorder(0, 20, 0, 22))
+  })
 
-  }
-
-  private def customLayout(): Unit = {
-
-    val textGBC     = new GridBagConstraints
-    textGBC.gridy   = 0
-    textGBC.anchor  = GridBagConstraints.WEST
-    textGBC.fill    = GridBagConstraints.HORIZONTAL
-    textGBC.weightx = 1
-    textGBC.insets  = new Insets(0, 20, 0, 20)
-
-    add(textPane, textGBC)
-
-    val xGBC     = new GridBagConstraints
-    xGBC.anchor  = GridBagConstraints.EAST
-    xGBC.fill    = GridBagConstraints.NONE
-    xGBC.weightx = 0
-    xGBC.insets  = new Insets(0, 20, 0, 22)
-
-    simpleXButton.setVisible(false)
-    add(simpleXButton, xGBC)
-    add(complexXWrapper, xGBC)
-
-  }
+  syncTheme()
 
   def appendData(anns: Seq[Announcement]): Unit = {
     val isDebug      = NetLogoPreferences.get("announce.debug", "false") == "true"
@@ -147,7 +126,10 @@ class AnnouncementBanner extends JPanel with MouseUtils with ThemeSync {
   }
 
   override def getPreferredSize: Dimension =
-    new Dimension(super.getPreferredSize.width, 66)
+    new Dimension(super.getPreferredSize.width, zoom(66))
+
+  override def getMaximumSize: Dimension =
+    new Dimension(Int.MaxValue, zoom(66))
 
   override def syncTheme(): Unit = {
     renderData()
@@ -157,7 +139,7 @@ class AnnouncementBanner extends JPanel with MouseUtils with ThemeSync {
 
 }
 
-private class TextPane(title: Component, text: Component) extends BoxRow(Seq(title, text)) with ThemeSync {
+private class TextPane(title: Component, text: Component) extends BoxColumn(Seq(title, text)) with ThemeSync {
 
   override def syncTheme(): Unit = {
     title.setForeground(InterfaceColors.widgetText())
@@ -208,34 +190,34 @@ private class XButton(dismissItem: () => Unit) extends JButton with MouseUtils w
 
 }
 
-private class ComplexXWrapper(dismissItem: () => Unit) extends JPanel with MouseUtils with Zoomable with ThemeSync {
+private class ComplexXWrapper(dismissItem: () => Unit)
+  extends BoxRow with RoundedBorderPanel with PreferredSize with ThemeSync {
 
   private def defaultWrapperColor() = InterfaceColors.scrollBarBackground()
 
-  private val complexX    = new JLabel
+  private val complexX = new JLabel with Zoomable {
+    setIcon(Utils.iconScaledWithColor(this, "/images/chevron-right.png", 10, 10, () => InterfaceColors.announceX()))
+  }
+
   private val complexXNum = new JLabel with Zoomable {
+    setBorder(new ZoomableBorder(0, 0, 0, 3))
     setBaseFont(getFont.deriveFont(14f))
   }
 
-  setOpaque(false)
-  setBorder(new ZoomableBorder(1, 8, 1, 8))
-
-  complexXNum.setBorder(new ZoomableBorder(0, 0, 0, 3))
-
-  complexX.setIcon(Utils.iconScaledWithColor(this, "/images/chevron-right.png", 10, 10,
-                                             () => InterfaceColors.announceX()))
-
-  val complexGBC = new GridBagConstraints()
+  setBorder(new ZoomableBorder(0, 20, 0, 20))
   setVisible(false)
-  add(complexXNum, complexGBC)
-  add(complexX   , complexGBC)
+  setDiameter(40)
+  setBorderColor(InterfaceColors.Transparent)
+
+  add(complexXNum)
+  add(complexX)
 
   syncTheme()
 
   addMouseListener(new MouseAdapter() {
 
     override def mouseEntered(e: MouseEvent): Unit = {
-      setBackground(new Color(200, 200, 200))
+      setBackgroundColor(new Color(200, 200, 200))
     }
 
     override def mouseClicked(e: MouseEvent): Unit = {
@@ -243,15 +225,15 @@ private class ComplexXWrapper(dismissItem: () => Unit) extends JPanel with Mouse
     }
 
     override def mouseExited(e: MouseEvent): Unit = {
-      setBackground(defaultWrapperColor())
+      setBackgroundColor(defaultWrapperColor())
     }
 
     override def mousePressed(e: MouseEvent): Unit = {
-      setBackground(InterfaceColors.announceXHovered())
+      setBackgroundColor(InterfaceColors.announceXHovered())
     }
 
     override def mouseReleased(e: MouseEvent): Unit = {
-      setBackground(defaultWrapperColor())
+      setBackgroundColor(defaultWrapperColor())
     }
 
   })
@@ -260,17 +242,12 @@ private class ComplexXWrapper(dismissItem: () => Unit) extends JPanel with Mouse
     complexXNum.setText(num.toString)
   }
 
+  override def getPreferredSize: Dimension =
+    new Dimension(super.getPreferredSize.width, 40)
+
   override def syncTheme(): Unit = {
     complexXNum.setForeground(InterfaceColors.widgetText())
-    setBackground(defaultWrapperColor())
-  }
-
-  override protected def paintComponent(g: Graphics): Unit = {
-    super.paintComponent(g)
-    val g2 = g.asInstanceOf[Graphics2D]
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
-    g2.setColor(getBackground())
-    g2.fillRoundRect(0, 0, getWidth(), getHeight(), 40, 40)
+    setBackgroundColor(defaultWrapperColor())
   }
 
 }
