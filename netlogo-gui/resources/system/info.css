@@ -133,6 +133,6 @@ ul {
 li {
     color: {P-COLOR};
 }
-a {
+a:link, a:hover, a:visited, a:active {
     color: {LINK-COLOR};
 }
