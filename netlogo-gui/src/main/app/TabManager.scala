@@ -678,8 +678,12 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
 
   def handle(e: LoadBeginEvent): Unit = {
     if (!reloading) {
+      loadingTabs = true
+
       getExternalFileTabs.foreach(closeExternalTab(_, true))
       mainTabs.setSelectedComponent(interfaceTab)
+
+      loadingTabs = false
     }
   }
 
