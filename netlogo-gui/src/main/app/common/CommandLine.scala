@@ -2,7 +2,7 @@
 
 package org.nlogo.app.common
 
-import java.awt.{ BorderLayout, Dimension, Font, Insets }
+import java.awt.{ BorderLayout, Dimension, EventQueue, Font, Insets }
 import java.awt.event.{ ActionEvent, ActionListener, InputEvent, KeyEvent, KeyListener }
 import javax.swing.{ KeyStroke, ScrollPaneConstants }
 
@@ -69,7 +69,7 @@ class CommandLine(commandCenter: CommandCenterInterface,
                        )
 
   lazy val textField = new EditorArea(configuration) {
-    getDocument.addDocumentListener(() => commandCenter.fitPrompt())
+    getDocument.addDocumentListener(() => EventQueue.invokeLater(() => commandCenter.fitPrompt()))
 
     override def setText(text: String): Unit = {
       super.setText(text)
