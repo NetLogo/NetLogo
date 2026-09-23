@@ -298,7 +298,7 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
             e.getCurrentTarget match {
               case anchor: HTMLAnchorElement =>
                 EventQueue.invokeLater(() => {
-                  val ensureProto = s"https://${anchor.getHref.stripPrefix("https://")}"
+                  val ensureProto = s"https://${"https?://".r.replaceFirstIn(anchor.getHref, "")}"
 
                   BrowserLauncher.openURI(InfoTab.this, URI.create(ensureProto))
                 })
