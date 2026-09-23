@@ -2,7 +2,7 @@
 
 package org.nlogo.app.infotab
 
-import java.awt.{ Dimension, BorderLayout, Font, Graphics }
+import java.awt.{ BorderLayout, Dimension, EventQueue, Font, Graphics }
 import java.awt.event.{ ActionEvent, FocusEvent, FocusListener }
 import java.awt.print.PageFormat
 import java.net.URI
@@ -297,7 +297,11 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
           override def handleEvent(e: Event): Unit = {
             e.getCurrentTarget match {
               case anchor: HTMLAnchorElement =>
-                BrowserLauncher.openURI(InfoTab.this, URI.create(anchor.getHref))
+                EventQueue.invokeLater(() => {
+                  val ensureProto = s"https://${anchor.getHref.stripPrefix("https://")}"
+
+                  BrowserLauncher.openURI(InfoTab.this, URI.create(ensureProto))
+                })
 
               case _ =>
             }
