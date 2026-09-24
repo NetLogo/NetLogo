@@ -243,7 +243,7 @@ private class ComplexXWrapper(dismissItem: () => Unit)
   }
 
   override def getPreferredSize: Dimension =
-    new Dimension(super.getPreferredSize.width, 40)
+    new Dimension(super.getPreferredSize.width, zoom(40))
 
   override def syncTheme(): Unit = {
     complexXNum.setForeground(InterfaceColors.widgetText())
