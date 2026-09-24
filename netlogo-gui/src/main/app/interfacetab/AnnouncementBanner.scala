@@ -117,7 +117,7 @@ class AnnouncementBanner extends BoxRow with MouseUtils with ThemeSync {
 
         setBackground(color)
         annTitle.setText(s"$title ($dateStr)")
-        annTitle.setBaseFont(annTitle.getFont.deriveFont(Font.BOLD))
+        annTitle.setBaseFont(annTitle.getBaseFont.deriveFont(Font.BOLD))
         annText.setText(summary.replaceAll("\n", " ").replaceAll("  ", " "))
         setVisible(true)
 
