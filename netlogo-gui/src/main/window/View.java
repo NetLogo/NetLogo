@@ -5,6 +5,7 @@ package org.nlogo.window;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
 import javax.swing.AbstractAction;
 
 import org.nlogo.agent.AgentIterator;
@@ -485,23 +486,32 @@ public class View
         org.nlogo.api.Exceptions.ignore(e);
       }
 
-      boolean linksAdded = false;
+      HashMap<String, Menu> linkMenus = new HashMap<String, Menu>();
+
       for (AgentIterator links = workspace.world().links().iterator();
            links.hasNext();) {
         org.nlogo.agent.Link link = (org.nlogo.agent.Link) links.next();
 
         if (!link.hidden() &&
             workspace.world().protractor().distance(link, xcor, ycor, true) < link.lineThickness() + 0.5) {
-          if (!linksAdded) {
-            menu.addSeparator();
-            linksAdded = true;
+          String breed = link.getBreed().printName().toLowerCase();
+
+          if (!linkMenus.containsKey(breed)) {
+            linkMenus.put(breed, new Menu(breed));
           }
-          menu.add(new AgentMenuItem(link, AgentMenuType.INSPECT, "inspect", false));
+
+          linkMenus.get(breed).add(new AgentMenuItem(link, AgentMenuType.INSPECT, "inspect", false));
         }
       }
 
+      for (Menu linkMenu : linkMenus.values()) {
+        menu.addSeparator();
+        menu.add(linkMenu);
+      }
+
+      HashMap<String, Menu> turtleMenus = new HashMap<String, Menu>();
+
       // detect any turtles in the pick-ray
-      boolean turtlesAdded = false;
       for (AgentIterator turtles = workspace.world().turtles().iterator();
            turtles.hasNext();) {
         org.nlogo.agent.Turtle turtle = (org.nlogo.agent.Turtle) turtles.next();
@@ -518,12 +528,13 @@ public class View
             double dist = workspace.world().protractor().distance(turtle, xcor, ycor, true);
 
             if (dist <= offset) {
-              if (!turtlesAdded) {
-                menu.addSeparator();
-                turtlesAdded = true;
+              String breed = turtle.getBreed().printName().toLowerCase();
+
+              if (!turtleMenus.containsKey(breed)) {
+                turtleMenus.put(breed, new Menu(breed));
               }
 
-              addTurtleToContextMenu(menu, turtle);
+              addTurtleToContextMenu(turtleMenus.get(breed), turtle);
             }
           } else {
             // otherwise the turtle takes a square shape
@@ -547,15 +558,22 @@ public class View
 
             if ((xMouse >= xCor - offset) && (xMouse <= xCor + offset) &&
                 (yMouse >= yCor - offset) && (yMouse <= yCor + offset)) {
-              if (!turtlesAdded) {
-                menu.addSeparator();
-                turtlesAdded = true;
+
+              String breed = turtle.getBreed().printName().toLowerCase();
+
+              if (!turtleMenus.containsKey(breed)) {
+                turtleMenus.put(breed, new Menu(breed));
               }
 
-              addTurtleToContextMenu(menu, turtle);
+              addTurtleToContextMenu(turtleMenus.get(breed), turtle);
             }
           }
         }
+      }
+
+      for (Menu turtleMenu : turtleMenus.values()) {
+        menu.addSeparator();
+        menu.add(turtleMenu);
       }
 
       int x = 0;
@@ -571,9 +589,8 @@ public class View
     }
   }
 
-  private void addTurtleToContextMenu(PopupMenu menu,
-                                      org.nlogo.agent.Turtle turtle) {
-    javax.swing.JMenu submenu = new AgentMenu(turtle);
+  private void addTurtleToContextMenu(Menu menu, org.nlogo.agent.Turtle turtle) {
+    AgentMenu submenu = new AgentMenu(turtle);
     submenu.add(new AgentMenuItem(turtle, AgentMenuType.INSPECT, "inspect", true));
     submenu.addSeparator();
     submenu.add(new AgentMenuItem(turtle, AgentMenuType.WATCH, "watch", true));
