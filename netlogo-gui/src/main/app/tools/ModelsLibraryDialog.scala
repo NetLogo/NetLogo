@@ -590,11 +590,14 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
       setBorder(new LineBorder(Color.DARK_GRAY, 1))
     }
 
-    private val textArea = new JEditorPane {
+    private val textArea = new JEditorPane with PreferredSize {
       setContentType("text/html")
       setEditable(false)
       setOpaque(false)
       setCaretColor(InterfaceColors.Transparent)
+
+      override def getPreferredSize: Dimension =
+        new Dimension(zoom(390), super.getPreferredSize.height)
     }
 
     textArea.addHyperlinkListener(this)
@@ -612,14 +615,6 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
       val fontStr = s"${zoom(12)}pt"
 
       graphicsPreview.setImage(image)
-
-      // This is a work-around for Java's inability to set a maximum
-      // width for a JEditorPane and let the height be determined by
-      // the content. Continues below.
-      // See http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4765285
-      // ER - 12/02/07
-      textArea.setPreferredSize(null)
-      textArea.setMaximumSize(new Dimension(zoom(390), Int.MaxValue))
 
       selected match {
         case Some(selection) if ! selection.isFolder =>
@@ -665,10 +660,8 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
           graphicsPreview.setVisible(false)
       }
 
-      // The conclusion of the above-mentioned work-around
-      // ER - 12/02/07
-      textArea.setPreferredSize(new Dimension(zoom(390), textArea.getPreferredSize.height))
       invalidate()
+      packWindow()
     }
 
     override def hyperlinkUpdate(e: HyperlinkEvent): Unit = {

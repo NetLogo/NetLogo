@@ -65,6 +65,8 @@ class MenuTests extends AnyFunSpec {
               fail("Menu action timed out, there is likely an EventQueue deadlock or an infinite loop.")
             }
 
+            Thread.sleep(250)
+
             // clear EventQueue so non-modal dialogs can receive their close events (Isaac B 10/30/25)
             AutomationUtils.waitForGUI()
 
