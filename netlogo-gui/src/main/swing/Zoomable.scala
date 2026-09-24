@@ -49,7 +49,7 @@ trait Zoomable extends Component with ZoomHelpers {
     Option(component).collect {
       case window: ZoomableWindow =>
         window
-    }.orElse(findZoomRoot(component.getParent)).orElse {
+    }.orElse(Option(component).map(_.getParent).flatMap(findZoomRoot)).orElse {
       component match {
         case zoom: ZoomHelpers =>
           Option(zoom)
