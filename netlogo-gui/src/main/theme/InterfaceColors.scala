@@ -127,6 +127,9 @@ object InterfaceColors {
   def checkFilled(): Color = theme.checkFilled
   def errorLabelText(): Color = theme.errorLabelText
   def errorLabelBackground(): Color = theme.errorLabelBackground
+  def errorLabelButtonBackground(): Color = theme.errorLabelButtonBackground
+  def errorLabelButtonBorder(): Color = theme.errorLabelButtonBorder
+  def errorLabelButtonText(): Color = theme.errorLabelButtonText
   def warningLabelText(): Color = theme.warningLabelText
   def warningLabelBackground(): Color = theme.warningLabelBackground
   def errorHighlight(): Color = theme.errorHighlight
@@ -333,6 +336,9 @@ trait ColorTheme {
   def checkFilled: Color
   def errorLabelText: Color
   def errorLabelBackground: Color
+  def errorLabelButtonBackground: Color
+  def errorLabelButtonBorder: Color
+  def errorLabelButtonText: Color
   def warningLabelText: Color
   def warningLabelBackground: Color
   def errorHighlight: Color
@@ -505,6 +511,9 @@ object ClassicTheme extends ColorTheme {
   override def checkFilled: Color = new Color(0, 173, 90)
   override def errorLabelText: Color = Color.WHITE
   override def errorLabelBackground: Color = LightRed
+  override def errorLabelButtonBackground: Color = LightGray
+  override def errorLabelButtonBorder: Color = InterfaceColors.Transparent
+  override def errorLabelButtonText: Color = Color.BLACK
   override def warningLabelText: Color = Color.WHITE
   override def warningLabelBackground: Color = new Color(255, 160, 0)
   override def errorHighlight: Color = LightRed
@@ -677,6 +686,9 @@ object LightTheme extends ColorTheme {
   override def checkFilled: Color = new Color(0, 173, 90)
   override def errorLabelText: Color = Color.WHITE
   override def errorLabelBackground: Color = LightRed
+  override def errorLabelButtonBackground: Color = LightGray
+  override def errorLabelButtonBorder: Color = InterfaceColors.Transparent
+  override def errorLabelButtonText: Color = Color.BLACK
   override def warningLabelText: Color = Color.WHITE
   override def warningLabelBackground: Color = new Color(255, 160, 0)
   override def errorHighlight: Color = LightRed
@@ -849,6 +861,9 @@ object DarkTheme extends ColorTheme {
   override def checkFilled: Color = new Color(0, 173, 90)
   override def errorLabelText: Color = Color.WHITE
   override def errorLabelBackground: Color = LightRed
+  override def errorLabelButtonBackground: Color = new Color(200, 75, 68)
+  override def errorLabelButtonBorder: Color = Color.WHITE
+  override def errorLabelButtonText: Color = Color.WHITE
   override def warningLabelText: Color = Color.WHITE
   override def warningLabelBackground: Color = new Color(255, 160, 0)
   override def errorHighlight: Color = LightRed
