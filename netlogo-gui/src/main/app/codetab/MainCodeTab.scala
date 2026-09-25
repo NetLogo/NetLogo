@@ -42,6 +42,13 @@ with WindowEvents.LoadModelEvent.Handler
     maybeSendAnalytics()
   }
 
+  protected def getProcedures(): Seq[String] = {
+    workspace.procedures.keys.collect {
+      case (proc, None) =>
+        proc
+    }.toSeq
+  }
+
   private def maybeSendAnalytics(): Unit = {
     val text = getText
 

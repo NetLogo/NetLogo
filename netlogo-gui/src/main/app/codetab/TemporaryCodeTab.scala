@@ -186,7 +186,7 @@ class TemporaryCodeTab(workspace: GUIWorkspace,
         setErrorLabel()
 
         val include: Boolean = includesTable.exists(_.exists {
-          case (_, IncludeSource(file, false)) if file == filename.getOrElse(null) =>
+          case (_, IncludeSource(file, _)) if file == filename.getOrElse(null) =>
             true
 
           case _ =>
@@ -213,5 +213,12 @@ class TemporaryCodeTab(workspace: GUIWorkspace,
     val newFileName = appendIfNecessary(filenameForDisplay, ".nlm")
     val path = SwingFileDialog.showFiles(this, I18N.gui.get("file.save.external"), FileDialog.SAVE, newFileName)
     appendIfNecessary(path, ".nlm")
+  }
+
+  protected def getProcedures(): Seq[String] = {
+    workspace.procedures.keys.collect {
+      case (proc, Some(module)) if filename.map(_ == module).getOrElse(false) =>
+        proc
+    }.toSeq
   }
 }

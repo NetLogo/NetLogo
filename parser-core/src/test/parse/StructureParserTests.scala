@@ -392,6 +392,10 @@ class StructureParserTests extends AnyFunSuite {
     assert(results.imports.nonEmpty || results.includedSources.nonEmpty)
   }
 
+  test("undeclared extensions in imported modules") {
+    expectParseAllError("import foo", "The following extensions are used by imported modules and must be declared in the model code: ARRAY", SourceType.NLModule, "extensions [array]")
+  }
+
   test("multiple import statements return correct results") {
     val src = """
       |import foo

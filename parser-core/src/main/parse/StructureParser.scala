@@ -107,6 +107,8 @@ object StructureParser {
                       }
                   }
 
+                val modelExtensions = newResults.extensions.map(_.value).toSet
+
                 if (!moduleCache.contains(currentPath)) {
                   newResults = includeFile(compilationEnvironment, currentPath) match {
                     case Some((path, fileContents)) => {
@@ -194,6 +196,13 @@ object StructureParser {
                     procedures = newResults.procedures ++ procedureAliases,
                     procedureTokens = newResults.procedureTokens ++ procedureTokenAliases
                   )
+                }
+
+                val allExtensions = newResults.extensions.map(_.value).toSet
+                val undeclaredExtensions = allExtensions -- modelExtensions
+
+                if (undeclaredExtensions.nonEmpty) {
+                  exception(I18N.errors.getN("compiler.StructureParser.undeclaredExtensions", undeclaredExtensions.mkString(", ")), 0, 0, "")
                 }
               }
             }
@@ -446,8 +455,8 @@ class StructureParser(
         StructureChecker.rejectMisplacedConstants(declarations)
         StructureChecker.rejectExportWithUndefinedNames(declarations)
         StructureChecker.rejectExportOutsideModule(declarations, module.isDefined)
-        StructureChecker.rejectNonProceduresInModule(declarations, module.isDefined)
         StructureChecker.rejectPathSeparatorsInImportPaths(declarations)
+        StructureChecker.rejectDisallowedDeclarationsInModule(declarations, module.isDefined)
         StructureChecker.rejectDuplicateDeclarations(declarations)
         StructureChecker.rejectDuplicateNames(declarations,
           StructureParser.usedNames(
