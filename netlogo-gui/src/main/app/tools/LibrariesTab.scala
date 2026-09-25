@@ -322,6 +322,10 @@ class LibrariesTab( category:        String
 
     } else {
       Seq(installButton, uninstallButton, addToCodeTabButton, homepageButton).foreach(_.setEnabled(false))
+
+      installButton.setVisible(true)
+      uninstallPanel.setVisible(false)
+
       info.setText("")
       info.select(0, 0)
     }
