@@ -1,0 +1,64 @@
+@context tracker from "./keywords.js"
+
+@external specialize { Identifier } keywords from "./keywords.js" {
+  Import,
+  Export,
+  From,
+  As,
+  Globals,
+  Extensions,
+  Includes,
+  Breed,
+  To,
+  End,
+  Own,
+  Command,
+  Reporter,
+  Constant
+}
+
+@skip { space | Comment }
+
+@detectDelim
+
+@top Program { declaration* procedure* }
+
+declaration {
+  Import Identifier (As Identifier)? |
+  Import ImportBlock From Identifier |
+  (Export | Globals | Own | Extensions) IdentBlock |
+  Includes StringBlock |
+  Breed BreedBlock
+}
+
+ImportBlock { OpenBracket (Identifier | Identifier As Identifier)* CloseBracket }
+BreedBlock { OpenBracket Identifier Identifier CloseBracket }
+IdentBlock { OpenBracket Identifier* CloseBracket }
+StringBlock { OpenBracket String* CloseBracket }
+
+procedure { To Identifier InputBlock? expression* End }
+
+InputBlock { OpenBracket Identifier+ CloseBracket }
+
+expression {
+  ParenExpression |
+  BracketExpression |
+  (Command | Reporter) (Identifier | Number | String | Constant)*
+}
+
+ParenExpression { OpenParen expression+ CloseParen }
+BracketExpression { OpenBracket expression* CloseBracket }
+
+@tokens {
+  space { @whitespace+ }
+  Comment [ openedBy=";" ] { ";" ![\n]* }
+  identNoDigit { @asciiLetter | "_" | "." | "?" | "=" | "*" | "!" | "<" | ">" | "#" | "+" | "/" | "%" | "$" | "^" | "'" | "&" | "-" | ":" }
+  Identifier { identNoDigit (identNoDigit | @digit)* }
+  Number { "-"? @digit+ ("." @digit+)? ("e" ("+" | "-") @digit+)? }
+  String { '"' (!["\n] | "\\\"")* ('"' | '\n' | @eof) }
+  OpenParen { "(" }
+  CloseParen { ")" }
+  OpenBracket { "[" }
+  CloseBracket { "]" }
+  @precedence { Number, Identifier }
+}
