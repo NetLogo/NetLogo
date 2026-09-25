@@ -6,18 +6,20 @@ import java.awt.Graphics
 import javax.swing.{ Action, JToggleButton }
 import javax.swing.border.EmptyBorder
 
-import org.nlogo.theme.InterfaceColors
+import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 class ToolBarActionButton(action: Action) extends Button(action) {
   setBorder(new EmptyBorder(6, 8, 6, 12))
   setIconTextGap(12)
 }
 
-class ToolBarToggleButton(action: Action) extends JToggleButton(action) with Transparent with MouseUtils {
+class ToolBarToggleButton(action: Action)
+  extends JToggleButton(action) with Transparent with MouseUtils with FocusUtils with ThemeSync {
+
   setBorder(new EmptyBorder(6, 8, 6, 12))
-  setFocusable(false)
   setContentAreaFilled(false)
   setIconTextGap(12)
+  setFocusDiameter(6)
 
   override def paintComponent(g: Graphics): Unit = {
     val g2d = Utils.initGraphics2D(g)
@@ -51,5 +53,9 @@ class ToolBarToggleButton(action: Action) extends JToggleButton(action) with Tra
     }
 
     super.paintComponent(g)
+  }
+
+  override def syncTheme(): Unit = {
+    setFocusColor(InterfaceColors.toolbarToolFocus())
   }
 }
