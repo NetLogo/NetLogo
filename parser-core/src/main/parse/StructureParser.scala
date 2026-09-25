@@ -448,6 +448,7 @@ class StructureParser(
         StructureChecker.rejectExportOutsideModule(declarations, module.isDefined)
         StructureChecker.rejectNonProceduresInModule(declarations, module.isDefined)
         StructureChecker.rejectPathSeparatorsInImportPaths(declarations)
+        StructureChecker.rejectDotDotInImportPaths(declarations)
         StructureChecker.rejectDuplicateDeclarations(declarations)
         StructureChecker.rejectDuplicateNames(declarations,
           StructureParser.usedNames(
