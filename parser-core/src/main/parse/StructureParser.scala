@@ -20,6 +20,7 @@ package org.nlogo.parse
 
 import scala.collection.immutable.ListMap
 import scala.collection.mutable
+import scala.util.matching.Regex
 import java.util.Locale
 import org.nlogo.core.{ CompilationEnvironment, CompilationOperand, CompilerException, ErrorSource, I18N, Import,
                         ProcedureSyntax, Program, StructureDeclarations, StructureResults, Token, TokenizerInterface,
@@ -82,7 +83,7 @@ object StructureParser {
               for (currentPath <- suppliedPaths) {
                 val basePath = compilationEnvironment.resolvePath(currentImport.filename.getOrElse(""))
                 val relativePath = currentPath.stripPrefix(s"$basePath$separator")
-                val pathComponentCount = relativePath.split(separator).length
+                val pathComponentCount = relativePath.split(Regex.quote(separator)).length
                 val modulePathComponentCount = currentImport.pathComponents.length
                 val isSelectiveImport = currentImport.importedIdentifiers.nonEmpty
 
