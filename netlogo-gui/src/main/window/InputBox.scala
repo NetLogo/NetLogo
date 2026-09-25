@@ -291,8 +291,10 @@ abstract class InputBox(textArea: EditorArea, editDialogTextArea: EditorArea, co
     super.doLayout()
 
     if (widgetLabel.getPreferredSize.width > widgetLabel.getWidth) {
+      setToolTipText(widgetLabel.getText)
       widgetLabel.setToolTipText(widgetLabel.getText)
     } else {
+      setToolTipText(null)
       widgetLabel.setToolTipText(null)
     }
   }
@@ -303,12 +305,6 @@ abstract class InputBox(textArea: EditorArea, editDialogTextArea: EditorArea, co
     widgetLabel.setForeground(InterfaceColors.widgetText())
 
     super.paintComponent(g)
-
-    if (widgetLabel.getPreferredSize.width > widgetLabel.getWidth) {
-      widgetLabel.setToolTipText(widgetLabel.getText)
-    } else {
-      widgetLabel.setToolTipText(null)
-    }
 
     if (isHover) {
       val g2d = Utils.initGraphics2D(g)

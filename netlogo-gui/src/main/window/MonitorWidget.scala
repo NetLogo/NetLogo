@@ -269,8 +269,10 @@ class MonitorWidget(random: MersenneTwisterFast, compiler: CompilerServices, col
     super.doLayout()
 
     if (nameLabel.getPreferredSize.width > nameLabel.getWidth) {
+      setToolTipText(nameLabel.getText)
       nameLabel.setToolTipText(nameLabel.getText)
     } else {
+      setToolTipText(null)
       nameLabel.setToolTipText(null)
     }
   }

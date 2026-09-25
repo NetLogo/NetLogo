@@ -132,8 +132,10 @@ abstract class Switch extends MultiErrorWidget with Events.AfterLoadEvent.Handle
     super.doLayout()
 
     if (label.getPreferredSize.width > label.getWidth) {
+      setToolTipText(label.getText)
       label.setToolTipText(label.getText)
     } else {
+      setToolTipText(null)
       label.setToolTipText(null)
     }
   }

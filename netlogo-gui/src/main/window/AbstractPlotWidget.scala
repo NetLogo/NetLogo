@@ -154,8 +154,17 @@ abstract class AbstractPlotWidget(val plot: Plot, val plotManager: PlotManagerIn
     recolor()
 
     super.paintComponent(g)
-    nameLabel.setToolTipText(
-      if (nameLabel.getPreferredSize.width > nameLabel.getSize().width) plotName else null)
+
+    val tooltip: String = {
+      if (nameLabel.getPreferredSize.width > nameLabel.getSize().width) {
+        plotName
+      } else {
+        null
+      }
+    }
+
+    setToolTipText(tooltip)
+    nameLabel.setToolTipText(tooltip)
   }
 
   def refreshGUI(): Unit = {

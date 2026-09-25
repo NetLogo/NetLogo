@@ -445,7 +445,8 @@ class App(args: App.CommandLineArgs) extends LinkChild with Exceptions.Handler w
       }
     }
 
-    ToolTipManager.sharedInstance().setDismissDelay(Int.MaxValue)
+    ToolTipManager.sharedInstance.setDismissDelay(Int.MaxValue)
+    ToolTipManager.sharedInstance.setInitialDelay(500)
 
     frame.addLinkComponent(this)
     frame.addLinkComponent(workspace)

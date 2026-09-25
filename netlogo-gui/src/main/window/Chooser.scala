@@ -146,8 +146,10 @@ trait Chooser extends SingleErrorWidget {
     super.doLayout()
 
     if (label.getPreferredSize.width > label.getWidth) {
+      setToolTipText(label.getText)
       label.setToolTipText(label.getText)
     } else {
+      setToolTipText(null)
       label.setToolTipText(null)
     }
   }
@@ -163,11 +165,6 @@ trait Chooser extends SingleErrorWidget {
                                            Array(InterfaceColors.widgetHoverShadow(), InterfaceColors.Transparent)))
       g2d.fillRoundRect(control.getX, control.getY + 3, control.getWidth, control.getHeight, 6, 6)
     }
-
-    if (label.getPreferredSize.width > label.getWidth)
-      label.setToolTipText(label.getText)
-    else
-      label.setToolTipText(null)
   }
 
   override def syncTheme(): Unit = {

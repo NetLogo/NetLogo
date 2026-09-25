@@ -527,23 +527,24 @@ class ButtonWidget(random: MersenneTwisterFast, compiler: CompilerServices, colo
       foreverLabel.setIcon(foreverIconPressed)
     }
 
-    if (nameLabel.getPreferredSize.width > nameLabel.getWidth) {
-      nameLabel.setToolTipText(
+    val tooltip: String = {
+      if (nameLabel.getPreferredSize.width > nameLabel.getWidth) {
         if (disabledWaitingForSetup) {
           "(disabled) " + nameLabel.getText
         } else {
           nameLabel.getText
         }
-      )
-    } else {
-      nameLabel.setToolTipText(
+      } else {
         if (disabledWaitingForSetup) {
           "(disabled)"
         } else {
           null
         }
-      )
+      }
     }
+
+    setToolTipText(tooltip)
+    nameLabel.setToolTipText(tooltip)
 
     super.paintComponent(g)
   }

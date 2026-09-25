@@ -406,8 +406,10 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
     }
 
     if (nameComponent.getPreferredSize.width > nameComponent.getWidth) {
+      setToolTipText(nameComponent.getText)
       nameComponent.setToolTipText(nameComponent.getText)
     } else {
+      setToolTipText(null)
       nameComponent.setToolTipText(null)
     }
   }
