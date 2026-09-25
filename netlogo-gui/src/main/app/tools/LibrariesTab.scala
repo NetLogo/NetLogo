@@ -2,7 +2,7 @@
 
 package org.nlogo.app.tools
 
-import java.awt.{ Component, EventQueue, Font, Toolkit }
+import java.awt.{ Component, Dimension, EventQueue, Font, Toolkit }
 import java.awt.event.KeyEvent
 import java.io.IOException
 import java.nio.file.Path
@@ -159,7 +159,10 @@ class LibrariesTab( category:        String
     val uninstallCheck = (lib: LibraryInfo) => installCheck(lib) && lib.canUninstall
     perform("uninstalling", uninstall, uninstallCheck, true)
     perform("installing", wrappedInstall, installCheck, false)
-  })
+  }) {
+    override def getMaximumSize: Dimension =
+      new Dimension(Int.MaxValue, super.getMaximumSize.height)
+  }
 
   private val addToCodeTabButton = new Button(I18N.gui("addToCodeTab"), () => {
     updateSource { source =>
@@ -184,9 +187,12 @@ class LibrariesTab( category:        String
 
   private val uninstallButton = new Button(I18N.gui("uninstall"), () => {
     perform("uninstalling", uninstall, _.canUninstall, false)
-  })
+  }) {
+    override def getMaximumSize: Dimension =
+      new Dimension(Int.MaxValue, super.getMaximumSize.height)
+  }
 
-  private val uninstallPanel = new BoxRow(Seq(new HorizontalStrut(6), uninstallButton))
+  private val buttonStrut = new HorizontalStrut(6)
 
   private val info = new TextArea(2, 28)
   private val infoScroll = new ScrollPane(info)
@@ -217,18 +223,26 @@ class LibrariesTab( category:        String
     info.setWrapStyleWord(true)
     info.setEditable(false)
 
+    val secondRow = new BoxRow(Seq(
+      addToCodeTabButton,
+      homepageButton
+    ), 6) with MaximumHeight
+
     add(new BoxRow(Seq(magIcon, filterField), 6))
     add(new BoxRow(Seq(
       libraryScroll,
       new BoxColumn(Seq(
-        new BoxRow(Seq(
+        new BoxColumn(Seq(
           new BoxRow(Seq(
             installButton,
-            uninstallPanel,
-          )),
-          addToCodeTabButton,
-          homepageButton
-        ), 6) with MaximumHeight,
+            buttonStrut,
+            uninstallButton,
+          )) {
+            override def getMaximumSize: Dimension =
+              new Dimension(secondRow.getPreferredSize.width, getPreferredSize.height)
+          },
+          secondRow
+        ), 6),
         new VerticalStrut(6),
         new BoxRow(Seq(installedVersionLabel, installedVersion)),
         new BoxRow(Seq(latestVersionLabel, latestVersion)),
@@ -324,7 +338,8 @@ class LibrariesTab( category:        String
       Seq(installButton, uninstallButton, addToCodeTabButton, homepageButton).foreach(_.setEnabled(false))
 
       installButton.setVisible(true)
-      uninstallPanel.setVisible(false)
+      uninstallButton.setVisible(false)
+      buttonStrut.setVisible(false)
 
       info.setText("")
       info.select(0, 0)
@@ -334,7 +349,8 @@ class LibrariesTab( category:        String
 
   private def updateInstallationPanel() = {
     installButton.setVisible(!actionIsInProgress && !selectedValues.forall(_.status == LibraryStatus.UpToDate))
-    uninstallPanel.setVisible(!actionIsInProgress && selectedValues.exists(_.status != LibraryStatus.CanInstall))
+    uninstallButton.setVisible(!actionIsInProgress && selectedValues.exists(_.status != LibraryStatus.CanInstall))
+    buttonStrut.setVisible(installButton.isVisible && uninstallButton.isVisible)
   }
 
   private def installButtonText: String =
