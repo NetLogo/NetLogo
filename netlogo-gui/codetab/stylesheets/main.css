@@ -1,0 +1,26 @@
+:root {
+  --scrollbar-background: white;
+  --scrollbar-foreground: white;
+  --scrollbar-foreground-hover: white;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+}
+
+::-webkit-scrollbar {
+  background: var(--scrollbar-background);
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-foreground);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-foreground);
+}
