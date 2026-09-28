@@ -306,7 +306,8 @@ lazy val netlogo = project.in(file("netlogo-gui")).
       "org.apache.pekko" %% "pekko-stream" % "1.1.5",
       // If we don't opt into slf4j, jSystemThemeDetector will whine. --Jason B. (11/19/25)
       "org.slf4j" % "slf4j-nop" % "2.0.13",
-      "org.openani.jsystemthemedetector" % "jSystemThemeDetector" % "3.8"
+      "org.openani.jsystemthemedetector" % "jSystemThemeDetector" % "3.8",
+      "org.webjars.npm" % "mathjax" % "3.2.2"
     ) ++ Seq("base", "controls", "graphics", "swing", "web")
       .map(m => "org.openjfx" % s"javafx-$m" % "21.0.6" classifier osName),
     Compile / compile := (Compile / compile).dependsOn(NativeLibs.nativeLibs).value,
