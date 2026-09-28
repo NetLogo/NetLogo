@@ -27,17 +27,22 @@ trait AbstractCompilationEnvironment {
         } else {
           val path = resolvePath(s"$pathPrefix${modulePath.mkString("/")}".toLowerCase)
 
-          // If the path points to a directory, search for module files in subdirectories.
-          if (FileIO.isDirectory(path)) {
+          // If the path points to a file, just return that file.
+          val siblings = if (FileIO.isRegularFile(s"$path.nlm")) Seq(s"$path.nlm") else Seq()
+
+          // If the path points to a directory, search for module files in subdirectories. Note that there can be a file
+          // and a directory "foo.nlm" and "foo" at the same level where "foo" is an arbitrary string, so we need to
+          // check both cases separately. -- 2026-09-28 Kritphong M
+          val descendants = if (FileIO.isDirectory(path)) {
             import scala.jdk.CollectionConverters.IteratorHasAsScala
             val fileIterator = Files.walk(Paths.get(path), FileVisitOption.FOLLOW_LINKS).iterator.asScala
             val isModuleFile = (x: Path) => Files.isRegularFile(x) && x.getFileName.toString.toLowerCase.endsWith(".nlm")
             fileIterator.filter(isModuleFile).map(_.toString).toSeq
-          } else if (FileIO.isRegularFile(s"$path.nlm")) { // If the path points to a file, just return that file.
-            Seq(s"$path.nlm")
-          } else { // Otherwise, return nothing and just move on to the next prefix.
+          } else {
             Seq()
           }
+
+          siblings ++ descendants
         }
     }
 
