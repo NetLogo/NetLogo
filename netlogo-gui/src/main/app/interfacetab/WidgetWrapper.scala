@@ -569,9 +569,11 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
 
   private def enforceMinimumSize(r: Rectangle): Unit = {
     if (widget != null) {
-      var minWidgetSize = zoomSize(widget.getMinimumSize)
+      val minWidgetSize: Dimension = {
+        val size: Dimension = widget.getMinimumSize
 
-      minWidgetSize = new Dimension(minWidgetSize.width.max(MinWidgetWidth), minWidgetSize.height.max(MinWidgetHeight))
+        new Dimension(size.width.max(zoom(MinWidgetWidth)), size.height.max(zoom(MinWidgetHeight)))
+      }
 
       mouseMode match {
         case MouseMode.S =>
@@ -637,7 +639,7 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
 
   private def enforceMaximumSize(r: Rectangle): Unit = {
     if (widget != null) {
-      var maxWidgetSize = widget.getMaximumSize
+      val maxWidgetSize = widget.getMaximumSize
 
       if (maxWidgetSize == null)
         return
@@ -647,8 +649,6 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
 
       if (maxWidgetSize.width <= 0)
         maxWidgetSize.width = 10000
-
-      maxWidgetSize = zoomSize(maxWidgetSize)
 
       mouseMode match {
         case MouseMode.S =>
