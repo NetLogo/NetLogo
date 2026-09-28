@@ -74,7 +74,7 @@ object InfoFormatter {
   }
 
   def wrapHtml(zoom: ZoomHelpers, body: String, fontFamily: String = "monospace"): String = {
-    val mathJax = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+    val mathJax = "https://cdn.jsdelivr.net/npm/mathjax@4/tex-svg.js"
 
     s"""<html><head>${styleSheet(zoom, fontFamily)}</head><body>$body</body><script>
       window.MathJax = {
