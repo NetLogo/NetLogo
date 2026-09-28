@@ -77,7 +77,7 @@ abstract class AbstractPlotWidget(val plot: Plot, val plotManager: PlotManagerIn
   add(new VerticalStrut(3))
   add(xAxis)
   add(new VerticalStrut(2))
-  add(new BoxRow(legend, BoxAlign.Center))
+  add(legend)
 
   // make sure to update the gui components in case
   // something changed underneath ev 8/26/08

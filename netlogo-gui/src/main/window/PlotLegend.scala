@@ -2,11 +2,11 @@
 
 package org.nlogo.window
 
-import java.awt.{ Color, Component, Container, Dimension, Font, Graphics, LayoutManager }
+import java.awt.{ Color, Component, Container, Dimension, Font, Graphics, Insets, LayoutManager }
 import javax.swing.{ JLabel, JPanel }
 
 import org.nlogo.plot.PlotPen
-import org.nlogo.swing.{ BoxRow, PreferredSize, Transparent, Zoomable, ZoomableBorder, ZoomHelpers }
+import org.nlogo.swing.{ BoxRow, PreferredSize, Transparent, Zoomable, ZoomableBorder }
 import org.nlogo.theme.InterfaceColors
 
 class PlotLegend(widget: AbstractPlotWidget) extends JPanel(new WrapLayout(widget)) with Transparent {
@@ -64,9 +64,9 @@ class PlotLegend(widget: AbstractPlotWidget) extends JPanel(new WrapLayout(widge
 }
 
 // FlowLayout wraps its content but doesn't change its vertical size, this custom layout does both (Isaac B 6/15/25)
-class WrapLayout(zoom: ZoomHelpers) extends LayoutManager {
+class WrapLayout(widget: AbstractPlotWidget) extends LayoutManager {
   private def rowGap: Int =
-    zoom.zoom(10)
+    widget.zoom(10)
 
   // don't need per-component strings (Isaac B 6/15/25)
   override def addLayoutComponent(name: String, component: Component): Unit = {}
@@ -80,7 +80,9 @@ class WrapLayout(zoom: ZoomHelpers) extends LayoutManager {
         if (parent.getWidth == 0) {
           parent.getMaximumSize.width
         } else {
-          parent.getWidth
+          val insets: Insets = widget.getInsets
+
+          widget.getWidth - insets.left - insets.right
         }
       }
 
@@ -135,7 +137,9 @@ class WrapLayout(zoom: ZoomHelpers) extends LayoutManager {
         if (parent.getWidth == 0) {
           parent.getMaximumSize.width
         } else {
-          parent.getWidth
+          val insets: Insets = widget.getInsets
+
+          widget.getWidth - insets.left - insets.right
         }
       }
 
@@ -143,7 +147,6 @@ class WrapLayout(zoom: ZoomHelpers) extends LayoutManager {
 
       var rowWidth = firstSize.width
       var rowHeight = firstSize.height
-      var width = 0
       var height = 0
 
       parent.getComponents.tail.foreach { component =>
@@ -151,8 +154,6 @@ class WrapLayout(zoom: ZoomHelpers) extends LayoutManager {
         val newWidth = rowWidth + size.width
 
         if (newWidth > maxWidth) {
-          width = width.max(rowWidth)
-
           if (height > 0) {
             height += rowHeight + rowGap
           } else {
@@ -168,8 +169,6 @@ class WrapLayout(zoom: ZoomHelpers) extends LayoutManager {
       }
 
       if (rowWidth > 0) {
-        width = width.max(rowWidth)
-
         if (height > 0) {
           height += rowHeight + rowGap
         } else {
@@ -177,7 +176,7 @@ class WrapLayout(zoom: ZoomHelpers) extends LayoutManager {
         }
       }
 
-      new Dimension(width.min(maxWidth), height)
+      new Dimension(maxWidth, height)
     }
   }
 
