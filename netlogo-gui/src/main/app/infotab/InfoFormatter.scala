@@ -25,6 +25,8 @@ import scala.io.Source
 object InfoFormatter {
   val MaxParsingTimeMillis = 4000 // set high for Travis, won't take that long on most computers
 
+  private val mathJax: String = FileIO.getResourceAsString("/system/mathjax.js")
+
   /**
    * for standalone use, for example on a web server
    */
@@ -74,8 +76,6 @@ object InfoFormatter {
   }
 
   def wrapHtml(zoom: ZoomHelpers, body: String, fontFamily: String = "monospace"): String = {
-    val mathJax = "https://cdn.jsdelivr.net/npm/mathjax@4/tex-svg.js"
-
     s"""<html><head>${styleSheet(zoom, fontFamily)}</head><body>$body</body><script>
       window.MathJax = {
         tex: {
@@ -84,7 +84,9 @@ object InfoFormatter {
         },
         loader: {load: ['[tex]/mhchem']}
       };
-    </script><script type="text/javascript" src="$mathJax"></script></html>"""
+
+      $mathJax
+    </script></html>"""
   }
 
   def toInnerHtml(content: String, modelDir: String = null,
