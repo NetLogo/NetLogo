@@ -2,16 +2,21 @@
 //
 package org.nlogo.workspace
 
-import java.io.{ Closeable, IOException, PrintWriter }
+import java.io.{ Closeable, File, InputStreamReader, IOException, PrintWriter }
 import java.lang.{ ClassLoader, Iterable => JIterable }
 import java.net.URL
 import java.util.{ List => JList, Locale }
+import java.util.jar.JarFile
 
 import org.nlogo.api.{ ClassManager, Dump, ExtensionException, ImportErrorHandler, Reporter, WorkspaceContext }
 import org.nlogo.core.{ CompilerException, ErrorSource, ExtensionObject, Primitive, PrimitiveCommand, PrimitiveReporter, TokenType }
 import org.nlogo.nvm.{ ExtensionManager => NvmExtensionManager }
 
+import org.json.simple.{ JSONArray, JSONObject }
+import org.json.simple.parser.JSONParser
+
 import scala.jdk.CollectionConverters.{ IterableHasAsJava, IteratorHasAsScala }
+import scala.util.Try
 
 /**
  * Some simple notes on loading and unloading extensions:
@@ -67,15 +72,41 @@ object ExtensionManager {
     val fileURL        = data.fileURL
     val modified: Long = data.modified
     val primManager: ExtensionPrimitiveManager = new ExtensionPrimitiveManager(extensionName)
+    lazy val primCache = getPrimitivesFromJSON
     var classManager: ClassManager = null
     var loaded: Boolean = false
+
+    def getPrimitivesFromJSON: Option[Map[String, TokenType]] = {
+      for {
+        jarFile <- Try(new JarFile(new File(fileURL.toURI))).toOption
+        primsEntry <- Option(jarFile.getEntry("prims.json"))
+        primsStream = jarFile.getInputStream(primsEntry)
+        jsonParser = new JSONParser()
+        top <- Option(jsonParser.parse(new InputStreamReader(primsStream)).asInstanceOf[JSONObject])
+        primsArray <- Option(top.get("prims").asInstanceOf[JSONArray])
+        primsIterator = primsArray.iterator.asScala.map(_.asInstanceOf[JSONObject])
+
+        result = primsIterator.foldLeft(Map[String, TokenType]()) { (p, x) =>
+          val tokenType = if (x.get("returnType") == "unit") TokenType.Command else TokenType.Reporter
+          val name = x.get("name").asInstanceOf[String]
+
+          p + (primName(name) -> tokenType)
+        }
+      } yield result
+    }
 
     def load(instantiatedClassManager: ClassManager, extensionManager: ExtensionManager): Unit = {
       loaded = true
       classManager = instantiatedClassManager
       classManager.load(primManager)
-      primManager.importedPrimitives.foreach {
-        case (name, p)  => extensionManager.cacheType(primName(name), p)
+
+      primCache match {
+        case Some(x) => extensionManager.typeCache ++= x
+        case None => {
+          primManager.importedPrimitives.foreach {
+            case (name, p)  => extensionManager.cacheType(primName(name), p)
+          }
+        }
       }
     }
 
@@ -87,9 +118,15 @@ object ExtensionManager {
     def unload(extensionManager: ExtensionManager) = {
       loaded = false
       try {
-        primManager.importedPrimitives.foreach {
-          case (name, p) => extensionManager.removeCachedType(primName(name))
+        primCache match {
+          case Some(x) => x.keys.foreach(extensionManager.removeCachedType)
+          case None => {
+            primManager.importedPrimitives.foreach {
+              case (name, p) => extensionManager.removeCachedType(primName(name))
+            }
+          }
         }
+
         classManager.unload(extensionManager)
       } catch {
         case ex: Exception => org.nlogo.api.Exceptions.ignore(ex)
