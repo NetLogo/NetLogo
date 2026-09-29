@@ -186,9 +186,9 @@ class DropdownOptionPane[T](parent: Component, title: String, message: String, c
     add(new BoxRow(Seq(
       new JLabel(icon(this)),
       new BoxColumn(Seq(
-        new JLabel(getWrappedMessage) with Zoomable {
+        new BoxRow(new JLabel(getWrappedMessage) with Zoomable {
           setForeground(InterfaceColors.dialogText())
-        },
+        }, BoxAlign.Start),
         dropdown
       ), 6)
     ), 12) {
