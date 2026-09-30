@@ -454,10 +454,6 @@ class InterfaceTab(workspace: GUIWorkspace,
   def getMinimumWidth: Int =
     toolBar.getMinimumWidth
 
-  override def zoomComponent(): Unit = {
-    sizeToFit()
-  }
-
   override def syncTheme(): Unit = {
     toolBar.syncTheme()
     iP.syncTheme()

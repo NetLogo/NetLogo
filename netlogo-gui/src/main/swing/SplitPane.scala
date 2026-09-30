@@ -27,7 +27,9 @@ private class SizeButton(expand: Boolean, splitPane: SplitPane) extends JButton 
   else {
     setAction(new AbstractAction {
       def actionPerformed(e: ActionEvent): Unit = {
-        if (splitPane.getDividerLocation <= 0) {
+        if (splitPane.getDividerLocation <= 0 && splitPane.lastOpenLocation <= 0) {
+          splitPane.setDividerLocation(splitPane.maxClosedDividerLocation)
+        } else if (splitPane.getDividerLocation <= 0) {
           splitPane.resetToLastOpenSizes()
         } else if (splitPane.getDividerLocation < splitPane.maxClosedDividerLocation) {
           splitPane.setDividerLocation(splitPane.maxClosedDividerLocation)
@@ -134,7 +136,7 @@ private class SplitPaneDivider(splitPane: SplitPane) extends JPanel(null) with T
 }
 
 class SplitPane(mainComponent: Component, topComponent: Component, commandCenterToggleAction: Option[Action])
-  extends JLayeredPane with ThemeSync {
+  extends JLayeredPane with Zoomable with ThemeSync {
 
   private val divider = new SplitPaneDivider(this)
 
@@ -146,6 +148,8 @@ class SplitPane(mainComponent: Component, topComponent: Component, commandCenter
   private var dividerLocation = 0
   private var lastOpenDividerLocation = 0
   private val dividerSize = 18
+  private var splitRatio = 1f
+  private var closed = false
 
   def getOrientation: Int = orientation
 
@@ -161,20 +165,30 @@ class SplitPane(mainComponent: Component, topComponent: Component, commandCenter
   def setDividerLocation(location: Int): Unit = {
     dividerLocation = location.max(0).min(maxClosedDividerLocation)
 
+    splitRatio = dividerLocation.toFloat / maxOpenDividerLocation
+    closed = location >= maxClosedDividerLocation
+
     revalidate()
     dividerChanged()
   }
 
-  def dragDividerLocation(location: Int): Unit = {
-    lastOpenDividerLocation = location.max(minOpenDividerLocation).min(maxOpenDividerLocation)
+  def lastOpenLocation: Int =
+    lastOpenDividerLocation
 
-    if (location < minOpenDividerLocation / 2) {
-      dividerLocation = 0
-    } else if (location > maxOpenDividerLocation + (maxClosedDividerLocation - maxOpenDividerLocation) / 2) {
+  def isClosed: Boolean =
+    closed
+
+  def dragDividerLocation(location: Int): Unit = {
+    lastOpenDividerLocation = location.max(0).min(maxOpenDividerLocation)
+
+    if (location > maxOpenDividerLocation + (maxClosedDividerLocation - maxOpenDividerLocation) / 2) {
       dividerLocation = maxClosedDividerLocation
     } else {
       dividerLocation = lastOpenDividerLocation
     }
+
+    splitRatio = dividerLocation.toFloat / maxOpenDividerLocation
+    closed = location >= maxClosedDividerLocation
 
     revalidate()
     dividerChanged()
@@ -198,9 +212,6 @@ class SplitPane(mainComponent: Component, topComponent: Component, commandCenter
     setDividerLocation(lastOpenDividerLocation)
   }
 
-  def minOpenDividerLocation: Int =
-    25
-
   def maxOpenDividerLocation: Int = {
     orientation match {
       case JSplitPane.HORIZONTAL_SPLIT => getHeight - topComponent.getPreferredSize.height - dividerSize
@@ -216,23 +227,28 @@ class SplitPane(mainComponent: Component, topComponent: Component, commandCenter
   }
 
   override def doLayout(): Unit = {
-    orientation match {
-      case JSplitPane.HORIZONTAL_SPLIT =>
-        mainComponent.setBounds(0, 0, getWidth, dividerLocation)
-      case JSplitPane.VERTICAL_SPLIT =>
-        mainComponent.setBounds(0, 0, dividerLocation, getHeight)
+    val location: Int = {
+      if (closed) {
+        maxClosedDividerLocation
+      } else {
+        dividerLocation
+      }
     }
 
-    if (dividerLocation > maxClosedDividerLocation)
-      dividerLocation = maxClosedDividerLocation
+    orientation match {
+      case JSplitPane.HORIZONTAL_SPLIT =>
+        mainComponent.setBounds(0, 0, getWidth, location)
+      case JSplitPane.VERTICAL_SPLIT =>
+        mainComponent.setBounds(0, 0, location, getHeight)
+    }
 
     orientation match {
       case JSplitPane.HORIZONTAL_SPLIT =>
-        topComponent.setBounds(0, dividerLocation + dividerSize, getWidth, getHeight - dividerLocation - dividerSize)
-        divider.setBounds(0, dividerLocation, getWidth, dividerSize)
+        topComponent.setBounds(0, location + dividerSize, getWidth, getHeight - location - dividerSize)
+        divider.setBounds(0, location, getWidth, dividerSize)
       case JSplitPane.VERTICAL_SPLIT =>
-        topComponent.setBounds(dividerLocation + dividerSize, 0, getWidth - dividerLocation - dividerSize, getHeight)
-        divider.setBounds(dividerLocation, 0, dividerSize, getHeight)
+        topComponent.setBounds(location + dividerSize, 0, getWidth - location - dividerSize, getHeight)
+        divider.setBounds(location, 0, dividerSize, getHeight)
     }
 
     dividerChanged()
@@ -257,6 +273,11 @@ class SplitPane(mainComponent: Component, topComponent: Component, commandCenter
   override def getPreferredSize: Dimension = {
     new Dimension(mainComponent.getPreferredSize.width,
                   mainComponent.getPreferredSize.height + topComponent.getPreferredSize.height + dividerSize)
+  }
+
+  override def zoomComponent(): Unit = {
+    if (!closed)
+      setDividerLocation((splitRatio * maxOpenDividerLocation).toInt)
   }
 
   override def syncTheme(): Unit = {
