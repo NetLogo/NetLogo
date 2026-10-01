@@ -11,6 +11,7 @@ import org.nlogo.swing.{ MenuItem, MouseUtils, PopupMenu, Zoomable }
 import org.nlogo.theme.InterfaceColors
 
 class LinePrompt(commandLine: CommandLine, switchingEnabled: Boolean) extends JLabel with MouseUtils with Zoomable {
+  setFocusable(false)
   setText(getPrompt)
 
   addMouseListener(new MouseAdapter {

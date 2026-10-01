@@ -9,7 +9,6 @@ import org.nlogo.swing.CheckBox
 
 class DisplaySwitch(workspace: GUIWorkspace) extends CheckBox(I18N.gui.get("tabs.run.viewUpdates.checkbox"))
                                              with ActionListener {
-  setFocusable(false)
   setToolTipText(I18N.gui.get("tabs.run.viewUpdates.checkbox.tooltip"))
 
   addActionListener(this)

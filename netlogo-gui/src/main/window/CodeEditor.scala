@@ -9,9 +9,9 @@ import javax.swing.{ JLabel, JPanel, ScrollPaneConstants }
 import org.nlogo.api.CompilerServices
 import org.nlogo.awt.Hierarchy
 import org.nlogo.editor.{ Colorizer, EditorArea, EditorConfiguration }
-import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, CollapsibleArrow, MaximumHeight, ScrollPane, Transparent,
-                         Zoomable }
-import org.nlogo.theme.InterfaceColors
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, CollapsibleArrow, FocusUtils, MaximumHeight, ScrollPane,
+                         Transparent, Zoomable }
+import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 import scala.util.{ Success, Try }
 
@@ -31,7 +31,7 @@ class CodeEditor(accessor: PropertyAccessor[String], compiler: CompilerServices,
                  err: () => Option[Exception] = () => None)
   extends BoxColumn(3) with PropertyEditor(accessor) with Zoomable {
 
-  val editorConfig =
+  lazy val editorConfig =
     EditorConfiguration.default(rows, columns, compiler, colorizer)
       .withListener(new TextListener { def textValueChanged(e: TextEvent): Unit = { accessor.changed() } })
 
@@ -65,8 +65,11 @@ class CodeEditor(accessor: PropertyAccessor[String], compiler: CompilerServices,
     })
   }
 
-  add(new BoxRow(3, BoxAlign.Start) with MaximumHeight {
+  private val header = new BoxRow(3, BoxAlign.Start) with MaximumHeight with FocusUtils with ThemeSync {
     if (collapsible) {
+      setFocusable(true)
+      setPrimaryAction(() => setVisibility(collapsed))
+
       add(new JLabel(arrow) {
         addMouseListener(new MouseAdapter {
           override def mouseReleased(e: MouseEvent): Unit = {
@@ -77,8 +80,13 @@ class CodeEditor(accessor: PropertyAccessor[String], compiler: CompilerServices,
     }
 
     add(nameLabel)
-  })
 
+    override def syncTheme(): Unit = {
+      setFocusColor(InterfaceColors.focus())
+    }
+  }
+
+  add(header)
   add(collapso)
 
   def collapsed: Boolean = !collapso.isVisible()
@@ -154,6 +162,8 @@ class CodeEditor(accessor: PropertyAccessor[String], compiler: CompilerServices,
     scrollPane.setBackground(InterfaceColors.textAreaBackground())
 
     nameLabel.setForeground(InterfaceColors.dialogText())
+
+    header.syncTheme()
   }
 }
 

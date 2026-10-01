@@ -4,6 +4,9 @@ package org.nlogo.app.tools;
 
 // leaving this in Java for now since our superclass is in Java - ST 8/13/10
 
+import java.awt.Component;
+import java.awt.Point;
+
 import org.nlogo.agent.Agent;
 import org.nlogo.agent.Link;
 import org.nlogo.agent.Patch;
@@ -179,5 +182,18 @@ public class AgentMonitorView extends org.nlogo.window.View {
       menu.show((java.awt.Component) e.getSource(), p.x, p.y);
     }
     e.consume();
+  }
+
+  protected void doPopup() {
+    int x = getWidth() / 2;
+    int y = getHeight() / 2;
+
+    WrappingPopupMenu menu = new WrappingPopupMenu(zoom);
+
+    populateContextMenu(menu, new Point(x, y));
+
+    if (menu.getSubElements().length > 0) {
+      menu.show(this, x, y);
+    }
   }
 }

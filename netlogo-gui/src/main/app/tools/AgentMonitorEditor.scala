@@ -52,7 +52,10 @@ class AgentMonitorEditor(parent: AgentMonitor) extends BoxColumn(3, BoxAlign.Sta
     setBorder(new ZoomableBorder(3, 3, 0, 3))
 
     vars.asScala.foreach { variableName =>
-      val label = new JLabel(variableName.toLowerCase) with Zoomable
+      val label = new JLabel(variableName.toLowerCase) with Zoomable {
+        setFocusable(false)
+      }
+
       val index =
         if (agent == null)
           workspace.world.indexOfVariable(agentKind, variableName)

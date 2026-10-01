@@ -153,7 +153,9 @@ class TabLabel(startPane: FloatingTabbedPane, text: String, tab: Component) exte
     this.tabbedPane = tabbedPane
   }
 
-  private val textLabel = new JLabel(text) with Zoomable
+  private val textLabel = new JLabel(text) with Zoomable {
+    setFocusable(false)
+  }
 
   private var rawText = text
 

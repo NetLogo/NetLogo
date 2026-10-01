@@ -8,7 +8,7 @@ import javax.swing.{ AbstractAction, Action, Icon, JCheckBox }
 
 import org.nlogo.theme.InterfaceColors
 
-class CheckBox(text: String = "") extends JCheckBox(text) with MouseUtils with Zoomable {
+class CheckBox(text: String = "") extends JCheckBox(text) with MouseUtils with FocusUtils with Zoomable {
   def this(action: Action) = {
     this(action.getValue(Action.NAME).toString)
 
@@ -71,9 +71,21 @@ class CheckBox(text: String = "") extends JCheckBox(text) with MouseUtils with Z
         g2d.setColor(InterfaceColors.checkboxBorder())
         g2d.drawRoundRect(x, y, size, size, diameter, diameter)
       }
+
+      if (hasFocus && shouldPaintFocus) {
+        if (isSelected) {
+          g2d.setColor(InterfaceColors.focusAlternate())
+        } else {
+          g2d.setColor(InterfaceColors.focus())
+        }
+
+        g2d.drawRoundRect(x, y, 14, 14, 4, 4)
+      }
     }
   })
 
   override def getIconTextGap: Int =
     zoom(super.getIconTextGap)
+
+  override def paintFocus(g: Graphics): Unit = {} // focus done in paintIcon (Isaac B 3/4/26)
 }

@@ -9,6 +9,7 @@ import org.nlogo.theme.InterfaceColors
 
 class DropdownArrow extends JPanel with PreferredSize with Zoomable {
   setOpaque(false)
+  setFocusable(false)
 
   override def getPreferredSize: Dimension =
     new Dimension(zoom(9), zoom(5))

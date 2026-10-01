@@ -27,9 +27,9 @@ import org.nlogo.core.I18N
 import org.nlogo.api.{ FileIO, LibraryManager }
 import org.nlogo.awt.{ Positioning, UserCancelException }
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, BrowserLauncher, Button, ButtonPanel, CollapsibleArrow,
-                         DialogButton, DummyZoomable, MaximumHeight, ModalProgressTask, OptionPane, PreferredSize,
-                         ScrollPane, TextField, Utils, WindowAutomator, Zoomable, ZoomableBorder, ZoomableWindow,
-                         ZoomHelpers },
+                         DialogButton, DummyZoomable, FocusUtils, MaximumHeight, ModalProgressTask, OptionPane,
+                         PreferredSize, ScrollPane, TextField, Utils, WindowAutomator, Zoomable, ZoomableBorder,
+                         ZoomableWindow, ZoomHelpers },
                        Utils.addEscKeyAction
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.workspace.ModelsLibrary
@@ -185,6 +185,7 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
 
   private var searchText = Option.empty[String]
   private val searchIcon = new JLabel with Zoomable {
+    setFocusable(false)
     setIcon(Utils.iconScaledWithColor(this, "/images/find.png", 15, 15, () => InterfaceColors.toolbarImage()))
   }
 
@@ -194,7 +195,7 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
     setBorder(null)
   }
 
-  private val tree = new JTree(new SearchableModelTree(node)) with Zoomable with ThemeSync {
+  private val tree = new JTree(new SearchableModelTree(node)) with FocusUtils with Zoomable with ThemeSync {
     val renderer = new TreeCellRenderer
 
     setCellRenderer(renderer)
@@ -220,6 +221,7 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
 
     override def syncTheme(): Unit = {
       setBackground(InterfaceColors.dialogBackground())
+      setFocusColor(InterfaceColors.focus())
 
       renderer.syncTheme()
     }
@@ -594,6 +596,7 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
       setContentType("text/html")
       setEditable(false)
       setOpaque(false)
+      setFocusable(false)
       setCaretColor(InterfaceColors.Transparent)
 
       override def getPreferredSize: Dimension =

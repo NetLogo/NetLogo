@@ -10,7 +10,7 @@ import javax.swing.plaf.basic.BasicSliderUI
 
 import org.nlogo.core.{ I18N, NetLogoPreferences }
 import org.nlogo.log.LogManager
-import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, Button, PreferredSize, Utils, Zoomable }
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, Button, FocusUtils, PreferredSize, Utils, Zoomable }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.Events.LoadBeginEvent
 
@@ -19,13 +19,9 @@ class SpeedSliderPanel(workspace: WorkspaceWithSpeed, ticksLabel: Component = nu
 
   implicit val prefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("tabs.run.speedslider")
 
-  val speedSlider = {
-    val slider = new SpeedSlider(workspace.speedSliderPosition().toInt)
-    slider.setFocusable(false)
-    slider.addChangeListener(this)
-    slider.addMouseListener(this)
-    slider.setOpaque(false)
-    slider
+  val speedSlider = new SpeedSlider(workspace.speedSliderPosition().toInt) {
+    addChangeListener(SpeedSliderPanel.this)
+    addMouseListener(SpeedSliderPanel.this)
   }
 
   val slower = new Button("", () => speedSlider.setValue(speedSlider.getValue - 11)) with PreferredSize {
@@ -65,7 +61,9 @@ class SpeedSliderPanel(workspace: WorkspaceWithSpeed, ticksLabel: Component = nu
     }
   }
 
-  val modelSpeed = new JLabel(I18N.gui("modelSpeed"), SwingConstants.CENTER) with Zoomable
+  val modelSpeed = new JLabel(I18N.gui("modelSpeed"), SwingConstants.CENTER) with Zoomable {
+    setFocusable(false)
+  }
 
   private var jumpOnClick = NetLogoPreferences.getBoolean("jumpOnClick", true)
 
@@ -145,16 +143,20 @@ class SpeedSliderPanel(workspace: WorkspaceWithSpeed, ticksLabel: Component = nu
   override def syncTheme(): Unit = {
     slower.syncTheme()
     faster.syncTheme()
+    speedSlider.syncTheme()
 
     modelSpeed.setForeground(InterfaceColors.toolbarText())
   }
 
-  class SpeedSlider(defaultSpeed: Int) extends JSlider(-110, 112, defaultSpeed) with MouseWheelListener with Zoomable {
+  class SpeedSlider(defaultSpeed: Int)
+    extends JSlider(-110, 112, defaultSpeed) with MouseWheelListener with FocusUtils with Zoomable with ThemeSync {
+
     private val sliderUI = new SpeedSliderUI
     private var lastThumbLocation = 0
 
     private var pressed = false
 
+    setOpaque(false)
     setExtent(1)
     setToolTipText(I18N.gui("tooltip"))
     setUI(sliderUI)
@@ -188,6 +190,10 @@ class SpeedSliderPanel(workspace: WorkspaceWithSpeed, ticksLabel: Component = nu
       g2d.drawLine(getWidth / 2 - 1, getHeight / 4, getWidth / 2 - 1, getHeight * 3 / 4)
 
       super.paintComponent(g)
+    }
+
+    override def syncTheme(): Unit = {
+      setFocusColor(InterfaceColors.focus())
     }
 
     private class SpeedSliderUI extends BasicSliderUI(this) {

@@ -10,8 +10,9 @@ import org.nlogo.api.Exceptions
 import org.nlogo.app.common.{ CommandLine, CommandServer, HistoryPrompt, LinePrompt }
 import org.nlogo.awt.{ Hierarchy, UserCancelException }
 import org.nlogo.core.{ AgentKind, I18N }
-import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, Button, FileDialog => SwingFileDialog, ModalProgressTask,
-                         MenuItem, PopupMenu, PreferredSize, RichAction, RoundedBorderPanel, Zoomable, ZoomableBorder }
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, Button, FileDialog => SwingFileDialog, FocusUtils,
+                         ModalProgressTask, MenuItem, PopupMenu, PreferredSize, RichAction, RoundedBorderPanel,
+                         Zoomable, ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ CommandCenterInterface, Events => WindowEvents, OutputArea, TextMenuActions }
 import org.nlogo.workspace.{ AbstractWorkspace, ExportOutput }
@@ -35,7 +36,7 @@ class CommandCenter(workspace: AbstractWorkspace, showToggle: Boolean, packSplit
     override def mouseReleased(e: MouseEvent): Unit = { if(e.isPopupTrigger) { e.consume(); doPopup(e) }}
   })
 
-  private val locationToggleButton = new Button(null) with PreferredSize {
+  val locationToggleButton = new Button(null) with PreferredSize {
     setBorder(new ZoomableBorder(3, 5, 3, 6))
     setVisible(showToggle)
 
@@ -47,19 +48,21 @@ class CommandCenter(workspace: AbstractWorkspace, showToggle: Boolean, packSplit
       setBackgroundHoverColor(InterfaceColors.toolbarControlBackgroundHover())
       setBackgroundPressedColor(InterfaceColors.toolbarControlBackgroundPressed())
       setBorderColor(InterfaceColors.toolbarControlBorder())
+      setFocusColor(InterfaceColors.focus())
     }
   }
 
   private val titleLabel = new JLabel(I18N.gui.get("tabs.run.commandcenter")) with Zoomable {
+    setFocusable(false)
     setBaseFont(getFont.deriveFont(Font.BOLD))
   }
 
-  private val clearButton = new JButton(RichAction(I18N.gui.get("tabs.run.commandcenter.clearButton")) {
+  val clearButton = new JButton(RichAction(I18N.gui.get("tabs.run.commandcenter.clearButton")) {
     _ => output.clear()
-  }) with RoundedBorderPanel with ThemeSync {
+  }) with RoundedBorderPanel with FocusUtils with ThemeSync {
     setBorder(new ZoomableBorder(3, 12, 3, 12))
-    setFocusable(false)
     setDiameter(6)
+    setFocusDiameter(6)
     enableHover()
     enablePressed()
 
@@ -69,10 +72,11 @@ class CommandCenter(workspace: AbstractWorkspace, showToggle: Boolean, packSplit
       setBackgroundPressedColor(InterfaceColors.toolbarControlBackgroundPressed())
       setBorderColor(InterfaceColors.toolbarControlBorder())
       setForeground(InterfaceColors.toolbarText())
+      setFocusColor(InterfaceColors.focus())
     }
   }
 
-  private val historyPrompt = new HistoryPrompt(commandLine)
+  val historyPrompt = new HistoryPrompt(commandLine)
 
   private val northPanel = new BoxRow(Seq(
     titleLabel,

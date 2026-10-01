@@ -7,7 +7,7 @@ import javax.swing.{ AbstractAction, Action, JButton, JToggleButton }
 
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
-class Button(action: Action) extends JButton(action) with RoundedBorderPanel with ThemeSync {
+class Button(action: Action) extends JButton(action) with RoundedBorderPanel with FocusUtils with ThemeSync {
   def this(text: String, function: () => Unit) = this(new AbstractAction(text) {
     def actionPerformed(e: ActionEvent): Unit = {
       function()
@@ -17,9 +17,9 @@ class Button(action: Action) extends JButton(action) with RoundedBorderPanel wit
   enableHover()
   enablePressed()
   setBorder(new ZoomableBorder(3, 12, 3, 12))
-  setFocusable(false)
   setContentAreaFilled(false)
   setDiameter(6)
+  setFocusDiameter(6)
 
   syncTheme()
 
@@ -29,10 +29,13 @@ class Button(action: Action) extends JButton(action) with RoundedBorderPanel wit
     setBackgroundPressedColor(InterfaceColors.toolbarControlBackgroundPressed())
     setBorderColor(InterfaceColors.toolbarControlBorder())
     setForeground(InterfaceColors.toolbarText())
+    setFocusColor(InterfaceColors.focus())
   }
 }
 
-class ToggleButton(action: Action) extends JToggleButton(action) with RoundedBorderPanel with ThemeSync {
+class ToggleButton(action: Action)
+  extends JToggleButton(action) with RoundedBorderPanel with FocusUtils with ThemeSync {
+
   def this(text: String, function: () => Unit) = this(new AbstractAction(text) {
     def actionPerformed(e: ActionEvent): Unit = {
       function()
@@ -42,9 +45,9 @@ class ToggleButton(action: Action) extends JToggleButton(action) with RoundedBor
   enableHover()
   enablePressed()
   setBorder(new ZoomableBorder(3, 12, 3, 12))
-  setFocusable(false)
   setContentAreaFilled(false)
   setDiameter(6)
+  setFocusDiameter(6)
 
   syncTheme()
 
@@ -57,6 +60,7 @@ class ToggleButton(action: Action) extends JToggleButton(action) with RoundedBor
     setBackgroundPressedColor(InterfaceColors.toolbarControlBackgroundPressed())
     setBorderColor(InterfaceColors.toolbarControlBorder())
     setForeground(InterfaceColors.toolbarText())
+    setFocusColor(InterfaceColors.focus())
   }
 }
 
@@ -69,8 +73,6 @@ class DialogButton(primary: Boolean, action: Action) extends Button(action) {
 
   def this(primary: Boolean, text: String, function: (String) => Unit) = this(primary, text, () => function(text))
 
-  setFocusable(true)
-
   syncTheme()
 
   override def syncTheme(): Unit = {
@@ -80,12 +82,14 @@ class DialogButton(primary: Boolean, action: Action) extends Button(action) {
       setBackgroundPressedColor(InterfaceColors.primaryButtonBackgroundPressed())
       setBorderColor(InterfaceColors.primaryButtonBorder())
       setForeground(InterfaceColors.primaryButtonText())
+      setFocusColor(InterfaceColors.focusAlternate())
     } else {
       setBackgroundColor(InterfaceColors.secondaryButtonBackground())
       setBackgroundHoverColor(InterfaceColors.secondaryButtonBackgroundHover())
       setBackgroundPressedColor(InterfaceColors.secondaryButtonBackgroundPressed())
       setBorderColor(InterfaceColors.secondaryButtonBorder())
       setForeground(InterfaceColors.secondaryButtonText())
+      setFocusColor(InterfaceColors.focus())
     }
   }
 }

@@ -3,17 +3,17 @@
 package org.nlogo.app.tools
 
 import java.awt.{ BorderLayout, Component, Dimension, EventQueue, Frame }
-import java.awt.event.{ MouseAdapter, MouseEvent }
+import java.awt.event.{ ActionEvent, KeyEvent, MouseAdapter, MouseEvent }
 import java.io.File
 import java.nio.file.Files
-import javax.swing.JLabel
+import javax.swing.{ AbstractAction, ActionMap, InputMap, JComponent, JLabel }
 
 import org.nlogo.app.common.TabsInterface
 import org.nlogo.app.common.Events.RestartEvent
 import org.nlogo.core.I18N
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, ButtonPanel, CheckBox, DialogButton, FloatingTabbedPane,
-                         MaximumHeight, OptionPane, PreferredSize, TabLabel, TextField, WindowAutomator, Zoomable,
-                         ZoomableBorder }
+                         MaximumHeight, OptionPane, PreferredSize, TabLabel, TextField, UserAction, WindowAutomator,
+                         Zoomable, ZoomableBorder }, UserAction.KeyBindings
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.AbstractWidgetPanel
 
@@ -96,6 +96,23 @@ class PreferencesDialog(parent: Frame & ThemeSync, tabManager: TabsInterface, wi
     reset(false)
 
     setResizable(false)
+
+    val inputMap: InputMap = getRootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+    val actionMap: ActionMap = getRootPane.getActionMap
+
+    bindTab(inputMap, actionMap, 0, KeyEvent.VK_1)
+    bindTab(inputMap, actionMap, 1, KeyEvent.VK_2)
+    bindTab(inputMap, actionMap, 2, KeyEvent.VK_3)
+    bindTab(inputMap, actionMap, 3, KeyEvent.VK_4)
+  }
+
+  private def bindTab(inputMap: InputMap, actionMap: ActionMap, index: Int, key: Int): Unit = {
+    inputMap.put(KeyBindings.keystroke(key, true), index.toString)
+    actionMap.put(index.toString, new AbstractAction {
+      override def actionPerformed(e: ActionEvent): Unit = {
+        tabs.setSelectedIndex(index)
+      }
+    })
   }
 
   override def setVisible(visible: Boolean): Unit = {
@@ -247,7 +264,9 @@ private class PreferenceContainer(preferences: Seq[Preference]) extends BoxColum
 
   private val (labels, components) = preferences.foldLeft((Seq[JLabel](), Seq[Component & ThemeSync]())) {
     case ((labels, components), pref) =>
-      val label = new JLabel(prefString(pref)) with Zoomable
+      val label = new JLabel(prefString(pref)) with Zoomable {
+        setFocusable(false)
+      }
 
       val labelComponent: Component = {
         if (pref.top) {
@@ -293,6 +312,9 @@ private class PreferenceContainer(preferences: Seq[Preference]) extends BoxColum
 
       (labels :+ label, components :+ pref.component)
   }
+
+  def getDefaultComponent: Option[Component] =
+    components.headOption
 
   private def prefString(pref: Preference): String =
     I18N.gui(pref.i18nKey) + pref.requirement.map(r => " " + I18N.gui(r.toString)).getOrElse("") + ":"

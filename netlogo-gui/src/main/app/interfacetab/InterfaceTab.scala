@@ -2,18 +2,17 @@
 
 package org.nlogo.app.interfacetab
 
-import java.awt.{ BasicStroke, BorderLayout, Component, Container, ContainerOrderFocusTraversalPolicy, Dimension, Font,
-                  Graphics, Graphics2D, Stroke }
-import java.awt.event.{ ActionEvent, FocusEvent, FocusListener, KeyEvent, MouseAdapter, MouseEvent }
+import java.awt.{ BasicStroke, BorderLayout, Component, Dimension, Font, Graphics, Graphics2D, Stroke }
+import java.awt.event.{ ActionEvent, KeyEvent, MouseAdapter, MouseEvent }
 import java.awt.print.{ PageFormat, Printable }
-import javax.swing.{ AbstractAction, Action, JComponent, JPanel, JSplitPane, ScrollPaneConstants }
+import javax.swing.{ AbstractAction, Action, JPanel, JSplitPane, ScrollPaneConstants }
 
 import org.nlogo.api.Announcement
 import org.nlogo.app.common.{Events => AppEvents, MenuTab}, AppEvents.SwitchedTabsEvent
 import org.nlogo.app.tools.AgentMonitorManager
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ BoxColumn, Implicits, PreferredSize, PrinterManager, Printable => NlogoPrintable, ScrollPane,
-                         SplitPane, Transparent, UserAction, Utils, Zoomable },
+import org.nlogo.swing.{ BoxColumn, FocusRoot, Implicits, PreferredSize, PrinterManager, Printable => NlogoPrintable,
+                         ScrollPane, SplitPane, Transparent, UserAction, Utils, Zoomable },
                        Implicits.thunk2action, UserAction.{ MenuAction, ToolsCategory }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ EditDialogFactory, GUIWorkspace, InterfaceMode, SpeedSliderPanel, ViewUpdatePanel,
@@ -37,13 +36,11 @@ class InterfaceTab(workspace: GUIWorkspace,
   with SwitchedTabsEvent.Handler
   with NlogoPrintable
   with MenuTab
+  with FocusRoot
   with Zoomable
   with ThemeSync {
 
   private var lastLoadTime = System.currentTimeMillis
-
-  setFocusCycleRoot(true)
-  setFocusTraversalPolicy(new InterfaceTabFocusTraversalPolicy)
 
   val iP = new InterfacePanel(workspace.viewWidget, workspace, dialogFactory)
 
@@ -57,8 +54,9 @@ class InterfaceTab(workspace: GUIWorkspace,
 
   override val permanentMenuActions = commandCenter.commandLine.getAdditionalActions
 
-  var lastFocusedComponent: JComponent = commandCenter
   setLayout(new BorderLayout)
+  setCanFocus(false)
+
   private val scrollPane = new ScrollPane(
     iP,
     // always reserve space for the vertical scrollbar, otherwise when it appears it causes a
@@ -91,14 +89,6 @@ class InterfaceTab(workspace: GUIWorkspace,
 
   add(splitPane, BorderLayout.CENTER)
 
-  object TrackingFocusListener extends FocusListener {
-    var lastFocused = Option.empty[Component]
-    override def focusGained(e: FocusEvent): Unit = {
-      lastFocused = Some(e.getSource.asInstanceOf[Component])
-    }
-    override def focusLost(e: FocusEvent): Unit = { }
-  }
-
   private val toolBar = new DynamicToolbar(iP.widgetControls, speedSlider, viewUpdatePanel)
   private val announcementBar = new AnnouncementBanner()
 
@@ -108,32 +98,31 @@ class InterfaceTab(workspace: GUIWorkspace,
     announcementBar.appendData(anns)
   }
 
-  iP.addFocusListener(TrackingFocusListener)
-
-  commandCenter.getDefaultComponentForFocus().addFocusListener(TrackingFocusListener)
-
   Utils.addEscKeyAction(this, () => InterfaceTab.this.monitorManager.closeTopMonitor())
-
-  private class InterfaceTabFocusTraversalPolicy extends ContainerOrderFocusTraversalPolicy {
-    override def getComponentAfter(focusCycleRoot: Container, aComponent: Component) =
-      if (aComponent == iP) {
-        commandCenter.getDefaultComponentForFocus()
-      } else {
-        super.getComponentAfter(focusCycleRoot, aComponent)
-      }
-    override def getComponentBefore(focusCycleRoot: Container, aComponent: Component) =
-      if (aComponent == iP) {
-        commandCenter.getDefaultComponentForFocus()
-      } else {
-        super.getComponentBefore(focusCycleRoot, aComponent)
-      }
-  }
 
   def getInterfacePanel = iP
 
   def setCodeFont(font: Font): Unit = {
     commandCenter.setCodeFont(font)
     iP.setCodeFont(font)
+  }
+
+  override def getDefaultComponent: Option[Component] =
+    Option(commandCenter)
+
+  override def getFocusOrder: Map[Component, (Component, Component)] = {
+    Map(
+      commandCenter.commandLine.textField -> (viewUpdatePanel.settingsButton, null),
+      commandCenter.historyPrompt -> (null, commandCenter.locationToggleButton),
+      commandCenter.locationToggleButton -> (commandCenter.historyPrompt, null),
+      commandCenter.clearButton -> (null, splitPane.divider),
+      splitPane.divider -> (commandCenter.clearButton, null),
+      iP.widgetControls.interactButton -> (null, speedSlider.slower),
+      iP.widgetControls.selectButton -> (null, speedSlider.slower),
+      iP.widgetControls.editButton -> (null, speedSlider.slower),
+      iP.widgetControls.deleteButton -> (null, speedSlider.slower),
+      viewUpdatePanel.settingsButton -> (null, commandCenter.commandLine.textField)
+    )
   }
 
   // When we get focus, we want to focus the command center first
@@ -233,6 +222,7 @@ class InterfaceTab(workspace: GUIWorkspace,
     private var permanent = true
 
     setLayout(null)
+    setFocusable(false)
 
     add(widgetControls)
     add(speedSlider)

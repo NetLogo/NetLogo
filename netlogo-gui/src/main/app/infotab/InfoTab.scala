@@ -2,8 +2,8 @@
 
 package org.nlogo.app.infotab
 
-import java.awt.{ BorderLayout, Dimension, EventQueue, Font, Graphics }
-import java.awt.event.{ ActionEvent, FocusEvent, FocusListener }
+import java.awt.{ BorderLayout, Component, Dimension, EventQueue, Font, Graphics }
+import java.awt.event.{ ActionEvent, FocusEvent, FocusListener, KeyAdapter, KeyEvent }
 import java.awt.print.PageFormat
 import java.net.URI
 import javax.swing.{ AbstractAction, JComponent, JPanel, JTextArea, ScrollPaneConstants }
@@ -20,8 +20,8 @@ import org.nlogo.api.{ ExternalResourceManager, Version }
 import org.nlogo.app.common.{ Events => AppEvents, FindDialog, MenuTab, UndoRedoActions }
 import org.nlogo.core.I18N
 import org.nlogo.editor.EditorConfiguration
-import org.nlogo.swing.{ BoxAlign, BoxRow, QuickHelp, ScrollableTextComponent, ScrollPane, TextArea,
-                         ToolBarActionButton, ToolBarToggleButton, Printable, PrinterManager, BrowserLauncher,
+import org.nlogo.swing.{ BoxAlign, BoxRow, FocusRoot, FocusUtils, QuickHelp, ScrollableTextComponent, ScrollPane,
+                         TextArea, ToolBarActionButton, ToolBarToggleButton, Printable, PrinterManager, BrowserLauncher,
                          UndoManager, UserAction, Utils, Zoomable, ZoomableBorder }, UserAction.MenuAction
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ Events => WindowEvents }
@@ -39,6 +39,7 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
   with WindowEvents.LoadBeginEvent.Handler
   with WindowEvents.LoadModelEvent.Handler
   with WindowEvents.ResourcesChangedEvent.Handler
+  with FocusRoot
   with Zoomable
   with ThemeSync {
 
@@ -99,7 +100,10 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
 
   locally {
     resetBorders()
+
     setLayout(new BorderLayout)
+    setCanFocus(false)
+
     add(toolBar, BorderLayout.NORTH)
     scrollPane.getVerticalScrollBar.setUnitIncrement(16)
     add(scrollPane, BorderLayout.CENTER)
@@ -107,6 +111,18 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
 
   private def resetBorders(): Unit = {
     textArea.setBorder(new ZoomableBorder(4, 7, 4, 7))
+  }
+
+  override def getDefaultComponent: Option[Component] =
+    Option(view)
+
+  override def getFocusOrder: Map[Component, (Component, Component)] = {
+    Map(
+      htmlPanel -> (null, editableButton),
+      textArea -> (null, findButton),
+      findButton -> (textArea, null),
+      editableButton -> (if (findButton.isEnabled) findButton else htmlPanel, null)
+    )
   }
 
   override def doLayout(): Unit = {
@@ -159,17 +175,27 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
   }
 
   private def setView(view: JComponent): Unit = {
-    this.view = view
+    if (view != this.view) {
+      this.view = view
 
-    // the WebView panel needs to handle its own scrolling instead of Swing's JScrollPane,
-    // otherwise it throws a bunch of exceptions about trying to render a view that's
-    // too large. (Isaac B 1/29/26)
-    if (view == htmlPanel) {
-      scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER)
-      scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER)
-    } else {
-      scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED)
-      scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED)
+      // the WebView panel needs to handle its own scrolling instead of Swing's JScrollPane,
+      // otherwise it throws a bunch of exceptions about trying to render a view that's
+      // too large. (Isaac B 1/29/26)
+      if (view == htmlPanel) {
+        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER)
+        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER)
+      } else {
+        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED)
+        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED)
+      }
+
+      if (view == textArea) {
+        FindDialog.watch(textArea)
+      } else {
+        FindDialog.dontWatch()
+
+        updateEditorPane()
+      }
     }
   }
 
@@ -182,13 +208,17 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
     scrollPane.setBackground(InterfaceColors.infoBackground())
 
     textArea.syncTheme()
+    htmlPanel.syncTheme()
 
     updateEditorPane()
   }
 
   def handle(e: AppEvents.SwitchedTabsEvent): Unit = {
-    if (e.newTab != this)
+    if (e.newTab == this && view == textArea) {
+      FindDialog.watch(textArea)
+    } else {
       FindDialog.dontWatch()
+    }
   }
 
   def handle(e: WindowEvents.LoadBeginEvent): Unit = {
@@ -221,15 +251,12 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
   private class ScrollableTextArea extends TextArea(0, 90) with ScrollableTextComponent {
     addFocusListener(new FocusListener {
       def focusGained(fe: FocusEvent): Unit = {
-        FindDialog.watch(ScrollableTextArea.this)
         UndoManager.setCurrentManager(undoManager)
       }
 
       def focusLost(fe: FocusEvent): Unit = {
-        if (!fe.isTemporary) {
-          FindDialog.dontWatch()
+        if (!fe.isTemporary)
           UndoManager.setCurrentManager(null)
-        }
       }
     })
 
@@ -252,10 +279,47 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
     }
   }
 
-  private class HTMLPanel extends JFXPanel with Zoomable {
+  private class HTMLPanel extends JFXPanel with FocusUtils with Zoomable with ThemeSync {
     private var view: Option[WebView] = None
     private var engine: Option[WebEngine] = None
     private var text = ""
+
+    addKeyListener(new KeyAdapter {
+      override def keyPressed(e: KeyEvent): Unit = {
+        e.getKeyCode match {
+          case KeyEvent.VK_TAB =>
+            if (e.isShiftDown) {
+              transferFocusBackward()
+            } else {
+              transferFocus()
+            }
+
+            e.consume()
+
+          case KeyEvent.VK_UP =>
+            scrollBy(0, -40)
+
+            e.consume()
+
+          case KeyEvent.VK_DOWN =>
+            scrollBy(0, 40)
+
+            e.consume()
+
+          case KeyEvent.VK_LEFT =>
+            scrollBy(-40, 0)
+
+            e.consume()
+
+          case KeyEvent.VK_RIGHT =>
+            scrollBy(40, 0)
+
+            e.consume()
+
+          case _ =>
+        }
+      }
+    })
 
     Platform.runLater(() => {
       val webView = new WebView
@@ -326,10 +390,20 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
       })
     }
 
+    private def scrollBy(x: Int, y: Int): Unit = {
+      Platform.runLater(() => {
+        engine.foreach(_.executeScript(s"window.scrollBy($x, $y)"))
+      })
+    }
+
     override def zoomComponent(): Unit = {
       Platform.runLater(() => {
         view.foreach(_.setZoom(getZoomFactor))
       })
+    }
+
+    override def syncTheme(): Unit = {
+      setFocusColor(InterfaceColors.focus())
     }
   }
 
