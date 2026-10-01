@@ -258,13 +258,9 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
 
       if (isSelected) {
         setBackground(InterfaceColors.dialogBackgroundSelected())
-
         label.setForeground(InterfaceColors.dialogTextSelected())
-      }
-
-      else {
-        setBackground(InterfaceColors.dialogBackground())
-
+      } else {
+        setBackground(InterfaceColors.textBoxBackground())
         label.setForeground(InterfaceColors.dialogText())
       }
 
