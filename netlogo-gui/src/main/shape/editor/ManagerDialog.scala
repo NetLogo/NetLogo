@@ -192,8 +192,8 @@ abstract class ManagerDialog[A <: CoreShape](parentFrame: Frame, modelLoader: Ab
   override def syncTheme(): Unit = {
     getContentPane.setBackground(InterfaceColors.dialogBackground())
     scrollPane.setBackground(InterfaceColors.dialogBackground())
-    shapesList.setBackground(InterfaceColors.dialogBackground())
 
+    shapesList.syncTheme()
     newButton.syncTheme()
     modelImportButton.syncTheme()
     editButton.syncTheme()

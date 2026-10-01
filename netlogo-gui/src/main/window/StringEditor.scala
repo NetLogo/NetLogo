@@ -14,7 +14,7 @@ class StringEditor(accessor: PropertyAccessor[String])
   extends BoxRow(6) with PropertyEditor(accessor) with MaximumHeight {
 
   private val label = new JLabel(accessor.name) with Zoomable
-  private val editor = new TextField(12) {
+  private lazy val editor = new TextField(12) {
     getDocument.addDocumentListener(() => accessor.changed())
   }
 

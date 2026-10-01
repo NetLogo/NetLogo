@@ -14,8 +14,8 @@ import javax.swing.event.{ AncestorEvent, AncestorListener, ListDataEvent, ListD
 import org.nlogo.api.{ LibraryInfoDownloader, LibraryManager, Version }
 import org.nlogo.core.{ I18N, LibraryInfo, LibraryStatus, Token, TokenType }
 import org.nlogo.swing.{ AutomationUtils, BoxColumn, BoxRow, BrowserLauncher, Button, EmptyIcon, FilterableListModel,
-                         HorizontalStrut, MaximumHeight, OptionPane, RichAction, ScrollPane, SwingWorker, TextArea,
-                         TextField, Utils, VerticalStrut, Zoomable, ZoomableBorder }
+                         FocusUtils, HorizontalStrut, MaximumHeight, OptionPane, RichAction, ScrollPane, SwingWorker,
+                         TextArea, TextField, Utils, VerticalStrut, Zoomable, ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.workspace.ModelsLibrary
 
@@ -122,8 +122,13 @@ class LibrariesTab( category:        String
   private val renderer = new CellRenderer
 
   private val listModel   = new FilterableListModel(baseListModel, containsLib)
-  private val libraryList = new JList[LibraryInfo](listModel) with Zoomable {
+  private val libraryList = new JList[LibraryInfo](listModel) with FocusUtils with Zoomable with ThemeSync {
     setCellRenderer(renderer)
+
+    override def syncTheme(): Unit = {
+      setBackground(InterfaceColors.dialogBackground())
+      setFocusColor(InterfaceColors.focus())
+    }
   }
 
   private var actionIsInProgress = false
@@ -194,7 +199,10 @@ class LibrariesTab( category:        String
 
   private val buttonStrut = new HorizontalStrut(6)
 
-  private val info = new TextArea(2, 28)
+  private val info = new TextArea(2, 28) {
+    setFocusable(false)
+  }
+
   private val infoScroll = new ScrollPane(info)
 
   private val installedVersionLabel  = new JLabel(s"${I18N.gui("installedVersion")}: ") with Zoomable {
@@ -522,7 +530,8 @@ class LibrariesTab( category:        String
     filterField.syncTheme()
 
     libraryScroll.setBackground(InterfaceColors.dialogBackground())
-    libraryList.setBackground(InterfaceColors.dialogBackground())
+
+    libraryList.syncTheme()
 
     installButton.syncTheme()
     addToCodeTabButton.syncTheme()

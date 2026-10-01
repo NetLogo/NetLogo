@@ -2,9 +2,9 @@
 
 package org.nlogo.app.tools
 
-import java.awt.{ BorderLayout, Container, Font, Frame }
+import java.awt.{ BorderLayout, Component, Font, Frame }
 import java.awt.event.{ ActionEvent, WindowAdapter, WindowEvent }
-import javax.swing.{ AbstractAction, JDialog, LayoutFocusTraversalPolicy }
+import javax.swing.{ AbstractAction, JDialog }
 
 import scala.jdk.CollectionConverters.SeqHasAsJava
 
@@ -13,7 +13,7 @@ import org.nlogo.analytics.Analytics
 import org.nlogo.api.Dump
 import org.nlogo.app.common.CommandLine
 import org.nlogo.core.{ AgentKind, I18N }
-import org.nlogo.swing.{ NetLogoIcon, Utils, ZoomableWindow }
+import org.nlogo.swing.{ FocusRoot, NetLogoIcon, Utils, ZoomableWindow }
 import org.nlogo.theme.ThemeSync
 import org.nlogo.window.{ Event, Events => WindowEvents }
 
@@ -21,7 +21,7 @@ class AgentMonitorWindow(val agentKind: AgentKind, _agent: Agent, radius: Double
                          manager: AgentMonitorManager, parent: Frame)
   extends JDialog(parent) with Event.LinkChild with WindowEvents.PeriodicUpdateEvent.Handler
   with WindowEvents.PatchesCreatedEvent.Handler with WindowEvents.LoadBeginEvent.Handler
-  with ZoomableWindow(Option(parent)) with ThemeSync with NetLogoIcon {
+  with FocusRoot with ZoomableWindow(Option(parent)) with ThemeSync with NetLogoIcon {
 
   private val monitor = {
     agentKind match {
@@ -41,17 +41,16 @@ class AgentMonitorWindow(val agentKind: AgentKind, _agent: Agent, radius: Double
   monitor.setAgent(_agent, radius)
   getContentPane.setLayout(new BorderLayout)
   getContentPane.add(monitor, BorderLayout.CENTER)
-  setFocusTraversalPolicy(
-    new LayoutFocusTraversalPolicy {
-      override def getFirstComponent(focusCycleRoot: Container) =
-        monitor.commandLine.textField
-    })
+
   Utils.addEscKeyAction(
     getRootPane, new AbstractAction {
       def actionPerformed(e: ActionEvent): Unit = {
         close()
       }})
+
   setTitle(getUpdatedTitle)
+  setCanFocus(false)
+
   // not sure why the second `pack()` is needed, but without it patch inspectors
   // can show up with their fields initially hidden.  -Jeremy B December 2021
   pack()
@@ -63,6 +62,15 @@ class AgentMonitorWindow(val agentKind: AgentKind, _agent: Agent, radius: Double
       override def windowClosing(e: WindowEvent): Unit = {
         close()
       }})
+
+  override def getDefaultComponent: Option[Component] =
+    Option(monitor.commandLine.textField)
+
+  override def getFocusOrder: Map[Component, (Component, Component)] = {
+    Map(
+      monitor.commandLine.textField -> (null, monitor.historyPrompt)
+    )
+  }
 
   override def requestFocus(): Unit = {
     monitor.requestFocus()

@@ -27,7 +27,6 @@ class IncludedFilesMenu(includesTable: => Option[Map[String, IncludeSource]], ta
   private var isEmpty = true
 
   updateVisibility()
-  enableHover()
 
   def setAlwaysVisible(visible: Boolean): Unit = {
     alwaysVisible = visible

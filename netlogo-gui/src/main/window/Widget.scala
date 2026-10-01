@@ -2,14 +2,14 @@
 
 package org.nlogo.window
 
-import java.awt.{ Component, Container, Dimension, Font, Graphics, Insets, Point, Rectangle, event },
+import java.awt.{ Color, Component, Container, Dimension, Font, Graphics, Insets, Point, Rectangle, event },
                 event.{ MouseAdapter, MouseEvent, MouseListener }
 import javax.swing.{ JPanel, JMenuItem }
 import javax.swing.border.Border
 
 import org.nlogo.api.CompilerServices
 import org.nlogo.core.{ NetLogoPreferences, TokenType, Widget => CoreWidget }
-import org.nlogo.swing.{ PopupMenu, PreferredSize, RoundedBorderPanel, Zoomable, ZoomHelpers }
+import org.nlogo.swing.{ FocusUtils, PopupMenu, PreferredSize, RoundedBorderPanel, Zoomable, ZoomHelpers }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.Event
 import org.nlogo.window.Events.{ InterfaceModeChangedEvent, WidgetAddedEvent, WidgetErrorEvent, WidgetRemovedEvent }
@@ -51,11 +51,14 @@ abstract class MultiErrorWidget extends Widget with MultiErrorHandler {
   }
 }
 
-abstract class Widget extends JPanel with RoundedBorderPanel with ThemeSync with InterfaceModeChangedEvent.Handler {
+abstract class Widget
+  extends JPanel with RoundedBorderPanel with FocusUtils with ThemeSync with InterfaceModeChangedEvent.Handler {
+
   def helpLink: Option[(String, String)] = None
   var displayName: String = ""
   var deleteable: Boolean = true
 
+  setFocusable(false)
   setBorderColor(InterfaceColors.Transparent)
   setDiameter(12)
 
@@ -186,6 +189,15 @@ abstract class Widget extends JPanel with RoundedBorderPanel with ThemeSync with
     super.removeNotify()
   }
 
+  def getFocusColor: Color =
+    focusColor
+
+  def getDefaultComponent: Option[Component] =
+    None
+
+  def getPrimaryAction: Option[() => Unit] =
+    None
+
   // The methods to raise widget added/removed are here so they can be overridden by child classes.  Some of those
   // classes are not "actual" widgets they just use the UI functionality of this class, and changes to those items
   // (monitors, command lines, etc) should not cause things like marking the model as "dirty".
@@ -209,6 +221,8 @@ abstract class Widget extends JPanel with RoundedBorderPanel with ThemeSync with
   def setCodeFont(font: Font): Unit = {}
 
   protected class AdaptableHorizontalStrut(oldSize: Int, newSize: Int) extends Zoomable with PreferredSize {
+    setFocusable(false)
+
     override def getMinimumSize: Dimension = {
       if (_oldSize) {
         new Dimension(zoom(oldSize), 0)
@@ -225,6 +239,8 @@ abstract class Widget extends JPanel with RoundedBorderPanel with ThemeSync with
   }
 
   protected class AdaptableVerticalStrut(oldSize: Int, newSize: Int) extends Zoomable with PreferredSize {
+    setFocusable(false)
+
     override def getMinimumSize: Dimension = {
       if (_oldSize) {
         new Dimension(0, zoom(oldSize))

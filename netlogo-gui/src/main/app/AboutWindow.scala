@@ -3,16 +3,17 @@
 package org.nlogo.app
 
 import java.awt.{ Cursor, Dimension, Frame }
-import java.awt.event.{ WindowAdapter, WindowEvent }
-import javax.swing.{ JDialog, JEditorPane, JLabel, Timer, WindowConstants }
+import java.awt.event.{ ActionEvent, KeyEvent, WindowAdapter, WindowEvent }
+import javax.swing.{ AbstractAction, ActionMap, InputMap, JComponent, JDialog, JEditorPane, JLabel, Timer,
+                     WindowConstants }
 import javax.swing.border.LineBorder
 
 import org.nlogo.api.{ APIVersion, FileIO, Version }
 import org.nlogo.awt.Positioning
 import org.nlogo.core.I18N
 import org.nlogo.editor.EditorConfiguration
-import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, RichAction, ScrollPane, TabbedPane, TextArea, Utils,
-                         WindowAutomator, Zoomable, ZoomableBorder, ZoomableWindow }
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, RichAction, ScrollPane, TabbedPane, TextArea, UserAction, Utils,
+                         WindowAutomator, Zoomable, ZoomableBorder, ZoomableWindow }, UserAction.KeyBindings
 import org.nlogo.theme.{ DarkTheme, InterfaceColors, ThemeSync }
 import org.nlogo.util.SysInfo
 
@@ -119,6 +120,23 @@ class AboutWindow(parent: Frame)
   })
 
   syncTheme()
+
+  locally {
+    val inputMap: InputMap = getRootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+    val actionMap: ActionMap = getRootPane.getActionMap
+
+    bindTab(inputMap, actionMap, 0, KeyEvent.VK_1)
+    bindTab(inputMap, actionMap, 1, KeyEvent.VK_2)
+  }
+
+  private def bindTab(inputMap: InputMap, actionMap: ActionMap, index: Int, key: Int): Unit = {
+    inputMap.put(KeyBindings.keystroke(key, true), index.toString)
+    actionMap.put(index.toString, new AbstractAction {
+      override def actionPerformed(e: ActionEvent): Unit = {
+        tabs.setSelectedIndex(index)
+      }
+    })
+  }
 
   Utils.addEscKeyAction(this, RichAction{ _ => dispose() } )
   pack()

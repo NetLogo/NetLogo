@@ -5,12 +5,14 @@ package org.nlogo.shape.editor
 import javax.swing.{ DefaultListModel, JList }
 
 import org.nlogo.core.{ I18N, Shape, ShapeList, ShapeListTracker }
-import org.nlogo.swing.{ OptionPane, Zoomable }
+import org.nlogo.swing.{ FocusUtils, OptionPane, Zoomable }
+import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 import scala.reflect.ClassTag
 
 class DrawableList[A <: Shape](shapeTracker: ShapeListTracker, rows: Int, height: Int, parent: java.awt.Component)
-  (implicit ct: ClassTag[A]) extends JList[A] with EditorDialog.VectorShapeContainer with Zoomable {
+  (implicit ct: ClassTag[A]) extends JList[A] with EditorDialog.VectorShapeContainer with FocusUtils with Zoomable
+                             with ThemeSync {
 
   def shapeList = shapeTracker.shapeList
 
@@ -147,5 +149,10 @@ class DrawableList[A <: Shape](shapeTracker: ShapeListTracker, rows: Int, height
 
   def removeShape(shape: Shape): Unit = {
     Option(shape).foreach(shapeTracker.removeShape)
+  }
+
+  override def syncTheme(): Unit = {
+    setBackground(InterfaceColors.dialogBackground())
+    setFocusColor(InterfaceColors.focus())
   }
 }

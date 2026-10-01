@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import java.awt.{ Dimension, Graphics, Insets, LinearGradientPaint }
+import java.awt.{ Component, Dimension, Graphics, Insets, LinearGradientPaint }
 import javax.swing.{ BoxLayout, JLabel }
 
 import org.nlogo.agent.ChooserConstraint
@@ -22,7 +22,10 @@ trait Chooser extends SingleErrorWidget {
   protected var _name = ""
 
   // sub-elements of Switch
-  protected val label = new JLabel(I18N.gui.get("edit.chooser.previewName")) with Zoomable
+  protected val label = new JLabel(I18N.gui.get("edit.chooser.previewName")) with Zoomable {
+    setFocusable(false)
+  }
+
   private val control = new ComboBox[String](Seq(" "), searchable = true) {
     addItemListener(_ => index(getSelectedIndex))
   }
@@ -33,6 +36,12 @@ trait Chooser extends SingleErrorWidget {
   add(new BoxRow(label, BoxAlign.Start))
   add(new AdaptableVerticalStrut(0, 6))
   add(control)
+
+  override def getDefaultComponent: Option[Component] =
+    Option(control)
+
+  override def getPrimaryAction: Option[() => Unit] =
+    Some(() => control.showPopup())
 
   /// attributes
 
@@ -136,6 +145,7 @@ trait Chooser extends SingleErrorWidget {
 
   override def syncTheme(): Unit = {
     setBackgroundColor(InterfaceColors.chooserBackground())
+    setFocusColor(InterfaceColors.focus())
 
     label.setForeground(InterfaceColors.widgetText())
 

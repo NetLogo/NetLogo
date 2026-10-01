@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import java.awt.{ Color, Dimension, Frame, Toolkit }
+import java.awt.{ Color, Dimension, Frame, Toolkit, Point }
 import java.awt.datatransfer.StringSelection
 
 import javafx.application.Platform
@@ -16,7 +16,7 @@ import javafx.scene.layout.VBox
 import javafx.scene.text.Font
 import javafx.scene.web.{ WebEngine, WebView }
 
-import javax.swing.{ JDialog, WindowConstants }
+import javax.swing.{ JDialog, SwingUtilities, WindowConstants }
 
 import netscape.javascript.JSObject
 
@@ -24,7 +24,7 @@ import org.nlogo.analytics.Analytics
 import org.nlogo.api.{ Color => NLColor }
 import org.nlogo.awt.EventQueue
 import org.nlogo.core.{ Color => CoreColor, I18N, LogoList }
-import org.nlogo.swing.{ Positioning, WindowAutomator, Zoomable, ZoomableWindow }
+import org.nlogo.swing.{ WindowAutomator, Zoomable, ZoomableWindow }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 class JFXColorPicker( frame: Frame, modal: Boolean, config: JFXCPConfig, initialValue: Option[NLColorValue] = None
@@ -60,11 +60,17 @@ class JFXColorPicker( frame: Frame, modal: Boolean, config: JFXCPConfig, initial
     else
       0
 
-  setSize(new Dimension(800, 570 + addedHeight))
   setResizable(false)
   setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE)
 
-  Positioning.center(this, frame)
+  // for some reason the actual size lags behind the preferred size when opening the dialog from the color input widget,
+  // so using Positioning.center doesn't work as expected here. (Isaac B 9/30/26)
+  val targetCorner = new Point
+
+  SwingUtilities.convertPointToScreen(targetCorner, frame)
+
+  setLocation(targetCorner.x + frame.getWidth / 2 - getPreferredSize.width / 2,
+              targetCorner.y + frame.getHeight / 2 - getPreferredSize.height / 2)
 
   Platform.runLater(
     () => {
@@ -141,6 +147,9 @@ class JFXColorPicker( frame: Frame, modal: Boolean, config: JFXCPConfig, initial
     }
 
   )
+
+  override def getPreferredSize: Dimension =
+    new Dimension(zoom(800), zoom(570) + addedHeight)
 
   override def syncTheme(): Unit = {
 

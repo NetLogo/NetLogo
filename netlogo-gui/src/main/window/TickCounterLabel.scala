@@ -25,6 +25,8 @@ class TickCounterLabel(world: World)
   with ThemeSync {
   private var _label: String = TickCounterLabelDefault
 
+  setFocusable(false)
+
   def handle(e: LoadBeginEvent): Unit = {
     setText("")
     _label = TickCounterLabelDefault
