@@ -2,7 +2,7 @@
 
 package org.nlogo.app
 
-import java.awt.{ Component, FileDialog => AWTFileDialog, Font, Frame, Insets }
+import java.awt.{ Component, Dimension, FileDialog => AWTFileDialog, Font, Frame, Insets }
 import java.awt.event.ActionEvent
 import java.io.FileOutputStream
 import java.nio.ByteBuffer
@@ -275,6 +275,13 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
       }
 
       this
+    }
+
+    override def getPreferredSize: Dimension = {
+      val font: Font = getBaseFont.deriveFont(zoom(getBaseFont.getSize2D))
+      val insets: Insets = getInsets
+
+      new Dimension(super.getPreferredSize.width, getFontMetrics(font).getHeight + insets.top + insets.bottom)
     }
   }
 
