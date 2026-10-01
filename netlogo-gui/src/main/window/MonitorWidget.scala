@@ -73,16 +73,19 @@ class MonitorWidget(random: MersenneTwisterFast, compiler: CompilerServices, col
   private var lastMousePressedWasPopupTrigger: Boolean = false;
 
   private val nameLabel = new JLabel(I18N.gui.get("edit.monitor.previewName")) with Zoomable {
+    setFocusable(false)
     setBaseFont(getFont.deriveFont(_boldState))
   }
 
   private lazy val valueLabel = new JLabel with Zoomable {
+    setFocusable(false)
     setBaseFont(getFont.deriveFont(11f))
   }
 
   private val valuePanel = new ValuePanel(valueLabel)
 
   private val unitsLabel = new JLabel with Zoomable {
+    setFocusable(false)
     setBaseFont(getFont.deriveFont(_boldState))
     setVisible(false)
   }
@@ -221,6 +224,7 @@ class MonitorWidget(random: MersenneTwisterFast, compiler: CompilerServices, col
 
   override def syncTheme(): Unit = {
     setBackgroundColor(InterfaceColors.monitorBackground())
+    setFocusColor(InterfaceColors.focus())
 
     if (anyErrors) {
       nameLabel.setForeground(Color.RED)

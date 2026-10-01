@@ -6,6 +6,8 @@ import java.awt.{ Component, Dimension, Graphics, Insets }
 import javax.swing.border.Border
 
 class HorizontalStrut(size: Int) extends Zoomable {
+  setFocusable(false)
+
   override def getPreferredSize: Dimension =
     getMinimumSize
 
@@ -17,6 +19,8 @@ class HorizontalStrut(size: Int) extends Zoomable {
 }
 
 class VerticalStrut(size: Int) extends Zoomable {
+  setFocusable(false)
+
   override def getPreferredSize: Dimension =
     getMinimumSize
 

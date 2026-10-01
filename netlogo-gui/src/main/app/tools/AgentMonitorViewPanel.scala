@@ -9,21 +9,30 @@ import javax.swing.{ AbstractAction, JPanel, JSlider }
 import org.nlogo.agent.Agent
 import org.nlogo.api.Perspective
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ ToggleButton, Zoomable }
+import org.nlogo.swing.{ FocusUtils, ToggleButton, Zoomable }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.GUIWorkspace
 
 class AgentMonitorViewPanel(workspace: GUIWorkspace) extends JPanel(new BorderLayout) with Zoomable with ThemeSync {
-  private val view = new AgentMonitorView(workspace, this)
+  private val view = new AgentMonitorView(workspace, this) with FocusUtils with ThemeSync {
+    setSecondaryAction(doPopup)
+
+    override def syncTheme(): Unit = {
+      setFocusColor(InterfaceColors.focus())
+    }
+  }
+
   private val watchButton = new ToggleButton(new WatchAction)
   private val zoomer = new ZoomSlider(view)
 
+  setFocusable(false)
+
   add(view, BorderLayout.CENTER)
   view.init()
+  view.setFocusable(true)
   view.setSize(workspace.world.worldWidth, workspace.world.worldHeight, 255.toDouble / workspace.world.worldWidth)
   view.applyNewFontSize(workspace.view.fontSize, 0)
   view.addPopupListener()
-  watchButton.setFocusable(false)
   private val controls = new JPanel
   controls.add(watchButton)
   controls.add(zoomer)
@@ -62,6 +71,7 @@ class AgentMonitorViewPanel(workspace: GUIWorkspace) extends JPanel(new BorderLa
   override def syncTheme(): Unit = {
     controls.setBackground(InterfaceColors.dialogBackground())
 
+    view.syncTheme()
     watchButton.syncTheme()
   }
 

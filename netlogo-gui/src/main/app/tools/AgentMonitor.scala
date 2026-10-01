@@ -49,8 +49,9 @@ abstract class AgentMonitor(val workspace: GUIWorkspace, window: JDialog)
   }
 
   private val prompt = new AgentLinePrompt(commandLine)
-  private val historyPrompt = new HistoryPrompt(commandLine)
   private val agentEditor = new AgentMonitorEditor(this)
+
+  val historyPrompt = new HistoryPrompt(commandLine)
 
   private val scrollPane = new ScrollPane(agentEditor,
     ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,

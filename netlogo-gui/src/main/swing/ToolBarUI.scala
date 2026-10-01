@@ -15,10 +15,12 @@ class ToolBarActionButton(action: Action) extends Button(action) {
   }
 }
 
-class ToolBarToggleButton(action: Action) extends JToggleButton(action) with Transparent with MouseUtils with Zoomable {
+class ToolBarToggleButton(action: Action)
+  extends JToggleButton(action) with Transparent with MouseUtils with FocusUtils with Zoomable {
+
   setBorder(new ZoomableBorder(6, 8, 6, 12))
-  setFocusable(false)
   setContentAreaFilled(false)
+  setFocusDiameter(6)
 
   override def paintComponent(g: Graphics): Unit = {
     val g2d = Utils.initGraphics2D(g)
@@ -58,5 +60,15 @@ class ToolBarToggleButton(action: Action) extends JToggleButton(action) with Tra
 
   override def zoomComponent(): Unit = {
     setIconTextGap(zoom(12))
+  }
+
+  override def paintFocus(g: Graphics): Unit = {
+    if (isSelected) {
+      setFocusColor(InterfaceColors.focusAlternate())
+    } else {
+      setFocusColor(InterfaceColors.focus())
+    }
+
+    super.paintFocus(g)
   }
 }

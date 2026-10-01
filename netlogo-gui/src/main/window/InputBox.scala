@@ -18,18 +18,19 @@ import org.nlogo.awt.{ Hierarchy, Positioning }
 import org.nlogo.core.{ BoxedValue, CompilerException, I18N, InputBox => CoreInputBox, NumericInput,
                         StringInput, Widget => CoreWidget }
 import org.nlogo.editor.{ EditorArea, EditorConfiguration }
-import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, Button, ButtonPanel, DialogButton, OptionPane, RoundedBorderPanel,
-                         ScrollPane, Utils, Zoomable, ZoomableBorder }
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, Button, ButtonPanel, DialogButton, FocusUtils, OptionPane,
+                         RoundedBorderPanel, ScrollPane, Utils, Zoomable, ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 abstract class InputBox(textArea: EditorArea, editDialogTextArea: EditorArea, compiler: CompilerServices,
                         nextComponent: Component)
   extends SingleErrorWidget with Editable with Events.InputBoxLoseFocusEvent.Handler {
 
-  protected class ColorButton extends JButton with RoundedBorderPanel with ThemeSync {
+  protected class ColorButton extends JButton with RoundedBorderPanel with FocusUtils with ThemeSync {
     setBorder(null)
     setBaseFont(getFont.deriveFont(9.0f))
     setDiameter(6)
+    setFocusDiameter(6)
 
     addActionListener(new SelectColorActionListener)
 
@@ -38,6 +39,7 @@ abstract class InputBox(textArea: EditorArea, editDialogTextArea: EditorArea, co
 
     override def syncTheme(): Unit = {
       setBorderColor(InterfaceColors.inputBorder())
+      setFocusColor(InterfaceColors.focus())
     }
   }
 
@@ -77,6 +79,7 @@ abstract class InputBox(textArea: EditorArea, editDialogTextArea: EditorArea, co
   /// be editable
   override def classDisplayName = I18N.gui.get("tabs.run.widgets.input")
   protected val widgetLabel = new JLabel(I18N.gui.get("edit.input.previewName")) with Zoomable {
+    setFocusable(false)
     setBaseFont(getFont.deriveFont(_boldState))
   }
   protected var dialog: InputDialog = null
@@ -211,6 +214,14 @@ abstract class InputBox(textArea: EditorArea, editDialogTextArea: EditorArea, co
     }
   )
 
+  override def getDefaultComponent: Option[Component] = {
+    if (scroller.isVisible) {
+      Option(textArea)
+    } else {
+      Option(colorSwatch)
+    }
+  }
+
   override def doLayout(): Unit = {
     super.doLayout()
 
@@ -255,6 +266,8 @@ abstract class InputBox(textArea: EditorArea, editDialogTextArea: EditorArea, co
   }
 
   override def syncTheme(): Unit = {
+    setFocusColor(InterfaceColors.focus())
+
     colorSwatch.syncTheme()
     scroller.syncTheme()
     changeButton.syncTheme()

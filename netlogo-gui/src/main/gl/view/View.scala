@@ -5,7 +5,7 @@ package org.nlogo.gl.view
 import com.jogamp.opengl.{ GLCapabilities, GLProfile }
 import com.jogamp.opengl.awt.GLJPanel
 
-import java.awt.{ Dimension, Rectangle }
+import java.awt.{ Dimension, Point, Rectangle }
 import java.awt.event.{ KeyEvent, KeyAdapter, MouseEvent }
 import java.awt.image.BufferedImage
 import javax.swing.JFrame
@@ -16,8 +16,8 @@ import org.nlogo.api.{ DrawingInterface, Version, World3D, WorldRenderable, Worl
 import org.nlogo.gl.render.{ LinkRenderer, LinkRenderer3D, PatchRenderer, PatchRenderer3D, Renderer, Renderer3D,
                              ShapeRenderer, ShapeRenderer3D, TurtleRenderer, TurtleRenderer3D, WorldRenderer,
                              WorldRenderer3D }
-import org.nlogo.swing.{ NetLogoIcon, PreferredSize, WindowAutomator, ZoomableWindow }
-import org.nlogo.theme.ThemeSync
+import org.nlogo.swing.{ FocusUtils, NetLogoIcon, PreferredSize, WindowAutomator, ZoomableWindow }
+import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.Event.LinkChild
 
 abstract class View(title: String, val viewManager: ViewManager, var renderer: Renderer, bounds: Option[Rectangle])
@@ -26,7 +26,7 @@ abstract class View(title: String, val viewManager: ViewManager, var renderer: R
 
   WindowAutomator.automate(this)
 
-  var canvas: GLJPanel = null
+  var canvas: GLJPanel & ThemeSync = null
   val picker = new Picker(this)
 
   if (Version.is3D) {
@@ -84,7 +84,19 @@ abstract class View(title: String, val viewManager: ViewManager, var renderer: R
     capabilities.setSampleBuffers(antiAliasing)
     capabilities.setNumSamples(4)
     capabilities.setStencilBits(1)
-    canvas = new GLJPanel(capabilities)
+
+    canvas = new GLJPanel(capabilities) with FocusUtils with ThemeSync {
+      setSecondaryAction(() => {
+        renderer.queuePick(new Point(getWidth / 2, getHeight / 2), picker)
+
+        View.this.display()
+      })
+
+      override def syncTheme(): Unit = {
+        setFocusColor(InterfaceColors.focus())
+      }
+    }
+
     canvas.addGLEventListener(renderer)
     canvas.addMouseListener(inputHandler)
     canvas.addMouseMotionListener(inputHandler)

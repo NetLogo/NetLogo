@@ -41,9 +41,9 @@ class ThemesPanel(frame: Frame & ThemeSync) extends BoxColumn(24) with ThemeSync
 
   new ButtonGroup {
     add(systemButton)
-    add(classicButton)
     add(lightButton)
     add(darkButton)
+    add(classicButton)
   }
 
   def init(): Unit = {

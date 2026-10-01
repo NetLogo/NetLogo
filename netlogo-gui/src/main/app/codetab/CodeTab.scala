@@ -2,8 +2,8 @@
 
 package org.nlogo.app.codetab
 
-import java.awt.{ BorderLayout, Dimension, Font, Graphics }
-import java.awt.event.{ ActionEvent, FocusAdapter, FocusEvent, TextEvent, TextListener }
+import java.awt.{ BorderLayout, Component, Dimension, Font, Graphics }
+import java.awt.event.{ ActionEvent, FocusAdapter, FocusEvent, KeyAdapter, KeyEvent, TextEvent, TextListener }
 import java.awt.print.PageFormat
 import java.io.IOException
 import java.net.MalformedURLException
@@ -14,7 +14,7 @@ import org.nlogo.app.common.{CodeToHtml, EditorFactory, FindDialog, MenuTab, Tab
 import org.nlogo.core.{ AgentKind, CompilerException, I18N }
 import org.nlogo.editor.{ AdvancedEditorArea, EditorConfiguration }
 import org.nlogo.nvm.IncludeSource
-import org.nlogo.swing.{ BoxAlign, BoxRow, Button, CheckBox, PrinterManager, ToolBarActionButton, UserAction,
+import org.nlogo.swing.{ BoxAlign, BoxRow, Button, CheckBox, FocusRoot, PrinterManager, ToolBarActionButton, UserAction,
                          Printable => NlogoPrintable, Utils, ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ CommentableError, ProceduresInterface, Events => WindowEvents }
@@ -29,11 +29,14 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
   with WindowEvents.AfterLoadEvent.Handler
   with NlogoPrintable
   with MenuTab
+  with FocusRoot
   with ThemeSync {
 
   protected val compileButton = new ToolBarActionButton(new AbstractAction(I18N.gui.get("tabs.code.checkButton")) {
     override def actionPerformed(e: ActionEvent): Unit = {
       compile()
+
+      text.requestFocus()
     }
   }) {
     setIcon(Utils.iconScaledWithColor(this, "/images/check.png", 15, 15, () => InterfaceColors.toolbarImage()))
@@ -74,16 +77,26 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
   protected def editorConfiguration: EditorConfiguration =
     configuration
 
-  protected val text: AdvancedEditorArea = {
-    val editor = new AdvancedEditorArea(editorConfiguration)
-
-    editor.addFocusListener(new FocusAdapter {
+  protected val text: AdvancedEditorArea = new AdvancedEditorArea(editorConfiguration) {
+    addFocusListener(new FocusAdapter {
       override def focusGained(e: FocusEvent): Unit = {
-        FindDialog.watch(editor, true)
+        FindDialog.watch(text, true)
       }
     })
 
-    editor
+    addKeyListener(new KeyAdapter {
+      override def keyPressed(e: KeyEvent): Unit = {
+        if (e.getKeyCode == KeyEvent.VK_TAB && e.isControlDown) {
+          if (e.isShiftDown) {
+            transferFocusBackward()
+          } else {
+            transferFocus()
+          }
+
+          e.consume()
+        }
+      }
+    })
   }
 
   private val includedFilesMenu = new IncludedFilesMenu(getIncludesTable, tabs)
@@ -105,15 +118,16 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
   def compiler = workspace
   def program = workspace.world.program
 
-  locally {
-    setLayout(new BorderLayout)
-    add(toolBar, BorderLayout.NORTH)
-    val codePanel = new JPanel(new BorderLayout) {
-      add(text, BorderLayout.CENTER)
-      add(errorLabel.component, BorderLayout.NORTH)
-    }
-    add(codePanel, BorderLayout.CENTER)
-  }
+  setLayout(new BorderLayout)
+  setCanFocus(false)
+
+  add(toolBar, BorderLayout.NORTH)
+  add(new JPanel(new BorderLayout) {
+    setFocusable(false)
+
+    add(text, BorderLayout.CENTER)
+    add(errorLabel.component, BorderLayout.NORTH)
+  }, BorderLayout.CENTER)
 
   override val permanentMenuActions: Seq[UserAction.MenuAction] = {
     editorConfiguration.getAdditionalActions :+
@@ -122,6 +136,17 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
 
   override def activeMenuActions: Seq[UserAction.MenuAction] =
     text.activeMenuActions :+ FindDialog.FIND_ACTION_CODE :+ FindDialog.FIND_NEXT_ACTION_CODE
+
+  override def getDefaultComponent: Option[Component] =
+    Option(text)
+
+  override def getFocusOrder: Map[Component, (Component, Component)] = {
+    Map(
+      text -> (null, if (compileButton.isEnabled) compileButton else findButton),
+      findButton -> (if (compileButton.isEnabled) compileButton else text, null),
+      compileButton -> (text, null)
+    )
+  }
 
   // don't let the editor influence the preferred size,
   // since the editor tends to want to be huge - ST

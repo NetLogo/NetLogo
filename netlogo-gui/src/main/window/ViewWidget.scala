@@ -19,6 +19,8 @@ class ViewWidget(workspace: GUIWorkspace) extends Widget with ViewWidgetInterfac
   view.init()
 
   setLayout(null)
+  setDiameter(0)
+
   add(view)
 
   val settings: WorldViewSettings = {
@@ -175,7 +177,9 @@ class ViewWidget(workspace: GUIWorkspace) extends Widget with ViewWidgetInterfac
 
   override def syncTheme(): Unit = {
     setBackgroundColor(InterfaceColors.viewBackground())
+    setFocusColor(InterfaceColors.focus())
     setBorder(new LineBorder(InterfaceColors.viewBorder(), 2))
+
     tickCounter.syncTheme()
   }
 

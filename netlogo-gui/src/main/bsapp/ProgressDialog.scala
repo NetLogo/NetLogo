@@ -33,6 +33,7 @@ class ProgressDialog(app: BehaviorSpaceApp, workspace: SemiHeadlessWorkspace, la
   private val totalRuns = protocol.countRuns
 
   private val progressArea = new TextArea(10.min(protocol.valueSets.headOption.fold(0)(_.size) + 3), 0) {
+    setFocusable(false)
     setEditable(false)
     setBorder(new ZoomableBorder(6, 6, 6, 6))
     setCaret(new DefaultCaret {

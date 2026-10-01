@@ -206,6 +206,8 @@ object Preferences {
 
   class LogDirectory(val frame: Frame) extends StringPreference("logDirectory", Some(RequiredAction.Restart), "") {
     private val panel = new JPanel(new BorderLayout(6, 0)) with Transparent with ThemeSync {
+      setFocusable(false)
+
       add(textField, BorderLayout.CENTER)
 
       private val browseButton = new Button(new AbstractAction("Browse...") {

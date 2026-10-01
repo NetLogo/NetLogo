@@ -14,8 +14,8 @@ import org.nlogo.api.{ Exceptions, LabProtocol, ModelReader, RefEnumeratedValueS
 import org.nlogo.awt.UserCancelException
 import org.nlogo.core.{ I18N, Model }
 import org.nlogo.editor.Colorizer
-import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, Button, FileDialog, OptionPane, Positioning, PreferredSize,
-                         ScrollPane, Utils, WindowAutomator, Zoomable, ZoomableBorder, ZoomableWindow }
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, Button, FileDialog, FocusUtils, OptionPane, Positioning,
+                         PreferredSize, ScrollPane, Utils, WindowAutomator, Zoomable, ZoomableBorder, ZoomableWindow }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ EditDialog, EditDialogFactory, MenuBarFactory }
 
@@ -31,7 +31,13 @@ class ManagerDialog(manager:       LabManager,
 
   private implicit val i18NPrefix: I18N.Prefix = I18N.Prefix("tools.behaviorSpace")
 
-  private val jlist = new JList[LabProtocol] with Zoomable
+  private val jlist = new JList[LabProtocol] with FocusUtils with Zoomable with ThemeSync {
+    override def syncTheme(): Unit = {
+      setBackground(InterfaceColors.dialogBackground())
+      setFocusColor(InterfaceColors.focus())
+    }
+  }
+
   private val listModel = new DefaultListModel[LabProtocol]
 
   private var running = Map[LabProtocol, RunningExperiment]()
@@ -399,8 +405,8 @@ class ManagerDialog(manager:       LabManager,
 
     listLabel.setForeground(InterfaceColors.dialogText())
     scrollPane.setBackground(InterfaceColors.dialogBackground())
-    jlist.setBackground(InterfaceColors.dialogBackground())
 
+    jlist.syncTheme()
     newButton.syncTheme()
     editButton.syncTheme()
     duplicateButton.syncTheme()
