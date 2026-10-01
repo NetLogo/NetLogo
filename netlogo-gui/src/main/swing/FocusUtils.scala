@@ -2,11 +2,10 @@
 
 package org.nlogo.swing
 
-import java.awt.{ Color, Graphics, KeyboardFocusManager }
+import java.awt.{ BasicStroke, Color, Graphics, KeyboardFocusManager, Stroke }
 import java.awt.event.{ FocusEvent, FocusListener, KeyAdapter, KeyEvent }
-import javax.swing.JComponent
 
-trait FocusUtils extends JComponent {
+trait FocusUtils extends Zoomable {
   protected var focusColor: Color = Color.WHITE
 
   private var focusDiameter = 0
@@ -87,13 +86,22 @@ trait FocusUtils extends JComponent {
   protected def paintFocus(g: Graphics): Unit = {
     val g2d = Utils.initGraphics2D(g)
 
+    val stroke: Stroke = g2d.getStroke
+
+    g2d.setStroke(new BasicStroke(zoomClamped(2f)))
     g2d.setColor(focusColor)
 
-    if (focusDiameter > 0) {
-      g2d.drawRoundRect(0, 0, getWidth - 1, getHeight - 1, focusDiameter, focusDiameter)
+    val topInset: Int = zoomClamped(1)
+    val bottomInset: Int = zoom(2f).toInt.max(3)
+    val diameter: Int = zoom(focusDiameter)
+
+    if (diameter > 0) {
+      g2d.drawRoundRect(topInset, topInset, getWidth - bottomInset, getHeight - bottomInset, diameter, diameter)
     } else {
-      g2d.drawRect(0, 0, getWidth - 1, getHeight - 1)
+      g2d.drawRect(topInset, topInset, getWidth - bottomInset, getHeight - bottomInset)
     }
+
+    g2d.setStroke(stroke)
   }
 
   override def paint(g: Graphics): Unit = {

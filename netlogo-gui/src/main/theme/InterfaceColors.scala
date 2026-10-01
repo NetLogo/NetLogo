@@ -573,7 +573,7 @@ object ClassicTheme extends ColorTheme {
   override def modelsLibraryLeaf: Color = MediumBlue
   override def modelsLibraryLeafSelected: Color = Color.WHITE
   override def focus: Color = MediumBlue
-  override def focusAlternate: Color = new Color(255, 103, 0)
+  override def focusAlternate: Color = Color.BLACK
 
   override def colorizerTheme: ColorizerTheme = ColorizerTheme.Classic
 }
@@ -745,7 +745,7 @@ object LightTheme extends ColorTheme {
   override def modelsLibraryLeaf: Color = MediumBlue
   override def modelsLibraryLeafSelected: Color = Color.WHITE
   override def focus: Color = MediumBlue
-  override def focusAlternate: Color = new Color(255, 103, 0)
+  override def focusAlternate: Color = Color.BLACK
 
   override def colorizerTheme: ColorizerTheme = ColorizerTheme.Light
 }

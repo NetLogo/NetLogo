@@ -2,7 +2,7 @@
 
 package org.nlogo.app.interfacetab
 
-import java.awt.{ Component, Cursor, Dimension, Graphics, Point, Rectangle }
+import java.awt.{ BasicStroke, Component, Cursor, Dimension, Graphics, Point, Rectangle, Stroke }
 import java.awt.event.{ ActionEvent, InputEvent, MouseAdapter, MouseEvent, MouseListener,  MouseMotionAdapter,
                         MouseMotionListener }
 import javax.swing.{ AbstractAction, JComponent, JLayeredPane, JPanel }
@@ -1072,10 +1072,23 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
   override def paintFocus(g: Graphics): Unit = {
     val g2d = Utils.initGraphics2D(g)
 
+    val stroke: Stroke = g2d.getStroke
+
+    g2d.setStroke(new BasicStroke(zoomClamped(2f)))
+    g2d.setColor(widget.getFocusColor)
+
+    val topInset: Int = zoomClamped(1)
+    val bottomInset: Int = zoom(2f).toInt.max(3)
     val diameter: Int = widget.getDiameter
 
-    g2d.setColor(widget.getFocusColor)
-    g2d.drawRoundRect(widget.getX, widget.getY, widget.getWidth - 1, widget.getHeight - 1, diameter, diameter)
+    if (diameter > 0) {
+      g2d.drawRoundRect(widget.getX + topInset, widget.getY + topInset, widget.getWidth - bottomInset,
+                        widget.getHeight - bottomInset, diameter, diameter)
+    } else {
+      g2d.drawRect(topInset, topInset, widget.getWidth - bottomInset, widget.getHeight - bottomInset)
+    }
+
+    g2d.setStroke(stroke)
   }
 
   override def syncTheme(): Unit = {

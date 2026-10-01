@@ -2,7 +2,7 @@
 
 package org.nlogo.swing
 
-import java.awt.{ Component, Graphics }
+import java.awt.{ BasicStroke, Component, Graphics, Stroke }
 import java.awt.event.ActionEvent
 import javax.swing.{ AbstractAction, Action, Icon, JRadioButton }
 
@@ -60,13 +60,21 @@ class RadioButton(action: Action)
       }
 
       if (hasFocus && shouldPaintFocus) {
+        val stroke: Stroke = g2d.getStroke
+
+        g2d.setStroke(new BasicStroke(zoomClamped(2f)))
+
         if (isSelected) {
           g2d.setColor(InterfaceColors.focusAlternate())
         } else {
           g2d.setColor(InterfaceColors.focus())
         }
 
-        g2d.drawRoundRect(x, y, width, height, width, height)
+        val topInset: Int = zoomClamped(1)
+        val bottomInset: Int = zoom(2f).toInt.max(3)
+
+        g2d.drawRoundRect(x + topInset, y + topInset, width - bottomInset, height - bottomInset, width, height)
+        g2d.setStroke(stroke)
       }
     }
   })
