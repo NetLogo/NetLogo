@@ -73,13 +73,23 @@ class CheckBox(text: String = "") extends JCheckBox(text) with MouseUtils with F
       }
 
       if (hasFocus && shouldPaintFocus) {
+        val stroke: Stroke = g2d.getStroke
+
+        g2d.setStroke(new BasicStroke(zoomClamped(2f)))
+
         if (isSelected) {
           g2d.setColor(InterfaceColors.focusAlternate())
         } else {
           g2d.setColor(InterfaceColors.focus())
         }
 
-        g2d.drawRoundRect(x, y, 14, 14, 4, 4)
+        val topInset: Int = zoomClamped(1)
+        val bottomInset: Int = zoom(2f).toInt.max(3)
+        val diameter: Int = zoom(4)
+
+        g2d.drawRoundRect(x + topInset, y + topInset, getIconWidth - bottomInset, getIconHeight - bottomInset, diameter,
+                          diameter)
+        g2d.setStroke(stroke)
       }
     }
   })
