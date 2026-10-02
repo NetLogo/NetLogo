@@ -42,5 +42,6 @@ extends View("3D View", viewManager, renderer, Option(bounds)) {
   override def syncTheme(): Unit = {
     navBar.syncTheme()
     controlStrip.syncTheme()
+    canvas.syncTheme()
   }
 }

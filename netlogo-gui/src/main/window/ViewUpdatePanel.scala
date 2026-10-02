@@ -24,7 +24,7 @@ class ViewUpdatePanel(workspace: GUIWorkspace, speedSlider: SpeedSliderPanel, di
     }
   }
 
-  private val settingsButton = new SettingsButton(new EditSettings(workspace.viewWidget.settings))
+  val settingsButton = new SettingsButton(new EditSettings(workspace.viewWidget.settings))
 
   displaySwitch.addItemListener(new ViewUpdateListener(speedSlider))
 
@@ -71,7 +71,7 @@ class ViewUpdatePanel(workspace: GUIWorkspace, speedSlider: SpeedSliderPanel, di
     }
   }
 
-  private class SettingsButton(action: Action) extends Button(action) with PreferredSize {
+  class SettingsButton(action: Action) extends Button(action) with PreferredSize {
     override def getPreferredSize: Dimension =
       new Dimension(super.getPreferredSize.width, updateModeChooser.getPreferredSize.height)
   }

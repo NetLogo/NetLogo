@@ -54,6 +54,7 @@ public class View
 
   public void init() {
     setOpaque(true);
+    setFocusable(false);
     mouser = new ViewMouseHandler(this, workspace.world(), this);
     addMouseListener(mouser);
     addMouseMotionListener(mouser);

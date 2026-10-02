@@ -14,6 +14,8 @@ class PlotLegend(widget: AbstractPlotWidget) extends JPanel(new WrapLayout(widge
 
   var open = false
 
+  setFocusable(false)
+
   def addPen(pen: PlotPen): Unit = {
     if (open) {
       if (pen.inLegend)

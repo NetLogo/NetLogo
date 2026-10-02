@@ -4,10 +4,11 @@ package org.nlogo.sdm.gui
 
 import org.jhotdraw.standard.StandardDrawingView
 
+import org.nlogo.swing.{ FocusRoot, FocusUtils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 class AggregateDrawingView(editor: AggregateModelEditor, width: Int, height: Int)
-  extends StandardDrawingView(editor, width, height) with ThemeSync {
+  extends StandardDrawingView(editor, width, height) with FocusRoot with FocusUtils with ThemeSync {
 
   syncTheme()
 

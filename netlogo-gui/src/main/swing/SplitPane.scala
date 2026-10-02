@@ -3,13 +3,15 @@
 package org.nlogo.swing
 
 import java.awt.{ Color, Component, Cursor, Dimension, Graphics, Point }
-import java.awt.event.{ ActionEvent, MouseAdapter, MouseEvent, MouseMotionAdapter }
+import java.awt.event.{ ActionEvent, KeyAdapter, KeyEvent, MouseAdapter, MouseEvent, MouseMotionAdapter }
 import javax.swing.{ AbstractAction, Action, JButton, JLayeredPane, JPanel, JSplitPane }
 
 import org.nlogo.core.I18N
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
-private class SizeButton(expand: Boolean, splitPane: SplitPane) extends JButton with Transparent {
+private class SizeButton(expand: Boolean, splitPane: SplitPane)
+  extends JButton with Transparent with FocusUtils with ThemeSync {
+
   setBorder(null)
 
   if (expand) {
@@ -65,9 +67,13 @@ private class SizeButton(expand: Boolean, splitPane: SplitPane) extends JButton 
         }
     }
   }
+
+  override def syncTheme(): Unit = {
+    setFocusColor(InterfaceColors.focus())
+  }
 }
 
-private class SplitPaneDivider(splitPane: SplitPane) extends JPanel(null) with ThemeSync {
+private class SplitPaneDivider(splitPane: SplitPane) extends JPanel(null) with FocusUtils with ThemeSync {
   private val expandButton = new SizeButton(true, splitPane)
   private val contractButton = new SizeButton(false, splitPane)
 
@@ -108,6 +114,20 @@ private class SplitPaneDivider(splitPane: SplitPane) extends JPanel(null) with T
     }
   })
 
+  addKeyListener(new KeyAdapter {
+    override def keyPressed(e: KeyEvent): Unit = {
+      e.getKeyCode match {
+        case KeyEvent.VK_UP =>
+          splitPane.dragDividerLocation(splitPane.getDividerLocation - 5)
+
+        case KeyEvent.VK_DOWN =>
+          splitPane.dragDividerLocation(splitPane.getDividerLocation + 5)
+
+        case _ =>
+      }
+    }
+  })
+
   override def doLayout(): Unit = {
     val size = splitPane.getDividerSize
 
@@ -132,13 +152,19 @@ private class SplitPaneDivider(splitPane: SplitPane) extends JPanel(null) with T
 
   override def syncTheme(): Unit = {
     setBackground(InterfaceColors.splitPaneDividerBackground())
+    setFocusColor(InterfaceColors.focus())
+
+    expandButton.syncTheme()
+    contractButton.syncTheme()
   }
 }
 
 class SplitPane(mainComponent: Component, topComponent: Component, commandCenterToggleAction: Option[Action])
   extends JLayeredPane with Zoomable with ThemeSync {
 
-  private val divider = new SplitPaneDivider(this)
+  val divider = new SplitPaneDivider(this)
+
+  setFocusable(false)
 
   add(mainComponent, JLayeredPane.DEFAULT_LAYER)
   add(topComponent, JLayeredPane.PALETTE_LAYER)

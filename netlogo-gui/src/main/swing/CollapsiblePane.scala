@@ -12,29 +12,39 @@ class CollapsiblePane(title: String, element: JComponent, parent: JDialog)
   extends JPanel(new BorderLayout) with ThemeSync {
 
   private val titleLabel = new JLabel(title) with Zoomable {
+    setFocusable(false)
+
     override def getIconTextGap: Int =
       zoom(super.getIconTextGap)
   }
 
   private val arrow = new CollapsibleArrow(titleLabel, element.isVisible)
 
+  private val listener = new MouseAdapter {
+    override def mouseClicked(e: MouseEvent): Unit = {
+      setOpen(!isOpen)
+    }
+  }
+
+  val header = new BoxRow(titleLabel, BoxAlign.Start) with FocusUtils with ThemeSync {
+    setBorder(new ZoomableBorder(6, 6, 6, 6))
+    setFocusable(true)
+    setPrimaryAction(() => setOpen(!isOpen))
+
+    addMouseListener(listener)
+
+    override def syncTheme(): Unit = {
+      setFocusColor(InterfaceColors.focus())
+    }
+  }
+
   titleLabel.setIcon(arrow)
 
-  locally {
-    val listener = new MouseAdapter {
-      override def mouseClicked(e: MouseEvent): Unit = {
-        setOpen(!isOpen)
-      }
-    }
+  setFocusable(false)
 
-    add(new BoxRow(titleLabel, BoxAlign.Start) {
-      setBorder(new ZoomableBorder(6, 6, 6, 6))
+  add(header, BorderLayout.NORTH)
 
-      addMouseListener(listener)
-    }, BorderLayout.NORTH)
-
-    titleLabel.addMouseListener(listener)
-  }
+  titleLabel.addMouseListener(listener)
 
   add(element, BorderLayout.CENTER)
 
@@ -53,6 +63,8 @@ class CollapsiblePane(title: String, element: JComponent, parent: JDialog)
     setBackground(InterfaceColors.dialogBackground())
 
     titleLabel.setForeground(InterfaceColors.dialogText())
+
+    header.syncTheme()
 
     element match {
       case ts: ThemeSync => ts.syncTheme()

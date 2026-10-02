@@ -21,6 +21,7 @@ class PlotCanvas(private val plot: Plot) extends JPanel {
 
   setOpaque(true)
   setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR))
+  setFocusable(false)
 
   addMouseListener(
     new MouseAdapter() {

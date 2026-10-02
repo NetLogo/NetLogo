@@ -46,6 +46,7 @@ abstract class AbstractPlotWidget(val plot: Plot, val plotManager: PlotManagerIn
   }
 
   private val nameLabel = new JLabel(originalName) with Zoomable {
+    setFocusable(false)
     setText(plot.name)
     setBaseFont(getFont.deriveFont(_boldState))
   }
@@ -215,6 +216,8 @@ abstract class AbstractPlotWidget(val plot: Plot, val plotManager: PlotManagerIn
   }
 
   override def syncTheme(): Unit = {
+    setFocusColor(InterfaceColors.focus())
+
     canvasPanel.syncTheme()
   }
 
@@ -343,9 +346,17 @@ abstract class AbstractPlotWidget(val plot: Plot, val plotManager: PlotManagerIn
 
 object AbstractPlotWidget {
   class XAxisLabels(plot: AbstractPlotWidget) extends BoxRow {
-    private val min = new JLabel with Zoomable
-    private val label = new JLabel("", SwingConstants.CENTER) with Zoomable
-    private val max = new JLabel with Zoomable
+    private val min = new JLabel with Zoomable {
+      setFocusable(false)
+    }
+
+    private val label = new JLabel("", SwingConstants.CENTER) with Zoomable {
+      setFocusable(false)
+    }
+
+    private val max = new JLabel with Zoomable {
+      setFocusable(false)
+    }
 
     add(min)
     add(Box.createHorizontalGlue)
@@ -378,8 +389,14 @@ object AbstractPlotWidget {
 
   class YAxisLabels(plot: AbstractPlotWidget) extends BoxColumn {
     private val label = new VerticalLabel
-    private val max = new JLabel with Zoomable
-    private val min = new JLabel with Zoomable
+
+    private val max = new JLabel with Zoomable {
+      setFocusable(false)
+    }
+
+    private val min = new JLabel with Zoomable {
+      setFocusable(false)
+    }
 
     add(new BoxRow(max, BoxAlign.End))
     add(Box.createVerticalGlue)
@@ -417,6 +434,8 @@ object AbstractPlotWidget {
 
   private class VerticalLabel extends JPanel with Zoomable {
     private var text = ""
+
+    setFocusable(false)
 
     def getText: String = text
     def setText(text: String): Unit = {

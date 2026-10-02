@@ -3,13 +3,14 @@
 package org.nlogo.app.interfacetab
 
 import java.awt.{ Dimension, Frame }
-import java.awt.event.{ ActionEvent, MouseAdapter, MouseEvent }
+import java.awt.event.{ ActionEvent, FocusEvent, MouseAdapter, MouseEvent }
 import javax.swing.{ AbstractAction, Action, ButtonGroup, JLabel }
 
 import org.nlogo.app.common.{ Events => AppEvents }
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ AutomationUtils, BoxAlign, BoxColumn, BoxRow, DropdownArrow, MenuItem, MouseUtils, PopupMenu,
-                         PreferredSize, RoundedBorderPanel, ToolBarToggleButton, Utils, Zoomable, ZoomableBorder }
+import org.nlogo.swing.{ AutomationUtils, BoxAlign, BoxColumn, BoxRow, DropdownArrow, FocusUtils, MenuItem, MouseUtils,
+                         PopupMenu, PreferredSize, RoundedBorderPanel, ToolBarToggleButton, Utils,
+                         WidgetControlsInterface, Zoomable, ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ Editable, EditDialog, EditDialogFactory, Events => WindowEvents, GUIWorkspace, InterfaceMode,
                           JobWidget, Widget, WidgetInfo, WorldViewSettings }
@@ -22,6 +23,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
                               frame: Frame,
                               dialogFactory: EditDialogFactory)
   extends BoxRow(6)
+  with WidgetControlsInterface
   with AppEvents.WidgetSelectedEvent.Handler
   with WindowEvents.InterfaceModeChangedEvent.Handler
   with WindowEvents.WidgetForegroundedEvent.Handler
@@ -37,9 +39,12 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
   val editButton = new SquareButton(new EditAction, "edit.png")
   val deleteButton = new SquareButton(new DeleteAction, "delete.png")
 
+  override val toolButtons: Seq[SquareButton] = Seq(interactButton, selectButton, editButton, deleteButton)
+
   private val buttonGroup = new ButtonGroup
 
-  private val widgetMenu = new WidgetMenu
+  override val widgetMenu: WidgetMenu = new WidgetMenu
+
   private val alignmentMenu = new AlignmentMenu
 
   locally {
@@ -232,12 +237,18 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
     }
   }
 
-  class WidgetMenu extends BoxRow(14) with RoundedBorderPanel with ThemeSync with MouseUtils {
-    private val label = new JLabel(I18N.gui.get("tabs.run.addWidget")) with Zoomable
+  class WidgetMenu extends BoxRow(14) with RoundedBorderPanel with FocusUtils with ThemeSync with MouseUtils {
+    private val label = new JLabel(I18N.gui.get("tabs.run.addWidget")) with Zoomable {
+      setFocusable(false)
+    }
+
     private val arrow = new DropdownArrow
 
     setBorder(new ZoomableBorder(6, 8, 6, 6))
+    setFocusable(true)
     setDiameter(6)
+    setFocusDiameter(6)
+    setPrimaryAction(showPopup)
 
     add(label)
     add(new BoxColumn(arrow, BoxAlign.Center))
@@ -252,9 +263,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
 
     addMouseListener(new MouseAdapter {
       override def mousePressed(e: MouseEvent): Unit = {
-        popup = getPopup
-
-        popup.show(WidgetMenu.this, 0, getHeight)
+        showPopup()
       }
     })
 
@@ -278,11 +287,18 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
       }
     }
 
+    private def showPopup(): Unit = {
+      popup = getPopup
+
+      popup.show(WidgetMenu.this, 0, getHeight)
+    }
+
     override def syncTheme(): Unit = {
       setBackgroundColor(InterfaceColors.toolbarControlBackground())
       setBackgroundHoverColor(InterfaceColors.toolbarControlBackgroundHover())
       setBackgroundPressedColor(InterfaceColors.toolbarControlBackgroundPressed())
       setBorderColor(InterfaceColors.toolbarControlBorder())
+      setFocusColor(InterfaceColors.focus())
 
       label.setForeground(InterfaceColors.toolbarText())
     }
@@ -300,18 +316,26 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
         super.addNotify()
 
         setEnabled(wPanel.canAddWidget(info.displayName))
+
+        WidgetMenuItem.this.syncTheme()
       }
     }
   }
 
-  class AlignmentMenu extends BoxRow(14) with RoundedBorderPanel with ThemeSync with MouseUtils {
+  class AlignmentMenu extends BoxRow(14) with RoundedBorderPanel with ThemeSync with FocusUtils with MouseUtils {
     private implicit val i18nPrefix: I18N.Prefix = I18N.Prefix("tabs.run.widget")
 
-    private val label = new JLabel(I18N.gui.get("tabs.run.alignWidgets")) with Zoomable
+    private val label = new JLabel(I18N.gui.get("tabs.run.alignWidgets")) with Zoomable {
+      setFocusable(false)
+    }
+
     private val arrow = new DropdownArrow
 
     setBorder(new ZoomableBorder(6, 8, 6, 6))
+    setFocusable(true)
     setDiameter(6)
+    setFocusDiameter(6)
+    setPrimaryAction(showPopup)
 
     add(label)
     add(new BoxColumn(arrow, BoxAlign.Center))
@@ -339,22 +363,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
 
     addMouseListener(new MouseAdapter {
       override def mousePressed(e: MouseEvent): Unit = {
-        leftAction.setEnabled(selectedObjects.size > 1 && wPanel.canAlignLeft)
-        centerHorizontalAction.setEnabled(selectedObjects.size > 1 && wPanel.canAlignCenterHorizontal)
-        rightAction.setEnabled(selectedObjects.size > 1 && wPanel.canAlignRight)
-        topAction.setEnabled(selectedObjects.size > 1 && wPanel.canAlignTop)
-        centerVerticalAction.setEnabled(selectedObjects.size > 1 && wPanel.canAlignCenterVertical)
-        bottomAction.setEnabled(selectedObjects.size > 1 && wPanel.canAlignBottom)
-        distributeHorizontalAction.setEnabled(selectedObjects.size > 1)
-        distributeVerticalAction.setEnabled(selectedObjects.size > 1)
-        stretchLeftAction.setEnabled(selectedObjects.size > 1)
-        stretchRightAction.setEnabled(selectedObjects.size > 1)
-        stretchTopAction.setEnabled(selectedObjects.size > 1)
-        stretchBottomAction.setEnabled(selectedObjects.size > 1)
-
-        popup = getPopup
-
-        popup.show(AlignmentMenu.this, 0, getHeight)
+        showPopup()
       }
     })
 
@@ -381,11 +390,38 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
       }
     }
 
+    private def showPopup(): Unit = {
+      leftAction.setEnabled(selectedObjects.size > 1 && wPanel.canAlignLeft)
+      centerHorizontalAction.setEnabled(selectedObjects.size > 1 && wPanel.canAlignCenterHorizontal)
+      rightAction.setEnabled(selectedObjects.size > 1 && wPanel.canAlignRight)
+      topAction.setEnabled(selectedObjects.size > 1 && wPanel.canAlignTop)
+      centerVerticalAction.setEnabled(selectedObjects.size > 1 && wPanel.canAlignCenterVertical)
+      bottomAction.setEnabled(selectedObjects.size > 1 && wPanel.canAlignBottom)
+      distributeHorizontalAction.setEnabled(selectedObjects.size > 1)
+      distributeVerticalAction.setEnabled(selectedObjects.size > 1)
+      stretchLeftAction.setEnabled(selectedObjects.size > 1)
+      stretchRightAction.setEnabled(selectedObjects.size > 1)
+      stretchTopAction.setEnabled(selectedObjects.size > 1)
+      stretchBottomAction.setEnabled(selectedObjects.size > 1)
+
+      popup = getPopup
+
+      popup.getComponents.foreach {
+        case ts: ThemeSync =>
+          ts.syncTheme()
+
+        case _ =>
+      }
+
+      popup.show(AlignmentMenu.this, 0, getHeight)
+    }
+
     override def syncTheme(): Unit = {
       setBackgroundColor(InterfaceColors.toolbarControlBackground())
       setBackgroundHoverColor(InterfaceColors.toolbarControlBackgroundHover())
       setBackgroundPressedColor(InterfaceColors.toolbarControlBackgroundPressed())
       setBorderColor(InterfaceColors.toolbarControlBorder())
+      setFocusColor(InterfaceColors.focus())
 
       label.setForeground(InterfaceColors.toolbarText())
     }
@@ -399,6 +435,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
 
   class SquareButton(action: Action, image: String) extends ToolBarToggleButton(action) with PreferredSize {
     setBorder(null)
+    setPrimaryAction(() => wPanel.requestFocus(FocusEvent.Cause.TRAVERSAL))
 
     setIcon(Utils.iconScaledWithColor(this, s"/images/$image", 18, 18, () => {
       if (isSelected) {

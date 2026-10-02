@@ -18,8 +18,6 @@ class ProceduresMenu(target: ProceduresMenuTarget) extends ToolBarMenu(I18N.gui.
     Ordering.comparatorToOrdering(using Collator.getInstance(locale))
   }
 
-  enableHover()
-
   override def populate(menu: PopupMenu): Unit = {
     val procsTable = {
       target.compiler.findProcedurePositions(target.getText)

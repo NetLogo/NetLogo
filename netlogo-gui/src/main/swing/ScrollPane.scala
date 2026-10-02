@@ -15,6 +15,9 @@ class ScrollPane(component: Component, vScroll: Int = ScrollPaneConstants.VERTIC
   // this is needed because JScrollPane defines its own ScrollBar class (Isaac B 2/25/25)
   import org.nlogo.swing.{ ScrollBar => NLScrollBar }
 
+  setFocusable(false)
+  getViewport.setFocusable(false)
+
   setHorizontalScrollBar(new NLScrollBar(Adjustable.HORIZONTAL))
   setVerticalScrollBar(new NLScrollBar(Adjustable.VERTICAL))
 
@@ -28,6 +31,7 @@ class ScrollPane(component: Component, vScroll: Int = ScrollPaneConstants.VERTIC
 }
 
 class ScrollBar(orientation: Int) extends JScrollBar(orientation) with MouseUtils {
+  setFocusable(false)
   setUnitIncrement(50)
   setUI(new ScrollBarUI)
 

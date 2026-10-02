@@ -2,9 +2,9 @@
 
 package org.nlogo.app.tools
 
-import java.awt.{ BorderLayout, Container, Font, Frame }
+import java.awt.{ BorderLayout, Font, Frame }
 import java.awt.event.{ ActionEvent, WindowAdapter, WindowEvent }
-import javax.swing.{ AbstractAction, JDialog, LayoutFocusTraversalPolicy }
+import javax.swing.{ AbstractAction, JDialog }
 
 import scala.jdk.CollectionConverters.SeqHasAsJava
 
@@ -41,11 +41,7 @@ class AgentMonitorWindow(val agentKind: AgentKind, _agent: Agent, radius: Double
   monitor.setAgent(_agent, radius)
   getContentPane.setLayout(new BorderLayout)
   getContentPane.add(monitor, BorderLayout.CENTER)
-  setFocusTraversalPolicy(
-    new LayoutFocusTraversalPolicy {
-      override def getFirstComponent(focusCycleRoot: Container) =
-        monitor.commandLine.textField
-    })
+
   Utils.addEscKeyAction(
     getRootPane, new AbstractAction {
       def actionPerformed(e: ActionEvent): Unit = {

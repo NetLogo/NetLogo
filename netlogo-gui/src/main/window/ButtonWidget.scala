@@ -28,19 +28,25 @@ class ButtonWidget(random: MersenneTwisterFast, compiler: CompilerServices, colo
   private var _buttonType: ButtonType = ButtonType.ObserverButton
 
   val keyLabel = new JLabel with Zoomable {
+    setFocusable(false)
+    setVisible(false)
     setBaseFont(getFont.deriveFont(12.0f))
   }
 
   val nameLabel = new JLabel(I18N.gui.get("edit.button.previewName")) with Zoomable {
+    setFocusable(false)
     setBaseFont(getFont.deriveFont(_boldState))
   }
 
-  val foreverLabel = new JLabel(foreverIcon)
-  val agentLabel = new JLabel
+  val foreverLabel = new JLabel(foreverIcon) {
+    setFocusable(false)
+    setVisible(false)
+  }
 
-  agentLabel.setVisible(false)
-  keyLabel.setVisible(false)
-  foreverLabel.setVisible(false)
+  val agentLabel = new JLabel {
+    setFocusable(false)
+    setVisible(false)
+  }
 
   keyLabel.addMouseListener(this)
   nameLabel.addMouseListener(this)
@@ -64,6 +70,9 @@ class ButtonWidget(random: MersenneTwisterFast, compiler: CompilerServices, colo
   override def editPanel: EditPanel = new ButtonEditPanel(this, compiler, colorizer)
 
   override def getEditable: Option[Editable] = Some(this)
+
+  override def getPrimaryAction: Option[() => Unit] =
+    Some(() => keyTriggered())
 
   def buttonType_=(bt: ButtonType): Unit = {
     _buttonType = bt
@@ -404,11 +413,13 @@ class ButtonWidget(random: MersenneTwisterFast, compiler: CompilerServices, colo
     if (disabledWaitingForSetup) {
       if (error().isDefined) {
         setBackgroundColor(InterfaceColors.widgetTextError())
+        setFocusColor(InterfaceColors.focus())
         keyLabel.setForeground(InterfaceColors.buttonText())
         nameLabel.setForeground(InterfaceColors.buttonText())
         foreverLabel.setIcon(foreverIcon)
       } else {
         setBackgroundColor(InterfaceColors.buttonBackgroundDisabled())
+        setFocusColor(InterfaceColors.focus())
         keyLabel.setForeground(InterfaceColors.buttonTextDisabled())
         nameLabel.setForeground(InterfaceColors.buttonTextDisabled())
         foreverLabel.setIcon(foreverIconDisabled)
@@ -424,6 +435,8 @@ class ButtonWidget(random: MersenneTwisterFast, compiler: CompilerServices, colo
         }
       )
 
+      setFocusColor(InterfaceColors.focusAlternate())
+
       keyLabel.setForeground(InterfaceColors.buttonText())
       nameLabel.setForeground(InterfaceColors.buttonText())
       foreverLabel.setIcon(foreverIcon)
@@ -437,6 +450,8 @@ class ButtonWidget(random: MersenneTwisterFast, compiler: CompilerServices, colo
           InterfaceColors.buttonBackgroundPressed()
         }
       )
+
+      setFocusColor(InterfaceColors.focusAlternate())
 
       keyLabel.setForeground(InterfaceColors.buttonTextPressed())
       if (error().isEmpty)

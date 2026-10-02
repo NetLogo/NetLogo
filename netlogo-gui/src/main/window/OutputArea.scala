@@ -42,6 +42,7 @@ class OutputArea(val text: TextArea) extends BoxRow with RoundedBorderPanel with
 
   // var help: String = null // don't think this is used any longer....
   //
+  text.setFocusable(false)
   text.setEditable(false)
   text.setDragEnabled(false)
 

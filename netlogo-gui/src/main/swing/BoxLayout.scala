@@ -18,6 +18,7 @@ abstract class AbstractBoxLayout(axis: Int, components: Seq[Component], gap: Int
   extends JPanel with Transparent with Zoomable {
 
   setLayout(new BoxLayout(this, axis))
+  setFocusable(false)
 
   if (align != BoxAlign.End && align != BoxAlign.None)
     add(createGlue)

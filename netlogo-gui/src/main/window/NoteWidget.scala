@@ -23,6 +23,7 @@ class NoteWidget extends SingleErrorWidget with Transparent with Editable {
   private val textPane = new JEditorPane("text/html", "") with Zoomable {
     setEditable(false)
     setOpaque(false)
+    setFocusable(false)
     setCaret(new SilentCaret)
     setCaretColor(InterfaceColors.Transparent)
   }
@@ -180,6 +181,8 @@ class NoteWidget extends SingleErrorWidget with Transparent with Editable {
 
       case _ => throw new IllegalStateException
     }
+
+    setFocusColor(InterfaceColors.focus())
 
     repaint()
   }

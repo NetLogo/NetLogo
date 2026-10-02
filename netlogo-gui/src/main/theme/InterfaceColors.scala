@@ -201,6 +201,8 @@ object InterfaceColors {
   def modelsLibraryFolderSelected(): Color = theme.modelsLibraryFolderSelected
   def modelsLibraryLeaf(): Color = theme.modelsLibraryLeaf
   def modelsLibraryLeafSelected(): Color = theme.modelsLibraryLeafSelected
+  def focus(): Color = theme.focus
+  def focusAlternate(): Color = theme.focusAlternate
 }
 
 trait ColorTheme {
@@ -398,6 +400,8 @@ trait ColorTheme {
   def modelsLibraryFolderSelected: Color
   def modelsLibraryLeaf: Color
   def modelsLibraryLeafSelected: Color
+  def focus: Color
+  def focusAlternate: Color
 
   def colorizerTheme: ColorizerTheme
 }
@@ -568,6 +572,8 @@ object ClassicTheme extends ColorTheme {
   override def modelsLibraryFolderSelected: Color = Color.WHITE
   override def modelsLibraryLeaf: Color = MediumBlue
   override def modelsLibraryLeafSelected: Color = Color.WHITE
+  override def focus: Color = MediumBlue
+  override def focusAlternate: Color = Color.BLACK
 
   override def colorizerTheme: ColorizerTheme = ColorizerTheme.Classic
 }
@@ -738,6 +744,8 @@ object LightTheme extends ColorTheme {
   override def modelsLibraryFolderSelected: Color = Color.WHITE
   override def modelsLibraryLeaf: Color = MediumBlue
   override def modelsLibraryLeafSelected: Color = Color.WHITE
+  override def focus: Color = MediumBlue
+  override def focusAlternate: Color = Color.BLACK
 
   override def colorizerTheme: ColorizerTheme = ColorizerTheme.Light
 }
@@ -908,6 +916,8 @@ object DarkTheme extends ColorTheme {
   override def modelsLibraryFolderSelected: Color = MediumGray
   override def modelsLibraryLeaf: Color = MediumBlue
   override def modelsLibraryLeafSelected: Color = MediumGray
+  override def focus: Color = Color.WHITE
+  override def focusAlternate: Color = Color.WHITE
 
   override def colorizerTheme: ColorizerTheme = ColorizerTheme.Dark
 }
