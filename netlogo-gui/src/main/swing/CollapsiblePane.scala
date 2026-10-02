@@ -26,7 +26,7 @@ class CollapsiblePane(title: String, element: JComponent, parent: JDialog)
     }
   }
 
-  private val header = new BoxRow(titleLabel, BoxAlign.Start) with FocusUtils with ThemeSync {
+  val header = new BoxRow(titleLabel, BoxAlign.Start) with FocusUtils with ThemeSync {
     setBorder(new ZoomableBorder(6, 6, 6, 6))
     setFocusable(true)
     setPrimaryAction(() => setOpen(!isOpen))
@@ -39,6 +39,8 @@ class CollapsiblePane(title: String, element: JComponent, parent: JDialog)
   }
 
   titleLabel.setIcon(arrow)
+
+  setFocusable(false)
 
   add(header, BorderLayout.NORTH)
 
