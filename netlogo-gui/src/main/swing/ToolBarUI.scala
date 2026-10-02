@@ -9,6 +9,7 @@ import org.nlogo.theme.InterfaceColors
 
 class ToolBarActionButton(action: Action) extends Button(action) {
   setBorder(new ZoomableBorder(6, 8, 6, 12))
+  setPrimaryAction(doClick)
 
   override def zoomComponent(): Unit = {
     setIconTextGap(zoom(12))

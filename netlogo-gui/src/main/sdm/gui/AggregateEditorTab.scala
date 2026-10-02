@@ -7,11 +7,13 @@ import java.awt.{ BorderLayout, Component }
 import javax.swing.{ JPanel, ScrollPaneConstants }
 
 import org.nlogo.core.CompilerException
-import org.nlogo.swing.ScrollPane
+import org.nlogo.swing.{ FocusRoot, ScrollPane }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.ErrorLabel
 
-class AggregateEditorTab(toolbar: AggregateModelEditorToolBar, contents: Component) extends JPanel with ThemeSync {
+class AggregateEditorTab(toolbar: AggregateModelEditorToolBar, contents: Component)
+  extends JPanel with FocusRoot with ThemeSync {
+
   private val errorLabel = new ErrorLabel()
 
   private val scrollPane = new ScrollPane(contents, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
@@ -21,6 +23,7 @@ class AggregateEditorTab(toolbar: AggregateModelEditorToolBar, contents: Compone
     setAlignmentX(Component.LEFT_ALIGNMENT)
     setAlignmentY(Component.TOP_ALIGNMENT)
     setLayout(new BorderLayout)
+    setCanFocus(false)
 
     val toolbarPanel = new JPanel(new BorderLayout)
     toolbarPanel.add(toolbar, BorderLayout.CENTER)
@@ -28,6 +31,19 @@ class AggregateEditorTab(toolbar: AggregateModelEditorToolBar, contents: Compone
 
     add(toolbarPanel, BorderLayout.NORTH)
     add(scrollPane, BorderLayout.CENTER)
+  }
+
+  override def getDefaultComponent: Option[Component] =
+    Option(contents)
+
+  override def getFocusOrder: Map[Component, (Component, Component)] = {
+    Map(
+      contents -> (null, if (toolbar.editButton.isEnabled) toolbar.editButton else toolbar.compileButton),
+      toolbar.stockButton -> (toolbar.compileButton, toolbar.dtButton),
+      toolbar.variableButton -> (toolbar.compileButton, toolbar.dtButton),
+      toolbar.flowButton -> (toolbar.compileButton, toolbar.dtButton),
+      toolbar.linkButton -> (toolbar.compileButton, toolbar.dtButton)
+    )
   }
 
   def setError(e: CompilerException, offset: Int): Unit = {
