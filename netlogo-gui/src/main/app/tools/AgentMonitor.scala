@@ -2,7 +2,8 @@
 
 package org.nlogo.app.tools
 
-import java.awt.{ BorderLayout, Dimension, Font }
+import java.awt.{ BorderLayout, Component, Dimension, Font }
+import java.awt.event.FocusEvent
 import java.util.{ List => JList }
 import javax.swing.{ JDialog, JPanel, ScrollPaneConstants }
 import javax.swing.border.{ CompoundBorder, MatteBorder }
@@ -11,13 +12,13 @@ import org.nlogo.agent.{ Agent, Link, Patch, Turtle }
 import org.nlogo.app.common.{ CommandLine, HistoryPrompt, LinePrompt }
 import org.nlogo.awt.Hierarchy
 import org.nlogo.core.{ AgentKind, I18N }
-import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, CollapsiblePane, ScrollPane, ZoomableBorder }
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, CollapsiblePane, FocusRoot, ScrollPane, ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ CommandCenterInterface, GUIWorkspace }
 
 // implementing CommandCenterInterface lets us embed CommandLine
 abstract class AgentMonitor(val workspace: GUIWorkspace, window: JDialog)
-  extends JPanel(new BorderLayout) with CommandCenterInterface with ThemeSync {
+  extends JPanel(new BorderLayout) with CommandCenterInterface with FocusRoot with ThemeSync {
 
   private implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("tools.agentMonitor")
 
@@ -101,6 +102,17 @@ abstract class AgentMonitor(val workspace: GUIWorkspace, window: JDialog)
     }
   }
 
+  override def getDefaultComponent: Option[Component] =
+    Option(commandLine.textField)
+
+  override def getFocusOrder: Map[Component, (Component, Component)] = {
+    Map(
+      commandLine.textField -> (null, historyPrompt),
+      historyPrompt -> (null, viewPane.header),
+      viewPane.header -> (historyPrompt, null)
+    )
+  }
+
   override def fitPrompt(): Unit = {
     revalidate()
     repaint()
@@ -110,7 +122,7 @@ abstract class AgentMonitor(val workspace: GUIWorkspace, window: JDialog)
   def cycleAgentType(forward: Boolean): Unit = {
     if (forward) {
       // calling commandLine.transferFocus() here didn't work for some reason - ST 8/16/03
-      agentEditor.requestFocus()
+      historyPrompt.requestFocus(FocusEvent.Cause.TRAVERSAL)
     } else {
       // but this does the right thing! go figure! - ST 8/16/03
       commandLine.transferFocusBackward()
