@@ -3,14 +3,14 @@
 package org.nlogo.hubnet.server.gui
 
 import java.awt.{ Component, Dimension }
-import java.awt.event.{ ActionEvent, WindowAdapter, WindowEvent }
+import java.awt.event.ActionEvent
 import javax.swing.{ AbstractAction, JFrame, ScrollPaneConstants }
 
 import org.nlogo.analytics.Analytics
 import org.nlogo.api.ModelType
 import org.nlogo.core.{ I18N, Widget => CoreWidget }
-import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, MaximumHeight, Menu, MenuBar, NetLogoIcon, OptionPane, ScrollPane,
-                         UserAction, WindowAutomator, ZoomableBorder, ZoomableWindow }
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, FocusRoot, MaximumHeight, Menu, MenuBar, NetLogoIcon, OptionPane,
+                         ScrollPane, UserAction, WindowAutomator, ZoomableBorder, ZoomableWindow }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ WidgetInfo, MenuBarFactory, InterfaceFactory, GUIWorkspace, AbstractWidgetPanel }
 
@@ -19,6 +19,7 @@ class HubNetClientEditor(workspace: GUIWorkspace,
                          iFactory: InterfaceFactory,
                          menuFactory: MenuBarFactory) extends JFrame
         with org.nlogo.window.Event.LinkChild
+        with FocusRoot
         with ZoomableWindow(Option(workspace.getFrame))
         with ThemeSync
         with NetLogoIcon {
@@ -35,10 +36,12 @@ class HubNetClientEditor(workspace: GUIWorkspace,
   }
 
   private val clientMenuBar = new MenuBar {
-    add(menuFactory.createEditMenu)
+    setFocusable(false)
+
+    add(menuFactory.createEditMenu).setFocusable(false)
     add(new HubNetToolsMenu)
-    add(menuFactory.createZoomMenu)
-    add(menuFactory.createHelpMenu)
+    add(menuFactory.createZoomMenu).setFocusable(false)
+    add(menuFactory.createHelpMenu).setFocusable(false)
   }
 
   setTitle(getTitle(workspace.modelNameForDisplay, workspace.getModelDir, workspace.getModelType))
@@ -50,12 +53,19 @@ class HubNetClientEditor(workspace: GUIWorkspace,
 
   setJMenuBar(clientMenuBar)
   setSize(getPreferredSize)
+  setCanFocus(false)
 
-  addWindowFocusListener(new WindowAdapter {
-    override def windowGainedFocus(e: WindowEvent): Unit = {
-      interfacePanel.requestFocus()
-    }
-  })
+  getRootPane.setFocusable(false)
+  getContentPane.setFocusable(false)
+
+  override def getDefaultComponent: Option[Component] =
+    Option(interfacePanel)
+
+  override def getFocusOrder: Map[Component, (Component, Component)] = {
+    ((interfacePanel -> (null, interfacePanel.widgetControls.widgetMenu)) +:
+     (interfacePanel.widgetControls.widgetMenu -> (interfacePanel, null)) +:
+     interfacePanel.widgetControls.toolButtons.map(_ -> (null, interfacePanel))).toMap
+  }
 
   override def getPreferredSize = if (interfacePanel.empty) new Dimension(700, 550) else super.getPreferredSize
   def getLinkParent = linkParent
@@ -103,6 +113,7 @@ class HubNetClientEditor(workspace: GUIWorkspace,
 
   private class HubNetToolsMenu extends Menu(I18N.gui.get("menu.tools"), Menu.model) {
     setMnemonic('T')
+    setFocusable(false)
 
     offerAction(ConvertWidgetSizes)
   }

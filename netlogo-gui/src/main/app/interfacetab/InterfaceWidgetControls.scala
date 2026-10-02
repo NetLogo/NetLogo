@@ -9,8 +9,8 @@ import javax.swing.{ AbstractAction, Action, ButtonGroup, JLabel }
 import org.nlogo.app.common.{ Events => AppEvents }
 import org.nlogo.core.I18N
 import org.nlogo.swing.{ AutomationUtils, BoxAlign, BoxColumn, BoxRow, DropdownArrow, FocusUtils, MenuItem, MouseUtils,
-                         PopupMenu, PreferredSize, RoundedBorderPanel, ToolBarToggleButton, Utils, Zoomable,
-                         ZoomableBorder }
+                         PopupMenu, PreferredSize, RoundedBorderPanel, ToolBarToggleButton, Utils,
+                         WidgetControlsInterface, Zoomable, ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ Editable, EditDialog, EditDialogFactory, Events => WindowEvents, GUIWorkspace, InterfaceMode,
                           JobWidget, Widget, WidgetInfo, WorldViewSettings }
@@ -23,6 +23,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
                               frame: Frame,
                               dialogFactory: EditDialogFactory)
   extends BoxRow(6)
+  with WidgetControlsInterface
   with AppEvents.WidgetSelectedEvent.Handler
   with WindowEvents.InterfaceModeChangedEvent.Handler
   with WindowEvents.WidgetForegroundedEvent.Handler
@@ -38,9 +39,12 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
   val editButton = new SquareButton(new EditAction, "edit.png")
   val deleteButton = new SquareButton(new DeleteAction, "delete.png")
 
+  override val toolButtons: Seq[SquareButton] = Seq(interactButton, selectButton, editButton, deleteButton)
+
   private val buttonGroup = new ButtonGroup
 
-  private val widgetMenu = new WidgetMenu
+  override val widgetMenu: WidgetMenu = new WidgetMenu
+
   private val alignmentMenu = new AlignmentMenu
 
   locally {
