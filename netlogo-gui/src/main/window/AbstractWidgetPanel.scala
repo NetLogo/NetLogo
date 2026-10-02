@@ -2,10 +2,10 @@
 
 package org.nlogo.window
 
-import java.awt.Component
 import javax.swing.JLayeredPane
 
 import org.nlogo.core.{ Widget => CoreWidget }
+import org.nlogo.swing.WidgetControlsInterface
 import org.nlogo.theme.ThemeSync
 
 abstract class AbstractWidgetPanel extends JLayeredPane with ThemeSync {
@@ -16,5 +16,5 @@ abstract class AbstractWidgetPanel extends JLayeredPane with ThemeSync {
   def hasView: Boolean
   def empty: Boolean
   def setBoldWidgetText(value: Boolean): Unit
-  def widgetControls: Component
+  def widgetControls: WidgetControlsInterface
 }
