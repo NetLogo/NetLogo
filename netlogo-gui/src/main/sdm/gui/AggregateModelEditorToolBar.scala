@@ -3,7 +3,7 @@
 package org.nlogo.sdm.gui
 
 import java.awt.{ Dimension, Graphics }
-import java.awt.event.{ ActionEvent, MouseEvent }
+import java.awt.event.{ ActionEvent, FocusEvent, KeyAdapter, KeyEvent, MouseEvent }
 import javax.swing.{ Action, AbstractAction, ButtonGroup, JLabel, JPanel, JToggleButton, SwingConstants }
 
 import org.jhotdraw.framework.{ DrawingEditor, DrawingView, Figure, FigureSelectionListener, Tool }
@@ -21,10 +21,16 @@ class AggregateModelEditorToolBar(editor: AggregateModelEditor, model: Model)
   implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("tools.sdm")
 
   // Invisible button allows no selection in visible buttongroup
-  private val noToolButton = new JToggleButton("")
-  private val dtLabel = new JLabel("dt = " + model.getDt) { setOpaque(false) }
+  private val noToolButton = new JToggleButton("") {
+    setFocusable(false)
+  }
 
-  private val dtButton = new Button(new AbstractAction(I18N.gui("edit")) {
+  private val dtLabel = new JLabel("dt = " + model.getDt) {
+    setOpaque(false)
+    setFocusable(false)
+  }
+
+  val dtButton = new Button(new AbstractAction(I18N.gui("edit")) {
     def actionPerformed(e: ActionEvent): Unit = {
       val newDt = new InputOptionPane(editor, I18N.gui("edit"), "dt", model.getDt.toString).getInput
       try if (newDt != null) {
@@ -58,9 +64,10 @@ class AggregateModelEditorToolBar(editor: AggregateModelEditor, model: Model)
     }
   }
 
-  private val editButton = new ToolBarActionButton(editAction)
   private val deleteButton = new ToolBarActionButton(deleteAction)
-  private val compileButton = new ToolBarActionButton(compileAction)
+
+  val editButton = new ToolBarActionButton(editAction)
+  val compileButton = new ToolBarActionButton(compileAction)
 
   setOpaque(true)
   setBorder(new ZoomableBorder(6, 6, 6, 6))
@@ -75,6 +82,19 @@ class AggregateModelEditorToolBar(editor: AggregateModelEditor, model: Model)
     new ToolBarToggleButton(new ToolAction(I18N.gui(name.toLowerCase), image, tool)) {
       setVerticalTextPosition(SwingConstants.BOTTOM)
       setHorizontalTextPosition(SwingConstants.CENTER)
+      setPrimaryAction(() => editor.view.requestFocus(FocusEvent.Cause.TRAVERSAL))
+
+      addKeyListener(new KeyAdapter {
+        override def keyPressed(e: KeyEvent): Unit = {
+          if (e.getKeyCode == KeyEvent.VK_TAB) {
+            if (e.isShiftDown) {
+              transferFocusBackward()
+            } else {
+              transferFocus()
+            }
+          }
+        }
+      })
     }
   }
 
@@ -163,6 +183,7 @@ class AggregateModelEditorToolBar(editor: AggregateModelEditor, model: Model)
 
   class Separator extends JPanel with Zoomable {
     setBorder(new ZoomableBorder(0, 12, 0, 12))
+    setFocusable(false)
 
     override def getPreferredSize: Dimension =
       new Dimension(1, super.getPreferredSize.height)
