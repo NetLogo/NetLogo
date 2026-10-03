@@ -5,6 +5,7 @@ package org.nlogo.app.codetab
 import java.awt.FileDialog
 import java.io.{ File, IOException }
 import java.nio.file.{ Files, Paths }
+import java.util.Locale
 
 import org.nlogo.api.FileIO
 import org.nlogo.app.common.{ Dialogs, Events => AppEvents, ModelConfig, TabsInterface }
@@ -186,7 +187,7 @@ class TemporaryCodeTab(workspace: GUIWorkspace,
         setErrorLabel()
 
         val include: Boolean = includesTable.exists(_.exists {
-          case (_, IncludeSource(file, false)) if file == filename.getOrElse(null) =>
+          case (_, IncludeSource(file, _)) if file == filename.getOrElse(null) =>
             true
 
           case _ =>
@@ -213,5 +214,16 @@ class TemporaryCodeTab(workspace: GUIWorkspace,
     val newFileName = appendIfNecessary(filenameForDisplay, ".nlm")
     val path = SwingFileDialog.showFiles(this, I18N.gui.get("file.save.external"), FileDialog.SAVE, newFileName)
     appendIfNecessary(path, ".nlm")
+  }
+
+  override protected def getProcedures(): Seq[String] = {
+    if (filename.merge.toUpperCase(Locale.ROOT).endsWith(".NLM")) {
+      workspace.procedures.keys.collect {
+        case (proc, Some(module)) if filename.merge == module =>
+          proc
+      }.toSeq
+    } else {
+      super.getProcedures()
+    }
   }
 }
