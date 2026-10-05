@@ -197,7 +197,7 @@ class FindDialog(val owner: Frame) extends JDialog(owner, I18N.gui.get("dialog.f
 
   private var target: Option[ScrollableTextComponent] = None
 
-  private val nextButton = new DialogButton(false, I18N.gui.get("dialog.find.next"), () => {
+  private val nextButton = new DialogButton(true, I18N.gui.get("dialog.find.next"), () => {
     if (!next(findBox.getText, ignoreCaseCheckBox.isSelected, wrapAroundCheckBox.isSelected)) {
       Toolkit.getDefaultToolkit.beep()
       notFoundLabel.setVisible(true)
