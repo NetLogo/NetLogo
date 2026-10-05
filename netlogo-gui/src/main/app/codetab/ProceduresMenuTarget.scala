@@ -7,10 +7,12 @@ package org.nlogo.app.codetab
 // strictly necessary since they're both in the app package, but it's still kind of nice. - ST
 // 2/2/09
 
+import java.awt.Component
+
 import org.nlogo.api.CompilerServices
 import org.nlogo.core.Program
 
-trait ProceduresMenuTarget {
+trait ProceduresMenuTarget extends Component {
   def compiler: CompilerServices
   def select(pos1: Int, pos2: Int): Unit
   def getText: String

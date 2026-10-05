@@ -39,6 +39,7 @@ abstract class ToolBarMenu(name: String) extends BoxRow(8) with RoundedBorderPan
     menu.pack()
     menu.syncTheme()
     menu.setVisible(true)
+    menu.requestFocus()
   }
 
   protected def populate(menu: PopupMenu): Unit

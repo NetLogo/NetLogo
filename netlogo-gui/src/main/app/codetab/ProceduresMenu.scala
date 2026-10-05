@@ -44,6 +44,7 @@ class ProceduresMenu(target: ProceduresMenuTarget) extends ToolBarMenu(I18N.gui.
           // view, then bring the beginning into view, so then we can see both, if they fit - ST 11/4/04
           target.select(end, end)
           EventQueue.invokeLater{() =>
+            target.requestFocus()
             target.select(namePos, namePos + proc.length)  // highlight the name
           }
         }
@@ -102,7 +103,7 @@ class ProceduresMenu(target: ProceduresMenuTarget) extends ToolBarMenu(I18N.gui.
     // becomes the call for visibility is made), so we delay the request until the next loop of the EDT. Note this line
     // is unnecessary for Mac, which grants focus to the field by default.
     // - BCH 1/31/2018
-    SwingUtilities.invokeLater(() => filterField.requestFocusInWindow())
+    SwingUtilities.invokeLater(() => filterField.requestFocus())
   }
 
   private def repopulate(menu: PopupMenu, filterField: TextField, items: Seq[JMenuItem]): Unit = {
