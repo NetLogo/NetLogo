@@ -79,6 +79,7 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
   setSecondaryAction(doPopup)
 
   widget.getPrimaryAction.foreach(setPrimaryAction)
+  widget.focusKeyListener.foreach(addKeyListener)
 
   add(glass, JLayeredPane.DRAG_LAYER)
   add(widget)

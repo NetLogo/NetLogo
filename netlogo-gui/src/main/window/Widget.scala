@@ -2,8 +2,8 @@
 
 package org.nlogo.window
 
-import java.awt.{ Color, Component, Container, Dimension, Font, Graphics, Insets, Point, Rectangle, event },
-                event.{ MouseAdapter, MouseEvent, MouseListener }
+import java.awt.{ Color, Component, Container, Dimension, Font, Graphics, Insets, Point, Rectangle }
+import java.awt.event.{ KeyListener, MouseAdapter, MouseEvent, MouseListener }
 import javax.swing.{ JPanel, JMenuItem }
 import javax.swing.border.Border
 
@@ -196,6 +196,9 @@ abstract class Widget
     None
 
   def getPrimaryAction: Option[() => Unit] =
+    None
+
+  def focusKeyListener: Option[KeyListener] =
     None
 
   // The methods to raise widget added/removed are here so they can be overridden by child classes.  Some of those
