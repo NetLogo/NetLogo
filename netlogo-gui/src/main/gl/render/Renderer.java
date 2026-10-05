@@ -24,6 +24,8 @@ import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.glu.gl2.GLUgl2;
+
+import java.awt.Color;
 import java.nio.DoubleBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
@@ -35,6 +37,7 @@ public class Renderer
     implements GLEventListener {
   final WorldWithWorldRenderable world;
   final ViewSettings renderer;
+  final GLViewSettings glSettings;
   private final TurtleRenderer turtleRenderer;
   private final PatchRenderer patchRenderer;
   final WorldRenderer worldRenderer;
@@ -93,6 +96,7 @@ public class Renderer
     this.world = world;
     transparentAgents = new PriorityQueue<Agent>(100, new Euclidean(world.observer()));
     renderer = graphicsSettings;
+    this.glSettings = glSettings;
     this.shapeRenderer = shapeRenderer;
     this.turtleRenderer = turtleRenderer;
     this.linkRenderer = linkRenderer;
@@ -104,6 +108,7 @@ public class Renderer
     world = glrenderer.world;
     transparentAgents = new PriorityQueue<Agent>(100, new Euclidean(world.observer()));
     renderer = glrenderer.renderer;
+    glSettings = glrenderer.glSettings;
     worldRenderer = glrenderer.worldRenderer;
     turtleRenderer = glrenderer.turtleRenderer;
     patchRenderer = glrenderer.patchRenderer;
@@ -150,11 +155,10 @@ public class Renderer
             + "OpenGL vendor: " + gl.glGetString(GL2.GL_VENDOR)
     );
 
-    gl.glShadeModel(GL2.GL_SMOOTH);                     // Enable Smooth Shading
-    gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);          // Black Background
-    gl.glClearDepth(1.0f);                            // Depth Buffer Setup
-    gl.glEnable(GL2.GL_DEPTH_TEST);              // Enables Depth Testing
-    gl.glDepthFunc(GL2.GL_LEQUAL);              // The Type Of Depth Testing To Do
+    gl.glShadeModel(GL2.GL_SMOOTH); // Enable Smooth Shading
+    gl.glClearDepth(1.0f); // Depth Buffer Setup
+    gl.glEnable(GL2.GL_DEPTH_TEST); // Enables Depth Testing
+    gl.glDepthFunc(GL2.GL_LEQUAL); // The Type Of Depth Testing To Do
 
     gl.glHint(GL2.GL_PERSPECTIVE_CORRECTION_HINT, GL2.GL_FASTEST);
 
@@ -235,7 +239,11 @@ public class Renderer
   public void display(GLAutoDrawable gLDrawable) {
     final GL2 gl = (GL2) gLDrawable.getGL();
 
+    Color bgColor = glSettings.getBgColor();
+
+    gl.glClearColor(bgColor.getRed() / 255.0f, bgColor.getGreen() / 255.0f, bgColor.getBlue() / 255.0f, 1.0f);
     gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
+
     shapeManager.checkQueue(gl, glu, world.turtleShapeList(), world.linkShapeList());
 
     render(gl);

@@ -2,6 +2,7 @@
 
 package org.nlogo.gl.view
 
+import java.awt.Color
 import java.awt.event.KeyListener
 import java.lang.UnsatisfiedLinkError
 import javax.swing.JFrame
@@ -29,6 +30,9 @@ class ViewManager(val workspace: GUIWorkspace,
   addLinkComponent(tickCounterLabel)
   private var fullscreenView: Option[FullscreenView] = None
   private var fullscreen = false
+
+  private var bgColor: Color = Color.BLACK
+  private var wireframeColor: Color = Color.WHITE
 
   var paintingImmediately = false
   private var _framesSkipped = false
@@ -186,6 +190,20 @@ class ViewManager(val workspace: GUIWorkspace,
 
   def setWireframeOn(on: Boolean): Unit = {
     wireframeOn = on
+  }
+
+  override def getBgColor: Color =
+    bgColor
+
+  override def setBgColor(color: Color): Unit = {
+    bgColor = color
+  }
+
+  override def getWireframeColor: Color =
+    wireframeColor
+
+  override def setWireframeColor(color: Color): Unit = {
+    wireframeColor = color
   }
 
   def paintImmediately(force: Boolean): Unit = {

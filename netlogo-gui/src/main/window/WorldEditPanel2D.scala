@@ -6,7 +6,7 @@ import javax.swing.JLabel
 import javax.swing.border.TitledBorder
 
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, MaximumHeight, Zoomable, ZoomableBorder }
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, MaximumHeight, PreferredSize, Zoomable, ZoomableBorder }
 import org.nlogo.theme.InterfaceColors
 
 class WorldEditPanel2D(target: WorldViewSettings2D, enableDualView: Boolean) extends WorldEditPanel(target) {
@@ -114,6 +114,24 @@ class WorldEditPanel2D(target: WorldViewSettings2D, enableDualView: Boolean) ext
 
   private val frameRateLabeled = new LabeledEditor(frameRate, I18N.gui("2D.frameRate.info"))
 
+  private val bgColor: ColorEditor =
+    new ColorEditor(
+      new PropertyAccessor(
+        target,
+        I18N.gui("3D.bgColor"),
+        () => target.getBgColor,
+        _.foreach(target.setBgColor),
+        () => target.updateBackground(bgColor.get.toOption)), target.workspace.getFrame) with PreferredSize
+
+  private val wireframeColor: ColorEditor =
+    new ColorEditor(
+      new PropertyAccessor(
+        target,
+        I18N.gui("3D.wireframeColor"),
+        () => target.getWireframeColor,
+        _.foreach(target.setWireframeColor),
+        () => target.updateWireframe(wireframeColor.get.toOption)), target.workspace.getFrame) with PreferredSize
+
   private val dualView =
     new BooleanEditor(
       new PropertyAccessor(
@@ -185,8 +203,11 @@ class WorldEditPanel2D(target: WorldViewSettings2D, enableDualView: Boolean) ext
       ), 6) {
         setBorder(new ZoomableBorder(6, 6, 6, 6))
 
-        if (enableDualView)
+        if (enableDualView) {
+          add(new BoxRow(bgColor, BoxAlign.Start))
+          add(new BoxRow(wireframeColor, BoxAlign.Start))
           add(new BoxRow(dualView, BoxAlign.Start))
+        }
       }
     )) {
       setBorder(viewBorder)
@@ -218,7 +239,7 @@ class WorldEditPanel2D(target: WorldViewSettings2D, enableDualView: Boolean) ext
 
   override def propertyEditors: Seq[PropertyEditor[?]] =
     Seq(modelTitle, minPxcor, maxPxcor, minPycor, maxPycor, wrappingX, wrappingY, patchSize, fontSize, frameRate,
-        dualView, showTickCounter, tickCounterLabel)
+        bgColor, wireframeColor, dualView, showTickCounter, tickCounterLabel)
 
   override def editors: Seq[IntegerEditor] =
     Seq(minPxcor, maxPxcor, minPycor, maxPycor)

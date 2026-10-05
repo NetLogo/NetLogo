@@ -2,6 +2,8 @@
 
 package org.nlogo.window
 
+import java.awt.Color
+
 import org.nlogo.api.WorldPropertiesInterface
 import org.nlogo.core.{ CompilerException, I18N, UpdateMode, View => CoreView, Widget => CoreWidget, WorldDimensions }
 import org.nlogo.workspace.WorldLoaderInterface
@@ -11,7 +13,7 @@ trait WorldIntegerEditor {
   def set(value: Int): Unit
 }
 
-abstract class WorldViewSettings(protected val workspace: GUIWorkspace, protected val gWidget: ViewWidget,
+abstract class WorldViewSettings(val workspace: GUIWorkspace, protected val gWidget: ViewWidget,
                                  tickCounter: TickCounterLabel)
   extends Editable with WorldLoaderInterface with WorldPropertiesInterface {
 
@@ -153,10 +155,38 @@ abstract class WorldViewSettings(protected val workspace: GUIWorkspace, protecte
     }
   }
 
+  def getBgColor: Color =
+    workspace.glView.getBgColor
+
+  def setBgColor(color: Color): Unit =
+    workspace.glView.setBgColor(color)
+
+  def getWireframeColor: Color =
+    workspace.glView.getWireframeColor
+
+  def setWireframeColor(color: Color): Unit =
+    workspace.glView.setWireframeColor(color)
+
   def dualView: Boolean = workspace.dualView
 
   def dualView(on: Boolean): Unit = {
     workspace.dualView(on)
+  }
+
+  def updateBackground(color: Option[Color]): Unit = {
+    color.foreach { c =>
+      setBgColor(c)
+
+      workspace.glView.repaint()
+    }
+  }
+
+  def updateWireframe(color: Option[Color]): Unit = {
+    color.foreach { c =>
+      setWireframeColor(c)
+
+      workspace.glView.repaint()
+    }
   }
 
   def helpLink: Option[(String, String)] = None

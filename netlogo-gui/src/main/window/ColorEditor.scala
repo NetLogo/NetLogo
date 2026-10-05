@@ -33,6 +33,9 @@ class ColorEditor(accessor: PropertyAccessor[Color], frame: Frame)
 
   override def revert(): Unit = {
     setColor(originalValue)
+
+    accessor.changed()
+
     super.revert()
   }
 
@@ -98,6 +101,8 @@ class ColorEditor(accessor: PropertyAccessor[Color], frame: Frame)
               }
 
             ColorEditor.this.setColor(thisValue.toColor)
+
+            accessor.changed()
 
           }
         ).setVisible(true)

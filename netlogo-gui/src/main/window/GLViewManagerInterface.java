@@ -2,6 +2,8 @@
 
 package org.nlogo.window;
 
+import java.awt.Color;
+
 import org.nlogo.theme.ThemeSync;
 
 public interface GLViewManagerInterface
@@ -22,6 +24,14 @@ public interface GLViewManagerInterface
   void setWireframeOn(boolean on);
 
   boolean wireframeOn();
+
+  Color getBgColor();
+
+  void setBgColor(Color color);
+
+  Color getWireframeColor();
+
+  void setWireframeColor(Color color);
 
   void editFinished();
 

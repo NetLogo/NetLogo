@@ -5,7 +5,7 @@ package org.nlogo.bsapp
 import com.jogamp.opengl.{ GLCapabilities, GLProfile }
 import com.jogamp.opengl.awt.GLJPanel
 
-import java.awt.{ BorderLayout, Cursor, Dimension, Frame }
+import java.awt.{ BorderLayout, Color, Cursor, Dimension, Frame }
 import java.awt.event.{ KeyAdapter, KeyEvent, MouseEvent }
 
 import org.nlogo.agent.{ World, World3D }
@@ -97,6 +97,12 @@ class View3D(workspace: SemiHeadlessWorkspace) extends Frame(I18N.gui.get("menu.
 
   override def wireframeOn: Boolean =
     true
+
+  override def getBgColor: Color =
+    Color.BLACK
+
+  override def getWireframeColor: Color =
+    Color.WHITE
 
   override def resetPerspective(): Unit = {
     world.observer.resetPerspective()

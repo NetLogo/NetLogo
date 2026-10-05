@@ -2,11 +2,11 @@
 
 package org.nlogo.window
 
-import javax.swing.JLabel
+import javax.swing.{ Box, JLabel }
 import javax.swing.border.TitledBorder
 
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, MaximumHeight, Zoomable, ZoomableBorder }
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, MaximumHeight, PreferredSize, Zoomable, ZoomableBorder }
 import org.nlogo.theme.InterfaceColors
 
 class WorldEditPanel3D(target: WorldViewSettings3D) extends WorldEditPanel(target) {
@@ -166,6 +166,24 @@ class WorldEditPanel3D(target: WorldViewSettings3D) extends WorldEditPanel(targe
 
   private val wireframeLabeled = new LabeledEditor(wireframe, I18N.gui("3D.affects"))
 
+  private val bgColor: ColorEditor =
+    new ColorEditor(
+      new PropertyAccessor(
+        target,
+        I18N.gui("3D.bgColor"),
+        () => target.getBgColor,
+        _.foreach(target.setBgColor),
+        () => target.updateBackground(bgColor.get.toOption)), target.workspace.getFrame)
+
+  private val wireframeColor: ColorEditor =
+    new ColorEditor(
+      new PropertyAccessor(
+        target,
+        I18N.gui("3D.wireframeColor"),
+        () => target.getWireframeColor,
+        _.foreach(target.setWireframeColor),
+        () => target.updateWireframe(wireframeColor.get.toOption)), target.workspace.getFrame)
+
   private val showTickCounter =
     new BooleanEditor(
       new PropertyAccessor(
@@ -224,8 +242,17 @@ class WorldEditPanel3D(target: WorldViewSettings3D) extends WorldEditPanel(targe
       new BoxColumn(Seq(
         new BoxRow(Seq(patchSizeLabeled, fontSizeLabeled), 6),
         frameRateLabeled,
-        smoothLabeled,
-        wireframeLabeled
+        new BoxRow(Seq(
+          new BoxColumn(Seq(
+            smoothLabeled,
+            wireframeLabeled
+          ), 6) with PreferredSize,
+          Box.createHorizontalGlue,
+          new BoxColumn(Seq(
+            bgColor,
+            wireframeColor
+          ), 6, BoxAlign.Start)
+        ), 6)
       ), 6) {
         setBorder(new ZoomableBorder(6, 6, 6, 6))
       }
@@ -259,7 +286,7 @@ class WorldEditPanel3D(target: WorldViewSettings3D) extends WorldEditPanel(targe
 
   override def propertyEditors: Seq[PropertyEditor[?]] =
     Seq(modelTitle, minPxcor, maxPxcor, minPycor, maxPycor, minPzcor, maxPzcor, wrappingX, wrappingY, wrappingZ,
-        patchSize, fontSize, frameRate, smooth, wireframe, showTickCounter, tickCounterLabel)
+        patchSize, fontSize, frameRate, smooth, wireframe, bgColor, wireframeColor, showTickCounter, tickCounterLabel)
 
   override def editors: Seq[IntegerEditor] =
     Seq(minPxcor, maxPxcor, minPycor, maxPycor, minPzcor, maxPzcor)

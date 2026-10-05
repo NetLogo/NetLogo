@@ -2,6 +2,8 @@
 
 package org.nlogo.gl.render
 
+import java.awt.Color
+
 import com.jogamp.opengl.{ GL, GL2, GL2GL3 }
 import com.jogamp.opengl.fixedfunc.GLLightingFunc.GL_LIGHTING
 import org.nlogo.api.{ World, Agent, AgentFollowingPerspective, Patch,
@@ -131,10 +133,10 @@ class WorldRenderer(world: World, patchRenderer: PatchRenderer, drawing: Drawing
 
   def renderWorldWireFrame(gl: GL2): Unit = {
     val coords = getWorldDimensions(world)
-    // white lines only please
+    val color: Color = settings.getWireframeColor
     gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL2GL3.GL_LINE)
     gl.glDisable(GL_LIGHTING)
-    gl.glColor3f(1.0f, 1.0f, 1.0f)
+    gl.glColor3f(color.getRed / 255f, color.getGreen / 255f, color.getBlue / 255f)
     gl.glPushMatrix()
     gl.glScalef(coords(0), coords(1), coords(2))
     gl.glCallList(shapeManager.getShape("@@@WIREFRAME@@@").displayListIndex)
