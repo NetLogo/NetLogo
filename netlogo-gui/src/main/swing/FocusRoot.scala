@@ -45,10 +45,11 @@ trait FocusRoot extends Container {
       setFocusTraversalKeys(KeyboardFocusManager.UP_CYCLE_TRAVERSAL_KEYS, null)
     } else {
       setFocusTraversalKeys(KeyboardFocusManager.DOWN_CYCLE_TRAVERSAL_KEYS,
-                            Set(AWTKeyStroke.getAWTKeyStroke(KeyEvent.VK_ENTER, 0)).asJava)
+                            Set(AWTKeyStroke.getAWTKeyStroke(KeyEvent.VK_ENTER, 0, true)).asJava)
 
       setFocusTraversalKeys(KeyboardFocusManager.UP_CYCLE_TRAVERSAL_KEYS,
-                            Set(AWTKeyStroke.getAWTKeyStroke(KeyEvent.VK_ENTER, InputEvent.SHIFT_DOWN_MASK)).asJava)
+                            Set(AWTKeyStroke.getAWTKeyStroke(KeyEvent.VK_ENTER, InputEvent.SHIFT_DOWN_MASK,
+                                                             true)).asJava)
     }
   }
 

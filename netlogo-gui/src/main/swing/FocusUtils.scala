@@ -53,6 +53,13 @@ trait FocusUtils extends Zoomable {
               primaryAction.foreach(_())
             }
 
+          case KeyEvent.VK_ENTER if !FocusUtils.this.isInstanceOf[FocusRoot] =>
+            if (e.isShiftDown) {
+              secondaryAction.foreach(_())
+            } else {
+              primaryAction.foreach(_())
+            }
+
           case KeyEvent.VK_ESCAPE =>
             Option(KeyboardFocusManager.getCurrentKeyboardFocusManager.getCurrentFocusCycleRoot)
               .foreach(_.requestFocus())
