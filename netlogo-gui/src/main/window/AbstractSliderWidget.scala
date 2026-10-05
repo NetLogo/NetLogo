@@ -3,8 +3,8 @@
 package org.nlogo.window
 
 import java.awt.{ Component, Dimension, Graphics, Point }
-import java.awt.event.{ ActionEvent, ActionListener, FocusAdapter, FocusEvent, KeyAdapter, KeyEvent, MouseAdapter,
-                        MouseEvent }
+import java.awt.event.{ ActionEvent, ActionListener, FocusAdapter, FocusEvent, KeyAdapter, KeyEvent, KeyListener,
+                        MouseAdapter, MouseEvent }
 import java.lang.NumberFormatException
 import javax.swing.{ JLabel, JTextField, SwingConstants }
 import javax.swing.text.{ AttributeSet, PlainDocument }
@@ -217,6 +217,30 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
 
   override def getDefaultComponent: Option[Component] =
     Some(slider)
+
+  override def focusKeyListener: Option[KeyListener] = {
+    Option(new KeyAdapter {
+      override def keyPressed(e: KeyEvent): Unit = {
+        e.getKeyCode match {
+          case KeyEvent.VK_UP | KeyEvent.VK_RIGHT =>
+            slider.increase()
+
+            setValueFromSlider()
+
+            e.consume()
+
+          case KeyEvent.VK_DOWN | KeyEvent.VK_LEFT =>
+            slider.decrease()
+
+            setValueFromSlider()
+
+            e.consume()
+
+          case _ =>
+        }
+      }
+    })
+  }
 
   def constraint = sliderData.constraint
   def setSliderConstraint(con: SliderConstraint) = {
