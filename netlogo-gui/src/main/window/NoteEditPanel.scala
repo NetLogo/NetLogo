@@ -7,7 +7,7 @@ import org.nlogo.core.I18N
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, MaximumHeight }
 
 class NoteEditPanel(target: NoteWidget) extends WidgetEditPanel(target) {
-  private val frame = Hierarchy.getFrame(this)
+  private val frame = Hierarchy.getFrame(target)
 
   private val text =
     new BigStringEditor(
