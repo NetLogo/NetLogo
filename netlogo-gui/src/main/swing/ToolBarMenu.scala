@@ -2,7 +2,7 @@
 
 package org.nlogo.swing
 
-import java.awt.event.{ MouseAdapter, MouseEvent }
+import java.awt.event.{ KeyAdapter, KeyEvent, KeyListener, MouseAdapter, MouseEvent }
 import javax.swing.JLabel
 
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
@@ -30,6 +30,19 @@ abstract class ToolBarMenu(name: String) extends BoxRow(8) with RoundedBorderPan
   addMouseListener(new MouseAdapter {
     override def mousePressed(e: MouseEvent): Unit = popup()
   })
+
+  override def focusKeyListener: Option[KeyListener] = {
+    Option(new KeyAdapter {
+      override def keyReleased(e: KeyEvent): Unit = {
+        e.getKeyCode match {
+          case KeyEvent.VK_UP | KeyEvent.VK_DOWN =>
+            popup()
+
+          case _ =>
+        }
+      }
+    })
+  }
 
   def popup(): Unit = {
     val menu = new WrappingPopupMenu(this)

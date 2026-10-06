@@ -73,9 +73,13 @@ class ComboBox[T](private var items: Seq[T] = Seq(), openOnPress: Boolean = true
   arrow.addMouseListener(mouseAdapter)
 
   addKeyListener(new KeyAdapter {
-    override def keyPressed(e: KeyEvent): Unit = {
-      if (e.getKeyCode == KeyEvent.VK_DOWN && isEnabled)
-        showPopup()
+    override def keyReleased(e: KeyEvent): Unit = {
+      e.getKeyCode match {
+        case KeyEvent.VK_UP | KeyEvent.VK_DOWN if isEnabled =>
+          showPopup()
+
+        case _ =>
+      }
     }
   })
 
