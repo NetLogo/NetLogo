@@ -3,7 +3,7 @@
 package org.nlogo.app.interfacetab
 
 import java.awt.{ Dimension, Frame }
-import java.awt.event.{ ActionEvent, FocusEvent, MouseAdapter, MouseEvent }
+import java.awt.event.{ ActionEvent, FocusEvent, KeyAdapter, KeyEvent, KeyListener, MouseAdapter, MouseEvent }
 import javax.swing.{ AbstractAction, Action, ButtonGroup, JLabel }
 
 import org.nlogo.app.common.{ Events => AppEvents }
@@ -267,6 +267,19 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
       }
     })
 
+    override def focusKeyListener: Option[KeyListener] = {
+      Option(new KeyAdapter {
+        override def keyReleased(e: KeyEvent): Unit = {
+          e.getKeyCode match {
+            case KeyEvent.VK_UP | KeyEvent.VK_DOWN =>
+              showPopup()
+
+            case _ =>
+          }
+        }
+      })
+    }
+
     def getSelectedWidget =
       widgetInfos.find(_.displayName == chosenItem).get.coreWidget
 
@@ -366,6 +379,19 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
         showPopup()
       }
     })
+
+    override def focusKeyListener: Option[KeyListener] = {
+      Option(new KeyAdapter {
+        override def keyReleased(e: KeyEvent): Unit = {
+          e.getKeyCode match {
+            case KeyEvent.VK_UP | KeyEvent.VK_DOWN =>
+              showPopup()
+
+            case _ =>
+          }
+        }
+      })
+    }
 
     private def getPopup: PopupMenu = {
       new PopupMenu(this) {

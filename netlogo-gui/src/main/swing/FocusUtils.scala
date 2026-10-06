@@ -3,7 +3,7 @@
 package org.nlogo.swing
 
 import java.awt.{ BasicStroke, Color, Graphics, KeyboardFocusManager, Stroke }
-import java.awt.event.{ FocusEvent, FocusListener, KeyAdapter, KeyEvent }
+import java.awt.event.{ FocusEvent, FocusListener, KeyAdapter, KeyEvent, KeyListener }
 
 trait FocusUtils extends Zoomable {
   protected var focusColor: Color = Color.WHITE
@@ -69,6 +69,11 @@ trait FocusUtils extends Zoomable {
       }
     }
   })
+
+  focusKeyListener.foreach(addKeyListener)
+
+  def focusKeyListener: Option[KeyListener] =
+    None
 
   protected def setFocusColor(color: Color): Unit = {
     focusColor = color
