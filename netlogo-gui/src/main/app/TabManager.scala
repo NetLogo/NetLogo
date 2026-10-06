@@ -87,8 +87,6 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
   workspace.getFrame.addWindowFocusListener(new WindowFocusListener {
     def windowGainedFocus(e: WindowEvent): Unit = {
       if (separateTabs.getSelectedComponent != null) {
-        mainTabs.focusSelected()
-
         setMenuActions(separateTabs.getSelectedComponent, mainTabs.getSelectedComponent)
 
         switchedTabs(mainTabs.getSelectedComponent)
@@ -132,8 +130,6 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
 
   separateTabsWindow.addWindowFocusListener(new WindowFocusListener {
     def windowGainedFocus(e: WindowEvent): Unit = {
-      separateTabs.focusSelected()
-
       setMenuActions(mainTabs.getSelectedComponent, separateTabs.getSelectedComponent)
 
       switchedTabs(separateTabs.getSelectedComponent)
@@ -461,8 +457,6 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
 
   def switchedTabs(tab: Component): Unit = {
     if (!movingTabs && tab != previousTab) {
-      tab.requestFocus
-
       setMenuActions(previousTab, tab)
 
       val prev = previousTab
