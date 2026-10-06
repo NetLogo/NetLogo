@@ -10,7 +10,8 @@ import org.nlogo.agent.{ Agent, AgentSet, OutputObject }
 import org.nlogo.core.{ AgentKind, CompilerException, I18N, Widget => CoreWidget }
 import org.nlogo.editor.{ EditorArea, EditorConfiguration }
 import org.nlogo.ide.{ AutoSuggestAction, CodeCompletionPopup }
-import org.nlogo.swing.{ Implicits, ScrollPane, Transparent, UserAction, Zoomable }, Implicits.thunk2documentListener
+import org.nlogo.swing.{ Implicits, MaximumHeight, ScrollPane, Transparent, UserAction, Zoomable },
+  Implicits.thunk2documentListener
 import org.nlogo.theme.InterfaceColors
 import org.nlogo.window.{ Editable, CommandCenterInterface, EditorColorizer, InterfaceMode, JobWidget,
                           Events => WindowEvents }
@@ -42,6 +43,7 @@ class CommandLine(commandCenter: CommandCenterInterface,
                      fontSize: Int,
                      workspace: AbstractWorkspace)
     extends JobWidget(workspace.world.mainRNG)
+    with MaximumHeight
     with ActionListener
     with KeyListener
     with WindowEvents.CompiledEvent.Handler
@@ -69,7 +71,7 @@ class CommandLine(commandCenter: CommandCenterInterface,
                            new AutoSuggestAction("auto-suggest", codeCompletionPopup)
                        )
 
-  lazy val textField = new EditorArea(configuration) {
+  lazy val textField = new EditorArea(configuration) with MaximumHeight {
     getDocument.addDocumentListener(() => EventQueue.invokeLater(() => commandCenter.fitPrompt()))
 
     override def setText(text: String): Unit = {

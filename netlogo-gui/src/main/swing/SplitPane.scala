@@ -172,6 +172,7 @@ class SplitPane(mainComponent: Component, topComponent: Component, commandCenter
 
   private var orientation = JSplitPane.HORIZONTAL_SPLIT
   private var dividerLocation = 0
+  private var permanentDividerLocation = 0
   private var lastOpenDividerLocation = 0
   private val dividerSize = 18
   private var splitRatio = 1f
@@ -188,8 +189,11 @@ class SplitPane(mainComponent: Component, topComponent: Component, commandCenter
 
   def getDividerLocation: Int = dividerLocation
 
-  def setDividerLocation(location: Int): Unit = {
+  def setDividerLocation(location: Int, permanent: Boolean = true): Unit = {
     dividerLocation = location.max(0).min(maxClosedDividerLocation)
+
+    if (permanent)
+      permanentDividerLocation = dividerLocation
 
     splitRatio = dividerLocation.toFloat / maxOpenDividerLocation
     closed = location >= maxClosedDividerLocation
@@ -212,6 +216,8 @@ class SplitPane(mainComponent: Component, topComponent: Component, commandCenter
     } else {
       dividerLocation = lastOpenDividerLocation
     }
+
+    permanentDividerLocation = dividerLocation
 
     splitRatio = dividerLocation.toFloat / maxOpenDividerLocation
     closed = location >= maxClosedDividerLocation
@@ -236,6 +242,10 @@ class SplitPane(mainComponent: Component, topComponent: Component, commandCenter
 
   def resetToLastOpenSizes(): Unit = {
     setDividerLocation(lastOpenDividerLocation)
+  }
+
+  def fitTemporary(): Unit = {
+    setDividerLocation(maxOpenDividerLocation.min(permanentDividerLocation), false)
   }
 
   def maxOpenDividerLocation: Int = {

@@ -10,7 +10,7 @@ import org.nlogo.api.Exceptions
 import org.nlogo.app.common.{ CommandLine, CommandServer, HistoryPrompt, LinePrompt }
 import org.nlogo.awt.{ Hierarchy, UserCancelException }
 import org.nlogo.core.{ AgentKind, I18N }
-import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, Button, FileDialog => SwingFileDialog, FocusUtils,
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, Button, FileDialog => SwingFileDialog, FocusUtils, MaximumHeight,
                          ModalProgressTask, MenuItem, PopupMenu, PreferredSize, RichAction, RoundedBorderPanel,
                          Zoomable, ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
@@ -90,8 +90,8 @@ class CommandCenter(workspace: AbstractWorkspace, showToggle: Boolean, packSplit
   private val southPanel = new BoxRow(Seq(
     prompt,
     commandLine,
-    new BoxColumn(historyPrompt, BoxAlign.End)
-  ), 6) {
+    new BoxColumn(historyPrompt, BoxAlign.End) with PreferredSize
+  ), 6) with MaximumHeight {
     setBorder(new ZoomableBorder(3, 0, 3, 0))
   }
 
