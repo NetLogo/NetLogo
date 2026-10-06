@@ -7,7 +7,7 @@ import javax.swing.JPanel
 
 import org.nlogo.theme.InterfaceColors
 
-class CloseButton extends JPanel with Transparent with MouseUtils with Zoomable {
+class CloseButton extends JPanel with Transparent with PreferredSize with MouseUtils with Zoomable {
   override def getPreferredSize: Dimension =
     new Dimension(zoom(16), zoom(16))
 

@@ -153,8 +153,11 @@ class TabLabel(startPane: FloatingTabbedPane, text: String, tab: Component) exte
     this.tabbedPane = tabbedPane
   }
 
-  private val textLabel = new JLabel(text) with Zoomable {
+  private val textLabel = new JLabel(text) with PreferredSize with Zoomable {
     setFocusable(false)
+
+    override def getPreferredSize: Dimension =
+      new Dimension(boldWidth, super.getPreferredSize.height)
   }
 
   private var rawText = text
@@ -213,9 +216,6 @@ class TabLabel(startPane: FloatingTabbedPane, text: String, tab: Component) exte
 
   override def contains(x: Int, y: Int): Boolean =
     closeButton.exists(button => button.contains(x - button.getX, y - button.getY))
-
-  override def getPreferredSize: Dimension =
-    new Dimension(boldWidth + closeButton.fold(0)(_.getPreferredSize.width + zoom(10)), super.getPreferredSize.height)
 
   override def paintComponent(g: Graphics): Unit = {
     if (tab == tabbedPane.getSelectedComponent) {
