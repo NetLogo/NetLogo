@@ -216,12 +216,21 @@ class TemporaryCodeTab(workspace: GUIWorkspace,
     appendIfNecessary(path, ".nlm")
   }
 
-  override protected def getProcedures(): Seq[String] = {
+  override protected def getProcedures(): (Seq[String], Seq[String]) = {
     if (filename.merge.toUpperCase(Locale.ROOT).endsWith(".NLM")) {
-      workspace.procedures.keys.collect {
+      val (reporterMap, commandMap) = workspace.procedures.partition(_._2.isReporter)
+
+      val commands: Seq[String] = commandMap.keys.collect {
         case (proc, Some(module)) if filename.merge == module =>
           proc
       }.toSeq
+
+      val reporters: Seq[String] = reporterMap.keys.collect {
+        case (proc, Some(module)) if filename.merge == module =>
+          proc
+      }.toSeq
+
+      (commands, reporters)
     } else {
       super.getProcedures()
     }
