@@ -1,15 +1,9 @@
 import { ContextTracker, type Stack } from "@lezer/lr";
 
 import {
-  As, Globals, Export, Extensions, From, Import, Includes, Breed, To, End, Own, Command, Reporter, Constant,
-  CloseBracket
+  As, Globals, Export, Extensions, From, Import, Includes, Breed, To, ToReport, End, Own, Command, Reporter, Constant,
+  Var
 } from "./netlogo.terms.js";
-
-enum Context {
-  Top,
-  Declaration,
-  Procedure
-}
 
 export function keywords(name: string, stack: Stack): number {
   const nameLower: string = name.toLowerCase();
@@ -22,40 +16,31 @@ export function keywords(name: string, stack: Stack): number {
     case "globals": return Globals;
     case "extensions": return Extensions;
     case "__includes": return Includes;
-    case "breed": return stack.context == Context.Top ? Breed : Reporter;
+    case "breed": return stack.context ? Reporter : Breed;
     case "directed-link-breed":
     case "undirected-link-breed": return Breed;
-    case "to":
-    case "to-report": return To;
+    case "to": return To;
+    case "to-report": return ToReport;
     case "end": return End;
     default:
-      const match = window.program.match(nameLower);
-
-      switch (match?.type) {
+      switch (window.program.match(nameLower)?.type) {
         case "keyword": return nameLower.endsWith("-own") ? Own : -1;
         case "constant": return Constant;
-        case "variable":
-        case "reporter": return (stack.context == Context.Declaration && !match.core) ? -1 : Reporter;
+        case "global":
+        case "variable": return Var;
+        case "reporter": return Reporter;
         case "command": return Command;
         default: return -1;
       }
   }
 };
 
-export const tracker = new ContextTracker<Context>({
-  start: Context.Top,
-  shift(context: Context, term: number, _, __): number {
+export const tracker = new ContextTracker<boolean>({
+  start: false,
+  shift(context: boolean, term: number, _, __): boolean {
     switch (term) {
-      case Import:
-      case Export:
-      case Globals:
-      case Extensions:
-      case Includes:
-      case Breed:
-      case Own: return Context.Declaration;
-      case CloseBracket: return context == Context.Declaration ? Context.Top : context;
-      case To: return Context.Procedure;
-      case End: return Context.Top;
+      case To: return true;
+      case End: return false;
       default: return context;
     }
   }
