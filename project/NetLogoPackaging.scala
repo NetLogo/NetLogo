@@ -13,7 +13,7 @@ import ujson.{ Obj, Str }
 
 import ChecksumsAndPreviews.allPreviews
 import Docs.{ docsDest, staticDocs }
-import Extensions.{ extensions, extensionRoot }
+import Extensions.extensionRoot
 import Keys.{ baseDirectory, buildStructure, dependencyClasspath, packageBin, state, streams, target, version }
 import ModelsLibrary.{ modelsDirectory, modelIndex }
 import NativeLibs.nativeLibs

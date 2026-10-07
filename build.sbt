@@ -2,6 +2,7 @@ import org.scalajs.linker.interface.ESVersion
 
 import java.nio.file.Paths
 
+import sbt.Keys.`package`
 import sbt.util.CacheImplicits.StringJsonFormat
 
 import sbtcrossproject.CrossPlugin.autoImport.{ crossProject, CrossType }
@@ -317,7 +318,7 @@ lazy val netlogo = project.in(file("netlogo-gui")).
     all := {
       all.dependsOn(
         Test / packageBin,
-        Extensions.extensions,
+        Extensions.extensionsConcurrent,
         NativeLibs.nativeLibs,
         ModelsLibrary.modelIndex,
         NetLogoWebExport.nlwUpdateExportFile

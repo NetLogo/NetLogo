@@ -16,6 +16,7 @@ object Extensions {
   val extensionRoot = SettingKey[File]("extension root", "root directory of extensions")
   val excludedExtensions = SettingKey[Seq[String]]("extensions excluded for this configuration")
   val extensions = TaskKey[Unit]("extensions", "builds extensions")
+  val extensionsConcurrent = TaskKey[Unit]("extensionsConcurrent", "builds extensions concurrently")
   val extension = InputKey[Unit]("extension", "build a single extension")
   val forExtension = InputKey[Unit]("forExtension", "run an sbt command in a single extension")
   val forAllExtensions = InputKey[Unit]("forAllExtensions", "run an sbt command in all extensions")
@@ -70,6 +71,9 @@ object Extensions {
       extensionDirs(extensionRoot.value).filterNot(f => excluded.contains(f.getName)).foreach { dir =>
         sbtExec(dir, "package", nlJar)
       }
+    },
+    extensionsConcurrent := {
+      sbtExec(new File("extensions"), "package", extensionNetLogoJar.value.getAbsolutePath)
     },
     excludedExtensions := Seq(),
     javaOptions +=
