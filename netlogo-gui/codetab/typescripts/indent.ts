@@ -4,7 +4,7 @@ import { type SyntaxNodeRef, Tree } from "@lezer/common";
 
 import { parser } from "./netlogo.js";
 import {
-  Breed, CloseBracket, Command, End, Extensions, Globals, Includes, OpenBracket, Own, To
+  Breed, CloseBracket, Command, End, Extensions, Globals, Includes, OpenBracket, Own, To, ToReport
 } from "./netlogo.terms.js";
 
 class TokenizedLine {
@@ -112,6 +112,7 @@ function getUpdate(view: EditorView): IndentUpdate {
         case Extensions:
         case Includes:
         case To:
+        case ToReport:
         case End:
           indents.push(0);
 
@@ -160,6 +161,7 @@ function getUpdate(view: EditorView): IndentUpdate {
 
       switch (line.tokens[0]?.type.id) {
         case To:
+        case ToReport:
           indentLevels = [ 2 ];
 
           break;
