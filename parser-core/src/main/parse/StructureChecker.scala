@@ -91,6 +91,18 @@ object StructureChecker {
     }
   }
 
+  def rejectDotDotInImportPaths(declarations: Seq[Declaration]): Unit = {
+    for (declaration <- declarations) {
+      declaration match {
+        case Import(pathComponents, _, _, token) =>
+          if (pathComponents.exists(x => x == "." || x == "..")) {
+            exception(I18N.errors.getN("compiler.StructureParser.importContainsDotDot"), token)
+          }
+        case _ =>
+      }
+    }
+  }
+
   def rejectMisplacedDeclarations(declarations: Seq[Declaration]): Unit = {
     declarations.dropWhile(!_.isInstanceOf[Procedure]).find(!_.isInstanceOf[Procedure]).foreach { decl =>
       exception(I18N.errors.get("compiler.StructureChecker.declOrder"), decl.start)
