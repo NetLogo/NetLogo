@@ -1,7 +1,7 @@
 import sbt._
 import Def.spaceDelimited
 import Keys._
-import Extensions.extensions
+import Extensions.extensionsConcurrent
 import scala.util.Try
 
 object ChecksumsAndPreviews {
@@ -28,6 +28,6 @@ object ChecksumsAndPreviews {
       "org.nlogo.headless.ChecksumsAndPreviews",
       Seq(flag),
       workingDirectory = baseDirectory(_.getParentFile))
-        .dependsOn(Compile / compile, extensions)
+        .dependsOn(Compile / compile, extensionsConcurrent)
 
 }
