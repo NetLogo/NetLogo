@@ -47,8 +47,7 @@ object CodeToHtml {
 class CodeToHtml(compiler: CompilerInterface) {
   def convert(source:String, wrapped: Boolean = true): String = {
     val theme: ColorizerTheme = InterfaceColors.getTheme match {
-      case ClassicTheme => ColorizerTheme.Classic
-      case LightTheme => ColorizerTheme.Light
+      case ClassicTheme | LightTheme => ColorizerTheme.Light
       case DarkTheme => ColorizerTheme.Dark
     }
     val code = compiler.utilities.colorizer.toHtml(source, theme)

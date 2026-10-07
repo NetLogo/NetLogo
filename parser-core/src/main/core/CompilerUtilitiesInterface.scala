@@ -30,22 +30,10 @@ trait CompilerUtilitiesInterface extends LiteralParser {
 
 sealed abstract trait ColorizerTheme {
   def getColor(tpe: TokenType): Color
+  def variableColor: Color
 }
 
 object ColorizerTheme {
-  case object Classic extends ColorizerTheme {
-    override def getColor(tpe: TokenType): Color = {
-      tpe match {
-        case TokenType.Literal  => new Color(150, 55, 0) // dark orange
-        case TokenType.Command  => new Color(0, 0, 170) // blue
-        case TokenType.Reporter => new Color(102, 0, 150) // purple
-        case TokenType.Keyword  => new Color(0, 127, 105) // bluish green
-        case TokenType.Comment  => new Color(120, 120, 120) // medium gray
-        case _                  => Color.BLACK
-      }
-    }
-  }
-
   case object Light extends ColorizerTheme {
     override def getColor(tpe: TokenType): Color = {
       tpe match {
@@ -57,6 +45,9 @@ object ColorizerTheme {
         case _                  => Color.BLACK
       }
     }
+
+    override def variableColor: Color =
+      new Color(0, 100, 220)
   }
 
   case object Dark extends ColorizerTheme {
@@ -70,6 +61,9 @@ object ColorizerTheme {
         case _                  => Color.WHITE
       }
     }
+
+    override def variableColor: Color =
+      new Color(200, 100, 100)
   }
 }
 

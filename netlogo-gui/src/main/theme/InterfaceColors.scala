@@ -184,6 +184,7 @@ object InterfaceColors {
   def commandColor(): Color = theme.colorizerTheme.getColor(TokenType.Command)
   def reporterColor(): Color = theme.colorizerTheme.getColor(TokenType.Reporter)
   def keywordColor(): Color = theme.colorizerTheme.getColor(TokenType.Keyword)
+  def variableColor(): Color = theme.colorizerTheme.variableColor
   def constantColor(): Color = theme.colorizerTheme.getColor(TokenType.Literal)
   def defaultColor(): Color = theme.colorizerTheme.getColor(null)
   def announceX(): Color = theme.announceX
@@ -575,7 +576,7 @@ object ClassicTheme extends ColorTheme {
   override def focus: Color = MediumBlue
   override def focusAlternate: Color = Color.BLACK
 
-  override def colorizerTheme: ColorizerTheme = ColorizerTheme.Classic
+  override def colorizerTheme: ColorizerTheme = ColorizerTheme.Light
 }
 
 object LightTheme extends ColorTheme {

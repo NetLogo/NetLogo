@@ -536,13 +536,13 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
     runInWeb(s"window.setCoreProgram($keywords, $constants, $commands, $reporters)")
   }
 
-  def setProgram(program: Program, procedures: Seq[String], extensionCommands: Seq[String],
-                 extensionReporters: Seq[String]): Unit = {
+  def setProgram(program: Program, commandProcs: Seq[String], reporterProcs: Seq[String],
+                 extensionCommands: Seq[String], extensionReporters: Seq[String]): Unit = {
     val turtleKeywords: Seq[String] = program.breeds.keys.map(name => s"$name-own").toSeq
     val linkKeywords: Seq[String] = program.linkBreeds.keys.map(name => s"$name-own").toSeq
 
     val keywords: String = format(turtleKeywords ++ linkKeywords)
-    val globals: String = format(program.globals ++ procedures)
+    val globals: String = format(program.globals)
 
     val breedsOwn: Seq[String] = program.breeds.values.flatMap(_.owns).toSeq
     val linkBreedsOwn: Seq[String] = program.linkBreeds.values.flatMap(_.owns).toSeq
@@ -560,8 +560,9 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
     val linkCommands: Seq[String] = program.linkBreeds.values.flatMap(BreedIdentifierHandler.breedCommands).toSeq
     val linkReporters: Seq[String] = program.linkBreeds.values.flatMap(BreedIdentifierHandler.breedReporters).toSeq
 
-    val commands: String = format(extensionCommands ++ turtleCommands ++ linkCommands)
-    val reporters: String = format(extensionReporters ++ breedReporters ++ turtleReporters ++ linkReporters)
+    val commands: String = format(extensionCommands ++ turtleCommands ++ linkCommands ++ commandProcs)
+    val reporters: String = format(extensionReporters ++ breedReporters ++ turtleReporters ++ linkReporters ++
+                                   reporterProcs)
 
     runInWeb(s"window.setCompiledProgram($keywords, $globals, $variables, $commands, $reporters)")
   }
@@ -607,7 +608,8 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
       |  constant: "${colorString(InterfaceColors.constantColor())}",
       |  keyword: "${colorString(InterfaceColors.keywordColor())}",
       |  command: "${colorString(InterfaceColors.commandColor())}",
-      |  reporter: "${colorString(InterfaceColors.reporterColor())}"
+      |  reporter: "${colorString(InterfaceColors.reporterColor())}",
+      |  variable: "${colorString(InterfaceColors.variableColor())}"
       })""".stripMargin)
   }
 

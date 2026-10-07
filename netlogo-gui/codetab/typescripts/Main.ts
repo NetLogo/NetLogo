@@ -38,15 +38,12 @@ interface ColorTheme {
   keyword: string;
   command: string;
   reporter: string;
+  variable: string;
 }
 
 interface FoldRange {
   from: number;
   to: number;
-}
-
-interface CompletionPlus extends Completion {
-  core: boolean;
 }
 
 interface BasicLine {
@@ -55,19 +52,13 @@ interface BasicLine {
 }
 
 class Trie {
-  readonly core: boolean;
-
   value?: string;
   type?: string;
   children: Map<string, Trie> = new Map<string, Trie>();
 
-  constructor(core: boolean) {
-    this.core = core;
-  }
-
   append(value: string, type: string, offset: number = 0): void {
     if (value[offset]) {
-      const child: Trie = this.children.get(value[offset]) ?? new Trie(this.core);
+      const child: Trie = this.children.get(value[offset]) ?? new Trie();
 
       child.append(value, type, offset + 1);
 
@@ -84,7 +75,7 @@ class Trie {
     });
   }
 
-  match(value: string, offset: number = 0): CompletionPlus | undefined {
+  match(value: string, offset: number = 0): Completion | undefined {
     if (value[offset]) {
       return this.children.get(value[offset])?.match(value, offset + 1);
     }
@@ -92,20 +83,19 @@ class Trie {
     if (this.value == value) {
       return {
         label: this.value,
-        type: this.type,
-        core: this.core
+        type: this.type
       };
     }
 
     return undefined;
   }
 
-  matches(value: string, offset: number = 0): CompletionPlus[] {
+  matches(value: string, offset: number = 0): Completion[] {
     if (value[offset]) {
       return this.children.get(value[offset])?.matches(value, offset + 1) ?? [];
     }
 
-    const entries: CompletionPlus[] = [];
+    const entries: Completion[] = [];
 
     this.children.forEach((child: Trie) => {
       entries.push(...child.matches("", offset + 1));
@@ -114,8 +104,7 @@ class Trie {
     if (this.value) {
       entries.push({
         label: this.value,
-        type: this.type,
-        core: this.core
+        type: this.type
       });
     }
 
@@ -126,13 +115,13 @@ class Trie {
 class Program {
   decls: string[] = [];
 
-  private core: Trie = new Trie(true);
-  private compiled: Trie = new Trie(false);
+  private core: Trie = new Trie();
+  private compiled: Trie = new Trie();
 
   setCore(keywords: string[], constants: string[], commands: string[], reporters: string[]) {
     this.decls = keywords.filter(value => !value.match("to|to-report|import|export"));
 
-    this.core = new Trie(true);
+    this.core = new Trie();
 
     this.core.appendAll(keywords, "keyword");
     this.core.appendAll(constants, "constant");
@@ -141,7 +130,7 @@ class Program {
   }
 
   setCompiled(keywords: string[], globals: string[], variables: string[], commands: string[], reporters: string[]) {
-    this.compiled = new Trie(false);
+    this.compiled = new Trie();
 
     this.compiled.appendAll(keywords, "keyword");
     this.compiled.appendAll(globals, "global");
@@ -150,11 +139,11 @@ class Program {
     this.compiled.appendAll(reporters, "reporter");
   }
 
-  match(value: string, offset: number = 0): CompletionPlus | undefined {
+  match(value: string, offset: number = 0): Completion | undefined {
     return this.core.match(value, offset) ?? this.compiled.match(value, offset);
   }
 
-  matches(value: string, offset: number = 0): CompletionPlus[] {
+  matches(value: string, offset: number = 0): Completion[] {
     return this.core.matches(value, offset).concat(this.compiled.matches(value, offset));
   }
 }
@@ -163,6 +152,7 @@ const identRegex: RegExp = /[\w\-:.?=*!<>#+/%$\^'&]+/;
 
 const commandTag: Tag = Tag.define("command", tags.name);
 const reporterTag: Tag = Tag.define("reporter", tags.name);
+const variableTag: Tag = Tag.define("variable", tags.name);
 
 declare global {
   interface Window {
@@ -279,6 +269,7 @@ window.onload = () => {
     keyword: "",
     command: "",
     reporter: "",
+    variable: ""
   };
 
   window.view = new EditorView({
@@ -316,13 +307,17 @@ window.onload = () => {
               Extensions: tags.keyword,
               Includes: tags.keyword,
               To: tags.keyword,
+              ToReport: tags.keyword,
               End: tags.keyword,
               Identifier: tags.name,
               Number: tags.literal,
               String: tags.literal,
               Command: commandTag,
               Reporter: reporterTag,
-              Var: reporterTag,
+              Var: variableTag,
+              AlwaysCommand: commandTag,
+              AlwaysReporter: reporterTag,
+              AlwaysVar: variableTag,
               Constant: tags.literal
             })
           ]
@@ -970,7 +965,8 @@ window.syncTheme = (theme: ColorTheme) => {
         { tag: tags.keyword, color: theme.keyword, fontWeight: "bold" },
         { tag: tags.literal, color: theme.constant },
         { tag: commandTag, color: theme.command },
-        { tag: reporterTag, color: theme.reporter }
+        { tag: reporterTag, color: theme.reporter },
+        { tag: variableTag, color: theme.variable }
       ])))
     ]
   });
