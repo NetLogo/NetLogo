@@ -393,7 +393,7 @@ class StructureParserTests extends AnyFunSuite {
   }
 
   test("undeclared extensions in imported modules") {
-    expectParseAllError("import foo", "The following extensions are used by imported modules and must be declared in the model code: ARRAY", SourceType.NLModule, "extensions [array]")
+    expectParseAllError("import foo", "The following extensions are referenced by imported modules and must be declared in the model code: ARRAY", SourceType.NLModule, "extensions [array]")
   }
 
   test("multiple import statements return correct results") {
