@@ -22,7 +22,7 @@
     "typescript": "~5.8.0",
     "codemirror": "~6.0.2",
     "@lezer/generator": "~1.8.0",
-    "webpack": "~5.98.0",
+    "webpack": "~5.111.1",
     "webpack-cli": "~6.0.0"
   }
 }
