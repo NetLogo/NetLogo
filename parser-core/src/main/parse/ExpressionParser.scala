@@ -183,14 +183,20 @@ object ExpressionParser {
       case TokenType.Bad if token.value.isInstanceOf[String] =>
         exception(token.value.asInstanceOf[String], token)
 
-      case _ =>
+      case _ => {
+        val tokenText = token.text.toUpperCase(Locale.ENGLISH)
         token.value match {
-          case (_: core.prim._symbol | _: core.prim._unknownidentifier) if ! scope.contains(token.text.toUpperCase(Locale.ENGLISH)) =>
-            exception(I18N.errors.getN("compiler.LetVariable.notDefined", token.text.toUpperCase(Locale.ENGLISH)),
-                      token)
+          case (_: core.prim._symbol | _: core.prim._unknownidentifier) if ! scope.contains(tokenText) => {
+            if (scope.containsImportPrefix(tokenText)) {
+              exception(I18N.errors.getN("compiler.LetVariable.notDefinedButMatchImportPrefix", tokenText), token)
+            } else {
+              exception(I18N.errors.getN("compiler.LetVariable.notDefined", tokenText), token)
+            }
+          }
 
           case _ => exception(ExpectedCommand, token)
         }
+      }
     }
   }
 
@@ -511,8 +517,13 @@ object ExpressionParser {
                     case (letReporter, newScope) =>
                       (letReporter.syntax, new core.ReporterApp(letReporter, token.sourceLocation))
                   }.getOrElse {
-                    exception(I18N.errors.getN("compiler.LetVariable.notDefined",
-                                               token.text.toUpperCase(Locale.ENGLISH)), token)
+                    val tokenText = token.text.toUpperCase(Locale.ENGLISH)
+
+                    if (scope.containsImportPrefix(tokenText)) {
+                      exception(I18N.errors.getN("compiler.LetVariable.notDefinedButMatchImportPrefix", tokenText), token)
+                    } else {
+                      exception(I18N.errors.getN("compiler.LetVariable.notDefined", tokenText), token)
+                    }
                   }
                 }
               }

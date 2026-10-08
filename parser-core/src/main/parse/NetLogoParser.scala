@@ -26,6 +26,11 @@ trait NetLogoParser {
         val scope = StructureParser.usedNames(structureResults.program,
           allProcedures.filter { case ((_, module), _ ) => module == x.module },
           x.module.isDefined)
+
+        for (x <- structureResults.confusingPrefixParts) {
+          scope.addImportPrefix(x)
+        }
+
         parseProcedure(structureResults, scope, oldProcedures, extensionManager)(x)
       }.toSeq
     (topLevelDefs, structureResults)
