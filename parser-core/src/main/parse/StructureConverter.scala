@@ -59,7 +59,8 @@ object StructureConverter {
             e.names.map(x => (x.token, if (x.token.filename.isEmpty) None else Some(x.token.filename)))
         }.flatten,
       imports = oldResults.imports ++ ims,
-      `export` = exs.headOption)
+      `export` = exs.headOption,
+      confusingPrefixParts = oldResults.confusingPrefixParts)
   }
 
   def buildProcedure(p: Procedure, module: Option[String], displayName: Option[String]): (FrontEndProcedure, Iterable[Token]) = {

@@ -73,6 +73,10 @@ object StructureParser {
               val separator = System.getProperty("file.separator")
               val newImports: mutable.Set[Import] = mutable.Set()
 
+              val importPrefix = currentImport.pathComponents.mkString(":")
+              val lastImportComponent = currentImport.pathComponents.lastOption
+              val importAlias = currentImport.pathAlias
+              val confusingImportParts = Seq(Some(importPrefix), lastImportComponent, importAlias).flatten
               val suppliedPaths =
                 compilationEnvironment.resolveModulePath(currentImport.filename, currentImport.pathComponents)
 
@@ -176,7 +180,8 @@ object StructureParser {
                   newResults = newResults.copy(
                     imports = newResults.imports ++ newImports.toSeq,
                     procedures = newProcedures,
-                    procedureTokens = newProcedureTokens
+                    procedureTokens = newProcedureTokens,
+                    confusingPrefixParts = newResults.confusingPrefixParts ++ confusingImportParts
                   )
                 } else {
                   val (procedures, procedureTokens) = moduleCache(currentPath)
@@ -195,7 +200,8 @@ object StructureParser {
                   newResults = newResults.copy(
                     imports = newResults.imports.tail,
                     procedures = newResults.procedures ++ procedureAliases,
-                    procedureTokens = newResults.procedureTokens ++ procedureTokenAliases
+                    procedureTokens = newResults.procedureTokens ++ procedureTokenAliases,
+                    confusingPrefixParts = newResults.confusingPrefixParts ++ confusingImportParts
                   )
                 }
 
@@ -467,7 +473,7 @@ class StructureParser(
         StructureChecker.rejectMissingReport(declarations)
         StructureConverter.convert(declarations, displayName, module,
           if (subprogram)
-            StructureResults(program = oldResults.program)
+            StructureResults(program = oldResults.program, confusingPrefixParts = oldResults.confusingPrefixParts)
           else oldResults,
           subprogram)
       case Left((msg, token)) =>
