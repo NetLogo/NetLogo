@@ -67,6 +67,14 @@ object FileDialog {
   def showDirectories(parentFrame: Frame, title: String): String = {
     if (automated)
       throw new UserCancelException
+    FXFileDialog.chooseDirectory(parentFrame, title, getDirectory) match {
+      case Some(None) =>
+        throw new UserCancelException
+      case Some(Some(dir)) =>
+        setDirectory(dir.getAbsolutePath)
+        return dir.getAbsolutePath
+      case None => // not available, use the JFileChooser below
+    }
     val chooser = new JFileChooser(getDirectory)
     chooser.setDialogTitle(title)
     chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY)
@@ -82,6 +90,18 @@ object FileDialog {
   private def showFiles(parentFrame: Frame, title: String, mode: Int, file: String, allowed: List[String]): String = {
     if (automated)
       throw new UserCancelException
+    FXFileDialog.chooseFile(parentFrame, title, mode, file, getDirectory) match {
+      case Some(None) =>
+        throw new UserCancelException
+      case Some(Some(chosen)) =>
+        val dir = Option(chosen.getParent)
+        // currentDirectory is expected to end with a separator, as java.awt.FileDialog's does
+        dir.foreach(d => setDirectory(if (d.endsWith(File.separator)) d else d + File.separator))
+        if (mode == AWTFileDialog.LOAD && !chosen.exists)
+          return showFiles(parentFrame, title, mode, chosen.getName, allowed)
+        return chosen.getAbsolutePath
+      case None => // not available, use the AWT dialog below
+    }
     val chooser = new AWTFileDialog(parentFrame, title, mode)
     chooser.setDirectory(getDirectory)
     if (file != null)
