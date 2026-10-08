@@ -176,7 +176,8 @@ object StructureParser {
                   newResults = newResults.copy(
                     imports = newResults.imports ++ newImports.toSeq,
                     procedures = newProcedures,
-                    procedureTokens = newProcedureTokens
+                    procedureTokens = newProcedureTokens,
+                    importPrefixes = newResults.importPrefixes + currentImport.pathComponents.mkString(":")
                   )
                 } else {
                   val (procedures, procedureTokens) = moduleCache(currentPath)
@@ -195,7 +196,8 @@ object StructureParser {
                   newResults = newResults.copy(
                     imports = newResults.imports.tail,
                     procedures = newResults.procedures ++ procedureAliases,
-                    procedureTokens = newResults.procedureTokens ++ procedureTokenAliases
+                    procedureTokens = newResults.procedureTokens ++ procedureTokenAliases,
+                    importPrefixes = newResults.importPrefixes + currentImport.pathComponents.mkString(":")
                   )
                 }
 
