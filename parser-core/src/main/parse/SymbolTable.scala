@@ -5,13 +5,19 @@ package org.nlogo.parse
 import java.util.Locale
 
 import scala.collection.{ Iterable, IterableOnce, WithFilter }
+import scala.collection.mutable.Set
 
 object SymbolTable {
   def empty = new SymbolTable(Map[String, SymbolType]())
   def apply(pairs: (String, SymbolType)*) = new SymbolTable(Map[String, SymbolType](pairs*))
 }
 
-class SymbolTable(private val syms: Map[String, SymbolType], private val uniqueVarID: Int = 0) extends WithFilter[(String, SymbolType), Iterable] {
+class SymbolTable(
+  private val syms: Map[String, SymbolType],
+  private val uniqueVarID: Int = 0,
+  val importPrefixes: Set[String] = Set[String]() // TODO : make private
+) extends WithFilter[(String, SymbolType), Iterable] {
+
   def flatMap[B](f: ((String, SymbolType)) => IterableOnce[B]): Iterable[B] =
     syms.flatMap(f)
 
@@ -19,26 +25,34 @@ class SymbolTable(private val syms: Map[String, SymbolType], private val uniqueV
     syms.map(f)
 
   def withFilter(p: ((String, SymbolType)) => Boolean): WithFilter[(String, SymbolType), Iterable] =
-    new SymbolTable(syms.filter(p), uniqueVarID)
+    new SymbolTable(syms.filter(p), uniqueVarID, importPrefixes)
 
   def foreach[U](f: ((String, SymbolType)) => U): Unit =
     syms.foreach(f)
 
   def addSymbols(symNames: Iterable[String], tpe: SymbolType): SymbolTable =
-    new SymbolTable(syms ++ symNames.map(_.toUpperCase(Locale.ENGLISH) -> tpe).toMap, uniqueVarID)
+    new SymbolTable(syms ++ symNames.map(_.toUpperCase(Locale.ENGLISH) -> tpe).toMap, uniqueVarID, importPrefixes)
 
   def addSymbol(symName: String, tpe: SymbolType): SymbolTable =
-    new SymbolTable(syms + (symName.toUpperCase(Locale.ENGLISH) -> tpe), uniqueVarID)
+    new SymbolTable(syms + (symName.toUpperCase(Locale.ENGLISH) -> tpe), uniqueVarID, importPrefixes)
+
+  def addImportPrefix(prefix: String): Unit =
+    importPrefixes += prefix.toUpperCase(Locale.ENGLISH)
+
+  def removeImportPrefix(prefix: String): Unit =
+    importPrefixes -= prefix.toUpperCase(Locale.ENGLISH)
 
   def ++(other: SymbolTable): SymbolTable =
-    new SymbolTable(syms ++ other.syms, uniqueVarID + other.uniqueVarID)
+    new SymbolTable(syms ++ other.syms, uniqueVarID + other.uniqueVarID, importPrefixes ++ other.importPrefixes)
 
   def -(name: String): SymbolTable =
-    new SymbolTable(syms - name.toUpperCase(Locale.ENGLISH), uniqueVarID)
+    new SymbolTable(syms - name.toUpperCase(Locale.ENGLISH), uniqueVarID, importPrefixes)
 
   def apply(name: String) = syms(name.toUpperCase(Locale.ENGLISH))
 
   def contains(name: String) = syms.isDefinedAt(name.toUpperCase(Locale.ENGLISH))
+
+  def containsImportPrefix(prefix: String) = importPrefixes contains prefix.toUpperCase(Locale.ENGLISH)
 
   def get(name: String): Option[SymbolType] = syms.get(name.toUpperCase(Locale.ENGLISH))
 
@@ -53,7 +67,7 @@ class SymbolTable(private val syms: Map[String, SymbolType], private val uniqueV
     }
 
     val (symbolName, symbolID) = foundSymbolAndID.get
-    (symbolName, new SymbolTable(syms + (symbolName -> symType), symbolID + 1))
+    (symbolName, new SymbolTable(syms + (symbolName -> symType), symbolID + 1, importPrefixes))
   }
 
   override def equals(that: Any): Boolean = {

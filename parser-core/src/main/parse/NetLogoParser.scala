@@ -26,6 +26,14 @@ trait NetLogoParser {
         val scope = StructureParser.usedNames(structureResults.program,
           allProcedures.filter { case ((_, module), _ ) => module == x.module },
           x.module.isDefined)
+
+        println("IMPORT PREFIXES: " + structureResults.importPrefixes)
+        for (x <- structureResults.importPrefixes) {
+          println("ADD PREFIX: " + x)
+          scope.addImportPrefix(x)
+        }
+        println("SCOPE AFTER: " + scope.importPrefixes)
+
         parseProcedure(structureResults, scope, oldProcedures, extensionManager)(x)
       }.toSeq
     (topLevelDefs, structureResults)
@@ -38,6 +46,8 @@ trait NetLogoParser {
     extensionManager:  ExtensionManager)(procedure: FrontEndProcedure): ProcedureDefinition = {
     val rawTokens = structureResults.procedureTokens((procedure.name, procedure.module))
     val usedNames = globallyUsedNames.addSymbols(procedure.args, SymbolType.ProcedureVariable)
+    println("PARSE PROC GLOBAL USEDNAMES: " + globallyUsedNames.importPrefixes)
+    println("PARSE PROC USEDNAMES: " + usedNames.importPrefixes)
     val namedTokens = {
       val consolidatedTokens = ConsolidatingTokenStream(rawTokens.iterator, ScopedIdentifierConsolidator)
       val letNamedTokens = TransformableTokenStream(consolidatedTokens, LetNamer)
