@@ -28,11 +28,24 @@ class SwitchEditPanel(target: SwitchWidget, compiler: CompilerServices, extensio
         _.foreach(target.oldSize),
         () => apply()))
 
+  private val tooltip =
+    new MarkdownEditor(
+      new PropertyAccessor(
+        target,
+        I18N.gui.get("edit.general.tooltip"),
+        () => target.getTooltipText,
+        _.foreach(target.setTooltipText),
+        () => apply()))
+
   add(name)
   add(new BoxRow(oldSize, BoxAlign.Start))
+  add(new BoxRow(tooltip, BoxAlign.Start))
 
   override def propertyEditors: Seq[PropertyEditor[?]] =
-    Seq(name, oldSize)
+    Seq(name, oldSize, tooltip)
+
+  override def isResizable: Boolean =
+    true
 
   override def requestFocus(): Unit = {
     name.requestFocus()

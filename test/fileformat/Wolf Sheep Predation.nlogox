@@ -165,8 +165,12 @@ end
     <slider x="183" step="1.0" y="195" max="100.0" display="wolf-gain-from-food" height="33" min="0.0" direction="Horizontal" default="20.0" variable="wolf-gain-from-food" width="165" sizeVersion="0"></slider>
     <slider x="183" step="1.0" y="231" max="20.0" display="wolf-reproduce" height="33" min="0.0" direction="Horizontal" default="5.0" variable="wolf-reproduce" units="%" width="165" sizeVersion="0"></slider>
     <slider x="40" step="1" y="100" max="100" display="grass-regrowth-time" height="33" min="0" direction="Horizontal" default="30.0" variable="grass-regrowth-time" width="212" sizeVersion="0"></slider>
-    <button x="40" y="140" height="33" disableUntilTicks="false" forever="false" kind="Observer" display="setup" width="69" sizeVersion="0">setup</button>
-    <button x="115" y="140" height="33" disableUntilTicks="true" forever="true" kind="Observer" display="go" width="75" sizeVersion="0">go</button>
+    <button x="40" y="140" height="33" disableUntilTicks="false" forever="false" kind="Observer" display="setup" width="69" sizeVersion="0">
+      <source>setup</source>
+    </button>
+    <button x="115" y="140" height="33" disableUntilTicks="true" forever="true" kind="Observer" display="go" width="75" sizeVersion="0">
+      <source>go</source>
+    </button>
     <plot x="10" autoPlotX="true" yMax="100.0" autoPlotY="true" yAxis="pop." y="360" xMin="0.0" height="170" legend="true" xMax="100.0" yMin="0.0" xAxis="time" display="populations" width="340" sizeVersion="0">
       <setup></setup>
       <update></update>
@@ -183,9 +187,15 @@ end
         <update>if model-version = "sheep-wolves-grass" [ plot count grass / 4 ]</update>
       </pen>
     </plot>
-    <monitor x="41" precision="3" y="308" height="45" fontSize="11" display="sheep" width="70" sizeVersion="0">count sheep</monitor>
-    <monitor x="115" precision="3" y="308" height="45" fontSize="11" display="wolves" width="70" sizeVersion="0">count wolves</monitor>
-    <monitor x="191" precision="0" y="308" height="45" fontSize="11" display="grass" width="65" sizeVersion="0">count grass / 4</monitor>
+    <monitor x="41" precision="3" y="308" height="45" fontSize="11" display="sheep" width="70" sizeVersion="0">
+      <source>count sheep</source>
+    </monitor>
+    <monitor x="115" precision="3" y="308" height="45" fontSize="11" display="wolves" width="70" sizeVersion="0">
+      <source>count wolves</source>
+    </monitor>
+    <monitor x="191" precision="0" y="308" height="45" fontSize="11" display="grass" width="65" sizeVersion="0">
+      <source>count grass / 4</source>
+    </monitor>
     <note x="20" y="178" backgroundDark="0" fontSize="11" width="140" markdown="false" height="18" textColorDark="-1" textColorLight="-16777216" backgroundLight="0">Sheep settings</note>
     <note x="198" y="176" backgroundDark="0" fontSize="11" width="113" markdown="false" height="18" textColorDark="-1" textColorLight="-16777216" backgroundLight="0">Wolf settings</note>
     <switch x="105" y="270" height="33" on="false" variable="show-energy?" display="show-energy?" width="136" sizeVersion="0"></switch>

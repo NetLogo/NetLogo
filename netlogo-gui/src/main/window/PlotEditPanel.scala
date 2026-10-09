@@ -156,6 +156,15 @@ class PlotEditPanel(target: PlotWidget, compiler: CompilerServices, colorizer: C
         _.foreach(target.oldSize),
         () => apply()))
 
+  private val tooltip =
+    new MarkdownEditor(
+      new PropertyAccessor(
+        target,
+        I18N.gui.get("edit.general.tooltip"),
+        () => target.getTooltipText,
+        _.foreach(target.setTooltipText),
+        () => apply()))
+
   setupCode.addFocusListener(new FocusAdapter {
     override def focusLost(e: FocusEvent): Unit = {
       target.compile()
@@ -179,12 +188,14 @@ class PlotEditPanel(target: PlotWidget, compiler: CompilerServices, colorizer: C
   add(updateCode)
   add(editPlotPens)
   add(new BoxRow(oldSize, BoxAlign.Start))
+  add(new BoxRow(tooltip, BoxAlign.Start))
 
   override def propertyEditors: Seq[PropertyEditor[?]] =
     Seq(plotName, xLabel, xMin, xMax, yLabel, yMin, yMax, autoPlotX, autoPlotY, showLegend, runtimeError, setupCode,
-        updateCode, editPlotPens, oldSize)
+        updateCode, editPlotPens, oldSize, tooltip)
 
-  override def isResizable: Boolean = true
+  override def isResizable: Boolean =
+    true
 
   override def requestFocus(): Unit = {
     plotName.requestFocus()

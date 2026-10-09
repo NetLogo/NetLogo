@@ -14,7 +14,7 @@ import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 abstract class Switch extends MultiErrorWidget with Events.AfterLoadEvent.Handler with ThemeSync {
   protected var constraint = new BooleanConstraint
 
-  protected val label = new JLabel(I18N.gui.get("edit.switch.previewName")) with Zoomable {
+  protected lazy val label = new JLabel(I18N.gui.get("edit.switch.previewName")) with Zoomable {
     setFocusable(false)
   }
 
@@ -73,6 +73,9 @@ abstract class Switch extends MultiErrorWidget with Events.AfterLoadEvent.Handle
     label.setText(displayName)
     repaint()
   }
+
+  override def getTooltipComponents: Seq[Component] =
+    Seq(label)
 
   override def updateConstraints(): Unit = {
     if (_name.length > 0) { new Events.AddBooleanConstraintEvent(_name, isOn).raise(this) }

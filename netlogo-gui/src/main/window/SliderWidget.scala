@@ -181,6 +181,8 @@ class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast,
         oldSize(s.oldSize)
         setSize(s.width, s.height)
 
+        s.tooltipText.foreach(setTooltipText)
+
       case _ =>
     }
   }
@@ -195,6 +197,7 @@ class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast,
       oldSize = _oldSize,
       variable = savedName, min = minimumCode, max = maximumCode,
       default = value, step = incrementCode,
-      units = savedUnits, direction = dir)
+      units = savedUnits, direction = dir,
+      tooltipText = getTooltipOption)
   }
 }

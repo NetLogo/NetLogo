@@ -67,7 +67,8 @@ class SwitchWidget(compiler: CompilerServices, extensionManager: ExtensionManage
     CoreSwitch(display = savedDisplayName,
       x = b.x, y = b.y, width = b.width, height = b.height,
       oldSize = _oldSize,
-      variable = varName, on = isOn)
+      variable = varName, on = isOn,
+      tooltipText = getTooltipOption)
   }
 
   override def load(model: CoreWidget): Unit = {
@@ -77,6 +78,8 @@ class SwitchWidget(compiler: CompilerServices, extensionManager: ExtensionManage
         isOn = switch.on
         oldSize(switch.oldSize)
         setSize(switch.width, switch.height)
+
+        switch.tooltipText.foreach(setTooltipText)
 
       case _ =>
     }

@@ -22,7 +22,7 @@ trait Chooser extends SingleErrorWidget {
   protected var _name = ""
 
   // sub-elements of Switch
-  protected val label = new JLabel(I18N.gui.get("edit.chooser.previewName")) with Zoomable {
+  protected lazy val label = new JLabel(I18N.gui.get("edit.chooser.previewName")) with Zoomable {
     setFocusable(false)
   }
 
@@ -87,6 +87,9 @@ trait Chooser extends SingleErrorWidget {
       control.setItems(Seq(" "))
     }
   }
+
+  override def getTooltipComponents: Seq[Component] =
+    Seq(label)
 
   override def updateConstraints(): Unit = {
     if (name.length > 0) {

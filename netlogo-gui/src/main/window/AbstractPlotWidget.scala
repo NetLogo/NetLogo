@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import java.awt.{ Color, Dimension, Graphics, Insets }
+import java.awt.{ Color, Component, Dimension, Graphics, Insets }
 import java.awt.image.BufferedImage
 import java.util.Locale
 import javax.swing.{ Box, BoxLayout, JLabel, JPanel, SwingConstants }
@@ -41,21 +41,21 @@ abstract class AbstractPlotWidget(val plot: Plot, val plotManager: PlotManagerIn
   val canvas = new PlotCanvas(plot)
   private val canvasPanel = new CanvasPanel(canvas)
 
-  private val legend = new PlotLegend(this) {
+  private lazy val legend = new PlotLegend(this) {
     setBoldState(_boldState)
   }
 
-  private val nameLabel = new JLabel(originalName) with Zoomable {
+  private lazy val nameLabel = new JLabel(originalName) with Zoomable {
     setFocusable(false)
     setText(plot.name)
     setBaseFont(getFont.deriveFont(_boldState))
   }
 
-  private val xAxis = new XAxisLabels(this) {
+  private lazy val xAxis = new XAxisLabels(this) {
     setBoldState(_boldState)
   }
 
-  private val yAxis = new YAxisLabels(this) {
+  private lazy val yAxis = new YAxisLabels(this) {
     setBoldState(_boldState)
   }
 
@@ -197,6 +197,9 @@ abstract class AbstractPlotWidget(val plot: Plot, val plotManager: PlotManagerIn
   def defaultAutoPlotY = plot.defaultAutoPlotY
   def setDefaultAutoPlotY(defaultAutoPlotY: Boolean): Unit = { plot.defaultAutoPlotY = defaultAutoPlotY }
 
+  override def getTooltipComponents: Seq[Component] =
+    Seq(nameLabel, xAxis, yAxis, legend)
+
   def compile(): Unit = {
     plotManager.compilePlot(plot)
   }
@@ -242,6 +245,8 @@ abstract class AbstractPlotWidget(val plot: Plot, val plotManager: PlotManagerIn
         setPlotName(plot.name)
         clear()
 
+        corePlot.tooltipText.foreach(setTooltipText)
+
       case _ =>
     }
   }
@@ -267,7 +272,8 @@ abstract class AbstractPlotWidget(val plot: Plot, val plotManager: PlotManagerIn
       ymin = plot.defaultYMin, ymax = plot.defaultYMax,
       autoPlotX = plot.defaultAutoPlotX, autoPlotY = plot.defaultAutoPlotY, legendOn = legend.open,
       setupCode = plot.setupCode, updateCode = plot.updateCode,
-      pens = pens.toList)
+      pens = pens.toList,
+      tooltipText = getTooltipOption)
   }
 
   /// exporting an image of the plot

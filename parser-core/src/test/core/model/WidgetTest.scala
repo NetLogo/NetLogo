@@ -44,6 +44,7 @@ class WidgetTest extends AnyFunSuite {
     def width = 5
     def height = 5
     def oldSize = true
+    def tooltipText: Option[String] = None
   }
 
   test("Required reader lines") {

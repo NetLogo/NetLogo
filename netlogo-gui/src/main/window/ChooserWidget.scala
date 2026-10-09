@@ -99,6 +99,8 @@ class ChooserWidget(val compiler: CompilerServices, colorizer: Colorizer, extens
         setChoicesWrapper(chooseableListToLogoList(chooser.choices))
         index(chooser.currentChoice)
 
+        chooser.tooltipText.foreach(setTooltipText)
+
       case _ =>
     }
   }
@@ -112,6 +114,7 @@ class ChooserWidget(val compiler: CompilerServices, colorizer: Colorizer, extens
       oldSize       = _oldSize,
       variable      = savedName,
       choices       = constraint.acceptedValues.map(Chooseable.apply).toList,
-      currentChoice = index)
+      currentChoice = index,
+      tooltipText   = getTooltipOption)
   }
 }

@@ -87,7 +87,8 @@ case class InputBox(variable: Option[String],
   x:  Int = 0, y:    Int = 0,
   width: Int = 0, height: Int = 0,
   oldSize: Boolean = false,
-  boxedValue: BoxedValue = StringInput("", StringInput.StringLabel, false))
+  boxedValue: BoxedValue = StringInput("", StringInput.StringLabel, false),
+  tooltipText: Option[String] = None)
   extends Widget
   with DeclaresGlobal
   with DeclaresGlobalCommand

@@ -37,11 +37,24 @@ class InputEditPanel(target: InputBoxWidget, compiler: CompilerServices, extensi
         _.foreach(target.oldSize),
         () => apply()))
 
+  private val tooltip =
+    new MarkdownEditor(
+      new PropertyAccessor(
+        target,
+        I18N.gui.get("edit.general.tooltip"),
+        () => target.getTooltipText,
+        _.foreach(target.setTooltipText),
+        () => apply()))
+
   add(nameWrapper)
   add(new BoxRow(Seq(typeOptions, oldSize), 6, BoxAlign.Start))
+  add(new BoxRow(tooltip, BoxAlign.Start))
 
   override def propertyEditors: Seq[PropertyEditor[?]] =
-    Seq(nameWrapper, typeOptions, oldSize)
+    Seq(nameWrapper, typeOptions, oldSize, tooltip)
+
+  override def isResizable: Boolean =
+    true
 
   override def requestFocus(): Unit = {
     nameWrapper.requestFocus()
