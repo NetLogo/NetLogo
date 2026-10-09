@@ -176,7 +176,8 @@ object StructureParser {
                   newResults = newResults.copy(
                     imports = newResults.imports ++ newImports.toSeq,
                     procedures = newProcedures,
-                    procedureTokens = newProcedureTokens
+                    procedureTokens = newProcedureTokens,
+                    importPrefixes = newResults.importPrefixes + currentImport.pathComponents.mkString(":")
                   )
                 } else {
                   val (procedures, procedureTokens) = moduleCache(currentPath)
@@ -195,7 +196,8 @@ object StructureParser {
                   newResults = newResults.copy(
                     imports = newResults.imports.tail,
                     procedures = newResults.procedures ++ procedureAliases,
-                    procedureTokens = newResults.procedureTokens ++ procedureTokenAliases
+                    procedureTokens = newResults.procedureTokens ++ procedureTokenAliases,
+                    importPrefixes = newResults.importPrefixes + currentImport.pathComponents.mkString(":")
                   )
                 }
 
@@ -450,6 +452,7 @@ class StructureParser(
   subprogram: Boolean) {
 
   def parse(tokens: Iterator[Token], module: Option[String], oldResults: StructureResults, filename: String): StructureResults =
+    println("parse structure")
     StructureCombinators.parse(tokens, filename) match {
       case Right(declarations) =>
         StructureChecker.rejectMisplacedDeclarations(declarations)

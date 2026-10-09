@@ -31,6 +31,7 @@ object ExpressionParser {
    * parses a procedure. Procedures are a bunch of statements (not a block of statements, that's
    * something else), and so are parsed as such. */
   def apply(procedureDeclaration: FrontEndProcedure, tokens: Iterator[Token], scope: SymbolTable): core.ProcedureDefinition = {
+    println("APPLY SCOPE: " + scope.importPrefixes)
     val buffered = tokens.buffered
     val statementList = parseStatements(buffered, scope, TokenType.Eof, parseStatement(_, false, _))
     val stmts = new core.Statements(buffered.head.filename, statementList, false)
@@ -183,14 +184,26 @@ object ExpressionParser {
       case TokenType.Bad if token.value.isInstanceOf[String] =>
         exception(token.value.asInstanceOf[String], token)
 
-      case _ =>
+      case _ => {
+        val tokenText = token.text.toUpperCase(Locale.ENGLISH)
         token.value match {
-          case (_: core.prim._symbol | _: core.prim._unknownidentifier) if ! scope.contains(token.text.toUpperCase(Locale.ENGLISH)) =>
-            exception(I18N.errors.getN("compiler.LetVariable.notDefined", token.text.toUpperCase(Locale.ENGLISH)),
-                      token)
+          case (_: core.prim._symbol | _: core.prim._unknownidentifier) if ! scope.contains(tokenText) => {
+            println("FOO: " + tokenText)
+            println("BAR: " + scope.containsImportPrefix(tokenText))
+            println("BAZ: " + scope.importPrefixes)
+            // TODO: Add imported prefixes to scope
+            if (scope.containsImportPrefix(tokenText)) {
+              exception(I18N.errors.getN("compiler.LetVariable.notDefinedButMatchImportPrefix", tokenText),
+                        token)
+            } else {
+              exception(I18N.errors.getN("compiler.LetVariable.notDefined", tokenText),
+                        token)
+            }
+          }
 
           case _ => exception(ExpectedCommand, token)
         }
+      }
     }
   }
 
