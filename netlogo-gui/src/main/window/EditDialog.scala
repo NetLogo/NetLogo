@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import java.awt.{ BorderLayout, Dialog, Dimension, EventQueue, Window }
+import java.awt.{ BorderLayout, Dialog, Dimension, EventQueue, Insets, Window }
 import java.awt.event.{ WindowAdapter, WindowEvent }
 import java.net.URI
 import javax.swing.{ JDialog, JPanel, WindowConstants }
@@ -113,7 +113,12 @@ class EditDialog(window: Window, target: Editable, editPanel: EditPanel, modal: 
   if (editPanel.isResizable) {
     setResizable(true)
 
-    editPanel.setLayoutListener(() => setMinimumSize(mainPanel.getPreferredSize))
+    editPanel.setLayoutListener(() => {
+      val insets: Insets = getInsets
+      val size: Dimension = mainPanel.getPreferredSize
+
+      setMinimumSize(new Dimension(size.width + insets.left + insets.right, size.height + insets.top + insets.bottom))
+    })
   } else {
     setResizable(false)
   }

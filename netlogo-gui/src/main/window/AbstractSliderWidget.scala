@@ -134,9 +134,11 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
   protected var _name = ""
   private var _units = ""
   private var _vertical = false
+  private var tooltipText = ""
+
   private val sliderData = new SliderData(this)
 
-  val nameComponent = new Label(I18N.gui.get("edit.slider.previewName")) {
+  lazy val nameComponent = new Label(I18N.gui.get("edit.slider.previewName")) {
     setBaseFont(getFont.deriveFont(_boldState))
   }
 
@@ -332,6 +334,17 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
       }
     }
   }
+
+  def getTooltipText: String = tooltipText
+  def setTooltipText(text: String): Unit = {
+    tooltipText = text
+  }
+
+  override def getTooltipComponents: Seq[Component] =
+    Seq(nameComponent)
+
+  override def getTooltipMarkdown: Option[String] =
+    Option(tooltipText).filter(_.nonEmpty)
 
   def valueString(num: Double): String = {
     var numString = Dump.number(num)

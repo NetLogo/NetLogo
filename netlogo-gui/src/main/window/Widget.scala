@@ -2,10 +2,21 @@
 
 package org.nlogo.window
 
-import java.awt.{ Color, Component, Container, Dimension, Font, Graphics, Insets, Point, Rectangle }
+import com.vladsch.flexmark.Extension
+import com.vladsch.flexmark.html.HtmlRenderer
+import com.vladsch.flexmark.parser.{ Parser, ParserEmulationProfile }
+import com.vladsch.flexmark.util.options.MutableDataSet
+import com.vladsch.flexmark.ext.escaped.character.EscapedCharacterExtension
+import com.vladsch.flexmark.ext.autolink.AutolinkExtension
+import com.vladsch.flexmark.ext.typographic.TypographicExtension
+
+import java.awt.{ Color, Component, Container, Dimension, EventQueue, Font, Graphics, Insets, MouseInfo, Point,
+                  Rectangle }
 import java.awt.event.{ MouseAdapter, MouseEvent, MouseListener }
-import javax.swing.{ JPanel, JMenuItem }
+import java.util.{ ArrayList, Timer, TimerTask }
+import javax.swing.{ JEditorPane, JPanel, JMenuItem, SwingUtilities }
 import javax.swing.border.Border
+import javax.swing.text.{ DefaultCaret, View }
 
 import org.nlogo.api.CompilerServices
 import org.nlogo.core.{ NetLogoPreferences, TokenType, Widget => CoreWidget }
@@ -58,9 +69,72 @@ abstract class Widget
   var displayName: String = ""
   var deleteable: Boolean = true
 
+  private val (renderer: HtmlRenderer, parser: Parser) = {
+    val extensions = new ArrayList[Extension]
+
+    extensions.add(EscapedCharacterExtension.create())
+    extensions.add(TypographicExtension.create())
+    extensions.add(AutolinkExtension.create())
+
+    val options = new MutableDataSet
+
+    options.setFrom(ParserEmulationProfile.PEGDOWN)
+    options.set(HtmlRenderer.SOFT_BREAK, "<br />\n")
+    options.set(HtmlRenderer.HARD_BREAK, "<br />\n")
+    options.set(TypographicExtension.ENABLE_QUOTES, Boolean.box(true))
+    options.set(TypographicExtension.ENABLE_SMARTS, Boolean.box(true))
+    options.set(Parser.MATCH_CLOSING_FENCE_CHARACTERS, Boolean.box(false))
+    options.set(Parser.EXTENSIONS, extensions)
+
+    val opts = options.toImmutable
+
+    (HtmlRenderer.builder(opts).build(), Parser.builder(opts).build())
+  }
+
+  private val tooltipPane = new JEditorPane("text/html", "") with ThemeSync {
+    setEditable(false)
+    setOpaque(false)
+    setCaret(new SilentCaret)
+    setCaretColor(InterfaceColors.Transparent)
+
+    addMouseListener(new MouseAdapter {
+      override def mouseExited(e: MouseEvent): Unit = {
+        handleTooltip(false)
+      }
+    })
+
+    override def syncTheme(): Unit = {
+      setForeground(InterfaceColors.dialogText())
+    }
+  }
+
+  private val tooltipPopup = new PopupMenu(this) {
+    add(tooltipPane)
+  }
+
+  private var tooltipTimer: Option[Timer] = None
+
   setFocusable(false)
   setBorderColor(InterfaceColors.Transparent)
   setDiameter(12)
+
+  (this +: getTooltipComponents).foreach { component =>
+    component.addMouseMotionListener(new MouseAdapter {
+      override def mouseMoved(e: MouseEvent): Unit = {
+        handleTooltip(true)
+      }
+    })
+
+    component.addMouseListener(new MouseAdapter {
+      override def mouseExited(e: MouseEvent): Unit = {
+        if (!getTooltipComponents.exists { component =>
+          component.contains(new Point(e.getX - component.getX, e.getY - component.getY))
+        } && !tooltipPopup.contains(e.getX - tooltipPopup.getX, e.getY - tooltipPopup.getY)) {
+          handleTooltip(false)
+        }
+      }
+    })
+  }
 
   protected var _oldSize = false
   protected var _boldState = {
@@ -81,6 +155,9 @@ abstract class Widget
   def setWidgetContainer(container: WidgetContainer): Unit = {
     widgetContainer = Option(container)
   }
+
+  def getTooltipComponents: Seq[Component] = Seq()
+  def getTooltipMarkdown: Option[String] = None
 
   def getEditable: Option[Editable]
   def copyable = true // only OutputWidget and ViewWidget are not copyable
@@ -220,6 +297,64 @@ abstract class Widget
 
   def setCodeFont(font: Font): Unit = {}
 
+  private def handleTooltip(show: Boolean): Unit = {
+    tooltipTimer.foreach { timer =>
+      timer.cancel()
+      timer.purge()
+    }
+
+    if (show && !tooltipPopup.isVisible) {
+      getTooltipMarkdown.foreach { markdown =>
+        val text = renderer.render(parser.parse(markdown))
+
+        // set once to get the preferred size and then a second time to properly fit the content, because
+        // the CSS that is typically used to achieve this is not supported in `JEditorPane` (Isaac B 10/5/26)
+        tooltipPane.setText(s"""<html><body style="width: 200px">$text</body></html>""")
+
+        val width: Int = {
+          val view: View = tooltipPane.getUI.getRootView(tooltipPane)
+
+          if (view.getPreferredSpan(View.Y_AXIS) > 20) {
+            200
+          } else {
+            view.getPreferredSpan(View.X_AXIS).toInt
+          }
+        }
+
+        tooltipPane.setText(s"""|<html>
+                                |  <style>
+                                |    body {
+                                |      width: ${width}px;
+                                |    }
+                                |    h1, h2, h3, h4, h5, h6, p {
+                                |      margin-top: 0;
+                                |    }
+                                |  </style>
+                                |  <body>$text</body>
+                                |</html>""".stripMargin)
+
+        tooltipPane.syncTheme()
+
+        tooltipTimer = Option(new Timer {
+          schedule(new TimerTask {
+            override def run(): Unit = {
+              EventQueue.invokeLater(() => {
+                val mouse: Point = MouseInfo.getPointerInfo.getLocation
+
+                SwingUtilities.convertPointFromScreen(mouse, Widget.this)
+
+                if (mouse.x >= 0 && mouse.y >= 0 && mouse.x < Widget.this.getWidth && mouse.y < Widget.this.getHeight)
+                  tooltipPopup.show(Widget.this, mouse.x + 1, mouse.y + 1)
+              })
+            }
+          }, 500)
+        })
+      }
+    } else if (!show) {
+      tooltipPopup.setVisible(false)
+    }
+  }
+
   protected class AdaptableHorizontalStrut(oldSize: Int, newSize: Int) extends Zoomable with PreferredSize {
     setFocusable(false)
 
@@ -281,6 +416,10 @@ abstract class Widget
       false
 
     override def paintBorder(c: Component, g: Graphics, x: Int, y: Int, width: Int, height: Int): Unit = {}
+  }
+
+  private class SilentCaret extends DefaultCaret {
+    override def adjustVisibility(nloc: Rectangle): Unit = {}
   }
 
   implicit class RichStringOption(s: Option[String]) {

@@ -6,7 +6,7 @@ import org.nlogo.agent.SliderConstraint
 import org.nlogo.api.{ CompilerServices, ExtensionManager }
 import org.nlogo.core.I18N
 import org.nlogo.editor.Colorizer
-import org.nlogo.swing.{ AutomationUtils, BoxAlign, BoxColumn, BoxRow }
+import org.nlogo.swing.{ AutomationUtils, BoxAlign, BoxColumn, BoxRow, MaximumHeight }
 
 class SliderEditPanel(target: SliderWidget, compiler: CompilerServices, colorizer: Colorizer,
                       extensionManager: ExtensionManager) extends WidgetEditPanel(target) {
@@ -89,22 +89,34 @@ class SliderEditPanel(target: SliderWidget, compiler: CompilerServices, colorize
         _.foreach(target.oldSize),
         () => apply(vertical.get.toOption.exists(_ != vertical.originalValue))))
 
+  private val tooltip =
+    new MarkdownEditor(
+      new PropertyAccessor(
+        target,
+        I18N.gui.get("edit.slider.tooltip"),
+        () => target.getTooltipText,
+        _.foreach(target.setTooltipText),
+        () => apply()))
+
   add(nameWrapper)
   add(new BoxRow(Seq(
-    minimumLabeled,
+    new BoxColumn(minimumLabeled, BoxAlign.Start),
     new BoxColumn(incrementCode, BoxAlign.Start),
     new BoxColumn(maximumCode, BoxAlign.Start)
-  ), 6))
-  add(new BoxRow(Seq(value, units), 6))
-  add(new BoxRow(vertical, BoxAlign.Start))
-  add(new BoxRow(oldSize, BoxAlign.Start))
+  ), 6) with MaximumHeight)
+  add(new BoxRow(Seq(value, units), 6) with MaximumHeight)
+  add(new BoxRow(Seq(vertical, oldSize), 6, BoxAlign.Start) with MaximumHeight)
+  add(new BoxRow(tooltip, BoxAlign.Start))
 
   override def propertyEditors: Seq[PropertyEditor[?]] =
-    Seq(nameWrapper, minimumCode, incrementCode, maximumCode, value, units, vertical, oldSize)
+    Seq(nameWrapper, minimumCode, incrementCode, maximumCode, value, units, vertical, oldSize, tooltip)
 
   override def syncExtraComponents(): Unit = {
     minimumLabeled.syncTheme()
   }
+
+  override def isResizable: Boolean =
+    true
 
   override def requestFocus(): Unit = {
     nameWrapper.requestFocus()
