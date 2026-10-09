@@ -67,6 +67,15 @@ class MonitorEditPanel(target: MonitorWidget, compiler: CompilerServices, colori
         _.foreach(target.oldSize),
         () => apply()))
 
+  private val tooltip =
+    new MarkdownEditor(
+      new PropertyAccessor(
+        target,
+        I18N.gui.get("edit.general.tooltip"),
+        () => target.getTooltipText,
+        _.foreach(target.setTooltipText),
+        () => apply()))
+
   add(wrapSource)
   add(name)
   add(new BoxRow(Seq(
@@ -75,11 +84,13 @@ class MonitorEditPanel(target: MonitorWidget, compiler: CompilerServices, colori
   ), 6) with MaximumHeight)
   add(fontSize)
   add(new BoxRow(oldSize, BoxAlign.Start))
+  add(new BoxRow(tooltip, BoxAlign.Start))
 
   override def propertyEditors: Seq[PropertyEditor[?]] =
-    Seq(wrapSource, name, decimalPlaces, units, fontSize, oldSize)
+    Seq(wrapSource, name, decimalPlaces, units, fontSize, oldSize, tooltip)
 
-  override def isResizable: Boolean = true
+  override def isResizable: Boolean =
+    true
 
   override def syncExtraComponents(): Unit = {
     decimalLabeled.syncTheme()

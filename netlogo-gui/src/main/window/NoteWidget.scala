@@ -2,16 +2,7 @@
 
 package org.nlogo.window
 
-import com.vladsch.flexmark.Extension
-import com.vladsch.flexmark.html.HtmlRenderer
-import com.vladsch.flexmark.parser.{ Parser, ParserEmulationProfile }
-import com.vladsch.flexmark.util.options.MutableDataSet
-import com.vladsch.flexmark.ext.escaped.character.EscapedCharacterExtension
-import com.vladsch.flexmark.ext.autolink.AutolinkExtension
-import com.vladsch.flexmark.ext.typographic.TypographicExtension
-
 import java.awt.{ Color, Dimension, Rectangle }
-import java.util.ArrayList
 import javax.swing.{ Box, BoxLayout, JEditorPane }
 import javax.swing.text.DefaultCaret
 
@@ -43,28 +34,6 @@ class NoteWidget extends SingleErrorWidget with Transparent with Editable {
   private var _backgroundDark = InterfaceColors.Transparent
   private var _markdown = false
 
-  private val (renderer: HtmlRenderer, parser: Parser) = {
-    val extensions = new ArrayList[Extension]
-
-    extensions.add(EscapedCharacterExtension.create())
-    extensions.add(TypographicExtension.create())
-    extensions.add(AutolinkExtension.create())
-
-    val options = new MutableDataSet
-
-    options.setFrom(ParserEmulationProfile.PEGDOWN)
-    options.set(HtmlRenderer.SOFT_BREAK, "<br />\n")
-    options.set(HtmlRenderer.HARD_BREAK, "<br />\n")
-    options.set(TypographicExtension.ENABLE_QUOTES, Boolean.box(true))
-    options.set(TypographicExtension.ENABLE_SMARTS, Boolean.box(true))
-    options.set(Parser.MATCH_CLOSING_FENCE_CHARACTERS, Boolean.box(false))
-    options.set(Parser.EXTENSIONS, extensions)
-
-    val opts = options.toImmutable
-
-    (HtmlRenderer.builder(opts).build(), Parser.builder(opts).build())
-  }
-
   override def classDisplayName: String = I18N.gui.get("tabs.run.widgets.note")
 
   override def editPanel: EditPanel = new NoteEditPanel(this)
@@ -91,7 +60,7 @@ class NoteWidget extends SingleErrorWidget with Transparent with Editable {
 
   private def wrapText(): Unit = {
     if (_markdown) {
-      val text = renderer.render(parser.parse(_text))
+      val text = MarkdownEditor.render(_text)
 
       // for some reason setting the content width in CSS to the width of the JLabel always results in the rendered
       // content being 1.3 times larger. dividing the JLabel width by 1.3 solves the problem. (Isaac B 6/15/25)

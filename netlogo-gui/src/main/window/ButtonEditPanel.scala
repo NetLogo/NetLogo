@@ -74,15 +74,25 @@ class ButtonEditPanel(target: ButtonWidget, compiler: CompilerServices, colorize
         _.foreach(target.oldSize),
         () => apply()))
 
+  private val tooltip =
+    new MarkdownEditor(
+      new PropertyAccessor(
+        target,
+        I18N.gui.get("edit.general.tooltip"),
+        () => target.getTooltipText,
+        _.foreach(target.setTooltipText),
+        () => apply()))
+
   add(new BoxRow(Seq(agentOptions, forever), 6, BoxAlign.Start) with MaximumHeight)
   add(new BoxRow(goTime, BoxAlign.Start))
   add(wrapSource)
   add(name)
   add(new BoxRow(actionKey, BoxAlign.Start))
   add(new BoxRow(oldSize, BoxAlign.Start))
+  add(new BoxRow(tooltip, BoxAlign.Start))
 
   override def propertyEditors: Seq[PropertyEditor[?]] =
-    Seq(agentOptions, forever, goTime, wrapSource, name, actionKey, oldSize)
+    Seq(agentOptions, forever, goTime, wrapSource, name, actionKey, oldSize, tooltip)
 
   override def isResizable: Boolean = true
 

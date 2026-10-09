@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import java.awt.{ Color, Cursor, Dimension, Graphics }
+import java.awt.{ Color, Component, Cursor, Dimension, Graphics }
 import java.awt.event.{ MouseEvent, MouseListener, MouseMotionListener }
 import javax.swing.{ Box, BoxLayout, Icon, JLabel }
 
@@ -27,23 +27,23 @@ class ButtonWidget(random: MersenneTwisterFast, compiler: CompilerServices, colo
 
   private var _buttonType: ButtonType = ButtonType.ObserverButton
 
-  val keyLabel = new JLabel with Zoomable {
+  lazy val keyLabel = new JLabel with Zoomable {
     setFocusable(false)
     setVisible(false)
     setBaseFont(getFont.deriveFont(12.0f))
   }
 
-  val nameLabel = new JLabel(I18N.gui.get("edit.button.previewName")) with Zoomable {
+  lazy val nameLabel = new JLabel(I18N.gui.get("edit.button.previewName")) with Zoomable {
     setFocusable(false)
     setBaseFont(getFont.deriveFont(_boldState))
   }
 
-  val foreverLabel = new JLabel(foreverIcon) {
+  lazy val foreverLabel = new JLabel(foreverIcon) {
     setFocusable(false)
     setVisible(false)
   }
 
-  val agentLabel = new JLabel {
+  lazy val agentLabel = new JLabel {
     setFocusable(false)
     setVisible(false)
   }
@@ -158,6 +158,9 @@ class ButtonWidget(random: MersenneTwisterFast, compiler: CompilerServices, colo
       repaint()
     }
   }
+
+  override def getTooltipComponents: Seq[Component] =
+    Seq(agentLabel, nameLabel, keyLabel, foreverLabel)
 
   def keyTriggered(): Unit = {
     if (error().isEmpty){
@@ -492,7 +495,8 @@ class ButtonWidget(random: MersenneTwisterFast, compiler: CompilerServices, colo
       x = b.x, y = b.y, width = b.width, height = b.height, oldSize = _oldSize,
       source    = innerSource.potentiallyEmptyStringToOption,
       forever   = forever,        buttonKind             = buttonType.agentKind,
-      actionKey = savedActionKey, disableUntilTicksStart = goTime)
+      actionKey = savedActionKey, disableUntilTicksStart = goTime,
+      tooltipText = getTooltipOption)
   }
 
   override def load(model: CoreWidget): Unit = {
@@ -512,6 +516,8 @@ class ButtonWidget(random: MersenneTwisterFast, compiler: CompilerServices, colo
         setSize(button.width, button.height)
 
         chooseDisplayName()
+
+        button.tooltipText.foreach(setTooltipText)
 
       case _ =>
     }

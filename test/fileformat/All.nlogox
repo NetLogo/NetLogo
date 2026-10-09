@@ -9,7 +9,9 @@ end
 ]]></code>
   <widgets>
     <view x="435" wrappingAllowedX="true" y="19" frameRate="30.0" minPycor="-16" height="434" showTickCounter="true" patchSize="13.0" fontSize="10" wrappingAllowedY="true" width="433" tickCounterLabel="ticks" maxPycor="16" updateMode="0" maxPxcor="16" minPxcor="-16"></view>
-    <button x="12" actionKey="P" y="15" height="35" disableUntilTicks="false" forever="false" kind="Observer" display="print-test" width="83" sizeVersion="0">print "test"</button>
+    <button x="12" actionKey="P" y="15" height="35" disableUntilTicks="false" forever="false" kind="Observer" display="print-test" width="83" sizeVersion="0">
+      <source>print "test"</source>
+    </button>
     <slider x="13" step="1" y="64" max="100" display="slides" height="150" min="-100" direction="Vertical" default="0.0" variable="slides" units="slides" width="33" sizeVersion="0"></slider>
     <switch x="59" y="64" height="33" on="true" variable="switching" display="switching" width="106" sizeVersion="0"></switch>
     <chooser x="60" y="113" height="45" variable="choice" current="0" display="choice" width="138" sizeVersion="0">
@@ -22,13 +24,19 @@ end
       <choice type="list">[4 5 6]</choice>
       <choice type="list">[7 8 9]</choice>
     </chooser>
-    <input x="12" multiline="true" y="235" height="60" variable="input-string" type="string" width="311" sizeVersion="0">hello
+    <input x="12" multiline="true" y="235" height="60" variable="input-string" type="string" width="311" sizeVersion="0">
+      <value>hello
 i
 am
 a
-string</input>
-    <input x="13" multiline="false" y="310" height="60" variable="color-input" type="color" width="155" sizeVersion="0">117.0</input>
-    <monitor x="181" precision="5" y="310" height="33" fontSize="8" display="slides" width="57" sizeVersion="0">slides</monitor>
+string</value>
+    </input>
+    <input x="13" multiline="false" y="310" height="60" variable="color-input" type="color" width="155" sizeVersion="0">
+      <value>117.0</value>
+    </input>
+    <monitor x="181" precision="5" y="310" height="33" fontSize="8" display="slides" width="57" sizeVersion="0">
+      <source>slides</source>
+    </monitor>
     <plot x="213" autoPlotX="true" yMax="66.6666" autoPlotY="true" yAxis="number" y="15" xMin="-10.0" height="150" legend="false" xMax="20.0" yMin="-33.3333" xAxis="choice" display="c hoice-plotter" width="200" sizeVersion="0">
       <setup>
         print "the plot has been set up"

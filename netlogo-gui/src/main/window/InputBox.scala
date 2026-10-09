@@ -78,7 +78,7 @@ abstract class InputBox(textArea: EditorArea, editDialogTextArea: EditorArea, co
 
   /// be editable
   override def classDisplayName = I18N.gui.get("tabs.run.widgets.input")
-  protected val widgetLabel = new JLabel(I18N.gui.get("edit.input.previewName")) with Zoomable {
+  protected lazy val widgetLabel = new JLabel(I18N.gui.get("edit.input.previewName")) with Zoomable {
     setFocusable(false)
     setBaseFont(getFont.deriveFont(_boldState))
   }
@@ -164,6 +164,9 @@ abstract class InputBox(textArea: EditorArea, editDialogTextArea: EditorArea, co
     nameChanged = name != this.name || nameChanged
     this.name(name, false)
   }
+
+  override def getTooltipComponents: Seq[Component] =
+    Seq(widgetLabel)
 
   protected var editing = false
   protected def stopEdit(): Unit = {
@@ -433,6 +436,8 @@ abstract class InputBox(textArea: EditorArea, editDialogTextArea: EditorArea, co
         oldSize(input.oldSize)
         setSize(input.width, input.height)
 
+        input.tooltipText.foreach(setTooltipText)
+
       case _ =>
     }
   }
@@ -444,7 +449,8 @@ abstract class InputBox(textArea: EditorArea, editDialogTextArea: EditorArea, co
       x          = b.x, y = b.y, width = b.width, height = b.height,
       oldSize = _oldSize,
       variable   = name.potentiallyEmptyStringToOption,
-      boxedValue = bv)
+      boxedValue = bv,
+      tooltipText = getTooltipOption)
   }
 
   override def exportable = true

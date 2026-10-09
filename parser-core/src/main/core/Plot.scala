@@ -10,7 +10,8 @@ case class Plot(display: Option[String],
   ymin: Double = 0, ymax: Double = 0,
   autoPlotX: Boolean = true, autoPlotY: Boolean = true, legendOn: Boolean = false,
   setupCode: String = "", updateCode: String = "",
-  pens: List[Pen] = Nil) extends Widget {
+  pens: List[Pen] = Nil,
+  tooltipText: Option[String] = None) extends Widget {
     override def convertSource(conversion: String => String): Plot =
       copy(setupCode = conversion(setupCode), updateCode = conversion(updateCode), pens = pens.map(_.convertSource(conversion)))
   }

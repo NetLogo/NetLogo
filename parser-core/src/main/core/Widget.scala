@@ -10,6 +10,7 @@ trait Widget extends Serializable {
   def width:  Int
   def height: Int
   def oldSize: Boolean
+  def tooltipText: Option[String]
 
   /** convertSource applies the given conversion to all code found in the widget. */
   def convertSource(conversion: String => String): Widget = this
@@ -46,7 +47,8 @@ case class Button(source: Option[String],
   forever: Boolean = false,
   buttonKind: AgentKind = AgentKind.Observer,
   actionKey: Option[Char] = None,
-  disableUntilTicksStart: Boolean = false) extends Widget {
+  disableUntilTicksStart: Boolean = false,
+  tooltipText: Option[String] = None) extends Widget {
     override def convertSource(conversion: String => String): Button =
       this.copy(source = source.map(conversion))
   }
@@ -59,6 +61,7 @@ case class TextBox(display: Option[String],
   backgroundLight: Option[Int] = None, backgroundDark: Option[Int] = None) extends Widget {
 
   def oldSize: Boolean = false
+  def tooltipText: Option[String] = None
 }
 
 case class Switch(variable: Option[String],
@@ -66,7 +69,8 @@ case class Switch(variable: Option[String],
   width: Int = 0, height: Int = 0,
   oldSize: Boolean = false,
   display: Option[String] = None,
-  on: Boolean = false) extends Widget
+  on: Boolean = false,
+  tooltipText: Option[String] = None) extends Widget
   with DeclaresGlobal
   with DeclaresGlobalCommand
   with DeclaresConstraint {
@@ -88,7 +92,8 @@ case class Slider(variable: Option[String],
   default:   Double         = 1,
   step:      String         = "1",
   units:     Option[String] = None,
-  direction: Direction      = Horizontal)
+  direction: Direction      = Horizontal,
+  tooltipText: Option[String] = None)
   extends Widget
   with DeclaresGlobal
   with DeclaresGlobalCommand
@@ -114,7 +119,8 @@ case class Monitor(
   display: Option[String],
   precision: Int,
   fontSize:  Int = 11,
-  units: Option[String] = None) extends Widget {
+  units: Option[String] = None,
+  tooltipText: Option[String] = None) extends Widget {
     override def convertSource(conversion: String => String): Monitor =
       this.copy(source = source.map(conversion))
   }
@@ -125,10 +131,12 @@ case class Output(
   fontSize: Int) extends Widget {
 
   def oldSize: Boolean = false
+  def tooltipText: Option[String] = None
 }
 
 trait ViewLike extends Widget {
   def oldSize: Boolean = false
+  def tooltipText: Option[String] = None
 }
 
 case class View(x: Int = 0, y: Int = 0, width: Int = 5, height: Int = 5,

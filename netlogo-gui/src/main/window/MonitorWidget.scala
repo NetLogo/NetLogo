@@ -32,7 +32,8 @@ object MonitorWidget {
         x = b.x, y = b.y, width = b.width, height = b.height,
         oldSize = _oldSize,
         source   = src, precision = decimalPlaces,
-        fontSize = fontSize, units = if (units.isEmpty) None else Option(units))
+        fontSize = fontSize, units = if (units.isEmpty) None else Option(units),
+        tooltipText = getTooltipOption)
     }
   }
 }
@@ -72,7 +73,7 @@ class MonitorWidget(random: MersenneTwisterFast, compiler: CompilerServices, col
   // brings up the popup menu not the edit dialog. ev 1/4/06
   private var lastMousePressedWasPopupTrigger: Boolean = false;
 
-  private val nameLabel = new JLabel(I18N.gui.get("edit.monitor.previewName")) with Zoomable {
+  private lazy val nameLabel = new JLabel(I18N.gui.get("edit.monitor.previewName")) with Zoomable {
     setFocusable(false)
     setBaseFont(getFont.deriveFont(_boldState))
   }
@@ -82,9 +83,9 @@ class MonitorWidget(random: MersenneTwisterFast, compiler: CompilerServices, col
     setBaseFont(getFont.deriveFont(11f))
   }
 
-  private val valuePanel = new ValuePanel(valueLabel)
+  private lazy val valuePanel = new ValuePanel(valueLabel)
 
-  private val unitsLabel = new JLabel with Zoomable {
+  private lazy val unitsLabel = new JLabel with Zoomable {
     setFocusable(false)
     setBaseFont(getFont.deriveFont(_boldState))
     setVisible(false)
@@ -125,6 +126,9 @@ class MonitorWidget(random: MersenneTwisterFast, compiler: CompilerServices, col
     revalidate()
     repaint()
   }
+
+  override def getTooltipComponents: Seq[Component] =
+    Seq(nameLabel, valuePanel, unitsLabel)
 
   override def classDisplayName: String =
     I18N.gui.get("tabs.run.widgets.monitor")
@@ -325,6 +329,8 @@ class MonitorWidget(random: MersenneTwisterFast, compiler: CompilerServices, col
         oldSize(monitor.oldSize)
         setSize(monitor.width, monitor.height)
         chooseDisplayName()
+
+        monitor.tooltipText.foreach(setTooltipText)
 
       case _ =>
     }

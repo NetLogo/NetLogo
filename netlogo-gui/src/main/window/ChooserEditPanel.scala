@@ -41,14 +41,25 @@ class ChooserEditPanel(target: ChooserWidget, compiler: CompilerServices, colori
         _.foreach(target.oldSize),
         () => apply()))
 
+  private val tooltip =
+    new MarkdownEditor(
+      new PropertyAccessor(
+        target,
+        I18N.gui.get("edit.general.tooltip"),
+        () => target.getTooltipText,
+        _.foreach(target.setTooltipText),
+        () => apply()))
+
   add(nameWrapper)
   add(choicesLabeled)
   add(new BoxRow(oldSize, BoxAlign.Start))
+  add(new BoxRow(tooltip, BoxAlign.Start))
 
   override def propertyEditors: Seq[PropertyEditor[?]] =
-    Seq(nameWrapper, choicesWrapper, oldSize)
+    Seq(nameWrapper, choicesWrapper, oldSize, tooltip)
 
-  override def isResizable: Boolean = true
+  override def isResizable: Boolean =
+    true
 
   override def syncExtraComponents(): Unit = {
     choicesLabeled.syncTheme()

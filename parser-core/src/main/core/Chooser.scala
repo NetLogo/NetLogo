@@ -45,7 +45,8 @@ case class Chooser(
   oldSize: Boolean = false,
   display: Option[String] = None,
   choices: List[Chooseable] = Nil,
-  currentChoice: Int = 0)
+  currentChoice: Int = 0,
+  tooltipText: Option[String] = None)
   extends Widget
   with DeclaresGlobal
   with DeclaresGlobalCommand

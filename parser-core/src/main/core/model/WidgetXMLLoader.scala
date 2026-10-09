@@ -33,11 +33,6 @@ object WidgetXMLLoader {
     element.name match {
 
       case "button" =>
-        val source =
-          if (element.text.isEmpty)
-            None
-          else
-            Some(element.text)
         val kind =
           element("kind") match {
             case "Observer" => AgentKind.Observer
@@ -45,10 +40,11 @@ object WidgetXMLLoader {
             case "Turtle"   => AgentKind.Turtle
             case "Link"     => AgentKind.Link
           }
-        Some(Button( source, toInt(element, "x"), toInt(element, "y"), toInt(element, "width")
-                   , toInt(element, "height"), element("sizeVersion", "1").toInt == 0, element.get("display")
-                   , toBoolean(element, "forever"), kind, element.get("actionKey").map(_.head)
-                   , toBoolean(element, "disableUntilTicks")
+        Some(Button( element.getOptionalChild("source").map(_.text).orElse(Option(element.text)), toInt(element, "x")
+                   , toInt(element, "y"), toInt(element, "width"), toInt(element, "height")
+                   , element("sizeVersion", "1").toInt == 0, element.get("display"), toBoolean(element, "forever"), kind
+                   , element.get("actionKey").map(_.head), toBoolean(element, "disableUntilTicks")
+                   , element.getOptionalChild("tooltip").map(_.text)
                    ))
 
       case "slider" =>
@@ -60,7 +56,7 @@ object WidgetXMLLoader {
         Some(Slider( element.get("variable"), toInt(element, "x"), toInt(element, "y"), toInt(element, "width")
                    , toInt(element, "height"), element("sizeVersion", "1").toInt == 0, element.get("display")
                    , element("min"), element("max"), toDouble(element, "default"), element("step")
-                   , element.get("units"), direction
+                   , element.get("units"), direction, element.getOptionalChild("tooltip").map(_.text)
                    ))
 
       case "view" =>
@@ -90,16 +86,16 @@ object WidgetXMLLoader {
                  ))
 
       case "monitor" =>
-        Some(Monitor( Some(element.text), toInt(element, "x"), toInt(element, "y")
-                    , toInt(element, "width"), toInt(element, "height"), element("sizeVersion", "1").toInt == 0
-                    , element.get("display"), toInt(element, "precision"), toInt(element, "fontSize")
-                    , element.get("units")
+        Some(Monitor( element.getOptionalChild("source").map(_.text).orElse(Option(element.text)), toInt(element, "x")
+                    , toInt(element, "y"), toInt(element, "width"), toInt(element, "height")
+                    , element("sizeVersion", "1").toInt == 0, element.get("display"), toInt(element, "precision")
+                    , toInt(element, "fontSize"), element.get("units"), element.getOptionalChild("tooltip").map(_.text)
                     ))
 
       case "switch" =>
         Some(Switch( element.get("variable"), toInt(element, "x"), toInt(element, "y"), toInt(element, "width")
                    , toInt(element, "height"), element("sizeVersion", "1").toInt == 0, element.get("display")
-                   , toBoolean(element, "on")
+                   , toBoolean(element, "on"), element.getOptionalChild("tooltip").map(_.text)
                    ))
 
       case "plot" =>
@@ -115,7 +111,7 @@ object WidgetXMLLoader {
                  , element.get("yAxis"), toDouble(element, "xMin"), toDouble(element, "xMax")
                  , toDouble(element, "yMin"), toDouble(element, "yMax"), toBoolean(element, "autoPlotX")
                  , toBoolean(element, "autoPlotY"), toBoolean(element, "legend"), element.getChild("setup").text
-                 , element.getChild("update").text, pens
+                 , element.getChild("update").text, pens, element.getOptionalChild("tooltip").map(_.text)
                  ))
 
       case "chooser" =>
@@ -135,7 +131,7 @@ object WidgetXMLLoader {
           )
         Some(Chooser( element.get("variable"), toInt(element, "x"), toInt(element, "y"), toInt(element, "width")
                    , toInt(element, "height"), element("sizeVersion", "1").toInt == 0, element.get("display")
-                   , children.toList, toInt(element, "current")
+                   , children.toList, toInt(element, "current"), element.getOptionalChild("tooltip").map(_.text)
                    ))
 
       case "output" =>
@@ -144,21 +140,25 @@ object WidgetXMLLoader {
                    ))
 
       case "input" =>
+        def findValue: String =
+          element.getOptionalChild("value").fold(element.text)(_.text)
+
         val input =
           element("type") match {
             case "number" =>
-              NumericInput(element.text.toDouble, NumericInput.NumberLabel)
+              NumericInput(findValue.toDouble, NumericInput.NumberLabel)
             case "color" =>
-              NumericInput(element.text.toDouble, NumericInput.ColorLabel)
+              NumericInput(findValue.toDouble, NumericInput.ColorLabel)
             case "string" =>
-              StringInput(element.text, StringInput.StringLabel, toBoolean(element, "multiline"))
+              StringInput(findValue, StringInput.StringLabel, toBoolean(element, "multiline"))
             case "reporter" =>
-              StringInput(element.text, StringInput.ReporterLabel, toBoolean(element, "multiline"))
+              StringInput(findValue, StringInput.ReporterLabel, toBoolean(element, "multiline"))
             case "command" =>
-              StringInput(element.text, StringInput.CommandLabel, toBoolean(element, "multiline"))
+              StringInput(findValue, StringInput.CommandLabel, toBoolean(element, "multiline"))
           }
         Some(InputBox( element.get("variable"), toInt(element, "x"), toInt(element, "y"), toInt(element, "width")
                      , toInt(element, "height"), element("sizeVersion", "1").toInt == 0, input
+                     , element.getOptionalChild("tooltip").map(_.text)
                      ))
 
       case "note" =>
@@ -178,6 +178,9 @@ object WidgetXMLLoader {
     def ifDefined[T <: Widget](w: T)(key: String, f: (T) => Option[Any]): Map[String, String] =
       if (f(w).isDefined) Map(key -> f(w).get.toString) else Map()
 
+    def maybeTooltip(w: Widget): Option[XMLElement] =
+      w.tooltipText.map(XMLElement("tooltip", Map(), _, Seq()))
+
     widget match {
 
       case button: Button =>
@@ -194,7 +197,9 @@ object WidgetXMLLoader {
           ifDefined(button)("actionKey", _.actionKey) ++
           (if (button.oldSize) Map("sizeVersion" -> "0") else Map())
 
-        XMLElement("button", attributes, button.source.getOrElse(""), Seq())
+        XMLElement("button", attributes, "", Seq(
+          XMLElement("source", Map(), button.source.getOrElse(""), Seq())
+        ) ++ maybeTooltip(button))
 
       case slider: Slider =>
         val attributes =
@@ -212,7 +217,7 @@ object WidgetXMLLoader {
           ifDefined(slider)("variable", _.variable) ++
           ifDefined(slider)(   "units",    _.units) ++
           (if (slider.oldSize) Map("sizeVersion" -> "0") else Map())
-        XMLElement("slider", attributes, "", Seq())
+        XMLElement("slider", attributes, "", maybeTooltip(slider).toSeq)
 
       case view: View =>
 
@@ -258,7 +263,9 @@ object WidgetXMLLoader {
           ifDefined(monitor)("units", _.units) ++
           (if (monitor.oldSize) Map("sizeVersion" -> "0") else Map())
 
-        XMLElement("monitor", attributes, monitor.source.getOrElse(""), Seq())
+        XMLElement("monitor", attributes, "", Seq(
+          XMLElement("source", Map(), monitor.source.getOrElse(""), Seq())
+        ) ++ maybeTooltip(monitor))
 
       case switch: Switch =>
         val attributes =
@@ -272,7 +279,7 @@ object WidgetXMLLoader {
           ifDefined(switch)("variable", _.variable) ++
           (if (switch.oldSize) Map("sizeVersion" -> "0") else Map())
 
-        XMLElement("switch", attributes, "", Seq())
+        XMLElement("switch", attributes, "", maybeTooltip(switch).toSeq)
 
       case plot: Plot =>
 
@@ -320,7 +327,7 @@ object WidgetXMLLoader {
 
           }
 
-        XMLElement("plot", attributes, "", children ++ pens)
+        XMLElement("plot", attributes, "", children ++ pens ++ maybeTooltip(plot))
 
       case chooser: Chooser =>
 
@@ -347,7 +354,7 @@ object WidgetXMLLoader {
               XMLElement("choice", Map("type" -> "list"), Dump.logoObject(list, true, false), Seq())
           }
 
-        XMLElement("chooser", attributes, "", children)
+        XMLElement("chooser", attributes, "", children ++ maybeTooltip(chooser))
 
       case output: Output =>
         val attributes =
@@ -387,7 +394,9 @@ object WidgetXMLLoader {
           ifDefined(input)("variable", _.variable) ++
           (if (input.oldSize) Map("sizeVersion" -> "0") else Map())
 
-        XMLElement("input", attributes, input.boxedValue.asString, Seq())
+        XMLElement("input", attributes, "", Seq(
+          XMLElement("value", Map(), input.boxedValue.asString, Seq())
+        ) ++ maybeTooltip(input))
 
       case note: TextBox =>
         val attributes =

@@ -2,10 +2,13 @@
 
 package org.nlogo.window
 
-import java.awt.{ Color, Component, Container, Dimension, Font, Graphics, Insets, Point, Rectangle }
+import java.awt.{ Color, Component, Container, Dimension, EventQueue, Font, Graphics, Insets, MouseInfo, Point,
+                  Rectangle }
 import java.awt.event.{ MouseAdapter, MouseEvent, MouseListener }
-import javax.swing.{ JPanel, JMenuItem }
+import java.util.{ Timer, TimerTask }
+import javax.swing.{ JEditorPane, JPanel, JMenuItem, SwingUtilities }
 import javax.swing.border.Border
+import javax.swing.text.DefaultCaret
 
 import org.nlogo.api.CompilerServices
 import org.nlogo.core.{ NetLogoPreferences, TokenType, Widget => CoreWidget }
@@ -13,6 +16,8 @@ import org.nlogo.swing.{ FocusUtils, PopupMenu, PreferredSize, RoundedBorderPane
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.Event
 import org.nlogo.window.Events.{ InterfaceModeChangedEvent, WidgetAddedEvent, WidgetErrorEvent, WidgetRemovedEvent }
+
+import scala.util.Try
 
 object Widget {
   trait LoadHelper {
@@ -58,9 +63,53 @@ abstract class Widget
   var displayName: String = ""
   var deleteable: Boolean = true
 
+  private val tooltipPane = new JEditorPane("text/html", "") with Zoomable with ThemeSync {
+    setEditable(false)
+    setOpaque(false)
+    setCaret(new SilentCaret)
+    setCaretColor(InterfaceColors.Transparent)
+
+    addMouseListener(new MouseAdapter {
+      override def mouseExited(e: MouseEvent): Unit = {
+        handleTooltip(false)
+      }
+    })
+
+    override def syncTheme(): Unit = {
+      setForeground(InterfaceColors.dialogText())
+    }
+  }
+
+  private val tooltipPopup = new PopupMenu(this) {
+    add(tooltipPane)
+  }
+
+  private var tooltipTimer: Option[Timer] = None
+  private var tooltipText: Option[String] = None
+  private var tooltipRendered: Option[String] = None
+
   setFocusable(false)
   setBorderColor(InterfaceColors.Transparent)
   setDiameter(12)
+
+  (this +: getTooltipComponents).foreach { component =>
+    component.addMouseMotionListener(new MouseAdapter {
+      override def mouseMoved(e: MouseEvent): Unit = {
+        handleTooltip(true)
+      }
+    })
+
+    component.addMouseListener(new MouseAdapter {
+      override def mousePressed(e: MouseEvent): Unit = {
+        handleTooltip(false)
+      }
+
+      override def mouseExited(e: MouseEvent): Unit = {
+        if (!onTooltipComponent(component, e.getPoint))
+          handleTooltip(false)
+      }
+    })
+  }
 
   protected var _oldSize = false
   protected var _boldState = {
@@ -81,6 +130,16 @@ abstract class Widget
   def setWidgetContainer(container: WidgetContainer): Unit = {
     widgetContainer = Option(container)
   }
+
+  protected def getTooltipOption: Option[String] = tooltipText
+
+  def getTooltipText: String = tooltipText.getOrElse("")
+  def setTooltipText(text: String): Unit = {
+    tooltipText = Option(text.trim).filter(_.nonEmpty)
+    tooltipRendered = tooltipText.flatMap(text => Try(MarkdownEditor.render(text)).toOption)
+  }
+
+  def getTooltipComponents: Seq[Component] = Seq()
 
   def getEditable: Option[Editable]
   def copyable = true // only OutputWidget and ViewWidget are not copyable
@@ -220,6 +279,69 @@ abstract class Widget
 
   def setCodeFont(font: Font): Unit = {}
 
+  private def onTooltipComponent(source: Component, point: Point): Boolean = {
+    val popup: Point = SwingUtilities.convertPoint(source, point, tooltipPopup)
+
+    tooltipPopup.contains(popup.x + 1, popup.y + 1) || getTooltipComponents.exists { component =>
+      component.contains(SwingUtilities.convertPoint(source, point, component))
+    }
+  }
+
+  private def handleTooltip(show: Boolean): Unit = {
+    tooltipTimer.foreach { timer =>
+      timer.cancel()
+      timer.purge()
+    }
+
+    if (show && !tooltipPopup.isVisible) {
+      tooltipRendered.foreach { text =>
+        // if the existing pane is reused, Java reports the incorrect preferred size, so it's best to just create a new
+        // one on the fly to properly fit the rendered content (Isaac B 10/23/26)
+        val width: Int = new JEditorPane("text/html", s"""<html><body>$text</body></html>""")
+                           .getPreferredSize.width.min(200)
+
+        tooltipPane.setText(s"""|<html>
+                                |  <style>
+                                |    body {
+                                |      width: ${width}px;
+                                |    }
+                                |    h1, h2, h3, h4, h5, h6, p {
+                                |      margin-top: 0;
+                                |    }
+                                |  </style>
+                                |  <body>$text</body>
+                                |</html>""".stripMargin)
+
+        tooltipPane.syncTheme()
+
+        tooltipTimer = Option(new Timer {
+          schedule(new TimerTask {
+            override def run(): Unit = {
+              EventQueue.invokeLater(() => {
+                val mouse: Point = MouseInfo.getPointerInfo.getLocation
+
+                SwingUtilities.convertPointFromScreen(mouse, Widget.this)
+
+                if (contains(mouse)) {
+                  tooltipPopup.getComponents.foreach {
+                    case zoom: Zoomable =>
+                      zoom.zoom()
+
+                    case _ =>
+                  }
+
+                  tooltipPopup.show(Widget.this, mouse.x + 1, mouse.y + 1)
+                }
+              })
+            }
+          }, 500)
+        })
+      }
+    } else if (!show) {
+      tooltipPopup.setVisible(false)
+    }
+  }
+
   protected class AdaptableHorizontalStrut(oldSize: Int, newSize: Int) extends Zoomable with PreferredSize {
     setFocusable(false)
 
@@ -281,6 +403,10 @@ abstract class Widget
       false
 
     override def paintBorder(c: Component, g: Graphics, x: Int, y: Int, width: Int, height: Int): Unit = {}
+  }
+
+  private class SilentCaret extends DefaultCaret {
+    override def adjustVisibility(nloc: Rectangle): Unit = {}
   }
 
   implicit class RichStringOption(s: Option[String]) {

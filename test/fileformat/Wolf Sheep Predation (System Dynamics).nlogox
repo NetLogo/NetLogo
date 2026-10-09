@@ -24,8 +24,12 @@ end
 ]]></code>
   <widgets>
     <view x="195" wrappingAllowedX="true" y="290" frameRate="30.0" minPycor="0" height="12" showTickCounter="true" patchSize="8.0" fontSize="10" wrappingAllowedY="true" width="284" tickCounterLabel="ticks" maxPycor="0" updateMode="1" maxPxcor="17" minPxcor="-17"></view>
-    <button x="14" y="13" height="33" disableUntilTicks="false" forever="false" kind="Observer" width="106" sizeVersion="0">setup</button>
-    <button x="15" y="56" height="33" disableUntilTicks="true" forever="true" kind="Observer" width="105" sizeVersion="0">go</button>
+    <button x="14" y="13" height="33" disableUntilTicks="false" forever="false" kind="Observer" width="106" sizeVersion="0">
+      <source>setup</source>
+    </button>
+    <button x="15" y="56" height="33" disableUntilTicks="true" forever="true" kind="Observer" width="105" sizeVersion="0">
+      <source>go</source>
+    </button>
     <plot x="15" autoPlotX="true" yMax="10.0" autoPlotY="true" y="144" xMin="0.0" height="305" legend="true" xMax="10.0" yMin="0.0" display="populations" width="676" sizeVersion="0">
       <setup></setup>
       <update></update>
@@ -38,8 +42,12 @@ end
         <update></update>
       </pen>
     </plot>
-    <monitor x="194" precision="3" y="15" height="45" fontSize="11" width="96" sizeVersion="0">sheep</monitor>
-    <monitor x="194" precision="3" y="83" height="45" fontSize="11" width="95" sizeVersion="0">wolves</monitor>
+    <monitor x="194" precision="3" y="15" height="45" fontSize="11" width="96" sizeVersion="0">
+      <source>sheep</source>
+    </monitor>
+    <monitor x="194" precision="3" y="83" height="45" fontSize="11" width="95" sizeVersion="0">
+      <source>wolves</source>
+    </monitor>
   </widgets>
   <info><![CDATA[
 
