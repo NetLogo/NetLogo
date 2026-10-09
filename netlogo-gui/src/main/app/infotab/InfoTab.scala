@@ -20,9 +20,10 @@ import org.nlogo.api.{ ExternalResourceManager, Version }
 import org.nlogo.app.common.{ Events => AppEvents, FindDialog, MenuTab, UndoRedoActions }
 import org.nlogo.core.I18N
 import org.nlogo.editor.EditorConfiguration
-import org.nlogo.swing.{ BoxAlign, BoxRow, FocusRoot, FocusUtils, QuickHelp, ScrollableTextComponent, ScrollPane,
-                         TextArea, ToolBarActionButton, ToolBarToggleButton, Printable, PrinterManager, BrowserLauncher,
-                         UndoManager, UserAction, Utils, Zoomable, ZoomableBorder }, UserAction.MenuAction
+import org.nlogo.swing.{ Autoscroller, BoxAlign, BoxRow, FocusRoot, FocusUtils, QuickHelp, ScrollableTextComponent,
+                         ScrollPane, TextArea, ToolBarActionButton, ToolBarToggleButton, Printable, PrinterManager,
+                         BrowserLauncher, UndoManager, UserAction, Utils, Zoomable, ZoomableBorder },
+                         UserAction.MenuAction
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ Events => WindowEvents }
 
@@ -107,6 +108,15 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
     add(toolBar, BorderLayout.NORTH)
     scrollPane.getVerticalScrollBar.setUnitIncrement(16)
     add(scrollPane, BorderLayout.CENTER)
+
+    // middle-click autoscrolling for the editable text (the HTML view does its own, since it handles its own scrolling)
+    new Autoscroller(textArea, (x, y) => {
+      val xBar = scrollPane.getHorizontalScrollBar
+      val yBar = scrollPane.getVerticalScrollBar
+
+      xBar.setValue(xBar.getValue + x)
+      yBar.setValue(yBar.getValue + y)
+    })
   }
 
   private def resetBorders(): Unit = {
@@ -320,6 +330,8 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
         }
       }
     })
+
+    new Autoscroller(this, (x, y) => scrollBy(x, y))
 
     Platform.runLater(() => {
       val webView = new WebView

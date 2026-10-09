@@ -21,7 +21,8 @@ import netscape.javascript.JSObject
 
 import org.nlogo.core.{ BreedIdentifierHandler, ColorConstants, I18N, Keywords, NetLogoCore, Program }
 import org.nlogo.editor.MouseQuickHelpAction
-import org.nlogo.swing.{ ClipboardUtils, Menu, MenuItem, PopupMenu, ScrollableTextComponent, UserAction, Zoomable },
+import org.nlogo.swing.{ Autoscroller, ClipboardUtils, Menu, MenuItem, PopupMenu, ScrollableTextComponent, UserAction,
+                         Zoomable },
   UserAction.{ EditCategory, EditClipboardGroup, EditFoldGroup, EditFoldSubcategory, EditFormatGroup,
                EditSelectionGroup, EditUndoGroup, KeyBindings, MenuAction }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
@@ -287,6 +288,9 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
         showPopup(e.getPoint)
     }
   })
+
+  // middle-click autoscrolling. the editor is a web page, so scrolling is done by script
+  new Autoscroller(this, (x, y) => runInWeb(s"window.view.scrollDOM.scrollBy($x, $y)"))
 
   Platform.runLater(() => {
     val webView = new WebView
