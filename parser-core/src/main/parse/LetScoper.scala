@@ -97,15 +97,25 @@ import scala.collection.BufferedIterator
 import SymbolType.LocalVariable
 
 object LetScope {
-  def apply(l: _let, tokens: BufferedIterator[Token], usedNames: SymbolTable): (_abstractlet, SymbolTable) = {
+  def apply(l: _let, letToken: Token, tokens: BufferedIterator[Token],
+            usedNames: SymbolTable): (_abstractlet, SymbolTable) = {
     l match {
       case _let(None, _) =>
         tokens.head match {
           case nameToken @ Token(text, TokenType.Reporter, _) =>
             val name = text.toUpperCase(Locale.ENGLISH)
             val newLet = Let(name)
-            for (tpe <- usedNames.get(name))
-              exception("There is already a " + SymbolType.typeName(tpe) + " called " + name, nameToken)
+
+            usedNames.get(name) match {
+              case Some(tpe) if name == "__DONE" =>
+                exception("LET expected 2 inputs.", letToken)
+
+              case Some(tpe) =>
+                exception("There is already a " + SymbolType.typeName(tpe) + " called " + name, nameToken)
+
+              case _ =>
+            }
+
             (l.copy(let = newLet, tokenText = Some(text)), usedNames.addSymbol(name, LocalVariable(newLet)))
 
           case _ @ Token(_, TokenType.OpenBracket, _) =>
