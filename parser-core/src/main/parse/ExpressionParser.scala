@@ -167,7 +167,7 @@ object ExpressionParser {
         val coreCommand = token.value.asInstanceOf[core.Command]
         val (command, newScope) = coreCommand match {
           case l: core.prim._let =>
-            LetScope(l, tokens, scope)
+            LetScope(l, token, tokens, scope)
 
           case s: core.prim._set =>
             (SplitSet(s, tokens), scope)
