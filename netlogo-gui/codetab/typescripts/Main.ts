@@ -6,8 +6,8 @@ import {
   moveLineDown, moveLineUp, redo, selectGroupBackward, selectGroupForward, undo
 } from "@codemirror/commands";
 import {
-  HighlightStyle, bracketMatching, foldGutter, LRLanguage, LanguageSupport, syntaxHighlighting, defaultHighlightStyle,
-  ensureSyntaxTree, foldAll, foldEffect, foldService, unfoldAll, unfoldEffect
+  HighlightStyle, bracketMatching, foldGutter, LRLanguage, LanguageSupport, type MatchResult, matchBrackets,
+  syntaxHighlighting, defaultHighlightStyle, ensureSyntaxTree, foldAll, foldEffect, foldService, unfoldAll, unfoldEffect
 } from "@codemirror/language";
 import { highlightSelectionMatches } from "@codemirror/search";
 import { Compartment, EditorState, Line, SelectionRange, Text, Transaction } from "@codemirror/state";
@@ -220,6 +220,8 @@ declare global {
     unfoldSelected: () => void;
     foldAll: () => void;
     unfoldAll: () => void;
+    findPreviousBracket: (view: EditorView) => boolean;
+    findNextBracket: (view: EditorView) => boolean;
     setCoreProgram: (keywords: string[], constants: string[], commands: string[], reporters: string[]) => void;
     setCompiledProgram: (keywords: string[], globals: string[], variables: string[], commands: string[],
                          reporters: string[]) => void;
@@ -351,6 +353,8 @@ window.onload = () => {
         { key: "Alt-z", run: window.nullHandler },
         { key: "Alt-a", run: window.nullHandler },
         { key: "Alt-h", run: window.nullHandler },
+        { key: "Mod-,", run: window.findPreviousBracket },
+        { key: "Mod-.", run: window.findNextBracket }
       ]),
       EditorView.clickAddsSelectionRange.of((event: MouseEvent) => event.altKey),
       EditorView.domEventHandlers({
@@ -811,6 +815,38 @@ window.foldAll = () => {
 
 window.unfoldAll = () => {
   unfoldAll(window.view);
+};
+
+window.findPreviousBracket = (view: EditorView) => {
+  const result: MatchResult | null = matchBrackets(view.state, view.state.selection.main.head, -1)
+
+  if (result?.end) {
+    view.dispatch({
+      selection: { anchor: result.end.to, head: result.end.to },
+      effects: EditorView.scrollIntoView(result.start.to, {
+        x: "center",
+        y: "center"
+      })
+    });
+  }
+
+  return true;
+};
+
+window.findNextBracket = (view: EditorView) => {
+  const result: MatchResult | null = matchBrackets(view.state, view.state.selection.main.head, 1)
+
+  if (result?.end) {
+    view.dispatch({
+      selection: { anchor: result.end.from, head: result.end.from },
+      effects: EditorView.scrollIntoView(result.start.to, {
+        x: "center",
+        y: "center"
+      })
+    });
+  }
+
+  return true;
 };
 
 window.setCoreProgram = (keywords: string[], constants: string[], commands: string[], reporters: string[]) => {
