@@ -15,10 +15,10 @@ import javax.swing.{ AbstractAction, Action, Timer }
 import javax.swing.border.LineBorder
 
 import org.nlogo.agent.{ Agent, BooleanConstraint, ImporterJ, OutputObject, SliderConstraint, World }
-import org.nlogo.api.{ Agent => ApiAgent, AgentFollowingPerspective, CommandRunnable, ControlSet, DrawingInterface,
-                       Exceptions, FileIO, JobOwner, LogoException, ModelReader, ModelSections, ModelType,
-                       PreviewCommands, RendererInterface, ReporterRunnable, SimpleJobOwner, TrailDrawerInterface,
-                       WorkspaceContext, WorldPropertiesInterface }
+import org.nlogo.api.{ Agent => ApiAgent, AgentFollowingPerspective, AppInterface, CommandRunnable, ControlSet,
+                       DrawingInterface, Exceptions, FileIO, JobOwner, LogoException, ModelReader, ModelSections,
+                       ModelType, PreviewCommands, RendererInterface, ReporterRunnable, SimpleJobOwner,
+                       TrailDrawerInterface, UpdateManagerInterface, WorkspaceContext, WorldPropertiesInterface }
 import org.nlogo.awt.{ EventQueue, Hierarchy, UserCancelException }
 import org.nlogo.core.{ AgentKind, CompilerException, File, I18N, Model, ModelSettings,
                         Shape, UpdateMode, WorldDimensions, WorldDimensions3D }
@@ -49,11 +49,11 @@ object GUIWorkspace {
   }
 }
 
-abstract class GUIWorkspace(world: World, kioskLevel: GUIWorkspace.KioskLevel, frame: Frame, linkParent: Component,
-                            hubNetManagerFactory: HubNetManagerFactory, externalFileManager: ExternalFileManager,
-                            listenerManager: NetLogoListenerManager, errorDialogManager: ErrorDialogManager,
-                            controlSet: ControlSet)
-  extends AbstractWorkspaceScala(world, hubNetManagerFactory)
+abstract class GUIWorkspace(app: Option[AppInterface], world: World, kioskLevel: GUIWorkspace.KioskLevel, frame: Frame,
+                            linkParent: Component, hubNetManagerFactory: HubNetManagerFactory,
+                            externalFileManager: ExternalFileManager, listenerManager: NetLogoListenerManager,
+                            errorDialogManager: ErrorDialogManager, controlSet: ControlSet)
+  extends AbstractWorkspaceScala(app, world, hubNetManagerFactory)
   with LinkChild with AboutToQuitEvent.Handler with AddJobEvent.Handler with AfterLoadEvent.Handler
   with BeforeLoadEvent.Handler with JobStoppingEvent.Handler with RemoveAllJobsEvent.Handler
   with RemoveJobEvent.Handler with AddSliderConstraintEvent.Handler with RemoveConstraintEvent.Handler

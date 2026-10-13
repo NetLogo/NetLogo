@@ -1,8 +1,9 @@
 package org.nlogo.extensions.vid
 
+import java.awt.Frame
 import javax.swing.JFileChooser
 
-import org.nlogo.api.ReporterRunnable
+import org.nlogo.api.{ AppInterface, ReporterRunnable, Workspace }
 import org.nlogo.app.App
 import org.nlogo.awt.UserCancelException
 import org.nlogo.core.I18N
@@ -13,22 +14,29 @@ trait Selector {
   def selectFile: Option[String]
 }
 
-object NetLogoSelector extends Selector {
+class NetLogoSelector extends Selector {
+  private var app: Option[AppInterface] = None
 
-  private def frame = App.app.frame
-  private def workspace = App.app.workspace
+  def setApp(app: Option[AppInterface]): Unit = {
+    this.app = app
+  }
+
+  private def frame: Option[Frame] = app.map(_.frame)
+  private def workspace: Option[Workspace] = app.map(_.workspace)
 
   override def selectOneOf(choices: Seq[String]): Option[String] = {
     if (VidExtension.isHeadless) {
       None
     } else {
-      workspace.waitForResult(
+      workspace.flatMap(_.waitForResult(
         new ReporterRunnable[Option[String]] {
           override def run(): Option[String] = {
-            new DropdownOptionPane(frame, "Select a Camera", "Choose a camera from the list", choices).getSelectedChoice
+            frame.flatMap { f =>
+              new DropdownOptionPane(f, "Select a Camera", "Choose a camera from the list", choices).getSelectedChoice
+            }
           }
         }
-      )
+      ))
     }
   }
 
@@ -36,13 +44,11 @@ object NetLogoSelector extends Selector {
     if (VidExtension.isHeadless) {
       None
     } else {
-      val selectedPath = workspace.waitForResult(
+      val selectedPath = workspace.flatMap(_.waitForResult(
         new ReporterRunnable[Option[String]] {
           override def run(): Option[String] =
             try {
-              val path =
-                FileDialog.showFiles(frame, "Select a movie to open", JFileChooser.FILES_ONLY)
-              Some(path)
+              frame.map(FileDialog.showFiles(_, "Select a movie to open", JFileChooser.FILES_ONLY))
             } catch {
               case e: UserCancelException => None
               case e: Exception =>
@@ -51,7 +57,7 @@ object NetLogoSelector extends Selector {
                 None
             }
         }
-      )
+      ))
 
       selectedPath
     }

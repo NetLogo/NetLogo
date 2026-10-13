@@ -44,6 +44,8 @@ trait ExtensionManager extends CoreManager {
 
   def workspaceContext: WorkspaceContext
 
+  def app: Option[AppInterface]
+
 }
 
 object ExtensionManager {

@@ -118,7 +118,7 @@ object NetLogoPackaging {
 
     buildMathematicaLink := {
       val sbt = if (System.getProperty("os.name").contains("Windows")) "sbt.bat" else "sbt"
-      RunProcess(Seq(sbt, "package"), mathematicaRoot.value, "package mathematica link")
+      RunProcess(Seq(sbt, s"-Dnetlogo.jar.file=${packagingMainJar.value}", "package"), mathematicaRoot.value, "package mathematica link")
     },
 
     packagedMathematicaLink := {

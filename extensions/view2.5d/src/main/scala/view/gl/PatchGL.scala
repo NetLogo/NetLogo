@@ -6,9 +6,11 @@ import com.jogamp.opengl.{ GL, GL2, GLAutoDrawable }
 import com.jogamp.opengl.fixedfunc.GLMatrixFunc
 import com.jogamp.opengl.glu.{ GLU, GLUquadric }
 
+import org.nlogo.api.AppInterface
+
 import view25d.view.{ MouseableGLWindow, PatchViewGUI }
 
-class PatchGL(viewer: PatchViewGUI) extends MouseableGLWindow(viewer) {
+class PatchGL(app: AppInterface, viewer: PatchViewGUI) extends MouseableGLWindow(app, viewer) {
   // handles for compiled GL shapes
   private var patchTileListHandle = 0
   private var patchThickTileListHandle = 0

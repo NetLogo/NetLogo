@@ -155,7 +155,7 @@ check [not-job-not-workspace] directlyIndependentOf [job]
 # as a special case, we allow referring to java.awt.Frame, because ShapesManagerFactory
 # mentions it in its constructor, and I don't want to have to make a whole new package
 # just to put ShapesManagerFactory in - ST 2/27/09
-[bad-AWT] = java.awt.* excluding [headless-AWT] java.awt.Frame
+[bad-AWT] = java.awt.* excluding [headless-AWT] java.awt.Component java.awt.Frame
 
 check [util+] independentOf [Sun-AWT]
 check [awt+] independentOf [Sun-Swing]

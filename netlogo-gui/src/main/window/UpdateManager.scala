@@ -5,6 +5,8 @@ package org.nlogo.window
 import java.util.Locale
 
 import org.nlogo.core.UpdateMode
+import org.nlogo.api.UpdateManagerInterface
+
 import System.nanoTime
 import StrictMath.pow
 

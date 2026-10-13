@@ -12,7 +12,7 @@ import org.nlogo.api.Argument
 object RunVid extends App with VideoSourceContainer {
 
   val movies: MovieFactory   = Movie
-  val cameras: CameraFactory = Camera
+  val cameras: CameraFactory = new CameraFactory
   val recorder: Recorder     = new MP4Recorder()
   lazy val player: Player    = new JavaFXPlayer()
 

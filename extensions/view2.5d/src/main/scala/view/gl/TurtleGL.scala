@@ -4,11 +4,11 @@ import com.jogamp.opengl.{ GL, GL2, GLAutoDrawable }
 import com.jogamp.opengl.fixedfunc.GLMatrixFunc
 import com.jogamp.opengl.glu.{ GLU, GLUquadric }
 
-import org.nlogo.api.Color
+import org.nlogo.api.{ AppInterface, Color }
 
 import view25d.view.{ MouseableGLWindow, TurtleViewGUI }
 
-class TurtleGL(viewer: TurtleViewGUI) extends MouseableGLWindow(viewer) {
+class TurtleGL(app: AppInterface, viewer: TurtleViewGUI) extends MouseableGLWindow(app, viewer) {
   // handles for compiled GL shapes
   var patchTileListHandle = 0
   var stemSkyscraperHandle = 0

@@ -20,7 +20,7 @@ class ExtensionManagerTests extends AnyFunSuiteEx with BeforeAndAfter {
   }
 
   val dummyWorkspace = new DummyWorkspace
-  val emptyManager = new ExtensionManager(dummyWorkspace, new JarLoader(dummyWorkspace))
+  val emptyManager = new ExtensionManager(None, dummyWorkspace, new JarLoader(dummyWorkspace))
   val tab = "\t"
 
   class ErrorSourceException extends Exception("problem")
@@ -36,7 +36,7 @@ class ExtensionManagerTests extends AnyFunSuiteEx with BeforeAndAfter {
     def extraLoaders: Seq[ExtensionLoader] = Seq()
 
     lazy val loadingManager = {
-      val m = new ExtensionManager(dummyWorkspace, new JarLoader(dummyWorkspace))
+      val m = new ExtensionManager(None, dummyWorkspace, new JarLoader(dummyWorkspace))
       extraLoaders.foreach(m.addLoader)
       m
     }
@@ -52,7 +52,7 @@ class ExtensionManagerTests extends AnyFunSuiteEx with BeforeAndAfter {
   trait InMemoryExtensionTest {
     lazy val dummyClassManager = new DummyClassManager()
     lazy val memoryLoader = new InMemoryExtensionLoader("foo", dummyClassManager)
-    lazy val inmemoryManager = new ExtensionManager(dummyWorkspace, memoryLoader)
+    lazy val inmemoryManager = new ExtensionManager(None, dummyWorkspace, memoryLoader)
   }
 
   test("loadedExtensions returns empty list when no extensions loaded") {

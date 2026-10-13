@@ -2,17 +2,17 @@
 
 package org.nlogo.app
 
-import java.awt.{ Dimension, Frame, GraphicsEnvironment, Point }
+import java.awt.{ Dimension, GraphicsEnvironment, Point }
 import javax.swing.{ JFrame, WindowConstants }
 
 import org.nlogo.swing.{ ModalProgress, NetLogoIcon, ZoomableWindow }
 import org.nlogo.theme.ThemeSync
 import org.nlogo.window.Event.LinkChild
 
-class CodeTabsWindow(parent: Frame, tabs: TabsPanel)
+class CodeTabsWindow(parent: AppFrame, tabs: TabsPanel)
   extends JFrame with LinkChild with ZoomableWindow(Option(parent)) with ThemeSync with NetLogoIcon with ModalProgress {
 
-  val mainMenuBar: MainMenuBar = new MainMenuBar(false)
+  val mainMenuBar: MainMenuBar = new MainMenuBar(parent, false)
 
   setJMenuBar(mainMenuBar)
 

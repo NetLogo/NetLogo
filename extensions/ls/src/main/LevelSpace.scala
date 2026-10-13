@@ -4,11 +4,11 @@ import java.awt.event.{ ActionEvent, ActionListener }
 import java.lang.{ Double => JDouble }
 import java.util
 import java.util.concurrent.ConcurrentHashMap
-import javax.swing.JMenuItem
+import javax.swing.{ JFrame, JMenuItem }
 
-import org.nlogo.api.{ Argument, DefaultClassManager, ExtensionException, ExtensionManager, ImportErrorHandler,
-                       LogoException, PrimitiveManager, Version }
-import org.nlogo.app.{ App, ToolsMenu }
+import org.nlogo.api.{ AppInterface, Argument, DefaultClassManager, ExtensionException, ExtensionManager,
+                       ImportErrorHandler, LogoException, PrimitiveManager, Version }
+import org.nlogo.app.ToolsMenu
 import org.nlogo.awt.EventQueue
 import org.nlogo.core.LogoList
 import org.nlogo.nvm.HaltException
@@ -53,10 +53,12 @@ object LevelSpace {
 class LevelSpace extends DefaultClassManager { // This can be accessed by both the JobThread and EDT (when halting)
   LevelSpace.checkSupportNetLogoVersion()
 
+  private var app: Option[AppInterface] = None
+
   private var functionID: Option[Long] = None
 
   private def addSyncFunction(): Unit = {
-    functionID = Some(App.app.addSyncFunction(() => syncTheme()))
+    functionID = app.map(_.addSyncFunction(() => syncTheme()))
   }
 
   final private val models = new ConcurrentHashMap[Integer, ChildModel].asScala
@@ -66,10 +68,9 @@ class LevelSpace extends DefaultClassManager { // This can be accessed by both t
   // These need to be cleaned up on unload
   // ideally this would check isHeadless, but that is determined in runOnce, which isn't called
   // when the workspace is in testing mode and is therefore headless (Isaac B 7/25/25)
-  private lazy val haltButton: Option[JMenuItem] = if (App.app == null)
-    None
-  else
-    App.app.frame.getJMenuBar.getSubElements.collectFirst{case tm: ToolsMenu => tm.getItem(0)}
+  private lazy val haltButton: Option[JMenuItem] = app.flatMap { instance =>
+    instance.frame.asInstanceOf[JFrame].getJMenuBar.getSubElements.collectFirst{case tm: ToolsMenu => tm.getItem(0)}
+  }
 
   private val haltListener: ActionListener = (_: ActionEvent) => haltChildModels()
   private var modelManager: LSModelManager = new HeadlessBackingModelManager
@@ -99,7 +100,7 @@ class LevelSpace extends DefaultClassManager { // This can be accessed by both t
     primitiveManager.addPrimitive("assign", new Assign(this))
   }
 
-  def isMainModel(myEM: ExtensionManager): Boolean = myEM eq App.app.workspace.getExtensionManager
+  def isMainModel(myEM: ExtensionManager): Boolean = app.exists(_.workspace.getExtensionManager == myEM)
 
   @throws[ExtensionException]
   def getModel(id: Int): ChildModel =
@@ -113,14 +114,18 @@ class LevelSpace extends DefaultClassManager { // This can be accessed by both t
 
   @throws[ExtensionException]
   override def unload(em: ExtensionManager): Unit = {
-    if (!LevelSpace.isHeadless) {
-      if (isMainModel(em)) {
-        App.app.frame.getJMenuBar.remove(modelManager.guiComponent)
-        functionID.foreach(App.app.removeSyncFunction)
-      }
+    app match {
+      case Some(instance) if !LevelSpace.isHeadless =>
+        if (isMainModel(em)) {
+          instance.frame.asInstanceOf[JFrame].getJMenuBar.remove(modelManager.guiComponent)
+          functionID.foreach(instance.removeSyncFunction)
+        }
 
-      haltButton.foreach(_.removeActionListener(haltListener))
+        haltButton.foreach(_.removeActionListener(haltListener))
+
+      case _ =>
     }
+
     try reset()
     catch {
       case _: HaltException =>
@@ -153,16 +158,19 @@ class LevelSpace extends DefaultClassManager { // This can be accessed by both t
       new HeadlessChildModel(pws, p, modelCounter)
     })
 
-  def createGUIModel(parentWS: AbstractWorkspace, path: String): ChildModel =
-    if (LevelSpace.isHeadless || parentWS.behaviorSpaceRunNumber != 0) {
-      createHeadlessModel(parentWS, path)
-    } else {
-      createModel(parentWS, path, { (pws, p) =>
-        val model = new GUIChildModel(this, parentWS, path, modelCounter)
-        model.setSpeed(App.app.workspace.updateManager.speed)
-        model
-      })
+  def createGUIModel(parentWS: AbstractWorkspace, path: String): ChildModel = {
+    app match {
+      case Some(instance) if !LevelSpace.isHeadless && parentWS.behaviorSpaceRunNumber == 0 =>
+        createModel(parentWS, path, { (pws, p) =>
+          val model = new GUIChildModel(this, instance, parentWS, path, modelCounter)
+          model.setSpeed(instance.updateManager.speed)
+          model
+        })
+
+      case _ =>
+        createHeadlessModel(parentWS, path)
     }
+  }
 
   def updateModelMenu(): Unit = {
     if (!LevelSpace.isHeadless) {
@@ -205,21 +213,33 @@ class LevelSpace extends DefaultClassManager { // This can be accessed by both t
 
   @throws[ExtensionException]
   override def runOnce(em: ExtensionManager): Unit = {
+    app = em.app
+
     LevelSpace.isHeadless = !em.workspaceContext.workspaceGUI
 
-    if (!LevelSpace.isHeadless) {
-      modelManager = new BackingModelManager
-      // We need to actually listen for halt actions because gui child models can be running independently on their own
-      // job threads if the user is interacting with them.
-      haltButton.foreach(_.addActionListener(haltListener))
+    app match {
+      case Some(instance: AppInterface) if !LevelSpace.isHeadless =>
+        modelManager = new BackingModelManager(instance)
+        // We need to actually listen for halt actions because gui child models can be running independently on their own
+        // job threads if the user is interacting with them.
+        haltButton.foreach(_.addActionListener(haltListener))
+
+      case _ =>
     }
+
     modelManager.updateChildModels(models)
-    if (!LevelSpace.isHeadless && isMainModel(em)) {
-      val menuBar = App.app.frame.getJMenuBar
-      if (menuBar.getComponentIndex(modelManager.guiComponent) == -1) {
-        menuBar.add(modelManager.guiComponent)
-      }
-      addSyncFunction()
+
+    app match {
+      case Some(instance) if !LevelSpace.isHeadless && isMainModel(em) =>
+        val menuBar = instance.frame.asInstanceOf[JFrame].getJMenuBar
+
+        if (menuBar.getComponentIndex(modelManager.guiComponent) == -1) {
+          menuBar.add(modelManager.guiComponent)
+        }
+
+        addSyncFunction()
+
+      case _ =>
     }
   }
 

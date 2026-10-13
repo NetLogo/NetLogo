@@ -5,8 +5,7 @@ import java.awt.{ BorderLayout, Component, Dimension, Toolkit }
 import javax.swing.{ JFrame, JPanel }
 
 import org.nlogo.agent.Turtle
-import org.nlogo.api.{ AgentSet, Context, Link }
-import org.nlogo.app.App
+import org.nlogo.api.{ AgentSet, AppInterface, Context, Link }
 import org.nlogo.swing.NetLogoIcon
 
 import scala.jdk.CollectionConverters.IterableHasAsScala
@@ -46,7 +45,9 @@ trait Varview {
 
 }
 
-abstract class VarviewWindow(override val title: String) extends JFrame(title) with Varview with NetLogoIcon {
+abstract class VarviewWindow(app: AppInterface, override val title: String)
+  extends JFrame(title) with Varview with NetLogoIcon {
+
   var worldWidth = 0
   var worldHeight = 0
   var viewWidth = 0
@@ -101,7 +102,7 @@ abstract class VarviewWindow(override val title: String) extends JFrame(title) w
   // Currently includes links for which only one end is in the AgentSet
   protected def getLinkSetFromTurtleSet(turtleSet: AgentSet): Set[Link] = {
     // no work to do if there are no links or no turtles
-    if (App.app.workspace.world.links.count == 0 || turtleSet.count == 0)
+    if (app.workspace.world.links.count == 0 || turtleSet.count == 0)
       return Set()
 
     turtleSet.agents.asScala.toSeq.collect {

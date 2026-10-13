@@ -168,7 +168,7 @@ private[workspace] final class DefaultFileManager(private val workspace: ModelTr
     val readLiteral = { (file: File) =>
       val oldPos = file.pos
       try {
-        workspace.compiler.utilities.readFromFile(file, importHandler)
+        workspace.utilities.readFromFile(file, importHandler)
       } catch {
         case ex: CompilerException =>
           file.pos = oldPos

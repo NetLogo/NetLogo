@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import org.nlogo.api.Workspace
+import org.nlogo.api.{ UpdateManagerInterface, Workspace }
 
 trait WorkspaceWithSpeed extends Workspace {
   def updateManager: UpdateManagerInterface
