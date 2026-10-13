@@ -1,9 +1,10 @@
 package org.nlogo.ls
 
+import java.awt.Component
+
 import org.nlogo.ls.gui.{ GUILevelSpaceMenu, LevelSpaceMenu, ModelCodeTab, ModelManager }
 
-import org.nlogo.app.App
-import org.nlogo.app.codetab.CodeTab
+import org.nlogo.api.AppInterface
 import org.nlogo.workspace.AbstractWorkspace
 
 import scala.collection.Map
@@ -14,8 +15,8 @@ trait LSModelManager extends ModelManager {
   def guiComponent: LevelSpaceMenu = null
 }
 
-class BackingModelManager extends LSModelManager {
-  override val guiComponent: GUILevelSpaceMenu = new GUILevelSpaceMenu(App.app.tabManager, this)
+class BackingModelManager(app: AppInterface) extends LSModelManager {
+  override val guiComponent: GUILevelSpaceMenu = new GUILevelSpaceMenu(app, app.tabManager, this)
   private val backingModels = ParHashMap.empty[String, (ChildModel, ModelCodeTab)]
   private var openModels    = Map.empty[String, ChildModel]
   private var models  = Seq[ChildModel]()
@@ -39,9 +40,9 @@ class BackingModelManager extends LSModelManager {
 
   def openModelPaths: collection.Set[String] = backingModels.seq.keySet
 
-  def existingTab(filePath: String): Option[CodeTab] =
-    if (filePath == App.app.workspace.getModelPath)
-      Some(App.app.tabManager.mainCodeTab)
+  def existingTab(filePath: String): Option[Component] =
+    if (filePath == app.workspace.getModelPath)
+      Some(app.tabManager.mainCodeTab)
     else
       backingModels.get(filePath).map(_._2)
 
@@ -68,7 +69,7 @@ class BackingModelManager extends LSModelManager {
       None
     } else {
       val newModel =
-        openModels.getOrElse(filePath, new HeadlessChildModel(App.app.workspace, filePath, -1))
+        openModels.getOrElse(filePath, new HeadlessChildModel(app.workspace, filePath, -1))
       registerTab(filePath, newModel)(f)
     }
   }
@@ -91,7 +92,7 @@ class BackingModelManager extends LSModelManager {
 // this is an example of the
 class HeadlessBackingModelManager extends LSModelManager {
   def removeTab(tab: ModelCodeTab): Unit = {}
-  def existingTab(filePath: String): Option[ModelCodeTab] = None
+  def existingTab(filePath: String): Option[Component] = None
   def registerTab(filePath: String)
                  (f: AbstractWorkspace => ModelCodeTab): Option[ModelCodeTab] = None
 }

@@ -12,18 +12,18 @@ import javafx.embed.swing.SwingFXUtils
 import javafx.event.EventHandler
 import javafx.scene.image.{ Image, ImageView }
 
+import org.nlogo.api.AppInterface
+
 import org.nlogo.extensions.vid.util.VideoDeviceUtils
 
-trait CameraFactory {
-  def cameraNames:              Seq[String]
-  def defaultCameraName:        Option[String]
-  def open(cameraName: String): Option[VideoSource]
-}
-
-object Camera extends CameraFactory {
-
+class CameraFactory {
+  private var app: Option[AppInterface] = None
   private var devices: Option[Seq[String]] = None
   private val cameraCcl = classOf[Camera].getClassLoader
+
+  def setApp(app: Option[AppInterface]): Unit = {
+    this.app = app
+  }
 
   def withContextClassLoader[A](f: () => A): A = {
     val oldCcl = Thread.currentThread.getContextClassLoader
@@ -49,16 +49,16 @@ object Camera extends CameraFactory {
   def defaultCameraName: Option[String] =
     cameraNames.headOption
 
-  override def open(cameraName: String): Option[VideoSource] = {
+  def open(cameraName: String): Option[VideoSource] = {
     val index = cameraNames.indexWhere(_ == cameraName)
     if (index == -1) {
       None
     } else {
       try {
-        Some(new Camera(index))
+        Some(new Camera(this, index))
       } catch {
         case ex: Exception if (PlatformErrors.isPossibleMacOSSecurityError(ex)) =>
-          PlatformErrors.showMacOSSecurityMessage(ex)
+          app.foreach(instance => PlatformErrors.showMacOSSecurityMessage(instance.frame, ex))
           None
       }
     }
@@ -66,8 +66,8 @@ object Camera extends CameraFactory {
 
 }
 
-class Camera(deviceIndex: Int) extends VideoSource {
-  val grabber = Camera.withContextClassLoader( () => {
+class Camera(factory: CameraFactory, deviceIndex: Int) extends VideoSource {
+  val grabber = factory.withContextClassLoader( () => {
     val g = new OpenCVFrameGrabber(deviceIndex)
     g.start()
     g
@@ -92,14 +92,14 @@ class Camera(deviceIndex: Int) extends VideoSource {
 
   override def close() = {
     isClosed = true
-    Camera.withContextClassLoader( () => {
+    factory.withContextClassLoader( () => {
       grabber.stop()
     })
   }
 
   override def captureImage(): BufferedImage = {
     cachedImage.getOrElse(
-      Camera.withContextClassLoader( () => {
+      factory.withContextClassLoader( () => {
         val frame = grabber.grab()
         Java2DFrameUtils.toBufferedImage(frame)
       })

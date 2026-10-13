@@ -10,7 +10,8 @@ import javax.swing.AbstractAction
 
 import scala.util.control.Exception.ignoring
 
-import org.nlogo.app.common.{ Actions, TabsInterface }, Actions.Ellipsis
+import org.nlogo.api.TabsInterface
+import org.nlogo.app.common.{ Actions }, Actions.Ellipsis
 import org.nlogo.awt.UserCancelException
 import org.nlogo.core.{ I18N, NetLogoPreferences }
 import org.nlogo.nvm.IncludeSource

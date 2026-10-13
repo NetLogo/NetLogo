@@ -8,7 +8,7 @@ import com.jogamp.opengl.awt.GLJPanel
 import com.jogamp.opengl.fixedfunc.{ GLLightingFunc, GLMatrixFunc }
 import com.jogamp.opengl.glu.GLU
 
-import org.nlogo.app.App
+import org.nlogo.api.AppInterface
 import org.nlogo.core.ShapeList
 import org.nlogo.gl.render.{ Polygons, Tessellator }
 import org.nlogo.shape.{ Circle, Curve, Line, Polygon, Rectangle, VectorShape }
@@ -18,7 +18,7 @@ import scala.collection.mutable.Map
 
 import view25d.view.gl.NetLogoGLU
 
-abstract class MouseableGLWindow(viewer: VarviewWindow) extends MouseAdapter with GLEventListener {
+abstract class MouseableGLWindow(app: AppInterface, viewer: VarviewWindow) extends MouseAdapter with GLEventListener {
   // initial values are overwritten immediately - this is the correct initial value for the default model
   val observer = new Observer(0, 0, 49.5)
 
@@ -274,9 +274,9 @@ abstract class MouseableGLWindow(viewer: VarviewWindow) extends MouseAdapter wit
 
   // Compile all the turtle shapes
   def compileShapes(gl: GL2, compiledShapes: Map[String, Int], rotatable: Boolean): Unit = {
-    App.app.workspace.world.turtleShapeList.names.foreach(name => {
+    app.workspace.world.turtleShapeList.names.foreach(name => {
       val handle = gl.glGenLists(1)
-      val shape = App.app.workspace.world.turtleShapeList.shape(name).asInstanceOf[VectorShape]
+      val shape = app.workspace.world.turtleShapeList.shape(name).asInstanceOf[VectorShape]
 
       compileShape(nlGLU, gl, glu, shape, handle, false)
       compiledShapes += ((name, handle))
@@ -289,7 +289,7 @@ abstract class MouseableGLWindow(viewer: VarviewWindow) extends MouseAdapter wit
     // but it will not have a name among the turtle shapes.
     // Hence it gets the default shape. Fortunately the default shape cannot be deleted or edited.
     // aab 05/06/2021
-    (compiledShapes.keysIterator.toSet -- App.app.workspace.world.turtleShapeList.names).foreach(name => {
+    (compiledShapes.keysIterator.toSet -- app.workspace.world.turtleShapeList.names).foreach(name => {
       compiledShapes += ((name, compiledShapes(ShapeList.DefaultShapeName)))
     })
   }

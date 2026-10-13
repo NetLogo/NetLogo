@@ -6,8 +6,9 @@ import java.io.{ File, IOException }
 import java.net.URI
 import java.nio.file.Paths
 
-import org.nlogo.api.ModelType
-import org.nlogo.nvm.{ PresentationCompilerInterface, FileManager }
+import org.nlogo.api.{ ExtensionManager, ModelType }
+import org.nlogo.core.CompilerUtilitiesInterface
+import org.nlogo.nvm.FileManager
 
 /** This trait holds the state of the workspace with respect to
  *  various facets related to (but external from) the model.
@@ -24,7 +25,7 @@ import org.nlogo.nvm.{ PresentationCompilerInterface, FileManager }
  */
 trait ModelTracker {
 
-  def compiler: PresentationCompilerInterface
+  def utilities: CompilerUtilitiesInterface
 
   def getExtensionManager(): ExtensionManager
 

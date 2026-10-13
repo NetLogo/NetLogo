@@ -8,8 +8,7 @@ import java.awt.event.{ WindowAdapter, WindowEvent }
 import javax.swing.WindowConstants
 
 import org.nlogo.agent.Turtle
-import org.nlogo.api.{ AgentException, AnonymousReporter, Color, Context }
-import org.nlogo.app.App
+import org.nlogo.api.{ AgentException, AnonymousReporter, AppInterface, Color, Context }
 import org.nlogo.theme.ThemeSync
 
 import scala.jdk.CollectionConverters.IterableHasAsScala
@@ -34,8 +33,10 @@ class PatchViewHeadless(override val title: String, reporter: AnonymousReporter)
   override def setVisible(isVisible: Boolean): Unit                                                           = ()
 }
 
-class PatchViewGUI(title: String, reporter: AnonymousReporter) extends VarviewWindow(title) with PatchView with ThemeSync {
-  private val glManager = new PatchGL(this)
+class PatchViewGUI(app: AppInterface, title: String, reporter: AnonymousReporter)
+  extends VarviewWindow(app, title) with PatchView with ThemeSync {
+
+  private val glManager = new PatchGL(app, this)
 
   def getGLWindow: MouseableGLWindow =
     glManager
@@ -89,7 +90,7 @@ class PatchViewGUI(title: String, reporter: AnonymousReporter) extends VarviewWi
     for (i <- 0 until worldWidth){
       for (j <- 0 until worldHeight) {
         try {
-          val patch = App.app.workspace.world.getPatchAt(i + minPxcor, j + minPycor)
+          val patch = app.workspace.world.getPatchAt(i + minPxcor, j + minPycor)
           val c = Color.getColor(patch.pcolor)
 
           reporterValueMatrix(i)(j) = new PatchValue(c, reporter.report(context, Array(patch)).asInstanceOf[Double])
@@ -102,7 +103,7 @@ class PatchViewGUI(title: String, reporter: AnonymousReporter) extends VarviewWi
     }
 
     if (doingTurtles) {
-      val as = App.app.workspace.world.turtles
+      val as = app.workspace.world.turtles
 
       turtleValues = as.agents.asScala.toArray.collect {
         case turtle: Turtle if !turtle.hidden =>

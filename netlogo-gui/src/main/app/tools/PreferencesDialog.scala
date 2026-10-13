@@ -8,8 +8,7 @@ import java.io.File
 import java.nio.file.Files
 import javax.swing.{ AbstractAction, ActionMap, InputMap, JComponent, JLabel }
 
-import org.nlogo.app.common.TabsInterface
-import org.nlogo.app.common.Events.RestartEvent
+import org.nlogo.app.common.{ AppTabsInterface, Events }, Events.RestartEvent
 import org.nlogo.core.I18N
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, ButtonPanel, CheckBox, DialogButton, FloatingTabbedPane,
                          MaximumHeight, OptionPane, PreferredSize, TabLabel, TextField, UserAction, WindowAutomator,
@@ -17,7 +16,7 @@ import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, ButtonPanel, CheckBox, Dia
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.AbstractWidgetPanel
 
-class PreferencesDialog(parent: Frame & ThemeSync, tabManager: TabsInterface, widgetPanel: AbstractWidgetPanel)
+class PreferencesDialog(parent: Frame & ThemeSync, tabManager: AppTabsInterface, widgetPanel: AbstractWidgetPanel)
   extends ToolDialog(parent, "preferences") with ThemeSync {
 
   WindowAutomator.automate(this)
