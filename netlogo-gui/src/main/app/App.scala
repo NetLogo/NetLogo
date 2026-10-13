@@ -4,7 +4,7 @@ package org.nlogo.app
 
 import com.jthemedetecor.OsThemeDetector
 
-import java.awt.{ BorderLayout, Dimension, EventQueue, Frame, KeyboardFocusManager, Toolkit }
+import java.awt.{ BorderLayout, Dimension, EventQueue, Frame, KeyboardFocusManager }
 import java.awt.datatransfer.DataFlavor
 import java.awt.dnd.{ DropTarget, DropTargetDragEvent, DropTargetDropEvent, DropTargetEvent, DropTargetListener }
 import java.awt.event.ActionEvent
@@ -22,17 +22,17 @@ import org.nlogo.agent.{ Agent, World2D, World3D }
 import org.nlogo.analytics.{ Analytics, AnalyticsSender }
 import org.nlogo.agent.{ CompilationManagement, World }
 import org.nlogo.api.{ Agent => ApiAgent, AggregateManagerInterface, AnnouncementsInfoDownloader, APIVersion,
-                       Exceptions, FileIO, LogoException, MetadataLoadingException, ModelSaver, ModelSections,
-                       ModelType, NetLogoLegacyDialect, NetLogoThreeDDialect, RendererInterface, SimpleJobOwner,
-                       Version }
+                       AppInterface, Exceptions, FileIO, LogoException, MetadataLoadingException, ModelSaver,
+                       ModelSections, ModelType, NetLogoLegacyDialect, NetLogoThreeDDialect, RendererInterface,
+                       SimpleJobOwner, UpdateManagerInterface, Version }
 import org.nlogo.app.codetab.{ ExternalFileManager, TemporaryCodeTab }
 import org.nlogo.app.common.{ Events => AppEvents, FileActions, FindDialog }
 import org.nlogo.app.interfacetab.{ CommandCenter, InterfaceTab, WidgetPanel }
 import org.nlogo.app.tools.{ AgentMonitorManager, GraphicsPreview, LibraryManagerErrorDialog, PreviewCommandsEditor }
 import org.nlogo.awt.UserCancelException
 import org.nlogo.compile.Compiler
-import org.nlogo.core.{ AgentKind, CompilerException, ExternalResource, I18N, Model, ModelSettings, NetLogoPreferences,
-                        Shape, Widget => CoreWidget },
+import org.nlogo.core.{ AgentKind, CompilerException, CompilerUtilitiesInterface, ExternalResource, I18N, Model,
+                        ModelSettings, NetLogoPreferences, Shape, Widget => CoreWidget },
   Shape.{ LinkShape, VectorShape }
 import org.nlogo.fileformat.FileFormat
 import org.nlogo.gl.view.ViewManager
@@ -91,15 +91,11 @@ object App {
     automated: Boolean = false
   )
 
-  // ideally this would be an Option[App], but that would break all the code that uses App.app,
-  // so it's not worth changing at this point (Isaac B 8/24/25)
-  var app: App = null
+  private var instances: Seq[App] = Seq()
 
   /**
    * Should be called once at startup to create the application and
-   * start it running.  May not be called more than once.  Once
-   * this method has called, the singleton instance of this class
-   * is stored in <code>app</code>.
+   * start it running.  May not be called more than once.
    *
    * <p>This method must <strong>not</strong> be called from the AWT event
    * queue thread.
@@ -147,29 +143,36 @@ object App {
 
       Splash.beginSplash() // also initializes AWT
 
-      app = new App(cmdArgs)
-
-      // It's pretty silly, but in order for the splash screen to show up
-      // for more than a fraction of a second, we want to initialize as
-      // much stuff as we can from main() before handing off to the event
-      // thread.  So what happens in the App constructor and what happens
-      // in finishStartup() is pretty arbitrary -- it's whatever makes
-      // the splash screen come up early without getting a bunch of Java
-      // exceptions because we're doing too much on the main thread.
-          // Hey, it's important to make a good first impression.
-      //   - ST 8/19/03
-      EventQueue.invokeAndWait(() => app.finishStartup(appHandler))
+      instances = instances :+ new App(cmdArgs) {
+        // It's pretty silly, but in order for the splash screen to show up
+        // for more than a fraction of a second, we want to initialize as
+        // much stuff as we can from main() before handing off to the event
+        // thread.  So what happens in the App constructor and what happens
+        // in finishStartup() is pretty arbitrary -- it's whatever makes
+        // the splash screen come up early without getting a bunch of Java
+        // exceptions because we're doing too much on the main thread.
+            // Hey, it's important to make a good first impression.
+        //   - ST 8/19/03
+        EventQueue.invokeAndWait(() => finishStartup(appHandler))
+      }
     } catch {
       case ex: Throwable =>
         StartupError.report(ex)
     }
   }
 
+  def createInstance(args: Array[String]): App = {
+    main(args)
+
+    instances.last
+  }
+
   private [app] def reset(): Unit = {
-    if (app != null) {
+    if (instances.nonEmpty) {
       WindowAutomator.resetWindows()
 
-      app.frame.dispose()
+      instances.foreach(_.frame.dispose())
+      instances = Seq()
     }
   }
 
@@ -271,13 +274,13 @@ object App {
   }
 }
 
-class App(args: App.CommandLineArgs) extends LinkChild with Exceptions.Handler with AppEvent.Handler
+class App(args: App.CommandLineArgs) extends AppInterface with LinkChild with Exceptions.Handler with AppEvent.Handler
   with BeforeLoadEvent.Handler with LoadBeginEvent.Handler with LoadEndEvent.Handler with LoadModelEvent.Handler
   with ModelSavedEvent.Handler with ModelSections with AppEvents.SwitchedTabsEvent.Handler
   with AppEvents.OpenLibrariesDialogEvent.Handler with AppEvents.RestartEvent.Handler with AboutToQuitEvent.Handler
   with Controllable {
 
-  val frame = new AppFrame
+  override val frame: AppFrame = new AppFrame(this)
 
   def getFrame = frame
 
@@ -306,17 +309,19 @@ class App(args: App.CommandLineArgs) extends LinkChild with Exceptions.Handler w
 
   private val controlSet = new AppControlSet
 
-  val workspace: GUIWorkspace = new GUIWorkspace(world, GUIWorkspace.KioskLevel.None, frame, frame,
-                                                 new HubNetManagerFactory(frame, interfaceFactory, menuBarFactory),
-                                                 externalFileManager, listenerManager, errorDialogManager,
-                                                 controlSet) {
-    val compiler = new Compiler(
+  override val workspace: GUIWorkspace =
+    new GUIWorkspace(Option(this), world, GUIWorkspace.KioskLevel.None, frame, frame,
+                     new HubNetManagerFactory(frame, interfaceFactory, menuBarFactory), externalFileManager,
+                     listenerManager, errorDialogManager, controlSet) {
+    val compiler: PresentationCompilerInterface = new Compiler(
       if (Version.is3D) {
         NetLogoThreeDDialect
       } else {
         NetLogoLegacyDialect
       }
     )
+
+    override val utilities: CompilerUtilitiesInterface = compiler.utilities
 
     // lazy to avoid initialization order snafu - ST 3/1/11
     lazy val updateManager = new UpdateManager {
@@ -369,6 +374,9 @@ class App(args: App.CommandLineArgs) extends LinkChild with Exceptions.Handler w
                                 Some(ModelSettings(false)))
   }
 
+  override val utilities: CompilerUtilitiesInterface = workspace.utilities
+  override val updateManager: UpdateManagerInterface = workspace.updateManager
+
   val monitorManager = new AgentMonitorManager(workspace)
 
   private val colorizer = new EditorColorizer(workspace)
@@ -380,9 +388,9 @@ class App(args: App.CommandLineArgs) extends LinkChild with Exceptions.Handler w
 
   private val modelSaver = new ModelSaver(this, modelLoader)
 
-  val tabManager = new TabManager(workspace, interfaceTab, externalFileManager)
+  override val tabManager: TabManager = new TabManager(this, workspace, interfaceTab, externalFileManager)
 
-  val dirtyMonitor = new DirtyMonitor(frame, modelSaver, modelLoader, workspace,
+  val dirtyMonitor = new DirtyMonitor(this, frame, modelSaver, modelLoader, workspace,
                                       _.fold(modelTitle())(externalFileTitle), tabManager)
 
   private val converter = FileFormat.converter(workspace.getExtensionManager, workspace.getLibraryManager,
@@ -390,7 +398,7 @@ class App(args: App.CommandLineArgs) extends LinkChild with Exceptions.Handler w
                                                FileFormat.defaultAutoConvertables :+ SDMGuiAutoConvertable)
                                               (workspace.dialect)
 
-  val mainMenuBar = new MainMenuBar(AbstractWorkspace.isApp)
+  val mainMenuBar = new MainMenuBar(frame, AbstractWorkspace.isApp)
 
   val workspaceFactory = new WorkspaceFactory {
     def newInstance: AbstractWorkspaceScala = HeadlessWorkspace.newInstance
@@ -511,7 +519,7 @@ class App(args: App.CommandLineArgs) extends LinkChild with Exceptions.Handler w
     }
   }
 
-  private def finishStartup(appHandler: AppHandler): Unit = {
+  protected def finishStartup(appHandler: AppHandler): Unit = {
     try {
       frame.getContentPane.add(tabManager.mainTabs, BorderLayout.CENTER)
 
@@ -537,7 +545,7 @@ class App(args: App.CommandLineArgs) extends LinkChild with Exceptions.Handler w
 
       interfaceTab.packSplitPane()
 
-      smartPack(frame.getPreferredSize, true)
+      frame.smartPack(frame.getPreferredSize, true)
 
       interfaceTab.resetSplitPane()
 
@@ -671,7 +679,7 @@ class App(args: App.CommandLineArgs) extends LinkChild with Exceptions.Handler w
     def createFileMenu:  JMenu = createMenu(new FileMenu,  FileCategory)
     def createHelpMenu:  JMenu = createMenu(new HelpMenu,  HelpCategory)
     def createToolsMenu: JMenu = createMenu(new ToolsMenu, ToolsCategory)
-    def createZoomMenu:  JMenu = new ZoomMenu
+    def createZoomMenu:  JMenu = new ZoomMenu(frame)
   }
 
   private def loadDefaultModel(): Unit = {
@@ -893,11 +901,11 @@ class App(args: App.CommandLineArgs) extends LinkChild with Exceptions.Handler w
     themeSyncManager.removeSyncComponent(ts)
   }
 
-  def addSyncFunction(f: () => Unit): Long = {
+  override def addSyncFunction(f: () => Unit): Long = {
     themeSyncManager.addSyncFunction(f)
   }
 
-  def removeSyncFunction(id: Long): Unit = {
+  override def removeSyncFunction(id: Long): Unit = {
     themeSyncManager.removeSyncFunction(id)
   }
 
@@ -1010,7 +1018,7 @@ class App(args: App.CommandLineArgs) extends LinkChild with Exceptions.Handler w
       // if we don't call revalidate() here we don't get up-to-date
       // preferred size information - ST 11/4/03
       tabManager.interfaceTab.packSplitPane()
-      if(wasAtPreferredSizeBeforeLoadBegan) smartPack(frame.getPreferredSize, true)
+      if(wasAtPreferredSizeBeforeLoadBegan) frame.smartPack(frame.getPreferredSize, true)
       else{
         val currentSize = frame.getSize
         val preferredSize = frame.getPreferredSize
@@ -1018,7 +1026,8 @@ class App(args: App.CommandLineArgs) extends LinkChild with Exceptions.Handler w
         if(preferredSize.width > newWidth) newWidth = preferredSize.width
         var newHeight = currentSize.height
         if(preferredSize.height > newHeight) newHeight = preferredSize.height
-        if(newWidth != currentSize.width || newHeight != currentSize.height) smartPack(new Dimension(newWidth, newHeight), true)
+        if(newWidth != currentSize.width || newHeight != currentSize.height)
+          frame.smartPack(new Dimension(newWidth, newHeight), true)
       }
       tabManager.interfaceTab.resetSplitPane()
       preferredSizeAtLoadEndTime = frame.getPreferredSize()
@@ -1067,7 +1076,7 @@ class App(args: App.CommandLineArgs) extends LinkChild with Exceptions.Handler w
 
   private def externalFileTitle(path: String): String = {
     val filename = TemporaryCodeTab.stripPath(path)
-    (tabManager.getTabWithFilename(Right(path)) orElse tabManager.getTabWithFilename(Left(path))).
+    (tabManager.getTabWithFilename(Right(path)).orElse(tabManager.getTabWithFilename(Left(path)))).
       map (tab => frameTitle(filename, tab.saveNeeded)).
       getOrElse(frameTitle(filename, false))
   }
@@ -1305,51 +1314,6 @@ class App(args: App.CommandLineArgs) extends LinkChild with Exceptions.Handler w
       .find(_.displayName == name)
       .getOrElse{throw new IllegalArgumentException(
         "button '" + name + "' not found")}
-
-  def smartPack(targetSize: Dimension, allowShrink: Boolean): Unit = {
-    if (frame.getExtendedState != Frame.MAXIMIZED_BOTH) {
-      val gc = frame.getGraphicsConfiguration
-      val maxBounds = gc.getBounds
-      val insets = Toolkit.getDefaultToolkit.getScreenInsets(gc)
-      val maxWidth = maxBounds.width - insets.left - insets.right
-      val maxHeight = maxBounds.height - insets.top - insets.bottom
-      val maxBoundsX = maxBounds.x + insets.left
-      val maxBoundsY = maxBounds.y + insets.top
-      val maxX = maxBoundsX + maxWidth
-      val maxY = maxBoundsY + maxHeight
-
-      val (currentWidth, currentHeight) = (frame.getWidth, frame.getHeight)
-
-      // Maybe grow the window, but never shrink it
-      var newWidth  = targetSize.width.max(tabManager.interfaceTab.getMinimumWidth).min(maxWidth)
-      var newHeight = targetSize.height.min(maxHeight)
-      if (!allowShrink) {
-        newWidth = newWidth.max(currentWidth)
-        newHeight = newHeight.max(currentHeight)
-      }
-
-      // move up/left to get more room if possible and necessary
-      val moveLeft = 0.max(frame.getLocation().x + newWidth  - maxX)
-      val moveUp   = 0.max(frame.getLocation().y + newHeight - maxY)
-
-      // now we can compute our new position
-      val newX = maxBoundsX.max(frame.getLocation().x - moveLeft)
-      val newY = maxBoundsY.max(frame.getLocation().y - moveUp)
-
-      // and now that we know our position, we can compute our new size
-      newWidth  = newWidth.min(maxX - newX)
-      newHeight = newHeight.min(maxY - newY)
-
-      // now do it!
-      frame.setBounds(newX, newY, newWidth, newHeight)
-      frame.validate()
-
-      frame.setMinimumSize(new Dimension(tabManager.interfaceTab.getMinimumWidth / 2, 300))
-
-      // not sure why this is sometimes necessary - ST 11/24/03
-      tabManager.mainTabs.requestFocus()
-    }
-  }
 
   /**
    * Internal use only.

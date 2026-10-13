@@ -8,7 +8,7 @@ import java.nio.file.{ Files, Paths }
 import java.util.Locale
 
 import org.nlogo.api.FileIO
-import org.nlogo.app.common.{ Dialogs, Events => AppEvents, ModelConfig, TabsInterface }
+import org.nlogo.app.common.{ AppTabsInterface, Dialogs, Events => AppEvents, ModelConfig }
 import org.nlogo.awt.UserCancelException
 import org.nlogo.core.I18N
 import org.nlogo.nvm.IncludeSource
@@ -23,8 +23,8 @@ object TemporaryCodeTab {
 }
 
 class TemporaryCodeTab(workspace: GUIWorkspace,
-  tabs:                           TabsInterface,
-  private var _filename:          TabsInterface.Filename,
+  tabs:                           AppTabsInterface,
+  private var _filename:          AppTabsInterface.Filename,
   externalFileManager:            ExternalFileManager,
   conversionAction:               TemporaryCodeTab => UserAction.MenuAction,
   separateCodeWindow:             Boolean)

@@ -7,7 +7,7 @@ import java.io.{ FileNotFoundException, IOException }
 import java.nio.file.{ Files, Paths }
 
 import org.nlogo.api._
-import org.nlogo.app.{ App, ZoomMenu }
+import org.nlogo.app.ZoomMenu
 import org.nlogo.ls.gui.{ GUIPanel, InterfaceComponent }
 import org.nlogo.nvm.HaltException
 import org.nlogo.swing.{ ModalProgress, NetLogoIcon, Utils }
@@ -17,7 +17,7 @@ import org.nlogo.window.GUIWorkspace
 import scala.util.{ Failure, Try }
 
 class GUIChildModel @throws(classOf[InterruptedException]) @throws(classOf[ExtensionException]) @throws(classOf[HaltException]) @throws(classOf[IOException])
-(ls: LevelSpace, parentWorkspace: Workspace, path: String, modelID: Int)
+(ls: LevelSpace, app: AppInterface, parentWorkspace: Workspace, path: String, modelID: Int)
   extends ChildModel(parentWorkspace, modelID) {
 
   if (!Files.exists(Paths.get(path))) {
@@ -26,18 +26,18 @@ class GUIChildModel @throws(classOf[InterruptedException]) @throws(classOf[Exten
 
   val (component, panel, frame) = UnlockAndBlock.onEDT(parentWorkspace.world) {
     val f = new JFrame with NetLogoIcon with ModalProgress
-    val component = new InterfaceComponent(f)
+    val component = new InterfaceComponent(app, f)
     val panel = new GUIPanel(component.workspace, component)
     (component, panel, Some(f))
   }
 
-  var menuBar = new SyncedMenuBar()
+  var menuBar = new SyncedMenuBar(app)
 
   UnlockAndBlock.onEDT(parentWorkspace.world) (Try {
     val f = frame.get
     f.add(panel)
     val currentlyFocused: Window =
-      Option(KeyboardFocusManager.getCurrentKeyboardFocusManager.getActiveWindow).getOrElse(App.app.frame)
+      Option(KeyboardFocusManager.getCurrentKeyboardFocusManager.getActiveWindow).getOrElse(app.frame)
     f.setLocationRelativeTo(currentlyFocused)
     f.setLocationByPlatform(true)
     f.setVisible(true)
@@ -96,8 +96,8 @@ class GUIChildModel @throws(classOf[InterruptedException]) @throws(classOf[Exten
   }
 }
 
-class SyncedMenuBar extends JMenuBar {
-  private val zoomMenu = new ZoomMenu
+class SyncedMenuBar(app: AppInterface) extends JMenuBar {
+  private val zoomMenu = new ZoomMenu(app.frame)
 
   add(zoomMenu)
 

@@ -1,18 +1,22 @@
 package org.nlogo.extensions.vid
 
-import org.nlogo.api.{ DefaultClassManager, ExtensionManager, PrimitiveManager }
+import org.nlogo.api.{ AppInterface, DefaultClassManager, ExtensionManager, PrimitiveManager }
 
 object VidExtension {
   var isHeadless = true
 }
 
-class VidExtension(movies: MovieFactory, cameras: CameraFactory, player: Player, selector: Selector, recorder: Recorder)
+class VidExtension(movies: MovieFactory, cameras: CameraFactory, player: Player, selector: NetLogoSelector,
+                   recorder: Recorder)
   extends DefaultClassManager with VideoSourceContainer {
 
-  def this() = this(Movie, Camera, new JavaFXPlayer, NetLogoSelector, new MP4Recorder)
+  def this() = this(Movie, new CameraFactory, new JavaFXPlayer, new NetLogoSelector, new MP4Recorder)
 
   override def runOnce(em: ExtensionManager): Unit = {
     VidExtension.isHeadless = !em.workspaceContext.workspaceGUI
+
+    cameras.setApp(em.app)
+    selector.setApp(em.app)
   }
 
   override def load(manager: PrimitiveManager) = {

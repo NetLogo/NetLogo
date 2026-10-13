@@ -3,8 +3,8 @@ package org.nlogo.extensions.simpler
 import java.awt.event.ActionEvent
 import javax.swing.AbstractAction
 
-import org.nlogo.api.{ ExtensionManager }
-import org.nlogo.app.App
+import org.nlogo.api.{ AppInterface, ExtensionManager, TabsInterface }
+import org.nlogo.app.codetab.CodeTab
 import org.nlogo.core.I18N
 import org.nlogo.swing.{ MenuItem, OptionPane }
 
@@ -20,10 +20,10 @@ trait SRMenu {
 
   def init(extMan: ExtensionManager, longName: String, binaryPath: String, config: Config): Unit = {
     value = create(extMan, longName, binaryPath, config)
-    onInit()
+    extMan.app.foreach(onInit)
   }
 
-  def onInit(): Unit = ()
+  def onInit(app: AppInterface): Unit = ()
 
   def setup(): Unit = ()
 
@@ -51,7 +51,7 @@ class SRMenuGUI extends SRMenu {
     Menu.create(extMan, longName, binaryPath, config)
   }
 
-  override def onInit(): Unit = {
+  override def onInit(app: AppInterface): Unit = {
     value.foreach {
       menu =>
 
@@ -61,16 +61,20 @@ class SRMenuGUI extends SRMenu {
             new AbstractAction("Convert code from R extension") {
               override def actionPerformed(e: ActionEvent): Unit = {
 
-                val tabManager = App.app.tabManager
+                val tabManager: TabsInterface = app.tabManager
 
-                val anySetup = (tabManager.mainCodeTab +: tabManager.getExternalFileTabs).exists { tab =>
-                  tab.innerSource = convertSource(tab.innerSource)
+                val anySetup = (tabManager.mainCodeTab +: tabManager.getExternalFileTabs).exists {
+                  case tab: CodeTab =>
+                    tab.innerSource = convertSource(tab.innerSource)
 
-                  """(?i)(^|[^a-z0-9_\\-])sr:setup($|[^a-z0-9_\\-])""".r.findFirstIn(tab.innerSource).isDefined
+                    """(?i)(^|[^a-z0-9_\\-])sr:setup($|[^a-z0-9_\\-])""".r.findFirstIn(tab.innerSource).isDefined
+
+                  case _ =>
+                    false
                 }
 
                 if (!anySetup) {
-                  new OptionPane(App.app.frame, I18N.gui.get("common.messages.warning"),
+                  new OptionPane(app.frame, I18N.gui.get("common.messages.warning"),
                                  """This model does not use the sr:setup primitive.
                                     You must call it before using any other Simple R primitives.""",
                                  OptionPane.Options.Ok, OptionPane.Icons.warning)

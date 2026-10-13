@@ -65,7 +65,7 @@ class CameraTest extends AnyFunSuite with BeforeAndAfter {
     }
 
     trait CameraTestHelper {
-      val cam = new Camera(0)
+      val cam = new Camera(new CameraFactory, 0)
     }
   }
 }

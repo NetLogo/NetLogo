@@ -3,9 +3,8 @@ package view25d
 import java.awt.GraphicsEnvironment
 import java.lang.Double
 
-import org.nlogo.api.{ Argument, Command, Context, DefaultClassManager, ExtensionManager,
+import org.nlogo.api.{ AppInterface, Argument, Command, Context, DefaultClassManager, ExtensionManager,
                        PrimitiveManager, Reporter }
-import org.nlogo.app.App
 import org.nlogo.core.Syntax
 import org.nlogo.workspace.AbstractWorkspace
 
@@ -64,34 +63,38 @@ object View25DExtension {
 class View25DExtension extends DefaultClassManager {
   import View25DExtension._
 
+  private var app: Option[AppInterface] = None
   private var syncFunctionIDOpt: Option[Long] = None
 
   // run at extension startup.  ensure that the NetLogo native JOGL is loaded.
   override def runOnce(manager: ExtensionManager): Unit = {
     View25DExtension.isHeadless = !manager.workspaceContext.workspaceGUI
 
-    View25DShapeChangeListener.listen()
+    app = manager.app
 
-    if (!View25DExtension.isHeadless) {
-      syncFunctionIDOpt =
-        Option(
-          App.app.addSyncFunction(
+    manager.app match {
+      case Some(instance) if !View25DExtension.isHeadless =>
+        View25DShapeChangeListener.listen(instance)
+
+        syncFunctionIDOpt =
+          Option(instance.addSyncFunction(
             () => {
               patchWindowMap.values.foreach(_.syncTheme())
               turtleWindowMap.values.foreach(_.syncTheme())
             }
-          )
-        )
+          ))
+
+      case _ =>
     }
 
   }
 
   override def load(manager: PrimitiveManager): Unit = {
-    manager.addPrimitive("patch-view", new MakePatchView())
+    manager.addPrimitive("patch-view", new MakePatchView(app))
     manager.addPrimitive("decorate-patch-view", new DecoratePatchView(true))
     manager.addPrimitive("undecorate-patch-view", new DecoratePatchView(false))
 
-    manager.addPrimitive("turtle-view", new MakeTurtleView())
+    manager.addPrimitive("turtle-view", new MakeTurtleView(app))
 
     manager.addPrimitive("update-patch-view", new UpdateOnePatchView())
     manager.addPrimitive("update-all-patch-views", new UpdateAllViews())
@@ -193,7 +196,7 @@ class View25DExtension extends DefaultClassManager {
     disposeAllTurtleViews()
 
     if (!View25DExtension.isHeadless) {
-      syncFunctionIDOpt.foreach(App.app.removeSyncFunction)
+      syncFunctionIDOpt.foreach(id => manager.app.foreach(_.removeSyncFunction(id)))
       syncFunctionIDOpt = None
     }
 

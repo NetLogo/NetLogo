@@ -4,7 +4,7 @@ package org.nlogo.workspace
 
 import org.nlogo.agent.{ World2D, World3D }
 import org.nlogo.api.{ AggregateManagerInterface, Version, WorkspaceContext }
-import org.nlogo.core.AgentKind
+import org.nlogo.core.{ AgentKind, CompilerUtilitiesInterface }
 import org.nlogo.nvm.{ PresentationCompilerInterface, PrimaryWorkspace }
 
 /**
@@ -13,6 +13,7 @@ import org.nlogo.nvm.{ PresentationCompilerInterface, PrimaryWorkspace }
 
 class DummyAbstractWorkspace
 extends AbstractWorkspaceScala(
+    None,
     if(Version.is3D) new World3D else new World2D,
     null) // no hubNetManagerFactory
 {
@@ -64,6 +65,7 @@ extends AbstractWorkspaceScala(
   override def periodicUpdate(): Unit = unsupported
   override def addJobFromJobThread(job: org.nlogo.nvm.Job) = unsupported
   override def compiler: PresentationCompilerInterface = unsupported
+  override def utilities: CompilerUtilitiesInterface = unsupported
 
   def openModel(model: org.nlogo.core.Model, shouldAutoInstallLibs: Boolean): Unit = unsupported
   def renderer: org.nlogo.api.RendererInterface = unsupported

@@ -8,7 +8,8 @@ import java.net.URL
 import java.util.{ List => JList, Locale }
 import java.util.jar.JarFile
 
-import org.nlogo.api.{ ClassManager, Dump, ExtensionException, ImportErrorHandler, Reporter, WorkspaceContext }
+import org.nlogo.api.{ AppInterface, ClassManager, Dump, ExtensionException, ImportErrorHandler, Reporter,
+                       WorkspaceContext }
 import org.nlogo.core.{ CompilerException, ErrorSource, ExtensionObject, Primitive, PrimitiveCommand, PrimitiveReporter, TokenType }
 import org.nlogo.nvm.{ ExtensionManager => NvmExtensionManager }
 
@@ -149,7 +150,9 @@ object ExtensionManager {
 
 import ExtensionManager._
 
-class ExtensionManager(val workspace: ExtendableWorkspace, loader: ExtensionLoader) extends NvmExtensionManager {
+class ExtensionManager(val app: Option[AppInterface], val workspace: ExtendableWorkspace, loader: ExtensionLoader)
+  extends NvmExtensionManager {
+
   import ExtensionManagerException._
 
   private var loaders   = Seq[ExtensionLoader](loader)

@@ -8,7 +8,7 @@ import java.nio.file.Path
 import javax.swing.{ AbstractAction, JDialog }
 
 import org.nlogo.api.{ AggregateManagerInterface, LibraryManager }
-import org.nlogo.app.common.TabsInterface
+import org.nlogo.app.common.AppTabsInterface
 import org.nlogo.app.interfacetab.WidgetPanel
 import org.nlogo.app.tools.{ LibrariesDialog, PreferencesDialog }
 import org.nlogo.awt.Positioning
@@ -34,7 +34,7 @@ abstract class ShowDialogAction(name: String) extends AbstractAction(name) with 
   }
 }
 
-class ShowPreferencesDialog(frame: Frame & ThemeSync, tabs: TabsInterface, widgetPanel: AbstractWidgetPanel)
+class ShowPreferencesDialog(frame: Frame & ThemeSync, tabs: AppTabsInterface, widgetPanel: AbstractWidgetPanel)
 extends AbstractAction(I18N.gui.get("menu.tools.preferences")) with ThemeSync
 with MenuAction {
   category = ToolsCategory
@@ -129,7 +129,7 @@ with MenuAction {
   }
 }
 
-class ConvertWidgetSizes(frame: Frame, widgetPanel: WidgetPanel)
+class ConvertWidgetSizes(frame: AppFrame, widgetPanel: WidgetPanel)
   extends AbstractAction(I18N.gui.get("menu.tools.convertWidgetSizes")) with MenuAction {
 
   category = ToolsCategory
@@ -144,7 +144,7 @@ class ConvertWidgetSizes(frame: Frame, widgetPanel: WidgetPanel)
                        OptionPane.Icons.info).getSelectedIndex == 0) {
       widgetPanel.convertWidgetSizes()
 
-      App.app.smartPack(frame.getPreferredSize, false)
+      frame.smartPack(frame.getPreferredSize, false)
     }
   }
 }

@@ -7,9 +7,8 @@ import org.nlogo.api._
 import org.nlogo.nvm.{ Context, Instruction }
 import org.nlogo.headless.HeadlessWorkspace
 import org.nlogo.ls.gui.ViewFrame
-import org.nlogo.workspace.AbstractWorkspace
 
-class HeadlessChildModel (parentWorkspace: AbstractWorkspace, path: String, modelID: Int)
+class HeadlessChildModel (parentWorkspace: Workspace, path: String, modelID: Int)
   extends ChildModel(parentWorkspace, modelID) {
 
   val world: World & CompilationManagement = if(Version.is3D) new World3D() else new World2D()

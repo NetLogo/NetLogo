@@ -6,14 +6,15 @@ import java.nio.file.Paths
 import javax.swing.JFrame
 
 import org.nlogo.agent.{ Agent, CompilationManagement, World, World2D, World3D }
-import org.nlogo.api.{ Agent => APIAgent, ControlSet, LabProtocol, ModelType, NetLogoLegacyDialect,
+import org.nlogo.api.{ Agent => APIAgent, AppInterface, ControlSet, LabProtocol, ModelType, NetLogoLegacyDialect,
                        NetLogoThreeDDialect, Version }
 import org.nlogo.app.codetab.ExternalFileManager
 import org.nlogo.app.tools.AgentMonitorManager
 import org.nlogo.awt.EventQueue
 import org.nlogo.compile.Compiler
-import org.nlogo.core.{ AgentKind, Model }
+import org.nlogo.core.{ AgentKind, CompilerUtilitiesInterface, Model }
 import org.nlogo.gl.view.ViewManager
+import org.nlogo.nvm.PresentationCompilerInterface
 import org.nlogo.sdm.AggregateManagerLite
 import org.nlogo.swing.{ BoxAlign, BoxRow }
 import org.nlogo.theme.InterfaceColors
@@ -27,18 +28,21 @@ import org.nlogo.fileformat.FileFormat
 import scala.concurrent.{ Future, Promise }
 import scala.util.Try
 
-class InterfaceComponent(frame: JFrame)
+class InterfaceComponent(app: AppInterface, frame: JFrame)
   extends BoxRow(BoxAlign.Start) with Event.LinkParent with LinkRoot with ControlSet {
 
   val listenerManager = new NetLogoListenerManager
   val world: World = if(Version.is3D) new World3D() else new World2D()
 
   // KioskLevel.None - We want a 3d button
-  val workspace: GUIWorkspace = new GUIWorkspace(world, GUIWorkspace.KioskLevel.None, frame, frame, null,
+  val workspace: GUIWorkspace = new GUIWorkspace(Option(app), world, GUIWorkspace.KioskLevel.None, frame, frame, null,
                                                  new ExternalFileManager, listenerManager,
                                                  new ErrorDialogManager(frame), this) {
 
-    val compiler = new Compiler(if (Version.is3D) NetLogoThreeDDialect else NetLogoLegacyDialect)
+    val compiler: PresentationCompilerInterface =
+      new Compiler(if (Version.is3D) NetLogoThreeDDialect else NetLogoLegacyDialect)
+
+    override val utilities: CompilerUtilitiesInterface = compiler.utilities
 
     lazy val updateManager = new UpdateManager {
       override def defaultFrameRate = workspace.frameRate
