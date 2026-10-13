@@ -4,7 +4,9 @@ package org.nlogo.app.common
 
 import java.awt.{ Component, Font }
 
-object TabsInterface {
+import org.nlogo.api.TabsInterface
+
+object AppTabsInterface {
   /**
     * Right indicates a real path, and Left means a name for a never-saved file
     * (analogous to ModelType.Normal & ModelType.New, respectively)
@@ -12,15 +14,9 @@ object TabsInterface {
   type Filename = Either[String, String]
 }
 
-trait TabsInterface {
-  import TabsInterface.Filename
-
+trait AppTabsInterface extends TabsInterface {
   val interfaceTab: Component
   val infoTab: Component
-  val mainCodeTab: Component
-
-  def smartTabbingEnabled: Boolean
-  def smartTabbingEnabled_=(enabled: Boolean): Unit
 
   def lineNumbersVisible: Boolean
   def lineNumbersVisible_=(b: Boolean): Unit
@@ -36,13 +32,7 @@ trait TabsInterface {
   def watchingFiles: Boolean
   def watchingFiles_=(b: Boolean): Unit
 
-  def newExternalFile(): Unit
-  def openExternalFile(filename: String, focus: Boolean = true): Unit
-  def closeExternalFile(filename: Filename): Unit
-
-  def switchWindow(separate: Boolean, preserveSelected: Boolean): Unit
-
-  def showCodeTabPreferences(): Unit
+  def closeExternalFile(filename: AppTabsInterface.Filename): Unit
 
   def setJumpOnClick(value: Boolean): Unit
 

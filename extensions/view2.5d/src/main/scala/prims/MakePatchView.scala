@@ -1,14 +1,13 @@
 package view25d.prims
 
-import org.nlogo.api.{ AgentException, AnonymousReporter, Argument, Command, Context, ExtensionException,
+import org.nlogo.api.{ AgentException, AnonymousReporter, AppInterface, Argument, Command, Context, ExtensionException,
                        ReporterRunnable }
-import org.nlogo.app.App
 import org.nlogo.core.Syntax
 
 import view25d.View25DExtension
 import view25d.view.{ PatchView, PatchViewGUI, PatchViewHeadless }
 
-class MakePatchView extends Command {
+class MakePatchView(app: Option[AppInterface]) extends Command {
   override def getSyntax: Syntax =
     Syntax.commandSyntax(right = List(Syntax.StringType, Syntax.ReporterType), agentClassString = "O---")
 
@@ -22,7 +21,7 @@ class MakePatchView extends Command {
     val patchReporter = args(1).getReporter
 
     try {
-      patchReporter.report(context, Array(App.app.workspace.world.getPatchAt(0, 0)))
+      patchReporter.report(context, Array(context.workspace.world.getPatchAt(0, 0)))
     }
 
     catch {
@@ -46,11 +45,13 @@ class MakePatchView extends Command {
     override def run(): PatchView = {
       try {
 
-        val manualPatchView =
-          if (context.workspace.workspaceContext.workspaceGUI)
-            new PatchViewGUI(title, patchReporter)
-          else
+        val manualPatchView = app match {
+          case Some(instance) if context.workspace.workspaceContext.workspaceGUI =>
+            new PatchViewGUI(instance, title, patchReporter)
+
+          case _ =>
             new PatchViewHeadless(title, patchReporter)
+        }
 
         val world = context.world
 

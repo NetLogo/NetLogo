@@ -3,8 +3,7 @@ package org.nlogo.ls.gui
 import java.net.URI
 import javax.swing.JOptionPane
 
-import org.nlogo.api.{ ExtensionException, ModelType, Version }
-import org.nlogo.app.{ App, TabManager }
+import org.nlogo.api.{ AppInterface, ExtensionException, ModelType, TabsInterface, Version }
 import org.nlogo.app.codetab.CodeTab
 import org.nlogo.awt.UserCancelException
 import org.nlogo.core.{ I18N, Model }
@@ -15,7 +14,8 @@ import org.nlogo.workspace.{ AbstractWorkspace, ModelsLibrary, ModelTracker, Ope
 
 import java.nio.file.Paths
 
-class ModelCodeTab(workspace: AbstractWorkspace, tabManager: TabManager, modelManager: ModelManager)
+class ModelCodeTab(app: AppInterface, workspace: AbstractWorkspace, tabManager: TabsInterface,
+                   modelManager: ModelManager)
   extends CodeTab(workspace, tabManager) with CloseableTab with ModelSavedEvent.Handler {
 
   val tabName      = workspace.getModelFileName
@@ -48,7 +48,7 @@ class ModelCodeTab(workspace: AbstractWorkspace, tabManager: TabManager, modelMa
     // All paths will be absolute, so this is okay
     if (ModelsLibrary.getModelPaths contains filePath) {
       text.setEditable(false)
-      JOptionPane.showMessageDialog(App.app.frame,
+      JOptionPane.showMessageDialog(app.frame,
         "<html><p style='width: 400px;'>" +
         "Because this is a models library model, you will not be able to make any changes to the code. If you wish " +
         "to make changes, copy the file to a different location, update your parent model with the new location, and " +

@@ -17,8 +17,7 @@ public class NLink {
   {
     isGUIworkspace = isGUImode;
     if( isGUImode ) {
-      App.main( new String[] { } ) ;
-      workspace = App.app();
+      workspace = App.createInstance(new String[] {});
       org.nlogo.api.Exceptions.setHandler
         ( new org.nlogo.api.Exceptions.Handler() {
             public void handle( Throwable t ) {
@@ -39,7 +38,7 @@ public class NLink {
           new Runnable() {
             public void run() {
               try
-              { App.app().open(path, true); }
+              { workspace.open(path, true); }
               catch( java.io.IOException ex)
               { caughtEx = ex; }
             } } );

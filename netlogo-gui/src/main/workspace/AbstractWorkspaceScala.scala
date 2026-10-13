@@ -9,8 +9,8 @@ import java.util.Base64
 import scala.collection.mutable.WeakHashMap
 import scala.util.Try
 import org.nlogo.agent.{ World, Agent, OutputObject }
-import org.nlogo.api.{ Dump, PackageManager => APIPM, ExtensionManager => APIEM, FileIO, HubNetInterface, LibraryManager, LogoException,
-                       OutputDestination, PreviewCommands, Workspace => APIWorkspace }
+import org.nlogo.api.{ AppInterface, Dump, PackageManager => APIPM, ExtensionManager => APIEM, FileIO, HubNetInterface,
+                       LibraryManager, LogoException, OutputDestination, PreviewCommands, Workspace => APIWorkspace }
 import org.nlogo.core.{ CompilerException, Model, View, Widget => CoreWidget, WorldDimensions, WorldDimensions3D }
 import org.nlogo.nvm.{ Activation, Instruction, Command, Context, Job, MutableLong, Procedure, Tracer }
 import org.nlogo.nvm.RuntimePrimitiveException
@@ -22,7 +22,8 @@ trait HubNetManagerFactory {
   def newInstance(workspace: AbstractWorkspaceScala): HubNetInterface
 }
 
-abstract class AbstractWorkspaceScala(val world: World, val hubNetManagerFactory: HubNetManagerFactory)
+abstract class AbstractWorkspaceScala(app: Option[AppInterface], val world: World,
+                                      val hubNetManagerFactory: HubNetManagerFactory)
   extends AbstractWorkspace(world)
   with APIConformant with Benchmarking
   with Checksums with Evaluating
@@ -36,7 +37,7 @@ abstract class AbstractWorkspaceScala(val world: World, val hubNetManagerFactory
   with Plotting
   with Extensions {
 
-  initMembers()
+  initMembers(app)
 
   private val libraryManager = new LibraryManager(APIPM.userPackagesPath, APIEM.userExtensionsPath, extensionManager.reset)
 

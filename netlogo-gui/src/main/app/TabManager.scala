@@ -11,9 +11,9 @@ import javax.swing.{ AbstractAction, JComponent, JFrame }
 
 import org.nlogo.api.Exceptions
 import org.nlogo.app.codetab.{ CodeTab, ExternalFileManager, MainCodeTab, TemporaryCodeTab }
-import org.nlogo.app.common.{ CommandLine, ExceptionCatchingAction, MenuTab, ModelConfig, TabsInterface }
+import org.nlogo.app.common.{ AppTabsInterface, CommandLine, ExceptionCatchingAction, MenuTab, ModelConfig },
+  AppTabsInterface.Filename
 import org.nlogo.app.common.Events.SwitchedTabsEvent
-import org.nlogo.app.common.TabsInterface.Filename
 import org.nlogo.app.infotab.InfoTab
 import org.nlogo.app.interfacetab.InterfaceTab
 import org.nlogo.app.tools.AgentMonitorManager
@@ -31,9 +31,9 @@ import org.nlogo.window.{ Event, ExternalFileInterface, GUIWorkspace, JobWidget,
 
 import scala.io.Source
 
-class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
+class TabManager(app: App, val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
                  val externalFileManager: ExternalFileManager)
-  extends TabsInterface with AboutToCloseFilesEvent.Handler with AboutToSaveExternalFileEvent.Handler
+  extends AppTabsInterface with AboutToCloseFilesEvent.Handler with AboutToSaveExternalFileEvent.Handler
   with AboutToSaveModelEvent.Handler with AutoIndentEvent.Handler with CompiledEvent.Handler
   with ExternalFileSavedEvent.Handler with LoadBeginEvent.Handler with LoadErrorEvent.Handler with LoadEndEvent.Handler
   with ModelSavedEvent.Handler with RuntimeErrorEvent.Handler with WidgetErrorEvent.Handler
@@ -52,7 +52,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
   val mainTabs = new TabsPanel(this)
   val separateTabs = new TabsPanel(this)
 
-  val separateTabsWindow = new CodeTabsWindow(workspace.getFrame, separateTabs)
+  val separateTabsWindow = new CodeTabsWindow(app.frame, separateTabs)
 
   private var previousTab: Component = interfaceTab
 
@@ -399,7 +399,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
       mainTabs.getSelectedComponent
   }
 
-  def getExternalFileTabs: Seq[TemporaryCodeTab] = {
+  override def getExternalFileTabs: Seq[TemporaryCodeTab] = {
     if (separateTabsWindow.isVisible) {
       (for (i <- 1 until separateTabs.getTabCount) yield separateTabs.getComponentAt(i))
         .collect(_ match {
@@ -435,7 +435,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     }
   }
 
-  def setSelectedTab(tab: Component): Unit = {
+  override def setSelectedTab(tab: Component): Unit = {
     if (mainTabs.indexOfComponent(tab) == -1) {
       separateTabs.setSelectedComponent(tab)
       separateTabs.focusSelected()
@@ -508,7 +508,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     newFileNumber += 1
   }
 
-  def addTab(tab: Component, name: String): Unit = {
+  override def addTab(tab: Component, name: String): Unit = {
     if (separateTabsWindow.isVisible) {
       addTabWithLabel(separateTabs, name, tab)
       separateTabs.setSelectedComponent(tab)
@@ -534,7 +534,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     }
   }
 
-  def replaceTab(oldTab: Component, newTab: Component): Unit = {
+  override def replaceTab(oldTab: Component, newTab: Component): Unit = {
     val index = mainTabs.indexOfComponent(oldTab)
 
     if (index == -1) {
@@ -571,7 +571,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     }
   }
 
-  def removeTab(tab: Component): Unit = {
+  override def removeTab(tab: Component): Unit = {
     if (mainTabs.indexOfComponent(tab) == -1) {
       separateTabs.remove(tab)
     } else {
@@ -633,11 +633,11 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
 
     new CompileAllEvent().raise(mainCodeTab)
 
-    App.app.setWindowTitles()
+    app.setWindowTitles()
   }
 
   override def showCodeTabPreferences(): Unit = {
-    App.app.showPreferencesDialogAt(1)
+    app.showPreferencesDialogAt(1)
   }
 
   override def setJumpOnClick(value: Boolean): Unit = {

@@ -1,6 +1,6 @@
 package view25d.prims
 
-import org.nlogo.api.{ AgentSet, AnonymousReporter, Argument, Command, Context, ExtensionException,
+import org.nlogo.api.{ AgentSet, AnonymousReporter, AppInterface, Argument, Command, Context, ExtensionException,
                        ReporterRunnable, Turtle }
 import org.nlogo.app.App
 import org.nlogo.core.Syntax
@@ -10,7 +10,7 @@ import scala.jdk.CollectionConverters.IterableHasAsScala
 import view25d.View25DExtension
 import view25d.view.{ TurtleView, TurtleViewGUI, TurtleViewHeadless }
 
-class MakeTurtleView extends Command {
+class MakeTurtleView(app: Option[AppInterface]) extends Command {
   override def getSyntax: Syntax =
     Syntax.commandSyntax(right = List(Syntax.StringType, Syntax.AgentsetType, Syntax.ReporterType),
                          agentClassString = "O---")
@@ -46,11 +46,13 @@ class MakeTurtleView extends Command {
 
     override def run(): TurtleView = {
 
-      val manualTurtleView =
-        if (context.workspace.workspaceContext.workspaceGUI)
-          new TurtleViewGUI(title, as, turtleReporter)
-        else
+      val manualTurtleView = app match {
+        case Some(instance) if context.workspace.workspaceContext.workspaceGUI =>
+          new TurtleViewGUI(instance, title, as, turtleReporter)
+
+        case _ =>
           new TurtleViewHeadless(title, as, turtleReporter)
+      }
 
       val world = context.world
 

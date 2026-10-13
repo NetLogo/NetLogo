@@ -7,8 +7,8 @@ import java.awt.{ BorderLayout, Color, Dimension }
 import java.awt.event.{ WindowAdapter, WindowEvent }
 import javax.swing.WindowConstants
 
-import org.nlogo.api.{ AgentException, AgentSet, AnonymousReporter, LogoException, Color => NLColor, Context, Turtle }
-import org.nlogo.app.App
+import org.nlogo.api.{ AgentException, AgentSet, AnonymousReporter, AppInterface, LogoException, Color => NLColor,
+                       Context, Turtle }
 import org.nlogo.theme.ThemeSync
 
 import scala.jdk.CollectionConverters.IterableHasAsScala
@@ -49,10 +49,10 @@ class TurtleViewHeadless(override val title: String, override protected val init
 
 }
 
-class TurtleViewGUI(title: String, override protected val initialAgents: AgentSet, reporter: AnonymousReporter)
-  extends VarviewWindow(title) with TurtleView with ThemeSync {
+class TurtleViewGUI(app: AppInterface, title: String, override protected val initialAgents: AgentSet,
+                    reporter: AnonymousReporter) extends VarviewWindow(app, title) with TurtleView with ThemeSync {
 
-  private val glManager = new TurtleGL(this)
+  private val glManager = new TurtleGL(app, this)
 
   def getGLWindow: MouseableGLWindow =
     glManager
@@ -127,7 +127,7 @@ class TurtleViewGUI(title: String, override protected val initialAgents: AgentSe
       for (j <- 0 until worldHeight) {
         try {
           patchColorMatrix(i)(j) =
-            NLColor.getColor(App.app.workspace.world.getPatchAt(i + minPxcor, j + minPycor).pcolor)
+            NLColor.getColor(app.workspace.world.getPatchAt(i + minPxcor, j + minPycor).pcolor)
         }
 
         catch {

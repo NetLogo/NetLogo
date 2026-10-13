@@ -20,13 +20,18 @@ import org.scalatest.funsuite.AnyFunSuite
 
 // test a variety of specific behaviors within dialogs (Isaac B 10/29/25)
 class DialogTests extends AnyFunSuite with BeforeAndAfterAll {
-  private lazy val frame: AppFrame = App.app.frame
-  private lazy val workspace: GUIWorkspace = App.app.workspace
-  private lazy val fileManager: FileManager = App.app.fileManager
-  private lazy val tabManager: TabManager = App.app.tabManager
-  private lazy val monitorManager: AgentMonitorManager = App.app.monitorManager
+  private lazy val app: App = {
+    App.reset()
+    App.createInstance(Array("--testing"))
+  }
+
+  private lazy val frame: AppFrame = app.frame
+  private lazy val workspace: GUIWorkspace = app.workspace
+  private lazy val fileManager: FileManager = app.fileManager
+  private lazy val tabManager: TabManager = app.tabManager
+  private lazy val monitorManager: AgentMonitorManager = app.monitorManager
   private lazy val commandLine: EditorArea = tabManager.interfaceTab.commandCenter.commandLine.textField
-  private lazy val labManager: LabManager = App.app.labManager
+  private lazy val labManager: LabManager = app.labManager
   private lazy val libraryManager: LibraryManager = workspace.getLibraryManager
 
   test("Search for standard model in Models Library dialog", GuiTest.Tag) {
@@ -100,7 +105,7 @@ class DialogTests extends AnyFunSuite with BeforeAndAfterAll {
   }
 
   test("Search for, install, and uninstall extension in Extensions Manager dialog", GuiTest.Tag) {
-    App.app.openLibrariesDialog.createDialog() match {
+    app.openLibrariesDialog.createDialog() match {
       case dialog: LibrariesDialog =>
         dialog.syncTheme()
         dialog.setVisible(true)
@@ -124,7 +129,7 @@ class DialogTests extends AnyFunSuite with BeforeAndAfterAll {
   }
 
   test("Search for imaginary extension in Extensions Manager dialog", GuiTest.Tag) {
-    App.app.openLibrariesDialog.createDialog() match {
+    app.openLibrariesDialog.createDialog() match {
       case dialog: LibrariesDialog =>
         dialog.syncTheme()
         dialog.setVisible(true)
@@ -248,8 +253,7 @@ class DialogTests extends AnyFunSuite with BeforeAndAfterAll {
     AutomationUtils.waitForGUI()
 
     val dialog = new PreviewCommandsDialog(frame, PreviewCommandsEditor.title, fileManager.currentModel,
-                                           workspace.getModelPath, App.app.workspaceFactory, App.app.graphicsPreview,
-                                           false)
+                                           workspace.getModelPath, app.workspaceFactory, app.graphicsPreview, false)
 
     dialog.setVisible(true)
 
@@ -293,8 +297,7 @@ class DialogTests extends AnyFunSuite with BeforeAndAfterAll {
   }
 
   override def beforeAll(): Unit = {
-    App.reset()
-    App.main(Array("--testing"))
+    app
   }
 
   private def sendLineOrFail(comp: Component, text: String, message: String): Unit = {

@@ -13,6 +13,7 @@ import org.nlogo.agent.Agent;
 import org.nlogo.agent.ImporterJ;
 import org.nlogo.agent.World;
 import org.nlogo.api.AggregateManagerInterface;
+import org.nlogo.api.AppInterface;
 import org.nlogo.api.ExportPlotWarningAction;
 import org.nlogo.api.ExportPlotWarningActionJ;
 import org.nlogo.api.ExternalResourceManager;
@@ -39,6 +40,8 @@ import org.nlogo.nvm.MutableLong;
 import org.nlogo.nvm.PresentationCompilerInterface;
 import org.nlogo.nvm.Procedure;
 import org.nlogo.nvm.Workspace;
+
+import scala.Option;
 
 public abstract class AbstractWorkspace
     implements Workspace,
@@ -110,10 +113,10 @@ public abstract class AbstractWorkspace
     _world = world;
   }
 
-  public void initMembers() {
+  public void initMembers(Option<AppInterface> app) {
     evaluator = new Evaluator(this);
     jobManager = Femto.getJ(JobManagerInterface.class, "org.nlogo.job.JobManager", new Object[]{this, _world, _world});
-    extensionManager = new ExtensionManager(this, new JarLoader(this));
+    extensionManager = new ExtensionManager(app, this, new JarLoader(this));
     resourceManager = new ExternalResourceManager();
   }
 

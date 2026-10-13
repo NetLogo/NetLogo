@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.window
+package org.nlogo.api
 
 trait UpdateManagerInterface {
   def shouldUpdateNow: Boolean

@@ -5,12 +5,12 @@ package view25d.view
 import java.awt.GraphicsEnvironment
 import java.util.Objects
 
+import org.nlogo.api.AppInterface
+
 import view25d.View25DExtension
-import org.nlogo.app.App
 
 object View25DShapeChangeListener {
-  def listen(): Unit = {
-    if (!View25DExtension.isHeadless)
-      App.app.workspace.world.turtleShapes.subscribe(_ => View25DExtension.updateTurtleShapesAllViews())
+  def listen(app: AppInterface): Unit = {
+    app.workspace.world.turtleShapes.subscribe(_ => View25DExtension.updateTurtleShapesAllViews())
   }
 }

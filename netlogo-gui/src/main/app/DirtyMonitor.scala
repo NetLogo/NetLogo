@@ -8,13 +8,14 @@ import java.nio.file.{ Files, Paths, StandardOpenOption }
 import java.util.{ Timer, TimerTask }
 import javax.swing.JFrame
 
-import org.nlogo.api.{ AbstractModelLoader, Exceptions, ModelSaver, ModelType, Version }
+import org.nlogo.api.{ AbstractModelLoader, Exceptions, ExtensionManager, ModelSaver, ModelType, Version }
 import org.nlogo.app.common.ModelConfig
+import org.nlogo.core.CompilerUtilitiesInterface
 import org.nlogo.window.Events._
 import org.nlogo.workspace.{ ModelTracker, SaveModel }
 
-class DirtyMonitor(frame: JFrame, modelSaver: ModelSaver, modelLoader: AbstractModelLoader, modelTracker: ModelTracker,
-                   title: Option[String] => String, tabManager: TabManager)
+class DirtyMonitor(app: App, frame: JFrame, modelSaver: ModelSaver, modelLoader: AbstractModelLoader,
+                   modelTracker: ModelTracker, title: Option[String] => String, tabManager: TabManager)
 extends BeforeLoadEvent.Handler
 with AfterLoadEvent.Handler
 with WidgetAddedEvent.Handler
@@ -68,7 +69,7 @@ with SaveModel.Controller
       dirtyPaths -= path
     }
 
-    App.app.setWindowTitles()
+    app.setWindowTitles()
   }
 
   private def doAutoSave(path: Option[String]): Unit = {
@@ -143,8 +144,8 @@ with SaveModel.Controller
 
   object TempFileModelTracker extends ModelTracker {
     val delegate = modelTracker
-    def compiler: org.nlogo.nvm.PresentationCompilerInterface = delegate.compiler
-    def getExtensionManager(): org.nlogo.workspace.ExtensionManager = delegate.getExtensionManager()
+    def utilities: CompilerUtilitiesInterface = delegate.utilities
+    def getExtensionManager(): ExtensionManager = delegate.getExtensionManager()
     override def getModelType = delegate.getModelType
     override def getModelFileUri: Option[URI] =
       Option(ModelConfig.getModelAutoSavePath(Option(delegate.getModelPath)).toUri)

@@ -10,7 +10,7 @@ import javax.swing.{ AbstractAction, JComponent, JFileChooser, JLabel, JPanel }
 import javax.swing.event.{ DocumentEvent, DocumentListener }
 
 import org.nlogo.analytics.Analytics
-import org.nlogo.app.common.TabsInterface
+import org.nlogo.app.common.AppTabsInterface
 import org.nlogo.core.{ I18N, NetLogoPreferences }
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, Button, CheckBox, ComboBox, PopupMenu, TextField, Transparent,
                          Zoomable }
@@ -186,7 +186,7 @@ object Preferences {
 
   object LoadLastOnStartup extends BooleanPreference("loadLastOnStartup", None, false)
 
-  class ReloadOnExternalChanges(tabs: TabsInterface)
+  class ReloadOnExternalChanges(tabs: AppTabsInterface)
     extends BooleanPreference("reloadOnExternalChanges", None, false) {
 
     override def onSelect(selected: Boolean): Unit = {
@@ -194,7 +194,7 @@ object Preferences {
     }
   }
 
-  class EnableRemoteCommands(tabs: TabsInterface)
+  class EnableRemoteCommands(tabs: AppTabsInterface)
     extends BooleanPreference("enableRemoteCommands", None, false) {
 
     override def onSelect(selected: Boolean): Unit = {
@@ -265,7 +265,7 @@ object Preferences {
     }
   }
 
-  class IncludedFilesMenu(tabs: TabsInterface) extends BooleanPreference("includedFilesMenu", None, true) {
+  class IncludedFilesMenu(tabs: AppTabsInterface) extends BooleanPreference("includedFilesMenu", None, true) {
     override def onSelect(selected: Boolean): Unit = {
       tabs.setIncludedFilesShown(selected)
     }
@@ -326,19 +326,19 @@ object Preferences {
     }
   }
 
-  class EditorLineNumbers(tabs: TabsInterface) extends BooleanPreference("editorLineNumbers", None, true) {
+  class EditorLineNumbers(tabs: AppTabsInterface) extends BooleanPreference("editorLineNumbers", None, true) {
     override def onSelect(selected: Boolean): Unit = {
       tabs.lineNumbersVisible = selected
     }
   }
 
-  class CompleteOnType(tabs: TabsInterface) extends BooleanPreference("completeOnType", None, true) {
+  class CompleteOnType(tabs: AppTabsInterface) extends BooleanPreference("completeOnType", None, true) {
     override def onSelect(selected: Boolean): Unit = {
       tabs.setCompleteOnType(selected)
     }
   }
 
-  class JumpOnClick(tabs: TabsInterface) extends BooleanPreference("jumpOnClick", None, true) {
+  class JumpOnClick(tabs: AppTabsInterface) extends BooleanPreference("jumpOnClick", None, true) {
     override def onSelect(selected: Boolean): Unit = {
       tabs.setJumpOnClick(selected)
     }
@@ -350,7 +350,7 @@ object Preferences {
     }
   }
 
-  class CodeFont(tabs: TabsInterface) extends Preference("codeFont", None) {
+  class CodeFont(tabs: AppTabsInterface) extends Preference("codeFont", None) {
     case class FontWrapper(font: Option[Font]) {
       override def toString: String =
         font.fold(I18N.gui.get("tools.preferences.defaultFont"))(_.getName)
