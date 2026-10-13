@@ -17,8 +17,13 @@ import scala.util.Random
 
 // test important interactions on the Interface Tab (Isaac B 11/8/25)
 class InterfaceTests extends AnyFunSuite with BeforeAndAfterAll {
-  private lazy val fileManager: FileManager = App.app.fileManager
-  private lazy val interfaceTab: InterfaceTab = App.app.tabManager.interfaceTab
+  private lazy val app: App = {
+    App.reset()
+    App.createInstance(Array("--testing", "--automated"))
+  }
+
+  private lazy val fileManager: FileManager = app.fileManager
+  private lazy val interfaceTab: InterfaceTab = app.tabManager.interfaceTab
   private lazy val interfacePanel: InterfacePanel = interfaceTab.iP
   private lazy val widgetControls: InterfaceWidgetControls = interfacePanel.widgetControls
 
@@ -141,12 +146,11 @@ class InterfaceTests extends AnyFunSuite with BeforeAndAfterAll {
       // wait for widget edit to complete (Isaac B 11/9/25)
       AutomationUtils.waitForGUI()
 
-      assert(!App.app.dirtyMonitor.modelDirty)
+      assert(!app.dirtyMonitor.modelDirty)
     }
   }
 
   override def beforeAll(): Unit = {
-    App.reset()
-    App.main(Array("--testing", "--automated"))
+    app
   }
 }

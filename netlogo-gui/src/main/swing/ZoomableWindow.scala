@@ -6,7 +6,9 @@ import java.awt.{ Component, Dimension, Window }
 import java.awt.event.{ ActionEvent, InputEvent, KeyEvent }
 import javax.swing.{ AbstractAction, ActionMap, InputMap, JComponent, KeyStroke, RootPaneContainer }
 
-trait ZoomableWindow(parent: Option[Component]) extends Window with RootPaneContainer with ZoomHelpers {
+import org.nlogo.api.ZoomRoot
+
+trait ZoomableWindow(parent: Option[Component]) extends Window with RootPaneContainer with ZoomRoot with ZoomHelpers {
   private var zoomFactor: Float = 1f
 
   locally {
@@ -77,15 +79,15 @@ trait ZoomableWindow(parent: Option[Component]) extends Window with RootPaneCont
     packWindow()
   }
 
-  def zoomIn(): Unit = {
+  override def zoomIn(): Unit = {
     setZoomFactor(zoomFactor + 0.125f)
   }
 
-  def zoomOut(): Unit = {
+  override def zoomOut(): Unit = {
     setZoomFactor((zoomFactor - 0.125f).max(0.25f))
   }
 
-  def resetZoom(): Unit = {
+  override def resetZoom(): Unit = {
     setZoomFactor(1)
   }
 

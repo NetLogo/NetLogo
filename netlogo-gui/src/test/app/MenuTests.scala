@@ -12,11 +12,13 @@ import org.scalatest.funspec.AnyFunSpec
 
 // make sure all the menu actions for each tab can be executed without the app blowing up (Isaac B 10/29/25)
 class MenuTests extends AnyFunSpec {
-  private lazy val tabManager: TabManager = App.app.tabManager
-  private lazy val menuBar: MainMenuBar = App.app.mainMenuBar
+  private lazy val app: App = {
+    App.reset()
+    App.createInstance(Array("--testing", "--automated"))
+  }
 
-  App.reset()
-  App.main(Array("--testing", "--automated"))
+  private lazy val tabManager: TabManager = app.tabManager
+  private lazy val menuBar: MainMenuBar = app.mainMenuBar
 
   // there are different menu actions for each tab, so test each one separately (Isaac B 10/29/25)
   describe("Interface Tab") {

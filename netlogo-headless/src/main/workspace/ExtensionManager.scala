@@ -5,7 +5,8 @@ package org.nlogo.workspace
 import java.net.URL
 import java.util.Locale
 
-import org.nlogo.api.{ ClassManager, Dump, ExtensionException, ImportErrorHandler, Reporter, WorkspaceContext }
+import org.nlogo.api.{ AppInterface, ClassManager, Dump, ExtensionException, ImportErrorHandler, Reporter,
+                       WorkspaceContext }
 import org.nlogo.core.CompilerException
 import org.nlogo.core.ErrorSource
 import org.nlogo.core.Primitive
@@ -329,4 +330,7 @@ class ExtensionManager(val workspace: ExtendableWorkspace, loader: ExtensionLoad
 
   override def workspaceContext: WorkspaceContext =
     workspace.workspaceContext
+
+  override def app: Option[AppInterface] =
+    None
 }

@@ -31,7 +31,7 @@ class SaveModelTests extends AnyFunSuiteEx {
       val modelTracker = new ModelTracker {
         override def getModelType = modelType
         override def getModelPath: String = existingPath.orNull
-        override def compiler = null
+        override def utilities = null
         override def getExtensionManager() = null
       }
       val res =
@@ -61,7 +61,7 @@ class SaveModelTests extends AnyFunSuiteEx {
       val modelTracker = new ModelTracker {
         override def getModelType = modelType
         override def getModelPath: String = existingPath.orNull
-        override def compiler = null
+        override def utilities = null
         override def getExtensionManager() = null
       }
       val res =

@@ -10,7 +10,8 @@ import java.net.MalformedURLException
 import javax.swing.{ AbstractAction, JPanel }
 
 import org.nlogo.agent.Observer
-import org.nlogo.app.common.{CodeToHtml, EditorFactory, FindDialog, MenuTab, TabsInterface, Events => AppEvents}
+import org.nlogo.api.TabsInterface
+import org.nlogo.app.common.{ CodeToHtml, EditorFactory, Events => AppEvents, FindDialog, MenuTab }
 import org.nlogo.core.{ AgentKind, CompilerException, I18N }
 import org.nlogo.editor.{ AdvancedEditorArea, EditorConfiguration }
 import org.nlogo.nvm.IncludeSource

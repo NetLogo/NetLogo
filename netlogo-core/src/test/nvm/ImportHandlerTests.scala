@@ -8,7 +8,7 @@ import org.nlogo.util.AnyFunSuiteEx
 
 import org.nlogo.{ api, agent, core },
   agent.{ AgentSet, World2D, DummyLiteralParser },
-  api.{ Dump, ExtensionManager => ApiExtensionManager , ClassManager, WorkspaceContext },
+  api.{ AppInterface, Dump, ExtensionManager => ApiExtensionManager , ClassManager, WorkspaceContext },
   core.{ ExtensionObject, File, ErrorSource, Primitive, TokenDSL}
 
 class ImportHandlerTests extends AnyFunSuiteEx {
@@ -71,6 +71,7 @@ class ImportHandlerTests extends AnyFunSuiteEx {
       def getExtensionNames: JList[String] = ???
       def profilingEnabled: Boolean = ???
       def workspaceContext: WorkspaceContext = ???
+      def app: Option[AppInterface] = ???
     }
   }
 

@@ -4,13 +4,15 @@ package org.nlogo.workspace
 
 import org.nlogo.api.{ ModelType, NetLogoLegacyDialect }
 import org.nlogo.core.Femto
+import org.nlogo.nvm.PresentationCompilerInterface
 import org.nlogo.util.AnyFunSuiteEx
 
 class ModelTrackerTest extends AnyFunSuiteEx {
   class Subject(modelType: ModelType, modelName: String) extends ModelTracker {
     _modelFileName = modelName
     setModelType(modelType)
-    def compiler = Femto.get("org.nlogo.compile.Compiler", NetLogoLegacyDialect)
+    def utilities = Femto.get[PresentationCompilerInterface]("org.nlogo.compile.Compiler",
+                                                             NetLogoLegacyDialect).utilities
     def getExtensionManager() = null
   }
 

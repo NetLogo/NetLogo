@@ -12,7 +12,7 @@ import org.nlogo.util.{ AnyFunSuiteEx, SlowTest }
 class TestModelNetLogoVersions extends AnyFunSuiteEx with SlowTest {
   val paths = ModelsLibrary.getModelPaths ++ ModelsLibrary.getModelPathsAtRoot("extensions")
   val dummyWorkspace = new DummyWorkspace()
-  val extensionManager = new ExtensionManager(dummyWorkspace, new JarLoader(dummyWorkspace))
+  val extensionManager = new ExtensionManager(None, dummyWorkspace, new JarLoader(dummyWorkspace))
   for(path <- paths)
     test("model version: " + path, SlowTest.Tag) {
       // if this test suddenly starts failing, make sure all models are the most current version

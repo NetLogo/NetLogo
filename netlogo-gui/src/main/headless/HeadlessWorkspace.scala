@@ -14,8 +14,8 @@ import org.nlogo.api.{ ComponentSerialization, Version, RendererInterface, Aggre
                        LogoException, ModelReader, ModelType, NetLogoLegacyDialect, NetLogoThreeDDialect,
                        CommandRunnable, ReporterRunnable, WorkspaceContext }, ModelReader.modelSuffix
 import org.nlogo.compile.Compiler
-import org.nlogo.core.{ AgentKind, CompilerException, Dialect, Femto, Model, Output, Program, UpdateMode,
-                        WorldDimensions, WorldDimensions3D }
+import org.nlogo.core.{ AgentKind, CompilerException, CompilerUtilitiesInterface, Dialect, Femto, Model, Output,
+                        Program, UpdateMode, WorldDimensions, WorldDimensions3D }
 import org.nlogo.hubnet.server.HeadlessHubNetManagerFactory
 import org.nlogo.nvm.{ LabInterface, PresentationCompilerInterface, PrimaryWorkspace }
 import org.nlogo.render.Renderer
@@ -111,13 +111,15 @@ class HeadlessWorkspace(
   val renderer: RendererInterface,
   val aggregateManager: AggregateManagerInterface,
   hubNetManagerFactory: HubNetManagerFactory)
-extends AbstractWorkspaceScala(_world, hubNetManagerFactory)
+extends AbstractWorkspaceScala(None, _world, hubNetManagerFactory)
 with org.nlogo.workspace.Controllable
 with org.nlogo.workspace.WorldLoaderInterface
 with org.nlogo.api.ViewSettings with PrimaryWorkspace {
 
   def this(world: World & CompilationManagement, compiler: PresentationCompilerInterface, renderer: RendererInterface,
            aggregateManager: AggregateManagerInterface) = this(world, compiler, renderer, aggregateManager, null)
+
+  override val utilities: CompilerUtilitiesInterface = compiler.utilities
 
   override val workspaceContext: WorkspaceContext = new WorkspaceContext(true, false)
 

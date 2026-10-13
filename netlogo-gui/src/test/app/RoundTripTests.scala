@@ -25,14 +25,18 @@ class RoundTripTests extends AnyFunSuite with BeforeAndAfterAll {
     }
   }
 
-  private lazy val fileManager: FileManager = App.app.fileManager
-  private lazy val modelLoader: AbstractModelLoader = App.app.modelLoader
+  private lazy val app: App = {
+    App.reset()
+    App.createInstance(Array("--testing", "--automated"))
+  }
+
+  private lazy val fileManager: FileManager = app.fileManager
+  private lazy val modelLoader: AbstractModelLoader = app.modelLoader
 
   recurseModels(new File("models"))
 
   override def beforeAll(): Unit = {
-    App.reset()
-    App.main(Array("--testing", "--automated"))
+    app
   }
 
   private def recurseModels(path: File): Unit = {
