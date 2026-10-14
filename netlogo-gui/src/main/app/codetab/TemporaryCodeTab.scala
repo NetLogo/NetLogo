@@ -2,13 +2,13 @@
 
 package org.nlogo.app.codetab
 
-import java.awt.FileDialog
+import java.awt.{ Component, FileDialog }
 import java.io.{ File, IOException }
 import java.nio.file.{ Files, Paths }
 import java.util.Locale
 
 import org.nlogo.api.FileIO
-import org.nlogo.app.common.{ AppTabsInterface, Dialogs, Events => AppEvents, ModelConfig }
+import org.nlogo.app.common.{ AppTabsInterface, Dialogs, ModelConfig }
 import org.nlogo.awt.UserCancelException
 import org.nlogo.core.I18N
 import org.nlogo.nvm.IncludeSource
@@ -136,12 +136,13 @@ class TemporaryCodeTab(workspace: GUIWorkspace,
       }
     }
 
-    new WindowEvents.AboutToSaveExternalFileEvent().raise(this)
+    // Stop watching here so that the watcher thread doesn't detect our own write. (Isaac B 11/26/25)
+    tabs.stopWatcherThread()
 
     FileIO.writeFile(filename.getOrElse(null), text.getText)
     saveNeeded = false
 
-    new WindowEvents.ExternalFileSavedEvent(filename.merge).raise(this)
+    tabs.externalFileSaved(filename.merge)
 
     compile()
   }
@@ -206,7 +207,10 @@ class TemporaryCodeTab(workspace: GUIWorkspace,
     }
   }
 
-  override def handle(e: AppEvents.SwitchedTabsEvent) = if (!closing) super.handle(e)
+  override def switchedTabs(oldTab: Component, newTab: Component): Unit = {
+    if (!closing)
+      super.switchedTabs(oldTab, newTab)
+  }
 
   private def userChooseSavePath(): String = {
     def appendIfNecessary(str: String, suffix: String) = if (str.endsWith(suffix)) str else str + suffix

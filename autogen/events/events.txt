@@ -1,62 +1,32 @@
-# org.nlogo.app package
-
-app.common.WidgetSelected - org.nlogo.window.Widget widget - boolean selected
-app.common.SwitchedTabs - java.awt.Component oldTab - java.awt.Component newTab
-app.common.OpenLibrariesDialog
-app.common.Restart
-
 # org.nlogo.window package
 
-window.AboutToCloseFiles
-window.AboutToSaveExternalFile
-window.AboutToSaveModel
-window.AboutToQuit
 window.AddBooleanConstraint - String varname - Boolean defaultValue
 window.AddChooserConstraint - String varname - org.nlogo.agent.ChooserConstraint constraint
 window.AddInputBoxConstraint - String varname - org.nlogo.agent.InputBoxConstraint constraint
 window.AddJob - org.nlogo.api.JobOwner owner - org.nlogo.agent.AgentSet agents - org.nlogo.nvm.Procedure procedure
 window.AddSliderConstraint - SliderWidget slider - String varname - String minSpec - String maxSpec - String incSpec - Double value
 window.AfterLoad
-window.App - AppEventType type - Object[] args
-window.AutoIndent - Boolean smart
 window.BeforeLoad - scala.Option<String> modelPath - org.nlogo.api.ModelType modelType
 window.CompileAll
 window.CompileMoreSource - org.nlogo.api.JobOwner owner
 window.Compiled - org.nlogo.api.SourceOwner sourceOwner - org.nlogo.core.Program program - org.nlogo.nvm.Procedure procedure - org.nlogo.core.CompilerException error
 window.Dirty - scala.Option<String> path
-window.EditView3D - org.nlogo.window.Editable settings
-window.Enable2D - boolean enabled
-window.ExportPlot - org.nlogo.window.PlotWidgetExport plotExport - String exportFilename - Runnable onCompletion
-window.ExportWorld - java.io.PrintWriter writer
-window.ExportWidget - org.nlogo.window.Widget widget
-window.ExternalFileSaved - String path
-window.Iconified - java.awt.Frame frame - boolean iconified
 window.InputBoxLoseFocus
 window.InterfaceGlobal - InterfaceGlobalWidget widget - boolean nameChanged - boolean updating - boolean valueChanged - boolean buttonReleased
-window.InterfaceModeChanged - java.awt.Component source - org.nlogo.window.InterfaceMode mode
 window.JobRemoved - org.nlogo.api.JobOwner owner
 window.JobStopping - org.nlogo.api.JobOwner owner
-window.Load3DShapes - String filename
 window.LoadBegin
 window.LoadEnd - boolean shouldAutoInstallLibs
-window.LoadError
 window.LoadModel - org.nlogo.core.Model model - boolean shouldAutoInstallLibs
-window.LoadSection - String version - Object section - String[] lines - String text
 window.LoadWidgets - scala.collection.immutable.Seq<org.nlogo.core.Widget> widgets - boolean convertWidgetSizes
 window.ModelSaved - String modelPath - boolean isNew
-window.OpenModel - String path - boolean shouldAutoInstallLibs
 window.Output - boolean clear - org.nlogo.agent.OutputObject outputObject - boolean wrapLines - boolean toCommandCenter - long time
-window.PatchesCreated
 window.PeriodicUpdate
 window.RemoveAllJobs
-window.RemoveConstraint - String varname
 window.RemoveJob - org.nlogo.api.JobOwner owner
-window.ResourcesChanged
 window.RuntimeError - org.nlogo.api.JobOwner jobOwner - org.nlogo.api.SourceOwner sourceOwner - int pos - int length
 window.SetInterfaceMode - org.nlogo.window.InterfaceMode mode - boolean focus
-window.TickStateChange - boolean tickCounterInitialized
 window.UpdateModeChanged
 window.WidgetAdded - Object widget
 window.WidgetError - Widget widget - scala.Option<Exception> error
-window.WidgetForegrounded - Widget widget
 window.WidgetRemoved - Widget widget

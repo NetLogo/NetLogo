@@ -12,6 +12,11 @@ trait AppInterface {
   def utilities: CompilerUtilitiesInterface
   def updateManager: UpdateManagerInterface
   def tabManager: TabsInterface
+  def fileManager: FileManagerInterface
+  def monitorManager: MonitorManagerInterface
   def addSyncFunction(f: () => Unit): Long
   def removeSyncFunction(id: Long): Unit
+  def magicOpen(name: String): Unit
+  def reload(): Unit
+  def restart(): Unit
 }

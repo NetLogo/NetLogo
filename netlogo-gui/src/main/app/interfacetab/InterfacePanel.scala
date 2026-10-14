@@ -18,11 +18,11 @@ import org.nlogo.core.{
 import org.nlogo.editor.EditorArea
 import org.nlogo.log.LogManager
 import org.nlogo.swing.{ ClipboardUtils, MenuItem, PopupMenu }
-import org.nlogo.window.{ AutoIndentHandler, ButtonWidget, ChooserWidget, Editable, EditDialogFactory,
-                          Events => WindowEvents, GUIWorkspace, InputBoxWidget, InterfaceGlobalWidget, InterfaceMode,
-                          MonitorWidget, PlotWidget, SliderWidget, SwitchWidget, ViewWidget, ViewWidgetInterface,
-                          Widget, WidgetInfo, WidgetRegistry },
-  WindowEvents.{ CompileAllEvent, LoadBeginEvent, LoadWidgetsEvent, RemoveConstraintEvent, WidgetRemovedEvent }
+import org.nlogo.window.{ ButtonWidget, ChooserWidget, Editable, EditDialogFactory, Events => WindowEvents,
+                          GUIWorkspace, InputBoxWidget, InterfaceGlobalWidget, InterfaceMode, MonitorWidget, PlotWidget,
+                          SliderWidget, SwitchWidget, ViewWidget, ViewWidgetInterface, Widget, WidgetInfo,
+                          WidgetRegistry },
+  WindowEvents.{ CompileAllEvent, LoadBeginEvent, LoadWidgetsEvent, WidgetRemovedEvent }
 import org.nlogo.workspace.Evaluator
 
 class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspace, dialogFactory: EditDialogFactory)
@@ -134,8 +134,8 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
         }
       case s: CoreSwitch => new SwitchWidget(workspace, workspace.getExtensionManager)
       case i: CoreInputBox =>
-        val textArea       = new EditorArea(textEditorConfiguration) with AutoIndentHandler
-        val dialogTextArea = new EditorArea(dialogEditorConfiguration) with AutoIndentHandler
+        val textArea       = new EditorArea(textEditorConfiguration)
+        val dialogTextArea = new EditorArea(dialogEditorConfiguration)
 
         new InputBoxWidget(textArea, dialogTextArea, workspace, workspace.getExtensionManager, this)
       case v: CoreView => new ViewWidget(workspace)
@@ -169,7 +169,7 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
     // the observer variables and constraints might not get reallocated in which case
     // if we try to add a different widget with the same name we get a constraint violation
     // from the old constraint. yuck.  ev 11/27/07
-    new RemoveConstraintEvent(wrapper.widget.displayName).raise(this)
+    workspace.removeConstraint(wrapper.widget.displayName)
 
     LogManager.widgetRemoved(true, wrapper.widget.classDisplayName, wrapper.widget.displayName)
   }

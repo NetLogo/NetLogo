@@ -5,7 +5,6 @@ package org.nlogo.app
 import java.awt.Component
 
 import org.nlogo.api.{ ExtensionManager, LibraryInfoDownloader }
-import org.nlogo.app.common.Events.OpenLibrariesDialogEvent
 import org.nlogo.core.I18N
 import org.nlogo.swing.OptionPane
 import org.nlogo.window.Events.CompiledEvent
@@ -17,6 +16,7 @@ class ExtensionAssistant( parent: Component
                         , extExists: (String) => Boolean
                         , lookupExtVersion: (String) => String
                         , installExt: (String, String) => Unit
+                        , openLibrariesDialog: () => Unit
                         ) extends CompiledEvent.Handler {
 
   def handle(e: CompiledEvent): Unit = {
@@ -27,7 +27,7 @@ class ExtensionAssistant( parent: Component
         if (confirmInstall(missingExtName, missingExtVersion))
           installExt(missingExtName, missingExtVersion)
       } else if (confirmOpen(missingExtName)) {
-        new OpenLibrariesDialogEvent().raise(parent)
+        openLibrariesDialog()
       }
     }
   }

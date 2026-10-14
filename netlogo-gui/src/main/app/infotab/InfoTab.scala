@@ -17,7 +17,7 @@ import javafx.scene.Scene
 import javafx.scene.web.{ WebEngine, WebView }
 
 import org.nlogo.api.{ ExternalResourceManager, Version }
-import org.nlogo.app.common.{ Events => AppEvents, FindDialog, MenuTab, UndoRedoActions }
+import org.nlogo.app.common.{ FindDialog, MenuTab, Tab, UndoRedoActions }
 import org.nlogo.core.I18N
 import org.nlogo.editor.EditorConfiguration
 import org.nlogo.swing.{ BoxAlign, BoxRow, FocusRoot, FocusUtils, QuickHelp, ScrollableTextComponent, ScrollPane,
@@ -32,13 +32,12 @@ import org.w3c.dom.html.HTMLAnchorElement
 class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManager)
   extends JPanel
   with DocumentListener
+  with Tab
   with MenuTab
   with Printable
   with UndoRedoActions
-  with AppEvents.SwitchedTabsEvent.Handler
   with WindowEvents.LoadBeginEvent.Handler
   with WindowEvents.LoadModelEvent.Handler
-  with WindowEvents.ResourcesChangedEvent.Handler
   with FocusRoot
   with Zoomable
   with ThemeSync {
@@ -213,8 +212,8 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
     updateEditorPane()
   }
 
-  def handle(e: AppEvents.SwitchedTabsEvent): Unit = {
-    if (e.newTab == this && view == textArea) {
+  override def switchedTabs(oldTab: Component, newTab: Component): Unit = {
+    if (newTab == this && view == textArea) {
       FindDialog.watch(textArea)
     } else {
       FindDialog.dontWatch()
@@ -230,7 +229,7 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
     resetView()
   }
 
-  override def handle(e: WindowEvents.ResourcesChangedEvent): Unit = {
+  def resourcesChanged(): Unit = {
     updateEditorPane(true)
   }
 

@@ -22,7 +22,7 @@ trait HubNetManagerFactory {
   def newInstance(workspace: AbstractWorkspaceScala): HubNetInterface
 }
 
-abstract class AbstractWorkspaceScala(app: Option[AppInterface], val world: World,
+abstract class AbstractWorkspaceScala(val app: Option[AppInterface], val world: World,
                                       val hubNetManagerFactory: HubNetManagerFactory)
   extends AbstractWorkspace(world)
   with APIConformant with Benchmarking
@@ -191,6 +191,8 @@ abstract class AbstractWorkspaceScala(app: Option[AppInterface], val world: Worl
         getHubNetManager.foreach(_.load(model))
     }
   }
+
+  def quit(): Unit
 }
 
 object AbstractWorkspaceTraits {
