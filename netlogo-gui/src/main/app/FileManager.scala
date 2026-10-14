@@ -14,18 +14,19 @@ import scala.util.{ Failure, Try }
 
 import org.nlogo.analytics.Analytics
 import org.nlogo.core.{ I18N, Model }
-import org.nlogo.api.{ AbstractModelLoader, Exceptions, FileIO, LibraryManager, ModelReader, ModelSaver, ModelType,
-                       Version }, ModelReader.{ emptyModelPath, modelSuffix }
+import org.nlogo.api.{ AbstractModelLoader, Exceptions, FileIO, FileManagerInterface, LibraryManager, ModelReader,
+                       ModelSaver, ModelType, Version }, ModelReader.{ emptyModelPath, modelSuffix }
 import org.nlogo.app.common.{ Actions, Dialogs, ExceptionCatchingAction, ModelConfig }, Actions.Ellipsis
 import org.nlogo.app.codetab.TemporaryCodeTab
+import org.nlogo.app.infotab.InfoTab
 import org.nlogo.app.tools.{ ModelsLibraryDialog, NetLogoWebSaver }
 import org.nlogo.awt.{ Hierarchy, UserCancelException }
 import org.nlogo.fileformat.{ FailedConversionResult, SuccessfulConversion }
 import org.nlogo.fileformat.FileFormat.ModelConversion
+import org.nlogo.log.LogManager
 import org.nlogo.swing.{ BrowserLauncher, FileDialog, ModalProgressTask, OptionPane, UserAction }, UserAction.MenuAction
 import org.nlogo.window.{ Events, FileController, GUIWorkspace, LabManagerInterface, ReconfigureWorkspaceUI },
-                          Events.{ AboutToCloseFilesEvent, AboutToQuitEvent, AboutToSaveModelEvent, LoadModelEvent,
-                                   LoadErrorEvent, ModelSavedEvent, OpenModelEvent }
+                          Events.{ LoadModelEvent, ModelSavedEvent }
 import org.nlogo.workspace.{ AbstractWorkspaceScala, OpenModel, OpenModelFromURI, OpenModelFromSource, SaveModel,
                              SaveModelAs, WorkspaceFactory }
 
@@ -281,7 +282,8 @@ object FileManager {
     }
   }
 
-  class ManageResourcesAction(manager: FileManager, workspace: AbstractWorkspaceScala, parent: Component)
+  class ManageResourcesAction(manager: FileManager, workspace: AbstractWorkspaceScala, infoTab: InfoTab,
+                              parent: Component)
     extends ExceptionCatchingAction(I18N.gui.get("menu.file.manageResources"), parent) with MenuAction {
 
     category = UserAction.FileCategory
@@ -290,7 +292,7 @@ object FileManager {
     mnemonic = 'B'
 
     override def action(): Unit = {
-      new ResourceManagerDialog(workspace.asInstanceOf[GUIWorkspace].getFrame, workspace).setVisible(true)
+      new ResourceManagerDialog(workspace.asInstanceOf[GUIWorkspace].getFrame, workspace, infoTab).setVisible(true)
     }
   }
 
@@ -311,16 +313,11 @@ class FileManager(workspace: AbstractWorkspaceScala,
   tabManager: TabManager,
   workspaceFactory: WorkspaceFactory,
   labManager: LabManagerInterface,
-  testing: Boolean)
-    extends OpenModelEvent.Handler
-    with LoadModelEvent.Handler {
+  testing: Boolean) extends FileManagerInterface with LoadModelEvent.Handler {
+
   private var firstLoad: Boolean = true
 
   val controller = new FileController(parent, workspace)
-
-  def handle(e: OpenModelEvent): Unit = {
-    openFromPath(e.path, ModelType.Library, e.shouldAutoInstallLibs)
-  }
 
   def handle(e: LoadModelEvent): Unit = {
     modelSaver.setCurrentModel(e.model)
@@ -349,7 +346,7 @@ class FileManager(workspace: AbstractWorkspaceScala,
       }
     }
 
-    new AboutToCloseFilesEvent().raise(eventRaiser)
+    OfferSaveExternalsDialog.offer(tabManager.getExternalFileTabs.filter(_.saveNeeded).toSet, parent)
   }
 
   @throws(classOf[UserCancelException])
@@ -359,8 +356,8 @@ class FileManager(workspace: AbstractWorkspaceScala,
 
     aboutToCloseFiles()
     ModelConfig.pruneConfigs()
-    new AboutToQuitEvent().raise(eventRaiser)
-    workspace.getExtensionManager.reset()
+    LogManager.stop()
+    workspace.quit()
 
     try {
       Await.ready(Analytics.appExit(), 5.seconds)
@@ -376,7 +373,7 @@ class FileManager(workspace: AbstractWorkspaceScala,
   /**
    * opens a model from a file path.
    */
-  def openFromPath(path: String, modelType: ModelType, shouldAutoInstallLibs: Boolean = false): Unit = {
+  override def openFromPath(path: String, modelType: ModelType, shouldAutoInstallLibs: Boolean = false): Unit = {
     openFromURI(new File(path).toURI, modelType, shouldAutoInstallLibs)
   }
 
@@ -449,9 +446,8 @@ class FileManager(workspace: AbstractWorkspaceScala,
     val result = ModalProgressTask.runForResultOnBackgroundThread(
       Hierarchy.getFrame(parent), I18N.gui.get("dialog.interface.loading.task"), () => {},
       Unit => openModel(controller))
-    if (result.isEmpty) {
-      new LoadErrorEvent().raise(eventRaiser)
-    }
+    if (result.isEmpty)
+      tabManager.loadError()
     result
   }
 
@@ -522,7 +518,8 @@ class FileManager(workspace: AbstractWorkspaceScala,
     var result = Option.empty[Try[URI]]
 
     def run(): Unit = {
-      new AboutToSaveModelEvent().raise(eventRaiser)
+      // Stop watching here so that the watcher thread doesn't detect our own write.
+      tabManager.stopWatcherThread()
       val r = thunk()
       r.foreach { uri =>
         val path = Paths.get(uri).toString
@@ -543,7 +540,7 @@ class FileManager(workspace: AbstractWorkspaceScala,
       new UploadToModelingCommonsAction(parent),
       new SaveAsNetLogoWebAction(this, workspace, modelSaver, parent),
       new ImportClientAction(this, workspace, parent),
-      new ManageResourcesAction(this, workspace, parent)
+      new ManageResourcesAction(this, workspace, tabManager.infoTab, parent)
     ) ++ {
       if (System.getProperty("os.name").toLowerCase.startsWith("mac")) {
         Seq()

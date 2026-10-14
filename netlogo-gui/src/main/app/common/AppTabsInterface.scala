@@ -15,11 +15,13 @@ object AppTabsInterface {
 }
 
 trait AppTabsInterface extends TabsInterface {
-  val interfaceTab: Component
   val infoTab: Component
 
   def lineNumbersVisible: Boolean
   def lineNumbersVisible_=(b: Boolean): Unit
+
+  def smartTabbingEnabled: Boolean
+  def smartTabbingEnabled_=(b: Boolean): Unit
 
   def getCompleteOnType: Boolean
   def setCompleteOnType(enabled: Boolean): Unit
@@ -32,6 +34,9 @@ trait AppTabsInterface extends TabsInterface {
   def watchingFiles: Boolean
   def watchingFiles_=(b: Boolean): Unit
 
+  def stopWatcherThread(): Unit
+
+  def externalFileSaved(path: String): Unit
   def closeExternalFile(filename: AppTabsInterface.Filename): Unit
 
   def setJumpOnClick(value: Boolean): Unit

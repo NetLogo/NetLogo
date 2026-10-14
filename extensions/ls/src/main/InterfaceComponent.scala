@@ -1,6 +1,7 @@
 package org.nlogo.ls.gui
 
 import java.awt.EventQueue.isDispatchThread
+import java.awt.event.KeyAdapter
 import java.awt.image.BufferedImage
 import java.nio.file.Paths
 import javax.swing.JFrame
@@ -63,19 +64,24 @@ class InterfaceComponent(app: AppInterface, frame: JFrame)
     override def closeAgentMonitors() = monitorManager.closeAll()
     override def newRenderer = new org.nlogo.render.Renderer(this.world)
     override def updateModel(m: Model): Model = m
+
+    override def tickStateChanged(initialized: Boolean): Unit = {
+      interfacePanel.tickStateChanged(initialized)
+    }
   }
 
   val monitorManager = new AgentMonitorManager(workspace)
   addLinkComponent(monitorManager)
 
-  val viewManager = new ViewManager(workspace, frame, new java.awt.event.KeyAdapter{})
-  workspace.init(viewManager)
-  addLinkComponent(viewManager)
-
   val procedures = new Procedures(workspace)
   val liteEditorFactory = new DefaultEditorFactory(workspace)
   val interfacePanel = new InterfacePanelLite(workspace.viewWidget, workspace, workspace, workspace.plotManager,
                                               liteEditorFactory, workspace.getExtensionManager)
+
+  val viewManager = new ViewManager(workspace, interfacePanel, frame, new KeyAdapter {})
+
+  workspace.init(viewManager)
+  addLinkComponent(viewManager)
 
   addLinkComponent(workspace.aggregateManager)
   addLinkComponent(workspace)

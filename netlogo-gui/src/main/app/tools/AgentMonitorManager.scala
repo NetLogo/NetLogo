@@ -7,12 +7,15 @@ import java.awt.{ Font, Window }
 import scala.collection.mutable
 
 import org.nlogo.agent.Agent
+import org.nlogo.api.MonitorManagerInterface
 import org.nlogo.core.AgentKind
 import org.nlogo.swing.Tiler
 import org.nlogo.theme.ThemeSync
 import org.nlogo.window.{ Event, GUIWorkspace }
 
-class AgentMonitorManager(val workspace: GUIWorkspace) extends Event.LinkChild with Event.LinkParent with ThemeSync {
+class AgentMonitorManager(val workspace: GUIWorkspace) extends MonitorManagerInterface with Event.LinkChild
+                                                       with Event.LinkParent with ThemeSync {
+
   private val monitorWindows      = mutable.Map[Agent, AgentMonitorWindow]()
   private val emptyMonitorWindows = mutable.Map[AgentKind, AgentMonitorWindow]()
   private val monitorList         = collection.mutable.Buffer[Agent]()
@@ -158,6 +161,10 @@ class AgentMonitorManager(val workspace: GUIWorkspace) extends Event.LinkChild w
   def setCodeFont(font: Font): Unit = {
     monitorWindows.values.foreach(_.setCodeFont(font))
     emptyMonitorWindows.values.foreach(_.setCodeFont(font))
+  }
+
+  override def patchesCreated(): Unit = {
+    getMonitorWindows.foreach(_.patchesCreated())
   }
 
   override def syncTheme(): Unit = {

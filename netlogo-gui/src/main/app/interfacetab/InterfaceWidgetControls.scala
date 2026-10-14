@@ -2,18 +2,17 @@
 
 package org.nlogo.app.interfacetab
 
-import java.awt.{ Dimension, Frame }
+import java.awt.{ Component, Dimension, Frame }
 import java.awt.event.{ ActionEvent, FocusEvent, KeyAdapter, KeyEvent, KeyListener, MouseAdapter, MouseEvent }
 import javax.swing.{ AbstractAction, Action, ButtonGroup, JLabel }
 
-import org.nlogo.app.common.{ Events => AppEvents }
 import org.nlogo.core.I18N
 import org.nlogo.swing.{ AutomationUtils, BoxAlign, BoxColumn, BoxRow, DropdownArrow, FocusUtils, MenuItem, MouseUtils,
                          PopupMenu, PreferredSize, RoundedBorderPanel, ToolBarToggleButton, Utils,
                          WidgetControlsInterface, Zoomable, ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
-import org.nlogo.window.{ Editable, EditDialog, EditDialogFactory, Events => WindowEvents, GUIWorkspace, InterfaceMode,
-                          JobWidget, Widget, WidgetInfo, WorldViewSettings }
+import org.nlogo.window.{ Editable, EditDialogFactory, Events => WindowEvents, GUIWorkspace, InterfaceMode, JobWidget,
+                          Widget, WidgetInfo }
 
 import scala.collection.mutable.HashSet
 
@@ -24,11 +23,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
                               dialogFactory: EditDialogFactory)
   extends BoxRow(6)
   with WidgetControlsInterface
-  with AppEvents.WidgetSelectedEvent.Handler
-  with WindowEvents.InterfaceModeChangedEvent.Handler
-  with WindowEvents.WidgetForegroundedEvent.Handler
   with WindowEvents.WidgetRemovedEvent.Handler
-  with WindowEvents.EditView3DEvent.Handler
   with WindowEvents.WidgetAddedEvent.Handler
   with ThemeSync {
 
@@ -133,16 +128,6 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
     }
   }
 
-  def handle(e: WindowEvents.EditView3DEvent): Unit = {
-    e.settings match {
-      case wvs: WorldViewSettings =>
-        wPanel.haltIfRunning()
-        wPanel.editWidgetFinished(wvs, new EditDialog(frame, wvs, wvs.editPanel3D, true).canceled)
-
-      case _ =>
-    }
-  }
-
   override def syncTheme(): Unit = {
     setBackground(InterfaceColors.toolbarBackground())
 
@@ -181,21 +166,21 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
     syncTheme()
   }
 
+  def widgetSelected(widget: Widget): Unit = {
+    updateActions(widget)
+  }
+
   def handle(e: WindowEvents.WidgetAddedEvent): Unit = {
     updateActions(e.widget.asInstanceOf[Widget])
   }
 
-  final def handle(e: AppEvents.WidgetSelectedEvent): Unit = {
-    updateActions(e.widget)
+  def widgetForegrounded(widget: Widget): Unit = {
+    updateTargets(widget)
   }
 
-  def handle(e: WindowEvents.WidgetForegroundedEvent): Unit = {
-    updateTargets(e.widget)
-  }
-
-  def handle(e: WindowEvents.InterfaceModeChangedEvent): Unit = {
-    if (e.source == wPanel) {
-      e.mode match {
+  def interfaceModeChanged(source: Component, mode: InterfaceMode): Unit = {
+    if (source == wPanel) {
+      mode match {
         case InterfaceMode.Interact =>
           interactButton.setSelected(true)
 

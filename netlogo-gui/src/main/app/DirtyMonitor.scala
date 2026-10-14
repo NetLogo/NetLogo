@@ -22,7 +22,6 @@ with WidgetAddedEvent.Handler
 with WidgetRemovedEvent.Handler
 with DirtyEvent.Handler
 with ModelSavedEvent.Handler
-with ExternalFileSavedEvent.Handler
 with UpdateModeChangedEvent.Handler
 with SaveModel.Controller
 {
@@ -38,7 +37,7 @@ with SaveModel.Controller
   }
 
   def modelDirty: Boolean = dirtyPaths.contains(None) && !loading
-  private def setDirty(dirty: Boolean, path: Option[String] = None): Unit = {
+  def setDirty(dirty: Boolean, path: Option[String] = None): Unit = {
     if (dirty && !loading) {
       dirtyTimers.get(path).foreach { timer =>
         timer.cancel()
@@ -114,7 +113,7 @@ with SaveModel.Controller
 
   /// how we get clean
   def handle(e: ModelSavedEvent) = { setDirty(false) }
-  def handle(e: ExternalFileSavedEvent) = setDirty(false, path = Some(e.path))
+
   def handle(e: BeforeLoadEvent): Unit = {
     setDirty(false)
     loading = true

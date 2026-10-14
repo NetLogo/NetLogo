@@ -12,7 +12,7 @@ import org.nlogo.swing.{ BoxColumn, BoxRow, Button, ComboBox, HasPropertyChangeS
                          ScrollPane, Utils }
 import org.nlogo.theme.InterfaceColors
 import org.nlogo.util.Implicits.RichString
-import org.nlogo.window.{ AutoIndentHandler, EditorAreaErrorLabel, EditorColorizer }
+import org.nlogo.window.{ EditorAreaErrorLabel, EditorColorizer }
 
 class EditorPanel(compiler: CompilerServices, colorizer: EditorColorizer) extends BoxColumn(6) {
   val comboBox = new PreviewCommandsComboBox
@@ -51,7 +51,7 @@ class EditorPanel(compiler: CompilerServices, colorizer: EditorColorizer) extend
     EditorConfiguration.default(0, 0, compiler, colorizer)
       .withFocusTraversalEnabled(true)
       .withListener(textListener)
-  val editor = new EditorArea(configuration) with AutoIndentHandler {
+  val editor = new EditorArea(configuration) {
     setBackground(InterfaceColors.codeBackground())
     setCaretColor(InterfaceColors.textAreaText())
 

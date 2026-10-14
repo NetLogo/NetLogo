@@ -19,12 +19,11 @@ import org.nlogo.log.LogManager
 import org.nlogo.nvm.DefaultCompilerServices
 import org.nlogo.swing.{ ClipboardUtils, FocusRoot, FocusUtils, MenuItem, PopupMenu, UndoManager, Utils, Zoomable }
 import org.nlogo.theme.InterfaceColors
-import org.nlogo.window.{ AbstractWidgetPanel, AutoIndentHandler, ButtonWidget, CopyPasteTarget, Editable,
-                          EditDialogFactory, Events => WindowEvents, GUIWorkspace, InterfaceMode, OutputWidget, Widget,
-                          WidgetContainer, WidgetRegistry, DummyChooserWidget, DummyInputBoxWidget, DummyPlotWidget,
-                          DummyViewWidget, MouseMode, PlotWidget, SliderWidget, ViewWidget, WidgetInfo },
-  WindowEvents.{ CompileAllEvent, DirtyEvent, InterfaceModeChangedEvent, LoadBeginEvent, SetInterfaceModeEvent,
-                 WidgetRemovedEvent }
+import org.nlogo.window.{ AbstractWidgetPanel, ButtonWidget, CopyPasteTarget, Editable, EditDialog, EditDialogFactory,
+                          Events => WindowEvents, GUIWorkspace, InterfaceMode, OutputWidget, Widget, WidgetContainer,
+                          WidgetRegistry, DummyChooserWidget, DummyInputBoxWidget, DummyPlotWidget, DummyViewWidget,
+                          MouseMode, PlotWidget, SliderWidget, ViewWidget, WidgetInfo, WorldViewSettings },
+  WindowEvents.{ CompileAllEvent, DirtyEvent, LoadBeginEvent, SetInterfaceModeEvent, WidgetRemovedEvent }
 
 // note that an instance of this class is used for the hubnet client editor
 // and its subclass InterfacePanel is used for the interface tab.
@@ -171,7 +170,9 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
       if (focus)
         requestFocus()
 
-      new InterfaceModeChangedEvent(this, mode).raise(this)
+      widgetControls.interfaceModeChanged(this, mode)
+
+      getWrappers.foreach(_.widget.resetMouseState())
     }
   }
 
@@ -766,8 +767,8 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
           DummyPlotWidget(names.headOption.getOrElse("plot 1"), workspace.plotManager)
         case i: CoreInputBox =>
           new DummyInputBoxWidget(
-            new EditorArea(textEditorConfiguration) with AutoIndentHandler,
-            new EditorArea(dialogEditorConfiguration) with AutoIndentHandler,
+            new EditorArea(textEditorConfiguration),
+            new EditorArea(dialogEditorConfiguration),
             this,
             new DefaultCompilerServices(workspace.compiler))
         case _ =>
@@ -1306,12 +1307,31 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
     repaint()
   }
 
+  def widgetForegrounded(widget: Widget): Unit = {
+    getWrappers.foreach { wrapper =>
+      if (wrapper.widget != widget)
+        wrapper.isForeground(false)
+    }
+
+    widgetControls.widgetForegrounded(widget)
+  }
+
   override def editWidget(widget: Editable): Unit = {
     snapLines = Seq()
 
     repaint()
 
     widgetControls.editWidget(widget)
+  }
+
+  override def edit3DView(settings: Editable): Unit = {
+    settings match {
+      case wvs: WorldViewSettings =>
+        haltIfRunning()
+        editWidgetFinished(wvs, new EditDialog(frame, wvs, wvs.editPanel3D, true).canceled)
+
+      case _ =>
+    }
   }
 
   def editWidgetFinished(target: Editable, canceled: Boolean): Unit = {
@@ -1869,6 +1889,15 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
     getComponents.foreach {
       case wrapper: WidgetWrapper =>
         wrapper.widget.setCodeFont(font)
+
+      case _ =>
+    }
+  }
+
+  def tickStateChanged(initialized: Boolean): Unit = {
+    getWrappers.map(_.widget).foreach {
+      case button: ButtonWidget =>
+        button.tickStateChanged(initialized)
 
       case _ =>
     }
