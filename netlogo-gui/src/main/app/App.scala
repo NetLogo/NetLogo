@@ -4,7 +4,7 @@ package org.nlogo.app
 
 import com.jthemedetecor.OsThemeDetector
 
-import java.awt.{ BorderLayout, Dimension, EventQueue, Frame, KeyboardFocusManager }
+import java.awt.{ BorderLayout, Component, Dimension, EventQueue, Frame, KeyboardFocusManager }
 import java.awt.datatransfer.DataFlavor
 import java.awt.dnd.{ DropTarget, DropTargetDragEvent, DropTargetDropEvent, DropTargetEvent, DropTargetListener }
 import java.awt.event.ActionEvent
@@ -26,7 +26,7 @@ import org.nlogo.api.{ Agent => ApiAgent, AggregateManagerInterface, Announcemen
                        ModelSections, ModelType, NetLogoLegacyDialect, NetLogoThreeDDialect, RendererInterface,
                        SimpleJobOwner, UpdateManagerInterface, Version }
 import org.nlogo.app.codetab.{ ExternalFileManager, TemporaryCodeTab }
-import org.nlogo.app.common.{ Events => AppEvents, FileActions, FindDialog }
+import org.nlogo.app.common.{ FileActions, FindDialog }
 import org.nlogo.app.interfacetab.{ CommandCenter, InterfaceTab, WidgetPanel }
 import org.nlogo.app.tools.{ AgentMonitorManager, GraphicsPreview, LibraryManagerErrorDialog, PreviewCommandsEditor }
 import org.nlogo.awt.UserCancelException
@@ -274,11 +274,9 @@ object App {
   }
 }
 
-class App(args: App.CommandLineArgs) extends AppInterface with LinkChild with Exceptions.Handler with AppEvent.Handler
+class App(args: App.CommandLineArgs) extends AppInterface with LinkChild with Exceptions.Handler
   with BeforeLoadEvent.Handler with LoadBeginEvent.Handler with LoadEndEvent.Handler with LoadModelEvent.Handler
-  with ModelSavedEvent.Handler with ModelSections with AppEvents.SwitchedTabsEvent.Handler
-  with AppEvents.OpenLibrariesDialogEvent.Handler with AppEvents.RestartEvent.Handler with AboutToQuitEvent.Handler
-  with Controllable {
+  with ModelSavedEvent.Handler with ModelSections with Controllable {
 
   override val frame: AppFrame = new AppFrame(this)
 
@@ -372,12 +370,15 @@ class App(args: App.CommandLineArgs) extends AppInterface with LinkChild with Ex
     def updateModel(model: Model): Model =
       model.withOptionalSection("org.nlogo.modelsection.modelsettings", Some(ModelSettings(snapOn)),
                                 Some(ModelSettings(false)))
+
+    override def tickStateChanged(initialized: Boolean): Unit = {
+      interfaceTab.iP.tickStateChanged(initialized)
+    }
   }
 
   override val utilities: CompilerUtilitiesInterface = workspace.utilities
   override val updateManager: UpdateManagerInterface = workspace.updateManager
-
-  val monitorManager = new AgentMonitorManager(workspace)
+  override val monitorManager: AgentMonitorManager = new AgentMonitorManager(workspace)
 
   private val colorizer = new EditorColorizer(workspace)
 
@@ -412,8 +413,9 @@ class App(args: App.CommandLineArgs) extends AppInterface with LinkChild with Ex
   val labManager = new LabManager(workspace, editDialogFactory, colorizer, menuBarFactory, workspaceFactory,
                                   modelLoader, modelSaver)
 
-  val fileManager = new FileManager(workspace, modelLoader, converter, dirtyMonitor, modelSaver, mainMenuBar,
-                                    frame, tabManager, workspaceFactory, labManager, args.testing)
+  override val fileManager: FileManager = new FileManager(workspace, modelLoader, converter, dirtyMonitor, modelSaver,
+                                                          mainMenuBar, frame, tabManager, workspaceFactory, labManager,
+                                                          args.testing)
 
   private val recentFilesMenu = new RecentFilesMenu(frame, fileManager)
 
@@ -476,10 +478,11 @@ class App(args: App.CommandLineArgs) extends AppInterface with LinkChild with Ex
       , (name)            => libMan.lookupExtension(name, "").isDefined
       , (name)            => libMan.lookupExtension(name, "").fold("N/A")(_.version)
       , { (name, version) => libMan.lookupExtension(name, version).foreach(libMan.installExtension); compileLater() }
+      , ()                => openLibrariesDialog.actionPerformed(null)
       )
     })
 
-    val viewManager = new ViewManager(workspace, frame, interfaceTab.iP)
+    val viewManager = new ViewManager(workspace, interfaceTab.iP, frame, interfaceTab.iP)
 
     frame.addLinkComponent(viewManager)
 
@@ -635,7 +638,7 @@ class App(args: App.CommandLineArgs) extends AppInterface with LinkChild with Ex
   }
 
   // used by preferences that require a restart if the user chooses the "Restart Now" option (Isaac B 7/23/25)
-  def handle(e: AppEvents.RestartEvent): Unit = {
+  override def restart(): Unit = {
 
     val processFile = new File(ProcessHandle.current.info.command.get)
 
@@ -758,7 +761,7 @@ class App(args: App.CommandLineArgs) extends AppInterface with LinkChild with Ex
 
   /// zooming
 
-  lazy val openPreferencesDialog = new ShowPreferencesDialog(frame, tabManager, tabManager.interfaceTab.iP)
+  lazy val openPreferencesDialog = new ShowPreferencesDialog(this, frame, tabManager, tabManager.interfaceTab.iP)
 
   lazy val openAboutDialog = new ShowAboutWindow(frame)
 
@@ -812,19 +815,7 @@ class App(args: App.CommandLineArgs) extends AppInterface with LinkChild with Ex
     tabManager.setIgnoreChanges(ignore)
   }
 
-  // AppEvent stuff (kludgy)
-  /**
-   * Internal use only.
-   */
-  def handle(e: AppEvent): Unit = {
-    import AppEventType._
-    e.`type` match {
-      case RELOAD => reload()
-      case MAGIC_OPEN => magicOpen(e.args(0).toString)
-    }
-  }
-
-  private def reload(): Unit = {
+  override def reload(): Unit = {
     val modelType = workspace.getModelType
     val path = workspace.getModelPath
     if (modelType != ModelType.New && path != null) tryOpenFromSource(path, modelType)
@@ -842,7 +833,7 @@ class App(args: App.CommandLineArgs) extends AppInterface with LinkChild with Ex
     }
   }
 
-  private def magicOpen(name: String): Unit = {
+  override def magicOpen(name: String): Unit = {
     val matches = org.nlogo.workspace.ModelsLibrary.findModelsBySubstring(name)
     if (matches.isEmpty) commandLater("print \"no models matching \\\"" + name + "\\\" found\"")
     else {
@@ -951,21 +942,15 @@ class App(args: App.CommandLineArgs) extends AppInterface with LinkChild with Ex
   /**
    * Internal use only.
    */
-  final def handle(e: AppEvents.SwitchedTabsEvent): Unit = {
-    if (e.newTab == tabManager.interfaceTab) {
+  def switchedTabs(oldTab: Component, newTab: Component): Unit = {
+    if (newTab == tabManager.interfaceTab) {
       monitorManager.showAll()
       frame.toFront()
-    } else if (e.oldTab == tabManager.interfaceTab) {
+    } else if (oldTab == tabManager.interfaceTab) {
       monitorManager.hideAll()
     }
     setWindowTitles()
   }
-
-  /**
-   * Internal use only.
-   */
-  def handle(e: AppEvents.OpenLibrariesDialogEvent): Unit =
-    openLibrariesDialog.actionPerformed(null)
 
   /**
    * Internal use only.
@@ -1043,13 +1028,6 @@ class App(args: App.CommandLineArgs) extends AppInterface with LinkChild with Ex
 
   def handle(e: LoadModelEvent): Unit = {
     workspace.getResourceManager.setResources(e.model.resources)
-  }
-
-  /**
-   * Internal use only.
-   */
-  def handle(e: AboutToQuitEvent): Unit = {
-    LogManager.stop()
   }
 
   private def frameTitle(filename: String, dirty: Boolean) = {

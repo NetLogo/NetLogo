@@ -33,6 +33,8 @@ public interface GLViewManagerInterface
 
   void setWireframeColor(Color color);
 
+  void edit3DView(WorldViewSettings settngs);
+
   void editFinished();
 
   void close();

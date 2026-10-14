@@ -2,6 +2,7 @@
 
 package org.nlogo.window;
 
+import java.awt.Frame;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -34,7 +35,6 @@ public class View
     org.nlogo.window.Events.LoadBeginEvent.Handler,
     org.nlogo.window.Events.LoadEndEvent.Handler,
     org.nlogo.window.Events.CompiledEvent.Handler,
-    org.nlogo.window.Events.IconifiedEvent.Handler,
     org.nlogo.api.ViewSettings,
     java.awt.event.ActionListener,
     LocalViewInterface {
@@ -133,9 +133,10 @@ public class View
 
   boolean iconified = false;
 
-  public void handle(org.nlogo.window.Events.IconifiedEvent e) {
-    if (e.frame == org.nlogo.awt.Hierarchy.getFrame(this)) {
-      iconified = e.iconified;
+  @Override
+  public void setIconified(Frame frame, boolean iconified) {
+    if (frame == org.nlogo.awt.Hierarchy.getFrame(this)) {
+      this.iconified = iconified;
     }
   }
 

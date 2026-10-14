@@ -11,7 +11,7 @@ import javax.swing.{ AbstractAction, JPanel }
 
 import org.nlogo.agent.Observer
 import org.nlogo.api.TabsInterface
-import org.nlogo.app.common.{ CodeToHtml, EditorFactory, Events => AppEvents, FindDialog, MenuTab }
+import org.nlogo.app.common.{ CodeToHtml, EditorFactory, FindDialog, MenuTab, Tab }
 import org.nlogo.core.{ AgentKind, CompilerException, I18N }
 import org.nlogo.editor.{ AdvancedEditorArea, EditorConfiguration }
 import org.nlogo.nvm.IncludeSource
@@ -25,10 +25,10 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
   extends JPanel
   with ProceduresInterface
   with ProceduresMenuTarget
-  with AppEvents.SwitchedTabsEvent.Handler
   with WindowEvents.CompiledEvent.Handler
   with WindowEvents.AfterLoadEvent.Handler
   with NlogoPrintable
+  with Tab
   with MenuTab
   with FocusRoot
   with ThemeSync {
@@ -184,10 +184,10 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
 
   def kind = AgentKind.Observer
 
-  def handle(e: AppEvents.SwitchedTabsEvent): Unit = {
-    if (e.oldTab == this && dirty)
+  override def switchedTabs(oldTab: Component, newTab: Component): Unit = {
+    if (oldTab == this && dirty)
       compile()
-    if (!e.newTab.isInstanceOf[CodeTab])
+    if (!newTab.isInstanceOf[CodeTab])
       FindDialog.dontWatch(true)
   }
 

@@ -2,7 +2,7 @@
 
 package org.nlogo.hubnet.server.gui
 
-import java.awt.Component
+import java.awt.{ Component, Frame }
 import java.net.{ InetAddress, NetworkInterface }
 
 import org.nlogo.api.{ AbstractModelLoader, ModelType, ViewInterface }
@@ -184,6 +184,9 @@ class GUIHubNetManager(workspace: GUIWorkspace,
   def sendFromLocalClient(clientName:String, tag: String, content: AnyRef) = {
     Some("unimplemented")
   }
+
+  // only handled for main view (Isaac B 10/14/26)
+  override def setIconified(frame: Frame, iconified: Boolean): Unit = {}
 
   override def syncTheme(): Unit = {
     _clientEditor.syncTheme()

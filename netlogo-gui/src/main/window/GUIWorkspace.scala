@@ -27,12 +27,10 @@ import org.nlogo.shape.ShapeConverter
 import org.nlogo.swing.{ CustomOptionPane, FileDialog, ModalProgressTask, OptionPane, ScrollPane, TextArea, Utils }
 import org.nlogo.theme.InterfaceColors
 import org.nlogo.window.Event.LinkChild
-import org.nlogo.window.Events.{ AboutToQuitEvent, AddBooleanConstraintEvent, AddChooserConstraintEvent,
-                                 AddInputBoxConstraintEvent, AddJobEvent, AddSliderConstraintEvent, AfterLoadEvent,
-                                 AppEvent, BeforeLoadEvent, CompiledEvent, Enable2DEvent, ExportPlotEvent,
-                                 ExportWidgetEvent, JobRemovedEvent, JobStoppingEvent, LoadModelEvent, OpenModelEvent,
-                                 OutputEvent,  PatchesCreatedEvent, PeriodicUpdateEvent, RemoveConstraintEvent,
-                                 RemoveAllJobsEvent, RemoveJobEvent, RuntimeErrorEvent, TickStateChangeEvent }
+import org.nlogo.window.Events.{ AddBooleanConstraintEvent, AddChooserConstraintEvent, AddInputBoxConstraintEvent,
+                                 AddJobEvent, AddSliderConstraintEvent, AfterLoadEvent, BeforeLoadEvent, CompiledEvent,
+                                 JobRemovedEvent, JobStoppingEvent, LoadModelEvent, OutputEvent, PeriodicUpdateEvent,
+                                 RemoveAllJobsEvent, RemoveJobEvent, RuntimeErrorEvent }
 import org.nlogo.workspace.{ AbstractWorkspaceScala, ExportOutput, HubNetManagerFactory }
 
 import scala.collection.immutable.ListMap
@@ -54,11 +52,10 @@ abstract class GUIWorkspace(app: Option[AppInterface], world: World, kioskLevel:
                             externalFileManager: ExternalFileManager, listenerManager: NetLogoListenerManager,
                             errorDialogManager: ErrorDialogManager, controlSet: ControlSet)
   extends AbstractWorkspaceScala(app, world, hubNetManagerFactory)
-  with LinkChild with AboutToQuitEvent.Handler with AddJobEvent.Handler with AfterLoadEvent.Handler
-  with BeforeLoadEvent.Handler with JobStoppingEvent.Handler with RemoveAllJobsEvent.Handler
-  with RemoveJobEvent.Handler with AddSliderConstraintEvent.Handler with RemoveConstraintEvent.Handler
-  with AddBooleanConstraintEvent.Handler with AddChooserConstraintEvent.Handler with AddInputBoxConstraintEvent.Handler
-  with CompiledEvent.Handler with ExportPlotEvent.Handler with ExportWidgetEvent.Handler with LoadModelEvent.Handler
+  with LinkChild with AddJobEvent.Handler with AfterLoadEvent.Handler with BeforeLoadEvent.Handler
+  with JobStoppingEvent.Handler with RemoveAllJobsEvent.Handler with RemoveJobEvent.Handler
+  with AddSliderConstraintEvent.Handler with AddBooleanConstraintEvent.Handler with AddChooserConstraintEvent.Handler
+  with AddInputBoxConstraintEvent.Handler with CompiledEvent.Handler with LoadModelEvent.Handler
   with TrailDrawerInterface with DrawingInterface with ModelSections.ModelSaveable with PrimaryWorkspace
   with WorkspaceWithSpeed {
 
@@ -210,16 +207,18 @@ abstract class GUIWorkspace(app: Option[AppInterface], world: World, kioskLevel:
     hubNetManager.foreach(_.sendStamp(agent, erase))
   }
 
+  def tickStateChanged(initialized: Boolean): Unit
+
   override def importWorld(filename: String): Unit = {
     super.importWorld(filename)
 
-    new TickStateChangeEvent(world.tickCounter.ticks > -1).raiseLater(this)
+    tickStateChanged(world.tickCounter.ticks > -1)
   }
 
   override def importWorld(reader: Reader): Unit = {
     super.importWorld(reader)
 
-    new TickStateChangeEvent(world.tickCounter.ticks > -1).raiseLater(this)
+    tickStateChanged(world.tickCounter.ticks > -1)
   }
 
   override def importDrawing(is: InputStream, mimeType: Option[String]): Unit =
@@ -273,8 +272,9 @@ abstract class GUIWorkspace(app: Option[AppInterface], world: World, kioskLevel:
   override def exportDrawingToCSV(writer: PrintWriter): Unit =
     view.renderer.trailDrawer.exportDrawingToCSV(writer)
 
-  override def exportOutputAreaToCSV(writer: PrintWriter): Unit =
-    new Events.ExportWorldEvent(writer).raise(this)
+  override def exportOutputAreaToCSV(writer: PrintWriter): Unit = {
+    app.foreach(_.tabManager.interfaceTab.exportOutputArea(writer))
+  }
 
   def getAndCreateDrawing(): BufferedImage =
     getAndCreateDrawing(true)
@@ -292,19 +292,19 @@ abstract class GUIWorkspace(app: Option[AppInterface], world: World, kioskLevel:
   override def resetTicks(context: Context): Unit = {
     super.resetTicks(context)
 
-    new TickStateChangeEvent(true).raiseLater(this)
+    tickStateChanged(true)
   }
 
   override def clearTicks(): Unit = {
     super.clearTicks()
 
-    new Events.TickStateChangeEvent(false).raiseLater(this)
+    tickStateChanged(false)
   }
 
   override def clearAll(): Unit = {
     super.clearAll()
 
-    new Events.TickStateChangeEvent(false).raiseLater(this)
+    tickStateChanged(false)
   }
 
   def sendPixels: Boolean =
@@ -395,9 +395,6 @@ abstract class GUIWorkspace(app: Option[AppInterface], world: World, kioskLevel:
     }
   }
 
-  def patchesCreatedNotify(): Unit =
-    new PatchesCreatedEvent().raise(this)
-
   def compilerTestingMode: Boolean =
     false
 
@@ -416,7 +413,7 @@ abstract class GUIWorkspace(app: Option[AppInterface], world: World, kioskLevel:
   override def open(path: String, shouldAutoInstallLibs: Boolean): Unit = {
     try {
       EventQueue.invokeAndWait(() => {
-        new OpenModelEvent(path, shouldAutoInstallLibs).raise(this)
+        app.foreach(_.fileManager.openFromPath(path, ModelType.Library, shouldAutoInstallLibs))
       })
     } catch {
       case e: InterruptedException =>
@@ -435,12 +432,14 @@ abstract class GUIWorkspace(app: Option[AppInterface], world: World, kioskLevel:
     view.renderer
 
   // called from the job thread
-  def reload(): Unit =
-    new AppEvent(AppEventType.RELOAD, Array()).raiseLater(this)
+  def reload(): Unit = {
+    app.foreach(_.reload())
+  }
 
   // called from the job thread
-  override def magicOpen(name: String): Unit =
-    new AppEvent(AppEventType.MAGIC_OPEN, Array(name)).raiseLater(this)
+  override def magicOpen(name: String): Unit = {
+    app.foreach(_.magicOpen(name))
+  }
 
   /// painting
 
@@ -488,7 +487,7 @@ abstract class GUIWorkspace(app: Option[AppInterface], world: World, kioskLevel:
 
     view.renderPerspective = enabled
 
-    new Enable2DEvent(enabled).raise(this)
+    app.foreach(_.tabManager.interfaceTab.enable2D(enabled))
   }
 
   def dualView: Boolean =
@@ -858,8 +857,8 @@ abstract class GUIWorkspace(app: Option[AppInterface], world: World, kioskLevel:
     }
   }
 
-  def handle(e: RemoveConstraintEvent): Unit = {
-    val index = world.observerOwnsIndexOf(e.varname.toUpperCase(Locale.ENGLISH))
+  def removeConstraint(varname: String): Unit = {
+    val index = world.observerOwnsIndexOf(varname.toUpperCase(Locale.ENGLISH))
 
     if (index != -1)
       world.observer.setConstraint(index, null)
@@ -882,15 +881,15 @@ abstract class GUIWorkspace(app: Option[AppInterface], world: World, kioskLevel:
     _isModel3D = e.model.view.dimensions.isInstanceOf[WorldDimensions3D]
   }
 
-  def handle(e: ExportWidgetEvent): Unit = {
+  def exportWidget(widget: Widget): Unit = {
     try {
-      val guessedName = guessExportName(e.widget.getDefaultExportName)
-      val exportPath = FileDialog.showFiles(e.widget, I18N.gui.get("menu.file.export"), AwtFileDialog.SAVE, guessedName)
+      val guessedName = guessExportName(widget.getDefaultExportName)
+      val exportPath = FileDialog.showFiles(widget, I18N.gui.get("menu.file.export"), AwtFileDialog.SAVE, guessedName)
       val exportToPath = Future.successful(exportPath)
 
-      e.widget match {
+      widget match {
         case pw: PlotWidget =>
-          new ExportPlotEvent(PlotWidgetExport.ExportSinglePlot(pw.plot), exportPath, {() => }).raise(pw)
+          exportPlot(PlotWidgetExport.ExportSinglePlot(pw.plot), exportPath, () => {})
 
         case ow: OutputWidget =>
           exportToPath
@@ -921,43 +920,40 @@ abstract class GUIWorkspace(app: Option[AppInterface], world: World, kioskLevel:
     }
   }
 
-  private def plotExportOperation(e: ExportPlotEvent): Future[Unit] = {
+  def exportPlot(plotExport: PlotWidgetExport, file: String, onCompletion: () => Unit): Future[Unit] = {
     def runAndComplete(f: () => Unit, onError: IOException => Unit): Unit = {
       try {
         f()
       } catch {
         case ex: IOException =>
-          e.onCompletion.run()
+          onCompletion()
           onError(ex)
       } finally {
-        e.onCompletion.run()
+        onCompletion()
       }
     }
 
-    e.plotExport match {
+    plotExport match {
       case PlotWidgetExport.ExportAllPlots =>
         if (plotManager.getPlotNames.isEmpty) {
           plotExportControls.sorryNoPlots(getFrame)
-          e.onCompletion.run()
+          onCompletion()
           Future.successful(())
         } else
           Future {
             runAndComplete(
-              () => super.exportAllPlots(e.exportFilename),
-              (ex) => plotExportControls.allPlotExportFailed(getFrame, e.exportFilename, ex))
+              () => super.exportAllPlots(file),
+              (ex) => plotExportControls.allPlotExportFailed(getFrame, file, ex))
           } (using new LockedBackgroundExecutionContext(world))
 
       case PlotWidgetExport.ExportSinglePlot(plot) =>
         Future {
           runAndComplete(
-            () => super.exportPlot(plot.name, e.exportFilename),
-            (ex) => plotExportControls.singlePlotExportFailed(getFrame, e.exportFilename, plot, ex))
+            () => super.exportPlot(plot.name, file),
+            (ex) => plotExportControls.singlePlotExportFailed(getFrame, file, plot, ex))
         } (using new LockedBackgroundExecutionContext(world))
     }
   }
-
-  def handle(e: ExportPlotEvent): Unit =
-    plotExportOperation(e)
 
   def getExportWindowFrame: Component =
     viewManager.getPrimary.getExportWindowFrame
@@ -1246,8 +1242,10 @@ abstract class GUIWorkspace(app: Option[AppInterface], world: World, kioskLevel:
     setModelType(ModelType.Normal)
   }
 
-  def handle(e: AboutToQuitEvent): Unit =
+  override def quit(): Unit = {
     hubNetManager.foreach(_.disconnect())
+    getExtensionManager.reset()
+  }
 
   override def hubNetRunning_=(running: Boolean): Unit = {
     if (hubNetRunning != running) {

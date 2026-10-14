@@ -374,7 +374,7 @@ abstract class WorldViewSettings(val workspace: GUIWorkspace, protected val gWid
   }
 
   private[window] def finishWorldResize(): Unit = {
-    workspace.patchesCreatedNotify()
+    workspace.app.foreach(_.monitorManager.patchesCreated())
     gWidget.resetSize()
     workspace.clearDrawing()
   }
