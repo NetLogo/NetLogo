@@ -11,9 +11,8 @@ import javax.swing.{ AbstractAction, JComponent, JFrame }
 
 import org.nlogo.api.Exceptions
 import org.nlogo.app.codetab.{ CodeTab, ExternalFileManager, MainCodeTab, TemporaryCodeTab }
-import org.nlogo.app.common.{ AppTabsInterface, CommandLine, ExceptionCatchingAction, MenuTab, ModelConfig },
+import org.nlogo.app.common.{ AppTabsInterface, CommandLine, ExceptionCatchingAction, MenuTab, ModelConfig, Tab },
   AppTabsInterface.Filename
-import org.nlogo.app.common.Events.SwitchedTabsEvent
 import org.nlogo.app.infotab.InfoTab
 import org.nlogo.app.interfacetab.InterfaceTab
 import org.nlogo.app.tools.AgentMonitorManager
@@ -23,19 +22,15 @@ import org.nlogo.editor.EditorConfiguration
 import org.nlogo.nvm.IncludeSource
 import org.nlogo.swing.{ OptionPane, Printable, PrinterManager, TabLabel, UserAction }
 import org.nlogo.theme.ThemeSync
-import org.nlogo.window.Events.{ AboutToCloseFilesEvent, AboutToSaveExternalFileEvent, AboutToSaveModelEvent,
-                                 AutoIndentEvent, CompileAllEvent, CompiledEvent, ExternalFileSavedEvent,
-                                 LoadBeginEvent, LoadErrorEvent, LoadEndEvent, ModelSavedEvent, RuntimeErrorEvent,
-                                 WidgetErrorEvent, WidgetRemovedEvent }
+import org.nlogo.window.Events.{ CompileAllEvent, CompiledEvent, LoadBeginEvent, LoadEndEvent, ModelSavedEvent,
+                                 RuntimeErrorEvent, WidgetErrorEvent, WidgetRemovedEvent }
 import org.nlogo.window.{ Event, ExternalFileInterface, GUIWorkspace, JobWidget, MonitorWidget, Widget }
 
 import scala.io.Source
 
-class TabManager(app: App, val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
+class TabManager(app: App, val workspace: GUIWorkspace, override val interfaceTab: InterfaceTab,
                  val externalFileManager: ExternalFileManager)
-  extends AppTabsInterface with AboutToCloseFilesEvent.Handler with AboutToSaveExternalFileEvent.Handler
-  with AboutToSaveModelEvent.Handler with AutoIndentEvent.Handler with CompiledEvent.Handler
-  with ExternalFileSavedEvent.Handler with LoadBeginEvent.Handler with LoadErrorEvent.Handler with LoadEndEvent.Handler
+  extends AppTabsInterface with CompiledEvent.Handler with LoadBeginEvent.Handler with LoadEndEvent.Handler
   with ModelSavedEvent.Handler with RuntimeErrorEvent.Handler with WidgetErrorEvent.Handler
   with WidgetRemovedEvent.Handler with ThemeSync {
 
@@ -195,7 +190,7 @@ class TabManager(app: App, val workspace: GUIWorkspace, val interfaceTab: Interf
     }
   }
 
-  def stopWatcherThread(): Unit = {
+  override def stopWatcherThread(): Unit = {
     if (watcherThread != null) {
       watcherThread.interrupt
       watcherThread = null
@@ -318,15 +313,15 @@ class TabManager(app: App, val workspace: GUIWorkspace, val interfaceTab: Interf
     separateTabsWindow.mainMenuBar.revokeAction(action)
   }
 
-  def smartTabbingEnabled: Boolean = smartTabbing
-  def smartTabbingEnabled_=(enabled: Boolean): Unit = {
+  override def smartTabbingEnabled: Boolean = smartTabbing
+  override def smartTabbingEnabled_=(enabled: Boolean): Unit = {
     smartTabbing = enabled
     mainCodeTab.setIndenter(enabled)
     getExternalFileTabs.foreach(_.setIndenter(enabled))
   }
 
-  def lineNumbersVisible: Boolean = mainCodeTab.lineNumbersVisible
-  def lineNumbersVisible_=(visible: Boolean): Unit = {
+  override def lineNumbersVisible: Boolean = mainCodeTab.lineNumbersVisible
+  override def lineNumbersVisible_=(visible: Boolean): Unit = {
     mainCodeTab.lineNumbersVisible = visible
     getExternalFileTabs.foreach(_.lineNumbersVisible = visible)
   }
@@ -399,6 +394,13 @@ class TabManager(app: App, val workspace: GUIWorkspace, val interfaceTab: Interf
       mainTabs.getSelectedComponent
   }
 
+  def getAllTabs: Array[Tab] = {
+    (mainTabs.getComponents ++ separateTabs.getComponents).collect {
+      case tab: Tab =>
+        tab
+    }
+  }
+
   override def getExternalFileTabs: Seq[TemporaryCodeTab] = {
     if (separateTabsWindow.isVisible) {
       (for (i <- 1 until separateTabs.getTabCount) yield separateTabs.getComponentAt(i))
@@ -463,7 +465,9 @@ class TabManager(app: App, val workspace: GUIWorkspace, val interfaceTab: Interf
 
       previousTab = tab
 
-      new SwitchedTabsEvent(prev, tab).raise(workspace.getFrame)
+      getAllTabs.foreach(_.switchedTabs(prev, tab))
+
+      app.switchedTabs(prev, tab)
     }
   }
 
@@ -698,7 +702,7 @@ class TabManager(app: App, val workspace: GUIWorkspace, val interfaceTab: Interf
     reloading = false
   }
 
-  def handle(e: LoadErrorEvent): Unit = {
+  def loadError(): Unit = {
     reloading = false
   }
 
@@ -809,22 +813,11 @@ class TabManager(app: App, val workspace: GUIWorkspace, val interfaceTab: Interf
     mainTabs.repaint()
   }
 
-  def handle(e: AboutToSaveExternalFileEvent): Unit = {
-    // Stop watching here so that the watcher thread doesn't detect our own write. (Isaac B 11/26/25)
-    stopWatcherThread()
-  }
-
-  def handle(e: AboutToSaveModelEvent): Unit = {
-    // Stop watching here so that the watcher thread doesn't detect our own
-    // write.
-    stopWatcherThread()
-  }
-
-  def handle(e: ExternalFileSavedEvent): Unit = {
+  override def externalFileSaved(path: String): Unit = {
     // close any existing tabs with the same name to prevent duplicate tabs (Isaac B 12/1/25)
-    getExternalFileTabs.filter(_.filename == Right(e.path)).dropRight(1).foreach(closeExternalTab(_, false))
+    getExternalFileTabs.filter(_.filename == Right(path)).dropRight(1).foreach(closeExternalTab(_, false))
 
-    getTabWithFilename(Right(e.path)).foreach(tab => {
+    getTabWithFilename(Right(path)).foreach(tab => {
       if (separateTabsWindow.isVisible) {
         separateTabs.getTabLabelAt(separateTabs.indexOfComponent(tab)).foreach(_.setText(tab.filenameForDisplay))
       } else {
@@ -832,24 +825,19 @@ class TabManager(app: App, val workspace: GUIWorkspace, val interfaceTab: Interf
       }
     })
 
+    dirtyMonitor.foreach(_.setDirty(false, Some(path)))
+
     // before saving, the watcher thread is stopped so it doesn't detect our own write,
     // so we need to start it up again after the save is complete (Isaac B 11/26/25)
     if (getAutoReload)
       startWatcherThread()
   }
 
-  def handle(e: AboutToCloseFilesEvent): Unit =
-    OfferSaveExternalsDialog.offer(getExternalFileTabs.filter(_.saveNeeded).toSet, workspace.getFrame)
-
   // before saving, the watcher thread is stopped so it doesn't detect our own write,
   // so we need to start it up again after the save is complete (Isaac B 9/7/25)
   def handle(e: ModelSavedEvent): Unit = {
     if (getAutoReload)
       startWatcherThread()
-  }
-
-  def handle(e: AutoIndentEvent): Unit = {
-    smartTabbingEnabled = e.smart
   }
 
   override def syncTheme(): Unit = {

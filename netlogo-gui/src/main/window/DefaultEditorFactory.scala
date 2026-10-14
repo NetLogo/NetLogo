@@ -9,5 +9,5 @@ class DefaultEditorFactory(val compiler: CompilerServices) extends EditorFactory
   val colorizer = new EditorColorizer(compiler)
 
   override def newEditor(configuration: EditorConfiguration): EditorArea =
-    new EditorArea(configuration) with AutoIndentHandler
+    new EditorArea(configuration)
 }

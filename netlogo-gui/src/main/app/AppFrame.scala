@@ -12,7 +12,6 @@ import org.nlogo.swing.{ ModalProgress, NetLogoIcon, ZoomableWindow }
 import org.nlogo.theme.ThemeSync
 import org.nlogo.window.LinkRoot
 import org.nlogo.window.Event.LinkParent
-import org.nlogo.window.Events.IconifiedEvent
 
 class AppFrame(app: App) extends JFrame with LinkParent with LinkRoot with NetLogoIcon with ModalProgress
                          with ZoomableWindow(None) with ThemeSync {
@@ -25,10 +24,10 @@ class AppFrame(app: App) extends JFrame with LinkParent with LinkRoot with NetLo
       catch { case ex: UserCancelException => Exceptions.ignore(ex) }
     }
     override def windowIconified(e: WindowEvent): Unit = {
-      new IconifiedEvent(AppFrame.this, true).raise(AppFrame.this)
+      app.workspace.viewManager.setIconified(AppFrame.this, true)
     }
     override def windowDeiconified(e: WindowEvent): Unit = {
-      new IconifiedEvent(AppFrame.this, false).raise(AppFrame.this)
+      app.workspace.viewManager.setIconified(AppFrame.this, false)
     }
   })
 

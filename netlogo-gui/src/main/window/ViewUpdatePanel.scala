@@ -81,7 +81,7 @@ class ViewUpdatePanel(workspace: GUIWorkspace, speedSlider: SpeedSliderPanel, di
     putValue(Action.SHORT_DESCRIPTION, I18N.gui("settingsButton.tooltip"))
     def actionPerformed(e: ActionEvent): Unit = {
       if (is3D) {
-        new Events.EditView3DEvent(settings).raise(e.getSource)
+        workspace.glView.edit3DView(settings)
       } else {
         settings.widgetContainer.foreach(_.editWidget(settings))
       }

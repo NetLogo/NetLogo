@@ -192,8 +192,7 @@ public abstract class Event {
       List<Handler> handlersV = events.get(eventClass);
       if (null == handlersV ||
         eventClass.toString().equals("class org.nlogo.window.Events$CompiledEvent") ||
-        eventClass.toString().equals("class org.nlogo.window.Events$LoadModelEvent") ||
-        eventClass.toString().equals("class org.nlogo.app.common.Events$SwitchedTabsEvent")) {
+        eventClass.toString().equals("class org.nlogo.window.Events$LoadModelEvent")) {
         // findHandlers does the grunt work of actually
         // walking the component hierarchy looking for
         // handlers

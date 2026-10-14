@@ -293,7 +293,17 @@ class InterfacePanelLite(viewWidget: Option[ViewWidgetInterface], compiler: Comp
   def interfaceImage: BufferedImage =
     Images.paintToImage(this)
 
+  def tickStateChanged(initialized: Boolean): Unit = {
+    getComponents.foreach {
+      case button: ButtonWidget =>
+        button.tickStateChanged(initialized)
+
+      case _ =>
+    }
+  }
+
   override def editWidget(widget: Editable): Unit = {}
+  override def edit3DView(settings: Editable): Unit = {}
 
   override def zoomComponent(): Unit = {
     getComponents.foreach {

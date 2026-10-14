@@ -3,16 +3,16 @@
 package org.nlogo.hubnet.client
 
 import java.awt.{ AWTEvent, BorderLayout }
-import java.io.{IOException, PrintWriter}
+import java.io.IOException
 import java.net.{Socket, ConnectException, UnknownHostException, NoRouteToHostException}
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.swing.JPanel
 
 import org.nlogo.core.{ I18N, LogoList }
-import org.nlogo.api.{ Version, Dump, ExtensionManager, MersenneTwisterFast, PlotInterface, DummyLogoThunkFactory,
+import org.nlogo.api.{ Version, ExtensionManager, MersenneTwisterFast, PlotInterface, DummyLogoThunkFactory,
                        CompilerServices }
-import org.nlogo.agent.{ AbstractExporter, ConstantSliderConstraint }
-import org.nlogo.plot.{ CorePlotExporter, Plot, PlotManager }
+import org.nlogo.agent.ConstantSliderConstraint
+import org.nlogo.plot.{ Plot, PlotManager }
 import org.nlogo.hubnet.connection.{ Streamable, ConnectionTypes, AbstractConnection }
 import org.nlogo.hubnet.mirroring.{ OverrideList, HubNetLinkStamp, HubNetPlotPoint, HubNetLine, HubNetTurtleStamp }
 import org.nlogo.hubnet.protocol._
@@ -20,12 +20,9 @@ import org.nlogo.awt.EventQueue.invokeLater
 import org.nlogo.awt.Hierarchy.getFrame
 import org.nlogo.swing.{ OptionPane, Transparent }
 import org.nlogo.theme.ThemeSync
-import org.nlogo.window.{ PlotWidgetExport, MonitorWidget, InterfaceGlobalWidget, Widget, ButtonWidget, PlotWidget,
-                          NetLogoExecutionContext }
-import org.nlogo.window.Events.{ AddJobEvent, AddSliderConstraintEvent, AfterLoadEvent, ExportPlotEvent,
-                                 InterfaceGlobalEvent, LoadWidgetsEvent }
-
-import scala.concurrent.Future
+import org.nlogo.window.{ MonitorWidget, InterfaceGlobalWidget, Widget, ButtonWidget, PlotWidget }
+import org.nlogo.window.Events.{ AddJobEvent, AddSliderConstraintEvent, AfterLoadEvent, InterfaceGlobalEvent,
+                                 LoadWidgetsEvent }
 
 // Normally we try not to use the org.nlogo.window.Events stuff except in
 // the app and window packages.  But currently there's no better
@@ -35,8 +32,8 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
                   errorHandler:ErrorHandler,
                   compiler:CompilerServices,
                   extensionManager: ExtensionManager)
-  extends JPanel(new BorderLayout) with Transparent with AddJobEvent.Handler with ExportPlotEvent.Handler
-  with InterfaceGlobalEvent.Handler with AddSliderConstraintEvent.Handler with ThemeSync {
+  extends JPanel(new BorderLayout) with Transparent with AddJobEvent.Handler with InterfaceGlobalEvent.Handler
+  with AddSliderConstraintEvent.Handler with ThemeSync {
 
   protected var clientGUI: Option[ClientGUI] = None
   protected var viewWidget: Option[ClientView] = None
@@ -87,27 +84,6 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
     val button = e.owner.asInstanceOf[ButtonWidget]
     sendDataAndWait(new ActivityCommand(button.displayName, button.foreverOn.asInstanceOf[AnyRef]))
     button.popUpStoppingButton()
-  }
-
-  def handle(e: org.nlogo.window.Events.ExportPlotEvent): Unit = {
-    e.plotExport match {
-      case PlotWidgetExport.ExportAllPlots =>
-        throw new UnsupportedOperationException("can't export all plots yet.")
-      case PlotWidgetExport.ExportSinglePlot(plot) =>
-        if (plot != null) {
-          Future.successful(e.exportFilename)
-           .foreach({ filename =>
-             try new AbstractExporter(filename) {
-               override def `export`(writer: PrintWriter): Unit = {
-                 new CorePlotExporter(plot, Dump.csv).`export`(writer)
-               }
-             }.`export`("plot", "HubNet Client", "")
-             catch {
-               case ex: IOException => org.nlogo.api.Exceptions.handle(ex)
-             }
-           })(using NetLogoExecutionContext.backgroundExecutionContext)
-        }
-    }
   }
 
   def handle(e: org.nlogo.window.Events.InterfaceGlobalEvent): Unit = {

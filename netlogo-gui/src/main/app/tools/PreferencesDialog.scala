@@ -8,7 +8,8 @@ import java.io.File
 import java.nio.file.Files
 import javax.swing.{ AbstractAction, ActionMap, InputMap, JComponent, JLabel }
 
-import org.nlogo.app.common.{ AppTabsInterface, Events }, Events.RestartEvent
+import org.nlogo.api.AppInterface
+import org.nlogo.app.common.AppTabsInterface
 import org.nlogo.core.I18N
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, ButtonPanel, CheckBox, DialogButton, FloatingTabbedPane,
                          MaximumHeight, OptionPane, PreferredSize, TabLabel, TextField, UserAction, WindowAutomator,
@@ -16,7 +17,8 @@ import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, ButtonPanel, CheckBox, Dia
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.AbstractWidgetPanel
 
-class PreferencesDialog(parent: Frame & ThemeSync, tabManager: AppTabsInterface, widgetPanel: AbstractWidgetPanel)
+class PreferencesDialog(app: AppInterface, parent: Frame & ThemeSync, tabManager: AppTabsInterface,
+                        widgetPanel: AbstractWidgetPanel)
   extends ToolDialog(parent, "preferences") with ThemeSync {
 
   WindowAutomator.automate(this)
@@ -36,7 +38,7 @@ class PreferencesDialog(parent: Frame & ThemeSync, tabManager: AppTabsInterface,
     new Preferences.IncludedFilesMenu(tabManager),
     Preferences.FocusOnError,
     Preferences.StartSeparateCodeTab,
-    new Preferences.IndentAutomatically(parent),
+    new Preferences.IndentAutomatically(tabManager),
     new Preferences.EditorLineNumbers(tabManager),
     new Preferences.CompleteOnType(tabManager),
     new Preferences.CodeFont(tabManager)
@@ -150,7 +152,7 @@ class PreferencesDialog(parent: Frame & ThemeSync, tabManager: AppTabsInterface,
         if (new OptionPane(this, I18N.gui("restartPrompt"), I18N.gui("restartPrompt.message"),
                            Seq(I18N.gui("restartNow"), I18N.gui("restartLater")), OptionPane.Icons.info)
               .getSelectedIndex == 0)
-          new RestartEvent().raise(parent)
+          app.restart()
       }
 
       true

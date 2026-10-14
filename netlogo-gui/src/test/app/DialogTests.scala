@@ -88,7 +88,7 @@ class DialogTests extends AnyFunSuite with BeforeAndAfterAll {
     var prefsDialog: Option[PreferencesDialog] = None
 
     AutomationUtils.waitForGUI(() => {
-      prefsDialog = Option(new PreferencesDialog(frame, tabManager, tabManager.interfaceTab.iP))
+      prefsDialog = Option(new PreferencesDialog(app, frame, tabManager, tabManager.interfaceTab.iP))
     })
 
     prefsDialog.foreach { dialog =>

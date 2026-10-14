@@ -20,8 +20,7 @@ import org.nlogo.window.{ Event, Events => WindowEvents }
 class AgentMonitorWindow(val agentKind: AgentKind, _agent: Agent, radius: Double,
                          manager: AgentMonitorManager, parent: Frame)
   extends JDialog(parent) with Event.LinkChild with WindowEvents.PeriodicUpdateEvent.Handler
-  with WindowEvents.PatchesCreatedEvent.Handler with WindowEvents.LoadBeginEvent.Handler
-  with ZoomableWindow(Option(parent)) with ThemeSync with NetLogoIcon {
+  with WindowEvents.LoadBeginEvent.Handler with ZoomableWindow(Option(parent)) with ThemeSync with NetLogoIcon {
 
   private val monitor = {
     agentKind match {
@@ -125,8 +124,9 @@ class AgentMonitorWindow(val agentKind: AgentKind, _agent: Agent, radius: Double
 
   def handle(e: WindowEvents.LoadBeginEvent): Unit = { close() }
   def handle(e: WindowEvents.PeriodicUpdateEvent): Unit = { refresh() }
-  def handle(e: WindowEvents.PatchesCreatedEvent): Unit = {
-    if(!agent.isInstanceOf[Observer])
+
+  def patchesCreated(): Unit = {
+    if (!agent.isInstanceOf[Observer])
       close()
   }
 

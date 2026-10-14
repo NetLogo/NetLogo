@@ -109,7 +109,7 @@ class WorldViewSettings2D(workspace: GUIWorkspace, gw: ViewWidget, tickCounter: 
         world.clearLinks()
         workspace.clearTicks()
         world.createPatches(newMinX, newMaxX, newMinY, newMaxY)
-        workspace.patchesCreatedNotify()
+        workspace.app.foreach(_.monitorManager.patchesCreated())
         gWidget.resetSize()
       }
       if (patchSizeChanged) {

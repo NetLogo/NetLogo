@@ -15,14 +15,15 @@ import javax.swing.event.{ ListSelectionEvent, ListSelectionListener }
 import javax.swing.table.{ DefaultTableModel, TableCellRenderer }
 
 import org.nlogo.api.{ Workspace }
+import org.nlogo.app.infotab.InfoTab
 import org.nlogo.awt.{ Positioning, UserCancelException }
 import org.nlogo.core.{ ExternalResource, I18N }
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, Button, FileDialog, InputOptionPane, MaximumHeight, OptionPane,
                          ScrollPane, Utils, WindowAutomator, Zoomable, ZoomableBorder, ZoomableWindow }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
-import org.nlogo.window.Events.{ DirtyEvent, ResourcesChangedEvent }
+import org.nlogo.window.Events.DirtyEvent
 
-class ResourceManagerDialog(parent: Frame, workspace: Workspace)
+class ResourceManagerDialog(parent: Frame, workspace: Workspace, infoTab: InfoTab)
   extends JDialog(parent, I18N.gui.get("resource.manager"), true) with ZoomableWindow(Option(parent)) with ThemeSync {
 
   WindowAutomator.automate(this)
@@ -113,7 +114,8 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
             refreshList()
 
             new DirtyEvent(None).raise(parent)
-            new ResourcesChangedEvent().raise(parent)
+
+            infoTab.resourcesChanged()
           }
 
           else {
@@ -166,7 +168,8 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
           refreshList()
 
           new DirtyEvent(None).raise(parent)
-          new ResourcesChangedEvent().raise(parent)
+
+          infoTab.resourcesChanged()
         }
 
         else {
@@ -185,7 +188,8 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
     refreshList()
 
     new DirtyEvent(None).raise(parent)
-    new ResourcesChangedEvent().raise(parent)
+
+    infoTab.resourcesChanged()
   })
 
   setContentPane(new BoxColumn(Seq(

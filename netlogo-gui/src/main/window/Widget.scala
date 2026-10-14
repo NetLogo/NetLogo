@@ -12,7 +12,7 @@ import org.nlogo.core.{ NetLogoPreferences, TokenType, Widget => CoreWidget }
 import org.nlogo.swing.{ FocusUtils, PopupMenu, PreferredSize, RoundedBorderPanel, Zoomable, ZoomHelpers }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.Event
-import org.nlogo.window.Events.{ InterfaceModeChangedEvent, WidgetAddedEvent, WidgetErrorEvent, WidgetRemovedEvent }
+import org.nlogo.window.Events.{ WidgetAddedEvent, WidgetErrorEvent, WidgetRemovedEvent }
 
 object Widget {
   trait LoadHelper {
@@ -52,7 +52,7 @@ abstract class MultiErrorWidget extends Widget with MultiErrorHandler {
 }
 
 abstract class Widget
-  extends JPanel with RoundedBorderPanel with FocusUtils with ThemeSync with InterfaceModeChangedEvent.Handler {
+  extends JPanel with RoundedBorderPanel with FocusUtils with ThemeSync {
 
   def helpLink: Option[(String, String)] = None
   var displayName: String = ""
@@ -209,10 +209,6 @@ abstract class Widget
     Event.rehash()
 
     widgetContainer.foreach(new WidgetAddedEvent(this).raise(_))
-  }
-
-  def handle(e: InterfaceModeChangedEvent): Unit = {
-    resetMouseState()
   }
 
   protected def checkRecursive(compiler: CompilerServices, source: String, name: String): Boolean =

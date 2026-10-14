@@ -2,6 +2,8 @@
 
 package org.nlogo.window;
 
+import java.awt.Frame;
+
 import org.nlogo.api.ViewInterface;
 
 public class ViewManager {
@@ -126,6 +128,12 @@ public class ViewManager {
   public void resetMouseCors() {
     for (ViewInterface view : views) {
       view.resetMouseCors();
+    }
+  }
+
+  public void setIconified(Frame frame, boolean iconified) {
+    for (ViewInterface view : views) {
+      view.setIconified(frame, iconified);
     }
   }
 }

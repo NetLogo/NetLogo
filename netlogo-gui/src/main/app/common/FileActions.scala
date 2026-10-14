@@ -11,8 +11,7 @@ import org.nlogo.api.LocalFile
 import org.nlogo.plot.Plot
 import org.nlogo.swing.UserAction,
   UserAction.{ FileCategory, FileExportSubcategory, FileImportSubcategory, MenuAction }
-import org.nlogo.window.{ Events => WindowEvents, GUIWorkspace, PlotWidgetExport },
-  WindowEvents.{ ExportPlotEvent }
+import org.nlogo.window.{ GUIWorkspace, PlotWidgetExport }
 
 object FileActions {
 
@@ -84,8 +83,8 @@ object FileActions {
     }
 
     def inModalDialog(filenameAndPlot: (String, Plot), closeDialog: () => Unit): Unit = {
-      new ExportPlotEvent(PlotWidgetExport.ExportSinglePlot(filenameAndPlot._2), filenameAndPlot._1, () => closeDialog())
-        .raise(parent)
+      workspace.exportPlot(PlotWidgetExport.ExportSinglePlot(filenameAndPlot._2), filenameAndPlot._1,
+                           () => closeDialog())
     }
   }
 
@@ -106,8 +105,7 @@ object FileActions {
     }
 
     def inModalDialog(filename: String, closeDialog: () => Unit): Unit = {
-      new ExportPlotEvent(PlotWidgetExport.ExportAllPlots, filename, () => closeDialog())
-        .raise(parent)
+      workspace.exportPlot(PlotWidgetExport.ExportAllPlots, filename, () => closeDialog())
     }
   }
 

@@ -16,7 +16,7 @@ import org.nlogo.theme.InterfaceColors
 
 class ButtonWidget(random: MersenneTwisterFast, compiler: CompilerServices, colorizer: Colorizer)
   extends JobWidget(random) with Editable with MouseListener with MouseMotionListener
-  with Events.JobRemovedEvent.Handler with Events.TickStateChangeEvent.Handler {
+  with Events.JobRemovedEvent.Handler {
 
   private val foreverIcon = Utils.iconScaledWithColor(this, "/images/forever.png", 15, 15,
                                                       () => InterfaceColors.buttonText())
@@ -329,8 +329,8 @@ class ButtonWidget(random: MersenneTwisterFast, compiler: CompilerServices, colo
     }
   }
 
-  def handle(e: Events.TickStateChangeEvent): Unit = {
-    setupFinished = e.tickCounterInitialized
+  def tickStateChanged(initialized: Boolean): Unit = {
+    setupFinished = initialized
     repaint()
   }
 

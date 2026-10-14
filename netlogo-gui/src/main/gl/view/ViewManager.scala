@@ -2,7 +2,7 @@
 
 package org.nlogo.gl.view
 
-import java.awt.Color
+import java.awt.{ Color, Frame }
 import java.awt.event.KeyListener
 import java.lang.UnsatisfiedLinkError
 import javax.swing.JFrame
@@ -11,9 +11,11 @@ import org.nlogo.awt.Positioning
 import org.nlogo.core.{ I18N, Shape }
 import org.nlogo.gl.render.GLViewSettings
 import org.nlogo.swing.Utils
-import org.nlogo.window.{ GUIWorkspace, JOGLLoadingException, JOGLVersionMismatchException, TickCounterLabel }
+import org.nlogo.window.{ GUIWorkspace, JOGLLoadingException, JOGLVersionMismatchException, TickCounterLabel,
+                          WidgetContainer, WorldViewSettings }
 
 class ViewManager(val workspace: GUIWorkspace,
+                  widgetPanel: WidgetContainer,
                   appWindow: JFrame,
                   keyListener: KeyListener)
     extends org.nlogo.window.GLViewManagerInterface
@@ -119,6 +121,10 @@ class ViewManager(val workspace: GUIWorkspace,
   }
 
   def isFullscreen = fullscreen
+
+  override def edit3DView(settings: WorldViewSettings): Unit = {
+    widgetPanel.edit3DView(settings)
+  }
 
   def editFinished(): Unit = {
     currentView.foreach(_.editFinished())
@@ -282,6 +288,9 @@ class ViewManager(val workspace: GUIWorkspace,
   // I think the 3D renderer grabs it's font size directly from the main view so we don't need to
   // keep track of it here.
   def applyNewFontSize(fontSize: Int, zoom: Int): Unit = {}
+
+  // only handled for 2D view (Isaac B 10/14/26)
+  override def setIconified(frame: Frame, iconified: Boolean): Unit = {}
 
   override def syncTheme(): Unit = {
     observerView.foreach(_.syncTheme())

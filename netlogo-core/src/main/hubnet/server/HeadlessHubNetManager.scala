@@ -2,6 +2,7 @@
 
 package org.nlogo.hubnet.server
 
+import java.awt.Frame
 import java.util.concurrent.{ Executors, ExecutorService }
 
 import org.nlogo.api.{ AbstractModelLoader, HubNetWorkspaceInterface, ModelType, Workspace }
@@ -124,4 +125,7 @@ class HeadlessHubNetManager(workspace: Workspace & HubNetWorkspaceInterface, loa
   }
 
   def showControlCenter(reinit: Boolean): Unit = {} // maybe we could log a message here.
+
+  // only handled in GUI (Isaac B 10/14/26)
+  override def setIconified(frame: Frame, iconified: Boolean): Unit = {}
 }

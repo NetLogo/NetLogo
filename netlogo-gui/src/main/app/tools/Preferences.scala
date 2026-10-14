@@ -2,7 +2,7 @@
 
 package org.nlogo.app.tools
 
-import java.awt.{ BorderLayout, Component, Font, Frame, GraphicsEnvironment, Insets }
+import java.awt.{ BorderLayout, Font, Frame, GraphicsEnvironment, Insets }
 import java.awt.event.ActionEvent
 import java.io.File
 import java.util.Locale
@@ -16,7 +16,6 @@ import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, Button, CheckBox, ComboBox
                          Zoomable }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.AbstractWidgetPanel
-import org.nlogo.window.Events.AutoIndentEvent
 
 object Preferences {
   abstract class BooleanPreference(i18nKey: String, requirement: Option[RequiredAction], default: Boolean)
@@ -320,9 +319,9 @@ object Preferences {
     }
   }
 
-  class IndentAutomatically(raiser: Component) extends BooleanPreference("indentAutomatically", None, true) {
+  class IndentAutomatically(tabs: AppTabsInterface) extends BooleanPreference("indentAutomatically", None, true) {
     override def onSelect(selected: Boolean): Unit = {
-      new AutoIndentEvent(selected).raise(raiser)
+      tabs.smartTabbingEnabled = selected
     }
   }
 

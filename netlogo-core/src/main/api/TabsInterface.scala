@@ -5,6 +5,7 @@ package org.nlogo.api
 import java.awt.Component
 
 trait TabsInterface {
+  val interfaceTab: AbstractInterfaceTab
   val mainCodeTab: Component
 
   def smartTabbingEnabled: Boolean

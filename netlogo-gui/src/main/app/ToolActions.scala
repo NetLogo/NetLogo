@@ -34,14 +34,15 @@ abstract class ShowDialogAction(name: String) extends AbstractAction(name) with 
   }
 }
 
-class ShowPreferencesDialog(frame: Frame & ThemeSync, tabs: AppTabsInterface, widgetPanel: AbstractWidgetPanel)
+class ShowPreferencesDialog(app: App, frame: Frame & ThemeSync, tabs: AppTabsInterface,
+                            widgetPanel: AbstractWidgetPanel)
 extends AbstractAction(I18N.gui.get("menu.tools.preferences")) with ThemeSync
 with MenuAction {
   category = ToolsCategory
   group    = ToolsSettingsGroup
   mnemonic = 'P'
 
-  private lazy val dialog = new PreferencesDialog(frame, tabs, widgetPanel)
+  private lazy val dialog = new PreferencesDialog(app, frame, tabs, widgetPanel)
 
   override def actionPerformed(e: ActionEvent): Unit = {
     openToTab(0)

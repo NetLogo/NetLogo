@@ -5,10 +5,11 @@ package org.nlogo.app.interfacetab
 import java.awt.{ BasicStroke, BorderLayout, Component, Dimension, Font, Graphics, Graphics2D, Stroke }
 import java.awt.event.{ ActionEvent, KeyEvent, MouseAdapter, MouseEvent }
 import java.awt.print.{ PageFormat, Printable }
+import java.io.PrintWriter
 import javax.swing.{ AbstractAction, Action, JPanel, JSplitPane, ScrollPaneConstants }
 
-import org.nlogo.api.Announcement
-import org.nlogo.app.common.{Events => AppEvents, MenuTab}, AppEvents.SwitchedTabsEvent
+import org.nlogo.api.{ AbstractInterfaceTab, Announcement }
+import org.nlogo.app.common.{ MenuTab, Tab }
 import org.nlogo.app.tools.AgentMonitorManager
 import org.nlogo.core.I18N
 import org.nlogo.swing.{ BoxColumn, FocusRoot, Implicits, PreferredSize, PrinterManager, Printable => NlogoPrintable,
@@ -17,7 +18,7 @@ import org.nlogo.swing.{ BoxColumn, FocusRoot, Implicits, PreferredSize, Printer
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ EditDialogFactory, GUIWorkspace, InterfaceMode, SpeedSliderPanel, ViewUpdatePanel,
                           Events => WindowEvents, WorkspaceActions },
-                        WindowEvents.{ AfterLoadEvent, Enable2DEvent, LoadBeginEvent, OutputEvent }
+                        WindowEvents.{ AfterLoadEvent, LoadBeginEvent, OutputEvent }
 
 object InterfaceTab {
   val MenuGroup = "org.nlogo.app.InterfaceTab"
@@ -32,10 +33,10 @@ class InterfaceTab(workspace: GUIWorkspace,
   with LoadBeginEvent.Handler
   with AfterLoadEvent.Handler
   with OutputEvent.Handler
-  with Enable2DEvent.Handler
-  with SwitchedTabsEvent.Handler
   with NlogoPrintable
+  with Tab
   with MenuTab
+  with AbstractInterfaceTab
   with FocusRoot
   with Zoomable
   with ThemeSync {
@@ -132,11 +133,11 @@ class InterfaceTab(workspace: GUIWorkspace,
     commandCenter.requestFocusInWindow()
   }
 
-  final def handle(e: SwitchedTabsEvent): Unit = {
+  override def switchedTabs(oldTab: Component, newTab: Component): Unit = {
     commandCenter.requestFocusInWindow()
-    if (e.oldTab == this)
+    if (oldTab == this)
       iP.setInterfaceMode(InterfaceMode.Interact, false)
-    if (e.newTab != this)
+    if (newTab != this)
       monitorManager.refresh()
   }
 
@@ -161,12 +162,16 @@ class InterfaceTab(workspace: GUIWorkspace,
     }
   }
 
-  def handle(e: Enable2DEvent): Unit = {
-    speedSlider.setVisible(e.enabled)
-    viewUpdatePanel.setVisible(e.enabled)
+  override def enable2D(enabled: Boolean): Unit = {
+    speedSlider.setVisible(enabled)
+    viewUpdatePanel.setVisible(enabled)
     viewUpdatePanel.handle(null)
     revalidate()
     repaint()
+  }
+
+  override def exportOutputArea(writer: PrintWriter): Unit = {
+    Option(iP.getOutputWidget).foreach(_.exportOutput(writer))
   }
 
   /// printing

@@ -4,6 +4,7 @@ package org.nlogo.window
 
 import java.awt.{ Font, Point }
 import java.awt.event.ActionEvent
+import java.io.PrintWriter
 import javax.swing.{ AbstractAction, BoxLayout }
 
 import org.nlogo.core.{ I18N, Output => CoreOutput, Widget => CoreWidget }
@@ -11,9 +12,7 @@ import org.nlogo.editor.EditorConfiguration
 import org.nlogo.swing.{ MenuItem, PopupMenu, ZoomableBorder }
 import org.nlogo.theme.InterfaceColors
 
-class OutputWidget extends SingleErrorWidget with CommandCenterInterface
-  with Events.ExportWorldEvent.Handler with Editable {
-
+class OutputWidget extends SingleErrorWidget with CommandCenterInterface with Editable {
   displayName(I18N.gui.get("tabs.run.widgets.output"))
 
   val outputArea = new OutputArea {
@@ -78,10 +77,10 @@ class OutputWidget extends SingleErrorWidget with CommandCenterInterface
   // these are copied from the TrailDrawer, as is this code for breaking up
   // possible very long text into multiple cells and rows for Excel
   // CLB 7/15/05
-  def handle(e:org.nlogo.window.Events.ExportWorldEvent): Unit ={
+  def exportOutput(writer: PrintWriter): Unit ={
     import org.nlogo.api.Dump
-    e.writer.println(Dump.csv.encode("OUTPUT"))
-    Dump.csv.stringToCSV(e.writer, outputArea.getTextForExport)
+    writer.println(Dump.csv.encode("OUTPUT"))
+    Dump.csv.stringToCSV(writer, outputArea.getTextForExport)
   }
 
   override def load(model: CoreWidget): Unit = {

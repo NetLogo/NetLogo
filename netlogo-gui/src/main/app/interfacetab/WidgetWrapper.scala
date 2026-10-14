@@ -7,13 +7,12 @@ import java.awt.event.{ ActionEvent, InputEvent, MouseAdapter, MouseEvent, Mouse
                         MouseMotionListener }
 import javax.swing.{ AbstractAction, JComponent, JLayeredPane, JPanel }
 
-import org.nlogo.app.common.Events.WidgetSelectedEvent
 import org.nlogo.awt.{ Coordinates, Mouse }
 import org.nlogo.core.I18N
 import org.nlogo.swing.{ FocusRoot, FocusUtils, MenuItem, PopupMenu, WrappingPopupMenu, Utils, Zoomable }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ InterfaceMode, MouseMode, ViewWidget, Widget, WidgetWrapperInterface }
-import org.nlogo.window.Events.{ DirtyEvent, ExportWidgetEvent, WidgetForegroundedEvent }
+import org.nlogo.window.Events.DirtyEvent
 
 object WidgetWrapper {
   private val HandleSize = 7
@@ -33,7 +32,6 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
   with WidgetWrapperInterface
   with MouseListener
   with MouseMotionListener
-  with WidgetForegroundedEvent.Handler
   with FocusRoot
   with FocusUtils
   with Zoomable
@@ -138,7 +136,7 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
       repaint()
 
       if (!temporary)
-        new WidgetSelectedEvent(widget, selected).raise(this)
+        interfacePanel.widgetControls.widgetSelected(widget)
     }
   }
 
@@ -229,7 +227,7 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
     if (!isForeground) {
       isForeground(true)
 
-      new WidgetForegroundedEvent(widget).raise(this)
+      interfacePanel.widgetForegrounded(widget)
     }
   }
 
@@ -791,11 +789,6 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
     revalidateInterfacePanel()
   }
 
-  def handle(e: WidgetForegroundedEvent): Unit = {
-    if (e.widget != widget)
-      isForeground(false)
-  }
-
   // if we are not selected, return our location if we are selected,
   // return what our location would be if we *weren't* selected... this
   // is needed for the zooming code in InterfacePanel
@@ -1028,7 +1021,7 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
       if (widget.exportable) {
         menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.export")) {
           def actionPerformed(e: ActionEvent): Unit = {
-            new ExportWidgetEvent(widget).raise(WidgetWrapper.this)
+            interfacePanel.workspace.exportWidget(widget)
           }
         }))
       }

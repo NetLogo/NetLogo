@@ -66,6 +66,7 @@ extends AbstractWorkspaceScala(
   override def addJobFromJobThread(job: org.nlogo.nvm.Job) = unsupported
   override def compiler: PresentationCompilerInterface = unsupported
   override def utilities: CompilerUtilitiesInterface = unsupported
+  override def quit(): Unit = unsupported
 
   def openModel(model: org.nlogo.core.Model, shouldAutoInstallLibs: Boolean): Unit = unsupported
   def renderer: org.nlogo.api.RendererInterface = unsupported

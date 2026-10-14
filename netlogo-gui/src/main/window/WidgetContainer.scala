@@ -12,4 +12,5 @@ trait WidgetContainer extends Component {
   def loadWidget(coreWidget: CoreWidget): Widget
   def allWidgets: Seq[CoreWidget]
   def editWidget(widget: Editable): Unit
+  def edit3DView(settings: Editable): Unit
 }

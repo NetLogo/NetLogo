@@ -2,6 +2,8 @@
 
 package org.nlogo.api
 
+import java.awt.Frame
+
 import org.nlogo.core.Shape
 
 trait ViewInterface {
@@ -18,4 +20,5 @@ trait ViewInterface {
   def resetMouseCors(): Unit
   def shapeChanged(shape: Shape): Unit
   def applyNewFontSize(fontSize: Int, zoom: Int): Unit
+  def setIconified(frame: Frame, iconified: Boolean): Unit
 }

@@ -584,5 +584,9 @@ with org.nlogo.api.ViewSettings with PrimaryWorkspace {
     super.halt()
   }
 
+  override def quit(): Unit = {
+    getExtensionManager.reset()
+  }
+
   def unsupported = throw new UnsupportedOperationException
 }

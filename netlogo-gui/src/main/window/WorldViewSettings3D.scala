@@ -141,7 +141,7 @@ class WorldViewSettings3D(workspace: GUIWorkspace, gw: ViewWidget, tickCounter: 
           workspace.clearTicks()
           world.createPatches(newMinX, newMaxX,
             newMinY, newMaxY, newMinZ, newMaxZ)
-          workspace.patchesCreatedNotify()
+          workspace.app.foreach(_.monitorManager.patchesCreated())
           gWidget.resetSize()
         }
         if (patchSizeChanged) {

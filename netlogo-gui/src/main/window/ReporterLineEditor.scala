@@ -16,7 +16,7 @@ class ReporterLineEditor(accessor: PropertyAccessor[String], compiler: CompilerS
   extends CodeEditor(accessor, compiler, colorizer, false, false, err = err) with MaximumHeight {
 
   override lazy val editor = {
-    new EditorField(30, EditorConfiguration.getCodeFont, true, compiler, colorizer) with AutoIndentHandler {
+    new EditorField(30, EditorConfiguration.getCodeFont, true, compiler, colorizer) {
       getDocument.addDocumentListener(new DocumentListener {
         def insertUpdate(e: DocumentEvent): Unit = { accessor.changed() }
         def removeUpdate(e: DocumentEvent): Unit = { accessor.changed() }
