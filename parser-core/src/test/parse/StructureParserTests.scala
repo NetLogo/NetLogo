@@ -189,7 +189,7 @@ class StructureParserTests extends AnyFunSuite {
       "links-own [END1 END2 COLOR LABEL LABEL-COLOR HIDDEN? BREED THICKNESS SHAPE TIE-MODE]\n" +
       "breeds \n" +
       "link-breeds \n")(results.program.dump)
-    assertResult("FOO")(results.extensions.map(_.value).mkString)
+    assertResult("FOO")(results.extensions.map(_._1.value).mkString)
   }
 
   test("declarations2") {

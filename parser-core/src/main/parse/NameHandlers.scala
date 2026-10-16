@@ -52,7 +52,7 @@ class ReporterHandler(tokenMapper: TokenMapperInterface) extends PrimitiveHandle
 }
 
 // replaces an identifier token with its imported implementation, if necessary
-class ExtensionPrimitiveHandler(extensionManager: ExtensionManager) extends NameHandler {
+class ExtensionPrimitiveHandler(extensionManager: ExtensionManager, module: Option[String]) extends NameHandler {
   override def apply(token: Token) =
     if(token.tpe != TokenType.Ident ||
        extensionManager == null || !extensionManager.anyExtensionsLoaded)
@@ -60,16 +60,15 @@ class ExtensionPrimitiveHandler(extensionManager: ExtensionManager) extends Name
     else {
       val name = token.value.asInstanceOf[String]
       val replacement = extensionManager.replaceIdentifier(name)
-      replacement match {
-        // if there's no replacement, make no change.
-        case null =>
-          None
-        case primitive =>
-          val newType =
-            if(primitive.isInstanceOf[PrimitiveCommand])
-              TokenType.Command
+
+      if(replacement != null && extensionManager.isVisibleIn(name, module)) {
+        val newType =
+          if(replacement.isInstanceOf[PrimitiveCommand])
+            TokenType.Command
             else TokenType.Reporter
-          Some((newType, wrap(primitive, name)))
+        Some((newType, wrap(replacement, name)))
+      } else { // if there's no replacement, make no change.
+        None
       }
     }
   private def wrap(primitive: Primitive, name: String): core.Instruction =

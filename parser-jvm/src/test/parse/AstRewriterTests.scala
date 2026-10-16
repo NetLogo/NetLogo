@@ -193,7 +193,7 @@ class AstRewriterTests extends AnyFunSuiteEx {
   def compilationOp(source: String): CompilationOperand =
     new CompilationOperand(Map("" -> source),
       new DummyExtensionManager() {
-        override def importExtension(path: String, errors: org.nlogo.core.ErrorSource): Unit = { }
+        override def importExtension(path: String, module: Option[String], errors: org.nlogo.core.ErrorSource): Unit = { }
       },
       new DummyLibraryManager,
       new DummyCompilationEnvironment(),

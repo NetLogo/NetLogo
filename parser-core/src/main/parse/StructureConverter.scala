@@ -56,7 +56,7 @@ object StructureConverter {
       extensions = oldResults.extensions ++
         declarations.collect {
           case e: Extensions =>
-            e.names.map(_.token)
+            e.names.map(x => (x.token, if (x.token.filename.isEmpty) None else Some(x.token.filename)))
         }.flatten,
       imports = oldResults.imports ++ ims,
       `export` = exs.headOption)
