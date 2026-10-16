@@ -10,7 +10,7 @@ case class StructureResults(program: Program,
                         procedureTokens: ListMap[(String, Option[String]), Iterable[Token]] = ListMap(),
                         includes: Seq[Token] = Seq(),
                         includedSources: Seq[String] = Seq(),
-                        extensions: Seq[Token] = Seq(),
+                        extensions: Seq[(Token, Option[String])] = Seq(),
                         imports: Seq[Import] = Seq(),
                         `export`: Option[Export] = None)
 

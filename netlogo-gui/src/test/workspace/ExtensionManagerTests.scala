@@ -44,7 +44,7 @@ class ExtensionManagerTests extends AnyFunSuiteEx with BeforeAndAfter {
 
   trait WithLoadedArrayExtension extends LoadingExtensionTest {
     lazy val loadedManager = {
-      loadingManager.importExtension("array", errorSource)
+      loadingManager.importExtension("array", None, errorSource)
       loadingManager
     }
   }
@@ -88,7 +88,7 @@ class ExtensionManagerTests extends AnyFunSuiteEx with BeforeAndAfter {
   test("importExtension signals an error when extension doesn't exist") {
     new LoadingExtensionTest {
       intercept[ErrorSourceException] {
-        loadingManager.importExtension("notfound", errorSource)
+        loadingManager.importExtension("notfound", None, errorSource)
       }
       assert(errorMessage == s"${APIEM.extensionNotFoundStr}notfound")
     }
@@ -96,7 +96,7 @@ class ExtensionManagerTests extends AnyFunSuiteEx with BeforeAndAfter {
 
   test("importExtension succeeds if the extension is located and valid") {
     new LoadingExtensionTest {
-      loadingManager.importExtension("array", errorSource)
+      loadingManager.importExtension("array", None, errorSource)
       assert(errorMessage == null)
       assert(loadingManager.anyExtensionsLoaded)
     }
@@ -105,7 +105,7 @@ class ExtensionManagerTests extends AnyFunSuiteEx with BeforeAndAfter {
   test("importExtension loads from an alternate loader, if provided") {
     new LoadingExtensionTest with InMemoryExtensionTest {
       override def extraLoaders = Seq(memoryLoader)
-      loadingManager.importExtension("foo", errorSource)
+      loadingManager.importExtension("foo", None, errorSource)
       assert(errorMessage == null)
       assert(loadingManager.anyExtensionsLoaded)
     }
@@ -132,7 +132,7 @@ class ExtensionManagerTests extends AnyFunSuiteEx with BeforeAndAfter {
 
   test("clearAll runs clearAll on all jars") {
     new InMemoryExtensionTest {
-      inmemoryManager.importExtension("foo", null)
+      inmemoryManager.importExtension("foo", None, null)
       inmemoryManager.clearAll()
       assert(dummyClassManager.methodsRun.contains("clearAll"))
     }
@@ -202,7 +202,7 @@ class ExtensionManagerTests extends AnyFunSuiteEx with BeforeAndAfter {
   test("finishFullCompilation does not remove live jars if they are used during compilation") {
     new WithLoadedArrayExtension {
       loadedManager.startFullCompilation()
-      loadedManager.importExtension("array", errorSource)
+      loadedManager.importExtension("array", None, errorSource)
       loadedManager.finishFullCompilation()
       assert(loadedManager.loadedExtensions.asScala.toSeq.length == 1)
     }
@@ -243,7 +243,7 @@ class ExtensionManagerTests extends AnyFunSuiteEx with BeforeAndAfter {
       override lazy val dummyClassManager = new DummyClassManager() {
         override def unload(em: org.nlogo.api.ExtensionManager) = { super.unload(em); throw new Exception("stuff") }
       }
-      inmemoryManager.importExtension("foo", null)
+      inmemoryManager.importExtension("foo", None, null)
       inmemoryManager.startFullCompilation()
       inmemoryManager.finishFullCompilation()
       assert(dummyClassManager.methodsRun.contains("unload"))

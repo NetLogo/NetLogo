@@ -219,7 +219,7 @@ class AstRewriter(val tokenizer: TokenizerInterface, frontEnd: FrontEndInterface
   }
 
   def addExtension(newExtension: String): String = {
-    rewrite(NoopFolder, declarationReplace("extensions", extensionsRegex, _.extensions.map(_.text), newExtension))
+    rewrite(NoopFolder, declarationReplace("extensions", extensionsRegex, _.extensions.map(_._1.text), newExtension))
   }
 
   def removeExtension(extension: String): String = {

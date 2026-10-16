@@ -10,7 +10,8 @@ class DummyExtensionManager extends ExtensionManager {
   override def finishFullCompilation(): Unit = { }
   override def anyExtensionsLoaded = false
   override def replaceIdentifier(name: String): Primitive = null
-  override def importExtension(jarPath: String, errors: ErrorSource): Unit = unsupported
+  override def importExtension(jarPath: String, module: Option[String], errors: ErrorSource): Unit = unsupported
+  override def isVisibleIn(name: String, module: Option[String]): Boolean = false
   override def readExtensionObject(extensionName: String, typeName: String, value: String): ExtensionObject = unsupported
   private def unsupported = throw new UnsupportedOperationException
 }

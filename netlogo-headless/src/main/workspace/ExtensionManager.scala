@@ -113,6 +113,7 @@ class ExtensionManager(val workspace: ExtendableWorkspace, loader: ExtensionLoad
   private var loaders  = Seq[ExtensionLoader](loader)
   private var jars     = Map[URL, JarContainer]()
   private var liveJars = Set[JarContainer]()
+  private var importedExtensions = Set[(String, Option[String])]()
 
   def anyExtensionsLoaded: Boolean = jars.nonEmpty
 
@@ -135,7 +136,7 @@ class ExtensionManager(val workspace: ExtendableWorkspace, loader: ExtensionLoad
   def retrieveObject: AnyRef = obj
 
   @throws(classOf[CompilerException])
-  def importExtension(extName: String, errors: ErrorSource): Unit = {
+  def importExtension(extName: String, module: Option[String], errors: ErrorSource): Unit = {
     try {
       val (fileURL, loader) = loaders.foldLeft(Option.empty[(URL, ExtensionLoader)]) {
         case (None,             ldr) => ldr.locateExtension(extName).map((_, ldr))
@@ -169,6 +170,7 @@ class ExtensionManager(val workspace: ExtendableWorkspace, loader: ExtensionLoad
       if (needsLoad)
         theJarContainer.foreach(_.load(classManager))
       theJarContainer.foreach(liveJars += _)
+      importedExtensions = importedExtensions + ((extName.toUpperCase(Locale.ENGLISH), module))
     } catch {
       case ex @ (_: ExtensionManagerException | _: ExtensionException) =>
         errors.signalError(ex.getMessage)
@@ -260,6 +262,7 @@ class ExtensionManager(val workspace: ExtendableWorkspace, loader: ExtensionLoad
     jars.values.foreach(_.unload(this))
     jars = Map[URL, JarContainer]()
     liveJars = Set[JarContainer]()
+    importedExtensions = Set[(String, Option[String])]()
   }
 
   private def tabulate(header: Seq[String], generateRows: (JarContainer) => Seq[Seq[String]]) = {
@@ -270,6 +273,7 @@ class ExtensionManager(val workspace: ExtendableWorkspace, loader: ExtensionLoad
 
   def startFullCompilation(): Unit = {
     liveJars = Set[JarContainer]()
+    importedExtensions = Set[(String, Option[String])]()
   }
 
   def finishFullCompilation(): Unit = {
@@ -319,6 +323,13 @@ class ExtensionManager(val workspace: ExtendableWorkspace, loader: ExtensionLoad
     val jar = getJarContainerByIdentifier(name).getOrElse(
       throw new ExtensionException(s"there is no extension named $name in this model"))
     jar.classManager.importWorld(data, this, handler)
+  }
+
+  def isVisibleIn(name: String, module: Option[String]): Boolean = {
+    name.split(":") match {
+      case Array(prefix, pname) => importedExtensions contains (prefix, module)
+      case _ => importedExtensions contains (name, module)
+    }
   }
 
   def isExtensionName(name: String): Boolean =

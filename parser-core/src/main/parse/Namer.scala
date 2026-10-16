@@ -34,7 +34,7 @@ class Namer(
     new ReporterHandler(program.dialect.tokenMapper),
     new BreedHandler(if (procedure.module.isDefined) Program.empty() else program),
     new AgentVariableReporterHandler(if (procedure.module.isDefined) Program.empty() else program),
-    new ExtensionPrimitiveHandler(extensionManager),
+    new ExtensionPrimitiveHandler(extensionManager, procedure.module),
     new ProcedureVariableHandler(procedure.args),
     new CallHandler(procedures, procedure.module))
 
@@ -101,7 +101,7 @@ object Namer {
     (Namer0.nameKeywordsAndConstants)             andThen
     (makeToken(new ReporterHandler(dialect.tokenMapper))) andThen
     (makeToken(new CommandHandler(dialect.tokenMapper)))  andThen
-    (makeToken(new ExtensionPrimitiveHandler(extensionManager)))  andThen
+    (makeToken(new ExtensionPrimitiveHandler(extensionManager, None)))  andThen
     (makeToken(new BuiltInAgentVariableReporterHandler(dialect.agentVariables)))  andThen
     ((t: Token) =>
         if (t.tpe == TokenType.Reporter && t.value.isInstanceOf[core.prim._symbol])

@@ -226,4 +226,19 @@ class TemporaryCodeTab(workspace: GUIWorkspace,
       super.getProcedures()
     }
   }
+
+  override def setProgram(): Unit = {
+    filename match {
+      case Right(x) => {
+        val extensionManager = workspace.getExtensionManager
+        val extensionCommands = extensionManager.extensionCommandNames.filter(extensionManager.isVisibleIn(_, Some(x)))
+        val extensionReporters = extensionManager.extensionReporterNames.filter(extensionManager.isVisibleIn(_, Some(x)))
+
+        text.setProgram(workspace.world.program, getProcedures(), extensionCommands.toSeq, extensionReporters.toSeq)
+      }
+      case _ => {
+        text.setProgram(workspace.world.program, getProcedures(), Seq(), Seq())
+      }
+    }
+  }
 }

@@ -41,7 +41,9 @@ trait ExtensionManager {
    * @param errors  the ErrorSource to use when a CompilerException needs
    *                to be thrown.
    */
-  def importExtension(jarPath: String, errors: ErrorSource): Unit
+  def importExtension(jarPath: String, module: Option[String], errors: ErrorSource): Unit
+
+  def isVisibleIn(name: String, module: Option[String]): Boolean
 
   def readExtensionObject(extensionName: String, typeName: String, value: String): ExtensionObject
 }

@@ -108,7 +108,7 @@ object StructureParser {
                       }
                   }
 
-                val modelExtensions = newResults.extensions.map(_.value).toSet
+                val modelExtensions = newResults.extensions.map(_._1.value).toSet
 
                 if (!moduleCache.contains(currentPath)) {
                   newResults = includeFile(compilationEnvironment, currentPath) match {
@@ -199,7 +199,7 @@ object StructureParser {
                   )
                 }
 
-                val allExtensions = newResults.extensions.map(_.value).toSet
+                val allExtensions = newResults.extensions.map(_._1.value).toSet
                 val undeclaredExtensions = allExtensions -- modelExtensions
 
                 if (undeclaredExtensions.nonEmpty) {
@@ -290,13 +290,13 @@ object StructureParser {
 
       val r = results
 
-      for (token <- r.extensions) {
+      for ((token, module) <- r.extensions) {
         val text = token.text.toLowerCase
         if (compilationData.shouldAutoInstallLibs) {
           val lm = compilationData.libraryManager
           lm.lookupExtension(text, "").filter(_.status == CanInstall).foreach(lm.installExtension)
         }
-        compilationData.extensionManager.importExtension(text, new ErrorSource(token))
+        compilationData.extensionManager.importExtension(text, module, new ErrorSource(token))
       }
 
       compilationData.extensionManager.finishFullCompilation()

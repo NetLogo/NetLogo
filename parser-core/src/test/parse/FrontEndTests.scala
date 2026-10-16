@@ -311,6 +311,8 @@ class FrontEndTests extends AnyFunSuite with BaseParserTest {
 object FrontEndTests {
   val extensionManager = new core.DummyExtensionManager() {
     override def anyExtensionsLoaded = true
+    override def isVisibleIn(name: String, module: Option[String]): Boolean =
+      module.isEmpty && (name == "FOO:BAR" || name == "FOO:BAZ")
     override def replaceIdentifier(name: String): core.Primitive =
       name match {
         case "FOO:BAR" => new core.PrimitiveCommand() {
