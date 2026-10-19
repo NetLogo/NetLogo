@@ -1,9 +1,6 @@
 [submodule "models"]
 	path = models
 	url = https://github.com/NetLogo/models.git
-[submodule "extensions/sample-scala"]
-	path = extensions/sample-scala
-	url = https://github.com/NetLogo/Sample-Scala-Extension.git
 [submodule "extensions/sound"]
 	path = extensions/sound
 	url = https://github.com/NetLogo/Sound-Extension.git
