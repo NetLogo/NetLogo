@@ -22,9 +22,6 @@
 [submodule "extensions/nw"]
 	path = extensions/nw
 	url = https://github.com/NetLogo/NW-Extension
-[submodule "gogo-hid"]
-	path = extensions/gogo
-	url = https://github.com/NetLogo/GoGo-HID-Extension
 [submodule "extensions/palette"]
 	path = extensions/palette
 	url = https://github.com/NetLogo/Palette-Extension
