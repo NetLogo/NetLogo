@@ -1,0 +1,76 @@
+from-row-simple
+  extensions [ csv ]
+  csv:from-row "1,2,3" => [1 2 3]
+
+from-row-empty
+  extensions [ csv ]
+  csv:from-row "" => [""]
+
+from-row-nested-quotes
+  extensions [ csv ]
+  csv:from-row "\"\"\"quoted string\"\"\",\"inner\"\"quote\",\"escaped\\\"\"quote\"" => ["\"quoted string\"" "inner\"quote" "escaped\\\"quote"]
+
+from-row-custom-delimiter
+  extensions [ csv ]
+  (csv:from-row "1\t2\t3" "\t") => [1 2 3]
+  (csv:from-row "1;2,3" ";") => [1 "2,3"]
+
+from-row-literal-support
+  extensions [ csv ]
+  csv:from-row "true,1,1e3,-1.100,false,FALSE,False" => [true 1 1000 -1.1 false false false]
+
+from-string
+  extensions [ csv ]
+  csv:from-string "1,2,3\n3,4,5" => [[1 2 3] [3 4 5]]
+  csv:from-string "1,2,\"3\n4\"\n5,6,7" => [[1 2 "3\n4"] [5 6 7]]
+  csv:from-string "1a." => [["1a."]]
+  csv:from-string "0x23" => [["0x23"]]
+  (csv:from-string "1a." "|") => [["1a."]]
+  (csv:from-string "1a." "/") => [["1a."]]
+
+from-string-empty
+  extensions [ csv ]
+  csv:from-string "" => []
+
+from-file
+  extensions [ csv ]
+  csv:from-file "extensions/csv/test/simple.csv" => [[1 2 3] [4 5 6] [7 8 9] [10 11 12]]
+  csv:from-file "extensions/csv/test/quotes.csv" => [[1 "two" "\"three\"" "four\"hi"] ["\"five\"" 6 7 8]]
+  (csv:from-file "extensions/csv/test/weirdlines.csv" ";") => [["this is"] ["a header"] ["whee"] ["" "one" "two" "three" ""] [1 2 3 4 5]]
+  csv:from-file "extensions/csv/test/idontexist.csv" => ERROR Extension exception: Couldn't find file: extensions/csv/test/idontexist.csv
+
+to-row
+  extensions [ csv ]
+  csv:to-row [] => ""
+  csv:to-row [1 2 3] => "1,2,3"
+  csv:to-row ["one" "two" "three"] => "one,two,three"
+  csv:to-row [1 "two" "three,four"] => "1,two,\"three,four\""
+  (csv:to-row [1 2 3] "\t") => "1\t2\t3"
+  csv:to-row ["\"foo\""] => "\"\"\"foo\"\"\""
+
+to-string
+  extensions [ csv ]
+  csv:to-string [[1 2 3]] => "1,2,3"
+  csv:to-string [[1 2 3][4 5 6]] => "1,2,3\n4,5,6"
+
+to-file
+  extensions [ csv ]
+  O> csv:to-file "extensions/csv/test/tmp.csv" [[1 2 3][4 5 6]]
+  csv:from-file "extensions/csv/test/tmp.csv" => [[1 2 3] [4 5 6]]
+  O> file-delete "extensions/csv/test/tmp.csv"
+
+to-string-errors-on-non-list
+  extensions [ csv ]
+  csv:to-string [[1 2 3] 4 [5 6 7]] => ERROR Extension exception: Expected a list of lists, but 4 was one of the elements.
+
+to-file-error-on-non-list
+  extensions [ csv ]
+  O> csv:to-file "incomplete.csv" [[1 2 3] 4 [5 6 7]] => ERROR Extension exception: Expected a list of lists, but 4 was one of the elements.
+  O> file-delete "incomplete.csv"
+
+to-file-partially-written-if-error
+  extensions [ csv ]
+  O> csv:to-file "incomplete.csv" [[1 2 3] 4 [5 6 7]] => ERROR Extension exception: Expected a list of lists, but 4 was one of the elements.
+  csv:from-file "incomplete.csv" => [[1 2 3]]
+  O> file-delete "incomplete.csv"
+
