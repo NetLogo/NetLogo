@@ -1,0 +1,8 @@
+.bundledFiles
+target/
+extensions/
+/*.jar
+/*.zip
+
+/lib/
+/tmp/

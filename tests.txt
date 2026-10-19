@@ -1,0 +1,84 @@
+Matrix
+  extensions [matrix]
+  globals [glob1 glob2 glob3]
+  O> set glob1 matrix:from-row-list [[1 2 3] [4 5 6]]
+  (word glob1) => "{{matrix:  [ [ 1 2 3 ][ 4 5 6 ] ]}}"
+  matrix:pretty-print-text glob1 => "[[ 1  2  3 ]\n [ 4  5  6 ]]"
+  matrix:dimensions glob1 => [2 3]
+  matrix:get glob1 1 2 => 6
+  O> matrix:set glob1 1 2 10
+  (word glob1) => "{{matrix:  [ [ 1 2 3 ][ 4 5 10 ] ]}}"
+  O> set glob2 matrix:make-identity 3
+  (word glob2) => "{{matrix:  [ [ 1 0 0 ][ 0 1 0 ][ 0 0 1 ] ]}}"
+  (word matrix:times glob1 glob2) => "{{matrix:  [ [ 1 2 3 ][ 4 5 10 ] ]}}"
+  O> set glob3 (matrix:set-and-report glob2 1 1 -1)
+  (word glob3) => "{{matrix:  [ [ 1 0 0 ][ 0 -1 0 ][ 0 0 1 ] ]}}"
+  (word matrix:times glob1 glob3) => "{{matrix:  [ [ 1 -2 3 ][ 4 -5 10 ] ]}}"
+  matrix:to-row-list (matrix:plus glob2 glob3) => [[2 0 0] [0 0 0] [0 0 2]]
+
+matrix-times
+  extensions [ matrix ]
+  globals [glob1 glob2]
+  O> set glob1 matrix:from-row-list [[1 2 3] [4 5 6] [7 8 9]]
+  (word (matrix:times 2 glob1 glob1)) => "{{matrix:  [ [ 60 72 84 ][ 132 162 192 ][ 204 252 300 ] ]}}"
+  (word (matrix:times 2 glob1 glob1)) => "{{matrix:  [ [ 60 72 84 ][ 132 162 192 ][ 204 252 300 ] ]}}"
+  (word (matrix:times matrix:make-identity 1 2 3)) => "{{matrix:  [ [ 6 ] ]}}"
+  O> set glob2 matrix:from-row-list [[ 6 ]]
+  (word (list matrix:times glob2 glob2 glob2)) => "[{{matrix:  [ [ 36 ] ]}} {{matrix:  [ [ 6 ] ]}}]"
+  (word (2 matrix:* glob1 matrix:* glob1)) => "{{matrix:  [ [ 60 72 84 ][ 132 162 192 ][ 204 252 300 ] ]}}"
+
+matrix-plus
+  extensions [ matrix ]
+  globals [glob1]
+  O> set glob1 matrix:from-row-list [[1 2 3] [4 5 6] [7 8 9]]
+  (word (matrix:plus 1 glob1 glob1 glob1)) => "{{matrix:  [ [ 4 7 10 ][ 13 16 19 ][ 22 25 28 ] ]}}"
+  (word (matrix:plus glob1 glob1 glob1)) => "{{matrix:  [ [ 3 6 9 ][ 12 15 18 ][ 21 24 27 ] ]}}"
+  (word (matrix:plus glob1 glob1 glob1)) => "{{matrix:  [ [ 3 6 9 ][ 12 15 18 ][ 21 24 27 ] ]}}"
+  (word (glob1 matrix:+ glob1 matrix:+ glob1)) => "{{matrix:  [ [ 3 6 9 ][ 12 15 18 ][ 21 24 27 ] ]}}"
+
+matrix-minus
+  extensions [ matrix ]
+  globals [glob1]
+  O> set glob1 matrix:from-row-list [[1 2 3] [4 5 6] [7 8 9]]
+  (word matrix:minus glob1 glob1) => "{{matrix:  [ [ 0 0 0 ][ 0 0 0 ][ 0 0 0 ] ]}}"
+  (word matrix:minus glob1 1) => "{{matrix:  [ [ 0 1 2 ][ 3 4 5 ][ 6 7 8 ] ]}}"
+  (word matrix:minus 1 glob1) => "{{matrix:  [ [ 0 -1 -2 ][ -3 -4 -5 ][ -6 -7 -8 ] ]}}"
+  (word (matrix:minus glob1 glob1 glob1)) => "{{matrix:  [ [ -1 -2 -3 ][ -4 -5 -6 ][ -7 -8 -9 ] ]}}"
+  (word (glob1 matrix:- glob1 matrix:- glob1)) => "{{matrix:  [ [ -1 -2 -3 ][ -4 -5 -6 ][ -7 -8 -9 ] ]}}"
+
+matrix:precedence
+  extensions [ matrix ]
+  globals [glob1]
+  O> set glob1 matrix:from-row-list [[1 2 3] [4 5 6] [7 8 9]]
+  (word (glob1 matrix:+ 2 matrix:* glob1)) => "{{matrix:  [ [ 3 6 9 ][ 12 15 18 ][ 21 24 27 ] ]}}"
+
+
+matrix-times-element-wise
+  extensions [ matrix ]
+  globals [glob1 glob2]
+  O> set glob1 matrix:from-row-list [[1 2 3] [1 2 3]]
+  (word (matrix:times-element-wise glob1 glob1 glob1)) => "{{matrix:  [ [ 1 8 27 ][ 1 8 27 ] ]}}"
+  O> set glob2 matrix:from-row-list [[ 6 ]]
+  (word (list matrix:times-element-wise glob2 glob2 glob2)) => "[{{matrix:  [ [ 36 ] ]}} {{matrix:  [ [ 6 ] ]}}]"
+
+Dimensions
+  extensions [matrix]
+  matrix:dimensions matrix:from-row-list [[1 2 3] [4 5 6]] => [2 3]
+
+Map
+  extensions [matrix]
+  globals [glob1 glob2]
+  O> set glob1 matrix:from-row-list [[0 1 2 3 4] [5 6 7 8 9]]
+  (word matrix:map [ [i] -> i ^ 2 ] glob1) => "{{matrix:  [ [ 0 1 4 9 16 ][ 25 36 49 64 81 ] ]}}"
+  O> set glob2 matrix:from-row-list [[9 8 7 6 5] [4 3 2 1 0]]
+  word (matrix:map [ [a b] -> a + b ] glob1  glob2) => "{{matrix:  [ [ 9 9 9 9 9 ][ 9 9 9 9 9 ] ]}}"
+  O> set glob2 matrix:from-row-list [[9 8 7 6] [4 3 2 1]]
+  word (matrix:map [ [a b] -> a + b ] glob1  glob2) => ERROR Extension exception: All matrices must have the same dimmensions: the first was 2x5 and another was 2x4.
+  word (matrix:map [ [a b c] -> a + b + c ] glob1  glob2) => ERROR Extension exception: Task expected 3 matrix inputs but only got 2.
+
+Regress
+  extensions [matrix]
+  globals [glob1 glob2]
+  O> set glob1 [20 25 28 32 35 39]
+  O> set glob2 n-values length glob1 [ [x] -> x ]
+  matrix:regress matrix:from-column-list (list glob1 glob2) => [[20.619047619047638 3.6857142857142824] [0.9953743395474031 238.83333333333331 1.1047619047619044]]
