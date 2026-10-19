@@ -1,0 +1,14 @@
+/target
+/project/project
+/project/target
+/*.zip
+/*.jar
+/*.mp4
+.bundledFiles
+extensions/
+videoDeviceUtils/**/*.dll
+videoDeviceUtils/**/*.exp
+videoDeviceUtils/**/*.lib
+videoDeviceUtils/**/*.obj
+videoDeviceUtils/**/*.dylib
+videoDeviceUtils/**/*.so
