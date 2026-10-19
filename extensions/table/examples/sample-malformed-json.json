@@ -1,0 +1,9 @@
+{
+  "name":"Ploni",
+  "age": 31,
+  "city":"New York",
+  "job" {
+    "b": "yes",
+    "a": "very"
+  }
+}
