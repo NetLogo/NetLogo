@@ -1,0 +1,189 @@
+extensionName: py
+icon: logos:python
+filesToIncludeInManual:
+- USING.md
+- primitives
+markdownTemplate: |2
+
+  # NetLogo Python extension
+
+  This NetLogo extension allows you to run Python code from NetLogo. It works with both Python 2 and 3, and should work with almost all Python libraries.
+
+  {{> BUILDING.md }}
+
+  {{> USING.md }}
+
+
+  ## Primitives
+
+  {{#primitives}}
+  {{> primTemplate}}
+  {{/primitives}}
+primTemplate: |2
+
+  ### `{{name}}`
+
+  ```NetLogo
+  {{#examples}}
+  {{primitive.fullName}}{{#args}} {{name}}{{/args}}
+  {{/examples}}
+  ```
+
+  {{{description}}}
+primitives:
+- arguments:
+  - name: python-executable
+    type: string
+  description: |2
+
+    Create the Python session that this extension will use to execute code. The session will be started with the given Python executable. This command *must* be run before running any other Python extension primitive. Running this command again will shutdown the current Python environment and start a new one.
+
+     The executable may be specified as a relative path, absolute path, or just the executable name if it is on your PATH.
+     Furthermore, this extension offers a few helper primitives for getting particular versions of Python in system
+     independent ways.
+
+     In general, unless working with a virtual environment or a specific system setup, you should do:
+
+     ```NetLogo
+     py:setup py:python  ; if your code works with either Python 2 or 3
+     py:setup py:python3 ; for Python 3
+     py:setup py:python2 ; for Python 2
+     ```
+
+    `py:setup` may be invoked by directly referring to different Pythons as well. For instance:
+
+    ```NetLogo
+    py:setup "python3" ; if `python3` is on your PATH
+    py:setup "python"  ; if `python` is on your PATH
+    ```
+
+    If you use virtualenv or Conda, simply specify the path of the Python executable in the environment you wish to use:
+
+    ```NetLogo
+    py:setup "/path/to/myenv/bin/python"
+    ```
+
+    The path may be relative or absolute. So, if you have a virtual environment in the same folder as your model, you can do:
+
+    ```NetLogo
+    py:setup "myenv/bin/python"
+    ```
+  name: setup
+  type: command
+- description: |2
+
+    Reports either the path to the latest version of Python configured in the `python.properties` file or, if that is blank, looks for a Python executable on your system's PATH.
+    For Windows, there is an installation option for including Python on your PATH.
+    For MacOS and Linux, it will likely already be on your PATH.
+    The output of this reporter is meant to be used with `py:setup`, but you may also use it to see which Python installation this extension will use by default.
+
+    For example, on MacOS with Homebrew installed Python 3:
+    ```NetLogo
+    observer> show py:python
+    observer: "/usr/local/bin/python3"
+    ```
+  name: python
+  returns: string
+  type: reporter
+- description: |2
+
+    Reports either the path to Python 2 configured in the `python.properties` file or, if that is blank, looks for a Python 2 executable on your system's PATH.
+    For Windows, there is an installation option for including Python on your PATH.
+    For MacOS and Linux, it will likely already be on your PATH.
+    The output of this reporter is meant to be used with `py:setup`, but you may also use it to see which Python 2 installation this extension will use by default.
+
+    For example, on MacOS with Homebrew installed Python 2:
+    ```NetLogo
+    observer> show py:python2
+    observer: "/usr/local/bin/python2"
+    ```
+  name: python2
+  returns: string
+  type: reporter
+- description: |2
+
+    Reports either the path to Python 3 configured in the `python.properties` file or, if that is blank, looks for a Python 3 executable on your system's PATH.
+    For Windows, there is an installation option for including Python on your PATH.
+    For MacOS and Linux, it will likely already be on your PATH.
+    The output of this reporter is meant to be used with `py:setup`, but you may also use it to see which Python 3 installation this extension will use by default.
+
+    For example, on MacOS with Homebrew installed Python 3:
+    ```NetLogo
+    observer> show py:python3
+    observer: "/usr/local/bin/python3"
+    ```
+  name: python3
+  returns: string
+  type: reporter
+- arguments:
+  - name: python-statement
+    type: repeatable string
+  description: |2
+
+    Runs the given Python statements in the current Python session. To make multi-line Python code easier to run, this command will take multiple strings, each of which will be interpreted as a separate line of Python code. For instance:
+
+    ```NetLogo
+    (py:run
+      "import matplotlib"
+      "matplotlib.use('TkAgg')"
+      "import numpy as np"
+      "import matplotlib.pyplot as plt"
+      "for i in range(10):"
+      "    plt.plot([ x ** i for x in np.arange(-1, 1, 0.1) ])"
+      "plt.show()"
+    )
+    ```
+
+    `py:run` will wait for the statements to finish running before continuing. Thus, if you have long running Python code, NetLogo will pause while it runs.
+  name: run
+  type: command
+- arguments:
+  - name: python-expression
+    type: repeatable string
+  description: |2
+
+    Evaluates the given Python expression and reports the result.
+    `py:runresult` attempts to convert from Python data types to NetLogo data types.
+    Numbers, strings, and booleans convert as you would expect.
+    Any list-like object in Python (that is, anything with a length that you can iterate through) will be converted to a NetLogo list.
+    For instance, Python lists and NumPy arrays will convert to NetLogo lists.
+    Python dicts (and dict-like objects) will convert to a NetLogo list of key-value pairs (where each pair is represented as a list).
+    `None` will be converted to `nobody`.
+    Other objects will simply be converted to a string representation.
+
+    Note that due a [current issue](https://github.com/qiemem/PythonExtension/issues/6), dict keys will always be reported as strings.
+    If you need to report non-string keys, report the `.items()` of the dict instead of the dict itself.
+  name: runresult
+  returns: anything
+  type: reporter
+- arguments:
+  - name: variable-name
+    type: string
+  - name: value
+    type: anything
+  description: |2+
+
+    Sets a variable in the Python session with the given name to the given NetLogo value. NetLogo objects will be converted to Python objects as expected.
+
+    All vanilla NetLogo objects are supported, but objects from other extensions, even other bundled extensions, are not supported.
+
+    ```NetLogo
+    py:set "x" [1 2 3]
+    show py:runresult "x" ;; Shows [1 2 3]
+    ```
+
+    Agents are converted into dictionaries with elements for each agent variable. Agentsets are converted into lists of agent dictionaries.
+
+    ```NetLogo
+    breed [goats goat]
+    goats-own [energy ]
+    create-goats 1 [ set heading 0 set color 75 ]
+    ask goat 0 [ set energy 42 ]
+    py:set "goat" goat 0
+    py:runresult "str(goat)" ;; Should output: "{'WHO': 0, 'COLOR': 75, 'HEADING': 0, 'XCOR': 0, 'YCOR': 0, 'SHAPE': 'default', 'LABEL': '', 'LABEL-COLOR': 9.9, 'BREED': 'GOATS', 'HIDDEN?': False, 'SIZE': 1, 'PEN-SIZE': 1, 'PEN-MODE': 'up', 'ENERGY': 42}"
+    ```
+
+    Agents with variables containing references to agentsets will have those variables converted into the string representation of that agentset.
+
+  name: set
+  type: command
