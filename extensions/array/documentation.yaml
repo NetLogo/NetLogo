@@ -1,0 +1,70 @@
+extensionName: array
+icon: i-material-symbols-data-array
+filesToIncludeInManual:
+- USING.md
+- primitives
+markdownTemplate: |2
+
+  # NetLogo Array Extension
+
+  {{> BUILDING.md}}
+
+  {{> USING.md}}
+
+  ## Primitives
+
+  {{#contents}}{{#prims}}
+  [`{{name}}`](#{{primitive.extensionName}}{{primitive.name}})
+  {{/prims}}{{/contents}}
+
+  {{#primitives}}
+  {{> primTemplate}}
+  {{/primitives}}
+
+  {{> LICENSE.md}}
+primTemplate: |2
+
+  ### `{{name}}`
+
+  {{{description}}}
+primitives:
+- arguments:
+  - type: list
+  description: Reports a new array containing the same items in the same order as the input list.
+  name: from-list
+  returns: array
+  type: reporter
+- arguments:
+  - type: array
+  - name: index
+    type: number
+  description: Reports the item in the given array with the given index (ranging from zero to the length of the array minus one).
+  name: item
+  returns: anything
+  type: reporter
+- arguments:
+  - type: array
+  - name: index
+    type: number
+  - name: value
+    type: anything
+  description: |2
+
+    Sets the item in the given array with the given index (ranging from zero to the length of the array minus one) to the given value.
+
+    Note that unlike the `replace-item` primitive for lists, a new array is not created.
+    The given array is actually modified.
+  name: set
+  type: command
+- arguments:
+  - type: array
+  description: Reports the length of the given array, that is, the number of items in the array.
+  name: length
+  returns: number
+  type: reporter
+- arguments:
+  - type: array
+  description: Reports a new list containing the same items in the same order as the given array.
+  name: to-list
+  returns: list
+  type: reporter
