@@ -1,0 +1,113 @@
+/*
+This CSS script has been modified from the design andreas08 (v2.0 - Jul 07, 2008), which was placed in the public domain by its creator, Andreas Viklund.
+For more information on the original version of this website layout, see http://andreasviklund.com/templates/andreas08/
+*/
+
+/* Body and tag styles */
+* {margin:0; padding:0;}
+body {font:85% Verdana,Tahoma,Arial,sans-serif; line-height:1.4em; text-align:center; color:#303030; background:#e8eaec;}
+a {color:#467aa7; font-weight:bold; text-decoration:none; background-color:inherit;}
+a:hover {color:#2a5a8a; text-decoration:none; background-color:inherit;}
+a img {border:none;}
+p {padding:0 0 1.6em 0;}
+p form {margin-top:0; margin-bottom:20px;}
+img.left,img.center,img.right {padding:4px; border:1px solid #a0a0a0;}
+img.left {float:left; margin:0 12px 5px 0;}
+img.center {display:block; margin:0 auto 5px auto;}
+img.right {float:right; margin:0 0 5px 12px;}
+
+/* Header and navigation styles */
+#container {width:760px; margin:20px auto; padding:1px 0; text-align:left; background:#ffffff; color:#303030; border:2px solid #a0a0a0;}
+#header {height:110px; width:758px; margin:0 1px 1px 1px; background:#464646; color:#ffffff;}
+#header h1 {padding:35px 0 0 20px; font-size:2.4em; background-color:inherit; color: #80b0da; letter-spacing:-2px; font-weight:normal;}
+#header h2 {margin:10px 0 0 40px; font-size:1.4em; background-color:inherit; color:#f0f2f4; letter-spacing:-1px; font-weight:normal;}
+#header img {
+float:left;
+padding:1px;
+margin: 4px 12px 4px 4px;
+}
+#navigation {height:2.2em; line-height:2.2em; width:758px; margin:0 1px; background:#575757; color:#ffffff;}
+#navigation li {float:left; list-style-type:none; border-right:1px solid #ffffff; white-space:nowrap;}
+#navigation li a {display:block; padding:0 10px; font-size:0.8em; font-weight:normal; text-transform:uppercase; text-decoration:none; background-color:inherit; color: #ffffff;}
+* html #navigation a {width:1%;}
+#navigation .selected,#navigation a:hover {background:#80b0da; color:#ffffff; text-decoration:none;}
+
+/* Content styles */
+#content {float:left; width:700px; font-size:0.9em; padding:20px 0px 0 20px;}
+#content h2 {display:block; margin:0 0 16px 0; font-size:1.7em; font-weight:normal; letter-spacing:-1px; color:#505050; background-color:inherit;}
+#content h2 a {font-weight:normal;}
+#content h3 {margin:0 0 12px 0; font-size:1.4em; letter-spacing:-1px;}
+#content a:hover,#subcontent a:hover {text-decoration:underline;}
+#content ul,#content ol {margin:0 5px 6px 35px;}
+#content dl {margin:0 5px 10px 25px;}
+#content dt {font-weight:bold; margin-bottom:5px;}
+#content dd {margin:0 0 10px 15px;}
+
+/*
+#content img {
+ padding:1px;
+ display:inline;
+ background:#cccccc;
+ color:#303030;
+ border:4px solid #f0f0f0;
+}*/
+
+
+/* Menublock styles */
+.menublock {margin:0 0 20px 8px; font-size:0.9em;}
+.menublock li {list-style:none; display:block; padding:2px; margin-bottom:2px;}
+.menublock li a {font-weight:bold; text-decoration:none;}
+.menublock li a:hover {text-decoration:none;}
+.menublock li ul {margin:3px 0 3px 15px; font-size:1em; font-weight:normal;}
+.menublock li ul li {margin-bottom:0; }
+.menublock li ul a {font-weight:normal; font-style:italic;}
+
+
+
+/* Footer styles */
+#footer {clear:both; width:758px; padding:5px 0; margin:0 1px; font-size:0.9em; color:#f0f0f0; background:#464646;}
+#footer p {padding:0; margin:0; text-align:center;}
+#footer a {color:#f0f0f0; background-color:inherit; font-weight:bold;}
+#footer a:hover {color:#ffffff; background-color:inherit; text-decoration: underline;}
+
+/* Misc classes and styles */
+.splitcontentleft {float:left; width:48%;}
+.splitcontentright {float:right; width:48%;}
+.clear {clear:both;}
+.small {font-size:0.8em;}
+.hide {display:none;}
+.textcenter {text-align:center;}
+.textright {text-align:right;}
+.important {color:#f02025; background-color:inherit; font-weight:bold;}
+.box {margin:0 0 20px 0; padding:10px; border:1px solid #c0c0c0; background-color:#fafbfc; color:#505050; line-height:1.5em;}
+
+.withborder {
+ padding:1px;
+ border:2px solid #a0a0a0;
+}
+.left {
+margin:3px 10px 2px 0;
+float:left;
+}
+
+.right {
+margin:2px 0 2px 10px;
+float:right;
+}
+
+div.figure {
+  float: right;
+  /*width: 25%; */
+  margin: 10px 0px 13px 10px ;
+  padding: 10px 0px 13px 10px ;
+}
+div.figure p {
+  text-align: center;
+  font-style: italic;
+  font-size: smaller;
+  text-indent: 0;
+}
+
+tt {font-family: Courier; font-size: 110%; font-weight: bold;}
+
+

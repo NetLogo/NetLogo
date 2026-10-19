@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<!DOCTYPE search SYSTEM "behaviorsearch.dtd">
+<search>
+<bsearchVersionNumber>0.74</bsearchVersionNumber>
+<modelInfo>
+<modelFile>Ethnocentrism-bench.nlogox</modelFile>
+<modelSetupCommands>setup-empty</modelSetupCommands>
+<modelStepCommands>go</modelStepCommands>
+<modelStopCondition/>
+<modelStepLimit>300</modelStepLimit>
+<modelMetricReporter>current-altruist-fraction</modelMetricReporter>
+<modelMeasureIf>ticks &gt; 200</modelMeasureIf>
+</modelInfo>
+<fitnessInfo>
+<fitnessMinimized>false</fitnessMinimized>
+<fitnessCollecting>MEAN_ACROSS_STEPS</fitnessCollecting>
+<fitnessSamplingReplications>10</fitnessSamplingReplications>
+<fitnessCombineReplications>MEAN</fitnessCombineReplications>
+<fitnessDerivative parameter="@MUTATE@" delta="0.05" useabs="true"/>
+</fitnessInfo>
+<searchSpace>
+<paramSpec>["mutation-rate" [0 0.001 1]]</paramSpec>
+<paramSpec>["death-rate" [0 0.01 1]]</paramSpec>
+<paramSpec>["immigrants-per-day" [0 1 10]]</paramSpec>
+<paramSpec>["initial-ptr" [0 0.01 1]]</paramSpec>
+<paramSpec>["cost-of-giving" [0 0.01 1]]</paramSpec>
+<paramSpec>["gain-of-receiving" [0 0.01 1]]</paramSpec>
+<paramSpec>["immigrant-chance-cooperate-with-same" 0.5]</paramSpec>
+<paramSpec>["immigrant-chance-cooperate-with-different" 0.5]</paramSpec>
+<paramSpec>["visuals?" false]</paramSpec>
+</searchSpace>
+<searchMethod type="RandomSearch"/>
+<chromosomeRepresentation type="MixedTypeChromosome"/>
+<caching>false</caching>
+<evaluationLimit>200</evaluationLimit>
+<bestCheckingNumReplications>0</bestCheckingNumReplications>
+</search>

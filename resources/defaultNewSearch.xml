@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<!DOCTYPE search SYSTEM "behaviorsearch.dtd">
+<search>
+<bsearchVersionNumber>0.74</bsearchVersionNumber>
+<modelInfo>
+<modelFile>Some Model.nlogox</modelFile>
+<modelSetupCommands>setup</modelSetupCommands>
+<modelStepCommands>go</modelStepCommands>
+<modelStopCondition>count turtles > 1000</modelStopCondition>
+<modelMetricReporter>mean [energy] of turtles</modelMetricReporter>
+<modelStepLimit>100</modelStepLimit>
+</modelInfo>
+<fitnessInfo>
+<fitnessMinimized>false</fitnessMinimized>
+<fitnessCollecting>AT_FINAL_STEP</fitnessCollecting>
+<fitnessSamplingReplications>10</fitnessSamplingReplications>
+<fitnessCombineReplications>MEAN</fitnessCombineReplications>
+</fitnessInfo>
+<searchSpace>
+<paramSpec>["integerParameter" [0 1 10]]</paramSpec>
+<paramSpec>["continuousParameter" [0.0 "C" 1.0]]</paramSpec>
+<paramSpec>["choiceParameter" "near" "far"]</paramSpec>
+</searchSpace>
+<searchMethod type="StandardGA">
+<searchMethodParameter name="mutation-rate" value="0.03"/>
+<searchMethodParameter name="population-size" value="50"/>
+<searchMethodParameter name="crossover-rate" value="0.7"/>
+<searchMethodParameter name="population-model" value="generational"/>
+<searchMethodParameter name="tournament-size" value="3"/>
+</searchMethod>
+<chromosomeRepresentation type="GrayBinaryChromosome"/>
+<evaluationLimit>300</evaluationLimit>
+</search>

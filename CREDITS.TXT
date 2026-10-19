@@ -1,0 +1,16 @@
+Copyright 2013 Forrest Stonedahl & Uri Wilensky
+
+The BehaviorSearch software was initially developed as part of Forrest Stonedahl's doctoral thesis research, with adviser Uri Wilensky at the Center for Connected Learning and Computer-Based Modeling at Northwestern University.
+It is an open source project, and new contributors/developers are welcome (contact feedback@behaviorsearch.org if interested).
+
+General acknowledgments:
+ * Thesis committee members: Doug Downey, Luis Amaral, and especially Bill Rand, for their helpful discussion and insights.
+ * Everyone in the CCL lab group, and Forrest's wife Susa, for their help and encouragement.
+ * John H. Miller, for laying out the original conceptual framework for Active Nonlinear Testing.
+ * The National Science Foundation (grant IIS-0713619), and the Walter P. Murphy Society (IABM course development grant), for making this work possible by their generous support.
+
+Additional contributions:
+ * Susa Stonedahl designed the BehaviorSpace icon/logo (based on the NetLogo icon, which is adapted from the version designed by Aaron Bramson.)
+ * Kevin Zollman submitted a patch to help update BehaviorSearch to work with NetLogo 5.     
+ * An Nguyen Dang migrated the GUI from Swing to JavaFX.
+ * Robert Grider helped bundle BehaviorSearch with NetLogo 6 and improved native support on Macs.

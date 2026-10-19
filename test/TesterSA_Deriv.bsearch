@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<!DOCTYPE search SYSTEM "behaviorsearch.dtd">
+<search>
+<bsearchVersionNumber>0.72</bsearchVersionNumber>
+<modelInfo>
+<modelFile>Tester.nlogox</modelFile>
+<modelSetupCommands>setup</modelSetupCommands>
+<modelStepCommands>go</modelStepCommands>
+<modelStopCondition>count turtles &gt; 1000</modelStopCondition>
+<modelStepLimit>0</modelStepLimit>
+<modelMetricReporter>ellipsoid</modelMetricReporter>
+<modelMeasureIf>true</modelMeasureIf>
+</modelInfo>
+<fitnessInfo>
+<fitnessMinimized>false</fitnessMinimized>
+<fitnessCollecting>AT_FINAL_STEP</fitnessCollecting>
+<fitnessSamplingReplications>1</fitnessSamplingReplications>
+<fitnessCombineReplications>MEAN</fitnessCombineReplications>
+<fitnessDerivative parameter="a" delta="1.0" useabs="true"/>
+</fitnessInfo>
+<searchSpace>
+<paramSpec>["a" [-32 1 32]]</paramSpec>
+<paramSpec>["b" [-32 1 32]]</paramSpec>
+<paramSpec>["c" [-32 1 32]]</paramSpec>
+<paramSpec>["d" [-32 1 32]]</paramSpec>
+</searchSpace>
+<searchMethod type="SimulatedAnnealing">
+<searchMethodParameter name="mutation-rate" value="0.05"/>
+<searchMethodParameter name="temperature-change-factor" value="0.99"/>
+<searchMethodParameter name="initial-temperature" value="1.0"/>
+<searchMethodParameter name="restart-after-stall-count" value="0"/>
+</searchMethod>
+<chromosomeRepresentation type="MixedTypeChromosome"/>
+<caching>true</caching>
+<evaluationLimit>400</evaluationLimit>
+<bestCheckingNumReplications>1</bestCheckingNumReplications>
+</search>

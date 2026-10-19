@@ -1,0 +1,31 @@
+name: build-and-test
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: zulu
+          java-version: 21.0.2
+          java-package: jdk+fx
+          cache: sbt
+
+      - uses: sbt/setup-sbt@v1
+
+      - name: Clone Models
+        run: |
+          cd ..
+          git clone https://github.com/NetLogo/models.git
+
+      - name: Build and Test
+        run: |
+          sbt -v update compile
+          sbt -v test

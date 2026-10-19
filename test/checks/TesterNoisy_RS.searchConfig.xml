@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<!DOCTYPE search SYSTEM "behaviorsearch.dtd">
+<search>
+    <bsearchVersionNumber>1.10</bsearchVersionNumber>
+    <modelInfo>
+        <modelFile>Tester.nlogox</modelFile>
+        <modelSetupCommands>setup</modelSetupCommands>
+        <modelStepCommands>go</modelStepCommands>
+        <modelStopCondition>count turtles &gt; 1000</modelStopCondition>
+        <modelStepLimit>0</modelStepLimit>
+        <modelMetricReporter>ellipsoid + random-normal 0 20</modelMetricReporter>
+        <modelMeasureIf>true</modelMeasureIf>
+    </modelInfo>
+    <fitnessInfo>
+        <fitnessMinimized>false</fitnessMinimized>
+        <fitnessCollecting>AT_FINAL_STEP</fitnessCollecting>
+        <fitnessSamplingReplications>1</fitnessSamplingReplications>
+        <fitnessCombineReplications>MEAN</fitnessCombineReplications>
+    </fitnessInfo>
+    <searchSpace>
+        <paramSpec>["a" [-32 1 32]]</paramSpec>
+        <paramSpec>["b" [-32 1 32]]</paramSpec>
+        <paramSpec>["c" [-32 1 32]]</paramSpec>
+        <paramSpec>["d" [-32 1 32]]</paramSpec>
+    </searchSpace>
+    <searchMethod type="RandomSearch"/>
+    <chromosomeRepresentation type="RealHypercubeChromosome"/>
+    <caching>true</caching>
+    <evaluationLimit>200</evaluationLimit>
+    <bestCheckingNumReplications>2</bestCheckingNumReplications>
+</search>

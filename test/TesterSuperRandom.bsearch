@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<!DOCTYPE search SYSTEM "behaviorsearch.dtd">
+<search>
+<bsearchVersionNumber>1.00</bsearchVersionNumber>
+<modelInfo>
+<modelFile>Tester.nlogox</modelFile>
+<modelSetupCommands>clear-all reset-ticks</modelSetupCommands>
+<modelStepCommands>ask one-of patches [ set pcolor random 100 ] tick</modelStepCommands>
+<modelStopCondition>ticks &gt; 20 and random-float 1.0 &gt; 0.7 </modelStopCondition>
+<modelStepLimit>60</modelStepLimit>
+<modelMetricReporter>random 10000</modelMetricReporter>
+<modelMeasureIf>random-float 1.0 &lt; 0.5 </modelMeasureIf>
+</modelInfo>
+<fitnessInfo>
+<fitnessMinimized>false</fitnessMinimized>
+<fitnessCollecting>SUM_ACROSS_STEPS</fitnessCollecting>
+<fitnessSamplingReplications>5</fitnessSamplingReplications>
+<fitnessCombineReplications>MEAN</fitnessCombineReplications>
+</fitnessInfo>
+<searchSpace>
+<paramSpec>["a" [-32 1 32]]</paramSpec>
+<paramSpec>["b" [-32 1 32]]</paramSpec>
+<paramSpec>["c" [-32 1 32]]</paramSpec>
+<paramSpec>["d" [-32 1 32]]</paramSpec>
+</searchSpace>
+<searchMethod type="RandomSearch"/>
+<chromosomeRepresentation type="GrayBinaryChromosome"/>
+<caching>false</caching>
+<evaluationLimit>200</evaluationLimit>
+<bestCheckingNumReplications>2</bestCheckingNumReplications>
+</search>

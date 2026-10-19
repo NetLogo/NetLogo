@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<!DOCTYPE search SYSTEM "behaviorsearch.dtd">
+<search>
+<modelInfo>
+<modelFile>../netlogo/models/Sample Models/Social Science/Ethnocentrism.nlogox</modelFile>
+<modelSetupCommands>setup-full</modelSetupCommands>
+<modelStepCommands>go</modelStepCommands>
+<modelStopCondition/>
+<modelMetricReporter>consist-ethno-percent</modelMetricReporter>
+<modelStepLimit>200</modelStepLimit>
+</modelInfo>
+<fitnessInfo>
+<fitnessMinimized>false</fitnessMinimized>
+<fitnessCollecting>AT_FINAL_STEP</fitnessCollecting>
+<fitnessSamplingReplications>2</fitnessSamplingReplications>
+<fitnessCombineReplications>MEAN</fitnessCombineReplications>
+</fitnessInfo>
+<searchSpace>
+<paramSpec>[ "cost-of-giving" [ 0.0 0.01 0.1 ]]</paramSpec>
+<paramSpec>[ "gain-of-receiving" [ 0.0 0.01 0.1 ]]</paramSpec>
+<paramSpec>[ "initial-ptr" [ 0.0 0.01 1.0 ]]</paramSpec>
+<paramSpec>[ "immigrants-per-day" [ 0.0 1.0 10.0 ]]</paramSpec>
+<paramSpec>[ "mutation-rate" [ 0.0 0.001 0.01 ]]</paramSpec>
+<paramSpec>[ "death-rate" [ 0.0 0.01 0.2 ]]</paramSpec>
+<paramSpec>[ "immigrant-chance-cooperate-with-same" 0.5 ]</paramSpec>
+<paramSpec>[ "immigrant-chance-cooperate-with-different" 0.5 ]</paramSpec>
+</searchSpace>
+<searchMethod type="GenerationalGA">
+<searchMethodParameter name="population-size" value="10"/>
+<searchMethodParameter name="mutation-rate" value="0.05"/>
+<searchMethodParameter name="crossover-rate" value="0.70"/>
+</searchMethod>
+<chromosomeRepresentation type="GrayBinaryChromosome"/>
+</search>

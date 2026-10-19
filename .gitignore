@@ -1,0 +1,5 @@
+/bin/
+target/
+/test/tmp
+.bsp/
+.project

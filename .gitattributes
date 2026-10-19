@@ -1,0 +1,34 @@
+# Files that don't matter (properties, classpath)
+* text=auto
+
+# Windows-only files
+*.bat text eol=crlf
+*.nsh text eol=crlf
+*.nsi text eol=crlf
+vbs
+
+# Files edited all OS's
+*.bsearch text eol=cr
+*.command text eol=cr
+*.css text eol=cr
+*.dtd text eol=cr
+*.html text eol=cr
+*.fxml text eol=cr
+*.java text eol=cr
+*.md text eol=cr
+*.nlogo text eol=cr
+*.py text eol=cr
+*.sbt text eol=cr
+*.sh text eol=cr
+*.TXT text eol=cr
+*.txt text eol=cr
+*.xml text eol=cr
+
+# Binary files
+*.exe binary
+*.icns binary
+*.ico binary
+*.png binary
+*.psd binary
+*.pyc binary
+*.svg binary
