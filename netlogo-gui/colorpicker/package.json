@@ -1,0 +1,41 @@
+{
+
+  "name":        "NetLogo color picker"
+, "version":     "0.0.1"
+, "description": "NetLogo color picker"
+, "homepage":    "https://github.com/NetLogo/ColorPicker"
+, "repository":  { "type": "git", "url": "git+https://github.com/NetLogo/ColorPicker.git" }
+, "bugs":        { "url": "https://github.com/NetLogo/ColorPicker/issues" }
+, "author":      "TheBizzle"
+, "license":     "GPL-2"
+, "private":     true
+, "main":        "dist/Main.js"
+, "type":        "module"
+
+, "engines" : { "npm":  "~11.8.0"
+              , "node": "~24.13.0"
+              }
+
+, "scripts": { "build": "npx tsc"
+             , "lint":  "npx tsc && npx eslint ."
+             , "start": "npx tsc && node dist/src/Controller.js"
+             , "test":  "npx tsc && npx eslint . && node --experimental-vm-modules node_modules/jest/bin/jest.js"
+             }
+
+, "dependencies": { "express": "~4.21.0"
+                  }
+
+, "devDependencies": { "@types/express":         "~4.17.0"
+                     , "@types/jest":            "~29.5.14"
+                     , "@types/node":            "~20.16.0"
+                     , "jest":                   "~29.7.0"
+                     , "jest-environment-jsdom": "~29.7.0"
+                     , "ts-jest":                "~29.4.0"
+                     , "ts-node":                "~10.9.0"
+                     , "typescript":             "~5.8.0"
+                     , "typescript-eslint":      "~8.28.0"
+                     , "webpack":                "~5.98.0"
+                     , "webpack-cli":            "~6.0.0"
+                     }
+
+}

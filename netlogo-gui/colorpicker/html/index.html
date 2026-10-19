@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8"/>
+    <link href="./stylesheets/main.css"     rel="stylesheet">
+    <link href="./stylesheets/simple.css"   rel="stylesheet">
+    <link href="./stylesheets/advanced.css" rel="stylesheet">
+    <title>Color Picker Test</title>
+    <script src="./deps/nl-color-model.js"></script>
+  </head>
+
+  <body class="flex column x-mid">
+    <div id="main" class="flex column x-mid">
+
+      <div id="tab-strip" class="tab-strip flex row">
+        <div id="simple-tab"   class="simple   tab-button selected">Simple</div>
+        <div id="advanced-tab" class="advanced tab-button">Advanced</div>
+      </div>
+
+      <div id="content-pane" class="flex column y-mid">
+
+        <div id="simple-pane" class="simple pane flex column x-mid">
+          <div id="simple-swatch-container" class="swatches flex column"></div>
+          <div class="outputs-placeholder"></div> <!-- See 'outputs-template' -->
+        </div>
+
+        <div id="advanced-pane" class="advanced pane flex row x-mid hidden">
+
+          <div class="wysiwyg-controls flex row">
+
+            <div class="sliders-container flex row">
+
+              <div class="sliders flex row">
+
+                <div class="input-bar">
+                  <div class="slider-background hue">
+                    <div id="hue-slider" class="slider-track">
+                      <div id="hue-knob" class="slider-knob" style="bottom: 41.6667%;">
+                        <div id="hue-knob-circle" class="slider-knob-circle"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div id="alpha-wrapper" class="input-bar">
+                  <div class="slider-background checkerboard">
+                    <div class="slider-background alpha">
+                      <div id="alpha-slider" class="slider-track">
+                        <div id="alpha-knob" class="slider-knob" style="bottom: 100%;">
+                          <div id="alpha-knob-circle" class="slider-knob-circle"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+
+            <div id="swatch-container" class="swatch-container">
+              <div id="swatch-gradient" class="swatch-gradient" style="background: rgb(0, 255, 128);">
+                <div class="swatch-gradient white">
+                  <div class="swatch-gradient black"></div>
+                  <div id="swatch-pointer" class="pointer" style="left: 66.6667%; top: 70%;">
+                    <div id="swatch-pointer-circle" class="pointer-circle"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="numeric-controls flex column y-mid">
+
+            <div>
+
+              <label class="repr-dropdown-label flex column form-label">
+                Input Format
+                <div class="dropdown-arrow">
+                  <div class="dropdown-arrow-inner"></div>
+                </div>
+                <select id="repr-dropdown" class="dropdown labeled-input">
+                  <option class="dropdown-option" value="nl-number">NetLogo number</option>
+                  <option class="dropdown-option" value="nl-word">NetLogo word</option>
+                  <option class="dropdown-option" value="rgb">RGB</option>
+                  <option class="dropdown-option" value="rgba">RGBA</option>
+                  <option class="dropdown-option" value="hsb">HSB</option>
+                  <option class="dropdown-option" value="hsba">HSBA</option>
+                  <option class="dropdown-option" value="hsl">HSL</option>
+                  <option class="dropdown-option" value="hsla">HSLA</option>
+                  <option class="dropdown-option" value="hex">Hexadecimal</option>
+                </select>
+              </label>
+
+              <div class="repr-controls-wrapper flex row y-mid">
+
+                <div class="repr-controls-container">
+
+                  <div id="netlogo-number-controls" class="repr-controls row">
+                    <input id="netlogo-number" class="repr-input solo" type="number" min="0" max="140" step="0.1" />
+                  </div>
+
+                  <div id="netlogo-word-controls" class="repr-controls row">
+                    <input id="netlogo-word" class="repr-input solo" type="text" />
+                  </div>
+
+                  <div id="hsb-controls" class="repr-controls row">
+                    <div class="repr-pair flex column x-mid">
+                      <input id="hsb-h" type="number" class="repr-input" min="0" max="360" />
+                      <label for="hsb-h" class="form-label" title="Hue">Hue (°)</label>
+                    </div>
+                    <div class="repr-pair flex column x-mid">
+                      <input id="hsb-s" type="number" class="repr-input" min="0" max="100" />
+                      <label for="hsb-s" class="form-label" title="Saturation">Sat. (%)</label>
+                    </div>
+                    <div class="repr-pair flex column x-mid">
+                      <input id="hsb-b" type="number" class="repr-input" min="0" max="100" />
+                      <label for="hsb-b" class="form-label" title="Brightness">Bright. (%)</label>
+                    </div>
+                  </div>
+
+                  <div id="hsba-controls" class="repr-controls row">
+                    <div class="repr-pair flex column x-mid">
+                      <input id="hsba-h" type="number" class="repr-input" min="0" max="360" />
+                      <label for="hsba-h" class="form-label" title="Hue">Hue (°)</label>
+                    </div>
+                    <div class="repr-pair flex column x-mid">
+                      <input id="hsba-s" type="number" class="repr-input" min="0" max="100" />
+                      <label for="hsba-s" class="form-label" title="Saturation">Sat. (%)</label>
+                    </div>
+                    <div class="repr-pair flex column x-mid">
+                      <input id="hsba-b" type="number" class="repr-input" min="0" max="100" />
+                      <label for="hsba-b" class="form-label" title="Brightness">Bright. (%)</label>
+                    </div>
+                    <div class="repr-pair flex column x-mid">
+                      <input id="hsba-a" class="repr-input" type="number" min="0" max="100" />
+                      <label for="hsba-a" class="form-label" title="Alpha">Alpha (%)</label>
+                    </div>
+                  </div>
+
+                  <div id="hsl-controls" class="repr-controls row">
+                    <div class="repr-pair flex column x-mid">
+                      <input id="hsl-h" type="number" class="repr-input" min="0" max="360" />
+                      <label for="hsl-h" class="form-label" title="Hue">Hue (°)</label>
+                    </div>
+                    <div class="repr-pair flex column x-mid">
+                      <input id="hsl-s" type="number" class="repr-input" min="0" max="100" />
+                      <label for="hsl-s" class="form-label" title="Saturation">Sat. (%)</label>
+                    </div>
+                    <div class="repr-pair flex column x-mid">
+                      <input id="hsl-l" type="number" class="repr-input" min="0" max="100" />
+                      <label for="hsl-l" class="form-label" title="Lightness">Light. (%)</label>
+                    </div>
+                  </div>
+
+                  <div id="hsla-controls" class="repr-controls row">
+                    <div class="repr-pair flex column x-mid">
+                      <input id="hsla-h" type="number" class="repr-input" min="0" max="360" />
+                      <label for="hsla-h" class="form-label" title="Hue">Hue (°)</label>
+                    </div>
+                    <div class="repr-pair flex column x-mid">
+                      <input id="hsla-s" type="number" class="repr-input" min="0" max="100" />
+                      <label for="hsla-s" class="form-label" title="Saturation">Sat. (%)</label>
+                    </div>
+                    <div class="repr-pair flex column x-mid">
+                      <input id="hsla-l" type="number" class="repr-input" min="0" max="100" />
+                      <label for="hsla-l" class="form-label" title="Lightness">Light. (%)</label>
+                    </div>
+                    <div class="repr-pair flex column x-mid">
+                      <input id="hsla-a" class="repr-input" type="number" min="0" max="100" />
+                      <label for="hsla-a" class="form-label" title="Alpha">Alpha (%)</label>
+                    </div>
+                  </div>
+
+                  <div id="rgb-controls" class="repr-controls row">
+                    <div class="repr-pair flex column x-mid">
+                      <input id="rgb-r" class="repr-input" type="number" min="0" max="255" />
+                      <label for="rgb-r" class="form-label" title="Red">Red</label>
+                    </div>
+                    <div class="repr-pair flex column x-mid">
+                      <input id="rgb-g" class="repr-input" type="number" min="0" max="255" />
+                      <label for="rgb-g" class="form-label" title="Green">Green</label>
+                    </div>
+                    <div class="repr-pair flex column x-mid">
+                      <input id="rgb-b" class="repr-input" type="number" min="0" max="255" />
+                      <label for="rgb-b" class="form-label" title="Blue">Blue</label>
+                    </div>
+                  </div>
+
+                  <div id="rgba-controls" class="repr-controls row">
+                    <div class="repr-pair flex column x-mid">
+                      <input id="rgba-r" class="repr-input" type="number" min="0" max="255" />
+                      <label for="rgba-r" class="form-label" title="Red">Red</label>
+                    </div>
+                    <div class="repr-pair flex column x-mid">
+                      <input id="rgba-g" class="repr-input" type="number" min="0" max="255" />
+                      <label for="rgba-g" class="form-label" title="Green">Green</label>
+                    </div>
+                    <div class="repr-pair flex column x-mid">
+                      <input id="rgba-b" class="repr-input" type="number" min="0" max="255" />
+                      <label for="rgba-b" class="form-label" title="Blue">Blue</label>
+                    </div>
+                    <div class="repr-pair flex column x-mid">
+                      <input id="rgba-a" class="repr-input" type="number" min="0" max="100" />
+                      <label for="rgba-a" class="form-label" title="Alpha">Alpha (%)</label>
+                    </div>
+                  </div>
+
+                  <div id="hex-controls" class="repr-controls row">
+                    <input id="hex" class="repr-input solo" type="text" />
+                  </div>
+
+                </div>
+
+              </div>
+
+            </div>
+
+            <div class="output-controls-container flex column">
+              <label class="repr-dropdown-label flex column form-label">
+                NetLogo Output Format
+                <div class="dropdown-arrow">
+                  <div class="dropdown-arrow-inner"></div>
+                </div>
+                <select id="output-format-dropdown" class="dropdown labeled-input">
+                  <option class="dropdown-option" value="nl-number" disabled selected>NetLogo number</option>
+                  <option class="dropdown-option" value="nl-word" disabled>NetLogo word</option>
+                  <option class="dropdown-option" value="rgba" disabled>RGBA</option>
+                </select>
+              </label>
+            </div>
+
+            <div class="results-row flex row">
+
+              <div class="preview-container flex row y-mid">
+                <div id="preview-color-opaque" class="preview-color cell opaque" style="background: rgb(25, 77, 51);"></div>
+                <div id="preview-color-alpha-wrapper" class="preview-color cell wrapper flex row">
+                  <div id="preview-color-transparent" class="preview-color transparent layer front" style="background: rgb(25, 77, 51);"></div>
+                  <div class="preview-background layer back"></div>
+                </div>
+              </div>
+
+              <div class="outputs-placeholder"></div> <!-- See 'outputs-template' -->
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="form-buttons flex row x-mid">
+        <div class="main-buttons flex row">
+          <input type="button" id=  "pick-button" class="form-button ok"     value="OK"     />
+          <input type="button" id="cancel-button" class="form-button cancel" value="Cancel" />
+        </div>
+      </div>
+
+    </div>
+
+  </body>
+
+  <template id="outputs-template">
+    <div class="main-outputs flex row">
+      <output class="output-field flex row x-mid y-mid"></output>
+      <div class="copy-button flex row y-mid">
+        <div class="inner">
+          <div class="copy-button-layer front"></div>
+          <div class="copy-button-layer back"></div>
+        </div>
+        <div class="checkmark"></div>
+      </div>
+    </div>
+  </template>
+
+  <script src="./javascripts/realmain.js"></script>
+
+</html>
