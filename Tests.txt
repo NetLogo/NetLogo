@@ -1,0 +1,94 @@
+Sizes
+  extensions [ bitmap ]
+  globals [ image ]
+  O> set image bitmap:import "extensions/bitmap/test-images/BitmapTest.jpg"
+  bitmap:width image => 1024
+  bitmap:height image => 768
+
+Base64
+  extensions [ bitmap ]
+  globals [ base64 image pcolors ]
+  O> set image bitmap:import "extensions/bitmap/test-images/BitmapTest.jpg"
+  O> set image bitmap:scaled image 64 48
+  O> bitmap:copy-to-pcolors image true
+  O> set pcolors map [ p -> [pcolor] of p ] (sort patches)
+  O> set base64 bitmap:to-base64 image
+  substring base64 0 49 => "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEA"
+  O> set image bitmap:from-base64 base64
+  O> bitmap:copy-to-pcolors image true
+  pcolors = map [ p -> [pcolor] of p ] (sort patches) => true
+
+Base64NoPrefix
+  extensions [ bitmap ]
+  globals [ base64 image pcolors ]
+  O> set image bitmap:import "extensions/bitmap/test-images/BitmapTest.jpg"
+  O> set image bitmap:scaled image 64 48
+  O> bitmap:copy-to-pcolors image true
+  O> set pcolors map [ p -> [pcolor] of p ] (sort patches)
+  O> set base64 bitmap:to-base64 image
+  substring base64 0 49 => "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEA"
+  O> set image bitmap:from-base64 (substring base64 22 (length base64)) ; Strip the prefix
+  O> bitmap:copy-to-pcolors image true
+  pcolors = map [ p -> [pcolor] of p ] (sort patches) => true
+
+AverageColor
+  extensions [ bitmap ]
+  globals [ image ]
+  O> set image bitmap:import "extensions/bitmap/test-images/BitmapTest.jpg"
+  bitmap:average-color image => [139.44314320882162 94.44454701741536 88.15065892537434]
+
+FromView
+  extensions [ bitmap ]
+  globals [ image1 image2 ]
+  O> set image1 bitmap:import "extensions/bitmap/test-images/BitmapTest.jpg"
+  O> bitmap:copy-to-drawing image1 0 0
+  O> set image1 bitmap:from-view
+  O> set image2 bitmap:import "extensions/bitmap/test-images/BitmapTest-view-0x0.png"
+  bitmap:to-base64 image1 = bitmap:to-base64 image2 => true
+  O> clear-drawing
+  O> bitmap:copy-to-drawing image1 50 50
+  O> set image1 bitmap:from-view
+  O> set image2 bitmap:import "extensions/bitmap/test-images/BitmapTest-view-50x50.png"
+  bitmap:to-base64 image1 = bitmap:to-base64 image2 => true
+
+DifferenceRgb
+  extensions [ bitmap ]
+  globals [ image1 image2 ]
+  O> set image1 bitmap:import "extensions/bitmap/test-images/BitmapTest-view-0x0.png"
+  O> random-seed 12315
+  O> create-turtles 30 [ set color red pen-down forward 30 ]
+  O> set image2 bitmap:from-view
+  O> set image2 bitmap:difference-rgb image1 image2
+  O> bitmap:export image2 "../huh-rgb.png"
+  O> set image1 bitmap:import "extensions/bitmap/test-images/BitmapTest-difference-rgb.png"
+  bitmap:to-base64 image1 = bitmap:to-base64 image2 => true
+
+Channel
+  extensions [ bitmap ]
+  globals [ image1 image2 image3 ]
+  O> set image1 bitmap:import "extensions/bitmap/test-images/BitmapTest.jpg"
+
+  O> set image2 bitmap:channel image1 0
+  O> set image3 bitmap:import "extensions/bitmap/test-images/BitmapTest-alpha.png"
+  bitmap:to-base64 image2 = bitmap:to-base64 image3 => true
+
+  O> set image2 bitmap:channel image1 1
+  O> set image3 bitmap:import "extensions/bitmap/test-images/BitmapTest-red.png"
+  bitmap:to-base64 image2 = bitmap:to-base64 image3 => true
+
+  O> set image2 bitmap:channel image1 2
+  O> set image3 bitmap:import "extensions/bitmap/test-images/BitmapTest-green.png"
+  bitmap:to-base64 image2 = bitmap:to-base64 image3 => true
+
+  O> set image2 bitmap:channel image1 3
+  O> set image3 bitmap:import "extensions/bitmap/test-images/BitmapTest-blue.png"
+  bitmap:to-base64 image2 = bitmap:to-base64 image3 => true
+
+ToGrayscale
+  extensions [ bitmap ]
+  globals [ image1 image2 image3 ]
+  O> set image1 bitmap:import "extensions/bitmap/test-images/BitmapTest.jpg"
+
+  O> set image2 bitmap:to-grayscale image1
+  O> set image3 bitmap:import "extensions/bitmap/test-images/BitmapTest-grayscale.png"
+  bitmap:to-base64 image2 = bitmap:to-base64 image3 => true
