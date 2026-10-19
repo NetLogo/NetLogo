@@ -1,0 +1,9 @@
+SampleReporterJava
+  extensions [sample]
+  sample:first-n-integers 5 => [0 1 2 3 4]
+
+SampleVariadicReporterJava
+  extensions [sample]
+  sample:my-list 5 6 => [5 6]
+  (sample:my-list 6) => [6]
+  (sample:my-list 5 6 7) => [5 6 7]
