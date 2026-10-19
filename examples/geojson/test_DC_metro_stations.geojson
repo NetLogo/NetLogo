@@ -1,0 +1,1643 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -76.9750541388,
+                    38.8410857803
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Southern Ave",
+                "symbol": "rail-metro",
+                "title": "Southern Ave",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=107",
+                "address": "1411 Southern Avenue, Temple Hills, MD 20748"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -76.935256783,
+                    38.9081784965
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Deanwood",
+                "symbol": "rail-metro",
+                "title": "Deanwood",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=65",
+                "address": "4720 Minnesota Avenue NE, Washington, DC 20019"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -76.9281249818,
+                    38.9786336339
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "College Park",
+                "symbol": "rail-metro",
+                "title": "College Park",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=79",
+                "address": "4931 Calvert Road, College Park, MD 20740"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -76.9110575731,
+                    39.0111458605
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Greenbelt",
+                "symbol": "rail-metro",
+                "title": "Greenbelt",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=80",
+                "address": "5717 Greenbelt Metro Drive, Greenbelt, MD 20740"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -76.9695766751,
+                    38.9550401707
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "West Hyattsville",
+                "symbol": "rail-metro",
+                "title": "West Hyattsville",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=77",
+                "address": "2700 Hamilton St., Hyattsville, MD 20782"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -77.113168835,
+                    38.8821828738
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Ballston",
+                "symbol": "rail-metro",
+                "title": "Ballston",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=99",
+                "address": "4230 Fairfax Drive, Arlington, VA 22201"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -77.053667574,
+                    38.8141436672
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Braddock Road",
+                "symbol": "rail-metro",
+                "title": "Braddock Road",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=47",
+                "address": "700 N. West St., Alexandria, VA 22301"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -76.8680747681,
+                    38.8938349282
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Morgan Blvd",
+                "symbol": "rail-metro",
+                "title": "Morgan Blvd",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=110",
+                "address": "300 Garrett Morgan Blvd., Landover, MD 20785"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -77.0628101291,
+                    38.8846868585
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Arlington Cemetery",
+                "symbol": "rail-metro",
+                "title": "Arlington Cemetery",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=42",
+                "address": "1000 North Memorial Drive, Arlington, VA 22211"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -77.0580425191,
+                    38.9347628908
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Cleveland Park",
+                "symbol": "rail-metro",
+                "title": "Cleveland Park",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=8",
+                "address": "3599 Connecticut Avenue NW, Washington, DC 20008"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -77.1646273343,
+                    39.1199273249
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Shady Grove",
+                "symbol": "rail-metro",
+                "title": "Shady Grove",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=18",
+                "address": "15903 Somerville Drive, Rockville, MD 20855"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -76.9953707387,
+                    38.8629631168
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Anacostia",
+                "symbol": "rail-metro",
+                "title": "Anacostia",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=85",
+                "address": "1101 Howard Road SE, Washington, DC 20020"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -76.9770889014,
+                    38.8867090898
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Stadium Armory",
+                "symbol": "rail-metro",
+                "title": "Stadium Armory",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=63",
+                "address": "192 19th St. SE, Washington, DC 20003"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -77.1208179517,
+                    39.0624676517
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Twinbrook",
+                "symbol": "rail-metro",
+                "title": "Twinbrook",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=16",
+                "address": "1600 Chapman Avenue, Rockville, MD 20852"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -77.0941291922,
+                    38.9843936603
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Bethesda",
+                "symbol": "rail-metro",
+                "title": "Bethesda",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=12",
+                "address": "7450 Wisconsin Avenue, Bethesda, MD 20814"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -76.9562627094,
+                    38.8513013835
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Naylor Road",
+                "symbol": "rail-metro",
+                "title": "Naylor Road",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=87",
+                "address": "3101 Branch Avenue, Temple Hills, MD 20748"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -77.0051394199,
+                    38.8850625009
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Capitol South",
+                "symbol": "rail-metro",
+                "title": "Capitol South",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=59",
+                "address": "355 First Street SE, Washington, DC 20003"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -76.9467477336,
+                    38.899191223
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Minnesota Avenue",
+                "symbol": "rail-metro",
+                "title": "Minnesota Avenue",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=64",
+                "address": "4000 Minnesota Avenue NE, Washington, DC 20019"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -77.2271606721,
+                    38.8836251359
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Dunn Loring",
+                "symbol": "rail-metro",
+                "title": "Dunn Loring",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=102",
+                "address": "2700 Gallows Road, Vienna, VA 22180"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -77.1291115237,
+                    38.799307672
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Van Dorn St",
+                "symbol": "rail-metro",
+                "title": "Van Dorn St",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=94",
+                "address": "5690 Eisenhower Avenue, Alexandria, VA 22310"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -77.0429165548,
+                    39.0149542752
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Forest Glen",
+                "symbol": "rail-metro",
+                "title": "Forest Glen",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=32",
+                "address": "9730 Georgia Avenue, Forest Glen, MD 20910"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -76.9118081145,
+                    38.8894658568
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Capitol Heights",
+                "symbol": "rail-metro",
+                "title": "Capitol Heights",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=91",
+                "address": "133 Central Avenue, Capitol Heights, MD 20743"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -77.0969522905,
+                    39.0000564843
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Medical Center",
+                "symbol": "rail-metro",
+                "title": "Medical Center",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=13",
+                "address": "8810 Rockville Pike, Bethesda, MD 20814"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -77.0336341721,
+                    38.9013327968
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "McPherson Square",
+                "symbol": "rail-metro",
+                "title": "McPherson Square",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=36",
+                "address": "1400 I St. NW, Washington, DC 20005"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -77.234607,
+                    38.921732
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Greensboro",
+                "symbol": "rail-metro",
+                "title": "Greensboro",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=113",
+                "address": "8305 Leesburg Pike, Vienna, VA 22182"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -77.0502898097,
+                    38.8579043204
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Crystal City",
+                "symbol": "rail-metro",
+                "title": "Crystal City",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=45",
+                "address": "1750 South Clark St., Arlington, VA 22202"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -77.0219117007,
+                    38.9134768711
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Shaw",
+                "symbol": "rail-metro",
+                "title": "Shaw",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=72",
+                "address": "1701 8th St. NW, Washington, DC 20001"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -77.0219143803,
+                    38.9064368149
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Mt Vernon Sq",
+                "symbol": "rail-metro",
+                "title": "Mt Vernon Sq",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=70",
+                "address": "700 M St. NW, Washington, DC 20001"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -77.021908484,
+                    38.8848377279
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "L'Enfant Plaza",
+                "symbol": "rail-metro",
+                "title": "L'Enfant Plaza",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=82",
+                "address": "600 Maryland Avenue SW, Washington, DC 20024"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -77.0280662342,
+                    38.888018702
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Smithsonian",
+                "symbol": "rail-metro",
+                "title": "Smithsonian",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=54",
+                "address": "1200 Independence Avenue SW, Washington, DC 20004"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -77.0440422943,
+                    38.8534163859
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "National Arpt",
+                "symbol": "rail-metro",
+                "title": "National Arpt",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=93",
+                "address": "2400 S. Smith Blvd., Arlington, VA 22202"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -77.0274958929,
+                    38.9170023992
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "U Street",
+                "symbol": "rail-metro",
+                "title": "U Street",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=73",
+                "address": "1240 U Street NW, Washington, DC 20009"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -77.0752057891,
+                    38.7939158529
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Huntington",
+                "symbol": "rail-metro",
+                "title": "Huntington",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=50",
+                "address": "2501 Huntington Ave, Huntington, VA 22303"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -77.0219153904,
+                    38.8983168097
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Gallery Place",
+                "symbol": "rail-metro",
+                "title": "Gallery Place",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=21",
+                "address": "630 H St. NW, Washington, DC 20001"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -77.0795873255,
+                    38.9488514351
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Tenleytown",
+                "symbol": "rail-metro",
+                "title": "Tenleytown",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=10",
+                "address": "4501 Wisconsin Avenue NW, Washington, DC 20016"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -77.0325521177,
+                    38.9278379675
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Columbia Heights",
+                "symbol": "rail-metro",
+                "title": "Columbia Heights",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=75",
+                "address": "3030 14th St. NW, Washington, DC 20009"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -77.112829859,
+                    39.0481513573
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "White Flint",
+                "symbol": "rail-metro",
+                "title": "White Flint",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=15",
+                "address": "5500 Marinelli Road, Rockville, MD 20852"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -77.023460904,
+                    38.9374346301
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Georgia Avenue",
+                "symbol": "rail-metro",
+                "title": "Georgia Avenue",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=76",
+                "address": "3700 Georgia Avenue NW, Washington, DC 20010"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -76.89410791,
+                    38.8867478168
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Addison Road",
+                "symbol": "rail-metro",
+                "title": "Addison Road",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=92",
+                "address": "100 Addison Road S., Capitol Heights, MD 20743"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -77.0280779971,
+                    38.8983144732
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Metro Center",
+                "symbol": "rail-metro",
+                "title": "Metro Center",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=1",
+                "address": "607 13th St. NW, Washington, DC 20005"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -77.210295,
+                    38.924432
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "McLean",
+                "symbol": "rail-metro",
+                "title": "McLean",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=111",
+                "address": "1824 Dolley Madison Boulevard, McLean, VA 22102"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -76.9945342851,
+                    38.9332109913
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Brookland",
+                "symbol": "rail-metro",
+                "title": "Brookland",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=27",
+                "address": "801 Michigan Avenue NE, Washington, DC 20017"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -77.0537156734,
+                    38.8694627012
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Pentagon",
+                "symbol": "rail-metro",
+                "title": "Pentagon",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=43",
+                "address": "2 South Rotary Road, Arlington, VA 22202"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -76.9854953196,
+                    38.8812632736
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Potomac Avenue",
+                "symbol": "rail-metro",
+                "title": "Potomac Avenue",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=61",
+                "address": "700 14th Street SE, Washington, DC 20003"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -77.0310178268,
+                    38.9939493747
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Silver Spring",
+                "symbol": "rail-metro",
+                "title": "Silver Spring",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=31",
+                "address": "8400 Colesville Road, Silver Spring, MD 20910"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -77.0595389215,
+                    38.8618823867
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Pentagon City",
+                "symbol": "rail-metro",
+                "title": "Pentagon City",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=44",
+                "address": "1250 South Hayes St., Arlington, VA 22202"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -77.2726222569,
+                    38.8776011238
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Vienna",
+                "symbol": "rail-metro",
+                "title": "Vienna",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=103",
+                "address": "9550 Saintsbury Drive, Fairfax, VA 22031"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -76.9960011267,
+                    38.8846222608
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Eastern Market",
+                "symbol": "rail-metro",
+                "title": "Eastern Market",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=60",
+                "address": "701 Pennsylvania Avenue SE, Washington, DC 20003"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -77.1029772942,
+                    38.8833661518
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Virginia Square",
+                "symbol": "rail-metro",
+                "title": "Virginia Square",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=98",
+                "address": "3600 Fairfax Drive, Arlington, VA 22201"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -77.0406954151,
+                    38.9013128941
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Farragut West",
+                "symbol": "rail-metro",
+                "title": "Farragut West",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=38",
+                "address": "900 18th St. NW, Washington, DC 20006"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -77.0434143597,
+                    38.9095980575
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Dupont Circle",
+                "symbol": "rail-metro",
+                "title": "Dupont Circle",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=6",
+                "address": "1525 20th St. NW, Washington, DC 20036"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -76.9114642177,
+                    38.8264463483
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Branch Avenue",
+                "symbol": "rail-metro",
+                "title": "Branch Avenue",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=89",
+                "address": "4704 Old Soper Road, Suitland, MD 20746"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -76.9885119326,
+                    38.8456577028
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Congress Height",
+                "symbol": "rail-metro",
+                "title": "Congress Height",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=86",
+                "address": "1290 Alabama Avenue SE, Washington, DC 20020"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -76.916628044,
+                    38.9166318546
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Cheverly",
+                "symbol": "rail-metro",
+                "title": "Cheverly",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=66",
+                "address": "5501 Columbia Park, Cheverly, MD 20785"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -77.0074142921,
+                    38.8977660392
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Union Station",
+                "symbol": "rail-metro",
+                "title": "Union Station",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=25",
+                "address": "701 First St. NE, Washington, DC 20002"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -77.1461253392,
+                    39.0843216075
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Rockville",
+                "symbol": "rail-metro",
+                "title": "Rockville",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=17",
+                "address": "251 Hungerford Drive, Rockville, MD 20850"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -77.0166389566,
+                    38.8960903176
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Judiciary Square",
+                "symbol": "rail-metro",
+                "title": "Judiciary Square",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=23",
+                "address": "450 F Street NW, Washington, DC 20001"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -77.084995805,
+                    38.9594838736
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Friendship Heights",
+                "symbol": "rail-metro",
+                "title": "Friendship Heights",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=11",
+                "address": "5337 Wisconsin Avenue NW, Washington, DC 20015"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -77.0501070535,
+                    39.0375271436
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Wheaton",
+                "symbol": "rail-metro",
+                "title": "Wheaton",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=33",
+                "address": "11171 Georgia Avenue, Silver Spring, MD 20902"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -76.8420375202,
+                    38.9050688072
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Largo Town Center",
+                "symbol": "rail-metro",
+                "title": "Largo Town Center",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=109",
+                "address": "Largo Town Center 9000 Lottsford Road, Largo, MD 20774"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -77.34027,
+                    38.94778
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Wiehle-Reston East",
+                "symbol": "rail-metro",
+                "title": "Wiehle-Reston East",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=115",
+                "address": "1862 Wiehle Avenue, Reston, VA 20190"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -77.0181766987,
+                    38.976078531
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Takoma",
+                "symbol": "rail-metro",
+                "title": "Takoma",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=29",
+                "address": "327 Cedar Street NW, Washington, DC 20012"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -77.0175052088,
+                    38.8764618668
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Waterfront",
+                "symbol": "rail-metro",
+                "title": "Waterfront",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=83",
+                "address": "399 M Street SW, Washington, DC 20024"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -76.8911979676,
+                    38.9335062344
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Landover",
+                "symbol": "rail-metro",
+                "title": "Landover",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=67",
+                "address": "3000 Pennsy Drive, Hyattsville, MD 20785"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -77.0219143879,
+                    38.8936652235
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Archives",
+                "symbol": "rail-metro",
+                "title": "Archives",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=81",
+                "address": "701 Pennsylvania Avenue NW, Washington, DC 20004"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -77.0709086853,
+                    38.8959790962
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Rosslyn",
+                "symbol": "rail-metro",
+                "title": "Rosslyn",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=41",
+                "address": "1850 N. Moore Street, Arlington, VA 22209"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -77.0030204472,
+                    38.9070162121
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "New York Avenue",
+                "symbol": "rail-metro",
+                "title": "New York Avenue",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=108",
+                "address": "200 Florida Ave N.E., Washington, DC 20002"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -77.1890948225,
+                    38.900780551
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "W Falls Church",
+                "symbol": "rail-metro",
+                "title": "W Falls Church",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=101",
+                "address": "7040 Haycock Road, Falls Church, VA 22043"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -77.0953940983,
+                    38.886704839
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Clarendon",
+                "symbol": "rail-metro",
+                "title": "Clarendon",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=97",
+                "address": "3100 Wilson Blvd, Arlington, VA 22201"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -77.0535573593,
+                    39.0617837655
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Glenmont",
+                "symbol": "rail-metro",
+                "title": "Glenmont",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=34",
+                "address": "12501 Georgia Avenue, Silver Spring, MD 20906"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -77.222262,
+                    38.920496
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Tysons Corner",
+                "symbol": "rail-metro",
+                "title": "Tysons Corner",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=112",
+                "address": "1943 Chain Bridge Road, McLean, VA 22102"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -77.0629861805,
+                    38.9432652883
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Van Ness UDC",
+                "symbol": "rail-metro",
+                "title": "Van Ness UDC",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=9",
+                "address": "4200 Connecticut Avenue NW, Washington, DC 20008"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -77.241472,
+                    38.928872
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Spring Hill",
+                "symbol": "rail-metro",
+                "title": "Spring Hill",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=114",
+                "address": "1576 Spring Hill Road, Vienna, VA 22182"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -77.087131231,
+                    38.8901755312
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Court House",
+                "symbol": "rail-metro",
+                "title": "Court House",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=96",
+                "address": "2100 Wilson Blvd, Arlington, VA 22201"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -77.0158682169,
+                    38.8850723551
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Federal Center SW",
+                "symbol": "rail-metro",
+                "title": "Federal Center SW",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=58",
+                "address": "401 3rd Street SW, Washington, DC 20024"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -77.0524180207,
+                    38.9250851371
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Woodley Park Zoo",
+                "symbol": "rail-metro",
+                "title": "Woodley Park Zoo",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=7",
+                "address": "2700 Connecticut Ave., NW, Washington, DC 20008"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -77.10384972,
+                    39.02926895
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Grosvenor",
+                "symbol": "rail-metro",
+                "title": "Grosvenor",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=14",
+                "address": "10300 Rockville Pike, Bethesda, MD 20852"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -77.0022030768,
+                    38.9518467675
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Fort Totten",
+                "symbol": "rail-metro",
+                "title": "Fort Totten",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=28",
+                "address": "550 Galloway Street NE, Washington, DC 20011"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -77.0281319984,
+                    38.8931808718
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Federal Triangle",
+                "symbol": "rail-metro",
+                "title": "Federal Triangle",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=53",
+                "address": "302 12th St. NW, Washington, DC 20004"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -77.050277739,
+                    38.9006980092
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Foggy Bottom",
+                "symbol": "rail-metro",
+                "title": "Foggy Bottom",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=40",
+                "address": "2301 I St. NW, Washington, DC 20037"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -76.9383648681,
+                    38.890975676
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Benning Road",
+                "symbol": "rail-metro",
+                "title": "Benning Road",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=90",
+                "address": "4500 Benning Road, Washington, DC 20019"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -77.0050856513,
+                    38.8764810849
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Navy Yard",
+                "symbol": "rail-metro",
+                "title": "Navy Yard",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=84",
+                "address": "200 M Street SE, Washington, DC 20003"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -77.0397008272,
+                    38.9032019462
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Farragut North",
+                "symbol": "rail-metro",
+                "title": "Farragut North",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=4",
+                "address": "1001 Connecticut Avenue NW, Washington, DC 20036"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -77.0708743893,
+                    38.8004254497
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Eisenhower Avenue",
+                "symbol": "rail-metro",
+                "title": "Eisenhower Avenue",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=49",
+                "address": "2400 Eisenhower Avenue, Alexandria, VA 22314"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -76.9558815078,
+                    38.9653854458
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Prince Georges Plaza",
+                "symbol": "rail-metro",
+                "title": "Prince Georges Plaza",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=78",
+                "address": "3575 East West Highway, Hyattsville, MD 20782"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -77.1568830199,
+                    38.8859531663
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "E Falls Church",
+                "symbol": "rail-metro",
+                "title": "E Falls Church",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=100",
+                "address": "2001 N. Sycamore St., Arlington, VA 22205"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -77.0608112085,
+                    38.8065861172
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "King Street",
+                "symbol": "rail-metro",
+                "title": "King Street",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=48",
+                "address": "1900 King Street, Alexandria, VA 22301"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -76.9959369166,
+                    38.9210596891
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Rhode Island Avenue",
+                "symbol": "rail-metro",
+                "title": "Rhode Island Avenue",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=26",
+                "address": "919 Rhode Island Avenue NE, Washington, DC 20018"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -77.1679701804,
+                    38.7665218926
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Franconia-Springf'ld",
+                "symbol": "rail-metro",
+                "title": "Franconia-Springf'ld",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=95",
+                "address": "6880 Frontier Drive, Springfield, VA 22150"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -76.9318701589,
+                    38.8439645544
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "Suitland",
+                "symbol": "rail-metro",
+                "title": "Suitland",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=88",
+                "address": "4500 Silver Hill Road, Suitland, MD 20746"
+            }
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -76.8718412865,
+                    38.9477848558
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "desc": "New Carrollton",
+                "symbol": "rail-metro",
+                "title": "New Carrollton",
+                "num_test" : 3.14,
+                "url": "http://www.wmata.com/rider_tools/pids/showpid.cfm?station_id=68",
+                "address": "4700 Garden City Drive, New Carrollton, MD 20784"
+            }
+        }
+    ]
+}

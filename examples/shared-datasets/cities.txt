@@ -1,0 +1,32 @@
+GeoDataset name: Cities
+Shapefile name: wCities.shp
+Path: ESRI Data & Maps 1 (CD) \world
+GeoDataset type: Cities is an ESRI shapefile with point features.
+GeoDataset lineage: World Cities was derived from ESRI's ArcWorld database and 
+    supplemented with other data from the Rand McNally New International 
+    Atlas, 2nd printing, revised. Chicago: Rand McNally, 1991.
+Coordinate system: Latitude/Longitude in decimal degrees.
+Datum Name: World Geodetic System of 1984 datum.
+Coordinate precision: Double.
+
+Useful display scales:
+    For the entire world:  1:200,000,000
+    For individual continents:  1:100,000,000
+    For regions of the world:  1:50,000,000
+The density of city points is important in determining the largest and 
+smallest useful display scales.
+
+World Cities contains locations of major cities around the world. The cities 
+include national capitals for each of the countries in World Countries 1998 as 
+well as major population centers and landmark cities.
+
+Cities -- World Cities
+606 points, 4 descriptive fields. Describes major world cities.
+Fields:
+Name -- The city name. Spellings are based on Board of Geographic Names 
+    standards and commercial atlases. (String)
+Country -- An abbreviated country name. (String)
+Population -- Total population for the entire metropolitan area. Values are 
+    from recent census or estimates. Attributes of -99 are null values (data 
+    not available). (Number)
+Capital -- Indicates whether a city is a national capital (Y/N). (String)

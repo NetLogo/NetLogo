@@ -1,0 +1,158 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -80.870885,
+                    35.215151
+                ]
+            },
+            "properties": {
+                "name": "ABBOTT NEIGHBORHOOD PARK",
+                "address": "1300  SPRUCE ST"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -80.837753,
+                    35.249801
+                ]
+            },
+            "properties": {
+                "name": "DOUBLE OAKS CENTER",
+                "address": "1326 WOODWARD AV"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -80.83827,
+                    35.256747
+                ]
+            },
+            "properties": {
+                "name": "DOUBLE OAKS NEIGHBORHOOD PARK",
+                "address": "2605  DOUBLE OAKS RD"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -80.836977,
+                    35.257517
+                ]
+            },
+            "properties": {
+                "name": "DOUBLE OAKS POOL",
+                "address": "1200 NEWLAND RD"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -80.816476,
+                    35.401487
+                ]
+            },
+            "properties": {
+                "name": "DAVID B. WAYMER FLYING REGIONAL PARK",
+                "address": "15401 HOLBROOKS RD"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -80.835564,
+                    35.399172
+                ]
+            },
+            "properties": {
+                "name": "DAVID B. WAYMER COMMUNITY PARK",
+                "address": "302 HOLBROOKS RD"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                    [
+                        [
+                            -80.724878,
+                            35.265454
+                        ],
+                        [
+                            -80.722646,
+                            35.260338
+                        ],
+                        [
+                            -80.720329,
+                            35.260618
+                        ],
+                        [
+                            -80.718698,
+                            35.260267
+                        ],
+                        [
+                            -80.715093,
+                            35.260548
+                        ],
+                        [
+                            -80.71681,
+                            35.255361
+                        ],
+                        [
+                            -80.710887,
+                            35.255361
+                        ],
+                        [
+                            -80.703248,
+                            35.265033
+                        ],
+                        [
+                            -80.704793,
+                            35.268397
+                        ],
+                        [
+                            -80.70857,
+                            35.268257
+                        ],
+                        [
+                            -80.712518,
+                            35.270359
+                        ],
+                        [
+                            -80.715179,
+                            35.267696
+                        ],
+                        [
+                            -80.721359,
+                            35.267276
+                        ],
+                        [
+                            -80.724878,
+                            35.265454
+                        ]
+                    ]
+                ]
+            },
+            "properties": {
+                "name": "Plaza Road Park"
+            }
+        }
+    ]
+}
