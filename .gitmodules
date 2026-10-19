@@ -25,9 +25,6 @@
 [submodule "extensions/time"]
 	path = extensions/time
 	url = https://github.com/NetLogo/Time-Extension
-[submodule "extensions/resource"]
-	path = extensions/resource
-	url = https://github.com/NetLogo/Resource-Extension
 [submodule "extensions/sr"]
 	path = extensions/sr
 	url = https://github.com/NetLogo/SimpleR-Extension
