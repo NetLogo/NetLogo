@@ -854,7 +854,7 @@ window.autocomplete = (context: CompletionContext) => {
     return {
       from: match?.from ?? context.pos,
       options: window.program.matches(match?.text.toLowerCase() ?? "").filter((completion) => {
-        return (completion.type == "keyword") != inProc;
+        return (completion.type == "keyword" && completion.label != "end") != inProc;
       })
     };
   }
@@ -880,7 +880,7 @@ window.autocomplete = (context: CompletionContext) => {
     return {
       from: match.from,
       options: window.program.matches(match.text.toLowerCase()).filter((completion) => {
-        return (completion.type == "keyword") != inProc;
+        return (completion.type == "keyword" && completion.label != "end") != inProc;
       })
     };
   }
