@@ -1,0 +1,35 @@
+first-n-integers
+  extensions [sample-scala]
+  sample-scala:first-n-integers 5 => [0 1 2 3 4]
+
+my-list
+  extensions [sample-scala]
+  sample-scala:my-list 5 6 => [5 6]
+  (sample-scala:my-list 6) => [6]
+  (sample-scala:my-list 5 6 7) => [5 6 7]
+
+create-red-turtles-correct-syntax
+  extensions [sample-scala]
+  O> sample-scala:create-red-turtles 10
+  O> sample-scala:create-red-turtles 10 sample-scala:create-red-turtles 10
+  O> sample-scala:create-red-turtles 10 [ ]
+  O> sample-scala:create-red-turtles 10 [ set size 2 ]
+
+create-red-turtles-incorrect-syntax
+  extensions [sample-scala]
+  O> sample-scala:create-red-turtles => COMPILER ERROR SAMPLE-SCALA:CREATE-RED-TURTLES expected 1 input, a number and a command block (optional).
+  O> sample-scala:create-red-turtles [ ] [ ] => COMPILER ERROR Expected a number here, rather than a list or block.
+  O> sample-scala:create-red-turtles 10 [ ] [ ] => COMPILER ERROR Expected command.
+  O> sample-scala:create-red-turtles 10 [ sprout 1 ] => COMPILER ERROR You can't use SPROUT in a turtle context, because SPROUT is patch-only.
+
+create-red-turtles-turtles-are-in-fact-red-as-advertised
+  extensions [sample-scala]
+  count turtles with [color = red] => 0
+  O> sample-scala:create-red-turtles 10
+  count turtles with [color = red] => 10
+
+create-red-turtles-with-commands
+  extensions [sample-scala]
+  O> crt 5 sample-scala:create-red-turtles 10 [ set size 2 ] crt 5
+  count turtles => 20
+  count turtles with [size = 2] => 10
