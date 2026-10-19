@@ -1,0 +1,567 @@
+TimeModelDiscreteScheduling
+  OPEN> extensions/time/examples/DiscreteEventScheduling.nlogox
+  O> setup
+  O> go-until
+
+
+TimeModelTimeSeriesNLSReadWrite
+  OPEN> extensions/time/examples/nlsTimeSeriesTest-CSVReadWrite.nlogox
+  O> run-test
+
+TimeModelSchedulingBenchmark
+  OPEN> extensions/time/examples/SchedulingBenchmark.nlogox
+  O> go-discrete-event
+  O> go-static
+
+TimeModelMouseDiscreteEvent
+  OPEN> extensions/time/examples/MouseDiscreteEvent.nlogox
+  O> setup
+  O> start
+
+TimeModelTimeExample
+  OPEN> extensions/time/examples/TimeExample.nlogox
+  O> setup
+  O> go
+
+TimeModelTimeSeriesNLSExample
+  OPEN> extensions/time/examples/nls-TimeSeriesExample.nlogox
+  O> setup
+  O> go
+
+TimeModelTimeTestAnchored
+  OPEN> extensions/time/examples/TimeTest-AnchoredCopy.nlogox
+  O> run-tests
+
+TimeModelTimeTestsFormatter
+  OPEN> extensions/time/examples/TimeTest-Formatter.nlogox
+  O> run-tests
+
+TimeModelTimeTestRepeatingEvents_2019_02_11
+  OPEN> extensions/time/examples/TimeTest-RepeatingEvent.nlogox
+  O> run-tests
+
+TimeModelTimeTestsScheduleLength_2019_02_15
+  OPEN> extensions/time/examples/TimeTest-ScheduleLength.nlogox
+  O> run-tests
+
+TimeModelTimeTests_SFR_2019_01_29
+  OPEN> extensions/time/examples/TimeTests_SFR_2019-01-29.nlogox
+  O> test-date-times
+
+TimeModelTimeTests_SFR_2019_02_01
+  OPEN> extensions/time/examples/TimeTests_SFR_2019-02-01.nlogox
+  O> write-test-file
+  O> write-test-file-dates
+
+TimeModelTimeTests_SFR_2019_02_05
+  OPEN> extensions/time/examples/TimeTests_SFR_2019-02-05.nlogox
+  O> test-create
+  O> test-create-with-format
+  O> test-plus-is-before
+
+TimeModelTimeTests_VariableTimeStepDemo
+  OPEN> extensions/time/examples/VariableTimeStepDemo.nlogox
+  O> setup
+  O> go
+
+TimeCreateDefault
+  extensions [time]
+  time:show (time:create "2000/01/01 10:00") "YYYY/dd/MM HH:mm" => "2000/01/01 10:00"
+  time:show (time:create "2000/01/01 10:00") "YYYY/dd/MM" => "2000/01/01"
+  time:show (time:create "2000/01/01 10:00") "dd/MM/YYYY" => "01/01/2000"
+
+TimePlusOperatorDay
+  extensions [time]
+  time:show (time:plus (time:create "2000/01/01 10:00") 3 "day") "YYYY/MM/dd" => "2000/01/04"
+  time:show (time:plus (time:create "2000/01/04 10:00") -3 "day") "YYYY/MM/dd" => "2000/01/01"
+  time:show (time:plus (time:create "2000/01/04 10:00") 0 "day") "YYYY/MM/dd" => "2000/01/04"
+
+TimePlusOperatorDayCustom
+  extensions [time]
+  time:show (time:plus (time:create-with-format "2000/01-01 10:00" "YYYY/MM-dd HH:mm") 3 "day")  "YYYY/MM/dd" => "2000/01/04"
+  time:show (time:plus (time:create-with-format "2000/01/04 10:00" "YYYY/MM/dd HH:mm") -3 "day") "YYYY/MM/dd" => "2000/01/01"
+  time:show (time:plus (time:create-with-format "2000/01/04 10:00" "YYYY/MM/dd HH:mm") 0 "day")  "YYYY/MM/dd" => "2000/01/04"
+  time:show (time:plus (time:create-with-format "01-02-2000" "MM-dd-YYYY") 3 "day") "MM-dd-YYYY" => "01-05-2000"
+  time:show (time:plus (time:create-with-format "01-02-2000" "MM-dd-YYYY") 3 "day") "MM-dd-YYYY" => "01-05-2000"
+
+TimePlusOperatorHour
+  extensions [time]
+  time:show (time:plus (time:create "2000/01/04 10:00") 3 "hour") "YYYY/MM/dd HH" => "2000/01/04 13"
+  time:show (time:plus (time:create "2000/01/04 10:00") 24 "hour") "YYYY/MM/dd HH" => "2000/01/05 10"
+
+TimePlusOperatorHourCustom
+  extensions [time]
+  time:show (time:plus (time:create-with-format "2000/01/04 10:00" "YYYY/MM/dd HH:mm") 3 "hour") "yyyy/MM/dd HH" => "2000/01/04 13"
+  time:show (time:plus (time:create-with-format "2000/01/04 10:00" "YYYY/MM/dd HH:mm") 24 "hour") "yyyy/MM/dd HH" => "2000/01/05 10"
+  time:show (time:plus (time:create-with-format "01-02-2000" "MM-dd-YYYY") 3 "hour") "MM-dd-yyyy" => "01-02-2000"
+  time:show (time:plus (time:create-with-format "01-02-2000" "MM-dd-YYYY") 24 "hour") "MM-dd-yyyy" => "01-03-2000"
+
+TimePlusOperatorMinute
+  extensions [time]
+  time:show (time:plus (time:create "2000/01/04 10:00") 59 "minute") "YYYY/MM/dd HH" => "2000/01/04 10"
+  time:show (time:plus (time:create "2000/01/04 10:00") 60 "minute") "YYYY/MM/dd HH" => "2000/01/04 11"
+
+TimePlusOperatorMinuteCustom
+  extensions [time]
+  time:show (time:plus (time:create-with-format "2000/01/04 10:00" "yyyy/MM/dd HH:mm") 59 "minute") "yyyy/MM/dd HH" => "2000/01/04 10"
+  time:show (time:plus (time:create-with-format "2000/01/04 10:00" "yyyy/MM/dd HH:mm") 60 "minute") "yyyy/MM/dd HH" => "2000/01/04 11"
+  time:show (time:plus (time:create-with-format "01/04/2000 10:00" "MM/dd/yyyy HH:mm") 59 "minute") "yyyy/MM/dd HH" => "2000/01/04 10"
+  time:show (time:plus (time:create-with-format "01/04/2000 10:00" "MM/dd/yyyy HH:mm") 60 "minute") "yyyy/MM/dd HH" => "2000/01/04 11"
+
+TimePlusOperatorSecond
+  extensions [time]
+  time:show (time:plus (time:create "2000/01/04 10:00") 59 "second") "yyyy/MM/dd HH:mm" => "2000/01/04 10:00"
+  time:show (time:plus (time:create "2000/01/04 10:00") 60 "second") "yyyy/MM/dd HH:mm" => "2000/01/04 10:01"
+
+
+TimePlusOperatorMillisecond
+  extensions [time]
+  time:show (time:plus (time:create "2000/01/04 10:00") 59999 "milli") "yyyy/MM/dd HH:mm" => "2000/01/04 10:00"
+  time:show (time:plus (time:create "2000/01/04 10:00") 60000 "milli") "yyyy/MM/dd HH:mm" => "2000/01/04 10:01"
+
+TimeIsBefore
+  extensions [time]
+  time:is-before? (time:create "2000/01/01 10:00")  (time:create "2000/01/01 11:00") => true
+  time:is-before? (time:create "2000/01/01 10:00")  (time:create "2000/01/01 09:00") => false
+  time:is-before? (time:create "2000/01/01 10:00")  (time:create "2000/01/01 10:00") => false
+  time:is-before? (time:create "2001/01/01 10:00")  (time:create "2001/01/01 10:00") => false
+  time:is-before? (time:create "2001/01/01 10:00")  (time:create "2000/01/01 10:00") => false
+  time:is-before? (time:create "2000/01/01 10:00")  (time:create "2001/01/01 10:00") => true
+  time:is-before? (time:create "2001/01/01 10:00")  (time:create "2000/01/01 10:00") => false
+  time:is-before? (time:create "2000/01/01 10:01")  (time:create "2000/01/01 10:00") => false
+  time:is-before? (time:create "2000/01/01 10:00")  (time:create "2000/01/01 10:01") => true
+
+TimeIsAfter
+  extensions [time]
+  time:is-after? (time:create "2000/01/01 10:00")  (time:create "2000/01/01 11:00") => false
+  time:is-after? (time:create "2000/01/01 10:00")  (time:create "2000/01/01 09:00") => true
+  time:is-after? (time:create "2000/01/01 10:00")  (time:create "2000/01/01 10:00") => false
+  time:is-after? (time:create "2001/01/01 10:00")  (time:create "2001/01/01 10:00") => false
+  time:is-after? (time:create "2001/01/01 10:00")  (time:create "2000/01/01 10:00") => true
+  time:is-after? (time:create "2000/01/01 10:00")  (time:create "2001/01/01 10:00") => false
+  time:is-after? (time:create "2001/01/01 10:00")  (time:create "2000/01/01 10:00") => true
+  time:is-after? (time:create "2000/01/01 10:01")  (time:create "2000/01/01 10:00") => true
+  time:is-after? (time:create "2000/01/01 10:00")  (time:create "2000/01/01 10:01") => false
+
+  time:is-after? (time:create "2000/01/01 10:00")  (time:create "2000-01-01 11:00") => false
+  time:is-after? (time:create "2000/01/01 10:00")  (time:create "2000-01-01 09:00") => true
+  time:is-after? (time:create "2000/01/01 10:00")  (time:create "2000-01-01 10:00") => false
+  time:is-after? (time:create "2001/01/01 10:00")  (time:create "2001-01-01 10:00") => false
+  time:is-after? (time:create "2001/01/01 10:00")  (time:create "2000-01-01 10:00") => true
+  time:is-after? (time:create "2000/01/01 10:00")  (time:create "2001-01-01 10:00") => false
+  time:is-after? (time:create "2001/01/01 10:00")  (time:create "2000-01-01 10:00") => true
+  time:is-after? (time:create "2000/01/01 10:01")  (time:create "2000-01-01 10:00") => true
+  time:is-after? (time:create "2000/01/01 10:00")  (time:create "2000-01-01 10:01") => false
+
+
+TimeIsEqual
+  extensions [time]
+  time:is-equal? (time:create "2000/01/01 10:00")  (time:create "2000/01/01 11:00") => false
+  time:is-equal? (time:create "2000/01/01 10:00")  (time:create "2000/01/01 09:00") => false
+  time:is-equal? (time:create "2000/01/01 10:00")  (time:create "2000/01/01 10:00") => true
+  time:is-equal? (time:create "2001/01/01 10:00")  (time:create "2001/01/01 10:00") => true
+  time:is-equal? (time:create "2001/01/01 10:00")  (time:create "2000/01/01 10:00") => false
+  time:is-equal? (time:create "2000/01/01 10:00")  (time:create "2001/01/01 10:00") => false
+  time:is-equal? (time:create "2001/01/01 10:00")  (time:create "2000/01/01 10:00") => false
+  time:is-equal? (time:plus (time:create "2001/01/01 10:00") 3 "day") (time:create "2001/01/04 10:00") => true
+  time:is-equal? (time:plus (time:create "2001/01/04 10:00") -3 "day") (time:create "2001/01/01 10:00") => true
+  time:is-equal? (time:plus (time:create "2001/01/04") -3 "day") (time:create "2001/01/01") => true
+  time:is-equal? (time:plus (time:create "2001/01/04") -2 "day") (time:create "2001/01/01") => false
+  time:is-equal? (time:plus (time:create "2001/01/04") -3 "day") (time:plus (time:create "2001/01/01") 0 "day") => true
+  time:is-equal? (time:plus (time:create "2001/01/04") 0 "day") (time:plus (time:create "2001/01/04") 0 "day") => true
+  time:is-equal? (time:plus (time:create "2001/01/04") 1 "day") (time:plus (time:create "2001/01/04") 1 "day") => true
+   time:is-equal? (time:plus (time:create "2001/01/04") 1 "day") (time:plus (time:create "2001/01/05") 0 "day") => true
+
+TimeShow
+  extensions [time]
+  time:show (time:create "2000/01/01 10:00:00.000") "yyyy-MM-d" => "2000-01-1"
+  time:show (time:create "2000-01-01 10:00:00.000") "yyyy-MM-d" => "2000-01-1"
+  time:show (time:create "2000/01/01 10:00:00") "yyyy-MM-d" => "2000-01-1"
+  time:show (time:create "2000-01-01 10:00:00") "yyyy-MM-d" => "2000-01-1"
+  time:show (time:create "2000/01/01 10:00") "yyyy-MM-d" => "2000-01-1"
+  time:show (time:create "2000-01-01 10:00") "yyyy-MM-d" => "2000-01-1"
+  time:show (time:create "2000/01/01 10") "yyyy-MM-d" => "2000-01-1"
+  time:show (time:create "2000-01-01 10") "yyyy-MM-d" => "2000-01-1"
+  time:show (time:create "01/01") "yyyy-MM-d" => "2000-01-1"
+  time:show (time:create "01-01") "yyyy-MM-d" => "2000-01-1"
+  time:show (time:create "2000/01/01 10:00") "mm" => "00"
+  time:show (time:create "2000/01/01") "SS" => "00"
+  time:show (time:create "2000/01/01") "SSS" => "000"
+  time:show (time:create "2000/01/01") "SSSS" => "0000"
+  time:show (time:create "2000/01/01 10:00:01.001") "SSSS" => "0010"
+  time:show (time:create "2000/01/01 10:00:00") "EEEE" => "Saturday"
+
+TimeRandomInputParsing
+  extensions [time]
+  globals [ month year day hour minute second milli logotime]
+  O> repeat 100000 [set month 1 + (random 12) set year 1000 + random 1000 set day 1 + random 28 set hour random 24 set minute random 60 set second random 60 set milli random 1000 set logotime time:create (word year "-" month "-" day " " hour ":" minute ":" second "." milli) ]
+
+LimitedTimeConversions
+  extensions [time]
+  globals [dt]
+  O> set dt time:create "2000/02/02"
+  O> set dt time:plus dt 3 "hour"
+  time:get "day" dt => 2
+  time:get "month" dt => 2
+  time:show dt "HH" => "00"
+  time:show dt "dd" => "02"
+  O> set dt time:plus dt 24 "hour"
+  time:show dt "HH" => "00"
+  time:show dt "dd" => "03"
+
+TimeIsBetween
+  extensions [time]
+  time:is-between? (time:create "2000/01/01 10:00:01") (time:create "2000/01/01 10:00:01") (time:create "2000/01/01 10:00:01") => true
+  time:is-between? (time:create "2000/01/01") (time:create "2000/01/01") (time:create "2000/01/01") => true
+  time:is-between? (time:create "2000/01/02") (time:create "2000/01/05") (time:create "2000/01/01") => true
+  time:is-between? (time:create "2000/01/01") (time:create "2000/01/02") (time:create "2000/01/03") => false
+
+TimeGet
+  extensions [time]
+  time:get "year" (time:create "2000/01/01 10:00") => 2000
+  time:get "year" (time:plus (time:create "2000/01/01 10:00") 3 "day") => 2000
+  time:get "year" (time:plus (time:create "2000/01/01 10:00") 3 "year") => 2003
+  time:get "month" (time:create "2000/01/01 10:00") => 1
+  time:get "day" (time:create "2000/01/01 10:00") => 1
+  time:get "hour" (time:create "2000/01/01 10:00") => 10
+  time:get "second" (time:create "2000/01/01 10:00:01.100") => 1
+  time:get "milli" (time:create "2000/01/01 10:00:01.100") => 100
+  time:get "milli" (time:create "2000/01/01 10:00:01.123") => 123
+
+TimeAnchorToTick
+  extensions [time]
+  time:show (time:anchor-to-ticks (time:create "2000-01-02 03:04:05") 1 "hour") "yyyy|MM/dd" => "2000|01/02"
+
+TimeDifferenceBetween
+  extensions [time]
+  time:difference-between (time:create "2000-01-02 10:00") (time:create "2000-01-01 10:00") "day" => -1
+  time:difference-between (time:create "2000-01-02 10:00") (time:create "2000-01-02 10:02") "second" => 120
+  time:difference-between (time:create "2000-02-01 10:00") (time:create "2000-03-01 10:00") "day" => 29
+  time:difference-between (time:create "2000-02-01 10:00") (time:create "2010-03-01 10:00") "year" => 10
+  time:difference-between (time:create "2000-02-01 10:00") (time:create "2010-01-01 10:00") "year" => 9
+
+TimeCreateWithFormat
+  extensions [time]
+  time:show (time:create-with-format "2000-02-01" "yyyy-MM-dd") "yyyy-MM-dd" => "2000-02-01"
+  time:show (time:create-with-format "2000-02-01" "yyyy-MM-dd") "dd/MM/yyyy" => "01/02/2000"
+  time:show (time:create-with-format "2000-02-01 10:00:42" "yyyy-MM-dd HH:mm:ss") "dd/MM/ss" => "01/02/42"
+   time:show (time:create-with-format "2000-02-01 10:23:42" "yyyy-MM-dd HH:ss:mm") "dd/MM/ss" => "01/02/23"
+
+TimeCreateCopy
+  extensions [time]
+  globals [ dt logotime ]
+  time:show time:copy (time:create "2000/01/01 10:00") "yyyy/MM/dd" => "2000/01/01"
+  time:show time:copy (time:plus (time:create "2000/01/01 10:00") 3 "day") "yyyy/MM/dd" => "2000/01/04"
+  time:show time:copy (time:plus (time:create "2000/01/01 10:00") 0 "day") "yyyy/MM/dd" => "2000/01/01"
+  time:show time:copy (time:plus (time:create "2000/01/01 10:00") 0 "day") "yyyy/MM/dd" => "2000/01/01"
+  time:show time:copy time:copy (time:plus (time:create "2000/01/01 10:00") 0 "day") "MM/dd/yyyy" => "01/01/2000"
+  O> set dt time:copy (time:plus (time:create "2000/01/01 10:00") 2 "day")
+  O> set logotime time:copy (time:plus dt 3 "day")
+  time:get "day" dt => 3
+  time:get "day" logotime => 6
+  time:get "day" (time:plus logotime 24 "hour") => 7
+
+TimeDiscreteEventAddEventTick
+  extensions [time]
+  globals [dt value]
+  turtles-own [cheese]
+  O> crt 1 [ set cheese 3 ]
+  O> reset-ticks
+  [ cheese ] of one-of turtles => 3
+  O> set dt time:anchor-to-ticks (time:create "2000/01/01 10:00") 1 "day"
+  O> time:anchor-schedule dt 1 "day"
+  O> time:schedule-event "observer" ([[] -> ask one-of turtles [set cheese 0]]) 2.0
+  O> time:go
+  [ cheese ] of one-of turtles => 0
+
+TimeDiscreteEventAddEventDate
+  extensions [time]
+  globals [dt value]
+  turtles-own [cheese]
+  O> crt 1 [ set cheese 3 ]
+  O> reset-ticks
+  [ cheese ] of one-of turtles => 3
+  O> set dt time:anchor-to-ticks (time:create "2000/01/01 10:00") 1 "day"
+  O> time:anchor-schedule dt 1 "day"
+  O> time:schedule-event "observer" ([[] -> ask one-of turtles [set cheese 0]]) (time:create "2000/01/02 10:00")
+  O> time:go
+  [ cheese ] of one-of turtles => 0
+
+TimeDiscreteEventAdd1
+  extensions [time]
+  globals [dt value]
+  turtles-own [cheese]
+  O> crt 1 [ set cheese 3 ]
+  O> reset-ticks
+  [ cheese ] of one-of turtles => 3
+  O> time:anchor-schedule time:create "2000/01/01 10:00" 1 "day"
+  O> time:schedule-event "observer" ([[] -> ask one-of turtles [set cheese 0]]) (time:create "2000/01/02 10:00")
+  O> time:go
+  [ cheese ] of one-of turtles => 0
+
+TimeDiscreteEventAdd2
+  extensions [time]
+  globals [dt value]
+  turtles-own [cheese]
+  O> crt 1 [ set cheese 3 ]
+  O> reset-ticks
+  [ cheese ] of one-of turtles => 3
+  O> time:anchor-schedule time:create "2000/01/01 10:00" 1 "day"
+  O> time:schedule-event "observer" ([[] -> ask one-of turtles [set cheese 0]]) (time:create "2000/01/03 10:00")
+  O> time:go
+  [ cheese ] of one-of turtles => 0
+
+TimeDiscreteEventAdd3
+  extensions [time]
+  globals [dt value]
+  turtles-own [cheese]
+  O> crt 1 [ set cheese 3 ]
+  O> reset-ticks
+  [ cheese ] of one-of turtles => 3
+  O> time:anchor-schedule time:create "2000/01/01 10:00" 1 "day"
+  O> time:schedule-event "observer" ([[] -> ask one-of turtles [set cheese 0]]) (time:create "2000/01/04 10:00")
+  [ cheese ] of one-of turtles => 3
+  O> time:go
+  [ cheese ] of one-of turtles => 0
+
+TimeDiscreteTurtlesMovement
+  extensions [time]
+  O> crt 1 [ setxy 0 0 ]
+  O> reset-ticks
+  O> time:anchor-schedule time:create "2000/01/01 10:00" 1 "year"
+  O> time:schedule-event turtles ([[] -> setxy 3 3]) 2.0
+  O> time:go
+  [ ycor ] of one-of turtles => 3
+
+TimeDiscreteTurtleMovement
+  extensions [time]
+  O> crt 10 [ setxy 0 0 ]
+  O> reset-ticks
+  O> time:anchor-schedule time:create "2000/01/01 10:00" 1 "year"
+  O> time:schedule-event turtle 0 ([[] -> setxy 1 1]) 2.0
+  O> time:go
+  [ ycor ] of turtle 0 => 1
+
+TimeDiscreteSuccess
+  extensions [time]
+  O> crt 1 [ setxy 0 0 ]
+  O> reset-ticks
+  O> time:anchor-schedule time:create "2000/01/01 10:00" 1 "year"
+  O> time:schedule-event turtles ([[] -> setxy 0 0]) (time:create "2000/01/02 10:00")
+
+TimeDiscreteRepeating
+  extensions [time]
+  globals [step]
+  O> crt 1 [ set step 0 setxy step step ]
+  O> reset-ticks
+  O> time:anchor-schedule time:create "2000/01/01 10:00" 1 "year"
+  O> time:schedule-repeating-event turtles ([[] -> set step step + 1 setxy step step]) (time:create "2000/01/02 10:00") 2.0
+  [ ycor ] of one-of turtles => 0
+  O> time:go-until (time:plus (time:create "2000/01/02 10:00") 1 "year")
+  [ ycor ] of one-of turtles => 1
+
+TimeGetCommandDateTime
+   extensions [time]
+   globals [t-datetime]
+   O> set t-datetime (time:create "2000-01-02 03:04:05.678")
+   time:get "year" t-datetime => 2000
+   time:get "month" t-datetime => 1
+   time:get "dayofyear" t-datetime => 2
+   time:get "hour" t-datetime => 3
+   time:get "second" t-datetime => 5
+   time:get "milli" t-datetime => 678
+
+TimeGetCommandDate
+   extensions [time]
+   globals [t-datetime]
+   O> set t-datetime (time:create "2000-01-02")
+   time:get "year" t-datetime => 2000
+   time:get "month" t-datetime => 1
+   time:get "dayofyear" t-datetime => 2
+   time:get "hour" t-datetime => 0
+   time:get "second" t-datetime => 0
+
+TimeGetCommandDay
+   extensions [time]
+   globals [t-datetime]
+   O> set t-datetime (time:create "01-02")
+   time:get "year" t-datetime => 2000
+   time:get "month" t-datetime => 1
+   time:get "dayofyear" t-datetime => 2
+   time:get "hour" t-datetime => 0
+   time:get "second" t-datetime => 0
+
+TimeGetCommandVaried
+   extensions [time]
+   globals [t-datetime]
+   O> set t-datetime (time:create-with-format "01-02" "MM-dd")
+   time:get "year" t-datetime => 2000
+   time:get "month" t-datetime => 1
+   time:get "dayofyear" t-datetime => 2
+   time:get "hour" t-datetime => 0
+   time:get "second" t-datetime => 0
+
+TimeFormatting
+   extensions [time]
+   time:show time:create-with-format "01-02-2000 03:04:05.678" "MM-dd-yyyy HH:mm:ss.SSS" "MM-dd-yyyy HH:mm:ss.SSS" => "01-02-2000 03:04:05.678"
+   time:show time:create-with-format "01-02-2000 03" "MM-dd-yyyy HH" "MM-dd-yyyy HH" => "01-02-2000 03"
+   time:show time:create-with-format "01-02-2000 03:00:00" "MM-dd-yyyy HH:mm:ss" "MM-dd-yyyy HH:mm" => "01-02-2000 03:00"
+   time:show time:create-with-format "01-02-2000 03:00:00.001" "MM-dd-yyyy HH:mm:ss.SSS" "MM-dd-yyyy HH:mm:ss" => "01-02-2000 03:00:00"
+   time:show (time:plus (time:create-with-format "01-02-2000" "MM-dd-yyyy") 3 "day") "MM-dd-yyyy" => "01-05-2000"
+   time:show (time:plus (time:create-with-format "01-02-2000" "MM-dd-yyyy") 3 "day") "MM dd yyyy" => "01 05 2000"
+   time:show (time:plus (time:create-with-format "01 02 2000" "MM dd yyyy") 3 "day") "MM dd yyyy" => "01 05 2000"
+
+TimePlusExamples
+   extensions [time]
+   globals [t-datetime t-date]
+   O> ;set t-datetime time:create-with-format "01-01-2000 03:04:05.678" "MM-dd-yyyy HH:mm:ss.SSS"
+   O> set t-datetime time:create-with-format "2000-01-01 03:04:05.678" "yyyy-MM-dd HH:mm:ss.SSS"
+   O> set t-date (time:create-with-format "2000-01-01 03:04:05.678" "yyyy-MM-dd HH:mm:ss.SSS")
+   time:show t-datetime "MM-dd-yyyy HH:mm:ss.SSS" => "01-01-2000 03:04:05.678"
+   time:show (time:plus (time:create "2000-01-01 10:00:00.000") 1 "hour") "MM-dd-yyyy" => "01-01-2000"
+   time:show (time:plus (time:create-with-format "2000-01-01 10:00:00.000" "yyyy-MM-dd HH:mm:ss.SSS") 1 "hour") "MM-dd-yyyy" => "01-01-2000"
+   O> ;time:show (time:plus t-date 1 "hour") "MM-dd-yyyy" this needs attention
+   O> set t-date time:plus t-date 1 "hour"
+
+
+NLSTimeSeriesReadWrite_Default
+  OPEN> extensions/time/tests/time-series.nlogox
+  O> set random_flow0 (random 100)
+  O> set random_flow1 (random 100)
+  O> set ts ts-create ["flow" "temp"]
+  O> set ts ts-add-row ts (list (time:create "2000-01-01") random_flow0 2)
+  O> set ts ts-add-row ts (list (time:create "2000-01-02") random_flow1 5)
+  O> ts-write ts "new-ts-output.csv"
+  O> set ts_out ts-load "new-ts-output.csv"
+  O> set flow_value0 ts-get ts_out (time:create "2000-01-01") "flow"
+  O> set flow_value1 ts-get ts_out (time:create "2000-01-02") "flow"
+  O> if (flow_value0 != random_flow0) [ error "Read and Write or ts-get Error" ]
+  O> if (flow_value1 != random_flow1) [ error "Read and Write or ts-get  Error" ]
+
+NLSTimeSeriesReadWrite_Exact
+  OPEN> extensions/time/tests/time-series.nlogox
+  O> set random_flow0 (random 100)
+  O> set random_flow1 (random 100)
+  O> set ts ts-create ["flow" "temp"]
+  O> set ts ts-add-row ts (list (time:create "2000-01-01") random_flow0 2)
+  O> set ts ts-add-row ts (list (time:create "2000-01-02") random_flow1 5)
+  O> ts-write ts "new-ts-output.csv"
+  O> set ts_out ts-load "new-ts-output.csv"
+  O> set flow_value0-exact ts-get-exact ts_out (time:create "2000-01-01") "flow"
+  O> set flow_value1-exact ts-get-exact ts_out (time:create "2000-01-02") "flow"
+  O> if (flow_value0-exact != random_flow0) [ error "Read and Write or ts-get-exact Error" ]
+  O> if (flow_value1-exact != random_flow1) [ error "Read and Write ts-get-exact Error" ]
+
+NLSTimeSeriesReadWrite_Interp
+  OPEN> extensions/time/tests/time-series.nlogox
+  O> set random_flow0 (random 100)
+  O> set random_flow1 (random 100)
+  O> set ts ts-create ["flow" "temp"]
+  O> set ts ts-add-row ts (list (time:create "2000-01-01") random_flow0 2)
+  O> set ts ts-add-row ts (list (time:create "2000-01-02") random_flow1 5)
+  O> ts-write ts "new-ts-output.csv"
+  O> set ts_out ts-load "new-ts-output.csv"
+  O> set flow_value0-interp ts-get-interp ts_out (time:create "2000-01-01") "flow"
+  O> set flow_value1-interp ts-get-interp ts_out (time:create "2000-01-02") "flow"
+  O> if (flow_value0-interp != random_flow0) [ error "Read and Write or ts-get-interp Error" ]
+  O> if (flow_value1-interp != random_flow1) [ error "Read and Write or ts-get-interp Error" ]
+
+NLSTimeSeriesGetRangeDouble
+  OPEN> extensions/time/tests/time-series.nlogox
+  O> set random_flow0 47
+  O> set random_flow1 52
+  O> set start-time time:create "1999-12-31"
+  O> set end-time time:create "2000-01-03"
+  O> set ts ts-create ["flow" "temp"]
+  O> set ts ts-add-row ts (list (time:create "2000-01-01") random_flow0 2)
+  O> set ts ts-add-row ts (list (time:create "2000-01-02") random_flow1 5)
+  (ts-get-range ts start-time end-time "flow") => [47 52]
+  O> ts-write ts "new-ts-range.csv"
+  O> set ts_out (ts-load-with-format "new-ts-range.csv" "YYYY-MM-dd")
+  length (ts-get-range ts_out start-time end-time "flow") => 2
+  (ts-get-range ts_out start-time end-time "flow") => [47 52]
+
+NLSTimeSeriesGetRangeString
+  OPEN> extensions/time/tests/time-series.nlogox
+  O> set start-time time:create "1999-12-31"
+  O> set end-time time:create "2000-01-03"
+  O> set ts ts-create ["flow" "temp"]
+  O> set ts ts-add-row ts (list (time:create "2000-01-01") "jerry" 2)
+  O> set ts ts-add-row ts (list (time:create "2000-01-02") "cherry" 5)
+  (ts-get-range ts start-time end-time "flow") => ["jerry" "cherry"]
+  (ts-get-range ts start-time end-time "temp") => [2 5]
+  O> ts-write ts "new-ts-range.csv"
+  O> set ts_out (ts-load-with-format "new-ts-range.csv" "YYYY-MM-dd")
+  length (ts-get-range ts_out start-time end-time "flow") => 2
+  (ts-get-range ts_out start-time end-time "flow") => ["jerry" "cherry"]
+  (ts-get-range ts_out start-time end-time "temp") => [2 5]
+
+NLSTimeSeriesGet
+  OPEN> extensions/time/tests/time-series.nlogox
+  O> set time-series ts-create ["x"]
+  O> set time-series ts-add-row time-series (sentence (time:create "2020-06-16 12:00") 1)
+  O> set time-series ts-add-row time-series (sentence (time:create "2020-06-17 12:00") 2)
+  (ts-get time-series (time:create "2020-06-16 23:00") "x") => 1
+
+NLSTimeSeriesGetRange
+  OPEN> extensions/time/tests/time-series.nlogox
+  O> set time-series ts-create ["x"]
+  O> set time-series ts-add-row time-series (sentence (time:create "2020-06-16 12:00") 1)
+  O> set time-series ts-add-row time-series (sentence (time:create "2020-06-17 12:00") 2)
+  O> set time-series ts-add-row time-series (sentence (time:create "2020-06-18 12:00") 3)
+  O> set time-series ts-add-row time-series (sentence (time:create "2020-06-18 12:00") 3)
+  O> set time-series ts-add-row time-series (sentence (time:create "2020-06-18 12:00") 3)
+  O> set time-series ts-add-row time-series (sentence (time:create "2020-06-18 12:00") 3)
+  O> set time-series ts-add-row time-series (sentence (time:create "2020-06-20 12:00") 5)
+  O> set time-series ts-add-row time-series (sentence (time:create "2020-06-20 12:00") 5)
+  (ts-get-range time-series (time:create "2020-06-15 12:00") (time:create "2020-06-16 11:59") "x") => []
+  (ts-get-range time-series (time:create "2020-06-16 12:00") (time:create "2020-06-16 12:00") "x") => [1]
+  (ts-get-range time-series (time:create "2020-06-16 12:00") (time:create "2020-06-17 12:00") "x") => [1 2]
+  (ts-get-range time-series (time:create "2020-06-17 12:00") (time:create "2020-06-17 12:00") "x") => [2]
+  (ts-get-range time-series (time:create "2020-06-18 12:00") (time:create "2020-06-18 12:00") "x") => [3 3 3 3]
+  (ts-get-range time-series (time:create "2020-06-19 12:00") (time:create "2020-06-19 12:00") "x") => []
+  (ts-get-range time-series (time:create "2020-06-20 12:00") (time:create "2020-06-20 12:00") "x") => [5 5]
+
+NLSTimeSeriesGetInterp
+  OPEN> extensions/time/tests/time-series.nlogox
+  O> set time-series ts-create ["flow"]
+  O> set time-series ts-add-row time-series (sentence (time:create "2000-01-01 00:00:00") 0)
+  O> set time-series ts-add-row time-series (sentence (time:create "2000-01-01 01:00:00") 10)
+  ts-get-interp time-series time:create "2000-01-01 00:30:00" "flow" => 5
+
+NLSTimeSeriesHasRepeatTimes
+  OPEN> extensions/time/tests/time-series.nlogox
+  O> set ts1 ts-create ["flow"]
+  O> set ts1 ts-add-row ts1 (sentence (time:create "2000-01-01 00:00:00") 0)
+  O> set ts1 ts-add-row ts1 (sentence (time:create "2000-01-01 01:00:00") 10)
+  O> set ts1 ts-add-row ts1 (sentence (time:create "2000-01-01 01:00:00") 10)
+  O> set ts1 ts-add-row ts1 (sentence (time:create "2000-01-01 03:00:00") 10)
+  O> set ts2 ts-create ["flow"]
+  O> set ts2 ts-add-row ts2 (sentence (time:create "2000-01-01 00:00:00") 0)
+  O> set ts2 ts-add-row ts2 (sentence (time:create "2000-01-01 01:00:00") 10)
+  O> set ts2 ts-add-row ts2 (sentence (time:create "2000-01-01 02:00:00") 10)
+  O> set ts2 ts-add-row ts2 (sentence (time:create "2000-01-01 03:00:00") 10)
+  ts-has-repeat-times? ts1 => true
+  ts-has-repeat-times? ts2 => false
+
+NLSTimeSeriesHasRepeatOfTime
+  OPEN> extensions/time/tests/time-series.nlogox
+  O> set ts1 ts-create ["flow"]
+  O> set ts1 ts-add-row ts1 (sentence (time:create "2000-01-01 00:00:00") 0)
+  O> set ts1 ts-add-row ts1 (sentence (time:create "2000-01-01 01:00:00") 10)
+  O> set ts1 ts-add-row ts1 (sentence (time:create "2000-01-01 01:00:00") 10)
+  O> set ts1 ts-add-row ts1 (sentence (time:create "2000-01-01 02:00:00") 10)
+  O> set ts1 ts-add-row ts1 (sentence (time:create "2000-01-01 02:00:00") 10)
+  O> set ts1 ts-add-row ts1 (sentence (time:create "2000-01-01 02:00:00") 10)
+  O> set ts1 ts-add-row ts1 (sentence (time:create "2000-01-01 03:00:00") 10)
+  O> set ts1 ts-add-row ts1 (sentence (time:create "2000-01-01 04:00:00") 10)
+  O> set ts1 ts-add-row ts1 (sentence (time:create "2000-01-01 05:00:00") 10)
+  ts-has-repeat-of-time? ts1 (time:create "2000-01-01 00:00:00") => false
+  ts-has-repeat-of-time? ts1 (time:create "2000-01-01 01:00:00") => true
+  ts-has-repeat-of-time? ts1 (time:create "2000-01-01 02:00:00") => true
+  ts-has-repeat-of-time? ts1 (time:create "2000-01-01 03:00:00") => false
+  ts-has-repeat-of-time? ts1 (time:create "2000-01-01 05:00:00") => false
+
+NLSTimeSeriesTestsFromFile
+  OPEN> extensions/time/examples/nls-time-series-tests.nlogox
+  O> run-tests

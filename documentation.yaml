@@ -1,0 +1,11 @@
+extensionName: time
+icon: i-lucide-timer
+filesToIncludeInManual:
+- USAGE.md
+- primitives
+markdownTemplate: |2
+
+  {{> USAGE.md }}
+primTemplate: |2+
+
+primitives: []
