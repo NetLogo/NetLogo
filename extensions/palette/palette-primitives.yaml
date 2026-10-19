@@ -1,0 +1,880 @@
+primitives:
+  - name: alpha-of
+    type: reporter
+    returns: number
+    arguments:
+      - name: color
+        type: list || number
+    description: >
+      
+      Reports a value in the range 0 to 255 representing the alpha of the given
+      NL, RGB or RGBA *color*. The alpha value of an NL or RGB color is 255.
+
+
+      Example:
+
+      ```
+
+      show palette:alpha-of red ;; 255
+
+      show palette:alpha-of [3 14 159 26] ;; 26
+
+      ```
+  - name: with-alpha
+    type: reporter
+    returns: list
+    infix: true
+    arguments:
+      - name: color
+        type: list || number
+      - name: number
+        type: number
+    description: >
+      
+      Reports an RGBA color with alpha component equal to *number* and the RGB
+      content of *color*. An error message results if alpha is not in the range
+      from 0 to 255.
+
+
+      Example:
+
+      ```
+
+      show [12 34 55 6] palette:with-alpha 99 ;; [12 34 55 99]
+
+      ```
+  - name: alpha
+    type: reporter
+    returns: number
+    description: >
+      
+      Get the alpha value of the color of the agent. The alpha value of an NL or
+      RGB color is 255.
+
+
+      Example:
+
+      ```
+
+      show [palette:alpha] of turtles
+
+      ```
+  - name: set-alpha
+    type: command
+    arguments:
+      - name: number
+        type: number
+    description: >
+      
+      Set the color of the agent to the RGBA color with alpha value *number* and
+      the RGB content of the color of the turtle or link (or patch in
+      NetLogo3D). An error message results if *number* is not in the range 0 to
+      255.
+
+
+      Example:
+
+      ```
+
+      ask turtles [palette:set-alpha 100]
+
+      ```
+  - name: transparency-of
+    type: reporter
+    returns: number
+    arguments:
+      - name: color
+        type: list || number
+    description: >
+      
+      Reports a value in the range 0 to 100 representing the percent
+      transparency of the given NL, RGB or RGBA *color*. The percent
+      transparency of an NL or RGB color is 0.
+
+
+      Example:
+
+      ```
+
+      show palette:transparency-of [100 100 100 100] ;; 60.7843137254902
+
+      show palette:transparency-of red ;; 0
+
+
+      ```
+  - name: with-transparency
+    type: reporter
+    returns: list
+    infix: true
+    arguments:
+      - name: color
+        type: list || number
+      - name: number
+        type: number
+    description: >
+      
+
+      Reports an RGBA color with an alpha value equivalent to the transparency
+      *number* and the RGB content of *color*. An error message results if
+      *number* is not in the range 0 to 100.
+
+
+      Example:
+
+      ```
+
+      show red palette:with-transparency 100 ;; [215 50 41 0]
+
+      ```
+  - name: transparency
+    type: reporter
+    returns: number
+    description: |
+      
+
+      Reports the transparency equivalent of the agent's alpha.
+
+      Example:
+      ```
+      show [palette:transparency] of turtles
+      ```
+  - name: set-transparency
+    type: command
+    arguments:
+      - name: number
+        type: number
+    description: >
+      
+
+      Set the color of the agent to the RGBA color with alpha value equivalent
+      to the transparency *number* and the RGB content of the color of the
+      turtle or link. An error message results if *number* is not in the range 0
+      to 100.
+
+
+      Example:
+
+      ```
+
+      ask turtles [palette:set-transparency 30]
+
+      ```
+  - name: hue-of
+    type: reporter
+    returns: number
+    arguments:
+      - name: color
+        type: list || number
+    description: >
+      
+      Reports a value in the range 0 to 360 representing the hue component in
+      HSB color space of the given NL, RGB or RGBA *color*.
+
+
+      Example:
+
+      ```
+
+      show palette:hue-of red ;; 3.103
+
+      ```
+  - name: with-hue
+    type: reporter
+    returns: list
+    infix: true
+    arguments:
+      - name: color
+        type: list || number
+      - name: number
+        type: number
+    description: >
+      
+
+      Reports an RGBA color with hue component in HSB color space equal to
+      *number* and the other HSB components of the input *color* unchanged. An
+      error message results if *number* is not in the range 0 to 360.
+
+
+      Example:
+
+      ```
+
+      show red palette:with-hue 100 ;; [99 215 41]
+
+      ```
+  - name: hue
+    type: reporter
+    returns: number
+    description: >
+      
+      Reports a number in the range 0 to 360 that represents the hue of an
+      agent’s color or pcolor.
+
+
+      Example:
+
+      ```
+
+      crt 1 [set color red]
+
+      [palette:hue] of turtle 0 ;; 3.103
+
+
+      ```
+  - name: set-hue
+    type: command
+    arguments:
+      - name: number
+        type: number
+    description: >
+      
+      Changes an agent’s hue value to *number*, leaving the other HSB components
+      unchanged. An error message results if *number* is not in the range from 0
+      to 360.
+
+
+      Example:
+
+      ```
+
+      ask turtles [palette:set-hue 30]
+
+      ```
+  - name: saturation-of
+    type: reporter
+    returns: number
+    arguments:
+      - name: color
+        type: list || number
+    description: >
+      
+      Reports a value in the range 0 to 100 representing the saturation
+      component in HSB color space of the given NL, RGB or RGBA *color*.
+
+
+      Example:
+
+      ```
+
+      show palette:saturation-of red ;; 80.93
+
+      ```
+  - name: with-saturation
+    type: reporter
+    returns: list
+    infix: true
+    arguments:
+      - name: color
+        type: list || number
+      - name: number
+        type: number
+    description: >
+      
+
+      Reports an RGBA color with saturation component in HSB color space equal
+      to *number* and the other HSB components of the input *color* unchanged.
+      An error message results if *number* is not in the range 0 to 100.
+
+
+      Example:
+
+      ```
+
+      show red palette:with-saturation 50 ;; [215 113 108]
+
+      ```
+  - name: saturation
+    type: reporter
+    returns: number
+    description: >
+      
+      Reports a number in the range 0 to 100 that represents the saturation of
+      an agent’s color or pcolor.
+
+
+      Example:
+
+      ```
+
+      crt 1 [set color red]
+
+      [palette:saturation] of turtle 0 ;; 80.93
+
+
+      ```
+  - name: set-saturation
+    type: command
+    arguments:
+      - name: number
+        type: number
+    description: >
+      
+
+      Changes an agent’s saturation leaving the other HSB components unchanged.
+      An error message results if *number* is not in the range from 0 to 100.
+
+
+      Example:
+
+      ```
+
+      ask turtles [palette:set-saturation 30]
+
+      ```
+  - name: brightness-of
+    type: reporter
+    returns: number
+    arguments:
+      - name: color
+        type: list || number
+    description: >
+      
+      Reports a value in the range 0 to 100 representing the brightness
+      component in HSB color space of the given NL, RGB or RGBA *color*.
+
+
+      Example:
+
+      ```
+
+      show palette:brightness-of red ;; 84.314
+
+      ```
+  - name: with-brightness
+    type: reporter
+    returns: list
+    infix: true
+    arguments:
+      - name: color
+        type: list || number
+      - name: number
+        type: number
+    description: >
+      
+
+      Reports an RGBA color with brightness component in HSB color space equal
+      to *number* and the other HSB components of the input *color* unchanged.
+      An error message results if *number* is not in the range 0 to 100.
+
+
+      Example:
+
+      ```
+
+      show red palette:with-brightness 50 ;; [128 30 24]
+
+      ```
+  - name: brightness
+    type: reporter
+    returns: number
+    description: >
+      
+      Reports a number in the range 0 to 100 that represents the brightness of
+      an agent’s color or pcolor.
+
+
+      Example:
+
+      ```
+
+      crt 1 [set color red]
+
+      [palette:brightness] of turtle 0 ;; 84.314
+
+
+      ```
+  - name: set-brightness
+    type: command
+    arguments:
+      - name: number
+        type: number
+    description: >
+      
+
+      Changes an agent’s brightness leaving the other HSB components unchanged.
+      An error message results if *number* is not in the range from 0 to 100.
+
+
+      Example:
+
+      ```
+
+      ask turtles [palette:set-brightness 30]
+
+      ```
+  - name: R-of
+    type: reporter
+    returns: number
+    arguments:
+      - name: color
+        type: list || number
+    description: >
+      
+      Reports a value in the range 0 to 255 representing the red component in
+      the RGB color space of the given NL, RGB or RGBA *color*.
+
+
+      Example:
+
+      ```
+
+      show palette:R-of red ;; 215
+
+      ```
+  - name: with-R
+    type: reporter
+    returns: list
+    infix: true
+    arguments:
+      - name: color
+        type: list || number
+      - name: number
+        type: number
+    description: >
+      
+
+      Reports an RGBA color with red component in RGB color space equal to
+      *number* and the other RGB components of the input *color* unchanged. An
+      error message results if *number* is not in the range 0 to 255.
+
+
+      Example:
+
+      ```
+
+      show red palette:with-R 50 ;; [50 50 41]
+
+      ```
+  - name: R
+    type: reporter
+    returns: number
+    description: >
+      
+      Reports a number in the range 0 to 255 that represents the red of an
+      agent’s color or pcolor.
+
+
+      Example:
+
+      ```
+
+      crt 1 [set color red]
+
+      [palette:R] of turtle 0 ;; 215
+
+
+      ```
+  - name: set-R
+    type: command
+    arguments:
+      - name: number
+        type: number
+    description: >
+      
+
+      Changes an agent’s red component of its RGB/A color leaving the other RGB
+      components unchanged. An error message results if *number* is not in the
+      range from 0 to 255.
+
+
+      Example:
+
+      ```
+
+      ask turtles [palette:set-R 30]
+
+      ```
+  - name: G-of
+    type: reporter
+    returns: number
+    arguments:
+      - name: color
+        type: list || number
+    description: >
+      
+      Reports a value in the range 0 to 255 representing the green component in
+      the RGB color space of the given NL, RGB or RGBA *color*.
+
+
+      Example:
+
+      ```
+
+      show palette:G-of red ;; 50
+
+      ```
+  - name: with-G
+    type: reporter
+    returns: list
+    infix: true
+    arguments:
+      - name: color
+        type: list || number
+      - name: number
+        type: number
+    description: >
+      
+
+      Reports an RGBA color with green component in RGB color space equal to
+      *number* and the other RGB components of the input *color* unchanged. An
+      error message results if *number* is not in the range 0 to 255.
+
+
+      Example:
+
+      ```
+
+      show red palette:with-G 56 ;; [215 56 41]
+
+      ```
+  - name: G
+    type: reporter
+    returns: number
+    description: >
+      
+      Reports a number in the range 0 to 255 that represents the green of an
+      agent’s color or pcolor.
+
+
+      Example:
+
+      ```
+
+      crt 1 [set color red]
+
+      [palette:G] of turtle 0 ;; 50
+
+
+      ```
+  - name: set-G
+    type: command
+    arguments:
+      - name: number
+        type: number
+    description: >
+      
+
+      Changes an agent’s green component of its RGB/A color leaving the other
+      RGB components unchanged. An error message results if *number* is not in
+      the range from 0 to 255.
+
+
+      Example:
+
+      ```
+
+      ask turtles [palette:set-G 30]
+
+      ```
+  - name: B-of
+    type: reporter
+    returns: number
+    arguments:
+      - name: color
+        type: list || number
+    description: >
+      
+      Reports a value in the range 0 to 255 representing the blue component in
+      the RGB color space of the given NL, RGB or RGBA *color*.
+
+
+      Example:
+
+      ```
+
+      show palette:B-of red ;; 41
+
+      ```
+  - name: with-B
+    type: reporter
+    returns: list
+    infix: true
+    arguments:
+      - name: color
+        type: list || number
+      - name: number
+        type: number
+    description: >
+      
+
+      Reports an RGBA color with blue component in RGB color space equal to
+      *number* and the other RGB components of the input *color* unchanged. An
+      error message results if *number* is not in the range 0 to 255.
+
+
+      Example:
+
+      ```
+
+      show red palette:with-B 56 ;; [215 50 56]
+
+      ```
+  - name: B
+    type: reporter
+    returns: number
+    description: >
+      
+      Reports a number in the range 0 to 255 that represents the blue of an
+      agent’s color or pcolor.
+
+
+      Example:
+
+      ```
+
+      crt 1 [set color red]
+
+      [palette:B] of turtle 0 ;; 41
+
+
+      ```
+  - name: set-B
+    type: command
+    arguments:
+      - name: number
+        type: number
+    description: >
+      
+
+      Changes an agent’s blue component of its RGB/A color leaving the other RGB
+      components unchanged. An error message results if *number* is not in the
+      range from 0 to 255.
+
+
+      Example:
+
+      ```
+
+      ask turtles [palette:set-B 30]
+
+      ```
+  - name: scale-gradient
+    type: Reporter
+    returns: list
+    arguments:
+      - name: rgb-color-list
+        type: list
+      - name: number
+        type: number
+      - name: range1
+        type: number
+      - name: range2
+        type: number
+    description: >
+      
+      Reports an RGB color proportional to *number* using a gradient generated
+      with _rgb-color-list_. The _rgb-color-list_ is a list containing NL or RGB
+      colors: e.g. [NL1 [r1 g1 b1]  [r2 g2 b2] [r3 g3 b3] NL2 …].
+
+
+      When *range1* is less than or equal to *range2*, the color will be
+      directly mapped to gradient colors. When *range2* is less than *range1*,
+      the color gradient is inverted.
+
+
+      Let *min-range* be the minimum of *range1* and *range2*. If *number* is
+      less than or equal to *min-range*, then the result is the same as if
+      *number* was equal to *min-range*.
+
+
+      Let *max-range* be the maximum of *range1* and *range2*. If *number* is
+      greater than *max-range*, then the result is the same as if *number* was
+      equal to *max-range*.
+
+
+      Example:
+
+
+      ```
+
+      ask patches
+
+      [
+        set pcolor palette:scale-gradient [[255 0 0] [0 0 255]] pxcor min-pxcor max-pxcor
+      ]
+
+
+      ;; colors each patch with a color proportional to the gradient
+
+      ```
+  - name: scale-gradient-hsb
+    type: reporter
+    returns: list
+    arguments:
+      - name: rgb-color-list
+        type: list
+      - name: number
+        type: number
+      - name: range1
+        type: number
+      - name: range2
+        type: number
+    description: "
+
+      Reports an RGB color equivalent to a color in HSB space proportional to
+      *number* using a gradient generated with _hsb-list_. The _hsb-list_ is a
+      list containing three-element lists of HSB colors: [[h1 s1 b1] [h2 s2 b2]
+      [h3 s3 b3]  …].
+
+
+      When *range1* is less than or equal to *range2*, the HSB color will be
+      directly mapped to gradient HSB colors. When range2 is less than range1,
+      the color gradient is inverted.
+
+
+      Let *min-range* be the minimum of *range1* and *range2*. If *number* is
+      less than or equal to *min-range*, then the result is the same as if
+      *number* was equal to *min-range*.
+
+
+      Let *max-range* be the maximum of *range1* and *range2*. If *number* is
+      greater than *max-range*, then the result is the same as if *number* was
+      equal to *max-range*.
+
+
+
+      \  Example:
+
+
+      \  ```
+
+      \  ask patches
+
+      \  [
+
+      \  ask patches [set pcolor palette:scale-gradient-hsb [[200 50 50] [100 60
+      70]] pxcor min-pxcor max-pxcor]
+
+      \  ]
+
+
+      \  ;; colors each patch with a color proportional to the gradient
+
+      \  ```
+
+      \  "
+  - name: scheme-colors
+    type: reporter
+    returns: list
+    arguments:
+      - name: scheme-type
+        type: string
+      - name: scheme-color
+        type: string
+      - name: number-of-classes
+        type: number
+    description: >
+      
+      Reports a list of RGB colors using ColorBrewer scheme of type
+      *scheme-type* with name *scheme-color* containing *number-of-classes*
+      colors. Scheme types are "Sequential," "Divergent" and "Qualitative." The
+      choice of scheme names depends on the scheme type and includes "Reds",
+      "Spectral" and "Set1". The minimum number of colors is 3 and a maximum is
+      between 8 and 12 depending on the color scheme. For more information go to
+      http://www.colorbrewer.org.
+
+
+      Example:
+
+
+      ```
+
+      show palette:scheme-colors "Divergent" "Spectral" 3
+
+      => [[252 141 89] [255 255 191] [153 213 148]]
+
+
+
+      ; The scheme-colors primitive can be used with the scale-gradient
+      primitive.
+
+      ask patches
+        [set pcolor palette:scale-gradient palette:scheme-colors "Divergent" "Spectral" 9 pxcor min-pxcor max-pxcor]
+      ```
+  - name: scale-scheme
+    type: reporter
+    returns: list
+    arguments:
+      - name: scheme-type
+        type: string
+      - name: scheme-color
+        type: number
+      - name: number-of-classes
+        type: number
+      - name: number
+        type: number
+      - name: range1
+        type: number
+      - name: range2
+        type: number
+    description: >
+      
+      Reports an RGB color from the ColorBrewer scheme of type *scheme-type*
+      with name *scheme-color* containing *number-of-classes* colors. The color
+      is chosen using the proportionality of *number* in the range specified by
+      *range1* and *range2*.
+
+
+      When *range1* is less than or equal to *range2*, the colors are ordered as
+      in the ColorBrewer scheme. When *range2* is less than *range1*, the color
+      order is reversed.
+
+
+      Let *min-range* be the minimum of *range1* and *range2*. If *number* is
+      less or equal to than *min-range*, then the result is the same as if
+      *number* was equal to *min-range*. This will be the first color in the
+      color list if *range1* is less than *range2*.
+
+
+      Let *max-range* be the maximum of *range1* and *range2*. If *number* is
+      greater than *max-range*, then the result is the same as if *number* was
+      equal to *max-range*. This will be the last color in the color list if
+      *range1* is less than *range2*.
+
+
+      Example:
+
+
+      ```
+
+      ask patches
+
+      [
+        set pcolor palette:scale-scheme "Divergent" "Spectral" 8 pxcor min-pxcor max-pxcor
+      ]
+
+
+      ;; colors each patch with a color from the Color Brewer Schemes
+
+      ```
+  - name: scheme-dialog
+    type: command
+    arguments: []
+    description: >
+      
+
+      Launches a dialog for previewing all the ColorBrewer color schemes.
+
+
+      Use the leftmost pulldown menu to select the scheme type: "Sequential,"
+      "Divergent" or "Qualitative." Use the next pulldown menu to select a named
+      scheme. Finally select the number of colors. The maximum number depends on
+      the color scheme. Use the *Copy* button to copy the scheme information
+      into the clipboard. This information can be pasted into commands such as
+      *palette:scheme-colors*. The *Close* button can be used to close the
+      dialog.
+
+
+      Example:
+
+
+      ```
+        palette:scheme-dialog
+
+        ;; In the dialog the user selects scheme type "Divergent," the scheme named "Spectral," and the number 3, and clicks the *Copy* button.
+        ;; In the Command Center the user types "show palette:scheme-colors " and then pastes the clipboard contents, and hits *Enter*.
+
+        show palette:scheme-colors "Divergent" "Spectral" 3
+
+        => [[252 141 89] [255 255 191] [153 213 148]]
+      ```
