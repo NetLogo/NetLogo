@@ -1,0 +1,97 @@
+{
+
+  "$schema": "https://json.schemastore.org/tsconfig"
+
+, "include": ["src/**/*", "typescripts/**/*"]
+, "noCheck": false
+
+, "compilerOptions": {
+
+    "allowUnreachableCode":               false
+  , "allowUnusedLabels":                  false
+  , "alwaysStrict":                       true
+  , "noFallthroughCasesInSwitch":         false
+  , "noImplicitAny":                      true
+  , "noImplicitOverride":                 true
+  , "noImplicitReturns":                  true
+  , "noImplicitThis":                     true
+  , "noPropertyAccessFromIndexSignature": true
+  , "noUncheckedIndexedAccess":           true
+  , "noUnusedLocals":                     true
+  , "noUnusedParameters":                 true
+  , "strict":                             true
+  , "useUnknownInCatchVariables":         true
+
+  , "allowArbitraryExtensions":   false
+  , "allowImportingTsExtensions": false
+  , "allowUmdGlobalAccess":       false
+  , "module":                     "node16"
+  , "rootDirs":                   ["./src/", "./typescripts"]
+
+  , "declaration":         true
+  , "declarationMap":      true
+  , "downlevelIteration":  false
+  , "emitBOM":             false
+  , "emitDeclarationOnly": false
+  , "importHelpers":       true
+  , "inlineSourceMap":     false
+  , "inlineSources":       false
+  , "newLine":             "LF"
+  , "noEmit":              false
+  , "noEmitHelpers":       false
+  , "noEmitOnError":       true
+  , "outDir":              "./dist/"
+  , "preserveConstEnums":  true
+  , "removeComments":      true
+  , "sourceMap":           true
+  , "stripInternal":       true
+
+  , "allowJs":              false
+  , "checkJs":              false
+  , "maxNodeModuleJsDepth": 0
+
+  , "paths": {}
+
+  , "disableSizeLimit": false
+  , "plugins": [
+      { "name": "typescript-styled-plugin" }
+    , { "name": "typescript-eslint-language-service" }
+    ]
+
+  , "allowSyntheticDefaultImports":     true
+  , "esModuleInterop":                  true
+  , "forceConsistentCasingInFileNames": true
+  , "isolatedDeclarations":             true
+  , "isolatedModules":                  true
+  , "preserveSymlinks":                 false
+  , "verbatimModuleSyntax":             true
+
+  , "emitDecoratorMetadata":   false
+  , "experimentalDecorators":  false
+  , "moduleDetection":         "auto"
+  , "noLib":                   false
+  , "target":                  "es2021"
+  , "useDefineForClassFields": true
+
+  , "diagnostics":         false
+  , "explainFiles":        false
+  , "extendedDiagnostics": false
+  , "listEmittedFiles":    true
+  , "listFiles":           false
+  , "traceResolution":     false
+
+  , "composite":                               true
+  , "disableReferencedProjectLoad":            false
+  , "disableSolutionSearching":                false
+  , "disableSourceOfProjectReferenceRedirect": false
+  , "incremental":                             true
+
+  , "noErrorTruncation":   false
+  , "preserveWatchOutput": true
+  , "pretty":              true
+
+  , "skipLibCheck": false
+
+  }
+
+}

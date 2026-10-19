@@ -1,0 +1,33 @@
+.simple .swatches {
+  border-color:          var(--generic-border);
+  border-style:          solid;
+  border-radius:         0.35rem;
+  border-width:          2px;
+  display:               grid;
+  grid-template-columns: repeat(11, 1fr);
+  padding:               5px;
+  height:                30rem;
+  width:                 30rem;
+}
+
+.swatch-color {
+  border:     2px solid black;
+  transition: transform 0.07s;
+}
+
+.swatch-color.white:hover {
+  opacity: 0.8;
+}
+
+.swatch-color:hover {
+  transform: scale(1.2);
+  z-index:   10;
+}
+
+.swatch-color.selected.light {
+  border-color: black !important;
+}
+
+.swatch-color.selected.dark {
+  border-color: white !important;
+}

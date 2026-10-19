@@ -1,0 +1,238 @@
+* {
+  font-family: "Segoe UI", "Open Sans", sans-serif;
+  font-size:   12px;
+}
+
+body {
+  background: var(--dialog-background);
+  padding:    0.75rem 0;
+}
+
+body.dragging, body.dragging * {
+  cursor:              grabbing;
+  user-select:         none;
+  -webkit-user-select: none;
+}
+
+.flex.column.x-mid {
+  align-items: center;
+}
+
+.flex.row.x-mid {
+  justify-content: center;
+}
+
+.flex.column.y-mid {
+  justify-content: center;
+}
+
+.flex.row.y-mid {
+  align-items: center;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex.column {
+  flex-direction: column;
+}
+
+.flex.row {
+  flex-direction: row;
+}
+
+#content-pane {
+  height: 38rem;
+  width:  70%;
+}
+
+.checkmark {
+  display:           inline-block;
+  height:            2.5rem;
+  width:             2.6rem;
+  -webkit-transform: rotate(45deg);
+  transform:         rotate(45deg);
+}
+
+.checkmark:before, .checkmark:after {
+  background-color: #3eb84f;
+  content:          "";
+  position:         absolute;
+}
+
+/* Checkmark stem (the long part) */
+.checkmark:before {
+  left:   16px;
+  top:    5px;
+  height: 18px;
+  width:  2px;
+}
+
+/* Checkmark stub (the short part) */
+.checkmark:after {
+  left:   9px;
+  top:    21px;
+  height: 2px;
+  width:  8px;
+}
+
+.copy-button {
+  border-radius: 0.5rem;
+  min-height:    100%;
+}
+
+.copy-button:not(.on-cooldown):hover {
+  background-color: var(--copy-hover);
+}
+
+.copy-button.on-cooldown .inner {
+  display: none;
+}
+
+.copy-button:not(.on-cooldown) .checkmark {
+  display: none;
+}
+
+.copy-button .inner {
+  padding:  0;
+  position: relative;
+  height:   1.7rem;
+  width:    2.6rem;
+}
+
+.copy-button-layer {
+  background-color: var(--dialog-background);
+  border-color:     var(--dialog-text);
+  border-style:     solid;
+  border-radius:    0.2rem;
+  border-width:     0.15rem;
+  height:           68%;
+  width:            34%;
+  position:         absolute;
+}
+
+.copy-button-layer.back {
+  left:   21%;
+  bottom: 0;
+}
+
+.copy-button-layer.front {
+  right:   21%;
+  top:     0;
+  z-index: 1;
+}
+
+.form-buttons .main-buttons {
+  gap: 0.8rem;
+}
+
+.apple2025 .form-buttons .main-buttons .ok {
+  order: 10;
+}
+
+.form-button {
+  border-style:  solid;
+  border-width:  1px;
+  border-radius: 0.5rem;
+  min-width:     5rem;
+  padding:       0.313rem 1rem;
+}
+
+.form-button.ok {
+  background:   var(--ok-button-background);
+  border-color: var(--ok-button-border);
+  color:        var(--ok-button-text);
+}
+
+.form-button.ok:hover {
+  background: var(--ok-button-background-hover);
+}
+
+.form-button.ok:active {
+  background: var(--ok-button-active);
+}
+
+.form-button.cancel {
+  background:   var(--cancel-button-background);
+  border-color: var(--cancel-button-border);
+  color:        var(--cancel-button-text);
+}
+
+.form-button.cancel:hover {
+  background: var(--cancel-button-background-hover);
+}
+
+.form-button.cancel:active {
+  background: var(--cancel-button-active);
+}
+
+.hidden {
+  display: none !important;
+}
+
+.invis {
+  visibility: hidden !important;
+}
+
+.main-outputs {
+  gap:    0.3rem;
+  margin: 1.5rem 0;
+}
+
+.output-field {
+  background-color: var(--output-background);
+  border-color:     var(--generic-border);
+  border-radius:    0.5rem;
+  border-style:     solid;
+  border-width:     1px;
+  color:            var(--tab-text-selected);
+  font-size:        1.2rem;
+  line-height:      2rem;
+  padding:          0.2rem 0.4rem;
+  text-align:       center;
+  width:            12rem;
+}
+
+.tab-button {
+  background-color:    var(--tab-background);
+  border-color:        var(--tab-border);
+  border-style:        solid;
+  border-width:        1px;
+  color:               var(--tab-text);
+  cursor:              default;
+  height:              2rem;
+  line-height:         2rem;
+  margin:              0.2rem 0;
+  min-width:           10rem;
+  padding:             0.2rem 0.7rem;
+  text-align:          center;
+  user-select:         none;
+  -webkit-user-select: none;
+}
+
+.tab-button:first-child {
+  border-radius: 0.6rem 0 0 0.6rem;
+}
+
+.tab-button:last-child {
+  border-radius: 0 0.6rem 0.6rem 0;
+}
+
+.tab-button:not(:first-child) {
+  margin-left: -1px;
+}
+
+.tab-button:hover {
+  background-color: var(--tab-background-hover);
+}
+
+.tab-button.selected {
+  background-color: var(--tab-background-selected);
+  color:            var(--tab-text-selected);
+}
+
+.tab-strip {
+  margin-bottom: 1.5rem;
+  position:      relative;
+}
