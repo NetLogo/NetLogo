@@ -1,0 +1,9 @@
+/classes
+/*.jar
+/*.pack.gz
+/*.zip
+/target
+/project/target
+/project/project
+.bundledFiles
+/.idea
