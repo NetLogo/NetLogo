@@ -1,0 +1,507 @@
+"extensionName": |-
+  view2.5d
+icon: i-lucide-move-3d
+filesToIncludeInManual:
+- USING.md
+- primitives
+"markdownTemplate": |2
+
+  # NetLogo View2.5D Extension
+
+  The `view2.5d` extension allows you to visualize 2d models on a 3d surface, using height to represent agent properties.
+
+  {{> BUILDING.md}}
+
+  {{> USING.md}}
+
+  ## Primitives
+
+  {{#contents}}{{#prims}}
+  [`{{name}}`](#{{primitive.extensionName}}{{primitive.name}})
+  {{/prims}}{{/contents}}
+
+  {{#primitives}}
+  {{> primTemplate}}{{/primitives}}
+
+  ## Acknowledgement
+
+  For development of the View 2.5D NetLogo Extension, we acknowledge financial support from Joshua M. Epstein's NIH Director's Pioneer Award (DP1).
+"primTemplate": |2
+
+  ### `{{name}}`
+
+  ```NetLogo
+  {{#examples}}
+  {{primitive.fullName}}{{#args}} {{name}}{{/args}}
+  {{/examples}}
+  ```
+
+  {{{description}}}
+"tableOfContents": {}
+"primitives":
+- "name": |-
+    patch-view
+  "type": |-
+    command
+  "agentContext":
+  - |-
+    observer
+  "arguments":
+  - "name": |-
+      Title
+    "type": |-
+      string
+  - "name": |-
+      Reporter
+    "type": |-
+      reporter
+  "description": |2
+
+    This command must be called from the Observer context.  (Attempting to call from another context causes an error)
+    The Title is a string, which will be used to label the new Window and to call for subsequent updates and modifications.
+    Specification of the Reporter uses the NetLogo arrow procedure syntax, from the Observer perspective.
+
+    Example:
+
+    ```NetLogo
+    view2.5d:patch-view "Test"  [ [the-patch] -> [pxcor] of the-patch ]
+    ```
+- "name": |-
+    decorate-patch-view
+  "arguments":
+  - "name": |-
+      Title
+    "type": |-
+      string
+  "agentContext":
+  - |-
+    observer
+  "type": |-
+    command
+  "description": |2
+
+    This command must be called from the Observer context.  (Attempting to call from another context causes an error)
+    The Title is a string, the label of an existing Patch View Window.
+    Effect:  draws the turtles of the model at their current location, on top of the Patch view display
+
+    > NOTE: only has an effect in the "structures" patch view (in the others, the patch value is inclined based on neighbors & gradient)
+
+    > NOTE: for negative patch values, the turtle shapes are drawn below (orbit underneath to see them)
+
+    Example:
+
+    ```NetLogo
+    view2.5d:decorate-patch-view "Test"
+    ```
+- "name": |-
+    undecorate-patch-view
+  "type": |-
+    command
+  "agentContext":
+  - |-
+    observer
+  "arguments":
+  - "name": |-
+      Title
+    "type": |-
+      string
+  "description": |2
+
+    This command must be called from the Observer context.  (Attempting to call from another context causes an error)
+
+    The Title is a string, the label of an existing Patch View Window.
+    Effect:  STOPS drawing the turtles of the model at their current location, on top of the Patch view display
+
+    Example:
+
+    ```NetLogo
+    view2.5d:undecorate-patch-view "Test"
+    ```
+- "name": |-
+    turtle-view
+  "type": |-
+    command
+  "agentContext":
+  - |-
+    observer
+  "arguments":
+  - "name": |-
+      Title
+    "type": |-
+      string
+  - "name": |-
+      Agents
+    "type": |-
+      turtleset
+  - "name": |-
+      Reporter
+    "type": |-
+      reporter
+  "description": |2
+
+    This command must be called from the Observer context.  (Attempting to call from another context causes an error)
+    The Title is a string, which will be used to label the new Window and to call for subsequent updates.
+    The turtle-set is any selector for turtles.
+    Reporter is an arrow reporter that should take a turtle as input, and report some number from it.
+
+    Example:
+
+    ```
+    view2.5d:turtle-view "Test" turtles with [color = red] [ the-turtle -> [energy] of the-turtle]
+    ; This would create a new 2.5d window, plotting the ENERGY value of all turtles that are red.
+    ```
+- "name": |-
+    update-all-patch-views
+  "type": |-
+    command
+  "agentContext":
+  - |-
+    observer
+  "description": |2
+
+    This command must be called from the Observer context.
+    Updates all existing patch-view windows according to the latest values.
+- "name": |-
+    update-patch-view
+  "type": |-
+    command
+  "agentContext":
+  - |-
+    observer
+  "arguments":
+  - "name": |-
+      Title
+    "type": |-
+      string
+  "description": |2
+
+    This command must be called from the Observer context.
+    Updates only the patch-view window with the specified title (if any).
+- "name": |-
+    update-turtle-view
+  "type": |-
+    command
+  "agentContext":
+  - |-
+    observer
+  "arguments":
+  - "name": |-
+      Title
+    "type": |-
+      string
+  - "name": |-
+      Agents
+    "type": |-
+      turtleset
+  "description": |2
+
+    This command must be called from the Observer context.
+    Updates only the turtle-view window with the specified title (if any).
+    The turtle-set selector must be supplied to refresh the set of turtles.
+- "name": |-
+    get-z-scale
+  "type": |-
+    reporter
+  "returns": |-
+    number
+  "agentContext":
+  - |-
+    observer
+  "arguments":
+  - "name": |-
+      title
+    "type": |-
+      string
+  "description": |2
+
+    This reporter must be called from the Observer context.
+    Returns the current z-scale of the turtle-view or patch-view window with the specified title (if any).
+- "name": |-
+    set-z-scale
+  "type": |-
+    command
+  "agentContext":
+  - |-
+    observer
+  "arguments":
+  - "name": |-
+      Title
+    "type": |-
+      string
+  - "name": |-
+      new-z-scale
+    "type": |-
+      number
+  "description": |2
+
+    This command must be called from the Observer context.
+    Updates only the turtle-view or patch-view window with the specified title (if any).
+    The view is now displayed with the new z-scale.
+- "name": |-
+    set-turtle-stem-thickness
+  "type": |-
+    command
+  "agentContext":
+  - |-
+    observer
+  "arguments":
+  - "name": |-
+      Title
+    "type": |-
+      string
+  - "name": |-
+      thickness
+    "type": |-
+      number
+  "description": |2
+
+    This command must be called from the Observer context.
+    Updates only the turtle-view window with the specified title (if any).
+    Turtles are now drawn with "pins" or "stems" that have the specified thickness (instead of the hairline default).
+- "name": |-
+    set-turtle-stem-color
+  "type": |-
+    command
+  "agentContext":
+  - |-
+    observer
+  "arguments":
+  - "name": |-
+      Title
+    "type": |-
+      string
+  - "name": |-
+      colorReporter
+    "type": |-
+      reporter
+  "description": |2
+
+    This command must be called from the Observer context.
+    Updates only the turtle-view window with the specified title (if any).
+    colorReporter is an arrow reporter that should take a turtle as input, and report some number representing a color from it.
+    Turtles are now drawn with "pins" or "stems" that have the specified color (instead of the grey default).
+
+    Example:
+
+    ```
+    ;; setup view with 2 turtles
+    crt 1 [ set color green  setxy 2 3]
+    crt 1 [ set color red  setxy 5 4]
+    view2.5d:turtle-view "Test" turtles [ the-turtle -> [ xcor] of the-turtle ]
+    view2.5d:set-observer-distance "Test" 40
+    view2.5d:set-z-scale "Test" 2
+    view2.5d:set-observer-angles "Test" 25 30
+
+    ;; increase the stem thickness
+    view2.5d:set-turtle-stem-thickness "Test" .2
+
+    ;; change the stem color to  match the turtle-color
+    view2.5d:set-turtle-stem-color "Test" [ the-turtle -> [ color ] of the-turtle ]
+
+    ; now make the stems orange
+    view2.5d:set-turtle-stem-color "Test" [ orange ]
+    ```
+- "name": |-
+    show-links-xy-plane
+  "type": |-
+    command
+  "agentContext":
+  - |-
+    observer
+  "arguments":
+  - "name": |-
+      Title
+    "type": |-
+      string
+  "description": "\n  This command must be called from the Observer context.\n  Updates\
+    \ only the turtle-view  or patch-view window with the specified title (if any).\n\
+    \  Links are drawn in the xy-plane (instead of the turtle to turtle default).\n\
+    \  This option can be selected using the Link Options xy-plane radio Button in\
+    \ the 3D view.\n  "
+- "name": |-
+    show-links-xyz
+  "type": |-
+    command
+  "agentContext":
+  - |-
+    observer
+  "arguments":
+  - "name": |-
+      Title
+    "type": |-
+      string
+  "description": "\n  This command must be called from the Observer context.\n  Updates\
+    \ only the turtle-view  or patch-view window with the specified title (if any).\n\
+    \  Links are drawn from turtle to turtle (this is the default way links are displayed).\n\
+    \  This option can be selected using the Link Options xyz radio Button in the\
+    \ 3D view.\n  "
+- "name": |-
+    get-observer-angles
+  "type": |-
+    reporter
+  "returns": |-
+    list
+  "agentContext":
+  - |-
+    observer
+  "arguments":
+  - "name": |-
+      Title
+    "type": |-
+      string
+  "description": |2
+
+    This reporter must be called from the Observer context.
+    Returns a list reflecting the observer's angular perspective { heading pitch } (the place on an imaginary sphere at the zoom distance is updated to obey heading & pitch given)
+- "name": |-
+    set-observer-angles
+  "type": |-
+    command
+  "agentContext":
+  - |-
+    observer
+  "arguments":
+  - "name": |-
+      Title
+    "type": |-
+      string
+  - "name": |-
+      heading
+    "type": |-
+      number
+  - "name": |-
+      pitch
+    "type": |-
+      number
+  "description": |2
+
+    This command must be called from the Observer context.
+    Updates only the turtle-view window with the specified title (if any).
+    Sets the observer's angular perspective (the place on an imaginary sphere at the zoom distance is updated to obey heading & pitch given)
+- "name": |-
+    get-observer-xy-focus
+  "type": |-
+    reporter
+  "returns": |-
+    list
+  "agentContext":
+  - |-
+    observer
+  "arguments":
+  - "name": |-
+      Title
+    "type": |-
+      string
+  "description": |2
+
+    This reporter must be called from the Observer context.
+    Returns a list reflecting the x and y coordinates the observer is "looking at" in the patch plane.
+- "name": |-
+    set-observer-xy-focus
+  "type": |-
+    command
+  "agentContext":
+  - |-
+    observer
+  "arguments":
+  - "name": |-
+      Title
+    "type": |-
+      string
+  - "type": |-
+      number
+  - "name": |-
+      ycor
+    "type": |-
+      number
+  "description": |2
+
+    This command must be called from the Observer context.
+    Updates only the turtle-view window with the specified title (if any).
+    Sets the x and y coordinates the observer that is "looking at" in the patch plane.
+- "name": |-
+    get-observer-distance
+  "type": |-
+    reporter
+  "returns": |-
+    number
+  "agentContext":
+  - |-
+    observer
+  "arguments":
+  - "name": |-
+      Title
+    "type": |-
+      string
+  "description": |2
+
+    This reporter must be called from the Observer context.
+    Returns the observer's distance from its "focus point"
+- "name": |-
+    set-observer-distance
+  "type": |-
+    command
+  "agentContext":
+  - |-
+    observer
+  "arguments":
+  - "name": |-
+      Title
+    "type": |-
+      string
+  - "name": |-
+      new-distance
+    "type": |-
+      number
+  "description": |2
+
+    This command must be called from the Observer context.
+    Updates only the turtle-view window with the specified title (if any).
+    Sets the observer's distance from its "focus point"
+- "name": |-
+    remove-patch-view
+  "type": |-
+    command
+  "arguments":
+  - "name": |-
+      Title
+    "type": |-
+      string
+  "description": |2
+
+    This command closes and removes the specified patch view programmatically (equivalent to closing the window manually).
+- "name": |-
+    remove-turtle-view
+  "type": |-
+    command
+  "arguments":
+  - "name": |-
+      Title
+    "type": |-
+      string
+  "description": |2
+
+    This command closes and removes the specified turtle view programmatically (equivalent to closing the window manually).
+- "name": |-
+    remove-all-patch-views
+  "type": |-
+    command
+  "description": |2
+
+    This command closes and removes all patch views programmatically (equivalent to closing the windows manually).
+- "name": |-
+    remove-all-turtle-views
+  "type": |-
+    command
+  "description": |2
+
+    This command closes and removes all turtle views programmatically (equivalent to closing the windows manually).
+- "name": |-
+    count-windows
+  "type": |-
+    reporter
+  "returns": |-
+    number
+  "description": |2
+
+    This reporter returns the number of turtle and patch views that are currently active.
