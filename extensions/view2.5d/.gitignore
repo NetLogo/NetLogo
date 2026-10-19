@@ -1,0 +1,7 @@
+.bundledFiles
+target/
+extensions/
+/*.jar
+/*.zip
+
+.DS_Store
