@@ -1,0 +1,111 @@
+TimeModelTimeSeriesReadWrite
+  OPEN> extensions/time/examples/TimeSeriesTest-CSVReadWrite.nlogox
+  O> run-test
+
+TimeModelTimeSeriesExample
+  OPEN> extensions/time/examples/TimeSeriesExample.nlogox
+  O> setup
+  O> go
+
+TimeSeriesReadWrite_Default
+  extensions [time]
+  globals [ts ts_out random_flow0 random_flow1 flow_value0 flow_value1]
+  O> set random_flow0 (random 100)
+  O> set random_flow1 (random 100)
+  O> set ts time:ts-create ["flow" "temp"]
+  O> time:ts-add-row ts (list (time:create "2000-01-01") random_flow0 2)
+  O> time:ts-add-row ts (list (time:create "2000-01-02") random_flow1 5)
+  O> time:ts-write ts "new-ts-output.csv"
+  O> set ts_out time:ts-load "new-ts-output.csv"
+  O> set flow_value0 time:ts-get ts_out (time:create "2000-01-01") "flow"
+  O> set flow_value1 time:ts-get ts_out (time:create "2000-01-02") "flow"
+  O> if (flow_value0 != random_flow0) [ error "Read and Write Error" ]
+  O> if (flow_value1 != random_flow1) [ error "Read and Write Error" ]
+
+TimeSeriesReadWrite_Exact
+  extensions [time]
+  globals [ts ts_out random_flow0 random_flow1 flow_value0-exact flow_value1-exact]
+  O> set random_flow0 (random 100)
+  O> set random_flow1 (random 100)
+  O> set ts time:ts-create ["flow" "temp"]
+  O> time:ts-add-row ts (list (time:create "2000-01-01") random_flow0 2)
+  O> time:ts-add-row ts (list (time:create "2000-01-02") random_flow1 5)
+  O> time:ts-write ts "new-ts-output.csv"
+  O> set ts_out time:ts-load "new-ts-output.csv"
+  O> set flow_value0-exact time:ts-get-exact ts_out (time:create "2000-01-01") "flow"
+  O> set flow_value1-exact time:ts-get-exact ts_out (time:create "2000-01-02") "flow"
+  O> if (flow_value0-exact != random_flow0) [ error "Read and Write Error" ]
+  O> if (flow_value1-exact != random_flow1) [ error "Read and Write Error" ]
+
+TimeSeriesReadWrite_Interp
+  extensions [time]
+  globals [ts ts_out random_flow0 random_flow1 flow_value0-interp flow_value1-interp]
+  O> set random_flow0 (random 100)
+  O> set random_flow1 (random 100)
+  O> set ts time:ts-create ["flow" "temp"]
+  O> time:ts-add-row ts (list (time:create "2000-01-01") random_flow0 2)
+  O> time:ts-add-row ts (list (time:create "2000-01-02") random_flow1 5)
+  O> time:ts-write ts "new-ts-output.csv"
+  O> set ts_out time:ts-load "new-ts-output.csv"
+  O> set flow_value0-interp time:ts-get-interp ts_out (time:create "2000-01-01") "flow"
+  O> set flow_value1-interp time:ts-get-interp ts_out (time:create "2000-01-02") "flow"
+  O> if (flow_value0-interp != random_flow0) [ error "Read and Write Error" ]
+  O> if (flow_value1-interp != random_flow1) [ error "Read and Write Error" ]
+
+TimeSeriesGetRangeDouble
+  extensions [time]
+  globals [ts ts_out random_flow0 random_flow1 flow_value0-interp flow_value1-interp start-time end-time]
+  O> set random_flow0 47
+  O> set random_flow1 52
+  O> set start-time time:create "1999-12-31"
+  O> set end-time time:create "2000-01-03"
+  O> set ts time:ts-create ["flow" "temp"]
+  O> time:ts-add-row ts (list (time:create "2000-01-01") random_flow0 2)
+  O> time:ts-add-row ts (list (time:create "2000-01-02") random_flow1 5)
+  (time:ts-get-range ts start-time end-time "flow") => [47 52]
+  O> time:ts-write ts "new-ts-range.csv"
+  O> set ts_out (time:ts-load-with-format "new-ts-range.csv" "YYYY-MM-dd")
+  length (time:ts-get-range ts_out start-time end-time "flow") => 2
+  (time:ts-get-range ts_out start-time end-time "flow") => [47 52]
+
+TimeSeriesGetRangeString
+  extensions [time]
+  globals [ts ts_out random_flow0 random_flow1 flow_value0-interp flow_value1-interp start-time end-time]
+  O> set start-time time:create "1999-12-31"
+  O> set end-time time:create "2000-01-03"
+  O> set ts time:ts-create ["flow" "temp"]
+  O> time:ts-add-row ts (list (time:create "2000-01-01") "jerry" 2)
+  O> time:ts-add-row ts (list (time:create "2000-01-02") "cherry" 5)
+  (time:ts-get-range ts start-time end-time "flow") => ["jerry" "cherry"]
+  (time:ts-get-range ts start-time end-time "temp") => [2 5]
+  O> time:ts-write ts "new-ts-range.csv"
+  O> set ts_out (time:ts-load-with-format "new-ts-range.csv" "YYYY-MM-dd")
+  length (time:ts-get-range ts_out start-time end-time "flow") => 2
+  (time:ts-get-range ts_out start-time end-time "flow") => ["jerry" "cherry"]
+  (time:ts-get-range ts_out start-time end-time "temp") => [2 5]
+
+TimeSeriesGet
+  extensions [time]
+  globals [time-series]
+  O> set time-series time:ts-create ["x"]
+  O> time:ts-add-row time-series (sentence (time:create "2020-06-16 12:00") 1)
+  O> time:ts-add-row time-series (sentence (time:create "2020-06-17 12:00") 2)
+  (time:ts-get time-series (time:create "2020-06-16 23:00") "x") => 1
+
+TimeSeriesGetRange
+  extensions [time]
+  globals [time-series]
+  O> set time-series time:ts-create ["x"]
+  O> time:ts-add-row time-series (sentence (time:create "2020-06-16 12:00") 1)
+  O> time:ts-add-row time-series (sentence (time:create "2020-06-17 12:00") 2)
+  (time:ts-get-range time-series (time:create "2020-06-16 12:00") (time:create "2020-06-17 12:00") "x") => [1 2]
+  (time:ts-get-range time-series (time:create "2020-06-17 12:00") (time:create "2020-06-17 12:00") "x") => [2]
+  (time:ts-get-range time-series (time:create "2020-06-18 12:00") (time:create "2020-06-19 12:00") "x") => []
+
+TimeSeriesGetInterp
+ extensions [time]
+ globals [time-series]
+ O> set time-series time:ts-create ["flow"]
+ O> time:ts-add-row time-series (sentence (time:create "2000-01-01 00:00:00") 0)
+ O> time:ts-add-row time-series (sentence (time:create "2000-01-01 01:00:00") 10)
+ time:ts-get-interp time-series time:create "2000-01-01 00:30:00" "flow" => 5

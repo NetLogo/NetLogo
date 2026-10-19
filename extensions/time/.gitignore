@@ -1,0 +1,8 @@
+.bundledFiles
+target/
+extensions/
+/*.jar
+/*.zip
+/examples/*.txt
+/tests/*.csv
+/time-series.nls
