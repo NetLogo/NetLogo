@@ -1,0 +1,5 @@
+nodedef> name VARCHAR,missing BOOLEAN
+1,true
+2,false
+edgedef> node1,node2
+1,2

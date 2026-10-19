@@ -1,0 +1,41 @@
+.bsp/
+
+.bundledFiles
+target/
+/extensions/
+/*.jar
+/*.zip
+
+*~
+*.orig
+/jung-src/
+/jgrapht-src/
+/nw/
+*.gz
+
+# eclipse files
+.project
+.classpath
+.cache
+.settings
+.texlipse
+
+# latex temp files
+*.log
+*.aux
+
+# intellij
+.idea*
+
+# vim
+*.swp
+
+# ensime
+.ensime*
+
+# emacs
+\#*\#
+\.\#*
+
+# os x
+.DS_Store

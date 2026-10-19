@@ -1,0 +1,5 @@
+nodedef> name VARCHAR,breed VARCHAR,fur VARCHAR, spots VARCHAR
+1,mice,white,
+2,frogs,,yellow
+edgedef> node1,node2
+1,2

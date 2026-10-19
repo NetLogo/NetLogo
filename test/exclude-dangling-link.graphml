@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns/graphml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns/graphml">
+<key id="YCOR" for="node" attr.name="YCOR" attr.type="double"/>
+<key id="HIDDEN?" for="node" attr.name="HIDDEN?" attr.type="boolean"/>
+<key id="XCOR" for="node" attr.name="XCOR" attr.type="double"/>
+<key id="SIZE" for="node" attr.name="SIZE" attr.type="double"/>
+<key id="HEADING" for="node" attr.name="HEADING" attr.type="double"/>
+<key id="SHAPE" for="node" attr.name="SHAPE" attr.type="string"/>
+<key id="LABEL-COLOR" for="node" attr.name="LABEL-COLOR" attr.type="double"/>
+<key id="PEN-SIZE" for="node" attr.name="PEN-SIZE" attr.type="double"/>
+<key id="PEN-MODE" for="node" attr.name="PEN-MODE" attr.type="string"/>
+<key id="COLOR" for="node" attr.name="COLOR" attr.type="double"/>
+<key id="LABEL" for="node" attr.name="LABEL" attr.type="string"/>
+<key id="BREED" for="node" attr.name="BREED" attr.type="string"/>
+<key id="WHO" for="node" attr.name="WHO" attr.type="double"/>
+<key id="SHAPE" for="edge" attr.name="SHAPE" attr.type="string"/>
+<key id="LABEL-COLOR" for="edge" attr.name="LABEL-COLOR" attr.type="double"/>
+<key id="HIDDEN?" for="edge" attr.name="HIDDEN?" attr.type="boolean"/>
+<key id="END1" for="edge" attr.name="END1" attr.type="string"/>
+<key id="COLOR" for="edge" attr.name="COLOR" attr.type="double"/>
+<key id="TIE-MODE" for="edge" attr.name="TIE-MODE" attr.type="string"/>
+<key id="END2" for="edge" attr.name="END2" attr.type="string"/>
+<key id="LABEL" for="edge" attr.name="LABEL" attr.type="string"/>
+<key id="BREED" for="edge" attr.name="BREED" attr.type="string"/>
+<key id="THICKNESS" for="edge" attr.name="THICKNESS" attr.type="double"/>
+<graph edgedefault="undirected">
+<node id="mouse 0">
+<data key="YCOR">0</data>
+<data key="HIDDEN?">false</data>
+<data key="XCOR">0</data>
+<data key="SIZE">1</data>
+<data key="HEADING">0</data>
+<data key="SHAPE">default</data>
+<data key="LABEL-COLOR">9.9</data>
+<data key="PEN-SIZE">1</data>
+<data key="PEN-MODE">up</data>
+<data key="COLOR">5</data>
+<data key="LABEL"></data>
+<data key="BREED">mice</data>
+<data key="WHO">0</data>
+</node>
+<node id="mouse 1">
+<data key="YCOR">0</data>
+<data key="HIDDEN?">false</data>
+<data key="XCOR">0</data>
+<data key="SIZE">1</data>
+<data key="HEADING">180</data>
+<data key="SHAPE">default</data>
+<data key="LABEL-COLOR">9.9</data>
+<data key="PEN-SIZE">1</data>
+<data key="PEN-MODE">up</data>
+<data key="COLOR">15</data>
+<data key="LABEL"></data>
+<data key="BREED">mice</data>
+<data key="WHO">1</data>
+</node>
+<edge source="mouse 0" target="mouse 1">
+<data key="SHAPE">default</data>
+<data key="LABEL-COLOR">9.9</data>
+<data key="HIDDEN?">false</data>
+<data key="END1">(mouse 0)</data>
+<data key="COLOR">5</data>
+<data key="TIE-MODE">none</data>
+<data key="END2">(mouse 1)</data>
+<data key="LABEL"></data>
+<data key="BREED">links</data>
+<data key="THICKNESS">0</data>
+</edge>
+</graph>
+</graphml>

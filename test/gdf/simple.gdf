@@ -1,0 +1,5 @@
+nodedef> name VARCHAR
+1
+2
+edgedef> node1,node2
+1,2

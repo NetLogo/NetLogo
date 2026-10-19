@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns/graphml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns/graphml">
+<key id="PEN-MODE" for="node" attr.name="PEN-MODE"/>
+<key id="YCOR" for="node" attr.name="YCOR"/>
+<key id="PEN-SIZE" for="node" attr.name="PEN-SIZE"/>
+<key id="LABEL" for="node" attr.name="LABEL"/>
+<key id="SHAPE" for="node" attr.name="SHAPE"/>
+<key id="BREED" for="node" attr.name="BREED"/>
+<key id="WHO" for="node" attr.name="WHO"/>
+<key id="HIDDEN?" for="node" attr.name="HIDDEN?"/>
+<key id="LABEL-COLOR" for="node" attr.name="LABEL-COLOR"/>
+<key id="HEADING" for="node" attr.name="HEADING"/>
+<key id="COLOR" for="node" attr.name="COLOR"/>
+<key id="XCOR" for="node" attr.name="XCOR"/>
+<key id="SIZE" for="node" attr.name="SIZE"/>
+<key id="END1" for="edge"/>
+<key id="TIE-MODE" for="edge"/>
+<key id="END2" for="edge"/>
+<key id="LABEL-COLOR" for="edge"/>
+<key id="THICKNESS" for="edge"/>
+<key id="LABEL" for="edge"/>
+<key id="SHAPE" for="edge"/>
+<key id="BREED" for="edge"/>
+<key id="COLOR" for="edge"/>
+<key id="HIDDEN?" for="edge"/>
+<graph edgedefault="undirected">
+<node id="turtle 0">
+<data key="PEN-MODE">up</data>
+<data key="YCOR">0</data>
+<data key="PEN-SIZE">1</data>
+<data key="LABEL"></data>
+<data key="SHAPE">default</data>
+<data key="BREED">turtles</data>
+<data key="WHO">0</data>
+<data key="HIDDEN?">false</data>
+<data key="LABEL-COLOR">9.9</data>
+<data key="HEADING">0</data>
+<data key="COLOR">5</data>
+<data key="XCOR">0</data>
+<data key="SIZE">1</data>
+</node>
+</graph>
+</graphml>

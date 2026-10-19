@@ -1,0 +1,5 @@
+nodedef> name VARCHAR,label VARCHAR,width DOUBLE,height DOUBLE,x DOUBLE,y DOUBLE,color VARCHAR,xcor DOUBLE,ycor DOUBLE
+1,"one",4.0,4.0,16.540089,-24.223572,'255,0,0',1,2
+2,"two",4.0,4.0,-16.540089,24.223572,'255,200,0',3,4
+edgedef> node1,node2,weight DOUBLE,directed BOOLEAN
+1,2,1.0,false

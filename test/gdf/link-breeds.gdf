@@ -1,0 +1,6 @@
+nodedef> name VARCHAR,tvar BOOLEAN
+1,true
+2,false
+edgedef> node1,node2,color,breed,lvar DOUBLE,weight DOUBLE
+1,2,'0,255,0',directed-edges,5,
+2,1,'0,0,255',undirected-edges,,10

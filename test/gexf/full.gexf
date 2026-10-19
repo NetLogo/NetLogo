@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gexf xmlns="http://www.gexf.net/1.2draft" version="1.2" xmlns:viz="http://www.gexf.net/1.2draft/viz" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.gexf.net/1.2draft http://www.gexf.net/1.2draft/gexf.xsd">
+  <meta lastmodifieddate="2015-01-25">
+    <creator>Gephi 0.8</creator>
+    <description></description>
+  </meta>
+  <graph defaultedgetype="mixed" timeformat="double" mode="dynamic">
+    <attributes class="node" mode="static">
+      <attribute id="tvar" title="tvar" type="boolean"></attribute>
+      <attribute id="breed" title="breed" type="string"></attribute>
+      <attribute id="spots" title="spots" type="boolean"></attribute>
+      <attribute id="fur" title="fur" type="string"></attribute>
+      <attribute id="missing" title="missing" type="string"></attribute>
+    </attributes>
+    <attributes class="edge" mode="static">
+      <attribute id="breed" title="breed" type="string"></attribute>
+      <attribute id="lvar" title="lvar" type="double"></attribute>
+    </attributes>
+    <nodes>
+      <node id="1" label="1">
+        <attvalues>
+          <attvalue for="tvar" value="true"></attvalue>
+          <attvalue for="breed" value="MICE"></attvalue>
+          <attvalue for="fur" value="white"></attvalue>
+          <attvalue for="missing" value="foo"></attvalue>
+        </attvalues>
+        <viz:size value="10.0"></viz:size>
+        <viz:position x="-355.93912" y="-114.81057" z="0.0"></viz:position>
+        <viz:color r="153" g="153" b="153"></viz:color>
+      </node>
+      <node id="2" label="2">
+        <attvalues>
+          <attvalue for="tvar" value="false"></attvalue>
+          <attvalue for="breed" value="FROGS"></attvalue>
+          <attvalue for="spots" value="true"></attvalue>
+          <attvalue for="missing" value="foo"></attvalue>
+        </attvalues>
+        <viz:size value="10.0"></viz:size>
+        <viz:position x="-170.28754" y="214.69585" z="0.0"></viz:position>
+        <viz:color r="153" g="153" b="153"></viz:color>
+      </node>
+      <node id="3" label="3">
+        <attvalues>
+          <attvalue for="tvar" value="false"></attvalue>
+          <attvalue for="breed" value="FROGS"></attvalue>
+          <attvalue for="spots" value="true"></attvalue>
+          <attvalue for="missing" value="foo"></attvalue>
+        </attvalues>
+        <viz:size value="10.0"></viz:size>
+        <viz:position x="526.2267" y="-99.88528" z="0.0"></viz:position>
+        <viz:color r="153" g="153" b="153"></viz:color>
+      </node>
+    </nodes>
+    <edges>
+      <edge source="1" target="2" type="directed">
+        <viz:color r="0" g="255" b="0"></viz:color>
+        <attvalues>
+          <attvalue for="weight" value="1.0"></attvalue>
+          <attvalue for="breed" value="directed-edges"></attvalue>
+          <attvalue for="lvar" value="5.0"></attvalue>
+        </attvalues>
+      </edge>
+      <edge source="3" target="1" type="undirected" weight="10.0">
+        <viz:color r="0" g="0" b="255"></viz:color>
+        <attvalues>
+          <attvalue for="weight" value="10.0"></attvalue>
+          <attvalue for="breed" value="undirected-edges"></attvalue>
+        </attvalues>
+      </edge>
+    </edges>
+  </graph>
+</gexf>
