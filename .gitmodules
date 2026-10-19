@@ -1,9 +1,6 @@
 [submodule "models"]
 	path = models
 	url = https://github.com/NetLogo/models.git
-[submodule "extensions/array"]
-	path = extensions/array
-	url = https://github.com/NetLogo/Array-Extension.git
 [submodule "extensions/bitmap"]
 	path = extensions/bitmap
 	url = https://github.com/NetLogo/Bitmap-Extension.git
