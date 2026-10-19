@@ -1,0 +1,422 @@
+extensionName: vid
+icon: i-lucide-video
+filesToIncludeInManual:
+- CONCEPTS.md
+- primitives
+markdownTemplate: |2
+
+  # NetLogo Vid Extension
+
+  {{> BUILDING.md}}
+  {{> CONCEPTS.md}}
+
+  ## Primitives
+
+  {{#contents}}{{#prims}}
+  [`{{name}}`](#{{primitive.extensionName}}{{primitive.name}})
+  {{/prims}}{{/contents}}
+
+  {{#primitives}}
+  {{> primTemplate}}
+  {{/primitives}}
+
+  {{> LICENSE.md}}
+primTemplate: |2
+
+  ### `{{name}}`
+
+  {{{description}}}
+primitives:
+- description: |2
+
+    Provides a list of all available cameras.
+
+    Example:
+    ```NetLogo
+    vid:camera-names => []
+    vid:camera-names => ["Mac Camera"]
+    vid:camera-names => ["Logitech Camera"]
+    ```
+  name: camera-names
+  returns: list
+  type: reporter
+- alternateArguments:
+  - name: camera-name
+    type: string
+  arguments: []
+  description: |2
+
+    Opens the named camera as a video source.
+    If no name is provided, opens the first camera that would be listed by `camera-names`.
+
+    Example:
+    ```NetLogo
+    vid:camera-open ; opens first camera
+    (vid:camera-open "Logitech Camera")
+    ```
+
+    Errors:
+
+    * Message `"vid: no cameras found"`: no cameras are available.
+    * Message `"vid: camera "\<name\>" not found"`: if the named camera is not available.
+  name: camera-open
+  type: command
+- description: |2
+
+    Prompts the user to select a camera as video source. This command does not error if the user cancels. Use `vid:status` to see if a user selected a camera.
+
+    Example:
+    ```NetLogo
+    vid:camera-select
+    ```
+
+    Errors:
+
+    * Message "vid: no cameras found": no cameras are available.
+  name: camera-select
+  type: command
+- description: |2-
+
+    Prompts the user to select a movie to use as a video source.
+    The formats supported are those [supported by JavaFX2](https://docs.oracle.com/javafx/2/api/javafx/scene/media/package-summary.html#SupportedMediaTypes).
+    This command does not error if the user cancels.
+    Use `vid:status` to see if the user selected a movie.
+
+    Example:
+
+    ```NetLogo
+    vid:movie-select
+    ```
+
+    Errors:
+
+    * Message `"vid: format not supported"`: the user selected a movie with an unsupported format.
+  name: movie-select
+  type: command
+- arguments:
+  - name: filename
+    type: string
+  description: |2
+
+    Opens a video from the file system.
+    If the provided path is not absolute the extension searches for the given path relative to the current model directory.
+    If the provided path is absolute the extension opens the file.
+
+    Example:
+
+    ```NetLogo
+    vid:movie-open "foo.mp4"      ; Opens foo.mp4 in the directory containing the model
+    vid:movie-open user-file      ; Opens a dialog for the user to select a movie
+    vid:movie-open "/tmp/foo.mp4" ; Opens a movie from the "/tmp" directory
+    ```
+
+    Errors:
+
+    * Message `"vid: no movie found"`: the movie could not be found.
+    * Message `"vid: format not supported"`: the user selected a movie with an unsupported format.
+  name: movie-open
+  type: command
+- arguments:
+  - name: url
+    type: string
+  description: |2
+
+    Opens a remote video from a website or ftp server.
+
+    Example:
+
+    ```NetLogo
+    vid:movie-open-remote "http://example.org/foo.mp4"
+    ```
+
+    Errors:
+
+    * Message `"vid: no movie found"`: The specified URL could not be loaded or errored while loading.
+    * Message `"vid: format not supported"`: The file type of the remote movie is not supported.
+    * Message `"vid: protocol not supported"`: The movie was at an unsupported URL protocol. Supported protocols are `ftp` and `http`.
+  name: movie-open-remote
+  type: command
+- description: |2
+
+    Closes the currently selected video source.
+    Has no effect if there is no active video source.
+
+    Example:
+
+    ```NetLogo
+    vid:close
+    ```
+  name: close
+  type: command
+- description: |2
+
+    Starts the selected video source.
+    A video source must have been selected before calling `vid:start`.
+
+    Example:
+
+    ```NetLogo
+    vid:start
+    ```
+
+    Errors:
+
+    * Message `"vid: no selected source"`: There is no currently selected video source. Select a source with `vid:movie-open`, `vid:movie-select`, `vid:camera-open`, or `vid:camera-select`.
+  name: start
+  type: command
+- description: |2
+
+    Stops the currently running video source.
+
+    Example:
+    ```NetLogo
+    vid:stop
+    ```
+  name: stop
+  type: command
+- description: |2
+
+    Reports the current status of an active video.
+    Note that after calling `vid:movie-open` or `vid:movie-select` the status will be set to "stopped",
+    while after calling `vid:camera-open` or `vid:camera-select` the status will be "playing".
+
+    Example:
+
+    ```NetLogo
+    vid:status     ; => "inactive"
+
+    vid:movie-open "foobar.mp4"
+    vid:status      ; => "stopped"
+
+    vid:movie-start
+    vid:status       ; => "playing"
+    ```
+  name: status
+  returns: string
+  type: reporter
+- arguments:
+  - name: width
+    type: number
+  - name: height
+    type: number
+  description: |2
+
+    Captures an image from the currently selected active source.
+
+    If width and height are not specified, the image is captured at the current source resolution.
+
+    Example:
+
+    ```NetLogo
+    extensions [ vid bitmap ]
+
+    to capture
+      ; capture an image if a video source is open,
+      ; have the user select a camera if no video source found
+      carefully [
+        ; when camera open, take an image
+        let image vid:capture-image ; returns image suitable for use with bitmap extension
+        bitmap:copy-to-drawing image 0 0
+      ] [
+        if error-message = "Extension exception: vid: no selected source" [
+          vid:camera-select
+          vid:start
+          let image vid:capture-image
+          bitmap:copy-to-drawing image 0 0
+        ]
+      ]
+    end
+    ```
+
+    If you want to capture images at a different resolution, simply replace `vid:capture-image` with, e.g., `(vid:capture-image 640 480)`.
+
+
+    Errors:
+
+    * Message `"vid: no selected source"`: There is no currently selected video source. Select a source with `vid:movie-open`, `vid:movie-select`, `vid:camera-open`, or `vid:camera-select`.
+    * Message `"vid: invalid dimensions"`: The selected dimensions are invalid (one of the dimensions is zero or negative).
+  name: capture-image
+  type: command
+- arguments:
+  - name: seconds
+    type: number
+  description: |2
+
+    Sets the time of the current video source to `*seconds*`.
+    This has no effect when the current video source is a camera.
+
+    Example:
+    ```NetLogo
+    vid:set-time 100
+    ```
+
+    Errors:
+
+    * Message `"vid: no selected source"`: There is no currently selected video source. Select a source with `vid:movie-open`, `vid:movie-select`, `vid:camera-open`, or `vid:camera-select`.
+    * Message `"vid: invalid time"`: The currently active video does not contain the specified second. The second may be negative, or greater than the length of the video.
+  name: set-time
+  type: command
+- arguments:
+  - name: width
+    type: number
+  - name: height
+    type: number
+  description: |2
+
+    Shows a player in a separate window.
+    If there is no video source, the window will be an empty black frame.
+    If there is an active video source, it will be displayed in the window with the specified width and height.
+    If there is a playing video source, it will be displayed in the window at its specified width and height.
+    If width and height are omitted, the video will be displayed in its native resolution.
+
+    Example with native resolution:
+
+    ```NetLogo
+    vid:show-player
+    ```
+
+    Example with custom resolution:
+
+    ```NetLogo
+    (vid:show-player 640 480)
+    ```
+
+    Errors:
+
+    * Message `"vid: invalid dimensions"`: The selected dimensions are invalid (one of the dimensions is zero or negative).
+  name: show-player
+  type: command
+- description: |2
+
+    Hides the player if open. Does nothing if there is no player window.
+
+    Example:
+
+    ```NetLogo
+    vid:hide-player
+    ```
+  name: hide-player
+  type: command
+- description: |2
+
+    Records the current image shown in the NetLogo view to the active recording.
+
+    Example:
+
+    ```NetLogo
+    vid:record-view
+    ```
+
+    Errors:
+
+    * Message `"vid: recorder not started"`: The recorder has not been started. Start the recorder with `vid:start-recorder`.
+  name: record-view
+  type: command
+- description: |2
+
+    Records the NetLogo interface view to the active recording.
+
+    Example:
+
+    ```NetLogo
+    vid:record-interface
+    ```
+
+    Errors:
+
+    * Message `"vid: recorder not started"`: The recorder has not been started. Start the recorder with `vid:start-recorder`.
+    * Message `"vid: export interface not supported"`: The calling NetLogo version does not support interface exports. This will occur when running NetLogo headlessly.
+  name: record-interface
+  type: command
+- description: |2
+
+    Records a frame to the active recording from the currently active source.
+
+    Example:
+
+    ```NetLogo
+    vid:record-source
+    ```
+
+    Errors:
+
+    * Message `"vid: recorder not started"`: The recorder has not been started. Start the recorder with `vid:start-recorder`.
+    * Message `"vid: no selected source"`: There is no currently selected video source. Select a source with `vid:movie-open`, `vid:movie-select`, `vid:camera-open`, or `vid:camera-select`.
+  name: record-source
+  type: command
+- description: |2
+
+    Reports the current status of the recorder.
+    Initially and after the recorder is saved (via `vid:save-recording`) or reset (via `vid:reset-recorder`) the recorder status is "inactive".
+    After calling `vid:start-recorder` the status will be "recording".
+
+    Example:
+
+    ```NetLogo
+    vid:recorder-status ; => "inactive"
+
+    vid:start-recorder
+    vid:recorder-status ; => "recording"
+
+    vid:reset-recorder
+    vid:recorder-status ; => "inactive"
+    ```
+  name: recorder-status
+  returns: string
+  type: reporter
+- description: Stops the current recording, discards any recorded frames without saving them, and forgets the currently set recording resolution.
+  name: reset-recorder
+  type: command
+- alternateArguments:
+  - name: width
+    type: number
+  - name: height
+    type: number
+  arguments: []
+  description: |2
+
+    Starts the recorder.
+    If the recorder is already running this will cause an error to be raised.
+    If desired, a recording width and height can be supplied.
+    If width and height are not supplied, they will be determined from the first frame recorded.
+
+    Example:
+
+    ```NetLogo
+    vid:start-recorder
+    (vid:start-recorder 640 480)
+    ```
+
+    Errors:
+
+    * Message `"vid: recorder already started"`: The recorder has already been started. The existing recording should be saved or reset before starting the recording.
+    * Message `"vid: invalid dimensions"`: The selected dimensions are invalid (one of the dimensions is zero or negative).
+  name: start-recorder
+  type: command
+- arguments:
+  - name: filename
+    type: string
+  description: |2
+
+    Saves the recording to the specified path.
+    If the recorder is not running this will cause an error to be raised.
+    Note that at present the recording will always be saved in the "mp4" format.
+    If the supplied filename does not end in ".mp4", the ".mp4" suffix will be added.
+    Note that `vid:save-recording` *will* overwrite existing files of the same name.
+    `vid:save-recording` will error if the recorder has not been started or if the file cannot be written since the containing directory does not exist.
+
+    Example:
+
+    ```NetLogo
+    vid:save-recording "foo.mp4"      ; Saves to foo.mp4 in the directory containing the model
+    vid:save-recording user-new-file  ; Opens a dialog for the user to select a save path
+    vid:save-recording "/tmp/foo.mp4" ; Saves the recording to the "/tmp" directory
+    ```
+
+    Errors:
+
+    * Message `"vid: recorder not started"`: The recorder has not been started. Start the recorder with `vid:start-recorder`.
+    * Message `"vid: no such directory"`: The directory containing the specified save file does not exist.
+    * Message `"vid: no frames recorded"`: You tried to save a recording with no frames recorded. Check that you are recording properly or use `vid:reset-recording` to to change the recording format without saving.
+  name: save-recording
+  type: command
