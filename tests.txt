@@ -1,0 +1,195 @@
+SmokeTest
+  extensions [ sr ]
+  O> sr:setup
+  sr:runresult "1:3" => [1 2 3]
+
+AllCommands
+  extensions [ sr ]
+  O> sr:setup
+  O> sr:run "a <- 5"
+  sr:runresult "a" => 5
+  O> sr:set "b" 10
+  sr:runresult "b" => 10
+
+DefaultEnvironment
+  # check that we can access variables from the environment that R gives us on startup. Note that this is different than the "empty" or "global" environment.
+  extensions [ sr ]
+  O> sr:setup
+  O> (sr:run "library(datasets)" "data(iris)")
+  sr:runresult "head(iris, 2)" => [["Sepal.Length" [5.1 4.9]] ["Sepal.Width" [3.5 3]] ["Petal.Length" [1.4 1.4]] ["Petal.Width" [0.2 0.2]] ["Species" ["setosa" "setosa"]]]
+
+# The path will be different when the test is run on different platforms, so we just make sure it doesn't fail.
+RHomeDoesNotErrorWhenSetup
+  extensions [ sr ]
+  globals [ r-home ]
+  O> sr:setup
+  O> set r-home sr:r-home
+  length r-home > 0 => true
+
+ShowShellDoesNotErrorHeadless
+  extensions [ sr ]
+  O> sr:setup
+  O> sr:show-console
+
+StopThrowsExtensionException
+  extensions [ sr ]
+  O> sr:setup
+  O> sr:run "stop('hi')" => ERROR Extension exception: hi
+
+Serialization
+  extensions [ sr ]
+  O> sr:setup
+  O> sr:set "my_str" "abc"
+  sr:runresult "my_str" => "abc"
+  O> sr:set "my_list" [1 2 3]
+  sr:runresult "my_list" => [1 2 3]
+  O> sr:run "my_numeric_vector <- c(1, 2, 3)"
+  sr:runresult "my_numeric_vector" => [1 2 3]
+  O> sr:run "my_heterogeneous_list <- list(TRUE, 1, 'two')"
+  sr:runresult "my_heterogeneous_list" => [true 1 "two"]
+
+AgentsAndAgentsets
+  extensions [ sr ]
+  breed [goats goat]
+  goats-own [ energy ]
+  O> create-goats 2 [ set color 75 set heading 0]
+  O> ask goat 0 [ set energy 42 set xcor 5]
+  O> ask goat 1 [ set energy -42 set xcor -5]
+  O> sr:setup
+  O> sr:set "goatZero" goat 0
+  sr:runresult "goatZero" => [["WHO" 0] ["COLOR" 75] ["HEADING" 0] ["XCOR" 5] ["YCOR" 0] ["SHAPE" "default"] ["LABEL" ""] ["LABEL-COLOR" 9.9] ["BREED" "GOATS"] ["HIDDEN?" false] ["SIZE" 1] ["PEN-SIZE" 1] ["PEN-MODE" "up"] ["ENERGY" 42]]
+  O> sr:set "goatOne" goat 1
+  sr:runresult "goatOne" => [["WHO" 1] ["COLOR" 75] ["HEADING" 0] ["XCOR" -5] ["YCOR" 0] ["SHAPE" "default"] ["LABEL" ""] ["LABEL-COLOR" 9.9] ["BREED" "GOATS"] ["HIDDEN?" false] ["SIZE" 1] ["PEN-SIZE" 1] ["PEN-MODE" "up"] ["ENERGY" -42]]
+  O> sr:set "goats_list_of_lists" goats
+  sr:runresult "goats_list_of_lists" => [[["WHO" 0] ["COLOR" 75] ["HEADING" 0] ["XCOR" 5] ["YCOR" 0] ["SHAPE" "default"] ["LABEL" ""] ["LABEL-COLOR" 9.9] ["BREED" "GOATS"] ["HIDDEN?" false] ["SIZE" 1] ["PEN-SIZE" 1] ["PEN-MODE" "up"] ["ENERGY" 42]] [["WHO" 1] ["COLOR" 75] ["HEADING" 0] ["XCOR" -5] ["YCOR" 0] ["SHAPE" "default"] ["LABEL" ""] ["LABEL-COLOR" 9.9] ["BREED" "GOATS"] ["HIDDEN?" false] ["SIZE" 1] ["PEN-SIZE" 1] ["PEN-MODE" "up"] ["ENERGY" -42]]]
+  O> sr:run "goats_data_frame <- as.data.frame(do.call(rbind, goats_list_of_lists))"
+  sr:runresult "goats_data_frame" => [["WHO" [0 1]] ["COLOR" [75 75]] ["HEADING" [0 0]] ["XCOR" [5 -5]] ["YCOR" [0 0]] ["SHAPE" ["default" "default"]] ["LABEL" ["" ""]] ["LABEL-COLOR" [9.9 9.9]] ["BREED" ["GOATS" "GOATS"]] ["HIDDEN?" [false false]] ["SIZE" [1 1]] ["PEN-SIZE" [1 1]] ["PEN-MODE" ["up" "up"]] ["ENERGY" [42 -42]]]
+
+SetList
+  extensions [ sr ]
+  O> sr:setup
+  O> sr:set-list "a" 10
+  sr:runresult "a" => 10
+  sr:runresult "class(a)" => "numeric"
+  O> (sr:set-list "a" 10 20 30)
+  sr:runresult "a" => [10 20 30]
+  sr:runresult "class(a)" => "numeric"
+
+SetNamedList
+  extensions [ sr ]
+  O> sr:setup
+  O> sr:set-named-list "a" "x" 10
+  sr:runresult "a" => [["x" 10]]
+  sr:runresult "class(a)" => "numeric"
+  O> (sr:set-named-list "a" "x" 10 "y" 20 "z" 30)
+  sr:runresult "a" => [["x" 10] ["y" 20] ["z" 30]]
+  sr:runresult "class(a)" => "numeric"
+
+SetDataFrame1
+  extensions [ sr ]
+  O> sr:setup
+  O> sr:set-data-frame "a" "x" 10
+  sr:runresult "a" => [["x" 10]]
+  sr:runresult "class(a)" => "data.frame"
+
+SetDataFrame2
+  extensions [ sr ]
+  O> sr:setup
+  O> (sr:set-data-frame "a" "x" 10 "y" 20 "z" 30)
+  sr:runresult "a" => [["x" 10] ["y" 20] ["z" 30]]
+  sr:runresult "class(a)" => "data.frame"
+
+SetDataFrame3
+  extensions [ sr ]
+  O> sr:setup
+  O> (sr:set-data-frame "a" "x" [10 20 30] "y" ["f" "g" "h"] "z" [true false true])
+  sr:runresult "a" => [["x" [10 20 30]] ["y" ["f" "g" "h"]] ["z" [true false true]]]
+  sr:runresult "class(a)" => "data.frame"
+
+SetAgent1
+  extensions [ sr ]
+  O> sr:setup
+  O> create-turtles 1 [ set color red set heading 90 set shape "arrow" ]
+  O> sr:set-agent "a" (one-of turtles) "color"
+  sr:runresult "a" => [["color" 15]]
+  sr:runresult "class(a)" => "numeric"
+
+SetAgent2
+  extensions [ sr ]
+  O> sr:setup
+  O> create-turtles 1 [ set color red set heading 90 set shape "arrow" ]
+  O> (sr:set-agent "a" (one-of turtles) "color" "heading" "shape")
+  sr:runresult "a" => [["color" 15] ["heading" 90] ["shape" "arrow"]]
+  sr:runresult "class(a)" => "list"
+
+SetAgent3
+  extensions [ sr ]
+  O> sr:setup
+  O> create-turtles 1 [ set color red set heading 90 set shape "arrow" ]
+  O> create-turtles 1 [ set color blue set heading 180 set shape "wolf" ]
+  O> sr:set-agent "a" turtles "color"
+  sr:runresult "a" => [["color" [15 105]]]
+  sr:runresult "class(a)" => "list"
+
+SetAgent4
+  extensions [ sr ]
+  O> sr:setup
+  O> create-turtles 1 [ set color red set heading 90 set shape "arrow" ]
+  O> create-turtles 1 [ set color blue set heading 180 set shape "wolf" ]
+  O> (sr:set-agent "a" turtles "color" "heading" "shape")
+  sr:runresult "a" => [["color" [15 105]] ["heading" [90 180]] ["shape" ["arrow" "wolf"]]]
+  sr:runresult "class(a)" => "list"
+
+SetAgentDataFrame1
+  extensions [ sr ]
+  O> sr:setup
+  O> create-turtles 1 [ set color red set heading 90 set shape "arrow" ]
+  O> sr:set-agent-data-frame "a" (one-of turtles) "color"
+  sr:runresult "a" => [["color" 15]]
+  sr:runresult "class(a)" => "data.frame"
+
+SetAgentDataFrame2
+  extensions [ sr ]
+  O> sr:setup
+  O> create-turtles 1 [ set color red set heading 90 set shape "arrow" ]
+  O> (sr:set-agent-data-frame "a" (one-of turtles) "color" "heading" "shape")
+  sr:runresult "a" => [["color" 15] ["heading" 90] ["shape" "arrow"]]
+  sr:runresult "class(a)" => "data.frame"
+
+SetAgentDataFrame3
+  extensions [ sr ]
+  O> sr:setup
+  O> create-turtles 1 [ set color red set heading 90 set shape "arrow" ]
+  O> create-turtles 1 [ set color blue set heading 180 set shape "wolf" ]
+  O> sr:set-agent-data-frame "a" turtles "color"
+  sr:runresult "a" => [["color" [15 105]]]
+  sr:runresult "class(a)" => "data.frame"
+
+SetAgentDataFrame4
+  extensions [ sr ]
+  O> sr:setup
+  O> create-turtles 1 [ set color red set heading 90 set shape "arrow" ]
+  O> create-turtles 1 [ set color blue set heading 180 set shape "wolf" ]
+  O> (sr:set-agent-data-frame "a" turtles "color" "heading" "shape")
+  sr:runresult "a" => [["color" [15 105]] ["heading" [90 180]] ["shape" ["arrow" "wolf"]]]
+  sr:runresult "class(a)" => "data.frame"
+
+NoHangOnRWarnings
+  extensions [ sr ]
+  O> sr:setup
+  # Prints a warning to the console
+  O> show sr:runresult "mean(\"boom\")"
+  sr:runresult "1:3" => [1 2 3]
+  sr:runresult "strsplit(123456789, \"2\")" => ERROR Extension exception: non-character argument
+  sr:runresult "1:3" => [1 2 3]
+
+SetPlotDeviceDoesNotCrashHeadless
+  extensions [ sr ]
+  O> sr:setup
+  O> sr:set-plot-device
+
+EnableDebug
+  extensions [ sr ]
+  O> sr:__enable-debug
+  O> sr:setup
+  sr:runresult "1:3" => [1 2 3]
