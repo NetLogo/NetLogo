@@ -1,0 +1,298 @@
+linkDatasetWithDatasetBreeds
+  OPEN> extensions/gis/examples/link_dataset_with_dataset_breeds.nlogox
+  O> setup
+  test => true
+
+TestSetPropertyValue
+  OPEN> extensions/gis/examples/set_property.nlogox
+  O> setup
+  O> test
+
+TestProjectLatLon-wgs84-wgs84
+  OPEN> extensions/gis/examples/project-lat-lon.nlogox
+  O> run-test-wgs84-wgs84
+
+TestProjectLatLon-wgs84-projected
+  OPEN> extensions/gis/examples/project-lat-lon.nlogox
+  O> run-test-wgs84-projected
+
+TestProjectLatLon-nad83-nad83
+  OPEN> extensions/gis/examples/project-lat-lon.nlogox
+  O> run-test-nad83-nad83
+
+TestProjectLatLon-nad83-wgs84
+  OPEN> extensions/gis/examples/project-lat-lon.nlogox
+  O> run-test-nad83-wgs84
+
+TestProjectLatLon-nad83-projected
+  OPEN> extensions/gis/examples/project-lat-lon.nlogox
+  O> run-test-nad83-projected
+
+TestImportPointZ-shapefile
+  OPEN> extensions/gis/examples/VectorDatasetZImporting/PointZ.nlogox
+  O> test-PointZ-shapefile
+
+TestImportPointZ-geojson
+  OPEN> extensions/gis/examples/VectorDatasetZImporting/PointZ.nlogox
+  O> test-PointZ-geojson
+
+TestImportIgnoredZ-shapefile
+  OPEN> extensions/gis/examples/VectorDatasetZImporting/NonPointZFeatures.nlogox
+  O> test-MultiPointZ
+  O> test-PolyLineZ
+  O> test-PolygonZ
+
+TestGeoJSONImport_DC_Metro
+  OPEN> extensions/gis/examples/geojson/geojson_import_test.nlogox
+  O> test-metro
+
+TestGeoJSONImport_Point
+  OPEN> extensions/gis/examples/geojson/geojson_import_test.nlogox
+  O> test-Point
+
+TestGeoJSONImport_MultiPoint
+  OPEN> extensions/gis/examples/geojson/geojson_import_test.nlogox
+  O> test-MultiPoint
+
+TestGeoJSONImport_LineString
+  OPEN> extensions/gis/examples/geojson/geojson_import_test.nlogox
+  O> test-LineString
+
+TestGeoJSONImport_MutliLineString
+  OPEN> extensions/gis/examples/geojson/geojson_import_test.nlogox
+  O> test-MultiLineString
+
+TestGeoJSONImport_Polygon
+  OPEN> extensions/gis/examples/geojson/geojson_import_test.nlogox
+  O> test-Polygon
+
+TestGeoJSONImport_Polygon_with_hole
+  OPEN> extensions/gis/examples/geojson/geojson_import_test.nlogox
+  O> test-Polygon_with_hole
+
+TestGeoJSONImport_MultiPolygon
+  OPEN> extensions/gis/examples/geojson/geojson_import_test.nlogox
+  O> test-MultiPolygon
+
+TestGeoJSONImport_Feature
+  OPEN> extensions/gis/examples/geojson/geojson_import_test.nlogox
+  O> test-Feature
+
+testGeoJSONImport_FeatureCollectionHomogenous
+  OPEN> extensions/gis/examples/geojson/geojson_import_test.nlogox
+  O> test-FeatureCollectionHomogenous
+
+TestGeoJSONImport_FeatureCollectionHeterogenous
+  OPEN> extensions/gis/examples/geojson/geojson_import_test.nlogox
+  test-FeatureCollectionHeterogenous => true
+
+testGeoJSONImport_FeatureCollectionDefaultFilling
+  OPEN> extensions/gis/examples/geojson/geojson_import_test.nlogox
+  O> test-FeatureCollectionDefaultFilling
+
+TestGeoJSONImport_GeometryCollection
+  OPEN> extensions/gis/examples/geojson/geojson_import_test.nlogox
+  test-GeometryCollection => true
+
+TestGeoJSONExport_DC_Metro
+  OPEN> extensions/gis/examples/geojson/geojson_export_test.nlogox
+  O> test-metro
+
+TestGeoJSONExport_Point
+  OPEN> extensions/gis/examples/geojson/geojson_export_test.nlogox
+  O> test-Point
+
+TestGeoJSONExport_MultiPoint
+  OPEN> extensions/gis/examples/geojson/geojson_export_test.nlogox
+  O> test-MultiPoint
+
+TestGeoJSONExport_LineString
+  OPEN> extensions/gis/examples/geojson/geojson_export_test.nlogox
+  O> test-LineString
+
+TestGeoJSONExport_MutliLineString
+  OPEN> extensions/gis/examples/geojson/geojson_export_test.nlogox
+  O> test-MultiLineString
+
+TestGeoJSONExport_Polygon
+  OPEN> extensions/gis/examples/geojson/geojson_export_test.nlogox
+  O> test-Polygon
+
+TestGeoJSONExport_Polygon_with_hole
+  OPEN> extensions/gis/examples/geojson/geojson_export_test.nlogox
+  O> test-Polygon_with_hole
+
+TestGeoJSONExport_MultiPolygon
+  OPEN> extensions/gis/examples/geojson/geojson_export_test.nlogox
+  O> test-MultiPolygon
+
+TestGeoJSONExport_Feature
+  OPEN> extensions/gis/examples/geojson/geojson_export_test.nlogox
+  O> test-Feature
+
+testGeoJSONExport_FeatureCollectionHomogenous
+  OPEN> extensions/gis/examples/geojson/geojson_export_test.nlogox
+  O> test-FeatureCollectionHomogenous
+
+testFindOneFeature
+  OPEN> extensions/gis/examples/find-features.nlogox
+  O> setup
+  O> test-find-one-feature-string
+  O> setup
+  O> test-find-one-feature-number
+
+testFindFeatures
+  OPEN> extensions/gis/examples/find-features.nlogox
+  O> setup
+  O> test-find-features-string
+  O> setup
+  O> test-find-features-number
+
+testCreateTurtlesFromPoints_color
+  OPEN> extensions/gis/examples/create-turtles-from-points/built-in-variables-test.nlogox
+  O> setup
+  O> test-color
+  [color] of turtle 0 => 55
+
+testCreateTurtlesFromPoints_color-str
+  OPEN> extensions/gis/examples/create-turtles-from-points/built-in-variables-test.nlogox
+  O> setup
+  O> test-color-str
+  [color] of turtle 0 => 105
+
+testCreateTurtlesFromPoints_heading
+  OPEN> extensions/gis/examples/create-turtles-from-points/built-in-variables-test.nlogox
+  O> setup
+  O> test-heading
+  [heading] of turtle 0 => 15
+
+testCreateTurtlesFromPoints_shape
+  OPEN> extensions/gis/examples/create-turtles-from-points/built-in-variables-test.nlogox
+  O> setup
+  O> test-shape
+  [shape] of turtle 0 => "circle"
+
+testCreateTurtlesFromPoints_label
+  OPEN> extensions/gis/examples/create-turtles-from-points/built-in-variables-test.nlogox
+  O> setup
+  O> test-label
+  [label] of turtle 0 => "circle"
+
+testCreateTurtlesFromPoints_label-color
+  OPEN> extensions/gis/examples/create-turtles-from-points/built-in-variables-test.nlogox
+  O> setup
+  O> test-label-color
+  [label-color] of turtle 0 => 55
+
+testCreateTurtlesFromPoints_label-color-str
+  OPEN> extensions/gis/examples/create-turtles-from-points/built-in-variables-test.nlogox
+  O> setup
+  O> test-label-color-str
+  [label-color] of turtle 0 => 105
+
+testCreateTurtlesFromPoints_hidden-str
+  OPEN> extensions/gis/examples/create-turtles-from-points/built-in-variables-test.nlogox
+  O> setup
+  O> test-hidden-str
+  [hidden?] of turtle 0 => true
+
+testCreateTurtlesFromPoints_hidden-num
+  OPEN> extensions/gis/examples/create-turtles-from-points/built-in-variables-test.nlogox
+  O> setup
+  O> test-hidden-num
+  [hidden?] of turtle 0 => true
+
+testCreateTurtlesFromPoints_size
+  OPEN> extensions/gis/examples/create-turtles-from-points/built-in-variables-test.nlogox
+  O> setup
+  O> test-size
+  [size] of turtle 0 => 15
+
+testCreateTurtlesFromPoints_pen-mode
+  OPEN> extensions/gis/examples/create-turtles-from-points/built-in-variables-test.nlogox
+  O> setup
+  O> test-pen-mode
+  [pen-mode] of turtle 0 => "down"
+
+testCreateTurtlesFromPoints_position
+  OPEN> extensions/gis/examples/create-turtles-from-points/create-turtles-from-points-testing.nlogox
+  O> test
+
+testCreateTurtlesFromPoints_empty-vars
+  OPEN> extensions/gis/examples/create-turtles-from-points/create-turtles-from-points-testing.nlogox
+  O> test-empty
+
+testCreateTurtlesFromPoints_manual
+  OPEN> extensions/gis/examples/create-turtles-from-points/create-turtles-from-points-testing.nlogox
+  O> test-manual
+
+testCreateTurtlesFromPoints_fail-on-non-breed-turtlesets
+  OPEN> extensions/gis/examples/create-turtles-from-points/create-turtles-from-points-testing.nlogox
+  test-fail-on-non-breed-turtlesets => true
+
+testCreateTurtlesInsidePolygon_automatic
+  OPEN> extensions/gis/examples/create-turtles-inside-polygon.nlogox
+  O> test-automatic
+
+testCreateTurtlesInsidePolygon_manual
+  OPEN> extensions/gis/examples/create-turtles-inside-polygon.nlogox
+  O> test-manual
+
+testCreateTurtlesInsidePolygon_turtles_as_agentset
+  OPEN> extensions/gis/examples/create-turtles-inside-polygon.nlogox
+  O> test-turtles
+
+testCreateTurtlesInsidePolygon_num_turtles_created
+  OPEN> extensions/gis/examples/create-turtles-inside-polygon.nlogox
+  O> test-num-agents-created
+
+FindFeaturesSearch
+  extensions [gis]
+  globals [ciudades]
+  O> clear-all
+  O> set ciudades gis:load-dataset "extensions/gis/examples/shared-datasets/cities.geojson"
+  length (gis:find-features ciudades "NAME" "San") => 0
+  length (gis:find-features ciudades "NAME" "*San") => 0
+  length (gis:find-features ciudades "NAME" "San*") => 15
+  length (gis:find-features ciudades "NAME" "*San*") => 15
+  length (gis:find-features ciudades "NAME" "*san*") => 2
+  length (gis:find-features ciudades "NAME" "San Juan") => 1
+  length (gis:find-features ciudades "NAME" "San Juan*") => 1
+  length (gis:find-features ciudades "NAME" "*San Juan") => 1
+  length (gis:find-features ciudades "NAME" "*San Juan*") => 1
+
+TestLoadGeoJsonFromString
+  OPEN> extensions/gis/examples/dataset-strings.nlogox
+  O> test-load-geojson-from-string
+
+TestLoadAscFromString
+  OPEN> extensions/gis/examples/dataset-strings.nlogox
+  O> test-load-asc-from-string
+
+TestRoundTripGeoJsonString
+  OPEN> extensions/gis/examples/dataset-strings.nlogox
+  O> test-round-trip-geojson
+
+TestRoundTripAscString
+  OPEN> extensions/gis/examples/dataset-strings.nlogox
+  O> test-round-trip-asc
+
+TestRoundTripShapefileString
+  OPEN> extensions/gis/examples/dataset-strings.nlogox
+  O> test-round-trip-shp
+
+TestRoundTripShapefileStringPrj
+  OPEN> extensions/gis/examples/dataset-strings.nlogox
+  O> test-round-trip-shp-prj
+
+TestRoundTripShapefileParts
+  OPEN> extensions/gis/examples/dataset-strings.nlogox
+  O> test-round-trip-shp-parts
+
+TestLoadShapefileZipInFolder
+  OPEN> extensions/gis/examples/dataset-strings.nlogox
+  O> test-load-shp-zip-folder
+
+TestDatasetStringErrors
+  OPEN> extensions/gis/examples/dataset-strings.nlogox
+  O> test-errors

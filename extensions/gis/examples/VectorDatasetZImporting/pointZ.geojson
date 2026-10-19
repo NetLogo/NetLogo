@@ -1,0 +1,12 @@
+{
+"type": "FeatureCollection",
+"name": "pointZ",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "FID" : 0 }, "geometry": { "type": "Point", "coordinates": [ -114.020335354976808, 44.338646209967216, 100.0 ] } },
+{ "type": "Feature", "properties": { "FID" : 1 }, "geometry": { "type": "Point", "coordinates": [ -98.24224045665359, 44.878068257773137, 400.0 ] } },
+{ "type": "Feature", "properties": { "FID" : 2 }, "geometry": { "type": "Point", "coordinates": [ -103.088221411125474, 41.416982093224163, 300.0 ] } },
+{ "type": "Feature", "properties": { "FID" : 3 }, "geometry": { "type": "Point", "coordinates": [ -110.244381020335354, 38.135292660199113, 200.0 ] } },
+{ "type": "Feature", "properties": { "FID" : 4 }, "geometry": { "type": "Point", "coordinates": [ -83.597140841740398, 38.926508511427642, 500.0 ] } }
+]
+}
