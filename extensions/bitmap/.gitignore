@@ -1,0 +1,5 @@
+.bundledFiles
+target/
+/*.jar
+/*.zip
+.bsp/
