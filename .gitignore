@@ -1,0 +1,19 @@
+.bundledFiles
+target/
+extensions/
+/*.jar
+/*.zip
+
+*~
+*.orig
+classes/
+
+# eclipse files
+.project
+.classpath
+.cache
+.settings
+.texlipse
+bin/
+/.cache-main
+/.cache-tests
