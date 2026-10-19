@@ -28,9 +28,6 @@
 [submodule "extensions/table"]
 	path = extensions/table
 	url = https://github.com/NetLogo/Table-Extension.git
-[submodule "Mathematica-Link"]
-	path = Mathematica-Link
-	url = https://github.com/NetLogo/Mathematica-Link.git
 [submodule "extensions/nw"]
 	path = extensions/nw
 	url = https://github.com/NetLogo/NW-Extension
