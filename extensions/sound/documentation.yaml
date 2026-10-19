@@ -1,0 +1,117 @@
+extensionName: sound
+icon: i-lucide-audio-lines
+filesToIncludeInManual:
+- USING.md
+- primitives
+- INSTRUMENTS.md
+markdownTemplate: |2
+
+  # NetLogo Sound extension
+
+  This package contains the NetLogo sound extension.
+
+  {{> BUILDING.md}}
+
+  {{> USING.md}}
+
+  ## Primitives
+
+  {{#contents}}{{#prims}}
+  [`{{name}}`](#{{primitive.extensionName}}{{primitive.name}})
+  {{/prims}}{{/contents}}
+
+  {{#primitives}}
+  {{> primTemplate}}
+  {{/primitives}}
+
+  {{> INSTRUMENTS.md}}
+
+  {{> LICENSE.md}}
+primTemplate: |2
+
+  ### `{{name}}`
+
+  ```NetLogo
+  {{#examples}}
+  {{primitive.fullName}}{{#args}} {{name}}{{/args}}
+  {{/examples}}
+  ```
+
+  {{{description}}}
+primitives:
+- description: |2
+
+    Reports a list of the names of the [47 drums](#drum-names)
+    for use with `sound:play-drum`.
+  name: drums
+  returns: list
+  type: reporter
+- description: |2
+
+    Reports a list of the names of the [128 instruments](#instrument-names)
+    for use with `sound:play-note`, `sound:play-note-later`,
+    `sound:start-note` and `sound:stop-note`.
+  name: instruments
+  returns: list
+  type: reporter
+- arguments:
+  - name: drum
+    type: string
+  - name: velocity
+    type: number
+  description: |2
+
+    Plays a drum.
+
+    Example:
+
+    ```NetLogo
+    sound:play-drum "ACOUSTIC SNARE" 64
+    ```
+  name: play-drum
+  type: command
+- arguments:
+  - name: instrument
+    type: string
+  - name: keynumber
+    type: number
+  - name: velocity
+    type: number
+  - name: duration
+    type: number
+  description: |2
+
+    Plays a note for a specified duration, in seconds. The agent does not
+    wait for the note to finish before continuing to next command.
+
+    ```NetLogo
+    ;; play a trumpet at middle C for two seconds
+    sound:play-note "TRUMPET" 60 64 2
+    ```
+  name: play-note
+  type: command
+- arguments:
+  - name: delay
+    type: number
+  - name: instrument
+    type: string
+  - name: keynumber
+    type: number
+  - name: velocity
+    type: number
+  - name: duration
+    type: number
+  description: |2
+
+    Waits for the specified delay before playing the note for a specified
+    duration, in seconds. The agent does not wait for the note to finish
+    before continuing to next command.
+
+    Example:
+
+    ```NetLogo
+    ;; in one second, play a trumpet at middle C for two seconds
+    sound:play-note-later 1 "TRUMPET" 60 64 2
+    ```
+  name: play-note-later
+  type: command
