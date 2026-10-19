@@ -1,0 +1,97 @@
+extensionName: arduino
+filesToIncludeInManual:
+- USING.md
+- primitives
+icon: logos:arduino
+markdownTemplate: |2
+
+  # Arduino Extension for NetLogo
+
+  This extension provides 'no-frills' communication between NetLogo and a connected Arduino.
+
+  {{> BUILDING.md}}
+
+  {{> USING.md}}
+
+  ## Primitives
+
+  {{#contents}}{{#prims}}
+  [`{{name}}`]({{primitive.extensionName}}#{{primitive.name}})
+  {{/prims}}{{/contents}}
+
+  {{#primitives}}
+  {{> primTemplate}}
+  {{/primitives}}
+primTemplate: |2
+
+  ### `{{name}}`
+
+  ```NetLogo
+  {{#examples}}
+  {{primitive.fullName}}{{#args}} {{name}}{{/args}}
+  {{/examples}}
+  ```
+
+  {{{description}}}
+primitives:
+- description: Reports a list of primitives available in the extension, with basic hints about their syntax.
+  name: primitives
+  returns: list
+  type: reporter
+- description: Reports a list of port names
+  name: ports
+  returns: list
+  type: reporter
+- arguments:
+  - name: port-name
+    type: string
+  description: Opens the port named *port-name*.
+  name: open
+  type: command
+- description: Closes the currently open port.
+  name: close
+  type: command
+- arguments:
+  - name: var-name
+    type: string
+  description: 'Reads and reports the value associated with *var-name* on the Arduino board. If there is no value associated with *var-name*, returns false. Note: *var-name* is case insensitive.'
+  name: get
+  returns: number or string or boolean
+  type: reporter
+- arguments:
+  - name: string-message
+    type: string
+  description: Writes a string message to the currently open port.
+  name: write-string
+  type: command
+- arguments:
+  - name: int-message
+    type: number
+  description: Writes a integer message to the currently open port.
+  name: write-int
+  type: command
+- arguments:
+  - name: byte-message
+    type: number
+  description: Writes a byte message to the currently open port.
+  name: write-byte
+  type: command
+- description: Reports a boolean value (`true` or `false`) indicating if a port is open.
+  name: is-open?
+  returns: boolean
+  type: reporter
+- description: |2
+
+    Reports a list of the last messages sent from NetLogo to the Arduino, up to a maximum of 5 messages.
+    Each entry in this list is a string beginning with "s:" if the message sent was a string, "i:" if the message sent was an int,
+    and "b:" if the message sent was a byte.
+  name: debug-to-arduino
+  returns: list
+  type: reporter
+- description: |2
+
+    Reports a list of lists containing any errant messages sent from NetLogo to the Arduino, up to a maximum of 10 errant messages.
+    Each sublist contains the raw message as its first element and a message describing the error as the second element.
+  name: debug-from-arduino
+  returns: list
+  type: reporter
