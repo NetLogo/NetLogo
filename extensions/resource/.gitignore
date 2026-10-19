@@ -1,0 +1,6 @@
+.bundledFiles
+target/
+extensions/
+/*.jar
+/*.zip
+*.tmp.nlogo
