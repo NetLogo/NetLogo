@@ -7,9 +7,6 @@
 [submodule "extensions/view2.5d"]
 	path = extensions/view2.5d
 	url = https://github.com/NetLogo/View2.5D.git
-[submodule "extensions/time"]
-	path = extensions/time
-	url = https://github.com/NetLogo/Time-Extension
 [submodule "test/exports"]
 	path = test/exports
 	url = https://github.com/NetLogo/Model-Exports
