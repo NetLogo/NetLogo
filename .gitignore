@@ -1,0 +1,9 @@
+.bsp/
+.bundledFiles
+target/
+extensions/
+/*.jar
+/*.zip
+
+py/
+/pyext.py
