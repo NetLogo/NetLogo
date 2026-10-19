@@ -1,0 +1,193 @@
+additionalVariables:
+  netlogoUrl: http://ccl.northwestern.edu/netlogo/docs/
+extensionName: gogo
+filesToIncludeInManual:
+- INTRO.md
+- BACKGROUND.md
+- USING.md
+- primitives
+- EXAMPLES.md
+markdownTemplate: |2+
+
+
+  {{> INTRO.md}}
+  {{> BUILDING.md}}
+  {{> BACKGROUND.md }}
+  {{> USING.md}}
+
+  ## Primitives
+
+  {{#contents}}
+  ### {{fullCategoryName}}
+
+  {{#prims}}
+  [`{{name}}`](#{{primitive.extensionName}}{{primitive.name}})
+  {{/prims}}
+
+  {{/contents}}
+
+  {{#primitives}}
+  {{> primTemplate}}
+  {{/primitives}}
+
+  {{> EXAMPLES.md }}
+
+primTemplate: |2
+
+  ### `{{name}}`
+
+  ```NetLogo
+  {{#examples}}
+  {{primitive.fullName}}{{#args}} {{name}}{{/args}}
+  {{/examples}}
+  ```
+
+  {{{description}}}
+primitives:
+- description: Returns a list of the primitives of this extension.
+  name: primitives
+  returns: list
+  tags:
+  - general
+  type: reporter
+- description: |2
+
+    Reports the number of USB HID devices visible to the computer and having the correct vendor and product ID to be a GoGo board.  A board will only be detected if it is both connected and powered on.  Using this primitive is one way to determine quickly whether a GoGo board has the HID firmware loaded. (A USB-Serial version of the board will not be detected.).
+  name: howmany-gogos
+  returns: number
+  tags:
+  - general
+  type: reporter
+- description: |2
+
+    Initialize the extension. The parameter `name` is a string representing the name of the backend to initialize.  There are currently 2 backends. One is the `"gogo"` backend that supports GoGo board 5 and earlier versions. Another is the `"gogo6"` backend that supports GoGo board 6.  You only need to use this primitive if you are using a GoGo board 6.  The extension will automatically initialize itself with the `"gogo"` backend if this primitive is not called.
+  name: init
+  tags:
+  - general
+  type: command
+- arguments:
+  - name: list-of-portnames
+    type: list
+  description: Establishes a list of output ports that will be controlled with subsequent output-port commands.  See below...
+  name: talk-to-output-ports
+  tags:
+  - outputs-servos
+  type: command
+- arguments:
+  - name: list-of-portnames
+    type: list
+  description: |2
+
+    Establishes a list of servo ports that will be controlled with subsequent output-port commands.  See below...
+
+    This command is only available with the "gogo6" backend.
+  name: talk-to-servo-ports
+  tags:
+  - outputs-servos
+  type: command
+- arguments:
+  - name: power-level
+    type: number
+  description: |2
+
+    `power-level` is a number between 0 and 100, reflecting the percentage of maximum power.
+    Sets the amount of power that will be fed to the output ports indicated in `talk-to-output-ports`.
+    This will not affect the on-off state of the output ports.
+    So, for example, if a motor is already connected to an output port and running, changing its power will change its speed.
+    If the motor is not running, changing the power level will not turn it on; instead, it will affect the speed at which the motor starts when it is turned on with `output-port-on`.
+  name: set-output-port-power
+  tags:
+  - outputs-servos
+  type: command
+- description: |2
+
+    Turns on the output ports which have been indicated with talk-to-output-ports.
+    If none have been set with talk-to-output-ports, no ports will be turned on.
+  name: output-port-on
+  tags:
+  - outputs-servos
+  type: command
+- description: |2
+
+    Turns off the output ports which have been indicated with talk-to-output-ports.
+    If none have been set with talk-to-output-ports, no ports will be turned off.
+  name: output-port-off
+  tags:
+  - outputs-servos
+  type: command
+- description: |2
+
+    Sets the polarity of the output port(s) that have been specified with talk-to-output-ports,
+    so that a motor attached to one of these ports would turn clockwise.
+  name: output-port-clockwise
+  tags:
+  - outputs-servos
+  type: command
+- description: |2
+
+    Sets the polarity of the output port(s) that have been specified with `talk-to-output-ports`, so that a motor attached to one of these ports would turn counterclockwise.
+  name: output-port-counterclockwise
+  tags:
+  - outputs-servos
+  type: command
+- arguments:
+  - type: number
+  description: |2
+
+    Sets the Pulse-Width Modulation (PWM) proportion of the output port(s) that have been specified with talk-to-output-ports.  Note that the servo connectors are the male pins next to the standard motor connectors.  Different servos respond to different PWM ranges, but all servos read PWM proportions and set the position of their main gear accordingly.
+  name: set-servo
+  tags:
+  - outputs-servos
+  type: command
+- arguments:
+  - name: on-or-off
+    type: number
+  description: |2
+
+    Turns the user-LED on or off, depending on the argument.  gogo:led 1 turns the LED on; gogo:led 0 turns it off.
+  name: led
+  tags:
+  - outputs-other
+  type: command
+- description: Causes the GoGo board to beep.
+  name: beep
+  tags:
+  - outputs-other
+  type: command
+- description: Reports a list containing the current readings of all eight sensors ports of the GoGo.
+  name: read-sensors
+  returns: list
+  tags:
+  - sensors
+  type: reporter
+- arguments:
+  - name: which-sensor
+    type: number
+  description: |2
+
+    Reports the value of sensor number *which-sensor*, where *which-sensor* is a number between 0-7.
+  name: read-sensor
+  returns: number
+  tags:
+  - sensors
+  type: reporter
+- description: Reports all data available from the board, in a raw-list form useful for debugging.
+  name: read-all
+  returns: list
+  tags:
+  - utilities
+  type: reporter
+- arguments:
+  - type: list
+  description: Sends a list of bytes to the GoGo board.  Useful for debugging or for testing any new or future functionality that is added to the GoGo board with new firmware updates.
+  name: send-bytes
+  tags:
+  - utilties
+  type: command
+tableOfContents:
+  general: General
+  outputs-other: Other Outputs
+  outputs-servos: Outputs and Servos
+  sensors: Sensors
+  utilities: Utilities
+
