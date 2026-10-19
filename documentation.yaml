@@ -1,0 +1,131 @@
+extensionName: profiler
+icon: i-oui-app-search-profiler
+filesToIncludeInManual:
+- USING.md
+- primitives
+markdownTemplate: |2
+
+  # NetLogo Profiler Extension
+
+  {{> BUILDING.md}}
+
+  {{> USING.md}}
+
+  ## Primitives
+
+  {{#contents}}{{#prims}}
+  [`{{name}}`](#{{primitive.extensionName}}{{primitive.name}})
+  {{/prims}}{{/contents}}
+
+  {{#primitives}}
+  {{> primTemplate}}
+  {{/primitives}}
+
+  {{> LICENSE.md}}
+primTemplate: |2
+
+  ### `{{name}}`
+
+  ```NetLogo
+  {{#examples}}
+  {{primitive.fullName}}{{#args}} {{name}}{{/args}}
+  {{/examples}}
+  ```
+
+  {{{description}}}
+primitives:
+  - name: calls
+    type: reporter
+    returns: number
+    arguments:
+      - name: procedure-name
+        type: string
+    description: |
+      Reports the number of times that *procedure-name* was called. If
+      *procedure-name* is not defined, then reports 0.
+
+  - name: exclusive-time
+    type: reporter
+    returns: number
+    arguments:
+      - name: procedure-name
+        type: string
+    description: |
+      Reports the exclusive time, in milliseconds, that
+      *procedure-name* was running for. Exclusive time is the time
+      from when the procedure was entered, until it finishes, but does not
+      include any time spent in other user-defined procedures which it
+      calls.
+
+      If *procedure-name* is not defined, then reports 0.
+
+  - name: inclusive-time
+    type: reporter
+    returns: number
+    arguments:
+      - name: procedure-name
+        type: string
+    description: |
+      Reports the inclusive time, in milliseconds, that
+      *procedure-name* was running for. Inclusive time is the time
+      from when the procedure was entered, until it finishes.
+
+      If *procedure-name* is not defined, then reports 0.
+
+  - name: start
+    type: command
+    description: Instructs the profiler to begin recording user-defined procedure calls.
+
+  - name: stop
+    type: command
+    description: Instructs the profiler to stop recording user-defined procedure calls.
+
+  - name: reset
+    type: command
+    description: Instructs the profiler to erase all collected data.
+
+  - name: report
+    type: reporter
+    returns: string
+    description: |
+      Reports a string containing a breakdown of all user-defined procedure
+      calls. The `Calls` column contains the number of times a
+      user-defined procedure was called. The `Incl T(ms)` column
+      is the total time, in milliseconds, it took for the call to complete,
+      including the time spent in other user-defined procedures. The
+      `Excl T(ms)` column is the total time, in milliseconds,
+      spent within that user-defined procedure, not counting other
+      user-define procedures it called. The <code>Excl/calls</code> column
+      is an estimate of the time, in milliseconds, spent in that
+      user-defined procedure for each call.
+
+      Here is example output:
+
+      ```
+      Sorted by Exclusive Time
+      Name                               Calls Incl T(ms) Excl T(ms) Excl/calls
+      CALLTHEM                              13     26.066     19.476      1.498
+      CALLME                                13      6.413      6.413      0.493
+      REPORTME                              13      0.177      0.177      0.014
+
+      Sorted by Inclusive Time
+      Name                               Calls Incl T(ms) Excl T(ms) Excl/calls
+      CALLTHEM                              13     26.066     19.476      1.498
+      CALLME                                13      6.413      6.413      0.493
+      REPORTME                              13      0.177      0.177      0.014
+
+      Sorted by Number of Calls
+      Name                               Calls Incl T(ms) Excl T(ms) Excl/calls
+      CALLTHEM                              13     26.066     19.476      1.498
+      ```
+
+  - name: data
+    type: reporter
+    returns: list
+    description: |
+      Reports a list of lists containing the results of the profiler in a format that is suitable
+      for exporting with the [`csv` extension](https://ccl.northwestern.edu/netlogo/docs/csv.html).
+
+      The first sublist contains the name of the data columns: `procedure`, `calls`, `inclusive_time` and
+      `exclusive_time`. This is followed by one sublist containing the profiler data for each user-defined
+      procedure. The reported times are in milliseconds.
