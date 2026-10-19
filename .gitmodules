@@ -16,9 +16,6 @@
 [submodule "extensions/table"]
 	path = extensions/table
 	url = https://github.com/NetLogo/Table-Extension.git
-[submodule "extensions/nw"]
-	path = extensions/nw
-	url = https://github.com/NetLogo/NW-Extension
 [submodule "extensions/palette"]
 	path = extensions/palette
 	url = https://github.com/NetLogo/Palette-Extension
