@@ -1,0 +1,236 @@
+TablesBasics
+  extensions [ table ]
+  globals [glob1]
+  O> set glob1 table:make
+  O> table:put glob1 0 "testvalue"
+  O> table:put glob1 "testkey" 1
+  table:length glob1 => 2
+  table:get glob1 "testkey" => 1
+  table:get glob1 0 => "testvalue"
+  table:keys glob1 => [0 "testkey"]
+  table:has-key? glob1 0 => true
+  table:has-key? glob1 3 => false
+  table:has-key? glob1 "testkey" => true
+  table:has-key? glob1 "somestring" => false
+  O> table:clear glob1
+  table:length glob1 => 0
+
+TablesToFromList
+  extensions [ table ]
+  globals [glob1 glob2]
+  O> set glob1 [[1 2] ["key" "value"]]
+  O> set glob2 table:from-list glob1
+  table:get glob2 "key" => "value"
+  table:get glob2 1 => 2
+  table:get glob2 4 => ERROR Extension exception: No value for 4 in table.
+  glob1 = table:to-list glob2 => true
+
+TablesAllowableTypes
+  extensions [ table ]
+  globals [glob1]
+  O> set glob1 table:make
+  O> table:put glob1 0 "number"
+  O> table:put glob1 "foo" "string"
+  O> table:put glob1 true "boolean"
+  O> table:put glob1 false "boolean"
+  O> table:put glob1 nobody "nobody" => ERROR Extension exception: nobody is not a valid table key (a table key may only be a number, a string, true or false, or a list whose items are valid keys)
+  O> table:put glob1 turtles "turtle set" => ERROR Extension exception: turtles is not a valid table key (a table key may only be a number, a string, true or false, or a list whose items are valid keys)
+  O> table:put glob1 patches "patch set" => ERROR Extension exception: patches is not a valid table key (a table key may only be a number, a string, true or false, or a list whose items are valid keys)
+  O> table:put glob1 links "link set" => ERROR Extension exception: links is not a valid table key (a table key may only be a number, a string, true or false, or a list whose items are valid keys)
+  O> table:put glob1 turtle 0 "nonexistent turtle" => ERROR Extension exception: nobody is not a valid table key (a table key may only be a number, a string, true or false, or a list whose items are valid keys)
+  O> crt 1
+  O> table:put glob1 turtle 0 "turtle" => ERROR Extension exception: (turtle 0) is not a valid table key (a table key may only be a number, a string, true or false, or a list whose items are valid keys)
+  O> ct
+  O> table:put glob1 turtle 0 "dead turtle" => ERROR Extension exception: nobody is not a valid table key (a table key may only be a number, a string, true or false, or a list whose items are valid keys)
+  O> table:put glob1 [] "list"
+  O> table:put glob1 [1] "1"
+  O> table:put glob1 [1] "2"
+  table:get glob1 [1] => "2"
+  O> table:put glob1 [[1] ["two" "three"] [4]] "uh huh"
+  table:get glob1 [[1] ["two" "three"] [4]] => "uh huh"
+
+TablesAllowableTypes_2D
+  extensions [ table ]
+  globals [glob1]
+  O> set glob1 table:make
+  O> crt 1
+  O> table:put glob1 [patch-here] of turtle 0 "patch" => ERROR Extension exception: (patch 0 0) is not a valid table key (a table key may only be a number, a string, true or false, or a list whose items are valid keys)
+
+TablesAllowableTypes_3D
+  extensions [ table ]
+  globals [glob1]
+  O> set glob1 table:make
+  O> crt 1
+  O> table:put glob1 patch 0 0 0 "patch" => ERROR Extension exception: (patch 0 0 0) is not a valid table key (a table key may only be a number, a string, true or false, or a list whose items are valid keys)
+
+TablesEquality
+  extensions [ table ]
+  globals [glob1 glob2]
+  O> set glob1 table:make
+  glob1 = 0 => false
+  0 = glob1 => false
+  glob1 = [] => false
+  [] = glob1 => false
+  glob1 = "" => false
+  "" = glob1 => false
+  glob1 = glob1 => true
+  table:make = table:make => true
+  O> table:put glob1 1 10
+  glob1 = table:make => false
+  table:make = glob1 => false
+  O> set glob2 table:make
+  glob1 = glob2 => false
+  glob2 = glob1 => false
+  O> table:put glob2 1 5
+  glob1 = glob2 => false
+  glob2 = glob1 => false
+  O> table:put glob2 1 10
+  glob1 = glob2 => true
+  glob2 = glob1 => true
+  O> crt 1
+  O> table:put glob2 0 turtle 0
+  glob1 = glob2 => false
+  glob2 = glob1 => false
+  O> table:put glob1 0 turtle 0
+  glob1 = glob2 => true
+  glob2 = glob1 => true
+  O> ct
+  glob1 = glob2 => true
+  glob2 = glob1 => true
+  O> table:put glob1 0 nobody
+  glob1 = glob2 => true
+  glob2 = glob1 => true
+  O> crt 1
+  glob1 = glob2 => true
+  glob2 = glob1 => true
+  O> table:put glob2 0 turtle 0
+  glob1 = glob2 => false
+  glob2 = glob1 => false
+
+
+TablesOfTables
+  extensions [ table ]
+  globals [glob1]
+  O> set glob1 table:from-list ( list (list 0 table:from-list [[1 2] [3 4]]) )
+  (word glob1) => "{{table: [[0 {{table: [[1 2] [3 4]]}}]]}}"
+
+TableCounts
+  extensions [ table ]
+  (word table:counts ["a" 0 "a" 4 [5] [5]]) => "{{table: [[\"a\" 2] [0 1] [4 1] [[5] 2]]}}"
+
+TableValues
+  extensions [ table ]
+  globals [ t ]
+  O> set t table:make
+  table:values t => []
+  O> table:put t 1 "a"
+  table:values t => ["a"]
+  O> table:put t 2 "b"
+  table:values t => ["a" "b"]
+  O> table:put t list 1 2 -1
+  table:values t => ["a" "b" -1]
+  O> table:put t "a" "testing values"
+  table:values t => ["a" "b" -1 "testing values"]
+  O> table:remove t 2
+  table:values t => ["a" -1 "testing values"]
+  O> table:put t -1 -1
+  table:values t => ["a" -1 "testing values" -1]
+
+TableGroupItems
+  extensions [ table ]
+  (word table:group-items range 10 [ n -> n mod 2 ]) => "{{table: [[0 [0 2 4 6 8]] [1 [1 3 5 7 9]]]}}"
+
+TableGroupAgents
+  extensions [ table ]
+  globals [ t ]
+  O> crt 3 [ set color red ]
+  O> crt 4 [ set color green ]
+  O> crt 5 [ set color blue ]
+  O> set t table:group-agents turtles [ color ]
+  count table:get t red => 3
+  count table:get t green => 4
+  count table:get t blue => 5
+
+TableGetOrDefault
+  extensions [ table ]
+  table:get-or-default (table:from-list [[1 2]]) 1 3 => 2
+  table:get-or-default (table:from-list [[1 2]]) 2 3 => 3
+
+ImportTable
+  extensions [ table ]
+  globals [ table1 temp ]
+  O> set table1 table:from-list [ [ 1 2 ] [ "word" "value" ] [ 3 false ] ]
+  O> __mkdir "tmp/table"
+  O> set temp (word "tmp/table/test-file-" __nano-time ".csv")
+  O> export-world temp
+  O> set table1 0
+  O> import-world temp
+  table:to-list table1 => [[1 2] ["word" "value"] [3 false]]
+
+ImportTablesSameTable
+  extensions [ table ]
+  globals [ table1 table2 temp ]
+  O> set table1 table:from-list [ [ 1 2 ] [ 3 4 ] [ 4 5 ] ]
+  O> set table2 table1
+  O> __mkdir "tmp/table"
+  O> set temp (word "tmp/table/test-file-" __nano-time ".csv")
+  O> export-world temp
+  O> set table1 0
+  O> set table2 0
+  O> import-world temp
+  O> table:put table1 7 8
+  table:to-list table1 => [[1 2] [3 4] [4 5] [7 8]]
+  table:to-list table2 => [[1 2] [3 4] [4 5] [7 8]]
+
+ImportTablesTwoTables
+  extensions [ table ]
+  globals [ table1 table2 temp ]
+  O> set table1 table:from-list [ [ 1 2 ] [ 3 4 ] [ 4 5 ] ]
+  O> set table2 table:from-list [ [ 1 2 ] [ 3 4 ] [ 4 5 ] ]
+  O> __mkdir "tmp/table"
+  O> set temp (word "tmp/table/test-file-" __nano-time ".csv")
+  O> export-world temp
+  O> set table1 0
+  O> set table2 0
+  O> import-world temp
+  O> table:put table1 7 8
+  table:to-list table1 => [[1 2] [3 4] [4 5] [7 8]]
+  table:to-list table2 => [[1 2] [3 4] [4 5]]
+
+TableFromJsonFile
+  extensions [ table ]
+  globals [ t ]
+  O> set t table:from-json-file "extensions/table/examples/sample-json.json"
+  table:get t "name" => "Ploni"
+  table:get t "age" => 31
+  table:get t "job" = table:from-list (list (list "b" "yes") (list "a" "very")) => true
+  table:get t "bool" => false
+  table:get t "bool2" => true
+  last table:get t "friends" = table:from-list (list (list "name" "G") (list "job" "traitor") (list "friends" (list))) => true
+  table:get t "foods" = list "apples" "stones" => true
+  table:get t "book-lists-list" = (list (list "vampires") (list "cool book" "less cool book" )) => true
+  table:from-json-file "extensions/table/examples/sample-malformed-json.json" => ERROR Extension exception: Error trying to read the JSON file. It is probably missing a colon or comma. See the line number on the next line: com.google.gson.stream.MalformedJsonException: Expected ':' at line 5 column 10 path $.
+
+ToJson
+  extensions [ table ]
+  globals [ls glob1]
+  O> set ls [["boots" [10 20 30]] ["slippers" []]]
+  O> set glob1 table:from-list ls
+  table:to-json glob1 => "{\"boots\":[10.0,20.0,30.0],\"slippers\":[]}"
+
+FromJsonFailure
+  extensions [ table ]
+  globals [glob1 actual-error expected-error]
+  O> set glob1 table:from-json "Not a json" => ERROR Extension exception: The string given to FROM-JSON was not valid. java.lang.IllegalStateException: Expected BEGIN_OBJECT but was STRING at line 1 column 1 path $
+
+JsonRoundTrip
+  extensions [ table ]
+  globals [glob1]
+  O> set glob1 table:from-json "{\"boots\":{\"size\":10,\"color\":\"red\",\"arr\":[10,20,30]},\"slippers\":{},\"hats\":{\"hat1\":[],\"hat2\":{\"hat3\":[]}}}"
+  table:to-json glob1 => "{\"boots\":{\"size\":10.0,\"color\":\"red\",\"arr\":[10.0,20.0,30.0]},\"slippers\":{},\"hats\":{\"hat1\":[],\"hat2\":{\"hat3\":[]}}}"
+
+ToJsonFailure
+  extensions [ table ]
+  globals [glob1]
+  O> set glob1 0
+  table:to-json glob1 => ERROR Extension exception: not a table: 0

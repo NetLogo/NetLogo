@@ -1,0 +1,14 @@
+{
+  "name":"Ploni",
+  "age": 31,
+  "city":"New York",
+  "job": {
+    "b": "yes",
+    "a": "very"
+  },
+  "bool": false,
+  "bool2": true,
+  "friends": [{"name": "R", "job": "person"}, {"name": "G", "job": "traitor", "friends":[]}],
+  "foods": ["apples", "stones"],
+  "book-lists-list": [["vampires"], ["cool book", "less cool book"]]
+}
