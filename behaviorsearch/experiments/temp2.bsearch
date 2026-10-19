@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<!DOCTYPE search SYSTEM "behaviorsearch.dtd">
+<search>
+<modelInfo>
+<modelFile>/home/forrest/prog/workspace/behaviorsearch/test/Tester.nlogox</modelFile>
+<modelSetupCommands>setup</modelSetupCommands>
+<modelStepCommands>go</modelStepCommands>
+<modelStopCondition>count turtles &gt; 1000</modelStopCondition>
+<modelStepLimit>0</modelStepLimit>
+<modelMetricReporter>ellipsoid</modelMetricReporter>
+<modelMeasureIf>true</modelMeasureIf>
+</modelInfo>
+<fitnessInfo>
+<fitnessMinimized>false</fitnessMinimized>
+<fitnessCollecting>AT_FINAL_STEP</fitnessCollecting>
+<fitnessSamplingReplications>2</fitnessSamplingReplications>
+<fitnessCombineReplications>MEAN</fitnessCombineReplications>
+</fitnessInfo>
+<searchSpace>
+<paramSpec>["a" [-32 1 32]]</paramSpec>
+<paramSpec>["b" [-32 1 32]]</paramSpec>
+<paramSpec>["c" [-32 1 32]]</paramSpec>
+<paramSpec>["d" [-32 1 32]]</paramSpec>
+</searchSpace>
+<searchMethod type="GenerationalGA">
+<searchMethodParameter name="mutation-rate" value="0.01"/>
+<searchMethodParameter name="population-size" value="10"/>
+<searchMethodParameter name="crossover-rate" value="0.7"/>
+</searchMethod>
+<chromosomeRepresentation type="GrayBinaryChromosome"/>
+<caching>true</caching>
+<evaluationLimit>200</evaluationLimit>
+</search>

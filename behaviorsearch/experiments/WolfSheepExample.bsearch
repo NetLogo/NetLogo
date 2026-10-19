@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<!DOCTYPE search SYSTEM "behaviorsearch.dtd">
+<search>
+<modelInfo>
+<modelFile>/home/forrest/apps/netlogo-4.1/models/Sample Models/Biology/Wolf Sheep Predation.nlogox</modelFile>
+<modelSetupCommands>setup</modelSetupCommands>
+<modelStepCommands>go</modelStepCommands>
+<modelStopCondition/>
+<modelStepLimit>100</modelStepLimit>
+<modelMetricReporter>count wolves</modelMetricReporter>
+<modelMeasureIf>ticks &gt;= 75</modelMeasureIf>
+</modelInfo>
+<fitnessInfo>
+<fitnessMinimized>false</fitnessMinimized>
+<fitnessCollecting>MEAN_ACROSS_STEPS</fitnessCollecting>
+<fitnessSamplingReplications>3</fitnessSamplingReplications>
+<fitnessCombineReplications>MEAN</fitnessCombineReplications>
+</fitnessInfo>
+<searchSpace>
+<paramSpec>["grass?" true]</paramSpec>
+<paramSpec>["initial-number-sheep" [0 1 50]]</paramSpec>
+<paramSpec>["initial-number-wolves" [0 1 25]]</paramSpec>
+<paramSpec>["sheep-gain-from-food" [0 1 20]]</paramSpec>
+<paramSpec>["wolf-gain-from-food" [0 1 20]]</paramSpec>
+<paramSpec>["sheep-reproduce" [5 1 10]]</paramSpec>
+<paramSpec>["wolf-reproduce" [5 1 10]]</paramSpec>
+<paramSpec>["grass-regrowth-time" [5 1 20]]</paramSpec>
+<paramSpec>["show-energy?" false]</paramSpec>
+</searchSpace>
+<searchMethod type="MutationHillClimber">
+<searchMethodParameter name="mutation-rate" value="0.01"/>
+<searchMethodParameter name="restart-after-stall-count" value="0"/>
+</searchMethod>
+<chromosomeRepresentation type="GrayBinaryChromosome"/>
+<caching>true</caching>
+<evaluationLimit>1000</evaluationLimit>
+<bestCheckingNumReplications>3</bestCheckingNumReplications>
+</search>

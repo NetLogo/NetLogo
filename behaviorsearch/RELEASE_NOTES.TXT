@@ -1,0 +1,43 @@
+NEW for Version 1.10
+ * Migrated/modernized the UI from Swing to JavaFX (Thanks An Nguyen Dang!)
+
+Version 1.02:
+ * Various updates and tweaks to interoperate (and be bundled) with NetLogo 6.
+
+Version 1.01:
+ * Ability to override parameter spec ranges from the command line...
+   (per the request of a BehaviorSearch user)
+ * No other changes, and file formats remain identical,
+   so should be backward/forward compatible with version 1.00
+
+Version 1.00: 
+ * Updated BehaviorSearch to work with NetLogo 5.0.x  
+   (Kudos to Kevin Zollman who submitted a patch that assisted with this transition!)
+   Note that this and future versions of BehaviorSearch will not support NetLogo 4.x.
+ * Fixed issue with range of possible initial seeds for the random number generator.
+   (This was fixed in NetLogo here: https://github.com/NetLogo/NetLogo/issues/111 )  
+ * Search protocols (.bsearch files) created with earlier versions of BehaviorSearch
+   should still load/work in this version, although the change in how random seeds
+   are handled means that results from doing the same search with the same random 
+   seed may differ slightly from the results from previous versions.
+ * Fixed an issue with BehaviorSearch's error reporting (of NetLogo language errors)
+   which had been broken (or at least made worse) by a change (regression?) in how
+   NetLogo 5's controlling API handles runtime errors. 
+
+Version 0.76:
+* Still compatible with NetLogo 4.x (not 5.x).
+* Mostly code cleanup & documentation fixes
+
+Version 0.75:
+* Added Simulated Annealing search algorithm.
+* Added "Derivative" functionality, for searching for the amount of change caused by a small change in a specified parameter.
+* Added additional example search files.
+* Lowered default maximum Java heap size on Windows, since it was causing problems for some people so they couldn't even launch the application. 
+* Various other fixes & enhancements I didn't write down...
+
+Version 0.73:
+* Fixed possible problem in behaviorsearch_gui launcher script for Linux, when JAVA_HOME was defined.
+
+Version 0.72:
+
+First public release.

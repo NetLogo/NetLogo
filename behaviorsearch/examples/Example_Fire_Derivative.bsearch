@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<!DOCTYPE search SYSTEM "behaviorsearch.dtd">
+<search>
+<bsearchVersionNumber>1.00</bsearchVersionNumber>
+<modelInfo>
+<modelFile>../../models/Sample Models/Earth Science/Fire.nlogox</modelFile>
+<modelSetupCommands>setup</modelSetupCommands>
+<modelStepCommands>go</modelStepCommands>
+<modelStopCondition>not any? turtles</modelStopCondition>
+<modelStepLimit>10000</modelStepLimit>
+<modelMetricReporter>(burned-trees / initial-trees) * 100</modelMetricReporter>
+<modelMeasureIf>true</modelMeasureIf>
+</modelInfo>
+<fitnessInfo>
+<fitnessMinimized>false</fitnessMinimized>
+<fitnessCollecting>AT_FINAL_STEP</fitnessCollecting>
+<fitnessSamplingReplications>2</fitnessSamplingReplications>
+<fitnessCombineReplications>MEAN</fitnessCombineReplications>
+<fitnessDerivative parameter="density" delta="1.0" useabs="false"/>
+</fitnessInfo>
+<searchSpace>
+<paramSpec>["density" [2 "C" 99]]</paramSpec>
+</searchSpace>
+<searchMethod type="MutationHillClimber">
+<searchMethodParameter name="mutation-rate" value="1.0"/>
+<searchMethodParameter name="restart-after-stall-count" value="0"/>
+</searchMethod>
+<chromosomeRepresentation type="MixedTypeChromosome"/>
+<caching>false</caching>
+<evaluationLimit>600</evaluationLimit>
+<bestCheckingNumReplications>4</bestCheckingNumReplications>
+</search>

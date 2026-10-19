@@ -1,0 +1,90 @@
+<?xml version='1.0' encoding='us-ascii'?>
+
+<!--
+This file specifies the XML format for BehaviorSearch protocols.
+WARNING: Work in progress.  ~Forrest (10/05/2008)
+-->
+
+<!ELEMENT search (modelInfo,fitnessInfo,searchSpace,searchMethod,chromosomeRepresentation,caching,evaluationLimit,bestCheckingNumReplications)>
+<!ATTLIST search >
+
+<!--  *********** EVALUATION SECTION ************** -->
+
+<!ELEMENT modelInfo (modelFile,modelSetupCommands,modelStepCommands,modelStopCondition,modelStepLimit,modelMetricReporter,modelMeasureIf)>
+<!ELEMENT fitnessInfo (fitnessMinimized,fitnessCollecting,fitnessSamplingReplications,fitnessCombineReplications,fitnessDerivative?)>
+
+<!ELEMENT modelFile (#PCDATA)>
+<!ELEMENT modelSetupCommands (#PCDATA)>
+<!ELEMENT modelStepCommands (#PCDATA)>
+<!ELEMENT modelStopCondition (#PCDATA)>
+<!ELEMENT modelStepLimit (#PCDATA)>
+<!ELEMENT modelMetricReporter (#PCDATA)>
+<!ELEMENT modelMeasureIf (#PCDATA)>
+
+<!ELEMENT fitnessMinimized (#PCDATA)>
+
+<!-- Note: set fitnessSamplingRepetitions to 0 for "adaptive sampling", which should 
+ 		   mean that more promising points/regions in the space receive more trials.
+           Values > 0 indicate each point is sampled a constant number of times. -->
+<!ELEMENT fitnessCollecting (#PCDATA)>
+
+<!ELEMENT fitnessSamplingReplications (#PCDATA)>
+<!ELEMENT fitnessCombineReplications (#PCDATA)>
+<!ELEMENT fitnessDerivative EMPTY>
+<!ATTLIST fitnessDerivative
+  parameter  CDATA #REQUIRED
+  delta CDATA #REQUIRED
+  useabs CDATA #REQUIRED>
+
+
+<!--  *********** SEARCH SPACE SECTION ************** -->
+
+<!ELEMENT searchSpace (paramSpec+)>
+<!-- Note: each paramSpec should contain a string, such as
+  ["wolf-pop" [10 5 50]]              ; discrete ranged
+  ["birth-rate" [0.0 "C" 2.0]]        ; continuous ranged
+  ["mode" "smart" "stupid" "random"]  ; categorical
+  ["happy?" true false]               ; categorical boolean
+-->
+<!ELEMENT paramSpec (#PCDATA)> 
+
+<!-- OLD JUNK -->
+<!-- <!ELEMENT searchSpace ((numericValueRange|enumeratedValueSet)+)>
+
+<!ELEMENT numericValueRange EMPTY>
+<!ATTLIST numericValueRange
+  variable CDATA #REQUIRED
+  low      CDATA #REQUIRED
+  step     CDATA #REQUIRED
+  high     CDATA #REQUIRED>
+
+
+<!ELEMENT enumeratedValueSet (value+)>
+<!ATTLIST enumeratedValueSet variable CDATA #REQUIRED>
+
+<!ELEMENT value EMPTY>
+<!ATTLIST value value CDATA #REQUIRED>
+-->
+<!-- Note: set step="C" for a continuous interval between low and high -->
+
+
+<!-- *********** SEARCH SPACE SECTION ************** -->
+
+<!ELEMENT searchMethod (searchMethodParameter*)>
+<!ATTLIST searchMethod type CDATA #REQUIRED>
+
+<!ELEMENT searchMethodParameter EMPTY>
+<!ATTLIST searchMethodParameter
+  name  CDATA #REQUIRED
+  value CDATA #REQUIRED>
+
+<!ELEMENT chromosomeRepresentation EMPTY>
+<!ATTLIST chromosomeRepresentation type CDATA #REQUIRED>
+
+<!-- some general options relating to the search -->
+<!ELEMENT caching (#PCDATA)>
+  
+<!ELEMENT evaluationLimit (#PCDATA)>
+ 
+<!ELEMENT bestCheckingNumReplications (#PCDATA)>
+ 

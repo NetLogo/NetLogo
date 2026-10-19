@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<!DOCTYPE search SYSTEM "behaviorsearch.dtd">
+<search>
+<bsearchVersionNumber>0.75</bsearchVersionNumber>
+<modelInfo>
+<modelFile>WolfSheep-bench.nlogox</modelFile>
+<modelSetupCommands/>
+<modelStepCommands/>
+<modelStopCondition/>
+<modelStepLimit>0</modelStepLimit>
+<modelMetricReporter>calibrate</modelMetricReporter>
+<modelMeasureIf>true</modelMeasureIf>
+</modelInfo>
+<fitnessInfo>
+<fitnessMinimized>false</fitnessMinimized>
+<fitnessCollecting>AT_FINAL_STEP</fitnessCollecting>
+<fitnessSamplingReplications>4</fitnessSamplingReplications>
+<fitnessCombineReplications>MEAN</fitnessCombineReplications>
+<fitnessDerivative parameter="@MUTATE@" delta="0.05" useabs="true"/>
+</fitnessInfo>
+<searchSpace>
+<paramSpec>["grass?" true false]</paramSpec>
+<paramSpec>["grass-regrowth-time" [0 1 100]]</paramSpec>
+<paramSpec>["initial-number-sheep" [0 1 250]]</paramSpec>
+<paramSpec>["initial-number-wolves" [0 1 250]]</paramSpec>
+<paramSpec>["sheep-gain-from-food" [0 1 50]]</paramSpec>
+<paramSpec>["wolf-gain-from-food" [0 1 100]]</paramSpec>
+<paramSpec>["sheep-reproduce" [1 1 20]]</paramSpec>
+<paramSpec>["wolf-reproduce" [0 1 20]]</paramSpec>
+<paramSpec>["ticks-per-year" [1 1 20]]</paramSpec>
+<paramSpec>["show-energy?" false]</paramSpec>
+<paramSpec>["visuals?" false]</paramSpec>
+</searchSpace>
+<searchMethod type="RandomSearch"/>
+<chromosomeRepresentation type="MixedTypeChromosome"/>
+<caching>false</caching>
+<evaluationLimit>200</evaluationLimit>
+<bestCheckingNumReplications>0</bestCheckingNumReplications>
+</search>

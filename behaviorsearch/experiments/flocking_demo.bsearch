@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<!DOCTYPE search SYSTEM "behaviorsearch.dtd">
+<search>
+<modelInfo>
+<modelFile>/home/forrest/prog/workspace/behaviorsearch/Flocking Bsearch.nlogoxx</modelFile>
+<modelSetupCommands>setup</modelSetupCommands>
+<modelStepCommands>go</modelStepCommands>
+<modelStopCondition/>
+<modelStepLimit>50</modelStepLimit>
+<modelMetricReporter>alignment-stdev</modelMetricReporter>
+<modelMeasureIf>true</modelMeasureIf>
+</modelInfo>
+<fitnessInfo>
+<fitnessMinimized>true</fitnessMinimized>
+<fitnessCollecting>AT_FINAL_STEP</fitnessCollecting>
+<fitnessSamplingReplications>3</fitnessSamplingReplications>
+<fitnessCombineReplications>MEAN</fitnessCombineReplications>
+</fitnessInfo>
+<searchSpace>
+<paramSpec>["population" [5 5 200]]</paramSpec>
+<paramSpec>["vision" [0 0.5 10]]</paramSpec>
+<paramSpec>["minimum-separation" [0 0.25 5]]</paramSpec>
+<paramSpec>["max-align-turn" [0 0.25 20]]</paramSpec>
+<paramSpec>["max-separate-turn" [0 0.25 20]]</paramSpec>
+<paramSpec>["max-cohere-turn" [0 0.25 20]]</paramSpec>
+<paramSpec>["plotting?" false]</paramSpec>
+</searchSpace>
+<searchMethod type="MutationHillClimber">
+<searchMethodParameter name="mutation-rate" value="0.05"/>
+<searchMethodParameter name="restart-after-stall-count" value="100"/>
+</searchMethod>
+<chromosomeRepresentation type="GrayBinaryChromosome"/>
+<caching>true</caching>
+<evaluationLimit>120</evaluationLimit>
+<bestCheckingNumReplications>0</bestCheckingNumReplications>
+</search>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<!DOCTYPE search SYSTEM "behaviorsearch.dtd">
+<search>
+<bsearchVersionNumber>1.00</bsearchVersionNumber>
+<modelInfo>
+<modelFile>../../models/Sample Models/Biology/Flocking.nlogox</modelFile>
+<modelSetupCommands>setup</modelSetupCommands>
+<modelStepCommands>go</modelStepCommands>
+<modelStopCondition/>
+<modelStepLimit>100</modelStepLimit>
+<modelMetricReporter>standard-deviation [dx] of turtles + standard-deviation [dy] of turtles</modelMetricReporter>
+<modelMeasureIf>ticks &gt;= 75</modelMeasureIf>
+</modelInfo>
+<fitnessInfo>
+<fitnessMinimized>true</fitnessMinimized>
+<fitnessCollecting>MEAN_ACROSS_STEPS</fitnessCollecting>
+<fitnessSamplingReplications>5</fitnessSamplingReplications>
+<fitnessCombineReplications>MEAN</fitnessCombineReplications>
+</fitnessInfo>
+<searchSpace>
+<paramSpec>["population" 50]</paramSpec>
+<paramSpec>["vision" [0 0.25 10]]</paramSpec>
+<paramSpec>["minimum-separation" [0 0.25 5]]</paramSpec>
+<paramSpec>["max-align-turn" [0 0.25 20]]</paramSpec>
+<paramSpec>["max-separate-turn" [0 0.25 20]]</paramSpec>
+<paramSpec>["max-cohere-turn" [0 0.25 20]]</paramSpec>
+</searchSpace>
+<searchMethod type="StandardGA">
+<searchMethodParameter name="mutation-rate" value="0.05"/>
+<searchMethodParameter name="population-size" value="30"/>
+<searchMethodParameter name="crossover-rate" value="0.7"/>
+<searchMethodParameter name="population-model" value="generational"/>
+<searchMethodParameter name="tournament-size" value="3"/>
+</searchMethod>
+<chromosomeRepresentation type="GrayBinaryChromosome"/>
+<caching>true</caching>
+<evaluationLimit>12000</evaluationLimit>
+<bestCheckingNumReplications>10</bestCheckingNumReplications>
+</search>

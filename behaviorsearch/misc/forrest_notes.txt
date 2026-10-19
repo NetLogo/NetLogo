@@ -1,0 +1,82 @@
+BUGS: 
+ * Fix "integer" problem in java version checking in behaviorsearch_headless.sh
+ * I was running a search with 4-threads/cores on SSCC, and noticed that the stdout file went to 48% then "All searches finished". 
+ *  Why didn't it go to 100?  Perhaps completely stalled out?  caching, with small search space, low mutation?
+
+
+TODO:
+ * add option for "brief" output - only output fitness evaluations for every 10th (100th?) evaluation
+ * make the NetLogo model path relative to the .bsearch file, if natural to do so (i.e. same directory) 
+ * add UNIT test coverage for "caching" and "measure if"...
+ * add a variety of different experiments to output consistency unit testing, (cover stuff like caching on/off, each different search method, etc)
+ * NEED to output True best values (at least for the finalBests, and might be good for every best found along the way...)
+   - Still need to add support for this to SearchProtocol and the UI.
+   - Can't remember what this bullet was about?  Was it just bestchecking, or was it about comparing to the true mean value (minus noise)?
+ * add stopTargetGoalFitness for FitnessFunctions: move to AbstractSearchMethod?
+ *  - put this in SearchProtocol? ALSO, move evaluationLimit into SearchProtocol too?
+ * -is the "finalCheckedBests.csv" file worthwhile?  
+      I guess it gives the most likely best parameter settings, although because of noise, the fitness values
+      shown could be biased towards higher values than they really are.
+ * should there be a ".algorithmsChoice.csv" file, which let's the GA (or other search process) pick the individual it
+   thinks is most likely to be best?  In particular, the best individual in the final generation of the GA may truly be better
+   than an earlier "best" that got lucky with a noisy fitness evaluation...  
+ 
+ * Add derivative functionality (not just GUI - needs support everywhere)
+ * Add support for fitness function to calibrate against a time-series (mean squared error?)
+ * Add support for custom netlogo code for fitness functions (collecting & combining)?
+ * Add "auxiliary measures" (non-fitness affecting) - to "modelRun" output file only, I think.
+ * is there any way to standardize mutation rates across representations?  seems hard. 
+ ? output a .searchConfig.txt file which describes the settings for the experiment in plain text, instead of xml
+ * ADD MORE search algorithms: PSO, SimulatedAnnealing!
+NOTE: Search may naturally gravitate towards areas of *high* noise, since these will (sometimes) yield better
+      fitness values than areas of low noise.  Can be misleading.  (Interesting observation - perhaps write about it?) 
+
+GUI TODO:  
+ * Update "best found" information at end of run!
+ * Redo the whole protocol editing GUI using JTabbedPane with multiple tabs?
+low priority:
+ * make "parameter" column read-only, in the search method parameter table ???
+ * mouse-over tooltips for help on all interface items (I did a few already)
+ * check out turning on tooltips support for JFreeChart?
+ 
+REFACTOR:
+
+
+Before any release:
+  * Make sure everything is strictfp
+  * look over all TODOs to see if they are urgent/important for release.
+  * clean out all the old commented System.out.println() calls  (perhaps search for 'DEBUG' or 'System.out.print')   
+   
+
+Possible eventual features:
+  * vary world-width and world-height parameters, like BehaviorSpace can
+  * What about EDAs?  
+  
+  
+Ethnocentrism
+
+["cost-of-giving" [0.0 0.01 0.1]]
+["gain-of-receiving" [0.0 0.01 0.1]]
+["initial-ptr" [0.0 0.01 1.0]]
+["immigrants-per-day" [0 1 10]]
+["mutation-rate" [0.0 0.001 0.010]]
+["death-rate" [0.0 0.01 0.20]]
+["immigrant-chance-cooperate-with-same" 0.5]
+["immigrant-chance-cooperate-with-different" 0.5]
+
+Measure: consist-ethno-percent
+setup commands:  setup-full
+go commands:     go
+stop condition:  (none)
+100 time steps
+about 2.5 seconds per run.
+10 repetitions = 25 seconds per fitness evaluation
+
+Wolf-Sheep:  modify to be wolf-moose on Isle Royale? possibility anyway...
+
+Ants:  Measure food collected per ant?  Hmm.  Compare to Calvez&Hutzler...
+
+Rebellion: replication of a published model
+
+Flocking: think of measures of flockingness?
+

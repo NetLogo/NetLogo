@@ -1,0 +1,3 @@
+"search-number","evaluation","a*","b*","c*","d*","num-replicates","best-fitness-so-far","recheck-replications","best-fitness-rechecked"
+"1","400","32","18","25","-20","1","63","1","63"
+"2","400","-32","0","-16","32","1","65","1","65"

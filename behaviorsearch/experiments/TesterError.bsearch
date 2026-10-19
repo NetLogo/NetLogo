@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<!DOCTYPE search SYSTEM "behaviorsearch.dtd">
+<search>
+<bsearchVersionNumber>1.00</bsearchVersionNumber>
+<modelInfo>
+<modelFile>../test/Tester.nlogox</modelFile>
+<modelSetupCommands>setup</modelSetupCommands>
+<modelStepCommands>go</modelStepCommands>
+<modelStopCondition>count turtles &gt; 1000</modelStopCondition>
+<modelStepLimit>0</modelStepLimit>
+<modelMetricReporter>ellipsoid</modelMetricReporter>
+<modelMeasureIf>true</modelMeasureIf>
+</modelInfo>
+<fitnessInfo>
+<fitnessMinimized>false</fitnessMinimized>
+<fitnessCollecting>AT_FINAL_STEP</fitnessCollecting>
+<fitnessSamplingReplications>1</fitnessSamplingReplications>
+<fitnessCombineReplications>MEAN</fitnessCombineReplications>
+</fitnessInfo>
+<searchSpace>
+<paramSpec>["a" [-2 "C" 2]]</paramSpec>
+<paramSpec>["b" [-2 "C" 2]]</paramSpec>
+<paramSpec>["c" [-2 "C" 2]]</paramSpec>
+<paramSpec>["d" "moo"]</paramSpec>
+</searchSpace>
+<searchMethod type="MutationHillClimber">
+<searchMethodParameter name="mutation-rate" value="0.05"/>
+<searchMethodParameter name="restart-after-stall-count" value="0"/>
+</searchMethod>
+<chromosomeRepresentation type="MixedTypeChromosome"/>
+<caching>true</caching>
+<evaluationLimit>300</evaluationLimit>
+<bestCheckingNumReplications>0</bestCheckingNumReplications>
+</search>

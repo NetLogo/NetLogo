@@ -1,0 +1,5 @@
+RandomSearch
+SimulatedAnnealing
+MutationHillClimber
+StandardGA
+

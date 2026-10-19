@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.input.KeyCodeCombination?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="750.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bsearch.fx.MainController">
+   <children>
+      <MenuBar layoutY="2.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <menus>
+          <Menu mnemonicParsing="false" text="File">
+            <items>
+                  <MenuItem mnemonicParsing="false" onAction="#actionNew" text="New">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator>
+                  </MenuItem>
+                  <MenuItem mnemonicParsing="false" onAction="#actionOpen" text="Open...">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator>
+                  </MenuItem>
+                  <MenuItem mnemonicParsing="false" onAction="#actionSave" text="Save">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator>
+                  </MenuItem>
+                  <MenuItem mnemonicParsing="false" onAction="#actionSaveAs" text="Save as..." />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem mnemonicParsing="false" onAction="#actionOpenExample" text="Open Example" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+              <MenuItem mnemonicParsing="false" text="Exit" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Help">
+            <items>
+                  <MenuItem mnemonicParsing="false" onAction="#showTutorialAction" text="Tutorial" />
+              <MenuItem mnemonicParsing="false" onAction="#showAboutAction" text="About" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+      <TabPane layoutX="28.0" layoutY="80.0" prefHeight="350.0" prefWidth="700.0" style="-fx-border-color: lightgray;" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="70.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="80.0">
+        <tabs>
+          <Tab text="Model">
+               <content>
+                  <BorderPane>
+                     <center>
+                        <BorderPane>
+                           <top>
+                              <BorderPane BorderPane.alignment="CENTER">
+                                 <center>
+                                    <Label text="Parameter Specification" BorderPane.alignment="CENTER">
+                                       <font>
+                                          <Font name="System Bold" size="14.0" />
+                                       </font>
+                                    </Label>
+                                 </center>
+                                 <padding>
+                                    <Insets bottom="5.0" top="10.0" />
+                                 </padding>
+                                 <right>
+                                    <Button fx:id="MHelpSearchSpaceButton" mnemonicParsing="false" onAction="#helpSearchSpaceAction" text="?" BorderPane.alignment="CENTER">
+                                       <tooltip>
+                                          <Tooltip text="Help about Search Space Specification" />
+                                       </tooltip></Button>
+                       		     </right>
+                              </BorderPane>
+                           </top>
+                           <bottom>
+                              <Button fx:id="MSuggestParamButton" mnemonicParsing="false" onAction="#suggestParam" text="Load parameter ranges from model interface" BorderPane.alignment="CENTER">
+                                 <BorderPane.margin>
+                                    <Insets bottom="10.0" top="5.0" />
+                                 </BorderPane.margin>
+                                 <tooltip>
+                                    <Tooltip text="Sets the search space specification based on sliders, choosers, etc., from model interface tab." />
+                                 </tooltip>
+                              </Button>
+                           </bottom>
+                           <center>
+                              <TextArea fx:id="MParamSpecsArea" prefHeight="230.0" prefWidth="368.0" BorderPane.alignment="CENTER">
+                                 <BorderPane.margin>
+                                    <Insets left="5.0" right="5.0" />
+                                 </BorderPane.margin>
+                              </TextArea>
+                           </center>
+                        </BorderPane>
+                     </center>
+                     <right>
+                        <AnchorPane prefHeight="319.0" prefWidth="298.0" BorderPane.alignment="CENTER">
+                           <children>
+                              <TextField fx:id="MModelStepField" layoutX="81.0" layoutY="89.0" prefHeight="25.0" prefWidth="194.0" AnchorPane.rightAnchor="23.0" AnchorPane.topAnchor="89.0" />
+                              <Label layoutX="157.0" layoutY="231.0" text="model steps" AnchorPane.rightAnchor="68.0" AnchorPane.topAnchor="231.0" />
+                              <TextField fx:id="MModelStepLimitField" layoutX="81.0" layoutY="227.0" prefHeight="25.0" prefWidth="60.0" AnchorPane.rightAnchor="157.0" AnchorPane.topAnchor="227.0" />
+                              <TextField fx:id="MModelStopConditionField" layoutX="81.0" layoutY="193.0" prefHeight="25.0" prefWidth="194.0" AnchorPane.rightAnchor="23.0" AnchorPane.topAnchor="193.0" />
+                              <TextField fx:id="MMeasureIfField" layoutX="81.0" layoutY="160.0" prefHeight="25.0" prefWidth="194.0" AnchorPane.rightAnchor="23.0" AnchorPane.topAnchor="160.0">
+                                 <tooltip>
+                                    <Tooltip text="e.g. &quot;(ticks mod 100) = 0&quot;, or &quot;member? ticks [50 100 200]&quot;" />
+                                 </tooltip></TextField>
+                              <TextField fx:id="MMeasureField" layoutX="81.0" layoutY="125.0" prefHeight="25.0" prefWidth="194.0" AnchorPane.rightAnchor="23.0" AnchorPane.topAnchor="125.0" />
+                              <TextField fx:id="MModelSetupField" layoutX="81.0" layoutY="55.0" prefHeight="25.0" prefWidth="195.0" AnchorPane.rightAnchor="22.0" AnchorPane.topAnchor="55.0" />
+                              <Label layoutX="12.0" layoutY="231.0" text="Step limit: " AnchorPane.rightAnchor="224.0" AnchorPane.topAnchor="231.0">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="7.0" layoutY="164.0" text="Measure if: " AnchorPane.rightAnchor="224.0" AnchorPane.topAnchor="164.0">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="29.0" layoutY="197.0" text="Stop if: " AnchorPane.rightAnchor="224.0" AnchorPane.topAnchor="197.0">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="16.0" layoutY="129.0" text="Measure: " AnchorPane.rightAnchor="224.0" AnchorPane.topAnchor="129.0">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="36.0" layoutY="93.0" text="Step: " AnchorPane.rightAnchor="224.0" AnchorPane.topAnchor="93.0">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="32.0" layoutY="59.0" text="Setup: " AnchorPane.rightAnchor="224.0" AnchorPane.topAnchor="59.0">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </AnchorPane>
+                     </right>
+                  </BorderPane>
+               </content>
+            </Tab>
+          <Tab text="Search Objective">
+               <content>
+                  <GridPane>
+                     <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="498.0" minWidth="10.0" prefWidth="147.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="539.3333740234375" minWidth="0.0" prefWidth="405.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="208.6666259765625" minWidth="10.0" prefWidth="145.3333740234375" />
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                     </rowConstraints>
+                     <children>
+                        <AnchorPane prefHeight="319.0" prefWidth="430.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+                           <children>
+                              <Label layoutX="58.0" layoutY="64.0" text="Goal: ">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                              <TextField fx:id="SODeltaField" disable="true" layoutX="238.0" layoutY="255.0">
+                                 <tooltip>
+                                    <Tooltip text="How much should be subtracted from the parameter's value, to get the measured change?" />
+                                 </tooltip>
+                              </TextField>
+                              <TextField fx:id="SOFitnessSamplingRepetitionsField" layoutX="217.0" layoutY="134.0" prefHeight="26.0" prefWidth="68.0">
+                                 <tooltip>
+                                    <Tooltip text="How many times should the model be run, for a given setting of the parameters?" />
+                                 </tooltip>
+                              </TextField>
+                              <Label fx:id="SODeltaLabel" disable="true" layoutX="212.0" layoutY="259.0" text="Δ = " />
+                              <Label fx:id="SOWrtLabel" disable="true" layoutX="14.0" layoutY="259.0" text="w.r.t." />
+                              <ChoiceBox fx:id="SOWrtBox" disable="true" layoutX="46.0" layoutY="255.0" prefWidth="150.0">
+                                 <tooltip>
+                                    <Tooltip text="Which parameter should be varied by a small amount to see how much change results?" />
+                                 </tooltip>
+                              </ChoiceBox>
+                              <ChoiceBox fx:id="SOCombineReplicatesBox" layoutX="195.0" layoutY="172.0" prefWidth="150.0" />
+                              <ChoiceBox fx:id="SOFixedSamplingBox" layoutX="56.0" layoutY="134.0" prefWidth="150.0" />
+                              <ChoiceBox fx:id="SOGoalBox" layoutX="195.0" layoutY="61.0" prefWidth="150.0" />
+                              <ChoiceBox fx:id="SOFitnessCollectingBox" layoutX="196.0" layoutY="97.0" prefWidth="150.0" />
+                              <CheckBox fx:id="SOFitnessDerivativeUseAbsCheckBox" disable="true" layoutX="282.0" layoutY="221.0" mnemonicParsing="false" text="Use ABS value?">
+                                 <tooltip>
+                                    <Tooltip text="You might want to take the absolute value if you don't care about the direction of the measured change... e.g., for trying to find phase transitions" />
+                                 </tooltip>
+                              </CheckBox>
+                              <CheckBox fx:id="SOTakeDerivativeCheckBox" layoutX="13.0" layoutY="221.0" mnemonicParsing="false" onAction="#takeDerivativeAction" text="Take derivatives?">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                                 <tooltip>
+                                    <Tooltip text="Instead of using the measure you've specified, use the *change* in that measure (with respect to a certain parameter) for your objective function." />
+                                 </tooltip>
+                              </CheckBox>
+                              <Label layoutX="55.0" layoutY="176.0" text="Combine replicates:">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="58.0" layoutY="100.0" text="Collected measure: ">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Button fx:id="SOHelpEvaluationButton" layoutX="324.0" layoutY="24.0" mnemonicParsing="false" onAction="#helpEvaluationAction" text="?">
+                                 <tooltip>
+                                    <Tooltip text="Help about Evaluation" />
+                                 </tooltip>
+                              </Button>
+                              <Label layoutX="87.0" layoutY="26.0" text="Objective / Fitness Function">
+                                 <font>
+                                    <Font name="System Bold" size="14.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="292.0" layoutY="140.0" text="replicates">
+                                 <font>
+                                    <Font size="12.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </AnchorPane>
+                     </children>
+                  </GridPane>
+               </content>
+            </Tab>
+            <Tab text="Search Algorithm">
+               <content>
+                  <BorderPane>
+                     <top>
+                        <BorderPane prefHeight="40.0" prefWidth="698.0" BorderPane.alignment="CENTER">
+                           <center>
+                              <Label text="Search Method Configuration" BorderPane.alignment="CENTER">
+                                 <font>
+                                    <Font name="System Bold" size="14.0" />
+                                 </font>
+                                 <BorderPane.margin>
+                                    <Insets top="10.0" />
+                                 </BorderPane.margin>
+                              </Label>
+                           </center>
+                           <bottom>
+                              <FlowPane prefHeight="13.0" prefWidth="698.0" BorderPane.alignment="CENTER">
+                                 <children>
+                                    <ChoiceBox fx:id="SASearchMethodBox" prefHeight="26.0" prefWidth="209.0">
+                                       <FlowPane.margin>
+                                          <Insets left="10.0" />
+                                       </FlowPane.margin>
+                                    </ChoiceBox>
+                                    <Button fx:id="SAHelpSearchMethodButton" mnemonicParsing="false" onAction="#helpSearchMethodAction" text="?">
+                                       <FlowPane.margin>
+                                          <Insets left="10.0" />
+                                       </FlowPane.margin>
+                                       <tooltip>
+                                          <Tooltip text="Help about this Search Method" />
+                                       </tooltip>
+                                    </Button>
+                                 </children>
+                              </FlowPane>
+                           </bottom>
+                        </BorderPane>
+                     </top>
+                     <bottom>
+                        <AnchorPane prefHeight="86.0" prefWidth="698.0" BorderPane.alignment="CENTER">
+                           <children>
+                              <Label layoutX="597.0" layoutY="12.0" text="model runs" AnchorPane.bottomAnchor="58.0" AnchorPane.rightAnchor="27.0" />
+                              <Label layoutX="16.0" layoutY="31.0" text="Search Encoding Representation" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="16.0">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="313.0" layoutY="43.0" text="Best-checking replicates: " AnchorPane.bottomAnchor="28.0" AnchorPane.rightAnchor="209.0">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                              <ChoiceBox fx:id="SAChromosomeTypeBox" layoutX="17.0" layoutY="48.0" prefHeight="26.0" prefWidth="190.0" AnchorPane.bottomAnchor="12.0" AnchorPane.leftAnchor="17.0" />
+                              <Button fx:id="SAHelpSearchSpaceRepresentationButton" layoutX="219.0" layoutY="48.0" mnemonicParsing="false" onAction="#helpSearchSpaceRepresentationAction" text="?" AnchorPane.bottomAnchor="12.0" AnchorPane.leftAnchor="219.0">
+                                 <tooltip>
+                                    <Tooltip text="Help about this Search Space Representation" />
+                                 </tooltip></Button>
+                              <TextField fx:id="SABestCheckingField" layoutX="486.0" layoutY="36.0" prefHeight="26.0" prefWidth="97.0" AnchorPane.bottomAnchor="24.0" AnchorPane.rightAnchor="115.0">
+                                 <tooltip>
+                                    <Tooltip text="BestChecking: running another N independent model runs to get an unbiased estimate of the objective function for each &quot;best&quot; individual that's found." />
+                                 </tooltip></TextField>
+                              <TextField fx:id="SAEvaluationLimitField" layoutX="486.0" layoutY="5.0" prefHeight="26.0" prefWidth="97.0" AnchorPane.bottomAnchor="55.0" AnchorPane.rightAnchor="115.0">
+                                 <tooltip>
+                                    <Tooltip text="Stop the search after this many model runs have occurred." />
+                                 </tooltip></TextField>
+                              <Label layoutX="372.0" layoutY="12.0" text="Evaluation limit: " AnchorPane.bottomAnchor="59.0" AnchorPane.rightAnchor="210.0">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                              <CheckBox fx:id="SACachingCheckBox" layoutX="15.0" layoutY="9.0" mnemonicParsing="false" text="Use fitness caching" AnchorPane.bottomAnchor="59.0" AnchorPane.leftAnchor="15.0">
+                                 <tooltip>
+                                    <Tooltip text="If fitness caching is turned on then the result of running the model with certain parameters gets saved so the model won't be re-run if a run with those same parameters are requested again." />
+                                 </tooltip></CheckBox>
+                           </children>
+                        </AnchorPane>
+                     </bottom>
+                     <center>
+                        <TableView fx:id="SASearchMethodTable" prefHeight="113.0" prefWidth="698.0" BorderPane.alignment="CENTER">
+                          <columns>
+                            <TableColumn fx:id="SAParamCol" prefWidth="397.0" text="Parameter" />
+                            <TableColumn fx:id="SAValCol" minWidth="0.0" prefWidth="268.0" text="Value" />
+                          </columns>
+                           <columnResizePolicy>
+                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                           </columnResizePolicy>
+                           <BorderPane.margin>
+                              <Insets left="5.0" right="5.0" top="5.0" />
+                           </BorderPane.margin>
+                        </TableView>
+                     </center>
+                  </BorderPane>
+               </content>
+            </Tab>
+        </tabs>
+      </TabPane>
+      <Button fx:id="runButton" layoutX="606.0" layoutY="448.0" mnemonicParsing="false" onAction="#actionRunNow" text="Run BehaviorSearch" AnchorPane.bottomAnchor="27.0" AnchorPane.rightAnchor="25.0" />
+      <BorderPane prefHeight="25.0" prefWidth="700.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="40.0">
+         <center>
+            <TextField fx:id="browseField" BorderPane.alignment="CENTER">
+               <tooltip>
+                  <Tooltip text="Path to .nlogo file - may be specified relative to the folder containing the '.bsearch' file" />
+               </tooltip></TextField>
+         </center>
+         <right>
+            <Button fx:id="browseButton" mnemonicParsing="false" onAction="#browseFile" prefHeight="25.0" prefWidth="116.0" text="Browse for model" BorderPane.alignment="CENTER" />
+         </right>
+      </BorderPane>
+   </children>
+</AnchorPane>

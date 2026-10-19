@@ -1,0 +1,3 @@
+"search-number","evaluation","a*","b*","c*","d*","num-replicates","best-fitness-so-far","recheck-replications","best-fitness-rechecked"
+"1","200","4","1","7","4","1","1404.4138518813859","10","-215.1676232043929"
+"2","200","-11","-2","-9","12","1","719.3611364244448","10","-1080.047772404885"

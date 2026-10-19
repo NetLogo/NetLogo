@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<!DOCTYPE search SYSTEM "behaviorsearch.dtd">
+<search>
+    <bsearchVersionNumber>1.10</bsearchVersionNumber>
+    <modelInfo>
+        <modelFile>Tester.nlogox</modelFile>
+        <modelSetupCommands/>
+        <modelStepCommands/>
+        <modelStopCondition/>
+        <modelStepLimit>0</modelStepLimit>
+        <modelMetricReporter>ellipsoid</modelMetricReporter>
+        <modelMeasureIf>true</modelMeasureIf>
+    </modelInfo>
+    <fitnessInfo>
+        <fitnessMinimized>false</fitnessMinimized>
+        <fitnessCollecting>AT_FINAL_STEP</fitnessCollecting>
+        <fitnessSamplingReplications>2</fitnessSamplingReplications>
+        <fitnessCombineReplications>MEAN</fitnessCombineReplications>
+    </fitnessInfo>
+    <searchSpace>
+        <paramSpec>["a" [-32 1 32]]</paramSpec>
+        <paramSpec>["b" [-32 1 32]]</paramSpec>
+        <paramSpec>["c" [-32 1 32]]</paramSpec>
+        <paramSpec>["d" [-32 1 32]]</paramSpec>
+    </searchSpace>
+    <searchMethod type="StandardGA">
+        <searchMethodParameter name="mutation-rate" value="0.03"/>
+        <searchMethodParameter name="population-size" value="20"/>
+        <searchMethodParameter name="crossover-rate" value="0.7"/>
+        <searchMethodParameter name="population-model" value="generational"/>
+        <searchMethodParameter name="tournament-size" value="3"/>
+    </searchMethod>
+    <chromosomeRepresentation type="MixedTypeChromosome"/>
+    <caching>false</caching>
+    <evaluationLimit>100</evaluationLimit>
+    <bestCheckingNumReplications>3</bestCheckingNumReplications>
+</search>
