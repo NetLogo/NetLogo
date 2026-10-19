@@ -1,9 +1,6 @@
 [submodule "models"]
 	path = models
 	url = https://github.com/NetLogo/models.git
-[submodule "extensions/gis"]
-	path = extensions/gis
-	url = https://github.com/NetLogo/GIS-Extension.git
 [submodule "extensions/matrix"]
 	path = extensions/matrix
 	url = https://github.com/NetLogo/Matrix-Extension.git
