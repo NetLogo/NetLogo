@@ -1,0 +1,15 @@
+.bundledFiles
+.bsp/
+target/
+extensions/
+/*.jar
+/*.zip
+
+.DS_Store
+*.iml
+bin/
+.project
+.settings
+.classpath
+.gitignore.swp
+.idea/

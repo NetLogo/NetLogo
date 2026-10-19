@@ -1,0 +1,398 @@
+extensionName: ls
+icon: i-si-flow-parallel-duotone
+filesToIncludeInManual:
+- USING.md
+- CITING.md
+- primitives
+markdownTemplate: |2+
+
+  # LS Extension for NetLogo
+
+  LevelSpace is an extension for NetLogo that allows you to run several models concurrently and have them "talk" with each other. LevelSpace models are hierarchical, in that models always belong hierarchically to another model. In this documentation, we will refer to models that have loaded LevelSpace and have opened models as 'parents', and to the models they have opened as 'children' or 'child models'.
+
+  {{> USING.md}}
+
+  {{> CITING.md}}
+
+  ## Primitives
+
+  {{#contents}}
+  ### {{fullCategoryName}}
+
+  {{#prims}}
+  [`{{name}}`](#{{primitive.extensionName}}{{primitive.name}})
+  {{/prims}}
+
+  {{/contents}}
+
+  {{#primitives}}
+  {{> primTemplate}}
+  {{/primitives}}
+
+  {{> LICENSE.md}}
+
+primTemplate: |2
+
+  ### `{{name}}`
+
+  ```NetLogo
+  {{#examples}}
+  {{#isOptional}}({{/isOptional}}{{primitive.fullName}}{{#args}} *{{argumentPlaceholder}}*{{/args}}{{#isOptional}}){{/isOptional}}
+  {{/examples}}
+  ```
+
+  {{{description}}}
+primitives:
+- alternateArguments:
+  - type: number
+  - name: path
+    type: string
+  - type: command
+  arguments:
+  - type: number
+  - name: path
+    type: string
+  description: |2
+
+    Create the specified number of instances of the given model.  The path can be absolute, or relative to the main model. Compared with `ls:create-interactive-models`, this primitive creates lightweight models that are hidden by default. You should use this primitive if you plan on having many instances of the given model. The models may be shown using `ls:show`; when visible, they will have a view and command center, but no other widgets, e.g. plots or monitors.
+
+    If given a command, LevelSpace will call the command after loading each instance of the model with the `model-id` as the argument. This allows you to easily store model ids in a variable or list when loading models, or do other initialization. For example, to store a model id in a variable, you can do:
+
+    ```NetLogo
+    let model-id 0
+    (ls:create-models "My-Model.nlogox" [ [id] -> set model-id id ])
+    ```
+
+    Child model RNGs are seeded from the parent models RNG when they are created.
+    Thus, if you seed the parent's model RNG before child model before child models are created, the simulation as a whole will be reproducible.
+    Use the `ls:random-seed` primitive to seed the model system's RNGs after child models have been created.
+  name: create-models
+  tags:
+  - opening-closing
+  type: command
+- alternateArguments:
+  - type: number
+  - name: path
+    type: string
+  - type: command
+  arguments:
+  - type: number
+  - name: path
+    type: string
+  description: |2
+
+    Like `ls:create-models`, creates the specified number of instances of the given model. Unlike `ls:create-models`, `ls:create-interactive-models` creates models that are visible by default, and have all widgets. You should use this primitive if you plan on having only a handful of instances of the given model, and would like to be able to interact with the instances through their interfaces during runtime.
+
+    Child model RNGs are seeded from the parent models RNG when they are created.
+    Thus, if you seed the parent's model RNG before child model before child models are created, the simulation as a whole will be reproducible.
+    Use the `ls:random-seed` primitive to seed the model system's RNGs after child models have been created.
+  name: create-interactive-models
+  tags:
+  - opening-closing
+  type: command
+- arguments:
+  - name: model-or-list-of-models
+    type: number/list
+  description: |2
+
+    Close the model or models with the given `model-id`.
+  name: close
+  tags:
+  - opening-closing
+  type: command
+- description: |2
+
+    Close down all child models (and, recursively, their child models). You'll often want to call this in your setup procedure.
+
+    Note that `clear-all` does *not* close LevelSpace models.
+  name: reset
+  tags:
+  - opening-closing
+  type: command
+- arguments:
+  - name: model-or-list-of-models
+    type: number/list
+  - name: command
+    type: code-block
+  - name: argument
+    type: repeatable anything
+  description: |2
+
+    Ask the given child model or list of child models to run the given command. This is the primary of doing things with child models. For example:
+
+    ```NetLogo
+    ls:ask model-id [ create-turtles 5 ]
+    ```
+
+    You can also ask a list of models to all do the same thing:
+
+    ```NetLogo
+    ls:ask ls:models [ create-turtles 5 ]
+    ```
+
+    You may supply the command with arguments, just like you would with arrow commands:
+
+    ```NetLogo
+    let turtle-id 0
+    let speed 5
+    (ls:ask model-id [ [t s] -> ask turtle t [ fd s ] ] turtle-id speed)
+    ```
+
+    Note that the commands cannot access variables in the parent model directly. You must either pass information in through arguments or using `ls:let`.
+  name: ask
+  tags:
+  - interaction
+  type: command
+- arguments:
+  - name: reporter
+    type: code-block
+  - name: model-or-list-of-models
+    type: number/list
+  description: |2
+
+    Run the given reporter in the given model and report the result.
+
+    `ls:of` is designed to work like NetLogo's inbuilt `of`: If you send `ls:of` a `model-id`, it will report the value of the reporter from that model. If you send it a list of model-ids, it will report a list of values of the reporter string from all models. You cannot pass arguments to `ls:of`, but you can use `ls:let`.
+
+    ```NetLogo
+    [ count turtles ] ls:of model-id
+    ```
+  infix: true
+  name: of
+  returns: anything
+  tags:
+  - interaction
+  type: reporter
+- arguments:
+  - name: model-or-list-of-models
+    type: number/list
+  - name: reporter
+    type: code-block
+  - name: argument
+    type: repeatable anything
+  description: |2
+
+    Run the given reporter in the given model and report the result. This form exists to allow you to pass arguments to the reporter.
+
+    ```NetLogo
+    let turtle-id 0
+    (ls:report model-id [ [a-turtle] -> [ color ] of turtle a-turtle ] turtle-id)
+    ```
+  name: report
+  returns: anything
+  tags:
+  - interaction
+  type: reporter
+- arguments:
+  - name: list-of-models
+    type: list
+  - name: reporter
+    type: code-block
+  description: |2
+
+    Reports a new list of models containing only those models that report `true` when they run the reporter block.
+
+    ```NetLogo
+    ls:models ls:with [ count turtles > 100 ]
+    ```
+  infix: true
+  name: with
+  returns: list
+  tags:
+  - interaction
+  type: reporter
+- arguments:
+  - name: variable-name
+    type: symbol
+  - name: value
+    type: anything
+  description: |2
+
+    Creates a variable containing the given data that can be accessed by the child models.
+
+    ```NetLogo
+    ask turtles [
+      ls:let my-color color
+      ls:ask my-model [
+        ask turtles [ set color my-color ]
+      ]
+    ]
+    ```
+
+    `ls:let` works quite similar to `let` in that the variable is only locally accessible:
+
+    ```NetLogo
+    ask turtles [
+      ls:let my-color color
+    ]
+    ;; my-color is innaccessible here
+    ```
+
+    `ls:let` is very similar to `let`, except in a few cases.
+
+    - `ls:let` will overwrite previous values in the variable
+
+    If you do
+
+    ```NetLogo
+    ls:let my-var 5
+    ls:let my-var 6
+    ```
+
+    `my-var` will be set equal to `6`. There is no `ls:set`.
+
+    - `ls:let` supports variable shadowing
+
+    If you do
+
+    ```NetLogo
+    ls:let my-var 5
+    ask turtles [
+      ls:let my-var 6
+      ls:ask child-model [ show my-var ]
+    ]
+    ls:ask child-model [ show my-var ]
+    ```
+
+    `child-model` will show `6` and then `5`. This is known as [variable shadowing](https://en.wikipedia.org/wiki/Variable_shadowing).
+
+    - The parent model cannot directly read the value of an ls variable
+
+    For example, this does *not* work.
+
+    ```NetLogo
+    ls:let my-var 5
+    show my-var
+    ```
+
+    This is intentional. ls variables are meant to be used for sharing data with child models. The parent model already has access to the data.
+
+    Furthermore, changing the value of an ls let variable in a child model will not affect it in any other model. For example:
+
+    ```NetLogo
+    ls:let my-var 0
+    ls:ask ls:models [
+      set my-var my-var + 1
+      show my-var
+    ]
+    ```
+
+    All models will print `1`.
+  name: let
+  tags:
+  - interaction
+  type: command
+- arguments:
+  - name: model-or-list-of-models
+    type: number/list
+  - name: global-variable
+    type: symbol
+  - name: value
+    type: anything
+  description: |2
+
+    Sets the given global variable in child model to given value. For instance
+
+    ```netlogo
+    ls:assign ls:models glob1 count turtles
+    ```
+
+    sets the global variable `glob1` in all models to the parent's model `count turtles`.
+  name: assign
+  tags:
+  - interaction
+  type: command
+- description: |2
+
+    Report a list of model-ids for all existing models.
+  name: models
+  returns: list
+  tags:
+  - logic
+  type: reporter
+- arguments:
+  - name: model-or-list-of-models
+    type: number/list
+  description: |2
+
+    Makes all of the given models visible.
+  name: show
+  tags:
+  - logic
+  type: command
+- arguments:
+  - name: model-or-list-of-models
+    type: number/list
+  description: |2
+
+    Makes all of the given models *and their descendents* visible.
+  name: show-all
+  tags:
+  - logic
+  type: command
+- arguments:
+  - name: model-or-list-of-models
+    type: number/list
+  description: |2
+
+    Hide all of the given models. Hiding models is a good way of making your simulation run faster.
+  name: hide
+  tags:
+  - logic
+  type: command
+- arguments:
+  - name: model-or-list-of-models
+    type: number/list
+  description: |2
+
+    Hide all of the given models *and their descendents*. Hiding models is a good way of making your simulation run faster.
+  name: hide-all
+  tags:
+  - logic
+  type: command
+- arguments:
+  - name: model-or-list-of-models
+    type: number/list
+  description: |2
+
+    Report the full path, including the file name of the model. If a list of models is given, a list of paths is reported.
+  name: path-of
+  returns: string
+  tags:
+  - logic
+  type: reporter
+- arguments:
+  - name: model-or-list-of-models
+    type: number/list
+  description: |2
+
+    Reports the name of the model file. This is the name of the window in which the model appears when visible. If a list of models is given, a list of names is reported.
+  name: name-of
+  returns: string
+  tags:
+  - logic
+  type: reporter
+- arguments:
+  - name: model-or-list-of-models
+    type: number/list
+  description: |2
+
+    Report a boolean value for whether there is a model with that model-id. This is often useful when you are dynamically generating models, and want to ensure that you are not asking models that no longer exist to do stuff.
+  name: model-exists?
+  returns: boolean
+  tags:
+  - logic
+  type: reporter
+- arguments:
+  - name: seed
+    type: number
+  description: |2
+
+    Behaves exactly like NetLogo's built-in primitive `random-seed`, except that child models have their RNGs seeded based on the given seed as well (as well their child models, and their child models' child models, and so forth).
+    This primitive should almost always be used instead of NetLogo's built-in one for seeding RNG when using LevelSpace.
+  name: random-seed
+  type: command
+tableOfContents:
+  interaction: Commanding and Reporting
+  logic: Logic and Control
+  opening-closing: Opening and Closing Models

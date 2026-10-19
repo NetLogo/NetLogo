@@ -1,0 +1,286 @@
+# There's funny business with language tests and extensions. They don't seem
+# to be isolated in their own classloaders. They don't unload between tests.
+# But they do seem to reload in the middle of tests for some reason.
+# So:
+# * ls:reset at the end of every test
+# * You can't do more than one level right now
+
+ls-load-reference
+  extensions [ ls ]
+  globals [glob1]
+  O> set glob1 5
+  O> (ls:create-models 1 "extensions/ls/test/Blank.nlogox" [ [id] -> set glob1 id ])
+  glob1 => 0
+  O> ls:close glob1
+  ls:models => []
+
+ls-load-and-close-models
+  extensions [ ls ]
+  O> ls:create-models 1 "extensions/ls/test/Blank.nlogox"
+  ls:uses-level-space? 0 => false
+  ls:models => [0]
+  O> ls:create-models 1 "extensions/ls/test/Blank.nlogox"
+  ls:models => [0 1]
+  O> ls:close 0
+  ls:models => [1]
+  O> ls:reset
+  ls:models => []
+
+ls-load-and-immediate-close
+  extensions [ ls ]
+  O> (ls:create-models 10 "extensions/ls/test/Blank.nlogox" [ [id] -> ls:close id ])
+  ls:models => []
+
+ls-models-preserves-order-of-creation
+  extensions [ ls ]
+  O> ls:create-models 1 "extensions/ls/test/Blank.nlogox"
+  ls:models => [0]
+  O> ls:create-models 1 "extensions/ls/test/Blank.nlogox"
+  ls:models => [0 1]
+  O> ls:create-models 1 "extensions/ls/test/Blank.nlogox"
+  ls:models => [0 1 2]
+  O> ls:create-models 2 "extensions/ls/test/Blank.nlogox"
+  ls:models => [0 1 2 3 4]
+  O> ls:close 2
+  O> ls:create-models 1 "extensions/ls/test/Blank.nlogox"
+  ls:models => [0 1 3 4 5]
+  O> ls:close 5
+  O> ls:create-models 1 "extensions/ls/test/Blank.nlogox"
+  ls:models => [0 1 3 4 6]
+
+ls-uses-level-space
+  extensions [ ls ]
+  O> ls:create-models 1 "extensions/ls/test/Blank.nlogox"
+  ls:uses-level-space? 0 => false
+  O> ls:create-models 1 "extensions/ls/test/LS.nlogox"
+  ls:uses-level-space? 1 => true
+
+ls-ask-and-of-and-report-work-for-single-models
+  extensions [ ls ]
+  O> ls:create-models 1 "extensions/ls/test/Blank.nlogox"
+  O> ls:ask 0 [ crt 1 ]
+  [ count turtles ] ls:of 0 => 1
+  ls:report 0 [ count turtles ] => 1
+
+ls-ask-and-report-take-arguments
+  extensions [ ls ]
+  O> ls:create-models 1 "extensions/ls/test/Blank.nlogox"
+  O> (ls:ask 0 [ [num] -> crt num ] 5)
+  [ count turtles ] ls:of 0 => 5
+  O> (ls:ask 0 [ [num] -> crt num ] 10)
+  [ count turtles ] ls:of 0 => 15
+  (ls:report 0 [ [x] -> x ] 5) => 5
+  (ls:report 0 [ [x y] -> x + y ] 5 6) => 11
+
+ls-ask-and-of-work-for-lists
+  extensions [ ls ]
+  [ count turtles ] ls:of [] => []
+  O> ls:create-models 1 "extensions/ls/test/Blank.nlogox"
+  O> ls:ask ls:models [ crt 1 ]
+  [ count turtles ] ls:of ls:models => [1]
+  O> ls:create-models 1 "extensions/ls/test/Blank.nlogox"
+  O> ls:ask ls:models [ crt 1 ]
+  [ count turtles ] ls:of ls:models => [2 1]
+
+ls-with-filters
+  extensions [ ls ]
+  O> ls:create-models 10 "extensions/ls/test/Blank.nlogox"
+  O> foreach ls:models [ [id] -> (ls:ask id [ [num] -> crt num ] id) ]
+  sort ls:models ls:with [ count turtles mod 2 = 0 ] => [0 2 4 6 8]
+
+ls-set-name
+  extensions [ ls ]
+  O> ls:create-models 1 "extensions/ls/test/Blank.nlogox"
+  O> ls:set-name 0 "foo"
+  ls:name-of 0 => "foo"
+  ls:name-of [0] => ["foo"]
+
+ls-path-of
+  extensions [ ls ]
+  O> ls:create-models 1 "extensions/ls/test/Blank.nlogox"
+  member? "extensions/ls/test/Blank.nlogox" ls:path-of 0 or member? "extensions\\ls\\test\\Blank.nlogox" ls:path-of 0 => true
+  member? "extensions/ls/test/Blank.nlogox" first ls:path-of [0] or member? "extensions\\ls\\test\\Blank.nlogox" first ls:path-of [0] => true
+
+*ls-errors-propagate
+  extensions [ ls ]
+  O> ls:create-models 1 "extensions/ls/test/Blank.nlogox"
+
+  O> ls:ask 0 [ error "hi" ] => STACKTRACE Extension exception: Model 0 (Blank.nlogox) encountered an error at expression 'error "hi"': /
+  /
+  hi /
+  error while observer running ERROR /
+    called by (arrow command: [ error "hi" ]) /
+    called by (arrow command: [ [__lsargs] -> __apply [ error "hi" ] __lsargs ]) /
+    called by procedure __EVALUATOR /
+  error while observer running LS:ASK /
+    called by procedure __EVALUATOR
+
+  [ 1 / count turtles ] ls:of 0 => STACKTRACE Extension exception: Model 0 (Blank.nlogox) encountered an error at expression '1 / count turtles': /
+  /
+  Division by zero. /
+  error while observer running //
+    called by procedure __EVALUATOR /
+  error while observer running LS:OF /
+    called by procedure __EVALUATOR
+
+  ls:report 0 [ 1 / count turtles ] => STACKTRACE Extension exception: Model 0 (Blank.nlogox) encountered an error at expression '1 / count turtles': /
+  /
+  Division by zero. /
+  error while observer running //
+    called by procedure __EVALUATOR /
+  error while observer running LS:REPORT /
+    called by procedure __EVALUATOR
+
+
+ls-cant-report-agentsets
+  extensions [ ls ]
+  O> ls:create-models 1 "extensions/ls/test/Blank.nlogox"
+  [ patches ] ls:of 0 => ERROR Extension exception: Model 0 (Blank.nlogox) encountered an error: You cannot report agents or agentsets from LevelSpace models.
+
+ls-let-injects-variables
+  extensions [ ls ]
+  O> ls:create-models 1 "extensions/ls/test/Blank.nlogox"
+  to-report test-of ls:let foo 5 report [ foo ] ls:of 0 end
+  test-of => 5
+  to-report test-report ls:let foo 6 report ls:report 0 [ foo ] end
+  test-report => 6
+  O> ls:let foo 7 ls:ask 0 [ crt foo ]
+  [ count turtles ] ls:of 0 => 7
+
+ls-let-sees-outer-agent-scope
+  extensions [ ls ]
+  O> ls:create-models 1 "extensions/ls/test/Blank.nlogox"
+  O> crt 1
+  O> ls:let foo 1 ask turtles [ ls:let bar 2 ls:ask 0 [ crt foo + bar ] ]
+  [ count turtles ] ls:of 0 => 3
+
+# https://github.com/NetLogo/LevelSpace/issues/121
+ls-let-sees-outer-procedure-scope
+  extensions [ ls ]
+  O> ls:create-models 1 "extensions/ls/test/Blank.nlogox"
+  O> ls:let foo 3 run [ ls:let bar 7 ls:ask 0 [ crt foo + bar ] ]
+  [ count turtles ] ls:of 0 => 10
+
+ls-let-respects-agent-scope
+  extensions [ ls ]
+  O> ls:create-models 1 "extensions/ls/test/Blank.nlogox"
+  O> ask patches [ ls:let foo 0 ] ls:ask 0 [ show foo ] => ERROR Extension exception: Model 0 (Blank.nlogox) encountered an error: Nothing named FOO has been defined.
+
+ls-let-respects-procedure-scope
+  extensions [ ls ]
+  O> ls:create-models 1 "extensions/ls/test/Blank.nlogox"
+  to proc ls:let foo 0 end
+  O> proc ls:ask 0 [ show foo ] => ERROR Extension exception: Model 0 (Blank.nlogox) encountered an error: Nothing named FOO has been defined.
+
+ls-let-works-in-repeat
+  extensions [ ls ]
+  O> ls:create-models 1 "extensions/ls/test/Blank.nlogox"
+  O> let i 0 repeat 10 [ ls:let foo i ls:ask 0 [ ca crt foo ] set i i + 1 ]
+  [ count turtles ] ls:of 0 => 9
+
+# https://github.com/NetLogo/LevelSpace/issues/121
+ls-lets-can-be-closed-over
+  extensions [ ls ]
+  O> ls:create-models 1 "extensions/ls/test/Blank.nlogox"
+  to-report get-command [ x ] ls:let foo x report [ -> ls:ask 0 [ crt foo ] ] end
+  O> run (get-command 3)
+  [ count turtles ] ls:of 0 => 3
+  to-report get-reporter [ x ] ls:let foo x report [ -> [ foo ] ls:of 0 ] end
+  runresult (get-reporter 5) => 5
+
+ls-gui-children-work-in-headless
+  extensions [ ls ]
+  O> ls:create-interactive-models 1 "extensions/ls/test/Blank.nlogox"
+  O> ls:ask 0 [ crt 5 ]
+  [ count turtles ] ls:of 0 => 5
+
+ls-gui-noops-in-headless
+  extensions [ ls ]
+  O> ls:create-models 1 "extensions/ls/test/Blank.nlogox"
+  O> ls:show 0
+  O> ls:hide 0
+
+# This fails to throw an error in tests, but works perfectly. Not sure what's up.
+ls-headless-model-old-version
+  extensions [ ls ]
+  O> ls:create-models 1 "extensions/ls/test/5.x.nlogo" => ERROR Extension exception: extensions/ls/test/5.x.nlogo is from an incompatible version of NetLogo. Try opening it in NetLogo to convert it.
+
+ls-syncs-rng-on-model-creation
+  extensions [ ls ]
+  globals [ glob1 glob2 ]
+  O> random-seed 0
+  O> ls:create-models 2 "extensions/ls/test/Blank.nlogox"
+  O> set glob1 [ random-float 1 ] ls:of 0
+  O> set glob2 [ random-float 1 ] ls:of 1
+  O> ls:reset
+  O> random-seed 0
+  O> ls:create-models 2 "extensions/ls/test/Blank.nlogox"
+  glob1 = [ random-float 1 ] ls:of 0 => true
+  glob2 = [ random-float 1 ] ls:of 1 => true
+  O> ls:reset
+  O> random-seed 0
+  O> ls:create-models 2 "extensions/ls/test/Blank.nlogox"
+  # This is making sure the child rng is not in the same state as the parent
+  glob1 = random-float 1 => false
+
+ls-random-seed
+  extensions [ ls ]
+  globals [ glob1 glob2 glob3 ]
+  O> ls:create-models 2 "extensions/ls/test/Blank.nlogox"
+  O> ls:random-seed 0
+  O> set glob1 random-float 1
+  O> set glob2 [ random-float 1 ] ls:of 0
+  O> set glob3 [ random-float 1 ] ls:of 1
+  O> ls:reset
+  O> ls:create-models 2 "extensions/ls/test/Blank.nlogox"
+  O> ls:random-seed 0
+  glob1 = random-float 1 => true
+  glob2 = [ random-float 1 ] ls:of 0 => true
+  glob3 = [ random-float 1 ] ls:of 1 => true
+  # This is making sure the child rng is not in the same state as the parent
+  glob1 = glob2 => false
+
+ls-uses-right-rng
+  extensions [ ls ]
+  globals [ glob1 glob2 ]
+  O> random-seed 0
+  O> ls:create-models 1 "extensions/ls/test/Blank.nlogox"
+  O> with-local-randomness [ set glob1 [ random-float 1 ] ls:of 0 ]
+  glob1 = [ random-float 1 ] ls:of 0 => true
+  # This is currently broken because every time an ls call is made with a local rng
+  # a new clone of the main rng is made
+  # O> with-local-randomness [ ls:random-seed 0 set glob2 [ random-float 1 ] ls:of 0 ]
+  # glob1 = glob2 => true
+
+ls-assign
+  extensions [ ls ]
+  globals [ glob1 ]
+  O> set glob1 5
+  O> ls:create-models 3 "extensions/ls/test/Blank.nlogox"
+  O> ls:assign 0 glob1 15
+  [ glob1 ] ls:of 0 => 15
+  O> ls:assign ls:models glob1 glob1
+  [ glob1 ] ls:of ls:models => [5 5 5]
+
+# This setup code is take from the Model Interactions Example to diagnose an issue found in the
+# models library automated tests.  It's probably not actually necessary to have the Climate Change
+# and Wolf Sheep models copied in for the test, but it can't hurt and makes things more "real world".
+# Names of the models are changed to avoid confusion. -Jeremy B June 2021
+model-interactions-inline
+  extensions [ ls ]
+  globals [ climate-change-model wolf-sheep-predation-model ]
+  O> ls:reset
+  O> clear-all
+  O> set climate-change-model -1
+  O> set wolf-sheep-predation-model -1
+  O> (ls:create-interactive-models 1 "extensions/ls/test/ClimateChangeLSTest.nlogox" [ id -> (set climate-change-model id) (ls:hide climate-change-model) ])
+  ls:models => [0]
+  O> (ls:create-interactive-models 1 "extensions/ls/test/WolfSheepPredationLSTest.nlogox" [ id -> (set wolf-sheep-predation-model id) (ls:ask wolf-sheep-predation-model [ set model-version "sheep-wolves-grass" ]) ])
+  O> if wolf-sheep-predation-model = -1 or climate-change-model = -1 [ error "Model setup not complete, what's the point of continuing?" ]
+  O> ls:ask ls:models [ setup ]
+  O> ls:ask climate-change-model [ (repeat 2 [ add-cloud ]) (repeat 10 [ add-co2 ]) (repeat 7000 [ go ]) ]
+  O> ls:show climate-change-model
+  O> reset-ticks
+  ls:models => [0 1]
+  O> ls:reset
+  ls:models => []
