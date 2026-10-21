@@ -2,8 +2,10 @@
 
 package org.nlogo.headless
 
+import java.io.FileInputStream
 import java.nio.file.{ Files, Paths }
 import java.util.Locale
+import java.util.zip.GZIPInputStream
 
 import org.nlogo.core.I18N
 import org.nlogo.util.{ AnyFunSuiteEx, SlowTest }
@@ -51,7 +53,16 @@ class ChecksumTester extends AnyFunSuiteEx {
 
     Checksummer.initModelForChecksumming(workspace, entry.variant.getOrElse(""))
 
-    val expectedWorld = Files.readString(entry.checksumPath.resolve("world.csv")).replace("\r\n", "\n")
+    val expectedWorld: String = {
+      val input = new GZIPInputStream(new FileInputStream(entry.checksumPath.resolve("world.csv.gz").toFile))
+
+      val str = new String(input.readAllBytes)
+
+      input.close()
+
+      str.replace("\r\n", "\n")
+    }
+
     val actualWorld = Checksummer.exportWorld(workspace)
 
     if (expectedWorld != actualWorld) {
@@ -64,7 +75,16 @@ class ChecksumTester extends AnyFunSuiteEx {
       fail("World file did not match expected.")
     }
 
-    val expectedGraphics = Files.readAllBytes(entry.checksumPath.resolve("graphics.png"))
+    val expectedGraphics: Array[Byte] = {
+      val input = new GZIPInputStream(new FileInputStream(entry.checksumPath.resolve("graphics.png.gz").toFile))
+
+      val bytes: Array[Byte] = input.readAllBytes
+
+      input.close()
+
+      bytes
+    }
+
     val actualGraphics = Checksummer.exportGraphics(workspace)
 
     if (!expectedGraphics.sameElements(actualGraphics)) {
