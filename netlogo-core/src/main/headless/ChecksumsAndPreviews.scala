@@ -2,9 +2,10 @@
 
 package org.nlogo.headless
 
-import java.io.File
+import java.io.{ File, FileOutputStream }
 import java.nio.file.{ Files, Path, Paths }
 import java.util.Locale
+import java.util.zip.GZIPOutputStream
 import javax.imageio.ImageIO
 
 import org.nlogo.api.{ FileIO, PreviewCommands, Version }
@@ -224,8 +225,16 @@ object ChecksumsAndPreviews {
 
       Files.createDirectories(checksumPath)
 
-      Files.writeString(checksumPath.resolve("world.csv"), Checksummer.exportWorld(workspace))
-      ImageIO.write(workspace.renderer.exportView(workspace), "png", checksumPath.resolve("graphics.png").toFile)
+      new GZIPOutputStream(new FileOutputStream(checksumPath.resolve("world.csv.gz").toFile)) {
+        write(Checksummer.exportWorld(workspace).getBytes)
+        close()
+      }
+
+      val output = new GZIPOutputStream(new FileOutputStream(checksumPath.resolve("graphics.png.gz").toFile))
+
+      ImageIO.write(workspace.renderer.exportView(workspace), "png", output)
+
+      output.close()
     }
 
     private def deleteRecursive(file: File): Unit = {
