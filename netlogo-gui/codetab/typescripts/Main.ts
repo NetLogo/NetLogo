@@ -983,15 +983,15 @@ window.nullHandler = (_: EditorView) => {
 };
 
 window.toBase64 = (text: string) => {
-  let encoder = new TextEncoder();
+  const bytes: Uint8Array<ArrayBuffer> = new TextEncoder().encode(text);
 
   let str = "";
 
-  for (let i = 0; i < text.length; i += 32766) {
-    str += btoa(String.fromCodePoint(...encoder.encode(text.substring(i, Math.min(i + 32766, text.length)))));
+  for (let i = 0; i < bytes.byteLength; i++) {
+    str += String.fromCharCode(bytes[i] || 0);
   }
 
-  return str;
+  return btoa(str);
 };
 
 window.fromBase64 = (text: string) => {
