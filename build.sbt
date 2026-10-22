@@ -223,6 +223,7 @@ lazy val netlogo = project.in(file("netlogo-gui")).
     isSnapshot := true,
     publishTo := { Some("Cloudsmith API" at "https://maven.cloudsmith.io/netlogo/netlogo/") },
     Compile / mainClass := Some("org.nlogo.app.App"),
+    Test / mainClass := None,
     javacOptions   ++= Seq("--release", "21"),
     modelsDirectory := baseDirectory.value.getParentFile / "models",
     extensionRoot   := (baseDirectory.value.getParentFile / "extensions").getAbsoluteFile,
