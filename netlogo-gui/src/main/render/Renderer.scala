@@ -11,8 +11,10 @@ import org.nlogo.core.AgentKind
 
 import scala.jdk.CollectionConverters.{ IterableHasAsScala, IteratorHasAsScala }
 
-class Renderer(world: WorldWithWorldRenderable, renderLabelsAsRectangles: Boolean = false)
-  extends AbstractRenderer(world, world.turtleShapes, world.linkShapes, renderLabelsAsRectangles) {
+class Renderer(world: WorldWithWorldRenderable, labelsAsRectangles: Boolean)
+  extends AbstractRenderer(world, world.turtleShapes, world.linkShapes, labelsAsRectangles) {
+
+  def this(world: WorldWithWorldRenderable) = this(world, false)
 
   def paint(g: Graphics2D, settings: ViewSettings): Unit = {
     paint(new Graphics2DWrapper(g, renderLabelsAsRectangles), settings)
@@ -24,6 +26,8 @@ class Renderer(world: WorldWithWorldRenderable, renderLabelsAsRectangles: Boolea
       world.patches.agents.asScala.foreach {
         case patch: Patch if patch.hasLabel =>
           drawPatchLabel(g, patch, patchSize)
+
+        case _ =>
       }
     }
 
@@ -40,13 +44,15 @@ class Renderer(world: WorldWithWorldRenderable, renderLabelsAsRectangles: Boolea
     var linksDrawn = 0
 
     // traverse breeds in reverse order of declaration
-    world.program.linkBreeds.keys.map(world.getLinkBreed).foreach(_.agents.iterator.asScala.foreach {
-      case link: Link =>
-        linkDrawer.drawLink(g, topology, link, patchSize, false)
-        linksDrawn += 1
+    world.program.linkBreeds.keys.foreach { breed =>
+      world.getLinkBreed(breed).agents.iterator.asScala.foreach {
+        case link: Link =>
+          linkDrawer.drawLink(g, topology, link, patchSize, false)
+          linksDrawn += 1
 
-      case _ =>
-    })
+        case _ =>
+      }
+    }
 
     if (linksDrawn < world.links.count) {
       // uh oh, we have some unbreeded turtles we need to go back and draw
