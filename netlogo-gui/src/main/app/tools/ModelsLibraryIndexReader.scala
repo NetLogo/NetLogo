@@ -52,7 +52,7 @@ object ModelsLibraryIndexReader {
     val whatIsItPattern = "(?s).*## WHAT IS IT\\?\\s*\\n"
     if (info.matches(whatIsItPattern + ".*")) {
       val firstParagraph = info.replaceFirst(whatIsItPattern, "").split('\n').head
-      val formattedFirstParagraph = InfoFormatter(new DummyZoomable, firstParagraph)
+      val formattedFirstParagraph = InfoFormatter(new DummyZoomable, firstParagraph, includeLatex = false)
       Some(formattedFirstParagraph)
     } else {
       None

@@ -71,23 +71,27 @@ object InfoFormatter {
 
   def apply(zoom: ZoomHelpers, content: String, modelDir: String = null,
             resourceManager: ExternalResourceManager = new ExternalResourceManager,
-            fontFamily: String = "monospace") = {
+            fontFamily: String = "monospace", includeLatex: Boolean = true) = {
 
-    wrapHtml(zoom, toInnerHtml(content, modelDir, resourceManager), fontFamily)
+    wrapHtml(zoom, toInnerHtml(content, modelDir, resourceManager), fontFamily, includeLatex)
   }
 
-  def wrapHtml(zoom: ZoomHelpers, body: String, fontFamily: String = "monospace"): String = {
-    s"""<html><head>${styleSheet(zoom, fontFamily)}</head><body>$body</body><script>
-      window.MathJax = {
-        tex: {
-          inlineMath: [['$$', '$$']],
-          packages: {'[+]': ['mhchem']}
-        },
-        loader: {load: ['[tex]/mhchem']}
-      };
+  def wrapHtml(zoom: ZoomHelpers, body: String, fontFamily: String = "monospace", includeLatex: Boolean): String = {
+    if (includeLatex) {
+      s"""<html><head>${styleSheet(zoom, fontFamily)}</head><body>$body</body><script>
+        window.MathJax = {
+          tex: {
+            inlineMath: [['$$', '$$']],
+            packages: {'[+]': ['mhchem']}
+          },
+          loader: {load: ['[tex]/mhchem']}
+        };
 
-      $mathJax
-    </script></html>"""
+        $mathJax
+      </script></html>"""
+    } else {
+      s"""<html><head>${styleSheet(zoom, fontFamily)}</head><body>$body</body></html>"""
+    }
   }
 
   def toInnerHtml(content: String, modelDir: String = null,
