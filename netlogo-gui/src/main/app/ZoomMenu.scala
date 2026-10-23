@@ -16,7 +16,7 @@ class ZoomMenu extends Menu(I18N.gui.get("menu.zoom")) {
   setMnemonic('Z')
 
   addMenuItem(new AbstractAction(I18N.gui("larger")) with MenuAction {
-    accelerator = KeyBindings.keystroke(KeyEvent.VK_EQUALS, withMenu = true)
+    accelerator = KeyBindings.keystroke(KeyEvent.VK_PLUS, withMenu = true)
     mnemonic = KeyEvent.VK_L
 
     def actionPerformed(e: ActionEvent): Unit = {
