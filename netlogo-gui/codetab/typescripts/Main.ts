@@ -220,6 +220,7 @@ declare global {
     unfoldSelected: () => void;
     foldAll: () => void;
     unfoldAll: () => void;
+    unfoldCurrent: (view: EditorView) => boolean;
     setCoreProgram: (keywords: string[], constants: string[], commands: string[], reporters: string[]) => void;
     setCompiledProgram: (keywords: string[], globals: string[], variables: string[], commands: string[],
                          reporters: string[]) => void;
@@ -343,6 +344,7 @@ window.onload = () => {
         { key: "Mod-ArrowRight", mac: "Alt-ArrowRight", run: cursorGroupForward, shift: selectGroupForward },
         { key: "Alt-ArrowUp", run: moveLineUp },
         { key: "Alt-ArrowDown", run: moveLineDown },
+        { key: "ArrowRight", run: window.unfoldCurrent },
         { key: "Tab", run: window.indent, shift: window.unindent },
         { key: "Enter", run: window.handleEnter },
         { key: "Alt-f", run: window.nullHandler },
@@ -812,6 +814,22 @@ window.foldAll = () => {
 window.unfoldAll = () => {
   unfoldAll(window.view);
 };
+
+window.unfoldCurrent = (view: EditorView) => {
+  const selection: SelectionRange = view.state.selection.main;
+
+  if (selection.empty && selection.head == view.state.doc.lineAt(selection.head).to) {
+    const fold: FoldRange | null = window.getFold(view.state, selection.head, selection.head);
+
+    if (fold) {
+      window.view.dispatch({
+        effects: unfoldEffect.of(fold)
+      });
+    }
+  }
+
+  return false;
+}
 
 window.setCoreProgram = (keywords: string[], constants: string[], commands: string[], reporters: string[]) => {
   window.program.setCore(keywords, constants, commands, reporters);
