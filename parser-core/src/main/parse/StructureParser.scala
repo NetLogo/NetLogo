@@ -73,10 +73,12 @@ object StructureParser {
               val separator = System.getProperty("file.separator")
               val newImports: mutable.Set[Import] = mutable.Set()
 
-              val importPrefix = currentImport.pathComponents.mkString(":")
-              val lastImportComponent = currentImport.pathComponents.lastOption
+              val fullImportPath = currentImport.pathComponents.mkString(":")
+              val lastImportComponent = currentImport.pathComponents.last
+              val butLastImportComponent = currentImport.pathComponents.dropRight(1).mkString(":")
               val importAlias = currentImport.pathAlias
-              val confusingImportParts = Seq(Some(importPrefix), lastImportComponent, importAlias).flatten
+              val confusingImportParts = Seq(Some(fullImportPath), Some(lastImportComponent), importAlias).flatten
+
               val suppliedPaths =
                 compilationEnvironment.resolveModulePath(currentImport.filename, currentImport.pathComponents)
 
@@ -105,9 +107,11 @@ object StructureParser {
                         val path = relativePath.replace(separator, ":").toUpperCase(Locale.ROOT).stripSuffix(".NLM")
 
                         if (path.nonEmpty) {
-                          s"$path:"
+                          val basePrefix = s"$butLastImportComponent:"
+
+                          s"${path.stripPrefix(basePrefix)}:"
                         } else {
-                          ""
+                          lastImportComponent
                         }
                       }
                   }
