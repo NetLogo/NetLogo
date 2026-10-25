@@ -339,7 +339,13 @@ class StructureParserTests extends AnyFunSuite {
     case NLInclude  extends SourceType("nls")
     case NLModule   extends SourceType("nlm")
 
-  def compileAll(src: String, sourceType: SourceType, fooSrc: String, barSrc: String = ""): StructureResults = {
+  def compileAll(
+    src: String,
+    sourceType: SourceType,
+    fooSrc: String,
+    barSrc: String = "",
+    qazSrc: String = ""):
+  StructureResults = {
     class TestCompilationEnvironment extends DummyCompilationEnvironment {
       override def resolveModulePath(currentFile: Option[String], modulePath: Seq[String]) = {
 
@@ -351,6 +357,7 @@ class StructureParserTests extends AnyFunSuite {
         (parentDir, modulePath) match {
           case (None, Seq("FOO")) => Seq(s"foo.$suffix")
           case (None, Seq("BAR")) if barSrc.nonEmpty => Seq(s"bar.$suffix")
+          case (None, Seq("BAZ", "QAZ")) if qazSrc.nonEmpty => Seq(s"baz/qaz.$suffix")
           case _ => Seq()
         }
       }
@@ -364,6 +371,7 @@ class StructureParserTests extends AnyFunSuite {
         name match {
           case s"foo.$suffix" => Some((s"foo.$suffix", fooSrc))
           case s"bar.$suffix" if barSrc.nonEmpty => Some((s"bar.$suffix", barSrc))
+          case s"baz/qaz.$suffix" if qazSrc.nonEmpty => Some((s"baz/qaz.$suffix", qazSrc))
           case _ => None
         })
   }
@@ -390,6 +398,19 @@ class StructureParserTests extends AnyFunSuite {
   test("import syntax returns correct results") {
     val results = compileAll("""import foo""", SourceType.NLModule, "")
     assert(results.imports.nonEmpty || results.includedSources.nonEmpty)
+  }
+
+  test("last component of the imported module path is used as the prefix") {
+    val qazSrc = """
+      |export [hello]
+      |
+      |to hello
+      |  show 12345
+      |end
+      """.stripMargin
+    val results = compileAll("""import baz:qaz""", SourceType.NLModule, "", "", qazSrc)
+
+    assert(results.procedures.keys.toSet == Set(("QAZ:HELLO", None), ("HELLO", Some("baz/qaz.nlm"))))
   }
 
   test("undeclared extensions in imported modules") {
