@@ -23,6 +23,7 @@ trait ZoomableWindow(parent: Option[Component]) extends Window with RootPaneCont
     inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_EQUALS, mask), "zoomIn")
     inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_PLUS, mask), "zoomIn")
     inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ADD, mask), "zoomIn")
+    inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_SUBTRACT, mask), "zoomOut")
     inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, mask), "zoomOut")
     inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_0, mask), "resetZoom")
 
