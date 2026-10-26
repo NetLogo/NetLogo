@@ -2,8 +2,8 @@
 
 package org.nlogo.parse
 
-import org.nlogo.core.{ CompilationOperand, DummyCompilationEnvironment, DummyExtensionManager,
-  DummyLibraryManager, CompilerException, Femto, StructureResults }
+import org.nlogo.core.{ CompilationOperand, DummyCompilationEnvironment, DummyExtensionManager, DummyLibraryManager,
+                        CompilerException, Femto, ResolvedModule, StructureResults }
 
 import org.nlogo._
 import org.scalatest.funsuite.AnyFunSuite
@@ -356,7 +356,7 @@ class StructureParserTests extends AnyFunSuite {
       override def resolveModulePath(
         currentFile: Option[String],
         modulePath: Seq[String]
-      ): Option[(String, Seq[String])] = {
+      ): Option[ResolvedModule] = {
 
         val separator = System.getProperty("file.separator")
         val suffix = sourceType.suffix
@@ -364,10 +364,11 @@ class StructureParserTests extends AnyFunSuite {
         val parentDir = currentFile.map(getParentDir(_)).flatMap(x => if (x.isEmpty) None else Some(x))
 
         (parentDir, modulePath) match {
-          case (None, Seq("FOO")) => Some(("", Seq(s"foo.$suffix")))
-          case (None, Seq("BAR")) if barSrc.nonEmpty => Some(("", Seq(s"bar.$suffix")))
-          case (None, Seq("BAZ", "QAZ")) if qazSrc.nonEmpty => Some(("", Seq(s"baz/qaz.$suffix")))
-          case _ => Some(("", Seq()))
+          case (None, Seq("FOO")) => Some(ResolvedModule("", s"foo.$suffix", Seq(s"foo.$suffix")))
+          case (None, Seq("BAR")) if barSrc.nonEmpty => Some(ResolvedModule("", s"bar.$suffix", Seq(s"bar.$suffix")))
+          case (None, Seq("BAZ", "QAZ")) if qazSrc.nonEmpty => Some(ResolvedModule("", s"baz/qaz.$suffix",
+                                                                                   Seq(s"baz/qaz.$suffix")))
+          case _ => Some(ResolvedModule("", "", Seq()))
         }
       }
     }

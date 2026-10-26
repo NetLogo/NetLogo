@@ -11,7 +11,7 @@ import javax.swing.{ AbstractAction, JPanel }
 
 import org.nlogo.agent.Observer
 import org.nlogo.app.common.{CodeToHtml, EditorFactory, FindDialog, MenuTab, TabsInterface, Events => AppEvents}
-import org.nlogo.core.{ AgentKind, CompilerException, I18N }
+import org.nlogo.core.{ AgentKind, CompilerException, I18N, ResolvedModule }
 import org.nlogo.editor.{ AdvancedEditorArea, EditorConfiguration }
 import org.nlogo.nvm.IncludeSource
 import org.nlogo.swing.{ BoxAlign, BoxRow, Button, CheckBox, FocusRoot, PrinterManager, ToolBarActionButton, UserAction,
@@ -179,6 +179,15 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
     }
   }
 
+  protected def getImports: Seq[(String, String)] = {
+    workspace.compiler.frontEnd.findImports(getText).flatMap { list =>
+      workspace.getCompilationEnvironment.resolveModulePath(None, list).map {
+        case ResolvedModule(_, path, _) =>
+          (list.last, path)
+      }
+    }
+  }
+
   def agentClass = classOf[Observer]
 
   def kind = AgentKind.Observer
@@ -226,7 +235,8 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
 
     text.setProgram(workspace.world.program, commands, reporters,
                     workspace.getExtensionManager.extensionCommandNames.toSeq,
-                    workspace.getExtensionManager.extensionReporterNames.toSeq)
+                    workspace.getExtensionManager.extensionReporterNames.toSeq,
+                    getImports)
   }
 
   protected def compile(): Unit = new WindowEvents.CompileAllEvent().raise(this)

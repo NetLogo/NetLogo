@@ -2,7 +2,7 @@ import { ContextTracker, type Stack } from "@lezer/lr";
 
 import {
   As, Globals, Export, Extensions, From, Import, Includes, Breed, To, ToReport, End, Own, Command, Reporter, Constant,
-  Var
+  Var, ModuleIdentifier
 } from "./netlogo.terms.js";
 
 export function keywords(name: string, stack: Stack): number {
@@ -30,7 +30,12 @@ export function keywords(name: string, stack: Stack): number {
         case "variable": return Var;
         case "reporter": return Reporter;
         case "command": return Command;
-        default: return -1;
+        default:
+          if (window.program.imports.has(nameLower)) {
+            return ModuleIdentifier;
+          }
+
+          return -1;
       }
   }
 };

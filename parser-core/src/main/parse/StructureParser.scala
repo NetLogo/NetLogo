@@ -23,8 +23,8 @@ import scala.collection.mutable
 import scala.util.matching.Regex
 import java.util.Locale
 import org.nlogo.core.{ CompilationEnvironment, CompilationOperand, CompilerException, ErrorSource, I18N, Import,
-                        ProcedureSyntax, Program, StructureDeclarations, StructureResults, Token, TokenizerInterface,
-                        TokenType }
+                        ProcedureSyntax, Program, ResolvedModule, StructureDeclarations, StructureResults, Token,
+                        TokenizerInterface, TokenType }
 import org.nlogo.core.Fail._
 import org.nlogo.core.FrontEndInterface.{ ProceduresMap, ProcedureTokensMap }
 import org.nlogo.core.LibraryStatus.CanInstall
@@ -80,7 +80,13 @@ object StructureParser {
               val confusingImportParts = Seq(Some(fullImportPath), Some(lastImportComponent), importAlias).flatten
 
               val (basePath, suppliedPaths) =
-                compilationEnvironment.resolveModulePath(currentImport.filename, currentImport.pathComponents).getOrElse(("", Seq()))
+                compilationEnvironment.resolveModulePath(currentImport.filename, currentImport.pathComponents) match {
+                  case Some(ResolvedModule(prefix, _, paths)) =>
+                    (prefix, paths)
+
+                  case _ =>
+                    ("", Seq())
+                }
 
               if (suppliedPaths.isEmpty) {
                 exception(I18N.errors.getN("compiler.StructureParser.importNotFound", currentImport.pathComponents.mkString(":")), currentImport.token)

@@ -11,19 +11,22 @@ import {
 } from "@codemirror/language";
 import { highlightSelectionMatches } from "@codemirror/search";
 import { Compartment, EditorState, Line, SelectionRange, Text, Transaction } from "@codemirror/state";
+import { hoverTooltip, type Tooltip } from "@codemirror/view";
 import {
   EditorView, keymap, drawSelection, highlightActiveLine, rectangularSelection, crosshairCursor, lineNumbers,
   highlightActiveLineGutter, ViewUpdate
 } from "@codemirror/view";
+import { type SyntaxNode, Tree } from "@lezer/common";
 import { styleTags, Tag, tags } from "@lezer/highlight";
 
 import { toggleComments } from "./comment.js";
 import { executeIndentations } from "./indent.js";
 import { parser } from "./netlogo.js";
-import { End, To } from "./netlogo.terms.js";
+import { End, ModuleIdentifier, To } from "./netlogo.terms.js";
 
 interface ColorTheme {
   background: string;
+  popupBackground: string;
   gutterBorder: string;
   scrollBarBackground: string;
   scrollBarForeground: string;
@@ -114,6 +117,7 @@ class Trie {
 
 class Program {
   decls: string[] = [];
+  imports: Map<string, string> = new Map();
 
   private core: Trie = new Trie();
   private compiled: Trie = new Trie();
@@ -129,7 +133,7 @@ class Program {
     this.core.appendAll(reporters, "reporter");
   }
 
-  setCompiled(keywords: string[], globals: string[], variables: string[], commands: string[], reporters: string[]) {
+  setCompiled(keywords: string[], globals: string[], variables: string[], commands: string[], reporters: string[], imports: [string, string][]) {
     this.compiled = new Trie();
 
     this.compiled.appendAll(keywords, "keyword");
@@ -137,6 +141,8 @@ class Program {
     this.compiled.appendAll(variables, "variable");
     this.compiled.appendAll(commands, "command");
     this.compiled.appendAll(reporters, "reporter");
+
+    this.imports = new Map(imports);
   }
 
   match(value: string, offset: number = 0): Completion | undefined {
@@ -148,11 +154,12 @@ class Program {
   }
 }
 
-const identRegex: RegExp = /[\w\-:.?=*!<>#+/%$\^'&]+/;
+const identRegex: RegExp = /[\w\-.?=*!<>#+/%$\^'&]+/;
 
 const commandTag: Tag = Tag.define("command", tags.name);
 const reporterTag: Tag = Tag.define("reporter", tags.name);
 const variableTag: Tag = Tag.define("variable", tags.name);
+const moduleTag: Tag = Tag.define("module", tags.name);
 
 declare global {
   interface Window {
@@ -223,8 +230,9 @@ declare global {
     unfoldCurrent: (view: EditorView) => boolean;
     setCoreProgram: (keywords: string[], constants: string[], commands: string[], reporters: string[]) => void;
     setCompiledProgram: (keywords: string[], globals: string[], variables: string[], commands: string[],
-                         reporters: string[]) => void;
+                         reporters: string[], imports: [string, string][]) => void;
     autocomplete: (context: CompletionContext) => CompletionResult | null;
+    hoverTooltip: (view: EditorView, pos: number, side: -1 | 1) => Tooltip | null;
     doScroll: (mouseX: number, mouseY: number, scrollX: number, scrollY: number) => void;
     syncTheme: (theme: ColorTheme) => void;
     nullHandler: (view: EditorView) => boolean;
@@ -256,6 +264,7 @@ window.onload = () => {
 
   window.currentTheme = {
     background: "",
+    popupBackground: "",
     gutterBorder: "",
     scrollBarBackground: "",
     scrollBarForeground: "",
@@ -293,6 +302,9 @@ window.onload = () => {
         icons: false,
         optionClass: (completion: Completion): string => `cm-completionLabel-${completion.type}`
       }),
+      hoverTooltip(window.hoverTooltip, {
+        hideOnChange: true
+      }),
       new LanguageSupport(LRLanguage.define({
         parser: parser.configure({
           props: [
@@ -311,6 +323,7 @@ window.onload = () => {
               ToReport: tags.keyword,
               End: tags.keyword,
               Identifier: tags.name,
+              ModuleIdentifier: moduleTag,
               Number: tags.literal,
               String: tags.literal,
               Command: commandTag,
@@ -836,8 +849,8 @@ window.setCoreProgram = (keywords: string[], constants: string[], commands: stri
 };
 
 window.setCompiledProgram = (keywords: string[], globals: string[], variables: string[], commands: string[],
-                             reporters: string[]) => {
-  window.program.setCompiled(keywords, globals, variables, commands, reporters);
+                             reporters: string[], imports: [string, string][]) => {
+  window.program.setCompiled(keywords, globals, variables, commands, reporters, imports);
 };
 
 window.autocomplete = (context: CompletionContext) => {
@@ -899,6 +912,41 @@ window.autocomplete = (context: CompletionContext) => {
   }
 
   return null;
+};
+
+window.hoverTooltip = (view: EditorView, pos: number, side: 1 | -1) => {
+  const tree: Tree | null = ensureSyntaxTree(view.state, pos);
+
+  if (!tree) {
+    return null;
+  }
+
+  const node: SyntaxNode = tree.resolve(pos, side);
+
+  if (node.type.id != ModuleIdentifier) {
+    return null;
+  }
+
+  const text: string = view.state.doc.sliceString(node.from, node.to).toLowerCase();
+  const path: string | undefined = window.program.imports.get(text);
+
+  if (!path) {
+    return null;
+  }
+
+  return {
+    pos,
+
+    create() {
+      const dom = document.createElement("p");
+
+      dom.innerText = `Module path: ${path}`;
+
+      return {
+        dom
+      };
+    }
+  };
 };
 
 window.doScroll = (mouseX: number, mouseY: number, scrollX: number, scrollY: number) => {
@@ -970,6 +1018,16 @@ window.syncTheme = (theme: ColorTheme) => {
         },
         ".cm-completionLabel-command, .cm-tooltip-autocomplete ul .cm-completionLabel-command[aria-selected]": {
           color: theme.command
+        },
+        ".cm-tooltip-hover": {
+          backgroundColor: theme.popupBackground,
+          color: theme.default
+        },
+        ".nl-module:hover": {
+          borderWidth: "1px",
+          borderStyle: "solid",
+          borderColor: "red",
+          transitionDelay: "0.5s"
         }
       })),
       window.highlightConfig.reconfigure(EditorView.theme({
@@ -984,7 +1042,8 @@ window.syncTheme = (theme: ColorTheme) => {
         { tag: tags.literal, color: theme.constant },
         { tag: commandTag, color: theme.command },
         { tag: reporterTag, color: theme.reporter },
-        { tag: variableTag, color: theme.variable }
+        { tag: variableTag, color: theme.variable },
+        { tag: moduleTag, color: theme.default, class: "nl-module" }
       ])))
     ]
   });
