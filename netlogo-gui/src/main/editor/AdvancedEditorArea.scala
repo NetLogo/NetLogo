@@ -537,7 +537,8 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
   }
 
   def setProgram(program: Program, commandProcs: Seq[String], reporterProcs: Seq[String],
-                 extensionCommands: Seq[String], extensionReporters: Seq[String]): Unit = {
+                 extensionCommands: Seq[String], extensionReporters: Seq[String],
+                 imports: Seq[(String, String)]): Unit = {
     val turtleKeywords: Seq[String] = program.breeds.keys.map(name => s"$name-own").toSeq
     val linkKeywords: Seq[String] = program.linkBreeds.keys.map(name => s"$name-own").toSeq
 
@@ -564,11 +565,13 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
     val reporters: String = format(extensionReporters ++ breedReporters ++ turtleReporters ++ linkReporters ++
                                    reporterProcs)
 
-    runInWeb(s"window.setCompiledProgram($keywords, $globals, $variables, $commands, $reporters)")
+    val importMap: String = imports.map((name, path) => s"[\"${name.toLowerCase}\",\"$path\"]").mkString("[", ",", "]")
+
+    runInWeb(s"window.setCompiledProgram($keywords, $globals, $variables, $commands, $reporters, $importMap)")
   }
 
   def unsetProgram(): Unit = {
-    runInWeb("window.setCompiledProgram([], [], [], [], [])")
+    runInWeb("window.setCompiledProgram([], [], [], [], [], [])")
   }
 
   private def runInWeb(function: String): Unit = {

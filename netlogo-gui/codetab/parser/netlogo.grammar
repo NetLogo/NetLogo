@@ -26,8 +26,8 @@
 @top Program { declaration* procedure* }
 
 declaration {
-  Import Identifier (As Identifier)? |
-  Import ImportBlock From Identifier |
+  Import ModuleSpec (As Identifier)? |
+  Import ImportBlock From ModuleSpec |
   (Export | Extensions) IdentBlock |
   (Globals | Own) VarBlock |
   Includes StringBlock |
@@ -39,6 +39,8 @@ BreedBlock { OpenBracket AlwaysReporter AlwaysReporter CloseBracket }
 IdentBlock { OpenBracket Identifier* CloseBracket }
 VarBlock { OpenBracket AlwaysVar* CloseBracket }
 StringBlock { OpenBracket String* CloseBracket }
+
+ModuleSpec { ModuleIdentifier (":" ModuleIdentifier)* }
 
 procedure { (To AlwaysCommand | ToReport AlwaysReporter) InputBlock? expression* End }
 
@@ -56,11 +58,12 @@ BracketExpression { OpenBracket expression* CloseBracket }
 @tokens {
   space { @whitespace+ }
   Comment [ openedBy=";" ] { ";" ![\n]* }
-  identNoDigit { @asciiLetter | "_" | "." | "?" | "=" | "*" | "!" | "<" | ">" | "#" | "+" | "/" | "%" | "$" | "^" | "'" | "&" | "-" | ":" }
+  identNoDigit { @asciiLetter | "_" | "." | "?" | "=" | "*" | "!" | "<" | ">" | "#" | "+" | "/" | "%" | "$" | "^" | "'" | "&" | "-" }
   Identifier { identNoDigit (identNoDigit | @digit)* }
   AlwaysCommand { Identifier }
   AlwaysReporter { Identifier }
   AlwaysVar { Identifier }
+  ModuleIdentifier { Identifier }
   Number { "-"? @digit+ ("." @digit+)? ("e" ("+" | "-") @digit+)? }
   String { '"' (!["\n] | "\\\"")* ('"' | '\n' | @eof) }
   OpenParen { "(" }
