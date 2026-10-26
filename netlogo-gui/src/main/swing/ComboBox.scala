@@ -162,11 +162,13 @@ class ComboBox[T](private var items: Seq[T] = Seq(), openOnPress: Boolean = true
   }
 
   private def selectItem(item: Option[T]): Unit = {
-    selectedItem = item
-    choiceDisplay.setItem(selectedItem)
+    if (selectedItem != item) {
+      selectedItem = item
+      choiceDisplay.setItem(selectedItem)
 
-    itemListeners.foreach(_.itemStateChanged(
-      new ItemEvent(this, ItemEvent.ITEM_STATE_CHANGED, item, ItemEvent.SELECTED)))
+      itemListeners.foreach(_.itemStateChanged(
+        new ItemEvent(this, ItemEvent.ITEM_STATE_CHANGED, item, ItemEvent.SELECTED)))
+    }
   }
 
   def addItemListener(listener: ItemListener): Unit = {

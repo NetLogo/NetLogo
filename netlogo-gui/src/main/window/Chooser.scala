@@ -11,7 +11,7 @@ import org.nlogo.core.{ I18N, LogoList }
 import org.nlogo.swing.{ BoxAlign, BoxRow, ComboBox, Utils, Zoomable }
 import org.nlogo.theme.InterfaceColors
 
-trait Chooser extends SingleErrorWidget {
+abstract class Chooser(constraintManager: ConstraintManager) extends SingleErrorWidget {
   def compiler: CompilerServices
 
   // The constraint track the list of choices, and ensures the
@@ -89,9 +89,8 @@ trait Chooser extends SingleErrorWidget {
   }
 
   override def updateConstraints(): Unit = {
-    if (name.length > 0) {
-      new Events.AddChooserConstraintEvent(name, constraint).raise(this)
-    }
+    if (name.length > 0)
+      constraintManager.addChooserConstraint(name, constraint)
   }
 
   /// size calculations

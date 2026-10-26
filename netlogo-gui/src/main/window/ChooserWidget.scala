@@ -5,10 +5,11 @@ package org.nlogo.window
 import org.nlogo.api.{ CompilerServices, Dump, ExtensionManager }
 import org.nlogo.core.{ I18N, Chooseable, Chooser => CoreChooser, LogoList, Widget => CoreWidget }
 import org.nlogo.editor.Colorizer
-import org.nlogo.window.Events.{AfterLoadEvent, PeriodicUpdateEvent, InterfaceGlobalEvent}
+import org.nlogo.window.Events.{ PeriodicUpdateEvent, InterfaceGlobalEvent }
 
-class ChooserWidget(val compiler: CompilerServices, colorizer: Colorizer, extensionManager: ExtensionManager)
-  extends Chooser with Editable with InterfaceGlobalWidget with PeriodicUpdateEvent.Handler {
+class ChooserWidget(constraintManager: ConstraintManager, val compiler: CompilerServices, colorizer: Colorizer,
+  extensionManager: ExtensionManager) extends Chooser(constraintManager) with Editable with InterfaceGlobalWidget
+                                      with PeriodicUpdateEvent.Handler {
 
   override def classDisplayName: String = I18N.gui.get("tabs.run.widgets.chooser")
 
@@ -64,7 +65,10 @@ class ChooserWidget(val compiler: CompilerServices, colorizer: Colorizer, extens
     if (newIndex == -1) index(0) else index(newIndex)
   }
 
-  def handle(e: AfterLoadEvent): Unit = {updateConstraints()}
+  override def afterLoad(): Unit = {
+    updateConstraints()
+  }
+
   def handle(e: PeriodicUpdateEvent): Unit = {
     new InterfaceGlobalEvent(this, false, true, false, false).raise(this)
   }

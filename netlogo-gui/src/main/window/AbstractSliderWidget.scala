@@ -14,7 +14,6 @@ import org.nlogo.api.{ Approximate, Dump }
 import org.nlogo.core.{ I18N, NetLogoPreferences }
 import org.nlogo.swing.{ Transparent, Utils, Zoomable, ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
-import org.nlogo.window.Events.InputBoxLoseFocusEvent
 
 import scala.math.Pi
 
@@ -174,7 +173,12 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
   locally {
     val mouseListener = new MouseAdapter {
       override def mousePressed(e: MouseEvent): Unit = {
-        new InputBoxLoseFocusEvent().raise(AbstractSliderWidget.this)
+        e.getSource match {
+          case component: Component =>
+            component.requestFocus()
+
+          case _ =>
+        }
       }
     }
 

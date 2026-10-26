@@ -17,4 +17,5 @@ abstract class AbstractWidgetPanel extends JLayeredPane with ThemeSync {
   def empty: Boolean
   def setBoldWidgetText(value: Boolean): Unit
   def widgetControls: WidgetControlsInterface
+  def setInterfaceMode(mode: InterfaceMode, focus: Boolean): Unit
 }

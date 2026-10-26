@@ -114,6 +114,7 @@ abstract class Widget
     repaint()
   }
   def getDefaultExportName = "output.txt"
+  def afterLoad(): Unit = {}
   def updateConstraints(): Unit = {}
   def classDisplayName: String = getClass.getName
   def addExtraMenuItems(menu: PopupMenu): Unit = {

@@ -6,18 +6,18 @@ import java.awt.Dimension
 import java.awt.event.{ ActionEvent, ItemEvent, ItemListener }
 import javax.swing.{ AbstractAction, Action, JCheckBox }
 
+import org.nlogo.api.AppInterface
 import org.nlogo.core.I18N, I18N.Prefix
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, Button, PreferredSize, ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
-import org.nlogo.window.Events.LoadEndEvent
 
-class ViewUpdatePanel(workspace: GUIWorkspace, speedSlider: SpeedSliderPanel, displaySwitch: JCheckBox,
-                      tickCounter: TickCounterLabel, is3D: Boolean)
-  extends BoxColumn(3) with LoadEndEvent.Handler with ThemeSync {
+class ViewUpdatePanel(app: AppInterface, workspace: GUIWorkspace, speedSlider: SpeedSliderPanel,
+                      displaySwitch: JCheckBox, tickCounter: TickCounterLabel, is3D: Boolean)
+  extends BoxColumn(3) with ThemeSync {
 
   implicit val prefix: org.nlogo.core.I18N.Prefix = Prefix("tabs.run")
 
-  private val updateModeChooser = new UpdateModeChooser(workspace) {
+  private val updateModeChooser = new UpdateModeChooser(app, workspace) {
     override def getPreferredSize: Dimension = {
       new Dimension(displaySwitch.getPreferredSize.width.max(super.getPreferredSize.width),
                     super.getPreferredSize.height)
@@ -40,7 +40,7 @@ class ViewUpdatePanel(workspace: GUIWorkspace, speedSlider: SpeedSliderPanel, di
     getComponents.foreach(_.setFocusable(false))
   }
 
-  def handle(e: LoadEndEvent): Unit = {
+  def loadEnd(): Unit = {
     updateModeChooser.refreshSelection()
     speedSlider.setValue(workspace.speedSliderPosition().toInt)
   }

@@ -617,14 +617,14 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
     }
 
     def textUpdated(overwriting: Boolean, canUndo: Boolean, canRedo: Boolean): Unit = {
-      webEngine synchronized {
-        refreshText = true
-      }
-
       undoAction.setEnabled(canUndo)
       redoAction.setEnabled(canRedo)
 
       if (!overwriting) {
+        webEngine synchronized {
+          refreshText = true
+        }
+
         EventQueue.invokeLater(() => {
           textListeners.foreach(_.textValueChanged(null))
         })

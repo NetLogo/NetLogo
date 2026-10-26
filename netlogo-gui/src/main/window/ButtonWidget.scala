@@ -6,7 +6,7 @@ import java.awt.{ Color, Cursor, Dimension, Graphics }
 import java.awt.event.{ MouseEvent, MouseListener, MouseMotionListener }
 import javax.swing.{ Box, BoxLayout, Icon, JLabel }
 
-import org.nlogo.api.{ CompilerServices, MersenneTwisterFast, Options }
+import org.nlogo.api.{ CompilerManagerInterface, CompilerServices, MersenneTwisterFast, Options }
 import org.nlogo.awt.Mouse.hasButton1
 import org.nlogo.core.{ AgentKind, Button => CoreButton, I18N, Widget => CoreWidget }
 import org.nlogo.editor.Colorizer
@@ -14,8 +14,9 @@ import org.nlogo.nvm.Procedure
 import org.nlogo.swing.{ BoxColumn, HorizontalStrut, Utils, Zoomable, ZoomableBorder }
 import org.nlogo.theme.InterfaceColors
 
-class ButtonWidget(random: MersenneTwisterFast, compiler: CompilerServices, colorizer: Colorizer)
-  extends JobWidget(random) with Editable with MouseListener with MouseMotionListener
+class ButtonWidget(random: MersenneTwisterFast, compiler: CompilerServices, colorizer: Colorizer,
+                   compilerManager: CompilerManagerInterface)
+  extends JobWidget(random, compilerManager) with Editable with MouseListener with MouseMotionListener
   with Events.JobRemovedEvent.Handler {
 
   private val foreverIcon = Utils.iconScaledWithColor(this, "/images/forever.png", 15, 15,
@@ -206,7 +207,6 @@ class ButtonWidget(random: MersenneTwisterFast, compiler: CompilerServices, colo
   }
 
   def mousePressed(e: MouseEvent): Unit = {
-    new Events.InputBoxLoseFocusEvent().raise(this)
     lastMousePressedWasPopupTrigger = e.isPopupTrigger()
     if (error().isEmpty && !e.isPopupTrigger && hasButton1(e) && isEnabled && !disabledWaitingForSetup) buttonUp = false
   }

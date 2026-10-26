@@ -14,6 +14,7 @@ import org.nlogo.agent.ImporterJ;
 import org.nlogo.agent.World;
 import org.nlogo.api.AggregateManagerInterface;
 import org.nlogo.api.AppInterface;
+import org.nlogo.api.CompilerManagerInterface;
 import org.nlogo.api.ExportPlotWarningAction;
 import org.nlogo.api.ExportPlotWarningActionJ;
 import org.nlogo.api.ExternalResourceManager;
@@ -56,6 +57,8 @@ public abstract class AbstractWorkspace
   /// (some of these probably should be changed not to be public - ST 12/11/01)
 
   public final World _world;
+
+  public abstract CompilerManagerInterface compilerManager();
 
   private org.nlogo.nvm.JobManagerInterface jobManager;
 

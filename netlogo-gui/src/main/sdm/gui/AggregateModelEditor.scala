@@ -13,7 +13,7 @@ import org.jhotdraw.framework.{ DrawingEditor, DrawingView, Figure, Tool, ViewCh
 import org.jhotdraw.util.{ Command, CommandMenu, RedoCommand, UndoCommand, UndoManager }
 
 import org.nlogo.analytics.Analytics
-import org.nlogo.api.{ CompilerServices, ExtensionManager, SourceOwner }
+import org.nlogo.api.{ CompilerManagerInterface, CompilerServices, ExtensionManager, SourceOwner }
 import org.nlogo.core.{ CompilerException, I18N }
 import org.nlogo.editor.Colorizer
 import org.nlogo.sdm.Translator
@@ -37,7 +37,8 @@ class AggregateModelEditor(
   val drawing: AggregateDrawing,
   compiler: CompilerServices,
   dialogFactory: EditDialogFactory,
-  extensionManager: ExtensionManager) extends JFrame(
+  extensionManager: ExtensionManager,
+  compilerManager: CompilerManagerInterface) extends JFrame(
     I18N.gui.get("menu.tools.systemDynamicsModeler"), linkParent.getGraphicsConfiguration)
   with DrawingEditor
   with LinkChild
@@ -54,8 +55,10 @@ class AggregateModelEditor(
     menuBarFactory: MenuBarFactory,
     compiler: CompilerServices,
     dialogFactory: EditDialogFactory,
-    extensionManager: ExtensionManager) =
-      this(linkParent, colorizer, menuBarFactory, new AggregateDrawing(), compiler, dialogFactory, extensionManager)
+    extensionManager: ExtensionManager,
+    compilerManager: CompilerManagerInterface) =
+      this(linkParent, colorizer, menuBarFactory, new AggregateDrawing(), compiler, dialogFactory, extensionManager,
+           compilerManager)
 
   private val undoManager: UndoManager = new UndoManager()
   private var currentTool: Option[Tool] = None
@@ -82,7 +85,7 @@ class AggregateModelEditor(
 
   view.setDrawing(drawing)
 
-  private val toolbar: AggregateModelEditorToolBar = new AggregateModelEditorToolBar(this, drawing.getModel)
+  private val toolbar = new AggregateModelEditorToolBar(this, drawing.getModel, compilerManager)
 
   val tabs: AggregateTabs = {
     val editorTab = new AggregateEditorTab(toolbar, view.asInstanceOf[Component])
@@ -178,7 +181,8 @@ class AggregateModelEditor(
 
         f match {
           case mef: ModelElementFigure if mef.dirty =>
-            new org.nlogo.window.Events.CompileAllEvent().raise(this)
+            compilerManager.compileAll()
+
             new org.nlogo.window.Events.DirtyEvent(None).raise(this)
           case _ =>
         }

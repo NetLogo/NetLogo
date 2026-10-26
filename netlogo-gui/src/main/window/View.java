@@ -15,6 +15,7 @@ import org.nlogo.api.AgentException;
 import org.nlogo.api.AgentFollowingPerspective;
 import org.nlogo.api.Perspective;
 import org.nlogo.api.PerspectiveJ;
+import org.nlogo.api.ProceduresInterface;
 import org.nlogo.api.RendererInterface;
 import org.nlogo.api.WorkspaceContext;
 import org.nlogo.awt.Colors;
@@ -33,7 +34,6 @@ public class View
     extends javax.swing.JComponent
     implements
     org.nlogo.window.Events.LoadBeginEvent.Handler,
-    org.nlogo.window.Events.LoadEndEvent.Handler,
     org.nlogo.window.Events.CompiledEvent.Handler,
     org.nlogo.api.ViewSettings,
     java.awt.event.ActionListener,
@@ -327,7 +327,7 @@ public class View
     renderer = workspace.newRenderer();
   }
 
-  public void handle(org.nlogo.window.Events.LoadEndEvent e) {
+  public void loadEnd() {
     renderer.changeTopology(workspace.world().wrappingAllowedInX(),
         workspace.world().wrappingAllowedInY());
     setVisible(true);

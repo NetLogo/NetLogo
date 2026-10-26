@@ -7,7 +7,7 @@ import java.awt.datatransfer.StringSelection
 import java.awt.event.{ ActionEvent, MouseEvent }
 import javax.swing.{ AbstractAction, BoxLayout, JLabel }
 
-import org.nlogo.api.{ CompilerServices, Dump, MersenneTwisterFast }
+import org.nlogo.api.{ CompilerManagerInterface, CompilerServices, Dump, MersenneTwisterFast }
 import org.nlogo.core.{ AgentKind, AgentKindJ, I18N, Monitor => CoreMonitor, Widget => CoreWidget }
 import org.nlogo.editor.Colorizer
 import org.nlogo.nvm.Procedure
@@ -39,8 +39,9 @@ object MonitorWidget {
 
 import MonitorWidget._
 
-class MonitorWidget(random: MersenneTwisterFast, compiler: CompilerServices, colorizer: Colorizer)
-    extends JobWidget(random)
+class MonitorWidget(random: MersenneTwisterFast, compiler: CompilerServices, colorizer: Colorizer,
+                    compilerManager: CompilerManagerInterface)
+    extends JobWidget(random, compilerManager)
     with Editable
     with ToMonitorModel
     with RuntimeErrorEvent.Handler

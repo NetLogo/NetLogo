@@ -6,6 +6,7 @@ import java.util.{ Timer, TimerTask }
 
 import org.nlogo.analytics.Analytics
 import org.nlogo.app.common.AppTabsInterface
+import org.nlogo.core.Model
 import org.nlogo.editor.EditorMenu
 import org.nlogo.window.{ Events => WindowEvents, GUIWorkspace }
 
@@ -15,9 +16,8 @@ import scala.util.hashing.MurmurHash3
 // Other Code tabs come and go.
 
 class MainCodeTab(workspace: GUIWorkspace, tabs: AppTabsInterface, editorMenu: EditorMenu)
-extends CodeTab(workspace, tabs)
-with WindowEvents.LoadModelEvent.Handler
-{
+  extends CodeTab(workspace, tabs) {
+
   private var lastHash: Option[Int] = None
 
   new Timer().scheduleAtFixedRate(new TimerTask {
@@ -36,8 +36,8 @@ with WindowEvents.LoadModelEvent.Handler
     }
   }
 
-  def handle(e: WindowEvents.LoadModelEvent): Unit = {
-    innerSource = e.model.code
+  override def loadModel(model: Model): Unit = {
+    innerSource = model.code
     compile()
     maybeSendAnalytics()
   }

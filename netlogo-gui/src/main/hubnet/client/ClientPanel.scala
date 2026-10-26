@@ -8,21 +8,21 @@ import java.net.{Socket, ConnectException, UnknownHostException, NoRouteToHostEx
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.swing.JPanel
 
+import org.nlogo.agent.{ ChooserConstraint, ConstantSliderConstraint, InputBoxConstraint }
+import org.nlogo.api.{ CompilerServices, DummyLogoThunkFactory, ExtensionManager, MersenneTwisterFast, PlotInterface,
+                       Version }
+import org.nlogo.awt.EventQueue.invokeLater
+import org.nlogo.awt.Hierarchy.getFrame
 import org.nlogo.core.{ I18N, LogoList }
-import org.nlogo.api.{ Version, ExtensionManager, MersenneTwisterFast, PlotInterface, DummyLogoThunkFactory,
-                       CompilerServices }
-import org.nlogo.agent.ConstantSliderConstraint
-import org.nlogo.plot.{ Plot, PlotManager }
 import org.nlogo.hubnet.connection.{ Streamable, ConnectionTypes, AbstractConnection }
 import org.nlogo.hubnet.mirroring.{ OverrideList, HubNetLinkStamp, HubNetPlotPoint, HubNetLine, HubNetTurtleStamp }
 import org.nlogo.hubnet.protocol._
-import org.nlogo.awt.EventQueue.invokeLater
-import org.nlogo.awt.Hierarchy.getFrame
+import org.nlogo.plot.{ Plot, PlotManager }
 import org.nlogo.swing.{ OptionPane, Transparent }
 import org.nlogo.theme.ThemeSync
-import org.nlogo.window.{ MonitorWidget, InterfaceGlobalWidget, Widget, ButtonWidget, PlotWidget }
-import org.nlogo.window.Events.{ AddJobEvent, AddSliderConstraintEvent, AfterLoadEvent, InterfaceGlobalEvent,
-                                 LoadWidgetsEvent }
+import org.nlogo.window.{ ButtonWidget, ConstraintManager, InterfaceGlobalWidget, MonitorWidget, PlotWidget,
+                          SliderWidget, Widget }
+import org.nlogo.window.Events.{ AddJobEvent, InterfaceGlobalEvent }
 
 // Normally we try not to use the org.nlogo.window.Events stuff except in
 // the app and window packages.  But currently there's no better
@@ -33,7 +33,7 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
                   compiler:CompilerServices,
                   extensionManager: ExtensionManager)
   extends JPanel(new BorderLayout) with Transparent with AddJobEvent.Handler with InterfaceGlobalEvent.Handler
-  with AddSliderConstraintEvent.Handler with ThemeSync {
+  with ConstraintManager with ThemeSync {
 
   protected var clientGUI: Option[ClientGUI] = None
   protected var viewWidget: Option[ClientView] = None
@@ -91,9 +91,14 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
     sendDataAndWait(new ActivityCommand(e.widget.name, e.widget.valueObject()))
   }
 
-  def handle(e: org.nlogo.window.Events.AddSliderConstraintEvent): Unit = {
-    e.slider.setSliderConstraint(
-      new ConstantSliderConstraint(e.minSpec.toDouble, e.maxSpec.toDouble, e.incSpec.toDouble){ defaultValue = e.value })
+  override def addBooleanConstraint(varname: String, defaultValue: Boolean): Unit = {}
+  override def addChooserConstraint(varname: String, constraint: ChooserConstraint): Unit = {}
+  override def addInputBoxConstraint(varname: String, constraint: InputBoxConstraint): Unit = {}
+
+  override def addSliderConstraint(slider: SliderWidget, varname: String, minSpec: String, maxSpec: String,
+                                   incSpec: String, value: Double): Unit = {
+    slider.setSliderConstraint(
+      new ConstantSliderConstraint(minSpec.toDouble, maxSpec.toDouble, incSpec.toDouble){ defaultValue = value })
   }
 
   /// Message Handlers
@@ -231,7 +236,7 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
     plotManager.forgetAll()
     val view = new ClientView(this)
     viewWidget = Some(view)
-    val gui = new ClientGUI(editorFactory, view, plotManager, compiler, extensionManager)
+    val gui = new ClientGUI(editorFactory, view, plotManager, this, compiler, extensionManager)
     clientGUI = Some(gui)
     add(gui, java.awt.BorderLayout.CENTER)
     gui.setStatus(userid, activityName, hostip, port)
@@ -239,10 +244,9 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
       case c: ComputerInterface => c
       case _                    => throw new IllegalStateException()
     }
-    val widgets = clientInterface.widgets
-    new LoadWidgetsEvent(widgets, false).raise(this)
+    gui.loadWidgets(clientInterface.widgets)
     // so that constrained widgets can initialize themselves -- CLB
-    new AfterLoadEvent().raise(this)
+    gui.afterLoad()
     gui.setChoices(clientInterface.chooserChoices.toMap)
     view.renderer.replaceTurtleShapes(clientInterface.turtleShapes)
     view.renderer.replaceLinkShapes(clientInterface.linkShapes)

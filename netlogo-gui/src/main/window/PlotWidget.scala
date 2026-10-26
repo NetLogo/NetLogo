@@ -41,6 +41,11 @@ class PlotWidget(plot: Plot, plotManager: PlotManagerInterface, compiler: Compil
 
   override def getEditable: Option[Editable] = Some(this)
 
+  override def afterLoad(): Unit = {
+    plotManager.compilePlot(plot)
+    recolor()
+  }
+
   def handle(e: PeriodicUpdateEvent): Unit ={ repaintIfNeeded() }
 
   override def hasContextMenu = true

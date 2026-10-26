@@ -3,13 +3,13 @@
 package org.nlogo.window
 
 import org.nlogo.agent.AgentSet
-import org.nlogo.api.{ JobOwner, MersenneTwisterFast }
+import org.nlogo.api.{ CompilerManagerInterface, JobOwner, MersenneTwisterFast }
 import org.nlogo.core.AgentKind
 import org.nlogo.nvm.Procedure
-import org.nlogo.window.Events.{ CompiledEvent, CompileMoreSourceEvent, RemoveJobEvent }
+import org.nlogo.window.Events.{ CompiledEvent, RemoveJobEvent }
 import java.awt.EventQueue
 
-abstract class JobWidget(val random: MersenneTwisterFast)
+abstract class JobWidget(val random: MersenneTwisterFast, compilerManager: CompilerManagerInterface)
   extends SingleErrorWidget with JobOwner with CompiledEvent.Handler {
 
   private var suppressRecompiles: Boolean = false
@@ -109,7 +109,7 @@ abstract class JobWidget(val random: MersenneTwisterFast)
     this.suppressRecompiles = suppressRecompiles
     if (!suppressRecompiles && recompilePending) {
       recompilePending = false
-      new CompileMoreSourceEvent(this).raise(this)
+      compilerManager.compileMoreSource(this)
     }
   }
 
@@ -120,7 +120,7 @@ abstract class JobWidget(val random: MersenneTwisterFast)
     if (suppressRecompiles) {
       recompilePending = true
     } else {
-      new CompileMoreSourceEvent(this).raise(this)
+      compilerManager.compileMoreSource(this)
     }
   }
 

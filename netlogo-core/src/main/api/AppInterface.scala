@@ -14,6 +14,8 @@ trait AppInterface {
   def tabManager: TabsInterface
   def fileManager: FileManagerInterface
   def monitorManager: MonitorManagerInterface
+  def modelCoordinator: ModelCoordinator
+  def dirtyMonitor: DirtyMonitorInterface
   def addSyncFunction(f: () => Unit): Long
   def removeSyncFunction(id: Long): Unit
   def magicOpen(name: String): Unit

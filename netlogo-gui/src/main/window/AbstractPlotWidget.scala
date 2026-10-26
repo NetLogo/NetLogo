@@ -7,18 +7,18 @@ import java.awt.image.BufferedImage
 import java.util.Locale
 import javax.swing.{ Box, BoxLayout, JLabel, JPanel, SwingConstants }
 
+import org.nlogo.api.ProceduresInterface
 import org.nlogo.core.{ I18N, Pen => CorePen, Plot => CorePlot, Widget => CoreWidget }
 import org.nlogo.plot.{ PenListener, PlotManagerInterface, PlotLoader, PlotPen, Plot }
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, RoundedBorderPanel, Utils, VerticalStrut, Zoomable,
                          ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
-import org.nlogo.window.Events.{ AfterLoadEvent, CompiledEvent, WidgetErrorEvent, WidgetRemovedEvent }
+import org.nlogo.window.Events.{ CompiledEvent, WidgetErrorEvent, WidgetRemovedEvent }
 
 import scala.math.Pi
 
 abstract class AbstractPlotWidget(val plot: Plot, val plotManager: PlotManagerInterface)
   extends Widget with Editable with Plot.DirtyListener
-  with AfterLoadEvent.Handler
   with WidgetRemovedEvent.Handler
   with CompiledEvent.Handler {
 
@@ -286,11 +286,6 @@ abstract class AbstractPlotWidget(val plot: Plot, val plotManager: PlotManagerIn
       new WidgetErrorEvent(this, error("updateCode")).raise(this)
     else
       new WidgetErrorEvent(this, None).raise(this)
-  }
-
-  def handle(e: AfterLoadEvent): Unit ={
-    plotManager.compilePlot(plot)
-    recolor()
   }
 
   def handle(e: WidgetRemovedEvent): Unit ={ if(e.widget == this){ plotManager.forgetPlot(plot) } }

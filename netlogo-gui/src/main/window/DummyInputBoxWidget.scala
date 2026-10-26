@@ -9,7 +9,7 @@ import org.nlogo.editor.EditorArea
 
 class DummyInputBoxWidget(textArea: EditorArea, dialogTextArea: EditorArea,
                           nextComponent: Component, compiler: CompilerServices) extends
-  InputBox(textArea, dialogTextArea, compiler, nextComponent) {
+  InputBox(textArea, dialogTextArea, new DummyConstraintManager, compiler, nextComponent) {
 
   override def editPanel: EditPanel = new DummyInputEditPanel(this)
 

@@ -23,7 +23,7 @@ import org.nlogo.window.{ AbstractWidgetPanel, ButtonWidget, CopyPasteTarget, Ed
                           Events => WindowEvents, GUIWorkspace, InterfaceMode, OutputWidget, Widget, WidgetContainer,
                           WidgetRegistry, DummyChooserWidget, DummyInputBoxWidget, DummyPlotWidget, DummyViewWidget,
                           MouseMode, PlotWidget, SliderWidget, ViewWidget, WidgetInfo, WorldViewSettings },
-  WindowEvents.{ CompileAllEvent, DirtyEvent, LoadBeginEvent, SetInterfaceModeEvent, WidgetRemovedEvent }
+  WindowEvents.{ DirtyEvent, LoadBeginEvent, WidgetRemovedEvent }
 
 // note that an instance of this class is used for the hubnet client editor
 // and its subclass InterfacePanel is used for the interface tab.
@@ -39,7 +39,6 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
     with KeyListener
     with WidgetRemovedEvent.Handler
     with LoadBeginEvent.Handler
-    with SetInterfaceModeEvent.Handler
     with CopyPasteTarget
     with FocusRoot
     with FocusUtils
@@ -174,10 +173,6 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
 
       getWrappers.foreach(_.widget.resetMouseState())
     }
-  }
-
-  def handle(e: SetInterfaceModeEvent): Unit = {
-    setInterfaceMode(e.mode, e.focus)
   }
 
   private var placedShadowWidgets = false
@@ -1095,7 +1090,7 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
     widgetWrapper.setVisible(true)
     widgetWrapper.widget.reAdd()
 
-    new CompileAllEvent().raise(this)
+    workspace.compilerManager.compileAll()
     LogManager.widgetAdded(false, widgetWrapper.widget.classDisplayName, widgetWrapper.widget.displayName)
     widgetWrapper
   }
@@ -1247,7 +1242,7 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
 
     setInterfaceMode(InterfaceMode.Interact, false)
 
-    new CompileAllEvent().raise(this)
+    workspace.compilerManager.compileAll()
   }
 
   // if widget is a View or Output, replace any existing one and return false if one was replaced
@@ -1655,6 +1650,10 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
 
       Analytics.loadOldSizeWidgets(getWrappers.count(_.widget.oldSize))
     }
+  }
+
+  def afterLoad(): Unit = {
+    getWrappers.foreach(_.widget.afterLoad())
   }
 
   override def getWidgetsForSaving: Seq[CoreWidget] =

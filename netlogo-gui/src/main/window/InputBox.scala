@@ -22,9 +22,9 @@ import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, Button, ButtonPanel, Dialo
                          RoundedBorderPanel, ScrollPane, Utils, Zoomable, ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
-abstract class InputBox(textArea: EditorArea, editDialogTextArea: EditorArea, compiler: CompilerServices,
-                        nextComponent: Component)
-  extends SingleErrorWidget with Editable with Events.InputBoxLoseFocusEvent.Handler {
+abstract class InputBox(textArea: EditorArea, editDialogTextArea: EditorArea, constraintManager: ConstraintManager,
+                        compiler: CompilerServices, nextComponent: Component)
+  extends SingleErrorWidget with Editable {
 
   protected class ColorButton extends JButton with RoundedBorderPanel with FocusUtils with ThemeSync {
     setBorder(null)
@@ -83,7 +83,6 @@ abstract class InputBox(textArea: EditorArea, editDialogTextArea: EditorArea, co
     setBaseFont(getFont.deriveFont(_boldState))
   }
   protected var dialog: InputDialog = null
-  private var _hasFocus = false
   // grab the current editor kit from the editor area
   // everyone but string will use it but we need to
   // keep it around so we know what to set it to.
@@ -197,11 +196,9 @@ abstract class InputBox(textArea: EditorArea, editDialogTextArea: EditorArea, co
   textArea.addFocusListener(
     new FocusListener() {
       def focusGained(e: FocusEvent): Unit = {
-        _hasFocus = true
         editing = true
       }
       def focusLost(e: FocusEvent): Unit = {
-        _hasFocus = false
         if (editing) {
           try getInput(Option(inputType.readValue(InputBox.this.textArea.getText)))
           catch {
@@ -304,10 +301,6 @@ abstract class InputBox(textArea: EditorArea, editDialogTextArea: EditorArea, co
     }
   }
 
-  def handle(e:Events.InputBoxLoseFocusEvent): Unit ={
-    if(_hasFocus) transferFocus()
-  }
-
   private class CancelAction extends AbstractAction {
     def actionPerformed(e:ActionEvent): Unit ={
       textArea.setText(boxedValue.defaultString)
@@ -323,7 +316,8 @@ abstract class InputBox(textArea: EditorArea, editDialogTextArea: EditorArea, co
   }
 
   override def updateConstraints(): Unit = {
-    if (name.length > 0) new org.nlogo.window.Events.AddInputBoxConstraintEvent(name, constraint).raise(this)
+    if (name.length > 0)
+      constraintManager.addInputBoxConstraint(name, constraint)
   }
 
   override def editFinished() = {

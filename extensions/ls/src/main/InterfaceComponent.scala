@@ -7,19 +7,19 @@ import java.nio.file.Paths
 import javax.swing.JFrame
 
 import org.nlogo.agent.{ Agent, CompilationManagement, World, World2D, World3D }
-import org.nlogo.api.{ Agent => APIAgent, AppInterface, ControlSet, LabProtocol, ModelType, NetLogoLegacyDialect,
-                       NetLogoThreeDDialect, Version }
+import org.nlogo.api.{ Agent => APIAgent, AppInterface, ControlSet, LabProtocol, ModelCoordinator, ModelType,
+                       NetLogoLegacyDialect, NetLogoThreeDDialect, ProceduresInterface, Version }
 import org.nlogo.app.codetab.ExternalFileManager
 import org.nlogo.app.tools.AgentMonitorManager
 import org.nlogo.awt.EventQueue
 import org.nlogo.compile.Compiler
-import org.nlogo.core.{ AgentKind, CompilerUtilitiesInterface, Model }
+import org.nlogo.core.{ AgentKind, CompilerUtilitiesInterface, Model, Widget }
 import org.nlogo.gl.view.ViewManager
 import org.nlogo.nvm.PresentationCompilerInterface
 import org.nlogo.sdm.AggregateManagerLite
 import org.nlogo.swing.{ BoxAlign, BoxRow }
 import org.nlogo.theme.InterfaceColors
-import org.nlogo.window.Events.{ CompiledEvent, LoadModelEvent }
+import org.nlogo.window.Events.CompiledEvent
 import org.nlogo.window.{ CompilerManager, DefaultEditorFactory, ErrorDialogManager, Event, FileController,
                           GUIWorkspace, InterfacePanelLite, LinkRoot, NetLogoListenerManager, OutputWidget,
                           ReconfigureWorkspaceUI, UpdateManager }
@@ -30,7 +30,7 @@ import scala.concurrent.{ Future, Promise }
 import scala.util.Try
 
 class InterfaceComponent(app: AppInterface, frame: JFrame)
-  extends BoxRow(BoxAlign.Start) with Event.LinkParent with LinkRoot with ControlSet {
+  extends BoxRow(BoxAlign.Start) with Event.LinkParent with LinkRoot with ControlSet with ModelCoordinator {
 
   val listenerManager = new NetLogoListenerManager
   val world: World = if(Version.is3D) new World3D() else new World2D()
@@ -44,6 +44,11 @@ class InterfaceComponent(app: AppInterface, frame: JFrame)
       new Compiler(if (Version.is3D) NetLogoThreeDDialect else NetLogoLegacyDialect)
 
     override val utilities: CompilerUtilitiesInterface = compiler.utilities
+
+    override val compilerManager = new CompilerManager(this, this.world.asInstanceOf[World & CompilationManagement]) {
+      override def procedures: ProceduresInterface =
+        InterfaceComponent.this.procedures
+    }
 
     lazy val updateManager = new UpdateManager {
       override def defaultFrameRate = workspace.frameRate
@@ -73,29 +78,24 @@ class InterfaceComponent(app: AppInterface, frame: JFrame)
   val monitorManager = new AgentMonitorManager(workspace)
   addLinkComponent(monitorManager)
 
-  val procedures = new Procedures(workspace)
+  val procedures = new Procedures(workspace.compilerManager)
   val liteEditorFactory = new DefaultEditorFactory(workspace)
-  val interfacePanel = new InterfacePanelLite(workspace.viewWidget, workspace, workspace, workspace.plotManager,
-                                              liteEditorFactory, workspace.getExtensionManager)
+  val interfacePanel = new InterfacePanelLite(workspace.viewWidget, workspace, workspace, workspace,
+                                              workspace.plotManager, liteEditorFactory, workspace.getExtensionManager,
+                                              workspace.compilerManager)
 
-  val viewManager = new ViewManager(workspace, interfacePanel, frame, new KeyAdapter {})
+  val viewManager = new ViewManager(app, workspace, interfacePanel, frame, new KeyAdapter {})
 
   workspace.init(viewManager)
   addLinkComponent(viewManager)
 
   addLinkComponent(workspace.aggregateManager)
   addLinkComponent(workspace)
-  addLinkComponent(procedures)
-  addLinkComponent(new CompilerManager(workspace, workspace.world.asInstanceOf[World & CompilationManagement],
-                                       procedures))
+  addLinkComponent(workspace.compilerManager)
   addLinkComponent(new CompiledEvent.Handler {
     override def handle(e: CompiledEvent): Unit = {
       if (e.error != null)
         throw e.error
-  }})
-  addLinkComponent(new LoadModelEvent.Handler {
-    override def handle(e: LoadModelEvent): Unit = {
-      workspace.aggregateManager.load(e.model, workspace)
   }})
   addLinkComponent(listenerManager)
 
@@ -109,7 +109,7 @@ class InterfaceComponent(app: AppInterface, frame: JFrame)
     val loader = FileFormat.standardAnyLoader(false, workspace.compiler.utilities)
     val modelOpt = OpenModelFromURI(uri, controller, loader, FileFormat.defaultConverter, Version)
     val protocols = modelOpt.flatMap(model => {
-      ReconfigureWorkspaceUI(this, uri, ModelType.Library, model, workspace)
+      ReconfigureWorkspaceUI(this, this, uri, ModelType.Library, model, workspace)
 
       model.optionalSectionValue[Seq[LabProtocol]]("org.nlogo.modelsection.behaviorspace")
     }).getOrElse(Seq[LabProtocol]())
@@ -144,6 +144,30 @@ class InterfaceComponent(app: AppInterface, frame: JFrame)
       }
       promise.future
     }
+  }
+
+  override def beforeLoad(modelPath: Option[String], modelType: ModelType): Unit = {
+    workspace.beforeLoad(modelPath, modelType)
+  }
+
+  override def loadModel(model: Model): Unit = {
+    workspace.loadModel(model)
+    procedures.loadModel(model)
+  }
+
+  override def loadWidgets(widgets: Seq[Widget], convertWidgetSizes: Boolean): Unit = {
+    interfacePanel.loadWidgets(widgets)
+  }
+
+  override def loadEnd(shouldAutoInstallLibs: Boolean): Unit = {}
+
+  override def afterLoad(): Unit = {
+    interfacePanel.afterLoad()
+    workspace.afterLoad()
+  }
+
+  override def modelSaved(modelPath: String, isNew: Boolean): Unit = {
+    workspace.modelSaved(modelPath)
   }
 
   def syncTheme(): Unit = {

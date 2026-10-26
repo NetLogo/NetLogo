@@ -9,9 +9,9 @@ import org.nlogo.core.{ BoxedValue, I18N }
 import org.nlogo.editor.EditorArea
 import org.nlogo.window.Events.{ InterfaceGlobalEvent, PeriodicUpdateEvent }
 
-class InputBoxWidget(textArea: EditorArea, dialogTextArea: EditorArea,
+class InputBoxWidget(textArea: EditorArea, dialogTextArea: EditorArea, constraintManager: ConstraintManager,
                      compiler: CompilerServices, extensionManager: ExtensionManager, nextComponent: Component)
-  extends InputBox(textArea, dialogTextArea, compiler, nextComponent)
+  extends InputBox(textArea, dialogTextArea, constraintManager, compiler, nextComponent)
   with InterfaceGlobalWidget
   with PeriodicUpdateEvent.Handler {
 

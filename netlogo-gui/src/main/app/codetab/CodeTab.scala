@@ -10,7 +10,7 @@ import java.net.MalformedURLException
 import javax.swing.{ AbstractAction, JPanel }
 
 import org.nlogo.agent.Observer
-import org.nlogo.api.TabsInterface
+import org.nlogo.api.{ ProceduresInterface, TabsInterface }
 import org.nlogo.app.common.{ CodeToHtml, EditorFactory, FindDialog, MenuTab, Tab }
 import org.nlogo.core.{ AgentKind, CompilerException, I18N }
 import org.nlogo.editor.{ AdvancedEditorArea, EditorConfiguration }
@@ -18,7 +18,7 @@ import org.nlogo.nvm.IncludeSource
 import org.nlogo.swing.{ BoxAlign, BoxRow, Button, CheckBox, FocusRoot, PrinterManager, ToolBarActionButton, UserAction,
                          Printable => NlogoPrintable, Utils, ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
-import org.nlogo.window.{ CommentableError, ProceduresInterface, Events => WindowEvents }
+import org.nlogo.window.{ CommentableError, Events => WindowEvents }
 import org.nlogo.workspace.AbstractWorkspace
 
 abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
@@ -26,7 +26,6 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
   with ProceduresInterface
   with ProceduresMenuTarget
   with WindowEvents.CompiledEvent.Handler
-  with WindowEvents.AfterLoadEvent.Handler
   with NlogoPrintable
   with Tab
   with MenuTab
@@ -202,9 +201,12 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
 
   // this forces CodeMirror to redo all syntax highlighting with the newly compiled
   // program context (Isaac B 7/25/26)
-  override def handle(e: WindowEvents.AfterLoadEvent): Unit = {
+  def afterLoad(): Unit = {
     text.refresh()
   }
+
+  // for LevelSpace code tabs to save themselves when the model is saved (Isaac B 10/21/26)
+  def modelSaved(): Unit = {}
 
   protected def getProcedures(): Seq[String] = {
     workspace.procedures.keys.collect {
@@ -218,7 +220,7 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
                     workspace.getExtensionManager.extensionReporterNames.toSeq)
   }
 
-  protected def compile(): Unit = new WindowEvents.CompileAllEvent().raise(this)
+  protected def compile(): Unit = workspace.compilerManager.compileAll()
 
   override def requestFocus(): Unit = text.requestFocus()
 

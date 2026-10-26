@@ -8,7 +8,7 @@ import java.awt.print.{ PageFormat, Printable }
 import java.io.PrintWriter
 import javax.swing.{ AbstractAction, Action, JPanel, JSplitPane, ScrollPaneConstants }
 
-import org.nlogo.api.{ AbstractInterfaceTab, Announcement }
+import org.nlogo.api.{ AbstractInterfaceTab, Announcement, AppInterface }
 import org.nlogo.app.common.{ MenuTab, Tab }
 import org.nlogo.app.tools.AgentMonitorManager
 import org.nlogo.core.I18N
@@ -18,7 +18,7 @@ import org.nlogo.swing.{ BoxColumn, FocusRoot, Implicits, PreferredSize, Printer
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ EditDialogFactory, GUIWorkspace, InterfaceMode, SpeedSliderPanel, ViewUpdatePanel,
                           Events => WindowEvents, WorkspaceActions },
-                        WindowEvents.{ AfterLoadEvent, LoadBeginEvent, OutputEvent }
+                        WindowEvents.{ LoadBeginEvent, OutputEvent }
 
 object InterfaceTab {
   val MenuGroup = "org.nlogo.app.InterfaceTab"
@@ -26,12 +26,12 @@ object InterfaceTab {
 
 import InterfaceTab._
 
-class InterfaceTab(workspace: GUIWorkspace,
+class InterfaceTab(app: AppInterface,
+                   workspace: GUIWorkspace,
                    monitorManager: AgentMonitorManager,
                    dialogFactory: EditDialogFactory,
                    val commandCenter: CommandCenter) extends JPanel
   with LoadBeginEvent.Handler
-  with AfterLoadEvent.Handler
   with OutputEvent.Handler
   with NlogoPrintable
   with Tab
@@ -81,7 +81,7 @@ class InterfaceTab(workspace: GUIWorkspace,
 
   val speedSlider = new SpeedSliderPanel(workspace, workspace.viewWidget.tickCounter)
 
-  private val viewUpdatePanel = new ViewUpdatePanel(workspace, speedSlider, workspace.viewWidget.displaySwitch,
+  private val viewUpdatePanel = new ViewUpdatePanel(app, workspace, speedSlider, workspace.viewWidget.displaySwitch,
                                                     workspace.viewWidget.tickCounter, false)
 
   private val splitPane = new SplitPane(scrollPane, commandCenter, Some(commandCenterToggleAction))
@@ -146,7 +146,9 @@ class InterfaceTab(workspace: GUIWorkspace,
     scrollPane.getVerticalScrollBar.setValue(0)
   }
 
-  def handle(e: AfterLoadEvent): Unit = {
+  def afterLoad(): Unit = {
+    iP.afterLoad()
+
     lastLoadTime = System.currentTimeMillis
   }
 
@@ -165,7 +167,7 @@ class InterfaceTab(workspace: GUIWorkspace,
   override def enable2D(enabled: Boolean): Unit = {
     speedSlider.setVisible(enabled)
     viewUpdatePanel.setVisible(enabled)
-    viewUpdatePanel.handle(null)
+    viewUpdatePanel.loadEnd()
     revalidate()
     repaint()
   }
@@ -440,6 +442,10 @@ class InterfaceTab(workspace: GUIWorkspace,
 
   def getMinimumWidth: Int =
     toolBar.getMinimumWidth
+
+  def loadEnd(): Unit = {
+    viewUpdatePanel.loadEnd()
+  }
 
   override def syncTheme(): Unit = {
     toolBar.syncTheme()
