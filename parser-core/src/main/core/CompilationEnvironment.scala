@@ -2,10 +2,12 @@
 
 package org.nlogo.core
 
+case class ResolvedModule(prefix: String, path: String, paths: Seq[String])
+
 trait CompilationEnvironment {
   def profilingEnabled: Boolean
   def resolvePath(path: String): String
-  def resolveModulePath(currentFile:Option[String], pathComponents: Seq[String]): Option[(String, Seq[String])]
+  def resolveModulePath(currentFile:Option[String], pathComponents: Seq[String]): Option[ResolvedModule]
   def exists(path: String): Boolean
   def getSource(filename: String): String
 }

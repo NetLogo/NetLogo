@@ -6,12 +6,13 @@ import java.nio.file.{ Files, FileVisitOption, Path, Paths }
 import java.util.Locale
 
 import org.nlogo.api.{ FileIO, PackageManager => APIPM }
+import org.nlogo.core.ResolvedModule
 
 trait AbstractCompilationEnvironment {
 
   def resolvePath(path: String): String
 
-  def resolveModulePath(currentFile: Option[String], modulePath: Seq[String]): Option[(String, Seq[String])] = {
+  def resolveModulePath(currentFile: Option[String], modulePath: Seq[String]): Option[ResolvedModule] = {
     val pathPrefixes =
       Seq( s"${resolvePath(currentFile.map(x => Paths.get(x).getParent.toString).getOrElse(""))}/"
          , s"${APIPM.userPackagesPath.toString}/"
@@ -26,7 +27,11 @@ trait AbstractCompilationEnvironment {
           val path = resolvePath(s"$pathPrefix${modulePath.mkString("/").toLowerCase(Locale.ROOT)}")
 
           // If the path points to a file, just return that file.
-          val siblings = if (FileIO.isRegularFile(s"$path.nlm")) Seq(s"$path.nlm") else Seq()
+          val (pathWithExt, siblings) = if (FileIO.isRegularFile(s"$path.nlm")) {
+            (s"$path.nlm", Seq(s"$path.nlm"))
+          } else {
+            (path, Seq())
+          }
 
           // If the path points to a directory, search for module files in subdirectories. Note that there can be a file
           // and a directory "foo.nlm" and "foo" at the same level where "foo" is an arbitrary string, so we need to
@@ -41,7 +46,7 @@ trait AbstractCompilationEnvironment {
           }
 
           if (siblings.nonEmpty || descendants.nonEmpty) {
-            Some(pathPrefix, siblings ++ descendants)
+            Some(ResolvedModule(pathPrefix, pathWithExt, siblings ++ descendants))
           } else {
             None
           }
