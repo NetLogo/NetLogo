@@ -24,3 +24,8 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--scrollbar-foreground);
 }
+
+.cm-tooltip-hover p {
+  margin: 0;
+  padding: 3px;
+}

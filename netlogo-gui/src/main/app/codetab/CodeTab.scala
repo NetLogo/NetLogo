@@ -179,6 +179,12 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
     }
   }
 
+  protected def getImports: Seq[(String, String)] = {
+    workspace.compiler.frontEnd.findImports(getText).flatMap { list =>
+      workspace.getCompilationEnvironment.resolveModulePath(None, list).flatMap(_._2.headOption).map((list.last, _))
+    }
+  }
+
   def agentClass = classOf[Observer]
 
   def kind = AgentKind.Observer
@@ -226,7 +232,8 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
 
     text.setProgram(workspace.world.program, commands, reporters,
                     workspace.getExtensionManager.extensionCommandNames.toSeq,
-                    workspace.getExtensionManager.extensionReporterNames.toSeq)
+                    workspace.getExtensionManager.extensionReporterNames.toSeq,
+                    getImports)
   }
 
   protected def compile(): Unit = new WindowEvents.CompileAllEvent().raise(this)
