@@ -1,32 +1,17 @@
 # org.nlogo.window package
 
-window.AddBooleanConstraint - String varname - Boolean defaultValue
-window.AddChooserConstraint - String varname - org.nlogo.agent.ChooserConstraint constraint
-window.AddInputBoxConstraint - String varname - org.nlogo.agent.InputBoxConstraint constraint
 window.AddJob - org.nlogo.api.JobOwner owner - org.nlogo.agent.AgentSet agents - org.nlogo.nvm.Procedure procedure
-window.AddSliderConstraint - SliderWidget slider - String varname - String minSpec - String maxSpec - String incSpec - Double value
-window.AfterLoad
-window.BeforeLoad - scala.Option<String> modelPath - org.nlogo.api.ModelType modelType
-window.CompileAll
-window.CompileMoreSource - org.nlogo.api.JobOwner owner
 window.Compiled - org.nlogo.api.SourceOwner sourceOwner - org.nlogo.core.Program program - org.nlogo.nvm.Procedure procedure - org.nlogo.core.CompilerException error
 window.Dirty - scala.Option<String> path
-window.InputBoxLoseFocus
 window.InterfaceGlobal - InterfaceGlobalWidget widget - boolean nameChanged - boolean updating - boolean valueChanged - boolean buttonReleased
 window.JobRemoved - org.nlogo.api.JobOwner owner
 window.JobStopping - org.nlogo.api.JobOwner owner
 window.LoadBegin
-window.LoadEnd - boolean shouldAutoInstallLibs
-window.LoadModel - org.nlogo.core.Model model - boolean shouldAutoInstallLibs
-window.LoadWidgets - scala.collection.immutable.Seq<org.nlogo.core.Widget> widgets - boolean convertWidgetSizes
-window.ModelSaved - String modelPath - boolean isNew
 window.Output - boolean clear - org.nlogo.agent.OutputObject outputObject - boolean wrapLines - boolean toCommandCenter - long time
 window.PeriodicUpdate
 window.RemoveAllJobs
 window.RemoveJob - org.nlogo.api.JobOwner owner
 window.RuntimeError - org.nlogo.api.JobOwner jobOwner - org.nlogo.api.SourceOwner sourceOwner - int pos - int length
-window.SetInterfaceMode - org.nlogo.window.InterfaceMode mode - boolean focus
-window.UpdateModeChanged
 window.WidgetAdded - Object widget
 window.WidgetError - Widget widget - scala.Option<Exception> error
 window.WidgetRemoved - Widget widget

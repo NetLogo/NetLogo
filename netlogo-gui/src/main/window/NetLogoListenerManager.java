@@ -5,8 +5,8 @@ package org.nlogo.window;
 import org.nlogo.core.AgentKind;
 import org.nlogo.core.AgentKindJ;
 import org.nlogo.api.NetLogoListener;
+import org.nlogo.api.ProceduresInterface;
 import org.nlogo.window.Events.AddJobEvent;
-import org.nlogo.window.Events.BeforeLoadEvent;
 import org.nlogo.window.Events.CompiledEvent;
 import org.nlogo.window.Events.InterfaceGlobalEvent;
 import org.nlogo.window.Events.JobRemovedEvent;
@@ -14,19 +14,20 @@ import org.nlogo.window.Events.JobRemovedEvent;
 import java.util.ArrayList;
 import java.util.List;
 
+import scala.Option;
+
 public class NetLogoListenerManager
     implements
     AddJobEvent.Handler,
     InterfaceGlobalEvent.Handler,
-    BeforeLoadEvent.Handler,
     JobRemovedEvent.Handler,
     CompiledEvent.Handler {
   private final List<NetLogoListener> listeners =
       new ArrayList<NetLogoListener>();
 
-  public void handle(BeforeLoadEvent e) {
+  public void beforeLoad(Option<String> modelPath) {
     for (NetLogoListener listener : listeners) {
-      listener.modelOpened(e.modelPath.getOrElse(() -> "new model"));
+      listener.modelOpened(modelPath.getOrElse(() -> "new model"));
     }
   }
 

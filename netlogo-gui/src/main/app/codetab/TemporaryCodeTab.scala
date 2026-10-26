@@ -10,7 +10,7 @@ import java.util.Locale
 import org.nlogo.api.FileIO
 import org.nlogo.app.common.{ AppTabsInterface, Dialogs, ModelConfig }
 import org.nlogo.awt.UserCancelException
-import org.nlogo.core.I18N
+import org.nlogo.core.{ I18N, Model }
 import org.nlogo.nvm.IncludeSource
 import org.nlogo.swing.{ CloseableTab, FileDialog => SwingFileDialog, OptionPane, RenameableTab, UserAction }
 import org.nlogo.util.PathUtils
@@ -174,6 +174,8 @@ class TemporaryCodeTab(workspace: GUIWorkspace,
     closing = true
     tabs.closeExternalFile(_filename)
   }
+
+  override def loadModel(model: Model): Unit = {}
 
   override def handle(e: WindowEvents.CompiledEvent) = {
     def setErrorLabel() = errorLabel.setError(Option(e.error), e.sourceOwner.headerSource.size)

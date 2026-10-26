@@ -8,7 +8,7 @@ import org.nlogo.api.{ Dump, World }
 import org.nlogo.core.I18N
 import org.nlogo.swing.Zoomable
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
-import org.nlogo.window.Events.{ AfterLoadEvent, PeriodicUpdateEvent, LoadBeginEvent }
+import org.nlogo.window.Events.{ PeriodicUpdateEvent, LoadBeginEvent }
 
 object TickCounterLabel {
   private val TickCounterLabelDefault = I18N.gui.get("tabs.run.speedslider.ticks")
@@ -18,7 +18,6 @@ import TickCounterLabel._
 
 class TickCounterLabel(world: World)
   extends JLabel
-  with AfterLoadEvent.Handler
   with LoadBeginEvent.Handler
   with PeriodicUpdateEvent.Handler
   with Zoomable
@@ -31,10 +30,6 @@ class TickCounterLabel(world: World)
     setText("")
     _label = TickCounterLabelDefault
     setVisible(true)
-  }
-
-  def handle(e: AfterLoadEvent): Unit = {
-    redrawTickCounter()
   }
 
   def handle(e: PeriodicUpdateEvent): Unit = {

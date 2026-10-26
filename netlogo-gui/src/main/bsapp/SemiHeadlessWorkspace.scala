@@ -5,15 +5,16 @@ package org.nlogo.bsapp
 import java.awt.EventQueue
 
 import org.nlogo.agent.{ AgentSet, CompilationManagement, OutputObject, World, World2D, World3D }
-import org.nlogo.api.{ CommandRunnable, JobOwner, NetLogoLegacyDialect, NetLogoThreeDDialect, Version }
+import org.nlogo.api.{ CommandRunnable, JobOwner, NetLogoLegacyDialect, NetLogoThreeDDialect, ProceduresInterface,
+                       Version }
 import org.nlogo.compile.Compiler
-import org.nlogo.core.{ AgentKind, Dialect, UpdateMode }
+import org.nlogo.core.{ AgentKind, Dialect, Model, UpdateMode }
 import org.nlogo.headless.HeadlessWorkspace
 import org.nlogo.hubnet.server.HeadlessHubNetManagerFactory
 import org.nlogo.render.Renderer
 import org.nlogo.sdm.AggregateManagerLite
-import org.nlogo.window.{ CompilerManager, Event, Events, JobWidget, PeriodicUpdater, ProceduresInterface, ThreadUtils,
-                          UpdateManager, ViewWidgetInterface, WorkspaceWithSpeed }
+import org.nlogo.window.{ CompilerManager, Event, Events, JobWidget, PeriodicUpdater, ThreadUtils, UpdateManager,
+                          ViewWidgetInterface, WorkspaceWithSpeed }
 
 // this extension of HeadlessWorkspace enables a model to be displayed
 // in the interface without all the baggage carried by the GUIWorkspace
@@ -50,6 +51,11 @@ class SemiHeadlessWorkspace(frame: BehaviorSpaceFrame, world: World & Compilatio
     with ProceduresInterface with WorkspaceWithSpeed with Event.LinkParent with Event.LinkChild
     with Events.AddJobEvent.Handler with Events.RemoveJobEvent.Handler with Events.JobStoppingEvent.Handler
     with Events.RemoveAllJobsEvent.Handler {
+
+  override val compilerManager = new CompilerManager(this, world) {
+    override def procedures: ProceduresInterface =
+      SemiHeadlessWorkspace.this
+  }
 
   val (view: ActiveView, viewWidget: Option[ViewWidgetInterface]) = {
     if (Version.is3D) {
@@ -95,7 +101,7 @@ class SemiHeadlessWorkspace(frame: BehaviorSpaceFrame, world: World & Compilatio
 
   set3d(Version.is3D)
 
-  frame.addLinkComponent(new CompilerManager(this, world, this))
+  frame.addLinkComponent(compilerManager)
 
   periodicUpdater.start()
   lifeguard.start()
@@ -253,6 +259,8 @@ class SemiHeadlessWorkspace(frame: BehaviorSpaceFrame, world: World & Compilatio
 
   override def kind: AgentKind =
     AgentKind.Observer
+
+  override def loadModel(model: Model): Unit = {}
 
   override def speedSliderPosition(): Double = {
     val s = updateManager.speed * 2

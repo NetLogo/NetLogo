@@ -113,7 +113,7 @@ class AgentVarEditor(parent: AgentMonitorEditor,
                      val index: Int,
                      variableName: String,
                      label: JLabel)
-extends JobWidget(parent.workspace.world.auxRNG)
+extends JobWidget(parent.workspace.world.auxRNG, parent.workspace.compilerManager)
 with KeyListener
 with FocusListener
 with WindowEvents.JobRemovedEvent.Handler
@@ -214,7 +214,7 @@ with ThemeSync {
   }
 
   // put together a full procedure definition. calling source at the end causes JobWidget and
-  // CompileMoreSourceEvent stuff to call the compiler and add a job if compilation succeeds
+  // compileMoreSource stuff to call the compiler and add a job if compilation succeeds
   def wrapSource(innerSource: String): Unit = {
     setEnabled(false)
     this.innerSource = innerSource

@@ -3,7 +3,7 @@
 package org.nlogo.workspace
 
 import org.nlogo.agent.{ World2D, World3D }
-import org.nlogo.api.{ AggregateManagerInterface, Version, WorkspaceContext }
+import org.nlogo.api.{ AggregateManagerInterface, CompilerManagerInterface, Version, WorkspaceContext }
 import org.nlogo.core.{ AgentKind, CompilerUtilitiesInterface }
 import org.nlogo.nvm.{ PresentationCompilerInterface, PrimaryWorkspace }
 
@@ -66,6 +66,7 @@ extends AbstractWorkspaceScala(
   override def addJobFromJobThread(job: org.nlogo.nvm.Job) = unsupported
   override def compiler: PresentationCompilerInterface = unsupported
   override def utilities: CompilerUtilitiesInterface = unsupported
+  override def compilerManager: CompilerManagerInterface = unsupported
   override def quit(): Unit = unsupported
 
   def openModel(model: org.nlogo.core.Model, shouldAutoInstallLibs: Boolean): Unit = unsupported

@@ -8,30 +8,33 @@ import java.awt.event.{ FocusListener, FocusEvent,
 import java.awt.image.BufferedImage
 import javax.swing.JLayeredPane
 
-import org.nlogo.api.{ CompilerServices, Exceptions, ExtensionManager, RandomServices, Version }
+import org.nlogo.api.{ CompilerManagerInterface, CompilerServices, Exceptions, ExtensionManager, RandomServices,
+                       Version }
 import org.nlogo.awt.Images
 import org.nlogo.core.{ Widget => CoreWidget, View => CoreView }
 import org.nlogo.plot.PlotManager
 import org.nlogo.swing.{ MenuItem, PopupMenu, Zoomable }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
-import org.nlogo.window.Events.{ LoadWidgetsEvent, OutputEvent }
+import org.nlogo.window.Events.OutputEvent
 import org.nlogo.util.SysInfo
 
 import scala.collection.mutable.{ Map => MutableMap }
 
-class InterfacePanelLite(viewWidget: Option[ViewWidgetInterface], compiler: CompilerServices,
-  random: RandomServices, plotManager: PlotManager, editorFactory: EditorFactory, extensionManager: ExtensionManager)
+class InterfacePanelLite(viewWidget: Option[ViewWidgetInterface], constraintManager: ConstraintManager,
+  compiler: CompilerServices, random: RandomServices, plotManager: PlotManager, editorFactory: EditorFactory,
+  extensionManager: ExtensionManager, compilerManager: CompilerManagerInterface)
   extends JLayeredPane
   with WidgetContainer
   with FocusListener
-  with LoadWidgetsEvent.Handler
   with OutputEvent.Handler
   with Zoomable
   with ThemeSync {
 
-  def this(viewWidget: ViewWidgetInterface, compiler: CompilerServices, random: RandomServices,
-           plotManager: PlotManager, editorFactory: EditorFactory, extensionManager: ExtensionManager) =
-    this(Option(viewWidget), compiler, random, plotManager, editorFactory, extensionManager)
+  def this(viewWidget: ViewWidgetInterface, constraintManager: ConstraintManager, compiler: CompilerServices,
+           random: RandomServices, plotManager: PlotManager, editorFactory: EditorFactory,
+           extensionManager: ExtensionManager, compilerManager: CompilerManagerInterface) =
+    this(Option(viewWidget), constraintManager, compiler, random, plotManager, editorFactory, extensionManager,
+         compilerManager)
 
   // widget name -> Widget
   private val widgets: MutableMap[String, Widget] = MutableMap[String, Widget]()
@@ -218,20 +221,20 @@ class InterfacePanelLite(viewWidget: Option[ViewWidgetInterface], compiler: Comp
   /// loading and saving
 
   private val widgetBuilderMap = Map[String, () => Widget](
-    "Monitor"  -> (() => new MonitorWidget(random.auxRNG, compiler, editorFactory.colorizer)),
+    "Monitor"  -> (() => new MonitorWidget(random.auxRNG, compiler, editorFactory.colorizer, compilerManager)),
     "Plot"     -> (() => PlotWidget.apply(plotManager, compiler, editorFactory.colorizer)),
-    "Slider"   -> (() => new SliderWidget(sliderEventOnReleaseOnly, random.auxRNG, compiler, editorFactory.colorizer,
-                                          extensionManager)),
-    "Switch"   -> (() => new SwitchWidget(compiler, extensionManager)),
-    "Chooser"  -> (() => new ChooserWidget(compiler, editorFactory.colorizer, extensionManager)),
+    "Slider"   -> (() => new SliderWidget(sliderEventOnReleaseOnly, random.auxRNG, constraintManager, compiler,
+                                          editorFactory.colorizer, extensionManager)),
+    "Switch"   -> (() => new SwitchWidget(constraintManager, compiler, extensionManager)),
+    "Chooser"  -> (() => new ChooserWidget(constraintManager, compiler, editorFactory.colorizer, extensionManager)),
     "InputBox" -> { () =>
       val singleLineConfig = editorFactory.defaultConfiguration(1, 10)
         .withFocusTraversalEnabled(true)
       val multiLineConfig = editorFactory.defaultConfiguration(5, 20)
-      new InputBoxWidget(editorFactory.newEditor(singleLineConfig),
-       editorFactory.newEditor(multiLineConfig), compiler, extensionManager, this)
+      new InputBoxWidget(editorFactory.newEditor(singleLineConfig), editorFactory.newEditor(multiLineConfig),
+                         constraintManager, compiler, extensionManager, this)
     },
-    "Button"   -> (() => new ButtonWidget(random.mainRNG, compiler, editorFactory.colorizer)),
+    "Button"   -> (() => new ButtonWidget(random.mainRNG, compiler, editorFactory.colorizer, compilerManager)),
     "Output"   -> (() => new OutputWidget()))
 
   override def allWidgets: Seq[CoreWidget] =
@@ -280,14 +283,18 @@ class InterfacePanelLite(viewWidget: Option[ViewWidgetInterface], compiler: Comp
     }
   }
 
-  def handle(e: LoadWidgetsEvent): Unit = {
+  def loadWidgets(widgets: Seq[CoreWidget]): Unit = {
     try {
       setVisible(false)
-      e.widgets.foreach(loadWidget)
+      widgets.foreach(loadWidget)
     } finally {
       setVisible(true)
       revalidate()
     }
+  }
+
+  def afterLoad(): Unit = {
+    widgets.values.foreach(_.afterLoad())
   }
 
   def interfaceImage: BufferedImage =

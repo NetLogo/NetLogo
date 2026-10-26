@@ -22,10 +22,10 @@ import org.nlogo.agent.{ Agent, World2D, World3D }
 import org.nlogo.analytics.{ Analytics, AnalyticsSender }
 import org.nlogo.agent.{ CompilationManagement, World }
 import org.nlogo.api.{ Agent => ApiAgent, AggregateManagerInterface, AnnouncementsInfoDownloader, APIVersion,
-                       AppInterface, Exceptions, FileIO, LogoException, MetadataLoadingException, ModelSaver,
-                       ModelSections, ModelType, NetLogoLegacyDialect, NetLogoThreeDDialect, RendererInterface,
-                       SimpleJobOwner, UpdateManagerInterface, Version }
-import org.nlogo.app.codetab.{ ExternalFileManager, TemporaryCodeTab }
+                       AppInterface, Exceptions, FileIO, LogoException, MetadataLoadingException, ModelCoordinator,
+                       ModelSaver, ModelSections, ModelType, NetLogoLegacyDialect, NetLogoThreeDDialect,
+                       ProceduresInterface, RendererInterface, SimpleJobOwner, UpdateManagerInterface, Version }
+import org.nlogo.app.codetab.{ CodeTab, ExternalFileManager, TemporaryCodeTab }
 import org.nlogo.app.common.{ FileActions, FindDialog }
 import org.nlogo.app.interfacetab.{ CommandCenter, InterfaceTab, WidgetPanel }
 import org.nlogo.app.tools.{ AgentMonitorManager, GraphicsPreview, LibraryManagerErrorDialog, PreviewCommandsEditor }
@@ -275,8 +275,7 @@ object App {
 }
 
 class App(args: App.CommandLineArgs) extends AppInterface with LinkChild with Exceptions.Handler
-  with BeforeLoadEvent.Handler with LoadBeginEvent.Handler with LoadEndEvent.Handler with LoadModelEvent.Handler
-  with ModelSavedEvent.Handler with ModelSections with Controllable {
+  with LoadBeginEvent.Handler with ModelSections with Controllable with ModelCoordinator {
 
   override val frame: AppFrame = new AppFrame(this)
 
@@ -321,6 +320,11 @@ class App(args: App.CommandLineArgs) extends AppInterface with LinkChild with Ex
 
     override val utilities: CompilerUtilitiesInterface = compiler.utilities
 
+    override val compilerManager = new CompilerManager(this, App.this.world) {
+      override def procedures: ProceduresInterface =
+        tabManager.mainCodeTab
+    }
+
     // lazy to avoid initialization order snafu - ST 3/1/11
     lazy val updateManager = new UpdateManager {
       override def defaultFrameRate = frameRate
@@ -337,7 +341,8 @@ class App(args: App.CommandLineArgs) extends AppInterface with LinkChild with Ex
     }
 
     lazy val aggregateManager: AggregateManagerInterface =
-      new GUIAggregateManager(frame, menuBarFactory, this, colorizer, editDialogFactory, extensionManager)
+      new GUIAggregateManager(frame, menuBarFactory, this, colorizer, editDialogFactory, extensionManager,
+                              compilerManager)
 
     def inspectAgent(agent: ApiAgent, radius: Double): Unit = {
       agent match {
@@ -382,7 +387,7 @@ class App(args: App.CommandLineArgs) extends AppInterface with LinkChild with Ex
 
   private val colorizer = new EditorColorizer(workspace)
 
-  private val interfaceTab: InterfaceTab = new InterfaceTab(workspace, monitorManager, editDialogFactory,
+  private val interfaceTab: InterfaceTab = new InterfaceTab(this, workspace, monitorManager, editDialogFactory,
                                                             new CommandCenter(workspace, true, interfaceTab.sizeToFit))
 
   val modelLoader = FileFormat.standardAnyLoader(false, workspace, true)
@@ -391,8 +396,8 @@ class App(args: App.CommandLineArgs) extends AppInterface with LinkChild with Ex
 
   override val tabManager: TabManager = new TabManager(this, workspace, interfaceTab, externalFileManager)
 
-  val dirtyMonitor = new DirtyMonitor(this, frame, modelSaver, modelLoader, workspace,
-                                      _.fold(modelTitle())(externalFileTitle), tabManager)
+  override val dirtyMonitor: DirtyMonitor = new DirtyMonitor(this, frame, modelSaver, modelLoader, workspace,
+                                                             _.fold(modelTitle())(externalFileTitle), tabManager)
 
   private val converter = FileFormat.converter(workspace.getExtensionManager, workspace.getLibraryManager,
                                                workspace.getCompilationEnvironment, workspace,
@@ -413,9 +418,9 @@ class App(args: App.CommandLineArgs) extends AppInterface with LinkChild with Ex
   val labManager = new LabManager(workspace, editDialogFactory, colorizer, menuBarFactory, workspaceFactory,
                                   modelLoader, modelSaver)
 
-  override val fileManager: FileManager = new FileManager(workspace, modelLoader, converter, dirtyMonitor, modelSaver,
-                                                          mainMenuBar, frame, tabManager, workspaceFactory, labManager,
-                                                          args.testing)
+  override val fileManager: FileManager = new FileManager(this, workspace, modelLoader, converter, dirtyMonitor,
+                                                          modelSaver, mainMenuBar, frame, tabManager, workspaceFactory,
+                                                          labManager, args.testing)
 
   private val recentFilesMenu = new RecentFilesMenu(frame, fileManager)
 
@@ -462,7 +467,7 @@ class App(args: App.CommandLineArgs) extends AppInterface with LinkChild with Ex
     frame.addLinkComponent(workspace)
     frame.addLinkComponent(monitorManager)
     frame.addLinkComponent(tabManager)
-    frame.addLinkComponent(new CompilerManager(workspace, world, tabManager.mainCodeTab))
+    frame.addLinkComponent(workspace.compilerManager)
     frame.addLinkComponent(listenerManager)
     frame.addLinkComponent(workspace.aggregateManager)
     frame.addLinkComponent(labManager)
@@ -482,7 +487,7 @@ class App(args: App.CommandLineArgs) extends AppInterface with LinkChild with Ex
       )
     })
 
-    val viewManager = new ViewManager(workspace, interfaceTab.iP, frame, interfaceTab.iP)
+    val viewManager = new ViewManager(this, workspace, interfaceTab.iP, frame, interfaceTab.iP)
 
     frame.addLinkComponent(viewManager)
 
@@ -955,20 +960,6 @@ class App(args: App.CommandLineArgs) extends AppInterface with LinkChild with Ex
   /**
    * Internal use only.
    */
-  def handle(e: ModelSavedEvent): Unit = {
-    workspace.modelSaved(e.modelPath)
-    errorDialogManager.setModelName(workspace.modelNameForDisplay)
-    if (AbstractWorkspace.isApp) {
-      setWindowTitles()
-      workspace.hubNetManager.foreach { manager =>
-        manager.setTitle(workspace.modelNameForDisplay, workspace.getModelDir, workspace.getModelType)
-      }
-    }
-  }
-
-  /**
-   * Internal use only.
-   */
   def handle(e: LoadBeginEvent): Unit = {
     val modelName = workspace.modelNameForDisplay
     errorDialogManager.setModelName(modelName)
@@ -981,20 +972,32 @@ class App(args: App.CommandLineArgs) extends AppInterface with LinkChild with Ex
   private var wasAtPreferredSizeBeforeLoadBegan = false
   private var preferredSizeAtLoadEndTime: java.awt.Dimension = null
 
-  /**
-   * Internal use only.
-   */
-  def handle(e: BeforeLoadEvent): Unit = {
+  override def modelCoordinator: ModelCoordinator =
+    this
+
+  override def beforeLoad(modelPath: Option[String], modelType: ModelType): Unit = {
     wasAtPreferredSizeBeforeLoadBegan =
-            preferredSizeAtLoadEndTime == null ||
-            frame.getSize == preferredSizeAtLoadEndTime ||
-            frame.getSize == frame.getPreferredSize
+      preferredSizeAtLoadEndTime == null ||
+      frame.getSize == preferredSizeAtLoadEndTime ||
+      frame.getSize == frame.getPreferredSize
+
+    dirtyMonitor.beforeLoad()
+    recentFilesMenu.beforeLoad(modelPath, modelType)
+    workspace.beforeLoad(modelPath, modelType)
   }
 
-  /**
-   * Internal use only.
-   */
-  def handle(e: LoadEndEvent): Unit = {
+  override def loadModel(model: Model): Unit = {
+    fileManager.loadModel(model)
+    tabManager.loadModel(model)
+    workspace.loadModel(model)
+    labManager.loadModel(model)
+  }
+
+  override def loadWidgets(widgets: Seq[CoreWidget], convertWidgetSizes: Boolean): Unit = {
+    interfaceTab.iP.loadWidgets(widgets, convertWidgetSizes)
+  }
+
+  override def loadEnd(shouldAutoInstallLibs: Boolean) = {
     turtleShapesManager.reset()
     linkShapesManager.reset()
     workspace.view.repaint()
@@ -1023,11 +1026,42 @@ class App(args: App.CommandLineArgs) extends AppInterface with LinkChild with Ex
       tabManager.interfaceTab.requestFocus()
     }
 
+    workspace.compilerManager.loadEnd(shouldAutoInstallLibs)
+    workspace.view.loadEnd()
+
+    tabManager.loadEnd()
+
     syncWindowThemes()
   }
 
-  def handle(e: LoadModelEvent): Unit = {
-    workspace.getResourceManager.setResources(e.model.resources)
+  override def afterLoad(): Unit = {
+    tabManager.getAllTabs.foreach {
+      case codeTab: CodeTab =>
+        codeTab.afterLoad()
+
+      case _ =>
+    }
+
+    interfaceTab.afterLoad()
+    workspace.afterLoad()
+    dirtyMonitor.afterLoad()
+  }
+
+  override def modelSaved(modelPath: String, isNew: Boolean): Unit = {
+    workspace.modelSaved(modelPath)
+    recentFilesMenu.modelSaved(modelPath)
+    tabManager.modelSaved()
+
+    errorDialogManager.setModelName(workspace.modelNameForDisplay)
+
+    if (AbstractWorkspace.isApp) {
+      setWindowTitles()
+      workspace.hubNetManager.foreach { manager =>
+        manager.setTitle(workspace.modelNameForDisplay, workspace.getModelDir, workspace.getModelType)
+      }
+    }
+
+    dirtyMonitor.setDirty(false)
   }
 
   private def frameTitle(filename: String, dirty: Boolean) = {
@@ -1245,7 +1279,9 @@ class App(args: App.CommandLineArgs) extends AppInterface with LinkChild with Ex
    * <code>setProcedures()</code>.
    * @see #setProcedures
    */
-  def compile(): Unit ={ dispatchThreadOrBust(new CompileAllEvent().raise(this)) }
+  def compile(): Unit = {
+    dispatchThreadOrBust(workspace.compilerManager.compileAll())
+  }
 
   /**
    * Recompiles the model after any other events in progress have finished.  Useful if you interrupt
@@ -1253,7 +1289,9 @@ class App(args: App.CommandLineArgs) extends AppInterface with LinkChild with Ex
    * from the library.
    * @see #compile
    */
-  def compileLater(): Unit ={ dispatchThreadOrBust(new CompileAllEvent().raiseLater(this)) }
+  def compileLater(): Unit = {
+    dispatchThreadOrBust(EventQueue.invokeLater(() => workspace.compilerManager.compileAll()))
+  }
 
   /**
    * Not currently supported.  For now, use <code>command</code>

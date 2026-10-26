@@ -3,15 +3,16 @@ package org.nlogo.ls.gui
 import java.awt.{ Dimension, Graphics, Graphics2D }
 import javax.swing.{ BoxLayout, JFrame, JPanel }
 
+import org.nlogo.api.JobOwner
 import org.nlogo.core.CompilerException
 import org.nlogo.headless.HeadlessWorkspace
 import org.nlogo.swing.{ ModalProgress, NetLogoIcon }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
-import org.nlogo.window.Events.{ AddJobEvent, CompileMoreSourceEvent, CompiledEvent }
+import org.nlogo.window.Events.{ AddJobEvent, CompiledEvent }
 import org.nlogo.window.JobWidget
 
-class ViewFrame(ws: HeadlessWorkspace) extends JFrame with CompileMoreSourceEvent.Handler with AddJobEvent.Handler
-                                       with ThemeSync with NetLogoIcon with ModalProgress {
+class ViewFrame(ws: HeadlessWorkspace)
+  extends JFrame with AddJobEvent.Handler with ThemeSync with NetLogoIcon with ModalProgress {
 
   private val viewPanel = new JPanel() {
     override def paintComponent(g: Graphics): Unit = ws.world.synchronized {
@@ -33,8 +34,7 @@ class ViewFrame(ws: HeadlessWorkspace) extends JFrame with CompileMoreSourceEven
   pack()
   panel.resetCommandCenter()
 
-  def handle(e: CompileMoreSourceEvent): Unit = {
-    val owner = e.owner
+  def compileMoreSource(owner: JobOwner): Unit = {
     try {
       val displayName = Some.apply(owner.classDisplayName)
       val results =

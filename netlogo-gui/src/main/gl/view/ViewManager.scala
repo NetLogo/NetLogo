@@ -7,6 +7,7 @@ import java.awt.event.KeyListener
 import java.lang.UnsatisfiedLinkError
 import javax.swing.JFrame
 
+import org.nlogo.api.AppInterface
 import org.nlogo.awt.Positioning
 import org.nlogo.core.{ I18N, Shape }
 import org.nlogo.gl.render.GLViewSettings
@@ -14,7 +15,8 @@ import org.nlogo.swing.Utils
 import org.nlogo.window.{ GUIWorkspace, JOGLLoadingException, JOGLVersionMismatchException, TickCounterLabel,
                           WidgetContainer, WorldViewSettings }
 
-class ViewManager(val workspace: GUIWorkspace,
+class ViewManager(app: AppInterface,
+                  val workspace: GUIWorkspace,
                   widgetPanel: WidgetContainer,
                   appWindow: JFrame,
                   keyListener: KeyListener)
@@ -72,7 +74,7 @@ class ViewManager(val workspace: GUIWorkspace,
     observerView.foreach(_.dispose())
 
     try {
-      val view = new ObserverView(this, null)
+      val view = new ObserverView(app, this, null)
       observerView = Option(view)
       view.canvas.addKeyListener(keyListener)
       currentView = observerView
@@ -183,7 +185,7 @@ class ViewManager(val workspace: GUIWorkspace,
     this.antiAliasing = antiAliasing
     currentView.foreach { view =>
       world.markPatchColorsDirty()
-      observerView = Option(new ObserverView(this, view.renderer, view.getBounds))
+      observerView = Option(new ObserverView(app, this, view.renderer, view.getBounds))
       view.dispose()
       currentView = observerView
       currentView.foreach(_.setVisible(true))

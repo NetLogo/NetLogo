@@ -10,9 +10,10 @@ import java.nio.file.Paths
 // here and document it here.  The overriding method can simply call super(). - ST 6/1/05, 7/28/11
 
 import org.nlogo.agent.{ CompilationManagement, OutputObject, World, World2D, World3D }
-import org.nlogo.api.{ ComponentSerialization, Version, RendererInterface, AggregateManagerInterface, FileIO,
-                       LogoException, ModelReader, ModelType, NetLogoLegacyDialect, NetLogoThreeDDialect,
-                       CommandRunnable, ReporterRunnable, WorkspaceContext }, ModelReader.modelSuffix
+import org.nlogo.api.{ CompilerManagerInterface, ComponentSerialization, DummyCompilerManager, Version,
+                       RendererInterface, AggregateManagerInterface, FileIO, LogoException, ModelReader, ModelType,
+                       NetLogoLegacyDialect, NetLogoThreeDDialect, CommandRunnable, ReporterRunnable,
+                       WorkspaceContext }, ModelReader.modelSuffix
 import org.nlogo.compile.Compiler
 import org.nlogo.core.{ AgentKind, CompilerException, CompilerUtilitiesInterface, Dialect, Femto, Model, Output,
                         Program, UpdateMode, WorldDimensions, WorldDimensions3D }
@@ -114,7 +115,8 @@ class HeadlessWorkspace(
 extends AbstractWorkspaceScala(None, _world, hubNetManagerFactory)
 with org.nlogo.workspace.Controllable
 with org.nlogo.workspace.WorldLoaderInterface
-with org.nlogo.api.ViewSettings with PrimaryWorkspace {
+with org.nlogo.api.ViewSettings
+with PrimaryWorkspace {
 
   def this(world: World & CompilationManagement, compiler: PresentationCompilerInterface, renderer: RendererInterface,
            aggregateManager: AggregateManagerInterface) = this(world, compiler, renderer, aggregateManager, null)
@@ -131,6 +133,8 @@ with org.nlogo.api.ViewSettings with PrimaryWorkspace {
   def setPrimaryWorkspace(workspace: PrimaryWorkspace): Unit = {
     primaryWorkspace = workspace
   }
+
+  override val compilerManager: CompilerManagerInterface = new DummyCompilerManager
 
   protected var mirrorHeadlessOutput = false
 

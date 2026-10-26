@@ -13,20 +13,19 @@ import scala.concurrent.Await
 import scala.util.{ Failure, Try }
 
 import org.nlogo.analytics.Analytics
-import org.nlogo.core.{ I18N, Model }
-import org.nlogo.api.{ AbstractModelLoader, Exceptions, FileIO, FileManagerInterface, LibraryManager, ModelReader,
-                       ModelSaver, ModelType, Version }, ModelReader.{ emptyModelPath, modelSuffix }
+import org.nlogo.api.{ AbstractModelLoader, AppInterface, Exceptions, FileIO, FileManagerInterface, LibraryManager,
+                       ModelReader, ModelSaver, ModelType, Version }, ModelReader.{ emptyModelPath, modelSuffix }
 import org.nlogo.app.common.{ Actions, Dialogs, ExceptionCatchingAction, ModelConfig }, Actions.Ellipsis
 import org.nlogo.app.codetab.TemporaryCodeTab
 import org.nlogo.app.infotab.InfoTab
 import org.nlogo.app.tools.{ ModelsLibraryDialog, NetLogoWebSaver }
 import org.nlogo.awt.{ Hierarchy, UserCancelException }
+import org.nlogo.core.{ I18N, Model }
 import org.nlogo.fileformat.{ FailedConversionResult, SuccessfulConversion }
 import org.nlogo.fileformat.FileFormat.ModelConversion
 import org.nlogo.log.LogManager
 import org.nlogo.swing.{ BrowserLauncher, FileDialog, ModalProgressTask, OptionPane, UserAction }, UserAction.MenuAction
-import org.nlogo.window.{ Events, FileController, GUIWorkspace, LabManagerInterface, ReconfigureWorkspaceUI },
-                          Events.{ LoadModelEvent, ModelSavedEvent }
+import org.nlogo.window.{ FileController, GUIWorkspace, LabManagerInterface, ReconfigureWorkspaceUI }
 import org.nlogo.workspace.{ AbstractWorkspaceScala, OpenModel, OpenModelFromURI, OpenModelFromSource, SaveModel,
                              SaveModelAs, WorkspaceFactory }
 
@@ -114,7 +113,7 @@ object FileManager {
         def run(): Unit = {
           try {
             val uri = Paths.get(importPath).toUri
-            manager.loadModel(manager.openModelURI(uri)).map(model =>
+            manager.load(manager.openModelURI(uri)).map(model =>
               workspace.getHubNetManager.foreach(_.importClientInterface(model, sectionChoice == 1)))
           } catch {
             case ex: IOException => exception = Some(ex)
@@ -303,7 +302,8 @@ import FileManager._
 /** This class manages a number of file operations. Much of the code in here used to live in
  *  fileMenu, but it's obviously undesirable to couple the behavior in this class too closely to
  *  its presentation (the menu) */
-class FileManager(workspace: AbstractWorkspaceScala,
+class FileManager(app: AppInterface,
+  workspace: AbstractWorkspaceScala,
   modelLoader: AbstractModelLoader,
   modelConverter: ModelConversion,
   dirtyMonitor: DirtyMonitor,
@@ -313,14 +313,14 @@ class FileManager(workspace: AbstractWorkspaceScala,
   tabManager: TabManager,
   workspaceFactory: WorkspaceFactory,
   labManager: LabManagerInterface,
-  testing: Boolean) extends FileManagerInterface with LoadModelEvent.Handler {
+  testing: Boolean) extends FileManagerInterface {
 
   private var firstLoad: Boolean = true
 
   val controller = new FileController(parent, workspace)
 
-  def handle(e: LoadModelEvent): Unit = {
-    modelSaver.setCurrentModel(e.model)
+  def loadModel(model: Model): Unit = {
+    modelSaver.setCurrentModel(model)
   }
 
   private[app] def aboutToCloseFiles(): Unit = {
@@ -390,7 +390,7 @@ class FileManager(workspace: AbstractWorkspaceScala,
       case _ => uri
     }
 
-    loadModel(openModelURI(newUri)).foreach { m =>
+    load(openModelURI(newUri)).foreach { m =>
       openFromModel(m, uri, modelType, shouldAutoInstallLibs)
 
       if (modelType == ModelType.Normal && newUri != uri) {
@@ -405,7 +405,7 @@ class FileManager(workspace: AbstractWorkspaceScala,
     ((fileController: OpenModel.Controller) => OpenModelFromURI(uri, fileController, modelLoader, modelConverter, Version))
 
   def openFromSource(uri: URI, modelSource: String, modelType: ModelType): Unit = {
-    loadModel((fileController: OpenModel.Controller) =>
+    load((fileController: OpenModel.Controller) =>
       OpenModelFromSource(uri, modelSource, fileController, modelLoader, modelConverter, Version))
         .foreach(m => openFromModel(m, uri, modelType))
   }
@@ -436,13 +436,14 @@ class FileManager(workspace: AbstractWorkspaceScala,
       }
     }
 
-    ReconfigureWorkspaceUI(linkParent, uri, modelType, model, workspace, shouldAutoInstallLibs, convertWidgetSizes)
+    ReconfigureWorkspaceUI(app.modelCoordinator, linkParent, uri, modelType, model, workspace, shouldAutoInstallLibs,
+                           convertWidgetSizes)
 
     if (modelType == ModelType.Normal)
       FileDialog.setDirectory(workspace.fileManager.prefix)
   }
 
-  private def loadModel(openModel: (OpenModel.Controller) => Option[Model]): Option[Model] = {
+  private def load(openModel: (OpenModel.Controller) => Option[Model]): Option[Model] = {
     val result = ModalProgressTask.runForResultOnBackgroundThread(
       Hierarchy.getFrame(parent), I18N.gui.get("dialog.interface.loading.task"), () => {},
       Unit => openModel(controller))
@@ -524,7 +525,7 @@ class FileManager(workspace: AbstractWorkspaceScala,
       r.foreach { uri =>
         val path = Paths.get(uri).toString
         modelSaver.setCurrentModel(modelSaver.currentModel.copy(version = Version.version))
-        new ModelSavedEvent(path, isNew).raise(eventRaiser)
+        app.modelCoordinator.modelSaved(path, isNew)
       }
       result = Some(r)
     }

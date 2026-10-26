@@ -18,7 +18,7 @@ import javafx.scene.web.{ WebEngine, WebView }
 
 import org.nlogo.api.{ ExternalResourceManager, Version }
 import org.nlogo.app.common.{ FindDialog, MenuTab, Tab, UndoRedoActions }
-import org.nlogo.core.I18N
+import org.nlogo.core.{ I18N, Model }
 import org.nlogo.editor.EditorConfiguration
 import org.nlogo.swing.{ BoxAlign, BoxRow, FocusRoot, FocusUtils, QuickHelp, ScrollableTextComponent, ScrollPane,
                          TextArea, ToolBarActionButton, ToolBarToggleButton, Printable, PrinterManager, BrowserLauncher,
@@ -37,7 +37,6 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
   with Printable
   with UndoRedoActions
   with WindowEvents.LoadBeginEvent.Handler
-  with WindowEvents.LoadModelEvent.Handler
   with FocusRoot
   with Zoomable
   with ThemeSync {
@@ -224,8 +223,8 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
     undoManager.discardAllEdits()
   }
 
-  def handle(e: WindowEvents.LoadModelEvent): Unit = {
-    info(e.model.info)
+  def loadModel(model: Model): Unit = {
+    info(model.info)
     resetView()
   }
 

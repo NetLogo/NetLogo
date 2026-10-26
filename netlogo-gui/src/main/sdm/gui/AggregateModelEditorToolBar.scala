@@ -9,13 +9,14 @@ import javax.swing.{ Action, AbstractAction, ButtonGroup, JLabel, JPanel, JToggl
 import org.jhotdraw.framework.{ DrawingEditor, DrawingView, Figure, FigureSelectionListener, Tool }
 import org.jhotdraw.standard.{ CreationTool, DeleteCommand }
 
+import org.nlogo.api.CompilerManagerInterface
 import org.nlogo.core.I18N
 import org.nlogo.sdm.Model
 import org.nlogo.swing.{ BoxAlign, BoxRow, Button, InputOptionPane, OptionPane, ToolBarActionButton,
                          ToolBarToggleButton, Utils => SwingUtils, Zoomable, ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
-class AggregateModelEditorToolBar(editor: AggregateModelEditor, model: Model)
+class AggregateModelEditorToolBar(editor: AggregateModelEditor, model: Model, compilerManager: CompilerManagerInterface)
   extends BoxRow(6, BoxAlign.Start) with ThemeSync {
 
   implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("tools.sdm")
@@ -36,7 +37,9 @@ class AggregateModelEditorToolBar(editor: AggregateModelEditor, model: Model)
       try if (newDt != null) {
         model.setDt(newDt.toDouble)
         dtLabel.setText("dt = " + model.getDt)
-        new org.nlogo.window.Events.CompileAllEvent().raise(editor)
+
+        compilerManager.compileAll()
+
         new org.nlogo.window.Events.DirtyEvent(None).raise(editor)
       }
       catch {
@@ -51,7 +54,9 @@ class AggregateModelEditorToolBar(editor: AggregateModelEditor, model: Model)
   })
 
   private val compileAction = new MyAction("Check", "/images/check.png", enableMe = true) {
-    def actionPerformed(e: ActionEvent): Unit = {new org.nlogo.window.Events.CompileAllEvent().raise(editor)}
+    def actionPerformed(e: ActionEvent): Unit = {
+      compilerManager.compileAll()
+    }
   }
   private val editAction = new MyAction("Edit", "/images/edit.png", enableMe = false) {
     def actionPerformed(e: ActionEvent): Unit = {editor.inspectFigure(editor.view.selection.nextFigure)}
@@ -59,7 +64,9 @@ class AggregateModelEditorToolBar(editor: AggregateModelEditor, model: Model)
   private val deleteAction = new MyAction("Delete", "/images/delete.png", enableMe = false) {
     def actionPerformed(e: ActionEvent): Unit = {
       new DeleteCommand(I18N.gui("delete"), editor).execute()
-      new org.nlogo.window.Events.CompileAllEvent().raise(editor)
+
+      compilerManager.compileAll()
+
       new org.nlogo.window.Events.DirtyEvent(None).raise(editor)
     }
   }

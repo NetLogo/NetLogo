@@ -7,8 +7,8 @@ import java.lang.{ Boolean => JBoolean }
 import org.nlogo.api.{ CompilerServices, ExtensionManager }
 import org.nlogo.core.{ I18N, Switch => CoreSwitch, Widget => CoreWidget }
 
-class SwitchWidget(compiler: CompilerServices, extensionManager: ExtensionManager)
-  extends Switch with Editable with InterfaceGlobalWidget with Events.PeriodicUpdateEvent.Handler {
+class SwitchWidget(constraintManager: ConstraintManager, compiler: CompilerServices, extensionManager: ExtensionManager)
+  extends Switch(constraintManager) with Editable with InterfaceGlobalWidget with Events.PeriodicUpdateEvent.Handler {
 
   override def classDisplayName = I18N.gui.get("tabs.run.widgets.switch")
 
@@ -82,5 +82,7 @@ class SwitchWidget(compiler: CompilerServices, extensionManager: ExtensionManage
     }
   }
 
-  def handle(e: Events.AfterLoadEvent): Unit = { updateConstraints() }
+  override def afterLoad(): Unit = {
+    updateConstraints()
+  }
 }

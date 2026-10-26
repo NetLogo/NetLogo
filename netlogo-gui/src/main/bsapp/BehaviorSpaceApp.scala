@@ -187,7 +187,7 @@ class BehaviorSpaceApp(args: BehaviorSpaceApp.CommandLineArgs) extends Thread.Un
         interfaceTab.resetSplitPane()
         interfaceTab.syncTheme()
 
-        Events.CompileAllEvent().raise(frame)
+        workspace.compilerManager.compileAll()
       })
     }
 

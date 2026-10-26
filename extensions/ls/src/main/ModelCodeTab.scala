@@ -9,14 +9,13 @@ import org.nlogo.awt.UserCancelException
 import org.nlogo.core.{ I18N, Model }
 import org.nlogo.fileformat.{ FailedConversionResult, FileFormat }
 import org.nlogo.swing.{ CloseableTab, OptionPane }
-import org.nlogo.window.Events.ModelSavedEvent
 import org.nlogo.workspace.{ AbstractWorkspace, ModelsLibrary, ModelTracker, OpenModel, OpenModelFromURI, SaveModel }
 
 import java.nio.file.Paths
 
 class ModelCodeTab(app: AppInterface, workspace: AbstractWorkspace, tabManager: TabsInterface,
                    modelManager: ModelManager)
-  extends CodeTab(workspace, tabManager) with CloseableTab with ModelSavedEvent.Handler {
+  extends CodeTab(workspace, tabManager) with CloseableTab {
 
   val tabName      = workspace.getModelFileName
   val filePath     = workspace.getModelPath
@@ -88,8 +87,9 @@ class ModelCodeTab(app: AppInterface, workspace: AbstractWorkspace, tabManager: 
 
   val originalModelSource = modelSource
 
-  override def handle(modelSavedEvent: ModelSavedEvent): Unit =
+  override def modelSaved(): Unit = {
     save()
+  }
 
   def save(): Unit = {
     val loader = FileFormat.standardAnyLoader(false, workspace.compiler.utilities)
@@ -126,4 +126,6 @@ class ModelCodeTab(app: AppInterface, workspace: AbstractWorkspace, tabManager: 
     } else {
       errorLabel.setVisible(false)
     }
+
+  override def loadModel(model: Model): Unit = {}
 }

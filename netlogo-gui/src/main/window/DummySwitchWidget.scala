@@ -4,7 +4,7 @@ package org.nlogo.window
 
 import org.nlogo.core.{ I18N, Switch => CoreSwitch, Widget => CoreWidget }
 
-class DummySwitchWidget extends Switch with Editable {
+class DummySwitchWidget extends Switch(new DummyConstraintManager) with Editable {
   override def classDisplayName = I18N.gui.get("tabs.run.widgets.switch")
 
   override def editPanel: EditPanel = new DummySwitchEditPanel(this)
@@ -13,9 +13,6 @@ class DummySwitchWidget extends Switch with Editable {
 
   // we never update constraints in a dummy widget -- CLB
   override def updateConstraints(): Unit = {}
-
-  // do nothing
-  def handle(e: Events.AfterLoadEvent): Unit = {}
 
   /// load and save
   override def load(model: CoreWidget): Unit = {

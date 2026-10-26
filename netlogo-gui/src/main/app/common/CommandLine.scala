@@ -13,8 +13,7 @@ import org.nlogo.ide.{ AutoSuggestAction, CodeCompletionPopup }
 import org.nlogo.swing.{ Implicits, MaximumHeight, ScrollPane, Transparent, UserAction, Zoomable },
   Implicits.thunk2documentListener
 import org.nlogo.theme.InterfaceColors
-import org.nlogo.window.{ Editable, CommandCenterInterface, EditorColorizer, InterfaceMode, JobWidget,
-                          Events => WindowEvents }
+import org.nlogo.window.{ Editable, CommandCenterInterface, EditorColorizer, JobWidget, Events => WindowEvents }
 import org.nlogo.workspace.AbstractWorkspace
 
 object CommandLine {
@@ -42,7 +41,7 @@ class CommandLine(commandCenter: CommandCenterInterface,
                      echoCommandsToOutput: Boolean,
                      fontSize: Int,
                      workspace: AbstractWorkspace)
-    extends JobWidget(workspace.world.mainRNG)
+    extends JobWidget(workspace.world.mainRNG, workspace.compilerManager)
     with MaximumHeight
     with ActionListener
     with KeyListener
@@ -156,8 +155,6 @@ class CommandLine(commandCenter: CommandCenterInterface,
   def keyTyped(e: KeyEvent): Unit = { }
 
   def keyPressed(e: KeyEvent): Unit = {
-    new WindowEvents.SetInterfaceModeEvent(InterfaceMode.Interact, false).raise(CommandLine.this)
-
     e.getKeyCode match {
       case KeyEvent.VK_ENTER if e.isShiftDown =>
         textField.replaceSelection("\n")

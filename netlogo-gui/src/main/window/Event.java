@@ -191,8 +191,7 @@ public abstract class Event {
       // code involved with separate code windows. AAB 10/2020
       List<Handler> handlersV = events.get(eventClass);
       if (null == handlersV ||
-        eventClass.toString().equals("class org.nlogo.window.Events$CompiledEvent") ||
-        eventClass.toString().equals("class org.nlogo.window.Events$LoadModelEvent")) {
+        eventClass.toString().equals("class org.nlogo.window.Events$CompiledEvent")) {
         // findHandlers does the grunt work of actually
         // walking the component hierarchy looking for
         // handlers

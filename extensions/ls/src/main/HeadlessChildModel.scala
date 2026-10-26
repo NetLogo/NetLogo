@@ -15,11 +15,15 @@ class HeadlessChildModel (parentWorkspace: Workspace, path: String, modelID: Int
 
   var frame: Option[ViewFrame] = None
 
+  private val compilerManager = new CompilerManager
+
   val workspace: HeadlessWorkspace = new HeadlessWorkspace(
       world,
       new org.nlogo.compile.Compiler(if (Version.is3D) NetLogoThreeDDialect else NetLogoLegacyDialect),
       new org.nlogo.render.Renderer(world),
       new org.nlogo.sdm.AggregateManagerLite) {
+
+    override val compilerManager: CompilerManager = HeadlessChildModel.this.compilerManager
 
     override def sendOutput(oo: OutputObject, toOutputArea: Boolean): Unit = {
       if (LevelSpace.isHeadless) {
@@ -93,5 +97,16 @@ class HeadlessChildModel (parentWorkspace: Workspace, path: String, modelID: Int
 
   def syncTheme(): Unit = {
     frame.foreach(_.syncTheme())
+  }
+
+  private class CompilerManager extends CompilerManagerInterface {
+    override def procedures: ProceduresInterface = null
+    override def compileAll(shouldAutoInstallLibs: Boolean): Unit = {}
+
+    override def compileMoreSource(owner: JobOwner): Unit = {
+      frame.foreach(_.compileMoreSource(owner))
+    }
+
+    override def loadEnd(shouldAutoInstallLibs: Boolean): Unit = {}
   }
 }

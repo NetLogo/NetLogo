@@ -5,7 +5,7 @@ package org.nlogo.lab.gui
 import java.awt.event.{ ActionEvent, KeyEvent }
 import javax.swing.AbstractAction
 
-import org.nlogo.api.{ AbstractModelLoader, LabProtocol, ModelSaver }
+import org.nlogo.api.{ AbstractModelLoader, LabProtocol, ModelSaver, ProceduresInterface }
 import org.nlogo.awt.Positioning
 import org.nlogo.core.{ I18N, Model }
 import org.nlogo.editor.Colorizer
@@ -27,7 +27,6 @@ class LabManager(val workspace:        GUIWorkspace,
   extends LabManagerInterface
   with CompiledEvent.Handler
   with LoadBeginEvent.Handler
-  with LoadModelEvent.Handler
   with ThemeSync {
 
   val protocols = new ListBuffer[LabProtocol]
@@ -61,23 +60,26 @@ class LabManager(val workspace:        GUIWorkspace,
     protocols.clear()
     lastCompileAllWasSuccessful = false
   }
-  def handle(e:LoadModelEvent): Unit = {
-    protocols ++= e.model
+
+  def loadModel(model: Model): Unit = {
+    protocols ++= model
       .optionalSectionValue[Seq[LabProtocol]]("org.nlogo.modelsection.behaviorspace")
       .getOrElse(Seq[LabProtocol]())
     workspace.getExperimentManager.setGUIExperiments(protocols.toSeq)
   }
+
   override def updateModel(m: Model): Model =
     m.withOptionalSection("org.nlogo.modelsection.behaviorspace", Some(protocols.toSeq), Seq())
 
   /// making sure everything gets compiled before an experiment run
   private var lastCompileAllWasSuccessful = false
   def handle(e:CompiledEvent): Unit = {
-    if(e.sourceOwner.isInstanceOf[org.nlogo.window.ProceduresInterface])
+    if(e.sourceOwner.isInstanceOf[ProceduresInterface])
       lastCompileAllWasSuccessful = e.error == null
   }
   def prepareForRun(): Unit = {
-    (new CompileAllEvent).raise(this)
+    workspace.compilerManager.compileAll()
+
     if(!lastCompileAllWasSuccessful)
       throw new org.nlogo.awt.UserCancelException
   }

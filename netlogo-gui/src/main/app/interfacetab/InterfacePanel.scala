@@ -2,7 +2,7 @@
 
 package org.nlogo.app.interfacetab
 
-import java.awt.Point
+import java.awt.{ EventQueue, Point }
 import java.awt.event.{ ActionEvent, FocusEvent, FocusListener, KeyEvent }
 import java.awt.image.BufferedImage
 import javax.swing.AbstractAction
@@ -22,13 +22,12 @@ import org.nlogo.window.{ ButtonWidget, ChooserWidget, Editable, EditDialogFacto
                           GUIWorkspace, InputBoxWidget, InterfaceGlobalWidget, InterfaceMode, MonitorWidget, PlotWidget,
                           SliderWidget, SwitchWidget, ViewWidget, ViewWidgetInterface, Widget, WidgetInfo,
                           WidgetRegistry },
-  WindowEvents.{ CompileAllEvent, LoadBeginEvent, LoadWidgetsEvent, WidgetRemovedEvent }
+  WindowEvents.{ LoadBeginEvent, WidgetRemovedEvent }
 import org.nlogo.workspace.Evaluator
 
 class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspace, dialogFactory: EditDialogFactory)
   extends WidgetPanel(workspace.getFrame, workspace, WidgetInfo.primaryInfos, dialogFactory)
   with FocusListener
-  with LoadWidgetsEvent.Handler
   with UndoRedoActions {
 
   // in 3d don't add the view widget since it's always
@@ -123,21 +122,25 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
     if (fromRegistry != null)
       fromRegistry
     else coreWidget match {
-      case c: CoreChooser  => new ChooserWidget(workspace, dialogFactory.colorizer, workspace.getExtensionManager)
-      case b: CoreButton   => new ButtonWidget(workspace.world.mainRNG, workspace, dialogFactory.colorizer)
+      case c: CoreChooser  => new ChooserWidget(workspace, workspace, dialogFactory.colorizer,
+                                                workspace.getExtensionManager)
+      case b: CoreButton   => new ButtonWidget(workspace.world.mainRNG, workspace, dialogFactory.colorizer,
+                                               workspace.compilerManager)
       case p: CorePlot     => PlotWidget(workspace.plotManager, workspace, dialogFactory.colorizer)
-      case m: CoreMonitor  => new MonitorWidget(workspace.world.auxRNG, workspace, dialogFactory.colorizer)
+      case m: CoreMonitor  => new MonitorWidget(workspace.world.auxRNG, workspace, dialogFactory.colorizer,
+                                                workspace.compilerManager)
       case s: CoreSlider =>
-        new SliderWidget(workspace.world.auxRNG, workspace, dialogFactory.colorizer, workspace.getExtensionManager) {
+        new SliderWidget(workspace.world.auxRNG, workspace, workspace, dialogFactory.colorizer,
+                         workspace.getExtensionManager) {
           override def sourceOffset: Int =
             Evaluator.sourceOffset(AgentKind.Observer, false)
         }
-      case s: CoreSwitch => new SwitchWidget(workspace, workspace.getExtensionManager)
+      case s: CoreSwitch => new SwitchWidget(workspace, workspace, workspace.getExtensionManager)
       case i: CoreInputBox =>
         val textArea       = new EditorArea(textEditorConfiguration)
         val dialogTextArea = new EditorArea(dialogEditorConfiguration)
 
-        new InputBoxWidget(textArea, dialogTextArea, workspace, workspace.getExtensionManager, this)
+        new InputBoxWidget(textArea, dialogTextArea, workspace, workspace, workspace.getExtensionManager, this)
       case v: CoreView => new ViewWidget(workspace)
       case _ =>
         throw new IllegalStateException("unknown widget type: " + coreWidget.getClass.getName)
@@ -157,9 +160,8 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
     revalidate()
     repaint() // you wouldn't think this'd be necessary, but without it
     // the widget didn't visually disappear - ST 6/23/03
-    if (needsRecompile) {
-      new CompileAllEvent().raise(this)
-    }
+    if (needsRecompile)
+      workspace.compilerManager.compileAll()
   }
 
   override protected def removeWidget(wrapper: WidgetWrapper): Unit = {
@@ -224,15 +226,11 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
     // We use `raiseLater` to ensure that the WidgetRemovedEvent
     // propagates to the Compiler.
     if (e.widget.getWidgetContainer.contains(this) && !unloading)
-      new CompileAllEvent().raiseLater(this)
+      EventQueue.invokeLater(() => workspace.compilerManager.compileAll())
   }
 
   def interfaceImage: BufferedImage =
     Images.paintToImage(this)
-
-  def handle(e: LoadWidgetsEvent): Unit = {
-    loadWidgets(e.widgets, e.convertWidgetSizes)
-  }
 
   private var unloading = false
 

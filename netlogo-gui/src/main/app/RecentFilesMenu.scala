@@ -11,7 +11,6 @@ import org.nlogo.api.{ Exceptions, ModelType, Version }
 import org.nlogo.awt.UserCancelException
 import org.nlogo.core.{ I18N, NetLogoPreferences }
 import org.nlogo.swing.{ OptionPane, UserAction }, UserAction.{ Menu => ActionMenu, MenuAction }
-import org.nlogo.window.Events._
 
 case class ModelEntry(path: String, modelType: ModelType) {
   def this(line: String) = {
@@ -122,10 +121,7 @@ class RecentFiles {
   }
 }
 
-class RecentFilesMenu(frame: AppFrame, fileManager: FileManager)
-  extends ModelSavedEvent.Handler
-  with BeforeLoadEvent.Handler {
-
+class RecentFilesMenu(frame: AppFrame, fileManager: FileManager) {
   val recentFiles = new RecentFiles
   private var currentActions = Seq[MenuAction]()
   private var menu: Option[ActionMenu] = None
@@ -136,21 +132,21 @@ class RecentFilesMenu(frame: AppFrame, fileManager: FileManager)
     refreshMenu()
   }
 
-  // Add models to list when the current model is saved
-  def handle(e: ModelSavedEvent): Unit = {
-    for (p <- Option(e.modelPath)) {
-      recentFiles.add(ModelEntry(p, ModelType.Normal))
-      refreshMenu()
+  // Add models to list when new models are opened
+  def beforeLoad(modelPath: Option[String], modelType: ModelType): Unit = {
+    if (modelType != ModelType.New) {
+      for (p <- modelPath) {
+        recentFiles.add(ModelEntry(p, modelType))
+        refreshMenu()
+      }
     }
   }
 
-  // Add models to list when new models are opened
-  def handle(e: BeforeLoadEvent): Unit = {
-    if (e.modelType != ModelType.New) {
-      for (p <- e.modelPath) {
-        recentFiles.add(ModelEntry(p, e.modelType))
-        refreshMenu()
-      }
+  // Add models to list when the current model is saved
+  def modelSaved(modelPath: String): Unit = {
+    for (p <- Option(modelPath)) {
+      recentFiles.add(ModelEntry(p, ModelType.Normal))
+      refreshMenu()
     }
   }
 

@@ -6,22 +6,24 @@ import java.awt.{ BorderLayout, Font, Insets }
 import javax.swing.{ Box, JLabel, JPanel }
 import javax.swing.border.{ BevelBorder, LineBorder }
 
-import org.nlogo.api.{ CompilerServices, ExtensionManager, MersenneTwisterFast, RandomServices }
+import org.nlogo.api.{ CompilerServices, DummyCompilerManager, ExtensionManager, MersenneTwisterFast, RandomServices }
 import org.nlogo.awt.Hierarchy
+import org.nlogo.core.Widget
 import org.nlogo.plot.PlotManager
 import org.nlogo.swing.{ BoxRow, ScrollPane, TextArea, Transparent, Zoomable, ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
-import org.nlogo.window.{ ButtonWidget, ChooserWidget, EditorFactory, InterfacePanelLite }
+import org.nlogo.window.{ ButtonWidget, ChooserWidget, ConstraintManager, EditorFactory, InterfacePanelLite }
 
 // The layout for the hubnet client. Holds the interface panel and the message text field.
 class ClientGUI(editorFactory: EditorFactory, clientView: ClientView, plotManager: PlotManager,
-                compiler: CompilerServices, extensionManager: ExtensionManager)
+                constraintManager: ConstraintManager, compiler: CompilerServices, extensionManager: ExtensionManager)
   extends JPanel(new BorderLayout) with Transparent with ThemeSync {
 
   private val statusPanel = new StatusPanel()
   private val messagePanel = new MessagePanel(new TextArea(4, 3))
-  private val interfacePanel = new InterfacePanelLite(clientView, compiler, new DummyRandomServices(), plotManager,
-                                                      editorFactory, extensionManager) {
+  private val interfacePanel = new InterfacePanelLite(clientView, constraintManager, compiler,
+                                                      new DummyRandomServices(), plotManager, editorFactory,
+                                                      extensionManager, new DummyCompilerManager) {
     sliderEventOnReleaseOnly(true)
 
     class ClientGUIButtonKeyAdapter extends ButtonKeyAdapter {
@@ -48,6 +50,14 @@ class ClientGUI(editorFactory: EditorFactory, clientView: ClientView, plotManage
   }, BorderLayout.CENTER)
 
   syncTheme()
+
+  def loadWidgets(widgets: Seq[Widget]): Unit = {
+    interfacePanel.loadWidgets(widgets)
+  }
+
+  def afterLoad(): Unit = {
+    interfacePanel.afterLoad()
+  }
 
   override def getInsets = new Insets(5, 5, 5, 5)
   override def requestFocus(): Unit = { if (interfacePanel != null) interfacePanel.requestFocus() }

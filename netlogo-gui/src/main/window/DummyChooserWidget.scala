@@ -6,7 +6,9 @@ import org.nlogo.api.{ CompilerServices, Dump }
 import org.nlogo.core.{ I18N, Chooseable, Chooser => CoreChooser, CompilerException, LogoList, Widget => CoreWidget }
 import org.nlogo.editor.Colorizer
 
-class DummyChooserWidget(val compiler: CompilerServices, colorizer: Colorizer) extends Chooser with Editable {
+class DummyChooserWidget(val compiler: CompilerServices, colorizer: Colorizer)
+  extends Chooser(new DummyConstraintManager) with Editable {
+
   override def updateConstraints(): Unit = {
     // we never update constraints in a dummy widget -- CLB
   }

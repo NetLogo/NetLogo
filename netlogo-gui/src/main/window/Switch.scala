@@ -11,7 +11,7 @@ import org.nlogo.core.I18N
 import org.nlogo.swing.{ FocusUtils, Utils, Zoomable }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
-abstract class Switch extends MultiErrorWidget with Events.AfterLoadEvent.Handler with ThemeSync {
+abstract class Switch(constraintManager: ConstraintManager) extends MultiErrorWidget with ThemeSync {
   protected var constraint = new BooleanConstraint
 
   protected val label = new JLabel(I18N.gui.get("edit.switch.previewName")) with Zoomable {
@@ -25,7 +25,12 @@ abstract class Switch extends MultiErrorWidget with Events.AfterLoadEvent.Handle
   locally {
     val mouseListener = new MouseAdapter {
       override def mousePressed(e: MouseEvent): Unit = {
-        new Events.InputBoxLoseFocusEvent().raise(Switch.this)
+        e.getSource match {
+          case component: Component =>
+            component.requestFocus()
+
+          case _ =>
+        }
 
         if (e.getButton == MouseEvent.BUTTON1)
           isOn = !isOn
@@ -75,7 +80,8 @@ abstract class Switch extends MultiErrorWidget with Events.AfterLoadEvent.Handle
   }
 
   override def updateConstraints(): Unit = {
-    if (_name.length > 0) { new Events.AddBooleanConstraintEvent(_name, isOn).raise(this) }
+    if (_name.length > 0)
+      constraintManager.addBooleanConstraint(_name, isOn)
   }
 
   override def getPreferredSize: Dimension = {

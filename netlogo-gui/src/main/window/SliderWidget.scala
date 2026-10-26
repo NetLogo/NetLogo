@@ -8,16 +8,16 @@ import org.nlogo.agent.SliderConstraint
 import org.nlogo.api.{ CompilerServices, ExtensionManager, MersenneTwisterFast }
 import org.nlogo.core.{ Horizontal, I18N, Slider => CoreSlider, Vertical, Widget => CoreWidget }
 import org.nlogo.editor.Colorizer
-import org.nlogo.window.Events.{ InterfaceGlobalEvent, AfterLoadEvent, PeriodicUpdateEvent, AddSliderConstraintEvent }
+import org.nlogo.window.Events.{ InterfaceGlobalEvent, PeriodicUpdateEvent }
 
-class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast,
+class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast, constraintManager: ConstraintManager,
                    compiler: CompilerServices, colorizer: Colorizer, extensionManager: ExtensionManager)
   extends MultiErrorWidget with AbstractSliderWidget with InterfaceGlobalWidget with Editable
-  with PeriodicUpdateEvent.Handler with AfterLoadEvent.Handler {
+  with PeriodicUpdateEvent.Handler {
 
-  def this(random: MersenneTwisterFast, compiler: CompilerServices, colorizer: Colorizer,
-           extensionManager: ExtensionManager) =
-    this(false, random, compiler, colorizer, extensionManager)
+  def this(random: MersenneTwisterFast, constraintManager: ConstraintManager, compiler: CompilerServices,
+           colorizer: Colorizer, extensionManager: ExtensionManager) =
+    this(false, random, constraintManager, compiler, colorizer, extensionManager)
 
   private var _minimumCode: String = "0"
   private var _maximumCode: String = "100"
@@ -122,7 +122,7 @@ class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast,
   }
 
   override def updateConstraints(): Unit = {
-    new AddSliderConstraintEvent(this, name, minimumCode, maximumCode, incrementCode, defaultValue).raise(this)
+    constraintManager.addSliderConstraint(this, name, minimumCode, maximumCode, incrementCode, defaultValue)
   }
 
   override def errorString: Option[String] = {
@@ -147,7 +147,8 @@ class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast,
   }
 
   // EVENT HANDLING
-  def handle(e: AfterLoadEvent): Unit = {
+
+  override def afterLoad(): Unit = {
     updateConstraints()
     forceValue(defaultValue)
   }

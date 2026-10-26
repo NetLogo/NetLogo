@@ -17,22 +17,21 @@ import org.nlogo.app.infotab.InfoTab
 import org.nlogo.app.interfacetab.InterfaceTab
 import org.nlogo.app.tools.AgentMonitorManager
 import org.nlogo.awt.UserCancelException
-import org.nlogo.core.{ I18N, NetLogoPreferences }
+import org.nlogo.core.{ I18N, Model, NetLogoPreferences }
 import org.nlogo.editor.EditorConfiguration
 import org.nlogo.nvm.IncludeSource
 import org.nlogo.swing.{ OptionPane, Printable, PrinterManager, TabLabel, UserAction }
 import org.nlogo.theme.ThemeSync
-import org.nlogo.window.Events.{ CompileAllEvent, CompiledEvent, LoadBeginEvent, LoadEndEvent, ModelSavedEvent,
-                                 RuntimeErrorEvent, WidgetErrorEvent, WidgetRemovedEvent }
+import org.nlogo.window.Events.{ CompiledEvent, LoadBeginEvent, RuntimeErrorEvent, WidgetErrorEvent,
+                                 WidgetRemovedEvent }
 import org.nlogo.window.{ Event, ExternalFileInterface, GUIWorkspace, JobWidget, MonitorWidget, Widget }
 
 import scala.io.Source
 
 class TabManager(app: App, val workspace: GUIWorkspace, override val interfaceTab: InterfaceTab,
                  val externalFileManager: ExternalFileManager)
-  extends AppTabsInterface with CompiledEvent.Handler with LoadBeginEvent.Handler with LoadEndEvent.Handler
-  with ModelSavedEvent.Handler with RuntimeErrorEvent.Handler with WidgetErrorEvent.Handler
-  with WidgetRemovedEvent.Handler with ThemeSync {
+  extends AppTabsInterface with CompiledEvent.Handler with LoadBeginEvent.Handler with RuntimeErrorEvent.Handler
+  with WidgetErrorEvent.Handler with WidgetRemovedEvent.Handler with ThemeSync {
 
   private val focusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager
 
@@ -534,7 +533,7 @@ class TabManager(app: App, val workspace: GUIWorkspace, override val interfaceTa
       case _ =>
         addExternalFile(Right(filename), focus)
 
-        new CompileAllEvent().raise(mainCodeTab)
+        workspace.compilerManager.compileAll()
     }
   }
 
@@ -635,7 +634,7 @@ class TabManager(app: App, val workspace: GUIWorkspace, override val interfaceTa
 
     movingTabs = false
 
-    new CompileAllEvent().raise(mainCodeTab)
+    workspace.compilerManager.compileAll()
 
     app.setWindowTitles()
   }
@@ -685,7 +684,14 @@ class TabManager(app: App, val workspace: GUIWorkspace, override val interfaceTa
     }
   }
 
-  def handle(e: LoadEndEvent): Unit = {
+  def loadModel(model: Model): Unit = {
+    infoTab.loadModel(model)
+    mainCodeTab.loadModel(model)
+  }
+
+  def loadEnd(): Unit = {
+    interfaceTab.loadEnd()
+
     loadOpenTabs()
 
     // We need to restart the watcher thread every load because the list of
@@ -835,7 +841,14 @@ class TabManager(app: App, val workspace: GUIWorkspace, override val interfaceTa
 
   // before saving, the watcher thread is stopped so it doesn't detect our own write,
   // so we need to start it up again after the save is complete (Isaac B 9/7/25)
-  def handle(e: ModelSavedEvent): Unit = {
+  def modelSaved(): Unit = {
+    getAllTabs.foreach {
+      case codeTab: CodeTab =>
+        codeTab.modelSaved()
+
+      case _ =>
+    }
+
     if (getAutoReload)
       startWatcherThread()
   }

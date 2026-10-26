@@ -8,7 +8,8 @@ import java.nio.file.{ Files, Paths, StandardOpenOption }
 import java.util.{ Timer, TimerTask }
 import javax.swing.JFrame
 
-import org.nlogo.api.{ AbstractModelLoader, Exceptions, ExtensionManager, ModelSaver, ModelType, Version }
+import org.nlogo.api.{ AbstractModelLoader, DirtyMonitorInterface, Exceptions, ExtensionManager, ModelSaver, ModelType,
+                       Version }
 import org.nlogo.app.common.ModelConfig
 import org.nlogo.core.CompilerUtilitiesInterface
 import org.nlogo.window.Events._
@@ -16,15 +17,12 @@ import org.nlogo.workspace.{ ModelTracker, SaveModel }
 
 class DirtyMonitor(app: App, frame: JFrame, modelSaver: ModelSaver, modelLoader: AbstractModelLoader,
                    modelTracker: ModelTracker, title: Option[String] => String, tabManager: TabManager)
-extends BeforeLoadEvent.Handler
-with AfterLoadEvent.Handler
-with WidgetAddedEvent.Handler
-with WidgetRemovedEvent.Handler
-with DirtyEvent.Handler
-with ModelSavedEvent.Handler
-with UpdateModeChangedEvent.Handler
-with SaveModel.Controller
-{
+  extends DirtyMonitorInterface
+  with WidgetAddedEvent.Handler
+  with WidgetRemovedEvent.Handler
+  with DirtyEvent.Handler
+  with SaveModel.Controller {
+
   // we don't want auto save to kick in when a model isn't completely loaded yet - ST 8/6/09
   private var loading = true
   private var lastAutoSaveFile: Option[File] = None
@@ -37,7 +35,8 @@ with SaveModel.Controller
   }
 
   def modelDirty: Boolean = dirtyPaths.contains(None) && !loading
-  def setDirty(dirty: Boolean, path: Option[String] = None): Unit = {
+
+  override def setDirty(dirty: Boolean, path: Option[String] = None): Unit = {
     if (dirty && !loading) {
       dirtyTimers.get(path).foreach { timer =>
         timer.cancel()
@@ -111,15 +110,12 @@ with SaveModel.Controller
     }
   }
 
-  /// how we get clean
-  def handle(e: ModelSavedEvent) = { setDirty(false) }
-
-  def handle(e: BeforeLoadEvent): Unit = {
+  def beforeLoad(): Unit = {
     setDirty(false)
     loading = true
   }
 
-  def handle(e: AfterLoadEvent): Unit = {
+  def afterLoad(): Unit = {
     setDirty(false)
     loading = false
   }
@@ -134,10 +130,6 @@ with SaveModel.Controller
   }
 
   def handle(e: WidgetRemovedEvent): Unit = {
-    setDirty(true)
-  }
-
-  override def handle(e: UpdateModeChangedEvent): Unit = {
     setDirty(true)
   }
 

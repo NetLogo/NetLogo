@@ -2,25 +2,24 @@
 
 package org.nlogo.window
 
-import org.nlogo.core.{ Femto, Widget => CoreWidget }
+import org.nlogo.core.{ Femto, Model, Widget => CoreWidget }
 import org.nlogo.agent.{ CompilationManagement, World }
-import org.nlogo.api.{ JobOwner, MersenneTwisterFast, NetLogoLegacyDialect }
+import org.nlogo.api.{ JobOwner, MersenneTwisterFast, NetLogoLegacyDialect, ProceduresInterface }
 import org.nlogo.nvm.PresentationCompilerInterface
 import org.nlogo.util.AnyFunSuiteEx
 import org.nlogo.workspace.{ AbstractWorkspace, DummyAbstractWorkspace }
-import org.nlogo.window.Events.{ CompiledEvent, CompileMoreSourceEvent, InterfaceGlobalEvent, LoadBeginEvent,
-                                 LoadEndEvent, WidgetAddedEvent, CompileAllEvent }
+import org.nlogo.window.Events.{ CompiledEvent, InterfaceGlobalEvent, LoadBeginEvent, WidgetAddedEvent }
 
 class CompilerManagerTests extends AnyFunSuiteEx {
   def loadWidgets(ws: Seq[JobOwner],
     source: String = "globals [ a b c ] to foo fd 1 end")(
       cm: CompilerManager): CompilerManager = {
-    cm.proceduresInterface.innerSource = source
+    cm.procedures.innerSource = source
     cm.handle(new LoadBeginEvent())
     ws.foreach { w =>
-      cm.handle(new CompileMoreSourceEvent(w))
+      cm.compileMoreSource(w)
     }
-    cm.handle(new LoadEndEvent(false))
+    cm.loadEnd(false)
     cm
   }
 
@@ -29,10 +28,11 @@ class CompilerManagerTests extends AnyFunSuiteEx {
     override def compiler = Femto.get[PresentationCompilerInterface]("org.nlogo.compile.Compiler", NetLogoLegacyDialect)
   }
 
-  def manager(workspace: AbstractWorkspace, procedures: DummyProcedures, eventSink: (Event, Object) => Unit): CompilerManager = {
-    new CompilerManager(workspace,
-      workspace.world.asInstanceOf[World & CompilationManagement],
-      procedures, eventSink)
+  def manager(workspace: AbstractWorkspace, procs: DummyProcedures, eventSink: (Event, Object) => Unit): CompilerManager = {
+    new CompilerManager(workspace, workspace.world.asInstanceOf[World & CompilationManagement], eventSink) {
+      override def procedures: ProceduresInterface =
+        procs
+    }
   }
 
   def testCompilerManager(run: (CompilerManager) => Unit)(
@@ -54,18 +54,18 @@ class CompilerManagerTests extends AnyFunSuiteEx {
     lazy val procedures = new DummyProcedures()
     lazy val compilerManager = manager(workspace, procedures, ((e, o) => events = events :+ e))
     def loadWidgets(): Unit = {
-      compilerManager.proceduresInterface.innerSource = source
+      compilerManager.procedures.innerSource = source
       compilerManager.handle(new LoadBeginEvent())
       compilerManager.handle(new LoadBeginEvent())
       widgets.foreach { w =>
-        compilerManager.handle(new CompileMoreSourceEvent(w))
+        compilerManager.compileMoreSource(w)
         w match {
           case ig: DummyIGWidget => compilerManager.handle(new WidgetAddedEvent(ig))
           case te: DummyTeSliderWidget => compilerManager.handle(new WidgetAddedEvent(te))
           case _ =>
         }
       }
-      compilerManager.handle(new LoadEndEvent(false))
+      compilerManager.loadEnd(false)
     }
   }
 
@@ -80,7 +80,7 @@ class CompilerManagerTests extends AnyFunSuiteEx {
     this.loadWidgets()
     assert(workspace.world.program.userGlobals == Seq("A", "B", "C"))
     assert(workspace.procedures.get(("FOO", None)).nonEmpty)
-    assert(workspace.procedures.apply(("FOO", None)).owner == compilerManager.proceduresInterface)
+    assert(workspace.procedures.apply(("FOO", None)).owner == compilerManager.procedures)
     assert(events.length == 3)
     assert(events(0).isInstanceOf[Events.RemoveAllJobsEvent])
     assert(events(1).isInstanceOf[Events.CompiledEvent])
@@ -102,7 +102,7 @@ class CompilerManagerTests extends AnyFunSuiteEx {
     widgets = Seq(widget)
     this.loadWidgets()
     widget.sourceCode = "set a 10"
-    compilerManager.handle(new CompileMoreSourceEvent(widget))
+    compilerManager.compileMoreSource(widget)
     assert(events.length == 4)
     assert(events(3).isInstanceOf[Events.CompiledEvent])
   } }
@@ -116,7 +116,7 @@ class CompilerManagerTests extends AnyFunSuiteEx {
   test("compiler widget compiles the command center source and emits a compiled event") { new Helper {
     this.loadWidgets()
     val ccWidget = new DummyWidget("", true)
-    compilerManager.handle(new CompileMoreSourceEvent(ccWidget))
+    compilerManager.compileMoreSource(ccWidget)
     assert(events.length == 4)
     assert(events(3).isInstanceOf[Events.CompiledEvent])
   } }
@@ -175,10 +175,10 @@ class CompilerManagerTests extends AnyFunSuiteEx {
       source = "globals [te]"
       this.loadWidgets()
       widget.value = Double.box(0)
-      compilerManager.handle(new CompileAllEvent)
+      compilerManager.compileAll()
       assert(workspace.world.getObserverVariableByName("te") == Double.box(0))
       widget.value = Double.box(20)
-      compilerManager.handle(new CompileAllEvent)
+      compilerManager.compileAll()
       assert(workspace.world.getObserverVariableByName("te") == Double.box(20))
     }
   }
@@ -191,7 +191,7 @@ class CompilerManagerTests extends AnyFunSuiteEx {
       this.loadWidgets()
       widget.value = Double.box(20)
       assert(workspace.world.getObserverVariableByName("te") == Double.box(0))
-      compilerManager.handle(new CompileAllEvent)
+      compilerManager.compileAll()
       assert(workspace.world.getObserverVariableByName("te") == Double.box(20))
     }
   }
@@ -226,7 +226,7 @@ class CompilerManagerTests extends AnyFunSuiteEx {
       widget.value = Double.box(30)
       compilerManager.handle(updateIGValue)
       assert(workspace.world.getObserverVariableByName("te") == Double.box(20))
-      compilerManager.handle(new CompileAllEvent)
+      compilerManager.compileAll()
       assert(workspace.world.getObserverVariableByName("te") == Double.box(20))
     }
   }
@@ -254,7 +254,7 @@ class CompilerManagerTests extends AnyFunSuiteEx {
 
   test("adds all loaded widgets to its widget set") { new Helper {
     val igWidget = new DummyIGWidget("", Double.box(10))
-    val jobWidget = new DummyJobWidget("", null)
+    val jobWidget = new DummyJobWidget("", null, compilerManager)
     widgets = Seq(igWidget, jobWidget)
     this.loadWidgets()
     assert(compilerManager.widgets.contains(jobWidget))
@@ -309,6 +309,7 @@ class DummyProcedures extends ProceduresInterface {
   def innerSource: String = codeTabSource
   def kind: org.nlogo.core.AgentKind = org.nlogo.core.AgentKind.Observer
   def source: String = codeTabSource
+  def loadModel(model: Model): Unit = ???
 }
 
 class DummyWidget(var sourceCode: String, val isCommandCenter: Boolean = false) extends JobOwner {
@@ -328,7 +329,9 @@ class DummyWidget(var sourceCode: String, val isCommandCenter: Boolean = false) 
   def source: String = sourceCode
 }
 
-class DummyJobWidget(source: String, rand: MersenneTwisterFast) extends JobWidget(rand) {
+class DummyJobWidget(source: String, rand: MersenneTwisterFast, compilerManager: CompilerManager)
+  extends JobWidget(rand, compilerManager) {
+
   def load(widget: CoreWidget): Unit = {}
   def model: CoreWidget = null
   override def getEditable: Option[Editable] = None

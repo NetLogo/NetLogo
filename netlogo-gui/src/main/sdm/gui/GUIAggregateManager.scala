@@ -4,7 +4,7 @@ package org.nlogo.sdm.gui
 
 import java.awt.EventQueue
 
-import org.nlogo.api.{ AggregateManagerInterface, CompilerServices, ExtensionManager }
+import org.nlogo.api.{ AggregateManagerInterface, CompilerManagerInterface, CompilerServices, ExtensionManager }
 import org.nlogo.core.{ AgentKind, LiteralParser, Model => CoreModel }
 import org.nlogo.editor.Colorizer
 import org.nlogo.theme.ThemeSync
@@ -16,12 +16,11 @@ class GUIAggregateManager(
   compiler: CompilerServices,
   colorizer: Colorizer,
   dialogFactory: EditDialogFactory,
-  extensionManager: ExtensionManager)
+  extensionManager: ExtensionManager,
+  compilerManager: CompilerManagerInterface)
 extends AggregateManagerInterface
 with Event.LinkChild
 with Events.CompiledEvent.Handler
-with Events.BeforeLoadEvent.Handler
-with Events.LoadModelEvent.Handler
 with ThemeSync {
 
   private var editor: AggregateModelEditor = null
@@ -30,29 +29,25 @@ with ThemeSync {
     // if it's the first time, make a new aggregate model editor
     if (editor == null)
       editor = new AggregateModelEditor(
-        linkParent, colorizer, menuBarFactory, compiler, dialogFactory, extensionManager)
+        linkParent, colorizer, menuBarFactory, compiler, dialogFactory, extensionManager, compilerManager)
     editor.setVisible(true)
     editor.toFront()
   }
 
   override def getLinkParent = linkParent
 
-  override def handle(e: org.nlogo.window.Events.BeforeLoadEvent): Unit = {
+  override def beforeLoad(): Unit = {
     if (editor != null) {
       editor.dispose()
       editor = null
     }
   }
 
-  override def handle(e: org.nlogo.window.Events.LoadModelEvent): Unit = {
-    load(e.model, compiler)
-  }
-
   override def load(model: CoreModel, parser: LiteralParser) = {
     model.optionalSectionValue[AggregateDrawing]("org.nlogo.modelsection.systemdynamics.gui")
       .foreach { drawing =>
         editor = new AggregateModelEditor(
-          linkParent, colorizer, menuBarFactory, drawing, compiler, dialogFactory, extensionManager)
+          linkParent, colorizer, menuBarFactory, drawing, compiler, dialogFactory, extensionManager, compilerManager)
         if (drawing.getModel.elements.nonEmpty) {
           editor.setVisible(true)
 

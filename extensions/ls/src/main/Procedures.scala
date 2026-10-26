@@ -1,12 +1,10 @@
 package org.nlogo.ls.gui
 
-import org.nlogo.core.AgentKind
-import org.nlogo.window.{ Event, Events, ProceduresInterface }
+import org.nlogo.api.{ CompilerManagerInterface, ProceduresInterface }
+import org.nlogo.core.{ AgentKind, Model }
 
 // dummy class so LevelSpace doesn't need to depend on (and instantiate) the main CodeTab class (Isaac B 1/25/26)
-class Procedures(linkParent: AnyRef)
-  extends ProceduresInterface with Event.LinkChild with Events.LoadModelEvent.Handler {
-
+class Procedures(compilerManager: CompilerManagerInterface) extends ProceduresInterface {
   private var text = ""
 
   override def classDisplayName: String =
@@ -28,12 +26,9 @@ class Procedures(linkParent: AnyRef)
     this.text = text
   }
 
-  override def handle(e: Events.LoadModelEvent): Unit = {
-    innerSource = e.model.code
+  override def loadModel(model: Model): Unit = {
+    innerSource = model.code
 
-    new Events.CompileAllEvent().raise(this)
+    compilerManager.compileAll()
   }
-
-  override def getLinkParent: AnyRef =
-    linkParent
 }

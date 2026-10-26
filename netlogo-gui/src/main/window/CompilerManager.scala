@@ -5,30 +5,26 @@ package org.nlogo.window
 import java.util.Locale
 
 import org.nlogo.core.{ CompilerException, Program }
-import org.nlogo.api.{ AgentException, Exceptions, JobOwner, LogoException, SourceOwner, ValueConstraint }
+import org.nlogo.api.{ AgentException, CompilerManagerInterface, Exceptions, JobOwner, LogoException, SourceOwner,
+                       ValueConstraint }
 import org.nlogo.nvm.CompilerResults
 import org.nlogo.util.PathUtils
 import org.nlogo.workspace.AbstractWorkspace
 import org.nlogo.window.Event.LinkChild
-import org.nlogo.window.Events.{
-  CompileMoreSourceEvent, CompiledEvent, InterfaceGlobalEvent,
-  LoadBeginEvent, LoadEndEvent, RemoveAllJobsEvent,
-  WidgetAddedEvent, WidgetRemovedEvent, CompileAllEvent }
+import org.nlogo.window.Events.{ CompiledEvent, InterfaceGlobalEvent, LoadBeginEvent, RemoveAllJobsEvent,
+                                 WidgetAddedEvent, WidgetRemovedEvent }
 
 import scala.collection.mutable.HashSet
 
-class CompilerManager(val workspace: AbstractWorkspace,
+abstract class CompilerManager(val workspace: AbstractWorkspace,
   val world: org.nlogo.agent.World & org.nlogo.agent.CompilationManagement = null,
-  val proceduresInterface: ProceduresInterface,
   eventRaiser: (Event, Object) => Unit = (e:Event, o:Object) => e.raise(o))
     extends LinkChild
-    with CompileMoreSourceEvent.Handler
+    with CompilerManagerInterface
     with InterfaceGlobalEvent.Handler
     with LoadBeginEvent.Handler
-    with LoadEndEvent.Handler
     with WidgetAddedEvent.Handler
-    with WidgetRemovedEvent.Handler
-    with CompileAllEvent.Handler {
+    with WidgetRemovedEvent.Handler {
 
   private[window] val widgets       = HashSet[JobOwner]()
   private[window] val globalWidgets = HashSet[InterfaceGlobalWidget]()
@@ -60,16 +56,15 @@ class CompilerManager(val workspace: AbstractWorkspace,
     world.setUpShapes(true)
   }
 
-  def handle(e: LoadEndEvent): Unit = {
+  override def loadEnd(shouldAutoInstallLibs: Boolean): Unit = {
     isLoading = false
     world.program(Program.fromDialect(workspace.dialect).copy(interfaceGlobals = getGlobalVariableNames))
     world.realloc()
-    compileAll(e.shouldAutoInstallLibs)
+    compileAll(shouldAutoInstallLibs)
     world.clearAll()
   }
 
-  def handle(e: CompileMoreSourceEvent): Unit = {
-    val owner = e.owner
+  override def compileMoreSource(owner: JobOwner): Unit = {
     if (isLoading)
       widgets += owner
     else if (! owner.isCommandCenter)
@@ -136,10 +131,6 @@ class CompilerManager(val workspace: AbstractWorkspace,
     }
   }
 
-  def handle(e: CompileAllEvent): Unit = {
-    compileAll()
-  }
-
   def handle(e: WidgetAddedEvent): Unit = {
     e.widget match {
       case jobOwner: JobOwner => widgets += jobOwner
@@ -162,7 +153,7 @@ class CompilerManager(val workspace: AbstractWorkspace,
     }
   }
 
-  private def compileAll(shouldAutoInstallLibs: Boolean = false): Unit = {
+  override def compileAll(shouldAutoInstallLibs: Boolean): Unit = {
     raiseEvent(new RemoveAllJobsEvent())
     world.displayOn(true)
     // We can't compile the Code tab until the contents of
@@ -207,13 +198,13 @@ class CompilerManager(val workspace: AbstractWorkspace,
 
       val results =
         workspace.compiler.compileProgram(
-          proceduresInterface.innerSource, owners, program,
+          procedures.innerSource, owners, program,
           workspace.getExtensionManager, workspace.getLibraryManager,
           workspace.getCompilationEnvironment, shouldAutoInstallLibs)
       workspace.setProcedures(results.proceduresMap)
       workspace.procedures.values.foreach { procedure =>
         val owner = procedure.filename match {
-          case ""          => proceduresInterface
+          case ""          => procedures
           case "aggregate" => workspace.aggregateManager
           case fileName    => new ExternalFileInterface(PathUtils.standardize(fileName))
         }
@@ -221,12 +212,12 @@ class CompilerManager(val workspace: AbstractWorkspace,
       }
       workspace.init()
       world.program(results.program)
-      raiseEvent(new CompiledEvent(proceduresInterface, results.program, null, null))
+      raiseEvent(new CompiledEvent(procedures, results.program, null, null))
       true
     } catch {
       case error: CompilerException =>
         val errorSource = error.filename match {
-          case ""          => proceduresInterface
+          case ""          => procedures
           case "aggregate" => workspace.aggregateManager
           case fileName    => new ExternalFileInterface(PathUtils.standardize(fileName))
         }

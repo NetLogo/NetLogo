@@ -7,11 +7,13 @@ import java.awt.event.MouseAdapter
 import javax.swing.{ JLayeredPane, JPanel }
 
 import org.nlogo.swing.{ PreferredSize, Transparent }
-import org.nlogo.window.{ DefaultEditorFactory, Event, InterfacePanelLite }
+import org.nlogo.window.{ DefaultEditorFactory, DummyConstraintManager, Event, InterfacePanelLite }
 
 class BlockedInterfacePanel(frame: BehaviorSpaceFrame, workspace: SemiHeadlessWorkspace)
-  extends InterfacePanelLite(workspace.viewWidget, workspace, workspace, workspace.plotManager,
-                             new DefaultEditorFactory(workspace), workspace.extensionManager) with Event.LinkChild {
+  extends InterfacePanelLite(workspace.viewWidget, new DummyConstraintManager, workspace, workspace,
+                             workspace.plotManager, new DefaultEditorFactory(workspace), workspace.extensionManager,
+                             workspace.compilerManager)
+    with Event.LinkChild {
 
   private val interceptPanel = new JPanel with PreferredSize with Transparent {
     setFocusable(true)

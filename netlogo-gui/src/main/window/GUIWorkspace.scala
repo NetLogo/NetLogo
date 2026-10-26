@@ -14,7 +14,8 @@ import java.util.concurrent.TimeoutException
 import javax.swing.{ AbstractAction, Action, Timer }
 import javax.swing.border.LineBorder
 
-import org.nlogo.agent.{ Agent, BooleanConstraint, ImporterJ, OutputObject, SliderConstraint, World }
+import org.nlogo.agent.{ Agent, BooleanConstraint, ChooserConstraint, ImporterJ, InputBoxConstraint, OutputObject,
+                         SliderConstraint, World }
 import org.nlogo.api.{ Agent => ApiAgent, AgentFollowingPerspective, AppInterface, CommandRunnable, ControlSet,
                        DrawingInterface, Exceptions, FileIO, JobOwner, LogoException, ModelReader, ModelSections,
                        ModelType, PreviewCommands, RendererInterface, ReporterRunnable, SimpleJobOwner,
@@ -27,10 +28,8 @@ import org.nlogo.shape.ShapeConverter
 import org.nlogo.swing.{ CustomOptionPane, FileDialog, ModalProgressTask, OptionPane, ScrollPane, TextArea, Utils }
 import org.nlogo.theme.InterfaceColors
 import org.nlogo.window.Event.LinkChild
-import org.nlogo.window.Events.{ AddBooleanConstraintEvent, AddChooserConstraintEvent, AddInputBoxConstraintEvent,
-                                 AddJobEvent, AddSliderConstraintEvent, AfterLoadEvent, BeforeLoadEvent, CompiledEvent,
-                                 JobRemovedEvent, JobStoppingEvent, LoadModelEvent, OutputEvent, PeriodicUpdateEvent,
-                                 RemoveAllJobsEvent, RemoveJobEvent, RuntimeErrorEvent }
+import org.nlogo.window.Events.{ AddJobEvent, CompiledEvent, JobRemovedEvent, JobStoppingEvent, OutputEvent,
+                                 PeriodicUpdateEvent, RemoveAllJobsEvent, RemoveJobEvent, RuntimeErrorEvent }
 import org.nlogo.workspace.{ AbstractWorkspaceScala, ExportOutput, HubNetManagerFactory }
 
 import scala.collection.immutable.ListMap
@@ -52,12 +51,9 @@ abstract class GUIWorkspace(app: Option[AppInterface], world: World, kioskLevel:
                             externalFileManager: ExternalFileManager, listenerManager: NetLogoListenerManager,
                             errorDialogManager: ErrorDialogManager, controlSet: ControlSet)
   extends AbstractWorkspaceScala(app, world, hubNetManagerFactory)
-  with LinkChild with AddJobEvent.Handler with AfterLoadEvent.Handler with BeforeLoadEvent.Handler
-  with JobStoppingEvent.Handler with RemoveAllJobsEvent.Handler with RemoveJobEvent.Handler
-  with AddSliderConstraintEvent.Handler with AddBooleanConstraintEvent.Handler with AddChooserConstraintEvent.Handler
-  with AddInputBoxConstraintEvent.Handler with CompiledEvent.Handler with LoadModelEvent.Handler
-  with TrailDrawerInterface with DrawingInterface with ModelSections.ModelSaveable with PrimaryWorkspace
-  with WorkspaceWithSpeed {
+  with LinkChild with AddJobEvent.Handler with JobStoppingEvent.Handler with RemoveAllJobsEvent.Handler
+  with RemoveJobEvent.Handler with CompiledEvent.Handler with TrailDrawerInterface with DrawingInterface
+  with ModelSections.ModelSaveable with PrimaryWorkspace with WorkspaceWithSpeed with ConstraintManager {
 
   val viewManager = new ViewManager
 
@@ -212,13 +208,13 @@ abstract class GUIWorkspace(app: Option[AppInterface], world: World, kioskLevel:
   override def importWorld(filename: String): Unit = {
     super.importWorld(filename)
 
-    tickStateChanged(world.tickCounter.ticks > -1)
+    EventQueue.invokeLater(() => tickStateChanged(world.tickCounter.ticks > -1))
   }
 
   override def importWorld(reader: Reader): Unit = {
     super.importWorld(reader)
 
-    tickStateChanged(world.tickCounter.ticks > -1)
+    EventQueue.invokeLater(() => tickStateChanged(world.tickCounter.ticks > -1))
   }
 
   override def importDrawing(is: InputStream, mimeType: Option[String]): Unit =
@@ -292,19 +288,19 @@ abstract class GUIWorkspace(app: Option[AppInterface], world: World, kioskLevel:
   override def resetTicks(context: Context): Unit = {
     super.resetTicks(context)
 
-    tickStateChanged(true)
+    EventQueue.invokeLater(() => tickStateChanged(true))
   }
 
   override def clearTicks(): Unit = {
     super.clearTicks()
 
-    tickStateChanged(false)
+    EventQueue.invokeLater(() => tickStateChanged(false))
   }
 
   override def clearAll(): Unit = {
     super.clearAll()
 
-    tickStateChanged(false)
+    EventQueue.invokeLater(() => tickStateChanged(false))
   }
 
   def sendPixels: Boolean =
@@ -433,12 +429,16 @@ abstract class GUIWorkspace(app: Option[AppInterface], world: World, kioskLevel:
 
   // called from the job thread
   def reload(): Unit = {
-    app.foreach(_.reload())
+    app.foreach { instance =>
+      EventQueue.invokeLater(() => instance.reload())
+    }
   }
 
   // called from the job thread
   override def magicOpen(name: String): Unit = {
-    app.foreach(_.magicOpen(name))
+    app.foreach { instance =>
+      EventQueue.invokeLater(() => instance.magicOpen(name))
+    }
   }
 
   /// painting
@@ -671,7 +671,63 @@ abstract class GUIWorkspace(app: Option[AppInterface], world: World, kioskLevel:
   def shapeChanged(shape: Shape): Unit =
     viewManager.shapeChanged(shape)
 
-  def handle(e: AfterLoadEvent): Unit = {
+  /**
+   * sets new model name and type, and, if necessary, disconnects
+   * HubNetManager. This must be done at beforeLoad time, because the
+   * model name needs to be available for setting titles and so on by the
+   * time we begin loading.
+   */
+  def beforeLoad(modelPath: Option[String], modelType: ModelType): Unit = {
+    setPeriodicUpdatesEnabled(false)
+
+    setModelPath(modelPath.orNull)
+    setModelType(modelType)
+
+    hubNetManager.foreach(_.disconnect())
+
+    jobManager.haltSecondary()
+    jobManager.haltPrimary()
+
+    getExtensionManager.reset()
+    fileManager.handleModelChange()
+
+    setPreviewCommands(PreviewCommands.Default)
+
+    clearDrawing()
+
+    viewManager.resetMouseCors()
+
+    displaySwitchOn(true)
+
+    setProcedures(new ListMap[(String, Option[String]), Procedure])
+
+    lastTicksListenersHeard = -1.0
+
+    plotManager.forgetAll()
+
+    aggregateManager.beforeLoad()
+    listenerManager.beforeLoad(modelPath)
+  }
+
+  def loadModel(model: Model): Unit = {
+    loadFromModel(model)
+
+    setModelTitle(model.title)
+
+    world.turtleShapes.replaceShapes(model.turtleShapes.map(ShapeConverter.baseShapeToShape))
+    world.linkShapes.replaceShapes(model.linkShapes.map(ShapeConverter.baseLinkShapeToLinkShape))
+
+    setSnapOn(!model.optionalSectionValue[ModelSettings]("org.nlogo.modelsection.modelsettings")
+                .exists(!_.snapToGrid))
+
+    _isModel3D = model.view.dimensions.isInstanceOf[WorldDimensions3D]
+
+    resourceManager.setResources(model.resources)
+
+    aggregateManager.load(model, this)
+  }
+
+  def afterLoad(): Unit = {
     setPeriodicUpdatesEnabled(true)
 
     world.observer.resetPerspective()
@@ -810,50 +866,51 @@ abstract class GUIWorkspace(app: Option[AppInterface], world: World, kioskLevel:
     jobManager.haltPrimary()
   }
 
-  def handle(e: AddBooleanConstraintEvent): Unit = {
+  override def addBooleanConstraint(varname: String, defaultValue: Boolean): Unit = {
     // now we set the constraint in the observer, so that it is enforced.
-    val index = world.observerOwnsIndexOf(e.varname.toUpperCase(Locale.ENGLISH))
+    val index = world.observerOwnsIndexOf(varname.toUpperCase(Locale.ENGLISH))
 
     if (index != -1)
-      world.observer.setConstraint(index, new BooleanConstraint(e.defaultValue))
+      world.observer.setConstraint(index, new BooleanConstraint(defaultValue))
   }
 
-  def handle(e: AddInputBoxConstraintEvent): Unit = {
+  override def addInputBoxConstraint(varname: String, constraint: InputBoxConstraint): Unit = {
     // now we set the constraint in the observer, so that it is enforced.
-    val index = world.observerOwnsIndexOf(e.varname.toUpperCase(Locale.ENGLISH))
+    val index = world.observerOwnsIndexOf(varname.toUpperCase(Locale.ENGLISH))
 
     if (index != -1)
-      world.observer.setConstraint(index, e.constraint)
+      world.observer.setConstraint(index, constraint)
   }
 
-  def handle(e: AddChooserConstraintEvent): Unit = {
+  override def addChooserConstraint(varname: String, constraint: ChooserConstraint): Unit = {
     // now we set the constraint in the observer, so that it is enforced.
-    val index = world.observerOwnsIndexOf(e.varname.toUpperCase(Locale.ENGLISH))
+    val index = world.observerOwnsIndexOf(varname.toUpperCase(Locale.ENGLISH))
 
     if (index != -1)
-      world.observer.setConstraint(index, e.constraint)
+      world.observer.setConstraint(index, constraint)
   }
 
-  def handle(e: AddSliderConstraintEvent): Unit = {
+  override def addSliderConstraint(slider: SliderWidget, varname: String, minSpec: String, maxSpec: String,
+                                   incSpec: String, value: Double): Unit = {
     try {
-      val con = SliderConstraint.makeSliderConstraint(world.observer, e.minSpec, e.maxSpec, e.incSpec, e.value,
-                                                      e.slider.name, this, this)
+      val con = SliderConstraint.makeSliderConstraint(world.observer, minSpec, maxSpec, incSpec, value, slider.name,
+                                                      this, this)
 
-      e.slider.removeAllErrors()
-      e.slider.setSliderConstraint(con)
+      slider.removeAllErrors()
+      slider.setSliderConstraint(con)
 
       // now we set the constraint in the observer, so that it is enforced.
-      val index = world.observerOwnsIndexOf(e.varname.toUpperCase(Locale.ENGLISH))
+      val index = world.observerOwnsIndexOf(varname.toUpperCase(Locale.ENGLISH))
 
       if (index != -1)
         world.observer.setConstraint(index, con)
     } catch {
       case err: SliderConstraint.ConstraintExceptionHolder =>
         for (cce <- err.getErrors)
-          e.slider.error(cce.spec.fieldName, cce)
+          slider.error(cce.spec.fieldName, cce)
 
       case err: SliderConstraint.ConstraintRuntimeException =>
-        e.slider.error(err.spec.fieldName, err)
+        slider.error(err.spec.fieldName, err)
     }
   }
 
@@ -866,20 +923,6 @@ abstract class GUIWorkspace(app: Option[AppInterface], world: World, kioskLevel:
 
   def handle(e: CompiledEvent): Unit =
     codeBits.clear()
-
-  def handle(e: LoadModelEvent): Unit = {
-    loadFromModel(e.model)
-
-    setModelTitle(e.model.title)
-
-    world.turtleShapes.replaceShapes(e.model.turtleShapes.map(ShapeConverter.baseShapeToShape))
-    world.linkShapes.replaceShapes(e.model.linkShapes.map(ShapeConverter.baseLinkShapeToLinkShape))
-
-    setSnapOn(!e.model.optionalSectionValue[ModelSettings]("org.nlogo.modelsection.modelsettings")
-                .exists(!_.snapToGrid))
-
-    _isModel3D = e.model.view.dimensions.isInstanceOf[WorldDimensions3D]
-  }
 
   def exportWidget(widget: Widget): Unit = {
     try {
@@ -1195,41 +1238,6 @@ abstract class GUIWorkspace(app: Option[AppInterface], world: World, kioskLevel:
   }
 
   /// keep track of model name
-
-  /**
-   * sets new model name and type, and, if necessary, disconnects
-   * HubNetManager. This must be done at BeforeLoadEvent time, because the
-   * model name needs to be available for setting titles and so on by the
-   * time we handle LoadBeginEvent.
-   */
-  def handle(e: BeforeLoadEvent): Unit = {
-    setPeriodicUpdatesEnabled(false)
-
-    setModelPath(e.modelPath.orNull)
-    setModelType(e.modelType)
-
-    hubNetManager.foreach(_.disconnect())
-
-    jobManager.haltSecondary()
-    jobManager.haltPrimary()
-
-    getExtensionManager.reset()
-    fileManager.handleModelChange()
-
-    setPreviewCommands(PreviewCommands.Default)
-
-    clearDrawing()
-
-    viewManager.resetMouseCors()
-
-    displaySwitchOn(true)
-
-    setProcedures(new ListMap[(String, Option[String]), Procedure])
-
-    lastTicksListenersHeard = -1.0
-
-    plotManager.forgetAll()
-  }
 
   /**
    * sets new model name and type after a save. Once a model is saved,
