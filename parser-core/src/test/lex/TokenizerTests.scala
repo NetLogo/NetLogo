@@ -136,6 +136,9 @@ class TokenizerTests extends AnyFunSuite {
   // for fifty, and *looks* just like an L, but is not a letter according to Unicode.
   testLexFailure("foo\u216Cbar", 3, 4,  "This non-standard character is not allowed.")
   testLexFailure(".5*",          0, 3,  "Illegal number format")
+  testLexFailure("foo: bar",     3, 4,  "Spaces are not allowed around colons")
+  testLexFailure("foo :bar",     4, 5,  "Spaces are not allowed around colons")
+  testLexFailure("foo : bar",    4, 5,  "Spaces are not allowed around colons")
   testLexFailure("__ignore 3__ignore 4", 9, 18, "Illegal number format")
 
   test("carriageReturnsAreWhitespace") {
