@@ -16,10 +16,10 @@ object Tokenizer extends TokenizerInterface {
   // instead. If lexing is too slow, you can probably get speed (both js and jvm)
   // by writing a WrappedInput which interacts directly with string. RG 5/4/17
   def tokenizeString(source: String, filename: String = ""): Iterator[Token] =
-    new TokenLexIterator(WhitespaceTokenizingLexer, WrapStringInput(source, filename)).map(_._1)
+    new TokenLexIterator(StandardLexer, WrapStringInput(source, filename)).map(_._1)
 
   def tokenize(reader: Reader, filename: String = ""): Iterator[Token] =
-    new TokenLexIterator(WhitespaceTokenizingLexer, WrappedInput(reader, filename)).map(_._1)
+    new TokenLexIterator(StandardLexer, WrappedInput(reader, filename)).map(_._1)
 
   def getTokenAtPosition(source: String, position: Int): Option[Token] = {
     val interestingTokenTypes =
@@ -50,13 +50,13 @@ object Tokenizer extends TokenizerInterface {
   // Returns an Iterator[Token] which includes tokens with tpe == TokenType.Whitespace.
   // The other tokenize methods will not include tokens of this type.
   def tokenizeWithWhitespace(reader: Reader, filename: String): Iterator[Token] =
-    new WhitespaceTokenLexIterator(WhitespaceTokenizingLexer, WrappedInput(reader, filename)).map(_._1)
+    new WhitespaceTokenLexIterator(StandardLexer, WrappedInput(reader, filename)).map(_._1)
 
   def tokenizeWithWhitespace(source: String, filename: String): Iterator[Token] =
-    new WhitespaceTokenLexIterator(WhitespaceTokenizingLexer, WrapStringInput(source, filename)).map(_._1)
+    new WhitespaceTokenLexIterator(StandardLexer, WrapStringInput(source, filename)).map(_._1)
 
   def tokenizeWithWhitespace(iter: CharacterIterator, filename: String): Iterator[Token] =
-    new WhitespaceTokenLexIterator(WhitespaceTokenizingLexer, WrappedInput(iter, filename)).map(_._1)
+    new WhitespaceTokenLexIterator(StandardLexer, WrappedInput(iter, filename)).map(_._1)
 
   private class TokenLexIterator(lexer: TokenLexer, initialInput: WrappedInput)
     extends WhitespaceTokenLexIterator(lexer, initialInput) {

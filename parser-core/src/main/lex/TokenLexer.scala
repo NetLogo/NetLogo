@@ -154,27 +154,18 @@ class TokenLexer {
   }
 }
 
-trait StandardLexer extends TokenLexer {
-  override def apply(input: WrappedInput): (Token, WrappedInput) = {
-    val (wsCount, remainder) = fastForwardWhitespace(input)
-    super.apply(remainder)
-  }
-}
-
-object StandardLexer extends StandardLexer
-
-object WhitespaceSkippingLexer extends StandardLexer {
-  override def apply(input: WrappedInput): (Token, WrappedInput) = {
-    val (t, endOfToken) = super.apply(input)
-    val (_, beginningOfNextToken) = fastForwardWhitespace(endOfToken)
-    (t, beginningOfNextToken)
-  }
-}
-
-object WhitespaceTokenizingLexer extends TokenLexer {
+object StandardLexer extends TokenLexer {
   override def lexerOrdering: Seq[(LexPredicate, TokenGenerator)] =
     whitespace +: super.lexerOrdering
 
   def whitespace: (LexPredicate, TokenGenerator) =
     (oneOrMore(Character.isWhitespace), (s) => if (s.nonEmpty) Some((s, TokenType.Whitespace, s)) else None)
+}
+
+object WhitespaceSkippingLexer extends TokenLexer {
+  override def apply(input: WrappedInput): (Token, WrappedInput) = {
+    val (t, endOfToken) = super.apply(fastForwardWhitespace(input)._2)
+    val (_, beginningOfNextToken) = fastForwardWhitespace(endOfToken)
+    (t, beginningOfNextToken)
+  }
 }
