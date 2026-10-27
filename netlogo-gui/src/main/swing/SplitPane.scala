@@ -193,7 +193,7 @@ class SplitPane(mainComponent: Component, topComponent: Component, commandCenter
     dividerLocation = location.max(0).min(maxClosedDividerLocation)
 
     if (permanent)
-      permanentDividerLocation = dividerLocation
+      permanentDividerLocation = maxClosedDividerLocation - dividerLocation
 
     splitRatio = dividerLocation.toFloat / maxOpenDividerLocation
     closed = location >= maxClosedDividerLocation
@@ -217,7 +217,7 @@ class SplitPane(mainComponent: Component, topComponent: Component, commandCenter
       dividerLocation = lastOpenDividerLocation
     }
 
-    permanentDividerLocation = dividerLocation
+    permanentDividerLocation = maxClosedDividerLocation - dividerLocation
 
     splitRatio = dividerLocation.toFloat / maxOpenDividerLocation
     closed = location >= maxClosedDividerLocation
@@ -245,7 +245,7 @@ class SplitPane(mainComponent: Component, topComponent: Component, commandCenter
   }
 
   def fitTemporary(): Unit = {
-    setDividerLocation(maxOpenDividerLocation.min(permanentDividerLocation), false)
+    setDividerLocation(maxOpenDividerLocation.min(maxClosedDividerLocation - permanentDividerLocation), false)
   }
 
   def maxOpenDividerLocation: Int = {
