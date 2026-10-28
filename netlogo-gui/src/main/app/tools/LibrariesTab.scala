@@ -2,128 +2,60 @@
 
 package org.nlogo.app.tools
 
-import java.awt.{ Component, Dimension, EventQueue, Font, Toolkit }
-import java.awt.event.KeyEvent
+import java.awt.{ Component, Dimension, EventQueue, Font }
+import java.awt.event.{ ActionEvent, KeyEvent }
 import java.io.IOException
 import java.nio.file.Path
-import java.util.Locale
-import javax.swing.{ Action, DefaultListModel, Icon, JLabel, JList, ListCellRenderer, ListModel }
+import javax.swing.{ AbstractAction, DefaultListModel, Icon, JLabel, JList, ListCellRenderer }
 import javax.swing.border.LineBorder
-import javax.swing.event.{ AncestorEvent, AncestorListener, ListDataEvent, ListDataListener }
+import javax.swing.event.{ ListDataEvent, ListDataListener }
 
 import org.nlogo.api.{ LibraryInfoDownloader, LibraryManager, Version }
-import org.nlogo.core.{ I18N, LibraryInfo, LibraryStatus, Token, TokenType }
+import org.nlogo.core.{ I18N, LibraryInfo, LibraryStatus }
 import org.nlogo.swing.{ AutomationUtils, BoxColumn, BoxRow, BrowserLauncher, Button, EmptyIcon, FilterableListModel,
-                         FocusUtils, HorizontalStrut, MaximumHeight, OptionPane, RichAction, ScrollPane, SwingWorker,
-                         TextArea, TextField, Utils, VerticalStrut, Zoomable, ZoomableBorder }
+                         FocusUtils, HorizontalStrut, Implicits, MaximumHeight, OptionPane, ScrollPane, SwingWorker,
+                         TextArea, TextField, Utils, VerticalStrut, Zoomable, ZoomableBorder },
+                       Implicits.thunk2documentListener
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.workspace.ModelsLibrary
 
 import scala.collection.mutable.Buffer
 
-object LibrariesTab {
-  // this may look overly complex, but when rewriting the user's source code, we need to be absolutely sure
-  // that we're doing the right thing, otherwise we might break things. the following code tokenizes the source,
-  // preserving all whitespace and comments. it then tries to find an existing valid extensions directive. if it
-  // can't find an extensions directive regardless of its validity, it adds a new extensions directive to the top
-  // of the source. if it finds an extensions directive that is in valid, it rejects the operation. if it finds a
-  // valid extensions directive, it adds any new extensions from the specified list to that directive.
-  // (Isaac B 7/25/25)
-  def addExtsToSource(source: String, requiredExts: Set[String],
-                      tokenizeSource: String => Iterator[Token]): Option[String] = {
-    val (prefix, rest) = tokenizeSource(source).span(token => token.tpe != TokenType.Keyword ||
-                                                              token.text.toUpperCase(Locale.US) != "EXTENSIONS")
+abstract class LibrariesTab(manager: LibraryManager, getLibraries: => Seq[LibraryInfo], updateStatus: String => Unit,
+                            recompile: () => Unit, updateSource: (String => String) => Unit,
+                            extPathMappings: Map[String, Path])
+  extends BoxColumn(6) with ThemeSync {
 
-    if (rest.nextOption.isDefined) {
-      val (beforeList, list) = rest.span(token => token.tpe == TokenType.Comment ||
-                                                  token.tpe == TokenType.Whitespace)
+  private implicit val i18nPrefix: I18N.Prefix = I18N.Prefix("tools.libraries")
 
-      if (list.nextOption.exists(_.tpe == TokenType.OpenBracket)) {
-        val (contents, suffix) = list.span(token => token.tpe == TokenType.Ident ||
-                                                    token.tpe == TokenType.Comment ||
-                                                    token.tpe == TokenType.Whitespace)
+  protected var actionIsInProgress = false
 
-        if (suffix.nextOption.exists(_.tpe == TokenType.CloseBracket)) {
-          val existing = contents.toSeq
-          val extNames = requiredExts -- existing.filter(_.tpe == TokenType.Ident)
-                                                 .map(_.text.toLowerCase(Locale.US)).toSet
-
-          val newExts = {
-            if (extNames.isEmpty) {
-              existing.map(_.text).mkString
-            } else {
-              extNames.toSeq.sorted.mkString(" ", " ", " ") + existing.map(_.text).mkString.stripLeading
-            }
-          }
-
-          Some(prefix.map(_.text).mkString + "extensions" + beforeList.map(_.text).mkString + "[" + newExts + "]" +
-               suffix.map(_.text).mkString)
-        } else {
-          None
-        }
-      } else {
-        None
-      }
-    } else {
-      Some(s"extensions [ ${requiredExts.toSeq.sorted.mkString(" ")} ]\n$source")
-    }
-  }
-}
-
-// this tab can be converted back to a `JTabbedPane` once other libraries are added, like code modules or models.
-// -JeremyB April 2019
-class LibrariesTab( category:        String
-                  , manager:         LibraryManager
-                  , updateStatus:    String => Unit
-                  , recompile:       () => Unit
-                  , tokenizeSource:  String => Iterator[Token]
-                  , updateSource:    ((String) => String) => Unit
-                  , extPathMappings: Map[String, Path]
-                  ) extends BoxColumn(6) with ThemeSync {
-
-  import LibrariesTab._
-
-  private val libraries = manager.getExtensionInfos ++ manager.getPackageInfos
-
-  private def install(info: LibraryInfo): Unit = {
-    if (info.isExtension) {
-      manager.installExtension(info)
-    } else {
-      manager.installPackage(info)
-    }
-  }
-
-  private def uninstall(info: LibraryInfo): Unit = {
-    if (info.isExtension) {
-      manager.uninstallExtension(info)
-    } else {
-      manager.uninstallPackage(info)
-    }
-  }
-
-  private val updateLists = () => manager.reloadMetadata()
-
-  implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("tools.libraries")
+  setBorder(new ZoomableBorder(10, 0, 0, 0))
 
   private val baseListModel = new DefaultListModel[LibraryInfo]
 
-  EventQueue.invokeLater { () => libraries.toArray.foreach(elem => baseListModel.addElement(elem)) }
-
-  manager.onLibInfoChange {
-    libs =>
-      EventQueue.invokeLater {
-        () =>
-          baseListModel.clear()
-          libs.foreach(elem => baseListModel.addElement(elem))
-          updateSidebar()
+  private val listModel   = new FilterableListModel(baseListModel, containsLib) {
+    addListDataListener(new ListDataListener {
+      override def intervalAdded(e: ListDataEvent): Unit = {
+        if (canUpdateInRange(e.getIndex0, e.getIndex1))
+          updateAllAction.setEnabled(LibraryInfoDownloader.enabled && true)
       }
+
+      override def intervalRemoved(e: ListDataEvent): Unit = {
+        updateAllAction.setEnabled(LibraryInfoDownloader.enabled && canUpdate)
+      }
+
+      override def contentsChanged(e: ListDataEvent): Unit = {
+        updateAllAction.setEnabled(LibraryInfoDownloader.enabled && canUpdate)
+      }
+    })
   }
 
-  private val renderer = new CellRenderer
-
-  private val listModel   = new FilterableListModel(baseListModel, containsLib)
   private val libraryList = new JList[LibraryInfo](listModel) with FocusUtils with Zoomable with ThemeSync {
-    setCellRenderer(renderer)
+    setCellRenderer(new CellRenderer)
+    setSelectedIndex(0)
+
+    addListSelectionListener(_ => updateSidebar())
 
     override def syncTheme(): Unit = {
       setBackground(InterfaceColors.dialogBackground())
@@ -131,12 +63,11 @@ class LibrariesTab( category:        String
     }
   }
 
-  private var actionIsInProgress = false
+  val updateAllAction: AbstractAction = new AbstractAction(I18N.gui("updateAll")) {
+    setEnabled(LibraryInfoDownloader.enabled && canUpdate)
 
-  val updateAllAction: Action =
-    RichAction(I18N.gui("updateAll")) { _ =>
-
-      updateAllAction.setEnabled(false)
+    override def actionPerformed(e: ActionEvent): Unit = {
+      setEnabled(false)
 
       val libsToUpdate =
         (0 until listModel.getSize).
@@ -147,8 +78,8 @@ class LibrariesTab( category:        String
       updateMultipleOperationStatus("installing")
 
       runAllWorkersAndThen("installing", install, libsToUpdate, multiple = true)(() => finishManagement())
-
     }
+  }
 
   private val magIcon = new JLabel with Zoomable {
     setIcon(Utils.iconScaledWithColor(this, "/images/find.png", 15, 15, () => InterfaceColors.toolbarImage()))
@@ -159,9 +90,12 @@ class LibrariesTab( category:        String
   private val libraryScroll = new ScrollPane(libraryList)
 
   private val installButton = new Button(I18N.gui("install"), () => {
-    val installCheck = (lib: LibraryInfo) =>
+    def installCheck(lib: LibraryInfo): Boolean =
       lib.isVersionRequirementMet(Version.version) && lib.status != LibraryStatus.UpToDate
-    val uninstallCheck = (lib: LibraryInfo) => installCheck(lib) && lib.canUninstall
+
+    def uninstallCheck(lib: LibraryInfo): Boolean =
+      installCheck(lib) && lib.canUninstall
+
     perform("uninstalling", uninstall, uninstallCheck, true)
     perform("installing", wrappedInstall, installCheck, false)
   }) {
@@ -171,7 +105,7 @@ class LibrariesTab( category:        String
 
   private val addToCodeTabButton = new Button(I18N.gui("addToCodeTab"), () => {
     updateSource { source =>
-      addExtsToSource(source, selectedValues.map(_.codeName).toSet, tokenizeSource) match {
+      addLibrariesToSource(source, selectedValues.map(_.codeName).toSet) match {
         case Some(newSource) =>
           newSource
 
@@ -187,7 +121,7 @@ class LibrariesTab( category:        String
   })
 
   private val homepageButton = new Button(I18N.gui("homepage"), () => {
-    BrowserLauncher.openURI(LibrariesTab.this, selectedValue.homepage.toURI)
+    BrowserLauncher.openURI(this, selectedValue.homepage.toURI)
   })
 
   private val uninstallButton = new Button(I18N.gui("uninstall"), () => {
@@ -201,6 +135,9 @@ class LibrariesTab( category:        String
 
   private val info = new TextArea(2, 28) {
     setFocusable(false)
+    setLineWrap(true)
+    setWrapStyleWord(true)
+    setEditable(false)
   }
 
   private val infoScroll = new ScrollPane(info)
@@ -223,20 +160,25 @@ class LibrariesTab( category:        String
 
   private val nlvPanel = new BoxRow(Seq(minNetLogoVersionLabel, minNetLogoVersion))
 
+  EventQueue.invokeLater(() => getLibraries.foreach(baseListModel.addElement))
+
+  manager.onLibInfoChange { () =>
+    EventQueue.invokeLater(() => {
+      baseListModel.clear()
+      getLibraries.foreach(baseListModel.addElement)
+      updateSidebar()
+    })
+  }
+
+  filterField.getDocument.addDocumentListener(() => listModel.filter(filterField.getText))
+
   locally {
-
-    import org.nlogo.swing.Implicits.thunk2documentListener
-
-    info.setLineWrap(true)
-    info.setWrapStyleWord(true)
-    info.setEditable(false)
-
     val secondRow = new BoxRow(Seq(
       addToCodeTabButton,
       homepageButton
     ), 6) with MaximumHeight
 
-    add(new BoxRow(Seq(magIcon, filterField), 6))
+    add(new BoxRow(Seq(magIcon, filterField), 6) with MaximumHeight)
     add(new BoxRow(Seq(
       libraryScroll,
       new BoxColumn(Seq(
@@ -260,49 +202,40 @@ class LibrariesTab( category:        String
       ))
     ), 6))
 
-    listModel.addListDataListener(
-      new ListDataListener {
-
-        override def intervalAdded(e: ListDataEvent): Unit =
-          if (canUpdateInRange(listModel, e.getIndex0, e.getIndex1))
-            updateAllAction.setEnabled(LibraryInfoDownloader.enabled && true)
-
-        override def intervalRemoved(e: ListDataEvent): Unit =
-          updateAllAction.setEnabled(LibraryInfoDownloader.enabled && canUpdate(listModel))
-
-        override def contentsChanged(e: ListDataEvent): Unit =
-          updateAllAction.setEnabled(LibraryInfoDownloader.enabled && canUpdate(listModel))
-
-      }
-    )
-
-    libraryList.addListSelectionListener(_ => updateSidebar())
-    libraryList.setSelectedIndex(0)
-
-    filterField.getDocument.addDocumentListener(() => listModel.filter(filterField.getText))
-
-    updateAllAction.setEnabled(LibraryInfoDownloader.enabled && canUpdate(listModel))
-
     updateSidebar()
-
-    def canUpdate(model: ListModel[LibraryInfo]) = canUpdateInRange(model, 0, model.getSize - 1)
-    def canUpdateInRange(model: ListModel[LibraryInfo], index0: Int, index1: Int) =
-      (index0 to index1)
-        .map(model.getElementAt)
-        .exists(_.status == LibraryStatus.CanUpdate)
-
   }
 
-  this.addAncestorListener(new AncestorListener {
-    override def ancestorAdded  (e: AncestorEvent): Unit = {}
-    override def ancestorMoved  (e: AncestorEvent): Unit = {}
-    override def ancestorRemoved(e: AncestorEvent): Unit = {
-      libraryList.setSelectedIndex(0)
-      filterField.setText("")
-    }
-  })
+  protected def statusName: String
 
-  private def actionableLibraries = selectedValues.filterNot((lib) => !lib.isVersionRequirementMet(Version.version) || lib.status == LibraryStatus.UpToDate)
+  def addLibrariesToSource(source: String, requiredLibs: Set[String]): Option[String]
+
+  private def install(info: LibraryInfo): Unit = {
+    if (info.isExtension) {
+      manager.installExtension(info)
+    } else {
+      manager.installPackage(info)
+    }
+  }
+
+  private def uninstall(info: LibraryInfo): Unit = {
+    if (info.isExtension) {
+      manager.uninstallExtension(info)
+    } else {
+      manager.uninstallPackage(info)
+    }
+  }
+
+  private def canUpdate: Boolean =
+    canUpdateInRange(0, listModel.getSize - 1)
+
+  private def canUpdateInRange(index0: Int, index1: Int): Boolean =
+    (index0 to index1).map(listModel.getElementAt).exists(_.status == LibraryStatus.CanUpdate)
+
+  private def actionableLibraries: Buffer[LibraryInfo] = {
+    selectedValues.filterNot { lib =>
+      !lib.isVersionRequirementMet(Version.version) || lib.status == LibraryStatus.UpToDate
+    }
+  }
 
   private def updateSidebar(): Unit = {
 
@@ -340,7 +273,9 @@ class LibrariesTab( category:        String
       val homepageToolTip = if (numSelected == 1) selectedValue.homepage.toString else null
       homepageButton.setToolTipText(homepageToolTip)
 
-      updateInstallationPanel()
+      installButton.setVisible(!actionIsInProgress && !selectedValues.forall(_.status == LibraryStatus.UpToDate))
+      uninstallButton.setVisible(!actionIsInProgress && selectedValues.exists(_.status != LibraryStatus.CanInstall))
+      buttonStrut.setVisible(installButton.isVisible && uninstallButton.isVisible)
 
     } else {
       Seq(installButton, uninstallButton, addToCodeTabButton, homepageButton).foreach(_.setEnabled(false))
@@ -353,12 +288,6 @@ class LibrariesTab( category:        String
       info.select(0, 0)
     }
 
-  }
-
-  private def updateInstallationPanel() = {
-    installButton.setVisible(!actionIsInProgress && !selectedValues.forall(_.status == LibraryStatus.UpToDate))
-    uninstallButton.setVisible(!actionIsInProgress && selectedValues.exists(_.status != LibraryStatus.CanInstall))
-    buttonStrut.setVisible(installButton.isVisible && uninstallButton.isVisible)
   }
 
   private def installButtonText: String =
@@ -421,8 +350,9 @@ class LibrariesTab( category:        String
   }
 
   private var numOperatedLibs = 0
+
   private def updateMultipleOperationStatus(operation: String) =
-    updateStatus(I18N.gui(operation + "Multiple", Int.box(numOperatedLibs), category.toLowerCase))
+    updateStatus(I18N.gui(operation + "Multiple", Int.box(numOperatedLibs), statusName))
 
   private def updateSingleOperationStatus(operation: String, libName: String) =
     updateStatus(I18N.gui(operation, libName))
@@ -493,7 +423,7 @@ class LibrariesTab( category:        String
 
     override def doInBackground() = fn(lib)
     override def onComplete() = {
-      updateLists()
+      manager.reloadMetadata()
       if (multiple && numOperatedLibs > 1) {
         // This happens (gets queued) on the EDT, so there are no shared-state threading issues -- EL 2018-07-01
         numOperatedLibs -= 1
@@ -559,7 +489,7 @@ class LibrariesTab( category:        String
     if (!AutomationUtils.waitUntil(() => filterField.hasFocus))
       return None
 
-    val queue: EventQueue = Toolkit.getDefaultToolkit.getSystemEventQueue
+    val queue: EventQueue = getToolkit.getSystemEventQueue
 
     text.foreach { char =>
       queue.postEvent(new KeyEvent(filterField, KeyEvent.KEY_TYPED, System.currentTimeMillis, 0,

@@ -64,7 +64,7 @@ class OpenLibrariesDialog( frame:              Frame
                          , tokenizeSource:     String => Iterator[Token]
                          , updateSource:       ((String) => String) => Unit
                          , getExtPathMappings: () => Map[String, Path]
-                         ) extends ShowDialogAction(I18N.gui.get("menu.tools.extensions")) with MenuAction {
+                         ) extends ShowDialogAction(I18N.gui.get("menu.tools.libraries")) with MenuAction {
 
   category = ToolsCategory
   group    = ToolsSettingsGroup

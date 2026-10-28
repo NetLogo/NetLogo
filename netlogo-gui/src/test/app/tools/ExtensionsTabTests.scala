@@ -6,9 +6,9 @@ import org.nlogo.api.DummyExtensionManager
 import org.nlogo.core.{ Femto, FrontEndInterface, NetLogoCore, Token }
 import org.nlogo.util.AnyFunSuiteEx
 
-import LibrariesTab.addExtsToSource
+import ExtensionsTab.addExtsToSource
 
-class LibrariesTabTests extends AnyFunSuiteEx {
+class ExtensionsTabTests extends AnyFunSuiteEx {
   private val frontEnd = Femto.scalaSingleton[FrontEndInterface]("org.nlogo.parse.FrontEnd")
   private val extensionManager = new DummyExtensionManager
 

@@ -10,8 +10,8 @@ import scala.concurrent.ExecutionContext
 
 import org.nlogo.api.LibraryManager
 import org.nlogo.core.{ I18N, LibraryInfo, Token }
-import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, CustomOptionPane, DialogButton, OptionPane, ProgressListener,
-                         ScrollPane, TextArea, WindowAutomator, ZoomableBorder }
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, CustomOptionPane, DialogButton, FloatingTabbedPane, OptionPane,
+                         ProgressListener, ScrollPane, TabLabel, TextArea, WindowAutomator, ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 class LibrariesDialog( parent:          Frame
@@ -24,8 +24,16 @@ class LibrariesDialog( parent:          Frame
 
   WindowAutomator.automate(this)
 
-  private lazy val tab             = new LibrariesTab("extensions", manager, status.setText, recompile, tokenizeSource,
-                                                      updateSource, extPathMappings)
+  private lazy val extensionsTab = new ExtensionsTab(manager, status.setText, recompile, tokenizeSource, updateSource,
+                                                     extPathMappings)
+
+  private lazy val packagesTab = new PackagesTab(manager, status.setText, recompile, updateSource, extPathMappings)
+
+  private lazy val tabs = new FloatingTabbedPane {
+    addTabWithLabel(extensionsTab, new TabLabel(this, I18N.gui.get("tools.libraries.extensions"), extensionsTab))
+    addTabWithLabel(packagesTab, new TabLabel(this, I18N.gui.get("tools.libraries.packages"), packagesTab))
+  }
+
   private lazy val status          = new JLabel
   private lazy val libPathsButton  = new DialogButton(false, I18N.gui("showLibPaths"), () => {
     val mappingsStr = extPathMappings.map { case (k, v) => s"  * $k: $v" }.toSeq.sorted.mkString("\n")
@@ -42,17 +50,18 @@ class LibrariesDialog( parent:          Frame
     }
     new CustomOptionPane(LibrariesDialog.this, I18N.gui("showLibPaths"), scrollPane, OptionPane.Options.Ok)
   }: Unit)
-  private lazy val updateAllButton = new DialogButton(true, tab.updateAllAction)
+
+  private lazy val updateAllButton = new DialogButton(true, extensionsTab.updateAllAction)
 
   add(new BoxColumn(Seq(
-    tab,
+    tabs,
     new BoxRow(Seq(
       status,
       libPathsButton,
       updateAllButton
     ), 6, BoxAlign.End)
   ), 10) {
-    setBorder(new ZoomableBorder(10, 10, 10, 10))
+    setBorder(new ZoomableBorder(0, 10, 10, 10))
   })
 
   pack()
@@ -85,18 +94,20 @@ class LibrariesDialog( parent:          Frame
 
   override def syncTheme(): Unit = {
     getContentPane.setBackground(InterfaceColors.dialogBackground())
+    tabs.setBackground(InterfaceColors.dialogBackground())
 
     status.setForeground(InterfaceColors.dialogText())
 
-    tab.syncTheme()
+    extensionsTab.syncTheme()
+    packagesTab.syncTheme()
     libPathsButton.syncTheme()
     updateAllButton.syncTheme()
   }
 
   private [app] def searchFor(text: String, expectedSize: Int): Option[Seq[LibraryInfo]] =
-    tab.searchFor(text, expectedSize)
+    extensionsTab.searchFor(text, expectedSize)
 
   private [app] def testInstall(info: LibraryInfo): Unit = {
-    tab.testInstall(info)
+    extensionsTab.testInstall(info)
   }
 }
