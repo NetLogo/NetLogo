@@ -72,7 +72,7 @@ class LibraryManager(userPkgPath: Path, userExtPath: Path, unloadExtensions: () 
 
   import LibraryManager.{ allLibsName, bundledsConfig }
 
-  private type InfoChangeCallback = Seq[LibraryInfo] => Unit
+  private type InfoChangeCallback = () => Unit
 
   private val userInstalledsPath = FileIO.perUserExtensionFile("installed-libraries.conf").toString
   private val extInstaller       = new ExtensionInstaller(userExtPath, unloadExtensions)
@@ -208,7 +208,7 @@ class LibraryManager(userPkgPath: Path, userExtPath: Path, unloadExtensions: () 
     LibraryManager.branchURLFuture.map {
       branchURL => {
         libraries = categories.flatMap(c => processCategory(c, branchURL))
-        infoChangeCallbacks.foreach(_.apply(libraries))
+        infoChangeCallbacks.foreach(_())
       }
 
     }
