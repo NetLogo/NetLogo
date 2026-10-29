@@ -170,10 +170,14 @@ extends scala.util.parsing.combinator.Parsers {
 
   def breedBlock(breedWord: String): Parser[Identifier ~ Identifier ~ Token] = {
     val breedNames: Parser[Identifier ~ Identifier] = identifier ~ identifier
+    val nonIdent: Parser[Nothing] = (identifier ~ guard(not(closeBracket))) >> {
+      case i ~ s =>
+        err("identifier expected")
+    }
     val singleBreedName: Parser[Nothing] =
       identifier >> (i =>
           failure(s"Breed declarations must have plural and singular. $breedWord [${i.name}] has only one name."))
-    (openBracket ~> (breedNames | singleBreedName) ~ closeBracket)
+    (openBracket ~> (breedNames | nonIdent | singleBreedName) ~ closeBracket)
   }
 
   def directedLinkBreed: Parser[Breed] =
