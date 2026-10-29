@@ -3,6 +3,7 @@
 package org.nlogo.workspace
 
 import java.nio.file.{ Files, FileVisitOption, Path, Paths }
+import java.util.Locale
 
 import org.nlogo.api.{ FileIO, PackageManager => APIPM }
 
@@ -10,8 +11,7 @@ trait AbstractCompilationEnvironment {
 
   def resolvePath(path: String): String
 
-  def resolveModulePath(currentFile: Option[String], modulePath: Seq[String]): Seq[String] = {
-
+  def resolveModulePath(currentFile: Option[String], modulePath: Seq[String]): Option[(String, Seq[String])] = {
     val packageName: String = modulePath.headOption.getOrElse("").toLowerCase
 
     val pathPrefixes =
@@ -20,12 +20,12 @@ trait AbstractCompilationEnvironment {
          , s"${APIPM.    packagesPath.resolve(packageName)}/"
          )
 
-    pathPrefixes.foldLeft(Seq()) {
+    pathPrefixes.foldLeft(None) {
       (p, pathPrefix) =>
-        if (p.nonEmpty) { // If we already found some paths, just return those.
+        if (p.isDefined) { // If we already found some paths, just return those.
           p
         } else {
-          val path = resolvePath(s"$pathPrefix${modulePath.mkString("/")}".toLowerCase)
+          val path = resolvePath(s"$pathPrefix${modulePath.mkString("/").toLowerCase(Locale.ROOT)}")
 
           // If the path points to a file, just return that file.
           val siblings = if (FileIO.isRegularFile(s"$path.nlm")) Seq(s"$path.nlm") else Seq()
@@ -42,7 +42,11 @@ trait AbstractCompilationEnvironment {
             Seq()
           }
 
-          siblings ++ descendants
+          if (siblings.nonEmpty || descendants.nonEmpty) {
+            Some(pathPrefix, siblings ++ descendants)
+          } else {
+            None
+          }
         }
     }
 
