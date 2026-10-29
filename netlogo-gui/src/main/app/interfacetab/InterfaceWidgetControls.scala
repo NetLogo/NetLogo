@@ -461,6 +461,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
 
   class SquareButton(action: Action, image: String) extends ToolBarToggleButton(action) with PreferredSize {
     setBorder(null)
+    setPaintFocusOnUnknown(true)
     setPrimaryAction(() => wPanel.requestFocus(FocusEvent.Cause.TRAVERSAL))
 
     setIcon(Utils.iconScaledWithColor(this, s"/images/$image", 18, 18, () => {

@@ -42,6 +42,7 @@ class ShapePreview
     this.rotationSpeed = rotationSpeed;
     rotationAngle = 0;
     setBackground(java.awt.Color.DARK_GRAY);
+    setFocusable(false);
   }
 
   // Set the size of the preview
