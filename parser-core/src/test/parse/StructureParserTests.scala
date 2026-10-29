@@ -244,6 +244,12 @@ class StructureParserTests extends AnyFunSuite {
   test("missing breed singular") {
     expectError("breed [xs]",
       "Breed declarations must have plural and singular. BREED [XS] has only one name.") }
+  test("non-identifier as breed plural") {
+    expectError("breed [\"wolves\" wolf]",
+      "identifier expected") }
+  test("non-identifier as breed singular") {
+    expectError("breed [wolves \"wolf\"]",
+      "identifier expected") }
   test("attempt primitive as variable") {
     expectError("globals [turtle]",
       "There is already a primitive reporter called TURTLE") }
