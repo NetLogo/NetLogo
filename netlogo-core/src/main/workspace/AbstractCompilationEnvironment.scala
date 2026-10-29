@@ -12,12 +12,10 @@ trait AbstractCompilationEnvironment {
   def resolvePath(path: String): String
 
   def resolveModulePath(currentFile: Option[String], modulePath: Seq[String]): Option[(String, Seq[String])] = {
-    val packageName: String = modulePath.headOption.getOrElse("").toLowerCase
-
     val pathPrefixes =
-      Seq( currentFile.map(x => s"${Paths.get(x).getParent}/").getOrElse("")
-         , s"${APIPM.userPackagesPath.resolve(packageName)}/"
-         , s"${APIPM.    packagesPath.resolve(packageName)}/"
+      Seq( s"${resolvePath(currentFile.map(x => Paths.get(x).getParent.toString).getOrElse(""))}/"
+         , s"${APIPM.userPackagesPath.toString}/"
+         , s"${APIPM.packagesPath.toString}/"
          )
 
     pathPrefixes.foldLeft(None) {
