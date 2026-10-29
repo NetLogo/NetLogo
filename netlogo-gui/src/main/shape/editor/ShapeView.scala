@@ -3,16 +3,19 @@
 package org.nlogo.shape.editor
 
 import java.awt.{ Color, Cursor, Dimension, Graphics, Point }
-import java.awt.event.MouseEvent
+import java.awt.event.{ FocusAdapter, FocusEvent, KeyAdapter, KeyEvent, MouseEvent }
 import java.beans.{ PropertyChangeEvent, PropertyChangeListener }
 import javax.swing.JPanel
 import javax.swing.event.MouseInputAdapter
 
 import org.nlogo.api.Graphics2DWrapper
 import org.nlogo.shape.{ Circle, Element, Line, Polygon, Rectangle, VectorShape }
-import org.nlogo.swing.Utils
+import org.nlogo.swing.{ FocusUtils, Utils }
+import org.nlogo.theme.InterfaceColors
 
-class ShapeView(editorDialog: EditorDialog, shape: VectorShape) extends JPanel with PropertyChangeListener {
+class ShapeView(editorDialog: EditorDialog, shape: VectorShape)
+  extends JPanel with PropertyChangeListener with FocusUtils {
+
   private val HandleRadius = 3
 
   // Starting point for the shape, where mouse started
@@ -33,32 +36,97 @@ class ShapeView(editorDialog: EditorDialog, shape: VectorShape) extends JPanel w
 
   private var handleIndex = -1
 
+  private var focusPoint = new Point(0, 0)
+  private var dragging = false
+
   setBackground(Color.DARK_GRAY.darker.darker)
   setOpaque(true)
   setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR))
+  setFocusColor(InterfaceColors.focus())
 
   locally {
     val handler = new MouseInputAdapter {
       override def mousePressed(e: MouseEvent): Unit = {
-        ShapeView.this.mousePressed(e)
+        removeFocus()
+
+        ShapeView.this.mousePressed(e.getPoint)
       }
 
       override def mouseMoved(e: MouseEvent): Unit = {
-        ShapeView.this.mouseMoved(e)
+        ShapeView.this.mouseMoved(e.getPoint)
       }
 
       override def mouseDragged(e: MouseEvent): Unit = {
-        ShapeView.this.mouseDragged(e)
+        ShapeView.this.mouseDragged(e.getPoint)
       }
 
       override def mouseReleased(e: MouseEvent): Unit = {
-        ShapeView.this.mouseReleased(e)
+        ShapeView.this.mouseReleased(e.getClickCount == 2)
       }
     }
 
     addMouseListener(handler)
     addMouseMotionListener(handler)
   }
+
+  addKeyListener(new KeyAdapter {
+    override def keyPressed(e: KeyEvent): Unit = {
+      e.getKeyCode match {
+        case KeyEvent.VK_SPACE =>
+          if (dragging) {
+            mouseReleased(false)
+          } else {
+            mousePressed(focusPoint)
+          }
+
+          dragging = !dragging
+
+        case KeyEvent.VK_UP =>
+          focusPoint.y -= gridGapY
+
+          if (dragging) {
+            mouseDragged(focusPoint)
+          } else {
+            repaint()
+          }
+
+        case KeyEvent.VK_RIGHT =>
+          focusPoint.x += gridGapX
+
+          if (dragging) {
+            mouseDragged(focusPoint)
+          } else {
+            repaint()
+          }
+
+        case KeyEvent.VK_DOWN =>
+          focusPoint.y += gridGapY
+
+          if (dragging) {
+            mouseDragged(focusPoint)
+          } else {
+            repaint()
+          }
+
+        case KeyEvent.VK_LEFT =>
+          focusPoint.x -= gridGapX
+
+          if (dragging) {
+            mouseDragged(focusPoint)
+          } else {
+            repaint()
+          }
+
+        case _ =>
+      }
+    }
+  })
+
+  addFocusListener(new FocusAdapter {
+    override def focusGained(e: FocusEvent): Unit = {
+      focusPoint = new Point(getWidth / 2, getHeight / 2)
+    }
+  })
 
   def getHandleIndex: Int =
     handleIndex
@@ -99,24 +167,8 @@ class ShapeView(editorDialog: EditorDialog, shape: VectorShape) extends JPanel w
     getHeight / VectorShape.NUM_GRID_LINES
 
   private def snapPointToGrid(point: Point): Point = {
-    // val gridX = (point.x / gridGapX) * gridGapX
-    // val gridY = (point.y / gridGapY) * gridGapY
-
-    // if (point.x < gridX + gridGapX / 2) {
-    //   if (point.y < gridY + gridGapY / 2) {
-    //     new Point(gridX.toInt, gridY.toInt)
-    //   } else {
-    //     new Point(gridX.toInt, (gridY + gridGapY).toInt)
-    //   }
-    // } else {
-    //   if (point.y < gridY + gridGapY / 2) {
-    //     new Point((gridX + gridGapX).toInt, gridY.toInt)
-    //   } else {
-    //     new Point((gridX.toInt + gridGapX).toInt, (gridY + gridGapY).toInt)
-    //   }
-    // }
-
-    new Point((point.x.toDouble / gridGapX).round.toInt * gridGapX, (point.y.toDouble / gridGapY).round.toInt * gridGapY)
+    new Point((point.x.toDouble / gridGapX).round.toInt * gridGapX,
+              (point.y.toDouble / gridGapY).round.toInt * gridGapY)
   }
 
   // Finishes a polygon when the user presses a button before
@@ -190,6 +242,12 @@ class ShapeView(editorDialog: EditorDialog, shape: VectorShape) extends JPanel w
 
       handle
     }).toSeq).getOrElse(handles)
+
+    if (hasFocus && shouldPaintFocus) {
+      g2d.setColor(Color.WHITE)
+      g2d.drawLine(focusPoint.x, focusPoint.y - HandleRadius, focusPoint.x, focusPoint.y + HandleRadius)
+      g2d.drawLine(focusPoint.x - HandleRadius, focusPoint.y, focusPoint.x + HandleRadius, focusPoint.y)
+    }
   }
 
   // Return the index in the handles if a handle was hit, else -1
@@ -255,8 +313,8 @@ class ShapeView(editorDialog: EditorDialog, shape: VectorShape) extends JPanel w
     repaint()
   }
 
-  private def mousePressed(e: MouseEvent): Unit = {
-    start = e.getPoint
+  private def mousePressed(point: Point): Unit = {
+    start = point
 
     // if editing is on, find out if one of the shapes was clicked in
     if (editorDialog.isEditingElements)
@@ -264,9 +322,9 @@ class ShapeView(editorDialog: EditorDialog, shape: VectorShape) extends JPanel w
 
     // if snap to grid is on, change start to a grid corner
     if (editorDialog.isSnapToGrid) {
-      start = snapPointToGrid(e.getPoint)
+      start = snapPointToGrid(point)
     } else {
-      start = e.getPoint
+      start = point
     }
 
     last = start
@@ -289,12 +347,12 @@ class ShapeView(editorDialog: EditorDialog, shape: VectorShape) extends JPanel w
   }
 
   // Handler for mouse movement when drawing a polygon
-  private def mouseMoved(e: MouseEvent): Unit = {
+  private def mouseMoved(point: Point): Unit = {
     // if snap to grid is on, change last to a grid corner
     if (editorDialog.isSnapToGrid) {
-      last = snapPointToGrid(e.getPoint)
+      last = snapPointToGrid(point)
     } else {
-      last = e.getPoint
+      last = point
     }
 
     // Sets the point that is currently last in the polygon to be <last>
@@ -308,14 +366,14 @@ class ShapeView(editorDialog: EditorDialog, shape: VectorShape) extends JPanel w
     })
   }
 
-  private def mouseDragged(e: MouseEvent): Unit = {
+  private def mouseDragged(point: Point): Unit = {
     previous = last
 
     // if snap to grid is on, change last to a grid corner
     if (editorDialog.isSnapToGrid) {
-      last = snapPointToGrid(e.getPoint)
+      last = snapPointToGrid(point)
     } else {
-      last = e.getPoint
+      last = point
     }
 
     if (editorDialog.isEditingElements) {
@@ -339,7 +397,7 @@ class ShapeView(editorDialog: EditorDialog, shape: VectorShape) extends JPanel w
     repaint()
   }
 
-  private def mouseReleased(e: MouseEvent): Unit = {
+  private def mouseReleased(doubleClick: Boolean): Unit = {
     if (editorDialog.isEditingElements) {
       if (draggingHandle) {
         draggingHandle = false
@@ -355,7 +413,7 @@ class ShapeView(editorDialog: EditorDialog, shape: VectorShape) extends JPanel w
     tempElement.foreach(element => {
       element match {
         case p: Polygon =>
-          if (e.getClickCount == 2) {
+          if (doubleClick) {
             p.finishUp()
 
             if (p.xCoords.size >= 3) {

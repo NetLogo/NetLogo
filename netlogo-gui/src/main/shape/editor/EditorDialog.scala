@@ -3,18 +3,18 @@
 package org.nlogo.shape.editor
 
 import java.awt.{ Color, Component, Cursor, Dimension, Graphics, GridLayout, Insets }
-import java.awt.event.{ ActionEvent, WindowAdapter, WindowEvent }
+import java.awt.event.{ ActionEvent, FocusEvent, WindowAdapter, WindowEvent }
 import java.beans.{ PropertyChangeEvent, PropertyChangeListener }
-import javax.swing.{ AbstractAction, Action, ButtonGroup, JDialog, JLabel, JPanel, JToolBar, WindowConstants }
+import javax.swing.{ AbstractAction, Action, ButtonGroup, JDialog, JLabel, JPanel, WindowConstants }
 import javax.swing.undo.{ AbstractUndoableEdit, UndoableEdit }
 
 import org.nlogo.analytics.Analytics
 import org.nlogo.api.{ Color => NLColor }
 import org.nlogo.core.{ I18N, Shape }
 import org.nlogo.shape.{ Element, VectorShape }
-import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, Button, ButtonPanel, CheckBox, ComboBox, DialogButton, MenuItem,
-                         OptionPane, PreferredSize, TextField, ToggleButton, Transparent, Utils, VerticalStrut,
-                         Zoomable, ZoomableBorder, ZoomableWindow }
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, Button, ButtonPanel, CheckBox, ComboBox, DialogButton, FocusRoot,
+                         MenuItem, OptionPane, PreferredSize, TextField, ToggleButton, Transparent, Utils,
+                         VerticalStrut, Zoomable, ZoomableBorder, ZoomableWindow }
 import org.nlogo.theme.InterfaceColors
 
 sealed trait ElementType
@@ -83,6 +83,8 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
     setIcon(Utils.iconScaledWithColor(this, "/images/shapes-editor/arrow.png", 15, 15,
                                       () => InterfaceColors.toolbarText()))
     setSelected(false)
+    setPaintFocusOnUnknown(true)
+    setPrimaryAction(() => shapeView.requestFocus(FocusEvent.Cause.TRAVERSAL))
   }
 
   // this is where we store the last edit, that we need to able to
@@ -159,9 +161,8 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
     setEnabled(false)
   }
 
-  private val colorGrid = new JToolBar with Transparent {
-    setFloatable(false)
-    setLayout(new GridLayout(4, 4, 3, 3))
+  private val colorGrid = new JPanel(new GridLayout(4, 4, 3, 3)) with Transparent {
+    setFocusable(false)
   }
 
   private val colorGroup = new ButtonGroup
@@ -187,6 +188,7 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
       setToolTipText(I18N.gui("drawIn") + " " + name)
       setBackgroundColor(color)
       setBackgroundHoverColor(color)
+      setPaintFocusOnUnknown(true)
 
       override def getPreferredSize: Dimension =
         new Dimension(zoom(20), zoom(20))
@@ -237,9 +239,8 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
 
   Utils.addEscKeyAction(this, closingAction)
 
-  private val editingToolBar = new JToolBar with Transparent {
-    setFloatable(false)
-    setLayout(new GridLayout(4, 2, 3, 3))
+  private val editingToolBar = new JPanel(new GridLayout(4, 2, 3, 3)) with Transparent {
+    setFocusable(false)
   }
 
   private val editingToolGroup = new ButtonGroup
@@ -357,6 +358,7 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
   setContentPane(new BoxColumn(Seq(
     new BoxRow(Seq(
       new JLabel(I18N.gui("name")) with Zoomable {
+        setFocusable(false)
         setForeground(InterfaceColors.dialogText())
       },
       nameText
@@ -368,6 +370,7 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
         new BoxRow(colorGrid, BoxAlign.Center),
         new VerticalStrut(10),
         new BoxRow(new JLabel(I18N.gui("colorChanges")) with Zoomable {
+          setFocusable(false)
           setForeground(InterfaceColors.dialogText())
         }, BoxAlign.Center),
         new VerticalStrut(3),
@@ -393,10 +396,17 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
       setBorder(new ZoomableBorder(0, 10, 0, 10))
     },
     new ButtonPanel(Seq(done, cancel))
-  ), 15) {
+  ), 15) with FocusRoot {
     setOpaque(true)
     setBackground(InterfaceColors.dialogBackground())
     setBorder(new ZoomableBorder(6, 6, 6, 6))
+    setFocusable(true)
+    setCanFocus(false)
+
+    override def getFocusOrder: Map[Component, (Component, Component)] = {
+      (editingToolBar.getComponents.map(_ -> (null, snapToGridButton)) ++
+       colorGrid.getComponents.map(_ -> (null, colorSelection))).toMap
+    }
   })
 
   getRootPane.setDefaultButton(done)
@@ -521,10 +531,12 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
     shape.markRecolorableElements(EditorDialog.getColor(shape.getEditableColorIndex), shape.getEditableColorIndex)
   }
 
-  private def addToolBarButton(toolbar: JToolBar, group: ButtonGroup, action: Action): ToggleButton = {
+  private def addToolBarButton(toolbar: JPanel, group: ButtonGroup, action: Action): ToggleButton = {
     new ToggleButton(action) {
       setBorder(null)
       setText(null)
+      setPaintFocusOnUnknown(true)
+      setPrimaryAction(() => shapeView.requestFocus(FocusEvent.Cause.TRAVERSAL))
 
       toolbar.add(this)
       group.add(this)
@@ -548,11 +560,14 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
     private val label = {
       val name = NLColor.getColorNameByIndex(index)
 
-      new JLabel(name(0).toUpper.toString + name.substring(1)) with Zoomable
+      new JLabel(name(0).toUpper.toString + name.substring(1)) with Zoomable {
+        setFocusable(false)
+      }
     }
 
     add(new JPanel with PreferredSize with Zoomable {
       setBackground(EditorDialog.getColor(index))
+      setFocusable(false)
 
       override def getPreferredSize: Dimension =
         new Dimension(zoom(10), zoom(10))

@@ -10,6 +10,7 @@ trait FocusUtils extends Zoomable {
 
   private var focusDiameter = 0
   private var paintFocusOnClick = false
+  private var paintFocusOnUnknown = false
 
   private var primaryAction: Option[() => Unit] = None
   private var secondaryAction: Option[() => Unit] = None
@@ -25,6 +26,9 @@ trait FocusUtils extends Zoomable {
           true
 
         case MOUSE_EVENT if paintFocusOnClick =>
+          true
+
+        case UNKNOWN if paintFocusOnUnknown =>
           true
 
         case _ =>
@@ -87,12 +91,24 @@ trait FocusUtils extends Zoomable {
     paintFocusOnClick = enabled
   }
 
+  protected def setPaintFocusOnUnknown(enabled: Boolean): Unit = {
+    paintFocusOnUnknown = enabled
+  }
+
   protected def setPrimaryAction(action: () => Unit): Unit = {
     primaryAction = Option(action)
   }
 
   protected def setSecondaryAction(action: () => Unit): Unit = {
     secondaryAction = Option(action)
+  }
+
+  protected def removeFocus(): Unit = {
+    if (shouldPaintFocus) {
+      shouldPaintFocus = false
+
+      repaint()
+    }
   }
 
   protected def paintFocus(g: Graphics): Unit = {
