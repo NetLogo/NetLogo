@@ -79,16 +79,15 @@ object StructureParser {
               val importAlias = currentImport.pathAlias
               val confusingImportParts = Seq(Some(fullImportPath), Some(lastImportComponent), importAlias).flatten
 
-              val suppliedPaths =
-                compilationEnvironment.resolveModulePath(currentImport.filename, currentImport.pathComponents)
+              val (basePath, suppliedPaths) =
+                compilationEnvironment.resolveModulePath(currentImport.filename, currentImport.pathComponents).getOrElse(("", Seq()))
 
               if (suppliedPaths.isEmpty) {
                 exception(I18N.errors.getN("compiler.StructureParser.importNotFound", currentImport.pathComponents.mkString(":")), currentImport.token)
               }
 
               for (currentPath <- suppliedPaths) {
-                val basePath = compilationEnvironment.resolvePath(currentImport.filename.getOrElse(""))
-                val relativePath = currentPath.stripPrefix(s"$basePath$separator")
+                val relativePath = currentPath.stripPrefix(basePath)
                 val pathComponentCount = relativePath.split(Regex.quote(separator)).length
                 val modulePathComponentCount = currentImport.pathComponents.length
                 val isSelectiveImport = currentImport.importedIdentifiers.nonEmpty
