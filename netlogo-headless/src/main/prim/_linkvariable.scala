@@ -3,14 +3,18 @@
 package org.nlogo.prim
 
 import org.nlogo.api.AgentException
+import org.nlogo.core.{ AgentKind, Reference, Referenceable }
 import org.nlogo.nvm.{ Context, Reporter }
 import org.nlogo.nvm.RuntimePrimitiveException
 
-class _linkvariable(_vn: Int) extends Reporter {
+class _linkvariable(_vn: Int) extends Reporter with Referenceable {
 
   override def toString =
     super.toString + ":" +
       Option(world).map(_.linksOwnNameAt(vn)).getOrElse(vn.toString)
+
+  def makeReference: Reference =
+    new Reference(AgentKind.Link, vn, this)
 
   // MethodRipper won't let us call a public method from report_1()
   // so we must keep vn and _vn separate - ST 9/22/12

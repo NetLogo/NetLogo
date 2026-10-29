@@ -149,3 +149,17 @@ DiffuseConservation
   O> set glob1 sum [pcolor] of patches
   O> diffuse pcolor 0.5
   abs( glob1 - sum [pcolor] of patches ) < 0.000000001 => true
+
+DiffuseGlobal
+  globals [ a ]
+  O> diffuse a 0.5 => COMPILER ERROR Expected a patch variable
+
+DiffuseTurtleVariable
+  turtles-own [ a ]
+  O> diffuse heading 0.5 => COMPILER ERROR Expected a patch variable
+  O> diffuse a 0.5 => COMPILER ERROR Expected a patch variable
+
+DiffuseLinkVariable
+  links-own [ a ]
+  O> diffuse thickness 0.5 => COMPILER ERROR Expected a patch variable
+  O> diffuse a 0.5 => COMPILER ERROR Expected a patch variable

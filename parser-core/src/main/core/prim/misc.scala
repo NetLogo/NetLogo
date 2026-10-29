@@ -294,9 +294,11 @@ case class _linkbreedvariable(name: String) extends Reporter {
       ret = Syntax.WildcardType | Syntax.ReferenceType,
       agentClassString = "---L")
 }
-case class _linkvariable(vn: Int, returnType: Int = Syntax.WildcardType) extends Reporter {
+case class _linkvariable(vn: Int, returnType: Int = Syntax.WildcardType) extends Reporter with Referenceable {
   override def syntax =
     Syntax.reporterSyntax(ret = returnType | Syntax.ReferenceType, agentClassString = "---L")
+  def makeReference =
+    new Reference(AgentKind.Link, vn, this)
 }
 case class _list() extends Reporter with Pure {
   override def syntax =

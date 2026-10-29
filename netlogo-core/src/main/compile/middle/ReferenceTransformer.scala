@@ -3,7 +3,7 @@
 package org.nlogo.compile.middle
 
 import org.nlogo.core
-import org.nlogo.core.Syntax
+import org.nlogo.core.{ AgentKind, Syntax }
 import org.nlogo.core.Fail._
 import org.nlogo.nvm.{ Referencer, ReferencerReporter }
 import org.nlogo.compile.api.{ AstTransformer, Expression, ReporterApp, Statement }
@@ -19,7 +19,11 @@ class ReferenceTransformer extends AstTransformer {
             val args = newStmt.args
             val newArgs = args.slice(0, cmd.referenceIndex).toSeq ++
               args.slice(cmd.referenceIndex + 1 min args.length, args.length)
-            newStmt.copy(command = cmd.applyReference(referenceable.makeReference), args = newArgs)
+            val ref = referenceable.makeReference
+            cmd.referenceKind.filter(_ != ref.kind).foreach { kind =>
+              exception(s"Expected ${kindName(kind)}", ref.original.token)
+            }
+            newStmt.copy(command = cmd.applyReference(ref), args = newArgs)
           case _ =>
             exception("Expected a variable name here.", stmt.args(cmd.referenceIndex))
         }
@@ -51,7 +55,11 @@ class ReferenceTransformer extends AstTransformer {
             val args = newApp.args
             val newArgs = args.slice(0, rep.referenceIndex).toSeq ++
               args.slice(rep.referenceIndex + 1 min args.length, args.length)
-            newApp.copy(reporter = rep.applyReference(referenceable.makeReference), args = newArgs)
+            val ref = referenceable.makeReference
+            rep.referenceKind.filter(_ != ref.kind).foreach { kind =>
+              exception(s"Expected ${kindName(kind)}", ref.original.token)
+            }
+            newApp.copy(reporter = rep.applyReference(ref), args = newArgs)
           case _ =>
             exception("Expected a variable name here.", app.args(rep.referenceIndex))
         }
@@ -88,5 +96,14 @@ class ReferenceTransformer extends AstTransformer {
     new ReporterApp(referenceable,
       new org.nlogo.prim._const(referenceable.makeReference),
       args(referenceIndex).sourceLocation)
+  }
+
+  private def kindName(kind: AgentKind): String = {
+    kind match {
+      case AgentKind.Observer => "an observer variable"
+      case AgentKind.Turtle => "a turtle variable"
+      case AgentKind.Patch => "a patch variable"
+      case AgentKind.Link => "a link variable"
+    }
   }
 }
