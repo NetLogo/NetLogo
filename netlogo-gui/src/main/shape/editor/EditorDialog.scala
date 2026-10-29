@@ -13,8 +13,8 @@ import org.nlogo.api.{ Color => NLColor }
 import org.nlogo.core.{ I18N, Shape }
 import org.nlogo.shape.{ Element, VectorShape }
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, Button, ButtonPanel, CheckBox, ComboBox, DialogButton, FocusRoot,
-                         MenuItem, OptionPane, PreferredSize, TextField, ToggleButton, Transparent, Utils,
-                         VerticalStrut, Zoomable, ZoomableBorder, ZoomableWindow }
+                         MaximumHeight, MenuItem, OptionPane, PreferredSize, TextField, ToggleButton, Transparent,
+                         Utils, VerticalStrut, Zoomable, ZoomableBorder, ZoomableWindow }
 import org.nlogo.theme.InterfaceColors
 
 sealed trait ElementType
@@ -203,7 +203,7 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
     new ColorPanel(i)
   }
 
-  private val colorSelection = new ComboBox(colors.toList) {
+  private val colorSelection = new ComboBox(colors) {
     addItemListener(_ => setEditableColor())
   }
 
@@ -556,11 +556,11 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
     super.setVisible(visible)
   }
 
-  private class ColorPanel(index: Int) extends BoxRow(6, BoxAlign.Start) with ComboBox.Clone {
+  private class ColorPanel(index: Int) extends BoxRow(6, BoxAlign.Start) with ComboBox.Clone with MaximumHeight {
     private val label = {
       val name = NLColor.getColorNameByIndex(index)
 
-      new JLabel(name(0).toUpper.toString + name.substring(1)) with Zoomable {
+      new JLabel(name.head.toUpper +: name.tail) with Zoomable {
         setFocusable(false)
       }
     }
