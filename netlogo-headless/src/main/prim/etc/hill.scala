@@ -2,7 +2,7 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.core.Reference
+import org.nlogo.core.{ AgentKind, Reference }
 import org.nlogo.agent.{ AgentSet, Patch, Turtle }
 import org.nlogo.nvm
 
@@ -19,6 +19,9 @@ abstract class HillCommand(sign: Int) extends nvm.Command with nvm.Referencer {
   switches = true
 
   override def referenceIndex: Int = 0
+
+  override def referenceKind: Option[AgentKind] =
+    Some(AgentKind.Patch)
 
   private var reference: Reference = null
 

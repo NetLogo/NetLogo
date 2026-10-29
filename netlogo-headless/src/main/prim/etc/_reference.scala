@@ -11,6 +11,9 @@ class _reference extends Reporter with ReferencerReporter {
 
   private var reference: Reference = null
 
+  override def referenceKind: Option[AgentKind] =
+    None
+
   override def applyReference(ref: Reference): Reporter = {
     reference = ref
     this

@@ -4,13 +4,16 @@ package org.nlogo.prim.etc
 
 import org.nlogo.agent.PatchException
 import org.nlogo.api.{ AgentException, Dump, LogoException, TypeNames }
-import org.nlogo.core.{ I18N, Nobody, Reference }
+import org.nlogo.core.{ AgentKind, I18N, Nobody, Reference }
 import org.nlogo.nvm.{ Command, Context, Referencer, RuntimePrimitiveException }
 
 class _diffuse4 extends Command with Referencer {
   switches = true
 
   override def referenceIndex: Int = 0
+
+  override def referenceKind: Option[AgentKind] =
+    Some(AgentKind.Patch)
 
   override def applyReference(ref: Reference): Command = {
     reference = ref

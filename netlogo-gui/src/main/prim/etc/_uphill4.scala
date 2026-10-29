@@ -5,13 +5,16 @@ package org.nlogo.prim.etc
 import java.util.{ ArrayList => JArrayList }
 import org.nlogo.agent.{ Patch, Turtle }
 import org.nlogo.api.AgentException
-import org.nlogo.core.Reference
+import org.nlogo.core.{ AgentKind, Reference }
 import org.nlogo.nvm.{ Command, Context, Referencer }
 
 class _uphill4 extends Command with Referencer {
   this.switches = true;
 
   override def referenceIndex: Int = 0
+
+  override def referenceKind: Option[AgentKind] =
+    Some(AgentKind.Patch)
 
   override def applyReference(ref: Reference): Command = {
     reference = ref
