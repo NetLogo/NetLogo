@@ -5,4 +5,3 @@ resolvers ++= Seq(
 
 addSbtPlugin("org.nlogo" % "netlogo-extension-plugin" % "7.0.4")
 addSbtPlugin("org.nlogo" % "netlogo-extension-documentation" % "0.8.3")
-addSbtPlugin("org.bytedeco" % "sbt-javacpp" % "1.17")
