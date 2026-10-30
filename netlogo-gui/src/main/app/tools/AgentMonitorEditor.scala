@@ -443,6 +443,9 @@ with ThemeSync {
       breed
     }
 
+  override def getPreferredSize: Dimension =
+    editor.getPreferredSize
+
   /// load and save are inapplicable
 
   override def load(model: CoreWidget): Unit =
