@@ -38,13 +38,13 @@ class ColorizerTests extends AnyFunSuiteEx {
       """<font color="#000000"> foo </font>""" +
       """<font color="#0000aa">crt</font>"""   +
       """<font color="#000000"> </font>"""     +
-      """<font color="#963700">10</font>"""    +
+      """<font color="#b95519">10</font>"""    +
       """<font color="#000000"> [ </font>"""   +
       """<font color="#0000aa">set</font>"""   +
       """<font color="#000000"> </font>"""     +
       """<font color="#660096">xcor</font>"""  +
       """<font color="#000000"> </font>"""     +
-      """<font color="#963700">5</font>"""     +
+      """<font color="#b95519">5</font>"""     +
       """<font color="#000000"> ] </font>"""   +
       """<font color="#007f69">end</font>"""
     assertResult(expected)(
@@ -55,7 +55,7 @@ class ColorizerTests extends AnyFunSuiteEx {
     assertResult("""<font color="#007f69">to</font>""" +
       """<font color="#000000"> foo<br /></font>""" +
       """<font color="#0000aa">crt</font><font color="#000000"> </font>""" +
-      """<font color="#963700">10</font><font color="#000000"> [""" +
+      """<font color="#b95519">10</font><font color="#000000"> [""" +
       """<br />]<br /></font>""" +
       """<font color="#007f69">end</font>""")(
         Colorizer.toHtml("to foo\ncrt 10 [\n]\nend", theme))

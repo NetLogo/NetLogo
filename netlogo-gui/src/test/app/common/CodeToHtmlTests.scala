@@ -10,7 +10,7 @@ class CodeToHtmlTests extends AnyFunSuiteEx with SlowTest {
   import converter.convert
   test("basic", SlowTest.Tag) {
     assertResult("""<pre><font color="#007f69">to</font><font color="#000000"> foo<br />  """ +
-      """</font><font color="#0000aa">crt</font><font color="#000000"> </font><font color="#963700">10</font><font color="#000000"><br />""" +
+      """</font><font color="#0000aa">crt</font><font color="#000000"> </font><font color="#b95519">10</font><font color="#000000"><br />""" +
       """</font><font color="#007f69">end</font>""" +
       "\n</pre>\n")(
         convert("to foo\n  crt 10\nend"))

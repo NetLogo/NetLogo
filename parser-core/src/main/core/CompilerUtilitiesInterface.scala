@@ -37,7 +37,7 @@ object ColorizerTheme {
   case object Light extends ColorizerTheme {
     override def getColor(tpe: TokenType): Color = {
       tpe match {
-        case TokenType.Literal  => new Color(150, 55, 0) // dark orange
+        case TokenType.Literal  => new Color(185, 85, 25) // burnt orange
         case TokenType.Command  => new Color(0, 0, 170) // blue
         case TokenType.Reporter => new Color(102, 0, 150) // purple
         case TokenType.Keyword  => new Color(0, 127, 105) // bluish green
@@ -47,7 +47,7 @@ object ColorizerTheme {
     }
 
     override def variableColor: Color =
-      new Color(0, 100, 220)
+      Color(25, 149, 200)
   }
 
   case object Dark extends ColorizerTheme {
