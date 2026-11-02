@@ -2,11 +2,13 @@
 
 package org.nlogo.app.infotab
 
-import java.awt.{ BorderLayout, Component, Dimension, EventQueue, Font, Graphics }
-import java.awt.event.{ ActionEvent, FocusEvent, FocusListener, KeyAdapter, KeyEvent }
+import java.awt.{ AWTEvent, BorderLayout, Component, Cursor, Dimension, EventQueue, Font, Graphics, MouseInfo,
+                  Toolkit }
+import java.awt.event.{ ActionEvent, AWTEventListener, FocusAdapter, FocusEvent, FocusListener, KeyAdapter, KeyEvent,
+                        MouseAdapter, MouseEvent }
 import java.awt.print.PageFormat
 import java.net.URI
-import javax.swing.{ AbstractAction, JComponent, JPanel, JTextArea, ScrollPaneConstants }
+import javax.swing.{ AbstractAction, JComponent, JPanel, JTextArea, ScrollPaneConstants, SwingUtilities, Timer }
 import javax.swing.event.{ DocumentListener, DocumentEvent }
 
 import javafx.application.Platform
@@ -20,10 +22,9 @@ import org.nlogo.api.{ ExternalResourceManager, Version }
 import org.nlogo.app.common.{ Events => AppEvents, FindDialog, MenuTab, UndoRedoActions }
 import org.nlogo.core.I18N
 import org.nlogo.editor.EditorConfiguration
-import org.nlogo.swing.{ Autoscroller, BoxAlign, BoxRow, FocusRoot, FocusUtils, QuickHelp, ScrollableTextComponent,
-                         ScrollPane, TextArea, ToolBarActionButton, ToolBarToggleButton, Printable, PrinterManager,
-                         BrowserLauncher, UndoManager, UserAction, Utils, Zoomable, ZoomableBorder },
-                         UserAction.MenuAction
+import org.nlogo.swing.{ BoxAlign, BoxRow, FocusRoot, FocusUtils, QuickHelp, ScrollableTextComponent, ScrollPane,
+                         TextArea, ToolBarActionButton, ToolBarToggleButton, Printable, PrinterManager, BrowserLauncher,
+                         UndoManager, UserAction, Utils, Zoomable, ZoomableBorder }, UserAction.MenuAction
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ Events => WindowEvents }
 
@@ -108,15 +109,6 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
     add(toolBar, BorderLayout.NORTH)
     scrollPane.getVerticalScrollBar.setUnitIncrement(16)
     add(scrollPane, BorderLayout.CENTER)
-
-    // middle-click autoscrolling for the editable text (the HTML view does its own, since it handles its own scrolling)
-    new Autoscroller(textArea, (x, y) => {
-      val xBar = scrollPane.getHorizontalScrollBar
-      val yBar = scrollPane.getVerticalScrollBar
-
-      xBar.setValue(xBar.getValue + x)
-      yBar.setValue(yBar.getValue + y)
-    })
   }
 
   private def resetBorders(): Unit = {
@@ -331,7 +323,87 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
       }
     })
 
-    new Autoscroller(this, (x, y) => scrollBy(x, y))
+    // middle-click autoscrolling, vertical only
+    private var autoscrollStartY = 0
+    private var autoscrollCursor: Cursor = null
+
+    private val autoscrollTimer = new Timer(16, _ => {
+      Option(MouseInfo.getPointerInfo).foreach { info =>
+        val dy = (info.getLocation.y - autoscrollStartY) / 5
+
+        if (dy != 0)
+          scrollBy(0, dy)
+      }
+    })
+
+    // while autoscrolling, any key press, wheel scroll, or click elsewhere in the app ends it.
+    // clicks on this panel are handled by its own mouse listener, so the starting press is never seen here.
+    private val autoscrollStopper: AWTEventListener = event => {
+      event.getID match {
+        case KeyEvent.KEY_PRESSED | MouseEvent.MOUSE_WHEEL =>
+          stopAutoscroll()
+
+        case MouseEvent.MOUSE_PRESSED if event.getSource != this =>
+          stopAutoscroll()
+
+        case _ =>
+      }
+    }
+
+    addMouseListener(new MouseAdapter {
+      override def mousePressed(e: MouseEvent): Unit = {
+        if (autoscrollTimer.isRunning) {
+          stopAutoscroll()
+        } else if (SwingUtilities.isMiddleMouseButton(e)) {
+          startAutoscroll(e.getYOnScreen)
+        }
+      }
+
+      // a plain middle click leaves autoscrolling on, but releasing after a drag ends it
+      override def mouseReleased(e: MouseEvent): Unit = {
+        if (SwingUtilities.isMiddleMouseButton(e) && (e.getYOnScreen - autoscrollStartY) / 5 != 0)
+          stopAutoscroll()
+      }
+    })
+
+    addFocusListener(new FocusAdapter {
+      override def focusLost(e: FocusEvent): Unit = {
+        stopAutoscroll()
+      }
+    })
+
+    addHierarchyListener(_ => {
+      if (!isShowing)
+        stopAutoscroll()
+    })
+
+    private def startAutoscroll(y: Int): Unit = {
+      autoscrollStartY = y
+      autoscrollCursor = if (isCursorSet) getCursor else null
+
+      setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR))
+
+      Toolkit.getDefaultToolkit.addAWTEventListener(autoscrollStopper,
+        AWTEvent.KEY_EVENT_MASK | AWTEvent.MOUSE_EVENT_MASK | AWTEvent.MOUSE_WHEEL_EVENT_MASK)
+
+      autoscrollTimer.start()
+    }
+
+    private def stopAutoscroll(): Unit = {
+      if (autoscrollTimer.isRunning) {
+        autoscrollTimer.stop()
+
+        Toolkit.getDefaultToolkit.removeAWTEventListener(autoscrollStopper)
+
+        setCursor(autoscrollCursor)
+      }
+    }
+
+    override def removeNotify(): Unit = {
+      stopAutoscroll()
+
+      super.removeNotify()
+    }
 
     Platform.runLater(() => {
       val webView = new WebView
