@@ -325,7 +325,19 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
 
     // middle-click autoscrolling, vertical only
     private var autoscrollStartY = 0
-    private var autoscrollCursor: Cursor = null
+    private var autoscrolling = false
+
+    // the cursor most recently requested for this panel. the web view sets it from the page on every mouse move,
+    // so while autoscrolling it is only recorded here, and applied when autoscrolling ends.
+    private var pageCursor: Cursor = null
+
+    override def setCursor(cursor: Cursor): Unit = {
+      if (autoscrolling) {
+        pageCursor = cursor
+      } else {
+        super.setCursor(cursor)
+      }
+    }
 
     private val autoscrollTimer = new Timer(16, _ => {
       Option(MouseInfo.getPointerInfo).foreach { info =>
@@ -379,9 +391,11 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
 
     private def startAutoscroll(y: Int): Unit = {
       autoscrollStartY = y
-      autoscrollCursor = if (isCursorSet) getCursor else null
+      pageCursor = if (isCursorSet) getCursor else null
 
       setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR))
+
+      autoscrolling = true
 
       Toolkit.getDefaultToolkit.addAWTEventListener(autoscrollStopper,
         AWTEvent.KEY_EVENT_MASK | AWTEvent.MOUSE_EVENT_MASK | AWTEvent.MOUSE_WHEEL_EVENT_MASK)
@@ -395,7 +409,9 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
 
         Toolkit.getDefaultToolkit.removeAWTEventListener(autoscrollStopper)
 
-        setCursor(autoscrollCursor)
+        autoscrolling = false
+
+        setCursor(pageCursor)
       }
     }
 
