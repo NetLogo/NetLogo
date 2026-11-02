@@ -960,10 +960,10 @@ window.syncTheme = (theme: ColorTheme) => {
           color: theme.constant
         },
         ".cm-completionLabel-global, .cm-tooltip-autocomplete ul .cm-completionLabel-global[aria-selected]": {
-          color: theme.default
+          color: theme.variable
         },
         ".cm-completionLabel-variable, .cm-tooltip-autocomplete ul .cm-completionLabel-variable[aria-selected]": {
-          color: theme.reporter
+          color: theme.variable
         },
         ".cm-completionLabel-reporter, .cm-tooltip-autocomplete ul .cm-completionLabel-reporter[aria-selected]": {
           color: theme.reporter
