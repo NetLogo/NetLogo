@@ -18,6 +18,9 @@ object NetLogoPreferences {
   def getInt(name: String, default: Int): Int =
     prefs.getInt(name, default)
 
+  def getFloat(name: String, default: Float): Float =
+    prefs.getFloat(name, default)
+
   def getDouble(name: String, default: Double): Double =
     prefs.getDouble(name, default)
 
@@ -32,6 +35,9 @@ object NetLogoPreferences {
 
   def putInt(name: String, value: Int): Unit =
     prefs.putInt(name, value)
+
+  def putFloat(name: String, value: Float): Unit =
+    prefs.putFloat(name, value)
 
   def putDouble(name: String, value: Double): Unit =
     prefs.putDouble(name, value)
