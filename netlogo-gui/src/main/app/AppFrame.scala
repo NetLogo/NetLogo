@@ -8,6 +8,7 @@ import javax.swing.{ JFrame, WindowConstants }
 
 import org.nlogo.api.Exceptions
 import org.nlogo.awt.UserCancelException
+import org.nlogo.core.NetLogoPreferences
 import org.nlogo.swing.{ ModalProgress, NetLogoIcon, ZoomableWindow }
 import org.nlogo.theme.ThemeSync
 import org.nlogo.window.LinkRoot
@@ -79,6 +80,12 @@ class AppFrame(app: App) extends JFrame with LinkParent with LinkRoot with NetLo
 
   override def packWindow(): Unit = {
     smartPack(getPreferredSize, false)
+  }
+
+  override def setZoomFactor(factor: Float): Unit = {
+    super.setZoomFactor(factor)
+
+    NetLogoPreferences.putFloat("zoomFactor", factor)
   }
 
   override def syncTheme(): Unit = {

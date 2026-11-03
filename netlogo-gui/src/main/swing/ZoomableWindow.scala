@@ -102,7 +102,7 @@ trait ZoomableWindow(parent: Option[Component]) extends Window with RootPaneCont
     setLocation(getX.min(screen.width - getWidth).max(0), getY.min(screen.height - getHeight).max(0))
   }
 
-  private def setZoomFactor(factor: Float): Unit = {
+  protected def setZoomFactor(factor: Float): Unit = {
     zoomFactor = factor
 
     zoomWindow()

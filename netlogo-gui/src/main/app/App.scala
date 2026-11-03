@@ -549,8 +549,6 @@ class App(args: App.CommandLineArgs) extends AppInterface with LinkChild with Ex
 
       interfaceTab.resetSplitPane()
 
-      Positioning.center(frame, null)
-
       new DropTarget(frame.getContentPane, new DropTargetListener {
         def dragEnter(e: DropTargetDragEvent): Unit = {}
         def dragExit(e: DropTargetEvent): Unit = {}
@@ -591,6 +589,9 @@ class App(args: App.CommandLineArgs) extends AppInterface with LinkChild with Ex
       Splash.endSplash()
 
       frame.setVisible(true)
+      frame.setZoomFactor(NetLogoPreferences.getFloat("zoomFactor", 1))
+
+      Positioning.center(frame, null)
 
       appHandler.ready(this)
 
