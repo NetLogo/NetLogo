@@ -185,8 +185,8 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
       (path, workspace.getCompilationEnvironment.resolvePath(path))
     }
 
-    val imports: Seq[(String, String)] = workspace.compiler.frontEnd.findImports(getText).flatMap { list =>
-      workspace.getCompilationEnvironment.resolveModulePath(None, list).map {
+    val imports: Seq[(String, String)] = workspace.compiler.frontEnd.findImports(getText).flatMap { (upCount, list) =>
+      workspace.getCompilationEnvironment.resolveModulePath(None, upCount, list).map {
         case ResolvedModule(_, path, _) =>
           (list.last, path.replaceAll("\\\\", "/"))
       }

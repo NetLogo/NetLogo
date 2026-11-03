@@ -77,7 +77,7 @@ trait FrontEndInterface {
   def findIncludes(source: String): Seq[String]
 
   // lists the names of imported libraries
-  def findImports(source: String): Seq[Seq[String]]
+  def findImports(source: String): Seq[(Integer, Seq[String])]
 
   // these do enough tokenization to be used by the frontEnd.
   // It's up to to the caller to decide whether they want a Seq or an Iterator

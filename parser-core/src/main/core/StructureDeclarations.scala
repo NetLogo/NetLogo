@@ -42,6 +42,9 @@ object StructureDeclarations {
     // List of all components in the module path.
     pathComponents: Seq[String],
 
+    // The number of "UP"s in the beggining of the path
+    upCount: Integer,
+
     // Alias for the module path.
     pathAlias: Option[String],
 

@@ -80,7 +80,7 @@ object StructureParser {
               val confusingImportParts = Seq(Some(fullImportPath), Some(lastImportComponent), importAlias).flatten
 
               val (basePath, suppliedPaths) =
-                compilationEnvironment.resolveModulePath(currentImport.filename, currentImport.pathComponents) match {
+                compilationEnvironment.resolveModulePath(currentImport.filename, currentImport.upCount, currentImport.pathComponents) match {
                   case Some(ResolvedModule(prefix, _, paths)) =>
                     (prefix, paths)
 
@@ -93,8 +93,9 @@ object StructureParser {
               }
 
               for (currentPath <- suppliedPaths) {
-                val relativePath = currentPath.stripPrefix(basePath)
-                val pathComponentCount = relativePath.split(Regex.quote(separator)).length
+                val quotedSeparator = Regex.quote(separator)
+                val relativePath = currentPath.stripPrefix(basePath).replaceFirst(s"^$quotedSeparator", "")
+                val pathComponentCount = relativePath.split(quotedSeparator).length
                 val modulePathComponentCount = currentImport.pathComponents.length
                 val isSelectiveImport = currentImport.importedIdentifiers.nonEmpty
 
@@ -116,7 +117,7 @@ object StructureParser {
 
                           s"${path.stripPrefix(basePrefix)}:"
                         } else {
-                          lastImportComponent
+                          s"$lastImportComponent:"
                         }
                       }
                   }
@@ -420,7 +421,7 @@ object StructureParser {
   }
 
   @throws(classOf[CompilerException])
-  def findImports(tokens: Iterator[Token]): Seq[Seq[String]] = {
+  def findImports(tokens: Iterator[Token]): Seq[(Integer, Seq[String])] = {
     val reader = new SeqReader[Token](tokens.filter(_.tpe != TokenType.Comment).map(Namer0).to(LazyList), _.start)
     val combinators = new StructureCombinators
 
@@ -428,7 +429,7 @@ object StructureParser {
       case combinators.Success(declarations, _) => {
         declarations.flatMap(x =>
           x match {
-            case StructureDeclarations.Import(pathComponents, _, _, _) => Seq(pathComponents)
+            case StructureDeclarations.Import(pathComponents, upCount, _, _, _) => Seq((upCount, pathComponents))
             case _ => Seq()
           })
       }

@@ -12,12 +12,17 @@ trait AbstractCompilationEnvironment {
 
   def resolvePath(path: String): String
 
-  def resolveModulePath(currentFile: Option[String], modulePath: Seq[String]): Option[ResolvedModule] = {
+  def resolveModulePath(
+    currentFile: Option[String],
+    upCount: Integer,
+    modulePath: Seq[String]
+  ): Option[ResolvedModule] = {
+    val localPathPrefix =
+      s"${resolvePath(currentFile.map(x => Paths.get(x).getParent.toString).getOrElse(""))}/${"../" * upCount}"
+    val repoPathPrefixes =
+      Seq(s"${APIPM.userPackagesPath.toString}/" , s"${APIPM.packagesPath.toString}/")
     val pathPrefixes =
-      Seq( s"${resolvePath(currentFile.map(x => Paths.get(x).getParent.toString).getOrElse(""))}/"
-         , s"${APIPM.userPackagesPath.toString}/"
-         , s"${APIPM.packagesPath.toString}/"
-         )
+      if (upCount > 0) Seq(localPathPrefix) else localPathPrefix +: repoPathPrefixes
 
     pathPrefixes.foldLeft(None) {
       (p, pathPrefix) =>
@@ -46,7 +51,7 @@ trait AbstractCompilationEnvironment {
           }
 
           if (siblings.nonEmpty || descendants.nonEmpty) {
-            Some(ResolvedModule(pathPrefix, pathWithExt, siblings ++ descendants))
+            Some(ResolvedModule(resolvePath(pathPrefix), pathWithExt, siblings ++ descendants))
           } else {
             None
           }

@@ -5,6 +5,7 @@ package org.nlogo.core
 case class Import(
   filename: Option[String],
   pathComponents: Seq[String],
+  upCount: Integer,
   pathAlias: Option[String],
   importedIdentifiers: Map[String, String],
   token: Token

@@ -106,22 +106,25 @@ extends scala.util.parsing.combinator.Parsers {
 
   def importSimple: Parser[Import] =
     keyword("IMPORT") ~ importPath ~ opt(exactIdentifier("AS") ~> identifier) ^^ {
-      case keyword ~ components ~ pathAliasOption =>
-        Import(components.map(_.text.toUpperCase), pathAliasOption.map(_.name), Map(), keyword)
+      case keyword ~ (upCount, components) ~ pathAliasOption =>
+        Import(components.map(_.text.toUpperCase), upCount, pathAliasOption.map(_.name), Map(), keyword)
     }
 
   def importIdentifiers: Parser[Import] =
     keyword("IMPORT") ~ importedIdentifierList ~ exactIdentifier("FROM") ~ importPath ^^ {
-      case keyword ~ importList ~ _ ~ components =>
-        Import(components.map(_.text.toUpperCase), None, importList, keyword)
+      case keyword ~ importList ~ _ ~ (upCount, components) =>
+        Import(components.map(_.text.toUpperCase), upCount, None, importList, keyword)
     }
 
-  def importPath: Parser[Seq[Token]] =
-    rep1sep(importPathComponent, colon)
+  def importPath: Parser[(Integer, Seq[Token])] =
+    rep(exactIdentifier("UP") <~ colon) ~ rep1sep(importPathComponent, colon) ^^ {
+      case ups ~ components => (ups.length, components)
+    }
 
   def importPathComponent: Parser[Token] =
     exactIdentifier(".") ~>! err(I18N.errors.getN("compiler.StructureCombinators.importPathContains", ".")) |
     exactIdentifier("..") ~>! err(I18N.errors.getN("compiler.StructureCombinators.importPathContains", "..")) |
+    exactIdentifier("UP") ~>! err(I18N.errors.get("compiler.StructureCombinators.importPathContainsUp")) |
     plainIdentifier
 
   def renamableIdentifier: Parser[(String, String)] =

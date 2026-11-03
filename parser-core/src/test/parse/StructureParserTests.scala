@@ -355,20 +355,25 @@ class StructureParserTests extends AnyFunSuite {
     class TestCompilationEnvironment extends DummyCompilationEnvironment {
       override def resolveModulePath(
         currentFile: Option[String],
+        upCount: Integer,
         modulePath: Seq[String]
       ): Option[ResolvedModule] = {
 
-        val separator = System.getProperty("file.separator")
-        val suffix = sourceType.suffix
-        val getParentDir = (x: String) => x.dropRight(x.length - x.lastIndexOf(separator))
-        val parentDir = currentFile.map(getParentDir(_)).flatMap(x => if (x.isEmpty) None else Some(x))
+        if (upCount > 0) {
+          None
+        } else {
+          val separator = System.getProperty("file.separator")
+          val suffix = sourceType.suffix
+          val getParentDir = (x: String) => x.dropRight(x.length - x.lastIndexOf(separator))
+          val parentDir = currentFile.map(getParentDir(_)).flatMap(x => if (x.isEmpty) None else Some(x))
 
-        (parentDir, modulePath) match {
-          case (None, Seq("FOO")) => Some(ResolvedModule("", s"foo.$suffix", Seq(s"foo.$suffix")))
-          case (None, Seq("BAR")) if barSrc.nonEmpty => Some(ResolvedModule("", s"bar.$suffix", Seq(s"bar.$suffix")))
-          case (None, Seq("BAZ", "QAZ")) if qazSrc.nonEmpty => Some(ResolvedModule("", s"baz/qaz.$suffix",
-                                                                                   Seq(s"baz/qaz.$suffix")))
-          case _ => Some(ResolvedModule("", "", Seq()))
+          (parentDir, modulePath) match {
+            case (None, Seq("FOO")) => Some(ResolvedModule("", s"foo.$suffix", Seq(s"foo.$suffix")))
+            case (None, Seq("BAR")) if barSrc.nonEmpty => Some(ResolvedModule("", s"bar.$suffix", Seq(s"bar.$suffix")))
+            case (None, Seq("BAZ", "QAZ")) if qazSrc.nonEmpty => Some(ResolvedModule("", s"baz/qaz.$suffix",
+                                                                                     Seq(s"baz/qaz.$suffix")))
+            case _ => Some(ResolvedModule("", "", Seq()))
+          }
         }
       }
     }
