@@ -134,7 +134,7 @@ trait Color {
     val r2 = argb2 >> 16 & 0xff
     val g2 = argb2 >> 8 & 0xff
     val b2 = argb2 & 0xff
-    val rmean = r1 + r2 / 2
+    val rmean = (r1 + r2) / 2
     val rd = r1 - r2
     val gd = g1 - g2
     val bd = b1 - b2
