@@ -184,6 +184,7 @@ declare global {
     smartIndent: boolean;
     lineNumbers: boolean;
     completeOnType: boolean;
+    errorSelection: boolean;
 
     getText: () => string;
     getSelectionStart: () => number;
@@ -497,10 +498,7 @@ window.refreshText = () => {
       to: window.view.state.doc.length,
       insert: window.view.state.doc.toString()
     },
-    selection: {
-      anchor: 0,
-      head: 0
-    },
+    selection: window.view.state.selection.main,
     scrollIntoView: true
   });
 
@@ -702,6 +700,8 @@ window.setFont = (family: string, size: number) => {
 };
 
 window.setNormalSelection = () => {
+  window.errorSelection = false;
+
   window.view.dispatch({
     effects: [
       window.selectionConfig.reconfigure(EditorView.theme({
@@ -714,6 +714,8 @@ window.setNormalSelection = () => {
 };
 
 window.setErrorSelection = () => {
+  window.errorSelection = true;
+
   window.view.dispatch({
     effects: [
       window.selectionConfig.reconfigure(EditorView.theme({
@@ -1048,7 +1050,11 @@ window.syncTheme = (theme: ColorTheme) => {
     ]
   });
 
-  window.setNormalSelection();
+  if (window.errorSelection) {
+    window.setErrorSelection();
+  } else {
+    window.setNormalSelection();
+  }
 };
 
 window.nullHandler = (_: EditorView) => {
