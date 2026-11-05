@@ -21,6 +21,7 @@ class MenuTests extends AnyFunSpec {
   private lazy val menuBar: MainMenuBar = app.mainMenuBar
 
   // there are different menu actions for each tab, so test each one separately (Isaac B 10/29/25)
+
   describe("Interface Tab") {
     actionsForTab(tabManager.interfaceTab)
   }
@@ -48,12 +49,12 @@ class MenuTests extends AnyFunSpec {
 
   private def recurseMenu(tab: Component, comp: Component, path: Seq[String]): Unit = {
     comp match {
-      case menu: JMenu =>
+      case menu: JMenu if filter(menu) =>
         val newPath = path :+ cleanText(menu.getText)
 
         menu.getMenuComponents.foreach(recurseMenu(tab, _, newPath))
 
-      case item: JMenuItem =>
+      case item: JMenuItem if filter(item) =>
         // exclude Quit because that exits the JVM and aborts the test suite (Isaac B 10/30/25)
         if (!item.getAction.isInstanceOf[FileManager.QuitAction]) {
           it((path :+ cleanText(item.getText)).mkString(" -> "), GuiTest.Tag) {
@@ -83,6 +84,16 @@ class MenuTests extends AnyFunSpec {
         }
 
       case _ =>
+    }
+  }
+
+  // exclude new window action, because it makes a window that is not in testing/automated mode. also exclude close
+  // window action, because it calls System.exit if it's the last window open. (Isaac B 11/6/26)
+  private def filter(menu: JMenuItem): Boolean = {
+    menu.getAction match {
+      case a: FileManager.NewWindowAction => false
+      case a: FileManager.CloseWindowAction => false
+      case _ => true
     }
   }
 }

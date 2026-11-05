@@ -7,8 +7,6 @@ import java.awt.event.{ WindowAdapter, WindowEvent }
 import java.beans.{ PropertyChangeEvent, PropertyChangeListener }
 import javax.swing.{ JFrame, WindowConstants }
 
-import org.nlogo.api.Exceptions
-import org.nlogo.awt.UserCancelException
 import org.nlogo.core.NetLogoPreferences
 import org.nlogo.swing.{ AppUtils, ModalProgress, NetLogoIcon, ZoomableWindow }
 import org.nlogo.theme.ThemeSync
@@ -23,8 +21,7 @@ class AppFrame(app: App) extends JFrame with LinkParent with LinkRoot with NetLo
 
   addWindowListener(new WindowAdapter() {
     override def windowClosing(e: WindowEvent): Unit = {
-      try app.quit()
-      catch { case ex: UserCancelException => Exceptions.ignore(ex) }
+      App.removeInstance(app)
     }
     override def windowIconified(e: WindowEvent): Unit = {
       new IconifiedEvent(AppFrame.this, true).raise(AppFrame.this)

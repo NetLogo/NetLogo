@@ -7,9 +7,8 @@ import java.awt.event.KeyEvent
 import java.io.{ File, IOException }
 import java.net.{ URI, URISyntaxException }
 import java.nio.file.{ Files, Paths }
-import java.util.concurrent.TimeoutException
 
-import scala.concurrent.Await
+import scala.concurrent.{ ExecutionContext, Future }
 import scala.util.{ Failure, Try }
 
 import org.nlogo.analytics.Analytics
@@ -31,7 +30,7 @@ import org.nlogo.workspace.{ AbstractWorkspaceScala, OpenModel, OpenModelFromURI
 
 object FileManager {
   class NewAction(manager: FileManager, parent: Container)
-  extends ExceptionCatchingAction(I18N.gui.get("menu.file.new"), parent)
+  extends ExceptionCatchingAction(I18N.gui.get("menu.file.newModel"), parent)
   with MenuAction {
     category    = UserAction.FileCategory
     group       = UserAction.FileOpenGroup
@@ -44,6 +43,22 @@ object FileManager {
     override def action(): Unit = {
       manager.aboutToCloseFiles()
       manager.newModel()
+    }
+  }
+
+  class NewWindowAction(parent: Component)
+    extends ExceptionCatchingAction(I18N.gui.get("menu.file.newWindow"), parent) with MenuAction {
+
+    category = UserAction.FileCategory
+    group = UserAction.FileOpenGroup
+    accelerator = UserAction.KeyBindings.keystroke('N', withMenu = true, withShift = true)
+    mnemonic = 'D'
+    rank = 1
+
+    override def action(): Unit = {
+      Future {
+        App.createInstance(Array())
+      }(using ExecutionContext.global)
     }
   }
 
@@ -64,7 +79,20 @@ object FileManager {
     }
   }
 
-  class QuitAction(manager: FileManager, parent: Component)
+  class CloseWindowAction(app: App, parent: Component)
+    extends ExceptionCatchingAction(I18N.gui.get("menu.file.closeWindow"), parent) with MenuAction {
+
+    category = UserAction.FileCategory
+    group = UserAction.FileQuitGroup
+    accelerator = UserAction.KeyBindings.keystroke('W', withMenu = true)
+    mnemonic = 'C'
+
+    override def action(): Unit = {
+      App.removeInstance(app)
+    }
+  }
+
+  class QuitAction(parent: Component)
   extends ExceptionCatchingAction(I18N.gui.get("menu.file.quit"), parent)
   with MenuAction {
     category    = UserAction.FileCategory
@@ -74,7 +102,7 @@ object FileManager {
 
     override def action(): Unit = {
       try {
-        manager.quit()
+        App.removeAllInstances()
       } catch {
         case ex: UserCancelException => Exceptions.ignore(ex)
       }
@@ -301,7 +329,8 @@ import FileManager._
 /** This class manages a number of file operations. Much of the code in here used to live in
  *  fileMenu, but it's obviously undesirable to couple the behavior in this class too closely to
  *  its presentation (the menu) */
-class FileManager(workspace: AbstractWorkspaceScala,
+class FileManager(app: App,
+  workspace: AbstractWorkspaceScala,
   modelLoader: AbstractModelLoader,
   modelConverter: ModelConversion,
   dirtyMonitor: DirtyMonitor,
@@ -354,23 +383,10 @@ class FileManager(workspace: AbstractWorkspaceScala,
 
   @throws(classOf[UserCancelException])
   def quit(): Unit = {
-
-    import scala.concurrent.duration.DurationInt
-
     aboutToCloseFiles()
     ModelConfig.pruneConfigs()
     new AboutToQuitEvent().raise(eventRaiser)
     workspace.getExtensionManager.reset()
-
-    try {
-      Await.ready(Analytics.appExit(), 5.seconds)
-    } catch {
-      case e: TimeoutException =>
-        println(e)
-    }
-
-    System.exit(0)
-
   }
 
   /**
@@ -538,17 +554,19 @@ class FileManager(workspace: AbstractWorkspaceScala,
   def actions: Seq[MenuAction] = {
     Seq(
       new NewAction(this, parent),
+      new NewWindowAction(parent),
       new OpenAction(this, parent),
       new ModelsLibraryAction(this, parent, workspace.getLibraryManager),
       new UploadToModelingCommonsAction(parent),
       new SaveAsNetLogoWebAction(this, workspace, modelSaver, parent),
       new ImportClientAction(this, workspace, parent),
-      new ManageResourcesAction(this, workspace, parent)
+      new ManageResourcesAction(this, workspace, parent),
+      new CloseWindowAction(app, parent)
     ) ++ {
       if (System.getProperty("os.name").toLowerCase.startsWith("mac")) {
         Seq()
       } else {
-        Seq(new QuitAction(this, parent))
+        Seq(new QuitAction(parent))
       }
     }
   }

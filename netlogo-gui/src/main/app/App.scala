@@ -4,17 +4,19 @@ package org.nlogo.app
 
 import com.jthemedetecor.OsThemeDetector
 
-import java.awt.{ BorderLayout, Dimension, EventQueue, Frame, KeyboardFocusManager }
+import java.awt.{ BorderLayout, Dimension, EventQueue, Frame, KeyboardFocusManager, MenuItem, PopupMenu, Taskbar }
 import java.awt.datatransfer.DataFlavor
 import java.awt.dnd.{ DropTarget, DropTargetDragEvent, DropTargetDropEvent, DropTargetEvent, DropTargetListener }
-import java.awt.event.ActionEvent
+import java.awt.event.{ ActionListener, ActionEvent }
 import java.io.File
 import java.lang.ProcessHandle
 import java.net.{ ConnectException, URI }
 import java.util.{ List => JList }
+import java.util.concurrent.TimeoutException
 import javax.swing.{ JFrame, JMenu, ToolTipManager }
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ Await, ExecutionContext, Future }
+import scala.concurrent.duration.DurationInt
 import scala.io.{ Codec, Source }
 import scala.sys.process.Process
 
@@ -48,7 +50,7 @@ import org.nlogo.swing.{ AppUtils, BrowserLauncher, DropdownOptionPane, FileDial
                          Positioning, PrinterManager, UserAction, WindowAutomator },
   UserAction.{ ActionCategoryKey, EditCategory, FileCategory, HelpCategory, MenuAction, ToolsCategory }
 import org.nlogo.theme.{ DarkTheme, InterfaceColors, LightTheme, ThemeSync }
-import org.nlogo.util.AppHandler
+import org.nlogo.util.{ AppHandler, Application }
 import org.nlogo.window._
 import org.nlogo.window.{ MenuBarFactory => WindowMenuBarFactory }
 import org.nlogo.window.Event.LinkChild
@@ -128,8 +130,6 @@ object App {
       // remove cached copies of extension directories to reduce tmpdir bloat (Isaac B 1/2/26)
       JarLoader.deleteCopies()
 
-      appHandler.init()
-
       AbstractWorkspace.isApp(true)
 
       val cmdArgs = processCommandLineArguments(args)
@@ -165,6 +165,44 @@ object App {
     main(args)
 
     instances.last
+  }
+
+  def removeInstance(app: App): Unit = {
+    try {
+      app.quit()
+      app.frame.dispose()
+
+      instances = instances.filter(_ != app)
+
+      if (instances.isEmpty)
+        finalQuit()
+    } catch {
+      case ex: UserCancelException =>
+        Exceptions.ignore(ex)
+    }
+  }
+
+  def removeAllInstances(): Unit = {
+    try {
+      instances.foreach(_.quit())
+      instances = Seq()
+
+      finalQuit()
+    } catch {
+      case ex: UserCancelException =>
+        Exceptions.ignore(ex)
+    }
+  }
+
+  private def finalQuit(): Unit = {
+    try {
+      Await.ready(Analytics.appExit(), 5.seconds)
+    } catch {
+      case e: TimeoutException =>
+        println(e)
+    }
+
+    System.exit(0)
   }
 
   private [app] def reset(): Unit = {
@@ -274,9 +312,9 @@ object App {
   }
 }
 
-class App(args: App.CommandLineArgs) extends AppInterface with LinkChild with Exceptions.Handler with AppEvent.Handler
-  with BeforeLoadEvent.Handler with LoadBeginEvent.Handler with LoadEndEvent.Handler with LoadModelEvent.Handler
-  with ModelSavedEvent.Handler with ModelSections with AppEvents.SwitchedTabsEvent.Handler
+class App(args: App.CommandLineArgs) extends AppInterface with Application with LinkChild with Exceptions.Handler
+  with AppEvent.Handler with BeforeLoadEvent.Handler with LoadBeginEvent.Handler with LoadEndEvent.Handler
+  with LoadModelEvent.Handler with ModelSavedEvent.Handler with ModelSections with AppEvents.SwitchedTabsEvent.Handler
   with AppEvents.OpenLibrariesDialogEvent.Handler with AppEvents.RestartEvent.Handler with AboutToQuitEvent.Handler
   with Controllable {
 
@@ -412,7 +450,7 @@ class App(args: App.CommandLineArgs) extends AppInterface with LinkChild with Ex
   val labManager = new LabManager(workspace, editDialogFactory, colorizer, menuBarFactory, workspaceFactory,
                                   modelLoader, modelSaver)
 
-  val fileManager = new FileManager(workspace, modelLoader, converter, dirtyMonitor, modelSaver, mainMenuBar,
+  val fileManager = new FileManager(this, workspace, modelLoader, converter, dirtyMonitor, modelSaver, mainMenuBar,
                                     frame, tabManager, workspaceFactory, labManager, args.testing)
 
   private val recentFilesMenu = new RecentFilesMenu(frame, fileManager)
@@ -428,10 +466,6 @@ class App(args: App.CommandLineArgs) extends AppInterface with LinkChild with Ex
 
   private val analyticsConsent = NetLogoPreferences.get("sendAnalytics", "$$$") == "$$$"
 
-  /**
-   * Quits NetLogo by exiting the JVM.  Asks user for confirmation first
-   * if they have unsaved changes. If the user confirms, calls System.exit(0).
-   */
   // part of controlling API; used by e.g. the Mathematica-NetLogo link
   // - ST 8/21/07
   @throws(classOf[UserCancelException])
@@ -455,6 +489,20 @@ class App(args: App.CommandLineArgs) extends AppInterface with LinkChild with Ex
 
     ToolTipManager.sharedInstance.setDismissDelay(Int.MaxValue)
     ToolTipManager.sharedInstance.setInitialDelay(500)
+
+    if (Taskbar.isTaskbarSupported && Taskbar.getTaskbar.isSupported(Taskbar.Feature.MENU)) {
+      Taskbar.getTaskbar.setMenu(new PopupMenu {
+        add(new MenuItem(I18N.gui.get("menu.file.newWindow")) {
+          addActionListener(new ActionListener {
+            override def actionPerformed(e: ActionEvent): Unit = {
+              Future {
+                App.createInstance(Array())
+              }(using ExecutionContext.global)
+            }
+          })
+        })
+      })
+    }
 
     frame.addLinkComponent(this)
     frame.addLinkComponent(workspace)
@@ -1139,12 +1187,7 @@ class App(args: App.CommandLineArgs) extends AppInterface with LinkChild with Ex
     dispatchThreadOrBust(fileManager.saveModel(false))
   }
 
-  /**
-   * This is called reflectively by the mac app wrapper with the full path.
-   * This will only be called after appHandler.ready has been called.
-   * @param path the path (absolute) to the NetLogo model to open.
-   */
-  def handleOpenPath(path: String) = {
+  override def handleOpenPath(path: String) = {
     try {
       dispatchThreadOrBust {
         fileManager.aboutToCloseFiles()
@@ -1158,24 +1201,15 @@ class App(args: App.CommandLineArgs) extends AppInterface with LinkChild with Ex
     }
   }
 
-  /**
-   * This is called reflectively by the mac app wrapper.
-   */
-  def handleQuit(): Unit = {
-    fileManager.quit()
+  override def handleQuit(): Unit = {
+    App.removeAllInstances()
   }
 
-  /**
-   * This is called reflectively by the mac app wrapper.
-   */
-  def handleShowAbout(): Unit = {
+  override def handleShowAbout(): Unit = {
     showAboutWindow()
   }
 
-  /**
-   * This is called reflectively by the mac app wrapper.
-   */
-  def handleShowPreferences(): Unit = {
+  override def handleShowPreferences(): Unit = {
     showPreferencesDialog()
   }
 
