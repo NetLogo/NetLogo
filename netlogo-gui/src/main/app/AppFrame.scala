@@ -2,14 +2,15 @@
 
 package org.nlogo.app
 
-import java.awt.{ Dimension, Frame }
+import java.awt.{ Dimension, Frame, GraphicsConfiguration }
 import java.awt.event.{ WindowAdapter, WindowEvent }
+import java.beans.{ PropertyChangeEvent, PropertyChangeListener }
 import javax.swing.{ JFrame, WindowConstants }
 
 import org.nlogo.api.Exceptions
 import org.nlogo.awt.UserCancelException
 import org.nlogo.core.NetLogoPreferences
-import org.nlogo.swing.{ ModalProgress, NetLogoIcon, ZoomableWindow }
+import org.nlogo.swing.{ AppUtils, ModalProgress, NetLogoIcon, ZoomableWindow }
 import org.nlogo.theme.ThemeSync
 import org.nlogo.window.LinkRoot
 import org.nlogo.window.Event.LinkParent
@@ -30,6 +31,20 @@ class AppFrame(app: App) extends JFrame with LinkParent with LinkRoot with NetLo
     }
     override def windowDeiconified(e: WindowEvent): Unit = {
       new IconifiedEvent(AppFrame.this, false).raise(AppFrame.this)
+    }
+  })
+
+  // if the window is moved to a screen with a different internal scale, eg. from a Mac retina display to a normal
+  // projector display, scalable icons can appear at the wrong size. this listener detects the display change and
+  // updates the tracked UI scale accordingly. (Isaac B 11/5/26)
+  addPropertyChangeListener("graphicsConfiguration", new PropertyChangeListener {
+    override def propertyChange(e: PropertyChangeEvent): Unit = {
+      e.getNewValue match {
+        case config: GraphicsConfiguration =>
+          AppUtils.reloadUIScale(config)
+
+        case _ =>
+      }
     }
   })
 

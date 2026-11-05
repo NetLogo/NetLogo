@@ -66,6 +66,7 @@ object Utils {
 
 class ScalableIcon(zoom: ZoomHelpers, image: Image, width: Int, height: Int) extends Icon {
   protected var lastZoom = 0f
+  protected var lastScale = 0.0
 
   protected var icon: Icon = new ImageIcon(image)
 
@@ -73,12 +74,13 @@ class ScalableIcon(zoom: ZoomHelpers, image: Image, width: Int, height: Int) ext
   override def getIconHeight: Int = zoom.zoom(height)
 
   protected def updateIcon(): Unit = {
-    if (lastZoom != zoom.getZoomFactor) {
+    if (lastZoom != zoom.getZoomFactor || lastScale != Utils.getUIScale) {
       icon = new ImageIcon(image.getScaledInstance(zoom.zoom(width * Utils.getUIScale.toFloat).toInt,
                                                    zoom.zoom(height * Utils.getUIScale.toFloat).toInt,
                                                    Image.SCALE_SMOOTH))
 
       lastZoom = zoom.getZoomFactor
+      lastScale = Utils.getUIScale
     }
   }
 
@@ -111,7 +113,7 @@ class ScalableIconWithColor(zoom: ZoomHelpers, image: Image, width: Int, height:
   override def updateIcon(): Unit = {
     val newColor: Color = color()
 
-    if (lastZoom != zoom.getZoomFactor || lastColor != newColor) {
+    if (lastZoom != zoom.getZoomFactor || lastColor != newColor || lastScale != Utils.getUIScale) {
       icon = new ImageIcon(image.getScaledInstance(zoom.zoom(width * Utils.getUIScale.toFloat).toInt,
                                                    zoom.zoom(height * Utils.getUIScale.toFloat).toInt,
                                                    Image.SCALE_SMOOTH))
@@ -140,6 +142,7 @@ class ScalableIconWithColor(zoom: ZoomHelpers, image: Image, width: Int, height:
 
       lastZoom = zoom.getZoomFactor
       lastColor = newColor
+      lastScale = Utils.getUIScale
     }
   }
 }

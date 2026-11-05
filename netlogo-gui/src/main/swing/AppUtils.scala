@@ -4,7 +4,7 @@ package org.nlogo.swing
 
 import com.jthemedetecor.OsThemeDetector
 
-import java.awt.GraphicsEnvironment
+import java.awt.{ GraphicsConfiguration, GraphicsEnvironment }
 
 import org.nlogo.core.NetLogoPreferences
 import org.nlogo.theme.{ ClassicTheme, DarkTheme, LightTheme, InterfaceColors }
@@ -26,6 +26,23 @@ object AppUtils {
   }
 
   def setupGUI(colorTheme: Option[String]): Unit = {
+    val devices = GraphicsEnvironment.getLocalGraphicsEnvironment.getScreenDevices
+
+    reloadUIScale(devices(0).getDefaultConfiguration)
+
+    SetSystemLookAndFeel.setSystemLookAndFeel()
+
+    InterfaceColors.setTheme(colorTheme.getOrElse(defaultTheme) match {
+      case "classic" => ClassicTheme
+      case "light" => LightTheme
+      case "dark" => DarkTheme
+    })
+
+    System.setProperty("flatlaf.menuBarEmbedded", "false")
+    System.setProperty("sun.awt.noerasebackground", "true") // stops view2.5d and 3d windows from blanking to white
+  }
+
+  def reloadUIScale(config: GraphicsConfiguration): Unit = {
     Option(System.getProperty("sun.java2d.uiScale")).flatMap(_.toFloatOption) match {
       case Some(scale) =>
         Utils.setUIScale(scale)
@@ -50,21 +67,7 @@ object AppUtils {
         }
 
       case _ =>
-        val devices = GraphicsEnvironment.getLocalGraphicsEnvironment.getScreenDevices
-        val scale = devices(0).getDefaultConfiguration.getDefaultTransform.getScaleX
-
-        Utils.setUIScale(scale)
+        Utils.setUIScale(config.getDefaultTransform.getScaleX)
     }
-
-    SetSystemLookAndFeel.setSystemLookAndFeel()
-
-    InterfaceColors.setTheme(colorTheme.getOrElse(defaultTheme) match {
-      case "classic" => ClassicTheme
-      case "light" => LightTheme
-      case "dark" => DarkTheme
-    })
-
-    System.setProperty("flatlaf.menuBarEmbedded", "false")
-    System.setProperty("sun.awt.noerasebackground", "true") // stops view2.5d and 3d windows from blanking to white
   }
 }
