@@ -10,13 +10,15 @@ import org.nlogo.core.ResolvedModule
 
 trait AbstractCompilationEnvironment {
 
+  private val separator: String = System.getProperty("file.separator")
+
   def resolvePath(path: String): String
 
   def resolveModulePath(currentFile: Option[String], modulePath: Seq[String]): Option[ResolvedModule] = {
     val pathPrefixes =
-      Seq( s"${resolvePath(currentFile.map(x => Paths.get(x).getParent.toString).getOrElse(""))}/"
-         , s"${APIPM.userPackagesPath.toString}/"
-         , s"${APIPM.packagesPath.toString}/"
+      Seq( s"${resolvePath(currentFile.map(x => Paths.get(x).getParent.toString).getOrElse(""))}$separator"
+         , s"${APIPM.userPackagesPath.toString}$separator"
+         , s"${APIPM.packagesPath.toString}$separator"
          )
 
     pathPrefixes.foldLeft(None) {
@@ -24,7 +26,7 @@ trait AbstractCompilationEnvironment {
         if (p.isDefined) { // If we already found some paths, just return those.
           p
         } else {
-          val path = resolvePath(s"$pathPrefix${modulePath.mkString("/").toLowerCase(Locale.ROOT)}")
+          val path = resolvePath(s"$pathPrefix${modulePath.mkString(separator).toLowerCase(Locale.ROOT)}")
 
           // If the path points to a file, just return that file.
           val (pathWithExt, siblings) = if (FileIO.isRegularFile(s"$path.nlm")) {
