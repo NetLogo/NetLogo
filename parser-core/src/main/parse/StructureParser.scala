@@ -80,7 +80,7 @@ object StructureParser {
               val confusingImportParts = Seq(Some(fullImportPath), Some(lastImportComponent), importAlias).flatten
 
               val (basePath, suppliedPaths) =
-                compilationEnvironment.resolveModulePath(currentImport.filename, currentImport.upCount, currentImport.pathComponents) match {
+                compilationEnvironment.resolveModulePath(currentImport.filename, currentImport.upCount, currentImport.pathComponents, None) match {
                   case Some(ResolvedModule(prefix, _, paths)) =>
                     (prefix, paths)
 

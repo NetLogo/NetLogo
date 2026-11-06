@@ -7,6 +7,8 @@ import java.util.Locale
 
 import org.nlogo.api.{ FileIO, PackageManager => APIPM }
 import org.nlogo.core.ResolvedModule
+import org.nlogo.core.Fail._
+import org.nlogo.core.{ I18N, SourceLocatable }
 
 trait AbstractCompilationEnvironment {
 
@@ -15,7 +17,8 @@ trait AbstractCompilationEnvironment {
   def resolveModulePath(
     currentFile: Option[String],
     upCount: Integer,
-    modulePath: Seq[String]
+    modulePath: Seq[String],
+    locatable: Option[SourceLocatable]
   ): Option[ResolvedModule] = {
     val localPathBase =
       s"${resolvePath(currentFile.map(x => Paths.get(x).getParent.toString).getOrElse(""))}/"
@@ -24,6 +27,7 @@ trait AbstractCompilationEnvironment {
     }
 
     if (crossesPackageIni) {
+      locatable.foreach(exception(I18N.errors.get("org.nlogo.workspace.AbstractCompilationEnvironment.upAbovePackageBoundary"), _))
       None
     } else {
       val localPathPrefix =

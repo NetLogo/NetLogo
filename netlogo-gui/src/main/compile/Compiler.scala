@@ -178,7 +178,7 @@ class Compiler(dialect: Dialect) extends PresentationCompilerInterface {
     oldPaths: Set[String] = Set()
   ): Seq[String] = {
     val imports = frontEnd.findImports(source)
-    val paths = imports.flatMap(x => compilationEnvironment.resolveModulePath(currentFile, x._1, x._2).map(_.paths).getOrElse(Seq()))
+    val paths = imports.flatMap(x => compilationEnvironment.resolveModulePath(currentFile, x._1, x._2, None).map(_.paths).getOrElse(Seq()))
     val sources = paths.flatMap(x => Try(compilationEnvironment.getSource(x)).toOption)
 
     def findRecursively(source: String, path: String): Seq[String] = {
