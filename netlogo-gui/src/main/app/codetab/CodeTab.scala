@@ -184,7 +184,7 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
     workspace.compiler.frontEnd.findImports(getText).flatMap { list =>
       workspace.getCompilationEnvironment.resolveModulePath(None, list).map {
         case ResolvedModule(_, path, _) =>
-          (list.last, path)
+          (list.last, path.replaceAll("\\\\", "/"))
       }
     }
   }
