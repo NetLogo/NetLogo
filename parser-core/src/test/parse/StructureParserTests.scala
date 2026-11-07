@@ -401,7 +401,7 @@ class StructureParserTests extends AnyFunSuite {
     val e = intercept[CompilerException] {
       compileAll(src, sourceType, fooSrc, barSrc)
     }
-    assertResult(error)(e.getMessage.takeWhile(_ != ','))
+    assertResult(error)(e.getMessage)
   }
 
   test("import nonexistent module") {
