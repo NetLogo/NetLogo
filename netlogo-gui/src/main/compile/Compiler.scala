@@ -5,8 +5,8 @@ package org.nlogo.compile
 import java.util.Locale
 
 import org.nlogo.api.{ ExtensionManager, LibraryManager, SourceOwner, World }
-import org.nlogo.core.{ CompilationEnvironment, CompilerException, CompilerUtilitiesInterface, Dialect, Femto,
-                        FrontEndInterface, ProcedureSyntax, Program, Token, TokenType }
+import org.nlogo.core.{ BundledModule, CompilationEnvironment, CompilerException, CompilerUtilitiesInterface, Dialect,
+                        Femto, FileModule, FrontEndInterface, ProcedureSyntax, Program, Token, TokenType }
 import org.nlogo.nvm.{ CompilerFlags, CompilerResults, ImportHandler, IncludeSource, PresentationCompilerInterface,
                        Procedure }
 import org.nlogo.util.PathUtils
@@ -177,9 +177,26 @@ class Compiler(dialect: Dialect) extends PresentationCompilerInterface {
     currentFile: Option[String] = None,
     oldPaths: Set[String] = Set()
   ): Seq[String] = {
-    val imports = frontEnd.findImports(source)
-    val paths = imports.flatMap(compilationEnvironment.resolveModulePath(currentFile, _).map(_.paths).getOrElse(Seq()))
-    val sources = paths.flatMap(x => Try(compilationEnvironment.getSource(x)).toOption)
+    val imports = frontEnd.findImports(source).flatMap { imp =>
+      compilationEnvironment.findBundledImport(imp)
+        .orElse(compilationEnvironment.resolveModulePath(currentFile, imp))
+    }
+
+    val paths = imports.flatMap {
+      case FileModule(_, path, paths) =>
+        path +: paths
+
+      case BundledModule(path, files) =>
+        path +: files.map(_.path)
+    }
+
+    val sources = imports.flatMap {
+      case FileModule(_, path, paths) =>
+        (path +: paths).flatMap(x => Try(compilationEnvironment.getSource(x)).toOption)
+
+      case BundledModule(path, files) =>
+        files.map(_.source)
+    }
 
     def findRecursively(source: String, path: String): Seq[String] = {
       if (oldPaths contains path) {

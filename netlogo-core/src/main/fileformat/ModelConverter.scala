@@ -9,8 +9,8 @@ import scala.util.matching.Regex
 
 import org.nlogo.api.{ AutoConverter, AutoConvertable, FileIO }
 import org.nlogo.core.{ CompilationEnvironment, CompilationOperand, Dialect, ExtensionManager, Femto,
-                        FrontEndInterface, LibraryManager, LiteralParser, Model, Program, SourceRewriter,
-                        StructureResults, VersionUtils },
+                        FrontEndInterface, LibraryManager, LiteralParser, Model, Program, ResolvedModule,
+                        SourceRewriter, StructureResults, VersionUtils },
   FrontEndInterface.ProceduresMap
 
 import FileFormat.ModelConversion
@@ -59,6 +59,10 @@ class ModelConverter(
               FileIO.resolvePath(path, modelPath).map(_.normalize.toString).getOrElse(path)
             def resolveModulePath(currentFile: Option[String], modulePath: Seq[String]) =
               compilationEnv.resolveModulePath(currentFile, modulePath)
+            def findBundledInclude(path: String): Option[String] =
+              compilationEnv.findBundledInclude(path)
+            def findBundledImport(path: Seq[String]): Option[ResolvedModule] =
+              compilationEnv.findBundledImport(path)
           },
         oldProcedures          = procedures,
         containingProgram      = program,

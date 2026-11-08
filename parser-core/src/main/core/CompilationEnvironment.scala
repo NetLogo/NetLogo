@@ -2,7 +2,11 @@
 
 package org.nlogo.core
 
-case class ResolvedModule(prefix: String, path: String, paths: Seq[String])
+sealed abstract trait ResolvedModule
+
+case class FileModule(prefix: String, path: String, paths: Seq[String]) extends ResolvedModule
+case class BundledModule(path: String, files: Seq[ResolvedFile]) extends ResolvedModule
+case class ResolvedFile(path: String, relative: String, source: String)
 
 trait CompilationEnvironment {
   def profilingEnabled: Boolean
@@ -10,6 +14,8 @@ trait CompilationEnvironment {
   def resolveModulePath(currentFile:Option[String], pathComponents: Seq[String]): Option[ResolvedModule]
   def exists(path: String): Boolean
   def getSource(filename: String): String
+  def findBundledInclude(path: String): Option[String]
+  def findBundledImport(path: Seq[String]): Option[ResolvedModule]
 }
 
 class DummyCompilationEnvironment extends CompilationEnvironment {
@@ -19,4 +25,6 @@ class DummyCompilationEnvironment extends CompilationEnvironment {
   def exists(filename: String): Boolean = false
   def getSource(filename: String): String =
     if (filename == "aggregate") "" else throw new UnsupportedOperationException
+  def findBundledInclude(path: String): Option[String] = None
+  def findBundledImport(path: Seq[String]): Option[ResolvedModule] = None
 }

@@ -4,7 +4,7 @@ package org.nlogo.api
 
 import java.awt.Frame
 
-import org.nlogo.core.CompilerUtilitiesInterface
+import org.nlogo.core.{ CompilerUtilitiesInterface, Model }
 
 trait AppInterface {
   def frame: Frame & ZoomRoot
@@ -14,4 +14,5 @@ trait AppInterface {
   def tabManager: TabsInterface
   def addSyncFunction(f: () => Unit): Long
   def removeSyncFunction(id: Long): Unit
+  def model: Model
 }

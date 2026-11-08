@@ -10,11 +10,13 @@ import scala.collection.mutable.WeakHashMap
 import scala.util.Try
 import org.nlogo.agent.{ World, Agent, OutputObject }
 import org.nlogo.api.{ AppInterface, Dump, PackageManager => APIPM, ExtensionManager => APIEM, FileIO, HubNetInterface,
-                       LibraryManager, LogoException, OutputDestination, PreviewCommands, Workspace => APIWorkspace }
-import org.nlogo.core.{ CompilerException, Model, View, Widget => CoreWidget, WorldDimensions, WorldDimensions3D }
-import org.nlogo.nvm.{ Activation, Instruction, Command, Context, Job, MutableLong, Procedure, Tracer }
-import org.nlogo.nvm.RuntimePrimitiveException
-import org.nlogo.api.PlotCompilationErrorAction
+                       LibraryManager, LogoException, OutputDestination, PlotCompilationErrorAction, PreviewCommands,
+                       Workspace => APIWorkspace }
+import org.nlogo.core.{ BundledInclude, BundledModule, CompilerException, Model, ResolvedFile, ResolvedModule, View,
+                        Widget => CoreWidget, WorldDimensions, WorldDimensions3D }
+import org.nlogo.nvm.{ Activation, Instruction, Command, Context, Job, MutableLong, Procedure,
+                       RuntimePrimitiveException, Tracer }
+import org.nlogo.util.PathUtils
 
 import AbstractWorkspaceTraits._
 
@@ -177,6 +179,37 @@ abstract class AbstractWorkspaceScala(app: Option[AppInterface], val world: Worl
         } catch {
           case ex: Exception =>
             throw new IllegalStateException(s"$path is not a valid pathname: $ex")
+        }
+      }
+
+      override def findBundledInclude(path: String): Option[String] = {
+        val fullPath: String = PathUtils.standardize(Paths.get(path).normalize.toString)
+
+        app.flatMap(_.model.includes.collectFirst {
+          case BundledInclude(`fullPath`, text, false) =>
+            text
+        })
+      }
+
+      override def findBundledImport(path: Seq[String]): Option[ResolvedModule] = {
+        val fullPath: String = PathUtils.standardize(Paths.get(path.mkString("/")).normalize.toString).toLowerCase
+
+        app.flatMap { instance =>
+          instance.model.includes.collectFirst {
+            case BundledInclude(s"$pathNoExt.nlm", text, true) if pathNoExt == fullPath =>
+              BundledModule(s"$fullPath.nlm", Seq(ResolvedFile(s"$fullPath.nlm", s"$fullPath.nlm", text)))
+          }.orElse {
+            val children: Seq[ResolvedFile] = instance.model.includes.collect {
+              case BundledInclude(s"$path", text, true) if path.startsWith(fullPath) =>
+                ResolvedFile(path, path, text)
+            }
+
+            if (children.nonEmpty) {
+              Some(BundledModule(fullPath, children))
+            } else {
+              None
+            }
+          }
         }
       }
     }

@@ -6,13 +6,13 @@ import java.awt.{ Component, Container, FileDialog => AWTFileDialog }
 import java.awt.event.KeyEvent
 import java.io.{ File, IOException }
 import java.net.{ URI, URISyntaxException }
-import java.nio.file.{ Files, Paths }
+import java.nio.file.{ Files, Path, Paths }
 
 import scala.concurrent.{ ExecutionContext, Future }
 import scala.util.{ Failure, Try }
 
 import org.nlogo.analytics.Analytics
-import org.nlogo.core.{ I18N, Model }
+import org.nlogo.core.{ BundledInclude, I18N, Model }
 import org.nlogo.api.{ AbstractModelLoader, Exceptions, FileIO, LibraryManager, ModelReader, ModelSaver, ModelType,
                        Version }, ModelReader.{ emptyModelPath, modelSuffix }
 import org.nlogo.app.common.{ Actions, Dialogs, ExceptionCatchingAction, ModelConfig }, Actions.Ellipsis
@@ -21,7 +21,9 @@ import org.nlogo.app.tools.{ ModelsLibraryDialog, NetLogoWebSaver }
 import org.nlogo.awt.{ Hierarchy, UserCancelException }
 import org.nlogo.fileformat.{ FailedConversionResult, SuccessfulConversion }
 import org.nlogo.fileformat.FileFormat.ModelConversion
+import org.nlogo.nvm.IncludeSource
 import org.nlogo.swing.{ BrowserLauncher, FileDialog, ModalProgressTask, OptionPane, UserAction }, UserAction.MenuAction
+import org.nlogo.util.PathUtils
 import org.nlogo.window.{ Events, FileController, GUIWorkspace, LabManagerInterface, ReconfigureWorkspaceUI },
                           Events.{ AboutToCloseFilesEvent, AboutToQuitEvent, AboutToSaveModelEvent, LoadModelEvent,
                                    LoadErrorEvent, ModelSavedEvent, OpenModelEvent }
@@ -169,6 +171,71 @@ object FileManager {
         exception.foreach(throw _)
       }
     }
+  }
+
+  class BundleIncludesAction(parent: Component, workspace: AbstractWorkspaceScala, modelLoader: AbstractModelLoader,
+                             modelSaver: ModelSaver)
+    extends ExceptionCatchingAction(I18N.gui.get("menu.file.bundleIncludes"), parent) with MenuAction {
+
+    category = UserAction.FileCategory
+    group = UserAction.FileShareGroup
+    mnemonic = 'L'
+
+    @throws(classOf[UserCancelException])
+    @throws(classOf[IOException])
+    override def action(): Unit = {
+      if (workspace.getModelPath == null) {
+        new OptionPane(parent, I18N.gui.get("menu.file.bundleIncludes.invalid"),
+                       I18N.gui.get("menu.file.bundleIncludes.unsaved"), OptionPane.Options.Ok, OptionPane.Icons.error)
+
+        return
+      }
+
+      val model: Model = modelSaver.currentModel
+
+      workspace.compiler.findIncludes(workspace.getModelPath, model.code, workspace.getCompilationEnvironment) match {
+        case Some(includes) if includes.nonEmpty =>
+          val name: String = workspace.getModelFileName.stripSuffix(s".${ModelReader.modelSuffix}")
+          val path: String = FileDialog.showFiles(parent, I18N.gui.get("menu.file.saveAs"), AWTFileDialog.SAVE,
+                                                  s"$name-bundled.${ModelReader.modelSuffix}")
+
+          try {
+            val bundled: Seq[BundledInclude] = includes.collect {
+              case (original, IncludeSource(file, isImport)) if file.endsWith(".nls") || file.endsWith(".nlm") =>
+                val path: Path = Paths.get(file)
+
+                if (!isImport && Paths.get(original).isAbsolute)
+                  throw BundleException(I18N.gui.get("menu.file.bundleIncludes.includeAbsolute"))
+
+                val relative: String = PathUtils.standardize(Paths.get(workspace.getModelDir).relativize(path)
+                                                               .normalize.toString)
+
+                if (relative.startsWith(".."))
+                  throw BundleException(I18N.gui.get("menu.file.bundleIncludes.includeUp"))
+
+                if (isImport) {
+                  BundledInclude(relative.toLowerCase, Files.readString(path), true)
+                } else {
+                  BundledInclude(relative, Files.readString(path), false)
+                }
+            }.toSeq
+
+            modelLoader.save(model.copy(includes = bundled),
+                             Paths.get(FileIO.ensureExtension(path, ModelReader.modelSuffix)).toUri)
+          } catch {
+            case BundleException(message) =>
+              new OptionPane(parent, I18N.gui.get("menu.file.bundleIncludes.invalid"), message, OptionPane.Options.Ok,
+                             OptionPane.Icons.error)
+          }
+
+        case _ =>
+          new OptionPane(parent, I18N.gui.get("menu.file.bundleIncludes.invalid"),
+                         I18N.gui.get("menu.file.bundleIncludes.noIncludes"), OptionPane.Options.Ok,
+                         OptionPane.Icons.error)
+      }
+    }
+
+    private case class BundleException(message: String) extends Exception(message)
   }
 
   class UploadToModelingCommonsAction(parent: Component)
@@ -557,6 +624,7 @@ class FileManager(app: App,
       new NewWindowAction(parent),
       new OpenAction(this, parent),
       new ModelsLibraryAction(this, parent, workspace.getLibraryManager),
+      new BundleIncludesAction(parent, workspace, modelLoader, modelSaver),
       new UploadToModelingCommonsAction(parent),
       new SaveAsNetLogoWebAction(this, workspace, modelSaver, parent),
       new ImportClientAction(this, workspace, parent),

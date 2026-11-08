@@ -20,11 +20,10 @@ package org.nlogo.parse
 
 import scala.collection.immutable.ListMap
 import scala.collection.mutable
-import scala.util.matching.Regex
 import java.util.Locale
-import org.nlogo.core.{ CompilationEnvironment, CompilationOperand, CompilerException, ErrorSource, I18N, Import,
-                        ProcedureSyntax, Program, ResolvedModule, StructureDeclarations, StructureResults, Token,
-                        TokenizerInterface, TokenType }
+import org.nlogo.core.{ BundledModule, CompilationEnvironment, CompilationOperand, CompilerException, ErrorSource,
+                        FileModule, I18N, Import, ProcedureSyntax, Program, ResolvedFile, StructureDeclarations,
+                        StructureResults, Token, TokenizerInterface, TokenType }
 import org.nlogo.core.Fail._
 import org.nlogo.core.FrontEndInterface.{ ProceduresMap, ProcedureTokensMap }
 import org.nlogo.core.LibraryStatus.CanInstall
@@ -70,7 +69,6 @@ object StructureParser {
             // Handle imports
             if (newResults.imports.nonEmpty) {
               val currentImport = results.imports.head
-              val separator = System.getProperty("file.separator")
               val newImports: mutable.Set[Import] = mutable.Set()
 
               val fullImportPath = currentImport.pathComponents.mkString(":")
@@ -79,22 +77,38 @@ object StructureParser {
               val importAlias = currentImport.pathAlias
               val confusingImportParts = Seq(Some(fullImportPath), Some(lastImportComponent), importAlias).flatten
 
-              val (basePath, suppliedPaths) =
-                compilationEnvironment.resolveModulePath(currentImport.filename, currentImport.pathComponents) match {
-                  case Some(ResolvedModule(prefix, _, paths)) =>
-                    (prefix, paths)
+              val suppliedFiles: Seq[ResolvedFile] = {
+                compilationEnvironment.findBundledImport(currentImport.pathComponents).orElse {
+                  compilationEnvironment.resolveModulePath(currentImport.filename, currentImport.pathComponents)
+                } match {
+                  case Some(FileModule(prefix, _, paths)) =>
+                    paths.map { path =>
+                      includeFile(compilationEnvironment, path) match {
+                        case Some((_, source)) =>
+                          ResolvedFile(path, path.stripPrefix(prefix), source)
+
+                        case None =>
+                          exception(I18N.errors.getN("compiler.StructureParser.importNotFound", path),
+                                    currentImport.token)
+                      }
+                    }
+
+                  case Some(BundledModule(_, files)) =>
+                    files
 
                   case _ =>
-                    ("", Seq())
+                    Seq()
                 }
+              }
 
-              if (suppliedPaths.isEmpty) {
+              if (suppliedFiles.isEmpty) {
                 exception(I18N.errors.getN("compiler.StructureParser.importNotFound", currentImport.pathComponents.mkString(":")), currentImport.token)
               }
 
-              for (currentPath <- suppliedPaths) {
-                val relativePath = currentPath.stripPrefix(basePath)
-                val pathComponentCount = relativePath.split(Regex.quote(separator)).length
+              for (currentFile <- suppliedFiles) {
+                val currentPath = currentFile.path
+                val relativePath = currentFile.relative
+                val pathComponentCount = relativePath.split("/").length
                 val modulePathComponentCount = currentImport.pathComponents.length
                 val isSelectiveImport = currentImport.importedIdentifiers.nonEmpty
 
@@ -109,7 +123,7 @@ object StructureParser {
                       if (isSelectiveImport) {
                         ""
                       } else {
-                        val path = relativePath.replace(separator, ":").toUpperCase(Locale.ROOT).stripSuffix(".NLM")
+                        val path = relativePath.replace("/", ":").toUpperCase(Locale.ROOT).stripSuffix(".NLM")
 
                         if (path.nonEmpty) {
                           val basePrefix = s"$butLastImportComponent:"
@@ -124,16 +138,11 @@ object StructureParser {
                 val modelExtensions = newResults.extensions.map(_._1.value).toSet
 
                 if (!moduleCache.contains(currentPath)) {
-                  newResults = includeFile(compilationEnvironment, currentPath) match {
-                    case Some((path, fileContents)) => {
-                      parseOne(tokenizer, structureParser, fileContents, path, Some(path),
-                        newResults.copy(
-                          imports = results.imports.tail,
-                          includedSources = newResults.includedSources :+ currentPath))
-                    }
-                    case None =>
-                      exception(I18N.errors.getN("compiler.StructureParser.importNotFound", currentPath), currentImport.token)
-                  }
+                  newResults =
+                    parseOne(tokenizer, structureParser, currentFile.source, currentPath, Some(currentPath),
+                      newResults.copy(
+                        imports = results.imports.tail,
+                        includedSources = newResults.includedSources :+ currentPath))
 
                   newImports ++= newResults.imports.toSet -- results.imports.toSet
 
@@ -227,7 +236,9 @@ object StructureParser {
             if (newResults.includes.nonEmpty) {
               val suppliedPath = resolveIncludePath(newResults.includes.head.value.asInstanceOf[String])
               cAssert(suppliedPath.endsWith(".nls"), IncludeFilesEndInNLS, newResults.includes.head)
-              newResults = includeFile(compilationEnvironment, suppliedPath) match {
+              newResults = compilationEnvironment.findBundledInclude(suppliedPath).map((suppliedPath, _)).orElse {
+                includeFile(compilationEnvironment, suppliedPath)
+              } match {
                 case Some((path, fileContents)) =>
                   parseOne(tokenizer, structureParser, fileContents, path, None,
                     newResults.copy(includes = newResults.includes.tail,

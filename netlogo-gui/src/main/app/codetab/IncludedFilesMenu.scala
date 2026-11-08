@@ -54,7 +54,7 @@ class IncludedFilesMenu(includesTable: => Option[Map[String, IncludeSource]], ta
           menu.add(new MenuItem(I18N.gui.get("common.menus.empty"))).setEnabled(false)
 
         else {
-          filtered.map(_.split(File.separatorChar).last -> _).toSeq.sortBy(_._1.toUpperCase(Locale.ENGLISH))
+          filtered.map(_.split("/").last -> _).toSeq.sortBy(_._1.toUpperCase(Locale.ENGLISH))
             .foreach((name, source) => menu.add(new MenuItem(name, () => tabs.openExternalFile(source.file))))
         }
       case None =>

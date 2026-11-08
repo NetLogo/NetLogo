@@ -6,27 +6,27 @@ import java.nio.file.{ Files, FileVisitOption, Path, Paths }
 import java.util.Locale
 
 import org.nlogo.api.{ FileIO, PackageManager => APIPM }
-import org.nlogo.core.ResolvedModule
+import org.nlogo.core.{ FileModule, ResolvedModule }
+import org.nlogo.util.PathUtils
 
 trait AbstractCompilationEnvironment {
-
-  private val separator: String = System.getProperty("file.separator")
 
   def resolvePath(path: String): String
 
   def resolveModulePath(currentFile: Option[String], modulePath: Seq[String]): Option[ResolvedModule] = {
     val pathPrefixes =
-      Seq( s"${resolvePath(currentFile.map(x => Paths.get(x).getParent.toString).getOrElse(""))}$separator"
-         , s"${APIPM.userPackagesPath.toString}$separator"
-         , s"${APIPM.packagesPath.toString}$separator"
-         )
+      Seq( s"${resolvePath(currentFile.flatMap(x => Option(Paths.get(x).getParent).map(_.toString)).getOrElse(""))}/"
+        , s"${APIPM.userPackagesPath.toString}/"
+        , s"${APIPM.packagesPath.toString}/"
+        ).map(PathUtils.standardize)
 
     pathPrefixes.foldLeft(None) {
       (p, pathPrefix) =>
         if (p.isDefined) { // If we already found some paths, just return those.
           p
         } else {
-          val path = resolvePath(s"$pathPrefix${modulePath.mkString(separator).toLowerCase(Locale.ROOT)}")
+          val joined: String = modulePath.mkString("/").toLowerCase(Locale.ROOT)
+          val path: String = PathUtils.standardize(resolvePath(s"$pathPrefix$joined"))
 
           // If the path points to a file, just return that file.
           val (pathWithExt, siblings) = if (FileIO.isRegularFile(s"$path.nlm")) {
@@ -42,13 +42,13 @@ trait AbstractCompilationEnvironment {
             import scala.jdk.CollectionConverters.IteratorHasAsScala
             val fileIterator = Files.walk(Paths.get(path), FileVisitOption.FOLLOW_LINKS).iterator.asScala
             val isModuleFile = (x: Path) => Files.isRegularFile(x) && x.getFileName.toString.toLowerCase.endsWith(".nlm")
-            fileIterator.filter(isModuleFile).map(_.toString).toSeq
+            fileIterator.filter(isModuleFile).map(_.toString).map(PathUtils.standardize).toSeq
           } else {
             Seq()
           }
 
           if (siblings.nonEmpty || descendants.nonEmpty) {
-            Some(ResolvedModule(pathPrefix, pathWithExt, siblings ++ descendants))
+            Some(FileModule(pathPrefix, pathWithExt, siblings ++ descendants))
           } else {
             None
           }

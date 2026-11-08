@@ -12,12 +12,13 @@ import javax.swing.{ AbstractAction, JPanel }
 import org.nlogo.agent.Observer
 import org.nlogo.api.TabsInterface
 import org.nlogo.app.common.{ CodeToHtml, EditorFactory, Events => AppEvents, FindDialog, MenuTab }
-import org.nlogo.core.{ AgentKind, CompilerException, I18N, ResolvedModule }
+import org.nlogo.core.{ AgentKind, BundledModule, CompilerException, FileModule, I18N }
 import org.nlogo.editor.{ AdvancedEditorArea, EditorConfiguration }
 import org.nlogo.nvm.IncludeSource
 import org.nlogo.swing.{ BoxAlign, BoxRow, Button, CheckBox, FocusRoot, PrinterManager, ToolBarActionButton, UserAction,
                          Printable => NlogoPrintable, Utils, ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
+import org.nlogo.util.PathUtils
 import org.nlogo.window.{ CommentableError, ProceduresInterface, Events => WindowEvents }
 import org.nlogo.workspace.AbstractWorkspace
 
@@ -182,9 +183,14 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
 
   protected def getImports: Seq[(String, String)] = {
     workspace.compiler.frontEnd.findImports(getText).flatMap { list =>
-      workspace.getCompilationEnvironment.resolveModulePath(None, list).map {
-        case ResolvedModule(_, path, _) =>
-          (list.last, path.replaceAll("\\\\", "/"))
+      workspace.getCompilationEnvironment.findBundledImport(list).orElse {
+        workspace.getCompilationEnvironment.resolveModulePath(None, list)
+      }.map {
+        case FileModule(_, path, _) =>
+          (list.last, PathUtils.standardize(path))
+
+        case BundledModule(_, _) =>
+          (list.last, "bundled with model")
       }
     }
   }

@@ -16,6 +16,7 @@ case class Model(title: Option[String] = None,
   linkShapes: Seq[LinkShape] = Model.defaultLinkShapes,
   optionalSections: Seq[OptionalSection[?]] = Seq(),
   resources: Seq[ExternalResource] = Seq(),
+  includes: Seq[BundledInclude] = Seq(),
   // these are sections in the XML format that were not recognized by the current version but should
   // remain in the model file just in case for the user's benefit (Isaac B 7/6/25)
   unknownSections: Seq[XMLElement] = Seq()) {
@@ -69,3 +70,5 @@ class OptionalSection[A <: AnyRef](val key: String, value: Option[A], val defaul
 class Section[A <: AnyRef](key: String, value: A) extends OptionalSection[A](key, Some(value), value)
 
 case class ModelSettings(snapToGrid: Boolean)
+
+case class BundledInclude(path: String, text: String, isImport: Boolean)

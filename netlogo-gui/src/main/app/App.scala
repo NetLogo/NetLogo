@@ -1379,6 +1379,9 @@ class App(args: App.CommandLineArgs) extends AppInterface with Application with 
     f
   }
 
+  override def model: Model =
+    modelSaver.currentModel
+
   def title:            Option[String] =
     workspace.modelTitle
   def procedureSource:  String =
