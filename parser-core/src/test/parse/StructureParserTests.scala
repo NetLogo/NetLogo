@@ -355,7 +355,8 @@ class StructureParserTests extends AnyFunSuite {
     class TestCompilationEnvironment extends DummyCompilationEnvironment {
       override def resolveModulePath(
         currentFile: Option[String],
-        modulePath: Seq[String]
+        modulePath: Seq[String],
+        save: Boolean
       ): Option[ResolvedModule] = {
 
         val separator = System.getProperty("file.separator")
@@ -364,11 +365,12 @@ class StructureParserTests extends AnyFunSuite {
         val parentDir = currentFile.map(getParentDir(_)).flatMap(x => if (x.isEmpty) None else Some(x))
 
         (parentDir, modulePath) match {
-          case (None, Seq("FOO")) => Some(ResolvedModule("", s"foo.$suffix", Seq(s"foo.$suffix")))
-          case (None, Seq("BAR")) if barSrc.nonEmpty => Some(ResolvedModule("", s"bar.$suffix", Seq(s"bar.$suffix")))
+          case (None, Seq("FOO")) => Some(ResolvedModule("", s"foo.$suffix", Seq(s"foo.$suffix"), false))
+          case (None, Seq("BAR")) if barSrc.nonEmpty => Some(ResolvedModule("", s"bar.$suffix", Seq(s"bar.$suffix"),
+                                                                            false))
           case (None, Seq("BAZ", "QAZ")) if qazSrc.nonEmpty => Some(ResolvedModule("", s"baz/qaz.$suffix",
-                                                                                   Seq(s"baz/qaz.$suffix")))
-          case _ => Some(ResolvedModule("", "", Seq()))
+                                                                                   Seq(s"baz/qaz.$suffix"), false))
+          case _ => Some(ResolvedModule("", "", Seq(), false))
         }
       }
     }

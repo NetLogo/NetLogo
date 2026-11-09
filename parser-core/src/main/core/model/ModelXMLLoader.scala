@@ -2,8 +2,8 @@
 
 package org.nlogo.core.model
 
-import org.nlogo.core.{ DummyView, ExternalResource, LiteralParser, Model, ModelSettings, Section, WorldDimensions,
-                        VersionUtils, WorldDimensions3D, XMLElement }
+import org.nlogo.core.{ DummyView, ExternalResource, LiteralParser, Model, ModelSettings, ModuleDep, Section,
+                        WorldDimensions, VersionUtils, WorldDimensions3D, XMLElement }
 
 import scala.util.{ Failure, Try }
 
@@ -78,6 +78,11 @@ object ModelXMLLoader {
               )
             )), sections)
 
+          case ((model, sections), el @ XMLElement("modules", _, _, _, _)) =>
+            (model.map(_.copy(modules = el.getChildren("module").map { el =>
+              (ModuleDep(el.get("from"), el("name")), el("version"))
+            }.toMap)), sections)
+
           // ignore other sections for compatibility with other versions in the future (Isaac B 2/12/25)
           // but still keep track of them in case the user wanted them in there (Isaac B 7/6/25)
           case ((model, sections), element) =>
@@ -138,6 +143,24 @@ object ModelXMLLoader {
       }
 
       writer.endElement("resources")
+    }
+
+    if (model.modules.nonEmpty) {
+      writer.startElement("modules")
+
+      model.modules.foreach {
+        case (ModuleDep(from, name), version) =>
+          writer.startElement("module")
+
+          from.foreach(spec => writer.attribute("from", spec.toString))
+
+          writer.attribute("name", name)
+          writer.attribute("version", version)
+
+          writer.endElement("module")
+      }
+
+      writer.endElement("modules")
     }
 
     writer.endElement("model")

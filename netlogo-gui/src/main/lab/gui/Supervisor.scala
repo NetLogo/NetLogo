@@ -88,6 +88,7 @@ class Supervisor(parent: Window, workspace: GUIWorkspace, modelPath: String, ori
       process = Option(Process(Seq(java) ++ memoryLimit ++ Seq("-cp", System.getProperty("java.class.path"),
                                    s"-Dorg.nlogo.is3d=${Version.is3D}",
                                    s"-Dnetlogo.extensions.dir=${System.getProperty("netlogo.extensions.dir")}",
+                                   s"-Dnetlogo.packages.dir=${System.getProperty("netlogo.packages.dir")}",
                                    s"-Djava.library.path=${System.getProperty("java.library.path")}",
                                    "-Dswing.aatext=true",
                                    "-Dsun.java2d.d3d=false",

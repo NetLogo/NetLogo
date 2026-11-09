@@ -57,6 +57,7 @@ case class LibraryInfo(
   shortDescription: String,
   longDescription: String,
   version: String,
+  dependencies: Seq[String],
   homepage: URL,
   bundled: Boolean,
   installedVersionOpt: Option[String],
