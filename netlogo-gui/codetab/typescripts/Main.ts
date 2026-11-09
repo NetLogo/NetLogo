@@ -21,6 +21,7 @@ import { styleTags, Tag, tags } from "@lezer/highlight";
 
 import { toggleComments } from "./comment.js";
 import { executeIndentations } from "./indent.js";
+import { lint, underlineEffect } from "./lint.js";
 import { parser } from "./netlogo.js";
 import { End, ExtensionIdentifier, IncludeString, ModuleIdentifier, To } from "./netlogo.terms.js";
 
@@ -34,7 +35,6 @@ interface ColorTheme {
   caret: string;
   lineHighlight: string;
   selection: string;
-  selectionError: string;
   default: string;
   comment: string;
   constant: string;
@@ -176,7 +176,6 @@ declare global {
     view: EditorView;
 
     themeConfig: Compartment;
-    selectionConfig: Compartment;
     highlightConfig: Compartment;
     syntaxConfig: Compartment;
     historyConfig: Compartment;
@@ -194,7 +193,6 @@ declare global {
     smartIndent: boolean;
     lineNumbers: boolean;
     completeOnType: boolean;
-    errorSelection: boolean;
 
     getText: () => string;
     getSelectionStart: () => number;
@@ -229,8 +227,8 @@ declare global {
     setLineNumbers: (visible: boolean) => void;
     setCompleteOnType: (enabled: boolean) => void;
     setFont: (family: string) => void;
-    setNormalSelection: () => void;
-    setErrorSelection: () => void;
+    setError: (from: number, to: number) => void;
+    clearError: () => void;
     setHighlight: (active: boolean) => void;
     getFold: (state: EditorState, start: number, end: number) => FoldRange | null;
     getFolds: (state: EditorState) => FoldRange[];
@@ -263,7 +261,6 @@ declare global {
 
 window.onload = () => {
   window.themeConfig = new Compartment();
-  window.selectionConfig = new Compartment();
   window.highlightConfig = new Compartment();
   window.syntaxConfig = new Compartment();
   window.historyConfig = new Compartment();
@@ -284,7 +281,6 @@ window.onload = () => {
     caret: "",
     lineHighlight: "",
     selection: "",
-    selectionError: "",
     default: "",
     comment: "",
     constant: "",
@@ -317,6 +313,7 @@ window.onload = () => {
       hoverTooltip(window.hoverTooltip, {
         hideOnChange: true
       }),
+      lint(),
       new LanguageSupport(LRLanguage.define({
         parser: parser.configure({
           props: [
@@ -415,7 +412,6 @@ window.onload = () => {
         }
       }),
       window.themeConfig.of(EditorView.theme({})),
-      window.selectionConfig.of(EditorView.theme({})),
       window.highlightConfig.of(EditorView.theme({})),
       window.syntaxConfig.of(syntaxHighlighting(defaultHighlightStyle)),
       window.historyConfig.of(history()),
@@ -712,31 +708,20 @@ window.setFont = (family: string) => {
   })
 };
 
-window.setNormalSelection = () => {
-  window.errorSelection = false;
-
-  window.view.dispatch({
-    effects: [
-      window.selectionConfig.reconfigure(EditorView.theme({
-        "&.cm-focused .cm-selectionBackground, & .cm-selectionBackground": {
-          backgroundColor: window.currentTheme.selection + " !important"
-        }
-      }))
-    ]
-  });
+window.setError = (from: number, to: number) => {
+  if (to > from) {
+    window.view.dispatch({
+      effects: underlineEffect.of({
+        from,
+        to
+      })
+    });
+  }
 };
 
-window.setErrorSelection = () => {
-  window.errorSelection = true;
-
+window.clearError = () => {
   window.view.dispatch({
-    effects: [
-      window.selectionConfig.reconfigure(EditorView.theme({
-        "&.cm-focused .cm-selectionBackground, & .cm-selectionBackground": {
-          backgroundColor: window.currentTheme.selectionError + " !important"
-        }
-      }))
-    ]
+    userEvent: "clear-lint"
   });
 };
 
@@ -1039,6 +1024,9 @@ window.syncTheme = (theme: ColorTheme) => {
         "&.cm-focused .cm-nonmatchingBracket": {
           backgroundColor: "transparent !important"
         },
+        "&.cm-focused .cm-selectionBackground, & .cm-selectionBackground": {
+          backgroundColor: theme.selection + " !important"
+        },
         "&, .cm-gutters, .cm-gutter, .cm-gutterElement": {
           backgroundColor: theme.background,
           color: theme.default
@@ -1108,12 +1096,6 @@ window.syncTheme = (theme: ColorTheme) => {
       ])))
     ]
   });
-
-  if (window.errorSelection) {
-    window.setErrorSelection();
-  } else {
-    window.setNormalSelection();
-  }
 };
 
 window.nullHandler = (_: EditorView) => {
