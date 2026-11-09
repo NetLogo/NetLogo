@@ -228,7 +228,7 @@ declare global {
     getLineNumbers: () => boolean;
     setLineNumbers: (visible: boolean) => void;
     setCompleteOnType: (enabled: boolean) => void;
-    setFont: (family: string, size: number) => void;
+    setFont: (family: string) => void;
     setNormalSelection: () => void;
     setErrorSelection: () => void;
     setHighlight: (active: boolean) => void;
@@ -699,12 +699,12 @@ window.setCompleteOnType = (enabled: boolean) => {
   window.completeOnType = enabled;
 }
 
-window.setFont = (family: string, size: number) => {
+window.setFont = (family: string) => {
   window.view.dispatch({
     effects: [
       window.fontConfig.reconfigure(EditorView.theme({
         "&, .cm-completionLabel, .cm-content, .cm-gutters": {
-          fontSize: `${size}pt`,
+          fontSize: `12pt`,
           fontFamily: `${family}, monospace`
         }
       }))

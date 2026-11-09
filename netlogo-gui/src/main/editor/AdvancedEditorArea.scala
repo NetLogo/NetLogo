@@ -40,6 +40,7 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
 
   private val bridge = new Bridge
 
+  private var webView: Option[WebView] = None
   private var webEngine: Option[WebEngine] = None
 
   private val engineReady = Promise[Unit]()
@@ -289,12 +290,14 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
   })
 
   Platform.runLater(() => {
-    val webView = new WebView
+    val view = new WebView
 
-    webView.setContextMenuEnabled(false)
-    webView.setFontScale(0.75)
+    view.setContextMenuEnabled(false)
+    view.setFontScale(0.75)
 
-    val engine = webView.getEngine
+    webView = Some(view)
+
+    val engine = view.getEngine
 
     engine.getLoadWorker.stateProperty.addListener(new ChangeListener[State] {
       override def changed(ov: ObservableValue[? <: State], oldState: State, newState: State): Unit = {
@@ -308,7 +311,7 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
       }
     })
 
-    webView.addEventFilter(ScrollEvent.SCROLL, event => {
+    view.addEventFilter(ScrollEvent.SCROLL, event => {
       webEngine.foreach(_.executeScript(
         if (event.isShiftDown) {
           s"window.doScroll(${event.getX}, ${event.getY}, ${-event.getDeltaY}, 0)"
@@ -320,7 +323,7 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
       event.consume()
     })
 
-    setScene(new Scene(webView))
+    setScene(new Scene(view))
 
     engine.load(getClass.getResource("/codetab/index.html").toExternalForm)
   })
@@ -506,7 +509,7 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
   override def setFont(font: Font): Unit = {
     super.setFont(font)
 
-    runInWeb(s"window.setFont('${font.getFamily}', ${font.getSize})")
+    runInWeb(s"window.setFont('${font.getFamily}')")
   }
 
   override def addTextListener(listener: TextListener): Unit = {
@@ -598,6 +601,12 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
 
   private def colorString(color: Color): String =
     s"rgba(${color.getRed}, ${color.getGreen}, ${color.getBlue}, ${color.getAlpha / 255f})"
+
+  override def zoomComponent(): Unit = {
+    Platform.runLater(() => {
+      webView.foreach(_.setZoom(getZoomFactor))
+    })
+  }
 
   override def syncTheme(): Unit = {
     runInWeb(s"""window.syncTheme({
