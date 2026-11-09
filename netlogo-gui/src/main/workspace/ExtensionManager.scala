@@ -169,6 +169,9 @@ class ExtensionManager(val app: Option[AppInterface], val workspace: ExtendableW
   def loadedExtensionNames: Seq[String] =
     jars.values.map(_.extensionName).toSeq
 
+  def locateExtension(name: String): Option[URL] =
+    loaders.flatMap(_.locateExtension(name)).headOption
+
   private var obj: AnyRef = null
 
   private[nlogo] def addLoader(alternateLoader: ExtensionLoader): Unit = {

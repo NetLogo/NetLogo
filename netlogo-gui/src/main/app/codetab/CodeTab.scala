@@ -181,11 +181,23 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
   }
 
   protected def getImports: Seq[(String, String)] = {
-    workspace.compiler.frontEnd.findImports(getText).flatMap { list =>
+    val includes: Seq[(String, String)] = workspace.compiler.frontEnd.findIncludes(getText).map { path =>
+      (path, workspace.getCompilationEnvironment.resolvePath(path))
+    }
+
+    val imports: Seq[(String, String)] = workspace.compiler.frontEnd.findImports(getText).flatMap { list =>
       workspace.getCompilationEnvironment.resolveModulePath(None, list).map {
         case ResolvedModule(_, path, _) =>
           (list.last, path.replaceAll("\\\\", "/"))
       }
+    }
+
+    includes ++ imports
+  }
+
+  protected def getExtensions: Seq[(String, String)] = {
+    workspace.extensionManager.loadedExtensionNames.flatMap { ext =>
+      workspace.extensionManager.locateExtension(ext).map(url => (ext, url.getPath))
     }
   }
 
@@ -237,7 +249,7 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
     text.setProgram(workspace.world.program, commands, reporters,
                     workspace.getExtensionManager.extensionCommandNames.toSeq,
                     workspace.getExtensionManager.extensionReporterNames.toSeq,
-                    getImports)
+                    getImports, getExtensions)
   }
 
   protected def compile(): Unit = new WindowEvents.CompileAllEvent().raise(this)

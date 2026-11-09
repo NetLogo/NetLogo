@@ -22,7 +22,7 @@ import { styleTags, Tag, tags } from "@lezer/highlight";
 import { toggleComments } from "./comment.js";
 import { executeIndentations } from "./indent.js";
 import { parser } from "./netlogo.js";
-import { End, ModuleIdentifier, To } from "./netlogo.terms.js";
+import { End, ExtensionIdentifier, IncludeString, ModuleIdentifier, To } from "./netlogo.terms.js";
 
 interface ColorTheme {
   background: string;
@@ -52,6 +52,11 @@ interface FoldRange {
 interface BasicLine {
   number: number;
   text: string;
+}
+
+interface ImportSpec {
+  classifier: string;
+  path: string;
 }
 
 class Trie {
@@ -118,6 +123,7 @@ class Trie {
 class Program {
   decls: string[] = [];
   imports: Map<string, string> = new Map();
+  extensions: Map<string, string> = new Map();
 
   private core: Trie = new Trie();
   private compiled: Trie = new Trie();
@@ -133,7 +139,9 @@ class Program {
     this.core.appendAll(reporters, "reporter");
   }
 
-  setCompiled(keywords: string[], globals: string[], variables: string[], commands: string[], reporters: string[], imports: [string, string][]) {
+  setCompiled(keywords: string[], globals: string[], variables: string[], commands: string[], reporters: string[],
+              imports: [string, string][], extensions: [string, string][]) {
+
     this.compiled = new Trie();
 
     this.compiled.appendAll(keywords, "keyword");
@@ -143,6 +151,7 @@ class Program {
     this.compiled.appendAll(reporters, "reporter");
 
     this.imports = new Map(imports);
+    this.extensions = new Map(extensions);
   }
 
   match(value: string, offset: number = 0): Completion | undefined {
@@ -160,6 +169,7 @@ const commandTag: Tag = Tag.define("command", tags.name);
 const reporterTag: Tag = Tag.define("reporter", tags.name);
 const variableTag: Tag = Tag.define("variable", tags.name);
 const moduleTag: Tag = Tag.define("module", tags.name);
+const includeTag: Tag = Tag.define("include", tags.literal);
 
 declare global {
   interface Window {
@@ -231,9 +241,10 @@ declare global {
     unfoldCurrent: (view: EditorView) => boolean;
     setCoreProgram: (keywords: string[], constants: string[], commands: string[], reporters: string[]) => void;
     setCompiledProgram: (keywords: string[], globals: string[], variables: string[], commands: string[],
-                         reporters: string[], imports: [string, string][]) => void;
+                         reporters: string[], imports: [string, string][], extensions: [string, string][]) => void;
     autocomplete: (context: CompletionContext) => CompletionResult | null;
     hoverTooltip: (view: EditorView, pos: number, side: -1 | 1) => Tooltip | null;
+    getImportSpec: (view: EditorView, node: SyntaxNode) => ImportSpec | null;
     doScroll: (mouseX: number, mouseY: number, scrollX: number, scrollY: number) => void;
     syncTheme: (theme: ColorTheme) => void;
     nullHandler: (view: EditorView) => boolean;
@@ -325,8 +336,10 @@ window.onload = () => {
               End: tags.keyword,
               Identifier: tags.name,
               ModuleIdentifier: moduleTag,
+              ExtensionIdentifier: moduleTag,
               Number: tags.literal,
               String: tags.literal,
+              IncludeString: includeTag,
               Command: commandTag,
               Reporter: reporterTag,
               Var: variableTag,
@@ -851,8 +864,8 @@ window.setCoreProgram = (keywords: string[], constants: string[], commands: stri
 };
 
 window.setCompiledProgram = (keywords: string[], globals: string[], variables: string[], commands: string[],
-                             reporters: string[], imports: [string, string][]) => {
-  window.program.setCompiled(keywords, globals, variables, commands, reporters, imports);
+                             reporters: string[], imports: [string, string][], extensions: [string, string][]) => {
+  window.program.setCompiled(keywords, globals, variables, commands, reporters, imports, extensions);
 };
 
 window.autocomplete = (context: CompletionContext) => {
@@ -923,16 +936,9 @@ window.hoverTooltip = (view: EditorView, pos: number, side: 1 | -1) => {
     return null;
   }
 
-  const node: SyntaxNode = tree.resolve(pos, side);
+  const spec: ImportSpec | null = window.getImportSpec(window.view, tree.resolve(pos, side));
 
-  if (node.type.id != ModuleIdentifier) {
-    return null;
-  }
-
-  const text: string = view.state.doc.sliceString(node.from, node.to).toLowerCase();
-  const path: string | undefined = window.program.imports.get(text);
-
-  if (!path) {
+  if (!spec) {
     return null;
   }
 
@@ -942,13 +948,62 @@ window.hoverTooltip = (view: EditorView, pos: number, side: 1 | -1) => {
     create() {
       const dom = document.createElement("p");
 
-      dom.innerText = `Module path: ${path}`;
+      dom.innerText = `${spec.classifier} path: ${spec.path}`;
 
       return {
         dom
       };
     }
   };
+};
+
+window.getImportSpec = (view: EditorView, node: SyntaxNode) => {
+  switch (node.type.id) {
+    case ModuleIdentifier: {
+      const text: string = view.state.doc.sliceString(node.from, node.to).toLowerCase();
+      const path: string | undefined = window.program.imports.get(text);
+
+      if (!path) {
+        return null;
+      }
+
+      return {
+        classifier: "Module",
+        path: path
+      };
+    }
+
+    case ExtensionIdentifier: {
+      const text: string = view.state.doc.sliceString(node.from, node.to);
+      const path: string | undefined = window.program.extensions.get(text);
+
+      if (!path) {
+        return null;
+      }
+
+      return {
+        classifier: "Extension",
+        path: path
+      };
+    }
+
+    case IncludeString: {
+      const text: string = view.state.doc.sliceString(node.from + 1, node.to - 1);
+      const path: string | undefined = window.program.imports.get(text);
+
+      if (!path) {
+        return null;
+      }
+
+      return {
+        classifier: "Include",
+        path: path
+      };
+    }
+
+    default:
+      return null;
+  }
 };
 
 window.doScroll = (mouseX: number, mouseY: number, scrollX: number, scrollY: number) => {
@@ -1025,7 +1080,10 @@ window.syncTheme = (theme: ColorTheme) => {
           backgroundColor: theme.popupBackground,
           color: theme.default
         },
-        ".nl-module:hover": {
+        ".nl-include": {
+          color: theme.constant
+        },
+        ".nl-hover:hover": {
           borderWidth: "1px",
           borderStyle: "solid",
           borderColor: "red",
@@ -1045,7 +1103,8 @@ window.syncTheme = (theme: ColorTheme) => {
         { tag: commandTag, color: theme.command },
         { tag: reporterTag, color: theme.reporter },
         { tag: variableTag, color: theme.variable },
-        { tag: moduleTag, color: theme.default, class: "nl-module" }
+        { tag: includeTag, class: "nl-include nl-hover" },
+        { tag: moduleTag, class: "nl-hover" }
       ])))
     ]
   });

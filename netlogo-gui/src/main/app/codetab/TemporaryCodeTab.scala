@@ -246,10 +246,10 @@ class TemporaryCodeTab(workspace: GUIWorkspace,
         val extensionReporters = extensionManager.extensionReporterNames.filter(extensionManager.isVisibleIn(_, Some(x)))
 
         text.setProgram(workspace.world.program, commands, reporters, extensionCommands.toSeq, extensionReporters.toSeq,
-                        getImports)
+                        getImports, getExtensions)
       }
       case _ => {
-        text.setProgram(workspace.world.program, commands, reporters, Seq(), Seq(), Seq())
+        text.setProgram(workspace.world.program, commands, reporters, Seq(), Seq(), Seq(), Seq())
       }
     }
   }

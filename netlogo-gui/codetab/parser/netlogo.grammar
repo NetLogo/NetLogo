@@ -17,7 +17,8 @@
   Reporter,
   Var,
   Constant,
-  ModuleIdentifier
+  ModuleIdentifier,
+  ExtensionIdentifier
 }
 
 @skip { space | Comment }
@@ -29,17 +30,19 @@
 declaration {
   Import ModuleSpec (As Identifier)? |
   Import ImportBlock From ModuleSpec |
-  (Export | Extensions) IdentBlock |
+  Export IdentBlock |
+  Extensions ExtensionsBlock |
   (Globals | Own) VarBlock |
-  Includes StringBlock |
+  Includes IncludesBlock |
   Breed BreedBlock
 }
 
 ImportBlock { OpenBracket (Identifier | Identifier As Identifier)* CloseBracket }
 BreedBlock { OpenBracket AlwaysReporter AlwaysReporter CloseBracket }
 IdentBlock { OpenBracket Identifier* CloseBracket }
+ExtensionsBlock { OpenBracket ExtensionIdentifier* CloseBracket }
 VarBlock { OpenBracket AlwaysVar* CloseBracket }
-StringBlock { OpenBracket String* CloseBracket }
+IncludesBlock { OpenBracket IncludeString* CloseBracket }
 
 ModuleSpec { (Identifier ":")* ModuleIdentifier }
 
@@ -66,6 +69,7 @@ BracketExpression { OpenBracket expression* CloseBracket }
   AlwaysVar { Identifier }
   Number { "-"? @digit+ ("." @digit+)? ("e" ("+" | "-") @digit+)? }
   String { '"' (!["\n] | "\\\"")* ('"' | '\n' | @eof) }
+  IncludeString { String }
   OpenParen { "(" }
   CloseParen { ")" }
   OpenBracket { "[" }
