@@ -15,30 +15,33 @@ private[api] class PackageInstaller(userPackagePath: Path) {
 
   def install(pkg: LibraryInfo): Unit = {
 
-    val conn = pkg.downloadURL.openConnection.asInstanceOf[HttpURLConnection]
+    val pkgDir = installPath(pkg)
 
-    if (conn.getResponseCode == 200) {
+    if (!Files.isDirectory(pkgDir)) {
+      val conn = pkg.downloadURL.openConnection.asInstanceOf[HttpURLConnection]
 
-      val urlPath  = pkg.downloadURL.getPath.stripSuffix("/")
-      val basename = urlPath.substring(urlPath.lastIndexOf('/') + 1).dropRight(4)
-      val zipPath  = Files.createTempFile(basename, ".zip")
-      Files.copy(conn.getInputStream, zipPath, StandardCopyOption.REPLACE_EXISTING)
+      if (conn.getResponseCode == 200) {
 
-      val pkgDir = userPackagePath.resolve(pkg.codeName)
-      if (!Files.isDirectory(pkgDir)) {
-        Files.createDirectory(pkgDir)
+        val urlPath  = pkg.downloadURL.getPath.stripSuffix("/")
+        val basename = urlPath.substring(urlPath.lastIndexOf('/') + 1).dropRight(4)
+        val zipPath  = Files.createTempFile(basename, ".zip")
+        Files.copy(conn.getInputStream, zipPath, StandardCopyOption.REPLACE_EXISTING)
+
+        if (!Files.isDirectory(pkgDir)) {
+          Files.createDirectory(pkgDir)
+        }
+
+        new ZipFile(zipPath.toFile).extractAll(pkgDir.toString)
+        Files.delete(zipPath)
+
       }
-
-      new ZipFile(zipPath.toFile).extractAll(pkgDir.toString)
-      Files.delete(zipPath)
-
     }
 
   }
 
   def uninstall(pkg: LibraryInfo): Unit = {
 
-    val pkgDir = userPackagePath.resolve(pkg.codeName)
+    val pkgDir = installPath(pkg)
 
     if (Files.exists(pkgDir))
 
@@ -55,5 +58,8 @@ private[api] class PackageInstaller(userPackagePath: Path) {
       })
 
   }
+
+  private def installPath(pkg: LibraryInfo): Path =
+    userPackagePath.resolve(s"${pkg.codeName}-${pkg.version}")
 
 }

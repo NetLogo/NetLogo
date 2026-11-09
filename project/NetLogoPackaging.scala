@@ -266,6 +266,7 @@ object NetLogoPackaging {
       // $APPDIR on Linux is `./lib/app`, so move two levels up for the extra dirs
       val extraJavaOptions = Seq(
         "-Dnetlogo.extensions.dir=$APPDIR/../../extensions"
+      , "-Dnetlogo.packages.dir=$APPDIR/../../packages"
       , "-Dnetlogo.models.dir=$APPDIR/../../models"
       , "-Dnetlogo.docs.dir=$APPDIR/../.."
       , s"-Djava.library.path=$$APPDIR/../../natives/linux-${buildJDK.nativesArch}"
@@ -350,6 +351,7 @@ object NetLogoPackaging {
       // $APPDIR on Windows is `./app`, so move one levels up for the extra dirs
       val extraJavaOptions = Seq(
         "-Dnetlogo.extensions.dir=$APPDIR/../extensions"
+      , "-Dnetlogo.packages.dir=$APPDIR/../packages"
       , "-Dnetlogo.models.dir=$APPDIR/../models"
       , "-Dnetlogo.docs.dir=$APPDIR/.."
       , s"-Djava.library.path=$$APPDIR/../natives/windows-${buildJDK.nativesArch}"
@@ -441,6 +443,7 @@ object NetLogoPackaging {
       // See comment in `PackageMacAggregate` for more info on the `{{{ROOTDIR}}}` placeholder.  -Jeremy B September
       // 2022
       , "-Dnetlogo.extensions.dir={{{ROOTDIR}}}/extensions"
+      , "-Dnetlogo.packages.dir={{{ROOTDIR}}}/packages"
       , "-Dnetlogo.models.dir={{{ROOTDIR}}}/models"
       , "-Dnetlogo.docs.dir={{{ROOTDIR}}}"
       , "-Djava.library.path={{{ROOTDIR}}}/natives/macosx-universal"

@@ -11,11 +11,11 @@ import javax.swing.{ Action, DefaultListModel, Icon, JLabel, JList, ListCellRend
 import javax.swing.border.LineBorder
 import javax.swing.event.{ AncestorEvent, AncestorListener, ListDataEvent, ListDataListener }
 
-import org.nlogo.api.{ LibraryInfoDownloader, LibraryManager, Version }
+import org.nlogo.api.{ LibraryInfoDownloader, LibraryManager, PackageDepException, Version }
 import org.nlogo.core.{ I18N, LibraryInfo, LibraryStatus, Token, TokenType }
-import org.nlogo.swing.{ AutomationUtils, BoxColumn, BoxRow, BrowserLauncher, Button, EmptyIcon, FilterableListModel,
-                         FocusUtils, HorizontalStrut, MaximumHeight, OptionPane, RichAction, ScrollPane, SwingWorker,
-                         TextArea, TextField, Utils, VerticalStrut, Zoomable, ZoomableBorder }
+import org.nlogo.swing.{ AutomationUtils, BoxAlign, BoxColumn, BoxRow, BrowserLauncher, Button, EmptyIcon,
+                         FilterableListModel, FocusUtils, HorizontalStrut, MaximumHeight, OptionPane, RichAction,
+                         ScrollPane, SwingWorker, TextArea, TextField, Utils, VerticalStrut, Zoomable, ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.workspace.ModelsLibrary
 
@@ -31,6 +31,9 @@ object LibrariesTab {
   // (Isaac B 7/25/25)
   def addExtsToSource(source: String, requiredExts: Set[String],
                       tokenizeSource: String => Iterator[Token]): Option[String] = {
+    if (requiredExts.isEmpty)
+      return Option(source)
+
     val (prefix, rest) = tokenizeSource(source).span(token => token.tpe != TokenType.Keyword ||
                                                               token.text.toUpperCase(Locale.US) != "EXTENSIONS")
 
@@ -68,6 +71,14 @@ object LibrariesTab {
       Some(s"extensions [ ${requiredExts.toSeq.sorted.mkString(" ")} ]\n$source")
     }
   }
+
+  def addPkgsToSource(source: String, packages: Set[String]): String = {
+    if (packages.nonEmpty) {
+      packages.map(name => s"import $name").mkString("", "\n", s"\n$source")
+    } else {
+      source
+    }
+  }
 }
 
 // this tab can be converted back to a `JTabbedPane` once other libraries are added, like code modules or models.
@@ -83,7 +94,7 @@ class LibrariesTab( category:        String
 
   import LibrariesTab._
 
-  private val libraries = manager.getExtensionInfos ++ manager.getPackageInfos
+  private val libraries = manager.getLibraryInfos
 
   private def install(info: LibraryInfo): Unit = {
     if (info.isExtension) {
@@ -171,9 +182,13 @@ class LibrariesTab( category:        String
 
   private val addToCodeTabButton = new Button(I18N.gui("addToCodeTab"), () => {
     updateSource { source =>
-      addExtsToSource(source, selectedValues.map(_.codeName).toSet, tokenizeSource) match {
+      val (extensions, packages) = selectedValues.partition(_.isExtension) match {
+        case (exts, pkgs) => (exts.map(_.codeName).toSet, pkgs.map(_.codeName).toSet)
+      }
+
+      addExtsToSource(source, extensions, tokenizeSource) match {
         case Some(newSource) =>
-          newSource
+          addPkgsToSource(newSource, packages)
 
         case _ =>
           new OptionPane(this, I18N.gui.get("common.messages.error"), I18N.gui.get("tools.libraries.failedToAdd"),
@@ -391,6 +406,10 @@ class LibrariesTab( category:        String
       case ex: IOException =>
         new OptionPane(this, I18N.gui.get("common.messages.error"), I18N.gui("downloadFailed", lib.downloadURL),
                        OptionPane.Options.Ok, OptionPane.Icons.error)
+
+      case PackageDepException(parent, parentVersion, child, childVersion) =>
+        new OptionPane(this, I18N.gui.get("common.messages.error"), I18N.gui("missingDep", child, parent),
+                       OptionPane.Options.Ok, OptionPane.Icons.error)
     }
 
   private def containsLib(info: LibraryInfo, text: String): Boolean =
@@ -443,11 +462,22 @@ class LibrariesTab( category:        String
       setBaseFont(getFont.deriveFont(14.0f).deriveFont(Font.BOLD))
     }
 
+    private val categoryLabel = new JLabel
+
+    private val extensionIcon: Icon = Utils.iconScaled(this, "/images/extension.png", 16, 16)
+    private val packageIcon: Icon = Utils.iconScaled(this, "/images/package.png", 16, 16)
+
     setOpaque(true)
     setBorder(new ZoomableBorder(6, 6, 6, 6))
 
     add(iconLabel)
-    add(new BoxColumn(Seq(nameLabel, descLabel), 6))
+    add(new BoxColumn(Seq(
+      new BoxRow(Seq(
+        nameLabel,
+        categoryLabel
+      ), 6, BoxAlign.Start),
+      new BoxRow(descLabel, BoxAlign.Start)
+    ), 6))
 
     override def getListCellRendererComponent(list: JList[? <: LibraryInfo], value: LibraryInfo, index: Int,
                                               isSelected: Boolean, hasFocus: Boolean): Component = {
@@ -455,6 +485,7 @@ class LibrariesTab( category:        String
       iconLabel.setIcon(statusIcon(value.status, value.codeName))
       nameLabel.setText(value.name)
       descLabel.setText(value.shortDescription)
+      categoryLabel.setIcon(categoryIcon(value.isExtension))
 
       if (isSelected) {
         setBackground(InterfaceColors.dialogBackgroundSelected())
@@ -481,6 +512,14 @@ class LibrariesTab( category:        String
       } else {
         warningIcon
       }
+
+    private def categoryIcon(extension: Boolean): Icon = {
+      if (extension) {
+        extensionIcon
+      } else {
+        packageIcon
+      }
+    }
   }
 
   private class Worker( operation: String, fn: LibraryInfo => Unit

@@ -10,8 +10,10 @@ import scala.collection.mutable.WeakHashMap
 import scala.util.Try
 import org.nlogo.agent.{ World, Agent, OutputObject }
 import org.nlogo.api.{ AppInterface, Dump, PackageManager => APIPM, ExtensionManager => APIEM, FileIO, HubNetInterface,
-                       LibraryManager, LogoException, OutputDestination, PreviewCommands, Workspace => APIWorkspace }
-import org.nlogo.core.{ CompilerException, Model, View, Widget => CoreWidget, WorldDimensions, WorldDimensions3D }
+                       LibraryManager, LogoException, OutputDestination, PackageSpec, PreviewCommands, VersionSpec,
+                       Workspace => APIWorkspace }
+import org.nlogo.core.{ CompilerException, Model, ModuleDep, View, Widget => CoreWidget, WorldDimensions,
+                        WorldDimensions3D }
 import org.nlogo.nvm.{ Activation, Instruction, Command, Context, Job, MutableLong, Procedure, Tracer }
 import org.nlogo.nvm.RuntimePrimitiveException
 import org.nlogo.api.PlotCompilationErrorAction
@@ -177,6 +179,18 @@ abstract class AbstractWorkspaceScala(app: Option[AppInterface], val world: Worl
         } catch {
           case ex: Exception =>
             throw new IllegalStateException(s"$path is not a valid pathname: $ex")
+        }
+      }
+
+      override def getModuleVersion(from: Option[PackageSpec], name: String): Option[VersionSpec] =
+        app.flatMap(_.getModel.modules.get(ModuleDep(from.map(_.toString), name.toLowerCase)).flatMap(VersionSpec.parse))
+
+      override def setModuleVersion(from: Option[PackageSpec], name: String, version: VersionSpec): Unit = {
+        app.foreach { instance =>
+          val model: Model = instance.getModel
+
+          instance.setModel(model.copy(modules =
+            model.modules + ((ModuleDep(from.map(_.toString), name.toLowerCase), version.toString))))
         }
       }
     }

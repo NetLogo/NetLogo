@@ -355,7 +355,8 @@ class StructureParserTests extends AnyFunSuite {
     class TestCompilationEnvironment extends DummyCompilationEnvironment {
       override def resolveModulePath(
         currentFile: Option[String],
-        modulePath: Seq[String]
+        modulePath: Seq[String],
+        save: Boolean
       ): Option[ResolvedModule] = {
 
         val separator = System.getProperty("file.separator")

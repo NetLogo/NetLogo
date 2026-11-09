@@ -16,7 +16,8 @@ import
   agent.{ AbstractExporter, Agent, AgentSet, OutputObject, World },
   api.{ PlotInterface, CommandLogoThunk, Dump, Exceptions, ExtensionManager => APIEM, ExternalResourceManager,
     ExportPlotWarningAction, FileIO, HubNetInterface, HubNetWorkspaceInterface, JobOwner, LibraryManager, LogoException, MersenneTwisterFast, ModelType,
-    PreviewCommands, PackageManager => APIPM, ReporterLogoThunk, SimpleJobOwner, WorldPropertiesInterface },
+    PreviewCommands, PackageManager => APIPM, ReporterLogoThunk, SimpleJobOwner, WorldPropertiesInterface, PackageSpec,
+    VersionSpec },
   core.{ CompilationEnvironment, AgentKind, CompilerException, Femto, File, FileMode, I18N, LiteralParser},
   fileformat.FileFormat,
   nvm.{ Activation, Command, Context, FileManager, ImportHandler,
@@ -174,6 +175,11 @@ with ExtendableWorkspace with ExtensionCompilationEnvironment with APIConformant
             throw new IllegalStateException(s"$path is not a valid pathname: $ex")
         }
       }
+
+      override def getModuleVersion(from: Option[PackageSpec], name: String): Option[VersionSpec] =
+        None
+
+      override def setModuleVersion(from: Option[PackageSpec], name: String, version: VersionSpec): Unit = {}
     }
   }
 
@@ -821,6 +827,11 @@ object AbstractWorkspaceTraits {
             throw new IllegalStateException(s"$path is not a valid pathname: $ex")
         }
       }
+
+      override def getModuleVersion(from: Option[PackageSpec], name: String): Option[VersionSpec] =
+        None
+
+      override def setModuleVersion(from: Option[PackageSpec], name: String, version: VersionSpec): Unit = {}
 
     }
   }

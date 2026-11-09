@@ -20,7 +20,6 @@ package org.nlogo.parse
 
 import scala.collection.immutable.ListMap
 import scala.collection.mutable
-import scala.util.matching.Regex
 import java.util.Locale
 import org.nlogo.core.{ CompilationEnvironment, CompilationOperand, CompilerException, ErrorSource, I18N, Import,
                         ProcedureSyntax, Program, ResolvedModule, StructureDeclarations, StructureResults, Token,
@@ -70,7 +69,6 @@ object StructureParser {
             // Handle imports
             if (newResults.imports.nonEmpty) {
               val currentImport = results.imports.head
-              val separator = System.getProperty("file.separator")
               val newImports: mutable.Set[Import] = mutable.Set()
 
               val fullImportPath = currentImport.pathComponents.mkString(":")
@@ -80,7 +78,9 @@ object StructureParser {
               val confusingImportParts = Seq(Some(fullImportPath), Some(lastImportComponent), importAlias).flatten
 
               val (basePath, suppliedPaths) =
-                compilationEnvironment.resolveModulePath(currentImport.filename, currentImport.pathComponents) match {
+                compilationEnvironment.resolveModulePath(currentImport.filename, currentImport.pathComponents,
+                                                         true) match {
+
                   case Some(ResolvedModule(prefix, _, paths)) =>
                     (prefix, paths)
 
@@ -94,7 +94,7 @@ object StructureParser {
 
               for (currentPath <- suppliedPaths) {
                 val relativePath = currentPath.stripPrefix(basePath)
-                val pathComponentCount = relativePath.split(Regex.quote(separator)).length
+                val pathComponentCount = relativePath.split('/').length
                 val modulePathComponentCount = currentImport.pathComponents.length
                 val isSelectiveImport = currentImport.importedIdentifiers.nonEmpty
 
@@ -109,7 +109,7 @@ object StructureParser {
                       if (isSelectiveImport) {
                         ""
                       } else {
-                        val path = relativePath.replace(separator, ":").toUpperCase(Locale.ROOT).stripSuffix(".NLM")
+                        val path = relativePath.replace("/", ":").toUpperCase(Locale.ROOT).stripSuffix(".NLM")
 
                         if (path.nonEmpty) {
                           val basePrefix = s"$butLastImportComponent:"

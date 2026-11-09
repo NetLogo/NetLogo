@@ -39,7 +39,7 @@ object LibraryManager {
     baseURLOptF.map {
       opt =>
         val baseURL = opt.getOrElse(bundledsConfig.getString("fallback-libraries-location"))
-        URI.create(s"$baseURL/refs/heads/${APIVersion.version}").toURL
+        URI.create(s"$baseURL/refs/heads/pacman").toURL
     }
 
   }
@@ -115,6 +115,9 @@ class LibraryManager(userPkgPath: Path, userExtPath: Path, unloadExtensions: () 
 
   def getPackageInfos = libraries.filter(!_.isExtension)
 
+  def getLibraryInfos: Seq[LibraryInfo] =
+    libraries.sortBy(_.name)
+
   override def lookupPackage(name: String, version: String): Option[LibraryInfo] =
     libraries.find(ext => ext.codeName == name)
 
@@ -122,6 +125,7 @@ class LibraryManager(userPkgPath: Path, userExtPath: Path, unloadExtensions: () 
     if (LibraryInfoDownloader.enabled) {
       pkgInstaller.install(ext)
       updateInstalledVersion("packages", ext)
+      installDeps(ext)
     }
   }
 
@@ -190,6 +194,15 @@ class LibraryManager(userPkgPath: Path, userExtPath: Path, unloadExtensions: () 
       val shortDesc   = config.getString("shortDescription")
       val longDesc    = config.getString("longDescription")
       val version     = config.getString("version")
+
+      val dependencies: Seq[String] = {
+        if (category == "packages") {
+          config.getStringList("dependencies").asScala.toSeq
+        } else {
+          Seq()
+        }
+      }
+
       val homepage    = URI.create(config.getString("homepage")).toURL
 
       val installedVersionPath = s"""$category."$codeName".installedVersion"""
@@ -197,7 +210,7 @@ class LibraryManager(userPkgPath: Path, userExtPath: Path, unloadExtensions: () 
       val bundled              = useBundled && bundledsConfig.hasPath(installedVersionPath) && installedVersion.isEmpty
       val minNetLogoVersion    = getStringOption(config, "minNetLogoVersion")
 
-      LibraryInfo( name, codeName, shortDesc, longDesc, version, homepage, bundled, installedVersion
+      LibraryInfo( name, codeName, shortDesc, longDesc, version, dependencies, homepage, bundled, installedVersion
                  , minNetLogoVersion, branchURL, category == "extensions")
     }
 
@@ -207,7 +220,7 @@ class LibraryManager(userPkgPath: Path, userExtPath: Path, unloadExtensions: () 
 
     LibraryManager.branchURLFuture.map {
       branchURL => {
-        libraries = categories.flatMap(c => processCategory(c, branchURL))
+        libraries = categories.flatMap(c => processCategory(c, branchURL)).sortBy(_.name)
         infoChangeCallbacks.foreach(_.apply(libraries))
       }
 
@@ -234,6 +247,24 @@ class LibraryManager(userPkgPath: Path, userExtPath: Path, unloadExtensions: () 
 
     updateLists(new File(allLibsPath), false)
 
+  }
+
+  private def installDeps(info: LibraryInfo): Unit = {
+    PackageUtils.createSpec(info).foreach { spec =>
+      val installed: Seq[PackageSpec] = Option(userPkgPath.toFile.listFiles).getOrElse(Array[File]())
+                                          .flatMap(PackageUtils.createSpec).toSeq
+
+      val available: Seq[PackageSpec] = libraries.filter(!_.isExtension).flatMap(PackageUtils.createSpec)
+
+      PackageUtils.findDeps(spec, installed, available).foreach { pkg =>
+        libraries.find { info =>
+          info.codeName.toLowerCase == pkg.name && VersionSpec.parse(info.version).contains(pkg.version)
+        }.foreach { info =>
+          pkgInstaller.install(info)
+          updateInstalledVersion("packages", info)
+        }
+      }
+    }
   }
 
 }
