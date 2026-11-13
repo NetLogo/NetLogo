@@ -25,7 +25,7 @@ lazy val commonSettings = Seq(
   testTempDirectory     := (baseDirectory.value.getParentFile / "tmp").getAbsoluteFile,
   ivyLoggingLevel       := UpdateLogging.Quiet,
   Compile / console / scalacOptions := scalacOptions.value.filterNot(_ == "-Xlint")
-)
+) ++ I18N.settings
 
 // These settings are common to all builds involving scala
 // Any scala-specific settings should change here (and thus for all projects at once)

@@ -279,11 +279,12 @@ object AbstractWorkspaceTraits {
       exportPlotWarningAction() match {
         case Warn => {
           setExportPlotWarningAction(ExportPlotWarningAction.Ignore)
-          throw new Exception(I18N.shared.get("tools.behaviorSpace.runoptions.updateplotsandmonitors.error"))
+          throw new Exception(
+            loc"Enable plot updating to use export-plot, export-all-plots, export-world, or export-interface.")
         }
         case Output => {
           setExportPlotWarningAction(ExportPlotWarningAction.Ignore)
-          println(I18N.shared.get("tools.behaviorSpace.runoptions.updateplotsandmonitors.error"))
+          println(loc"Enable plot updating to use export-plot, export-all-plots, export-world, or export-interface.")
         }
         case Ignore =>
       }

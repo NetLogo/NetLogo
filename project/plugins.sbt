@@ -38,6 +38,7 @@ libraryDependencies ++= Seq(
 , "com.thesamet.scalapb"              %% "compilerplugin"        % "0.11.17"
 , "com.softwaremill.sttp.client4"     %% "upickle"               % "4.0.9"
 , "com.dynatrace.hash4j"              %  "hash4j"                % "0.28.0"
+, "org.scalameta"                     %% "scalameta"             % "4.17.4"
 )
 
 {

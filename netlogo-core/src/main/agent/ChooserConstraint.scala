@@ -2,7 +2,7 @@
 
 package org.nlogo.agent
 
-import org.nlogo.core.{ I18N, LogoList }
+import org.nlogo.core.{ I18N, LogoList }, I18N.LocaleContext
 import org.nlogo.api.{ Dump, Equality, ValueConstraint }
 
 class ChooserConstraint(private var _acceptedValues: LogoList = LogoList(),
@@ -29,9 +29,7 @@ extends ValueConstraint
   @throws(classOf[ValueConstraint.Violation])
   def assertConstraint(value: AnyRef): Unit = {
     if(!acceptedValues.contains(value))
-      throw new ValueConstraint.Violation(
-        I18N.errors.getN("org.nlogo.agent.ChooserConstraint.invalidValue", Dump.logoObject(acceptedValues, true, false))
-        )
+      throw new ValueConstraint.Violation(loc"Value must be one of: ${Dump.logoObject(acceptedValues, true, false)}")
   }
 
   def coerceValue(value: AnyRef): AnyRef =

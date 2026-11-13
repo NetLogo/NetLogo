@@ -8,7 +8,7 @@ import java.util.Locale
 import javax.swing.tree.DefaultMutableTreeNode
 
 import org.nlogo.api.{ DummyLibraryManager, FileIO, LibraryManager, Version }
-import org.nlogo.core.I18N
+import org.nlogo.core.I18N.LocaleContext
 
 import scala.annotation.tailrec
 import scala.math.Ordering
@@ -111,8 +111,8 @@ object ModelsLibrary {
         else new File(modelsRoot, "3D").getCanonicalFile
 
       def getExtensionExamples(): Seq[Node] = {
-        val unverified = I18N.shared.get("modelsLibrary.unverified")
-        val extensionSamples = I18N.shared.get("modelsLibrary.extensionSamples")
+        val unverified = loc"(unverified)"
+        val extensionSamples = loc"Extension Samples"
 
         val extensionsRoot = FileIO.perUserExtensionDir("extensions").toFile
         val extensionsNode = scanDirectory(extensionsRoot.toPath, exclusive)

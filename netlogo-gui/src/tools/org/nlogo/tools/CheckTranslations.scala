@@ -17,20 +17,17 @@ object CheckTranslations {
     }
 
     val englishGUI: Set[String] = keySet(I18N.gui, Locale.US)
-    val englishShared: Set[String] = keySet(I18N.shared, Locale.US)
     val englishErrors: Set[String] = keySet(I18N.errors, Locale.US)
 
     args.foreach { lang =>
       val locale = Locale.of(lang)
 
       val missingGUI: Set[String] = englishGUI &~ keySet(I18N.gui, locale)
-      val missingShared: Set[String] = englishShared &~ keySet(I18N.shared, locale)
       val missingErrors: Set[String] = englishErrors &~ keySet(I18N.errors, locale)
 
-      if (missingGUI.nonEmpty || missingShared.nonEmpty || missingErrors.nonEmpty) {
+      if (missingGUI.nonEmpty || missingErrors.nonEmpty) {
         println(s"Language $lang is missing translations for the following keys:")
         printKeys(missingGUI, "(GUI) ")
-        printKeys(missingShared, "(Shared) ")
         printKeys(missingErrors, "(Errors) ")
       }
     }

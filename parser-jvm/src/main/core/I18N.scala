@@ -113,7 +113,6 @@ object I18N {
   }
 
   lazy val errors = new BundleKind("i18n.Errors")
-  lazy val shared = new BundleKind("i18n.Shared_Strings")
   lazy val gui = new BundleKind("i18n.GUI_Strings")
 
   // for easy use from Java
@@ -124,10 +123,36 @@ object I18N {
   // used by tests to enforce English localization of output/error messages (Isaac B 12/28/25)
   def setAllLanguages(locale: Locale, includeGui: Boolean = true): Unit = {
     errors.setLanguage(locale)
-    shared.setLanguage(locale)
 
     if (includeGui)
       gui.setLanguage(locale)
+  }
+
+  private val defaultLocale: Locale = {
+    // if the users locale from the preferences is available, use it.
+    localeFromPreferences.getOrElse {
+      // if not, see if the default (from the OS or JVM) is available. if so, use it.
+      // otherwise, fall back.
+      localeIfAvailable(Locale.getDefault).getOrElse(Locale.US)
+    }
+  }
+
+  private var strings = Map[String, Map[Seq[String], Seq[String]]]()
+
+  private def getString(lang: String, input: Seq[String]): Seq[String] = {
+    if (!strings.contains(lang)) {
+      strings += ((lang, Resource.lines(s"/i18n/$lang.po").sliding(2).collect {
+        case Seq(s"msgid \"$key\"", s"msgstr \"$value\"") =>
+          (key.split("\\{\\}").toSeq, value.split("\\{\\}").toSeq)
+      }.toMap))
+    }
+
+    strings.getOrElse(lang, strings("en")).getOrElse(input, input)
+  }
+
+  implicit class LocaleContext(sc: StringContext) extends AnyVal {
+    def loc(args: Any*): String =
+      getString(defaultLocale.getLanguage, sc.parts).zip(args :+ "").map(_ + _.toString).mkString
   }
 
 }

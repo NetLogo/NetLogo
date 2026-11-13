@@ -23,7 +23,7 @@ import javax.swing.event.{ AncestorEvent, AncestorListener, DocumentEvent, Docum
   HyperlinkEvent, HyperlinkListener, TreeExpansionEvent, TreeExpansionListener,
   TreeSelectionEvent, TreeSelectionListener }
 
-import org.nlogo.core.I18N
+import org.nlogo.core.I18N, I18N.LocaleContext
 import org.nlogo.api.{ FileIO, LibraryManager }
 import org.nlogo.awt.{ Positioning, UserCancelException }
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, BrowserLauncher, Button, ButtonPanel, CollapsibleArrow,
@@ -100,7 +100,7 @@ object ModelsLibraryDialog {
 
     private def translateNameForDisplay(name: String): String =
       if (name.equalsIgnoreCase("UNVERIFIED"))
-        I18N.shared.get("modelsLibrary.unverified")
+        loc"(unverified)"
       else
         removeSuffix(name)
 

@@ -12,7 +12,7 @@ import javax.swing.text.DefaultCaret
 import org.nlogo.analytics.Analytics
 import org.nlogo.api.{ Color, Exceptions, ExportPlotWarningAction, LabProtocol }
 import org.nlogo.awt.Fonts
-import org.nlogo.core.I18N
+import org.nlogo.core.I18N, I18N.LocaleContext
 import org.nlogo.editor.Colorizer
 import org.nlogo.nvm.LabInterface
 import org.nlogo.plot.DummyPlotManager
@@ -215,9 +215,10 @@ class ProgressDialog(app: BehaviorSpaceApp, workspace: SemiHeadlessWorkspace, la
       workspace.setExportPlotWarningAction(ExportPlotWarningAction.Ignore)
 
       EventQueue.invokeLater(() => {
-        new OptionPane(app.getFrame, I18N.gui("updatingPlotsWarningTitle"),
-                       I18N.shared.get("tools.behaviorSpace.runoptions.updateplotsandmonitors.error"),
-                       OptionPane.Options.Ok, OptionPane.Icons.warning)
+        new OptionPane(
+          app.getFrame, I18N.gui("updatingPlotsWarningTitle"),
+          loc"Enable plot updating to use export-plot, export-all-plots, export-world, or export-interface.",
+          OptionPane.Options.Ok, OptionPane.Icons.warning)
       })
     }
   }
