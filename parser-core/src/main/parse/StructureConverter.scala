@@ -23,7 +23,7 @@ object StructureConverter {
         val tokenFilename = i.token.sourceLocation.filename
         val filename = if (tokenFilename.isEmpty()) None else Some(tokenFilename)
 
-        Import(filename, i.pathComponents, i.upCount, i.pathAlias, i.importedIdentifiers, i.token)
+        Import(filename, i.pathComponents, i.pathPrefix, i.pathAlias, i.importedIdentifiers, i.token)
     }
     val exs = declarations.collect {
       case ex: ExportDecl =>

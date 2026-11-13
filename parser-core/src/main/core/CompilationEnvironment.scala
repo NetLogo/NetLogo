@@ -9,7 +9,7 @@ trait CompilationEnvironment {
   def resolvePath(path: String): String
   def resolveModulePath(
     currentFile:Option[String],
-    upCount: Integer,
+    importPathPrefix: Option[ImportPathPrefix],
     pathComponents: Seq[String],
     locatable: Option[SourceLocatable]
   ): Option[ResolvedModule]
@@ -22,7 +22,7 @@ class DummyCompilationEnvironment extends CompilationEnvironment {
   def resolvePath(filename: String): String = filename
   def resolveModulePath(
     currentFile: Option[String],
-    upCount: Integer,
+    importPathPrefix: Option[ImportPathPrefix],
     modulePath: Seq[String],
     locatable: Option[SourceLocatable]
   ): Option[ResolvedModule] = None

@@ -3,8 +3,8 @@
 package org.nlogo.parse
 
 import org.nlogo.core.{ CompilationOperand, DummyCompilationEnvironment, DummyExtensionManager,
-                        DummyLibraryManager, CompilerException, Femto, ResolvedModule,
-                        SourceLocatable, StructureResults }
+                        DummyLibraryManager, CompilerException, Femto, ImportPathPrefix,
+                        ResolvedModule, SourceLocatable, StructureResults }
 
 import org.nlogo._
 import org.scalatest.funsuite.AnyFunSuite
@@ -356,10 +356,14 @@ class StructureParserTests extends AnyFunSuite {
     class TestCompilationEnvironment extends DummyCompilationEnvironment {
       override def resolveModulePath(
         currentFile: Option[String],
-        upCount: Integer,
+        importPathPrefix: Option[ImportPathPrefix],
         modulePath: Seq[String],
         locatable: Option[SourceLocatable]
       ): Option[ResolvedModule] = {
+        val upCount = importPathPrefix match {
+          case Some(ImportPathPrefix.Up(n)) => n
+          case _ => 0
+        }
 
         if (upCount > 0) {
           None

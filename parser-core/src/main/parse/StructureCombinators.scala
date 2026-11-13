@@ -26,7 +26,7 @@ package org.nlogo.parse
 // and discard input).
 
 import
-  org.nlogo.core.{ I18N, Token, TokenType, StructureDeclarations },
+  org.nlogo.core.{ I18N, Token, TokenType, StructureDeclarations, ImportPathPrefix },
   StructureDeclarations._
 
 object StructureCombinators {
@@ -116,10 +116,14 @@ extends scala.util.parsing.combinator.Parsers {
         Import(components.map(_.text.toUpperCase), upCount, None, importList, keyword)
     }
 
-  def importPath: Parser[(Integer, Seq[Token])] =
-    rep(exactIdentifier("UP") <~ colon) ~ rep1sep(importPathComponent, colon) ^^ {
-      case ups ~ components => (ups.length, components)
+  def importPath: Parser[(Option[ImportPathPrefix], Seq[Token])] =
+    opt(importPathPrefix <~ colon) ~ rep1sep(importPathComponent, colon) ^^ {
+      case prefix ~ components => (prefix, components)
     }
+
+  def importPathPrefix: Parser[ImportPathPrefix] =
+    atKeyword("@PACKAGE") ^^^ ImportPathPrefix.PackageRoot |
+    rep(exactIdentifier("UP")) ^^ (x => ImportPathPrefix.Up(x.length))
 
   def importPathComponent: Parser[Token] =
     exactIdentifier(".") ~>! err(I18N.errors.getN("compiler.StructureCombinators.importPathContains", ".")) |
@@ -285,6 +289,11 @@ extends scala.util.parsing.combinator.Parsers {
   def keyword(name: String): Parser[Token] =
     acceptMatch(name, {
       case token @ Token(_, TokenType.Keyword, `name`) =>
+        token })
+
+  def atKeyword(name: String): Parser[Token] =
+    acceptMatch(name, {
+      case token @ Token(_, TokenType.AtKeyword, `name`) =>
         token })
 
   // kludge: special case because of naming conflict with BREED turtle variable - jrn 8/04/05

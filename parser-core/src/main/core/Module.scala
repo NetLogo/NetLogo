@@ -2,10 +2,14 @@
 
 package org.nlogo.core
 
+enum ImportPathPrefix:
+  case Up(count: Int)
+  case PackageRoot
+
 case class Import(
   filename: Option[String],
   pathComponents: Seq[String],
-  upCount: Integer,
+  pathPrefix: Option[ImportPathPrefix],
   pathAlias: Option[String],
   importedIdentifiers: Map[String, String],
   token: Token

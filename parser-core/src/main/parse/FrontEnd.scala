@@ -3,7 +3,8 @@
 package org.nlogo.parse
 
 import org.nlogo.core.{ AstTransformer, CompilationOperand, CompilerException, Dialect, ExtensionManager, Fail, Femto,
-                        FrontEndInterface, StructureDeclarations, Token, TokenizerInterface, TokenType }
+                        FrontEndInterface, ImportPathPrefix, StructureDeclarations, Token, TokenizerInterface,
+                        TokenType }
 import java.text.CharacterIterator
 
 object FrontEnd extends FrontEnd {
@@ -101,7 +102,7 @@ trait FrontEndMain extends NetLogoParser {
   }
 
   @throws(classOf[CompilerException])
-  def findImports(source: String): Seq[(Integer, Seq[String])] = {
+  def findImports(source: String): Seq[(Option[ImportPathPrefix], Seq[String])] = {
     if (FrontEndInterface.hasImport(source)) {
       val tokens = tokenizer.tokenizeString(source)
       StructureParser.findImports(tokens)

@@ -23,8 +23,8 @@ import scala.collection.mutable
 import scala.util.matching.Regex
 import java.util.Locale
 import org.nlogo.core.{ CompilationEnvironment, CompilationOperand, CompilerException, ErrorSource, I18N, Import,
-                        ProcedureSyntax, Program, ResolvedModule, StructureDeclarations, StructureResults, Token,
-                        TokenizerInterface, TokenType }
+                        ImportPathPrefix, ProcedureSyntax, Program, ResolvedModule, StructureDeclarations,
+                        StructureResults, Token, TokenizerInterface, TokenType }
 import org.nlogo.core.Fail._
 import org.nlogo.core.FrontEndInterface.{ ProceduresMap, ProcedureTokensMap }
 import org.nlogo.core.LibraryStatus.CanInstall
@@ -80,7 +80,7 @@ object StructureParser {
               val confusingImportParts = Seq(Some(fullImportPath), Some(lastImportComponent), importAlias).flatten
 
               val (basePath, suppliedPaths) =
-                compilationEnvironment.resolveModulePath(currentImport.filename, currentImport.upCount, currentImport.pathComponents, None) match {
+                compilationEnvironment.resolveModulePath(currentImport.filename, currentImport.pathPrefix, currentImport.pathComponents, None) match {
                   case Some(ResolvedModule(prefix, _, paths)) =>
                     (prefix, paths)
 
@@ -422,7 +422,7 @@ object StructureParser {
   }
 
   @throws(classOf[CompilerException])
-  def findImports(tokens: Iterator[Token]): Seq[(Integer, Seq[String])] = {
+  def findImports(tokens: Iterator[Token]): Seq[(Option[ImportPathPrefix], Seq[String])] = {
     val reader = new SeqReader[Token](tokens.filter(_.tpe != TokenType.Comment).map(Namer0).to(LazyList), _.start)
     val combinators = new StructureCombinators
 
@@ -430,7 +430,8 @@ object StructureParser {
       case combinators.Success(declarations, _) => {
         declarations.flatMap(x =>
           x match {
-            case StructureDeclarations.Import(pathComponents, upCount, _, _, _) => Seq((upCount, pathComponents))
+            case StructureDeclarations.Import(components, prefix, _, _, _) =>
+              Seq((prefix, components))
             case _ => Seq()
           })
       }
