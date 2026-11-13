@@ -344,6 +344,8 @@ object Preferences {
     }
   }
 
+  object ConfirmStartup extends BooleanPreference("confirmStartup", None, true)
+
   object SendAnalytics extends BooleanPreference("sendAnalytics", None, false) {
     override def onSelect(selected: Boolean): Unit = {
       Analytics.setPreference(selected)

@@ -47,6 +47,13 @@ class Evaluator(workspace: AbstractWorkspace) {
     job.stopping
   }
 
+  def runCompiledCommandsNoWait(owner: JobOwner, procedure: Procedure): Unit = {
+    val job = workspace.jobManager.makeConcurrentJob(owner, workspace.world.agentSetOfKind(owner.kind), workspace,
+                                                     procedure)
+
+    workspace.jobManager.addJob(job, false)
+  }
+
   def runCompiledReporter(owner: JobOwner, procedure: Procedure) =
     workspace.jobManager.addReporterJobAndWait(owner,
       workspace.world.agentSetOfKind(owner.kind), workspace, procedure)

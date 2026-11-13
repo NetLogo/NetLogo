@@ -61,6 +61,7 @@ class DummyWorkspace extends Workspace {
   override def evaluateReporter(owner: org.nlogo.api.JobOwner,source: String): AnyRef = unsupported
   override def compileReporter(source: String) = unsupported
   override def runCompiledCommands(owner: JobOwner, procedure: Procedure) = unsupported
+  override def runCompiledCommandsNoWait(owner: JobOwner, procedure: Procedure) = unsupported
   override def runCompiledReporter(owner: JobOwner, procedure: Procedure) = unsupported
   override def patchSize = unsupported
   override def changeTopology(wrapX: Boolean, wrapY: Boolean) = unsupported

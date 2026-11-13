@@ -426,6 +426,8 @@ object AbstractWorkspaceTraits {
       evaluator.compileReporter(source)
     def runCompiledCommands(owner: JobOwner, procedure: Procedure): Boolean =
       evaluator.runCompiledCommands(owner, procedure)
+    def runCompiledCommandsNoWait(owner: JobOwner, procedure: Procedure): Unit =
+      evaluator.runCompiledCommandsNoWait(owner, procedure)
     def runCompiledReporter(owner: JobOwner, procedure: Procedure): AnyRef =
       evaluator.runCompiledReporter(owner, procedure)
     def readFromString(string: String): AnyRef =

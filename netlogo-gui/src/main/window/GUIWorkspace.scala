@@ -20,7 +20,7 @@ import org.nlogo.api.{ Agent => ApiAgent, AgentFollowingPerspective, AppInterfac
                        ModelType, PreviewCommands, RendererInterface, ReporterRunnable, SimpleJobOwner,
                        TrailDrawerInterface, UpdateManagerInterface, WorkspaceContext, WorldPropertiesInterface }
 import org.nlogo.awt.{ EventQueue, Hierarchy, UserCancelException }
-import org.nlogo.core.{ AgentKind, CompilerException, File, I18N, Model, ModelSettings,
+import org.nlogo.core.{ AgentKind, CompilerException, File, I18N, Model, ModelSettings, NetLogoPreferences,
                         Shape, UpdateMode, WorldDimensions, WorldDimensions3D }
 import org.nlogo.nvm.{ Context, HaltException, Instruction, PrimaryWorkspace, Procedure }
 import org.nlogo.shape.ShapeConverter
@@ -690,8 +690,13 @@ abstract class GUIWorkspace(app: Option[AppInterface], world: World, kioskLevel:
       open3DView()
 
     try {
-      evaluateCommands(new SimpleJobOwner("startup", world.mainRNG, AgentKind.Observer),
-                       "without-interruption [ startup ]", false)
+      val procedure: Procedure = compileCommands("without-interruption [ startup ]")
+
+      if (!NetLogoPreferences.getBoolean("confirmStartup", true) ||
+          new OptionPane(frame, I18N.gui.get("common.messages.warning"), I18N.gui.get("warning.confirmStartup"),
+                         OptionPane.Options.YesNo, OptionPane.Icons.warning).getSelectedIndex == 0) {
+        runCompiledCommandsNoWait(new SimpleJobOwner("startup", world.mainRNG, AgentKind.Observer), procedure)
+      }
     } catch {
       case e: CompilerException =>
         Exceptions.ignore(e)

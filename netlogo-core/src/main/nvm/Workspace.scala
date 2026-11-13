@@ -50,6 +50,7 @@ trait Workspace extends ApiWorkspace with JobManagerOwner {
 
   /* evaluation */
   def runCompiledCommands(owner: JobOwner, procedure: Procedure): Boolean
+  def runCompiledCommandsNoWait(owner: JobOwner, procedure: Procedure): Unit
   def runCompiledReporter(owner: JobOwner, procedure: Procedure): AnyRef
 
   @throws(classOf[CompilerException])
