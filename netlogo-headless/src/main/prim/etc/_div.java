@@ -2,7 +2,7 @@
 
 package org.nlogo.prim.etc;
 
-import org.nlogo.core.I18N;
+import org.nlogo.core.LocaleContextJ;
 import org.nlogo.core.Pure;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.RuntimePrimitiveException;
@@ -18,7 +18,7 @@ public final class _div extends Reporter implements Pure {
 
   public double report_1(Context context, double arg0, double arg1) {
     if (arg1 == 0) {
-      throw new RuntimePrimitiveException(context, this, I18N.errorsJ().get("org.nlogo.prim.etc.$common.divByZero"));
+      throw new RuntimePrimitiveException(context, this, LocaleContextJ.loc("Division by zero."));
     }
     return arg0 / arg1;
   }

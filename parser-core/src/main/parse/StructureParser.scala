@@ -22,9 +22,9 @@ import scala.collection.immutable.ListMap
 import scala.collection.mutable
 import scala.util.matching.Regex
 import java.util.Locale
-import org.nlogo.core.{ CompilationEnvironment, CompilationOperand, CompilerException, ErrorSource, I18N, Import,
-                        ProcedureSyntax, Program, ResolvedModule, StructureDeclarations, StructureResults, Token,
-                        TokenizerInterface, TokenType }
+import org.nlogo.core.{ CompilationEnvironment, CompilationOperand, CompilerException, ErrorSource, Import,
+                        LocaleContext, ProcedureSyntax, Program, ResolvedModule, StructureDeclarations,
+                        StructureResults, Token, TokenizerInterface, TokenType }
 import org.nlogo.core.Fail._
 import org.nlogo.core.FrontEndInterface.{ ProceduresMap, ProcedureTokensMap }
 import org.nlogo.core.LibraryStatus.CanInstall
@@ -60,7 +60,7 @@ object StructureParser {
             case ((token @ Some(_), previousNames), _) => (token, previousNames)
           }
 
-          maybeDuplicateImport.foreach(x => exception(I18N.errors.get("compiler.StructureParser.importMultipleImports"), x.token))
+          maybeDuplicateImport.foreach(x => exception(loc"Attempted to import a module multiple times", x.token))
 
           val moduleCache: mutable.Map[String, (ProceduresMap, ProcedureTokensMap)] = mutable.Map()
 
@@ -89,7 +89,7 @@ object StructureParser {
                 }
 
               if (suppliedPaths.isEmpty) {
-                exception(I18N.errors.getN("compiler.StructureParser.importNotFound", currentImport.pathComponents.mkString(":")), currentImport.token)
+                exception(loc"Could not find ${currentImport.pathComponents.mkString(":")}", currentImport.token)
               }
 
               for (currentPath <- suppliedPaths) {
@@ -99,7 +99,7 @@ object StructureParser {
                 val isSelectiveImport = currentImport.importedIdentifiers.nonEmpty
 
                 if (isSelectiveImport && modulePathComponentCount < pathComponentCount) {
-                  exception(I18N.errors.getN("compiler.StructureParser.importSelectiveFromNonModule"), currentImport.token)
+                  exception(loc"Selective import only works when importing directly from a module", currentImport.token)
                 }
 
                 val prefix =
@@ -132,7 +132,7 @@ object StructureParser {
                           includedSources = newResults.includedSources :+ currentPath))
                     }
                     case None =>
-                      exception(I18N.errors.getN("compiler.StructureParser.importNotFound", currentPath), currentImport.token)
+                      exception(loc"Could not find $currentPath", currentImport.token)
                   }
 
                   newImports ++= newResults.imports.toSet -- results.imports.toSet
@@ -148,7 +148,7 @@ object StructureParser {
                     }
 
                   if ((importedNames -- exportedNames).nonEmpty) {
-                    exception(I18N.errors.getN("compiler.StructureParser.importSelectiveNotExported"), currentImport.token)
+                    exception(loc"Attempted to import a non-exported identifier", currentImport.token)
                   }
 
                   def extractExported[V](
@@ -218,7 +218,10 @@ object StructureParser {
                 val undeclaredExtensions = allExtensions -- modelExtensions
 
                 if (undeclaredExtensions.nonEmpty) {
-                  exception(I18N.errors.getN("compiler.StructureParser.undeclaredExtensions", undeclaredExtensions.mkString(", ")), 0, 0, "")
+                  val message = loc"""|The following extensions are referenced by imported modules and must be declared
+                                      |in the model code: ${undeclaredExtensions.mkString(", ")}"""
+
+                  exception(message, 0, 0, "")
                 }
               }
             }
@@ -233,7 +236,7 @@ object StructureParser {
                     newResults.copy(includes = newResults.includes.tail,
                       includedSources = newResults.includedSources :+ suppliedPath))
                 case None =>
-                  exception(I18N.errors.getN("compiler.StructureParser.includeNotFound", suppliedPath), newResults.includes.head)
+                  exception(loc"Could not find $suppliedPath", newResults.includes.head)
               }
             }
 
@@ -266,8 +269,7 @@ object StructureParser {
 
     aliases.keys.find(x => oldProcedureKeys.contains(x)) match {
       case Some(x) => {
-        val message = I18N.errors.getN("compiler.StructureParser.importConflict", "procedure", x._1)
-        exception(message, oldProcedures(x).nameToken)
+        exception(loc"There is already an imported procedure called ${x._1}", oldProcedures(x).nameToken)
       }
       case None => ()
     }

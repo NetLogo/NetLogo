@@ -1,10 +1,10 @@
-// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
+/// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.prim
 
 import org.nlogo.agent.{ Patch, Turtle }
 import org.nlogo.api.{ Dump, TypeNames }
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.nvm.{ Context, Reporter }
 import org.nlogo.nvm.RuntimePrimitiveException
 
@@ -29,10 +29,10 @@ class _nsum(vn: Int) extends Reporter {
         case d: java.lang.Double =>
           sum += d.doubleValue
         case x =>
-          throw new RuntimePrimitiveException(
-            context, this, I18N.errors.getN(
-              "org.nlogo.prim.$common.noSumOfListWithNonNumbers",
-              Dump.logoObject(x).toString, TypeNames.name(x)))
+          val message = loc"""|Can't find the sum of a list that contains non-numbers: ${Dump.logoObject(x)} is a
+                              |${TypeNames.name(x)}."""
+
+          throw new RuntimePrimitiveException(context, this, message)
       }
     validDouble(sum, context)
   }

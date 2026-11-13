@@ -3,7 +3,7 @@
 package org.nlogo.prim
 
 import org.nlogo.agent.AgentSet
-import org.nlogo.core.{ I18N, LogoList, Nobody, Syntax }
+import org.nlogo.core.{ LocaleContext, LogoList, Nobody, Syntax }
 import org.nlogo.nvm.{ ArgumentTypeException, Context, Reporter }
 import org.nlogo.nvm.RuntimePrimitiveException
 
@@ -23,9 +23,7 @@ class _oneof extends Reporter {
   def report_2(context: Context, list: LogoList): AnyRef = {
     val size = list.size
     if (size == 0)
-      throw new RuntimePrimitiveException(
-        context, this,
-        I18N.errors.getN("org.nlogo.prim.etc.$common.emptyListInput", displayName))
+      throw new RuntimePrimitiveException(context, this, loc"$displayName got an empty list as input.")
     list.get(context.job.random.nextInt(size))
   }
 
@@ -40,9 +38,7 @@ class _oneof extends Reporter {
       case list: LogoList =>
         val size = list.size
         if (size == 0)
-          throw new RuntimePrimitiveException(
-            context, this,
-            I18N.errors.getN("org.nlogo.prim.etc.$common.emptyListInput", displayName))
+          throw new RuntimePrimitiveException(context, this, loc"$displayName got an empty list as input.")
         list.get(context.job.random.nextInt(size))
       case _ =>
         throw new ArgumentTypeException(

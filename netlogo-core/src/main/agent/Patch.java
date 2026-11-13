@@ -7,7 +7,7 @@ import java.util.Arrays;
 
 import org.nlogo.core.AgentKind;
 import org.nlogo.core.AgentKindJ;
-import org.nlogo.core.I18N;
+import org.nlogo.core.LocaleContextJ;
 import org.nlogo.core.LogoList;
 import org.nlogo.core.Program;
 import org.nlogo.api.AgentException;
@@ -138,36 +138,35 @@ public class Patch
   @Override
   public Object getTurtleVariable(int vn)
       throws AgentException {
-    throw new AgentException
-        (I18N.errorsJ().get("org.nlogo.agent.Patch.cantAccessTurtleWithoutSpecifyingTurtle"));
+    throw new AgentException(
+      LocaleContextJ.loc("A patch can't access a turtle variable without specifying which turtle."));
   }
 
 
   @Override
   public Object getLinkVariable(int vn)
       throws AgentException {
-    throw new AgentException
-        (I18N.errorsJ().get("org.nlogo.agent.Patch.cantAccessLinkVarWithoutSpecifyingLink"));
+    throw new AgentException(LocaleContextJ.loc("A patch can't access a link variable without specifying which link."));
   }
 
   @Override
   public Object getTurtleOrLinkVariable(String varName)
       throws AgentException {
-    throw new AgentException
-        (I18N.errorsJ().get("org.nlogo.agent.Patch.cantAccessTurtleOrLinkWithoutSpecifyingAgent"));
+    throw new AgentException(
+      LocaleContextJ.loc("A patch can't access a turtle or link variable without specifying which agent."));
   }
 
   @Override
   public Object getLinkBreedVariable(String name)
       throws AgentException {
-    throw new AgentException
-        (I18N.errorsJ().get("org.nlogo.agent.Patch.cantAccessLinkVarWithoutSpecifyingLink"));
+    throw new AgentException(LocaleContextJ.loc("A patch can't access a link variable without specifying which link."));
   }
 
   @Override
   public Object getBreedVariable(String name)
       throws AgentException {
-    throw new AgentException(I18N.errorsJ().get("org.nlogo.agent.Patch.cantAccessTurtleWithoutSpecifyingTurtle"));
+    throw new AgentException(
+      LocaleContextJ.loc("A patch can't access a turtle variable without specifying which turtle."));
   }
 
   @Override
@@ -182,47 +181,47 @@ public class Patch
   @Override
   public void setTurtleVariable(int vn, Object value)
       throws AgentException {
-    throw new AgentException(I18N.errorsJ().get("org.nlogo.agent.Patch.cantSetTurtleWithoutSpecifyingTurtle"));
+    throw new AgentException(
+      LocaleContextJ.loc("A patch can't set a turtle variable without specifying which turtle."));
   }
 
   @Override
   public void setTurtleVariable(int vn, double value)
       throws AgentException {
-    throw new AgentException(I18N.errorsJ().get("org.nlogo.agent.Patch.cantSetTurtleWithoutSpecifyingTurtle"));
+    throw new AgentException(
+      LocaleContextJ.loc("A patch can't set a turtle variable without specifying which turtle."));
   }
 
   @Override
   public void setBreedVariable(String name, Object value)
       throws AgentException {
-    throw new AgentException(I18N.errorsJ().get("org.nlogo.agent.Patch.cantSetTurtleWithoutSpecifyingTurtle"));
+    throw new AgentException(
+      LocaleContextJ.loc("A patch can't set a turtle variable without specifying which turtle."));
   }
 
   @Override
   public void setLinkVariable(int vn, Object value)
       throws AgentException {
-    throw new AgentException
-        (I18N.errorsJ().get("org.nlogo.agent.Patch.cantAccessLinkVarWithoutSpecifyingLink"));
+    throw new AgentException(LocaleContextJ.loc("A patch can't access a link variable without specifying which link."));
   }
 
   @Override
   public void setLinkVariable(int vn, double value)
       throws AgentException {
-    throw new AgentException
-        (I18N.errorsJ().get("org.nlogo.agent.Patch.cantAccessLinkVarWithoutSpecifyingLink"));
+    throw new AgentException(LocaleContextJ.loc("A patch can't access a link variable without specifying which link."));
   }
 
   @Override
   public void setTurtleOrLinkVariable(String varName, Object value)
       throws AgentException {
-    throw new AgentException
-        (I18N.errorsJ().get("org.nlogo.agent.Patch.cantAccessTurtleOrLinkWithoutSpecifyingAgent"));
+    throw new AgentException(
+      LocaleContextJ.loc("A patch can't access a turtle or link variable without specifying which agent."));
   }
 
   @Override
   public void setLinkBreedVariable(String name, Object value)
       throws AgentException {
-    throw new AgentException
-        (I18N.errorsJ().get("org.nlogo.agent.Patch.cantAccessLinkVarWithoutSpecifyingLink"));
+    throw new AgentException(LocaleContextJ.loc("A patch can't access a link variable without specifying which link."));
   }
 
   @Override
@@ -270,10 +269,10 @@ public class Patch
 
         case VAR_PXCOR:
         case VAR_PYCOR:
-          throw new AgentException(I18N.errorsJ().get("org.nlogo.agent.Patch.cantChangePatchCoordinates"));
+          throw new AgentException(LocaleContextJ.loc("You can't change a patch's coordinates."));
 
         default:
-          throw new IllegalStateException(I18N.errorsJ().getN("org.nlogo.agent.Agent.cantSetUnknownVariable", vn));
+          throw new IllegalStateException(LocaleContextJ.loc("Unknown variable {}.", Integer.toString(vn)));
       }
     }
     _world.notifyWatchers(this, vn, value);
@@ -284,11 +283,11 @@ public class Patch
       throws AgentException {
     switch (vn) {
       case VAR_PXCOR:
-        throw new AgentException(I18N.errorsJ().get("org.nlogo.agent.Patch.cantChangePatchCoordinates"));
+        throw new AgentException(LocaleContextJ.loc("You can't change a patch's coordinates."));
       case VAR_PYCOR:
-        throw new AgentException(I18N.errorsJ().get("org.nlogo.agent.Patch.cantChangePatchCoordinates"));
+        throw new AgentException(LocaleContextJ.loc("You can't change a patch's coordinates."));
       default:
-        throw new IllegalArgumentException(I18N.errorsJ().getN("org.nlogo.agent.Agent.notADoubleVariable", vn));
+        throw new IllegalArgumentException(LocaleContextJ.loc("{} is not a double variable.", Integer.toString(vn)));
     }
   }
 
@@ -304,8 +303,7 @@ public class Patch
       case VAR_PYCOR:
         return pycor;
       default:
-        throw new IllegalArgumentException(
-            I18N.errorsJ().getN("org.nlogo.agent.Agent.notADoubleVariable", Integer.toString(vn)));
+        throw new IllegalArgumentException(LocaleContextJ.loc("{} is not a double variable.", Integer.toString(vn)));
     }
   }
 
@@ -314,7 +312,7 @@ public class Patch
       throws AgentException {
     Patch target = _world.getPatchAt(pxcor + dx, pycor + dy);
     if (target == null) {
-      throw new AgentException(I18N.errorsJ().get("org.nlogo.agent.Turtle.patchBeyondLimits"));
+      throw new AgentException(LocaleContextJ.loc("Cannot get patch beyond limits of current world."));
     }
     return target;
   }

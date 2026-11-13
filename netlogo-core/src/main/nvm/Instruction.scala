@@ -4,21 +4,18 @@ package org.nlogo.nvm
 
 import java.util.{ List => JList, Locale }
 
-import org.nlogo.core.{ AgentKind, I18N, LogoList, Syntax, Token, TokenHolder }
+import org.nlogo.core.{ AgentKind, LocaleContext, LogoList, Syntax, Token, TokenHolder }
 import org.nlogo.api.{ AnonymousReporter => ApiAnonymousReporter, AnonymousCommand => ApiAnonymousCommand }
 import org.nlogo.agent.{ Agent, AgentSet, AgentBit, Turtle, Patch, Link }
 
 object Instruction {
   def agentKindDescription(kind: AgentKind): String = {
-    val key =
-      kind match {
-        case AgentKind.Observer => "observer"
-        case AgentKind.Turtle   => "turtle"
-        case AgentKind.Patch    => "patch"
-        case AgentKind.Link     => "link"
-      }
-    if (key == null) null
-    else I18N.errors.get("org.nlogo.prim.$common.agentKind." + key)
+    kind match {
+      case AgentKind.Observer => loc"the observer"
+      case AgentKind.Turtle   => loc"a turtle"
+      case AgentKind.Patch    => loc"a patch"
+      case AgentKind.Link     => loc"a link"
+    }
   }
 
 
@@ -26,9 +23,9 @@ object Instruction {
     val kindDescription = agentKindDescription(kind)
     lazy val allowedDescription = agentKindDescription(allowedKinds.head)
     if (allowedKinds.size == 1)
-      I18N.errors.getN("org.nlogo.prim.$common.invalidAgentKind.alternative", kindDescription, allowedDescription)
+      loc"this code can't be run by $kindDescription, only by $allowedDescription"
     else
-      I18N.errors.getN("org.nlogo.prim.$common.invalidAgentKind.simple", kindDescription)
+      loc"this code can't be run by $kindDescription"
   }
 }
 
@@ -160,8 +157,7 @@ abstract class Instruction extends InstructionJ with TokenHolder {
     args(index).report(context) match {
       case a: Agent =>
         if (a.id == -1)
-          throw new RuntimePrimitiveException(context, this,
-            I18N.errors.getN("org.nlogo.$common.thatAgentIsDead", a.classDisplayName))
+          throw new RuntimePrimitiveException(context, this, loc"That ${a.classDisplayName} is dead.")
         a
       case x =>
         throw new ArgumentTypeException(

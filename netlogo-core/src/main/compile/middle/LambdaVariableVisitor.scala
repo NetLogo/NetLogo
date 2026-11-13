@@ -5,7 +5,7 @@ package middle
 
 import
   org.nlogo.{ core, nvm, prim },
-    core.{ Fail, I18N, Let },
+    core.{ Fail, Let, LocaleContext },
       Fail.cAssert
 
 import org.nlogo.compile.api.{ DefaultAstVisitor, ProcedureDefinition, ReporterApp, Statement }
@@ -73,7 +73,7 @@ class LambdaVariableVisitor extends DefaultAstVisitor {
                 stmt.command = newCommand
                 stmt.removeArgument(0)
               case None =>
-                cAssert(procedure.get.isLambda, I18N.errors.getN("compiler.LocalsVisitor.notDefined", lv.varName), stmt)
+                cAssert(procedure.get.isLambda, loc"Nothing named ${lv.varName} has been defined.", stmt)
             }
             super.visitStatement(stmt)
           case _ => super.visitStatement(stmt)
@@ -100,7 +100,7 @@ class LambdaVariableVisitor extends DefaultAstVisitor {
             newLet.copyMetadataFrom(expr.reporter)
             expr.reporter = newLet
           case None =>
-            cAssert(procedure.get.isLambda, I18N.errors.getN("compiler.LocalsVisitor.notDefined", lv.varName), expr)
+            cAssert(procedure.get.isLambda, loc"Nothing named ${lv.varName} has been defined.", expr)
         }
       case _ =>
         super.visitReporterApp(expr)

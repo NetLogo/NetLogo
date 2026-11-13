@@ -8,7 +8,7 @@ import java.net.SocketException
 import java.nio.file.Paths
 
 import org.nlogo.api.{ Exceptions, IPCServerHandler, LabProtocol, Version }
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.swing.OptionPane
 import org.nlogo.window.{ EditDialogFactory, GUIWorkspace }
 
@@ -132,9 +132,10 @@ class Supervisor(parent: Window, workspace: GUIWorkspace, modelPath: String, ori
 
     if (!launched) {
       if (errorLines.isEmpty) {
-        new OptionPane(parent, I18N.gui.get("common.messages.error"),
-                       I18N.gui.get("tools.behaviorSpace.error.memoryLimit"), OptionPane.Options.Ok,
-                       OptionPane.Icons.error)
+        val message = loc"""|NetLogo was unable to initialize the experiment. This was most likely caused by
+                            |specifying a memory limit that is too small or too large."""
+
+        new OptionPane(parent, loc"Error", message, OptionPane.Options.Ok, OptionPane.Icons.error)
       } else {
         Exceptions.handle(new Exception(errorLines.mkString("\n")))
       }

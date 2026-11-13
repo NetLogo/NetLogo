@@ -2,7 +2,7 @@
 
 package org.nlogo.prim.etc;
 
-import org.nlogo.core.I18N;
+import org.nlogo.core.LocaleContextJ;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.RuntimePrimitiveException;
@@ -14,8 +14,7 @@ public final class _exportoutput
       throws LogoException {
     final String filename = argEvalString(context, 0);
     if (filename.equals("")) {
-      throw new RuntimePrimitiveException
-          (context, this, I18N.errorsJ().get("org.nlogo.prim.etc._exportoutput.emptyPath"));
+      throw new RuntimePrimitiveException(context, this, LocaleContextJ.loc("Can't export to empty pathname."));
     }
     final org.nlogo.nvm.Command comm = this;
     try {

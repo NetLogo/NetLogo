@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.swing.{ BoxAlign, BoxRow }
 
 class DummyPlotEditPanel(target: DummyPlotWidget) extends WidgetEditPanel(target) {
@@ -10,7 +10,7 @@ class DummyPlotEditPanel(target: DummyPlotWidget) extends WidgetEditPanel(target
     new OptionsEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.plot.name"),
+        loc"Name",
         () => target.nameOptions,
         _.foreach(target.setNameOptions),
         () => apply()))
@@ -19,7 +19,7 @@ class DummyPlotEditPanel(target: DummyPlotWidget) extends WidgetEditPanel(target
     new StringEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.plot.xLabel"),
+        loc"X axis label",
         () => target.xLabel,
         _.foreach(target.setXLabel),
         () => apply()))
@@ -28,7 +28,7 @@ class DummyPlotEditPanel(target: DummyPlotWidget) extends WidgetEditPanel(target
     new DoubleEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.plot.xmin"),
+        loc"X axis label",
         () => target.defaultXMin,
         _.foreach(target.setDefaultXMin),
         () => apply()))
@@ -37,7 +37,7 @@ class DummyPlotEditPanel(target: DummyPlotWidget) extends WidgetEditPanel(target
     new DoubleEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.plot.xmax"),
+        loc"X max",
         () => target.defaultXMax,
         _.foreach(target.setDefaultXMax),
         () => apply()))
@@ -46,7 +46,7 @@ class DummyPlotEditPanel(target: DummyPlotWidget) extends WidgetEditPanel(target
     new StringEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.plot.yLabel"),
+        loc"Y axis label",
         () => target.yLabel,
         _.foreach(target.setYLabel),
         () => apply()))
@@ -55,7 +55,7 @@ class DummyPlotEditPanel(target: DummyPlotWidget) extends WidgetEditPanel(target
     new DoubleEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.plot.ymin"),
+        loc"Y min",
         () => target.defaultYMin,
         _.foreach(target.setDefaultYMin),
         () => apply()))
@@ -64,7 +64,7 @@ class DummyPlotEditPanel(target: DummyPlotWidget) extends WidgetEditPanel(target
     new DoubleEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.plot.ymax"),
+        loc"Y max",
         () => target.defaultYMax,
         _.foreach(target.setDefaultYMax),
         () => apply()))
@@ -73,7 +73,7 @@ class DummyPlotEditPanel(target: DummyPlotWidget) extends WidgetEditPanel(target
     new BooleanEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.plot.autoScaleX"),
+        loc"Auto scale x-axis?",
         () => target.defaultAutoPlotX,
         _.foreach(target.setDefaultAutoPlotX),
         () => apply()))
@@ -82,7 +82,7 @@ class DummyPlotEditPanel(target: DummyPlotWidget) extends WidgetEditPanel(target
     new BooleanEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.plot.autoScaleY"),
+        loc"Auto scale y-axis?",
         () => target.defaultAutoPlotY,
         _.foreach(target.setDefaultAutoPlotY),
         () => apply()))
@@ -91,7 +91,7 @@ class DummyPlotEditPanel(target: DummyPlotWidget) extends WidgetEditPanel(target
     new BooleanEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.plot.showLegend"),
+        loc"Show legend?",
         () => target.showLegend,
         _.foreach(target.setShowLegend),
         () => apply()))
@@ -100,7 +100,7 @@ class DummyPlotEditPanel(target: DummyPlotWidget) extends WidgetEditPanel(target
     new BooleanEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.general.oldSize"),
+        loc"Use old sizing",
         () => target.oldSize,
         _.foreach(target.oldSize),
         () => apply()))

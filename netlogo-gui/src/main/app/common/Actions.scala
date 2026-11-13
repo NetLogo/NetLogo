@@ -7,9 +7,9 @@ import java.awt.event.ActionEvent
 import java.io.IOException
 import javax.swing.{ AbstractAction => SwingAbstractAction }
 
-import org.nlogo.core.I18N
 import org.nlogo.api.Exceptions
 import org.nlogo.awt.{ EventQueue, Hierarchy => NLogoHierarchy, UserCancelException }
+import org.nlogo.core.LocaleContext
 import org.nlogo.swing.{ FileDialog, ModalProgress, ModalProgressTask, OptionPane }
 import org.nlogo.window.ExportControls
 
@@ -20,7 +20,7 @@ object Actions {
 import Actions._
 
 abstract class ExportBackgroundAction[A](parent: Component, taskName: String, suggestedFileName: => String)
-extends SwingAbstractAction(I18N.gui.get("menu.file.export." + taskName) + Ellipsis) {
+extends SwingAbstractAction(taskName + Ellipsis) {
   def frame = NLogoHierarchy.getFrame(parent)
 
   def beforeModalDialog(): A
@@ -51,15 +51,11 @@ extends SwingAbstractAction(I18N.gui.get("menu.file.export." + taskName) + Ellip
           None
       }
     aOpt.foreach(a =>
-      ModalProgressTask.display(NLogoHierarchy.getFrame(parent),
-        I18N.gui.get("dialog.interface.export.task"),
-        runDialog(a)))
+      ModalProgressTask.display(NLogoHierarchy.getFrame(parent), loc"Exporting...", runDialog(a)))
   }
 
   def promptForFilePath(): String = {
-    FileDialog.showFiles(NLogoHierarchy.getFrame(parent),
-      I18N.gui.get(s"menu.file.export.$taskName"),
-      AWTFileDialog.SAVE, suggestedFileName)
+    FileDialog.showFiles(NLogoHierarchy.getFrame(parent), taskName, AWTFileDialog.SAVE, suggestedFileName)
   }
 
   def handleIOException(ex: Exception): Unit = {
@@ -67,8 +63,9 @@ extends SwingAbstractAction(I18N.gui.get("menu.file.export." + taskName) + Ellip
   }
 }
 
-abstract class ExportAction(taskName: String, suggestedFileName: => String, parent: Component, performExport: String => Unit = {(s) => })
-  extends ExceptionCatchingAction(I18N.gui.get("menu.file.export." + taskName) + Actions.Ellipsis, parent) {
+abstract class ExportAction(taskName: String, suggestedFileName: => String, parent: Component,
+                            performExport: String => Unit = {(s) => })
+  extends ExceptionCatchingAction(taskName + Ellipsis, parent) {
 
   def exportTask(path: String): Runnable = new Runnable() {
     override def run(): Unit = {
@@ -86,14 +83,11 @@ abstract class ExportAction(taskName: String, suggestedFileName: => String, pare
   @throws(classOf[UserCancelException])
   @throws(classOf[IOException])
   def action(): Unit = {
-    val exportPath = FileDialog.showFiles(
-      parent,
-      I18N.gui.get(s"menu.file.export.$taskName"),
-      AWTFileDialog.SAVE, suggestedFileName)
+    val exportPath = FileDialog.showFiles(parent, taskName, AWTFileDialog.SAVE, suggestedFileName)
+
     exception = None
 
-    ModalProgressTask.onUIThread(frame,
-      I18N.gui.get("dialog.interface.export.task"), exportTask(exportPath))
+    ModalProgressTask.onUIThread(frame, loc"Exporting...", exportTask(exportPath))
 
     exception.foreach(throw _)
   }
@@ -111,14 +105,14 @@ abstract class ExceptionCatchingAction(name: String, parent: Component) extends 
       action()
     } catch {
       case ex: UserCancelException => Exceptions.ignore(ex)
-      case ex: IOException => new OptionPane(parent, I18N.gui.get("common.messages.error"), ex.getMessage,
-                                             OptionPane.Options.Ok, OptionPane.Icons.error)
+      case ex: IOException => new OptionPane(parent, loc"Error", ex.getMessage, OptionPane.Options.Ok,
+                                             OptionPane.Icons.error)
     }
   }
 }
 
 abstract class ImportAction(taskName: String, parent: Component, performImport: String => Unit = { s => })
-  extends ExceptionCatchingAction(I18N.gui.get(s"menu.file.import.$taskName") + Ellipsis, parent) {
+  extends ExceptionCatchingAction(taskName + Ellipsis, parent) {
   var exception = Option.empty[IOException]
 
   def importTask(path: String): Runnable = new Runnable() {
@@ -136,12 +130,10 @@ abstract class ImportAction(taskName: String, parent: Component, performImport: 
   @throws(classOf[IOException])
   override def action(): Unit = {
     exception = None
-    val importPath = FileDialog.showFiles(
-        parent, I18N.gui.get(s"menu.file.import.$taskName"), AWTFileDialog.LOAD, null)
 
-    ModalProgressTask.onUIThread(frame,
-      I18N.gui.get("dialog.interface.import.task"),
-      importTask(importPath))
+    val importPath = FileDialog.showFiles(parent, taskName, AWTFileDialog.LOAD, null)
+
+    ModalProgressTask.onUIThread(frame, loc"Importing...", importTask(importPath))
     exception.foreach(throw _)
   }
 }

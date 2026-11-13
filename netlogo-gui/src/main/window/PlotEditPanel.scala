@@ -5,7 +5,7 @@ package org.nlogo.window
 import java.awt.event.{ FocusAdapter, FocusEvent }
 
 import org.nlogo.api.CompilerServices
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.editor.Colorizer
 import org.nlogo.swing.{ BoxAlign, BoxRow, MaximumHeight }
 
@@ -18,7 +18,7 @@ class PlotEditPanel(target: PlotWidget, compiler: CompilerServices, colorizer: C
     new StringEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.plot.name"),
+        loc"Name",
         () => target.plotName,
         name => target.setPlotName(name.getOrElse("")),
         () => apply())) {
@@ -31,7 +31,7 @@ class PlotEditPanel(target: PlotWidget, compiler: CompilerServices, colorizer: C
     new StringEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.plot.xLabel"),
+        loc"X axis label",
         () => target.xLabel,
         _.foreach(target.setXLabel),
         () => apply()))
@@ -40,7 +40,7 @@ class PlotEditPanel(target: PlotWidget, compiler: CompilerServices, colorizer: C
     new DoubleEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.plot.xmin"),
+        loc"X min",
         () => target.defaultXMin,
         _.foreach(target.setDefaultXMin),
         () => apply()))
@@ -49,7 +49,7 @@ class PlotEditPanel(target: PlotWidget, compiler: CompilerServices, colorizer: C
     new DoubleEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.plot.xmax"),
+        loc"X max",
         () => target.defaultXMax,
         _.foreach(target.setDefaultXMax),
         () => apply()))
@@ -58,7 +58,7 @@ class PlotEditPanel(target: PlotWidget, compiler: CompilerServices, colorizer: C
     new StringEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.plot.yLabel"),
+        loc"Y axis label",
         () => target.yLabel,
         _.foreach(target.setYLabel),
         () => apply()))
@@ -67,7 +67,7 @@ class PlotEditPanel(target: PlotWidget, compiler: CompilerServices, colorizer: C
     new DoubleEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.plot.ymin"),
+        loc"Y min",
         () => target.defaultYMin,
         _.foreach(target.setDefaultYMin),
         () => apply()))
@@ -76,7 +76,7 @@ class PlotEditPanel(target: PlotWidget, compiler: CompilerServices, colorizer: C
     new DoubleEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.plot.ymax"),
+        loc"Y max",
         () => target.defaultYMax,
         _.foreach(target.setDefaultYMax),
         () => apply()))
@@ -85,7 +85,7 @@ class PlotEditPanel(target: PlotWidget, compiler: CompilerServices, colorizer: C
     new BooleanEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.plot.autoScaleX"),
+        loc"Auto scale x-axis?",
         () => target.defaultAutoPlotX,
         _.foreach(target.setDefaultAutoPlotX),
         () => apply()))
@@ -94,7 +94,7 @@ class PlotEditPanel(target: PlotWidget, compiler: CompilerServices, colorizer: C
     new BooleanEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.plot.autoScaleY"),
+        loc"Auto scale y-axis?",
         () => target.defaultAutoPlotY,
         _.foreach(target.setDefaultAutoPlotY),
         () => apply()))
@@ -103,7 +103,7 @@ class PlotEditPanel(target: PlotWidget, compiler: CompilerServices, colorizer: C
     new BooleanEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.plot.showLegend"),
+        loc"Show legend?",
         () => target.showLegend,
         _.foreach(target.setShowLegend),
         () => apply()))
@@ -112,7 +112,7 @@ class PlotEditPanel(target: PlotWidget, compiler: CompilerServices, colorizer: C
     new RuntimeErrorDisplay(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.plot.error.runtimeError"),
+        loc"Runtime Error:",
         () => target.runtimeError,
         _.foreach(target.setRuntimeError),
         () => apply()))
@@ -121,7 +121,7 @@ class PlotEditPanel(target: PlotWidget, compiler: CompilerServices, colorizer: C
     new CodeEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.plot.setupCode"),
+        loc"Plot setup commands",
         () => target.setupCode,
         _.foreach(target.setSetupCode),
         () => apply()),
@@ -131,7 +131,7 @@ class PlotEditPanel(target: PlotWidget, compiler: CompilerServices, colorizer: C
     new CodeEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.plot.updateCode"),
+        loc"Plot update commands",
         () => target.updateCode,
         _.foreach(target.setUpdateCode),
         () => apply()),
@@ -141,7 +141,7 @@ class PlotEditPanel(target: PlotWidget, compiler: CompilerServices, colorizer: C
     new PlotPensEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.plot.pen.plotPens"),
+        loc"Plot pens",
         () => target.editPlotPens,
         _.foreach(target.setEditPlotPens),
         () => apply()),
@@ -151,7 +151,7 @@ class PlotEditPanel(target: PlotWidget, compiler: CompilerServices, colorizer: C
     new BooleanEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.general.oldSize"),
+        loc"Use old sizing",
         () => target.oldSize,
         _.foreach(target.oldSize),
         () => apply()))

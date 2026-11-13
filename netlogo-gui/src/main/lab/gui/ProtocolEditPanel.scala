@@ -5,7 +5,7 @@ package org.nlogo.lab.gui
 import java.awt.Dimension
 
 import org.nlogo.api.CompilerServices
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.editor.Colorizer
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, MaximumHeight }
 import org.nlogo.window.{ BooleanEditor, CodeEditor, EditPanel, IntegerEditor, PropertyAccessor, PropertyEditor,
@@ -18,69 +18,80 @@ class ProtocolEditPanel(target: ProtocolEditable, compiler: CompilerServices, co
     new StringEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("tools.behaviorSpace.experimentName"),
+        loc"Experiment name",
         () => target.name,
         _.foreach(target.setName),
         () => apply())) {
 
-      setToolTipText(I18N.gui.get("tools.behaviorSpace.experimentName.info"))
+      setToolTipText(loc"experiment names must be unique")
     }
 
   private val valueSets =
     new CodeEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("tools.behaviorSpace.vary"),
+        loc"Vary variables as follows (note brackets and quotation marks):",
         () => target.valueSets,
         _.foreach(target.setValueSets),
         () => apply()),
       compiler, colorizer) {
 
-      setToolTipText(s"<html>${I18N.gui.get("tools.behaviorSpace.vary.info")}</html>")
+      setToolTipText(loc"""|<html>Either list values to use, for example:<br>
+                           |["my-slider" 1 2 7 8]<br>
+                           |or specify start, increment, and end, for example:<br>
+                           |["my-slider" [0 1 10]] (note additional brackets)<br>
+                           |to go from 0, 1 at a time, to 10.<br>
+                           |In addition, subexperiments may be specified to create<br>
+                           |specific parameter combinations. For example:<br>
+                           |[["my-slider" 1 2]["my-slider-2" 3]] (note doubly-nested brackets)<br>
+                           |You may also vary max-pxcor, min-pxcor, max-pycor, min-pycor, random-seed.</html>""")
     }
 
   private val repetitions =
     new IntegerEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("tools.behaviorSpace.repetitions"),
+        loc"Repetitions",
         () => target.repetitions,
         _.foreach(target.setRepetitions),
         () => apply())) {
 
-      setToolTipText(I18N.gui.get("tools.behaviorSpace.repetitions.info"))
+      setToolTipText(loc"execute each combination this many times")
     }
 
   private val sequentialRunOrder =
     new BooleanEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("tools.behaviorSpace.sequentialRunOrder"),
+        loc"Execute combinations in sequential order",
         () => target.sequentialRunOrder,
         _.foreach(target.setSequentialRunOrder),
         () => apply())) {
 
-      setToolTipText(s"<html>${I18N.gui.get("tools.behaviorSpace.sequentialRunOrder.info")}</html>")
+      setToolTipText(loc"""|<html>For example, having ["var" 1 2 3] with 2 repetitions,
+                           |the experiments'' "var" values will be:<br>
+                           |sequential order: 1, 1, 2, 2, 3, 3<br>
+                           |alternating order: 1, 2, 3, 1, 2, 3</html>""")
     }
 
   private val metrics =
     new CodeEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("tools.behaviorSpace.metrics"),
+        loc"Measure runs using these reporters as metrics:",
         () => target.metrics,
         _.foreach(target.setMetrics),
         () => apply()),
       compiler, colorizer) {
 
-      setToolTipText(s"<html>${I18N.gui.get("tools.behaviorSpace.metrics.info")}</html>")
+      setToolTipText(loc"<html>one reporter per line; you may not split a reporter<br>across multiple lines</html>")
     }
 
   private val runMetricsEveryStep: BooleanEditor =
     new BooleanEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("tools.behaviorSpace.runMetricsEveryStep"),
+        loc"Run metrics every step",
         () => target.runMetricsEveryStep,
         _.foreach(target.setRunMetricsEveryStep),
         () => {
@@ -88,20 +99,23 @@ class ProtocolEditPanel(target: ProtocolEditable, compiler: CompilerServices, co
           runMetricsCondition.setEnabled(!runMetricsEveryStep.get.getOrElse(true))
         })) {
 
-      setToolTipText(I18N.gui.get("tools.behaviorSpace.runMetricsEveryStep.info"))
+      setToolTipText(loc"""|when checked, metrics will run at every step, when unchecked, metrics will run at the end
+                           |of the experiment or when any "Run metrics when" reporter is true""")
     }
 
   private val runMetricsCondition =
     new ReporterLineEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("tools.behaviorSpace.runMetricsCondition"),
+        loc"Run metrics when",
         () => target.runMetricsCondition,
         _.foreach(target.setRunMetricsCondition),
         () => apply()),
       compiler, colorizer, true) {
 
-      setToolTipText(I18N.gui.get("tools.behaviorSpace.runMetricsCondition.info"))
+      setToolTipText(loc"""|metrics will run when any of these reporters are true, for example, use the reporter
+                           |"ticks mod 3 = 0" to run metrics every 3 ticks""")
+
       setEnabled(!target.runMetricsEveryStep)
     }
 
@@ -109,90 +123,90 @@ class ProtocolEditPanel(target: ProtocolEditable, compiler: CompilerServices, co
     new CodeEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("tools.behaviorSpace.preExperimentCommands"),
+        loc"Pre experiment commands:",
         () => target.preExperimentCommands,
         _.foreach(target.setPreExperimentCommands),
         () => apply()),
       compiler, colorizer, true, true) {
 
-      setToolTipText(I18N.gui.get("tools.behaviorSpace.preExperimentCommands.info"))
+      setToolTipText(loc"executed before the experiment begins")
     }
 
   private val setupCommands =
     new CodeEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("tools.behaviorSpace.setupCommands"),
+        loc"Setup commands:",
         () => target.setupCommands,
         _.foreach(target.setSetupCommands),
         () => apply()),
       compiler, colorizer) {
 
-      setToolTipText(I18N.gui.get("tools.behaviorSpace.setupCommands.info"))
+      setToolTipText(loc"executed before each run begins")
     }
 
   private val goCommands =
     new CodeEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("tools.behaviorSpace.goCommands"),
+        loc"Go commands:",
         () => target.goCommands,
         _.foreach(target.setGoCommands),
         () => apply()),
       compiler, colorizer) {
 
-      setToolTipText(I18N.gui.get("tools.behaviorSpace.goCommands.info"))
+      setToolTipText(loc"executed at every step")
     }
 
   private val exitCondition =
     new CodeEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("tools.behaviorSpace.exitCondition"),
+        loc"Stop condition:",
         () => target.exitCondition,
         _.foreach(target.setExitCondition),
         () => apply()),
       compiler, colorizer, true, true) {
 
-      setToolTipText(I18N.gui.get("tools.behaviorSpace.exitCondition.info"))
+      setToolTipText(loc"the run stops if this reporter becomes true")
     }
 
   private val postRunCommands =
     new CodeEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("tools.behaviorSpace.postRunCommands"),
+        loc"Post run commands:",
         () => target.postRunCommands,
         _.foreach(target.setPostRunCommands),
         () => apply()),
       compiler, colorizer, true, true) {
 
-      setToolTipText(I18N.gui.get("tools.behaviorSpace.postRunCommands.info"))
+      setToolTipText(loc"executed at the end of each run")
     }
 
   private val postExperimentCommands =
     new CodeEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("tools.behaviorSpace.postExperimentCommands"),
+        loc"Post experiment commands",
         () => target.postExperimentCommands,
         _.foreach(target.setPostExperimentCommands),
         () => apply()),
       compiler, colorizer, true, true) {
 
-      setToolTipText(I18N.gui.get("tools.behaviorSpace.postExperimentCommands.info"))
+      setToolTipText(loc"executed after the experiment is finished")
     }
 
   private val timeLimit =
     new IntegerEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("tools.behaviorSpace.timeLimit"),
+        loc"Time limit",
         () => target.timeLimit,
         _.foreach(target.setTimeLimit),
         () => apply())) {
 
-      setToolTipText(I18N.gui.get("tools.behaviorSpace.timeLimit.info"))
+      setToolTipText(loc"stop after this many steps (0 = no limit)")
     }
 
   add(name)

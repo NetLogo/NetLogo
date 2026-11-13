@@ -3,7 +3,7 @@
 package org.nlogo.parse
 
 import
-  org.nlogo.core.{ AstTransformer, CommandBlock, Fail, I18N,
+  org.nlogo.core.{ AstTransformer, CommandBlock, Fail, LocaleContext,
                    prim, ProcedureDefinition, ReporterApp, Statement },
     Fail._,
     prim.{ _commandlambda, _report, _run, _stop }
@@ -48,17 +48,11 @@ class ControlFlowVerifier extends AstTransformer {
       contextStack = contextStack.head.exitsNonLocally :: contextStack.tail
     (contextStack.head, statement.command) match {
       case (_: ReporterContext, _: _stop) =>
-        exception(
-          I18N.errors.getN("org.nlogo.prim.etc._stop.notAllowedInsideToReport", "STOP"),
-          statement)
+        exception(loc"STOP is not allowed inside TO-REPORT.", statement)
       case (_,                  _: _report) if contextStack.last.isInstanceOf[CommandContext] && ! contextStack.head.isInstanceOf[CommandLambdaContext] =>
-        exception(
-          I18N.errors.getN("org.nlogo.prim._report.canOnlyUseInToReport", "REPORT"),
-          statement)
+        exception(loc"REPORT can only be used inside TO-REPORT.", statement)
       case ((_: BlockContext | _: CommandContext), _: _report) =>
-        exception(
-          I18N.errors.getN("org.nlogo.prim._report.mustImmediatelyBeUsedInToReport", "REPORT"),
-          statement)
+        exception(loc"REPORT must be immediately inside a TO-REPORT.", statement)
       case _ if (statement.command.syntax.introducesContext) =>
         contextStack = new BlockContext(false) :: contextStack
         val r = super.visitStatement(statement)

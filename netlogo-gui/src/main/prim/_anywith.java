@@ -6,7 +6,7 @@ import org.nlogo.agent.Agent;
 import org.nlogo.agent.AgentIterator;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.api.Dump;
-import org.nlogo.core.I18N;
+import org.nlogo.core.LocaleContextJ;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Context;
@@ -30,9 +30,9 @@ public final class _anywith
       Agent tester = iter.next();
       Object value = freshContext.evaluateReporter(tester, arg1);
       if (!(value instanceof Boolean)) {
-        throw new RuntimePrimitiveException
-            (context, this, I18N.errorsJ().getN("org.nlogo.prim.$common.withExpectedBooleanValue",
-                Dump.logoObject(tester), Dump.logoObject(value)));
+        throw new RuntimePrimitiveException(context, this,
+          LocaleContextJ.loc("WITH expected a true/false value from {}, but got {} instead.", Dump.logoObject(tester),
+                             Dump.logoObject(value)));
       }
       if (((Boolean) value).booleanValue()) {
         return true;

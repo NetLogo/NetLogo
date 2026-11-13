@@ -6,7 +6,7 @@ import java.lang.{ Double => JDouble }
 
 import org.nlogo.agent.SliderConstraint
 import org.nlogo.api.{ CompilerServices, ExtensionManager, MersenneTwisterFast }
-import org.nlogo.core.{ Horizontal, I18N, Slider => CoreSlider, Vertical, Widget => CoreWidget }
+import org.nlogo.core.{ Horizontal, LocaleContext, Slider => CoreSlider, Vertical, Widget => CoreWidget }
 import org.nlogo.editor.Colorizer
 import org.nlogo.window.Events.{ InterfaceGlobalEvent, AfterLoadEvent, PeriodicUpdateEvent, AddSliderConstraintEvent }
 
@@ -43,7 +43,7 @@ class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast,
     updateConstraints()
   }
 
-  override def classDisplayName = I18N.gui.get("tabs.run.widgets.slider")
+  override def classDisplayName = loc"Slider"
 
   override def editPanel: EditPanel = new SliderEditPanel(this, compiler, colorizer, extensionManager)
 
@@ -133,11 +133,11 @@ class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast,
       if (checkRecursive(compiler, minimumCode, name) ||
           checkRecursive(compiler, maximumCode, name) ||
           checkRecursive(compiler, incrementCode, name)) {
-        return Some(I18N.gui.get("edit.general.recursive"))
+        return Some(loc"Widget cannot reference itself")
       } else if (minimumCode.toDouble >= maximumCode.toDouble) {
-        return Some(I18N.gui.get("edit.slider.invalidBounds"))
+        return Some(loc"Maximum must be strictly greater than Minimum")
       } else if (incrementCode.toDouble > maximumCode.toDouble - minimumCode.toDouble) {
-        return Some(I18N.gui.get("edit.slider.invalidIncrement"))
+        return Some(loc"Increment cannot be greater than the difference of Maximum and Minimum")
       }
     } catch {
       case e: NumberFormatException =>

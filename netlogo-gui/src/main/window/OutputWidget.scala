@@ -6,7 +6,7 @@ import java.awt.{ Font, Point }
 import java.awt.event.ActionEvent
 import javax.swing.{ AbstractAction, BoxLayout }
 
-import org.nlogo.core.{ I18N, Output => CoreOutput, Widget => CoreWidget }
+import org.nlogo.core.{ LocaleContext, Output => CoreOutput, Widget => CoreWidget }
 import org.nlogo.editor.EditorConfiguration
 import org.nlogo.swing.{ MenuItem, PopupMenu, ZoomableBorder }
 import org.nlogo.theme.InterfaceColors
@@ -14,7 +14,7 @@ import org.nlogo.theme.InterfaceColors
 class OutputWidget extends SingleErrorWidget with CommandCenterInterface
   with Events.ExportWorldEvent.Handler with Editable {
 
-  displayName(I18N.gui.get("tabs.run.widgets.output"))
+  displayName(loc"Output")
 
   val outputArea = new OutputArea {
     setBaseFont(EditorConfiguration.getCodeFont)
@@ -36,7 +36,7 @@ class OutputWidget extends SingleErrorWidget with CommandCenterInterface
     outputArea.fontSize(newSize)
   }
 
-  override def classDisplayName = I18N.gui.get("tabs.run.widgets.output")
+  override def classDisplayName = loc"Output"
   override def exportable = true
   override def getDefaultExportName = "output.txt"
   def valueText: String = outputArea.text.getText
@@ -52,13 +52,13 @@ class OutputWidget extends SingleErrorWidget with CommandCenterInterface
   override def populateContextMenu(menu: PopupMenu, p: Point): Unit = {
     // at least on Macs, Command-C to copy may not work, so this
     // is needed - ST 4/21/05
-    menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.copyselectedtext")) {
+    menu.add(new MenuItem(new AbstractAction(loc"Copy Selected Text") {
       def actionPerformed(e: ActionEvent): Unit = {
         outputArea.text.copy
       }
     }))
 
-    menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.clear")) {
+    menu.add(new MenuItem(new AbstractAction(loc"Clear") {
       def actionPerformed(e: ActionEvent): Unit = {
         outputArea.clear()
       }

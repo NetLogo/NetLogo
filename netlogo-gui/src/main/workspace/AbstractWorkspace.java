@@ -25,7 +25,7 @@ import org.nlogo.core.CompilerException;
 import org.nlogo.core.Femto;
 import org.nlogo.core.FileModeJ;
 import org.nlogo.core.File;
-import org.nlogo.core.I18N;
+import org.nlogo.core.LocaleContextJ;
 import org.nlogo.core.Token;
 import org.nlogo.core.TokenType;
 import org.nlogo.core.UpdateMode;
@@ -246,7 +246,7 @@ public abstract class AbstractWorkspace
     if (upperName.equals("RANDOM-SEED")) {
       for (Object o : values) {
         if (!(o instanceof Double)) {
-          throw new Exception(I18N.guiJ().getN("edit.behaviorSpace.invalidValue", name));
+          throw new Exception(LocaleContextJ.loc("Invalid value specified for global variable \"{}\"", name));
         }
       }
     } else if (_world.isDimensionVariable(upperName)) {
@@ -258,14 +258,14 @@ public abstract class AbstractWorkspace
     } else {
       synchronized (_world) {
         if (_world.observerOwnsIndexOf(upperName) == -1) {
-          throw new Exception(I18N.guiJ().getN("edit.behaviorSpace.noGlobal", name));
+          throw new Exception(LocaleContextJ.loc("There is no global variable named \"{}\"", name));
         }
 
         for (Object o : values) {
           try {
             _world.observer().assertConstraint(_world.observer().variableIndex(upperName), o);
           } catch (Exception e) {
-            throw new Exception(I18N.guiJ().getN("edit.behaviorSpace.invalidValue", name));
+            throw new Exception(LocaleContextJ.loc("Invalid value specified for global variable \"{}\"", name));
           }
         }
       }

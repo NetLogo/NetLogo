@@ -9,7 +9,7 @@ import javax.swing.{ AbstractAction, Action, JLabel, SwingConstants }
 import scala.util.{ Failure, Success }
 
 import org.nlogo.awt.Hierarchy.getFrame
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, Button, ModalProgressTask, Zoomable }
 import org.nlogo.window.GraphicsPreviewInterface
 import org.nlogo.workspace.PreviewCommandsRunner
@@ -34,11 +34,11 @@ class PreviewPanel(graphicsPreview: GraphicsPreviewInterface) extends BoxColumn(
     .map("<p style='text-align:center; margin:10px'><![CDATA[" + _ + "]]></p>")
     .mkString("<html>", "", "</html>")
   def executeCommandsAction(runnableCommands: Option[PreviewCommandsRunner#Runnable]) =
-    new AbstractAction(I18N.gui.get("tools.previewPanel.runPreviewCommands")) {
+    new AbstractAction(loc"Run Preview Commands") {
       def run(): Unit = {
         runnableCommands match {
           case Some(runnable) =>
-            ModalProgressTask.onUIThread(getFrame(PreviewPanel.this), I18N.gui.get("tools.previewPanel.runningPreviewCommands"), runnable)
+            ModalProgressTask.onUIThread(getFrame(PreviewPanel.this), loc"Running Preview Commands", runnable)
             runnable.result.foreach {
               _ match {
                 case Success(image) => showImage(image)
@@ -57,17 +57,16 @@ class PreviewPanel(graphicsPreview: GraphicsPreviewInterface) extends BoxColumn(
   }
   def loadImageAction(path: String): Action =
     new AbstractAction {
-      putValue(Action.NAME, I18N.gui.get("tools.previewPanel.loadManualPreviewImage"))
+      putValue(Action.NAME, loc"Load Manual Preview Image")
       showText(wrap(path))
       setEnabled(true)
 
       def load(): Unit = {
-        ModalProgressTask.onUIThread(getFrame(PreviewPanel.this),
-          I18N.gui.get("tools.previewPanel.loadingManualPreviewImage"),
+        ModalProgressTask.onUIThread(getFrame(PreviewPanel.this), loc"Loading Manual Preview Image",
           () => {
             try {
               showImage(ImageIO.read(new File(path)))
-              putValue(Action.NAME, I18N.gui.get("tools.previewPanel.reloadManualPreviewImage"))
+              putValue(Action.NAME, loc"Reload Manual Preview Image")
             } catch {
               case e: IOException => showText(wrap(e.getMessage, path))
             }
@@ -80,7 +79,7 @@ class PreviewPanel(graphicsPreview: GraphicsPreviewInterface) extends BoxColumn(
   def dummyLoadImageAction: Action = {
     new AbstractAction {
       setEnabled(false)
-      putValue(Action.NAME, I18N.gui.get("tools.previewPanel.loadManualPreviewImage"))
+      putValue(Action.NAME, loc"Load Manual Preview Image")
       def actionPerformed(evt: ActionEvent): Unit = { }
     }
   }

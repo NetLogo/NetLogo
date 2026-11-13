@@ -6,7 +6,7 @@ import org.nlogo.agent.Agent;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Turtle;
 import org.nlogo.core.AgentKindJ;
-import org.nlogo.core.I18N;
+import org.nlogo.core.LocaleContextJ;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.RuntimePrimitiveException;
@@ -29,20 +29,20 @@ public final class _inconenowrap
                            double radius, double angle)
       throws LogoException {
     if (sourceSet.kind() == AgentKindJ.Link()) {
-      throw new RuntimePrimitiveException
-          (context, this, I18N.errorsJ().get("org.nlogo.prim.etc.$common.expectedTurtleOrPatchButGotLink"));
+      throw new RuntimePrimitiveException(context, this,
+        LocaleContextJ.loc("Expected a turtle or a patch but got a link."));
     }
     if (radius < 0) {
       throw new RuntimePrimitiveException(context, this,
-          I18N.errorsJ().getN("org.nlogo.prim.etc.$common.noNegativeRadius", displayName()));
+        LocaleContextJ.loc("{} cannot take a negative radius.", displayName()));
     }
     if (angle < 0) {
       throw new RuntimePrimitiveException(context, this,
-          I18N.errorsJ().getN("org.nlogo.prim.etc.$common.noNegativeAngle", displayName()));
+        LocaleContextJ.loc("{} cannot take a negative angle.", displayName()));
     }
     if (angle > 360) {
       throw new RuntimePrimitiveException(context, this,
-          I18N.errorsJ().getN("org.nlogo.prim.etc.$common.noAngleGreaterThan360", displayName()));
+        LocaleContextJ.loc("{} cannot take an angle greater than 360.", displayName()));
     }
 
     List<Agent> result =

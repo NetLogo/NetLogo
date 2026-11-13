@@ -12,7 +12,7 @@ import javax.swing.border.LineBorder
 import javax.swing.event.{ AncestorEvent, AncestorListener, ListDataEvent, ListDataListener }
 
 import org.nlogo.api.{ LibraryInfoDownloader, LibraryManager, Version }
-import org.nlogo.core.{ I18N, LibraryInfo, LibraryStatus, Token, TokenType }
+import org.nlogo.core.{ LibraryInfo, LibraryStatus, LocaleContext, Token, TokenType }
 import org.nlogo.swing.{ AutomationUtils, BoxColumn, BoxRow, BrowserLauncher, Button, EmptyIcon, FilterableListModel,
                          FocusUtils, HorizontalStrut, MaximumHeight, OptionPane, RichAction, ScrollPane, SwingWorker,
                          TextArea, TextField, Utils, VerticalStrut, Zoomable, ZoomableBorder }
@@ -103,8 +103,6 @@ class LibrariesTab( category:        String
 
   private val updateLists = () => manager.reloadMetadata()
 
-  implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("tools.libraries")
-
   private val baseListModel = new DefaultListModel[LibraryInfo]
 
   EventQueue.invokeLater { () => libraries.toArray.foreach(elem => baseListModel.addElement(elem)) }
@@ -134,7 +132,7 @@ class LibrariesTab( category:        String
   private var actionIsInProgress = false
 
   val updateAllAction: Action =
-    RichAction(I18N.gui("updateAll")) { _ =>
+    RichAction(loc"Update All") { _ =>
 
       updateAllAction.setEnabled(false)
 
@@ -158,26 +156,28 @@ class LibrariesTab( category:        String
 
   private val libraryScroll = new ScrollPane(libraryList)
 
-  private val installButton = new Button(I18N.gui("install"), () => {
+  private val installButton = new Button(loc"Install", () => {
     val installCheck = (lib: LibraryInfo) =>
       lib.isVersionRequirementMet(Version.version) && lib.status != LibraryStatus.UpToDate
     val uninstallCheck = (lib: LibraryInfo) => installCheck(lib) && lib.canUninstall
-    perform("uninstalling", uninstall, uninstallCheck, true)
-    perform("installing", wrappedInstall, installCheck, false)
+    perform(loc"Uninstalling", uninstall, uninstallCheck, true)
+    perform(loc"Installing", wrappedInstall, installCheck, false)
   }) {
     override def getMaximumSize: Dimension =
       new Dimension(Int.MaxValue, super.getMaximumSize.height)
   }
 
-  private val addToCodeTabButton = new Button(I18N.gui("addToCodeTab"), () => {
+  private val addToCodeTabButton = new Button(loc"Add to Code Tab", () => {
     updateSource { source =>
       addExtsToSource(source, selectedValues.map(_.codeName).toSet, tokenizeSource) match {
         case Some(newSource) =>
           newSource
 
         case _ =>
-          new OptionPane(this, I18N.gui.get("common.messages.error"), I18N.gui.get("tools.libraries.failedToAdd"),
-                         OptionPane.Options.Ok, OptionPane.Icons.error)
+          val message = loc"""|Failed to add selected extensions to the Code tab. Please ensure that\n
+                              |your code is formatted correctly before using this tool."""
+
+          new OptionPane(this, loc"Error", message, OptionPane.Options.Ok, OptionPane.Icons.error)
 
           source
       }
@@ -186,12 +186,12 @@ class LibrariesTab( category:        String
     recompile()
   })
 
-  private val homepageButton = new Button(I18N.gui("homepage"), () => {
+  private val homepageButton = new Button(loc"Homepage", () => {
     BrowserLauncher.openURI(LibrariesTab.this, selectedValue.homepage.toURI)
   })
 
-  private val uninstallButton = new Button(I18N.gui("uninstall"), () => {
-    perform("uninstalling", uninstall, _.canUninstall, false)
+  private val uninstallButton = new Button(loc"Uninstall", () => {
+    perform(loc"Uninstalling", uninstall, _.canUninstall, false)
   }) {
     override def getMaximumSize: Dimension =
       new Dimension(Int.MaxValue, super.getMaximumSize.height)
@@ -205,15 +205,15 @@ class LibrariesTab( category:        String
 
   private val infoScroll = new ScrollPane(info)
 
-  private val installedVersionLabel  = new JLabel(s"${I18N.gui("installedVersion")}: ") with Zoomable {
+  private val installedVersionLabel  = new JLabel(loc"Installed Version: ") with Zoomable {
     setBaseFont(getFont.deriveFont(Font.BOLD))
   }
 
-  private val latestVersionLabel  = new JLabel(s"${I18N.gui("latestVersion")}: ") with Zoomable {
+  private val latestVersionLabel  = new JLabel(loc"Latest Version: ") with Zoomable {
     setBaseFont(getFont.deriveFont(Font.BOLD))
   }
 
-  private val minNetLogoVersionLabel = new JLabel(s"${I18N.gui("minimumVersion")}: ") with Zoomable {
+  private val minNetLogoVersionLabel = new JLabel(loc"Minimum NetLogo Version: ") with Zoomable {
     setBaseFont(getFont.deriveFont(Font.BOLD))
   }
 
@@ -320,7 +320,9 @@ class LibrariesTab( category:        String
         if (selectedValue.isVersionRequirementMet(Version.version)) {
           selectedValue.longDescription
         } else {
-          s"${I18N.gui("unmetMinimumVersion", selectedValue.name, selectedValue.minNetLogoVersion.get)}\n\n${selectedValue.longDescription}"
+          loc"""|This version of ${selectedValue.name} can only be used with NetLogo version
+                |${selectedValue.minNetLogoVersion.get} or newer.\n\nYou can download the latest version of NetLogo
+                |at https://www.netlogo.org/download\n\n${selectedValue.longDescription}"""
         }
       }
       info.setText(infoText)
@@ -363,11 +365,11 @@ class LibrariesTab( category:        String
 
   private def installButtonText: String =
     if (actionableLibraries.forall(_.status == LibraryStatus.CanInstall)) {
-      I18N.gui("install")
+      loc"Install"
     } else if (actionableLibraries.forall(_.status == LibraryStatus.CanUpdate)) {
-      I18N.gui("update")
+      loc"Update"
     } else {
-      I18N.gui("update") + " / " + I18N.gui("install")
+      loc"Update / Install"
     }
 
   private def finishManagement(): Unit = {
@@ -389,8 +391,12 @@ class LibrariesTab( category:        String
       install(lib)
     } catch {
       case ex: IOException =>
-        new OptionPane(this, I18N.gui.get("common.messages.error"), I18N.gui("downloadFailed", lib.downloadURL),
-                       OptionPane.Options.Ok, OptionPane.Icons.error)
+        val message = loc"""|We couldn't download ${lib.downloadURL}.\n
+                            |Check your Internet connectivity. If you think the URL is incorrect or unreachable,\n
+                            |please report to us at https://github.com/NetLogo/NetLogo/issues, or to
+                            |bugs@ccl.northwestern.edu, with details."""
+
+        new OptionPane(this, loc"Error", message, OptionPane.Options.Ok, OptionPane.Icons.error)
     }
 
   private def containsLib(info: LibraryInfo, text: String): Boolean =
@@ -422,10 +428,10 @@ class LibrariesTab( category:        String
 
   private var numOperatedLibs = 0
   private def updateMultipleOperationStatus(operation: String) =
-    updateStatus(I18N.gui(operation + "Multiple", Int.box(numOperatedLibs), category.toLowerCase))
+    updateStatus(s"$operation ${Int.box(numOperatedLibs)} ${category.toLowerCase}...")
 
   private def updateSingleOperationStatus(operation: String, libName: String) =
-    updateStatus(I18N.gui(operation, libName))
+    updateStatus(s"$operation $libName...")
 
   private class CellRenderer extends BoxRow(6) with ListCellRenderer[LibraryInfo] {
     private val upToDateIcon: Icon = Utils.iconScaledWithColor(this, "/images/check.png", 24, 24,

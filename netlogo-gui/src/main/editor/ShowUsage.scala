@@ -4,7 +4,7 @@ package org.nlogo.editor
 
 import java.awt.Color
 
-import org.nlogo.core.{ Femto, I18N, Token, TokenizerInterface }
+import org.nlogo.core.{ Femto, LocaleContext, Token, TokenizerInterface }
 import org.nlogo.swing.{ MenuItem, PopupMenu }
 import org.nlogo.theme.InterfaceColors
 
@@ -27,7 +27,7 @@ class ShowUsage(editorArea: AdvancedEditorArea, colorizer: Colorizer) extends Po
     }
 
     if (matches.isEmpty) {
-      add(new MenuItem(I18N.gui.get("tabs.code.rightclick.showUsage.noUsages"))).setEnabled(false)
+      add(new MenuItem(loc"No usages found")).setEnabled(false)
     } else {
       val lines: Seq[(Token, Line)] = matches.zip(editorArea.getLinesForOffsets(matches.map(_.start)))
                                         .distinctBy(_._2.number)

@@ -9,7 +9,7 @@ import javax.swing.{ Action, AbstractAction, ButtonGroup, JLabel, JPanel, JToggl
 import org.jhotdraw.framework.{ DrawingEditor, DrawingView, Figure, FigureSelectionListener, Tool }
 import org.jhotdraw.standard.{ CreationTool, DeleteCommand }
 
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.sdm.Model
 import org.nlogo.swing.{ BoxAlign, BoxRow, Button, InputOptionPane, OptionPane, ToolBarActionButton,
                          ToolBarToggleButton, Utils => SwingUtils, Zoomable, ZoomableBorder }
@@ -17,8 +17,6 @@ import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 class AggregateModelEditorToolBar(editor: AggregateModelEditor, model: Model)
   extends BoxRow(6, BoxAlign.Start) with ThemeSync {
-
-  implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("tools.sdm")
 
   // Invisible button allows no selection in visible buttongroup
   private val noToolButton = new JToggleButton("") {
@@ -30,9 +28,9 @@ class AggregateModelEditorToolBar(editor: AggregateModelEditor, model: Model)
     setFocusable(false)
   }
 
-  val dtButton = new Button(new AbstractAction(I18N.gui("edit")) {
+  val dtButton = new Button(new AbstractAction(loc"Edit") {
     def actionPerformed(e: ActionEvent): Unit = {
-      val newDt = new InputOptionPane(editor, I18N.gui("edit"), "dt", model.getDt.toString).getInput
+      val newDt = new InputOptionPane(editor, loc"Edit", "dt", model.getDt.toString).getInput
       try if (newDt != null) {
         model.setDt(newDt.toDouble)
         dtLabel.setText("dt = " + model.getDt)
@@ -40,25 +38,23 @@ class AggregateModelEditorToolBar(editor: AggregateModelEditor, model: Model)
         new org.nlogo.window.Events.DirtyEvent(None).raise(editor)
       }
       catch {
-        case ex: NumberFormatException => new OptionPane(null, I18N.gui.get("common.messages.error"),
-                                                         I18N.gui("dtNumberError"), OptionPane.Options.Ok,
-                                                         OptionPane.Icons.error)
-        case ex: Model.ModelException => new OptionPane(null, I18N.gui.get("common.messages.error"),
-                                                        I18N.gui("dtZeroError"), OptionPane.Options.Ok,
-                                                        OptionPane.Icons.error)
+        case ex: NumberFormatException => new OptionPane(null, loc"Error", loc"dt must be a number",
+                                                         OptionPane.Options.Ok, OptionPane.Icons.error)
+        case ex: Model.ModelException => new OptionPane(null, loc"Error", loc"dt must be greater than 0",
+                                                        OptionPane.Options.Ok, OptionPane.Icons.error)
       }
     }
   })
 
-  private val compileAction = new MyAction("Check", "/images/check.png", enableMe = true) {
+  private val compileAction = new MyAction(loc"Check", "/images/check.png", enableMe = true) {
     def actionPerformed(e: ActionEvent): Unit = {new org.nlogo.window.Events.CompileAllEvent().raise(editor)}
   }
-  private val editAction = new MyAction("Edit", "/images/edit.png", enableMe = false) {
+  private val editAction = new MyAction(loc"Edit", "/images/edit.png", enableMe = false) {
     def actionPerformed(e: ActionEvent): Unit = {editor.inspectFigure(editor.view.selection.nextFigure)}
   }
-  private val deleteAction = new MyAction("Delete", "/images/delete.png", enableMe = false) {
+  private val deleteAction = new MyAction(loc"Delete", "/images/delete.png", enableMe = false) {
     def actionPerformed(e: ActionEvent): Unit = {
-      new DeleteCommand(I18N.gui("delete"), editor).execute()
+      new DeleteCommand(loc"Delete", editor).execute()
       new org.nlogo.window.Events.CompileAllEvent().raise(editor)
       new org.nlogo.window.Events.DirtyEvent(None).raise(editor)
     }
@@ -78,8 +74,8 @@ class AggregateModelEditorToolBar(editor: AggregateModelEditor, model: Model)
   add(compileButton)
   add(new Separator)
 
-  def makeButton(name:String, image:String, tool:Tool) = {
-    new ToolBarToggleButton(new ToolAction(I18N.gui(name.toLowerCase), image, tool)) {
+  def makeButton(name: String, image: String, tool: Tool) = {
+    new ToolBarToggleButton(new ToolAction(name, image, tool)) {
       setVerticalTextPosition(SwingConstants.BOTTOM)
       setHorizontalTextPosition(SwingConstants.CENTER)
       setPrimaryAction(() => editor.view.requestFocus(FocusEvent.Cause.TRAVERSAL))
@@ -98,10 +94,13 @@ class AggregateModelEditorToolBar(editor: AggregateModelEditor, model: Model)
     }
   }
 
-  val stockButton = makeButton("Stock", "/images/stock.gif", new StockFigureCreationTool(model, editor))
-  val variableButton = makeButton("Variable", "/images/converter.gif", new ConverterFigureCreationTool(model, editor))
-  val flowButton = makeButton("Flow", "/images/rate.gif", new RateConnectionTool(model, editor, RateConnection.create()))
-  val linkButton = makeButton("Link", "/images/connector.gif", new AggregateConnectionTool(model, editor, BindingConnection.create()))
+  val stockButton = makeButton(loc"Stock", "/images/stock.gif", new StockFigureCreationTool(model, editor))
+  val variableButton = makeButton(loc"Variable", "/images/converter.gif",
+                                  new ConverterFigureCreationTool(model, editor))
+  val flowButton = makeButton(loc"Flow", "/images/rate.gif",
+                              new RateConnectionTool(model, editor, RateConnection.create()))
+  val linkButton = makeButton(loc"Link", "/images/connector.gif",
+                              new AggregateConnectionTool(model, editor, BindingConnection.create()))
 
   val toolButtonGroup = new ButtonGroup() { add(noToolButton) }
 
@@ -169,8 +168,7 @@ class AggregateModelEditorToolBar(editor: AggregateModelEditor, model: Model)
     override def mouseDrag(e: MouseEvent, x: Int, y: Int): Unit = {}
   }
 
-  abstract class MyAction(name:String, image:String, enableMe: Boolean)
-          extends AbstractAction(I18N.gui(name.toLowerCase)) {
+  abstract class MyAction(name: String, image: String, enableMe: Boolean) extends AbstractAction(name) {
     putValue(Action.SMALL_ICON, SwingUtils.iconScaledWithColor(AggregateModelEditorToolBar.this, image, 15, 15,
                                                                () => InterfaceColors.toolbarImage()))
     setEnabled(enableMe)

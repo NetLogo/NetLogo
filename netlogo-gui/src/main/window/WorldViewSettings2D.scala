@@ -3,7 +3,7 @@
 package org.nlogo.window
 
 import org.nlogo.awt.Hierarchy
-import org.nlogo.core.{ I18N, View => CoreView, Widget => CoreWidget, WorldDimensions }
+import org.nlogo.core.{ LocaleContext, View => CoreView, Widget => CoreWidget, WorldDimensions }
 import org.nlogo.swing.{ ModalProgressTask, OptionPane }
 
 object WorldViewSettings2D {
@@ -23,19 +23,19 @@ class WorldViewSettings2D(workspace: GUIWorkspace, gw: ViewWidget, tickCounter: 
 
   override def cornerConfigs: Seq[OriginConfiguration] = {
     Seq(
-      OriginConfiguration(I18N.gui.get("edit.viewSettings.origin.location.corner.bottomLeft"), 0, 0),
-      OriginConfiguration(I18N.gui.get("edit.viewSettings.origin.location.corner.topLeft"), 0, 1),
-      OriginConfiguration(I18N.gui.get("edit.viewSettings.origin.location.corner.topRight"), 1, 1),
-      OriginConfiguration(I18N.gui.get("edit.viewSettings.origin.location.corner.bottomRight"), 1, 0)
+      OriginConfiguration(loc"Bottom Left", 0, 0),
+      OriginConfiguration(loc"Top Left", 0, 1),
+      OriginConfiguration(loc"Top Right", 1, 1),
+      OriginConfiguration(loc"Bottom Right", 1, 0)
     )
   }
 
   override def edgeConfigs: Seq[OriginConfiguration] = {
     Seq(
-      OriginConfiguration(I18N.gui.get("edit.viewSettings.origin.location.edge.bottom"), 0.5, 0),
-      OriginConfiguration(I18N.gui.get("edit.viewSettings.origin.location.edge.top"), 0.5, 1),
-      OriginConfiguration(I18N.gui.get("edit.viewSettings.origin.location.edge.right"), 1, 0.5),
-      OriginConfiguration(I18N.gui.get("edit.viewSettings.origin.location.edge.left"), 0, 0.5)
+      OriginConfiguration(loc"Bottom", 0.5, 0),
+      OriginConfiguration(loc"Top", 0.5, 1),
+      OriginConfiguration(loc"Right", 1, 0.5),
+      OriginConfiguration(loc"Left", 0, 0.5)
     )
   }
 
@@ -125,9 +125,10 @@ class WorldViewSettings2D(workspace: GUIWorkspace, gw: ViewWidget, tickCounter: 
 
     private def hubnetDecision(): Int = {
       if (workspace.hubNetRunning) {
-        new OptionPane(workspace.getFrame, I18N.gui.get("view.resize.hubnet.prompt"),
-                       I18N.gui.get("view.resize.hubnet.warning"),
-                       Seq(I18N.gui.get("view.resize.hubnet.kick"), I18N.gui.get("view.resize.hubnet.dontkick")),
+        val message = loc"""|Resizing the world kills all turtles. This may cause HubNet clients to be unresponsive.
+                            |Consider kicking out all clients before proceeding."""
+
+        new OptionPane(workspace.getFrame, loc"Kick clients?", message, Seq(loc"Kick clients", loc"Don't kick"),
                        OptionPane.Icons.question).getSelectedIndex
       } else
         HubNetIgnore
@@ -141,8 +142,7 @@ class WorldViewSettings2D(workspace: GUIWorkspace, gw: ViewWidget, tickCounter: 
 
     val runnable = new RunResize()
     if (showProgress)
-      ModalProgressTask.onUIThread(Hierarchy.getFrame(gWidget),
-        I18N.gui.get("view.resize.progress"), runnable)
+      ModalProgressTask.onUIThread(Hierarchy.getFrame(gWidget), loc"Resizing...", runnable)
     else
       runnable.run()
     gWidget.displaySwitchOn(true)

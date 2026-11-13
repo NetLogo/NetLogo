@@ -8,7 +8,7 @@ import java.net.{ InetAddress, NetworkInterface }
 import org.nlogo.api.{ AbstractModelLoader, ModelType, ViewInterface }
 import org.nlogo.api.HubNetInterface.ClientInterface
 import org.nlogo.awt.EventQueue.invokeLater
-import org.nlogo.core.{ Femto, I18N, Model, Widget => CoreWidget }
+import org.nlogo.core.{ Femto, LocaleContext, Model, Widget => CoreWidget }
 import org.nlogo.fileformat.FileFormat.ModelConversion
 import org.nlogo.hubnet.connection.{ HubNetException, NetworkUtils }
 import org.nlogo.hubnet.protocol.ComputerInterface
@@ -141,12 +141,14 @@ class GUIHubNetManager(workspace: GUIWorkspace,
       serverName = name
       serverInterface = selectedNetwork
       if (serverInterface.isEmpty) {
-        new OptionPane(workspace.getFrame, I18N.gui.get("common.messages.error"),
-                       I18N.gui.get("edit.hubnet.checkNetwork"), OptionPane.Options.Ok, OptionPane.Icons.error)
+        val message = loc"Unable to find a suitable network connection for HubNet, please check your network connection"
+
+        new OptionPane(workspace.getFrame, loc"Error", message, OptionPane.Options.Ok, OptionPane.Icons.error)
+      } else if (serverInterface.exists(_._1.isLoopback)) {
+        val message = loc"Unable to find an external network connection, HubNet will be served locally"
+
+        new OptionPane(workspace.getFrame, loc"Error", message, OptionPane.Options.Ok, OptionPane.Icons.error)
       }
-      else if (serverInterface.exists(_._1.isLoopback))
-        new OptionPane(workspace.getFrame, I18N.gui.get("common.messages.error"),
-                       I18N.gui.get("edit.hubnet.noNetwork"), OptionPane.Options.Ok, OptionPane.Icons.error)
     }
     serverInterface.foreach { nw =>
       connectionManager.startup(serverName, nw)

@@ -6,7 +6,7 @@ package org.nlogo.app
  each have their own menu bar and menus ev 8/25/05 */
 
 import org.nlogo.app.interfacetab.InterfaceTab
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.swing.{ Menu, UserAction }, UserAction.{ ToolsDialogsGroup, ToolsMonitorGroup, ToolsHubNetGroup,
                                                           ToolsSettingsGroup, ToolsWidgetGroup }
 import org.nlogo.window.WorkspaceActions,
@@ -18,7 +18,7 @@ object ToolsMenu {
 }
 
 class ToolsMenu
-  extends Menu(I18N.gui.get("menu.tools"), Menu.model(ToolsMenu.sortOrder))
+  extends Menu(loc"Tools", Menu.model(ToolsMenu.sortOrder))
   with UserAction.Menu {
 
   setMnemonic('T')

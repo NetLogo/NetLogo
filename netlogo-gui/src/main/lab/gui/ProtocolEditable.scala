@@ -5,7 +5,7 @@ package org.nlogo.lab.gui
 import java.awt.Window
 
 import org.nlogo.api.{ CompilerServices, GlobalsIdentifier, LabProtocol, LabVariableParser, RefValueSet }
-import org.nlogo.core.{ CompilerException, I18N, WorldDimensions, WorldDimensions3D }
+import org.nlogo.core.{ CompilerException, LocaleContext, WorldDimensions, WorldDimensions3D }
 import org.nlogo.editor.Colorizer
 import org.nlogo.swing.OptionPane
 import org.nlogo.window.{ DummyErrorHandler, Editable, EditPanel }
@@ -24,8 +24,6 @@ private [gui] class ProtocolEditable(protocol: LabProtocol,
   def helpLink = Option(("behaviorspace", "creating-an-experiment-setup"))
   val classDisplayName = "Experiment"
   val sourceOffset = 0
-
-  private implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("tools.behaviorSpace")
 
   private var _valueSets = LabVariableParser.combineVariables(protocol.constants, protocol.subExperiments)
 
@@ -105,8 +103,10 @@ private [gui] class ProtocolEditable(protocol: LabProtocol,
   def editFinished(): Boolean = get.isDefined
   def get: Option[LabProtocol] = {
     def complain(message: String): Unit = {
-      new OptionPane(window, I18N.gui("invalid"), I18N.gui.getN("edit.behaviorSpace.invalidVarySpec", message),
-                     OptionPane.Options.Ok, OptionPane.Icons.error)
+      val error = loc"""|Invalid spec for varying variables. Error:\n
+                        |$message"""
+
+      new OptionPane(window, loc"Invalid", error, OptionPane.Options.Ok, OptionPane.Icons.error)
     }
     LabVariableParser.parseVariables(valueSets, repetitions, worldLock, compiler) match {
       case Success((constants, subExperiments)) =>
@@ -123,19 +123,18 @@ private [gui] class ProtocolEditable(protocol: LabProtocol,
 
   override def errorString: Option[String] = {
     if (name.trim.isEmpty) {
-      Option(I18N.gui.get("edit.behaviorSpace.name.empty"))
+      Option(loc"Experiment name cannot be empty")
     } else if (name.contains('/') || name.contains('\\')) {
-      Option(I18N.gui.get("edit.behaviorSpace.name.slashes"))
+      Option(loc"""Experiment name cannot contain "/" or "\\"""")
     } else if (experimentNames.contains(name.trim)) {
-      Option(I18N.gui.getN("edit.behaviorSpace.name.duplicate", name.trim))
+      Option(loc"""An experiment with the name "${name.trim}" already exists""")
     } else {
       LabVariableParser.parseVariables(valueSets, repetitions, worldLock, compiler) match {
         case Success((constants, subExperiments)) =>
           checkWorldDimensions(constants, subExperiments).orElse(checkCodeEditors())
 
         case Failure(t) =>
-          Option(I18N.gui.getN("edit.behaviorSpace.compilerError", I18N.gui.get("edit.behaviorSpace.variableSpec"),
-                               t.getMessage))
+          Option(loc"""Compiler error in variable specification: ${t.getMessage}""")
       }
     }
   }
@@ -177,9 +176,9 @@ private [gui] class ProtocolEditable(protocol: LabProtocol,
 
   private def invalidDims(minName: String, maxName: String, min: Int, max: Int): Option[String] = {
     if (max < 0) {
-      Option(I18N.gui.getN("edit.behaviorSpace.dimNegative", maxName))
+      Option(loc"$maxName cannot be negative.")
     } else if (min > 0) {
-      Option(I18N.gui.getN("edit.behaviorSpace.dimPositive", minName))
+      Option(loc"$minName cannot be positive.")
     } else {
       None
     }
@@ -195,7 +194,7 @@ private [gui] class ProtocolEditable(protocol: LabProtocol,
       None
     } catch {
       case e: CompilerException =>
-        Option(I18N.gui.getN("edit.behaviorSpace.compilerError", name, e.getMessage))
+        Option(loc"""Compiler error in $name: ${e.getMessage}""")
     }
   }
 
@@ -209,25 +208,25 @@ private [gui] class ProtocolEditable(protocol: LabProtocol,
       None
     } catch {
       case e: CompilerException =>
-        Option(I18N.gui.getN("edit.behaviorSpace.compilerError", name, e.getMessage))
+        Option(loc"""Compiler error in $name: ${e.getMessage}""")
     }
   }
 
   private def checkCodeEditors(): Option[String] = {
     metrics.split("\n").foldLeft(Option.empty[String]) {
-      case (None, m) => checkReporter(I18N.gui.get("edit.behaviorSpace.metrics"), m)
+      case (None, m) => checkReporter(loc"metrics", m)
       case (e, _) => e
-    }.orElse(checkReporter(I18N.gui.get("edit.behaviorSpace.runMetricsCondition"), runMetricsCondition))
-    .orElse(checkCommand(I18N.gui.get("edit.behaviorSpace.preExperimentCommands"), preExperimentCommands))
-    .orElse(checkCommand(I18N.gui.get("edit.behaviorSpace.setupCommands"), setupCommands))
-    .orElse(checkCommand(I18N.gui.get("edit.behaviorSpace.goCommands"), goCommands))
+    }.orElse(checkReporter(loc"run metrics when", runMetricsCondition))
+    .orElse(checkCommand(loc"pre experiment commands", preExperimentCommands))
+    .orElse(checkCommand(loc"setup commands", setupCommands))
+    .orElse(checkCommand(loc"go commands", goCommands))
     .orElse {
         val trimmed: Option[String] = exitCondition.split("\n").dropWhile(_.trim.startsWith(";"))
                                         .dropWhile(_.trim.isEmpty).headOption
 
-        trimmed.flatMap(checkReporter(I18N.gui.get("edit.behaviorSpace.exitCondition"), _))
+        trimmed.flatMap(checkReporter(loc"stop condition", _))
       }
-    .orElse(checkCommand(I18N.gui.get("edit.behaviorSpace.postRunCommands"), postRunCommands))
-    .orElse(checkCommand(I18N.gui.get("edit.behaviorSpace.postExperimentCommands"), postExperimentCommands))
+    .orElse(checkCommand(loc"post run commands", postRunCommands))
+    .orElse(checkCommand(loc"post experiment commands", postExperimentCommands))
   }
 }

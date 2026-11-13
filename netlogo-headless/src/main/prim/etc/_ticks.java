@@ -2,7 +2,7 @@
 
 package org.nlogo.prim.etc;
 
-import org.nlogo.core.I18N;
+import org.nlogo.core.LocaleContextJ;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.RuntimePrimitiveException;
 import org.nlogo.nvm.Reporter;
@@ -19,8 +19,8 @@ public final class _ticks extends Reporter {
       throws RuntimePrimitiveException {
     double result = world.ticks();
     if (result == -1) {
-      throw new RuntimePrimitiveException(
-          context, this, I18N.errorsJ().get("org.nlogo.prim.etc.$common.tickCounterNotStarted"));
+      throw new RuntimePrimitiveException(context, this,
+        LocaleContextJ.loc("The tick counter has not been started yet. Use RESET-TICKS."));
     }
     return result;
   }

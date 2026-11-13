@@ -6,7 +6,7 @@ import org.nlogo.agent.Agent;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.ArrayAgentSet;
 import org.nlogo.agent.Observer;
-import org.nlogo.core.I18N;
+import org.nlogo.core.LocaleContextJ;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.ArgumentTypeException;
@@ -41,19 +41,19 @@ public final class _ask
       agentset = (AgentSet) target;
       if (!(context.agent instanceof Observer)) {
         if (agentset == world.turtles()) {
-          throw new RuntimePrimitiveException
-              (context, this, I18N.errorsJ().get("org.nlogo.prim.$common.onlyObserverCanAskAllTurtles"));
+          throw new RuntimePrimitiveException(context, this,
+            LocaleContextJ.loc("Only the observer can ASK the set of all turtles."));
         }
         if (agentset == world.patches()) {
-          throw new RuntimePrimitiveException
-              (context, this, I18N.errorsJ().get("org.nlogo.prim.$common.onlyObserverCanAskAllPatches"));
+          throw new RuntimePrimitiveException(context, this,
+            LocaleContextJ.loc("Only the observer can ASK the set of all patches."));
         }
       }
     } else if (target instanceof Agent) {
       Agent agent = (Agent) target;
       if (agent.id() == -1) {
         throw new RuntimePrimitiveException(context, this,
-          I18N.errorsJ().getN("org.nlogo.$common.thatAgentIsDead", agent.classDisplayName()));
+          LocaleContextJ.loc("That {} is dead.", agent.classDisplayName()));
       }
       agentset = AgentSet.fromAgent(agent);
     } else {
@@ -67,12 +67,12 @@ public final class _ask
       throws LogoException {
     if (!(context.agent instanceof Observer)) {
       if (agentset == world.turtles()) {
-        throw new RuntimePrimitiveException
-            (context, this, I18N.errorsJ().get("org.nlogo.prim.$common.onlyObserverCanAskAllTurtles"));
+        throw new RuntimePrimitiveException(context, this,
+          LocaleContextJ.loc("Only the observer can ASK the set of all turtles."));
       }
       if (agentset == world.patches()) {
-        throw new RuntimePrimitiveException
-            (context, this, I18N.errorsJ().get("org.nlogo.prim.$common.onlyObserverCanAskAllPatches"));
+        throw new RuntimePrimitiveException(context, this,
+          LocaleContextJ.loc("Only the observer can ASK the set of all patches."));
       }
     }
     context.runExclusiveJob(agentset, next);
@@ -83,7 +83,7 @@ public final class _ask
       throws LogoException {
     if (agent.id() == -1) {
       throw new RuntimePrimitiveException(context, this,
-        I18N.errorsJ().getN("org.nlogo.$common.thatAgentIsDead", agent.classDisplayName()));
+        LocaleContextJ.loc("That {} is dead.", agent.classDisplayName()));
     }
     context.runExclusiveJob(AgentSet.fromAgent(agent), next);
     context.ip = offset;

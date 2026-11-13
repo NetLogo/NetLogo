@@ -5,7 +5,7 @@ package org.nlogo.app.common
 import java.awt.Component
 import java.awt.event.KeyEvent
 
-import org.nlogo.core.{ ColorizerTheme, Dialect, Femto }
+import org.nlogo.core.{ ColorizerTheme, Dialect, Femto, LocaleContext }
 import org.nlogo.api.{ Version, FileIO }
 import org.nlogo.nvm.CompilerInterface
 import org.nlogo.swing.UserAction,
@@ -33,7 +33,7 @@ object CodeToHtml {
   }
 
   class Action(workspace: AbstractWorkspace, parent: Component, getText: () => String) extends
-  ExportAction("code", workspace.guessExportName("code.html"), parent, { exportPath =>
+  ExportAction(loc"Export Code", workspace.guessExportName("code.html"), parent, { exportPath =>
     FileIO.writeFile(exportPath,
       new CodeToHtml(workspace.compiler).convert(getText()))
   }) with MenuAction {

@@ -2,7 +2,7 @@
 
 package org.nlogo.app
 
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.swing.{ Menu, UserAction },
   UserAction.{ FileExportSubcategory, FileImportSubcategory, FileOpenGroup, FilePrintGroup, FileQuitGroup,
                FileSaveGroup, FileShareGroup, FileRecentSubcategory, FileResourcesGroup, MenuAction }
@@ -16,16 +16,14 @@ object FileMenu {
 
 import FileMenu._
 
-class FileMenu extends Menu(I18N.gui.get("menu.file"), Menu.model(sortOrder)) {
-
-  implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("menu.file")
+class FileMenu extends Menu(loc"File", Menu.model(sortOrder)) {
 
   setMnemonic('F')
 
   val subcategoryNamesAndGroups = Map(
-    FileExportSubcategory -> (I18N.gui("export") -> ExportImportGroup),
-    FileImportSubcategory -> (I18N.gui("import") -> ExportImportGroup),
-    FileRecentSubcategory -> (I18N.gui("recent") -> FileOpenGroup))
+    FileExportSubcategory -> (loc"Export" -> ExportImportGroup),
+    FileImportSubcategory -> (loc"Import" -> ExportImportGroup),
+    FileRecentSubcategory -> (loc"Recent Files" -> FileOpenGroup))
 
   override def subcategoryNameAndGroup(key: String): (String, String) = {
     subcategoryNamesAndGroups.get(key).getOrElse(super.subcategoryNameAndGroup(key))

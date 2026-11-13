@@ -4,8 +4,7 @@ package org.nlogo.prim
 
 import org.nlogo.agent.{ Agent, AgentSet }
 import org.nlogo.api.{ AgentException, LogoListBuilder }
-import org.nlogo.core.I18N
-import org.nlogo.core.Syntax
+import org.nlogo.core.{ LocaleContext, Syntax }
 import org.nlogo.nvm.{ ArgumentTypeException, Context, Reporter }
 import org.nlogo.nvm.RuntimePrimitiveException
 
@@ -17,8 +16,7 @@ class _breedvariableof(name: String) extends Reporter {
   override def report(context: Context): AnyRef = args(0).report(context) match {
       case agent: Agent =>
         if (agent.id == -1)
-          throw new RuntimePrimitiveException(context, this,
-            I18N.errors.getN("org.nlogo.$common.thatAgentIsDead", agent.classDisplayName))
+          throw new RuntimePrimitiveException(context, this, loc"That ${agent.classDisplayName} is dead.")
         try {
           agent.getBreedVariable(name)
         } catch {

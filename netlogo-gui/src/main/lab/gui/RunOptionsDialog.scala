@@ -7,7 +7,7 @@ import java.nio.file.Path
 
 import org.nlogo.api.{ LabDefaultValues, LabProtocol, Options }
 import org.nlogo.awt.UserCancelException
-import org.nlogo.core.{ I18N, NetLogoPreferences }
+import org.nlogo.core.{ LocaleContext, NetLogoPreferences }
 import org.nlogo.window.{ DummyErrorHandler, Editable, EditDialogFactory, EditPanel }
 
 import java.io.File
@@ -94,14 +94,12 @@ class RunOptionsDialog(parent: Window, dialogFactory: EditDialogFactory, current
   }
 
   class EditableRunOptions extends Editable with DummyErrorHandler {
-    private implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("tools.behaviorSpace.runoptions")
-
-    val classDisplayName = I18N.gui("title")
+    val classDisplayName = loc"Run options"
 
     var errorBehaviorOptions = new Options[LabProtocol.ErrorBehavior] {
-      addOption(I18N.gui(LabProtocol.IgnoreErrors.key), LabProtocol.IgnoreErrors)
-      addOption(I18N.gui(LabProtocol.AbortRun.key), LabProtocol.AbortRun)
-      addOption(I18N.gui(LabProtocol.AbortExperiment.key), LabProtocol.AbortExperiment)
+      addOption(loc"Ignore errors", LabProtocol.IgnoreErrors)
+      addOption(loc"Abort current run", LabProtocol.AbortRun)
+      addOption(loc"Abort experiment", LabProtocol.AbortExperiment)
 
       selectValue(protocol.errorBehavior)
     }

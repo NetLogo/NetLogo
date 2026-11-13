@@ -7,7 +7,7 @@ import javax.swing.AbstractAction
 
 import org.nlogo.api.{ AbstractModelLoader, LabProtocol, ModelSaver }
 import org.nlogo.awt.Positioning
-import org.nlogo.core.{ I18N, Model }
+import org.nlogo.core.{ LocaleContext, Model }
 import org.nlogo.editor.Colorizer
 import org.nlogo.swing.UserAction.{ ToolsCategory, ToolsDialogsGroup, KeyBindings, MenuAction }
 import org.nlogo.theme.ThemeSync
@@ -101,7 +101,7 @@ class LabManager(val workspace:        GUIWorkspace,
   def getDialog: ManagerDialog =
     dialog
 
-  class ShowLabManager extends AbstractAction(I18N.gui.get(s"menu.tools.behaviorSpace")) with MenuAction {
+  class ShowLabManager extends AbstractAction(loc"BehaviorSpace") with MenuAction {
     category    = ToolsCategory
     group       = ToolsDialogsGroup
     accelerator = KeyBindings.keystroke('B', withMenu = true, withShift = true)

@@ -4,7 +4,7 @@ package org.nlogo.nvm
 
 import org.nlogo.api
 import org.nlogo.api.{ AnonymousProcedure => ApiLambda }
-import org.nlogo.core.{ AgentKind, I18N, Let, Syntax }
+import org.nlogo.core.{ AgentKind, Let, LocaleContext, Syntax }
 
 // anonymous procedures are created by the compiler via the `->` prim,
 // which may appear in user code, or may be inserted by
@@ -46,9 +46,9 @@ sealed trait AnonymousProcedure {
 object AnonymousProcedure {
   def missingInputs(lambda: ApiLambda, argCount: Int): String =
     if (lambda.syntax.minimum == 1)
-      I18N.errors.get("org.nlogo.prim.lambda.missingInput")
+      loc"arrow procedure expected 1 input, but only got 0"
     else
-      I18N.errors.getN("org.nlogo.prim.lambda.missingInputs", lambda.syntax.minimum.toString, argCount.toString)
+      loc"arrow procedure expected ${lambda.syntax.minimum} inputs, but only got $argCount"
 
   def letBindingsToBinding(letBindings: List[LetBinding]): Binding = {
     val binding = new Binding()

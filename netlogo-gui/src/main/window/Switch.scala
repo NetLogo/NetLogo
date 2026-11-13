@@ -7,14 +7,14 @@ import java.awt.event.{ MouseEvent, MouseAdapter }
 import javax.swing.{ Box, BoxLayout, JLabel, JPanel }
 
 import org.nlogo.agent.BooleanConstraint
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.swing.{ FocusUtils, Utils, Zoomable }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 abstract class Switch extends MultiErrorWidget with Events.AfterLoadEvent.Handler with ThemeSync {
   protected var constraint = new BooleanConstraint
 
-  protected val label = new JLabel(I18N.gui.get("edit.switch.previewName")) with Zoomable {
+  protected val label = new JLabel(loc"(switch)") with Zoomable {
     setFocusable(false)
   }
 
@@ -66,7 +66,7 @@ abstract class Switch extends MultiErrorWidget with Events.AfterLoadEvent.Handle
   def setVarName(name: String): Unit = {
     this._name = name
     if (name == "") {
-      displayName(I18N.gui.get("edit.switch.previewName"))
+      displayName(loc"(switch)")
     } else {
       displayName(name)
     }

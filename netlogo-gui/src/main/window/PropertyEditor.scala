@@ -4,7 +4,7 @@ package org.nlogo.window
 
 import java.awt.Component
 
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.theme.ThemeSync
 
 import scala.util.{ Failure, Try }
@@ -12,7 +12,7 @@ import scala.util.{ Failure, Try }
 trait PropertyEditor[T](val accessor: PropertyAccessor[T], val handlesOwnErrors: Boolean = false)
   extends Component with ThemeSync {
 
-  protected val defaultError = Failure(new Exception(I18N.gui.getN("edit.general.invalidValue", accessor.name)))
+  protected val defaultError = Failure(new Exception(loc"Invalid value for ${accessor.name}"))
 
   val originalValue: T = accessor.getter()
 

@@ -2,7 +2,7 @@
 
 package org.nlogo.prim;
 
-import org.nlogo.core.I18N;
+import org.nlogo.core.LocaleContextJ;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.RuntimePrimitiveException;
@@ -22,7 +22,7 @@ public final class _report
     context.ip = next;
     if (! context.activation.nonLambdaActivation().procedure.isReporter()) {
       throw new RuntimePrimitiveException(context, this,
-          I18N.errorsJ().getN("org.nlogo.prim._report.canOnlyUseInToReport", displayName()));
+        LocaleContextJ.loc("{} can only be used inside TO-REPORT.", displayName()));
     } else if (context.activation.procedure.isLambda()) {
       throw new NonLocalExit();
     } else if (!context.atTopActivation()) {
@@ -30,7 +30,7 @@ public final class _report
       //   to-report foo ask turtle 0 [ report 5 ] end
       // maybe you should be able to, but at least for now, you can't
       throw new RuntimePrimitiveException(context, this,
-          I18N.errorsJ().getN("org.nlogo.prim._report.mustImmediatelyBeUsedInToReport", displayName()));
+        LocaleContextJ.loc("{} must be immediately inside a TO-REPORT.", displayName()));
     }
   }
 }

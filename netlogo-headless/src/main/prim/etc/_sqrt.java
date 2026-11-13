@@ -2,7 +2,7 @@
 
 package org.nlogo.prim.etc;
 
-import org.nlogo.core.I18N;
+import org.nlogo.core.LocaleContextJ;
 import org.nlogo.core.Pure;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.RuntimePrimitiveException;
@@ -18,7 +18,7 @@ public final class _sqrt extends Reporter implements Pure {
   public double report_1(Context context, double arg0) {
     if (arg0 < 0) {
       throw new RuntimePrimitiveException(context, this,
-          I18N.errorsJ().getN("org.nlogo.prim.etc._sqrt.squareRootIsImaginary", arg0));
+        LocaleContextJ.loc("The square root of {} is an imaginary number.", LocaleContextJ.formatDouble(arg0)));
     }
     return StrictMath.sqrt(arg0);
   }

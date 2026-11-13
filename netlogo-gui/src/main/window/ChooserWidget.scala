@@ -3,14 +3,14 @@
 package org.nlogo.window
 
 import org.nlogo.api.{ CompilerServices, Dump, ExtensionManager }
-import org.nlogo.core.{ I18N, Chooseable, Chooser => CoreChooser, LogoList, Widget => CoreWidget }
+import org.nlogo.core.{ Chooseable, Chooser => CoreChooser, LocaleContext, LogoList, Widget => CoreWidget }
 import org.nlogo.editor.Colorizer
 import org.nlogo.window.Events.{AfterLoadEvent, PeriodicUpdateEvent, InterfaceGlobalEvent}
 
 class ChooserWidget(val compiler: CompilerServices, colorizer: Colorizer, extensionManager: ExtensionManager)
   extends Chooser with Editable with InterfaceGlobalWidget with PeriodicUpdateEvent.Handler {
 
-  override def classDisplayName: String = I18N.gui.get("tabs.run.widgets.chooser")
+  override def classDisplayName: String = loc"Chooser"
 
   override def editPanel: EditPanel = new ChooserEditPanel(this, compiler, colorizer, extensionManager)
 

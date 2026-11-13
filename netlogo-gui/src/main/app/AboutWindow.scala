@@ -10,7 +10,7 @@ import javax.swing.border.LineBorder
 
 import org.nlogo.api.{ APIVersion, FileIO, Version }
 import org.nlogo.awt.Positioning
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.editor.EditorConfiguration
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, RichAction, ScrollPane, TabbedPane, TextArea, UserAction, Utils,
                          WindowAutomator, Zoomable, ZoomableBorder, ZoomableWindow }, UserAction.KeyBindings
@@ -18,7 +18,7 @@ import org.nlogo.theme.{ DarkTheme, InterfaceColors, ThemeSync }
 import org.nlogo.util.SysInfo
 
 class AboutWindow(parent: Frame)
-  extends JDialog(parent, I18N.gui.get("dialog.about"), false) with ZoomableWindow(Option(parent)) with ThemeSync {
+  extends JDialog(parent, loc"About NetLogo", false) with ZoomableWindow(Option(parent)) with ThemeSync {
 
   WindowAutomator.automate(this)
 
@@ -102,8 +102,8 @@ class AboutWindow(parent: Frame)
   }
 
   private val tabs = new TabbedPane {
-    add(I18N.gui.get("dialog.about.credits"), creditsScrollPane)
-    add(I18N.gui.get("dialog.about.system"), systemScrollPane)
+    add(loc"Credits", creditsScrollPane)
+    add(loc"System", systemScrollPane)
   }
 
   setResizable(false)

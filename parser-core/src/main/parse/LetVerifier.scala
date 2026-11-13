@@ -29,7 +29,7 @@ class LetVerifier extends AstVisitor {
       case l: _letvariable =>
         cAssert(
           currentLet.isEmpty || (currentLet.get ne l.let),
-          I18N.errors.getN("compiler.LetVariable.notDefined", l.token.text.toUpperCase(Locale.ENGLISH)),
+          loc"Nothing named ${l.token.text.toUpperCase(Locale.ENGLISH)} has been defined.",
           l.token)
       case _ =>
     }

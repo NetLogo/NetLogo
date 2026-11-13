@@ -5,7 +5,7 @@ package org.nlogo.prim.etc;
 import org.nlogo.agent.Agent;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.core.AgentKindJ;
-import org.nlogo.core.I18N;
+import org.nlogo.core.LocaleContextJ;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Context;
@@ -28,11 +28,11 @@ public final class _inradiusnowrap
       throws LogoException {
     if (sourceSet.kind() == AgentKindJ.Link()) {
       throw new RuntimePrimitiveException(context, this,
-          I18N.errorsJ().get("org.nlogo.prim.etc.$common.expectedTurtleOrPatchButGotLink"));
+        LocaleContextJ.loc("Expected a turtle or a patch but got a link."));
     }
     if (radius < 0) {
       throw new RuntimePrimitiveException(context, this,
-          I18N.errorsJ().getN("org.nlogo.prim.etc.$common.noNegativeRadius", displayName()));
+        LocaleContextJ.loc("{} cannot take a negative radius.", displayName()));
     }
     List<Agent> result =
         world.inRadiusOrCone().inRadius(context.agent, sourceSet, radius, false);

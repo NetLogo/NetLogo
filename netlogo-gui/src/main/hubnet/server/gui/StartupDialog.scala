@@ -7,7 +7,7 @@ import java.net.{ InetAddress, NetworkInterface }
 import javax.swing.{ JDialog, JLabel, WindowConstants }
 
 import org.nlogo.awt.Positioning
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.swing.NonemptyTextFieldButtonEnabler
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, CheckBox, ComboBox, DialogButton, TextField, TextFieldBox,
                          WindowAutomator, ZoomableBorder, ZoomableWindow }
@@ -15,7 +15,7 @@ import org.nlogo.theme.InterfaceColors
 
 class StartupDialog(parent: Frame, choices: Seq[(NetworkInterface, InetAddress)],
                     preferredNetworkConnection: Option[(NetworkInterface, InetAddress)])
-  extends JDialog(parent, I18N.gui.get("edit.hubnet.startActivity"), true) with ZoomableWindow(Option(parent)) {
+  extends JDialog(parent, loc"Start HubNet Activity", true) with ZoomableWindow(Option(parent)) {
 
   WindowAutomator.automate(this)
 

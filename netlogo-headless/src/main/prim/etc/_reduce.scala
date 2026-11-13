@@ -2,7 +2,7 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.nvm.{ AnonymousProcedure, Context, Reporter }
 import org.nlogo.nvm.RuntimePrimitiveException
 
@@ -14,7 +14,7 @@ class _reduce extends Reporter {
       throw new RuntimePrimitiveException(context, this, AnonymousProcedure.missingInputs(task, 2))
     val list = argEvalList(context, 1)
     if (list.size < 1)
-      throw new RuntimePrimitiveException( context , this , I18N.errors.get("org.nlogo.prim._reduce.emptyListInvalidInput"))
+      throw new RuntimePrimitiveException(context, this, loc"The list argument to reduce must not be empty.")
     val it = list.javaIterator
     var result = it.next()
     while (it.hasNext)

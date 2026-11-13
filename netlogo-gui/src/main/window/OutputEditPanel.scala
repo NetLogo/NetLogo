@@ -2,14 +2,14 @@
 
 package org.nlogo.window
 
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 
 class OutputEditPanel(target: OutputWidget) extends WidgetEditPanel(target) {
   private val fontSize =
     new IntegerEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.output.fontSize"),
+        loc"Font Size",
         () => target.fontSize,
         _.foreach(target.setFontSize),
         () => apply()))

@@ -2,7 +2,7 @@
 
 package org.nlogo.parse
 
-import org.nlogo.core.{AstTransformer, ReporterApp, Statement, I18N}
+import org.nlogo.core.{ AstTransformer, LocaleContext, ReporterApp, Statement }
 import org.nlogo.core.Fail._
 import org.nlogo.core.prim._
 
@@ -30,7 +30,7 @@ class CarefullyVisitor extends AstTransformer {
     app.reporter match {
       case em: _errormessage =>
         if(stack.isEmpty)
-          exception(I18N.errors.getN("compiler.CarefullyVisitor.badNesting", em.token.text), app)
+          exception(loc"${em.token.text} cannot be used outside of CAREFULLY.", app)
         app.copy(reporter = em.copy(let = Option(stack.head.let)))
       case _ => super.visitReporterApp(app)
     }

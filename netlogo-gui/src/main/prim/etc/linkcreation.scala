@@ -4,7 +4,7 @@ package org.nlogo.prim.etc
 
 import
   org.nlogo.{ agent, core, nvm },
-    core.Syntax,
+    core.{ LocaleContext, Syntax },
     agent.{ Turtle, Link, LinkManager, AgentSet, AgentSetBuilder },
     nvm.{ Command, Context, RuntimePrimitiveException, SelfScoping }
 
@@ -44,14 +44,11 @@ trait LinkCreationCommand extends Command with nvm.CustomAssembled with SelfScop
   def checkForBreedCompatibility(context: Context, breed: AgentSet): Unit = {
     if (!world.linkManager.checkBreededCompatibility(breed eq world.links))
       throw new RuntimePrimitiveException(
-        context, this, core.I18N.errors.get(
-          "org.nlogo.agent.Link.cantHaveBreededAndUnbreededLinks"))
+        context, this, loc"You cannot have both breeded and unbreeded links in the same world.")
   }
   def newLink(context: Context, src: Turtle, dest: Turtle, breed: AgentSet): Option[Link] =
     if (src eq dest)
-      throw new RuntimePrimitiveException(
-        context, this, core.I18N.errors.get(
-          "org.nlogo.prim.$common.turtleCantLinkToSelf"))
+      throw new RuntimePrimitiveException(context, this, loc"A turtle cannot link to itself.")
     else if (src.id == -1 || dest.id == -1 || linkAlreadyExists(src, dest, breed))
       None
     else {

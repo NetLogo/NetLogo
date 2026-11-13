@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.swing.{ BoxAlign, BoxRow }
 
 class DummySliderEditPanel(target: DummySliderWidget) extends WidgetEditPanel(target) {
@@ -10,7 +10,7 @@ class DummySliderEditPanel(target: DummySliderWidget) extends WidgetEditPanel(ta
     new StringEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.hubnet.tag"),
+        loc"Tag",
         () => target.name,
         _.foreach(target.setVarName),
         () => apply()))
@@ -19,7 +19,7 @@ class DummySliderEditPanel(target: DummySliderWidget) extends WidgetEditPanel(ta
     new DoubleEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.slider.minimum"),
+        loc"Minimum",
         () => target.min,
         _.foreach(target.setMin),
         () => apply()))
@@ -28,7 +28,7 @@ class DummySliderEditPanel(target: DummySliderWidget) extends WidgetEditPanel(ta
     new DoubleEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.slider.increment"),
+        loc"Increment",
         () => target.inc,
         _.foreach(target.setInc),
         () => apply()))
@@ -37,7 +37,7 @@ class DummySliderEditPanel(target: DummySliderWidget) extends WidgetEditPanel(ta
     new DoubleEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.slider.maximum"),
+        loc"Maximum",
         () => target.max,
         _.foreach(target.setMax),
         () => apply()))
@@ -46,7 +46,7 @@ class DummySliderEditPanel(target: DummySliderWidget) extends WidgetEditPanel(ta
     new DoubleEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.slider.value"),
+        loc"Value",
         () => target.value,
         _.foreach(target.setValue),
         () => apply()))
@@ -55,7 +55,7 @@ class DummySliderEditPanel(target: DummySliderWidget) extends WidgetEditPanel(ta
     new StringEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.slider.units"),
+        loc"Units (optional)",
         () => target.units,
         _.foreach(target.setUnits),
         () => apply()))
@@ -64,7 +64,7 @@ class DummySliderEditPanel(target: DummySliderWidget) extends WidgetEditPanel(ta
     new BooleanEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.slider.vertical"),
+        loc"vertical?",
         () => target.vertical,
         _.foreach(target.setVertical),
         () => apply(vertical.get.toOption.exists(_ != vertical.originalValue))))
@@ -73,7 +73,7 @@ class DummySliderEditPanel(target: DummySliderWidget) extends WidgetEditPanel(ta
     new BooleanEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.general.oldSize"),
+        loc"Use old sizing",
         () => target.oldSize,
         _.foreach(target.oldSize),
         () => apply()))

@@ -23,7 +23,7 @@ import javax.swing.event.{ AncestorEvent, AncestorListener, DocumentEvent, Docum
   HyperlinkEvent, HyperlinkListener, TreeExpansionEvent, TreeExpansionListener,
   TreeSelectionEvent, TreeSelectionListener }
 
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.api.{ FileIO, LibraryManager }
 import org.nlogo.awt.{ Positioning, UserCancelException }
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, BrowserLauncher, Button, ButtonPanel, CollapsibleArrow,
@@ -48,7 +48,7 @@ object ModelsLibraryDialog {
   @throws(classOf[UserCancelException])
   def open(parent: Frame, libraryManager: LibraryManager, onSelect: URI => Unit): Unit = {
     if (me == null || ModelsLibrary.needsModelScan) {
-      ModalProgressTask.onUIThread(parent, I18N.gui.get("modelsLibrary.loading"), { () =>
+      ModalProgressTask.onUIThread(parent, loc"Loading Models Library...", { () =>
         try {
           buildRootNode(libraryManager).foreach { node =>
             SwingUtilities.invokeLater({ () =>
@@ -100,7 +100,7 @@ object ModelsLibraryDialog {
 
     private def translateNameForDisplay(name: String): String =
       if (name.equalsIgnoreCase("UNVERIFIED"))
-        I18N.shared.get("modelsLibrary.unverified")
+        loc"(unverified)"
       else
         removeSuffix(name)
 
@@ -163,7 +163,7 @@ object ModelsLibraryDialog {
 import ModelsLibraryDialog._
 
 class ModelsLibraryDialog(parent: Frame, node: Node)
-  extends JDialog(parent, I18N.gui.get("menu.file.modelsLibrary"), true)
+  extends JDialog(parent, loc"Models Library", true)
   with TreeSelectionListener
   with TreeExpansionListener
   with ZoomableWindow(Option(parent))
@@ -234,7 +234,7 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
   }
 
   private val openAction: Action =
-    new AbstractAction(I18N.gui.get("modelsLibrary.open")) {
+    new AbstractAction(loc"Open") {
       def actionPerformed(e: ActionEvent): Unit = {
         sourceURI = selected.map(_.getFileURI)
         setVisible(false)
@@ -258,7 +258,7 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
     }
 
   private val cancelAction: Action =
-    new AbstractAction(I18N.gui.get("common.buttons.cancel")) {
+    new AbstractAction(loc"Cancel") {
       def actionPerformed(e: ActionEvent): Unit = {
         sourceURI = None
         setVisible(false)
@@ -266,7 +266,7 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
     }
 
   private val communityAction: Action =
-    new AbstractAction(I18N.gui.get("modelsLibrary.community")) {
+    new AbstractAction(loc"Go to the Community Models web page") {
       def actionPerformed(e: ActionEvent): Unit = {
         val uri = BrowserLauncher.makeURI(me, "https://ccl.northwestern.edu/netlogo/more-models.shtml")
         if (uri != null) {
@@ -287,7 +287,7 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
   private val selectButton = new DialogButton(true, openAction)
   private val cancelButton = new DialogButton(false, cancelAction)
 
-  private val clearSearchButton = new Button(I18N.gui.get("modelsLibrary.clear"), () => {
+  private val clearSearchButton = new Button(loc"Clear", () => {
     searchField.setText("")
   })
 
@@ -671,8 +671,7 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
       if (e.getEventType == HyperlinkEvent.EventType.ACTIVATED) {
         Option(e.getURL)
           .flatMap(u => Try(u.toURI).toOption) match {
-            case None => new OptionPane(this, I18N.gui.get("common.messages.error"),
-                                        I18N.gui.get("modelsLibrary.invalidURL"), OptionPane.Options.Ok,
+            case None => new OptionPane(this, loc"Error", loc"Invalid URL!", OptionPane.Options.Ok,
                                         OptionPane.Icons.error)
             case Some(toOpen) => BrowserLauncher.openURI(this, toOpen)
           }

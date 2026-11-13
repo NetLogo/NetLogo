@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.swing.{ BoxAlign, BoxRow }
 
 class DummyButtonEditPanel(target: DummyButtonWidget) extends WidgetEditPanel(target) {
@@ -10,7 +10,7 @@ class DummyButtonEditPanel(target: DummyButtonWidget) extends WidgetEditPanel(ta
     new StringEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.hubnet.tag"),
+        loc"Tag",
         () => target.name,
         _.foreach(target.setDisplayName),
         () => apply()))
@@ -19,7 +19,7 @@ class DummyButtonEditPanel(target: DummyButtonWidget) extends WidgetEditPanel(ta
     new KeyEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.button.actionKey"),
+        loc"Action key",
         () => target.actionKey,
         _.foreach(target.setActionKey),
         () => apply()))

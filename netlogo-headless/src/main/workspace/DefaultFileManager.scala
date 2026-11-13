@@ -11,7 +11,7 @@ import
 import
   org.nlogo.{ agent, api, core, nvm },
     agent.{ OutputObject, World },
-    core.{ CompilerException, File, FileMode, I18N },
+    core.{ CompilerException, File, FileMode, LocaleContext },
     api.LocalFile,
     nvm.{ FileManager, ImportHandler }
 
@@ -107,11 +107,11 @@ private[workspace] final class DefaultFileManager(private val workspace: Abstrac
     val checkFile = new JFile(filePath)
 
     if (!checkFile.exists)
-      throw new IOException(I18N.errorsJ.get("org.nlogo.workspace.DefaultFileManager.cannotDeleteNonExistantFile"))
+      throw new IOException(loc"You cannot delete a non-existent file.")
     else if (!checkFile.canWrite)
       throw new IOException("Modification to this file is denied.")
     else if (!checkFile.isFile)
-      throw new IOException(I18N.errorsJ.get("org.nlogo.workspace.DefaultFileManager.canOnlyDeleteFiles"))
+      throw new IOException(loc"You can only delete files.")
     else if (!checkFile.delete)
       throw new IOException("Deletion failed.")
 
@@ -237,7 +237,7 @@ private[workspace] final class DefaultFileManager(private val workspace: Abstrac
   }
 
   private def throwNoOpenFile(): Nothing =
-    throw new IOException(I18N.errors.get("org.nlogo.workspace.DefaultFileManager.noOpenFile"))
+    throw new IOException(loc"No file has been opened.")
 
   private def closeFile(file: File): Unit = {
     openFiles -= file.getAbsolutePath

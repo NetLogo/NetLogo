@@ -5,7 +5,7 @@ package org.nlogo.api
 import java.text.DecimalFormat
 import java.awt.{ Color => JColor }
 
-import org.nlogo.core.{ Color => CColor, ColorConstants, LogoList, I18N, Resource },
+import org.nlogo.core.{ Color => CColor, ColorConstants, LogoList, LocaleContext, Resource },
   ColorConstants._
 
 object Color extends CColor {
@@ -196,8 +196,7 @@ object Color extends CColor {
   def validRGBList(rgb: LogoList, allowAlpha: Boolean): Unit = {
     def validRGB(c: Int): Unit = {
       if (c < 0 || c > 255)
-        throw new AgentException(I18N.errors.get(
-          "org.nlogo.agent.Agent.rgbValueError"))
+        throw new AgentException(loc"RGB values must be 0-255")
     }
     if (rgb.size == 3 || (allowAlpha && rgb.size == 4))
       try {
@@ -212,10 +211,11 @@ object Color extends CColor {
         // just fall through and throw the error below
         org.nlogo.api.Exceptions.ignore(e)
       }
-    val key = "org.nlogo.agent.Agent." +
-      (if (allowAlpha) "rgbListSizeError.3or4"
-       else "rgbListSizeError.3")
-    throw new AgentException(I18N.errors.get(key))
+    throw new AgentException(if (allowAlpha) {
+      loc"An rgb list must contain 3 or 4 numbers 0-255"
+    } else {
+      loc"An rgb list must contain 3 numbers 0-255"
+    })
   }
 
 

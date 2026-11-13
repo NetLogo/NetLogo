@@ -7,7 +7,7 @@ import java.awt.event.{ ActionEvent, FocusEvent, KeyAdapter, KeyEvent, KeyListen
 import javax.swing.{ AbstractAction, Action, ButtonGroup, JLabel }
 
 import org.nlogo.app.common.{ Events => AppEvents }
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.swing.{ AutomationUtils, BoxAlign, BoxColumn, BoxRow, DropdownArrow, FocusUtils, MenuItem, MouseUtils,
                          PopupMenu, PreferredSize, RoundedBorderPanel, ToolBarToggleButton, Utils,
                          WidgetControlsInterface, Zoomable, ZoomableBorder }
@@ -54,10 +54,10 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
       "Alt"
     }
 
-    interactButton.setToolTipText(I18N.gui.getN("tabs.run.interactButton.tooltip", altText))
-    selectButton.setToolTipText(I18N.gui.getN("tabs.run.selectButton.tooltip", altText))
-    editButton.setToolTipText(I18N.gui.getN("tabs.run.editButton.tooltip", altText))
-    deleteButton.setToolTipText(I18N.gui.getN("tabs.run.deleteButton.tooltip", altText))
+    interactButton.setToolTipText(loc"interact with interface items ($altText+1)")
+    selectButton.setToolTipText(loc"select interface items ($altText+2)")
+    editButton.setToolTipText(loc"edit interface items ($altText+3)")
+    deleteButton.setToolTipText(loc"delete interface items ($altText+4)")
   }
 
   buttonGroup.add(interactButton)
@@ -238,7 +238,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
   }
 
   class WidgetMenu extends BoxRow(14) with RoundedBorderPanel with FocusUtils with ThemeSync with MouseUtils {
-    private val label = new JLabel(I18N.gui.get("tabs.run.addWidget")) with Zoomable {
+    private val label = new JLabel(loc"Add Widget") with Zoomable {
       setFocusable(false)
     }
 
@@ -336,9 +336,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
   }
 
   class AlignmentMenu extends BoxRow(14) with RoundedBorderPanel with ThemeSync with FocusUtils with MouseUtils {
-    private implicit val i18nPrefix: I18N.Prefix = I18N.Prefix("tabs.run.widget")
-
-    private val label = new JLabel(I18N.gui.get("tabs.run.alignWidgets")) with Zoomable {
+    private val label = new JLabel(loc"Align Widgets") with Zoomable {
       setFocusable(false)
     }
 
@@ -355,22 +353,23 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
 
     enableHover()
 
-    private val leftAction = new AlignMenuItem("alignLeft", "align-left.png", _.alignLeft())
+    private val leftAction = new AlignMenuItem(loc"Align Left", "align-left.png", _.alignLeft())
     private val centerHorizontalAction = new AlignMenuItem("alignCenterHorizontal", "align-horizontal-center.png",
                                                            _.alignCenterHorizontal())
-    private val rightAction = new AlignMenuItem("alignRight", "align-right.png", _.alignRight())
-    private val topAction = new AlignMenuItem("alignTop", "align-top.png", _.alignTop())
-    private val centerVerticalAction = new AlignMenuItem("alignCenterVertical", "align-vertical-center.png",
+    private val rightAction = new AlignMenuItem(loc"Align Right", "align-right.png", _.alignRight())
+    private val topAction = new AlignMenuItem(loc"Align Top", "align-top.png", _.alignTop())
+    private val centerVerticalAction = new AlignMenuItem(loc"Center Vertically", "align-vertical-center.png",
                                                          _.alignCenterVertical())
-    private val bottomAction = new AlignMenuItem("alignBottom", "align-bottom.png", _.alignBottom())
-    private val distributeHorizontalAction = new AlignMenuItem("distributeHorizontal", "distribute-horizontal.png",
+    private val bottomAction = new AlignMenuItem(loc"Align Bottom", "align-bottom.png", _.alignBottom())
+    private val distributeHorizontalAction = new AlignMenuItem(loc"Distribute Horizontally",
+                                                               "distribute-horizontal.png",
                                                                _.distributeHorizontal())
-    private val distributeVerticalAction = new AlignMenuItem("distributeVertical", "distribute-vertical.png",
+    private val distributeVerticalAction = new AlignMenuItem(loc"Distribute Vertically", "distribute-vertical.png",
                                                              _.distributeVertical())
-    private val stretchLeftAction = new AlignMenuItem("stretchLeft", "stretch-left.png", _.stretchLeft())
-    private val stretchRightAction = new AlignMenuItem("stretchRight", "stretch-right.png", _.stretchRight())
-    private val stretchTopAction = new AlignMenuItem("stretchTop", "stretch-top.png", _.stretchTop())
-    private val stretchBottomAction = new AlignMenuItem("stretchBottom", "stretch-bottom.png", _.stretchBottom())
+    private val stretchLeftAction = new AlignMenuItem(loc"Stretch Left", "stretch-left.png", _.stretchLeft())
+    private val stretchRightAction = new AlignMenuItem(loc"Stretch Right", "stretch-right.png", _.stretchRight())
+    private val stretchTopAction = new AlignMenuItem(loc"Stretch Top", "stretch-top.png", _.stretchTop())
+    private val stretchBottomAction = new AlignMenuItem(loc"Stretch Bottom", "stretch-bottom.png", _.stretchBottom())
 
     var popup: PopupMenu = getPopup
 
@@ -453,7 +452,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
     }
 
     private class AlignMenuItem(name: String, image: String, action: WidgetPanel => Unit)
-      extends MenuItem(I18N.gui(name), () => action(wPanel)) {
+      extends MenuItem(name, () => action(wPanel)) {
 
       setIcon(Utils.iconScaledWithColor(this, s"/images/$image", 16, 16, () => InterfaceColors.toolbarImage()))
     }

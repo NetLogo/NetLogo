@@ -3,7 +3,8 @@
 package org.nlogo.window
 
 import org.nlogo.api.{ CompilerServices, Dump }
-import org.nlogo.core.{ I18N, Chooseable, Chooser => CoreChooser, CompilerException, LogoList, Widget => CoreWidget }
+import org.nlogo.core.{ Chooseable, Chooser => CoreChooser, CompilerException, LocaleContext, LogoList,
+                        Widget => CoreWidget }
 import org.nlogo.editor.Colorizer
 
 class DummyChooserWidget(val compiler: CompilerServices, colorizer: Colorizer) extends Chooser with Editable {
@@ -12,7 +13,7 @@ class DummyChooserWidget(val compiler: CompilerServices, colorizer: Colorizer) e
   }
 
   override def classDisplayName: String =
-    I18N.gui.get("tabs.run.widgets.chooser")
+    loc"Chooser"
 
   override def editPanel: EditPanel = new DummyChooserEditPanel(this, compiler, colorizer)
 

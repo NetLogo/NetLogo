@@ -10,7 +10,7 @@ import javax.swing.{ AbstractAction, JComponent }
 
 import org.nlogo.api.{ FileIO, ModelReader, Version }
 import org.nlogo.awt.UserCancelException
-import org.nlogo.core.{ I18N, Model }
+import org.nlogo.core.{ LocaleContext, Model }
 import org.nlogo.fileformat.{ ConversionError, ConversionWithErrors, ErroredConversion, FailedConversionResult }
 import org.nlogo.swing.{ BrowserLauncher, Button, FileDialog, MessageDialog, OptionPane }
 import org.nlogo.workspace.{ ModelTracker, OpenModel, SaveModel },
@@ -24,13 +24,12 @@ class FileController(owner: Component, modelTracker: ModelTracker) extends OpenM
   def errorOpeningURI(uri: URI, exception: Exception): Unit = {
     println(exception)
     exception.printStackTrace()
-    new OptionPane(owner, I18N.gui.get("common.messages.error"),
-                   I18N.gui.getN("file.open.error.unableToOpen", Paths.get(uri).toString, exception.getMessage),
+    new OptionPane(owner, loc"Error", loc"NetLogo can't open the model ${Paths.get(uri)}:\n\n${exception.getMessage}",
                    OptionPane.Options.Ok, OptionPane.Icons.error)
   }
 
   def errorAutoconvertingModel(res: FailedConversionResult): Option[Model] =
-    showAutoconversionError(res, "model")
+    showAutoconversionError(res, loc"Model")
 
   def showAutoconversionError(res: FailedConversionResult, base: String): Option[Model] = {
     res.errors.foreach(_.errors.foreach { e =>
@@ -78,25 +77,33 @@ class FileController(owner: Component, modelTracker: ModelTracker) extends OpenM
 
   @throws(classOf[UserCancelException])
   def checkWithUserBeforeOpeningModelFromFutureVersion(version: String): Unit = {
-    if (new OptionPane(owner, I18N.gui.get("common.messages.warning"),
-                       I18N.gui.getN("file.open.warn.version.newer", Version.version, version),
-                       OptionPane.Options.OkCancel, OptionPane.Icons.warning).getSelectedIndex != 0)
+    val message = loc"""|You are attempting to open a model that was created in a newer version of NetLogo.
+                        |(This is ${Version.version}; the model was created in $version.) NetLogo can try to open the
+                        |model, but it may or may not work."""
+
+    if (new OptionPane(owner, loc"Warning", message, OptionPane.Options.OkCancel, OptionPane.Icons.warning)
+          .getSelectedIndex != 0)
       throw new UserCancelException()
   }
 
   @throws(classOf[UserCancelException])
   def checkWithUserBeforeOpening3DModelin2D(version: String): Unit = {
-    if (new OptionPane(owner, I18N.gui.get("common.messages.warning"),
-                       I18N.gui.getN("file.open.warn.intwod.openthreed", Version.version, version),
-                       OptionPane.Options.OkCancel, OptionPane.Icons.warning).getSelectedIndex != 0)
+    val message = loc"""|You are attempting to open a model that was created in a 3D version of NetLogo. (This is
+                        |${Version.version}; the model was created in $version.) NetLogo can try to open the model,
+                        |but it may or may not work."""
+
+    if (new OptionPane(owner, loc"Warning", message, OptionPane.Options.OkCancel, OptionPane.Icons.warning)
+          .getSelectedIndex != 0)
       throw new UserCancelException()
   }
 
   @throws(classOf[UserCancelException])
   def checkWithUserBeforeOpening2DModelin3D(): Unit = {
-   if (new OptionPane(owner, I18N.gui.get("common.messages.warning"),
-                       I18N.gui.getN("file.open.warn.inthreed.opentwod", Version.version),
-                       OptionPane.Options.OkCancel, OptionPane.Icons.warning).getSelectedIndex != 0)
+    val message = loc"""|You are attempting to open a 2D model in ${Version.version}. You might need to make changes
+                        |before it will work in 3D."""
+
+    if (new OptionPane(owner, loc"Warning", message, OptionPane.Options.OkCancel, OptionPane.Icons.warning)
+          .getSelectedIndex != 0)
       throw new UserCancelException()
   }
 
@@ -104,19 +111,19 @@ class FileController(owner: Component, modelTracker: ModelTracker) extends OpenM
   def notifyUserNotValidFile(uri: URI): Unit = {
     val warningText = Try(Paths.get(uri))
       .toOption
-      .map(path => I18N.gui.getN("file.open.error.invalidmodel.withPath", path.toString))
-      .getOrElse(I18N.gui.get("file.open.error.invalidmodel"))
-    new OptionPane(owner, I18N.gui.get("common.messages.error"), warningText, OptionPane.Options.Ok,
-                   OptionPane.Icons.error)
+      .map(path => loc"The file $path is not a valid NetLogo model file.")
+      .getOrElse(loc"This file is not a valid NetLogo model file.")
+    new OptionPane(owner, loc"Error", warningText, OptionPane.Options.Ok, OptionPane.Icons.error)
     throw new UserCancelException()
   }
 
   def showVersionWarningAndGetResponse(version: String): Boolean = {
-    val response = new OptionPane(owner, I18N.gui.get("common.messages.warning"),
-                                  I18N.gui.getN("file.open.warn.version.older", version, Version.version),
-                                  Seq(I18N.gui.get("common.buttons.continue"),
-                                      I18N.gui.get("file.open.warn.version.transitionGuide"),
-                                      I18N.gui.get("file.open.warn.version.autoConverter")),
+    val message = loc"""|This model was created in $version. You may need to make changes for it to work in
+                        |${Version.version}. If it does not open, you may be able to update it for ${Version.version}
+                        |using the Auto-Converter service."""
+
+    val response = new OptionPane(owner, loc"Warning", message,
+                                  Seq(loc"Continue", loc"Open Transition Guide", loc"Open Auto-Converter"),
                                   OptionPane.Icons.warning).getSelectedIndex
     response match {
       case 0 => true
@@ -132,9 +139,8 @@ class FileController(owner: Component, modelTracker: ModelTracker) extends OpenM
   }
 
   def chooseFilePath(modelType: org.nlogo.api.ModelType): Option[java.net.URI] = {
-    val userPath = FileDialog.showFiles(
-      owner, I18N.gui.get("menu.file.saveAs"), AWTFileDialog.SAVE,
-      guessFileName, List[String](ModelReader.modelSuffix))
+    val userPath = FileDialog.showFiles(owner, loc"Save As", AWTFileDialog.SAVE, guessFileName,
+                                        List[String](ModelReader.modelSuffix))
     val extensionPath = FileIO.ensureExtension(userPath, ModelReader.modelSuffix)
     val path = Paths.get(extensionPath)
     if (!path.toFile.exists || userPath == extensionPath) {
@@ -153,22 +159,22 @@ class FileController(owner: Component, modelTracker: ModelTracker) extends OpenM
 
   def shouldSaveModelOfDifferingVersion(version: String): Boolean = {
     Version.compatibleVersion(version) || {
-      new OptionPane(owner, I18N.gui.get("common.messages.error"),
-                     I18N.gui.getN("file.save.warn.savingInNewerVersion", version, Version.version),
-                     Seq(I18N.gui.get("common.buttons.save"),
-                         I18N.gui.get("common.buttons.cancel")),
-                     OptionPane.Icons.error).getSelectedIndex == 0
+      val message = loc"""|This model was made with $version. If you save it in ${Version.version} it may not work in
+                          |the old version anymore."""
+
+      new OptionPane(owner, loc"Error", message, Seq(loc"Save", loc"Cancel"), OptionPane.Icons.error)
+        .getSelectedIndex == 0
     }
   }
 
   def warnInvalidFileFormat(format: String): Unit = {
-    new OptionPane(owner, I18N.gui.get("common.messages.warning"),
-                   I18N.gui.getN("file.save.warn.invalidFormat", format), OptionPane.Options.Ok,
-                   OptionPane.Icons.warning)
+    new OptionPane(owner, loc"Warning",
+                   loc"""NetLogo doesn't know how to save in ".$format" format, please choose a different format.""",
+                   OptionPane.Options.Ok, OptionPane.Icons.warning)
   }
 }
 
-class AutoConversionErrorDialog(owner: Component, keyContext: String) extends MessageDialog(owner, I18N.gui.get("common.buttons.cancel")) {
+class AutoConversionErrorDialog(owner: Component, context: String) extends MessageDialog(owner, loc"Cancel") {
   setModalityType(Dialog.ModalityType.DOCUMENT_MODAL)
 
   var modelToOpen = Option.empty[Model]
@@ -183,21 +189,23 @@ class AutoConversionErrorDialog(owner: Component, keyContext: String) extends Me
     }
   }
 
-  lazy val bestEffortAction = new ConversionAction(I18N.gui.get(s"file.open.warn.autoconversion.$keyContext.bestEffort"))
-  lazy val originalAction = new ConversionAction(I18N.gui.get(s"file.open.warn.autoconversion.$keyContext.original"))
+  lazy val bestEffortAction = new ConversionAction(loc"Open Partially Converted $context")
+  lazy val originalAction = new ConversionAction(loc"Open Unconverted $context")
 
   override def makeButtons(): Seq[JComponent] = {
     super.makeButtons() ++ Seq(new Button(bestEffortAction), new Button(originalAction))
   }
 
   def errorMessage(failure: FailedConversionResult): String =
-    I18N.gui.get(s"file.open.warn.autoconversion.$keyContext.error") +
-      failure.errors.map(decorateError(_)).mkString("\n\n", "\n", "")
+    loc"""|NetLogo encountered the following errors while trying to automatically convert the $context to the current\n
+          |version. Would you like to continue opening it?\n
+          |${failure.errors.map(decorateError(_)).mkString("\n\n", "\n", "")}"""
 
   private def decorateError(error: ConversionError): String = {
     val errorMessages = error.errors.map(e => s"- ${e.getMessage}").mkString("\n", "\n", "")
-    I18N.gui.getN(s"file.open.warn.autoconversion.$keyContext.detail",
-      error.conversionDescription, error.componentDescription, errorMessages)
+
+    loc"""|While running conversion "${error.conversionDescription}" on the
+          |${error.componentDescription}: $errorMessages"""
   }
 
   def doShow(failure: FailedConversionResult): Unit = {
@@ -211,6 +219,6 @@ class AutoConversionErrorDialog(owner: Component, keyContext: String) extends Me
         originalAction.putModel(original)
         bestEffortAction.putModel(bestEffort)
     }
-    doShow(I18N.gui.get(s"file.open.warn.autoconversion.$keyContext.title"), errorMessage(failure), 5, 50)
+    doShow(loc"Error Converting $context", errorMessage(failure), 5, 50)
   }
 }

@@ -7,7 +7,7 @@ import org.nlogo.agent.Link;
 import org.nlogo.agent.Patch;
 import org.nlogo.agent.Turtle;
 import org.nlogo.api.TypeNames;
-import org.nlogo.core.I18N;
+import org.nlogo.core.LocaleContextJ;
 import org.nlogo.core.Pure;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.RuntimePrimitiveException;
@@ -40,8 +40,8 @@ public final class _greaterorequal
       }
     }
     throw new RuntimePrimitiveException(context, this,
-        I18N.errorsJ().getN("org.nlogo.prim._greaterorequal.cannotCompareParameters",
-            TypeNames.aName(o1), TypeNames.aName(o2)));
+      LocaleContextJ.loc("The >= operator can only be used on two numbers, two strings, or two agents of the same type, but not on {} and {}.",
+                         TypeNames.aName(o1), TypeNames.aName(o2)));
   }
 
   public boolean report_2(Context context, String arg0, String arg1) {
@@ -69,8 +69,8 @@ public final class _greaterorequal
       return arg0 >= ((Double) arg1).doubleValue();
     }
     throw new RuntimePrimitiveException(context, this,
-        I18N.errorsJ().getN("org.nlogo.prim._greaterorequal.cannotCompareParameters",
-            TypeNames.aName(arg0), TypeNames.aName(arg1)));
+      LocaleContextJ.loc("The >= operator can only be used on two numbers, two strings, or two agents of the same type, but not on {} and {}.",
+                         TypeNames.aName(arg0), TypeNames.aName(arg1)));
   }
 
   public boolean report_8(Context context, Object arg0, double arg1) {
@@ -78,7 +78,7 @@ public final class _greaterorequal
       return ((Double) arg0).doubleValue() >= arg1;
     }
     throw new RuntimePrimitiveException(context, this,
-        I18N.errorsJ().getN("org.nlogo.prim._greaterorequal.cannotCompareParameters",
-            TypeNames.aName(arg0), TypeNames.aName(arg1)));
+      LocaleContextJ.loc("The >= operator can only be used on two numbers, two strings, or two agents of the same type, but not on {} and {}.",
+                         TypeNames.aName(arg0), TypeNames.aName(arg1)));
   }
 }

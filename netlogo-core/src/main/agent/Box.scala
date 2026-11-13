@@ -3,7 +3,7 @@
 package org.nlogo.agent
 
 import org.nlogo.api.AgentException
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 
 class Box(world2d: World2D) extends Topology(world2d) with XBlocks with YBlocks {
   @throws(classOf[AgentException])
@@ -11,9 +11,7 @@ class Box(world2d: World2D) extends Topology(world2d) with XBlocks with YBlocks 
     val max = world.maxPxcor + 0.5
     val min = world.minPxcor - 0.5
     if (x >= max || x < min)
-      throw new AgentException(
-        I18N.errors.get(
-          "org.nlogo.agent.Topology.cantMoveTurtleBeyondWorldEdge"))
+      throw new AgentException(loc"Cannot move turtle beyond the world's edge.")
     x
   }
 
@@ -22,9 +20,7 @@ class Box(world2d: World2D) extends Topology(world2d) with XBlocks with YBlocks 
     val max = world.maxPycor + 0.5
     val min = world.minPycor - 0.5
     if (y >= max || y < min)
-      throw new AgentException(
-        I18N.errors.get(
-          "org.nlogo.agent.Topology.cantMoveTurtleBeyondWorldEdge"))
+      throw new AgentException(loc"Cannot move turtle beyond the world's edge.")
     y
   }
 

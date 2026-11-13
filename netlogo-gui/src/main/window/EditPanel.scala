@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.swing.{ BoxColumn, OptionPane, ZoomableBorder }
 import org.nlogo.theme.ThemeSync
 
@@ -44,20 +44,16 @@ abstract class EditPanel(target: Editable) extends BoxColumn(6) with ThemeSync {
         error.getMessage
     } match {
       case Some(error) =>
-        if (!silent) {
-          new OptionPane(this, I18N.gui.get("edit.general.invalidSettings"), error, OptionPane.Options.Ok,
-                         OptionPane.Icons.error)
-        }
+        if (!silent)
+          new OptionPane(this, loc"Invalid Settings", error, OptionPane.Options.Ok, OptionPane.Icons.error)
 
         false
 
       case None =>
         (target.errorString match {
           case Some(error) =>
-            if (!silent) {
-              new OptionPane(this, I18N.gui.get("edit.general.invalidSettings"), error, OptionPane.Options.Ok,
-                             OptionPane.Icons.error)
-            }
+            if (!silent)
+              new OptionPane(this, loc"Invalid Settings", error, OptionPane.Options.Ok, OptionPane.Icons.error)
 
             false
 

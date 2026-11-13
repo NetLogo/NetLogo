@@ -8,7 +8,7 @@ import java.util.Locale
 import javax.swing.{ AbstractAction, JDialog, JEditorPane, JLabel }
 import javax.swing.text.{ BadLocationException, TextAction }
 
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, ButtonPanel, CheckBox, DialogButton,
                          NonemptyTextFieldActionEnabler, NonemptyTextFieldButtonEnabler, ScrollableTextComponent,
@@ -16,7 +16,7 @@ import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, ButtonPanel, CheckBox, Dia
   UserAction.{ EditCategory, EditFindGroup, KeyBindings, MenuAction }
 
 object FindDialog extends ThemeSync {
-  class FindAction extends TextAction(I18N.gui.get("menu.edit.find")) with MenuAction {
+  class FindAction extends TextAction(loc"Find") with MenuAction {
     category = EditCategory
     group = EditFindGroup
     accelerator = KeyBindings.keystroke('F', withMenu = true)
@@ -47,7 +47,7 @@ object FindDialog extends ThemeSync {
     }
   }
 
-  class FindNextAction extends TextAction(I18N.gui.get("menu.edit.findNext")) with MenuAction {
+  class FindNextAction extends TextAction(loc"Find Next") with MenuAction {
     category = EditCategory
     group = EditFindGroup
     accelerator = KeyBindings.keystroke('G', withMenu = true)
@@ -63,7 +63,7 @@ object FindDialog extends ThemeSync {
     }
   }
 
-  class FindActionCode extends TextAction(I18N.gui.get("menu.edit.find")) with MenuAction {
+  class FindActionCode extends TextAction(loc"Find") with MenuAction {
     category = EditCategory
     group = EditFindGroup
     accelerator = KeyBindings.keystroke('F', withMenu = true)
@@ -95,7 +95,7 @@ object FindDialog extends ThemeSync {
     }
   }
 
-  class FindNextActionCode extends TextAction(I18N.gui.get("menu.edit.findNext")) with MenuAction {
+  class FindNextActionCode extends TextAction(loc"Find Next") with MenuAction {
     category = EditCategory
     group = EditFindGroup
     accelerator = KeyBindings.keystroke('G', withMenu = true)
@@ -190,14 +190,14 @@ object FindDialog extends ThemeSync {
   }
 }
 
-class FindDialog(val owner: Frame) extends JDialog(owner, I18N.gui.get("dialog.find.title"), false) with ActionListener
+class FindDialog(val owner: Frame) extends JDialog(owner, loc"Find", false) with ActionListener
                                    with ZoomableWindow(Option(owner)) with ThemeSync {
 
   WindowAutomator.automate(this)
 
   private var target: Option[ScrollableTextComponent] = None
 
-  private val nextButton = new DialogButton(true, I18N.gui.get("dialog.find.next"), () => {
+  private val nextButton = new DialogButton(true, loc"Next", () => {
     if (!next(findBox.getText, ignoreCaseCheckBox.isSelected, wrapAroundCheckBox.isSelected)) {
       Toolkit.getDefaultToolkit.beep()
       notFoundLabel.setVisible(true)
@@ -208,7 +208,7 @@ class FindDialog(val owner: Frame) extends JDialog(owner, I18N.gui.get("dialog.f
     pack()
   })
 
-  private val prevButton = new DialogButton(false, I18N.gui.get("dialog.find.previous"), () => {
+  private val prevButton = new DialogButton(false, loc"Previous", () => {
     if (!prev(findBox.getText, ignoreCaseCheckBox.isSelected, wrapAroundCheckBox.isSelected)) {
       Toolkit.getDefaultToolkit.beep()
       notFoundLabel.setVisible(true)
@@ -219,11 +219,11 @@ class FindDialog(val owner: Frame) extends JDialog(owner, I18N.gui.get("dialog.f
     pack()
   })
 
-  private val replaceButton = new DialogButton(false, I18N.gui.get("dialog.find.replace"), () => {
+  private val replaceButton = new DialogButton(false, loc"Replace", () => {
     replace(replaceBox.getText)
   })
 
-  private val replaceAndFindButton = new DialogButton(false, I18N.gui.get("dialog.find.replaceAndFind"), () => {
+  private val replaceAndFindButton = new DialogButton(false, loc"Replace & Find", () => {
     target.foreach { t =>
       if (t.getSelectedText != null && (
         if (ignoreCaseCheckBox.isSelected)
@@ -245,15 +245,15 @@ class FindDialog(val owner: Frame) extends JDialog(owner, I18N.gui.get("dialog.f
     pack()
   })
 
-  private val replaceAllButton = new DialogButton(false, I18N.gui.get("dialog.find.replaceAll"), () => {
+  private val replaceAllButton = new DialogButton(false, loc"Replace All", () => {
     replaceAll(findBox.getText, ignoreCaseCheckBox.isSelected, replaceBox.getText)
   }: Unit)
 
   private val findBox = new TextField(25)
   private val replaceBox = new TextField(25)
-  private val findLabel = new JLabel(I18N.gui.get("dialog.find.find")) with Zoomable
-  private val replaceLabel = new JLabel(I18N.gui.get("dialog.find.replaceWith")) with Zoomable
-  private val notFoundLabel = new JLabel(I18N.gui.get("dialog.find.notFound")) with Zoomable
+  private val findLabel = new JLabel(loc"Find:") with Zoomable
+  private val replaceLabel = new JLabel(loc"Replace With:") with Zoomable
+  private val notFoundLabel = new JLabel(loc"phrase not found") with Zoomable
 
   new NonemptyTextFieldButtonEnabler(nextButton, List(findBox))
   new NonemptyTextFieldButtonEnabler(prevButton, List(findBox))
@@ -262,11 +262,11 @@ class FindDialog(val owner: Frame) extends JDialog(owner, I18N.gui.get("dialog.f
   private val replaceAndFindEnabler = new NonemptyTextFieldButtonEnabler(replaceAndFindButton, List(findBox))
   private val replaceAllEnabler = new NonemptyTextFieldButtonEnabler(replaceAllButton, List(findBox))
 
-  private val ignoreCaseCheckBox = new CheckBox(I18N.gui.get("dialog.find.ignoreCase")) {
+  private val ignoreCaseCheckBox = new CheckBox(loc"Ignore case") {
     setSelected(true)
   }
 
-  private val wrapAroundCheckBox = new CheckBox(I18N.gui.get("dialog.find.wrapAround")) {
+  private val wrapAroundCheckBox = new CheckBox(loc"Wrap around") {
     setSelected(true)
   }
 

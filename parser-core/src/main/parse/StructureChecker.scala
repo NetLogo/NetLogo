@@ -12,7 +12,7 @@ import java.util.Locale
 
 import
   org.nlogo.core,
-    core.{ BreedIdentifierHandler, I18N, StructureDeclarations, Token, TokenType },
+    core.{ BreedIdentifierHandler, LocaleContext, StructureDeclarations, Token, TokenType },
       StructureDeclarations.{ Breed, Declaration, Export, Extensions, Identifier, Import, Includes, Procedure, Variables },
     core.Fail._
 
@@ -32,7 +32,7 @@ object StructureChecker {
       for (declaration <- declarations) {
         declaration match {
           case Export(_, token) =>
-            exception(I18N.errors.getN("compiler.StructureParser.exportOutsideModule"), token)
+            exception(loc"EXPORT can only be used in a module", token)
           case _ =>
         }
       }
@@ -54,7 +54,7 @@ object StructureChecker {
 
     (exportedNames.keySet -- procedures).headOption match {
       case Some(x) =>
-        exception(I18N.errors.getN("compiler.StructureParser.exportUndefined", x), exportedNames(x))
+        exception(loc"Nothing named $x has been defined.", exportedNames(x))
       case _ =>
     }
   }
@@ -64,11 +64,11 @@ object StructureChecker {
       for (declaration <- declarations) {
         declaration match {
           case Breed(_, _, _, _, start, _) =>
-            exception(I18N.errors.getN("compiler.StructureParser.importContainsBreed"), start)
+            exception(loc"Breeds cannot be declared in a module", start)
           case Variables(kind, _, start, _) if kind.name.toLowerCase == "globals" =>
-            exception(I18N.errors.getN("compiler.StructureParser.importContainsGlobals"), start)
+            exception(loc"Globals cannot be declared in a module", start)
           case Variables(_, _, start, _) =>
-            exception(I18N.errors.getN("compiler.StructureParser.importContainsVariables"), start)
+            exception(loc"Agent variables cannot be declared in a module", start)
           case _ =>
         }
       }
@@ -82,7 +82,7 @@ object StructureChecker {
       declaration match {
         case Import(pathComponents, _, _, token) =>
           if (pathComponents.exists(x => separators.exists(x.contains))) {
-            exception(I18N.errors.getN("compiler.StructureParser.importContainsPathSeparator"), token)
+            exception(loc"Import paths may not contain slash or the system path separator", token)
           }
         case _ =>
       }
@@ -91,7 +91,7 @@ object StructureChecker {
 
   def rejectMisplacedDeclarations(declarations: Seq[Declaration]): Unit = {
     declarations.dropWhile(!_.isInstanceOf[Procedure]).find(!_.isInstanceOf[Procedure]).foreach { decl =>
-      exception(I18N.errors.get("compiler.StructureChecker.declOrder"), decl.start)
+      exception(loc"All declarations must come before procedures.", decl.start)
     }
   }
 
@@ -102,15 +102,15 @@ object StructureChecker {
           for (name <- names) {
             if (name.token.tpe == TokenType.Literal) {
               if (!Constants.get(name.token.text).isEmpty) {
-                exception(I18N.errors.get("compiler.StructureChecker.variableConstant"), name.token)
+                exception(loc"Variable name conflicts with a constant.", name.token)
               }
-              exception(I18N.errors.get("compiler.StructureChecker.variableLiteral"), name.token)
+              exception(loc"A string/number cannot be used as a global variable name.", name.token)
             }
           }
         case Procedure(_, _, inputs, _) =>
           for (input <- inputs) {
             if (input.token.tpe == TokenType.Literal) {
-              exception(I18N.errors.get("compiler.StructureChecker.inputConstant"), input.token)
+              exception(loc"Input name conflicts with a constant.", input.token)
             }
           }
         case _ =>
@@ -161,7 +161,7 @@ object StructureChecker {
 
     declarations.foreach {
       case Breed(plural, singular, _, _, _, _) =>
-        cAssert(plural.name != singular.name, I18N.errors.get("compiler.StructureChecker.pluralSingular"),
+        cAssert(plural.name != singular.name, loc"A breed cannot have the same plural and singular name",
                 singular.token)
 
       case _ =>
@@ -300,23 +300,21 @@ object StructureChecker {
 
   private def breedOverridesBuiltIn(breed: Breed, duplicatedType: SymbolType, duplicatedName: String): String = {
     val typeName = SymbolType.typeName(duplicatedType)
-    I18N.errors.getN("compiler.StructureChecker.breedOverrides", s"[${breed.plural.name} ${breed.singular.name}]", duplicatedName, typeName)
+    loc"Defining a breed [${breed.plural.name} ${breed.singular.name}] redefines $duplicatedName, a $typeName"
   }
 
   private def checkNotArrow(ident: Identifier): Unit = {
-    cAssert(ident.name != "->", I18N.errors.get("compiler.StructureChecker.invalidArrow"), ident.token)
+    cAssert(ident.name != "->", loc"-> can only be used to create arrow procedures", ident.token)
   }
 
   private def redeclarationOf(kind: String) =
-    I18N.errors.getN("compiler.StructureChecker.redeclaration", kind)
+    loc"Redeclaration of $kind"
 
-  private def duplicateOf(symbolType: SymbolType, origName: String) = {
-    val typeName = SymbolType.typeName(symbolType)
-    I18N.errors.getN("compiler.StructureChecker.duplicateType", typeName, origName)
-  }
+  private def duplicateOf(symbolType: SymbolType, origName: String) =
+    loc"There is already a ${SymbolType.typeName(symbolType)} called $origName"
 
   private def duplicateVariableIdentifier(ident: Identifier) =
-    I18N.errors.getN("compiler.StructureChecker.duplicateVariable", ident.name)
+    loc"There is already a local variable called ${ident.name} here"
 
   private case class Occurrence(declaration: Declaration, identifier: Identifier, typeOfDeclaration: SymbolType, isGlobal: Boolean = true)
 

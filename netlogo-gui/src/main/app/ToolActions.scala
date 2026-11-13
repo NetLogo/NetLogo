@@ -12,7 +12,7 @@ import org.nlogo.app.common.AppTabsInterface
 import org.nlogo.app.interfacetab.WidgetPanel
 import org.nlogo.app.tools.{ LibrariesDialog, PreferencesDialog }
 import org.nlogo.awt.Positioning
-import org.nlogo.core.{ I18N, Token }
+import org.nlogo.core.{ LocaleContext, Token }
 import org.nlogo.shape.ShapesManagerInterface
 import org.nlogo.swing.{ OptionPane, UserAction }, UserAction._
 import org.nlogo.theme.ThemeSync
@@ -35,7 +35,7 @@ abstract class ShowDialogAction(name: String) extends AbstractAction(name) with 
 }
 
 class ShowPreferencesDialog(frame: Frame & ThemeSync, tabs: AppTabsInterface, widgetPanel: AbstractWidgetPanel)
-extends AbstractAction(I18N.gui.get("menu.tools.preferences")) with ThemeSync
+extends AbstractAction(loc"Preferences") with ThemeSync
 with MenuAction {
   category = ToolsCategory
   group    = ToolsSettingsGroup
@@ -64,7 +64,7 @@ class OpenLibrariesDialog( frame:              Frame
                          , tokenizeSource:     String => Iterator[Token]
                          , updateSource:       ((String) => String) => Unit
                          , getExtPathMappings: () => Map[String, Path]
-                         ) extends ShowDialogAction(I18N.gui.get("menu.tools.extensions")) with MenuAction {
+                         ) extends ShowDialogAction(loc"Extensions") with MenuAction {
 
   category = ToolsCategory
   group    = ToolsSettingsGroup
@@ -75,8 +75,7 @@ class OpenLibrariesDialog( frame:              Frame
 
 }
 
-class OpenRGBAColorDialog(frame: Frame) extends ShowDialogAction(I18N.gui.get("menu.tools.rgbaColorPicker"))
-                                        with MenuAction {
+class OpenRGBAColorDialog(frame: Frame) extends ShowDialogAction(loc"Color Picker") with MenuAction {
   category = ToolsCategory
   group = ToolsDialogsGroup
   mnemonic = 'C'
@@ -90,19 +89,19 @@ class OpenRGBAColorDialog(frame: Frame) extends ShowDialogAction(I18N.gui.get("m
   }
 }
 
-class ShowShapeManager(key: String, shapeManager: => ShapesManagerInterface)
-extends AbstractAction(I18N.gui.get(s"menu.tools.$key"))
+class ShowShapeManager(name: String, shapeManager: => ShapesManagerInterface)
+extends AbstractAction(name)
 with MenuAction {
   category = ToolsCategory
   group    = ToolsDialogsGroup
 
   override def actionPerformed(e: ActionEvent): Unit = {
-    shapeManager.init(I18N.gui.get(s"menu.tools.$key"))
+    shapeManager.init(name)
   }
 }
 
 class ShowSystemDynamicsModeler(aggregateManager: AggregateManagerInterface)
-extends AbstractAction(I18N.gui.get("menu.tools.systemDynamicsModeler"))
+extends AbstractAction(loc"System Dynamics Modeler")
 with MenuAction {
   category    = ToolsCategory
   group       = ToolsDialogsGroup
@@ -115,7 +114,7 @@ with MenuAction {
 }
 
 class OpenHubNetClientEditor(workspace: AbstractWorkspaceScala, linkRoot: LinkRoot)
-extends AbstractAction(I18N.gui.get("menu.tools.hubNetClientEditor"))
+extends AbstractAction(loc"HubNet Client Editor")
 with MenuAction {
   category = ToolsCategory
   group    = ToolsHubNetGroup
@@ -130,18 +129,20 @@ with MenuAction {
 }
 
 class ConvertWidgetSizes(frame: AppFrame, widgetPanel: WidgetPanel)
-  extends AbstractAction(I18N.gui.get("menu.tools.convertWidgetSizes")) with MenuAction {
+  extends AbstractAction(loc"Convert Widgets to New Sizes") with MenuAction {
 
   category = ToolsCategory
   group    = ToolsWidgetGroup
   mnemonic = 'W'
 
   override def actionPerformed(e: ActionEvent): Unit = {
-    if (new OptionPane(frame, I18N.gui.get("menu.tools.convertWidgetSizes"),
-                       I18N.gui.get("menu.tools.convertWidgetSizes.prompt"),
-                       Seq(I18N.gui.get("menu.tools.convertWidgetSizes.resizeAndAdjust"),
-                           I18N.gui.get("common.buttons.cancel")),
-                       OptionPane.Icons.info).getSelectedIndex == 0) {
+    val prompt = loc"""|This tool converts all widgets in the current model to the new larger sizes
+                       |for NetLogo 7 and adjusts their positions to retain the original spacing between widgets.
+                       |You will likely need to make further adjustments after using the tool."""
+
+    if (new OptionPane(frame, loc"Convert Widgets to New Sizes", prompt,
+                       Seq(loc"Resize and adjust positions", loc"Cancel"), OptionPane.Icons.info)
+          .getSelectedIndex == 0) {
       widgetPanel.convertWidgetSizes()
 
       frame.smartPack(frame.getPreferredSize, false)

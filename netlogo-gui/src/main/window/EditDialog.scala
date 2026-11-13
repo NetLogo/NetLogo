@@ -9,7 +9,7 @@ import javax.swing.{ JDialog, JPanel, WindowConstants }
 
 import org.nlogo.api.Version
 import org.nlogo.awt.Positioning
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.swing.{ BrowserLauncher, ButtonPanel, DialogButton, Implicits, PreferredSize, QuickHelp, Utils,
                          WindowAutomator, ZoomableBorder, ZoomableWindow }, Implicits.thunk2action
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
@@ -24,7 +24,7 @@ class EditDialog(window: Window, target: Editable, editPanel: EditPanel, modal: 
 
   var canceled = false
 
-  val okButton = new DialogButton(true, I18N.gui.get("common.buttons.ok"), () => {
+  val okButton = new DialogButton(true, loc"OK", () => {
     if (editPanel.valid(false)) {
       if (editPanel.changed)
         new Events.DirtyEvent(None).raise(window)
@@ -37,7 +37,7 @@ class EditDialog(window: Window, target: Editable, editPanel: EditPanel, modal: 
   })
 
   var sendEditFinishedOnCancel = false
-  val applyButton = new DialogButton(false, I18N.gui.get("common.buttons.apply"), () => {
+  val applyButton = new DialogButton(false, loc"Apply", () => {
     if (editPanel.valid(false)) {
       sendEditFinishedOnCancel = true
       editPanel.apply()
@@ -45,11 +45,11 @@ class EditDialog(window: Window, target: Editable, editPanel: EditPanel, modal: 
     }
   })
 
-  val cancelButton = new DialogButton(false, I18N.gui.get("common.buttons.cancel"), () => {
+  val cancelButton = new DialogButton(false, loc"Cancel", () => {
     cancel(target)
   })
 
-  val helpButton = new DialogButton(false, I18N.gui.get("common.buttons.help"), () => {
+  val helpButton = new DialogButton(false, loc"Help", () => {
     val link = target.helpLink.fold("")((page, anchor) => s"$page.html#$anchor")
 
     BrowserLauncher.tryOpenURI(this, new URI(s"https://docs.netlogo.org/${Version.versionNumberNo3D}/$link"),

@@ -7,7 +7,7 @@ import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Patch;
 import org.nlogo.agent.Turtle;
 import org.nlogo.api.Dump;
-import org.nlogo.core.I18N;
+import org.nlogo.core.LocaleContextJ;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
 import org.nlogo.api.TypeNames;
@@ -48,8 +48,8 @@ public final class _nsum4 extends Reporter {
       Object value = ((Patch) it.next()).getPatchVariable(vn);
       if (!(value instanceof Double)) {
         throw new RuntimePrimitiveException(context, this,
-            I18N.errorsJ().getN("org.nlogo.prim.$common.noSumOfListWithNonNumbers",
-                Dump.logoObject(value).toString(), TypeNames.name(value)));
+          LocaleContextJ.loc("Can't find the sum of a list that contains non-numbers: {} is a {}.",
+                             Dump.logoObject(value).toString(), TypeNames.name(value)));
       }
 
       sum += ((Double) value).doubleValue();

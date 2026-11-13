@@ -3,7 +3,7 @@
 package org.nlogo.prim.etc;
 
 import org.nlogo.api.Dump;
-import org.nlogo.core.I18N;
+import org.nlogo.core.LocaleContextJ;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.LogoList;
 import org.nlogo.core.Syntax;
@@ -35,10 +35,8 @@ public final class _mean extends Reporter implements Pure {
     }
 
     if (count == 0) {
-      String i18nMsg = I18N.errorsJ().getN(
-        "org.nlogo.prim.etc._mean.cantFindMeanOfListWithNoNumbers", Dump.logoObject(list)
-      );
-      throw new RuntimePrimitiveException(context, this, i18nMsg);
+      throw new RuntimePrimitiveException(context, this,
+        LocaleContextJ.loc("Can't find the mean of a list with no numbers: {}.", Dump.logoObject(list)));
     }
 
     return validDouble(sum / count, context);

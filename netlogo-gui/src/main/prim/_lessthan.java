@@ -6,7 +6,7 @@ import org.nlogo.agent.Agent;
 import org.nlogo.agent.Link;
 import org.nlogo.agent.Patch;
 import org.nlogo.agent.Turtle;
-import org.nlogo.core.I18N;
+import org.nlogo.core.LocaleContextJ;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
 import org.nlogo.api.TypeNames;
@@ -43,9 +43,9 @@ public final class _lessthan
         return a1.compareTo(a2) < 0;
       }
     }
-    throw new RuntimePrimitiveException
-        (context, this, I18N.errorsJ().getN("org.nlogo.prim._lessthan.cantUseLessthanOnDifferentArgs",
-            TypeNames.aName(o1), TypeNames.aName(o2)));
+    throw new RuntimePrimitiveException(context, this,
+      LocaleContextJ.loc("The < operator can only be used on two numbers, two strings, or two agents of the same type, but not on {} and {}.",
+                         TypeNames.aName(o1), TypeNames.aName(o2)));
   }
 
   public boolean report_2(Context context, String arg0, String arg1) {
@@ -72,9 +72,9 @@ public final class _lessthan
     if (arg1 instanceof Double) {
       return arg0 < ((Double) arg1).doubleValue();
     }
-    throw new RuntimePrimitiveException
-        (context, this, I18N.errorsJ().getN("org.nlogo.prim._lessthan.cantUseLessthanOnDifferentArgs",
-            TypeNames.aName(arg0), TypeNames.aName(arg1)));
+    throw new RuntimePrimitiveException(context, this,
+      LocaleContextJ.loc("The < operator can only be used on two numbers, two strings, or two agents of the same type, but not on {} and {}.",
+                         TypeNames.aName(arg0), TypeNames.aName(arg1)));
 
 
   }
@@ -83,8 +83,8 @@ public final class _lessthan
     if (arg0 instanceof Double) {
       return ((Double) arg0).doubleValue() < arg1;
     }
-    throw new RuntimePrimitiveException
-        (context, this, I18N.errorsJ().getN("org.nlogo.prim._lessthan.cantUseLessthanOnDifferentArgs",
-            TypeNames.aName(arg0), TypeNames.aName(arg1)));
+    throw new RuntimePrimitiveException(context, this,
+      LocaleContextJ.loc("The < operator can only be used on two numbers, two strings, or two agents of the same type, but not on {} and {}.",
+                         TypeNames.aName(arg0), TypeNames.aName(arg1)));
   }
 }

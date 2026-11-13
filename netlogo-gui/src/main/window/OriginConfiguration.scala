@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 
 abstract class OriginType(name: String) {
   override def toString: String =
@@ -10,10 +10,10 @@ abstract class OriginType(name: String) {
 }
 
 object OriginType {
-  case object Center extends OriginType(I18N.gui.get("edit.viewSettings.origin.location.center"))
-  case object Corner extends OriginType(I18N.gui.get("edit.viewSettings.origin.location.corner"))
-  case object Edge extends OriginType(I18N.gui.get("edit.viewSettings.origin.location.edge"))
-  case object Custom extends OriginType(I18N.gui.get("edit.viewSettings.origin.location.custom"))
+  case object Center extends OriginType(loc"Center")
+  case object Corner extends OriginType(loc"Corner")
+  case object Edge extends OriginType(loc"Edge")
+  case object Custom extends OriginType(loc"Custom")
 }
 
 case class OriginConfiguration(name: String, x: Double, y: Double, z: Double = 0.5) {

@@ -33,8 +33,8 @@ import org.nlogo.app.interfacetab.{ CommandCenter, InterfaceTab, WidgetPanel }
 import org.nlogo.app.tools.{ AgentMonitorManager, GraphicsPreview, LibraryManagerErrorDialog, PreviewCommandsEditor }
 import org.nlogo.awt.UserCancelException
 import org.nlogo.compile.Compiler
-import org.nlogo.core.{ AgentKind, CompilerException, CompilerUtilitiesInterface, ExternalResource, I18N, Model,
-                        ModelSettings, NetLogoPreferences, Shape, Widget => CoreWidget },
+import org.nlogo.core.{ AgentKind, CompilerException, CompilerUtilitiesInterface, ExternalResource, LocaleContext,
+                        Model, ModelSettings, NetLogoPreferences, Shape, Widget => CoreWidget },
   Shape.{ LinkShape, VectorShape }
 import org.nlogo.fileformat.FileFormat
 import org.nlogo.gl.view.ViewManager
@@ -243,40 +243,48 @@ object App {
         case "--events" => Event.logEvents = true
 
         case token @ ("--open" | "--launch") =>
-          require(current.model.isEmpty, I18N.errors.get("args.oneModel"))
+          require(current.model.isEmpty,
+                  loc"Error parsing command line arguments: you can only specify one model to open at startup.")
 
-          val next = requireAndGet(I18N.errors.getN("args.noFile", token))
+          val next = requireAndGet(loc"""You must specify a file after the "$token" option.""")
           val file = new File(next)
 
           // Best to check if the file exists here, because after the GUI thread has started,
           // NetLogo just hangs with the splash screen showing if file doesn't exist. ~Forrest (2/12/2009)
-          require(file.exists, I18N.errors.getN("fileformat.notFound", next))
+          require(file.exists, loc"""|Model file was not found at "$next". Double check the path given; the model may
+                                     |have been moved or deleted.""")
 
           current = current.copy(launch = token == "--launch", model = Some(ModelArgType.Model(file.getAbsolutePath)))
 
         case "--magic" =>
-          require(current.model.isEmpty, I18N.errors.get("args.oneModel"))
+          require(current.model.isEmpty,
+                  loc"Error parsing command line arguments: you can only specify one model to open at startup.")
 
-          current = current.copy(model = Some(ModelArgType.Magic(requireAndGet(I18N.errors.get("args.noName")))))
+          current = current.copy(model =
+            Some(ModelArgType.Magic(requireAndGet(loc"""You must specify a model name after the "--magic" option."""))))
 
         case "--url" =>
-          require(current.model.isEmpty, I18N.errors.get("args.oneModel"))
+          require(current.model.isEmpty,
+                  loc"Error parsing command line arguments: you can only specify one model to open at startup.")
 
-          current = current.copy(model = Some(ModelArgType.Url(requireAndGet(I18N.errors.get("args.noUrl")))))
+          current = current.copy(model =
+            Some(ModelArgType.Url(requireAndGet(loc"""You must specify a URL after the "--url" option."""))))
 
         case "--color-theme" =>
-          val next = requireAndGet(I18N.errors.get("args.noTheme"))
+          val next = requireAndGet(loc"""You must specify a color theme name after the "--color-theme" option.""")
           val known = next == "classic" || next == "light" || next == "dark" || next == "system"
 
-          require(known, I18N.errors.getN("themes.unknown", next))
+          require(known, loc"""Unknown color theme "$next"""")
 
           current = current.copy(colorTheme = next)
 
         case "--log-events" =>
-          current = current.copy(logEvents = Option(requireAndGet(I18N.errors.get("args.noEvents"))))
+          current = current.copy(logEvents =
+            Option(requireAndGet(loc"""You must specify at least one event name after the "--log-events" option.""")))
 
         case "--log-directory" =>
-          current = current.copy(logDirectory = Option(requireAndGet(I18N.errors.get("args.noDirectory"))))
+          current = current.copy(logDirectory =
+            Option(requireAndGet(loc"""You must specify a directory after the "--log-directory" option.""")))
 
         case "--codetab-window" =>
           current = current.copy(popOutCodeTab = true)
@@ -296,13 +304,15 @@ object App {
           System.err.println("Error: Unknown command line argument: " + token)
 
         case token => // we assume it's a filename to "launch"
-          require(current.model.isEmpty, I18N.errors.get("args.oneModel"))
+          require(current.model.isEmpty,
+                  loc"Error parsing command line arguments: you can only specify one model to open at startup.")
 
           val file = new File(token)
 
           // Best to check if the file exists here, because after the GUI thread has started,
           // NetLogo just hangs with the splash screen showing if file doesn't exist. ~Forrest (2/12/2009)
-          require(file.exists, I18N.errors.getN("fileformat.notFound", token))
+          require(file.exists, loc"""|Model file was not found at "$token". Double check the path given; the model may
+                                     |have been moved or deleted.""")
 
           current = current.copy(launch = true, model = Some(ModelArgType.Model(file.getAbsolutePath)))
       }
@@ -492,7 +502,7 @@ class App(args: App.CommandLineArgs) extends AppInterface with Application with 
 
     if (Taskbar.isTaskbarSupported && Taskbar.getTaskbar.isSupported(Taskbar.Feature.MENU)) {
       Taskbar.getTaskbar.setMenu(new PopupMenu {
-        add(new MenuItem(I18N.gui.get("menu.file.newWindow")) {
+        add(new MenuItem(loc"New Window") {
           addActionListener(new ActionListener {
             override def actionPerformed(e: ActionEvent): Unit = {
               Future {
@@ -561,9 +571,12 @@ class App(args: App.CommandLineArgs) extends AppInterface with Application with 
       val studentName       = askForName()
       val addListener       = (l) => listenerManager.addListener(l)
       val loggerFactory     = (p) => new JsonFileLogger(p)
-      LogManager.start(addListener, loggerFactory, finalLogDirectory, events, studentName, () =>
-        new OptionPane(frame, I18N.gui.get("common.messages.warning"), I18N.gui.get("error.dialog.logDirectory"),
-                       OptionPane.Options.Ok, OptionPane.Icons.warning))
+      LogManager.start(addListener, loggerFactory, finalLogDirectory, events, studentName, () => {
+        val message = loc"""|Error writing to the specified log directory.
+                            |Logs will not be written for this NetLogo session."""
+
+        new OptionPane(frame, loc"Warning", message, OptionPane.Options.Ok, OptionPane.Icons.warning)
+      })
     }
   }
 
@@ -658,9 +671,14 @@ class App(args: App.CommandLineArgs) extends AppInterface with Application with 
         AnalyticsSender.silence()
       } else {
         if (analyticsConsent) {
-          val sendAnalytics = new OptionPane(frame, I18N.gui.get("dialog.analyticsConsent"),
-                                            I18N.gui.get("dialog.analyticsConsent.message"), OptionPane.Options.YesNo,
-                                            OptionPane.Icons.info).getSelectedIndex == 0
+          val message = loc"""|As of NetLogo 7, the application will collect usage statistics while it is running. This
+                              |data is entirely anonymized and can be turned off in the application preferences at any
+                              |time.\n\nThe data is analyzed by the NetLogo team to understand which features are
+                              |important to NetLogo users, so as to inform development priorities and measure growth in
+                              |the NetLogo community.\n\nDo you wish to send the NetLogo team this information?"""
+
+          val sendAnalytics = new OptionPane(frame, loc"Data Consent", message, OptionPane.Options.YesNo,
+                                             OptionPane.Icons.info).getSelectedIndex == 0
 
           NetLogoPreferences.putBoolean("sendAnalytics", sendAnalytics)
 
@@ -786,9 +804,11 @@ class App(args: App.CommandLineArgs) extends AppInterface with Application with 
           case _: ConnectException =>
             fileManager.newModel()
 
-            new OptionPane(frame, I18N.gui.get("file.open.error.unloadable.title"),
-                           I18N.gui.getN("file.open.error.unloadable.message", url),
-                           OptionPane.Options.OkCancel, OptionPane.Icons.warning)
+            val message = loc"""|Could not obtain NetLogo model from URL '$url'.\n
+                                |NetLogo will instead start without any model loaded."""
+
+            new OptionPane(frame, loc"Connection Failed", message, OptionPane.Options.OkCancel,
+                           OptionPane.Icons.warning)
         }
 
       case _ =>
@@ -833,10 +853,10 @@ class App(args: App.CommandLineArgs) extends AppInterface with Application with 
     val generalActions: Seq[MenuAction] = Seq(
       openLibrariesDialog,
       openRGBAColorDialog,
-      new ShowShapeManager("turtleShapesEditor", turtleShapesManager) {
+      new ShowShapeManager(loc"Turtle Shapes Editor", turtleShapesManager) {
         mnemonic = 'U'
       },
-      new ShowShapeManager("linkShapesEditor",   linkShapesManager) {
+      new ShowShapeManager(loc"Link Shapes Editor", linkShapesManager) {
         mnemonic = 'K'
       },
       new ShowSystemDynamicsModeler(workspace.aggregateManager),
@@ -899,8 +919,7 @@ class App(args: App.CommandLineArgs) extends AppInterface with Application with 
         if (matches.size == 1) {
           Some(matches(0))
         } else {
-          new DropdownOptionPane(frame, I18N.gui.get("tools.magicModelMatcher"),
-                                 I18N.gui.get("tools.magicModelMatcher.mustChoose"),
+          new DropdownOptionPane(frame, loc"Magic Model Matcher", loc"You must choose!",
                                  matches.map(_.replace(".nlogox3d", "")
                                               .replace(".nlogox", "")))
             .getSelectedChoice
@@ -1196,8 +1215,7 @@ class App(args: App.CommandLineArgs) extends AppInterface with Application with 
     } catch {
       case ex: UserCancelException => org.nlogo.api.Exceptions.ignore(ex)
       case ex: java.io.IOException =>
-        new OptionPane(frame, I18N.gui.get("common.messages.error"), ex.getMessage, OptionPane.Options.Ok,
-                       OptionPane.Icons.error)
+        new OptionPane(frame, loc"Error", ex.getMessage, OptionPane.Options.Ok, OptionPane.Icons.error)
     }
   }
 
@@ -1406,7 +1424,7 @@ class App(args: App.CommandLineArgs) extends AppInterface with Application with 
   def askForName() = {
     val frame = new JFrame()
     frame.setAlwaysOnTop(true)
-    val prompt = I18N.gui.get("tools.loggingMode.enterName")
+    val prompt = loc"Enter your name:"
     val name   = new InputOptionPane(frame, "", prompt).getInput
     if (name == null) { "unknown" } else { name.toString.trim() }
   }

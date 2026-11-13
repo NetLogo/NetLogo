@@ -9,7 +9,7 @@ import java.net.{ HttpURLConnection, NetworkInterface, URI, URISyntaxException }
 import java.nio.file.Path
 import javax.swing.JDialog
 
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 
 import scala.jdk.CollectionConverters.EnumerationHasAsScala
 import scala.util.Try
@@ -38,13 +38,11 @@ object BrowserLauncher {
         osSpecificBrowserRunner.getOrElse(browserNotFound()).apply(normalUri.toString)
     } catch {
       case ex: UnsupportedOperationException =>
-        new OptionPane(comp, I18N.gui.get("common.messages.error"), unableToOpenBrowserError, OptionPane.Options.Ok,
-                       OptionPane.Icons.error)
+        new OptionPane(comp, loc"Error", unableToOpenBrowserError, OptionPane.Options.Ok, OptionPane.Icons.error)
       case ex: BrowserNotFoundException =>
-        new OptionPane(comp, I18N.gui.get("common.messages.error"), ex.getLocalizedMessage, OptionPane.Options.Ok,
-                       OptionPane.Icons.error)
+        new OptionPane(comp, loc"Error", ex.getLocalizedMessage, OptionPane.Options.Ok, OptionPane.Icons.error)
       case ex: IOException =>
-        new OptionPane(comp, I18N.gui.get("common.messages.error"),
+        new OptionPane(comp, loc"Error",
                        s"""Unable to open a browser to: ${normalUri.toString}
                        ${if (normalUri.toString != uri.toString) { s"with original URI: ${uri.toString}" } else { "" }}
                        Please report to bugs@ccl.northwestern.edu""", OptionPane.Options.Ok, OptionPane.Icons.error)
@@ -78,7 +76,7 @@ object BrowserLauncher {
       new URI(s)
     } catch {
       case ue: URISyntaxException =>
-        new OptionPane(comp, I18N.gui.get("common.messages.error"),
+        new OptionPane(comp, loc"Error",
                        s"Unable to open a browser to: $s\n" + "Please report to bugs@ccl.northwestern.edu",
                        OptionPane.Options.Ok, OptionPane.Icons.error)
       null

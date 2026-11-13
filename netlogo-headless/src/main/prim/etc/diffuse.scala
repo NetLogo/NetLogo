@@ -3,7 +3,7 @@
 package org.nlogo.prim.etc
 
 import org.nlogo.agent.PatchException
-import org.nlogo.core.{ AgentKind, Nobody, Reference }
+import org.nlogo.core.{ AgentKind, LocaleContext, Nobody, Reference }
 import org.nlogo.{ api, core, nvm }
 
 class _diffuse extends DiffuseCommand {
@@ -42,9 +42,7 @@ abstract class DiffuseCommand extends nvm.Command with nvm.Referencer {
   override def perform(context: nvm.Context): Unit = {
     val amount = argEvalDoubleValue(context, 0)
     if (amount < 0.0 || amount > 1.0)
-      throw new nvm.RuntimePrimitiveException(
-        context, this, core.I18N.errors.getN(
-          "org.nlogo.prim.$common.paramOutOfBounds", Double.box(amount)))
+      throw new nvm.RuntimePrimitiveException(context, this, loc"$amount is not in the range 0.0 to 1.0")
     try diffuse(amount)
     catch {
       case ex: api.AgentException =>

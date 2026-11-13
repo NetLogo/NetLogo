@@ -4,6 +4,7 @@ package org.nlogo.app.tools
 
 import javax.swing.JComponent
 
+import org.nlogo.core.LocaleContext
 import org.nlogo.theme.ThemeSync
 
 // stores I18N key for hint to be added before preference name (Isaac B 2/9/25)
@@ -11,11 +12,11 @@ sealed trait RequiredAction
 
 object RequiredAction {
   case object Restart extends RequiredAction {
-    override def toString: String = "restartRequired"
+    override def toString: String = loc"(restart required)"
   }
 }
 
-trait Preference(val i18nKey: String, val requirement: Option[RequiredAction], val top: Boolean = false) {
+trait Preference(val key: String, val name: String, val requirement: Option[RequiredAction], val top: Boolean = false) {
   def component: JComponent & ThemeSync
   def load(): Unit
   def save(): Unit

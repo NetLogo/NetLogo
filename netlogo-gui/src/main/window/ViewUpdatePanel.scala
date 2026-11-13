@@ -6,7 +6,7 @@ import java.awt.Dimension
 import java.awt.event.{ ActionEvent, ItemEvent, ItemListener }
 import javax.swing.{ AbstractAction, Action, JCheckBox }
 
-import org.nlogo.core.I18N, I18N.Prefix
+import org.nlogo.core.LocaleContext
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, Button, PreferredSize, ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.Events.LoadEndEvent
@@ -14,8 +14,6 @@ import org.nlogo.window.Events.LoadEndEvent
 class ViewUpdatePanel(workspace: GUIWorkspace, speedSlider: SpeedSliderPanel, displaySwitch: JCheckBox,
                       tickCounter: TickCounterLabel, is3D: Boolean)
   extends BoxColumn(3) with LoadEndEvent.Handler with ThemeSync {
-
-  implicit val prefix: org.nlogo.core.I18N.Prefix = Prefix("tabs.run")
 
   private val updateModeChooser = new UpdateModeChooser(workspace) {
     override def getPreferredSize: Dimension = {
@@ -77,8 +75,8 @@ class ViewUpdatePanel(workspace: GUIWorkspace, speedSlider: SpeedSliderPanel, di
   }
 
   private class EditSettings(settings: WorldViewSettings)
-    extends AbstractAction(I18N.gui("settingsButton")) {
-    putValue(Action.SHORT_DESCRIPTION, I18N.gui("settingsButton.tooltip"))
+    extends AbstractAction(loc"Settings") {
+    putValue(Action.SHORT_DESCRIPTION, loc"Edit model settings")
     def actionPerformed(e: ActionEvent): Unit = {
       if (is3D) {
         new Events.EditView3DEvent(settings).raise(e.getSource)

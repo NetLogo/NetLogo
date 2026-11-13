@@ -8,7 +8,7 @@ import javax.swing.{ AbstractAction, JFrame, ScrollPaneConstants }
 
 import org.nlogo.analytics.Analytics
 import org.nlogo.api.ModelType
-import org.nlogo.core.{ I18N, Widget => CoreWidget }
+import org.nlogo.core.{ LocaleContext, Widget => CoreWidget }
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, FocusRoot, MaximumHeight, Menu, MenuBar, NetLogoIcon, OptionPane,
                          ScrollPane, UserAction, WindowAutomator, ZoomableBorder, ZoomableWindow }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
@@ -86,11 +86,11 @@ class HubNetClientEditor(workspace: GUIWorkspace,
   private def getTitle (title:String, directory:String, mt: ModelType) = {
     // on OS X, use standard window title format. otherwise use Windows convention
     val t = if (!System.getProperty("os.name").startsWith("Mac")) {
-      title + " - " + I18N.gui.get("menu.tools.hubNetClientEditor")
+      title + " - " + loc"HubNet Client Editor"
     } else {
       // 8212 is the unicode value for an em dash. we use the number since
       // we don't want non-ASCII characters in the source files -- AZS 6/14/2005
-      I18N.gui.get("menu.tools.hubNetClientEditor") + " " + 8212.toChar + " " + title
+      loc"HubNet Client Editor" + " " + 8212.toChar + " " + title
     }
     // OS X UI guidelines prohibit paths in title bars, but oh well...
     if (mt == ModelType.Normal) t + " {" + directory + "}" else t
@@ -111,22 +111,24 @@ class HubNetClientEditor(workspace: GUIWorkspace,
     super.setVisible(visible)
   }
 
-  private class HubNetToolsMenu extends Menu(I18N.gui.get("menu.tools"), Menu.model) {
+  private class HubNetToolsMenu extends Menu(loc"Tools", Menu.model) {
     setMnemonic('T')
     setFocusable(false)
 
     offerAction(ConvertWidgetSizes)
   }
 
-  private object ConvertWidgetSizes extends AbstractAction(I18N.gui.get("menu.tools.convertWidgetSizes"))
+  private object ConvertWidgetSizes extends AbstractAction(loc"Convert Widgets to New Sizes")
                                     with UserAction.MenuAction {
 
     override def actionPerformed(e: ActionEvent): Unit = {
-      if (new OptionPane(HubNetClientEditor.this, I18N.gui.get("menu.tools.convertWidgetSizes"),
-                         I18N.gui.get("menu.tools.convertWidgetSizes.prompt"),
-                         Seq(I18N.gui.get("menu.tools.convertWidgetSizes.resizeAndAdjust"),
-                             I18N.gui.get("common.buttons.cancel")),
-                         OptionPane.Icons.info).getSelectedIndex == 0) {
+      val prompt = loc"""|This tool converts all widgets in the current model to the new larger sizes
+                         |for NetLogo 7 and adjusts their positions to retain the original spacing between widgets.
+                         |You will likely need to make further adjustments after using the tool."""
+
+      if (new OptionPane(HubNetClientEditor.this, loc"Convert Widgets to New Sizes", prompt,
+                         Seq(loc"Resize and adjust positions", loc"Cancel"), OptionPane.Icons.info)
+            .getSelectedIndex == 0) {
         interfacePanel.convertWidgetSizes()
 
         setSize(getPreferredSize)

@@ -5,7 +5,7 @@ package org.nlogo.lab.gui
 import java.nio.file.Path
 
 import org.nlogo.api.LabProtocol
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.swing.{ BoxAlign, BoxRow }
 import org.nlogo.window.{ BooleanEditor, EditPanel, FilePathEditor, IntegerEditor, LabeledEditor, OptionsEditor,
                           PositiveIntegerEditor, PropertyAccessor, PropertyEditor }
@@ -19,7 +19,7 @@ class RunOptionsEditPanel(target: RunOptionsDialog#EditableRunOptions, currentDi
     new FilePathEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("tools.behaviorSpace.runoptions.spreadsheet"),
+        loc"Spreadsheet output",
         () => target.spreadsheet,
         _.foreach(target.setSpreadsheet),
         () => apply()),
@@ -29,7 +29,7 @@ class RunOptionsEditPanel(target: RunOptionsDialog#EditableRunOptions, currentDi
     new FilePathEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("tools.behaviorSpace.runoptions.table"),
+        loc"Table output",
         () => target.table,
         _.foreach(target.setTable),
         () => apply()),
@@ -39,7 +39,7 @@ class RunOptionsEditPanel(target: RunOptionsDialog#EditableRunOptions, currentDi
     new FilePathEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("tools.behaviorSpace.runoptions.stats"),
+        loc"Stats output",
         () => target.stats,
         _.foreach(target.setStats),
         () => apply()),
@@ -49,7 +49,7 @@ class RunOptionsEditPanel(target: RunOptionsDialog#EditableRunOptions, currentDi
     new FilePathEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("tools.behaviorSpace.runoptions.lists"),
+        loc"Lists output",
         () => target.lists,
         _.foreach(target.setLists),
         () => apply()),
@@ -59,7 +59,7 @@ class RunOptionsEditPanel(target: RunOptionsDialog#EditableRunOptions, currentDi
     new BooleanEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("tools.behaviorSpace.runoptions.updateview"),
+        loc"Update view",
         () => target.updateView,
         _.foreach(target.setUpdateView),
         () => apply()))
@@ -68,45 +68,46 @@ class RunOptionsEditPanel(target: RunOptionsDialog#EditableRunOptions, currentDi
     new BooleanEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("tools.behaviorSpace.runoptions.updateplotsandmonitors"),
+        loc"Update plots and monitors",
         () => target.updatePlotsAndMonitors,
         _.foreach(target.setUpdatePlotsAndMonitors),
         () => apply()))
 
   private val updateLabeled =
-    new LabeledEditor(updatePlotsAndMonitors,
-                      s"<html>${I18N.gui.get("tools.behaviorSpace.runoptions.updateplotsandmonitors.info")}</html>")
+    new LabeledEditor(updatePlotsAndMonitors, loc"""|<html>When unchecked performance will be better. However, no plot
+                                                    |data can be exported,<br> and you will not be able to toggle plots
+                                                    |in the "Running Experiment" window.</html>""")
 
   private val threadCount =
     new IntegerEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("tools.behaviorSpace.runoptions.simultaneousruns"),
+        loc"Simultaneous runs in parallel",
         () => target.threadCount,
         _.foreach(target.setThreadCount),
         () => apply()))
 
   private val threadCountLabeled =
-    new LabeledEditor(threadCount, s"<html>${I18N.gui.getN("tools.behaviorSpace.runoptions.simultaneousruns.info",
-                                                           defaultProcessors, totalProcessors)}</html>")
+    new LabeledEditor(threadCount, loc"""|<html>If more than one, some runs happen invisibly in the background.
+                                         |Default: $defaultProcessors runs. Recommended maximum: $totalProcessors
+                                         |runs.</html>""")
 
   private val memoryLimit =
     new PositiveIntegerEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("tools.behaviorSpace.runoptions.memoryLimit"),
+        loc"Experiment memory limit (MB)",
         () => target.memoryLimit,
         _.foreach(target.setMemoryLimit),
         () => apply()))
 
-  private val memoryLimitLabeled =
-    new LabeledEditor(memoryLimit, s"<html>${I18N.gui.get("tools.behaviorSpace.runoptions.memoryLimit.info")}</html>")
+  private val memoryLimitLabeled = new LabeledEditor(memoryLimit, loc"0 = no limit")
 
   private val mirrorHeadlessOutput =
     new BooleanEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("tools.behaviorSpace.runoptions.mirrorHeadlessOutput"),
+        loc"Display parallel run output in Command Center",
         () => target.mirrorHeadlessOutput,
         _.foreach(target.setMirrorHeadlessOutput),
         () => apply()))
@@ -115,7 +116,7 @@ class RunOptionsEditPanel(target: RunOptionsDialog#EditableRunOptions, currentDi
     new OptionsEditor[LabProtocol.ErrorBehavior](
       new PropertyAccessor(
         target,
-        I18N.gui.get("tools.behaviorSpace.runoptions.errorBehavior"),
+        loc"Error behavior",
         () => target.errorBehavior,
         _.foreach(target.setErrorBehavior),
         () => apply()))

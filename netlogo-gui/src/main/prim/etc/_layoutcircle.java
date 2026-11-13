@@ -29,9 +29,7 @@ public final class _layoutcircle
       } else {
         AgentSet set = (AgentSet) nodes;
         if (set.kind() != AgentKindJ.Turtle()) {
-          throw new RuntimePrimitiveException
-              (context, this,
-                  I18N.errorsJ().get("org.nlogo.prim.etc._layoutcircle.patchesImmovable"));
+          throw new RuntimePrimitiveException(context, this, LocaleContextJ.loc("Patches are immovable."));
         }
         org.nlogo.agent.Layouts.circle(world, set, radius, context.job.random);
       }

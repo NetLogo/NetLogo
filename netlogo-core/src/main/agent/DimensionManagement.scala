@@ -6,7 +6,7 @@ import java.lang.{ Double => JDouble }
 import java.util.Locale
 
 import org.nlogo.api.{ AgentException, WorldDimensionException }
-import org.nlogo.core.{ I18N, WorldDimensions }
+import org.nlogo.core.{ LocaleContext, WorldDimensions }
 
 trait DimensionManagement { this: WorldJ =>
   def topology: Topology
@@ -101,12 +101,12 @@ trait DimensionManagement { this: WorldJ =>
   @throws(classOf[WorldDimensionException])
   protected def growMin(name: String, min: Int, max: Int, value: Int, d: Int): Int = {
     if (value < 1) {
-      throw WorldDimensionException(I18N.errors.getN("view.dims.greaterEqOne", name))
+      throw WorldDimensionException(loc"$name must be greater than or equal to 1.")
     }
 
     if (max == -min) {
       if (value % 2 != 1) {
-        throw WorldDimensionException(I18N.errors.getN("view.dims.odd", name))
+        throw WorldDimensionException(loc"$name must be an odd number when the origin is in the center of the world.")
       }
       -(value - 1) / 2
     } else if (max == 0) {
@@ -118,12 +118,12 @@ trait DimensionManagement { this: WorldJ =>
   @throws(classOf[WorldDimensionException])
   protected def growMax(name: String, min: Int, max: Int, value: Int, d: Int): Int = {
     if (value < 1) {
-      throw WorldDimensionException(I18N.errors.getN("view.dims.greaterEqOne", name))
+      throw WorldDimensionException(loc"$name must be greater than or equal to 1.")
     }
 
     if (max == -min) {
       if (value % 2 != 1) {
-        throw WorldDimensionException(I18N.errors.getN("view.dims.odd", name))
+        throw WorldDimensionException(loc"$name must be an odd number when the origin is in the center of the world.")
       }
       (value - 1) / 2
     } else if (min == 0) {

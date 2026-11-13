@@ -26,7 +26,7 @@ package org.nlogo.parse
 // and discard input).
 
 import
-  org.nlogo.core.{ I18N, Token, TokenType, StructureDeclarations },
+  org.nlogo.core.{ LocaleContext, Token, TokenType, StructureDeclarations },
   StructureDeclarations._
 
 object StructureCombinators {
@@ -132,7 +132,7 @@ extends scala.util.parsing.combinator.Parsers {
         val (src, dst) = xs.unzip
 
         if (hasDuplicates(src) || hasDuplicates(dst)) {
-          Left(I18N.errors.get("compiler.StructureCombinators.duplicateIdentifiers"))
+          Left(loc"Identifier list contains duplicates")
         } else {
           Right(xs.toMap)
         }

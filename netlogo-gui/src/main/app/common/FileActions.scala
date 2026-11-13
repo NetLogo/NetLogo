@@ -8,6 +8,7 @@ import java.awt.event.KeyEvent
 import org.nlogo.awt.UserCancelException
 import org.nlogo.agent.ImportPatchColors
 import org.nlogo.api.LocalFile
+import org.nlogo.core.LocaleContext
 import org.nlogo.plot.Plot
 import org.nlogo.swing.UserAction,
   UserAction.{ FileCategory, FileExportSubcategory, FileImportSubcategory, MenuAction }
@@ -33,7 +34,7 @@ object FileActions {
   }
 
   class ExportWorldAction(workspace: GUIWorkspace, parent: Component)
-  extends ExportAction("world", workspace.guessExportName("world.csv"), parent, workspace.exportWorld)
+  extends ExportAction(loc"Export World", workspace.guessExportName("world.csv"), parent, workspace.exportWorld)
   with MenuAction {
     category    = FileCategory
     subcategory = FileExportSubcategory
@@ -42,7 +43,7 @@ object FileActions {
   }
 
   class ExportGraphicsAction(workspace: GUIWorkspace, parent: Component)
-  extends ExportBackgroundAction[String](parent, "view", workspace.guessExportName("view.png"))
+  extends ExportBackgroundAction[String](parent, loc"Export View", workspace.guessExportName("view.png"))
   with MenuAction {
       category    = FileCategory
       subcategory = FileExportSubcategory
@@ -57,7 +58,7 @@ object FileActions {
   }
 
   class ExportOutputAction(workspace: GUIWorkspace, parent: Component)
-  extends ExportAction("output", workspace.guessExportName("output.txt"), parent,
+  extends ExportAction(loc"Export Output", workspace.guessExportName("output.txt"), parent,
     { exportPath => workspace.exportOutput(exportPath) })
   with MenuAction {
     category      = FileCategory
@@ -68,7 +69,7 @@ object FileActions {
   }
 
   class ExportPlotAction(workspace: GUIWorkspace, parent: Component)
-    extends ExportBackgroundAction[(String, Plot)](parent, "plot", workspace.guessExportName("plot.csv"))
+    extends ExportBackgroundAction[(String, Plot)](parent, loc"Export Plot", workspace.guessExportName("plot.csv"))
     with MenuAction {
     category      = FileCategory
     subcategory   = FileExportSubcategory
@@ -90,7 +91,7 @@ object FileActions {
   }
 
   class ExportAllPlotsAction(workspace: GUIWorkspace, parent: Component)
-  extends ExportBackgroundAction[String](parent, "allPlots", workspace.guessExportName("plots.csv"))
+  extends ExportBackgroundAction[String](parent, loc"Export All Plots", workspace.guessExportName("plots.csv"))
   with MenuAction {
     category    = FileCategory
     subcategory = FileExportSubcategory
@@ -112,7 +113,7 @@ object FileActions {
   }
 
   class ExportInterfaceAction(workspace: GUIWorkspace, parent: Component)
-  extends ExportBackgroundAction[String](parent, "interface", workspace.guessExportName("interface.png"))
+  extends ExportBackgroundAction[String](parent, loc"Export Interface", workspace.guessExportName("interface.png"))
   with MenuAction {
     category    = FileCategory
     subcategory = FileExportSubcategory
@@ -127,7 +128,7 @@ object FileActions {
   }
 
   class ImportWorldAction(workspace: GUIWorkspace, parent: Component)
-  extends ImportAction("world", parent, { importPath =>
+  extends ImportAction(loc"Import World", parent, { importPath =>
     workspace.importWorld(importPath)
     workspace.view.dirty()
     workspace.view.repaint()
@@ -139,7 +140,7 @@ object FileActions {
   }
 
   class ImportPatchColorsAction(workspace: GUIWorkspace, parent: Component)
-  extends ImportAction("patchColors", parent, { importPath =>
+  extends ImportAction(loc"Import Patch Colors", parent, { importPath =>
     // We can't wait for the thread to complete, or we end
     // up locking up the app since the Model Dialog and the
     // job wedge against one another. -- CLB 07/19/05
@@ -157,7 +158,7 @@ object FileActions {
   }
 
   class ImportPatchColorsRGBAction(workspace: GUIWorkspace, parent: Component)
-  extends ImportAction("patchColorsRGB", parent, { importPath =>
+  extends ImportAction(loc"Import Patch Colors RGB", parent, { importPath =>
     // We can't wait for the thread to complete, or we end
     // up locking up the app since the Model Dialog and the
     // job wedge against one another. -- CLB 07/19/05
@@ -174,7 +175,7 @@ object FileActions {
   }
 
   class ImportDrawingAction(workspace: GUIWorkspace, parent: Component)
-  extends ImportAction("drawing", parent, { importPath =>
+  extends ImportAction(loc"Import Drawing", parent, { importPath =>
     workspace.importDrawing(importPath)
     workspace.view.dirty()
     workspace.view.repaint()

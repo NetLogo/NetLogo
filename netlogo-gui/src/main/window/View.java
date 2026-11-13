@@ -19,7 +19,7 @@ import org.nlogo.api.WorkspaceContext;
 import org.nlogo.awt.Colors;
 import org.nlogo.awt.ImageSelection;
 import org.nlogo.core.AgentKindJ;
-import org.nlogo.core.I18N;
+import org.nlogo.core.LocaleContextJ;
 import org.nlogo.swing.Menu;
 import org.nlogo.swing.MenuItem;
 import org.nlogo.swing.PopupMenu;
@@ -440,13 +440,13 @@ public class View
     // the only ones that do are watch, follow and reset-perspective
     // this check (and others below) prevent items from being added
     // when we are running in Applet. JC - 6/8/10
-    menu.add(new MenuItem(new AbstractAction(I18N.guiJ().get("tabs.run.widget.view.copy")) {
+    menu.add(new MenuItem(new AbstractAction(LocaleContextJ.loc("Copy View")) {
       public void actionPerformed(ActionEvent e) {
         Toolkit.getDefaultToolkit().getSystemClipboard().setContents(
           new ImageSelection(exportView()), null);
       }
     }, true));
-    menu.add(new MenuItem(new AbstractAction(I18N.guiJ().get("tabs.run.widget.view.export")) {
+    menu.add(new MenuItem(new AbstractAction(LocaleContextJ.loc("Export View...")) {
       public void actionPerformed(ActionEvent e) {
         workspace.doExportView(View.this);
       }
@@ -456,7 +456,7 @@ public class View
 
     menu.addSeparator();
 
-    menu.add(new MenuItem(new AbstractAction(I18N.guiJ().get("tabs.run.widget.view.inspectGlobals")) {
+    menu.add(new MenuItem(new AbstractAction(LocaleContextJ.loc("inspect globals")) {
       public void actionPerformed(ActionEvent actionEvent) {
         workspace.inspectAgent(AgentKindJ.Observer());
       }

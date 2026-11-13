@@ -18,7 +18,7 @@ import org.nlogo.app.infotab.InfoTab
 import org.nlogo.app.interfacetab.InterfaceTab
 import org.nlogo.app.tools.AgentMonitorManager
 import org.nlogo.awt.UserCancelException
-import org.nlogo.core.{ I18N, NetLogoPreferences }
+import org.nlogo.core.{ LocaleContext, NetLogoPreferences }
 import org.nlogo.editor.EditorConfiguration
 import org.nlogo.nvm.IncludeSource
 import org.nlogo.swing.{ OptionPane, Printable, PrinterManager, TabLabel, UserAction }
@@ -78,9 +78,9 @@ class TabManager(app: App, val workspace: GUIWorkspace, val interfaceTab: Interf
 
   private var ignoreChanges = false
 
-  addTabWithLabel(mainTabs, I18N.gui.get("tabs.run"), interfaceTab)
-  addTabWithLabel(mainTabs, I18N.gui.get("tabs.info"), infoTab)
-  addTabWithLabel(mainTabs, I18N.gui.get("tabs.code"), mainCodeTab)
+  addTabWithLabel(mainTabs, loc"Interface", interfaceTab)
+  addTabWithLabel(mainTabs, loc"Info", infoTab)
+  addTabWithLabel(mainTabs, loc"Code", mainCodeTab)
 
   movingTabs = false
 
@@ -230,9 +230,10 @@ class TabManager(app: App, val workspace: GUIWorkspace, val interfaceTab: Interf
     val dirty = dirtyMonitor.fold(false)(_.modelDirty)
 
     if (dirty) {
-      val index = new OptionPane(workspace.getFrame, I18N.gui.get("dirty.dialog.title"),
-                                 I18N.gui.get("dirty.dialog.message"), OptionPane.Options.OkCancel,
-                                 OptionPane.Icons.question).getSelectedIndex
+      val message = loc"This file has been externally changed. Discard unsaved changes and reload the file?"
+
+      val index = new OptionPane(workspace.getFrame, loc"External Change Detected", message,
+                                 OptionPane.Options.OkCancel, OptionPane.Icons.question).getSelectedIndex
 
       if (index == 0) {
         okCallback()
@@ -248,7 +249,7 @@ class TabManager(app: App, val workspace: GUIWorkspace, val interfaceTab: Interf
     dirty
   }
 
-  class SaveAllAction extends ExceptionCatchingAction(I18N.gui.get("menu.file.saveAll"), workspace.getFrame)
+  class SaveAllAction extends ExceptionCatchingAction(loc"Save All", workspace.getFrame)
                        with UserAction.MenuAction {
     category    = UserAction.FileCategory
     group       = UserAction.FileSaveGroup
@@ -262,7 +263,7 @@ class TabManager(app: App, val workspace: GUIWorkspace, val interfaceTab: Interf
     }
   }
 
-  class PrintAction extends AbstractAction(I18N.gui.get("menu.file.print")) with UserAction.MenuAction {
+  class PrintAction extends AbstractAction(loc"Print...") with UserAction.MenuAction {
     category = UserAction.FileCategory
     group = UserAction.FilePrintGroup
     accelerator = UserAction.KeyBindings.keystroke('P', withMenu = true)
@@ -503,7 +504,7 @@ class TabManager(app: App, val workspace: GUIWorkspace, val interfaceTab: Interf
   }
 
   def newExternalFile(): Unit = {
-    addExternalFile(Left(I18N.gui.getN("tabs.external.new", newFileNumber: Integer)), true)
+    addExternalFile(Left(loc"New File ${newFileNumber: Integer}"), true)
 
     newFileNumber += 1
   }

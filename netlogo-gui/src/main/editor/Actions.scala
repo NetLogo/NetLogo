@@ -8,7 +8,7 @@ import javax.swing.{ AbstractAction, Action },
 import javax.swing.text.DefaultEditorKit,
   DefaultEditorKit.{ CutAction, CopyAction, PasteAction, InsertContentAction }
 
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 
 object Actions {
   /// default editor kit actions
@@ -24,24 +24,24 @@ object Actions {
   def getDefaultEditorKitAction(name:String) = actionMap(name)
 
   class NetLogoPasteAction extends PasteAction {
-    putValue(NAME, I18N.gui.get("menu.edit.paste"))
+    putValue(NAME, loc"Paste")
   }
 
   class NetLogoCopyAction extends CopyAction {
-    putValue(NAME, I18N.gui.get("menu.edit.copy"))
+    putValue(NAME, loc"Copy")
   }
 
   class NetLogoCutAction extends CutAction {
-    putValue(NAME, I18N.gui.get("menu.edit.cut"))
+    putValue(NAME, loc"Cut")
   }
 
   class NetLogoDeleteAction extends InsertContentAction {
-    putValue(NAME, I18N.gui.get("menu.edit.delete"))
+    putValue(NAME, loc"Delete")
     putValue(ACTION_COMMAND_KEY, "")
   }
 
   class NetLogoSelectAllAction extends AbstractAction {
-    putValue(NAME, I18N.gui.get("menu.edit.selectAll"))
+    putValue(NAME, loc"Select All")
 
     val defaultAction =
       getDefaultEditorKitAction(DefaultEditorKit.selectAllAction)

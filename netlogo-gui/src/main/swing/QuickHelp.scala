@@ -8,7 +8,7 @@ import java.nio.file.{ Path, Paths }
 import java.util.Locale
 
 import org.nlogo.api.Version
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 
 object QuickHelp {
   /**
@@ -73,9 +73,10 @@ object QuickHelp {
     } else if (quickHelpWords.contains(tokenLower)) {
       openDictionary(comp, tokenLower, quickHelpWords)
     } else {
-      if (new OptionPane(comp, I18N.gui.get("common.netlogo"),
-                         I18N.gui.getN("tabs.code.rightclick.quickhelp.notfound",
-                         tokenLower.toUpperCase(Locale.ENGLISH)), OptionPane.Options.OkCancel,
+      val notFound = loc"""|${tokenLower.toUpperCase(Locale.ENGLISH)} could not be found in the NetLogo Dictionary.\n
+                           |Would you like to open the full NetLogo Dictionary?"""
+
+      if (new OptionPane(comp, loc"NetLogo", notFound, OptionPane.Options.OkCancel,
                          OptionPane.Icons.error).getSelectedIndex == 0)
         BrowserLauncher.tryOpenURI(comp,
           new URI(s"https://docs.netlogo.org/${Version.versionNumberNo3D}/dictionary.html"),

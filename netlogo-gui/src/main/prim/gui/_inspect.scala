@@ -2,7 +2,7 @@
 
 package org.nlogo.prim.gui
 
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.nvm.{ Command, Context, RuntimePrimitiveException }
 
 class _inspect extends Command {
@@ -10,8 +10,7 @@ class _inspect extends Command {
   override def perform(context: Context): Unit = {
     val agent = argEvalAgent(context, 0)
     if (agent.id == -1)
-      throw new RuntimePrimitiveException(context, this,
-        I18N.errors.getN("org.nlogo.$common.thatAgentIsDead", agent.classDisplayName))
+      throw new RuntimePrimitiveException(context, this, loc"That ${agent.classDisplayName} is dead.")
     org.nlogo.awt.EventQueue.invokeLater(
       new Runnable {
         override def run(): Unit = {

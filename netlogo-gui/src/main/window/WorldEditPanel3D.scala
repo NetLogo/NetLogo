@@ -5,22 +5,20 @@ package org.nlogo.window
 import javax.swing.{ Box, JLabel }
 import javax.swing.border.TitledBorder
 
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, MaximumHeight, PreferredSize, Zoomable, ZoomableBorder }
 import org.nlogo.theme.InterfaceColors
 
 class WorldEditPanel3D(target: WorldViewSettings3D) extends WorldEditPanel(target) {
-  private implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("edit.viewSettings")
-
   private val modelTitle: StringEditor =
     new StringEditor(
       new PropertyAccessor(
         target,
-        I18N.gui("modelTitle"),
+        loc"Model title",
         () => target.modelTitle,
         _.foreach(target.setModelTitle)))
 
-  private val locationLabel = new JLabel(I18N.gui("origin.location")) with Zoomable
+  private val locationLabel = new JLabel(loc"Location of origin:") with Zoomable
 
   private val minPxcor: NegativeIntegerEditor =
     new NegativeIntegerEditor(
@@ -31,7 +29,7 @@ class WorldEditPanel3D(target: WorldViewSettings3D) extends WorldEditPanel(targe
         _.foreach(target.minPxcor),
         () => previewChanged("minPxcor", minPxcor.get)))
 
-  private val minPxcorLabeled = new LabeledEditor(minPxcor, I18N.gui("3D.minPxcor"))
+  private val minPxcorLabeled = new LabeledEditor(minPxcor, loc"minimum x coordinate for patches")
 
   private val maxPxcor: PositiveIntegerEditor =
     new PositiveIntegerEditor(
@@ -42,7 +40,7 @@ class WorldEditPanel3D(target: WorldViewSettings3D) extends WorldEditPanel(targe
         _.foreach(target.maxPxcor),
         () => previewChanged("maxPxcor", maxPxcor.get)))
 
-  private val maxPxcorLabeled = new LabeledEditor(maxPxcor, I18N.gui("3D.maxPxcor"))
+  private val maxPxcorLabeled = new LabeledEditor(maxPxcor, loc"maximum x coordinate for patches")
 
   private val minPycor: NegativeIntegerEditor =
     new NegativeIntegerEditor(
@@ -53,7 +51,7 @@ class WorldEditPanel3D(target: WorldViewSettings3D) extends WorldEditPanel(targe
         _.foreach(target.minPycor),
         () => previewChanged("minPycor", minPycor.get)))
 
-  private val minPycorLabeled = new LabeledEditor(minPycor, I18N.gui("3D.minPycor"))
+  private val minPycorLabeled = new LabeledEditor(minPycor, loc"minimum y coordinate for patches")
 
   private val maxPycor: PositiveIntegerEditor =
     new PositiveIntegerEditor(
@@ -64,7 +62,7 @@ class WorldEditPanel3D(target: WorldViewSettings3D) extends WorldEditPanel(targe
         _.foreach(target.maxPycor),
         () => previewChanged("maxPycor", maxPycor.get)))
 
-  private val maxPycorLabeled = new LabeledEditor(maxPycor, I18N.gui("3D.maxPycor"))
+  private val maxPycorLabeled = new LabeledEditor(maxPycor, loc"maximum y coordinate for patches")
 
   private val minPzcor: NegativeIntegerEditor =
     new NegativeIntegerEditor(
@@ -75,7 +73,7 @@ class WorldEditPanel3D(target: WorldViewSettings3D) extends WorldEditPanel(targe
         _.foreach(target.minPzcor),
         () => previewChanged("minPzcor", minPzcor.get)))
 
-  private val minPzcorLabeled = new LabeledEditor(minPzcor, I18N.gui("3D.minPzcor"))
+  private val minPzcorLabeled = new LabeledEditor(minPzcor, loc"minimum z coordinate for patches")
 
   private val maxPzcor: PositiveIntegerEditor =
     new PositiveIntegerEditor(
@@ -86,14 +84,14 @@ class WorldEditPanel3D(target: WorldViewSettings3D) extends WorldEditPanel(targe
         _.foreach(target.maxPzcor),
         () => previewChanged("maxPzcor", maxPzcor.get)))
 
-  private val maxPzcorLabeled = new LabeledEditor(maxPzcor, I18N.gui("3D.maxPzcor"))
+  private val maxPzcorLabeled = new LabeledEditor(maxPzcor, loc"maximum z coordinate for patches")
 
   // the wrapping properties are here to control the variables but they are not added to the GUI (Isaac B 4/2/25)
   private val wrappingX: BooleanEditor =
     new BooleanEditor(
       new PropertyAccessor(
         target,
-        I18N.gui("3D.wrapX"),
+        loc"World wraps X (east/west)",
         () => target.wrappingX,
         _.foreach(target.wrappingX),
         () => previewChanged("wrappingX", wrappingX.get)))
@@ -102,7 +100,7 @@ class WorldEditPanel3D(target: WorldViewSettings3D) extends WorldEditPanel(targe
     new BooleanEditor(
       new PropertyAccessor(
         target,
-        I18N.gui("3D.wrapY"),
+        loc"World wraps Y (north/south)",
         () => target.wrappingY,
         _.foreach(target.wrappingY),
         () => previewChanged("wrappingY", wrappingY.get)))
@@ -111,7 +109,7 @@ class WorldEditPanel3D(target: WorldViewSettings3D) extends WorldEditPanel(targe
     new BooleanEditor(
       new PropertyAccessor(
         target,
-        I18N.gui("3D.wrapZ"),
+        loc"World wraps Z (top/bottom)",
         () => target.wrappingZ,
         _.foreach(target.wrappingZ),
         () => previewChanged("wrappingZ", wrappingZ.get)))
@@ -120,57 +118,57 @@ class WorldEditPanel3D(target: WorldViewSettings3D) extends WorldEditPanel(targe
     new StrictlyPositiveDoubleEditor(
       new PropertyAccessor(
         target,
-        I18N.gui("2D.patchSize"),
+        loc"Patch size",
         () => target.patchSize,
         _.foreach(target.patchSize)))
 
-  private val patchSizeLabeled = new LabeledEditor(patchSize, I18N.gui("2D.patchSize.info"))
+  private val patchSizeLabeled = new LabeledEditor(patchSize, loc"measured in pixels")
 
   private val fontSize =
     new PositiveIntegerEditor(
       new PropertyAccessor(
         target,
-        I18N.gui("2D.fontSize"),
+        loc"Font size",
         () => target.fontSize,
         _.foreach(target.fontSize)))
 
-  private val fontSizeLabeled = new LabeledEditor(fontSize, I18N.gui("2D.fontSize.info"))
+  private val fontSizeLabeled = new LabeledEditor(fontSize, loc"of labels on agents")
 
   private val frameRate =
     new StrictlyPositiveDoubleEditor(
       new PropertyAccessor(
         target,
-        I18N.gui("2D.frameRate"),
+        loc"Frame rate",
         () => target.frameRate,
         _.foreach(target.frameRate)))
 
-  private val frameRateLabeled = new LabeledEditor(frameRate, I18N.gui("2D.frameRate.info"))
+  private val frameRateLabeled = new LabeledEditor(frameRate, loc"Frames per second at normal speed")
 
   private val smooth =
     new BooleanEditor(
       new PropertyAccessor(
         target,
-        I18N.gui("3D.smooth"),
+        loc"Smooth edges (slower)",
         () => target.smooth,
         _.foreach(target.smooth)))
 
-  private val smoothLabeled = new LabeledEditor(smooth, I18N.gui("3D.affects"))
+  private val smoothLabeled = new LabeledEditor(smooth, loc"only affects 3D view")
 
   private val wireframe =
     new BooleanEditor(
       new PropertyAccessor(
         target,
-        I18N.gui("3D.wireFrame"),
+        loc"Show wire frame",
         () => target.wireframe,
         _.foreach(target.wireframe)))
 
-  private val wireframeLabeled = new LabeledEditor(wireframe, I18N.gui("3D.affects"))
+  private val wireframeLabeled = new LabeledEditor(wireframe, loc"only affects 3D view")
 
   private val bgColor: ColorEditor =
     new ColorEditor(
       new PropertyAccessor(
         target,
-        I18N.gui("3D.bgColor"),
+        loc"Background color",
         () => target.getBgColor,
         _.foreach(target.setBgColor),
         () => target.updateBackground(bgColor.get.toOption)), target.workspace.getFrame)
@@ -179,7 +177,7 @@ class WorldEditPanel3D(target: WorldViewSettings3D) extends WorldEditPanel(targe
     new ColorEditor(
       new PropertyAccessor(
         target,
-        I18N.gui("3D.wireframeColor"),
+        loc"Wire frame color",
         () => target.getWireframeColor,
         _.foreach(target.setWireframeColor),
         () => target.updateWireframe(wireframeColor.get.toOption)), target.workspace.getFrame)
@@ -188,7 +186,7 @@ class WorldEditPanel3D(target: WorldViewSettings3D) extends WorldEditPanel(targe
     new BooleanEditor(
       new PropertyAccessor(
         target,
-        I18N.gui("showTickCounter"),
+        loc"Show tick counter",
         () => target.showTickCounter,
         _.foreach(target.showTickCounter)))
 
@@ -196,14 +194,14 @@ class WorldEditPanel3D(target: WorldViewSettings3D) extends WorldEditPanel(targe
     new StringEditor(
       new PropertyAccessor(
         target,
-        I18N.gui("tickCounterLabel"),
+        loc"Tick counter label",
         () => target.tickCounterLabel,
         target.tickCounterLabel))
 
-  private val modelBorder = new TitledBorder(I18N.gui("model"))
-  private val worldBorder = new TitledBorder(I18N.gui("world"))
-  private val viewBorder = new TitledBorder(I18N.gui("view"))
-  private val tickBorder = new TitledBorder(I18N.gui("tickCounter"))
+  private val modelBorder = new TitledBorder(loc"Model")
+  private val worldBorder = new TitledBorder(loc"World")
+  private val viewBorder = new TitledBorder(loc"View")
+  private val tickBorder = new TitledBorder(loc"Tick counter")
 
   locally {
     val configPanel = new BoxColumn(Seq(

@@ -9,7 +9,7 @@ import javax.swing.{ AbstractAction, Action, Box, JButton, JLabel, JPanel }
 import org.nlogo.api.Exceptions
 import org.nlogo.app.common.{ CommandLine, CommandServer, HistoryPrompt, LinePrompt }
 import org.nlogo.awt.{ Hierarchy, UserCancelException }
-import org.nlogo.core.{ AgentKind, I18N }
+import org.nlogo.core.{ AgentKind, LocaleContext }
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, Button, FileDialog => SwingFileDialog, FocusUtils, MaximumHeight,
                          ModalProgressTask, MenuItem, PopupMenu, PreferredSize, RichAction, RoundedBorderPanel,
                          Zoomable, ZoomableBorder }
@@ -52,12 +52,12 @@ class CommandCenter(workspace: AbstractWorkspace, showToggle: Boolean, packSplit
     }
   }
 
-  private val titleLabel = new JLabel(I18N.gui.get("tabs.run.commandcenter")) with Zoomable {
+  private val titleLabel = new JLabel(loc"Command Center") with Zoomable {
     setFocusable(false)
     setBaseFont(getFont.deriveFont(Font.BOLD))
   }
 
-  val clearButton = new JButton(RichAction(I18N.gui.get("tabs.run.commandcenter.clearButton")) {
+  val clearButton = new JButton(RichAction(loc"Clear") {
     _ => output.clear()
   }) with RoundedBorderPanel with FocusUtils with ThemeSync {
     setBorder(new ZoomableBorder(3, 12, 3, 12))
@@ -138,14 +138,13 @@ class CommandCenter(workspace: AbstractWorkspace, showToggle: Boolean, packSplit
   private def doPopup(e: MouseEvent): Unit = {
     new PopupMenu(this) {
       add(new MenuItem(TextMenuActions.CopyAction))
-      add(new MenuItem(new AbstractAction(I18N.gui.get("menu.file.export")) {
+      add(new MenuItem(new AbstractAction(loc"Export") {
         def actionPerformed(e: ActionEvent): Unit = {
           try {
-            val filename = SwingFileDialog.showFiles(
-              output, I18N.gui.get("tabs.run.commandcenter.exporting"), FileDialog.SAVE,
+            val filename = SwingFileDialog.showFiles(output, loc"Exporting", FileDialog.SAVE,
               workspace.guessExportName("command center output.txt"))
             ModalProgressTask.runForResultOnBackgroundThread(
-              Hierarchy.getFrame(output), I18N.gui.get("dialog.interface.export.task"),
+              Hierarchy.getFrame(output), loc"Exporting...",
               () => output.valueText, (text: String) => ExportOutput.silencingErrors(filename, text))
           } catch {
             case uce: UserCancelException => Exceptions.ignore(uce)

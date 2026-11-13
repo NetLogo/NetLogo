@@ -5,7 +5,8 @@ package org.nlogo.window
 import java.awt.Color
 
 import org.nlogo.api.WorldPropertiesInterface
-import org.nlogo.core.{ CompilerException, I18N, UpdateMode, View => CoreView, Widget => CoreWidget, WorldDimensions }
+import org.nlogo.core.{ CompilerException, LocaleContext, UpdateMode, View => CoreView, Widget => CoreWidget,
+                        WorldDimensions }
 import org.nlogo.workspace.WorldLoaderInterface
 
 trait WorldIntegerEditor {
@@ -42,7 +43,7 @@ abstract class WorldViewSettings(val workspace: GUIWorkspace, protected val gWid
 
   protected var _error: Option[CompilerException] = None
 
-  def classDisplayName: String = I18N.gui.get("edit.viewSettings.modelSettings")
+  def classDisplayName: String = loc"Model Settings"
   def resizeWithProgress(showProgress: Boolean): Unit
 
   def editPanel3D: EditPanel = editPanel

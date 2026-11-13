@@ -6,7 +6,6 @@ import javax.swing.JFileChooser
 import org.nlogo.api.{ AppInterface, ReporterRunnable, Workspace }
 import org.nlogo.app.App
 import org.nlogo.awt.UserCancelException
-import org.nlogo.core.I18N
 import org.nlogo.swing.{ DropdownOptionPane, FileDialog }
 
 trait Selector {

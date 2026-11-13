@@ -12,7 +12,7 @@ import scala.concurrent.{ ExecutionContext, Future }
 import scala.util.{ Failure, Try }
 
 import org.nlogo.analytics.Analytics
-import org.nlogo.core.{ I18N, Model }
+import org.nlogo.core.{ LocaleContext, Model }
 import org.nlogo.api.{ AbstractModelLoader, Exceptions, FileIO, LibraryManager, ModelReader, ModelSaver, ModelType,
                        Version }, ModelReader.{ emptyModelPath, modelSuffix }
 import org.nlogo.app.common.{ Actions, Dialogs, ExceptionCatchingAction, ModelConfig }, Actions.Ellipsis
@@ -30,7 +30,7 @@ import org.nlogo.workspace.{ AbstractWorkspaceScala, OpenModel, OpenModelFromURI
 
 object FileManager {
   class NewAction(manager: FileManager, parent: Container)
-  extends ExceptionCatchingAction(I18N.gui.get("menu.file.newModel"), parent)
+  extends ExceptionCatchingAction(loc"New Model", parent)
   with MenuAction {
     category    = UserAction.FileCategory
     group       = UserAction.FileOpenGroup
@@ -47,7 +47,7 @@ object FileManager {
   }
 
   class NewWindowAction(parent: Component)
-    extends ExceptionCatchingAction(I18N.gui.get("menu.file.newWindow"), parent) with MenuAction {
+    extends ExceptionCatchingAction(loc"New Window", parent) with MenuAction {
 
     category = UserAction.FileCategory
     group = UserAction.FileOpenGroup
@@ -63,7 +63,7 @@ object FileManager {
   }
 
   class OpenAction(manager: FileManager, parent: Component)
-  extends ExceptionCatchingAction(I18N.gui.get("menu.file.open") + Ellipsis, parent)
+  extends ExceptionCatchingAction(loc"Open$Ellipsis", parent)
   with MenuAction {
     category    = UserAction.FileCategory
     group       = UserAction.FileOpenGroup
@@ -80,7 +80,7 @@ object FileManager {
   }
 
   class CloseWindowAction(app: App, parent: Component)
-    extends ExceptionCatchingAction(I18N.gui.get("menu.file.closeWindow"), parent) with MenuAction {
+    extends ExceptionCatchingAction(loc"Close Window", parent) with MenuAction {
 
     category = UserAction.FileCategory
     group = UserAction.FileQuitGroup
@@ -93,7 +93,7 @@ object FileManager {
   }
 
   class QuitAction(parent: Component)
-  extends ExceptionCatchingAction(I18N.gui.get("menu.file.quit"), parent)
+  extends ExceptionCatchingAction(loc"Quit", parent)
   with MenuAction {
     category    = UserAction.FileCategory
     group       = UserAction.FileQuitGroup
@@ -110,7 +110,7 @@ object FileManager {
   }
 
   class ModelsLibraryAction(manager: FileManager, parent: Component, libraryManager: LibraryManager)
-  extends ExceptionCatchingAction(I18N.gui.get("menu.file.modelsLibrary"), parent)
+  extends ExceptionCatchingAction(loc"Models Library", parent)
   with MenuAction {
     category    = UserAction.FileCategory
     group       = UserAction.FileOpenGroup
@@ -128,7 +128,7 @@ object FileManager {
   }
 
   class ImportClientAction(manager: FileManager, workspace: AbstractWorkspaceScala, parent: Component)
-  extends ExceptionCatchingAction(I18N.gui.get("menu.file.import.hubNetClientInterface") + Ellipsis, parent)
+  extends ExceptionCatchingAction(loc"Import HubNet Client Interface$Ellipsis", parent)
   with MenuAction {
     category    = UserAction.FileCategory
     subcategory = UserAction.FileImportSubcategory
@@ -152,27 +152,21 @@ object FileManager {
     @throws(classOf[UserCancelException])
     @throws(classOf[IOException])
     override def action(): Unit = {
-      val importPath = org.nlogo.swing.FileDialog.showFiles(
-          parent, I18N.gui.get("menu.file.import.hubNetClientInterface"), java.awt.FileDialog.LOAD, null);
+      val importPath = org.nlogo.swing.FileDialog.showFiles(parent, loc"Import HubNet Client Interface",
+                                                            java.awt.FileDialog.LOAD, null);
       val choice =
-          new OptionPane(frame, I18N.gui.get("menu.file.import.hubNetClientInterface.message"),
-                         I18N.gui.get("menu.file.import.hubNetClientInterface.prompt"),
-                         Seq(I18N.gui.get("menu.file.import.hubNetClientInterface.fromInterface"),
-                             I18N.gui.get("menu.file.import.hubNetClientInterface.fromClient")),
-                         OptionPane.Icons.question).getSelectedIndex
+          new OptionPane(frame, loc"Import HubNet Client", loc"Which section would you like to import from?",
+                         Seq(loc"Interface Tab", loc"HubNet Client"), OptionPane.Icons.question).getSelectedIndex
 
       if (choice != 2) {
-        ModalProgressTask.onUIThread(
-          frame,
-          I18N.gui.get("dialog.interface.import.task"),
-          importTask(importPath, choice))
+        ModalProgressTask.onUIThread(frame, loc"Importing...", importTask(importPath, choice))
         exception.foreach(throw _)
       }
     }
   }
 
   class UploadToModelingCommonsAction(parent: Component)
-    extends ExceptionCatchingAction(I18N.gui.get("menu.file.uploadMc"), parent) with MenuAction {
+    extends ExceptionCatchingAction(loc"Upload To Modeling Commons", parent) with MenuAction {
 
     category = UserAction.FileCategory
     group = UserAction.FileShareGroup
@@ -186,7 +180,7 @@ object FileManager {
   }
 
   class SaveAsNetLogoWebAction(manager: FileManager, workspace: AbstractWorkspaceScala, modelSaver: ModelSaver, parent: Component)
-  extends ExceptionCatchingAction(I18N.gui.get("menu.file.saveAsNetLogoWeb"), parent)
+  extends ExceptionCatchingAction(loc"Save As NetLogo Web...", parent)
   with MenuAction {
     category = UserAction.FileCategory
     group    = UserAction.FileShareGroup
@@ -198,9 +192,8 @@ object FileManager {
     @throws(classOf[UserCancelException])
     @throws(classOf[IOException])
     override def action(): Unit = {
-      val exportPath = FileDialog.showFiles(
-        parent, I18N.gui.get("menu.file.saveAsNetLogoWeb.dialog"),
-        AWTFileDialog.SAVE, suggestedFileName)
+      val exportPath = FileDialog.showFiles(parent, loc"Saving as NetLogo Web HTML Page", AWTFileDialog.SAVE,
+                                            suggestedFileName)
 
       val exportFile = new File(exportPath)
       val saver = NetLogoWebSaver(exportPath)
@@ -208,10 +201,12 @@ object FileManager {
       val modelString = modelToSave
       val includes = collectIncludes(modelString)
 
+      val text = loc"""|This model contains included files, which are not supported in NetLogo Web.
+                       |The contents of these files will be merged with the main code."""
+
       if (includes.nonEmpty &&
-        new OptionPane(parent, I18N.gui.get("common.messages.warning"),
-                       I18N.gui.get("menu.file.nlw.prompt.includesWarning"), OptionPane.Options.OkCancel,
-                       OptionPane.Icons.warning).getSelectedIndex != 0)
+        new OptionPane(parent, loc"Warning", text, OptionPane.Options.OkCancel, OptionPane.Icons.warning)
+          .getSelectedIndex != 0)
         throw new UserCancelException()
 
       Analytics.saveAsNetLogoWeb()
@@ -243,12 +238,15 @@ object FileManager {
 
     @throws(classOf[UserCancelException])
     private def userWantsLastSaveExported(): Boolean = {
-      val typeKey =
-        if (workspace.getModelType == ModelType.Normal) "fromSave" else "fromLibrary"
-      val choice = new OptionPane(parent, I18N.gui.get("menu.file.nlw.prompt.title"),
-                                  I18N.gui.get("menu.file.nlw.prompt.message." + typeKey),
-                                  Seq(I18N.gui.get("menu.file.nlw.prompt." + typeKey),
-                                      I18N.gui.get("menu.file.nlw.prompt.fromCurrentCopy")),
+      val (message, option) = {
+        if (workspace.getModelType == ModelType.Normal) {
+          (loc"Export model from last save or from open copy?", loc"From last save")
+        } else {
+          (loc"Export model from Models Library or open copy?", loc"From Models Library")
+        }
+      }
+
+      val choice = new OptionPane(parent, loc"Choose Export Source", message, Seq(option, loc"From open copy"),
                                   OptionPane.Icons.question).getSelectedIndex
       if (choice == 0)
         true
@@ -288,7 +286,7 @@ object FileManager {
     convertIncludeFile: ConvertIncludeFile,
     workspace:          AbstractWorkspaceScala,
     controller:         FileController)
-  extends ExceptionCatchingAction(I18N.gui.get("menu.edit.convertToNetLogoSix"), tab)
+  extends ExceptionCatchingAction(loc"Convert from 5.3.1 to 6.0", tab)
   with MenuAction{
     category = UserAction.EditCategory
     group    = "ConversionGroup"
@@ -301,7 +299,7 @@ object FileManager {
         convertIncludeFile.apply(path, modelSaver.currentModel, tab.innerSource) match {
           case SuccessfulConversion(originalModel, m) => tab.innerSource = m.code
           case failure: FailedConversionResult =>
-            controller.showAutoconversionError(failure, "nls").foreach { m =>
+            controller.showAutoconversionError(failure, loc".nls file").foreach { m =>
               tab.innerSource = m.code
             }
         }
@@ -310,7 +308,7 @@ object FileManager {
   }
 
   class ManageResourcesAction(manager: FileManager, workspace: AbstractWorkspaceScala, parent: Component)
-    extends ExceptionCatchingAction(I18N.gui.get("menu.file.manageResources"), parent) with MenuAction {
+    extends ExceptionCatchingAction(loc"Manage Bundled Resources", parent) with MenuAction {
 
     category = UserAction.FileCategory
     group = UserAction.FileResourcesGroup
@@ -357,21 +355,23 @@ class FileManager(app: App,
 
   private[app] def aboutToCloseFiles(): Unit = {
     if (labManager.anyRunning &&
-        new OptionPane(parent, I18N.gui.get("common.messages.warning"),
-                       I18N.gui.get("file.close.warn.runningExperiments"), OptionPane.Options.YesNo,
-                       OptionPane.Icons.warning).getSelectedIndex != 0)
+        new OptionPane(parent, loc"Warning",
+                       loc"A BehaviorSpace experiment is currently running. Do you want to abort it?",
+                       OptionPane.Options.YesNo, OptionPane.Icons.warning).getSelectedIndex != 0)
       throw new UserCancelException
 
     labManager.abort()
 
+    val message = loc"""|You have a paused BehaviorSpace experiment. Do you want to leave this model and discard the
+                        |experiment data?"""
+
     if (labManager.anyPaused &&
-        new OptionPane(parent, I18N.gui.get("common.messages.warning"),
-                       I18N.gui.get("file.close.warn.pausedExperiments"), OptionPane.Options.YesNo,
-                       OptionPane.Icons.warning).getSelectedIndex != 0)
+        new OptionPane(parent, loc"Warning", message, OptionPane.Options.YesNo, OptionPane.Icons.warning)
+          .getSelectedIndex != 0)
       throw new UserCancelException
 
     if (dirtyMonitor.modelDirty) {
-      if (!testing && Dialogs.userWantsToSaveFirst(I18N.gui.get("file.save.offer.thisModel"), parent)) {
+      if (!testing && Dialogs.userWantsToSaveFirst(loc"this model", parent)) {
         saveModel(false)
       } else {
         dirtyMonitor.discardNewAutoSaves()
@@ -399,7 +399,8 @@ class FileManager(app: App,
   def openFromURI(uri: URI, modelType: ModelType, shouldAutoInstallLibs: Boolean = false): Unit = {
     val newUri = ModelConfig.findModelAutoSave(Paths.get(uri).toString) match {
       case Some(path) if !testing =>
-        if (new OptionPane(parent, I18N.gui.get("file.autosave.recover"), I18N.gui.get("file.autosave.recover.message"),
+        if (new OptionPane(parent, loc"Recover Autosave",
+                           loc"NetLogo found an autosave for this model. Would you like to recover it?",
                            OptionPane.Options.YesNo, OptionPane.Icons.info).getSelectedIndex == 0) {
           path.toUri
         } else {
@@ -447,10 +448,12 @@ class FileManager(app: App,
       if (Version.numericValue(model.version) > Version.numericValue("NetLogo 6.4.0")) {
         false
       } else {
-        new OptionPane(parent, I18N.gui.get("menu.tools.convertWidgetSizes"),
-                      I18N.gui.get("file.open.warn.convertWidgetSizes"),
-                      Seq(I18N.gui.get("menu.tools.convertWidgetSizes.resizeAndAdjust"),
-                          I18N.gui.get("file.open.skip")), OptionPane.Icons.info)
+        val message = loc"""|The widgets in this model can be converted to the new larger sizes for NetLogo 7. They
+                            |can also be repositioned to retain the original spacing between widgets. Either way, you
+                            |will likely need to make further adjustments afterward."""
+
+        new OptionPane(parent, loc"Convert Widgets to New Sizes", message,
+                       Seq(loc"Resize and adjust positions", loc"Skip"), OptionPane.Icons.info)
           .getSelectedIndex == 0
       }
     }
@@ -463,8 +466,7 @@ class FileManager(app: App,
 
   private def loadModel(openModel: (OpenModel.Controller) => Option[Model]): Option[Model] = {
     val result = ModalProgressTask.runForResultOnBackgroundThread(
-      Hierarchy.getFrame(parent), I18N.gui.get("dialog.interface.loading.task"), () => {},
-      Unit => openModel(controller))
+      Hierarchy.getFrame(parent), loc"Loading...", () => {}, Unit => openModel(controller))
     if (result.isEmpty) {
       new LoadErrorEvent().raise(eventRaiser)
     }
@@ -498,15 +500,15 @@ class FileManager(app: App,
     saveThunk.foreach { thunk =>
       val saver = new Saver(thunk, isNew)
 
-      ModalProgressTask.onUIThread(Hierarchy.getFrame(parent), I18N.gui.get("dialog.interface.saving.task"), saver)
+      ModalProgressTask.onUIThread(Hierarchy.getFrame(parent), loc"Saving...", saver)
 
       if (! saver.result.isDefined)
         throw new UserCancelException()
 
       saver.result match {
         case Some(Failure(e: Throwable)) =>
-          new OptionPane(parent, I18N.gui.get("common.netlogo"), I18N.gui.getN("menu.file.save.error", e.getMessage),
-                         OptionPane.Options.Ok, OptionPane.Icons.error)
+          new OptionPane(parent, loc"NetLogo", loc"Error while saving file: ${e.getMessage}", OptionPane.Options.Ok,
+                         OptionPane.Icons.error)
         case _ =>
           ModelConfig.setLastModified(workspace.getModelPath)
       }
@@ -525,13 +527,13 @@ class FileManager(app: App,
         }
       }
 
-      ModalProgressTask.onUIThread(Hierarchy.getFrame(parent), I18N.gui.get("dialog.interface.loading.task"), loader)
+      ModalProgressTask.onUIThread(Hierarchy.getFrame(parent), loc"Loading...", loader)
     }
   }
 
   @throws(classOf[UserCancelException])
   private def userChooseLoadPath(): String = {
-    FileDialog.showFiles(parent, I18N.gui.get("menu.file.open"), AWTFileDialog.LOAD, null)
+    FileDialog.showFiles(parent, loc"Open", AWTFileDialog.LOAD, null)
   }
 
   private class Saver(val thunk: () => Try[URI], isNew: Boolean) extends Runnable {
@@ -574,7 +576,7 @@ class FileManager(app: App,
   def saveModelActions(parent: Component) = {
     def saveAction(saveAs: Boolean) =
       new ExceptionCatchingAction(
-        if (saveAs) I18N.gui.get("menu.file.saveAs") + Ellipsis else I18N.gui.get("menu.file.save"),
+        if (saveAs) loc"Save As$Ellipsis" else loc"Save",
         parent)
       with MenuAction {
         category = UserAction.FileCategory

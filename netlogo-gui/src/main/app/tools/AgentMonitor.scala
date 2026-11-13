@@ -11,7 +11,7 @@ import javax.swing.border.{ CompoundBorder, MatteBorder }
 import org.nlogo.agent.{ Agent, Link, Patch, Turtle }
 import org.nlogo.app.common.{ CommandLine, HistoryPrompt, LinePrompt }
 import org.nlogo.awt.Hierarchy
-import org.nlogo.core.{ AgentKind, I18N }
+import org.nlogo.core.{ AgentKind, LocaleContext }
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, CollapsiblePane, FocusRoot, ScrollPane, ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ CommandCenterInterface, GUIWorkspace }
@@ -19,8 +19,6 @@ import org.nlogo.window.{ CommandCenterInterface, GUIWorkspace }
 // implementing CommandCenterInterface lets us embed CommandLine
 abstract class AgentMonitor(val workspace: GUIWorkspace, window: JDialog)
   extends JPanel(new BorderLayout) with CommandCenterInterface with FocusRoot with ThemeSync {
-
-  private implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("tools.agentMonitor")
 
   private var _agent: Agent = null
   def agent: Agent = _agent
@@ -74,8 +72,8 @@ abstract class AgentMonitor(val workspace: GUIWorkspace, window: JDialog)
   }
 
   private val panel = new AgentMonitorViewPanel(workspace)
-  private val viewPane = new CollapsiblePane(I18N.gui("view"), panel, window)
-  private val propertiesPane = new CollapsiblePane(I18N.gui("properties"), scrollPane, window)
+  private val viewPane = new CollapsiblePane(loc"View", panel, window)
+  private val propertiesPane = new CollapsiblePane(loc"Properties", scrollPane, window)
   private val viewPanel: Option[AgentMonitorViewPanel] = {
     if (agentKind == AgentKind.Observer) {
       // the observer monitor doesn't have a view or the command center. ev 6/4/08

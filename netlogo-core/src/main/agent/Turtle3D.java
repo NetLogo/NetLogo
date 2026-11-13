@@ -7,7 +7,7 @@ import org.nlogo.api.AgentVariableNumbers;
 import org.nlogo.api.AgentVariables;
 import org.nlogo.api.Color;
 import org.nlogo.api.Dump;
-import org.nlogo.core.I18N;
+import org.nlogo.core.LocaleContextJ;
 import org.nlogo.core.LogoList;
 import org.nlogo.api.Vect;
 
@@ -362,7 +362,7 @@ public final class Turtle3D
           if (value instanceof AgentSet) {
             AgentSet breed = (AgentSet) value;
             if (breed != _world.turtles() && !_world.isBreed(breed)) {
-              throw new AgentException(I18N.errorsJ().get("org.nlogo.agent.Turtle.cantSetBreedToNonBreedAgentSet"));
+              throw new AgentException(LocaleContextJ.loc("You can't set BREED to a non-breed agentset."));
             }
             setBreed(breed);
           } else {

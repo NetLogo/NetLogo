@@ -10,7 +10,7 @@ import org.nlogo.agent.Turtle;
 import org.nlogo.api.AgentException;
 import org.nlogo.api.Dump;
 import org.nlogo.core.AgentKindJ;
-import org.nlogo.core.I18N;
+import org.nlogo.core.LocaleContextJ;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.LogoList;
 import org.nlogo.core.Syntax;
@@ -34,8 +34,8 @@ public final class _atpoints
     LogoList points = argEvalList(context, 1);
     for (Object point : points.javaIterable()) {
       if (!validateListEntry(point)) {
-        throw new RuntimePrimitiveException(context, this, I18N.errorsJ().getN(
-            "org.nlogo.prim.etc._atpoints.invalidListOfPoints", Dump.logoObject(points)));
+        throw new RuntimePrimitiveException(context, this,
+          LocaleContextJ.loc("Invalid list of points: {}", Dump.logoObject(points)));
       }
     }
 
@@ -129,20 +129,20 @@ public final class _atpoints
           case 2:
             if (!is3D) {
               throw new RuntimePrimitiveException(context, this,
-                  I18N.errorsJ().getN("org.nlogo.prim.etc._atpoints.invalidListOfPoints", Dump.logoObject(points)));
+                LocaleContextJ.loc("Invalid list of points: {}", Dump.logoObject(points)));
 
             }
             z = (Double) it2.next();
             break;
           default:
             throw new RuntimePrimitiveException(context, this,
-                I18N.errorsJ().getN("org.nlogo.prim.etc._atpoints.invalidListOfPoints", Dump.logoObject(points)));
+              LocaleContextJ.loc("Invalid list of points: {}", Dump.logoObject(points)));
         }
         j++;
       }
       if (x == null || y == null) {
         throw new RuntimePrimitiveException(context, this,
-            I18N.errorsJ().getN("org.nlogo.prim.etc._atpoints.invalidListOfPoints", Dump.logoObject(points)));
+          LocaleContextJ.loc("Invalid list of points: {}", Dump.logoObject(points)));
       }
       try {
         Patch patch = null;

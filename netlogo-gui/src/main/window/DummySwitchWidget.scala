@@ -2,10 +2,10 @@
 
 package org.nlogo.window
 
-import org.nlogo.core.{ I18N, Switch => CoreSwitch, Widget => CoreWidget }
+import org.nlogo.core.{ LocaleContext, Switch => CoreSwitch, Widget => CoreWidget }
 
 class DummySwitchWidget extends Switch with Editable {
-  override def classDisplayName = I18N.gui.get("tabs.run.widgets.switch")
+  override def classDisplayName = loc"Switch"
 
   override def editPanel: EditPanel = new DummySwitchEditPanel(this)
 

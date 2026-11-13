@@ -9,7 +9,7 @@ import javax.swing.{ AbstractAction, JComponent, JLayeredPane, JPanel }
 
 import org.nlogo.app.common.Events.WidgetSelectedEvent
 import org.nlogo.awt.{ Coordinates, Mouse }
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.swing.{ FocusRoot, FocusUtils, MenuItem, PopupMenu, WrappingPopupMenu, Utils, Zoomable }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ InterfaceMode, MouseMode, ViewWidget, Widget, WidgetWrapperInterface }
@@ -850,7 +850,7 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
   private def populateContextMenu(menu: PopupMenu, p: Point): Unit = {
     widget.getEditable match {
       case Some(editable) if !interfacePanel.multiSelected =>
-        menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.edit")) {
+        menu.add(new MenuItem(new AbstractAction(loc"Edit") {
           def actionPerformed(e: ActionEvent): Unit = {
             selected(true)
             foreground()
@@ -862,7 +862,7 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
     }
 
     if (selected) {
-      menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.deselect")) {
+      menu.add(new MenuItem(new AbstractAction(loc"Deselect") {
         def actionPerformed(e: ActionEvent): Unit = {
           interfacePanel.setInterfaceMode(InterfaceMode.Select, true)
           selected(false)
@@ -876,7 +876,7 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
         var added = false
 
         if (interfacePanel.canAlignLeft) {
-          menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.alignLeft")) {
+          menu.add(new MenuItem(new AbstractAction(loc"Align Left") {
             def actionPerformed(e: ActionEvent): Unit = {
               interfacePanel.alignLeft()
             }
@@ -886,7 +886,7 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
         }
 
         if (interfacePanel.canAlignCenterHorizontal) {
-          menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.alignCenterHorizontal")) {
+          menu.add(new MenuItem(new AbstractAction(loc"Center Horizontally") {
             def actionPerformed(e: ActionEvent): Unit = {
               interfacePanel.alignCenterHorizontal()
             }
@@ -896,7 +896,7 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
         }
 
         if (interfacePanel.canAlignRight) {
-          menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.alignRight")) {
+          menu.add(new MenuItem(new AbstractAction(loc"Align Right") {
             def actionPerformed(e: ActionEvent): Unit = {
               interfacePanel.alignRight()
             }
@@ -906,7 +906,7 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
         }
 
         if (interfacePanel.canAlignTop) {
-          menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.alignTop")) {
+          menu.add(new MenuItem(new AbstractAction(loc"Align Top") {
             def actionPerformed(e: ActionEvent): Unit = {
               interfacePanel.alignTop()
             }
@@ -916,7 +916,7 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
         }
 
         if (interfacePanel.canAlignCenterVertical) {
-          menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.alignCenterVertical")) {
+          menu.add(new MenuItem(new AbstractAction(loc"Center Vertically") {
             def actionPerformed(e: ActionEvent): Unit = {
               interfacePanel.alignCenterVertical()
             }
@@ -926,7 +926,7 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
         }
 
         if (interfacePanel.canAlignBottom) {
-          menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.alignBottom")) {
+          menu.add(new MenuItem(new AbstractAction(loc"Align Bottom") {
             def actionPerformed(e: ActionEvent): Unit = {
               interfacePanel.alignBottom()
             }
@@ -938,13 +938,13 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
         if (added)
           menu.addSeparator()
 
-        menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.distributeHorizontal")) {
+        menu.add(new MenuItem(new AbstractAction(loc"Distribute Horizontally") {
           def actionPerformed(e: ActionEvent): Unit = {
             interfacePanel.distributeHorizontal()
           }
         }))
 
-        menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.distributeVertical")) {
+        menu.add(new MenuItem(new AbstractAction(loc"Distribute Vertically") {
           def actionPerformed(e: ActionEvent): Unit = {
             interfacePanel.distributeVertical()
           }
@@ -952,32 +952,32 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
 
         menu.addSeparator()
 
-        menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.stretchLeft")) {
+        menu.add(new MenuItem(new AbstractAction(loc"Stretch Left") {
           def actionPerformed(e: ActionEvent): Unit = {
             interfacePanel.stretchLeft()
           }
         }))
 
-        menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.stretchRight")) {
+        menu.add(new MenuItem(new AbstractAction(loc"Stretch Right") {
           def actionPerformed(e: ActionEvent): Unit = {
             interfacePanel.stretchRight()
           }
         }))
 
-        menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.stretchTop")) {
+        menu.add(new MenuItem(new AbstractAction(loc"Stretch Top") {
           def actionPerformed(e: ActionEvent): Unit = {
             interfacePanel.stretchTop()
           }
         }))
 
-        menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.stretchBottom")) {
+        menu.add(new MenuItem(new AbstractAction(loc"Stretch Bottom") {
           def actionPerformed(e: ActionEvent): Unit = {
             interfacePanel.stretchBottom()
           }
         }))
       }
     } else {
-      menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.select")) {
+      menu.add(new MenuItem(new AbstractAction(loc"Select") {
         def actionPerformed(e: ActionEvent): Unit = {
           interfacePanel.setInterfaceMode(InterfaceMode.Select, true)
           selected(true)
@@ -989,13 +989,13 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
     menu.addSeparator()
 
     if (interfacePanel.multiSelected) {
-      menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.copySelected")) {
+      menu.add(new MenuItem(new AbstractAction(loc"Copy Selected Widgets") {
         def actionPerformed(e: ActionEvent): Unit = {
           interfacePanel.copySelectedWidgets()
         }
       }))
     } else {
-      menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.copy")) {
+      menu.add(new MenuItem(new AbstractAction(loc"Copy Widget") {
         def actionPerformed(e: ActionEvent): Unit = {
           interfacePanel.copyWidgets(Seq(WidgetWrapper.this))
         }
@@ -1005,7 +1005,7 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
     if (interfacePanel.selectedWrappers.size > 1) {
       menu.addSeparator()
 
-      menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.deleteSelected")) {
+      menu.add(new MenuItem(new AbstractAction(loc"Delete Selected") {
         def actionPerformed(e: ActionEvent): Unit = {
           interfacePanel.deleteSelectedWidgets()
         }
@@ -1013,7 +1013,7 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
     } else if (widget.deleteable) {
       menu.addSeparator()
 
-      menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.delete")) {
+      menu.add(new MenuItem(new AbstractAction(loc"Delete") {
         def actionPerformed(e: ActionEvent): Unit = {
           WidgetActions.removeWidget(interfacePanel, WidgetWrapper.this)
         }
@@ -1026,7 +1026,7 @@ class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
       widget.populateContextMenu(menu, p)
 
       if (widget.exportable) {
-        menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.export")) {
+        menu.add(new MenuItem(new AbstractAction(loc"Export...") {
           def actionPerformed(e: ActionEvent): Unit = {
             new ExportWidgetEvent(widget).raise(WidgetWrapper.this)
           }

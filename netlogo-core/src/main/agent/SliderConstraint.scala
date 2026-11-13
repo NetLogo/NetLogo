@@ -5,16 +5,16 @@ package org.nlogo.agent
 import java.lang.{ Double => JDouble }
 
 import org.nlogo.api.{ CompilerServices, LogoException, LogoThunkFactory, ReporterLogoThunk, ValueConstraint }
-import org.nlogo.core.{ CompilerException, I18N }
+import org.nlogo.core.{ CompilerException, LocaleContext }
 
 import scala.util.{ Failure, Success, Try }
 
 object SliderConstraint {
 
   case class Spec(fieldName: String, displayName:String)
-  val Min = Spec("minimumCode", I18N.gui.get("edit.slider.minimum"))
-  val Max = Spec("maximumCode", I18N.gui.get("edit.slider.maximum"))
-  val Inc = Spec("incrementCode", I18N.gui.get("edit.slider.increment"))
+  val Min = Spec("minimumCode", loc"Minimum")
+  val Max = Spec("maximumCode", loc"Maximum")
+  val Inc = Spec("incrementCode", loc"Increment")
 
   trait SliderConstraintException extends Exception { val spec: Spec }
   class ConstraintCompilerException(val spec: Spec, ex: CompilerException) extends

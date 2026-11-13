@@ -4,7 +4,7 @@ package org.nlogo.prim.etc;
 
 import org.nlogo.agent.Agent;
 import org.nlogo.agent.Turtle;
-import org.nlogo.core.I18N;
+import org.nlogo.core.LocaleContextJ;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Command;
@@ -28,12 +28,12 @@ public final class _face
   public void perform_1(final Context context, Agent target)
       throws LogoException {
     if (target instanceof org.nlogo.agent.Link) {
-      throw new RuntimePrimitiveException
-          (context, this, I18N.errorsJ().get("org.nlogo.prim.etc.$common.expectedTurtleOrPatchButGotLink"));
+      throw new RuntimePrimitiveException(context, this,
+        LocaleContextJ.loc("Expected a turtle or a patch but got a link."));
     }
     if (target.id() == -1) {
       throw new RuntimePrimitiveException(context, this,
-        I18N.errorsJ().getN("org.nlogo.$common.thatAgentIsDead", target.classDisplayName()));
+        LocaleContextJ.loc("That {} is dead.", target.classDisplayName()));
     }
     if (context.agent instanceof Turtle) {
       ((Turtle) context.agent).face(target, true);

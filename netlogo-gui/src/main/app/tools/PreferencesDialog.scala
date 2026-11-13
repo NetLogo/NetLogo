@@ -9,15 +9,15 @@ import java.nio.file.Files
 import javax.swing.{ AbstractAction, ActionMap, InputMap, JComponent, JLabel }
 
 import org.nlogo.app.common.{ AppTabsInterface, Events }, Events.RestartEvent
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, ButtonPanel, CheckBox, DialogButton, FloatingTabbedPane,
-                         MaximumHeight, OptionPane, PreferredSize, TabLabel, TextField, UserAction, WindowAutomator,
-                         Zoomable, ZoomableBorder }, UserAction.KeyBindings
+                         MaximumHeight, OptionPane, PreferredSize, TabLabel, UserAction, WindowAutomator, Zoomable,
+                         ZoomableBorder }, UserAction.KeyBindings
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.AbstractWidgetPanel
 
 class PreferencesDialog(parent: Frame & ThemeSync, tabManager: AppTabsInterface, widgetPanel: AbstractWidgetPanel)
-  extends ToolDialog(parent, "preferences") with ThemeSync {
+  extends ToolDialog(parent, loc"NetLogo Preferences") with ThemeSync {
 
   WindowAutomator.automate(this)
 
@@ -56,11 +56,23 @@ class PreferencesDialog(parent: Frame & ThemeSync, tabManager: AppTabsInterface,
   private lazy val loggingPreferencesPanel = new PreferenceContainer(loggingPreferences)
   private lazy val themesPanel = new ThemesPanel(parent)
 
-  private lazy val codeMessage = new JLabel(I18N.gui("code.message")) with PreferredSize with Zoomable
-  private lazy val loggingMessage = new JLabel(I18N.gui("logging.message")) with PreferredSize with Zoomable
+  private lazy val codeMessage = {
+    val text = loc"""|<html>The following global preferences apply to the main Code tab<br>as well as any included file
+                     |tabs and LevelSpace code tabs.</html>"""
 
-  private lazy val okButton = new DialogButton(true, I18N.gui.get("common.buttons.ok"), () => ok())
-  private lazy val cancelButton = new DialogButton(false, I18N.gui.get("common.buttons.cancel"), () => cancel())
+    new JLabel(text) with PreferredSize with Zoomable
+  }
+
+  private lazy val loggingMessage = {
+    val text = loc"""|<html>The following preferences can be used for logging user interactions with a NetLogo<br>
+                     |model. This can be particularly helpful when using NetLogo for education research.<br>A
+                     |fuller explanation of NetLogo's logging functionality can be found in the User Manual.</html>"""
+
+    new JLabel(text) with PreferredSize with Zoomable
+  }
+
+  private lazy val okButton = new DialogButton(true, loc"OK", () => ok())
+  private lazy val cancelButton = new DialogButton(false, loc"Cancel", () => cancel())
 
   locally {
     val generalPreferencesContainer = new BoxColumn(generalPreferencesPanel, BoxAlign.Start) {
@@ -83,10 +95,10 @@ class PreferencesDialog(parent: Frame & ThemeSync, tabManager: AppTabsInterface,
 
     getRootPane.setDefaultButton(okButton)
 
-    tabs.addTabWithLabel(generalPreferencesContainer, new TabLabel(tabs, I18N.gui("general"), generalPreferencesContainer))
-    tabs.addTabWithLabel(codePreferencesContainer, new TabLabel(tabs, I18N.gui("code"), codePreferencesContainer))
-    tabs.addTabWithLabel(loggingPreferencesContainer, new TabLabel(tabs, I18N.gui("logging"), loggingPreferencesContainer))
-    tabs.addTabWithLabel(themesPanel, new TabLabel(tabs, I18N.gui("themes"), themesPanel))
+    tabs.addTabWithLabel(generalPreferencesContainer, new TabLabel(tabs, loc"General", generalPreferencesContainer))
+    tabs.addTabWithLabel(codePreferencesContainer, new TabLabel(tabs, loc"Code", codePreferencesContainer))
+    tabs.addTabWithLabel(loggingPreferencesContainer, new TabLabel(tabs, loc"Logging", loggingPreferencesContainer))
+    tabs.addTabWithLabel(themesPanel, new TabLabel(tabs, loc"Color Themes", themesPanel))
 
     add(tabs, BorderLayout.CENTER)
     add(new ButtonPanel(Seq(okButton, cancelButton)) {
@@ -148,8 +160,11 @@ class PreferencesDialog(parent: Frame & ThemeSync, tabManager: AppTabsInterface,
       loggingPreferences.foreach(_.save())
 
       if (restartPrompt) {
-        if (new OptionPane(this, I18N.gui("restartPrompt"), I18N.gui("restartPrompt.message"),
-                           Seq(I18N.gui("restartNow"), I18N.gui("restartLater")), OptionPane.Icons.info)
+        val message = loc"""|One or more changed preferences will not take effect until the\n
+                            |application is restarted. Would you like to restart now or later?"""
+
+        if (new OptionPane(this, loc"Restart Required", message, Seq(loc"Restart Now", loc"Restart Later"),
+                           OptionPane.Icons.info)
               .getSelectedIndex == 0)
           new RestartEvent().raise(parent)
       }
@@ -166,36 +181,28 @@ class PreferencesDialog(parent: Frame & ThemeSync, tabManager: AppTabsInterface,
   }
 
   private def validatePrefs(): Boolean = {
-    if (loggingPreferences.find(x => x.i18nKey == "loggingEnabled").get.
+    if (loggingPreferences.find(x => x.key == "loggingEnabled").get.
         asInstanceOf[Preferences.BooleanPreference].checkBox.isSelected) {
-      val path = loggingPreferences.find(x => x.i18nKey == "logDirectory").get.
+      val path = loggingPreferences.find(x => x.key == "logDirectory").get.
                  asInstanceOf[Preferences.LogDirectory].textField.getText
       val file = new File(path)
       if (path.isEmpty) {
-        new OptionPane(this, I18N.gui.get("common.messages.error"), I18N.gui.get("tools.preferences.emptyDirectory"),
+        new OptionPane(this, loc"Error", loc"Logging was enabled, but no log directory was specified.",
                        OptionPane.Options.Ok, OptionPane.Icons.error)
         return false
       }
       if (!file.exists) {
-        if (new OptionPane(this, I18N.gui.get("common.messages.warning"),
-                           I18N.gui.get("tools.preferences.missingDirectory"), OptionPane.Options.YesNo,
-                           OptionPane.Icons.warning).getSelectedIndex != 0)
+        if (new OptionPane(this, loc"Warning",
+                           loc"The specified log directory does not exist, would you like to create it?",
+                           OptionPane.Options.YesNo, OptionPane.Icons.warning).getSelectedIndex != 0)
           return false
         file.mkdirs
       }
       if (!Files.isWritable(file.toPath)) {
-        new OptionPane(this, I18N.gui.get("common.messages.error"), I18N.gui.get("tools.preferences.badPermissions"),
+        new OptionPane(this, loc"Error", loc"NetLogo does not have permission to write to the specified log directory.",
                        OptionPane.Options.Ok, OptionPane.Icons.error)
         return false
       }
-    }
-    try {
-      generalPreferences.find(_.i18nKey == "uiScale").foreach(_.component.asInstanceOf[TextField].getText.toDouble)
-    } catch {
-      case e: NumberFormatException =>
-        new OptionPane(this, I18N.gui.get("common.messages.error"), I18N.gui.get("tools.preferences.scaleError"),
-                       OptionPane.Options.Ok, OptionPane.Icons.error)
-        return false
     }
     true
   }
@@ -260,8 +267,6 @@ class PreferencesDialog(parent: Frame & ThemeSync, tabManager: AppTabsInterface,
 // this is basically a reimplementation of GridBagLayout, but without the annoying issues that GridBagLayout has with
 // zooming and resizing. (Isaac B 8/26/26)
 private class PreferenceContainer(preferences: Seq[Preference]) extends BoxColumn with ThemeSync {
-  private implicit val i18nPrefix: I18N.Prefix = I18N.Prefix("tools.preferences")
-
   private val (labels, components) = preferences.foldLeft((Seq[JLabel](), Seq[Component & ThemeSync]())) {
     case ((labels, components), pref) =>
       val label = new JLabel(prefString(pref)) with Zoomable {
@@ -317,7 +322,7 @@ private class PreferenceContainer(preferences: Seq[Preference]) extends BoxColum
     components.headOption
 
   private def prefString(pref: Preference): String =
-    I18N.gui(pref.i18nKey) + pref.requirement.map(r => " " + I18N.gui(r.toString)).getOrElse("") + ":"
+    s"${pref.name}${pref.requirement.fold("")(" " + _.toString)}:"
 
   private def maxLabelWidth: Int =
     labels.map(_.getPreferredSize.width).max

@@ -9,7 +9,7 @@ import javax.swing.Timer
 
 import org.nlogo.agent.OutputObject
 import org.nlogo.api.{ Dump, IPCClientHandler, LabProtocol, LogoException }
-import org.nlogo.core.{ CompilerException, I18N }
+import org.nlogo.core.{ CompilerException, LocaleContext }
 import org.nlogo.headless.{ BehaviorSpaceCoordinator, HeadlessWorkspace }
 import org.nlogo.nvm.{ DummyPrimaryWorkspace, LabInterface, Workspace }
 import org.nlogo.swing.{ AppUtils, OptionPane, RichAction, WindowAutomator }
@@ -108,8 +108,6 @@ object BehaviorSpaceApp {
 }
 
 class BehaviorSpaceApp(args: BehaviorSpaceApp.CommandLineArgs) extends Thread.UncaughtExceptionHandler {
-  private implicit val i18nPrefix: I18N.Prefix = I18N.Prefix("tools.behaviorSpace")
-
   private val frame = new BehaviorSpaceFrame(this)
 
   private val ipcHandler = new IPCClientHandler
@@ -139,13 +137,13 @@ class BehaviorSpaceApp(args: BehaviorSpaceApp.CommandLineArgs) extends Thread.Un
     override def runtimeError(t: Throwable): Unit = {
       t match {
         case _: CompilerException =>
-          displayError(s"${I18N.gui("error.compilation")} ${t.getMessage}")
+          displayError(loc"Syntax error: ${t.getMessage}")
 
         case _: RuntimeException =>
-          displayError(s"${I18N.gui("error.runtime")} ${t.getMessage}")
+          displayError(loc"Runtime error: ${t.getMessage}")
 
         case _: IOException =>
-          displayError(s"${I18N.gui("error.io")} ${t.getMessage}")
+          displayError(loc"File input or output (I/O) error: ${t.getMessage}")
 
         case _ =>
           displayError(Option(t.getMessage).getOrElse(t.toString))
@@ -321,7 +319,7 @@ class BehaviorSpaceApp(args: BehaviorSpaceApp.CommandLineArgs) extends Thread.Un
   }
 
   private def displayError(message: String): Unit = {
-    new OptionPane(frame, I18N.gui("error.title"), message, OptionPane.Options.Ok, OptionPane.Icons.error)
+    new OptionPane(frame, loc"Error During Experiment", message, OptionPane.Options.Ok, OptionPane.Icons.error)
   }
 
   override def uncaughtException(thread: Thread, ex: Throwable): Unit = {

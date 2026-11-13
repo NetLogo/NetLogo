@@ -7,7 +7,8 @@ import java.util.Locale
 import org.scalatest.Assertions
 import org.nlogo.agent.CompilationManagement
 import org.nlogo.api.{ Equality, JobOwner, LogoException, NetLogoLegacyDialect, NetLogoThreeDDialect, Version }
-import org.nlogo.core.{ AgentKind, CompilerException, I18N, Model, Program, WorldDimensions, WorldDimensions3D }
+import org.nlogo.core.{ AgentKind, CompilerException, LocaleContext, Model, Program, WorldDimensions,
+                        WorldDimensions3D }
 import org.nlogo.nvm.PresentationCompilerInterface
 import org.nlogo.core.Femto
 
@@ -33,7 +34,7 @@ trait AbstractTestLanguage extends Assertions {
   }
 
   // ensure that output/error messages are formatted as expected (Isaac B 12/28/25)
-  I18N.setAllLanguages(Locale.US)
+  LocaleContext.setLocale(Locale.US)
 
   def owner: JobOwner = workspace.defaultOwner
 

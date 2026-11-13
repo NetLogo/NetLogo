@@ -4,7 +4,7 @@ package org.nlogo.window
 
 import org.nlogo.agent.SliderConstraint
 import org.nlogo.api.{ CompilerServices, ExtensionManager }
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.editor.Colorizer
 import org.nlogo.swing.{ AutomationUtils, BoxAlign, BoxColumn, BoxRow }
 
@@ -15,7 +15,7 @@ class SliderEditPanel(target: SliderWidget, compiler: CompilerServices, colorize
     new IdentifierEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.slider.globalVar"),
+        loc"Global variable",
         () => target.name,
         name => target.setNameWrapper(name.getOrElse("")),
         () => apply()),
@@ -25,19 +25,19 @@ class SliderEditPanel(target: SliderWidget, compiler: CompilerServices, colorize
     new ReporterLineEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.slider.minimum"),
+        loc"Minimum",
         () => target.minimumCode,
         _.foreach(target.setMinimumCode),
         () => apply()),
       compiler, colorizer, false, () => target.error(SliderConstraint.Min.fieldName))
 
-  private val minimumLabeled = new LabeledEditor(minimumCode, I18N.gui.get("edit.slider.minmax.message"))
+  private val minimumLabeled = new LabeledEditor(minimumCode, loc"min, increment, and max may be numbers or reporters")
 
   private val incrementCode =
     new ReporterLineEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.slider.increment"),
+        loc"Increment",
         () => target.incrementCode,
         _.foreach(target.setIncrementCode),
         () => apply()),
@@ -47,7 +47,7 @@ class SliderEditPanel(target: SliderWidget, compiler: CompilerServices, colorize
     new ReporterLineEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.slider.maximum"),
+        loc"Maximum",
         () => target.maximumCode,
         _.foreach(target.setMaximumCode),
         () => apply()),
@@ -57,7 +57,7 @@ class SliderEditPanel(target: SliderWidget, compiler: CompilerServices, colorize
     new DoubleEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.slider.value"),
+        loc"Value",
         () => target.value,
         _.foreach(target.setValue),
         () => apply()))
@@ -66,7 +66,7 @@ class SliderEditPanel(target: SliderWidget, compiler: CompilerServices, colorize
     new StringEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.slider.units"),
+        loc"Units (optional)",
         () => target.units,
         _.foreach(target.setUnits),
         () => apply()))
@@ -75,7 +75,7 @@ class SliderEditPanel(target: SliderWidget, compiler: CompilerServices, colorize
     new BooleanEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.slider.vertical"),
+        loc"vertical?",
         () => target.vertical,
         _.foreach(target.setVertical),
         () => apply(vertical.get.toOption.exists(_ != vertical.originalValue))))
@@ -84,7 +84,7 @@ class SliderEditPanel(target: SliderWidget, compiler: CompilerServices, colorize
     new BooleanEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.general.oldSize"),
+        loc"Use old sizing",
         () => target.oldSize,
         _.foreach(target.oldSize),
         () => apply(vertical.get.toOption.exists(_ != vertical.originalValue))))

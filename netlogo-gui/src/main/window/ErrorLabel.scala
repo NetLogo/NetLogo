@@ -6,7 +6,7 @@ import java.awt.{ Color, Cursor, Dimension }
 import javax.swing.{ Box, JLabel, JTextPane }
 
 import org.nlogo.awt.Hierarchy
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, Button, MaximumHeight, PreferredSize, Utils, Zoomable,
                          ZoomableBorder }
 import org.nlogo.theme.InterfaceColors
@@ -27,7 +27,7 @@ class ErrorLabel extends BoxRow(6) with MaximumHeight {
       new Dimension(super.getPreferredSize.width, getFontMetrics(getFont).getHeight)
   }
 
-  val report = new Button(I18N.gui.get("code.error.notHelpful"), () => {
+  val report = new Button(loc"Unhelpful?", () => {
     new ReportNotHelpfulDialog(Hierarchy.getFrame(ErrorLabel.this), error.getOrElse(new Exception))
   }) {
     private def scale(color: Color, factor: Float): Color =

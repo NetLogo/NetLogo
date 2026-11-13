@@ -4,7 +4,7 @@ package org.nlogo.prim
 
 import org.nlogo.agent.{ Agent, AgentSet }
 import org.nlogo.api.{ AgentException, LogoListBuilder }
-import org.nlogo.core.{ I18N, LogoList, Syntax }
+import org.nlogo.core.{ LocaleContext, LogoList, Syntax }
 import org.nlogo.nvm.{ ArgumentTypeException, Context, Reporter }
 import org.nlogo.nvm.RuntimePrimitiveException
 
@@ -26,9 +26,7 @@ class _patchvariableof(_vn: Int) extends Reporter {
     try arg0 match {
       case agent: Agent =>
         if (agent.id == -1)
-          throw new RuntimePrimitiveException(
-            context, this, I18N.errors.getN(
-              "org.nlogo.$common.thatAgentIsDead", agent.classDisplayName))
+          throw new RuntimePrimitiveException(context, this, loc"That ${agent.classDisplayName} is dead.")
         agent.getPatchVariable(_vn)
       case sourceSet: AgentSet =>
         val result = new LogoListBuilder
@@ -60,9 +58,7 @@ class _patchvariableof(_vn: Int) extends Reporter {
   def report_3(context: Context, agent: Agent): AnyRef =
     try {
       if (agent.id == -1)
-        throw new RuntimePrimitiveException(
-          context, this, I18N.errors.getN(
-            "org.nlogo.$common.thatAgentIsDead", agent.classDisplayName))
+        throw new RuntimePrimitiveException(context, this, loc"That ${agent.classDisplayName} is dead.")
       agent.getPatchVariable(_vn)
     }
     catch { case ex: AgentException =>

@@ -5,13 +5,13 @@ package org.nlogo.window
 import javax.swing.JLabel
 
 import org.nlogo.api.{ Dump, World }
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.swing.Zoomable
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.Events.{ AfterLoadEvent, PeriodicUpdateEvent, LoadBeginEvent }
 
 object TickCounterLabel {
-  private val TickCounterLabelDefault = I18N.gui.get("tabs.run.speedslider.ticks")
+  private val TickCounterLabelDefault = loc"ticks"
 }
 
 import TickCounterLabel._

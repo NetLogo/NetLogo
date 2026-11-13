@@ -5,7 +5,7 @@ package org.nlogo.editor
 import java.awt.event.{ ActionEvent, KeyEvent }
 import javax.swing.text.{ Document, JTextComponent }
 
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.editor.{ DocumentAction, RichDocument }, RichDocument._
 import org.nlogo.swing.UserAction,
   UserAction.{ EditCategory, EditFormatGroup, KeyBindings, MenuAction },
@@ -53,7 +53,7 @@ object ToggleComments {
 }
 
 class ToggleComments
-  extends DocumentAction(I18N.gui.get("menu.edit.comment") + " / " + I18N.gui.get("menu.edit.uncomment"))
+  extends DocumentAction(loc"Comment / Uncomment")
   with FocusedOnlyAction
   with MenuAction {
 

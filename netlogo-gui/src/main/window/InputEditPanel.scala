@@ -3,7 +3,7 @@
 package org.nlogo.window
 
 import org.nlogo.api.{ CompilerServices, ExtensionManager }
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.swing.{ AutomationUtils, BoxAlign, BoxRow }
 
 class InputEditPanel(target: InputBoxWidget, compiler: CompilerServices, extensionManager: ExtensionManager)
@@ -13,7 +13,7 @@ class InputEditPanel(target: InputBoxWidget, compiler: CompilerServices, extensi
     new IdentifierEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.input.globalVar"),
+        loc"Global Variable",
         () => target.name,
         name => target.setNameWrapper(name.getOrElse("")),
         () => apply()),
@@ -23,7 +23,7 @@ class InputEditPanel(target: InputBoxWidget, compiler: CompilerServices, extensi
     new InputBoxEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.input.type"),
+        loc"Type",
         () => target.typeOptions,
         _.foreach(target.setTypeOptions),
         () => apply()))
@@ -32,7 +32,7 @@ class InputEditPanel(target: InputBoxWidget, compiler: CompilerServices, extensi
     new BooleanEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.general.oldSize"),
+        loc"Use old sizing",
         () => target.oldSize,
         _.foreach(target.oldSize),
         () => apply()))

@@ -3,7 +3,7 @@
 package org.nlogo.window
 
 import org.nlogo.api.CompilerServices
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.editor.Colorizer
 import org.nlogo.swing.{ AutomationUtils, BoxAlign, BoxColumn, BoxRow, MaximumHeight }
 
@@ -14,7 +14,7 @@ class MonitorEditPanel(target: MonitorWidget, compiler: CompilerServices, colori
     new NonEmptyCodeEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.monitor.reporter"),
+        loc"Reporter",
         () => target.wrapSource,
         name => target.setWrapSource(name.getOrElse("")),
         () => apply()),
@@ -24,7 +24,7 @@ class MonitorEditPanel(target: MonitorWidget, compiler: CompilerServices, colori
     new StringEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.monitor.name"),
+        loc"Display Name",
         () => target.name,
         _.foreach(target.setDisplayName),
         () => apply()))
@@ -33,7 +33,7 @@ class MonitorEditPanel(target: MonitorWidget, compiler: CompilerServices, colori
     new IntegerEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.monitor.decimalPlaces"),
+        loc"Decimal places",
         () => target.decimalPlaces,
         _.foreach(target.setDecimalPlaces),
         () => apply()))
@@ -42,18 +42,18 @@ class MonitorEditPanel(target: MonitorWidget, compiler: CompilerServices, colori
     new StringEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.monitor.units"),
+        loc"Units (optional)",
         () => target.units,
         _.foreach(target.setUnits),
         () => apply()))
 
-  private val decimalLabeled = new LabeledEditor(decimalPlaces, I18N.gui.get("edit.monitor.precision"))
+  private val decimalLabeled = new LabeledEditor(decimalPlaces, loc"full precision is 17")
 
   private val fontSize =
     new IntegerEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.monitor.fontSize"),
+        loc"Font Size",
         () => target.fontSize,
         _.foreach(target.setFontSize),
         () => apply()))
@@ -62,7 +62,7 @@ class MonitorEditPanel(target: MonitorWidget, compiler: CompilerServices, colori
     new BooleanEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.general.oldSize"),
+        loc"Use old sizing",
         () => target.oldSize,
         _.foreach(target.oldSize),
         () => apply()))

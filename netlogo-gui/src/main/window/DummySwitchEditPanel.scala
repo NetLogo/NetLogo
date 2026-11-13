@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.swing.{ BoxAlign, BoxRow }
 
 class DummySwitchEditPanel(target: DummySwitchWidget) extends WidgetEditPanel(target) {
@@ -10,7 +10,7 @@ class DummySwitchEditPanel(target: DummySwitchWidget) extends WidgetEditPanel(ta
     new StringEditor(
       PropertyAccessor(
         target,
-        I18N.gui.get("edit.hubnet.tag"),
+        loc"Tag",
         () => target.name,
         _.foreach(target.setVarName),
         () => apply()))
@@ -19,7 +19,7 @@ class DummySwitchEditPanel(target: DummySwitchWidget) extends WidgetEditPanel(ta
     new BooleanEditor(
       PropertyAccessor(
         target,
-        I18N.gui.get("edit.general.oldSize"),
+        loc"Use old sizing",
         () => target.oldSize,
         _.foreach(target.oldSize),
         () => apply()))

@@ -9,7 +9,7 @@ import javax.swing.AbstractAction
 
 import org.nlogo.api.{ Agent, Perspective, Turtle }
 import org.nlogo.awt.{ Colors, ImageSelection }, Colors.colorize
-import org.nlogo.core.AgentKind
+import org.nlogo.core.{ AgentKind, LocaleContext }
 import org.nlogo.gl.render.PickListener
 import org.nlogo.swing.{ Menu, MenuItem, WrappingPopupMenu }
 import org.nlogo.theme.InterfaceColors
@@ -28,14 +28,14 @@ class Picker(view: View) extends PickListener with ActionListener {
 
     menu.addSeparator()
 
-    menu.add(new MenuItem(new AbstractAction("Copy View") {
+    menu.add(new MenuItem(new AbstractAction(loc"Copy View") {
       def actionPerformed(e: ActionEvent): Unit = {
         Toolkit.getDefaultToolkit.getSystemClipboard.setContents(
           new ImageSelection(view.exportView), null)
       }
     }))
 
-    menu.add(new MenuItem(new AbstractAction("Export View...") {
+    menu.add(new MenuItem(new AbstractAction(loc"Export View...") {
       def actionPerformed(e: ActionEvent): Unit = {
         view.viewManager.workspace.doExportView(view.viewManager)
       }
@@ -43,7 +43,7 @@ class Picker(view: View) extends PickListener with ActionListener {
 
     menu.addSeparator()
 
-    menu.add(new MenuItem(new AbstractAction("inspect globals") {
+    menu.add(new MenuItem(new AbstractAction(loc"inspect globals") {
       def actionPerformed(e: ActionEvent): Unit = {
         view.viewManager.workspace.inspectAgent(AgentKind.Observer)
       }

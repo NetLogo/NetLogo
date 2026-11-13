@@ -12,9 +12,9 @@ import org.nlogo.app.common.{ FileActions, UndoRedoActions },
   FileActions.ExportInterfaceAction
 import org.nlogo.awt.Images
 import org.nlogo.core.{
-  AgentKind, I18N, Button => CoreButton, Chooser => CoreChooser, InputBox => CoreInputBox, Monitor => CoreMonitor,
-  Output => CoreOutput, Plot => CorePlot, Slider => CoreSlider, Switch => CoreSwitch, TextBox => CoreTextBox,
-  View => CoreView, Widget => CoreWidget }
+  AgentKind, Button => CoreButton, Chooser => CoreChooser, InputBox => CoreInputBox, LocaleContext,
+  Monitor => CoreMonitor, Output => CoreOutput, Plot => CorePlot, Slider => CoreSlider, Switch => CoreSwitch,
+  TextBox => CoreTextBox, View => CoreView, Widget => CoreWidget }
 import org.nlogo.editor.EditorArea
 import org.nlogo.log.LogManager
 import org.nlogo.swing.{ ClipboardUtils, MenuItem, PopupMenu }
@@ -71,25 +71,23 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
     }
 
     // add all the widgets
-    val outputItem = new WidgetCreationMenuItemIP(I18N.gui.get("tabs.run.widgets.output"), CoreOutput(0, 0, 0, 0, 11),
-                                                  focusTraversal)
+    val outputItem = new WidgetCreationMenuItemIP(loc"Output", CoreOutput(0, 0, 0, 0, 11), focusTraversal)
     if (getOutputWidget != null) {
       outputItem.setEnabled(false)
     }
     menu.add(outputItem)
 
-    menu.add(new WidgetCreationMenuItemIP(I18N.gui.get("tabs.run.widgets.note"), CoreTextBox(None, fontSize = 11),
-                                          focusTraversal))
+    menu.add(new WidgetCreationMenuItemIP(loc"Note", CoreTextBox(None, fontSize = 11), focusTraversal))
 
     menu.addSeparator()
 
-    menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.copySelected")) {
+    menu.add(new MenuItem(new AbstractAction(loc"Copy Selected Widgets") {
       def actionPerformed(e: ActionEvent): Unit = {
         copySelectedWidgets()
       }
     })).setEnabled(selectedWrappers.nonEmpty)
 
-    menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widgets.paste")) {
+    menu.add(new MenuItem(new AbstractAction(loc"Paste Widgets") {
       def actionPerformed(e: ActionEvent): Unit = {
         pasteWidgets()
       }

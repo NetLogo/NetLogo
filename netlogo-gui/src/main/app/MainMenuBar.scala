@@ -4,7 +4,7 @@ package org.nlogo.app
 
 import java.awt.Component
 
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.editor.EditorMenu
 import org.nlogo.swing.{ MenuBar, UserAction },
   UserAction.{ ActionCategoryKey, EditCategory, FileCategory, HelpCategory, MenuAction, TabsCategory, ToolsCategory }
@@ -12,7 +12,7 @@ import org.nlogo.swing.{ MenuBar, UserAction },
 class MainMenuBar(frame: AppFrame, isApplicationWide: Boolean) extends MenuBar with EditorMenu with UserAction.Menu {
   val editMenu  = new EditMenu
   val fileMenu  = new FileMenu
-  val tabsMenu  = new TabsMenu(I18N.gui.get("menu.tabs"))
+  val tabsMenu  = new TabsMenu(loc"Tabs")
   val toolsMenu = new ToolsMenu
   val helpMenu  = new HelpMenu
   val zoomMenu = new ZoomMenu(frame)

@@ -3,7 +3,7 @@
 package org.nlogo.prim.gui
 
 import org.nlogo.api.{ Dump, ReporterRunnable }
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.nvm.{ Context, HaltException, Reporter, RuntimePrimitiveException }
 import org.nlogo.swing.DropdownOptionPane
 import org.nlogo.window.GUIWorkspace
@@ -18,15 +18,15 @@ class _useroneof extends Reporter {
     workspace match {
       case gw: GUIWorkspace =>
         if(list.isEmpty)
-          throw new RuntimePrimitiveException(context, this, I18N.errors.get("org.nlogo.prim.etc.$common.emptyList"))
+          throw new RuntimePrimitiveException(context, this, loc"List is empty.")
         val items = list.map(Dump.logoObject).toList
         gw.updateUI()
         val choice = workspace.waitForResult(
           new ReporterRunnable[Int] {
             override def run() = {
               gw.view.mouseDown(false)
-              new DropdownOptionPane(gw.getFrame, I18N.gui.get("dialog.userOneOf"), Dump.logoObject(choiceMessage),
-                                     items).getChoiceIndex
+              new DropdownOptionPane(gw.getFrame, loc"User One Of", Dump.logoObject(choiceMessage), items)
+                .getChoiceIndex
             }})
         if (choice == -1)
           throw new HaltException(true)

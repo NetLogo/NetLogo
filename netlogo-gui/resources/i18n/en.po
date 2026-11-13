@@ -1,0 +1,4116 @@
+#: netlogo-gui/src/main/hubnet/server/gui/ControlCenter.scala:92
+msgid "'{}' disconnected.\n"
+msgstr "'{}' disconnected.\n"
+
+#: netlogo-gui/src/main/hubnet/server/gui/ControlCenter.scala:87
+msgid "'{}' joined from: {}.\n"
+msgstr "'{}' joined from: {}.\n"
+
+#: netlogo-gui/src/main/window/ButtonWidget.scala:36
+#: netlogo-gui/src/main/window/ButtonWidget.scala:349
+msgid "(button)"
+msgstr "(button)"
+
+#: netlogo-gui/src/main/window/Chooser.scala:25
+#: netlogo-gui/src/main/window/Chooser.scala:54
+msgid "(chooser)"
+msgstr "(chooser)"
+
+#: netlogo-gui/src/main/window/InputBox.scala:81
+#: netlogo-gui/src/main/window/InputBox.scala:155
+#: netlogo-gui/src/main/window/InputBoxWidget.scala:27
+msgid "(input)"
+msgstr "(input)"
+
+#: netlogo-gui/src/main/window/DummyMonitorWidget.scala:17
+#: netlogo-gui/src/main/window/DummyMonitorWidget.scala:46
+#: netlogo-gui/src/main/window/MonitorWidget.scala:75
+#: netlogo-gui/src/main/window/MonitorWidget.scala:168
+msgid "(monitor)"
+msgstr "(monitor)"
+
+#: netlogo-gui/src/main/app/tools/AgentMonitorWindow.scala:107
+msgid "(no link)"
+msgstr "(no link)"
+
+#: netlogo-gui/src/main/app/tools/AgentMonitorWindow.scala:112
+msgid "(no patch)"
+msgstr "(no patch)"
+
+#: netlogo-gui/src/main/app/tools/AgentMonitorWindow.scala:102
+msgid "(no turtle)"
+msgstr "(no turtle)"
+
+#: netlogo-gui/src/main/app/tools/AgentMonitorEditor.scala:21
+msgid "(no variables defined)"
+msgstr "(no variables defined)"
+
+#: netlogo-gui/src/main/app/tools/Preference.scala:15
+msgid "(restart required)"
+msgstr "(restart required)"
+
+#: netlogo-gui/src/main/window/AbstractSliderWidget.scala:141
+#: netlogo-gui/src/main/window/AbstractSliderWidget.scala:261
+msgid "(slider)"
+msgstr "(slider)"
+
+#: netlogo-gui/src/main/window/Switch.scala:17
+#: netlogo-gui/src/main/window/Switch.scala:69
+msgid "(switch)"
+msgstr "(switch)"
+
+#: netlogo-core/src/main/workspace/ModelsLibrary.scala:114
+#: netlogo-gui/src/main/app/tools/ModelsLibraryDialog.scala:103
+msgid "(unverified)"
+msgstr "(unverified)"
+
+#: netlogo-gui/src/main/lab/gui/ManagerDialog.scala:466
+msgid "** In Progress ** {}"
+msgstr "** In Progress ** {}"
+
+#: netlogo-gui/src/main/lab/gui/ManagerDialog.scala:468
+msgid "** Paused ** {} ({}/{} runs)"
+msgstr "** Paused ** {} ({}/{} runs)"
+
+#: parser-core/src/main/parse/StructureChecker.scala:307
+msgid "-> can only be used to create arrow procedures"
+msgstr "-> can only be used to create arrow procedures"
+
+#: netlogo-gui/src/main/app/FileManager.scala:302
+msgid ".nls file"
+msgstr ".nls file"
+
+#: netlogo-gui/src/main/lab/gui/RunOptionsEditPanel.scala:104
+msgid "0 = no limit"
+msgstr "0 = no limit"
+
+#: netlogo-gui/src/main/bsapp/View3D.scala:22
+msgid "3D View"
+msgstr "3D View"
+
+#: netlogo-gui/src/main/app/tools/Preferences.scala:108
+msgid "<detect language>"
+msgstr "<detect language>"
+
+#: netlogo-gui/src/main/app/RecentFilesMenu.scala:172
+#: netlogo-gui/src/main/app/codetab/IncludedFilesMenu.scala:52
+#: netlogo-gui/src/main/app/codetab/IncludedFilesMenu.scala:59
+msgid "<empty>"
+msgstr "<empty>"
+
+#: netlogo-gui/src/main/lab/gui/ProtocolEditPanel.scala:39
+msgid "<html>Either list values to use, for example:<br> [\"my-slider\" 1 2 7 8]<br> or specify start, increment, and end, for example:<br> [\"my-slider\" [0 1 10]] (note additional brackets)<br> to go from 0, 1 at a time, to 10.<br> In addition, subexperiments may be specified to create<br> specific parameter combinations. For example:<br> [[\"my-slider\" 1 2][\"my-slider-2\" 3]] (note doubly-nested brackets)<br> You may also vary max-pxcor, min-pxcor, max-pycor, min-pycor, random-seed.</html>"
+msgstr "<html>Either list values to use, for example:<br> [\"my-slider\" 1 2 7 8]<br> or specify start, increment, and end, for example:<br> [\"my-slider\" [0 1 10]] (note additional brackets)<br> to go from 0, 1 at a time, to 10.<br> In addition, subexperiments may be specified to create<br> specific parameter combinations. For example:<br> [[\"my-slider\" 1 2][\"my-slider-2\" 3]] (note doubly-nested brackets)<br> You may also vary max-pxcor, min-pxcor, max-pycor, min-pycor, random-seed.</html>"
+
+#: netlogo-gui/src/main/lab/gui/ProtocolEditPanel.scala:71
+msgid "<html>For example, having [\"var\" 1 2 3] with 2 repetitions, the experiments'' \"var\" values will be:<br> sequential order: 1, 1, 2, 2, 3, 3<br> alternating order: 1, 2, 3, 1, 2, 3</html>"
+msgstr "<html>For example, having [\"var\" 1 2 3] with 2 repetitions, the experiments'' \"var\" values will be:<br> sequential order: 1, 1, 2, 2, 3, 3<br> alternating order: 1, 2, 3, 1, 2, 3</html>"
+
+#: netlogo-gui/src/main/lab/gui/RunOptionsEditPanel.scala:91
+msgid "<html>If more than one, some runs happen invisibly in the background. Default: {} runs. Recommended maximum: {} runs.</html>"
+msgstr "<html>If more than one, some runs happen invisibly in the background. Default: {} runs. Recommended maximum: {} runs.</html>"
+
+#: netlogo-gui/src/main/app/tools/Preferences.scala:357
+msgid "<html>Jump sliders to click location<br>(instead of incrementing)</html>"
+msgstr "<html>Jump sliders to click location<br>(instead of incrementing)</html>"
+
+#: netlogo-gui/src/main/window/ErrorDialogManager.scala:255
+msgid "<html>Please include any extra information needed to replicate the error,<br> especially what you did in NetLogo right before it occurred. You do not need to provide any<br>personal information unless you would like to be contacted by the NetLogo team. <br>This model will not be sent automatically with the report.</html>"
+msgstr "<html>Please include any extra information needed to replicate the error,<br> especially what you did in NetLogo right before it occurred. You do not need to provide any<br>personal information unless you would like to be contacted by the NetLogo team. <br>This model will not be sent automatically with the report.</html>"
+
+#: netlogo-gui/src/main/window/ReportNotHelpfulDialog.scala:27
+msgid "<html>Please tell us how you think this error message could be improved. Note that this will automatically send<br>the NetLogo team information about the error message, but not about your model or its code.</html>"
+msgstr "<html>Please tell us how you think this error message could be improved. Note that this will automatically send<br>the NetLogo team information about the error message, but not about your model or its code.</html>"
+
+#: netlogo-gui/src/main/app/tools/PreferencesDialog.scala:60
+msgid "<html>The following global preferences apply to the main Code tab<br>as well as any included file tabs and LevelSpace code tabs.</html>"
+msgstr "<html>The following global preferences apply to the main Code tab<br>as well as any included file tabs and LevelSpace code tabs.</html>"
+
+#: netlogo-gui/src/main/app/tools/PreferencesDialog.scala:67
+msgid "<html>The following preferences can be used for logging user interactions with a NetLogo<br> model. This can be particularly helpful when using NetLogo for education research.<br>A fuller explanation of NetLogo's logging functionality can be found in the User Manual.</html>"
+msgstr "<html>The following preferences can be used for logging user interactions with a NetLogo<br> model. This can be particularly helpful when using NetLogo for education research.<br>A fuller explanation of NetLogo's logging functionality can be found in the User Manual.</html>"
+
+#: netlogo-gui/src/main/app/tools/ThemesPanel.scala:15
+msgid "<html>These themes control the colors of the entire application,<br> including toolbars, menus, dialogs, and widgets.</html>"
+msgstr "<html>These themes control the colors of the entire application,<br> including toolbars, menus, dialogs, and widgets.</html>"
+
+#: netlogo-gui/src/main/lab/gui/RunOptionsEditPanel.scala:77
+msgid "<html>When unchecked performance will be better. However, no plot data can be exported,<br> and you will not be able to toggle plots in the \"Running Experiment\" window.</html>"
+msgstr "<html>When unchecked performance will be better. However, no plot data can be exported,<br> and you will not be able to toggle plots in the \"Running Experiment\" window.</html>"
+
+#: netlogo-gui/src/main/window/ChooserEditPanel.scala:34
+#: netlogo-gui/src/main/window/DummyChooserEditPanel.scala:33
+msgid "<html>example: &quot;a&quot; &quot;b&quot; &quot;c&quot; 3 4 5</html>"
+msgstr "<html>example: &quot;a&quot; &quot;b&quot; &quot;c&quot; 3 4 5</html>"
+
+#: netlogo-gui/src/main/lab/gui/ProtocolEditPanel.scala:87
+msgid "<html>one reporter per line; you may not split a reporter<br>across multiple lines</html>"
+msgstr "<html>one reporter per line; you may not split a reporter<br>across multiple lines</html>"
+
+#: netlogo-gui/src/main/app/codetab/ProceduresMenu.scala:125
+msgid "<none>"
+msgstr "<none>"
+
+#: netlogo-gui/src/main/app/FileManager.scala:359
+msgid "A BehaviorSpace experiment is currently running. Do you want to abort it?"
+msgstr "A BehaviorSpace experiment is currently running. Do you want to abort it?"
+
+#: parser-core/src/main/parse/StructureChecker.scala:164
+msgid "A breed cannot have the same plural and singular name"
+msgstr "A breed cannot have the same plural and singular name"
+
+#: netlogo-gui/src/main/swing/FileDialog.scala:49
+msgid "A file named \"{}\" already exists. Do you want to replace it?"
+msgstr "A file named \"{}\" already exists. Do you want to replace it?"
+
+#: netlogo-core/src/main/agent/Patch.java:149
+#: netlogo-core/src/main/agent/Patch.java:162
+#: netlogo-core/src/main/agent/Patch.java:205
+#: netlogo-core/src/main/agent/Patch.java:211
+#: netlogo-core/src/main/agent/Patch.java:224
+msgid "A patch can't access a link variable without specifying which link."
+msgstr "A patch can't access a link variable without specifying which link."
+
+#: netlogo-core/src/main/agent/Patch.java:156
+#: netlogo-core/src/main/agent/Patch.java:218
+msgid "A patch can't access a turtle or link variable without specifying which agent."
+msgstr "A patch can't access a turtle or link variable without specifying which agent."
+
+#: netlogo-core/src/main/agent/Patch.java:142
+#: netlogo-core/src/main/agent/Patch.java:169
+msgid "A patch can't access a turtle variable without specifying which turtle."
+msgstr "A patch can't access a turtle variable without specifying which turtle."
+
+#: netlogo-core/src/main/agent/Patch.java:185
+#: netlogo-core/src/main/agent/Patch.java:192
+#: netlogo-core/src/main/agent/Patch.java:199
+msgid "A patch can't set a turtle variable without specifying which turtle."
+msgstr "A patch can't set a turtle variable without specifying which turtle."
+
+#: netlogo-gui/src/main/app/ResourceManagerDialog.scala:120
+#: netlogo-gui/src/main/app/ResourceManagerDialog.scala:175
+msgid "A resource with the name \"{}\" already exists in this model."
+msgstr "A resource with the name \"{}\" already exists in this model."
+
+#: netlogo-gui/src/main/shape/editor/ImportDialog.scala:79
+msgid "A shape with the name \"{}\" already exists in this model.\n Do you want to replace the existing shape or rename the imported one?"
+msgstr "A shape with the name \"{}\" already exists in this model.\n Do you want to replace the existing shape or rename the imported one?"
+
+#: netlogo-gui/src/main/shape/editor/EditorDialog.scala:508
+#: netlogo-gui/src/main/shape/editor/LinkEditorDialog.scala:132
+msgid "A shape with this name already exists. Do you want to replace it?"
+msgstr "A shape with this name already exists. Do you want to replace it?"
+
+#: parser-core/src/main/parse/StructureChecker.scala:107
+msgid "A string/number cannot be used as a global variable name."
+msgstr "A string/number cannot be used as a global variable name."
+
+#: netlogo-core/src/main/agent/Turtle.java:300
+#: netlogo-core/src/main/agent/Turtle.java:341
+msgid "A turtle can't access a link variable without specifying which link."
+msgstr "A turtle can't access a link variable without specifying which link."
+
+#: netlogo-gui/src/main/prim/etc/linkcreation.scala:51
+msgid "A turtle cannot link to itself."
+msgstr "A turtle cannot link to itself."
+
+#: netlogo-gui/src/main/bsapp/ProgressDialog.scala:60
+#: netlogo-gui/src/main/lab/gui/ManagerDialog.scala:59
+msgid "Abort"
+msgstr "Abort"
+
+#: netlogo-gui/src/main/lab/gui/RunOptionsDialog.scala:101
+msgid "Abort current run"
+msgstr "Abort current run"
+
+#: netlogo-gui/src/main/lab/gui/RunOptionsDialog.scala:102
+msgid "Abort experiment"
+msgstr "Abort experiment"
+
+#: netlogo-gui/src/main/app/AboutWindow.scala:21
+msgid "About NetLogo"
+msgstr "About NetLogo"
+
+#: netlogo-gui/src/main/app/HelpActions.scala:66
+msgid "About {}"
+msgstr "About {}"
+
+#: netlogo-gui/src/main/window/ButtonEditPanel.scala:63
+#: netlogo-gui/src/main/window/DummyButtonEditPanel.scala:22
+msgid "Action key"
+msgstr "Action key"
+
+#: netlogo-gui/src/main/hubnet/server/gui/ControlCenter.scala:330
+msgid "Activity:"
+msgstr "Activity:"
+
+#: netlogo-gui/src/main/app/ResourceManagerDialog.scala:73
+msgid "Add"
+msgstr "Add"
+
+#: netlogo-gui/src/main/window/PlotPensEditor.scala:94
+msgid "Add Pen"
+msgstr "Add Pen"
+
+#: netlogo-gui/src/main/app/interfacetab/InterfaceWidgetControls.scala:241
+msgid "Add Widget"
+msgstr "Add Widget"
+
+#: netlogo-gui/src/main/app/tools/LibrariesTab.scala:170
+msgid "Add to Code Tab"
+msgstr "Add to Code Tab"
+
+#: netlogo-gui/src/main/window/SpeedSliderPanel.scala:159
+msgid "Adjust speed of model"
+msgstr "Adjust speed of model"
+
+#: parser-core/src/main/parse/StructureChecker.scala:71
+msgid "Agent variables cannot be declared in a module"
+msgstr "Agent variables cannot be declared in a module"
+
+#: netlogo-gui/src/main/window/ButtonEditPanel.scala:17
+msgid "Agent(s)"
+msgstr "Agent(s)"
+
+#: netlogo-gui/src/main/app/interfacetab/InterfaceWidgetControls.scala:363
+#: netlogo-gui/src/main/app/interfacetab/WidgetWrapper.scala:929
+msgid "Align Bottom"
+msgstr "Align Bottom"
+
+#: netlogo-gui/src/main/app/interfacetab/InterfaceWidgetControls.scala:356
+#: netlogo-gui/src/main/app/interfacetab/WidgetWrapper.scala:879
+msgid "Align Left"
+msgstr "Align Left"
+
+#: netlogo-gui/src/main/app/interfacetab/InterfaceWidgetControls.scala:359
+#: netlogo-gui/src/main/app/interfacetab/WidgetWrapper.scala:899
+msgid "Align Right"
+msgstr "Align Right"
+
+#: netlogo-gui/src/main/app/interfacetab/InterfaceWidgetControls.scala:360
+#: netlogo-gui/src/main/app/interfacetab/WidgetWrapper.scala:909
+msgid "Align Top"
+msgstr "Align Top"
+
+#: netlogo-gui/src/main/app/interfacetab/InterfaceWidgetControls.scala:339
+msgid "Align Widgets"
+msgstr "Align Widgets"
+
+#: parser-core/src/main/parse/StructureChecker.scala:94
+msgid "All declarations must come before procedures."
+msgstr "All declarations must come before procedures."
+
+#: netlogo-gui/src/main/prim/etc/_foreach.scala:24
+msgid "All the list arguments to FOREACH must be the same length."
+msgstr "All the list arguments to FOREACH must be the same length."
+
+#: netlogo-gui/src/main/sdm/gui/StockEditPanel.scala:39
+msgid "Allow negative values"
+msgstr "Allow negative values"
+
+#: netlogo-gui/src/main/app/codetab/ProceduresMenu.scala:27
+#: netlogo-gui/src/main/app/tools/Preferences.scala:283
+msgid "Alphabetical order"
+msgstr "Alphabetical order"
+
+#: netlogo-gui/src/main/app/tools/Preferences.scala:273
+msgid "Always show \"Included Files\" menu"
+msgstr "Always show \"Included Files\" menu"
+
+#: netlogo-gui/src/main/lab/gui/ProtocolEditable.scala:130
+msgid "An experiment with the name \"{}\" already exists"
+msgstr "An experiment with the name \"{}\" already exists"
+
+#: netlogo-core/src/main/agent/AgentColors.scala:31
+#: netlogo-core/src/main/api/Color.scala:217
+msgid "An rgb list must contain 3 numbers 0-255"
+msgstr "An rgb list must contain 3 numbers 0-255"
+
+#: netlogo-core/src/main/agent/AgentColors.scala:29
+#: netlogo-core/src/main/api/Color.scala:215
+msgid "An rgb list must contain 3 or 4 numbers 0-255"
+msgstr "An rgb list must contain 3 or 4 numbers 0-255"
+
+#: netlogo-gui/src/main/window/EditDialog.scala:40
+msgid "Apply"
+msgstr "Apply"
+
+#: netlogo-gui/src/main/lab/gui/ManagerDialog.scala:269
+msgid "Are you sure you want to delete \"{}\"?"
+msgstr "Are you sure you want to delete \"{}\"?"
+
+#: netlogo-gui/src/main/lab/gui/ManagerDialog.scala:267
+msgid "Are you sure you want to delete these {} experiments?"
+msgstr "Are you sure you want to delete these {} experiments?"
+
+#: netlogo-gui/src/main/shape/editor/DrawableList.scala:101
+msgid "Are you sure you want to delete these {} shapes?"
+msgstr "Are you sure you want to delete these {} shapes?"
+
+#: netlogo-gui/src/main/shape/editor/DrawableList.scala:103
+msgid "Are you sure you want to delete this shape?"
+msgstr "Are you sure you want to delete this shape?"
+
+#: netlogo-gui/src/main/app/App.scala:674
+msgid "As of NetLogo 7, the application will collect usage statistics while it is running. This data is entirely anonymized and can be turned off in the application preferences at any time.\n\nThe data is analyzed by the NetLogo team to understand which features are important to NetLogo users, so as to inform development priorities and measure growth in the NetLogo community.\n\nDo you wish to send the NetLogo team this information?"
+msgstr "As of NetLogo 7, the application will collect usage statistics while it is running. This data is entirely anonymized and can be turned off in the application preferences at any time.\n\nThe data is analyzed by the NetLogo team to understand which features are important to NetLogo users, so as to inform development priorities and measure growth in the NetLogo community.\n\nDo you wish to send the NetLogo team this information?"
+
+#: netlogo-gui/src/main/app/tools/Preferences.scala:366
+msgid "Ask for confirmation before running startup procedure"
+msgstr "Ask for confirmation before running startup procedure"
+
+#: parser-core/src/main/parse/StructureParser.scala:63
+msgid "Attempted to import a module multiple times"
+msgstr "Attempted to import a module multiple times"
+
+#: parser-core/src/main/parse/StructureParser.scala:151
+msgid "Attempted to import a non-exported identifier"
+msgstr "Attempted to import a non-exported identifier"
+
+#: netlogo-gui/src/main/window/DummyPlotEditPanel.scala:76
+#: netlogo-gui/src/main/window/PlotEditPanel.scala:88
+msgid "Auto scale x-axis?"
+msgstr "Auto scale x-axis?"
+
+#: netlogo-gui/src/main/window/DummyPlotEditPanel.scala:85
+#: netlogo-gui/src/main/window/PlotEditPanel.scala:97
+msgid "Auto scale y-axis?"
+msgstr "Auto scale y-axis?"
+
+#: netlogo-gui/src/main/app/tools/Preferences.scala:333
+msgid "Auto-indent"
+msgstr "Auto-indent"
+
+#: netlogo-gui/src/main/app/tools/ThemesPanel.scala:21
+msgid "Automatic"
+msgstr "Automatic"
+
+#: netlogo-gui/src/main/app/tools/Preferences.scala:319
+msgid "Automatically jump to source of compilation error"
+msgstr "Automatically jump to source of compilation error"
+
+#: netlogo-gui/src/main/window/WorldEditPanel2D.scala:119
+#: netlogo-gui/src/main/window/WorldEditPanel3D.scala:171
+msgid "Background color"
+msgstr "Background color"
+
+#: netlogo-gui/src/main/window/NoteEditPanel.scala:64
+msgid "Background color (dark mode)"
+msgstr "Background color (dark mode)"
+
+#: netlogo-gui/src/main/window/NoteEditPanel.scala:54
+msgid "Background color (light mode)"
+msgstr "Background color (light mode)"
+
+#: netlogo-gui/src/main/window/PlotPenEditorAdvanced.scala:22
+msgid "Bar"
+msgstr "Bar"
+
+#: netlogo-gui/src/main/app/HelpActions.scala:48
+msgid "Beginner's Interactive NetLogo Dictionary"
+msgstr "Beginner's Interactive NetLogo Dictionary"
+
+#: netlogo-gui/src/main/bsapp/ProgressDialog.scala:103
+msgid "Behavior"
+msgstr "Behavior"
+
+#: netlogo-gui/src/main/bsapp/ProgressDialog.scala:83
+msgid "Behavior Plot"
+msgstr "Behavior Plot"
+
+#: netlogo-gui/src/main/bsapp/BehaviorSpaceFrame.scala:13
+#: netlogo-gui/src/main/lab/gui/LabManager.scala:104
+#: netlogo-gui/src/main/lab/gui/ManagerDialog.scala:71
+msgid "BehaviorSpace"
+msgstr "BehaviorSpace"
+
+#: netlogo-gui/src/main/app/tools/Preferences.scala:325
+msgid "Bold widget text"
+msgstr "Bold widget text"
+
+#: netlogo-gui/src/main/prim/etc/_randomgamma.java:25
+msgid "Both inputs to {} must be positive."
+msgstr "Both inputs to {} must be positive."
+
+#: netlogo-gui/src/main/window/WorldViewSettings2D.scala:35
+#: netlogo-gui/src/main/window/WorldViewSettings3D.scala:71
+msgid "Bottom"
+msgstr "Bottom"
+
+#: netlogo-gui/src/main/window/WorldViewSettings2D.scala:26
+msgid "Bottom Left"
+msgstr "Bottom Left"
+
+#: netlogo-gui/src/main/window/WorldViewSettings3D.scala:56
+msgid "Bottom Northeast"
+msgstr "Bottom Northeast"
+
+#: netlogo-gui/src/main/window/WorldViewSettings3D.scala:55
+msgid "Bottom Northwest"
+msgstr "Bottom Northwest"
+
+#: netlogo-gui/src/main/window/WorldViewSettings2D.scala:29
+msgid "Bottom Right"
+msgstr "Bottom Right"
+
+#: netlogo-gui/src/main/window/WorldViewSettings3D.scala:57
+msgid "Bottom Southeast"
+msgstr "Bottom Southeast"
+
+#: netlogo-gui/src/main/window/WorldViewSettings3D.scala:54
+msgid "Bottom Southwest"
+msgstr "Bottom Southwest"
+
+#: parser-core/src/main/parse/StructureChecker.scala:67
+msgid "Breeds cannot be declared in a module"
+msgstr "Breeds cannot be declared in a module"
+
+#: netlogo-gui/src/main/shape/editor/EditorDialog.scala:128
+msgid "Bring to front"
+msgstr "Bring to front"
+
+#: netlogo-gui/src/main/hubnet/server/gui/ControlCenter.scala:259
+msgid "Broacast Message"
+msgstr "Broacast Message"
+
+#: netlogo-gui/src/main/window/ButtonWidget.scala:244
+#: netlogo-gui/src/main/window/DummyButtonWidget.scala:57
+#: netlogo-gui/src/main/window/InterfaceFactory.scala:18
+#: netlogo-gui/src/main/app/interfacetab/WidgetPanel.scala:704
+msgid "Button"
+msgstr "Button"
+
+#: netlogo-gui/src/main/hubnet/server/gui/ControlCenter.scala:166
+msgid "CLIENT NAME"
+msgstr "CLIENT NAME"
+
+#: netlogo-gui/src/main/prim/etc/_setdefaultshape.java:33
+msgid "Can only set the default shape of all turtles , all links, or an entire breed."
+msgstr "Can only set the default shape of all turtles , all links, or an entire breed."
+
+#: netlogo-gui/src/main/prim/etc/_exportoutput.java:17
+msgid "Can't export to empty pathname."
+msgstr "Can't export to empty pathname."
+
+#: netlogo-gui/src/main/prim/etc/_item.java:33
+#: netlogo-gui/src/main/prim/etc/_item.java:41
+#: netlogo-gui/src/main/prim/etc/_item.java:59
+#: netlogo-gui/src/main/prim/etc/_item.java:73
+#: netlogo-gui/src/main/prim/etc/_removeitem.java:29
+#: netlogo-gui/src/main/prim/etc/_replaceitem.java:30
+#: netlogo-gui/src/main/prim/etc/_insertitem.scala:22
+msgid "Can't find element {} of the list {}, which is only of length {}."
+msgstr "Can't find element {} of the list {}, which is only of length {}."
+
+#: netlogo-gui/src/main/prim/etc/_removeitem.java:37
+#: netlogo-gui/src/main/prim/etc/_replaceitem.java:41
+#: netlogo-gui/src/main/prim/etc/_insertitem.scala:31
+msgid "Can't find element {} of the string {}, which is only of length {}."
+msgstr "Can't find element {} of the string {}, which is only of length {}."
+
+#: netlogo-gui/src/main/prim/etc/_max.java:35
+msgid "Can't find the maximum of a list with no numbers: {}"
+msgstr "Can't find the maximum of a list with no numbers: {}"
+
+#: netlogo-gui/src/main/prim/etc/_mean.java:39
+msgid "Can't find the mean of a list with no numbers: {}."
+msgstr "Can't find the mean of a list with no numbers: {}."
+
+#: netlogo-gui/src/main/prim/etc/_median.java:34
+msgid "Can't find the median of a list with no numbers: {}."
+msgstr "Can't find the median of a list with no numbers: {}."
+
+#: netlogo-gui/src/main/prim/etc/_min.java:38
+msgid "Can't find the minimum of a list with no numbers: {}"
+msgstr "Can't find the minimum of a list with no numbers: {}"
+
+#: netlogo-gui/src/main/prim/etc/_standarddeviation.java:38
+msgid "Can't find the standard deviation of a list without at least two numbers: {}"
+msgstr "Can't find the standard deviation of a list without at least two numbers: {}"
+
+#: netlogo-gui/src/main/prim/_nsum.java:51
+#: netlogo-gui/src/main/prim/_nsum4.java:51
+msgid "Can't find the sum of a list that contains non-numbers: {} is a {}."
+msgstr "Can't find the sum of a list that contains non-numbers: {} is a {}."
+
+#: netlogo-gui/src/main/prim/etc/_variance.java:38
+msgid "Can't find the variance of a list without at least two numbers: {}."
+msgstr "Can't find the variance of a list without at least two numbers: {}."
+
+#: netlogo-gui/src/main/prim/etc/_ln.java:24
+#: netlogo-gui/src/main/prim/etc/_log.java:27
+msgid "Can't take logarithm of {}."
+msgstr "Can't take logarithm of {}."
+
+#: netlogo-gui/src/main/swing/FileDialog.scala:50
+#: netlogo-gui/src/main/swing/OptionPane.scala:18
+#: netlogo-gui/src/main/swing/Popup.scala:27
+#: netlogo-gui/src/main/app/ToolActions.scala:144
+#: netlogo-gui/src/main/window/EditDialog.scala:48
+#: netlogo-gui/src/main/window/ErrorDialogManager.scala:272
+#: netlogo-gui/src/main/window/FileController.scala:165
+#: netlogo-gui/src/main/window/FileController.scala:177
+#: netlogo-gui/src/main/window/InputBox.scala:477
+#: netlogo-gui/src/main/window/ReportNotHelpfulDialog.scala:51
+#: netlogo-gui/src/main/gl/view/ViewControlToolBar.scala:24
+#: netlogo-gui/src/main/shape/editor/EditorDialog.scala:359
+#: netlogo-gui/src/main/shape/editor/ImportDialog.scala:19
+#: netlogo-gui/src/main/shape/editor/ImportDialog.scala:65
+#: netlogo-gui/src/main/shape/editor/LinkEditorDialog.scala:62
+#: netlogo-gui/src/main/app/common/Dialogs.scala:15
+#: netlogo-gui/src/main/app/tools/ModelsLibraryDialog.scala:261
+#: netlogo-gui/src/main/app/tools/PreferencesDialog.scala:75
+#: netlogo-gui/src/main/app/tools/PreviewCommandsDialog.scala:47
+#: netlogo-gui/src/main/hubnet/server/gui/HubNetClientEditor.scala:130
+msgid "Cancel"
+msgstr "Cancel"
+
+#: netlogo-gui/src/main/prim/etc/_tickadvance.scala:14
+msgid "Cannot advance the tick counter by a negative amount."
+msgstr "Cannot advance the tick counter by a negative amount."
+
+#: netlogo-core/src/main/agent/Turtle2D.java:61
+#: netlogo-core/src/main/agent/Patch.java:315
+msgid "Cannot get patch beyond limits of current world."
+msgstr "Cannot get patch beyond limits of current world."
+
+#: netlogo-core/src/main/agent/Box.scala:14
+#: netlogo-core/src/main/agent/Box.scala:23
+#: netlogo-core/src/main/agent/HorizCylinder.scala:16
+#: netlogo-core/src/main/agent/VertCylinder.scala:19
+msgid "Cannot move turtle beyond the world's edge."
+msgstr "Cannot move turtle beyond the world's edge."
+
+#: netlogo-gui/src/main/prim/etc/_setdefaultshape.java:24
+msgid "Cannot set the default shape of patches, because patches do not have shapes."
+msgstr "Cannot set the default shape of patches, because patches do not have shapes."
+
+#: netlogo-gui/src/main/window/OriginConfiguration.scala:13
+msgid "Center"
+msgstr "Center"
+
+#: netlogo-gui/src/main/app/interfacetab/WidgetWrapper.scala:889
+msgid "Center Horizontally"
+msgstr "Center Horizontally"
+
+#: netlogo-gui/src/main/app/interfacetab/InterfaceWidgetControls.scala:361
+#: netlogo-gui/src/main/app/interfacetab/WidgetWrapper.scala:919
+msgid "Center Vertically"
+msgstr "Center Vertically"
+
+#: netlogo-gui/src/main/sdm/gui/AggregateModelEditorToolBar.scala:49
+#: netlogo-gui/src/main/app/codetab/CodeTab.scala:36
+msgid "Check"
+msgstr "Check"
+
+#: netlogo-gui/src/main/window/PlotPensEditor.scala:95
+msgid "Check Pens"
+msgstr "Check Pens"
+
+#: netlogo-gui/src/main/app/tools/LibrariesDialog.scala:67
+msgid "Checking for updates..."
+msgstr "Checking for updates..."
+
+#: netlogo-gui/src/main/window/ChooserEditPanel.scala:27
+#: netlogo-gui/src/main/window/DummyChooserEditPanel.scala:26
+msgid "Choices"
+msgstr "Choices"
+
+#: netlogo-gui/src/main/app/FileManager.scala:249
+msgid "Choose Export Source"
+msgstr "Choose Export Source"
+
+#: netlogo-gui/src/main/window/ChooserWidget.scala:13
+#: netlogo-gui/src/main/window/DummyChooserWidget.scala:16
+#: netlogo-gui/src/main/window/InterfaceFactory.scala:21
+#: netlogo-gui/src/main/app/interfacetab/WidgetPanel.scala:707
+msgid "Chooser"
+msgstr "Chooser"
+
+#: netlogo-gui/src/main/app/tools/ThemesPanel.scala:22
+msgid "Classic"
+msgstr "Classic"
+
+#: netlogo-gui/src/main/bsapp/OutputPanel.scala:19
+#: netlogo-gui/src/main/window/OutputWidget.scala:61
+#: netlogo-gui/src/main/window/PlotWidget.scala:73
+#: netlogo-gui/src/main/app/interfacetab/CommandCenter.scala:60
+#: netlogo-gui/src/main/app/tools/ModelsLibraryDialog.scala:290
+msgid "Clear"
+msgstr "Clear"
+
+#: netlogo-gui/src/main/app/common/HistoryPrompt.scala:53
+msgid "Clear History"
+msgstr "Clear History"
+
+#: netlogo-gui/src/main/app/RecentFilesMenu.scala:182
+msgid "Clear Items"
+msgstr "Clear Items"
+
+#: netlogo-gui/src/main/hubnet/server/gui/ControlCenter.scala:170
+msgid "Clients:"
+msgstr "Clients:"
+
+#: netlogo-gui/src/main/lab/gui/ManagerDialog.scala:58
+msgid "Close"
+msgstr "Close"
+
+#: netlogo-gui/src/main/window/WorkspaceActions.scala:31
+msgid "Close All Agent Monitors"
+msgstr "Close All Agent Monitors"
+
+#: netlogo-gui/src/main/window/WorkspaceActions.scala:34
+msgid "Close Monitors for Dead Agents"
+msgstr "Close Monitors for Dead Agents"
+
+#: netlogo-gui/src/main/app/FileManager.scala:83
+msgid "Close Window"
+msgstr "Close Window"
+
+#: netlogo-gui/src/main/app/TabManager.scala:83
+#: netlogo-gui/src/main/sdm/gui/AggregateTabs.scala:24
+#: netlogo-gui/src/main/app/tools/PreferencesDialog.scala:99
+msgid "Code"
+msgstr "Code"
+
+#: netlogo-gui/src/main/app/tools/Preferences.scala:374
+msgid "Code font"
+msgstr "Code font"
+
+#: netlogo-gui/src/main/editor/AdvancedEditorArea.scala:213
+msgid "Collapse All Folds"
+msgstr "Collapse All Folds"
+
+#: netlogo-gui/src/main/editor/AdvancedEditorArea.scala:185
+msgid "Collapse Selected Folds"
+msgstr "Collapse Selected Folds"
+
+#: netlogo-gui/src/main/app/interfacetab/InterfaceTab.scala:361
+#: netlogo-gui/src/main/app/interfacetab/InterfaceTab.scala:376
+msgid "Collapse Toolbar"
+msgstr "Collapse Toolbar"
+
+#: netlogo-gui/src/main/window/InputBox.scala:652
+#: netlogo-gui/src/main/window/PlotPensEditor.scala:146
+msgid "Color"
+msgstr "Color"
+
+#: netlogo-gui/src/main/app/ToolActions.scala:78
+#: netlogo-gui/src/main/window/JFXColorPicker.scala:32
+msgid "Color Picker"
+msgstr "Color Picker"
+
+#: netlogo-gui/src/main/app/tools/PreferencesDialog.scala:101
+msgid "Color Themes"
+msgstr "Color Themes"
+
+#: netlogo-gui/src/main/prim/etc/_extractrgb.java:32
+msgid "Color must be a number or a valid RGB/A color list with 3 - 4 numbers that have values between 0 and 255."
+msgstr "Color must be a number or a valid RGB/A color list with 3 - 4 numbers that have values between 0 and 255."
+
+#: netlogo-gui/src/main/shape/editor/EditorDialog.scala:377
+msgid "Color that changes:"
+msgstr "Color that changes:"
+
+#: netlogo-gui/src/main/bsapp/OutputPanel.scala:17
+#: netlogo-gui/src/main/app/interfacetab/CommandCenter.scala:55
+msgid "Command Center"
+msgstr "Command Center"
+
+#: netlogo-gui/src/main/window/ButtonEditPanel.scala:44
+msgid "Commands"
+msgstr "Commands"
+
+#: netlogo-gui/src/main/editor/AdvancedEditorArea.scala:144
+#: netlogo-gui/src/main/editor/ToggleComments.scala:56
+msgid "Comment / Uncomment"
+msgstr "Comment / Uncomment"
+
+#: netlogo-gui/src/main/lab/gui/ProtocolEditable.scala:137
+msgid "Compiler error in variable specification: {}"
+msgstr "Compiler error in variable specification: {}"
+
+#: netlogo-gui/src/main/lab/gui/ProtocolEditable.scala:197
+#: netlogo-gui/src/main/lab/gui/ProtocolEditable.scala:211
+msgid "Compiler error in {}: {}"
+msgstr "Compiler error in {}: {}"
+
+#: netlogo-gui/src/main/shape/editor/EditorDialog.scala:224
+#: netlogo-gui/src/main/shape/editor/LinkEditorDialog.scala:52
+msgid "Confirm Cancel"
+msgstr "Confirm Cancel"
+
+#: netlogo-gui/src/main/hubnet/client/ClientApp.scala:173
+msgid "Confirm Exit"
+msgstr "Confirm Exit"
+
+#: netlogo-gui/src/main/shape/editor/EditorDialog.scala:507
+#: netlogo-gui/src/main/shape/editor/LinkEditorDialog.scala:131
+msgid "Confirm Overwrite"
+msgstr "Confirm Overwrite"
+
+#: netlogo-gui/src/main/hubnet/client/ClientApp.scala:183
+msgid "Confirm Quit"
+msgstr "Confirm Quit"
+
+#: netlogo-gui/src/main/app/App.scala:810
+msgid "Connection Failed"
+msgstr "Connection Failed"
+
+#: netlogo-core/src/main/api/LabVariableParser.scala:53
+#: netlogo-core/src/main/api/LabVariableParser.scala:77
+msgid "Constant \"{}\" defined twice"
+msgstr "Constant \"{}\" defined twice"
+
+#: netlogo-gui/src/main/app/HelpActions.scala:58
+msgid "Contact Us"
+msgstr "Contact Us"
+
+#: netlogo-gui/src/main/window/FileController.scala:126
+#: netlogo-gui/src/main/window/GUIWorkspace.scala:713
+#: netlogo-gui/src/main/window/WorkspaceActions.scala:86
+#: netlogo-gui/src/main/gl/view/ViewControlToolBar.scala:24
+#: netlogo-gui/src/main/gl/view/ViewManager.scala:55
+msgid "Continue"
+msgstr "Continue"
+
+#: netlogo-gui/src/main/window/UpdateModeChooser.scala:11
+#: netlogo-gui/src/main/window/UpdateModeChooser.scala:15
+#: netlogo-gui/src/main/window/UpdateModeChooser.scala:26
+msgid "Continuous"
+msgstr "Continuous"
+
+#: netlogo-gui/src/main/app/FileManager.scala:455
+#: netlogo-gui/src/main/app/ToolActions.scala:132
+#: netlogo-gui/src/main/app/ToolActions.scala:143
+#: netlogo-gui/src/main/hubnet/server/gui/HubNetClientEditor.scala:121
+#: netlogo-gui/src/main/hubnet/server/gui/HubNetClientEditor.scala:129
+msgid "Convert Widgets to New Sizes"
+msgstr "Convert Widgets to New Sizes"
+
+#: netlogo-gui/src/main/app/FileManager.scala:289
+msgid "Convert from 5.3.1 to 6.0"
+msgstr "Convert from 5.3.1 to 6.0"
+
+#: netlogo-gui/src/main/editor/Actions.scala:31
+#: netlogo-gui/src/main/editor/AdvancedEditorArea.scala:79
+#: netlogo-gui/src/main/window/ErrorDialogManager.scala:138
+msgid "Copy"
+msgstr "Copy"
+
+#: netlogo-gui/src/main/window/PlotWidget.scala:65
+msgid "Copy Image"
+msgstr "Copy Image"
+
+#: netlogo-gui/src/main/window/OutputWidget.scala:55
+msgid "Copy Selected Text"
+msgstr "Copy Selected Text"
+
+#: netlogo-gui/src/main/app/interfacetab/InterfacePanel.scala:84
+#: netlogo-gui/src/main/app/interfacetab/WidgetPanel.scala:720
+#: netlogo-gui/src/main/app/interfacetab/WidgetWrapper.scala:992
+msgid "Copy Selected Widgets"
+msgstr "Copy Selected Widgets"
+
+#: netlogo-gui/src/main/window/MonitorWidget.scala:218
+msgid "Copy Text"
+msgstr "Copy Text"
+
+#: netlogo-gui/src/main/window/View.java:443
+#: netlogo-gui/src/main/gl/view/Picker.scala:31
+msgid "Copy View"
+msgstr "Copy View"
+
+#: netlogo-gui/src/main/app/interfacetab/WidgetWrapper.scala:998
+msgid "Copy Widget"
+msgstr "Copy Widget"
+
+#: netlogo-gui/src/main/window/OriginConfiguration.scala:14
+msgid "Corner"
+msgstr "Corner"
+
+#: parser-core/src/main/parse/StructureParser.scala:92
+#: parser-core/src/main/parse/StructureParser.scala:135
+#: parser-core/src/main/parse/StructureParser.scala:239
+msgid "Could not find {}"
+msgstr "Could not find {}"
+
+#: netlogo-gui/src/main/app/App.scala:807
+msgid "Could not obtain NetLogo model from URL '{}'.\n NetLogo will instead start without any model loaded."
+msgstr "Could not obtain NetLogo model from URL '{}'.\n NetLogo will instead start without any model loaded."
+
+#: netlogo-gui/src/main/app/AboutWindow.scala:105
+msgid "Credits"
+msgstr "Credits"
+
+#: netlogo-gui/src/main/shape/editor/LinkEditorDialog.scala:73
+msgid "Curviness"
+msgstr "Curviness"
+
+#: netlogo-gui/src/main/shape/editor/LinkEditorDialog.scala:141
+msgid "Curviness must be a valid floating point number."
+msgstr "Curviness must be a valid floating point number."
+
+#: netlogo-gui/src/main/window/OriginConfiguration.scala:16
+msgid "Custom"
+msgstr "Custom"
+
+#: netlogo-gui/src/main/app/tools/EditorPanel.scala:94
+msgid "Custom preview commands"
+msgstr "Custom preview commands"
+
+#: netlogo-gui/src/main/editor/Actions.scala:35
+#: netlogo-gui/src/main/editor/AdvancedEditorArea.scala:92
+msgid "Cut"
+msgstr "Cut"
+
+#: netlogo-gui/src/main/app/tools/ThemesPanel.scala:24
+msgid "Dark"
+msgstr "Dark"
+
+#: netlogo-gui/src/main/app/App.scala:680
+msgid "Data Consent"
+msgstr "Data Consent"
+
+#: netlogo-gui/src/main/window/DummyMonitorEditPanel.scala:22
+#: netlogo-gui/src/main/window/MonitorEditPanel.scala:36
+msgid "Decimal places"
+msgstr "Decimal places"
+
+#: netlogo-gui/src/main/app/tools/Preferences.scala:377
+msgid "Default"
+msgstr "Default"
+
+#: netlogo-gui/src/main/app/tools/EditorPanel.scala:93
+msgid "Default preview commands"
+msgstr "Default preview commands"
+
+#: parser-core/src/main/parse/StructureChecker.scala:303
+msgid "Defining a breed [{} {}] redefines {}, a {}"
+msgstr "Defining a breed [{} {}] redefines {}, a {}"
+
+#: netlogo-gui/src/main/app/tools/Preferences.scala:283
+msgid "Definition order"
+msgstr "Definition order"
+
+#: netlogo-gui/src/main/editor/Actions.scala:39
+#: netlogo-gui/src/main/editor/AdvancedEditorArea.scala:118
+#: netlogo-gui/src/main/lab/gui/ManagerDialog.scala:54
+#: netlogo-gui/src/main/lab/gui/ManagerDialog.scala:271
+#: netlogo-gui/src/main/sdm/gui/AggregateModelEditorToolBar.scala:55
+#: netlogo-gui/src/main/sdm/gui/AggregateModelEditorToolBar.scala:57
+#: netlogo-gui/src/main/shape/editor/DrawableList.scala:108
+#: netlogo-gui/src/main/shape/editor/EditorDialog.scala:95
+#: netlogo-gui/src/main/shape/editor/ManagerDialog.scala:48
+#: netlogo-gui/src/main/app/interfacetab/WidgetWrapper.scala:1016
+msgid "Delete"
+msgstr "Delete"
+
+#: netlogo-gui/src/main/app/interfacetab/WidgetWrapper.scala:1008
+msgid "Delete Selected"
+msgstr "Delete Selected"
+
+#: netlogo-gui/src/main/app/interfacetab/WidgetWrapper.scala:865
+msgid "Deselect"
+msgstr "Deselect"
+
+#: netlogo-gui/src/main/sdm/gui/AggregateTabs.scala:23
+msgid "Diagram"
+msgstr "Diagram"
+
+#: netlogo-gui/src/main/shape/editor/LinkEditorDialog.scala:68
+msgid "Direction Indicator"
+msgstr "Direction Indicator"
+
+#: netlogo-gui/src/main/app/tools/Preferences.scala:210
+msgid "Directory to store logs"
+msgstr "Directory to store logs"
+
+#: netlogo-gui/src/main/window/ButtonEditPanel.scala:35
+msgid "Disable until ticks start"
+msgstr "Disable until ticks start"
+
+#: netlogo-gui/src/main/app/common/Dialogs.scala:15
+msgid "Discard"
+msgstr "Discard"
+
+#: netlogo-gui/src/main/app/OfferSaveExternalsDialog.scala:87
+msgid "Discard All"
+msgstr "Discard All"
+
+#: netlogo-gui/src/main/hubnet/client/ClientApp.scala:157
+msgid "Disconnected"
+msgstr "Disconnected"
+
+#: netlogo-gui/src/main/window/ErrorDialogManager.scala:145
+#: netlogo-gui/src/main/window/ErrorDialogManager.scala:154
+#: netlogo-gui/src/main/window/RuntimeErrorPanel.scala:59
+#: netlogo-gui/src/main/window/RuntimeErrorPanel.scala:60
+msgid "Dismiss"
+msgstr "Dismiss"
+
+#: netlogo-gui/src/main/window/MonitorEditPanel.scala:27
+msgid "Display Name"
+msgstr "Display Name"
+
+#: netlogo-gui/src/main/window/ButtonEditPanel.scala:54
+msgid "Display name"
+msgstr "Display name"
+
+#: netlogo-gui/src/main/lab/gui/RunOptionsEditPanel.scala:110
+msgid "Display parallel run output in Command Center"
+msgstr "Display parallel run output in Command Center"
+
+#: netlogo-gui/src/main/app/interfacetab/InterfaceWidgetControls.scala:364
+#: netlogo-gui/src/main/app/interfacetab/WidgetWrapper.scala:941
+msgid "Distribute Horizontally"
+msgstr "Distribute Horizontally"
+
+#: netlogo-gui/src/main/app/interfacetab/InterfaceWidgetControls.scala:367
+#: netlogo-gui/src/main/app/interfacetab/WidgetWrapper.scala:947
+msgid "Distribute Vertically"
+msgstr "Distribute Vertically"
+
+#: netlogo-gui/src/main/prim/etc/_div.java:26
+#: netlogo-gui/src/main/prim/etc/_mod.java:25
+#: netlogo-gui/src/main/prim/etc/_remainder.java:26
+msgid "Division by zero."
+msgstr "Division by zero."
+
+#: netlogo-gui/src/main/hubnet/client/ClientApp.scala:173
+msgid "Do you really want to exit this activity?"
+msgstr "Do you really want to exit this activity?"
+
+#: netlogo-gui/src/main/hubnet/client/ClientApp.scala:183
+msgid "Do you really want to quit HubNet?"
+msgstr "Do you really want to quit HubNet?"
+
+#: netlogo-gui/src/main/app/common/Dialogs.scala:14
+msgid "Do you want to save the changes you made to {}?"
+msgstr "Do you want to save the changes you made to {}?"
+
+#: netlogo-gui/src/main/window/WorldViewSettings2D.scala:131
+msgid "Don't kick"
+msgstr "Don't kick"
+
+#: netlogo-gui/src/main/window/ErrorDialogManager.scala:202
+msgid "Don't show again"
+msgstr "Don't show again"
+
+#: netlogo-gui/src/main/app/HelpActions.scala:59
+msgid "Donate"
+msgstr "Donate"
+
+#: netlogo-gui/src/main/shape/editor/EditorDialog.scala:259
+msgid "Draw circle"
+msgstr "Draw circle"
+
+#: netlogo-gui/src/main/shape/editor/EditorDialog.scala:257
+msgid "Draw filled circle"
+msgstr "Draw filled circle"
+
+#: netlogo-gui/src/main/shape/editor/EditorDialog.scala:261
+msgid "Draw filled polygon"
+msgstr "Draw filled polygon"
+
+#: netlogo-gui/src/main/shape/editor/EditorDialog.scala:253
+msgid "Draw filled rectangle"
+msgstr "Draw filled rectangle"
+
+#: netlogo-gui/src/main/shape/editor/EditorDialog.scala:186
+msgid "Draw in {}"
+msgstr "Draw in {}"
+
+#: netlogo-gui/src/main/shape/editor/EditorDialog.scala:252
+msgid "Draw line"
+msgstr "Draw line"
+
+#: netlogo-gui/src/main/shape/editor/EditorDialog.scala:263
+msgid "Draw polygon"
+msgstr "Draw polygon"
+
+#: netlogo-gui/src/main/shape/editor/EditorDialog.scala:255
+msgid "Draw rectangle"
+msgstr "Draw rectangle"
+
+#: netlogo-gui/src/main/lab/gui/ManagerDialog.scala:55
+#: netlogo-gui/src/main/shape/editor/EditorDialog.scala:117
+#: netlogo-gui/src/main/shape/editor/ManagerDialog.scala:47
+msgid "Duplicate"
+msgstr "Duplicate"
+
+#: parser-core/src/main/parse/StructureChecker.scala:35
+msgid "EXPORT can only be used in a module"
+msgstr "EXPORT can only be used in a module"
+
+#: parser-core/src/main/parse/StructureConverter.scala:45
+msgid "EXPORT may only be used once per file"
+msgstr "EXPORT may only be used once per file"
+
+#: netlogo-gui/src/main/window/WorldViewSettings3D.scala:69
+msgid "East"
+msgstr "East"
+
+#: netlogo-gui/src/main/window/OriginConfiguration.scala:15
+msgid "Edge"
+msgstr "Edge"
+
+#: netlogo-gui/src/main/app/EditMenu.scala:21
+#: netlogo-gui/src/main/lab/gui/ManagerDialog.scala:52
+#: netlogo-gui/src/main/sdm/gui/AggregateModelEditor.scala:109
+#: netlogo-gui/src/main/sdm/gui/AggregateModelEditorToolBar.scala:31
+#: netlogo-gui/src/main/sdm/gui/AggregateModelEditorToolBar.scala:33
+#: netlogo-gui/src/main/sdm/gui/AggregateModelEditorToolBar.scala:52
+#: netlogo-gui/src/main/shape/editor/LinkEditorDialog.scala:68
+#: netlogo-gui/src/main/shape/editor/ManagerDialog.scala:46
+#: netlogo-gui/src/main/app/infotab/InfoTab.scala:52
+#: netlogo-gui/src/main/app/interfacetab/WidgetWrapper.scala:853
+msgid "Edit"
+msgstr "Edit"
+
+#: netlogo-gui/src/main/shape/editor/EditorDialog.scala:41
+msgid "Edit Shape"
+msgstr "Edit Shape"
+
+#: netlogo-gui/src/main/window/ViewUpdatePanel.scala:79
+msgid "Edit model settings"
+msgstr "Edit model settings"
+
+#: netlogo-gui/src/main/window/PlotPensEditor.scala:299
+msgid "Editing: {}"
+msgstr "Editing: {}"
+
+#: netlogo-gui/src/main/window/NoteEditPanel.scala:74
+msgid "Enable Markdown"
+msgstr "Enable Markdown"
+
+#: netlogo-gui/src/main/app/tools/Preferences.scala:207
+msgid "Enable logging"
+msgstr "Enable logging"
+
+#: netlogo-core/src/main/lab/Worker.scala:257
+#: netlogo-gui/src/main/bsapp/ProgressDialog.scala:218
+msgid "Enable plot updating to use export-plot, export-all-plots, export-world, or export-interface."
+msgstr "Enable plot updating to use export-plot, export-all-plots, export-world, or export-interface."
+
+#: netlogo-gui/src/main/app/tools/Preferences.scala:199
+msgid "Enable remote commands"
+msgstr "Enable remote commands"
+
+#: netlogo-gui/src/main/app/ResourceManagerDialog.scala:150
+#: netlogo-gui/src/main/app/ResourceManagerDialog.scala:150
+msgid "Enter New Resource Name"
+msgstr "Enter New Resource Name"
+
+#: netlogo-gui/src/main/app/ResourceManagerDialog.scala:88
+#: netlogo-gui/src/main/app/ResourceManagerDialog.scala:88
+msgid "Enter Resource Name"
+msgstr "Enter Resource Name"
+
+#: netlogo-gui/src/main/app/App.scala:1427
+msgid "Enter your name:"
+msgstr "Enter your name:"
+
+#: netlogo-gui/src/main/swing/BrowserLauncher.scala:41
+#: netlogo-gui/src/main/swing/BrowserLauncher.scala:43
+#: netlogo-gui/src/main/swing/BrowserLauncher.scala:45
+#: netlogo-gui/src/main/swing/BrowserLauncher.scala:79
+#: netlogo-gui/src/main/app/App.scala:1218
+#: netlogo-gui/src/main/app/RecentFilesMenu.scala:69
+#: netlogo-gui/src/main/app/RecentFilesMenu.scala:72
+#: netlogo-gui/src/main/app/ResourceManagerDialog.scala:94
+#: netlogo-gui/src/main/app/ResourceManagerDialog.scala:119
+#: netlogo-gui/src/main/app/ResourceManagerDialog.scala:157
+#: netlogo-gui/src/main/app/ResourceManagerDialog.scala:174
+#: netlogo-gui/src/main/window/ExportControls.scala:12
+#: netlogo-gui/src/main/window/FileController.scala:27
+#: netlogo-gui/src/main/window/FileController.scala:116
+#: netlogo-gui/src/main/window/FileController.scala:165
+#: netlogo-gui/src/main/lab/gui/Supervisor.scala:138
+#: netlogo-gui/src/main/sdm/gui/AggregateModelEditorToolBar.scala:41
+#: netlogo-gui/src/main/sdm/gui/AggregateModelEditorToolBar.scala:43
+#: netlogo-gui/src/main/app/codetab/IncludedFilesMenu.scala:82
+#: netlogo-gui/src/main/app/common/Actions.scala:108
+#: netlogo-gui/src/main/app/tools/AgentMonitorEditor.scala:206
+#: netlogo-gui/src/main/app/tools/LibrariesTab.scala:180
+#: netlogo-gui/src/main/app/tools/LibrariesTab.scala:399
+#: netlogo-gui/src/main/app/tools/ModelsLibraryDialog.scala:674
+#: netlogo-gui/src/main/app/tools/PreferencesDialog.scala:190
+#: netlogo-gui/src/main/app/tools/PreferencesDialog.scala:202
+#: netlogo-gui/src/main/hubnet/server/gui/GUIHubNetManager.scala:146
+#: netlogo-gui/src/main/hubnet/server/gui/GUIHubNetManager.scala:150
+msgid "Error"
+msgstr "Error"
+
+#: netlogo-gui/src/main/window/FileController.scala:222
+msgid "Error Converting {}"
+msgstr "Error Converting {}"
+
+#: netlogo-gui/src/main/bsapp/BehaviorSpaceApp.scala:322
+msgid "Error During Experiment"
+msgstr "Error During Experiment"
+
+#: netlogo-gui/src/main/lab/gui/RunOptionsEditPanel.scala:119
+msgid "Error behavior"
+msgstr "Error behavior"
+
+#: netlogo-gui/src/main/app/App.scala:247
+#: netlogo-gui/src/main/app/App.scala:261
+#: netlogo-gui/src/main/app/App.scala:268
+#: netlogo-gui/src/main/app/App.scala:308
+msgid "Error parsing command line arguments: you can only specify one model to open at startup."
+msgstr "Error parsing command line arguments: you can only specify one model to open at startup."
+
+#: netlogo-gui/src/main/app/FileManager.scala:510
+msgid "Error while saving file: {}"
+msgstr "Error while saving file: {}"
+
+#: netlogo-gui/src/main/app/App.scala:575
+msgid "Error writing to the specified log directory. Logs will not be written for this NetLogo session."
+msgstr "Error writing to the specified log directory. Logs will not be written for this NetLogo session."
+
+#: netlogo-gui/src/main/app/tools/Preferences.scala:262
+msgid "Events to log"
+msgstr "Events to log"
+
+#: netlogo-gui/src/main/lab/gui/ProtocolEditPanel.scala:66
+msgid "Execute combinations in sequential order"
+msgstr "Execute combinations in sequential order"
+
+#: netlogo-gui/src/main/editor/AdvancedEditorArea.scala:228
+msgid "Expand All Folds"
+msgstr "Expand All Folds"
+
+#: netlogo-gui/src/main/editor/AdvancedEditorArea.scala:199
+msgid "Expand Selected Folds"
+msgstr "Expand Selected Folds"
+
+#: netlogo-gui/src/main/app/interfacetab/InterfaceTab.scala:374
+msgid "Expand Toolbar"
+msgstr "Expand Toolbar"
+
+#: netlogo-gui/src/main/prim/etc/_distance.java:24
+#: netlogo-gui/src/main/prim/etc/_distancenowrap.java:24
+#: netlogo-gui/src/main/prim/etc/_face.java:32
+#: netlogo-gui/src/main/prim/etc/_incone.java:35
+#: netlogo-gui/src/main/prim/etc/_inconenowrap.java:33
+#: netlogo-gui/src/main/prim/etc/_inradius.java:29
+#: netlogo-gui/src/main/prim/etc/_inradiusnowrap.java:31
+#: netlogo-gui/src/main/prim/etc/_towards.java:21
+#: netlogo-gui/src/main/prim/etc/_towardsnowrap.java:20
+msgid "Expected a turtle or a patch but got a link."
+msgstr "Expected a turtle or a patch but got a link."
+
+#: netlogo-core/src/main/api/LabVariableParser.scala:70
+#: netlogo-core/src/main/api/LabVariableParser.scala:130
+msgid "Expected a value for variable \"{}"
+msgstr "Expected a value for variable \"{}"
+
+#: parser-core/src/main/parse/ScopedIdentifierConsolidator.scala:15
+msgid "Expected identifier between colons"
+msgstr "Expected identifier between colons"
+
+#: netlogo-core/src/main/api/LabVariableParser.scala:23
+#: netlogo-core/src/main/api/LabVariableParser.scala:91
+msgid "Expected list"
+msgstr "Expected list"
+
+#: netlogo-gui/src/main/window/InputBox.scala:301
+msgid "Expected reporter."
+msgstr "Expected reporter."
+
+#: netlogo-gui/src/main/lab/gui/RunOptionsEditPanel.scala:99
+msgid "Experiment memory limit (MB)"
+msgstr "Experiment memory limit (MB)"
+
+#: netlogo-gui/src/main/lab/gui/ProtocolEditPanel.scala:21
+msgid "Experiment name"
+msgstr "Experiment name"
+
+#: netlogo-gui/src/main/lab/gui/ProtocolEditable.scala:126
+msgid "Experiment name cannot be empty"
+msgstr "Experiment name cannot be empty"
+
+#: netlogo-gui/src/main/lab/gui/ProtocolEditable.scala:128
+msgid "Experiment name cannot contain \"/\" or \"\\\""
+msgstr "Experiment name cannot contain \"/\" or \"\\\""
+
+#: netlogo-gui/src/main/lab/gui/ManagerDialog.scala:89
+msgid "Experiments:"
+msgstr "Experiments:"
+
+#: netlogo-gui/src/main/app/FileMenu.scala:24
+#: netlogo-gui/src/main/app/ResourceManagerDialog.scala:132
+#: netlogo-gui/src/main/window/GUIWorkspace.scala:893
+#: netlogo-gui/src/main/lab/gui/ManagerDialog.scala:57
+#: netlogo-gui/src/main/app/interfacetab/CommandCenter.scala:141
+msgid "Export"
+msgstr "Export"
+
+#: netlogo-gui/src/main/app/common/FileActions.scala:94
+msgid "Export All Plots"
+msgstr "Export All Plots"
+
+#: netlogo-gui/src/main/app/common/CodeToHtml.scala:36
+msgid "Export Code"
+msgstr "Export Code"
+
+#: netlogo-gui/src/main/lab/gui/ManagerDialog.scala:337
+msgid "Export Experiment"
+msgstr "Export Experiment"
+
+#: netlogo-gui/src/main/window/GUIWorkspace.scala:916
+msgid "Export Failed"
+msgstr "Export Failed"
+
+#: netlogo-gui/src/main/app/common/FileActions.scala:116
+msgid "Export Interface"
+msgstr "Export Interface"
+
+#: netlogo-gui/src/main/app/common/FileActions.scala:61
+msgid "Export Output"
+msgstr "Export Output"
+
+#: netlogo-gui/src/main/window/PlotExportControls.scala:21
+#: netlogo-gui/src/main/window/PlotExportControls.scala:40
+#: netlogo-gui/src/main/app/common/FileActions.scala:72
+msgid "Export Plot"
+msgstr "Export Plot"
+
+#: netlogo-gui/src/main/window/PlotExportControls.scala:31
+#: netlogo-gui/src/main/window/PlotExportControls.scala:36
+msgid "Export Plot Failed"
+msgstr "Export Plot Failed"
+
+#: netlogo-gui/src/main/window/GUIWorkspace.scala:1002
+#: netlogo-gui/src/main/app/common/FileActions.scala:46
+msgid "Export View"
+msgstr "Export View"
+
+#: netlogo-gui/src/main/window/View.java:449
+#: netlogo-gui/src/main/gl/view/Picker.scala:38
+msgid "Export View..."
+msgstr "Export View..."
+
+#: netlogo-gui/src/main/app/common/FileActions.scala:37
+msgid "Export World"
+msgstr "Export World"
+
+#: netlogo-gui/src/main/window/GUIWorkspace.scala:917
+msgid "Export failed. Error:\n{}"
+msgstr "Export failed. Error:\n{}"
+
+#: netlogo-gui/src/main/app/FileManager.scala:245
+msgid "Export model from Models Library or open copy?"
+msgstr "Export model from Models Library or open copy?"
+
+#: netlogo-gui/src/main/app/FileManager.scala:243
+msgid "Export model from last save or from open copy?"
+msgstr "Export model from last save or from open copy?"
+
+#: netlogo-gui/src/main/window/PlotExportControls.scala:31
+msgid "Export of all plots to {} failed: {}"
+msgstr "Export of all plots to {} failed: {}"
+
+#: netlogo-gui/src/main/window/PlotExportControls.scala:35
+msgid "Export of {} plot to {} failed: {}"
+msgstr "Export of {} plot to {} failed: {}"
+
+#: netlogo-gui/src/main/app/interfacetab/WidgetWrapper.scala:1029
+msgid "Export..."
+msgstr "Export..."
+
+#: netlogo-gui/src/main/app/interfacetab/CommandCenter.scala:144
+msgid "Exporting"
+msgstr "Exporting"
+
+#: netlogo-gui/src/main/window/GUIWorkspace.scala:1021
+#: netlogo-gui/src/main/window/GUIWorkspace.scala:1082
+#: netlogo-gui/src/main/app/common/Actions.scala:54
+#: netlogo-gui/src/main/app/common/Actions.scala:90
+#: netlogo-gui/src/main/app/interfacetab/CommandCenter.scala:147
+msgid "Exporting..."
+msgstr "Exporting..."
+
+#: netlogo-gui/src/main/sdm/gui/ConverterEditPanel.scala:38
+#: netlogo-gui/src/main/sdm/gui/RateEditPanel.scala:38
+msgid "Expression"
+msgstr "Expression"
+
+#: netlogo-core/src/main/workspace/ModelsLibrary.scala:115
+msgid "Extension Samples"
+msgstr "Extension Samples"
+
+#: netlogo-gui/src/main/app/ExtensionAssistant.scala:49
+msgid "Extension not found"
+msgstr "Extension not found"
+
+#: netlogo-gui/src/main/app/ToolActions.scala:67
+#: netlogo-gui/src/main/app/tools/LibrariesDialog.scala:23
+msgid "Extensions"
+msgstr "Extensions"
+
+#: netlogo-gui/src/main/app/TabManager.scala:235
+msgid "External Change Detected"
+msgstr "External Change Detected"
+
+#: netlogo-gui/src/main/app/ResourceManagerDialog.scala:26
+msgid "External Resource Manager"
+msgstr "External Resource Manager"
+
+#: netlogo-gui/src/main/app/tools/LibrariesTab.scala:177
+msgid "Failed to add selected extensions to the Code tab. Please ensure that\n your code is formatted correctly before using this tool."
+msgstr "Failed to add selected extensions to the Code tab. Please ensure that\n your code is formatted correctly before using this tool."
+
+#: netlogo-gui/src/main/app/FileMenu.scala:19
+msgid "File"
+msgstr "File"
+
+#: netlogo-gui/src/main/bsapp/BehaviorSpaceApp.scala:146
+msgid "File input or output (I/O) error: {}"
+msgstr "File input or output (I/O) error: {}"
+
+#: netlogo-gui/src/main/app/codetab/IncludedFilesMenu.scala:82
+msgid "Filename must end with \".nls\" or \".nlm\"."
+msgstr "Filename must end with \".nls\" or \".nlm\"."
+
+#: netlogo-gui/src/main/app/common/FindDialog.scala:19
+#: netlogo-gui/src/main/app/common/FindDialog.scala:66
+#: netlogo-gui/src/main/app/common/FindDialog.scala:193
+msgid "Find"
+msgstr "Find"
+
+#: netlogo-gui/src/main/app/common/FindDialog.scala:50
+#: netlogo-gui/src/main/app/common/FindDialog.scala:98
+msgid "Find Next"
+msgstr "Find Next"
+
+#: netlogo-gui/src/main/app/common/FindDialog.scala:254
+msgid "Find:"
+msgstr "Find:"
+
+#: netlogo-gui/src/main/prim/etc/_maxnof.java:29
+#: netlogo-gui/src/main/prim/etc/_minnof.java:28
+#: netlogo-gui/src/main/prim/etc/_nof.java:23
+#: netlogo-gui/src/main/prim/etc/_uptonof.scala:11
+msgid "First input to {} can't be negative."
+msgstr "First input to {} can't be negative."
+
+#: netlogo-gui/src/main/shape/editor/EditorDialog.scala:322
+msgid "Flip Horizontal"
+msgstr "Flip Horizontal"
+
+#: netlogo-gui/src/main/shape/editor/EditorDialog.scala:340
+msgid "Flip Vertical"
+msgstr "Flip Vertical"
+
+#: netlogo-gui/src/main/sdm/gui/AggregateModelEditorToolBar.scala:100
+msgid "Flow"
+msgstr "Flow"
+
+#: netlogo-gui/src/main/editor/AdvancedEditorArea.scala:344
+#: netlogo-gui/src/main/app/EditMenu.scala:37
+msgid "Folding"
+msgstr "Folding"
+
+#: netlogo-core/src/main/api/Perspective.scala:32
+msgid "Following {}"
+msgstr "Following {}"
+
+#: netlogo-gui/src/main/window/MonitorEditPanel.scala:56
+#: netlogo-gui/src/main/window/OutputEditPanel.scala:12
+msgid "Font Size"
+msgstr "Font Size"
+
+#: netlogo-gui/src/main/window/NoteEditPanel.scala:25
+#: netlogo-gui/src/main/window/WorldEditPanel2D.scala:99
+#: netlogo-gui/src/main/window/WorldEditPanel3D.scala:131
+msgid "Font size"
+msgstr "Font size"
+
+#: netlogo-gui/src/main/window/ButtonEditPanel.scala:26
+msgid "Forever"
+msgstr "Forever"
+
+#: netlogo-gui/src/main/window/WorldEditPanel2D.scala:109
+#: netlogo-gui/src/main/window/WorldEditPanel3D.scala:141
+msgid "Frame rate"
+msgstr "Frame rate"
+
+#: netlogo-gui/src/main/window/WorldEditPanel2D.scala:113
+#: netlogo-gui/src/main/window/WorldEditPanel3D.scala:145
+msgid "Frames per second at normal speed"
+msgstr "Frames per second at normal speed"
+
+#: netlogo-gui/src/main/window/DisplaySwitch.scala:11
+msgid "Freeze or unfreeze view"
+msgstr "Freeze or unfreeze view"
+
+#: netlogo-gui/src/main/app/FileManager.scala:245
+msgid "From Models Library"
+msgstr "From Models Library"
+
+#: netlogo-gui/src/main/app/FileManager.scala:243
+msgid "From last save"
+msgstr "From last save"
+
+#: netlogo-gui/src/main/app/FileManager.scala:249
+msgid "From open copy"
+msgstr "From open copy"
+
+#: netlogo-gui/src/main/gl/view/ViewControlToolBar.scala:23
+msgid "Full Screen"
+msgstr "Full Screen"
+
+#: netlogo-gui/src/main/app/tools/PreferencesDialog.scala:98
+msgid "General"
+msgstr "General"
+
+#: netlogo-gui/src/main/window/InputEditPanel.scala:16
+#: netlogo-gui/src/main/window/SwitchEditPanel.scala:16
+msgid "Global Variable"
+msgstr "Global Variable"
+
+#: netlogo-gui/src/main/window/ChooserEditPanel.scala:17
+#: netlogo-gui/src/main/window/SliderEditPanel.scala:18
+msgid "Global variable"
+msgstr "Global variable"
+
+#: netlogo-gui/src/main/app/tools/AgentMonitorWindow.scala:101
+msgid "Globals"
+msgstr "Globals"
+
+#: netlogo-gui/src/main/window/WorkspaceActions.scala:19
+msgid "Globals Monitor"
+msgstr "Globals Monitor"
+
+#: parser-core/src/main/parse/StructureChecker.scala:69
+msgid "Globals cannot be declared in a module"
+msgstr "Globals cannot be declared in a module"
+
+#: netlogo-gui/src/main/lab/gui/ProtocolEditPanel.scala:152
+msgid "Go commands:"
+msgstr "Go commands:"
+
+#: netlogo-gui/src/main/app/tools/ModelsLibraryDialog.scala:269
+msgid "Go to the Community Models web page"
+msgstr "Go to the Community Models web page"
+
+#: netlogo-gui/src/main/window/WorkspaceActions.scala:62
+#: netlogo-gui/src/main/hubnet/client/ClientPanel.scala:299
+#: netlogo-gui/src/main/prim/gui/_usermessage.scala:24
+#: netlogo-gui/src/main/prim/gui/_useryesorno.scala:23
+msgid "Halt"
+msgstr "Halt"
+
+#: netlogo-gui/src/main/window/DummyViewEditPanel.scala:21
+msgid "Height (pixels)"
+msgstr "Height (pixels)"
+
+#: netlogo-gui/src/main/app/HelpMenu.scala:16
+#: netlogo-gui/src/main/window/EditDialog.scala:52
+#: netlogo-gui/src/main/app/infotab/InfoTab.scala:66
+msgid "Help"
+msgstr "Help"
+
+#: netlogo-gui/src/main/swing/SplitPane.scala:231
+#: netlogo-gui/src/main/app/interfacetab/InterfaceTab.scala:381
+msgid "Hide Command Center"
+msgstr "Hide Command Center"
+
+#: netlogo-gui/src/main/app/common/HistoryPrompt.scala:30
+msgid "History"
+msgstr "History"
+
+#: netlogo-gui/src/main/app/tools/LibrariesTab.scala:189
+msgid "Homepage"
+msgstr "Homepage"
+
+#: netlogo-gui/src/main/app/FileManager.scala:159
+msgid "HubNet Client"
+msgstr "HubNet Client"
+
+#: netlogo-gui/src/main/app/ToolActions.scala:117
+#: netlogo-gui/src/main/hubnet/server/gui/HubNetClientEditor.scala:89
+#: netlogo-gui/src/main/hubnet/server/gui/HubNetClientEditor.scala:93
+msgid "HubNet Client Editor"
+msgstr "HubNet Client Editor"
+
+#: netlogo-gui/src/main/window/WorkspaceActions.scala:94
+#: netlogo-gui/src/main/hubnet/server/gui/ControlCenter.scala:33
+msgid "HubNet Control Center"
+msgstr "HubNet Control Center"
+
+#: parser-core/src/main/parse/StructureCombinators.scala:135
+msgid "Identifier list contains duplicates"
+msgstr "Identifier list contains duplicates"
+
+#: netlogo-gui/src/main/app/common/FindDialog.scala:265
+msgid "Ignore case"
+msgstr "Ignore case"
+
+#: netlogo-gui/src/main/lab/gui/RunOptionsDialog.scala:100
+msgid "Ignore errors"
+msgstr "Ignore errors"
+
+#: netlogo-gui/src/main/app/FileMenu.scala:25
+#: netlogo-gui/src/main/lab/gui/ManagerDialog.scala:56
+#: netlogo-gui/src/main/shape/editor/ImportDialog.scala:18
+#: netlogo-gui/src/main/shape/editor/ImportDialog.scala:82
+#: netlogo-gui/src/main/shape/editor/ImportDialog.scala:114
+#: netlogo-gui/src/main/shape/editor/ManagerDialog.scala:144
+msgid "Import"
+msgstr "Import"
+
+#: netlogo-gui/src/main/app/common/FileActions.scala:178
+msgid "Import Drawing"
+msgstr "Import Drawing"
+
+#: netlogo-gui/src/main/app/FileManager.scala:158
+msgid "Import HubNet Client"
+msgstr "Import HubNet Client"
+
+#: netlogo-gui/src/main/app/FileManager.scala:155
+msgid "Import HubNet Client Interface"
+msgstr "Import HubNet Client Interface"
+
+#: netlogo-gui/src/main/app/FileManager.scala:131
+msgid "Import HubNet Client Interface{}"
+msgstr "Import HubNet Client Interface{}"
+
+#: netlogo-gui/src/main/app/common/FileActions.scala:143
+msgid "Import Patch Colors"
+msgstr "Import Patch Colors"
+
+#: netlogo-gui/src/main/app/common/FileActions.scala:161
+msgid "Import Patch Colors RGB"
+msgstr "Import Patch Colors RGB"
+
+#: netlogo-gui/src/main/shape/editor/ImportDialog.scala:85
+msgid "Import Shape As"
+msgstr "Import Shape As"
+
+#: netlogo-gui/src/main/shape/editor/ImportDialog.scala:85
+msgid "Import Shapes"
+msgstr "Import Shapes"
+
+#: netlogo-gui/src/main/shape/editor/ManagerDialog.scala:135
+msgid "Import Shapes from Model"
+msgstr "Import Shapes from Model"
+
+#: netlogo-gui/src/main/app/common/FileActions.scala:131
+msgid "Import World"
+msgstr "Import World"
+
+#: netlogo-gui/src/main/shape/editor/ImportDialog.scala:15
+#: netlogo-gui/src/main/shape/editor/TurtleShapeManagerDialog.scala:20
+msgid "Import from Library..."
+msgstr "Import from Library..."
+
+#: netlogo-gui/src/main/shape/editor/ManagerDialog.scala:44
+msgid "Import from Model..."
+msgstr "Import from Model..."
+
+#: parser-core/src/main/parse/StructureChecker.scala:85
+msgid "Import paths may not contain slash or the system path separator"
+msgstr "Import paths may not contain slash or the system path separator"
+
+#: netlogo-gui/src/main/app/FileManager.scala:162
+#: netlogo-gui/src/main/app/common/Actions.scala:136
+msgid "Importing..."
+msgstr "Importing..."
+
+#: netlogo-gui/src/main/app/codetab/IncludedFilesMenu.scala:22
+msgid "Included Files"
+msgstr "Included Files"
+
+#: netlogo-core/src/main/agent/SliderConstraint.scala:17
+#: netlogo-gui/src/main/window/DummySliderEditPanel.scala:31
+#: netlogo-gui/src/main/window/SliderEditPanel.scala:40
+msgid "Increment"
+msgstr "Increment"
+
+#: netlogo-gui/src/main/window/SliderWidget.scala:140
+msgid "Increment cannot be greater than the difference of Maximum and Minimum"
+msgstr "Increment cannot be greater than the difference of Maximum and Minimum"
+
+#: netlogo-core/src/main/api/LabVariableParser.scala:110
+msgid "Increment list \"[ {} [ {} {} {} ] ]\" is unbounded, reverse sign of step value"
+msgstr "Increment list \"[ {} [ {} {} {} ] ]\" is unbounded, reverse sign of step value"
+
+#: netlogo-core/src/main/api/LabVariableParser.scala:42
+msgid "Increment list \"[\"variableName\" [ {} {} {} ] ]\" is unbounded, reverse sign of step value"
+msgstr "Increment list \"[\"variableName\" [ {} {} {} ] ]\" is unbounded, reverse sign of step value"
+
+#: netlogo-gui/src/main/app/TabManager.scala:82
+msgid "Info"
+msgstr "Info"
+
+#: netlogo-gui/src/main/sdm/gui/StockEditPanel.scala:29
+msgid "Initial Value"
+msgstr "Initial Value"
+
+#: netlogo-gui/src/main/bsapp/ProgressDialog.scala:290
+msgid "Initializing experiment..."
+msgstr "Initializing experiment..."
+
+#: netlogo-gui/src/main/window/InputBox.scala:80
+#: netlogo-gui/src/main/window/InterfaceFactory.scala:22
+#: netlogo-gui/src/main/app/interfacetab/WidgetPanel.scala:708
+msgid "Input"
+msgstr "Input"
+
+#: parser-core/src/main/parse/StructureChecker.scala:113
+msgid "Input name conflicts with a constant."
+msgstr "Input name conflicts with a constant."
+
+#: netlogo-gui/src/main/sdm/gui/ConverterEditPanel.scala:29
+#: netlogo-gui/src/main/sdm/gui/RateEditPanel.scala:29
+msgid "Inputs"
+msgstr "Inputs"
+
+#: netlogo-gui/src/main/app/tools/LibrariesTab.scala:159
+#: netlogo-gui/src/main/app/tools/LibrariesTab.scala:368
+msgid "Install"
+msgstr "Install"
+
+#: netlogo-gui/src/main/app/ExtensionAssistant.scala:39
+msgid "Install Extension?"
+msgstr "Install Extension?"
+
+#: netlogo-gui/src/main/app/tools/LibrariesTab.scala:208
+msgid "Installed Version: "
+msgstr "Installed Version: "
+
+#: netlogo-gui/src/main/app/tools/LibrariesTab.scala:164
+msgid "Installing"
+msgstr "Installing"
+
+#: netlogo-gui/src/main/gl/view/ViewControlToolBar.scala:20
+msgid "Interact"
+msgstr "Interact"
+
+#: netlogo-gui/src/main/app/TabManager.scala:81
+msgid "Interface"
+msgstr "Interface"
+
+#: netlogo-gui/src/main/app/FileManager.scala:159
+msgid "Interface Tab"
+msgstr "Interface Tab"
+
+#: netlogo-gui/src/main/window/ErrorDialogManager.scala:184
+msgid "Internal Error"
+msgstr "Internal Error"
+
+#: netlogo-gui/src/main/window/PlotPenEditorAdvanced.scala:53
+msgid "Interval"
+msgstr "Interval"
+
+#: netlogo-gui/src/main/app/HelpActions.scala:50
+msgid "Introduction to Agent-Based Modeling"
+msgstr "Introduction to Agent-Based Modeling"
+
+#: netlogo-gui/src/main/lab/gui/ManagerDialog.scala:315
+#: netlogo-gui/src/main/lab/gui/ProtocolEditable.scala:109
+msgid "Invalid"
+msgstr "Invalid"
+
+#: netlogo-gui/src/main/window/PlotPenEditorAdvanced.scala:91
+msgid "Invalid Entry"
+msgstr "Invalid Entry"
+
+#: netlogo-gui/src/main/app/codetab/TemporaryCodeTab.scala:138
+msgid "Invalid File Name"
+msgstr "Invalid File Name"
+
+#: netlogo-core/src/main/fileformat/NLogoFormat.scala:188
+msgid "Invalid NetLogo file. Expected \"{}\" formatted model to have version compatible with {}, but this model had version {}"
+msgstr "Invalid NetLogo file. Expected \"{}\" formatted model to have version compatible with {}, but this model had version {}"
+
+#: netlogo-gui/src/main/shape/editor/EditorDialog.scala:498
+#: netlogo-gui/src/main/shape/editor/LinkEditorDialog.scala:123
+#: netlogo-gui/src/main/shape/editor/LinkEditorDialog.scala:141
+msgid "Invalid Parameters"
+msgstr "Invalid Parameters"
+
+#: netlogo-gui/src/main/window/EditPanel.scala:48
+#: netlogo-gui/src/main/window/EditPanel.scala:56
+msgid "Invalid Settings"
+msgstr "Invalid Settings"
+
+#: netlogo-gui/src/main/app/tools/ModelsLibraryDialog.scala:674
+msgid "Invalid URL!"
+msgstr "Invalid URL!"
+
+#: netlogo-core/src/main/api/LabVariableParser.scala:140
+#: netlogo-core/src/main/api/LabVariableParser.scala:145
+msgid "Invalid format"
+msgstr "Invalid format"
+
+#: netlogo-gui/src/main/lab/gui/ManagerDialog.scala:315
+msgid "Invalid format in {}"
+msgstr "Invalid format in {}"
+
+#: netlogo-core/src/main/api/LabVariableParser.scala:64
+#: netlogo-core/src/main/api/LabVariableParser.scala:124
+msgid "Invalid increment notation for \"{}\", the increment list must have exactly 3 number values."
+msgstr "Invalid increment notation for \"{}\", the increment list must have exactly 3 number values."
+
+#: netlogo-gui/src/main/window/InputBox.scala:302
+msgid "Invalid input for a {}"
+msgstr "Invalid input for a {}"
+
+#: netlogo-gui/src/main/prim/etc/_atpoints.java:38
+#: netlogo-gui/src/main/prim/etc/_atpoints.java:132
+#: netlogo-gui/src/main/prim/etc/_atpoints.java:139
+#: netlogo-gui/src/main/prim/etc/_atpoints.java:145
+msgid "Invalid list of points: {}"
+msgstr "Invalid list of points: {}"
+
+#: netlogo-gui/src/main/lab/gui/ProtocolEditable.scala:106
+msgid "Invalid spec for varying variables. Error:\n {}"
+msgstr "Invalid spec for varying variables. Error:\n {}"
+
+#: netlogo-gui/src/main/window/PlotPenEditorAdvanced.scala:91
+msgid "Invalid value for the pen interval"
+msgstr "Invalid value for the pen interval"
+
+#: netlogo-gui/src/main/window/PropertyEditor.scala:15
+msgid "Invalid value for {}"
+msgstr "Invalid value for {}"
+
+#: netlogo-gui/src/main/workspace/AbstractWorkspace.java:249
+#: netlogo-gui/src/main/workspace/AbstractWorkspace.java:268
+msgid "Invalid value specified for global variable \"{}\""
+msgstr "Invalid value specified for global variable \"{}\""
+
+#: netlogo-gui/src/main/editor/JumpToDeclarationAction.scala:12
+msgid "Jump To Declaration"
+msgstr "Jump To Declaration"
+
+#: netlogo-gui/src/main/app/interfacetab/InterfaceTab.scala:399
+msgid "Jump to Command Center"
+msgstr "Jump to Command Center"
+
+#: netlogo-gui/src/main/hubnet/server/gui/ControlCenter.scala:176
+msgid "Kick"
+msgstr "Kick"
+
+#: netlogo-gui/src/main/window/WorldViewSettings2D.scala:131
+msgid "Kick clients"
+msgstr "Kick clients"
+
+#: netlogo-gui/src/main/window/WorldViewSettings2D.scala:131
+msgid "Kick clients?"
+msgstr "Kick clients?"
+
+#: netlogo-gui/src/main/app/ZoomMenu.scala:17
+msgid "Larger"
+msgstr "Larger"
+
+#: netlogo-gui/src/main/app/HelpActions.scala:60
+msgid "Latest NetLogo News"
+msgstr "Latest NetLogo News"
+
+#: netlogo-gui/src/main/app/tools/LibrariesTab.scala:212
+msgid "Latest Version: "
+msgstr "Latest Version: "
+
+#: netlogo-gui/src/main/window/WorldViewSettings2D.scala:38
+msgid "Left"
+msgstr "Left"
+
+#: netlogo-gui/src/main/shape/editor/LinkEditorDialog.scala:76
+msgid "Left Line"
+msgstr "Left Line"
+
+#: netlogo-gui/src/main/app/tools/ThemesPanel.scala:23
+msgid "Light"
+msgstr "Light"
+
+#: netlogo-gui/src/main/window/PlotPenEditorAdvanced.scala:22
+msgid "Line"
+msgstr "Line"
+
+#: netlogo-gui/src/main/sdm/gui/AggregateModelEditorToolBar.scala:102
+msgid "Link"
+msgstr "Link"
+
+#: netlogo-gui/src/main/window/WorkspaceActions.scala:28
+msgid "Link Monitor"
+msgstr "Link Monitor"
+
+#: netlogo-gui/src/main/shape/editor/LinkEditorDialog.scala:19
+msgid "Link Shape"
+msgstr "Link Shape"
+
+#: netlogo-gui/src/main/app/App.scala:859
+msgid "Link Shapes Editor"
+msgstr "Link Shapes Editor"
+
+#: netlogo-gui/src/main/prim/etc/_linkset.java:59
+msgid "List inputs to {} must only contain link, link agentset, or list elements.  The list {} contained a different type agentset: {}."
+msgstr "List inputs to {} must only contain link, link agentset, or list elements.  The list {} contained a different type agentset: {}."
+
+#: netlogo-gui/src/main/prim/etc/_linkset.java:70
+msgid "List inputs to {} must only contain link, link agentset, or list elements.  The list {} contained {} which is NOT a link or link agentset."
+msgstr "List inputs to {} must only contain link, link agentset, or list elements.  The list {} contained {} which is NOT a link or link agentset."
+
+#: netlogo-gui/src/main/prim/etc/_patchset.java:65
+msgid "List inputs to {} must only contain patch, patch agentset, or list elements.  The list {} contained a different type agentset: {}."
+msgstr "List inputs to {} must only contain patch, patch agentset, or list elements.  The list {} contained a different type agentset: {}."
+
+#: netlogo-gui/src/main/prim/etc/_patchset.java:77
+msgid "List inputs to {} must only contain patch, patch agentset, or list elements.  The list {} contained {} which is NOT a patch or patch agentset."
+msgstr "List inputs to {} must only contain patch, patch agentset, or list elements.  The list {} contained {} which is NOT a patch or patch agentset."
+
+#: netlogo-gui/src/main/prim/etc/_turtleset.java:63
+msgid "List inputs to {} must only contain turtle, turtle agentset, or list elements.  The list {} contained a different type agentset: {}."
+msgstr "List inputs to {} must only contain turtle, turtle agentset, or list elements.  The list {} contained a different type agentset: {}."
+
+#: netlogo-gui/src/main/prim/etc/_turtleset.java:74
+msgid "List inputs to {} must only contain turtle, turtle agentset, or list elements.  The list {} contained {} which is NOT a turtle or turtle agentset."
+msgstr "List inputs to {} must only contain turtle, turtle agentset, or list elements.  The list {} contained {} which is NOT a turtle or turtle agentset."
+
+#: netlogo-gui/src/main/prim/etc/_first.java:28
+#: netlogo-gui/src/main/prim/etc/_first.java:46
+#: netlogo-gui/src/main/prim/etc/_last.java:24
+#: netlogo-gui/src/main/prim/gui/_useroneof.scala:21
+msgid "List is empty."
+msgstr "List is empty."
+
+#: netlogo-gui/src/main/lab/gui/RunOptionsEditPanel.scala:52
+msgid "Lists output"
+msgstr "Lists output"
+
+#: netlogo-core/src/main/lab/Lab.scala:167
+msgid "Lists output selected with no spreadsheet or table output."
+msgstr "Lists output selected with no spreadsheet or table output."
+
+#: netlogo-gui/src/main/app/tools/PreviewPanel.scala:60
+#: netlogo-gui/src/main/app/tools/PreviewPanel.scala:82
+msgid "Load Manual Preview Image"
+msgstr "Load Manual Preview Image"
+
+#: netlogo-gui/src/main/app/tools/PreviewPanel.scala:65
+msgid "Loading Manual Preview Image"
+msgstr "Loading Manual Preview Image"
+
+#: netlogo-gui/src/main/app/tools/ModelsLibraryDialog.scala:51
+msgid "Loading Models Library..."
+msgstr "Loading Models Library..."
+
+#: netlogo-gui/src/main/app/FileManager.scala:469
+#: netlogo-gui/src/main/app/FileManager.scala:530
+msgid "Loading..."
+msgstr "Loading..."
+
+#: netlogo-gui/src/main/hubnet/server/gui/ControlCenter.scala:184
+msgid "Local"
+msgstr "Local"
+
+#: netlogo-gui/src/main/window/WorldEditPanel2D.scala:21
+#: netlogo-gui/src/main/window/WorldEditPanel3D.scala:21
+msgid "Location of origin:"
+msgstr "Location of origin:"
+
+#: netlogo-gui/src/main/window/CommentableError.scala:16
+msgid "Log a comment"
+msgstr "Log a comment"
+
+#: netlogo-gui/src/main/app/tools/PreferencesDialog.scala:100
+msgid "Logging"
+msgstr "Logging"
+
+#: netlogo-gui/src/main/app/tools/PreferencesDialog.scala:190
+msgid "Logging was enabled, but no log directory was specified."
+msgstr "Logging was enabled, but no log directory was specified."
+
+#: netlogo-gui/src/main/hubnet/client/ClientApp.scala:167
+msgid "Login Failed"
+msgstr "Login Failed"
+
+#: netlogo-gui/src/main/editor/QuickHelpAction.scala:41
+msgid "Look Up Selected Text In Dictionary"
+msgstr "Look Up Selected Text In Dictionary"
+
+#: netlogo-gui/src/main/app/App.scala:922
+msgid "Magic Model Matcher"
+msgstr "Magic Model Matcher"
+
+#: netlogo-gui/src/main/app/FileManager.scala:311
+msgid "Manage Bundled Resources"
+msgstr "Manage Bundled Resources"
+
+#: netlogo-gui/src/main/app/tools/EditorPanel.scala:92
+msgid "Manually make preview"
+msgstr "Manually make preview"
+
+#: netlogo-core/src/main/agent/SliderConstraint.scala:16
+#: netlogo-gui/src/main/window/DummySliderEditPanel.scala:40
+#: netlogo-gui/src/main/window/SliderEditPanel.scala:50
+msgid "Maximum"
+msgstr "Maximum"
+
+#: netlogo-gui/src/main/window/SliderWidget.scala:138
+msgid "Maximum must be strictly greater than Minimum"
+msgstr "Maximum must be strictly greater than Minimum"
+
+#: netlogo-gui/src/main/lab/gui/ProtocolEditPanel.scala:81
+msgid "Measure runs using these reporters as metrics:"
+msgstr "Measure runs using these reporters as metrics:"
+
+#: netlogo-gui/src/main/app/tools/LibraryManagerErrorDialog.scala:14
+msgid "Metadata Loading Error"
+msgstr "Metadata Loading Error"
+
+#: netlogo-gui/src/main/shape/editor/LinkEditorDialog.scala:79
+msgid "Middle Line"
+msgstr "Middle Line"
+
+#: netlogo-core/src/main/agent/SliderConstraint.scala:15
+#: netlogo-gui/src/main/window/DummySliderEditPanel.scala:22
+#: netlogo-gui/src/main/window/SliderEditPanel.scala:28
+msgid "Minimum"
+msgstr "Minimum"
+
+#: netlogo-gui/src/main/app/tools/LibrariesTab.scala:216
+msgid "Minimum NetLogo Version: "
+msgstr "Minimum NetLogo Version: "
+
+#: netlogo-gui/src/main/hubnet/server/gui/ControlCenter.scala:314
+msgid "Mirror 2D view on clients"
+msgstr "Mirror 2D view on clients"
+
+#: netlogo-gui/src/main/hubnet/server/gui/ControlCenter.scala:319
+msgid "Mirror plots on clients (experimental)"
+msgstr "Mirror plots on clients (experimental)"
+
+#: netlogo-gui/src/main/window/PlotPenEditorAdvanced.scala:46
+msgid "Mode"
+msgstr "Mode"
+
+#: netlogo-gui/src/main/window/FileController.scala:32
+#: netlogo-gui/src/main/window/WorldEditPanel2D.scala:157
+#: netlogo-gui/src/main/window/WorldEditPanel3D.scala:201
+msgid "Model"
+msgstr "Model"
+
+#: netlogo-gui/src/main/window/WorldViewSettings.scala:46
+msgid "Model Settings"
+msgstr "Model Settings"
+
+#: netlogo-gui/src/main/window/SpeedSliderPanel.scala:62
+msgid "Model Speed"
+msgstr "Model Speed"
+
+#: netlogo-gui/src/main/window/ErrorDialogManager.scala:232
+msgid "Model Too Large"
+msgstr "Model Too Large"
+
+#: netlogo-core/src/main/api/ModelLoader.scala:147
+#: netlogo-gui/src/main/app/App.scala:254
+#: netlogo-gui/src/main/app/App.scala:314
+msgid "Model file was not found at \"{}\". Double check the path given; the model may have been moved or deleted."
+msgstr "Model file was not found at \"{}\". Double check the path given; the model may have been moved or deleted."
+
+#: netlogo-gui/src/main/window/WorldEditPanel2D.scala:17
+#: netlogo-gui/src/main/window/WorldEditPanel3D.scala:17
+msgid "Model title"
+msgstr "Model title"
+
+#: netlogo-gui/src/main/app/FileManager.scala:113
+#: netlogo-gui/src/main/app/tools/ModelsLibraryDialog.scala:166
+msgid "Models Library"
+msgstr "Models Library"
+
+#: netlogo-gui/src/main/window/DummyMonitorWidget.scala:60
+#: netlogo-gui/src/main/window/InterfaceFactory.scala:23
+#: netlogo-gui/src/main/window/MonitorWidget.scala:130
+#: netlogo-gui/src/main/app/interfacetab/WidgetPanel.scala:709
+msgid "Monitor"
+msgstr "Monitor"
+
+#: netlogo-gui/src/main/gl/view/ViewControlToolBar.scala:19
+msgid "Move"
+msgstr "Move"
+
+#: netlogo-gui/src/main/window/MonitorWidget.scala:308
+msgid "N/A"
+msgstr "N/A"
+
+#: netlogo-gui/src/main/window/DummyPlotEditPanel.scala:13
+#: netlogo-gui/src/main/window/PlotEditPanel.scala:21
+#: netlogo-gui/src/main/sdm/gui/ConverterEditPanel.scala:19
+#: netlogo-gui/src/main/sdm/gui/RateEditPanel.scala:19
+#: netlogo-gui/src/main/sdm/gui/StockEditPanel.scala:19
+#: netlogo-gui/src/main/shape/editor/EditorDialog.scala:365
+#: netlogo-gui/src/main/shape/editor/LinkEditorDialog.scala:65
+msgid "Name"
+msgstr "Name"
+
+#: netlogo-gui/src/main/shape/editor/EditorDialog.scala:498
+#: netlogo-gui/src/main/shape/editor/LinkEditorDialog.scala:123
+msgid "Name cannot be empty."
+msgstr "Name cannot be empty."
+
+#: netlogo-gui/src/main/hubnet/server/gui/ControlCenter.scala:329
+msgid "Name:"
+msgstr "Name:"
+
+#: netlogo-gui/src/main/swing/FileDialog.scala:49
+#: netlogo-gui/src/main/swing/QuickHelp.scala:79
+#: netlogo-gui/src/main/app/FileManager.scala:510
+#: netlogo-gui/src/main/app/OfferSaveExternalsDialog.scala:87
+#: netlogo-gui/src/main/app/common/Dialogs.scala:14
+msgid "NetLogo"
+msgstr "NetLogo"
+
+#: netlogo-gui/src/main/app/HelpActions.scala:45
+msgid "NetLogo Dictionary"
+msgstr "NetLogo Dictionary"
+
+#: netlogo-gui/src/main/app/HelpActions.scala:52
+msgid "NetLogo Forum"
+msgstr "NetLogo Forum"
+
+#: netlogo-gui/src/main/app/tools/PreferencesDialog.scala:20
+msgid "NetLogo Preferences"
+msgstr "NetLogo Preferences"
+
+#: netlogo-gui/src/main/app/HelpActions.scala:43
+msgid "NetLogo User Manual"
+msgstr "NetLogo User Manual"
+
+#: netlogo-gui/src/main/app/HelpActions.scala:53
+msgid "NetLogo Users Group"
+msgstr "NetLogo Users Group"
+
+#: netlogo-gui/src/main/window/FileController.scala:27
+msgid "NetLogo can't open the model {}:\n\n{}"
+msgstr "NetLogo can't open the model {}:\n\n{}"
+
+#: netlogo-gui/src/main/app/tools/PreferencesDialog.scala:202
+msgid "NetLogo does not have permission to write to the specified log directory."
+msgstr "NetLogo does not have permission to write to the specified log directory."
+
+#: netlogo-gui/src/main/window/FileController.scala:172
+msgid "NetLogo doesn't know how to save in \".{}\" format, please choose a different format."
+msgstr "NetLogo doesn't know how to save in \".{}\" format, please choose a different format."
+
+#: netlogo-gui/src/main/window/FileController.scala:200
+msgid "NetLogo encountered the following errors while trying to automatically convert the {} to the current\n version. Would you like to continue opening it?\n {}"
+msgstr "NetLogo encountered the following errors while trying to automatically convert the {} to the current\n version. Would you like to continue opening it?\n {}"
+
+#: netlogo-gui/src/main/app/codetab/TemporaryCodeTab.scala:57
+msgid "NetLogo found an autosave for a file included in this model. Would you like to recover it?"
+msgstr "NetLogo found an autosave for a file included in this model. Would you like to recover it?"
+
+#: netlogo-gui/src/main/app/FileManager.scala:403
+msgid "NetLogo found an autosave for this model. Would you like to recover it?"
+msgstr "NetLogo found an autosave for this model. Would you like to recover it?"
+
+#: netlogo-gui/src/main/window/ErrorDialogManager.scala:187
+msgid "NetLogo is unable to supply you with more details about this error. Please report the problem at https://github.com/NetLogo/NetLogo/issues or to bugs@ccl.northwestern.edu and paste the contents of this window into your report.\n\nPlease also include the steps necessary to reproduce the problem. If you need to attach a NetLogo model (i.e. .nlogox file), to ensure it gets through please put it and any accessory files in a zip file. If you cannot reproduce the error then please try to describe what you were doing when it happened.\n\nWe recommend that you use the latest version of NetLogo, which is available at https://www.netlogo.org/download"
+msgstr "NetLogo is unable to supply you with more details about this error. Please report the problem at https://github.com/NetLogo/NetLogo/issues or to bugs@ccl.northwestern.edu and paste the contents of this window into your report.\n\nPlease also include the steps necessary to reproduce the problem. If you need to attach a NetLogo model (i.e. .nlogox file), to ensure it gets through please put it and any accessory files in a zip file. If you cannot reproduce the error then please try to describe what you were doing when it happened.\n\nWe recommend that you use the latest version of NetLogo, which is available at https://www.netlogo.org/download"
+
+#: netlogo-gui/src/main/lab/gui/Supervisor.scala:135
+msgid "NetLogo was unable to initialize the experiment. This was most likely caused by specifying a memory limit that is too small or too large."
+msgstr "NetLogo was unable to initialize the experiment. This was most likely caused by specifying a memory limit that is too small or too large."
+
+#: netlogo-gui/src/main/shape/editor/ManagerDialog.scala:141
+msgid "NetLogo was unable to read shapes from this file. Please ensure it is a valid NetLogo model file."
+msgstr "NetLogo was unable to read shapes from this file. Please ensure it is a valid NetLogo model file."
+
+#: netlogo-gui/src/main/lab/gui/ManagerDialog.scala:53
+#: netlogo-gui/src/main/shape/editor/ManagerDialog.scala:43
+msgid "New"
+msgstr "New"
+
+#: netlogo-gui/src/main/app/TabManager.scala:507
+msgid "New File {}"
+msgstr "New File {}"
+
+#: netlogo-gui/src/main/app/FileManager.scala:33
+msgid "New Model"
+msgstr "New Model"
+
+#: netlogo-gui/src/main/app/codetab/IncludedFilesMenu.scala:71
+msgid "New Source File"
+msgstr "New Source File"
+
+#: netlogo-gui/src/main/app/App.scala:505
+#: netlogo-gui/src/main/app/FileManager.scala:50
+msgid "New Window"
+msgstr "New Window"
+
+#: netlogo-gui/src/main/app/common/FindDialog.scala:200
+msgid "Next"
+msgstr "Next"
+
+#: netlogo-gui/src/main/swing/OptionPane.scala:19
+#: netlogo-gui/src/main/prim/gui/_useryesorno.scala:23
+msgid "No"
+msgstr "No"
+
+#: netlogo-gui/src/main/app/common/HistoryPrompt.scala:33
+msgid "No History"
+msgstr "No History"
+
+#: netlogo-gui/src/main/workspace/DefaultFileManager.scala:240
+msgid "No file has been opened."
+msgstr "No file has been opened."
+
+#: netlogo-core/src/main/agent/Protractor.java:275
+msgid "No heading is defined from a point ({},{}) to that same point."
+msgstr "No heading is defined from a point ({},{}) to that same point."
+
+#: netlogo-core/src/main/agent/Protractor.java:219
+msgid "No heading is defined from an agent to itself."
+msgstr "No heading is defined from an agent to itself."
+
+#: netlogo-gui/src/main/shape/editor/ManagerDialog.scala:147
+msgid "No shapes found in this file."
+msgstr "No shapes found in this file."
+
+#: netlogo-gui/src/main/editor/ShowUsage.scala:30
+msgid "No usages found"
+msgstr "No usages found"
+
+#: netlogo-gui/src/main/app/ZoomMenu.scala:26
+msgid "Normal Size"
+msgstr "Normal Size"
+
+#: netlogo-gui/src/main/window/WorldViewSettings3D.scala:68
+msgid "North"
+msgstr "North"
+
+#: netlogo-gui/src/main/window/InterfaceFactory.scala:26
+#: netlogo-gui/src/main/window/NoteWidget.scala:68
+#: netlogo-gui/src/main/app/interfacetab/InterfacePanel.scala:80
+#: netlogo-gui/src/main/app/interfacetab/WidgetPanel.scala:711
+msgid "Note"
+msgstr "Note"
+
+#: netlogo-core/src/main/compile/middle/LambdaVariableVisitor.scala:76
+#: netlogo-core/src/main/compile/middle/LambdaVariableVisitor.scala:103
+#: netlogo-gui/src/main/compile/Backifier.scala:131
+#: netlogo-gui/src/main/prim/etc/_reference.scala:24
+#: parser-core/src/main/parse/LetVerifier.scala:32
+#: parser-core/src/main/parse/ExpressionParser.scala:196
+#: parser-core/src/main/parse/ExpressionParser.scala:531
+#: parser-core/src/main/parse/StructureChecker.scala:57
+msgid "Nothing named {} has been defined."
+msgstr "Nothing named {} has been defined."
+
+#: netlogo-gui/src/main/swing/Utils.scala:37
+msgid "Notice"
+msgstr "Notice"
+
+#: netlogo-gui/src/main/window/InputBox.scala:637
+msgid "Number"
+msgstr "Number"
+
+#: netlogo-gui/src/main/swing/OptionPane.scala:17
+#: netlogo-gui/src/main/swing/OptionPane.scala:18
+#: netlogo-gui/src/main/swing/Popup.scala:24
+#: netlogo-gui/src/main/window/EditDialog.scala:27
+#: netlogo-gui/src/main/window/InputBox.scala:463
+#: netlogo-gui/src/main/hubnet/client/ClientPanel.scala:299
+#: netlogo-gui/src/main/prim/gui/_usermessage.scala:24
+#: netlogo-gui/src/main/shape/editor/EditorDialog.scala:358
+#: netlogo-gui/src/main/shape/editor/LinkEditorDialog.scala:61
+#: netlogo-gui/src/main/app/tools/PreferencesDialog.scala:74
+#: netlogo-gui/src/main/app/tools/PreviewCommandsDialog.scala:56
+msgid "OK"
+msgstr "OK"
+
+#: netlogo-gui/src/main/window/UpdateModeChooser.scala:11
+#: netlogo-gui/src/main/window/UpdateModeChooser.scala:27
+msgid "On Ticks"
+msgstr "On Ticks"
+
+#: netlogo-gui/src/main/gl/view/ViewControlToolBar.scala:28
+msgid "On some systems, fullscreen mode may cause Windows to lock up."
+msgstr "On some systems, fullscreen mode may cause Windows to lock up."
+
+#: netlogo-gui/src/main/app/tools/PreferencesDialog.scala:163
+msgid "One or more changed preferences will not take effect until the\n application is restarted. Would you like to restart now or later?"
+msgstr "One or more changed preferences will not take effect until the\n application is restarted. Would you like to restart now or later?"
+
+#: netlogo-core/src/main/api/LabVariableParser.scala:26
+#: netlogo-core/src/main/api/LabVariableParser.scala:94
+msgid "One or more lists do not contain any elements"
+msgstr "One or more lists do not contain any elements"
+
+#: netlogo-gui/src/main/prim/etc/_otherend.java:32
+msgid "Only a link can get the OTHER-END from a turtle."
+msgstr "Only a link can get the OTHER-END from a turtle."
+
+#: netlogo-gui/src/main/prim/etc/_otherend.java:25
+msgid "Only a turtle can get the OTHER-END of a link."
+msgstr "Only a turtle can get the OTHER-END of a link."
+
+#: netlogo-gui/src/main/prim/_ask.java:49
+#: netlogo-gui/src/main/prim/_ask.java:75
+#: netlogo-gui/src/main/prim/_askconcurrent.java:35
+msgid "Only the observer can ASK the set of all patches."
+msgstr "Only the observer can ASK the set of all patches."
+
+#: netlogo-gui/src/main/prim/_ask.java:45
+#: netlogo-gui/src/main/prim/_ask.java:71
+#: netlogo-gui/src/main/prim/_askconcurrent.java:31
+msgid "Only the observer can ASK the set of all turtles."
+msgstr "Only the observer can ASK the set of all turtles."
+
+#: netlogo-gui/src/main/app/FileManager.scala:536
+#: netlogo-gui/src/main/app/tools/ModelsLibraryDialog.scala:237
+msgid "Open"
+msgstr "Open"
+
+#: netlogo-gui/src/main/window/FileController.scala:126
+msgid "Open Auto-Converter"
+msgstr "Open Auto-Converter"
+
+#: netlogo-gui/src/main/window/ErrorDialogManager.scala:243
+msgid "Open FAQ"
+msgstr "Open FAQ"
+
+#: netlogo-gui/src/main/window/FileController.scala:192
+msgid "Open Partially Converted {}"
+msgstr "Open Partially Converted {}"
+
+#: netlogo-gui/src/main/app/codetab/IncludedFilesMenu.scala:77
+msgid "Open Source File"
+msgstr "Open Source File"
+
+#: netlogo-gui/src/main/app/codetab/IncludedFilesMenu.scala:75
+msgid "Open Source File{}"
+msgstr "Open Source File{}"
+
+#: netlogo-gui/src/main/window/FileController.scala:126
+msgid "Open Transition Guide"
+msgstr "Open Transition Guide"
+
+#: netlogo-gui/src/main/window/FileController.scala:193
+msgid "Open Unconverted {}"
+msgstr "Open Unconverted {}"
+
+#: netlogo-gui/src/main/app/tools/Preferences.scala:322
+msgid "Open code tab in separate window on startup"
+msgstr "Open code tab in separate window on startup"
+
+#: netlogo-gui/src/main/app/FileManager.scala:66
+msgid "Open{}"
+msgstr "Open{}"
+
+#: netlogo-gui/src/main/gl/view/ViewControlToolBar.scala:17
+msgid "Orbit"
+msgstr "Orbit"
+
+#: netlogo-gui/src/main/window/InterfaceFactory.scala:25
+#: netlogo-gui/src/main/window/OutputWidget.scala:17
+#: netlogo-gui/src/main/window/OutputWidget.scala:39
+#: netlogo-gui/src/main/app/interfacetab/InterfacePanel.scala:74
+msgid "Output"
+msgstr "Output"
+
+#: netlogo-gui/src/main/editor/Actions.scala:27
+#: netlogo-gui/src/main/editor/AdvancedEditorArea.scala:105
+msgid "Paste"
+msgstr "Paste"
+
+#: netlogo-gui/src/main/app/interfacetab/InterfacePanel.scala:90
+#: netlogo-gui/src/main/app/interfacetab/WidgetPanel.scala:726
+msgid "Paste Widgets"
+msgstr "Paste Widgets"
+
+#: netlogo-gui/src/main/window/WorkspaceActions.scala:25
+msgid "Patch Monitor"
+msgstr "Patch Monitor"
+
+#: netlogo-gui/src/main/window/WorldEditPanel2D.scala:89
+#: netlogo-gui/src/main/window/WorldEditPanel3D.scala:121
+msgid "Patch size"
+msgstr "Patch size"
+
+#: netlogo-gui/src/main/prim/etc/_setpatchsize.java:24
+msgid "Patch size must be greater than zero."
+msgstr "Patch size must be greater than zero."
+
+#: netlogo-gui/src/main/prim/etc/_layoutcircle.java:32
+msgid "Patches are immovable."
+msgstr "Patches are immovable."
+
+#: netlogo-gui/src/main/bsapp/ProgressDialog.scala:59
+msgid "Pause"
+msgstr "Pause"
+
+#: netlogo-gui/src/main/window/PlotPensEditor.scala:145
+msgid "Pen name"
+msgstr "Pen name"
+
+#: netlogo-gui/src/main/window/PlotPenEditorAdvanced.scala:28
+msgid "Pen setup commands"
+msgstr "Pen setup commands"
+
+#: netlogo-gui/src/main/window/PlotPenEditorAdvanced.scala:31
+#: netlogo-gui/src/main/window/PlotPensEditor.scala:144
+msgid "Pen update commands"
+msgstr "Pen update commands"
+
+#: netlogo-gui/src/main/window/PlotPensEditor.scala:122
+msgid "Pens list contains duplicate names: {}."
+msgstr "Pens list contains duplicate names: {}."
+
+#: netlogo-gui/src/main/window/AbstractPlotWidget.scala:119
+#: netlogo-gui/src/main/window/InterfaceFactory.scala:24
+#: netlogo-gui/src/main/app/interfacetab/WidgetPanel.scala:702
+#: netlogo-gui/src/main/app/interfacetab/WidgetPanel.scala:1714
+msgid "Plot"
+msgstr "Plot"
+
+#: netlogo-gui/src/main/window/PlotEditPanel.scala:144
+msgid "Plot pens"
+msgstr "Plot pens"
+
+#: netlogo-gui/src/main/window/PlotEditPanel.scala:124
+msgid "Plot setup commands"
+msgstr "Plot setup commands"
+
+#: netlogo-gui/src/main/window/PlotEditPanel.scala:134
+msgid "Plot update commands"
+msgstr "Plot update commands"
+
+#: netlogo-gui/src/main/window/PlotPenEditorAdvanced.scala:22
+msgid "Point"
+msgstr "Point"
+
+#: netlogo-gui/src/main/hubnet/server/gui/ControlCenter.scala:333
+msgid "Port number:"
+msgstr "Port number:"
+
+#: netlogo-gui/src/main/lab/gui/ProtocolEditPanel.scala:191
+msgid "Post experiment commands"
+msgstr "Post experiment commands"
+
+#: netlogo-gui/src/main/lab/gui/ProtocolEditPanel.scala:178
+msgid "Post run commands:"
+msgstr "Post run commands:"
+
+#: netlogo-gui/src/main/lab/gui/ProtocolEditPanel.scala:126
+msgid "Pre experiment commands:"
+msgstr "Pre experiment commands:"
+
+#: netlogo-gui/src/main/app/ToolActions.scala:38
+#: netlogo-gui/src/main/app/codetab/CodeTab.scala:57
+msgid "Preferences"
+msgstr "Preferences"
+
+#: netlogo-gui/src/main/app/tools/PreviewCommandsEditor.scala:16
+msgid "Preview Commands Editor"
+msgstr "Preview Commands Editor"
+
+#: netlogo-gui/src/main/app/common/FindDialog.scala:211
+msgid "Previous"
+msgstr "Previous"
+
+#: netlogo-gui/src/main/app/TabManager.scala:266
+msgid "Print..."
+msgstr "Print..."
+
+#: netlogo-gui/src/main/app/codetab/ProceduresMenu.scala:14
+msgid "Procedures"
+msgstr "Procedures"
+
+#: netlogo-gui/src/main/app/tools/AgentMonitor.scala:76
+msgid "Properties"
+msgstr "Properties"
+
+#: netlogo-gui/src/main/editor/QuickHelpAction.scala:27
+msgid "Quick Help"
+msgstr "Quick Help"
+
+#: netlogo-gui/src/main/app/FileManager.scala:96
+msgid "Quit"
+msgstr "Quit"
+
+#: parser-core/src/main/parse/ControlFlowVerifier.scala:53
+msgid "REPORT can only be used inside TO-REPORT."
+msgstr "REPORT can only be used inside TO-REPORT."
+
+#: parser-core/src/main/parse/ControlFlowVerifier.scala:55
+msgid "REPORT must be immediately inside a TO-REPORT."
+msgstr "REPORT must be immediately inside a TO-REPORT."
+
+#: netlogo-core/src/main/agent/AgentColors.scala:38
+#: netlogo-core/src/main/api/Color.scala:199
+msgid "RGB values must be 0-255"
+msgstr "RGB values must be 0-255"
+
+#: netlogo-gui/src/main/prim/_returnreport.java:27
+msgid "Reached end of reporter procedure without REPORT being called."
+msgstr "Reached end of reporter procedure without REPORT being called."
+
+#: netlogo-gui/src/main/app/FileMenu.scala:26
+msgid "Recent Files"
+msgstr "Recent Files"
+
+#: netlogo-gui/src/main/app/FileManager.scala:402
+#: netlogo-gui/src/main/app/codetab/TemporaryCodeTab.scala:59
+msgid "Recover Autosave"
+msgstr "Recover Autosave"
+
+#: parser-core/src/main/parse/StructureChecker.scala:311
+msgid "Redeclaration of {}"
+msgstr "Redeclaration of {}"
+
+#: netlogo-gui/src/main/editor/AdvancedEditorArea.scala:66
+#: netlogo-gui/src/main/sdm/gui/AggregateModelEditor.scala:112
+msgid "Redo"
+msgstr "Redo"
+
+#: netlogo-gui/src/main/app/tools/PreviewPanel.scala:69
+msgid "Reload Manual Preview Image"
+msgstr "Reload Manual Preview Image"
+
+#: netlogo-gui/src/main/app/tools/Preferences.scala:191
+msgid "Reload model on external changes"
+msgstr "Reload model on external changes"
+
+#: netlogo-gui/src/main/app/tools/Preferences.scala:188
+msgid "Reload the last used model on startup"
+msgstr "Reload the last used model on startup"
+
+#: netlogo-gui/src/main/app/ResourceManagerDialog.scala:182
+msgid "Remove"
+msgstr "Remove"
+
+#: netlogo-gui/src/main/hubnet/server/gui/ControlCenter.scala:73
+msgid "Removed via Control Center."
+msgstr "Removed via Control Center."
+
+#: netlogo-gui/src/main/swing/FloatingTabbedPane.scala:211
+#: netlogo-gui/src/main/app/ResourceManagerDialog.scala:147
+#: netlogo-gui/src/main/shape/editor/ImportDialog.scala:65
+msgid "Rename"
+msgstr "Rename"
+
+#: netlogo-gui/src/main/lab/gui/ProtocolEditPanel.scala:54
+msgid "Repetitions"
+msgstr "Repetitions"
+
+#: netlogo-gui/src/main/swing/FileDialog.scala:50
+#: netlogo-gui/src/main/shape/editor/ImportDialog.scala:65
+#: netlogo-gui/src/main/app/common/FindDialog.scala:222
+msgid "Replace"
+msgstr "Replace"
+
+#: netlogo-gui/src/main/app/common/FindDialog.scala:226
+msgid "Replace & Find"
+msgstr "Replace & Find"
+
+#: netlogo-gui/src/main/app/common/FindDialog.scala:248
+msgid "Replace All"
+msgstr "Replace All"
+
+#: netlogo-gui/src/main/app/common/FindDialog.scala:255
+msgid "Replace With:"
+msgstr "Replace With:"
+
+#: netlogo-gui/src/main/window/ErrorDialogManager.scala:150
+#: netlogo-gui/src/main/window/ErrorDialogManager.scala:267
+#: netlogo-gui/src/main/window/ReportNotHelpfulDialog.scala:50
+msgid "Report"
+msgstr "Report"
+
+#: netlogo-gui/src/main/window/ErrorDialogManager.scala:252
+msgid "Report Error"
+msgstr "Report Error"
+
+#: netlogo-gui/src/main/window/MonitorEditPanel.scala:17
+msgid "Reporter"
+msgstr "Reporter"
+
+#: netlogo-gui/src/main/prim/etc/_maxnof.java:35
+#: netlogo-gui/src/main/prim/etc/_minnof.java:34
+#: netlogo-gui/src/main/prim/etc/_nof.java:44
+msgid "Requested {} random agents from a set of only {} agents."
+msgstr "Requested {} random agents from a set of only {} agents."
+
+#: netlogo-gui/src/main/prim/etc/_nof.java:30
+msgid "Requested {} random items from a list of length {}."
+msgstr "Requested {} random items from a list of length {}."
+
+#: netlogo-gui/src/main/hubnet/server/gui/ControlCenter.scala:186
+msgid "Reset"
+msgstr "Reset"
+
+#: netlogo-gui/src/main/gl/view/ViewControlToolBar.scala:22
+msgid "Reset Perspective"
+msgstr "Reset Perspective"
+
+#: netlogo-gui/src/main/app/FileManager.scala:456
+#: netlogo-gui/src/main/app/ToolActions.scala:144
+#: netlogo-gui/src/main/hubnet/server/gui/HubNetClientEditor.scala:130
+msgid "Resize and adjust positions"
+msgstr "Resize and adjust positions"
+
+#: netlogo-gui/src/main/window/WorldViewSettings2D.scala:128
+msgid "Resizing the world kills all turtles. This may cause HubNet clients to be unresponsive. Consider kicking out all clients before proceeding."
+msgstr "Resizing the world kills all turtles. This may cause HubNet clients to be unresponsive. Consider kicking out all clients before proceeding."
+
+#: netlogo-gui/src/main/window/WorldViewSettings2D.scala:145
+#: netlogo-gui/src/main/window/WorldViewSettings3D.scala:172
+msgid "Resizing..."
+msgstr "Resizing..."
+
+#: netlogo-gui/src/main/app/ResourceManagerDialog.scala:94
+#: netlogo-gui/src/main/app/ResourceManagerDialog.scala:157
+msgid "Resource name cannot be empty."
+msgstr "Resource name cannot be empty."
+
+#: netlogo-gui/src/main/app/tools/PreferencesDialog.scala:166
+msgid "Restart Later"
+msgstr "Restart Later"
+
+#: netlogo-gui/src/main/app/tools/PreferencesDialog.scala:166
+msgid "Restart Now"
+msgstr "Restart Now"
+
+#: netlogo-gui/src/main/app/tools/PreferencesDialog.scala:166
+msgid "Restart Required"
+msgstr "Restart Required"
+
+#: netlogo-core/src/main/api/Perspective.scala:28
+msgid "Riding {}"
+msgstr "Riding {}"
+
+#: netlogo-gui/src/main/window/WorldViewSettings2D.scala:37
+msgid "Right"
+msgstr "Right"
+
+#: netlogo-gui/src/main/shape/editor/LinkEditorDialog.scala:82
+msgid "Right Line"
+msgstr "Right Line"
+
+#: netlogo-gui/src/main/shape/editor/EditorDialog.scala:273
+msgid "Rotatable"
+msgstr "Rotatable"
+
+#: netlogo-gui/src/main/shape/editor/EditorDialog.scala:286
+msgid "Rotate Left"
+msgstr "Rotate Left"
+
+#: netlogo-gui/src/main/shape/editor/EditorDialog.scala:304
+msgid "Rotate Right"
+msgstr "Rotate Right"
+
+#: netlogo-gui/src/main/lab/gui/ManagerDialog.scala:60
+msgid "Run"
+msgstr "Run"
+
+#: netlogo-gui/src/main/bsapp/ProgressDialog.scala:295
+msgid "Run #{} of {}, step #{}\n Total elapsed time: {}\n {}"
+msgstr "Run #{} of {}, step #{}\n Total elapsed time: {}\n {}"
+
+#: netlogo-gui/src/main/app/tools/PreviewPanel.scala:37
+msgid "Run Preview Commands"
+msgstr "Run Preview Commands"
+
+#: netlogo-gui/src/main/lab/gui/ProtocolEditPanel.scala:94
+msgid "Run metrics every step"
+msgstr "Run metrics every step"
+
+#: netlogo-gui/src/main/lab/gui/ProtocolEditPanel.scala:110
+msgid "Run metrics when"
+msgstr "Run metrics when"
+
+#: netlogo-gui/src/main/lab/gui/RunOptionsDialog.scala:97
+msgid "Run options"
+msgstr "Run options"
+
+#: netlogo-gui/src/main/bsapp/ProgressDialog.scala:28
+msgid "Running Experiment: {}"
+msgstr "Running Experiment: {}"
+
+#: netlogo-gui/src/main/app/tools/PreviewPanel.scala:41
+msgid "Running Preview Commands"
+msgstr "Running Preview Commands"
+
+#: netlogo-gui/src/main/window/ErrorDialogManager.scala:211
+msgid "Runtime Error"
+msgstr "Runtime Error"
+
+#: netlogo-gui/src/main/window/PlotEditPanel.scala:115
+#: netlogo-gui/src/main/window/RuntimeErrorPanel.scala:65
+msgid "Runtime Error:"
+msgstr "Runtime Error:"
+
+#: netlogo-gui/src/main/bsapp/BehaviorSpaceApp.scala:143
+msgid "Runtime error: {}"
+msgstr "Runtime error: {}"
+
+#: parser-core/src/main/parse/ControlFlowVerifier.scala:51
+msgid "STOP is not allowed inside TO-REPORT."
+msgstr "STOP is not allowed inside TO-REPORT."
+
+#: netlogo-gui/src/main/app/FileManager.scala:579
+#: netlogo-gui/src/main/window/FileController.scala:165
+#: netlogo-gui/src/main/app/common/Dialogs.scala:15
+msgid "Save"
+msgstr "Save"
+
+#: netlogo-gui/src/main/app/TabManager.scala:252
+msgid "Save All"
+msgstr "Save All"
+
+#: netlogo-gui/src/main/window/FileController.scala:142
+msgid "Save As"
+msgstr "Save As"
+
+#: netlogo-gui/src/main/app/FileManager.scala:183
+msgid "Save As NetLogo Web..."
+msgstr "Save As NetLogo Web..."
+
+#: netlogo-gui/src/main/app/FileManager.scala:579
+msgid "Save As{}"
+msgstr "Save As{}"
+
+#: netlogo-gui/src/main/app/codetab/TemporaryCodeTab.scala:221
+msgid "Save NetLogo Source File"
+msgstr "Save NetLogo Source File"
+
+#: netlogo-gui/src/main/app/OfferSaveExternalsDialog.scala:87
+msgid "Save Selected Files"
+msgstr "Save Selected Files"
+
+#: netlogo-gui/src/main/app/FileManager.scala:195
+msgid "Saving as NetLogo Web HTML Page"
+msgstr "Saving as NetLogo Web HTML Page"
+
+#: netlogo-gui/src/main/app/FileManager.scala:503
+msgid "Saving..."
+msgstr "Saving..."
+
+#: netlogo-gui/src/main/shape/editor/EditorDialog.scala:247
+#: netlogo-gui/src/main/app/interfacetab/WidgetWrapper.scala:980
+msgid "Select"
+msgstr "Select"
+
+#: netlogo-gui/src/main/editor/Actions.scala:44
+#: netlogo-gui/src/main/editor/AdvancedEditorArea.scala:131
+msgid "Select All"
+msgstr "Select All"
+
+#: netlogo-gui/src/main/lab/gui/ManagerDialog.scala:299
+msgid "Select Experiment Files"
+msgstr "Select Experiment Files"
+
+#: netlogo-gui/src/main/app/ResourceManagerDialog.scala:75
+#: netlogo-gui/src/main/app/ResourceManagerDialog.scala:135
+msgid "Select File"
+msgstr "Select File"
+
+#: parser-core/src/main/parse/StructureParser.scala:102
+msgid "Selective import only works when importing directly from a module"
+msgstr "Selective import only works when importing directly from a module"
+
+#: netlogo-gui/src/main/app/tools/Preferences.scala:368
+msgid "Send anonymous usage statistics"
+msgstr "Send anonymous usage statistics"
+
+#: netlogo-gui/src/main/shape/editor/EditorDialog.scala:139
+msgid "Send to back"
+msgstr "Send to back"
+
+#: netlogo-gui/src/main/app/codetab/CodeTab.scala:53
+msgid "Separate code window"
+msgstr "Separate code window"
+
+#: netlogo-gui/src/main/hubnet/server/gui/ControlCenter.scala:332
+msgid "Server address:"
+msgstr "Server address:"
+
+#: netlogo-gui/src/main/window/ViewUpdatePanel.scala:78
+msgid "Settings"
+msgstr "Settings"
+
+#: netlogo-gui/src/main/hubnet/server/gui/ControlCenter.scala:336
+msgid "Settings:"
+msgstr "Settings:"
+
+#: netlogo-gui/src/main/lab/gui/ProtocolEditPanel.scala:139
+msgid "Setup commands:"
+msgstr "Setup commands:"
+
+#: netlogo-gui/src/main/editor/AdvancedEditorArea.scala:159
+#: netlogo-gui/src/main/ide/ShiftActions.scala:28
+msgid "Shift Left"
+msgstr "Shift Left"
+
+#: netlogo-gui/src/main/editor/AdvancedEditorArea.scala:172
+#: netlogo-gui/src/main/ide/ShiftActions.scala:15
+msgid "Shift Right"
+msgstr "Shift Right"
+
+#: netlogo-gui/src/main/swing/SplitPane.scala:232
+msgid "Show Command Center"
+msgstr "Show Command Center"
+
+#: netlogo-gui/src/main/editor/ShowUsageAction.scala:12
+msgid "Show Usage"
+msgstr "Show Usage"
+
+#: netlogo-gui/src/main/app/tools/Preferences.scala:349
+msgid "Show auto-complete popup while typing"
+msgstr "Show auto-complete popup while typing"
+
+#: netlogo-gui/src/main/window/PlotPenEditorAdvanced.scala:24
+msgid "Show in legend"
+msgstr "Show in legend"
+
+#: netlogo-gui/src/main/window/ErrorDialogManager.scala:212
+msgid "Show internal details"
+msgstr "Show internal details"
+
+#: netlogo-gui/src/main/window/DummyPlotEditPanel.scala:94
+#: netlogo-gui/src/main/window/PlotEditPanel.scala:106
+msgid "Show legend?"
+msgstr "Show legend?"
+
+#: netlogo-gui/src/main/app/tools/Preferences.scala:341
+msgid "Show line numbers"
+msgstr "Show line numbers"
+
+#: netlogo-gui/src/main/window/WorldEditPanel2D.scala:145
+#: netlogo-gui/src/main/window/WorldEditPanel3D.scala:189
+msgid "Show tick counter"
+msgstr "Show tick counter"
+
+#: netlogo-gui/src/main/window/WorldEditPanel3D.scala:161
+msgid "Show wire frame"
+msgstr "Show wire frame"
+
+#: netlogo-gui/src/main/lab/gui/RunOptionsEditPanel.scala:85
+msgid "Simultaneous runs in parallel"
+msgstr "Simultaneous runs in parallel"
+
+#: netlogo-gui/src/main/app/FileManager.scala:456
+msgid "Skip"
+msgstr "Skip"
+
+#: netlogo-gui/src/main/window/DummySliderWidget.scala:14
+#: netlogo-gui/src/main/window/InterfaceFactory.scala:19
+#: netlogo-gui/src/main/window/SliderWidget.scala:46
+#: netlogo-gui/src/main/app/interfacetab/WidgetPanel.scala:705
+msgid "Slider"
+msgstr "Slider"
+
+#: netlogo-gui/src/main/app/ZoomMenu.scala:35
+msgid "Smaller"
+msgstr "Smaller"
+
+#: netlogo-gui/src/main/window/WorldEditPanel3D.scala:151
+msgid "Smooth edges (slower)"
+msgstr "Smooth edges (slower)"
+
+#: netlogo-gui/src/main/window/WorkspaceActions.scala:106
+msgid "Snap to Grid"
+msgstr "Snap to Grid"
+
+#: netlogo-gui/src/main/shape/editor/EditorDialog.scala:266
+msgid "Snap to grid"
+msgstr "Snap to grid"
+
+#: netlogo-gui/src/main/app/tools/Preferences.scala:281
+msgid "Sort \"Procedures\" menu by"
+msgstr "Sort \"Procedures\" menu by"
+
+#: netlogo-gui/src/main/window/WorldViewSettings3D.scala:67
+msgid "South"
+msgstr "South"
+
+#: netlogo-gui/src/main/lab/gui/RunOptionsEditPanel.scala:22
+msgid "Spreadsheet output"
+msgstr "Spreadsheet output"
+
+#: netlogo-core/src/main/lab/Lab.scala:82
+msgid "Spreadsheet output file has been moved or deleted."
+msgstr "Spreadsheet output file has been moved or deleted."
+
+#: netlogo-gui/src/main/hubnet/server/gui/StartupDialog.scala:18
+msgid "Start HubNet Activity"
+msgstr "Start HubNet Activity"
+
+#: netlogo-core/src/main/lab/Lab.scala:148
+msgid "Statistics output selected with no spreadsheet or table output."
+msgstr "Statistics output selected with no spreadsheet or table output."
+
+#: netlogo-gui/src/main/lab/gui/RunOptionsEditPanel.scala:42
+msgid "Stats output"
+msgstr "Stats output"
+
+#: netlogo-core/src/main/api/LabVariableParser.scala:33
+#: netlogo-core/src/main/api/LabVariableParser.scala:101
+msgid "Step value in increment list for variable \"{}\" is 0, this would result in an infinite range."
+msgstr "Step value in increment list for variable \"{}\" is 0, this would result in an infinite range."
+
+#: netlogo-gui/src/main/sdm/gui/AggregateModelEditorToolBar.scala:97
+msgid "Stock"
+msgstr "Stock"
+
+#: netlogo-gui/src/main/lab/gui/ProtocolEditPanel.scala:165
+msgid "Stop condition:"
+msgstr "Stop condition:"
+
+#: netlogo-gui/src/main/app/interfacetab/InterfaceWidgetControls.scala:372
+#: netlogo-gui/src/main/app/interfacetab/WidgetWrapper.scala:973
+msgid "Stretch Bottom"
+msgstr "Stretch Bottom"
+
+#: netlogo-gui/src/main/app/interfacetab/InterfaceWidgetControls.scala:369
+#: netlogo-gui/src/main/app/interfacetab/WidgetWrapper.scala:955
+msgid "Stretch Left"
+msgstr "Stretch Left"
+
+#: netlogo-gui/src/main/app/interfacetab/InterfaceWidgetControls.scala:370
+#: netlogo-gui/src/main/app/interfacetab/WidgetWrapper.scala:961
+msgid "Stretch Right"
+msgstr "Stretch Right"
+
+#: netlogo-gui/src/main/app/interfacetab/InterfaceWidgetControls.scala:371
+#: netlogo-gui/src/main/app/interfacetab/WidgetWrapper.scala:967
+msgid "Stretch Top"
+msgstr "Stretch Top"
+
+#: netlogo-gui/src/main/window/InputBox.scala:600
+msgid "String"
+msgstr "String"
+
+#: netlogo-gui/src/main/window/InputBox.scala:623
+msgid "String (commands)"
+msgstr "String (commands)"
+
+#: netlogo-gui/src/main/window/InputBox.scala:603
+msgid "String (reporter)"
+msgstr "String (reporter)"
+
+#: netlogo-gui/src/main/prim/etc/_first.java:34
+#: netlogo-gui/src/main/prim/etc/_first.java:54
+#: netlogo-gui/src/main/prim/etc/_last.java:30
+msgid "String is empty."
+msgstr "String is empty."
+
+#: netlogo-gui/src/main/window/DummySwitchWidget.scala:8
+#: netlogo-gui/src/main/window/InterfaceFactory.scala:20
+#: netlogo-gui/src/main/window/SwitchWidget.scala:13
+#: netlogo-gui/src/main/app/interfacetab/WidgetPanel.scala:706
+msgid "Switch"
+msgstr "Switch"
+
+#: netlogo-gui/src/main/window/GUIWorkspace.scala:132
+#: netlogo-gui/src/main/window/WorkspaceActions.scala:72
+msgid "Switch to 3D View"
+msgstr "Switch to 3D View"
+
+#: netlogo-gui/src/main/bsapp/BehaviorSpaceApp.scala:140
+msgid "Syntax error: {}"
+msgstr "Syntax error: {}"
+
+#: netlogo-gui/src/main/app/AboutWindow.scala:106
+msgid "System"
+msgstr "System"
+
+#: netlogo-gui/src/main/app/ToolActions.scala:104
+#: netlogo-gui/src/main/sdm/gui/AggregateModelEditor.scala:40
+msgid "System Dynamics Modeler"
+msgstr "System Dynamics Modeler"
+
+#: netlogo-gui/src/main/ide/ShiftActions.scala:52
+msgid "Tab Left"
+msgstr "Tab Left"
+
+#: netlogo-gui/src/main/lab/gui/RunOptionsEditPanel.scala:32
+msgid "Table output"
+msgstr "Table output"
+
+#: netlogo-core/src/main/lab/Lab.scala:66
+msgid "Table output file has been moved or deleted."
+msgstr "Table output file has been moved or deleted."
+
+#: netlogo-gui/src/main/app/MainMenuBar.scala:15
+#: netlogo-gui/src/main/sdm/gui/AggregateModelEditor.scala:124
+msgid "Tabs"
+msgstr "Tabs"
+
+#: netlogo-gui/src/main/window/DummyButtonEditPanel.scala:13
+#: netlogo-gui/src/main/window/DummyChooserEditPanel.scala:17
+#: netlogo-gui/src/main/window/DummyInputEditPanel.scala:13
+#: netlogo-gui/src/main/window/DummyMonitorEditPanel.scala:13
+#: netlogo-gui/src/main/window/DummySliderEditPanel.scala:13
+#: netlogo-gui/src/main/window/DummySwitchEditPanel.scala:13
+msgid "Tag"
+msgstr "Tag"
+
+#: netlogo-gui/src/main/window/NoteEditPanel.scala:16
+msgid "Text"
+msgstr "Text"
+
+#: netlogo-gui/src/main/window/NoteEditPanel.scala:44
+msgid "Text color (dark mode)"
+msgstr "Text color (dark mode)"
+
+#: netlogo-gui/src/main/window/NoteEditPanel.scala:34
+msgid "Text color (light mode)"
+msgstr "Text color (light mode)"
+
+#: netlogo-core/src/main/prim/_turtleson.java:31
+#: netlogo-gui/src/main/prim/_ask.java:56
+#: netlogo-gui/src/main/prim/_ask.java:86
+#: netlogo-gui/src/main/prim/_of.java:27
+#: netlogo-gui/src/main/prim/_turtleorlinkvariableof.java:32
+#: netlogo-gui/src/main/prim/_turtleorlinkvariableof.java:72
+#: netlogo-gui/src/main/prim/_turtleorlinkvariableof.java:104
+#: netlogo-gui/src/main/prim/_turtlevariableof.java:32
+#: netlogo-gui/src/main/prim/_turtlevariableof.java:75
+#: netlogo-gui/src/main/prim/_turtlevariableof.java:106
+#: netlogo-gui/src/main/prim/etc/_distance.java:28
+#: netlogo-gui/src/main/prim/etc/_distancenowrap.java:28
+#: netlogo-gui/src/main/prim/etc/_face.java:36
+#: netlogo-gui/src/main/prim/etc/_facenowrap.java:27
+#: netlogo-gui/src/main/prim/etc/_moveto.java:28
+#: netlogo-gui/src/main/prim/etc/_ride.java:26
+#: netlogo-gui/src/main/prim/etc/_towards.java:25
+#: netlogo-gui/src/main/prim/etc/_towardsnowrap.java:24
+#: netlogo-gui/src/main/prim/etc/_watch.java:25
+#: netlogo-core/src/main/nvm/Instruction.scala:160
+#: netlogo-core/src/main/prim/_anybreedon.scala:23
+#: netlogo-core/src/main/prim/_anyturtleson.scala:17
+#: netlogo-core/src/main/prim/_breedon.scala:23
+#: netlogo-core/src/main/prim/_breedon.scala:115
+#: netlogo-core/src/main/prim/_breedon.scala:143
+#: netlogo-gui/src/main/prim/_breedvariableof.scala:19
+#: netlogo-gui/src/main/prim/_linkbreedvariableof.scala:18
+#: netlogo-gui/src/main/prim/_linkvariableof.scala:19
+#: netlogo-gui/src/main/prim/_linkvariableof.scala:43
+#: netlogo-gui/src/main/prim/_linkvariableof.scala:66
+#: netlogo-gui/src/main/prim/_patchvariableof.scala:19
+#: netlogo-gui/src/main/prim/_patchvariableof.scala:44
+#: netlogo-gui/src/main/prim/_patchvariableof.scala:80
+#: netlogo-gui/src/main/prim/etc/_follow.scala:17
+#: netlogo-gui/src/main/prim/gui/_inspect.scala:13
+#: netlogo-gui/src/main/prim/gui/_inspectwithradius.scala:14
+#: netlogo-gui/src/main/prim/threed/_towardspitch.scala:14
+#: netlogo-gui/src/main/prim/threed/_towardspitchnowrap.scala:14
+msgid "That {} is dead."
+msgstr "That {} is dead."
+
+#: netlogo-gui/src/main/prim/_lessthan.java:47
+#: netlogo-gui/src/main/prim/_lessthan.java:76
+#: netlogo-gui/src/main/prim/_lessthan.java:87
+msgid "The < operator can only be used on two numbers, two strings, or two agents of the same type, but not on {} and {}."
+msgstr "The < operator can only be used on two numbers, two strings, or two agents of the same type, but not on {} and {}."
+
+#: netlogo-gui/src/main/prim/etc/_lessorequal.java:47
+#: netlogo-gui/src/main/prim/etc/_lessorequal.java:76
+#: netlogo-gui/src/main/prim/etc/_lessorequal.java:85
+msgid "The <= operator can only be used on two numbers, two strings, or two agents of the same type, but not on {} and {}."
+msgstr "The <= operator can only be used on two numbers, two strings, or two agents of the same type, but not on {} and {}."
+
+#: netlogo-gui/src/main/prim/_greaterthan.java:47
+#: netlogo-gui/src/main/prim/_greaterthan.java:76
+#: netlogo-gui/src/main/prim/_greaterthan.java:85
+msgid "The > operator can only be used on two numbers, two strings, or two agents of the same type, but not on {} and {}."
+msgstr "The > operator can only be used on two numbers, two strings, or two agents of the same type, but not on {} and {}."
+
+#: netlogo-gui/src/main/prim/etc/_greaterorequal.java:47
+#: netlogo-gui/src/main/prim/etc/_greaterorequal.java:76
+#: netlogo-gui/src/main/prim/etc/_greaterorequal.java:85
+msgid "The >= operator can only be used on two numbers, two strings, or two agents of the same type, but not on {} and {}."
+msgstr "The >= operator can only be used on two numbers, two strings, or two agents of the same type, but not on {} and {}."
+
+#: netlogo-gui/src/main/app/tools/LibrariesDialog.scala:32
+msgid "The below extensions will override any extension with the same name that is installed through the Extension Manager.  If you wish to use a version of the extension downloaded through the Extension Manager instead, you must first remove the files at the specified location.\n\nSee the \"Extensions Guide\" and the \"Extension Manager\" pages of the NetLogo User Manual for more information.\n\n {}"
+msgstr "The below extensions will override any extension with the same name that is installed through the Extension Manager.  If you wish to use a version of the extension downloaded through the Extension Manager instead, you must first remove the files at the specified location.\n\nSee the \"Extensions Guide\" and the \"Extension Manager\" pages of the NetLogo User Manual for more information.\n\n {}"
+
+#: netlogo-gui/src/main/app/RecentFilesMenu.scala:69
+msgid "The file \"{}\" does not exist."
+msgstr "The file \"{}\" does not exist."
+
+#: netlogo-gui/src/main/app/codetab/TemporaryCodeTab.scala:135
+msgid "The file name \"{}.nlm\" is invalid. NLS file names must be valid NetLogo identifiers, and cannot conflict with an existing keyword or primitive name."
+msgstr "The file name \"{}.nlm\" is invalid. NLS file names must be valid NetLogo identifiers, and cannot conflict with an existing keyword or primitive name."
+
+#: netlogo-gui/src/main/window/FileController.scala:114
+msgid "The file {} is not a valid NetLogo model file."
+msgstr "The file {} is not a valid NetLogo model file."
+
+#: parser-core/src/main/parse/StructureParser.scala:221
+msgid "The following extensions are referenced by imported modules and must be declared in the model code: {}"
+msgstr "The following extensions are referenced by imported modules and must be declared in the model code: {}"
+
+#: netlogo-core/src/main/agent/ImportPatchColors.java:33
+msgid "The following file is not in a supported image format: {}"
+msgstr "The following file is not in a supported image format: {}"
+
+#: netlogo-gui/src/main/app/OfferSaveExternalsDialog.scala:31
+msgid "The following files have been modified:"
+msgstr "The following files have been modified:"
+
+#: netlogo-gui/src/main/prim/etc/_reduce.scala:16
+msgid "The list argument to reduce must not be empty."
+msgstr "The list argument to reduce must not be empty."
+
+#: netlogo-core/src/main/prim/_multiassign.scala:80
+#: netlogo-core/src/main/prim/_multiassignnest.scala:15
+msgid "The list of values for {} must be at least as long as the list of names.  We need {} value(s) but only got {} from the list {}."
+msgstr "The list of values for {} must be at least as long as the list of names.  We need {} value(s) but only got {} from the list {}."
+
+#: parser-core/src/main/parse/LetScoper.scala:182
+msgid "The list of variables names given to LET must contain at least one item."
+msgstr "The list of variables names given to LET must contain at least one item."
+
+#: parser-core/src/main/parse/SetSplitter.scala:54
+msgid "The list of variables names given to SET must contain at least one item."
+msgstr "The list of variables names given to SET must contain at least one item."
+
+#: netlogo-core/src/main/api/LabVariableParser.scala:73
+#: netlogo-core/src/main/api/LabVariableParser.scala:133
+msgid "The number of variable combinations for \"{}\" exceeds limit"
+msgstr "The number of variable combinations for \"{}\" exceeds limit"
+
+#: netlogo-gui/src/main/prim/etc/_setxy.java:40
+#: netlogo-gui/src/main/prim/etc/_setxy.java:54
+msgid "The point [ {} , {} ] is outside of the boundaries of the world and wrapping is not permitted in one or both directions."
+msgstr "The point [ {} , {} ] is outside of the boundaries of the world and wrapping is not permitted in one or both directions."
+
+#: netlogo-gui/src/main/app/tools/PreferencesDialog.scala:196
+msgid "The specified log directory does not exist, would you like to create it?"
+msgstr "The specified log directory does not exist, would you like to create it?"
+
+#: netlogo-gui/src/main/prim/etc/_sqrt.java:24
+msgid "The square root of {} is an imaginary number."
+msgstr "The square root of {} is an imaginary number."
+
+#: netlogo-gui/src/main/prim/etc/_range.scala:17
+msgid "The step-size for range must be non-zero."
+msgstr "The step-size for range must be non-zero."
+
+#: netlogo-gui/src/main/prim/etc/_ticks.java:25
+#: netlogo-gui/src/main/prim/etc/_tickadvance.scala:17
+msgid "The tick counter has not been started yet. Use RESET-TICKS."
+msgstr "The tick counter has not been started yet. Use RESET-TICKS."
+
+#: netlogo-core/src/main/api/LabVariableParser.scala:56
+#: netlogo-core/src/main/api/LabVariableParser.scala:80
+#: netlogo-core/src/main/api/LabVariableParser.scala:152
+msgid "The variable \"{}\" does not have an assigned value in at least one subexperiment. It must be explicitly defined in all subexperiments or defined first as a constant."
+msgstr "The variable \"{}\" does not have an assigned value in at least one subexperiment. It must be explicitly defined in all subexperiments or defined first as a constant."
+
+#: netlogo-gui/src/main/app/FileManager.scala:451
+msgid "The widgets in this model can be converted to the new larger sizes for NetLogo 7. They can also be repositioned to retain the original spacing between widgets. Either way, you will likely need to make further adjustments afterward."
+msgstr "The widgets in this model can be converted to the new larger sizes for NetLogo 7. They can also be repositioned to retain the original spacing between widgets. Either way, you will likely need to make further adjustments afterward."
+
+#: netlogo-gui/src/main/window/PlotExportControls.scala:40
+msgid "There are no plots to export."
+msgstr "There are no plots to export."
+
+#: parser-core/src/main/parse/StructureChecker.scala:317
+msgid "There is already a local variable called {} here"
+msgstr "There is already a local variable called {} here"
+
+#: netlogo-gui/src/main/window/AbstractPlotWidget.scala:327
+msgid "There is already a plot with the name {}"
+msgstr "There is already a plot with the name {}"
+
+#: parser-core/src/main/parse/StructureChecker.scala:314
+#: parser-core/src/main/parse/StructureConverter.scala:77
+msgid "There is already a {} called {}"
+msgstr "There is already a {} called {}"
+
+#: parser-core/src/main/parse/StructureParser.scala:272
+msgid "There is already an imported procedure called {}"
+msgstr "There is already an imported procedure called {}"
+
+#: netlogo-gui/src/main/prim/etc/_myself.java:23
+#: netlogo-gui/src/main/prim/etc/_myself.java:32
+msgid "There is no agent for MYSELF to refer to."
+msgstr "There is no agent for MYSELF to refer to."
+
+#: parser-core/src/main/parse/StructureConverter.scala:164
+msgid "There is no breed \"{}\""
+msgstr "There is no breed \"{}\""
+
+#: netlogo-gui/src/main/prim/plot/primitives.scala:22
+msgid "There is no current plot. Please select a current plot using the set-current-plot command."
+msgstr "There is no current plot. Please select a current plot using the set-current-plot command."
+
+#: netlogo-gui/src/main/workspace/AbstractWorkspace.java:261
+msgid "There is no global variable named \"{}\""
+msgstr "There is no global variable named \"{}\""
+
+#: netlogo-gui/src/main/app/TabManager.scala:233
+msgid "This file has been externally changed. Discard unsaved changes and reload the file?"
+msgstr "This file has been externally changed. Discard unsaved changes and reload the file?"
+
+#: netlogo-gui/src/main/window/FileController.scala:115
+msgid "This file is not a valid NetLogo model file."
+msgstr "This file is not a valid NetLogo model file."
+
+#: netlogo-gui/src/main/app/codetab/TemporaryCodeTab.scala:105
+msgid "This included file cannot be checked. Make sure that the main Code tab references it and has been checked."
+msgstr "This included file cannot be checked. Make sure that the main Code tab references it and has been checked."
+
+#: netlogo-core/src/main/compile/middle/SetVisitor.scala:20
+#: parser-core/src/main/parse/ExpressionParser.scala:111
+msgid "This isn't something you can use \"set\" on."
+msgstr "This isn't something you can use \"set\" on."
+
+#: netlogo-gui/src/main/app/FileManager.scala:204
+msgid "This model contains included files, which are not supported in NetLogo Web. The contents of these files will be merged with the main code."
+msgstr "This model contains included files, which are not supported in NetLogo Web. The contents of these files will be merged with the main code."
+
+#: netlogo-gui/src/main/window/GUIWorkspace.scala:696
+msgid "This model has a startup procedure. Would you like to run it now?"
+msgstr "This model has a startup procedure. Would you like to run it now?"
+
+#: netlogo-gui/src/main/window/FileController.scala:121
+msgid "This model was created in {}. You may need to make changes for it to work in {}. If it does not open, you may be able to update it for {} using the Auto-Converter service."
+msgstr "This model was created in {}. You may need to make changes for it to work in {}. If it does not open, you may be able to update it for {} using the Auto-Converter service."
+
+#: netlogo-gui/src/main/window/FileController.scala:162
+msgid "This model was made with {}. If you save it in {} it may not work in the old version anymore."
+msgstr "This model was made with {}. If you save it in {} it may not work in the old version anymore."
+
+#: netlogo-gui/src/main/app/ToolActions.scala:139
+#: netlogo-gui/src/main/hubnet/server/gui/HubNetClientEditor.scala:125
+msgid "This tool converts all widgets in the current model to the new larger sizes for NetLogo 7 and adjusts their positions to retain the original spacing between widgets. You will likely need to make further adjustments after using the tool."
+msgstr "This tool converts all widgets in the current model to the new larger sizes for NetLogo 7 and adjusts their positions to retain the original spacing between widgets. You will likely need to make further adjustments after using the tool."
+
+#: netlogo-gui/src/main/app/tools/LibrariesTab.scala:323
+msgid "This version of {} can only be used with NetLogo version {} or newer.\n\nYou can download the latest version of NetLogo at https://www.netlogo.org/download\n\n{}"
+msgstr "This version of {} can only be used with NetLogo version {} or newer.\n\nYou can download the latest version of NetLogo at https://www.netlogo.org/download\n\n{}"
+
+#: netlogo-gui/src/main/window/WorldEditPanel2D.scala:160
+#: netlogo-gui/src/main/window/WorldEditPanel3D.scala:204
+msgid "Tick counter"
+msgstr "Tick counter"
+
+#: netlogo-gui/src/main/window/WorldEditPanel2D.scala:153
+#: netlogo-gui/src/main/window/WorldEditPanel3D.scala:197
+msgid "Tick counter label"
+msgstr "Tick counter label"
+
+#: netlogo-gui/src/main/bsapp/ProgressDialog.scala:102
+msgid "Time"
+msgstr "Time"
+
+#: netlogo-gui/src/main/lab/gui/ProtocolEditPanel.scala:204
+msgid "Time limit"
+msgstr "Time limit"
+
+#: netlogo-gui/src/main/app/ToolsMenu.scala:21
+#: netlogo-gui/src/main/hubnet/server/gui/HubNetClientEditor.scala:114
+msgid "Tools"
+msgstr "Tools"
+
+#: netlogo-gui/src/main/window/WorldViewSettings2D.scala:36
+#: netlogo-gui/src/main/window/WorldViewSettings3D.scala:72
+msgid "Top"
+msgstr "Top"
+
+#: netlogo-gui/src/main/window/WorldViewSettings2D.scala:27
+msgid "Top Left"
+msgstr "Top Left"
+
+#: netlogo-gui/src/main/window/WorldViewSettings3D.scala:60
+msgid "Top Northeast"
+msgstr "Top Northeast"
+
+#: netlogo-gui/src/main/window/WorldViewSettings3D.scala:59
+msgid "Top Northwest"
+msgstr "Top Northwest"
+
+#: netlogo-gui/src/main/window/WorldViewSettings2D.scala:28
+msgid "Top Right"
+msgstr "Top Right"
+
+#: netlogo-gui/src/main/window/WorldViewSettings3D.scala:61
+msgid "Top Southeast"
+msgstr "Top Southeast"
+
+#: netlogo-gui/src/main/window/WorldViewSettings3D.scala:58
+msgid "Top Southwest"
+msgstr "Top Southwest"
+
+#: netlogo-core/src/main/api/LabVariableParser.scala:161
+msgid "Total number of runs exceeds limit"
+msgstr "Total number of runs exceeds limit"
+
+#: netlogo-gui/src/main/window/WorkspaceActions.scala:22
+msgid "Turtle Monitor"
+msgstr "Turtle Monitor"
+
+#: netlogo-gui/src/main/app/App.scala:856
+msgid "Turtle Shapes Editor"
+msgstr "Turtle Shapes Editor"
+
+#: netlogo-gui/src/main/window/DummyInputEditPanel.scala:22
+#: netlogo-gui/src/main/window/InputEditPanel.scala:26
+msgid "Type"
+msgstr "Type"
+
+#: netlogo-gui/src/main/hubnet/server/gui/ControlCenter.scala:360
+msgid "UNKNOWN"
+msgstr "UNKNOWN"
+
+#: netlogo-gui/src/main/hubnet/server/gui/GUIHubNetManager.scala:144
+msgid "Unable to find a suitable network connection for HubNet, please check your network connection"
+msgstr "Unable to find a suitable network connection for HubNet, please check your network connection"
+
+#: netlogo-gui/src/main/hubnet/server/gui/GUIHubNetManager.scala:148
+msgid "Unable to find an external network connection, HubNet will be served locally"
+msgstr "Unable to find an external network connection, HubNet will be served locally"
+
+#: netlogo-core/src/main/lab/Lab.scala:126
+msgid "Unable to read existing spreadsheet output, data is not intact."
+msgstr "Unable to read existing spreadsheet output, data is not intact."
+
+#: netlogo-gui/src/main/editor/AdvancedEditorArea.scala:53
+#: netlogo-gui/src/main/sdm/gui/AggregateModelEditor.scala:111
+#: netlogo-gui/src/main/shape/editor/EditorDialog.scala:150
+msgid "Undo"
+msgstr "Undo"
+
+#: netlogo-gui/src/main/window/ReportNotHelpfulDialog.scala:24
+msgid "Unhelpful Error Message"
+msgstr "Unhelpful Error Message"
+
+#: netlogo-gui/src/main/window/ErrorLabel.scala:30
+msgid "Unhelpful?"
+msgstr "Unhelpful?"
+
+#: netlogo-gui/src/main/app/tools/LibrariesTab.scala:193
+msgid "Uninstall"
+msgstr "Uninstall"
+
+#: netlogo-gui/src/main/app/tools/LibrariesTab.scala:163
+#: netlogo-gui/src/main/app/tools/LibrariesTab.scala:194
+msgid "Uninstalling"
+msgstr "Uninstalling"
+
+#: netlogo-gui/src/main/window/DummySliderEditPanel.scala:58
+#: netlogo-gui/src/main/window/MonitorEditPanel.scala:45
+#: netlogo-gui/src/main/window/SliderEditPanel.scala:69
+msgid "Units (optional)"
+msgstr "Units (optional)"
+
+#: netlogo-gui/src/main/app/App.scala:277
+msgid "Unknown color theme \"{}\""
+msgstr "Unknown color theme \"{}\""
+
+#: netlogo-gui/src/main/app/ExtensionAssistant.scala:44
+msgid "Unknown extension: {}\n\nWould you like to look for extensions in the Extension Manager?\n\n(If your desired extension is not listed in the Extension Manager, you will need to manually download and install the extension in order to use it. See the \"Extensions Guide\" page of the NetLogo User Manual for more information.)"
+msgstr "Unknown extension: {}\n\nWould you like to look for extensions in the Extension Manager?\n\n(If your desired extension is not listed in the Extension Manager, you will need to manually download and install the extension in order to use it. See the \"Extensions Guide\" page of the NetLogo User Manual for more information.)"
+
+#: netlogo-core/src/main/agent/Patch.java:275
+#: netlogo-core/src/main/agent/Turtle.java:500
+msgid "Unknown variable {}."
+msgstr "Unknown variable {}."
+
+#: netlogo-gui/src/main/app/tools/LibrariesTab.scala:370
+msgid "Update"
+msgstr "Update"
+
+#: netlogo-gui/src/main/app/tools/LibrariesTab.scala:372
+msgid "Update / Install"
+msgstr "Update / Install"
+
+#: netlogo-gui/src/main/window/WorldEditPanel2D.scala:137
+msgid "Update 2D view"
+msgstr "Update 2D view"
+
+#: netlogo-gui/src/main/app/tools/LibrariesTab.scala:135
+msgid "Update All"
+msgstr "Update All"
+
+#: netlogo-gui/src/main/bsapp/ProgressDialog.scala:52
+#: netlogo-gui/src/main/lab/gui/RunOptionsEditPanel.scala:71
+msgid "Update plots and monitors"
+msgstr "Update plots and monitors"
+
+#: netlogo-gui/src/main/bsapp/ProgressDialog.scala:51
+#: netlogo-gui/src/main/lab/gui/RunOptionsEditPanel.scala:62
+msgid "Update view"
+msgstr "Update view"
+
+#: netlogo-gui/src/main/bsapp/ProgressDialog.scala:217
+msgid "Updating Plots Warning"
+msgstr "Updating Plots Warning"
+
+#: netlogo-gui/src/main/app/FileManager.scala:169
+msgid "Upload To Modeling Commons"
+msgstr "Upload To Modeling Commons"
+
+#: netlogo-gui/src/main/window/ButtonEditPanel.scala:72
+#: netlogo-gui/src/main/window/ChooserEditPanel.scala:40
+#: netlogo-gui/src/main/window/DummyChooserEditPanel.scala:39
+#: netlogo-gui/src/main/window/DummyInputEditPanel.scala:31
+#: netlogo-gui/src/main/window/DummyMonitorEditPanel.scala:31
+#: netlogo-gui/src/main/window/DummyPlotEditPanel.scala:103
+#: netlogo-gui/src/main/window/DummySliderEditPanel.scala:76
+#: netlogo-gui/src/main/window/DummySwitchEditPanel.scala:22
+#: netlogo-gui/src/main/window/InputEditPanel.scala:35
+#: netlogo-gui/src/main/window/MonitorEditPanel.scala:65
+#: netlogo-gui/src/main/window/PlotEditPanel.scala:154
+#: netlogo-gui/src/main/window/SliderEditPanel.scala:87
+#: netlogo-gui/src/main/window/SwitchEditPanel.scala:26
+msgid "Use old sizing"
+msgstr "Use old sizing"
+
+#: netlogo-gui/src/main/app/tools/Preferences.scala:104
+msgid "User Interface language"
+msgstr "User Interface language"
+
+#: netlogo-gui/src/main/hubnet/client/ClientPanel.scala:299
+#: netlogo-gui/src/main/prim/gui/_usermessage.scala:24
+msgid "User Message"
+msgstr "User Message"
+
+#: netlogo-gui/src/main/prim/gui/_useroneof.scala:28
+msgid "User One Of"
+msgstr "User One Of"
+
+#: netlogo-gui/src/main/prim/gui/_useryesorno.scala:22
+msgid "User Yes or No"
+msgstr "User Yes or No"
+
+#: netlogo-gui/src/main/window/DummySliderEditPanel.scala:49
+#: netlogo-gui/src/main/window/SliderEditPanel.scala:60
+msgid "Value"
+msgstr "Value"
+
+#: netlogo-core/src/main/agent/BooleanConstraint.scala:18
+msgid "Value must be a boolean."
+msgstr "Value must be a boolean."
+
+#: netlogo-core/src/main/agent/ChooserConstraint.scala:32
+msgid "Value must be one of: {}"
+msgstr "Value must be one of: {}"
+
+#: netlogo-gui/src/main/sdm/gui/AggregateModelEditorToolBar.scala:98
+msgid "Variable"
+msgstr "Variable"
+
+#: netlogo-core/src/main/api/LabVariableParser.scala:121
+#: netlogo-core/src/main/api/LabVariableParser.scala:137
+msgid "Variable \"{}\" defined twice in one subexperiment"
+msgstr "Variable \"{}\" defined twice in one subexperiment"
+
+#: parser-core/src/main/parse/StructureChecker.scala:105
+msgid "Variable name conflicts with a constant."
+msgstr "Variable name conflicts with a constant."
+
+#: netlogo-gui/src/main/lab/gui/ProtocolEditPanel.scala:33
+msgid "Vary variables as follows (note brackets and quotation marks):"
+msgstr "Vary variables as follows (note brackets and quotation marks):"
+
+#: netlogo-gui/src/main/window/DummyViewWidget.scala:20
+#: netlogo-gui/src/main/window/InterfaceFactory.scala:27
+#: netlogo-gui/src/main/window/WorldEditPanel2D.scala:159
+#: netlogo-gui/src/main/window/WorldEditPanel3D.scala:203
+#: netlogo-gui/src/main/app/interfacetab/WidgetPanel.scala:1712
+#: netlogo-gui/src/main/app/tools/AgentMonitor.scala:75
+msgid "View"
+msgstr "View"
+
+#: netlogo-gui/src/main/app/tools/LibrariesDialog.scala:30
+#: netlogo-gui/src/main/app/tools/LibrariesDialog.scala:45
+msgid "View Conflicting Libraries"
+msgstr "View Conflicting Libraries"
+
+#: netlogo-gui/src/main/window/DisplaySwitch.scala:10
+msgid "View Updates"
+msgstr "View Updates"
+
+#: netlogo-gui/src/main/prim/_anywith.java:34
+#: netlogo-gui/src/main/prim/_oneofwith.java:36
+msgid "WITH expected a true/false value from {}, but got {} instead."
+msgstr "WITH expected a true/false value from {}, but got {} instead."
+
+#: netlogo-gui/src/main/bsapp/ProgressDialog.scala:161
+msgid "Waiting for current runs to finish..."
+msgstr "Waiting for current runs to finish..."
+
+#: netlogo-gui/src/main/app/App.scala:578
+#: netlogo-gui/src/main/app/FileManager.scala:208
+#: netlogo-gui/src/main/app/FileManager.scala:358
+#: netlogo-gui/src/main/app/FileManager.scala:369
+#: netlogo-gui/src/main/window/FileController.scala:84
+#: netlogo-gui/src/main/window/FileController.scala:95
+#: netlogo-gui/src/main/window/FileController.scala:105
+#: netlogo-gui/src/main/window/FileController.scala:125
+#: netlogo-gui/src/main/window/FileController.scala:171
+#: netlogo-gui/src/main/window/GUIWorkspace.scala:348
+#: netlogo-gui/src/main/window/GUIWorkspace.scala:696
+#: netlogo-gui/src/main/gl/view/ViewControlToolBar.scala:28
+#: netlogo-gui/src/main/app/tools/PreferencesDialog.scala:195
+msgid "Warning"
+msgstr "Warning"
+
+#: netlogo-gui/src/main/app/tools/AgentMonitorViewPanel.scala:81
+msgid "Watch"
+msgstr "Watch"
+
+#: netlogo-core/src/main/api/Perspective.scala:36
+msgid "Watching {}"
+msgstr "Watching {}"
+
+#: netlogo-gui/src/main/app/tools/LibrariesTab.scala:394
+msgid "We couldn't download {}.\n Check your Internet connectivity. If you think the URL is incorrect or unreachable,\n please report to us at https://github.com/NetLogo/NetLogo/issues, or to bugs@ccl.northwestern.edu, with details."
+msgstr "We couldn't download {}.\n Check your Internet connectivity. If you think the URL is incorrect or unreachable,\n please report to us at https://github.com/NetLogo/NetLogo/issues, or to bugs@ccl.northwestern.edu, with details."
+
+#: netlogo-gui/src/main/app/tools/LibraryManagerErrorDialog.scala:15
+msgid "We had a problem parsing the libraries metadata.  Please report the problem\n at https://github.com/NetLogo/NetLogo-Libraries/issues, or to bugs@ccl.northwestern.edu, and paste\n the contents of this window into your report."
+msgstr "We had a problem parsing the libraries metadata.  Please report the problem\n at https://github.com/NetLogo/NetLogo-Libraries/issues, or to bugs@ccl.northwestern.edu, and paste\n the contents of this window into your report."
+
+#: netlogo-gui/src/main/window/WorldViewSettings3D.scala:70
+msgid "West"
+msgstr "West"
+
+#: netlogo-gui/src/main/window/CommentableError.scala:18
+msgid "What is your comment about the error?"
+msgstr "What is your comment about the error?"
+
+#: netlogo-gui/src/main/window/PlotExportControls.scala:21
+msgid "Which plot would you like to export?"
+msgstr "Which plot would you like to export?"
+
+#: netlogo-gui/src/main/app/FileManager.scala:158
+msgid "Which section would you like to import from?"
+msgstr "Which section would you like to import from?"
+
+#: netlogo-gui/src/main/window/FileController.scala:207
+msgid "While running conversion \"{}\" on the {}: {}"
+msgstr "While running conversion \"{}\" on the {}: {}"
+
+#: netlogo-gui/src/main/window/SliderWidget.scala:136
+msgid "Widget cannot reference itself"
+msgstr "Widget cannot reference itself"
+
+#: netlogo-gui/src/main/window/DummyViewEditPanel.scala:12
+msgid "Width (pixels)"
+msgstr "Width (pixels)"
+
+#: netlogo-gui/src/main/window/WorldEditPanel2D.scala:128
+#: netlogo-gui/src/main/window/WorldEditPanel3D.scala:180
+msgid "Wire frame color"
+msgstr "Wire frame color"
+
+#: netlogo-gui/src/main/window/WorldEditPanel2D.scala:158
+#: netlogo-gui/src/main/window/WorldEditPanel3D.scala:202
+msgid "World"
+msgstr "World"
+
+#: netlogo-gui/src/main/window/WorldEditPanel3D.scala:94
+msgid "World wraps X (east/west)"
+msgstr "World wraps X (east/west)"
+
+#: netlogo-gui/src/main/window/WorldEditPanel3D.scala:103
+msgid "World wraps Y (north/south)"
+msgstr "World wraps Y (north/south)"
+
+#: netlogo-gui/src/main/window/WorldEditPanel3D.scala:112
+msgid "World wraps Z (top/bottom)"
+msgstr "World wraps Z (top/bottom)"
+
+#: netlogo-gui/src/main/window/WorldEditPanel2D.scala:71
+msgid "World wraps horizontally"
+msgstr "World wraps horizontally"
+
+#: netlogo-gui/src/main/window/WorldEditPanel2D.scala:80
+msgid "World wraps vertically"
+msgstr "World wraps vertically"
+
+#: netlogo-gui/src/main/app/common/FindDialog.scala:269
+msgid "Wrap around"
+msgstr "Wrap around"
+
+#: netlogo-gui/src/main/bsapp/ProgressDialog.scala:167
+msgid "Writing output files..."
+msgstr "Writing output files..."
+
+#: netlogo-gui/src/main/window/DummyPlotEditPanel.scala:22
+#: netlogo-gui/src/main/window/DummyPlotEditPanel.scala:31
+#: netlogo-gui/src/main/window/PlotEditPanel.scala:34
+msgid "X axis label"
+msgstr "X axis label"
+
+#: netlogo-gui/src/main/window/DummyPlotEditPanel.scala:40
+#: netlogo-gui/src/main/window/PlotEditPanel.scala:52
+msgid "X max"
+msgstr "X max"
+
+#: netlogo-gui/src/main/window/PlotEditPanel.scala:43
+msgid "X min"
+msgstr "X min"
+
+#: netlogo-gui/src/main/window/DummyPlotEditPanel.scala:49
+#: netlogo-gui/src/main/window/PlotEditPanel.scala:61
+msgid "Y axis label"
+msgstr "Y axis label"
+
+#: netlogo-gui/src/main/window/DummyPlotEditPanel.scala:67
+#: netlogo-gui/src/main/window/PlotEditPanel.scala:79
+msgid "Y max"
+msgstr "Y max"
+
+#: netlogo-gui/src/main/window/DummyPlotEditPanel.scala:58
+#: netlogo-gui/src/main/window/PlotEditPanel.scala:70
+msgid "Y min"
+msgstr "Y min"
+
+#: netlogo-gui/src/main/swing/OptionPane.scala:19
+#: netlogo-gui/src/main/prim/gui/_useryesorno.scala:23
+msgid "Yes"
+msgstr "Yes"
+
+#: netlogo-gui/src/main/window/FileController.scala:102
+msgid "You are attempting to open a 2D model in {}. You might need to make changes before it will work in 3D."
+msgstr "You are attempting to open a 2D model in {}. You might need to make changes before it will work in 3D."
+
+#: netlogo-gui/src/main/window/FileController.scala:91
+msgid "You are attempting to open a model that was created in a 3D version of NetLogo. (This is {}; the model was created in {}.) NetLogo can try to open the model, but it may or may not work."
+msgstr "You are attempting to open a model that was created in a 3D version of NetLogo. (This is {}; the model was created in {}.) NetLogo can try to open the model, but it may or may not work."
+
+#: netlogo-gui/src/main/window/FileController.scala:80
+msgid "You are attempting to open a model that was created in a newer version of NetLogo. (This is {}; the model was created in {}.) NetLogo can try to open the model, but it may or may not work."
+msgstr "You are attempting to open a model that was created in a newer version of NetLogo. (This is {}; the model was created in {}.) NetLogo can try to open the model, but it may or may not work."
+
+#: netlogo-gui/src/main/workspace/DefaultFileManager.scala:114
+msgid "You can only delete files."
+msgstr "You can only delete files."
+
+#: netlogo-core/src/main/agent/Patch.java:272
+#: netlogo-core/src/main/agent/Patch.java:286
+#: netlogo-core/src/main/agent/Patch.java:288
+msgid "You can't change a patch's coordinates."
+msgstr "You can't change a patch's coordinates."
+
+#: netlogo-core/src/main/agent/Turtle.java:378
+#: netlogo-core/src/main/agent/Turtle.java:498
+msgid "You can't change a turtle's ID number."
+msgstr "You can't change a turtle's ID number."
+
+#: netlogo-gui/src/main/prim/etc/_importdrawing.java:21
+msgid "You can't import drawing in 3D."
+msgstr "You can't import drawing in 3D."
+
+#: netlogo-core/src/main/agent/Turtle3D.java:365
+#: netlogo-core/src/main/agent/Turtle.java:454
+msgid "You can't set BREED to a non-breed agentset."
+msgstr "You can't set BREED to a non-breed agentset."
+
+#: netlogo-core/src/main/agent/Link.java:302
+msgid "You can't set BREED to a non-link-breed agentset."
+msgstr "You can't set BREED to a non-link-breed agentset."
+
+#: netlogo-gui/src/main/workspace/DefaultFileManager.scala:110
+msgid "You cannot delete a non-existent file."
+msgstr "You cannot delete a non-existent file."
+
+#: netlogo-core/src/main/agent/Link.java:312
+#: netlogo-gui/src/main/prim/etc/linkcreation.scala:47
+msgid "You cannot have both breeded and unbreeded links in the same world."
+msgstr "You cannot have both breeded and unbreeded links in the same world."
+
+#: netlogo-gui/src/main/app/ExtensionAssistant.scala:36
+msgid "You do not have the \"{}\" extension installed, but NetLogo can download it for you.\n Would you like NetLogo to automatically install \"{}\" version {}?"
+msgstr "You do not have the \"{}\" extension installed, but NetLogo can download it for you.\n Would you like NetLogo to automatically install \"{}\" version {}?"
+
+#: netlogo-gui/src/main/app/FileManager.scala:365
+msgid "You have a paused BehaviorSpace experiment. Do you want to leave this model and discard the experiment data?"
+msgstr "You have a paused BehaviorSpace experiment. Do you want to leave this model and discard the experiment data?"
+
+#: netlogo-gui/src/main/hubnet/client/ClientApp.scala:157
+msgid "You have been disconnected from {}."
+msgstr "You have been disconnected from {}."
+
+#: netlogo-gui/src/main/shape/editor/EditorDialog.scala:225
+#: netlogo-gui/src/main/shape/editor/LinkEditorDialog.scala:53
+msgid "You may lose changes made to this shape. Do you want to cancel anyway?"
+msgstr "You may lose changes made to this shape. Do you want to cancel anyway?"
+
+#: netlogo-gui/src/main/app/App.scala:922
+msgid "You must choose!"
+msgstr "You must choose!"
+
+#: netlogo-gui/src/main/prim/etc/_resizeworld.java:34
+msgid "You must include the point (0, 0) in the world."
+msgstr "You must include the point (0, 0) in the world."
+
+#: netlogo-gui/src/main/app/App.scala:271
+msgid "You must specify a URL after the \"--url\" option."
+msgstr "You must specify a URL after the \"--url\" option."
+
+#: netlogo-gui/src/main/app/App.scala:274
+msgid "You must specify a color theme name after the \"--color-theme\" option."
+msgstr "You must specify a color theme name after the \"--color-theme\" option."
+
+#: netlogo-gui/src/main/app/App.scala:287
+msgid "You must specify a directory after the \"--log-directory\" option."
+msgstr "You must specify a directory after the \"--log-directory\" option."
+
+#: netlogo-gui/src/main/app/App.scala:249
+msgid "You must specify a file after the \"{}\" option."
+msgstr "You must specify a file after the \"{}\" option."
+
+#: netlogo-gui/src/main/app/App.scala:264
+msgid "You must specify a model name after the \"--magic\" option."
+msgstr "You must specify a model name after the \"--magic\" option."
+
+#: netlogo-gui/src/main/app/App.scala:283
+msgid "You must specify at least one event name after the \"--log-events\" option."
+msgstr "You must specify at least one event name after the \"--log-events\" option."
+
+#: netlogo-gui/src/main/window/ErrorDialogManager.scala:233
+msgid "Your model is too large to run in the amount of memory available to NetLogo!\n For more information consult the \"How big can my model be?\" section of the FAQ in the user manual.\n Warning: you may see strange results if you continue running the current model without restarting NetLogo."
+msgstr "Your model is too large to run in the amount of memory available to NetLogo!\n For more information consult the \"How big can my model be?\" section of the FAQ in the user manual.\n Warning: you may see strange results if you continue running the current model without restarting NetLogo."
+
+#: netlogo-gui/src/main/app/ZoomMenu.scala:14
+#: netlogo-gui/src/main/gl/view/ViewControlToolBar.scala:18
+msgid "Zoom"
+msgstr "Zoom"
+
+#: netlogo-gui/src/main/prim/etc/_setdefaultshape.java:46
+msgid "\"{}\" is not a currently defined link shape."
+msgstr "\"{}\" is not a currently defined link shape."
+
+#: netlogo-core/src/main/agent/Link.java:332
+#: netlogo-core/src/main/agent/Turtle.java:429
+msgid "\"{}\" is not a currently defined shape."
+msgstr "\"{}\" is not a currently defined shape."
+
+#: netlogo-gui/src/main/prim/etc/_setdefaultshape.java:39
+msgid "\"{}\" is not a currently defined turtle shape."
+msgstr "\"{}\" is not a currently defined turtle shape."
+
+#: netlogo-core/src/main/nvm/Instruction.scala:17
+msgid "a link"
+msgstr "a link"
+
+#: netlogo-core/src/main/nvm/Instruction.scala:16
+msgid "a patch"
+msgstr "a patch"
+
+#: netlogo-core/src/main/nvm/Instruction.scala:15
+msgid "a turtle"
+msgstr "a turtle"
+
+#: netlogo-core/src/main/nvm/AnonymousProcedure.scala:49
+msgid "arrow procedure expected 1 input, but only got 0"
+msgstr "arrow procedure expected 1 input, but only got 0"
+
+#: netlogo-core/src/main/nvm/AnonymousProcedure.scala:51
+msgid "arrow procedure expected {} inputs, but only got {}"
+msgstr "arrow procedure expected {} inputs, but only got {}"
+
+#: netlogo-gui/src/main/prim/etc/_atan.java:26
+msgid "atan is undefined when both inputs are zero."
+msgstr "atan is undefined when both inputs are zero."
+
+#: netlogo-core/src/main/agent/Agent.scala:105
+msgid "can't set {} variable {} to non-{} {}"
+msgstr "can't set {} variable {} to non-{} {}"
+
+#: netlogo-gui/src/main/window/UpdateModeChooser.scala:9
+msgid "change view update mode"
+msgstr "change view update mode"
+
+#: netlogo-gui/src/main/app/interfacetab/InterfaceWidgetControls.scala:60
+msgid "delete interface items ({}+4)"
+msgstr "delete interface items ({}+4)"
+
+#: netlogo-gui/src/main/sdm/gui/AggregateModelEditorToolBar.scala:41
+msgid "dt must be a number"
+msgstr "dt must be a number"
+
+#: netlogo-gui/src/main/sdm/gui/AggregateModelEditorToolBar.scala:43
+msgid "dt must be greater than 0"
+msgstr "dt must be greater than 0"
+
+#: netlogo-gui/src/main/app/interfacetab/InterfaceWidgetControls.scala:59
+msgid "edit interface items ({}+3)"
+msgstr "edit interface items ({}+3)"
+
+#: netlogo-gui/src/main/lab/gui/ProtocolEditPanel.scala:59
+msgid "execute each combination this many times"
+msgstr "execute each combination this many times"
+
+#: netlogo-gui/src/main/lab/gui/ProtocolEditPanel.scala:197
+msgid "executed after the experiment is finished"
+msgstr "executed after the experiment is finished"
+
+#: netlogo-gui/src/main/lab/gui/ProtocolEditPanel.scala:158
+msgid "executed at every step"
+msgstr "executed at every step"
+
+#: netlogo-gui/src/main/lab/gui/ProtocolEditPanel.scala:184
+msgid "executed at the end of each run"
+msgstr "executed at the end of each run"
+
+#: netlogo-gui/src/main/lab/gui/ProtocolEditPanel.scala:145
+msgid "executed before each run begins"
+msgstr "executed before each run begins"
+
+#: netlogo-gui/src/main/lab/gui/ProtocolEditPanel.scala:132
+msgid "executed before the experiment begins"
+msgstr "executed before the experiment begins"
+
+#: netlogo-gui/src/main/app/tools/AgentMonitorEditor.scala:441
+msgid "expected a link breed"
+msgstr "expected a link breed"
+
+#: netlogo-gui/src/main/app/tools/AgentMonitorEditor.scala:430
+msgid "expected a turtle or a who number"
+msgstr "expected a turtle or a who number"
+
+#: netlogo-gui/src/main/lab/gui/ProtocolEditPanel.scala:26
+msgid "experiment names must be unique"
+msgstr "experiment names must be unique"
+
+#: netlogo-gui/src/main/window/MonitorEditPanel.scala:50
+msgid "full precision is 17"
+msgstr "full precision is 17"
+
+#: netlogo-gui/src/main/lab/gui/ProtocolEditable.scala:222
+msgid "go commands"
+msgstr "go commands"
+
+#: netlogo-gui/src/main/hubnet/server/gui/ControlCenter.scala:257
+msgid "h:mm:ss"
+msgstr "h:mm:ss"
+
+#: netlogo-gui/src/main/window/View.java:459
+#: netlogo-gui/src/main/gl/view/Picker.scala:46
+msgid "inspect globals"
+msgstr "inspect globals"
+
+#: netlogo-gui/src/main/app/interfacetab/InterfaceWidgetControls.scala:57
+msgid "interact with interface items ({}+1)"
+msgstr "interact with interface items ({}+1)"
+
+#: netlogo-gui/src/main/window/ButtonWidget.scala:555
+#: netlogo-gui/src/main/app/common/CommandLine.scala:25
+#: netlogo-gui/src/main/app/common/LinePrompt.scala:34
+msgid "links"
+msgstr "links"
+
+#: netlogo-gui/src/main/window/WorldEditPanel2D.scala:43
+#: netlogo-gui/src/main/window/WorldEditPanel3D.scala:43
+msgid "maximum x coordinate for patches"
+msgstr "maximum x coordinate for patches"
+
+#: netlogo-gui/src/main/window/WorldEditPanel2D.scala:65
+#: netlogo-gui/src/main/window/WorldEditPanel3D.scala:65
+msgid "maximum y coordinate for patches"
+msgstr "maximum y coordinate for patches"
+
+#: netlogo-gui/src/main/window/WorldEditPanel3D.scala:87
+msgid "maximum z coordinate for patches"
+msgstr "maximum z coordinate for patches"
+
+#: netlogo-gui/src/main/window/WorldEditPanel2D.scala:93
+#: netlogo-gui/src/main/window/WorldEditPanel3D.scala:125
+msgid "measured in pixels"
+msgstr "measured in pixels"
+
+#: netlogo-gui/src/main/lab/gui/ProtocolEditable.scala:217
+msgid "metrics"
+msgstr "metrics"
+
+#: netlogo-gui/src/main/lab/gui/ProtocolEditPanel.scala:116
+msgid "metrics will run when any of these reporters are true, for example, use the reporter \"ticks mod 3 = 0\" to run metrics every 3 ticks"
+msgstr "metrics will run when any of these reporters are true, for example, use the reporter \"ticks mod 3 = 0\" to run metrics every 3 ticks"
+
+#: netlogo-gui/src/main/window/SliderEditPanel.scala:34
+msgid "min, increment, and max may be numbers or reporters"
+msgstr "min, increment, and max may be numbers or reporters"
+
+#: netlogo-gui/src/main/window/WorldEditPanel2D.scala:32
+#: netlogo-gui/src/main/window/WorldEditPanel3D.scala:32
+msgid "minimum x coordinate for patches"
+msgstr "minimum x coordinate for patches"
+
+#: netlogo-gui/src/main/window/WorldEditPanel2D.scala:54
+#: netlogo-gui/src/main/window/WorldEditPanel3D.scala:54
+msgid "minimum y coordinate for patches"
+msgstr "minimum y coordinate for patches"
+
+#: netlogo-gui/src/main/window/WorldEditPanel3D.scala:76
+msgid "minimum z coordinate for patches"
+msgstr "minimum z coordinate for patches"
+
+#: netlogo-gui/src/main/window/ButtonWidget.scala:552
+#: netlogo-gui/src/main/app/common/CommandLine.scala:22
+#: netlogo-gui/src/main/app/common/LinePrompt.scala:31
+msgid "observer"
+msgstr "observer"
+
+#: netlogo-gui/src/main/window/WorldEditPanel2D.scala:103
+#: netlogo-gui/src/main/window/WorldEditPanel3D.scala:135
+msgid "of labels on agents"
+msgstr "of labels on agents"
+
+#: netlogo-gui/src/main/window/WorldEditPanel3D.scala:155
+#: netlogo-gui/src/main/window/WorldEditPanel3D.scala:165
+msgid "only affects 3D view"
+msgstr "only affects 3D view"
+
+#: netlogo-gui/src/main/app/common/LinePrompt.scala:36
+msgid "or use Tab key"
+msgstr "or use Tab key"
+
+#: netlogo-gui/src/main/app/common/HistoryPrompt.scala:51
+msgid "or use up and down arrow keys"
+msgstr "or use up and down arrow keys"
+
+#: netlogo-gui/src/main/window/ButtonWidget.scala:554
+#: netlogo-gui/src/main/app/common/CommandLine.scala:24
+#: netlogo-gui/src/main/app/common/LinePrompt.scala:33
+msgid "patches"
+msgstr "patches"
+
+#: netlogo-gui/src/main/app/common/FindDialog.scala:256
+msgid "phrase not found"
+msgstr "phrase not found"
+
+#: netlogo-gui/src/main/lab/gui/ProtocolEditable.scala:230
+msgid "post experiment commands"
+msgstr "post experiment commands"
+
+#: netlogo-gui/src/main/lab/gui/ProtocolEditable.scala:229
+msgid "post run commands"
+msgstr "post run commands"
+
+#: netlogo-gui/src/main/lab/gui/ProtocolEditable.scala:220
+msgid "pre experiment commands"
+msgstr "pre experiment commands"
+
+#: netlogo-gui/src/main/prim/etc/_randomnormal.java:25
+msgid "random-normal's second input can't be negative."
+msgstr "random-normal's second input can't be negative."
+
+#: netlogo-gui/src/main/lab/gui/ProtocolEditable.scala:219
+msgid "run metrics when"
+msgstr "run metrics when"
+
+#: netlogo-gui/src/main/app/interfacetab/InterfaceWidgetControls.scala:58
+msgid "select interface items ({}+2)"
+msgstr "select interface items ({}+2)"
+
+#: netlogo-gui/src/main/lab/gui/ProtocolEditable.scala:221
+msgid "setup commands"
+msgstr "setup commands"
+
+#: netlogo-gui/src/main/lab/gui/ProtocolEditPanel.scala:209
+msgid "stop after this many steps (0 = no limit)"
+msgstr "stop after this many steps (0 = no limit)"
+
+#: netlogo-gui/src/main/lab/gui/ProtocolEditable.scala:227
+msgid "stop condition"
+msgstr "stop condition"
+
+#: netlogo-core/src/main/nvm/Instruction.scala:14
+msgid "the observer"
+msgstr "the observer"
+
+#: netlogo-gui/src/main/lab/gui/ProtocolEditPanel.scala:171
+msgid "the run stops if this reporter becomes true"
+msgstr "the run stops if this reporter becomes true"
+
+#: netlogo-core/src/main/nvm/Instruction.scala:28
+msgid "this code can't be run by {}"
+msgstr "this code can't be run by {}"
+
+#: netlogo-core/src/main/nvm/Instruction.scala:26
+msgid "this code can't be run by {}, only by {}"
+msgstr "this code can't be run by {}, only by {}"
+
+#: netlogo-gui/src/main/app/FileManager.scala:374
+msgid "this model"
+msgstr "this model"
+
+#: netlogo-gui/src/main/window/TickCounterLabel.scala:14
+msgid "ticks"
+msgstr "ticks"
+
+#: netlogo-gui/src/main/window/ButtonWidget.scala:553
+#: netlogo-gui/src/main/app/common/CommandLine.scala:23
+#: netlogo-gui/src/main/app/common/LinePrompt.scala:32
+msgid "turtles"
+msgstr "turtles"
+
+#: netlogo-gui/src/main/window/DummySliderEditPanel.scala:67
+#: netlogo-gui/src/main/window/SliderEditPanel.scala:78
+msgid "vertical?"
+msgstr "vertical?"
+
+#: netlogo-gui/src/main/lab/gui/ProtocolEditPanel.scala:102
+msgid "when checked, metrics will run at every step, when unchecked, metrics will run at the end of the experiment or when any \"Run metrics when\" reporter is true"
+msgstr "when checked, metrics will run at every step, when unchecked, metrics will run at the end of the experiment or when any \"Run metrics when\" reporter is true"
+
+#: netlogo-gui/src/main/app/tools/AgentMonitorWindow.scala:103
+#: netlogo-gui/src/main/app/tools/AgentMonitorWindow.scala:108
+msgid "{} (dead)"
+msgstr "{} (dead)"
+
+#: netlogo-core/src/main/agent/Link.java:439
+#: netlogo-core/src/main/agent/Turtle.java:308
+#: netlogo-core/src/main/agent/Turtle.java:334
+#: netlogo-core/src/main/agent/Turtle.java:511
+msgid "{} breed does not own variable {}"
+msgstr "{} breed does not own variable {}"
+
+#: netlogo-gui/src/main/prim/etc/_report.java:25
+msgid "{} can only be used inside TO-REPORT."
+msgstr "{} can only be used inside TO-REPORT."
+
+#: netlogo-gui/src/main/lab/gui/ProtocolEditable.scala:179
+msgid "{} cannot be negative."
+msgstr "{} cannot be negative."
+
+#: netlogo-gui/src/main/lab/gui/ProtocolEditable.scala:181
+msgid "{} cannot be positive."
+msgstr "{} cannot be positive."
+
+#: parser-core/src/main/parse/CarefullyVisitor.scala:33
+msgid "{} cannot be used outside of CAREFULLY."
+msgstr "{} cannot be used outside of CAREFULLY."
+
+#: netlogo-gui/src/main/prim/etc/_incone.java:43
+#: netlogo-gui/src/main/prim/etc/_inconenowrap.java:41
+msgid "{} cannot take a negative angle."
+msgstr "{} cannot take a negative angle."
+
+#: netlogo-gui/src/main/prim/etc/_nvalues.scala:15
+msgid "{} cannot take a negative number."
+msgstr "{} cannot take a negative number."
+
+#: netlogo-gui/src/main/prim/etc/_incone.java:39
+#: netlogo-gui/src/main/prim/etc/_inconenowrap.java:37
+#: netlogo-gui/src/main/prim/etc/_inradius.java:33
+#: netlogo-gui/src/main/prim/etc/_inradiusnowrap.java:35
+msgid "{} cannot take a negative radius."
+msgstr "{} cannot take a negative radius."
+
+#: netlogo-gui/src/main/prim/etc/_incone.java:47
+#: netlogo-gui/src/main/prim/etc/_inconenowrap.java:45
+msgid "{} cannot take an angle greater than 360."
+msgstr "{} cannot take an angle greater than 360."
+
+#: netlogo-gui/src/main/swing/QuickHelp.scala:76
+msgid "{} could not be found in the NetLogo Dictionary.\n Would you like to open the full NetLogo Dictionary?"
+msgstr "{} could not be found in the NetLogo Dictionary.\n Would you like to open the full NetLogo Dictionary?"
+
+#: netlogo-gui/src/main/prim/_anyotherwith.java:35
+#: netlogo-gui/src/main/prim/_countotherwith.java:36
+#: netlogo-gui/src/main/prim/_countwith.java:36
+#: netlogo-gui/src/main/prim/_otherwith.java:43
+#: netlogo-gui/src/main/prim/_with.java:40
+#: netlogo-gui/src/main/prim/etc/_all.java:38
+msgid "{} expected a true/false value from {}, but got {} instead."
+msgstr "{} expected a true/false value from {}, but got {} instead."
+
+#: netlogo-gui/src/main/prim/_oneof.java:25
+#: netlogo-gui/src/main/prim/_oneof.java:57
+#: netlogo-gui/src/main/prim/_oneof.java:68
+#: netlogo-gui/src/main/prim/etc/_butfirst.java:29
+#: netlogo-gui/src/main/prim/etc/_butfirst.java:58
+#: netlogo-gui/src/main/prim/etc/_butlast.java:29
+#: netlogo-gui/src/main/prim/etc/_butlast.java:58
+msgid "{} got an empty list as input."
+msgstr "{} got an empty list as input."
+
+#: netlogo-gui/src/main/prim/etc/_butfirst.java:36
+#: netlogo-gui/src/main/prim/etc/_butfirst.java:49
+#: netlogo-gui/src/main/prim/etc/_butlast.java:36
+#: netlogo-gui/src/main/prim/etc/_butlast.java:49
+msgid "{} got an empty string as input."
+msgstr "{} got an empty string as input."
+
+#: parser-core/src/main/parse/ExpressionParser.scala:191
+#: parser-core/src/main/parse/ExpressionParser.scala:526
+msgid "{} is an imported module, not a command or a reporter. To use some X within {}, write {}:X."
+msgstr "{} is an imported module, not a command or a reporter. To use some X within {}, write {}:X."
+
+#: netlogo-gui/src/main/prim/etc/_sublist.java:30
+msgid "{} is greater than the length of the input list ({})."
+msgstr "{} is greater than the length of the input list ({})."
+
+#: netlogo-gui/src/main/prim/etc/_sublist.java:24
+#: netlogo-gui/src/main/prim/etc/_substring.java:22
+msgid "{} is less than zero."
+msgstr "{} is less than zero."
+
+#: netlogo-gui/src/main/prim/etc/_sublist.java:27
+#: netlogo-gui/src/main/prim/etc/_substring.java:25
+msgid "{} is less than {}."
+msgstr "{} is less than {}."
+
+#: netlogo-gui/src/main/compile/Backifier.scala:128
+msgid "{} is no longer a primitive, use {} instead."
+msgstr "{} is no longer a primitive, use {} instead."
+
+#: netlogo-core/src/main/agent/Patch.java:290
+#: netlogo-core/src/main/agent/Patch.java:306
+#: netlogo-core/src/main/agent/Turtle.java:292
+#: netlogo-core/src/main/agent/Turtle.java:380
+msgid "{} is not a double variable."
+msgstr "{} is not a double variable."
+
+#: netlogo-gui/src/main/prim/etc/_stop.java:33
+#: netlogo-gui/src/main/prim/etc/_stop.java:45
+msgid "{} is not allowed inside TO-REPORT."
+msgstr "{} is not allowed inside TO-REPORT."
+
+#: netlogo-gui/src/main/prim/etc/_diffuse.scala:37
+#: netlogo-gui/src/main/prim/etc/_diffuse4.scala:36
+msgid "{} is not in the range 0.0 to 1.0"
+msgstr "{} is not in the range 0.0 to 1.0"
+
+#: netlogo-gui/src/main/prim/etc/_otherend.java:47
+msgid "{} is not linked by {}."
+msgstr "{} is not linked by {}."
+
+#: netlogo-gui/src/main/prim/etc/_substring.java:28
+msgid "{} is too big for {}, which is only of length {}."
+msgstr "{} is too big for {}, which is only of length {}."
+
+#: netlogo-gui/src/main/prim/etc/_log.java:31
+msgid "{} isn't a valid base for a logarithm."
+msgstr "{} isn't a valid base for a logarithm."
+
+#: netlogo-gui/src/main/prim/etc/_item.java:27
+#: netlogo-gui/src/main/prim/etc/_item.java:55
+#: netlogo-gui/src/main/prim/etc/_item.java:69
+#: netlogo-gui/src/main/prim/etc/_removeitem.java:23
+#: netlogo-gui/src/main/prim/etc/_replaceitem.java:24
+#: netlogo-gui/src/main/prim/etc/_insertitem.scala:16
+msgid "{} isn't greater than or equal to zero."
+msgstr "{} isn't greater than or equal to zero."
+
+#: netlogo-core/src/main/agent/DimensionManagement.scala:109
+#: netlogo-core/src/main/agent/DimensionManagement.scala:126
+msgid "{} must be an odd number when the origin is in the center of the world."
+msgstr "{} must be an odd number when the origin is in the center of the world."
+
+#: netlogo-core/src/main/agent/DimensionManagement.scala:104
+#: netlogo-core/src/main/agent/DimensionManagement.scala:121
+msgid "{} must be greater than or equal to 1."
+msgstr "{} must be greater than or equal to 1."
+
+#: netlogo-gui/src/main/prim/etc/_report.java:33
+msgid "{} must be immediately inside a TO-REPORT."
+msgstr "{} must be immediately inside a TO-REPORT."

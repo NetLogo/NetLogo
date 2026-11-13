@@ -5,7 +5,7 @@ import javax.swing.AbstractAction
 
 import org.nlogo.api.{ AppInterface, ExtensionManager, TabsInterface }
 import org.nlogo.app.codetab.CodeTab
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.swing.{ MenuItem, OptionPane }
 
 import org.nlogo.languagelibrary.config.{ Config, Menu }
@@ -74,7 +74,7 @@ class SRMenuGUI extends SRMenu {
                 }
 
                 if (!anySetup) {
-                  new OptionPane(app.frame, I18N.gui.get("common.messages.warning"),
+                  new OptionPane(app.frame, loc"Warning",
                                  """This model does not use the sr:setup primitive.
                                     You must call it before using any other Simple R primitives.""",
                                  OptionPane.Options.Ok, OptionPane.Icons.warning)

@@ -4,7 +4,7 @@ package org.nlogo.compile
 
 import java.util.Locale
 
-import org.nlogo.core.{ Fail, I18N, Instantiator, Program, BreedIdentifierHandler }, Fail.exception
+import org.nlogo.core.{ Fail, Instantiator, LocaleContext, Program, BreedIdentifierHandler }, Fail.exception
 import org.nlogo.{ api => nlogoApi, core, nvm, prim => nvmprim }
 
 import scala.collection.immutable.ListMap
@@ -125,9 +125,10 @@ class Backifier(program: Program,
           case _: ClassNotFoundException =>
             i match {
               case replaced: ReplacedPrim =>
-                exception(I18N.errors.getN("compiler.Backifier.replaced", i.token.text, replaced.recommendedReplacement), i.token)
+                exception(loc"${i.token.text} is no longer a primitive, use ${replaced.recommendedReplacement} instead.",
+                          i.token)
               case _ =>
-                exception(I18N.errors.getN("compiler.LocalsVisitor.notDefined", i.token.text), i.token)
+                exception(loc"Nothing named ${i.token.text} has been defined.", i.token)
             }
         }
       case Some((className, breedName, _)) =>

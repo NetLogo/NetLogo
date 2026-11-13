@@ -4,7 +4,7 @@ package org.nlogo.prim.etc;
 
 import org.nlogo.agent.AgentSet;
 import org.nlogo.core.AgentKindJ;
-import org.nlogo.core.I18N;
+import org.nlogo.core.LocaleContextJ;
 import org.nlogo.core.LogoList;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
@@ -28,9 +28,7 @@ public final class _layoutcircle
       } else {
         AgentSet set = (AgentSet) nodes;
         if (set.kind() != AgentKindJ.Turtle()) {
-          throw new RuntimePrimitiveException
-              (context, this,
-                  I18N.errorsJ().get("org.nlogo.prim.etc._layoutcircle.patchesImmovable"));
+          throw new RuntimePrimitiveException(context, this, LocaleContextJ.loc("Patches are immovable."));
         }
         org.nlogo.agent.Layouts.circle(world, set, radius, context.job.random);
       }

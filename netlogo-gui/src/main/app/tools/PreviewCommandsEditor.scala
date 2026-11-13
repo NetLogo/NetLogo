@@ -7,13 +7,13 @@ import java.awt.event.{ ActionEvent, KeyEvent }
 import javax.swing.AbstractAction
 
 import org.nlogo.api.PreviewCommands
-import org.nlogo.core.{ I18N, Model }
+import org.nlogo.core.{ LocaleContext, Model }
 import org.nlogo.swing.UserAction._
 import org.nlogo.window.{ GraphicsPreviewInterface, PreviewCommandsEditorInterface }
 import org.nlogo.workspace.{ AbstractWorkspaceScala, WorkspaceFactory }
 
 object PreviewCommandsEditor {
-  val title = I18N.gui.get("tools.previewCommands.title")
+  val title = loc"Preview Commands Editor"
   class EditPreviewCommands(
     previewCommandsEditor: => PreviewCommandsEditorInterface,
     workspace:             AbstractWorkspaceScala,

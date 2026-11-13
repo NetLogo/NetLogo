@@ -3,7 +3,7 @@
 package org.nlogo.prim;
 
 import org.nlogo.agent.AgentSet;
-import org.nlogo.core.I18N;
+import org.nlogo.core.LocaleContextJ;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Command;
@@ -27,12 +27,12 @@ public final class _askconcurrent
     AgentSet agentset = argEvalAgentSet(context, 0);
     if (!(context.agent instanceof org.nlogo.agent.Observer)) {
       if (agentset == world.turtles()) {
-        throw new RuntimePrimitiveException
-            (context, this, I18N.errorsJ().get("org.nlogo.prim.$common.onlyObserverCanAskAllTurtles"));
+        throw new RuntimePrimitiveException(context, this,
+          LocaleContextJ.loc("Only the observer can ASK the set of all turtles."));
       }
       if (agentset == world.patches()) {
-        throw new RuntimePrimitiveException
-            (context, this, I18N.errorsJ().get("org.nlogo.prim.$common.onlyObserverCanAskAllPatches"));
+        throw new RuntimePrimitiveException(context, this,
+          LocaleContextJ.loc("Only the observer can ASK the set of all patches."));
       }
     }
     if (context.makeChildrenExclusive()) {

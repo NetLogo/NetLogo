@@ -4,7 +4,7 @@ package org.nlogo.prim
 
 import org.nlogo.agent.{ Agent, AgentSet }
 import org.nlogo.api.{ AgentException, LogoListBuilder }
-import org.nlogo.core.{ I18N, Syntax }
+import org.nlogo.core.{ LocaleContext, Syntax }
 import org.nlogo.nvm.{ ArgumentTypeException, Context, Reporter, RuntimePrimitiveException }
 
 class _patchvariableof(_vn: Int) extends Reporter {
@@ -16,8 +16,7 @@ class _patchvariableof(_vn: Int) extends Reporter {
   override def report(context: Context): AnyRef = args(0).report(context) match {
       case agent: Agent =>
         if (agent.id == -1)
-          throw new RuntimePrimitiveException(context, this,
-            I18N.errors.getN("org.nlogo.$common.thatAgentIsDead", agent.classDisplayName))
+          throw new RuntimePrimitiveException(context, this, loc"That ${agent.classDisplayName} is dead.")
         try {
           agent.getPatchVariable(vn)
         } catch {
@@ -42,8 +41,7 @@ class _patchvariableof(_vn: Int) extends Reporter {
   def report_1(context: Context, agentOrSet: AnyRef): AnyRef = agentOrSet match {
       case agent: Agent =>
         if (agent.id == -1)
-          throw new RuntimePrimitiveException(context, this,
-            I18N.errors.getN("org.nlogo.$common.thatAgentIsDead", agent.classDisplayName))
+          throw new RuntimePrimitiveException(context, this, loc"That ${agent.classDisplayName} is dead.")
         try {
           agent.getPatchVariable(_vn)
         } catch {
@@ -79,8 +77,7 @@ class _patchvariableof(_vn: Int) extends Reporter {
 
   def report_3(context: Context, agent: Agent): AnyRef = {
     if (agent.id == -1)
-      throw new RuntimePrimitiveException(context, this,
-        I18N.errors.getN("org.nlogo.$common.thatAgentIsDead", agent.classDisplayName))
+      throw new RuntimePrimitiveException(context, this, loc"That ${agent.classDisplayName} is dead.")
     try {
       agent.getPatchVariable(_vn)
     } catch {

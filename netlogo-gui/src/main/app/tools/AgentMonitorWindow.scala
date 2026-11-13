@@ -12,7 +12,7 @@ import org.nlogo.agent.{ Agent, Link, Observer, Turtle }
 import org.nlogo.analytics.Analytics
 import org.nlogo.api.Dump
 import org.nlogo.app.common.CommandLine
-import org.nlogo.core.{ AgentKind, I18N }
+import org.nlogo.core.{ AgentKind, LocaleContext }
 import org.nlogo.swing.{ NetLogoIcon, Utils, ZoomableWindow }
 import org.nlogo.theme.ThemeSync
 import org.nlogo.window.{ Event, Events => WindowEvents }
@@ -98,18 +98,18 @@ class AgentMonitorWindow(val agentKind: AgentKind, _agent: Agent, radius: Double
 
   def getUpdatedTitle = {
     monitor.agentKind match {
-      case AgentKind.Observer => I18N.gui.get("tools.agentMonitor.window.globals")
-      case AgentKind.Turtle if agent == null => I18N.gui.get("tools.agentMonitor.window.noTurtle")
-      case AgentKind.Turtle if agent.id == -1 => I18N.gui.getN("tools.agentMonitor.window.dead", lastAliveTitle)
+      case AgentKind.Observer => loc"Globals"
+      case AgentKind.Turtle if agent == null => loc"(no turtle)"
+      case AgentKind.Turtle if agent.id == -1 => loc"$lastAliveTitle (dead)"
       case AgentKind.Turtle =>
         lastAliveTitle = agent.toString
         lastAliveTitle
-      case AgentKind.Link if agent == null => I18N.gui.get("tools.agentMonitor.window.noLink")
-      case AgentKind.Link if agent.id == -1 => I18N.gui.getN("tools.agentMonitor.window.dead", lastAliveTitle)
+      case AgentKind.Link if agent == null => loc"(no link)"
+      case AgentKind.Link if agent.id == -1 => loc"$lastAliveTitle (dead)"
       case AgentKind.Link =>
         lastAliveTitle = agent.toString
         lastAliveTitle
-      case AgentKind.Patch if agent == null => I18N.gui.get("tools.agentMonitor.window.noPatch")
+      case AgentKind.Patch if agent == null => loc"(no patch)"
       case AgentKind.Patch => agent.toString
     }
   }

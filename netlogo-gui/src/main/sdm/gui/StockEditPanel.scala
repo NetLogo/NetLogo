@@ -3,7 +3,7 @@
 package org.nlogo.sdm.gui
 
 import org.nlogo.api.{ CompilerServices, ExtensionManager }
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.editor.Colorizer
 import org.nlogo.swing.{ BoxAlign, BoxRow }
 import org.nlogo.window.{ BooleanEditor, EditPanel, IdentifierEditor, NonEmptyCodeEditor, PropertyAccessor,
@@ -16,7 +16,7 @@ class StockEditPanel(target: StockFigure, compiler: CompilerServices, colorizer:
     new IdentifierEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("tools.sdm.name"),
+        loc"Name",
         () => target.nameWrapper,
         name => target.nameWrapper(name.getOrElse("")),
         () => apply()),
@@ -26,7 +26,7 @@ class StockEditPanel(target: StockFigure, compiler: CompilerServices, colorizer:
     new NonEmptyCodeEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("tools.sdm.initialValue"),
+        loc"Initial Value",
         () => target.initialValueExpressionWrapper,
         _.foreach(target.initialValueExpressionWrapper),
         () => apply()),
@@ -36,7 +36,7 @@ class StockEditPanel(target: StockFigure, compiler: CompilerServices, colorizer:
     new BooleanEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("tools.sdm.allowNegative"),
+        loc"Allow negative values",
         () => target.allowNegative,
         _.foreach(target.allowNegative),
         () => apply()))

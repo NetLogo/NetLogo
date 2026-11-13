@@ -2,7 +2,7 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.nvm.{ AnonymousProcedure, Command, Context, NonLocalExit, RuntimePrimitiveException }
 
 class _foreach extends Command {
@@ -21,7 +21,7 @@ class _foreach extends Command {
       if (i == 0) size = list.size
       else if (size != list.size)
         throw new RuntimePrimitiveException(context, this,
-          I18N.errors.get("org.nlogo.prim.etc._foreach.listsMustBeSameLength"))
+          loc"All the list arguments to FOREACH must be the same length.")
       list.iterator
     }
     if (n < cmd.syntax.minimum)

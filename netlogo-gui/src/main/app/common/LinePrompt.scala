@@ -6,7 +6,7 @@ import java.awt.{ Color, Graphics }
 import java.awt.event.{ ActionEvent, MouseAdapter, MouseEvent }
 import javax.swing.{ AbstractAction, JLabel }
 
-import org.nlogo.core.{ AgentKind, I18N }
+import org.nlogo.core.{ AgentKind, LocaleContext }
 import org.nlogo.swing.{ MenuItem, MouseUtils, PopupMenu, Zoomable }
 import org.nlogo.theme.InterfaceColors
 
@@ -28,12 +28,12 @@ class LinePrompt(commandLine: CommandLine, switchingEnabled: Boolean) extends JL
             }
           }))
         }
-        addItem(I18N.gui.get("common.observer"), AgentKind.Observer)
-        addItem(I18N.gui.get("common.turtles"), AgentKind.Turtle)
-        addItem(I18N.gui.get("common.patches"), AgentKind.Patch)
-        addItem(I18N.gui.get("common.links"), AgentKind.Link)
+        addItem(loc"observer", AgentKind.Observer)
+        addItem(loc"turtles", AgentKind.Turtle)
+        addItem(loc"patches", AgentKind.Patch)
+        addItem(loc"links", AgentKind.Link)
         popMenu.addSeparator()
-        popMenu.add(new MenuItem(I18N.gui.get("tabs.run.commandcenter.orusetabkey"))).setEnabled(false)
+        popMenu.add(new MenuItem(loc"or use Tab key")).setEnabled(false)
         popMenu.show(LinePrompt.this, 0, getHeight)
       }
     }

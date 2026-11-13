@@ -3,7 +3,7 @@
 package org.nlogo.prim.etc;
 
 import org.nlogo.api.Dump;
-import org.nlogo.core.I18N;
+import org.nlogo.core.LocaleContextJ;
 import org.nlogo.core.LogoList;
 import org.nlogo.core.Pure;
 import org.nlogo.nvm.Context;
@@ -28,7 +28,7 @@ public final class _max extends Reporter implements Pure {
     }
     if (boxedWinner == null) {
       throw new RuntimePrimitiveException(context, this,
-          I18N.errorsJ().getN("org.nlogo.prim._max.cantFindMaxOfListWithNoNumbers", Dump.logoObject(list)));
+        LocaleContextJ.loc("Can't find the maximum of a list with no numbers: {}", Dump.logoObject(list)));
     }
     return boxedWinner;
   }

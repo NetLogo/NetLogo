@@ -15,7 +15,7 @@ import java.util.ArrayList
 import javax.swing.{ Box, BoxLayout, JEditorPane }
 import javax.swing.text.DefaultCaret
 
-import org.nlogo.core.{ I18N, TextBox => CoreTextBox, Widget => CoreWidget }
+import org.nlogo.core.{ LocaleContext, TextBox => CoreTextBox, Widget => CoreWidget }
 import org.nlogo.swing.{ Transparent, Zoomable, ZoomableBorder }
 import org.nlogo.theme.{ ClassicTheme, DarkTheme, InterfaceColors, LightTheme }
 
@@ -65,7 +65,7 @@ class NoteWidget extends SingleErrorWidget with Transparent with Editable {
     (HtmlRenderer.builder(opts).build(), Parser.builder(opts).build())
   }
 
-  override def classDisplayName: String = I18N.gui.get("tabs.run.widgets.note")
+  override def classDisplayName: String = loc"Note"
 
   override def editPanel: EditPanel = new NoteEditPanel(this)
 

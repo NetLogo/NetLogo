@@ -3,7 +3,7 @@
 package org.nlogo.prim.etc;
 
 import org.nlogo.api.Dump;
-import org.nlogo.core.I18N;
+import org.nlogo.core.LocaleContextJ;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.LogoList;
 import org.nlogo.core.Syntax;
@@ -35,7 +35,8 @@ public final class _variance extends Reporter implements Pure {
     }
     if (listSize - badElts < 2) {
       throw new RuntimePrimitiveException(context, this,
-          I18N.errorsJ().getN("org.nlogo.prim.etc._variance.listMustHaveMoreThanOneNumber", Dump.logoObject(list)));
+        LocaleContextJ.loc("Can't find the variance of a list without at least two numbers: {}.",
+                           Dump.logoObject(list)));
     }
     double mean = sum / (listSize - badElts);
     double squareOfDifference = 0;

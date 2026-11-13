@@ -8,7 +8,7 @@ import javax.swing.{ AbstractAction, JPanel, JSlider }
 
 import org.nlogo.agent.Agent
 import org.nlogo.api.Perspective
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.swing.{ FocusUtils, ToggleButton, Zoomable }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.GUIWorkspace
@@ -78,7 +78,7 @@ class AgentMonitorViewPanel(workspace: GUIWorkspace) extends JPanel(new BorderLa
     watchButton.syncTheme()
   }
 
-  private class WatchAction extends AbstractAction(I18N.gui.get("tools.agentMonitor.view.watch")) {
+  private class WatchAction extends AbstractAction(loc"Watch") {
     override def actionPerformed(e: ActionEvent) = {
       if (watchButton.isSelected)
         workspace.world.observer.setPerspective(Perspective.Watch(view.agent))

@@ -8,7 +8,7 @@ import java.net.URI
 import java.nio.file.Path
 import javax.swing.AbstractAction
 
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.api.Version
 import org.nlogo.swing.{ BrowserLauncher, QuickHelp, UserAction }, UserAction._
 import org.nlogo.theme.ThemeSync
@@ -40,33 +40,30 @@ with MenuAction {
 object HelpActions {
   def apply: Seq[MenuAction] = {
     Seq(
-    new TryRemoteBrowseAction(I18N.gui.get("menu.help.netLogoUserManual"),
+    new TryRemoteBrowseAction(loc"NetLogo User Manual",
       new URI(s"https://docs.netlogo.org/${Version.versionNumberNo3D}"), QuickHelp.docPath("index"), HelpDocGroup, 'U'),
-    new TryRemoteBrowseAction(I18N.gui.get("menu.help.netLogoDictionary"),
+    new TryRemoteBrowseAction(loc"NetLogo Dictionary",
       new URI(s"https://docs.netlogo.org/${Version.versionNumberNo3D}/dictionary.html"),
       QuickHelp.docPath("dictionary"), HelpDocGroup, 'D'),
-    new RemoteBrowseAction(I18N.gui.get("menu.help.bind"),
+    new RemoteBrowseAction(loc"Beginner's Interactive NetLogo Dictionary",
       new URI("https://ccl.northwestern.edu/netlogo/bind"), HelpDocGroup, 'B'),
-    new RemoteBrowseAction(I18N.gui.get("menu.help.introToABM"),
+    new RemoteBrowseAction(loc"Introduction to Agent-Based Modeling",
       new URI("https://mitpress.mit.edu/9780262731898/an-introduction-to-agent-based-modeling/"), HelpDocGroup, 'I'),
-    new RemoteBrowseAction(I18N.gui.get("menu.help.forum"),
-      new URI("https://forum.netlogo.org"), HelpWebGroup, 'F'),
-    new RemoteBrowseAction(I18N.gui.get("menu.help.netLogoUsersGroup"),
-      new URI("http://groups.google.com/d/forum/netlogo-users"), HelpWebGroup, 'G') {
+    new RemoteBrowseAction(loc"NetLogo Forum", new URI("https://forum.netlogo.org"), HelpWebGroup, 'F'),
+    new RemoteBrowseAction(loc"NetLogo Users Group", new URI("http://groups.google.com/d/forum/netlogo-users"),
+                           HelpWebGroup, 'G') {
 
       mnemonicIndex = 14
     },
-    new RemoteBrowseAction(I18N.gui.get("menu.help.contact"),
-      new URI("https://www.netlogo.org/contact/"), HelpWebGroup, 'C'),
-    new RemoteBrowseAction(I18N.gui.get("menu.help.donate"),
-      new URI("https://www.netlogo.org/donate/"), HelpDonateGroup, 'O'),
-    new RemoteBrowseAction(I18N.gui.get("menu.help.news"),
-      new URI("https://www.netlogo.org/announcements/"), HelpAboutGroup, 'N'))
+    new RemoteBrowseAction(loc"Contact Us", new URI("https://www.netlogo.org/contact/"), HelpWebGroup, 'C'),
+    new RemoteBrowseAction(loc"Donate", new URI("https://www.netlogo.org/donate/"), HelpDonateGroup, 'O'),
+    new RemoteBrowseAction(loc"Latest NetLogo News", new URI("https://www.netlogo.org/announcements/"), HelpAboutGroup,
+                           'N'))
   }
 }
 
 class ShowAboutWindow(frame: Frame)
-extends AbstractAction(I18N.gui.getN("menu.help.aboutVersion", Version.versionDropZeroPatch))
+extends AbstractAction(loc"About ${Version.versionDropZeroPatch}")
 with MenuAction with ThemeSync {
   category = HelpCategory
   group    = HelpAboutGroup

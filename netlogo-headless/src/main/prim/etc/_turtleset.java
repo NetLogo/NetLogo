@@ -57,8 +57,9 @@ public final class _turtleset
         AgentSet tempSet = (AgentSet) obj;
         if (tempSet.kind() != AgentKindJ.Turtle()) {
           throw new RuntimePrimitiveException(context, this,
-              I18N.errorsJ().getN("org.nlogo.prim.etc._turtleset.listInputsMustBeTurtleOrTurtleAgentset",
-                  this.displayName(), Dump.logoObject(tempList, true, false), Dump.logoObject(obj, true, false)));
+            LocaleContextJ.loc("List inputs to {} must only contain turtle, turtle agentset, or list elements.  The list {} contained a different type agentset: {}.",
+                               displayName(), Dump.logoObject(tempList, true, false),
+                               Dump.logoObject(obj, true, false)));
         }
         for (AgentIterator iter2 = tempSet.iterator();
              iter2.hasNext();) {
@@ -68,8 +69,8 @@ public final class _turtleset
         descendList(context, (LogoList) obj, result);
       } else if (obj != Nobody$.MODULE$) {
         throw new RuntimePrimitiveException(context, this,
-            I18N.errorsJ().getN("org.nlogo.prim.etc._turtleset.incorrectInputType",
-                this.displayName(), Dump.logoObject(tempList, true, false), Dump.logoObject(obj, true, false)));
+          LocaleContextJ.loc("List inputs to {} must only contain turtle, turtle agentset, or list elements.  The list {} contained {} which is NOT a turtle or turtle agentset.",
+                             displayName(), Dump.logoObject(tempList, true, false), Dump.logoObject(obj, true, false)));
       }
     }
   }

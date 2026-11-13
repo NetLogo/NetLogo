@@ -3,7 +3,8 @@
 package org.nlogo.parse
 
 import org.nlogo.core,
-  core.{ CompilerException, Fail, FrontEndProcedure, I18N, StructureResults, Program, Syntax, Token, TokenType }
+  core.{ CompilerException, Fail, FrontEndProcedure, LocaleContext, StructureResults, Program, Syntax, Token,
+         TokenType }
 
 /// Stage #3 of StructureParser
 
@@ -41,7 +42,7 @@ object StructureConverter {
     }
     ps.foreach(_._1.topLevel = subprogram)
     if (exs.size > 1) {
-      exception(I18N.errors.get("compiler.StructureParser.exportMultiple"), exs(1).token)
+      exception(loc"EXPORT may only be used once per file", exs(1).token)
     }
     StructureResults(
       program =
@@ -73,7 +74,7 @@ object StructureConverter {
     identifiers.foldLeft(current) {
       case (names, i) =>
         if (names.exists(_ == i.name))
-          Fail.exception(I18N.errors.getN("compiler.StructureChecker.duplicateType", typeName, i.name), i.token)
+          Fail.exception(loc"There is already a $typeName called ${i.name}", i.token)
 
         names + i.name
     }
@@ -160,8 +161,7 @@ object StructureConverter {
             breed.copy(owns = breed.owns ++ newOwns.map(_.name))))
       }
     } else {
-      throw new CompilerException(
-        I18N.errors.getN("compiler.StructureConverter.noBreed", breedName), tok.start, tok.end, tok.filename)
+      throw new CompilerException(loc"""There is no breed "$breedName"""", tok.start, tok.end, tok.filename)
     }
   }
 }
