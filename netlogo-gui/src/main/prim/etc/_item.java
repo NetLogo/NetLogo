@@ -3,7 +3,7 @@
 package org.nlogo.prim.etc;
 
 import org.nlogo.api.Dump;
-import org.nlogo.core.I18N;
+import org.nlogo.core.LocaleContextJ;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.LogoList;
 import org.nlogo.core.Syntax;
@@ -24,22 +24,22 @@ public final class _item
     int index = (int) i;
     if (index < 0) {
       throw new RuntimePrimitiveException(context, this,
-          I18N.errorsJ().getN("org.nlogo.prim.etc.$common.negativeIndex", index));
+        LocaleContextJ.loc("{} isn't greater than or equal to zero.", Integer.toString(index)));
     }
     if (obj instanceof LogoList) {
       LogoList list = (LogoList) obj;
       if (index >= list.size()) {
         throw new RuntimePrimitiveException(context, this,
-            I18N.errorsJ().getN("org.nlogo.prim.etc.$common.indexExceedsListSize",
-                index, Dump.logoObject(list), list.size()));
+          LocaleContextJ.loc("Can't find element {} of the list {}, which is only of length {}.",
+                             Integer.toString(index), Dump.logoObject(list), Integer.toString(list.size())));
       }
       return list.get(index);
     } else if (obj instanceof String) {
       String string = (String) obj;
       if (index >= string.length()) {
         throw new RuntimePrimitiveException(context, this,
-            I18N.errorsJ().getN("org.nlogo.prim.etc.$common.indexExceedsListSize",
-                index, Dump.logoObject(string), string.length()));
+          LocaleContextJ.loc("Can't find element {} of the list {}, which is only of length {}.",
+                             Integer.toString(index), Dump.logoObject(string), Integer.toString(string.length())));
       }
       return string.substring(index, index + 1);
     } else {
@@ -52,12 +52,12 @@ public final class _item
     int index = (int) i;
     if (index < 0) {
       throw new RuntimePrimitiveException(context, this,
-          I18N.errorsJ().getN("org.nlogo.prim.etc.$common.negativeIndex", index));
+        LocaleContextJ.loc("{} isn't greater than or equal to zero.", Integer.toString(index)));
     }
     if (index >= list.size()) {
       throw new RuntimePrimitiveException(context, this,
-          I18N.errorsJ().getN("org.nlogo.prim.etc.$common.indexExceedsListSize",
-            index, Dump.logoObject(list), list.size()));
+          LocaleContextJ.loc("Can't find element {} of the list {}, which is only of length {}.",
+                             Integer.toString(index), Dump.logoObject(list), Integer.toString(list.size())));
     }
     return list.get(index);
   }
@@ -66,12 +66,12 @@ public final class _item
     int index = (int) i;
     if (index < 0) {
       throw new RuntimePrimitiveException(context, this,
-          I18N.errorsJ().getN("org.nlogo.prim.etc.$common.negativeIndex", index));
+        LocaleContextJ.loc("{} isn't greater than or equal to zero.", Integer.toString(index)));
     }
     if (index >= string.length()) {
       throw new RuntimePrimitiveException(context, this,
-          I18N.errorsJ().getN("org.nlogo.prim.etc.$common.indexExceedsListSize",
-            index, Dump.logoObject(string), string.length()));
+          LocaleContextJ.loc("Can't find element {} of the list {}, which is only of length {}.",
+                             Integer.toString(index), Dump.logoObject(string), Integer.toString(string.length())));
     }
     return string.substring(index, index + 1);
   }

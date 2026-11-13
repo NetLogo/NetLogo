@@ -7,7 +7,7 @@ import java.awt.event.{ ActionEvent, KeyEvent }
 import javax.swing.{ AbstractAction, SwingUtilities }
 
 import org.nlogo.awt.Hierarchy
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.swing.{ QuickHelp, UserAction }, UserAction.{ KeyBindings, MenuAction }
 
 trait QuickHelpAction {
@@ -24,7 +24,7 @@ object QuickHelpAction {
 }
 
 class MouseQuickHelpAction(protected val colorizer: Colorizer)
-  extends AbstractAction(I18N.gui.get("tabs.code.rightclick.quickhelp"))
+  extends AbstractAction(loc"Quick Help")
   with EditorAwareAction
   with QuickHelpAction
   with MenuAction {
@@ -38,7 +38,7 @@ class MouseQuickHelpAction(protected val colorizer: Colorizer)
 }
 
 class KeyboardQuickHelpAction
-  extends AbstractAction(I18N.gui.get("menu.help.lookUpInDictionary"))
+  extends AbstractAction(loc"Look Up Selected Text In Dictionary")
   with QuickHelpAction
   with MenuAction {
 

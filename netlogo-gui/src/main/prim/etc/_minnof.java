@@ -6,7 +6,7 @@ import org.nlogo.agent.Agent;
 import org.nlogo.agent.AgentIterator;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.AgentSetBuilder;
-import org.nlogo.core.I18N;
+import org.nlogo.core.LocaleContextJ;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.RuntimePrimitiveException;
@@ -25,13 +25,14 @@ public final class _minnof
     int n = argEvalIntValue(context, 0);
     if (n < 0) {
       throw new RuntimePrimitiveException(context, this,
-          I18N.errorsJ().getN("org.nlogo.prim.etc.$common.firstInputCantBeNegative", displayName()));
+        LocaleContextJ.loc("First input to {} can't be negative.", displayName()));
     }
     AgentSet sourceSet = argEvalAgentSet(context, 1);
     int count = sourceSet.count();
     if (n > count) {
       throw new RuntimePrimitiveException(context, this,
-          I18N.errorsJ().getN("org.nlogo.prim.etc.$common.notThatManyAgentsExist", n, count));
+        LocaleContextJ.loc("Requested {} random agents from a set of only {} agents.", Integer.toString(n),
+                           Integer.toString(count)));
     }
     args[2].checkAgentSetClass(sourceSet, context);
     TreeMap<Object, LinkedList<Agent>> resultAgents =

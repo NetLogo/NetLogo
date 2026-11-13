@@ -3,7 +3,7 @@
 package org.nlogo.window
 
 import org.nlogo.awt.Hierarchy
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, MaximumHeight }
 
 class NoteEditPanel(target: NoteWidget) extends WidgetEditPanel(target) {
@@ -13,7 +13,7 @@ class NoteEditPanel(target: NoteWidget) extends WidgetEditPanel(target) {
     new BigStringEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.text.text"),
+        loc"Text",
         () => target.text,
         _.foreach(target.setText),
         () => apply()))
@@ -22,7 +22,7 @@ class NoteEditPanel(target: NoteWidget) extends WidgetEditPanel(target) {
     new IntegerEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.text.fontSize"),
+        loc"Font size",
         () => target.fontSize,
         _.foreach(target.setFontSize),
         () => apply()))
@@ -31,7 +31,7 @@ class NoteEditPanel(target: NoteWidget) extends WidgetEditPanel(target) {
     new ColorEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.text.textLight"),
+        loc"Text color (light mode)",
         () => target.textColorLight,
         _.foreach(target.setTextColorLight),
         () => apply()),
@@ -41,7 +41,7 @@ class NoteEditPanel(target: NoteWidget) extends WidgetEditPanel(target) {
     new ColorEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.text.textDark"),
+        loc"Text color (dark mode)",
         () => target.textColorDark,
         _.foreach(target.setTextColorDark),
         () => apply()),
@@ -51,7 +51,7 @@ class NoteEditPanel(target: NoteWidget) extends WidgetEditPanel(target) {
     new ColorEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.text.backgroundLight"),
+        loc"Background color (light mode)",
         () => target.backgroundLight,
         _.foreach(target.setBackgroundLight),
         () => apply()),
@@ -61,7 +61,7 @@ class NoteEditPanel(target: NoteWidget) extends WidgetEditPanel(target) {
     new ColorEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.text.backgroundDark"),
+        loc"Background color (dark mode)",
         () => target.backgroundDark,
         _.foreach(target.setBackgroundDark),
         () => apply()),
@@ -71,7 +71,7 @@ class NoteEditPanel(target: NoteWidget) extends WidgetEditPanel(target) {
     new BooleanEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.text.markdown"),
+        loc"Enable Markdown",
         () => target.markdown,
         _.foreach(target.setMarkdown),
         () => apply()))

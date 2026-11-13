@@ -4,7 +4,7 @@ package org.nlogo.extensions.nw
 
 import org.nlogo.agent.TreeAgentSet
 import org.nlogo.api.{Agent, ExtensionException}
-import org.nlogo.core.{ AgentKind, I18N, Syntax, Token }
+import org.nlogo.core.{ AgentKind, LocaleContext, Syntax, Token }
 import org.nlogo.{agent, api, nvm}
 import org.nlogo.api.MersenneTwisterFast
 import scala.language.implicitConversions
@@ -40,8 +40,7 @@ object NetworkExtensionUtil {
     def requireAlive =
       if (agent.id != -1) // is alive
         agent
-      else throw new ExtensionException(
-        I18N.errors.get("org.nlogo.$common.thatAgentIsDead"))
+      else throw new ExtensionException(loc"That agent is dead.")
   }
 
   implicit def LinkToRichLink(link: org.nlogo.agent.Link)(implicit world: agent.World): org.nlogo.extensions.nw.NetworkExtensionUtil.RichLink =
@@ -81,8 +80,7 @@ object NetworkExtensionUtil {
       else throw new ExtensionException("Expected input to be a turtle breed")
     def requireLinkBreed =
       if (isLinkBreed) agentSet.asInstanceOf[TreeAgentSet]
-      else throw new ExtensionException(
-        I18N.errors.get("org.nlogo.prim.etc.$common.expectedLastInputToBeLinkBreed"))
+      else throw new ExtensionException(loc"Expected the last input to be a link breed.")
     def requireDirectedLinkBreed =
       if (isLinkBreed && agentSet.isDirected) agentSet.asInstanceOf[TreeAgentSet]
       else throw new ExtensionException(

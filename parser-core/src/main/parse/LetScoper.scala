@@ -86,7 +86,7 @@ package org.nlogo.parse
 
 import java.util.Locale
 
-import org.nlogo.core.{ I18N, Let, Reporter, Token, TokenType }
+import org.nlogo.core.{ Let, LocaleContext, Reporter, Token, TokenType }
 import org.nlogo.core.Fail._
 import org.nlogo.core.prim.{ _abstractlet, _let, _multilet }
 
@@ -179,7 +179,7 @@ object LetScope {
     }
 
     if (lets.length == 0)
-      exception(I18N.errors.getN("compiler.MultiAssign.emptyVarList", "LET"), token)
+      exception(loc"The list of variables names given to LET must contain at least one item.", token)
 
     val multi = _multilet(lets)
 

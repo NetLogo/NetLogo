@@ -8,7 +8,7 @@ import javax.swing.{ JLabel, JSlider, SwingConstants }
 import javax.swing.event.{ ChangeEvent, ChangeListener }
 import javax.swing.plaf.basic.BasicSliderUI
 
-import org.nlogo.core.{ I18N, NetLogoPreferences }
+import org.nlogo.core.{ LocaleContext, NetLogoPreferences }
 import org.nlogo.log.LogManager
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, Button, FocusUtils, PreferredSize, Utils, Zoomable }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
@@ -16,8 +16,6 @@ import org.nlogo.window.Events.LoadBeginEvent
 
 class SpeedSliderPanel(workspace: WorkspaceWithSpeed, ticksLabel: Component = null)
   extends BoxColumn with MouseListener with ChangeListener with LoadBeginEvent.Handler with ThemeSync {
-
-  implicit val prefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("tabs.run.speedslider")
 
   val speedSlider = new SpeedSlider(workspace.speedSliderPosition().toInt) {
     addChangeListener(SpeedSliderPanel.this)
@@ -61,7 +59,7 @@ class SpeedSliderPanel(workspace: WorkspaceWithSpeed, ticksLabel: Component = nu
     }
   }
 
-  val modelSpeed = new JLabel(I18N.gui("modelSpeed"), SwingConstants.CENTER) with Zoomable {
+  val modelSpeed = new JLabel(loc"Model Speed", SwingConstants.CENTER) with Zoomable {
     setFocusable(false)
   }
 
@@ -158,7 +156,7 @@ class SpeedSliderPanel(workspace: WorkspaceWithSpeed, ticksLabel: Component = nu
 
     setOpaque(false)
     setExtent(1)
-    setToolTipText(I18N.gui("tooltip"))
+    setToolTipText(loc"Adjust speed of model")
     setUI(sliderUI)
 
     addMouseWheelListener(this)

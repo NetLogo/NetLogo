@@ -1,7 +1,7 @@
 package org.nlogo.prim.etc
 
 import org.nlogo.api.DoubleRange
-import org.nlogo.core.{I18N, LogoList}
+import org.nlogo.core.{ LocaleContext, LogoList }
 import org.nlogo.nvm.{Context, Reporter, RuntimePrimitiveException}
 
 class _range extends Reporter {
@@ -14,7 +14,7 @@ class _range extends Reporter {
       case _ => throw new RuntimePrimitiveException(context, this, "range expects at most three arguments")
     }
     if (step == 0)
-      throw new RuntimePrimitiveException(context, this, I18N.errors.get("org.nlogo.prim.etc._range.zeroStep"))
+      throw new RuntimePrimitiveException(context, this, loc"The step-size for range must be non-zero.")
     LogoList.fromVector(DoubleRange(start, stop, step).map(Double.box).toVector)
   }
 }

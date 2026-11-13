@@ -7,7 +7,7 @@ import java.util.Locale
 import SymbolType.LocalVariable
 
 import org.nlogo.core
-import org.nlogo.core.{ FrontEndProcedure, I18N, SourceLocation, Syntax, Token, TokenType }
+import org.nlogo.core.{ FrontEndProcedure, LocaleContext, SourceLocation, Syntax, Token, TokenType }
 import org.nlogo.core.Fail.{ cAssert, exception }
 import org.nlogo.core.Syntax.compatible
 import org.nlogo.core.prim.Lambda
@@ -108,7 +108,7 @@ object ExpressionParser {
                     new core.ReporterApp(r, Seq(), set.token.sourceLocation)
 
                   case _ =>
-                    exception(I18N.errors.get("compiler.SetVisitor.notSettable"), set.token.sourceLocation)
+                    exception(loc"""This isn't something you can use "set" on.""", set.token.sourceLocation)
 
                 }
 
@@ -188,9 +188,12 @@ object ExpressionParser {
         token.value match {
           case (_: core.prim._symbol | _: core.prim._unknownidentifier) if ! scope.contains(tokenText) => {
             if (scope.containsImportPrefix(tokenText)) {
-              exception(I18N.errors.getN("compiler.LetVariable.notDefinedButMatchImportPrefix", tokenText), token)
+              val message = loc"""|$tokenText is an imported module, not a command or a reporter.
+                                  |To use some X within $tokenText, write $tokenText:X."""
+
+              exception(message, token)
             } else {
-              exception(I18N.errors.getN("compiler.LetVariable.notDefined", tokenText), token)
+              exception(loc"Nothing named $tokenText has been defined.", token)
             }
           }
 
@@ -520,9 +523,12 @@ object ExpressionParser {
                     val tokenText = token.text.toUpperCase(Locale.ENGLISH)
 
                     if (scope.containsImportPrefix(tokenText)) {
-                      exception(I18N.errors.getN("compiler.LetVariable.notDefinedButMatchImportPrefix", tokenText), token)
+                      val message = loc"""|$tokenText is an imported module, not a command or a reporter.
+                                          |To use some X within $tokenText, write $tokenText:X."""
+
+                      exception(message, token)
                     } else {
-                      exception(I18N.errors.getN("compiler.LetVariable.notDefined", tokenText), token)
+                      exception(loc"Nothing named $tokenText has been defined.", token)
                     }
                   }
                 }

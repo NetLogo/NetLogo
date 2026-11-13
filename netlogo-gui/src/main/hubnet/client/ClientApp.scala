@@ -8,7 +8,7 @@ import javax.swing.{ JFrame, WindowConstants }
 import org.nlogo.analytics.Analytics
 import org.nlogo.api.{ CompilerServices, ExtensionManager }
 import org.nlogo.awt.{ EventQueue, Hierarchy, Images, Positioning }
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.hubnet.connection.Ports
 import org.nlogo.swing.{ Implicits, ModalProgress, ModalProgressTask, OptionPane, SetSystemLookAndFeel }, Implicits._
 import org.nlogo.theme.InterfaceColors
@@ -154,9 +154,8 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
     EventQueue.mustBeEventDispatchThread()
     if (isLocal) this.dispose()
     else if (connected) {
-      new OptionPane(this, I18N.gui.get("edit.hubnet.disconnected"),
-                     I18N.gui.getN("edit.hubnet.disconnected.message", activityName), OptionPane.Options.Ok,
-                     OptionPane.Icons.info)
+      new OptionPane(this, loc"Disconnected", loc"You have been disconnected from $activityName.",
+                     OptionPane.Options.Ok, OptionPane.Icons.info)
       dispose()
       doLogin()
       ()
@@ -165,14 +164,13 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
 
   def handleLoginFailure(errorMessage: String): Unit = {
     EventQueue.mustBeEventDispatchThread()
-    new OptionPane(ClientApp.this, I18N.gui.get("edit.hubnet.loginFailed"), errorMessage, OptionPane.Options.Ok,
-                   OptionPane.Icons.error)
+    new OptionPane(ClientApp.this, loc"Login Failed", errorMessage, OptionPane.Options.Ok, OptionPane.Icons.error)
     loginDialog.setVisible(true)
   }
 
   def handleExit(): Unit = {
     EventQueue.mustBeEventDispatchThread()
-    if (showExitMessage(I18N.gui.get("edit.hubnet.exit"), I18N.gui.get("edit.hubnet.exit.message"))) {
+    if (showExitMessage(loc"Confirm Exit", loc"Do you really want to exit this activity?")) {
       clientPanel.logout()
       setVisible(false)
       dispose()
@@ -182,7 +180,7 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
 
   def handleQuit(): Unit = {
     EventQueue.mustBeEventDispatchThread()
-    val shouldExit = showExitMessage(I18N.gui.get("edit.hubnet.quit"), I18N.gui.get("edit.hubnet.quit.message"))
+    val shouldExit = showExitMessage(loc"Confirm Quit", loc"Do you really want to quit HubNet?")
     if (shouldExit) System.exit(0)
   }
 

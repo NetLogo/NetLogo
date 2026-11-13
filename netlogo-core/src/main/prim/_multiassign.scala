@@ -5,7 +5,7 @@ package org.nlogo.prim
 import java.util.concurrent.ConcurrentHashMap
 
 import org.nlogo.api.Dump
-import org.nlogo.core.{ I18N, LogoList }
+import org.nlogo.core.{ LocaleContext, LogoList }
 import org.nlogo.nvm.{ Context, Command, RuntimePrimitiveException, Workspace }
 
 import scala.jdk.CollectionConverters.ConcurrentMapHasAsScala
@@ -77,7 +77,9 @@ class _multiassign(name: String, totalNeeded: Int) extends Command {
 
   def perform_1(context: Context, list: LogoList): Unit = {
     if (totalNeeded > list.size) {
-      val message = I18N.errors.getN("compiler.MultiAssign.tooFewValues", name, totalNeeded.toString, list.size.toString, Dump.logoObject(list))
+      val message = loc"""|The list of values for $name must be at least as long as the list of names.  We need
+                          |$totalNeeded value(s) but only got ${list.size} from the list ${Dump.logoObject(list)}."""
+
       throw new RuntimePrimitiveException(context, this, message)
     }
     MultiAssign.setCurrentList(context.job.workspace, list)

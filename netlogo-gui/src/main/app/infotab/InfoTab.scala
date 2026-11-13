@@ -18,7 +18,7 @@ import javafx.scene.web.{ WebEngine, WebView }
 
 import org.nlogo.api.{ ExternalResourceManager, Version }
 import org.nlogo.app.common.{ Events => AppEvents, FindDialog, MenuTab, UndoRedoActions }
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.editor.EditorConfiguration
 import org.nlogo.swing.{ BoxAlign, BoxRow, FocusRoot, FocusUtils, QuickHelp, ScrollableTextComponent, ScrollPane,
                          TextArea, ToolBarActionButton, ToolBarToggleButton, Printable, PrinterManager, BrowserLauncher,
@@ -49,7 +49,7 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
   private val textArea = new ScrollableTextArea
   private val htmlPanel = new HTMLPanel
 
-  private val editableButton = new ToolBarToggleButton(new EditableAction(I18N.gui.get("tabs.info.edit"))) {
+  private val editableButton = new ToolBarToggleButton(new EditableAction(loc"Edit")) {
     setIcon(Utils.iconScaledWithColor(this, "/images/edit.png", 15, 15, () => {
       if (isSelected) {
         InterfaceColors.toolbarImageSelected()
@@ -63,7 +63,7 @@ class InfoTab(getModelDir: () => String, resourceManager: ExternalResourceManage
     setIcon(Utils.iconScaledWithColor(this, "/images/find.png", 15, 15, () => InterfaceColors.toolbarImage()))
   }
 
-  private val helpButton = new ToolBarActionButton(new AbstractAction(I18N.gui.get("tabs.info.help")) {
+  private val helpButton = new ToolBarActionButton(new AbstractAction(loc"Help") {
     setVisible(false)
 
     override def actionPerformed(e: ActionEvent): Unit = {

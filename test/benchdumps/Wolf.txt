@@ -475,9 +475,10 @@ procedure CATCH-SHEEP:[]{-T--}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
-          LDC "org.nlogo.prim.$common.onlyObserverCanAskAllTurtles"
-          INVOKEINTERFACE org/nlogo/core/I18NJava.get (Ljava/lang/String;)Ljava/lang/String; (itf)
+          LDC "Only the observer can ASK the set of all turtles."
+          ICONST_0
+          ANEWARRAY java/lang/String
+          INVOKESTATIC org/nlogo/core/LocaleContextJ.loc (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L6
@@ -491,9 +492,10 @@ procedure CATCH-SHEEP:[]{-T--}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
-          LDC "org.nlogo.prim.$common.onlyObserverCanAskAllPatches"
-          INVOKEINTERFACE org/nlogo/core/I18NJava.get (Ljava/lang/String;)Ljava/lang/String; (itf)
+          LDC "Only the observer can ASK the set of all patches."
+          ICONST_0
+          ANEWARRAY java/lang/String
+          INVOKESTATIC org/nlogo/core/LocaleContextJ.loc (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L4
@@ -513,16 +515,15 @@ procedure CATCH-SHEEP:[]{-T--}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
-          LDC "org.nlogo.$common.thatAgentIsDead"
+          LDC "That {} is dead."
           ICONST_1
-          ANEWARRAY java/lang/Object
+          ANEWARRAY java/lang/String
           DUP
           ICONST_0
           ALOAD 4
           INVOKEVIRTUAL org/nlogo/agent/Agent.classDisplayName ()Ljava/lang/String;
           AASTORE
-          INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String; (itf)
+          INVOKESTATIC org/nlogo/core/LocaleContextJ.loc (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L8
@@ -775,10 +776,9 @@ procedure DEATH:[]{-T--}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
-          LDC "org.nlogo.prim._lessthan.cantUseLessthanOnDifferentArgs"
+          LDC "The < operator can only be used on two numbers, two strings, or two agents of the same type, but not on {} and {}."
           ICONST_2
-          ANEWARRAY java/lang/Object
+          ANEWARRAY java/lang/String
           DUP
           ICONST_0
           ALOAD 2
@@ -790,7 +790,7 @@ procedure DEATH:[]{-T--}:
           INVOKESTATIC java/lang/Double.valueOf (D)Ljava/lang/Double;
           INVOKESTATIC org/nlogo/api/TypeNames.aName (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
-          INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String; (itf)
+          INVOKESTATIC org/nlogo/core/LocaleContextJ.loc (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L8
@@ -1092,9 +1092,10 @@ procedure GO:[]{O---}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
-          LDC "org.nlogo.prim.$common.onlyObserverCanAskAllTurtles"
-          INVOKEINTERFACE org/nlogo/core/I18NJava.get (Ljava/lang/String;)Ljava/lang/String; (itf)
+          LDC "Only the observer can ASK the set of all turtles."
+          ICONST_0
+          ANEWARRAY java/lang/String
+          INVOKESTATIC org/nlogo/core/LocaleContextJ.loc (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L3
@@ -1108,9 +1109,10 @@ procedure GO:[]{O---}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
-          LDC "org.nlogo.prim.$common.onlyObserverCanAskAllPatches"
-          INVOKEINTERFACE org/nlogo/core/I18NJava.get (Ljava/lang/String;)Ljava/lang/String; (itf)
+          LDC "Only the observer can ASK the set of all patches."
+          ICONST_0
+          ANEWARRAY java/lang/String
+          INVOKESTATIC org/nlogo/core/LocaleContextJ.loc (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L2
@@ -1369,9 +1371,10 @@ procedure GO:[]{O---}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
-          LDC "org.nlogo.prim.$common.onlyObserverCanAskAllTurtles"
-          INVOKEINTERFACE org/nlogo/core/I18NJava.get (Ljava/lang/String;)Ljava/lang/String; (itf)
+          LDC "Only the observer can ASK the set of all turtles."
+          ICONST_0
+          ANEWARRAY java/lang/String
+          INVOKESTATIC org/nlogo/core/LocaleContextJ.loc (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L3
@@ -1385,9 +1388,10 @@ procedure GO:[]{O---}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
-          LDC "org.nlogo.prim.$common.onlyObserverCanAskAllPatches"
-          INVOKEINTERFACE org/nlogo/core/I18NJava.get (Ljava/lang/String;)Ljava/lang/String; (itf)
+          LDC "Only the observer can ASK the set of all patches."
+          ICONST_0
+          ANEWARRAY java/lang/String
+          INVOKESTATIC org/nlogo/core/LocaleContextJ.loc (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L2
@@ -1645,9 +1649,10 @@ procedure GO:[]{O---}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
-          LDC "org.nlogo.prim.$common.onlyObserverCanAskAllTurtles"
-          INVOKEINTERFACE org/nlogo/core/I18NJava.get (Ljava/lang/String;)Ljava/lang/String; (itf)
+          LDC "Only the observer can ASK the set of all turtles."
+          ICONST_0
+          ANEWARRAY java/lang/String
+          INVOKESTATIC org/nlogo/core/LocaleContextJ.loc (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L3
@@ -1661,9 +1666,10 @@ procedure GO:[]{O---}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
-          LDC "org.nlogo.prim.$common.onlyObserverCanAskAllPatches"
-          INVOKEINTERFACE org/nlogo/core/I18NJava.get (Ljava/lang/String;)Ljava/lang/String; (itf)
+          LDC "Only the observer can ASK the set of all patches."
+          ICONST_0
+          ANEWARRAY java/lang/String
+          INVOKESTATIC org/nlogo/core/LocaleContextJ.loc (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L2
@@ -1829,15 +1835,14 @@ procedure GO:[]{O---}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
-          LDC "org.nlogo.prim.etc._stop.notAllowedInsideToReport"
+          LDC "{} is not allowed inside TO-REPORT."
           ICONST_1
-          ANEWARRAY java/lang/Object
+          ANEWARRAY java/lang/String
           DUP
           ICONST_0
           LDC "STOP"
           AASTORE
-          INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String; (itf)
+          INVOKESTATIC org/nlogo/core/LocaleContextJ.loc (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L2
@@ -2070,10 +2075,9 @@ procedure GRAPH:[]{OTPL}:
             DUP
             ALOAD 1
             ALOAD 0
-            INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
-            LDC "org.nlogo.prim.$common.expectedBooleanValue"
+            LDC "{} expected a true/false value from {}, but got {} instead."
             ICONST_3
-            ANEWARRAY java/lang/Object
+            ANEWARRAY java/lang/String
             DUP
             ICONST_0
             LDC "WITH"
@@ -2088,7 +2092,7 @@ procedure GRAPH:[]{OTPL}:
             ALOAD 8
             INVOKESTATIC org/nlogo/api/Dump.logoObject (Ljava/lang/Object;)Ljava/lang/String;
             AASTORE
-            INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String; (itf)
+            INVOKESTATIC org/nlogo/core/LocaleContextJ.loc (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
             INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
             ATHROW
            L4
@@ -2118,9 +2122,10 @@ procedure GRAPH:[]{OTPL}:
             DUP
             ALOAD 1
             ALOAD 0
-            INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
-            LDC "org.nlogo.prim.etc.$common.divByZero"
-            INVOKEINTERFACE org/nlogo/core/I18NJava.get (Ljava/lang/String;)Ljava/lang/String; (itf)
+            LDC "Division by zero."
+            ICONST_0
+            ANEWARRAY java/lang/String
+            INVOKESTATIC org/nlogo/core/LocaleContextJ.loc (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
             INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
             ATHROW
            L8
@@ -2274,10 +2279,9 @@ procedure GROW-GRASS:[]{-TP-}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
-          LDC "org.nlogo.prim._lessorequal.cannotCompareParameters"
+          LDC "The <= operator can only be used on two numbers, two strings, or two agents of the same type, but not on {} and {}."
           ICONST_2
-          ANEWARRAY java/lang/Object
+          ANEWARRAY java/lang/String
           DUP
           ICONST_0
           ALOAD 2
@@ -2289,7 +2293,7 @@ procedure GROW-GRASS:[]{-TP-}:
           INVOKESTATIC java/lang/Double.valueOf (D)Ljava/lang/Double;
           INVOKESTATIC org/nlogo/api/TypeNames.aName (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
-          INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String; (itf)
+          INVOKESTATIC org/nlogo/core/LocaleContextJ.loc (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L9
@@ -2616,10 +2620,9 @@ procedure REPRODUCE-SHEEP:[]{-T--}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
-          LDC "org.nlogo.prim._lessthan.cantUseLessthanOnDifferentArgs"
+          LDC "The < operator can only be used on two numbers, two strings, or two agents of the same type, but not on {} and {}."
           ICONST_2
-          ANEWARRAY java/lang/Object
+          ANEWARRAY java/lang/String
           DUP
           ICONST_0
           DLOAD 2
@@ -2631,7 +2634,7 @@ procedure REPRODUCE-SHEEP:[]{-T--}:
           ALOAD 4
           INVOKESTATIC org/nlogo/api/TypeNames.aName (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
-          INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String; (itf)
+          INVOKESTATIC org/nlogo/core/LocaleContextJ.loc (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L7
@@ -2710,9 +2713,10 @@ procedure REPRODUCE-SHEEP:[]{-T--}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
-          LDC "org.nlogo.prim.etc.$common.divByZero"
-          INVOKEINTERFACE org/nlogo/core/I18NJava.get (Ljava/lang/String;)Ljava/lang/String; (itf)
+          LDC "Division by zero."
+          ICONST_0
+          ANEWARRAY java/lang/String
+          INVOKESTATIC org/nlogo/core/LocaleContextJ.loc (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L11
@@ -2882,10 +2886,9 @@ procedure REPRODUCE-WOLVES:[]{-T--}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
-          LDC "org.nlogo.prim._lessthan.cantUseLessthanOnDifferentArgs"
+          LDC "The < operator can only be used on two numbers, two strings, or two agents of the same type, but not on {} and {}."
           ICONST_2
-          ANEWARRAY java/lang/Object
+          ANEWARRAY java/lang/String
           DUP
           ICONST_0
           DLOAD 2
@@ -2897,7 +2900,7 @@ procedure REPRODUCE-WOLVES:[]{-T--}:
           ALOAD 4
           INVOKESTATIC org/nlogo/api/TypeNames.aName (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
-          INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String; (itf)
+          INVOKESTATIC org/nlogo/core/LocaleContextJ.loc (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L7
@@ -2976,9 +2979,10 @@ procedure REPRODUCE-WOLVES:[]{-T--}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
-          LDC "org.nlogo.prim.etc.$common.divByZero"
-          INVOKEINTERFACE org/nlogo/core/I18NJava.get (Ljava/lang/String;)Ljava/lang/String; (itf)
+          LDC "Division by zero."
+          ICONST_0
+          ANEWARRAY java/lang/String
+          INVOKESTATIC org/nlogo/core/LocaleContextJ.loc (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L11
@@ -3122,9 +3126,10 @@ procedure SETUP:[]{O---}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
-          LDC "org.nlogo.prim.$common.onlyObserverCanAskAllTurtles"
-          INVOKEINTERFACE org/nlogo/core/I18NJava.get (Ljava/lang/String;)Ljava/lang/String; (itf)
+          LDC "Only the observer can ASK the set of all turtles."
+          ICONST_0
+          ANEWARRAY java/lang/String
+          INVOKESTATIC org/nlogo/core/LocaleContextJ.loc (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L3
@@ -3138,9 +3143,10 @@ procedure SETUP:[]{O---}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
-          LDC "org.nlogo.prim.$common.onlyObserverCanAskAllPatches"
-          INVOKEINTERFACE org/nlogo/core/I18NJava.get (Ljava/lang/String;)Ljava/lang/String; (itf)
+          LDC "Only the observer can ASK the set of all patches."
+          ICONST_0
+          ANEWARRAY java/lang/String
+          INVOKESTATIC org/nlogo/core/LocaleContextJ.loc (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L2
@@ -3262,9 +3268,10 @@ procedure SETUP:[]{O---}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
-          LDC "org.nlogo.prim.$common.onlyObserverCanAskAllTurtles"
-          INVOKEINTERFACE org/nlogo/core/I18NJava.get (Ljava/lang/String;)Ljava/lang/String; (itf)
+          LDC "Only the observer can ASK the set of all turtles."
+          ICONST_0
+          ANEWARRAY java/lang/String
+          INVOKESTATIC org/nlogo/core/LocaleContextJ.loc (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L3
@@ -3278,9 +3285,10 @@ procedure SETUP:[]{O---}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
-          LDC "org.nlogo.prim.$common.onlyObserverCanAskAllPatches"
-          INVOKEINTERFACE org/nlogo/core/I18NJava.get (Ljava/lang/String;)Ljava/lang/String; (itf)
+          LDC "Only the observer can ASK the set of all patches."
+          ICONST_0
+          ANEWARRAY java/lang/String
+          INVOKESTATIC org/nlogo/core/LocaleContextJ.loc (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L2
@@ -3533,9 +3541,10 @@ procedure SETUP:[]{O---}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
-          LDC "org.nlogo.prim.$common.onlyObserverCanAskAllTurtles"
-          INVOKEINTERFACE org/nlogo/core/I18NJava.get (Ljava/lang/String;)Ljava/lang/String; (itf)
+          LDC "Only the observer can ASK the set of all turtles."
+          ICONST_0
+          ANEWARRAY java/lang/String
+          INVOKESTATIC org/nlogo/core/LocaleContextJ.loc (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L3
@@ -3549,9 +3558,10 @@ procedure SETUP:[]{O---}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
-          LDC "org.nlogo.prim.$common.onlyObserverCanAskAllPatches"
-          INVOKEINTERFACE org/nlogo/core/I18NJava.get (Ljava/lang/String;)Ljava/lang/String; (itf)
+          LDC "Only the observer can ASK the set of all patches."
+          ICONST_0
+          ANEWARRAY java/lang/String
+          INVOKESTATIC org/nlogo/core/LocaleContextJ.loc (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L2
@@ -3935,21 +3945,20 @@ procedure SETUP:[]{O---}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
-          LDC "org.nlogo.prim.etc._setxy.pointOutsideWorld"
+          LDC "The point [ {} , {} ] is outside of the boundaries of the world and wrapping is not permitted in one or both directions."
           ICONST_2
-          ANEWARRAY java/lang/Object
+          ANEWARRAY java/lang/String
           DUP
           ICONST_0
           DLOAD 2
-          INVOKESTATIC java/lang/Double.valueOf (D)Ljava/lang/Double;
+          INVOKESTATIC org/nlogo/core/LocaleContextJ.formatDouble (D)Ljava/lang/String;
           AASTORE
           DUP
           ICONST_1
           DLOAD 4
-          INVOKESTATIC java/lang/Double.valueOf (D)Ljava/lang/Double;
+          INVOKESTATIC org/nlogo/core/LocaleContextJ.formatDouble (D)Ljava/lang/String;
           AASTORE
-          INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String; (itf)
+          INVOKESTATIC org/nlogo/core/LocaleContextJ.loc (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L18
@@ -4000,9 +4009,10 @@ procedure SETUP:[]{O---}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
-          LDC "org.nlogo.prim.$common.onlyObserverCanAskAllTurtles"
-          INVOKEINTERFACE org/nlogo/core/I18NJava.get (Ljava/lang/String;)Ljava/lang/String; (itf)
+          LDC "Only the observer can ASK the set of all turtles."
+          ICONST_0
+          ANEWARRAY java/lang/String
+          INVOKESTATIC org/nlogo/core/LocaleContextJ.loc (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L3
@@ -4016,9 +4026,10 @@ procedure SETUP:[]{O---}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
-          LDC "org.nlogo.prim.$common.onlyObserverCanAskAllPatches"
-          INVOKEINTERFACE org/nlogo/core/I18NJava.get (Ljava/lang/String;)Ljava/lang/String; (itf)
+          LDC "Only the observer can ASK the set of all patches."
+          ICONST_0
+          ANEWARRAY java/lang/String
+          INVOKESTATIC org/nlogo/core/LocaleContextJ.loc (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L2
@@ -4402,21 +4413,20 @@ procedure SETUP:[]{O---}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
-          LDC "org.nlogo.prim.etc._setxy.pointOutsideWorld"
+          LDC "The point [ {} , {} ] is outside of the boundaries of the world and wrapping is not permitted in one or both directions."
           ICONST_2
-          ANEWARRAY java/lang/Object
+          ANEWARRAY java/lang/String
           DUP
           ICONST_0
           DLOAD 2
-          INVOKESTATIC java/lang/Double.valueOf (D)Ljava/lang/Double;
+          INVOKESTATIC org/nlogo/core/LocaleContextJ.formatDouble (D)Ljava/lang/String;
           AASTORE
           DUP
           ICONST_1
           DLOAD 4
-          INVOKESTATIC java/lang/Double.valueOf (D)Ljava/lang/Double;
+          INVOKESTATIC org/nlogo/core/LocaleContextJ.formatDouble (D)Ljava/lang/String;
           AASTORE
-          INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String; (itf)
+          INVOKESTATIC org/nlogo/core/LocaleContextJ.loc (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L18

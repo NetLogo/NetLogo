@@ -25,7 +25,7 @@ lazy val commonSettings = Seq(
   testTempDirectory     := (baseDirectory.value.getParentFile / "tmp").getAbsoluteFile,
   ivyLoggingLevel       := UpdateLogging.Quiet,
   Compile / console / scalacOptions := scalacOptions.value.filterNot(_ == "-Xlint")
-)
+) ++ I18N.settings
 
 // These settings are common to all builds involving scala
 // Any scala-specific settings should change here (and thus for all projects at once)
@@ -215,8 +215,7 @@ lazy val netlogo = project.in(file("netlogo-gui")).
           BSBench.settings ++
           FindBadSource.settings ++
           Ruler.settings ++
-          SpellCheck.settings ++
-          TranslationHelper.settings: _*).
+          SpellCheck.settings: _*).
   settings(
     name := "NetLogo",
     version := "7.1.0-alpha1",
@@ -418,7 +417,7 @@ lazy val headless = (project in file ("netlogo-headless")).
 lazy val dist = project.in(file("dist")).
   settings(version := (netlogo / version).value).
   settings(NetLogoBuild.settings: _*).
-  settings(NetLogoPackaging.settings(netlogo, behaviorsearchProject): _*).
+  settings(NetLogoPackaging.settings(parserJVM, parserJS, netlogo, headless, behaviorsearchProject): _*).
   settings(
     zipJars := {
       val nlJar: File = (netlogo / target).value / "NetLogo.jar"
@@ -465,6 +464,7 @@ lazy val parser = crossProject(JSPlatform, JVMPlatform).
     version := "0.4.0",
     Compile / unmanagedSourceDirectories += baseDirectory.value.getParentFile / "parser-core" / "src" / "main",
     Test / unmanagedSourceDirectories    += baseDirectory.value.getParentFile / "parser-core" / "src" / "test",
+    Compile / unmanagedResourceDirectories += baseDirectory.value / "resources",
     Compile / doc / scalacOptions := Seq(
       "-skip-by-regex", Scaladoc.excludedPackages.mkString(",")
     )).

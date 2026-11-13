@@ -5,7 +5,7 @@ import java.lang.{Boolean => JBoolean, Double => JDouble}
 import java.net.MalformedURLException
 
 import org.nlogo.api.{Argument, Command, Context, Dump, ExtensionException, Reporter}
-import org.nlogo.core.{CompilerException, I18N, LogoList, Syntax, Token}
+import org.nlogo.core.{CompilerException, LocaleContext, LogoList, Syntax, Token}
 import org.nlogo.nvm.{Activation, Binding, ExtensionContext, HaltException, Context => NvmContext}
 import org.nlogo.workspace.AbstractWorkspace
 
@@ -169,8 +169,8 @@ class With(ls: LevelSpace) extends Reporter {
         b
       case (id: AnyRef, x: AnyRef) =>
         val m = ls.getModel(LevelSpace.castToId(id))
-        throw new ExtensionException(I18N.errorsJ.getN("org.nlogo.prim.$common.expectedBooleanValue",
-          "ls:with", m.name, Dump.logoObject(x)))
+        throw new ExtensionException(
+          loc"ls:with expected a true/false value from ${m.name}, but got ${Dump.logoObject(x)} instead.")
     }.map(_._1).toVector)
   }
 }

@@ -2,8 +2,8 @@
 
 package org.nlogo.agent;
 
-import org.nlogo.core.I18N;
 import org.nlogo.api.AgentException;
+import org.nlogo.core.LocaleContextJ;
 
 public class Turtle2D
   extends Turtle {
@@ -58,7 +58,7 @@ public class Turtle2D
     Patch target = _world.getPatchAt(xcor + dx, ycor + dy);
     if (target == null) {
       // Cannot get patch beyond limits of current world.
-      throw new AgentException(I18N.errorsJ().get("org.nlogo.agent.Turtle.patchBeyondLimits"));
+      throw new AgentException(LocaleContextJ.loc("Cannot get patch beyond limits of current world."));
     }
     return target;
   }

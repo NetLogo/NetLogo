@@ -13,15 +13,13 @@ import scala.util.control.Exception.ignoring
 import org.nlogo.api.TabsInterface
 import org.nlogo.app.common.{ Actions }, Actions.Ellipsis
 import org.nlogo.awt.UserCancelException
-import org.nlogo.core.{ I18N, NetLogoPreferences }
+import org.nlogo.core.{ LocaleContext, NetLogoPreferences }
 import org.nlogo.nvm.IncludeSource
 import org.nlogo.swing.{ FileDialog => SwingFileDialog, MenuItem, OptionPane, PopupMenu, ToolBarMenu }
 import org.nlogo.window.{ Events => WindowEvents }
 
 class IncludedFilesMenu(includesTable: => Option[Map[String, IncludeSource]], tabs: TabsInterface)
-  extends ToolBarMenu(I18N.gui.get("tabs.code.includedFiles")) with WindowEvents.CompiledEvent.Handler {
-
-  implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("tabs.code.includedFiles")
+  extends ToolBarMenu(loc"Included Files") with WindowEvents.CompiledEvent.Handler {
 
   private var alwaysVisible = NetLogoPreferences.get("includedFilesMenu", "false").toBoolean
   // If we're empty, we have no size, are invisible and don't affect our parent's layout
@@ -51,14 +49,14 @@ class IncludedFilesMenu(includesTable: => Option[Map[String, IncludeSource]], ta
             new File(value.file).exists)
 
         if (filtered.isEmpty)
-          menu.add(new MenuItem(I18N.gui.get("common.menus.empty"))).setEnabled(false)
+          menu.add(new MenuItem(loc"<empty>")).setEnabled(false)
 
         else {
           filtered.map(_.split(File.separatorChar).last -> _).toSeq.sortBy(_._1.toUpperCase(Locale.ENGLISH))
             .foreach((name, source) => menu.add(new MenuItem(name, () => tabs.openExternalFile(source.file))))
         }
       case None =>
-        menu.add(new MenuItem(I18N.gui.get("common.menus.empty"))).setEnabled(false)
+        menu.add(new MenuItem(loc"<empty>")).setEnabled(false)
     }
     menu.addSeparator()
     menu.add(new MenuItem(new NewSourceEditorAction))
@@ -70,19 +68,19 @@ class IncludedFilesMenu(includesTable: => Option[Map[String, IncludeSource]], ta
   override def getMinimumSize = sizeIfVisible(super.getMinimumSize)
   override def getPreferredSize = sizeIfVisible(super.getPreferredSize)
 
-  private class NewSourceEditorAction extends AbstractAction(I18N.gui("new")) {
+  private class NewSourceEditorAction extends AbstractAction(loc"New Source File") {
     override def actionPerformed(e: ActionEvent) = tabs.newExternalFile()
   }
 
-  private class OpenSourceEditorAction extends AbstractAction(I18N.gui("open") + Ellipsis) {
+  private class OpenSourceEditorAction extends AbstractAction(loc"Open Source File$Ellipsis") {
     override def actionPerformed(e: ActionEvent): Unit = ignoring(classOf[UserCancelException]) {
-      val path = SwingFileDialog.showFiles(IncludedFilesMenu.this, I18N.gui("open"), FileDialog.LOAD, null)
+      val path = SwingFileDialog.showFiles(IncludedFilesMenu.this, loc"Open Source File", FileDialog.LOAD, null)
         .replace(File.separatorChar, '/')
       if(path.endsWith(".nls") || path.endsWith(".nlm"))
         tabs.openExternalFile(path)
       else
-        new OptionPane(IncludedFilesMenu.this, I18N.gui.get("common.messages.error"),
-                       I18N.gui.get("file.open.error.external.suffix"), OptionPane.Options.Ok, OptionPane.Icons.error)
+        new OptionPane(IncludedFilesMenu.this, loc"Error", loc"""Filename must end with ".nls" or ".nlm".""",
+                       OptionPane.Options.Ok, OptionPane.Icons.error)
     }
   }
 }

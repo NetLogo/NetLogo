@@ -2,7 +2,7 @@
 
 package org.nlogo.prim.etc;
 
-import org.nlogo.core.I18N;
+import org.nlogo.core.LocaleContextJ;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.RuntimePrimitiveException;
@@ -18,8 +18,7 @@ public final class _importdrawing
   @Override
   public void perform(final org.nlogo.nvm.Context context) throws LogoException {
     if (world.program().dialect().is3D()) {
-      throw new RuntimePrimitiveException(context, this,
-          I18N.errorsJ().get("org.nlogo.prim.etc._importdrawing.cantImportDrawingin3D"));
+      throw new RuntimePrimitiveException(context, this, LocaleContextJ.loc("You can't import drawing in 3D."));
     }
     try {
       workspace.importDrawing

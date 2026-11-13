@@ -6,7 +6,7 @@ import java.awt.Dimension
 import java.awt.event.{ ActionEvent, ActionListener }
 import javax.swing.JLabel
 
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.swing.{ BoxAlign, BoxRow, Button, Utils, Zoomable, ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
@@ -56,14 +56,13 @@ abstract class RuntimeErrorDisplayer
   def exceptionMessage: Option[String]
 
   lazy val dismissButton = {
-    implicit val i18nPrefix = I18N.Prefix("common.buttons")
-    val button = new Button(I18N.gui("dismiss"), () => {})
-    button.setToolTipText(I18N.gui("dismiss"))
+    val button = new Button(loc"Dismiss", () => {})
+    button.setToolTipText(loc"Dismiss")
     button.addActionListener(this)
     button
   }
 
-  lazy val errorLabel = new JLabel(I18N.gui.get("edit.plot.error.runtimeError")) with Zoomable {
+  lazy val errorLabel = new JLabel(loc"Runtime Error:") with Zoomable {
     setIcon(Utils.iconScaledWithColor(this, "/images/error.png", 15, 15, () => InterfaceColors.errorLabelText()))
   }
 

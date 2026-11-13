@@ -1,0 +1,142 @@
+#: parser-core/src/main/parse/StructureChecker.scala:307
+msgid "-> can only be used to create arrow procedures"
+msgstr ""
+
+#: parser-core/src/main/parse/StructureChecker.scala:164
+msgid "A breed cannot have the same plural and singular name"
+msgstr ""
+
+#: parser-core/src/main/parse/StructureChecker.scala:107
+msgid "A string/number cannot be used as a global variable name."
+msgstr ""
+
+#: parser-core/src/main/parse/StructureChecker.scala:71
+msgid "Agent variables cannot be declared in a module"
+msgstr ""
+
+#: parser-core/src/main/parse/StructureChecker.scala:94
+msgid "All declarations must come before procedures."
+msgstr ""
+
+#: parser-core/src/main/parse/StructureParser.scala:63
+msgid "Attempted to import a module multiple times"
+msgstr ""
+
+#: parser-core/src/main/parse/StructureParser.scala:151
+msgid "Attempted to import a non-exported identifier"
+msgstr ""
+
+#: parser-core/src/main/parse/StructureChecker.scala:67
+msgid "Breeds cannot be declared in a module"
+msgstr ""
+
+#: parser-core/src/main/parse/StructureParser.scala:92
+#: parser-core/src/main/parse/StructureParser.scala:135
+#: parser-core/src/main/parse/StructureParser.scala:239
+msgid "Could not find {}"
+msgstr ""
+
+#: parser-core/src/main/parse/StructureChecker.scala:303
+msgid "Defining a breed [{} {}] redefines {}, a {}"
+msgstr ""
+
+#: parser-core/src/main/parse/StructureChecker.scala:35
+msgid "EXPORT can only be used in a module"
+msgstr ""
+
+#: parser-core/src/main/parse/StructureConverter.scala:45
+msgid "EXPORT may only be used once per file"
+msgstr ""
+
+#: parser-core/src/main/parse/ScopedIdentifierConsolidator.scala:15
+msgid "Expected identifier between colons"
+msgstr ""
+
+#: parser-core/src/main/parse/StructureChecker.scala:69
+msgid "Globals cannot be declared in a module"
+msgstr ""
+
+#: parser-core/src/main/parse/StructureCombinators.scala:135
+msgid "Identifier list contains duplicates"
+msgstr ""
+
+#: parser-core/src/main/parse/StructureChecker.scala:85
+msgid "Import paths may not contain slash or the system path separator"
+msgstr ""
+
+#: parser-core/src/main/parse/StructureChecker.scala:113
+msgid "Input name conflicts with a constant."
+msgstr ""
+
+#: parser-core/src/main/parse/LetVerifier.scala:32
+#: parser-core/src/main/parse/ExpressionParser.scala:196
+#: parser-core/src/main/parse/ExpressionParser.scala:531
+#: parser-core/src/main/parse/StructureChecker.scala:57
+msgid "Nothing named {} has been defined."
+msgstr ""
+
+#: parser-core/src/main/parse/ControlFlowVerifier.scala:53
+msgid "REPORT can only be used inside TO-REPORT."
+msgstr ""
+
+#: parser-core/src/main/parse/ControlFlowVerifier.scala:55
+msgid "REPORT must be immediately inside a TO-REPORT."
+msgstr ""
+
+#: parser-core/src/main/parse/StructureChecker.scala:311
+msgid "Redeclaration of {}"
+msgstr ""
+
+#: parser-core/src/main/parse/ControlFlowVerifier.scala:51
+msgid "STOP is not allowed inside TO-REPORT."
+msgstr ""
+
+#: parser-core/src/main/parse/StructureParser.scala:102
+msgid "Selective import only works when importing directly from a module"
+msgstr ""
+
+#: parser-core/src/main/parse/StructureParser.scala:221
+msgid "The following extensions are referenced by imported modules and must be declared in the model code: {}"
+msgstr ""
+
+#: parser-core/src/main/parse/LetScoper.scala:182
+msgid "The list of variables names given to LET must contain at least one item."
+msgstr ""
+
+#: parser-core/src/main/parse/SetSplitter.scala:54
+msgid "The list of variables names given to SET must contain at least one item."
+msgstr ""
+
+#: parser-core/src/main/parse/StructureChecker.scala:317
+msgid "There is already a local variable called {} here"
+msgstr ""
+
+#: parser-core/src/main/parse/StructureChecker.scala:314
+#: parser-core/src/main/parse/StructureConverter.scala:77
+msgid "There is already a {} called {}"
+msgstr ""
+
+#: parser-core/src/main/parse/StructureParser.scala:272
+msgid "There is already an imported procedure called {}"
+msgstr ""
+
+#: parser-core/src/main/parse/StructureConverter.scala:164
+msgid "There is no breed \"{}\""
+msgstr ""
+
+#: parser-core/src/main/parse/ExpressionParser.scala:111
+msgid "This isn't something you can use \"set\" on."
+msgstr ""
+
+#: parser-core/src/main/parse/StructureChecker.scala:105
+msgid "Variable name conflicts with a constant."
+msgstr ""
+
+#: parser-core/src/main/parse/CarefullyVisitor.scala:33
+msgid "{} cannot be used outside of CAREFULLY."
+msgstr ""
+
+#: parser-core/src/main/parse/ExpressionParser.scala:191
+#: parser-core/src/main/parse/ExpressionParser.scala:526
+msgid "{} is an imported module, not a command or a reporter. To use some X within {}, write {}:X."
+msgstr ""

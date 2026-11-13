@@ -6,17 +6,15 @@ import java.awt.event.{ ActionEvent, KeyEvent }
 import javax.swing.AbstractAction
 
 import org.nlogo.api.ZoomRoot
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.swing.{ Menu, UserAction }, UserAction.{ KeyBindings, MenuAction }
 
 // note that multiple instances of this class may exist as there are now multiple frames that each
 // have their own menu bar and menus  ev 8/25/05
-class ZoomMenu(root: ZoomRoot) extends Menu(I18N.gui.get("menu.zoom")) {
-  private implicit val i18nPrefix: I18N.Prefix = I18N.Prefix("menu.zoom")
-
+class ZoomMenu(root: ZoomRoot) extends Menu(loc"Zoom") {
   setMnemonic('Z')
 
-  addMenuItem(new AbstractAction(I18N.gui("larger")) with MenuAction {
+  addMenuItem(new AbstractAction(loc"Larger") with MenuAction {
     accelerator = KeyBindings.keystroke(KeyEvent.VK_PLUS, withMenu = true)
     mnemonic = KeyEvent.VK_L
 
@@ -25,7 +23,7 @@ class ZoomMenu(root: ZoomRoot) extends Menu(I18N.gui.get("menu.zoom")) {
     }
   })
 
-  addMenuItem(new AbstractAction(I18N.gui("normalSize")) with MenuAction {
+  addMenuItem(new AbstractAction(loc"Normal Size") with MenuAction {
     accelerator = KeyBindings.keystroke(KeyEvent.VK_0, withMenu = true)
     mnemonic = KeyEvent.VK_N
 
@@ -34,7 +32,7 @@ class ZoomMenu(root: ZoomRoot) extends Menu(I18N.gui.get("menu.zoom")) {
     }
   })
 
-  addMenuItem(new AbstractAction(I18N.gui("smaller")) with MenuAction {
+  addMenuItem(new AbstractAction(loc"Smaller") with MenuAction {
     accelerator = KeyBindings.keystroke(KeyEvent.VK_MINUS, withMenu = true)
     mnemonic = KeyEvent.VK_S
 

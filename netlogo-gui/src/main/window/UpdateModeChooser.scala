@@ -2,19 +2,17 @@
 
 package org.nlogo.window
 
-import org.nlogo.core.{ I18N, UpdateMode }
+import org.nlogo.core.{ LocaleContext, UpdateMode }
 import org.nlogo.swing.ComboBox
 
 class UpdateModeChooser(workspace: GUIWorkspace) extends ComboBox[String] {
-  implicit val prefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("tabs.run.viewUpdates")
+  setToolTipText(loc"change view update mode")
 
-  setToolTipText(I18N.gui("dropdown.tooltip"))
-
-  setItems(List(I18N.gui("dropdown.continuous"), I18N.gui("dropdown.onticks")))
+  setItems(List(loc"Continuous", loc"On Ticks"))
 
   addItemListener(_ => {
     getSelectedItem match {
-      case Some(text) if text == I18N.gui("dropdown.continuous") =>
+      case Some(text) if text == loc"Continuous" =>
         workspace.updateMode(UpdateMode.Continuous)
       case _ =>
         workspace.updateMode(UpdateMode.TickBased)
@@ -25,8 +23,8 @@ class UpdateModeChooser(workspace: GUIWorkspace) extends ComboBox[String] {
 
   def refreshSelection(): Unit = {
     workspace.updateMode() match {
-      case UpdateMode.Continuous => setSelectedItem(I18N.gui("dropdown.continuous"))
-      case UpdateMode.TickBased => setSelectedItem(I18N.gui("dropdown.onticks"))
+      case UpdateMode.Continuous => setSelectedItem(loc"Continuous")
+      case UpdateMode.TickBased => setSelectedItem(loc"On Ticks")
     }
   }
 }

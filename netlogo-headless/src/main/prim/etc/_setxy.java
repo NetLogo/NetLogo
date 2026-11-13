@@ -3,7 +3,7 @@
 package org.nlogo.prim.etc;
 
 import org.nlogo.agent.Turtle;
-import org.nlogo.core.I18N;
+import org.nlogo.core.LocaleContextJ;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.RuntimePrimitiveException;
@@ -34,8 +34,8 @@ public final class _setxy
       turtle.xandycor(newx, newy);
     } catch (org.nlogo.api.AgentException e) {
       throw new RuntimePrimitiveException(context, this,
-          I18N.errorsJ().getN("org.nlogo.prim.etc._setxy.pointOutsideWorld",
-              newx.doubleValue(), newy.doubleValue()));
+        LocaleContextJ.loc("The point [ {} , {} ] is outside of the boundaries of the world and wrapping is not permitted in one or both directions.",
+                           newx.toString(), newy.toString()));
     }
     context.ip = next;
   }
@@ -47,7 +47,8 @@ public final class _setxy
           turtle.shortestPathY(yvalue));
     } catch (org.nlogo.api.AgentException e) {
       throw new RuntimePrimitiveException(context, this,
-          I18N.errorsJ().getN("org.nlogo.prim.etc._setxy.pointOutsideWorld", xvalue, yvalue));
+        LocaleContextJ.loc("The point [ {} , {} ] is outside of the boundaries of the world and wrapping is not permitted in one or both directions.",
+                           LocaleContextJ.formatDouble(xvalue), LocaleContextJ.formatDouble(yvalue)));
     }
     context.ip = next;
   }

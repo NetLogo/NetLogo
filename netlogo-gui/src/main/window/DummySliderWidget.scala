@@ -3,7 +3,7 @@
 package org.nlogo.window
 
 import org.nlogo.agent.ConstantSliderConstraint
-import org.nlogo.core.{ Horizontal, I18N, Slider => CoreSlider, Vertical, Widget => CoreWidget }
+import org.nlogo.core.{ Horizontal, LocaleContext, Slider => CoreSlider, Vertical, Widget => CoreWidget }
 
 // This widget works iff the slider has a ConstantSliderConstraint
 // object.  Since this is only being used to construct HubNet client
@@ -11,7 +11,7 @@ import org.nlogo.core.{ Horizontal, I18N, Slider => CoreSlider, Vertical, Widget
 // must have constant values for their constraints. -- CLB
 
 class DummySliderWidget extends AbstractSliderWidget with Editable {
-  override def classDisplayName = I18N.gui.get("tabs.run.widgets.slider")
+  override def classDisplayName = loc"Slider"
 
   override def editPanel: EditPanel = new DummySliderEditPanel(this)
 

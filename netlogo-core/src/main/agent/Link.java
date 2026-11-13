@@ -5,7 +5,7 @@ package org.nlogo.agent;
 import org.nlogo.core.AgentKind;
 import org.nlogo.core.AgentKindJ;
 import org.nlogo.core.Breed;
-import org.nlogo.core.I18N;
+import org.nlogo.core.LocaleContextJ;
 import org.nlogo.core.LogoList;
 import org.nlogo.core.Program;
 import org.nlogo.api.AgentException;
@@ -299,7 +299,7 @@ public class Link
           if (value instanceof AgentSet) {
             AgentSet breed = (AgentSet) value;
             if (breed != _world.links() && !_world.isLinkBreed(breed)) {
-              throw new AgentException(I18N.errorsJ().get("org.nlogo.agent.Link.cantSetBreedToNonLinkBreedAgentSet"));
+              throw new AgentException(LocaleContextJ.loc("You can't set BREED to a non-link-breed agentset."));
             }
             if (_world.getLink(_end1.agentKey(), _end2.agentKey(), breed) != null) {
               throw new AgentException("there is already a "
@@ -308,8 +308,8 @@ public class Link
                   + _end1.toString() + " and " + _end2.toString());
             }
             if (!_world.linkManager().checkBreededCompatibility(breed == _world.links())) {
-              throw new AgentException
-                  (I18N.errorsJ().get("org.nlogo.agent.Link.cantHaveBreededAndUnbreededLinks"));
+              throw new AgentException(
+                LocaleContextJ.loc("You cannot have both breeded and unbreeded links in the same world."));
             }
             setBreed(breed);
           } else {
@@ -329,7 +329,7 @@ public class Link
           if (value instanceof String) {
             String newShape = _world.checkLinkShapeName((String) value);
             if (newShape == null) {
-              throw new AgentException(I18N.errorsJ().getN("org.nlogo.agent.Agent.shapeUndefined", value));
+              throw new AgentException(LocaleContextJ.loc("\"{}\" is not a currently defined shape.", (String) value));
             }
             shape(newShape);
           } else {
@@ -436,8 +436,7 @@ public class Link
   void mustOwn(String name)
       throws AgentException {
     if (name != null && !_world.linkBreedOwns(getBreed(), name)) {
-      throw new AgentException(
-          I18N.errorsJ().getN("org.nlogo.agent.Agent.breedDoesNotOwnVariable",getBreed().printName(), name));
+      throw new AgentException(LocaleContextJ.loc("{} breed does not own variable {}", getBreed().printName(), name));
     }
   }
 

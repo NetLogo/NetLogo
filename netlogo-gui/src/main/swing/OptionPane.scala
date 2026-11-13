@@ -7,16 +7,16 @@ import java.awt.event.{ ActionEvent, KeyEvent }
 import javax.swing.{ AbstractAction, Icon, JComponent, JDialog, JLabel, JPanel, KeyStroke }
 
 import org.nlogo.awt.LineBreaker
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.theme.InterfaceColors
 
 import scala.collection.{ Seq => CollectionSeq }
 
 object OptionPane {
   object Options {
-    val Ok = Seq(I18N.gui.get("common.buttons.ok"))
-    val OkCancel = Seq(I18N.gui.get("common.buttons.ok"), I18N.gui.get("common.buttons.cancel"))
-    val YesNo = Seq(I18N.gui.get("common.buttons.yes"), I18N.gui.get("common.buttons.no"))
+    val Ok = Seq(loc"OK")
+    val OkCancel = Seq(loc"OK", loc"Cancel")
+    val YesNo = Seq(loc"Yes", loc"No")
   }
 
   object Icons {

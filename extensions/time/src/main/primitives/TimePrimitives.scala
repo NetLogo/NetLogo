@@ -4,7 +4,7 @@ import java.time.format.DateTimeFormatter
 import java.time.format.ResolverStyle.STRICT
 
 import org.nlogo.api.{ Argument, Context, Reporter }
-import org.nlogo.core.{ I18N, Syntax }
+import org.nlogo.core.{ LocaleContext, Syntax }
 import org.nlogo.nvm.ExtensionContext
 
 import org.nlogo.extensions.time._
@@ -56,8 +56,9 @@ object TimePrimitives {
       val fmtString: String = TimeUtils.getStringFromArgument(args, 1)
       val fmt =
         if (fmtString.trim().==(""))
-          DateTimeFormatter.ofPattern("uuuu-MM-dd HH:mm:ss.SSS", I18N.shared.defaultLocale).withResolverStyle(STRICT)
-        else DateTimeFormatter.ofPattern(fmtString.replace('y','u'), I18N.shared.defaultLocale).withResolverStyle(STRICT)
+          DateTimeFormatter.ofPattern("uuuu-MM-dd HH:mm:ss.SSS", LocaleContext.getLocale).withResolverStyle(STRICT)
+        else
+          DateTimeFormatter.ofPattern(fmtString.replace('y','u'), LocaleContext.getLocale).withResolverStyle(STRICT)
       time.show(fmt)
     }
   }

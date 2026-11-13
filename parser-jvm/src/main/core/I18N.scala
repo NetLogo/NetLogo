@@ -2,10 +2,16 @@
 
 package org.nlogo.core
 
-import java.text.MessageFormat
 import java.util.{ MissingResourceException, Locale, ResourceBundle }
 
 object I18N {
+
+  // if the users locale from the preferences is available, use it.
+  LocaleContext.setLocale(localeFromPreferences.getOrElse {
+    // if not, see if the default (from the OS or JVM) is available. if so, use it.
+    // otherwise, fall back.
+    localeIfAvailable(Locale.getDefault).getOrElse(Locale.US)
+  })
 
   def availableLocales: Array[Locale] =
     Locale.getAvailableLocales.filter(available)
@@ -40,94 +46,6 @@ object I18N {
       case (Some(l), _) => localeIfAvailable(Locale.of(l))
       case _ => None
     }
-  }
-
-  case class Prefix(name: String)
-
-  class BundleKind(name: String) extends I18NJava {
-
-    var defaultLocale: Locale = {
-      // if the users locale from the preferences is available, use it.
-      localeFromPreferences.getOrElse(
-        // if not, see if the default (from the OS or JVM) is available. if so, use it.
-        // otherwise, fall back.
-        localeIfAvailable(Locale.getDefault).getOrElse(Locale.US)
-      )
-    }
-
-    // here we get both bundles (both of which should be available)
-    // we get both because the default bundle might not contain all the keys
-    // maybe some got left out in translation. if that happens
-    // we need to fall back and use the english string instead of erroring.
-    // its very possible (and in fact in most cases, likely) that the
-    // defaultBundle IS the english bundle, but that is ok.
-    private var defaultBundle = getBundle(defaultLocale)
-    private val englishBundle = getBundle(Locale.US)
-    def getBundle(locale: Locale) = ResourceBundle.getBundle(name, locale)
-    def apply(key: String)(implicit prefix: Prefix) = get(prefix.name + "." + key)
-    def apply(key: String, args: AnyRef*)(implicit prefix: Prefix) = getN(prefix.name + "." + key, args*)
-    override def get(key: String) = getN(key)
-    override def getN(key: String, args: AnyRef*) = {
-      def getFromBundle(bundle: ResourceBundle): Option[String] =
-        try Some(bundle.getString(key))
-        catch { case m: MissingResourceException => None }
-      getFromBundle(defaultBundle) match {
-        case Some(text) =>
-          new MessageFormat(text, defaultLocale).format(args.toArray)
-
-        case _ => // fallback to english here.
-          println(s"unable to find translation for: $key in $name for locale: $defaultLocale")
-
-          val text = getFromBundle(englishBundle).getOrElse {
-            throw new IllegalArgumentException(s"internal error, bad translation key: $key for $name")
-          }
-
-          new MessageFormat(text, Locale.US).format(args.toArray)
-      }
-    }
-    // internal use only
-    def withLanguage[T](locale: Locale)(f: => T): T = {
-      val oldLocale = defaultLocale
-      val oldBundle = defaultBundle
-      defaultLocale = locale
-      defaultBundle = getBundle(locale)
-      val v = f
-      defaultLocale = oldLocale
-      defaultBundle = oldBundle
-      v
-    }
-    // internal use only, get all the keys for the given locale.
-    // use getKeys not keySet since keySet is new in Java 6 - ST 2/11/11
-    def keys(locale: Locale): Set[String] = {
-      import scala.jdk.CollectionConverters.SetHasAsScala
-      getBundle(locale).keySet.asScala.toSet
-    }
-    // internal use only, used to set the locale for error messages in the GUI only.
-    def setLanguage(locale: Locale): Unit = {
-      defaultLocale = locale
-      defaultBundle = getBundle(locale)
-    }
-
-    // for use in Java classes that we don't want to depend on I18N
-    override val fn = get
-  }
-
-  lazy val errors = new BundleKind("i18n.Errors")
-  lazy val shared = new BundleKind("i18n.Shared_Strings")
-  lazy val gui = new BundleKind("i18n.GUI_Strings")
-
-  // for easy use from Java
-  def errorsJ: I18NJava = errors
-
-  def guiJ: I18NJava = gui
-
-  // used by tests to enforce English localization of output/error messages (Isaac B 12/28/25)
-  def setAllLanguages(locale: Locale, includeGui: Boolean = true): Unit = {
-    errors.setLanguage(locale)
-    shared.setLanguage(locale)
-
-    if (includeGui)
-      gui.setLanguage(locale)
   }
 
 }

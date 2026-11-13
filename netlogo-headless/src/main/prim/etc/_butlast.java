@@ -2,7 +2,7 @@
 
 package org.nlogo.prim.etc;
 
-import org.nlogo.core.I18N;
+import org.nlogo.core.LocaleContextJ;
 import org.nlogo.core.LogoList;
 import org.nlogo.core.Pure;
 import org.nlogo.core.Syntax;
@@ -23,14 +23,14 @@ public final class _butlast
       LogoList list = (LogoList) arg0;
       if (list.isEmpty()) {
         throw new RuntimePrimitiveException(context, this,
-            I18N.errorsJ().getN("org.nlogo.prim.etc.$common.emptyListInput", displayName()));
+          LocaleContextJ.loc("{} got an empty list as input.", displayName()));
       }
       return list.butLast();
     } else if (arg0 instanceof String) {
       String string = (String) arg0;
       if (string.length() == 0) {
         throw new RuntimePrimitiveException(context, this,
-            I18N.errorsJ().getN("org.nlogo.prim.etc.$common.emptyStringInput", token().text()));
+          LocaleContextJ.loc("{} got an empty string as input.", token().text()));
       }
       return string.substring(0, string.length() - 1);
     } else {
@@ -42,7 +42,7 @@ public final class _butlast
   public String report_2(final org.nlogo.nvm.Context context, String arg0) {
     if (arg0.length() == 0) {
       throw new RuntimePrimitiveException(context, this,
-          I18N.errorsJ().getN("org.nlogo.prim.etc.$common.emptyStringInput", token().text()));
+        LocaleContextJ.loc("{} got an empty string as input.", token().text()));
     }
     return arg0.substring(0, arg0.length() - 1);
   }
@@ -50,7 +50,7 @@ public final class _butlast
   public LogoList report_3(final org.nlogo.nvm.Context context, LogoList arg0) {
     if (arg0.isEmpty()) {
       throw new RuntimePrimitiveException(context, this,
-          I18N.errorsJ().getN("org.nlogo.prim.etc.$common.emptyListInput", displayName()));
+        LocaleContextJ.loc("{} got an empty list as input.", displayName()));
     }
     return arg0.butLast();
   }

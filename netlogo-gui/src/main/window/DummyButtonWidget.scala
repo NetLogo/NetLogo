@@ -5,7 +5,7 @@ package org.nlogo.window
 import java.awt.Dimension
 import javax.swing.JLabel
 
-import org.nlogo.core.{ AgentKind, I18N, Button => CoreButton, Widget => CoreWidget }
+import org.nlogo.core.{ AgentKind, Button => CoreButton, LocaleContext, Widget => CoreWidget }
 import org.nlogo.swing.Zoomable
 import org.nlogo.theme.InterfaceColors
 
@@ -54,7 +54,7 @@ class DummyButtonWidget extends SingleErrorWidget with Editable {
   /// editability
 
   override def classDisplayName: String =
-    I18N.gui.get("tabs.run.widgets.button")
+    loc"Button"
 
   def name: String = _name
 

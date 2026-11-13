@@ -11,7 +11,7 @@ import javax.swing.table.{ DefaultTableCellRenderer, AbstractTableModel, TableCe
 
 import org.nlogo.api.CompilerServices
 import org.nlogo.awt.Hierarchy
-import org.nlogo.core.{ CompilerException, I18N }
+import org.nlogo.core.{ CompilerException, LocaleContext }
 import org.nlogo.editor.{ Colorizer, EditorArea, EditorConfiguration }
 import org.nlogo.plot.{ Plot, PlotManagerInterface, PlotPen }
 import org.nlogo.swing.{ BoxColumn, BoxRow, Button, PreferredSize, Popup, ScrollPane, Utils, Zoomable, ZoomableBorder }
@@ -85,16 +85,14 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], compiler: Compil
 
   import PlotPensEditor._
 
-  private implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("edit.plot.pen")
-
   private val plot = target.plot
   private val plotManager = target.plotManager
   private val table = new PlotPensTable()
 
   private val scrollPane = new ScrollPane(table)
 
-  private val addButton = new Button(I18N.gui("add"), () => table.newPen())
-  private val checkButton = new Button(I18N.gui("check"), () => apply())
+  private val addButton = new Button(loc"Add Pen", () => table.newPen())
+  private val checkButton = new Button(loc"Check Pens", () => apply())
 
   override def apply(): Unit = {
     super.apply()
@@ -121,7 +119,7 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], compiler: Compil
     }
 
     if (duplicateNames.nonEmpty) {
-      Failure(new Exception(I18N.gui.getN("edit.plot.pen.duplicateNames", duplicateNames.mkString(", "))))
+      Failure(new Exception(loc"Pens list contains duplicate names: ${duplicateNames.mkString(", ")}."))
     } else {
       Success(table.getPlotPens)
     }
@@ -143,9 +141,9 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], compiler: Compil
 
   class PlotPensTable extends JTable with Zoomable { table =>
 
-    val UpdateCommandsColumnName = I18N.gui("updateCommands")
-    val NameColumnName = I18N.gui("name")
-    val ColorColumnName = I18N.gui("color")
+    val UpdateCommandsColumnName = loc"Pen update commands"
+    val NameColumnName = loc"Pen name"
+    val ColorColumnName = loc"Color"
     val ButtonsColumnName = "Buttons"
     def updateCommandsColumn = getColumn(UpdateCommandsColumnName)
     def nameColumn = getColumn(NameColumnName)
@@ -298,7 +296,7 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], compiler: Compil
     }
 
     def showEditorPopup(editingPen: Pen, p: PlotPenEditorAdvanced): Unit = {
-      new Popup(frame, I18N.gui("editing") + " " + editingPen.name, p, (), {
+      new Popup(frame, loc"Editing: ${editingPen.name}", p, (), {
         p.getResult match {
           case Some(p) =>
             model.updatePen(getSelectedRow, p)
@@ -306,7 +304,7 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], compiler: Compil
             true
           case _ => false
         }
-      }, I18N.gui.get).show()
+      }).show()
     }
 
     def openAdvancedPenEditor(editingPen: Pen): Unit = {

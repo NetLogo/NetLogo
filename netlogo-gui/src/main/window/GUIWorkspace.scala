@@ -20,7 +20,7 @@ import org.nlogo.api.{ Agent => ApiAgent, AgentFollowingPerspective, AppInterfac
                        ModelType, PreviewCommands, RendererInterface, ReporterRunnable, SimpleJobOwner,
                        TrailDrawerInterface, UpdateManagerInterface, WorkspaceContext, WorldPropertiesInterface }
 import org.nlogo.awt.{ EventQueue, Hierarchy, UserCancelException }
-import org.nlogo.core.{ AgentKind, CompilerException, File, I18N, Model, ModelSettings, NetLogoPreferences,
+import org.nlogo.core.{ AgentKind, CompilerException, File, LocaleContext, Model, ModelSettings, NetLogoPreferences,
                         Shape, UpdateMode, WorldDimensions, WorldDimensions3D }
 import org.nlogo.nvm.{ Context, HaltException, Instruction, PrimaryWorkspace, Procedure }
 import org.nlogo.shape.ShapeConverter
@@ -129,7 +129,7 @@ abstract class GUIWorkspace(app: Option[AppInterface], world: World, kioskLevel:
   private var lastTicksListenersHeard = -1.0
 
   val hubNetControlCenterAction = new HubNetControlCenterAction(this)
-  val switchTo3DViewAction = new AbstractAction(I18N.gui.get("menu.tools.3DView.switch")) {
+  val switchTo3DViewAction = new AbstractAction(loc"Switch to 3D View") {
     override def actionPerformed(e: ActionEvent): Unit =
       open3DView()
   }
@@ -345,8 +345,8 @@ abstract class GUIWorkspace(app: Option[AppInterface], world: World, kioskLevel:
    * Returns true if the user OKs it.
    */
   override def warningMessage(message: String): Boolean = {
-    new OptionPane(getFrame, I18N.gui.get("common.messages.warning"), message,
-                   OptionPane.Options.OkCancel, OptionPane.Icons.warning).getSelectedIndex == 0
+    new OptionPane(getFrame, loc"Warning", message, OptionPane.Options.OkCancel, OptionPane.Icons.warning)
+      .getSelectedIndex == 0
   }
 
   def resizeView(): Unit = {
@@ -693,7 +693,7 @@ abstract class GUIWorkspace(app: Option[AppInterface], world: World, kioskLevel:
       val procedure: Procedure = compileCommands("without-interruption [ startup ]")
 
       if (!NetLogoPreferences.getBoolean("confirmStartup", true) ||
-          new OptionPane(frame, I18N.gui.get("common.messages.warning"), I18N.gui.get("warning.confirmStartup"),
+          new OptionPane(frame, loc"Warning", loc"This model has a startup procedure. Would you like to run it now?",
                          OptionPane.Options.YesNo, OptionPane.Icons.warning).getSelectedIndex == 0) {
         runCompiledCommandsNoWait(new SimpleJobOwner("startup", world.mainRNG, AgentKind.Observer), procedure)
       }
@@ -710,7 +710,7 @@ abstract class GUIWorkspace(app: Option[AppInterface], world: World, kioskLevel:
         set2DViewEnabled(false)
       } catch {
         case e: JOGLLoadingException =>
-          Utils.alert("3D View", e.getMessage, "" + e.getCause, I18N.gui.get("common.buttons.continue"))
+          Utils.alert("3D View", e.getMessage, "" + e.getCause, loc"Continue")
 
           switchTo3DViewAction.setEnabled(false)
       }
@@ -890,7 +890,7 @@ abstract class GUIWorkspace(app: Option[AppInterface], world: World, kioskLevel:
   def handle(e: ExportWidgetEvent): Unit = {
     try {
       val guessedName = guessExportName(e.widget.getDefaultExportName)
-      val exportPath = FileDialog.showFiles(e.widget, I18N.gui.get("menu.file.export"), AwtFileDialog.SAVE, guessedName)
+      val exportPath = FileDialog.showFiles(e.widget, loc"Export", AwtFileDialog.SAVE, guessedName)
       val exportToPath = Future.successful(exportPath)
 
       e.widget match {
@@ -913,9 +913,8 @@ abstract class GUIWorkspace(app: Option[AppInterface], world: World, kioskLevel:
               case (filename: String, text: String) => FileIO.writeFile(filename, text, true); ()
             })(using NetLogoExecutionContext.backgroundExecutionContext).failed.foreach({ // on UI Thread
               case ex: java.io.IOException =>
-                ExportControls.displayExportError(Hierarchy.getFrame(ib),
-                  I18N.gui.get("menu.file.export.failed"),
-                  I18N.gui.getN("tabs.input.export.error", ex.getMessage))
+                ExportControls.displayExportError(Hierarchy.getFrame(ib), loc"Export Failed",
+                                                  loc"Export failed. Error:\n${ex.getMessage}")
               case _ =>
             })(using SwingUnlockedExecutionContext)
 
@@ -1000,8 +999,8 @@ abstract class GUIWorkspace(app: Option[AppInterface], world: World, kioskLevel:
   def doExportView(exportee: LocalViewInterface): Unit = {
     val exportPathOption =
       try {
-        val userPath      = FileDialog.showFiles(getExportWindowFrame, I18N.gui.get("menu.file.export.view"),
-                                                 AwtFileDialog.SAVE, guessExportName("view.png"))
+        val userPath      = FileDialog.showFiles(getExportWindowFrame, loc"Export View", AwtFileDialog.SAVE,
+                                                 guessExportName("view.png"))
         val extensionPath = FileIO.ensureExtension(userPath, "png")
         val path          = Paths.get(extensionPath)
 
@@ -1019,7 +1018,7 @@ abstract class GUIWorkspace(app: Option[AppInterface], world: World, kioskLevel:
 
     exportPathOption.foreach { exportPath =>
       ModalProgressTask.runForResultOnBackgroundThread(
-        getFrame, I18N.gui.get("dialog.interface.export.task"), () => (exportee.exportView, exportPath),
+        getFrame, loc"Exporting...", () => (exportee.exportView, exportPath),
         { (data: (BufferedImage, String)) =>
           data match {
             case (exportedView, path) =>
@@ -1080,8 +1079,7 @@ abstract class GUIWorkspace(app: Option[AppInterface], world: World, kioskLevel:
       val text = awaitFutureFromJobThread(controlSet.userOutput)
       ExportOutput.throwingErrors(filename, text)
     } else {
-      ModalProgressTask.runForResultOnBackgroundThread(frame, I18N.gui.get("dialog.interface.export.task"),
-        () => controlSet.userOutput,
+      ModalProgressTask.runForResultOnBackgroundThread(frame, loc"Exporting...", () => controlSet.userOutput,
         (textFuture: Future[String]) => ExportOutput.silencingErrors(filename, awaitFuture(textFuture, 1000)))
     }
   }

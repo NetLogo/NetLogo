@@ -4,7 +4,7 @@ package org.nlogo.window
 
 import java.awt.Frame
 
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.plot.{ Plot, PlotManager }
 import org.nlogo.swing.{ DropdownOptionPane, OptionPane }
 
@@ -18,8 +18,7 @@ class PlotExportControls(plotManager: PlotManager) {
       sorryNoPlots(frame)
       None
     } else {
-      val plotnum = new DropdownOptionPane(frame, I18N.gui.get("menu.file.export.plot"),
-                                           I18N.gui.get("menu.file.export.plot.whichPlot"),
+      val plotnum = new DropdownOptionPane(frame, loc"Export Plot", loc"Which plot would you like to export?",
                                            plotNames).getChoiceIndex
       if (plotnum == -1)
         None
@@ -29,19 +28,16 @@ class PlotExportControls(plotManager: PlotManager) {
   }
 
   def allPlotExportFailed(frame: Frame, filename: String, ex: Exception): Unit = {
-    displayExportError(
-      frame, I18N.gui.getN("menu.file.export.allPlots.exportFailed", filename, ex.getMessage),
-      I18N.gui.get("menu.file.export.plot.failed"))
+    displayExportError(frame, loc"Export of all plots to ${filename} failed: ${ex.getMessage}", loc"Export Plot Failed")
   }
 
   def singlePlotExportFailed(frame: Frame, filename: String, plot: Plot, ex: Exception): Unit = {
-    displayExportError(
-      frame, I18N.gui.getN("menu.file.export.plot.exportFailed", plot.name, filename, ex.getMessage),
-      I18N.gui.get("menu.file.export.plot.failed"))
+    displayExportError(frame, loc"Export of ${plot.name} plot to ${filename} failed: ${ex.getMessage}",
+                       loc"Export Plot Failed")
   }
 
   def sorryNoPlots(frame: Frame): Unit = {
-    new OptionPane(frame, I18N.gui.get("menu.file.export.plot"), I18N.gui.get("menu.file.export.noPlots"),
+    new OptionPane(frame, loc"Export Plot", loc"There are no plots to export.",
                    OptionPane.Options.Ok, OptionPane.Icons.info)
   }
 }

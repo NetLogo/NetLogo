@@ -5,11 +5,11 @@ package org.nlogo.editor
 import java.awt.event.{ ActionEvent, KeyEvent }
 import javax.swing.AbstractAction
 
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.swing.UserAction.{ EditCategory, EditFormatGroup, KeyBindings, MenuAction }
 
 class ShowUsageAction(editorArea: AdvancedEditorArea, colorizer: Colorizer)
-  extends AbstractAction(I18N.gui.get("tabs.code.rightclick.showUsage")) with MenuAction {
+  extends AbstractAction(loc"Show Usage") with MenuAction {
 
   category = EditCategory
   group = EditFormatGroup

@@ -7,28 +7,27 @@ import java.awt.event.ActionEvent
 import javax.swing.{ AbstractAction, Box, ButtonGroup, JLabel }
 
 import org.nlogo.api.Perspective
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.swing.{ BoxRow, Button, OptionPane, ToolBarToggleButton, Zoomable, ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 import MouseMotionHandler.{ Mode, OrbitMode, ZoomMode, TranslateMode, InterfaceMode }
 
 class ViewControlToolBar(view: GLViewInterface, inputHandler: MouseMotionHandler) extends BoxRow(6) with ThemeSync {
-  private implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("view.3d")
+  private val orbitButton = new ModeButton(loc"Orbit", OrbitMode)
+  private val zoomButton = new ModeButton(loc"Zoom", ZoomMode)
+  private val moveButton = new ModeButton(loc"Move", TranslateMode)
+  private val interactButton = new ModeButton(loc"Interact", InterfaceMode)
 
-  private val orbitButton = new ModeButton(I18N.gui("orbit"), OrbitMode)
-  private val zoomButton = new ModeButton(I18N.gui("zoom"), ZoomMode)
-  private val moveButton = new ModeButton(I18N.gui("move"), TranslateMode)
-  private val interactButton = new ModeButton(I18N.gui("interact"), InterfaceMode)
-
-  private val resetButton = new Button(I18N.gui("resetPerspective"), view.resetPerspective)
-  private val fullScreenButton = new Button(I18N.gui("fullScreen"), () => {
-    val options = Seq(I18N.gui.get("common.buttons.continue"), I18N.gui.get("common.buttons.cancel"))
+  private val resetButton = new Button(loc"Reset Perspective", view.resetPerspective)
+  private val fullScreenButton = new Button(loc"Full Screen", () => {
+    val options = Seq(loc"Continue", loc"Cancel")
     val isWindows = System.getProperty("os.name").toLowerCase.startsWith("win")
 
     if (!isWindows || view.warned ||
-      (new OptionPane(view, I18N.gui.get("common.messages.warning"), I18N.gui("fullScreenWarning"), options,
-                      OptionPane.Icons.warning).getSelectedIndex == 0)) {
+      (new OptionPane(view, loc"Warning", loc"On some systems, fullscreen mode may cause Windows to lock up.", options,
+                      OptionPane.Icons.warning)
+         .getSelectedIndex == 0)) {
       view.setFullscreen(true)
       view.warned = true
     }

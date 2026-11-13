@@ -4,7 +4,7 @@ package org.nlogo.prim
 
 import org.nlogo.agent.{ Agent, AgentSet }
 import org.nlogo.api.LogoListBuilder
-import org.nlogo.core.{ I18N, Syntax }
+import org.nlogo.core.{ LocaleContext, Syntax }
 import org.nlogo.nvm.{ Context, Reporter }
 import org.nlogo.nvm.RuntimePrimitiveException
 
@@ -14,10 +14,7 @@ class _of extends Reporter {
     args(1).report(context) match {
       case agent: Agent =>
         if (agent.id == -1)
-          throw new RuntimePrimitiveException(
-            context, this,
-            I18N.errors.getN("org.nlogo.$common.thatAgentIsDead",
-                             agent.classDisplayName))
+          throw new RuntimePrimitiveException(context, this, loc"That ${agent.classDisplayName} is dead.")
         args(0).checkAgentClass(agent, context)
         new Context(context, agent)
           .evaluateReporter(agent, args(0))

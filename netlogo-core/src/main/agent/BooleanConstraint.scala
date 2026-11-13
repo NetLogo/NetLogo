@@ -3,7 +3,7 @@
 package org.nlogo.agent
 
 import org.nlogo.api.ValueConstraint
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 
 /**
  * Constraint suitable for Switch variables.
@@ -15,7 +15,7 @@ class BooleanConstraint(var defaultValue: java.lang.Boolean) extends ValueConstr
   @throws(classOf[ValueConstraint.Violation])
   def assertConstraint(value: AnyRef): Unit = {
     if(!value.isInstanceOf[java.lang.Boolean])
-      throw new ValueConstraint.Violation(I18N.errors.get("org.nlogo.agent.BooleanConstraint.bool"))
+      throw new ValueConstraint.Violation(loc"Value must be a boolean.")
   }
 
   def coerceValue(value: AnyRef): java.lang.Boolean =

@@ -2,7 +2,7 @@
 
 package org.nlogo.prim.etc;
 
-import org.nlogo.core.I18N;
+import org.nlogo.core.LocaleContextJ;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Command;
@@ -30,8 +30,8 @@ public final class _resizeworld
     final int oldMaxY = workspace.world().maxPycor();
 
     if (newMinX > 0 || newMaxX < 0 || newMinY > 0 || newMaxY < 0) {
-      throw new RuntimePrimitiveException
-          (context, this, I18N.errorsJ().get("org.nlogo.prim.etc._resizeworld.worldMustIncludeOrigin"));
+      throw new RuntimePrimitiveException(context, this,
+        LocaleContextJ.loc("You must include the point (0, 0) in the world."));
     }
 
     if (oldMinX != newMinX || oldMaxX != newMaxX ||

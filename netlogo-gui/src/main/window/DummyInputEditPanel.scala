@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.swing.{ BoxAlign, BoxRow }
 
 class DummyInputEditPanel(target: DummyInputBoxWidget) extends WidgetEditPanel(target) {
@@ -10,7 +10,7 @@ class DummyInputEditPanel(target: DummyInputBoxWidget) extends WidgetEditPanel(t
     new StringEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.hubnet.tag"),
+        loc"Tag",
         () => target.name,
         _.foreach(target.setNameWrapper),
         () => apply()))
@@ -19,7 +19,7 @@ class DummyInputEditPanel(target: DummyInputBoxWidget) extends WidgetEditPanel(t
     new InputBoxEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.input.type"),
+        loc"Type",
         () => target.typeOptions,
         _.foreach(target.setTypeOptions),
         () => apply()))
@@ -28,7 +28,7 @@ class DummyInputEditPanel(target: DummyInputBoxWidget) extends WidgetEditPanel(t
     new BooleanEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.general.oldSize"),
+        loc"Use old sizing",
         () => target.oldSize,
         _.foreach(target.oldSize),
         () => apply()))

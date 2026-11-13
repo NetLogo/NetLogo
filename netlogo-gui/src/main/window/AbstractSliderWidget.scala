@@ -11,7 +11,7 @@ import javax.swing.text.{ AttributeSet, PlainDocument }
 
 import org.nlogo.agent.SliderConstraint
 import org.nlogo.api.{ Approximate, Dump }
-import org.nlogo.core.{ I18N, NetLogoPreferences }
+import org.nlogo.core.{ LocaleContext, NetLogoPreferences }
 import org.nlogo.swing.{ Transparent, Utils, Zoomable, ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.Events.InputBoxLoseFocusEvent
@@ -138,7 +138,7 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
   private var _vertical = false
   private val sliderData = new SliderData(this)
 
-  val nameComponent = new Label(I18N.gui.get("edit.slider.previewName")) {
+  val nameComponent = new Label(loc"(slider)") {
     setBaseFont(getFont.deriveFont(_boldState))
   }
 
@@ -258,7 +258,7 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
   def setVarName(name: String): Unit = {
     _name = name
     if (name == "") {
-      displayName(I18N.gui.get("edit.slider.previewName"))
+      displayName(loc"(slider)")
     } else {
       displayName(name)
     }

@@ -6,7 +6,7 @@ import java.awt.Frame
 
 import org.nlogo.analytics.Analytics
 import org.nlogo.api.{ AbstractModelLoader, World }
-import org.nlogo.core.{ AgentKind, I18N, Model, Shape, ShapeList },
+import org.nlogo.core.{ AgentKind, LocaleContext, Model, Shape, ShapeList },
   Shape.{ VectorShape => CoreVectorShape }, ShapeList.isDefaultShapeName
 import org.nlogo.shape.{ ShapeConverter, TurtleShapesManagerInterface, VectorShape },
   ShapeConverter.baseVectorShapeToVectorShape
@@ -17,8 +17,7 @@ class TurtleShapeManagerDialog(parentFrame: Frame,
                                modelLoader: AbstractModelLoader)
   extends ManagerDialog[VectorShape](parentFrame, modelLoader, world.turtleShapes) with TurtleShapesManagerInterface {
 
-  private lazy val libraryButton = new DialogButton(false, I18N.gui.get("tools.shapesEditor.importFromLibrary"),
-                                                    () => importFromLibrary())
+  private lazy val libraryButton = new DialogButton(false, loc"Import from Library...", () => importFromLibrary())
 
   shapesList.addListSelectionListener(this)
 

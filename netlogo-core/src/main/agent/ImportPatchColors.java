@@ -3,7 +3,7 @@
 package org.nlogo.agent;
 
 import org.nlogo.api.AgentException;
-import org.nlogo.core.I18N;
+import org.nlogo.core.LocaleContextJ;
 import org.nlogo.core.File;
 
 import javax.imageio.ImageIO;
@@ -14,6 +14,7 @@ import java.awt.image.ColorModel;
 import java.awt.image.DataBuffer;
 import java.awt.image.SampleModel;
 import java.io.InputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,8 +30,7 @@ public class ImportPatchColors {
     // sometime we have to throw the exception ourselves,
     // because we just get back null. Booo.  -CLB
     if (image == null) {
-      throw new java.io.IOException(I18N.errorsJ().getN(
-          "org.nlogo.agent.ImportPatchColors.unsupportedImageFormat", filename));
+      throw new IOException(LocaleContextJ.loc("The following file is not in a supported image format: {}", filename));
     }
 
     doImport(image, world, asNetLogoColors);

@@ -12,7 +12,7 @@ import javax.swing.event.{ ListSelectionEvent, ListSelectionListener }
 import org.nlogo.analytics.Analytics
 import org.nlogo.api.{ Exceptions, LabProtocol, ModelReader, RefEnumeratedValueSet }
 import org.nlogo.awt.UserCancelException
-import org.nlogo.core.{ I18N, Model }
+import org.nlogo.core.{ LocaleContext, Model }
 import org.nlogo.editor.Colorizer
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, Button, FileDialog, FocusUtils, OptionPane, Positioning,
                          PreferredSize, ScrollPane, Utils, WindowAutomator, Zoomable, ZoomableBorder, ZoomableWindow }
@@ -28,8 +28,6 @@ class ManagerDialog(manager:       LabManager,
                     menuFactory:   MenuBarFactory)
   extends JDialog(manager.workspace.getFrame) with ListSelectionListener
   with ZoomableWindow(Option(manager.workspace.getFrame)) with ThemeSync {
-
-  private implicit val i18NPrefix: I18N.Prefix = I18N.Prefix("tools.behaviorSpace")
 
   private val jlist = new JList[LabProtocol] with FocusUtils with Zoomable with ThemeSync {
     override def syncTheme(): Unit = {
@@ -51,15 +49,15 @@ class ManagerDialog(manager:       LabManager,
     }
   }
 
-  private val editAction = makeAction(I18N.gui("edit"), edit)
-  private val newAction = makeAction(I18N.gui("new"), makeNew)
-  private val deleteAction = makeAction(I18N.gui("delete"), delete)
-  private val duplicateAction = makeAction(I18N.gui("duplicate"), duplicate)
-  private val importAction = makeAction(I18N.gui("import"), importnl)
-  private val exportAction = makeAction(I18N.gui("export"), `export`)
-  private val closeAction = makeAction(I18N.gui("close"), manager.close)
-  private val abortAction = makeAction(I18N.gui("abort"), abort)
-  private val runAction = makeAction(I18N.gui("run"), run)
+  private val editAction = makeAction(loc"Edit", edit)
+  private val newAction = makeAction(loc"New", makeNew)
+  private val deleteAction = makeAction(loc"Delete", delete)
+  private val duplicateAction = makeAction(loc"Duplicate", duplicate)
+  private val importAction = makeAction(loc"Import", importnl)
+  private val exportAction = makeAction(loc"Export", `export`)
+  private val closeAction = makeAction(loc"Close", manager.close)
+  private val abortAction = makeAction(loc"Abort", abort)
+  private val runAction = makeAction(loc"Run", run)
 
   private var blockActions = false
   private var editIndex = 0
@@ -70,7 +68,7 @@ class ManagerDialog(manager:       LabManager,
   setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE)
   addWindowListener(new java.awt.event.WindowAdapter {
     override def windowClosing(e: java.awt.event.WindowEvent): Unit = { closeAction.actionPerformed(null) } })
-  setTitle(I18N.gui.get("menu.tools.behaviorSpace"))
+  setTitle(loc"BehaviorSpace")
   // set up the list
   jlist.setVisibleRowCount(5)
   jlist.setModel(listModel)
@@ -88,7 +86,7 @@ class ManagerDialog(manager:       LabManager,
 
   jlist.setCellRenderer(renderer)
 
-  private val listLabel = new JLabel(I18N.gui("experiments")) with Zoomable
+  private val listLabel = new JLabel(loc"Experiments:") with Zoomable
   private val scrollPane = new ScrollPane(jlist)
 
   private val newButton = new Button(newAction)
@@ -265,14 +263,12 @@ class ManagerDialog(manager:       LabManager,
   }
   private def delete(): Unit = {
     val selected = jlist.getSelectedIndices
-    val message = {
-      if (selected.length > 1) {
-        I18N.gui("delete.confirm.multiple", selected.length.toString)
-      } else {
-        I18N.gui("delete.confirm.one", listModel.getElementAt(selected(0)).asInstanceOf[LabProtocol].name)
-      }
+    val message = if (selected.length > 1) {
+      loc"Are you sure you want to delete these ${selected.length} experiments?"
+    } else {
+      loc"""Are you sure you want to delete "${listModel.getElementAt(selected(0)).asInstanceOf[LabProtocol].name}"?"""
     }
-    if (new OptionPane(this, I18N.gui("delete"), message, OptionPane.Options.YesNo, OptionPane.Icons.question)
+    if (new OptionPane(this, loc"Delete", message, OptionPane.Options.YesNo, OptionPane.Icons.question)
           .getSelectedIndex == 0) {
       for(i <- 0 until selected.length)
         manager.protocols -= listModel.getElementAt(selected(i)).asInstanceOf[LabProtocol]
@@ -300,7 +296,7 @@ class ManagerDialog(manager:       LabManager,
 
       val lastSelected = selectedIndex
 
-      val dialog = new JFileDialog(manager.workspace.getFrame, I18N.gui("import.dialog"))
+      val dialog = new JFileDialog(manager.workspace.getFrame, loc"Select Experiment Files")
 
       dialog.setDirectory(FileDialog.getDirectory)
       dialog.setFilenameFilter(new XMLFilter)
@@ -316,7 +312,7 @@ class ManagerDialog(manager:       LabManager,
             protocols.foreach(manager.addProtocol)
 
           case Failure(_) =>
-            new OptionPane(manager.workspace.getFrame, I18N.gui("invalid"), I18N.gui("error.import", file.getName),
+            new OptionPane(manager.workspace.getFrame, loc"Invalid", loc"Invalid format in ${file.getName}",
                            OptionPane.Options.Ok, OptionPane.Icons.error)
         }
       }
@@ -338,7 +334,7 @@ class ManagerDialog(manager:       LabManager,
           manager.workspace.getModelFileName.split('.')(0) + '-'
         }
 
-      var path = FileDialog.showFiles(manager.workspace.getFrame, I18N.gui("export.dialog"), java.awt.FileDialog.SAVE,
+      var path = FileDialog.showFiles(manager.workspace.getFrame, loc"Export Experiment", java.awt.FileDialog.SAVE,
                   if (indices.length == 1) {
                     modelName + selectedProtocol.name + "-experiment.xml"
                   } else {
@@ -467,9 +463,9 @@ class ManagerDialog(manager:       LabManager,
                                      isSelected: Boolean, cellHasFocus: Boolean): Component = {
       label.setText(
         if (running.contains(proto)) {
-          I18N.gui("inProgress", proto.name)
+          loc"** In Progress ** ${proto.name}"
         } else if (proto.runsCompleted != 0) {
-          I18N.gui("paused", proto.name, proto.runsCompleted.toString, proto.countRuns.toString)
+          loc"** Paused ** ${proto.name} (${proto.runsCompleted}/${proto.countRuns} runs)"
         } else {
           s"${proto.name} (${proto.countRuns} run${(if (proto.countRuns != 1) "s" else "")})"
         })

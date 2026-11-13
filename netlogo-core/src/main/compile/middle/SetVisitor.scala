@@ -5,7 +5,7 @@ package middle
 
 import org.nlogo.core.Instantiator
 import org.nlogo.{ core, nvm, prim },
-  core.{ Program, Fail},
+  core.{ Fail, LocaleContext, Program },
     Fail._,
   prim._
 import org.nlogo.compile.api.{ DefaultAstVisitor, ReporterApp, Statement }
@@ -17,8 +17,7 @@ import org.nlogo.compile.api.{ DefaultAstVisitor, ReporterApp, Statement }
  * knows internally the variable it's setting.
  */
 class SetVisitor(program: Program) extends DefaultAstVisitor {
-  private lazy val INVALID_SET =
-    core.I18N.errors.get("compiler.SetVisitor.notSettable")
+  private lazy val INVALID_SET = loc"""This isn't something you can use "set" on."""
   override def visitStatement(stmt: Statement): Unit = {
     super.visitStatement(stmt)
     if(stmt.command.isInstanceOf[_set]) {

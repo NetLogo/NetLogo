@@ -5,14 +5,14 @@ package org.nlogo.ide
 import java.awt.event.{ ActionEvent, KeyEvent }
 import javax.swing.text.{ Document, JTextComponent }
 
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.editor.{ DocumentAction, FocusedOnlyAction, RichDocument }, RichDocument._
 import org.nlogo.swing.UserAction,
   UserAction.{ EditCategory, EditFormatGroup, KeyBindings, MenuAction },
     KeyBindings.keystroke
 
 object ShiftActions {
-  class Right extends DocumentAction(I18N.gui.get("menu.edit.shiftRight"))
+  class Right extends DocumentAction(loc"Shift Right")
   with FocusedOnlyAction with MenuAction {
     accelerator = keystroke(KeyEvent.VK_CLOSE_BRACKET, withMenu = true)
     group       = EditFormatGroup
@@ -25,7 +25,7 @@ object ShiftActions {
     }
   }
 
-  class Left extends DocumentAction(I18N.gui.get("menu.edit.shiftLeft"))
+  class Left extends DocumentAction(loc"Shift Left")
   with FocusedOnlyAction with MenuAction {
     accelerator = keystroke(KeyEvent.VK_OPEN_BRACKET, withMenu = true)
     group       = EditFormatGroup
@@ -49,7 +49,7 @@ object ShiftActions {
     }
   }
 
-  class LeftTab extends DocumentAction(I18N.gui.get("menu.edit.shiftTab"))
+  class LeftTab extends DocumentAction(loc"Tab Left")
   with FocusedOnlyAction with MenuAction {
     accelerator = keystroke(KeyEvent.VK_TAB, withShift = true)
 

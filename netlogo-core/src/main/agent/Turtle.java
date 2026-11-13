@@ -5,7 +5,7 @@ package org.nlogo.agent;
 import org.nlogo.core.AgentKind;
 import org.nlogo.core.AgentKindJ;
 import org.nlogo.core.Breed;
-import org.nlogo.core.I18N;
+import org.nlogo.core.LocaleContextJ;
 import org.nlogo.core.LogoList;
 import org.nlogo.core.Program;
 import org.nlogo.api.AgentException;
@@ -289,16 +289,15 @@ public abstract class Turtle
       case VAR_PENSIZE:
         return penSize();
       default:
-        throw new IllegalArgumentException
-            (I18N.errorsJ().getN("org.nlogo.agent.Agent.notADoubleVariable", vn));
+        throw new IllegalArgumentException(LocaleContextJ.loc("{} is not a double variable.", Integer.toString(vn)));
     }
   }
 
   @Override
   public Object getLinkBreedVariable(String name)
       throws AgentException {
-    throw new AgentException
-        (I18N.errorsJ().get("org.nlogo.agent.Turtle.cantAccessLinkWithoutSpecifyingLink"));
+    throw new AgentException(
+      LocaleContextJ.loc("A turtle can't access a link variable without specifying which link."));
   }
 
   @Override
@@ -306,8 +305,7 @@ public abstract class Turtle
       throws AgentException {
     int vn = _world.breedsOwnIndexOf(getBreed(), name);
     if (name != null && vn == -1) {
-      throw new AgentException(I18N.errorsJ().getN("org.nlogo.agent.Agent.breedDoesNotOwnVariable",
-          getBreed().printName(), name));
+      throw new AgentException(LocaleContextJ.loc("{} breed does not own variable {}", getBreed().printName(), name));
     }
     return getTurtleVariable(vn);
   }
@@ -333,14 +331,14 @@ public abstract class Turtle
     if (vn != -1) {
       return getTurtleVariable(vn);
     }
-    throw new AgentException(I18N.errorsJ().getN("org.nlogo.agent.Agent.breedDoesNotOwnVariable", this.toString(), name));
+    throw new AgentException(LocaleContextJ.loc("{} breed does not own variable {}", this.toString(), name));
   }
 
   @Override
   public Object getLinkVariable(int vn)
       throws AgentException {
-    throw new AgentException
-        (I18N.errorsJ().get("org.nlogo.agent.Turtle.cantAccessLinkWithoutSpecifyingLink"));
+    throw new AgentException(
+      LocaleContextJ.loc("A turtle can't access a link variable without specifying which link."));
   }
 
   @Override
@@ -377,9 +375,9 @@ public abstract class Turtle
         penSize(value);
         break;
       case VAR_WHO:
-        throw new AgentException(I18N.errorsJ().get("org.nlogo.agent.Turtle.cantChangeWho"));
+        throw new AgentException(LocaleContextJ.loc("You can't change a turtle's ID number."));
       default:
-        throw new IllegalArgumentException(I18N.errorsJ().getN("org.nlogo.agent.Agent.notADoubleVariable", vn));
+        throw new IllegalArgumentException(LocaleContextJ.loc("{} is not a double variable.", Integer.toString(vn)));
     }
   }
 
@@ -428,8 +426,7 @@ public abstract class Turtle
           if (value instanceof String) {
             String newShape = _world.checkTurtleShapeName((String) value);
             if (newShape == null) {
-              throw new AgentException
-                  (I18N.errorsJ().getN("org.nlogo.agent.Agent.shapeUndefined", value));
+              throw new AgentException(LocaleContextJ.loc("\"{}\" is not a currently defined shape.", (String) value));
             }
             shape(newShape);
           } else {
@@ -454,7 +451,7 @@ public abstract class Turtle
           if (value instanceof AgentSet) {
             AgentSet breed = (AgentSet) value;
             if (breed != _world.turtles() && !_world.isBreed(breed)) {
-              throw new AgentException(I18N.errorsJ().get("org.nlogo.agent.Turtle.cantSetBreedToNonBreedAgentSet"));
+              throw new AgentException(LocaleContextJ.loc("You can't set BREED to a non-breed agentset."));
             }
             setBreed(breed);
           } else {
@@ -498,9 +495,9 @@ public abstract class Turtle
           break;
 
         case VAR_WHO:
-          throw new AgentException(I18N.errorsJ().get("org.nlogo.agent.Turtle.cantChangeWho"));
+          throw new AgentException(LocaleContextJ.loc("You can't change a turtle's ID number."));
         default:
-          throw new IllegalStateException(I18N.errorsJ().getN("org.nlogo.agent.Agent.cantSetUnknownVariable", vn));
+          throw new IllegalStateException(LocaleContextJ.loc("Unknown variable {}.", Integer.toString(vn)));
       }
     }
     _world.notifyWatchers(this, vn, value);
@@ -511,8 +508,7 @@ public abstract class Turtle
       throws AgentException {
     int vn = _world.breedsOwnIndexOf(getBreed(), name);
     if (name != null && vn == -1) {
-      throw new AgentException(I18N.errorsJ().getN("org.nlogo.agent.Agent.breedDoesNotOwnVariable",
-          getBreed().printName(), name));
+      throw new AgentException(LocaleContextJ.loc("{} breed does not own variable {}", getBreed().printName(), name));
     }
     setTurtleVariable(vn, value);
   }

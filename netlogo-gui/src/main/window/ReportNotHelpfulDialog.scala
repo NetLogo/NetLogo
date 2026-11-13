@@ -8,7 +8,7 @@ import java.util.Locale
 import javax.swing.{ JDialog, JLabel }
 
 import org.nlogo.api.Version
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, ButtonPanel, DialogButton, Implicits, Positioning, ScrollPane,
                          TextArea, Utils, Zoomable, ZoomableBorder, ZoomableWindow }, Implicits.thunk2action
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
@@ -21,10 +21,13 @@ import sttp.client4.quick.{ quickRequest, UriContext }
 import ujson.Obj
 
 class ReportNotHelpfulDialog(parent: Frame, error: Exception)
-  extends JDialog(parent, I18N.gui.get("error.dialog.notHelpful"), true) with ZoomableWindow(Option(parent))
+  extends JDialog(parent, loc"Unhelpful Error Message", true) with ZoomableWindow(Option(parent))
   with ThemeSync {
 
-  private val message = new JLabel(I18N.gui.get("error.dialog.notHelpful.message")) with Zoomable
+  private val message = new JLabel(loc"""|<html>Please tell us how you think this error message could be improved.
+                                         |Note that this will automatically send<br>the NetLogo team information about
+                                         |the error message, but not about your model or its code.</html>""")
+                          with Zoomable
 
   private val comment = new TextArea(8, 40) {
     addKeyListener(new java.awt.event.KeyAdapter {
@@ -44,8 +47,8 @@ class ReportNotHelpfulDialog(parent: Frame, error: Exception)
 
   private val scroll = new ScrollPane(comment)
 
-  private val reportButton = new DialogButton(true, I18N.gui.get("dialog.error.report"), () => report())
-  private val cancelButton = new DialogButton(false, I18N.gui.get("common.buttons.cancel"), () => cancel())
+  private val reportButton = new DialogButton(true, loc"Report", () => report())
+  private val cancelButton = new DialogButton(false, loc"Cancel", () => cancel())
 
   setContentPane(new BoxColumn(Seq(
     new BoxRow(message, BoxAlign.Start),

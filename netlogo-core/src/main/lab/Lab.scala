@@ -5,7 +5,7 @@ package org.nlogo.lab
 import java.io.{ File, FileWriter, PrintWriter }
 
 import org.nlogo.api.{ LabProtocol, LabPostProcessorInputFormat, ModelReader, PartialData }
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.nvm.{ LabInterface, PrimaryWorkspace, Workspace }
 
 import scala.collection.mutable.Queue
@@ -63,7 +63,7 @@ class Lab extends LabInterface {
           }
         })
       } else if (worker.protocol.runsCompleted > 0 && !new File(path).exists) {
-        error(I18N.gui.get("tools.behaviorSpace.error.pause.table"))
+        error(loc"Table output file has been moved or deleted.")
       } else {
         worker.addTableWriter(displayPath, dims.getOrElse(modelDims),
                               new PrintWriter(new FileWriter(path, worker.protocol.runsCompleted > 0)))
@@ -79,7 +79,7 @@ class Lab extends LabInterface {
           }
         })
       } else if (worker.protocol.runsCompleted > 0 && !new File(path).exists) {
-        error(I18N.gui.get("tools.behaviorSpace.error.pause.spreadsheet"))
+        error(loc"Spreadsheet output file has been moved or deleted.")
       } else if (worker.protocol.runsCompleted > 0) {
         try {
           val partialData = new PartialData
@@ -123,7 +123,7 @@ class Lab extends LabInterface {
           worker.addSpreadsheetWriter(displayPath, dims.getOrElse(modelDims), new PrintWriter(path), partialData)
         } catch {
           case _: Throwable =>
-            error(I18N.gui.get("tools.behaviorSpace.error.pause.invalidSpreadsheet"))
+            error(loc"Unable to read existing spreadsheet output, data is not intact.")
         }
       } else {
         worker.addSpreadsheetWriter(displayPath, dims.getOrElse(modelDims), new PrintWriter(path))
@@ -145,7 +145,7 @@ class Lab extends LabInterface {
           }, processor)
 
         case _ =>
-          error(I18N.gui.get("tools.behaviorSpace.error.stats"))
+          error(loc"Statistics output selected with no spreadsheet or table output.")
       }
     }
 
@@ -164,7 +164,7 @@ class Lab extends LabInterface {
           }, processor)
 
         case _ =>
-          error(I18N.gui.get("tools.behaviorSpace.error.lists"))
+          error(loc"Lists output selected with no spreadsheet or table output.")
       }
     }
 

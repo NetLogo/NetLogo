@@ -5,7 +5,7 @@ package org.nlogo.agent
 import java.lang.{ Double => JDouble }
 import
   org.nlogo.{ core, api },
-    core.{ I18N, LogoList },
+    core.{ LocaleContext, LogoList },
     api.{ AgentException, Exceptions }
 
 trait AgentColors extends Agent {
@@ -25,16 +25,17 @@ trait AgentColors extends Agent {
           Exceptions.ignore(ex)
       }
     }
-    val key =
-      if (allowAlpha) "org.nlogo.agent.Agent.rgbListSizeError.3or4"
-      else            "org.nlogo.agent.Agent.rgbListSizeError.3"
-    throw new AgentException(I18N.errors.get(key))
+    throw new AgentException(if (allowAlpha) {
+      loc"An rgb list must contain 3 or 4 numbers 0-255"
+    } else {
+      loc"An rgb list must contain 3 numbers 0-255"
+    })
   }
 
   @throws(classOf[AgentException])
   private def validRGB(c: Int): Unit = {
     if (c < 0 || c > 255) {
-      throw new AgentException(I18N.errors.get("org.nlogo.agent.Agent.rgbValueError"))
+      throw new AgentException(loc"RGB values must be 0-255")
     }
   }
 }

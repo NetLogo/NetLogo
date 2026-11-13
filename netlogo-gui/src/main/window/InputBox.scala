@@ -15,7 +15,7 @@ import org.nlogo.api.Approximate.approximate
 import org.nlogo.api.Color.{ getColor, getColorNameByIndex, modulateDouble }
 import org.nlogo.agent.InputBoxConstraint
 import org.nlogo.awt.{ Hierarchy, Positioning }
-import org.nlogo.core.{ BoxedValue, CompilerException, I18N, InputBox => CoreInputBox, NumericInput,
+import org.nlogo.core.{ BoxedValue, CompilerException, InputBox => CoreInputBox, LocaleContext, NumericInput,
                         StringInput, Widget => CoreWidget }
 import org.nlogo.editor.{ EditorArea, EditorConfiguration }
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, Button, ButtonPanel, DialogButton, FocusUtils, OptionPane,
@@ -77,8 +77,8 @@ abstract class InputBox(textArea: EditorArea, editDialogTextArea: EditorArea, co
   }
 
   /// be editable
-  override def classDisplayName = I18N.gui.get("tabs.run.widgets.input")
-  protected val widgetLabel = new JLabel(I18N.gui.get("edit.input.previewName")) with Zoomable {
+  override def classDisplayName = loc"Input"
+  protected val widgetLabel = new JLabel(loc"(input)") with Zoomable {
     setFocusable(false)
     setBaseFont(getFont.deriveFont(_boldState))
   }
@@ -152,7 +152,7 @@ abstract class InputBox(textArea: EditorArea, editDialogTextArea: EditorArea, co
     // I don't think anyone ever uses the display name, but let's keep it in sync
     // with the real name, just in case - ST 6/3/02
     if (name == "") {
-      displayName(I18N.gui.get("edit.input.previewName"))
+      displayName(loc"(input)")
     } else {
       displayName(name)
     }
@@ -298,9 +298,8 @@ abstract class InputBox(textArea: EditorArea, editDialogTextArea: EditorArea, co
     if (frame != null) {
       var msg = ex.getMessage
       if (msg.startsWith("REPORT expected 1 input."))
-        msg = I18N.gui.get("edit.input.invalid.message")
-      new OptionPane(frame, I18N.gui.getN("edit.input.invalid.title", inputType), msg, OptionPane.Options.Ok,
-                     OptionPane.Icons.error)
+        msg = loc"Expected reporter."
+      new OptionPane(frame, loc"Invalid input for a $inputType", msg, OptionPane.Options.Ok, OptionPane.Icons.error)
     }
   }
 
@@ -461,7 +460,7 @@ abstract class InputBox(textArea: EditorArea, editDialogTextArea: EditorArea, co
         new Dimension(Int.MaxValue, Int.MaxValue)
     }
 
-    private val okButton = new DialogButton(true, I18N.gui.get("common.buttons.ok"), () => {
+    private val okButton = new DialogButton(true, loc"OK", () => {
       try{
         val value = inputType.readValue(textArea.getText)
         getInput(Option(value))
@@ -475,7 +474,7 @@ abstract class InputBox(textArea: EditorArea, editDialogTextArea: EditorArea, co
       }
     })
 
-    private val cancelAction = new AbstractAction(I18N.gui.get("common.buttons.cancel")) {
+    private val cancelAction = new AbstractAction(loc"Cancel") {
       def actionPerformed(e: ActionEvent): Unit = {
         dispose()
         editing = false
@@ -556,7 +555,7 @@ abstract class InputBox(textArea: EditorArea, editDialogTextArea: EditorArea, co
     }
   }
 
-  case class InputType(baseName: String, i18nKey: String, editorKit: EditorKit, codeFont: Boolean) {
+  case class InputType(baseName: String, name: String, editorKit: EditorKit, codeFont: Boolean) {
     def defaultValue: BoxedValue = StringInput("", StringInput.StringLabel, false)
     def multiline = boxedValue.getMultiline
     def multiline(newMultiline: Boolean): Unit = {
@@ -567,7 +566,7 @@ abstract class InputBox(textArea: EditorArea, editDialogTextArea: EditorArea, co
     }
     override def toString = displayName
     def saveName = baseName
-    def displayName = I18N.gui.get("edit.input.type." + i18nKey)
+    def displayName = name
     def getEditorKit = editorKit
     def getFont: Font = {
       if (codeFont) {
@@ -598,9 +597,11 @@ abstract class InputBox(textArea: EditorArea, editDialogTextArea: EditorArea, co
   }
 
   private class StringInputType
-    extends InputType("String", "string", textArea.getEditorKitForContentType("String"), false)
+    extends InputType("String", loc"String", textArea.getEditorKitForContentType("String"), false)
 
-  private class ReporterInputType(kit: EditorKit) extends InputType("String (reporter)", "string.reporter", kit, true) {
+  private class ReporterInputType(kit: EditorKit)
+    extends InputType("String (reporter)", loc"String (reporter)", kit, true) {
+
     override def defaultValue = StringInput("0", StringInput.ReporterLabel, false)
     override def enableBracketMatcher = true
     @throws(classOf[ValueConstraint.Violation])
@@ -618,7 +619,9 @@ abstract class InputBox(textArea: EditorArea, editDialogTextArea: EditorArea, co
     }
   }
 
-  private class CommandInputType(kit: EditorKit) extends InputType("String (commands)", "string.commands", kit, true) {
+  private class CommandInputType(kit: EditorKit)
+    extends InputType("String (commands)", loc"String (commands)", kit, true) {
+
     override def enableBracketMatcher = true
     @throws(classOf[ValueConstraint.Violation])
     @throws(classOf[CompilerException])
@@ -631,7 +634,7 @@ abstract class InputBox(textArea: EditorArea, editDialogTextArea: EditorArea, co
     }
   }
 
-  private class NumberInputType(kit: EditorKit) extends InputType("Number", "number", kit, true) {
+  private class NumberInputType(kit: EditorKit) extends InputType("Number", loc"Number", kit, true) {
     @throws(classOf[CompilerException])
     override def readValue(text: String): BoxedValue = {
       if (text.isEmpty) {
@@ -646,7 +649,7 @@ abstract class InputBox(textArea: EditorArea, editDialogTextArea: EditorArea, co
     override def defaultValue = NumericInput(org.nlogo.agent.World.Zero, NumericInput.NumberLabel)
   }
 
-  private class ColorInputType(kit: EditorKit) extends InputType("Color", "color", kit, true) {
+  private class ColorInputType(kit: EditorKit) extends InputType("Color", loc"Color", kit, true) {
     @throws(classOf[CompilerException])
     override def readValue(text: String): BoxedValue = {
       val num = compiler.readNumberFromString(text).asInstanceOf[java.lang.Double]

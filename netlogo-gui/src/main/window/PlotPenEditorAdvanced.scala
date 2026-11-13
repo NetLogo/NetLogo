@@ -6,7 +6,7 @@ import javax.swing.JLabel
 
 import org.nlogo.api.CompilerServices
 import org.nlogo.awt.Hierarchy
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.editor.Colorizer
 import org.nlogo.plot.PlotManagerInterface
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, CheckBox, ComboBox, MaximumHeight, OptionPane, TextField,
@@ -16,21 +16,19 @@ import org.nlogo.theme.InterfaceColors
 class PlotPenEditorAdvanced(inputPen: PlotPensEditor.Pen, compiler: CompilerServices, colorizer: Colorizer,
                             plotManager: PlotManagerInterface) extends BoxColumn(6) {
 
-  private implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("edit.plot.pen")
-
   // pieces of the UI
   private val intervalField = new TextField(8) with MaximumHeight
 
-  private val penModes = new ComboBox(List(I18N.gui("mode.line"), I18N.gui("mode.bar"), I18N.gui("mode.point")))
+  private val penModes = new ComboBox(List(loc"Line", loc"Bar", loc"Point"))
 
-  private val showPenInLegend = new CheckBox(I18N.gui("showInLegend")) {
+  private val showPenInLegend = new CheckBox(loc"Show in legend") {
     setForeground(InterfaceColors.dialogText())
   }
 
-  val setupCode = CodeEditor(I18N.gui("setupCommands"), compiler, colorizer, columns = 65,
+  val setupCode = CodeEditor(loc"Pen setup commands", compiler, colorizer, columns = 65,
                              err = () => inputPen.setupError)
 
-  val updateCode = CodeEditor(I18N.gui("updateCommands"), compiler, colorizer, columns = 65,
+  val updateCode = CodeEditor(loc"Pen update commands", compiler, colorizer, columns = 65,
                               err = () => inputPen.updateError)
 
   val runtimeErrorPanel =
@@ -45,14 +43,14 @@ class PlotPenEditorAdvanced(inputPen: PlotPensEditor.Pen, compiler: CompilerServ
   setBorder(new ZoomableBorder(6, 6, 6, 6))
 
   add(new BoxRow(Seq(
-    new JLabel(I18N.gui("mode")) {
+    new JLabel(loc"Mode") {
       setForeground(InterfaceColors.dialogText())
     },
     penModes
   ), 6) with MaximumHeight)
 
   add(new BoxRow(Seq(
-    new JLabel(I18N.gui("interval")) {
+    new JLabel(loc"Interval") {
       setForeground(InterfaceColors.dialogText())
     },
     intervalField
@@ -90,8 +88,8 @@ class PlotPenEditorAdvanced(inputPen: PlotPensEditor.Pen, compiler: CompilerServ
       try {intervalField.getText.toDouble; true}
       catch {
         case ex: NumberFormatException =>
-          new OptionPane(Hierarchy.getWindow(this), I18N.gui.get("edit.plot.pen.invalidEntry"),
-                         I18N.gui.get("edit.plot.pen.invalidInterval"), OptionPane.Options.Ok, OptionPane.Icons.error)
+          new OptionPane(Hierarchy.getWindow(this), loc"Invalid Entry", loc"Invalid value for the pen interval",
+                         OptionPane.Options.Ok, OptionPane.Icons.error)
           false
       }
     }

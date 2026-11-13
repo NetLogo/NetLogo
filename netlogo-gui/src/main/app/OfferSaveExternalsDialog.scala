@@ -8,7 +8,7 @@ import javax.swing.{ JLabel, JPanel }
 
 import org.nlogo.app.codetab.TemporaryCodeTab
 import org.nlogo.awt.UserCancelException
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.swing.{ CheckBox, CustomOptionPane, ScrollPane, Transparent, Zoomable }
 import org.nlogo.theme.InterfaceColors
 
@@ -16,8 +16,6 @@ import scala.collection.mutable.Map
 
 object OfferSaveExternalsDialog {
   def offer(dirtyExternalFiles: Set[TemporaryCodeTab], parent: Component) = {
-    implicit val i18nPrefix = I18N.Prefix("file.save.offer.external")
-
     if (dirtyExternalFiles.nonEmpty) {
       val saveStatus = Map[TemporaryCodeTab, CheckBox]()
 
@@ -30,7 +28,7 @@ object OfferSaveExternalsDialog {
         c.weightx = 1
         c.insets = new Insets(0, 0, 6, 0)
 
-        add(new JLabel(I18N.gui("filesChanged")) with Zoomable {
+        add(new JLabel(loc"The following files have been modified:") with Zoomable {
           setForeground(InterfaceColors.dialogText())
         }, c)
 
@@ -86,9 +84,9 @@ object OfferSaveExternalsDialog {
         }, c)
       }
 
-      new CustomOptionPane(parent, I18N.gui.get("common.netlogo"), panel,
-                           Seq(I18N.gui("saveSelected"),
-                               I18N.gui("discardAll"))).getSelectedIndex match {
+      new CustomOptionPane(parent, loc"NetLogo", panel, Seq(loc"Save Selected Files", loc"Discard All"))
+        .getSelectedIndex match {
+
         case 0 =>
           dirtyExternalFiles.foreach(file => {
             if (saveStatus(file).isSelected)

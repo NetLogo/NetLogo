@@ -6,19 +6,22 @@ import java.awt.Frame
 import javax.swing.{ ButtonGroup, JLabel }
 
 import org.nlogo.analytics.Analytics
-import org.nlogo.core.{ I18N, NetLogoPreferences }
+import org.nlogo.core.{ LocaleContext, NetLogoPreferences }
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, PreferredSize, RadioButton, Zoomable, ZoomableBorder }
 import org.nlogo.theme.{ ClassicTheme, ColorTheme, DarkTheme, InterfaceColors, LightTheme, ThemeSync }
 
 class ThemesPanel(frame: Frame & ThemeSync) extends BoxColumn(24) with ThemeSync {
-  private implicit val i18nPrefix: I18N.Prefix = I18N.Prefix("tools.preferences.themes")
+  private val label = {
+    val text = loc"""|<html>These themes control the colors of the entire application,<br>
+                     |including toolbars, menus, dialogs, and widgets.</html>"""
 
-  private val label = new JLabel(s"<html>${I18N.gui("text")}</html>") with PreferredSize with Zoomable
+    new JLabel(text) with PreferredSize with Zoomable
+  }
 
-  private val systemButton = new RadioButton(I18N.gui("system"), () => setTheme(None))
-  private val classicButton = new RadioButton(I18N.gui("classic"), () => setTheme(Some(ClassicTheme)))
-  private val lightButton = new RadioButton(I18N.gui("light"), () => setTheme(Some(LightTheme)))
-  private val darkButton = new RadioButton(I18N.gui("dark"), () => setTheme(Some(DarkTheme)))
+  private val systemButton = new RadioButton(loc"Automatic", () => setTheme(None))
+  private val classicButton = new RadioButton(loc"Classic", () => setTheme(Some(ClassicTheme)))
+  private val lightButton = new RadioButton(loc"Light", () => setTheme(Some(LightTheme)))
+  private val darkButton = new RadioButton(loc"Dark", () => setTheme(Some(DarkTheme)))
 
   private var startTheme: Option[ColorTheme] = {
     NetLogoPreferences.get("colorTheme2", NetLogoPreferences.get("colorTheme", "system")) match {

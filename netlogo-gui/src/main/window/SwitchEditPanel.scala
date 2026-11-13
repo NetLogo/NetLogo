@@ -3,7 +3,7 @@
 package org.nlogo.window
 
 import org.nlogo.api.{ CompilerServices, ExtensionManager }
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.swing.{ AutomationUtils, BoxAlign, BoxRow }
 
 class SwitchEditPanel(target: SwitchWidget, compiler: CompilerServices, extensionManager: ExtensionManager)
@@ -13,7 +13,7 @@ class SwitchEditPanel(target: SwitchWidget, compiler: CompilerServices, extensio
     new IdentifierEditor(
       PropertyAccessor(
         target,
-        I18N.gui.get("edit.switch.globalVar"),
+        loc"Global Variable",
         () => target.nameWrapper,
         name => target.setNameWrapper(name.getOrElse("")),
         () => apply()),
@@ -23,7 +23,7 @@ class SwitchEditPanel(target: SwitchWidget, compiler: CompilerServices, extensio
     new BooleanEditor(
       PropertyAccessor(
         target,
-        I18N.gui.get("edit.general.oldSize"),
+        loc"Use old sizing",
         () => target.oldSize,
         _.foreach(target.oldSize),
         () => apply()))

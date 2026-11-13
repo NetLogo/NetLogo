@@ -2,8 +2,7 @@
 
 package org.nlogo.parse
 
-import org.nlogo.core,
-  core.{ I18N, Token, TokenType }
+import org.nlogo.core.{ LocaleContext, Token, TokenType }
 
 type StateType = (Option[Token], Boolean)
 
@@ -13,8 +12,7 @@ object ScopedIdentifierConsolidator extends TokenConsolidator[StateType] {
   override def transform(token: Token, state: StateType, hasNext: Boolean): (Seq[Token], StateType) = {
     val result = (token, state) match {
       case (t @ Token(_, TokenType.Colon, _), (Some(pendingToken), true)) => {
-        val errorMessage = I18N.errors.getN("compiler.ScopedIdentifierConsolidator.consecutiveColons")
-        val newToken = t.copy(tpe = TokenType.Bad, value = errorMessage)(t.sourceLocation)
+        val newToken = t.copy(tpe = TokenType.Bad, value = loc"Expected identifier between colons")(t.sourceLocation)
         (Seq(newToken), (None, true))
       }
 

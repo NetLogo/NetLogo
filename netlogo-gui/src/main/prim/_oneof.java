@@ -3,7 +3,7 @@
 package org.nlogo.prim;
 
 import org.nlogo.agent.AgentSet;
-import org.nlogo.core.I18N;
+import org.nlogo.core.LocaleContextJ;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.LogoList;
 import org.nlogo.core.Syntax;
@@ -22,7 +22,7 @@ public final class _oneof
       int size = list.size();
       if (size == 0) {
         throw new RuntimePrimitiveException(context, this,
-            I18N.errorsJ().getN("org.nlogo.prim.etc.$common.emptyListInput", displayName()));
+          LocaleContextJ.loc("{} got an empty list as input.", displayName()));
       }
       return list.get(context.job.random.nextInt(size));
     } else if (obj instanceof AgentSet) {
@@ -54,7 +54,7 @@ public final class _oneof
     int size = list.size();
     if (size == 0) {
       throw new RuntimePrimitiveException(context, this,
-          I18N.errorsJ().getN("org.nlogo.prim.etc.$common.emptyListInput", displayName()));
+        LocaleContextJ.loc("{} got an empty list as input.", displayName()));
     }
     return list.get(context.job.random.nextInt(size));
   }
@@ -65,7 +65,7 @@ public final class _oneof
       int size = list.size();
       if (size == 0) {
         throw new RuntimePrimitiveException(context, this,
-            I18N.errorsJ().getN("org.nlogo.prim.etc.$common.emptyListInput", displayName()));
+          LocaleContextJ.loc("{} got an empty list as input.", displayName()));
       }
       return list.get(context.job.random.nextInt(size));
     } else if (obj instanceof AgentSet) {

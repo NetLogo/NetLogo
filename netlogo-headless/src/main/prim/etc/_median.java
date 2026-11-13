@@ -3,7 +3,7 @@
 package org.nlogo.prim.etc;
 
 import org.nlogo.api.Dump;
-import org.nlogo.core.I18N;
+import org.nlogo.core.LocaleContextJ;
 import org.nlogo.core.LogoList;
 import org.nlogo.core.Pure;
 import org.nlogo.nvm.Context;
@@ -33,7 +33,7 @@ public final class _median
     int listSize = list.size();
     if (listSize == badElts) {
       throw new RuntimePrimitiveException(context, this,
-          I18N.errorsJ().getN("org.nlogo.prim.etc.median.cantFindMedianOfListWithNoNumbers", Dump.logoObject(list)));
+        LocaleContextJ.loc("Can't find the median of a list with no numbers: {}.", Dump.logoObject(list)));
     }
     Collections.sort(nums);
     int medianPos = (listSize - badElts) / 2;

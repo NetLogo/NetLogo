@@ -2,7 +2,7 @@
 
 package org.nlogo.app
 
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.swing.{ Menu, UserAction },
   UserAction.{ HelpAboutGroup, HelpContextGroup, HelpDocGroup, HelpDonateGroup, HelpWebGroup }
 
@@ -13,6 +13,6 @@ object HelpMenu {
   def sortOrder = Seq(HelpContextGroup, HelpDocGroup, HelpWebGroup, HelpDonateGroup, HelpAboutGroup)
 }
 
-class HelpMenu extends Menu(I18N.gui.get("menu.help"), Menu.model(HelpMenu.sortOrder)) {
+class HelpMenu extends Menu(loc"Help", Menu.model(HelpMenu.sortOrder)) {
   setMnemonic('H')
 }

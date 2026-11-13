@@ -3,7 +3,7 @@
 package org.nlogo.prim.etc
 
 import org.nlogo.api.LogoListBuilder
-import org.nlogo.core.{ I18N, LogoList }
+import org.nlogo.core.{ LocaleContext, LogoList }
 import org.nlogo.nvm.{ AnonymousProcedure, Context, Reporter }
 import org.nlogo.nvm.RuntimePrimitiveException
 
@@ -13,8 +13,7 @@ class _nvalues extends Reporter {
     // get the first argument...
     val n = argEvalIntValue(context, 0)
     if (n < 0)
-      throw new RuntimePrimitiveException( context, this,
-        I18N.errors.getN("org.nlogo.prim.etc.$common.noNegativeNumber", displayName))
+      throw new RuntimePrimitiveException(context, this, loc"$displayName cannot take a negative number.")
     // make the result list.
     val result = new LogoListBuilder
     val task = argEvalAnonymousReporter(context, 1)

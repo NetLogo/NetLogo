@@ -3,7 +3,7 @@
 package org.nlogo.sdm.gui
 
 import org.nlogo.api.{ CompilerServices, ExtensionManager }
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.editor.Colorizer
 import org.nlogo.swing.{ BoxAlign, BoxRow }
 import org.nlogo.window.{ EditPanel, IdentifierEditor, NonEmptyCodeEditor, OptionsEditor, PropertyAccessor,
@@ -16,7 +16,7 @@ class ConverterEditPanel(target: ConverterFigure, compiler: CompilerServices, co
     new IdentifierEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("tools.sdm.name"),
+        loc"Name",
         () => target.nameWrapper,
         name => target.nameWrapper(name.getOrElse("")),
         () => apply()),
@@ -26,7 +26,7 @@ class ConverterEditPanel(target: ConverterFigure, compiler: CompilerServices, co
     new OptionsEditor[String](
       new PropertyAccessor(
         target,
-        I18N.gui.get("tools.sdm.inputs"),
+        loc"Inputs",
         () => target.inputs,
         _.foreach(target.inputs),
         () => apply()))
@@ -35,7 +35,7 @@ class ConverterEditPanel(target: ConverterFigure, compiler: CompilerServices, co
     new NonEmptyCodeEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("tools.sdm.expression"),
+        loc"Expression",
         () => target.expressionWrapper,
         _.foreach(target.expressionWrapper),
         () => apply()),

@@ -1,16 +1,14 @@
 package org.nlogo.prim.etc
 
 import org.nlogo.agent.AgentSet
-import org.nlogo.core.{I18N, LogoList, Syntax}
+import org.nlogo.core.{ LocaleContext, LogoList, Syntax }
 import org.nlogo.nvm.{ArgumentTypeException, Context, Reporter, RuntimePrimitiveException}
 
 class _uptonof extends Reporter {
   override def report(ctx: Context): AnyRef = {
     val n = argEvalIntValue(ctx, 0)
     if (n < 0)
-      throw new RuntimePrimitiveException(ctx, this,
-        I18N.errors.getN("org.nlogo.prim.etc.$common.firstInputCantBeNegative",
-          displayName))
+      throw new RuntimePrimitiveException(ctx, this, loc"First input to $displayName can't be negative.")
     args(1).report(ctx) match {
       case l: LogoList =>
         if (n >= l.size) l

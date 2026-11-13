@@ -3,7 +3,7 @@
 package org.nlogo.window
 
 import org.nlogo.agent.World3D
-import org.nlogo.core.{ I18N, View => CoreView, Widget => CoreWidget, WorldDimensions, WorldDimensions3D }
+import org.nlogo.core.{ LocaleContext, View => CoreView, Widget => CoreWidget, WorldDimensions, WorldDimensions3D }
 import org.nlogo.swing.ModalProgressTask
 import org.nlogo.window.Events.RemoveAllJobsEvent
 
@@ -51,25 +51,25 @@ class WorldViewSettings3D(workspace: GUIWorkspace, gw: ViewWidget, tickCounter: 
 
   override def cornerConfigs: Seq[OriginConfiguration] = {
     Seq(
-      OriginConfiguration(I18N.gui.get("edit.viewSettings.3D.origin.location.corner.bottomSouthwest"), 0, 0, 0),
-      OriginConfiguration(I18N.gui.get("edit.viewSettings.3D.origin.location.corner.bottomNorthwest"), 0, 1, 0),
-      OriginConfiguration(I18N.gui.get("edit.viewSettings.3D.origin.location.corner.bottomNortheast"), 1, 1, 0),
-      OriginConfiguration(I18N.gui.get("edit.viewSettings.3D.origin.location.corner.bottomSoutheast"), 1, 0, 0),
-      OriginConfiguration(I18N.gui.get("edit.viewSettings.3D.origin.location.corner.topSouthwest"), 0, 0, 1),
-      OriginConfiguration(I18N.gui.get("edit.viewSettings.3D.origin.location.corner.topNorthwest"), 0, 1, 1),
-      OriginConfiguration(I18N.gui.get("edit.viewSettings.3D.origin.location.corner.topNortheast"), 1, 1, 1),
-      OriginConfiguration(I18N.gui.get("edit.viewSettings.3D.origin.location.corner.topSoutheast"), 1, 0, 1)
+      OriginConfiguration(loc"Bottom Southwest", 0, 0, 0),
+      OriginConfiguration(loc"Bottom Northwest", 0, 1, 0),
+      OriginConfiguration(loc"Bottom Northeast", 1, 1, 0),
+      OriginConfiguration(loc"Bottom Southeast", 1, 0, 0),
+      OriginConfiguration(loc"Top Southwest", 0, 0, 1),
+      OriginConfiguration(loc"Top Northwest", 0, 1, 1),
+      OriginConfiguration(loc"Top Northeast", 1, 1, 1),
+      OriginConfiguration(loc"Top Southeast", 1, 0, 1)
     )
   }
 
   override def edgeConfigs: Seq[OriginConfiguration] = {
     Seq(
-      OriginConfiguration(I18N.gui.get("edit.viewSettings.3D.origin.location.edge.south"), 0.5, 0, 0.5),
-      OriginConfiguration(I18N.gui.get("edit.viewSettings.3D.origin.location.edge.north"), 0.5, 1, 0.5),
-      OriginConfiguration(I18N.gui.get("edit.viewSettings.3D.origin.location.edge.east"), 1, 0.5, 0.5),
-      OriginConfiguration(I18N.gui.get("edit.viewSettings.3D.origin.location.edge.west"), 0, 0.5, 0.5),
-      OriginConfiguration(I18N.gui.get("edit.viewSettings.3D.origin.location.edge.bottom"), 0.5, 0.5, 0),
-      OriginConfiguration(I18N.gui.get("edit.viewSettings.3D.origin.location.edge.top"), 0.5, 0.5, 1)
+      OriginConfiguration(loc"South", 0.5, 0, 0.5),
+      OriginConfiguration(loc"North", 0.5, 1, 0.5),
+      OriginConfiguration(loc"East", 1, 0.5, 0.5),
+      OriginConfiguration(loc"West", 0, 0.5, 0.5),
+      OriginConfiguration(loc"Bottom", 0.5, 0.5, 0),
+      OriginConfiguration(loc"Top", 0.5, 0.5, 1)
     )
   }
 
@@ -169,7 +169,7 @@ class WorldViewSettings3D(workspace: GUIWorkspace, gw: ViewWidget, tickCounter: 
     val runnable = new ResizeRunner()
 
     if (showProgress) {
-      ModalProgressTask.onUIThread(workspace.getFrame, I18N.gui.get("view.resize.progress"), runnable)
+      ModalProgressTask.onUIThread(workspace.getFrame, loc"Resizing...", runnable)
     } else {
       runnable.run()
     }

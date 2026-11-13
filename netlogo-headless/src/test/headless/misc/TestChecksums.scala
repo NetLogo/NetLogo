@@ -7,7 +7,7 @@ import java.nio.file.{ Files, Paths }
 import java.util.Locale
 import java.util.zip.GZIPInputStream
 
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.headless.ChecksumsAndPreviewsSettings.ChecksumsPath
 import org.nlogo.headless.{ ChecksumsAndPreviews, HeadlessWorkspace }
 import org.nlogo.util.{ AnyFunSuiteEx, SlowTest }
@@ -17,7 +17,7 @@ import org.scalatest.{ Args, Status, SucceededStatus }
 
 class TestChecksums extends ChecksumTester {
   // ensure that output/error messages are formatted as expected (Isaac B 12/28/25)
-  I18N.setAllLanguages(Locale.US, false)
+  LocaleContext.setLocale(Locale.US)
 
   // overriding this so we can pass in a model filter to run checksums against a single model.
   // example   sbt> checksums model=Echo

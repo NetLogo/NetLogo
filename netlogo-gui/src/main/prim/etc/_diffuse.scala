@@ -4,7 +4,7 @@ package org.nlogo.prim.etc
 
 import org.nlogo.agent.PatchException
 import org.nlogo.api.{ AgentException, Dump, LogoException, TypeNames }
-import org.nlogo.core.{ AgentKind, I18N, Nobody, Reference }
+import org.nlogo.core.{ AgentKind, LocaleContext, Nobody, Reference }
 import org.nlogo.nvm.{ Command, Context, Referencer, RuntimePrimitiveException }
 
 class _diffuse extends Command with Referencer {
@@ -34,7 +34,7 @@ class _diffuse extends Command with Referencer {
   override def perform(context: Context): Unit = {
     val diffuseparam = argEvalDoubleValue(context, 0)
     if (diffuseparam < 0.0 || diffuseparam > 1.0) {
-      throw new RuntimePrimitiveException(context, this, I18N.errors.getN("org.nlogo.prim.$common.paramOutOfBounds", Double.box(diffuseparam)))
+      throw new RuntimePrimitiveException(context, this, loc"$diffuseparam is not in the range 0.0 to 1.0")
     }
     try {
       world.diffuse(diffuseparam, reference.vn)

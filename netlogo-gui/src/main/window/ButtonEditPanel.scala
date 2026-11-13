@@ -3,7 +3,7 @@
 package org.nlogo.window
 
 import org.nlogo.api.CompilerServices
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.editor.Colorizer
 import org.nlogo.swing.{ BoxAlign, BoxRow, MaximumHeight }
 
@@ -14,7 +14,7 @@ class ButtonEditPanel(target: ButtonWidget, compiler: CompilerServices, colorize
     new OptionsEditor[String](
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.button.agents"),
+        loc"Agent(s)",
         () => target.agentOptions,
         _.foreach(target.setAgentOptions),
         () => apply()))
@@ -23,7 +23,7 @@ class ButtonEditPanel(target: ButtonWidget, compiler: CompilerServices, colorize
     new BooleanEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.button.forever"),
+        loc"Forever",
         () => target.forever,
         _.foreach(target.setForever),
         () => apply()))
@@ -32,7 +32,7 @@ class ButtonEditPanel(target: ButtonWidget, compiler: CompilerServices, colorize
     new BooleanEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.button.disable"),
+        loc"Disable until ticks start",
         () => target.goTime,
         _.foreach(target.setGoTime),
         () => apply()))
@@ -41,7 +41,7 @@ class ButtonEditPanel(target: ButtonWidget, compiler: CompilerServices, colorize
     new CodeEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.button.commands"),
+        loc"Commands",
         () => target.wrapSource,
         _.foreach(target.setWrapSource),
         () => apply()),
@@ -51,7 +51,7 @@ class ButtonEditPanel(target: ButtonWidget, compiler: CompilerServices, colorize
     new StringEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.button.displayName"),
+        loc"Display name",
         () => target.name,
         _.foreach(target.setVarName),
         () => apply()))
@@ -60,7 +60,7 @@ class ButtonEditPanel(target: ButtonWidget, compiler: CompilerServices, colorize
     new KeyEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.button.actionKey"),
+        loc"Action key",
         () => target.actionKey,
         _.foreach(target.setActionKey),
         () => apply()))
@@ -69,7 +69,7 @@ class ButtonEditPanel(target: ButtonWidget, compiler: CompilerServices, colorize
     new BooleanEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.general.oldSize"),
+        loc"Use old sizing",
         () => target.oldSize,
         _.foreach(target.oldSize),
         () => apply()))

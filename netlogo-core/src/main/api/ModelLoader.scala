@@ -6,7 +6,7 @@ import java.io.{ FileNotFoundException, Writer }
 import java.net.URI
 import java.nio.file.{ Files, Paths }
 
-import org.nlogo.core.{ I18N, Model }
+import org.nlogo.core.{ LocaleContext, Model }
 
 import scala.reflect.ClassTag
 import scala.util.{ Failure, Try }
@@ -144,7 +144,9 @@ class ConfigurableModelLoader(val formats: Seq[FormatterPair[?, ?]] = Seq()) ext
     if (uri.getScheme == "file") {
       val path = Paths.get(uri)
       if (!Files.exists(path)) {
-        val message = I18N.errors.getN("fileformat.notFound", path)
+        val message = loc"""|Model file was not found at "$path". Double check the path given; the model may have been
+                            |moved or deleted."""
+
         return Failure(new FileNotFoundException(message))
       }
     }

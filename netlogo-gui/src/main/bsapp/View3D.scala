@@ -11,7 +11,7 @@ import java.awt.event.{ KeyAdapter, KeyEvent, MouseEvent }
 import org.nlogo.agent.{ World, World3D }
 import org.nlogo.api.{ DrawingInterface, WorldRenderable }
 import org.nlogo.awt.Positioning
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.gl.render.{ GLViewSettings, LinkRenderer3D, PatchRenderer3D, Renderer3D, ShapeRenderer3D,
                              TurtleRenderer3D, WorldRenderer3D }
 import org.nlogo.gl.view.{ GLViewInterface, MouseMotionHandler, ViewControlToolBar }
@@ -19,7 +19,7 @@ import org.nlogo.render.Renderer
 import org.nlogo.swing.NetLogoIcon
 import org.nlogo.theme.ThemeSync
 
-class View3D(workspace: SemiHeadlessWorkspace) extends Frame(I18N.gui.get("menu.tools.3DView")) with GLViewInterface
+class View3D(workspace: SemiHeadlessWorkspace) extends Frame(loc"3D View") with GLViewInterface
                                                with GLViewSettings with NetLogoIcon with ActiveView with ThemeSync {
 
   private val world3D: World3D & WorldRenderable = world.asInstanceOf[World3D & WorldRenderable]

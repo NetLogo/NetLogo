@@ -753,10 +753,24 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           DUP
           ALOAD 1
           ALOAD 0
-          GETSTATIC org/nlogo/core/I18N$.MODULE$ : Lorg/nlogo/core/I18N$;
-          INVOKEVIRTUAL org/nlogo/core/I18N$.errors ()Lorg/nlogo/core/I18N$BundleKind;
-          LDC "org.nlogo.prim.$common.onlyObserverCanAskAllTurtles"
-          INVOKEVIRTUAL org/nlogo/core/I18N$BundleKind.get (Ljava/lang/String;)Ljava/lang/String;
+          GETSTATIC org/nlogo/core/LocaleContext$package$LocaleContext$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$LocaleContext$;
+          GETSTATIC org/nlogo/core/LocaleContext$package$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$;
+          GETSTATIC scala/StringContext$.MODULE$ : Lscala/StringContext$;
+          GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
+          ICONST_1
+          ANEWARRAY java/lang/String
+          DUP
+          ICONST_0
+          LDC "Only the observer can ASK the set of all turtles."
+          AASTORE
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL scala/StringContext$.apply (Lscala/collection/immutable/Seq;)Lscala/StringContext;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$.LocaleContext (Lscala/StringContext;)Lscala/StringContext;
+          GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
+          ICONST_0
+          ANEWARRAY java/lang/Object
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.genericWrapArray (Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$LocaleContext$.loc$extension (Lscala/StringContext;Lscala/collection/immutable/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L3
@@ -770,10 +784,24 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           DUP
           ALOAD 1
           ALOAD 0
-          GETSTATIC org/nlogo/core/I18N$.MODULE$ : Lorg/nlogo/core/I18N$;
-          INVOKEVIRTUAL org/nlogo/core/I18N$.errors ()Lorg/nlogo/core/I18N$BundleKind;
-          LDC "org.nlogo.prim.$common.onlyObserverCanAskAllPatches"
-          INVOKEVIRTUAL org/nlogo/core/I18N$BundleKind.get (Ljava/lang/String;)Ljava/lang/String;
+          GETSTATIC org/nlogo/core/LocaleContext$package$LocaleContext$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$LocaleContext$;
+          GETSTATIC org/nlogo/core/LocaleContext$package$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$;
+          GETSTATIC scala/StringContext$.MODULE$ : Lscala/StringContext$;
+          GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
+          ICONST_1
+          ANEWARRAY java/lang/String
+          DUP
+          ICONST_0
+          LDC "Only the observer can ASK the set of all patches."
+          AASTORE
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL scala/StringContext$.apply (Lscala/collection/immutable/Seq;)Lscala/StringContext;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$.LocaleContext (Lscala/StringContext;)Lscala/StringContext;
+          GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
+          ICONST_0
+          ANEWARRAY java/lang/Object
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.genericWrapArray (Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$LocaleContext$.loc$extension (Lscala/StringContext;Lscala/collection/immutable/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L2
@@ -943,10 +971,24 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           DUP
           ALOAD 1
           ALOAD 0
-          GETSTATIC org/nlogo/core/I18N$.MODULE$ : Lorg/nlogo/core/I18N$;
-          INVOKEVIRTUAL org/nlogo/core/I18N$.errors ()Lorg/nlogo/core/I18N$BundleKind;
-          LDC "org.nlogo.prim.$common.onlyObserverCanAskAllTurtles"
-          INVOKEVIRTUAL org/nlogo/core/I18N$BundleKind.get (Ljava/lang/String;)Ljava/lang/String;
+          GETSTATIC org/nlogo/core/LocaleContext$package$LocaleContext$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$LocaleContext$;
+          GETSTATIC org/nlogo/core/LocaleContext$package$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$;
+          GETSTATIC scala/StringContext$.MODULE$ : Lscala/StringContext$;
+          GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
+          ICONST_1
+          ANEWARRAY java/lang/String
+          DUP
+          ICONST_0
+          LDC "Only the observer can ASK the set of all turtles."
+          AASTORE
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL scala/StringContext$.apply (Lscala/collection/immutable/Seq;)Lscala/StringContext;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$.LocaleContext (Lscala/StringContext;)Lscala/StringContext;
+          GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
+          ICONST_0
+          ANEWARRAY java/lang/Object
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.genericWrapArray (Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$LocaleContext$.loc$extension (Lscala/StringContext;Lscala/collection/immutable/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L3
@@ -960,10 +1002,24 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           DUP
           ALOAD 1
           ALOAD 0
-          GETSTATIC org/nlogo/core/I18N$.MODULE$ : Lorg/nlogo/core/I18N$;
-          INVOKEVIRTUAL org/nlogo/core/I18N$.errors ()Lorg/nlogo/core/I18N$BundleKind;
-          LDC "org.nlogo.prim.$common.onlyObserverCanAskAllPatches"
-          INVOKEVIRTUAL org/nlogo/core/I18N$BundleKind.get (Ljava/lang/String;)Ljava/lang/String;
+          GETSTATIC org/nlogo/core/LocaleContext$package$LocaleContext$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$LocaleContext$;
+          GETSTATIC org/nlogo/core/LocaleContext$package$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$;
+          GETSTATIC scala/StringContext$.MODULE$ : Lscala/StringContext$;
+          GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
+          ICONST_1
+          ANEWARRAY java/lang/String
+          DUP
+          ICONST_0
+          LDC "Only the observer can ASK the set of all patches."
+          AASTORE
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL scala/StringContext$.apply (Lscala/collection/immutable/Seq;)Lscala/StringContext;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$.LocaleContext (Lscala/StringContext;)Lscala/StringContext;
+          GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
+          ICONST_0
+          ANEWARRAY java/lang/Object
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.genericWrapArray (Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$LocaleContext$.loc$extension (Lscala/StringContext;Lscala/collection/immutable/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L2
@@ -1032,9 +1088,10 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
-          LDC "org.nlogo.prim.etc.$common.divByZero"
-          INVOKEINTERFACE org/nlogo/core/I18NJava.get (Ljava/lang/String;)Ljava/lang/String; (itf)
+          LDC "Division by zero."
+          ICONST_0
+          ANEWARRAY java/lang/String
+          INVOKESTATIC org/nlogo/core/LocaleContextJ.loc (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L9
@@ -1294,10 +1351,24 @@ procedure GO:[]{O---}:
           DUP
           ALOAD 1
           ALOAD 0
-          GETSTATIC org/nlogo/core/I18N$.MODULE$ : Lorg/nlogo/core/I18N$;
-          INVOKEVIRTUAL org/nlogo/core/I18N$.errors ()Lorg/nlogo/core/I18N$BundleKind;
-          LDC "org.nlogo.prim.$common.onlyObserverCanAskAllTurtles"
-          INVOKEVIRTUAL org/nlogo/core/I18N$BundleKind.get (Ljava/lang/String;)Ljava/lang/String;
+          GETSTATIC org/nlogo/core/LocaleContext$package$LocaleContext$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$LocaleContext$;
+          GETSTATIC org/nlogo/core/LocaleContext$package$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$;
+          GETSTATIC scala/StringContext$.MODULE$ : Lscala/StringContext$;
+          GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
+          ICONST_1
+          ANEWARRAY java/lang/String
+          DUP
+          ICONST_0
+          LDC "Only the observer can ASK the set of all turtles."
+          AASTORE
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL scala/StringContext$.apply (Lscala/collection/immutable/Seq;)Lscala/StringContext;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$.LocaleContext (Lscala/StringContext;)Lscala/StringContext;
+          GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
+          ICONST_0
+          ANEWARRAY java/lang/Object
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.genericWrapArray (Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$LocaleContext$.loc$extension (Lscala/StringContext;Lscala/collection/immutable/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L3
@@ -1311,10 +1382,24 @@ procedure GO:[]{O---}:
           DUP
           ALOAD 1
           ALOAD 0
-          GETSTATIC org/nlogo/core/I18N$.MODULE$ : Lorg/nlogo/core/I18N$;
-          INVOKEVIRTUAL org/nlogo/core/I18N$.errors ()Lorg/nlogo/core/I18N$BundleKind;
-          LDC "org.nlogo.prim.$common.onlyObserverCanAskAllPatches"
-          INVOKEVIRTUAL org/nlogo/core/I18N$BundleKind.get (Ljava/lang/String;)Ljava/lang/String;
+          GETSTATIC org/nlogo/core/LocaleContext$package$LocaleContext$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$LocaleContext$;
+          GETSTATIC org/nlogo/core/LocaleContext$package$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$;
+          GETSTATIC scala/StringContext$.MODULE$ : Lscala/StringContext$;
+          GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
+          ICONST_1
+          ANEWARRAY java/lang/String
+          DUP
+          ICONST_0
+          LDC "Only the observer can ASK the set of all patches."
+          AASTORE
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL scala/StringContext$.apply (Lscala/collection/immutable/Seq;)Lscala/StringContext;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$.LocaleContext (Lscala/StringContext;)Lscala/StringContext;
+          GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
+          ICONST_0
+          ANEWARRAY java/lang/Object
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.genericWrapArray (Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$LocaleContext$.loc$extension (Lscala/StringContext;Lscala/collection/immutable/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L2
@@ -1512,10 +1597,24 @@ procedure GO:[]{O---}:
           DUP
           ALOAD 1
           ALOAD 0
-          GETSTATIC org/nlogo/core/I18N$.MODULE$ : Lorg/nlogo/core/I18N$;
-          INVOKEVIRTUAL org/nlogo/core/I18N$.errors ()Lorg/nlogo/core/I18N$BundleKind;
-          LDC "org.nlogo.prim.$common.onlyObserverCanAskAllTurtles"
-          INVOKEVIRTUAL org/nlogo/core/I18N$BundleKind.get (Ljava/lang/String;)Ljava/lang/String;
+          GETSTATIC org/nlogo/core/LocaleContext$package$LocaleContext$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$LocaleContext$;
+          GETSTATIC org/nlogo/core/LocaleContext$package$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$;
+          GETSTATIC scala/StringContext$.MODULE$ : Lscala/StringContext$;
+          GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
+          ICONST_1
+          ANEWARRAY java/lang/String
+          DUP
+          ICONST_0
+          LDC "Only the observer can ASK the set of all turtles."
+          AASTORE
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL scala/StringContext$.apply (Lscala/collection/immutable/Seq;)Lscala/StringContext;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$.LocaleContext (Lscala/StringContext;)Lscala/StringContext;
+          GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
+          ICONST_0
+          ANEWARRAY java/lang/Object
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.genericWrapArray (Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$LocaleContext$.loc$extension (Lscala/StringContext;Lscala/collection/immutable/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L3
@@ -1529,10 +1628,24 @@ procedure GO:[]{O---}:
           DUP
           ALOAD 1
           ALOAD 0
-          GETSTATIC org/nlogo/core/I18N$.MODULE$ : Lorg/nlogo/core/I18N$;
-          INVOKEVIRTUAL org/nlogo/core/I18N$.errors ()Lorg/nlogo/core/I18N$BundleKind;
-          LDC "org.nlogo.prim.$common.onlyObserverCanAskAllPatches"
-          INVOKEVIRTUAL org/nlogo/core/I18N$BundleKind.get (Ljava/lang/String;)Ljava/lang/String;
+          GETSTATIC org/nlogo/core/LocaleContext$package$LocaleContext$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$LocaleContext$;
+          GETSTATIC org/nlogo/core/LocaleContext$package$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$;
+          GETSTATIC scala/StringContext$.MODULE$ : Lscala/StringContext$;
+          GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
+          ICONST_1
+          ANEWARRAY java/lang/String
+          DUP
+          ICONST_0
+          LDC "Only the observer can ASK the set of all patches."
+          AASTORE
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL scala/StringContext$.apply (Lscala/collection/immutable/Seq;)Lscala/StringContext;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$.LocaleContext (Lscala/StringContext;)Lscala/StringContext;
+          GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
+          ICONST_0
+          ANEWARRAY java/lang/Object
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.genericWrapArray (Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$LocaleContext$.loc$extension (Lscala/StringContext;Lscala/collection/immutable/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L2
@@ -1680,10 +1793,24 @@ procedure GO:[]{O---}:
           DUP
           ALOAD 1
           ALOAD 0
-          GETSTATIC org/nlogo/core/I18N$.MODULE$ : Lorg/nlogo/core/I18N$;
-          INVOKEVIRTUAL org/nlogo/core/I18N$.errors ()Lorg/nlogo/core/I18N$BundleKind;
-          LDC "org.nlogo.prim.$common.onlyObserverCanAskAllTurtles"
-          INVOKEVIRTUAL org/nlogo/core/I18N$BundleKind.get (Ljava/lang/String;)Ljava/lang/String;
+          GETSTATIC org/nlogo/core/LocaleContext$package$LocaleContext$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$LocaleContext$;
+          GETSTATIC org/nlogo/core/LocaleContext$package$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$;
+          GETSTATIC scala/StringContext$.MODULE$ : Lscala/StringContext$;
+          GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
+          ICONST_1
+          ANEWARRAY java/lang/String
+          DUP
+          ICONST_0
+          LDC "Only the observer can ASK the set of all turtles."
+          AASTORE
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL scala/StringContext$.apply (Lscala/collection/immutable/Seq;)Lscala/StringContext;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$.LocaleContext (Lscala/StringContext;)Lscala/StringContext;
+          GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
+          ICONST_0
+          ANEWARRAY java/lang/Object
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.genericWrapArray (Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$LocaleContext$.loc$extension (Lscala/StringContext;Lscala/collection/immutable/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L3
@@ -1697,10 +1824,24 @@ procedure GO:[]{O---}:
           DUP
           ALOAD 1
           ALOAD 0
-          GETSTATIC org/nlogo/core/I18N$.MODULE$ : Lorg/nlogo/core/I18N$;
-          INVOKEVIRTUAL org/nlogo/core/I18N$.errors ()Lorg/nlogo/core/I18N$BundleKind;
-          LDC "org.nlogo.prim.$common.onlyObserverCanAskAllPatches"
-          INVOKEVIRTUAL org/nlogo/core/I18N$BundleKind.get (Ljava/lang/String;)Ljava/lang/String;
+          GETSTATIC org/nlogo/core/LocaleContext$package$LocaleContext$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$LocaleContext$;
+          GETSTATIC org/nlogo/core/LocaleContext$package$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$;
+          GETSTATIC scala/StringContext$.MODULE$ : Lscala/StringContext$;
+          GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
+          ICONST_1
+          ANEWARRAY java/lang/String
+          DUP
+          ICONST_0
+          LDC "Only the observer can ASK the set of all patches."
+          AASTORE
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL scala/StringContext$.apply (Lscala/collection/immutable/Seq;)Lscala/StringContext;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$.LocaleContext (Lscala/StringContext;)Lscala/StringContext;
+          GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
+          ICONST_0
+          ANEWARRAY java/lang/Object
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.genericWrapArray (Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$LocaleContext$.loc$extension (Lscala/StringContext;Lscala/collection/immutable/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L2
@@ -1838,13 +1979,27 @@ procedure GO:[]{O---}:
           GOTO L9
          L13
          FRAME CHOP 2
-          NEW org/nlogo/nvm/RuntimePrimitiveException
+          GETSTATIC org/nlogo/core/LocaleContext$package$LocaleContext$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$LocaleContext$;
+          GETSTATIC org/nlogo/core/LocaleContext$package$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$;
+          GETSTATIC scala/StringContext$.MODULE$ : Lscala/StringContext$;
+          GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
+          ICONST_3
+          ANEWARRAY java/lang/String
           DUP
-          ALOAD 1
-          ALOAD 0
-          GETSTATIC org/nlogo/core/I18N$.MODULE$ : Lorg/nlogo/core/I18N$;
-          INVOKEVIRTUAL org/nlogo/core/I18N$.errors ()Lorg/nlogo/core/I18N$BundleKind;
-          LDC "org.nlogo.prim._greaterthan.cannotCompareParameters"
+          ICONST_0
+          LDC "\"|The > operator can only be used on two numbers, two strings, or two agents of the same type,\n                         |but not on "
+          AASTORE
+          DUP
+          ICONST_1
+          LDC " and "
+          AASTORE
+          DUP
+          ICONST_2
+          LDC ".\""
+          AASTORE
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL scala/StringContext$.apply (Lscala/collection/immutable/Seq;)Lscala/StringContext;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$.LocaleContext (Lscala/StringContext;)Lscala/StringContext;
           GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
           ICONST_2
           ANEWARRAY java/lang/Object
@@ -1860,8 +2015,14 @@ procedure GO:[]{O---}:
           ALOAD 3
           INVOKEVIRTUAL org/nlogo/api/TypeNames$.aName (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
-          INVOKEVIRTUAL org/nlogo/core/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/immutable/Seq;)Ljava/lang/String;
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.genericWrapArray (Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$LocaleContext$.loc$extension (Lscala/StringContext;Lscala/collection/immutable/Seq;)Ljava/lang/String;
+          ASTORE 6
+          NEW org/nlogo/nvm/RuntimePrimitiveException
+          DUP
+          ALOAD 1
+          ALOAD 0
+          ALOAD 6
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L9
@@ -2329,10 +2490,9 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
-          LDC "org.nlogo.prim._greaterorequal.cannotCompareParameters"
+          LDC "The >= operator can only be used on two numbers, two strings, or two agents of the same type, but not on {} and {}."
           ICONST_2
-          ANEWARRAY java/lang/Object
+          ANEWARRAY java/lang/String
           DUP
           ICONST_0
           DLOAD 2
@@ -2344,7 +2504,7 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
           ALOAD 4
           INVOKESTATIC org/nlogo/api/TypeNames.aName (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
-          INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String; (itf)
+          INVOKESTATIC org/nlogo/core/LocaleContextJ.loc (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L7
@@ -2630,13 +2790,27 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
                FRAME CHOP 1
                 ALOAD 7
                 ASTORE 9
-                NEW org/nlogo/nvm/RuntimePrimitiveException
+                GETSTATIC org/nlogo/core/LocaleContext$package$LocaleContext$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$LocaleContext$;
+                GETSTATIC org/nlogo/core/LocaleContext$package$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$;
+                GETSTATIC scala/StringContext$.MODULE$ : Lscala/StringContext$;
+                GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
+                ICONST_3
+                ANEWARRAY java/lang/String
                 DUP
-                ALOAD 1
-                ALOAD 0
-                GETSTATIC org/nlogo/core/I18N$.MODULE$ : Lorg/nlogo/core/I18N$;
-                INVOKEVIRTUAL org/nlogo/core/I18N$.errors ()Lorg/nlogo/core/I18N$BundleKind;
-                LDC "org.nlogo.prim.$common.withExpectedBooleanValue"
+                ICONST_0
+                LDC "|WITH expected a true/false value from "
+                AASTORE
+                DUP
+                ICONST_1
+                LDC ",\n                              |but got "
+                AASTORE
+                DUP
+                ICONST_2
+                LDC " instead."
+                AASTORE
+                INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+                INVOKEVIRTUAL scala/StringContext$.apply (Lscala/collection/immutable/Seq;)Lscala/StringContext;
+                INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$.LocaleContext (Lscala/StringContext;)Lscala/StringContext;
                 GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
                 ICONST_2
                 ANEWARRAY java/lang/Object
@@ -2652,8 +2826,14 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
                 ALOAD 9
                 INVOKEVIRTUAL org/nlogo/api/Dump$.logoObject (Ljava/lang/Object;)Ljava/lang/String;
                 AASTORE
-                INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
-                INVOKEVIRTUAL org/nlogo/core/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/immutable/Seq;)Ljava/lang/String;
+                INVOKEVIRTUAL scala/runtime/ScalaRunTime$.genericWrapArray (Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+                INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$LocaleContext$.loc$extension (Lscala/StringContext;Lscala/collection/immutable/Seq;)Ljava/lang/String;
+                ASTORE 10
+                NEW org/nlogo/nvm/RuntimePrimitiveException
+                DUP
+                ALOAD 1
+                ALOAD 0
+                ALOAD 10
                 INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
                 ATHROW
                L14
@@ -2731,13 +2911,27 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
           GOTO L7
          L4
          FRAME CHOP 1
-          NEW org/nlogo/nvm/RuntimePrimitiveException
+          GETSTATIC org/nlogo/core/LocaleContext$package$LocaleContext$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$LocaleContext$;
+          GETSTATIC org/nlogo/core/LocaleContext$package$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$;
+          GETSTATIC scala/StringContext$.MODULE$ : Lscala/StringContext$;
+          GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
+          ICONST_3
+          ANEWARRAY java/lang/String
           DUP
-          ALOAD 1
-          ALOAD 0
-          GETSTATIC org/nlogo/core/I18N$.MODULE$ : Lorg/nlogo/core/I18N$;
-          INVOKEVIRTUAL org/nlogo/core/I18N$.errors ()Lorg/nlogo/core/I18N$BundleKind;
-          LDC "org.nlogo.prim._lessthan.cantUseLessthanOnDifferentArgs"
+          ICONST_0
+          LDC "|The < operator can only be used on two numbers, two strings, or two agents of the same\n                            |type, but not on "
+          AASTORE
+          DUP
+          ICONST_1
+          LDC " and "
+          AASTORE
+          DUP
+          ICONST_2
+          LDC "."
+          AASTORE
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL scala/StringContext$.apply (Lscala/collection/immutable/Seq;)Lscala/StringContext;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$.LocaleContext (Lscala/StringContext;)Lscala/StringContext;
           GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
           ICONST_2
           ANEWARRAY java/lang/Object
@@ -2754,8 +2948,14 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
           ALOAD 4
           INVOKEVIRTUAL org/nlogo/api/TypeNames$.aName (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
-          INVOKEVIRTUAL org/nlogo/core/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/immutable/Seq;)Ljava/lang/String;
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.genericWrapArray (Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$LocaleContext$.loc$extension (Lscala/StringContext;Lscala/collection/immutable/Seq;)Ljava/lang/String;
+          ASTORE 7
+          NEW org/nlogo/nvm/RuntimePrimitiveException
+          DUP
+          ALOAD 1
+          ALOAD 0
+          ALOAD 7
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L7
@@ -2815,13 +3015,27 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
          FRAME CHOP 1
           ALOAD 7
           ASTORE 9
-          NEW org/nlogo/nvm/RuntimePrimitiveException
+          GETSTATIC org/nlogo/core/LocaleContext$package$LocaleContext$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$LocaleContext$;
+          GETSTATIC org/nlogo/core/LocaleContext$package$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$;
+          GETSTATIC scala/StringContext$.MODULE$ : Lscala/StringContext$;
+          GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
+          ICONST_3
+          ANEWARRAY java/lang/String
           DUP
-          ALOAD 1
-          ALOAD 0
-          GETSTATIC org/nlogo/core/I18N$.MODULE$ : Lorg/nlogo/core/I18N$;
-          INVOKEVIRTUAL org/nlogo/core/I18N$.errors ()Lorg/nlogo/core/I18N$BundleKind;
-          LDC "org.nlogo.prim.$common.withExpectedBooleanValue"
+          ICONST_0
+          LDC "|WITH expected a true/false value from "
+          AASTORE
+          DUP
+          ICONST_1
+          LDC ",\n                              |but got "
+          AASTORE
+          DUP
+          ICONST_2
+          LDC " instead."
+          AASTORE
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL scala/StringContext$.apply (Lscala/collection/immutable/Seq;)Lscala/StringContext;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$.LocaleContext (Lscala/StringContext;)Lscala/StringContext;
           GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
           ICONST_2
           ANEWARRAY java/lang/Object
@@ -2837,8 +3051,14 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
           ALOAD 9
           INVOKEVIRTUAL org/nlogo/api/Dump$.logoObject (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
-          INVOKEVIRTUAL org/nlogo/core/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/immutable/Seq;)Ljava/lang/String;
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.genericWrapArray (Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$LocaleContext$.loc$extension (Lscala/StringContext;Lscala/collection/immutable/Seq;)Ljava/lang/String;
+          ASTORE 10
+          NEW org/nlogo/nvm/RuntimePrimitiveException
+          DUP
+          ALOAD 1
+          ALOAD 0
+          ALOAD 10
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L12
@@ -3047,13 +3267,27 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
              FRAME CHOP 1
               ALOAD 7
               ASTORE 9
-              NEW org/nlogo/nvm/RuntimePrimitiveException
+              GETSTATIC org/nlogo/core/LocaleContext$package$LocaleContext$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$LocaleContext$;
+              GETSTATIC org/nlogo/core/LocaleContext$package$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$;
+              GETSTATIC scala/StringContext$.MODULE$ : Lscala/StringContext$;
+              GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
+              ICONST_3
+              ANEWARRAY java/lang/String
               DUP
-              ALOAD 1
-              ALOAD 0
-              GETSTATIC org/nlogo/core/I18N$.MODULE$ : Lorg/nlogo/core/I18N$;
-              INVOKEVIRTUAL org/nlogo/core/I18N$.errors ()Lorg/nlogo/core/I18N$BundleKind;
-              LDC "org.nlogo.prim.$common.withExpectedBooleanValue"
+              ICONST_0
+              LDC "|WITH expected a true/false value from "
+              AASTORE
+              DUP
+              ICONST_1
+              LDC ",\n                              |but got "
+              AASTORE
+              DUP
+              ICONST_2
+              LDC " instead."
+              AASTORE
+              INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+              INVOKEVIRTUAL scala/StringContext$.apply (Lscala/collection/immutable/Seq;)Lscala/StringContext;
+              INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$.LocaleContext (Lscala/StringContext;)Lscala/StringContext;
               GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
               ICONST_2
               ANEWARRAY java/lang/Object
@@ -3069,8 +3303,14 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
               ALOAD 9
               INVOKEVIRTUAL org/nlogo/api/Dump$.logoObject (Ljava/lang/Object;)Ljava/lang/String;
               AASTORE
-              INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
-              INVOKEVIRTUAL org/nlogo/core/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/immutable/Seq;)Ljava/lang/String;
+              INVOKEVIRTUAL scala/runtime/ScalaRunTime$.genericWrapArray (Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+              INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$LocaleContext$.loc$extension (Lscala/StringContext;Lscala/collection/immutable/Seq;)Ljava/lang/String;
+              ASTORE 10
+              NEW org/nlogo/nvm/RuntimePrimitiveException
+              DUP
+              ALOAD 1
+              ALOAD 0
+              ALOAD 10
               INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
               ATHROW
              L16
@@ -3156,13 +3396,27 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
          FRAME CHOP 1
           ALOAD 7
           ASTORE 9
-          NEW org/nlogo/nvm/RuntimePrimitiveException
+          GETSTATIC org/nlogo/core/LocaleContext$package$LocaleContext$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$LocaleContext$;
+          GETSTATIC org/nlogo/core/LocaleContext$package$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$;
+          GETSTATIC scala/StringContext$.MODULE$ : Lscala/StringContext$;
+          GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
+          ICONST_3
+          ANEWARRAY java/lang/String
           DUP
-          ALOAD 1
-          ALOAD 0
-          GETSTATIC org/nlogo/core/I18N$.MODULE$ : Lorg/nlogo/core/I18N$;
-          INVOKEVIRTUAL org/nlogo/core/I18N$.errors ()Lorg/nlogo/core/I18N$BundleKind;
-          LDC "org.nlogo.prim.$common.withExpectedBooleanValue"
+          ICONST_0
+          LDC "|WITH expected a true/false value from "
+          AASTORE
+          DUP
+          ICONST_1
+          LDC ",\n                              |but got "
+          AASTORE
+          DUP
+          ICONST_2
+          LDC " instead."
+          AASTORE
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL scala/StringContext$.apply (Lscala/collection/immutable/Seq;)Lscala/StringContext;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$.LocaleContext (Lscala/StringContext;)Lscala/StringContext;
           GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
           ICONST_2
           ANEWARRAY java/lang/Object
@@ -3178,8 +3432,14 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
           ALOAD 9
           INVOKEVIRTUAL org/nlogo/api/Dump$.logoObject (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
-          INVOKEVIRTUAL org/nlogo/core/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/immutable/Seq;)Ljava/lang/String;
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.genericWrapArray (Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$LocaleContext$.loc$extension (Lscala/StringContext;Lscala/collection/immutable/Seq;)Ljava/lang/String;
+          ASTORE 10
+          NEW org/nlogo/nvm/RuntimePrimitiveException
+          DUP
+          ALOAD 1
+          ALOAD 0
+          ALOAD 10
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L3
@@ -3344,13 +3604,27 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
          FRAME CHOP 1
           ALOAD 7
           ASTORE 9
-          NEW org/nlogo/nvm/RuntimePrimitiveException
+          GETSTATIC org/nlogo/core/LocaleContext$package$LocaleContext$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$LocaleContext$;
+          GETSTATIC org/nlogo/core/LocaleContext$package$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$;
+          GETSTATIC scala/StringContext$.MODULE$ : Lscala/StringContext$;
+          GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
+          ICONST_3
+          ANEWARRAY java/lang/String
           DUP
-          ALOAD 1
-          ALOAD 0
-          GETSTATIC org/nlogo/core/I18N$.MODULE$ : Lorg/nlogo/core/I18N$;
-          INVOKEVIRTUAL org/nlogo/core/I18N$.errors ()Lorg/nlogo/core/I18N$BundleKind;
-          LDC "org.nlogo.prim.$common.withExpectedBooleanValue"
+          ICONST_0
+          LDC "|WITH expected a true/false value from "
+          AASTORE
+          DUP
+          ICONST_1
+          LDC ",\n                              |but got "
+          AASTORE
+          DUP
+          ICONST_2
+          LDC " instead."
+          AASTORE
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL scala/StringContext$.apply (Lscala/collection/immutable/Seq;)Lscala/StringContext;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$.LocaleContext (Lscala/StringContext;)Lscala/StringContext;
           GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
           ICONST_2
           ANEWARRAY java/lang/Object
@@ -3366,8 +3640,14 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
           ALOAD 9
           INVOKEVIRTUAL org/nlogo/api/Dump$.logoObject (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
-          INVOKEVIRTUAL org/nlogo/core/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/immutable/Seq;)Ljava/lang/String;
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.genericWrapArray (Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$LocaleContext$.loc$extension (Lscala/StringContext;Lscala/collection/immutable/Seq;)Ljava/lang/String;
+          ASTORE 10
+          NEW org/nlogo/nvm/RuntimePrimitiveException
+          DUP
+          ALOAD 1
+          ALOAD 0
+          ALOAD 10
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L3
@@ -3421,10 +3701,24 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
           DUP
           ALOAD 1
           ALOAD 0
-          GETSTATIC org/nlogo/core/I18N$.MODULE$ : Lorg/nlogo/core/I18N$;
-          INVOKEVIRTUAL org/nlogo/core/I18N$.errors ()Lorg/nlogo/core/I18N$BundleKind;
-          LDC "org.nlogo.prim.$common.onlyObserverCanAskAllTurtles"
-          INVOKEVIRTUAL org/nlogo/core/I18N$BundleKind.get (Ljava/lang/String;)Ljava/lang/String;
+          GETSTATIC org/nlogo/core/LocaleContext$package$LocaleContext$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$LocaleContext$;
+          GETSTATIC org/nlogo/core/LocaleContext$package$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$;
+          GETSTATIC scala/StringContext$.MODULE$ : Lscala/StringContext$;
+          GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
+          ICONST_1
+          ANEWARRAY java/lang/String
+          DUP
+          ICONST_0
+          LDC "Only the observer can ASK the set of all turtles."
+          AASTORE
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL scala/StringContext$.apply (Lscala/collection/immutable/Seq;)Lscala/StringContext;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$.LocaleContext (Lscala/StringContext;)Lscala/StringContext;
+          GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
+          ICONST_0
+          ANEWARRAY java/lang/Object
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.genericWrapArray (Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$LocaleContext$.loc$extension (Lscala/StringContext;Lscala/collection/immutable/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L4
@@ -3438,10 +3732,24 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
           DUP
           ALOAD 1
           ALOAD 0
-          GETSTATIC org/nlogo/core/I18N$.MODULE$ : Lorg/nlogo/core/I18N$;
-          INVOKEVIRTUAL org/nlogo/core/I18N$.errors ()Lorg/nlogo/core/I18N$BundleKind;
-          LDC "org.nlogo.prim.$common.onlyObserverCanAskAllPatches"
-          INVOKEVIRTUAL org/nlogo/core/I18N$BundleKind.get (Ljava/lang/String;)Ljava/lang/String;
+          GETSTATIC org/nlogo/core/LocaleContext$package$LocaleContext$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$LocaleContext$;
+          GETSTATIC org/nlogo/core/LocaleContext$package$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$;
+          GETSTATIC scala/StringContext$.MODULE$ : Lscala/StringContext$;
+          GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
+          ICONST_1
+          ANEWARRAY java/lang/String
+          DUP
+          ICONST_0
+          LDC "Only the observer can ASK the set of all patches."
+          AASTORE
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL scala/StringContext$.apply (Lscala/collection/immutable/Seq;)Lscala/StringContext;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$.LocaleContext (Lscala/StringContext;)Lscala/StringContext;
+          GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
+          ICONST_0
+          ANEWARRAY java/lang/Object
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.genericWrapArray (Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$LocaleContext$.loc$extension (Lscala/StringContext;Lscala/collection/immutable/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L3
@@ -3465,9 +3773,23 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
           DUP
           ALOAD 1
           ALOAD 0
-          GETSTATIC org/nlogo/core/I18N$.MODULE$ : Lorg/nlogo/core/I18N$;
-          INVOKEVIRTUAL org/nlogo/core/I18N$.errors ()Lorg/nlogo/core/I18N$BundleKind;
-          LDC "org.nlogo.$common.thatAgentIsDead"
+          GETSTATIC org/nlogo/core/LocaleContext$package$LocaleContext$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$LocaleContext$;
+          GETSTATIC org/nlogo/core/LocaleContext$package$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$;
+          GETSTATIC scala/StringContext$.MODULE$ : Lscala/StringContext$;
+          GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
+          ICONST_2
+          ANEWARRAY java/lang/String
+          DUP
+          ICONST_0
+          LDC "That "
+          AASTORE
+          DUP
+          ICONST_1
+          LDC " is dead."
+          AASTORE
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL scala/StringContext$.apply (Lscala/collection/immutable/Seq;)Lscala/StringContext;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$.LocaleContext (Lscala/StringContext;)Lscala/StringContext;
           GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
           ICONST_1
           ANEWARRAY java/lang/Object
@@ -3476,8 +3798,8 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
           ALOAD 6
           INVOKEVIRTUAL org/nlogo/agent/Agent.classDisplayName ()Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
-          INVOKEVIRTUAL org/nlogo/core/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/immutable/Seq;)Ljava/lang/String;
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.genericWrapArray (Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$LocaleContext$.loc$extension (Lscala/StringContext;Lscala/collection/immutable/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L7
@@ -3905,13 +4227,31 @@ procedure TIE-COLLABORATORS:[]{OTPL}:
          FRAME CHOP 1
           ALOAD 8
           ASTORE 10
-          NEW org/nlogo/nvm/RuntimePrimitiveException
+          GETSTATIC org/nlogo/core/LocaleContext$package$LocaleContext$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$LocaleContext$;
+          GETSTATIC org/nlogo/core/LocaleContext$package$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$;
+          GETSTATIC scala/StringContext$.MODULE$ : Lscala/StringContext$;
+          GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
+          ICONST_4
+          ANEWARRAY java/lang/String
           DUP
-          ALOAD 1
-          ALOAD 0
-          GETSTATIC org/nlogo/core/I18N$.MODULE$ : Lorg/nlogo/core/I18N$;
-          INVOKEVIRTUAL org/nlogo/core/I18N$.errors ()Lorg/nlogo/core/I18N$BundleKind;
-          LDC "org.nlogo.prim.$common.expectedBooleanValue"
+          ICONST_0
+          LDC "|"
+          AASTORE
+          DUP
+          ICONST_1
+          LDC " expected a true/false value from "
+          AASTORE
+          DUP
+          ICONST_2
+          LDC ", but got\n                              |"
+          AASTORE
+          DUP
+          ICONST_3
+          LDC " instead."
+          AASTORE
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL scala/StringContext$.apply (Lscala/collection/immutable/Seq;)Lscala/StringContext;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$.LocaleContext (Lscala/StringContext;)Lscala/StringContext;
           GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
           ICONST_3
           ANEWARRAY java/lang/Object
@@ -3931,8 +4271,14 @@ procedure TIE-COLLABORATORS:[]{OTPL}:
           ALOAD 10
           INVOKEVIRTUAL org/nlogo/api/Dump$.logoObject (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
-          INVOKEVIRTUAL org/nlogo/core/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/immutable/Seq;)Ljava/lang/String;
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.genericWrapArray (Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$LocaleContext$.loc$extension (Lscala/StringContext;Lscala/collection/immutable/Seq;)Ljava/lang/String;
+          ASTORE 11
+          NEW org/nlogo/nvm/RuntimePrimitiveException
+          DUP
+          ALOAD 1
+          ALOAD 0
+          ALOAD 11
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L3
@@ -3962,10 +4308,24 @@ procedure TIE-COLLABORATORS:[]{OTPL}:
           DUP
           ALOAD 1
           ALOAD 0
-          GETSTATIC org/nlogo/core/I18N$.MODULE$ : Lorg/nlogo/core/I18N$;
-          INVOKEVIRTUAL org/nlogo/core/I18N$.errors ()Lorg/nlogo/core/I18N$BundleKind;
-          LDC "org.nlogo.prim.$common.onlyObserverCanAskAllTurtles"
-          INVOKEVIRTUAL org/nlogo/core/I18N$BundleKind.get (Ljava/lang/String;)Ljava/lang/String;
+          GETSTATIC org/nlogo/core/LocaleContext$package$LocaleContext$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$LocaleContext$;
+          GETSTATIC org/nlogo/core/LocaleContext$package$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$;
+          GETSTATIC scala/StringContext$.MODULE$ : Lscala/StringContext$;
+          GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
+          ICONST_1
+          ANEWARRAY java/lang/String
+          DUP
+          ICONST_0
+          LDC "Only the observer can ASK the set of all turtles."
+          AASTORE
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL scala/StringContext$.apply (Lscala/collection/immutable/Seq;)Lscala/StringContext;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$.LocaleContext (Lscala/StringContext;)Lscala/StringContext;
+          GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
+          ICONST_0
+          ANEWARRAY java/lang/Object
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.genericWrapArray (Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$LocaleContext$.loc$extension (Lscala/StringContext;Lscala/collection/immutable/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L8
@@ -3979,10 +4339,24 @@ procedure TIE-COLLABORATORS:[]{OTPL}:
           DUP
           ALOAD 1
           ALOAD 0
-          GETSTATIC org/nlogo/core/I18N$.MODULE$ : Lorg/nlogo/core/I18N$;
-          INVOKEVIRTUAL org/nlogo/core/I18N$.errors ()Lorg/nlogo/core/I18N$BundleKind;
-          LDC "org.nlogo.prim.$common.onlyObserverCanAskAllPatches"
-          INVOKEVIRTUAL org/nlogo/core/I18N$BundleKind.get (Ljava/lang/String;)Ljava/lang/String;
+          GETSTATIC org/nlogo/core/LocaleContext$package$LocaleContext$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$LocaleContext$;
+          GETSTATIC org/nlogo/core/LocaleContext$package$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$;
+          GETSTATIC scala/StringContext$.MODULE$ : Lscala/StringContext$;
+          GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
+          ICONST_1
+          ANEWARRAY java/lang/String
+          DUP
+          ICONST_0
+          LDC "Only the observer can ASK the set of all patches."
+          AASTORE
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL scala/StringContext$.apply (Lscala/collection/immutable/Seq;)Lscala/StringContext;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$.LocaleContext (Lscala/StringContext;)Lscala/StringContext;
+          GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
+          ICONST_0
+          ANEWARRAY java/lang/Object
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.genericWrapArray (Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$LocaleContext$.loc$extension (Lscala/StringContext;Lscala/collection/immutable/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L7
@@ -4100,13 +4474,31 @@ procedure TIE-COLLABORATORS:[]{OTPL}:
            FRAME CHOP 1
             ALOAD 8
             ASTORE 10
-            NEW org/nlogo/nvm/RuntimePrimitiveException
+            GETSTATIC org/nlogo/core/LocaleContext$package$LocaleContext$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$LocaleContext$;
+            GETSTATIC org/nlogo/core/LocaleContext$package$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$;
+            GETSTATIC scala/StringContext$.MODULE$ : Lscala/StringContext$;
+            GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
+            ICONST_4
+            ANEWARRAY java/lang/String
             DUP
-            ALOAD 1
-            ALOAD 0
-            GETSTATIC org/nlogo/core/I18N$.MODULE$ : Lorg/nlogo/core/I18N$;
-            INVOKEVIRTUAL org/nlogo/core/I18N$.errors ()Lorg/nlogo/core/I18N$BundleKind;
-            LDC "org.nlogo.prim.$common.expectedBooleanValue"
+            ICONST_0
+            LDC "|"
+            AASTORE
+            DUP
+            ICONST_1
+            LDC " expected a true/false value from "
+            AASTORE
+            DUP
+            ICONST_2
+            LDC ", but got\n                                |"
+            AASTORE
+            DUP
+            ICONST_3
+            LDC " instead."
+            AASTORE
+            INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+            INVOKEVIRTUAL scala/StringContext$.apply (Lscala/collection/immutable/Seq;)Lscala/StringContext;
+            INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$.LocaleContext (Lscala/StringContext;)Lscala/StringContext;
             GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
             ICONST_3
             ANEWARRAY java/lang/Object
@@ -4126,8 +4518,14 @@ procedure TIE-COLLABORATORS:[]{OTPL}:
             ALOAD 10
             INVOKEVIRTUAL org/nlogo/api/Dump$.logoObject (Ljava/lang/Object;)Ljava/lang/String;
             AASTORE
-            INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
-            INVOKEVIRTUAL org/nlogo/core/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/immutable/Seq;)Ljava/lang/String;
+            INVOKEVIRTUAL scala/runtime/ScalaRunTime$.genericWrapArray (Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+            INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$LocaleContext$.loc$extension (Lscala/StringContext;Lscala/collection/immutable/Seq;)Ljava/lang/String;
+            ASTORE 11
+            NEW org/nlogo/nvm/RuntimePrimitiveException
+            DUP
+            ALOAD 1
+            ALOAD 0
+            ALOAD 11
             INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
             ATHROW
            L4
@@ -4323,9 +4721,23 @@ procedure COLOR-COLLABORATIONS:[]{OTPL}:
               DUP
               ALOAD 1
               ALOAD 0
-              GETSTATIC org/nlogo/core/I18N$.MODULE$ : Lorg/nlogo/core/I18N$;
-              INVOKEVIRTUAL org/nlogo/core/I18N$.errors ()Lorg/nlogo/core/I18N$BundleKind;
-              LDC "org.nlogo.$common.thatAgentIsDead"
+              GETSTATIC org/nlogo/core/LocaleContext$package$LocaleContext$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$LocaleContext$;
+              GETSTATIC org/nlogo/core/LocaleContext$package$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$;
+              GETSTATIC scala/StringContext$.MODULE$ : Lscala/StringContext$;
+              GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
+              ICONST_2
+              ANEWARRAY java/lang/String
+              DUP
+              ICONST_0
+              LDC "That "
+              AASTORE
+              DUP
+              ICONST_1
+              LDC " is dead."
+              AASTORE
+              INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+              INVOKEVIRTUAL scala/StringContext$.apply (Lscala/collection/immutable/Seq;)Lscala/StringContext;
+              INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$.LocaleContext (Lscala/StringContext;)Lscala/StringContext;
               GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
               ICONST_1
               ANEWARRAY java/lang/Object
@@ -4334,8 +4746,8 @@ procedure COLOR-COLLABORATIONS:[]{OTPL}:
               ALOAD 4
               INVOKEVIRTUAL org/nlogo/agent/Agent.classDisplayName ()Ljava/lang/String;
               AASTORE
-              INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
-              INVOKEVIRTUAL org/nlogo/core/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/immutable/Seq;)Ljava/lang/String;
+              INVOKEVIRTUAL scala/runtime/ScalaRunTime$.genericWrapArray (Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+              INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$LocaleContext$.loc$extension (Lscala/StringContext;Lscala/collection/immutable/Seq;)Ljava/lang/String;
               INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
               ATHROW
              L19
@@ -4480,9 +4892,23 @@ procedure COLOR-COLLABORATIONS:[]{OTPL}:
               DUP
               ALOAD 1
               ALOAD 0
-              GETSTATIC org/nlogo/core/I18N$.MODULE$ : Lorg/nlogo/core/I18N$;
-              INVOKEVIRTUAL org/nlogo/core/I18N$.errors ()Lorg/nlogo/core/I18N$BundleKind;
-              LDC "org.nlogo.$common.thatAgentIsDead"
+              GETSTATIC org/nlogo/core/LocaleContext$package$LocaleContext$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$LocaleContext$;
+              GETSTATIC org/nlogo/core/LocaleContext$package$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$;
+              GETSTATIC scala/StringContext$.MODULE$ : Lscala/StringContext$;
+              GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
+              ICONST_2
+              ANEWARRAY java/lang/String
+              DUP
+              ICONST_0
+              LDC "That "
+              AASTORE
+              DUP
+              ICONST_1
+              LDC " is dead."
+              AASTORE
+              INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+              INVOKEVIRTUAL scala/StringContext$.apply (Lscala/collection/immutable/Seq;)Lscala/StringContext;
+              INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$.LocaleContext (Lscala/StringContext;)Lscala/StringContext;
               GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
               ICONST_1
               ANEWARRAY java/lang/Object
@@ -4491,8 +4917,8 @@ procedure COLOR-COLLABORATIONS:[]{OTPL}:
               ALOAD 4
               INVOKEVIRTUAL org/nlogo/agent/Agent.classDisplayName ()Ljava/lang/String;
               AASTORE
-              INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
-              INVOKEVIRTUAL org/nlogo/core/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/immutable/Seq;)Ljava/lang/String;
+              INVOKEVIRTUAL scala/runtime/ScalaRunTime$.genericWrapArray (Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+              INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$LocaleContext$.loc$extension (Lscala/StringContext;Lscala/collection/immutable/Seq;)Ljava/lang/String;
               INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
               ATHROW
              L30
@@ -4677,13 +5103,31 @@ procedure COLOR-COLLABORATIONS:[]{OTPL}:
          FRAME CHOP 1
           ALOAD 8
           ASTORE 10
-          NEW org/nlogo/nvm/RuntimePrimitiveException
+          GETSTATIC org/nlogo/core/LocaleContext$package$LocaleContext$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$LocaleContext$;
+          GETSTATIC org/nlogo/core/LocaleContext$package$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$;
+          GETSTATIC scala/StringContext$.MODULE$ : Lscala/StringContext$;
+          GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
+          ICONST_4
+          ANEWARRAY java/lang/String
           DUP
-          ALOAD 1
-          ALOAD 0
-          GETSTATIC org/nlogo/core/I18N$.MODULE$ : Lorg/nlogo/core/I18N$;
-          INVOKEVIRTUAL org/nlogo/core/I18N$.errors ()Lorg/nlogo/core/I18N$BundleKind;
-          LDC "org.nlogo.prim.$common.expectedBooleanValue"
+          ICONST_0
+          LDC "|"
+          AASTORE
+          DUP
+          ICONST_1
+          LDC " expected a true/false value from "
+          AASTORE
+          DUP
+          ICONST_2
+          LDC ", but got\n                              |"
+          AASTORE
+          DUP
+          ICONST_3
+          LDC " instead."
+          AASTORE
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL scala/StringContext$.apply (Lscala/collection/immutable/Seq;)Lscala/StringContext;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$.LocaleContext (Lscala/StringContext;)Lscala/StringContext;
           GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
           ICONST_3
           ANEWARRAY java/lang/Object
@@ -4703,8 +5147,14 @@ procedure COLOR-COLLABORATIONS:[]{OTPL}:
           ALOAD 10
           INVOKEVIRTUAL org/nlogo/api/Dump$.logoObject (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
-          INVOKEVIRTUAL org/nlogo/core/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/immutable/Seq;)Ljava/lang/String;
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.genericWrapArray (Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$LocaleContext$.loc$extension (Lscala/StringContext;Lscala/collection/immutable/Seq;)Ljava/lang/String;
+          ASTORE 11
+          NEW org/nlogo/nvm/RuntimePrimitiveException
+          DUP
+          ALOAD 1
+          ALOAD 0
+          ALOAD 11
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L3
@@ -4734,10 +5184,24 @@ procedure COLOR-COLLABORATIONS:[]{OTPL}:
           DUP
           ALOAD 1
           ALOAD 0
-          GETSTATIC org/nlogo/core/I18N$.MODULE$ : Lorg/nlogo/core/I18N$;
-          INVOKEVIRTUAL org/nlogo/core/I18N$.errors ()Lorg/nlogo/core/I18N$BundleKind;
-          LDC "org.nlogo.prim.$common.onlyObserverCanAskAllTurtles"
-          INVOKEVIRTUAL org/nlogo/core/I18N$BundleKind.get (Ljava/lang/String;)Ljava/lang/String;
+          GETSTATIC org/nlogo/core/LocaleContext$package$LocaleContext$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$LocaleContext$;
+          GETSTATIC org/nlogo/core/LocaleContext$package$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$;
+          GETSTATIC scala/StringContext$.MODULE$ : Lscala/StringContext$;
+          GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
+          ICONST_1
+          ANEWARRAY java/lang/String
+          DUP
+          ICONST_0
+          LDC "Only the observer can ASK the set of all turtles."
+          AASTORE
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL scala/StringContext$.apply (Lscala/collection/immutable/Seq;)Lscala/StringContext;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$.LocaleContext (Lscala/StringContext;)Lscala/StringContext;
+          GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
+          ICONST_0
+          ANEWARRAY java/lang/Object
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.genericWrapArray (Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$LocaleContext$.loc$extension (Lscala/StringContext;Lscala/collection/immutable/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L8
@@ -4751,10 +5215,24 @@ procedure COLOR-COLLABORATIONS:[]{OTPL}:
           DUP
           ALOAD 1
           ALOAD 0
-          GETSTATIC org/nlogo/core/I18N$.MODULE$ : Lorg/nlogo/core/I18N$;
-          INVOKEVIRTUAL org/nlogo/core/I18N$.errors ()Lorg/nlogo/core/I18N$BundleKind;
-          LDC "org.nlogo.prim.$common.onlyObserverCanAskAllPatches"
-          INVOKEVIRTUAL org/nlogo/core/I18N$BundleKind.get (Ljava/lang/String;)Ljava/lang/String;
+          GETSTATIC org/nlogo/core/LocaleContext$package$LocaleContext$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$LocaleContext$;
+          GETSTATIC org/nlogo/core/LocaleContext$package$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$;
+          GETSTATIC scala/StringContext$.MODULE$ : Lscala/StringContext$;
+          GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
+          ICONST_1
+          ANEWARRAY java/lang/String
+          DUP
+          ICONST_0
+          LDC "Only the observer can ASK the set of all patches."
+          AASTORE
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL scala/StringContext$.apply (Lscala/collection/immutable/Seq;)Lscala/StringContext;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$.LocaleContext (Lscala/StringContext;)Lscala/StringContext;
+          GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
+          ICONST_0
+          ANEWARRAY java/lang/Object
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.genericWrapArray (Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$LocaleContext$.loc$extension (Lscala/StringContext;Lscala/collection/immutable/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L7
@@ -4898,9 +5376,23 @@ procedure COLOR-COLLABORATIONS:[]{OTPL}:
           DUP
           ALOAD 1
           ALOAD 0
-          GETSTATIC org/nlogo/core/I18N$.MODULE$ : Lorg/nlogo/core/I18N$;
-          INVOKEVIRTUAL org/nlogo/core/I18N$.errors ()Lorg/nlogo/core/I18N$BundleKind;
-          LDC "org.nlogo.$common.thatAgentIsDead"
+          GETSTATIC org/nlogo/core/LocaleContext$package$LocaleContext$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$LocaleContext$;
+          GETSTATIC org/nlogo/core/LocaleContext$package$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$;
+          GETSTATIC scala/StringContext$.MODULE$ : Lscala/StringContext$;
+          GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
+          ICONST_2
+          ANEWARRAY java/lang/String
+          DUP
+          ICONST_0
+          LDC "That "
+          AASTORE
+          DUP
+          ICONST_1
+          LDC " is dead."
+          AASTORE
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL scala/StringContext$.apply (Lscala/collection/immutable/Seq;)Lscala/StringContext;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$.LocaleContext (Lscala/StringContext;)Lscala/StringContext;
           GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
           ICONST_1
           ANEWARRAY java/lang/Object
@@ -4909,8 +5401,8 @@ procedure COLOR-COLLABORATIONS:[]{OTPL}:
           ALOAD 4
           INVOKEVIRTUAL org/nlogo/agent/Agent.classDisplayName ()Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
-          INVOKEVIRTUAL org/nlogo/core/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/immutable/Seq;)Ljava/lang/String;
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.genericWrapArray (Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$LocaleContext$.loc$extension (Lscala/StringContext;Lscala/collection/immutable/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L19
@@ -5055,9 +5547,23 @@ procedure COLOR-COLLABORATIONS:[]{OTPL}:
           DUP
           ALOAD 1
           ALOAD 0
-          GETSTATIC org/nlogo/core/I18N$.MODULE$ : Lorg/nlogo/core/I18N$;
-          INVOKEVIRTUAL org/nlogo/core/I18N$.errors ()Lorg/nlogo/core/I18N$BundleKind;
-          LDC "org.nlogo.$common.thatAgentIsDead"
+          GETSTATIC org/nlogo/core/LocaleContext$package$LocaleContext$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$LocaleContext$;
+          GETSTATIC org/nlogo/core/LocaleContext$package$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$;
+          GETSTATIC scala/StringContext$.MODULE$ : Lscala/StringContext$;
+          GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
+          ICONST_2
+          ANEWARRAY java/lang/String
+          DUP
+          ICONST_0
+          LDC "That "
+          AASTORE
+          DUP
+          ICONST_1
+          LDC " is dead."
+          AASTORE
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL scala/StringContext$.apply (Lscala/collection/immutable/Seq;)Lscala/StringContext;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$.LocaleContext (Lscala/StringContext;)Lscala/StringContext;
           GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
           ICONST_1
           ANEWARRAY java/lang/Object
@@ -5066,8 +5572,8 @@ procedure COLOR-COLLABORATIONS:[]{OTPL}:
           ALOAD 4
           INVOKEVIRTUAL org/nlogo/agent/Agent.classDisplayName ()Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
-          INVOKEVIRTUAL org/nlogo/core/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/immutable/Seq;)Ljava/lang/String;
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.genericWrapArray (Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$LocaleContext$.loc$extension (Lscala/StringContext;Lscala/collection/immutable/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L30
@@ -5327,9 +5833,23 @@ procedure COLOR-COLLABORATIONS:[]{OTPL}:
           DUP
           ALOAD 1
           ALOAD 0
-          GETSTATIC org/nlogo/core/I18N$.MODULE$ : Lorg/nlogo/core/I18N$;
-          INVOKEVIRTUAL org/nlogo/core/I18N$.errors ()Lorg/nlogo/core/I18N$BundleKind;
-          LDC "org.nlogo.$common.thatAgentIsDead"
+          GETSTATIC org/nlogo/core/LocaleContext$package$LocaleContext$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$LocaleContext$;
+          GETSTATIC org/nlogo/core/LocaleContext$package$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$;
+          GETSTATIC scala/StringContext$.MODULE$ : Lscala/StringContext$;
+          GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
+          ICONST_2
+          ANEWARRAY java/lang/String
+          DUP
+          ICONST_0
+          LDC "That "
+          AASTORE
+          DUP
+          ICONST_1
+          LDC " is dead."
+          AASTORE
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL scala/StringContext$.apply (Lscala/collection/immutable/Seq;)Lscala/StringContext;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$.LocaleContext (Lscala/StringContext;)Lscala/StringContext;
           GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
           ICONST_1
           ANEWARRAY java/lang/Object
@@ -5338,8 +5858,8 @@ procedure COLOR-COLLABORATIONS:[]{OTPL}:
           ALOAD 4
           INVOKEVIRTUAL org/nlogo/agent/Agent.classDisplayName ()Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
-          INVOKEVIRTUAL org/nlogo/core/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/immutable/Seq;)Ljava/lang/String;
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.genericWrapArray (Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$LocaleContext$.loc$extension (Lscala/StringContext;Lscala/collection/immutable/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L19
@@ -5484,9 +6004,23 @@ procedure COLOR-COLLABORATIONS:[]{OTPL}:
           DUP
           ALOAD 1
           ALOAD 0
-          GETSTATIC org/nlogo/core/I18N$.MODULE$ : Lorg/nlogo/core/I18N$;
-          INVOKEVIRTUAL org/nlogo/core/I18N$.errors ()Lorg/nlogo/core/I18N$BundleKind;
-          LDC "org.nlogo.$common.thatAgentIsDead"
+          GETSTATIC org/nlogo/core/LocaleContext$package$LocaleContext$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$LocaleContext$;
+          GETSTATIC org/nlogo/core/LocaleContext$package$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$;
+          GETSTATIC scala/StringContext$.MODULE$ : Lscala/StringContext$;
+          GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
+          ICONST_2
+          ANEWARRAY java/lang/String
+          DUP
+          ICONST_0
+          LDC "That "
+          AASTORE
+          DUP
+          ICONST_1
+          LDC " is dead."
+          AASTORE
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL scala/StringContext$.apply (Lscala/collection/immutable/Seq;)Lscala/StringContext;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$.LocaleContext (Lscala/StringContext;)Lscala/StringContext;
           GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
           ICONST_1
           ANEWARRAY java/lang/Object
@@ -5495,8 +6029,8 @@ procedure COLOR-COLLABORATIONS:[]{OTPL}:
           ALOAD 4
           INVOKEVIRTUAL org/nlogo/agent/Agent.classDisplayName ()Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
-          INVOKEVIRTUAL org/nlogo/core/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/immutable/Seq;)Ljava/lang/String;
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.genericWrapArray (Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$LocaleContext$.loc$extension (Lscala/StringContext;Lscala/collection/immutable/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L30
@@ -6017,9 +6551,10 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
             DUP
             ALOAD 1
             ALOAD 0
-            INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
-            LDC "org.nlogo.prim.etc.$common.tickCounterNotStarted"
-            INVOKEINTERFACE org/nlogo/core/I18NJava.get (Ljava/lang/String;)Ljava/lang/String; (itf)
+            LDC "The tick counter has not been started yet. Use RESET-TICKS."
+            ICONST_0
+            ANEWARRAY java/lang/String
+            INVOKESTATIC org/nlogo/core/LocaleContextJ.loc (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
             INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
             ATHROW
            L1
@@ -6212,13 +6747,31 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
          FRAME FULL [org/nlogo/prim/_asm_proceduredoplot_setprocedurevariable_5 org/nlogo/nvm/Context org/nlogo/agent/TreeAgentSet org/nlogo/nvm/Reporter org/nlogo/nvm/Context I org/nlogo/agent/AgentIterator org/nlogo/agent/Agent java/lang/Object] [D]
           ALOAD 8
           ASTORE 10
-          NEW org/nlogo/nvm/RuntimePrimitiveException
+          GETSTATIC org/nlogo/core/LocaleContext$package$LocaleContext$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$LocaleContext$;
+          GETSTATIC org/nlogo/core/LocaleContext$package$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$;
+          GETSTATIC scala/StringContext$.MODULE$ : Lscala/StringContext$;
+          GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
+          ICONST_4
+          ANEWARRAY java/lang/String
           DUP
-          ALOAD 1
-          ALOAD 0
-          GETSTATIC org/nlogo/core/I18N$.MODULE$ : Lorg/nlogo/core/I18N$;
-          INVOKEVIRTUAL org/nlogo/core/I18N$.errors ()Lorg/nlogo/core/I18N$BundleKind;
-          LDC "org.nlogo.prim.$common.expectedBooleanValue"
+          ICONST_0
+          LDC "|"
+          AASTORE
+          DUP
+          ICONST_1
+          LDC " expected a true/false value from "
+          AASTORE
+          DUP
+          ICONST_2
+          LDC ", but got\n                              |"
+          AASTORE
+          DUP
+          ICONST_3
+          LDC " instead."
+          AASTORE
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL scala/StringContext$.apply (Lscala/collection/immutable/Seq;)Lscala/StringContext;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$.LocaleContext (Lscala/StringContext;)Lscala/StringContext;
           GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
           ICONST_3
           ANEWARRAY java/lang/Object
@@ -6238,8 +6791,14 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
           ALOAD 10
           INVOKEVIRTUAL org/nlogo/api/Dump$.logoObject (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
-          INVOKEVIRTUAL org/nlogo/core/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/immutable/Seq;)Ljava/lang/String;
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.genericWrapArray (Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$LocaleContext$.loc$extension (Lscala/StringContext;Lscala/collection/immutable/Seq;)Ljava/lang/String;
+          ASTORE 11
+          NEW org/nlogo/nvm/RuntimePrimitiveException
+          DUP
+          ALOAD 1
+          ALOAD 0
+          ALOAD 11
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L7
@@ -6287,9 +6846,10 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
             DUP
             ALOAD 1
             ALOAD 0
-            INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
-            LDC "org.nlogo.prim.etc.$common.tickCounterNotStarted"
-            INVOKEINTERFACE org/nlogo/core/I18NJava.get (Ljava/lang/String;)Ljava/lang/String; (itf)
+            LDC "The tick counter has not been started yet. Use RESET-TICKS."
+            ICONST_0
+            ANEWARRAY java/lang/String
+            INVOKESTATIC org/nlogo/core/LocaleContextJ.loc (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
             INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
             ATHROW
            L1
@@ -6335,9 +6895,10 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
             DUP
             ALOAD 1
             ALOAD 0
-            INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
-            LDC "org.nlogo.prim.etc.$common.tickCounterNotStarted"
-            INVOKEINTERFACE org/nlogo/core/I18NJava.get (Ljava/lang/String;)Ljava/lang/String; (itf)
+            LDC "The tick counter has not been started yet. Use RESET-TICKS."
+            ICONST_0
+            ANEWARRAY java/lang/String
+            INVOKESTATIC org/nlogo/core/LocaleContextJ.loc (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
             INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
             ATHROW
            L1
@@ -6530,13 +7091,31 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
          FRAME FULL [org/nlogo/prim/_asm_proceduredoplot_setprocedurevariable_12 org/nlogo/nvm/Context org/nlogo/agent/TreeAgentSet org/nlogo/nvm/Reporter org/nlogo/nvm/Context I org/nlogo/agent/AgentIterator org/nlogo/agent/Agent java/lang/Object] [D]
           ALOAD 8
           ASTORE 10
-          NEW org/nlogo/nvm/RuntimePrimitiveException
+          GETSTATIC org/nlogo/core/LocaleContext$package$LocaleContext$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$LocaleContext$;
+          GETSTATIC org/nlogo/core/LocaleContext$package$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$;
+          GETSTATIC scala/StringContext$.MODULE$ : Lscala/StringContext$;
+          GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
+          ICONST_4
+          ANEWARRAY java/lang/String
           DUP
-          ALOAD 1
-          ALOAD 0
-          GETSTATIC org/nlogo/core/I18N$.MODULE$ : Lorg/nlogo/core/I18N$;
-          INVOKEVIRTUAL org/nlogo/core/I18N$.errors ()Lorg/nlogo/core/I18N$BundleKind;
-          LDC "org.nlogo.prim.$common.expectedBooleanValue"
+          ICONST_0
+          LDC "|"
+          AASTORE
+          DUP
+          ICONST_1
+          LDC " expected a true/false value from "
+          AASTORE
+          DUP
+          ICONST_2
+          LDC ", but got\n                              |"
+          AASTORE
+          DUP
+          ICONST_3
+          LDC " instead."
+          AASTORE
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL scala/StringContext$.apply (Lscala/collection/immutable/Seq;)Lscala/StringContext;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$.LocaleContext (Lscala/StringContext;)Lscala/StringContext;
           GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
           ICONST_3
           ANEWARRAY java/lang/Object
@@ -6556,8 +7135,14 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
           ALOAD 10
           INVOKEVIRTUAL org/nlogo/api/Dump$.logoObject (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
-          INVOKEVIRTUAL org/nlogo/core/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/immutable/Seq;)Ljava/lang/String;
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.genericWrapArray (Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$LocaleContext$.loc$extension (Lscala/StringContext;Lscala/collection/immutable/Seq;)Ljava/lang/String;
+          ASTORE 11
+          NEW org/nlogo/nvm/RuntimePrimitiveException
+          DUP
+          ALOAD 1
+          ALOAD 0
+          ALOAD 11
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L7
@@ -6605,9 +7190,10 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
             DUP
             ALOAD 1
             ALOAD 0
-            INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
-            LDC "org.nlogo.prim.etc.$common.tickCounterNotStarted"
-            INVOKEINTERFACE org/nlogo/core/I18NJava.get (Ljava/lang/String;)Ljava/lang/String; (itf)
+            LDC "The tick counter has not been started yet. Use RESET-TICKS."
+            ICONST_0
+            ANEWARRAY java/lang/String
+            INVOKESTATIC org/nlogo/core/LocaleContextJ.loc (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
             INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
             ATHROW
            L1
@@ -6653,9 +7239,10 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
             DUP
             ALOAD 1
             ALOAD 0
-            INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
-            LDC "org.nlogo.prim.etc.$common.tickCounterNotStarted"
-            INVOKEINTERFACE org/nlogo/core/I18NJava.get (Ljava/lang/String;)Ljava/lang/String; (itf)
+            LDC "The tick counter has not been started yet. Use RESET-TICKS."
+            ICONST_0
+            ANEWARRAY java/lang/String
+            INVOKESTATIC org/nlogo/core/LocaleContextJ.loc (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
             INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
             ATHROW
            L1
@@ -6848,13 +7435,31 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
          FRAME FULL [org/nlogo/prim/_asm_proceduredoplot_setprocedurevariable_19 org/nlogo/nvm/Context org/nlogo/agent/TreeAgentSet org/nlogo/nvm/Reporter org/nlogo/nvm/Context I org/nlogo/agent/AgentIterator org/nlogo/agent/Agent java/lang/Object] [D]
           ALOAD 8
           ASTORE 10
-          NEW org/nlogo/nvm/RuntimePrimitiveException
+          GETSTATIC org/nlogo/core/LocaleContext$package$LocaleContext$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$LocaleContext$;
+          GETSTATIC org/nlogo/core/LocaleContext$package$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$;
+          GETSTATIC scala/StringContext$.MODULE$ : Lscala/StringContext$;
+          GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
+          ICONST_4
+          ANEWARRAY java/lang/String
           DUP
-          ALOAD 1
-          ALOAD 0
-          GETSTATIC org/nlogo/core/I18N$.MODULE$ : Lorg/nlogo/core/I18N$;
-          INVOKEVIRTUAL org/nlogo/core/I18N$.errors ()Lorg/nlogo/core/I18N$BundleKind;
-          LDC "org.nlogo.prim.$common.expectedBooleanValue"
+          ICONST_0
+          LDC "|"
+          AASTORE
+          DUP
+          ICONST_1
+          LDC " expected a true/false value from "
+          AASTORE
+          DUP
+          ICONST_2
+          LDC ", but got\n                              |"
+          AASTORE
+          DUP
+          ICONST_3
+          LDC " instead."
+          AASTORE
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL scala/StringContext$.apply (Lscala/collection/immutable/Seq;)Lscala/StringContext;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$.LocaleContext (Lscala/StringContext;)Lscala/StringContext;
           GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
           ICONST_3
           ANEWARRAY java/lang/Object
@@ -6874,8 +7479,14 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
           ALOAD 10
           INVOKEVIRTUAL org/nlogo/api/Dump$.logoObject (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
-          INVOKEVIRTUAL org/nlogo/core/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/immutable/Seq;)Ljava/lang/String;
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.genericWrapArray (Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$LocaleContext$.loc$extension (Lscala/StringContext;Lscala/collection/immutable/Seq;)Ljava/lang/String;
+          ASTORE 11
+          NEW org/nlogo/nvm/RuntimePrimitiveException
+          DUP
+          ALOAD 1
+          ALOAD 0
+          ALOAD 11
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L7
@@ -6923,9 +7534,10 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
             DUP
             ALOAD 1
             ALOAD 0
-            INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
-            LDC "org.nlogo.prim.etc.$common.tickCounterNotStarted"
-            INVOKEINTERFACE org/nlogo/core/I18NJava.get (Ljava/lang/String;)Ljava/lang/String; (itf)
+            LDC "The tick counter has not been started yet. Use RESET-TICKS."
+            ICONST_0
+            ANEWARRAY java/lang/String
+            INVOKESTATIC org/nlogo/core/LocaleContextJ.loc (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
             INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
             ATHROW
            L1
@@ -6971,9 +7583,10 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
             DUP
             ALOAD 1
             ALOAD 0
-            INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
-            LDC "org.nlogo.prim.etc.$common.tickCounterNotStarted"
-            INVOKEINTERFACE org/nlogo/core/I18NJava.get (Ljava/lang/String;)Ljava/lang/String; (itf)
+            LDC "The tick counter has not been started yet. Use RESET-TICKS."
+            ICONST_0
+            ANEWARRAY java/lang/String
+            INVOKESTATIC org/nlogo/core/LocaleContextJ.loc (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
             INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
             ATHROW
            L1
@@ -7166,13 +7779,31 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
          FRAME FULL [org/nlogo/prim/_asm_proceduredoplot_setprocedurevariable_26 org/nlogo/nvm/Context org/nlogo/agent/TreeAgentSet org/nlogo/nvm/Reporter org/nlogo/nvm/Context I org/nlogo/agent/AgentIterator org/nlogo/agent/Agent java/lang/Object] [D]
           ALOAD 8
           ASTORE 10
-          NEW org/nlogo/nvm/RuntimePrimitiveException
+          GETSTATIC org/nlogo/core/LocaleContext$package$LocaleContext$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$LocaleContext$;
+          GETSTATIC org/nlogo/core/LocaleContext$package$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$;
+          GETSTATIC scala/StringContext$.MODULE$ : Lscala/StringContext$;
+          GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
+          ICONST_4
+          ANEWARRAY java/lang/String
           DUP
-          ALOAD 1
-          ALOAD 0
-          GETSTATIC org/nlogo/core/I18N$.MODULE$ : Lorg/nlogo/core/I18N$;
-          INVOKEVIRTUAL org/nlogo/core/I18N$.errors ()Lorg/nlogo/core/I18N$BundleKind;
-          LDC "org.nlogo.prim.$common.expectedBooleanValue"
+          ICONST_0
+          LDC "|"
+          AASTORE
+          DUP
+          ICONST_1
+          LDC " expected a true/false value from "
+          AASTORE
+          DUP
+          ICONST_2
+          LDC ", but got\n                              |"
+          AASTORE
+          DUP
+          ICONST_3
+          LDC " instead."
+          AASTORE
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL scala/StringContext$.apply (Lscala/collection/immutable/Seq;)Lscala/StringContext;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$.LocaleContext (Lscala/StringContext;)Lscala/StringContext;
           GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
           ICONST_3
           ANEWARRAY java/lang/Object
@@ -7192,8 +7823,14 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
           ALOAD 10
           INVOKEVIRTUAL org/nlogo/api/Dump$.logoObject (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
-          INVOKEVIRTUAL org/nlogo/core/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/immutable/Seq;)Ljava/lang/String;
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.genericWrapArray (Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$LocaleContext$.loc$extension (Lscala/StringContext;Lscala/collection/immutable/Seq;)Ljava/lang/String;
+          ASTORE 11
+          NEW org/nlogo/nvm/RuntimePrimitiveException
+          DUP
+          ALOAD 1
+          ALOAD 0
+          ALOAD 11
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L7
@@ -7241,9 +7878,10 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
             DUP
             ALOAD 1
             ALOAD 0
-            INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
-            LDC "org.nlogo.prim.etc.$common.tickCounterNotStarted"
-            INVOKEINTERFACE org/nlogo/core/I18NJava.get (Ljava/lang/String;)Ljava/lang/String; (itf)
+            LDC "The tick counter has not been started yet. Use RESET-TICKS."
+            ICONST_0
+            ANEWARRAY java/lang/String
+            INVOKESTATIC org/nlogo/core/LocaleContextJ.loc (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
             INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
             ATHROW
            L1
@@ -7308,9 +7946,10 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
             DUP
             ALOAD 1
             ALOAD 0
-            INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
-            LDC "org.nlogo.prim.etc.$common.tickCounterNotStarted"
-            INVOKEINTERFACE org/nlogo/core/I18NJava.get (Ljava/lang/String;)Ljava/lang/String; (itf)
+            LDC "The tick counter has not been started yet. Use RESET-TICKS."
+            ICONST_0
+            ANEWARRAY java/lang/String
+            INVOKESTATIC org/nlogo/core/LocaleContextJ.loc (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
             INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
             ATHROW
            L1
@@ -7379,9 +8018,10 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
             DUP
             ALOAD 1
             ALOAD 0
-            INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
-            LDC "org.nlogo.prim.etc.$common.divByZero"
-            INVOKEINTERFACE org/nlogo/core/I18NJava.get (Ljava/lang/String;)Ljava/lang/String; (itf)
+            LDC "Division by zero."
+            ICONST_0
+            ANEWARRAY java/lang/String
+            INVOKESTATIC org/nlogo/core/LocaleContextJ.loc (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
             INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
             ATHROW
            L7
@@ -7418,9 +8058,10 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
             DUP
             ALOAD 1
             ALOAD 0
-            INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
-            LDC "org.nlogo.prim.etc.$common.tickCounterNotStarted"
-            INVOKEINTERFACE org/nlogo/core/I18NJava.get (Ljava/lang/String;)Ljava/lang/String; (itf)
+            LDC "The tick counter has not been started yet. Use RESET-TICKS."
+            ICONST_0
+            ANEWARRAY java/lang/String
+            INVOKESTATIC org/nlogo/core/LocaleContextJ.loc (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
             INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
             ATHROW
            L1
@@ -7497,22 +8138,19 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
            FRAME CHOP 1
             ILOAD 5
             IFNE L8
-            INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
-            LDC "org.nlogo.prim.etc._mean.cantFindMeanOfListWithNoNumbers"
+            NEW org/nlogo/nvm/RuntimePrimitiveException
+            DUP
+            ALOAD 1
+            ALOAD 0
+            LDC "Can't find the mean of a list with no numbers: {}."
             ICONST_1
-            ANEWARRAY java/lang/Object
+            ANEWARRAY java/lang/String
             DUP
             ICONST_0
             ALOAD 2
             INVOKESTATIC org/nlogo/api/Dump.logoObject (Ljava/lang/Object;)Ljava/lang/String;
             AASTORE
-            INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String; (itf)
-            ASTORE 6
-            NEW org/nlogo/nvm/RuntimePrimitiveException
-            DUP
-            ALOAD 1
-            ALOAD 0
-            ALOAD 6
+            INVOKESTATIC org/nlogo/core/LocaleContextJ.loc (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
             INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
             ATHROW
            L8
@@ -7653,10 +8291,24 @@ procedure FIND-ALL-COMPONENTS:[START]{OTPL}:
           DUP
           ALOAD 1
           ALOAD 0
-          GETSTATIC org/nlogo/core/I18N$.MODULE$ : Lorg/nlogo/core/I18N$;
-          INVOKEVIRTUAL org/nlogo/core/I18N$.errors ()Lorg/nlogo/core/I18N$BundleKind;
-          LDC "org.nlogo.prim.$common.onlyObserverCanAskAllTurtles"
-          INVOKEVIRTUAL org/nlogo/core/I18N$BundleKind.get (Ljava/lang/String;)Ljava/lang/String;
+          GETSTATIC org/nlogo/core/LocaleContext$package$LocaleContext$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$LocaleContext$;
+          GETSTATIC org/nlogo/core/LocaleContext$package$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$;
+          GETSTATIC scala/StringContext$.MODULE$ : Lscala/StringContext$;
+          GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
+          ICONST_1
+          ANEWARRAY java/lang/String
+          DUP
+          ICONST_0
+          LDC "Only the observer can ASK the set of all turtles."
+          AASTORE
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL scala/StringContext$.apply (Lscala/collection/immutable/Seq;)Lscala/StringContext;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$.LocaleContext (Lscala/StringContext;)Lscala/StringContext;
+          GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
+          ICONST_0
+          ANEWARRAY java/lang/Object
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.genericWrapArray (Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$LocaleContext$.loc$extension (Lscala/StringContext;Lscala/collection/immutable/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L3
@@ -7670,10 +8322,24 @@ procedure FIND-ALL-COMPONENTS:[START]{OTPL}:
           DUP
           ALOAD 1
           ALOAD 0
-          GETSTATIC org/nlogo/core/I18N$.MODULE$ : Lorg/nlogo/core/I18N$;
-          INVOKEVIRTUAL org/nlogo/core/I18N$.errors ()Lorg/nlogo/core/I18N$BundleKind;
-          LDC "org.nlogo.prim.$common.onlyObserverCanAskAllPatches"
-          INVOKEVIRTUAL org/nlogo/core/I18N$BundleKind.get (Ljava/lang/String;)Ljava/lang/String;
+          GETSTATIC org/nlogo/core/LocaleContext$package$LocaleContext$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$LocaleContext$;
+          GETSTATIC org/nlogo/core/LocaleContext$package$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$;
+          GETSTATIC scala/StringContext$.MODULE$ : Lscala/StringContext$;
+          GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
+          ICONST_1
+          ANEWARRAY java/lang/String
+          DUP
+          ICONST_0
+          LDC "Only the observer can ASK the set of all patches."
+          AASTORE
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL scala/StringContext$.apply (Lscala/collection/immutable/Seq;)Lscala/StringContext;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$.LocaleContext (Lscala/StringContext;)Lscala/StringContext;
+          GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
+          ICONST_0
+          ANEWARRAY java/lang/Object
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.genericWrapArray (Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$LocaleContext$.loc$extension (Lscala/StringContext;Lscala/collection/immutable/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L2
@@ -7874,13 +8540,27 @@ procedure FIND-ALL-COMPONENTS:[START]{OTPL}:
          FRAME CHOP 1
           ALOAD 7
           ASTORE 9
-          NEW org/nlogo/nvm/RuntimePrimitiveException
+          GETSTATIC org/nlogo/core/LocaleContext$package$LocaleContext$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$LocaleContext$;
+          GETSTATIC org/nlogo/core/LocaleContext$package$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$;
+          GETSTATIC scala/StringContext$.MODULE$ : Lscala/StringContext$;
+          GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
+          ICONST_3
+          ANEWARRAY java/lang/String
           DUP
-          ALOAD 1
-          ALOAD 0
-          GETSTATIC org/nlogo/core/I18N$.MODULE$ : Lorg/nlogo/core/I18N$;
-          INVOKEVIRTUAL org/nlogo/core/I18N$.errors ()Lorg/nlogo/core/I18N$BundleKind;
-          LDC "org.nlogo.prim.$common.withExpectedBooleanValue"
+          ICONST_0
+          LDC "|WITH expected a true/false value from "
+          AASTORE
+          DUP
+          ICONST_1
+          LDC ",\n                              |but got "
+          AASTORE
+          DUP
+          ICONST_2
+          LDC " instead."
+          AASTORE
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL scala/StringContext$.apply (Lscala/collection/immutable/Seq;)Lscala/StringContext;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$.LocaleContext (Lscala/StringContext;)Lscala/StringContext;
           GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
           ICONST_2
           ANEWARRAY java/lang/Object
@@ -7896,8 +8576,14 @@ procedure FIND-ALL-COMPONENTS:[START]{OTPL}:
           ALOAD 9
           INVOKEVIRTUAL org/nlogo/api/Dump$.logoObject (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
-          INVOKEVIRTUAL org/nlogo/core/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/immutable/Seq;)Ljava/lang/String;
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.genericWrapArray (Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$LocaleContext$.loc$extension (Lscala/StringContext;Lscala/collection/immutable/Seq;)Ljava/lang/String;
+          ASTORE 10
+          NEW org/nlogo/nvm/RuntimePrimitiveException
+          DUP
+          ALOAD 1
+          ALOAD 0
+          ALOAD 10
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L3
@@ -7979,15 +8665,14 @@ procedure FIND-ALL-COMPONENTS:[START]{OTPL}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
-          LDC "org.nlogo.prim.etc._stop.notAllowedInsideToReport"
+          LDC "{} is not allowed inside TO-REPORT."
           ICONST_1
-          ANEWARRAY java/lang/Object
+          ANEWARRAY java/lang/String
           DUP
           ICONST_0
           LDC "STOP"
           AASTORE
-          INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String; (itf)
+          INVOKESTATIC org/nlogo/core/LocaleContextJ.loc (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L2
@@ -8073,10 +8758,24 @@ procedure FIND-ALL-COMPONENTS:[START]{OTPL}:
           DUP
           ALOAD 1
           ALOAD 0
-          GETSTATIC org/nlogo/core/I18N$.MODULE$ : Lorg/nlogo/core/I18N$;
-          INVOKEVIRTUAL org/nlogo/core/I18N$.errors ()Lorg/nlogo/core/I18N$BundleKind;
-          LDC "org.nlogo.prim.$common.onlyObserverCanAskAllTurtles"
-          INVOKEVIRTUAL org/nlogo/core/I18N$BundleKind.get (Ljava/lang/String;)Ljava/lang/String;
+          GETSTATIC org/nlogo/core/LocaleContext$package$LocaleContext$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$LocaleContext$;
+          GETSTATIC org/nlogo/core/LocaleContext$package$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$;
+          GETSTATIC scala/StringContext$.MODULE$ : Lscala/StringContext$;
+          GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
+          ICONST_1
+          ANEWARRAY java/lang/String
+          DUP
+          ICONST_0
+          LDC "Only the observer can ASK the set of all turtles."
+          AASTORE
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL scala/StringContext$.apply (Lscala/collection/immutable/Seq;)Lscala/StringContext;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$.LocaleContext (Lscala/StringContext;)Lscala/StringContext;
+          GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
+          ICONST_0
+          ANEWARRAY java/lang/Object
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.genericWrapArray (Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$LocaleContext$.loc$extension (Lscala/StringContext;Lscala/collection/immutable/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L4
@@ -8090,10 +8789,24 @@ procedure FIND-ALL-COMPONENTS:[START]{OTPL}:
           DUP
           ALOAD 1
           ALOAD 0
-          GETSTATIC org/nlogo/core/I18N$.MODULE$ : Lorg/nlogo/core/I18N$;
-          INVOKEVIRTUAL org/nlogo/core/I18N$.errors ()Lorg/nlogo/core/I18N$BundleKind;
-          LDC "org.nlogo.prim.$common.onlyObserverCanAskAllPatches"
-          INVOKEVIRTUAL org/nlogo/core/I18N$BundleKind.get (Ljava/lang/String;)Ljava/lang/String;
+          GETSTATIC org/nlogo/core/LocaleContext$package$LocaleContext$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$LocaleContext$;
+          GETSTATIC org/nlogo/core/LocaleContext$package$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$;
+          GETSTATIC scala/StringContext$.MODULE$ : Lscala/StringContext$;
+          GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
+          ICONST_1
+          ANEWARRAY java/lang/String
+          DUP
+          ICONST_0
+          LDC "Only the observer can ASK the set of all patches."
+          AASTORE
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL scala/StringContext$.apply (Lscala/collection/immutable/Seq;)Lscala/StringContext;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$.LocaleContext (Lscala/StringContext;)Lscala/StringContext;
+          GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
+          ICONST_0
+          ANEWARRAY java/lang/Object
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.genericWrapArray (Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$LocaleContext$.loc$extension (Lscala/StringContext;Lscala/collection/immutable/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L3
@@ -8117,9 +8830,23 @@ procedure FIND-ALL-COMPONENTS:[START]{OTPL}:
           DUP
           ALOAD 1
           ALOAD 0
-          GETSTATIC org/nlogo/core/I18N$.MODULE$ : Lorg/nlogo/core/I18N$;
-          INVOKEVIRTUAL org/nlogo/core/I18N$.errors ()Lorg/nlogo/core/I18N$BundleKind;
-          LDC "org.nlogo.$common.thatAgentIsDead"
+          GETSTATIC org/nlogo/core/LocaleContext$package$LocaleContext$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$LocaleContext$;
+          GETSTATIC org/nlogo/core/LocaleContext$package$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$;
+          GETSTATIC scala/StringContext$.MODULE$ : Lscala/StringContext$;
+          GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
+          ICONST_2
+          ANEWARRAY java/lang/String
+          DUP
+          ICONST_0
+          LDC "That "
+          AASTORE
+          DUP
+          ICONST_1
+          LDC " is dead."
+          AASTORE
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL scala/StringContext$.apply (Lscala/collection/immutable/Seq;)Lscala/StringContext;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$.LocaleContext (Lscala/StringContext;)Lscala/StringContext;
           GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
           ICONST_1
           ANEWARRAY java/lang/Object
@@ -8128,8 +8855,8 @@ procedure FIND-ALL-COMPONENTS:[START]{OTPL}:
           ALOAD 6
           INVOKEVIRTUAL org/nlogo/agent/Agent.classDisplayName ()Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
-          INVOKEVIRTUAL org/nlogo/core/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/immutable/Seq;)Ljava/lang/String;
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.genericWrapArray (Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$LocaleContext$.loc$extension (Lscala/StringContext;Lscala/collection/immutable/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L7
@@ -8298,13 +9025,27 @@ procedure FIND-ALL-COMPONENTS:[START]{OTPL}:
           GOTO L6
          L10
          FRAME CHOP 2
-          NEW org/nlogo/nvm/RuntimePrimitiveException
+          GETSTATIC org/nlogo/core/LocaleContext$package$LocaleContext$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$LocaleContext$;
+          GETSTATIC org/nlogo/core/LocaleContext$package$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$;
+          GETSTATIC scala/StringContext$.MODULE$ : Lscala/StringContext$;
+          GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
+          ICONST_3
+          ANEWARRAY java/lang/String
           DUP
-          ALOAD 1
-          ALOAD 0
-          GETSTATIC org/nlogo/core/I18N$.MODULE$ : Lorg/nlogo/core/I18N$;
-          INVOKEVIRTUAL org/nlogo/core/I18N$.errors ()Lorg/nlogo/core/I18N$BundleKind;
-          LDC "org.nlogo.prim._greaterthan.cannotCompareParameters"
+          ICONST_0
+          LDC "\"|The > operator can only be used on two numbers, two strings, or two agents of the same type,\n                         |but not on "
+          AASTORE
+          DUP
+          ICONST_1
+          LDC " and "
+          AASTORE
+          DUP
+          ICONST_2
+          LDC ".\""
+          AASTORE
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL scala/StringContext$.apply (Lscala/collection/immutable/Seq;)Lscala/StringContext;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$.LocaleContext (Lscala/StringContext;)Lscala/StringContext;
           GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
           ICONST_2
           ANEWARRAY java/lang/Object
@@ -8320,8 +9061,14 @@ procedure FIND-ALL-COMPONENTS:[START]{OTPL}:
           ALOAD 3
           INVOKEVIRTUAL org/nlogo/api/TypeNames$.aName (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
-          INVOKEVIRTUAL org/nlogo/core/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/immutable/Seq;)Ljava/lang/String;
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.genericWrapArray (Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$LocaleContext$.loc$extension (Lscala/StringContext;Lscala/collection/immutable/Seq;)Ljava/lang/String;
+          ASTORE 6
+          NEW org/nlogo/nvm/RuntimePrimitiveException
+          DUP
+          ALOAD 1
+          ALOAD 0
+          ALOAD 6
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L6
@@ -8556,15 +9303,14 @@ procedure EXPLORE:[]{-T--}:
           DUP
           ALOAD 1
           ALOAD 0
-          INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
-          LDC "org.nlogo.prim.etc._stop.notAllowedInsideToReport"
+          LDC "{} is not allowed inside TO-REPORT."
           ICONST_1
-          ANEWARRAY java/lang/Object
+          ANEWARRAY java/lang/String
           DUP
           ICONST_0
           LDC "STOP"
           AASTORE
-          INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String; (itf)
+          INVOKESTATIC org/nlogo/core/LocaleContextJ.loc (Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L2
@@ -8750,10 +9496,24 @@ procedure EXPLORE:[]{-T--}:
           DUP
           ALOAD 1
           ALOAD 0
-          GETSTATIC org/nlogo/core/I18N$.MODULE$ : Lorg/nlogo/core/I18N$;
-          INVOKEVIRTUAL org/nlogo/core/I18N$.errors ()Lorg/nlogo/core/I18N$BundleKind;
-          LDC "org.nlogo.prim.$common.onlyObserverCanAskAllTurtles"
-          INVOKEVIRTUAL org/nlogo/core/I18N$BundleKind.get (Ljava/lang/String;)Ljava/lang/String;
+          GETSTATIC org/nlogo/core/LocaleContext$package$LocaleContext$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$LocaleContext$;
+          GETSTATIC org/nlogo/core/LocaleContext$package$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$;
+          GETSTATIC scala/StringContext$.MODULE$ : Lscala/StringContext$;
+          GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
+          ICONST_1
+          ANEWARRAY java/lang/String
+          DUP
+          ICONST_0
+          LDC "Only the observer can ASK the set of all turtles."
+          AASTORE
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL scala/StringContext$.apply (Lscala/collection/immutable/Seq;)Lscala/StringContext;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$.LocaleContext (Lscala/StringContext;)Lscala/StringContext;
+          GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
+          ICONST_0
+          ANEWARRAY java/lang/Object
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.genericWrapArray (Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$LocaleContext$.loc$extension (Lscala/StringContext;Lscala/collection/immutable/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L5
@@ -8767,10 +9527,24 @@ procedure EXPLORE:[]{-T--}:
           DUP
           ALOAD 1
           ALOAD 0
-          GETSTATIC org/nlogo/core/I18N$.MODULE$ : Lorg/nlogo/core/I18N$;
-          INVOKEVIRTUAL org/nlogo/core/I18N$.errors ()Lorg/nlogo/core/I18N$BundleKind;
-          LDC "org.nlogo.prim.$common.onlyObserverCanAskAllPatches"
-          INVOKEVIRTUAL org/nlogo/core/I18N$BundleKind.get (Ljava/lang/String;)Ljava/lang/String;
+          GETSTATIC org/nlogo/core/LocaleContext$package$LocaleContext$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$LocaleContext$;
+          GETSTATIC org/nlogo/core/LocaleContext$package$.MODULE$ : Lorg/nlogo/core/LocaleContext$package$;
+          GETSTATIC scala/StringContext$.MODULE$ : Lscala/StringContext$;
+          GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
+          ICONST_1
+          ANEWARRAY java/lang/String
+          DUP
+          ICONST_0
+          LDC "Only the observer can ASK the set of all patches."
+          AASTORE
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL scala/StringContext$.apply (Lscala/collection/immutable/Seq;)Lscala/StringContext;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$.LocaleContext (Lscala/StringContext;)Lscala/StringContext;
+          GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
+          ICONST_0
+          ANEWARRAY java/lang/Object
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.genericWrapArray (Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL org/nlogo/core/LocaleContext$package$LocaleContext$.loc$extension (Lscala/StringContext;Lscala/collection/immutable/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L4

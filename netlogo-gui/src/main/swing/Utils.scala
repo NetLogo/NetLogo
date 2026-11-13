@@ -8,7 +8,7 @@ import java.awt.geom.AffineTransform
 import java.awt.image.BufferedImage
 import javax.swing.{ Action, Icon, ImageIcon, InputMap, JComponent, JDialog, JWindow, KeyStroke }
 
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 
 object Utils {
   private var uiScale = 1.0
@@ -34,7 +34,7 @@ object Utils {
     Font.createFont(Font.TRUETYPE_FONT, getClass.getResourceAsStream(path))
 
   def alert(message: String, continueText: String): Unit = {
-    new OptionPane(null, I18N.gui.get("common.messages.notice"), message, Seq(continueText), OptionPane.Icons.info)
+    new OptionPane(null, loc"Notice", message, Seq(continueText), OptionPane.Icons.info)
   }
 
   def alert(title: String, message: String, details: String, continueText: String): Unit = {

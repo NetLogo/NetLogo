@@ -5,7 +5,7 @@ import java.io.File
 
 import org.nlogo.api.{ Argument, Context, DefaultClassManager, ExtensionException, ExternalResourceManager,
                        PrimitiveManager, Reporter }
-import org.nlogo.core.{ ExternalResource, I18N, LogoList, Syntax }
+import org.nlogo.core.{ ExternalResource, LocaleContext, LogoList, Syntax }
 import org.nlogo.workspace.AbstractWorkspace
 
 import scala.io.Source
@@ -26,12 +26,7 @@ object Get extends Reporter {
       case Some(resource) =>
         resource.data
       case None =>
-        if (context.workspace.workspaceContext.appGUI) {
-          throw new ExtensionException(I18N.gui.getN("resource.noResource", args(0).getString))
-        } else {
-          // I18N can't be used in headless, so default to the English message (Isaac B 7/29/25)
-          throw new ExtensionException(s"Resource \"${args(0).getString}\" does not exist")
-        }
+        throw new ExtensionException(loc"""Resource "${args(0).getString}" does not exist""")
     }
   }
 }

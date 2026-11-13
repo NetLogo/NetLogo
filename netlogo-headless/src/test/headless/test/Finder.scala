@@ -6,7 +6,7 @@ import java.io.File
 import java.util.Locale
 
 import org.nlogo.api.FileIO.fileToString
-import org.nlogo.core.{ I18N, Model, Resource }
+import org.nlogo.core.{ LocaleContext, Model, Resource }
 
 import org.scalatest.Tag
 import org.scalatest.funsuite.AnyFunSuite
@@ -56,7 +56,7 @@ abstract class ExtensionTests extends Finder {
 // one, and FixtureSuite assumes one - ST 8/7/13
 trait Finder extends AnyFunSuite {
   // ensure that output/error messages are formatted as expected (Isaac B 12/28/25)
-  I18N.setAllLanguages(Locale.US, false)
+  LocaleContext.setLocale(Locale.US)
 
   def extraTags: Seq[Tag] = Seq()
   def files: Iterable[(String, String)]

@@ -8,7 +8,7 @@ import java.net.{Socket, ConnectException, UnknownHostException, NoRouteToHostEx
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.swing.JPanel
 
-import org.nlogo.core.{ I18N, LogoList }
+import org.nlogo.core.{ LocaleContext, LogoList }
 import org.nlogo.api.{ Version, Dump, ExtensionManager, MersenneTwisterFast, PlotInterface, DummyLogoThunkFactory,
                        CompilerServices }
 import org.nlogo.agent.{ AbstractExporter, ConstantSliderConstraint }
@@ -296,8 +296,7 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
       case Text(content, messageType) => messageType match {
         case Text.MessageType.TEXT => clientGUI.foreach(_.addMessage(content.toString))
         case Text.MessageType.USER =>
-          new OptionPane(getFrame(this), I18N.gui.get("common.messages.userMessage"), content.toString,
-                         Seq(I18N.gui.get("common.buttons.ok"), I18N.gui.get("common.buttons.halt")),
+          new OptionPane(getFrame(this), loc"User Message", content.toString, Seq(loc"OK", loc"Halt"),
                          OptionPane.Icons.info)
         case Text.MessageType.CLEAR => clientGUI.foreach(_.clearMessages())
       }

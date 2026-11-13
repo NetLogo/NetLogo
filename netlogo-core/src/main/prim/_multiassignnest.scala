@@ -3,7 +3,7 @@
 package org.nlogo.prim
 
 import org.nlogo.api.Dump
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.nvm.{ Command, Context, RuntimePrimitiveException }
 
 class _multiassignnest(name: String, totalNeeded: Int) extends Command {
@@ -12,7 +12,9 @@ class _multiassignnest(name: String, totalNeeded: Int) extends Command {
       MultiAssign.nest(context.job.workspace, totalNeeded)
     } catch {
       case NestException(list) =>
-        val message = I18N.errors.getN("compiler.MultiAssign.tooFewValues", name, totalNeeded.toString, list.size.toString, Dump.logoObject(list))
+        val message = loc"""|The list of values for $name must be at least as long as the list of names.  We need
+                            |$totalNeeded value(s) but only got ${list.size} from the list ${Dump.logoObject(list)}."""
+
         throw new RuntimePrimitiveException(context, this, message)
     }
 

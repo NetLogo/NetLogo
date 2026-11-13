@@ -2,7 +2,7 @@
 
 package org.nlogo.prim;
 
-import org.nlogo.core.I18N;
+import org.nlogo.core.LocaleContextJ;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.RuntimePrimitiveException;
 
@@ -25,7 +25,7 @@ public final class _stop
       // immediately.  first we must check that it's a command procedure
       // and not a reporter procedure.
       throw new RuntimePrimitiveException(context, this,
-          I18N.errorsJ().getN("org.nlogo.prim.etc._stop.notAllowedInsideToReport", displayName()));
+        LocaleContextJ.loc("{} is not allowed inside TO-REPORT.", displayName()));
     }
     context.stop();
   }
@@ -36,7 +36,7 @@ public final class _stop
       context.finished = true;
     } else if (context.activation.nonLambdaActivation().procedure().isReporter()) {
       throw new RuntimePrimitiveException(context, this,
-          I18N.errorsJ().getN("org.nlogo.prim.etc._stop.notAllowedInsideToReport", displayName()));
+        LocaleContextJ.loc("{} is not allowed inside TO-REPORT.", displayName()));
     }
     workspace.profilingTracer().closeCallRecord(context, context.activation);
     context.stop();

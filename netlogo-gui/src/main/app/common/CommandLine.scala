@@ -7,7 +7,7 @@ import java.awt.event.{ ActionEvent, ActionListener, InputEvent, KeyEvent, KeyLi
 import javax.swing.{ KeyStroke, ScrollPaneConstants }
 
 import org.nlogo.agent.{ Agent, AgentSet, OutputObject }
-import org.nlogo.core.{ AgentKind, CompilerException, I18N, Widget => CoreWidget }
+import org.nlogo.core.{ AgentKind, CompilerException, LocaleContext, Widget => CoreWidget }
 import org.nlogo.editor.{ EditorArea, EditorConfiguration }
 import org.nlogo.ide.{ AutoSuggestAction, CodeCompletionPopup }
 import org.nlogo.swing.{ Implicits, MaximumHeight, ScrollPane, Transparent, UserAction, Zoomable },
@@ -19,10 +19,10 @@ import org.nlogo.workspace.AbstractWorkspace
 
 object CommandLine {
   val PROMPT = ">"
-  val OBSERVER_PROMPT = I18N.gui.get("common.observer") + PROMPT
-  val TURTLE_PROMPT = I18N.gui.get("common.turtles") + PROMPT
-  val PATCH_PROMPT = I18N.gui.get("common.patches") + PROMPT
-  val LINK_PROMPT = I18N.gui.get("common.links") + PROMPT
+  val OBSERVER_PROMPT = loc"observer" + PROMPT
+  val TURTLE_PROMPT = loc"turtles" + PROMPT
+  val PATCH_PROMPT = loc"patches" + PROMPT
+  val LINK_PROMPT = loc"links" + PROMPT
 
   val MAX_HISTORY_SIZE = 40
 

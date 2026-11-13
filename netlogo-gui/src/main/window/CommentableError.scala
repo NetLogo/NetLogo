@@ -6,16 +6,16 @@ import javax.swing.{ AbstractAction, JButton, JPanel }
 import java.awt.BorderLayout
 import java.awt.event.ActionEvent
 
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.editor.AbstractEditorArea
 import org.nlogo.log.LogManager
 import org.nlogo.swing.InputOptionPane
 
 class CommentableError(val editorArea: AbstractEditorArea) {
   private val errorLabel = new EditorAreaErrorLabel(editorArea)
-  private val commentAction = new AbstractAction(I18N.gui.get("tools.loggingMode.errorComment.button")) {
+  private val commentAction = new AbstractAction(loc"Log a comment") {
     def actionPerformed(e: ActionEvent): Unit = {
-      val comment = new InputOptionPane(null, "", I18N.gui.get("tools.loggingMode.errorComment.label")).getInput
+      val comment = new InputOptionPane(null, "", loc"What is your comment about the error?").getInput
       if (comment != null && !comment.trim().isEmpty()) {
         LogManager.userComment(comment)
       }

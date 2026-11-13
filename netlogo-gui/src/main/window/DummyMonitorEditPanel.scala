@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.swing.{ BoxAlign, BoxRow }
 
 class DummyMonitorEditPanel(target: DummyMonitorWidget) extends WidgetEditPanel(target) {
@@ -10,7 +10,7 @@ class DummyMonitorEditPanel(target: DummyMonitorWidget) extends WidgetEditPanel(
     new StringEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.hubnet.tag"),
+        loc"Tag",
         () => target.name,
         _.foreach(target.setDisplayName),
         () => apply()))
@@ -19,7 +19,7 @@ class DummyMonitorEditPanel(target: DummyMonitorWidget) extends WidgetEditPanel(
     new IntegerEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.monitor.decimalPlaces"),
+        loc"Decimal places",
         () => target.decimalPlaces,
         _.foreach(target.setDecimalPlaces),
         () => apply()))
@@ -28,7 +28,7 @@ class DummyMonitorEditPanel(target: DummyMonitorWidget) extends WidgetEditPanel(
     new BooleanEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.general.oldSize"),
+        loc"Use old sizing",
         () => target.oldSize,
         _.foreach(target.oldSize),
         () => apply()))

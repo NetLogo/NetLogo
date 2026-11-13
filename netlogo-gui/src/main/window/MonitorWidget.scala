@@ -8,7 +8,7 @@ import java.awt.event.{ ActionEvent, MouseEvent }
 import javax.swing.{ AbstractAction, BoxLayout, JLabel }
 
 import org.nlogo.api.{ CompilerServices, Dump, MersenneTwisterFast }
-import org.nlogo.core.{ AgentKind, AgentKindJ, I18N, Monitor => CoreMonitor, Widget => CoreWidget }
+import org.nlogo.core.{ AgentKind, AgentKindJ, LocaleContext, Monitor => CoreMonitor, Widget => CoreWidget }
 import org.nlogo.editor.Colorizer
 import org.nlogo.nvm.Procedure
 import org.nlogo.swing.{ BoxAlign, BoxRow, MenuItem, PopupMenu, RoundedBorderPanel, Zoomable, ZoomableBorder }
@@ -72,7 +72,7 @@ class MonitorWidget(random: MersenneTwisterFast, compiler: CompilerServices, col
   // brings up the popup menu not the edit dialog. ev 1/4/06
   private var lastMousePressedWasPopupTrigger: Boolean = false;
 
-  private val nameLabel = new JLabel(I18N.gui.get("edit.monitor.previewName")) with Zoomable {
+  private val nameLabel = new JLabel(loc"(monitor)") with Zoomable {
     setFocusable(false)
     setBaseFont(getFont.deriveFont(_boldState))
   }
@@ -127,7 +127,7 @@ class MonitorWidget(random: MersenneTwisterFast, compiler: CompilerServices, col
   }
 
   override def classDisplayName: String =
-    I18N.gui.get("tabs.run.widgets.monitor")
+    loc"Monitor"
 
   override def editPanel: EditPanel = new MonitorEditPanel(this, compiler, colorizer)
 
@@ -165,7 +165,7 @@ class MonitorWidget(random: MersenneTwisterFast, compiler: CompilerServices, col
   def chooseDisplayName(): Unit = {
     if (name == null || name == "") {
       if (getSourceName == "") {
-        displayName(I18N.gui.get("edit.monitor.previewName"))
+        displayName(loc"(monitor)")
       } else {
         displayName(getSourceName)
       }
@@ -215,7 +215,7 @@ class MonitorWidget(random: MersenneTwisterFast, compiler: CompilerServices, col
     true
 
   override def populateContextMenu(menu: PopupMenu, p: Point): Unit = {
-    menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.copytext")) {
+    menu.add(new MenuItem(new AbstractAction(loc"Copy Text") {
       def actionPerformed(e: ActionEvent): Unit = {
         getToolkit.getSystemClipboard.setContents(new StringSelection(valueLabel.getText), null)
       }
@@ -305,7 +305,7 @@ class MonitorWidget(random: MersenneTwisterFast, compiler: CompilerServices, col
   def handle(e: JobRemovedEvent): Unit =
     if (e.owner == this) {
       jobRunning = false
-      value(if (hasError) I18N.gui.get("tabs.run.widgets.monitor.notApplicable") else "")
+      value(if (hasError) loc"N/A" else "")
     }
 
   def halt(): Unit = {

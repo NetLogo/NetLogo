@@ -2,7 +2,7 @@
 
 package org.nlogo.prim.etc;
 
-import org.nlogo.core.I18N;
+import org.nlogo.core.LocaleContextJ;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Command;
@@ -24,7 +24,7 @@ public final class _facenowrap
     org.nlogo.agent.Agent agentToFace = argEvalAgent(context, 0);
     if (agentToFace.id() == -1) {
       throw new RuntimePrimitiveException(context, this,
-        I18N.errorsJ().getN("org.nlogo.$common.thatAgentIsDead", agentToFace.classDisplayName()));
+        LocaleContextJ.loc("That {} is dead.", agentToFace.classDisplayName()));
     }
     org.nlogo.agent.Turtle turtle = (org.nlogo.agent.Turtle) context.agent;
     turtle.face(agentToFace, false);

@@ -9,7 +9,7 @@ import javax.swing.{ AbstractAction, JMenuItem }
 
 import org.nlogo.api.CompilerServices
 import org.nlogo.awt.ImageSelection
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.editor.Colorizer
 import org.nlogo.plot.{PlotManagerInterface, Plot}
 import org.nlogo.swing.{ MenuItem, PopupMenu, Utils }
@@ -62,7 +62,7 @@ class PlotWidget(plot: Plot, plotManager: PlotManagerInterface, compiler: Compil
   }
 
   override def populateContextMenu(menu: PopupMenu, p: Point): Unit = {
-    menu.add(new MenuItem(new AbstractAction(I18N.gui.get("edit.plot.copyimage")) {
+    menu.add(new MenuItem(new AbstractAction(loc"Copy Image") {
       def actionPerformed(e: ActionEvent): Unit = {
         Toolkit.getDefaultToolkit.getSystemClipboard.setContents(new ImageSelection(exportGraphics), null)
       }
@@ -70,7 +70,7 @@ class PlotWidget(plot: Plot, plotManager: PlotManagerInterface, compiler: Compil
   }
 
   override def extraMenuItems: List[JMenuItem] = List(
-    new MenuItem(new AbstractAction(I18N.gui.get("edit.plot.clearplot")) {
+    new MenuItem(new AbstractAction(loc"Clear") {
       def actionPerformed(e: ActionEvent): Unit = {
         clear()
       }

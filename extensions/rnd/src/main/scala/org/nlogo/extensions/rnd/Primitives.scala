@@ -10,7 +10,7 @@ import org.nlogo.api.ExtensionException
 import org.nlogo.api.LogoListBuilder
 import org.nlogo.api.MersenneTwisterFast
 import org.nlogo.api.Reporter
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.core.Nobody
 import org.nlogo.core.Syntax.AgentType
 import org.nlogo.core.Syntax.AgentsetType
@@ -142,8 +142,8 @@ trait WeightedNOf extends WeightedRndPrim {
 
   def report(args: Array[Argument], context: Context): AnyRef = {
     val n = args(0).getIntValue
-    if (n < 0) throw new ExtensionException(I18N.errors.getN(
-      "org.nlogo.prim.etc.$common.firstInputCantBeNegative", name))
+    if (n < 0)
+      throw new ExtensionException(loc"First input to $name can't be negative.")
     val rng = context.getRNG
     val candidates: Vector[AnyRef] = getCandidates(minSize(n), args(1), rng)
     val weightFunction = getWeightFunction(args(2), context)

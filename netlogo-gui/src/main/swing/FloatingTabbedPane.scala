@@ -7,7 +7,7 @@ import java.awt.event.{ MouseAdapter, MouseEvent, MouseMotionAdapter }
 import javax.swing.{ JComponent, JLabel, JTabbedPane, SwingConstants }
 import javax.swing.plaf.basic.BasicTabbedPaneUI
 
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.theme.InterfaceColors
 
 import scala.util.Try
@@ -208,7 +208,7 @@ class TabLabel(startPane: FloatingTabbedPane, text: String, tab: Component) exte
   tab match {
     case temp: RenameableTab =>
       popupMenu = Some(new PopupMenu(this) {
-        add(new MenuItem(I18N.gui.get("tabs.external.rename"), () => temp.rename()))
+        add(new MenuItem(loc"Rename", () => temp.rename()))
       })
 
     case _ =>

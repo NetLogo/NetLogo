@@ -1,0 +1,851 @@
+#: netlogo-core/src/main/workspace/ModelsLibrary.scala:114
+msgid "(unverified)"
+msgstr ""
+
+#: parser-core/src/main/parse/StructureChecker.scala:307
+msgid "-> can only be used to create arrow procedures"
+msgstr ""
+
+#: parser-core/src/main/parse/StructureChecker.scala:164
+msgid "A breed cannot have the same plural and singular name"
+msgstr ""
+
+#: netlogo-core/src/main/agent/Patch.java:149
+#: netlogo-core/src/main/agent/Patch.java:162
+#: netlogo-core/src/main/agent/Patch.java:205
+#: netlogo-core/src/main/agent/Patch.java:211
+#: netlogo-core/src/main/agent/Patch.java:224
+msgid "A patch can't access a link variable without specifying which link."
+msgstr ""
+
+#: netlogo-core/src/main/agent/Patch.java:156
+#: netlogo-core/src/main/agent/Patch.java:218
+msgid "A patch can't access a turtle or link variable without specifying which agent."
+msgstr ""
+
+#: netlogo-core/src/main/agent/Patch.java:142
+#: netlogo-core/src/main/agent/Patch.java:169
+msgid "A patch can't access a turtle variable without specifying which turtle."
+msgstr ""
+
+#: netlogo-core/src/main/agent/Patch.java:185
+#: netlogo-core/src/main/agent/Patch.java:192
+#: netlogo-core/src/main/agent/Patch.java:199
+msgid "A patch can't set a turtle variable without specifying which turtle."
+msgstr ""
+
+#: parser-core/src/main/parse/StructureChecker.scala:107
+msgid "A string/number cannot be used as a global variable name."
+msgstr ""
+
+#: netlogo-core/src/main/agent/Turtle.java:300
+#: netlogo-core/src/main/agent/Turtle.java:341
+msgid "A turtle can't access a link variable without specifying which link."
+msgstr ""
+
+#: netlogo-headless/src/main/prim/etc/linkcreation.scala:51
+msgid "A turtle cannot link to itself."
+msgstr ""
+
+#: parser-core/src/main/parse/StructureChecker.scala:71
+msgid "Agent variables cannot be declared in a module"
+msgstr ""
+
+#: parser-core/src/main/parse/StructureChecker.scala:94
+msgid "All declarations must come before procedures."
+msgstr ""
+
+#: netlogo-headless/src/main/prim/etc/_foreach.scala:24
+msgid "All the list arguments to FOREACH must be the same length."
+msgstr ""
+
+#: netlogo-core/src/main/agent/AgentColors.scala:31
+#: netlogo-core/src/main/api/Color.scala:217
+msgid "An rgb list must contain 3 numbers 0-255"
+msgstr ""
+
+#: netlogo-core/src/main/agent/AgentColors.scala:29
+#: netlogo-core/src/main/api/Color.scala:215
+msgid "An rgb list must contain 3 or 4 numbers 0-255"
+msgstr ""
+
+#: parser-core/src/main/parse/StructureParser.scala:63
+msgid "Attempted to import a module multiple times"
+msgstr ""
+
+#: parser-core/src/main/parse/StructureParser.scala:151
+msgid "Attempted to import a non-exported identifier"
+msgstr ""
+
+#: netlogo-headless/src/main/prim/etc/_randomgamma.java:22
+msgid "Both inputs to {} must be positive."
+msgstr ""
+
+#: parser-core/src/main/parse/StructureChecker.scala:67
+msgid "Breeds cannot be declared in a module"
+msgstr ""
+
+#: netlogo-headless/src/main/prim/etc/_setdefaultshape.scala:24
+msgid "Can only set the default shape of all turtles , all links, or an entire breed."
+msgstr ""
+
+#: netlogo-headless/src/main/prim/etc/_exportoutput.java:15
+msgid "Can't export to empty pathname."
+msgstr ""
+
+#: netlogo-headless/src/main/prim/etc/_item.java:29
+#: netlogo-headless/src/main/prim/etc/_item.java:37
+#: netlogo-headless/src/main/prim/etc/_removeitem.java:29
+#: netlogo-headless/src/main/prim/etc/_replaceitem.java:30
+#: netlogo-headless/src/main/prim/etc/_insertitem.scala:22
+msgid "Can't find element {} of the list {}, which is only of length {}."
+msgstr ""
+
+#: netlogo-headless/src/main/prim/etc/_removeitem.java:37
+#: netlogo-headless/src/main/prim/etc/_replaceitem.java:41
+#: netlogo-headless/src/main/prim/etc/_insertitem.scala:31
+msgid "Can't find element {} of the string {}, which is only of length {}."
+msgstr ""
+
+#: netlogo-headless/src/main/prim/etc/_max.java:31
+msgid "Can't find the maximum of a list with no numbers: {}"
+msgstr ""
+
+#: netlogo-headless/src/main/prim/etc/_mean.java:34
+msgid "Can't find the mean of a list with no numbers: {}."
+msgstr ""
+
+#: netlogo-headless/src/main/prim/etc/_median.java:36
+msgid "Can't find the median of a list with no numbers: {}."
+msgstr ""
+
+#: netlogo-headless/src/main/prim/etc/_min.java:36
+msgid "Can't find the minimum of a list with no numbers: {}"
+msgstr ""
+
+#: netlogo-headless/src/main/prim/etc/_standarddeviation.java:32
+msgid "Can't find the standard deviation of a list without at least two numbers: {}"
+msgstr ""
+
+#: netlogo-headless/src/main/prim/_nsum.scala:32
+#: netlogo-headless/src/main/prim/_nsum4.scala:33
+msgid "Can't find the sum of a list that contains non-numbers: {} is a {}."
+msgstr ""
+
+#: netlogo-headless/src/main/prim/etc/_variance.java:32
+msgid "Can't find the variance of a list without at least two numbers: {}."
+msgstr ""
+
+#: netlogo-headless/src/main/prim/etc/_ln.java:21
+#: netlogo-headless/src/main/prim/etc/_log.java:23
+msgid "Can't take logarithm of {}."
+msgstr ""
+
+#: netlogo-headless/src/main/prim/etc/_tickadvance.scala:14
+msgid "Cannot advance the tick counter by a negative amount."
+msgstr ""
+
+#: netlogo-core/src/main/agent/Turtle2D.java:61
+#: netlogo-core/src/main/agent/Patch.java:315
+msgid "Cannot get patch beyond limits of current world."
+msgstr ""
+
+#: netlogo-core/src/main/agent/Box.scala:14
+#: netlogo-core/src/main/agent/Box.scala:23
+#: netlogo-core/src/main/agent/HorizCylinder.scala:16
+#: netlogo-core/src/main/agent/VertCylinder.scala:19
+msgid "Cannot move turtle beyond the world's edge."
+msgstr ""
+
+#: netlogo-headless/src/main/prim/etc/_setdefaultshape.scala:17
+msgid "Cannot set the default shape of patches, because patches do not have shapes."
+msgstr ""
+
+#: netlogo-headless/src/main/prim/etc/_extractrgb.java:32
+msgid "Color must be a number or a valid RGB/A color list with 3 - 4 numbers that have values between 0 and 255."
+msgstr ""
+
+#: netlogo-core/src/main/api/LabVariableParser.scala:53
+#: netlogo-core/src/main/api/LabVariableParser.scala:77
+msgid "Constant \"{}\" defined twice"
+msgstr ""
+
+#: parser-core/src/main/parse/StructureParser.scala:92
+#: parser-core/src/main/parse/StructureParser.scala:135
+#: parser-core/src/main/parse/StructureParser.scala:239
+msgid "Could not find {}"
+msgstr ""
+
+#: parser-core/src/main/parse/StructureChecker.scala:303
+msgid "Defining a breed [{} {}] redefines {}, a {}"
+msgstr ""
+
+#: netlogo-headless/src/main/prim/etc/_div.java:21
+#: netlogo-headless/src/main/prim/etc/_mod.java:22
+#: netlogo-headless/src/main/prim/etc/_remainder.java:22
+msgid "Division by zero."
+msgstr ""
+
+#: parser-core/src/main/parse/StructureChecker.scala:35
+msgid "EXPORT can only be used in a module"
+msgstr ""
+
+#: parser-core/src/main/parse/StructureConverter.scala:45
+msgid "EXPORT may only be used once per file"
+msgstr ""
+
+#: netlogo-core/src/main/lab/Worker.scala:257
+#: netlogo-headless/src/main/workspace/AbstractWorkspace.scala:283
+#: netlogo-headless/src/main/workspace/AbstractWorkspace.scala:287
+msgid "Enable plot updating to use export-plot, export-all-plots, export-world, or export-interface."
+msgstr ""
+
+#: netlogo-headless/src/main/prim/etc/_distance.java:20
+#: netlogo-headless/src/main/prim/etc/_incone.java:30
+#: netlogo-headless/src/main/prim/etc/_towards.java:18
+#: netlogo-headless/src/main/prim/_inradius.scala:18
+#: netlogo-headless/src/main/prim/etc/_face.scala:17
+msgid "Expected a turtle or a patch but got a link."
+msgstr ""
+
+#: netlogo-core/src/main/api/LabVariableParser.scala:70
+#: netlogo-core/src/main/api/LabVariableParser.scala:130
+msgid "Expected a value for variable \"{}"
+msgstr ""
+
+#: parser-core/src/main/parse/ScopedIdentifierConsolidator.scala:15
+msgid "Expected identifier between colons"
+msgstr ""
+
+#: netlogo-core/src/main/api/LabVariableParser.scala:23
+#: netlogo-core/src/main/api/LabVariableParser.scala:91
+msgid "Expected list"
+msgstr ""
+
+#: netlogo-core/src/main/workspace/ModelsLibrary.scala:115
+msgid "Extension Samples"
+msgstr ""
+
+#: netlogo-headless/src/main/prim/etc/_maxnof.java:26
+#: netlogo-headless/src/main/prim/etc/_minnof.java:25
+#: netlogo-headless/src/main/prim/etc/_nof.java:24
+#: netlogo-headless/src/main/prim/etc/_uptonof.scala:11
+msgid "First input to {} can't be negative."
+msgstr ""
+
+#: netlogo-core/src/main/api/Perspective.scala:32
+msgid "Following {}"
+msgstr ""
+
+#: parser-core/src/main/parse/StructureChecker.scala:69
+msgid "Globals cannot be declared in a module"
+msgstr ""
+
+#: parser-core/src/main/parse/StructureCombinators.scala:135
+msgid "Identifier list contains duplicates"
+msgstr ""
+
+#: parser-core/src/main/parse/StructureChecker.scala:85
+msgid "Import paths may not contain slash or the system path separator"
+msgstr ""
+
+#: netlogo-core/src/main/agent/SliderConstraint.scala:17
+msgid "Increment"
+msgstr ""
+
+#: netlogo-core/src/main/api/LabVariableParser.scala:110
+msgid "Increment list \"[ {} [ {} {} {} ] ]\" is unbounded, reverse sign of step value"
+msgstr ""
+
+#: netlogo-core/src/main/api/LabVariableParser.scala:42
+msgid "Increment list \"[\"variableName\" [ {} {} {} ] ]\" is unbounded, reverse sign of step value"
+msgstr ""
+
+#: parser-core/src/main/parse/StructureChecker.scala:113
+msgid "Input name conflicts with a constant."
+msgstr ""
+
+#: netlogo-core/src/main/fileformat/NLogoFormat.scala:188
+msgid "Invalid NetLogo file. Expected \"{}\" formatted model to have version compatible with {}, but this model had version {}"
+msgstr ""
+
+#: netlogo-core/src/main/api/LabVariableParser.scala:140
+#: netlogo-core/src/main/api/LabVariableParser.scala:145
+msgid "Invalid format"
+msgstr ""
+
+#: netlogo-core/src/main/api/LabVariableParser.scala:64
+#: netlogo-core/src/main/api/LabVariableParser.scala:124
+msgid "Invalid increment notation for \"{}\", the increment list must have exactly 3 number values."
+msgstr ""
+
+#: netlogo-headless/src/main/prim/etc/_atpoints.java:31
+#: netlogo-headless/src/main/prim/etc/_atpoints.java:120
+#: netlogo-headless/src/main/prim/etc/_atpoints.java:126
+msgid "Invalid list of points: {}"
+msgstr ""
+
+#: netlogo-headless/src/main/prim/etc/_linkset.java:56
+msgid "List inputs to {} must only contain link, link agentset, or list elements.  The list {} contained a different type agentset: {}."
+msgstr ""
+
+#: netlogo-headless/src/main/prim/etc/_linkset.java:68
+msgid "List inputs to {} must only contain link, link agentset, or list elements.  The list {} contained {} which is NOT a link or link agentset."
+msgstr ""
+
+#: netlogo-headless/src/main/prim/etc/_patchset.java:58
+msgid "List inputs to {} must only contain patch, patch agentset, or list elements.  The list {} contained a different type agentset: {}."
+msgstr ""
+
+#: netlogo-headless/src/main/prim/etc/_patchset.java:70
+msgid "List inputs to {} must only contain patch, patch agentset, or list elements.  The list {} contained {} which is NOT a patch or patch agentset."
+msgstr ""
+
+#: netlogo-headless/src/main/prim/etc/_turtleset.java:60
+msgid "List inputs to {} must only contain turtle, turtle agentset, or list elements.  The list {} contained a different type agentset: {}."
+msgstr ""
+
+#: netlogo-headless/src/main/prim/etc/_turtleset.java:72
+msgid "List inputs to {} must only contain turtle, turtle agentset, or list elements.  The list {} contained {} which is NOT a turtle or turtle agentset."
+msgstr ""
+
+#: netlogo-headless/src/main/prim/etc/_first.java:26
+#: netlogo-headless/src/main/prim/etc/_first.java:43
+#: netlogo-headless/src/main/prim/etc/_last.java:23
+msgid "List is empty."
+msgstr ""
+
+#: netlogo-core/src/main/lab/Lab.scala:167
+msgid "Lists output selected with no spreadsheet or table output."
+msgstr ""
+
+#: netlogo-core/src/main/agent/SliderConstraint.scala:16
+msgid "Maximum"
+msgstr ""
+
+#: netlogo-core/src/main/agent/SliderConstraint.scala:15
+msgid "Minimum"
+msgstr ""
+
+#: netlogo-core/src/main/api/ModelLoader.scala:147
+msgid "Model file was not found at \"{}\". Double check the path given; the model may have been moved or deleted."
+msgstr ""
+
+#: netlogo-headless/src/main/workspace/DefaultFileManager.scala:240
+msgid "No file has been opened."
+msgstr ""
+
+#: netlogo-core/src/main/agent/Protractor.java:275
+msgid "No heading is defined from a point ({},{}) to that same point."
+msgstr ""
+
+#: netlogo-core/src/main/agent/Protractor.java:219
+msgid "No heading is defined from an agent to itself."
+msgstr ""
+
+#: netlogo-core/src/main/compile/middle/LambdaVariableVisitor.scala:76
+#: netlogo-core/src/main/compile/middle/LambdaVariableVisitor.scala:103
+#: netlogo-headless/src/main/prim/etc/_reference.scala:24
+#: parser-core/src/main/parse/LetVerifier.scala:32
+#: parser-core/src/main/parse/ExpressionParser.scala:196
+#: parser-core/src/main/parse/ExpressionParser.scala:531
+#: parser-core/src/main/parse/StructureChecker.scala:57
+msgid "Nothing named {} has been defined."
+msgstr ""
+
+#: netlogo-core/src/main/api/LabVariableParser.scala:26
+#: netlogo-core/src/main/api/LabVariableParser.scala:94
+msgid "One or more lists do not contain any elements"
+msgstr ""
+
+#: netlogo-headless/src/main/prim/etc/_otherend.java:29
+msgid "Only a link can get the OTHER-END from a turtle."
+msgstr ""
+
+#: netlogo-headless/src/main/prim/etc/_otherend.java:22
+msgid "Only a turtle can get the OTHER-END of a link."
+msgstr ""
+
+#: netlogo-headless/src/main/prim/_ask.scala:31
+#: netlogo-headless/src/main/prim/_ask.scala:51
+#: netlogo-headless/src/main/prim/_askconcurrent.scala:23
+msgid "Only the observer can ASK the set of all patches."
+msgstr ""
+
+#: netlogo-headless/src/main/prim/_ask.scala:29
+#: netlogo-headless/src/main/prim/_ask.scala:49
+#: netlogo-headless/src/main/prim/_askconcurrent.scala:21
+msgid "Only the observer can ASK the set of all turtles."
+msgstr ""
+
+#: netlogo-headless/src/main/prim/etc/_setpatchsize.java:21
+msgid "Patch size must be greater than zero."
+msgstr ""
+
+#: netlogo-headless/src/main/prim/etc/_layoutcircle.java:31
+msgid "Patches are immovable."
+msgstr ""
+
+#: parser-core/src/main/parse/ControlFlowVerifier.scala:53
+msgid "REPORT can only be used inside TO-REPORT."
+msgstr ""
+
+#: parser-core/src/main/parse/ControlFlowVerifier.scala:55
+msgid "REPORT must be immediately inside a TO-REPORT."
+msgstr ""
+
+#: netlogo-core/src/main/agent/AgentColors.scala:38
+#: netlogo-core/src/main/api/Color.scala:199
+msgid "RGB values must be 0-255"
+msgstr ""
+
+#: netlogo-headless/src/main/prim/_returnreport.scala:16
+msgid "Reached end of reporter procedure without REPORT being called."
+msgstr ""
+
+#: parser-core/src/main/parse/StructureChecker.scala:311
+msgid "Redeclaration of {}"
+msgstr ""
+
+#: netlogo-headless/src/main/prim/etc/_maxnof.java:32
+#: netlogo-headless/src/main/prim/etc/_minnof.java:31
+#: netlogo-headless/src/main/prim/etc/_nof.java:45
+msgid "Requested {} random agents from a set of only {} agents."
+msgstr ""
+
+#: netlogo-headless/src/main/prim/etc/_nof.java:31
+msgid "Requested {} random items from a list of length {}."
+msgstr ""
+
+#: netlogo-core/src/main/api/Perspective.scala:28
+msgid "Riding {}"
+msgstr ""
+
+#: parser-core/src/main/parse/ControlFlowVerifier.scala:51
+msgid "STOP is not allowed inside TO-REPORT."
+msgstr ""
+
+#: parser-core/src/main/parse/StructureParser.scala:102
+msgid "Selective import only works when importing directly from a module"
+msgstr ""
+
+#: netlogo-core/src/main/lab/Lab.scala:82
+msgid "Spreadsheet output file has been moved or deleted."
+msgstr ""
+
+#: netlogo-core/src/main/lab/Lab.scala:148
+msgid "Statistics output selected with no spreadsheet or table output."
+msgstr ""
+
+#: netlogo-core/src/main/api/LabVariableParser.scala:33
+#: netlogo-core/src/main/api/LabVariableParser.scala:101
+msgid "Step value in increment list for variable \"{}\" is 0, this would result in an infinite range."
+msgstr ""
+
+#: netlogo-headless/src/main/prim/etc/_first.java:32
+#: netlogo-headless/src/main/prim/etc/_first.java:50
+#: netlogo-headless/src/main/prim/etc/_last.java:29
+msgid "String is empty."
+msgstr ""
+
+#: netlogo-core/src/main/lab/Lab.scala:66
+msgid "Table output file has been moved or deleted."
+msgstr ""
+
+#: netlogo-core/src/main/prim/_turtleson.java:31
+#: netlogo-headless/src/main/prim/etc/_distance.java:24
+#: netlogo-headless/src/main/prim/etc/_moveto.java:24
+#: netlogo-headless/src/main/prim/etc/_ride.java:23
+#: netlogo-headless/src/main/prim/etc/_towards.java:22
+#: netlogo-headless/src/main/prim/etc/_watch.java:22
+#: netlogo-core/src/main/nvm/Instruction.scala:160
+#: netlogo-core/src/main/prim/_anybreedon.scala:23
+#: netlogo-core/src/main/prim/_anyturtleson.scala:17
+#: netlogo-core/src/main/prim/_breedon.scala:23
+#: netlogo-core/src/main/prim/_breedon.scala:115
+#: netlogo-core/src/main/prim/_breedon.scala:143
+#: netlogo-headless/src/main/prim/_breedvariableof.scala:20
+#: netlogo-headless/src/main/prim/_linkbreedvariableof.scala:20
+#: netlogo-headless/src/main/prim/_linkvariableof.scala:28
+#: netlogo-headless/src/main/prim/_linkvariableof.scala:48
+#: netlogo-headless/src/main/prim/_of.scala:17
+#: netlogo-headless/src/main/prim/_patchvariableof.scala:29
+#: netlogo-headless/src/main/prim/_patchvariableof.scala:61
+#: netlogo-headless/src/main/prim/_turtleorlinkvariableof.scala:27
+#: netlogo-headless/src/main/prim/_turtleorlinkvariableof.scala:47
+#: netlogo-headless/src/main/prim/_turtlevariableof.scala:29
+#: netlogo-headless/src/main/prim/_turtlevariableof.scala:49
+#: netlogo-headless/src/main/prim/_ask.scala:36
+#: netlogo-headless/src/main/prim/_ask.scala:59
+#: netlogo-headless/src/main/prim/etc/_follow.scala:15
+#: netlogo-headless/src/main/prim/etc/_face.scala:19
+#: netlogo-headless/src/main/prim/etc/_inspect.scala:13
+msgid "That {} is dead."
+msgstr ""
+
+#: netlogo-headless/src/main/prim/_lessthan.scala:31
+#: netlogo-headless/src/main/prim/_lessthan.scala:56
+#: netlogo-headless/src/main/prim/_lessthan.scala:66
+msgid "The < operator can only be used on two numbers, two strings, or two agents of the same type, but not on {} and {}."
+msgstr ""
+
+#: netlogo-headless/src/main/prim/etc/_lessorequal.java:43
+#: netlogo-headless/src/main/prim/etc/_lessorequal.java:72
+#: netlogo-headless/src/main/prim/etc/_lessorequal.java:81
+msgid "The <= operator can only be used on two numbers, two strings, or two agents of the same type, but not on {} and {}."
+msgstr ""
+
+#: netlogo-headless/src/main/prim/etc/_greaterorequal.java:43
+#: netlogo-headless/src/main/prim/etc/_greaterorequal.java:72
+#: netlogo-headless/src/main/prim/etc/_greaterorequal.java:81
+msgid "The >= operator can only be used on two numbers, two strings, or two agents of the same type, but not on {} and {}."
+msgstr ""
+
+#: parser-core/src/main/parse/StructureParser.scala:221
+msgid "The following extensions are referenced by imported modules and must be declared in the model code: {}"
+msgstr ""
+
+#: netlogo-core/src/main/agent/ImportPatchColors.java:33
+msgid "The following file is not in a supported image format: {}"
+msgstr ""
+
+#: netlogo-headless/src/main/prim/etc/_reduce.scala:17
+msgid "The list argument to reduce must not be empty."
+msgstr ""
+
+#: netlogo-core/src/main/prim/_multiassign.scala:80
+#: netlogo-core/src/main/prim/_multiassignnest.scala:15
+msgid "The list of values for {} must be at least as long as the list of names.  We need {} value(s) but only got {} from the list {}."
+msgstr ""
+
+#: parser-core/src/main/parse/LetScoper.scala:182
+msgid "The list of variables names given to LET must contain at least one item."
+msgstr ""
+
+#: parser-core/src/main/parse/SetSplitter.scala:54
+msgid "The list of variables names given to SET must contain at least one item."
+msgstr ""
+
+#: netlogo-core/src/main/api/LabVariableParser.scala:73
+#: netlogo-core/src/main/api/LabVariableParser.scala:133
+msgid "The number of variable combinations for \"{}\" exceeds limit"
+msgstr ""
+
+#: netlogo-headless/src/main/prim/etc/_setxy.java:37
+#: netlogo-headless/src/main/prim/etc/_setxy.java:50
+msgid "The point [ {} , {} ] is outside of the boundaries of the world and wrapping is not permitted in one or both directions."
+msgstr ""
+
+#: netlogo-headless/src/main/prim/etc/_sqrt.java:21
+msgid "The square root of {} is an imaginary number."
+msgstr ""
+
+#: netlogo-headless/src/main/prim/etc/_range.scala:17
+msgid "The step-size for range must be non-zero."
+msgstr ""
+
+#: netlogo-headless/src/main/prim/etc/_ticks.java:23
+#: netlogo-headless/src/main/prim/etc/_tickadvance.scala:17
+msgid "The tick counter has not been started yet. Use RESET-TICKS."
+msgstr ""
+
+#: netlogo-core/src/main/api/LabVariableParser.scala:56
+#: netlogo-core/src/main/api/LabVariableParser.scala:80
+#: netlogo-core/src/main/api/LabVariableParser.scala:152
+msgid "The variable \"{}\" does not have an assigned value in at least one subexperiment. It must be explicitly defined in all subexperiments or defined first as a constant."
+msgstr ""
+
+#: parser-core/src/main/parse/StructureChecker.scala:317
+msgid "There is already a local variable called {} here"
+msgstr ""
+
+#: parser-core/src/main/parse/StructureChecker.scala:314
+#: parser-core/src/main/parse/StructureConverter.scala:77
+msgid "There is already a {} called {}"
+msgstr ""
+
+#: parser-core/src/main/parse/StructureParser.scala:272
+msgid "There is already an imported procedure called {}"
+msgstr ""
+
+#: netlogo-headless/src/main/prim/etc/_myself.java:20
+#: netlogo-headless/src/main/prim/etc/_myself.java:29
+msgid "There is no agent for MYSELF to refer to."
+msgstr ""
+
+#: parser-core/src/main/parse/StructureConverter.scala:164
+msgid "There is no breed \"{}\""
+msgstr ""
+
+#: netlogo-headless/src/main/prim/etc/plotting.scala:22
+msgid "There is no current plot. Please select a current plot using the set-current-plot command."
+msgstr ""
+
+#: netlogo-core/src/main/compile/middle/SetVisitor.scala:20
+#: parser-core/src/main/parse/ExpressionParser.scala:111
+msgid "This isn't something you can use \"set\" on."
+msgstr ""
+
+#: netlogo-core/src/main/api/LabVariableParser.scala:161
+msgid "Total number of runs exceeds limit"
+msgstr ""
+
+#: netlogo-core/src/main/lab/Lab.scala:126
+msgid "Unable to read existing spreadsheet output, data is not intact."
+msgstr ""
+
+#: netlogo-core/src/main/agent/Patch.java:275
+#: netlogo-core/src/main/agent/Turtle.java:500
+msgid "Unknown variable {}."
+msgstr ""
+
+#: netlogo-core/src/main/agent/BooleanConstraint.scala:18
+msgid "Value must be a boolean."
+msgstr ""
+
+#: netlogo-core/src/main/agent/ChooserConstraint.scala:32
+msgid "Value must be one of: {}"
+msgstr ""
+
+#: netlogo-core/src/main/api/LabVariableParser.scala:121
+#: netlogo-core/src/main/api/LabVariableParser.scala:137
+msgid "Variable \"{}\" defined twice in one subexperiment"
+msgstr ""
+
+#: parser-core/src/main/parse/StructureChecker.scala:105
+msgid "Variable name conflicts with a constant."
+msgstr ""
+
+#: netlogo-headless/src/main/prim/_anywith.scala:28
+#: netlogo-headless/src/main/prim/_oneofwith.scala:27
+msgid "WITH expected a true/false value from {}, but got {} instead."
+msgstr ""
+
+#: netlogo-core/src/main/api/Perspective.scala:36
+msgid "Watching {}"
+msgstr ""
+
+#: netlogo-headless/src/main/workspace/DefaultFileManager.scala:114
+msgid "You can only delete files."
+msgstr ""
+
+#: netlogo-core/src/main/agent/Patch.java:272
+#: netlogo-core/src/main/agent/Patch.java:286
+#: netlogo-core/src/main/agent/Patch.java:288
+msgid "You can't change a patch's coordinates."
+msgstr ""
+
+#: netlogo-core/src/main/agent/Turtle.java:378
+#: netlogo-core/src/main/agent/Turtle.java:498
+msgid "You can't change a turtle's ID number."
+msgstr ""
+
+#: netlogo-core/src/main/agent/Turtle3D.java:365
+#: netlogo-core/src/main/agent/Turtle.java:454
+msgid "You can't set BREED to a non-breed agentset."
+msgstr ""
+
+#: netlogo-core/src/main/agent/Link.java:302
+msgid "You can't set BREED to a non-link-breed agentset."
+msgstr ""
+
+#: netlogo-headless/src/main/workspace/DefaultFileManager.scala:110
+msgid "You cannot delete a non-existent file."
+msgstr ""
+
+#: netlogo-core/src/main/agent/Link.java:312
+#: netlogo-headless/src/main/prim/etc/linkcreation.scala:47
+msgid "You cannot have both breeded and unbreeded links in the same world."
+msgstr ""
+
+#: netlogo-headless/src/main/prim/etc/_resizeworld.java:31
+msgid "You must include the point (0, 0) in the world."
+msgstr ""
+
+#: netlogo-headless/src/main/prim/_greaterthan.scala:31
+#: netlogo-headless/src/main/prim/_greaterthan.scala:56
+#: netlogo-headless/src/main/prim/_greaterthan.scala:66
+msgid "\"The > operator can only be used on two numbers, two strings, or two agents of the same type, but not on {} and {}.\""
+msgstr ""
+
+#: netlogo-core/src/main/agent/Link.java:332
+#: netlogo-core/src/main/agent/Turtle.java:429
+msgid "\"{}\" is not a currently defined shape."
+msgstr ""
+
+#: netlogo-headless/src/main/prim/etc/_setdefaultshape.scala:34
+msgid "\\"{}\\" is not a currently defined link shape."
+msgstr ""
+
+#: netlogo-headless/src/main/prim/etc/_setdefaultshape.scala:28
+msgid "\\"{}\\" is not a currently defined turtle shape."
+msgstr ""
+
+#: netlogo-core/src/main/nvm/Instruction.scala:17
+msgid "a link"
+msgstr ""
+
+#: netlogo-core/src/main/nvm/Instruction.scala:16
+msgid "a patch"
+msgstr ""
+
+#: netlogo-core/src/main/nvm/Instruction.scala:15
+msgid "a turtle"
+msgstr ""
+
+#: netlogo-core/src/main/nvm/AnonymousProcedure.scala:49
+msgid "arrow procedure expected 1 input, but only got 0"
+msgstr ""
+
+#: netlogo-core/src/main/nvm/AnonymousProcedure.scala:51
+msgid "arrow procedure expected {} inputs, but only got {}"
+msgstr ""
+
+#: netlogo-headless/src/main/prim/etc/_atan.scala:17
+msgid "atan is undefined when both inputs are zero."
+msgstr ""
+
+#: netlogo-core/src/main/agent/Agent.scala:105
+msgid "can't set {} variable {} to non-{} {}"
+msgstr ""
+
+#: netlogo-headless/src/main/prim/etc/_randomnormal.scala:17
+msgid "random-normal's second input can't be negative."
+msgstr ""
+
+#: netlogo-core/src/main/nvm/Instruction.scala:14
+msgid "the observer"
+msgstr ""
+
+#: netlogo-core/src/main/nvm/Instruction.scala:28
+msgid "this code can't be run by {}"
+msgstr ""
+
+#: netlogo-core/src/main/nvm/Instruction.scala:26
+msgid "this code can't be run by {}, only by {}"
+msgstr ""
+
+#: netlogo-core/src/main/agent/Link.java:439
+#: netlogo-core/src/main/agent/Turtle.java:308
+#: netlogo-core/src/main/agent/Turtle.java:334
+#: netlogo-core/src/main/agent/Turtle.java:511
+msgid "{} breed does not own variable {}"
+msgstr ""
+
+#: netlogo-headless/src/main/prim/_report.java:25
+msgid "{} can only be used inside TO-REPORT."
+msgstr ""
+
+#: parser-core/src/main/parse/CarefullyVisitor.scala:33
+msgid "{} cannot be used outside of CAREFULLY."
+msgstr ""
+
+#: netlogo-headless/src/main/prim/etc/_incone.java:38
+msgid "{} cannot take a negative angle."
+msgstr ""
+
+#: netlogo-headless/src/main/prim/etc/_nvalues.scala:16
+msgid "{} cannot take a negative number."
+msgstr ""
+
+#: netlogo-headless/src/main/prim/etc/_incone.java:34
+#: netlogo-headless/src/main/prim/_inradius.scala:21
+msgid "{} cannot take a negative radius."
+msgstr ""
+
+#: netlogo-headless/src/main/prim/etc/_incone.java:42
+msgid "{} cannot take an angle greater than 360."
+msgstr ""
+
+#: netlogo-headless/src/main/prim/etc/_all.java:32
+#: netlogo-headless/src/main/prim/_anyotherwith.scala:28
+#: netlogo-headless/src/main/prim/_countotherwith.scala:30
+#: netlogo-headless/src/main/prim/_countwith.scala:29
+#: netlogo-headless/src/main/prim/_otherwith.scala:29
+#: netlogo-headless/src/main/prim/_with.scala:28
+msgid "{} expected a true/false value from {}, but got {} instead."
+msgstr ""
+
+#: netlogo-headless/src/main/prim/etc/_butfirst.java:26
+#: netlogo-headless/src/main/prim/etc/_butfirst.java:53
+#: netlogo-headless/src/main/prim/etc/_butlast.java:26
+#: netlogo-headless/src/main/prim/etc/_butlast.java:53
+#: netlogo-headless/src/main/prim/_oneof.scala:26
+#: netlogo-headless/src/main/prim/_oneof.scala:41
+msgid "{} got an empty list as input."
+msgstr ""
+
+#: netlogo-headless/src/main/prim/etc/_butfirst.java:33
+#: netlogo-headless/src/main/prim/etc/_butfirst.java:45
+#: netlogo-headless/src/main/prim/etc/_butlast.java:33
+#: netlogo-headless/src/main/prim/etc/_butlast.java:45
+msgid "{} got an empty string as input."
+msgstr ""
+
+#: parser-core/src/main/parse/ExpressionParser.scala:191
+#: parser-core/src/main/parse/ExpressionParser.scala:526
+msgid "{} is an imported module, not a command or a reporter. To use some X within {}, write {}:X."
+msgstr ""
+
+#: netlogo-headless/src/main/prim/etc/_sublist.java:28
+msgid "{} is greater than the length of the input list ({})."
+msgstr ""
+
+#: netlogo-headless/src/main/prim/etc/_sublist.java:22
+#: netlogo-headless/src/main/prim/etc/_substring.java:21
+msgid "{} is less than zero."
+msgstr ""
+
+#: netlogo-headless/src/main/prim/etc/_sublist.java:25
+#: netlogo-headless/src/main/prim/etc/_substring.java:24
+msgid "{} is less than {}."
+msgstr ""
+
+#: netlogo-core/src/main/agent/Patch.java:290
+#: netlogo-core/src/main/agent/Patch.java:306
+#: netlogo-core/src/main/agent/Turtle.java:292
+#: netlogo-core/src/main/agent/Turtle.java:380
+msgid "{} is not a double variable."
+msgstr ""
+
+#: netlogo-headless/src/main/prim/_stop.java:28
+#: netlogo-headless/src/main/prim/_stop.java:39
+msgid "{} is not allowed inside TO-REPORT."
+msgstr ""
+
+#: netlogo-headless/src/main/prim/etc/diffuse.scala:45
+msgid "{} is not in the range 0.0 to 1.0"
+msgstr ""
+
+#: netlogo-headless/src/main/prim/etc/_otherend.java:44
+msgid "{} is not linked by {}."
+msgstr ""
+
+#: netlogo-headless/src/main/prim/etc/_substring.java:27
+msgid "{} is too big for {}, which is only of length {}."
+msgstr ""
+
+#: netlogo-headless/src/main/prim/etc/_log.java:27
+msgid "{} isn't a valid base for a logarithm."
+msgstr ""
+
+#: netlogo-headless/src/main/prim/etc/_item.java:23
+#: netlogo-headless/src/main/prim/etc/_removeitem.java:23
+#: netlogo-headless/src/main/prim/etc/_replaceitem.java:24
+#: netlogo-headless/src/main/prim/etc/_insertitem.scala:16
+msgid "{} isn't greater than or equal to zero."
+msgstr ""
+
+#: netlogo-core/src/main/agent/DimensionManagement.scala:109
+#: netlogo-core/src/main/agent/DimensionManagement.scala:126
+msgid "{} must be an odd number when the origin is in the center of the world."
+msgstr ""
+
+#: netlogo-core/src/main/agent/DimensionManagement.scala:104
+#: netlogo-core/src/main/agent/DimensionManagement.scala:121
+msgid "{} must be greater than or equal to 1."
+msgstr ""
+
+#: netlogo-headless/src/main/prim/_report.java:33
+msgid "{} must be immediately inside a TO-REPORT."
+msgstr ""

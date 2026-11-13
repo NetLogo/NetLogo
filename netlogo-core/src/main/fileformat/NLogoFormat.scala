@@ -7,7 +7,7 @@ import java.net.URI
 import java.nio.file.{ Files, Paths }
 
 import org.nlogo.api.{ ComponentSerialization, FileIO, LabProtocol, ModelFormat, Version, VersionHistory }
-import org.nlogo.core.{ Femto, I18N, LiteralParser, Model, ShapeParser, Widget }
+import org.nlogo.core.{ Femto, LocaleContext, LiteralParser, Model, ShapeParser, Widget }
 import org.nlogo.core.model.WidgetReader
 
 import scala.io.{ Codec, Source }, Codec.UTF8
@@ -185,8 +185,10 @@ trait AbstractNLogoFormat[A <: ModelFormat[Array[String], A]] extends ModelForma
         Version.is3D(versionString) == is3DFormat)
         Success(m.copy(version = versionString))
       else {
-        val errorString =
-          I18N.errors.getN("fileformat.invalidversion", AbstractNLogoFormat.this.name, Version.version, versionString)
+        val errorString = loc"""|Invalid NetLogo file. Expected "${AbstractNLogoFormat.this.name}" formatted model to
+                                |have version compatible with ${Version.version}, but this model had version
+                                |$versionString"""
+
         Failure(new NLogoFormatException(errorString))
       }
     }

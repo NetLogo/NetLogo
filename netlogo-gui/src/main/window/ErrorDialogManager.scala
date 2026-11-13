@@ -10,7 +10,7 @@ import javax.swing.border.LineBorder
 import javax.swing.text.JTextComponent
 
 import org.nlogo.api.{ LogoException, Version }
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.nvm.{ Context, Instruction }
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, BrowserLauncher, ButtonPanel, CheckBox, DialogButton,
                          MessageDialog, Positioning, ScrollPane, TextArea, Utils => SwingUtils, Zoomable,
@@ -135,23 +135,23 @@ class ErrorDialogManager(owner: Component, additionalDialogs: => Map[Class[? <: 
   }
 }
 
-class CopyButton(textComp: JTextComponent) extends DialogButton(false, I18N.gui.get("menu.edit.copy"), () => {
+class CopyButton(textComp: JTextComponent) extends DialogButton(false, loc"Copy", () => {
   textComp.select(0, textComp.getText.length)
   textComp.copy()
   textComp.setCaretPosition(0)
 })
 
 abstract class ErrorDialog(owner: Component, dialogTitle: String)
-extends MessageDialog(owner, I18N.gui.get("common.buttons.dismiss")) {
+extends MessageDialog(owner, loc"Dismiss") {
   protected var message = ""
   protected var details = ""
 
   override def makeButtons(): Seq[JComponent] = {
-    val reportButton = new DialogButton(true, I18N.gui.get("dialog.error.report"), () => {
+    val reportButton = new DialogButton(true, loc"Report", () => {
       new ReportDialog(this, details)
     }: Unit)
 
-    val dismissAction = new AbstractAction(I18N.gui.get("common.buttons.dismiss")) {
+    val dismissAction = new AbstractAction(loc"Dismiss") {
       override def actionPerformed(e: ActionEvent): Unit = {
         setVisible(false)
       }
@@ -181,10 +181,17 @@ extends MessageDialog(owner, I18N.gui.get("common.buttons.dismiss")) {
 }
 
 class UnknownErrorDialog(owner: Component)
-extends ErrorDialog(owner, I18N.gui.get("error.dialog.unknown")) {
+extends ErrorDialog(owner, loc"Internal Error") {
   private var suppressed = false
 
-  message = I18N.gui.get("error.dialog.pleaseReport")
+  message = loc"""|NetLogo is unable to supply you with more details about this error.
+                  |Please report the problem at https://github.com/NetLogo/NetLogo/issues or to
+                  |bugs@ccl.northwestern.edu and paste the contents of this window into your report.\n\nPlease also
+                  |include the steps necessary to reproduce the problem. If you need to attach a NetLogo model
+                  |(i.e. .nlogox file), to ensure it gets through please put it and any accessory files in a zip file.
+                  |If you cannot reproduce the error then please try to describe what you were doing when it
+                  |happened.\n\nWe recommend that you use the latest version of NetLogo, which is available at
+                  |https://www.netlogo.org/download"""
 
   override def show(errorInfo: ErrorInfo, debugInfo: DebuggingInfo): Unit = if (!suppressed) {
     details = debugInfo.detailedInformation
@@ -192,7 +199,7 @@ extends ErrorDialog(owner, I18N.gui.get("error.dialog.unknown")) {
   }
 
   override def makeButtons() = {
-    val suppressButton = new DialogButton(false, I18N.gui.get("error.dialog.suppress"), () => {
+    val suppressButton = new DialogButton(false, loc"Don't show again", () => {
       suppressed = true
       setVisible(false)
     })
@@ -201,8 +208,8 @@ extends ErrorDialog(owner, I18N.gui.get("error.dialog.unknown")) {
 }
 
 class LogoExceptionDialog(owner: Component)
-extends ErrorDialog(owner, I18N.gui.get("error.dialog.logo")) {
-  private lazy val checkbox = new CheckBox(I18N.gui.get("error.dialog.showInternals"), (selected) => {
+extends ErrorDialog(owner, loc"Runtime Error") {
+  private lazy val checkbox = new CheckBox(loc"Show internal details", (selected) => {
     doShow(selected)
   })
 
@@ -222,15 +229,18 @@ extends ErrorDialog(owner, I18N.gui.get("error.dialog.logo")) {
 }
 
 class OutOfMemoryDialog(owner: Component)
-extends ErrorDialog(owner, I18N.gui.get("error.dialog.outOfMemory.title")) {
-  message = I18N.gui.get("error.dialog.outOfMemory")
+extends ErrorDialog(owner, loc"Model Too Large") {
+  message = loc"""|Your model is too large to run in the amount of memory available to NetLogo!\n
+                  |For more information consult the "How big can my model be?" section of the FAQ in the user manual.\n
+                  |Warning: you may see strange results if you continue running the current model without restarting
+                  |NetLogo."""
 
   override def show(errorInfo: ErrorInfo, debugInfo: DebuggingInfo): Unit = {
     doShow(false)
   }
 
   override def makeButtons() = {
-    super.makeButtons() :+ new DialogButton(false, I18N.gui.get("error.dialog.openFAQ"), () => {
+    super.makeButtons() :+ new DialogButton(false, loc"Open FAQ", () => {
       BrowserLauncher.openURI(
         owner,
         new URI(s"https://docs.netlogo.org/${Version.versionNumberNo3D}/faq#how-big-can-my-model-be-how-many-turtles-patches-procedures-buttons-and-so-on-can-my-model-contain"))
@@ -239,22 +249,27 @@ extends ErrorDialog(owner, I18N.gui.get("error.dialog.outOfMemory.title")) {
 }
 
 private class ReportDialog(parent: Dialog, trace: String)
-  extends JDialog(parent, I18N.gui.get("dialog.error.report.title"), true) with ZoomableWindow(Option(parent))
+  extends JDialog(parent, loc"Report Error", true) with ZoomableWindow(Option(parent))
   with ThemeSync {
 
-  private val label = new JLabel(I18N.gui.get("dialog.error.report.message")) with Zoomable
+  private val message = loc"""|<html>Please include any extra information needed to replicate the error,<br>
+                              |especially what you did in NetLogo right before it occurred. You do not need to provide
+                              |any<br>personal information unless you would like to be contacted by the NetLogo team.
+                              |<br>This model will not be sent automatically with the report.</html>"""
 
-  private val message = new TextArea(8, 40)
+  private val label = new JLabel(message) with Zoomable
 
-  private val scrollPane = new ScrollPane(message, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+  private val text = new TextArea(8, 40)
+
+  private val scrollPane = new ScrollPane(text, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
                                           ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED)
 
-  private val reportButton = new DialogButton(true, I18N.gui.get("dialog.error.report"), () => {
+  private val reportButton = new DialogButton(true, loc"Report", () => {
     report()
     setVisible(false)
   })
 
-  private val cancelButton = new DialogButton(false, I18N.gui.get("common.buttons.cancel"), () => {
+  private val cancelButton = new DialogButton(false, loc"Cancel", () => {
     setVisible(false)
   })
 
@@ -278,7 +293,7 @@ private class ReportDialog(parent: Dialog, trace: String)
     val version = Version.versionNumberOnly
     val os = s"${System.getProperty("os.name").split(" ")(0)} ${System.getProperty("os.arch")}"
     val stacktrace = trace.trim
-    val comment = message.getText.trim
+    val comment = text.getText.trim
 
     val json =
       ujson.write(
@@ -304,7 +319,7 @@ private class ReportDialog(parent: Dialog, trace: String)
     scrollPane.setBorder(new LineBorder(InterfaceColors.textAreaBorderEditable()))
     scrollPane.setBackground(InterfaceColors.textAreaBackground())
 
-    message.syncTheme()
+    text.syncTheme()
     reportButton.syncTheme()
     cancelButton.syncTheme()
   }

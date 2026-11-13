@@ -4,7 +4,7 @@ package org.nlogo.agent
 
 import
   org.nlogo.{ core, api },
-    core.{ I18N, Program },
+    core.{ LocaleContext, Program },
     api.{ AgentException, Agent => ApiAgent }
 
 import scala.collection.immutable.Set
@@ -101,8 +101,9 @@ abstract class Agent(val world: World) extends AgentJ(world) with ApiAgent with 
 
   @throws(classOf[AgentException])
   private[agent] def wrongTypeForVariable(name: String, expectedClass: Class[?], value: AnyRef): Unit = {
-    throw new AgentException(I18N.errors.getN("org.nlogo.agent.Agent.wrongTypeOnSetError",
-        classDisplayName, name, api.Dump.typeName(expectedClass), api.Dump.logoObject(value)))
+    throw new AgentException(
+      loc"can't set $classDisplayName variable $name to non-${api.Dump.typeName(expectedClass)} ${api.Dump.logoObject(value)}"
+    )
   }
 }
 

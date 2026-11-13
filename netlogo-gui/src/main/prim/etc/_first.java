@@ -2,7 +2,7 @@
 
 package org.nlogo.prim.etc;
 
-import org.nlogo.core.I18N;
+import org.nlogo.core.LocaleContextJ;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.LogoList;
 import org.nlogo.core.Syntax;
@@ -25,13 +25,13 @@ public final class _first
     if (obj instanceof LogoList) {
       LogoList list = (LogoList) obj;
       if (list.isEmpty()) {
-        throw new RuntimePrimitiveException(context, this, I18N.errorsJ().get("org.nlogo.prim.etc.$common.emptyList"));
+        throw new RuntimePrimitiveException(context, this, LocaleContextJ.loc("List is empty."));
       }
       return list.first();
     } else if (obj instanceof String) {
       String string = (String) obj;
       if (string.length() == 0) {
-        throw new RuntimePrimitiveException(context, this, I18N.errorsJ().get("org.nlogo.prim.etc.$common.emptyString"));
+        throw new RuntimePrimitiveException(context, this, LocaleContextJ.loc("String is empty."));
       }
       return string.substring(0, 1);
     } else {
@@ -43,7 +43,7 @@ public final class _first
   public Object report_2(final org.nlogo.nvm.Context context, LogoList list)
       throws LogoException {
     if (list.isEmpty()) {
-      throw new RuntimePrimitiveException(context, this, I18N.errorsJ().get("org.nlogo.prim.etc.$common.emptyList"));
+      throw new RuntimePrimitiveException(context, this, LocaleContextJ.loc("List is empty."));
     }
     return list.first();
   }
@@ -51,7 +51,7 @@ public final class _first
   public Object report_3(final org.nlogo.nvm.Context context, String string)
       throws LogoException {
     if (string.length() == 0) {
-      throw new RuntimePrimitiveException(context, this, I18N.errorsJ().get("org.nlogo.prim.etc.$common.emptyString"));
+      throw new RuntimePrimitiveException(context, this, LocaleContextJ.loc("String is empty."));
     }
     return string.substring(0, 1);
   }

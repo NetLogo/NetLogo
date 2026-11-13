@@ -3,7 +3,7 @@
 package org.nlogo.window
 
 import org.nlogo.api.CompilerServices
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.editor.Colorizer
 import org.nlogo.swing.{ BoxAlign, BoxRow }
 
@@ -14,7 +14,7 @@ class DummyChooserEditPanel(target: DummyChooserWidget, compiler: CompilerServic
     new StringEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.hubnet.tag"),
+        loc"Tag",
         () => target.name,
         _.foreach(target.setVarName),
         () => apply()))
@@ -23,19 +23,20 @@ class DummyChooserEditPanel(target: DummyChooserWidget, compiler: CompilerServic
     new LogoListEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.chooser.choices"),
+        loc"Choices",
         () => target.choicesWrapper,
         _.foreach(target.setChoicesWrapper),
         () => apply()),
       compiler, colorizer)
 
-  private val choicesLabeled = new LabeledEditor(choicesWrapper, I18N.gui.get("edit.chooser.example"))
+  private val choicesLabeled =
+    new LabeledEditor(choicesWrapper, loc"<html>example: &quot;a&quot; &quot;b&quot; &quot;c&quot; 3 4 5</html>")
 
   private val oldSize =
     new BooleanEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.general.oldSize"),
+        loc"Use old sizing",
         () => target.oldSize,
         _.foreach(target.oldSize),
         () => apply()))

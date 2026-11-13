@@ -2,7 +2,7 @@
 
 package org.nlogo.prim.etc;
 
-import org.nlogo.core.I18N;
+import org.nlogo.core.LocaleContextJ;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.AgentException;
 import org.nlogo.core.LogoList;
@@ -28,8 +28,8 @@ public final class _extractrgb
       org.nlogo.api.Color.validRGBList(rgb,true);
     }
     catch (AgentException a) {
-      throw new org.nlogo.nvm.RuntimePrimitiveException(
-        context, this, I18N.errorsJ().getN("org.nlogo.prim.etc._extractrgb.invalidColor"));
+      throw new org.nlogo.nvm.RuntimePrimitiveException(context, this,
+        LocaleContextJ.loc("Color must be a number or a valid RGB/A color list with 3 - 4 numbers that have values between 0 and 255."));
     }
     LogoListBuilder rgbNoAlpha = new LogoListBuilder();
     for (int i = 0; i < 3; i++) {

@@ -7,33 +7,31 @@ import java.awt.event.{ ActionEvent, KeyEvent }
 import javax.swing.{ AbstractAction, Action }
 
 import org.nlogo.api.{ Refreshable, Version }
-import org.nlogo.core.{ I18N, AgentKind }
+import org.nlogo.core.{ AgentKind, LocaleContext }
 import org.nlogo.swing.UserAction._
 
 object WorkspaceActions {
-  implicit val i18nName: org.nlogo.core.I18N.Prefix = I18N.Prefix("menu.tools")
-
   val HaltGroup     = "org.nlogo.window.WorkspaceActions.Halt"
 
   def apply(workspace: GUIWorkspace): Seq[MenuAction] =
     Seq(
       new HaltAction(workspace),
-      new SimpleGUIWorkspaceAction(I18N.gui("globalsMonitor"), ToolsMonitorGroup, workspace, _.inspectAgent(AgentKind.Observer)) {
+      new SimpleGUIWorkspaceAction(loc"Globals Monitor", ToolsMonitorGroup, workspace, _.inspectAgent(AgentKind.Observer)) {
         mnemonic = 'G'
       },
-      new SimpleGUIWorkspaceAction(I18N.gui("turtleMonitor"), ToolsMonitorGroup, workspace, _.inspectAgent(AgentKind.Turtle)) {
+      new SimpleGUIWorkspaceAction(loc"Turtle Monitor", ToolsMonitorGroup, workspace, _.inspectAgent(AgentKind.Turtle)) {
         mnemonic = 'T'
       },
-      new SimpleGUIWorkspaceAction(I18N.gui("patchMonitor"), ToolsMonitorGroup, workspace, _.inspectAgent(AgentKind.Patch)) {
+      new SimpleGUIWorkspaceAction(loc"Patch Monitor", ToolsMonitorGroup, workspace, _.inspectAgent(AgentKind.Patch)) {
         mnemonic = 'O'
       },
-      new SimpleGUIWorkspaceAction(I18N.gui("linkMonitor"), ToolsMonitorGroup, workspace, _.inspectAgent(AgentKind.Link)) {
+      new SimpleGUIWorkspaceAction(loc"Link Monitor", ToolsMonitorGroup, workspace, _.inspectAgent(AgentKind.Link)) {
         mnemonic = 'L'
       },
-      new SimpleGUIWorkspaceAction(I18N.gui("closeAllAgentMonitors"), ToolsMonitorGroup, workspace, _.closeAgentMonitors()) {
+      new SimpleGUIWorkspaceAction(loc"Close All Agent Monitors", ToolsMonitorGroup, workspace, _.closeAgentMonitors()) {
         mnemonic = 'A'
       },
-      new SimpleGUIWorkspaceAction(I18N.gui("closeDeadAgentMonitors"), ToolsMonitorGroup, workspace, _.stopInspectingDeadAgents()) {
+      new SimpleGUIWorkspaceAction(loc"Close Monitors for Dead Agents", ToolsMonitorGroup, workspace, _.stopInspectingDeadAgents()) {
         mnemonic = 'M'
       },
     ) ++ (if (Version.is3D) Seq() else Seq(new Open3DViewAction(workspace)))
@@ -61,7 +59,7 @@ object WorkspaceActions {
   }
 
   class HaltAction(workspace: GUIWorkspace)
-    extends SimpleGUIWorkspaceAction(I18N.gui("halt"), HaltGroup, workspace, _.halt) {
+    extends SimpleGUIWorkspaceAction(loc"Halt", HaltGroup, workspace, _.halt) {
 
     mnemonic = 'H'
 
@@ -71,7 +69,7 @@ object WorkspaceActions {
 
   // this should be unified with switchTo3DViewAction in GUIWorkspace at some point...
   class Open3DViewAction(workspace: GUIWorkspace)
-  extends GUIWorkspaceAction(I18N.gui.get("menu.tools.3DView.switch"), workspace) {
+  extends GUIWorkspaceAction(loc"Switch to 3D View", workspace) {
     category    = ToolsCategory
     group       = ToolsDialogsGroup
     rank        = 0
@@ -85,7 +83,7 @@ object WorkspaceActions {
           workspace.set2DViewEnabled(false)
         } catch {
           case ex: org.nlogo.window.JOGLLoadingException =>
-            org.nlogo.swing.Utils.alert("3d", ex.getMessage, "" + ex.getCause, I18N.gui.get("common.buttons.continue") )
+            org.nlogo.swing.Utils.alert("3d", ex.getMessage, "" + ex.getCause, loc"Continue")
         }
       }
     }
@@ -93,7 +91,7 @@ object WorkspaceActions {
 }
 
 class HubNetControlCenterAction(workspace: GUIWorkspace)
-  extends AbstractAction(I18N.gui.get("menu.tools.hubNetControlCenter"))
+  extends AbstractAction(loc"HubNet Control Center")
   with MenuAction {
     category    = ToolsCategory
     group       = ToolsHubNetGroup
@@ -105,7 +103,7 @@ class HubNetControlCenterAction(workspace: GUIWorkspace)
 }
 
 class SnapToGridAction(workspace: GUIWorkspace, widgetPanel: AbstractWidgetPanel)
-  extends AbstractAction(I18N.gui.get("menu.edit.snapToGrid"))
+  extends AbstractAction(loc"Snap to Grid")
   with CheckBoxAction
   with MenuAction
   with Refreshable {

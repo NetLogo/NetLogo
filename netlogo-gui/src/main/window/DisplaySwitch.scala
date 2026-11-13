@@ -4,12 +4,11 @@ package org.nlogo.window
 
 import java.awt.event.{ ActionEvent, ActionListener }
 
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.swing.CheckBox
 
-class DisplaySwitch(workspace: GUIWorkspace) extends CheckBox(I18N.gui.get("tabs.run.viewUpdates.checkbox"))
-                                             with ActionListener {
-  setToolTipText(I18N.gui.get("tabs.run.viewUpdates.checkbox.tooltip"))
+class DisplaySwitch(workspace: GUIWorkspace) extends CheckBox(loc"View Updates") with ActionListener {
+  setToolTipText(loc"Freeze or unfreeze view")
 
   addActionListener(this)
 

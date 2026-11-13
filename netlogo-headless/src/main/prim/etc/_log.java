@@ -2,7 +2,7 @@
 
 package org.nlogo.prim.etc;
 
-import org.nlogo.core.I18N;
+import org.nlogo.core.LocaleContextJ;
 import org.nlogo.core.Pure;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.RuntimePrimitiveException;
@@ -20,11 +20,11 @@ public final class _log extends Reporter implements Pure {
   public double report_1(Context context, double n, double base) {
     if (n <= 0) {
       throw new RuntimePrimitiveException(context, this,
-          I18N.errorsJ().getN("org.nlogo.prim.etc.$common.cantTakeLogarithmOf", n));
+        LocaleContextJ.loc("Can't take logarithm of {}.", LocaleContextJ.formatDouble(n)));
     }
     if (base <= 0) {
       throw new RuntimePrimitiveException(context, this,
-          I18N.errorsJ().getN("org.nlogo.prim.etc._log.notAValidBase", base));
+        LocaleContextJ.loc("{} isn't a valid base for a logarithm.", LocaleContextJ.formatDouble(base)));
     }
     return validDouble(StrictMath.log(n) / StrictMath.log(base), context);
   }

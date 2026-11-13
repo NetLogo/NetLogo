@@ -29,7 +29,7 @@ object NetLogoPackaging {
   lazy val configRoot              = settingKey[File]("configuration directory")
   lazy val resaveModel             = inputKey[Unit]("resave specific models in the current version")
   lazy val resaveModels            = taskKey[Unit]("prep models library for packaging")
-  lazy val checkTranslations       = inputKey[Unit]("check for missing translation keys")
+  lazy val extractStrings          = taskKey[Unit]("update PO template files for each project")
   lazy val buildMathematicaLink    = taskKey[Unit]("build and package Mathematica Link submodule")
   lazy val generateLocalWebsite    = taskKey[File]("package the web download pages")
   lazy val mathematicaRoot         = settingKey[File]("root of Mathematica-Link directory")
@@ -75,7 +75,8 @@ object NetLogoPackaging {
     ).map(p => (" " ~> p))
     .getOrElse(Parser.failure("Add at least one JDK to '.jdks.yaml' at the root of the NetLogo repository."))
 
-  def settings(netlogo: Project, behaviorsearchProject: Project): Seq[Setting[?]] = Seq(
+  def settings(parserJVM: Project, parserJS: Project, netlogo: Project, headless: Project,
+               behaviorsearchProject: Project): Seq[Setting[?]] = Seq(
     netLogoRoot     := (netlogo / baseDirectory).value,
     mathematicaRoot := netLogoRoot.value.getParentFile / "Mathematica-Link",
     configRoot      := baseDirectory.value / "configuration",
@@ -112,8 +113,11 @@ object NetLogoPackaging {
         workingDirectory = baseDirectory(_.getParentFile)).toTask("").value
     },
 
-    checkTranslations := {
-      makeMainTask("org.nlogo.tools.CheckTranslations", classpath = (netlogo / Test / Keys.fullClasspath)).evaluated
+    extractStrings := {
+      (parserJVM / extractStrings).value
+      (parserJS / extractStrings).value
+      (netlogo / extractStrings).value
+      (headless / extractStrings).value
     },
 
     buildMathematicaLink := {

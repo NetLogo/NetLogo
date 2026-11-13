@@ -10,7 +10,7 @@ import javax.swing.{ AbstractAction, Action, JPanel, JSplitPane, ScrollPaneConst
 import org.nlogo.api.Announcement
 import org.nlogo.app.common.{Events => AppEvents, MenuTab}, AppEvents.SwitchedTabsEvent
 import org.nlogo.app.tools.AgentMonitorManager
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.swing.{ BoxColumn, FocusRoot, Implicits, PreferredSize, PrinterManager, Printable => NlogoPrintable,
                          ScrollPane, SplitPane, Transparent, UserAction, Utils, Zoomable },
                        Implicits.thunk2action, UserAction.{ MenuAction, ToolsCategory }
@@ -358,7 +358,7 @@ class InterfaceTab(workspace: GUIWorkspace,
       splitPane.resetToLastOpenSizes()
   }
 
-  class ToolbarAction extends AbstractAction(I18N.gui.get("menu.tools.collapseToolbar")) with MenuAction {
+  class ToolbarAction extends AbstractAction(loc"Collapse Toolbar") with MenuAction {
     category = ToolsCategory
     group = MenuGroup
     mnemonic = KeyEvent.VK_T
@@ -371,14 +371,14 @@ class InterfaceTab(workspace: GUIWorkspace,
 
     def updateAction(): Unit = {
       if (toolBar.isCollapsed) {
-        putValue(Action.NAME, I18N.gui.get("menu.tools.expandToolbar"))
+        putValue(Action.NAME, loc"Expand Toolbar")
       } else {
-        putValue(Action.NAME, I18N.gui.get("menu.tools.collapseToolbar"))
+        putValue(Action.NAME, loc"Collapse Toolbar")
       }
     }
   }
 
-  class CommandCenterToggleAction extends AbstractAction(I18N.gui.get("menu.tools.hideCommandCenter"))
+  class CommandCenterToggleAction extends AbstractAction(loc"Hide Command Center")
   with MenuAction {
     category    = ToolsCategory
     group       = MenuGroup
@@ -396,7 +396,7 @@ class InterfaceTab(workspace: GUIWorkspace,
     }
   }
 
-  class JumpToCommandCenterAction extends AbstractAction(I18N.gui.get("menu.tools.jumpToCommandCenter"))
+  class JumpToCommandCenterAction extends AbstractAction(loc"Jump to Command Center")
   with MenuAction {
     category    = ToolsCategory
     group       = MenuGroup

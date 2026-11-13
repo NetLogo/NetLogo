@@ -7,7 +7,7 @@ import java.io.File
 import javax.swing.JFileChooser
 
 import org.nlogo.awt.{ Hierarchy, UserCancelException }
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 
 object FileDialog {
   /**
@@ -46,9 +46,8 @@ object FileDialog {
     // so we need to check with the user to see if they really meant to use
     // the extension so we don't overwrite anything we're not meant to.
     // -Jeremy B June 2021
-    if (new OptionPane(owner, I18N.gui.get("common.netlogo"), I18N.gui.getN("file.save.warn.overwrite", path),
-                       Seq(I18N.gui.get("common.buttons.replace"), I18N.gui.get("common.buttons.cancel")),
-                       OptionPane.Icons.question).getSelectedIndex != 0) {
+    if (new OptionPane(owner, loc"NetLogo", loc"""A file named "$path" already exists. Do you want to replace it?""",
+                       Seq(loc"Replace", loc"Cancel"), OptionPane.Icons.question).getSelectedIndex != 0) {
       None
     } else {
       Some(path)

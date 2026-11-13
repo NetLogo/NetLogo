@@ -16,14 +16,14 @@ import javax.swing.table.{ DefaultTableModel, TableCellRenderer }
 
 import org.nlogo.api.{ Workspace }
 import org.nlogo.awt.{ Positioning, UserCancelException }
-import org.nlogo.core.{ ExternalResource, I18N }
+import org.nlogo.core.{ ExternalResource, LocaleContext }
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, Button, FileDialog, InputOptionPane, MaximumHeight, OptionPane,
                          ScrollPane, Utils, WindowAutomator, Zoomable, ZoomableBorder, ZoomableWindow }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.Events.{ DirtyEvent, ResourcesChangedEvent }
 
 class ResourceManagerDialog(parent: Frame, workspace: Workspace)
-  extends JDialog(parent, I18N.gui.get("resource.manager"), true) with ZoomableWindow(Option(parent)) with ThemeSync {
+  extends JDialog(parent, loc"External Resource Manager", true) with ZoomableWindow(Option(parent)) with ThemeSync {
 
   WindowAutomator.automate(this)
 
@@ -70,9 +70,9 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
 
   private val scrollPane = new ScrollPane(table)
 
-  private val addButton = new Button(I18N.gui.get("resource.add"), () => {
+  private val addButton = new Button(loc"Add", () => {
     try {
-      val file = FileDialog.showFiles(parent, I18N.gui.get("resource.select"), AWTFileDialog.LOAD)
+      val file = FileDialog.showFiles(parent, loc"Select File", AWTFileDialog.LOAD)
       val path = Paths.get(file)
 
       val (fileName, extension) = {
@@ -85,15 +85,14 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
         }
       }
 
-      val name = new InputOptionPane(parent, I18N.gui.get("resource.name"), I18N.gui.get("resource.name"),
-                                     fileName).getInput
+      val name = new InputOptionPane(parent, loc"Enter Resource Name", loc"Enter Resource Name", fileName).getInput
 
       if (name != null) {
         val trimmed = name.trim
 
         if (trimmed.isEmpty) {
-          new OptionPane(parent, I18N.gui.get("common.messages.error"), I18N.gui.get("resource.nameEmpty"),
-                         OptionPane.Options.Ok, OptionPane.Icons.error)
+          new OptionPane(parent, loc"Error", loc"Resource name cannot be empty.", OptionPane.Options.Ok,
+                         OptionPane.Icons.error)
         }
 
         else {
@@ -117,7 +116,8 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
           }
 
           else {
-            new OptionPane(parent, I18N.gui.get("common.messages.error"), I18N.gui.getN("resource.alreadyExists", trimmed),
+            new OptionPane(parent, loc"Error",
+                           loc"""A resource with the name "$trimmed" already exists in this model.""",
                            OptionPane.Options.Ok, OptionPane.Icons.error)
           }
         }
@@ -129,12 +129,11 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
     }
   })
 
-  private val exportButton = new Button(I18N.gui.get("resource.export"), () => {
+  private val exportButton = new Button(loc"Export", () => {
     try {
       val resource = manager.getResource(table.getValueAt(table.getSelectedRow, 0).toString).get
-      val stream = new FileOutputStream(FileDialog.showFiles(parent, I18N.gui.get("resource.select"),
-                                                              AWTFileDialog.SAVE,
-                                                              s"${resource.name}.${resource.extension}"))
+      val stream = new FileOutputStream(FileDialog.showFiles(parent, loc"Select File", AWTFileDialog.SAVE,
+                                                             s"${resource.name}.${resource.extension}"))
 
       stream.write(Base64.getDecoder.decode(resource.data))
       stream.close()
@@ -145,18 +144,18 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
     }
   })
 
-  private val renameButton = new Button(I18N.gui.get("resource.rename"), () => {
+  private val renameButton = new Button(loc"Rename", () => {
     val resource = manager.getResource(table.getValueAt(table.getSelectedRow, 0).toString).get
 
-    val name = new InputOptionPane(parent, I18N.gui.get("resource.newName"), I18N.gui.get("resource.newName"),
-                                   resource.name).getInput
+    val name = new InputOptionPane(parent, loc"Enter New Resource Name", loc"Enter New Resource Name", resource.name)
+                 .getInput
 
     if (name != null) {
       val trimmed = name.trim
 
       if (trimmed.isEmpty) {
-        new OptionPane(parent, I18N.gui.get("common.messages.error"), I18N.gui.get("resource.nameEmpty"),
-                       OptionPane.Options.Ok, OptionPane.Icons.error)
+        new OptionPane(parent, loc"Error", loc"Resource name cannot be empty.", OptionPane.Options.Ok,
+                       OptionPane.Icons.error)
       }
 
       else if (trimmed != resource.name) {
@@ -172,14 +171,15 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
         else {
           manager.addResource(resource)
 
-          new OptionPane(parent, I18N.gui.get("common.messages.error"), I18N.gui.getN("resource.alreadyExists", trimmed),
+          new OptionPane(parent, loc"Error",
+                         loc"""A resource with the name "$trimmed" already exists in this model.""",
                          OptionPane.Options.Ok, OptionPane.Icons.error)
         }
       }
     }
   })
 
-  private val removeButton = new Button(I18N.gui.get("resource.remove"), () => {
+  private val removeButton = new Button(loc"Remove", () => {
     manager.removeResource(table.getValueAt(table.getSelectedRow, 0).toString)
 
     refreshList()

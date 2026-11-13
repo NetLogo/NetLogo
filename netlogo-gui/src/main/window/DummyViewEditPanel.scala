@@ -2,14 +2,14 @@
 
 package org.nlogo.window
 
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 
 class DummyViewEditPanel(target: DummyViewWidget) extends WidgetEditPanel(target) {
   private val widthEditor =
     new IntegerEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.hubnet.view.width"),
+        loc"Width (pixels)",
         () => target.width(),
         _.foreach(target.setWidth),
         () => apply()))
@@ -18,7 +18,7 @@ class DummyViewEditPanel(target: DummyViewWidget) extends WidgetEditPanel(target
     new IntegerEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.hubnet.view.height"),
+        loc"Height (pixels)",
         () => target.height(),
         _.foreach(target.setHeight),
         () => apply()))

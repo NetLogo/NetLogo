@@ -12,7 +12,7 @@ import javax.swing.{ AbstractAction, JPanel }
 import org.nlogo.agent.Observer
 import org.nlogo.api.TabsInterface
 import org.nlogo.app.common.{ CodeToHtml, EditorFactory, Events => AppEvents, FindDialog, MenuTab }
-import org.nlogo.core.{ AgentKind, CompilerException, I18N, ResolvedModule }
+import org.nlogo.core.{ AgentKind, CompilerException, LocaleContext, ResolvedModule }
 import org.nlogo.editor.{ AdvancedEditorArea, EditorConfiguration }
 import org.nlogo.nvm.IncludeSource
 import org.nlogo.swing.{ BoxAlign, BoxRow, Button, CheckBox, FocusRoot, PrinterManager, ToolBarActionButton, UserAction,
@@ -33,7 +33,7 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
   with FocusRoot
   with ThemeSync {
 
-  protected val compileButton = new ToolBarActionButton(new AbstractAction(I18N.gui.get("tabs.code.checkButton")) {
+  protected val compileButton = new ToolBarActionButton(new AbstractAction(loc"Check") {
     override def actionPerformed(e: ActionEvent): Unit = {
       compile()
 
@@ -50,11 +50,11 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
 
   private val proceduresMenu = new ProceduresMenu(CodeTab.this)
 
-  private val separate = new CheckBox(I18N.gui.get("tabs.code.separateCodeWindow"), (selected) => {
+  private val separate = new CheckBox(loc"Separate code window", (selected) => {
     tabs.switchWindow(selected, true)
   })
 
-  private val prefsButton = new Button(I18N.gui.get("tabs.code.preferences"), () => {
+  private val prefsButton = new Button(loc"Preferences", () => {
     tabs.showCodeTabPreferences()
   })
 

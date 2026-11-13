@@ -5,7 +5,7 @@ package org.nlogo.sdm.gui
 import java.awt.{ Color, Component }
 import javax.swing.event.{ ChangeEvent, ChangeListener }
 
-import org.nlogo.core.{ CompilerException, I18N }
+import org.nlogo.core.{ CompilerException, LocaleContext }
 import org.nlogo.theme.InterfaceColors
 import org.nlogo.swing.TabbedPane
 
@@ -20,8 +20,8 @@ class AggregateTabs(editor: AggregateModelEditor, editorTab: AggregateEditorTab,
 
   addChangeListener(this)
 
-  add(I18N.gui.get("tools.sdm.diagram"), editorTab)
-  add(I18N.gui.get("tabs.code"), proceduresTab)
+  add(loc"Diagram", editorTab)
+  add(loc"Code", proceduresTab)
 
   setSelectedComponent(editorTab)
 

@@ -7,18 +7,16 @@ import java.awt.event.{ ActionEvent, MouseAdapter, MouseEvent }
 import javax.swing.{ AbstractAction, JDialog }
 import javax.swing.event.{ ListSelectionEvent, ListSelectionListener }
 
-import org.nlogo.core.{ I18N, Shape }
+import org.nlogo.core.{ LocaleContext, Shape }
 import org.nlogo.swing.{ ButtonPanel, DialogButton, InputOptionPane, OptionPane, ScrollPane, Utils }
 import org.nlogo.theme.InterfaceColors
 
 class ImportDialog(parent: JDialog, manager: ManagerDialog[? <: Shape], list: DrawableList[? <: Shape])
-  extends JDialog(parent, I18N.gui.get("tools.shapesEditor.importFromLibrary"), true) with ListSelectionListener {
-
-  private implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("tools.shapesEditor.import")
+  extends JDialog(parent, loc"Import from Library...", true) with ListSelectionListener {
 
   locally {
-    val importButton = new DialogButton(true, I18N.gui.get("tools.shapesEditor.import"), () => importSelectedShapes())
-    val cancelButton = new DialogButton(false, I18N.gui.get("common.buttons.cancel"), () => dispose)
+    val importButton = new DialogButton(true, loc"Import", () => importSelectedShapes())
+    val cancelButton = new DialogButton(false, loc"Cancel", () => dispose)
 
     getContentPane.setLayout(new BorderLayout(0, 10))
     getContentPane.add(new ScrollPane(list) {
@@ -64,7 +62,7 @@ class ImportDialog(parent: JDialog, manager: ManagerDialog[? <: Shape], list: Dr
 
   // Import shapes from another model
   private def importSelectedShapes(): Unit = {
-    val choices = Seq(I18N.gui("replace"), I18N.gui("rename"), I18N.gui.get("common.buttons.cancel"))
+    val choices = Seq(loc"Replace", loc"Rename", loc"Cancel")
 
     // For each selected shape, add it to the current model's file and the turtledrawer
     val shapes: Option[Seq[Shape]] = list.getSelectedIndices.foldLeft(Option(Seq[Shape]())) {
@@ -78,12 +76,13 @@ class ImportDialog(parent: JDialog, manager: ManagerDialog[? <: Shape], list: Dr
 
         // If the shape exists, give the user the chance to overwrite or rename
         while (manager.shapesList.exists(shape.name) && choice == 1) {
-          choice = new OptionPane(this, I18N.gui.get("tools.shapesEditor.import"),
-                                  I18N.gui("nameConflict", shape.name), choices,
-                                  OptionPane.Icons.warning).getSelectedIndex
+          val message = loc"""|A shape with the name "${shape.name}" already exists in this model.\n
+                              |Do you want to replace the existing shape or rename the imported one?"""
+
+          choice = new OptionPane(this, loc"Import", message, choices, OptionPane.Icons.warning).getSelectedIndex
 
           if (choice == 1) { // rename
-            val name = new InputOptionPane(this, I18N.gui("importShapes"), I18N.gui("importAs")).getInput
+            val name = new InputOptionPane(this, loc"Import Shapes", loc"Import Shape As").getInput
 
             // if the user cancels the inputdialog, then name could
             // be null causing a nullpointerexception later on
@@ -112,7 +111,7 @@ class ImportDialog(parent: JDialog, manager: ManagerDialog[? <: Shape], list: Dr
 
   // Show a warning dialog to indicate something went wrong when importing
   def sendImportWarning(message: String): Unit = {
-    new OptionPane(this, I18N.gui.get("tools.shapesEditor.import"), message, OptionPane.Options.Ok,
+    new OptionPane(this, loc"Import", message, OptionPane.Options.Ok,
                    OptionPane.Icons.warning)
   }
 

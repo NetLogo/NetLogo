@@ -4,7 +4,7 @@ package org.nlogo.prim
 
 import org.nlogo.agent.{ Agent, Link, Patch, Turtle }
 import org.nlogo.api.TypeNames
-import org.nlogo.core.{ I18N, Pure }
+import org.nlogo.core.{ LocaleContext, Pure }
 import org.nlogo.nvm.{ Context, Reporter }
 import org.nlogo.nvm.RuntimePrimitiveException
 
@@ -28,10 +28,9 @@ class _greaterthan extends Reporter with Pure {
       if (a1.agentBit == a2.agentBit)
         return a1.compareTo(a2) > 0
     }
-    throw new RuntimePrimitiveException(
-      context, this, I18N.errors.getN(
-        "org.nlogo.prim._greaterthan.cannotCompareParameters",
-        TypeNames.aName(o1), TypeNames.aName(o2)))
+    val message = loc""""|The > operator can only be used on two numbers, two strings, or two agents of the same type,
+                         |but not on ${TypeNames.aName(o1)} and ${TypeNames.aName(o2)}.""""
+    throw new RuntimePrimitiveException(context, this, message)
   }
 
   def report_2(context: Context, arg0: String, arg1: String): Boolean =
@@ -54,10 +53,9 @@ class _greaterthan extends Reporter with Pure {
       case d: java.lang.Double =>
         arg0 > d.doubleValue
       case _ =>
-        throw new RuntimePrimitiveException(
-          context, this, I18N.errors.getN(
-            "org.nlogo.prim._greaterthan.cannotCompareParameters",
-            TypeNames.aName(Double.box(arg0)), TypeNames.aName(arg1)))
+        val message = loc""""|The > operator can only be used on two numbers, two strings, or two agents of the same
+                             |type, but not on ${TypeNames.aName(Double.box(arg0))} and ${TypeNames.aName(arg1)}.""""
+        throw new RuntimePrimitiveException(context, this, message)
     }
 
   def report_8(context: Context, arg0: AnyRef, arg1: Double): Boolean =
@@ -65,10 +63,9 @@ class _greaterthan extends Reporter with Pure {
       case d: java.lang.Double =>
         d.doubleValue > arg1
       case _ =>
-        throw new RuntimePrimitiveException(
-          context, this, I18N.errors.getN(
-            "org.nlogo.prim._greaterthan.cannotCompareParameters",
-            TypeNames.aName(arg0), TypeNames.aName(Double.box(arg1))))
+        val message = loc""""|The > operator can only be used on two numbers, two strings, or two agents of the same
+                             |type, but not on ${TypeNames.aName(arg0)} and ${TypeNames.aName(Double.box(arg1))}.""""
+        throw new RuntimePrimitiveException(context, this, message)
     }
 
 }

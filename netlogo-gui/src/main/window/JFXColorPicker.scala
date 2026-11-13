@@ -23,13 +23,13 @@ import netscape.javascript.JSObject
 import org.nlogo.analytics.Analytics
 import org.nlogo.api.{ Color => NLColor }
 import org.nlogo.awt.EventQueue
-import org.nlogo.core.{ Color => CoreColor, I18N, LogoList }
+import org.nlogo.core.{ Color => CoreColor, LocaleContext, LogoList }
 import org.nlogo.swing.{ WindowAutomator, Zoomable, ZoomableWindow }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 class JFXColorPicker( frame: Frame, modal: Boolean, config: JFXCPConfig, initialValue: Option[NLColorValue] = None
                     , pickCallback: (String) => Unit = (_ => {}), cancelCallback: () => Unit = (() => {}))
-  extends JDialog(frame, I18N.gui.get("tools.colorpicker"), modal) with ZoomableWindow(Option(frame)) with ThemeSync {
+  extends JDialog(frame,loc"Color Picker", modal) with ZoomableWindow(Option(frame)) with ThemeSync {
 
   WindowAutomator.automate(this)
 

@@ -3,7 +3,7 @@
 package org.nlogo.prim
 
 import org.nlogo.agent.{ Agent, AgentSet, Observer }
-import org.nlogo.core.{ I18N, Syntax }
+import org.nlogo.core.{ LocaleContext, Syntax }
 import org.nlogo.nvm.{ ArgumentTypeException, AssemblerAssistant, Command, Context,
                        CustomAssembled, RuntimePrimitiveException, SelfScoping }
 
@@ -26,20 +26,14 @@ class _ask
       case agents: AgentSet =>
         if (!context.agent.isInstanceOf[Observer]) {
           if (agents eq world.turtles)
-            throw new RuntimePrimitiveException(
-              context, this, I18N.errors.get(
-                "org.nlogo.prim.$common.onlyObserverCanAskAllTurtles"))
+            throw new RuntimePrimitiveException(context, this, loc"Only the observer can ASK the set of all turtles.")
           if (agents eq world.patches)
-            throw new RuntimePrimitiveException(
-              context, this, I18N.errors.get(
-                "org.nlogo.prim.$common.onlyObserverCanAskAllPatches"))
+            throw new RuntimePrimitiveException(context, this, loc"Only the observer can ASK the set of all patches.")
         }
         agents
       case agent: Agent =>
         if (agent.id == -1)
-          throw new RuntimePrimitiveException(
-            context, this, I18N.errors.getN(
-              "org.nlogo.$common.thatAgentIsDead", agent.classDisplayName))
+          throw new RuntimePrimitiveException(context, this, loc"That ${agent.classDisplayName} is dead.")
         AgentSet.fromAgent(agent)
       case _ =>
         throw new ArgumentTypeException(
@@ -52,13 +46,9 @@ class _ask
   def perform_2(context: Context, agents: AgentSet): Unit = {
     if (!context.agent.isInstanceOf[Observer]) {
       if (agents eq world.turtles)
-        throw new RuntimePrimitiveException(
-          context, this, I18N.errors.get(
-            "org.nlogo.prim.$common.onlyObserverCanAskAllTurtles"))
+        throw new RuntimePrimitiveException(context, this, loc"Only the observer can ASK the set of all turtles.")
       if (agents eq world.patches)
-        throw new RuntimePrimitiveException(
-          context, this, I18N.errors.get(
-            "org.nlogo.prim.$common.onlyObserverCanAskAllPatches"))
+        throw new RuntimePrimitiveException(context, this, loc"Only the observer can ASK the set of all patches.")
     }
     context.runExclusiveJob(agents, next)
     context.ip = offset
@@ -66,9 +56,7 @@ class _ask
 
   def perform_3(context: Context, agent: Agent): Unit = {
     if (agent.id == -1)
-      throw new RuntimePrimitiveException(
-        context, this, I18N.errors.getN(
-          "org.nlogo.$common.thatAgentIsDead", agent.classDisplayName))
+      throw new RuntimePrimitiveException(context, this, loc"That ${agent.classDisplayName} is dead.")
     context.runExclusiveJob(AgentSet.fromAgent(agent), next)
     context.ip = offset
   }

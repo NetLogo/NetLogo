@@ -7,7 +7,7 @@ import org.nlogo.core.AgentKindJ;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Patch;
 import org.nlogo.api.Dump;
-import org.nlogo.core.I18N;
+import org.nlogo.core.LocaleContextJ;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.LogoList;
 import org.nlogo.core.Syntax;
@@ -62,8 +62,9 @@ public final class _patchset
         AgentSet tempSet = (AgentSet) obj;
         if (tempSet.kind() != AgentKindJ.Patch()) {
           throw new RuntimePrimitiveException(context, this,
-              I18N.errorsJ().getN("org.nlogo.prim.etc._patchset.listInputNonPatchAgentset",
-                  this.displayName(), Dump.logoObject(tempList, true, false), Dump.logoObject(obj, true, false)));
+            LocaleContextJ.loc("List inputs to {} must only contain patch, patch agentset, or list elements.  The list {} contained a different type agentset: {}.",
+                               displayName(), Dump.logoObject(tempList, true, false),
+                               Dump.logoObject(obj, true, false)));
         }
         for (AgentIterator iter2 = tempSet.iterator();
              iter2.hasNext();) {
@@ -73,8 +74,9 @@ public final class _patchset
         descendList(context, (LogoList) obj, result);
       } else if (obj != org.nlogo.core.Nobody$.MODULE$) {
         throw new RuntimePrimitiveException(context, this,
-            I18N.errorsJ().getN("org.nlogo.prim.etc._patchset.listInputNonPatch",
-                this.displayName(), Dump.logoObject(tempList, true, false), Dump.logoObject(obj, true, false)));
+          LocaleContextJ.loc("List inputs to {} must only contain patch, patch agentset, or list elements.  The list {} contained {} which is NOT a patch or patch agentset.",
+                             displayName(), Dump.logoObject(tempList, true, false),
+                             Dump.logoObject(obj, true, false)));
       }
     }
   }

@@ -6,7 +6,7 @@ import java.awt.Component
 
 import org.nlogo.api.{ ExtensionManager, LibraryInfoDownloader }
 import org.nlogo.app.common.Events.OpenLibrariesDialogEvent
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.swing.OptionPane
 import org.nlogo.window.Events.CompiledEvent
 
@@ -32,14 +32,22 @@ class ExtensionAssistant( parent: Component
     }
   }
 
-  def confirmInstall(extName: String, extVersion: String): Boolean =
-    new OptionPane(parent, I18N.gui.get("tabs.code.extension.installable.title"),
-                   I18N.gui.getN("tabs.code.extension.installable.message", extName, extVersion),
-                   OptionPane.Options.YesNo, OptionPane.Icons.question).getSelectedIndex == 0
+  def confirmInstall(extName: String, extVersion: String): Boolean = {
+    val message = loc"""|You do not have the "$extName" extension installed, but NetLogo can download it for you.\n
+                        |Would you like NetLogo to automatically install "$extName" version $extVersion?"""
 
-  def confirmOpen(extName: String): Boolean =
-    new OptionPane(parent, I18N.gui.get("tabs.code.extension.notfound.title"),
-                   I18N.gui.getN("tabs.code.extension.notfound.message", extName),
-                   OptionPane.Options.YesNo, OptionPane.Icons.question).getSelectedIndex == 0
+    new OptionPane(parent, loc"Install Extension?", message, OptionPane.Options.YesNo, OptionPane.Icons.question)
+      .getSelectedIndex == 0
+  }
+
+  def confirmOpen(extName: String): Boolean = {
+    val message = loc"""|Unknown extension: $extName\n\nWould you like to look for extensions in the Extension
+                        |Manager?\n\n(If your desired extension is not listed in the Extension Manager, you will need
+                        |to manually download and install the extension in order to use it. See the "Extensions Guide"
+                        |page of the NetLogo User Manual for more information.)"""
+
+    new OptionPane(parent, loc"Extension not found", message, OptionPane.Options.YesNo, OptionPane.Icons.question)
+      .getSelectedIndex == 0
+  }
 
 }

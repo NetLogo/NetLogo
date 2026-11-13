@@ -4,7 +4,7 @@ package org.nlogo.prim.plot
 
 import org.nlogo.api.{ CommandRunnable}
 import org.nlogo.core.{ Color, Syntax }
-import org.nlogo.core.{ I18N, LogoList }
+import org.nlogo.core.{ LocaleContext, LogoList }
 import org.nlogo.nvm.{ Command, Context, Instruction, Reporter }
 import org.nlogo.nvm.RuntimePrimitiveException
 import org.nlogo.plot.PlotManager
@@ -19,8 +19,7 @@ trait Helpers extends Instruction {
   def currentPlot(context: Context) =
     plotManager.currentPlot.getOrElse(
       throw new RuntimePrimitiveException(
-        context, this,
-        I18N.errors.get("org.nlogo.plot.noPlotSelected")))
+        context, this, loc"There is no current plot. Please select a current plot using the set-current-plot command."))
   def currentPen(context: Context) = {
     val plot = currentPlot(context)
     plot.currentPen.getOrElse(

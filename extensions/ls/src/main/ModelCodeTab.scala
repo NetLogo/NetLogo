@@ -6,7 +6,7 @@ import javax.swing.JOptionPane
 import org.nlogo.api.{ AppInterface, ExtensionException, ModelType, TabsInterface, Version }
 import org.nlogo.app.codetab.CodeTab
 import org.nlogo.awt.UserCancelException
-import org.nlogo.core.{ I18N, Model }
+import org.nlogo.core.{ LocaleContext, Model }
 import org.nlogo.fileformat.{ FailedConversionResult, FileFormat }
 import org.nlogo.swing.{ CloseableTab, OptionPane }
 import org.nlogo.window.Events.ModelSavedEvent
@@ -74,12 +74,9 @@ class ModelCodeTab(app: AppInterface, workspace: AbstractWorkspace, tabManager: 
   }
 
   private def userWantsToSaveFile(): Boolean = {
-    val options = Array(
-      I18N.gui.get("common.buttons.save"),
-      "Discard",
-      I18N.gui.get("common.buttons.cancel"))
+    val options = Array(loc"Save", loc"Discard", loc"Cancel")
     val message = "Do you want to save the changes you made to " + filePath + "?"
-    new OptionPane(this, I18N.gui.get("common.messages.warning"), message, options.toSeq).getSelectedIndex match {
+    new OptionPane(this, loc"Warning", message, options.toSeq).getSelectedIndex match {
       case 0 => true
       case 1 => false
       case _ => throw new UserCancelException

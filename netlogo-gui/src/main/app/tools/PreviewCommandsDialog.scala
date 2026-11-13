@@ -10,7 +10,7 @@ import javax.swing.{ AbstractAction, JDialog }
 import org.nlogo.analytics.Analytics
 import org.nlogo.api.PreviewCommands
 import org.nlogo.awt.Positioning
-import org.nlogo.core.{ AgentKind, CompilerException, I18N, Model }
+import org.nlogo.core.{ AgentKind, CompilerException, LocaleContext, Model }
 import org.nlogo.swing.{ BoxColumn, BoxRow, Button, ButtonPanel, MaximumHeight, Utils, WindowAutomator, ZoomableBorder,
                          ZoomableWindow }
 import org.nlogo.theme.InterfaceColors
@@ -44,7 +44,7 @@ class PreviewCommandsDialog(
   val editor = editorPanel.editor
   val previewPanel = new PreviewPanel(graphicsPreview)
 
-  val cancelAction = new AbstractAction(I18N.gui.get("common.buttons.cancel")) {
+  val cancelAction = new AbstractAction(loc"Cancel") {
     def actionPerformed(evt: ActionEvent): Unit = {
       workspace.dispose()
       setVisible(false)
@@ -53,7 +53,7 @@ class PreviewCommandsDialog(
 
   Utils.addEscKeyAction(this, cancelAction)
 
-  val okButton = new Button(I18N.gui.get("common.buttons.ok"), () => {
+  val okButton = new Button(loc"OK", () => {
     for (previewCommands <- guiState.previewCommands) {
       _previewCommands = previewCommands
       workspace.dispose()

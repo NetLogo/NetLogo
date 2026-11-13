@@ -9,7 +9,7 @@ import javax.swing.AbstractAction
 
 import org.nlogo.api.{ Exceptions, ModelType, Version }
 import org.nlogo.awt.UserCancelException
-import org.nlogo.core.{ I18N, NetLogoPreferences }
+import org.nlogo.core.{ LocaleContext, NetLogoPreferences }
 import org.nlogo.swing.{ OptionPane, UserAction }, UserAction.{ Menu => ActionMenu, MenuAction }
 import org.nlogo.window.Events._
 
@@ -66,12 +66,10 @@ class OpenRecentFileAction(parent: Frame, modelEntry: ModelEntry, fileManager: F
       case ex: UserCancelException =>
         Exceptions.ignore(ex)
       case ex: FileNotFoundException =>
-        new OptionPane(parent, I18N.gui.get("common.messages.error"),
-                       I18N.gui.getN("file.open.error.doesNotExist", modelEntry.path), OptionPane.Options.Ok,
-                       OptionPane.Icons.error)
+        new OptionPane(parent, loc"Error", loc"""The file "${modelEntry.path}" does not exist.""",
+                       OptionPane.Options.Ok, OptionPane.Icons.error)
       case ex: IOException => {
-        new OptionPane(parent, I18N.gui.get("common.messages.error"), ex.getMessage, OptionPane.Options.Ok,
-                       OptionPane.Icons.error)
+        new OptionPane(parent, loc"Error", ex.getMessage, OptionPane.Options.Ok, OptionPane.Icons.error)
       }
     }
   }
@@ -171,7 +169,7 @@ class RecentFilesMenu(frame: AppFrame, fileManager: FileManager)
     }
   }
 
-  class EmptyAction extends AbstractAction(I18N.gui.get("common.menus.empty"))
+  class EmptyAction extends AbstractAction(loc"<empty>")
   with MenuAction {
     category    = UserAction.FileCategory
     subcategory = UserAction.FileRecentSubcategory
@@ -181,7 +179,7 @@ class RecentFilesMenu(frame: AppFrame, fileManager: FileManager)
     override def actionPerformed(e: ActionEvent): Unit = {}
   }
 
-  class ClearItems extends AbstractAction(I18N.gui.get("menu.file.recent.clear"))
+  class ClearItems extends AbstractAction(loc"Clear Items")
   with MenuAction {
     category    = UserAction.FileCategory
     subcategory = UserAction.FileRecentSubcategory

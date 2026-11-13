@@ -2,7 +2,7 @@
 
 package org.nlogo.prim.etc;
 
-import org.nlogo.core.I18N;
+import org.nlogo.core.LocaleContextJ;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Context;
@@ -22,7 +22,7 @@ public final class _mod extends Reporter implements Pure {
 
   public double report_1(Context context, double d0, double d1) throws LogoException {
     if (d1 == 0) {
-      throw new RuntimePrimitiveException(context, this, I18N.errorsJ().get("org.nlogo.prim.etc.$common.divByZero"));
+      throw new RuntimePrimitiveException(context, this, LocaleContextJ.loc("Division by zero."));
     }
     return validDouble(d0 - (StrictMath.floor(d0 / d1) * d1), context);
   }

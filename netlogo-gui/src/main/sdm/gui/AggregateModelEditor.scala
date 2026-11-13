@@ -14,7 +14,7 @@ import org.jhotdraw.util.{ Command, CommandMenu, RedoCommand, UndoCommand, UndoM
 
 import org.nlogo.analytics.Analytics
 import org.nlogo.api.{ CompilerServices, ExtensionManager, SourceOwner }
-import org.nlogo.core.{ CompilerException, I18N }
+import org.nlogo.core.{ CompilerException, LocaleContext }
 import org.nlogo.editor.Colorizer
 import org.nlogo.sdm.Translator
 import org.nlogo.swing.{ MenuBar, MenuItem, NetLogoIcon, Utils, WindowAutomator, Zoomable, ZoomableWindow }
@@ -37,8 +37,7 @@ class AggregateModelEditor(
   val drawing: AggregateDrawing,
   compiler: CompilerServices,
   dialogFactory: EditDialogFactory,
-  extensionManager: ExtensionManager) extends JFrame(
-    I18N.gui.get("menu.tools.systemDynamicsModeler"), linkParent.getGraphicsConfiguration)
+  extensionManager: ExtensionManager) extends JFrame(loc"System Dynamics Modeler", linkParent.getGraphicsConfiguration)
   with DrawingEditor
   with LinkChild
   with Events.LoadBeginEvent.Handler
@@ -107,10 +106,10 @@ class AggregateModelEditor(
       menuBar.add(menuBarFactory.createFileMenu);
     }
 
-    val editMenu = new SyncedCommandMenu(I18N.gui.get("menu.edit"))
+    val editMenu = new SyncedCommandMenu(loc"Edit")
 
-    editMenu.add(new UndoCommand(I18N.gui.get("menu.edit.undo"), this))
-    editMenu.add(new RedoCommand(I18N.gui.get("menu.edit.redo"), this))
+    editMenu.add(new UndoCommand(loc"Undo", this))
+    editMenu.add(new RedoCommand(loc"Redo", this))
 
     menuBar.add(editMenu)
 
@@ -122,7 +121,7 @@ class AggregateModelEditor(
       menuBar.add(zoomMenu)
     }
 
-    menuBar.add(new TabsMenu(I18N.gui.get("menu.tabs"), tabs))
+    menuBar.add(new TabsMenu(loc"Tabs", tabs))
 
     if (isOSX) {
       val helpMenu = menuBarFactory.createHelpMenu

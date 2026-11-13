@@ -8,7 +8,7 @@ import java.lang.UnsatisfiedLinkError
 import javax.swing.JFrame
 
 import org.nlogo.awt.Positioning
-import org.nlogo.core.{ I18N, Shape }
+import org.nlogo.core.{ LocaleContext, Shape }
 import org.nlogo.gl.render.GLViewSettings
 import org.nlogo.swing.Utils
 import org.nlogo.window.{ GUIWorkspace, JOGLLoadingException, JOGLVersionMismatchException, TickCounterLabel }
@@ -52,7 +52,7 @@ class ViewManager(val workspace: GUIWorkspace,
           init()
         } catch {
           case vex: JOGLVersionMismatchException =>
-            Utils.alert(vex.getMessage, I18N.gui.get("common.buttons.continue"))
+            Utils.alert(vex.getMessage, loc"Continue")
 
           case ex: JOGLLoadingException =>
             observerView.foreach(_.dispose())

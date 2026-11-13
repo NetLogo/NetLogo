@@ -7,7 +7,7 @@ import java.awt.event.{ ActionEvent, WindowAdapter, WindowEvent }
 import javax.swing.{ AbstractAction, Icon, JDialog, JLabel, WindowConstants }
 
 import org.nlogo.analytics.Analytics
-import org.nlogo.core.{ I18N, Shape, ShapeList }
+import org.nlogo.core.{ LocaleContext, Shape, ShapeList }
 import org.nlogo.shape.{ LinkLine, LinkShape, VectorShape }
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, Button, ButtonPanel, ComboBox, DialogButton, LabeledComponent,
                          OptionPane, TextField, Utils, ZoomableBorder, ZoomableWindow }
@@ -16,10 +16,8 @@ import org.nlogo.theme.InterfaceColors
 import scala.util.{ Failure, Success, Try }
 
 class LinkEditorDialog(parent: JDialog, list: DrawableList[LinkShape], shape: LinkShape)
-  extends JDialog(parent, I18N.gui.get("tools.linkEditor"), true) with EditorDialog.VectorShapeContainer
+  extends JDialog(parent, loc"Link Shape", true) with EditorDialog.VectorShapeContainer
   with ZoomableWindow(Option(parent)) {
-
-  private implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("tools.linkEditor")
 
   private val name = new TextField(10, shape.name)
   private val curviness = new TextField(10, shape.curviness.toString)
@@ -51,37 +49,37 @@ class LinkEditorDialog(parent: JDialog, list: DrawableList[LinkShape], shape: Li
     Utils.addEscKeyAction(this, new AbstractAction {
       def actionPerformed(e: ActionEvent): Unit = {
         if (originalShape.toString != getCurrentShape.toString ||
-            new OptionPane(LinkEditorDialog.this, I18N.gui.get("tools.shapesEditor.confirmCancel"),
-                          I18N.gui.get("tools.shapesEditor.confirmCancel.message"), OptionPane.Options.YesNo,
-                          OptionPane.Icons.question).getSelectedIndex != 0)
+            new OptionPane(LinkEditorDialog.this, loc"Confirm Cancel",
+                           loc"You may lose changes made to this shape. Do you want to cancel anyway?",
+                           OptionPane.Options.YesNo, OptionPane.Icons.question).getSelectedIndex != 0)
           return
 
         dispose()
       }
     })
 
-    val done = new DialogButton(true, I18N.gui.get("common.buttons.ok"), () => saveShape())
-    val cancel = new DialogButton(false, I18N.gui.get("common.buttons.cancel"), () => dispose)
+    val done = new DialogButton(true, loc"OK", () => saveShape())
+    val cancel = new DialogButton(false, loc"Cancel", () => dispose)
 
     setContentPane(new BoxColumn(Seq(
-      new LabeledComponent(I18N.gui("name"), name) {
+      new LabeledComponent(loc"Name", name) {
         setForeground(InterfaceColors.dialogText())
       },
-      new BoxRow(new LabeledComponent(I18N.gui("direction"), new Button(I18N.gui("edit"), () => {
+      new BoxRow(new LabeledComponent(loc"Direction Indicator", new Button(loc"Edit", () => {
         new EditorDialog(LinkEditorDialog.this, LinkEditorDialog.this, shape.directionIndicator, false)
       })) {
         setForeground(InterfaceColors.dialogText())
       }, BoxAlign.Start),
-      new LabeledComponent(I18N.gui("curviness"), curviness) {
+      new LabeledComponent(loc"Curviness", curviness) {
         setForeground(InterfaceColors.dialogText())
       },
-      new LabeledComponent(I18N.gui("leftLine"), dashes(2)) {
+      new LabeledComponent(loc"Left Line", dashes(2)) {
         setForeground(InterfaceColors.dialogText())
       },
-      new LabeledComponent(I18N.gui("middleLine"), dashes(1)) {
+      new LabeledComponent(loc"Middle Line", dashes(1)) {
         setForeground(InterfaceColors.dialogText())
       },
-      new LabeledComponent(I18N.gui("rightLine"), dashes(0)) {
+      new LabeledComponent(loc"Right Line", dashes(0)) {
         setForeground(InterfaceColors.dialogText())
       },
       new ButtonPanel(Seq(done, cancel))
@@ -122,14 +120,16 @@ class LinkEditorDialog(parent: JDialog, list: DrawableList[LinkShape], shape: Li
 
     // Make sure the shape has a name
     if (nameStr.isEmpty) {
-      new OptionPane(this, I18N.gui("invalid"), I18N.gui("nameEmpty"), OptionPane.Options.Ok, OptionPane.Icons.error)
+      new OptionPane(this, loc"Invalid Parameters", loc"Name cannot be empty.", OptionPane.Options.Ok,
+                     OptionPane.Icons.error)
 
       return
     }
 
     // If this is an attempt to overwrite a shape, prompt for permission to do it
     if (list.exists(nameStr) && nameStr != originalShape.name &&
-        new OptionPane(this, I18N.gui("confirmOverwrite"), I18N.gui("nameConflict"), OptionPane.Options.YesNo,
+        new OptionPane(this, loc"Confirm Overwrite",
+                       loc"A shape with this name already exists. Do you want to replace it?", OptionPane.Options.YesNo,
                        OptionPane.Icons.question).getSelectedIndex != 0)
       return
 
@@ -138,8 +138,8 @@ class LinkEditorDialog(parent: JDialog, list: DrawableList[LinkShape], shape: Li
     Try(curviness.getText.toDouble) match {
       case Success(cv) => shape.curviness = cv
       case Failure(_) =>
-        new OptionPane(this, I18N.gui("invalid"), I18N.gui("invalidCurviness"), OptionPane.Options.Ok,
-                       OptionPane.Icons.error)
+        new OptionPane(this, loc"Invalid Parameters", loc"Curviness must be a valid floating point number.",
+                       OptionPane.Options.Ok, OptionPane.Icons.error)
 
         return
     }

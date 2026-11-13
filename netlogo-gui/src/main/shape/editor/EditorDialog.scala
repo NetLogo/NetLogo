@@ -10,7 +10,7 @@ import javax.swing.undo.{ AbstractUndoableEdit, UndoableEdit }
 
 import org.nlogo.analytics.Analytics
 import org.nlogo.api.{ Color => NLColor }
-import org.nlogo.core.{ I18N, Shape }
+import org.nlogo.core.{ LocaleContext, Shape }
 import org.nlogo.shape.{ Element, VectorShape }
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, Button, ButtonPanel, CheckBox, ComboBox, DialogButton, FocusRoot,
                          MaximumHeight, MenuItem, OptionPane, PreferredSize, TextField, ToggleButton, Transparent,
@@ -38,10 +38,8 @@ object EditorDialog {
 }
 
 class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer, originalShape: VectorShape,
-                   nameEditable: Boolean) extends JDialog(parent, I18N.gui.get("tools.shapesEditor"), true)
+                   nameEditable: Boolean) extends JDialog(parent, loc"Edit Shape", true)
                                           with PropertyChangeListener with ZoomableWindow(Option(parent)) {
-
-  private implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("tools.shapesEditor")
 
   private val shape = originalShape.clone()
   private val shapeView = new ShapeView(this, shape)
@@ -94,7 +92,7 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
   // - SAB/ST 6/11/04
   private var undoableEdit: Option[UndoableEdit] = None
 
-  private val deleteSelected: Button = new Button(I18N.gui("delete"), () => {
+  private val deleteSelected: Button = new Button(loc"Delete", () => {
     shapeView.getSelectedElement.foreach(element => {
       undoableEdit = Some(new UndoableDeleteEdit(element, shape.getElements.indexOf(element)))
 
@@ -116,7 +114,7 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
     setEnabled(false)
   }
 
-  private val duplicateSelected = new Button(I18N.gui("duplicate"), () => {
+  private val duplicateSelected = new Button(loc"Duplicate", () => {
     shapeView.getSelectedElement.foreach(element => {
       val newElement = element.clone.asInstanceOf[Element]
 
@@ -127,7 +125,7 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
     setEnabled(false)
   }
 
-  private val bringToFront = new Button(I18N.gui("bringToFront"), () => {
+  private val bringToFront = new Button(loc"Bring to front", () => {
     shapeView.getSelectedElement.foreach(element => {
       makeUndoableModification(element, shape.getElements.indexOf(element))
 
@@ -138,7 +136,7 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
     setEnabled(false)
   }
 
-  private val sendToBack = new Button(I18N.gui("sendToBack"), () => {
+  private val sendToBack = new Button(loc"Send to back", () => {
     shapeView.getSelectedElement.foreach(element => {
       makeUndoableModification(element, shape.getElements.indexOf(element))
 
@@ -149,7 +147,7 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
     setEnabled(false)
   }
 
-  private val undoButton: Button = new Button(I18N.gui("undo"), () => {
+  private val undoButton: Button = new Button(loc"Undo", () => {
     undoableEdit.foreach(edit => {
       edit.undo()
 
@@ -185,7 +183,7 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
     }) with PreferredSize {
       setText(null)
       setBorder(null)
-      setToolTipText(I18N.gui("drawIn") + " " + name)
+      setToolTipText(loc"Draw in $name")
       setBackgroundColor(color)
       setBackgroundHoverColor(color)
       setPaintFocusOnUnknown(true)
@@ -223,7 +221,8 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
   private val closingAction = new AbstractAction {
     def actionPerformed(e: ActionEvent): Unit = {
       if (originalShape.toString != getCurrentShape.toString &&
-          new OptionPane(EditorDialog.this, I18N.gui("confirmCancel"), I18N.gui("confirmCancel.message"),
+          new OptionPane(EditorDialog.this, loc"Confirm Cancel",
+                         loc"You may lose changes made to this shape. Do you want to cancel anyway?",
                          OptionPane.Options.YesNo, OptionPane.Icons.question).getSelectedIndex != 0)
         return
 
@@ -245,27 +244,33 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
 
   private val editingToolGroup = new ButtonGroup
 
-  editElements.setToolTipText(I18N.gui("select"))
+  editElements.setToolTipText(loc"Select")
 
   editingToolBar.add(editElements)
   editingToolGroup.add(editElements)
 
-  addToolBarButton(editingToolBar, editingToolGroup, new CreateAction("line", ElementType.Line, false))
-  addToolBarButton(editingToolBar, editingToolGroup, new CreateAction("rectangleFilled", ElementType.Rectangle, true))
-  addToolBarButton(editingToolBar, editingToolGroup, new CreateAction("rectangle", ElementType.Rectangle, false))
-  addToolBarButton(editingToolBar, editingToolGroup, new CreateAction("circleFilled", ElementType.Circle, true))
-  addToolBarButton(editingToolBar, editingToolGroup, new CreateAction("circle", ElementType.Circle, false))
-  addToolBarButton(editingToolBar, editingToolGroup, new CreateAction("polygonFilled", ElementType.Polygon, true))
-  addToolBarButton(editingToolBar, editingToolGroup, new CreateAction("polygon", ElementType.Polygon, false))
+  addToolBarButton(editingToolBar, editingToolGroup, new CreateAction("line", loc"Draw line", ElementType.Line, false))
+  addToolBarButton(editingToolBar, editingToolGroup, new CreateAction("rectangleFilled", loc"Draw filled rectangle",
+                                                                      ElementType.Rectangle, true))
+  addToolBarButton(editingToolBar, editingToolGroup, new CreateAction("rectangle", loc"Draw rectangle",
+                                                                      ElementType.Rectangle, false))
+  addToolBarButton(editingToolBar, editingToolGroup, new CreateAction("circleFilled", loc"Draw filled circle",
+                                                                      ElementType.Circle, true))
+  addToolBarButton(editingToolBar, editingToolGroup, new CreateAction("circle", loc"Draw circle", ElementType.Circle,
+                                                                      false))
+  addToolBarButton(editingToolBar, editingToolGroup, new CreateAction("polygonFilled", loc"Draw filled polygon",
+                                                                      ElementType.Polygon, true))
+  addToolBarButton(editingToolBar, editingToolGroup, new CreateAction("polygon", loc"Draw polygon", ElementType.Polygon,
+                                                                      false))
 
-  private val snapToGridButton = new CheckBox(I18N.gui("snapToGrid"), (selected) => {
+  private val snapToGridButton = new CheckBox(loc"Snap to grid", (selected) => {
     snapToGrid = selected
   }) {
     setForeground(InterfaceColors.dialogText())
     setSelected(true)
   }
 
-  private val rotatableButton = new CheckBox(I18N.gui("rotatable"), (selected) => {
+  private val rotatableButton = new CheckBox(loc"Rotatable", (selected) => {
     shapeRotatable = selected
 
     previews.foreach(_.updateRotation(shapeRotatable))
@@ -278,7 +283,7 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
     setSelected(shapeRotatable)
   }
 
-  private val rotateLeftButton = new Button(I18N.gui("rotateLeft"), () => {
+  private val rotateLeftButton = new Button(loc"Rotate Left", () => {
     shapeView.getSelectedElement match {
       case Some(element) =>
         makeUndoableModification(element, shape.getElements.indexOf(element))
@@ -296,7 +301,7 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
     shapeView.repaint()
   })
 
-  private val rotateRightButton = new Button(I18N.gui("rotateRight"), () => {
+  private val rotateRightButton = new Button(loc"Rotate Right", () => {
     shapeView.getSelectedElement match {
       case Some(element) =>
         makeUndoableModification(element, shape.getElements.indexOf(element))
@@ -314,7 +319,7 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
     shapeView.repaint()
   })
 
-  private val flipHorizontalButton = new Button(I18N.gui("flipHorizontal"), () => {
+  private val flipHorizontalButton = new Button(loc"Flip Horizontal", () => {
     shapeView.getSelectedElement match {
       case Some(element) =>
         makeUndoableModification(element, shape.getElements.indexOf(element))
@@ -332,7 +337,7 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
     shapeView.repaint()
   })
 
-  private val flipVerticalButton = new Button(I18N.gui("flipVertical"), () => {
+  private val flipVerticalButton = new Button(loc"Flip Vertical", () => {
     shapeView.getSelectedElement match {
       case Some(element) =>
         makeUndoableModification(element, shape.getElements.indexOf(element))
@@ -350,14 +355,14 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
     shapeView.repaint()
   })
 
-  private val done = new DialogButton(true, I18N.gui.get("common.buttons.ok"), () => saveShape())
-  private val cancel = new DialogButton(false, I18N.gui.get("common.buttons.cancel"), () => dispose)
+  private val done = new DialogButton(true, loc"OK", () => saveShape())
+  private val cancel = new DialogButton(false, loc"Cancel", () => dispose)
 
   previews.foreach(shape.addPropertyChangeListener)
 
   setContentPane(new BoxColumn(Seq(
     new BoxRow(Seq(
-      new JLabel(I18N.gui("name")) with Zoomable {
+      new JLabel(loc"Name") with Zoomable {
         setFocusable(false)
         setForeground(InterfaceColors.dialogText())
       },
@@ -369,7 +374,7 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
         new BoxRow(snapToGridButton, BoxAlign.Center),
         new BoxRow(colorGrid, BoxAlign.Center),
         new VerticalStrut(10),
-        new BoxRow(new JLabel(I18N.gui("colorChanges")) with Zoomable {
+        new BoxRow(new JLabel(loc"Color that changes:") with Zoomable {
           setFocusable(false)
           setForeground(InterfaceColors.dialogText())
         }, BoxAlign.Center),
@@ -490,7 +495,8 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
 
     // Make sure the shape has a name
     if (name.isEmpty) {
-      new OptionPane(this, I18N.gui("invalid"), I18N.gui("nameEmpty"), OptionPane.Options.Ok, OptionPane.Icons.error)
+      new OptionPane(this, loc"Invalid Parameters", loc"Name cannot be empty.", OptionPane.Options.Ok,
+                     OptionPane.Icons.error)
 
       return
     }
@@ -498,7 +504,8 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
     // If this is an attempt to overwrite a shape, prompt for
     // permission to do it
     if (container.exists(name) && name != originalShape.name &&
-        new OptionPane(this, I18N.gui("confirmOverwrite"), I18N.gui("nameConflict"), OptionPane.Options.YesNo,
+        new OptionPane(this, loc"Confirm Overwrite",
+                       loc"A shape with this name already exists. Do you want to replace it?", OptionPane.Options.YesNo,
                        OptionPane.Icons.question).getSelectedIndex != 0)
       return
 
@@ -588,12 +595,12 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
       new ColorPanel(index)
   }
 
-  private class CreateAction(name: String, typeID: ElementType, filled: Boolean)
-    extends AbstractAction(name) {
+  private class CreateAction(image: String, name: String, typeID: ElementType, filled: Boolean)
+    extends AbstractAction(image) {
 
-    putValue(Action.SMALL_ICON, Utils.iconScaledWithColor(EditorDialog.this, "/images/shapes-editor/" + name + ".png",
+    putValue(Action.SMALL_ICON, Utils.iconScaledWithColor(EditorDialog.this, "/images/shapes-editor/" + image + ".png",
                                                           15, 15, () => InterfaceColors.toolbarText()))
-    putValue(Action.SHORT_DESCRIPTION, I18N.gui(name))
+    putValue(Action.SHORT_DESCRIPTION, name)
 
     def actionPerformed(e: ActionEvent): Unit = {
       shapeView.selfFinishPolygon(true)

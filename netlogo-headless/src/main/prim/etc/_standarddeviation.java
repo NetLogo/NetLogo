@@ -3,7 +3,7 @@
 package org.nlogo.prim.etc;
 
 import org.nlogo.api.Dump;
-import org.nlogo.core.I18N;
+import org.nlogo.core.LocaleContextJ;
 import org.nlogo.core.LogoList;
 import org.nlogo.core.Pure;
 import org.nlogo.nvm.Context;
@@ -28,8 +28,9 @@ public final class _standarddeviation extends Reporter implements Pure {
       }
     }
     if (listSize - badElts < 2) {
-      throw new RuntimePrimitiveException(context, this, I18N.errorsJ().getN(
-          "org.nlogo.prim.etc._standarddeviation.needListGreaterThanOneItem", Dump.logoObject(list)));
+      throw new RuntimePrimitiveException(context, this,
+        LocaleContextJ.loc("Can't find the standard deviation of a list without at least two numbers: {}",
+                           Dump.logoObject(list)));
     }
     double mean = sum / (listSize - badElts);
     double squareOfDifference = 0;

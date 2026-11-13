@@ -5,7 +5,7 @@ package org.nlogo.window
 import java.awt.Component
 
 import org.nlogo.api.{ CompilerServices, ExtensionManager }
-import org.nlogo.core.{ BoxedValue, I18N }
+import org.nlogo.core.{ BoxedValue, LocaleContext }
 import org.nlogo.editor.EditorArea
 import org.nlogo.window.Events.{ InterfaceGlobalEvent, PeriodicUpdateEvent }
 
@@ -24,7 +24,7 @@ class InputBoxWidget(textArea: EditorArea, dialogTextArea: EditorArea,
     // I don't think anyone ever uses the display name, but let's keep it in sync
     // with the real name, just in case - ST 6/3/02
     if (name == "") {
-      displayName(I18N.gui.get("edit.input.previewName"))
+      displayName(loc"(input)")
     } else {
       displayName(name)
     }

@@ -3,7 +3,7 @@
 package org.nlogo.prim.etc
 
 import org.nlogo.api.LogoListBuilder
-import org.nlogo.core.{ AgentKind, I18N, Reference }
+import org.nlogo.core.{ AgentKind, LocaleContext, Reference }
 import org.nlogo.nvm.{ Context, ReferencerReporter, Reporter, RuntimePrimitiveException }
 
 class _reference extends Reporter with ReferencerReporter {
@@ -21,7 +21,7 @@ class _reference extends Reporter with ReferencerReporter {
 
   override def report(context: Context): AnyRef = {
     if (reference == null) {
-      throw new RuntimePrimitiveException(context, this, I18N.errors.getN("compiler.LetVariable.notDefined", args(0).token.text))
+      throw new RuntimePrimitiveException(context, this, loc"Nothing named ${args(0).token.text} has been defined.")
     } else {
       val builder = new LogoListBuilder()
       val kindString =

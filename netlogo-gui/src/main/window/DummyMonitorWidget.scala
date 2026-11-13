@@ -5,7 +5,7 @@ package org.nlogo.window
 import java.awt.{ Dimension, Insets }
 import javax.swing.{ BoxLayout, JLabel, JPanel }
 
-import org.nlogo.core.{ I18N, Monitor => CoreMonitor, Widget => CoreWidget }
+import org.nlogo.core.{ LocaleContext, Monitor => CoreMonitor, Widget => CoreWidget }
 import org.nlogo.swing.{ BoxAlign, BoxRow, RoundedBorderPanel }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
@@ -14,7 +14,7 @@ class DummyMonitorWidget extends SingleErrorWidget with MonitorWidget.ToMonitorM
   private var _decimalPlaces = 3
   private var _units: String = ""
 
-  private val nameLabel = new JLabel(I18N.gui.get("edit.monitor.previewName"))
+  private val nameLabel = new JLabel(loc"(monitor)")
 
   private val valuePanel = new JPanel with RoundedBorderPanel with ThemeSync {
     setDiameter(6)
@@ -43,7 +43,7 @@ class DummyMonitorWidget extends SingleErrorWidget with MonitorWidget.ToMonitorM
     displayName = name
 
     if (_name.trim.isEmpty) {
-      nameLabel.setText(I18N.gui.get("edit.monitor.previewName"))
+      nameLabel.setText(loc"(monitor)")
     } else {
       nameLabel.setText(_name)
     }
@@ -57,7 +57,7 @@ class DummyMonitorWidget extends SingleErrorWidget with MonitorWidget.ToMonitorM
   }
 
   override def classDisplayName: String =
-    I18N.gui.get("tabs.run.widgets.monitor")
+    loc"Monitor"
 
   override def editPanel: EditPanel = new DummyMonitorEditPanel(this)
 

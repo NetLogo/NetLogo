@@ -56,8 +56,9 @@ public final class _linkset
         AgentSet tempSet = (AgentSet) obj;
         if (tempSet.kind() != AgentKindJ.Link()) {
           throw new RuntimePrimitiveException(context, this,
-              I18N.errorsJ().getN("org.nlogo.prim.etc._linkset.invalidLAgentsetTypeInputToList",
-                  this.displayName(), Dump.logoObject(tempList, true, false), Dump.logoObject(obj, true, false)));
+            LocaleContextJ.loc("List inputs to {} must only contain link, link agentset, or list elements.  The list {} contained a different type agentset: {}.",
+                               displayName(), Dump.logoObject(tempList, true, false),
+                               Dump.logoObject(obj, true, false)));
         }
         for (AgentIterator linkSetIter = tempSet.iterator(); linkSetIter.hasNext();) {
           result.add((Link) linkSetIter.next());
@@ -66,8 +67,8 @@ public final class _linkset
         descendList(context, (LogoList) obj, result);
       } else if (obj != org.nlogo.core.Nobody$.MODULE$) {
         throw new RuntimePrimitiveException(context, this,
-            I18N.errorsJ().getN("org.nlogo.prim.etc._linkset.invalidListInputs",
-                this.displayName(), Dump.logoObject(tempList, true, false), Dump.logoObject(obj, true, false)));
+          LocaleContextJ.loc("List inputs to {} must only contain link, link agentset, or list elements.  The list {} contained {} which is NOT a link or link agentset.",
+                             displayName(), Dump.logoObject(tempList, true, false), Dump.logoObject(obj, true, false)));
       }
     }
   }

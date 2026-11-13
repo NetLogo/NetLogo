@@ -2,8 +2,8 @@
 
 package org.nlogo.agent
 
-import org.nlogo.core.I18N
 import org.nlogo.api.AgentException
+import org.nlogo.core.LocaleContext
 
 // imagine a cylinder standing on end.
 
@@ -16,7 +16,7 @@ class VertCylinder(world2d: World2D) extends Topology(world2d) with XWraps with 
     val max = world.maxPycor + 0.5
     val min = world.minPycor - 0.5
     if (y >= max || y < min)
-      throw new AgentException(I18N.errors.get("org.nlogo.agent.Topology.cantMoveTurtleBeyondWorldEdge"))
+      throw new AgentException(loc"Cannot move turtle beyond the world's edge.")
     y
   }
 

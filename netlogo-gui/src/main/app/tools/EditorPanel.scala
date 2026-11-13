@@ -6,7 +6,7 @@ import java.awt.Dimension
 import java.awt.event.{ FocusEvent, TextEvent, TextListener }
 
 import org.nlogo.api.{ CompilerServices, PreviewCommands }, PreviewCommands.{ Compilable, Custom, Default, Manual }
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.editor.{ EditorArea, EditorConfiguration }
 import org.nlogo.swing.{ BoxColumn, BoxRow, Button, ComboBox, HasPropertyChangeSupport, MaximumHeight, PreferredSize,
                          ScrollPane, Utils }
@@ -89,9 +89,9 @@ class EditorPanel(compiler: CompilerServices, colorizer: EditorColorizer) extend
 case class PreviewCommandsWrapper(commands: PreviewCommands) {
   override def toString: String = {
     commands match {
-      case Manual => I18N.gui.get("tools.previewCommands.manual")
-      case Default => I18N.gui.get("tools.previewCommands.default")
-      case _: Custom => I18N.gui.get("tools.previewCommands.custom")
+      case Manual => loc"Manually make preview"
+      case Default => loc"Default preview commands"
+      case _: Custom => loc"Custom preview commands"
       case c => c.toString
     }
   }

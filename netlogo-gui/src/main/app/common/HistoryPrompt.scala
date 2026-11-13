@@ -8,7 +8,7 @@ import java.awt.Dimension
 import java.awt.event.ActionEvent
 import javax.swing.AbstractAction
 
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.swing.{ Button, CollapsibleArrow, MenuItem, PopupMenu }
 
 class HistoryPrompt(commandLine: CommandLine) extends Button(null) {
@@ -27,10 +27,10 @@ class HistoryPrompt(commandLine: CommandLine) extends Button(null) {
   }
 
   private def doPopupMenu(): Unit = {
-    val menu = new PopupMenu(this, I18N.gui.get("tabs.run.commandcenter.history"))
+    val menu = new PopupMenu(this, loc"History")
 
     if (commandLine.getExecutionList.isEmpty) {
-      menu.add(new MenuItem(I18N.gui.get("tabs.run.commandcenter.nohistory"))).setEnabled(false)
+      menu.add(new MenuItem(loc"No History")).setEnabled(false)
     } else {
       commandLine.getExecutionList.foreach { command =>
         val prompt = {
@@ -48,9 +48,9 @@ class HistoryPrompt(commandLine: CommandLine) extends Button(null) {
       }
 
       menu.addSeparator()
-      menu.add(new MenuItem(I18N.gui.get("tabs.run.commandcenter.useArrowKeys"))).setEnabled(false)
+      menu.add(new MenuItem(loc"or use up and down arrow keys")).setEnabled(false)
       menu.addSeparator()
-      menu.add(new MenuItem(I18N.gui.get("tabs.run.commandcenter.clearHistory"), () => commandLine.clearList()))
+      menu.add(new MenuItem(loc"Clear History", () => commandLine.clearList()))
     }
 
     menu.show(this, 0, getHeight)

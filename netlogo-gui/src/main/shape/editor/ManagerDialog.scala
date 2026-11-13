@@ -2,17 +2,17 @@
 
 package org.nlogo.shape.editor
 
-import java.awt.Frame
+import java.awt.{ FileDialog => AWTFileDialog, Frame }
 import java.awt.event.MouseEvent
 import java.nio.file.Paths
 import javax.swing.{ JLabel, JDialog }
 import javax.swing.event.{ DocumentEvent, DocumentListener, ListSelectionEvent, ListSelectionListener, MouseInputAdapter }
 
 import org.nlogo.api.AbstractModelLoader
-import org.nlogo.core.{ AgentKind, I18N, Model, Shape => CoreShape, ShapeList, ShapeListTracker },
+import org.nlogo.core.{ AgentKind, LocaleContext, Model, Shape => CoreShape, ShapeList, ShapeListTracker },
   ShapeList.{ shapesToMap, isDefaultShapeName }
-import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, Button, DialogButton, MaximumHeight, OptionPane, ScrollPane,
-                         TextField, Utils, WindowAutomator, Zoomable, ZoomableBorder, ZoomableWindow }
+import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, Button, DialogButton, FileDialog, MaximumHeight, OptionPane,
+                         ScrollPane, TextField, Utils, WindowAutomator, Zoomable, ZoomableBorder, ZoomableWindow }
 import org.nlogo.swing.Implicits.thunk2action
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
@@ -24,8 +24,6 @@ abstract class ManagerDialog[A <: CoreShape](parentFrame: Frame, modelLoader: Ab
   extends JDialog(parentFrame) with ListSelectionListener with ZoomableWindow(Option(parentFrame)) with ThemeSync {
 
   WindowAutomator.automate(this)
-
-  implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("tools.shapesEditor")
 
   val shapesList = new DrawableList(shapeListTracker, 10, 34, this)
 
@@ -42,12 +40,12 @@ abstract class ManagerDialog[A <: CoreShape](parentFrame: Frame, modelLoader: Ab
 
   def shapeKind: AgentKind
 
-  private val newButton = new DialogButton(false, I18N.gui("new"), () => newShape())
-  private val modelImportButton = new DialogButton(false, I18N.gui("importFromModel"), () => importFromModel())
+  private val newButton = new DialogButton(false, loc"New", () => newShape())
+  private val modelImportButton = new DialogButton(false, loc"Import from Model...", () => importFromModel())
 
-  private val editButton = new DialogButton(false, I18N.gui("edit"), () => editShape())
-  private val duplicateButton = new DialogButton(false, I18N.gui("duplicate"), () => duplicateShape())
-  private val deleteButton = new DialogButton(false, I18N.gui("delete"), () => {
+  private val editButton = new DialogButton(false, loc"Edit", () => editShape())
+  private val duplicateButton = new DialogButton(false, loc"Duplicate", () => duplicateShape())
+  private val deleteButton = new DialogButton(false, loc"Delete", () => {
       shapesList.deleteShapes()
       editButton.setEnabled(true) // Since at most one shape is highlighted now, enable edit
       setEnabled(true)
@@ -134,17 +132,19 @@ abstract class ManagerDialog[A <: CoreShape](parentFrame: Frame, modelLoader: Ab
   // Import shapes from another model
   private def importFromModel(): Unit = {
     try {
-      val path = org.nlogo.swing.FileDialog.showFiles(parentFrame, I18N.gui("import.note"), java.awt.FileDialog.LOAD)
+      val path = FileDialog.showFiles(parentFrame, loc"Import Shapes from Model", AWTFileDialog.LOAD)
       val modelUri = Paths.get(path).toUri
       modelLoader.readModel(modelUri)
         .map(modelShapes)
         .map(drawableListFromModelShapes) match {
           case Failure(ex) =>
-            new OptionPane(this, I18N.gui("import"), I18N.gui("import.invalidError"), OptionPane.Options.Ok,
-                           OptionPane.Icons.error)
+            val message = loc"""|NetLogo was unable to read shapes from this file.
+                                |Please ensure it is a valid NetLogo model file."""
+
+            new OptionPane(this, loc"Import", message, OptionPane.Options.Ok, OptionPane.Icons.error)
           case Success(drawableList) =>
             if (drawableList.shapeList.isEmpty)
-              importDialog.foreach(_.sendImportWarning(I18N.gui("import.error")))
+              importDialog.foreach(_.sendImportWarning(loc"No shapes found in this file."))
             else
               importDialog = Some(new ImportDialog(this, this, drawableList))
         }

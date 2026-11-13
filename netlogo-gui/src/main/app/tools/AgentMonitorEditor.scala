@@ -9,7 +9,7 @@ import javax.swing.{ JLabel, ScrollPaneConstants }
 
 import org.nlogo.agent.{ Agent, AgentSet, Turtle, Patch, Link }
 import org.nlogo.api.{ AgentVariables, Dump }
-import org.nlogo.core.{ AgentKind, I18N, Nobody, Widget => CoreWidget }
+import org.nlogo.core.{ AgentKind, LocaleContext, Nobody, Widget => CoreWidget }
 import org.nlogo.editor.{ EditorConfiguration, EditorField }
 import org.nlogo.nvm.Procedure
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, MaximumHeight, OptionPane, PreferredSize, ScrollPane, Zoomable,
@@ -18,7 +18,7 @@ import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ Editable, EditorColorizer, Events => WindowEvents, JobWidget }
 
 class AgentMonitorEditor(parent: AgentMonitor) extends BoxColumn(3, BoxAlign.Start) with ThemeSync {
-  private val noVarLabel = new JLabel(I18N.gui.get("tools.agentMonitor.editor.noVariables")) with Zoomable
+  private val noVarLabel = new JLabel(loc"(no variables defined)") with Zoomable
 
   private var labels = Seq[Component]()
   private var editors = Seq[AgentVarEditor]()
@@ -203,8 +203,7 @@ with ThemeSync {
     if(e.sourceOwner == this) {
       error(e.error)
       error().foreach { e =>
-        new OptionPane(workspace.getFrame, I18N.gui.get("common.messages.error"), e.getMessage,
-                       OptionPane.Options.Ok, OptionPane.Icons.error)
+        new OptionPane(workspace.getFrame, loc"Error", e.getMessage, OptionPane.Options.Ok, OptionPane.Icons.error)
         setEnabled(true)
         editor.setText(get)
         lastTextBeforeUserChangedAnything = editor.getText()
@@ -428,7 +427,7 @@ with ThemeSync {
       case d: java.lang.Double =>
         workspace.world.getTurtle(d.longValue)
       case _ =>
-        throw new org.nlogo.api.AgentException(I18N.gui.get("tools.agentMonitor.editor.expectedTurtleOrWho"))
+        throw new org.nlogo.api.AgentException(loc"expected a turtle or a who number")
     }
   }
 
@@ -439,7 +438,7 @@ with ThemeSync {
     else {
       val breed = workspace.world.getLinkBreed(text.toUpperCase(Locale.ENGLISH))
       if(breed == null)
-        throw new org.nlogo.api.AgentException(I18N.gui.get("tools.agentMonitor.editor.edpectedLinkBreed"))
+        throw new org.nlogo.api.AgentException(loc"expected a link breed")
       breed
     }
 

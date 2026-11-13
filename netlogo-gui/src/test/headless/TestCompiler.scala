@@ -2,7 +2,7 @@
 
 package org.nlogo.headless
 
-import org.nlogo.core.{ CompilerException, I18N }
+import org.nlogo.core.{ CompilerException, LocaleContext }
 import org.nlogo.util.AnyFunSuiteEx
 
 import org.scalatest.{ OneInstancePerTest, BeforeAndAfterEach }
@@ -30,23 +30,19 @@ class TestCompiler extends AnyFunSuiteEx with OneInstancePerTest with BeforeAndA
   }
 
   test("RunUnknownProcedure") {
-    badCommand("foo 5",
-               I18N.errors.getN("compiler.LocalsVisitor.notDefined", "FOO"))
+    badCommand("foo 5", loc"Nothing named FOO has been defined.")
   }
 
   test("RunWithUnknownArgument") {
-    badCommand("crt foo",
-               I18N.errors.getN("compiler.LocalsVisitor.notDefined", "FOO"))
+    badCommand("crt foo", loc"Nothing named FOO has been defined.")
   }
 
   test("GetUnknownVariable") {
-    badCommand("let a foo",
-               I18N.errors.getN("compiler.LocalsVisitor.notDefined", "FOO"))
+    badCommand("let a foo", loc"Nothing named FOO has been defined.")
   }
 
   test("SetUnknownVariable") {
-    badCommand("set foo 5",
-               I18N.errors.getN("compiler.LocalsVisitor.notDefined", "FOO"))
+    badCommand("set foo 5", loc"Nothing named FOO has been defined.")
   }
 
   test("LetSameVariableTwice1") {
@@ -120,8 +116,7 @@ class TestCompiler extends AnyFunSuiteEx with OneInstancePerTest with BeforeAndA
                "There is already a procedure called BAZORT")
   }
   test("SameLocalVariableTwice1") {
-    declareBad("to a1 locals [b b] end",
-               I18N.errors.getN("compiler.LocalsVisitor.notDefined", "LOCALS"))
+    declareBad("to a1 locals [b b] end", loc"Nothing named LOCALS has been defined.")
   }
   test("SameLocalVariableTwice2") {
     declareBad("to a2 [b b] end",
@@ -132,12 +127,10 @@ class TestCompiler extends AnyFunSuiteEx with OneInstancePerTest with BeforeAndA
                "There is already a local variable here called B")
   }
   test("SameLocalVariableTwice4") {
-    declareBad("to a4 locals [b] let b 5 end",
-               I18N.errors.getN("compiler.LocalsVisitor.notDefined", "LOCALS"))
+    declareBad("to a4 locals [b] let b 5 end", loc"Nothing named LOCALS has been defined.")
   }
   test("SameLocalVariableTwice5") {
-    declareBad("to a5 [b] locals [b] end",
-               I18N.errors.getN("compiler.LocalsVisitor.notDefined", "LOCALS"))
+    declareBad("to a5 [b] locals [b] end", loc"Nothing named LOCALS has been defined.")
   }
   test("SameLocalVariableTwice6") {
     declareBad("to a6 [b] let b 5 end",

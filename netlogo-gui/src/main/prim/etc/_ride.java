@@ -3,7 +3,7 @@
 package org.nlogo.prim.etc;
 
 import org.nlogo.agent.Turtle;
-import org.nlogo.core.I18N;
+import org.nlogo.core.LocaleContextJ;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.PerspectiveJ;
 import org.nlogo.core.Syntax;
@@ -23,7 +23,7 @@ public final class _ride
     Turtle turtle = argEvalTurtle(context, 0);
     if (turtle.id() == -1) {
       throw new RuntimePrimitiveException(context, this,
-        I18N.errorsJ().getN("org.nlogo.$common.thatAgentIsDead", turtle.classDisplayName()));
+        LocaleContextJ.loc("That {} is dead.", turtle.classDisplayName()));
     }
     world.observer().setPerspective(PerspectiveJ.create(PerspectiveJ.RIDE, turtle));
     context.ip = next;

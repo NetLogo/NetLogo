@@ -9,7 +9,7 @@ import javax.swing.JLabel
 import scala.concurrent.ExecutionContext
 
 import org.nlogo.api.LibraryManager
-import org.nlogo.core.{ I18N, LibraryInfo, Token }
+import org.nlogo.core.{ LibraryInfo, LocaleContext, Token }
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, CustomOptionPane, DialogButton, OptionPane, ProgressListener,
                          ScrollPane, TextArea, WindowAutomator, ZoomableBorder }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
@@ -20,18 +20,20 @@ class LibrariesDialog( parent:          Frame
                      , tokenizeSource:  String => Iterator[Token]
                      , updateSource:    ((String) => String) => Unit
                      , extPathMappings: Map[String, Path]
-                     ) extends ToolDialog(parent, "libraries") with ThemeSync {
+                     ) extends ToolDialog(parent, loc"Extensions") with ThemeSync {
 
   WindowAutomator.automate(this)
 
   private lazy val tab             = new LibrariesTab("extensions", manager, status.setText, recompile, tokenizeSource,
                                                       updateSource, extPathMappings)
   private lazy val status          = new JLabel
-  private lazy val libPathsButton  = new DialogButton(false, I18N.gui("showLibPaths"), () => {
+  private lazy val libPathsButton  = new DialogButton(false, loc"View Conflicting Libraries", () => {
     val mappingsStr = extPathMappings.map { case (k, v) => s"  * $k: $v" }.toSeq.sorted.mkString("\n")
-    val msg = s"""${I18N.gui("libPathsExplanation")}
-                  |
-                  |$mappingsStr""".stripMargin
+    val msg = loc"""|The below extensions will override any extension with the same name that is installed through the
+                    |Extension Manager.  If you wish to use a version of the extension downloaded through the Extension
+                    |Manager instead, you must first remove the files at the specified location.\n\nSee the "Extensions
+                    |Guide" and the "Extension Manager" pages of the NetLogo User Manual for more information.\n\n
+                    |$mappingsStr"""
     val textArea = new TextArea(15, 60, msg) {
       setLineWrap(true)
       setWrapStyleWord(true)
@@ -40,7 +42,7 @@ class LibrariesDialog( parent:          Frame
     val scrollPane = new ScrollPane(textArea) {
       setBackground(InterfaceColors.textAreaBackground())
     }
-    new CustomOptionPane(LibrariesDialog.this, I18N.gui("showLibPaths"), scrollPane, OptionPane.Options.Ok)
+    new CustomOptionPane(LibrariesDialog.this, loc"View Conflicting Libraries", scrollPane, OptionPane.Options.Ok)
   }: Unit)
   private lazy val updateAllButton = new DialogButton(true, tab.updateAllAction)
 
@@ -62,7 +64,7 @@ class LibrariesDialog( parent:          Frame
 
       val listener =
         new ProgressListener {
-          override def start()  = status.setText(I18N.gui("checkingForUpdates"))
+          override def start()  = status.setText(loc"Checking for updates...")
           override def finish() = status.setText(null)
         }
 

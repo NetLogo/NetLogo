@@ -12,7 +12,7 @@ import javax.swing.text.DefaultCaret
 import org.nlogo.analytics.Analytics
 import org.nlogo.api.{ Color, Exceptions, ExportPlotWarningAction, LabProtocol }
 import org.nlogo.awt.Fonts
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.editor.Colorizer
 import org.nlogo.nvm.LabInterface
 import org.nlogo.plot.DummyPlotManager
@@ -25,10 +25,8 @@ import scala.concurrent.duration.DurationLong
 
 class ProgressDialog(app: BehaviorSpaceApp, workspace: SemiHeadlessWorkspace, lab: LabInterface,
                      colorizer: Colorizer, protocol: LabProtocol)
-  extends JDialog(app.getFrame, I18N.gui.getN("tools.behaviorSpace.progressDialog.title", protocol.name))
-  with ThemeSync with ZoomableWindow(Option(app.getFrame)) {
-
-  private implicit val i18nPrefix: I18N.Prefix = I18N.Prefix("tools.behaviorSpace.progressDialog")
+  extends JDialog(app.getFrame, loc"Running Experiment: ${protocol.name}") with ThemeSync
+  with ZoomableWindow(Option(app.getFrame)) {
 
   private val totalRuns = protocol.countRuns
 
@@ -50,16 +48,16 @@ class ProgressDialog(app: BehaviorSpaceApp, workspace: SemiHeadlessWorkspace, la
 
   private val timer = new Timer(1000, RichAction(_ => updateProgressArea()))
 
-  private val updateViewCheckbox = new CheckBox(I18N.gui("updateView"), workspace.setUpdateView)
-  private val plotsAndMonitorsSwitch = new CheckBox(I18N.gui("updatePlotsAndMonitors"), checked => {
+  private val updateViewCheckbox = new CheckBox(loc"Update view", workspace.setUpdateView)
+  private val plotsAndMonitorsSwitch = new CheckBox(loc"Update plots and monitors", checked => {
     workspace.setUpdatePlotsAndMonitors(checked)
 
     if (!checked)
       workspace.jobManager.finishSecondaryJobs(null)
   })
 
-  private val pauseButton = new Button(I18N.gui("pause"), pause)
-  private val abortButton = new Button(I18N.gui.get("tools.behaviorSpace.abort"), app.abort)
+  private val pauseButton = new Button(loc"Pause", pause)
+  private val abortButton = new Button(loc"Abort", app.abort)
 
   private val speedSlider = new SpeedSliderPanel(workspace)
 
@@ -82,7 +80,7 @@ class ProgressDialog(app: BehaviorSpaceApp, workspace: SemiHeadlessWorkspace, la
       // except of course, for the measurements that this plot is displaying.
       // JC - 4/4/11
       val plotManager = new DummyPlotManager
-      val plotWidget = new PlotWidget(plotManager.newPlot(I18N.gui("plot.title")), plotManager, workspace, colorizer) {
+      val plotWidget = new PlotWidget(plotManager.newPlot(loc"Behavior Plot"), plotManager, workspace, colorizer) {
         // the default plot size assumes there is no legend, so add the legend height
         // to ensure that enough canvas area is visible by default (Isaac B 7/22/25)
         override def getMinimumSize: Dimension =
@@ -101,8 +99,8 @@ class ProgressDialog(app: BehaviorSpaceApp, workspace: SemiHeadlessWorkspace, la
       plotWidget.plot.defaultYMax = 1
       plotWidget.plot.defaultAutoPlotX = true
       plotWidget.plot.defaultAutoPlotY = true
-      plotWidget.setXLabel(I18N.gui("plot.time"))
-      plotWidget.setYLabel(I18N.gui("plot.behavior"))
+      plotWidget.setXLabel(loc"Time")
+      plotWidget.setYLabel(loc"Behavior")
       plotWidget.clear()
       plotWidget.togglePenList()
 
@@ -160,13 +158,13 @@ class ProgressDialog(app: BehaviorSpaceApp, workspace: SemiHeadlessWorkspace, la
     timer.stop()
     pauseButton.setEnabled(false)
     abortButton.setEnabled(false)
-    progressArea.setText(I18N.gui("waiting"))
+    progressArea.setText(loc"Waiting for current runs to finish...")
     lab.pause()
   }
 
   def writing(): Unit = {
     timer.stop()
-    progressArea.setText(I18N.gui("writing"))
+    progressArea.setText(loc"Writing output files...")
   }
 
   override def setVisible(visible: Boolean): Unit = {
@@ -215,9 +213,10 @@ class ProgressDialog(app: BehaviorSpaceApp, workspace: SemiHeadlessWorkspace, la
       workspace.setExportPlotWarningAction(ExportPlotWarningAction.Ignore)
 
       EventQueue.invokeLater(() => {
-        new OptionPane(app.getFrame, I18N.gui("updatingPlotsWarningTitle"),
-                       I18N.shared.get("tools.behaviorSpace.runoptions.updateplotsandmonitors.error"),
-                       OptionPane.Options.Ok, OptionPane.Icons.warning)
+        new OptionPane(
+          app.getFrame, loc"Updating Plots Warning",
+          loc"Enable plot updating to use export-plot, export-all-plots, export-world, or export-interface.",
+          OptionPane.Options.Ok, OptionPane.Icons.warning)
       })
     }
   }
@@ -288,13 +287,14 @@ class ProgressDialog(app: BehaviorSpaceApp, workspace: SemiHeadlessWorkspace, la
 
   private def updateProgressArea(): Unit = {
     if (started == 0) {
-      progressArea.setText(I18N.gui("init"))
+      progressArea.setText(loc"Initializing experiment...")
     } else if (timer.isRunning) {
       val duration = (System.currentTimeMillis - started).millis
       val formatted = f"${duration.toHours}%02d:${duration.toMinutes % 60}%02d:${duration.toSeconds % 60}%02d"
 
-      progressArea.setText(I18N.gui("progressArea", runCount.toString, totalRuns.toString, steps.toString, formatted,
-                                    settingsString))
+      progressArea.setText(loc"""|Run #$runCount of $totalRuns, step #$steps\n
+                                 |Total elapsed time: $formatted\n
+                                 |$settingsString""")
     }
   }
 

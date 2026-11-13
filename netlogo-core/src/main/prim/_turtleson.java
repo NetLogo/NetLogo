@@ -7,7 +7,7 @@ import org.nlogo.core.AgentKindJ;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.agent.Patch;
 import org.nlogo.agent.Turtle;
-import org.nlogo.core.I18N;
+import org.nlogo.core.LocaleContextJ;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.ArgumentTypeException;
@@ -28,7 +28,7 @@ public final class _turtleson
       Turtle turtle = (Turtle) agentOrSet;
       if (turtle.id() == -1) {
         throw new RuntimePrimitiveException(context, this,
-          I18N.errorsJ().getN("org.nlogo.$common.thatAgentIsDead", turtle.classDisplayName()));
+          LocaleContextJ.loc("That {} is dead.", turtle.classDisplayName()));
       }
       addAll(resultList, turtle.getPatchHere().turtlesHere());
 

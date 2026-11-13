@@ -4,7 +4,7 @@ package org.nlogo.prim.etc;
 
 import org.nlogo.agent.AgentSet;
 import org.nlogo.api.LogoListBuilder;
-import org.nlogo.core.I18N;
+import org.nlogo.core.LocaleContextJ;
 import org.nlogo.core.LogoList;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.ArgumentTypeException;
@@ -21,14 +21,15 @@ public final class _nof
     int n = argEvalIntValue(context, 0);
     if (n < 0) {
       throw new RuntimePrimitiveException(context, this,
-          I18N.errorsJ().getN("org.nlogo.prim.etc.$common.firstInputCantBeNegative", displayName()));
+        LocaleContextJ.loc("First input to {} can't be negative.", displayName()));
     }
     Object obj = args[1].report(context);
     if (obj instanceof LogoList) {
       LogoList list = (LogoList) obj;
       if (n > list.size()) {
         throw new RuntimePrimitiveException(context, this,
-            I18N.errorsJ().getN("org.nlogo.prim.etc.$common.requestMoreItemsThanInList", n, list.size()));
+          LocaleContextJ.loc("Requested {} random items from a list of length {}.", Integer.toString(n),
+                             Integer.toString(list.size())));
       }
       if (n == list.size()) {
         return list;
@@ -41,7 +42,8 @@ public final class _nof
       int count = agents.count();
       if (n > count) {
         throw new RuntimePrimitiveException(context, this,
-            I18N.errorsJ().getN("org.nlogo.prim.etc.$common.notThatManyAgentsExist", n, count));
+          LocaleContextJ.loc("Requested {} random agents from a set of only {} agents.", Integer.toString(n),
+                             Integer.toString(count)));
       }
       return agents.randomSubset(n, count, context.job.random);
     } else {

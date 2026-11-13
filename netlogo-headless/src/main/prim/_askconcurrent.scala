@@ -3,7 +3,7 @@
 package org.nlogo.prim
 
 import org.nlogo.agent.Observer
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.nvm.{ AssemblerAssistant, Command, Context, CustomAssembled, SelfScoping }
 import org.nlogo.nvm.RuntimePrimitiveException
 
@@ -18,13 +18,9 @@ class _askconcurrent extends Command with CustomAssembled with SelfScoping {
     val agentset = argEvalAgentSet(context, 0)
     if (!context.agent.isInstanceOf[Observer]) {
       if (agentset eq world.turtles)
-        throw new RuntimePrimitiveException(
-          context, this, I18N.errors.get(
-            "org.nlogo.prim.$common.onlyObserverCanAskAllTurtles"))
+        throw new RuntimePrimitiveException(context, this, loc"Only the observer can ASK the set of all turtles.")
       if (agentset eq world.patches)
-        throw new RuntimePrimitiveException(
-          context, this, I18N.errors.get(
-            "org.nlogo.prim.$common.onlyObserverCanAskAllPatches"))
+        throw new RuntimePrimitiveException(context, this, loc"Only the observer can ASK the set of all patches.")
     }
     if (context.makeChildrenExclusive)
       context.runExclusiveJob(agentset, next)

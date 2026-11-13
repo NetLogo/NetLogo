@@ -6,7 +6,7 @@ import java.awt.{ Color, Component, Cursor, Dimension, Graphics, Point }
 import java.awt.event.{ ActionEvent, KeyAdapter, KeyEvent, MouseAdapter, MouseEvent, MouseMotionAdapter }
 import javax.swing.{ AbstractAction, Action, JButton, JLayeredPane, JPanel, JSplitPane }
 
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 private class SizeButton(expand: Boolean, splitPane: SplitPane)
@@ -228,8 +228,8 @@ class SplitPane(mainComponent: Component, topComponent: Component, commandCenter
 
   private def dividerChanged(): Unit = {
     commandCenterToggleAction.foreach(_.putValue(Action.NAME,
-      if (dividerLocation < maxClosedDividerLocation) I18N.gui.get("menu.tools.hideCommandCenter")
-      else I18N.gui.get("menu.tools.showCommandCenter")))
+      if (dividerLocation < maxClosedDividerLocation) loc"Hide Command Center"
+      else loc"Show Command Center"))
   }
 
   def getDividerSize: Int = dividerSize

@@ -4,7 +4,7 @@ package org.nlogo.prim.etc;
 
 import org.nlogo.agent.Link;
 import org.nlogo.agent.Turtle;
-import org.nlogo.core.I18N;
+import org.nlogo.core.LocaleContextJ;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.RuntimePrimitiveException;
@@ -22,14 +22,14 @@ public final class _otherend
       link = (Link) context.agent;
       if (!(context.myself() instanceof Turtle)) {
         throw new RuntimePrimitiveException(context, this,
-            I18N.errorsJ().get("org.nlogo.prim.etc._otherend.onlyTurtleCanGetLinkEnd"));
+          LocaleContextJ.loc("Only a turtle can get the OTHER-END of a link."));
       }
       node = (Turtle) context.myself();
     } else {
       node = (Turtle) context.agent;
       if (!(context.myself() instanceof Link)) {
         throw new RuntimePrimitiveException(context, this,
-            I18N.errorsJ().get("org.nlogo.prim.etc._otherend.onlyLinkCanGetTurtleEnd"));
+          LocaleContextJ.loc("Only a link can get the OTHER-END from a turtle."));
       }
       link = (Link) context.myself();
     }
@@ -44,6 +44,6 @@ public final class _otherend
     }
 
     throw new RuntimePrimitiveException(context, this,
-        I18N.errorsJ().getN("org.nlogo.prim.etc._otherend.incorrectLink", node.toString(), link.toString()));
+      LocaleContextJ.loc("{} is not linked by {}.", node.toString(), link.toString()));
   }
 }

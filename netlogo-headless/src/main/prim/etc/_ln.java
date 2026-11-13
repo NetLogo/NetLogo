@@ -2,7 +2,7 @@
 
 package org.nlogo.prim.etc;
 
-import org.nlogo.core.I18N;
+import org.nlogo.core.LocaleContextJ;
 import org.nlogo.core.Pure;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.RuntimePrimitiveException;
@@ -18,7 +18,7 @@ public final class _ln extends Reporter implements Pure {
   public double report_1(Context context, double d) {
     if (d <= 0) {
       throw new RuntimePrimitiveException(context, this,
-          I18N.errorsJ().getN("org.nlogo.prim.etc.$common.cantTakeLogarithmOf", d));
+        LocaleContextJ.loc("Can't take logarithm of {}.", LocaleContextJ.formatDouble(d)));
     }
     return validDouble(StrictMath.log(d), context);
   }

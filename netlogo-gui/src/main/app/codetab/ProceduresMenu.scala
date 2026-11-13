@@ -7,14 +7,14 @@ import javax.swing.{ AbstractAction, JMenuItem, MenuSelectionManager, SwingUtili
 import java.text.Collator
 
 import org.nlogo.awt.EventQueue
-import org.nlogo.core.{ I18N, NetLogoPreferences }
+import org.nlogo.core.{ I18N, LocaleContext, NetLogoPreferences }
 import org.nlogo.swing.Implicits._
 import org.nlogo.swing.{ MenuItem, PopupMenu, TextField, ToolBarMenu }
 
-class ProceduresMenu(target: ProceduresMenuTarget) extends ToolBarMenu(I18N.gui.get("tabs.code.procedures")) {
+class ProceduresMenu(target: ProceduresMenuTarget) extends ToolBarMenu(loc"Procedures") {
   // Locale-aware, case-insensitive ordering for optional alphabetic sorting of procedures:
   private lazy val ordering = {
-    val locale = I18N.localeFromPreferences.getOrElse(I18N.gui.defaultLocale)
+    val locale = I18N.localeFromPreferences.getOrElse(LocaleContext.getLocale)
     Ordering.comparatorToOrdering(using Collator.getInstance(locale))
   }
 
@@ -24,7 +24,7 @@ class ProceduresMenu(target: ProceduresMenuTarget) extends ToolBarMenu(I18N.gui.
     }
 
     val procs = {
-      val AlphaSort = I18N.gui.get("tools.preferences.proceduresSortAlphabetical")
+      val AlphaSort = loc"Alphabetical order"
       val sort: Seq[String] => Seq[String] =
         NetLogoPreferences.get("proceduresMenuSortOrder", "default") match {
           // Sort procedures by alphabetical order if requested in preferences
@@ -122,7 +122,7 @@ class ProceduresMenu(target: ProceduresMenuTarget) extends ToolBarMenu(I18N.gui.
         .sortBy(-_._2)
         .map(_._1)
     if (visibleItems.isEmpty)
-      menu.add(new MenuItem("<"+I18N.gui.get("tabs.code.procedures.none")+">")).setEnabled(false)
+      menu.add(new MenuItem(loc"<none>")).setEnabled(false)
     else
       visibleItems.foreach(menu.add)
   }

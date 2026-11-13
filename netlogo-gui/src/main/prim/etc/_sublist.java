@@ -2,7 +2,7 @@
 
 package org.nlogo.prim.etc;
 
-import org.nlogo.core.I18N;
+import org.nlogo.core.LocaleContextJ;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.LogoList;
 import org.nlogo.core.Syntax;
@@ -20,15 +20,15 @@ public final class _sublist
     int stop = argEvalIntValue(context, 2);
     int size = list.size();
     if (start < 0) {
-      throw new RuntimePrimitiveException
-          (context, this, I18N.errorsJ().getN("org.nlogo.prim.etc._sublist.startIsLessThanZero", start));
+      throw new RuntimePrimitiveException(context, this,
+        LocaleContextJ.loc("{} is less than zero.", Integer.toString(start)));
     } else if (stop < start) {
-      throw new RuntimePrimitiveException
-          (context, this, I18N.errorsJ().getN("org.nlogo.prim.etc._sublist.endIsLessThanStart", stop, start));
-
+      throw new RuntimePrimitiveException(context, this,
+        LocaleContextJ.loc("{} is less than {}.", Integer.toString(stop), Integer.toString(start)));
     } else if (stop > size) {
-      throw new RuntimePrimitiveException
-          (context, this, I18N.errorsJ().getN("org.nlogo.prim.etc._sublist.endIsGreaterThanListSize", stop, size));
+      throw new RuntimePrimitiveException(context, this,
+        LocaleContextJ.loc("{} is greater than the length of the input list ({}).", Integer.toString(stop),
+                           Integer.toString(size)));
     }
     return list.logoSublist(start, stop);
   }

@@ -4,7 +4,7 @@ package org.nlogo.shape.editor
 
 import javax.swing.{ DefaultListModel, JList }
 
-import org.nlogo.core.{ I18N, Shape, ShapeList, ShapeListTracker }
+import org.nlogo.core.{ LocaleContext, Shape, ShapeList, ShapeListTracker }
 import org.nlogo.swing.{ FocusUtils, OptionPane, Zoomable }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
@@ -98,15 +98,15 @@ class DrawableList[A <: Shape](shapeTracker: ShapeListTracker, rows: Int, height
   private def confirmDeletion(deleteCount: Int): Boolean = {
     val message =
       if (deleteCount > 1)
-        Some(I18N.gui.getN("tools.shapesEditor.delete.many.confirm", Int.box(deleteCount)))
+        Some(loc"Are you sure you want to delete these $deleteCount shapes?")
       else if (deleteCount == 1)
-        Some(I18N.gui.get("tools.shapesEditor.delete.one.confirm"))
+        Some(loc"Are you sure you want to delete this shape?")
       else
         None
 
     message.map { msg =>
-      new OptionPane(parent, I18N.gui.get("tools.shapesEditor.delete"), msg, OptionPane.Options.YesNo,
-                     OptionPane.Icons.question).getSelectedIndex == 0
+      new OptionPane(parent, loc"Delete", msg, OptionPane.Options.YesNo, OptionPane.Icons.question)
+        .getSelectedIndex == 0
     }.getOrElse(false)
   }
 

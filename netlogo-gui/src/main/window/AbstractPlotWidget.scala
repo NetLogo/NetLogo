@@ -7,7 +7,7 @@ import java.awt.image.BufferedImage
 import java.util.Locale
 import javax.swing.{ Box, BoxLayout, JLabel, JPanel, SwingConstants }
 
-import org.nlogo.core.{ I18N, Pen => CorePen, Plot => CorePlot, Widget => CoreWidget }
+import org.nlogo.core.{ LocaleContext, Pen => CorePen, Plot => CorePlot, Widget => CoreWidget }
 import org.nlogo.plot.{ PenListener, PlotManagerInterface, PlotLoader, PlotPen, Plot }
 import org.nlogo.swing.{ BoxAlign, BoxColumn, BoxRow, RoundedBorderPanel, Utils, VerticalStrut, Zoomable,
                          ZoomableBorder }
@@ -116,7 +116,7 @@ abstract class AbstractPlotWidget(val plot: Plot, val plotManager: PlotManagerIn
   }
 
   /// satisfy the usual obligations of top-level widgets
-  override def classDisplayName = I18N.gui.get("tabs.run.widgets.plot")
+  override def classDisplayName = loc"Plot"
   def makeDirty(): Unit ={
     // yuck! plot calls makeDirty when its being constructed.
     // but canvas isnt created yet.
@@ -324,7 +324,7 @@ abstract class AbstractPlotWidget(val plot: Plot, val plotManager: PlotManagerIn
                                      .getOrElse("") == plotName.toUpperCase(Locale.ENGLISH) => p
       }.length > 1
     if (hasDuplicatedName) {
-      Some(I18N.gui.getN("edit.plot.name.duplicate", plotName.toUpperCase(Locale.ENGLISH)))
+      Some(loc"There is already a plot with the name ${plotName.toUpperCase(Locale.ENGLISH)}")
     } else {
       None
     }

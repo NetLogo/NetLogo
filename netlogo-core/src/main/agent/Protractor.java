@@ -4,7 +4,7 @@ package org.nlogo.agent;
 
 import org.nlogo.api.AgentException;
 import org.nlogo.api.Numbers;
-import org.nlogo.core.I18N;
+import org.nlogo.core.LocaleContextJ;
 
 public class Protractor
     implements org.nlogo.api.Protractor {
@@ -216,8 +216,7 @@ public class Protractor
       throws AgentException {
     double x, y;
     if (fromAgent == toAgent) {
-      throw new AgentException
-          (I18N.errorsJ().get("org.nlogo.agent.Protractor.noHeadingFromAgentToSelf"));
+      throw new AgentException(LocaleContextJ.loc("No heading is defined from an agent to itself."));
     }
     if (toAgent instanceof Turtle) {
       Turtle turtle = (Turtle) toAgent;
@@ -272,8 +271,9 @@ public class Protractor
                         boolean wrap)
       throws AgentException {
     if (fromX == toX && fromY == toY) {
-      throw new AgentException
-          (I18N.errorsJ().getN("org.nlogo.agent.Protractor.noHeadingFromPointToSelf", fromX, fromY));
+      throw new AgentException(
+        LocaleContextJ.loc("No heading is defined from a point ({},{}) to that same point.",
+                           LocaleContextJ.formatDouble(fromX), LocaleContextJ.formatDouble(fromY)));
     }
     double dx = toX - fromX;
     double dy = toY - fromY;

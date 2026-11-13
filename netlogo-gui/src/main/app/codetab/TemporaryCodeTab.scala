@@ -10,7 +10,7 @@ import java.util.Locale
 import org.nlogo.api.FileIO
 import org.nlogo.app.common.{ AppTabsInterface, Dialogs, Events => AppEvents, ModelConfig }
 import org.nlogo.awt.UserCancelException
-import org.nlogo.core.I18N
+import org.nlogo.core.LocaleContext
 import org.nlogo.nvm.IncludeSource
 import org.nlogo.swing.{ CloseableTab, FileDialog => SwingFileDialog, OptionPane, RenameableTab, UserAction }
 import org.nlogo.util.PathUtils
@@ -54,8 +54,9 @@ class TemporaryCodeTab(workspace: GUIWorkspace,
 
     filename foreach { path =>
       val newPath: String = ModelConfig.findIncludeAutoSave(Paths.get(path).toString).fold(path) { autosavePath =>
-        if (new OptionPane(workspace.getFrame, I18N.gui.get("file.autosave.recover"),
-                           I18N.gui.get("file.autosave.recover.include"), OptionPane.Options.YesNo,
+        val message = loc"NetLogo found an autosave for a file included in this model. Would you like to recover it?"
+
+        if (new OptionPane(workspace.getFrame, loc"Recover Autosave", message, OptionPane.Options.YesNo,
                            OptionPane.Icons.info).getSelectedIndex == 0) {
           autosavePath.toString
         } else {
@@ -101,8 +102,11 @@ class TemporaryCodeTab(workspace: GUIWorkspace,
       compileButton.setEnabled(dirty)
       errorLabel.setWarning(None)
     } else {
+      val message = loc"""|This included file cannot be checked.
+                          |Make sure that the main Code tab references it and has been checked."""
+
       compileButton.setEnabled(false)
-      errorLabel.setWarning(Some(I18N.gui.get("tabs.code.cannotCompile")))
+      errorLabel.setWarning(Some(message))
     }
   }
 
@@ -128,8 +132,10 @@ class TemporaryCodeTab(workspace: GUIWorkspace,
       if (workspace.isValidIdentifier(name, workspace.getExtensionManager)) {
         filename = Right(path)
       } else {
-        new OptionPane(workspace.getFrame, I18N.gui.get("tabs.code.invalidName"),
-                       I18N.gui.getN("tabs.code.invalidName.message", s"$name.nlm"), OptionPane.Options.Ok,
+        val message = loc"""|The file name "$name.nlm" is invalid. NLS file names must be valid NetLogo identifiers,
+                            |and cannot conflict with an existing keyword or primitive name."""
+
+        new OptionPane(workspace.getFrame, loc"Invalid File Name", message, OptionPane.Options.Ok,
                        OptionPane.Icons.error)
 
         throw new UserCancelException
@@ -212,7 +218,7 @@ class TemporaryCodeTab(workspace: GUIWorkspace,
     def appendIfNecessary(str: String, suffix: String) = if (str.endsWith(suffix)) str else str + suffix
 
     val newFileName = appendIfNecessary(filenameForDisplay, ".nlm")
-    val path = SwingFileDialog.showFiles(this, I18N.gui.get("file.save.external"), FileDialog.SAVE, newFileName)
+    val path = SwingFileDialog.showFiles(this, loc"Save NetLogo Source File", FileDialog.SAVE, newFileName)
     appendIfNecessary(path, ".nlm")
   }
 

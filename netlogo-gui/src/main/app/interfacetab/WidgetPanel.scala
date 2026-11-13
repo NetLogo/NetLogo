@@ -11,7 +11,7 @@ import javax.swing.{ AbstractAction, JComponent, JLayeredPane, SwingUtilities }
 import org.nlogo.analytics.Analytics
 import org.nlogo.app.common.EditorFactory
 import org.nlogo.awt.{ Mouse => NlogoMouse }
-import org.nlogo.core.{ I18N, Button => CoreButton, Chooser => CoreChooser, InputBox => CoreInputBox,
+import org.nlogo.core.{ Button => CoreButton, Chooser => CoreChooser, InputBox => CoreInputBox, LocaleContext,
   Monitor => CoreMonitor, Plot => CorePlot, Slider => CoreSlider, Switch => CoreSwitch, TextBox => CoreTextBox,
   View => CoreView, Widget => CoreWidget }
 import org.nlogo.editor.{ EditorArea, EditorConfiguration }
@@ -696,19 +696,19 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
 
     val menu = new PopupMenu(this)
 
-    def menuItem(keyName: String, widget: CoreWidget): WidgetCreationMenuItem = {
-      new WidgetCreationMenuItem(I18N.gui.get(s"tabs.run.widgets.$keyName"), widget, focusTraversal)
+    def menuItem(name: String, widget: CoreWidget): WidgetCreationMenuItem = {
+      new WidgetCreationMenuItem(name, widget, focusTraversal)
     }
-    val plot = menuItem("plot", CorePlot(None))
+    val plot = menuItem(loc"Plot", CorePlot(None))
     val menuItems = Seq(
-      menuItem("button",  CoreButton(None, 0, 0, 0, 0)),
-      menuItem("slider",  CoreSlider(None)),
-      menuItem("switch",  CoreSwitch(None)),
-      menuItem("chooser", CoreChooser(None)),
-      menuItem("input",   CoreInputBox(None)),
-      menuItem("monitor", CoreMonitor(None, 0, 0, 0, 0, false, None, 10)),
+      menuItem(loc"Button",  CoreButton(None, 0, 0, 0, 0)),
+      menuItem(loc"Slider",  CoreSlider(None)),
+      menuItem(loc"Switch",  CoreSwitch(None)),
+      menuItem(loc"Chooser", CoreChooser(None)),
+      menuItem(loc"Input",   CoreInputBox(None)),
+      menuItem(loc"Monitor", CoreMonitor(None, 0, 0, 0, 0, false, None, 10)),
       plot,
-      menuItem("note", CoreTextBox(None, fontSize = 11)))
+      menuItem(loc"Note", CoreTextBox(None, fontSize = 11)))
     menuItems.foreach(menu.add)
 
     // if there are no plots in this model, then you can't have a plot in a hubnet client.
@@ -717,13 +717,13 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
 
     menu.addSeparator()
 
-    menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.copySelected")) {
+    menu.add(new MenuItem(new AbstractAction(loc"Copy Selected Widgets") {
       def actionPerformed(e: ActionEvent): Unit = {
         copySelectedWidgets()
       }
     })).setEnabled(selectedWrappers.nonEmpty)
 
-    menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widgets.paste")) {
+    menu.add(new MenuItem(new AbstractAction(loc"Paste Widgets") {
       def actionPerformed(e: ActionEvent): Unit = {
         pasteWidgets()
       }
@@ -1709,9 +1709,9 @@ class WidgetPanel(frame: Frame, val workspace: GUIWorkspace, widgetInfos: Seq[Wi
   /// dispatch WidgetContainer methods
 
   def canAddWidget(widget: String): Boolean = {
-    if (widget.equals(I18N.gui.get("tabs.run.widgets.view"))) {
+    if (widget.equals(loc"View")) {
       !hasView
-    } else if (widget.equals(I18N.gui.get("tabs.run.widgets.plot"))) {
+    } else if (widget.equals(loc"Plot")) {
       // you can't add a plot to the client interface unless
       // there are plots in the server interface so enable the
       // plot button accordingly ev 1/25/07

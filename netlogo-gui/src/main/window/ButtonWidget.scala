@@ -8,7 +8,7 @@ import javax.swing.{ Box, BoxLayout, Icon, JLabel }
 
 import org.nlogo.api.{ CompilerServices, MersenneTwisterFast, Options }
 import org.nlogo.awt.Mouse.hasButton1
-import org.nlogo.core.{ AgentKind, Button => CoreButton, I18N, Widget => CoreWidget }
+import org.nlogo.core.{ AgentKind, Button => CoreButton, LocaleContext, Widget => CoreWidget }
 import org.nlogo.editor.Colorizer
 import org.nlogo.nvm.Procedure
 import org.nlogo.swing.{ BoxColumn, HorizontalStrut, Utils, Zoomable, ZoomableBorder }
@@ -33,7 +33,7 @@ class ButtonWidget(random: MersenneTwisterFast, compiler: CompilerServices, colo
     setBaseFont(getFont.deriveFont(12.0f))
   }
 
-  val nameLabel = new JLabel(I18N.gui.get("edit.button.previewName")) with Zoomable {
+  val nameLabel = new JLabel(loc"(button)") with Zoomable {
     setFocusable(false)
     setBaseFont(getFont.deriveFont(_boldState))
   }
@@ -241,7 +241,7 @@ class ButtonWidget(random: MersenneTwisterFast, compiler: CompilerServices, colo
   }
 
   /// editability
-  override def classDisplayName = I18N.gui.get("tabs.run.widgets.button")
+  override def classDisplayName = loc"Button"
 
   /// compilation & jobs
   var running = false
@@ -346,7 +346,7 @@ class ButtonWidget(random: MersenneTwisterFast, compiler: CompilerServices, colo
   private def chooseDisplayName(): Unit = {
     if (name == "") {
       if (getSourceName == "") {
-        displayName(I18N.gui.get("edit.button.previewName"))
+        displayName(loc"(button)")
       } else {
         displayName(getSourceName)
       }
@@ -549,11 +549,10 @@ class ButtonWidget(random: MersenneTwisterFast, compiler: CompilerServices, colo
 
     // used for the dropdown in the button editor in the UI.
     def defaultAgentOptions = new Options[String](){
-      implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("common")
-      addOption(I18N.gui("observer"), ButtonType.ObserverButton.name)
-      addOption(I18N.gui("turtles"), ButtonType.TurtleButton.name)
-      addOption(I18N.gui("patches"), ButtonType.PatchButton.name)
-      addOption(I18N.gui("links"), ButtonType.LinkButton.name)
+      addOption(loc"observer", ButtonType.ObserverButton.name)
+      addOption(loc"turtles", ButtonType.TurtleButton.name)
+      addOption(loc"patches", ButtonType.PatchButton.name)
+      addOption(loc"links", ButtonType.LinkButton.name)
     }
   }
 

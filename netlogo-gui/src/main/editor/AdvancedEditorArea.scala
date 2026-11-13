@@ -19,7 +19,7 @@ import javax.swing.AbstractAction
 
 import netscape.javascript.JSObject
 
-import org.nlogo.core.{ BreedIdentifierHandler, ColorConstants, I18N, Keywords, NetLogoCore, Program }
+import org.nlogo.core.{ BreedIdentifierHandler, ColorConstants, Keywords, LocaleContext, NetLogoCore, Program }
 import org.nlogo.editor.MouseQuickHelpAction
 import org.nlogo.swing.{ ClipboardUtils, Menu, MenuItem, PopupMenu, ScrollableTextComponent, UserAction, Zoomable },
   UserAction.{ EditCategory, EditClipboardGroup, EditFoldGroup, EditFoldSubcategory, EditFormatGroup,
@@ -33,8 +33,6 @@ import scala.util.Try
 
 class AdvancedEditorArea(configuration: EditorConfiguration)
   extends JFXPanel with AbstractEditorArea with ScrollableTextComponent with Zoomable with ThemeSync {
-
-  private implicit val prefix: I18N.Prefix = I18N.Prefix("menu.edit")
 
   private implicit val ec: ExecutionContext = ExecutionContext.global
 
@@ -52,7 +50,7 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
   private lazy val textListeners = Buffer[TextListener]()
 
   private val undoAction: MenuAction = {
-    new AbstractAction(I18N.gui("undo")) with MenuAction {
+    new AbstractAction(loc"Undo") with MenuAction {
       category = EditCategory
       group = EditUndoGroup
       accelerator = KeyBindings.keystroke('Z', withMenu = true)
@@ -65,7 +63,7 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
   }
 
   private val redoAction: MenuAction = {
-    new AbstractAction(I18N.gui("redo")) with MenuAction {
+    new AbstractAction(loc"Redo") with MenuAction {
       category = EditCategory
       group = EditUndoGroup
       accelerator = KeyBindings.keystroke('Y', withMenu = true)
@@ -78,7 +76,7 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
   }
 
   private val copyAction: MenuAction = {
-    new AbstractAction(I18N.gui("copy")) with MenuAction {
+    new AbstractAction(loc"Copy") with MenuAction {
       category = EditCategory
       group = EditClipboardGroup
       accelerator = KeyBindings.keystroke('C', withMenu = true)
@@ -91,7 +89,7 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
   }
 
   private val cutAction: MenuAction = {
-    new AbstractAction(I18N.gui("cut")) with MenuAction {
+    new AbstractAction(loc"Cut") with MenuAction {
       category = EditCategory
       group = EditClipboardGroup
       accelerator = KeyBindings.keystroke('X', withMenu = true)
@@ -104,7 +102,7 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
   }
 
   private val pasteAction: MenuAction = {
-    new AbstractAction(I18N.gui("paste")) with MenuAction {
+    new AbstractAction(loc"Paste") with MenuAction {
       category = EditCategory
       group = EditClipboardGroup
       accelerator = KeyBindings.keystroke('V', withMenu = true)
@@ -117,7 +115,7 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
   }
 
   private val deleteAction: MenuAction = {
-    new AbstractAction(I18N.gui("delete")) with MenuAction {
+    new AbstractAction(loc"Delete") with MenuAction {
       category = EditCategory
       group = EditClipboardGroup
       accelerator = KeyBindings.keystroke(KeyEvent.VK_DELETE)
@@ -130,7 +128,7 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
   }
 
   private val selectAllAction: MenuAction = {
-    new AbstractAction(I18N.gui("selectAll")) with MenuAction {
+    new AbstractAction(loc"Select All") with MenuAction {
       category = EditCategory
       group = EditSelectionGroup
       accelerator = KeyBindings.keystroke('A', withMenu = true)
@@ -143,7 +141,7 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
   }
 
   private val toggleCommentsAction: MenuAction = {
-    new AbstractAction(s"${I18N.gui("comment")} / ${I18N.gui("uncomment")}")
+    new AbstractAction(loc"Comment / Uncomment")
       with MenuAction {
 
       category = EditCategory
@@ -158,7 +156,7 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
   }
 
   private val shiftLeftAction: MenuAction = {
-    new AbstractAction(I18N.gui("shiftLeft")) with MenuAction {
+    new AbstractAction(loc"Shift Left") with MenuAction {
       category = EditCategory
       group = EditFormatGroup
       accelerator = KeyBindings.keystroke(KeyEvent.VK_OPEN_BRACKET, withMenu = true)
@@ -171,7 +169,7 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
   }
 
   private val shiftRightAction: MenuAction = {
-    new AbstractAction(I18N.gui("shiftRight")) with MenuAction {
+    new AbstractAction(loc"Shift Right") with MenuAction {
       category = EditCategory
       group = EditFormatGroup
       accelerator = KeyBindings.keystroke(KeyEvent.VK_CLOSE_BRACKET, withMenu = true)
@@ -184,7 +182,7 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
   }
 
   private val foldSelectedAction: MenuAction = {
-    new AbstractAction(I18N.gui("foldSelected")) with MenuAction {
+    new AbstractAction(loc"Collapse Selected Folds") with MenuAction {
       category = EditCategory
       subcategory = EditFoldSubcategory
       group = EditFoldGroup
@@ -198,7 +196,7 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
   }
 
   private val unfoldSelectedAction: MenuAction = {
-    new AbstractAction(I18N.gui("unfoldSelected")) with MenuAction {
+    new AbstractAction(loc"Expand Selected Folds") with MenuAction {
       category = EditCategory
       subcategory = EditFoldSubcategory
       group = EditFoldGroup
@@ -212,7 +210,7 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
   }
 
   private val foldAllAction: MenuAction = {
-    new AbstractAction(I18N.gui("foldAll")) with MenuAction {
+    new AbstractAction(loc"Collapse All Folds") with MenuAction {
       category = EditCategory
       subcategory = EditFoldSubcategory
       group = EditFoldGroup
@@ -227,7 +225,7 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
   }
 
   private val unfoldAllAction: MenuAction = {
-    new AbstractAction(I18N.gui("unfoldAll")) with MenuAction {
+    new AbstractAction(loc"Expand All Folds") with MenuAction {
       category = EditCategory
       subcategory = EditFoldSubcategory
       group = EditFoldGroup
@@ -343,7 +341,7 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
 
       addSeparator()
 
-      add(new Menu(I18N.gui("folding")) {
+      add(new Menu(loc"Folding") {
         setMnemonic(KeyEvent.VK_O)
 
         add(new MenuItem(foldSelectedAction))
