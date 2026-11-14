@@ -104,22 +104,23 @@ object StructureParser {
                 }
 
                 val prefix =
-                  currentImport.pathAlias match {
-                    case Some(x) => s"$x:"
-                    case None =>
-                      if (isSelectiveImport) {
-                        ""
-                      } else {
-                        val path = relativePath.replace(separator, ":").toUpperCase(Locale.ROOT).stripSuffix(".NLM")
+                  if (isSelectiveImport) {
+                    ""
+                  } else {
+                    val path = relativePath.replace(separator, ":").toUpperCase(Locale.ROOT).stripSuffix(".NLM")
 
-                        if (path.nonEmpty) {
-                          val basePrefix = s"$butLastImportComponent:"
+                    val rawPrefix = if (path.nonEmpty) {
+                      val basePrefix = s"$butLastImportComponent:"
 
-                          s"${path.stripPrefix(basePrefix)}:"
-                        } else {
-                          s"$lastImportComponent:"
-                        }
-                      }
+                      s"${path.stripPrefix(basePrefix)}:"
+                    } else {
+                      s"$lastImportComponent:"
+                    }
+
+                    currentImport.pathAlias match {
+                      case Some(x) => rawPrefix.replaceFirst(s"^.*?:", s"$x:")
+                      case None => rawPrefix
+                    }
                   }
 
                 val modelExtensions = newResults.extensions.map(_._1.value).toSet
