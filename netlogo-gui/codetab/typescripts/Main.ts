@@ -23,7 +23,7 @@ import { toggleComments } from "./comment.js";
 import { executeIndentations } from "./indent.js";
 import { lint, underlineEffect } from "./lint.js";
 import { parser } from "./netlogo.js";
-import { End, ExtensionIdentifier, IncludeString, ModuleIdentifier, To } from "./netlogo.terms.js";
+import { End, ExtensionIdentifier, IncludeString, ModuleIdentifier, To, ToReport } from "./netlogo.terms.js";
 
 interface ColorTheme {
   background: string;
@@ -860,7 +860,7 @@ window.autocomplete = (context: CompletionContext) => {
     from: 0,
     to: context.pos,
     enter(node) {
-      if (node.type.id == To) {
+      if (node.type.id == To || node.type.id == ToReport) {
         scope++;
       } else if (node.type.id == End && scope > 0) {
         scope--;
