@@ -46,6 +46,8 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
         }
 
         setText(valueString(value))
+
+        slider.requestFocus()
       }
     })
 
@@ -175,6 +177,8 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
     val mouseListener = new MouseAdapter {
       override def mousePressed(e: MouseEvent): Unit = {
         new InputBoxLoseFocusEvent().raise(AbstractSliderWidget.this)
+
+        slider.requestFocus()
       }
     }
 
