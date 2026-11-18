@@ -112,7 +112,7 @@ object Analytics {
     AnalyticsSender(ModelCodeHash, Map("hash" -> hash))
   }
 
-  def primUsage(tokens: Iterator[Token]): Unit = {
+  def primUsage(tokens: Seq[Token]): Unit = {
     Future {
       tokens.foldLeft(Map[String, Int]()) {
         case (map, token) =>
@@ -126,7 +126,7 @@ object Analytics {
     }.filter(_.nonEmpty).flatMap(AnalyticsSender(PrimitiveUsage, _))
   }
 
-  def keywordUsage(tokens: Iterator[Token]): Unit = {
+  def keywordUsage(tokens: Seq[Token]): Unit = {
     Future {
       tokens.foldLeft(Map[String, Int]()) {
         case (map, token) =>
@@ -141,7 +141,7 @@ object Analytics {
      .flatMap(AnalyticsSender(KeywordUsage, _))
   }
 
-  def includeExtensions(extensions: Array[String]): Unit = {
+  def includeExtensions(extensions: Seq[String]): Unit = {
     extensions.foreach {
       extension =>
         AnalyticsSender(IncludeExtension, Map("name" -> extension))

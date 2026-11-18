@@ -6,6 +6,7 @@ import java.util.{ Timer, TimerTask }
 
 import org.nlogo.analytics.Analytics
 import org.nlogo.app.common.AppTabsInterface
+import org.nlogo.core.{ Token, TokenType }
 import org.nlogo.editor.EditorMenu
 import org.nlogo.window.{ Events => WindowEvents, GUIWorkspace }
 
@@ -52,14 +53,23 @@ with WindowEvents.LoadModelEvent.Handler
         lastHash = Option(hash)
 
         Analytics.codeHash(hash)
-        Analytics.primUsage(workspace.tokenizeForColorizationIterator(text))
-        Analytics.keywordUsage(workspace.tokenizeForColorizationIterator(text))
 
-        "extensions[\\s\r\n]*\\[(.*)\\]".r.findFirstMatchIn(text).foreach(_.group(1) match {
-          case s if s != null => Analytics.includeExtensions(s.trim.split("[\\s\r\n]+"))
-          case _ =>
-        })
+        val tokens: Seq[Token] = workspace.tokenizeForColorization(text).toSeq
+
+        Analytics.primUsage(tokens)
+        Analytics.keywordUsage(tokens)
+        Analytics.includeExtensions(findExtensions(tokens))
       }
     }
+  }
+
+  private def findExtensions(tokens: Seq[Token]): Seq[String] = {
+    tokens.dropWhile {
+      case Token(_, TokenType.Keyword, "EXTENSIONS") =>
+        false
+
+      case _ =>
+        true
+    }.drop(2).takeWhile(_.tpe == TokenType.Ident).take(50).map(_.text)
   }
 }
