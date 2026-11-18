@@ -23,7 +23,7 @@ class TokenLexer {
   )
 
   def lexerOrdering: Seq[(LexPredicate, TokenGenerator)] =
-    Seq(extensionLiteral, punct, comment, numericLiteral, string, ident, illegalCharacter)
+    Seq(extensionLiteral, punct, comment, numericLiteral, string, atKeyword, ident, illegalCharacter)
 
   def apply(input: WrappedInput): (Token, WrappedInput) = {
     if (input.hasNext) {
@@ -102,6 +102,9 @@ class TokenLexer {
   def ident: (LexPredicate, TokenGenerator) =
     (oneOrMore(validIdentifierChar), tokenizeIdent)
 
+  def atKeyword: (LexPredicate, TokenGenerator) =
+    (chain('@', oneOrMore(validIdentifierChar)), tokenizeAtKeyword)
+
   def illegalCharacter: (LexPredicate, TokenGenerator) =
     // if we've gotten to this point, we have a bad character
     (aSingle(c => Accept), {s => Some((s, TokenType.Bad, "This non-standard character is not allowed.")) } )
@@ -134,6 +137,9 @@ class TokenLexer {
 
   private def tokenizeIdent(identString: String): Option[(String, TokenType, AnyRef)] =
     Some((identString, TokenType.Ident, identString.toUpperCase(Locale.ENGLISH)))
+
+  private def tokenizeAtKeyword(keywordString: String): Option[(String, TokenType, AnyRef)] =
+    Some((keywordString, TokenType.AtKeyword, keywordString.toUpperCase(Locale.ENGLISH)))
 
   private def tokenizeString(stringText: String): Option[(String, TokenType, AnyRef)] = {
     val lastCharEscaped = stringText.dropRight(1).foldLeft(false) {
