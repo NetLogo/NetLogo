@@ -390,7 +390,7 @@ class StructureParserTests extends AnyFunSuite {
     val e = intercept[CompilerException] {
       compileAll(src, sourceType, fooSrc, barSrc)
     }
-    assertResult(error)(e.getMessage.takeWhile(_ != ','))
+    assertResult(error)(e.getMessage)
   }
 
   test("import nonexistent module") {
@@ -540,7 +540,7 @@ class StructureParserTests extends AnyFunSuite {
       |end
       """.stripMargin
 
-    expectParseAllError(src, "There is already an imported procedure called A:TEST", SourceType.NLModule, nlmSrc)
+    expectParseAllError(src, "This import statement is attempting to bring in a procedure called A:TEST, but another procedure with the same name already exists", SourceType.NLModule, nlmSrc)
   }
 
   test("nothing exported without an export statement") {
