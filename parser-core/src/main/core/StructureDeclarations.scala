@@ -42,6 +42,9 @@ object StructureDeclarations {
     // List of all components in the module path.
     pathComponents: Seq[String],
 
+    // Import path prefix ("UP" or "@PACKAGE"), if any
+    pathPrefix: Option[ImportPathPrefix],
+
     // Alias for the module path.
     pathAlias: Option[String],
 

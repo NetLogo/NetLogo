@@ -2,8 +2,9 @@
 
 package org.nlogo.parse
 
-import org.nlogo.core.{ CompilationOperand, DummyCompilationEnvironment, DummyExtensionManager, DummyLibraryManager,
-                        CompilerException, Femto, ResolvedModule, StructureResults }
+import org.nlogo.core.{ CompilationOperand, DummyCompilationEnvironment, DummyExtensionManager,
+                        DummyLibraryManager, CompilerException, Femto, ImportPathPrefix,
+                        ResolvedModule, SourceLocatable, StructureResults }
 
 import org.nlogo._
 import org.scalatest.funsuite.AnyFunSuite
@@ -355,20 +356,30 @@ class StructureParserTests extends AnyFunSuite {
     class TestCompilationEnvironment extends DummyCompilationEnvironment {
       override def resolveModulePath(
         currentFile: Option[String],
-        modulePath: Seq[String]
+        importPathPrefix: Option[ImportPathPrefix],
+        modulePath: Seq[String],
+        locatable: Option[SourceLocatable]
       ): Option[ResolvedModule] = {
+        val upCount = importPathPrefix match {
+          case Some(ImportPathPrefix.Up(n)) => n
+          case _ => 0
+        }
 
-        val separator = System.getProperty("file.separator")
-        val suffix = sourceType.suffix
-        val getParentDir = (x: String) => x.dropRight(x.length - x.lastIndexOf(separator))
-        val parentDir = currentFile.map(getParentDir(_)).flatMap(x => if (x.isEmpty) None else Some(x))
+        if (upCount > 0) {
+          None
+        } else {
+          val separator = System.getProperty("file.separator")
+          val suffix = sourceType.suffix
+          val getParentDir = (x: String) => x.dropRight(x.length - x.lastIndexOf(separator))
+          val parentDir = currentFile.map(getParentDir(_)).flatMap(x => if (x.isEmpty) None else Some(x))
 
-        (parentDir, modulePath) match {
-          case (None, Seq("FOO")) => Some(ResolvedModule("", s"foo.$suffix", Seq(s"foo.$suffix")))
-          case (None, Seq("BAR")) if barSrc.nonEmpty => Some(ResolvedModule("", s"bar.$suffix", Seq(s"bar.$suffix")))
-          case (None, Seq("BAZ", "QAZ")) if qazSrc.nonEmpty => Some(ResolvedModule("", s"baz/qaz.$suffix",
-                                                                                   Seq(s"baz/qaz.$suffix")))
-          case _ => Some(ResolvedModule("", "", Seq()))
+          (parentDir, modulePath) match {
+            case (None, Seq("FOO")) => Some(ResolvedModule("", s"foo.$suffix", Seq(s"foo.$suffix")))
+            case (None, Seq("BAR")) if barSrc.nonEmpty => Some(ResolvedModule("", s"bar.$suffix", Seq(s"bar.$suffix")))
+            case (None, Seq("BAZ", "QAZ")) if qazSrc.nonEmpty => Some(ResolvedModule("", s"baz/qaz.$suffix",
+                                                                                     Seq(s"baz/qaz.$suffix")))
+            case _ => Some(ResolvedModule("", "", Seq()))
+          }
         }
       }
     }
