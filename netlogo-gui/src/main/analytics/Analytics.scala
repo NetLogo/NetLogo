@@ -148,6 +148,10 @@ object Analytics {
     }
   }
 
+  def importModule(name: String): Unit = {
+    AnalyticsSender(ImportModule, Map("name" -> name))
+  }
+
   def loadOldSizeWidgets(widgets: Int): Unit = {
     if (widgets > 0) {
       AnalyticsSender(LoadOldSizeWidgets, Map("numWidgets" -> widgets.toDouble))

@@ -33,5 +33,6 @@ enum AnalyticsEventType {
   , SaveAsNetLogoWeb
   , PreviewCommandsOpen
   , AnnouncementClicked
+  , ImportModule
 }
 

@@ -10,6 +10,7 @@ import org.nlogo.core.{ Token, TokenType }
 import org.nlogo.editor.EditorMenu
 import org.nlogo.window.{ Events => WindowEvents, GUIWorkspace }
 
+import scala.concurrent.{ ExecutionContext, Future }
 import scala.util.hashing.MurmurHash3
 
 // This is THE Code tab.  Certain settings and things that are only accessible here.
@@ -23,7 +24,7 @@ with WindowEvents.LoadModelEvent.Handler
 
   new Timer().scheduleAtFixedRate(new TimerTask {
     override def run(): Unit = {
-      maybeSendAnalytics()
+      maybeSendAnalytics(getText)
     }
   }, 300000, 300000)
 
@@ -40,12 +41,15 @@ with WindowEvents.LoadModelEvent.Handler
   def handle(e: WindowEvents.LoadModelEvent): Unit = {
     innerSource = e.model.code
     compile()
-    maybeSendAnalytics()
+
+    val text: String = getText
+
+    Future {
+      maybeSendAnalytics(text)
+    }(using ExecutionContext.global)
   }
 
-  private def maybeSendAnalytics(): Unit = {
-    val text = getText
-
+  private def maybeSendAnalytics(text: String): Unit = {
     if (text.nonEmpty) {
       val hash = MurmurHash3.stringHash(text)
 
@@ -59,6 +63,8 @@ with WindowEvents.LoadModelEvent.Handler
         Analytics.primUsage(tokens)
         Analytics.keywordUsage(tokens)
         Analytics.includeExtensions(findExtensions(tokens))
+
+        findModules(tokens).foreach(Analytics.importModule)
       }
     }
   }
@@ -77,5 +83,29 @@ with WindowEvents.LoadModelEvent.Handler
       .takeWhile(_.tpe == TokenType.Ident)
       .take(MaxSendableExtNames)
       .map(_.text)
+  }
+
+  private def findModules(tokens: Seq[Token]): Seq[String] = {
+    val start: Seq[Token] = tokens.dropWhile {
+      case Token(_, TokenType.Keyword, "IMPORT") =>
+        false
+
+      case _ =>
+        true
+    }.drop(1)
+
+    (if (start.headOption.exists(_.tpe == TokenType.OpenBracket)) {
+      val rest: Seq[Token] = start.dropWhile(_.value != "FROM").drop(1)
+
+      rest.headOption.map(token => (token.text, rest.drop(1)))
+    } else {
+      start.headOption.map(token => (token.text, start.drop(1)))
+    }) match {
+      case Some(module, rest) =>
+        module +: findModules(rest)
+
+      case _ =>
+        Seq()
+    }
   }
 }
