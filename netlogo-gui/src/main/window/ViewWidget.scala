@@ -99,6 +99,8 @@ class ViewWidget(workspace: GUIWorkspace) extends Widget with ViewWidgetInterfac
     setSize(dim.width + insetWidth,
         dim.height + getExtraHeight)
     doLayout()
+
+    Option(getParent).foreach(_.setSize(getSize))
   }
 
   // the border size was changed for 7.0, so there can be weird sizing issues with older views. this method is used
