@@ -117,6 +117,7 @@ trait ModelTracker {
     if (modelPath == null) {
       _modelFileName = null
       modelDir = null
+      fileManager.setPrefix(System.getProperty("user.home"))
     } else {
       val file = new File(modelPath).getAbsoluteFile
       _modelFileName = file.getName

@@ -556,6 +556,7 @@ object AbstractWorkspaceTraits {
       if (modelPath == null) {
         _modelFileName = null
         _modelDir = null
+        fileManager.setPrefix(System.getProperty("user.home"))
       }
       else {
         val file = new java.io.File(modelPath).getAbsoluteFile
