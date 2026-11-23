@@ -120,6 +120,23 @@ class Trie {
   }
 }
 
+interface CoreProgramSpec {
+  keywords: string[];
+  constants: string[];
+  commands: string[];
+  reporters: string[];
+}
+
+interface CompiledProgramSpec {
+  keywords: string[];
+  globals: string[];
+  variables: string[];
+  commands: string[];
+  reporters: string[];
+  imports: [string, string][];
+  extensions: [string, string][];
+}
+
 class Program {
   decls: string[] = [];
   imports: Map<string, string> = new Map();
@@ -128,30 +145,28 @@ class Program {
   private core: Trie = new Trie();
   private compiled: Trie = new Trie();
 
-  setCore(keywords: string[], constants: string[], commands: string[], reporters: string[]) {
-    this.decls = keywords.filter(value => !value.match("to|to-report|import|export"));
+  setCore(program: CoreProgramSpec) {
+    this.decls = program.keywords.filter(value => !value.match("to|to-report|import|export"));
 
     this.core = new Trie();
 
-    this.core.appendAll(keywords, "keyword");
-    this.core.appendAll(constants, "constant");
-    this.core.appendAll(commands, "command");
-    this.core.appendAll(reporters, "reporter");
+    this.core.appendAll(program.keywords, "keyword");
+    this.core.appendAll(program.constants, "constant");
+    this.core.appendAll(program.commands, "command");
+    this.core.appendAll(program.reporters, "reporter");
   }
 
-  setCompiled(keywords: string[], globals: string[], variables: string[], commands: string[], reporters: string[],
-              imports: [string, string][], extensions: [string, string][]) {
-
+  setCompiled(program: CompiledProgramSpec) {
     this.compiled = new Trie();
 
-    this.compiled.appendAll(keywords, "keyword");
-    this.compiled.appendAll(globals, "global");
-    this.compiled.appendAll(variables, "variable");
-    this.compiled.appendAll(commands, "command");
-    this.compiled.appendAll(reporters, "reporter");
+    this.compiled.appendAll(program.keywords, "keyword");
+    this.compiled.appendAll(program.globals, "global");
+    this.compiled.appendAll(program.variables, "variable");
+    this.compiled.appendAll(program.commands, "command");
+    this.compiled.appendAll(program.reporters, "reporter");
 
-    this.imports = new Map(imports);
-    this.extensions = new Map(extensions);
+    this.imports = new Map(program.imports);
+    this.extensions = new Map(program.extensions);
   }
 
   match(value: string, offset: number = 0): Completion | undefined {
@@ -237,9 +252,8 @@ declare global {
     foldAll: () => void;
     unfoldAll: () => void;
     unfoldCurrent: (view: EditorView) => boolean;
-    setCoreProgram: (keywords: string[], constants: string[], commands: string[], reporters: string[]) => void;
-    setCompiledProgram: (keywords: string[], globals: string[], variables: string[], commands: string[],
-                         reporters: string[], imports: [string, string][], extensions: [string, string][]) => void;
+    setCoreProgram: (program: CoreProgramSpec) => void;
+    setCompiledProgram: (program: CompiledProgramSpec) => void;
     autocomplete: (context: CompletionContext) => CompletionResult | null;
     hoverTooltip: (view: EditorView, pos: number, side: -1 | 1) => Tooltip | null;
     getImportSpec: (view: EditorView, node: SyntaxNode) => ImportSpec | null;
@@ -844,13 +858,12 @@ window.unfoldCurrent = (view: EditorView) => {
   return false;
 }
 
-window.setCoreProgram = (keywords: string[], constants: string[], commands: string[], reporters: string[]) => {
-  window.program.setCore(keywords, constants, commands, reporters);
+window.setCoreProgram = (program: CoreProgramSpec) => {
+  window.program.setCore(program);
 };
 
-window.setCompiledProgram = (keywords: string[], globals: string[], variables: string[], commands: string[],
-                             reporters: string[], imports: [string, string][], extensions: [string, string][]) => {
-  window.program.setCompiled(keywords, globals, variables, commands, reporters, imports, extensions);
+window.setCompiledProgram = (program: CompiledProgramSpec) => {
+  window.program.setCompiled(program);
 };
 
 window.autocomplete = (context: CompletionContext) => {

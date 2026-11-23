@@ -523,7 +523,12 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
     val commands: String = format(NetLogoCore.tokenMapper.allCommandNames.filterNot(_.startsWith("__")).toSeq)
     val reporters: String = format(NetLogoCore.tokenMapper.allReporterNames.filterNot(_.startsWith("__")).toSeq)
 
-    runInWeb(s"window.setCoreProgram($keywords, $constants, $commands, $reporters)")
+    runInWeb(s"""window.setCoreProgram({
+                   keywords: $keywords,
+                   constants: $constants,
+                   commands: $commands,
+                   reporters: $reporters
+                 })""")
   }
 
   def setProgram(program: Program, commandProcs: Seq[String], reporterProcs: Seq[String],
@@ -561,11 +566,27 @@ class AdvancedEditorArea(configuration: EditorConfiguration)
       s"[\"${name.toLowerCase}\",\"$path\"]"
     }.mkString("[", ",", "]")
 
-    runInWeb(s"window.setCompiledProgram($keywords, $globals, $variables, $commands, $reporters, $importMap, $extensionMap)")
+    runInWeb(s"""window.setCompiledProgram({
+                   keywords: $keywords,
+                   globals: $globals,
+                   variables: $variables,
+                   commands: $commands,
+                   reporters: $reporters,
+                   imports: $importMap,
+                   extensions: $extensionMap
+                 })""")
   }
 
   def unsetProgram(): Unit = {
-    runInWeb("window.setCompiledProgram([], [], [], [], [], [], [])")
+    runInWeb(s"""window.setCompiledProgram({
+                   keywords: [],
+                   globals: [],
+                   variables: [],
+                   commands: [],
+                   reporters: [],
+                   imports: [],
+                   extensions: []
+                 })""")
   }
 
   private def runInWeb(function: String): Unit = {
