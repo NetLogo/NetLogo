@@ -26,7 +26,7 @@ package org.nlogo.parse
 // and discard input).
 
 import
-  org.nlogo.core.{ I18N, Token, TokenType, StructureDeclarations },
+  org.nlogo.core.{ I18N, Token, TokenType, StructureDeclarations, ImportPathPrefix },
   StructureDeclarations._
 
 object StructureCombinators {
@@ -105,16 +105,31 @@ extends scala.util.parsing.combinator.Parsers {
   def `import`: Parser[Import] = importSimple | importIdentifiers
 
   def importSimple: Parser[Import] =
-    keyword("IMPORT") ~ rep1sep(plainIdentifier, colon) ~ opt(exactIdentifier("AS") ~> identifier) ^^ {
-      case keyword ~ components ~ pathAliasOption =>
-        Import(components.map(_.text.toUpperCase), pathAliasOption.map(_.name), Map(), keyword)
+    keyword("IMPORT") ~ importPath ~ opt(exactIdentifier("AS") ~> identifier) ^^ {
+      case keyword ~ (upCount, components) ~ pathAliasOption =>
+        Import(components.map(_.text.toUpperCase), upCount, pathAliasOption.map(_.name), Map(), keyword)
     }
 
   def importIdentifiers: Parser[Import] =
-    keyword("IMPORT") ~ importedIdentifierList ~ exactIdentifier("FROM") ~ rep1sep(plainIdentifier, colon) ^^ {
-      case keyword ~ importList ~ _ ~ components =>
-        Import(components.map(_.text.toUpperCase), None, importList, keyword)
+    keyword("IMPORT") ~ importedIdentifierList ~ exactIdentifier("FROM") ~ importPath ^^ {
+      case keyword ~ importList ~ _ ~ (upCount, components) =>
+        Import(components.map(_.text.toUpperCase), upCount, None, importList, keyword)
     }
+
+  def importPath: Parser[(Option[ImportPathPrefix], Seq[Token])] =
+    opt(importPathPrefix <~ colon) ~ rep1sep(importPathComponent, colon) ^^ {
+      case prefix ~ components => (prefix, components)
+    }
+
+  def importPathPrefix: Parser[ImportPathPrefix] =
+    atKeyword("@PACKAGE") ^^^ ImportPathPrefix.PackageRoot |
+    rep(exactIdentifier("UP")) ^^ (x => ImportPathPrefix.Up(x.length))
+
+  def importPathComponent: Parser[Token] =
+    exactIdentifier(".") ~>! err(I18N.errors.getN("compiler.StructureCombinators.importPathContains", ".")) |
+    exactIdentifier("..") ~>! err(I18N.errors.getN("compiler.StructureCombinators.importPathContains", "..")) |
+    exactIdentifier("UP") ~>! err(I18N.errors.get("compiler.StructureCombinators.importPathContainsUp")) |
+    plainIdentifier
 
   def renamableIdentifier: Parser[(String, String)] =
     identifier ^^ (x => (x.name, x.name)) |
@@ -274,6 +289,11 @@ extends scala.util.parsing.combinator.Parsers {
   def keyword(name: String): Parser[Token] =
     acceptMatch(name, {
       case token @ Token(_, TokenType.Keyword, `name`) =>
+        token })
+
+  def atKeyword(name: String): Parser[Token] =
+    acceptMatch(name, {
+      case token @ Token(_, TokenType.AtKeyword, `name`) =>
         token })
 
   // kludge: special case because of naming conflict with BREED turtle variable - jrn 8/04/05

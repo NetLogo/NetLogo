@@ -80,7 +80,7 @@ object StructureChecker {
 
     for (declaration <- declarations) {
       declaration match {
-        case Import(pathComponents, _, _, token) =>
+        case Import(pathComponents, _, _, _, token) =>
           if (pathComponents.exists(x => separators.exists(x.contains))) {
             exception(I18N.errors.getN("compiler.StructureParser.importContainsPathSeparator"), token)
           }
