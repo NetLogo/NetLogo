@@ -94,18 +94,16 @@ with WindowEvents.LoadModelEvent.Handler
         true
     }.drop(1)
 
-    (if (start.headOption.exists(_.tpe == TokenType.OpenBracket)) {
-      val rest: Seq[Token] = start.dropWhile(_.value != "FROM").drop(1)
+    val remaining =
+      if (start.headOption.exists(_.tpe == TokenType.OpenBracket)) {
+        start.dropWhile(_.value != "FROM").drop(1)
+      } else {
+        start
+      }
 
-      rest.headOption.map(token => (token.text, rest.drop(1)))
-    } else {
-      start.headOption.map(token => (token.text, start.drop(1)))
-    }) match {
-      case Some(module, rest) =>
-        module +: findModules(rest)
-
-      case _ =>
-        Seq()
+    remaining match {
+      case head +: tail => head.text +: findModules(tail)
+      case _            => Seq.empty
     }
   }
 }
