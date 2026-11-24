@@ -64,12 +64,18 @@ with WindowEvents.LoadModelEvent.Handler
   }
 
   private def findExtensions(tokens: Seq[Token]): Seq[String] = {
-    tokens.dropWhile {
-      case Token(_, TokenType.Keyword, "EXTENSIONS") =>
-        false
+    val MaxSendableExtNames = 50
 
-      case _ =>
-        true
-    }.drop(2).takeWhile(_.tpe == TokenType.Ident).take(50).map(_.text)
+    tokens
+      .dropWhile {
+        case Token(_, TokenType.Keyword, "EXTENSIONS") =>
+          false
+
+        case _ =>
+          true
+      }.drop(2) // First token is `extensions`; second is `[`. --Jason B. (11/24/26)
+      .takeWhile(_.tpe == TokenType.Ident)
+      .take(MaxSendableExtNames)
+      .map(_.text)
   }
 }
