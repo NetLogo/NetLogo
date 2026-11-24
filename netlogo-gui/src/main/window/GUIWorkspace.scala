@@ -7,7 +7,7 @@ import java.awt.event.ActionEvent
 import java.awt.image.BufferedImage
 import java.io.{ IOException, InputStream, PrintWriter, Reader }
 import java.lang.Thread
-import java.net.MalformedURLException
+import java.net.{ MalformedURLException, URI }
 import java.nio.file.Paths
 import java.util.Locale
 import java.util.concurrent.TimeoutException
@@ -24,7 +24,8 @@ import org.nlogo.core.{ AgentKind, CompilerException, File, I18N, Model, ModelSe
                         Shape, UpdateMode, WorldDimensions, WorldDimensions3D }
 import org.nlogo.nvm.{ Context, HaltException, Instruction, PrimaryWorkspace, Procedure }
 import org.nlogo.shape.ShapeConverter
-import org.nlogo.swing.{ CustomOptionPane, FileDialog, ModalProgressTask, OptionPane, ScrollPane, TextArea, Utils }
+import org.nlogo.swing.{ BrowserLauncher, CustomOptionPane, FileDialog, ModalProgressTask, OptionPane, ScrollPane,
+                         TextArea, Utils }
 import org.nlogo.theme.InterfaceColors
 import org.nlogo.window.Event.LinkChild
 import org.nlogo.window.Events.{ AboutToQuitEvent, AddBooleanConstraintEvent, AddChooserConstraintEvent,
@@ -692,10 +693,21 @@ abstract class GUIWorkspace(app: Option[AppInterface], world: World, kioskLevel:
     try {
       val procedure: Procedure = compileCommands("without-interruption [ startup ]")
 
-      if (!NetLogoPreferences.getBoolean("confirmStartup", true) ||
-          new OptionPane(frame, I18N.gui.get("common.messages.warning"), I18N.gui.get("warning.confirmStartup"),
-                         OptionPane.Options.YesNo, OptionPane.Icons.warning).getSelectedIndex == 0) {
-        runCompiledCommandsNoWait(new SimpleJobOwner("startup", world.mainRNG, AgentKind.Observer), procedure)
+      if (NetLogoPreferences.getBoolean("confirmStartup", true)) {
+        val choice: Int = new OptionPane(frame, I18N.gui.get("common.messages.warning"),
+                                         I18N.gui.get("warning.confirmStartup"),
+                                         Seq(I18N.gui.get("common.buttons.yes"),
+                                             I18N.gui.get("warning.confirmStartup.learnMore"),
+                                             I18N.gui.get("common.buttons.no")),
+                                         OptionPane.Icons.warning).getSelectedIndex
+
+        if (choice == 0) {
+          runCompiledCommandsNoWait(new SimpleJobOwner("startup", world.mainRNG, AgentKind.Observer), procedure)
+        } else if (choice == 1) {
+          val section = "why-am-i-being-asked-if-i-want-to-run-the-startup-procedure-in-some-models"
+
+          BrowserLauncher.openURI(new URI(s"https://docs.netlogo.org/faq#$section"))
+        }
       }
     } catch {
       case e: CompilerException =>
