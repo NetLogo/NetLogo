@@ -9,6 +9,8 @@ import java.io.IOException
 import java.net.MalformedURLException
 import javax.swing.{ AbstractAction, JPanel }
 
+import scala.util.Try
+
 import org.nlogo.agent.Observer
 import org.nlogo.api.TabsInterface
 import org.nlogo.app.common.{ CodeToHtml, EditorFactory, Events => AppEvents, FindDialog, MenuTab }
@@ -181,11 +183,13 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
   }
 
   protected def getImports: Seq[(String, String)] = {
-    val includes: Seq[(String, String)] = workspace.compiler.frontEnd.findIncludes(getText).map { path =>
+    val frontEnd = workspace.compiler.frontEnd
+
+    val includes: Seq[(String, String)] = Try(frontEnd.findIncludes(getText)).getOrElse(Seq()).map { path =>
       (path, workspace.getCompilationEnvironment.resolvePath(path))
     }
 
-    val imports: Seq[(String, String)] = workspace.compiler.frontEnd.findImports(getText).flatMap { list =>
+    val imports: Seq[(String, String)] = Try(frontEnd.findImports(getText)).getOrElse(Seq()).flatMap { list =>
       workspace.getCompilationEnvironment.resolveModulePath(None, list).map {
         case ResolvedModule(_, path, _) =>
           (list.last, path.replaceAll("\\\\", "/"))
