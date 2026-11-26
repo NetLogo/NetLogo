@@ -176,7 +176,8 @@ object StructureParser {
                     results.procedures,
                     newResults.procedures,
                     renameMap,
-                    currentImport.filename
+                    currentImport.filename,
+                    currentImport.token
                   )
                   val newProcedureTokens = addProcedureTokenAliases(
                     results.procedureTokens,
@@ -247,7 +248,8 @@ object StructureParser {
     oldProcedures: ProceduresMap,
     newProcedures: ProceduresMap,
     renameMap: Map[String, String],
-    module: Option[String]
+    module: Option[String],
+    importToken: Token
   ): ProceduresMap = {
 
     val changedProcedures = newProcedures.removedAll(oldProcedures.keys)
@@ -267,7 +269,7 @@ object StructureParser {
     aliases.keys.find(x => oldProcedureKeys.contains(x)) match {
       case Some(x) => {
         val message = I18N.errors.getN("compiler.StructureParser.importConflict", "procedure", x._1)
-        exception(message, oldProcedures(x).nameToken)
+        exception(message, importToken)
       }
       case None => ()
     }
